@@ -24,6 +24,7 @@ except according to the terms contained in the LICENSE file.
     v-model:page="pagination.page" v-model:size="pagination.size"
     :count="pagination.count" :size-options="pageSizeOptions"
     :spinner="odata.awaitingResponse"
+    :removed="pagination.removed"
     :empty="odata.dataExists && odata.value.length === 0"
     @update:page="handlePageChange"/>
 </template>
@@ -73,7 +74,12 @@ const emit = defineEmits(['review', 'delete', 'restore']);
 const { odata, deletedSubmissionCount } = useRequestData();
 
 const pageSizeOptions = [250, 500, 1000];
-const pagination = reactive({ page: 0, size: pageSizeOptions[0], count: 0 });
+const pagination = reactive({
+  page: 0,
+  size: pageSizeOptions[0],
+  count: computed(() => (odata.dataExists ? odata.count : 0)),
+  removed: computed(() => (odata.dataExists ? odata.removedSubmissions : 0))
+});
 
 const odataSelect = computed(() => {
   if (props.fields == null) return null;
@@ -107,14 +113,9 @@ const fetchChunk = (clear, refresh = false) => {
         $orderby: '__system/submissionDate desc'
       }
     ),
-    clear,
-    patch: !first
-      ? (response) => odata.replaceData(response.data, response.config)
-      : null
+    clear
   })
     .then(() => {
-      pagination.count = odata.count;
-
       if (props.deleted) {
         deletedSubmissionCount.cancelRequest();
         if (!deletedSubmissionCount.dataExists) {

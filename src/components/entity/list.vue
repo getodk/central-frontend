@@ -413,6 +413,7 @@ export default {
           this.deleteModal.hide();
           this.alert.success(this.$t('alert.entityDeleted', { label }));
 
+          this.odataEntities.removedEntities += 1;
           this.dataset.entities -= 1;
           if (this.deletedEntityCount.dataExists) this.deletedEntityCount.value += 1;
 
@@ -447,6 +448,7 @@ export default {
           this.alert.success(this.$t('alert.entityRestored', { label }));
           if (confirm != null) this.confirmRestore = confirm;
 
+          this.odataEntities.removedEntities += 1;
           this.dataset.entities += 1;
           if (this.deletedEntityCount.dataExists && this.deletedEntityCount.value > 0)
             this.deletedEntityCount.value -= 1;
@@ -495,16 +497,11 @@ export default {
       };
 
       const onSuccess = () => {
-        if (this.deletedEntityCount.dataExists) this.deletedEntityCount.value += uuids.length;
-
-        this.dataset.entities -= uuids.length;
-
-
         this.bulkDeletedEntities = [...this.selectedEntities];
-        this.odataEntities.value = this.odataEntities.value.filter(e => !this.selectedEntities.has(e));
         this.alert.success(this.$tcn('alert.bulkDelete', this.selectedEntities.size))
           .cta(this.$t('action.undo'), () => this.requestBulkRestore(uuids));
         this.selectedEntities.clear();
+        this.refresh();
       };
 
       bulkDelete()
@@ -538,21 +535,8 @@ export default {
       };
 
       const onSuccess = () => {
-        this.bulkDeletedEntities.forEach(e => {
-          e.__system.selected = false;
-        });
-        const combined = [
-          ...this.odataEntities.value,
-          ...this.bulkDeletedEntities
-        ];
-
-        this.odataEntities.value = combined.sort((a, b) =>
-          b.__system.rowNumber - a.__system.rowNumber);
-
-        this.bulkDeletedEntities.length = 0;
-        if (this.deletedEntityCount.dataExists) this.deletedEntityCount.value -= uuids.length;
-        this.dataset.entities += uuids.length;
         this.alert.success(this.$tcn('alert.restored', uuids.length));
+        this.refresh();
       };
 
       bulkRestore()

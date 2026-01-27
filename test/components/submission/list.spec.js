@@ -939,7 +939,6 @@ describe('SubmissionList', () => {
         .afterResponses(async component => {
           await nextTick();
           checkIds(component, 1, 500);
-          component.find('.pagination select').element.value.should.be.eql('2');
         });
     });
   });

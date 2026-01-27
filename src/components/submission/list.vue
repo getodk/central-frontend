@@ -413,6 +413,7 @@ export default {
           this.alert.success(this.$t('alert.submissionDeleted'));
           if (confirm != null) this.confirmDelete = confirm;
 
+          this.odata.removedSubmissions += 1;
           this.formVersion.submissions -= 1;
           if (this.deletedSubmissionCount.dataExists) this.deletedSubmissionCount.value += 1;
 
@@ -438,6 +439,7 @@ export default {
           this.alert.success(this.$t('alert.submissionRestored'));
           if (confirm != null) this.confirmRestore = confirm;
 
+          this.odata.removedSubmissions += 1;
           this.formVersion.submissions += 1;
           if (this.deletedSubmissionCount.dataExists && this.deletedSubmissionCount.value > 0)
             this.deletedSubmissionCount.value -= 1;
