@@ -11,6 +11,10 @@ import {
 	type RuntimeValue,
 } from '../lib/codecs/getSharedValueCodec.ts';
 import type { RuntimeValueSetter, RuntimeValueState } from '../lib/codecs/ValueCodec.ts';
+import {
+	createAttributeState,
+	type AttributeState,
+} from '../lib/reactivity/createAttributeState.ts';
 import { createInstanceValueState } from '../lib/reactivity/createInstanceValueState.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
@@ -29,6 +33,7 @@ import type { Root } from './Root.ts';
 
 export interface AttributeStateSpec extends DescendantNodeStateSpec<string> {
 	readonly children: null;
+	readonly attributes: Accessor<Attribute[]>;
 	readonly value: SimpleAtomicState<string>;
 	readonly instanceValue: Accessor<string>;
 	readonly relevant: Accessor<boolean>;
@@ -61,10 +66,13 @@ export class Attribute
 	protected readonly getInstanceValue: Accessor<string>;
 	protected readonly valueState: RuntimeValueState<RuntimeValue<'string'>>;
 	protected readonly setValueState: RuntimeValueSetter<RuntimeInputValue<'string'>>;
+	readonly attributeState: AttributeState;
 
 	override readonly isAttached: Accessor<boolean> = () => {
 		return this.owner.isAttached();
 	};
+
+	override readonly getXPathValue: () => string;
 
 	constructor(
 		readonly owner: AnyNode,
@@ -117,12 +125,21 @@ export class Attribute
 		this.engineState = state.engineState;
 		this.currentState = state.currentState;
 		this.instanceState = createAttributeNodeInstanceState(this);
+		this.attributeState = createAttributeState(this.scope);
+
+		this.getXPathValue = () => {
+			return this.getInstanceValue();
+		};
 	}
 
 	setValue(value: string): Root {
 		this.setValueState(value);
 
 		return this.root;
+	}
+
+	override getAttributes(): readonly Attribute[] {
+		return [];
 	}
 
 	getChildren(): readonly [] {

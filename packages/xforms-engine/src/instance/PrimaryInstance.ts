@@ -18,7 +18,10 @@ import { EngineXPathEvaluator } from '../integration/xpath/EngineXPathEvaluator.
 import type { StaticDocument } from '../integration/xpath/static-dom/StaticDocument.ts';
 import { createPrimaryInstanceState } from '../lib/client-reactivity/instance-state/createPrimaryInstanceState.ts';
 import { prepareInstancePayload } from '../lib/client-reactivity/instance-state/prepareInstancePayload.ts';
-import { createAttributeState } from '../lib/reactivity/createAttributeState.ts';
+import {
+	createAttributeState,
+	type AttributeState,
+} from '../lib/reactivity/createAttributeState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createTranslationState } from '../lib/reactivity/createTranslationState.ts';
 import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
@@ -127,6 +130,7 @@ export class PrimaryInstance<
 	// InstanceNode
 	protected readonly state: SharedNodeState<PrimaryInstanceStateSpec>;
 	protected readonly engineState: EngineState<PrimaryInstanceStateSpec>;
+	readonly attributeState: AttributeState;
 
 	override readonly instanceNode: StaticDocument;
 	readonly getChildren: Accessor<readonly Root[]>;
@@ -203,7 +207,7 @@ export class PrimaryInstance<
 		this.classes = definition.classes;
 
 		const childrenState = createChildrenState<this, Root>(this);
-		const attributeState = createAttributeState(this.scope);
+		this.attributeState = createAttributeState(this.scope);
 
 		this.getChildren = childrenState.getChildren;
 
@@ -218,7 +222,7 @@ export class PrimaryInstance<
 			valueOptions: null,
 			value: null,
 			children: childrenState.childIds,
-			attributes: attributeState.getAttributes,
+			attributes: this.attributeState.getAttributes,
 		};
 
 		const state = createSharedNodeState(scope, stateSpec, config);
@@ -239,8 +243,12 @@ export class PrimaryInstance<
 		this.instanceState = createPrimaryInstanceState(this);
 
 		childrenState.setChildren([root]);
-		attributeState.setAttributes(buildAttributes(this));
+		this.attributeState.setAttributes(buildAttributes(this));
 		setIsAttached(true);
+	}
+
+	override getAttributes(): readonly Attribute[] {
+		return this.attributeState.getAttributes();
 	}
 
 	// PrimaryInstanceDocument

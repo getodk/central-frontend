@@ -8,7 +8,6 @@ import type {
 	EngineXPathDocument,
 	EngineXPathElement,
 	EngineXPathNode,
-	EngineXPathParentNode,
 	PrimaryInstanceXPathChildNode,
 	XFormsXPathChildNode,
 } from './kind.ts';
@@ -18,13 +17,13 @@ export const getContainingEngineXPathDocument = (node: EngineXPathNode): EngineX
 	return node.rootDocument;
 };
 
-export const getEngineXPathAttributes = (
-	node: EngineXPathNode
-): readonly EngineXPathAttribute[] => {
+export const getAttributes = (node: EngineXPathNode): readonly EngineXPathAttribute[] => {
 	if (node.nodeType === 'static-element') {
 		return node.attributes;
 	}
-
+	if (isEngineXPathElement(node)) {
+		return node.getAttributes();
+	}
 	return [];
 };
 
@@ -43,7 +42,7 @@ export const getEngineXPathAttributes = (
  */
 export const getNamespaceDeclarations = (): readonly [] => [];
 
-export const getParentNode = (node: EngineXPathNode): EngineXPathParentNode | null => {
+export const getParentNode = (node: EngineXPathNode): EngineXPathNode | null => {
 	if (node.nodeType === 'repeat-instance') {
 		return node.parent.parent;
 	}

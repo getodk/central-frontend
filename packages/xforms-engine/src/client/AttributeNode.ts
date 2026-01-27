@@ -1,9 +1,10 @@
 import type { Root } from '../instance/Root.ts';
 import type { AttributeDefinition } from '../parse/model/AttributeDefinition.ts';
+import type { BaseNode, BaseNodeState } from './BaseNode.ts';
 import type { OpaqueReactiveObjectFactory } from './OpaqueReactiveObjectFactory.ts';
 import type { InstanceState } from './serialization/InstanceState.ts';
 
-export interface AttributeNodeState {
+export interface AttributeNodeState extends BaseNodeState {
 	get value(): string;
 	get relevant(): boolean;
 }
@@ -11,7 +12,7 @@ export interface AttributeNodeState {
 /**
  * Base interface for common/shared aspects of attributes.
  */
-export interface AttributeNode {
+export interface AttributeNode extends BaseNode {
 	/**
 	 * Specifies the node's general type. This can be useful for narrowing types,
 	 * e.g. those of children.
@@ -31,7 +32,7 @@ export interface AttributeNode {
 	 */
 	readonly root: Root;
 
-	readonly owner: unknown;
+	readonly parent: unknown;
 
 	/**
 	 * Each node provides a discrete object representing the stateful aspects of

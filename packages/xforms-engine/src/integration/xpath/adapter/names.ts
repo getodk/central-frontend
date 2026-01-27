@@ -128,6 +128,7 @@ export const resolveEngineXPathNodeNamespaceURI = (
 		case 'static-text':
 			return resolveNamespaceURIFromStaticNodeContext(node, prefix);
 
+		case 'attribute':
 		case 'group':
 		case 'input':
 		case 'model-value':

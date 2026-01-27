@@ -11,7 +11,10 @@ import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPat
 import type { StaticLeafElement } from '../integration/xpath/static-dom/StaticElement.ts';
 import { RangeCodec } from '../lib/codecs/RangeCodec.ts';
 import { getSharedValueCodec } from '../lib/codecs/getSharedValueCodec.ts';
-import { createAttributeState } from '../lib/reactivity/createAttributeState.ts';
+import {
+	createAttributeState,
+	type AttributeState,
+} from '../lib/reactivity/createAttributeState.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
@@ -23,6 +26,7 @@ import type {
 	RangeNodeDefinition,
 	RangeValueType,
 } from '../parse/model/RangeNodeDefinition.ts';
+import type { Attribute } from './Attribute.ts';
 import type { Root } from './Root.ts';
 import { ValueNode, type ValueNodeStateSpec } from './abstract/ValueNode.ts';
 import { buildAttributes } from './attachments/buildAttributes.ts';
@@ -66,6 +70,7 @@ export class RangeControl<V extends RangeValueType = RangeValueType>
 	// InstanceNode
 	protected readonly state: SharedNodeState<RangeControlStateSpec<V>>;
 	protected readonly engineState: EngineState<RangeControlStateSpec<V>>;
+	readonly attributeState: AttributeState;
 
 	// RangeNode
 	readonly nodeType = 'range';
@@ -84,7 +89,7 @@ export class RangeControl<V extends RangeValueType = RangeValueType>
 		super(parent, instanceNode, definition, codec);
 
 		this.appearances = definition.bodyElement.appearances;
-		const attributeState = createAttributeState(this.scope);
+		this.attributeState = createAttributeState(this.scope);
 
 		const state = createSharedNodeState(
 			this.scope,
@@ -97,7 +102,7 @@ export class RangeControl<V extends RangeValueType = RangeValueType>
 				label: createNodeLabel(this, definition),
 				hint: createFieldHint(this, definition),
 				children: null,
-				attributes: attributeState.getAttributes,
+				attributes: this.attributeState.getAttributes,
 				valueOptions: null,
 				value: this.valueState,
 				instanceValue: this.getInstanceValue,
@@ -105,7 +110,7 @@ export class RangeControl<V extends RangeValueType = RangeValueType>
 			this.instanceConfig
 		);
 
-		attributeState.setAttributes(buildAttributes(this));
+		this.attributeState.setAttributes(buildAttributes(this));
 
 		this.state = state;
 		this.engineState = state.engineState;
@@ -116,6 +121,10 @@ export class RangeControl<V extends RangeValueType = RangeValueType>
 		this.setValueState(value);
 
 		return this.root;
+	}
+
+	override getAttributes(): readonly Attribute[] {
+		return this.attributeState.getAttributes();
 	}
 }
 

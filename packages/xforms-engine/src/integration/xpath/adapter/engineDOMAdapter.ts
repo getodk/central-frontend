@@ -10,10 +10,10 @@ import {
 } from './names.ts';
 import {
 	compareDocumentOrder,
+	getAttributes,
 	getChildElements,
 	getChildNodes,
 	getContainingEngineXPathDocument,
-	getEngineXPathAttributes,
 	getNamespaceDeclarations,
 	getNextSiblingElement,
 	getNextSiblingNode,
@@ -43,7 +43,7 @@ export const engineDOMAdapter: EngineDOMAdapter = {
 
 	// XPathTraversalAdapter
 	compareDocumentOrder,
-	getAttributes: getEngineXPathAttributes,
+	getAttributes: getAttributes,
 	getChildElements: getChildElements,
 	getChildNodes: getChildNodes,
 	getContainingDocument: getContainingEngineXPathDocument,

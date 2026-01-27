@@ -9,7 +9,11 @@ export function buildAttributes(
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	owner: AnyNode | InputControl<any> | ModelValue<any> | Note<any> | RangeControl<any>
 ): Attribute[] {
-	return Array.from(owner.definition.attributes.values()).map((attributeDefinition) => {
+	const attributes = owner.definition.attributes;
+	if (!attributes) {
+		return [];
+	}
+	return Array.from(attributes.values()).map((attributeDefinition) => {
 		return new Attribute(owner, attributeDefinition, attributeDefinition.template);
 	});
 }

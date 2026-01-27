@@ -8,7 +8,10 @@ import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPat
 import type { StaticLeafElement } from '../integration/xpath/static-dom/StaticElement.ts';
 import { getNoteCodec } from '../lib/codecs/getNoteCodec.ts';
 import type { NoteInputValue, NoteRuntimeValue } from '../lib/codecs/NoteCodec.ts';
-import { createAttributeState } from '../lib/reactivity/createAttributeState.ts';
+import {
+	createAttributeState,
+	type AttributeState,
+} from '../lib/reactivity/createAttributeState.ts';
 import { createNoteReadonlyThunk } from '../lib/reactivity/createNoteReadonlyThunk.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
@@ -20,6 +23,7 @@ import { createNoteText, type ComputedNoteText } from '../lib/reactivity/text/cr
 import type { NoteNodeDefinition } from '../parse/model/NoteNodeDefinition.ts';
 import { ValueNode, type ValueNodeStateSpec } from './abstract/ValueNode.ts';
 import { buildAttributes } from './attachments/buildAttributes.ts';
+import type { Attribute } from './Attribute.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { ClientReactiveSerializableValueNode } from './internal-api/serialization/ClientReactiveSerializableValueNode.ts';
@@ -48,6 +52,7 @@ export class Note<V extends ValueType = ValueType>
 	// InstanceNode
 	protected readonly state: SharedNodeState<NoteStateSpec<V>>;
 	protected readonly engineState: EngineState<NoteStateSpec<V>>;
+	readonly attributeState: AttributeState;
 
 	// NoteNode
 	readonly nodeType = 'note';
@@ -68,7 +73,7 @@ export class Note<V extends ValueType = ValueType>
 
 		const isReadonly = createNoteReadonlyThunk(this, definition);
 		const noteTextComputation = createNoteText(this, definition.noteTextDefinition);
-		const attributeState = createAttributeState(this.scope);
+		this.attributeState = createAttributeState(this.scope);
 
 		let noteText: ComputedNoteText;
 		let label: Accessor<TextRange<'label', 'form'> | null>;
@@ -108,7 +113,7 @@ export class Note<V extends ValueType = ValueType>
 				noteText,
 
 				children: null,
-				attributes: attributeState.getAttributes,
+				attributes: this.attributeState.getAttributes,
 				valueOptions: null,
 				value: this.valueState,
 				instanceValue: this.getInstanceValue,
@@ -116,11 +121,15 @@ export class Note<V extends ValueType = ValueType>
 			this.instanceConfig
 		);
 
-		attributeState.setAttributes(buildAttributes(this));
+		this.attributeState.setAttributes(buildAttributes(this));
 
 		this.state = state;
 		this.engineState = state.engineState;
 		this.currentState = state.currentState;
+	}
+
+	override getAttributes(): readonly Attribute[] {
+		return this.attributeState.getAttributes();
 	}
 }
 

@@ -15,6 +15,7 @@ import {
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
 import { beforeEach, describe, expect, it } from 'vitest';
+import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
 
 const IGNORED_INSTANCE_ID = 'ignored for purposes of functionality under test';
@@ -134,6 +135,35 @@ describe('Bind attributes', () => {
 				t('orx:meta', t('orx:instanceID', IGNORED_INSTANCE_ID))
 			).asXml();
 			await expect(actual).toHavePreparedSubmissionXML(expected);
+		});
+	});
+
+	describe('can evaluate the attribute value', () => {
+		let scenario: Scenario;
+
+		const formDefinition = html(
+			head(
+				title('Evaluate attributes'),
+				model(
+					mainInstance(
+						t(
+							'root id="evaluate-attributes" version=""',
+							t('note attr="abc"'),
+							t('orx:meta', t('orx:instanceID', IGNORED_INSTANCE_ID))
+						)
+					),
+					bind('/root/note').type('string').calculate('/root/note/@attr')
+				)
+			),
+			body(input('/root/note'))
+		);
+
+		beforeEach(async () => {
+			scenario = await Scenario.init('Evaluate attributes', formDefinition);
+		});
+
+		it('attribute values can be bound', () => {
+			expect(scenario.answerOf('/root/note')).toEqualAnswer(stringAnswer('abc'));
 		});
 	});
 

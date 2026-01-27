@@ -5,11 +5,15 @@ import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPat
 import type { StaticLeafElement } from '../integration/xpath/static-dom/StaticElement.ts';
 import type { RuntimeInputValue, RuntimeValue } from '../lib/codecs/getSharedValueCodec.ts';
 import { getSharedValueCodec } from '../lib/codecs/getSharedValueCodec.ts';
-import { createAttributeState } from '../lib/reactivity/createAttributeState.ts';
+import {
+	createAttributeState,
+	type AttributeState,
+} from '../lib/reactivity/createAttributeState.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createSharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
+import type { Attribute } from './Attribute.ts';
 import { ValueNode, type ValueNodeStateSpec } from './abstract/ValueNode.ts';
 import { buildAttributes } from './attachments/buildAttributes.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
@@ -51,6 +55,7 @@ export class ModelValue<V extends ValueType = ValueType>
 	// InstanceNode
 	protected readonly state: SharedNodeState<ModelValueStateSpec<V>>;
 	protected readonly engineState: EngineState<ModelValueStateSpec<V>>;
+	readonly attributeState: AttributeState;
 
 	// ModelValueNode
 	readonly nodeType = 'model-value';
@@ -67,7 +72,7 @@ export class ModelValue<V extends ValueType = ValueType>
 
 		super(parent, instanceNode, definition, codec);
 
-		const attributeState = createAttributeState(this.scope);
+		this.attributeState = createAttributeState(this.scope);
 
 		const state = createSharedNodeState(
 			this.scope,
@@ -80,7 +85,7 @@ export class ModelValue<V extends ValueType = ValueType>
 				label: null,
 				hint: null,
 				children: null,
-				attributes: attributeState.getAttributes,
+				attributes: this.attributeState.getAttributes,
 				valueOptions: null,
 				value: this.valueState,
 				instanceValue: this.getInstanceValue,
@@ -88,11 +93,15 @@ export class ModelValue<V extends ValueType = ValueType>
 			this.instanceConfig
 		);
 
-		attributeState.setAttributes(buildAttributes(this));
+		this.attributeState.setAttributes(buildAttributes(this));
 
 		this.state = state;
 		this.engineState = state.engineState;
 		this.currentState = state.currentState;
+	}
+
+	override getAttributes(): readonly Attribute[] {
+		return this.attributeState.getAttributes();
 	}
 }
 

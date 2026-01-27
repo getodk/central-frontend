@@ -272,4 +272,6 @@ export abstract class InstanceNode<
 			.map((child) => child.getXPathValue())
 			.join('');
 	}
+
+	abstract getAttributes(): readonly Attribute[];
 }

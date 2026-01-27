@@ -8,7 +8,10 @@ import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPat
 import type { StaticLeafElement } from '../integration/xpath/static-dom/StaticElement.ts';
 import type { TriggerInputValue, TriggerRuntimeValue } from '../lib/codecs/TriggerCodec.ts';
 import { TriggerCodec } from '../lib/codecs/TriggerCodec.ts';
-import { createAttributeState } from '../lib/reactivity/createAttributeState.ts';
+import {
+	createAttributeState,
+	type AttributeState,
+} from '../lib/reactivity/createAttributeState.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
@@ -16,6 +19,7 @@ import { createSharedNodeState } from '../lib/reactivity/node-state/createShared
 import { createFieldHint } from '../lib/reactivity/text/createFieldHint.ts';
 import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
 import type { UnknownAppearanceDefinition } from '../parse/body/appearance/unknownAppearanceParser.ts';
+import type { Attribute } from './Attribute.ts';
 import type { Root } from './Root.ts';
 import { ValueNode, type ValueNodeStateSpec } from './abstract/ValueNode.ts';
 import { buildAttributes } from './attachments/buildAttributes.ts';
@@ -75,6 +79,7 @@ export class TriggerControl
 	// InstanceNode
 	protected readonly state: SharedNodeState<TriggerControlStateSpec>;
 	protected readonly engineState: EngineState<TriggerControlStateSpec>;
+	readonly attributeState: AttributeState;
 
 	// TriggerNode
 	readonly nodeType = 'trigger';
@@ -90,7 +95,7 @@ export class TriggerControl
 		super(parent, instanceNode, definition, codec);
 
 		this.appearances = definition.bodyElement.appearances;
-		const attributeState = createAttributeState(this.scope);
+		this.attributeState = createAttributeState(this.scope);
 
 		const state = createSharedNodeState(
 			this.scope,
@@ -103,7 +108,7 @@ export class TriggerControl
 				label: createNodeLabel(this, definition),
 				hint: createFieldHint(this, definition),
 				children: null,
-				attributes: attributeState.getAttributes,
+				attributes: this.attributeState.getAttributes,
 				valueOptions: null,
 				value: this.valueState,
 				instanceValue: this.getInstanceValue,
@@ -111,11 +116,15 @@ export class TriggerControl
 			this.instanceConfig
 		);
 
-		attributeState.setAttributes(buildAttributes(this));
+		this.attributeState.setAttributes(buildAttributes(this));
 
 		this.state = state;
 		this.engineState = state.engineState;
 		this.currentState = state.currentState;
+	}
+
+	override getAttributes(): readonly Attribute[] {
+		return this.attributeState.getAttributes();
 	}
 
 	// TriggerNode

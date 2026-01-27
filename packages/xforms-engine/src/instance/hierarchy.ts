@@ -1,3 +1,4 @@
+import type { Attribute } from './Attribute.ts';
 import type { Group } from './Group.ts';
 import type { AnyInputControl } from './InputControl.ts';
 import type { AnyModelValue } from './ModelValue.ts';
@@ -23,6 +24,7 @@ export type AnyNode =
 	| Group
 	| RepeatRange
 	| RepeatInstance
+	| Attribute
 	| AnyNote
 	| AnyModelValue
 	| AnyInputControl

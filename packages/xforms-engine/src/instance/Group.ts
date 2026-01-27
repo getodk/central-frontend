@@ -8,7 +8,10 @@ import type { AncestorNodeValidationState } from '../client/validation.ts';
 import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
 import type { StaticElement } from '../integration/xpath/static-dom/StaticElement.ts';
 import { createParentNodeInstanceState } from '../lib/client-reactivity/instance-state/createParentNodeInstanceState.ts';
-import { createAttributeState } from '../lib/reactivity/createAttributeState.ts';
+import {
+	createAttributeState,
+	type AttributeState,
+} from '../lib/reactivity/createAttributeState.ts';
 import type { ChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import type { MaterializedChildren } from '../lib/reactivity/materializeCurrentStateChildren.ts';
@@ -53,6 +56,7 @@ export class Group
 	// InstanceNode
 	protected readonly state: SharedNodeState<GroupStateSpec>;
 	protected override engineState: EngineState<GroupStateSpec>;
+	readonly attributeState: AttributeState;
 
 	// GroupNode
 	readonly nodeType = 'group';
@@ -72,7 +76,7 @@ export class Group
 		this.appearances = definition.bodyElement?.appearances ?? null;
 
 		const childrenState = createChildrenState<Group, GeneralChildNode>(this);
-		const attributeState = createAttributeState(this.scope);
+		this.attributeState = createAttributeState(this.scope);
 
 		this.childrenState = childrenState;
 
@@ -87,7 +91,7 @@ export class Group
 				label: createNodeLabel(this, definition),
 				hint: null,
 				children: childrenState.childIds,
-				attributes: attributeState.getAttributes,
+				attributes: this.attributeState.getAttributes,
 				valueOptions: null,
 				value: null,
 			},
@@ -103,12 +107,16 @@ export class Group
 		);
 
 		childrenState.setChildren(buildChildren(this));
-		attributeState.setAttributes(buildAttributes(this));
+		this.attributeState.setAttributes(buildAttributes(this));
 		this.validationState = createAggregatedViolations(this, this.instanceConfig);
 		this.instanceState = createParentNodeInstanceState(this);
 	}
 
 	getChildren(): readonly GeneralChildNode[] {
 		return this.childrenState.getChildren();
+	}
+
+	override getAttributes(): readonly Attribute[] {
+		return this.attributeState.getAttributes();
 	}
 }

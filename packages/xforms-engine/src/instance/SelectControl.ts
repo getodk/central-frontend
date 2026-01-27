@@ -1,4 +1,4 @@
-import { type XPathChoiceNode, XPathNodeKindKey } from '@getodk/xpath';
+import { XPathNodeKindKey, type XPathChoiceNode } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
 import type {
@@ -14,7 +14,10 @@ import { SelectValueTypeError } from '../error/SelectValueTypeError.ts';
 import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
 import type { StaticLeafElement } from '../integration/xpath/static-dom/StaticElement.ts';
 import { getSelectCodec } from '../lib/codecs/getSelectCodec.ts';
-import { createAttributeState } from '../lib/reactivity/createAttributeState.ts';
+import {
+	createAttributeState,
+	type AttributeState,
+} from '../lib/reactivity/createAttributeState.ts';
 import { createItemCollection } from '../lib/reactivity/createItemCollection.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
@@ -24,6 +27,7 @@ import { createFieldHint } from '../lib/reactivity/text/createFieldHint.ts';
 import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
 import type { SimpleAtomicState } from '../lib/reactivity/types.ts';
 import type { SelectType } from '../parse/body/control/SelectControlDefinition.ts';
+import type { Attribute } from './Attribute.ts';
 import type { Root } from './Root.ts';
 import type { ValueNodeStateSpec } from './abstract/ValueNode.ts';
 import { ValueNode } from './abstract/ValueNode.ts';
@@ -91,6 +95,7 @@ export class SelectControl
 	// InstanceNode
 	protected readonly state: SharedNodeState<SelectControlStateSpec>;
 	protected readonly engineState: EngineState<SelectControlStateSpec>;
+	readonly attributeState: AttributeState;
 
 	// SelectNode
 	readonly nodeType = 'select';
@@ -110,7 +115,7 @@ export class SelectControl
 
 		this.appearances = definition.bodyElement.appearances;
 		this.selectType = definition.bodyElement.type;
-		const attributeState = createAttributeState(this.scope);
+		this.attributeState = createAttributeState(this.scope);
 
 		const valueOptions = createItemCollection(this);
 
@@ -156,7 +161,7 @@ export class SelectControl
 				label: createNodeLabel(this, definition),
 				hint: createFieldHint(this, definition),
 				children: null,
-				attributes: attributeState.getAttributes,
+				attributes: this.attributeState.getAttributes,
 				valueOptions,
 				value: valueState,
 				instanceValue: this.getInstanceValue,
@@ -165,7 +170,7 @@ export class SelectControl
 			this.instanceConfig
 		);
 
-		attributeState.setAttributes(buildAttributes(this));
+		this.attributeState.setAttributes(buildAttributes(this));
 
 		this.state = state;
 		this.engineState = state.engineState;
@@ -242,5 +247,9 @@ export class SelectControl
 	getChoiceName(value: string): string | null {
 		const option = this.mapOptionsByValue().get(value);
 		return option?.label?.asString ?? null;
+	}
+
+	override getAttributes(): readonly Attribute[] {
+		return this.attributeState.getAttributes();
 	}
 }

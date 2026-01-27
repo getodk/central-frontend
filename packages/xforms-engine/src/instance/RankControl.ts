@@ -1,4 +1,4 @@
-import { type XPathChoiceNode, XPathNodeKindKey } from '@getodk/xpath';
+import { XPathNodeKindKey, type XPathChoiceNode } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
 import type { RankDefinition, RankItem, RankNode, RankValueOptions } from '../client/RankNode.ts';
@@ -10,7 +10,10 @@ import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPat
 import type { StaticLeafElement } from '../integration/xpath/static-dom/StaticElement.ts';
 import { sharedValueCodecs } from '../lib/codecs/getSharedValueCodec.ts';
 import { MultipleValueItemCodec } from '../lib/codecs/items/MultipleValueItemCodec.ts';
-import { createAttributeState } from '../lib/reactivity/createAttributeState.ts';
+import {
+	createAttributeState,
+	type AttributeState,
+} from '../lib/reactivity/createAttributeState.ts';
 import { createItemCollection } from '../lib/reactivity/createItemCollection.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
@@ -20,6 +23,7 @@ import { createFieldHint } from '../lib/reactivity/text/createFieldHint.ts';
 import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
 import type { SimpleAtomicState } from '../lib/reactivity/types.ts';
 import type { UnknownAppearanceDefinition } from '../parse/body/appearance/unknownAppearanceParser.ts';
+import type { Attribute } from './Attribute.ts';
 import type { Root } from './Root.ts';
 import type { ValueNodeStateSpec } from './abstract/ValueNode.ts';
 import { ValueNode } from './abstract/ValueNode.ts';
@@ -96,6 +100,7 @@ export class RankControl
 	// InstanceNode
 	protected readonly state: SharedNodeState<RankControlStateSpec>;
 	protected readonly engineState: EngineState<RankControlStateSpec>;
+	readonly attributeState: AttributeState;
 
 	// RankNode
 	readonly nodeType = 'rank';
@@ -125,7 +130,7 @@ export class RankControl
 		const baseValueState = this.valueState;
 		const [baseGetValue, setValue] = baseValueState;
 
-		const attributeState = createAttributeState(this.scope);
+		this.attributeState = createAttributeState(this.scope);
 
 		/**
 		 * @ToDo As new value options become available, they're not yet in the
@@ -178,7 +183,7 @@ export class RankControl
 				label: createNodeLabel(this, definition),
 				hint: createFieldHint(this, definition),
 				children: null,
-				attributes: attributeState.getAttributes,
+				attributes: this.attributeState.getAttributes,
 				valueOptions,
 				value: valueState,
 				instanceValue: this.getInstanceValue,
@@ -186,11 +191,15 @@ export class RankControl
 			this.instanceConfig
 		);
 
-		attributeState.setAttributes(buildAttributes(this));
+		this.attributeState.setAttributes(buildAttributes(this));
 
 		this.state = state;
 		this.engineState = state.engineState;
 		this.currentState = state.currentState;
+	}
+
+	override getAttributes(): readonly Attribute[] {
+		return this.attributeState.getAttributes();
 	}
 
 	getValueLabel(value: string): TextRange<'item-label'> | null {

@@ -25,6 +25,8 @@ export type AdapterProcessingInstruction<T extends XPathNode> = Extract<
 	XPathProcessingInstruction
 >;
 
+export type AdapterNode<T extends XPathNode> = AdapterChildNode<T> | AdapterParentNode<T>;
+
 // prettier-ignore
 export type AdapterParentNode<T extends XPathNode> =
 	| AdapterDocument<T>

@@ -1,5 +1,6 @@
 import type { XPathNodeKind } from '@getodk/xpath';
 import { XPathNodeKindKey } from '@getodk/xpath';
+import type { Attribute } from '../../../instance/Attribute.ts';
 import type { AnyChildNode, AnyNode, AnyParentNode } from '../../../instance/hierarchy.ts';
 import type { PrimaryInstance } from '../../../instance/PrimaryInstance.ts';
 import type { StaticAttribute } from '../static-dom/StaticAttribute.ts';
@@ -7,6 +8,7 @@ import type { StaticDocument } from '../static-dom/StaticDocument.ts';
 import type { StaticElement } from '../static-dom/StaticElement.ts';
 import type { StaticText } from '../static-dom/StaticText.ts';
 import type {
+	XFormsXPathAttribute,
 	XFormsXPathComment,
 	XFormsXPathDocument,
 	XFormsXPathElement,
@@ -17,12 +19,15 @@ export type PrimaryInstanceXPathNode = Extract<AnyNode, XFormsXPathPrimaryInstan
 
 export type PrimaryInstanceXPathElement = Extract<AnyChildNode, XFormsXPathElement>;
 
+export type PrimaryInstanceXPathAttribute = Extract<Attribute, XFormsXPathAttribute>;
+
 export type PrimaryInstanceXPathComment = Extract<AnyChildNode, XFormsXPathComment>;
 
 // prettier-ignore
 export type PrimaryInstanceXPathChildNode =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| PrimaryInstanceXPathElement
+	| PrimaryInstanceXPathAttribute
 	| PrimaryInstanceXPathComment;
 
 // prettier-ignore
@@ -41,7 +46,7 @@ export type EngineXPathComment =
 
 // Giving this a type alias anticipates eventually implementing attributes
 // in primary instance state as well
-export type EngineXPathAttribute = StaticAttribute;
+export type EngineXPathAttribute = PrimaryInstanceXPathAttribute | StaticAttribute;
 
 export type EngineXPathText = StaticText;
 

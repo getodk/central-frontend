@@ -5,7 +5,7 @@ import type {
 	AdapterDocument,
 	AdapterElement,
 	AdapterNamespaceDeclaration,
-	AdapterParentNode,
+	AdapterNode,
 } from './XPathNodeKindAdapter.ts';
 
 export type DocumentOrderComparison = -1 | 0 | 1;
@@ -24,7 +24,7 @@ export interface XPathTraversalAdapter<T extends XPathNode> {
 
 	readonly getNamespaceDeclarations: (node: T) => ReadonlyArray<AdapterNamespaceDeclaration<T>>;
 	readonly getAttributes: (node: T) => ReadonlyArray<AdapterAttribute<T>>;
-	readonly getParentNode: (node: T) => AdapterParentNode<T> | null;
+	readonly getParentNode: (node: T) => AdapterNode<T> | null;
 	readonly getChildNodes: (node: T) => ReadonlyArray<AdapterChildNode<T>>;
 	readonly getChildElements: (node: T) => ReadonlyArray<AdapterElement<T>>;
 	readonly getPreviousSiblingNode: (node: T) => AdapterChildNode<T> | null;

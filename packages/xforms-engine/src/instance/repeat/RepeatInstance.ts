@@ -13,7 +13,10 @@ import type { AncestorNodeValidationState } from '../../client/validation.ts';
 import type { XFormsXPathElement } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
 import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import { createTemplatedNodeInstanceState } from '../../lib/client-reactivity/instance-state/createTemplatedNodeInstanceState.ts';
-import { createAttributeState } from '../../lib/reactivity/createAttributeState.ts';
+import {
+	createAttributeState,
+	type AttributeState,
+} from '../../lib/reactivity/createAttributeState.ts';
 import type { ChildrenState } from '../../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../../lib/reactivity/createChildrenState.ts';
 import type { MaterializedChildren } from '../../lib/reactivity/materializeCurrentStateChildren.ts';
@@ -60,6 +63,7 @@ export class RepeatInstance
 		ClientReactiveSerializableTemplatedNode
 {
 	private readonly childrenState: ChildrenState<GeneralChildNode>;
+	private readonly attributeState: AttributeState;
 	private readonly currentIndex: Accessor<number>;
 
 	override readonly [XPathNodeKindKey] = 'element';
@@ -131,7 +135,7 @@ export class RepeatInstance
 		this.appearances = definition.bodyElement.appearances;
 
 		const childrenState = createChildrenState<RepeatInstance, GeneralChildNode>(this);
-		const attributeState = createAttributeState(this.scope);
+		this.attributeState = createAttributeState(this.scope);
 
 		this.childrenState = childrenState;
 		this.currentIndex = currentIndex;
@@ -147,7 +151,7 @@ export class RepeatInstance
 				// TODO: only-child <group><label>
 				label: createNodeLabel(this, definition),
 				hint: null,
-				attributes: attributeState.getAttributes,
+				attributes: this.attributeState.getAttributes,
 				children: childrenState.childIds,
 				valueOptions: null,
 				value: null,
@@ -191,5 +195,9 @@ export class RepeatInstance
 
 	getChildren(): readonly GeneralChildNode[] {
 		return this.childrenState.getChildren();
+	}
+
+	override getAttributes(): readonly Attribute[] {
+		return this.attributeState.getAttributes();
 	}
 }
