@@ -201,6 +201,32 @@ const createCalculation = (
 	});
 };
 
+/**
+ * Runs the computation without maintaining a reactive listener, so
+ * actions that should run only at a specific time are not triggered
+ * when referenced elements are updated.
+ */
+const createActionCalculation = (
+	context: ValueContext,
+	setRelevantValue: SimpleAtomicStateSetter<string>,
+	computation: ActionComputationExpression<'string'>
+): void => {
+	createComputed(() => {
+		if (context.isAttached()) {
+			// use untrack so the expression evaluation isn't reactive
+			const relevant = untrack(() => context.isRelevant());
+			if (!relevant) {
+				return;
+			}
+			const calculated = untrack(() => {
+				return context.evaluator.evaluateString(computation.expression, context);
+			});
+			const value = context.decodeInstanceValue(calculated);
+			setRelevantValue(value);
+		}
+	});
+};
+
 const resolveAndSetValueChanged = (
 	context: ValueContext,
 	setRelevantValue: SimpleAtomicStateSetter<string>,
@@ -271,7 +297,7 @@ const performActionComputation = (
 		getGeopointValue(context, (point) => setValue(point));
 		return;
 	}
-	createCalculation(context, setValue, action.computation);
+	createActionCalculation(context, setValue, action.computation);
 };
 
 const dispatchAction = (

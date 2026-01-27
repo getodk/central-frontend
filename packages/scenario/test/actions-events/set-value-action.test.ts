@@ -534,6 +534,48 @@ describe('setvalue action', () => {
 			expect(scenario.answerOf('/data/readonly-field')).toEqualAnswer(intAnswer(16));
 		});
 
+		it('does not update after load', async () => {
+			const scenario = await Scenario.init(
+				'Setvalue readonly',
+				html(
+					head(
+						title('Setvalue readonly'),
+						model(
+							mainInstance(t('data id="setvalue-readonly"', t('output'), t('input', '5'))),
+							bind('/data/output').type('int'),
+							setvalue('odk-instance-first-load', '/data/output', '/data/input * 4')
+						)
+					),
+					body(input('/data/output'), input('/data/input'))
+				)
+			);
+
+			expect(scenario.answerOf('/data/output')).toEqualAnswer(intAnswer(20));
+			scenario.answer('/data/input', '4');
+			expect(scenario.answerOf('/data/output')).toEqualAnswer(intAnswer(20));
+		});
+
+		it('does not update after field becomes relevant', async () => {
+			const scenario = await Scenario.init(
+				'Setvalue readonly',
+				html(
+					head(
+						title('Setvalue readonly'),
+						model(
+							mainInstance(t('data id="setvalue-readonly"', t('output'), t('input', '5'))),
+							bind('/data/output').relevant('/data/input = 3').type('int'),
+							setvalue('odk-instance-first-load', '/data/output', '/data/input * 4')
+						)
+					),
+					body(input('/data/output'), input('/data/input'))
+				)
+			);
+
+			expect(scenario.answerOf('/data/output')).toEqualAnswer(stringAnswer(''));
+			scenario.answer('/data/input', '3'); // makes the output relevant
+			expect(scenario.answerOf('/data/output')).toEqualAnswer(stringAnswer(''));
+		});
+
 		// ported from: https://github.com/getodk/javarosa/blob/2dd8e15e9f3110a86f8d7d851efc98627ae5692e/src/test/java/org/javarosa/core/model/actions/SetValueActionTest.java#L468
 		describe('with inner empty string', () => {
 			it('clears the `ref` target', async () => {
@@ -555,7 +597,7 @@ describe('setvalue action', () => {
 			});
 		});
 
-		describe('with empty string `value` [attribute]', () => {
+		describe('with empty string `value` attribute', () => {
 			// ported from: https://github.com/getodk/javarosa/blob/2dd8e15e9f3110a86f8d7d851efc98627ae5692e/src/test/java/org/javarosa/core/model/actions/SetValueActionTest.java#L488
 			it('clears the `ref` target', async () => {
 				const scenario = await Scenario.init(
