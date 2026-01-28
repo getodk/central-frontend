@@ -86,6 +86,7 @@ export default {
         this.actionOption('dataset.update'),
         this.actionOption('entity.bulk.delete'),
         this.actionOption('entity.bulk.restore'),
+        this.actionOption('dataset.delete'),
         this.categoryOption('config'),
         this.actionOption('config.set'),
         this.categoryOption('upgrade')

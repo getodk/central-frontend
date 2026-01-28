@@ -111,7 +111,8 @@
       "dataset": {
         "create": "@:audit.action.default.create",
         "update": "Update",
-        "update_publish": "Publish"
+        "update_publish": "Publish",
+        "delete": "Delete"
       },
       "entity": {
         "bulk_delete": "Bulk Delete",

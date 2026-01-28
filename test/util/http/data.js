@@ -86,7 +86,8 @@ const responsesByComponent = {
     formSummaryAssignments: () => testData.standardFormSummaryAssignments.sorted()
   }),
   DatasetList: componentResponses({
-    datasets: () => testData.extendedDatasets.sorted()
+    datasets: () => testData.extendedDatasets.sorted(),
+    deletedDatasets: () => []
   }),
   ProjectSettings: [],
   FormShow: componentResponses({
