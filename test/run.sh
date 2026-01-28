@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 set -o pipefail
-shopt -s inherit_errexit
+# shopt -s inherit_errexit
 
 # Normally, index.html is housed at the root of the repository for Vite, but
 # here we move it to public/, where Vue CLI expects it.
