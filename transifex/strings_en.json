@@ -224,6 +224,10 @@
         "update_publish": {
           "string": "Publish",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
+        },
+        "delete": {
+          "string": "Delete",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         }
       },
       "entity": {
