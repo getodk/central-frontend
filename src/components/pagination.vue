@@ -35,13 +35,7 @@ except according to the terms contained in the LICENSE file.
       <i18n-t tag="div" keypath="rows" :plural="sizeOfCurrentPage"
         class="form-group">
         <template #range>
-          <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
-          <select v-if="lastPage > 0 && lastPage < 20" v-model="pageModel"
-            class="form-control">
-            <option v-for="[value, text] of pageOptions" :key="value" :value="value">
-              {{ text }}
-            </option>
-          </select>
+          <template v-if="empty">0</template>
           <template v-else>{{ pageRange(page) }}</template>
         </template>
         <template #count>{{ $n(count, 'default') }}</template>
@@ -71,6 +65,10 @@ const props = defineProps({
     type: Number,
     required: true
   },
+  removed: {
+    type: Number,
+    default: 0
+  },
   page: {
     type: Number,
     required: true
@@ -83,31 +81,26 @@ const props = defineProps({
     type: Array,
     required: true
   },
+  empty: Boolean,
   spinner: Boolean
 });
 const emit = defineEmits(['update:page', 'update:size']);
 
 const lastPage = computed(() => Math.ceil(props.count / props.size) - 1);
 
-const pageModel = computed({
-  get: () => props.page,
-  set: (value) => { emit('update:page', value); }
-});
+const count = computed(() => props.count - props.removed);
+
 const { formatRange } = useI18nUtils();
 // Returns the formatted range of rows shown on the specified page.
 const pageRange = (page) => {
   const start = page * props.size + 1;
-  const end = page < lastPage.value ? start + props.size - 1 : props.count;
+  const end = page < lastPage.value ? start + props.size - 1 - props.removed : count.value;
   return formatRange(start, end);
 };
-const pageOptions = computed(() => {
-  const result = new Array(lastPage.value + 1);
-  for (let i = 0; i <= lastPage.value; i += 1) result[i] = [i, pageRange(i)];
-  return result;
-});
+
 const sizeOfCurrentPage = computed(() => {
-  if (props.page < lastPage.value) return props.size;
-  const r = props.count % props.size;
+  if (props.page < lastPage.value) return props.size - props.removed;
+  const r = count.value % props.size;
   return r === 0 ? props.size : r;
 });
 

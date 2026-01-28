@@ -275,13 +275,6 @@ export default {
       if (!this.odata.dataExists) return '';
       if (this.odata.value.length > 0) return '';
 
-      // Cases related to submission deletion
-      if (this.odata.removedSubmissions.size === this.odata.count && this.odata.count > 0) {
-        return this.deleted ? this.$t('deletedSubmission.allRestored') : this.$t('allDeleted');
-      }
-      if (this.odata.removedSubmissions.size > 0 && this.odata.value.length === 0) {
-        return this.deleted ? this.$t('deletedSubmission.allRestoredOnPage') : this.$t('allDeletedOnPage');
-      }
       if (this.deleted) {
         return this.$t('deletedSubmission.emptyTable');
       }
@@ -405,7 +398,7 @@ export default {
           this.alert.success(this.$t('alert.submissionDeleted'));
           if (confirm != null) this.confirmDelete = confirm;
 
-          this.odata.removedSubmissions.add(instanceId);
+          this.odata.removedSubmissions += 1;
           this.formVersion.submissions -= 1;
           if (this.deletedSubmissionCount.dataExists) this.deletedSubmissionCount.value += 1;
 
@@ -431,7 +424,7 @@ export default {
           this.alert.success(this.$t('alert.submissionRestored'));
           if (confirm != null) this.confirmRestore = confirm;
 
-          this.odata.removedSubmissions.add(instanceId);
+          this.odata.removedSubmissions += 1;
           this.formVersion.submissions += 1;
           if (this.deletedSubmissionCount.dataExists && this.deletedSubmissionCount.value > 0)
             this.deletedSubmissionCount.value -= 1;
@@ -505,15 +498,11 @@ export default {
     "noMatching": "There are no matching Submissions.",
     "emptyMap": "Submissions only appear if they include data in the first geo field.",
     "learnMoreMap": "Learn more about mapping Submissions",
-    "allDeleted": "All Submissions are deleted.",
-    "allDeletedOnPage": "All Submissions on the page have been deleted.",
     "downloadDisabled": "Download is unavailable for deleted Submissions",
     "filterDisabledMessage": "Filtering is unavailable for deleted Submissions",
     "noMapEncryption": "Map is unavailable due to Form encryption",
     "deletedSubmission": {
       "emptyTable": "There are no deleted Submissions.",
-      "allRestored": "All deleted Submissions are restored.",
-      "allRestoredOnPage": "All Submissions on the page have been restored."
     },
     "noMapDeleted": "Map is unavailable for deleted Submissions"
   }

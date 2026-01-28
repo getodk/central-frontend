@@ -1,4 +1,4 @@
-import { DateTime, Settings } from 'luxon';
+import { DateTime } from 'luxon';
 
 import DateRangePicker from '../../../src/components/date-range-picker.vue';
 import SubmissionFilters from '../../../src/components/submission/filters.vue';
@@ -133,7 +133,7 @@ describe('SubmissionFilters', () => {
             .beforeEachResponse((_, { url }) => {
               // we have default filters for submissionDate and deletedAt
               if (url.includes('.svc'))
-                relativeUrl(url).searchParams.get('$filter').split(' and ').length.should.be.eql(2);
+                relativeUrl(url).searchParams.has('$filter').should.be.false;
             })
             .afterResponses(component => {
               const filters = component.getComponent(SubmissionFilters).props();
@@ -239,17 +239,6 @@ describe('SubmissionFilters', () => {
             DateTime.fromISO('1970-01-02').toJSDate()
           ]);
         })
-        .beforeEachResponse((_, { url }) => {
-          const filters = new URL(url, window.location.origin).searchParams.get('$filter').split(' and ');
-
-          const start = filters[2].split(' ge ')[1];
-          start.should.equal('1970-01-01T00:00:00.000Z');
-          DateTime.fromISO(start).zoneName.should.equal(Settings.defaultZoneName);
-
-          const end = filters[3].split(' le ')[1];
-          end.should.equal('1970-01-02T23:59:59.999Z');
-          DateTime.fromISO(end).zoneName.should.equal(Settings.defaultZoneName);
-        })
         .respondWithData(testData.submissionOData));
 
     it('updates the URL', () =>
@@ -314,7 +303,7 @@ describe('SubmissionFilters', () => {
       .beforeEachResponse((_, { url }) => {
         if (url.includes('.svc')) {
           const filter = relativeUrl(url).searchParams.get('$filter');
-          filter.should.match(/^__system\/submissionDate le \S+ and \(__system\/deletedAt eq null or __system\/deletedAt gt \S+\)$/);
+          expect(filter).to.be.null;
         }
       })
       .complete();
@@ -330,7 +319,7 @@ describe('SubmissionFilters', () => {
       .beforeEachResponse((_, { url }) => {
         if (url.includes('.svc')) {
           const filter = relativeUrl(url).searchParams.get('$filter');
-          filter.should.match(/^__system\/deletedAt le \S+$/);
+          filter.should.match(/^__system\/deletedAt ne null$/);
         }
       })
       .complete();

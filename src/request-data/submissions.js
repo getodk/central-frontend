@@ -34,15 +34,8 @@ export default () => {
     transformResponse: ({ data, config }) => shallowReactive({
       value: shallowReactive(transformValue(data, config)),
       count: data['@odata.count'],
-      removedSubmissions: reactive(new Set())
-    }),
-    replaceData(data, config) {
-      odata.count = data['@odata.count'];
-      odata.value = shallowReactive(transformValue({
-        ...data,
-        value: data.value.filter(s => !odata.removedSubmissions.has(s.__id))
-      }, config));
-    }
+      removedSubmissions: 0
+    })
   }));
   const submitters = createResource('submitters', () => ({
     ids: computeIfExists(() =>

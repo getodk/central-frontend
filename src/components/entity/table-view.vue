@@ -23,12 +23,14 @@ except according to the terms contained in the LICENSE file.
   <Pagination v-if="pagination.count > 0"
     v-model:page="pagination.page" v-model:size="pagination.size"
     :count="pagination.count" :size-options="pageSizeOptions"
+    :removed="pagination.removed"
+    :empty="odataEntities.dataExists && odataEntities.value.length === 0"
     :spinner="odataEntities.awaitingResponse"
     @update:page="handlePageChange"/>
 </template>
 
 <script setup>
-import { inject, reactive, useTemplateRef, watch } from 'vue';
+import { computed, inject, reactive, useTemplateRef, watch } from 'vue';
 
 import EntityTable from './table.vue';
 import OdataLoadingMessage from '../odata-loading-message.vue';
@@ -59,21 +61,12 @@ const datasetName = inject('datasetName');
 const { dataset, odataEntities, deletedEntityCount } = useRequestData();
 
 const pageSizeOptions = [250, 500, 1000];
-const pagination = reactive({ page: 0, size: pageSizeOptions[0], count: 0 });
-
-// For more information about how the snapshot filter works, see
-// SubmissionTableView.
-let snapshotFilter;
-const setSnapshotFilter = () => {
-  snapshotFilter = '';
-  const now = new Date().toISOString();
-  if (props.deleted) {
-    snapshotFilter += `__system/deletedAt le ${now}`;
-  } else {
-    snapshotFilter += `__system/createdAt le ${now} and `;
-    snapshotFilter += `(__system/deletedAt eq null or __system/deletedAt gt ${now})`;
-  }
-};
+const pagination = reactive({
+  page: 0,
+  size: pageSizeOptions[0],
+  count: computed(() => (odataEntities.dataExists ? odataEntities.count : 0)),
+  removed: computed(() => (odataEntities.dataExists ? odataEntities.removedEntities : 0))
+});
 
 // `clear` indicates whether odataEntities should be cleared before sending the
 // request. `refresh` indicates whether the request is a background refresh
@@ -82,13 +75,7 @@ const fetchChunk = (clear, refresh = false) => {
   // Are we fetching the first chunk of entities or the next chunk?
   const first = clear || refresh;
   if (first) {
-    setSnapshotFilter();
     pagination.page = 0;
-  }
-
-  let $filter = snapshotFilter;
-  if (props.filter) {
-    $filter += ` and ${props.filter}`;
   }
 
   const $search = props.searchTerm ? props.searchTerm : undefined;
@@ -103,19 +90,14 @@ const fetchChunk = (clear, refresh = false) => {
         $top: pagination.size,
         $skip: pagination.page * pagination.size,
         $count: true,
-        $filter,
+        $filter: props.deleted ? '__system/deletedAt ne null' : props.filter,
         $search,
         $orderby: '__system/createdAt desc'
       }
     ),
-    clear,
-    patch: !first
-      ? (response) => odataEntities.replaceData(response.data, response.config)
-      : null
+    clear
   })
     .then(() => {
-      pagination.count = odataEntities.count;
-
       if (props.deleted) {
         deletedEntityCount.cancelRequest();
         if (!deletedEntityCount.dataExists) {
