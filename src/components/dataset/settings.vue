@@ -198,7 +198,7 @@ const dependentFormsCount = computed(() => (!dataset.dataExists ? 0 : dataset.so
         // {formsCount} is the number of Forms that are dependent on the Entity List.
         // Example: 4 Forms
         "The Entity List ‟{name}” is related to {formsCount}.",
-        "Before you can deleted it, you’ll need to unlink it from the related Forms.",
+        "Before you can delete it, you’ll need to unlink it from the related Forms.",
         "Learn more here."
       ],
       "formsCount": "{count} Form | {count} Forms",

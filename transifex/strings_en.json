@@ -224,10 +224,6 @@
         "update_publish": {
           "string": "Publish",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
-        },
-        "delete": {
-          "string": "Delete",
-          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         }
       },
       "entity": {
@@ -1623,7 +1619,7 @@
     },
     "DatasetDelete": {
       "title": {
-        "string": "Delete Dataset",
+        "string": "Delete Entity List",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
@@ -1898,7 +1894,7 @@
             "developer_comment": "{formsCount} is the number of Forms that are dependent on the Entity List. Example: 4 Forms"
           },
           "1": {
-            "string": "Before you can deleted it, you’ll need to unlink it from the related Forms."
+            "string": "Before you can delete it, you’ll need to unlink it from the related Forms."
           },
           "2": {
             "string": "Learn more here."
@@ -1946,9 +1942,6 @@
           "string": "Download data (.csv)",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
-      },
-      "possibleConflictsCount": {
-        "string": "{count, plural, one {{count} possible conflict} other {{count} possible conflicts}}"
       }
     },
     "Download": {

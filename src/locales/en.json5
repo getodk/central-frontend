@@ -112,7 +112,7 @@
         "create": "@:audit.action.default.create",
         "update": "Update",
         "update_publish": "Publish",
-        "delete": "Delete"
+        "delete": "@:audit.action.default.delete"
       },
       "entity": {
         "bulk_delete": "Bulk Delete",
