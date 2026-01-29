@@ -1,5 +1,13 @@
 # @getodk/xforms-engine
 
+## 0.16.1
+
+### Patch Changes
+
+- f5b706e: Fixes the xpath traversal code to support dynamic attributes
+- 7908b30: Fixes actions so they are no longer reactive to model updates
+- 40ea005: Fix Attributes to have the correct contextNode so `current()` works as expected
+
 ## 0.16.0
 
 ### Minor Changes

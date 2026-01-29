@@ -1,6 +1,6 @@
 {
   "name": "@getodk/xforms-engine",
-  "version": "0.16.0",
+  "version": "0.16.1",
   "license": "Apache-2.0",
   "description": "XForms engine for ODK Web Forms",
   "type": "module",
@@ -63,7 +63,7 @@
   "devDependencies": {
     "@babel/core": "^7.28.5",
     "@getodk/tree-sitter-xpath": "0.2.2",
-    "@getodk/xpath": "0.9.1",
+    "@getodk/xpath": "0.9.2",
     "@playwright/test": "^1.57.0",
     "@types/papaparse": "^5.5.0",
     "@vitest/browser": "^3.2.4",

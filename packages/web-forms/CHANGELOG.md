@@ -1,5 +1,14 @@
 # @getodk/web-forms
 
+## 0.18.2
+
+### Patch Changes
+
+- f5b706e: Fixes the xpath traversal code to support dynamic attributes
+- 7908b30: Fixes actions so they are no longer reactive to model updates
+- 40ea005: Fix Attributes to have the correct contextNode so `current()` works as expected
+- 37015de: Fixes missing whitespace in panel headers
+
 ## 0.18.1
 
 ### Patch Changes

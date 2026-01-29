@@ -1,5 +1,13 @@
 # @getodk/xpath
 
+## 0.9.2
+
+### Patch Changes
+
+- f5b706e: Fixes the xpath traversal code to support dynamic attributes
+- Updated dependencies
+  - @getodk/common@0.11.1
+
 ## 0.9.1
 
 ### Patch Changes

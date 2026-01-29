@@ -1,5 +1,11 @@
 # @getodk/common
 
+## 0.11.1
+
+### Patch Changes
+
+- Fixes xform for scenario tests
+
 ## 0.11.0
 
 ### Minor Changes
