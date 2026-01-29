@@ -47,8 +47,7 @@ export default {
   },
   computed: {
     href() {
-      // TODO: API might be different for the deleted dataset (SK)
-      return apiPaths.entities(this.dataset.projectId, this.dataset.id, '.csv');
+      return apiPaths.deletedDatasetCsv(this.dataset.projectId, this.dataset.id);
     }
   }
 };
