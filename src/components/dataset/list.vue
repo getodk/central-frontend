@@ -34,6 +34,7 @@ except according to the terms contained in the LICENSE file.
       </p>
     </div>
     <dataset-table/>
+    <dataset-trash-table/>
     <loading :state="datasets.initiallyLoading"/>
     <dataset-new v-bind="newDatasetModal" @hide="newDatasetModal.hide()" @success="afterCreateDataset"/>
   </div>
@@ -43,6 +44,7 @@ except according to the terms contained in the LICENSE file.
 import { useRouter } from 'vue-router';
 import DatasetNew from './new.vue';
 import DatasetTable from './table.vue';
+import DatasetTrashTable from './trash-table.vue';
 import DocLink from '../doc-link.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
@@ -64,12 +66,18 @@ const props = defineProps({
   }
 });
 
-const { project, datasets } = useRequestData();
+const { project, datasets, deletedDatasets } = useRequestData();
 const { datasetPath } = useRoutes();
 const router = useRouter();
 
 datasets.request({
   url: apiPaths.datasets(props.projectId),
+  extended: true,
+  resend: false
+}).catch(noop);
+
+deletedDatasets.request({
+  url: apiPaths.datasets(props.projectId, { deleted: true }),
   extended: true,
   resend: false
 }).catch(noop);

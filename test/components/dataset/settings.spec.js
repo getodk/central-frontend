@@ -1,7 +1,8 @@
+import DatasetDelete from '../../../src/components/dataset/delete.vue';
 import DatasetPendingSubmissions from '../../../src/components/dataset/pending-submissions.vue';
 
 import testData from '../../data';
-import { load } from '../../util/http';
+import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
 describe('DatasetSettings', () => {
@@ -119,5 +120,107 @@ describe('DatasetSettings', () => {
         modal.props().state.should.be.false;
         component.get('input[value="false"]').element.checked.should.be.true;
       });
+  });
+
+  describe('DatasetDelete', () => {
+    it('toggles the modal', () => {
+      testData.extendedDatasets.createPast(1);
+      return load('/projects/1/entity-lists/trees/settings', { root: false })
+        .testModalToggles({
+          modal: DatasetDelete,
+          show: '#dataset-settings .panel-simple-danger .btn-danger',
+          hide: '.btn-link'
+        });
+    });
+
+    describe('dependent forms', () => {
+      it('shows help text if there are dependent forms', async () => {
+        testData.extendedDatasets.createPast(1, {
+          sourceForms: [{ xmlFormId: 'f1', name: 'Form 1' }],
+          linkedForms: [{ xmlFormId: 'f2', name: 'Form 2' }]
+        });
+        const component = await load('/projects/1/entity-lists/trees/settings');
+        const help = component.get('.dependent-forms-help');
+        help.text().should.match(/2 Forms/);
+      });
+
+      it('does not show help text if there are no dependent forms', async () => {
+        testData.extendedDatasets.createPast(1, {
+          sourceForms: [],
+          linkedForms: []
+        });
+        const component = await load('/projects/1/entity-lists/trees/settings');
+        component.find('.dependent-forms-help').exists().should.be.false;
+      });
+
+      it('disables delete button if there are dependent forms', async () => {
+        testData.extendedDatasets.createPast(1, {
+          sourceForms: [{ xmlFormId: 'f1', name: 'Form 1' }]
+        });
+        const component = await load('/projects/1/entity-lists/trees/settings');
+        const button = component.get('#dataset-settings .panel-simple-danger .btn-danger');
+        button.attributes('aria-disabled').should.equal('true');
+      });
+
+      it('enables delete button if there are no dependent forms', async () => {
+        testData.extendedDatasets.createPast(1, {
+          sourceForms: [],
+          linkedForms: []
+        });
+        const component = await load('/projects/1/entity-lists/trees/settings');
+        const button = component.get('#dataset-settings .panel-simple-danger .btn-danger');
+        button.attributes('aria-disabled').should.equal('false');
+      });
+    });
+
+    it('implements some standard button things', () => {
+      testData.extendedDatasets.createPast(1);
+      return mockHttp()
+        .mount(DatasetDelete, {
+          props: { state: true },
+          container: {
+            requestData: { dataset: testData.extendedDatasets.last() }
+          }
+        })
+        .testStandardButton({
+          button: '.btn-danger',
+          disabled: ['.btn-link'],
+          modal: true
+        });
+    });
+
+    describe('after a successful response', () => {
+      const del = () => {
+        testData.extendedDatasets.createPast(1);
+        return load('/projects/1/entity-lists/trees/settings')
+          .complete()
+          .request(async (app) => {
+            await app.get('#dataset-settings .panel-simple-danger .btn-danger').trigger('click');
+            return app.get('#dataset-delete .btn-danger').trigger('click');
+          })
+          .respondWithData(() => {
+            testData.extendedDatasets.splice(0, 1);
+            return { success: true };
+          })
+          .respondWithData(() => testData.extendedDatasets.sorted())
+          .respondWithData(() => []); // Empty list of deleted dataset
+      };
+
+      it('navigates to the entity-lists page', async () => {
+        const app = await del();
+        app.vm.$route.path.should.equal('/projects/1/entity-lists');
+      });
+
+      it('shows a success message', async () => {
+        const app = await del();
+        app.should.alert('success');
+      });
+
+      it('decreases the dataset count', () =>
+        del().beforeEachResponse((app, _, i) => {
+          if (i === 0) return;
+          app.get('#page-head-tabs li.active .badge').text().should.equal('0');
+        }));
+    });
   });
 });
