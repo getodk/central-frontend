@@ -262,7 +262,7 @@ const saveAdvancedPanelCoords = (newCoords: Coordinate) => {
 	border: 1px solid var(--odk-border-color);
 	border-radius: var(--odk-radius);
 	overflow: hidden;
-	// Fixes iPhone select issues on map
+	// iPhone - fixes select issues on map
 	-webkit-user-select: none;
 	user-select: none;
 	-webkit-touch-callout: none;
@@ -295,18 +295,31 @@ const saveAdvancedPanelCoords = (newCoords: Coordinate) => {
 }
 
 .map-container.map-full-screen {
+	position: fixed;
+	inset: 0;
 	display: flex;
 	flex-direction: column;
-	justify-content: flex-start;
-	position: fixed;
-	top: 0;
-	left: 0;
-	height: 100vh;
 	width: 100vw;
+	height: 100dvh;
 	z-index: var(--odk-z-index-topmost);
+	background: var(--odk-base-background-color);
+	border-radius: 0;
+
+	// Prevent background scroll-chaining
+	overscroll-behavior: none;
+	// Hand touch gestures (zoom/pan) exclusively to the map engine
+	touch-action: none;
 
 	.map-block {
-		flex-grow: 2;
+		flex: 1 1 0;
+		width: 100%;
+		min-height: 0;
+		height: auto;
+	}
+
+	:deep(.map-status-bar),
+	:deep(.advanced-panel) {
+		flex-shrink: 0;
 	}
 }
 

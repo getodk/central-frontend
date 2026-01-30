@@ -41,7 +41,7 @@ const surveyLink = computed(() => {
 	right: 0;
 	bottom: 150px;
 	height: 4rem;
-	z-index: var(--odk-z-index-topmost);
+	z-index: var(--odk-z-index-feedback-button);
 	border-top-left-radius: var(--odk-radius);
 	border-top-right-radius: var(--odk-radius);
 	text-align: center;
