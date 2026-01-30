@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import ImageBlock from '@/components/common/ImageBlock.vue';
+import AudioBlock from '@/components/common/media/AudioBlock.vue';
+import ImageBlock from '@/components/common/media/ImageBlock.vue';
 import MarkdownBlock from '@/components/common/MarkdownBlock.vue';
+import VideoBlock from '@/components/common/media/VideoBlock.vue';
 import type { AnyControlNode as QuestionNode } from '@getodk/xforms-engine';
 import { computed } from 'vue';
 
@@ -18,17 +20,15 @@ const audio = computed(() => question.currentState.label?.audioSource);
 		<MarkdownBlock v-for="elem in text" :key="elem.id" :elem="elem" />
 		<div v-if="image || video || audio" class="media-content">
 			<ImageBlock v-if="image" :resource-url="image" :alt="alt" />
-
-			<!-- TODO: Implement VideoBlock component -->
-			<span v-else-if="video">🚧 Video media type is not supported</span>
-
-			<!-- TODO: Implement AudioBlock component -->
-			<span v-else-if="audio">🚧 Video media type is not supported</span>
+			<AudioBlock v-if="audio" :resource-url="audio" :alt="alt" />
+			<VideoBlock v-if="video" :resource-url="video" :alt="alt" />
 		</div>
 	</label>
 </template>
 
 <style scoped lang="scss">
+@use 'primeflex/core/_variables.scss' as pf;
+
 label {
 	font-weight: 400;
 	font-size: var(--odk-question-font-size);
@@ -46,6 +46,21 @@ label {
 
 	:first-child {
 		margin-top: 0;
+	}
+
+	.media-content {
+		margin-top: 15px;
+		max-width: 400px;
+		display: flex;
+		gap: 20px;
+		flex-direction: column;
+		align-items: flex-start;
+	}
+}
+
+@media screen and (max-width: #{pf.$sm}) {
+	label .media-content {
+		width: auto;
 	}
 }
 </style>

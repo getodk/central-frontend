@@ -28,11 +28,13 @@ import {
 	mdiPlus,
 	mdiPrinter,
 	mdiRefresh,
+	mdiStopCircleOutline,
 	mdiTrashCanOutline,
 	mdiUnfoldMoreHorizontal,
 	mdiUpload,
 	mdiVectorPolygon,
 	mdiVectorPolyline,
+	mdiVolumeHigh,
 	mdiWeb,
 } from '@mdi/js';
 
@@ -65,11 +67,13 @@ const iconMap: Record<string, string> = {
 	mdiPlus,
 	mdiPrinter,
 	mdiRefresh,
+	mdiStopCircleOutline,
 	mdiTrashCanOutline,
 	mdiUnfoldMoreHorizontal,
 	mdiUpload,
 	mdiVectorPolygon,
 	mdiVectorPolyline,
+	mdiVolumeHigh,
 	mdiWeb,
 };
 

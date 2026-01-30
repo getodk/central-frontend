@@ -73,7 +73,7 @@ defineEmits(['change']);
 		.text-content {
 			text-align: center;
 			margin: -11.5px 0 10px 0;
-			width: 100%;
+			width: fit-content;
 			position: relative;
 			padding-top: 20px;
 			word-break: break-word;

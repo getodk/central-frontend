@@ -40,7 +40,7 @@ const selectValue = (value: string) => {
 			@update:model-value="selectValue"
 			@change="$emit('change')"
 		/>
-		<TextMedia :label="option.label" />
+		<TextMedia :label="option.label" :audio-icons-only="question.currentState.isSelectWithImages" />
 	</label>
 </template>
 

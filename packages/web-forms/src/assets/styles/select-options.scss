@@ -1,3 +1,5 @@
+@use 'primeflex/core/_variables.scss' as pf;
+
 .value-option {
 	--text-content-margin: 15px;
 }
@@ -55,10 +57,12 @@
 	}
 
 	:deep(.media-content) {
-		background: var(--odk-base-background-color);
+		background: transparent;
 		height: calc(100% - (var(--odk-base-font-size) + (var(--text-content-margin) * 2)));
-		width: 100%;
-		justify-items: center;
+		min-height: 54px;
+		flex: 0 1 auto;
+		margin-left: auto;
+		align-content: center;
 	}
 
 	&:has(.media-content) {
@@ -71,8 +75,11 @@
 		}
 
 		:deep(.text-content) {
+			width: fit-content;
+			min-width: unset;
 			max-width: calc(100% - 70px);
 			margin: var(--text-content-margin) 20px;
+			flex: 1 1 auto;
 		}
 	}
 }
@@ -94,4 +101,27 @@
 	background: var(--odk-light-background-color);
 	align-content: flex-start;
 	flex-wrap: wrap;
+
+	:deep(.media-content) {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
+		justify-content: flex-start;
+		gap: 10px;
+
+		.media-block {
+			border-radius: 0;
+		}
+	}
+}
+
+@media screen and (max-width: #{pf.$sm}) {
+	:not(.select-with-images) .value-option {
+		flex-wrap: wrap;
+
+		:deep(.media-content) {
+			margin-left: unset;
+		}
+	}
 }

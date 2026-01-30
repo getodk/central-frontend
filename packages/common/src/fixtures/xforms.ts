@@ -102,7 +102,7 @@ export class XFormResource<Type extends XFormResourceType> {
 				const service = new JRResourceService();
 				const parentPath = localPath.replace(/\/[^/]+$/, '');
 
-				service.activateFixtures(parentPath, ['file', 'file-csv', 'images']);
+				service.activateFixtures(parentPath, ['file', 'file-csv', 'images', 'audio', 'video']);
 
 				return service;
 			},
@@ -119,7 +119,7 @@ export class XFormResource<Type extends XFormResourceType> {
 			const service = new JRResourceService();
 			const parentPath = resourceURL.pathname.replace(/\/[^/]+$/, '');
 
-			service.activateFixtures(parentPath, ['file', 'file-csv', 'images']);
+			service.activateFixtures(parentPath, ['file', 'file-csv', 'images', 'audio', 'video']);
 
 			return service;
 		};
