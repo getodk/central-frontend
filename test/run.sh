@@ -16,8 +16,6 @@ set -- -F -e 'WARN LOG:' -e 'ERROR LOG:' -e 'Module Warning' -e 'WARN [web-serve
 warnings=$(grep -c "$@")
 if (( warnings > 2)); then
   grep -C5 "$@"
-  # Reset the text format in case the search results contained formatted text.
-  tput sgr0
   echo
   echo "All tests passed, but there were $warnings warnings: see above."
   exit 1
