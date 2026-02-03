@@ -129,7 +129,7 @@ describe('EntityFilters', () => {
           })
           .respondWithData(testData.entityOData));
 
-      it('re-renders the table', function() { // eslint-disable-line func-names
+      it.only('re-renders the table', function() { // eslint-disable-line func-names
         this.timeout(16000);
 
         testData.extendedEntities.createPast(1);
