@@ -49,8 +49,8 @@ export const fakePastDate = (dateStrings) => {
   // ticked, without having to use setTimeout() and make every
   // function that calls this one change to being async.
   // eslint-disable-next-line no-plusplus, space-infix-ops
-  for (let i=0; i<100000; ++i);
-  const now = Date.now();
+  let now;
+  for (let i=0; i<100000; ++i) now = Date.now();
   const to = now - 1;
   if (from > to) {
     const json = JSON.stringify(dateStrings);
