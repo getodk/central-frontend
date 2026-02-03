@@ -7,6 +7,9 @@ module.exports = {
     'plugin:vue/vue3-recommended',
     '@vue/airbnb'
   ],
+  plugins: [
+    '@intlify/eslint-plugin-vue-i18n',
+  ],
   globals: {
     $: 'readonly',
     alert: 'readonly',
@@ -15,6 +18,29 @@ module.exports = {
     defineModel: 'readonly'
   },
   rules: {
+    '@intlify/vue-i18n/no-unused-keys': [ 'error', {
+      src: 'src/',
+      callExpression: '^(\\$t|t|\\$tc|tc|\\$tcn|tcn|\\$tn|tn)$',
+      ignores: [
+        // /^[\w-]+\./ should match all locale keys, e.g. "en", "zh-Hant" etc.
+        /^[\w-]+\.audit\.action\./,
+        /^[\w-]+\.audit\.category\./,
+        /^[\w-]+\.back\.back$/,
+        /^[\w-]+\.back\.title$/,
+        /^[\w-]+\.component\.WebFormRenderer\./, // dynamic modals
+        /^[\w-]+\.conflict\./,
+        /^[\w-]+\.fields\./,
+        /^[\w-]+\.oidc.error\./,
+        /^[\w-]+\.outdatedVersionHtml\./, // check that file's comments
+        /^[\w-]+\.reviewState\./,
+        /^[\w-]+\.steps\[0\]\.introduction\[1\]\[0\]$/,
+        /^[\w-]+\.tab\./,
+        /^[\w-]+\.title\.submissionBacklog\./,
+        /^[\w-]+\.title\.updateReviewState\./,
+        /^[\w-]+\.type\./,
+        /Modal\.(body|title)$/,
+      ].map(re => re.toString()),
+    }],
     'arrow-parens': 'off',
     'class-methods-use-this': 'off',
     'comma-dangle': ['error', 'only-multiline'],
@@ -52,6 +78,7 @@ module.exports = {
       asyncArrow: 'always'
     }],
     'spaced-comment': 'off',
+    'vue/attribute-hyphenation': 'off',
     'vue/attributes-order': ['error', {
       order: [
         'LIST_RENDERING',
@@ -77,6 +104,7 @@ module.exports = {
       selfClosingTag: 'never'
     }],
     'vue/html-indent': 'off',
+    'vue/require-prop-types': 'off',
     'vue/html-self-closing': ['error', {
       html: {
         void: 'never',
@@ -88,6 +116,7 @@ module.exports = {
     }],
     'vue/max-attributes-per-line': 'off',
     'vue/multi-word-component-names': 'off',
+    'vue/no-constant-condition': 'off',
     'vue/no-setup-props-destructure': 'off',
     'vue/no-template-target-blank': 'off',
     'vue/object-curly-newline': 'off',
