@@ -45,8 +45,13 @@ export const fakePastDate = (dateStrings) => {
     .map(s => Date.parse(s));
   if (parsed.length === 0) return faker.date.past().toISOString();
   const from = Math.max(...parsed);
+  // Fix one race condition with another: make sure the clock has
+  // ticked, without having to use setTimeout() and make every
+  // function that calls this one change to being async.
+  // eslint-disable-next-line no-plusplus, space-infix-ops
+  for (let i=0; i<100000; ++i);
   const now = Date.now();
-  const to = now - 10000;
+  const to = now - 1;
   if (from > to) {
     const json = JSON.stringify(dateStrings);
     const toAsString = new Date(to).toISOString();
