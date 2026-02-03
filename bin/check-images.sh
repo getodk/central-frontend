@@ -17,8 +17,9 @@ fatal_error() {
 }
 downloadAndVerify() {
   fileName="$1"
-  expectedDownloadHash="$2"
-  expectedExeHash="$3"
+  archDir="$2"
+  expectedDownloadHash="$3"
+  expectedExeHash="$4"
 
   wget "https://www.jonof.id.au/files/kenutils/$fileName"
 
@@ -32,10 +33,19 @@ downloadAndVerify() {
     *) fatal_error "Unsupported file format for $fileName" ;;
   esac
 
-  pngoutExe="$(find . -type f -name pngout)"
+  pngoutExe="$(find . -type f -path "$archDir/pngout")"
 
   log "Verifying executable integrity..."
   [[ $(sha256sum "$pngoutExe" | cut -d" " -f1) = "$expectedExeHash" ]]
+}
+pngoutArchDir() {
+  case "$(uname -m)" in
+    aarch64) echo aarch64 ;;
+    armv7l)  echo armv7   ;;
+    i686)    echo i686    ;;
+    x86_64)  echo amd64   ;;
+    *)       echo amd64   ;;
+  esac
 }
 ensurePngout() {
   if command -v pngout &> /dev/null; then
@@ -48,14 +58,16 @@ ensurePngout() {
     cd "$tmpDir"
 
     case "$(uname -s)" in
-      Linux*)   downloadAndVerify pngout-20200115-linux.tar.gz \
+      Linux*)   downloadAndVerify pngout-20200115-linux.tar.gz "*/$(pngoutArchDir)" \
                     ac38bba6f0de29033de866538c3afa64341319b695bbe388efbc5fd9e830e928 \
                     c509286fccedd7529b32dfdee2b39906f06d35350034df6dfbf75a4c7dc9a0b5 ;;
-      Darwin*)  downloadAndVerify pngout-20230322-mac.zip \
+      Darwin*)  downloadAndVerify pngout-20230322-mac.zip "*" \
                     2e3eb79345206040ae3a0d0d0ecfe9ad01d92fe5002b8a1676a65632a56840e1 \
                     1981cd0aadc6b2f70353f41d483810285b67ad282cc9cf8877f79d87e33f7c4a ;;
       *) fatal_error "Unsupported operating system?" ;;
     esac
+
+    pngoutExe="$tmpDir/$pngoutExe"
 
     cd -
   fi
