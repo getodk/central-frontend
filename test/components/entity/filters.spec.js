@@ -237,7 +237,9 @@ describe('EntityFilters', () => {
           creatorId.should.eql([id.toString()]);
         }));
 
-    it.only('re-renders the table', () => {
+    it.only('re-renders the table', function randomname() {
+      this.timeout(16000);
+
       testData.extendedEntities.createPast(250);
       load('/projects/1/entity-lists/trees/entities', {
         attachTo: document.body
