@@ -825,7 +825,7 @@ class MockHttp {
       console.error('(empty)');
     } else {
       for (const entry of this._orderedResponses)
-        console.error(entry);
+        console.error(entry.toString());
     }
   }
 
