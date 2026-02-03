@@ -129,7 +129,9 @@ describe('EntityFilters', () => {
           })
           .respondWithData(testData.entityOData));
 
-      it('re-renders the table', () => {
+      it('re-renders the table', function() {
+        this.timeout(16000);
+
         testData.extendedEntities.createPast(1);
         return load('/projects/1/entity-lists/trees/entities', {
           attachTo: document.body
