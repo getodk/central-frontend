@@ -22,3 +22,9 @@ jobs:
     - run: npm run lint
     - uses: browser-actions/setup-chrome@v2
     - run: npm run test
+    - if: always()
+      run: git status
+    - if: always()
+      run: git diff
+    - if: always()
+      run: tree
