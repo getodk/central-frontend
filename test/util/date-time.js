@@ -45,7 +45,7 @@ export const fakePastDate = (dateStrings) => {
     .map(s => Date.parse(s));
   if (parsed.length === 0) return faker.date.past().toISOString();
   const from = Math.max(...parsed);
-  const to = Date.now() - 1000;
+  const to = Date.now() - 1;
   if (from > to) {
     const json = JSON.stringify(dateStrings);
     const toAsString = new Date(to).toISOString();
