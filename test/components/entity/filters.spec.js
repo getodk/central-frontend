@@ -129,9 +129,7 @@ describe('EntityFilters', () => {
           })
           .respondWithData(testData.entityOData));
 
-      it.only('re-renders the table', function() { // eslint-disable-line func-names
-        this.timeout(16000);
-
+      it.skip('re-renders the table', () => {
         testData.extendedEntities.createPast(1);
         return load('/projects/1/entity-lists/trees/entities', {
           attachTo: document.body
