@@ -820,6 +820,13 @@ class MockHttp {
       for (const entry of this._requestResponseLog)
         console.error(entry);
     }
+    console.error('expected _orderedResponses:');
+    if (this._orderedResponses.length === 0) {
+      console.error('(empty)');
+    } else {
+      for (const entry of this._orderedResponses)
+        console.error(entry);
+    }
   }
 
   _checkStateAfterWait() {
