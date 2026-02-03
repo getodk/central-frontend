@@ -51,7 +51,7 @@ export const fakePastDate = (dateStrings) => {
     const json = JSON.stringify(dateStrings);
     const toAsString = new Date(to).toISOString();
     const isoNow = new Date(now).toISOString();
-    throw new Error(`one of the specified timestamps is later than the maximum allowed timestamp of ${toAsString}: ${json}; isoNow=${isoNow}`);
+    throw new Error(`one of the specified timestamps is later than the maximum allowed timestamp of ${toAsString}: ${json}; isoNow=${isoNow}; dateStrings=${dateStrings}`);
   }
   return faker.date.between({ from, to }).toISOString();
 };
