@@ -15,7 +15,7 @@ NODE_ENV="test" karma start | tee "$output"
 set -- -F -e 'WARN LOG:' -e 'ERROR LOG:' -e 'Module Warning' -e 'WARN [web-server]:' "$output"
 warnings=$(grep -c "$@")
 if (( warnings > 2)); then
-  echo ----- WARNINGS: -----
+  echo "----- WARNINGS: -----"
   grep -C5 "$@"
   echo
   echo "All tests passed, but there were $warnings warnings: see above."
