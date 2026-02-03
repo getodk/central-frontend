@@ -129,7 +129,7 @@ describe('EntityFilters', () => {
           })
           .respondWithData(testData.entityOData));
 
-      it.skip('re-renders the table', () => {
+      it('re-renders the table', () => {
         testData.extendedEntities.createPast(1);
         return load('/projects/1/entity-lists/trees/entities', {
           attachTo: document.body
@@ -237,7 +237,7 @@ describe('EntityFilters', () => {
           creatorId.should.eql([id.toString()]);
         }));
 
-    it('re-renders the table', () => {
+    it.only('re-renders the table', () => {
       testData.extendedEntities.createPast(250);
       load('/projects/1/entity-lists/trees/entities', {
         attachTo: document.body
