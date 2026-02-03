@@ -8,6 +8,7 @@ import { changeMultiselect } from '../../util/trigger';
 import { findTab } from '../../util/dom';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
+import { relativeUrl } from '../../util/request';
 import { setLuxon } from '../../util/date-time';
 
 const findToggle = (component) =>
@@ -130,10 +131,12 @@ describe('SubmissionMapView', () => {
         .testRequestsInclude([{
           url: ({ pathname, searchParams }) => {
             pathname.should.equal('/v1/projects/1/forms/f/submissions.geojson');
-            searchParams.getAll('submitterId').should.eql(['1', '2']);
-            searchParams.get('start__gte').should.equal('1970-01-01T00:00:00.000Z');
-            searchParams.get('end__lte').should.equal('1970-01-02T23:59:59.999Z');
-            searchParams.getAll('reviewState').should.eql(['approved', 'null']);
+            searchParams.get('$filter').split(' and ').should.eql([
+              '(__system/submitterId eq 1 or __system/submitterId eq 2)',
+              '__system/submissionDate ge 1970-01-01T00:00:00.000Z',
+              '__system/submissionDate le 1970-01-02T23:59:59.999Z',
+              "(__system/reviewState eq 'approved' or __system/reviewState eq null)"
+            ]);
           }
         }]));
 
@@ -148,7 +151,10 @@ describe('SubmissionMapView', () => {
         })
         .request(changeMultiselect('#submission-filters-review-state', [1]))
         .beforeEachResponse((app, { url }) => {
-          url.should.equal('/v1/projects/1/forms/f/submissions.geojson?reviewState=hasIssues');
+          url.should.startWith('/v1/projects/1/forms/f/submissions.geojson?');
+          const filter = relativeUrl(url).searchParams.get('$filter');
+          filter.should.equal("(__system/reviewState eq 'hasIssues')");
+
           // Not a background refresh: the map disappears during the request.
           countFeatures(app).should.equal(0);
         })
@@ -249,12 +255,12 @@ describe('SubmissionMapView', () => {
         .request(changeMultiselect('#submission-filters-review-state', [1]))
         .beforeAnyResponse(app => {
           app.get('.empty-table-message').should.be.hidden();
-          app.get('#submission-map-view .loading').should.be.visible();
+          app.get('#map-view .loading').should.be.visible();
         })
         .respondWithData(testData.submissionGeojson)
         .afterResponse(app => {
           app.get('.empty-table-message').should.be.visible();
-          app.get('#submission-map-view .loading').should.be.hidden();
+          app.get('#map-view .loading').should.be.hidden();
         }));
 
     it('hides the empty message after toggling to map view', () =>

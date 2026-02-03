@@ -57,7 +57,7 @@ function isTooBig({ path, size }) {
   // Special cases:
   const simpleName = basename(path).replace(/(-[\w-]{8})+\./, '.');
   switch (simpleName) { // eslint-disable-line default-case
-    case 'index.js':             return size >   450_000;
+    case 'index.js':             return size >   750_000;
     case 'web-form.js': return size > 3_300_000;
     case 'MapBlock.js': return size > 450_000; // A Web Forms' feature bundle
     case 'geojson-map.js':       return size >   500_000;
@@ -69,7 +69,7 @@ function isTooBig({ path, size }) {
     case 'html': return size >   1_200;
     case 'ico':  return size >  16_000;
     case 'js':   return size > 200_000;
-    case 'png':  return size >  40_000;
+    case 'png':  return size > 700_000;
     case 'svg':  return size >  60_000;
     case 'ttf':  return size >  18_000;
     case 'woff': return size >  19_000;

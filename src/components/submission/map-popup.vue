@@ -75,7 +75,7 @@ import { last } from 'ramda';
 import DateTime from '../date-time.vue';
 import DlData from '../dl-data.vue';
 import Loading from '../loading.vue';
-import MapPopup from '../map-popup.vue';
+import MapPopup from '../map/popup.vue';
 import SubmissionActions from './actions.vue';
 import SubmissionAttachmentLink from './attachment-link.vue';
 import SubmissionReviewState from './review-state.vue';
@@ -141,7 +141,7 @@ const missingField = computed(() => {
   return { name: last(elements), header: elements.join('-') };
 });
 const handleActions = (event) => {
-  const action = event.target.closest('.btn-group .btn');
+  const action = event.target.closest('.btn');
   if (action == null) return;
   const { classList } = action;
   if (classList.contains('review-button'))

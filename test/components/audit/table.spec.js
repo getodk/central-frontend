@@ -38,7 +38,7 @@ const testTarget = async (row, text, ...linkOptions) => {
     span.text().should.equal(text);
     await span.should.have.textTooltip();
   } else if (typeof linkOptions[0] === 'string') {
-    testTarget(row, text, RouterLinkStub, (link) => {
+    await testTarget(row, text, RouterLinkStub, (link) => {
       link.props().to.should.equal(linkOptions[0]);
     });
   } else {

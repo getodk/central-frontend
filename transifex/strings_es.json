@@ -478,6 +478,10 @@
     "selectRow": {
       "string": "Seleccionar fila",
       "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "reset": {
+      "string": "Restablecer",
+      "developer_comment": "This text is shown on a button that resets the data filters"
     }
   },
   "field": {
@@ -809,6 +813,9 @@
         "string": "Tu",
         "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {your} is in the following text:\n\nTo do this, we need {your} feedback, so that we can understand how you are using Central, and how it could be better for you."
       }
+    },
+    "mailingListOptIn": {
+      "string": "Envíame correos electrónicos ocasionales sobre nuevas funciones y mejores prácticas."
     }
   },
   "submission": {
@@ -1497,6 +1504,9 @@
         },
         "num_entities_with_geometry": {
           "string": "Número de entidades con datos geométricos"
+        },
+        "num_multi_entity_errors": {
+          "string": "Número de errores de entidades repetidas"
         }
       }
     },
@@ -2235,6 +2245,9 @@
       "noMatching": {
         "string": "No hay entidades coincidentes."
       },
+      "emptyMap": {
+        "string": "Las entidades solo aparecen si incluyen datos en la propiedad de geometría."
+      },
       "allDeleted": {
         "string": "Se eliminan todas las Entidades."
       },
@@ -2257,6 +2270,9 @@
       },
       "searchDisabledMessage": {
         "string": "La búsqueda no está disponible para las entidades eliminadas"
+      },
+      "mapDisabled": {
+        "string": "La mapa no está disponible para las entidades eliminadas"
       },
       "downloadDisabled": {
         "string": "La descarga no está disponible para Entidades eliminadas"
@@ -2297,6 +2313,14 @@
             }
           }
         }
+      }
+    },
+    "EntityMapView": {
+      "loading": {
+        "string": "Preparando mapa. Esto puede tardar un poco."
+      },
+      "overlapTitle": {
+        "string": "{count, plural, one {{count} Entidad a esta zona} many {{count} Entidades a esta zona} other {{count} Entidades a esta zona}}"
       }
     },
     "EntityMetadataRow": {
@@ -2407,6 +2431,9 @@
           "string": "Valor actualizado",
           "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
         }
+      },
+      "geometryDisabled": {
+        "string": "La geometría no se puede actualizar desde el mapa."
       },
       "problem": {
         "409_15": {
@@ -5443,17 +5470,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "Los borradores de formularios se han trasladado",
+        "string": "Mapas ️🗺️, eliminación masiva ️🗑️ y mejor visibilidad del sistema 👀",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "Cree un nuevo formulario y edítelo en la nueva pestaña Editar formulario"
-      },
-      "action": {
-        "gotIt": {
-          "string": "¡Ya está!",
-          "developer_comment": "This is the text of a button that is used to close the modal."
-        }
+        "string": "Presentamos una nueva vista de mapa para envíos y entidades, una limpieza de datos más rápida con la eliminación masiva de entidades y una visión más clara del sistema gracias a los estados visibles de las invitaciones de los usuarios y las marcas de tiempo de «última actualización»."
       }
     }
   },

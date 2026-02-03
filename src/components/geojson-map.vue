@@ -475,7 +475,7 @@ const moveOverFeature = (event) => {
 };
 
 const forEachFeatureNearPixel = (source, pixel, radius, callback) => {
-  // Start with a boundary box.
+  // Build a small bounding box and check all features for intersection.
   const corners = [
     [pixel[0] - radius, pixel[1] - radius], // top-left
     [pixel[0] + radius, pixel[1] + radius] // bottom-right
@@ -483,17 +483,7 @@ const forEachFeatureNearPixel = (source, pixel, radius, callback) => {
   const extent = boundingExtent(corners.map(p =>
     mapInstance.getCoordinateFromPixel(p)));
 
-  // For features within `extent`, filter for those that are actually within
-  // `radius` pixels of `pixel`.
-  const coordinate = mapInstance.getCoordinateFromPixel(pixel);
-  const r2 = radius ** 2;
-  source.forEachFeatureIntersectingExtent(extent, (feature) => {
-    const closest = mapInstance.getPixelFromCoordinate(
-      feature.getGeometry().getClosestPoint(coordinate)
-    );
-    if ((closest[0] - pixel[0]) ** 2 + (closest[1] - pixel[1]) ** 2 <= r2)
-      callback(feature);
-  });
+  source.forEachFeatureIntersectingExtent(extent, callback);
 };
 
 const getHits = (pixel) => {
@@ -911,7 +901,11 @@ $muted-background-color: #F1F5F9;
   },
   "zh-Hant": {
     "showing": "正在顯示{total}項中的第{count}項",
-    "zoomToFit": "縮放以符合所有資料"
+    "zoomToFit": "縮放以符合所有資料",
+    "noWebGL": {
+      "title": "圖形顯示異常。",
+      "message": "您的瀏覽器目前無法顯示地圖。請啟用圖形加速設定。"
+    }
   }
 }
 </i18n>

@@ -38,11 +38,11 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 import { useTemplateRef, watch } from 'vue';
 
-import Loading from './loading.vue';
-import MapPopup from './map-popup.vue';
+import Loading from '../loading.vue';
+import MapPopup from './popup.vue';
 
-import { odataLiteral } from '../util/odata';
-import { useRequestData } from '../request-data';
+import { odataLiteral } from '../../util/odata';
+import { useRequestData } from '../../request-data';
 
 defineOptions({
   name: 'MapOverlapPopup'
@@ -99,7 +99,7 @@ const preview = (feature) => {
 </script>
 
 <style lang="scss">
-@import '../assets/scss/mixins';
+@import '../../assets/scss/mixins';
 
 .map-overlap-popup {
   .feature {

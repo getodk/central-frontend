@@ -152,7 +152,8 @@ export default {
       "num_entity_update_forms": "Number of Forms that update Entities",
       "num_repeat_entity_update_forms": "Number of Forms that update Entities in repeats",
       "num_entity_create_update_forms": "Number of Forms that both create and update Entities",
-      "num_entities_with_geometry": "Number of Entities with geometry data"
+      "num_entities_with_geometry": "Number of Entities with geometry data",
+      "num_multi_entity_errors": "Number of errors from repeat Entities"
     }
   }
 }
@@ -303,7 +304,8 @@ export default {
       "num_entity_update_forms": "Anzahl der Formulare, die Entitäten aktualisieren",
       "num_repeat_entity_update_forms": "Anzahl der Formulare, die Entitäten in Wiederholungen/repeats aktualisieren",
       "num_entity_create_update_forms": "Anzahl der Formulare, die Entitäten sowohl erstellen als auch aktualisieren",
-      "num_entities_with_geometry": "Anzahl der Entitäten mit Geometriedaten"
+      "num_entities_with_geometry": "Anzahl der Entitäten mit Geometriedaten",
+      "num_multi_entity_errors": "Anzahl der Fehler durch wiederholte Entitäten"
     }
   },
   "es": {
@@ -390,7 +392,8 @@ export default {
       "num_entity_update_forms": "Número de formularios que actualizan entidades",
       "num_repeat_entity_update_forms": "Número de formularios que actualizan entidades en repeticiones",
       "num_entity_create_update_forms": "Número de formularios que crean y actualizan entidades",
-      "num_entities_with_geometry": "Número de entidades con datos geométricos"
+      "num_entities_with_geometry": "Número de entidades con datos geométricos",
+      "num_multi_entity_errors": "Número de errores de entidades repetidas"
     }
   },
   "fr": {
@@ -477,7 +480,8 @@ export default {
       "num_entity_update_forms": "Nombre de formulaires qui mettent à jour des entités",
       "num_repeat_entity_update_forms": "Nombre de formulaires qui mettent à jour des entités avec répétition",
       "num_entity_create_update_forms": "Nombre de formulaires qui créent et mettent à jour des entités",
-      "num_entities_with_geometry": "Nombre d'entités avec données géographiques"
+      "num_entities_with_geometry": "Nombre d'entités avec données géographiques",
+      "num_multi_entity_errors": "Nombre d'erreurs d'entités créées par répétition"
     }
   },
   "id": {
@@ -588,7 +592,8 @@ export default {
       "num_entity_update_forms": "Numero di formulari che aggiornano Entità",
       "num_repeat_entity_update_forms": "Numero di formulari che aggiornano Entità dentro repeats",
       "num_entity_create_update_forms": "Numero di formulari che contemporaneamente creano e aggiornano Entità",
-      "num_entities_with_geometry": "Numero di entità con proprietà geometrica"
+      "num_entities_with_geometry": "Numero di entità con proprietà geometrica",
+      "num_multi_entity_errors": "Numero di errori da Entità ripetute"
     }
   },
   "ja": {
@@ -843,7 +848,8 @@ export default {
       "num_entity_update_forms": "可更新实体的表单数量",
       "num_repeat_entity_update_forms": "可更新重复实体的表单数量",
       "num_entity_create_update_forms": "创建并更新实体的表单数量",
-      "num_entities_with_geometry": "含有地理数据的实体数量"
+      "num_entities_with_geometry": "含有地理数据的实体数量",
+      "num_multi_entity_errors": "重复实体的报错数量"
     }
   },
   "zh-Hant": {
@@ -921,7 +927,17 @@ export default {
       "num_reset_failed_to_pending_count": "使用者重置上傳到 S3 相容儲存失敗的次數",
       "num_entity_creates_sub": "透過提交創建的實體數量",
       "num_entity_creates_api": "透過API建立的實體數量",
-      "num_entity_creates_bulk": "透過批次上傳建立的實體數量"
+      "num_entity_creates_bulk": "透過批次上傳建立的實體數量",
+      "max_geo_per_form": "表單中具有地理資料的提交次數上限",
+      "num_entity_bulk_deletes": "批次刪除實體的稽核日誌事件數量",
+      "num_datasets_with_geometry": "具有地理資料的實體清單數量",
+      "num_entity_create_forms": "可建立實體的表單數量",
+      "num_repeat_entity_create_forms": "可建立重複實體的表單數量",
+      "num_entity_update_forms": "可更新實體的表單數量",
+      "num_repeat_entity_update_forms": "可更新重複實體的表單數量",
+      "num_entity_create_update_forms": "建立並更新實體的表單數量",
+      "num_entities_with_geometry": "含有地理資料的實體數量",
+      "num_multi_entity_errors": "重複實體的錯誤次數"
     }
   }
 }

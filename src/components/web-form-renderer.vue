@@ -16,6 +16,7 @@ except according to the terms contained in the LICENSE file.
       :form-xml="formVersionXml.data"
       :edit-instance="editInstanceOptions"
       :fetch-form-attachment="getAttachment"
+      :track-device="true"
       @submit="handleSubmit"/>
   </template>
 
