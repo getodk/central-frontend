@@ -48,10 +48,11 @@ export const fakePastDate = (dateStrings) => {
   // Fix one race condition with another: make sure the clock has
   // ticked, without having to use setTimeout() and make every
   // function that calls this one change to being async.
-  console.log(new Date(), 'wasting time...');
+  const start = Date.now();
+  console.log('wasting time...');
   let now;
   for (let i=0; i<100000; ++i) now = Date.now();
-  console.log(new Date(), 'time wasted.');
+  console.log('time wasted:', (start - Date.now()));
   const to = now - 1;
   if (from > to) {
     const json = JSON.stringify(dateStrings);
