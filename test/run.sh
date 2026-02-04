@@ -20,6 +20,6 @@ if (( warnings > 2)); then
   echo
   echo "All tests passed, but there were $warnings warnings: see above."
   exit 1
-elif (( warnings > 0 )); then
-  echo "There were $warnings warnings, which is within the accepted threshold."
 fi
+
+echo "There were $warnings warnings, which is within the accepted threshold."
