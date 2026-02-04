@@ -45,15 +45,7 @@ export const fakePastDate = (dateStrings) => {
     .map(s => Date.parse(s));
   if (parsed.length === 0) return faker.date.past().toISOString();
   const from = Math.max(...parsed);
-  // Fix one race condition with another: make sure the clock has
-  // ticked, without having to use setTimeout() and make every
-  // function that calls this one change to being async.
-  const to = Date.now();
-  while(to === Date.now()) /* wend */;
-  if (from > to) {
-    const json = JSON.stringify(dateStrings);
-    const toAsString = new Date(to).toISOString();
-    throw new Error(`one of the specified timestamps is later than the maximum allowed timestamp of ${toAsString}: ${json}; dateStrings=${dateStrings}`);
-  }
+  const to = Date.now() - 1000;
+  while (from > to) { /* wait */ }
   return faker.date.between({ from, to }).toISOString();
 };
