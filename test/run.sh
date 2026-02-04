@@ -14,10 +14,10 @@ NODE_ENV="test" karma start | tee "$output"
 # warnings; and warnings from Karma.
 awk '
   BEGIN { warnings = 0 }
-  /WARN LOG:/          { ++warnings; print $0 }
-  /ERROR LOG:/         { ++warnings; print $0 }
-  /Module Warning/     { ++warnings; print $0 }
-  /WARN [web-server]:/ { ++warnings; print $0 }
+  /WARN LOG:/          { ++warnings; print "WARNING: " $0 }
+  /ERROR LOG:/         { ++warnings; print "WARNING: " $0 }
+  /Module Warning/     { ++warnings; print "WARNING: " $0 }
+  /WARN [web-server]:/ { ++warnings; print "WARNING: " $0 }
   END {
     if(warnings > 2) {
       print "All tests passed, but there were " warnings " warnings: see above."
