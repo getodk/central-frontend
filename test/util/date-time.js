@@ -48,9 +48,11 @@ export const fakePastDate = (dateStrings) => {
   // Fix one race condition with another: make sure the clock has
   // ticked, without having to use setTimeout() and make every
   // function that calls this one change to being async.
+  console.log(new Date(), 'wasting time...');
   let now;
   // eslint-disable-next-line no-plusplus, space-infix-ops
   for (let i=0; i<100000; ++i) now = Date.now();
+  console.log(new Date(), 'time wasted.');
   const to = now - 1;
   if (from > to) {
     const json = JSON.stringify(dateStrings);
