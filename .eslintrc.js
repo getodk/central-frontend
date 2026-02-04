@@ -29,6 +29,7 @@ module.exports = {
     'max-len': 'off',
     'vue/max-len': 'off',
     'newline-per-chained-call': 'off',
+    'no-cond-assign': 'off',
     'no-console': 'off',
     'no-debugger': 'error',
     'no-empty': ['error', { allowEmptyCatch: true }],
