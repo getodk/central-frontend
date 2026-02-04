@@ -52,8 +52,8 @@ module.exports = {
       named: 'never',
       asyncArrow: 'always'
     }],
+    'space-infix-ops': 'off',
     'spaced-comment': 'off',
-    'spaced-infix-ops': 'off',
     'vue/attributes-order': ['error', {
       order: [
         'LIST_RENDERING',
