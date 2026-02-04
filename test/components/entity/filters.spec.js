@@ -237,7 +237,7 @@ describe('EntityFilters', () => {
           creatorId.should.eql([id.toString()]);
         }));
 
-    it.only('re-renders the table', function randomname() {
+    it('re-renders the table', function randomname() {
       this.timeout(16000);
 
       testData.extendedEntities.createPast(250);
