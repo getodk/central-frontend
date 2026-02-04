@@ -806,26 +806,19 @@ class MockHttp {
     // this.mount() and this.route() are allowed to result in requests, but if
     // they do, this.request() should not be specified.
     if (this._requestResponseLog.length === 0) return;
-    this._listRequestResponseLog('request sent before callback');
+    this._listRequestResponseLog();
     throw new Error('a request was sent before the request() callback was run');
   }
 
   /* eslint-disable no-console */
 
-  _listRequestResponseLog(reason) {
-    console.error(`[${reason}] request/response log for the last series executed:`);
+  _listRequestResponseLog() {
+    console.error('request/response log for the last series executed:');
     if (this._requestResponseLog.length === 0) {
       console.error('(empty)');
     } else {
       for (const entry of this._requestResponseLog)
         console.error(entry);
-    }
-    console.error('expected _orderedResponses:');
-    if (this._orderedResponses.length === 0) {
-      console.error('(empty)');
-    } else {
-      for (const entry of this._orderedResponses)
-        console.error(entry.toString(), entry.data?.toString());
     }
   }
 
@@ -848,13 +841,13 @@ class MockHttp {
     }
 
     if (this._requestWithoutResponse) {
-      this._listRequestResponseLog('no response specified for request');
+      this._listRequestResponseLog();
       throw new Error('request without response: no response specified for request');
     } else if (this._orderedResponsesRequested < this._orderedResponses.length) {
-      this._listRequestResponseLog('not all responses were requested');
+      this._listRequestResponseLog();
       throw new Error('response without request: not all responses were requested');
     } else if (this._orderedResponsesReturned !== this._orderedResponses.length) {
-      this._listRequestResponseLog('not all responses returned in time');
+      this._listRequestResponseLog();
       throw new Error('All responses were requested, but not all were returned in time. By default, all responses are expected to be returned in microtasks, before the next task. You may need to use the pollWork option of afterResponses().');
     }
   }
