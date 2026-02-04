@@ -28,10 +28,12 @@ module.exports = {
     'max-len': 'off',
     'vue/max-len': 'off',
     'newline-per-chained-call': 'off',
+    'no-console': 'off',
     'no-debugger': 'error',
     'no-empty': ['error', { allowEmptyCatch: true }],
     'no-multiple-empty-lines': ['error', { max: 3 }],
     'no-nested-ternary': 'off',
+    'no-plusplus': 'off',
     'no-restricted-syntax': ['error', 'LabeledStatement', 'WithStatement'],
     'no-underscore-dangle': 'off',
     'nonblock-statement-body-position': 'off',
@@ -51,6 +53,7 @@ module.exports = {
       asyncArrow: 'always'
     }],
     'spaced-comment': 'off',
+    'spaced-infix-ops': 'off',
     'vue/attributes-order': ['error', {
       order: [
         'LIST_RENDERING',
