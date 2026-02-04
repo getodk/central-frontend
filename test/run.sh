@@ -13,13 +13,13 @@ NODE_ENV="test" karma start | tee "$output"
 # Search for: warnings from console.warn(), including Vue warnings; Sass
 # warnings; and warnings from Karma.
 awk '
-  BEGIN { count = 0 }
-  /WARN LOG:/          { ++count }
-  /ERROR LOG:/         { ++count }
-  /Module Warning/     { ++count }
-  /WARN [web-server]:/ { ++count }
+  BEGIN { warnings = 0 }
+  /WARN LOG:/          { ++warnings }
+  /ERROR LOG:/         { ++warnings }
+  /Module Warning/     { ++warnings }
+  /WARN [web-server]:/ { ++warnings }
   END {
-    if(count > 2) {
+    if(warnings > 2) {
       print "All tests passed, but there were " warnings " warnings: see above."
       exit 1
     }
