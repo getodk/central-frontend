@@ -46,6 +46,8 @@ export const fakePastDate = (dateStrings) => {
   if (parsed.length === 0) return faker.date.past().toISOString();
   const from = Math.max(...parsed);
   let to;
-  while (from > (to = Date.now() - 1000)) { /* wait */ }
+  do {
+    to = Date.now() - 1000;
+  } while (from > to);
   return faker.date.between({ from, to }).toISOString();
 };
