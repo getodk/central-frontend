@@ -34,9 +34,6 @@ webpackConfigForKarma.module.rules.push({
   test: /\.xml$/,
   use: 'raw-loader'
 });
-// This makes karma fail if webpack errors, which seems like it should
-// be enabled (and be the default anyway), but causes problems:
-//webpackConfigForKarma.optimization.emitOnErrors = false;
 
 module.exports = (config) => {
   config.set({
@@ -62,31 +59,17 @@ module.exports = (config) => {
       'test/index.js': ['webpack', 'sourcemap']
     },
     webpack: webpackConfigForKarma,
-    browsers: ['ChromeHeadlessNoSandbox'],
-    captureTimeout: 60000,
-
-    browserSocketTimeout: 210000,
-    browserDisconnectTimeout: 210000,
-    browserDisconnectTolerance: 3,
-    browserNoActivityTimeout: 210000,
-
+    browsers: ['ChromeHeadless'],
     reporters: ['spec'],
     singleRun: true,
     client: {
-      mocha: {
-        grep: process.env.TEST_PATTERN || '.',
-        timeout: 8000,
-      },
+      mocha: { grep: process.env.TEST_PATTERN || '.' }
     },
     customLaunchers: {
       ChromeDebugging: {
         base: 'Chrome',
         flags: ['--remote-debugging-port=8333']
-      },
-      ChromeHeadlessNoSandbox: {
-        base: 'ChromeHeadless',
-        flags: ['--no-sandbox', '--disable-dev-shm-usage'],
-      },
+      }
     }
   });
 };
