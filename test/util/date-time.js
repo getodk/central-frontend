@@ -48,17 +48,12 @@ export const fakePastDate = (dateStrings) => {
   // Fix one race condition with another: make sure the clock has
   // ticked, without having to use setTimeout() and make every
   // function that calls this one change to being async.
-  const start = Date.now();
-  console.log('wasting time...');
-  let now;
-  for (let i=0; i<100000; ++i) now = Date.now();
-  console.log('time wasted:', (start - Date.now()));
-  const to = now - 1;
+  const to = Date.now();
+  while(to === Date.now()) /* wend */;
   if (from > to) {
     const json = JSON.stringify(dateStrings);
     const toAsString = new Date(to).toISOString();
-    const isoNow = new Date(now).toISOString();
-    throw new Error(`one of the specified timestamps is later than the maximum allowed timestamp of ${toAsString}: ${json}; isoNow=${isoNow}; dateStrings=${dateStrings}`);
+    throw new Error(`one of the specified timestamps is later than the maximum allowed timestamp of ${toAsString}: ${json}; dateStrings=${dateStrings}`);
   }
   return faker.date.between({ from, to }).toISOString();
 };
