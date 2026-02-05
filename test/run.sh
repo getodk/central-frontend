@@ -23,6 +23,6 @@ awk '
       print "All tests passed, but there were " warnings " warnings: see above."
       exit 1
     }
-    echo "There were " warnings " warnings, which is within the accepted threshold."
+    print "There were " warnings " warnings, which is within the accepted threshold."
   }
 ' "$output"
