@@ -816,7 +816,7 @@ describe('SubmissionList', () => {
     });
   });
 
-  describe('pagination', function() { // eslint-disable-line func-names
+  describe('pagination', () => {
     const checkIds = (component, count, offset = 0) => {
       const rows = component.findAllComponents(SubmissionDataRow);
       rows.length.should.equal(count);
