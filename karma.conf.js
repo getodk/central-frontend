@@ -66,8 +66,8 @@ module.exports = (config) => {
     //captureTimeout: 60000,
 
     //browserSocketTimeout: 210000,
-    //browserDisconnectTimeout: 210000,
-    //browserDisconnectTolerance: 3,
+    browserDisconnectTimeout: 20_000,
+    browserDisconnectTolerance: 3,
     //browserNoActivityTimeout: 210000,
 
     reporters: ['spec'],
