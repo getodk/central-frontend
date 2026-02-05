@@ -38,12 +38,13 @@ import {
 	getVertexByIndex,
 	updateVertexCoordinate,
 } from '@/components/common/map/vertex-geometry.ts';
-import type { FeatureCollection, Feature as GeoJsonFeature } from 'geojson';
+import type { Feature as GeoJsonFeature, FeatureCollection } from 'geojson';
 import { Map, View } from 'ol';
 import { Attribution, Zoom } from 'ol/control';
 import type { Coordinate } from 'ol/coordinate';
 import Feature from 'ol/Feature';
 import { LineString, Polygon, SimpleGeometry } from 'ol/geom';
+import { defaults as defaultInteractions } from 'ol/interaction';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import WebGLVectorLayer from 'ol/layer/WebGLVector';
@@ -133,6 +134,7 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 				extent: getProjection(DEFAULT_VIEW_PROJECTION)?.getExtent(),
 			}),
 			controls: [new Zoom(), new Attribution({ collapsible: false })],
+			interactions: defaultInteractions({ doubleClickZoom: false }),
 		});
 
 		mapViewControls = useMapViewControls(mapInstance);
@@ -199,8 +201,8 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 			);
 		}
 
-		if (currentMode.interactions.longPress) {
-			mapInteractions.setupLongPressPoint(featuresSource, (feature) =>
+		if (currentMode.interactions.tapToAdd) {
+			mapInteractions.setupTapToAddVertex(featuresSource, (feature) =>
 				handlePointPlacement(feature)
 			);
 
@@ -468,9 +470,9 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 		return currentMode.capabilities.canRemoveCurrentLocation && !!mapFeatures?.getSavedFeature();
 	};
 
-	const canLongPressAndDrag = () => {
-		const { longPress, dragFeature, dragFeatureAndVertex } = currentMode.interactions;
-		return longPress && (dragFeature || dragFeatureAndVertex);
+	const canTapToAddAndDrag = () => {
+		const { tapToAdd, dragFeature, dragFeatureAndVertex } = currentMode.interactions;
+		return tapToAdd && (dragFeature || dragFeatureAndVertex);
 	};
 
 	const canOpenAdvancedPanel = () => {
@@ -554,7 +556,7 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 		selectSavedFeature: () => mapFeatures?.selectFeature(mapFeatures?.getSavedFeature()),
 		unselectFeature,
 
-		canLongPressAndDrag,
+		canTapToAddAndDrag,
 		canViewProperties: () => currentMode.capabilities.canViewProperties,
 		canOpenAdvancedPanel,
 		shouldShowMapOverlay,

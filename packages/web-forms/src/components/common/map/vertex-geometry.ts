@@ -87,9 +87,51 @@ export const isCoordsEqual = (coordA: Coordinate | undefined, coordB: Coordinate
 	return coordA && coordB && coordA[0] === coordB[0] && coordA[1] === coordB[1];
 };
 
-const isOnLine = (squaredDist: number, resolution: number, hitTolerance: number) => {
+const isWithinHitTolerance = (squaredDist: number, resolution: number, hitTolerance: number) => {
 	const tolerance = resolution * hitTolerance;
 	return squaredDist <= tolerance ** 2;
+};
+
+export const isNearVertex = (
+	feature: Feature | undefined,
+	point: Coordinate,
+	resolution: number,
+	hitTolerance: number
+): boolean => {
+	const geometry = feature?.getGeometry();
+	if (!geometry || (!(geometry instanceof LineString) && !(geometry instanceof Polygon))) {
+		return false;
+	}
+
+	return getFlatCoordinates(geometry).some((vertex) => {
+		const { deltaX, deltaY } = getDeltaBetweenPoints(point, vertex);
+		const squaredDist = getDistanceBetweenPoints(deltaX, deltaY);
+		return isWithinHitTolerance(squaredDist, resolution, hitTolerance);
+	});
+};
+
+export const isOnFeatureEdge = (
+	feature: Feature | undefined,
+	point: Coordinate,
+	resolution: number,
+	hitTolerance: number
+): boolean => {
+	const geometry = feature?.getGeometry();
+	if (geometry instanceof LineString) {
+		return true;
+	}
+
+	if (geometry instanceof Polygon) {
+		const ring = getFlatCoordinates(geometry);
+		if (ring.length < 2) {
+			return false;
+		}
+
+		const { squaredDist } = getClosestSegmentAndIndex(ring, point);
+		return isWithinHitTolerance(squaredDist, resolution, hitTolerance);
+	}
+
+	return false;
 };
 
 export const addTraceVertex = (
@@ -111,7 +153,7 @@ export const addTraceVertex = (
 	}
 
 	const { segmentIndex, closest, squaredDist } = getClosestSegmentAndIndex(coords, newVertex);
-	if (segmentIndex >= 0 && isOnLine(squaredDist, resolution, hitTolerance)) {
+	if (segmentIndex >= 0 && isWithinHitTolerance(squaredDist, resolution, hitTolerance)) {
 		coords.splice(segmentIndex + 1, 0, closest);
 	} else {
 		coords.push(newVertex);
@@ -143,7 +185,7 @@ export const addShapeVertex = (
 		ring.push(newVertex);
 	} else {
 		const { segmentIndex, closest, squaredDist } = getClosestSegmentAndIndex(ring, newVertex);
-		if (segmentIndex >= 0 && isOnLine(squaredDist, resolution, hitTolerance)) {
+		if (segmentIndex >= 0 && isWithinHitTolerance(squaredDist, resolution, hitTolerance)) {
 			ring.splice(segmentIndex + 1, 0, closest);
 		} else {
 			ring.splice(ring.length - 1, 0, newVertex);

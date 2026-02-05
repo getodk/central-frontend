@@ -37,6 +37,7 @@ const isFullScreen = ref(false);
 const isAdvancedPanelOpen = ref(false);
 const confirmDeleteAction = ref(false);
 const isUpdateCoordsDialogOpen = ref(false);
+const pointPlaced = ref(false);
 const selectedVertex = ref<Coordinate | undefined>();
 const showErrorStyle = inject<ComputedRef<boolean>>(
 	QUESTION_HAS_ERROR,
@@ -46,7 +47,7 @@ const showErrorStyle = inject<ComputedRef<boolean>>(
 const mapHandler = useMapBlock(
 	{ mode: props.mode, singleFeatureType: props.singleFeatureType },
 	{
-		onFeaturePlacement: () => emitSavedFeature(),
+		onFeaturePlacement: () => onFeaturePlacement(),
 		onVertexSelect: (vertex) => (selectedVertex.value = vertex),
 	}
 );
@@ -98,6 +99,8 @@ watch(
 	(newValue) => mapHandler.setupMapInteractions(newValue)
 );
 
+const onFeaturePlacement = () => emitSavedFeature();
+
 const handleEscapeKey = (event: KeyboardEvent) => {
 	if (event.key === 'Escape' && isFullScreen.value) {
 		isFullScreen.value = false;
@@ -105,7 +108,9 @@ const handleEscapeKey = (event: KeyboardEvent) => {
 };
 
 const emitSavedFeature = () => {
-	emit('save', mapHandler.getSavedFeatureValue() ?? '');
+	const value = mapHandler.getSavedFeatureValue() ?? '';
+	pointPlaced.value = !!value.length;
+	emit('save', value);
 };
 
 const saveSelection = () => {
@@ -175,15 +180,15 @@ const saveAdvancedPanelCoords = (newCoords: Coordinate) => {
 				/>
 
 				<Message
-					v-if="!disabled && mapHandler.canLongPressAndDrag()"
+					v-if="!disabled && mapHandler.canTapToAddAndDrag()"
 					severity="contrast"
 					closable
 					size="small"
 					:class="{ 'map-message': true, 'above-secondary-controls': showSecondaryControls }"
 				>
 					<!-- TODO: translations -->
-					<span v-if="savedFeatureValue">Press and drag to move a point</span>
-					<span v-else>Long press to place a point</span>
+					<span v-if="pointPlaced">Press and drag to move a point</span>
+					<span v-else>Tap to place a point</span>
 				</Message>
 			</div>
 

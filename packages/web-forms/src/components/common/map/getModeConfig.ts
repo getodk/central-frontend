@@ -36,7 +36,7 @@ export interface ModeCapabilities {
 interface ModeConfig {
 	interactions: {
 		select: boolean;
-		longPress: boolean;
+		tapToAdd: boolean;
 		dragFeature: boolean;
 		dragFeatureAndVertex: boolean;
 	};
@@ -48,7 +48,7 @@ export const getModeConfig = (mode: Mode): ModeConfig => {
 	const defaultConfig = {
 		interactions: {
 			select: false,
-			longPress: false,
+			tapToAdd: false,
 			dragFeature: false,
 			dragFeatureAndVertex: false,
 		},
@@ -98,7 +98,7 @@ export const getModeConfig = (mode: Mode): ModeConfig => {
 		return {
 			interactions: {
 				...defaultConfig.interactions,
-				longPress: true,
+				tapToAdd: true,
 				dragFeature: true,
 			},
 			capabilities: {
@@ -115,7 +115,7 @@ export const getModeConfig = (mode: Mode): ModeConfig => {
 			interactions: {
 				...defaultConfig.interactions,
 				select: true,
-				longPress: true,
+				tapToAdd: true,
 				dragFeatureAndVertex: true,
 			},
 			capabilities: {

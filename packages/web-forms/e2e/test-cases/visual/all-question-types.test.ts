@@ -126,7 +126,7 @@ test.describe('All Question Types (Visual)', () => {
 		});
 
 		test('adds a new point elsewhere, removes saved point', async () => {
-			await formPage.map.longPressMap(mapComponent, 100, 100);
+			await formPage.map.tapToAddPoint(mapComponent, 100, 100);
 			await formPage.map.expectMapScreenshot(mapComponent, 'placement-map-new-point-saved.png');
 
 			await formPage.map.removeSavedPoint(mapComponent);
@@ -184,10 +184,10 @@ test.describe('All Question Types (Visual)', () => {
 			await formPage.map.expectMapScreenshot(mapComponent, 'geoshape-initial-state.png');
 			await formPage.waitForNetworkIdle();
 			await formPage.map.scrollMapIntoView(mapComponent);
-			await formPage.map.longPressMap(mapComponent, 100, 100);
-			await formPage.map.longPressMap(mapComponent, 150, -50);
+			await formPage.map.tapToAddPoint(mapComponent, 100, 100);
+			await formPage.map.tapToAddPoint(mapComponent, 150, -50);
 			await formPage.map.expectMapScreenshot(mapComponent, 'geoshape-uncompleted-polygon.png');
-			await formPage.map.longPressMap(mapComponent, 50, -150);
+			await formPage.map.tapToAddPoint(mapComponent, 50, -150);
 			await formPage.map.expectMapScreenshot(mapComponent, 'geoshape-autoclose-polygon.png');
 		});
 	});
@@ -213,10 +213,10 @@ test.describe('All Question Types (Visual)', () => {
 			await formPage.map.expectMapScreenshot(mapComponent, 'geotrace-initial-state.png');
 			await formPage.waitForNetworkIdle();
 			await formPage.map.scrollMapIntoView(mapComponent);
-			await formPage.map.longPressMap(mapComponent, 100, 100);
-			await formPage.map.longPressMap(mapComponent, 150, -50);
+			await formPage.map.tapToAddPoint(mapComponent, 100, 100);
+			await formPage.map.tapToAddPoint(mapComponent, 150, -50);
 			await formPage.map.expectMapScreenshot(mapComponent, 'geotrace-two-points.png');
-			await formPage.map.longPressMap(mapComponent, 50, -75);
+			await formPage.map.tapToAddPoint(mapComponent, 50, -75);
 			await formPage.map.expectMapScreenshot(mapComponent, 'geoshape-three-points.png');
 		});
 	});

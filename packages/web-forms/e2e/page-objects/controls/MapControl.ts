@@ -58,7 +58,7 @@ export class MapControl {
 		await this.page.mouse.up();
 	}
 
-	async longPressMap(mapComponent: Locator, moveX: number, moveY: number) {
+	async tapToAddPoint(mapComponent: Locator, moveX: number, moveY: number) {
 		const box = await mapComponent.locator(this.MAP_CONTAINER_SELECTOR).boundingBox();
 		if (!box) {
 			return;
@@ -69,7 +69,7 @@ export class MapControl {
 
 		await this.page.mouse.move(centerX + moveX, centerY + moveY);
 		await this.page.mouse.down();
-		await this.page.waitForTimeout(1400); // Press and hold
+		await this.page.waitForTimeout(200); // Press
 		await this.page.mouse.up();
 		await this.page.waitForTimeout(300); // Process point
 	}

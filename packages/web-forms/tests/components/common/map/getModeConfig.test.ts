@@ -8,7 +8,7 @@ describe('getModeConfig', () => {
 		expect(config).toEqual({
 			interactions: {
 				select: true,
-				longPress: false,
+				tapToAdd: false,
 				dragFeature: false,
 				dragFeatureAndVertex: false,
 			},
@@ -34,7 +34,7 @@ describe('getModeConfig', () => {
 		expect(config).toEqual({
 			interactions: {
 				select: false,
-				longPress: false,
+				tapToAdd: false,
 				dragFeature: false,
 				dragFeatureAndVertex: false,
 			},
@@ -60,7 +60,7 @@ describe('getModeConfig', () => {
 		expect(config).toEqual({
 			interactions: {
 				select: false,
-				longPress: true,
+				tapToAdd: true,
 				dragFeature: true,
 				dragFeatureAndVertex: false,
 			},
@@ -86,7 +86,7 @@ describe('getModeConfig', () => {
 		expect(config).toEqual({
 			interactions: {
 				select: true,
-				longPress: true,
+				tapToAdd: true,
 				dragFeature: false,
 				dragFeatureAndVertex: true,
 			},
@@ -113,7 +113,7 @@ describe('getModeConfig', () => {
 		expect(config).toEqual({
 			interactions: {
 				select: false,
-				longPress: false,
+				tapToAdd: false,
 				dragFeature: false,
 				dragFeatureAndVertex: false,
 			},
