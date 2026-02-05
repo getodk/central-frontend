@@ -73,10 +73,7 @@ module.exports = (config) => {
     reporters: ['spec'],
     singleRun: true,
     client: {
-      mocha: {
-        grep: process.env.TEST_PATTERN || '.',
-        timeout: 8000,
-      },
+      mocha: { grep: process.env.TEST_PATTERN || '.' }
     },
     customLaunchers: {
       ChromeDebugging: {
