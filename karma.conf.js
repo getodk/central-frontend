@@ -14,6 +14,7 @@ const { resolve } = require('node:path');
 const webpackConfig = require('./node_modules/@vue/cli-service/webpack.config.js');
 
 const { entry, ...webpackConfigForKarma } = webpackConfig;
+webpackConfigForKarma.mode = 'none';
 webpackConfigForKarma.plugins.push(VueI18nPlugin({
   include: resolve(__dirname, './src/locales/**'),
   compositionOnly: false,
