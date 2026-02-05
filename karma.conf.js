@@ -65,7 +65,7 @@ module.exports = (config) => {
     browsers: ['ChromeHeadlessNoSandbox'],
     //captureTimeout: 60000,
 
-    browserSocketTimeout: 210000,
+    //browserSocketTimeout: 210000,
     browserDisconnectTimeout: 210000,
     browserDisconnectTolerance: 3,
     browserNoActivityTimeout: 210000,
