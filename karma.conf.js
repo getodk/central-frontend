@@ -63,7 +63,7 @@ module.exports = (config) => {
     },
     webpack: webpackConfigForKarma,
     browsers: ['ChromeHeadlessNoSandbox'],
-    captureTimeout: 60000,
+    //captureTimeout: 60000,
 
     browserSocketTimeout: 210000,
     browserDisconnectTimeout: 210000,
