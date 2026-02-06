@@ -12,15 +12,21 @@ describe('util/sort', () => {
   });
 
   describe('sort forms', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       testData.extendedProjects.createPast(1);
-      testData.extendedForms.createPast(1, { name: 'C', lastSubmission: ago({ days: 15 }).toISO() });
-      testData.extendedForms.createPast(1, { name: 'D', lastSubmission: ago({ days: 20 }).toISO() });
-      testData.extendedForms.createPast(1, { name: 'E', lastSubmission: ago({ days: 10 }).toISO() });
-      testData.extendedForms.createPast(1, { name: 'F', lastSubmission: ago({ days: 5 }).toISO() });
-      testData.extendedForms.createPast(1, { name: 'G', lastSubmission: ago({ days: 12 }).toISO() });
-      testData.extendedForms.createPast(1, { name: 'A' });
-      testData.extendedForms.createPast(1, { name: 'B' });
+      for (const form of [
+        { name: 'C', lastSubmission: ago({ days: 15 }).toISO() },
+        { name: 'D', lastSubmission: ago({ days: 20 }).toISO() },
+        { name: 'E', lastSubmission: ago({ days: 10 }).toISO() },
+        { name: 'F', lastSubmission: ago({ days: 5 }).toISO() },
+        { name: 'G', lastSubmission: ago({ days: 12 }).toISO() },
+        { name: 'A' },
+        { name: 'B' },
+      ]) {
+        // eslint-disable-next-line no-use-before-define
+        await timeChange(); // ensure createdAt dates are all different
+        testData.extendedForms.createPast(1, form);
+      }
     });
 
     it('can sort forms by latest activity including breaking ties (null submissions) alphabetically', () => {
@@ -85,3 +91,9 @@ describe('util/sort', () => {
     });
   });
 });
+
+async function timeChange() {
+  const start = Date.now();
+  // eslint-disable-next-line no-promise-executor-return
+  while (Date.now() === start) await new Promise(resolve => setTimeout(resolve, 1));
+}
