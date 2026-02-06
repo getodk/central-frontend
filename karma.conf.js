@@ -60,6 +60,8 @@ module.exports = (config) => {
     },
     webpack: webpackConfigForKarma,
     browsers: ['ChromeHeadless'],
+    browserDisconnectTimeout: 300_000,
+    browserDisconnectTolerance: 3,
     reporters: ['spec'],
     singleRun: true,
     client: {
