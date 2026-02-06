@@ -19,6 +19,7 @@ module.exports = {
     'class-methods-use-this': 'off',
     'comma-dangle': ['error', 'only-multiline'],
     curly: 'off',
+    'keyword-spacing': 'off',
     'implicit-arrow-linebreak': 'off',
     'import/first': 'off',
     'lines-between-class-members': ['error', 'always', {
@@ -28,11 +29,13 @@ module.exports = {
     'max-len': 'off',
     'vue/max-len': 'off',
     'newline-per-chained-call': 'off',
-    'no-console': 'error',
+    'no-cond-assign': 'off',
+    'no-console': 'off',
     'no-debugger': 'error',
     'no-empty': ['error', { allowEmptyCatch: true }],
     'no-multiple-empty-lines': ['error', { max: 3 }],
     'no-nested-ternary': 'off',
+    'no-plusplus': 'off',
     'no-restricted-syntax': ['error', 'LabeledStatement', 'WithStatement'],
     'no-underscore-dangle': 'off',
     'nonblock-statement-body-position': 'off',
@@ -51,6 +54,7 @@ module.exports = {
       named: 'never',
       asyncArrow: 'always'
     }],
+    'space-infix-ops': 'off',
     'spaced-comment': 'off',
     'vue/attributes-order': ['error', {
       order: [

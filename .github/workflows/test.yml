@@ -1,0 +1,31 @@
+name: Test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        x: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
+        y: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 22.21.1
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run lint
+    - uses: browser-actions/setup-chrome@v2
+    - run: npm run test
+    - if: always()
+      run: git status
+    - if: always()
+      run: git diff
+    - if: always()
+      run: tree
