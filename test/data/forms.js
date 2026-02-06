@@ -61,17 +61,17 @@ const forms = dataStore({
     // If createdAt is supplied, use that.  Otherwise if publishedAt
     // was specified, set createdAt to publishedAt in order to ensure
     // that createdAt is not after publishedAt.
-    createdAt = !draft && publishedAt != null
-        ? publishedAt
-        : (inPast
-          ? fakePastDate([lastCreatedAt, project.createdAt, createdBy.createdAt])
-          : new Date().toISOString()),
     publishedAt = undefined,
     enketoOnceId = !draft ? 'zyx' : null,
     state = 'open',
     createdBy = extendedUsers.size !== 0
       ? extendedUsers.first()
       : extendedUsers.createPast(1).last(),
+    createdAt = !draft && publishedAt != null
+      ? publishedAt
+      : (inPast
+        ? fakePastDate([lastCreatedAt, project.createdAt, createdBy.createdAt])
+        : new Date().toISOString()),
     fields = [testDataFields.string('/s')],
     entityRelated = false,
     publicLinks = 0,

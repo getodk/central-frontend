@@ -85,9 +85,3 @@ describe('util/sort', () => {
     });
   });
 });
-
-async function timeChange() {
-  const start = Date.now();
-  // eslint-disable-next-line no-promise-executor-return
-  while (Date.now() === start) await new Promise(resolve => setTimeout(resolve, 1));
-}
