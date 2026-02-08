@@ -23,6 +23,10 @@ webpackConfigForKarma.plugins.push(VueI18nPlugin({
   fullInstall: true,
   dropMessageCompiler: true
 }));
+// eslint-disable-next-line arrow-body-style
+webpackConfigForKarma.plugins = webpackConfigForKarma.plugins.filter(plugin => {
+  return plugin.constructor.name !== 'HtmlWebpackPlugin';
+});
 webpackConfigForKarma.devtool = 'inline-source-map';
 // See additional warning information.
 webpackConfigForKarma.stats = {
