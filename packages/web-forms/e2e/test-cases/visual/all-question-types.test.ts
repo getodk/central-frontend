@@ -119,7 +119,7 @@ test.describe('All Question Types (Visual)', () => {
 
 		test('renders overlay and taps on button to start the action', async () => {
 			await formPage.map.expectMapScreenshot(mapComponent, 'placement-map-initial-state.png');
-			await formPage.map.getLocationFromOverlay(mapComponent);
+			await formPage.map.centerCurrentLocation(mapComponent);
 			await formPage.waitForNetworkIdle();
 			await formPage.map.scrollMapIntoView(mapComponent);
 			await formPage.map.expectMapScreenshot(mapComponent, 'placement-map-current-location.png');

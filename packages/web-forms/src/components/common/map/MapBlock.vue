@@ -63,6 +63,30 @@ const showSecondaryControls = computed(() => {
 	return !props.disabled && (mapHandler.canUndoChange() || mapHandler.canDeleteFeatureOrVertex());
 });
 
+const instructionMessage = computed(() => {
+	if (props.disabled) {
+		return null;
+	}
+
+	if (mapHandler.canDragFeatureAndVertex()) {
+		// TODO: translations
+		return {
+			placed: 'Press and drag to move a point',
+			default: 'Tap to place a point',
+		};
+	}
+
+	if (mapHandler.canDragFeature()) {
+		// TODO: translations
+		return {
+			placed: 'Tap to move point',
+			default: 'Use the location button to center on your current location',
+		};
+	}
+
+	return null;
+});
+
 onMounted(() => {
 	if (!mapElement.value || !mapHandler) {
 		return;
@@ -180,15 +204,14 @@ const saveAdvancedPanelCoords = (newCoords: Coordinate) => {
 				/>
 
 				<Message
-					v-if="!disabled && mapHandler.canTapToAddAndDrag()"
+					v-if="instructionMessage"
 					severity="contrast"
 					closable
 					size="small"
 					:class="{ 'map-message': true, 'above-secondary-controls': showSecondaryControls }"
 				>
-					<!-- TODO: translations -->
-					<span v-if="pointPlaced">Press and drag to move a point</span>
-					<span v-else>Tap to place a point</span>
+					<span v-if="pointPlaced">{{ instructionMessage.placed }}</span>
+					<span v-else>{{ instructionMessage.default }}</span>
 				</Message>
 			</div>
 

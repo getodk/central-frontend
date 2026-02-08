@@ -105,7 +105,6 @@ export const getModeConfig = (mode: Mode): ModeConfig => {
 				...defaultConfig.capabilities,
 				canRemoveCurrentLocation: true,
 				canSaveCurrentLocation: false,
-				canShowMapOverlay: true,
 			},
 		};
 	}

@@ -154,7 +154,7 @@ const displayState = computed(() => {
 		</div>
 
 		<div class="map-status-container">
-			<div class="map-status">
+			<div v-if="!isCapturing && displayState" class="map-status">
 				<IconSVG
 					:name="displayState.icon"
 					:variant="displayState.highlight ? 'success' : 'base'"

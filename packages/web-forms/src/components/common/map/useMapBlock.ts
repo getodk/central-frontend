@@ -470,9 +470,12 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 		return currentMode.capabilities.canRemoveCurrentLocation && !!mapFeatures?.getSavedFeature();
 	};
 
-	const canTapToAddAndDrag = () => {
-		const { tapToAdd, dragFeature, dragFeatureAndVertex } = currentMode.interactions;
-		return tapToAdd && (dragFeature || dragFeatureAndVertex);
+	const canDragFeatureAndVertex = () => {
+		return currentMode.interactions.tapToAdd && currentMode.interactions.dragFeatureAndVertex;
+	};
+
+	const canDragFeature = () => {
+		return currentMode.interactions.tapToAdd && currentMode.interactions.dragFeature;
 	};
 
 	const canOpenAdvancedPanel = () => {
@@ -556,7 +559,8 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 		selectSavedFeature: () => mapFeatures?.selectFeature(mapFeatures?.getSavedFeature()),
 		unselectFeature,
 
-		canTapToAddAndDrag,
+		canDragFeatureAndVertex,
+		canDragFeature,
 		canViewProperties: () => currentMode.capabilities.canViewProperties,
 		canOpenAdvancedPanel,
 		shouldShowMapOverlay,

@@ -70,7 +70,7 @@ describe('getModeConfig', () => {
 				canLoadMultiFeatures: false,
 				canViewProperties: false,
 				canSelectFeatureOrVertex: false,
-				canShowMapOverlay: true,
+				canShowMapOverlay: false,
 				canShowMapOverlayOnError: false,
 				canUndoLastChange: false,
 				canDeleteFeature: false,
