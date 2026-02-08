@@ -27,7 +27,7 @@ describe.each<InstanceRoundTripCase>([
 	const scenarioFromCurrentInstanceState = async (scenario: Scenario): Promise<Scenario> => {
 		switch (initializationMode) {
 			case 'edit':
-				return scenario.proposed_editCurrentInstanceState();
+				return scenario.editCurrentInstance();
 
 			case 'restore':
 				return scenario.proposed_serializeAndRestoreInstanceState();

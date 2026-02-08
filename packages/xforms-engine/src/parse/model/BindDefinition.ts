@@ -82,7 +82,7 @@ export class BindDefinition<T extends BindType = BindType> extends DependencyCon
 		const parentNodeset = nodeset.replace(/\/[^/]+$/, '');
 
 		this.parentNodeset = parentNodeset.length > 1 ? parentNodeset : null;
-		this.preload = BindPreloadDefinition.from(bindElement);
+		this.preload = BindPreloadDefinition.from(this, bindElement);
 		this.calculate = BindComputationExpression.forComputation(this, 'calculate');
 		this.readonly = BindComputationExpression.forComputation(this, 'readonly');
 		this.relevant = BindComputationExpression.forComputation(this, 'relevant');

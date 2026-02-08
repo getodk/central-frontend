@@ -144,6 +144,28 @@ describe('`jr:preload`', () => {
 		});
 	});
 
+	describe('editing', () => {
+		it('does not update value when editing a property', async () => {
+			const scenario = await Scenario.init(
+				'Preload start date',
+				html(
+					head(
+						title('Preload start date'),
+						model(
+							mainInstance(t('data id="preload-attribute"', t('element'))),
+							bind('/data/element').type('xsd:dateTime').preload('timestamp').preloadParams('start')
+						)
+					),
+					body()
+				)
+			);
+			const originalValue = scenario.answerOf('/data/element').toString();
+
+			const edited = await scenario.editCurrentInstance();
+			expect(edited.answerOf('/data/element').toString()).to.equal(originalValue);
+		});
+	});
+
 	describe('property', () => {
 		const init = async (preloadProperties: PreloadProperties) => {
 			return await Scenario.init(

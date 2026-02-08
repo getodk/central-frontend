@@ -1217,7 +1217,7 @@ export class Scenario {
 	}
 
 	/** @see {@link editInstance} */
-	async proposed_editCurrentInstanceState(): Promise<this> {
+	async editCurrentInstance(): Promise<this> {
 		const instance = await editInstance(this.form, this.instanceRoot);
 
 		return this.fork(instance);

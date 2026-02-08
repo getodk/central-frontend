@@ -2,6 +2,7 @@ import { JAVAROSA_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
 import type { PartiallyKnownString } from '@getodk/common/types/string/PartiallyKnownString.ts';
 import type { AttributeContext } from '../../instance/internal-api/AttributeContext.ts';
 import type { InstanceValueContext } from '../../instance/internal-api/InstanceValueContext.ts';
+import type { BindDefinition } from './BindDefinition.ts';
 import type { BindElement } from './BindElement.ts';
 import { XFORM_EVENT, type XFormEvent } from './Event.ts';
 
@@ -71,19 +72,28 @@ const getPreloadInput = (bindElement: BindElement): AnyPreloadInput | null => {
  * - {@link parameter}, an associated `jr:preloadParams` value
  */
 export class BindPreloadDefinition<Type extends PreloadType> implements PreloadInput<Type> {
-	static from(bindElement: BindElement): AnyBindPreloadDefinition | null {
+	static from(
+		definition: BindDefinition,
+		bindElement: BindElement
+	): AnyBindPreloadDefinition | null {
 		const input = getPreloadInput(bindElement);
 
 		if (input == null) {
 			return null;
 		}
 
-		return new this(input);
+		const type = input.type;
+		const parameter = input.parameter;
+		let event;
+		if (definition.form.xformDOM.isInstanceID(bindElement.getAttribute('nodeset'))) {
+			event = XFORM_EVENT.odkInstanceLoad;
+		} else if (type === 'timestamp' && parameter === 'end') {
+			event = XFORM_EVENT.xformsRevalidate;
+		} else {
+			event = XFORM_EVENT.odkInstanceFirstLoad;
+		}
+		return new this(type, parameter, event);
 	}
-
-	readonly type: Type;
-	readonly parameter: PreloadParameter<Type>;
-	readonly event: XFormEvent;
 
 	getValue(context: AttributeContext | InstanceValueContext): string | undefined {
 		if (this.type === 'uid') {
@@ -113,14 +123,11 @@ export class BindPreloadDefinition<Type extends PreloadType> implements PreloadI
 		return;
 	}
 
-	private constructor(input: PreloadInput<Type>) {
-		this.type = input.type;
-		this.parameter = input.parameter;
-		this.event =
-			this.type === 'timestamp' && this.parameter === 'end'
-				? XFORM_EVENT.xformsRevalidate
-				: XFORM_EVENT.odkInstanceFirstLoad;
-	}
+	private constructor(
+		readonly type: Type,
+		readonly parameter: PreloadParameter<Type>,
+		readonly event: XFormEvent
+	) {}
 }
 
 // prettier-ignore

@@ -179,7 +179,7 @@ describe('Instance edit semantics', () => {
 				// Prerequisite
 				expect(sourceInstanceID).toMatch(PRELOAD_UID_PATTERN);
 
-				const edited = await scenario.proposed_editCurrentInstanceState();
+				const edited = await scenario.editCurrentInstance();
 				const editedDeprecatedID = getMetaValue(edited, deprecatedID);
 
 				expect(editedDeprecatedID).toBe(sourceInstanceID);
@@ -187,7 +187,7 @@ describe('Instance edit semantics', () => {
 
 			it(`serializes ${deprecatedID.path} with the input value of ${instanceID.path}`, async () => {
 				const sourceScenario = await simpleEditScenario(caseOptions);
-				const edited = await sourceScenario.proposed_editCurrentInstanceState();
+				const edited = await sourceScenario.editCurrentInstance();
 
 				expect(edited).toHaveDeprecatedIDFromSource({
 					sourceScenario,
@@ -204,7 +204,7 @@ describe('Instance edit semantics', () => {
 		])('metadata namespace prefix: $metaPrefix', (caseOptions) => {
 			it('recomputes instanceID', async () => {
 				const sourceScenario = await simpleEditScenario(caseOptions);
-				const edited = await sourceScenario.proposed_editCurrentInstanceState();
+				const edited = await sourceScenario.editCurrentInstance();
 
 				expect(edited).toHaveEditedPreloadInstanceID({
 					sourceScenario,
@@ -231,8 +231,8 @@ describe('Instance edit semantics', () => {
 
 			beforeEach(async () => {
 				const source = await simpleEditScenario(caseOptions);
-				const edit1 = await source.proposed_editCurrentInstanceState();
-				const edit2 = await edit1.proposed_editCurrentInstanceState();
+				const edit1 = await source.editCurrentInstance();
+				const edit2 = await edit1.editCurrentInstance();
 
 				scenarios = {
 					source,
@@ -325,8 +325,8 @@ describe('Instance edit semantics', () => {
 			it('creates a tree of edited deprecatedID -> source instanceID references over subsequent edits of a common ancestor instance', async () => {
 				const { source, edit1: branch1, edit2: leaf1 } = scenarios;
 
-				const branch2 = await source.proposed_editCurrentInstanceState();
-				const leaf2 = await branch2.proposed_editCurrentInstanceState();
+				const branch2 = await source.editCurrentInstance();
+				const leaf2 = await branch2.editCurrentInstance();
 
 				assertChained(source, branch1);
 				assertChained(source, branch2);

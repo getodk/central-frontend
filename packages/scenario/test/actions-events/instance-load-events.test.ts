@@ -163,7 +163,7 @@ describe('instance load events', () => {
 
 			expect(scenario.answerOf('/data/q1')).toEqualAnswer(intAnswer(16));
 			scenario.answer('/data/q1', 555);
-			const restored = await scenario.proposed_editCurrentInstanceState();
+			const restored = await scenario.editCurrentInstance();
 			expect(restored.answerOf('/data/q1')).toEqualAnswer(intAnswer(555));
 		});
 	});

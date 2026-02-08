@@ -96,16 +96,6 @@ const guardDownstreamReadonlyWrites = (
 	return [getValue, setValue];
 };
 
-/**
- * @todo It feels increasingly awkward to keep piling up preload stuff here, but it won't stay that way for long. In the meantime, this seems like the best way to express the cases where `preload="uid"` should be effective, i.e.:
- *
- * - When an instance is first loaded ({@link isInstanceFirstLoad})
- * - When an instance is initially loaded for editing ({@link isEditInitialLoad})
- */
-const isLoading = (context: ValueContext) => {
-	return isInstanceFirstLoad(context) || isEditInitialLoad(context);
-};
-
 const setValueIfPreloadDefined = (
 	context: ValueContext,
 	setValue: SimpleAtomicStateSetter<string>,
@@ -136,11 +126,14 @@ const preloadValue = (context: ValueContext, setValue: SimpleAtomicStateSetter<s
 
 	if (preload.event === XFORM_EVENT.xformsRevalidate) {
 		postloadValue(context, setValue, preload);
-		return;
-	}
-
-	if (isLoading(context)) {
-		setValueIfPreloadDefined(context, setValue, preload);
+	} else if (preload.event === XFORM_EVENT.odkInstanceFirstLoad) {
+		if (isInstanceFirstLoad(context)) {
+			setValueIfPreloadDefined(context, setValue, preload);
+		}
+	} else if (preload.event === XFORM_EVENT.odkInstanceLoad) {
+		if (isInstanceFirstLoad(context) || isEditInitialLoad(context)) {
+			setValueIfPreloadDefined(context, setValue, preload);
+		}
 	}
 };
 

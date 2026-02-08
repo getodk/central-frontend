@@ -330,6 +330,15 @@ export class XFormDOM {
 		return new this(sourceXML, { isNormalized: false });
 	}
 
+	isInstanceID = (nodeset: string) => {
+		const meta = getMetaElement(this.primaryInstanceRoot);
+		const instanceId = meta && getMetaChildElement(meta, 'instanceID');
+		return (
+			instanceId &&
+			nodeset === `/${this.primaryInstanceRoot.nodeName}/${meta.nodeName}/${instanceId.nodeName}`
+		);
+	};
+
 	protected readonly normalizedXML: string;
 
 	// Commonly accessed landmark nodes
