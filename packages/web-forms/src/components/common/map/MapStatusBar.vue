@@ -24,6 +24,7 @@ const props = defineProps<{
 	selectedVertex: Coordinate | undefined;
 	singleFeatureType?: SingleFeatureType;
 	isCapturing: boolean;
+	isFullScreen: boolean;
 	canRemove: boolean;
 	canViewDetails: boolean;
 	canOpenAdvancedPanel: boolean;
@@ -144,7 +145,7 @@ const displayState = computed(() => {
 </script>
 
 <template>
-	<div class="map-status-bar">
+	<div class="map-status-bar" :class="{ 'full-screen-active': isFullScreen }">
 		<div v-if="isCapturing" class="map-status-container">
 			<div class="map-status">
 				<ProgressSpinner class="map-status-spinner" stroke-width="5px" />
@@ -241,6 +242,12 @@ const displayState = computed(() => {
 }
 
 @media screen and (max-width: #{pf.$sm}) {
+	.map-status-bar:not(.full-screen-active) {
+		.advanced-button {
+			display: none;
+		}
+	}
+
 	.advanced-button span {
 		display: none;
 	}

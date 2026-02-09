@@ -1,0 +1,10 @@
+@mixin clear-button {
+	position: absolute;
+	background: var(--odk-base-background-color);
+	border: 1px solid var(--odk-border-color);
+	width: 38px;
+	height: 38px;
+	&.p-button {
+		min-height: 0;
+	}
+}

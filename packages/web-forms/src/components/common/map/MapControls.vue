@@ -19,18 +19,16 @@ const emit = defineEmits([
 </script>
 
 <template>
-	<div class="control-bar">
+	<div class="control-bar" :class="{ 'full-screen-active': isFullScreen }">
 		<div class="control-bar-vertical">
 			<!-- TODO: translations -->
-			<button
-				:class="{ 'control-active': isFullScreen }"
-				title="Full Screen"
-				@click="emit('toggleFullScreen')"
-			>
-				<IconSVG name="mdiArrowExpandAll" size="sm" />
+			<button title="Full Screen" @click="emit('toggleFullScreen')">
+				<IconSVG v-if="isFullScreen" name="mdiArrowCollapse" />
+				<IconSVG v-else name="mdiArrowExpand" />
 			</button>
 			<!-- TODO: translations -->
 			<button
+				class="zoom-fit-all"
 				title="Zoom to fit all options"
 				:disabled="disableFitAllFeatures"
 				@click="emit('fitAllFeatures')"
@@ -38,7 +36,7 @@ const emit = defineEmits([
 				<IconSVG name="mdiFullscreen" />
 			</button>
 			<!-- TODO: translations -->
-			<button title="Zoom to current location" @click="emit('watchCurrentLocation')">
+			<button class="zoom-current-location" title="Zoom to current location" @click="emit('watchCurrentLocation')">
 				<IconSVG name="mdiCrosshairsGps" size="sm" />
 			</button>
 		</div>
@@ -100,6 +98,14 @@ const emit = defineEmits([
 	.control-bar {
 		top: var(--odk-map-controls-spacing);
 		right: var(--odk-map-controls-spacing);
+	}
+
+	.control-bar:not(.full-screen-active) {
+		.control-bar-horizontal,
+		.control-bar-vertical .zoom-fit-all,
+		.control-bar-vertical .zoom-current-location {
+			display: none;
+		}
 	}
 }
 </style>

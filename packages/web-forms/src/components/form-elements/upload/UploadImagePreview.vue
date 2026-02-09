@@ -40,6 +40,8 @@ const imageURL = computed((previous: ObjectURL | null = null) => {
 </template>
 
 <style scoped lang="scss">
+@use '../../../assets/styles/buttons' as btn;
+
 .preview-captured-image {
 	position: relative;
 	width: fit-content;
@@ -49,13 +51,9 @@ const imageURL = computed((previous: ObjectURL | null = null) => {
 	border-radius: var(--odk-radius);
 
 	.clear-button {
-		position: absolute;
+		@include btn.clear-button;
 		top: 10px;
 		right: 10px;
-		background: var(--odk-base-background-color);
-		border: 1px solid var(--odk-border-color);
-		width: 38px;
-		height: 38px;
 		z-index: var(--odk-z-index-form-floating);
 	}
 

@@ -19,7 +19,16 @@ import type { Coordinate } from 'ol/coordinate';
 import { toLonLat } from 'ol/proj';
 import Button from 'primevue/button';
 import Message from 'primevue/message';
-import { computed, type ComputedRef, inject, onMounted, onUnmounted, ref, watch } from 'vue';
+import {
+	computed,
+	type ComputedRef,
+	inject,
+	nextTick,
+	onMounted,
+	onUnmounted,
+	ref,
+	watch,
+} from 'vue';
 
 interface MapBlockProps {
 	featureCollection: FeatureCollection;
@@ -39,6 +48,7 @@ const confirmDeleteAction = ref(false);
 const isUpdateCoordsDialogOpen = ref(false);
 const pointPlaced = ref(false);
 const selectedVertex = ref<Coordinate | undefined>();
+const showErrorFullScreen = ref(false);
 const showErrorStyle = inject<ComputedRef<boolean>>(
 	QUESTION_HAS_ERROR,
 	computed(() => false)
@@ -125,6 +135,11 @@ watch(
 
 const onFeaturePlacement = () => emitSavedFeature();
 
+watch(
+	() => mapHandler.errorMessage.value,
+	() => (showErrorFullScreen.value = !!mapHandler.errorMessage.value)
+);
+
 const handleEscapeKey = (event: KeyboardEvent) => {
 	if (event.key === 'Escape' && isFullScreen.value) {
 		isFullScreen.value = false;
@@ -176,13 +191,41 @@ const saveAdvancedPanelCoords = (newCoords: Coordinate) => {
 	mapHandler.updateVertexCoords(newCoords);
 	emitSavedFeature();
 };
+
+const enterFullScreen = () => {
+	isFullScreen.value = true;
+	if (mapHandler.shouldShowMapOverlay()) {
+		mapHandler.watchCurrentLocation();
+	}
+};
+
+const toggleFullScreen = async () => {
+	isFullScreen.value = !isFullScreen.value;
+	if (!isFullScreen.value) {
+		await nextTick();
+		mapHandler.fitToAllFeatures();
+	}
+};
 </script>
 
 <template>
 	<div class="map-block-component">
 		<div :class="{ 'map-container': true, 'map-full-screen': isFullScreen }">
 			<div ref="mapElement" class="map-block">
-				<div v-if="mapHandler.shouldShowMapOverlay()" class="map-overlay">
+				<div
+					v-if="!isFullScreen"
+					class="map-overlay full-screen-overlay"
+					@click="enterFullScreen"
+				/>
+				<div v-if="mapHandler.shouldShowMapOverlay()" class="map-overlay get-location-overlay">
+					<Button
+						severity="secondary"
+						outlined
+						class="close-full-screen"
+						@click="isFullScreen = false"
+					>
+						<IconSVG name="mdiClose" size="sm" />
+					</Button>
 					<Button outlined severity="contrast" @click="mapHandler.watchCurrentLocation">
 						<IconSVG name="mdiCrosshairsGps" />
 						<!-- TODO: translations -->
@@ -196,7 +239,7 @@ const saveAdvancedPanelCoords = (newCoords: Coordinate) => {
 					:disable-undo="!mapHandler.canUndoChange()"
 					:disable-delete="!mapHandler.isFeatureSelected()"
 					:show-secondary-controls="showSecondaryControls"
-					@toggle-full-screen="isFullScreen = !isFullScreen"
+					@toggle-full-screen="toggleFullScreen"
 					@fit-all-features="mapHandler.fitToAllFeatures"
 					@watch-current-location="mapHandler.watchCurrentLocation"
 					@trigger-delete="triggerDelete"
@@ -208,7 +251,7 @@ const saveAdvancedPanelCoords = (newCoords: Coordinate) => {
 					severity="contrast"
 					closable
 					size="small"
-					:class="{ 'map-message': true, 'above-secondary-controls': showSecondaryControls }"
+					:class="{ 'map-message': true, 'above-secondary-controls': isFullScreen && showSecondaryControls }"
 				>
 					<span v-if="pointPlaced">{{ instructionMessage.placed }}</span>
 					<span v-else>{{ instructionMessage.default }}</span>
@@ -221,6 +264,7 @@ const saveAdvancedPanelCoords = (newCoords: Coordinate) => {
 				:can-view-details="mapHandler.canViewProperties()"
 				:single-feature-type="singleFeatureType"
 				:is-capturing="mapHandler.currentState.value === STATES.CAPTURING"
+				:is-full-screen="isFullScreen"
 				:saved-feature-value="savedFeatureValue"
 				:selected-vertex="selectedVertex"
 				class="map-status-bar-component"
@@ -251,12 +295,23 @@ const saveAdvancedPanelCoords = (newCoords: Coordinate) => {
 		</div>
 
 		<div
-			v-if="mapHandler.errorMessage.value"
-			:class="{ 'map-block-error': true, 'stack-errors': showErrorStyle }"
+			v-if="mapHandler.errorMessage.value && (!isFullScreen || showErrorFullScreen)"
+			class="map-block-error"
+			:class="{ 'stack-errors': showErrorStyle && !isFullScreen, 'top-position': isFullScreen }"
 		>
-			<strong>{{ mapHandler.errorMessage.value.title }}</strong>
-			&nbsp;
-			<span>{{ mapHandler.errorMessage.value.message }}</span>
+			<div class="error-message">
+				<strong>{{ mapHandler.errorMessage.value.title }}</strong>
+				&nbsp;
+				<span>{{ mapHandler.errorMessage.value.message }}</span>
+			</div>
+			<IconSVG
+				v-if="isFullScreen"
+				class="clear-error"
+				name="mdiClose"
+				variant="error"
+				size="sm"
+				@click="showErrorFullScreen = false"
+			/>
 		</div>
 	</div>
 
@@ -276,6 +331,7 @@ const saveAdvancedPanelCoords = (newCoords: Coordinate) => {
 <style scoped lang="scss">
 @use 'primeflex/core/_variables.scss' as pf;
 @use '../../../assets/styles/map-block' as mb;
+@use '../../../assets/styles/buttons' as btn;
 
 .map-block-component {
 	position: relative;
@@ -309,8 +365,18 @@ const saveAdvancedPanelCoords = (newCoords: Coordinate) => {
 		align-items: center;
 		width: 100%;
 		height: 100%;
+	}
+
+	.map-overlay.get-location-overlay {
 		background-color: rgba(from var(--odk-muted-background-color) r g b / 0.9);
 		z-index: var(--odk-z-index-overlay);
+
+		.close-full-screen {
+			@include btn.clear-button;
+			display: none;
+			top: var(--odk-map-controls-spacing);
+			left: var(--odk-map-controls-spacing);
+		}
 
 		.p-button.p-button-contrast.p-button-outlined {
 			background: var(--odk-base-background-color);
@@ -319,6 +385,11 @@ const saveAdvancedPanelCoords = (newCoords: Coordinate) => {
 				background: var(--odk-muted-background-color);
 			}
 		}
+	}
+
+	.map-overlay.full-screen-overlay {
+		display: none;
+		z-index: var(--odk-z-index-top-overlay);
 	}
 }
 
@@ -403,6 +474,22 @@ const saveAdvancedPanelCoords = (newCoords: Coordinate) => {
 		margin-top: 0;
 		border-radius: 0;
 	}
+
+	&.top-position {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		position: fixed;
+		top: var(--odk-map-controls-spacing);
+		left: var(--odk-map-controls-spacing);
+		right: var(--odk-map-controls-spacing);
+		z-index: var(--odk-z-index-topmost);
+		margin-top: 0;
+	}
+
+	.clear-error {
+		cursor: pointer;
+	}
 }
 
 .map-message {
@@ -420,20 +507,27 @@ const saveAdvancedPanelCoords = (newCoords: Coordinate) => {
 		height: fit-content;
 	}
 
-	.map-block-component .map-block {
-		--map-status-bar-min-height: 60px;
-		--map-label-min-height: 60px;
-		height: calc(100vh - var(--map-status-bar-min-height) - var(--map-label-min-height));
-
+	.map-container {
 		:deep(.ol-zoom) {
-			top: 195px;
-			bottom: unset;
+			display: none;
+		}
+
+		.map-overlay.full-screen-overlay {
+			display: flex;
 		}
 	}
 
-	.map-block-component :deep(.ol-zoom) {
-		right: var(--odk-map-controls-spacing);
-		bottom: var(--odk-map-controls-spacing);
+	.map-container.map-full-screen {
+		.map-overlay.get-location-overlay .close-full-screen {
+			display: block;
+		}
+
+		:deep(.ol-zoom) {
+			display: flex;
+			top: 195px;
+			right: var(--odk-map-controls-spacing);
+			bottom: var(--odk-map-controls-spacing);
+		}
 	}
 
 	.map-message.above-secondary-controls {

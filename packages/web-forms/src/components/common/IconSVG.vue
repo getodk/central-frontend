@@ -3,7 +3,8 @@ import { computed } from 'vue';
 import {
 	mdiAlert,
 	mdiAlertCircleOutline,
-	mdiArrowExpandAll,
+	mdiArrowCollapse,
+	mdiArrowExpand,
 	mdiArrowULeftTop,
 	mdiCamera,
 	mdiCheck,
@@ -42,7 +43,8 @@ import {
 const iconMap: Record<string, string> = {
 	mdiAlert,
 	mdiAlertCircleOutline,
-	mdiArrowExpandAll,
+	mdiArrowCollapse,
+	mdiArrowExpand,
 	mdiArrowULeftTop,
 	mdiCamera,
 	mdiCheck,
