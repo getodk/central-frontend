@@ -286,7 +286,8 @@
     "entities": "Total Entities",
     // This is the text of a table column header. The column shows the date and time of the 
     // newest entity
-    "lastEntity": "Latest Entity"
+    "lastEntity": "Latest Entity",
+    "delete": "@:audit.action.default.delete"
   },
   "plural": {
     "appUser": "App User | App Users",

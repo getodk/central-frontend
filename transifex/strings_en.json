@@ -1718,6 +1718,53 @@
       "none": {
         "string": "(None)",
         "developer_comment": "This is shown in an Entity property row in a column about Forms, and 'None' refers to Forms."
+      },
+      "confirmation": {
+        "title": {
+          "string": "Delete Property"
+        },
+        "body": {
+          "string": "Are you sure you want to delete the Property “{propertyName}”? This cannot be undone.",
+          "developer_comment": "This is shown on a confirmation dialog box. {propertyName} is the name of the property that is being deleted."
+        }
+      },
+      "deleted": {
+        "string": "Property “{name}” has been deleted.",
+        "developer_comment": "This is shown after a Property has been successfully deleted. {name} is the name of the deleted property."
+      }
+    },
+    "DatasetOverviewDeletePropertyError": {
+      "title": {
+        "string": "Delete Property"
+      },
+      "intro": {
+        "string": "Before you can delete the Property “{propertyName}”, you’ll need to {actions}."
+      },
+      "clearEntities": {
+        "string": "clear its value in {entities}",
+        "developer_comment": "{entities} is a bold count like \"2 Entities\""
+      },
+      "and": {
+        "string": "and"
+      },
+      "unlinkForms": {
+        "string": "unlink {forms} that set it",
+        "developer_comment": "{forms} is a bold count like \"5 Forms\""
+      },
+      "entitiesCount": {
+        "string": "{count, plural, one {{count} Entity} other {{count} Entities}}"
+      },
+      "relatedToEntities": {
+        "string": "{count, plural, one {Related to {count} Entity} other {Related to {count} Entities}}"
+      },
+      "moreEntities": {
+        "string": "{count, plural, one {and {count} more Entity} other {and {count} more Entities}}"
+      },
+      "formsCount": {
+        "string": "{count, plural, one {{count} Form} other {{count} Forms}}"
+      },
+      "relatedToForms": {
+        "string": "{count, plural, one {Related to {count} Form} other {Related to {count} Forms}}"
       }
     },
     "DatasetOverviewLinkedForms": {
