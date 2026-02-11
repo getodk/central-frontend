@@ -179,6 +179,7 @@ export class Scenario {
 			geolocationProvider: overrideOptions?.geolocationProvider ?? {
 				getLocation: () => Promise.resolve(''),
 			},
+			editInstance: overrideOptions?.editInstance ?? null,
 		};
 	}
 

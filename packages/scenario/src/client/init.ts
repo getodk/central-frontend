@@ -1,5 +1,6 @@
 import type { JRResourceService } from '@getodk/common/jr-resources/JRResourceService.ts';
 import type {
+	EditFormInstanceInput,
 	FormResource,
 	GeolocationProvider,
 	InstanceAttachmentsConfig,
@@ -11,7 +12,7 @@ import type {
 	PreloadProperties,
 	RootNode,
 } from '@getodk/xforms-engine';
-import { createInstance } from '@getodk/xforms-engine';
+import { createInstance, editInstance } from '@getodk/xforms-engine';
 import type { Owner } from 'solid-js';
 import { createRoot } from 'solid-js';
 import { getAssertedOwner, runInSolidScope } from './solid-helpers.ts';
@@ -31,6 +32,7 @@ export interface TestFormOptions {
 	readonly instanceAttachments: InstanceAttachmentsConfig;
 	readonly preloadProperties: PreloadProperties;
 	readonly geolocationProvider: GeolocationProvider;
+	readonly editInstance: EditFormInstanceInput | null;
 }
 
 const defaultConfig = {
@@ -57,7 +59,7 @@ export const initializeTestForm = async (
 		const owner = getAssertedOwner();
 
 		const { formResult: form, root: instanceRoot } = await runInSolidScope(owner, async () => {
-			return createInstance(formResource, {
+			const initOptions = {
 				form: {
 					...defaultConfig,
 					fetchFormAttachment: options.resourceService.handleRequest,
@@ -69,7 +71,11 @@ export const initializeTestForm = async (
 					preloadProperties: options.preloadProperties,
 					geolocationProvider: options.geolocationProvider,
 				},
-			});
+			};
+			if (options.editInstance) {
+				return editInstance(formResource, options.editInstance, initOptions);
+			}
+			return createInstance(formResource, initOptions);
 		});
 
 		return {

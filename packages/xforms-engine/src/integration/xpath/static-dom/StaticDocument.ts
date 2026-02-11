@@ -1,4 +1,5 @@
 import type { XFormsXPathDocument } from '../adapter/XFormsXPathNode.ts';
+import type { StaticAttribute } from './StaticAttribute.ts';
 import type { StaticElementOptions } from './StaticElement.ts';
 import { StaticElement } from './StaticElement.ts';
 import { StaticParentNode } from './StaticParentNode.ts';
@@ -15,6 +16,7 @@ export class StaticDocument extends StaticParentNode<'document'> implements XFor
 	readonly nodeset: string;
 	readonly children: readonly [root: StaticElement];
 	readonly childElements: readonly [root: StaticElement];
+	readonly attributes: readonly StaticAttribute[] = [];
 
 	constructor(options: StaticDocumentOptions) {
 		super('document');
