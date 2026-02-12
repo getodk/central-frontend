@@ -35,15 +35,8 @@ export default () => {
     transformResponse: ({ data, config }) => shallowReactive({
       value: reactive(transformValue(data, config)),
       count: data['@odata.count'],
-      removedEntities: reactive(new Set())
-    }),
-    replaceData(data, config) {
-      entityOData.count = data['@odata.count'];
-      entityOData.value = reactive(transformValue({
-        ...data,
-        value: data.value.filter(e => !entityOData.removedEntities.has(e.__id))
-      }, config));
-    }
+      removedEntities: 0
+    })
   }));
   const deletedEntityCount = createResource('deletedEntityCount', () => ({
     transformResponse: ({ data }) => reactive({

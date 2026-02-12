@@ -24,6 +24,8 @@ except according to the terms contained in the LICENSE file.
     v-model:page="pagination.page" v-model:size="pagination.size"
     :count="pagination.count" :size-options="pageSizeOptions"
     :spinner="odata.awaitingResponse"
+    :removed="pagination.removed"
+    :empty="odata.dataExists && odata.value.length === 0"
     @update:page="handlePageChange"/>
 </template>
 
@@ -72,24 +74,12 @@ const emit = defineEmits(['review', 'delete', 'restore']);
 const { odata, deletedSubmissionCount } = useRequestData();
 
 const pageSizeOptions = [250, 500, 1000];
-const pagination = reactive({ page: 0, size: pageSizeOptions[0], count: 0 });
-
-let snapshotFilter;
-const setSnapshotFilter = () => {
-  snapshotFilter = '';
-  const now = new Date().toISOString();
-  if (props.deleted) {
-    // This is not foolproof. Missing clause: __system/deletedAt became null after `now`.
-    // We don't keep restore date, that would have helped here.
-    snapshotFilter += `__system/deletedAt le ${now}`;
-  } else {
-    snapshotFilter += `__system/submissionDate le ${now} and `;
-    // We include __system/deletedAt gt ${now} so that if the user deletes a
-    // submission, then changes the page, other submissions stay on the same
-    // page as before.
-    snapshotFilter += `(__system/deletedAt eq null or __system/deletedAt gt ${now})`;
-  }
-};
+const pagination = reactive({
+  page: 0,
+  size: pageSizeOptions[0],
+  count: computed(() => (odata.dataExists ? odata.count : 0)),
+  removed: computed(() => (odata.dataExists ? odata.removedSubmissions : 0))
+});
 
 const odataSelect = computed(() => {
   if (props.fields == null) return null;
@@ -105,13 +95,7 @@ const fetchChunk = (clear, refresh = false) => {
   // Are we fetching the first chunk of submissions or the next chunk?
   const first = clear || refresh;
   if (first) {
-    setSnapshotFilter();
     pagination.page = 0;
-  }
-
-  let $filter = snapshotFilter;
-  if (props.filter) {
-    $filter += ` and ${props.filter}`;
   }
 
   return odata.request({
@@ -124,19 +108,14 @@ const fetchChunk = (clear, refresh = false) => {
         $skip: pagination.page * pagination.size,
         $count: true,
         $wkt: true,
-        $filter,
+        $filter: props.deleted ? '__system/deletedAt ne null' : props.filter,
         $select: odataSelect.value,
         $orderby: '__system/submissionDate desc'
       }
     ),
-    clear,
-    patch: !first
-      ? (response) => odata.replaceData(response.data, response.config)
-      : null
+    clear
   })
     .then(() => {
-      pagination.count = odata.count;
-
       if (props.deleted) {
         deletedSubmissionCount.cancelRequest();
         if (!deletedSubmissionCount.dataExists) {

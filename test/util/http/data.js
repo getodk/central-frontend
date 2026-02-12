@@ -158,7 +158,7 @@ const responsesByComponent = {
       },
       ({ url }) => {
         const filter = relativeUrl(url).searchParams.get('$filter');
-        return filter.includes('__system/deletedAt eq null')
+        return !filter || filter.includes('__system/deletedAt eq null')
           ? testData.submissionOData()
           : testData.submissionDeletedOData();
       }
@@ -240,7 +240,7 @@ const responsesByComponent = {
       ({ url }) => matchesApiPath(apiPaths.odataEntities, url) && !url.includes('top=0'),
       ({ url }) => {
         const filter = relativeUrl(url).searchParams.get('$filter');
-        return filter.includes('__system/deletedAt eq null')
+        return !filter || filter.includes('__system/deletedAt eq null')
           ? testData.entityOData()
           : testData.entityDeletedOData();
       }

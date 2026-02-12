@@ -46,7 +46,7 @@ describe('EntityList', () => {
         url: ({ pathname, searchParams }) => {
           // Request to get all the Entities created before now and ( not deleted or deleted after now)
           pathname.should.be.eql('/v1/projects/1/datasets/trees.svc/Entities');
-          searchParams.get('$filter').should.match(/__system\/createdAt le \S+ and \(__system\/deletedAt eq null or __system\/deletedAt gt \S+\)/);
+          expect(searchParams.get('$filter')).to.be.null;
           searchParams.get('$top').should.be.eql('250');
         }
       },
@@ -897,8 +897,21 @@ describe('EntityList', () => {
         .respondWithData(() => testData.entityOData(250, 500))
         .afterResponses(async component => {
           checkIds(component, 1, 500);
-          component.find('.pagination select').element.value.should.be.eql('2');
         });
+    });
+
+    it('updates the pagination count after delete', async () => {
+      testData.extendedEntities.createPast(260, { label: 'My Entity' });
+      const component = await load('/projects/1/entity-lists/trees/entities')
+        .complete()
+        .request(async (c) => {
+          await c.get('.entity-metadata-row .delete-button').trigger('click');
+          return c.get('#entity-delete .btn-danger').trigger('click');
+        })
+        .respondWithSuccess();
+      const text = component.get('.pagination .form-group').text();
+
+      text.should.equal('Rows 1–249 of 259');
     });
   });
 
@@ -1171,13 +1184,19 @@ describe('EntityList', () => {
         await checkboxes[1].setValue(true);
         return component.find('.action-bar-container .btn-primary').trigger('click');
       })
-      .beforeEachResponse((_, { url, data }) => {
-        url.should.equal('/v1/projects/1/datasets/trees/entities/bulk-delete');
-        const entities = testData.extendedEntities.sorted();
-        const expectedUUIDs = [entities[0].uuid, entities[1].uuid];
-        data.ids.should.eql(expectedUUIDs);
+      .beforeEachResponse((_, { url, data }, i) => {
+        if (i === 0) {
+          url.should.equal('/v1/projects/1/datasets/trees/entities/bulk-delete');
+          testData.extendedEntities.delete(0);
+          testData.extendedEntities.delete(1);
+          const entities = testData.extendedEntities.sorted();
+          const expectedUUIDs = [entities[0].uuid, entities[1].uuid];
+          data.ids.should.eql(expectedUUIDs);
+        }
       })
       .respondWithSuccess()
+      .respondWithData(testData.entityOData)
+      .respondWithData(testData.entityDeletedOData)
       .afterResponse(component => {
         const actionBar = component.findComponent({ name: 'ActionBar' });
         actionBar.props().state.should.be.false;
@@ -1219,13 +1238,19 @@ describe('EntityList', () => {
         const tryAgainButton = component.find('.alert .btn');
         return tryAgainButton.trigger('click');
       })
-      .beforeEachResponse((_, { url, data }) => {
-        url.should.equal('/v1/projects/1/datasets/trees/entities/bulk-delete');
-        const entities = testData.extendedEntities.sorted();
-        const expectedUUIDs = [entities[0].uuid, entities[1].uuid];
-        data.ids.should.eql(expectedUUIDs);
+      .beforeEachResponse((_, { url, data }, i) => {
+        if (i === 0) {
+          url.should.equal('/v1/projects/1/datasets/trees/entities/bulk-delete');
+          const entities = testData.extendedEntities.sorted();
+          testData.extendedEntities.delete(0);
+          testData.extendedEntities.delete(1);
+          const expectedUUIDs = [entities[0].uuid, entities[1].uuid];
+          data.ids.should.eql(expectedUUIDs);
+        }
       })
       .respondWithSuccess()
+      .respondWithData(testData.entityOData)
+      .respondWithData(testData.entityDeletedOData)
       .afterResponse(component => {
         const remainingRows = component.findAllComponents(EntityMetadataRow);
         remainingRows.length.should.equal(1);
@@ -1242,15 +1267,21 @@ describe('EntityList', () => {
         return component.find('.action-bar-container .btn-primary').trigger('click');
       })
       .respondWithSuccess()
+      .respondWithData(testData.entityOData)
+      .respondWithData(testData.entityDeletedOData)
       .complete()
       .request(component => {
         const undoButton = component.find('.alert .btn');
         return undoButton.trigger('click');
       })
-      .beforeEachResponse((_, { url }) => {
-        url.should.equal('/v1/projects/1/datasets/trees/entities/bulk-restore');
+      .beforeEachResponse((_, { url }, i) => {
+        if (i === 0) {
+          url.should.equal('/v1/projects/1/datasets/trees/entities/bulk-restore');
+        }
       })
       .respondWithSuccess()
+      .respondWithData(testData.entityOData)
+      .respondWithData(testData.entityDeletedOData)
       .afterResponse(component => {
         const remainingRows = component.findAllComponents(EntityMetadataRow);
         remainingRows.length.should.equal(3);
@@ -1267,6 +1298,7 @@ describe('EntityList', () => {
         return component.find('.action-bar-container .btn-primary').trigger('click');
       })
       .respondWithSuccess()
+      .respondWithData(testData.entityOData)
       .complete()
       .request(component => component.vm.$container.alert.cta.handler())
       .beforeEachResponse((_, { url }) => {
@@ -1289,6 +1321,8 @@ describe('EntityList', () => {
         return component.find('.action-bar-container .btn-primary').trigger('click');
       })
       .respondWithSuccess()
+      .respondWithData(testData.entityOData)
+      .respondWithData(testData.entityDeletedOData)
       .complete()
       .request(component => {
         const undoButton = component.find('.alert .btn');
@@ -1300,13 +1334,17 @@ describe('EntityList', () => {
         const tryAgainButton = component.find('.alert .btn');
         return tryAgainButton.trigger('click');
       })
-      .beforeEachResponse((_, { url, data }) => {
-        url.should.equal('/v1/projects/1/datasets/trees/entities/bulk-restore');
-        const entities = testData.extendedEntities.sorted();
-        const expectedUUIDs = [entities[0].uuid, entities[1].uuid];
-        data.ids.should.eql(expectedUUIDs);
+      .beforeEachResponse((_, { url, data }, i) => {
+        if (i === 0) {
+          url.should.equal('/v1/projects/1/datasets/trees/entities/bulk-restore');
+          const entities = testData.extendedEntities.sorted();
+          const expectedUUIDs = [entities[0].uuid, entities[1].uuid];
+          data.ids.should.eql(expectedUUIDs);
+        }
       })
       .respondWithSuccess()
+      .respondWithData(testData.entityOData)
+      .respondWithData(testData.entityDeletedOData)
       .afterResponse(component => {
         const remainingRows = component.findAllComponents(EntityMetadataRow);
         remainingRows.length.should.equal(3); // All 3 entities should be back
@@ -1327,7 +1365,8 @@ describe('EntityList', () => {
           await checkboxes[1].setValue(true);
           return component.find('.action-bar-container .btn-primary').trigger('click');
         })
-        .beforeEachResponse(component => {
+        .beforeEachResponse((component, config) => {
+          if (!config.url.match(/bulk-delete/)) return;
           const disableContainer = component.getComponent({ name: 'DisableContainer' });
           disableContainer.props().disabled.should.be.true;
           disableContainer.props().disabledMessage.should.equal('Bulk operation in progress');
@@ -1342,6 +1381,8 @@ describe('EntityList', () => {
           component.find('.toggle-deleted-entities').should.be.hidden(true);
         })
         .respondWithSuccess()
+        .respondWithData(testData.entityOData)
+        .respondWithData(testData.entityDeletedOData)
         .afterResponse(component => {
           const disableContainer = component.getComponent({ name: 'DisableContainer' });
           disableContainer.props().disabled.should.be.false;
@@ -1438,8 +1479,9 @@ describe('EntityList', () => {
           await checkboxes[1].setValue(true);
           return component.find('.action-bar-container .btn-primary').trigger('click');
         })
-        .respondWithData(testData.entityOData)
+        .respondWithData(testData.entityOData) // refresh
         .respondWithSuccess()
+        .respondWithData(testData.entityOData) // refetch after success of bulk delete
         .afterResponses((component) => {
           component.vm.$container.requestData.localResources.odataEntities.cancelRequest.called.should.be.true;
         }));
@@ -1455,6 +1497,7 @@ describe('EntityList', () => {
         return component.find('.action-bar-container .btn-primary').trigger('click');
       })
       .respondWithSuccess()
+      .respondWithData(testData.entityOData)
       .complete()
       .request(component => component.find('button[aria-label="Next page"]').trigger('click'))
       .respondWithData(() => testData.entityOData(1, 250))
