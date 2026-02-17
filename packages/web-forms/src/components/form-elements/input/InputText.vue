@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { StringInputNode, TemporaryStringValueInputNode } from '@getodk/xforms-engine';
 import InputText from 'primevue/inputtext';
+import Password from 'primevue/password';
 import Textarea from 'primevue/textarea';
 import { computed } from 'vue';
 
@@ -36,7 +37,19 @@ const rows = computed(() => {
 </script>
 
 <template>
-	<template v-if="rows > 0">
+	<template v-if="node.appearances.masked">
+		<Password
+			:id="node.nodeId"
+			:required="node.currentState.required"
+			:disabled="node.currentState.readonly"
+			:model-value="node.currentState.value"
+			:feedback="false"
+			fluid
+			toggle-mask
+			@update:model-value="setValue"
+		/>
+	</template>
+	<template v-else-if="rows > 0">
 		<Textarea
 			:id="node.nodeId"
 			:required="node.currentState.required"
