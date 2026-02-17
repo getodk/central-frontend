@@ -24,7 +24,6 @@ except according to the terms contained in the LICENSE file.
     v-model:page="pagination.page" v-model:size="pagination.size"
     :count="pagination.count" :size-options="pageSizeOptions"
     :removed="pagination.removed"
-    :empty="odataEntities.dataExists && odataEntities.value.length === 0"
     :spinner="odataEntities.awaitingResponse"
     @update:page="handlePageChange"/>
 </template>

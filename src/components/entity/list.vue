@@ -257,7 +257,9 @@ export default {
     emptyMessage() {
       if (!this.odataEntities.dataExists) return '';
       if (this.odataEntities.value.length > 0) return '';
-
+      if (this.odataEntities.removedEntities > 0 && this.odataEntities.value.length === 0) {
+        return this.deleted ? this.$t('deletedEntity.allRestoredOnPage') : this.$t('allDeletedOnPage');
+      }
       if (this.deleted) {
         return this.$t('deletedEntity.emptyTable');
       }
@@ -497,9 +499,10 @@ export default {
       };
 
       const onSuccess = () => {
-        this.bulkDeletedEntities = [...this.selectedEntities];
+        this.bulkDeletedEntities = [...this.selectedEntities].map(e => e.__id);
+        this.odataEntities.value = this.odataEntities.value.filter(e => !this.selectedEntities.has(e));
         this.alert.success(this.$tcn('alert.bulkDelete', this.selectedEntities.size))
-          .cta(this.$t('action.undo'), () => this.requestBulkRestore(uuids));
+          .cta(this.$t('action.undo'), () => this.requestBulkRestore());
         this.selectedEntities.clear();
         this.refresh();
       };
@@ -517,7 +520,7 @@ export default {
         });
     },
     requestBulkRestore() {
-      const uuids = this.bulkDeletedEntities.map(e => e.__id);
+      const uuids = this.bulkDeletedEntities;
       const bulkRestore = () => {
         this.bulkOperationInProgress = true;
         this.cancelBackgroundRefresh();
@@ -602,6 +605,7 @@ export default {
     "noEntities": "There are no Entities to show.",
     "noMatching": "There are no matching Entities.",
     "emptyMap": "Entities only appear if they include data in the geometry property.",
+    "allDeletedOnPage": "All Entities on the page have been deleted.",
     "alert": {
       "delete": "Entity “{label}” has been deleted.",
       "bulkDelete": "{count} Entity successfully deleted. | {count} Entities successfully deleted.",
@@ -613,6 +617,7 @@ export default {
     "downloadDisabled": "Download is unavailable for deleted Entities",
     "deletedEntity": {
       "emptyTable": "There are no deleted Entities.",
+      "allRestoredOnPage": "All Entities on the page have been restored."
     },
     "actionBar": {
       "message": "{count} Entity selected | {count} Entities selected"

@@ -2248,6 +2248,9 @@
       "emptyMap": {
         "string": "Entities only appear if they include data in the geometry property."
       },
+      "allDeletedOnPage": {
+        "string": "All Entities on the page have been deleted."
+      },
       "alert": {
         "delete": {
           "string": "Entity “{label}” has been deleted."
@@ -2274,6 +2277,9 @@
       "deletedEntity": {
         "emptyTable": {
           "string": "There are no deleted Entities."
+        },
+        "allRestoredOnPage": {
+          "string": "All Entities on the page have been restored."
         }
       },
       "actionBar": {
@@ -3969,6 +3975,10 @@
       "rows": {
         "string": "{count, plural, one {Row {range} of {count}} other {Rows {range} of {count}}}",
         "developer_comment": "{range} is a range of row numbers, for example, 1-5. {count} is the total number of rows. The string will be pluralized based on the number of rows in the range."
+      },
+      "zeroRow": {
+        "string": "Row 0 of {count}",
+        "developer_comment": "Shown when no row is displayed on the page because all rows are deleted or some other reasons. {count} is the total number of rows across all pages."
       },
       "field": {
         "size": {

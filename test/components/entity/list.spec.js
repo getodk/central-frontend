@@ -591,6 +591,25 @@ describe('EntityList', () => {
             component.get('.empty-table-message').should.be.visible();
           }));
     });
+
+    it('shows the correct message when last filtered entity is deleted', () => {
+      // Having dataset.entities = 2 and creating only one entity implies that data is filtered.
+      testData.extendedDatasets.createPast(1, { entities: 2 });
+      testData.extendedEntities.createPast(1);
+
+      return load('/projects/1/entity-lists/trees/entities?search=foo', { root: false })
+        .complete()
+        .request(async (component) => {
+          const row = component.get('.entity-metadata-row');
+          await row.get('.delete-button').trigger('click');
+          return component.get('#entity-delete .btn-danger').trigger('click');
+        })
+        .respondWithSuccess()
+        .afterResponse(component => {
+          component.get('.empty-table-message').should.be.visible();
+          component.get('.empty-table-message').text().should.be.equal('All Entities on the page have been deleted.');
+        });
+    });
   });
 
   describe('restore', () => {
@@ -1339,7 +1358,7 @@ describe('EntityList', () => {
           url.should.equal('/v1/projects/1/datasets/trees/entities/bulk-restore');
           const entities = testData.extendedEntities.sorted();
           const expectedUUIDs = [entities[0].uuid, entities[1].uuid];
-          data.ids.should.eql(expectedUUIDs);
+          [...data.ids].should.eql(expectedUUIDs);
         }
       })
       .respondWithSuccess()

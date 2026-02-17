@@ -25,7 +25,6 @@ except according to the terms contained in the LICENSE file.
     :count="pagination.count" :size-options="pageSizeOptions"
     :spinner="odata.awaitingResponse"
     :removed="pagination.removed"
-    :empty="odata.dataExists && odata.value.length === 0"
     @update:page="handlePageChange"/>
 </template>
 
