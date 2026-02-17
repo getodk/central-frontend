@@ -19,6 +19,11 @@ except according to the terms contained in the LICENSE file.
             class="btn btn-primary" @click="upload.show()">
             <span class="icon-upload"></span>{{ $t('upload') }}
           </button>
+          <button v-if="project.dataExists && project.permits('entity.create')"
+            id="dataset-entities-create-button" type="button"
+            class="btn btn-primary" @click="create.show()">
+            <span class="icon-plus-circle"></span>{{ $t('new') }}
+          </button>
           <template v-if="deletedEntityCount.dataExists">
             <button v-if="canDelete && (deletedEntityCount.value > 0 || deleted)" type="button"
               class="btn toggle-deleted-entities" :class="{ 'btn-danger': deleted, 'btn-link': !deleted }"
@@ -42,6 +47,8 @@ except according to the terms contained in the LICENSE file.
 
     <entity-upload v-if="dataset.dataExists" v-bind="upload"
       @hide="upload.hide()" @success="afterUpload"/>
+    <entity-create v-if="dataset.dataExists" v-bind="create"
+      @hide="create.hide()" @success="afterCreate"/>
     <odata-analyze v-bind="analyze" :odata-url="odataUrl" @hide="analyze.hide()"/>
   </div>
 </template>
@@ -50,6 +57,7 @@ except according to the terms contained in the LICENSE file.
 import { defineAsyncComponent, watchEffect, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
+import EntityCreate from '../entity/create.vue';
 import EntityList from '../entity/list.vue';
 import OdataAnalyze from '../odata/analyze.vue';
 import OdataDataAccess from '../odata/data-access.vue';
@@ -66,6 +74,7 @@ import { noop } from '../../util/util';
 export default {
   name: 'DatasetEntities',
   components: {
+    EntityCreate,
     OdataAnalyze,
     OdataDataAccess,
     EntityList,
@@ -114,6 +123,7 @@ export default {
   data() {
     return {
       upload: modalData('EntityUpload'),
+      create: modalData(),
       analyze: modalData()
     };
   },
@@ -134,6 +144,12 @@ export default {
       // Update dataset.entities so that the count in the OData loading message
       // reflects the new entities.
       this.dataset.entities += count;
+    },
+    afterCreate() {
+      this.create.hide();
+      this.alert.success(this.$t('alert.create'));
+      this.$refs.list.reset();
+      this.dataset.entities += 1;
     },
     fetchDeletedCount() {
       this.deletedEntityCount.request({
@@ -197,8 +213,10 @@ export default {
 {
   "en": {
     "upload": "Upload Entities",
+    "new": "New",
     "alert": {
-      "upload": "Your Entities have been successfully uploaded."
+      "upload": "Your Entities have been successfully uploaded.",
+      "create": "Entity has been successfully created."
     },
     "purgeDescription": "Entities are deleted after 30 days in the Trash",
     "action": {

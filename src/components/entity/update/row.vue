@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
         {{ requiredLabel(label, required) }}
       </label>
     </td>
-    <td class="old-value" :class="{ empty: oldIsEmpty }">
+    <td v-if="showOldValue" class="old-value" :class="{ empty: oldIsEmpty }">
       <div ref="oldValueContainer">
         {{ oldIsEmpty ? $t('common.emptyValue') : oldValue }}
       </div>
@@ -55,7 +55,11 @@ const props = defineProps({
   },
   required: Boolean,
   disabled: Boolean,
-  disabledMessage: String
+  disabledMessage: String,
+  showOldValue: {
+    type: Boolean,
+    default: true
+  }
 });
 const emit = defineEmits(['update:modelValue']);
 
@@ -75,6 +79,12 @@ const setMinHeight = () => {
 watch(() => props.oldValue, () => { minHeightOutdated = true; });
 
 const update = (value) => {
+  if (!props.showOldValue) {
+    // In create mode, emit the value directly. Emit `undefined` for empty
+    // strings so that axios won't send the value.
+    emit('update:modelValue', value !== '' ? value : undefined);
+    return;
+  }
   // We emit `undefined` if `value` is the same as props.oldValue. If `value` is
   // an empty string, and props.oldValue is nullish, the two are considered to
   // be the same. We emit `undefined` rather than `null` so that axios won't
@@ -85,7 +95,9 @@ const update = (value) => {
 const textarea = ref(null);
 const resize = () => {
   textarea.value.resize();
-  if (minHeightOutdated) setMinHeight();
+  // setMinHeight syncs the textarea height with the old-value cell beside it.
+  // Skip it when showOldValue is false (create mode), since the cell doesn't exist.
+  if (props.showOldValue && minHeightOutdated) setMinHeight();
 };
 defineExpose({ textarea: computed(() => ({ ...textarea.value, resize })) });
 </script>
