@@ -1621,9 +1621,15 @@
       "upload": {
         "string": "Upload Entities"
       },
+      "new": {
+        "string": "New"
+      },
       "alert": {
         "upload": {
           "string": "Your Entities have been successfully uploaded."
+        },
+        "create": {
+          "string": "Entity has been successfully created."
         }
       },
       "purgeDescription": {
@@ -2024,6 +2030,18 @@
       "branch": {
         "string": "Offline update chain",
         "developer_comment": "A series of updates that were made offline"
+      }
+    },
+    "EntityCreate": {
+      "title": {
+        "string": "Create New Entity",
+        "developer_comment": "This is the title at the top of a pop-up for creating a new Entity."
+      },
+      "header": {
+        "value": {
+          "string": "Value",
+          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
+        }
       }
     },
     "EntityDelete": {
