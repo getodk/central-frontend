@@ -10,14 +10,10 @@ import {
 	t,
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
-import { type ResolvedFormInstanceInputType } from '@getodk/xforms-engine';
 import { describe, expect, it } from 'vitest';
 import { Scenario } from '../src/jr/Scenario.ts';
 
-import { constants, type InstanceData } from '@getodk/xforms-engine';
 import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';
-
-const { INSTANCE_FILE_NAME, INSTANCE_FILE_TYPE } = constants;
 
 describe('Value evaluation order', () => {
 	it('default value', async () => {
@@ -57,16 +53,6 @@ describe('Value evaluation order', () => {
 		const instanceXML = `<data id="value-evaluation-order">
 	<element>editing value</element>
 </data>`;
-		const instanceFile = new File([instanceXML], INSTANCE_FILE_NAME, {
-			type: INSTANCE_FILE_TYPE,
-		});
-		const instanceData = new FormData();
-		instanceData.set(INSTANCE_FILE_NAME, instanceFile);
-		const instance = {
-			inputType: 'FORM_INSTANCE_INPUT_RESOLVED' as ResolvedFormInstanceInputType,
-			data: [instanceData as InstanceData] as const,
-		};
-
 		const scenario = await Scenario.init(
 			'Value evalatation order',
 			html(
@@ -80,7 +66,7 @@ describe('Value evaluation order', () => {
 				body(input('/data/element'))
 			),
 			{
-				editInstance: instance,
+				editInstance: instanceXML,
 			}
 		);
 
@@ -91,16 +77,6 @@ describe('Value evaluation order', () => {
 		const instanceXML = `<data id="value-evaluation-order">
 	<element>editing value</element>
 </data>`;
-		const instanceFile = new File([instanceXML], INSTANCE_FILE_NAME, {
-			type: INSTANCE_FILE_TYPE,
-		});
-		const instanceData = new FormData();
-		instanceData.set(INSTANCE_FILE_NAME, instanceFile);
-		const instance = {
-			inputType: 'FORM_INSTANCE_INPUT_RESOLVED' as ResolvedFormInstanceInputType,
-			data: [instanceData as InstanceData] as const,
-		};
-
 		const scenario = await Scenario.init(
 			'Value evalatation order',
 			html(
@@ -114,7 +90,7 @@ describe('Value evaluation order', () => {
 				body(input('/data/element'))
 			),
 			{
-				editInstance: instance,
+				editInstance: instanceXML,
 			}
 		);
 
@@ -125,16 +101,6 @@ describe('Value evaluation order', () => {
 		const instanceXML = `<data id="value-evaluation-order">
 	<element>editing value</element>
 </data>`;
-		const instanceFile = new File([instanceXML], INSTANCE_FILE_NAME, {
-			type: INSTANCE_FILE_TYPE,
-		});
-		const instanceData = new FormData();
-		instanceData.set(INSTANCE_FILE_NAME, instanceFile);
-		const instance = {
-			inputType: 'FORM_INSTANCE_INPUT_RESOLVED' as ResolvedFormInstanceInputType,
-			data: [instanceData as InstanceData] as const,
-		};
-
 		const scenario = await Scenario.init(
 			'Value evalatation order',
 			html(
@@ -149,7 +115,7 @@ describe('Value evaluation order', () => {
 				body(input('/data/element'))
 			),
 			{
-				editInstance: instance,
+				editInstance: instanceXML,
 			}
 		);
 
