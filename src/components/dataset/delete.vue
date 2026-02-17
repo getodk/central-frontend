@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="dataset-delete" :state="state" :hideable="!awaitingResponse" backdrop
-    @hide="$emit('hide')">
+    @hide="emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div class="modal-introduction">
@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
       </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-link" :aria-disabled="awaitingResponse"
-          @click="$emit('hide')">
+          @click="emit('hide')">
           {{ $t('action.noCancel') }}
         </button>
         <button type="button" class="btn btn-danger"
@@ -35,7 +35,7 @@ except according to the terms contained in the LICENSE file.
   </modal>
 </template>
 
-<script>
+<script setup>
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 
@@ -44,39 +44,37 @@ import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
-export default {
-  name: 'DatasetDelete',
-  components: { Modal, Spinner },
-  props: {
-    state: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: ['hide', 'success'],
-  setup() {
-    // The component does not assume that this data will exist when the
-    // component is created.
-    const { project, dataset } = useRequestData();
-    const { request, awaitingResponse } = useRequest();
-    return { project, dataset, request, awaitingResponse };
-  },
-  methods: {
-    del() {
-      this.request({
-        method: 'DELETE',
-        url: apiPaths.dataset(this.dataset.projectId, this.dataset.name)
-      })
-        .then(() => {
-          this.project.datasets -= 1;
-          // project.lastEntity may now be out-of-date. However,
-          // project.lastEntity is not used within ProjectShow.
+defineOptions({
+  name: 'DatasetDelete'
+});
 
-          this.$emit('success');
-        })
-        .catch(noop);
-    }
+defineProps({
+  state: {
+    type: Boolean,
+    default: false
   }
+});
+
+const emit = defineEmits(['hide', 'success']);
+
+// The component does not assume that this data will exist when the
+// component is created.
+const { project, dataset } = useRequestData();
+const { request, awaitingResponse } = useRequest();
+
+const del = () => {
+  request({
+    method: 'DELETE',
+    url: apiPaths.dataset(dataset.projectId, dataset.name)
+  })
+    .then(() => {
+      project.datasets -= 1;
+      // project.lastEntity may now be out-of-date. However,
+      // project.lastEntity is not used within ProjectShow.
+
+      emit('success');
+    })
+    .catch(noop);
 };
 </script>
 
