@@ -182,7 +182,7 @@ describe('setvalue action', () => {
 	});
 
 	describe('region repeats', () => {
-		describe('[`setvalue`] source in repeat', () => {
+		describe('`setvalue` source in repeat', () => {
 			// ported from: https://github.com/getodk/javarosa/blob/2dd8e15e9f3110a86f8d7d851efc98627ae5692e/src/test/java/org/javarosa/core/model/actions/SetValueActionTest.java#L251
 			it('updates destination in the same repeat instance', async () => {
 				const scenario = await Scenario.init(
@@ -777,5 +777,33 @@ describe('setvalue action', () => {
 			const newInstance = cached.newInstance();
 			expect(newInstance.attributeOf('/data/element', 'attr').getValue()).toBe('7');
 		});
+	});
+
+	it('allows multiple `setvalue` elements with the same `ref`', async () => {
+		const scenario = await Scenario.init(
+			'Setvalue multiple',
+			html(
+				head(
+					title('Setvalue multiple'),
+					model(
+						mainInstance(t('data id="setvalue-multiple"', t('repeat id=""', t('source')))),
+						setvalueLiteral('odk-instance-first-load', '/data/repeat/source', 'first')
+					)
+				),
+				body(
+					repeat(
+						'/data/repeat',
+						input(
+							'/data/repeat/source',
+							setvalueLiteral('odk-new-repeat', '/data/repeat/source', 'second')
+						)
+					)
+				)
+			)
+		);
+		expect(scenario.answerOf('/data/repeat[1]/source').getValue()).toBe('first');
+		scenario.createNewRepeat('/data/repeat');
+		expect(scenario.answerOf('/data/repeat[1]/source').getValue()).toBe('first');
+		expect(scenario.answerOf('/data/repeat[2]/source').getValue()).toBe('second');
 	});
 });
