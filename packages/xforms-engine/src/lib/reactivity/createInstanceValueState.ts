@@ -17,7 +17,7 @@ const REPEAT_INDEX_REGEX = /([^[]*)(\[[0-9]+\])/g;
 type ValueContext = AttributeContext | InstanceValueContext;
 
 const isInstanceFirstLoad = (context: ValueContext) => {
-	return context.rootDocument.initializationMode === 'create';
+	return context.rootDocument.initializationMode === 'create' && !isAddingRepeatChild(context);
 };
 
 const isAddingRepeatChild = (context: ValueContext) => {
@@ -28,7 +28,7 @@ const isAddingRepeatChild = (context: ValueContext) => {
  * Special case, does not correspond to any event.
  */
 const isEditInitialLoad = (context: ValueContext) => {
-	return context.rootDocument.initializationMode === 'edit';
+	return context.rootDocument.initializationMode === 'edit' && !isAddingRepeatChild(context);
 };
 
 const getInitialValue = (context: ValueContext): string => {

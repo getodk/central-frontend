@@ -576,6 +576,27 @@ describe('setvalue action', () => {
 			expect(scenario.answerOf('/data/output')).toEqualAnswer(stringAnswer(''));
 		});
 
+		it('odk-instance-first-load does not update on repeat add', async () => {
+			const scenario = await Scenario.init(
+				'Setvalue repeat',
+				html(
+					head(
+						title('Setvalue multiple'),
+						model(
+							mainInstance(t('data id="setvalue-multiple"', t('repeat id=""', t('source')))),
+							setvalueLiteral('odk-instance-first-load', '/data/repeat/source', 'first')
+						)
+					),
+					body(repeat('/data/repeat', input('/data/repeat/source')))
+				)
+			);
+
+			expect(scenario.answerOf('/data/repeat[1]/source').getValue()).toBe('first');
+			scenario.createNewRepeat('/data/repeat');
+			expect(scenario.answerOf('/data/repeat[1]/source').getValue()).toBe('first');
+			expect(scenario.answerOf('/data/repeat[2]/source').getValue()).toBe('');
+		});
+
 		// ported from: https://github.com/getodk/javarosa/blob/2dd8e15e9f3110a86f8d7d851efc98627ae5692e/src/test/java/org/javarosa/core/model/actions/SetValueActionTest.java#L468
 		describe('with inner empty string', () => {
 			it('clears the `ref` target', async () => {
