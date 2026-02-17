@@ -223,14 +223,8 @@ const createActionCalculation = (
 const resolveAndSetValueChanged = (
 	context: ValueContext,
 	setRelevantValue: SimpleAtomicStateSetter<string>,
-	expression: string,
-	candidateValue?: string
+	expression: string
 ): void => {
-	if (candidateValue?.length) {
-		setRelevantValue(candidateValue);
-		return;
-	}
-
 	const calc = context.evaluator.evaluateString(expression, context);
 	const value = context.decodeInstanceValue(calc);
 	setRelevantValue(value);
@@ -246,22 +240,21 @@ const createValueChangedCalculation = (
 		// No element to listen to
 		return;
 	}
-	let previous = '';
+	let previous: string;
 	const sourceElementExpression = new ActionComputationExpression('string', source);
 	const calculateValueSource = createComputedExpression(context, sourceElementExpression); // Registers listener
 	createComputed(() => {
 		if (context.isAttached() && context.isRelevant()) {
 			const valueSource = calculateValueSource();
-			if (previous !== valueSource && referencesCurrentNode(context, ref)) {
+			if (
+				previous !== undefined &&
+				previous !== valueSource &&
+				referencesCurrentNode(context, ref)
+			) {
 				// Only update if value has changed
 				if (action.element.nodeName === SET_GEOPOINT_LOCAL_NAME) {
 					getGeopointValue(context, (point) => {
-						resolveAndSetValueChanged(
-							context,
-							setRelevantValue,
-							action.computation.expression,
-							point
-						);
+						setRelevantValue(point);
 					});
 				} else {
 					resolveAndSetValueChanged(context, setRelevantValue, action.computation.expression);

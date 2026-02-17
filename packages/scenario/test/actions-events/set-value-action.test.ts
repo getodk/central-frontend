@@ -684,6 +684,35 @@ describe('setvalue action', () => {
 
 			expect(scenario.answerOf('/data/destination')).toEqualAnswer(intAnswer(24));
 		});
+
+		it('is not triggered when loading form for editing', async () => {
+			const originalDate = '2025-01-01T10:23:28.822+13:00';
+			const instanceXML = `<data id="xforms-value-changed-event">
+	<source>5</source>
+	<destination>${originalDate}</destination>
+	<meta>
+		<instanceID>uuid:c0b9c932-e78b-474b-8568-48980113a7ac</instanceID>
+	</meta>
+</data>`;
+			const form = html(
+				head(
+					title('Value changed event'),
+					model(
+						mainInstance(t('data id="xforms-value-changed-event"', t('source'), t('destination'))),
+						bind('/data/destination').type('dateTime')
+					)
+				),
+				body(input('/data/source', setvalue('xforms-value-changed', '/data/destination', 'now()')))
+			);
+			const scenario = await Scenario.init('upgrade form', form, {
+				editInstance: instanceXML,
+			});
+
+			expect(scenario.answerOf('/data/destination')).toEqualAnswer(stringAnswer(originalDate));
+
+			scenario.answer('/data/source', 12);
+			expect(scenario.answerOf('/data/destination')).not.toEqualAnswer(stringAnswer(originalDate));
+		});
 	});
 
 	describe('`setvalue`', () => {

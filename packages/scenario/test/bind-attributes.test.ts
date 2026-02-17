@@ -15,11 +15,9 @@ import {
 	t,
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
-import { constants, type InstanceData } from '@getodk/xforms-engine';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../src/jr/Scenario.ts';
-const { INSTANCE_FILE_NAME, INSTANCE_FILE_TYPE } = constants;
 
 const IGNORED_INSTANCE_ID = 'ignored for purposes of functionality under test';
 
@@ -151,11 +149,6 @@ describe('Bind attributes', () => {
 		<deprecatedID>uuid:da0bb609-4293-48bd-ba64-136ffa1c43d3</deprecatedID>
 	</meta>
 </data>`;
-		const instanceFile = new File([instanceXML], INSTANCE_FILE_NAME, {
-			type: INSTANCE_FILE_TYPE,
-		});
-		const instanceData = new FormData();
-		instanceData.set(INSTANCE_FILE_NAME, instanceFile);
 		const form = html(
 			head(
 				title('Neighborhood pet: add'),
@@ -177,10 +170,7 @@ describe('Bind attributes', () => {
 			body(input('/data/species'), input('/data/name'))
 		);
 		const scenario = await Scenario.init('upgrade form', form, {
-			editInstance: {
-				inputType: 'FORM_INSTANCE_INPUT_RESOLVED',
-				data: [instanceData as InstanceData],
-			},
+			editInstance: instanceXML,
 		});
 		expect(scenario.attributeOf('/data/meta/entity', 'id').getValue()).to.equal(
 			'0ed0b751-0d7d-4342-a818-67910a01df9a'
