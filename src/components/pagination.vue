@@ -33,14 +33,6 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-angle-double-right"></span>
       </button>
       <div class="form-group">{{ pageRange }}</div>
-      <!-- <i18n-t tag="div" keypath="rows" :plural="sizeOfCurrentPage"
-      class="form-group">
-        <template #range>
-          <template v-if="empty">0</template>
-          <template v-else>{{ pageRange(page) }}</template>
-        </template>
-        <template #count>{{ $n(count, 'default') }}</template>
-      </i18n-t> -->
       <label class="form-group">
         <select v-model="sizeModel" class="form-control">
           <option v-for="x of sizeOptions" :key="x" :value="x">

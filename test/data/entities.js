@@ -389,5 +389,5 @@ extendedEntities.resolve = (index) => {
 extendedEntities.delete = (index) => {
   const entity = entities.get(index);
   if (entity == null) throw new Error('entity not found');
-  entities.update(index, { deletedAt: new Date() });
+  entities.update(index, { deletedAt: (new Date()).toISOString() });
 };

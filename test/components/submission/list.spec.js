@@ -716,7 +716,7 @@ describe('SubmissionList', () => {
           .respondWithSuccess()
           .afterResponse(component => {
             component.get('.empty-table-message').should.be.visible();
-            component.get('.empty-table-message').text().should.be.equal('There are no deleted Submissions.');
+            component.get('.empty-table-message').text().should.be.equal('All Submissions on the page have been restored.');
           }));
     });
 

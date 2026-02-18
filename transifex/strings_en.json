@@ -5038,6 +5038,9 @@
       "learnMoreMap": {
         "string": "Learn more about mapping Submissions"
       },
+      "allDeletedOnPage": {
+        "string": "All Submissions on the page have been deleted."
+      },
       "downloadDisabled": {
         "string": "Download is unavailable for deleted Submissions"
       },
@@ -5050,6 +5053,9 @@
       "deletedSubmission": {
         "emptyTable": {
           "string": "There are no deleted Submissions."
+        },
+        "allRestoredOnPage": {
+          "string": "All Submissions on the page have been restored."
         }
       },
       "noMapDeleted": {

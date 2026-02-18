@@ -289,7 +289,9 @@ export default {
     emptyMessage() {
       if (!this.odata.dataExists) return '';
       if (this.odata.value.length > 0) return '';
-
+      if (this.odata.removedSubmissions > 0 && this.odata.value.length === 0) {
+        return this.deleted ? this.$t('deletedSubmission.allRestoredOnPage') : this.$t('allDeletedOnPage');
+      }
       if (this.deleted) {
         return this.$t('deletedSubmission.emptyTable');
       }
@@ -513,11 +515,13 @@ export default {
     "noMatching": "There are no matching Submissions.",
     "emptyMap": "Submissions only appear if they include data in the first geo field.",
     "learnMoreMap": "Learn more about mapping Submissions",
+    "allDeletedOnPage": "All Submissions on the page have been deleted.",
     "downloadDisabled": "Download is unavailable for deleted Submissions",
     "filterDisabledMessage": "Filtering is unavailable for deleted Submissions",
     "noMapEncryption": "Map is unavailable due to Form encryption",
     "deletedSubmission": {
       "emptyTable": "There are no deleted Submissions.",
+      "allRestoredOnPage": "All Submissions on the page have been restored."
     },
     "noMapDeleted": "Map is unavailable for deleted Submissions"
   }
