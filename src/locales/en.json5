@@ -464,7 +464,9 @@
     "warning": "Warning",
     "beta": "Beta",
     "none": "(none)",
-    "search": "Search"
+    "search": "Search",
+    // @transifexKey component.FormTrashList.title
+    "trash": "Trash"
   },
   "mixin": {
     "request": {

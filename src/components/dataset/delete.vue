@@ -84,7 +84,7 @@ const del = () => {
     // This is the title at the top of a pop-up.
     "title": "Delete Entity List",
     "introduction": [
-      "Are you sure you want to delete the Entity List ‟{name}”? This cannot be undone."
+      "Are you sure you want to delete the Entity List “{name}”? This cannot be undone."
     ]
   }
 }

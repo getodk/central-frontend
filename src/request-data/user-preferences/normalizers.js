@@ -69,4 +69,8 @@ export class ProjectPreferenceNormalizer extends PreferenceNormalizer {
   static formTrashCollapsed(val) {
     return val === true;
   }
+
+  static datasetTrashCollapsed(val) {
+    return val === true;
+  }
 }

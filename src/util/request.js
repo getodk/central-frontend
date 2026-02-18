@@ -180,10 +180,7 @@ export const apiPaths = {
     const qs = queryString(query);
     return `/v1/projects/${projectId}/datasets/${encodedName}/entities${suffix}${qs}`;
   },
-  deletedDatasetCsv: (projectId, datasetName) => {
-    const encodedName = encodeURIComponent(datasetName);
-    return `/v1/projects/${projectId}/trash/datasets/${encodedName}/entities.csv`;
-  },
+  deletedDatasetCsv: (projectId, datasetId) => `/v1/projects/${projectId}/trash/datasets/${datasetId}/entities.csv`,
   odataEntitiesSvc: datasetPath('.svc'),
   odataEntities: datasetPath('.svc/Entities'),
   entity: entityPath(''),
