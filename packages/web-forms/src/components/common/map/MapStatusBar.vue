@@ -146,15 +146,13 @@ const displayState = computed(() => {
 
 <template>
 	<div class="map-status-bar" :class="{ 'full-screen-active': isFullScreen }">
-		<div v-if="isCapturing" class="map-status-container">
-			<div class="map-status">
+		<div class="map-status-container">
+			<div v-if="isCapturing" class="map-status">
 				<ProgressSpinner class="map-status-spinner" stroke-width="5px" />
 				<!-- TODO: translations -->
 				<span>Capturing location...</span>
 			</div>
-		</div>
 
-		<div class="map-status-container">
 			<div v-if="!isCapturing && displayState" class="map-status">
 				<IconSVG
 					:name="displayState.icon"

@@ -203,6 +203,7 @@ const toggleFullScreen = async () => {
 	isFullScreen.value = !isFullScreen.value;
 	if (!isFullScreen.value) {
 		await nextTick();
+		isAdvancedPanelOpen.value = false;
 		mapHandler.fitToAllFeatures();
 	}
 };
