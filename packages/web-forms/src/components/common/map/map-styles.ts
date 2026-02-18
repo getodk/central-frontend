@@ -1,11 +1,15 @@
 import type { Coordinate } from 'ol/coordinate';
+import type { FeatureLike } from 'ol/Feature';
 import { LineString, MultiPoint, Point, type Polygon } from 'ol/geom';
 import { Fill, Stroke, Style } from 'ol/style';
 import CircleStyle from 'ol/style/Circle';
 import type { Rule } from 'ol/style/flat';
 import mapLocationIcon from '@/assets/images/map-location.svg';
+import mapSavedLocationIcon from '@/assets/images/map-saved-location.svg';
 import type { StyleFunction } from 'ol/style/Style';
 import { getFlatCoordinates } from '@/components/common/map/vertex-geometry.ts';
+import { Map } from 'ol';
+import { getPointResolution } from 'ol/proj';
 
 const HIGHLIGHT_DRAW_COLOR = '#3488AF';
 const DEFAULT_DRAW_LINE_COLOR = '#82C3E0';
@@ -13,6 +17,7 @@ const DEFAULT_VERTEX_FILL_COLOR = '#FFFFFF';
 const DEFAULT_POLYGON_FILL_COLOR = 'rgba(233, 248, 255, 0.8)';
 const DEFAULT_STROKE_COLOR = '#3E9FCC';
 const DEFAULT_STROKE_WIDTH = 4;
+const CLEAR_STROKE_COLOR = '#FFFFFF';
 
 const ICON_ANCHOR = {
 	'icon-anchor': [0.5, 0.95],
@@ -27,6 +32,11 @@ const DEFAULT_POINT_STYLE = {
 	...ICON_ANCHOR,
 };
 
+const SAVED_POINT_STYLE = {
+	...DEFAULT_POINT_STYLE,
+	'icon-src': mapSavedLocationIcon,
+};
+
 const DEFAULT_FEATURE_STYLE = {
 	'stroke-width': DEFAULT_STROKE_WIDTH,
 	'stroke-color': DEFAULT_STROKE_COLOR,
@@ -34,10 +44,14 @@ const DEFAULT_FEATURE_STYLE = {
 };
 
 const SCALE_POINT_STYLE = {
-	'icon-src': mapLocationIcon,
+	...DEFAULT_POINT_STYLE,
 	'icon-width': 50,
 	'icon-height': 50,
-	...ICON_ANCHOR,
+};
+
+const SCALE_SAVED_POINT_STYLE = {
+	...SCALE_POINT_STYLE,
+	'icon-src': mapSavedLocationIcon,
 };
 
 const SCALE_FEATURE_STYLE = {
@@ -59,16 +73,9 @@ const BLUE_GLOW_FEATURE_STYLE = {
 	'fill-color': 'transparent',
 };
 
-const GREEN_GLOW_COLOR = 'rgba(34, 197, 94, 0.6)';
-const GREEN_GLOW_POINT_STYLE = {
-	'circle-radius': 30,
-	'circle-fill-color': GREEN_GLOW_COLOR,
-	'circle-displacement': [0, 22],
-};
-
 const GREEN_GLOW_FEATURE_STYLE = {
 	'stroke-width': OUTLINE_STROKE_WIDTH,
-	'stroke-color': GREEN_GLOW_COLOR,
+	'stroke-color': 'rgba(34, 197, 94, 0.6)',
 	'fill-color': 'transparent',
 };
 
@@ -79,11 +86,15 @@ const LINE_HIT_TOLERANCE = {
 	'stroke-color': LINE_HIT_TOLERANCE_COLOR,
 };
 
-const getVertexStyle = (borderColor: string, fillColor: string, size = 8) => {
+const LOCATION_POINT_FILL = '#6393F2';
+const ACCURACY_FILL = 'rgba(99, 147, 242, 0.3)';
+const ACCURACY_STROKE = 'rgba(99, 147, 242, 0.1)';
+
+const getCircleStyle = (fillColor: string, strokeColor: string, radius = 8, strokeSize = 2) => {
 	return new CircleStyle({
-		radius: size,
+		radius: radius,
 		fill: new Fill({ color: fillColor }),
-		stroke: new Stroke({ color: borderColor, width: 2 }),
+		stroke: new Stroke({ color: strokeColor, width: strokeSize }),
 	});
 };
 
@@ -145,7 +156,7 @@ export function getSavedStyles(featureIdProp: string, savedPropName: string): Ru
 	return [
 		{
 			filter: makeFilter(['Point'], [filter]),
-			style: [GREEN_GLOW_POINT_STYLE, DEFAULT_POINT_STYLE, SCALE_POINT_STYLE],
+			style: [SAVED_POINT_STYLE, DEFAULT_POINT_STYLE, SCALE_SAVED_POINT_STYLE],
 		},
 		{
 			filter: makeFilter(['LineString', 'Polygon'], [filter]),
@@ -163,14 +174,14 @@ const createFeatureDrawStyle = (featureColor: string) => {
 
 const createUnselectedVertexDrawStyle = (featureColor: string, coords: Coordinate[]) => {
 	return new Style({
-		image: getVertexStyle(featureColor, DEFAULT_VERTEX_FILL_COLOR),
+		image: getCircleStyle(DEFAULT_VERTEX_FILL_COLOR, featureColor),
 		geometry: () => (coords.length > 1 ? new MultiPoint(coords.slice(0, -1)) : undefined),
 	});
 };
 
 const createSelectedVertexDrawStyle = (vertexIndex: number | undefined, coords: Coordinate[]) => {
 	return new Style({
-		image: getVertexStyle('#FFFFFF', HIGHLIGHT_DRAW_COLOR),
+		image: getCircleStyle(HIGHLIGHT_DRAW_COLOR, CLEAR_STROKE_COLOR),
 		geometry: () => {
 			if (vertexIndex === undefined) {
 				return;
@@ -185,7 +196,7 @@ const createSelectedVertexDrawStyle = (vertexIndex: number | undefined, coords: 
 
 const createLastVertexDrawStyle = (offset: number, coords: Coordinate[]) => {
 	return new Style({
-		image: getVertexStyle(HIGHLIGHT_DRAW_COLOR, DEFAULT_VERTEX_FILL_COLOR),
+		image: getCircleStyle(DEFAULT_VERTEX_FILL_COLOR, HIGHLIGHT_DRAW_COLOR),
 		geometry: () => {
 			const firstCoordinate = coords[0];
 			if (coords.length === 1 && firstCoordinate) {
@@ -235,7 +246,7 @@ export function getDrawStyles(
 }
 
 export function getPhantomPointStyle(): Style | undefined {
-	const vertex = getVertexStyle(HIGHLIGHT_DRAW_COLOR, HIGHLIGHT_DRAW_COLOR, DEFAULT_STROKE_WIDTH);
+	const vertex = getCircleStyle(HIGHLIGHT_DRAW_COLOR, HIGHLIGHT_DRAW_COLOR, 4);
 
 	// Make it transparent on touch devices to suppress phantom visibility
 	const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
@@ -244,4 +255,62 @@ export function getPhantomPointStyle(): Style | undefined {
 	}
 
 	return new Style({ image: vertex });
+}
+
+const LOCATION_DOT_RADIUS = 13;
+const LOCATION_DOT_STYLE = new Style({
+	image: new CircleStyle({
+		radius: LOCATION_DOT_RADIUS,
+		fill: new Fill({ color: LOCATION_POINT_FILL }),
+		stroke: new Stroke({ color: CLEAR_STROKE_COLOR, width: DEFAULT_STROKE_WIDTH }),
+	}),
+	zIndex: 2,
+});
+const ACCURACY_FILL_STYLE = new Fill({ color: ACCURACY_FILL });
+const ACCURACY_STROKE_STYLE = new Stroke({ color: ACCURACY_STROKE, width: 1 });
+const STYLE_UPDATE_TOLERANCE_PX = 5;
+
+export function createCurrentLocationStyle(map: Map): StyleFunction {
+	const DOT_ONLY = [LOCATION_DOT_STYLE];
+	const projection = map.getView().getProjection();
+	let lastRadius = 0;
+	let lastStyles = DOT_ONLY;
+
+	return (feature: FeatureLike, resolution: number): Style[] => {
+		const accuracy = feature.get('accuracy') as number | undefined;
+		const geometry = feature.getGeometry() as Point;
+
+		let targetRadius = 0;
+		if (accuracy && geometry) {
+			const mPerPixel = getPointResolution(projection, resolution, geometry.getCoordinates(), 'm');
+			if (mPerPixel > 0) {
+				targetRadius = accuracy / mPerPixel;
+			}
+		}
+
+		if (Math.abs(targetRadius - lastRadius) < STYLE_UPDATE_TOLERANCE_PX) {
+			return lastStyles;
+		}
+
+		lastRadius = targetRadius;
+		const mapWidth = map.getSize()?.[0] ?? 0;
+		if (targetRadius < LOCATION_DOT_RADIUS || targetRadius * 2 > mapWidth) {
+			lastStyles = DOT_ONLY;
+			return lastStyles;
+		}
+
+		lastStyles = [
+			new Style({
+				image: new CircleStyle({
+					radius: targetRadius,
+					fill: ACCURACY_FILL_STYLE,
+					stroke: ACCURACY_STROKE_STYLE,
+				}),
+				zIndex: 1,
+			}),
+			LOCATION_DOT_STYLE,
+		];
+
+		return lastStyles;
+	};
 }

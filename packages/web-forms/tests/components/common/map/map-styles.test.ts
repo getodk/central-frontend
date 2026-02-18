@@ -145,9 +145,12 @@ describe('Map Styles', () => {
 			],
 			style: [
 				{
-					'circle-radius': 30,
-					'circle-fill-color': 'rgba(34, 197, 94, 0.6)',
-					'circle-displacement': [0, 22],
+					'icon-src': iconMock,
+					'icon-width': 40,
+					'icon-height': 40,
+					'icon-anchor': [0.5, 0.95],
+					'icon-anchor-x-units': 'fraction',
+					'icon-anchor-y-units': 'fraction',
 				},
 				{
 					'icon-src': iconMock,
