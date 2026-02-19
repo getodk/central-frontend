@@ -1,5 +1,15 @@
 # @getodk/common
 
+## 0.12.0
+
+### Minor Changes
+
+- dc089de: Adds support for labels with audio and video
+
+### Patch Changes
+
+- 4346971: Adds support for Geoshape and Geotrace.
+
 ## 0.11.1
 
 ### Patch Changes

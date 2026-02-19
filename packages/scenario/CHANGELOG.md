@@ -1,5 +1,17 @@
 # @getodk/scenario
 
+## 0.11.2
+
+### Patch Changes
+
+- 4346971: Adds support for Geoshape and Geotrace.
+- 72a4961: Allow for multiple setvalue actions to reference the same element
+- cd382fb: Set attribute value to instance value when editing submission
+- c44525a: Fixed xforms-value-changed firing when loading submission for edit
+- ad6d0ba: Fixes odk-instance-first-load so it doesn't run on add repeat
+- 126e11d: Adds support for setgeopoint
+- d1811f2: Fixes preload bindings so they only set the value on first load
+
 ## 0.11.1
 
 ### Patch Changes

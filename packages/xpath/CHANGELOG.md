@@ -1,5 +1,19 @@
 # @getodk/xpath
 
+## 0.10.0
+
+### Minor Changes
+
+- 8f49cfa: Adds geofence xpath function
+
+### Patch Changes
+
+- 2276870: Removes temporal-polyfill from xpath bundle
+- a3839c1: Fixes a range of memory leaks when resetting form instances
+- Updated dependencies [4346971]
+- Updated dependencies [dc089de]
+  - @getodk/common@0.12.0
+
 ## 0.9.2
 
 ### Patch Changes

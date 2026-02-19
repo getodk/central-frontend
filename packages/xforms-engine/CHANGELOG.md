@@ -1,5 +1,26 @@
 # @getodk/xforms-engine
 
+## 0.17.0
+
+### Minor Changes
+
+- 8f49cfa: Adds geofence xpath function
+- 4346971: Adds support for Geoshape and Geotrace.
+- 126e11d: Adds support for setgeopoint
+
+### Patch Changes
+
+- 72a4961: Allow for multiple setvalue actions to reference the same element
+- 2276870: Removes temporal-polyfill from xpath bundle
+- a3839c1: Fixes a range of memory leaks when resetting form instances
+- b6ed538: Parsing external instance csvs should be permissive of empty rows
+- cd382fb: Set attribute value to instance value when editing submission
+- 031d0d1: Adds a generated ID to markdown nodes to use as the key in vue loops
+- c44525a: Fixed xforms-value-changed firing when loading submission for edit
+- ad6d0ba: Fixes odk-instance-first-load so it doesn't run on add repeat
+- 14b65e4: Defer evaluation of translation elements to improve performance
+- d1811f2: Fixes preload bindings so they only set the value on first load
+
 ## 0.16.1
 
 ### Patch Changes

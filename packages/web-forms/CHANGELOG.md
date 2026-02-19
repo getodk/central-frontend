@@ -1,5 +1,39 @@
 # @getodk/web-forms
 
+## 0.19.0
+
+### Minor Changes
+
+- 6bc1715: Improve map full-screen UX on mobile
+- 8f49cfa: Adds geofence xpath function
+- 4346971: Adds support for Geoshape and Geotrace.
+- 6f682f3: Remove long-press interactions in maps
+- def68e1: Update the current location indicator for maps
+- 30a6a7c: Adds unlimited undo history for map interactions
+- dc089de: Adds support for labels with audio and video
+- a8f37a8: Remove “Get location” overlay from geopoint with placement-map
+- e7fe47a: Remove the save button in geopoint with maps and placement-map appearances
+- 859699c: Add support for the masked appearance
+- 126e11d: Adds support for setgeopoint
+- 653fb7f: Adds support for editing the coordinates in geoshape and geotrace question types.
+
+### Patch Changes
+
+- 72a4961: Allow for multiple setvalue actions to reference the same element
+- 2276870: Removes temporal-polyfill from xpath bundle
+- a3839c1: Fixes a range of memory leaks when resetting form instances
+- da6dc94: Improves the UIUX of map status bar and fit to feature
+- b6ed538: Parsing external instance csvs should be permissive of empty rows
+- cd382fb: Set attribute value to instance value when editing submission
+- 031d0d1: Adds a generated ID to markdown nodes to use as the key in vue loops
+- c44525a: Fixed xforms-value-changed firing when loading submission for edit
+- 3e695c7: Prevent background scroll and browser zooming in full-screen map
+- ad6d0ba: Fixes odk-instance-first-load so it doesn't run on add repeat
+- 14b65e4: Defer evaluation of translation elements to improve performance
+- 265b8c4: Fix micro-panning interference, optimize full-screen UI and location tracking
+- cc95fd2: Hide Entity special properties from the maps property dialog
+- d1811f2: Fixes preload bindings so they only set the value on first load
+
 ## 0.18.2
 
 ### Patch Changes
