@@ -15,7 +15,7 @@ import formWithAttachmentXml from '../data/xml/with-attachment/form.xml';
 import { mockLogin } from '../util/session';
 import { mergeMountOptions } from '../util/lifecycle';
 import { setFiles } from '../util/trigger';
-import { waitUntil } from '../util/util';
+import { wait, waitUntil } from '../util/util';
 
 describe('WebFormRenderer', () => {
   let WebFormRenderer;
@@ -171,6 +171,8 @@ describe('WebFormRenderer', () => {
 
     await component.find('.odk-form .footer button').trigger('click');
 
+    await wait();
+
     const modal = component.get('#web-form-renderer-submission-modal');
 
     modal.find('.modal-introduction').text().should.equal('The data you entered is valid, but it was not submitted because this is a Form preview.');
@@ -314,7 +316,10 @@ describe('WebFormRenderer', () => {
         .respondWithData(() => [])
         .respondWithData(() => simpleSubmission)
         .complete()
-        .request((c) => c.find('.odk-form .footer button').trigger('click'))
+        .request(async (c) => {
+          await c.find('.odk-form .footer button').trigger('click');
+          await clock.tick(0);
+        })
         .respondWithData(() => ({ currentVersion: { instanceId: '123' } }))
         .testRequests([
           {
