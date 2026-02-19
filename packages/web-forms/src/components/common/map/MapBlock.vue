@@ -133,6 +133,15 @@ watch(
 	(newValue) => mapHandler.setupMapInteractions(newValue)
 );
 
+watch(isFullScreen, async (newValue) => {
+	if (!newValue) {
+		await nextTick();
+		isAdvancedPanelOpen.value = false;
+		mapHandler.fitToAllFeatures();
+		mapHandler.stopWatchingCurrentLocation();
+	}
+});
+
 const onFeaturePlacement = () => emitSavedFeature();
 
 watch(
@@ -199,13 +208,8 @@ const enterFullScreen = () => {
 	}
 };
 
-const toggleFullScreen = async () => {
+const toggleFullScreen = () => {
 	isFullScreen.value = !isFullScreen.value;
-	if (!isFullScreen.value) {
-		await nextTick();
-		isAdvancedPanelOpen.value = false;
-		mapHandler.fitToAllFeatures();
-	}
 };
 </script>
 
@@ -421,11 +425,16 @@ const toggleFullScreen = async () => {
 	:deep(.advanced-panel) {
 		flex-shrink: 0;
 	}
+
+	.map-overlay.get-location-overlay .close-full-screen {
+		display: block;
+	}
 }
 
 .map-block-component :deep(.ol-zoom) {
 	@include mb.map-control-bar-vertical;
 	bottom: 35px;
+	height: fit-content;
 
 	button,
 	button:hover,
@@ -519,15 +528,12 @@ const toggleFullScreen = async () => {
 	}
 
 	.map-container.map-full-screen {
-		.map-overlay.get-location-overlay .close-full-screen {
-			display: block;
-		}
-
 		:deep(.ol-zoom) {
 			display: flex;
 			top: 195px;
 			right: var(--odk-map-controls-spacing);
 			bottom: var(--odk-map-controls-spacing);
+			height: fit-content;
 		}
 	}
 

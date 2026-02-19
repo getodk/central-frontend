@@ -76,13 +76,14 @@ export function useMapViewControls(mapInstance: Map): UseMapViewControls {
 		const view = mapInstance.getView();
 		const center = getCenter(extent);
 		const distance = evaluateDistance(view, center);
+		const padding = [70, 70, 70, 70];
 		if (distance === DISTANCE_CATEGORY.LONG) {
 			view.animate(
 				{ zoom: INTERMEDIATE_ZOOM, duration: ANIMATION_TIME_MS, easing: easeOut },
 				{ center: center, duration: ANIMATION_TIME_MS, easing: easeOut },
 				() => {
 					view.fit(extent, {
-						padding: [50, 50, 50, 50],
+						padding,
 						duration: 0,
 						maxZoom: MAX_ZOOM,
 					});
@@ -92,7 +93,7 @@ export function useMapViewControls(mapInstance: Map): UseMapViewControls {
 		}
 
 		view.fit(extent, {
-			padding: [50, 50, 50, 50],
+			padding,
 			duration: getZoomDuration(distance),
 			maxZoom: MAX_ZOOM,
 		});
@@ -103,6 +104,9 @@ export function useMapViewControls(mapInstance: Map): UseMapViewControls {
 			clearTimeout(debounceTimer.value);
 		}
 		debounceTimer.value = setTimeout(() => {
+			if (!watchLocation.value) {
+				return;
+			}
 			const { latitude, longitude, altitude, accuracy } = position.coords;
 			userCurrentLocation.value = { latitude, longitude, altitude, accuracy };
 			onSuccess();
@@ -142,13 +146,18 @@ export function useMapViewControls(mapInstance: Map): UseMapViewControls {
 	};
 
 	const stopWatchingCurrentLocation = () => {
-		currentLocationSource.clear(true);
-		userCurrentLocation.value = undefined;
+		if (debounceTimer.value) {
+			clearTimeout(debounceTimer.value);
+			debounceTimer.value = undefined;
+		}
 
 		if (watchLocation.value) {
 			navigator.geolocation.clearWatch(watchLocation.value);
 			watchLocation.value = undefined;
 		}
+
+		userCurrentLocation.value = undefined;
+		currentLocationSource.clear(true);
 	};
 
 	const resolveTargetViewSettings = (extent: Extent, view: View, size: Size) => {

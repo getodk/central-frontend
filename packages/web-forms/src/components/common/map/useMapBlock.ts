@@ -135,6 +135,7 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 			}),
 			controls: [new Zoom(), new Attribution({ collapsible: false })],
 			interactions: defaultInteractions({ doubleClickZoom: false }),
+			moveTolerance: 8, // Prevents micro-panning from suppressing click events
 		});
 
 		mapViewControls = useMapViewControls(mapInstance);
@@ -151,9 +152,7 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 		);
 
 		initLayer(geoJSON, savedFeatureValue);
-		mapInteractions.setupMapVisibilityObserver(mapContainer, () =>
-			mapViewControls?.stopWatchingCurrentLocation()
-		);
+		mapInteractions.setupMapVisibilityObserver(mapContainer, () => stopWatchingCurrentLocation());
 		currentState.value = STATES.READY;
 	};
 
@@ -409,10 +408,10 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 			return;
 		}
 
-		clearMap();
 		if (currentMode.capabilities.canSaveCurrentLocation) {
-			mapViewControls?.stopWatchingCurrentLocation();
+			stopWatchingCurrentLocation();
 		}
+		clearMap();
 	};
 
 	const unselectFeature = () => {
@@ -423,7 +422,7 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 	const clearSavedFeature = () => mapFeatures?.saveFeature(undefined);
 
 	const teardownMap = () => {
-		mapViewControls?.stopWatchingCurrentLocation();
+		stopWatchingCurrentLocation();
 		mapViewControls = undefined;
 		mapInteractions?.teardownMap();
 		mapInteractions = undefined;
@@ -508,6 +507,11 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 		);
 	};
 
+	const stopWatchingCurrentLocation = () => {
+		currentState.value = STATES.READY;
+		mapViewControls?.stopWatchingCurrentLocation();
+	};
+
 	const findAndSaveFeature = (feature: GeoJsonFeature | undefined) => {
 		return mapFeatures?.findAndSaveFeature(
 			featuresSource,
@@ -538,6 +542,7 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 		isMapEmpty: () => featuresSource.isEmpty(),
 		fitToAllFeatures: () => mapViewControls?.fitToAllFeatures(featuresSource),
 		watchCurrentLocation,
+		stopWatchingCurrentLocation,
 		canRemoveCurrentLocation,
 
 		discardSavedFeature,
