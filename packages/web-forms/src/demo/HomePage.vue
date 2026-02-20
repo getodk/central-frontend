@@ -49,9 +49,9 @@ const isDev = import.meta.env.DEV;
 						<div class="sample-preview">
 							<img
 								class="sample-image"
-								srcset="../assets/images/demo-screenshot@1x.jpg,
-												../assets/images/demo-screenshot@2x.jpg 2x"
-								src="../assets/images/demo-screenshot@2x.jpg"
+								srcset="./assets/images/demo-screenshot@1x.jpg,
+												./assets/images/demo-screenshot@2x.jpg 2x"
+								src="./assets/images/demo-screenshot@2x.jpg"
 								alt="Sample Form Preview"
 							>
 						</div>

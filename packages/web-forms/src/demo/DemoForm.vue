@@ -14,13 +14,13 @@ const props = defineProps<{
 
 const imageSrcSet = computed(
 	() => `
-	${new URL(`../assets/images/${props.imageName}@1x.jpg`, import.meta.url).href},
-	${new URL(`../assets/images/${props.imageName}@2x.jpg`, import.meta.url).href} 2x
+	${new URL(`./assets/images/${props.imageName}@1x.jpg`, import.meta.url).href},
+	${new URL(`./assets/images/${props.imageName}@2x.jpg`, import.meta.url).href} 2x
 `
 );
 
 const imageSrc = computed(
-	() => new URL(`../assets/images/${props.imageName}@2x.jpg`, import.meta.url).href
+	() => new URL(`./assets/images/${props.imageName}@2x.jpg`, import.meta.url).href
 );
 
 const formXml = computed(() => {
