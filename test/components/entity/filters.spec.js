@@ -239,7 +239,7 @@ describe('EntityFilters', () => {
 
     it('re-renders the table', () => {
       testData.extendedEntities.createPast(250);
-      load('/projects/1/entity-lists/trees/entities', {
+      return load('/projects/1/entity-lists/trees/entities', {
         attachTo: document.body
       })
         .complete()

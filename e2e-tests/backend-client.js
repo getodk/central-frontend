@@ -43,7 +43,7 @@ export default class BackendClient {
       data: formTemplate
         .replaceAll('{{ formId }}', `${this.#prefix}_${faker.word.noun()}`)
     });
-    expect(response.ok()).toBeTruthy();
+    expect(response).toBeOK();
     return response.json();
   };
 
@@ -59,14 +59,14 @@ export default class BackendClient {
         .replace('{{ firstName }}', faker.person.firstName())
         .replace('{{ formId }}', xmlFormId)
     });
-    expect(response.ok()).toBeTruthy();
+    expect(response).toBeOK();
     return response.json();
   };
 
   editSubmission = async (xmlFormId, instanceId) => {
     const request = await this.#getRequest();
     const response = await request.get(`/v1/projects/${projectId}/forms/${xmlFormId}/submissions/${instanceId}/edit`);
-    expect(response.ok()).toBeTruthy();
+    expect(response).toBeOK();
   };
 
   createDraftVersion = async (xmlFormId, version = 'v2') => {
@@ -81,10 +81,10 @@ export default class BackendClient {
         .replace('<data', `<data version="${version}"`)
         .replace('</h:title>', ` - ${version}</h:title>`)
     });
-    expect(response.ok()).toBeTruthy();
+    expect(response).toBeOK();
 
     const getResponse = await request.get(`/v1/projects/${projectId}/forms/${xmlFormId}/draft`);
-    expect(getResponse.ok()).toBeTruthy();
+    expect(getResponse).toBeOK();
     return getResponse.json();
   };
 
@@ -96,7 +96,7 @@ export default class BackendClient {
         once
       }
     });
-    expect(response.ok()).toBeTruthy();
+    expect(response).toBeOK();
     return response.json();
   };
 
@@ -107,7 +107,7 @@ export default class BackendClient {
         webformsEnabled: enable
       }
     });
-    expect(response.ok()).toBeTruthy();
+    expect(response).toBeOK();
   };
 
   createFormAndChildren = async () => {

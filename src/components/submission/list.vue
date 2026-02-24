@@ -75,7 +75,7 @@ except according to the terms contained in the LICENSE file.
         @review="showReview" @delete="showDelete" @restore="showRestore"/>
       <submission-map-view v-else ref="view"
         :project-id="projectId" :xml-form-id="xmlFormId"
-        :filter="geojsonFilter"
+        :filter="odataFilter"
         :awaiting-responses="awaitingResponses"
         @review="showReview" @delete="showDelete"/>
     </div>
@@ -267,21 +267,6 @@ export default {
         conditions.push(`(${condition})`);
       }
       return conditions.length !== 0 ? conditions.join(' and ') : null;
-    },
-    geojsonFilter() {
-      if (this.draft) return null;
-      const query = {};
-      if (this.filtersOnSubmitterId) query.submitterId = this.submitterIds;
-      if (this.submissionDateRange.length !== 0) {
-        query.start__gte = this.submissionDateRange[0].toISO();
-        query.end__lte = this.submissionDateRange[1].endOf('day').toISO();
-      }
-      if (this.reviewStates.length !== this.allReviewStates.length) {
-        query.reviewState = this.reviewStates.map(reviewState =>
-          // Undo odataLiteral(): remove quotes.
-          (reviewState === 'null' ? reviewState : reviewState.slice(1, -1)));
-      }
-      return Object.keys(query).length !== 0 ? query : null;
     },
     emptyMapMessage() {
       return joinSentences(this.$i18n, [this.$t('common.emptyMap'), this.$t('emptyMap')]);

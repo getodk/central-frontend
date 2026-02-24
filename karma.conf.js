@@ -23,6 +23,10 @@ webpackConfigForKarma.plugins.push(VueI18nPlugin({
   fullInstall: true,
   dropMessageCompiler: true
 }));
+// eslint-disable-next-line arrow-body-style
+webpackConfigForKarma.plugins = webpackConfigForKarma.plugins.filter(plugin => {
+  return plugin.constructor.name !== 'HtmlWebpackPlugin';
+});
 webpackConfigForKarma.devtool = 'inline-source-map';
 // See additional warning information.
 webpackConfigForKarma.stats = {
@@ -37,7 +41,7 @@ webpackConfigForKarma.module.rules.push({
 
 module.exports = (config) => {
   config.set({
-    frameworks: ['webpack', 'mocha'],
+    frameworks: ['webpack', 'mocha', 'source-map-support'],
     files: [
       'test/index.js',
       { pattern: 'public/fonts/icomoon.ttf', served: true, included: false },
@@ -51,7 +55,7 @@ module.exports = (config) => {
       '/test/files/': '/base/test/files/',
 
       // Images
-      '/img/banner@1x.603ede21.png': '/base/src/assets/images/whats-new/banner@1x.png', // Smaller resolution for circleCI test
+      '/img/banner@1x.2ab8c238.png': '/base/src/assets/images/whats-new/banner@1x.png', // Smaller resolution for circleCI test
       '/img/map-location.b523ce2d.svg': '/base/src/assets/images/geojson-map/map-location.svg',
       '/img/fullscreen.37a932a6.svg': '/base/src/assets/images/geojson-map/fullscreen.svg'
     },
@@ -60,10 +64,15 @@ module.exports = (config) => {
     },
     webpack: webpackConfigForKarma,
     browsers: ['ChromeHeadless'],
+    browserDisconnectTimeout: 300_000,
+    browserDisconnectTolerance: 3,
     reporters: ['spec'],
     singleRun: true,
     client: {
-      mocha: { grep: process.env.TEST_PATTERN || '.' }
+      mocha: {
+        grep: process.env.TEST_PATTERN || '.',
+        timeout: 4000,
+      },
     },
     customLaunchers: {
       ChromeDebugging: {

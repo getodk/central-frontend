@@ -1504,6 +1504,9 @@
         },
         "num_entities_with_geometry": {
           "string": "Nombre d'entités avec données géographiques"
+        },
+        "num_multi_entity_errors": {
+          "string": "Nombre d'erreurs d'entités créées par répétition"
         }
       }
     },
@@ -5467,11 +5470,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "",
+        "string": "Cartes 🗺️, suppression en masse 🗑️, et plus de visibilité 👀",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": ""
+        "string": "Essayez les nouvelles vues cartographiques pour les soumissions et les entités, nettoyez vos données plus rapidement avec la suppression en masse des entités, et comprenez mieux vos utilisateurs grâce à l'affichage des statuts d'invitation!"
       }
     }
   },

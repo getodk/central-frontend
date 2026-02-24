@@ -43,7 +43,7 @@ except according to the terms contained in the LICENSE file.
         @clear-selection="clearSelectedEntities"
         @update="showUpdate" @resolve="showResolve" @delete="showDelete"
         @restore="showRestore"/>
-      <entity-map-view v-else ref="view" :filter="geojsonFilter"
+      <entity-map-view v-else ref="view" :filter="odataFilter"
         :search-term="searchTerm" :awaiting-responses="awaitingResponses"
         @update="showUpdate" @resolve="showResolve" @delete="showDelete"/>
     </disable-container>
@@ -242,17 +242,6 @@ export default {
         conditions.push(this.conflict[0] ? '__system/conflict ne null' : '__system/conflict eq null');
       }
       return conditions.length !== 0 ? conditions.join(' and ') : null;
-    },
-    geojsonFilter() {
-      const query = {};
-      if (this.filtersOnCreatorId) query.creatorId = this.creatorIds;
-      if (this.creationDateRange.length !== 0) {
-        query.start__gte = this.creationDateRange[0].toISO();
-        query.end__lte = this.creationDateRange[1].endOf('day').toISO();
-      }
-      if (this.conflict.length === 1)
-        query.conflict = this.conflict[0] ? ['soft', 'hard'] : 'null';
-      return Object.keys(query).length !== 0 ? query : null;
     },
     emptyMessage() {
       if (!this.odataEntities.dataExists) return '';
@@ -762,6 +751,7 @@ export default {
   "zh": {
     "noEntities": "暂无实体可显示。",
     "noMatching": "没有匹配的实体。",
+    "emptyMap": "仅当实体包含几何属性数据时才会显示该实体。",
     "allDeleted": "所有实体已被删除。",
     "allDeletedOnPage": "本页所有实体已被删除。",
     "alert": {
@@ -771,6 +761,7 @@ export default {
     },
     "filterDisabledMessage": "筛选功能对已删除的实体不可用",
     "searchDisabledMessage": "搜索功能对已删除的实体不可用",
+    "mapDisabled": "已删除实体的地图功能不可用",
     "downloadDisabled": "下载功能对已删除的实体不可用",
     "deletedEntity": {
       "emptyTable": "没有已删除的实体。",
@@ -785,6 +776,7 @@ export default {
   "zh-Hant": {
     "noEntities": "沒有可顯示的實體。",
     "noMatching": "無相符的實體。",
+    "emptyMap": "只有在實體包含地理屬性資料時，才會顯示該實體。",
     "allDeleted": "所有實體都會被刪除。",
     "allDeletedOnPage": "頁面上的所有實體都已刪除。",
     "alert": {
@@ -794,6 +786,7 @@ export default {
     },
     "filterDisabledMessage": "已刪除的實體無法使用篩選功能",
     "searchDisabledMessage": "已刪除的實體無法使用搜尋功能",
+    "mapDisabled": "已刪除實體的地圖功能不可用",
     "downloadDisabled": "已刪除的實體無法下載",
     "deletedEntity": {
       "emptyTable": "沒有已刪除的實體。",

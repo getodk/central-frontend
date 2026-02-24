@@ -1,4 +1,6 @@
 #!/bin/bash -eu
+set -o pipefail
+shopt -s inherit_errexit
 
 log() {
   echo "[e2e-tester] $*"
@@ -10,6 +12,7 @@ ODK_PORT="8989"
 ODK_PROTOCOL="http://"
 ODK_USER="alice@example.com"
 ODK_PASSWORD="Testpassword@12345"
+SKIP_INSTALL=false
 
 show_help() {
   cat <<EOF
@@ -23,6 +26,7 @@ Options:
   --password=PASSWORD Set the protocol (default: $ODK_PASSWORD)
   --ui                Pass --ui option to playwright
   --help              Show this help message and exit
+  --skip-install      Assume playwright is already available
 EOF
 }
 
@@ -35,6 +39,7 @@ while [[ $# -gt 0 ]]; do
     --user=*) ODK_USER="${1#*=}"; shift ;;
     --password=*) ODK_PASSWORD="${1#*=}"; shift ;;
     --ui) PLAYWRIGHT_UI=true; shift ;;
+    --skip-install) SKIP_INSTALL=true; shift ;;
     --help) show_help; exit 0 ;;
     *) echo "Unknown option: $1"; show_help; exit 1 ;;
   esac
@@ -55,25 +60,35 @@ export PW_EXPERIMENTAL_SERVICE_WORKER_NETWORK_EVENTS=1
 if [[ ${CI-} = true ]]; then
   log "Installing apt dependencies..."
   sudo apt-get install -y wait-for-it
+  sudo -k
 
   log "Waiting for ODK Central to start..."
-  wait-for-it $ODK_DOMAIN:$ODK_PORT --strict --timeout=60 -- echo '[e2e-tester] odk-central is UP!'
+  wait-for-it "$ODK_DOMAIN:$ODK_PORT" --strict --timeout=60 -- echo '[e2e-tester] odk-central is UP!'
 
   log "Creating test users..."
-  docker compose exec service bash -c "echo $ODK_PASSWORD | node lib/bin/cli.js --email $ODK_USER user-create"
-  docker compose exec service node lib/bin/cli.js --email $ODK_USER user-promote
+  docker compose exec service bash -c "echo '$ODK_PASSWORD' | node lib/bin/cli.js --email '$ODK_USER' user-create"
+  docker compose exec service node lib/bin/cli.js --email "$ODK_USER" user-promote
   log "Test user created."
   cd client
 fi
 
-log "Installing npm packages..."
-npm ci
+if [[ "$SKIP_INSTALL" = "true" ]]; then
+  log "Skipping npm install."
+else
+  log "Installing npm packages..."
+  npm ci
+fi
 
 cd e2e-tests
 log "Playwright: $(npx playwright --version)"
 
-log "Installing playwright deps..."
-npx playwright install --with-deps
+if [[ "$SKIP_INSTALL" = "true" ]]; then
+  log "Skipping playwright install."
+else
+  log "Installing playwright deps..."
+  npx playwright install --with-deps
+  sudo -k
+fi
 
 log "Running playwright tests..."
 npx playwright test ${PLAYWRIGHT_UI:+--ui}

@@ -1504,6 +1504,9 @@
         },
         "num_entities_with_geometry": {
           "string": ""
+        },
+        "num_multi_entity_errors": {
+          "string": ""
         }
       }
     },

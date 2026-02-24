@@ -1504,6 +1504,9 @@
         },
         "num_entities_with_geometry": {
           "string": "Numero di entità con proprietà geometrica"
+        },
+        "num_multi_entity_errors": {
+          "string": "Numero di errori da Entità ripetute"
         }
       }
     },
@@ -5467,11 +5470,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "",
+        "string": "Mappe ️🗺️, eliminazione in blocco ️🗑️ e migliore visibilità del sistema 👀",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": ""
+        "string": "Presentiamo una nuova visualizzazione della mappa per gli invii e le entità, una gestione dei dati più rapida grazie alla cancellazione in blocco delle entità e una visione più chiara del sistema grazie alla visualizzazione dello stato degli inviti agli utenti e dei timestamp dell'ultimo aggiornamento."
       }
     }
   },
