@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div v-if="count > 0" class="pagination">
+  <div v-if="computedCount > 0" class="pagination">
     <form class="form-inline">
       <button type="button" class="btn btn-link" :aria-label="$t('action.first')"
         :aria-disabled="page === 0" v-tooltip.aria-label
@@ -82,14 +82,14 @@ const emit = defineEmits(['update:page', 'update:size']);
 
 const lastPage = computed(() => Math.ceil(props.count / props.size) - 1);
 
-const count = computed(() => props.count - props.removed);
+const computedCount = computed(() => props.count - props.removed);
 
 const { formatRange, tn } = useI18nUtils();
 const { t, n } = useI18n();
 
 const sizeOfCurrentPage = computed(() => {
   if (props.page < lastPage.value) return props.size - props.removed;
-  const r = count.value % props.size;
+  const r = computedCount.value % props.size;
   return r === 0 ? props.size : r;
 });
 
@@ -99,10 +99,10 @@ const empty = computed(() => props.count === 0 || sizeOfCurrentPage.value === 0 
 const pageRange = computed(() => {
   // Copy of `zeroRow` breaks the general pluralization rules. We want to say "Row 0 of N", general
   // words get pluralized for 0, here we don't want to do that.
-  if (empty.value) return tn('zeroRow', count.value);
+  if (empty.value) return tn('zeroRow', computedCount.value);
   const start = props.page * props.size + 1;
-  const end = props.page < lastPage.value ? start + props.size - 1 - props.removed : count.value;
-  return t('rows', { range: formatRange(start, end), count: n(count.value, 'default') }, sizeOfCurrentPage.value);
+  const end = props.page < lastPage.value ? start + props.size - 1 - props.removed : computedCount.value;
+  return t('rows', { range: formatRange(start, end), count: n(computedCount.value, 'default') }, sizeOfCurrentPage.value);
 });
 
 const sizeModel = computed({
@@ -184,11 +184,6 @@ const sizeModel = computed({
 
   .btn + .form-group {
     margin-left: 18px;
-
-    .form-control {
-      margin-left: 1px;
-      margin-right: 1px;
-    }
   }
 
   .form-group + .form-group {

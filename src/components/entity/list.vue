@@ -499,8 +499,7 @@ export default {
       };
 
       const onSuccess = () => {
-        this.bulkDeletedEntities = [...this.selectedEntities].map(e => e.__id);
-        this.odataEntities.value = this.odataEntities.value.filter(e => !this.selectedEntities.has(e));
+        this.bulkDeletedEntities = uuids;
         this.alert.success(this.$tcn('alert.bulkDelete', this.selectedEntities.size))
           .cta(this.$t('action.undo'), () => this.requestBulkRestore());
         this.selectedEntities.clear();
