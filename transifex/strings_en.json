@@ -2248,9 +2248,6 @@
       "emptyMap": {
         "string": "Entities only appear if they include data in the geometry property."
       },
-      "allDeleted": {
-        "string": "All Entities are deleted."
-      },
       "allDeletedOnPage": {
         "string": "All Entities on the page have been deleted."
       },
@@ -2280,9 +2277,6 @@
       "deletedEntity": {
         "emptyTable": {
           "string": "There are no deleted Entities."
-        },
-        "allRestored": {
-          "string": "All deleted Entities are restored."
         },
         "allRestoredOnPage": {
           "string": "All Entities on the page have been restored."
@@ -3982,6 +3976,10 @@
         "string": "{count, plural, one {Row {range} of {count}} other {Rows {range} of {count}}}",
         "developer_comment": "{range} is a range of row numbers, for example, 1-5. {count} is the total number of rows. The string will be pluralized based on the number of rows in the range."
       },
+      "zeroRow": {
+        "string": "Row 0 of {count}",
+        "developer_comment": "Shown when no row is displayed on the page because all rows are deleted or some other reasons. {count} is the total number of rows across all pages."
+      },
       "field": {
         "size": {
           "string": "per page",
@@ -5040,9 +5038,6 @@
       "learnMoreMap": {
         "string": "Learn more about mapping Submissions"
       },
-      "allDeleted": {
-        "string": "All Submissions are deleted."
-      },
       "allDeletedOnPage": {
         "string": "All Submissions on the page have been deleted."
       },
@@ -5058,9 +5053,6 @@
       "deletedSubmission": {
         "emptyTable": {
           "string": "There are no deleted Submissions."
-        },
-        "allRestored": {
-          "string": "All deleted Submissions are restored."
         },
         "allRestoredOnPage": {
           "string": "All Submissions on the page have been restored."
