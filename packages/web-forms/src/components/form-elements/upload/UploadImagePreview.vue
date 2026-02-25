@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import IconSVG from '@/components/common/IconSVG.vue';
 import ImageBlock from '@/components/common/media/ImageBlock.vue';
-import type { ObjectURL } from '@getodk/common/lib/web-compat/url.ts';
-import { createObjectURL, revokeObjectURL } from '@getodk/common/lib/web-compat/url.ts';
 import type { UploadNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import { computed } from 'vue';
+
+type ObjectURL = `blob:${string}`;
 
 export interface UploadImagePreviewProps {
 	readonly question: UploadNode;
@@ -17,7 +17,7 @@ const props = defineProps<UploadImagePreviewProps>();
 
 const imageURL = computed((previous: ObjectURL | null = null) => {
 	if (previous != null) {
-		revokeObjectURL(previous);
+		URL.revokeObjectURL(previous);
 	}
 
 	const file = props.question.currentState.value;
@@ -25,7 +25,7 @@ const imageURL = computed((previous: ObjectURL | null = null) => {
 		return null;
 	}
 
-	return createObjectURL(file);
+	return URL.createObjectURL(file) satisfies string as ObjectURL;
 });
 </script>
 

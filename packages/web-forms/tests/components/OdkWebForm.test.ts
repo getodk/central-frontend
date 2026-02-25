@@ -14,13 +14,7 @@ import type {
 import { flushPromises, mount } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import packageJson from '../../package.json' with { type: 'json' };
-import {
-	type ElementMethodName,
-	getFormXml,
-	getWebFormsTestFixture,
-	globalMountOptions,
-	mockElementPrototypeMethod,
-} from '../helpers';
+import { getFormXml, getWebFormsTestFixture, globalMountOptions } from '../helpers';
 
 interface MountComponentOptions {
 	readonly overrideProps?: Partial<OdkWebFormsProps>;
@@ -50,27 +44,51 @@ const mountComponent = (formXML: string, options?: MountComponentOptions) => {
 
 describe('OdkWebForm', () => {
 	let formXML: string;
-	let elementKeysAdded: ElementMethodName[];
 
 	beforeEach(async () => {
 		formXML = await getFormXml('2-simple-required.xml');
 
-		elementKeysAdded = [];
-		mockElementPrototypeMethod('scrollTo', () => {
-			/* Do nothing */
-		});
-		mockElementPrototypeMethod('showPopover', function () {
-			this.style.display = 'block';
-		});
-		mockElementPrototypeMethod('hidePopover', function () {
-			this.style.display = 'none';
-		});
+		if ('scrollTo' in HTMLElement.prototype) {
+			const mock = vi.spyOn<HTMLElement, 'scrollTo'>(HTMLElement.prototype, 'scrollTo');
+			return mock.mockImplementation(function () {
+				// Do nothing
+			});
+		} else {
+			const mock = vi.fn(function () {
+				// Do nothing
+			});
+			// eslint-disable-next-line @typescript-eslint/dot-notation
+			HTMLElement.prototype['scrollTo'] = mock as never;
+		}
+
+		if ('showPopover' in HTMLElement.prototype) {
+			const mock = vi.spyOn<HTMLElement, 'showPopover'>(HTMLElement.prototype, 'showPopover');
+			return mock.mockImplementation(function (this: HTMLElement) {
+				this.style.display = 'block';
+			});
+		} else {
+			const mock = vi.fn(function (this: HTMLElement) {
+				this.style.display = 'block';
+			});
+			// eslint-disable-next-line @typescript-eslint/dot-notation
+			HTMLElement.prototype['showPopover'] = mock as never;
+		}
+
+		if ('hidePopover' in HTMLElement.prototype) {
+			const mock = vi.spyOn<HTMLElement, 'hidePopover'>(HTMLElement.prototype, 'hidePopover');
+			return mock.mockImplementation(function (this: HTMLElement) {
+				this.style.display = 'none';
+			});
+		} else {
+			const mock = vi.fn(function (this: HTMLElement) {
+				this.style.display = 'none';
+			});
+			// eslint-disable-next-line @typescript-eslint/dot-notation
+			HTMLElement.prototype['hidePopover'] = mock as never;
+		}
 	});
 
 	afterEach(() => {
-		elementKeysAdded.forEach((methodName) => {
-			delete HTMLElement.prototype[methodName];
-		});
 		vi.restoreAllMocks();
 	});
 

@@ -5,7 +5,6 @@ import type { RootNode } from '@getodk/xforms-engine';
 import { createInstance } from '@getodk/xforms-engine';
 import type { MountingOptions } from '@vue/test-utils';
 import PrimeVue from 'primevue/config';
-import type { MockInstance } from 'vitest';
 import { vi } from 'vitest';
 import { reactive, ref } from 'vue';
 import { odkThemePreset } from '../src/odk-theme-preset';
@@ -104,38 +103,5 @@ export const mockDocumentGetter = <PropertyName extends DocumentPropertyName>(
 		get: mock,
 		configurable: true,
 	});
-	return mock;
-};
-
-type StringKeyOfHTMLElement = StringKeyOf<HTMLElement>;
-
-// prettier-ignore
-export type ElementMethodName = {
-	[PropertyName in StringKeyOfHTMLElement]:
-		HTMLElement[PropertyName] extends AnyFunction
-			? PropertyName
-			: never;
-}[keyof HTMLElement];
-
-type ElementMethodMock<MethodName extends ElementMethodName> = (
-	this: HTMLElement,
-	...args: Parameters<HTMLElement[MethodName]>
-) => ReturnType<HTMLElement[MethodName]>;
-
-export const mockElementPrototypeMethod = <MethodName extends ElementMethodName>(
-	methodName: MethodName,
-	mockImplementation: ElementMethodMock<MethodName>
-) => {
-	if (methodName in HTMLElement.prototype) {
-		const mock = vi.spyOn<HTMLElement, MethodName>(
-			HTMLElement.prototype,
-			methodName
-		) as MockInstance<HTMLElement[MethodName]>;
-
-		return mock.mockImplementation(mockImplementation);
-	}
-	const mock = vi.fn(mockImplementation);
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
-	HTMLElement.prototype[methodName] = mock as any;
 	return mock;
 };

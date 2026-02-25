@@ -5,8 +5,9 @@ import type {
 	JRResourceURL,
 	JRResourceURLString,
 } from '@getodk/common/jr-resources/JRResourceURL.ts';
-import { createObjectURL, type ObjectURL } from '@getodk/common/lib/web-compat/url.ts';
 import { computed, inject, ref, watchEffect } from 'vue';
+
+type ObjectURL = `blob:${string}`;
 
 const props = defineProps<{
 	readonly resourceUrl?: JRResourceURL;
@@ -51,7 +52,7 @@ const loadMedia = async (src?: JRResourceURL): Promise<void> => {
 		}
 
 		const data = await response.blob();
-		const url = createObjectURL(data);
+		const url = URL.createObjectURL(data) satisfies string as ObjectURL;
 		mediaCache.set(src.href, url);
 		setMedia(url);
 	} catch {

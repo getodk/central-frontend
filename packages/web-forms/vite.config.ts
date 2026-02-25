@@ -1,14 +1,15 @@
 import { CollectionValues } from '@getodk/common/types/collections/CollectionValues';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
+import { playwright } from '@vitest/browser-playwright';
 import { execSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath, URL } from 'node:url';
 import type { LibraryOptions, PluginOption } from 'vite';
+import { defineConfig } from 'vite';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
-import { defineConfig } from 'vite';
 
 interface PackageJson {
 	version?: string;
@@ -175,7 +176,7 @@ export default defineConfig(({ mode }) => {
 			browser: {
 				enabled: BROWSER_ENABLED,
 				instances: BROWSER_NAME != null ? [{ browser: BROWSER_NAME }] : [],
-				provider: 'playwright',
+				provider: playwright(),
 				fileParallelism: false,
 				headless: true,
 				screenshotFailures: false,

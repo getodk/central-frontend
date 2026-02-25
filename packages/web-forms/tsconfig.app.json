@@ -28,6 +28,7 @@
       "@getodk/common/types/*": ["../common/types/*"],
       "@getodk/common/*": ["../common/src/*"]
     },
+    "types": ["node"],
     "skipLibCheck": true,
     "plugins": [{ "name": "ts-vue-plugin" }]
   }

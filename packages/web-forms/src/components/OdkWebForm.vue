@@ -21,7 +21,6 @@ import type {
 	OptionalAwaitableHostSubmissionResult,
 } from '@/lib/submission/host-submission-result-callback.ts';
 import type { JRResourceURLString } from '@getodk/common/jr-resources/JRResourceURL.ts';
-import type { ObjectURL } from '@getodk/common/lib/web-compat/url.ts';
 import type {
 	ChunkedInstancePayload,
 	FetchFormAttachment,
@@ -44,6 +43,7 @@ import {
 } from 'vue';
 
 const webFormsVersion = __WEB_FORMS_VERSION__;
+type ObjectURL = `blob:${string}`;
 
 export interface OdkWebFormsProps {
 	readonly formXml: string;

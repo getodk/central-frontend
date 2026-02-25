@@ -51,10 +51,9 @@
     "test:types": "tsc --project ./tsconfig.json --emitDeclarationOnly false --noEmit"
   },
   "devDependencies": {
-    "@vitest/browser": "^3.2.4",
     "jsdom": "^27.2.0",
     "npm-run-all2": "^8.0.4",
-    "vite": "^7.2.4",
-    "vitest": "^3.2.4"
+    "vite": "^7.3.1",
+    "vitest": "^4.0.18"
   }
 }
