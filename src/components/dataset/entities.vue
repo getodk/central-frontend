@@ -57,7 +57,7 @@ except according to the terms contained in the LICENSE file.
 import { defineAsyncComponent, watchEffect, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
-import EntityUpdate from '../entity/update.vue';
+import EntityCreate from '../entity/create.vue';
 import EntityList from '../entity/list.vue';
 import OdataAnalyze from '../odata/analyze.vue';
 import OdataDataAccess from '../odata/data-access.vue';
@@ -74,7 +74,7 @@ import { noop } from '../../util/util';
 export default {
   name: 'DatasetEntities',
   components: {
-    EntityCreate: EntityUpdate,
+    EntityCreate,
     OdataAnalyze,
     OdataDataAccess,
     EntityList,
