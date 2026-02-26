@@ -25,7 +25,7 @@ interface AsyncMapProps {
 	disabled: boolean;
 	singleFeatureType?: SingleFeatureType;
 	mode: Mode;
-	savedFeatureValue: string | undefined;
+	savedFeatureValue: SelectItem | string | undefined;
 }
 
 const props = defineProps<AsyncMapProps>();

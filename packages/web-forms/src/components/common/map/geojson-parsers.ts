@@ -124,7 +124,7 @@ const normalizeODKFeature = (odkFeature: SelectItem | string) => {
 };
 
 export const createFeatureCollectionAndProps = (
-	odkFeatures: readonly SelectItem[] | readonly string[] | undefined
+	odkFeatures: ReadonlyArray<SelectItem | string> | undefined
 ) => {
 	const orderedExtraPropsMap = new Map<string, Array<[key: string, value: string]>>();
 	const features: Feature[] = [];
