@@ -105,6 +105,7 @@ const handleLanguageChange = (event: FormLanguage) => {
 			font-size: var(--odk-title-font-size);
 			font-weight: 500;
 			margin: 10px 0;
+			word-break: break-all;
 		}
 	}
 }
@@ -118,6 +119,7 @@ const handleLanguageChange = (event: FormLanguage) => {
 		font-size: var(--odk-title-font-size);
 		font-weight: 400;
 		margin: 16px 0;
+		word-break: break-all;
 	}
 
 	.form-options {

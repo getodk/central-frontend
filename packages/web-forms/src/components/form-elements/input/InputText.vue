@@ -44,6 +44,7 @@ const rows = computed(() => {
 			:disabled="node.currentState.readonly"
 			:model-value="node.currentState.value"
 			:feedback="false"
+			:input-props="{ autocomplete: 'new-password' }"
 			fluid
 			toggle-mask
 			@update:model-value="setValue"
