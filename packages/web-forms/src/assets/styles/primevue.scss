@@ -1,0 +1,15 @@
+.odk-form {
+	.p-datepicker-input:disabled,
+	.p-datepicker-input:disabled + .p-datepicker-input-icon-container {
+		cursor: not-allowed;
+	}
+}
+
+// Modals and dropdowns are outside the .odk-form class scope.
+.p-datepicker-panel,
+.p-dialog {
+	.p-button.p-button-secondary:focus-visible {
+		outline: none;
+		outline-offset: unset;
+	}
+}

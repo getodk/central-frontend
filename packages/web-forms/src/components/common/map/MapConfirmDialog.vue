@@ -61,10 +61,5 @@ const emit = defineEmits(['update:visible', 'deleteFeature']);
 	.p-dialog-footer button {
 		font-size: var(--odk-base-font-size);
 	}
-
-	button.p-button-secondary:focus-visible {
-		outline: none;
-		outline-offset: unset;
-	}
 }
 </style>

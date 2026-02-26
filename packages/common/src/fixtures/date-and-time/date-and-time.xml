@@ -20,6 +20,9 @@
           <text id="/data/dates/vegetables_date:label">
             <value>When was the last time you ate vegetables?</value>
           </text>
+          <text id="/data/dates/time:label">
+            <value>What time is your first meal?</value>
+          </text>
         </translation>
         <translation lang="French (fr)">
           <text id="/data/dates/survey_date:label">
@@ -34,6 +37,9 @@
           <text id="/data/dates/vegetables_date:label">
             <value>Quand est-ce que vous avez mangé des légumes pour la dernière fois ?</value>
           </text>
+          <text id="/data/dates/time:label">
+            <value>À quelle heure prends-tu ton premier repas ?</value>
+          </text>
         </translation>
       </itext>
       <instance>
@@ -43,6 +49,7 @@
             <date_of_birth/>
             <fruits_date/>
             <vegetables_date/>
+            <time>22:02:10.562+07:00</time>
           </dates>
           <meta>
             <instanceID/>
@@ -55,6 +62,7 @@
             relevant=" /data/dates/date_of_birth  != &quot;&quot;"/>
       <bind nodeset="/data/dates/vegetables_date" type="date" required="false()"
             relevant=" /data/dates/date_of_birth  != &quot;&quot;" readonly="/data/dates/date_of_birth &lt;= today()"/>
+      <bind nodeset="/data/dates/time" type="time" required="true()" />
       <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid"/>
     </model>
   </h:head>
@@ -71,6 +79,9 @@
       </input>
       <input ref="/data/dates/vegetables_date">
         <label ref="jr:itext('/data/dates/vegetables_date:label')"/>
+      </input>
+      <input ref="/data/dates/time">
+        <label ref="jr:itext('/data/dates/time:label')"/>
       </input>
     </group>
   </h:body>

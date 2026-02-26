@@ -85,6 +85,7 @@ export type StringInputValue = InputValue<'string'>;
 export type IntInputValue = InputValue<'int'>;
 export type DecimalInputValue = InputValue<'decimal'>;
 export type DateInputValue = InputValue<'date'>;
+export type TimeInputValue = InputValue<'time'>;
 export type GeopointInputValue = InputValue<'geopoint'>;
 export type GeoshapeInputValue = InputValue<'geoshape'>;
 export type GeotraceInputValue = InputValue<'geotrace'>;
@@ -93,6 +94,7 @@ export type StringInputNode = InputNode<'string'>;
 export type IntInputNode = InputNode<'int'>;
 export type DecimalInputNode = InputNode<'decimal'>;
 export type DateInputNode = InputNode<'date'>;
+export type TimeInputNode = InputNode<'time'>;
 export type GeopointInputNode = InputNode<'geopoint'>;
 export type GeoshapeInputNode = InputNode<'geoshape'>;
 export type GeotraceInputNode = InputNode<'geotrace'>;
@@ -104,6 +106,7 @@ type SupportedInputValueType =
 	| 'int'
 	| 'decimal'
 	| 'date'
+	| 'time'
 	| 'geopoint'
 	| 'geoshape'
 	| 'geotrace';
@@ -119,6 +122,7 @@ export type AnyInputNode =
 	| IntInputNode
 	| DecimalInputNode
 	| DateInputNode
+	| TimeInputNode
 	| GeopointInputNode
 	| GeoshapeInputNode
 	| GeotraceInputNode

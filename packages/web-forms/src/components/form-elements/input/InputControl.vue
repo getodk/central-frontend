@@ -10,6 +10,7 @@ import InputGeoMultiPoint from '@/components/form-elements/input/InputGeoMultiPo
 import InputInt from '@/components/form-elements/input/InputInt.vue';
 import InputNumbersAppearance from '@/components/form-elements/input/InputNumbersAppearance.vue';
 import InputText from '@/components/form-elements/input/InputText.vue';
+import InputTime from '@/components/form-elements/input/InputTime.vue';
 import { IS_FORM_EDIT_MODE } from '@/lib/constants/injection-keys.ts';
 import type { AnyInputNode } from '@getodk/xforms-engine';
 import { inject } from 'vue';
@@ -48,6 +49,9 @@ const isFormEditMode = inject(IS_FORM_EDIT_MODE);
 		</template>
 		<template v-else-if="node.valueType === 'date'">
 			<InputDate :question="node" />
+		</template>
+		<template v-else-if="node.valueType === 'time'">
+			<InputTime :question="node" />
 		</template>
 		<template v-else>
 			<InputText :node="node" />

@@ -526,6 +526,7 @@ onUnmounted(() => {
 
 <style lang="scss">
 @use 'primeflex/core/_variables.scss' as pf;
+@use '../assets/styles/primevue';
 
 :root {
 	// This variable is used to assert the breakpoint from PrimeFlex are loaded

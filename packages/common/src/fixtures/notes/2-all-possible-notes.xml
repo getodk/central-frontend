@@ -20,6 +20,7 @@
             <read_only_int_value>3</read_only_int_value>
             <note_calc_decimal_from_int />
             <date_note>2025-12-21T23:30:05</date_note>
+            <time_note>22:02:10.562+06:00</time_note>
             <geopoint_note>38.253094215699576 21.756382658677467 0 150</geopoint_note>
             <geotrace_note>37.7749 -122.4194 0 0; 37.775 -122.419 0 0; 37.774 -122.420 0 0</geotrace_note>
             <geoshape_note>37.7749 -122.4194 0 0; 37.775 -122.419 0 0; 37.774 -122.420 0 0; 37.7749 -122.4194 0 0</geoshape_note>
@@ -42,6 +43,7 @@
       <bind nodeset="/data/group/note_calc_decimal_from_int" type="decimal"
         calculate="/data/group/read_only_int_value + 1.5" readonly="true()" />
       <bind nodeset="/data/group/date_note" type="date" readonly="true()" />
+      <bind nodeset="/data/group/time_note" type="time" readonly="true()" />
       <bind nodeset="/data/group/geopoint_note" type="geopoint" readonly="true()" />
       <bind nodeset="/data/group/geotrace_note" type="geotrace" readonly="true()" />
       <bind nodeset="/data/group/geoshape_note" type="geoshape" readonly="true()" />
@@ -86,6 +88,9 @@
       </input>
       <input ref="/data/group/date_note">
         <label>A note with date type</label>
+      </input>
+      <input ref="/data/group/time_note">
+        <label>A note with time type</label>
       </input>
       <input ref="/data/group/geopoint_note">
         <label>A note with geopoint type</label>
