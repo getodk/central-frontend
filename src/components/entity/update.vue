@@ -10,20 +10,20 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal id="entity-update" :state="state" :hideable="!awaitingResponse"
+  <modal :id="modalId" :state="state" :hideable="!awaitingResponse"
     size="large" backdrop @shown="afterShown" @hide="$emit('hide')">
-    <template #title>{{ $t('title', currentVersion) }}</template>
+    <template #title>{{ isCreate ? $t('titleCreate') : $t('title', currentVersion) }}</template>
     <template #body>
-      <div>{{ $t('introduction[0]') }}</div>
+      <div>{{ isCreate ? $t('createIntroduction[0]') : $t('introduction[0]') }}</div>
       <form @submit.prevent="submit">
         <table class="table">
           <tbody>
             <entity-update-row ref="labelRow" v-model="label"
-              :old-value="currentVersion.label"/>
+              :old-value="currentVersion.label" :required="isCreate"/>
             </tbody>
         </table>
         <h4 id="properties-header">{{ $t('resource.properties') }}</h4>
-        <div>{{ $t('introduction[1]') }}</div>
+        <div>{{ isCreate ? $t('createIntroduction[1]') : $t('introduction[1]') }}</div>
         <div class="table-scroll">
           <table class="table">
             <thead>
@@ -37,7 +37,7 @@ except according to the terms contained in the LICENSE file.
                 <entity-update-row v-for="{ name } of dataset.properties"
                   :key="name" ref="propertyRows" v-model="data[name]"
                   :old-value="currentVersion.data[name]" :label="name"
-                  :disabled="name === 'geometry' && geometryDisabled"
+                  :disabled="!isCreate && name === 'geometry' && geometryDisabled"
                   :disabled-message="$t('geometryDisabled')"/>
               </template>
             </tbody>
@@ -46,11 +46,11 @@ except according to the terms contained in the LICENSE file.
         <div class="modal-actions">
           <button type="button" class="btn btn-link"
             :aria-disabled="awaitingResponse" @click="$emit('hide')">
-            {{ $t('action.cancel') }}
+            {{ isCreate ? $t('action.neverMind') : $t('action.cancel') }}
           </button>
           <button type="submit" class="btn btn-primary"
             :aria-disabled="awaitingResponse">
-            {{ $t('action.update') }} <spinner :state="awaitingResponse"/>
+            {{ isCreate ? $t('action.create') : $t('action.update') }} <spinner :state="awaitingResponse"/>
           </button>
         </div>
       </form>
@@ -81,9 +81,13 @@ const props = defineProps({
   state: Boolean,
   // An entity in the format of a REST response (not OData)
   entity: Object,
+  create: Boolean,
   geometryDisabled: Boolean
 });
 
+
+const isCreate = computed(() => props.create);
+const modalId = computed(() => (isCreate.value ? 'entity-create' : 'entity-update'));
 
 const propertyRows = ref([]);
 const labelRow = ref(null);
@@ -130,6 +134,18 @@ const { dataset } = useRequestData();
 
 const { request, awaitingResponse } = useRequest();
 const submit = () => {
+  if (isCreate.value) {
+    request.post(
+      apiPaths.entities(dataset.projectId, dataset.name),
+      { label: label.value, data: data.value },
+    )
+      .then(response => {
+        emit('success', response.data);
+      })
+      .catch(noop);
+    return;
+  }
+
   const { entity } = props;
   const url = apiPaths.entity(dataset.projectId, dataset.name, entity.uuid, { baseVersion: entity.currentVersion.version });
 
@@ -154,7 +170,7 @@ const submit = () => {
 <style lang="scss">
 @import '../../assets/scss/variables';
 
-#entity-update {
+#entity-update, #entity-create {
   #labelTextArea, th {
     font-size: 12px;
     margin-top: 10px;
@@ -197,6 +213,11 @@ const submit = () => {
     // This is the title at the top of a pop-up. {label} is the label of an
     // Entity.
     "title": "Update {label}",
+    "titleCreate": "Create New Entity",
+    "createIntroduction": [
+      "Name your new Entity",
+      "Properties describe key details about your Entities."
+    ],
     "introduction": [
       "Label your Entity",
       "Properties describe key details about your Entities."
