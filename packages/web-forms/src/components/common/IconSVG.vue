@@ -117,6 +117,7 @@ const iconSize = computed(() => props.size ?? 'md');
 	display: inline-block;
 	vertical-align: middle;
 	overflow: visible;
+	flex-shrink: 0;
 }
 
 .odk-icon.base path {

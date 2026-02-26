@@ -29,7 +29,7 @@ const emit = defineEmits([
 			<!-- TODO: translations -->
 			<button
 				class="zoom-fit-all"
-				title="Zoom to fit all options"
+				title="Zoom to fit"
 				:disabled="disableFitAllFeatures"
 				@click="emit('fitAllFeatures')"
 			>

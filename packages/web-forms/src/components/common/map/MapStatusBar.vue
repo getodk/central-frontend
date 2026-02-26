@@ -207,12 +207,13 @@ const displayState = computed(() => {
 }
 
 .map-status {
-	gap: 10px;
+	gap: var(--odk-map-controls-spacing);
 }
 
 .map-status-container {
 	justify-content: space-between;
 	width: 100%;
+	gap: var(--odk-map-controls-spacing);
 }
 
 .map-status-bar :deep(.p-button).p-button-contrast.p-button-outlined {

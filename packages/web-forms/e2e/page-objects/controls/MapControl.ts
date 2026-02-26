@@ -95,7 +95,7 @@ export class MapControl {
 	}
 
 	async zoomToFitAll(mapComponent: Locator) {
-		const button = mapComponent.locator('button[title="Zoom to fit all options"]');
+		const button = mapComponent.locator('button[title="Zoom to fit"]');
 		await expect(button).toBeVisible();
 		await button.click();
 	}
