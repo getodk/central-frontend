@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <entity-upsert-modal v-bind="props"
+  <entity-upsert-modal v-bind="props" create
     @hide="emit('hide')" @success="emit('success', $event)"/>
 </template>
 
@@ -18,13 +18,10 @@ except according to the terms contained in the LICENSE file.
 import EntityUpsertModal from './upsert.vue';
 
 defineOptions({
-  name: 'EntityUpdate'
+  name: 'EntityCreate'
 });
 const props = defineProps({
-  state: Boolean,
-  // An entity in the format of a REST response (not OData)
-  entity: Object,
-  geometryDisabled: Boolean
+  state: Boolean
 });
 const emit = defineEmits(['hide', 'success']);
 </script>
