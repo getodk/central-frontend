@@ -199,13 +199,13 @@ const submit = () => {
 <i18n lang="json5">
 {
   "en": {
+    // @transifexKey component.EntityUpdate.title
     // This is the title at the top of a pop-up. {label} is the label of an
     // Entity.
-    // @transifexKey component.EntityUpdate.title
     "title": "Update {label}",
     "titleCreate": "Create New Entity",
     "createIntroduction": [
-      "Name your new Entity",
+      "Label your new Entity",
       "Properties describe key details about your Entities."
     ],
     "introduction": [

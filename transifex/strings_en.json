@@ -1621,9 +1621,15 @@
       "upload": {
         "string": "Upload Entities"
       },
+      "new": {
+        "string": "New"
+      },
       "alert": {
         "upload": {
           "string": "Your Entities have been successfully uploaded."
+        },
+        "create": {
+          "string": "Entity has been successfully created."
         }
       },
       "purgeDescription": {
@@ -2416,6 +2422,14 @@
         "string": "Update {label}",
         "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
       },
+      "geometryDisabled": {
+        "string": "Geometry can’t be updated from the map."
+      },
+      "problem": {
+        "409_15": {
+          "string": "Data has been modified by another user. Please refresh to see the updated data."
+        }
+      },
       "header": {
         "currentValue": {
           "string": "Current Value",
@@ -2424,14 +2438,6 @@
         "updatedValue": {
           "string": "Updated Value",
           "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
-        }
-      },
-      "geometryDisabled": {
-        "string": "Geometry can’t be updated from the map."
-      },
-      "problem": {
-        "409_15": {
-          "string": "Data has been modified by another user. Please refresh to see the updated data."
         }
       }
     },
@@ -2554,6 +2560,27 @@
         "largeCell": {
           "string": "Some cells are abnormally large, which can indicate difficulties reading your file:",
           "developer_comment": "This is a warning that is followed by a list of rows."
+        }
+      }
+    },
+    "EntityUpsert": {
+      "titleCreate": {
+        "string": "Create New Entity"
+      },
+      "createIntroduction": {
+        "0": {
+          "string": "Label your new Entity"
+        },
+        "1": {
+          "string": "Properties describe key details about your Entities."
+        }
+      },
+      "introduction": {
+        "0": {
+          "string": "Label your Entity"
+        },
+        "1": {
+          "string": "Properties describe key details about your Entities."
         }
       }
     },
