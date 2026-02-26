@@ -27,24 +27,45 @@ const progress = (fraction) => {
 	return `${bar}${remaining} ${Math.floor(fraction * 100)}\\%`;
 };
 
+const isMarkdownLink = (s) => /^\[[^\]]+\]\([^)]+\)$/.test(s);
+
+const visibleText = (token) => {
+	// Replace markdown links with just their visible label
+	// "[Foo Bar](https://example.com)" -> "Foo Bar"
+	return token.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+};
+
+const visibleLength = (token) => visibleText(token).length;
+
+// Tokenize by either a full markdown link OR a non-space run.
+// This keeps "[Foo Bar](...)" together even though it contains spaces.
+const tokenizePreservingLinks = (str) => str.match(/\[[^\]]+\]\([^)]+\)|\S+/g) ?? [];
+
 const wrapString = (str, maxLength) => {
-	if (str.length <= maxLength) {
-		return str;
-	}
-	const words = str.split(/\s/);
+	if (visibleText(str).length <= maxLength) return str;
+
+	const tokens = tokenizePreservingLinks(str);
 	const lines = [];
 	let currentLine = '';
-	for (const word of words) {
-		if (currentLine.length + word.length > maxLength) {
-			lines.push(currentLine);
-			currentLine = word;
+	let currentLen = 0;
+
+	for (const token of tokens) {
+		const tokenLen = visibleLength(token);
+
+		// +1 for the space if not first token in the line
+		const extra = currentLine === '' ? 0 : 1;
+
+		if (currentLen + extra + tokenLen > maxLength) {
+			if (currentLine !== '') lines.push(currentLine);
+			currentLine = token;
+			currentLen = tokenLen;
 		} else {
-			currentLine += ' ' + word;
+			currentLine = currentLine === '' ? token : `${currentLine} ${token}`;
+			currentLen += extra + tokenLen;
 		}
 	}
-	if (currentLine != '') {
-		lines.push(currentLine);
-	}
+
+	if (currentLine !== '') lines.push(currentLine);
 	return lines.join('<br/>');
 };
 
