@@ -161,7 +161,6 @@ const submit = () => {
 #entity-update, #entity-create {
   #labelTextArea, th {
     font-size: 12px;
-    margin-top: 10px;
   }
 
   .modal-dialog { margin-top: 15vh; }
@@ -172,12 +171,12 @@ const submit = () => {
 
   .table-scroll {
     max-height: calc(70vh -
-      #{/* .modal-header */ 150px + /* .modal-actions */ 100px});
+      #{/* .modal-header */ 140px + /* .modal-actions */ 100px});
     overflow-y: auto;
+    border-bottom: none;
   }
 
   table {
-    margin-bottom: 0;
     table-layout: fixed;
   }
 
