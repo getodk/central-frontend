@@ -10,15 +10,14 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <tr class="entity-update-row"
-    :class="{ 'uncommitted-change': modelValue != null }">
+  <tr class="entity-update-row">
     <td v-if="label != null" class="label-cell">
       <label :for="textareaId" v-tooltip.text>
         {{ requiredLabel(label, required) }}
       </label>
     </td>
     <td class="new-value">
-      <div>
+      <div class="form-group" :class="{ 'value-changed': markValueChanged && modelValue != null }">
         <textarea-autosize :id="textareaId" ref="textarea"
           :model-value="modelValue ?? oldValue ?? ''"
           :required="required" :disabled="disabled"
@@ -50,7 +49,8 @@ const props = defineProps({
   },
   required: Boolean,
   disabled: Boolean,
-  disabledMessage: String
+  disabledMessage: String,
+  markValueChanged: Boolean
 });
 const emit = defineEmits(['update:modelValue']);
 
@@ -78,18 +78,21 @@ defineExpose({ textarea: computed(() => ({ ...textarea.value, resize })) });
 
 .entity-update-row {
   td, textarea, label { font-size: 12px; }
-  tr td { padding-left: 0px; }
 
   $vpadding: 4px;
-  .label-cell, .old-value, .new-value { padding-bottom: $vpadding; }
+  .label-cell, .new-value { padding-bottom: $vpadding; }
   .label-cell {
+    padding-left: 0px;
     padding-right: 15px;
     padding-top: #{$vpadding + $padding-top-form-control};
   }
   .new-value {
     padding-top: $vpadding;
-    padding-right: 0px;
   }
+
+    .value-changed {
+      box-shadow: 0 0 0 3px #C8E4EE;
+    }
 
   .label-cell { @include text-overflow-ellipsis; }
   label {
@@ -97,6 +100,11 @@ defineExpose({ textarea: computed(() => ({ ...textarea.value, resize })) });
     display: inline;
     margin-bottom: 0;
     font-weight: 400;
+  }
+
+  .form-group {
+    margin-bottom: 0;
+    padding-bottom: 0;
   }
 }
 </style>

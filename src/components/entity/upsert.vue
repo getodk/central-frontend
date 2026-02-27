@@ -1,24 +1,24 @@
 <template>
-  <modal :id="modalId" :state="state" :hideable="!awaitingResponse"
+  <modal :state="state" :hideable="!awaitingResponse"
     size="large" backdrop @shown="afterShown" @hide="$emit('hide')">
-    <template #title>{{ isCreate ? $t('titleCreate') : $t('title', currentVersion) }}</template>
+    <template #title>{{ create ? $t('titleCreate') : $t('title', currentVersion) }}</template>
     <template #body>
-      <div>{{ isCreate ? $t('createIntroduction[0]') : $t('introduction[0]') }}</div>
       <form @submit.prevent="submit">
+        <div>{{ $t('entity.entityLabel') }}</div>
         <table class="table">
           <tbody>
             <entity-update-row ref="labelRow" v-model="label"
-              :old-value="currentVersion.label" :required="isCreate"/>
+              :old-value="currentVersion.label"
+              :mark-value-changed="!create" required/>
             </tbody>
         </table>
         <h4 id="properties-header">{{ $t('resource.properties') }}</h4>
-        <div>{{ isCreate ? $t('createIntroduction[1]') : $t('introduction[1]') }}</div>
         <div class="table-scroll">
           <table class="table">
             <thead>
               <tr>
                 <th class="label-cell">{{ $t('resource.property') }}</th>
-                <th class="new-value">{{ $t('header.updatedValue') }}</th>
+                <th class="new-value">{{ $t('header.value') }}</th>
               </tr>
             </thead>
             <tbody>
@@ -26,8 +26,9 @@
                 <entity-update-row v-for="{ name } of dataset.properties"
                   :key="name" ref="propertyRows" v-model="data[name]"
                   :old-value="currentVersion.data[name]" :label="name"
-                  :disabled="!isCreate && name === 'geometry' && geometryDisabled"
-                  :disabled-message="$t('geometryDisabled')"/>
+                  :disabled="!create && name === 'geometry' && geometryDisabled"
+                  :disabled-message="$t('geometryDisabled')"
+                  :mark-value-changed="!create"/>
               </template>
             </tbody>
           </table>
@@ -39,7 +40,7 @@
           </button>
           <button type="submit" class="btn btn-primary"
             :aria-disabled="awaitingResponse">
-            {{ isCreate ? $t('action.create') : $t('action.update') }} <spinner :state="awaitingResponse"/>
+            {{ create ? $t('action.create') : $t('action.update') }} <spinner :state="awaitingResponse"/>
           </button>
         </div>
       </form>
@@ -64,7 +65,7 @@ import { useRequestData } from '../../request-data';
 const { t } = useI18n();
 
 defineOptions({
-  name: 'EntityUpsertModal'
+  name: 'EntityUpsert'
 });
 const props = defineProps({
   state: Boolean,
@@ -74,9 +75,6 @@ const props = defineProps({
   geometryDisabled: Boolean
 });
 
-
-const isCreate = computed(() => props.create);
-const modalId = computed(() => (isCreate.value ? 'entity-create' : 'entity-update'));
 
 const propertyRows = ref([]);
 const labelRow = ref(null);
@@ -123,7 +121,8 @@ const { dataset } = useRequestData();
 
 const { request, awaitingResponse } = useRequest();
 const submit = () => {
-  if (isCreate.value) {
+  if (props.create) {
+    // Send entity data to POST endpoint for create
     request.post(
       apiPaths.entities(dataset.projectId, dataset.name),
       { label: label.value, data: data.value },
@@ -132,27 +131,27 @@ const submit = () => {
         emit('success', response.data);
       })
       .catch(noop);
-    return;
-  }
+  } else {
+    // Send entity data + version/uuid info to PATCH endpoint for update
+    const { entity } = props;
+    const url = apiPaths.entity(dataset.projectId, dataset.name, entity.uuid, { baseVersion: entity.currentVersion.version });
 
-  const { entity } = props;
-  const url = apiPaths.entity(dataset.projectId, dataset.name, entity.uuid, { baseVersion: entity.currentVersion.version });
-
-  request.patch(
-    url,
-    { label: label.value, data: data.value },
-    {
-      problemToAlert: ({ code }) => {
-        if (code === 409.15) return t('problem.409_15');
-        return null;
+    request.patch(
+      url,
+      { label: label.value, data: data.value },
+      {
+        problemToAlert: ({ code }) => {
+          if (code === 409.15) return t('problem.409_15');
+          return null;
+        }
       }
-    }
-  )
-    .then(response => {
-      // It is the responsibility of the parent component to patch the entity.
-      emit('success', response.data);
-    })
-    .catch(noop);
+    )
+      .then(response => {
+        // It is the responsibility of the parent component to patch the entity.
+        emit('success', response.data);
+      })
+      .catch(noop);
+  }
 };
 </script>
 
@@ -178,7 +177,6 @@ const submit = () => {
   }
 
   table {
-    margin-top: 10px;
     margin-bottom: 0;
     table-layout: fixed;
   }
@@ -204,21 +202,10 @@ const submit = () => {
     // Entity.
     "title": "Update {label}",
     "titleCreate": "Create New Entity",
-    "createIntroduction": [
-      "Label your new Entity",
-      "Properties describe key details about your Entities."
-    ],
-    "introduction": [
-      "Label your Entity",
-      "Properties describe key details about your Entities."
-    ],
     // This is the text of a table column header. "Value" refers to the value of
     // an Entity property.
     "header": {
-      // @transifexKey component.EntityUpdate.header.currentValue
-      "currentValue": "Current Value",
-      // @transifexKey component.EntityUpdate.header.updatedValue
-      "updatedValue": "Updated Value"
+      "value": "Value"
     },
     // @transifexKey component.EntityUpdate.geometryDisabled
     "geometryDisabled": "Geometry can’t be updated from the map.",
