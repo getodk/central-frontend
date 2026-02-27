@@ -47,7 +47,7 @@ except according to the terms contained in the LICENSE file.
 
     <entity-upload v-if="dataset.dataExists" v-bind="upload"
       @hide="upload.hide()" @success="afterUpload"/>
-    <entity-create v-if="dataset.dataExists" v-bind="create" create
+    <entity-create v-if="dataset.dataExists" v-bind="create"
       @hide="create.hide()" @success="afterCreate"/>
     <odata-analyze v-bind="analyze" :odata-url="odataUrl" @hide="analyze.hide()"/>
   </div>
@@ -213,6 +213,7 @@ export default {
 {
   "en": {
     "upload": "Upload Entities",
+    // This is shown on a button for creating new Entities
     "new": "New",
     "alert": {
       "upload": "Your Entities have been successfully uploaded.",

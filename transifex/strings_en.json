@@ -1622,7 +1622,8 @@
         "string": "Upload Entities"
       },
       "new": {
-        "string": "New"
+        "string": "New",
+        "developer_comment": "This is shown on a button for creating new Entities"
       },
       "alert": {
         "upload": {
@@ -2429,16 +2430,6 @@
         "409_15": {
           "string": "Data has been modified by another user. Please refresh to see the updated data."
         }
-      },
-      "header": {
-        "currentValue": {
-          "string": "Current Value",
-          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
-        },
-        "updatedValue": {
-          "string": "Updated Value",
-          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
-        }
       }
     },
     "EntityUpload": {
@@ -2567,20 +2558,10 @@
       "titleCreate": {
         "string": "Create New Entity"
       },
-      "createIntroduction": {
-        "0": {
-          "string": "Label your new Entity"
-        },
-        "1": {
-          "string": "Properties describe key details about your Entities."
-        }
-      },
-      "introduction": {
-        "0": {
-          "string": "Label your Entity"
-        },
-        "1": {
-          "string": "Properties describe key details about your Entities."
+      "header": {
+        "value": {
+          "string": "Value",
+          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
         }
       }
     },

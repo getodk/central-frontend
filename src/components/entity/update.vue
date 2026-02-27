@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <entity-upsert-modal v-bind="props"
+  <entity-upsert-modal id="entity-update" v-bind="props"
     @hide="emit('hide')" @success="emit('success', $event)"/>
 </template>
 

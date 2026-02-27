@@ -73,11 +73,18 @@ describe('EntityUpdateRow', () => {
       row.emitted('update:modelValue').should.eql([['bar'], [undefined]]);
     });
 
-    it('adds uncommitted-change class if modelValue prop exists', () => {
+    it('adds value-changed class if markValueChanged provided and modelValue prop exists', () => {
+      const row = mountComponent({
+        props: { oldValue: 'foo', modelValue: 'bar', markValueChanged: true }
+      });
+      row.get('.form-group').classes('value-changed').should.be.true;
+    });
+
+    it('does not add value-changed class if markValueChanged not provided but modelValue prop exists', () => {
       const row = mountComponent({
         props: { oldValue: 'foo', modelValue: 'bar' }
       });
-      row.classes('uncommitted-change').should.be.true;
+      row.get('.form-group').classes('value-changed').should.be.false;
     });
   });
 
