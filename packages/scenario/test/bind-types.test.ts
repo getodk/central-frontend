@@ -38,7 +38,7 @@ describe('Data (<bind type>) type support', () => {
 							t('implicit-string-value', 'implicit string'),
 							t('int-value', '123'),
 							t('decimal-value', '45.67'),
-							t('geopoint-value', '38.25146813817506 21.758421137528785 0 0'),
+							t('geopoint-value', '38.25146813817506 21.758421137528785 0.0 0.0'),
 							t('date-value', '1999-11-23T23:30:05'),
 						)
 					),
@@ -262,7 +262,7 @@ describe('Data (<bind type>) type support', () => {
 							t('implicit-string-value', 'implicit string'),
 							t('int-value', '123'),
 							t('decimal-value', '45.67'),
-							t('geopoint-value', '38.25146813817506 21.758421137528785 1000 25'),
+							t('geopoint-value', '38.25146813817506 21.758421137528785 1000.0 25.0'),
 							t('date-value', '2025-12-20'),
 						)
 					),
@@ -518,6 +518,7 @@ describe('Data (<bind type>) type support', () => {
 					readonly inputType: T;
 					readonly inputValue: SetDecimalInputValueByType[T];
 					readonly expectedValue: number | null;
+					readonly expectedStringValue: string;
 				}
 
 				type SetDecimalInputValueCase = {
@@ -525,11 +526,11 @@ describe('Data (<bind type>) type support', () => {
 				}[SetDecimalInputValueType];
 
 				it.each<SetDecimalInputValueCase>([
-					{ inputType: 'bigint', inputValue: 89n, expectedValue: 89 },
-					{ inputType: 'number', inputValue: 10, expectedValue: 10 },
-					{ inputType: 'string', inputValue: '23', expectedValue: 23 },
-					{ inputType: 'null', inputValue: null, expectedValue: null },
-				])('sets value ($inputType)', ({ inputValue, expectedValue }) => {
+					{ inputType: 'bigint', inputValue: 89n, expectedValue: 89, expectedStringValue: '89.0' },
+					{ inputType: 'number', inputValue: 10, expectedValue: 10, expectedStringValue: '10.0' },
+					{ inputType: 'string', inputValue: '23', expectedValue: 23, expectedStringValue: '23.0' },
+					{ inputType: 'null', inputValue: null, expectedValue: null, expectedStringValue: '' },
+				])('sets value ($inputType)', ({ inputValue, expectedValue, expectedStringValue }) => {
 					scenario.answer('/root/decimal-value', inputValue);
 					answer = getTypedInputNodeAnswer('/root/decimal-value', 'decimal');
 
@@ -541,7 +542,7 @@ describe('Data (<bind type>) type support', () => {
 					} else {
 						expect(answer.value).toBeTypeOf('number');
 						expect(answer.value).toBe(expectedValue);
-						expect(answer.stringValue).toBe(`${expectedValue}`);
+						expect(answer.stringValue).toBe(`${expectedStringValue}`);
 					}
 				});
 			});
@@ -571,7 +572,7 @@ describe('Data (<bind type>) type support', () => {
 					altitude: 1000,
 					accuracy: 25,
 				});
-				expect(answer.stringValue).toEqual('38.25146813817506 21.758421137528785 1000 25');
+				expect(answer.stringValue).toEqual('38.25146813817506 21.758421137528785 1000.0 25.0');
 			});
 
 			it('has an null as blank value', () => {
@@ -590,7 +591,7 @@ describe('Data (<bind type>) type support', () => {
 					altitude: 0,
 					accuracy: 5,
 				});
-				expect(answer.stringValue).toEqual('-5.299 46.663 0 5');
+				expect(answer.stringValue).toEqual('-5.299 46.663 0.0 5.0');
 			});
 
 			it.each([
@@ -617,17 +618,17 @@ describe('Data (<bind type>) type support', () => {
 				{
 					expression: { latitude: 19.899, longitude: 100.55559, accuracy: 15 },
 					expectedAsObject: { latitude: 19.899, longitude: 100.55559, altitude: 0, accuracy: 15 },
-					expectedAsText: '19.899 100.55559 0 15',
+					expectedAsText: '19.899 100.55559 0.0 15.0',
 				},
 				{
 					expression: { latitude: 45.111, longitude: 127.23, altitude: 1350 },
 					expectedAsObject: { latitude: 45.111, longitude: 127.23, altitude: 1350, accuracy: null },
-					expectedAsText: '45.111 127.23 1350',
+					expectedAsText: '45.111 127.23 1350.0',
 				},
 				{
 					expression: { latitude: 14.66599, longitude: 179.9009, altitude: 200, accuracy: 5 },
 					expectedAsObject: { latitude: 14.66599, longitude: 179.9009, altitude: 200, accuracy: 5 },
-					expectedAsText: '14.66599 179.9009 200 5',
+					expectedAsText: '14.66599 179.9009 200.0 5.0',
 				},
 				{
 					expression: { latitude: 0, longitude: 0, altitude: 0, accuracy: 0 },

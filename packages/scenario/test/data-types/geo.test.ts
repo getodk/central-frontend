@@ -14,6 +14,7 @@ import type { ExpectStatic, JestAssertion } from 'vitest';
 import { describe, expect, it } from 'vitest';
 import { expectedArea, expectedDistance } from '../../src/answer/ExpectedApproximateUOMAnswer.ts';
 import { floatAnswer } from '../../src/answer/ExpectedFloatAnswer.ts';
+import { stringAnswer } from '../../src/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../../src/jr/Scenario.ts';
 import { EARTH_EQUATORIAL_CIRCUMFERENCE_METERS } from '../../src/jr/core/util/GeoUtils.ts';
 
@@ -72,11 +73,11 @@ describe('Geopoint', () => {
 								mainInstance(
 									t(
 										'data id="geopoint-area"',
-										t('location', t('point', '38.253094215699576 21.756382658677467 0 0')),
-										t('location', t('point', '38.25021274773806 21.756382658677467 0 0')),
-										t('location', t('point', '38.25007793942195 21.763892843919166 0 0')),
-										t('location', t('point', '38.25290886154963 21.763935759263404 0 0')),
-										t('location', t('point', '38.25146813817506 21.758421137528785 0 0')),
+										t('location', t('point', '38.253094215699576 21.756382658677467 0.0 0.0')),
+										t('location', t('point', '38.25021274773806 21.756382658677467 0.0 0.0')),
+										t('location', t('point', '38.25007793942195 21.763892843919166 0.0 0.0')),
+										t('location', t('point', '38.25290886154963 21.763935759263404 0.0 0.0')),
+										t('location', t('point', '38.25146813817506 21.758421137528785 0.0 0.0')),
 										t('area')
 									)
 								),
@@ -106,11 +107,11 @@ describe('Geopoint', () => {
 								mainInstance(
 									t(
 										'data id="string-area"',
-										t('point1', '38.253094215699576 21.756382658677467 0 0'),
-										t('point2', '38.25021274773806 21.756382658677467 0 0'),
-										t('point3', '38.25007793942195 21.763892843919166 0 0'),
-										t('point4', '38.25290886154963 21.763935759263404 0 0'),
-										t('point5', '38.25146813817506 21.758421137528785 0 0'),
+										t('point1', '38.253094215699576 21.756382658677467 0.0 0.0'),
+										t('point2', '38.25021274773806 21.756382658677467 0.0 0.0'),
+										t('point3', '38.25007793942195 21.763892843919166 0.0 0.0'),
+										t('point4', '38.25290886154963 21.763935759263404 0.0 0.0'),
+										t('point5', '38.25146813817506 21.758421137528785 0.0 0.0'),
 										t('concat'),
 										t('area')
 									)
@@ -181,8 +182,8 @@ describe('Geopoint', () => {
 									mainInstance(
 										t(
 											'data id="geopoint-distance"',
-											t('location', t('point', '0 1 0 0')),
-											t('location', t('point', '0 91 0 0')),
+											t('location', t('point', '0 1 0.0 0.0')),
+											t('location', t('point', '0 91 0.0 0.0')),
 											t('distance')
 										)
 									),
@@ -216,11 +217,11 @@ describe('Geopoint', () => {
 								mainInstance(
 									t(
 										'data id="string-distance"',
-										t('point1', '38.253094215699576 21.756382658677467 0 0'),
-										t('point2', '38.25021274773806 21.756382658677467 0 0'),
-										t('point3', '38.25007793942195 21.763892843919166 0 0'),
-										t('point4', '38.25290886154963 21.763935759263404 0 0'),
-										t('point5', '38.25146813817506 21.758421137528785 0 0'),
+										t('point1', '38.253094215699576 21.756382658677467 0.0 0.0'),
+										t('point2', '38.25021274773806 21.756382658677467 0.0 0.0'),
+										t('point3', '38.25007793942195 21.763892843919166 0.0 0.0'),
+										t('point4', '38.25290886154963 21.763935759263404 0.0 0.0'),
+										t('point5', '38.25146813817506 21.758421137528785 0.0 0.0'),
 										t('concat'),
 										t('distance')
 									)
@@ -276,7 +277,7 @@ describe('Geoshape', () => {
 										'data id="geoshape-area"',
 										t(
 											'polygon',
-											'38.253094215699576 21.756382658677467 0 0; 38.25021274773806 21.756382658677467 0 0; 38.25007793942195 21.763892843919166 0 0; 38.25290886154963 21.763935759263404 0 0; 38.253094215699576 21.756382658677467 0 0;'
+											'38.253094215699576 21.756382658677467 0.0 0.0; 38.25021274773806 21.756382658677467 0.0 0.0; 38.25007793942195 21.763892843919166 0.0 0.0; 38.25290886154963 21.763935759263404 0.0 0.0; 38.253094215699576 21.756382658677467 0.0 0.0;'
 										),
 										t('area')
 									)
@@ -313,10 +314,10 @@ describe('Geoshape', () => {
 									mainInstance(
 										t(
 											'data id="geoshape-area"',
-											t('polygon1', '38.253094215699576 21.756382658677467 0 0;'),
+											t('polygon1', '38.253094215699576 21.756382658677467 0.0 0.0;'),
 											t(
 												'polygon2',
-												'38.253094215699576 21.756382658677467 0 0; 38.25021274773806 21.756382658677467 0 0;'
+												'38.253094215699576 21.756382658677467 0.0 0.0; 38.25021274773806 21.756382658677467 0.0 0.0;'
 											),
 											t('area1'),
 											t('area2')
@@ -333,9 +334,9 @@ describe('Geoshape', () => {
 					);
 
 					// assertThat(Double.parseDouble(scenario.answerOf("/data/area1").getDisplayText()), is(0.0));
-					expect(scenario.answerOf('/data/area1')).toEqualAnswer(floatAnswer(0.0));
+					expect(scenario.answerOf('/data/area1')).toEqualAnswer(stringAnswer('0.0'));
 					// assertThat(Double.parseDouble(scenario.answerOf("/data/area2").getDisplayText()), is(0.0));
-					expect(scenario.answerOf('/data/area2')).toEqualAnswer(floatAnswer(0.0));
+					expect(scenario.answerOf('/data/area2')).toEqualAnswer(stringAnswer('0.0'));
 				});
 			});
 		});
@@ -372,7 +373,7 @@ describe('Geoshape', () => {
 									mainInstance(
 										t(
 											'data id="geoshape-distance"',
-											t('polygon', '0 1 0 0; 0 91 0 0; 0 1 0 0;'),
+											t('polygon', '0 1 0.0 0.0; 0 91 0.0 0.0; 0 1 0.0 0.0;'),
 											t('distance')
 										)
 									),
@@ -429,7 +430,11 @@ describe('Geotrace', () => {
 								title('Geotrace distance'),
 								model(
 									mainInstance(
-										t('data id="geotrace-distance"', t('line', '0 1 0 0; 0 91 0 0;'), t('distance'))
+										t(
+											'data id="geotrace-distance"',
+											t('line', '0 1 0.0 0.0; 0 91 0.0 0.0;'),
+											t('distance')
+										)
 									),
 									bind('/data/line').type('geotrace'),
 									bind('/data/distance').type('decimal').calculate('distance(/data/line)')
@@ -465,7 +470,7 @@ describe('Geotrace', () => {
 								title('Geotrace distance'),
 								model(
 									mainInstance(
-										t('data id="geotrace-distance"', t('line', '0 1 0 0;'), t('distance'))
+										t('data id="geotrace-distance"', t('line', '0 1 0.0 0.0;'), t('distance'))
 									),
 									bind('/data/line').type('geotrace'),
 									bind('/data/distance').type('decimal').calculate('distance(/data/line)')

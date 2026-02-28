@@ -12,8 +12,8 @@ import {
 	t,
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
-import { describe, expect, it } from 'vitest';
 import { flushPromises } from '@vue/test-utils';
+import { describe, expect, it } from 'vitest';
 import { stringAnswer } from '../../src/answer/ExpectedStringAnswer.ts';
 import { createGeolocationProvider } from '../../src/client/createGeolocationProvider.ts';
 import { Scenario } from '../../src/jr/Scenario.ts';
@@ -34,7 +34,7 @@ describe('odk:setgeopoint action', () => {
 				),
 				body(input('/data/destination'))
 			),
-			{ geolocationProvider: createGeolocationProvider('300 21.7567 110 5') }
+			{ geolocationProvider: createGeolocationProvider('300 21.7567 110.0 5.0') }
 		);
 
 		expect(scenario.answerOf('/data/destination')).toEqualAnswer(stringAnswer(''));
@@ -54,7 +54,7 @@ describe('odk:setgeopoint action', () => {
 				),
 				body(input('/data/destination'))
 			),
-			{ geolocationProvider: createGeolocationProvider('38.295 21.7567 110 5') }
+			{ geolocationProvider: createGeolocationProvider('38.295 21.7567 110.0 5.0') }
 		);
 
 		expect(scenario.answerOf('/data/destination')).toEqualAnswer(stringAnswer(''));
@@ -95,7 +95,7 @@ describe('odk:setgeopoint action', () => {
 					),
 					body(input('/data/destination'))
 				),
-				{ geolocationProvider: createGeolocationProvider('38.295 21.7567 110 5') }
+				{ geolocationProvider: createGeolocationProvider('38.295 21.7567 110.0 5.0') }
 			);
 		}).rejects.toThrowError(
 			'An action was registered for unsupported events: odk-some-random-event'
@@ -116,11 +116,11 @@ describe('odk:setgeopoint action', () => {
 				),
 				body(input('/data/destination'))
 			),
-			{ geolocationProvider: createGeolocationProvider('38.295 21.7567 110 5') }
+			{ geolocationProvider: createGeolocationProvider('38.295 21.7567 110.0 5.0') }
 		);
 
 		expect(scenario.answerOf('/data/destination')).toEqualAnswer(
-			stringAnswer('38.295 21.7567 110 5')
+			stringAnswer('38.295 21.7567 110.0 5.0')
 		);
 	});
 
@@ -138,11 +138,11 @@ describe('odk:setgeopoint action', () => {
 				),
 				body(input('/data/house_location'))
 			),
-			{ geolocationProvider: createGeolocationProvider('38.295 21.7567 110 5') }
+			{ geolocationProvider: createGeolocationProvider('38.295 21.7567 110.0 5.0') }
 		);
 
 		expect(scenario.answerOf('/data/house_location')).toEqualAnswer(
-			stringAnswer('38.295 21.7567 110 5')
+			stringAnswer('38.295 21.7567 110.0 5.0')
 		);
 	});
 
@@ -170,8 +170,8 @@ describe('odk:setgeopoint action', () => {
 			),
 			{
 				geolocationProvider: createGeolocationProvider(
-					'38.295 21.7567 110 5',
-					'38.333 21.766 150 3'
+					'38.295 21.7567 110.0 5.0',
+					'38.333 21.766 150.0 3.0'
 				),
 			}
 		);
@@ -179,13 +179,13 @@ describe('odk:setgeopoint action', () => {
 		scenario.createNewRepeat('/data/person');
 		await flushPromises();
 		expect(scenario.answerOf('/data/person[1]/location')).toEqualAnswer(
-			stringAnswer('38.295 21.7567 110 5')
+			stringAnswer('38.295 21.7567 110.0 5.0')
 		);
 
 		scenario.createNewRepeat('/data/person');
 		await flushPromises();
 		expect(scenario.answerOf('/data/person[2]/location')).toEqualAnswer(
-			stringAnswer('38.333 21.766 150 3')
+			stringAnswer('38.333 21.766 150.0 3.0')
 		);
 	});
 
@@ -205,8 +205,8 @@ describe('odk:setgeopoint action', () => {
 			),
 			{
 				geolocationProvider: createGeolocationProvider(
-					'38.295 21.7567 110 5',
-					'38.333 21.766 150 3'
+					'38.295 21.7567 110.0 5.0',
+					'38.333 21.766 150.0 3.0'
 				),
 			}
 		);
@@ -214,13 +214,13 @@ describe('odk:setgeopoint action', () => {
 		scenario.answer('/data/source', 22);
 		await flushPromises();
 		expect(scenario.answerOf('/data/destination')).toEqualAnswer(
-			stringAnswer('38.295 21.7567 110 5')
+			stringAnswer('38.295 21.7567 110.0 5.0')
 		);
 
 		scenario.answer('/data/source', 33);
 		await flushPromises();
 		expect(scenario.answerOf('/data/destination')).toEqualAnswer(
-			stringAnswer('38.333 21.766 150 3')
+			stringAnswer('38.333 21.766 150.0 3.0')
 		);
 	});
 });

@@ -1,3 +1,5 @@
+import { formatDecimal } from '../../number-parsers';
+
 abstract class SemanticValue<Semantic extends string, Value extends number | null> {
 	abstract readonly semantic: Semantic;
 
@@ -141,7 +143,7 @@ export class Geolocation {
 
 		return new this(decodedValue)
 			.getTuple()
-			.map((item) => item.value ?? 0)
+			.map((item) => formatDecimal(item.value ?? 0))
 			.join(' ');
 	}
 
