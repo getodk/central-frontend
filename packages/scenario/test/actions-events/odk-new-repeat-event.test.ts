@@ -8,11 +8,13 @@ import {
 	model,
 	repeat,
 	setvalue,
+	setvalueLiteral,
 	t,
 	title,
 } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
 import { describe, expect, it } from 'vitest';
 import { intAnswer } from '../../src/answer/ExpectedIntAnswer.ts';
+import { stringAnswer } from '../../src/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../../src/jr/Scenario.ts';
 import { r } from '../../src/jr/resource/ResourcePathHelper.ts';
 
@@ -229,6 +231,39 @@ describe('OdkNewRepeatEventTest.java', () => {
 			expect(scenario.answerOf('/data/repeat[1]/q')).toEqualAnswer(intAnswer(7));
 			expect(scenario.answerOf('/data/repeat[2]/q')).toEqualAnswer(intAnswer(8));
 			expect(scenario.answerOf('/data/repeat[3]/q')).toEqualAnswer(intAnswer(8));
+		});
+
+		it('does not fire when editing an existing instance', async () => {
+			const form = html(
+				head(
+					title('Repeat first load'),
+					model(
+						mainInstance(
+							t('data id="repeat-first-load"', t('count'), t('repeat', t('destination')))
+						),
+						bind('/data/repeat/destination').type('string')
+					)
+				),
+				body(
+					repeat(
+						'/data/repeat',
+						'/data/count',
+						input('/data/repeat/destination'),
+						setvalueLiteral('odk-new-repeat', '/data/repeat/destination', '5000')
+					)
+				)
+			);
+
+			const instanceXML = `<data id="repeat-first-load">
+	<count>1</count>
+	<repeat><destination>2</destination></repeat>
+</data>`;
+
+			const scenario = await Scenario.init('repeat first load', form, {
+				editInstance: instanceXML,
+			});
+
+			expect(scenario.answerOf('/data/repeat[1]/destination')).toEqualAnswer(stringAnswer('2'));
 		});
 	});
 

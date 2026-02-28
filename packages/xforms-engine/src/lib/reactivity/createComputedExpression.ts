@@ -25,7 +25,7 @@ type EvaluatedExpression<
 // prettier-ignore
 type ExpressionEvaluator<
 	Type extends DependentExpressionResultType
-> = () => EvaluatedExpression<Type>;
+> = (defaultValue?: EvaluatedExpression<Type>) => EvaluatedExpression<Type>;
 
 interface ExpressionEvaluatorOptions {
 	get contextNode(): EngineXPathNode;
@@ -39,23 +39,27 @@ const expressionEvaluator = <Type extends DependentExpressionResultType>(
 ): ExpressionEvaluator<Type> => {
 	switch (type) {
 		case 'boolean':
-			return (() => {
+			return ((_) => {
 				return evaluator.evaluateBoolean(expression, options);
 			}) as ExpressionEvaluator<Type>;
 
 		case 'nodes':
-			return (() => {
-				return evaluator.evaluateNodes(expression, options);
+			return ((defaultValue) => {
+				return evaluator.evaluateNodes(expression, options) ?? defaultValue;
 			}) as ExpressionEvaluator<Type>;
 
 		case 'number':
-			return (() => {
-				return evaluator.evaluateNumber(expression, options);
+			return ((defaultValue) => {
+				const result = evaluator.evaluateNumber(expression, options);
+				if (defaultValue && Number.isNaN(result)) {
+					return defaultValue;
+				}
+				return result;
 			}) as ExpressionEvaluator<Type>;
 
 		case 'string':
-			return (() => {
-				return evaluator.evaluateString(expression, options);
+			return ((defaultValue) => {
+				return evaluator.evaluateString(expression, options) ?? defaultValue;
 			}) as ExpressionEvaluator<Type>;
 
 		default:
@@ -109,27 +113,28 @@ export const createComputedExpression = <Type extends DependentExpressionResultT
 	return context.scope.runTask(() => {
 		const { contextNode, evaluator } = context;
 		const { expression, isTranslated, resultType } = dependentExpression;
-		const evaluatePreInitializationDefaultValue = () => {
-			return options?.defaultValue ?? defaultEvaluationsByType[resultType];
-		};
 		const evaluateExpression = expressionEvaluator(evaluator, resultType, expression, {
 			contextNode,
 		});
 
 		if (isConstantExpression(expression)) {
-			return createMemo(evaluateExpression);
+			return createMemo(() => evaluateExpression());
 		}
 
 		return createMemo(() => {
-			if (!context.isAttached()) {
-				return evaluatePreInitializationDefaultValue();
-			}
-
 			if (isTranslated) {
 				context.getActiveLanguage();
 			}
-
-			return evaluateExpression();
+			if (context.isAttached()) {
+				return evaluateExpression();
+			}
+			const defaultValue = options?.defaultValue ?? defaultEvaluationsByType[resultType];
+			try {
+				return evaluateExpression(defaultValue);
+			} catch {
+				// likely because it's not yet attached - try again later
+				return defaultValue;
+			}
 		});
 	});
 };
