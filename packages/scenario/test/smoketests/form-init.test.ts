@@ -201,21 +201,14 @@ describe('Form initialization smoke tests', () => {
 		/**
 		 * **PORTING NOTES**
 		 *
-		 * - Fails on primary instance element's lack of id attribute.
-		 *
 		 * - Unclear if there will be a need for additional setup in the future when
 		 *   we add last-saved support.
 		 */
-		it.fails('parsesLastSavedInstanceWithNullSrc', async () => {
+		it('parses last saved instance with null src', async () => {
 			const scenario = await Scenario.init(r('last-saved-blank.xml'));
 
 			expectNoInitializationErrors(scenario);
-
-			// assertEquals("Form with last-saved instance (blank)", formDef.getTitle());
-
-			// DataInstance lastSaved = formDef.getNonMainInstance("last-saved");
-			// AbstractTreeElement root = lastSaved.getRoot();
-			// assertEquals(0, root.getNumChildren());
+			expect(scenario.answerOf('/data/item')).toEqualAnswer(stringAnswer('')); // nothing to bind from the last-saved instance
 		});
 
 		/**

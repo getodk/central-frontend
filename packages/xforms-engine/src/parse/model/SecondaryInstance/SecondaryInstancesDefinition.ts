@@ -82,6 +82,11 @@ export class SecondaryInstancesDefinition
 				}
 
 				const resourceURL = JRResourceURL.from(src);
+
+				if (resourceURL.isLastSavedInstance()) {
+					return new BlankSecondaryInstanceSource(instanceId, resourceURL, domElement);
+				}
+
 				const resource = await ExternalSecondaryInstanceResource.load(
 					instanceId,
 					resourceURL,

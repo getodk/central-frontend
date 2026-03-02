@@ -1,4 +1,6 @@
 const JR_RESOURCE_URL_PROTOCOL = 'jr:';
+const LAST_SAVED_INSTANCE_ID = 'jr://instance/last-saved';
+
 type JRResourceURLProtocol = typeof JR_RESOURCE_URL_PROTOCOL;
 
 export type JRResourceURLString = `${JRResourceURLProtocol}${string}`;
@@ -49,5 +51,9 @@ export class JRResourceURL extends URL {
 		super(url);
 
 		validateJRResourceURL(this);
+	}
+
+	isLastSavedInstance(): boolean {
+		return this.href === LAST_SAVED_INSTANCE_ID;
 	}
 }

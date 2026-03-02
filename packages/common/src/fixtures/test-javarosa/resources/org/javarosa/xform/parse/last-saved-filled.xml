@@ -6,8 +6,11 @@
         <h:title>Form with last-saved instance (filled)</h:title>
         <model>
             <instance>
-                <data>
+                <data id="last-saved-filled">
                     <item>Foo</item>
+                    <meta>
+                        <instanceID/>
+                    </meta>
                 </data>
             </instance>
             <instance id="last-saved" src="jr://instance/last-saved"/>
