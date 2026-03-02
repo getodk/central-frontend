@@ -1,5 +1,21 @@
 # @getodk/web-forms
 
+## 0.20.0
+
+### Minor Changes
+
+- 90e5a03: Adds time question type
+
+### Patch Changes
+
+- 240a019: Fixes load submission data in maps
+- 716bc51: Exclude demo images from core library bundle.
+- f382254: Fixed a bug where editing forms with repeat counts caused odk-new-repeat events to fire and overwrite user entered values
+- 12f943c: Prevents showing errors when starting new submissions
+- fdc8b0a: Fixes spacing of elements in the map's status bar
+- b2b6541: Prevents autofill in masked inputs and fixes long-form titles
+- 507344e: Decimals and geopoint values are now serialized with a minimum of one digit after the decimal point
+
 ## 0.19.0
 
 ### Minor Changes

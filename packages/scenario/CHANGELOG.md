@@ -1,5 +1,13 @@
 # @getodk/scenario
 
+## 0.11.3
+
+### Patch Changes
+
+- 90e5a03: Adds time question type
+- f382254: Fixed a bug where editing forms with repeat counts caused odk-new-repeat events to fire and overwrite user entered values
+- 507344e: Decimals and geopoint values are now serialized with a minimum of one digit after the decimal point
+
 ## 0.11.2
 
 ### Patch Changes

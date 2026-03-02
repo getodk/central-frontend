@@ -1,5 +1,11 @@
 # @getodk/common
 
+## 0.12.1
+
+### Patch Changes
+
+- 90e5a03: Adds time question type
+
 ## 0.12.0
 
 ### Minor Changes

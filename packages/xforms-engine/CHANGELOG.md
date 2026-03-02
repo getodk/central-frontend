@@ -1,5 +1,16 @@
 # @getodk/xforms-engine
 
+## 0.18.0
+
+### Minor Changes
+
+- 90e5a03: Adds time question type
+
+### Patch Changes
+
+- f382254: Fixed a bug where editing forms with repeat counts caused odk-new-repeat events to fire and overwrite user entered values
+- 507344e: Decimals and geopoint values are now serialized with a minimum of one digit after the decimal point
+
 ## 0.17.0
 
 ### Minor Changes
