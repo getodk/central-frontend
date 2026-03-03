@@ -14,6 +14,41 @@ except according to the terms contained in the LICENSE file.
     @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
+      <div v-if="warnings != null" class="modal-warnings">
+        <p>{{ $t('warningsText[0]') }}</p>
+        <ul>
+          <template v-for="dataset of warnings.datasets" :key="dataset.name">
+            <li>
+              {{ $t('warningsText[1].dataset', { name: dataset.name }) }}
+              <span v-show="dataset.isNew">
+                <span class="icon-plus-circle dataset-new" v-tooltip.sr-only></span>
+                <span class="sr-only">&nbsp;{{ $t('new') }}</span>
+              </span>
+              <br>
+              <!-- This is important; i18n-list's PostEffect watcher + awaitResponse + warning
+               changing together causes infinite update recursion -->
+              <span v-if="!awaitingResponse">
+                {{ $t('warningsText[1].properties', dataset.properties) }}
+                <i18n-list v-slot="{ value: property }" :list="dataset.properties"
+                  class="property-list">
+                  <span>{{ property.name }}</span>
+                  <span v-show="property.isNew">
+                    <span class="icon-plus-circle property-new" v-tooltip.sr-only></span>
+                    <span class="sr-only">&nbsp;{{ $t('new') }}</span>
+                  </span>
+                </i18n-list>
+              </span>
+            </li>
+          </template>
+        </ul>
+        <p>{{ $t('warningsText[2]') }}</p>
+        <p>
+          <button type="button" class="btn btn-danger"
+            :aria-disabled="awaitingResponse" @click="doRestore(true)">
+            {{ $t('action.yesProceed') }} <spinner :state="awaitingResponse"/>
+          </button>
+        </p>
+      </div>
       <div v-if="form" class="modal-introduction">
         <i18n-t tag="p" keypath="introduction[0]">
           <template #name>
@@ -29,7 +64,7 @@ except according to the terms contained in the LICENSE file.
           {{ $t('action.noCancel') }}
         </button>
         <button type="button" class="btn btn-danger"
-          :aria-disabled="awaitingResponse" @click="doRestore">
+          :aria-disabled="awaitingResponse" @click="doRestore(false)">
           {{ $t('action.yesProceed') }} <spinner :state="awaitingResponse"/>
         </button>
       </div>
@@ -41,13 +76,16 @@ except according to the terms contained in the LICENSE file.
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
 
+import I18nList from '../i18n/list.vue';
+
+
 import useRequest from '../../composables/request';
-import { apiPaths } from '../../util/request';
+import { apiPaths, isProblem } from '../../util/request';
 import { noop } from '../../util/util';
 
 export default {
   name: 'FormRestore',
-  components: { Modal, Spinner },
+  components: { Modal, Spinner, I18nList },
   props: {
     state: Boolean,
     form: Object
@@ -57,14 +95,27 @@ export default {
     const { request, awaitingResponse } = useRequest();
     return { request, awaitingResponse };
   },
+  data() {
+    return {
+      warnings: null
+    };
+  },
   methods: {
-    doRestore() {
+    doRestore(ignoreWarnings) {
+      const query = ignoreWarnings ? { ignoreWarnings } : null;
       this.request({
         method: 'POST',
-        url: apiPaths.restoreForm(this.form.projectId, this.form.id)
+        url: apiPaths.restoreForm(this.form.projectId, this.form.id, query),
+        fulfillProblem: ({ code }) => code === 400.44
       })
-        .then(() => {
-          this.$emit('success');
+        .then(({ data }) => {
+          if (isProblem(data)) {
+            // eslint-disable-next-line prefer-destructuring
+            this.warnings = data.details[0];
+          } else {
+            this.$emit('success');
+            this.warnings = null;
+          }
         })
         .catch(noop);
     }
@@ -72,6 +123,15 @@ export default {
 };
 </script>
 
+<style lang="scss">
+.modal-warnings {
+  .dataset-new, .property-new {
+    margin-left: 2px;
+    color: #08a10b;
+    vertical-align: super;
+  }
+}
+</style>
 <i18n lang="json5">
 {
   "en": {
@@ -81,6 +141,14 @@ export default {
       "Are you sure you want to restore the Form {name}?",
       "The Form will be restored to its previous state, including all data, settings, and permissions.",
       "If the Form is deleted again, it will be another 30 days before it is removed."
+    ],
+    "warningsText": [
+      "Restoring this Form will also create:",
+      {
+        "dataset": "Dataset: {name}",
+        "properties": "Property: | Properties:"
+      },
+      "Do you still want to restore this Form?"
     ]
   }
 }

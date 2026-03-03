@@ -88,8 +88,8 @@ export const apiPaths = {
   projectKey: projectPath('/key'),
   forms: projectPath('/forms'),
   deletedForms: projectPath('/forms?deleted=true'),
-  restoreForm: (projectId, numericFormId) =>
-    `/v1/projects/${projectId}/forms/${numericFormId}/restore`,
+  restoreForm: (projectId, numericFormId, query = undefined) =>
+    `/v1/projects/${projectId}/forms/${numericFormId}/restore${queryString(query)}`,
   formSummaryAssignments: (projectId, role) =>
     `/v1/projects/${projectId}/assignments/forms/${role}`,
   form: formPath(''),
