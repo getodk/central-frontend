@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 set -o pipefail
-shopt -s inherit_errexit
+shopt -s inherit_errexit || true
 
 log() { echo >&2 "[$(basename "$0")] $*"; }
 
