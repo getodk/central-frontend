@@ -189,6 +189,36 @@ describe('Markdown', () => {
 			];
 			await run(given, expected);
 		});
+
+		describe('ordered lists with a single item', () => {
+			it('ignores single child at the top level', async () => {
+				const given = '3. third question';
+				const expected = [{ value: '3. third question' }];
+				await run(given, expected);
+			});
+
+			it('parses when sibling', async () => {
+				const given = `### My section
+
+3. third question`;
+				const expected = [
+					{
+						elementName: 'h3',
+						children: [{ value: 'My section' }],
+					},
+					{
+						elementName: 'ol',
+						children: [
+							{
+								elementName: 'li',
+								children: [{ elementName: 'p', children: [{ value: 'third question' }] }],
+							},
+						],
+					},
+				];
+				await run(given, expected);
+			});
+		});
 	});
 
 	describe('should handle html', () => {

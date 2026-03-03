@@ -196,9 +196,22 @@ function escapeEditableChunks(chunks: readonly TextChunk[]) {
 		.join('');
 }
 
+function isSingleOrderedList(odk: MarkdownNode[]) {
+	return (
+		odk.length === 1 &&
+		odk[0]?.role === 'parent' &&
+		odk[0]?.elementName === 'ol' &&
+		odk[0].children.length === 1
+	);
+}
+
 function toOdkMarkdown(str: string): MarkdownNode[] {
 	const tree = fromMarkdown(str);
 	const odk = mdastToOdkMarkdown(tree.children);
+	if (isSingleOrderedList(odk)) {
+		// do not return a numbered list with only a single element - this is almost never what people expect
+		return [new ChildMarkdownNode(str)];
+	}
 	if (odk.length === 1 && odk[0]?.role === 'parent' && odk[0]?.elementName === 'p') {
 		// mdast tends to add too many paragraphs which if left in place, puts a block level
 		// element where it's not needed
