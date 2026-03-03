@@ -3573,6 +3573,22 @@
         "2": {
           "string": "If the Form is deleted again, it will be another 30 days before it is removed."
         }
+      },
+      "warningsText": {
+        "0": {
+          "string": "Restoring this Form will also create:"
+        },
+        "1": {
+          "dataset": {
+            "string": "Dataset: {name}"
+          },
+          "properties": {
+            "string": "{count, plural, one {Property:} other {Properties:}}"
+          }
+        },
+        "2": {
+          "string": "Do you still want to restore this Form?"
+        }
       }
     },
     "FormRow": {
