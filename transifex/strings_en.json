@@ -3160,7 +3160,7 @@
         }
       },
       "newProperties": {
-        "string": "{count, plural, one {Publishing this draft will create {count} property. It cannot be deleted.} other {Publishing this draft will create {count} properties. These cannot be deleted.}}"
+        "string": "{count, plural, one {Publishing this draft will create {count} property.} other {Publishing this draft will create {count} properties.}}"
       },
       "problem": {
         "409_6": {

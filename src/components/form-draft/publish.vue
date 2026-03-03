@@ -195,7 +195,7 @@ export default {
       "Every version of a Form requires a unique version name. Right now, your Draft Form has the same version name as a previously published version. You can set a new one by uploading a Form definition with your desired name, or you can type a new one below and the server will change it for you.",
       "Would you like to proceed?"
     ],
-    "newProperties": "Publishing this draft will create {count} property. It cannot be deleted. | Publishing this draft will create {count} properties. These cannot be deleted.",
+    "newProperties": "Publishing this draft will create {count} property. | Publishing this draft will create {count} properties.",
     "problem": {
       "409_6": "The version name of this Draft conflicts with a past version of this Form or a deleted Form. Please use the field below to change it to something new or upload a new Form definition."
     }
