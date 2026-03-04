@@ -46,13 +46,14 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-magic entity-icon"></span>
         <i18n-t keypath="title.entity.create">
           <template #label>
-            <entity-link v-if="entityDetails?.currentVersion?.label != null"
+            <entity-link v-if="entityDetails?.currentVersion?.label != null && entityDetails?.datasetDeleted === false"
               :project-id="projectId" :dataset="entityDetails.dataset"
               :entity="entityDetails"/>
             <span v-else class="entity-label">{{ entityDetails.uuid }}</span>
           </template>
           <template #dataset>
-            <dataset-link :project-id="projectId" :name="entityDetails.dataset"/>
+            <dataset-link v-if="entityDetails?.datasetDeleted === false" :project-id="projectId" :name="entityDetails.dataset"/>
+            <span v-else>{{ $t('title.entity.deletedDataset', { dataset: entityDetails.dataset }) }}</span>
           </template>
         </i18n-t>
       </template>
@@ -60,13 +61,14 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-magic entity-icon"></span>
         <i18n-t keypath="title.entity.update">
           <template #label>
-            <entity-link v-if="entityDetails?.currentVersion?.label != null"
+            <entity-link v-if="entityDetails?.currentVersion?.label != null && entityDetails?.datasetDeleted === false"
               :project-id="projectId" :dataset="entityDetails.dataset"
               :entity="entityDetails"/>
             <span v-else class="entity-label">{{ entityDetails.uuid }}</span>
           </template>
           <template #dataset>
-            <dataset-link :project-id="projectId" :name="entityDetails.dataset"/>
+            <dataset-link v-if="entityDetails?.datasetDeleted === false" :project-id="projectId" :name="entityDetails.dataset"/>
+            <span v-else>{{ $t('title.entity.deletedDataset', { dataset: entityDetails.dataset }) }}</span>
           </template>
         </i18n-t>
       </template>
@@ -241,6 +243,8 @@ export default {
         "create": "Created Entity {label} in {dataset} Entity List",
         "update": "Updated Entity {label} in {dataset} Entity List",
         "error": "Problem processing Entity",
+        // Shown in the Submission feed when dataset has been deleted.
+        "deletedDataset": "{dataset} (deleted)"
       },
       "updateReviewState": {
         "null": {
