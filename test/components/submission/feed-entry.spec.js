@@ -197,6 +197,7 @@ describe('SubmissionFeedEntry', () => {
             entity: {
               uuid: 'xyz',
               dataset: 'DatasetName',
+              datasetDeleted: false,
               currentVersion: { label: 'EntityName' }
             }
           }
@@ -212,6 +213,7 @@ describe('SubmissionFeedEntry', () => {
             entity: {
               uuid: 'xyz',
               dataset: 'DatasetName',
+              datasetDeleted: false,
               currentVersion: { label: 'EntityName' }
             }
           }
@@ -236,12 +238,30 @@ describe('SubmissionFeedEntry', () => {
       it('does not render link if entity deleted (no currentVersion.label)', () => {
         testData.extendedAudits.createPast(1, {
           action: 'entity.create',
-          details: { entity: { uuid: 'xyz', dataset: 'DatasetName' } }
+          details: { entity: { uuid: 'xyz', dataset: 'DatasetName', datasetDeleted: false } }
         });
         const component = mountComponent();
         component.get('.feed-entry-title').text().should.equal('Created Entity xyz in DatasetName Entity List');
         component.findComponent(EntityLink).exists().should.be.false;
         component.findComponent(DatasetLink).exists().should.be.true;
+      });
+
+      it('does not render links if dataset deleted', () => {
+        testData.extendedAudits.createPast(1, {
+          action: 'entity.create',
+          details: {
+            entity: {
+              uuid: 'xyz',
+              dataset: 'DatasetName',
+              datasetDeleted: true,
+              currentVersion: { label: 'EntityName' }
+            }
+          }
+        });
+        const component = mountComponent();
+        component.get('.feed-entry-title').text().should.equal('Created Entity xyz in DatasetName (deleted) Entity List');
+        component.findComponent(EntityLink).exists().should.be.false;
+        component.findComponent(DatasetLink).exists().should.be.false;
       });
     });
 
@@ -253,6 +273,7 @@ describe('SubmissionFeedEntry', () => {
             entity: {
               uuid: 'xyz',
               dataset: 'DatasetName',
+              datasetDeleted: false,
               currentVersion: { label: 'EntityName' }
             }
           }
@@ -268,6 +289,7 @@ describe('SubmissionFeedEntry', () => {
             entity: {
               uuid: 'xyz',
               dataset: 'DatasetName',
+              datasetDeleted: false,
               currentVersion: { label: 'EntityName' }
             }
           }
@@ -292,12 +314,30 @@ describe('SubmissionFeedEntry', () => {
       it('does not render link if entity deleted (no currentVersion.label)', () => {
         testData.extendedAudits.createPast(1, {
           action: 'entity.update.version',
-          details: { entity: { uuid: 'xyz', dataset: 'DatasetName' } }
+          details: { entity: { uuid: 'xyz', dataset: 'DatasetName', datasetDeleted: false } }
         });
         const component = mountComponent();
         component.get('.feed-entry-title').text().should.equal('Updated Entity xyz in DatasetName Entity List');
         component.findComponent(EntityLink).exists().should.be.false;
         component.findComponent(DatasetLink).exists().should.be.true;
+      });
+
+      it('does not render links if dataset deleted', () => {
+        testData.extendedAudits.createPast(1, {
+          action: 'entity.update.version',
+          details: {
+            entity: {
+              uuid: 'xyz',
+              dataset: 'DatasetName',
+              datasetDeleted: true,
+              currentVersion: { label: 'EntityName' }
+            }
+          }
+        });
+        const component = mountComponent();
+        component.get('.feed-entry-title').text().should.equal('Updated Entity xyz in DatasetName (deleted) Entity List');
+        component.findComponent(EntityLink).exists().should.be.false;
+        component.findComponent(DatasetLink).exists().should.be.false;
       });
     });
 

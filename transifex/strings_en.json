@@ -4920,6 +4920,10 @@
           },
           "error": {
             "string": "Problem processing Entity"
+          },
+          "deletedDataset": {
+            "string": "{dataset} (deleted)",
+            "developer_comment": "Shown in the Submission feed when dataset has been deleted."
           }
         },
         "updateReviewState": {
