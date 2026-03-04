@@ -174,6 +174,10 @@ export const apiPaths = {
   datasets: projectPath('/datasets'),
   dataset: datasetPath(''),
   datasetProperties: datasetPath('/properties'),
+  datasetProperty: (projectId, datasetName, propertyName) => {
+    const suffix = `/properties/${encodeURIComponent(propertyName)}`;
+    return datasetPath(suffix)(projectId, datasetName);
+  },
   entityCreators: datasetPath('/entities/creators'),
   entities: (projectId, datasetName, suffix = '', query = undefined) => {
     const encodedName = encodeURIComponent(datasetName);
