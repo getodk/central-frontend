@@ -74,7 +74,6 @@ const toDateString = (value: DatetimeInputValue): string => {
 		const parsed = parseString(String(value));
 		return parsed?.toString() ?? '';
 	} catch {
-		// TODO: should we throw when codec cannot interpret the value?
 		return '';
 	}
 };

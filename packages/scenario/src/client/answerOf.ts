@@ -2,6 +2,7 @@ import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import type { AnyNode, RootNode } from '@getodk/xforms-engine';
 import { InputNodeAnswer } from '../answer/InputNodeAnswer.ts';
 import { ModelValueNodeAnswer } from '../answer/ModelValueNodeAnswer.ts.ts';
+import { RangeNodeAnswer } from '../answer/RangeNodeAnswer.ts';
 import { RankNodeAnswer } from '../answer/RankNodeAnswer.ts';
 import { SelectNodeAnswer } from '../answer/SelectNodeAnswer.ts';
 import { TriggerNodeAnswer } from '../answer/TriggerNodeAnswer.ts';
@@ -13,6 +14,7 @@ const isValueNode = (node: AnyNode) => {
 	return (
 		node.nodeType === 'model-value' ||
 		node.nodeType === 'rank' ||
+		node.nodeType === 'range' ||
 		node.nodeType === 'select' ||
 		node.nodeType === 'input' ||
 		node.nodeType === 'trigger' ||
@@ -33,6 +35,9 @@ export const answerOf = (instanceRoot: RootNode, reference: string): ValueNodeAn
 
 		case 'rank':
 			return new RankNodeAnswer(node);
+
+		case 'range':
+			return new RangeNodeAnswer(node);
 
 		case 'select':
 			return new SelectNodeAnswer(node);

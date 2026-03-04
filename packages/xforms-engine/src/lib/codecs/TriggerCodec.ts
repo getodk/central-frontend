@@ -1,5 +1,4 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
-import { ErrorProductionDesignPendingError } from '../../error/ErrorProductionDesignPendingError.ts';
 import { ValueCodec } from './ValueCodec.ts';
 
 export type TriggerValueType = 'string';
@@ -35,22 +34,7 @@ const encodeTriggerValue = (value: TriggerInputValue): TriggerInstanceValue => {
 };
 
 const decodeTriggerValue = (value: string): TriggerRuntimeValue => {
-	if (value === 'OK') {
-		return true;
-	}
-
-	if (value === '') {
-		return false;
-	}
-
-	if (value.toLowerCase() === 'ok') {
-		// eslint-disable-next-line no-console
-		console.warn('Treating trigger value as case-insensitive:', value);
-
-		return true;
-	}
-
-	throw new ErrorProductionDesignPendingError(`Unexpected trigger value: ${value}`);
+	return value.toLowerCase() === 'ok';
 };
 
 export class TriggerCodec extends ValueCodec<

@@ -411,69 +411,66 @@ describe('Data (<bind type>) type support', () => {
 
 				type SetIntInputValueType = keyof SetIntInputValueByType;
 
-				interface BaseSetIntInputValueCase<T extends SetIntInputValueType> {
-					readonly inputType: T;
-					readonly inputValue: SetIntInputValueByType[T];
-					readonly expectedValue: bigint | null;
-				}
+				describe('sets value', () => {
+					interface BaseSetIntInputValueCase<T extends SetIntInputValueType> {
+						readonly inputType: T;
+						readonly inputValue: SetIntInputValueByType[T];
+						readonly expectedValue: bigint | null;
+					}
 
-				type SetIntInputValueCase = {
-					[T in SetIntInputValueType]: BaseSetIntInputValueCase<T>;
-				}[SetIntInputValueType];
+					type SetIntInputValueCase = {
+						[T in SetIntInputValueType]: BaseSetIntInputValueCase<T>;
+					}[SetIntInputValueType];
 
-				describe.each<SetIntInputValueCase>([
-					{ inputType: 'bigint', inputValue: 89n, expectedValue: 89n },
-					{ inputType: 'number', inputValue: 10, expectedValue: 10n },
-					{ inputType: 'string', inputValue: '23', expectedValue: 23n },
-					{ inputType: 'null', inputValue: null, expectedValue: null },
-					{ inputType: 'string', inputValue: '10.1', expectedValue: 10n },
-					{ inputType: 'number', inputValue: 10.1, expectedValue: 10n },
-				])('setValue($inputType)', ({ inputValue, expectedValue }) => {
-					it(`sets ${inputValue}, resulting in value ${expectedValue}`, () => {
-						scenario.answer('/root/int-value', inputValue);
-						answer = getTypedInputNodeAnswer('/root/int-value', 'int');
-
-						expectTypeOf(answer.value).toEqualTypeOf<bigint | null>();
-
-						if (expectedValue == null) {
-							expect(answer.value).toBeNull();
-							expect(answer.stringValue).toBe('');
-						} else {
-							expect(answer.value).toBeTypeOf('bigint');
-							expect(answer.value).toBe(expectedValue);
-							expect(answer.stringValue).toBe(`${expectedValue}`);
-						}
-					});
-				});
-
-				interface BaseSetIntInputErrorCase<T extends SetIntInputValueType> {
-					readonly inputType: T;
-					readonly inputValue: SetIntInputValueByType[T];
-				}
-
-				type SetIntInputErrorCase = {
-					[T in SetIntInputValueType]: BaseSetIntInputErrorCase<T>;
-				}[SetIntInputValueType];
-
-				describe.each<SetIntInputErrorCase>([
-					{ inputType: 'bigint', inputValue: -2_147_483_649n },
-					{ inputType: 'bigint', inputValue: 2_147_483_648n },
-					{ inputType: 'number', inputValue: -2_147_483_649 },
-					{ inputType: 'number', inputValue: 2_147_483_648 },
-					{ inputType: 'string', inputValue: '-2147483649' },
-					{ inputType: 'string', inputValue: '2147483648' },
-				])('integer value out of specified bounds ($inputType)', ({ inputValue }) => {
-					it(`fails to set ${inputValue}`, () => {
-						let caught: unknown;
-
-						try {
+					it.each<SetIntInputValueCase>([
+						{ inputType: 'bigint', inputValue: 89n, expectedValue: 89n },
+						{ inputType: 'number', inputValue: 10, expectedValue: 10n },
+						{ inputType: 'string', inputValue: '23', expectedValue: 23n },
+						{ inputType: 'null', inputValue: null, expectedValue: null },
+						{ inputType: 'string', inputValue: '10.1', expectedValue: 10n },
+						{ inputType: 'number', inputValue: 10.1, expectedValue: 10n },
+					])(
+						'$inputValue ($inputType), resulting in value $expectedValue',
+						({ inputValue, expectedValue }) => {
 							scenario.answer('/root/int-value', inputValue);
 							answer = getTypedInputNodeAnswer('/root/int-value', 'int');
-						} catch (error) {
-							caught = error;
-						}
 
-						expect(caught, `Value was set to ${answer.value}`).toBeInstanceOf(Error);
+							expectTypeOf(answer.value).toEqualTypeOf<bigint | null>();
+
+							if (expectedValue == null) {
+								expect(answer.value).toBeNull();
+								expect(answer.stringValue).toBe('');
+							} else {
+								expect(answer.value).toBeTypeOf('bigint');
+								expect(answer.value).toBe(expectedValue);
+								expect(answer.stringValue).toBe(`${expectedValue}`);
+							}
+						}
+					);
+				});
+
+				describe('fails to set when out of bounds', () => {
+					interface BaseSetIntInputErrorCase<T extends SetIntInputValueType> {
+						readonly inputType: T;
+						readonly inputValue: SetIntInputValueByType[T];
+					}
+
+					type SetIntInputErrorCase = {
+						[T in SetIntInputValueType]: BaseSetIntInputErrorCase<T>;
+					}[SetIntInputValueType];
+
+					it.each<SetIntInputErrorCase>([
+						{ inputType: 'bigint', inputValue: -2_147_483_649n },
+						{ inputType: 'bigint', inputValue: 2_147_483_648n },
+						{ inputType: 'number', inputValue: -2_147_483_649 },
+						{ inputType: 'number', inputValue: 2_147_483_648 },
+						{ inputType: 'string', inputValue: '-2147483649' },
+						{ inputType: 'string', inputValue: '2147483648' },
+					])('$inputValue ($inputType)', ({ inputValue }) => {
+						scenario.answer('/root/int-value', inputValue);
+						answer = getTypedInputNodeAnswer('/root/int-value', 'int');
+						expect(answer.value).toBeNull();
+						expect(answer.stringValue).toBe('');
 					});
 				});
 			});

@@ -1,4 +1,3 @@
-import { ValueTypeInvariantError } from '../../error/ValueTypeInvariantError.ts';
 import { ValueCodec } from './ValueCodec.ts';
 
 /**
@@ -13,27 +12,21 @@ const INT_BOUNDS = {
 	MAX: 2_147_483_647n,
 };
 
-const assertIntBounds = <T extends bigint | null>(value: T): T => {
+const assertIntBounds = <T extends bigint | null>(value: T): T | null => {
 	if (value == null) {
 		return value;
 	}
 
 	if (value < INT_BOUNDS.MIN || value > INT_BOUNDS.MAX) {
-		throw new ValueTypeInvariantError(
-			'int',
-			`Unable to decode int value from ${String(value)}: expected value to be between ${INT_BOUNDS.MIN} and ${INT_BOUNDS.MAX} (inclusive)`
-		);
+		return null;
 	}
 
 	return value;
 };
 
-const boundedInt = (value: bigint | number): bigint => {
+const boundedInt = (value: bigint | number): bigint | null => {
 	const result = BigInt(value);
-
-	assertIntBounds(result);
-
-	return result;
+	return assertIntBounds(result);
 };
 
 export type IntInputValue = bigint | number | string | null;
@@ -65,7 +58,6 @@ const encodeInt = (value: IntInputValue): string => {
 
 		default:
 			value satisfies bigint;
-
 			intValue = boundedInt(value);
 	}
 
@@ -81,9 +73,6 @@ export type IntRuntimeValue = bigint | null;
 /**
  * Note: Collect/JavaRosa trim decimal values (i.e. round closest to zero). We
  * do the same.
- *
- * @todo Note that we enforce bounds **after** rounding, which may not be quite
- * right! Look at actual Collect/JR implementation to align.
  */
 const decodeInt = (value: string): IntRuntimeValue => {
 	if (value === '') {

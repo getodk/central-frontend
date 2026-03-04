@@ -1,5 +1,4 @@
 import type { RangeValue } from '../../client/RangeNode.ts';
-import { ValueTypeInvariantError } from '../../error/ValueTypeInvariantError.ts';
 import type { RangeNodeDefinition, RangeValueType } from '../../parse/model/RangeNodeDefinition.ts';
 import type { RuntimeInputValue, RuntimeValue, SharedValueCodec } from './getSharedValueCodec.ts';
 import { ValueCodec } from './ValueCodec.ts';
@@ -31,33 +30,23 @@ export class RangeCodec<V extends RangeValueType> extends ValueCodec<
 			return value;
 		};
 
-		const assertBounds = (value: RuntimeInputValue<V>) => {
+		const assertBounds = (value: RuntimeInputValue<V>): boolean => {
 			const comparableValue = toComparableValue(value);
-
-			if (comparableValue == null) {
-				return;
-			}
-
-			if (comparableValue < min || comparableValue > max) {
-				throw new ValueTypeInvariantError(
-					valueType,
-					`Expected value to be within bounds [${min}, ${max}]. Got: ${value}`
-				);
-			}
+			return comparableValue != null && comparableValue >= min && comparableValue <= max;
 		};
 
 		const encodeValue = (value: RangeInputValue<V>): string => {
-			assertBounds(value);
-
-			return baseCodec.encodeValue(value);
+			return baseCodec.encodeValue(assertBounds(value) ? value : null);
 		};
 
 		const decodeValue = (value: string): RangeValue<V> => {
 			const decoded = baseCodec.decodeValue(value);
 
-			assertBounds(value);
+			if (assertBounds(decoded)) {
+				return decoded;
+			}
 
-			return decoded;
+			return null;
 		};
 
 		super(valueType, encodeValue, decodeValue);
