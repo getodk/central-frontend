@@ -41,7 +41,7 @@
 	}
 
 	&:disabled {
-		cursor: not-allowed;
+		cursor: default;
 
 		svg {
 			opacity: 0.5;

@@ -85,7 +85,6 @@ const isFormEditMode = inject(IS_FORM_EDIT_MODE);
 		}
 
 		&:read-only {
-			cursor: not-allowed;
 			opacity: 1;
 			background-image: none;
 		}

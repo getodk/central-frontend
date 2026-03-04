@@ -224,10 +224,6 @@ const displayState = computed(() => {
 	&:hover {
 		background: var(--odk-muted-background-color);
 	}
-
-	&:disabled {
-		cursor: not-allowed;
-	}
 }
 
 .map-status-spinner {

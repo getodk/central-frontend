@@ -194,7 +194,6 @@ onBeforeUnmount(cleanup);
 
 .geo-dialog-header-title {
 	display: flex;
-	font-size: var(--odk-dialog-title-font-size);
 
 	.geo-spinner {
 		width: 22px;
@@ -244,17 +243,6 @@ onBeforeUnmount(cleanup);
 
 .geo-dialog-footer button {
 	margin: 0 0 var(--geo-spacing-m) var(--geo-spacing-l);
-}
-
-// Overriding Primevue's styles
-.p-dialog.geo-dialog {
-	background: var(--odk-base-background-color);
-
-	&,
-	.p-dialog-footer,
-	.p-dialog-header {
-		border-radius: var(--odk-radius);
-	}
 }
 
 @media screen and (max-width: #{pf.$md}) {

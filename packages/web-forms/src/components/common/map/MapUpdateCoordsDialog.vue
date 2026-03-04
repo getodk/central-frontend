@@ -274,33 +274,12 @@ watch(pasteValue, (newVal) => {
 <style lang="scss">
 // Global overrides for this dialog
 .p-dialog.map-paste-dialog {
-	background: var(--odk-base-background-color);
-	border-radius: var(--odk-radius);
-	margin: 0 24px;
 	width: 550px;
-
-	.p-dialog-header {
-		padding: 15px 20px;
-		font-size: var(--odk-dialog-title-font-size);
-	}
 
 	.p-dialog-content {
 		display: flex;
 		flex-direction: column;
 		gap: 35px;
-		padding: 20px;
-	}
-
-	.p-dialog-footer button {
-		font-size: var(--odk-base-font-size);
-		&:disabled {
-			cursor: not-allowed;
-		}
-	}
-
-	button.p-button-secondary:focus-visible {
-		outline: none;
-		outline-offset: unset;
 	}
 }
 </style>

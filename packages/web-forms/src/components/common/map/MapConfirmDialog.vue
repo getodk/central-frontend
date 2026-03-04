@@ -44,22 +44,3 @@ const emit = defineEmits(['update:visible', 'deleteFeature']);
 		</template>
 	</Dialog>
 </template>
-
-<style lang="scss">
-// Override PrimeVue dialog style that is outside scoped (rendered outside the component)
-.p-dialog.map-block-dialog {
-	background: var(--odk-base-background-color);
-	border-radius: var(--odk-radius);
-	margin: 0 24px;
-
-	.p-dialog-header {
-		padding: 15px 20px;
-		font-size: var(--odk-dialog-title-font-size);
-	}
-
-	.p-dialog-content p,
-	.p-dialog-footer button {
-		font-size: var(--odk-base-font-size);
-	}
-}
-</style>

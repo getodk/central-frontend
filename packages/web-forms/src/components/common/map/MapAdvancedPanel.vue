@@ -214,7 +214,7 @@ const updateVertex = () => {
 
 		&:disabled {
 			background-color: var(--odk-muted-background-color);
-			cursor: not-allowed;
+			cursor: default;
 		}
 	}
 

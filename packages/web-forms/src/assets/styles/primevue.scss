@@ -1,7 +1,10 @@
 .odk-form {
 	.p-datepicker-input:disabled,
-	.p-datepicker-input:disabled + .p-datepicker-input-icon-container {
-		cursor: not-allowed;
+	.p-datepicker-input:disabled + .p-datepicker-input-icon-container,
+	.p-inputtext:disabled,
+	.p-inputtext:read-only,
+	.p-button:disabled {
+		cursor: default;
 	}
 }
 
@@ -11,5 +14,33 @@
 	.p-button.p-button-secondary:focus-visible {
 		outline: none;
 		outline-offset: unset;
+	}
+
+	.p-button:disabled {
+		cursor: default;
+	}
+}
+
+.p-dialog {
+	margin: 0 24px;
+
+	.p-dialog-header {
+		font-size: var(--odk-dialog-title-font-size);
+	}
+
+	.p-dialog-content *,
+	.p-dialog-footer * {
+		font-size: var(--odk-base-font-size);
+	}
+
+	.p-dialog-header,
+	.p-dialog-content,
+	.p-dialog-footer {
+		padding: 20px;
+	}
+
+	.p-dialog-content,
+	.p-dialog-footer {
+		padding-top: 0;
 	}
 }

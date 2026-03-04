@@ -58,6 +58,10 @@ export const odkThemePreset = definePreset(Aura, {
 			},
 		},
 		dialog: {
+			root: {
+				background: 'var(--odk-base-background-color)',
+				borderRadius: 'var(--odk-radius)',
+			},
 			colorScheme: {
 				light: {
 					root: {

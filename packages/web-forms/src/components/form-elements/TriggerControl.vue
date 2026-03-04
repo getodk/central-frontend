@@ -68,7 +68,7 @@ const setValue = (value: boolean) => {
 
 	&.disabled,
 	&.disabled label {
-		cursor: not-allowed;
+		cursor: default;
 	}
 	:deep(.p-checkbox:not(.p-disabled):has(.p-checkbox-input:hover)) {
 		box-shadow: none;

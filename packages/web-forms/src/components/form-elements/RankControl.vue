@@ -252,7 +252,7 @@ const onDragEnd = (oldIndex: number | undefined, newIndex: number | undefined) =
 
 .disabled .rank-option,
 .disabled button {
-	cursor: not-allowed;
+	cursor: default;
 }
 
 .rank-buttons {
