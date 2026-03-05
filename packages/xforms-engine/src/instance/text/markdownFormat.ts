@@ -23,6 +23,7 @@ import {
 	UnorderedList,
 } from '../markdown/MarkdownNode.ts';
 
+const LEADING_WHITESPACE_REGEX = /^\s+/;
 const STYLE_PROPERTY_REGEX = /style\s*=\s*(?:'|")(.+)(?:'|")/i;
 const HTML_TAG_MAP = {
 	span: Span,
@@ -183,7 +184,7 @@ function mdastToOdkMarkdown(elements: RootContent[]): MarkdownNode[] {
 function escapeEditableChunks(chunks: readonly TextChunk[]) {
 	return chunks
 		.map((chunk, i) => {
-			const str = chunk.asString;
+			const str = chunk.asString.replace(LEADING_WHITESPACE_REGEX, ' ');
 			if (str && chunk.source === 'output') {
 				// we need to process this separately otherwise user entered markup will
 				// interract with form markup in unexpected ways
