@@ -43,10 +43,8 @@ export type AnyDescendantNode = DescendantNode<
 	DescendantNodeDefinition,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	DescendantNodeStateSpec<any>,
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	any,
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	any
+	AnyNode,
+	AnyChildNode | null
 >;
 
 interface DescendantNodeOptions {
@@ -106,6 +104,23 @@ export abstract class DescendantNode<
 		}
 
 		return this.isSelfRelevant();
+	};
+
+	readonly hasRelevantBodyNodes: Accessor<boolean> = () => {
+		if (!this.isSelfRelevant()) {
+			return false;
+		}
+
+		const children = this.getChildren();
+		if (!children?.length) {
+			return false;
+		}
+
+		return children
+			.filter((child) => child.nodeType !== 'model-value')
+			.some((child) => {
+				return child.getChildren()?.length ? child.hasRelevantBodyNodes() : child.isSelfRelevant();
+			});
 	};
 
 	readonly isRequired: Accessor<boolean>;

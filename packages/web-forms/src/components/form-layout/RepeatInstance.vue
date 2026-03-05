@@ -65,7 +65,14 @@ const menuItems = computed((): MenuItem[] | undefined => {
 });
 </script>
 <template>
-	<FormPanel :title="label.literal" :title-formatted="label.formatted" :menu-items="menuItems" :label-number="instanceIndex + 1" :is-repeat="true">
+	<FormPanel
+		v-if="instance.currentState.hasRelevantBodyNodes"
+		:title="label.literal"
+		:title-formatted="label.formatted"
+		:menu-items="menuItems"
+		:label-number="instanceIndex + 1"
+		:is-repeat="true"
+	>
 		<QuestionList :nodes="children" />
 	</FormPanel>
 </template>

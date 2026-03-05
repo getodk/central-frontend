@@ -138,6 +138,7 @@ export class PrimaryInstance<
 	readonly isReadonly = () => false;
 	readonly hasNonRelevantAncestor = () => false;
 	readonly isRelevant = () => true;
+	readonly hasRelevantBodyNodes: Accessor<boolean> = () => this.root.hasRelevantBodyNodes();
 
 	private geolocationProvider: GeolocationProvider | undefined;
 	// TranslationContext (support)

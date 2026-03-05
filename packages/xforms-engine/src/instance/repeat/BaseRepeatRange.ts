@@ -46,6 +46,7 @@ interface RepeatRangeStateSpec extends DescendantNodeSharedStateSpec {
 	readonly hint: null;
 	readonly label: Accessor<TextRange<'label'> | null>;
 	readonly children: Accessor<readonly FormNodeID[]>;
+	readonly hasRelevantBodyNodes: Accessor<boolean>;
 	readonly attributes: Accessor<readonly Attribute[]>;
 	readonly valueOptions: null;
 	readonly value: null;
@@ -179,6 +180,7 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatDefinition>
 				label: createNodeLabel(this, definition),
 				hint: null,
 				children: childrenState.childIds,
+				hasRelevantBodyNodes: this.hasRelevantBodyNodes,
 				attributes: attributeState.getAttributes,
 				valueOptions: null,
 				value: null,

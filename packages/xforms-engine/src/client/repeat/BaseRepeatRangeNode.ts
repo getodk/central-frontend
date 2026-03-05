@@ -20,7 +20,7 @@ export interface BaseRepeatRangeNodeState extends BaseNodeState {
 	 * @see {@link BaseRepeatRangeNode} for additional detail.
 	 */
 	get children(): readonly RepeatInstanceNode[];
-
+	get hasRelevantBodyNodes(): boolean;
 	get valueOptions(): null;
 	get value(): null;
 }

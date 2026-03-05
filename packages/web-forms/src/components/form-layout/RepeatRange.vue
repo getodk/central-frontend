@@ -10,8 +10,9 @@ const props = defineProps<{ node: RepeatRangeNode }>();
 const label = computed(() => props.node.currentState.label?.formatted);
 </script>
 <template>
-	<RepeatInstance v-for="(instance, index) in node.currentState.children" :key="index" :instance="instance" :instance-index="index" />
-
+	<template v-if="node.currentState.hasRelevantBodyNodes">
+		<RepeatInstance v-for="(instance, index) in node.currentState.children" :key="index" :instance="instance" :instance-index="index" />
+	</template>
 	<Button
 		v-if="node.nodeType === 'repeat-range:uncontrolled'"
 		outlined

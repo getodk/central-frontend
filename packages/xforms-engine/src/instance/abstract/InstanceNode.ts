@@ -62,8 +62,8 @@ type AnyInstanceNode = InstanceNode<
 	AnyNodeDefinition,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	InstanceNodeStateSpec<any>,
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	any
+	AnyNode | null,
+	AnyChildNode | null
 >;
 
 /**
@@ -78,10 +78,12 @@ export type InstanceNodeCurrentState<
 > =
 	& CurrentState<Omit<Spec, 'children'>>
 	& {
-			readonly children: [Child] extends [AnyChildNode]
-				? readonly Child[]
-				: null;
-		};
+	readonly children: [Child] extends [null]
+		? null
+		: null extends Child
+			? ReadonlyArray<NonNullable<Child>> | null
+			: ReadonlyArray<NonNullable<Child>>;
+};
 
 interface ComputableReferenceNode {
 	readonly parent: AnyNode | null;
@@ -139,6 +141,12 @@ export abstract class InstanceNode<
 	 * conditional behavior for value nodes.
 	 */
 	abstract readonly isRelevant: Accessor<boolean>;
+
+	/**
+	 * @package Exposed on every node type to facilitate inheritance, as well as
+	 * conditional behavior for value nodes.
+	 */
+	abstract readonly hasRelevantBodyNodes: Accessor<boolean>;
 
 	// BaseNode: identity
 	readonly nodeId: FormNodeID;
