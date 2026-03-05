@@ -11,6 +11,7 @@ const DOM_PURIFY_SETTINGS = {
 	ALLOWED_TAGS: [
 		'b',
 		'br',
+		'div',
 		'em',
 		'i',
 		'li',
