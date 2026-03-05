@@ -1,5 +1,11 @@
 # @getodk/common
 
+## 0.12.2
+
+### Patch Changes
+
+- 53e60da: Handle last-saved virtual secondary instance gracefully pending full implementation later
+
 ## 0.12.1
 
 ### Patch Changes

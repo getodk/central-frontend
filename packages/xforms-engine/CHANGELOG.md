@@ -1,5 +1,18 @@
 # @getodk/xforms-engine
 
+## 0.19.0
+
+### Minor Changes
+
+- 965f6a9: Prevent displaying groups or repeats without relevant questions.
+
+### Patch Changes
+
+- 72bac16: Fixed markdown parser to ignore single labels that start with numbers instead of turning them into ordered lists
+- 53e60da: Handle last-saved virtual secondary instance gracefully pending full implementation later
+- aa8090a: Fixes integer and range codecs to not throw errors when given invalid data
+- 14d6c9a: Fixed markdown to not interpret leading whitespace as a code block
+
 ## 0.18.0
 
 ### Minor Changes

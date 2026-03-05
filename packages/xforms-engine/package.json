@@ -1,6 +1,6 @@
 {
   "name": "@getodk/xforms-engine",
-  "version": "0.18.0",
+  "version": "0.19.0",
   "license": "Apache-2.0",
   "description": "XForms engine for ODK Web Forms",
   "type": "module",
@@ -63,7 +63,7 @@
   "devDependencies": {
     "@babel/core": "^7.28.5",
     "@getodk/tree-sitter-xpath": "0.2.2",
-    "@getodk/xpath": "0.10.1",
+    "@getodk/xpath": "0.10.2",
     "@playwright/test": "^1.58.2",
     "@types/papaparse": "^5.5.0",
     "babel-plugin-transform-jsbi-to-bigint": "^1.4.2",
