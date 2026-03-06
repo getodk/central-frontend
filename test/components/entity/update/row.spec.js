@@ -1,8 +1,6 @@
-import EntityUpdate from '../../../../src/components/entity/update.vue';
 import EntityUpdateRow from '../../../../src/components/entity/update/row.vue';
 import TextareaAutosize from '../../../../src/components/textarea-autosize.vue';
 
-import testData from '../../../data';
 import { mergeMountOptions, mount } from '../../../util/lifecycle';
 
 const mountComponent = (options = undefined) =>
@@ -26,31 +24,6 @@ describe('EntityUpdateRow', () => {
       const id = row.get('textarea').attributes('id');
       id.should.match(/^entity-update-row-textarea\d+$/);
       row.get('label').attributes('for').should.equal(id);
-    });
-  });
-
-  describe('current value', () => {
-    it('shows the value', () => {
-      const row = mountComponent({
-        props: { oldValue: 'foo' }
-      });
-      row.get('.old-value').text().should.equal('foo');
-    });
-
-    it('renders correctly if the value is an empty string', () => {
-      const row = mountComponent({
-        props: { oldValue: '' }
-      });
-      const oldValue = row.get('.old-value');
-      oldValue.text().should.equal('(empty)');
-      oldValue.classes('empty').should.be.true;
-    });
-
-    it('renders correctly if the value is nullish', () => {
-      const row = mountComponent();
-      const oldValue = row.get('.old-value');
-      oldValue.text().should.equal('(empty)');
-      oldValue.classes('empty').should.be.true;
     });
   });
 
@@ -100,11 +73,18 @@ describe('EntityUpdateRow', () => {
       row.emitted('update:modelValue').should.eql([['bar'], [undefined]]);
     });
 
-    it('adds uncommitted-change class if modelValue prop exists', () => {
+    it('adds value-changed class if markValueChanged provided and modelValue prop exists', () => {
+      const row = mountComponent({
+        props: { oldValue: 'foo', modelValue: 'bar', markValueChanged: true }
+      });
+      row.get('.form-group').classes('value-changed').should.be.true;
+    });
+
+    it('does not add value-changed class if markValueChanged not provided but modelValue prop exists', () => {
       const row = mountComponent({
         props: { oldValue: 'foo', modelValue: 'bar' }
       });
-      row.classes('uncommitted-change').should.be.true;
+      row.get('.form-group').classes('value-changed').should.be.false;
     });
   });
 
@@ -122,26 +102,5 @@ describe('EntityUpdateRow', () => {
       });
       row.get('textarea').element.required.should.be.true;
     });
-  });
-
-  it('sets TextareaAutosize minHeight prop based on oldValue prop', async () => {
-    testData.extendedEntities.createPast(1, {
-      label: 'a',
-      data: { notes: 'a'.repeat(5000) }
-    });
-    const modal = mount(EntityUpdate, {
-      props: { state: true, entity: testData.extendedEntities.last() },
-      container: {
-        requestData: { dataset: testData.extendedDatasets.last() }
-      },
-      attachTo: document.body
-    });
-    await modal.vm.$nextTick();
-    await modal.vm.$nextTick();
-    const minHeights = modal.findAllComponents(TextareaAutosize)
-      .map(textarea => textarea.props().minHeight);
-    should.exist(minHeights[0]);
-    minHeights[0].should.be.above(0);
-    minHeights[1].should.be.above(minHeights[0]);
   });
 });

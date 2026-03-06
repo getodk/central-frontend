@@ -1621,9 +1621,16 @@
       "upload": {
         "string": "Upload Entities"
       },
+      "new": {
+        "string": "New",
+        "developer_comment": "This is shown on a button for creating new Entities"
+      },
       "alert": {
         "upload": {
           "string": "Your Entities have been successfully uploaded."
+        },
+        "create": {
+          "string": "Entity has been successfully created."
         }
       },
       "purgeDescription": {
@@ -2416,16 +2423,6 @@
         "string": "Update {label}",
         "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
       },
-      "header": {
-        "currentValue": {
-          "string": "Current Value",
-          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
-        },
-        "updatedValue": {
-          "string": "Updated Value",
-          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
-        }
-      },
       "geometryDisabled": {
         "string": "Geometry can’t be updated from the map."
       },
@@ -2554,6 +2551,17 @@
         "largeCell": {
           "string": "Some cells are abnormally large, which can indicate difficulties reading your file:",
           "developer_comment": "This is a warning that is followed by a list of rows."
+        }
+      }
+    },
+    "EntityUpsert": {
+      "titleCreate": {
+        "string": "Create New Entity"
+      },
+      "header": {
+        "value": {
+          "string": "Value",
+          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
         }
       }
     },
