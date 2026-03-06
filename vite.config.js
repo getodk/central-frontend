@@ -16,6 +16,12 @@ import vue from '@vitejs/plugin-vue';
 import { defineConfig } from 'vite';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'url';
+import { readFileSync } from 'fs';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const webFormsPackage = JSON.parse(
+  readFileSync(resolve(__dirname, 'node_modules/@getodk/web-forms/package.json'), 'utf-8')
+);
 
 // The default is es2020, but we need es2022 or later because Web Forms uses
 // top-level await.
@@ -50,6 +56,9 @@ export default defineConfig(({ mode }) => ({
       dropMessageCompiler: true
     })
   ],
+  define: {
+    __WEB_FORMS_VERSION__: JSON.stringify(webFormsPackage.version)
+  },
   build: {
     target: buildTarget,
     // `false` during dev for performance reasons
