@@ -623,7 +623,7 @@ describe('FormNew', () => {
           modal.should.alert('danger');
           modal.get('.modal-warnings').should.be.hidden();
         })
-        .request(modal => modal.get('#form-new-upload-button').trigger('click'))
+        .request(upload)
         .respondWithProblem(xlsFormWarning)
         .afterResponse(modal => {
           modal.should.not.alert();

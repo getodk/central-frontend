@@ -200,6 +200,21 @@ export default {
         return;
       }
 
+      // Assumption: If file is changed/deleted on the disk then it won't be readable
+      if (ignoreWarnings) {
+        const reader = new FileReader();
+        reader.onload = () => this.performUpload(ignoreWarnings);
+        reader.onerror = () => {
+          this.redAlert.show(this.$t('alert.fileNotReadable'));
+          this.file = null;
+          this.warnings = null;
+        };
+        reader.readAsArrayBuffer(this.file);
+      } else {
+        this.performUpload(ignoreWarnings);
+      }
+    },
+    performUpload(ignoreWarnings) {
       const query = ignoreWarnings ? { ignoreWarnings } : null;
       const headers = { 'Content-Type': this.contentType };
       if (this.contentType !== 'application/xml') {
@@ -242,7 +257,10 @@ export default {
           }
         })
         .catch(() => {
-          if (this.$route === initialRoute) this.warnings = null;
+          if (this.$route === initialRoute) {
+            this.warnings = null;
+            this.file = null;
+          }
         });
     },
     removeLearnMore(value) {
@@ -314,7 +332,8 @@ export default {
       "uploadAnyway": "Upload anyway"
     },
     "alert": {
-      "fileRequired": "Please choose a file."
+      "fileRequired": "Please choose a file.",
+      "fileNotReadable": "The file could not be read. It may have been modified or deleted. Please choose the file again."
     },
     "problem": {
       "400_8": "The Form definition you have uploaded does not appear to be for this Form. It has the wrong formId (expected “{expected}”, got “{actual}”).",
