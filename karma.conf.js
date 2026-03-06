@@ -9,20 +9,32 @@ This config is based on:
 
 // eslint-disable-next-line import/no-unresolved
 const VueI18nPlugin = require('@intlify/unplugin-vue-i18n/webpack');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const { DefinePlugin } = require('webpack');
 const { resolve } = require('node:path');
+const { readFileSync } = require('fs');
 // eslint-disable-next-line import/extensions
 const webpackConfig = require('./node_modules/@vue/cli-service/webpack.config.js');
 
+const webFormsPackage = JSON.parse(
+  readFileSync(resolve(__dirname, 'node_modules/@getodk/web-forms/package.json'), 'utf-8')
+);
+
 const { entry, ...webpackConfigForKarma } = webpackConfig;
-webpackConfigForKarma.plugins.push(VueI18nPlugin({
-  include: resolve(__dirname, './src/locales/**'),
-  compositionOnly: false,
-  defaultSFCLang: 'json5',
-  // `false` doesn't work for some reason. When `false` is specified, Vue I18n
-  // warns that it's been installed already.
-  fullInstall: true,
-  dropMessageCompiler: true
-}));
+webpackConfigForKarma.plugins.push(
+  VueI18nPlugin({
+    include: resolve(__dirname, './src/locales/**'),
+    compositionOnly: false,
+    defaultSFCLang: 'json5',
+    // `false` doesn't work for some reason. When `false` is specified, Vue I18n
+    // warns that it's been installed already.
+    fullInstall: true,
+    dropMessageCompiler: true
+  }),
+  new DefinePlugin({
+    __WEB_FORMS_VERSION__: JSON.stringify(webFormsPackage.version)
+  })
+);
 // eslint-disable-next-line arrow-body-style
 webpackConfigForKarma.plugins = webpackConfigForKarma.plugins.filter(plugin => {
   return plugin.constructor.name !== 'HtmlWebpackPlugin';
