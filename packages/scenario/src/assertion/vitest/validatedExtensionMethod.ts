@@ -1,5 +1,5 @@
-import type { AssertIs } from '../../../../types/assertions/AssertIs.ts';
-import { UnreachableError } from '../../../lib/error/UnreachableError.ts';
+import type { AssertIs } from '../AssertIs.ts';
+import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import {
 	assertVoidExpectedArgument,
 	type AssertVoidExpectedArgument,

@@ -1,4 +1,4 @@
-import type { AssertIs } from '../../../types/assertions/AssertIs.ts';
+import type { AssertIs } from './AssertIs.ts';
 
 type ArrayItemAssertion<T> = (item: unknown) => asserts item is T;
 

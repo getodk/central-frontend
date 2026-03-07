@@ -5,7 +5,7 @@ import {
 	isCommentNode,
 	isElementNode,
 	isTextNode,
-} from '../../lib/dom/predicates.ts';
+} from '@getodk/common/lib/dom/predicates.ts';
 
 export const expectEqualComment = (actual: Node, expected: Comment) => {
 	expect(isCommentNode(actual)).toBe(true);

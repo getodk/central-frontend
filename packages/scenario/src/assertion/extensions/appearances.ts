@@ -1,10 +1,8 @@
-import type { DeriveStaticVitestExpectExtension } from '@getodk/common/test/assertions/helpers.ts';
-import {
-	AsymmetricTypedExpectExtension,
-	extendExpect,
-} from '@getodk/common/test/assertions/helpers.ts';
 import type { AnyNode } from '@getodk/xforms-engine';
 import { expect } from 'vitest';
+import { AsymmetricTypedExpectExtension } from '../vitest/AsymmetricTypedExpectExtension.ts';
+import { extendExpect } from '../vitest/extendExpect.ts';
+import type { DeriveStaticVitestExpectExtension } from '../vitest/shared-extension-types.ts';
 import { assertArrayOfStrings, assertEngineNode, assertString } from './shared-type-assertions.ts';
 
 const hasAppearance = (node: AnyNode, appearance: string): boolean => {

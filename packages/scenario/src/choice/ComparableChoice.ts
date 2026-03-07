@@ -1,4 +1,4 @@
-import type { JSONValue } from '@getodk/common/types/JSONValue.ts';
+import type { JSONValue } from '../../types/JSONValue.ts';
 
 export abstract class ComparableChoice {
 	abstract get value(): string;

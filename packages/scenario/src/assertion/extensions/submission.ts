@@ -6,23 +6,22 @@ import {
 import { assertUnknownArray } from '@getodk/common/lib/type-assertions/assertUnknownArray.ts';
 import { assertUnknownObject } from '@getodk/common/lib/type-assertions/assertUnknownObject.ts';
 import { getBlobText } from '@getodk/common/lib/web-compat/blob.ts';
-import type * as CommonAssertionHelpers from '@getodk/common/test/assertions/helpers.ts';
-import type { DeriveStaticVitestExpectExtension } from '@getodk/common/test/assertions/helpers.ts';
-import {
-	ArbitraryConditionExpectExtension,
-	AsymmetricTypedExpectExtension,
-	AsyncAsymmetricTypedExpectExtension,
-	extendExpect,
-	instanceAssertion,
-} from '@getodk/common/test/assertions/helpers.ts';
-import type { SimpleAssertionResult } from '@getodk/common/test/assertions/vitest/shared-extension-types.ts';
-import type { AssertIs } from '@getodk/common/types/assertions/AssertIs.ts';
-import type { ExpandUnion } from '@getodk/common/types/helpers.js';
+import type { ExpandUnion } from '@getodk/common/types/helpers.d.ts';
 import type { InstanceFile, InstancePayload, InstancePayloadType } from '@getodk/xforms-engine';
 import { constants } from '@getodk/xforms-engine';
 import { assert, expect } from 'vitest';
 import { Scenario } from '../../jr/Scenario.ts';
 import { ComparableXMLSerialization } from '../../serialization/ComparableXMLSerialization.ts';
+import type { AssertIs } from '../AssertIs.ts';
+import { instanceAssertion } from '../instanceAssertion.ts';
+import { ArbitraryConditionExpectExtension } from '../vitest/ArbitraryConditionExpectExtension.ts';
+import { AsymmetricTypedExpectExtension } from '../vitest/AsymmetricTypedExpectExtension.ts';
+import { AsyncAsymmetricTypedExpectExtension } from '../vitest/AsyncAsymmetricTypedExpectExtension.ts';
+import { extendExpect } from '../vitest/extendExpect.ts';
+import type {
+	DeriveStaticVitestExpectExtension,
+	SimpleAssertionResult,
+} from '../vitest/shared-extension-types.ts';
 import { assertString } from './shared-type-assertions.ts';
 
 type AssertScenario = AssertIs<Scenario>;

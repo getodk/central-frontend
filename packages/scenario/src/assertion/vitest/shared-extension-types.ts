@@ -1,6 +1,6 @@
+import type { Primitive } from '@getodk/common/types/Primitive.ts';
 import type { SyncExpectationResult } from 'vitest';
-import type { JSONValue } from '../../../../types/JSONValue.ts';
-import type { Primitive } from '../../../../types/Primitive.ts';
+import type { JSONValue } from '../../../types/JSONValue.ts';
 import type { ArbitraryConditionExpectExtension } from './ArbitraryConditionExpectExtension.ts';
 import type { AsymmetricTypedExpectExtension } from './AsymmetricTypedExpectExtension.ts';
 import type { AsyncAsymmetricTypedExpectExtension } from './AsyncAsymmetricTypedExpectExtension.ts';

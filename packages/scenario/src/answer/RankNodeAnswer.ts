@@ -1,4 +1,4 @@
-import type { JSONValue } from '@getodk/common/types/JSONValue.ts';
+import type { JSONValue } from '../../types/JSONValue.ts';
 import type { RankNode } from '@getodk/xforms-engine';
 import { ValueNodeAnswer } from './ValueNodeAnswer.ts';
 

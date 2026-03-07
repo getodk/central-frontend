@@ -1,25 +1,24 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import { getBlobText } from '@getodk/common/lib/web-compat/blob.ts';
-import type { DeriveStaticVitestExpectExtension } from '@getodk/common/test/assertions/helpers.ts';
-import {
-	AsymmetricTypedExpectExtension,
-	AsyncAsymmetricTypedExpectExtension,
-	InspectableComparisonError,
-	StaticConditionExpectExtension,
-	SymmetricTypedExpectExtension,
-	extendExpect,
-	instanceAssertion,
-} from '@getodk/common/test/assertions/helpers.ts';
-import type { SimpleAssertionResult } from '@getodk/common/test/assertions/vitest/shared-extension-types.ts';
 import { constants, type ValidationCondition } from '@getodk/xforms-engine';
 import { assert, expect } from 'vitest';
 import { ComparableAnswer } from '../../answer/ComparableAnswer.ts';
 import { ExpectedApproximateUOMAnswer } from '../../answer/ExpectedApproximateUOMAnswer.ts';
 import { ExpectedBinaryAnswer } from '../../answer/ExpectedBinaryAnswer.ts';
 import { UploadNodeAnswer } from '../../answer/UploadNodeAnswer.ts';
-import type { ValueNode } from '../../answer/ValueNodeAnswer.ts';
-import { ValueNodeAnswer } from '../../answer/ValueNodeAnswer.ts';
+import { type ValueNode, ValueNodeAnswer } from '../../answer/ValueNodeAnswer.ts';
 import { AnswerResult } from '../../jr/Scenario.ts';
+import { instanceAssertion } from '../instanceAssertion.ts';
+import { AsymmetricTypedExpectExtension } from '../vitest/AsymmetricTypedExpectExtension.ts';
+import { AsyncAsymmetricTypedExpectExtension } from '../vitest/AsyncAsymmetricTypedExpectExtension.ts';
+import { extendExpect } from '../vitest/extendExpect.ts';
+import { InspectableComparisonError } from '../vitest/InspectableComparisonError.ts';
+import type {
+	DeriveStaticVitestExpectExtension,
+	SimpleAssertionResult,
+} from '../vitest/shared-extension-types.ts';
+import { StaticConditionExpectExtension } from '../vitest/StaticConditionExpectExtension.ts';
+import { SymmetricTypedExpectExtension } from '../vitest/SymmetricTypedExpectExtension.ts';
 import { assertNullableString, assertString } from './shared-type-assertions.ts';
 
 const assertComparableAnswer = instanceAssertion(ComparableAnswer);

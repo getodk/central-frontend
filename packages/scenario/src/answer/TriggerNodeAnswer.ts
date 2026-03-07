@@ -1,6 +1,6 @@
-import { InspectableComparisonError } from '@getodk/common/test/assertions/helpers.ts';
-import type { SimpleAssertionResult } from '@getodk/common/test/assertions/vitest/shared-extension-types.ts';
 import type { TriggerNode } from '@getodk/xforms-engine';
+import { InspectableComparisonError } from '../assertion/vitest/InspectableComparisonError.ts';
+import type { SimpleAssertionResult } from '../assertion/vitest/shared-extension-types.ts';
 import type { ComparableAnswer } from './ComparableAnswer.ts';
 import { ValueNodeAnswer } from './ValueNodeAnswer.ts';
 

@@ -1,19 +1,17 @@
-import type {
-	CustomInspectable,
-	DeriveStaticVitestExpectExtension,
-} from '@getodk/common/test/assertions/helpers.ts';
-import {
-	AsymmetricTypedExpectExtension,
-	InspectableComparisonError,
-	extendExpect,
-	instanceArrayAssertion,
-	instanceAssertion,
-} from '@getodk/common/test/assertions/helpers.ts';
-import type { JSONValue } from '@getodk/common/types/JSONValue.ts';
 import { expect } from 'vitest';
+import type { JSONValue } from '../../../types/JSONValue.ts';
 import { ComparableChoice } from '../../choice/ComparableChoice.ts';
 import { ExpectedChoice } from '../../choice/ExpectedChoice.ts';
 import { SelectChoiceList } from '../../jr/select/SelectChoiceList.ts';
+import { instanceArrayAssertion } from '../instanceArrayAssertion.ts';
+import { instanceAssertion } from '../instanceAssertion.ts';
+import { AsymmetricTypedExpectExtension } from '../vitest/AsymmetricTypedExpectExtension.ts';
+import { extendExpect } from '../vitest/extendExpect.ts';
+import { InspectableComparisonError } from '../vitest/InspectableComparisonError.ts';
+import type {
+	CustomInspectable,
+	DeriveStaticVitestExpectExtension,
+} from '../vitest/shared-extension-types.ts';
 
 const assertSelectList = instanceAssertion(SelectChoiceList);
 const assertExpectedChoicesArray = instanceArrayAssertion(ExpectedChoice);

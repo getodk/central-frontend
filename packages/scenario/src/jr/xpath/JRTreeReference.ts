@@ -1,5 +1,5 @@
-import type { CustomInspectable } from '@getodk/common/test/assertions/helpers.ts';
-import type { JSONValue } from '@getodk/common/types/JSONValue.ts';
+import type { CustomInspectable } from '../../assertion/vitest/shared-extension-types.ts';
+import type { JSONValue } from '../../../types/JSONValue.ts';
 
 /**
  * @todo Hopefully we can keep this interface extremely minimal. It currently

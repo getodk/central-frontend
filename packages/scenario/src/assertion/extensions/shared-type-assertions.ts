@@ -1,8 +1,7 @@
 import { assertUnknownObject } from '@getodk/common/lib/type-assertions/assertUnknownObject.ts';
-import { arrayOfAssertion } from '@getodk/common/test/assertions/arrayOfAssertion.ts';
-import type { TypeofAssertion } from '@getodk/common/test/assertions/typeofAssertion.ts';
-import { typeofAssertion } from '@getodk/common/test/assertions/typeofAssertion.ts';
 import type { AnyNode, RootNode } from '@getodk/xforms-engine';
+import { arrayOfAssertion } from '../arrayOfAssertion.ts';
+import { type TypeofAssertion, typeofAssertion } from '../typeofAssertion.ts';
 
 type AssertRootNode = (node: unknown) => asserts node is RootNode;
 

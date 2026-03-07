@@ -1,6 +1,6 @@
-import type { AssertIs } from '../../../types/assertions/AssertIs.ts';
-import type { ConstructorOf } from '../../../types/helpers';
+import type { ConstructorOf } from '@getodk/common/types/helpers.d.ts';
 import { arrayOfAssertion } from './arrayOfAssertion.ts';
+import type { AssertIs } from './AssertIs.ts';
 import { instanceAssertion } from './instanceAssertion.ts';
 
 /**

@@ -1,5 +1,5 @@
-import type { AssertIs } from '../../../types/assertions/AssertIs.ts';
-import type { ConstructorOf } from '../../../types/helpers';
+import type { AssertIs } from './AssertIs.ts';
+import type { ConstructorOf } from '@getodk/common/types/helpers.d.ts';
 
 /**
  * Creates a type assertion function, used to validate both statically and at

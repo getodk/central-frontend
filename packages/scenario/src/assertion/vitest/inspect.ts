@@ -1,5 +1,5 @@
-import type { JSONValue } from '../../../../types/JSONValue.ts';
-import { UnreachableError } from '../../../lib/error/UnreachableError.ts';
+import type { JSONValue } from '../../../types/JSONValue.ts';
+import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import type { Inspectable } from './shared-extension-types.ts';
 
 type SerializableInspectable = JSONValue;

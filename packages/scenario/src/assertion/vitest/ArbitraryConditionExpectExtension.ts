@@ -1,5 +1,5 @@
 import type { SyncExpectationResult } from 'vitest';
-import type { AssertIs } from '../../../../types/assertions/AssertIs.ts';
+import type { AssertIs } from '../AssertIs.ts';
 import { assertVoidExpectedArgument } from './assertVoidExpectedArgument.ts';
 import { expandSimpleExpectExtensionResult } from './expandSimpleExpectExtensionResult.ts';
 import type { ExpectExtensionMethod } from './shared-extension-types.ts';

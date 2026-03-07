@@ -1,5 +1,5 @@
-import { InspectableComparisonError } from '@getodk/common/test/assertions/helpers.ts';
-import type { SimpleAssertionResult } from '@getodk/common/test/assertions/vitest/shared-extension-types.ts';
+import { InspectableComparisonError } from '../assertion/vitest/InspectableComparisonError.ts';
+import type { SimpleAssertionResult } from '../assertion/vitest/shared-extension-types.ts';
 import { ComparableAnswer } from './ComparableAnswer.ts';
 
 export class ExpectedBooleanAnswer extends ComparableAnswer {

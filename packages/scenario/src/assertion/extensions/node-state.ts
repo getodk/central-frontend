@@ -1,9 +1,7 @@
-import type { DeriveStaticVitestExpectExtension } from '@getodk/common/test/assertions/helpers.ts';
-import {
-	extendExpect,
-	StaticConditionExpectExtension,
-} from '@getodk/common/test/assertions/helpers.ts';
 import { expect } from 'vitest';
+import { extendExpect } from '../vitest/extendExpect.ts';
+import type { DeriveStaticVitestExpectExtension } from '../vitest/shared-extension-types.ts';
+import { StaticConditionExpectExtension } from '../vitest/StaticConditionExpectExtension.ts';
 import { assertEngineNode } from './shared-type-assertions.ts';
 
 export const nodeStateExtensions = extendExpect(expect, {

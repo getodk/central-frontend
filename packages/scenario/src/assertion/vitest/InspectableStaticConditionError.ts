@@ -1,4 +1,4 @@
-import type { JSONValue } from '../../../../types/JSONValue.ts';
+import type { JSONValue } from '../../../types/JSONValue.ts';
 import { inspect } from './inspect.ts';
 import type { Inspectable } from './shared-extension-types.ts';
 

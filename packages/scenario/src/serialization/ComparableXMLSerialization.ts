@@ -3,8 +3,8 @@ import {
 	XMLNS_NAMESPACE_URI,
 	XMLNS_PREFIX,
 } from '@getodk/common/constants/xmlns.ts';
-import { InspectableComparisonError } from '@getodk/common/test/assertions/helpers.ts';
-import type { SimpleAssertionResult } from '@getodk/common/test/assertions/vitest/shared-extension-types.ts';
+import { InspectableComparisonError } from '../assertion/vitest/InspectableComparisonError.ts';
+import type { SimpleAssertionResult } from '../assertion/vitest/shared-extension-types.ts';
 import { ComparableAssertableValue } from '../comparable/ComparableAssertableValue.ts';
 
 class ComparableXMLQualifiedName {

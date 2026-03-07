@@ -1,5 +1,5 @@
-import type { SimpleAssertionResult } from '@getodk/common/test/assertions/vitest/shared-extension-types.ts';
-import type { JSONValue } from '@getodk/common/types/JSONValue.ts';
+import type { SimpleAssertionResult } from '../assertion/vitest/shared-extension-types.ts';
+import type { JSONValue } from '../../types/JSONValue.ts';
 import type { Scenario } from '../jr/Scenario.ts';
 
 interface OptionalBooleanComparable {

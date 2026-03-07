@@ -1,7 +1,7 @@
 import type { JestAssertion, SyncExpectationResult } from 'vitest';
 import { expect } from 'vitest';
-import type { JSONObject } from '../../../../types/JSONValue.ts';
-import type { AssertIs } from '../../../../types/assertions/AssertIs.ts';
+import type { JSONObject } from '../../../types/JSONValue.ts';
+import type { AssertIs } from '../AssertIs.ts';
 import { assertVoidExpectedArgument } from './assertVoidExpectedArgument.ts';
 import { expandSimpleExpectExtensionResult } from './expandSimpleExpectExtensionResult.ts';
 import type { ExpectExtensionMethod } from './shared-extension-types.ts';

@@ -1,4 +1,4 @@
-import type { JSONValue } from '@getodk/common/types/JSONValue.ts';
+import type { JSONValue } from '../../types/JSONValue.ts';
 import { ComparableAnswer } from './ComparableAnswer.ts';
 
 /**

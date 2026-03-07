@@ -1,4 +1,4 @@
-import type { AnyConstructor, AnyFunction } from '../../../types/helpers.d.ts';
+import type { AnyConstructor, AnyFunction } from '@getodk/common/types/helpers.d.ts';
 
 /**
  * @see {@link Typeof}
