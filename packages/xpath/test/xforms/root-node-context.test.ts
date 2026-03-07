@@ -1,6 +1,6 @@
 import { ScopedElementLookup } from '@getodk/common/lib/dom/compatibility.ts';
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
-import { xml } from '@getodk/common/test/factories/xml.ts';
+import { xml } from '../../../common/test-utils/xml.ts';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { DefaultEvaluator } from '../../src/evaluator/DefaultEvaluator.ts';
 

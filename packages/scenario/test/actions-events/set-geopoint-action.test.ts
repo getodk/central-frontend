@@ -11,7 +11,7 @@ import {
 	setgeopoint,
 	t,
 	title,
-} from '@getodk/common/test/fixtures/xform-dsl/index.ts';
+} from '@getodk/common/test-utils/xform-dsl/index.ts';
 import { flushPromises } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import { stringAnswer } from '../../src/answer/ExpectedStringAnswer.ts';

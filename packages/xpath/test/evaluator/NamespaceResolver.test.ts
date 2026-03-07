@@ -1,4 +1,4 @@
-import { xml } from '@getodk/common/test/factories/xml.ts';
+import { xml } from '../../../common/test-utils/xml.ts';
 import { assert, beforeEach, describe, expect, it } from 'vitest';
 import type { DefaultDOMAdapterNode } from '../../src/adapter/defaults.ts';
 import { DEFAULT_DOM_PROVIDER } from '../../src/adapter/defaults.ts';

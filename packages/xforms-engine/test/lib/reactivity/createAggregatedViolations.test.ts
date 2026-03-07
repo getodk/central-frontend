@@ -1,4 +1,4 @@
-import type { HtmlXFormsElement } from '@getodk/common/test/fixtures/xform-dsl/HtmlXFormsElement.ts';
+import type { HtmlXFormsElement } from '@getodk/common/test-utils/xform-dsl/HtmlXFormsElement.ts';
 import {
 	bind,
 	body,
@@ -13,7 +13,7 @@ import {
 	select1,
 	t,
 	title,
-} from '@getodk/common/test/fixtures/xform-dsl/index.ts';
+} from '@getodk/common/test-utils/xform-dsl/index.ts';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { VALIDATION_TEXT } from '../../../src/client/constants.ts';
 import type { ValidationCondition } from '../../../src/client/validation.ts';

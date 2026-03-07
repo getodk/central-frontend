@@ -8,7 +8,7 @@ import {
 	model,
 	t,
 	title,
-} from '@getodk/common/test/fixtures/xform-dsl/index.ts';
+} from '@getodk/common/test-utils/xform-dsl/index.ts';
 import { describe, expect, it } from 'vitest';
 import type { BindType } from '../../../src/parse/model/BindTypeDefinition.ts';
 import { XFormDefinition } from '../../../src/parse/XFormDefinition.ts';

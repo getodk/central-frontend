@@ -1,6 +1,6 @@
 import { OPENROSA_XFORMS_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
-import type { XFormsElement } from '@getodk/common/test/fixtures/xform-dsl/XFormsElement.ts';
+import type { XFormsElement } from '@getodk/common/test-utils/xform-dsl/XFormsElement.ts';
 import {
 	bind,
 	body,
@@ -14,7 +14,7 @@ import {
 	repeat,
 	t,
 	title,
-} from '@getodk/common/test/fixtures/xform-dsl/index.ts';
+} from '@getodk/common/test-utils/xform-dsl/index.ts';
 import type {
 	InstanceData,
 	InstanceFile,

@@ -9,7 +9,7 @@ import {
 	repeat,
 	t,
 	title,
-} from '@getodk/common/test/fixtures/xform-dsl/index.ts';
+} from '@getodk/common/test-utils/xform-dsl/index.ts';
 import { beforeEach, describe, it } from 'vitest';
 import type { indexedRepeat } from '../../src/functions/xforms/node-set.ts';
 import type { TestContext } from '../helpers.ts';

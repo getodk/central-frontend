@@ -6,6 +6,7 @@
     "skipLibCheck": true,
     "types": ["node"],
     "paths": {
+      "@getodk/common/test-utils/*": ["../common/test-utils/*"],
       "@getodk/common/types/*": ["../common/types/*"],
       "@getodk/common/*": ["../common/src/*"]
     }

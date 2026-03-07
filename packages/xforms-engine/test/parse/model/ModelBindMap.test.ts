@@ -7,7 +7,7 @@ import {
 	model,
 	t,
 	title,
-} from '@getodk/common/test/fixtures/xform-dsl';
+} from '@getodk/common/test-utils/xform-dsl/index.ts';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { BindDefinition } from '../../../src/parse/model/BindDefinition.ts';
 import type { ModelBindMap } from '../../../src/parse/model/ModelBindMap.ts';

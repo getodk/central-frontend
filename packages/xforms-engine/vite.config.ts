@@ -99,6 +99,7 @@ export default defineConfig(({ mode }) => {
 
 		resolve: {
 			alias: {
+				'@getodk/common/test-utils': resolvePath(__dirname, '../common/test-utils'),
 				'@getodk/common/types': resolvePath(__dirname, '../common/types'),
 				'@getodk/common': resolvePath(__dirname, '../common/src'),
 			},

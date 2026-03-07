@@ -1,4 +1,4 @@
-import { xml } from '@getodk/common/test/factories/xml.ts';
+import { xml } from '@getodk/common/test-utils/xml.ts';
 import { DefaultEvaluator } from '@getodk/xpath';
 import { assert, beforeEach, describe, expect, it } from 'vitest';
 import {

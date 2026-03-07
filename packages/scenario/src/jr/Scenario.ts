@@ -1,5 +1,5 @@
-import type { XFormsElement } from '@getodk/common/test/fixtures/xform-dsl/XFormsElement.ts';
-import { xmlElement } from '@getodk/common/test/fixtures/xform-dsl/index.ts';
+import type { XFormsElement } from '@getodk/common/test-utils/xform-dsl/XFormsElement.ts';
+import { xmlElement } from '@getodk/common/test-utils/xform-dsl/index.ts';
 import type {
 	AnyFormInstance,
 	AnyNode,

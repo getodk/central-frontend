@@ -9,7 +9,7 @@ import {
 	model,
 	t,
 	title,
-} from '@getodk/common/test/fixtures/xform-dsl';
+} from '@getodk/common/test-utils/xform-dsl/index.ts';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { ActiveLanguage } from '../../src/client/FormLanguage.ts';
 import type { OpaqueReactiveObjectFactory } from '../../src/client/OpaqueReactiveObjectFactory.ts';

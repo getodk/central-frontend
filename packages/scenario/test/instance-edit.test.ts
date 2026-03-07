@@ -15,7 +15,7 @@ import {
 	model,
 	t,
 	title,
-} from '@getodk/common/test/fixtures/xform-dsl/index.ts';
+} from '@getodk/common/test-utils/xform-dsl/index.ts';
 import type { FormInstanceEditMode, FormInstanceRestoreMode } from '@getodk/xforms-engine';
 import { assert, beforeEach, describe, expect, it } from 'vitest';
 import { getNodeForReference } from '../src/client/traversal.ts';

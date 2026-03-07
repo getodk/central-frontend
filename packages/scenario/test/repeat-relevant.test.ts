@@ -11,7 +11,7 @@ import {
 	select1,
 	t,
 	title,
-} from '@getodk/common/test/fixtures/xform-dsl/index.ts';
+} from '@getodk/common/test-utils/xform-dsl/index.ts';
 import { describe, expect, it } from 'vitest';
 import { Scenario, getRef } from '../src/jr/Scenario.ts';
 import type { JRFormDef } from '../src/jr/form/JRFormDef.ts';

@@ -11,7 +11,7 @@ import {
 	repeat,
 	t,
 	title,
-} from '@getodk/common/test/fixtures/xform-dsl';
+} from '@getodk/common/test-utils/xform-dsl/index.ts';
 import { beforeEach, describe, expect, it } from 'vitest';
 import type { BodyDefinition } from '../../../src/parse/body/BodyDefinition.ts';
 import { XFormDefinition } from '../../../src/parse/XFormDefinition.ts';

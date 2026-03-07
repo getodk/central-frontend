@@ -1,5 +1,5 @@
 import { UpsertableMap } from '@getodk/common/lib/collections/UpsertableMap.ts';
-import type { HtmlXFormsElement } from '@getodk/common/test/fixtures/xform-dsl/HtmlXFormsElement.ts';
+import type { HtmlXFormsElement } from '@getodk/common/test-utils/xform-dsl/HtmlXFormsElement.ts';
 import {
 	body,
 	head,
@@ -11,7 +11,7 @@ import {
 	select1Dynamic,
 	t,
 	title,
-} from '@getodk/common/test/fixtures/xform-dsl/index.ts';
+} from '@getodk/common/test-utils/xform-dsl/index.ts';
 import { describe, expect, it } from 'vitest';
 import { createInstance } from '../../../src/entrypoints/createInstance.ts';
 import type { createItemCollection } from '../../../src/lib/reactivity/createItemCollection.ts';

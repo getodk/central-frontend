@@ -24,7 +24,7 @@ Two of the sub-directories in particular serve an important purpose:
 
 - [`test-web-forms`](./test-web-forms/): Fixtures in this directory are used for testing UI/UX behavior, as implemented by the [@getodk/web-forms](../../../web-forms/) package. These fixtures are intended to make it easy to manually inspect and interact with the same fixtures used under test.
 
-  **NOTE:** In the future, we may also consider ways to make UI access easier for test fixtures defined in tests inline, using the [XForms DSL](../test/fixtures/xform-dsl/README.md). In which case, we should consider inlining these fixtures as well.
+  **NOTE:** In the future, we may also consider ways to make UI access easier for test fixtures defined in tests inline, using the [XForms DSL](../../test-utils/xform-dsl/README.md). In which case, we should consider inlining these fixtures as well.
 
 - [`preview-service`](./preview-service/): Fixtures in this directory are used as real world Forms in the Web Form preview service. It contains XLSForms to be serve as downloadable resource from the service. XForms are generated using [pyxform](https://github.com/XLSForm/pyxform) / [xlsform-online](https://getodk.org/xlsform/) service and should not be manually modified. Note: XForm (xml) for WHO Verbal Autopsy is not placed in the `xform` subdirectory as it is already present in the [`smoketests`](./test-javarosa/resources//smoketests/)
 

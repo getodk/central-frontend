@@ -28,10 +28,19 @@
     "./types/*.ts": {
       "types": "./types/*.ts",
       "default": "./types/*.ts"
+    },
+    "./test-utils/*": {
+      "types": "./test-utils/*.ts",
+      "default": "./test-utils/*.ts"
+    },
+    "./test-utils/*.ts": {
+      "types": "./test-utils/*.ts",
+      "default": "./test-utils/*.ts"
     }
   },
   "files": [
     "src",
+    "test-utils",
     "README.md"
   ],
   "engines": {

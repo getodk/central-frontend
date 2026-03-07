@@ -11,7 +11,7 @@ import {
 	repeat,
 	t,
 	title,
-} from '@getodk/common/test/fixtures/xform-dsl/index.ts';
+} from '@getodk/common/test-utils/xform-dsl/index.ts';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { BindDefinition } from '../../../src/parse/model/BindDefinition.ts';
 import type { LeafNodeDefinition } from '../../../src/parse/model/LeafNodeDefinition.ts';

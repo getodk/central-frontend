@@ -9,7 +9,7 @@ import {
 	repeat,
 	t,
 	title,
-} from '@getodk/common/test/fixtures/xform-dsl/index.ts';
+} from '@getodk/common/test-utils/xform-dsl/index.ts';
 import type { ValueType } from '@getodk/xforms-engine';
 import { Temporal } from 'temporal-polyfill';
 import { assert, beforeEach, describe, expect, expectTypeOf, it } from 'vitest';

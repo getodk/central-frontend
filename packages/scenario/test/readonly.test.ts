@@ -9,7 +9,7 @@ import {
 	model,
 	t,
 	title,
-} from '@getodk/common/test/fixtures/xform-dsl/index.ts';
+} from '@getodk/common/test-utils/xform-dsl/index.ts';
 import { describe, expect, it } from 'vitest';
 import { Scenario } from '../src/jr/Scenario.ts';
 

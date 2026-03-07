@@ -8,7 +8,7 @@ import {
 	model,
 	t,
 	title,
-} from '@getodk/common/test/fixtures/xform-dsl/index.ts';
+} from '@getodk/common/test-utils/xform-dsl/index.ts';
 import { assert, beforeEach, describe, expect, it } from 'vitest';
 import { InputNodeAnswer } from '../src/answer/InputNodeAnswer.ts';
 import { ModelValueNodeAnswer } from '../src/answer/ModelValueNodeAnswer.ts';

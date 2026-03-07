@@ -16,7 +16,7 @@ import {
 	select1Dynamic,
 	t,
 	title,
-} from '@getodk/common/test/fixtures/xform-dsl/index.ts';
+} from '@getodk/common/test-utils/xform-dsl/index.ts';
 import type { PartiallyKnownString } from '@getodk/common/types/string/PartiallyKnownString.ts';
 import { constants as ENGINE_CONSTANTS } from '@getodk/xforms-engine';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';

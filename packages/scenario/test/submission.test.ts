@@ -18,9 +18,9 @@ import {
 	select1,
 	t,
 	title,
-} from '@getodk/common/test/fixtures/xform-dsl/index.ts';
-import { TagXFormsElement } from '@getodk/common/test/fixtures/xform-dsl/TagXFormsElement.ts';
-import type { XFormsElement } from '@getodk/common/test/fixtures/xform-dsl/XFormsElement.ts';
+} from '@getodk/common/test-utils/xform-dsl/index.ts';
+import { TagXFormsElement } from '@getodk/common/test-utils/xform-dsl/TagXFormsElement.ts';
+import type { XFormsElement } from '@getodk/common/test-utils/xform-dsl/XFormsElement.ts';
 import { createUniqueId } from 'solid-js';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { Scenario } from '../src/jr/Scenario.ts';

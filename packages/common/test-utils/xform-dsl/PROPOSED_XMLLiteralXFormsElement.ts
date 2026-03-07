@@ -1,4 +1,4 @@
-import { UpsertableMap } from '../../../lib/collections/UpsertableMap.ts';
+import { UpsertableMap } from '../../src/lib/collections/UpsertableMap.ts';
 import type { XFormsElement } from './XFormsElement.ts';
 
 const xmlLiteralNameCache = new UpsertableMap<string, string>();

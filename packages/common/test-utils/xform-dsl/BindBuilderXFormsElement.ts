@@ -1,4 +1,4 @@
-import { JAVAROSA_PREFIX } from '../../../constants/xmlns.ts';
+import { JAVAROSA_PREFIX } from '../../src/constants/xmlns.ts';
 import { EmptyXFormsElement } from './EmptyXFormsElement.ts';
 import type { XFormsElement } from './XFormsElement.ts';
 

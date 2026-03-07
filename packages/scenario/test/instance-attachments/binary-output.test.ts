@@ -12,7 +12,7 @@ import {
 	t,
 	title,
 	upload,
-} from '@getodk/common/test/fixtures/xform-dsl/index.ts';
+} from '@getodk/common/test-utils/xform-dsl/index.ts';
 import type {
 	AnyNode,
 	FormNodeID,

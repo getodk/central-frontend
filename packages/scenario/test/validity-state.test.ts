@@ -8,7 +8,7 @@ import {
 	model,
 	t,
 	title,
-} from '@getodk/common/test/fixtures/xform-dsl/index.ts';
+} from '@getodk/common/test-utils/xform-dsl/index.ts';
 import { describe, expect, it } from 'vitest';
 import type { ComparableAnswer } from '../src/answer/ComparableAnswer.ts';
 import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';

@@ -8,7 +8,7 @@ import {
 	model,
 	t,
 	title,
-} from '@getodk/common/test/fixtures/xform-dsl/index.ts';
+} from '@getodk/common/test-utils/xform-dsl/index.ts';
 import type { PreloadProperties } from '@getodk/xforms-engine';
 import { Temporal } from 'temporal-polyfill';
 import { describe, expect, it } from 'vitest';

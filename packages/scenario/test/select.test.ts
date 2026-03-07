@@ -14,7 +14,7 @@ import {
 	select1Dynamic,
 	t,
 	title,
-} from '@getodk/common/test/fixtures/xform-dsl/index.ts';
+} from '@getodk/common/test-utils/xform-dsl/index.ts';
 import { describe, expect, it } from 'vitest';
 import { answerText } from '../src/answer/ExpectedDisplayTextAnswer.ts';
 import { stringAnswer } from '../src/answer/ExpectedStringAnswer.ts';

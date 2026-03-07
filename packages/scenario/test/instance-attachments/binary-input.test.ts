@@ -9,7 +9,7 @@ import {
 	t,
 	title,
 	upload,
-} from '@getodk/common/test/fixtures/xform-dsl/index.ts';
+} from '@getodk/common/test-utils/xform-dsl/index.ts';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { binaryAnswer } from '../../src/answer/ExpectedBinaryAnswer.ts';
 import { Scenario } from '../../src/jr/Scenario.ts';

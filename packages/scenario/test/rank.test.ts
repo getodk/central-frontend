@@ -10,7 +10,7 @@ import {
 	selectDynamic,
 	t,
 	title,
-} from '@getodk/common/test/fixtures/xform-dsl/index.ts';
+} from '@getodk/common/test-utils/xform-dsl/index.ts';
 import { describe, it, expect } from 'vitest';
 import { Scenario } from '../src/jr/Scenario.ts';
 import { r } from '../src/jr/resource/ResourcePathHelper.ts';

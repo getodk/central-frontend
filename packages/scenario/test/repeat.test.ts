@@ -13,7 +13,7 @@ import {
 	select1,
 	t,
 	title,
-} from '@getodk/common/test/fixtures/xform-dsl/index.ts';
+} from '@getodk/common/test-utils/xform-dsl/index.ts';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { booleanAnswer } from '../src/answer/ExpectedBooleanAnswer.ts';
 import { intAnswer } from '../src/answer/ExpectedIntAnswer.ts';
