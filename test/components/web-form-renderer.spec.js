@@ -83,14 +83,14 @@ describe('WebFormRenderer', () => {
       .complete()
       .request((c) => c.find('.odk-form .footer button').trigger('click'))
       .respondWithData(() => ({ currentVersion: { instanceId: '123' } }))
-      .testRequests([
-        {
-          url: '/v1/projects/1/forms/a/submissions',
-          method: 'POST',
-          headers: { 'content-type': 'text/xml' },
-          data: { name: 'xml_submission_file', type: 'text/xml' }
-        }
-      ]);
+      .beforeEachResponse((_, config) => {
+        const { headers, url, method, data } = config;
+        url.should.be.eql('/v1/projects/1/forms/a/submissions');
+        method.should.be.eql('POST');
+        JSON.stringify(data).should.match(/xml_submission_file/);
+        headers['content-type'].should.be.eql('text/xml');
+        headers['user-agent'].should.be.match(/odk-web-forms/);
+      });
   });
 
   it('should show success modal after submission request', async () => {
