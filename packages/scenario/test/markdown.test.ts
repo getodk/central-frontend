@@ -273,7 +273,11 @@ describe('Markdown', () => {
 				const given = `hello
 single line break`;
 
-				await run(given, [{ value: 'hello\nsingle line break' }]);
+				await run(given, [
+					{ value: 'hello' },
+					{ elementName: 'br' },
+					{ value: 'single line break' },
+				]);
 			});
 
 			it('double', async () => {

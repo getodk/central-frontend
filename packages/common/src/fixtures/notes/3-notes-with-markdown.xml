@@ -169,18 +169,14 @@
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Indented text
 
 [get odk](http://www.getodk.org)
-&lt;br/&gt;&lt;br/&gt;
+
 Escaping: \*hello\*
-&lt;br/&gt;&lt;br/&gt;
+
 &lt;span style="color:red;font-family:cursive"&gt;signature&lt;/span&gt;
-&lt;br/&gt;&lt;br/&gt;
 
 &lt;p style="text-align:center"&gt;
   centered paragraph
 &lt;/p&gt;
-
-&lt;br/&gt;&lt;br/&gt;
-
 
 &lt;div style="text-align:center"&gt;centered div&lt;/div&gt;
 
@@ -203,6 +199,10 @@ Escaping: \*hello\*
 1. ordered list 1
 2. ordered list 2
 3. ordered list 3
+
+Items can be
+separated by
+single line breaks
 
 _styles **can &lt;span style="color:red;"&gt;be&lt;/span&gt; nested** inside_
 

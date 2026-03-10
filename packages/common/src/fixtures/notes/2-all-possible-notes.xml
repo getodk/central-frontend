@@ -53,9 +53,7 @@
   <h:body>
     <group appearance="field-list" ref="/data/group">
       <input ref="/data/group/intro">
-        <label>This form illustrates the note concept in ODK. This is not a concept that exists in
-          the underlying ODK XForms spec, it's introduced by XLSForm and discussed informally.
-          Typically a note only has a label.</label>
+        <label>This form illustrates the note concept in ODK. This is not a concept that exists in the underlying ODK XForms spec, it's introduced by XLSForm and discussed informally. Typically a note only has a label.</label>
       </input>
       <input ref="/data/group/note_w_hint">
         <label>A note with a hint</label>

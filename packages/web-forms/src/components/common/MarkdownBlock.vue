@@ -14,6 +14,8 @@ const { elem } = defineProps<MarkdownProps>();
 		{{ elem.value }}
 	</template>
 
+	<br v-else-if="elem.role === 'line-break'">
+
 	<!-- unsafe html -->
 	<!-- eslint-disable-next-line vue/no-v-html -->
 	<span v-else-if="elem.role === 'html'" v-html="purify(elem)" />

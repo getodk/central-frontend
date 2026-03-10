@@ -1,5 +1,6 @@
 import type { Heading, Literal, RootContent } from 'mdast';
 import { fromMarkdown } from 'mdast-util-from-markdown';
+import { newlineToBreak } from 'mdast-util-newline-to-break';
 import { type MarkdownNode, type StyleProperty } from '../../client';
 import type { TextChunk } from '../../client/TextRange.ts';
 import {
@@ -14,6 +15,7 @@ import {
 	Heading5,
 	Heading6,
 	Html,
+	LineBreak,
 	ListItem,
 	OrderedList,
 	Paragraph,
@@ -108,6 +110,9 @@ function mdastNodeToOdkMarkdown(tree: RootContent): MarkdownNode | undefined {
 			return new Span(children, undefined);
 		}
 		return new ChildMarkdownNode(tree.value);
+	}
+	if (tree.type === 'break') {
+		return new LineBreak();
 	}
 	if ('children' in tree) {
 		const children = mdastToOdkMarkdown(tree.children);
@@ -208,6 +213,7 @@ function isSingleOrderedList(odk: MarkdownNode[]) {
 
 function toOdkMarkdown(str: string): MarkdownNode[] {
 	const tree = fromMarkdown(str);
+	newlineToBreak(tree);
 	const odk = mdastToOdkMarkdown(tree.children);
 	if (isSingleOrderedList(odk)) {
 		// do not return a numbered list with only a single element - this is almost never what people expect

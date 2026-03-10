@@ -6,6 +6,7 @@ import {
 	type ParentMarkdownNode as ClientParentMarkdownNode,
 	type StyledMarkdownNode as ClientStyledMarkdownNode,
 	type ElementName,
+	type LineBreakMarkdownNode,
 	type MarkdownProperty,
 } from '../../client';
 
@@ -72,6 +73,15 @@ export class UnorderedList extends ParentMarkdownNode {
 
 export class ListItem extends ParentMarkdownNode {
 	readonly elementName = 'li';
+}
+
+export class LineBreak implements LineBreakMarkdownNode {
+	readonly id: string;
+	readonly role = 'line-break';
+	readonly elementName = 'br';
+	constructor() {
+		this.id = crypto.randomUUID();
+	}
 }
 
 export class Anchor extends ParentMarkdownNode implements AnchorMarkdownNode {

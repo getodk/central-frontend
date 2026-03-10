@@ -21,11 +21,9 @@ test.describe('Note Question Type', () => {
 			altitude: 0,
 		});
 
-		await formPage.text.expectLabel(`
-		This form illustrates the note concept in ODK. This is not a concept that exists in
-          the underlying ODK XForms spec, it's introduced by XLSForm and discussed informally.
-          Typically a note only has a label.
-		`);
+		await formPage.text.expectLabel(
+			"This form illustrates the note concept in ODK. This is not a concept that exists in the underlying ODK XForms spec, it's introduced by XLSForm and discussed informally. Typically a note only has a label."
+		);
 
 		await formPage.text.expectLabel('A note with a hint');
 		await formPage.text.expectHint('This is a hint');
