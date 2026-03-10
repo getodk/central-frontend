@@ -159,7 +159,7 @@ const submit = () => {
 @import '../../assets/scss/variables';
 
 #entity-update, #entity-create {
-  #labelTextArea, th {
+  th {
     font-size: 12px;
   }
 
