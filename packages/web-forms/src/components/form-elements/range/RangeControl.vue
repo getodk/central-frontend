@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { AnyRangeNode } from '@getodk/xforms-engine';
+import Rating from 'primevue/rating';
 import { computed } from 'vue';
 import ControlText from '../ControlText.vue';
 import RangeSlider from './RangeSlider.vue';
@@ -13,8 +14,8 @@ const props = defineProps<RangeControlProps>();
 defineEmits(['update:modelValue', 'change']);
 
 const { bounds } = props.node.definition;
-const min = Number(bounds.min);
-const max = Number(bounds.max);
+const start = Number(bounds.start);
+const end = Number(bounds.end);
 const step = Number(bounds.step);
 
 const numberValue = computed((): number | undefined => {
@@ -43,24 +44,36 @@ const orientation = props.node.appearances.vertical ? 'vertical' : 'horizontal';
 <template>
 	<ControlText :question="node" />
 
-	<div :class="['range-control-container', orientation]">
-		<div class="range-bound range-min">
-			{{ min }}
-		</div>
-		<RangeSlider
+	<template v-if="props.node.appearances.rating">
+		<Rating
 			:id="node.nodeId"
 			:disabled="node.currentState.readonly"
-			:min="min"
-			:max="max"
-			:step="step"
-			:orientation="orientation"
 			:model-value="numberValue"
+			:stars="end"
 			@update:model-value="setValue"
 		/>
-		<div class="range-bound range-max">
-			{{ max }}
+	</template>
+
+	<template v-else>
+		<div :class="['range-control-container', orientation]">
+			<div class="range-bound range-min">
+				{{ start }}
+			</div>
+			<RangeSlider
+				:id="node.nodeId"
+				:disabled="node.currentState.readonly"
+				:min="start"
+				:max="end"
+				:step="step"
+				:orientation="orientation"
+				:model-value="numberValue"
+				@update:model-value="setValue"
+			/>
+			<div class="range-bound range-max">
+				{{ end }}
+			</div>
 		</div>
-	</div>
+	</template>
 </template>
 
 <style scoped lang="scss">
@@ -196,5 +209,9 @@ const orientation = props.node.appearances.vertical ? 'vertical' : 'horizontal';
 
 		z-index: var(--odk-z-index-form-content);
 	}
+}
+
+.p-rating {
+	flex-wrap: wrap;
 }
 </style>

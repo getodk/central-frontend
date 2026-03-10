@@ -57,16 +57,16 @@ class RangeNodeBoundsDefinition<V extends RangeValueType = RangeValueType> {
 	): RangeNodeBoundsDefinition<V> {
 		const type = bind.type.resolved;
 		const codec = getSharedValueCodec(type);
-		const min = decodeBoundsValue(codec, bounds.start);
-		const max = decodeBoundsValue(codec, bounds.end);
+		const start = decodeBoundsValue(codec, bounds.start);
+		const end = decodeBoundsValue(codec, bounds.end);
 		const step = decodeBoundsValue(codec, bounds.step);
 
-		return new this(min, max, step);
+		return new this(start, end, step);
 	}
 
 	constructor(
-		readonly min: NonNullable<RuntimeValue<V>>,
-		readonly max: NonNullable<RuntimeValue<V>>,
+		readonly start: NonNullable<RuntimeValue<V>>,
+		readonly end: NonNullable<RuntimeValue<V>>,
 		readonly step: NonNullable<RuntimeValue<V>>
 	) {}
 }

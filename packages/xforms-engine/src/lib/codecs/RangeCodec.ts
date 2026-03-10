@@ -14,7 +14,7 @@ export class RangeCodec<V extends RangeValueType> extends ValueCodec<
 > {
 	constructor(baseCodec: SharedValueCodec<V>, definition: RangeNodeDefinition<V>) {
 		const { valueType, bounds } = definition;
-		const { min, max } = bounds;
+		const { start, end } = bounds;
 
 		type ComparableRangeValue = bigint | number | null;
 
@@ -32,7 +32,7 @@ export class RangeCodec<V extends RangeValueType> extends ValueCodec<
 
 		const assertBounds = (value: RuntimeInputValue<V>): boolean => {
 			const comparableValue = toComparableValue(value);
-			return comparableValue != null && comparableValue >= min && comparableValue <= max;
+			return comparableValue != null && comparableValue >= start && comparableValue <= end;
 		};
 
 		const encodeValue = (value: RangeInputValue<V>): string => {
