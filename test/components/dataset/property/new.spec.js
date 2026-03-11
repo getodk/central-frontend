@@ -102,7 +102,7 @@ describe('DatasetPropertyNew', () => {
     it('shows (none) in updated by column for new property', async () => {
       const app = await submit('width_cm');
       const propertyList = app.findComponent(DatasetProperties).findAll('tbody tr');
-      propertyList[1].findAll('td')[1].text().should.equal('(None)');
+      propertyList[1].findAll('td')[2].text().should.equal('(None)');
     });
 
     it('updates property count in form summary', async () => {
