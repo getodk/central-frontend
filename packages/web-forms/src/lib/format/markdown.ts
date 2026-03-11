@@ -37,7 +37,11 @@ export const getStylePropertyMap = (node: ParentMarkdownNode): StyleValue | unde
 
 export const getUrl = (node: ParentMarkdownNode): string | undefined => {
 	if (node.elementName === 'a') {
-		return (node as AnchorMarkdownNode).url;
+		const url = (node as AnchorMarkdownNode).url;
+		if (!DOMPurify.isValidAttribute('a', 'href', url)) {
+			return 'about:blank';
+		}
+		return url;
 	}
 };
 

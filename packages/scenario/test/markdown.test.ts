@@ -311,6 +311,88 @@ double line break`;
 		]);
 	});
 
+	describe('links', () => {
+		it('should handle links', async () => {
+			await run('[get odk](http://www.getodk.org)', [
+				{ elementName: 'a', url: 'http://www.getodk.org', children: [{ value: 'get odk' }] },
+			]);
+		});
+
+		it('should handle tel protocol', async () => {
+			await run('[call me](tel:+123456789)', [
+				{ elementName: 'a', url: 'tel:+123456789', children: [{ value: 'call me' }] },
+			]);
+		});
+
+		it('should handle links with outputs', async () => {
+			const outputScenario = async () => {
+				return await Scenario.init(
+					'markdown',
+					html(
+						head(
+							title('markdown'),
+							model(
+								mainInstance(t('data id="markdown"', t('url'))),
+								bind('/data/url').type('string')
+							)
+						),
+						body(
+							input(
+								'/data/url',
+								t('label', '[<output value="/data/url" />](<output value="/data/url" />)')
+							)
+						)
+					)
+				);
+			};
+			const scenario = await outputScenario();
+			scenario.next('/data/url');
+			scenario.answer('https://www.getodk.org');
+			const label = scenario.getQuestionLabel({ assertCurrentReference: '/data/url' }).formatted;
+			expect(label).toMatchObject([
+				{
+					elementName: 'a',
+					url: 'https://www.getodk.org',
+					children: [{ elementName: 'span', children: [{ value: 'https://www.getodk.org' }] }],
+				},
+			]);
+		});
+
+		it('should handle tel protocol with outputs', async () => {
+			const outputScenario = async () => {
+				return await Scenario.init(
+					'markdown',
+					html(
+						head(
+							title('markdown'),
+							model(
+								mainInstance(t('data id="markdown"', t('phone'))),
+								bind('/data/phone').type('string')
+							)
+						),
+						body(
+							input(
+								'/data/phone',
+								t('label', '[<output value="/data/phone" />](tel:<output value="/data/phone" />)')
+							)
+						)
+					)
+				);
+			};
+			const scenario = await outputScenario();
+			scenario.next('/data/phone');
+			scenario.answer('+55555555');
+			const label = scenario.getQuestionLabel({ assertCurrentReference: '/data/phone' }).formatted;
+			expect(label).toMatchObject([
+				{
+					elementName: 'a',
+					url: 'tel:+55555555',
+					children: [{ elementName: 'span', children: [{ value: '+55555555' }] }],
+				},
+			]);
+		});
+	});
+
 	describe('handle indented code without support code blocks', () => {
 		it('four spaces are replaced', async () => {
 			await run('    code block', [{ value: 'code block' }]);

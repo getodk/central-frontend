@@ -29,6 +29,8 @@
           <group>
             <headings />
             <name/>
+            <phone>+255755555555</phone>
+            <url>https://www.getodk.org</url>
             <userentered/>
             <translated/>
             <selected/>
@@ -67,6 +69,8 @@
       <bind nodeset="/data/group/headings" readonly="true()" type="string" />
       <bind nodeset="/data/group/name" type="string" constraint="string-length(.) > 2"
         jr:constraintMsg="jr:itext('/data/group/name:jr:constraintMsg')" required="true()" />
+      <bind nodeset="/data/group/phone" readonly="true()" type="string" />
+      <bind nodeset="/data/group/url" readonly="true()" type="string" />
       <bind nodeset="/data/group/userentered" readonly="true()" type="string" />
       <bind nodeset="/data/group/translated" readonly="true()" type="string" />
       <bind nodeset="/data/group/selected" type="string" required="true()"
@@ -168,7 +172,9 @@
 
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Indented text
 
-[get odk](http://www.getodk.org)
+[get odk](<output value="/data/group/url" />)
+
+Phone number: [<output value="/data/group/phone" />](tel:<output value="/data/group/phone" />)
 
 Escaping: \*hello\*
 
@@ -205,7 +211,6 @@ separated by
 single line breaks
 
 _styles **can &lt;span style="color:red;"&gt;be&lt;/span&gt; nested** inside_
-
         </label>
       </input>
     </group>

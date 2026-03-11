@@ -25,6 +25,7 @@ import {
 	UnorderedList,
 } from '../markdown/MarkdownNode.ts';
 
+const OUTPUT_STRING_REGEX = /`(--ODK-OUTPUT-STRING-[0-9]+--)`/g;
 const LEADING_WHITESPACE_REGEX = /^\s+/;
 const STYLE_PROPERTY_REGEX = /style\s*=\s*(?:'|")(.+)(?:'|")/i;
 const HTML_TAG_MAP = {
@@ -126,7 +127,10 @@ function mdastNodeToOdkMarkdown(tree: RootContent): MarkdownNode | undefined {
 			return new Emphasis(children);
 		}
 		if (tree.type === 'link') {
-			return new Anchor(children, tree.url);
+			const url = tree.url.replaceAll(OUTPUT_STRING_REGEX, (_, group: string) => {
+				return outputStrings.get(group) ?? '';
+			});
+			return new Anchor(children, url);
 		}
 		if (tree.type === 'list') {
 			if (tree.ordered) {
