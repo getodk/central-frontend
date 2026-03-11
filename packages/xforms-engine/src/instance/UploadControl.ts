@@ -118,6 +118,7 @@ export class UploadControl
 	// UploadNode
 	readonly nodeType = 'upload';
 	readonly valueType = 'binary';
+	readonly maxPixels: number | null;
 	readonly appearances: UnknownAppearanceDefinition;
 	readonly nodeOptions: UploadNodeOptions;
 	readonly currentState: CurrentState<UploadControlStateSpec>;
@@ -137,6 +138,7 @@ export class UploadControl
 
 		this.appearances = definition.bodyElement.appearances;
 		this.nodeOptions = definition.bodyElement.options;
+		this.maxPixels = definition.bind.maxPixels;
 
 		const instanceAttachment = createInstanceAttachment(this);
 

@@ -73,6 +73,7 @@ export interface UploadNode extends BaseValueNode<'binary', UploadValue> {
 	readonly parent: GeneralParentNode;
 	readonly currentState: UploadNodeState;
 	readonly validationState: LeafNodeValidationState;
+	readonly maxPixels: number | null;
 
 	setValue(value: UploadValue): RootNode;
 }

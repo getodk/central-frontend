@@ -61,6 +61,7 @@
     "@getodk/xforms-engine": "0.19.0",
     "@playwright/test": "^1.58.2",
     "@primeuix/themes": "1.0.3",
+    "@types/image-blob-reduce": "^4",
     "@types/ramda": "^0.31.1",
     "@vitejs/plugin-vue": "^6.0.4",
     "@vitejs/plugin-vue-jsx": "^5.1.4",
@@ -87,6 +88,7 @@
   "dependencies": {
     "@mdi/js": "^7.4.47",
     "dompurify": "^3.3.0",
+    "image-blob-reduce": "^4.1.0",
     "ol": "^10.7.0",
     "vue-draggable-plus": "^0.6.1"
   },

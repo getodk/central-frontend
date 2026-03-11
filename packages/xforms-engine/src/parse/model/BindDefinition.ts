@@ -1,3 +1,5 @@
+import { OPENROSA_XFORMS_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
+import { parseToInteger } from '../../lib/number-parsers.ts';
 import { DependencyContext } from '../expression/abstract/DependencyContext.ts';
 import type { DependentExpression } from '../expression/abstract/DependentExpression.ts';
 import { BindComputationExpression } from '../expression/BindComputationExpression.ts';
@@ -9,9 +11,15 @@ import type { BindType } from './BindTypeDefinition.ts';
 import { BindTypeDefinition } from './BindTypeDefinition.ts';
 import type { ModelDefinition } from './ModelDefinition.ts';
 
+const parseMaxPixels = (bindElement: BindElement): number | null => {
+	const value = bindElement.getAttributeNS(OPENROSA_XFORMS_NAMESPACE_URI, 'max-pixels');
+	return value ? parseToInteger(value) : null;
+};
+
 export class BindDefinition<T extends BindType = BindType> extends DependencyContext {
 	readonly type: BindTypeDefinition<T>;
 	readonly parentNodeset: string | null;
+	readonly maxPixels: number | null;
 
 	readonly preload: AnyBindPreloadDefinition | null;
 
@@ -37,8 +45,6 @@ export class BindDefinition<T extends BindType = BindType> extends DependencyCon
 	// TODO: it is unclear whether this will need to be supported.
 	// https://github.com/getodk/collect/issues/3758 mentions deprecation.
 	readonly saveIncomplete: BindComputationExpression<'saveIncomplete'>;
-
-	// TODO: deferred until prioritized: readonly 'max-pixels': string | null;
 
 	protected _parentBind: BindDefinition | null | undefined;
 
@@ -91,8 +97,7 @@ export class BindDefinition<T extends BindType = BindType> extends DependencyCon
 		this.saveIncomplete = BindComputationExpression.forComputation(this, 'saveIncomplete');
 		this.constraintMsg = MessageDefinition.from(this, 'constraintMsg');
 		this.requiredMsg = MessageDefinition.from(this, 'requiredMsg');
-
-		// this['max-pixels'] = BindComputation.forExpression(this, 'max-pixels');
+		this.maxPixels = parseMaxPixels(bindElement);
 	}
 
 	toJSON() {

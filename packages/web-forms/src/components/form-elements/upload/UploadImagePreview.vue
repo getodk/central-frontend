@@ -34,7 +34,6 @@ const imageURL = computed((previous: ObjectURL | null = null) => {
 		<Button v-if="!isDisabled" severity="secondary" outlined class="clear-button" @click="$emit('clear')">
 			<IconSVG name="mdiClose" variant="muted" size="sm" />
 		</Button>
-		<!-- TODO Add form edit support. Ref: https://github.com/getodk/web-forms/issues/392 -->
 		<ImageBlock :blob-url="imageURL" alt="Captured image preview" />
 	</div>
 </template>

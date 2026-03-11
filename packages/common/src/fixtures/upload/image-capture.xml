@@ -85,7 +85,7 @@
         </data>
       </instance>
 
-      <bind nodeset="/data/cat_image" type="binary" required="true()"/>
+      <bind nodeset="/data/cat_image" type="binary" required="true()" orx:max-pixels="1000"/>
       <bind nodeset="/data/dog_image" type="binary"/>
       <bind nodeset="/data/have_birds" type="string" required="true()"/>
       <bind nodeset="/data/bird_image" type="binary" readonly=" /data/fruits != &quot;&quot;" relevant=" /data/have_birds ='yes'"/>

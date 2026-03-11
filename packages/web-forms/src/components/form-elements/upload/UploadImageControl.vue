@@ -2,6 +2,7 @@
 import IconSVG from '@/components/common/IconSVG.vue';
 import ValidationMessage from '@/components/common/ValidationMessage.vue';
 import ControlText from '@/components/form-elements/ControlText.vue';
+import { resize } from '@/lib/services/resizeImage';
 import type { UploadNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import type { HTMLInputElementEvent, Ref } from 'vue';
@@ -26,10 +27,6 @@ const isDisabled = computed(() => props.question.currentState.readonly === true)
 const selectImageInput = ref<HTMLInputElement | null>(null);
 const takePictureInput = ref<HTMLInputElement | null>(null);
 
-/**
- * @todo <button> to trigger sibling <input type="file" style="display: none">
- * is probably a common enough pattern we'll want to make it a component.
- */
 const triggerInputField = (inputField: HTMLInputElement | null) => {
 	if (inputField == null) {
 		return;
@@ -38,8 +35,22 @@ const triggerInputField = (inputField: HTMLInputElement | null) => {
 	inputField.click();
 };
 
+const resizeImage = async (file: File | null, max: number | null): Promise<File | null> => {
+	if (file && max) {
+		return await resize(file, max);
+	}
+	return file;
+};
+
 const updateValue = (file: File | null) => {
-	props.question.setValue(file);
+	resizeImage(file, props.question.maxPixels)
+		.then((image) => {
+			props.question.setValue(image);
+		})
+		.catch((_) => {
+			// unspecified error - set the original file
+			props.question.setValue(file);
+		});
 };
 
 const onChange = (event: HTMLInputElementEvent) => {
@@ -64,7 +75,6 @@ watchEffect(() => {
 	<ControlText :question="question" />
 
 	<div class="capture-buttons">
-		<!-- TODO: Good candidate for <slot> in a general component -->
 		<template v-if="IS_CAPTURE_SUPPORTED">
 			<Button
 				class="take-picture-button"
@@ -92,7 +102,6 @@ watchEffect(() => {
 			@click="triggerInputField(selectImageInput)"
 		>
 			<IconSVG name="mdiImage" variant="inverted" />
-			<!-- TODO: Good candidate for <slot> in a general component -->
 			<!-- TODO: translations -->
 			<span>Choose image</span>
 		</Button>
@@ -105,7 +114,6 @@ watchEffect(() => {
 		>
 	</div>
 
-	<!-- TODO: good candidate for <slot> in a general component -->
 	<UploadImagePreview
 		:question="question"
 		:is-disabled="isDisabled"
