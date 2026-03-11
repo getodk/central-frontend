@@ -38,7 +38,7 @@ except according to the terms contained in the LICENSE file.
           </summary>
           <ul>
             <li v-for="entity in nonEmptyEntities.details.entities" :key="entity.uuid">
-              <router-link :to="entityPath(projectId, datasetName, entity.uuid)">{{ entity.label }}</router-link>
+              <router-link :to="entityPath(projectId, datasetName, entity.uuid)" target="_blank">{{ entity.label }}</router-link>
             </li>
           </ul>
           <p v-if="nonEmptyEntities.details.totalCount > 3" class="more-entities">
@@ -52,7 +52,7 @@ except according to the terms contained in the LICENSE file.
           </summary>
           <ul>
             <li v-for="form in dependentForms.details.forms" :key="form.xmlFormId">
-              <router-link :to="formPath(projectId, form.xmlFormId, 'draft')">{{ form.formName }}</router-link>
+              <router-link :to="formPath(projectId, form.xmlFormId, 'draft')" target="_blank">{{ form.formName }}</router-link>
             </li>
           </ul>
         </details>

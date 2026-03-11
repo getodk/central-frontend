@@ -29,7 +29,7 @@ except according to the terms contained in the LICENSE file.
           <td :rowspan="property.forms.length || 1" class="col-actions">
             <button v-if="project.verbs.has('dataset.update')" type="button"
               class="delete-button btn btn-default" :aria-label="$t('action.delete')"
-              v-tooltip.aria-label @click="showConfirmation(property.name)">
+              v-tooltip.aria-label @click="showDeleteConfirmation(property.name)">
               <span class="icon-trash"></span>
             </button>
           </td>
@@ -58,7 +58,7 @@ except according to the terms contained in the LICENSE file.
       {{ $t('emptyTable') }}
     </p>
 
-  <confirmation v-bind="confirm" @hide="hideConfirm" @success="deleteProperty">
+  <confirmation v-bind="confirmDeleteModal" @hide="hideDeleteConfirmation" @success="deleteProperty">
     <template #body>
       <p>
         {{ $t('confirmation.body', { propertyName: propertyToBeDeleted }) }}
@@ -98,24 +98,24 @@ const properties = computed(() => dataset.properties);
 
 const { publishedFormPath } = useRoutes();
 
-const confirmModalState = modalData();
+const confirmDeleteModalState = modalData();
 
 const propertyToBeDeleted = ref('');
 
-const confirm = computed(() => ({
-  state: confirmModalState.state,
+const confirmDeleteModal = computed(() => ({
+  state: confirmDeleteModalState.state,
   title: t('confirmation.title'),
   yesText: t('confirmation.confirm'),
   awaitingResponse: awaitingResponse.value
 }));
 
-const showConfirmation = (propertyName) => {
-  confirmModalState.show();
+const showDeleteConfirmation = (propertyName) => {
+  confirmDeleteModalState.show();
   propertyToBeDeleted.value = propertyName;
 };
 
-const hideConfirm = () => {
-  confirmModalState.hide();
+const hideDeleteConfirmation = () => {
+  confirmDeleteModalState.hide();
   propertyToBeDeleted.value = '';
 };
 
@@ -130,11 +130,11 @@ const deleteProperty = () => {
     .then(({ data }) => {
       if (isProblem(data)) {
         deletePropertyErrorModal.show({ projectId: project.id, datasetName: dataset.name, errorObject: data });
-        hideConfirm();
+        hideDeleteConfirmation();
       } else {
         dataset.properties = dataset.properties.filter(p => p.name !== propertyToBeDeleted.value);
         alert.success(t('deleted', { name: propertyToBeDeleted.value }));
-        hideConfirm();
+        hideDeleteConfirmation();
       }
     })
     .catch(noop);
@@ -192,7 +192,7 @@ const deleteProperty = () => {
         "title": "Delete Property",
         // This is shown on a confirmation dialog box. {propertyName} is the name of the property that is being deleted.
         "body": "Are you sure you want to delete the Property “{propertyName}”? This cannot be undone.",
-        "confirm": "@:audit.action.default.delete",
+        "confirm": "@:action.delete",
       },
       // This is shown after a Property has been successfully deleted. {name} is the name of the deleted property.
       "deleted": "Property “{name}” has been deleted."

@@ -99,42 +99,54 @@ describe('DatasetProperties', () => {
   });
 
   describe('delete property', () => {
-    it('shows delete button', () => {
+    it('shows a delete button for each property', () => {
       testData.extendedProjects.createPast(1);
       testData.extendedDatasets.createPast(1, {
         name: 'trees',
-        properties: [{ name: 'height', forms: [] }]
+        properties: [
+          { name: 'height', forms: [] },
+          { name: 'species', forms: [] }
+        ]
       });
       const component = mountComponent();
       component.find('.delete-button').exists().should.be.true;
+      component.findAll('.delete-button').length.should.be.eql(2);
     });
 
-    it('shows confirmation modal when delete button is clicked', async () => {
+    it('shows confirmation modal for the correct property when delete button is clicked', async () => {
       testData.extendedProjects.createPast(1);
       testData.extendedDatasets.createPast(1, {
         name: 'trees',
-        properties: [{ name: 'height', forms: [] }]
+        properties: [
+          { name: 'height', forms: [] },
+          { name: 'species', forms: [] },
+        ]
       });
       const component = mountComponent();
-      await component.get('.delete-button').trigger('click');
+      await component.findAll('.delete-button')[1].trigger('click');
       component.getComponent(Confirmation).props().state.should.be.true;
+      component.getComponent(Confirmation).text().should.match(/Are you sure you want to delete the Property “species”/);
     });
 
     it('sends the correct DELETE request', () => {
       testData.extendedDatasets.createPast(1, {
         name: 'trees',
-        properties: [{ name: 'height', forms: [] }]
+        properties: [
+          { name: 'height', forms: [] },
+          { name: 'species', forms: [] },
+        ]
       });
       return load('/projects/1/entity-lists/trees/properties')
         .complete()
         .request(async (app) => {
-          await app.get('.delete-button').trigger('click');
+          await app.findAll('.delete-button')[1].trigger('click');
+          app.get('.confirmation').text().should.match(/species/);
           return app.get('.confirmation .btn-primary').trigger('click');
         })
         .respondWithSuccess()
         .testRequests([{
           method: 'DELETE',
-          url: '/v1/projects/1/datasets/trees/properties/height'
+          url: '/v1/projects/1/datasets/trees/properties/species'
         }]);
     });
 
