@@ -1,5 +1,13 @@
 # @getodk/scenario
 
+## 0.11.5
+
+### Patch Changes
+
+- e9f4e28: Fixed markdown to support computed link urls
+- 56a1652: Move assertion utilities to @getodk/scenario
+- b83577f: Fix markdown to preserve line breaks
+
 ## 0.11.4
 
 ### Patch Changes

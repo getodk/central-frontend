@@ -1,5 +1,17 @@
 # @getodk/xforms-engine
 
+## 0.20.0
+
+### Minor Changes
+
+- b454f1f: Added support for max-pixels parameter to scale down image files before upload
+
+### Patch Changes
+
+- e9f4e28: Fixed markdown to support computed link urls
+- 5a9faa8: Fixed bug where unknown mimetype on an attachment would error when loading a form
+- b83577f: Fix markdown to preserve line breaks
+
 ## 0.19.0
 
 ### Minor Changes

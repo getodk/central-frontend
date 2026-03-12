@@ -1,5 +1,21 @@
 # @getodk/web-forms
 
+## 0.22.0
+
+### Minor Changes
+
+- b454f1f: Added support for max-pixels parameter to scale down image files before upload
+- 9df487b: Improved styling for disabled inputs to reduce confusion
+- 361de3e: Added support for 'rating' appearance to range question types
+
+### Patch Changes
+
+- ffad6c4: Allow text selection in properties dialog and status bar
+- e9f4e28: Fixed markdown to support computed link urls
+- 5a9faa8: Fixed bug where unknown mimetype on an attachment would error when loading a form
+- b83577f: Fix markdown to preserve line breaks
+- d8985e7: Fix the display of the error banner on top of the map overlay.
+
 ## 0.21.0
 
 ### Minor Changes

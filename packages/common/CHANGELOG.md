@@ -1,5 +1,18 @@
 # @getodk/common
 
+## 0.13.0
+
+### Minor Changes
+
+- b454f1f: Added support for max-pixels parameter to scale down image files before upload
+
+### Patch Changes
+
+- e9f4e28: Fixed markdown to support computed link urls
+- 749e9f1: Relocate shared test utilities to @getodk/common/test-utils
+- 56a1652: Move assertion utilities to @getodk/scenario
+- b83577f: Fix markdown to preserve line breaks
+
 ## 0.12.2
 
 ### Patch Changes
