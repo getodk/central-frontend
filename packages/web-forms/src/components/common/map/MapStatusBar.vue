@@ -208,6 +208,8 @@ const displayState = computed(() => {
 
 .map-status {
 	gap: var(--odk-map-controls-spacing);
+	-webkit-user-select: text;
+	user-select: text;
 }
 
 .map-status-container {

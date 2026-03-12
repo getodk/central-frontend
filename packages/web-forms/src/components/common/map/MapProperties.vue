@@ -85,6 +85,8 @@ const orderedProps = computed(() => {
 	align-items: flex-start;
 	gap: var(--odk-map-properties-spacing-md);
 	padding: 0;
+	-webkit-user-select: text;
+	user-select: text;
 
 	strong {
 		font-size: var(--odk-dialog-title-font-size);
@@ -106,6 +108,8 @@ const orderedProps = computed(() => {
 	.property-line {
 		display: block;
 		padding: 15px 0;
+		-webkit-user-select: text;
+		user-select: text;
 
 		dt,
 		dd {
