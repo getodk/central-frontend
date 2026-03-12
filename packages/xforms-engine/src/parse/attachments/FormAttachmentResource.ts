@@ -34,7 +34,6 @@ export abstract class FormAttachmentResource<DataType extends FormAttachmentData
 	protected constructor(
 		readonly dataType: DataType,
 		readonly resourceURL: JRResourceURL,
-		readonly contentType: string,
 		readonly data: FormAttachmentData<DataType>
 	) {}
 }

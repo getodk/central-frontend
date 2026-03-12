@@ -14,79 +14,51 @@ const assertResponseSuccess = (resourceURL: JRResourceURL, response: FetchResour
 	}
 };
 
-interface ExternalSecondaryInstanceResourceMetadata<
-	Format extends ExternalSecondaryInstanceSourceFormat = ExternalSecondaryInstanceSourceFormat,
-> {
-	readonly contentType: string;
-	readonly format: Format;
-}
-
-const inferSecondaryInstanceResourceMetadata = (
-	resourceURL: JRResourceURL,
-	contentType: string | null,
+const getFormatFromFileExtension = (
+	url: string,
 	data: string
-): ExternalSecondaryInstanceResourceMetadata => {
-	const url = resourceURL.href;
-
-	let format: ExternalSecondaryInstanceSourceFormat | null = null;
-
+): ExternalSecondaryInstanceSourceFormat | undefined => {
 	if (url.endsWith('.xml') && data.startsWith('<')) {
-		format = 'xml';
-	} else if (url.endsWith('.csv')) {
-		format = 'csv';
-	} else if (url.endsWith('.geojson') && data.startsWith('{')) {
-		format = 'geojson';
+		return 'xml';
 	}
-
-	if (format == null) {
-		throw new ErrorProductionDesignPendingError(
-			`Failed to infer external secondary instance format/content type for resource ${url} (response content type: ${contentType}, data: ${data})`
-		);
+	if (url.endsWith('.csv')) {
+		return 'csv';
 	}
-
-	return {
-		contentType: contentType ?? 'text/plain',
-		format,
-	};
+	if (url.endsWith('.geojson') && data.startsWith('{')) {
+		return 'geojson';
+	}
+	return;
 };
 
-const detectSecondaryInstanceResourceMetadata = (
+const getFormatFromContentType = (
+	contentType: string | null
+): ExternalSecondaryInstanceSourceFormat | undefined => {
+	if (contentType === 'text/csv') {
+		return 'csv';
+	}
+	if (contentType === 'application/geo+json') {
+		return 'geojson';
+	}
+	if (contentType === 'text/xml') {
+		return 'xml';
+	}
+	return;
+};
+
+const getFormat = (
 	resourceURL: JRResourceURL,
 	response: FetchResourceResponse,
 	data: string
-): ExternalSecondaryInstanceResourceMetadata => {
+): ExternalSecondaryInstanceSourceFormat => {
 	const contentType = getResponseContentType(response);
-
-	if (contentType == null || contentType === 'text/plain') {
-		return inferSecondaryInstanceResourceMetadata(resourceURL, contentType, data);
-	}
-
-	let format: ExternalSecondaryInstanceSourceFormat | null = null;
-
-	switch (contentType) {
-		case 'text/csv':
-			format = 'csv';
-			break;
-
-		case 'application/geo+json':
-			format = 'geojson';
-			break;
-
-		case 'text/xml':
-			format = 'xml';
-			break;
-	}
-
-	if (format == null) {
+	const url = resourceURL.href;
+	const format = getFormatFromContentType(contentType) ?? getFormatFromFileExtension(url, data);
+	if (!format) {
 		throw new ErrorProductionDesignPendingError(
-			`Failed to detect external secondary instance format for resource ${resourceURL.href} (response content type: ${contentType}, data: ${data})`
+			`Failed to determine external secondary instance format for resource "${url}", content type: "${contentType}"`
 		);
 	}
-
-	return {
-		contentType,
-		format,
-	};
+	return format;
 };
 
 interface MissingResourceResponse extends FetchResourceResponse {
@@ -122,17 +94,9 @@ export class ExternalSecondaryInstanceResource<
 		options: ExternalSecondaryInstanceResourceLoadOptions
 	) {
 		if (options.missingResourceBehavior === 'BLANK') {
-			return new this(
-				response.status,
-				instanceId,
-				resourceURL,
-				{
-					format: 'xml',
-					contentType: 'text/xml',
-				},
-				'',
-				{ isExplicitlyBlank: true }
-			);
+			return new this(response.status, instanceId, resourceURL, 'xml', '', {
+				isExplicitlyBlank: true,
+			});
 		}
 
 		throw new ErrorProductionDesignPendingError(
@@ -154,30 +118,24 @@ export class ExternalSecondaryInstanceResource<
 		assertResponseSuccess(resourceURL, response);
 
 		const data = await response.text();
-		const metadata = detectSecondaryInstanceResourceMetadata(resourceURL, response, data);
+		const metadata = getFormat(resourceURL, response, data);
 
 		return new this(response.status ?? null, instanceId, resourceURL, metadata, data, {
 			isExplicitlyBlank: false,
 		}) satisfies ExternalSecondaryInstanceResource as LoadedExternalSecondaryInstanceResource;
 	}
 
-	readonly format: Format;
 	readonly isBlank: boolean;
 
 	private constructor(
 		readonly responseStatus: number | null,
 		readonly instanceId: string,
 		resourceURL: JRResourceURL,
-		metadata: ExternalSecondaryInstanceResourceMetadata<Format>,
+		readonly format: Format,
 		data: string,
 		options: ExternalSecondaryInstanceResourceOptions
 	) {
-		const { contentType, format } = metadata;
-
-		super('secondary-instance', resourceURL, contentType, data);
-
-		this.format = format;
-
+		super('secondary-instance', resourceURL, data);
 		if (data === '') {
 			if (options.isExplicitlyBlank) {
 				this.isBlank = true;
