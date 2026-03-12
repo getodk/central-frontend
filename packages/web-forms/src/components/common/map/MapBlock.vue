@@ -374,7 +374,7 @@ const toggleFullScreen = () => {
 
 	.map-overlay.get-location-overlay {
 		background-color: rgba(from var(--odk-muted-background-color) r g b / 0.9);
-		z-index: var(--odk-z-index-overlay);
+		z-index: var(--odk-z-index-form-floating);
 
 		.close-full-screen {
 			@include btn.clear-button;
