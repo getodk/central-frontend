@@ -31,7 +31,7 @@ except according to the terms contained in the LICENSE file.
 let id = 0;
 </script>
 <script setup>
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 
 import TextareaAutosize from '../../textarea-autosize.vue';
 
@@ -43,10 +43,7 @@ defineOptions({
 const props = defineProps({
   modelValue: String,
   oldValue: String,
-  label: {
-    type: String,
-    required: false
-  },
+  label: String,
   required: Boolean,
   disabled: Boolean,
   disabledMessage: String,
@@ -67,10 +64,7 @@ const update = (value) => {
 };
 
 const textarea = ref(null);
-const resize = () => {
-  textarea.value.resize();
-};
-defineExpose({ textarea: computed(() => ({ ...textarea.value, resize })) });
+defineExpose({ textarea });
 </script>
 
 <style lang="scss">

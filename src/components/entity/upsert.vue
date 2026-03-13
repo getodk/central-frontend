@@ -1,5 +1,5 @@
 <template>
-  <modal :state="state" :hideable="!awaitingResponse"
+  <modal class="entity-upsert" :state="state" :hideable="!awaitingResponse"
     size="large" backdrop @shown="afterShown" @hide="$emit('hide')">
     <template #title>{{ create ? $t('titleCreate') : $t('title', currentVersion) }}</template>
     <template #body>
@@ -12,7 +12,7 @@
               :mark-value-changed="!create" required/>
             </tbody>
         </table>
-        <h4 id="properties-header">{{ $t('resource.properties') }}</h4>
+        <div class="entity-upsert-properties-header">{{ $t('resource.properties') }}</div>
         <div class="table-scroll">
           <table class="table">
             <thead>
@@ -75,6 +75,7 @@ const props = defineProps({
   geometryDisabled: Boolean
 });
 
+const emit = defineEmits(['hide', 'success']);
 
 const propertyRows = ref([]);
 const labelRow = ref(null);
@@ -114,8 +115,6 @@ const afterShown = () => {
 
 // ----
 // Requests and modal behavior after sending requests
-
-const emit = defineEmits(['hide', 'success']);
 
 const { dataset } = useRequestData();
 
@@ -158,14 +157,16 @@ const submit = () => {
 <style lang="scss">
 @import '../../assets/scss/variables';
 
-#entity-update, #entity-create {
+.entity-upsert {
   th {
     font-size: 12px;
   }
 
   .modal-dialog { margin-top: 15vh; }
 
-  #properties-header {
+  .entity-upsert-properties-header {
+    font-size: 18px;
+    font-weight: 500;
     margin-top: 40px;
   }
 
@@ -184,7 +185,7 @@ const submit = () => {
     background-color: white;
   }
 
-  tr td, th {
+  tbody tr td, thead tr th {
     border: none;
     padding-left: 0px;
   }
