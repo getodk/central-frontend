@@ -10,22 +10,16 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <tr class="entity-update-row"
-    :class="{ 'uncommitted-change': modelValue != null }">
-    <td class="label-cell">
+  <tr class="entity-update-row">
+    <td v-if="label != null" class="label-cell">
       <label :for="textareaId" v-tooltip.text>
         {{ requiredLabel(label, required) }}
       </label>
     </td>
-    <td class="old-value" :class="{ empty: oldIsEmpty }">
-      <div ref="oldValueContainer">
-        {{ oldIsEmpty ? $t('common.emptyValue') : oldValue }}
-      </div>
-    </td>
     <td class="new-value">
-      <div class="form-group">
+      <div class="form-group" :class="{ 'value-changed': markValueChanged && modelValue != null }">
         <textarea-autosize :id="textareaId" ref="textarea"
-          :model-value="modelValue ?? oldValue ?? ''" :min-height="minHeight"
+          :model-value="modelValue ?? oldValue ?? ''"
           :required="required" :disabled="disabled"
           :disabled-message="disabledMessage" @update:model-value="update"/>
       </div>
@@ -37,7 +31,7 @@ except according to the terms contained in the LICENSE file.
 let id = 0;
 </script>
 <script setup>
-import { computed, ref, watch } from 'vue';
+import { ref } from 'vue';
 
 import TextareaAutosize from '../../textarea-autosize.vue';
 
@@ -49,30 +43,17 @@ defineOptions({
 const props = defineProps({
   modelValue: String,
   oldValue: String,
-  label: {
-    type: String,
-    required: true
-  },
+  label: String,
   required: Boolean,
   disabled: Boolean,
-  disabledMessage: String
+  disabledMessage: String,
+  markValueChanged: Boolean
 });
 const emit = defineEmits(['update:modelValue']);
-
-const oldIsEmpty = computed(() =>
-  props.oldValue == null || props.oldValue === '');
 
 id += 1;
 const textareaId = `entity-update-row-textarea${id}`;
 
-const minHeight = ref(0);
-let minHeightOutdated = true;
-const oldValueContainer = ref(null);
-const setMinHeight = () => {
-  minHeight.value = oldValueContainer.value.getBoundingClientRect().height;
-  minHeightOutdated = false;
-};
-watch(() => props.oldValue, () => { minHeightOutdated = true; });
 
 const update = (value) => {
   // We emit `undefined` if `value` is the same as props.oldValue. If `value` is
@@ -83,55 +64,36 @@ const update = (value) => {
 };
 
 const textarea = ref(null);
-const resize = () => {
-  textarea.value.resize();
-  if (minHeightOutdated) setMinHeight();
-};
-defineExpose({ textarea: computed(() => ({ ...textarea.value, resize })) });
+defineExpose({ textarea });
 </script>
 
 <style lang="scss">
 @import '../../../assets/scss/mixins';
 
 .entity-update-row {
-  td, textarea { font-size: 16px; }
+  td, textarea, label { font-size: 12px; }
 
   $vpadding: 4px;
-  .label-cell, .old-value, .new-value { padding-bottom: $vpadding; }
+  .label-cell, .new-value { padding-bottom: $vpadding; }
   .label-cell {
+    padding-left: 0px;
     padding-right: 15px;
     padding-top: #{$vpadding + $padding-top-form-control};
   }
-  .old-value {
-    padding-top: $vpadding;
-
-    // Add $padding-top-form-control to the <div> rather than the <td> so that
-    // it is included in the minHeight prop passed to TextareaAutosize.
-    div {
-      padding-top: $padding-top-form-control;
-      padding-bottom: $padding-top-form-control;
-    }
-  }
   .new-value {
     padding-top: $vpadding;
-    padding-right: 0px;
   }
+
+    .value-changed {
+      box-shadow: 0 0 0 3px #C8E4EE;
+    }
 
   .label-cell { @include text-overflow-ellipsis; }
   label {
     // Needed for the text to truncate.
     display: inline;
     margin-bottom: 0;
-  }
-
-  .old-value {
-    overflow-wrap: break-word;
-    white-space: break-spaces;
-
-    &.empty {
-      @include italic;
-      color: #999;
-    }
+    font-weight: 400;
   }
 
   .form-group {
