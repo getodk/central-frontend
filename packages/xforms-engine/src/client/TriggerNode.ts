@@ -16,8 +16,9 @@ export interface TriggerNodeState extends BaseValueNodeState<TriggerValue> {
 	get value(): TriggerValue;
 }
 
-export interface TriggerNodeDefinition<V extends ValueType = ValueType>
-	extends LeafNodeDefinition<V> {
+export interface TriggerNodeDefinition<
+	V extends ValueType = ValueType,
+> extends LeafNodeDefinition<V> {
 	readonly bodyElement: TriggerControlDefinition;
 }
 

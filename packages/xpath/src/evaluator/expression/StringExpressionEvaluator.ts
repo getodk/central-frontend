@@ -3,9 +3,9 @@ import type { EvaluationContext } from '../../context/EvaluationContext.ts';
 import { StringEvaluation } from '../../evaluations/StringEvaluation.ts';
 import type { ExpressionEvaluator, ExpressionNode } from './ExpressionEvaluator.ts';
 
-export abstract class StringExpressionEvaluator<ConstValue extends string | null = null>
-	implements ExpressionEvaluator
-{
+export abstract class StringExpressionEvaluator<
+	ConstValue extends string | null = null,
+> implements ExpressionEvaluator {
 	constructor(protected readonly constValue: ConstValue) {}
 
 	abstract readonly syntaxNode: ExpressionNode;

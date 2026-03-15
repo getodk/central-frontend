@@ -7,17 +7,14 @@ import type {
 	ClientReactiveSerializableParentNodeDefinition,
 } from './ClientReactiveSerializableParentNode.ts';
 
-export interface ClientReactiveSerializableTemplatedNodeCurrentState
-	extends ClientReactiveSerializableParentNodeCurrentState<GeneralChildNode> {
+export interface ClientReactiveSerializableTemplatedNodeCurrentState extends ClientReactiveSerializableParentNodeCurrentState<GeneralChildNode> {
 	get attributes(): readonly Attribute[];
 }
 
-export interface ClientReactiveSerializableTemplatedNodeDefinition
-	extends ClientReactiveSerializableParentNodeDefinition {
+export interface ClientReactiveSerializableTemplatedNodeDefinition extends ClientReactiveSerializableParentNodeDefinition {
 	readonly template: StaticElement;
 }
 
-export interface ClientReactiveSerializableTemplatedNode
-	extends ClientReactiveSerializableParentNode<GeneralChildNode> {
+export interface ClientReactiveSerializableTemplatedNode extends ClientReactiveSerializableParentNode<GeneralChildNode> {
 	readonly currentState: ClientReactiveSerializableTemplatedNodeCurrentState;
 }

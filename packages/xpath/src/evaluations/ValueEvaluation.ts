@@ -4,9 +4,10 @@ import type { Evaluation } from './Evaluation.ts';
 import type { EvaluationType, EvaluationTypes } from './EvaluationType.ts';
 import { LocationPathEvaluation } from './LocationPathEvaluation.ts';
 
-export abstract class ValueEvaluation<T extends XPathNode, Type extends EvaluationType>
-	implements Evaluation<T, Type>
-{
+export abstract class ValueEvaluation<
+	T extends XPathNode,
+	Type extends EvaluationType,
+> implements Evaluation<T, Type> {
 	protected readonly _values: readonly [this] = [this];
 
 	abstract readonly context: LocationPathEvaluation<T>;

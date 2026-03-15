@@ -102,12 +102,12 @@ export interface InstanceNodeOptions {
 }
 
 export abstract class InstanceNode<
-		Definition extends AnyNodeDefinition,
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		Spec extends InstanceNodeStateSpec<any>,
-		Parent extends AnyNode | null,
-		Child extends AnyChildNode | null = null,
-	>
+	Definition extends AnyNodeDefinition,
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	Spec extends InstanceNodeStateSpec<any>,
+	Parent extends AnyNode | null,
+	Child extends AnyChildNode | null = null,
+>
 	implements BaseEngineNode, XFormsXPathPrimaryInstanceNode, EvaluationContext
 {
 	protected abstract readonly state: SharedNodeState<Spec>;

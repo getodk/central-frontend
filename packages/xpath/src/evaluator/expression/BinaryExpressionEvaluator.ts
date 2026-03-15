@@ -5,9 +5,9 @@ import type { AnyBinaryExprNode } from '../../static/grammar/SyntaxNode.ts';
 import type { ExpressionEvaluator } from './ExpressionEvaluator.ts';
 import { createExpression } from './factory.ts';
 
-export abstract class BinaryExpressionEvaluator<Node extends AnyBinaryExprNode>
-	implements ExpressionEvaluator
-{
+export abstract class BinaryExpressionEvaluator<
+	Node extends AnyBinaryExprNode,
+> implements ExpressionEvaluator {
 	readonly lhs: ExpressionEvaluator;
 	readonly rhs: ExpressionEvaluator;
 

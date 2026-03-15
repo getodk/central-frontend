@@ -129,8 +129,7 @@ const resolveXMLSchemaNamespacePrefix = (
 };
 
 interface MaybeBindElementNamespaceResolver
-	extends BindElement,
-		Partial<BindDataTypeNamespaceResolver> {}
+	extends BindElement, Partial<BindDataTypeNamespaceResolver> {}
 
 interface BindElementNamespaceResolver extends BindElement, BindDataTypeNamespaceResolver {}
 

@@ -15,9 +15,10 @@ export interface MediaSources {
 	audio?: JRResourceURL;
 }
 
-export class TextRange<Role extends TextRole, Origin extends TextOrigin>
-	implements ClientTextRange<Role, Origin>
-{
+export class TextRange<Role extends TextRole, Origin extends TextOrigin> implements ClientTextRange<
+	Role,
+	Origin
+> {
 	*[Symbol.iterator]() {
 		yield* this.chunks;
 	}

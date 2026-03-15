@@ -92,8 +92,9 @@ interface BaseInstancePayload<PayloadType extends InstancePayloadType> {
 	readonly data: InstancePayloadData<PayloadType>;
 }
 
-interface PendingInstancePayload<PayloadType extends InstancePayloadType>
-	extends BaseInstancePayload<PayloadType> {
+interface PendingInstancePayload<
+	PayloadType extends InstancePayloadType,
+> extends BaseInstancePayload<PayloadType> {
 	readonly status: 'pending';
 	get violations(): readonly DescendantNodeViolationReference[];
 }
@@ -103,8 +104,9 @@ interface MaxSizeExceededResult extends BaseInstancePayload<'chunked'> {
 	get violations(): readonly MaxSizeViolation[];
 }
 
-interface ReadyInstancePayload<PayloadType extends InstancePayloadType>
-	extends BaseInstancePayload<PayloadType> {
+interface ReadyInstancePayload<
+	PayloadType extends InstancePayloadType,
+> extends BaseInstancePayload<PayloadType> {
 	readonly status: 'ready';
 	get violations(): null;
 }

@@ -12,7 +12,7 @@ export class SubmissionDefinition implements SubmissionMeta {
 
 		let submissionAction: URL | null = null;
 		let submissionMethod: 'post';
-		let encryptionKey: string | null = null;
+		let encryptionKey: string | null;
 
 		if (submissionElement == null) {
 			submissionAction = null;

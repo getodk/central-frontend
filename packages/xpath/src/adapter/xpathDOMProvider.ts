@@ -51,8 +51,7 @@ interface NodeKindGuards<T extends XPathNode> {
 }
 
 interface ExtendedNodeKindGuards<T extends XPathNode>
-	extends XPathDOMAdapter<T>,
-		NodeKindGuards<T> {}
+	extends XPathDOMAdapter<T>, NodeKindGuards<T> {}
 
 /**
  * Derives frequently used {@link NodeKindGuards | node kind predicates}
@@ -325,7 +324,8 @@ const getLastChildElementFactory = <T extends XPathNode>(
 type OmitOptionalOptimizableOperations<T> = Omit<T, keyof XPathDOMOptimizableOperations<XPathNode>>;
 
 interface ExtendedOptimizableOperations<T extends XPathNode>
-	extends OmitOptionalOptimizableOperations<ExtendedNodeKindGuards<T>>,
+	extends
+		OmitOptionalOptimizableOperations<ExtendedNodeKindGuards<T>>,
 		XPathDOMOptimizableOperations<T> {}
 
 /**
@@ -398,7 +398,8 @@ const derivedDOMProvider = <T>(base: T): DerivedDOMProvider & T => {
 };
 
 export interface XPathDOMProvider<T extends XPathNode>
-	extends OmitOptionalOptimizableOperations<XPathDOMAdapter<T>>,
+	extends
+		OmitOptionalOptimizableOperations<XPathDOMAdapter<T>>,
 		NodeKindGuards<T>,
 		XPathDOMOptimizableOperations<T>,
 		DerivedDOMProvider {}

@@ -400,6 +400,5 @@ type SubmissionExtensions = typeof submissionExtensions;
 declare module 'vitest' {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	interface Assertion<T = any> extends DeriveStaticVitestExpectExtension<SubmissionExtensions, T> {}
-	interface AsymmetricMatchersContaining
-		extends DeriveStaticVitestExpectExtension<SubmissionExtensions> {}
+	interface AsymmetricMatchersContaining extends DeriveStaticVitestExpectExtension<SubmissionExtensions> {}
 }

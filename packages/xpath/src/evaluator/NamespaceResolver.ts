@@ -70,10 +70,10 @@ export interface StaticNamespaces<
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging -- it's not unsafe lol, it's defining the types
 export class StaticNamespaces<
-		DefaultPrefix extends string,
-		DefaultURI extends string,
-		const Mapping extends Record<string, string>,
-	>
+	DefaultPrefix extends string,
+	DefaultURI extends string,
+	const Mapping extends Record<string, string>,
+>
 	extends Map<string | null, string>
 	implements ReadonlyMap<string | null, string>
 {

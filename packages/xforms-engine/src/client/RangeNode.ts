@@ -12,8 +12,9 @@ export type RangeValue<V extends RangeValueType> = RuntimeValue<V>;
 
 export type RangeInputValue<V extends RangeValueType> = RuntimeInputValue<V>;
 
-export interface RangeNodeState<V extends RangeValueType>
-	extends BaseValueNodeState<RangeValue<V>> {
+export interface RangeNodeState<V extends RangeValueType> extends BaseValueNodeState<
+	RangeValue<V>
+> {
 	get valueOptions(): null;
 }
 
@@ -23,8 +24,10 @@ export type RangeNodeAppearances = NodeAppearances<RangeNodeDefinition>;
  * A node corresponding to form field defined as an
  * {@link https://getodk.github.io/xforms-spec/#body-elements | XForms `<range>`}.
  */
-export interface RangeNode<V extends RangeValueType = RangeValueType>
-	extends BaseValueNode<V, RangeValue<V>> {
+export interface RangeNode<V extends RangeValueType = RangeValueType> extends BaseValueNode<
+	V,
+	RangeValue<V>
+> {
 	readonly nodeType: 'range';
 	readonly valueType: V;
 	readonly appearances: RangeNodeAppearances;

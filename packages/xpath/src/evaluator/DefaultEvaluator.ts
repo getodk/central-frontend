@@ -4,8 +4,10 @@ import type { XPathDOMAdapter } from '../adapter/interface/XPathDOMAdapter.ts';
 import type { EvaluatorOptions } from './Evaluator.ts';
 import { Evaluator } from './Evaluator.ts';
 
-export interface DefaultEvaluatorOptions
-	extends Omit<EvaluatorOptions<DefaultDOMAdapterNode>, 'domAdapter'> {}
+export interface DefaultEvaluatorOptions extends Omit<
+	EvaluatorOptions<DefaultDOMAdapterNode>,
+	'domAdapter'
+> {}
 
 /**
  * The default {@link Evaluator} implementation is suitable for use in a browser

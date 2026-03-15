@@ -7,13 +7,11 @@ import type {
 	ClientReactiveSerializableParentNodeDefinition,
 } from './ClientReactiveSerializableParentNode.ts';
 
-interface ClientReactiveSerializableInstanceDefinition
-	extends ClientReactiveSerializableParentNodeDefinition {
+interface ClientReactiveSerializableInstanceDefinition extends ClientReactiveSerializableParentNodeDefinition {
 	readonly submission: SubmissionMeta;
 }
 
-export interface ClientReactiveSerializableInstance
-	extends ClientReactiveSerializableParentNode<Root> {
+export interface ClientReactiveSerializableInstance extends ClientReactiveSerializableParentNode<Root> {
 	readonly definition: ClientReactiveSerializableInstanceDefinition;
 	readonly root: Root;
 	readonly parent: null;

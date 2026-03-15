@@ -72,9 +72,9 @@ export type ChildNodeDefinition =
 	| GroupDefinition
 	| LeafNodeDefinition;
 
-export abstract class NodeDefinition<Type extends NodeDefinitionType>
-	implements NamedSubtreeDefinition
-{
+export abstract class NodeDefinition<
+	Type extends NodeDefinitionType,
+> implements NamedSubtreeDefinition {
 	abstract readonly type: Type;
 	abstract readonly namespaceDeclarations: NamespaceDeclarationMap;
 	abstract readonly qualifiedName: QualifiedName;

@@ -25,8 +25,10 @@ export const DISTANCE_CATEGORY = {
 
 export type DistanceCategory = (typeof DISTANCE_CATEGORY)[keyof typeof DISTANCE_CATEGORY];
 
-interface BrowserLocation
-	extends Pick<GeolocationCoordinates, 'accuracy' | 'altitude' | 'latitude' | 'longitude'> {}
+interface BrowserLocation extends Pick<
+	GeolocationCoordinates,
+	'accuracy' | 'altitude' | 'latitude' | 'longitude'
+> {}
 
 export interface UseMapViewControls {
 	centerFeatureLocation: (feature: Feature) => void;

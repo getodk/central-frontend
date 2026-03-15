@@ -151,6 +151,5 @@ type ChoiceExtensions = typeof choiceExtensions;
 declare module 'vitest' {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	interface Assertion<T = any> extends DeriveStaticVitestExpectExtension<ChoiceExtensions, T> {}
-	interface AsymmetricMatchersContaining
-		extends DeriveStaticVitestExpectExtension<ChoiceExtensions> {}
+	interface AsymmetricMatchersContaining extends DeriveStaticVitestExpectExtension<ChoiceExtensions> {}
 }

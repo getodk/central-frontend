@@ -30,8 +30,9 @@ const assertRangeBindDefinition: AssertRangeBindDefinition = (bind) => {
 	}
 };
 
-export interface RangeLeafNodeDefinition<V extends ValueType = ValueType>
-	extends LeafNodeDefinition<V> {
+export interface RangeLeafNodeDefinition<
+	V extends ValueType = ValueType,
+> extends LeafNodeDefinition<V> {
 	readonly bodyElement: RangeControlDefinition;
 }
 

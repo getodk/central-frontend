@@ -312,7 +312,7 @@ const axisEvaluators = {
 		}
 
 		let firstChild: T | null;
-		let nextSibling: T | null = null;
+		let nextSibling: T | null;
 
 		if (step.nodeType === '__NAMED__') {
 			firstChild = domProvider.getFirstChildElement(contextNode);

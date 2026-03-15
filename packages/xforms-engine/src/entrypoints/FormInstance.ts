@@ -27,9 +27,9 @@ interface FormInstanceOptions<Mode extends FormInstanceInitializationMode> {
 	readonly instanceConfig: FormInstanceConfig;
 }
 
-export class FormInstance<Mode extends FormInstanceInitializationMode>
-	implements ClientFormInstance<Mode>
-{
+export class FormInstance<
+	Mode extends FormInstanceInitializationMode,
+> implements ClientFormInstance<Mode> {
 	readonly mode: Mode;
 	readonly root: Root;
 

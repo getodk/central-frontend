@@ -42,6 +42,5 @@ type FormStateExtensions = typeof formStateExtensions;
 declare module 'vitest' {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	interface Assertion<T = any> extends DeriveStaticVitestExpectExtension<FormStateExtensions, T> {}
-	interface AsymmetricMatchersContaining
-		extends DeriveStaticVitestExpectExtension<FormStateExtensions> {}
+	interface AsymmetricMatchersContaining extends DeriveStaticVitestExpectExtension<FormStateExtensions> {}
 }

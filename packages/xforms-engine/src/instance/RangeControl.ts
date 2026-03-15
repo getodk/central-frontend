@@ -35,8 +35,9 @@ import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { ValidationContext } from './internal-api/ValidationContext.ts';
 import type { ClientReactiveSerializableValueNode } from './internal-api/serialization/ClientReactiveSerializableValueNode.ts';
 
-interface RangeControlStateSpec<V extends RangeValueType>
-	extends ValueNodeStateSpec<RangeValue<V>> {
+interface RangeControlStateSpec<V extends RangeValueType> extends ValueNodeStateSpec<
+	RangeValue<V>
+> {
 	readonly label: Accessor<TextRange<'label'> | null>;
 	readonly hint: Accessor<TextRange<'hint'> | null>;
 	readonly valueOptions: null;

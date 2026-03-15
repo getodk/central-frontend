@@ -23,8 +23,9 @@ export type DependentExpressionResult<Type extends DependentExpressionResultType
 	EngineXPathEvaluator[DependentExpressionEvaluatorMethod<Type>]
 >;
 
-export interface ConstantDependentExpression<Type extends DependentExpressionResultType>
-	extends DependentExpression<Type> {
+export interface ConstantDependentExpression<
+	Type extends DependentExpressionResultType,
+> extends DependentExpression<Type> {
 	readonly expression: ConstantExpression;
 }
 

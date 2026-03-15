@@ -2,8 +2,10 @@ import type { XPathNode } from '../adapter/interface/XPathNode.ts';
 import type { EvaluationType } from './EvaluationType.ts';
 import type { LocationPathEvaluation } from './LocationPathEvaluation.ts';
 
-export interface Evaluation<T extends XPathNode, Type extends EvaluationType = EvaluationType>
-	extends Iterable<Evaluation<T, Type>> {
+export interface Evaluation<
+	T extends XPathNode,
+	Type extends EvaluationType = EvaluationType,
+> extends Iterable<Evaluation<T, Type>> {
 	readonly context: LocationPathEvaluation<T>;
 	readonly type: Type;
 

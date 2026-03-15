@@ -43,11 +43,11 @@ export interface ValueNodeStateSpec<RuntimeValue> extends DescendantNodeStateSpe
 }
 
 export abstract class ValueNode<
-		V extends ValueType,
-		Definition extends ValueNodeDefinition<V>,
-		RuntimeValue extends RuntimeInputValue,
-		RuntimeInputValue = RuntimeValue,
-	>
+	V extends ValueType,
+	Definition extends ValueNodeDefinition<V>,
+	RuntimeValue extends RuntimeInputValue,
+	RuntimeInputValue = RuntimeValue,
+>
 	extends DescendantNode<Definition, ValueNodeStateSpec<RuntimeValue>, GeneralParentNode, null>
 	implements
 		BaseValueNode<V, RuntimeValue>,

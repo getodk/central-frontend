@@ -63,8 +63,10 @@ export type InputNodeOptions<V extends ValueType> = InputNodeOptionsByValueType[
  * {@link https://getodk.github.io/xforms-spec/#body-elements | XForms `<input>`},
  * which a user-facing client would likely present for a user to fill.
  */
-export interface InputNode<V extends ValueType = ValueType>
-	extends BaseValueNode<V, InputValue<V>> {
+export interface InputNode<V extends ValueType = ValueType> extends BaseValueNode<
+	V,
+	InputValue<V>
+> {
 	readonly nodeType: 'input';
 	readonly valueType: V;
 	readonly appearances: InputNodeAppearances;

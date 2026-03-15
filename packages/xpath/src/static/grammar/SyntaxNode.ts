@@ -83,17 +83,25 @@ export interface ASyntaxNode extends SyntaxNode<AnySyntaxType, readonly ASyntaxN
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface UnknownSyntaxNode extends SyntaxNode<any, any> {}
 
-export interface TerminalSyntaxNode<Type extends AnySyntaxType>
-	extends SyntaxNode<Type, readonly []> {}
+export interface TerminalSyntaxNode<Type extends AnySyntaxType> extends SyntaxNode<
+	Type,
+	readonly []
+> {}
 
-export interface UnaryExprSyntaxNode<Type extends AnyUnaryExprType>
-	extends SyntaxNode<Type, readonly [AnyExprNode]> {}
+export interface UnaryExprSyntaxNode<Type extends AnyUnaryExprType> extends SyntaxNode<
+	Type,
+	readonly [AnyExprNode]
+> {}
 
-export interface BinaryExprSyntaxNode<Type extends AnyBinaryExprType>
-	extends SyntaxNode<Type, readonly [AnyExprNode, AnyExprNode]> {}
+export interface BinaryExprSyntaxNode<Type extends AnyBinaryExprType> extends SyntaxNode<
+	Type,
+	readonly [AnyExprNode, AnyExprNode]
+> {}
 
-export interface TerminalTextLiteralSyntaxNode<Type extends AnySyntaxType, Text extends string>
-	extends SyntaxNode<Type, readonly [], Text> {}
+export interface TerminalTextLiteralSyntaxNode<
+	Type extends AnySyntaxType,
+	Text extends string,
+> extends SyntaxNode<Type, readonly [], Text> {}
 
 /*
  * ============================================================================
@@ -173,41 +181,49 @@ export type FilterExprNodes =
 
 export interface FilterExprNode extends SyntaxNode<FilterExprType, FilterExprNodes> {}
 
-export interface FilterPathExprNode
-	extends SyntaxNode<
-		FilterPathExprType,
-		readonly [FilterExprNode, ...Array<RelativeStepSyntaxLiteralNode | StepNode>]
-	> {}
+export interface FilterPathExprNode extends SyntaxNode<
+	FilterPathExprType,
+	readonly [FilterExprNode, ...Array<RelativeStepSyntaxLiteralNode | StepNode>]
+> {}
 
 type AbsoluteLocationPathNodes =
 	| readonly [AbbreviatedAbsoluteLocationPathNode]
 	| readonly [AbsoluteRootLocationPathNode, ...RelativeLocationPathNodes];
 
-export interface AbsoluteLocationPathNode
-	extends SyntaxNode<AbsoluteLocationPathType, AbsoluteLocationPathNodes> {}
+export interface AbsoluteLocationPathNode extends SyntaxNode<
+	AbsoluteLocationPathType,
+	AbsoluteLocationPathNodes
+> {}
 
-export interface AbsoluteRootLocationPathNode
-	extends TerminalTextLiteralSyntaxNode<AbsoluteRootLocationPathType, '/'> {}
+export interface AbsoluteRootLocationPathNode extends TerminalTextLiteralSyntaxNode<
+	AbsoluteRootLocationPathType,
+	'/'
+> {}
 
 type RelativeLocationPathNodes = readonly [
 	StepNode,
 	...Array<RelativeStepSyntaxLiteralNode | StepNode>,
 ];
 
-export interface RelativeLocationPathNode
-	extends SyntaxNode<RelativeLocationPathType, RelativeLocationPathNodes> {}
+export interface RelativeLocationPathNode extends SyntaxNode<
+	RelativeLocationPathType,
+	RelativeLocationPathNodes
+> {}
 
-export interface AbbreviatedAbsoluteLocationPathNode
-	extends SyntaxNode<
-		AbbreviatedAbsoluteLocationPathType,
-		readonly [RelativeStepSyntaxLiteralNode, ...RelativeLocationPathNodes]
-	> {}
+export interface AbbreviatedAbsoluteLocationPathNode extends SyntaxNode<
+	AbbreviatedAbsoluteLocationPathType,
+	readonly [RelativeStepSyntaxLiteralNode, ...RelativeLocationPathNodes]
+> {}
 
-export interface AbbreviatedAxisTestNode
-	extends SyntaxNode<AbbreviatedAxisTestType, readonly [NameTestNode]> {}
+export interface AbbreviatedAxisTestNode extends SyntaxNode<
+	AbbreviatedAxisTestType,
+	readonly [NameTestNode]
+> {}
 
-export interface AbbreviatedStepNode
-	extends TerminalTextLiteralSyntaxNode<AbbreviatedStepType, '..' | '.'> {}
+export interface AbbreviatedStepNode extends TerminalTextLiteralSyntaxNode<
+	AbbreviatedStepType,
+	'..' | '.'
+> {}
 
 export type AxisNameText =
 	| 'ancestor-or-self'
@@ -226,8 +242,10 @@ export type AxisNameText =
 
 export interface AxisNameNode extends TerminalTextLiteralSyntaxNode<AxisNameType, AxisNameText> {}
 
-export interface AxisTestNode
-	extends SyntaxNode<AxisTestType, readonly [AxisNameNode, ...NodeTestNodes]> {}
+export interface AxisTestNode extends SyntaxNode<
+	AxisTestType,
+	readonly [AxisNameNode, ...NodeTestNodes]
+> {}
 
 export type NameTestNode =
 	| ExplicitNameNode
@@ -240,11 +258,15 @@ export type NodeTypeTest = 'comment' | 'node' | 'processing-instruction' | 'text
 // implemented as a regex like `/node\s*\(\s*\)/`
 export type NodeTypeTestText = `${NodeTypeTest}${string}`;
 
-export interface NodeTypeTestNode
-	extends TerminalTextLiteralSyntaxNode<NodeTypeTestType, NodeTypeTestText> {}
+export interface NodeTypeTestNode extends TerminalTextLiteralSyntaxNode<
+	NodeTypeTestType,
+	NodeTypeTestText
+> {}
 
-export interface ProcessingInstructionNameTestNode
-	extends SyntaxNode<ProcessingInstructionNameTestType, readonly [LiteralNode]> {}
+export interface ProcessingInstructionNameTestNode extends SyntaxNode<
+	ProcessingInstructionNameTestType,
+	readonly [LiteralNode]
+> {}
 
 export type NodeTestNodes =
 	| readonly [NameTestNode]
@@ -265,8 +287,10 @@ export interface SelfNode extends TerminalTextLiteralSyntaxNode<SelfType, '.'> {
 
 export interface PredicateNode extends SyntaxNode<PredicateType, readonly [ExprNode]> {}
 
-export interface RelativeStepSyntaxLiteralNode
-	extends TerminalTextLiteralSyntaxNode<RelativeStepSyntaxLiteral, '//'> {}
+export interface RelativeStepSyntaxLiteralNode extends TerminalTextLiteralSyntaxNode<
+	RelativeStepSyntaxLiteral,
+	'//'
+> {}
 
 type AnyLocationPathExprNode =
 	| AbsoluteLocationPathNode
@@ -297,11 +321,15 @@ type AnyLocationPathNode =
  * ----------------------------------------------------------------------------
  */
 
-export interface FunctionCallNode
-	extends SyntaxNode<FunctionCallType, readonly [FunctionNameNode, ...ArgumentNode[]]> {}
+export interface FunctionCallNode extends SyntaxNode<
+	FunctionCallType,
+	readonly [FunctionNameNode, ...ArgumentNode[]]
+> {}
 
-export interface FunctionNameNode
-	extends SyntaxNode<FunctionNameType, readonly [ExplicitNameNode]> {}
+export interface FunctionNameNode extends SyntaxNode<
+	FunctionNameType,
+	readonly [ExplicitNameNode]
+> {}
 
 export interface ArgumentNode extends SyntaxNode<ArgumentType, readonly [ExprNode]> {}
 
@@ -317,14 +345,17 @@ export interface PrefixNode extends TerminalSyntaxNode<PrefixType> {}
 
 export interface LocalPartNode extends TerminalSyntaxNode<LocalPartType> {}
 
-export interface PrefixedWildcardNameTestNode
-	extends SyntaxNode<PrefixedWildcardNameTestType, readonly [PrefixNode]> {}
+export interface PrefixedWildcardNameTestNode extends SyntaxNode<
+	PrefixedWildcardNameTestType,
+	readonly [PrefixNode]
+> {}
 
-export interface UnprefixedWildcardNameTestNode
-	extends TerminalSyntaxNode<UnprefixedWildcardNameTestType> {}
+export interface UnprefixedWildcardNameTestNode extends TerminalSyntaxNode<UnprefixedWildcardNameTestType> {}
 
-export interface PrefixedNameNode
-	extends SyntaxNode<PrefixedNameType, readonly [PrefixNode, LocalPartNode]> {}
+export interface PrefixedNameNode extends SyntaxNode<
+	PrefixedNameType,
+	readonly [PrefixNode, LocalPartNode]
+> {}
 
 export interface UnprefixedNameNode extends TerminalSyntaxNode<UnprefixedNameType> {}
 

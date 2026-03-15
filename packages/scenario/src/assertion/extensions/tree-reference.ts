@@ -49,8 +49,9 @@ type TreeReferenceExtensions = typeof treeReferenceExtensions;
 
 declare module 'vitest' {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	interface Assertion<T = any>
-		extends DeriveStaticVitestExpectExtension<TreeReferenceExtensions, T> {}
-	interface AsymmetricMatchersContaining
-		extends DeriveStaticVitestExpectExtension<TreeReferenceExtensions> {}
+	interface Assertion<T = any> extends DeriveStaticVitestExpectExtension<
+		TreeReferenceExtensions,
+		T
+	> {}
+	interface AsymmetricMatchersContaining extends DeriveStaticVitestExpectExtension<TreeReferenceExtensions> {}
 }

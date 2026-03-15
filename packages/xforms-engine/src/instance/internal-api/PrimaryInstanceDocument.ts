@@ -1,13 +1,12 @@
 import type { FormLanguage } from '../../client/FormLanguage.ts';
 import type { RootNode, RootNodeState } from '../../client/RootNode.ts';
 
-export interface PrimaryInstanceDocumentState
-	extends Omit<
-		RootNodeState,
-		// Allow for override with `RootNode`, which is not presently considered a
-		// child node in the client API
-		'children'
-	> {
+export interface PrimaryInstanceDocumentState extends Omit<
+	RootNodeState,
+	// Allow for override with `RootNode`, which is not presently considered a
+	// child node in the client API
+	'children'
+> {
 	/**
 	 * @todo while this is an internal interface, this feels like maybe an
 	 * unnecessary indirection? It would probably be fine for it to reference
@@ -26,15 +25,14 @@ export interface PrimaryInstanceDocumentState
  * Note: this interface (as well as {@link currentState}'s {@link PrimaryInstanceDocumentState}) is derived from {@link RootNode} to help avoid drift if that underlying interface (or its shared {@link BaseNode} interface) is updated.
  *
  */
-export interface PrimaryInstanceDocument
-	extends Omit<
-		RootNode,
-		// prettier-ignore
-		// eslint-disable-next-line @typescript-eslint/sort-type-constituents
-		| 'nodeType' // Allow for override with 'primary-instance'
-		| 'currentState' // Allow for override of `children`
-		| 'setLanguage' // Allow for override of return type
-	> {
+export interface PrimaryInstanceDocument extends Omit<
+	RootNode,
+	// prettier-ignore
+	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
+	| 'nodeType' // Allow for override with 'primary-instance'
+	| 'currentState' // Allow for override of `children`
+	| 'setLanguage' // Allow for override of return type
+> {
 	readonly nodeType: 'primary-instance';
 	readonly currentState: PrimaryInstanceDocumentState;
 

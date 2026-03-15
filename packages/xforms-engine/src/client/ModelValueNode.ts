@@ -8,8 +8,9 @@ import type { ValueType } from './ValueType.ts';
 
 export type ModelValue<V extends ValueType> = RuntimeValue<V>;
 
-export interface ModelValueNodeState<V extends ValueType>
-	extends BaseValueNodeState<ModelValue<V>> {
+export interface ModelValueNodeState<V extends ValueType> extends BaseValueNodeState<
+	ModelValue<V>
+> {
 	get label(): null;
 	get hint(): null;
 	get children(): null;
@@ -23,8 +24,9 @@ export interface ModelValueNodeState<V extends ValueType>
 	get value(): ModelValue<V>;
 }
 
-export interface ModelValueDefinition<V extends ValueType = ValueType>
-	extends LeafNodeDefinition<V> {
+export interface ModelValueDefinition<
+	V extends ValueType = ValueType,
+> extends LeafNodeDefinition<V> {
 	readonly bodyElement: null;
 }
 
@@ -35,8 +37,10 @@ export interface ModelValueDefinition<V extends ValueType = ValueType>
  * - a leaf/value node (i.e. it has no element children; it may be defined in
  *   the form's `<model>` as either an {@link Element} or {@link Attr})
  */
-export interface ModelValueNode<V extends ValueType = ValueType>
-	extends BaseValueNode<V, ModelValue<V>> {
+export interface ModelValueNode<V extends ValueType = ValueType> extends BaseValueNode<
+	V,
+	ModelValue<V>
+> {
 	readonly nodeType: 'model-value';
 	readonly valueType: V;
 	readonly appearances: null;

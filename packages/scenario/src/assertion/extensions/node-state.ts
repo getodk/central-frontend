@@ -57,6 +57,5 @@ type NodeStateExtensions = typeof nodeStateExtensions;
 declare module 'vitest' {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	interface Assertion<T = any> extends DeriveStaticVitestExpectExtension<NodeStateExtensions, T> {}
-	interface AsymmetricMatchersContaining
-		extends DeriveStaticVitestExpectExtension<NodeStateExtensions> {}
+	interface AsymmetricMatchersContaining extends DeriveStaticVitestExpectExtension<NodeStateExtensions> {}
 }

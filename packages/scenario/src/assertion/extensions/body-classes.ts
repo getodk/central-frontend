@@ -68,6 +68,5 @@ type BodyClassExtensions = typeof bodyClassesExtensions;
 declare module 'vitest' {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	interface Assertion<T = any> extends DeriveStaticVitestExpectExtension<BodyClassExtensions, T> {}
-	interface AsymmetricMatchersContaining
-		extends DeriveStaticVitestExpectExtension<BodyClassExtensions> {}
+	interface AsymmetricMatchersContaining extends DeriveStaticVitestExpectExtension<BodyClassExtensions> {}
 }

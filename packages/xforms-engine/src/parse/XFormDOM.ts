@@ -15,8 +15,10 @@ export const SET_GEOPOINT_LOCAL_NAME = 'odk:setgeopoint';
 
 interface DOMBindElement extends KnownAttributeLocalNamedElement<'bind', 'nodeset'> {}
 export interface DOMSetValueElement extends KnownAttributeLocalNamedElement<'setvalue', 'event'> {}
-export interface DOMSetGeopointElement
-	extends KnownAttributeLocalNamedElement<'odk:setgeopoint', 'event'> {}
+export interface DOMSetGeopointElement extends KnownAttributeLocalNamedElement<
+	'odk:setgeopoint',
+	'event'
+> {}
 
 const getMetaElement = (primaryInstanceRoot: Element): Element | null => {
 	for (const child of primaryInstanceRoot.children) {
@@ -128,13 +130,17 @@ const normalizeDefaultMetaBindings = (
 	return binds;
 };
 
-export interface DOMItextTranslationElement
-	extends KnownAttributeLocalNamedElement<'translation', 'lang'> {}
+export interface DOMItextTranslationElement extends KnownAttributeLocalNamedElement<
+	'translation',
+	'lang'
+> {}
 
 interface DOMInstanceElement extends LocalNamedElement<'instance'> {}
 
-export interface DOMSecondaryInstanceElement
-	extends KnownAttributeLocalNamedElement<'instance', 'id'> {}
+export interface DOMSecondaryInstanceElement extends KnownAttributeLocalNamedElement<
+	'instance',
+	'id'
+> {}
 
 type AssertDOMSecondaryInstanceElement = (
 	element: DOMInstanceElement

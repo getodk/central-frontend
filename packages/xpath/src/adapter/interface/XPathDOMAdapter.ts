@@ -6,7 +6,8 @@ import type { XPathTraversalAdapter } from './XPathTraversalAdapter.ts';
 import type { XPathValueAdapter } from './XPathValueAdapter.ts';
 
 export interface XPathDOMAdapter<T extends XPathNode>
-	extends XPathNodeKindAdapter<T>,
+	extends
+		XPathNodeKindAdapter<T>,
 		XPathNameAdapter<T>,
 		XPathValueAdapter<T>,
 		XPathTraversalAdapter<T>,

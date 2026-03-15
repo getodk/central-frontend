@@ -18,9 +18,7 @@ export interface WHATAttribute extends Attr, XPathCustomUnwrappableNode<Attr> {
 }
 
 export interface WHATText
-	extends CDATASection,
-		Text,
-		XPathCustomUnwrappableNode<CDATASection | Text> {
+	extends CDATASection, Text, XPathCustomUnwrappableNode<CDATASection | Text> {
 	readonly [XPathNodeKindKey]: 'text';
 
 	readonly nodeType: Node['CDATA_SECTION_NODE'] | Node['TEXT_NODE'];

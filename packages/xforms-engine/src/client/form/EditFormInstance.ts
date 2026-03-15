@@ -72,8 +72,7 @@ export interface ResolvableFormInstanceInput extends BaseEditFormInstanceInput {
  *   without sacrificing resource loading optimizations)
  */
 export interface ResolvedFormInstanceInput
-	extends BaseEditFormInstanceInput,
-		RestoreFormInstanceInput {
+	extends BaseEditFormInstanceInput, RestoreFormInstanceInput {
 	readonly inputType: ResolvedFormInstanceInputType;
 	readonly data: readonly [InstanceData, ...InstanceData[]];
 	readonly resolveInstance?: never;

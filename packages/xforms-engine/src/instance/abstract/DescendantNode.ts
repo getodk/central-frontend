@@ -59,12 +59,12 @@ interface DescendantNodeOptions {
  * with the current module-local {@link DescendantNodeOptions}).
  */
 export abstract class DescendantNode<
-		Definition extends DescendantNodeDefinition,
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		Spec extends DescendantNodeStateSpec<any>,
-		Parent extends AnyNode,
-		Child extends AnyChildNode | null = null,
-	>
+	Definition extends DescendantNodeDefinition,
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	Spec extends DescendantNodeStateSpec<any>,
+	Parent extends AnyNode,
+	Child extends AnyChildNode | null = null,
+>
 	extends InstanceNode<Definition, Spec, Parent, Child>
 	implements BaseNode, XFormsXPathPrimaryInstanceDescendantNode, EvaluationContext
 {

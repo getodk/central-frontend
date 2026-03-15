@@ -163,8 +163,9 @@ interface ValidationStateSpec {
 
 export type SharedValidationState = SharedNodeState<ValidationStateSpec>;
 
-interface ValidationStateOptions<Factory extends OpaqueReactiveObjectFactory>
-	extends SharedNodeStateOptions<Factory, ValidationStateSpec> {}
+interface ValidationStateOptions<
+	Factory extends OpaqueReactiveObjectFactory,
+> extends SharedNodeStateOptions<Factory, ValidationStateSpec> {}
 
 export const createValidationState = <Factory extends OpaqueReactiveObjectFactory>(
 	context: ValidationContext,

@@ -1,16 +1,15 @@
 import type { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL.ts';
 import type { loadForm } from '../entrypoints/loadForm.ts';
 
-interface FetchResourceHeadersIterator<T>
-	extends IteratorObject<
-		T,
-		// Note: we use this weird TypeScript intrinsic type so a built-in
-		// `HeadersIterator` is assignable regardless of a client's configured
-		// TypeScript or linting strictness. We don't actually care about the type, or
-		// consume the value it represents.
-		BuiltinIteratorReturn,
-		unknown
-	> {
+interface FetchResourceHeadersIterator<T> extends IteratorObject<
+	T,
+	// Note: we use this weird TypeScript intrinsic type so a built-in
+	// `HeadersIterator` is assignable regardless of a client's configured
+	// TypeScript or linting strictness. We don't actually care about the type, or
+	// consume the value it represents.
+	BuiltinIteratorReturn,
+	unknown
+> {
 	[Symbol.iterator](): FetchResourceHeadersIterator<T>;
 }
 

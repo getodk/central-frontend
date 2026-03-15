@@ -106,15 +106,16 @@ export interface ModelessPrimaryInstanceOptions extends BasePrimaryInstanceOptio
 	readonly config: InstanceConfig;
 }
 
-export interface PrimaryInstanceOptions<Mode extends FormInstanceInitializationMode>
-	extends ModelessPrimaryInstanceOptions {
+export interface PrimaryInstanceOptions<
+	Mode extends FormInstanceInitializationMode,
+> extends ModelessPrimaryInstanceOptions {
 	readonly mode: Mode;
 	readonly initialState: PrimaryInstanceInitialState<Mode>;
 }
 
 export class PrimaryInstance<
-		Mode extends FormInstanceInitializationMode = FormInstanceInitializationMode,
-	>
+	Mode extends FormInstanceInitializationMode = FormInstanceInitializationMode,
+>
 	extends InstanceNode<RootDefinition, PrimaryInstanceStateSpec, null, Root>
 	implements
 		PrimaryInstanceDocument,

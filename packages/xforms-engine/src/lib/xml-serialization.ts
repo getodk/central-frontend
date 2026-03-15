@@ -49,10 +49,10 @@ export const escapeXMLText = <Text extends string>(
 ): EscapedXMLText => {
 	const match = (attr ? ATTR_REGEX : CONTENT_REGEX).exec(text);
 	if (!match) return text as string as EscapedXMLText;
-	let index = 0;
+	let index;
 	let lastIndex = 0;
 	let out = '';
-	let escape = '';
+	let escape;
 	for (index = match.index; index < text.length; index++) {
 		switch (text.charCodeAt(index)) {
 			case 34: // "
