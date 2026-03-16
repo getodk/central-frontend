@@ -154,7 +154,19 @@ const afterDelete = () => {
     .then(() => { alert.success(message); });
 };
 
-const dependentFormsCount = computed(() => (!dataset.dataExists ? 0 : dataset.sourceForms.length + dataset.linkedForms.length));
+const dependentFormsCount = computed(() => {
+  if (!dataset.dataExists) return 0;
+
+  const publishedForm = new Set();
+  if (dataset.sourceForms) dataset.sourceForms.forEach(f => publishedForm.add(f.xmlFormId));
+  if (dataset.linkedForms) dataset.linkedForms.forEach(f => publishedForm.add(f.xmlFormId));
+
+  const draftForm = new Set();
+  if (dataset.draftSourceForms) dataset.draftSourceForms.forEach(f => draftForm.add(f.xmlFormId));
+  if (dataset.draftLinkedForms) dataset.draftLinkedForms.forEach(f => draftForm.add(f.xmlFormId));
+
+  return publishedForm.size + draftForm.size;
+});
 </script>
 
 <style lang="scss">
