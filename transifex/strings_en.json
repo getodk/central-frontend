@@ -224,6 +224,10 @@
         "update_publish": {
           "string": "Publish",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
+        },
+        "update_property_delete": {
+          "string": "Delete Property",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         }
       },
       "entity": {
@@ -1617,6 +1621,17 @@
         "string": "There was an error loading Central."
       }
     },
+    "DatasetDelete": {
+      "title": {
+        "string": "Delete Entity List",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Are you sure you want to delete the Entity List “{name}”? This cannot be undone."
+        }
+      }
+    },
     "DatasetEntities": {
       "upload": {
         "string": "Upload Entities"
@@ -1714,6 +1729,53 @@
       "none": {
         "string": "(None)",
         "developer_comment": "This is shown in an Entity property row in a column about Forms, and 'None' refers to Forms."
+      },
+      "confirmation": {
+        "title": {
+          "string": "Delete Property"
+        },
+        "body": {
+          "string": "Are you sure you want to delete the Property “{propertyName}”? This cannot be undone.",
+          "developer_comment": "This is shown on a confirmation dialog box. {propertyName} is the name of the property that is being deleted."
+        }
+      },
+      "deleted": {
+        "string": "Property “{name}” has been deleted.",
+        "developer_comment": "This is shown after a Property has been successfully deleted. {name} is the name of the deleted property."
+      }
+    },
+    "DatasetOverviewDeletePropertyError": {
+      "title": {
+        "string": "Delete Property"
+      },
+      "intro": {
+        "string": "Before you can delete the Property “{propertyName}”, you’ll need to {actions}."
+      },
+      "clearEntities": {
+        "string": "clear its value in {entities}",
+        "developer_comment": "{entities} is a bold count like \"2 Entities\""
+      },
+      "and": {
+        "string": "and"
+      },
+      "unlinkForms": {
+        "string": "unlink {forms} that set it",
+        "developer_comment": "{forms} is a bold count like \"5 Forms\""
+      },
+      "entitiesCount": {
+        "string": "{count, plural, one {{count} Entity} other {{count} Entities}}"
+      },
+      "relatedToEntities": {
+        "string": "{count, plural, one {Related to {count} Entity} other {Related to {count} Entities}}"
+      },
+      "moreEntities": {
+        "string": "{count, plural, one {and {count} more Entity} other {and {count} more Entities}}"
+      },
+      "formsCount": {
+        "string": "{count, plural, one {{count} Form} other {{count} Forms}}"
+      },
+      "relatedToForms": {
+        "string": "{count, plural, one {Related to {count} Form} other {Related to {count} Forms}}"
       }
     },
     "DatasetOverviewLinkedForms": {
@@ -1871,6 +1933,34 @@
         "successMessage": {
           "string": "Entities will be created when Submissions are marked as Approved."
         }
+      },
+      "action": {
+        "delete": {
+          "string": "Delete Entity List",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "delete": {
+          "string": "The Entity List “{name}” has been successfully deleted."
+        }
+      },
+      "dependentForms": {
+        "description": {
+          "0": {
+            "string": "The Entity List “{name}” is related to {formsCount}.",
+            "developer_comment": "{formsCount} is the number of Forms that are dependent on the Entity List. Example: 4 Forms"
+          },
+          "1": {
+            "string": "Before you can delete it, you’ll need to unlink it from the related Forms."
+          },
+          "2": {
+            "string": "Learn more here."
+          }
+        },
+        "formsCount": {
+          "string": "{count, plural, one {{count} Form} other {{count} Forms}}"
+        }
       }
     },
     "DatasetShow": {
@@ -1902,6 +1992,23 @@
     "DatasetTable": {
       "emptyTable": {
         "string": "No Entities have been created for this Project yet."
+      }
+    },
+    "DatasetTrashRow": {
+      "action": {
+        "download": {
+          "string": "Download data (.csv)",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "DatasetTrashTable": {
+      "trashCount": {
+        "string": "({count})",
+        "developer_comment": "{count} is the number of Entity Lists in the trash."
+      },
+      "message": {
+        "string": "Entity Lists are deleted after 30 days in the Trash"
       }
     },
     "Download": {
@@ -3106,7 +3213,7 @@
         }
       },
       "newProperties": {
-        "string": "{count, plural, one {Publishing this draft will create {count} property. It cannot be deleted.} other {Publishing this draft will create {count} properties. These cannot be deleted.}}"
+        "string": "{count, plural, one {Publishing this draft will create {count} property.} other {Publishing this draft will create {count} properties.}}"
       },
       "problem": {
         "409_6": {
@@ -4950,6 +5057,10 @@
             "developer_comment": "This text is shown in the list of actions performed on a Submission."
           }
         }
+      },
+      "deleted": {
+        "string": "(deleted)",
+        "developer_comment": "Shown in the Submission feed when dataset or entity has been deleted."
       }
     },
     "SubmissionFieldDropdown": {

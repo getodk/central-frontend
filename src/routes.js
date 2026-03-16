@@ -545,7 +545,12 @@ const routes = [
         meta: {
           title: () => [i18n.t('common.tab.settings'), dataset.name],
           validateData: {
-            project: () => project.permits(['dataset.read', 'dataset.update', 'entity.list'])
+            project: () => project.permits([
+              'dataset.read',
+              'dataset.update',
+              'entity.list',
+              'dataset.delete'
+            ])
           }
         }
       })

@@ -111,7 +111,9 @@
       "dataset": {
         "create": "@:audit.action.default.create",
         "update": "Update",
-        "update_publish": "Publish"
+        "update_publish": "Publish",
+        "delete": "@:audit.action.default.delete",
+        "update_property_delete": "Delete Property"
       },
       "entity": {
         "bulk_delete": "Bulk Delete",
@@ -463,7 +465,9 @@
     "warning": "Warning",
     "beta": "Beta",
     "none": "(none)",
-    "search": "Search"
+    "search": "Search",
+    // @transifexKey component.FormTrashList.title
+    "trash": "Trash"
   },
   "mixin": {
     "request": {
