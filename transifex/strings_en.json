@@ -5047,6 +5047,10 @@
             "developer_comment": "This text is shown in the list of actions performed on a Submission."
           }
         }
+      },
+      "deleted": {
+        "string": "(deleted)",
+        "developer_comment": "Shown in the Submission feed when dataset or entity has been deleted."
       }
     },
     "SubmissionFieldDropdown": {
