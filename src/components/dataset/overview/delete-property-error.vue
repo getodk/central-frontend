@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 
 <template>
-  <modal id="delete-property-error-modal" :state="state" backdrop :hideable="true" @hide="$emit('hide')">
+  <modal id="delete-property-error-modal" :state="state" backdrop hideable @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div v-if="state && errorObject" class="modal-introduction">
