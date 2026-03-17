@@ -13,7 +13,7 @@
             </tbody>
         </table>
         <div class="entity-upsert-properties-header">{{ $t('resource.properties') }}</div>
-        <div class="table-scroll">
+        <div class="entity-upsert-table-scroll">
           <table class="table">
             <thead>
               <tr>
@@ -170,7 +170,7 @@ const submit = () => {
     margin-top: 40px;
   }
 
-  .table-scroll {
+  .entity-upsert-table-scroll {
     max-height: calc(70vh -
       #{/* .modal-header */ 140px + /* .modal-actions */ 100px});
     overflow-y: auto;
