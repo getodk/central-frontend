@@ -121,7 +121,7 @@ describe('#date()', () => {
 			{ expression: 'date(1.5)', expected: '1970-01-02T05:00:00.000-07:00' },
 			{ expression: 'date(-1)', expected: '1969-12-30T17:00:00.000-07:00' },
 		].forEach(({ expression, expected }) => {
-			it(expression + ' should be converted to ' + expected, () => {
+			it(`${expression} should be converted to ${expected}`, () => {
 				testContext.assertStringValue(expression, expected);
 			});
 		});
@@ -166,7 +166,7 @@ describe('#date()', () => {
 			{ expression: 'date("2100-01-02") > 1', expected: true },
 			{ expression: 'date("1970-01-02") < 3', expected: true },
 		].forEach(({ expression, expected }) => {
-			it("should evaluate '" + expression + "' to: " + expected, () => {
+			it(`should evaluate '${expression}' to '${expected}'`, () => {
 				testContext.assertBooleanValue(expression, expected);
 			});
 		});
@@ -181,7 +181,7 @@ describe('#date()', () => {
 			{ expression: '3 + date("2001-12-26") + 5', expected: '11690.291666666666' },
 			{ expression: '3 + date("2001-12-26") - 5', expected: '11680.291666666666' },
 		].forEach(({ expression, expected }) => {
-			it("should evaluate '" + expression + "' to: " + expected, () => {
+			it(`should evaluate '${expression}' to '${expected}'`, () => {
 				testContext.assertStringValue(expression, expected);
 			});
 		});
@@ -206,6 +206,30 @@ describe('#date()', () => {
 		].forEach(({ expression, expected }) => {
 			it(`should convert ${expression} to ${expected}`, () => {
 				testContext.assertNumberRounded(expression, expected, 100);
+			});
+		});
+	});
+
+	describe('with node reference', () => {
+		beforeEach(() => {
+			testContext = createXFormsTestContext(`
+				<div id="TestCase">
+					<div id="DateField">1970-01-01</div>
+					<div id="DateTimeField">1970-01-02T03:00:00</div>
+				</div>`);
+		});
+
+		it('date field', () => {
+			const contextNode = testContext.document.getElementById('DateField');
+			testContext.assertNumberRounded('date(.)', 0.291667, 1000000, {
+				contextNode,
+			});
+		});
+
+		it('datetime field', () => {
+			const contextNode = testContext.document.getElementById('DateTimeField');
+			testContext.assertNumberRounded('date(.)', 1.416667, 1000000, {
+				contextNode,
 			});
 		});
 	});

@@ -1,3 +1,4 @@
+import { DAY_MILLISECONDS } from '@getodk/common/constants/datetime.ts';
 import { Temporal } from 'temporal-polyfill';
 import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import { EvaluationContext } from '../../context/EvaluationContext.ts';
@@ -8,7 +9,6 @@ import { FunctionImplementation } from '../../evaluator/functions/FunctionImplem
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
 import { StringFunction } from '../../evaluator/functions/StringFunction.ts';
 import { dateTimeFromNumber, dateTimeFromString } from '../../lib/datetime/coercion.ts';
-import { DAY_MILLISECONDS } from '@getodk/common/constants/datetime.ts';
 import { now } from '../../lib/datetime/functions.ts';
 import { isValidTimeString } from '../../lib/datetime/predicates.ts';
 
@@ -228,20 +228,19 @@ const evaluateDateTime = <T extends XPathNode>(
 			}
 
 			const milliseconds = days * DAY_MILLISECONDS;
-
 			return dateTimeFromNumber(timeZone, milliseconds);
 		}
 
-		case 'STRING': {
-			const stringValue = evaluation.toString();
-
-			return dateTimeFromString(timeZone, stringValue);
-		}
-
-		default:
+		case 'BOOLEAN': {
 			throw new Error(
 				'Expected a NUMBER or STRING evaluation type for date-time conversion, but received an invalid type.'
 			);
+		}
+
+		default: {
+			const stringValue = evaluation.toString();
+			return dateTimeFromString(timeZone, stringValue);
+		}
 	}
 };
 
@@ -263,6 +262,7 @@ export const date = new FunctionImplementation(
 			case 'BOOLEAN':
 				return new StringEvaluation(context, '');
 
+			case 'NODE':
 			case 'STRING': {
 				const string = results.toString();
 
@@ -290,9 +290,6 @@ export const date = new FunctionImplementation(
 
 			case 'NUMBER':
 				break;
-
-			default:
-				throw new Error('Invalid input type for date function: expected STRING or NUMBER.');
 		}
 
 		const dateTime = evaluateDateTime(context, results);

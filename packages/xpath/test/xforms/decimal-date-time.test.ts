@@ -64,10 +64,33 @@ describe('#decimal-date-time()', () => {
 	});
 
 	it('different format', () => {
-		// testContext.assertNumberRounded('decimal-date-time("2018-04-24T15:30:00.000+06:00")', 17645.396, 1000);
 		testContext.assertNumberValue(
 			'decimal-date-time("2018-04-24T15:30:00.000+06:00")',
 			17645.395833333332
 		);
+	});
+
+	describe('with node reference', () => {
+		beforeEach(() => {
+			testContext = createXFormsTestContext(`
+				<div id="TestCase">
+					<div id="DateField">1970-01-01</div>
+					<div id="DateTimeField">1970-01-02T03:00:00</div>
+				</div>`);
+		});
+
+		it('date field', () => {
+			const contextNode = testContext.document.getElementById('DateField');
+			testContext.assertNumberRounded('decimal-date-time(.)', 0.291667, 1000000, {
+				contextNode,
+			});
+		});
+
+		it('datetime field', () => {
+			const contextNode = testContext.document.getElementById('DateTimeField');
+			testContext.assertNumberRounded('decimal-date-time(.)', 1.416667, 1000000, {
+				contextNode,
+			});
+		});
 	});
 });
