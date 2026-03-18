@@ -214,7 +214,7 @@ const asyncRoute = (options) => {
 };
 
 const { i18n, requestData, config } = container;
-const { currentUser, project, form, dataset } = requestData;
+const { currentUser, serverConfig, project, form, dataset } = requestData;
 const routes = [
   asyncRoute({
     path: '/load-error',
@@ -225,7 +225,8 @@ const routes = [
       requireAnonymity: true,
       title: () => [i18n.t('common.error')]
     },
-    beforeEnter: () => (config.loadError == null ? '/login' : true)
+    beforeEnter: () =>
+      (config.loadError != null || serverConfig.loadError != null ? true : '/login')
   }),
 
   {
@@ -633,6 +634,21 @@ const routes = [
             currentUser: () => currentUser.can('audit.read')
           },
           title: () => [i18n.t('systemHome.tab.audits'), i18n.t('systemHome.title')],
+          fullWidth: true
+        }
+      }),
+      asyncRoute({
+        path: 'customization',
+        component: 'ConfigLogin',
+        loading: 'tab',
+        meta: {
+          validateData: {
+            currentUser: () => currentUser.can(['config.read', 'config.set'])
+          },
+          title: () => [
+            i18n.t('systemHome.tab.customization'),
+            i18n.t('systemHome.title')
+          ],
           fullWidth: true
         }
       }),

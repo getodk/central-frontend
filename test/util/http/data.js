@@ -28,7 +28,8 @@ const responseDefaults = {
   // Common local resources
   users: () => testData.standardUsers.sorted(),
   user: () => testData.standardUsers.last(),
-  audits: () => testData.extendedAudits.sorted()
+  audits: () => testData.extendedAudits.sorted(),
+  serverConfig: () => testData.standardConfigs.byKey()
 };
 
 /**
@@ -274,6 +275,9 @@ const responsesByComponent = {
 
   SystemHome: [],
   AuditList: componentResponses({ audits: true }),
+  ConfigLogin: componentResponses({
+    serverConfig: true
+  }),
   AnalyticsList: componentResponses({
     analyticsConfig: () => {
       const config = testData.standardConfigs.forKey('analytics');

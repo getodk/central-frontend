@@ -229,11 +229,12 @@ describe('FileDropZone', () => {
       component.classes('dragover').should.be.false;
     });
 
-    it('adds a class named disabled', () => {
+    it('renders correctly', () => {
       const component = mountComponent({
         props: { disabled: true }
       });
       component.classes('disabled').should.be.true;
+      should.exist(component.attributes().inert);
     });
   });
 

@@ -59,6 +59,9 @@ const loaders = new Map()
     /* webpackChunkName: "component-config-error" */
     '../components/config-error.vue'
   )))
+  .set('ConfigLogin', loader(() => import(
+    '../components/config/login.vue'
+  )))
   .set('DatasetList', loader(() => import(
     /* webpackChunkName: "component-dataset-list" */
     '../components/dataset/list.vue'

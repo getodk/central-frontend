@@ -34,8 +34,11 @@ export default ({
     buildMode: 'test',
     ...options
   });
+
   if (config !== false)
     container.requestData.config.setFromResponse({ status: 200, data: config });
+  container.requestData.serverConfig.setFromResponse({ status: 200, data: {} });
   if (container.requestData.seed != null) container.requestData.seed();
+
   return container;
 };

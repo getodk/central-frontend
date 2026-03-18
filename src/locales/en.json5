@@ -30,6 +30,7 @@
     "title": "System Management",
     "tab": {
       "audits": "Server Audit Logs",
+      "customization": "Customization",
       "analytics": "Usage Reporting"
     }
   },
@@ -241,6 +242,7 @@
   "field": {
     "comment": "Leave a comment…",
     "dateRange": "Date range",
+    "description": "Description",
     "displayName": "Display name",
     "email": "Email address",
     "name": "Name",
@@ -249,6 +251,7 @@
     "passphrase": "Passphrase",
     "password": "Password",
     "passwordConfirm": "New password (confirm)",
+    "title": "Title",
     "type": "Type"
   },
   "header": {
@@ -360,6 +363,10 @@
     },
     // This is a link to more information.
     "learnMore": "Learn more."
+  },
+  "login": {
+    "welcome": "Welcome to ODK Central",
+    "help": "Log into your account to get started"
   },
   "analytics": {
     "alwaysImprove": "We are always trying to improve ODK Central.",

@@ -4,6 +4,7 @@ import PageHead from '../../../src/components/page/head.vue';
 import SystemHome from '../../../src/components/system/home.vue';
 
 import { findTab } from '../../util/dom';
+import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 import { mockRouter } from '../../util/router';
@@ -17,7 +18,7 @@ describe('SystemHome', () => {
     });
     const links = component.getComponent(PageHead).findAllComponents(RouterLinkStub);
     const to = links.map(link => link.props().to);
-    to.should.eql(['/system/audits', '/system/analytics']);
+    to.should.eql(['/system/audits', '/system/customization', '/system/analytics']);
   });
 
   it('hides "Usage Reporting" tab if showsAnalytics config is false', () => {
@@ -31,24 +32,13 @@ describe('SystemHome', () => {
   });
 
   describe('active tab', () => {
-    it('activates correct tab after user navigates to .../audits', () => {
-      const component = mount(SystemHome, {
-        container: { router: mockRouter('/system/audits') }
+    for (const path of ['audits', 'customization', 'audits']) {
+      it(`activates correct tab after user navigates to .../${path}`, async () => {
+        const app = await load(`/system/${path}`);
+        const links = app.findAll('#page-head-tabs .active a');
+        links.length.should.equal(1);
+        links[0].attributes().href.should.equal(`/system/${path}`);
       });
-      const links = component.getComponent(PageHead).findAllComponents(RouterLinkStub)
-        .filter(link => (link.element.closest('.active') != null));
-      links.length.should.equal(1);
-      links[0].props().to.should.equal('/system/audits');
-    });
-
-    it('activates correct tab after user navigates to .../analytics', () => {
-      const component = mount(SystemHome, {
-        container: { router: mockRouter('/system/analytics') }
-      });
-      const links = component.getComponent(PageHead).findAllComponents(RouterLinkStub)
-        .filter(link => (link.element.closest('.active') != null));
-      links.length.should.equal(1);
-      links[0].props().to.should.equal('/system/analytics');
-    });
+    }
   });
 });

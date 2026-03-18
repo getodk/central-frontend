@@ -36,6 +36,7 @@ import { onBeforeRouteLeave } from 'vue-router';
 import SentenceSeparator from './sentence-separator.vue';
 
 import { requestAlertMessage } from '../util/request';
+import { useRequestData } from '../request-data';
 
 defineOptions({
   name: 'ConfigError'
@@ -48,7 +49,9 @@ defineOptions({
 onBeforeRouteLeave(F);
 
 const { i18n, config } = inject('container');
-const loadError = computed(() => requestAlertMessage(i18n, config.loadError));
+const { serverConfig } = useRequestData();
+const loadError = computed(() =>
+  requestAlertMessage(i18n, config.loadError ?? serverConfig.loadError));
 </script>
 
 <i18n lang="json5">
