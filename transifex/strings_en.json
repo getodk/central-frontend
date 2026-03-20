@@ -5581,11 +5581,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "Maps ️🗺️, bulk deletion ️🗑️, and better system visibility 👀",
+        "string": "Entity List and Property deletion ️🗑️, Entity Creation 🪄and custom branding on login page 🎨",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "Introducing a new map view for Submissions and Entities, faster data cleanup with bulk Entity deletion and cleaner system insight through visible user invitation statuses and “last updated” timestamps!"
+        "string": "Clean up Entity Lists and Properties when they’re no longer needed, quickly create Entities directly from the Central UI, and customize the login page so your server reflects your organization’s branding and builds user trust."
       }
     }
   },
