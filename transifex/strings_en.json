@@ -1374,6 +1374,12 @@
         "description_length": {
           "string": "Length of the Project description"
         },
+        "num_datasets_deleted": {
+          "string": "Number of Dataset delete events"
+        },
+        "num_dataset_properties_deleted": {
+          "string": "Number of Dataset Property delete events"
+        },
         "num_properties": {
           "string": "Number of Properties"
         },
@@ -1415,6 +1421,18 @@
         },
         "sso_enabled": {
           "string": "SSO enabled on server"
+        },
+        "login_customization_logo_set": {
+          "string": "Login customization logo set on server"
+        },
+        "login_customization_hero_image_set": {
+          "string": "Login customization hero image set on server"
+        },
+        "login_customization_title_set": {
+          "string": "Login customization title set on server"
+        },
+        "login_customization_description_set": {
+          "string": "Login customization description set on server"
         },
         "num_client_audit_attachments": {
           "string": "Number of Client Audit Attachments"
