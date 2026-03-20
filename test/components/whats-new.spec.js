@@ -5,6 +5,8 @@ import testData from '../data';
 import { load } from '../util/http';
 import { mockLogin } from '../util/session';
 
+const currentVersion = '2025.4';
+
 describe('WhatsNew modal', () => {
   describe('shows modal', () => {
     it('shows modal to admin with 0 projects', async () => {
@@ -49,6 +51,14 @@ describe('WhatsNew modal', () => {
       const img = baseModal.find('img');
       img.attributes('src').should.contain('banner');
     });
+
+    it('shows modal if dismissed in an older version', async () => {
+      mockLogin({ preferences: { site: { whatsNewDismissed: '2020.1' }, projects: {} } });
+      const app = await load('/', { root: false });
+      const baseModal = app.findComponent(WhatsNew).findComponent(Modal);
+      baseModal.exists().should.be.true;
+      baseModal.props().state.should.be.true;
+    });
   });
 
   describe('does not show modal', () => {
@@ -61,8 +71,8 @@ describe('WhatsNew modal', () => {
       baseModal.props().state.should.be.false;
     });
 
-    it('does not show modal if already dismissed (user preference set)', async () => {
-      mockLogin({ preferences: { site: { whatsNewDismissed2025_4: true }, projects: {} } });
+    it('does not show modal if already dismissed (user preference set to current version)', async () => {
+      mockLogin({ preferences: { site: { whatsNewDismissed: currentVersion }, projects: {} } });
       const app = await load('/', { root: false });
       const baseModal = app.findComponent(WhatsNew).findComponent(Modal);
       baseModal.exists().should.be.true;
@@ -71,7 +81,7 @@ describe('WhatsNew modal', () => {
   });
 
   describe('set user preference', () => {
-    it('sets the whatsNewDismissed2025_4 preference when modal closed', async () => {
+    it('sets the whatsNewDismissed preference when modal closed', async () => {
       // Include preference for having already opted into mailing list.
       mockLogin({ createdAt: '2025-01-01', preferences: { site: { mailingListOptIn: true } } });
       await load('/', { root: false })
@@ -79,8 +89,8 @@ describe('WhatsNew modal', () => {
         .request(app => app.findComponent(WhatsNew).find('.btn').trigger('click'))
         .beforeEachResponse((_, { method, url, data }) => {
           method.should.equal('PUT');
-          url.should.equal('/v1/user-preferences/site/whatsNewDismissed2025_4');
-          data.propertyValue.should.be.equal(true);
+          url.should.equal('/v1/user-preferences/site/whatsNewDismissed');
+          data.propertyValue.should.be.equal(currentVersion);
         })
         .respondWithSuccess();
     });
@@ -107,7 +117,7 @@ describe('WhatsNew modal', () => {
         })
         .respondWithSuccess()
         .testRequests([
-          { url: '/v1/user-preferences/site/whatsNewDismissed2025_4', method: 'PUT', data: { propertyValue: true } },
+          { url: '/v1/user-preferences/site/whatsNewDismissed', method: 'PUT', data: { propertyValue: currentVersion } },
         ]);
     });
 
@@ -126,7 +136,7 @@ describe('WhatsNew modal', () => {
         .respondWithSuccess()
         .respondWithSuccess()
         .testRequests([
-          { url: '/v1/user-preferences/site/whatsNewDismissed2025_4', method: 'PUT', data: { propertyValue: true } },
+          { url: '/v1/user-preferences/site/whatsNewDismissed', method: 'PUT', data: { propertyValue: currentVersion } },
           { url: '/v1/user-preferences/site/mailingListOptIn', method: 'PUT', data: { propertyValue: true } },
         ]);
     });
@@ -144,7 +154,7 @@ describe('WhatsNew modal', () => {
         })
         .respondWithSuccess()
         .testRequests([
-          { url: '/v1/user-preferences/site/whatsNewDismissed2025_4', method: 'PUT', data: { propertyValue: true } },
+          { url: '/v1/user-preferences/site/whatsNewDismissed', method: 'PUT', data: { propertyValue: currentVersion } },
         ]);
     });
 
@@ -162,7 +172,7 @@ describe('WhatsNew modal', () => {
         .respondWithSuccess()
         .respondWithSuccess()
         .testRequests([
-          { url: '/v1/user-preferences/site/whatsNewDismissed2025_4', method: 'PUT', data: { propertyValue: true } },
+          { url: '/v1/user-preferences/site/whatsNewDismissed', method: 'PUT', data: { propertyValue: currentVersion } },
           { url: '/v1/user-preferences/site/mailingListOptIn', method: 'PUT', data: { propertyValue: true } },
         ]);
     });
@@ -182,7 +192,7 @@ describe('WhatsNew modal', () => {
         .respondWithSuccess()
         .respondWithSuccess()
         .testRequests([
-          { url: '/v1/user-preferences/site/whatsNewDismissed2025_4', method: 'PUT', data: { propertyValue: true } },
+          { url: '/v1/user-preferences/site/whatsNewDismissed', method: 'PUT', data: { propertyValue: currentVersion } },
           { url: '/v1/user-preferences/site/mailingListOptIn', method: 'PUT', data: { propertyValue: false } },
         ]);
     });

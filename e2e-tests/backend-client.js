@@ -127,8 +127,8 @@ export default class BackendClient {
 
   alwaysHideModal = async () => {
     const request = await this.#getRequest();
-    const response = await request.put('/v1/user-preferences/site/whatsNewDismissed2025_4', {
-      data: { propertyValue: true }
+    const response = await request.put('/v1/user-preferences/site/whatsNewDismissed', {
+      data: { propertyValue: '2100.1' } //  Fairly future-proof - modal will be dismissed if preference is not older than current version.
     });
     expect(response.ok()).toBeTruthy();
   };

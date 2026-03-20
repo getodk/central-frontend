@@ -53,7 +53,19 @@ const isVisible = ref(false);
 const initialOptIn = currentUser.preferences.site.mailingListOptIn;
 const mailingListOptIn = ref(currentUser.preferences.site.mailingListOptIn !== false);
 
+const currentVersion = '2025.4';
+
+const isOlderVersion = (stored, current) => {
+  // compare stored vs. current year & release
+  const [sy, sr] = stored.split('.').map(Number);
+  const [cy, cr] = current.split('.').map(Number);
+  return sy < cy || (sy === cy && sr < cr);
+};
+
 watch(() => projects.dataExists, () => {
+  const showModal = !currentUser.preferences.site.whatsNewDismissed ||
+    isOlderVersion(currentUser.preferences.site.whatsNewDismissed, currentVersion);
+
   // When updating `canUpdateForm` in the future, consider the *verb* for the audience.
   // For 2025.4, we decided it could be shown to project viewers as well,
   // where the previous modal was only shown to admins and project managers.
@@ -61,13 +73,13 @@ watch(() => projects.dataExists, () => {
     projects.data.some(project => project.verbs.has('submission.list'));
   if (canUpdateForm && // Check that user is admin or is able to edit forms in at least one project
     !openModal.state && // Check that no other modal (e.g. new project) is open
-    !currentUser.preferences.site.whatsNewDismissed2025_4) {
+    showModal) {
     isVisible.value = true;
   }
 });
 
 function hideModal() {
-  currentUser.preferences.site.whatsNewDismissed2025_4 = true;
+  currentUser.preferences.site.whatsNewDismissed = currentVersion;
 
   // If user was not already opted in and preference changed, then save preference.
   if (!initialOptIn && mailingListOptIn.value !== initialOptIn) {
