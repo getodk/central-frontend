@@ -53,7 +53,7 @@ const isVisible = ref(false);
 const initialOptIn = currentUser.preferences.site.mailingListOptIn;
 const mailingListOptIn = ref(currentUser.preferences.site.mailingListOptIn !== false);
 
-const currentVersion = '2025.4';
+const currentVersion = '2026.1';
 
 const isOlderVersion = (stored, current) => {
   // compare stored vs. current year & release
@@ -93,6 +93,10 @@ function hideModal() {
 <style lang="scss">
 @import '../assets/scss/variables';
 
+#whats-new-modal h4 {
+  white-space: wrap;
+}
+
 #whats-new-modal .modal-actions {
   display: flex;
   column-gap: 10px;
@@ -123,8 +127,8 @@ function hideModal() {
   {
     "en": {
       // This is the title at the top of a pop-up.
-      "title": "Maps ️🗺️, bulk deletion ️🗑️, and better system visibility 👀",
-      "body": "Introducing a new map view for Submissions and Entities, faster data cleanup with bulk Entity deletion and cleaner system insight through visible user invitation statuses and “last updated” timestamps!"
+      "title": "Entity List and Property deletion ️🗑️, Entity Creation 🪄and custom branding on login page 🎨",
+      "body": "Clean up Entity Lists and Properties when they’re no longer needed, quickly create Entities directly from the Central UI, and customize the login page so your server reflects your organization’s branding and builds user trust."
     }
   }
 </i18n>

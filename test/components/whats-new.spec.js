@@ -5,7 +5,7 @@ import testData from '../data';
 import { load } from '../util/http';
 import { mockLogin } from '../util/session';
 
-const currentVersion = '2025.4';
+const currentVersion = '2026.1';
 
 describe('WhatsNew modal', () => {
   describe('shows modal', () => {
