@@ -51,6 +51,14 @@ describe('WhatsNew modal', () => {
       const img = baseModal.find('img');
       img.attributes('src').should.contain('banner');
     });
+
+    it('shows modal if dismissed in an older version', async () => {
+      mockLogin({ preferences: { site: { whatsNewDismissed: '2020.1' }, projects: {} } });
+      const app = await load('/', { root: false });
+      const baseModal = app.findComponent(WhatsNew).findComponent(Modal);
+      baseModal.exists().should.be.true;
+      baseModal.props().state.should.be.true;
+    });
   });
 
   describe('does not show modal', () => {
@@ -63,7 +71,7 @@ describe('WhatsNew modal', () => {
       baseModal.props().state.should.be.false;
     });
 
-    it('does not show modal if already dismissed (user preference set)', async () => {
+    it('does not show modal if already dismissed (user preference set to current version)', async () => {
       mockLogin({ preferences: { site: { whatsNewDismissed: currentVersion }, projects: {} } });
       const app = await load('/', { root: false });
       const baseModal = app.findComponent(WhatsNew).findComponent(Modal);

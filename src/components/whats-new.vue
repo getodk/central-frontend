@@ -55,11 +55,12 @@ const mailingListOptIn = ref(currentUser.preferences.site.mailingListOptIn !== f
 
 const currentVersion = '2025.4';
 
-function isOlderVersion(stored, current) {
-  const [sy, sm] = stored.split('.').map(Number);
-  const [cy, cm] = current.split('.').map(Number);
-  return sy < cy || (sy === cy && sm < cm);
-}
+const isOlderVersion = (stored, current) => {
+  // compare stored vs. current year & release
+  const [sy, sr] = stored.split('.').map(Number);
+  const [cy, cr] = current.split('.').map(Number);
+  return sy < cy || (sy === cy && sr < cr);
+};
 
 watch(() => projects.dataExists, () => {
   const showModal = !currentUser.preferences.site.whatsNewDismissed ||
