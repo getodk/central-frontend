@@ -15,7 +15,7 @@ const props = defineProps<{
 	coordinates: Coordinate | null;
 }>();
 
-const emit = defineEmits(['open-paste-dialog', 'save']);
+const emit = defineEmits(['closing-panel', 'open-paste-dialog', 'save']);
 
 const latitude = ref<number | undefined>();
 const longitude = ref<number | undefined>();
@@ -63,7 +63,7 @@ const updateVertex = () => {
 </script>
 
 <template>
-	<transition name="panel">
+	<transition name="panel" @before-leave="emit('closing-panel', true)" @after-leave="emit('closing-panel', false)">
 		<div v-if="isOpen" class="advanced-panel">
 			<div class="fields-container">
 				<div :class="{ 'field-error': !disableInputs && !validLongitude }" class="field-set">

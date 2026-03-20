@@ -37,10 +37,10 @@ const label = computed(() => props.node.currentState.label?.formatted);
 .button-add-instance {
 	max-width: 260px;
 	width: fit-content;
-	margin-bottom: 20px;
+	margin-bottom: var(--odk-spacing-xl);
 }
 
 .p-panel .button-add-instance {
-	margin: 0 0 15px 15px;
+	margin: 0 0 var(--odk-spacing-l) var(--odk-spacing-l);
 }
 </style>

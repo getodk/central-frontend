@@ -95,7 +95,7 @@ const handleLanguageChange = (event: FormLanguage) => {
 	border-radius: var(--odk-radius);
 	box-shadow: none;
 	border-top: none;
-	margin-top: 20px;
+	margin-top: var(--odk-spacing-xl);
 
 	:deep(.p-card-body) {
 		padding-left: 3rem;
@@ -104,7 +104,7 @@ const handleLanguageChange = (event: FormLanguage) => {
 		h1 {
 			font-size: var(--odk-title-font-size);
 			font-weight: 500;
-			margin: 10px 0;
+			margin: var(--odk-spacing-m) 0;
 			word-break: break-all;
 		}
 	}
@@ -123,12 +123,12 @@ const handleLanguageChange = (event: FormLanguage) => {
 	}
 
 	.form-options {
-		padding-right: 10px;
+		padding-right: var(--odk-spacing-m);
 		min-width: 50px;
 		container-type: size;
 		container-name: formOptionsContainer;
 		height: 40px;
-		margin-top: 10px;
+		margin-top: var(--odk-spacing-m);
 
 		.language-changer {
 			display: flex;

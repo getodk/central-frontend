@@ -1,3 +1,5 @@
+@use './style' as odk;
+
 .odk-form {
 	.p-datepicker-input:disabled,
 	.p-datepicker-input:disabled + .p-datepicker-input-icon-container,
@@ -36,13 +38,15 @@
 	.p-dialog-header,
 	.p-dialog-content,
 	.p-dialog-footer {
-		padding: 20px;
+		padding: var(--odk-spacing-xl);
 	}
 
 	.p-dialog-content,
 	.p-dialog-footer {
 		padding-top: 0;
 	}
+
+	@include odk.toggle-visibility();
 }
 
 .p-disabled,

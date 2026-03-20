@@ -44,7 +44,7 @@ defineEmits(['update:activeLanguage']);
 	}
 
 	:deep(.p-select-label) {
-		padding: 10px 12px;
+		padding: var(--odk-spacing-m) 12px;
 
 		span {
 			vertical-align: middle;

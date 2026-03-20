@@ -157,11 +157,8 @@ watch(pasteValue, (newVal) => {
 				<!-- TODO: translations -->
 				<label for="paste-input">
 					<span>Paste data in ODK format</span>
-					<span
-						class="info-helper"
-						title="Enter as: Lat Long Alt Acc (e.g. 45.5 -122.6 15 2; 45.6 -122.7 12 3)"
-					>
-						&#9432;
+					<span class="info-helper">
+						Enter coordinates as: Lat Long Altitude Accuracy. Separate multiple points with a semicolon (;).
 					</span>
 				</label>
 				<Textarea
@@ -220,7 +217,7 @@ watch(pasteValue, (newVal) => {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
-	gap: 10px;
+	gap: var(--odk-spacing-m);
 
 	label {
 		font-size: var(--odk-base-font-size);
@@ -232,18 +229,19 @@ watch(pasteValue, (newVal) => {
 	}
 
 	.upload-button {
-		margin-top: 10px;
+		margin-top: var(--odk-spacing-m);
 	}
 
 	.info-helper {
+		display: block;
 		font-size: var(--odk-hint-font-size);
-		font-weight: bold;
-		cursor: pointer;
+		color: var(--odk-muted-text-color);
+		font-weight: 300;
 	}
 
 	#paste-input {
 		width: 100%;
-		padding: 10px;
+		padding: var(--odk-spacing-m);
 	}
 }
 
@@ -256,10 +254,10 @@ watch(pasteValue, (newVal) => {
 .file-added-container {
 	display: flex;
 	align-items: center;
-	gap: 10px;
+	gap: var(--odk-spacing-m);
 	border: 1px solid var(--odk-border-color);
 	border-radius: var(--odk-radius);
-	padding: 10px;
+	padding: var(--odk-spacing-m);
 
 	.file-name {
 		flex: 1 1 100px;

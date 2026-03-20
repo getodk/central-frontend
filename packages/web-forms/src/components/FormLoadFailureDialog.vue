@@ -64,7 +64,7 @@ const detail = computed((): FormLoadErrorDetail | null => {
 
 <style lang="scss" scoped>
 .form-load-failure-dialog .message {
-	margin: 10px 0 30px 0;
+	margin: var(--odk-spacing-m) 0 var(--odk-spacing-xxl) 0;
 	color: var(--odk-error-text-color);
 	font-size: var(--odk-base-font-size);
 	white-space: pre-wrap;

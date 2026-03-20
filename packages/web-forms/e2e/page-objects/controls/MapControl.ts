@@ -95,13 +95,13 @@ export class MapControl {
 	}
 
 	async zoomToFitAll(mapComponent: Locator) {
-		const button = mapComponent.locator('button[title="Zoom to fit"]');
+		const button = mapComponent.locator('button.zoom-fit-all');
 		await expect(button).toBeVisible();
 		await button.click();
 	}
 
 	async centerCurrentLocation(mapComponent: Locator) {
-		const button = mapComponent.locator('button[title="Zoom to current location"]');
+		const button = mapComponent.locator('button.zoom-current-location');
 		await expect(button).toBeVisible();
 		await button.click();
 		// Wait for the current location icon to appear on the map.
@@ -109,7 +109,7 @@ export class MapControl {
 	}
 
 	async toggleFullScreen(mapComponent: Locator) {
-		const button = mapComponent.locator('button[title="Full Screen"]');
+		const button = mapComponent.locator('button.fullscreen');
 		await expect(button).toBeVisible();
 		await button.click();
 	}

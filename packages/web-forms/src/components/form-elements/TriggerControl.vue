@@ -63,7 +63,7 @@ const setValue = (value: boolean) => {
 	}
 
 	.label-text {
-		margin-left: 10px;
+		margin-left: var(--odk-spacing-m);
 	}
 
 	&.disabled,

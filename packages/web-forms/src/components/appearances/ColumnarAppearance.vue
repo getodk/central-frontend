@@ -24,7 +24,7 @@ const nColumnstyle = computed(() => {
 .columns-pack {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 20px;
+	gap: var(--odk-spacing-xl);
 
 	:deep(.value-option) .text-content {
 		min-width: fit-content;
@@ -33,7 +33,7 @@ const nColumnstyle = computed(() => {
 
 .columns {
 	display: grid;
-	gap: 20px;
+	gap: var(--odk-spacing-xl);
 	grid-template-columns: repeat(2, 1fr);
 
 	@media screen and (min-width: #{pf.$md}) {

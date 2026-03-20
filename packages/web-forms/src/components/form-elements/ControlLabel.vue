@@ -41,7 +41,7 @@ label {
 		content: '*';
 		color: var(--odk-error-text-color);
 		float: left;
-		margin-right: 5px;
+		margin-right: var(--odk-spacing-s);
 	}
 
 	:first-child {
@@ -49,10 +49,10 @@ label {
 	}
 
 	.media-content {
-		margin-top: 15px;
+		margin-top: var(--odk-spacing-l);
 		max-width: 400px;
 		display: flex;
-		gap: 20px;
+		gap: var(--odk-spacing-xl);
 		flex-direction: column;
 		align-items: flex-start;
 	}

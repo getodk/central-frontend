@@ -54,6 +54,6 @@ const surveyLink = computed(() => {
 
 .feedback-button span:hover,
 .feedback-button:focus-within span {
-	right: 10px;
+	right: var(--odk-spacing-m);
 }
 </style>

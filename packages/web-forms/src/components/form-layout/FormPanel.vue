@@ -84,8 +84,8 @@ h2 {
 }
 
 .label-number {
-	margin-right: 15px;
-	padding: 5px 10px;
+	margin-right: var(--odk-spacing-l);
+	padding: var(--odk-spacing-s) var(--odk-spacing-m);
 	border-radius: var(--odk-radius);
 	background-color: var(--odk-muted-background-color);
 	font-size: var(--odk-hint-font-size);
@@ -101,7 +101,7 @@ h2 {
 	border-radius: var(--odk-radius);
 
 	&:not(:last-child) {
-		margin-bottom: 20px;
+		margin-bottom: var(--odk-spacing-xl);
 	}
 
 	:deep(.p-panel-header) {
@@ -110,7 +110,7 @@ h2 {
 		background: var(--odk-light-background-color);
 		border-radius: var(--odk-radius) var(--odk-radius) 0 0;
 		width: 100%;
-		padding: 12px 20px;
+		padding: 12px var(--odk-spacing-xl);
 
 		.p-panel-toggle-button {
 			display: none;
@@ -125,13 +125,13 @@ h2 {
 		}
 
 		.panel-title .odk-icon {
-			margin-right: 15px;
+			margin-right: var(--odk-spacing-l);
 		}
 	}
 
 	:deep(.p-panel-content) {
 		border-top: 1px solid var(--odk-border-color);
-		padding: 15px 0;
+		padding: var(--odk-spacing-l) 0;
 	}
 
 	:deep(.p-panel-toggler) {

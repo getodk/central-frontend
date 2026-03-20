@@ -56,6 +56,12 @@
 	--odk-max-image-height: 300px;
 	--odk-image-container-size: 300px;
 
+	--odk-spacing-s: 5px;
+	--odk-spacing-m: 10px;
+	--odk-spacing-l: 15px;
+	--odk-spacing-xl: 20px;
+	--odk-spacing-xxl: 30px;
+
 	/*
 	 * This project uses a centralized z-index layering system to manage the stacking order of UI
 	 * elements, preventing overlap issues and ensuring maintainability.
@@ -89,6 +95,36 @@
 	--odk-z-index-topmost: 1000;
 }
 
+@mixin toggle-visibility($display: inline-block) {
+	/**
+	 * The "!important" is intentional here. These visibility toggles must strictly enforce their state
+	 * and override any nested component styles.
+	 */
+	.desktop-only {
+		display: #{$display} !important;
+	}
+
+	.mobile-only {
+		display: none !important;
+	}
+
+	@media screen and (max-width: #{pf.$sm}) {
+		.desktop-only {
+			display: none !important;
+		}
+
+		.mobile-only {
+			display: #{$display} !important;
+		}
+	}
+}
+
+@mixin sm-constrained {
+	@media (width <= #{pf.$sm}) and (orientation: portrait), (height <= #{pf.$sm}) and (orientation: landscape) {
+		@content;
+	}
+}
+
 .odk-form {
 	@keyframes shimmer {
 		0% {
@@ -112,23 +148,23 @@
 		animation: shimmer 1.5s infinite;
 	}
 
-	.desktop-only {
-		display: inline;
-	}
-
-	.mobile-only {
-		display: none;
-	}
+	@include toggle-visibility();
 }
 
-@media screen and (max-width: #{pf.$sm}) {
-	.odk-form {
-		.desktop-only {
-			display: none;
-		}
+.odk-form-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	overflow: auto;
 
-		.mobile-only {
-			display: inline;
+	.odk-form-list-item {
+		display: block;
+		padding: var(--odk-spacing-l) 0;
+		width: 100%;
+		border: none;
+
+		&:not(:first-child) {
+			border-top: 1px solid var(--odk-border-color);
 		}
 	}
 }

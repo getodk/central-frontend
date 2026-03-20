@@ -42,6 +42,6 @@ const audio = computed(() => props.label.audioSource);
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
-	gap: 10px;
+	gap: var(--odk-spacing-m);
 }
 </style>

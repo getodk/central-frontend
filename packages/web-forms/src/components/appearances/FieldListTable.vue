@@ -21,7 +21,7 @@ defineProps<{ appearances: SelectNodeAppearances }>();
 	justify-content: flex-start;
 	border-radius: var(--odk-radius);
 	margin-bottom: 6px;
-	padding-left: 10px;
+	padding-left: var(--odk-spacing-m);
 
 	:deep(.control-text) {
 		margin-bottom: 0;
@@ -40,7 +40,7 @@ defineProps<{ appearances: SelectNodeAppearances }>();
 		min-width: 50px;
 		text-align: center;
 		vertical-align: middle;
-		padding: 15px 0;
+		padding: var(--odk-spacing-l) 0;
 		outline: none;
 		background-color: unset;
 
@@ -114,7 +114,7 @@ defineProps<{ appearances: SelectNodeAppearances }>();
 
 	:deep(.value-option) {
 		position: relative;
-		gap: 10px;
+		gap: var(--odk-spacing-m);
 		justify-content: center;
 
 		.p-checkbox,

@@ -1,10 +1,6 @@
 @use 'primeflex/core/_variables.scss' as pf;
 
 .value-option {
-	--text-content-margin: 15px;
-}
-
-.value-option {
 	display: flex;
 	align-items: center;
 	outline: 1px solid var(--odk-border-color);
@@ -58,7 +54,7 @@
 
 	:deep(.media-content) {
 		background: transparent;
-		height: calc(100% - (var(--odk-base-font-size) + (var(--text-content-margin) * 2)));
+		height: calc(100% - (var(--odk-base-font-size) + (var(--odk-spacing-l) * 2)));
 		min-height: 54px;
 		flex: 0 1 auto;
 		margin-left: auto;
@@ -70,7 +66,7 @@
 
 		:deep(.p-checkbox),
 		:deep(.p-radiobutton) {
-			margin: auto 0 auto 20px;
+			margin: auto 0 auto var(--odk-spacing-xl);
 			align-self: flex-start;
 		}
 
@@ -78,7 +74,7 @@
 			width: fit-content;
 			min-width: unset;
 			max-width: calc(100% - 70px);
-			margin: var(--text-content-margin) 20px;
+			margin: var(--odk-spacing-l) var(--odk-spacing-xl);
 			flex: 1 1 auto;
 		}
 	}
@@ -94,7 +90,7 @@
 }
 
 .value-option:not(.no-buttons) :deep(.text-content) {
-	margin-left: 10px;
+	margin-left: var(--odk-spacing-m);
 }
 
 .select-with-images .value-option {
@@ -108,7 +104,7 @@
 		align-items: center;
 		width: 100%;
 		justify-content: flex-start;
-		gap: 10px;
+		gap: var(--odk-spacing-m);
 
 		.media-block {
 			border-radius: 0;

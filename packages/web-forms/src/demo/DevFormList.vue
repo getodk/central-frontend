@@ -29,8 +29,8 @@ import { RouterLink } from 'vue-router';
 
 <style scoped>
 h1 {
-	margin-left: 10px;
-	padding-top: 20px;
+	margin-left: var(--odk-spacing-m);
+	padding-top: var(--odk-spacing-xl);
 }
 
 .category-list {
@@ -39,7 +39,7 @@ h1 {
 	> li {
 		list-style: none;
 		cursor: pointer;
-		margin: 10px;
+		margin: var(--odk-spacing-m);
 		font-size: var(--odk-sub-group-font-size);
 
 		summary {
@@ -51,11 +51,11 @@ h1 {
 		}
 
 		ul.form-list {
-			padding: 0 0 0 20px;
+			padding: 0 0 0 var(--odk-spacing-xl);
 
 			li {
 				list-style: none;
-				margin: 10px;
+				margin: var(--odk-spacing-m);
 				border: 1px solid var(--odk-primary-border-color);
 				border-radius: var(--odk-radius);
 				cursor: pointer;
@@ -64,7 +64,7 @@ h1 {
 
 				a {
 					display: block;
-					padding: 10px;
+					padding: var(--odk-spacing-m);
 					text-decoration: none;
 					color: var(--odk-text-color);
 

@@ -277,7 +277,7 @@ const onDragEnd = (oldIndex: number | undefined, newIndex: number | undefined) =
 	border-radius: var(--odk-radius);
 
 	button {
-		padding: 12px 20px;
+		padding: 12px var(--odk-spacing-xl);
 		font-size: var(--odk-base-font-size);
 
 		&:hover:not(:disabled) {

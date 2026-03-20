@@ -201,7 +201,7 @@ const displayState = computed(() => {
 }
 
 .map-status-bar {
-	padding: 10px 17px;
+	padding: var(--odk-spacing-m) 17px;
 	min-height: 60px;
 	background: var(--odk-light-background-color);
 }

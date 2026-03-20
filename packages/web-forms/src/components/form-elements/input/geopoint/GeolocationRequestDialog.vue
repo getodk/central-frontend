@@ -171,14 +171,6 @@ onBeforeUnmount(cleanup);
 <style lang="scss">
 @use 'primeflex/core/_variables.scss' as pf;
 
-.geo-dialog {
-	--geo-spacing-s: 5px;
-	--geo-spacing-m: 10px;
-	--geo-spacing-l: 15px;
-	--geo-spacing-xl: 20px;
-	--geo-spacing-xxl: 30px;
-}
-
 .geo-dialog-header {
 	display: flex;
 	justify-content: space-between;
@@ -198,7 +190,7 @@ onBeforeUnmount(cleanup);
 	.geo-spinner {
 		width: 22px;
 		height: 22px;
-		margin-right: var(--geo-spacing-l);
+		margin-right: var(--odk-spacing-l);
 	}
 }
 
@@ -209,7 +201,7 @@ onBeforeUnmount(cleanup);
 
 	.geopoint-icons {
 		margin-top: -4px;
-		margin-right: var(--geo-spacing-l);
+		margin-right: var(--odk-spacing-l);
 
 		.warning-icon path {
 			transform: scale(0.91) translate(-1px, -1px);
@@ -223,7 +215,7 @@ onBeforeUnmount(cleanup);
 
 .geo-dialog-body {
 	align-items: flex-start;
-	padding: var(--geo-spacing-xxl);
+	padding: var(--odk-spacing-xxl);
 	max-width: 450px;
 	width: 80vw;
 }
@@ -231,23 +223,23 @@ onBeforeUnmount(cleanup);
 .geopoint-information {
 	p {
 		font-size: var(--odk-base-font-size);
-		margin: var(--geo-spacing-s) 0;
+		margin: var(--odk-spacing-s) 0;
 	}
 
 	strong {
 		font-size: var(--odk-base-font-size);
 		display: block;
-		margin-bottom: var(--geo-spacing-m);
+		margin-bottom: var(--odk-spacing-m);
 	}
 }
 
 .geo-dialog-footer button {
-	margin: 0 0 var(--geo-spacing-m) var(--geo-spacing-l);
+	margin: 0 0 var(--odk-spacing-m) var(--odk-spacing-l);
 }
 
 @media screen and (max-width: #{pf.$md}) {
 	.geo-dialog-body {
-		padding: var(--geo-spacing-xxl) var(--geo-spacing-xl);
+		padding: var(--odk-spacing-xxl) var(--odk-spacing-xl);
 	}
 }
 </style>

@@ -175,30 +175,21 @@ const onSave = (saved: GeolocationRequestSuccess) => {
 </template>
 
 <style scoped lang="scss">
-// Variable definition
-.geopoint-control {
-	--geo-spacing-s: 5px;
-	--geo-spacing-m: 10px;
-	--geo-spacing-l: 15px;
-	--geo-spacing-xl: 20px;
-	--geo-spacing-xxl: 30px;
-}
-
 .geopoint-value-container {
 	display: inline-flex;
 	background: var(--odk-muted-background-color);
 	border-radius: var(--odk-radius);
 	align-items: flex-start;
 	font-size: var(--odk-answer-font-size);
-	padding: var(--geo-spacing-xl);
+	padding: var(--odk-spacing-xl);
 
 	.geo-quality {
-		margin-right: var(--geo-spacing-l);
+		margin-right: var(--odk-spacing-l);
 	}
 
 	.geopoint-icons {
 		margin-top: -4px;
-		margin-right: var(--geo-spacing-l);
+		margin-right: var(--odk-spacing-l);
 	}
 
 	.geopoint-value {
@@ -224,8 +215,8 @@ const onSave = (saved: GeolocationRequestSuccess) => {
 	color: var(--odk-error-text-color);
 	background-color: var(--odk-error-background-color);
 	border-radius: var(--odk-radius);
-	margin-top: var(--geo-spacing-l);
-	padding: var(--geo-spacing-xl);
+	margin-top: var(--odk-spacing-l);
+	padding: var(--odk-spacing-xl);
 
 	&.stack-errors {
 		padding: 0;

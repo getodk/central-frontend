@@ -127,7 +127,7 @@ watchEffect(() => {
 
 <style scoped lang="scss">
 .capture-buttons button:not(:last-child) {
-	margin-right: 20px;
-	margin-bottom: 10px;
+	margin-right: var(--odk-spacing-xl);
+	margin-bottom: var(--odk-spacing-m);
 }
 </style>

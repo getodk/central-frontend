@@ -45,14 +45,14 @@ const imageURL = computed((previous: ObjectURL | null = null) => {
 	position: relative;
 	width: fit-content;
 	height: fit-content;
-	margin-top: 20px;
+	margin-top: var(--odk-spacing-xl);
 	overflow: hidden;
 	border-radius: var(--odk-radius);
 
 	.clear-button {
 		@include btn.clear-button;
-		top: 10px;
-		right: 10px;
+		top: var(--odk-spacing-m);
+		right: var(--odk-spacing-m);
 		z-index: var(--odk-z-index-form-floating);
 	}
 

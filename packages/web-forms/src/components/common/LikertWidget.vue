@@ -31,9 +31,9 @@ defineEmits(['change']);
 		flex-wrap: nowrap;
 		cursor: pointer;
 		outline: none;
-		padding: 10px 0;
-		margin-left: 10px;
-		margin-right: 10px;
+		padding: var(--odk-spacing-m) 0;
+		margin-left: var(--odk-spacing-m);
+		margin-right: var(--odk-spacing-m);
 		background: transparent;
 
 		&:last-of-type::before {
@@ -72,10 +72,10 @@ defineEmits(['change']);
 
 		.text-content {
 			text-align: center;
-			margin: -11.5px 0 10px 0;
+			margin: -11.5px 0 var(--odk-spacing-m) 0;
 			width: fit-content;
 			position: relative;
-			padding-top: 20px;
+			padding-top: var(--odk-spacing-xl);
 			word-break: break-word;
 			max-width: unset;
 		}

@@ -50,7 +50,7 @@ const locationPoints = computed<GeolocationValue>(() => {
 }
 
 .geolocation-formatted-value > span {
-	margin-right: 10px;
+	margin-right: var(--odk-spacing-m);
 	font-size: var(--odk-answer-font-size);
 	font-weight: 300;
 }
@@ -59,7 +59,7 @@ const locationPoints = computed<GeolocationValue>(() => {
 	.geolocation-formatted-value {
 		display: flex;
 		flex-direction: column;
-		gap: 10px;
+		gap: var(--odk-spacing-m);
 	}
 }
 </style>

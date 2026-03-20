@@ -138,12 +138,12 @@ watchEffect(() => {
 
 		img {
 			max-width: 90%;
-			margin-top: 10px;
+			margin-top: var(--odk-spacing-m);
 		}
 	}
 
 	.media-error-message {
-		margin: 20px;
+		margin: var(--odk-spacing-xl);
 		font-size: var(--odk-hint-font-size);
 		font-weight: 300;
 		word-break: break-word;

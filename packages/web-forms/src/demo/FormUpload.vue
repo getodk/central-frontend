@@ -272,7 +272,7 @@ document.addEventListener(
 			.odk-icon.doc-input-icon {
 				position: absolute;
 				top: 12px;
-				left: 10px;
+				left: var(--odk-spacing-m);
 			}
 
 			.odk-icon.reset-action {
@@ -312,7 +312,7 @@ document.addEventListener(
 	}
 
 	:deep(.p-message .p-message-content .odk-icon) {
-		margin-right: 10px;
+		margin-right: var(--odk-spacing-m);
 		margin-top: -3px;
 
 		path {

@@ -1,5 +1,12 @@
 .map-block-component {
 	--odk-map-controls-spacing: 8px;
+	--odk-map-bottom-placeholder-height: 60px;
+}
+
+@mixin map-block-sm {
+	@container map-block (max-height: 333px) {
+		@content;
+	}
 }
 
 @mixin map-control-bar {
@@ -11,7 +18,7 @@
 	background: none;
 	overflow: hidden;
 	gap: var(--odk-map-controls-spacing);
-	z-index: var(--odk-z-index-form-floating);
+	z-index: var(--odk-z-index-form-content);
 }
 
 @mixin map-control-bar-vertical {
