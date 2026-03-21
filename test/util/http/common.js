@@ -1,6 +1,5 @@
 // Common tests for a series of request-response cycles
 
-import { omit } from 'ramda';
 import Modal from '../../../src/components/modal.vue';
 import Spinner from '../../../src/components/spinner.vue';
 
@@ -33,7 +32,7 @@ const assertRequestsMatch = (actual, expected) => {
   }
 
   const { headers: expectedHeaders = {} } = expectedNormalized;
-  (omit(['user-agent'], actual.headers) ?? {}).should.eql(expectedHeaders);
+  (actual.headers ?? {}).should.eql(expectedHeaders);
 };
 
 export function testRequests(expectedConfigs) {
