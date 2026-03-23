@@ -1092,107 +1092,70 @@ describe('createCentralRouter()', () => {
         }));
   });
 
-  describe('config', () => {
-    const containerWithoutConfig = {
-      config: false,
-      requestData: { serverConfig: false }
-    };
-
-    it('requests the client and server config', () => {
+  describe('client config', () => {
+    it('requests the config', () => {
       // Using a role of 'none' in order to prevent some requests.
       const user = testData.extendedUsers
         .createPast(1, { role: 'none' })
         .first();
       const session = testData.sessions.createPast(1).last();
-      return load('/', { container: containerWithoutConfig }, false)
+      const container = { config: false };
+      return load('/', { container }, false)
         .respondWithData(() => session)
         .respondWithData(() => ({})) // config
-        .respondWithData(() => ({})) // serverConfig
         .respondWithData(() => user)
         .respondFor('/', { users: false })
         .beforeAnyResponse(app => {
-          const { config, serverConfig } = app.vm.$container.requestData;
-          config.dataExists.should.be.false;
-          serverConfig.dataExists.should.be.false;
+          app.vm.$container.requestData.config.dataExists.should.be.false;
         })
         .testRequests([
           { url: '/v1/sessions/restore' },
           { url: '/client-config.json' },
-          { url: '/v1/config/public' },
           { url: '/v1/users/current', extended: true },
           { url: '/v1/projects?forms=true&datasets=true' }
         ])
         .afterResponses(app => {
-          const { config, serverConfig } = app.vm.$container.requestData;
+          const { config } = app.vm.$container.requestData;
           config.data.should.include({ oidcEnabled: false });
-          serverConfig.data.should.eql({});
         });
     });
 
     describe('error loading config', () => {
-      describe('error for client config', () => {
-        it('redirects to /load-error', () =>
-          load('/login', { container: containerWithoutConfig })
-            .restoreSession(false)
-            .respond(() => ({ status: 502 })) // config
-            .respondWithData(() => ({})) // serverConfig
-            .afterResponses(app => {
-              app.vm.$route.path.should.equal('/load-error');
-            }));
-
-        it('does not request the current user', () => {
-          const session = testData.sessions.createPast(1).last();
-          return load('/login', { container: containerWithoutConfig })
-            .respondWithData(() => session)
-            .respond(() => ({ status: 502 })) // config
-            .respondWithData(() => ({})) // serverConfig
-            .testRequests([
-              { url: '/v1/sessions/restore' },
-              { url: '/client-config.json' },
-              { url: '/v1/config/public' }
-            ]);
-        });
-
-        it('clears the session', () => {
-          const session = testData.sessions.createPast(1).last();
-          return load('/login', { container: containerWithoutConfig })
-            .respondWithData(() => session)
-            .respond(() => ({ status: 502 })) // config
-            .respondWithData(() => ({})) // serverConfig
-            .beforeEachResponse((app, config, i) => {
-              if (i === 1)
-                app.vm.$container.requestData.session.dataExists.should.be.true;
-            })
-            .afterResponses(app => {
-              app.vm.$container.requestData.session.dataExists.should.be.false;
-            });
-        });
+      it('redirects to /load-error', () => {
+        const container = { config: false };
+        return load('/login', { container })
+          .restoreSession(false)
+          .respond(() => ({ status: 502 })) // config
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/load-error');
+          });
       });
 
-      describe('error for server config', () => {
-        it('redirects to /load-error', () =>
-          load('/login', { container: containerWithoutConfig })
-            .restoreSession(false)
-            .respondWithData(() => ({})) // config
-            .respond(() => ({ status: 502 })) // serverConfig
-            .afterResponses(app => {
-              app.vm.$route.path.should.equal('/load-error');
-            }));
+      it('does not request the current user', () => {
+        const session = testData.sessions.createPast(1).last();
+        const container = { config: false };
+        return load('/login', { container })
+          .respondWithData(() => session)
+          .respond(() => ({ status: 502 })) // config
+          .testRequests([
+            { url: '/v1/sessions/restore' },
+            { url: '/client-config.json' }
+          ]);
+      });
 
-        it('clears the session', () => {
-          const session = testData.sessions.createPast(1).last();
-          return load('/login', { container: containerWithoutConfig })
-            .respondWithData(() => session)
-            .respondWithData(() => ({})) // config
-            .respond(() => ({ status: 502 })) // serverConfig
-            .beforeEachResponse((app, config, i) => {
-              if (i === 1)
-                app.vm.$container.requestData.session.dataExists.should.be.true;
-            })
-            .afterResponses(app => {
-              app.vm.$container.requestData.session.dataExists.should.be.false;
-            });
-        });
+      it('clears the session', () => {
+        const session = testData.sessions.createPast(1).last();
+        const container = { config: false };
+        return load('/login', { container })
+          .respondWithData(() => session)
+          .respond(() => ({ status: 502 })) // config
+          .beforeEachResponse((app, config, i) => {
+            if (i === 1)
+              app.vm.$container.requestData.session.dataExists.should.be.true;
+          })
+          .afterResponses(app => {
+            app.vm.$container.requestData.session.dataExists.should.be.false;
+          });
       });
 
       it('redirects from /load-error if there was not an error', () =>

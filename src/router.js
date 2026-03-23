@@ -30,7 +30,7 @@ export default (container, {
   const routes = createRoutes(container);
   const router = createRouter({ history, routes, scrollBehavior });
   const { requestData, toast, redAlert, unsavedChanges, config } = container;
-  const { session, serverConfig } = requestData;
+  const { session } = requestData;
 
 
 
@@ -118,15 +118,6 @@ router.afterEach(unlessFailure(to => {
           session.reset();
         });
 
-    const serverConfigPromise = serverConfig.dataExists
-      ? Promise.resolve()
-      : serverConfig.request({ url: '/v1/config/public', alert: false })
-        .catch(error => {
-          serverConfig.data = { loadError: error };
-          // Resetting `session` just as we do after a client config error.
-          session.reset();
-        });
-
     const locale = userLocale();
     const localePromise = locale != null
       ? loadLocale(container, locale)
@@ -134,7 +125,7 @@ router.afterEach(unlessFailure(to => {
 
     // Once the session and the config have been received, we can complete
     // login.
-    await Promise.allSettled([sessionPromise, configPromise, serverConfigPromise]);
+    await Promise.allSettled([sessionPromise, configPromise]);
     if (needsLogin && session.dataExists) {
       // If this is the first time that the session has been restored since the
       // most recent OIDC login, set sessionExpires in local storage. If
@@ -146,9 +137,7 @@ router.afterEach(unlessFailure(to => {
     }
 
     await localePromise.catch(noop);
-    return config.loadError != null || serverConfig.loadError != null
-      ? '/load-error'
-      : true;
+    return config.loadError == null ? true : '/load-error';
   });
 
   //////////////////////////////////////////////////////////////////////////////

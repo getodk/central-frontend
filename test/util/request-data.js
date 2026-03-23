@@ -23,15 +23,10 @@ export const setRequestData = (requestData, responsesOrData) => {
   for (const [name, responseOrData] of Object.entries(responsesOrData)) {
     const resource = requestData.localResources[name] ?? requestData[name];
     if (resource == null) throw new Error(`unknown resource ${name}`);
-
-    if (responseOrData === false) {
-      resource.reset();
-    } else {
-      const response = mockResponse.of(responseOrData);
-      if (typeof response.data === 'object' && response.data != null)
-        response.data = clone(response.data);
-      resource.setFromResponse(response);
-    }
+    const response = mockResponse.of(responseOrData);
+    if (typeof response.data === 'object' && response.data != null)
+      response.data = clone(response.data);
+    resource.setFromResponse(response);
   }
   return requestData;
 };

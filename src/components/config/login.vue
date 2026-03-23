@@ -2,7 +2,7 @@
   <div id="config-login">
     <p id="config-login-title">{{ $t('title') }}</p>
     <loading :state="serverConfig.awaitingResponse"/>
-    <div v-if="refreshed" class="row">
+    <div v-if="serverConfig.dataExists" class="row">
       <div class="col-xs-5">
         <config-login-edit/>
       </div>
@@ -14,8 +14,6 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-
 import ConfigLoginEdit from './login/edit.vue';
 import Loading from '../loading.vue';
 
@@ -28,10 +26,7 @@ defineOptions({
 
 const { serverConfig } = useRequestData();
 
-const refreshed = ref(false);
-serverConfig.request({ url: '/v1/config/public', clear: false })
-  .then(() => { refreshed.value = true; })
-  .catch(noop);
+serverConfig.request({ url: '/v1/config/public' }).catch(noop);
 </script>
 
 <style lang="scss">

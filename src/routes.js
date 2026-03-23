@@ -214,7 +214,7 @@ const asyncRoute = (options) => {
 };
 
 const { i18n, requestData, config } = container;
-const { currentUser, serverConfig, project, form, dataset } = requestData;
+const { currentUser, project, form, dataset } = requestData;
 const routes = [
   asyncRoute({
     path: '/load-error',
@@ -225,8 +225,7 @@ const routes = [
       requireAnonymity: true,
       title: () => [i18n.t('common.error')]
     },
-    beforeEnter: () =>
-      (config.loadError != null || serverConfig.loadError != null ? true : '/login')
+    beforeEnter: () => (config.loadError == null ? '/login' : true)
   }),
 
   {
