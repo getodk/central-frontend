@@ -31,6 +31,7 @@ import FileDropZone from '../../file-drop-zone.vue';
 import Spinner from '../../spinner.vue';
 
 import useRequest from '../../../composables/request';
+import { apiPaths } from '../../../util/request';
 import { noop } from '../../../util/util';
 import { useRequestData } from '../../../request-data';
 
@@ -54,11 +55,10 @@ const exists = computed(() => {
 });
 
 const { request, awaitingResponse } = useRequest();
-const url = computed(() => `/v1/config/${props.name}`);
 const post = (file) => {
   request({
     method: 'POST',
-    url: url.value,
+    url: apiPaths.config(props.name),
     data: file,
     headers: { 'Content-Type': file.type }
   })
@@ -89,7 +89,7 @@ const changeInput = (event) => {
 };
 
 const del = () => {
-  request({ method: 'DELETE', url: url.value })
+  request({ method: 'DELETE', url: apiPaths.config(props.name) })
     .then(() => {
       delete serverConfig[props.name];
       toast.show(t('alert.del'));

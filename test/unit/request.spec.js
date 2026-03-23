@@ -401,6 +401,10 @@ describe('util/request', () => {
       const path = apiPaths.audits({ action: 'nonverbose', limit: 10 });
       path.should.equal('/v1/audits?action=nonverbose&limit=10');
     });
+
+    it('config', () => {
+      apiPaths.config('a b').should.equal('/v1/config/a%20b');
+    });
   });
 
   // Right now, withHttpMethods() modifies the request() function that is passed
