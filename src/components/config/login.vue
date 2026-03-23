@@ -6,7 +6,7 @@
       <div class="col-xs-5">
         <config-login-edit/>
       </div>
-      <div class="col-xs-5 col-xs-offset-2">
+      <div class="col-xs-6 col-xs-offset-1">
         <!-- TODO preview -->
       </div>
     </div>

@@ -1652,7 +1652,7 @@
     "ConfigLoginEdit": {
       "logo": {
         "help": {
-          "string": "We recommend using a PNG logo with transparent background of at least 400x400 pixels."
+          "string": "We recommend using an image with a white or transparent background of at least 150x150 pixels."
         }
       },
       "title": {

@@ -647,8 +647,7 @@ const routes = [
           title: () => [
             i18n.t('systemHome.tab.customization'),
             i18n.t('systemHome.title')
-          ],
-          fullWidth: true
+          ]
         }
       }),
       asyncRoute({
@@ -666,8 +665,7 @@ const routes = [
           title: () => [
             i18n.t('systemHome.tab.analytics'),
             i18n.t('systemHome.title')
-          ],
-          fullWidth: true
+          ]
         },
         beforeEnter: () => (config.showsAnalytics ? true : '/404')
       })

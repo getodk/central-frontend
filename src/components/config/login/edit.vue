@@ -73,8 +73,9 @@ const submit = () => {
 
 <style lang="scss">
 #config-login-edit {
-  .file-drop-zone, .form-group, .btn-primary { margin-bottom: 20px; }
-  button[type="submit"] { margin-top: -4px; }
+  .file-drop-zone, .btn-primary { margin-bottom: 40px; }
+  .form-group { margin-bottom: 25px; }
+  button[type="submit"] { margin-top: -10px; }
 
   .file-label, label { font-size: 16px; }
   label { font-weight: normal; }
@@ -85,7 +86,7 @@ const submit = () => {
 {
   "en": {
     "logo": {
-      "help": "We recommend using a PNG logo with transparent background of at least 400x400 pixels."
+      "help": "We recommend using an image with a white or transparent background of at least 150x150 pixels."
     },
     "title": {
       "help": "A title for your server login."
