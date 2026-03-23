@@ -63,8 +63,8 @@ const submit = () => {
   if (description.value !== '') data.description = description.value;
 
   request({ method: 'POST', url: '/v1/config/login-appearance', data })
-    .then(() => {
-      serverConfig['login-appearance'] = data;
+    .then(response => {
+      serverConfig['login-appearance'] = response.data;
       toast.show(t('alert.success'));
     })
     .catch(noop);
