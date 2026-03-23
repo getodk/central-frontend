@@ -1692,6 +1692,9 @@
         }
       },
       "alert": {
+        "invalidType": {
+          "string": "File type not accepted."
+        },
         "post": {
           "string": "Image successfully saved."
         },

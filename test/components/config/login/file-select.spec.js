@@ -37,6 +37,18 @@ describe('ConfigLoginFileSelect', () => {
         }]);
     });
 
+    it('shows an alert for an invalid file type', () =>
+      mockHttp()
+        .mount(ConfigLoginFileSelect, mountOptions())
+        .request(component => {
+          const image = new File([''], 'some_image.gif', { type: 'image/gif' });
+          return dragAndDrop(component.get('.file-drop-zone'), [image]);
+        })
+        .testNoRequest()
+        .afterResponses(component => {
+          component.should.redAlert('File type not accepted.');
+        }));
+
     describe('after an image is selected using the file input', () => {
       it('sends a request', () =>
         mockHttp()

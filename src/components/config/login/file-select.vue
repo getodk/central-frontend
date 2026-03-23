@@ -1,14 +1,13 @@
 <template>
   <div class="config-login-file-select">
     <template v-if="!exists">
-      <file-drop-zone :disabled="awaitingResponse"
-        @drop="post($event.dataTransfer.files[0])">
+      <file-drop-zone :disabled="awaitingResponse" @drop="drop">
         <span class="icon-file-o"></span>
         <i18n-t keypath="select.full">
           <template #upload>
             <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
-            <input v-show="false" ref="input" type="file" accept=".jpg,.jpeg,.png"
-              @change="changeInput">
+            <input v-show="false" ref="input" type="file"
+              :accept="accept.join(',')" @change="changeInput">
             <a href="#" role="button" @click="input.click()">
               {{ $t('select.upload') }}
             </a>
@@ -47,7 +46,7 @@ const props = defineProps({
 
 const { t } = useI18n();
 const { serverConfig } = useRequestData();
-const { toast } = inject('container');
+const { toast, redAlert } = inject('container');
 
 const exists = computed(() => {
   const config = serverConfig[props.name];
@@ -68,6 +67,19 @@ const post = (file) => {
       toast.show(t('alert.post'));
     })
     .catch(noop);
+};
+
+const accept = ['.jpg', '.jpeg', '.png'];
+const getExtension = (filename) => {
+  const i = filename.lastIndexOf('.');
+  return i <= 0 ? '' : filename.slice(i).toLowerCase();
+};
+const drop = (event) => {
+  const file = event.dataTransfer.files[0];
+  if (!accept.includes(getExtension(file.name)))
+    redAlert.show(t('alert.invalidType'));
+  else
+    post(file);
 };
 
 const input = ref(null);
@@ -107,6 +119,7 @@ const del = () => {
       "remove": "Remove image"
     },
     "alert": {
+      "invalidType": "File type not accepted.",
       "post": "Image successfully saved.",
       "del": "Image successfully removed."
     }
