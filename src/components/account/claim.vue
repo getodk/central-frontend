@@ -10,30 +10,20 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="account-claim" class="row">
-    <div class="col-xs-12 col-sm-offset-3 col-sm-6">
-      <div class="panel panel-default panel-main">
-        <div class="panel-heading">
-          <h1 class="panel-title">{{ $t('title.setPassword') }}</h1>
-        </div>
-        <div class="panel-body">
-          <form @submit.prevent="submit">
-            <!-- Chrome displays a message in the console indicating that there
-            should be a username input (even if it is hidden). However, we do
-            not know the user's email address on this page. -->
-            <form-group ref="password" v-model="password" type="password"
-              :placeholder="$t('field.newPassword')" required
-              autocomplete="new-password"/>
-            <div class="panel-footer">
-              <button type="submit" class="btn btn-primary"
-                :aria-disabled="awaitingResponse">
-                {{ $t('action.set') }} <spinner :state="awaitingResponse"/>
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+  <div id="account-claim">
+    <h1 class="panel-title">{{ $t('title') }}</h1>
+    <form @submit.prevent="submit">
+      <!-- Chrome displays a message in the console indicating that there should
+      be a username input (even if it is hidden). However, we do not know the
+      user's email address on this page. -->
+      <form-group ref="password" v-model="password" type="password"
+        :placeholder="$t('field.newPassword')" required
+        autocomplete="new-password"/>
+      <button type="submit" class="btn btn-primary"
+        :aria-disabled="awaitingResponse">
+        {{ $t('action.set') }} <spinner :state="awaitingResponse"/>
+      </button>
+    </form>
   </div>
 </template>
 
@@ -92,6 +82,7 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    "title": "Set your new password",
     "action": {
       "set": "Set password"
     },

@@ -450,14 +450,23 @@ class MockHttp {
   }
 
   restoreSession(restore = true) {
-    if (!restore) return this.respondWithProblem(404.1);
+    if (!restore) {
+      return this.respondIf(
+        ({ url }) => url === '/v1/sessions/restore',
+        () => mockResponse.problem(404.1)
+      );
+    }
+
     if (testData.extendedUsers.size === 0) throw new Error('user not found');
     const session = testData.sessions.size !== 0
       ? testData.sessions.last()
       : testData.sessions.createPast(1).last();
     return this
-      .respondWithData(() => session)
-      .respondWithData(() => testData.extendedUsers.first());
+      .respondIf(({ url }) => url === '/v1/sessions/restore', () => session)
+      .respondIf(
+        ({ url }) => url === '/v1/users/current',
+        () => testData.extendedUsers.first()
+      );
   }
 
   // respondForComponent() responds with all the responses expected for the

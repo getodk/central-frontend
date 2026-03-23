@@ -1,0 +1,54 @@
+import AccountPageContainer from '../../../../src/components/account/page/container.vue';
+
+import testData from '../../../data';
+import { mergeMountOptions, mount } from '../../../util/lifecycle';
+
+const mountComponent = (options = undefined) =>
+  mount(AccountPageContainer, mergeMountOptions(options, {
+    container: {
+      requestData: { serverConfig: testData.standardConfigs.byKey() }
+    }
+  }));
+
+describe('AccountPageContainer', () => {
+  describe('logo', () => {
+    it('shows the default logo if a custom one has not been configured', () => {
+      const component = mountComponent();
+      const img = component.findAll('#account-page-container-logo img');
+      img.length.should.equal(1);
+      img[0].attributes().alt.should.equal('ODK logo');
+    });
+
+    it('shows a custom logo', () => {
+      testData.standardConfigs.createPast(1, { key: 'logo', blobExists: true });
+      const component = mountComponent();
+      const img = component.findAll('#account-page-container-logo img');
+      img.length.should.equal(1);
+      img[0].attributes().alt.should.equal('');
+    });
+  });
+
+  describe('hero image', () => {
+    it('shows default hero image if a custom one has not been configured', () => {
+      const component = mountComponent();
+      const img = component.findAll('#account-page-container-hero img');
+      img.length.should.equal(1);
+      img[0].attributes().alt.should.equal('Features of ODK Central');
+    });
+
+    it('shows a custom hero image', () => {
+      testData.standardConfigs.createPast(1, { key: 'hero-image', blobExists: true });
+      const component = mountComponent();
+      const img = component.findAll('#account-page-container-hero img');
+      img.length.should.equal(1);
+      img[0].attributes().alt.should.equal('');
+    });
+  });
+
+  it('is inert during preview', () => {
+    const component = mountComponent({
+      props: { preview: true }
+    });
+    should.exist(component.attributes().inert);
+  });
+});

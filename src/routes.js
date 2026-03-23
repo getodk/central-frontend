@@ -12,6 +12,7 @@ except according to the terms contained in the LICENSE file.
 import { always, equals } from 'ramda';
 
 import AccountLogin from './components/account/login.vue';
+import AccountPage from './components/account/page.vue';
 import AsyncRoute from './components/async-route.vue';
 import { routeProps } from './util/router';
 
@@ -214,11 +215,11 @@ const asyncRoute = (options) => {
 };
 
 const { i18n, requestData, config } = container;
-const { currentUser, project, form, dataset } = requestData;
+const { currentUser, serverConfig, project, form, dataset } = requestData;
 const routes = [
   asyncRoute({
     path: '/load-error',
-    component: 'ConfigError',
+    component: 'ClientConfigError',
     loading: 'page',
     meta: {
       requireLogin: false,
@@ -229,38 +230,49 @@ const routes = [
   }),
 
   {
-    path: '/login',
-    name: 'AccountLogin',
-    component: AccountLogin,
-    meta: {
-      requireLogin: false,
-      requireAnonymity: true,
-      title: () => [i18n.t('action.logIn')]
-    }
+    path: '/account',
+    component: AccountPage,
+    children: [
+      {
+        path: 'login',
+        alias: '/login',
+        name: 'AccountLogin',
+        component: AccountLogin,
+        meta: {
+          requireLogin: false,
+          requireAnonymity: true,
+          title: () => [i18n.t('action.logIn')],
+          fullWidth: true
+        }
+      },
+      asyncRoute({
+        path: 'reset-password',
+        alias: '/reset-password',
+        component: 'AccountResetPassword',
+        loading: 'tab',
+        meta: {
+          requireLogin: false,
+          requireAnonymity: true,
+          title: () => [i18n.t('title.resetPassword')],
+          fullWidth: true
+        },
+        beforeEnter: () => (config.oidcEnabled ? '/404' : true)
+      }),
+      asyncRoute({
+        path: 'claim',
+        component: 'AccountClaim',
+        loading: 'tab',
+        meta: {
+          restoreSession: false,
+          requireLogin: false,
+          requireAnonymity: true,
+          title: () => [i18n.t('title.setPassword')],
+          fullWidth: true
+        },
+        beforeEnter: () => (config.oidcEnabled ? '/404' : true)
+      })
+    ]
   },
-  asyncRoute({
-    path: '/reset-password',
-    component: 'AccountResetPassword',
-    loading: 'page',
-    meta: {
-      requireLogin: false,
-      requireAnonymity: true,
-      title: () => [i18n.t('title.resetPassword')]
-    },
-    beforeEnter: () => (config.oidcEnabled ? '/404' : true)
-  }),
-  asyncRoute({
-    path: '/account/claim',
-    component: 'AccountClaim',
-    loading: 'page',
-    meta: {
-      restoreSession: false,
-      requireLogin: false,
-      requireAnonymity: true,
-      title: () => [i18n.t('title.setPassword')]
-    },
-    beforeEnter: () => (config.oidcEnabled ? '/404' : true)
-  }),
 
   asyncRoute({
     path: '/',
@@ -865,6 +877,12 @@ const routesByName = new Map();
   preserveDataBetweenRoutes(projectRoutes, preserveBetweenTabs);
   preserveDataBetweenRoutes(formRoutes, preserveBetweenTabs);
   preserveDataBetweenRoutes(datasetRoutes, preserveBetweenTabs);
+
+  // Preserve requestData.serverConfig.
+  preserveDataBetweenRoutes(
+    ['AccountLogin', 'AccountResetPassword', 'AccountClaim'],
+    () => [serverConfig]
+  );
 
   // Preserve requestData.project.
   preserveDataBetweenRoutes(

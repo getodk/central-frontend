@@ -67,6 +67,9 @@ module.exports = (config) => {
       '/test/files/': '/base/test/files/',
 
       // Images
+      '/img/default-hero.db35caad.png': '/base/src/assets/images/account/default-hero.png',
+      '/v1/config/public/hero-image': '/base/src/assets/images/account/default-hero.png',
+      '/v1/config/public/logo': '/base/src/assets/images/odk-logo.png',
       '/img/banner@1x.2ab8c238.png': '/base/src/assets/images/whats-new/banner@1x.png', // Smaller resolution for circleCI test
       '/img/map-location.b523ce2d.svg': '/base/src/assets/images/geojson-map/map-location.svg',
       '/img/fullscreen.37a932a6.svg': '/base/src/assets/images/geojson-map/fullscreen.svg'

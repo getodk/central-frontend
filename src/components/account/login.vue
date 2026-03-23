@@ -10,53 +10,52 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="account-login" class="row">
-    <div class="col-xs-12 col-sm-offset-3 col-sm-6">
-      <div class="panel panel-default panel-main">
-        <div class="panel-heading">
-          <h1 class="panel-title">{{ $t('action.logIn') }}</h1>
-        </div>
-        <div v-if="config.oidcEnabled" class="panel-body">
-          <p>{{ $t('oidc.body') }}</p>
-          <div class="panel-footer">
-            <a :href="oidcLoginPath" class="btn btn-primary"
-              :class="{ disabled }" @click="loginByOIDC">
-              {{ $t('action.continue') }} <spinner :state="disabled"/>
-            </a>
-          </div>
-        </div>
-        <div v-else class="panel-body">
-          <form @submit.prevent="submit">
-            <form-group ref="email" v-model.trim="email" type="email"
-              :placeholder="$t('field.email')" required autocomplete="off"/>
-            <form-group v-model="password" type="password"
-              :placeholder="$t('field.password')" required
-              autocomplete="current-password"/>
-            <div v-if="showMailingListOptIn" id="mailing-list-opt-in" class="checkbox">
-              <label>
-                <input v-model="mailingListOptIn" type="checkbox">{{ $t('analytics.mailingListOptIn') }}
-              </label>
-            </div>
-            <div class="panel-footer">
-              <button type="submit" class="btn btn-primary"
-                :aria-disabled="disabled">
-                {{ $t('action.logIn') }} <spinner :state="disabled"/>
-              </button>
-              <router-link v-slot="{ navigate }" to="/reset-password" custom>
-                <button type="button" class="btn btn-link" :aria-disabled="disabled"
-                  @click="navigate">
-                  {{ $t('action.resetPassword') }}
-                </button>
-              </router-link>
-            </div>
-          </form>
-        </div>
+  <div id="account-login">
+    <h1>{{ loginAppearance?.title || $t('login.defaultTitle') }}</h1>
+    <p>{{ loginAppearance?.description || $t('login.defaultDescription') }}</p>
+
+    <template v-if="config.oidcEnabled">
+      <p>{{ $t('oidc.body') }}</p>
+      <a :href="oidcLoginPath" class="btn btn-primary" :class="{ disabled }"
+        @click="loginByOIDC">
+        {{ $t('action.continue') }} <spinner :state="disabled"/>
+      </a>
+    </template>
+    <form v-else @submit.prevent="submit">
+      <form-group ref="email" v-model.trim="email" type="email"
+        :placeholder="$t('field.email')" required autocomplete="off"/>
+      <form-group v-model="password" type="password"
+        :placeholder="$t('field.password')" required
+        autocomplete="current-password"/>
+      <div v-if="showMailingListOptIn" id="mailing-list-opt-in" class="checkbox">
+        <label>
+          <input v-model="mailingListOptIn" type="checkbox">{{ $t('analytics.mailingListOptIn') }}
+        </label>
       </div>
+      <div>
+        <button type="submit" class="btn btn-primary" :aria-disabled="disabled">
+          {{ $t('action.logIn') }} <spinner :state="disabled"/>
+        </button>
+        <router-link v-slot="{ navigate }" to="/reset-password" custom>
+          <button type="button" class="btn btn-link" :aria-disabled="disabled"
+            @click="navigate">
+            {{ $t('action.resetPassword') }}
+          </button>
+        </router-link>
+      </div>
+    </form>
+
+    <div id="account-login-footer">
+      <img src="../../assets/images/odk-logo.png" :alt="$t('login.odkLogo')">
+      <span>{{ hostname }}</span>
     </div>
   </div>
 </template>
 
 <script>
+import { onBeforeUnmount, ref } from 'vue';
+import { useRouter } from 'vue-router';
+
 import FormGroup from '../form-group.vue';
 import Spinner from '../spinner.vue';
 
@@ -70,22 +69,35 @@ export default {
   name: 'AccountLogin',
   components: { FormGroup, Spinner },
   inject: ['container', 'alert', 'config', 'location'],
-  beforeRouteLeave() {
-    return !this.disabled;
+  props: {
+    // `true` is the component is being previewed in ConfigLoginPreview
+    preview: Boolean
   },
-  setup() {
-    const { currentUser, session } = useRequestData();
-    return { currentUser, session };
+  setup(props) {
+    const router = useRouter();
+    const { currentUser, session, serverConfig } = useRequestData();
+
+    const disabled = ref(false);
+    if (!props.preview) {
+      const removeGuard = router.beforeEach(() => !disabled.value);
+      onBeforeUnmount(removeGuard);
+    }
+
+    return { currentUser, session, serverConfig, disabled };
   },
   data() {
     return {
-      disabled: false,
       email: '',
       password: '',
       mailingListOptIn: true,
     };
   },
   computed: {
+    loginAppearance() {
+      return this.serverConfig.dataExists
+        ? this.serverConfig['login-appearance']?.value
+        : null;
+    },
     oidcLoginPath() {
       const { query } = this.$route;
       const next = typeof query.next === 'string' ? query.next : null;
@@ -93,20 +105,24 @@ export default {
       return `/v1/oidc/login${qs}`;
     },
     showMailingListOptIn() {
-      return this.$route.query.source === 'claim';
+      return this.$route.query.source === 'claim' && !this.preview;
+    },
+    hostname() {
+      return window.location.hostname;
     }
   },
   created() {
-    this.handleOIDCError();
+    if (!this.preview) this.handleOIDCError();
   },
   mounted() {
+    if (this.preview) return;
     if (this.config.oidcEnabled)
       window.addEventListener('pageshow', this.reenableIfPersisted);
     else
       this.$refs.email.focus();
   },
   beforeUnmount() {
-    if (this.config.oidcEnabled)
+    if (!this.preview && this.config.oidcEnabled)
       window.removeEventListener('pageshow', this.reenableIfPersisted);
   },
   methods: {
@@ -217,6 +233,33 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+@import '../../assets/scss/variables';
+
+#account-login-footer {
+  display: flex;
+  align-items: center;
+  column-gap: 12px;
+
+  margin-top: 40px;
+
+  img {
+    width: 39px;
+    max-height: 39px;
+  }
+
+  span {
+    color: #555;
+    font-family: $font-family-monospace;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1.25px;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}
+</style>
 
 <i18n lang="json5">
 {

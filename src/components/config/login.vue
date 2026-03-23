@@ -7,7 +7,7 @@
         <config-login-edit/>
       </div>
       <div class="col-xs-6 col-xs-offset-1">
-        <!-- TODO preview -->
+        <config-login-preview/>
       </div>
     </div>
   </div>
@@ -15,6 +15,7 @@
 
 <script setup>
 import ConfigLoginEdit from './login/edit.vue';
+import ConfigLoginPreview from './login/preview.vue';
 import Loading from '../loading.vue';
 
 import { noop } from '../../util/util';
