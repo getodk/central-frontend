@@ -365,8 +365,8 @@
     "learnMore": "Learn more."
   },
   "login": {
-    "welcome": "Welcome to ODK Central",
-    "help": "Log into your account to get started"
+    "defaultTitle": "Welcome to ODK Central",
+    "defaultDescription": "Log into your account to get started"
   },
   "analytics": {
     "alwaysImprove": "We are always trying to improve ODK Central.",
@@ -434,6 +434,7 @@
     "forum": "Forum",
     "lastUpdate": "Last update",
     "loading": "Loading…",
+    "logo": "Logo",
     "map": "Map",
     "no": "No",
     // This is shown if a search returned no results.

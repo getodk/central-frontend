@@ -1,6 +1,6 @@
 <template>
   <div id="config-login-edit">
-    <p class="file-label">{{ $t('logo.label') }}</p>
+    <p class="file-label">{{ $t('common.logo') }}</p>
     <p>{{ $t('logo.help') }}</p>
     <config-login-file-select name="logo"/>
 
@@ -10,7 +10,7 @@
         <p id="config-login-edit-title-help">{{ $t('title.help') }}</p>
         <input id="config-login-edit-title" v-model.trim="title"
           class="form-control" aria-describedby="config-login-edit-title-help"
-          :placeholder="$t('login.welcome')" autocomplete="off">
+          :placeholder="$t('login.defaultTitle')" autocomplete="off">
       </div>
 
       <div class="form-group">
@@ -19,7 +19,7 @@
         <input id="config-login-edit-description" v-model.trim="description"
           class="form-control"
           aria-describedby="config-login-edit-description-help"
-          :placeholder="$t('login.help')" autocomplete="off">
+          :placeholder="$t('login.defaultDescription')" autocomplete="off">
       </div>
 
       <button type="submit" class="btn btn-primary">
@@ -85,7 +85,6 @@ const submit = () => {
 {
   "en": {
     "logo": {
-      "label": "Logo",
       "help": "We recommend using a PNG logo with transparent background of at least 400x400 pixels."
     },
     "title": {

@@ -817,10 +817,10 @@
     }
   },
   "login": {
-    "welcome": {
+    "defaultTitle": {
       "string": "Welcome to ODK Central"
     },
-    "help": {
+    "defaultDescription": {
       "string": "Log into your account to get started"
     }
   },
@@ -954,6 +954,9 @@
     },
     "loading": {
       "string": "Loading…"
+    },
+    "logo": {
+      "string": "Logo"
     },
     "map": {
       "string": "Map"
@@ -1648,9 +1651,6 @@
     },
     "ConfigLoginEdit": {
       "logo": {
-        "label": {
-          "string": "Logo"
-        },
         "help": {
           "string": "We recommend using a PNG logo with transparent background of at least 400x400 pixels."
         }
