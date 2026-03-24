@@ -24,7 +24,7 @@ describe('AccountPageContainer', () => {
       const component = mountComponent();
       const img = component.findAll('#account-page-container-logo img');
       img.length.should.equal(1);
-      img[0].attributes().alt.should.equal('');
+      img[0].attributes().alt.should.equal('Organization logo');
     });
   });
 
@@ -41,7 +41,7 @@ describe('AccountPageContainer', () => {
       const component = mountComponent();
       const img = component.findAll('#account-page-container-hero img');
       img.length.should.equal(1);
-      img[0].attributes().alt.should.equal('');
+      img[0].attributes().alt.should.equal('Welcome image');
     });
   });
 

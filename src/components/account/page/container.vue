@@ -9,7 +9,7 @@ content in a slot, which the component will style. -->
           <!-- Try to load the customized logo even before knowing whether it
           exists, with the aim of showing it more quickly if it does exist. -->
           <img v-if="initiallyLoading || logoExists"
-            :src="'/v1/config/public/logo'" alt=""
+            :src="'/v1/config/public/logo'" :alt="$t('customLogoAlt')"
             v-on="imgHandlers">
           <img v-if="initiallyLoading || !logoExists"
             src="../../../assets/images/odk-logo.png" :alt="$t('login.odkLogo')"
@@ -21,7 +21,7 @@ content in a slot, which the component will style. -->
     </div>
     <div id="account-page-container-hero" :class="hiddenClass">
       <img v-if="initiallyLoading || heroExists"
-        :src="'/v1/config/public/hero-image'" alt=""
+        :src="'/v1/config/public/hero-image'" :alt="$t('customHeroAlt')"
         v-on="imgHandlers">
       <img v-if="initiallyLoading || !heroExists"
         src="../../../assets/images/account/default-hero.png" :alt="$t('defaultHeroAlt')"
@@ -211,7 +211,9 @@ Notes about the layout:
 <i18n lang="json5">
 {
   "en": {
-    "defaultHeroAlt": "Features of ODK Central"
+    "customLogoAlt": "Organization logo",
+    "defaultHeroAlt": "Features of ODK Central",
+    "customHeroAlt": "Welcome image"
   }
 }
 </i18n>

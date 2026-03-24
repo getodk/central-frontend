@@ -1174,8 +1174,14 @@
       }
     },
     "AccountPageContainer": {
+      "customLogoAlt": {
+        "string": "Organization logo"
+      },
       "defaultHeroAlt": {
         "string": "Features of ODK Central"
+      },
+      "customHeroAlt": {
+        "string": "Welcome image"
       }
     },
     "AccountResetPassword": {
