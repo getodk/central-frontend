@@ -29,7 +29,7 @@ defineOptions({
 const { serverConfig } = useRequestData();
 
 const loadError = shallowRef(null);
-serverConfig.request({ url: '/v1/config/public', resend: false, alert: false })
+serverConfig.request({ url: '/v1/config/public', alert: false })
   .catch(error => { loadError.value = error; });
 
 const el = ref(null);
@@ -57,8 +57,7 @@ useEventListener(window, 'resize', resize);
 #account-page {
   margin-inline: -$padding-inline-container;
 
-  #account-page-container {
-    margin-block: -$margin-top-page-body (-$box-shadow-offset-y-body);
-  }
+  #page-body { margin-top: 0; }
+  #account-page-container { margin-bottom: -$box-shadow-offset-y-body; }
 }
 </style>

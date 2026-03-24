@@ -245,7 +245,7 @@ export default {
   margin-top: 40px;
 
   img {
-    width: 39px;
+    max-width: 39px;
     max-height: 39px;
   }
 

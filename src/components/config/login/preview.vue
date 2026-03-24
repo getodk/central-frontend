@@ -23,8 +23,8 @@ defineOptions({
 });
 
 const scaler = ref(null);
-const resize = () => {
-  // Remove the effect of the previous call to resize().
+const rescale = () => {
+  // Remove the effect of the previous call to rescale().
   scaler.value.style.transform = '';
 
   const scalerWidth = scaler.value.getBoundingClientRect().width;
@@ -32,8 +32,8 @@ const resize = () => {
   const scale = scalerWidth / unscaledWidth;
   scaler.value.style.transform = `scale(${scale})`;
 };
-onMounted(resize);
-useEventListener(window, 'resize', resize);
+onMounted(rescale);
+useEventListener(window, 'resize', rescale);
 </script>
 
 <style lang="scss">

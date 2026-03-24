@@ -167,24 +167,24 @@ Notes about the layout:
 }
 
 #account-page-container-main {
+  $margin-after-title: 40px;
+
   h1 {
     font-size: 24px;
     letter-spacing: normal;
     line-height: inherit;
-    margin-block: 0 10px;
+    margin-block: 0 $margin-after-title;
   }
 
-  // Subtitle
+  // Subtitle (optional). The slot may or may not render this element.
   h1 + p {
     font-size: 16px;
     line-height: 20px;
+    // Undo the bottom margin on the title, then add it to the subtitle.
+    margin-block: #{10px - $margin-after-title} $margin-after-title;
 
     &:empty { display: none; }
   }
-
-  // After the title and subtitle, there should be 40px of spaces before what
-  // follows. The subtitle is optional, which is why there are two cases here.
-  h1 + :not(p), h1 + p + * { margin-top: 40px; }
 
   // Using :where() to decrease specificity, so that the default border-color
   // applies when the .form-control is focused.
