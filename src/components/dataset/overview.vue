@@ -12,21 +12,6 @@ except according to the terms contained in the LICENSE file.
 
 <template>
   <div v-if="dataset.dataExists" id="dataset-overview">
-    <page-section id="dataset-overview-form-connections">
-      <template #heading>
-        <span class="dataset-overview-heading"><span class="icon-link"></span>{{ $t('connectionsToForms') }}</span>
-      </template>
-      <template #body>
-        <div class="row">
-          <div class="col-md-7">
-            <connection-to-forms/>
-          </div>
-          <div class="col-md-5">
-            <linked-forms/>
-          </div>
-        </div>
-      </template>
-    </page-section>
     <page-section>
       <template #heading>
         <span class="dataset-overview-heading"><span class="icon-cog"></span>{{ $t('entityProperties') }}</span>
@@ -48,8 +33,6 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import PageSection from '../page/section.vue';
-import ConnectionToForms from './overview/connection-to-forms.vue';
-import LinkedForms from './overview/linked-forms.vue';
 import DatasetPropertyNew from './property/new.vue';
 import DatasetProperties from './overview/dataset-properties.vue';
 
@@ -88,31 +71,14 @@ const afterCreateProperty = () => {
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/mixins';
-
 #dataset-overview .page-section-heading {
   font-size: 24px;
-  margin: 20px 0px;
-
-  .dataset-overview-heading {
-    [class^="icon-"] {
-      @include icon-box;
-      font-size: 24px;
-      margin-right: 10px;
-    }
-  }
-}
-
-#dataset-overview-form-connections{
-  margin-bottom: 0;
 }
 </style>
 
 <i18n lang="json5">
 {
   "en": {
-    // This is a title shown above a section of the page.
-    "connectionsToForms": "Connections to Forms",
     // This is a title shown above a section of the page.
     "entityProperties" : "Entity Properties",
     // This is shown on a button for creating new Entity Properties

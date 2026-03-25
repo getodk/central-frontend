@@ -1704,10 +1704,6 @@
       }
     },
     "DatasetOverview": {
-      "connectionsToForms": {
-        "string": "Connections to Forms",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
       "entityProperties": {
         "string": "Entity Properties",
         "developer_comment": "This is a title shown above a section of the page."
@@ -1715,11 +1711,6 @@
       "new": {
         "string": "New",
         "developer_comment": "This is shown on a button for creating new Entity Properties"
-      }
-    },
-    "DatasetOverviewConnectionToForms": {
-      "formsUpdateEntities": {
-        "string": "{count, plural, one {{count} Form updating Entities} other {{count} Forms updating Entities}}"
       }
     },
     "DatasetOverviewDatasetProperties": {
@@ -1776,11 +1767,6 @@
       },
       "relatedToForms": {
         "string": "{count, plural, one {Related to {count} Form} other {Related to {count} Forms}}"
-      }
-    },
-    "DatasetOverviewLinkedForms": {
-      "formsConsumeData": {
-        "string": "{count, plural, one {{count} Form uses this Entity List} other {{count} Forms use this Entity List}}"
       }
     },
     "DatasetOverviewNewProperty": {
