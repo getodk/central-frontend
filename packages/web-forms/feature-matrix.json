@@ -119,10 +119,10 @@
     "form translations with ref to other field": "✅",
     "Markdown": "✅",
     "Inline HTML": "✅",
-    "[image](https://github.com/getodk/web-forms/issues/30)": "🚧",
+    "[image](https://github.com/getodk/web-forms/issues/30)": "✅",
     "big-image": "",
-    "[audio](https://github.com/getodk/web-forms/issues/30)": "🚧",
-    "[video](https://github.com/getodk/web-forms/issues/30)": "🚧",
+    "[audio](https://github.com/getodk/web-forms/issues/30)": "✅",
+    "[video](https://github.com/getodk/web-forms/issues/30)": "✅",
     "autoplay": ""
   },
   "Theme and layouts": {
