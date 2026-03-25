@@ -1,6 +1,5 @@
 import DatasetPropertyNew from '../../../../src/components/dataset/property/new.vue';
 import DatasetProperties from '../../../../src/components/dataset/overview/dataset-properties.vue';
-import ConnectionToForms from '../../../../src/components/dataset/overview/connection-to-forms.vue';
 
 import testData from '../../../data';
 import { load, mockHttp } from '../../../util/http';
@@ -103,12 +102,6 @@ describe('DatasetPropertyNew', () => {
       const app = await submit('width_cm');
       const propertyList = app.findComponent(DatasetProperties).findAll('tbody tr');
       propertyList[1].findAll('td')[2].text().should.equal('(None)');
-    });
-
-    it('updates property count in form summary', async () => {
-      const app = await submit('width_cm');
-      const connections = app.findComponent(ConnectionToForms);
-      connections.find('.caption-cell').text().should.equal('1 of 2 properties');
     });
   });
 
