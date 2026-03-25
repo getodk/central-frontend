@@ -71,8 +71,18 @@ const afterCreateProperty = () => {
 </script>
 
 <style lang="scss">
+@import '../../assets/scss/mixins';
+
 #dataset-overview .page-section-heading {
   font-size: 24px;
+
+  .dataset-overview-heading {
+    [class^="icon-"] {
+      @include icon-box;
+      font-size: 24px;
+      margin-right: 10px;
+    }
+  }
 }
 </style>
 
