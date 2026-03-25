@@ -106,7 +106,7 @@ function mdastNodeToOdkMarkdown(tree: RootContent): MarkdownNode | undefined {
 	}
 	if (tree.type === 'text' || tree.type === 'inlineCode') {
 		const outputString = outputStrings.get(tree.value);
-		if (outputString) {
+		if (outputString != null) {
 			const children = toOdkMarkdown(outputString);
 			return new Span(children, undefined);
 		}
@@ -193,15 +193,15 @@ function mdastToOdkMarkdown(elements: RootContent[]): MarkdownNode[] {
 function escapeEditableChunks(chunks: readonly TextChunk[]) {
 	return chunks
 		.map((chunk, i) => {
-			const str = chunk.asString.replace(LEADING_WHITESPACE_REGEX, ' ');
-			if (str && chunk.source === 'output') {
+			const str = chunk.asString.replace(LEADING_WHITESPACE_REGEX, ' ') ?? '';
+			if (chunk.source === 'output') {
 				// we need to process this separately otherwise user entered markup will
 				// interract with form markup in unexpected ways
 				const id = `--ODK-OUTPUT-STRING-${i}--`;
 				outputStrings.set(id, str);
 				return '`' + id + '`';
 			}
-			return str ?? '';
+			return str;
 		})
 		.join('');
 }

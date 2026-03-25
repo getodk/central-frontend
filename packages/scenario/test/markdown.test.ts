@@ -442,7 +442,9 @@ double line break`;
 	});
 
 	describe('should handle output elements', () => {
-		const outputScenario = async () => {
+		const outputScenario = async (
+			markdown = '**Dear <output value=" /data/name " />!** Welcome.'
+		) => {
 			return await Scenario.init(
 				'markdown',
 				html(
@@ -453,10 +455,7 @@ double line break`;
 								'itext',
 								t(
 									'translation lang="default"',
-									t(
-										'text id="/data/name:label"',
-										t('value', `**Dear <output value=" /data/name " />!** Welcome.`)
-									)
+									t('text id="/data/name:label"', t('value', markdown))
 								)
 							),
 							mainInstance(t('data id="markdown"', t('name'))),
@@ -483,6 +482,24 @@ double line break`;
 							children: [{ value: 'Alice' }],
 						},
 						{ value: '!' },
+					],
+				},
+				{ value: ' Welcome.' },
+			]);
+		});
+
+		it('style wraps empty output elements', async () => {
+			const scenario = await outputScenario('**<output value=" /data/name " />** Welcome.');
+			scenario.next('/data/name');
+			const label = scenario.getQuestionLabel({ assertCurrentReference: '/data/name' }).formatted;
+			expect(label).toMatchObject([
+				{
+					elementName: 'strong',
+					children: [
+						{
+							elementName: 'span',
+							children: [],
+						},
 					],
 				},
 				{ value: ' Welcome.' },
