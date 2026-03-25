@@ -37,6 +37,54 @@ describe('external-instance-csv-parser', () => {
 		);
 	});
 
+	it('parses csv with single column', () => {
+		const csv = `name
+a
+b
+`;
+		const actual = parseItems(url, csv);
+		expect(actual).to.deep.equal([
+			[
+				{
+					cellValue: 'a',
+					columnName: 'name',
+				},
+			],
+			[
+				{
+					cellValue: 'b',
+					columnName: 'name',
+				},
+			],
+		]);
+	});
+
+	it('parses csv with single column with quoted commas', () => {
+		const csv = `name
+a
+"2,3"
+`;
+		const actual = parseItems(url, csv);
+		expect(actual).to.deep.equal([
+			[
+				{
+					cellValue: 'a',
+					columnName: 'name',
+				},
+			],
+			[
+				{
+					cellValue: '2,3',
+					columnName: 'name',
+				},
+			],
+		]);
+	});
+
+	it('errors when given invalid CSV with commas on non-header lines as a single-column', () => {
+		expect(() => parseItems(url, 'a\n1,2')).to.throw('Failed to parse CSV jr://csv/mock.csv');
+	});
+
 	it('parses csv with rows with extra columns that are empty', () => {
 		const csv = `name,value
 a,1,,,,,,

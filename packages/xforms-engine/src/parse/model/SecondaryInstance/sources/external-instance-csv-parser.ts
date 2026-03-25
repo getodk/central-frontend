@@ -60,6 +60,12 @@ const assertCSVRow: AssertCSVRow = (resourceURL: JRResourceURL, columns) => {
 		);
 	}
 
+	if (columns.length === 0) {
+		throw new ErrorProductionDesignPendingError(
+			`Failed to parse CSV ${resourceURL.href}: no columns found`
+		);
+	}
+
 	for (const [index, column] of columns.entries()) {
 		if (typeof column !== 'string') {
 			throw new ErrorProductionDesignPendingError(
@@ -142,6 +148,19 @@ const toItems = (
 	});
 };
 
+const parseCSVHeaderWithRetry = (csvData: string, delimiter?: string) => {
+	const result = papa.parse(csvData, {
+		delimitersToGuess: [',', ';', '\t', '|'],
+		download: false,
+		preview: 1,
+		delimiter,
+	});
+	if (!delimiter && result.errors.some((error) => error.code === 'UndetectableDelimiter')) {
+		return parseCSVHeaderWithRetry(csvData, ',');
+	}
+	return result;
+};
+
 /**
  * Based on
  * {@link https://github.com/getodk/central-frontend/blob/42c9277709e593480d1462e28b4be5f1364532b7/src/util/csv.js#L79} (and {@link https://github.com/getodk/central-frontend/blob/42c9277709e593480d1462e28b4be5f1364532b7/src/util/csv.js#L13}).
@@ -154,13 +173,8 @@ const toItems = (
  *   {@link papa | papaparse} API/config.
  */
 const parseCSVHeader = (resourceURL: JRResourceURL, csvData: string): ParsedCSVHeader => {
-	const { data, errors, meta } = papa.parse(csvData, {
-		delimitersToGuess: [',', ';', '\t', '|'],
-		download: false,
-		preview: 1,
-	});
+	const { data, errors, meta } = parseCSVHeaderWithRetry(csvData);
 	const [columns = []] = data;
-
 	assertCSVRow(resourceURL, columns);
 	assertPapaparseSuccess(resourceURL, errors);
 

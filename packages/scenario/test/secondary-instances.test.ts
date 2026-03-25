@@ -905,9 +905,8 @@ describe('Secondary instances', () => {
 				rowDelimiter: '\r\n',
 			},
 			{
-				description: 'unsupported row delimiter: LFLF',
+				description: 'row delimiter: LFLF',
 				rowDelimiter: `\n\n`,
-				expectedFailure: 'parse',
 			},
 
 			{
