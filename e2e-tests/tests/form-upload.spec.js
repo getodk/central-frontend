@@ -3,10 +3,9 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import BackendClient from '../backend-client';
+import { login } from '../util';
 
 const appUrl = process.env.ODK_URL;
-const user = process.env.ODK_USER;
-const password = process.env.ODK_PASSWORD;
 const projectId = process.env.PROJECT_ID;
 
 let publishedForm;
@@ -18,46 +17,7 @@ test.beforeAll(async ({ playwright }, testInfo) => {
   await backendClient.dispose();
 });
 
-const login = async (page) => {
-  await page.goto(appUrl);
-  await expect(page.getByRole('heading', { name: 'Log in' })).toBeVisible();
-
-  await page.getByPlaceholder('email address').fill(user);
-  await page.getByPlaceholder('password').fill(password);
-
-  await page.getByRole('button', { name: 'Log in' }).click();
-
-  await page.waitForURL(appUrl);
-};
-
 test.describe('Form Upload', () => {
-  test('clears file input when server returns an error', async ({ page }) => {
-    await login(page);
-
-    // Navigate to create form page
-    await page.goto(`${appUrl}/#/projects/${projectId}`);
-    await page.getByRole('button', { name: 'New' }).click();
-
-    // Verify modal is open
-    await expect(page.locator('#form-new')).toBeVisible();
-
-    const formXml = path.join(__dirname, '../data/form-without-meta.xml');
-
-    await page.locator('#form-new input[type="file"]').setInputFiles(formXml);
-
-    // Verify filename is displayed
-    await expect(page.locator('#form-new-filename')).toContainText('form-without-meta');
-
-    // Click upload
-    await page.getByRole('button', { name: 'Upload' }).click();
-
-    // Wait for error alert to appear
-    await expect(page.locator('#form-new .red-alert')).toContainText("The form does not contain a 'meta' group");
-
-    // Verify file input is cleared (filename should not be visible)
-    await expect(page.locator('#form-new-filename')).not.toBeVisible();
-  });
-
   test('shows error when file is modified before clicking upload anyway', async ({ page, playwright }, testInfo) => {
     // Delete the form to put it in trash
     const backendClient = new BackendClient(playwright, `${testInfo.project.name}_form_upload`);
@@ -111,7 +71,7 @@ test.describe('Form Upload', () => {
       await expect(page.locator('.modal-warnings')).not.toBeVisible();
     } finally {
       // Clean up temp directory
-      // fs.rmSync(tempDir, { recursive: true, force: true });
+      fs.rmSync(tempDir, { recursive: true, force: true });
     }
   });
 });

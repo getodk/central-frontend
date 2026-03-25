@@ -179,12 +179,15 @@ export default {
   watch: {
     state(state) {
       if (!state) {
-        this.file = null;
-        this.warnings = null;
+        this.clear();
       }
     }
   },
   methods: {
+    clear() {
+      this.file = null;
+      this.warnings = null;
+    },
     afterFileSelection(file) {
       this.redAlert.hide();
       this.file = file;
@@ -199,20 +202,14 @@ export default {
         this.redAlert.show(this.$t('alert.fileRequired'));
         return;
       }
-
-      // Assumption: If file is changed/deleted on the disk then it won't be readable
-      if (ignoreWarnings) {
-        const reader = new FileReader();
-        reader.onload = () => this.performUpload(ignoreWarnings);
-        reader.onerror = () => {
-          this.redAlert.show(this.$t('alert.fileNotReadable'));
-          this.file = null;
-          this.warnings = null;
-        };
-        reader.readAsArrayBuffer(this.file);
-      } else {
-        this.performUpload(ignoreWarnings);
-      }
+      // Try to read the file, error means file is modified or deleted or moved
+      const reader = new FileReader();
+      reader.onload = () => this.performUpload(ignoreWarnings);
+      reader.onerror = () => {
+        this.redAlert.show(this.$t('alert.fileNotReadable'));
+        this.clear();
+      };
+      reader.readAsArrayBuffer(this.file);
     },
     performUpload(ignoreWarnings) {
       const query = ignoreWarnings ? { ignoreWarnings } : null;
@@ -257,10 +254,7 @@ export default {
           }
         })
         .catch(() => {
-          if (this.$route === initialRoute) {
-            this.warnings = null;
-            this.file = null;
-          }
+          if (this.$route === initialRoute) this.warnings = null;
         });
     },
     removeLearnMore(value) {
