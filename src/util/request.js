@@ -198,6 +198,11 @@ export const apiPaths = {
   config: (key) => {
     const encodedKey = encodeURIComponent(key);
     return `/v1/config/${encodedKey}`;
+  },
+  publicConfig: (key, query = undefined) => {
+    const encodedKey = encodeURIComponent(key);
+    const qs = queryString(query);
+    return `/v1/config/public/${encodedKey}${qs}`;
   }
 };
 

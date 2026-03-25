@@ -6,26 +6,23 @@ content in a slot, which the component will style. -->
     <div id="account-page-container-left">
       <div>
         <div id="account-page-container-logo">
-          <!-- Try to load the customized logo even before knowing whether it
-          exists, with the aim of showing it more quickly if it does exist. -->
-          <img v-if="initiallyLoading || logoExists"
-            :src="'/v1/config/public/logo'" :alt="$t('customLogoAlt')"
-            v-on="imgHandlers">
-          <img v-if="initiallyLoading || !logoExists"
-            src="../../../assets/images/odk-logo.png" :alt="$t('login.odkLogo')"
-            v-on="imgHandlers">
+          <!-- This will load the default logo eagerly, even before the response
+          for serverConfig has been received. The goal is to show the default
+          logo more quickly if a custom logo isn't configured. -->
+          <img v-if="logoUrl == null" src="../../../assets/images/odk-logo.png"
+            :alt="$t('login.odkLogo')" v-on="imgHandlers">
+          <img v-else :src="logoUrl"
+            :alt="$t('customLogoAlt')" v-on="imgHandlers">
           <spinner/>
         </div>
         <div id="account-page-container-main"><slot></slot></div>
       </div>
     </div>
     <div id="account-page-container-hero" :class="hiddenClass">
-      <img v-if="initiallyLoading || heroExists"
-        :src="'/v1/config/public/hero-image'" :alt="$t('customHeroAlt')"
-        v-on="imgHandlers">
-      <img v-if="initiallyLoading || !heroExists"
-        src="../../../assets/images/account/default-hero.png" :alt="$t('defaultHeroAlt')"
-        v-on="imgHandlers">
+      <img v-if="heroUrl == null" src="../../../assets/images/account/default-hero.png"
+        :alt="$t('defaultHeroAlt')" v-on="imgHandlers">
+      <img v-else :src="heroUrl"
+        :alt="$t('customHeroAlt')" v-on="imgHandlers">
     </div>
   </div>
 </template>
@@ -35,6 +32,7 @@ import { computed } from 'vue';
 
 import Spinner from '../../spinner.vue';
 
+import { apiPaths } from '../../../util/request';
 import { useRequestData } from '../../../request-data';
 
 defineOptions({
@@ -49,12 +47,15 @@ const props = defineProps({
 // created.
 const { serverConfig } = useRequestData();
 
-const { initiallyLoading } = serverConfig.toRefs();
-
-const blobExists = (key) => computed(() => serverConfig.dataExists &&
-  serverConfig[key] != null && serverConfig[key].blobExists);
-const logoExists = blobExists('logo');
-const heroExists = blobExists('hero-image');
+const blobUrl = (key) => computed(() => {
+  if (!serverConfig.dataExists) return null;
+  const config = serverConfig[key];
+  if (config == null || !config.blobExists) return null;
+  // The `ts` query parameter isn't for Backend: it's for cache-busting.
+  return apiPaths.publicConfig(key, { ts: Date.parse(config.setAt) });
+});
+const logoUrl = blobUrl('logo');
+const heroUrl = blobUrl('hero-image');
 
 const imgHandlers = {
   // eslint-disable-next-line no-param-reassign
