@@ -70,7 +70,7 @@ export default {
   components: { FormGroup, Spinner },
   inject: ['container', 'alert', 'config', 'location'],
   props: {
-    // `true` is the component is being previewed in ConfigLoginPreview
+    // `true` if the component is being previewed in ConfigLoginPreview
     preview: Boolean
   },
   setup(props) {
