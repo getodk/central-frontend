@@ -72,7 +72,7 @@ const hiddenClass = computed(() => (props.preview ? null : 'hidden-xs hidden-sm'
 <style lang="scss">
 @use 'sass:color';
 @use 'sass:math';
-@import '../../../assets/scss/variables';
+@import '../../../assets/scss/mixins';
 
 /*
 Notes about the layout:
@@ -171,6 +171,7 @@ Notes about the layout:
   $margin-after-title: 40px;
 
   h1 {
+    @include break-word;
     font-size: 24px;
     letter-spacing: normal;
     line-height: inherit;
