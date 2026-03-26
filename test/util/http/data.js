@@ -29,7 +29,10 @@ const responseDefaults = {
   users: () => testData.standardUsers.sorted(),
   user: () => testData.standardUsers.last(),
   audits: () => testData.extendedAudits.sorted(),
-  serverConfig: () => testData.standardConfigs.byKey()
+  serverConfig: [
+    ({ url }) => url === '/v1/config/public',
+    () => testData.standardConfigs.byKey()
+  ]
 };
 
 /**
@@ -63,8 +66,11 @@ const componentResponses = (map) => Object.entries(map)
   ]);
 
 const responsesByComponent = {
-  ConfigError: [],
+  ClientConfigError: [],
 
+  AccountPage: componentResponses({
+    serverConfig: true
+  }),
   AccountLogin: [],
   AccountResetPassword: [],
   AccountClaim: [],

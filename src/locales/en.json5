@@ -365,6 +365,7 @@
     "learnMore": "Learn more."
   },
   "login": {
+    "odkLogo": "ODK logo",
     "defaultTitle": "Welcome to ODK Central",
     "defaultDescription": "Log into your account to get started"
   },

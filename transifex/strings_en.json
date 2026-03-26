@@ -817,6 +817,9 @@
     }
   },
   "login": {
+    "odkLogo": {
+      "string": "ODK logo"
+    },
     "defaultTitle": {
       "string": "Welcome to ODK Central"
     },
@@ -1115,6 +1118,9 @@
   },
   "component": {
     "AccountClaim": {
+      "title": {
+        "string": "Set your new password"
+      },
       "action": {
         "set": {
           "string": "Set password",
@@ -1167,7 +1173,24 @@
         }
       }
     },
+    "AccountPageContainer": {
+      "customLogoAlt": {
+        "string": "Organization logo"
+      },
+      "defaultHeroAlt": {
+        "string": "Features of ODK Central"
+      },
+      "customHeroAlt": {
+        "string": "Welcome image"
+      }
+    },
     "AccountResetPassword": {
+      "title": {
+        "string": "Reset your password"
+      },
+      "subtitle": {
+        "string": "Enter your email to reset your password"
+      },
       "alert": {
         "success": {
           "string": "An email has been sent to {email} with further instructions."
@@ -1719,6 +1742,11 @@
         "del": {
           "string": "Image successfully removed."
         }
+      }
+    },
+    "ConfigLoginPreview": {
+      "introduction": {
+        "string": "This is what your login page looks like right now:"
       }
     },
     "DatasetDelete": {

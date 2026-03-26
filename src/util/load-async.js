@@ -55,9 +55,9 @@ const loaders = new Map()
     /* webpackChunkName: "component-audit-list" */
     '../components/audit/list.vue'
   )))
-  .set('ConfigError', loader(() => import(
-    /* webpackChunkName: "component-config-error" */
-    '../components/config-error.vue'
+  .set('ClientConfigError', loader(() => import(
+    /* webpackChunkName: "component-client-config-error" */
+    '../components/client-config-error.vue'
   )))
   .set('ConfigLogin', loader(() => import(
     '../components/config/login.vue'

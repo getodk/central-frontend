@@ -10,31 +10,24 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="account-reset-password" class="row">
-    <div class="col-xs-12 col-sm-offset-3 col-sm-6">
-      <div class="panel panel-default panel-main">
-        <div class="panel-heading">
-          <h1 class="panel-title">{{ $t('title.resetPassword') }}</h1>
-        </div>
-        <div class="panel-body">
-          <form @submit.prevent="submit">
-            <form-group ref="email" v-model.trim="email" type="email"
-              :placeholder="$t('field.email')" required autocomplete="off"/>
-            <div class="panel-footer">
-              <button type="submit" class="btn btn-primary"
-                :aria-disabled="awaitingResponse">
-                {{ $t('action.resetPassword') }} <spinner :state="awaitingResponse"/>
-              </button>
-              <router-link v-slot="{ navigate }" to="/login" custom>
-                <button type="button" class="btn btn-link" @click="navigate">
-                  {{ $t('action.cancel') }}
-                </button>
-              </router-link>
-            </div>
-          </form>
-        </div>
+  <div id="account-reset-password">
+    <h1>{{ $t('title') }}</h1>
+    <p>{{ $t('subtitle') }}</p>
+    <form @submit.prevent="submit">
+      <form-group ref="email" v-model.trim="email" type="email"
+        :placeholder="$t('field.email')" required autocomplete="off"/>
+      <div>
+        <button type="submit" class="btn btn-primary"
+          :aria-disabled="awaitingResponse">
+          {{ $t('action.resetPassword') }} <spinner :state="awaitingResponse"/>
+        </button>
+        <router-link v-slot="{ navigate }" to="/login" custom>
+          <button type="button" class="btn btn-link" @click="navigate">
+            {{ $t('action.cancel') }}
+          </button>
+        </router-link>
       </div>
-    </div>
+    </form>
   </div>
 </template>
 
@@ -83,6 +76,8 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    "title": "Reset your password",
+    "subtitle": "Enter your email to reset your password",
     "alert": {
       "success": "An email has been sent to {email} with further instructions."
     }
