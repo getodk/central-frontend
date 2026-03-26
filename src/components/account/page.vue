@@ -60,5 +60,7 @@ useEventListener(window, 'resize', resize);
   #account-page-container {
     margin-block: -$margin-top-page-body (-$box-shadow-offset-y-body);
   }
+
+  body:has(&) .navbar-default { box-shadow: none; }
 }
 </style>
