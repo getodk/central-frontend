@@ -1,0 +1,46 @@
+<template>
+  <div id="config-login">
+    <p id="config-login-title">{{ $t('title') }}</p>
+    <loading :state="serverConfig.awaitingResponse"/>
+    <div v-if="serverConfig.dataExists" class="row">
+      <div class="col-xs-5">
+        <config-login-edit/>
+      </div>
+      <div class="col-xs-6 col-xs-offset-1">
+        <!-- TODO preview -->
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import ConfigLoginEdit from './login/edit.vue';
+import Loading from '../loading.vue';
+
+import { noop } from '../../util/util';
+import { useRequestData } from '../../request-data';
+
+defineOptions({
+  name: 'ConfigLogin'
+});
+
+const { serverConfig } = useRequestData();
+
+serverConfig.request({ url: '/v1/config/public' }).catch(noop);
+</script>
+
+<style lang="scss">
+#config-login-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 40px;
+}
+</style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "title": "Login page"
+  }
+}
+</i18n>

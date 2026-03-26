@@ -66,6 +66,10 @@
         "string": "Server Audit Logs",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       },
+      "customization": {
+        "string": "Customization",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      },
       "analytics": {
         "string": "Usage Reporting",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
@@ -497,6 +501,10 @@
       "string": "Date range",
       "developer_comment": "This is the text of a form field."
     },
+    "description": {
+      "string": "Description",
+      "developer_comment": "This is the text of a form field."
+    },
     "displayName": {
       "string": "Display name",
       "developer_comment": "This is the text of a form field."
@@ -527,6 +535,10 @@
     },
     "passwordConfirm": {
       "string": "New password (confirm)",
+      "developer_comment": "This is the text of a form field."
+    },
+    "title": {
+      "string": "Title",
       "developer_comment": "This is the text of a form field."
     },
     "type": {
@@ -802,6 +814,14 @@
     "learnMore": {
       "string": "Learn more.",
       "developer_comment": "This is a link to more information."
+    }
+  },
+  "login": {
+    "defaultTitle": {
+      "string": "Welcome to ODK Central"
+    },
+    "defaultDescription": {
+      "string": "Log into your account to get started"
     }
   },
   "analytics": {
@@ -1637,6 +1657,68 @@
       },
       "body": {
         "string": "There was an error loading Central."
+      }
+    },
+    "ConfigLogin": {
+      "title": {
+        "string": "Login page"
+      }
+    },
+    "ConfigLoginEdit": {
+      "logo": {
+        "label": {
+          "string": "Logo"
+        },
+        "help": {
+          "string": "We recommend using an image with a white or transparent background of at least 150x150 pixels."
+        }
+      },
+      "title": {
+        "help": {
+          "string": "A title for your server login."
+        }
+      },
+      "description": {
+        "help": {
+          "string": "A brief description of your project space."
+        }
+      },
+      "hero": {
+        "label": {
+          "string": "Hero image"
+        },
+        "help": {
+          "string": "We recommend using a high-resolution image in JPG or PNG format. For best results, use a visually engaging image that represents your brand or message."
+        }
+      }
+    },
+    "ConfigLoginFileSelect": {
+      "select": {
+        "full": {
+          "string": "Drag image here or {upload}",
+          "developer_comment": "{upload} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nupload file"
+        },
+        "upload": {
+          "string": "upload file",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {upload} is in the following text:\n\nDrag image here or {upload}"
+        }
+      },
+      "action": {
+        "remove": {
+          "string": "Remove image",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "invalidType": {
+          "string": "File type not accepted."
+        },
+        "post": {
+          "string": "Image successfully saved."
+        },
+        "del": {
+          "string": "Image successfully removed."
+        }
       }
     },
     "DatasetDelete": {

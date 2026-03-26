@@ -201,6 +201,7 @@ describe('createCentralRouter()', () => {
       '/users/2/edit',
       '/account/edit',
       '/system/audits',
+      '/system/config',
       '/system/analytics',
       '/dl/projects/1/forms/f/submissions/s/attachments/a'
     ];
@@ -515,6 +516,7 @@ describe('createCentralRouter()', () => {
         '/users',
         '/users/2/edit',
         '/system/audits',
+        '/system/config',
         '/system/analytics'
       ];
       for (const path of paths) {
@@ -1052,6 +1054,12 @@ describe('createCentralRouter()', () => {
       document.title.should.equal('Server Audit Logs | System Management | ODK Central');
     });
 
+    it('shows static title for /system/config', async () => {
+      await load('/system/config');
+      const { title } = document;
+      title.should.equal('Customization | System Management | ODK Central');
+    });
+
     it('shows static title for /system/analytics', async () => {
       await load('/system/analytics');
       const { title } = document;
@@ -1084,7 +1092,7 @@ describe('createCentralRouter()', () => {
         }));
   });
 
-  describe('config', () => {
+  describe('client config', () => {
     it('requests the config', () => {
       // Using a role of 'none' in order to prevent some requests.
       const user = testData.extendedUsers
@@ -1124,12 +1132,11 @@ describe('createCentralRouter()', () => {
       });
 
       it('does not request the current user', () => {
-        testData.extendedUsers.createPast(1);
         const session = testData.sessions.createPast(1).last();
         const container = { config: false };
         return load('/login', { container })
           .respondWithData(() => session)
-          .respond(() => ({ status: 502 }))
+          .respond(() => ({ status: 502 })) // config
           .testRequests([
             { url: '/v1/sessions/restore' },
             { url: '/client-config.json' }
@@ -1137,12 +1144,11 @@ describe('createCentralRouter()', () => {
       });
 
       it('clears the session', () => {
-        testData.extendedUsers.createPast(1);
         const session = testData.sessions.createPast(1).last();
         const container = { config: false };
         return load('/login', { container })
           .respondWithData(() => session)
-          .respond(() => ({ status: 502 }))
+          .respond(() => ({ status: 502 })) // config
           .beforeEachResponse((app, config, i) => {
             if (i === 1)
               app.vm.$container.requestData.session.dataExists.should.be.true;

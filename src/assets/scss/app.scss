@@ -419,7 +419,6 @@ $form-group-padding-bottom: 15px;
   display: block;
   font-weight: normal;
   margin-bottom: 15px;
-  padding-bottom: $form-group-padding-bottom;
   position: relative;
 
   $form-control-z-index: 1;
@@ -457,6 +456,7 @@ $form-group-padding-bottom: 15px;
     transform: translateY(2px);
     transition: 0.15s transform, 0.15s color;
   }
+  &:where(:has(.form-label)) { padding-bottom: $form-group-padding-bottom; }
   &:focus-within .form-label { color: $color-action-foreground; }
   .form-control {
     &:placeholder-shown ~ .form-label { transform: translateY(-15px); }

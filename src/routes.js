@@ -637,6 +637,20 @@ const routes = [
         }
       }),
       asyncRoute({
+        path: 'config',
+        component: 'ConfigLogin',
+        loading: 'tab',
+        meta: {
+          validateData: {
+            currentUser: () => currentUser.can(['config.read', 'config.set'])
+          },
+          title: () => [
+            i18n.t('systemHome.tab.customization'),
+            i18n.t('systemHome.title')
+          ]
+        }
+      }),
+      asyncRoute({
         path: 'analytics',
         component: 'AnalyticsList',
         loading: 'tab',
@@ -651,8 +665,7 @@ const routes = [
           title: () => [
             i18n.t('systemHome.tab.analytics'),
             i18n.t('systemHome.title')
-          ],
-          fullWidth: true
+          ]
         },
         beforeEnter: () => (config.showsAnalytics ? true : '/404')
       })

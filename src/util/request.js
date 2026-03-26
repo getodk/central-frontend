@@ -195,6 +195,10 @@ export const apiPaths = {
   serverUrlForFieldKey: (token, projectId) =>
     `/v1/key/${token}/projects/${projectId}`,
   audits: (query) => `/v1/audits${queryString(query)}`,
+  config: (key) => {
+    const encodedKey = encodeURIComponent(key);
+    return `/v1/config/${encodedKey}`;
+  }
 };
 
 
