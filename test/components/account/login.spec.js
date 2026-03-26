@@ -56,6 +56,32 @@ describe('AccountLogin', () => {
     });
   });
 
+  describe('autofill', () => {
+    it('facilitates autofill by default', () => {
+      const component = mountComponent();
+      const inputs = component.findAll('input');
+      inputs.length.should.equal(2);
+      inputs[0].attributes().type.should.equal('email');
+      inputs[1].attributes().should.include({
+        type: 'password',
+        autocomplete: 'current-password'
+      });
+    });
+
+    it('discourages autofill during preview', () => {
+      const component = mountComponent({
+        props: { preview: true }
+      });
+      const inputs = component.findAll('input');
+      inputs.length.should.equal(2);
+      inputs[0].attributes().type.should.equal('text');
+      inputs[1].attributes().should.include({
+        type: 'text',
+        autocomplete: 'off'
+      });
+    });
+  });
+
   it('shows the hostname', () => {
     const component = mountComponent();
     const text = component.get('#account-login-footer span').text();

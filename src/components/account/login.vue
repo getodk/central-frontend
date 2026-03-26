@@ -22,11 +22,11 @@ except according to the terms contained in the LICENSE file.
       </a>
     </template>
     <form v-else @submit.prevent="submit">
-      <form-group ref="email" v-model.trim="email" type="email"
+      <form-group ref="email" v-model.trim="email" :type="preview ? 'text' : 'email'"
         :placeholder="$t('field.email')" required autocomplete="off"/>
-      <form-group v-model="password" type="password"
+      <form-group v-model="password" :type="preview ? 'text' : 'password'"
         :placeholder="$t('field.password')" required
-        autocomplete="current-password"/>
+        :autocomplete="preview ? 'off' : 'current-password'"/>
       <div v-if="showMailingListOptIn" id="mailing-list-opt-in" class="checkbox">
         <label>
           <input v-model="mailingListOptIn" type="checkbox">{{ $t('analytics.mailingListOptIn') }}
