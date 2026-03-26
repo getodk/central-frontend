@@ -1,0 +1,61 @@
+<script setup lang="ts">
+import IconSVG from '@/components/common/IconSVG.vue';
+import type { UploadNode } from '@getodk/xforms-engine';
+import Button from 'primevue/button';
+import type { HTMLInputElementEvent, Ref } from 'vue';
+import { ref, watchEffect } from 'vue';
+
+const selectFileInput = ref<HTMLInputElement | null>(null);
+
+export interface UploadFileHeaderProps {
+	readonly question: UploadNode;
+	readonly isDisabled: boolean;
+	readonly accept: string;
+}
+
+const props = defineProps<UploadFileHeaderProps>();
+
+const triggerInputField = (inputField: HTMLInputElement | null) => {
+	if (inputField == null) {
+		return;
+	}
+
+	inputField.click();
+};
+
+const clearInputRefValue = (inputRef: Ref<HTMLInputElement | null>) => {
+	if (inputRef.value != null) {
+		inputRef.value.value = '';
+	}
+};
+
+const onChange = (event: HTMLInputElementEvent) => {
+	emit('change', event.target.files?.[0] ?? null);
+};
+
+watchEffect(() => {
+	if (props.question.currentState.value == null) {
+		clearInputRefValue(selectFileInput);
+	}
+});
+
+const emit = defineEmits(['change']);
+</script>
+
+<template>
+	<Button
+		:disabled="isDisabled"
+		@click="triggerInputField(selectFileInput)"
+	>
+		<IconSVG name="mdiPaperclip" variant="inverted" />
+		<!-- TODO: translations -->
+		<span>Choose file</span>
+	</Button>
+	<input
+		ref="selectFileInput"
+		type="file"
+		:accept="accept"
+		style="display: none"
+		@change="onChange"
+	>
+</template>

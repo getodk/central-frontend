@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 import {
 	mdiAlert,
 	mdiAlertCircleOutline,
@@ -21,12 +20,15 @@ import {
 	mdiDownload,
 	mdiDragVertical,
 	mdiEyeOutline,
+	mdiFileMusic,
 	mdiFileOutline,
+	mdiFileVideo,
 	mdiFullscreen,
 	mdiImage,
 	mdiInformationSlabCircleOutline,
 	mdiMapMarkerOutline,
 	mdiMenu,
+	mdiPaperclip,
 	mdiPencil,
 	mdiPlus,
 	mdiPrinter,
@@ -40,6 +42,7 @@ import {
 	mdiVolumeHigh,
 	mdiWeb,
 } from '@mdi/js';
+import { computed } from 'vue';
 
 // Find icons here: https://pictogrammers.com/library/mdi/
 const iconMap: Record<string, string> = {
@@ -63,12 +66,15 @@ const iconMap: Record<string, string> = {
 	mdiDownload,
 	mdiDragVertical,
 	mdiEyeOutline,
+	mdiFileMusic,
 	mdiFileOutline,
+	mdiFileVideo,
 	mdiFullscreen,
 	mdiImage,
 	mdiInformationSlabCircleOutline,
 	mdiMapMarkerOutline,
 	mdiMenu,
+	mdiPaperclip,
 	mdiPencil,
 	mdiPlus,
 	mdiPrinter,

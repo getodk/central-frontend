@@ -23,6 +23,7 @@ export interface FormOptions {
 	readonly fetchFormAttachment: FetchFormAttachment;
 	readonly missingResourceBehavior?: MissingResourceBehavior;
 	readonly geolocationProvider?: GeolocationProvider;
+	readonly attachmentMaxSize?: number;
 }
 
 export type ResolveInstanceAttachment = (fileName: string) => Promise<FetchResourceResponse>;

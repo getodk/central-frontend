@@ -51,6 +51,7 @@ export interface OdkWebFormsProps {
 	readonly trackDevice?: boolean;
 	readonly preloadProperties?: PreloadProperties;
 	readonly missingResourceBehavior?: MissingResourceBehavior;
+	readonly attachmentMaxSize?: number;
 
 	/**
 	 * Note: this parameter must be set when subscribing to the
@@ -188,6 +189,7 @@ const formOptions = readonly<FormOptions>({
 	fetchFormAttachment: props.fetchFormAttachment,
 	missingResourceBehavior: props.missingResourceBehavior,
 	geolocationProvider: { getLocation: () => getLocation() },
+	attachmentMaxSize: props.attachmentMaxSize,
 });
 provide(FORM_OPTIONS, formOptions);
 provide(FORM_MEDIA_CACHE, new Map<JRResourceURLString, ObjectURL>());

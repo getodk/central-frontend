@@ -37,11 +37,12 @@ app.use(WebFormsPlugin);
 
 The `<OdkWebForm>` component accepts the following props:
 
-- `formXml` (`string`, required): The XML of the ODK XForm to be rendered
-- `fetchFormAttachment` (`FetchFormAttachment`, required): Function to fetch form attachments
-- `missingResourceBehavior` (`MissingResourceBehavior`, optional): Defines behavior when resources are missing
-- `submissionMaxSize` (`number`, optional): Maximum size for chunked submissions. Required when subscribing to `submitChunked` event
-- `editInstance` (`EditInstanceOptions`, optional): Options to resolve and load instance and attachment resources for editing
+- `formXml` (`string`, required): The XML of the ODK XForm to be rendered.
+- `fetchFormAttachment` (`FetchFormAttachment`, required): Function to fetch form attachments.
+- `missingResourceBehavior` (`MissingResourceBehavior`, optional): Defines behavior when resources are missing.
+- `submissionMaxSize` (`number`, optional): Maximum size for chunked submissions. Required when subscribing to `submitChunked` event.
+- `attachmentMaxSize` (`number`, optional, defaults to 100MB): Maximum size for submission attachments in bytes.
+- `editInstance` (`EditInstanceOptions`, optional): Options to resolve and load instance and attachment resources for editing.
 - `preloadProperties` (`PreloadProperties`, optional): Properties to make available for binding in the form using jr:preload.
 - `trackDevice` (`boolean`, optional, defaults to `false`): If `true`, generates a unique identifier for this device and stores it in `localstorage` for use in subsequent submissions. Ignored if `preloadProperties.deviceID` is given.
 

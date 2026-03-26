@@ -18,5 +18,5 @@ export const resize = async (file: File, max: number): Promise<File> => {
 		});
 	};
 	const blob = await reducer.toBlob(file, { max });
-	return new File([blob], file.name);
+	return new File([blob], file.name, { type: file.type });
 };

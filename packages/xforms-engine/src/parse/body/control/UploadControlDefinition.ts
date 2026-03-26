@@ -15,6 +15,16 @@ type MediaTypeMatches =
 	| readonly [$0: string, $1: string, $2: string];
 
 const parseUploadMediaOptions = (element: Element): UploadMediaOptions => {
+	const acceptAttribute = element.getAttribute('accept')?.trim();
+
+	if (acceptAttribute) {
+		return {
+			accept: acceptAttribute,
+			type: null,
+			subtype: null,
+		};
+	}
+
 	const mediaType = element.getAttribute('mediatype')?.trim();
 
 	if (mediaType == null || mediaType === '') {

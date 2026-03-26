@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml"
+        xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms"
+        xmlns:odk="http://www.opendatakit.org/xforms">
+  <h:head>
+    <h:title>File Upload</h:title>
+    <model odk:xforms-version="1.0.0">
+      <instance>
+        <data id="file_upload" version="2025020401">
+          <image/>
+          <audio/>
+          <video/>
+          <doc/>
+          <anything/>
+          <disabled/>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+
+      <bind nodeset="/data/image" type="binary" />
+      <bind nodeset="/data/audio" type="binary" />
+      <bind nodeset="/data/video" type="binary" />
+      <bind nodeset="/data/doc" type="binary" />
+      <bind nodeset="/data/anything" type="binary" required="true()" />
+      <bind nodeset="/data/disabled" type="binary" readonly="true()" />
+    </model>
+  </h:head>
+  <h:body>
+    <upload mediatype="image/*" ref="/data/image">
+      <label>Upload image</label>
+    </upload>
+    <upload mediatype="audio/*" ref="/data/audio">
+      <label>Upload audio</label>
+    </upload>
+    <upload mediatype="video/*" ref="/data/video">
+      <label>Upload video</label>
+    </upload>
+    <upload accept=".pdf,.doc,.docx" ref="/data/doc">
+      <label>Upload PDF or Word doc</label>
+      <hint>Must have an extension matching "pdf", "doc", or "docx"</hint>
+    </upload>
+    <upload ref="/data/anything">
+      <label>Upload any file</label>
+    </upload>
+    <upload ref="/data/disabled">
+      <label>Disabled upload</label>
+    </upload>
+  </h:body>
+</h:html>
