@@ -48,7 +48,7 @@ useEventListener(window, 'resize', rescale);
 
   #account-page-container {
     width: 1280px;
-    height: 720px;
+    min-height: 720px;
   }
 }
 </style>

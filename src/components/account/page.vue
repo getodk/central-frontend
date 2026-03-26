@@ -57,7 +57,8 @@ useEventListener(window, 'resize', resize);
 #account-page {
   margin-inline: -$padding-inline-container;
 
-  #page-body { margin-top: 0; }
-  #account-page-container { margin-bottom: -$box-shadow-offset-y-body; }
+  #account-page-container {
+    margin-block: -$margin-top-page-body (-$box-shadow-offset-y-body);
+  }
 }
 </style>

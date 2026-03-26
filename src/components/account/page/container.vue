@@ -95,6 +95,7 @@ Notes about the layout:
   // show the hero image, or 100% if the hero image is not shown.
   flex-basis: 0;
   flex-grow: 1;
+  overflow-x: hidden;
 
   // Center vertically.
   align-self: center;
