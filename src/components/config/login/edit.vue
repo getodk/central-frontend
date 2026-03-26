@@ -1,6 +1,6 @@
 <template>
   <div id="config-login-edit">
-    <p class="file-label">{{ $t('common.logo') }}</p>
+    <p class="file-label">{{ $t('logo.label') }}</p>
     <p>{{ $t('logo.help') }}</p>
     <config-login-file-select name="logo"/>
 
@@ -86,6 +86,7 @@ const submit = () => {
 {
   "en": {
     "logo": {
+      "label": "Logo",
       "help": "We recommend using an image with a white or transparent background of at least 150x150 pixels."
     },
     "title": {

@@ -955,9 +955,6 @@
     "loading": {
       "string": "Loading…"
     },
-    "logo": {
-      "string": "Logo"
-    },
     "map": {
       "string": "Map"
     },
@@ -1651,6 +1648,9 @@
     },
     "ConfigLoginEdit": {
       "logo": {
+        "label": {
+          "string": "Logo"
+        },
         "help": {
           "string": "We recommend using an image with a white or transparent background of at least 150x150 pixels."
         }
