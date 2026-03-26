@@ -34,8 +34,8 @@ export default (container, createResource) => {
   }));
 
   // Resources related to configuration
-  // The `config` resource is probably named too generically. It refers
-  // specifically to the client config.
+  // The `config` resource refers specifically to the client config. (It's
+  // probably named too generically.)
   createResource('config', (config) => ({
     // If client-config.json is completely invalid JSON, `data` seems to be a
     // string (e.g., '{]').

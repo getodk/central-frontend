@@ -102,6 +102,7 @@ const del = () => {
 @import '../../../assets/scss/variables';
 
 .config-login-file-select {
+  // Needed for Spinner.
   position: relative;
 
   .icon-file-o { margin-right: $margin-right-icon; }

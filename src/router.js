@@ -137,7 +137,7 @@ router.afterEach(unlessFailure(to => {
     }
 
     await localePromise.catch(noop);
-    return config.loadError == null ? true : '/load-error';
+    return config.loadError != null ? '/load-error' : true;
   });
 
   //////////////////////////////////////////////////////////////////////////////
