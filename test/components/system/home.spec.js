@@ -18,7 +18,7 @@ describe('SystemHome', () => {
     });
     const links = component.getComponent(PageHead).findAllComponents(RouterLinkStub);
     const to = links.map(link => link.props().to);
-    to.should.eql(['/system/audits', '/system/customization', '/system/analytics']);
+    to.should.eql(['/system/audits', '/system/config', '/system/analytics']);
   });
 
   it('hides "Usage Reporting" tab if showsAnalytics config is false', () => {
@@ -32,7 +32,7 @@ describe('SystemHome', () => {
   });
 
   describe('active tab', () => {
-    for (const path of ['audits', 'customization', 'audits']) {
+    for (const path of ['audits', 'config', 'audits']) {
       it(`activates correct tab after user navigates to .../${path}`, async () => {
         const app = await load(`/system/${path}`);
         const links = app.findAll('#page-head-tabs .active a');

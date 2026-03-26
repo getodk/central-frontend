@@ -19,8 +19,8 @@ except according to the terms contained in the LICENSE file.
             {{ $t('systemHome.tab.audits') }}
           </router-link>
         </li>
-        <li :class="tabClass('customization')" role="presentation">
-          <router-link :to="tabPath('customization')">
+        <li :class="tabClass('config')" role="presentation">
+          <router-link :to="tabPath('config')">
             {{ $t('systemHome.tab.customization') }}
           </router-link>
         </li>

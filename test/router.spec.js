@@ -201,7 +201,7 @@ describe('createCentralRouter()', () => {
       '/users/2/edit',
       '/account/edit',
       '/system/audits',
-      '/system/customization',
+      '/system/config',
       '/system/analytics',
       '/dl/projects/1/forms/f/submissions/s/attachments/a'
     ];
@@ -516,7 +516,7 @@ describe('createCentralRouter()', () => {
         '/users',
         '/users/2/edit',
         '/system/audits',
-        '/system/customization',
+        '/system/config',
         '/system/analytics'
       ];
       for (const path of paths) {
@@ -1054,8 +1054,8 @@ describe('createCentralRouter()', () => {
       document.title.should.equal('Server Audit Logs | System Management | ODK Central');
     });
 
-    it('shows static title for /system/customization', async () => {
-      await load('/system/customization');
+    it('shows static title for /system/config', async () => {
+      await load('/system/config');
       const { title } = document;
       title.should.equal('Customization | System Management | ODK Central');
     });

@@ -637,7 +637,7 @@ const routes = [
         }
       }),
       asyncRoute({
-        path: 'customization',
+        path: 'config',
         component: 'ConfigLogin',
         loading: 'tab',
         meta: {
