@@ -94,11 +94,15 @@ export default {
     }
   },
   "de": {
+    "title": "Passwort zurücksetzen",
+    "subtitle": "Gib deine E-Mail-Adresse ein, um dein Passwort zurückzusetzen",
     "alert": {
       "success": "Eine E-Mail mit weiteren Anweisungen wurde an {email} gesendet."
     }
   },
   "es": {
+    "title": "Restablece tu contraseña",
+    "subtitle": "Introduce tu correo electrónico para restablecer tu contraseña",
     "alert": {
       "success": "Se ha enviado un correo electrónico {email} con más instrucciones"
     }
@@ -114,6 +118,8 @@ export default {
     }
   },
   "it": {
+    "title": "Reimposta la tua password",
+    "subtitle": "Inserisci il tuo indirizzo e-mail per reimpostare la password",
     "alert": {
       "success": "È stata inviata un'email a {email} con ulteriori istruzioni."
     }
@@ -134,6 +140,8 @@ export default {
     }
   },
   "zh": {
+    "title": "重置密码",
+    "subtitle": "输入您的电子邮件以重置密码",
     "alert": {
       "success": "已向{email}发送邮件，内含后续操作说明。"
     }

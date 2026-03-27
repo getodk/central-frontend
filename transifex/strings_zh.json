@@ -66,6 +66,10 @@
         "string": "服务器审计记录",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       },
+      "customization": {
+        "string": "自定义",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      },
       "analytics": {
         "string": "使用报告",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
@@ -223,6 +227,10 @@
         },
         "update_publish": {
           "string": "发布",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
+        },
+        "update_property_delete": {
+          "string": "删除属性",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         }
       },
@@ -493,6 +501,10 @@
       "string": "日期范围",
       "developer_comment": "This is the text of a form field."
     },
+    "description": {
+      "string": "描述",
+      "developer_comment": "This is the text of a form field."
+    },
     "displayName": {
       "string": "展示名称",
       "developer_comment": "This is the text of a form field."
@@ -523,6 +535,10 @@
     },
     "passwordConfirm": {
       "string": "新密码（确认）",
+      "developer_comment": "This is the text of a form field."
+    },
+    "title": {
+      "string": "标题",
       "developer_comment": "This is the text of a form field."
     },
     "type": {
@@ -798,6 +814,17 @@
     "learnMore": {
       "string": "了解更多。",
       "developer_comment": "This is a link to more information."
+    }
+  },
+  "login": {
+    "odkLogo": {
+      "string": "ODK 标志"
+    },
+    "defaultTitle": {
+      "string": "欢迎使用 ODK Central"
+    },
+    "defaultDescription": {
+      "string": "登录您的帐户以开始使用"
     }
   },
   "analytics": {
@@ -1091,6 +1118,9 @@
   },
   "component": {
     "AccountClaim": {
+      "title": {
+        "string": "设置您的新密码"
+      },
       "action": {
         "set": {
           "string": "设置密码",
@@ -1143,7 +1173,24 @@
         }
       }
     },
+    "AccountPageContainer": {
+      "customLogoAlt": {
+        "string": "组织标志"
+      },
+      "defaultHeroAlt": {
+        "string": "ODK Central 的功能特性"
+      },
+      "customHeroAlt": {
+        "string": "欢迎图片"
+      }
+    },
     "AccountResetPassword": {
+      "title": {
+        "string": "重置密码"
+      },
+      "subtitle": {
+        "string": "输入您的电子邮件以重置密码"
+      },
       "alert": {
         "success": {
           "string": "已向{email}发送邮件，内含后续操作说明。"
@@ -1370,6 +1417,12 @@
         "description_length": {
           "string": "项目描述长度"
         },
+        "num_datasets_deleted": {
+          "string": "实体列表删除事件数量"
+        },
+        "num_dataset_properties_deleted": {
+          "string": "实体属性删除事件数量"
+        },
         "num_properties": {
           "string": "属性数量"
         },
@@ -1411,6 +1464,18 @@
         },
         "sso_enabled": {
           "string": "服务器上已启用SSO"
+        },
+        "login_customization_logo_set": {
+          "string": "自定义登录页面标志设置"
+        },
+        "login_customization_hero_image_set": {
+          "string": "自定义登录页面主视觉图片已设置"
+        },
+        "login_customization_title_set": {
+          "string": "自定义登录页面标题已设置"
+        },
+        "login_customization_description_set": {
+          "string": "自定义登录页面描述已设置"
         },
         "num_client_audit_attachments": {
           "string": "客户端审计附件数量"
@@ -1617,13 +1682,98 @@
         "string": "载入Central时发生错误。"
       }
     },
+    "ConfigLogin": {
+      "title": {
+        "string": "登录页面"
+      }
+    },
+    "ConfigLoginEdit": {
+      "logo": {
+        "label": {
+          "string": "标志"
+        },
+        "help": {
+          "string": "我们建议使用背景为白色或透明、尺寸至少为 150x150 像素的图片。"
+        }
+      },
+      "title": {
+        "help": {
+          "string": "您的服务器登录标题。"
+        }
+      },
+      "description": {
+        "help": {
+          "string": "您的项目空间的简短描述。"
+        }
+      },
+      "hero": {
+        "label": {
+          "string": "主视觉图片"
+        },
+        "help": {
+          "string": "我们建议使用高分辨率的 JPG 或 PNG 格式图片。为获得最佳效果，请使用能够代表您品牌或信息的视觉吸引力强的图片。"
+        }
+      }
+    },
+    "ConfigLoginFileSelect": {
+      "select": {
+        "full": {
+          "string": "将图片拖拽至此或 {upload}",
+          "developer_comment": "{upload} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nupload file"
+        },
+        "upload": {
+          "string": "上传文件",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {upload} is in the following text:\n\nDrag image here or {upload}"
+        }
+      },
+      "action": {
+        "remove": {
+          "string": "移除图片",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "invalidType": {
+          "string": "文件类型不支持。"
+        },
+        "post": {
+          "string": "图片已成功保存。"
+        },
+        "del": {
+          "string": "图片已成功移除。"
+        }
+      }
+    },
+    "ConfigLoginPreview": {
+      "introduction": {
+        "string": "这是您当前的登录页面样式："
+      }
+    },
+    "DatasetDelete": {
+      "title": {
+        "string": "删除实体列表",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "您确定要删除实体列表“{name}”吗？此操作无法撤销。"
+        }
+      }
+    },
     "DatasetEntities": {
       "upload": {
         "string": "上传实体"
       },
+      "new": {
+        "string": "新建",
+        "developer_comment": "This is shown on a button for creating new Entities"
+      },
       "alert": {
         "upload": {
           "string": "您的实体已成功上传。"
+        },
+        "create": {
+          "string": "实体已成功创建。"
         }
       },
       "purgeDescription": {
@@ -1682,10 +1832,6 @@
       }
     },
     "DatasetOverview": {
-      "connectionsToForms": {
-        "string": "关联表单",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
       "entityProperties": {
         "string": "实体属性",
         "developer_comment": "This is a title shown above a section of the page."
@@ -1695,11 +1841,6 @@
         "developer_comment": "This is shown on a button for creating new Entity Properties"
       }
     },
-    "DatasetOverviewConnectionToForms": {
-      "formsUpdateEntities": {
-        "string": "{count, plural, other {{count}个表单正在更新实体}}"
-      }
-    },
     "DatasetOverviewDatasetProperties": {
       "emptyTable": {
         "string": "该实体清单中的实体没有任何使用者定义的属性。"
@@ -1707,11 +1848,53 @@
       "none": {
         "string": "（无）",
         "developer_comment": "This is shown in an Entity property row in a column about Forms, and 'None' refers to Forms."
+      },
+      "confirmation": {
+        "title": {
+          "string": "删除实体"
+        },
+        "body": {
+          "string": "您确定要删除属性“{propertyName}”吗？此操作无法撤销。",
+          "developer_comment": "This is shown on a confirmation dialog box. {propertyName} is the name of the property that is being deleted."
+        }
+      },
+      "deleted": {
+        "string": "属性“{name}”已被删除。",
+        "developer_comment": "This is shown after a Property has been successfully deleted. {name} is the name of the deleted property."
       }
     },
-    "DatasetOverviewLinkedForms": {
-      "formsConsumeData": {
-        "string": "{count, plural, other {{count}个表单使用此实体列表}}"
+    "DatasetOverviewDeletePropertyError": {
+      "title": {
+        "string": "删除属性"
+      },
+      "intro": {
+        "string": "在删除属性“{propertyName}”之前，您需要先{actions}"
+      },
+      "clearEntities": {
+        "string": "清除其在{entities}中的值",
+        "developer_comment": "{entities} is a bold count like \"2 Entities\""
+      },
+      "and": {
+        "string": "和"
+      },
+      "unlinkForms": {
+        "string": "取消设置该属性的{forms}的关联",
+        "developer_comment": "{forms} is a bold count like \"5 Forms\""
+      },
+      "entitiesCount": {
+        "string": "{count, plural, other {{count} 个实体}}"
+      },
+      "relatedToEntities": {
+        "string": "{count, plural, other {与 {count} 个实体相关}}"
+      },
+      "moreEntities": {
+        "string": "{count, plural, other {以及其他 {count} 个实体}}"
+      },
+      "formsCount": {
+        "string": "{count, plural, other {{count} 个表单}}"
+      },
+      "relatedToForms": {
+        "string": "{count, plural, other {与 {count} 个表单相关}}"
       }
     },
     "DatasetOverviewNewProperty": {
@@ -1864,6 +2047,34 @@
         "successMessage": {
           "string": "当提交标记为“已批准”时，将创建实体。"
         }
+      },
+      "action": {
+        "delete": {
+          "string": "删除实体列表",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "delete": {
+          "string": "实体列表“{name}”已成功删除。"
+        }
+      },
+      "dependentForms": {
+        "description": {
+          "0": {
+            "string": "实体列表“{name}”与 {formsCount} 个表单相关。",
+            "developer_comment": "{formsCount} is the number of Forms that are dependent on the Entity List. Example: 4 Forms"
+          },
+          "1": {
+            "string": "在删除它之前，您需要先解除它与相关表单的关联。"
+          },
+          "2": {
+            "string": "在此了解更多。"
+          }
+        },
+        "formsCount": {
+          "string": "{count, plural, other {{count} 个表单}}"
+        }
       }
     },
     "DatasetShow": {
@@ -1895,6 +2106,23 @@
     "DatasetTable": {
       "emptyTable": {
         "string": "尚未为此项目建立任何实体"
+      }
+    },
+    "DatasetTrashRow": {
+      "action": {
+        "download": {
+          "string": "下载数据 (.csv)",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "DatasetTrashTable": {
+      "trashCount": {
+        "string": "({count})",
+        "developer_comment": "{count} is the number of Entity Lists in the trash."
+      },
+      "message": {
+        "string": "实体列表将在回收站中保留 30 天后被删除"
       }
     },
     "Download": {
@@ -2248,9 +2476,6 @@
       "emptyMap": {
         "string": "仅当实体包含几何属性数据时才会显示该实体。"
       },
-      "allDeleted": {
-        "string": "所有实体已被删除。"
-      },
       "allDeletedOnPage": {
         "string": "本页所有实体已被删除。"
       },
@@ -2280,9 +2505,6 @@
       "deletedEntity": {
         "emptyTable": {
           "string": "没有已删除的实体。"
-        },
-        "allRestored": {
-          "string": "所有已删除的实体已复原。"
         },
         "allRestoredOnPage": {
           "string": "本页所有实体已复原。"
@@ -2422,16 +2644,6 @@
         "string": "更新{label}",
         "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
       },
-      "header": {
-        "currentValue": {
-          "string": "当前数值",
-          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
-        },
-        "updatedValue": {
-          "string": "更新后的数值",
-          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
-        }
-      },
       "geometryDisabled": {
         "string": "无法通过地图更新几何数据。"
       },
@@ -2560,6 +2772,17 @@
         "largeCell": {
           "string": "部分单元格异常过大，这可能会使文件读取失败：",
           "developer_comment": "This is a warning that is followed by a list of rows."
+        }
+      }
+    },
+    "EntityUpsert": {
+      "titleCreate": {
+        "string": "创建新实体"
+      },
+      "header": {
+        "value": {
+          "string": "值",
+          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
         }
       }
     },
@@ -3104,7 +3327,7 @@
         }
       },
       "newProperties": {
-        "string": "{count, plural, other {发布此草稿将创建 {count} 个属性，这些属性一经创建即无法删除。}}"
+        "string": "{count, plural, other {发布此草稿将创建 {count} 个属性。}}"
       },
       "problem": {
         "409_6": {
@@ -3437,6 +3660,9 @@
       "alert": {
         "fileRequired": {
           "string": "请选择文件。"
+        },
+        "fileNotReadable": {
+          "string": "无法读取该文件。它可能已被修改或删除。请重新选择文件。"
         }
       },
       "problem": {
@@ -3981,6 +4207,10 @@
       "rows": {
         "string": "{count, plural, other {第{range}行/共{count}行}}",
         "developer_comment": "{range} is a range of row numbers, for example, 1-5. {count} is the total number of rows. The string will be pluralized based on the number of rows in the range."
+      },
+      "zeroRow": {
+        "string": "第 0 行，共 {count} 行",
+        "developer_comment": "Shown when no row is displayed on the page because all rows are deleted or some other reasons. {count} is the total number of rows across all pages."
       },
       "field": {
         "size": {
@@ -4944,6 +5174,10 @@
             "developer_comment": "This text is shown in the list of actions performed on a Submission."
           }
         }
+      },
+      "deleted": {
+        "string": "（已删除）",
+        "developer_comment": "Shown in the Submission feed when dataset or entity has been deleted."
       }
     },
     "SubmissionFieldDropdown": {
@@ -5040,9 +5274,6 @@
       "learnMoreMap": {
         "string": "进一步了解提交地图数据功能"
       },
-      "allDeleted": {
-        "string": "已删除所有提交内容。"
-      },
       "allDeletedOnPage": {
         "string": "当前页面中的所有提交数据已被删除。"
       },
@@ -5058,9 +5289,6 @@
       "deletedSubmission": {
         "emptyTable": {
           "string": "没有已删除的提交内容。"
-        },
-        "allRestored": {
-          "string": "所有已删除的提交内容都已恢复。"
         },
         "allRestoredOnPage": {
           "string": "所有此页面上的提交内容都已还原。"
@@ -5470,11 +5698,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "地图功能️🗺️、批量删除️🗑️，及更强的系统可见性👀",
+        "string": "实体列表与属性删除🗑️、实体创建🪄以及登录页面的自定义品牌标识🎨",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "我们推出了全新的地图视图，可同时展示提交数据与实体；通过批量删除实体实现高效数据清理；系统可视化也得到提升——现在可清晰查看用户邀请状态及“最后更新”时间戳！"
+        "string": "当实体列表和属性不再需要时进行清理，直接从 Central 用户界面快速创建实体，并自定义登录页面，使您的服务器体现组织品牌形象，建立用户信任。"
       }
     }
   },

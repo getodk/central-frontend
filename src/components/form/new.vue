@@ -429,7 +429,8 @@ export default {
       "uploadAnyway": "Trotzdem hochladen"
     },
     "alert": {
-      "fileRequired": "Bitte wählen Sie eine Datei aus."
+      "fileRequired": "Bitte wählen Sie eine Datei aus.",
+      "fileNotReadable": "Die Datei konnte nicht gelesen werden. Möglicherweise wurde sie geändert oder gelöscht. Bitte wählen Sie die Datei erneut aus."
     },
     "problem": {
       "400_8": "Die hochgeladene Formulardefinition scheint nicht für dieses Formular zu sein. Es hat die falsche formId (\"{expected}\" erwartet, \"{actual}\" erhalten).",
@@ -477,7 +478,8 @@ export default {
       "uploadAnyway": "Subir de todos modos"
     },
     "alert": {
-      "fileRequired": "Por favor, elija un archivo."
+      "fileRequired": "Por favor, elija un archivo.",
+      "fileNotReadable": "No se ha podido leer el archivo. Es posible que se haya modificado o eliminado. Selecciona el archivo de nuevo."
     },
     "problem": {
       "400_8": "La definición del formulario que ha subido no parece ser para este formulario. Tiene el FormId equivocado (esperado \"{expected}\", got \"{actual}\").",
@@ -604,7 +606,8 @@ export default {
       "uploadAnyway": "Carica comunque"
     },
     "alert": {
-      "fileRequired": "Selezionare un file per favore"
+      "fileRequired": "Selezionare un file per favore",
+      "fileNotReadable": "Impossibile leggere il file. Potrebbe essere stato modificato o eliminato. Seleziona nuovamente il file."
     },
     "problem": {
       "400_8": "La definizione del formulario che hai caricato non sembra essere per questo formulario. Ha il formId sbagliato (previsto \"{expected}\", ottenuto \"{actual}\").",
@@ -776,7 +779,8 @@ export default {
       "uploadAnyway": "仍然上传"
     },
     "alert": {
-      "fileRequired": "请选择文件。"
+      "fileRequired": "请选择文件。",
+      "fileNotReadable": "无法读取该文件。它可能已被修改或删除。请重新选择文件。"
     },
     "problem": {
       "400_8": "您上传的表单定义文件与此表单不匹配：表单ID应为“{expected}”，但上传文件为“{actual}”。",

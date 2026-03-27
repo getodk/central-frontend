@@ -626,7 +626,6 @@ export default {
     "noEntities": "Es gibt keine Objekte zum Anzeigen.",
     "noMatching": "Es gibt keine passenden Objekte.",
     "emptyMap": "Entitäten werden nur angezeigt, wenn sie Daten in der Geometrieeigenschaft enthalten.",
-    "allDeleted": "Alle Objekte werden gelöscht.",
     "allDeletedOnPage": "Alle Objekte auf der Seite wurden gelöscht.",
     "alert": {
       "delete": "Das Objekt \"{label}“ wurde gelöscht.",
@@ -639,7 +638,6 @@ export default {
     "downloadDisabled": "Der Download ist für gelöschte Objekte nicht verfügbar",
     "deletedEntity": {
       "emptyTable": "Es gibt keine gelöschten Objekte.",
-      "allRestored": "Alle gelöschten Objekte werden wiederhergestellt.",
       "allRestoredOnPage": "Alle Objekte auf der Seite wurden wiederhergestellt."
     },
     "actionBar": {
@@ -651,7 +649,6 @@ export default {
     "noEntities": "No hay Entidades para mostrar.",
     "noMatching": "No hay entidades coincidentes.",
     "emptyMap": "Las entidades solo aparecen si incluyen datos en la propiedad de geometría.",
-    "allDeleted": "Se eliminan todas las Entidades.",
     "allDeletedOnPage": "Se han eliminado todas las Entidades de la página.",
     "alert": {
       "delete": "Entidad “{label}” se ha eliminado.",
@@ -664,7 +661,6 @@ export default {
     "downloadDisabled": "La descarga no está disponible para Entidades eliminadas",
     "deletedEntity": {
       "emptyTable": "No hay entidades eliminadas.",
-      "allRestored": "Todas las Entidades eliminadas se restauran.",
       "allRestoredOnPage": "Se han restaurado todas las Entidades de la página."
     },
     "actionBar": {
@@ -676,7 +672,6 @@ export default {
     "noEntities": "Pas d'entités à montrer.",
     "noMatching": "Il n'y a pas d'Entités correspondantes",
     "emptyMap": "Les entités n'apparaissent que si elles ont une propriété géographique.",
-    "allDeleted": "Toutes les Entités sont supprimées.",
     "allDeletedOnPage": "Toutes les Entités de la page ont été supprimées.",
     "alert": {
       "delete": "L'Entité \"{label}\" a été supprimée.",
@@ -689,7 +684,6 @@ export default {
     "downloadDisabled": "Le téléchargement n'est pas disponible pour les entités supprimées.",
     "deletedEntity": {
       "emptyTable": "Il n'y a pas d'Entité supprimée.",
-      "allRestored": "Toutes les Entités supprimées ont été restaurées.",
       "allRestoredOnPage": "Toutes les Entités de la page ont été restaurées."
     },
     "actionBar": {
@@ -701,7 +695,6 @@ export default {
     "noEntities": "Non ci sono entità da mostrare.",
     "noMatching": "Non sono presenti Entità corrispondenti.",
     "emptyMap": "Le entità vengono visualizzate solo se includono dati nella proprietà geometria.",
-    "allDeleted": "Tutte le entità vengono eliminate.",
     "allDeletedOnPage": "Tutte le entità della pagina sono state eliminate.",
     "alert": {
       "delete": "La Entità “{label}” è stata cancellata.",
@@ -714,7 +707,6 @@ export default {
     "downloadDisabled": "Il download non è disponibile per le Entità eliminate",
     "deletedEntity": {
       "emptyTable": "Non ci sono Entità cancellate.",
-      "allRestored": "Tutte le entità eliminate vengono ripristinate.",
       "allRestoredOnPage": "Tutte le entità della pagina sono state ripristinate."
     },
     "actionBar": {
@@ -725,7 +717,7 @@ export default {
   "pt": {
     "noEntities": "Não há Entidades para mostrar.",
     "noMatching": "Não há Entidades correspondentes.",
-    "allDeleted": "Todas as Entidades foram excluídas.",
+    "emptyMap": "As entidades só aparecem se elas possuem dados na propriedade geometria.",
     "allDeletedOnPage": "Todas as Entidades nesta página foram excluídas.",
     "alert": {
       "delete": "A Entidade \"{label}\" foi excluída.",
@@ -734,10 +726,10 @@ export default {
     },
     "filterDisabledMessage": "Não é possível filtrar Entidades excluídas",
     "searchDisabledMessage": "A busca não está disponível para Entidades excluídas.",
+    "mapDisabled": "O mapa não está disponível para Entidades apagadas",
     "downloadDisabled": "Não é possível fazer download de Entidades excluídas",
     "deletedEntity": {
       "emptyTable": "Não há Entidades excluídas.",
-      "allRestored": "Todas as Entidades excluídas foram recuperadas.",
       "allRestoredOnPage": "Todas as Entidades nesta página foram recuperadas."
     },
     "actionBar": {
@@ -752,7 +744,6 @@ export default {
     "noEntities": "暂无实体可显示。",
     "noMatching": "没有匹配的实体。",
     "emptyMap": "仅当实体包含几何属性数据时才会显示该实体。",
-    "allDeleted": "所有实体已被删除。",
     "allDeletedOnPage": "本页所有实体已被删除。",
     "alert": {
       "delete": "实体“{label}”已被删除。",
@@ -765,7 +756,6 @@ export default {
     "downloadDisabled": "下载功能对已删除的实体不可用",
     "deletedEntity": {
       "emptyTable": "没有已删除的实体。",
-      "allRestored": "所有已删除的实体已复原。",
       "allRestoredOnPage": "本页所有实体已复原。"
     },
     "actionBar": {
@@ -777,7 +767,6 @@ export default {
     "noEntities": "沒有可顯示的實體。",
     "noMatching": "無相符的實體。",
     "emptyMap": "只有在實體包含地理屬性資料時，才會顯示該實體。",
-    "allDeleted": "所有實體都會被刪除。",
     "allDeletedOnPage": "頁面上的所有實體都已刪除。",
     "alert": {
       "delete": "實體「1{label}」已被刪除。",
@@ -790,7 +779,6 @@ export default {
     "downloadDisabled": "已刪除的實體無法下載",
     "deletedEntity": {
       "emptyTable": "沒有已刪除的實體。",
-      "allRestored": "所有已刪除的實體都會還原。",
       "allRestoredOnPage": "頁面上的所有實體都已還原。"
     },
     "actionBar": {

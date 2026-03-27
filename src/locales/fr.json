@@ -23,6 +23,7 @@
     "title": "Gestion du système",
     "tab": {
       "audits": "Journal d'audit",
+      "customization": "Personnalisation",
       "analytics": "Rapport d'utilisation"
     }
   },
@@ -78,7 +79,9 @@
       "dataset": {
         "update": "Mettre à jour",
         "update_publish": "Publier",
-        "create": "@:audit.action.default.create"
+        "update_property_delete": "Supprimer la propriété",
+        "create": "@:audit.action.default.create",
+        "delete": "@:audit.action.default.delete"
       },
       "entity": {
         "bulk_delete": "Supprimer sélection",
@@ -182,6 +185,7 @@
   "field": {
     "comment": "Ajouter un commentaire...",
     "dateRange": "Intervalle de date",
+    "description": "Description",
     "displayName": "Nom affiché",
     "email": "Adresse de courriel",
     "name": "Nom",
@@ -190,6 +194,7 @@
     "passphrase": "Phrase de passe",
     "password": "Mot de passe",
     "passwordConfirm": "Nouveau mot de passe (confirmez)",
+    "title": "Titre",
     "type": "Type"
   },
   "header": {
@@ -276,6 +281,11 @@
     },
     "learnMore": "En savoir plus."
   },
+  "login": {
+    "odkLogo": "Logo d'ODK",
+    "defaultTitle": "Bienvenue à ODK Central",
+    "defaultDescription": "Connectez-vous à votre compte pour commencer"
+  },
   "analytics": {
     "alwaysImprove": "Nous veillons toujours à améliorer ODK Central.",
     "needFeedback": {
@@ -345,7 +355,8 @@
     "search": "Recherche",
     "reviewState": "État",
     "status": "Statut",
-    "version": "Version"
+    "version": "Version",
+    "trash": "Corbeille"
   },
   "mixin": {
     "request": {

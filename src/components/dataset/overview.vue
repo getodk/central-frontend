@@ -101,45 +101,36 @@ const afterCreateProperty = () => {
 <i18n>
 {
   "cs": {
-    "connectionsToForms": "Připojení k formulářům",
     "entityProperties": "Vlastnosti entity"
   },
   "de": {
-    "connectionsToForms": "Verbindungen zu Formularen",
     "entityProperties": "Objekteigenschaften",
     "new": "Neu"
   },
   "es": {
-    "connectionsToForms": "Conexiones a formularios",
     "entityProperties": "Propiedades de la entidad",
     "new": "Nueva"
   },
   "fr": {
-    "connectionsToForms": "Connexions aux formulaires",
     "entityProperties": "Propriétés",
     "new": "Nouvelle"
   },
   "it": {
-    "connectionsToForms": "Connessioni ai formulari",
     "entityProperties": "Proprietà della Entità",
     "new": "Nuova"
   },
   "pt": {
-    "connectionsToForms": "Conexões com Formulários",
     "entityProperties": "Propriedades da Entidade",
     "new": "Nova"
   },
   "sw": {
-    "connectionsToForms": "Viunganisho kwa Fomu",
     "entityProperties": "Sifa za Mashirika"
   },
   "zh": {
-    "connectionsToForms": "关联表单",
     "entityProperties": "实体属性",
     "new": "更新"
   },
   "zh-Hant": {
-    "connectionsToForms": "與表單的連接",
     "entityProperties": "實體屬性",
     "new": "新增"
   }

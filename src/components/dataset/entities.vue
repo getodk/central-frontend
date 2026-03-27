@@ -233,8 +233,10 @@ export default {
 {
   "de": {
     "upload": "Objekte hochladen",
+    "new": "Neu",
     "alert": {
-      "upload": "Ihre Objekte wurden erfolgreich hochgeladen."
+      "upload": "Ihre Objekte wurden erfolgreich hochgeladen.",
+      "create": "Die Entität wurde erfolgreich erstellt."
     },
     "purgeDescription": "Objekte werden nach 30 Tagen im Papierkorb gelöscht",
     "action": {
@@ -244,8 +246,10 @@ export default {
   },
   "es": {
     "upload": "Subir entidades",
+    "new": "Nueva",
     "alert": {
-      "upload": "Sus Entidades han sido cargadas con éxito."
+      "upload": "Sus Entidades han sido cargadas con éxito.",
+      "create": "La entidad ha sido creado exitosamente."
     },
     "purgeDescription": "Las Entidades se eliminan después de 30 días en la Papelera",
     "action": {
@@ -266,8 +270,10 @@ export default {
   },
   "it": {
     "upload": "Caricare Entità",
+    "new": "Nuova",
     "alert": {
-      "upload": "Le entità sono state caricate con successo."
+      "upload": "Le entità sono state caricate con successo.",
+      "create": "L'Entità è stata creata con successo."
     },
     "purgeDescription": "Le Entità vengono eliminate dopo 30 giorni nel Cestino",
     "action": {
@@ -288,8 +294,10 @@ export default {
   },
   "zh": {
     "upload": "上传实体",
+    "new": "新建",
     "alert": {
-      "upload": "您的实体已成功上传。"
+      "upload": "您的实体已成功上传。",
+      "create": "实体已成功创建。"
     },
     "purgeDescription": "实体将在30天后从垃圾箱中删除",
     "action": {
