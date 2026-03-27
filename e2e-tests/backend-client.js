@@ -110,6 +110,12 @@ export default class BackendClient {
     expect(response).toBeOK();
   };
 
+  deleteForm = async (xmlFormId) => {
+    const request = await this.#getRequest();
+    const response = await request.delete(`/v1/projects/${projectId}/forms/${xmlFormId}`);
+    expect(response).toBeOK();
+  };
+
   createFormAndChildren = async () => {
     const form = await this.createForm();
     const submission = await this.createSubmission(form.xmlFormId);

@@ -179,12 +179,15 @@ export default {
   watch: {
     state(state) {
       if (!state) {
-        this.file = null;
-        this.warnings = null;
+        this.clear();
       }
     }
   },
   methods: {
+    clear() {
+      this.file = null;
+      this.warnings = null;
+    },
     afterFileSelection(file) {
       this.redAlert.hide();
       this.file = file;
@@ -199,7 +202,16 @@ export default {
         this.redAlert.show(this.$t('alert.fileRequired'));
         return;
       }
-
+      // Try to read the file, error means file is modified or deleted or moved
+      const reader = new FileReader();
+      reader.onload = () => this.postFile(ignoreWarnings);
+      reader.onerror = () => {
+        this.redAlert.show(this.$t('alert.fileNotReadable'));
+        this.clear();
+      };
+      reader.readAsArrayBuffer(this.file);
+    },
+    postFile(ignoreWarnings) {
       const query = ignoreWarnings ? { ignoreWarnings } : null;
       const headers = { 'Content-Type': this.contentType };
       if (this.contentType !== 'application/xml') {
@@ -314,7 +326,8 @@ export default {
       "uploadAnyway": "Upload anyway"
     },
     "alert": {
-      "fileRequired": "Please choose a file."
+      "fileRequired": "Please choose a file.",
+      "fileNotReadable": "The file could not be read. It may have been modified or deleted. Please choose the file again."
     },
     "problem": {
       "400_8": "The Form definition you have uploaded does not appear to be for this Form. It has the wrong formId (expected “{expected}”, got “{actual}”).",

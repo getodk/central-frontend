@@ -3660,6 +3660,9 @@
       "alert": {
         "fileRequired": {
           "string": "Please choose a file."
+        },
+        "fileNotReadable": {
+          "string": "The file could not be read. It may have been modified or deleted. Please choose the file again."
         }
       },
       "problem": {
