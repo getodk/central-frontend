@@ -204,14 +204,14 @@ export default {
       }
       // Try to read the file, error means file is modified or deleted or moved
       const reader = new FileReader();
-      reader.onload = () => this.performUpload(ignoreWarnings);
+      reader.onload = () => this.postFile(ignoreWarnings);
       reader.onerror = () => {
         this.redAlert.show(this.$t('alert.fileNotReadable'));
         this.clear();
       };
       reader.readAsArrayBuffer(this.file);
     },
-    performUpload(ignoreWarnings) {
+    postFile(ignoreWarnings) {
       const query = ignoreWarnings ? { ignoreWarnings } : null;
       const headers = { 'Content-Type': this.contentType };
       if (this.contentType !== 'application/xml') {

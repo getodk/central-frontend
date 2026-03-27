@@ -38,7 +38,7 @@ test.describe('Form Upload', () => {
       await login(page);
 
       // Navigate to create form page
-      await page.goto(`${appUrl}/#/projects/${projectId}`);
+      await page.goto(`${appUrl}/projects/${projectId}`);
       await page.getByRole('button', { name: 'New' }).click();
 
       // Verify modal is open

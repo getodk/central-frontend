@@ -6,7 +6,7 @@ const password = process.env.ODK_PASSWORD;
 
 const login = async (page) => {
   await page.goto(appUrl);
-  await expect(page.getByRole('heading', { name: 'Log in' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Welcome to ODK Central' })).toBeVisible();
 
   await page.getByPlaceholder('email address').fill(user);
   await page.getByPlaceholder('password').fill(password);
