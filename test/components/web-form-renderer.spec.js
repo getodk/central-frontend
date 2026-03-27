@@ -89,7 +89,7 @@ describe('WebFormRenderer', () => {
         method.should.be.eql('POST');
         JSON.stringify(data).should.match(/xml_submission_file/);
         headers['content-type'].should.be.eql('text/xml');
-        headers['user-agent'].should.be.match(/odk-web-forms/);
+        headers['odk-client'].should.be.match(/odk-web-forms/);
       });
   });
 
@@ -321,14 +321,14 @@ describe('WebFormRenderer', () => {
           await clock.tick(0);
         })
         .respondWithData(() => ({ currentVersion: { instanceId: '123' } }))
-        .testRequests([
-          {
-            url: '/v1/projects/1/forms/a/submissions/uuid%3A01f165e1-8814-43b8-83ec-741222b00f25',
-            method: 'PUT',
-            headers: { 'content-type': 'text/xml' },
-            data: { name: 'xml_submission_file', type: 'text/xml' }
-          }
-        ])
+        .beforeEachResponse((_, config) => {
+          const { headers, url, method, data } = config;
+          url.should.be.eql('/v1/projects/1/forms/a/submissions/uuid%3A01f165e1-8814-43b8-83ec-741222b00f25');
+          method.should.be.eql('PUT');
+          JSON.stringify(data).should.match(/xml_submission_file/);
+          headers['content-type'].should.be.eql('text/xml');
+          headers['odk-client'].should.be.match(/odk-web-forms/);
+        })
         .afterResponses(async c => {
           await clock.tick(2000);
           c.vm.$router.push.calledWith('/projects/1/forms/a/submissions/uuid%3A01f165e1-8814-43b8-83ec-741222b00f25').should.be.true;

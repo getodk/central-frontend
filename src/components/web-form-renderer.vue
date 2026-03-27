@@ -280,7 +280,7 @@ const postPrimaryInstance = async (file) => {
       data: file,
       headers: {
         'content-type': 'text/xml',
-        'user-agent': `odk-web-forms/${__WEB_FORMS_VERSION__} ${navigator.userAgent}`
+        'odk-client': `odk-web-forms/${__WEB_FORMS_VERSION__}`
       },
       alert: false,
     };
