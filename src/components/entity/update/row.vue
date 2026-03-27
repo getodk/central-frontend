@@ -71,7 +71,7 @@ defineExpose({ textarea });
 @import '../../../assets/scss/mixins';
 
 .entity-update-row {
-  td, textarea, label { font-size: 12px; }
+  td, textarea, label { font-size: 14px; }
 
   $vpadding: 4px;
   .label-cell, .new-value { padding-bottom: $vpadding; }
@@ -82,6 +82,7 @@ defineExpose({ textarea });
   }
   .new-value {
     padding-top: $vpadding;
+    padding-right: 0px;
   }
 
     .value-changed {
