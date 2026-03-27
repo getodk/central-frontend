@@ -57,7 +57,11 @@ useEventListener(window, 'resize', resize);
 #account-page {
   margin-inline: -$padding-inline-container;
 
-  #page-body { margin-top: 0; }
-  #account-page-container { margin-bottom: -$box-shadow-offset-y-body; }
+  #account-page-container {
+    margin-top: -$margin-top-page-body;
+    margin-bottom: -$box-shadow-offset-y-body;
+  }
+
+  body:has(&) .navbar-default { box-shadow: none; }
 }
 </style>

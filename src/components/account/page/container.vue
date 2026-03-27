@@ -72,7 +72,7 @@ const hiddenClass = computed(() => (props.preview ? null : 'hidden-xs hidden-sm'
 <style lang="scss">
 @use 'sass:color';
 @use 'sass:math';
-@import '../../../assets/scss/variables';
+@import '../../../assets/scss/mixins';
 
 /*
 Notes about the layout:
@@ -95,6 +95,7 @@ Notes about the layout:
   // show the hero image, or 100% if the hero image is not shown.
   flex-basis: 0;
   flex-grow: 1;
+  overflow-x: hidden;
 
   // Center vertically.
   align-self: center;
@@ -171,6 +172,7 @@ Notes about the layout:
   $margin-after-title: 40px;
 
   h1 {
+    @include break-word;
     font-size: 24px;
     letter-spacing: normal;
     line-height: inherit;
