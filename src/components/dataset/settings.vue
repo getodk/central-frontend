@@ -246,6 +246,20 @@ const dependentFormsCount = computed(() => {
       "label": "Objekte erstellen, wenn Einsendungen als genehmigt markiert sind",
       "description": "Objektdaten werden erst aktualisiert, wenn eine Person die Daten überprüft. Korrekturen können bei Bedarf vorgenommen werden.",
       "successMessage": "Die Objekte werden erstellt, wenn die Einsendungen als genehmigt markiert werden."
+    },
+    "action": {
+      "delete": "Objektliste löschen"
+    },
+    "alert": {
+      "delete": "Die Objektliste \"{name}\" wurde erfolgreich gelöscht."
+    },
+    "dependentForms": {
+      "description": [
+        "Die Objektliste \"{name}\" steht im Verbindung mit {formsCount}.",
+        "Bevor Sie es löschen können, müssen Sie die Verknüpfung zu den zugehörigen Formularen aufheben.",
+        "Erfahren Sie mehr hier."
+      ],
+      "formsCount": "{count} Formular | {count} Formulare"
     }
   },
   "es": {
@@ -259,6 +273,20 @@ const dependentFormsCount = computed(() => {
       "label": "Crear Entidades cuando los envíos se marcan como aprobados",
       "description": "Los datos de la entidad no se actualizarán hasta que una persona los revise. Se pueden hacer correcciones si es necesario.",
       "successMessage": "Las entidades se crearán cuando los Envíos se marquen como Aprobados."
+    },
+    "action": {
+      "delete": "Borrar lista de entidades"
+    },
+    "alert": {
+      "delete": "La lista de entidades {name} fue eliminada correctamente."
+    },
+    "dependentForms": {
+      "description": [
+        "La lista de entidades “{name}” está relacionada con {formsCount}.",
+        "Antes de poder Eliminarlo, tendrás que desvincularlo de los formularios relacionados.",
+        "Aprende más aquí."
+      ],
+      "formsCount": "{count} formulario | {count} formularios | {count} formularios"
     }
   },
   "fr": {
@@ -285,6 +313,20 @@ const dependentFormsCount = computed(() => {
       "label": "Crea Entità quando gli invii sono contrassegnati come approvati",
       "description": "I dati dell'entità non verranno aggiornati fino a quando una persona non li esamina. Se necessario, possono essere apportate correzioni.",
       "successMessage": "Le entità verranno create non appena gli Invii saranno contrassegnati come approvati."
+    },
+    "action": {
+      "delete": "Elimina l'elenco di entità"
+    },
+    "alert": {
+      "delete": "La Lista Entità “{name}” è stato eliminato con successo."
+    },
+    "dependentForms": {
+      "description": [
+        "La Lista Entità “{name}” è correlata a {formsCount}.",
+        "Prima di poterlo eliminare, dovrai scollegarlo dai formulari correlati.",
+        "Impara di più qui."
+      ],
+      "formsCount": "{count} Formulario | {count} Formulari | {count} Formulari"
     }
   },
   "pt": {
@@ -324,6 +366,20 @@ const dependentFormsCount = computed(() => {
       "label": "当提交被标记为“已批准”时创建实体",
       "description": "在有人查看资料之前，实体数据不会更新。如有必要，可修改。",
       "successMessage": "当提交标记为“已批准”时，将创建实体。"
+    },
+    "action": {
+      "delete": "删除实体列表"
+    },
+    "alert": {
+      "delete": "实体列表“{name}”已成功删除。"
+    },
+    "dependentForms": {
+      "description": [
+        "实体列表“{name}”与 {formsCount} 个表单相关。",
+        "在删除它之前，您需要先解除它与相关表单的关联。",
+        "在此了解更多。"
+      ],
+      "formsCount": "{count} 个表单"
     }
   },
   "zh-Hant": {

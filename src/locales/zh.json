@@ -23,6 +23,7 @@
     "title": "系统设置",
     "tab": {
       "audits": "服务器审计记录",
+      "customization": "自定义",
       "analytics": "使用报告"
     }
   },
@@ -78,7 +79,9 @@
       "dataset": {
         "update": "更新",
         "update_publish": "发布",
-        "create": "@:audit.action.default.create"
+        "update_property_delete": "删除属性",
+        "create": "@:audit.action.default.create",
+        "delete": "@:audit.action.default.delete"
       },
       "entity": {
         "bulk_delete": "批量删除",
@@ -182,6 +185,7 @@
   "field": {
     "comment": "写评论...",
     "dateRange": "日期范围",
+    "description": "描述",
     "displayName": "展示名称",
     "email": "邮件地址",
     "name": "名字",
@@ -190,6 +194,7 @@
     "passphrase": "密码短语",
     "password": "密码",
     "passwordConfirm": "新密码（确认）",
+    "title": "标题",
     "type": "类型"
   },
   "header": {
@@ -276,6 +281,11 @@
     },
     "learnMore": "了解更多。"
   },
+  "login": {
+    "odkLogo": "ODK 标志",
+    "defaultTitle": "欢迎使用 ODK Central",
+    "defaultDescription": "登录您的帐户以开始使用"
+  },
   "analytics": {
     "alwaysImprove": "我们一直努力改进ODK Central",
     "needFeedback": {
@@ -345,7 +355,8 @@
     "search": "搜索",
     "reviewState": "审核状态",
     "status": "状态",
-    "version": "版本"
+    "version": "版本",
+    "trash": "回收站"
   },
   "mixin": {
     "request": {

@@ -205,38 +205,77 @@ const deleteProperty = () => {
 {
   "cs": {
     "emptyTable": "Entity v tomto seznamu entit nemají žádné uživatelsky definované vlastnosti.",
-    "none": "(žádný)"
+    "none": "(žádný)",
+    "confirmation": {
+      "confirm": "@:action.delete"
+    }
   },
   "de": {
     "emptyTable": "Die Objekte in dieser Objektliste verfügen über keine benutzerdefinierten Eigenschaften.",
-    "none": "(Keine)"
+    "none": "(Keine)",
+    "confirmation": {
+      "title": "Eigenschaft löschen",
+      "body": "Sind Sie sicher, dass Sie die Eigenschaft “{propertyName}” löschen möchten? Das lässt sich nicht rückgängig machen",
+      "confirm": "@:action.delete"
+    },
+    "deleted": "Die Eigenschaft \"{name}“ wurde gelöscht."
   },
   "es": {
     "emptyTable": "Las entidades de esta lista no tienen propiedades definidas por el usuario.",
-    "none": "(ninguno)"
+    "none": "(ninguno)",
+    "confirmation": {
+      "title": "Borrar propiedad",
+      "body": "¿Está seguro que desea eliminar la propriedad “{propertyName}”? Esto es irreversible.",
+      "confirm": "@:action.delete"
+    },
+    "deleted": "La propiedad “{name}” se ha eliminado."
   },
   "fr": {
     "emptyTable": "Les entités dans cette liste n'ont pas de propriétés définies par l'utilisateur",
-    "none": "Aucun"
+    "none": "Aucun",
+    "confirmation": {
+      "title": "Supprimer la propriété",
+      "body": "Voulez-vous vraiment supprimer la propriété \"{propertyName}\"? Ceci ne peut pas être défait.",
+      "confirm": "@:action.delete"
+    },
+    "deleted": "La propriété \"{name}\" a été supprimée."
   },
   "it": {
     "emptyTable": "Le entità di questo elenco di entità non hanno proprietà definite dall'utente.",
-    "none": "(Nessuna)"
+    "none": "(Nessuna)",
+    "confirmation": {
+      "title": "Elimina proprietà",
+      "body": "Sei sicuro di voler eliminare la proprietà? “{propertyName}”? Questo è irreversibile.",
+      "confirm": "@:action.delete"
+    },
+    "deleted": "La proprietà “{name}” è stata eliminata."
   },
   "pt": {
     "emptyTable": "As Entidades nesta Lista de Entidades não têm nenhuma propriedade definida pelo usuário.",
-    "none": "(Nenhum)"
+    "none": "(Nenhum)",
+    "confirmation": {
+      "confirm": "@:action.delete"
+    }
   },
   "sw": {
     "emptyTable": "Huluki katika Orodha hii ya Huluki hazina sifa zozote zilizobainishwa na mtumiaji."
   },
   "zh": {
     "emptyTable": "该实体清单中的实体没有任何使用者定义的属性。",
-    "none": "（无）"
+    "none": "（无）",
+    "confirmation": {
+      "title": "删除实体",
+      "body": "您确定要删除属性“{propertyName}”吗？此操作无法撤销。",
+      "confirm": "@:action.delete"
+    },
+    "deleted": "属性“{name}”已被删除。"
   },
   "zh-Hant": {
     "emptyTable": "此實體清單中的實體沒有任何使用者定義的屬性。",
-    "none": "(無)"
+    "none": "(無)",
+    "confirmation": {
+      "confirm": "@:action.delete"
+    }
   }
 }
 </i18n>
