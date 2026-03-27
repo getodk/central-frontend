@@ -166,7 +166,6 @@ const submit = () => {
 
 
   .entity-upsert-label-header, .entity-upsert-properties-header {
-    font-size: 14px;
     font-weight: 500;
   }
 
@@ -190,13 +189,13 @@ const submit = () => {
   }
 
   tbody tr td, thead tr th {
-    border: none;
     padding-left: 0px;
   }
 
-  .entity-upsert-table-scroll tbody tr td {
-    border-top: 1px solid #ccc;
-  }
+
+.entity-upsert-label-header + table tr td {
+  border: none;
+}
 
   .alert { margin: 15px; }
 }
