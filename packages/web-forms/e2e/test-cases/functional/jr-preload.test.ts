@@ -2,8 +2,7 @@ import { expect, test } from '@playwright/test';
 import { FillFormPage } from '../../page-objects/pages/FillFormPage.js';
 import { PreviewPage } from '../../page-objects/pages/PreviewPage.js';
 
-const DEVICE_ID_REGEX =
-	/^getodk\.org:webforms:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+const DEVICE_ID_REGEX = /^wf:[0-9a-zA-Z]{16}$/;
 const INSTANCE_ID_REGEX =
 	/^uuid:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 
