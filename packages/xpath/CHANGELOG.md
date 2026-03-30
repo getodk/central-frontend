@@ -1,5 +1,13 @@
 # @getodk/xpath
 
+## 0.10.4
+
+### Patch Changes
+
+- 60073ee: Fixed decimal-date-time function to accept a node as a parameter
+- Updated dependencies [2eccd28]
+  - @getodk/common@0.14.0
+
 ## 0.10.3
 
 ### Patch Changes

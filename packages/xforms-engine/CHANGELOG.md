@@ -1,5 +1,16 @@
 # @getodk/xforms-engine
 
+## 0.21.0
+
+### Minor Changes
+
+- 2eccd28: Added support for the file, audio, and video upload types, and implemented drag and drop for uploads
+
+### Patch Changes
+
+- 1795a20: Fixed csv parsing to allow files with single column
+- 7b47bb1: Fixed a bug with markdown rendering outputs with empty values
+
 ## 0.20.0
 
 ### Minor Changes

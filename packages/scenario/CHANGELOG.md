@@ -1,5 +1,11 @@
 # @getodk/scenario
 
+## 0.11.6
+
+### Patch Changes
+
+- 7b47bb1: Fixed a bug with markdown rendering outputs with empty values
+
 ## 0.11.5
 
 ### Patch Changes

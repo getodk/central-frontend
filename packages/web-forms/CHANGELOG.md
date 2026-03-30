@@ -1,5 +1,18 @@
 # @getodk/web-forms
 
+## 0.23.0
+
+### Minor Changes
+
+- 2eccd28: Added support for the file, audio, and video upload types, and implemented drag and drop for uploads
+
+### Patch Changes
+
+- 1795a20: Fixed csv parsing to allow files with single column
+- 9818208: Fixed deviceid format to be shorter and more consistent with other clients
+- dabf273: Changed the map tooltips to a dialog that explains the actions.
+- 7b47bb1: Fixed a bug with markdown rendering outputs with empty values
+
 ## 0.22.0
 
 ### Minor Changes

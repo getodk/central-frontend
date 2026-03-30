@@ -1,5 +1,11 @@
 # @getodk/common
 
+## 0.14.0
+
+### Minor Changes
+
+- 2eccd28: Added support for the file, audio, and video upload types, and implemented drag and drop for uploads
+
 ## 0.13.0
 
 ### Minor Changes
