@@ -696,7 +696,8 @@ onUnmounted(() => {
       }
     },
     "retryModal": {
-      "title": "Erro no envio"
+      "title": "Erro no envio",
+      "body": "Seus dados não foram enviados completamente. Por favor, clique no botão “Tentar novamente” para tentar novamente. Se o erro persistir, entre em contato com a pessoa que solicitou o preenchimento deste formulário ou {supportEmail}."
     }
   },
   "zh": {

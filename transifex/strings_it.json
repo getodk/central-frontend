@@ -66,6 +66,10 @@
         "string": "Registri di controllo del server",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       },
+      "customization": {
+        "string": "Personalizzazione",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      },
       "analytics": {
         "string": "Report di utilizzo",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
@@ -223,6 +227,10 @@
         },
         "update_publish": {
           "string": "Pubblica",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
+        },
+        "update_property_delete": {
+          "string": "Elimina proprietà",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         }
       },
@@ -493,6 +501,10 @@
       "string": "Intervallo date",
       "developer_comment": "This is the text of a form field."
     },
+    "description": {
+      "string": "Descrizione",
+      "developer_comment": "This is the text of a form field."
+    },
     "displayName": {
       "string": "Nome visualizzato",
       "developer_comment": "This is the text of a form field."
@@ -523,6 +535,10 @@
     },
     "passwordConfirm": {
       "string": "Nuova password (conferma)",
+      "developer_comment": "This is the text of a form field."
+    },
+    "title": {
+      "string": "Titolo",
       "developer_comment": "This is the text of a form field."
     },
     "type": {
@@ -798,6 +814,17 @@
     "learnMore": {
       "string": "Per saperne di più.",
       "developer_comment": "This is a link to more information."
+    }
+  },
+  "login": {
+    "odkLogo": {
+      "string": "Logo ODK "
+    },
+    "defaultTitle": {
+      "string": "Benvenuto su ODK Central"
+    },
+    "defaultDescription": {
+      "string": "Accedi al tuo account per iniziare"
     }
   },
   "analytics": {
@@ -1091,6 +1118,9 @@
   },
   "component": {
     "AccountClaim": {
+      "title": {
+        "string": "Configurare la tua nuova password"
+      },
       "action": {
         "set": {
           "string": "Configurare la password",
@@ -1143,7 +1173,24 @@
         }
       }
     },
+    "AccountPageContainer": {
+      "customLogoAlt": {
+        "string": "Logo dell'Organizzazione"
+      },
+      "defaultHeroAlt": {
+        "string": "Funzionalità di ODK Central"
+      },
+      "customHeroAlt": {
+        "string": "Immagine di benvenuto"
+      }
+    },
     "AccountResetPassword": {
+      "title": {
+        "string": "Reimposta la tua password"
+      },
+      "subtitle": {
+        "string": "Inserisci il tuo indirizzo e-mail per reimpostare la password"
+      },
       "alert": {
         "success": {
           "string": "È stata inviata un'email a {email} con ulteriori istruzioni."
@@ -1370,6 +1417,12 @@
         "description_length": {
           "string": "Lunghezza della descrizione del progetto"
         },
+        "num_datasets_deleted": {
+          "string": "Numero di eventi di eliminazione dall'elenco delle entità"
+        },
+        "num_dataset_properties_deleted": {
+          "string": "Numero di eventi di eliminazione della proprietà dell'entità"
+        },
         "num_properties": {
           "string": "Numero di proprietà"
         },
@@ -1411,6 +1464,18 @@
         },
         "sso_enabled": {
           "string": "SSO abilitato sul server"
+        },
+        "login_customization_logo_set": {
+          "string": "Set di loghi personalizzati per la pagina di accesso"
+        },
+        "login_customization_hero_image_set": {
+          "string": "Set di immagini di copertina personalizzate per la pagina di accesso"
+        },
+        "login_customization_title_set": {
+          "string": "Titolo della pagina di accesso personalizzato"
+        },
+        "login_customization_description_set": {
+          "string": "Impostazione della descrizione della pagina di accesso personalizzata"
         },
         "num_client_audit_attachments": {
           "string": "Numero di allegati di audit del client"
@@ -1617,13 +1682,98 @@
         "string": "C'è stato un errore nel caricamento di Central."
       }
     },
+    "ConfigLogin": {
+      "title": {
+        "string": "Pagina di Login"
+      }
+    },
+    "ConfigLoginEdit": {
+      "logo": {
+        "label": {
+          "string": "Logo"
+        },
+        "help": {
+          "string": "Si consiglia di utilizzare un'immagine con sfondo bianco o trasparente di almeno 150x150 pixel."
+        }
+      },
+      "title": {
+        "help": {
+          "string": "Un titolo per il tuo accesso al server."
+        }
+      },
+      "description": {
+        "help": {
+          "string": "Una breve descrizione del vostro spazio dedicato al progetto."
+        }
+      },
+      "hero": {
+        "label": {
+          "string": "Immagine di copertina"
+        },
+        "help": {
+          "string": "Ti consigliamo di utilizzare un'immagine ad alta risoluzione in formato JPG o PNG. Per ottenere risultati ottimali, scegli un'immagine accattivante che rappresenti il tuo brand o il tuo messaggio."
+        }
+      }
+    },
+    "ConfigLoginFileSelect": {
+      "select": {
+        "full": {
+          "string": "Trascina l'immagine qui o {upload}",
+          "developer_comment": "{upload} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nupload file"
+        },
+        "upload": {
+          "string": "Caricare il file",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {upload} is in the following text:\n\nDrag image here or {upload}"
+        }
+      },
+      "action": {
+        "remove": {
+          "string": "Rimuovi l'immagine",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "invalidType": {
+          "string": "Tipo di file non supportato."
+        },
+        "post": {
+          "string": "L'immagine è stata salvata correttamente."
+        },
+        "del": {
+          "string": "L'immagine è stata rimossa correttamente."
+        }
+      }
+    },
+    "ConfigLoginPreview": {
+      "introduction": {
+        "string": "Ecco come appare la tua pagina di accesso in questo momento:"
+      }
+    },
+    "DatasetDelete": {
+      "title": {
+        "string": "Elimina l'elenco di entità",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Sei sicuro di voler eliminare la Lista Entità? “{name}”? Questo è irreversibile."
+        }
+      }
+    },
     "DatasetEntities": {
       "upload": {
         "string": "Caricare Entità"
       },
+      "new": {
+        "string": "Nuova",
+        "developer_comment": "This is shown on a button for creating new Entities"
+      },
       "alert": {
         "upload": {
           "string": "Le entità sono state caricate con successo."
+        },
+        "create": {
+          "string": "L'Entità è stata creata con successo."
         }
       },
       "purgeDescription": {
@@ -1682,10 +1832,6 @@
       }
     },
     "DatasetOverview": {
-      "connectionsToForms": {
-        "string": "Connessioni ai formulari",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
       "entityProperties": {
         "string": "Proprietà della Entità",
         "developer_comment": "This is a title shown above a section of the page."
@@ -1695,11 +1841,6 @@
         "developer_comment": "This is shown on a button for creating new Entity Properties"
       }
     },
-    "DatasetOverviewConnectionToForms": {
-      "formsUpdateEntities": {
-        "string": "{count, plural, one {{count} Formulario che aggiorna Entità} many {{count} Formulari che aggiornano Entità} other {{count} Formulari che aggiornano Entità}}"
-      }
-    },
     "DatasetOverviewDatasetProperties": {
       "emptyTable": {
         "string": "Le entità di questo elenco di entità non hanno proprietà definite dall'utente."
@@ -1707,11 +1848,53 @@
       "none": {
         "string": "(Nessuna)",
         "developer_comment": "This is shown in an Entity property row in a column about Forms, and 'None' refers to Forms."
+      },
+      "confirmation": {
+        "title": {
+          "string": "Elimina proprietà"
+        },
+        "body": {
+          "string": "Sei sicuro di voler eliminare la  proprietà? “{propertyName}”? Questo è irreversibile.",
+          "developer_comment": "This is shown on a confirmation dialog box. {propertyName} is the name of the property that is being deleted."
+        }
+      },
+      "deleted": {
+        "string": "La proprietà “{name}” è stata eliminata.",
+        "developer_comment": "This is shown after a Property has been successfully deleted. {name} is the name of the deleted property."
       }
     },
-    "DatasetOverviewLinkedForms": {
-      "formsConsumeData": {
-        "string": "{count, plural, one {{count} Formulario che usa questa lista di Entità} many {{count} Formulari che usano questa lista di Entità} other {{count} Formulari che usano questa lista di Entità}}"
+    "DatasetOverviewDeletePropertyError": {
+      "title": {
+        "string": "Elimina proprietà"
+      },
+      "intro": {
+        "string": "Prima di eliminare la proprietà “{propertyName}”, devi{actions}."
+      },
+      "clearEntities": {
+        "string": "cancellare il suo valore in  {entities}",
+        "developer_comment": "{entities} is a bold count like \"2 Entities\""
+      },
+      "and": {
+        "string": "e"
+      },
+      "unlinkForms": {
+        "string": "rimuovere il collegamento ai {forms} che lo definiscono",
+        "developer_comment": "{forms} is a bold count like \"5 Forms\""
+      },
+      "entitiesCount": {
+        "string": "{count, plural, one {{count}Entità} many {{count}Entità} other {{count} Entità}}"
+      },
+      "relatedToEntities": {
+        "string": "{count, plural, one {Correlato a {count} Entità} many {Correlato a {count} Entità} other {Correlato a {count} Entità}}"
+      },
+      "moreEntities": {
+        "string": "{count, plural, one {e{count} Entità in più } many {e {count}Entità in più } other {e{count} Entità in più }}"
+      },
+      "formsCount": {
+        "string": "{count, plural, one {{count} Formulario} many {{count} Formulari} other {{count} Formulari}}"
+      },
+      "relatedToForms": {
+        "string": "{count, plural, one {Correlato a {count} Formulario} many {Correlato a {count} Formulari} other {Correlato a {count} Formulari}}"
       }
     },
     "DatasetOverviewNewProperty": {
@@ -1864,6 +2047,34 @@
         "successMessage": {
           "string": "Le entità verranno create non appena gli Invii saranno contrassegnati come approvati."
         }
+      },
+      "action": {
+        "delete": {
+          "string": "Elimina l'elenco di entità",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "delete": {
+          "string": "La Lista Entità “{name}” è stato eliminato con successo."
+        }
+      },
+      "dependentForms": {
+        "description": {
+          "0": {
+            "string": "La Lista Entità “{name}” è correlata a {formsCount}.",
+            "developer_comment": "{formsCount} is the number of Forms that are dependent on the Entity List. Example: 4 Forms"
+          },
+          "1": {
+            "string": "Prima di poterlo eliminare, dovrai scollegarlo dai formulari correlati."
+          },
+          "2": {
+            "string": "Impara di più qui."
+          }
+        },
+        "formsCount": {
+          "string": "{count, plural, one {{count} Formulario} many {{count} Formulari} other {{count} Formulari}}"
+        }
       }
     },
     "DatasetShow": {
@@ -1895,6 +2106,23 @@
     "DatasetTable": {
       "emptyTable": {
         "string": "Non sono ancora stati create Entità per questo progetto."
+      }
+    },
+    "DatasetTrashRow": {
+      "action": {
+        "download": {
+          "string": "Scarica dati (.csv)",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "DatasetTrashTable": {
+      "trashCount": {
+        "string": "({count})",
+        "developer_comment": "{count} is the number of Entity Lists in the trash."
+      },
+      "message": {
+        "string": "Gli elenchi delle entità vengono eliminati dopo 30 giorni nel Cestino"
       }
     },
     "Download": {
@@ -2248,9 +2476,6 @@
       "emptyMap": {
         "string": "Le entità vengono visualizzate solo se includono dati nella proprietà geometria."
       },
-      "allDeleted": {
-        "string": "Tutte le entità vengono eliminate."
-      },
       "allDeletedOnPage": {
         "string": "Tutte le entità della pagina sono state eliminate."
       },
@@ -2280,9 +2505,6 @@
       "deletedEntity": {
         "emptyTable": {
           "string": "Non ci sono Entità cancellate."
-        },
-        "allRestored": {
-          "string": "Tutte le entità eliminate vengono ripristinate."
         },
         "allRestoredOnPage": {
           "string": "Tutte le entità della pagina sono state ripristinate."
@@ -2422,16 +2644,6 @@
         "string": "Aggiorna {label}",
         "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
       },
-      "header": {
-        "currentValue": {
-          "string": "Valore corrente",
-          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
-        },
-        "updatedValue": {
-          "string": "Valore aggiornato",
-          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
-        }
-      },
       "geometryDisabled": {
         "string": "La geometria non può essere aggiornata dalla mappa."
       },
@@ -2560,6 +2772,17 @@
         "largeCell": {
           "string": "Alcune celle sono eccessivamente grandi, il che può indicare difficoltà nella lettura del file:",
           "developer_comment": "This is a warning that is followed by a list of rows."
+        }
+      }
+    },
+    "EntityUpsert": {
+      "titleCreate": {
+        "string": "Crea una nuova Entità"
+      },
+      "header": {
+        "value": {
+          "string": "Valore",
+          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
         }
       }
     },
@@ -3104,7 +3327,7 @@
         }
       },
       "newProperties": {
-        "string": "{count, plural, one {La pubblicazione di questa bozza creerà {count} proprietà. Questa non può essere eliminata.} many {La pubblicazione di questa bozza creerà {count} proprietà. Queste non possono essere eliminate.} other {La pubblicazione di questa bozza creerà {count} proprietà. Queste non possono essere eliminate.}}"
+        "string": "{count, plural, one {La pubblicazione di questa bozza creerà {count} proprietà. } many {La pubblicazione di questa bozza creerà {count} proprietà. } other {La pubblicazione di questa bozza creerà {count} proprietà. }}"
       },
       "problem": {
         "409_6": {
@@ -3437,6 +3660,9 @@
       "alert": {
         "fileRequired": {
           "string": "Selezionare un file per favore"
+        },
+        "fileNotReadable": {
+          "string": "Impossibile leggere il file. Potrebbe essere stato modificato o eliminato. Seleziona nuovamente il file."
         }
       },
       "problem": {
@@ -3981,6 +4207,10 @@
       "rows": {
         "string": "{count, plural, one {Riga {range} di {count}} many {Righe {range} di {count}} other {Righe {range} di {count}}}",
         "developer_comment": "{range} is a range of row numbers, for example, 1-5. {count} is the total number of rows. The string will be pluralized based on the number of rows in the range."
+      },
+      "zeroRow": {
+        "string": "Riga 0 di {count}",
+        "developer_comment": "Shown when no row is displayed on the page because all rows are deleted or some other reasons. {count} is the total number of rows across all pages."
       },
       "field": {
         "size": {
@@ -4944,6 +5174,10 @@
             "developer_comment": "This text is shown in the list of actions performed on a Submission."
           }
         }
+      },
+      "deleted": {
+        "string": "(cancellato)",
+        "developer_comment": "Shown in the Submission feed when dataset or entity has been deleted."
       }
     },
     "SubmissionFieldDropdown": {
@@ -5040,9 +5274,6 @@
       "learnMoreMap": {
         "string": "Scopri di più sulla mappatura degli invii"
       },
-      "allDeleted": {
-        "string": "Tutti gli invii vengono cancellati."
-      },
       "allDeletedOnPage": {
         "string": "Tutti gli invii presenti nella pagina sono stati cancellati."
       },
@@ -5058,9 +5289,6 @@
       "deletedSubmission": {
         "emptyTable": {
           "string": "Non ci sono invii cancellati."
-        },
-        "allRestored": {
-          "string": "Tutti gli invii cancellati vengono ripristinati."
         },
         "allRestoredOnPage": {
           "string": "Tutti i contributi presenti nella pagina sono stati ripristinati."
@@ -5470,11 +5698,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "Mappe ️🗺️, eliminazione in blocco ️🗑️ e migliore visibilità del sistema 👀",
+        "string": "Eliminazione dell'elenco delle entità e delle proprietà ️🗑️, Creazione di entità 🪄e personalizzazione del branding nella pagina di accesso 🎨",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "Presentiamo una nuova visualizzazione della mappa per gli invii e le entità, una gestione dei dati più rapida grazie alla cancellazione in blocco delle entità e una visione più chiara del sistema grazie alla visualizzazione dello stato degli inviti agli utenti e dei timestamp dell'ultimo aggiornamento."
+        "string": "Elimina gli elenchi di entità e le proprietà quando non sono più necessari, crea rapidamente entità direttamente dall'interfaccia utente di Central e personalizza la pagina di accesso in modo che il tuo server rispecchi l'immagine del tuo brand e rafforzi la fiducia degli utenti."
       }
     }
   },

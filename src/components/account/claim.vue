@@ -109,6 +109,7 @@ export default {
     }
   },
   "de": {
+    "title": "Legen Sie Ihr neues Passwort fest",
     "action": {
       "set": "Passwort festlegen"
     },
@@ -120,6 +121,7 @@ export default {
     }
   },
   "es": {
+    "title": "Establece tu nueva contraseña",
     "action": {
       "set": "Establecer contraseña"
     },
@@ -131,6 +133,7 @@ export default {
     }
   },
   "fr": {
+    "title": "Définissez votre nouveau mot de passe",
     "action": {
       "set": "Définir le mot de passe"
     },
@@ -150,6 +153,7 @@ export default {
     }
   },
   "it": {
+    "title": "Configurare la tua nuova password",
     "action": {
       "set": "Configurare la password"
     },
@@ -188,6 +192,7 @@ export default {
     }
   },
   "zh": {
+    "title": "设置您的新密码",
     "action": {
       "set": "设置密码"
     },

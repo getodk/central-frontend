@@ -66,6 +66,10 @@
         "string": "伺服器數據軌跡",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       },
+      "customization": {
+        "string": "",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      },
       "analytics": {
         "string": "使用情況報告",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
@@ -223,6 +227,10 @@
         },
         "update_publish": {
           "string": "發布",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
+        },
+        "update_property_delete": {
+          "string": "",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         }
       },
@@ -493,6 +501,10 @@
       "string": "資料範圍",
       "developer_comment": "This is the text of a form field."
     },
+    "description": {
+      "string": "",
+      "developer_comment": "This is the text of a form field."
+    },
     "displayName": {
       "string": "顯示名稱",
       "developer_comment": "This is the text of a form field."
@@ -523,6 +535,10 @@
     },
     "passwordConfirm": {
       "string": "新密碼(確認)",
+      "developer_comment": "This is the text of a form field."
+    },
+    "title": {
+      "string": "",
       "developer_comment": "This is the text of a form field."
     },
     "type": {
@@ -798,6 +814,17 @@
     "learnMore": {
       "string": "了解更多。",
       "developer_comment": "This is a link to more information."
+    }
+  },
+  "login": {
+    "odkLogo": {
+      "string": ""
+    },
+    "defaultTitle": {
+      "string": ""
+    },
+    "defaultDescription": {
+      "string": ""
     }
   },
   "analytics": {
@@ -1091,6 +1118,9 @@
   },
   "component": {
     "AccountClaim": {
+      "title": {
+        "string": ""
+      },
       "action": {
         "set": {
           "string": "設定密碼",
@@ -1143,7 +1173,24 @@
         }
       }
     },
+    "AccountPageContainer": {
+      "customLogoAlt": {
+        "string": ""
+      },
+      "defaultHeroAlt": {
+        "string": ""
+      },
+      "customHeroAlt": {
+        "string": ""
+      }
+    },
     "AccountResetPassword": {
+      "title": {
+        "string": ""
+      },
+      "subtitle": {
+        "string": ""
+      },
       "alert": {
         "success": {
           "string": "一封電子郵件已發送至 {email} 並附有進一步說明。"
@@ -1370,6 +1417,12 @@
         "description_length": {
           "string": "專案描述的長度"
         },
+        "num_datasets_deleted": {
+          "string": ""
+        },
+        "num_dataset_properties_deleted": {
+          "string": ""
+        },
         "num_properties": {
           "string": "特性數量"
         },
@@ -1411,6 +1464,18 @@
         },
         "sso_enabled": {
           "string": "伺服器上啟用 SSO"
+        },
+        "login_customization_logo_set": {
+          "string": ""
+        },
+        "login_customization_hero_image_set": {
+          "string": ""
+        },
+        "login_customization_title_set": {
+          "string": ""
+        },
+        "login_customization_description_set": {
+          "string": ""
         },
         "num_client_audit_attachments": {
           "string": "客戶審核附件數量"
@@ -1617,13 +1682,98 @@
         "string": "載入 Central 時發生錯誤。"
       }
     },
+    "ConfigLogin": {
+      "title": {
+        "string": ""
+      }
+    },
+    "ConfigLoginEdit": {
+      "logo": {
+        "label": {
+          "string": ""
+        },
+        "help": {
+          "string": ""
+        }
+      },
+      "title": {
+        "help": {
+          "string": ""
+        }
+      },
+      "description": {
+        "help": {
+          "string": ""
+        }
+      },
+      "hero": {
+        "label": {
+          "string": ""
+        },
+        "help": {
+          "string": ""
+        }
+      }
+    },
+    "ConfigLoginFileSelect": {
+      "select": {
+        "full": {
+          "string": "",
+          "developer_comment": "{upload} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nupload file"
+        },
+        "upload": {
+          "string": "",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {upload} is in the following text:\n\nDrag image here or {upload}"
+        }
+      },
+      "action": {
+        "remove": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "invalidType": {
+          "string": ""
+        },
+        "post": {
+          "string": ""
+        },
+        "del": {
+          "string": ""
+        }
+      }
+    },
+    "ConfigLoginPreview": {
+      "introduction": {
+        "string": ""
+      }
+    },
+    "DatasetDelete": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": ""
+        }
+      }
+    },
     "DatasetEntities": {
       "upload": {
         "string": "上傳實體"
       },
+      "new": {
+        "string": "",
+        "developer_comment": "This is shown on a button for creating new Entities"
+      },
       "alert": {
         "upload": {
           "string": "您的實體已成功上傳。"
+        },
+        "create": {
+          "string": ""
         }
       },
       "purgeDescription": {
@@ -1682,10 +1832,6 @@
       }
     },
     "DatasetOverview": {
-      "connectionsToForms": {
-        "string": "與表單的連接",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
       "entityProperties": {
         "string": "實體屬性",
         "developer_comment": "This is a title shown above a section of the page."
@@ -1695,11 +1841,6 @@
         "developer_comment": "This is shown on a button for creating new Entity Properties"
       }
     },
-    "DatasetOverviewConnectionToForms": {
-      "formsUpdateEntities": {
-        "string": "{count, plural, other {{count}個表單正在更新實體}}"
-      }
-    },
     "DatasetOverviewDatasetProperties": {
       "emptyTable": {
         "string": "此實體清單中的實體沒有任何使用者定義的屬性。"
@@ -1707,11 +1848,53 @@
       "none": {
         "string": "(無)",
         "developer_comment": "This is shown in an Entity property row in a column about Forms, and 'None' refers to Forms."
+      },
+      "confirmation": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": "",
+          "developer_comment": "This is shown on a confirmation dialog box. {propertyName} is the name of the property that is being deleted."
+        }
+      },
+      "deleted": {
+        "string": "",
+        "developer_comment": "This is shown after a Property has been successfully deleted. {name} is the name of the deleted property."
       }
     },
-    "DatasetOverviewLinkedForms": {
-      "formsConsumeData": {
-        "string": "{count, plural, other {{count}個表單使用此實體清單}}"
+    "DatasetOverviewDeletePropertyError": {
+      "title": {
+        "string": ""
+      },
+      "intro": {
+        "string": ""
+      },
+      "clearEntities": {
+        "string": "",
+        "developer_comment": "{entities} is a bold count like \"2 Entities\""
+      },
+      "and": {
+        "string": ""
+      },
+      "unlinkForms": {
+        "string": "",
+        "developer_comment": "{forms} is a bold count like \"5 Forms\""
+      },
+      "entitiesCount": {
+        "string": "{count, plural, other {}}"
+      },
+      "relatedToEntities": {
+        "string": "{count, plural, other {}}"
+      },
+      "moreEntities": {
+        "string": "{count, plural, other {}}"
+      },
+      "formsCount": {
+        "string": "{count, plural, other {}}"
+      },
+      "relatedToForms": {
+        "string": "{count, plural, other {}}"
       }
     },
     "DatasetOverviewNewProperty": {
@@ -1864,6 +2047,34 @@
         "successMessage": {
           "string": "當提交標記為「已核准」時，將建立實體。"
         }
+      },
+      "action": {
+        "delete": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "delete": {
+          "string": ""
+        }
+      },
+      "dependentForms": {
+        "description": {
+          "0": {
+            "string": "",
+            "developer_comment": "{formsCount} is the number of Forms that are dependent on the Entity List. Example: 4 Forms"
+          },
+          "1": {
+            "string": ""
+          },
+          "2": {
+            "string": ""
+          }
+        },
+        "formsCount": {
+          "string": "{count, plural, other {}}"
+        }
       }
     },
     "DatasetShow": {
@@ -1895,6 +2106,23 @@
     "DatasetTable": {
       "emptyTable": {
         "string": "尚未為此專案建立任何實體。"
+      }
+    },
+    "DatasetTrashRow": {
+      "action": {
+        "download": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "DatasetTrashTable": {
+      "trashCount": {
+        "string": "",
+        "developer_comment": "{count} is the number of Entity Lists in the trash."
+      },
+      "message": {
+        "string": ""
       }
     },
     "Download": {
@@ -2248,9 +2476,6 @@
       "emptyMap": {
         "string": "只有在實體包含地理屬性資料時，才會顯示該實體。"
       },
-      "allDeleted": {
-        "string": "所有實體都會被刪除。"
-      },
       "allDeletedOnPage": {
         "string": "頁面上的所有實體都已刪除。"
       },
@@ -2280,9 +2505,6 @@
       "deletedEntity": {
         "emptyTable": {
           "string": "沒有已刪除的實體。"
-        },
-        "allRestored": {
-          "string": "所有已刪除的實體都會還原。"
         },
         "allRestoredOnPage": {
           "string": "頁面上的所有實體都已還原。"
@@ -2422,16 +2644,6 @@
         "string": "更新{label}",
         "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
       },
-      "header": {
-        "currentValue": {
-          "string": "目前數值",
-          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
-        },
-        "updatedValue": {
-          "string": "更新數值",
-          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
-        }
-      },
       "geometryDisabled": {
         "string": "無法透過地圖更新地理資料。"
       },
@@ -2560,6 +2772,17 @@
         "largeCell": {
           "string": "有些儲存格異常大，這可能表示讀取檔案有困難：",
           "developer_comment": "This is a warning that is followed by a list of rows."
+        }
+      }
+    },
+    "EntityUpsert": {
+      "titleCreate": {
+        "string": ""
+      },
+      "header": {
+        "value": {
+          "string": "",
+          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
         }
       }
     },
@@ -3104,7 +3327,7 @@
         }
       },
       "newProperties": {
-        "string": "{count, plural, other {發布此草稿將建立{count}種屬性。這些屬性無法刪除。}}"
+        "string": "{count, plural, other {}}"
       },
       "problem": {
         "409_6": {
@@ -3437,6 +3660,9 @@
       "alert": {
         "fileRequired": {
           "string": "請選擇檔案"
+        },
+        "fileNotReadable": {
+          "string": ""
         }
       },
       "problem": {
@@ -3981,6 +4207,10 @@
       "rows": {
         "string": "{count, plural, other {第 {range} 行，共 {count} 行}}",
         "developer_comment": "{range} is a range of row numbers, for example, 1-5. {count} is the total number of rows. The string will be pluralized based on the number of rows in the range."
+      },
+      "zeroRow": {
+        "string": "",
+        "developer_comment": "Shown when no row is displayed on the page because all rows are deleted or some other reasons. {count} is the total number of rows across all pages."
       },
       "field": {
         "size": {
@@ -4944,6 +5174,10 @@
             "developer_comment": "This text is shown in the list of actions performed on a Submission."
           }
         }
+      },
+      "deleted": {
+        "string": "",
+        "developer_comment": "Shown in the Submission feed when dataset or entity has been deleted."
       }
     },
     "SubmissionFieldDropdown": {
@@ -5040,9 +5274,6 @@
       "learnMoreMap": {
         "string": "進一步了解提交地圖資料功能"
       },
-      "allDeleted": {
-        "string": "所有提交內容都會被刪除。"
-      },
       "allDeletedOnPage": {
         "string": "頁面上的所有提交內容都已刪除。"
       },
@@ -5058,9 +5289,6 @@
       "deletedSubmission": {
         "emptyTable": {
           "string": "沒有已刪除的提交內容。"
-        },
-        "allRestored": {
-          "string": "所有已刪除的提交內容都會還原。"
         },
         "allRestoredOnPage": {
           "string": "頁面上的所有提交內容都已還原。"
@@ -5470,11 +5698,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "地圖功能️🗺️、批次刪除️🗑️，以及更佳的系統可見性👀",
+        "string": "",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "我們推出了全新的地圖視圖，可同時展示提交資料與實體；透過批次刪除實體來實現更高效率的資料清理；系統可視化也全面提升——現在可清楚查看使用者邀請狀態與「最後更新」時間戳！"
+        "string": ""
       }
     }
   },

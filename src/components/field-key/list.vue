@@ -405,7 +405,8 @@ export default {
     },
     "emptyTable": "Não existe nenhum usuário de aplicativo ainda. Você terá que criar um para baixar formulários e enviar dados a partir do seu dispositivo.",
     "alert": {
-      "create": "O usuário de aplicativo \"{displayName}\" foi criado com sucesso."
+      "create": "O usuário de aplicativo \"{displayName}\" foi criado com sucesso.",
+      "revoke": "Acesso do Usuário de Aplicativo {displayName} removido com sucesso."
     }
   },
   "sw": {

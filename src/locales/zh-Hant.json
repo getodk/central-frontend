@@ -78,7 +78,8 @@
       "dataset": {
         "update": "更新",
         "update_publish": "發布",
-        "create": "@:audit.action.default.create"
+        "create": "@:audit.action.default.create",
+        "delete": "@:audit.action.default.delete"
       },
       "entity": {
         "bulk_delete": "大量刪除",
@@ -345,7 +346,8 @@
     "search": "檢索",
     "reviewState": "審核狀態",
     "status": "狀態",
-    "version": "版本"
+    "version": "版本",
+    "trash": "垃圾桶"
   },
   "mixin": {
     "request": {

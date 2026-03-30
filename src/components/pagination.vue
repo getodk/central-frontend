@@ -213,6 +213,7 @@ const sizeModel = computed({
       "last": "Letzte Seite"
     },
     "rows": "Reihe {range} von {count} | Reihen {range} von {count}",
+    "zeroRow": "Reihe 0 von {count}",
     "field": {
       "size": "pro Seite"
     }
@@ -225,6 +226,7 @@ const sizeModel = computed({
       "last": "Última página"
     },
     "rows": "Fila {range} de {count} | Filas {range} de {count} | Filas {range} de {count}",
+    "zeroRow": "Fila 0 de {count}",
     "field": {
       "size": "por página"
     }
@@ -249,6 +251,7 @@ const sizeModel = computed({
       "last": "Ultima pagina"
     },
     "rows": "Riga {range} di {count} | Righe {range} di {count} | Righe {range} di {count}",
+    "zeroRow": "Riga 0 di {count}",
     "field": {
       "size": "per pagina"
     }
@@ -273,6 +276,7 @@ const sizeModel = computed({
       "last": "末页"
     },
     "rows": "第{range}行/共{count}行",
+    "zeroRow": "第 0 行，共 {count} 行",
     "field": {
       "size": "每页显示"
     }

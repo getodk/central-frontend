@@ -463,7 +463,8 @@ export default {
         "force": "Bearbeitete Übermittlung aus dem Rückstand ohne vorherige Übermittlung in der Offline-Verbuchungskette",
         "reprocess": "Die vorherige Übermittlung in der Offline-Aktualisierungskette wurde empfangen"
       }
-    }
+    },
+    "deleted": "(gelöscht)"
   },
   "es": {
     "title": {
@@ -503,7 +504,8 @@ export default {
         "force": "Presentación procesada desde la cartera de pedidos sin presentación previa en la cadena de actualización offline",
         "reprocess": "Se ha recibido el envío anterior en la cadena de actualización offline"
       }
-    }
+    },
+    "deleted": "(borrado)"
   },
   "fr": {
     "title": {
@@ -611,7 +613,8 @@ export default {
         "force": "Invio elaborato dall'arretrato senza un invio precedente nella catena di aggiornamento offline",
         "reprocess": "È stato ricevuto l'invio precedente nella catena di aggiornamento offline"
       }
-    }
+    },
+    "deleted": "(cancellato)"
   },
   "ja": {
     "title": {
@@ -752,7 +755,8 @@ export default {
         "force": "已处理积压队列中的提交（离线更新链中无前序提交）",
         "reprocess": "离线更新链中的前序提交已接收"
       }
-    }
+    },
+    "deleted": "（已删除）"
   },
   "zh-Hant": {
     "title": {
