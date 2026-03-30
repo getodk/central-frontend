@@ -4,7 +4,7 @@
     <template #title>{{ create ? $t('titleCreate') : $t('title', currentVersion) }}</template>
     <template #body>
       <form @submit.prevent="submit">
-        <div>{{ $t('entity.entityLabel') }}</div>
+        <div class="entity-upsert-label-header">{{ $t('entity.entityLabel') }}</div>
         <table class="table">
           <tbody>
             <entity-update-row ref="labelRow" v-model="label"
@@ -164,9 +164,12 @@ const submit = () => {
 
   .modal-dialog { margin-top: 15vh; }
 
-  .entity-upsert-properties-header {
-    font-size: 18px;
+
+  .entity-upsert-label-header, .entity-upsert-properties-header {
     font-weight: 500;
+  }
+
+  .entity-upsert-properties-header {
     margin-top: 40px;
   }
 
@@ -186,9 +189,13 @@ const submit = () => {
   }
 
   tbody tr td, thead tr th {
-    border: none;
     padding-left: 0px;
   }
+
+
+.entity-upsert-label-header + table tr td {
+  border: none;
+}
 
   .alert { margin: 15px; }
 }
