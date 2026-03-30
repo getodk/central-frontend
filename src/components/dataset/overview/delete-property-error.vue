@@ -137,10 +137,10 @@ defineEmits(['hide']);
     // {forms} is a bold count like "5 Forms"
     "unlinkForms": "unlink {forms} that set it",
     "entitiesCount": "{count} Entity | {count} Entities",
-    "relatedToEntities": "Related to {count} Entity | Related to {count} Entities",
+    "relatedToEntities": "Set in {count} Entity | Set in {count} Entities",
     "moreEntities": "and {count} more Entity | and {count} more Entities",
     "formsCount": "{count} Form | {count} Forms",
-    "relatedToForms": "Related to {count} Form | Related to {count} Forms"
+    "relatedToForms": "Set by {count} Form | Set by {count} Forms"
   }
 }
 </i18n>
