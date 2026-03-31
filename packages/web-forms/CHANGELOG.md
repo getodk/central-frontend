@@ -1,5 +1,11 @@
 # @getodk/web-forms
 
+## 0.23.1
+
+### Patch Changes
+
+- 8f1865c: Fixed images not allowed in file uploads
+
 ## 0.23.0
 
 ### Minor Changes

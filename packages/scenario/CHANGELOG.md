@@ -1,5 +1,11 @@
 # @getodk/scenario
 
+## 0.11.7
+
+### Patch Changes
+
+- 8f1865c: Fixed images not allowed in file uploads
+
 ## 0.11.6
 
 ### Patch Changes

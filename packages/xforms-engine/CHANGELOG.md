@@ -1,5 +1,11 @@
 # @getodk/xforms-engine
 
+## 0.21.1
+
+### Patch Changes
+
+- 8f1865c: Fixed images not allowed in file uploads
+
 ## 0.21.0
 
 ### Minor Changes
