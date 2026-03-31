@@ -62,7 +62,7 @@ except according to the terms contained in the LICENSE file.
               </i18n-t>
               <br>
               <span>{{ $t('dependentForms.description[1]') }}</span>&nbsp;
-              <a href="#">{{ $t('dependentForms.description[2]') }}</a>
+              <a href="https://docs.getodk.org/central-entities/#deleting-entity-lists" target="_blank">{{ $t('dependentForms.description[2]') }}</a>
             </p>
             <p>
               <button type="button" class="btn btn-danger" :aria-disabled="dependentFormsCount > 0" @click="deleteModal.show()">
