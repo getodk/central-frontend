@@ -9,20 +9,20 @@ jobs:
     timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - run: ./bin/check-images.sh
   shellcheck:
     timeout-minutes: 2
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - run: sudo apt-get install shellcheck
     - run: ./bin/check-scripts.sh
   unit-tests:
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - uses: actions/setup-node@v4
       with:
         node-version-file: package.json
@@ -45,7 +45,7 @@ jobs:
     # see: https://github.com/actions/runner/issues/4030
     - run: sudo apt-get remove --purge man-db
 
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       with:
         path: client
         fetch-depth: 0
