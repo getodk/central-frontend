@@ -1885,7 +1885,7 @@
         "string": "{count, plural, one {{count} Entity} other {{count} Entities}}"
       },
       "relatedToEntities": {
-        "string": "{count, plural, one {Related to {count} Entity} other {Related to {count} Entities}}"
+        "string": "{count, plural, one {Set in {count} Entity} other {Set in {count} Entities}}"
       },
       "moreEntities": {
         "string": "{count, plural, one {and {count} more Entity} other {and {count} more Entities}}"
@@ -1894,7 +1894,7 @@
         "string": "{count, plural, one {{count} Form} other {{count} Forms}}"
       },
       "relatedToForms": {
-        "string": "{count, plural, one {Related to {count} Form} other {Related to {count} Forms}}"
+        "string": "{count, plural, one {Set by {count} Form} other {Set by {count} Forms}}"
       }
     },
     "DatasetOverviewNewProperty": {
@@ -2062,7 +2062,7 @@
       "dependentForms": {
         "description": {
           "0": {
-            "string": "The Entity List “{name}” is related to {formsCount}.",
+            "string": "The Entity List “{name}” is linked to {formsCount}.",
             "developer_comment": "{formsCount} is the number of Forms that are dependent on the Entity List. Example: 4 Forms"
           },
           "1": {
@@ -3554,7 +3554,7 @@
       },
       "infoNav": {
         "entityLists": {
-          "string": "{count, plural, one {{count} Related Entity List} other {{count} Related Entity Lists}}"
+          "string": "{count, plural, one {{count} Linked Entity List} other {{count} Linked Entity Lists}}"
         },
         "updatedDatasets": {
           "string": "Updates",

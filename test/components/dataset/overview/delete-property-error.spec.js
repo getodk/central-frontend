@@ -113,7 +113,7 @@ describe('DeletePropertyError', () => {
       });
       const details = component.findAll('details');
       details.length.should.equal(1);
-      details[0].get('summary').text().should.contain('Related to 2 Entities');
+      details[0].get('summary').text().should.contain('Set in 2 Entities');
     });
 
     it('links to entities', () => {
@@ -204,7 +204,7 @@ describe('DeletePropertyError', () => {
       });
       const details = component.findAll('details');
       details.length.should.equal(1);
-      details[0].get('summary').text().should.contain('Related to 2 Forms');
+      details[0].get('summary').text().should.contain('Set by 2 Forms');
     });
 
     it('links to form draft', () => {
@@ -257,8 +257,8 @@ describe('DeletePropertyError', () => {
       });
       const details = component.findAll('details');
       details.length.should.equal(2);
-      details[0].get('summary').text().should.contain('Related to 1 Entity');
-      details[1].get('summary').text().should.contain('Related to 1 Form');
+      details[0].get('summary').text().should.contain('Set in 1 Entity');
+      details[1].get('summary').text().should.contain('Set by 1 Form');
     });
   });
 });
