@@ -89,9 +89,9 @@ class PluralForms {
       if (badWhitespace) {
         const badLength = badWhitespace[0].length;
         const badPath = forms.length === 1 ? key : `${key}[${i}]`;
-        console.error(`unexpected white space in translation string '${badPath}':`); // eslint-disable-line no-console
-        console.error(`  [${form}]`); // eslint-disable-line no-console
-        console.error(`  [${''.padStart(badLength, '^').padStart(badWhitespace.index + badLength, ' ').padEnd(form.length, ' ')}]`); // eslint-disable-line no-console
+        console.error(`unexpected white space in translation string '${badPath}':`);
+        console.error(`  [${form}]`);
+        console.error(`  [${''.padStart(badLength, '^').padStart(badWhitespace.index + badLength, ' ').padEnd(form.length, ' ')}]`);
         throw new Error(`unexpected whitespace in message '${badPath}' at index ${badWhitespace.index} ("${message}")`);
       }
     }
