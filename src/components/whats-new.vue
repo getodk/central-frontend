@@ -128,7 +128,7 @@ function hideModal() {
     "en": {
       // This is the title at the top of a pop-up.
       "title": "🎨 Branded login pages, Entity List cleanups, and file uploads in Web Forms",
-      "body": "Customize the login page with your branding, clean up Entity Lists and Properties when they are no longer needed, and upload any file to your web form."
+      "body": "Customize the login page with your branding, clean up Entity Lists and Properties when they are no longer needed, and upload any file to your Web Forms."
     }
   }
 </i18n>
