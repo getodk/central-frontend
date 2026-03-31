@@ -158,6 +158,7 @@ describe('App', () => {
           })
           .respondWithData(() => '(v2024.1.2-sha)')
           .respondWithSuccess()
+          .respondFor('/login')
           .complete()
           .request(() => {
             clock.tick(60000);

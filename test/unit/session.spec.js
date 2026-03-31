@@ -323,6 +323,7 @@ describe('util/session', () => {
           .complete()
           .request(app => logOut(app.vm.$container, false))
           .respondWithSuccess()
+          .respondFor('/login')
           .afterResponse(app => {
             app.vm.$route.fullPath.should.equal('/login');
           }));
@@ -334,6 +335,7 @@ describe('util/session', () => {
           .complete()
           .request(app => logOut(app.vm.$container, false))
           .respondWithSuccess()
+          .respondFor('/login')
           .afterResponse(app => {
             const { requestData } = app.vm.$container;
             requestData.session.dataExists.should.be.false;
@@ -346,6 +348,7 @@ describe('util/session', () => {
           .complete()
           .request(app => logOut(app.vm.$container, true))
           .respondWithSuccess()
+          .respondFor('/login')
           .afterResponse(app => {
             const route = app.vm.$route;
             route.path.should.equal('/login');
@@ -361,6 +364,7 @@ describe('util/session', () => {
           })
           .request(app => logOut(app.vm.$container, false))
           .respondWithSuccess()
+          .respondFor('/login')
           .afterResponse(app => {
             app.vm.$route.path.should.equal('/login');
             app.vm.$container.unsavedChanges.count.should.equal(0);
@@ -471,7 +475,8 @@ describe('util/session', () => {
               }
             })
             .restoreSession()
-            .respondWithProblem(401.2));
+            .respondWithProblem(401.2)
+            .respondFor('/login'));
 
         it('does not navigate to /login', () => {
           const replace = sinon.fake();
@@ -613,6 +618,7 @@ describe('util/session', () => {
           clock.tick(225000);
         })
         .respondWithSuccess()
+        .respondFor('/login')
         .afterResponse(app => {
           app.vm.$route.query.next.should.equal('/');
         });
@@ -904,6 +910,7 @@ describe('util/session', () => {
           }));
         })
         .respondWithProblem(401.2)
+        .respondFor('/login')
         .afterResponse(app => {
           app.vm.$route.query.next.should.equal('/users');
         });

@@ -70,7 +70,8 @@
       "dataset": {
         "update": "Perbarui",
         "update_publish": "Terbitkan",
-        "create": "@:audit.action.default.create"
+        "create": "@:audit.action.default.create",
+        "delete": "@:audit.action.default.delete"
       },
       "field_key": {
         "assignment_create": "Memberi Akses",
@@ -274,7 +275,8 @@
     "propertiesCount": "{inform} dari {count} properti",
     "reviewState": "Status ulasan",
     "status": "Status",
-    "version": "Versi"
+    "version": "Versi",
+    "trash": "Sampah"
   },
   "mixin": {
     "request": {

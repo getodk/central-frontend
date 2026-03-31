@@ -110,6 +110,12 @@ export default class BackendClient {
     expect(response).toBeOK();
   };
 
+  deleteForm = async (xmlFormId) => {
+    const request = await this.#getRequest();
+    const response = await request.delete(`/v1/projects/${projectId}/forms/${xmlFormId}`);
+    expect(response).toBeOK();
+  };
+
   createFormAndChildren = async () => {
     const form = await this.createForm();
     const submission = await this.createSubmission(form.xmlFormId);
@@ -127,8 +133,8 @@ export default class BackendClient {
 
   alwaysHideModal = async () => {
     const request = await this.#getRequest();
-    const response = await request.put('/v1/user-preferences/site/whatsNewDismissed2025_4', {
-      data: { propertyValue: true }
+    const response = await request.put('/v1/user-preferences/site/whatsNewDismissed', {
+      data: { propertyValue: '2100.1' } //  Fairly future-proof - modal will be dismissed if preference is not older than current version.
     });
     expect(response.ok()).toBeTruthy();
   };

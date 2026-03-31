@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="pagination">
+  <div v-if="computedCount > 0" class="pagination">
     <form class="form-inline">
       <button type="button" class="btn btn-link" :aria-label="$t('action.first')"
         :aria-disabled="page === 0" v-tooltip.aria-label
@@ -32,20 +32,7 @@ except according to the terms contained in the LICENSE file.
         @click="$emit('update:page', lastPage)">
         <span class="icon-angle-double-right"></span>
       </button>
-      <i18n-t tag="div" keypath="rows" :plural="sizeOfCurrentPage"
-        class="form-group">
-        <template #range>
-          <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
-          <select v-if="lastPage > 0 && lastPage < 20" v-model="pageModel"
-            class="form-control">
-            <option v-for="[value, text] of pageOptions" :key="value" :value="value">
-              {{ text }}
-            </option>
-          </select>
-          <template v-else>{{ pageRange(page) }}</template>
-        </template>
-        <template #count>{{ $n(count, 'default') }}</template>
-      </i18n-t>
+      <div class="form-group">{{ pageRange }}</div>
       <label class="form-group">
         <select v-model="sizeModel" class="form-control">
           <option v-for="x of sizeOptions" :key="x" :value="x">
@@ -62,6 +49,7 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 import { computed } from 'vue';
 
+import { useI18n } from 'vue-i18n';
 import Spinner from './spinner.vue';
 
 import { useI18nUtils } from '../util/i18n';
@@ -70,6 +58,11 @@ const props = defineProps({
   count: {
     type: Number,
     required: true
+  },
+  /** Number of rows removed from the current page, e.g. by means of deletion. */
+  removed: {
+    type: Number,
+    default: 0
   },
   page: {
     type: Number,
@@ -89,26 +82,27 @@ const emit = defineEmits(['update:page', 'update:size']);
 
 const lastPage = computed(() => Math.ceil(props.count / props.size) - 1);
 
-const pageModel = computed({
-  get: () => props.page,
-  set: (value) => { emit('update:page', value); }
-});
-const { formatRange } = useI18nUtils();
-// Returns the formatted range of rows shown on the specified page.
-const pageRange = (page) => {
-  const start = page * props.size + 1;
-  const end = page < lastPage.value ? start + props.size - 1 : props.count;
-  return formatRange(start, end);
-};
-const pageOptions = computed(() => {
-  const result = new Array(lastPage.value + 1);
-  for (let i = 0; i <= lastPage.value; i += 1) result[i] = [i, pageRange(i)];
-  return result;
-});
+const computedCount = computed(() => props.count - props.removed);
+
+const { formatRange, tn } = useI18nUtils();
+const { t, n } = useI18n();
+
 const sizeOfCurrentPage = computed(() => {
-  if (props.page < lastPage.value) return props.size;
-  const r = props.count % props.size;
+  if (props.page < lastPage.value) return props.size - props.removed;
+  const r = computedCount.value % props.size;
   return r === 0 ? props.size : r;
+});
+
+const empty = computed(() => props.count === 0 || sizeOfCurrentPage.value === 0 || sizeOfCurrentPage.value === props.removed || props.page > lastPage.value);
+
+// Returns the formatted range of rows shown on the specified page.
+const pageRange = computed(() => {
+  // Copy of `zeroRow` breaks the general pluralization rules. We want to say "Row 0 of N", general
+  // words get pluralized for 0, here we don't want to do that.
+  if (empty.value) return tn('zeroRow', computedCount.value);
+  const start = props.page * props.size + 1;
+  const end = props.page < lastPage.value ? start + props.size - 1 - props.removed : computedCount.value;
+  return t('rows', { range: formatRange(start, end), count: n(computedCount.value, 'default') }, sizeOfCurrentPage.value);
 });
 
 const sizeModel = computed({
@@ -133,6 +127,9 @@ const sizeModel = computed({
     // number of rows. The string will be pluralized based on the number of rows
     // in the range.
     "rows": "Row {range} of {count} | Rows {range} of {count}",
+    // Shown when no row is displayed on the page because all rows are deleted or
+    // some other reasons. {count} is the total number of rows across all pages.
+    "zeroRow": "Row 0 of {count}",
     "field": {
       // This is shown next to a field to select the number of rows to show on
       // each page.
@@ -187,11 +184,6 @@ const sizeModel = computed({
 
   .btn + .form-group {
     margin-left: 18px;
-
-    .form-control {
-      margin-left: 1px;
-      margin-right: 1px;
-    }
   }
 
   .form-group + .form-group {
@@ -221,6 +213,7 @@ const sizeModel = computed({
       "last": "Letzte Seite"
     },
     "rows": "Reihe {range} von {count} | Reihen {range} von {count}",
+    "zeroRow": "Reihe 0 von {count}",
     "field": {
       "size": "pro Seite"
     }
@@ -233,6 +226,7 @@ const sizeModel = computed({
       "last": "Última página"
     },
     "rows": "Fila {range} de {count} | Filas {range} de {count} | Filas {range} de {count}",
+    "zeroRow": "Fila 0 de {count}",
     "field": {
       "size": "por página"
     }
@@ -257,6 +251,7 @@ const sizeModel = computed({
       "last": "Ultima pagina"
     },
     "rows": "Riga {range} di {count} | Righe {range} di {count} | Righe {range} di {count}",
+    "zeroRow": "Riga 0 di {count}",
     "field": {
       "size": "per pagina"
     }
@@ -281,6 +276,7 @@ const sizeModel = computed({
       "last": "末页"
     },
     "rows": "第{range}行/共{count}行",
+    "zeroRow": "第 0 行，共 {count} 行",
     "field": {
       "size": "每页显示"
     }

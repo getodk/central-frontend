@@ -5,10 +5,18 @@ import AccountLogin from '../../../src/components/account/login.vue';
 
 import testData from '../../data';
 import { load, mockHttp } from '../../util/http';
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
-import { mount } from '../../util/lifecycle';
 
+const mountOptions = (options = undefined) => mergeMountOptions(options, {
+  container: {
+    router: mockRouter('/account/login'),
+    requestData: { serverConfig: testData.standardConfigs.byKey() }
+  }
+});
+const mountComponent = (options = undefined) =>
+  mount(AccountLogin, mountOptions(options));
 const submit = async (component) => {
   const form = component.get('#account-login form');
   await form.get('input[type="email"]').setValue('test@email.com');
@@ -20,19 +28,74 @@ const oidcContainer = {
 };
 
 describe('AccountLogin', () => {
-  it('focuses the first input', () => {
-    const component = mount(AccountLogin, {
-      container: { router: mockRouter('/account/login') },
-      attachTo: document.body
+  describe('login-appearance config', () => {
+    it('shows a default title and description if there is no config', () => {
+      const component = mountComponent();
+      component.get('h1').text().should.equal('Welcome to ODK Central');
+      component.get('h1 + p').text().should.startWith('Log into your account');
     });
+
+    it('uses the configured title', () => {
+      testData.standardConfigs.createPast(1, {
+        key: 'login-appearance',
+        value: { title: 'foo' }
+      });
+      const component = mountComponent();
+      component.get('h1').text().should.equal('foo');
+      component.get('h1 + p').text().should.startWith('Log into your account');
+    });
+
+    it('uses the configured description', () => {
+      testData.standardConfigs.createPast(1, {
+        key: 'login-appearance',
+        value: { description: 'foo' }
+      });
+      const component = mountComponent();
+      component.get('h1').text().should.equal('Welcome to ODK Central');
+      component.get('h1 + p').text().should.equal('foo');
+    });
+  });
+
+  describe('autofill', () => {
+    it('facilitates autofill by default', () => {
+      const component = mountComponent();
+      const inputs = component.findAll('input');
+      inputs.length.should.equal(2);
+      inputs[0].attributes().type.should.equal('email');
+      inputs[1].attributes().should.include({
+        type: 'password',
+        autocomplete: 'current-password'
+      });
+    });
+
+    it('discourages autofill during preview', () => {
+      const component = mountComponent({
+        props: { preview: true }
+      });
+      const inputs = component.findAll('input');
+      inputs.length.should.equal(2);
+      inputs[0].attributes().type.should.equal('text');
+      inputs[1].attributes().should.include({
+        type: 'text',
+        autocomplete: 'off'
+      });
+    });
+  });
+
+  it('shows the hostname', () => {
+    const component = mountComponent();
+    const text = component.get('#account-login-footer span').text();
+    text.should.equal('localhost');
+  });
+
+  it('focuses the first input', () => {
+    const component = mountComponent({ attachTo: document.body });
     component.get('input[type="email"]').should.be.focused();
   });
 
   it('sends the correct request', () =>
     mockHttp()
-      .mount(AccountLogin, {
-        container: { router: mockRouter('/account/login') }
-      })
+      .mount(AccountLogin, mountOptions())
       .request(submit)
       .beforeEachResponse((_, { method, url, data }) => {
         method.should.equal('POST');
@@ -54,9 +117,7 @@ describe('AccountLogin', () => {
 
   it('shows a danger alert for incorrect credentials', () =>
     mockHttp()
-      .mount(AccountLogin, {
-        container: { router: mockRouter('/account/login') }
-      })
+      .mount(AccountLogin, mountOptions())
       .request(submit)
       .respondWithProblem(401.2)
       .afterResponse(component => {
@@ -201,7 +262,7 @@ describe('AccountLogin', () => {
 
     it("does not use the param if the user's session is restored", () => {
       testData.extendedUsers.createPast(1, { role: 'none' });
-      return load('/login?next=%2Faccount%2Fedit')
+      return load('/login?next=%2Faccount%2Fedit', {}, false)
         .restoreSession()
         .respondFor('/', { users: false })
         .afterResponses(app => {

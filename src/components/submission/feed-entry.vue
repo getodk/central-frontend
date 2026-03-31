@@ -46,13 +46,15 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-magic entity-icon"></span>
         <i18n-t keypath="title.entity.create">
           <template #label>
-            <entity-link v-if="entityDetails?.currentVersion?.label != null"
+            <span v-if="!entityDetails.entityAvailable" class="deleted">{{ $t('deleted') }}&nbsp;</span>
+            <entity-link v-if="entityDetails.entityAvailable && entityDetails?.currentVersion?.label != null"
               :project-id="projectId" :dataset="entityDetails.dataset"
               :entity="entityDetails"/>
             <span v-else class="entity-label">{{ entityDetails.uuid }}</span>
           </template>
           <template #dataset>
-            <dataset-link :project-id="projectId" :name="entityDetails.dataset"/>
+            <dataset-link v-if="entityDetails.entityAvailable" :project-id="projectId" :name="entityDetails.dataset"/>
+            <span v-else>{{ entityDetails.dataset }}</span>
           </template>
         </i18n-t>
       </template>
@@ -60,13 +62,15 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-magic entity-icon"></span>
         <i18n-t keypath="title.entity.update">
           <template #label>
-            <entity-link v-if="entityDetails?.currentVersion?.label != null"
+            <span v-if="!entityDetails.entityAvailable" class="deleted">{{ $t('deleted') }}&nbsp;</span>
+            <entity-link v-if="entityDetails.entityAvailable && entityDetails?.currentVersion?.label != null"
               :project-id="projectId" :dataset="entityDetails.dataset"
               :entity="entityDetails"/>
             <span v-else class="entity-label">{{ entityDetails.uuid }}</span>
           </template>
           <template #dataset>
-            <dataset-link :project-id="projectId" :name="entityDetails.dataset"/>
+            <dataset-link v-if="entityDetails.entityAvailable" :project-id="projectId" :name="entityDetails.dataset"/>
+            <span v-else>{{ $t('title.entity.deletedDataset', { dataset: entityDetails.dataset }) }}</span>
           </template>
         </i18n-t>
       </template>
@@ -216,6 +220,10 @@ export default {
   .entity-icon { color: $color-action-foreground; }
   .icon-warning { color: $color-danger; }
   .entity-label { font-weight: normal; }
+  .deleted {
+    color: $color-danger;
+    font-weight: normal;
+  }
 }
 </style>
 
@@ -240,7 +248,7 @@ export default {
       "entity": {
         "create": "Created Entity {label} in {dataset} Entity List",
         "update": "Updated Entity {label} in {dataset} Entity List",
-        "error": "Problem processing Entity",
+        "error": "Problem processing Entity"
       },
       "updateReviewState": {
         "null": {
@@ -379,7 +387,9 @@ export default {
         "force": "Processed Submission from backlog without previous Submission in offline update chain",
         "reprocess": "Previous Submission in offline update chain was received"
       }
-    }
+    },
+    // Shown in the Submission feed when dataset or entity has been deleted.
+    "deleted": "(deleted)"
   }
 }
 </i18n>
@@ -453,7 +463,8 @@ export default {
         "force": "Bearbeitete Übermittlung aus dem Rückstand ohne vorherige Übermittlung in der Offline-Verbuchungskette",
         "reprocess": "Die vorherige Übermittlung in der Offline-Aktualisierungskette wurde empfangen"
       }
-    }
+    },
+    "deleted": "(gelöscht)"
   },
   "es": {
     "title": {
@@ -493,7 +504,8 @@ export default {
         "force": "Presentación procesada desde la cartera de pedidos sin presentación previa en la cadena de actualización offline",
         "reprocess": "Se ha recibido el envío anterior en la cadena de actualización offline"
       }
-    }
+    },
+    "deleted": "(borrado)"
   },
   "fr": {
     "title": {
@@ -601,7 +613,8 @@ export default {
         "force": "Invio elaborato dall'arretrato senza un invio precedente nella catena di aggiornamento offline",
         "reprocess": "È stato ricevuto l'invio precedente nella catena di aggiornamento offline"
       }
-    }
+    },
+    "deleted": "(cancellato)"
   },
   "ja": {
     "title": {
@@ -742,7 +755,8 @@ export default {
         "force": "已处理积压队列中的提交（离线更新链中无前序提交）",
         "reprocess": "离线更新链中的前序提交已接收"
       }
-    }
+    },
+    "deleted": "（已删除）"
   },
   "zh-Hant": {
     "title": {

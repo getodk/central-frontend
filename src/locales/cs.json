@@ -78,7 +78,8 @@
       "dataset": {
         "update": "Aktualizovat",
         "update_publish": "Zveřejnit",
-        "create": "@:audit.action.default.create"
+        "create": "@:audit.action.default.create",
+        "delete": "@:audit.action.default.delete"
       },
       "field_key": {
         "assignment_create": "Dát přístup",
@@ -247,7 +248,10 @@
   "alert": {
     "passwordTooShort": "Heslo musí mít nejméně 10 znaků.",
     "updateEntity": "Entita byla úspěšně aktualizována.",
-    "updateReviewState": "Kontrola úspěšně uložena"
+    "updateReviewState": "Kontrola úspěšně uložena",
+    "versionChange": "Server byl úspěšně aktualizován.",
+    "submissionDeleted": "Odeslání bylo úspěšně smazáno.",
+    "submissionRestored": "Odeslání bylo obnoveno."
   },
   "moreInfo": {
     "clickHere": {
@@ -265,7 +269,8 @@
     "needFeedback": {
       "full": "K tomu potřebujeme {your} zpětnou vazbu, abychom pochopili, jak Central používáte a jak by pro vás mohl být lepší.",
       "your": "vaší"
-    }
+    },
+    "mailingListOptIn": "Posílejte mi občas e-maily o nových funkcích a osvědčených postupech."
   },
   "submission": {
     "missingAttachment": "Chybějící příloha",
@@ -276,7 +281,8 @@
     "binaryLinkTitle": "Soubor byl odeslán. Kliknutím stáhnete.",
     "encryptionMessage": "Náhled dat není k dispozici kvůli šifrování.",
     "noSubmission": "(žádný)",
-    "emptyTable": "Zatím nejsou žádné příspěvky."
+    "emptyTable": "Zatím nejsou žádné příspěvky.",
+    "fileDownloadUnavailable": "Stažení souboru není k dispozici pro smazané příspěvky."
   },
   "entity": {
     "label": "Štítek",
@@ -296,6 +302,7 @@
     "dangerZone": "Nebezpečná zóna",
     "data": "Data",
     "docs": "Dokumentace",
+    "emptyMap": "Mapová data zatím nejsou k dispozici.",
     "emptyValue": "(prázdný)",
     "error": "Chyba",
     "filter": "Filtr",
@@ -313,6 +320,7 @@
     "tab": {
       "settings": "Nastavení"
     },
+    "table": "Tabulka",
     "total": "Celkem",
     "totalSubmissions": "Celkem odeslání",
     "new": "Novinka!",
@@ -324,7 +332,8 @@
     "search": "Hledat",
     "reviewState": "Přezkoumání stavu",
     "status": "Stav",
-    "version": "Verze"
+    "version": "Verze",
+    "trash": "Koš"
   },
   "mixin": {
     "request": {

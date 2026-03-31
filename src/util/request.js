@@ -174,12 +174,17 @@ export const apiPaths = {
   datasets: projectPath('/datasets'),
   dataset: datasetPath(''),
   datasetProperties: datasetPath('/properties'),
+  datasetProperty: (projectId, datasetName, propertyName) => {
+    const suffix = `/properties/${encodeURIComponent(propertyName)}`;
+    return datasetPath(suffix)(projectId, datasetName);
+  },
   entityCreators: datasetPath('/entities/creators'),
   entities: (projectId, datasetName, suffix = '', query = undefined) => {
     const encodedName = encodeURIComponent(datasetName);
     const qs = queryString(query);
     return `/v1/projects/${projectId}/datasets/${encodedName}/entities${suffix}${qs}`;
   },
+  deletedDatasetCsv: (projectId, datasetId) => `/v1/projects/${projectId}/trash/datasets/${datasetId}/entities.csv`,
   odataEntitiesSvc: datasetPath('.svc'),
   odataEntities: datasetPath('.svc/Entities'),
   entity: entityPath(''),
@@ -190,6 +195,15 @@ export const apiPaths = {
   serverUrlForFieldKey: (token, projectId) =>
     `/v1/key/${token}/projects/${projectId}`,
   audits: (query) => `/v1/audits${queryString(query)}`,
+  config: (key) => {
+    const encodedKey = encodeURIComponent(key);
+    return `/v1/config/${encodedKey}`;
+  },
+  publicConfig: (key, query = undefined) => {
+    const encodedKey = encodeURIComponent(key);
+    const qs = queryString(query);
+    return `/v1/config/public/${encodedKey}${qs}`;
+  }
 };
 
 

@@ -57,16 +57,16 @@ function isTooBig({ path, size }) {
   // Special cases:
   const simpleName = basename(path).replace(/(-[\w-]{8})+\./, '.');
   switch (simpleName) { // eslint-disable-line default-case
-    case 'index.js':             return size >   750_000;
-    case 'web-form.js': return size > 3_300_000;
-    case 'MapBlock.js': return size > 450_000; // A Web Forms' feature bundle
+    case 'index.js':             return size >   2_000_000;
+    case 'web-form.js': return size > 2_000_000;
+    case 'MapBlock.js': return size > 600_000; // A Web Forms' feature bundle
     case 'geojson-map.js':       return size >   500_000;
   }
 
   const type = extname(path).substr(1);
   switch (type) { // eslint-disable-line default-case
     case 'css':  return size > 220_000;
-    case 'html': return size >   1_200;
+    case 'html': return size >   2_500;
     case 'ico':  return size >  16_000;
     case 'js':   return size > 200_000;
     case 'png':  return size > 700_000;

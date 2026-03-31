@@ -66,6 +66,10 @@
         "string": "Kumbukumbu za ukaguzi wa seva",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       },
+      "customization": {
+        "string": "",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      },
       "analytics": {
         "string": "Ripoti ya matumizi",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
@@ -223,6 +227,10 @@
         },
         "update_publish": {
           "string": "Kuchapisha",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
+        },
+        "update_property_delete": {
+          "string": "",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         }
       },
@@ -493,6 +501,10 @@
       "string": "Muda wa tarehe",
       "developer_comment": "This is the text of a form field."
     },
+    "description": {
+      "string": "",
+      "developer_comment": "This is the text of a form field."
+    },
     "displayName": {
       "string": " Onyesha jina",
       "developer_comment": "This is the text of a form field."
@@ -523,6 +535,10 @@
     },
     "passwordConfirm": {
       "string": "Password mpya (thibitisha)",
+      "developer_comment": "This is the text of a form field."
+    },
+    "title": {
+      "string": "",
       "developer_comment": "This is the text of a form field."
     },
     "type": {
@@ -798,6 +814,17 @@
     "learnMore": {
       "string": "Jifunze zaidi",
       "developer_comment": "This is a link to more information."
+    }
+  },
+  "login": {
+    "odkLogo": {
+      "string": ""
+    },
+    "defaultTitle": {
+      "string": ""
+    },
+    "defaultDescription": {
+      "string": ""
     }
   },
   "analytics": {
@@ -1091,6 +1118,9 @@
   },
   "component": {
     "AccountClaim": {
+      "title": {
+        "string": ""
+      },
       "action": {
         "set": {
           "string": "Weka nenosiri",
@@ -1143,7 +1173,24 @@
         }
       }
     },
+    "AccountPageContainer": {
+      "customLogoAlt": {
+        "string": ""
+      },
+      "defaultHeroAlt": {
+        "string": ""
+      },
+      "customHeroAlt": {
+        "string": ""
+      }
+    },
     "AccountResetPassword": {
+      "title": {
+        "string": ""
+      },
+      "subtitle": {
+        "string": ""
+      },
       "alert": {
         "success": {
           "string": "Barua pepe imetumwa kwa {email} ikiwa na maagizo zaidi."
@@ -1370,6 +1417,12 @@
         "description_length": {
           "string": "Urefu wa maelezo ya Mradi"
         },
+        "num_datasets_deleted": {
+          "string": ""
+        },
+        "num_dataset_properties_deleted": {
+          "string": ""
+        },
         "num_properties": {
           "string": "Idadi ya Mali"
         },
@@ -1411,6 +1464,18 @@
         },
         "sso_enabled": {
           "string": "SSO imewashwa kwenye seva"
+        },
+        "login_customization_logo_set": {
+          "string": ""
+        },
+        "login_customization_hero_image_set": {
+          "string": ""
+        },
+        "login_customization_title_set": {
+          "string": ""
+        },
+        "login_customization_description_set": {
+          "string": ""
         },
         "num_client_audit_attachments": {
           "string": "Idadi ya Viambatisho vya Ukaguzi wa Mteja"
@@ -1617,12 +1682,97 @@
         "string": ""
       }
     },
+    "ConfigLogin": {
+      "title": {
+        "string": ""
+      }
+    },
+    "ConfigLoginEdit": {
+      "logo": {
+        "label": {
+          "string": ""
+        },
+        "help": {
+          "string": ""
+        }
+      },
+      "title": {
+        "help": {
+          "string": ""
+        }
+      },
+      "description": {
+        "help": {
+          "string": ""
+        }
+      },
+      "hero": {
+        "label": {
+          "string": ""
+        },
+        "help": {
+          "string": ""
+        }
+      }
+    },
+    "ConfigLoginFileSelect": {
+      "select": {
+        "full": {
+          "string": "",
+          "developer_comment": "{upload} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nupload file"
+        },
+        "upload": {
+          "string": "",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {upload} is in the following text:\n\nDrag image here or {upload}"
+        }
+      },
+      "action": {
+        "remove": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "invalidType": {
+          "string": ""
+        },
+        "post": {
+          "string": ""
+        },
+        "del": {
+          "string": ""
+        }
+      }
+    },
+    "ConfigLoginPreview": {
+      "introduction": {
+        "string": ""
+      }
+    },
+    "DatasetDelete": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": ""
+        }
+      }
+    },
     "DatasetEntities": {
       "upload": {
         "string": ""
       },
+      "new": {
+        "string": "",
+        "developer_comment": "This is shown on a button for creating new Entities"
+      },
       "alert": {
         "upload": {
+          "string": ""
+        },
+        "create": {
           "string": ""
         }
       },
@@ -1682,10 +1832,6 @@
       }
     },
     "DatasetOverview": {
-      "connectionsToForms": {
-        "string": "Viunganisho kwa Fomu",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
       "entityProperties": {
         "string": "Sifa za Mashirika",
         "developer_comment": "This is a title shown above a section of the page."
@@ -1695,11 +1841,6 @@
         "developer_comment": "This is shown on a button for creating new Entity Properties"
       }
     },
-    "DatasetOverviewConnectionToForms": {
-      "formsUpdateEntities": {
-        "string": "{count, plural, one {} other {}}"
-      }
-    },
     "DatasetOverviewDatasetProperties": {
       "emptyTable": {
         "string": "Huluki katika Orodha hii ya Huluki hazina sifa zozote zilizobainishwa na mtumiaji."
@@ -1707,10 +1848,52 @@
       "none": {
         "string": "",
         "developer_comment": "This is shown in an Entity property row in a column about Forms, and 'None' refers to Forms."
+      },
+      "confirmation": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": "",
+          "developer_comment": "This is shown on a confirmation dialog box. {propertyName} is the name of the property that is being deleted."
+        }
+      },
+      "deleted": {
+        "string": "",
+        "developer_comment": "This is shown after a Property has been successfully deleted. {name} is the name of the deleted property."
       }
     },
-    "DatasetOverviewLinkedForms": {
-      "formsConsumeData": {
+    "DatasetOverviewDeletePropertyError": {
+      "title": {
+        "string": ""
+      },
+      "intro": {
+        "string": ""
+      },
+      "clearEntities": {
+        "string": "",
+        "developer_comment": "{entities} is a bold count like \"2 Entities\""
+      },
+      "and": {
+        "string": ""
+      },
+      "unlinkForms": {
+        "string": "",
+        "developer_comment": "{forms} is a bold count like \"5 Forms\""
+      },
+      "entitiesCount": {
+        "string": "{count, plural, one {} other {}}"
+      },
+      "relatedToEntities": {
+        "string": "{count, plural, one {} other {}}"
+      },
+      "moreEntities": {
+        "string": "{count, plural, one {} other {}}"
+      },
+      "formsCount": {
+        "string": "{count, plural, one {} other {}}"
+      },
+      "relatedToForms": {
         "string": "{count, plural, one {} other {}}"
       }
     },
@@ -1864,6 +2047,34 @@
         "successMessage": {
           "string": "Huluki zitaundwa Mawasilisho yanapotiwa alama kuwa Yameidhinishwa."
         }
+      },
+      "action": {
+        "delete": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "delete": {
+          "string": ""
+        }
+      },
+      "dependentForms": {
+        "description": {
+          "0": {
+            "string": "",
+            "developer_comment": "{formsCount} is the number of Forms that are dependent on the Entity List. Example: 4 Forms"
+          },
+          "1": {
+            "string": ""
+          },
+          "2": {
+            "string": ""
+          }
+        },
+        "formsCount": {
+          "string": "{count, plural, one {} other {}}"
+        }
       }
     },
     "DatasetShow": {
@@ -1895,6 +2106,23 @@
     "DatasetTable": {
       "emptyTable": {
         "string": "Bado hakuna Huluki ambazo zimeundwa kwa ajili ya Mradi huu."
+      }
+    },
+    "DatasetTrashRow": {
+      "action": {
+        "download": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "DatasetTrashTable": {
+      "trashCount": {
+        "string": "",
+        "developer_comment": "{count} is the number of Entity Lists in the trash."
+      },
+      "message": {
+        "string": ""
       }
     },
     "Download": {
@@ -2248,9 +2476,6 @@
       "emptyMap": {
         "string": ""
       },
-      "allDeleted": {
-        "string": ""
-      },
       "allDeletedOnPage": {
         "string": ""
       },
@@ -2279,9 +2504,6 @@
       },
       "deletedEntity": {
         "emptyTable": {
-          "string": ""
-        },
-        "allRestored": {
           "string": ""
         },
         "allRestoredOnPage": {
@@ -2422,16 +2644,6 @@
         "string": "Sasisha {label}",
         "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
       },
-      "header": {
-        "currentValue": {
-          "string": "Thamani ya Sasa",
-          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
-        },
-        "updatedValue": {
-          "string": "Thamani Iliyosasishwa",
-          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
-        }
-      },
       "geometryDisabled": {
         "string": ""
       },
@@ -2560,6 +2772,17 @@
         "largeCell": {
           "string": "",
           "developer_comment": "This is a warning that is followed by a list of rows."
+        }
+      }
+    },
+    "EntityUpsert": {
+      "titleCreate": {
+        "string": ""
+      },
+      "header": {
+        "value": {
+          "string": "",
+          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
         }
       }
     },
@@ -3437,6 +3660,9 @@
       "alert": {
         "fileRequired": {
           "string": "Tafadhali chagua faili."
+        },
+        "fileNotReadable": {
+          "string": ""
         }
       },
       "problem": {
@@ -3981,6 +4207,10 @@
       "rows": {
         "string": "{count, plural, one {} other {}}",
         "developer_comment": "{range} is a range of row numbers, for example, 1-5. {count} is the total number of rows. The string will be pluralized based on the number of rows in the range."
+      },
+      "zeroRow": {
+        "string": "",
+        "developer_comment": "Shown when no row is displayed on the page because all rows are deleted or some other reasons. {count} is the total number of rows across all pages."
       },
       "field": {
         "size": {
@@ -4944,6 +5174,10 @@
             "developer_comment": "This text is shown in the list of actions performed on a Submission."
           }
         }
+      },
+      "deleted": {
+        "string": "",
+        "developer_comment": "Shown in the Submission feed when dataset or entity has been deleted."
       }
     },
     "SubmissionFieldDropdown": {
@@ -5040,9 +5274,6 @@
       "learnMoreMap": {
         "string": ""
       },
-      "allDeleted": {
-        "string": ""
-      },
       "allDeletedOnPage": {
         "string": ""
       },
@@ -5057,9 +5288,6 @@
       },
       "deletedSubmission": {
         "emptyTable": {
-          "string": ""
-        },
-        "allRestored": {
           "string": ""
         },
         "allRestoredOnPage": {

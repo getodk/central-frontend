@@ -102,7 +102,7 @@ describe('FormHead', () => {
         const app = await load('/projects/1/forms/f/settings');
         const buttons = app.findAllComponents(Infonav);
         buttons.length.should.equal(2);
-        buttons[0].get('button').text().should.equal('1 Related Entity List');
+        buttons[0].get('button').text().should.equal('1 Linked Entity List');
         buttons[0].findAll('.dropdown-menu > li').map(li => li.text()).should.eql(['Updates', 'trees']);
       });
 
@@ -112,7 +112,7 @@ describe('FormHead', () => {
         const app = await load('/projects/1/forms/f/settings');
         const buttons = app.findAllComponents(Infonav);
         buttons.length.should.equal(2);
-        buttons[0].get('button').text().should.equal('1 Related Entity List');
+        buttons[0].get('button').text().should.equal('1 Linked Entity List');
         buttons[0].findAll('.dropdown-menu > li').map(li => li.text()).should.eql(['Uses', 'shovels']);
       });
 
@@ -123,7 +123,7 @@ describe('FormHead', () => {
         const app = await load('/projects/1/forms/f/settings');
         const buttons = app.findAllComponents(Infonav);
         buttons.length.should.equal(2);
-        buttons[0].get('button').text().should.equal('2 Related Entity Lists');
+        buttons[0].get('button').text().should.equal('2 Linked Entity Lists');
         buttons[0].findAll('.dropdown-menu > li').map(li => li.text()).should.eql(['Updates', 'trees', '', 'Uses', 'shovels']);
       });
 
@@ -134,7 +134,7 @@ describe('FormHead', () => {
         const app = await load('/projects/1/forms/f/settings');
         const buttons = app.findAllComponents(Infonav);
         buttons.length.should.equal(2);
-        buttons[0].get('button').text().should.equal('1 Related Entity List');
+        buttons[0].get('button').text().should.equal('1 Linked Entity List');
         buttons[0].findAll('.dropdown-menu > li').map(li => li.text()).should.eql(['Updates', 'trees', '', 'Uses', 'trees']);
       });
     });

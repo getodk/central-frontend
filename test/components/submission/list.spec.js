@@ -716,7 +716,7 @@ describe('SubmissionList', () => {
           .respondWithSuccess()
           .afterResponse(component => {
             component.get('.empty-table-message').should.be.visible();
-            component.get('.empty-table-message').text().should.be.equal('All deleted Submissions are restored.');
+            component.get('.empty-table-message').text().should.be.equal('All Submissions on the page have been restored.');
           }));
     });
 
@@ -816,9 +816,7 @@ describe('SubmissionList', () => {
     });
   });
 
-  describe('pagination', function() { // eslint-disable-line func-names
-    this.timeout(4000);
-
+  describe('pagination', () => {
     const checkIds = (component, count, offset = 0) => {
       const rows = component.findAllComponents(SubmissionDataRow);
       rows.length.should.equal(count);
@@ -939,7 +937,6 @@ describe('SubmissionList', () => {
         .afterResponses(async component => {
           await nextTick();
           checkIds(component, 1, 500);
-          component.find('.pagination select').element.value.should.be.eql('2');
         });
     });
   });

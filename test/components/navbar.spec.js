@@ -10,7 +10,7 @@ describe('Navbar', () => {
     it('does not show the navbar during the initial navigation', () => {
       testData.extendedUsers.createPast(1, { role: 'none' });
       let wasHidden = false;
-      return load('/login')
+      return load('/login', {}, false)
         .beforeAnyResponse(app => {
           app.vm.$router.currentRoute.value.should.equal(START_LOCATION);
           app.vm.$router.afterEach(() => {

@@ -181,7 +181,7 @@ export default {
       "tabTitle": "Publish this Draft Form to enable these functions"
     },
     "infoNav": {
-      "entityLists": "{count} Related Entity List | {count} Related Entity Lists",
+      "entityLists": "{count} Linked Entity List | {count} Linked Entity Lists",
       // This text is shown as a header in a dropdown about related entity lists updated by this form.
       "updatedDatasets": "Updates",
       // This text is shown as a header in a dropdown about related entity lists that are used as attachments by this form.

@@ -53,7 +53,19 @@ const isVisible = ref(false);
 const initialOptIn = currentUser.preferences.site.mailingListOptIn;
 const mailingListOptIn = ref(currentUser.preferences.site.mailingListOptIn !== false);
 
+const currentVersion = '2026.1';
+
+const isOlderVersion = (stored, current) => {
+  // compare stored vs. current year & release
+  const [sy, sr] = stored.split('.').map(Number);
+  const [cy, cr] = current.split('.').map(Number);
+  return sy < cy || (sy === cy && sr < cr);
+};
+
 watch(() => projects.dataExists, () => {
+  const showModal = !currentUser.preferences.site.whatsNewDismissed ||
+    isOlderVersion(currentUser.preferences.site.whatsNewDismissed, currentVersion);
+
   // When updating `canUpdateForm` in the future, consider the *verb* for the audience.
   // For 2025.4, we decided it could be shown to project viewers as well,
   // where the previous modal was only shown to admins and project managers.
@@ -61,13 +73,13 @@ watch(() => projects.dataExists, () => {
     projects.data.some(project => project.verbs.has('submission.list'));
   if (canUpdateForm && // Check that user is admin or is able to edit forms in at least one project
     !openModal.state && // Check that no other modal (e.g. new project) is open
-    !currentUser.preferences.site.whatsNewDismissed2025_4) {
+    showModal) {
     isVisible.value = true;
   }
 });
 
 function hideModal() {
-  currentUser.preferences.site.whatsNewDismissed2025_4 = true;
+  currentUser.preferences.site.whatsNewDismissed = currentVersion;
 
   // If user was not already opted in and preference changed, then save preference.
   if (!initialOptIn && mailingListOptIn.value !== initialOptIn) {
@@ -80,6 +92,10 @@ function hideModal() {
 
 <style lang="scss">
 @import '../assets/scss/variables';
+
+#whats-new-modal h4 {
+  white-space: wrap;
+}
 
 #whats-new-modal .modal-actions {
   display: flex;
@@ -111,8 +127,8 @@ function hideModal() {
   {
     "en": {
       // This is the title at the top of a pop-up.
-      "title": "Maps ️🗺️, bulk deletion ️🗑️, and better system visibility 👀",
-      "body": "Introducing a new map view for Submissions and Entities, faster data cleanup with bulk Entity deletion and cleaner system insight through visible user invitation statuses and “last updated” timestamps!"
+      "title": "🎨 Branded login pages, Entity List cleanups, and file uploads in Web Forms",
+      "body": "Customize the login page with your branding, clean up Entity Lists and Properties when they are no longer needed, and upload any file to your Web Forms."
     }
   }
 </i18n>
@@ -121,28 +137,23 @@ function hideModal() {
 <i18n>
 {
   "de": {
-    "title": "Karten ️🗺️, Massenlöschung ️🗑️ und bessere Systemtransparenz 👀",
-    "body": "Einführung einer neuen Kartenansicht für Übermittlungen und Entitäten, schnellere Datenbereinigung durch Massenlöschung von Entitäten und übersichtlichere Systemeinblicke durch sichtbare Einladungsstatus von Benutzern und Zeitstempel „Zuletzt aktualisiert“!"
+    "title": "Löschen von Entitäten und Eigenschaften ️🗑️, Erstellung von Entitäten 🪄sowie individuelles Branding auf der Anmeldeseite 🎨",
+    "body": "Bereinigen Sie Entitätslisten und Eigenschaften, wenn diese nicht mehr benötigt werden, erstellen Sie Entitäten schnell direkt über die Benutzeroberfläche von Central und passen Sie die Anmeldeseite so an, dass Ihr Server das Corporate Design Ihrer Organisation widerspiegelt und das Vertrauen der Benutzer stärkt."
   },
   "es": {
-    "title": "Mapas ️🗺️, eliminación masiva ️🗑️ y mejor visibilidad del sistema 👀",
-    "body": "Presentamos una nueva vista de mapa para envíos y entidades, una limpieza de datos más rápida con la eliminación masiva de entidades y una visión más clara del sistema gracias a los estados visibles de las invitaciones de los usuarios y las marcas de tiempo de «última actualización»."
+    "title": "Eliminación de la lista de entidades y de propiedades ️🗑️, Creación de entidades 🪄y personalización de la identidad corporativa en la página de inicio de sesión 🎨",
+    "body": "Elimina las listas de entidades y las propiedades cuando ya no sean necesarias, crea rápidamente entidades directamente desde la interfaz de usuario de Central y personaliza la página de inicio de sesión para que tu servidor refleje la imagen de tu organización y genere confianza entre los usuarios."
   },
   "fr": {
-    "title": "Cartes 🗺️, suppression en masse 🗑️, et plus de visibilité 👀",
-    "body": "Essayez les nouvelles vues cartographiques pour les soumissions et les entités, nettoyez vos données plus rapidement avec la suppression en masse des entités, et comprenez mieux vos utilisateurs grâce à l'affichage des statuts d'invitation!"
+    "title": "Suppression de listes d'entités 🗑️, création d'entités 🪄 et personnalisation de la page de connexion 🎨"
   },
   "it": {
-    "title": "Mappe ️🗺️, eliminazione in blocco ️🗑️ e migliore visibilità del sistema 👀",
-    "body": "Presentiamo una nuova visualizzazione della mappa per gli invii e le entità, una gestione dei dati più rapida grazie alla cancellazione in blocco delle entità e una visione più chiara del sistema grazie alla visualizzazione dello stato degli inviti agli utenti e dei timestamp dell'ultimo aggiornamento."
+    "title": "Eliminazione dell'elenco delle entità e delle proprietà ️🗑️, Creazione di entità 🪄e personalizzazione del branding nella pagina di accesso 🎨",
+    "body": "Elimina gli elenchi di entità e le proprietà quando non sono più necessari, crea rapidamente entità direttamente dall'interfaccia utente di Central e personalizza la pagina di accesso in modo che il tuo server rispecchi l'immagine del tuo brand e rafforzi la fiducia degli utenti."
   },
   "zh": {
-    "title": "地图功能️🗺️、批量删除️🗑️，及更强的系统可见性👀",
-    "body": "我们推出了全新的地图视图，可同时展示提交数据与实体；通过批量删除实体实现高效数据清理；系统可视化也得到提升——现在可清晰查看用户邀请状态及“最后更新”时间戳！"
-  },
-  "zh-Hant": {
-    "title": "地圖功能️🗺️、批次刪除️🗑️，以及更佳的系統可見性👀",
-    "body": "我們推出了全新的地圖視圖，可同時展示提交資料與實體；透過批次刪除實體來實現更高效率的資料清理；系統可視化也全面提升——現在可清楚查看使用者邀請狀態與「最後更新」時間戳！"
+    "title": "实体列表与属性删除🗑️、实体创建🪄以及登录页面的自定义品牌标识🎨",
+    "body": "当实体列表和属性不再需要时进行清理，直接从 Central 用户界面快速创建实体，并自定义登录页面，使您的服务器体现组织品牌形象，建立用户信任。"
   }
 }
 </i18n>

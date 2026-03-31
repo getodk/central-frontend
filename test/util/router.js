@@ -60,6 +60,7 @@ export const mockRouter = (location = undefined) => (container) => {
     isReady: currentRoute.value !== START_LOCATION
       ? () => Promise.resolve()
       : () => { throw new Error('not ready'); },
+    beforeEach: () => noop,
     afterEach: () => noop,
     onError: () => noop,
     install: (app) => {
