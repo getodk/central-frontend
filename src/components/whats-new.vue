@@ -127,8 +127,8 @@ function hideModal() {
   {
     "en": {
       // This is the title at the top of a pop-up.
-      "title": "Entity List and Property deletion ️🗑️, Entity Creation 🪄and custom branding on login page 🎨",
-      "body": "Clean up Entity Lists and Properties when they’re no longer needed, quickly create Entities directly from the Central UI, and customize the login page so your server reflects your organization’s branding and builds user trust."
+      "title": "🎨 Branded login pages, Entity List cleanups, and file uploads in Web Forms",
+      "body": "Customize the login page with your branding, clean up Entity Lists and Properties when they are no longer needed, and upload any file to your Web Forms."
     }
   }
 </i18n>
