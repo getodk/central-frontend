@@ -27,7 +27,7 @@ const parseUploadMediaOptions = (element: Element): UploadMediaOptions => {
 
 	const mediaType = element.getAttribute('mediatype')?.trim();
 
-	if (mediaType == null || mediaType === '') {
+	if (mediaType == null || mediaType === '' || mediaType === 'application/*') {
 		return {
 			accept: '*',
 			type: null,

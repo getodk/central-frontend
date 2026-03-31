@@ -173,11 +173,21 @@ describe('Instance attachments: upload controls', () => {
 
 			{
 				description: 'parses an unknown `mediatype` MIME type value',
+				mediaType: 'xyz/*',
+				expected: {
+					accept: 'xyz/*',
+					type: 'xyz',
+					subtype: '*',
+				},
+			},
+
+			{
+				description: 'parses default "application/*" `mediatype` MIME type value',
 				mediaType: 'application/*',
 				expected: {
-					accept: 'application/*',
-					type: 'application',
-					subtype: '*',
+					accept: '*',
+					type: null,
+					subtype: null,
 				},
 			},
 
