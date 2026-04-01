@@ -18,11 +18,8 @@ content in a slot, which the component will style. -->
         <div id="account-page-container-main"><slot></slot></div>
       </div>
     </div>
-    <div id="account-page-container-hero" :class="hiddenClass">
-      <img v-if="heroUrl == null" src="../../../assets/images/account/default-hero.png"
-        :alt="$t('defaultHeroAlt')" v-on="imgHandlers">
-      <img v-else :src="heroUrl"
-        :alt="$t('customHeroAlt')" v-on="imgHandlers">
+    <div v-if="heroUrl != null" id="account-page-container-hero" :class="hiddenClass">
+      <img :src="heroUrl" :alt="$t('customHeroAlt')" v-on="imgHandlers">
     </div>
   </div>
 </template>
@@ -215,7 +212,6 @@ Notes about the layout:
 {
   "en": {
     "customLogoAlt": "Organization logo",
-    "defaultHeroAlt": "Features of ODK Central",
     "customHeroAlt": "Welcome image"
   }
 }

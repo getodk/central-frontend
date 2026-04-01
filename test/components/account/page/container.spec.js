@@ -31,15 +31,6 @@ describe('AccountPageContainer', () => {
   });
 
   describe('hero image', () => {
-    it('shows default hero image if a custom one has not been configured', () => {
-      const component = mountComponent();
-      const img = component.findAll('#account-page-container-hero img');
-      img.length.should.equal(1);
-      const { alt, src } = img[0].attributes();
-      alt.should.equal('Features of ODK Central');
-      src.should.include('default-hero');
-    });
-
     it('shows a custom hero image', () => {
       testData.standardConfigs.createPast(1, { key: 'hero-image', blobExists: true });
       const component = mountComponent();
@@ -48,6 +39,11 @@ describe('AccountPageContainer', () => {
       const { alt, src } = img[0].attributes();
       alt.should.equal('Welcome image');
       src.should.startWith('/v1/config/public/hero-image?');
+    });
+
+    it('does not show a hero image if one has not been configured', () => {
+      const component = mountComponent();
+      component.find('#account-page-container-hero').exists().should.be.false;
     });
   });
 
