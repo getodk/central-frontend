@@ -501,10 +501,6 @@
       "string": "Date range",
       "developer_comment": "This is the text of a form field."
     },
-    "description": {
-      "string": "Description",
-      "developer_comment": "This is the text of a form field."
-    },
     "displayName": {
       "string": "Display name",
       "developer_comment": "This is the text of a form field."
@@ -825,6 +821,9 @@
     },
     "defaultDescription": {
       "string": "Log into your account to get started"
+    },
+    "heroImage": {
+      "string": "Login image"
     }
   },
   "analytics": {
@@ -1176,9 +1175,6 @@
     "AccountPageContainer": {
       "customLogoAlt": {
         "string": "Organization logo"
-      },
-      "customHeroAlt": {
-        "string": "Welcome image"
       }
     },
     "AccountResetPassword": {
@@ -1690,7 +1686,7 @@
           "string": "Logo"
         },
         "help": {
-          "string": "We recommend using an image with a white or transparent background of at least 150x150 pixels."
+          "string": "We recommend using a PNG logo with transparent background of at least 150x150 pixels."
         }
       },
       "title": {
@@ -1699,16 +1695,16 @@
         }
       },
       "description": {
+        "label": {
+          "string": "Subtitle"
+        },
         "help": {
-          "string": "A brief description of your project space."
+          "string": "Instructions for your users, a welcome message or a description of this server."
         }
       },
       "hero": {
-        "label": {
-          "string": "Hero image"
-        },
         "help": {
-          "string": "We recommend using a high-resolution image in JPG or PNG format. For best results, use a visually engaging image that represents your brand or message."
+          "string": "Upload a vertical image, we recommend a 4:5 crop. Use a visually engaging image that represents your brand or message. The image will be cropped on different screen sizes, so keep important content centered."
         }
       }
     },
@@ -1743,7 +1739,7 @@
     },
     "ConfigLoginPreview": {
       "introduction": {
-        "string": "This is what your login page looks like right now:"
+        "string": "Your login page now looks like this:"
       }
     },
     "DatasetDelete": {

@@ -37,7 +37,7 @@ describe('AccountPageContainer', () => {
       const img = component.findAll('#account-page-container-hero img');
       img.length.should.equal(1);
       const { alt, src } = img[0].attributes();
-      alt.should.equal('Welcome image');
+      alt.should.equal('Login image');
       src.should.startWith('/v1/config/public/hero-image?');
     });
 
