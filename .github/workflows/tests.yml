@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
-    - uses: actions/setup-node@v4
+    - uses: actions/setup-node@v6
       with:
         node-version-file: package.json
         cache: 'npm'
@@ -70,7 +70,7 @@ jobs:
       working-directory: central
       run: touch ./files/allow-postgres14-upgrade && docker compose build && docker compose up -d
     - name: Set node version
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
         node-version-file: central/client/package.json
         cache: 'npm'
