@@ -4,38 +4,39 @@
     <p>{{ $t('logo.help') }}</p>
     <config-login-file-select name="logo"/>
 
-    <form @submit.prevent="submit">
+    <p class="file-label">{{ $t('hero.label') }}</p>
+    <p>{{ $t('hero.help') }}</p>
+    <config-login-file-select name="hero-image"/>
+
+    <form>
       <div class="form-group">
         <label for="config-login-edit-title">{{ $t('field.title') }}</label>
         <p id="config-login-edit-title-help">{{ $t('title.help') }}</p>
-        <input id="config-login-edit-title" v-model.trim="title"
+        <input id="config-login-edit-title" v-model.trim="newAppearance.title"
           class="form-control" aria-describedby="config-login-edit-title-help"
-          :placeholder="$t('login.defaultTitle')" autocomplete="off">
+          :placeholder="$t('login.defaultTitle')"
+          :aria-disabled="awaitingResponse" autocomplete="off"
+          @blur="update('title')">
+        <spinner :state="updating === 'title'" inline/>
       </div>
 
       <div class="form-group">
         <label for="config-login-edit-description">{{ $t('field.description') }}</label>
         <p id="config-login-edit-description-help">{{ $t('description.help') }}</p>
-        <input id="config-login-edit-description" v-model.trim="description"
+        <input id="config-login-edit-description" v-model.trim="newAppearance.description"
           class="form-control"
           aria-describedby="config-login-edit-description-help"
-          :placeholder="$t('login.defaultDescription')" autocomplete="off">
+          :placeholder="$t('login.defaultDescription')"
+          :aria-disabled="awaitingResponse" autocomplete="off"
+          @blur="update('description')">
+        <spinner :state="updating === 'description'" inline/>
       </div>
-
-      <button type="submit" class="btn btn-primary">
-        {{ $t('action.save') }} <spinner :state="awaitingResponse"/>
-      </button>
     </form>
-
-    <p class="file-label">{{ $t('hero.label') }}</p>
-    <p>{{ $t('hero.help') }}</p>
-    <config-login-file-select name="hero-image"/>
   </div>
 </template>
 
 <script setup>
-import { inject, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
+import { reactive, ref } from 'vue';
 
 import ConfigLoginFileSelect from './file-select.vue';
 import Spinner from '../../spinner.vue';
@@ -48,37 +49,50 @@ defineOptions({
   name: 'ConfigLoginEdit'
 });
 
-const { t } = useI18n();
 const { serverConfig } = useRequestData();
-const { toast } = inject('container');
 
-const initialAppearance = serverConfig['login-appearance']?.value;
-const title = ref(initialAppearance?.title ?? '');
-const description = ref(initialAppearance?.description ?? '');
+const newAppearance = reactive({
+  title: '',
+  description: '',
+  ...serverConfig['login-appearance']?.value
+});
 
 const { request, awaitingResponse } = useRequest();
-const submit = () => {
-  const data = {};
-  if (title.value !== '') data.title = title.value;
-  if (description.value !== '') data.description = description.value;
+// The name of the login-appearance property that the current request is
+// updating
+const updating = ref(null);
+const update = (prop) => {
+  if (awaitingResponse.value) return;
+  const currentValue = serverConfig['login-appearance']?.value[prop] ?? '';
+  if (newAppearance[prop] === currentValue) return;
 
+  updating.value = prop;
+  const data = Object.fromEntries(Object.entries(newAppearance)
+    .filter(([, value]) => value !== ''));
   request({ method: 'POST', url: '/v1/config/login-appearance', data })
-    .then(response => {
-      serverConfig['login-appearance'] = response.data;
-      toast.show(t('alert.success'));
-    })
-    .catch(noop);
+    .then(response => { serverConfig['login-appearance'] = response.data; })
+    .catch(noop)
+    .finally(() => { updating.value = null; });
 };
 </script>
 
 <style lang="scss">
 #config-login-edit {
-  .file-drop-zone, .btn-primary { margin-bottom: 40px; }
-  .form-group { margin-bottom: 25px; }
-  button[type="submit"] { margin-top: -10px; }
+  .config-login-file-select, .form-group { margin-bottom: 20px; }
 
   .file-label, label { font-size: 16px; }
   label { font-weight: normal; }
+
+  .form-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  label, .form-group p { width: 100%; }
+  .form-control {
+    width: auto;
+    flex-grow: 1;
+  }
+  .spinner { align-self: center; }
 }
 </style>
 
@@ -98,10 +112,6 @@ const submit = () => {
     "hero": {
       "label": "Hero image",
       "help": "We recommend using a high-resolution image in JPG or PNG format. For best results, use a visually engaging image that represents your brand or message."
-    },
-    "alert": {
-      // @transifexKey component.AnalyticsForm.alert.success
-      "success": "Settings successfully saved."
     }
   }
 }
