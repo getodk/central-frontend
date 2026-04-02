@@ -18,12 +18,12 @@ const focus = (wrapper) => {
   wrapper.element.focus();
   return nextTick();
 };
-const change = async (component, inputIndex, value) => {
+const change = async (component, inputIndex, value, blur = true) => {
   const inputs = component.findAll('form input');
   inputs.length.should.equal(2);
   await focus(inputs[inputIndex]);
   await inputs[inputIndex].setValue(value);
-  await focus(inputs[inputIndex === 0 ? 1 : 0]);
+  if (blur) await focus(inputs[inputIndex === 0 ? 1 : 0]);
 };
 
 describe('ConfigLoginEdit', () => {
@@ -115,11 +115,11 @@ describe('ConfigLoginEdit', () => {
     return mockHttp()
       .mount(ConfigLoginEdit, mountOptions())
       .testNoRequest(async (component) => {
-        await component.get('form input').setValue('bar');
-        return change(component, 0, 'foo');
+        await change(component, 0, 'bar', false);
+        await change(component, 0, 'foo');
       })
       .testNoRequest(async (component) => {
-        await component.findAll('form input')[1].setValue('bar');
+        await change(component, 1, 'bar', false);
         // Technically, there is a difference between this empty value and
         // serverConfig['login-appearance'].value.description, which is
         // `undefined`. Yet there should still be no request.

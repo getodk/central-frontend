@@ -17,7 +17,7 @@
           :placeholder="$t('login.defaultTitle')"
           :aria-disabled="awaitingResponse" autocomplete="off"
           @blur="update('title')">
-        <spinner :state="updating === 'title'" inline/>
+        <spinner :state="updating === 'title'"/>
       </div>
 
       <div class="form-group">
@@ -29,7 +29,7 @@
           :placeholder="$t('login.defaultDescription')"
           :aria-disabled="awaitingResponse" autocomplete="off"
           @blur="update('description')">
-        <spinner :state="updating === 'description'" inline/>
+        <spinner :state="updating === 'description'"/>
       </div>
     </form>
   </div>
