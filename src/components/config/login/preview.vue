@@ -58,7 +58,7 @@ useEventListener(window, 'resize', rescale);
   "en": {
     // @transifexKey component.MarkdownTextarea.preview
     "title": "Preview",
-    "introduction": "This is what your login page looks like right now:"
+    "introduction": "Your login page now looks like this:"
   }
 }
 </i18n>
