@@ -1758,8 +1758,8 @@
       "upload": {
         "string": "Upload Entities"
       },
-      "new": {
-        "string": "New",
+      "newEntity": {
+        "string": "New Entity",
         "developer_comment": "This is shown on a button for creating new Entities"
       },
       "alert": {

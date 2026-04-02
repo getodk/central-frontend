@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
           <button v-if="project.dataExists && project.permits('entity.create')"
             id="dataset-entities-create-button" type="button"
             class="btn btn-primary" @click="create.show()">
-            <span class="icon-plus-circle"></span>{{ $t('new') }}
+            <span class="icon-plus-circle"></span>{{ $t('newEntity') }}
           </button>
           <template v-if="deletedEntityCount.dataExists">
             <button v-if="canDelete && (deletedEntityCount.value > 0 || deleted)" type="button"
@@ -33,9 +33,12 @@ except according to the terms contained in the LICENSE file.
             </button>
           </template>
           <p v-show="deleted" class="purge-description">{{ $t('purgeDescription') }}</p>
-          <odata-data-access :analyze-disabled="deleted"
-            :analyze-disabled-message="$t('analyzeDisabledDeletedData')"
-            @analyze="analyze.show()"/>
+          <div class="dataset-entities-heading-row-right-side">
+            <odata-data-access :analyze-disabled="deleted"
+              :analyze-disabled-message="$t('analyzeDisabledDeletedData')"
+              @analyze="analyze.show()"/>
+            <!-- download button is teleported here -->
+          </div>
         </div>
       </template>
       <template #body>
@@ -200,10 +203,15 @@ export default {
     display: flex;
     align-items: center;
     gap: 10px;
+
+    .dataset-entities-heading-row-right-side {
+      display: flex;
+      margin-left: auto;
+      gap: 10px;
+    }
   }
 
   #odata-data-access {
-    margin-left: auto;
     font-size: initial;
   }
 }
@@ -214,7 +222,7 @@ export default {
   "en": {
     "upload": "Upload Entities",
     // This is shown on a button for creating new Entities
-    "new": "New",
+    "newEntity": "New Entity",
     "alert": {
       "upload": "Your Entities have been successfully uploaded.",
       "create": "Entity has been successfully created."
