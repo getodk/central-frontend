@@ -369,6 +369,7 @@
     "customLogoAlt": "Organization logo",
     "defaultTitle": "Welcome to ODK Central",
     "defaultDescription": "Log into your account to get started",
+    // An image shown on the login page
     "heroImage": "Login image"
   },
   "analytics": {

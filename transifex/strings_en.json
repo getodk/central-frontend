@@ -823,7 +823,8 @@
       "string": "Log into your account to get started"
     },
     "heroImage": {
-      "string": "Login image"
+      "string": "Login image",
+      "developer_comment": "An image shown on the login page"
     }
   },
   "analytics": {
