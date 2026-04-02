@@ -12,24 +12,28 @@
       <div class="form-group">
         <label for="config-login-edit-title">{{ $t('field.title') }}</label>
         <p id="config-login-edit-title-help">{{ $t('title.help') }}</p>
-        <input id="config-login-edit-title" v-model.trim="newAppearance.title"
-          class="form-control" aria-describedby="config-login-edit-title-help"
-          :placeholder="$t('login.defaultTitle')"
-          :aria-disabled="awaitingResponse" autocomplete="off"
-          @blur="update('title')">
-        <spinner :state="updating === 'title'"/>
+        <div>
+          <input id="config-login-edit-title" v-model.trim="newAppearance.title"
+            class="form-control" aria-describedby="config-login-edit-title-help"
+            :placeholder="$t('login.defaultTitle')"
+            :aria-disabled="awaitingResponse" autocomplete="off"
+            @blur="update('title')">
+          <spinner :state="updating === 'title'"/>
+        </div>
       </div>
 
       <div class="form-group">
         <label for="config-login-edit-description">{{ $t('description.label') }}</label>
         <p id="config-login-edit-description-help">{{ $t('description.help') }}</p>
-        <input id="config-login-edit-description" v-model.trim="newAppearance.description"
-          class="form-control"
-          aria-describedby="config-login-edit-description-help"
-          :placeholder="$t('login.defaultDescription')"
-          :aria-disabled="awaitingResponse" autocomplete="off"
-          @blur="update('description')">
-        <spinner :state="updating === 'description'"/>
+        <div>
+          <input id="config-login-edit-description" v-model.trim="newAppearance.description"
+            class="form-control"
+            aria-describedby="config-login-edit-description-help"
+            :placeholder="$t('login.defaultDescription')"
+            :aria-disabled="awaitingResponse" autocomplete="off"
+            @blur="update('description')">
+          <spinner :state="updating === 'description'"/>
+        </div>
       </div>
     </form>
   </div>
@@ -83,16 +87,14 @@ const update = (prop) => {
   .file-label, label { font-size: 16px; }
   label { font-weight: normal; }
 
-  .form-group {
+  .form-group > div {
     display: flex;
-    flex-wrap: wrap;
+    align-items: center;
   }
-  label, .form-group p { width: 100%; }
   .form-control {
     width: auto;
     flex-grow: 1;
   }
-  .spinner { align-self: center; }
 }
 </style>
 
