@@ -4,7 +4,7 @@
     <p>{{ $t('logo.help') }}</p>
     <config-login-file-select name="logo"/>
 
-    <p class="file-label">{{ $t('hero.label') }}</p>
+    <p class="file-label">{{ $t('login.heroImage') }}</p>
     <p>{{ $t('hero.help') }}</p>
     <config-login-file-select name="hero-image"/>
 
@@ -21,7 +21,7 @@
       </div>
 
       <div class="form-group">
-        <label for="config-login-edit-description">{{ $t('field.description') }}</label>
+        <label for="config-login-edit-description">{{ $t('description.label') }}</label>
         <p id="config-login-edit-description-help">{{ $t('description.help') }}</p>
         <input id="config-login-edit-description" v-model.trim="newAppearance.description"
           class="form-control"
@@ -101,17 +101,17 @@ const update = (prop) => {
   "en": {
     "logo": {
       "label": "Logo",
-      "help": "We recommend using an image with a white or transparent background of at least 150x150 pixels."
+      "help": "We recommend using a PNG logo with transparent background of at least 150x150 pixels."
     },
     "title": {
       "help": "A title for your server login."
     },
     "description": {
-      "help": "A brief description of your project space."
+      "label": "Subtitle",
+      "help": "Instructions for your users, a welcome message or a description of this server."
     },
     "hero": {
-      "label": "Hero image",
-      "help": "We recommend using a high-resolution image in JPG or PNG format. For best results, use a visually engaging image that represents your brand or message."
+      "help": "Upload a vertical image, we recommend a 4:5 crop. Use a visually engaging image that represents your brand or message. The image will be cropped on different screen sizes, so keep important content centered."
     }
   }
 }
