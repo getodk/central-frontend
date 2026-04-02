@@ -1862,33 +1862,28 @@
         "string": "Delete Property"
       },
       "intro": {
-        "string": "Before you can delete the Property “{propertyName}”, you’ll need to {actions}."
+        "string": "Before you can delete the Property “{propertyName}”, you must:",
+        "developer_comment": "This text is followed by a list of actions."
       },
       "clearEntities": {
-        "string": "clear its value in {entities}",
-        "developer_comment": "{entities} is a bold count like \"2 Entities\""
-      },
-      "and": {
-        "string": "and"
+        "string": "{count, plural, one {Clear its value in {count} Entity} other {Clear its value in {count} Entities}}",
+        "developer_comment": "This text appears in a list of required actions. \"It\" refers to an Entity property."
       },
       "unlinkForms": {
-        "string": "unlink {forms} that set it",
-        "developer_comment": "{forms} is a bold count like \"5 Forms\""
-      },
-      "entitiesCount": {
-        "string": "{count, plural, one {{count} Entity} other {{count} Entities}}"
+        "string": "{count, plural, one {Unlink {count} Form that sets it} other {Unlink {count} Forms that set it}}",
+        "developer_comment": "This text appears in a list of required actions. \"It\" refers to an Entity property."
       },
       "relatedToEntities": {
-        "string": "{count, plural, one {Set in {count} Entity} other {Set in {count} Entities}}"
+        "string": "{count, plural, one {Set in {count} Entity} other {Set in {count} Entities}}",
+        "developer_comment": "This text refers to an Entity property that is set."
       },
       "moreEntities": {
-        "string": "{count, plural, one {and {count} more Entity} other {and {count} more Entities}}"
-      },
-      "formsCount": {
-        "string": "{count, plural, one {{count} Form} other {{count} Forms}}"
+        "string": "{count, plural, one {and {count} more Entity} other {and {count} more Entities}}",
+        "developer_comment": "This text is shown below a partial list of Entities. If there are more than a few Entities, then only the first few Entities are shown, followed by this text."
       },
       "relatedToForms": {
-        "string": "{count, plural, one {Set by {count} Form} other {Set by {count} Forms}}"
+        "string": "{count, plural, one {Set by {count} Form} other {Set by {count} Forms}}",
+        "developer_comment": "This text refers to an Entity property that is set."
       }
     },
     "DatasetOverviewNewProperty": {
@@ -2067,7 +2062,8 @@
           }
         },
         "formsCount": {
-          "string": "{count, plural, one {{count} Form} other {{count} Forms}}"
+          "string": "{count, plural, one {{count} Form} other {{count} Forms}}",
+          "developer_comment": "This text will be inserted where {formsCount} is in the following sentence:\n\nThe Entity List “{name}” is linked to {formsCount}.\""
         }
       }
     },
@@ -2111,10 +2107,6 @@
       }
     },
     "DatasetTrashTable": {
-      "trashCount": {
-        "string": "({count})",
-        "developer_comment": "{count} is the number of Entity Lists in the trash."
-      },
       "message": {
         "string": "Entity Lists are deleted after 30 days in the Trash"
       }

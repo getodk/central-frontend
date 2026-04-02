@@ -213,6 +213,11 @@ const dependentFormsCount = computed(() => {
         "Before you can delete it, you’ll need to unlink it from the related Forms.",
         "Learn more here."
       ],
+      /*
+      This text will be inserted where {formsCount} is in the following sentence:
+
+      The Entity List “{name}” is linked to {formsCount}."
+      */
       "formsCount": "{count} Form | {count} Forms",
     }
   }

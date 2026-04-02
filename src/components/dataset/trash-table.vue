@@ -134,7 +134,7 @@ const onToggleTrashExpansion = (evt) => {
     "en": {
       // @transifexKey component.EntityTable.header.deletedAt
       "deletedAt": "Deleted at",
-      // {count} is the number of Entity Lists in the trash.
+      // @transifexKey component.FormTrashList.trashCount
       "trashCount": "({count})",
       "message": "Entity Lists are deleted after 30 days in the Trash"
     }

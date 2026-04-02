@@ -15,22 +15,15 @@ except according to the terms contained in the LICENSE file.
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div v-if="state && errorObject" class="modal-introduction">
-        <i18n-t tag="p" keypath="intro">
-          <template #propertyName>{{ errorObject.details.propertyName }}</template>
-          <template #actions>
-            <i18n-t v-if="nonEmptyEntities" keypath="clearEntities">
-              <template #entities>
-                <strong>{{ $t('entitiesCount', nonEmptyEntities.details.totalCount) }}</strong>
-              </template>
-            </i18n-t>
-            <template v-if="nonEmptyEntities && dependentForms">&nbsp;{{ $t('and') }}&nbsp;</template>
-            <i18n-t v-if="dependentForms" keypath="unlinkForms">
-              <template #forms>
-                <strong>{{ $t('formsCount', dependentForms.details.forms.length) }}</strong>
-              </template>
-            </i18n-t>
-          </template>
-        </i18n-t>
+        <p>{{ $t('intro', { propertyName: errorObject.details.propertyName }) }}</p>
+        <ul>
+          <li v-if="nonEmptyEntities">
+            {{ $tcn('clearEntities', nonEmptyEntities.details.totalCount) }}
+          </li>
+          <li v-if="dependentForms">
+            {{ $tcn('unlinkForms', dependentForms.details.forms.length) }}
+          </li>
+        </ul>
         <details v-if="nonEmptyEntities" open>
           <summary>
             {{ $t('relatedToEntities', nonEmptyEntities.details.totalCount) }}
@@ -130,16 +123,21 @@ defineEmits(['hide']);
 {
   "en": {
     "title": "Delete Property",
-    "intro": "Before you can delete the Property “{propertyName}”, you’ll need to {actions}.",
-    // {entities} is a bold count like "2 Entities"
-    "clearEntities": "clear its value in {entities}",
-    "and": "and",
-    // {forms} is a bold count like "5 Forms"
-    "unlinkForms": "unlink {forms} that set it",
-    "entitiesCount": "{count} Entity | {count} Entities",
+    // This text is followed by a list of actions.
+    "intro": "Before you can delete the Property “{propertyName}”, you must:",
+    // This text appears in a list of required actions. "It" refers to an Entity
+    // property.
+    "clearEntities": "Clear its value in {count} Entity | Clear its value in {count} Entities",
+    // This text appears in a list of required actions. "It" refers to an Entity
+    // property.
+    "unlinkForms": "Unlink {count} Form that sets it | Unlink {count} Forms that set it",
+    // This text refers to an Entity property that is set.
     "relatedToEntities": "Set in {count} Entity | Set in {count} Entities",
+    // This text is shown below a partial list of Entities. If there are more
+    // than a few Entities, then only the first few Entities are shown, followed
+    // by this text.
     "moreEntities": "and {count} more Entity | and {count} more Entities",
-    "formsCount": "{count} Form | {count} Forms",
+    // This text refers to an Entity property that is set.
     "relatedToForms": "Set by {count} Form | Set by {count} Forms"
   }
 }
