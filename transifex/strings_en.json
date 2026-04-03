@@ -5164,7 +5164,7 @@
       },
       "deleted": {
         "string": "(deleted)",
-        "developer_comment": "Shown in the Submission feed when dataset or entity has been deleted."
+        "developer_comment": "This text is shown next to an Entity when the Entity has been deleted."
       }
     },
     "SubmissionFieldDropdown": {
