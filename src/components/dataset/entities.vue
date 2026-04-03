@@ -241,7 +241,6 @@ export default {
 {
   "de": {
     "upload": "Objekte hochladen",
-    "new": "Neu",
     "alert": {
       "upload": "Ihre Objekte wurden erfolgreich hochgeladen.",
       "create": "Die Entität wurde erfolgreich erstellt."
@@ -254,7 +253,6 @@ export default {
   },
   "es": {
     "upload": "Subir entidades",
-    "new": "Nueva",
     "alert": {
       "upload": "Sus Entidades han sido cargadas con éxito.",
       "create": "La entidad ha sido creado exitosamente."
@@ -267,8 +265,10 @@ export default {
   },
   "fr": {
     "upload": "Téléverser des entités",
+    "newEntity": "Nouvelle entité",
     "alert": {
-      "upload": "Vos Entités ont été téléversées."
+      "upload": "Vos Entités ont été téléversées.",
+      "create": "Entité a été créée avec succès."
     },
     "purgeDescription": "Les entités sont supprimées après 30 jours passés dans la corbeille.",
     "action": {
@@ -278,7 +278,6 @@ export default {
   },
   "it": {
     "upload": "Caricare Entità",
-    "new": "Nuova",
     "alert": {
       "upload": "Le entità sono state caricate con successo.",
       "create": "L'Entità è stata creata con successo."
@@ -302,7 +301,6 @@ export default {
   },
   "zh": {
     "upload": "上传实体",
-    "new": "新建",
     "alert": {
       "upload": "您的实体已成功上传。",
       "create": "实体已成功创建。"

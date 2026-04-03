@@ -501,10 +501,6 @@
       "string": "日期范围",
       "developer_comment": "This is the text of a form field."
     },
-    "description": {
-      "string": "描述",
-      "developer_comment": "This is the text of a form field."
-    },
     "displayName": {
       "string": "展示名称",
       "developer_comment": "This is the text of a form field."
@@ -825,6 +821,10 @@
     },
     "defaultDescription": {
       "string": "登录您的帐户以开始使用"
+    },
+    "heroImage": {
+      "string": "",
+      "developer_comment": "An image shown on the login page"
     }
   },
   "analytics": {
@@ -1176,12 +1176,6 @@
     "AccountPageContainer": {
       "customLogoAlt": {
         "string": "组织标志"
-      },
-      "defaultHeroAlt": {
-        "string": "ODK Central 的功能特性"
-      },
-      "customHeroAlt": {
-        "string": "欢迎图片"
       }
     },
     "AccountResetPassword": {
@@ -1693,7 +1687,7 @@
           "string": "标志"
         },
         "help": {
-          "string": "我们建议使用背景为白色或透明、尺寸至少为 150x150 像素的图片。"
+          "string": ""
         }
       },
       "title": {
@@ -1702,16 +1696,16 @@
         }
       },
       "description": {
+        "label": {
+          "string": ""
+        },
         "help": {
-          "string": "您的项目空间的简短描述。"
+          "string": ""
         }
       },
       "hero": {
-        "label": {
-          "string": "主视觉图片"
-        },
         "help": {
-          "string": "我们建议使用高分辨率的 JPG 或 PNG 格式图片。为获得最佳效果，请使用能够代表您品牌或信息的视觉吸引力强的图片。"
+          "string": ""
         }
       }
     },
@@ -1746,7 +1740,7 @@
     },
     "ConfigLoginPreview": {
       "introduction": {
-        "string": "这是您当前的登录页面样式："
+        "string": ""
       }
     },
     "DatasetDelete": {
@@ -1764,8 +1758,8 @@
       "upload": {
         "string": "上传实体"
       },
-      "new": {
-        "string": "新建",
+      "newEntity": {
+        "string": "",
         "developer_comment": "This is shown on a button for creating new Entities"
       },
       "alert": {
@@ -1868,33 +1862,28 @@
         "string": "删除属性"
       },
       "intro": {
-        "string": "在删除属性“{propertyName}”之前，您需要先{actions}"
+        "string": "",
+        "developer_comment": "This text is followed by a list of actions."
       },
       "clearEntities": {
-        "string": "清除其在{entities}中的值",
-        "developer_comment": "{entities} is a bold count like \"2 Entities\""
-      },
-      "and": {
-        "string": "和"
+        "string": "{count, plural, other {}}",
+        "developer_comment": "This text appears in a list of required actions. \"It\" refers to an Entity property."
       },
       "unlinkForms": {
-        "string": "取消设置该属性的{forms}的关联",
-        "developer_comment": "{forms} is a bold count like \"5 Forms\""
-      },
-      "entitiesCount": {
-        "string": "{count, plural, other {{count} 个实体}}"
+        "string": "{count, plural, other {}}",
+        "developer_comment": "This text appears in a list of required actions. \"It\" refers to an Entity property."
       },
       "relatedToEntities": {
-        "string": "{count, plural, other {与 {count} 个实体相关}}"
+        "string": "{count, plural, other {}}",
+        "developer_comment": "This text refers to an Entity property that is set."
       },
       "moreEntities": {
-        "string": "{count, plural, other {以及其他 {count} 个实体}}"
-      },
-      "formsCount": {
-        "string": "{count, plural, other {{count} 个表单}}"
+        "string": "{count, plural, other {以及其他 {count} 个实体}}",
+        "developer_comment": "This text is shown beneath a partial list of Entities. If there are more than a few Entities, then only the first few Entities are shown, followed by this text."
       },
       "relatedToForms": {
-        "string": "{count, plural, other {与 {count} 个表单相关}}"
+        "string": "{count, plural, other {}}",
+        "developer_comment": "This text refers to an Entity property that is set."
       }
     },
     "DatasetOverviewNewProperty": {
@@ -2062,18 +2051,20 @@
       "dependentForms": {
         "description": {
           "0": {
-            "string": "实体列表“{name}”与 {formsCount} 个表单相关。",
+            "string": "",
             "developer_comment": "{formsCount} is the number of Forms that are dependent on the Entity List. Example: 4 Forms"
           },
           "1": {
-            "string": "在删除它之前，您需要先解除它与相关表单的关联。"
+            "string": "在删除它之前，您需要先解除它与相关表单的关联。",
+            "developer_comment": "\"It\" refers to an Entity List."
           },
           "2": {
             "string": "在此了解更多。"
           }
         },
         "formsCount": {
-          "string": "{count, plural, other {{count} 个表单}}"
+          "string": "{count, plural, other {{count} 个表单}}",
+          "developer_comment": "This text will be inserted where {formsCount} is in the following sentence:\n\nThe Entity List “{name}” is linked to {formsCount}."
         }
       }
     },
@@ -2117,10 +2108,6 @@
       }
     },
     "DatasetTrashTable": {
-      "trashCount": {
-        "string": "({count})",
-        "developer_comment": "{count} is the number of Entity Lists in the trash."
-      },
       "message": {
         "string": "实体列表将在回收站中保留 30 天后被删除"
       }
@@ -3554,7 +3541,7 @@
       },
       "infoNav": {
         "entityLists": {
-          "string": "{count, plural, other {{count}个关联的实体列表}}"
+          "string": "{count, plural, other {}}"
         },
         "updatedDatasets": {
           "string": "更新",
@@ -5698,11 +5685,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "实体列表与属性删除🗑️、实体创建🪄以及登录页面的自定义品牌标识🎨",
+        "string": "",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "当实体列表和属性不再需要时进行清理，直接从 Central 用户界面快速创建实体，并自定义登录页面，使您的服务器体现组织品牌形象，建立用户信任。"
+        "string": ""
       }
     }
   },

@@ -108,6 +108,8 @@ export default {
     }
   },
   "fr": {
+    "title": "Réinitialiser votre mot de passe",
+    "subtitle": "Entrez votre adresse email pour réinitialiser votre mot de passe",
     "alert": {
       "success": "Un courriel a été envoyé à {email} avec de plus amples instructions"
     }

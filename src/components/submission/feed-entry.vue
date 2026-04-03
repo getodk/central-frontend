@@ -545,7 +545,8 @@ export default {
         "force": "Soumission retenue et puis traitée sans la soumission qui la précéderait dans la série de mises à jour effectuées hors ligne",
         "reprocess": "Soumission précédente dans une série de mises à jours hors ligne à été reçue"
       }
-    }
+    },
+    "deleted": "(supprimée)"
   },
   "id": {
     "title": {

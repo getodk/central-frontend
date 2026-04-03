@@ -55,6 +55,9 @@ serverConfig.request({ url: '/v1/config/public' }).catch(noop);
   "es": {
     "title": "Página de inicio de sesión"
   },
+  "fr": {
+    "title": "Page de connexion"
+  },
   "it": {
     "title": "Pagina di Login"
   },

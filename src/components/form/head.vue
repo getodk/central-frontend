@@ -212,7 +212,7 @@ export default {
       "tabTitle": "Veröffentlichen Sie diesen Formularentwurf, um diese Funktionen zu aktivieren"
     },
     "infoNav": {
-      "entityLists": "{count} Verwandte Objektliste | {count} Verwandte Objektlisten",
+      "entityLists": "{count} Verknüpfter Objektliste | {count} Verknüpfter Objektlisten",
       "updatedDatasets": "Aktualisierungen",
       "attachedDatasets": "Verwendet",
       "appUsers": "{count} App-Benutzer zugewiesen | {count} App-Benutzer zugewiesen"
@@ -228,7 +228,7 @@ export default {
       "tabTitle": "Publique este borrador de formulario para habilitar estas funciones"
     },
     "infoNav": {
-      "entityLists": "{count} Lista de entidades relacionadas | {count} Listas de entidades relacionadas | {count} Listas de entidades relacionadas",
+      "entityLists": "{count} Lista de entidades conectada | {count} Listas de entidades conectadas | {count} Listas de entidades conectadas",
       "updatedDatasets": "Actualizaciones",
       "attachedDatasets": "Usos",
       "appUsers": "{count} Usuario de la aplicación asignados | {count} Usuarios de la aplicación asignados | {count} Usuarios de la aplicación asignados"
@@ -244,7 +244,7 @@ export default {
       "tabTitle": "Publier cette Ébauche de Formulaire pour activer ces fonctions"
     },
     "infoNav": {
-      "entityLists": "{count} Liste d'Entité liée | {count} Listes d'Entité liées | {count} Liste(s) d'Entité liée(s)",
+      "entityLists": "{count} liste d'entités liée | {count} listes d'entités liées | {count} de listes d'entités liées",
       "updatedDatasets": "Mises à jour",
       "attachedDatasets": "Utilise",
       "appUsers": "{count} Utilisateur mobile assigné | {count} Utilisateurs mobile assignés | {count} Utilisateur(s) mobile assigné(s)"
@@ -267,7 +267,7 @@ export default {
       "tabTitle": "Pubblicare questa bozza di formulario per abilitare queste funzioni"
     },
     "infoNav": {
-      "entityLists": "{count} Elenco di entità correlate | {count} Elenchi di entità correlate | {count} Elenchi di entità correlate",
+      "entityLists": "{count} Elenco di entità collegata | {count} Elenchi di entità collegate | {count} Elenchi di entità collegate",
       "updatedDatasets": "Aggiornamenti",
       "attachedDatasets": "Utilizzi",
       "appUsers": "{count} Utente App assegnato | {count} Utenti App assegnati | {count} Utenti App assegnati"
@@ -311,7 +311,6 @@ export default {
       "tabTitle": "发布此草稿表单以启用这些功能"
     },
     "infoNav": {
-      "entityLists": "{count}个关联的实体列表",
       "updatedDatasets": "更新",
       "attachedDatasets": "用途",
       "appUsers": "已分配{count}个应用用户"
@@ -327,7 +326,6 @@ export default {
       "tabTitle": "發布此表格草稿以啟用這些功能"
     },
     "infoNav": {
-      "entityLists": "{count}個相關實體清單",
       "updatedDatasets": "更新",
       "attachedDatasets": "用途",
       "appUsers": "已指派{count}位 App 使用者"
