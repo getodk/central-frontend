@@ -239,6 +239,7 @@ const sizeModel = computed({
       "last": "Dernière page"
     },
     "rows": "Ligne {range} de {count} | Lignes {range} de {count} | Lignes {range} de {count}",
+    "zeroRow": "Ligne 0 de {count}",
     "field": {
       "size": "par page"
     }

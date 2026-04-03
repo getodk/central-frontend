@@ -501,10 +501,6 @@
       "string": "Intervalle de date",
       "developer_comment": "This is the text of a form field."
     },
-    "description": {
-      "string": "Description",
-      "developer_comment": "This is the text of a form field."
-    },
     "displayName": {
       "string": "Nom affiché",
       "developer_comment": "This is the text of a form field."
@@ -825,6 +821,10 @@
     },
     "defaultDescription": {
       "string": "Connectez-vous à votre compte pour commencer"
+    },
+    "heroImage": {
+      "string": "Image de page de connexion",
+      "developer_comment": "An image shown on the login page"
     }
   },
   "analytics": {
@@ -1176,20 +1176,14 @@
     "AccountPageContainer": {
       "customLogoAlt": {
         "string": "Logo de l'organisation"
-      },
-      "defaultHeroAlt": {
-        "string": "Fonctionnalités de ODK Central"
-      },
-      "customHeroAlt": {
-        "string": ""
       }
     },
     "AccountResetPassword": {
       "title": {
-        "string": ""
+        "string": "Réinitialiser votre mot de passe"
       },
       "subtitle": {
-        "string": ""
+        "string": "Entrez votre adresse email pour réinitialiser votre mot de passe"
       },
       "alert": {
         "success": {
@@ -1418,7 +1412,7 @@
           "string": "Longueur de la description du Projet"
         },
         "num_datasets_deleted": {
-          "string": ""
+          "string": "Nombre d'événements de suppression de listes d'entités"
         },
         "num_dataset_properties_deleted": {
           "string": "Nombre d'événements de propriétés supprimées"
@@ -1466,16 +1460,16 @@
           "string": "Authentification unique (SSO) activée"
         },
         "login_customization_logo_set": {
-          "string": ""
+          "string": "Logo personnalisé sur la page de connexion"
         },
         "login_customization_hero_image_set": {
-          "string": ""
+          "string": "Image personnalisée sur la page de connexion"
         },
         "login_customization_title_set": {
-          "string": ""
+          "string": "Titre personnalisé sur la page de connexion"
         },
         "login_customization_description_set": {
-          "string": ""
+          "string": "Description personnalisée sur la page de connexion"
         },
         "num_client_audit_attachments": {
           "string": "Nombre d'audit de client joints"
@@ -1684,79 +1678,79 @@
     },
     "ConfigLogin": {
       "title": {
-        "string": ""
+        "string": "Page de connexion"
       }
     },
     "ConfigLoginEdit": {
       "logo": {
         "label": {
-          "string": ""
+          "string": "Logo"
         },
         "help": {
-          "string": ""
+          "string": "Nous recommandons un logo en format PNG avec un arrière-plan transparent d'au moins 150x150 pixels."
         }
       },
       "title": {
         "help": {
-          "string": ""
+          "string": "Un titre pour la page de connexion."
         }
       },
       "description": {
+        "label": {
+          "string": "Sous-titre"
+        },
         "help": {
-          "string": ""
+          "string": "Instructions pour vos utilisateurs, un message de bienvenue ou une description de ce serveur. "
         }
       },
       "hero": {
-        "label": {
-          "string": ""
-        },
         "help": {
-          "string": ""
+          "string": "Importez une image verticale ; nous vous recommandons un recadrage au format 4:5. Utilisez une image visuellement attrayante qui représente votre marque ou votre message. L'image sera recadrée en fonction de la taille de l'écran ; veillez donc à centrer les éléments importants."
         }
       }
     },
     "ConfigLoginFileSelect": {
       "select": {
         "full": {
-          "string": "",
+          "string": "Glisser image ici ou {upload}",
           "developer_comment": "{upload} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nupload file"
         },
         "upload": {
-          "string": "",
+          "string": "Téléverser fichier",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {upload} is in the following text:\n\nDrag image here or {upload}"
         }
       },
       "action": {
         "remove": {
-          "string": "",
+          "string": "Supprimer l'image",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "alert": {
         "invalidType": {
-          "string": ""
+          "string": "Type de fichier non accepté"
         },
         "post": {
-          "string": ""
+          "string": "Image sauvegardée avec succès"
         },
         "del": {
-          "string": ""
+          "string": "Image supprimée avec succès."
         }
       }
     },
     "ConfigLoginPreview": {
       "introduction": {
-        "string": ""
+        "string": "Votre page de connexion :"
       }
     },
     "DatasetDelete": {
       "title": {
-        "string": "",
+        "string": "Supprimer liste d'entités",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
         "0": {
-          "string": ""
+          "string": "Voulez-vous vraiment supprimer la liste d'entités \"{name}\"? Ceci ne peut pas être annulé."
         }
       }
     },
@@ -1764,8 +1758,8 @@
       "upload": {
         "string": "Téléverser des entités"
       },
-      "new": {
-        "string": "",
+      "newEntity": {
+        "string": "Nouvelle entité",
         "developer_comment": "This is shown on a button for creating new Entities"
       },
       "alert": {
@@ -1773,7 +1767,7 @@
           "string": "Vos Entités ont été téléversées."
         },
         "create": {
-          "string": ""
+          "string": "Entité a été créée avec succès."
         }
       },
       "purgeDescription": {
@@ -1868,33 +1862,28 @@
         "string": "Supprimer la propriété"
       },
       "intro": {
-        "string": "Avant de pouvoir supprimer la propriété \"{propertyName}\", vous devrez {actions}."
+        "string": "Avant de pouvoir supprimer la propriété \"{propertyName}\", vous devrez :",
+        "developer_comment": "This text is followed by a list of actions."
       },
       "clearEntities": {
-        "string": "",
-        "developer_comment": "{entities} is a bold count like \"2 Entities\""
-      },
-      "and": {
-        "string": ""
+        "string": "{count, plural, one {Supprimer sa valeur dans {count} entité} many {Supprimer sa valeur dans {count} entités} other {Supprimer sa valeur dans {count} d’entités}}",
+        "developer_comment": "This text appears in a list of required actions. \"It\" refers to an Entity property."
       },
       "unlinkForms": {
-        "string": "",
-        "developer_comment": "{forms} is a bold count like \"5 Forms\""
-      },
-      "entitiesCount": {
-        "string": "{count, plural, one {} many {} other {}}"
+        "string": "{count, plural, one {Dissocier {count} formulaire qui définit sa valeur} many {Dissocier {count} formulaires qui définissent sa valeur} other {Dissocier {count} de formulaires qui définissent sa valeur}}",
+        "developer_comment": "This text appears in a list of required actions. \"It\" refers to an Entity property."
       },
       "relatedToEntities": {
-        "string": "{count, plural, one {} many {} other {}}"
+        "string": "{count, plural, one {Définie dans {count} entité} many {Définie dans {count} entités} other {Définie dans {count} d'entités}}",
+        "developer_comment": "This text refers to an Entity property that is set."
       },
       "moreEntities": {
-        "string": "{count, plural, one {} many {} other {}}"
-      },
-      "formsCount": {
-        "string": "{count, plural, one {} many {} other {}}"
+        "string": "{count, plural, one {et {count} autre entité} many {et {count} autres entités} other {et {count} d'autres entités}}",
+        "developer_comment": "This text is shown beneath a partial list of Entities. If there are more than a few Entities, then only the first few Entities are shown, followed by this text."
       },
       "relatedToForms": {
-        "string": "{count, plural, one {} many {} other {}}"
+        "string": "{count, plural, one {Définie par {count} de formulaire} many {Définie par {count} formulaires} other {Définie par {count} de formulaires}}",
+        "developer_comment": "This text refers to an Entity property that is set."
       }
     },
     "DatasetOverviewNewProperty": {
@@ -2050,30 +2039,32 @@
       },
       "action": {
         "delete": {
-          "string": "",
+          "string": "Supprimer la liste d'entités",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "alert": {
         "delete": {
-          "string": ""
+          "string": "La liste d'entités \"{name}\" a été supprimée avec succès."
         }
       },
       "dependentForms": {
         "description": {
           "0": {
-            "string": "",
+            "string": "La liste d'entités \"{name}\" est liée à {formsCount}.",
             "developer_comment": "{formsCount} is the number of Forms that are dependent on the Entity List. Example: 4 Forms"
           },
           "1": {
-            "string": ""
+            "string": "Avant de pouvoir la supprimer, vous devrez la dissocier des formulaires associés.",
+            "developer_comment": "\"It\" refers to an Entity List."
           },
           "2": {
-            "string": ""
+            "string": "En apprendre plus ici."
           }
         },
         "formsCount": {
-          "string": "{count, plural, one {} many {} other {}}"
+          "string": "{count, plural, one {{count} formulaire} many {{count} formulaires} other {{count} de formulaires}}",
+          "developer_comment": "This text will be inserted where {formsCount} is in the following sentence:\n\nThe Entity List “{name}” is linked to {formsCount}."
         }
       }
     },
@@ -2111,18 +2102,14 @@
     "DatasetTrashRow": {
       "action": {
         "download": {
-          "string": "",
+          "string": "Télécharger données (.csv)",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
     "DatasetTrashTable": {
-      "trashCount": {
-        "string": "",
-        "developer_comment": "{count} is the number of Entity Lists in the trash."
-      },
       "message": {
-        "string": ""
+        "string": "Les listes d'entités sont supprimées après 30 jours dans la corbeille"
       }
     },
     "Download": {
@@ -2777,11 +2764,11 @@
     },
     "EntityUpsert": {
       "titleCreate": {
-        "string": ""
+        "string": "Créer nouvelle entité"
       },
       "header": {
         "value": {
-          "string": "",
+          "string": "Valeur",
           "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
         }
       }
@@ -3554,7 +3541,7 @@
       },
       "infoNav": {
         "entityLists": {
-          "string": "{count, plural, one {{count} Liste d'Entité liée} many {{count} Listes d'Entité liées} other {{count} Liste(s) d'Entité liée(s)}}"
+          "string": "{count, plural, one {{count} liste d'entités liée} many {{count} listes d'entités liées} other {{count} de listes d'entités liées}}"
         },
         "updatedDatasets": {
           "string": "Mises à jour",
@@ -3662,7 +3649,7 @@
           "string": "Merci de choisir un fichier."
         },
         "fileNotReadable": {
-          "string": ""
+          "string": "Le fichier n'a pas pu être lu. Il a peut-être été modifié ou supprimé. Veuillez choisir le fichier à nouveau."
         }
       },
       "problem": {
@@ -4209,7 +4196,7 @@
         "developer_comment": "{range} is a range of row numbers, for example, 1-5. {count} is the total number of rows. The string will be pluralized based on the number of rows in the range."
       },
       "zeroRow": {
-        "string": "",
+        "string": "Ligne 0 de {count}",
         "developer_comment": "Shown when no row is displayed on the page because all rows are deleted or some other reasons. {count} is the total number of rows across all pages."
       },
       "field": {
@@ -4707,7 +4694,7 @@
             "developer_comment": "This is the text of a form field."
           },
           "cannotList": {
-            "string": "Entrez l'adresse de courriel exacte de l'utilisateur...",
+            "string": "Entrez l'adresse email exacte de l'utilisateur...",
             "developer_comment": "This is the text of a form field."
           }
         }
@@ -5176,7 +5163,7 @@
         }
       },
       "deleted": {
-        "string": "",
+        "string": "(supprimée)",
         "developer_comment": "Shown in the Submission feed when dataset or entity has been deleted."
       }
     },
@@ -5698,11 +5685,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "Suppression de listes d'entités 🗑️, création d'entités 🪄 et personnalisation de la page de connexion 🎨",
+        "string": "🎨 Page de connexion personnalisée, suppression de listes d'entités et téléchargement de fichiers dans Web Forms.",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": ""
+        "string": "Choisissez les images et le texte de votre page de connexion, faites disparaître les listes d'entités et les propriétés dont vous n'avez plus besoin et essayez la nouvelle expérience de formulaires web."
       }
     }
   },

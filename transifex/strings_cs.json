@@ -501,10 +501,6 @@
       "string": "Časové období",
       "developer_comment": "This is the text of a form field."
     },
-    "description": {
-      "string": "",
-      "developer_comment": "This is the text of a form field."
-    },
     "displayName": {
       "string": "Zobrazit název",
       "developer_comment": "This is the text of a form field."
@@ -825,6 +821,10 @@
     },
     "defaultDescription": {
       "string": ""
+    },
+    "heroImage": {
+      "string": "",
+      "developer_comment": "An image shown on the login page"
     }
   },
   "analytics": {
@@ -1175,12 +1175,6 @@
     },
     "AccountPageContainer": {
       "customLogoAlt": {
-        "string": ""
-      },
-      "defaultHeroAlt": {
-        "string": ""
-      },
-      "customHeroAlt": {
         "string": ""
       }
     },
@@ -1702,14 +1696,14 @@
         }
       },
       "description": {
+        "label": {
+          "string": ""
+        },
         "help": {
           "string": ""
         }
       },
       "hero": {
-        "label": {
-          "string": ""
-        },
         "help": {
           "string": ""
         }
@@ -1764,7 +1758,7 @@
       "upload": {
         "string": ""
       },
-      "new": {
+      "newEntity": {
         "string": "",
         "developer_comment": "This is shown on a button for creating new Entities"
       },
@@ -1868,33 +1862,28 @@
         "string": ""
       },
       "intro": {
-        "string": ""
+        "string": "",
+        "developer_comment": "This text is followed by a list of actions."
       },
       "clearEntities": {
-        "string": "",
-        "developer_comment": "{entities} is a bold count like \"2 Entities\""
-      },
-      "and": {
-        "string": ""
+        "string": "{count, plural, one {} few {} many {} other {}}",
+        "developer_comment": "This text appears in a list of required actions. \"It\" refers to an Entity property."
       },
       "unlinkForms": {
-        "string": "",
-        "developer_comment": "{forms} is a bold count like \"5 Forms\""
-      },
-      "entitiesCount": {
-        "string": "{count, plural, one {} few {} many {} other {}}"
+        "string": "{count, plural, one {} few {} many {} other {}}",
+        "developer_comment": "This text appears in a list of required actions. \"It\" refers to an Entity property."
       },
       "relatedToEntities": {
-        "string": "{count, plural, one {} few {} many {} other {}}"
+        "string": "{count, plural, one {} few {} many {} other {}}",
+        "developer_comment": "This text refers to an Entity property that is set."
       },
       "moreEntities": {
-        "string": "{count, plural, one {} few {} many {} other {}}"
-      },
-      "formsCount": {
-        "string": "{count, plural, one {} few {} many {} other {}}"
+        "string": "{count, plural, one {} few {} many {} other {}}",
+        "developer_comment": "This text is shown beneath a partial list of Entities. If there are more than a few Entities, then only the first few Entities are shown, followed by this text."
       },
       "relatedToForms": {
-        "string": "{count, plural, one {} few {} many {} other {}}"
+        "string": "{count, plural, one {} few {} many {} other {}}",
+        "developer_comment": "This text refers to an Entity property that is set."
       }
     },
     "DatasetOverviewNewProperty": {
@@ -2066,14 +2055,16 @@
             "developer_comment": "{formsCount} is the number of Forms that are dependent on the Entity List. Example: 4 Forms"
           },
           "1": {
-            "string": ""
+            "string": "",
+            "developer_comment": "\"It\" refers to an Entity List."
           },
           "2": {
             "string": ""
           }
         },
         "formsCount": {
-          "string": "{count, plural, one {} few {} many {} other {}}"
+          "string": "{count, plural, one {} few {} many {} other {}}",
+          "developer_comment": "This text will be inserted where {formsCount} is in the following sentence:\n\nThe Entity List “{name}” is linked to {formsCount}."
         }
       }
     },
@@ -2117,10 +2108,6 @@
       }
     },
     "DatasetTrashTable": {
-      "trashCount": {
-        "string": "",
-        "developer_comment": "{count} is the number of Entity Lists in the trash."
-      },
       "message": {
         "string": ""
       }

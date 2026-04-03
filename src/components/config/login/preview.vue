@@ -70,21 +70,19 @@ useEventListener(window, 'resize', rescale);
     "title": "Náhled"
   },
   "de": {
-    "introduction": "So sieht Ihre Anmeldeseite derzeit aus:",
     "title": "Vorschau"
   },
   "es": {
-    "introduction": "Así es como se ve tu página de inicio de sesión en este momento:",
     "title": "Vista previa"
   },
   "fr": {
+    "introduction": "Votre page de connexion :",
     "title": "Aperçu"
   },
   "id": {
     "title": "Pratinjau"
   },
   "it": {
-    "introduction": "Ecco come appare la tua pagina di accesso in questo momento:",
     "title": "Anteprima"
   },
   "ja": {
@@ -97,7 +95,6 @@ useEventListener(window, 'resize', rescale);
     "title": "Hakiki"
   },
   "zh": {
-    "introduction": "这是您当前的登录页面样式：",
     "title": "预览"
   },
   "zh-Hant": {

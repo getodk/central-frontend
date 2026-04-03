@@ -527,7 +527,8 @@ export default {
       "uploadAnyway": "Téléverser malgré tout"
     },
     "alert": {
-      "fileRequired": "Merci de choisir un fichier."
+      "fileRequired": "Merci de choisir un fichier.",
+      "fileNotReadable": "Le fichier n'a pas pu être lu. Il a peut-être été modifié ou supprimé. Veuillez choisir le fichier à nouveau."
     },
     "problem": {
       "400_8": "La définition de formulaire que vous avez envoyé ne semble pas correspondre à ce formulaire. Elle a un mauvais formid ( “{expected}” attendu, “{actual}” reçu).",

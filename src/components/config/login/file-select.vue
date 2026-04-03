@@ -159,6 +159,20 @@ const del = () => {
       "del": "La imagen se ha eliminado correctamente."
     }
   },
+  "fr": {
+    "select": {
+      "full": "Glisser image ici ou {upload}",
+      "upload": "Téléverser fichier"
+    },
+    "action": {
+      "remove": "Supprimer l'image"
+    },
+    "alert": {
+      "invalidType": "Type de fichier non accepté",
+      "post": "Image sauvegardée avec succès",
+      "del": "Image supprimée avec succès."
+    }
+  },
   "it": {
     "select": {
       "full": "Trascina l'immagine qui o {upload}",
