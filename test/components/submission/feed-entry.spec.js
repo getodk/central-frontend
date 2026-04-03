@@ -258,7 +258,8 @@ describe('SubmissionFeedEntry', () => {
           }
         });
         const component = mountComponent();
-        component.get('.feed-entry-title').text().should.match(/deleted/);
+        const title = component.get('.feed-entry-title').text();
+        title.should.equal('Created Entity (deleted)\u00a0xyz in DatasetName Entity List');
         component.findComponent(EntityLink).exists().should.be.false;
         component.findComponent(DatasetLink).exists().should.be.false;
       });
@@ -333,7 +334,8 @@ describe('SubmissionFeedEntry', () => {
           }
         });
         const component = mountComponent();
-        component.get('.feed-entry-title').text().should.match(/deleted/);
+        const title = component.get('.feed-entry-title').text();
+        title.should.equal('Updated Entity (deleted)\u00a0xyz in DatasetName Entity List');
         component.findComponent(EntityLink).exists().should.be.false;
         component.findComponent(DatasetLink).exists().should.be.false;
       });

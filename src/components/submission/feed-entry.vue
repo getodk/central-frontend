@@ -70,7 +70,7 @@ except according to the terms contained in the LICENSE file.
           </template>
           <template #dataset>
             <dataset-link v-if="entityDetails.entityAvailable" :project-id="projectId" :name="entityDetails.dataset"/>
-            <span v-else>{{ $t('title.entity.deletedDataset', { dataset: entityDetails.dataset }) }}</span>
+            <span v-else>{{ entityDetails.dataset }}</span>
           </template>
         </i18n-t>
       </template>
@@ -388,7 +388,7 @@ export default {
         "reprocess": "Previous Submission in offline update chain was received"
       }
     },
-    // Shown in the Submission feed when dataset or entity has been deleted.
+    // This text is shown next to an Entity when the Entity has been deleted.
     "deleted": "(deleted)"
   }
 }
