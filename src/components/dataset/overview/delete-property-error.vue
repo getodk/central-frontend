@@ -133,7 +133,7 @@ defineEmits(['hide']);
     "unlinkForms": "Unlink {count} Form that sets it | Unlink {count} Forms that set it",
     // This text refers to an Entity property that is set.
     "relatedToEntities": "Set in {count} Entity | Set in {count} Entities",
-    // This text is shown below a partial list of Entities. If there are more
+    // This text is shown beneath a partial list of Entities. If there are more
     // than a few Entities, then only the first few Entities are shown, followed
     // by this text.
     "moreEntities": "and {count} more Entity | and {count} more Entities",
