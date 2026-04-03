@@ -79,7 +79,7 @@ describe('DeletePropertyError', () => {
   });
 
   describe('nonEmptyEntities only', () => {
-    it('shows entity count in intro message', () => {
+    it('shows entity count in list', () => {
       const component = mountComponent({
         props: {
           errorObject: errorWithEntities(2, [
@@ -88,8 +88,9 @@ describe('DeletePropertyError', () => {
           ])
         }
       });
-      const intro = component.get('.modal-introduction p').text();
-      intro.should.contain('2 Entities');
+      const li = component.findAll('.modal-introduction > ul li');
+      li.length.should.equal(1);
+      li[0].text().should.contain('2 Entities');
     });
 
     it('shows singular entity text for 1 entity', () => {
@@ -98,8 +99,8 @@ describe('DeletePropertyError', () => {
           errorObject: errorWithEntities(1, [{ uuid: 'abc123', label: 'Entity 1' }])
         }
       });
-      const intro = component.get('.modal-introduction p').text();
-      intro.should.contain('1 Entity');
+      const text = component.get('.modal-introduction > ul li').text();
+      text.should.contain('1 Entity');
     });
 
     it('shows entities details section', () => {
@@ -170,7 +171,7 @@ describe('DeletePropertyError', () => {
   });
 
   describe('dependentForms only', () => {
-    it('shows form count in intro message', () => {
+    it('shows form count in list', () => {
       const component = mountComponent({
         props: {
           errorObject: errorWithForms([
@@ -179,8 +180,9 @@ describe('DeletePropertyError', () => {
           ])
         }
       });
-      const intro = component.get('.modal-introduction p').text();
-      intro.should.contain('2 Forms');
+      const li = component.findAll('.modal-introduction > ul li');
+      li.length.should.equal(1);
+      li[0].text().should.contain('2 Forms');
     });
 
     it('shows singular form text for 1 form', () => {
@@ -189,8 +191,8 @@ describe('DeletePropertyError', () => {
           errorObject: errorWithForms([{ xmlFormId: 'form1', formName: 'Form One' }])
         }
       });
-      const intro = component.get('.modal-introduction p').text();
-      intro.should.contain('1 Form');
+      const text = component.get('.modal-introduction > ul li').text();
+      text.should.contain('1 Form');
     });
 
     it('shows forms details section', () => {
@@ -229,7 +231,7 @@ describe('DeletePropertyError', () => {
   });
 
   describe('both nonEmptyEntities and dependentForms', () => {
-    it('shows both counts in intro message with "and"', () => {
+    it('shows both counts in list', () => {
       const component = mountComponent({
         props: {
           errorObject: errorWithBoth(
@@ -239,10 +241,10 @@ describe('DeletePropertyError', () => {
           )
         }
       });
-      const intro = component.get('.modal-introduction p').text();
-      intro.should.contain('2 Entities');
-      intro.should.contain('and');
-      intro.should.contain('1 Form');
+      const li = component.findAll('.modal-introduction > ul li');
+      li.length.should.equal(2);
+      li[0].text().should.contain('2 Entities');
+      li[1].text().should.contain('1 Form');
     });
 
     it('shows both details sections', () => {

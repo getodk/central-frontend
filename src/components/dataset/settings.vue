@@ -210,9 +210,15 @@ const dependentFormsCount = computed(() => {
         // {formsCount} is the number of Forms that are dependent on the Entity List.
         // Example: 4 Forms
         "The Entity List “{name}” is linked to {formsCount}.",
+        // "It" refers to an Entity List.
         "Before you can delete it, you’ll need to unlink it from the related Forms.",
         "Learn more here."
       ],
+      /*
+      This text will be inserted where {formsCount} is in the following sentence:
+
+      The Entity List “{name}” is linked to {formsCount}.
+      */
       "formsCount": "{count} Form | {count} Forms",
     }
   }
