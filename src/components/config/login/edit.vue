@@ -4,38 +4,43 @@
     <p>{{ $t('logo.help') }}</p>
     <config-login-file-select name="logo"/>
 
-    <form @submit.prevent="submit">
+    <p class="file-label">{{ $t('login.heroImage') }}</p>
+    <p>{{ $t('hero.help') }}</p>
+    <config-login-file-select name="hero-image"/>
+
+    <form>
       <div class="form-group">
         <label for="config-login-edit-title">{{ $t('field.title') }}</label>
         <p id="config-login-edit-title-help">{{ $t('title.help') }}</p>
-        <input id="config-login-edit-title" v-model.trim="title"
-          class="form-control" aria-describedby="config-login-edit-title-help"
-          :placeholder="$t('login.defaultTitle')" autocomplete="off">
+        <div>
+          <input id="config-login-edit-title" v-model.trim="newAppearance.title"
+            class="form-control" aria-describedby="config-login-edit-title-help"
+            :placeholder="$t('login.defaultTitle')"
+            :aria-disabled="awaitingResponse" autocomplete="off"
+            @blur="update('title')">
+          <spinner :state="updating === 'title'"/>
+        </div>
       </div>
 
       <div class="form-group">
-        <label for="config-login-edit-description">{{ $t('field.description') }}</label>
+        <label for="config-login-edit-description">{{ $t('description.label') }}</label>
         <p id="config-login-edit-description-help">{{ $t('description.help') }}</p>
-        <input id="config-login-edit-description" v-model.trim="description"
-          class="form-control"
-          aria-describedby="config-login-edit-description-help"
-          :placeholder="$t('login.defaultDescription')" autocomplete="off">
+        <div>
+          <input id="config-login-edit-description" v-model.trim="newAppearance.description"
+            class="form-control"
+            aria-describedby="config-login-edit-description-help"
+            :placeholder="$t('login.defaultDescription')"
+            :aria-disabled="awaitingResponse" autocomplete="off"
+            @blur="update('description')">
+          <spinner :state="updating === 'description'"/>
+        </div>
       </div>
-
-      <button type="submit" class="btn btn-primary">
-        {{ $t('action.save') }} <spinner :state="awaitingResponse"/>
-      </button>
     </form>
-
-    <p class="file-label">{{ $t('hero.label') }}</p>
-    <p>{{ $t('hero.help') }}</p>
-    <config-login-file-select name="hero-image"/>
   </div>
 </template>
 
 <script setup>
-import { inject, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
+import { reactive, ref } from 'vue';
 
 import ConfigLoginFileSelect from './file-select.vue';
 import Spinner from '../../spinner.vue';
@@ -48,37 +53,48 @@ defineOptions({
   name: 'ConfigLoginEdit'
 });
 
-const { t } = useI18n();
 const { serverConfig } = useRequestData();
-const { toast } = inject('container');
 
-const initialAppearance = serverConfig['login-appearance']?.value;
-const title = ref(initialAppearance?.title ?? '');
-const description = ref(initialAppearance?.description ?? '');
+const newAppearance = reactive({
+  title: '',
+  description: '',
+  ...serverConfig['login-appearance']?.value
+});
 
 const { request, awaitingResponse } = useRequest();
-const submit = () => {
-  const data = {};
-  if (title.value !== '') data.title = title.value;
-  if (description.value !== '') data.description = description.value;
+// The name of the login-appearance property that the current request is
+// updating
+const updating = ref(null);
+const update = (prop) => {
+  if (awaitingResponse.value) return;
+  const currentValue = serverConfig['login-appearance']?.value[prop] ?? '';
+  if (newAppearance[prop] === currentValue) return;
 
+  updating.value = prop;
+  const data = Object.fromEntries(Object.entries(newAppearance)
+    .filter(([, value]) => value !== ''));
   request({ method: 'POST', url: '/v1/config/login-appearance', data })
-    .then(response => {
-      serverConfig['login-appearance'] = response.data;
-      toast.show(t('alert.success'));
-    })
-    .catch(noop);
+    .then(response => { serverConfig['login-appearance'] = response.data; })
+    .catch(noop)
+    .finally(() => { updating.value = null; });
 };
 </script>
 
 <style lang="scss">
 #config-login-edit {
-  .file-drop-zone, .btn-primary { margin-bottom: 40px; }
-  .form-group { margin-bottom: 25px; }
-  button[type="submit"] { margin-top: -10px; }
+  .config-login-file-select, .form-group { margin-bottom: 20px; }
 
   .file-label, label { font-size: 16px; }
   label { font-weight: normal; }
+
+  .form-group > div {
+    display: flex;
+    align-items: center;
+  }
+  .form-control {
+    width: auto;
+    flex-grow: 1;
+  }
 }
 </style>
 
@@ -87,21 +103,17 @@ const submit = () => {
   "en": {
     "logo": {
       "label": "Logo",
-      "help": "We recommend using an image with a white or transparent background of at least 150x150 pixels."
+      "help": "We recommend using a PNG logo with transparent background of at least 150x150 pixels."
     },
     "title": {
       "help": "A title for your server login."
     },
     "description": {
-      "help": "A brief description of your project space."
+      "label": "Subtitle",
+      "help": "Instructions for your users, a welcome message or a description of this server."
     },
     "hero": {
-      "label": "Hero image",
-      "help": "We recommend using a high-resolution image in JPG or PNG format. For best results, use a visually engaging image that represents your brand or message."
-    },
-    "alert": {
-      // @transifexKey component.AnalyticsForm.alert.success
-      "success": "Settings successfully saved."
+      "help": "Upload a vertical image, we recommend a 4:5 crop. Use a visually engaging image that represents your brand or message. The image will be cropped on different screen sizes, so keep important content centered."
     }
   }
 }
@@ -112,93 +124,50 @@ const submit = () => {
 {
   "de": {
     "logo": {
-      "label": "Logo",
-      "help": "Wir empfehlen, ein Bild mit weißem oder transparentem Hintergrund und einer Größe von mindestens 150 x 150 Pixel zu verwenden."
+      "label": "Logo"
     },
     "title": {
       "help": "Ein Titel für Ihre Server-Anmeldeseite."
-    },
-    "description": {
-      "help": "Eine kurze Beschreibung Ihres Projektbereichs."
-    },
-    "hero": {
-      "label": "Hauptbild",
-      "help": "Wir empfehlen die Verwendung eines hochauflösenden Bildes im JPG- oder PNG-Format. Um optimale Ergebnisse zu erzielen, sollten Sie ein ansprechendes Bild wählen, das Ihre Brand oder Botschaft widerspiegelt."
-    },
-    "alert": {
-      "success": "Einstellungen erfolgreich gespeichert."
     }
   },
   "es": {
     "logo": {
-      "label": "Logotipo",
-      "help": "Recomendamos utilizar una imagen con fondo blanco o transparente de al menos 150 x 150 píxeles."
+      "label": "Logotipo"
     },
     "title": {
       "help": "Un título para tu inicio de sesión en el servidor."
-    },
-    "description": {
-      "help": "Una breve descripción de tu espacio de proyectos."
-    },
-    "hero": {
-      "label": "Imagen principal",
-      "help": "Recomendamos utilizar una imagen de alta resolución en formato JPG o PNG. Para obtener los mejores resultados, utiliza una imagen atractiva que represente tu empresa o mensaje."
-    },
-    "alert": {
-      "success": "Ajustes guardados correctamente."
     }
   },
   "fr": {
-    "alert": {
-      "success": "Réglages enregistrés."
+    "logo": {
+      "label": "Logo",
+      "help": "Nous recommandons un logo en format PNG avec un arrière-plan transparent d'au moins 150x150 pixels."
+    },
+    "title": {
+      "help": "Un titre pour la page de connexion."
+    },
+    "description": {
+      "label": "Sous-titre",
+      "help": "Instructions pour vos utilisateurs, un message de bienvenue ou une description de ce serveur."
+    },
+    "hero": {
+      "help": "Importez une image verticale ; nous vous recommandons un recadrage au format 4:5. Utilisez une image visuellement attrayante qui représente votre marque ou votre message. L'image sera recadrée en fonction de la taille de l'écran ; veillez donc à centrer les éléments importants."
     }
   },
   "it": {
     "logo": {
-      "label": "Logo",
-      "help": "Si consiglia di utilizzare un'immagine con sfondo bianco o trasparente di almeno 150x150 pixel."
+      "label": "Logo"
     },
     "title": {
       "help": "Un titolo per il tuo accesso al server."
-    },
-    "description": {
-      "help": "Una breve descrizione del vostro spazio dedicato al progetto."
-    },
-    "hero": {
-      "label": "Immagine di copertina",
-      "help": "Ti consigliamo di utilizzare un'immagine ad alta risoluzione in formato JPG o PNG. Per ottenere risultati ottimali, scegli un'immagine accattivante che rappresenti il tuo brand o il tuo messaggio."
-    },
-    "alert": {
-      "success": "Impostazioni salvate con successo!"
-    }
-  },
-  "pt": {
-    "alert": {
-      "success": "Configurações salvas com sucesso."
     }
   },
   "zh": {
     "logo": {
-      "label": "标志",
-      "help": "我们建议使用背景为白色或透明、尺寸至少为 150x150 像素的图片。"
+      "label": "标志"
     },
     "title": {
       "help": "您的服务器登录标题。"
-    },
-    "description": {
-      "help": "您的项目空间的简短描述。"
-    },
-    "hero": {
-      "label": "主视觉图片",
-      "help": "我们建议使用高分辨率的 JPG 或 PNG 格式图片。为获得最佳效果，请使用能够代表您品牌或信息的视觉吸引力强的图片。"
-    },
-    "alert": {
-      "success": "设置已成功保存。"
-    }
-  },
-  "zh-Hant": {
-    "alert": {
-      "success": "設定已成功儲存。"
     }
   }
 }

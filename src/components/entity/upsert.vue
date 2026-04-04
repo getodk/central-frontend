@@ -256,6 +256,10 @@ const submit = () => {
     }
   },
   "fr": {
+    "titleCreate": "Créer nouvelle entité",
+    "header": {
+      "value": "Valeur"
+    },
     "title": "Mise à jour {label}",
     "geometryDisabled": "La géométrie ne peut être modifiée depuis la carte.",
     "problem": {

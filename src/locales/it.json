@@ -185,7 +185,6 @@
   "field": {
     "comment": "Lascia un commento...",
     "dateRange": "Intervallo date",
-    "description": "Descrizione",
     "displayName": "Nome visualizzato",
     "email": "Indirizzo email",
     "name": "Nome",
@@ -284,7 +283,8 @@
   "login": {
     "odkLogo": "Logo ODK",
     "defaultTitle": "Benvenuto su ODK Central",
-    "defaultDescription": "Accedi al tuo account per iniziare"
+    "defaultDescription": "Accedi al tuo account per iniziare",
+    "customLogoAlt": "Logo dell'Organizzazione"
   },
   "analytics": {
     "alwaysImprove": "Stiamo sempre cercando di migliorare ODK Central",

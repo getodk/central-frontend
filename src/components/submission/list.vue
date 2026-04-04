@@ -47,7 +47,7 @@ except according to the terms contained in the LICENSE file.
           v-model="dataView" :options="viewOptions" :disabled="encrypted || deleted"
           :button-appearance="true" :disabled-message="deleted ? $t('noMapDeleted') : $t('noMapEncryption')"/>
         <teleport-if-exists v-if="formVersion.dataExists && odata.dataExists"
-          :to="'.form-submissions-heading-row'">
+          to=".form-submissions-heading-row-right-side">
           <submission-download-button :form-version="formVersion"
             :aria-disabled="deleted"
             :filtered="odataFilter != null && !deleted"

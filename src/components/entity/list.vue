@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
         <radio-field v-if="dataset.dataExists && dataset.hasGeometry"
           v-model="dataView" :options="viewOptions" :disabled="deleted"
           :disabled-message="$t('mapDisabled')" button-appearance/>
-        <teleport-if-exists v-if="odataEntities.dataExists" to=".dataset-entities-heading-row">
+        <teleport-if-exists v-if="odataEntities.dataExists" to=".dataset-entities-heading-row-right-side">
           <entity-download-button :odata-filter="deleted ? null : odataFilter"
           :search-term="deleted ? null : searchTerm"
           :disabled="deleted"

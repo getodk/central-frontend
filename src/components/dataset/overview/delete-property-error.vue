@@ -15,22 +15,15 @@ except according to the terms contained in the LICENSE file.
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div v-if="state && errorObject" class="modal-introduction">
-        <i18n-t tag="p" keypath="intro">
-          <template #propertyName>{{ errorObject.details.propertyName }}</template>
-          <template #actions>
-            <i18n-t v-if="nonEmptyEntities" keypath="clearEntities">
-              <template #entities>
-                <strong>{{ $t('entitiesCount', nonEmptyEntities.details.totalCount) }}</strong>
-              </template>
-            </i18n-t>
-            <template v-if="nonEmptyEntities && dependentForms">&nbsp;{{ $t('and') }}&nbsp;</template>
-            <i18n-t v-if="dependentForms" keypath="unlinkForms">
-              <template #forms>
-                <strong>{{ $t('formsCount', dependentForms.details.forms.length) }}</strong>
-              </template>
-            </i18n-t>
-          </template>
-        </i18n-t>
+        <p>{{ $t('intro', { propertyName: errorObject.details.propertyName }) }}</p>
+        <ul>
+          <li v-if="nonEmptyEntities">
+            {{ $tcn('clearEntities', nonEmptyEntities.details.totalCount) }}
+          </li>
+          <li v-if="dependentForms">
+            {{ $tcn('unlinkForms', dependentForms.details.forms.length) }}
+          </li>
+        </ul>
         <details v-if="nonEmptyEntities" open>
           <summary>
             {{ $t('relatedToEntities', nonEmptyEntities.details.totalCount) }}
@@ -130,16 +123,21 @@ defineEmits(['hide']);
 {
   "en": {
     "title": "Delete Property",
-    "intro": "Before you can delete the Property “{propertyName}”, you’ll need to {actions}.",
-    // {entities} is a bold count like "2 Entities"
-    "clearEntities": "clear its value in {entities}",
-    "and": "and",
-    // {forms} is a bold count like "5 Forms"
-    "unlinkForms": "unlink {forms} that set it",
-    "entitiesCount": "{count} Entity | {count} Entities",
+    // This text is followed by a list of actions.
+    "intro": "Before you can delete the Property “{propertyName}”, you must:",
+    // This text appears in a list of required actions. "It" refers to an Entity
+    // property.
+    "clearEntities": "Clear its value in {count} Entity | Clear its value in {count} Entities",
+    // This text appears in a list of required actions. "It" refers to an Entity
+    // property.
+    "unlinkForms": "Unlink {count} Form that sets it | Unlink {count} Forms that set it",
+    // This text refers to an Entity property that is set.
     "relatedToEntities": "Set in {count} Entity | Set in {count} Entities",
+    // This text is shown beneath a partial list of Entities. If there are more
+    // than a few Entities, then only the first few Entities are shown, followed
+    // by this text.
     "moreEntities": "and {count} more Entity | and {count} more Entities",
-    "formsCount": "{count} Form | {count} Forms",
+    // This text refers to an Entity property that is set.
     "relatedToForms": "Set by {count} Form | Set by {count} Forms"
   }
 }
@@ -150,55 +148,34 @@ defineEmits(['hide']);
 {
   "de": {
     "title": "Eigenschaft löschen",
-    "intro": "Bevor Sie die Eigenschaft löschen können “{propertyName}”, Sie müssen {actions}.",
-    "clearEntities": "seinen Wert in {entities} löschen",
-    "and": "und",
-    "unlinkForms": "die Verknüpfung zu dem {forms}aufheben, das es festgelegt hat",
-    "entitiesCount": "{count} Objekt | {count} Objekte",
-    "relatedToEntities": "In Verbindung mit {count} Entität | In Verbindung mit {count} Entitäten",
-    "moreEntities": "und {count}weitere Entität | und {count} weitere Entitäten",
-    "formsCount": "{count} Formular | {count} Formulare",
-    "relatedToForms": "In Verbindung mit {count} Formular | In Verbindung mit {count} Formularen"
+    "relatedToEntities": "Eingestellt auf {count} Objekt | Eingestellt auf {count} Objekte",
+    "moreEntities": "und {count} weitere Entität | und {count} weitere Entitäten",
+    "relatedToForms": "Festgelegt von {count} Formular | Festgelegt von {count} Formulare"
   },
   "es": {
     "title": "Borrar propiedad",
-    "intro": "Antes de poder eliminar la propiedad “{propertyName}”, tendrás que{actions}.",
-    "clearEntities": "eliminar su valor en {entities}",
-    "and": "y",
-    "unlinkForms": "desvincular {forms}que lo configuró",
-    "entitiesCount": "{count}entidad | {count} entidades | {count} entidades",
-    "relatedToEntities": "Relacionado con{count} Entidad | Relacionado con {count}Entidades | Relacionado con {count} Entidades",
-    "moreEntities": "y otra {count} entidad | y otras {count}entidades | y otras {count} entidades",
-    "formsCount": "{count} formulario | {count} formularios | {count} formularios",
-    "relatedToForms": "Relacionado con{count} formulario | Relacionado con {count}formularios | Relacionado con {count} formularios"
+    "relatedToEntities": "Establecido en {count} Entidad... | Establecido en {count} Entidades... | Establecido en {count} Entidades...",
+    "moreEntities": "y otra {count} entidad | y otras {count} entidades | y otras {count} entidades",
+    "relatedToForms": "Establecido por {count} formulario | Establecido por {count} formularios | Establecido por {count} Forms"
   },
   "fr": {
     "title": "Supprimer la propriété",
-    "intro": "Avant de pouvoir supprimer la propriété \"{propertyName}\", vous devrez {actions}."
+    "intro": "Avant de pouvoir supprimer la propriété \"{propertyName}\", vous devrez :",
+    "clearEntities": "Supprimer sa valeur dans {count} entité | Supprimer sa valeur dans {count} entités | Supprimer sa valeur dans {count} d’entités",
+    "unlinkForms": "Dissocier {count} formulaire qui définit sa valeur | Dissocier {count} formulaires qui définissent sa valeur | Dissocier {count} de formulaires qui définissent sa valeur",
+    "relatedToEntities": "Définie dans {count} entité | Définie dans {count} entités | Définie dans {count} d'entités",
+    "moreEntities": "et {count} autre entité | et {count} autres entités | et {count} d'autres entités",
+    "relatedToForms": "Définie par {count} de formulaire | Définie par {count} formulaires | Définie par {count} de formulaires"
   },
   "it": {
     "title": "Elimina proprietà",
-    "intro": "Prima di eliminare la proprietà “{propertyName}”, devi{actions}.",
-    "clearEntities": "cancellare il suo valore in {entities}",
-    "and": "e",
-    "unlinkForms": "rimuovere il collegamento ai {forms} che lo definiscono",
-    "entitiesCount": "{count}Entità | {count}Entità | {count} Entità",
-    "relatedToEntities": "Correlato a {count} Entità | Correlato a {count} Entità | Correlato a {count} Entità",
-    "moreEntities": "e{count} Entità in più | e {count}Entità in più | e{count} Entità in più",
-    "formsCount": "{count} Formulario | {count} Formulari | {count} Formulari",
-    "relatedToForms": "Correlato a {count} Formulario | Correlato a {count} Formulari | Correlato a {count} Formulari"
+    "relatedToEntities": "Impostato in {count} Entità... | Impostato in {count} Entità... | Impostato in {count} Entità...",
+    "moreEntities": "e {count} Entità in più | e {count} Entità in più | e {count} Entità in più",
+    "relatedToForms": "Impostato da {count} Formulario | Impostato da {count} Formulari | Impostato da {count} Formulari"
   },
   "zh": {
     "title": "删除属性",
-    "intro": "在删除属性“{propertyName}”之前，您需要先{actions}",
-    "clearEntities": "清除其在{entities}中的值",
-    "and": "和",
-    "unlinkForms": "取消设置该属性的{forms}的关联",
-    "entitiesCount": "{count} 个实体",
-    "relatedToEntities": "与 {count} 个实体相关",
-    "moreEntities": "以及其他 {count} 个实体",
-    "formsCount": "{count} 个表单",
-    "relatedToForms": "与 {count} 个表单相关"
+    "moreEntities": "以及其他 {count} 个实体"
   }
 }
 </i18n>

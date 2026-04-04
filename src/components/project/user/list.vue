@@ -390,7 +390,7 @@ export default {
     "field": {
       "q": {
         "canList": "Rechercher un utilisateur...",
-        "cannotList": "Entrez l'adresse de courriel exacte de l'utilisateur..."
+        "cannotList": "Entrez l'adresse email exacte de l'utilisateur..."
       }
     },
     "header": {
