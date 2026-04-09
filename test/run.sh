@@ -19,7 +19,7 @@ awk '
   /Module Warning/       { ++warnings; print "WARNING: " $0 }
   /WARN \[web-server\]:/ { ++warnings; print "WARNING: " $0 }
   END {
-    if(warnings > 11) {
+    if(warnings > 2) {
       print "All tests passed, but there were " warnings " warnings: see above."
       exit 1
     }

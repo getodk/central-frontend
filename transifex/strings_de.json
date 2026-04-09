@@ -501,10 +501,6 @@
       "string": "Zeitraum",
       "developer_comment": "This is the text of a form field."
     },
-    "description": {
-      "string": "Beschreibung",
-      "developer_comment": "This is the text of a form field."
-    },
     "displayName": {
       "string": "Anzeigename",
       "developer_comment": "This is the text of a form field."
@@ -825,6 +821,10 @@
     },
     "defaultDescription": {
       "string": "Melden Sie sich bei Ihrem Konto an, um loszulegen"
+    },
+    "heroImage": {
+      "string": "",
+      "developer_comment": "An image shown on the login page"
     }
   },
   "analytics": {
@@ -1176,12 +1176,6 @@
     "AccountPageContainer": {
       "customLogoAlt": {
         "string": "Logo der Organisation"
-      },
-      "defaultHeroAlt": {
-        "string": "Funktionen von ODK Central"
-      },
-      "customHeroAlt": {
-        "string": "Willkommensbild"
       }
     },
     "AccountResetPassword": {
@@ -1421,7 +1415,7 @@
           "string": "Anzahl der Löschvorgänge in der Entitätsliste"
         },
         "num_dataset_properties_deleted": {
-          "string": ""
+          "string": "Anzahl der Löschereignisse für Entitätseigenschaften"
         },
         "num_properties": {
           "string": "Anzahl der Eigenschaften"
@@ -1466,16 +1460,16 @@
           "string": "SSO auf dem Server aktiviert"
         },
         "login_customization_logo_set": {
-          "string": ""
+          "string": "Set mit benutzerdefinierten Logos für die Anmeldeseite"
         },
         "login_customization_hero_image_set": {
-          "string": ""
+          "string": "Set mit benutzerdefinierten Hero-Bildern für die Anmeldeseite"
         },
         "login_customization_title_set": {
-          "string": ""
+          "string": "Benutzerdefinierter Titel für die Anmeldeseite festgelegt"
         },
         "login_customization_description_set": {
-          "string": ""
+          "string": "Beschreibung der benutzerdefinierten Anmeldeseite festgelegt"
         },
         "num_client_audit_attachments": {
           "string": "Anzahl Client-Audit-Anhänge"
@@ -1693,7 +1687,7 @@
           "string": "Logo"
         },
         "help": {
-          "string": "Wir empfehlen, ein Bild mit weißem oder transparentem Hintergrund und einer Größe von mindestens 150 x 150 Pixel zu verwenden."
+          "string": ""
         }
       },
       "title": {
@@ -1702,16 +1696,16 @@
         }
       },
       "description": {
+        "label": {
+          "string": ""
+        },
         "help": {
-          "string": "Eine kurze Beschreibung Ihres Projektbereichs."
+          "string": ""
         }
       },
       "hero": {
-        "label": {
-          "string": "Hauptbild"
-        },
         "help": {
-          "string": "Wir empfehlen die Verwendung eines hochauflösenden Bildes im JPG- oder PNG-Format. Um optimale Ergebnisse zu erzielen, sollten Sie ein ansprechendes Bild wählen, das Ihre Brand oder Botschaft widerspiegelt."
+          "string": ""
         }
       }
     },
@@ -1746,7 +1740,7 @@
     },
     "ConfigLoginPreview": {
       "introduction": {
-        "string": "So sieht Ihre Anmeldeseite derzeit aus:"
+        "string": ""
       }
     },
     "DatasetDelete": {
@@ -1764,8 +1758,8 @@
       "upload": {
         "string": "Objekte hochladen"
       },
-      "new": {
-        "string": "Neu",
+      "newEntity": {
+        "string": "",
         "developer_comment": "This is shown on a button for creating new Entities"
       },
       "alert": {
@@ -1868,33 +1862,28 @@
         "string": "Eigenschaft löschen"
       },
       "intro": {
-        "string": "Bevor Sie die Eigenschaft löschen können “{propertyName}”, Sie müssen {actions}."
+        "string": "",
+        "developer_comment": "This text is followed by a list of actions."
       },
       "clearEntities": {
-        "string": "seinen Wert in {entities} löschen",
-        "developer_comment": "{entities} is a bold count like \"2 Entities\""
-      },
-      "and": {
-        "string": "und"
+        "string": "{count, plural, one {} other {}}",
+        "developer_comment": "This text appears in a list of required actions. \"It\" refers to an Entity property."
       },
       "unlinkForms": {
-        "string": "die Verknüpfung zu dem {forms}aufheben, das es festgelegt hat",
-        "developer_comment": "{forms} is a bold count like \"5 Forms\""
-      },
-      "entitiesCount": {
-        "string": "{count, plural, one {{count} Objekt } other {{count} Objekte}}"
+        "string": "{count, plural, one {} other {}}",
+        "developer_comment": "This text appears in a list of required actions. \"It\" refers to an Entity property."
       },
       "relatedToEntities": {
-        "string": "{count, plural, one {In Verbindung mit  {count} Entität} other {In Verbindung mit {count} Entitäten}}"
+        "string": "{count, plural, one {Eingestellt auf {count} Objekt} other {Eingestellt auf {count} Objekte }}",
+        "developer_comment": "This text refers to an Entity property that is set."
       },
       "moreEntities": {
-        "string": "{count, plural, one {und {count}weitere  Entität } other {und {count} weitere Entitäten}}"
-      },
-      "formsCount": {
-        "string": "{count, plural, one {{count} Formular} other {{count} Formulare}}"
+        "string": "{count, plural, one {und {count} weitere  Entität } other {und {count} weitere Entitäten}}",
+        "developer_comment": "This text is shown beneath a partial list of Entities. If there are more than a few Entities, then only the first few Entities are shown, followed by this text."
       },
       "relatedToForms": {
-        "string": "{count, plural, one {In Verbindung mit  {count} Formular} other {In Verbindung mit {count} Formularen}}"
+        "string": "{count, plural, one {Festgelegt von {count} Formular} other {Festgelegt von {count} Formulare}}",
+        "developer_comment": "This text refers to an Entity property that is set."
       }
     },
     "DatasetOverviewNewProperty": {
@@ -2066,14 +2055,16 @@
             "developer_comment": "{formsCount} is the number of Forms that are dependent on the Entity List. Example: 4 Forms"
           },
           "1": {
-            "string": "Bevor Sie es löschen können, müssen Sie die Verknüpfung zu den zugehörigen Formularen aufheben."
+            "string": "Bevor Sie es löschen können, müssen Sie die Verknüpfung zu den zugehörigen Formularen aufheben.",
+            "developer_comment": "\"It\" refers to an Entity List."
           },
           "2": {
             "string": "Erfahren Sie mehr hier."
           }
         },
         "formsCount": {
-          "string": "{count, plural, one {{count} Formular} other {{count} Formulare}}"
+          "string": "{count, plural, one {{count} Formular} other {{count} Formulare}}",
+          "developer_comment": "This text will be inserted where {formsCount} is in the following sentence:\n\nThe Entity List “{name}” is linked to {formsCount}."
         }
       }
     },
@@ -2117,10 +2108,6 @@
       }
     },
     "DatasetTrashTable": {
-      "trashCount": {
-        "string": "({count})",
-        "developer_comment": "{count} is the number of Entity Lists in the trash."
-      },
       "message": {
         "string": "Entitätslisten werden nach 30 Tagen im Papierkorb gelöscht"
       }
@@ -3554,7 +3541,7 @@
       },
       "infoNav": {
         "entityLists": {
-          "string": "{count, plural, one {{count} Verwandte Objektliste} other {{count} Verwandte Objektlisten}}"
+          "string": "{count, plural, one {{count} Verknüpfter Objektliste} other {{count} Verknüpfter Objektlisten}}"
         },
         "updatedDatasets": {
           "string": "Aktualisierungen",
@@ -5698,11 +5685,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "Löschen von Entitäten und Eigenschaften ️🗑️, Erstellung von Entitäten 🪄sowie individuelles Branding auf der Anmeldeseite 🎨",
+        "string": "🎨 Markenspezifische Anmeldeseiten, Bereinigung der Entitätsliste und Datei-Uploads in Web Forms",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "Bereinigen Sie Entitätslisten und Eigenschaften, wenn diese nicht mehr benötigt werden, erstellen Sie Entitäten schnell direkt über die Benutzeroberfläche von  Central und passen Sie die Anmeldeseite so an, dass Ihr Server das Corporate Design Ihrer Organisation widerspiegelt und das Vertrauen der Benutzer stärkt."
+        "string": "Passen Sie die Anmeldeseite an Ihr Corporate Design an, bereinigen Sie Entitätslisten und Eigenschaften, wenn diese nicht mehr benötigt werden, und laden Sie beliebige Dateien in Ihre Webformulare hoch."
       }
     }
   },

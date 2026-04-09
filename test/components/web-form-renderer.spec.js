@@ -193,7 +193,11 @@ describe('WebFormRenderer', () => {
       .respondWithData(() => ({ currentVersion: { instanceId: '123' } }));
   });
 
-  const fileToUpload = new File(['dummy content'], '1746140510984.jpg', { type: 'image/jpeg' });
+  // Minimal valid 1x1 pixel GIF
+  const gifBase64 = 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+  const gifBinary = atob(gifBase64);
+  const gifBytes = Uint8Array.from(gifBinary, c => c.charCodeAt(0));
+  const fileToUpload = new File([gifBytes], '1746140510984.gif', { type: 'image/gif' });
 
   const uploadFile = async (component) => {
     await setFiles(component.find('.odk-form input[type="file"]'), [fileToUpload]);
@@ -256,9 +260,9 @@ describe('WebFormRenderer', () => {
       .testRequests([
         {
           method: 'POST',
-          url: ({ pathname }) => pathname.should.match(/attachments.*jpg/),
+          url: ({ pathname }) => pathname.should.match(/attachments.*gif/),
           data: fileToUpload,
-          headers: { 'content-type': 'image/jpeg' }
+          headers: { 'content-type': 'image/gif' }
         }
       ]);
 
@@ -351,7 +355,7 @@ describe('WebFormRenderer', () => {
         })
         .respondWithData(() => [{ name: '1746140510984.jpg', exists: true }])
         .respondWithData(() => imageUploaderSubmission)
-        .respondWithData(() => 'dummy content');
+        .respondWithData(() => gifBinary);
 
       await waitUntil(() => component.find('.odk-form').exists());
       component.find('.odk-form h1').text().should.be.equal('Display Picture');

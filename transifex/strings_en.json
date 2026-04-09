@@ -501,10 +501,6 @@
       "string": "Date range",
       "developer_comment": "This is the text of a form field."
     },
-    "description": {
-      "string": "Description",
-      "developer_comment": "This is the text of a form field."
-    },
     "displayName": {
       "string": "Display name",
       "developer_comment": "This is the text of a form field."
@@ -825,6 +821,10 @@
     },
     "defaultDescription": {
       "string": "Log into your account to get started"
+    },
+    "heroImage": {
+      "string": "Login image",
+      "developer_comment": "An image shown on the login page"
     }
   },
   "analytics": {
@@ -1176,12 +1176,6 @@
     "AccountPageContainer": {
       "customLogoAlt": {
         "string": "Organization logo"
-      },
-      "defaultHeroAlt": {
-        "string": "Features of ODK Central"
-      },
-      "customHeroAlt": {
-        "string": "Welcome image"
       }
     },
     "AccountResetPassword": {
@@ -1693,7 +1687,7 @@
           "string": "Logo"
         },
         "help": {
-          "string": "We recommend using an image with a white or transparent background of at least 150x150 pixels."
+          "string": "We recommend using a PNG logo with transparent background of at least 150x150 pixels."
         }
       },
       "title": {
@@ -1702,16 +1696,16 @@
         }
       },
       "description": {
+        "label": {
+          "string": "Subtitle"
+        },
         "help": {
-          "string": "A brief description of your project space."
+          "string": "Instructions for your users, a welcome message or a description of this server."
         }
       },
       "hero": {
-        "label": {
-          "string": "Hero image"
-        },
         "help": {
-          "string": "We recommend using a high-resolution image in JPG or PNG format. For best results, use a visually engaging image that represents your brand or message."
+          "string": "Upload a vertical image, we recommend a 4:5 crop. Use a visually engaging image that represents your brand or message. The image will be cropped on different screen sizes, so keep important content centered."
         }
       }
     },
@@ -1746,7 +1740,7 @@
     },
     "ConfigLoginPreview": {
       "introduction": {
-        "string": "This is what your login page looks like right now:"
+        "string": "Your login page now looks like this:"
       }
     },
     "DatasetDelete": {
@@ -1764,8 +1758,8 @@
       "upload": {
         "string": "Upload Entities"
       },
-      "new": {
-        "string": "New",
+      "newEntity": {
+        "string": "New Entity",
         "developer_comment": "This is shown on a button for creating new Entities"
       },
       "alert": {
@@ -1868,33 +1862,28 @@
         "string": "Delete Property"
       },
       "intro": {
-        "string": "Before you can delete the Property “{propertyName}”, you’ll need to {actions}."
+        "string": "Before you can delete the Property “{propertyName}”, you must:",
+        "developer_comment": "This text is followed by a list of actions."
       },
       "clearEntities": {
-        "string": "clear its value in {entities}",
-        "developer_comment": "{entities} is a bold count like \"2 Entities\""
-      },
-      "and": {
-        "string": "and"
+        "string": "{count, plural, one {Clear its value in {count} Entity} other {Clear its value in {count} Entities}}",
+        "developer_comment": "This text appears in a list of required actions. \"It\" refers to an Entity property."
       },
       "unlinkForms": {
-        "string": "unlink {forms} that set it",
-        "developer_comment": "{forms} is a bold count like \"5 Forms\""
-      },
-      "entitiesCount": {
-        "string": "{count, plural, one {{count} Entity} other {{count} Entities}}"
+        "string": "{count, plural, one {Unlink {count} Form that sets it} other {Unlink {count} Forms that set it}}",
+        "developer_comment": "This text appears in a list of required actions. \"It\" refers to an Entity property."
       },
       "relatedToEntities": {
-        "string": "{count, plural, one {Related to {count} Entity} other {Related to {count} Entities}}"
+        "string": "{count, plural, one {Set in {count} Entity} other {Set in {count} Entities}}",
+        "developer_comment": "This text refers to an Entity property that is set."
       },
       "moreEntities": {
-        "string": "{count, plural, one {and {count} more Entity} other {and {count} more Entities}}"
-      },
-      "formsCount": {
-        "string": "{count, plural, one {{count} Form} other {{count} Forms}}"
+        "string": "{count, plural, one {and {count} more Entity} other {and {count} more Entities}}",
+        "developer_comment": "This text is shown beneath a partial list of Entities. If there are more than a few Entities, then only the first few Entities are shown, followed by this text."
       },
       "relatedToForms": {
-        "string": "{count, plural, one {Related to {count} Form} other {Related to {count} Forms}}"
+        "string": "{count, plural, one {Set by {count} Form} other {Set by {count} Forms}}",
+        "developer_comment": "This text refers to an Entity property that is set."
       }
     },
     "DatasetOverviewNewProperty": {
@@ -2062,18 +2051,20 @@
       "dependentForms": {
         "description": {
           "0": {
-            "string": "The Entity List “{name}” is related to {formsCount}.",
+            "string": "The Entity List “{name}” is linked to {formsCount}.",
             "developer_comment": "{formsCount} is the number of Forms that are dependent on the Entity List. Example: 4 Forms"
           },
           "1": {
-            "string": "Before you can delete it, you’ll need to unlink it from the related Forms."
+            "string": "Before you can delete it, you’ll need to unlink it from the related Forms.",
+            "developer_comment": "\"It\" refers to an Entity List."
           },
           "2": {
             "string": "Learn more here."
           }
         },
         "formsCount": {
-          "string": "{count, plural, one {{count} Form} other {{count} Forms}}"
+          "string": "{count, plural, one {{count} Form} other {{count} Forms}}",
+          "developer_comment": "This text will be inserted where {formsCount} is in the following sentence:\n\nThe Entity List “{name}” is linked to {formsCount}."
         }
       }
     },
@@ -2117,10 +2108,6 @@
       }
     },
     "DatasetTrashTable": {
-      "trashCount": {
-        "string": "({count})",
-        "developer_comment": "{count} is the number of Entity Lists in the trash."
-      },
       "message": {
         "string": "Entity Lists are deleted after 30 days in the Trash"
       }
@@ -3554,7 +3541,7 @@
       },
       "infoNav": {
         "entityLists": {
-          "string": "{count, plural, one {{count} Related Entity List} other {{count} Related Entity Lists}}"
+          "string": "{count, plural, one {{count} Linked Entity List} other {{count} Linked Entity Lists}}"
         },
         "updatedDatasets": {
           "string": "Updates",
@@ -5177,7 +5164,7 @@
       },
       "deleted": {
         "string": "(deleted)",
-        "developer_comment": "Shown in the Submission feed when dataset or entity has been deleted."
+        "developer_comment": "This text is shown next to an Entity when the Entity has been deleted."
       }
     },
     "SubmissionFieldDropdown": {
@@ -5698,11 +5685,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "Entity List and Property deletion ️🗑️, Entity Creation 🪄and custom branding on login page 🎨",
+        "string": "🎨 Branded login pages, Entity List cleanups, and file uploads in Web Forms",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "Clean up Entity Lists and Properties when they’re no longer needed, quickly create Entities directly from the Central UI, and customize the login page so your server reflects your organization’s branding and builds user trust."
+        "string": "Customize the login page with your branding, clean up Entity Lists and Properties when they are no longer needed, and upload any file to your Web Forms."
       }
     }
   },

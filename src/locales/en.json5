@@ -242,7 +242,6 @@
   "field": {
     "comment": "Leave a comment…",
     "dateRange": "Date range",
-    "description": "Description",
     "displayName": "Display name",
     "email": "Email address",
     "name": "Name",
@@ -366,8 +365,12 @@
   },
   "login": {
     "odkLogo": "ODK logo",
+    // @transifexKey component.AccountPageContainer.customLogoAlt
+    "customLogoAlt": "Organization logo",
     "defaultTitle": "Welcome to ODK Central",
-    "defaultDescription": "Log into your account to get started"
+    "defaultDescription": "Log into your account to get started",
+    // An image shown on the login page
+    "heroImage": "Login image"
   },
   "analytics": {
     "alwaysImprove": "We are always trying to improve ODK Central.",

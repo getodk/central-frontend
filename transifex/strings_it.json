@@ -501,10 +501,6 @@
       "string": "Intervallo date",
       "developer_comment": "This is the text of a form field."
     },
-    "description": {
-      "string": "Descrizione",
-      "developer_comment": "This is the text of a form field."
-    },
     "displayName": {
       "string": "Nome visualizzato",
       "developer_comment": "This is the text of a form field."
@@ -825,6 +821,10 @@
     },
     "defaultDescription": {
       "string": "Accedi al tuo account per iniziare"
+    },
+    "heroImage": {
+      "string": "",
+      "developer_comment": "An image shown on the login page"
     }
   },
   "analytics": {
@@ -1176,12 +1176,6 @@
     "AccountPageContainer": {
       "customLogoAlt": {
         "string": "Logo dell'Organizzazione"
-      },
-      "defaultHeroAlt": {
-        "string": "Funzionalità di ODK Central"
-      },
-      "customHeroAlt": {
-        "string": "Immagine di benvenuto"
       }
     },
     "AccountResetPassword": {
@@ -1693,7 +1687,7 @@
           "string": "Logo"
         },
         "help": {
-          "string": "Si consiglia di utilizzare un'immagine con sfondo bianco o trasparente di almeno 150x150 pixel."
+          "string": ""
         }
       },
       "title": {
@@ -1702,16 +1696,16 @@
         }
       },
       "description": {
+        "label": {
+          "string": ""
+        },
         "help": {
-          "string": "Una breve descrizione del vostro spazio dedicato al progetto."
+          "string": ""
         }
       },
       "hero": {
-        "label": {
-          "string": "Immagine di copertina"
-        },
         "help": {
-          "string": "Ti consigliamo di utilizzare un'immagine ad alta risoluzione in formato JPG o PNG. Per ottenere risultati ottimali, scegli un'immagine accattivante che rappresenti il tuo brand o il tuo messaggio."
+          "string": ""
         }
       }
     },
@@ -1746,7 +1740,7 @@
     },
     "ConfigLoginPreview": {
       "introduction": {
-        "string": "Ecco come appare la tua pagina di accesso in questo momento:"
+        "string": ""
       }
     },
     "DatasetDelete": {
@@ -1764,8 +1758,8 @@
       "upload": {
         "string": "Caricare Entità"
       },
-      "new": {
-        "string": "Nuova",
+      "newEntity": {
+        "string": "",
         "developer_comment": "This is shown on a button for creating new Entities"
       },
       "alert": {
@@ -1868,33 +1862,28 @@
         "string": "Elimina proprietà"
       },
       "intro": {
-        "string": "Prima di eliminare la proprietà “{propertyName}”, devi{actions}."
+        "string": "",
+        "developer_comment": "This text is followed by a list of actions."
       },
       "clearEntities": {
-        "string": "cancellare il suo valore in  {entities}",
-        "developer_comment": "{entities} is a bold count like \"2 Entities\""
-      },
-      "and": {
-        "string": "e"
+        "string": "{count, plural, one {} many {} other {}}",
+        "developer_comment": "This text appears in a list of required actions. \"It\" refers to an Entity property."
       },
       "unlinkForms": {
-        "string": "rimuovere il collegamento ai {forms} che lo definiscono",
-        "developer_comment": "{forms} is a bold count like \"5 Forms\""
-      },
-      "entitiesCount": {
-        "string": "{count, plural, one {{count}Entità} many {{count}Entità} other {{count} Entità}}"
+        "string": "{count, plural, one {} many {} other {}}",
+        "developer_comment": "This text appears in a list of required actions. \"It\" refers to an Entity property."
       },
       "relatedToEntities": {
-        "string": "{count, plural, one {Correlato a {count} Entità} many {Correlato a {count} Entità} other {Correlato a {count} Entità}}"
+        "string": "{count, plural, one {Impostato in {count} Entità...} many {Impostato in {count} Entità...} other {Impostato in {count} Entità...}}",
+        "developer_comment": "This text refers to an Entity property that is set."
       },
       "moreEntities": {
-        "string": "{count, plural, one {e{count} Entità in più } many {e {count}Entità in più } other {e{count} Entità in più }}"
-      },
-      "formsCount": {
-        "string": "{count, plural, one {{count} Formulario} many {{count} Formulari} other {{count} Formulari}}"
+        "string": "{count, plural, one {e {count} Entità in più } many {e {count} Entità in più } other {e {count} Entità in più }}",
+        "developer_comment": "This text is shown beneath a partial list of Entities. If there are more than a few Entities, then only the first few Entities are shown, followed by this text."
       },
       "relatedToForms": {
-        "string": "{count, plural, one {Correlato a {count} Formulario} many {Correlato a {count} Formulari} other {Correlato a {count} Formulari}}"
+        "string": "{count, plural, one {Impostato da {count} Formulario} many {Impostato da {count} Formulari} other {Impostato da {count} Formulari}}",
+        "developer_comment": "This text refers to an Entity property that is set."
       }
     },
     "DatasetOverviewNewProperty": {
@@ -2062,18 +2051,20 @@
       "dependentForms": {
         "description": {
           "0": {
-            "string": "La Lista Entità “{name}” è correlata a {formsCount}.",
+            "string": "La Lista Entità “{name}” è collegata a {formsCount}.",
             "developer_comment": "{formsCount} is the number of Forms that are dependent on the Entity List. Example: 4 Forms"
           },
           "1": {
-            "string": "Prima di poterlo eliminare, dovrai scollegarlo dai formulari correlati."
+            "string": "Prima di poterlo eliminare, dovrai scollegarlo dai formulari correlati.",
+            "developer_comment": "\"It\" refers to an Entity List."
           },
           "2": {
             "string": "Impara di più qui."
           }
         },
         "formsCount": {
-          "string": "{count, plural, one {{count} Formulario} many {{count} Formulari} other {{count} Formulari}}"
+          "string": "{count, plural, one {{count} Formulario} many {{count} Formulari} other {{count} Formulari}}",
+          "developer_comment": "This text will be inserted where {formsCount} is in the following sentence:\n\nThe Entity List “{name}” is linked to {formsCount}."
         }
       }
     },
@@ -2117,10 +2108,6 @@
       }
     },
     "DatasetTrashTable": {
-      "trashCount": {
-        "string": "({count})",
-        "developer_comment": "{count} is the number of Entity Lists in the trash."
-      },
       "message": {
         "string": "Gli elenchi delle entità vengono eliminati dopo 30 giorni nel Cestino"
       }
@@ -3554,7 +3541,7 @@
       },
       "infoNav": {
         "entityLists": {
-          "string": "{count, plural, one {{count} Elenco di entità correlate} many {{count} Elenchi di entità correlate} other {{count} Elenchi di entità correlate}}"
+          "string": "{count, plural, one {{count} Elenco di entità collegata} many {{count} Elenchi di entità collegate} other {{count} Elenchi di entità collegate}}"
         },
         "updatedDatasets": {
           "string": "Aggiornamenti",
@@ -5698,11 +5685,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "Eliminazione dell'elenco delle entità e delle proprietà ️🗑️, Creazione di entità 🪄e personalizzazione del branding nella pagina di accesso 🎨",
+        "string": "🎨 Pagine di accesso personalizzate, eliminazione degli elementi dall'elenco delle entità e caricamento di file in Web Forms",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "Elimina gli elenchi di entità e le proprietà quando non sono più necessari, crea rapidamente entità direttamente dall'interfaccia utente di Central e personalizza la pagina di accesso in modo che il tuo server rispecchi l'immagine del tuo brand e rafforzi la fiducia degli utenti."
+        "string": "Personalizza la pagina di accesso con il tuo brand, elimina gli elenchi di entità e le proprietà quando non servono più e carica qualsiasi file nei tuoi Web Forms."
       }
     }
   },

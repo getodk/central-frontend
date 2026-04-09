@@ -501,10 +501,6 @@
       "string": "Rango de fecha",
       "developer_comment": "This is the text of a form field."
     },
-    "description": {
-      "string": "Descripción",
-      "developer_comment": "This is the text of a form field."
-    },
     "displayName": {
       "string": "Nombre para mostrar",
       "developer_comment": "This is the text of a form field."
@@ -825,6 +821,10 @@
     },
     "defaultDescription": {
       "string": "Inicia sesión en tu cuenta para empezar"
+    },
+    "heroImage": {
+      "string": "",
+      "developer_comment": "An image shown on the login page"
     }
   },
   "analytics": {
@@ -1176,12 +1176,6 @@
     "AccountPageContainer": {
       "customLogoAlt": {
         "string": "Logotipo de la organización"
-      },
-      "defaultHeroAlt": {
-        "string": "Funcionalidades de ODK Central"
-      },
-      "customHeroAlt": {
-        "string": "Imagen de bienvenida"
       }
     },
     "AccountResetPassword": {
@@ -1693,7 +1687,7 @@
           "string": "Logotipo"
         },
         "help": {
-          "string": "Recomendamos utilizar una imagen con fondo blanco o transparente de al menos 150 x 150 píxeles."
+          "string": ""
         }
       },
       "title": {
@@ -1702,16 +1696,16 @@
         }
       },
       "description": {
+        "label": {
+          "string": ""
+        },
         "help": {
-          "string": "Una breve descripción de tu espacio de proyectos."
+          "string": ""
         }
       },
       "hero": {
-        "label": {
-          "string": "Imagen principal"
-        },
         "help": {
-          "string": "Recomendamos utilizar una imagen de alta resolución en formato JPG o PNG. Para obtener los mejores resultados, utiliza una imagen atractiva que represente tu empresa o mensaje."
+          "string": ""
         }
       }
     },
@@ -1746,7 +1740,7 @@
     },
     "ConfigLoginPreview": {
       "introduction": {
-        "string": "Así es como se ve tu página de inicio de sesión en este momento:"
+        "string": ""
       }
     },
     "DatasetDelete": {
@@ -1764,8 +1758,8 @@
       "upload": {
         "string": "Subir entidades"
       },
-      "new": {
-        "string": "Nueva",
+      "newEntity": {
+        "string": "",
         "developer_comment": "This is shown on a button for creating new Entities"
       },
       "alert": {
@@ -1868,33 +1862,28 @@
         "string": "Borrar propiedad"
       },
       "intro": {
-        "string": "Antes de poder eliminar la propiedad “{propertyName}”, tendrás que{actions}."
+        "string": "",
+        "developer_comment": "This text is followed by a list of actions."
       },
       "clearEntities": {
-        "string": "eliminar su valor en {entities}",
-        "developer_comment": "{entities} is a bold count like \"2 Entities\""
-      },
-      "and": {
-        "string": "y"
+        "string": "{count, plural, one {} many {} other {}}",
+        "developer_comment": "This text appears in a list of required actions. \"It\" refers to an Entity property."
       },
       "unlinkForms": {
-        "string": "desvincular {forms}que lo configuró",
-        "developer_comment": "{forms} is a bold count like \"5 Forms\""
-      },
-      "entitiesCount": {
-        "string": "{count, plural, one {{count}entidad} many {{count} entidades} other {{count} entidades}}"
+        "string": "{count, plural, one {} many {} other {}}",
+        "developer_comment": "This text appears in a list of required actions. \"It\" refers to an Entity property."
       },
       "relatedToEntities": {
-        "string": "{count, plural, one {Relacionado con{count} Entidad} many {Relacionado con {count}Entidades} other {Relacionado con {count} Entidades}}"
+        "string": "{count, plural, one {Establecido en {count} Entidad...} many {Establecido en {count} Entidades...} other {Establecido en {count} Entidades...}}",
+        "developer_comment": "This text refers to an Entity property that is set."
       },
       "moreEntities": {
-        "string": "{count, plural, one {y otra {count} entidad } many {y otras {count}entidades } other {y otras {count} entidades }}"
-      },
-      "formsCount": {
-        "string": "{count, plural, one {{count} formulario} many {{count} formularios} other {{count} formularios}}"
+        "string": "{count, plural, one {y otra {count} entidad } many {y otras {count} entidades } other {y otras {count} entidades }}",
+        "developer_comment": "This text is shown beneath a partial list of Entities. If there are more than a few Entities, then only the first few Entities are shown, followed by this text."
       },
       "relatedToForms": {
-        "string": "{count, plural, one {Relacionado con{count} formulario} many {Relacionado con {count}formularios} other {Relacionado con {count} formularios}}"
+        "string": "{count, plural, one {Establecido por {count} formulario} many {Establecido por {count} formularios} other {Establecido por {count} Forms}}",
+        "developer_comment": "This text refers to an Entity property that is set."
       }
     },
     "DatasetOverviewNewProperty": {
@@ -2062,18 +2051,20 @@
       "dependentForms": {
         "description": {
           "0": {
-            "string": "La lista de entidades “{name}”  está relacionada con {formsCount}.",
+            "string": "La lista de entidades “{name}”  está conectada con {formsCount}.",
             "developer_comment": "{formsCount} is the number of Forms that are dependent on the Entity List. Example: 4 Forms"
           },
           "1": {
-            "string": "Antes de poder Eliminarlo, tendrás que desvincularlo de los formularios relacionados."
+            "string": "Antes de poder Eliminarlo, tendrás que desvincularlo de los formularios relacionados.",
+            "developer_comment": "\"It\" refers to an Entity List."
           },
           "2": {
             "string": "Aprende más aquí."
           }
         },
         "formsCount": {
-          "string": "{count, plural, one {{count} formulario} many {{count} formularios} other {{count} formularios}}"
+          "string": "{count, plural, one {{count} formulario} many {{count} formularios} other {{count} formularios}}",
+          "developer_comment": "This text will be inserted where {formsCount} is in the following sentence:\n\nThe Entity List “{name}” is linked to {formsCount}."
         }
       }
     },
@@ -2117,10 +2108,6 @@
       }
     },
     "DatasetTrashTable": {
-      "trashCount": {
-        "string": "({count})",
-        "developer_comment": "{count} is the number of Entity Lists in the trash."
-      },
       "message": {
         "string": "Las listas de entidades se eliminan después de 30 días en la Papelera"
       }
@@ -3554,7 +3541,7 @@
       },
       "infoNav": {
         "entityLists": {
-          "string": "{count, plural, one {{count} Lista de entidades relacionadas} many {{count} Listas de entidades relacionadas} other {{count} Listas de entidades relacionadas}}"
+          "string": "{count, plural, one {{count} Lista de entidades conectada} many {{count} Listas de entidades conectadas} other {{count} Listas de entidades conectadas}}"
         },
         "updatedDatasets": {
           "string": "Actualizaciones",
@@ -5698,11 +5685,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "Eliminación de la lista de entidades y de propiedades ️🗑️, Creación de entidades 🪄y personalización de la identidad corporativa en la página de inicio de sesión 🎨",
+        "string": "🎨 Páginas de inicio de sesión personalizadas, limpieza de la lista de entidades y carga de archivos en formularios web",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "Elimina las listas de entidades y las propiedades cuando ya no sean necesarias, crea rápidamente entidades directamente desde la interfaz de usuario de Central y personaliza la página de inicio de sesión para que tu servidor refleje la imagen de tu organización y genere confianza entre los usuarios."
+        "string": "Personaliza la página de inicio de sesión con tu imagen de empresa, elimina las listas de entidades y las propiedades cuando ya no las necesites, y sube cualquier archivo a tus formularios web."
       }
     }
   },
