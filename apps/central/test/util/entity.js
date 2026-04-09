@@ -3,7 +3,7 @@ import EntityList from '../../src/components/entity/list.vue';
 import testData from '../data';
 import { mergeMountOptions } from './lifecycle';
 import { mockHttp } from './http';
-import { testRouter } from './router';
+import { mockRouter } from './router';
 import { testRequestData } from './request-data';
 import useEntities from '../../src/request-data/entities';
 
@@ -21,7 +21,7 @@ export const loadEntityList = (mountOptions = {}) => {
         project,
         dataset
       }),
-      router: testRouter()
+      router: mockRouter('')
     },
     global: {
       provide: { projectId: project.id.toString(), datasetName: dataset.name }

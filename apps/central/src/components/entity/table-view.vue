@@ -69,14 +69,11 @@ const pagination = reactive({
   removed: computed(() => (odataEntities.dataExists ? odataEntities.removedEntities : 0))
 });
 
-// `clear` indicates whether odataEntities should be cleared before sending the
-// request. `refresh` indicates whether the request is a background refresh
-// (whether the refresh button was pressed).
-const fetchChunk = (clear, refresh = false) => {
-  if (refresh) {
-    pagination.page = 0;
-  }
-
+/**
+ * @param clear indicates whether this.odata should be cleared before sending the request.
+ * @param page indicates which page to load
+ */
+const fetchChunk = (clear, page = 0) => {
   const $search = props.searchTerm ? props.searchTerm : undefined;
 
   emit('clear-selection');
@@ -87,7 +84,7 @@ const fetchChunk = (clear, refresh = false) => {
       datasetName,
       {
         $top: pagination.size,
-        $skip: pagination.page * pagination.size,
+        $skip: page * pagination.size,
         $count: true,
         $filter: props.deleted ? '__system/deletedAt ne null' : props.filter,
         $search,
@@ -97,10 +94,13 @@ const fetchChunk = (clear, refresh = false) => {
     clear
   })
     .then(() => {
+      if (pagination.page !== page) {
+        pagination.page = page;
+      }
       const lastPage = Math.max(0, Math.ceil(odataEntities.count / pagination.size) - 1);
       if (pagination.page > lastPage) {
-        pagination.page = lastPage;
-        fetchChunk(true);
+        fetchChunk(true, lastPage);
+        return;
       }
       if (props.deleted) {
         deletedEntityCount.cancelRequest();
@@ -112,20 +112,21 @@ const fetchChunk = (clear, refresh = false) => {
     })
     .catch(noop);
 };
-fetchChunk(true);
+
+fetchChunk(true, pagination.page);
+
 watch([() => props.deleted, () => props.filter, () => props.searchTerm], () => {
-  pagination.page = 0;
   fetchChunk(true);
 });
 const handlePageChange = () => {
   // This function is called for size change as well. So when the total number of entities are
   // less than the lowest size option, hence we don't need to make a request.
   if (odataEntities.count < pageSizeOptions[0]) return;
-  fetchChunk(false);
+  fetchChunk(false, pagination.page);
 };
 // For defineExpose()
 const exposedFetch = {
-  fetchData: (clear = true) => fetchChunk(clear, !clear),
+  fetchData: (clear = true) => fetchChunk(clear, clear ? 0 : pagination.page),
   cancelFetch: () => { odataEntities.cancelRequest(); }
 };
 

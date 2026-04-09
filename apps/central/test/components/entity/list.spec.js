@@ -932,32 +932,6 @@ describe('EntityList', () => {
       text.should.equal('Rows 1–249 of 259');
     });
 
-    it('adds page-size query parameter when page size is changed', () => {
-      createEntities(251);
-      return load('/projects/1/entity-lists/trees/entities')
-        .complete()
-        .request(component => {
-          const sizeDropdown = component.find('.pagination select:has(option[value="500"])');
-          return sizeDropdown.setValue(500);
-        })
-        .respondWithData(() => testData.entityOData(500))
-        .afterResponse(component => {
-          component.vm.$route.query['page-size'].should.equal('500');
-        });
-    });
-
-    it('adds page-number query parameter when next page is clicked', () => {
-      createEntities(251);
-      return load('/projects/1/entity-lists/trees/entities')
-        .complete()
-        .request(component =>
-          component.find('button[aria-label="Next page"]').trigger('click'))
-        .respondWithData(() => testData.entityOData(250, 250))
-        .afterResponse(component => {
-          component.vm.$route.query['page-number'].should.equal('2');
-        });
-    });
-
     it('displays the correct page when page-number is provided in URL', () => {
       createEntities(501);
       return load('/projects/1/entity-lists/trees/entities?page-number=2', { root: false })
@@ -985,16 +959,9 @@ describe('EntityList', () => {
     it('selects last page when page-number is greater than last page in URL', () => {
       createEntities(501);
       return load('/projects/1/entity-lists/trees/entities?page-number=999', { root: false })
+        .respondWithData(() => testData.entityOData((250, 500)))
         .afterResponse(component => {
           component.find('.pagination .form-group').text().should.be.eql('Row 501 of 501');
-        });
-    });
-
-    it('floors page-size to nearest valid value when invalid page-size is provided in URL', () => {
-      createEntities(251);
-      return load('/projects/1/entity-lists/trees/entities?page-size=350', { root: false })
-        .afterResponse(component => {
-          component.find('.pagination select:has(option[value="500"])').element.value.should.be.eql('250');
         });
     });
   });

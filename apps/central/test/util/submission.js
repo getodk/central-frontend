@@ -7,7 +7,7 @@ import testData from '../data';
 import { mergeMountOptions } from './lifecycle';
 import { mockHttp } from './http';
 import { mockResponse } from './axios';
-import { testRouter } from './router';
+import { mockRouter } from './router';
 import { testRequestData } from './request-data';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -30,7 +30,9 @@ export const loadSubmissionList = (mountOptions = {}) => {
           : mockResponse.problem(404.1),
         keys: testData.standardKeys.sorted()
       }),
-      router: testRouter()
+      router: mockRouter(form.publishedAt != null
+        ? `/projects/${project.id}/forms/${encodeURIComponent(form.xmlFormId)}/submissions`
+        : `/projects/${project.id}/forms/${encodeURIComponent(form.xmlFormId)}/draft`)
     }
   });
   const { deleted } = mergedOptions.props;
