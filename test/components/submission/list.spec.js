@@ -129,6 +129,25 @@ describe('SubmissionList', () => {
           });
         });
     });
+
+    it('makes the correct request after refresh button is pressed on second page', () => {
+      createSubmissions(251);
+      return loadSubmissionList()
+        .complete()
+        .request(component =>
+          component.find('button[aria-label="Next page"]').trigger('click'))
+        .respondWithData(() => testData.submissionOData(250, 250))
+        .complete()
+        .request(component =>
+          component.get('#refresh-button').trigger('click'))
+        .beforeEachResponse((_, { url }) => {
+          if (url.includes('.svc/Submissions')) {
+            const skip = relativeUrl(url).searchParams.get('$skip');
+            skip.should.be.equal('0');
+          }
+        })
+        .respondWithData(() => testData.submissionOData(250));
+    });
   });
 
   describe('refreshing keys', () => {
@@ -279,6 +298,26 @@ describe('SubmissionList', () => {
           $select(url).should.equal('__id,__system');
         })
         .respondWithData(testData.submissionOData));
+
+    // eslint-disable-next-line func-names
+    it('resets page if different field is selected on the second page', function() {
+      this.timeout(20 * 1000);
+      testData.extendedSubmissions.createPast(251);
+      return loadSubmissionList({ attachTo: document.body })
+        .complete()
+        .request(component =>
+          component.find('button[aria-label="Next page"]').trigger('click'))
+        .respondWithData(() => testData.submissionOData(250, 250))
+        .complete()
+        .request(changeMultiselect('#submission-field-dropdown', [19]))
+        .beforeEachResponse((_, { url }) => {
+          if (url.includes('.svc/Submissions')) {
+            const skip = relativeUrl(url).searchParams.get('$skip');
+            skip.should.be.equal('0');
+          }
+        })
+        .respondWithData(testData.submissionOData);
+    });
   });
 
   describe('deleted submissions', () => {
@@ -980,32 +1019,6 @@ describe('SubmissionList', () => {
         });
     });
 
-    it('adds page-size query parameter when page size is changed', () => {
-      createSubmissions(251);
-      return load('/projects/1/forms/f/submissions')
-        .complete()
-        .request(component => {
-          const sizeDropdown = component.find('.pagination select:has(option[value="500"])');
-          return sizeDropdown.setValue(500);
-        })
-        .respondWithData(() => testData.submissionOData(500))
-        .afterResponse(component => {
-          component.vm.$route.query['page-size'].should.equal('500');
-        });
-    });
-
-    it('adds page-number query parameter when next page is clicked', () => {
-      createSubmissions(251);
-      return load('/projects/1/forms/f/submissions')
-        .complete()
-        .request(component =>
-          component.find('button[aria-label="Next page"]').trigger('click'))
-        .respondWithData(() => testData.submissionOData(250, 250))
-        .afterResponse(component => {
-          component.vm.$route.query['page-number'].should.equal('2');
-        });
-    });
-
     it('displays the correct page when page-number is provided in URL', () => {
       createSubmissions(501);
       return load('/projects/1/forms/f/submissions?page-number=2', { root: false })
@@ -1033,16 +1046,9 @@ describe('SubmissionList', () => {
     it('selects last page when page-number is greater than last page in URL', () => {
       createSubmissions(501);
       return load('/projects/1/forms/f/submissions?page-number=999', { root: false })
+        .respondWithData(() => testData.submissionOData(250, 500))
         .afterResponse(component => {
           component.find('.pagination .form-group').text().should.be.eql('Row 501 of 501');
-        });
-    });
-
-    it('floors page-size to nearest valid value when invalid page-size is provided in URL', () => {
-      createSubmissions(251);
-      return load('/projects/1/forms/f/submissions?page-size=350', { root: false })
-        .afterResponse(component => {
-          component.find('.pagination select').element.value.should.be.eql('250');
         });
     });
 

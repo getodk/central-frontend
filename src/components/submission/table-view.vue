@@ -89,64 +89,65 @@ const odataSelect = computed(() => {
   return paths.join(',');
 });
 
-// `clear` indicates whether this.odata should be cleared before sending the
-// request. `refresh` indicates whether the request is a background refresh.
-// (whether the refresh button was pressed).
-const fetchChunk = (clear, refresh = false) => {
-  if (refresh) {
-    pagination.page = 0;
-  }
-
-  return odata.request({
-    url: apiPaths.odataSubmissions(
-      props.projectId,
-      props.xmlFormId,
-      props.draft,
-      {
-        $top: pagination.size,
-        $skip: pagination.page * pagination.size,
-        $count: true,
-        $wkt: true,
-        $filter: props.deleted ? '__system/deletedAt ne null' : props.filter,
-        $select: odataSelect.value,
-        $orderby: '__system/submissionDate desc'
+/**
+ * @param clear indicates whether this.odata should be cleared before sending the request.
+ * @param page indicates which page to load
+ */
+const fetchChunk = (clear, page = 0) => odata.request({
+  url: apiPaths.odataSubmissions(
+    props.projectId,
+    props.xmlFormId,
+    props.draft,
+    {
+      $top: pagination.size,
+      $skip: page * pagination.size,
+      $count: true,
+      $wkt: true,
+      $filter: props.deleted ? '__system/deletedAt ne null' : props.filter,
+      $select: odataSelect.value,
+      $orderby: '__system/submissionDate desc'
+    }
+  ),
+  clear
+})
+  .then(() => {
+    if (pagination.page !== page) {
+      pagination.page = page;
+    }
+    const lastPage = Math.max(0, Math.ceil(odata.count / pagination.size) - 1);
+    if (pagination.page > lastPage) {
+      fetchChunk(true, lastPage);
+      return;
+    }
+    if (props.deleted) {
+      deletedSubmissionCount.cancelRequest();
+      if (!deletedSubmissionCount.dataExists) {
+        deletedSubmissionCount.data = reactive({});
       }
-    ),
-    clear
+      deletedSubmissionCount.value = odata.count;
+    }
   })
-    .then(() => {
-      const lastPage = Math.max(0, Math.ceil(odata.count / pagination.size) - 1);
-      if (pagination.page > lastPage) {
-        pagination.page = lastPage;
-        fetchChunk(true);
-      }
-      if (props.deleted) {
-        deletedSubmissionCount.cancelRequest();
-        if (!deletedSubmissionCount.dataExists) {
-          deletedSubmissionCount.data = reactive({});
-        }
-        deletedSubmissionCount.value = odata.count;
-      }
-    })
-    .catch(noop);
-};
-fetchChunk(true);
+  .catch(noop);
+
+fetchChunk(true, pagination.page);
+
 watch([() => props.filter, () => props.deleted], () => {
-  pagination.page = 0;
   fetchChunk(true);
 });
 watch(() => props.fields, (_, oldFields) => {
   // SubmissionList resets column selector when delete button is pressed, in
   // that case we don't want to send request from here.
-  if (oldFields != null && !props.deleted) fetchChunk(true);
+  if (oldFields != null && !props.deleted) {
+    fetchChunk(true);
+  }
 });
 const handlePageChange = () => {
   // This function is called for size change as well. So the total number of submissions are
   // less than the lowest size option, hence we don't need to make a request.
   if (odata.count < pageSizeOptions[0]) return;
-  fetchChunk(false);
+  fetchChunk(false, pagination.page);
 };
-const refresh = () => fetchChunk(false, true);
+const refresh = () => fetchChunk(false);
 const cancelRefresh = () => { odata.cancelRequest(); };
 
 const reemitters = reemit(emit, ['review', 'delete', 'restore']);
