@@ -100,7 +100,7 @@ const createTextChunks = <Role extends TextRole>(
 	return { chunks, mediaSources };
 };
 
-type ComputedFormTextRange<Role extends TextRole> = Accessor<TextRange<Role, 'form'>>;
+type ComputedFormTextRange<Role extends TextRole> = Accessor<TextRange<Role>>;
 
 /**
  * Creates a text range (e.g. label or hint) from the provided definition, reactive to:
@@ -116,7 +116,7 @@ export const createTextRange = <Role extends TextRole>(
 	return context.scope.runTask(() => {
 		return createMemo(() => {
 			const chunks = createTextChunks(context, definition);
-			return new TextRange('form', role, chunks.chunks, chunks.mediaSources);
+			return new TextRange(role, chunks.chunks, chunks.mediaSources);
 		});
 	});
 };

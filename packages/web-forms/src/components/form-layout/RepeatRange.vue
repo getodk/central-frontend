@@ -1,17 +1,25 @@
 <script setup lang="ts">
 import IconSVG from '@/components/common/IconSVG.vue';
 import MarkdownBlock from '@/components/common/MarkdownBlock.vue';
+import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
+import type { Translate } from '@/lib/locale/useLocale.ts';
 import type { RepeatRangeNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
-import { computed } from 'vue';
+import { computed, inject } from 'vue';
 import RepeatInstance from './RepeatInstance.vue';
 
+const t: Translate = inject(TRANSLATE)!;
 const props = defineProps<{ node: RepeatRangeNode }>();
 const label = computed(() => props.node.currentState.label?.formatted);
 </script>
 <template>
 	<template v-if="node.currentState.hasRelevantBodyNodes">
-		<RepeatInstance v-for="(instance, index) in node.currentState.children" :key="index" :instance="instance" :instance-index="index" />
+		<RepeatInstance
+			v-for="(instance, index) in node.currentState.children"
+			:key="index"
+			:instance="instance"
+			:instance-index="index"
+		/>
 	</template>
 	<Button
 		v-if="node.nodeType === 'repeat-range:uncontrolled'"
@@ -21,9 +29,8 @@ const label = computed(() => props.node.currentState.label?.formatted);
 		@click="node.addInstances()"
 	>
 		<IconSVG name="mdiPlus" />
-		<!-- TODO: translations -->
 		<span>
-			Add
+			{{ t('repeat.add.label') }}
 			<MarkdownBlock v-for="elem in label" :key="elem.id" :elem="elem" />
 		</span>
 	</Button>

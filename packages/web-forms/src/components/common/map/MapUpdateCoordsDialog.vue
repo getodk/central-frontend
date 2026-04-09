@@ -10,7 +10,9 @@ import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import Textarea from 'primevue/textarea';
 import IconSVG from '@/components/common/IconSVG.vue';
-import { ref, watch } from 'vue';
+import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
+import type { Translate } from '@/lib/locale/useLocale.ts';
+import { inject, ref, watch } from 'vue';
 
 const props = defineProps<{
 	visible: boolean;
@@ -18,6 +20,8 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits(['update:visible', 'save']);
+
+const t: Translate = inject(TRANSLATE)!;
 
 const pasteValue = ref('');
 const fileInput = ref<HTMLInputElement | null>(null);
@@ -43,8 +47,7 @@ const parseFileCoordinates = async (file: File): Promise<Geometry | undefined> =
 	try {
 		const text = await file.text();
 		if (!text?.trim()?.length) {
-			// TODO: translations
-			setUploadErrorIfBlank('File is empty.');
+			setUploadErrorIfBlank(t('map_update_coords_dialog.file_empty.error'));
 			return;
 		}
 
@@ -53,11 +56,9 @@ const parseFileCoordinates = async (file: File): Promise<Geometry | undefined> =
 			return getGeometryFromJSON(text);
 		}
 
-		// TODO: translations
-		setUploadErrorIfBlank('Unsupported file type. Please upload a .geojson file.');
+		setUploadErrorIfBlank(t('map_update_coords_dialog.unsupported_file.error'));
 	} catch {
-		// TODO: translations
-		setUploadErrorIfBlank('Failed to parse file. Ensure it is a valid GeoJSON.');
+		setUploadErrorIfBlank(t('map_update_coords_dialog.parse_failed.error'));
 	}
 };
 
@@ -86,8 +87,7 @@ const save = async () => {
 	);
 	isParsing.value = false;
 
-	// TODO: translations
-	const errorMessage = 'Incorrect geometry type.';
+	const errorMessage = t('map_update_coords_dialog.incorrect_geometry.error');
 	if (!coordinates?.length && selectedFile.value) {
 		setUploadErrorIfBlank(errorMessage);
 		return;
@@ -148,17 +148,15 @@ watch(pasteValue, (newVal) => {
 		@after-hide="reset"
 	>
 		<template #header>
-			<!-- TODO: translations -->
-			<strong>Import data to replace location</strong>
+			<strong>{{ t('map_update_coords_dialog.header.title') }}</strong>
 		</template>
 
 		<template #default>
 			<div class="dialog-field-container">
-				<!-- TODO: translations -->
 				<label for="paste-input">
-					<span>Paste data in ODK format</span>
+					<span>{{ t('map_update_coords_dialog.paste_data.label') }}</span>
 					<span class="info-helper">
-						Enter coordinates as: Lat Long Altitude Accuracy. Separate multiple points with a semicolon (;).
+						{{ t('map_update_coords_dialog.paste_data.hint') }}
 					</span>
 				</label>
 				<Textarea
@@ -174,9 +172,7 @@ watch(pasteValue, (newVal) => {
 			</div>
 
 			<div class="dialog-field-container">
-				<!-- TODO: translations -->
-				<label>Upload a GeoJSON file</label>
-				<!-- TODO: translations -->
+				<label>{{ t('map_update_coords_dialog.upload_file.label') }}</label>
 				<div v-if="selectedFile" class="file-added-container">
 					<IconSVG name="mdiFileOutline" />
 					<span class="file-name">{{ selectedFile.name }}</span>
@@ -193,8 +189,7 @@ watch(pasteValue, (newVal) => {
 					@click="openFileChooser"
 				>
 					<IconSVG name="mdiUpload" />
-					<!-- TODO: translations -->
-					<span>Upload file</span>
+					<span>{{ t('map_update_coords_dialog.upload_file.action') }}</span>
 				</Button>
 
 				<input
@@ -207,7 +202,7 @@ watch(pasteValue, (newVal) => {
 		</template>
 
 		<template #footer>
-			<Button label="Save" :disabled="!selectedFile && !pasteValue.length" @click="save" />
+			<Button :label="t('odk_web_forms.save.label')" :disabled="!selectedFile && !pasteValue.length" @click="save" />
 		</template>
 	</Dialog>
 </template>

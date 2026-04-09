@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { FORM_MEDIA_CACHE, FORM_OPTIONS } from '@/lib/constants/injection-keys.ts';
+import { FORM_MEDIA_CACHE, FORM_OPTIONS, TRANSLATE } from '@/lib/constants/injection-keys.ts';
 import type { FormOptions } from '@/lib/init/load-form-state.ts';
+import type { Translate } from '@/lib/locale/useLocale.ts';
 import type {
 	JRResourceURL,
 	JRResourceURLString,
@@ -17,6 +18,7 @@ const props = defineProps<{
 	readonly variant?: 'fit-content' | 'full-width' | 'small-fixed';
 }>();
 
+const t: Translate = inject(TRANSLATE)!;
 const formOptions = inject<FormOptions>(FORM_OPTIONS);
 const mediaCache = inject<Map<JRResourceURLString, ObjectURL>>(FORM_MEDIA_CACHE, new Map());
 const loading = ref<boolean>(true);
@@ -32,8 +34,7 @@ const brokenFileSrc = computed(() => {
 
 const loadMedia = async (src?: JRResourceURL): Promise<void> => {
 	if (src?.href == null || formOptions?.fetchFormAttachment == null) {
-		// TODO: translations
-		handleError(new Error('Cannot fetch media. Verify the URL and fetch settings.'));
+		handleError(t('media_block.fetch.error'));
 		return;
 	}
 
@@ -46,8 +47,7 @@ const loadMedia = async (src?: JRResourceURL): Promise<void> => {
 
 		const response = await formOptions.fetchFormAttachment(src);
 		if (!response.ok || response.status !== 200) {
-			// TODO: translations
-			handleError(new Error(`Media not found. File: ${src.href}`));
+			handleError(t('media_block.not_found.error', { file: src.href }));
 			return;
 		}
 
@@ -56,8 +56,7 @@ const loadMedia = async (src?: JRResourceURL): Promise<void> => {
 		mediaCache.set(src.href, url);
 		setMedia(url);
 	} catch {
-		// TODO: translations
-		handleError(new Error(`Cannot fetch media. Unknown error. File: ${src.href}`));
+		handleError(t('media_block.unknown.error', { file: src.href }));
 	}
 };
 
@@ -66,10 +65,10 @@ const setMedia = (value: string) => {
 	loading.value = false;
 };
 
-const handleError = (error: Error) => {
+const handleError = (error: string) => {
 	loading.value = false;
 	mediaUrl.value = '';
-	errorMessage.value = error.message;
+	errorMessage.value = error;
 };
 
 watchEffect(() => {

@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import ElapsedTime from '@/components/common/ElapsedTime.vue';
 import IconSVG from '@/components/common/IconSVG.vue';
+import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
+import type { Translate } from '@/lib/locale/useLocale.ts';
 import { truncateDecimals } from '@/lib/format/truncate-decimals.ts';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import ProgressSpinner from 'primevue/progressspinner';
-import { computed, onBeforeUnmount, ref, watchEffect } from 'vue';
+import { computed, inject, onBeforeUnmount, ref, watchEffect } from 'vue';
 import {
 	GEOLOCATION_STATUS,
 	type GeolocationRequestFailure,
@@ -23,6 +25,8 @@ interface GeolocationRequestDialogProps {
 }
 
 const props = defineProps<GeolocationRequestDialogProps>();
+
+const t: Translate = inject(TRANSLATE)!;
 
 const accuracyTruncateOptions = { decimals: 3 };
 
@@ -124,8 +128,7 @@ onBeforeUnmount(cleanup);
 			<div class="geo-dialog-header">
 				<div class="geo-dialog-header-title">
 					<ProgressSpinner class="geo-spinner" stroke-width="4" />
-					<!-- TODO: translations -->
-					<strong>Finding your location</strong>
+					<strong>{{ t('geolocation_dialog.header.title') }}</strong>
 				</div>
 				<button class="close-icon" @click="cancel()">
 					<IconSVG name="mdiClose" />
@@ -141,16 +144,15 @@ onBeforeUnmount(cleanup);
 				</div>
 
 				<div class="geopoint-information">
-					<!-- TODO: translations -->
 					<strong v-if="accuracy.value != null" class="geo-quality">
-						{{ truncateDecimals(accuracy.value, accuracyTruncateOptions) }} m - {{ accuracy.label }}
+						{{ truncateDecimals(accuracy.value, accuracyTruncateOptions) }} m - {{ t(accuracy.labelMessageId) }}
 					</strong>
 					<p v-if="options.accuracyThreshold > 0 && state.geopoint == null">
-						Location will be saved at {{ options.accuracyThreshold }} m
+						{{ t('geolocation_dialog.accuracy_threshold.info', { accuracyThreshold: options.accuracyThreshold }) }}
 					</p>
-					<p>Time taken to capture location: <ElapsedTime /></p>
+					<p>{{ t('geolocation_dialog.elapsed_time.label') }} <ElapsedTime /></p>
 					<p v-if="previousAccuracy.value">
-						Previous saved location at {{ truncateDecimals(previousAccuracy.value, accuracyTruncateOptions) }} m
+						{{ t('geolocation_dialog.previous_accuracy.info', { accuracy: truncateDecimals(previousAccuracy.value, accuracyTruncateOptions) }) }}
 					</p>
 				</div>
 			</div>
@@ -158,11 +160,9 @@ onBeforeUnmount(cleanup);
 
 		<template #footer>
 			<div class="geo-dialog-footer">
-				<!-- TODO: translations -->
-				<Button text severity="contrast" label="Cancel" @click="cancel()" />
+				<Button text severity="contrast" :label="t('odk_web_forms.cancel.label')" @click="cancel()" />
 
-				<!-- TODO: translations -->
-				<Button label="Save location" :disabled="accuracy.value == null" @click="save()" />
+				<Button :label="t('geolocation_dialog.save.label')" :disabled="accuracy.value == null" @click="save()" />
 			</div>
 		</template>
 	</Dialog>

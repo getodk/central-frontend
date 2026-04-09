@@ -18,7 +18,7 @@ const mountComponent = async (formPath: string, questionNumber: number) => {
 		},
 		global: {
 			...globalMountOptions,
-			provide: { [IS_FORM_EDIT_MODE]: shallowRef(false) },
+			provide: { ...globalMountOptions.provide, [IS_FORM_EDIT_MODE]: shallowRef(false) },
 		},
 	});
 };

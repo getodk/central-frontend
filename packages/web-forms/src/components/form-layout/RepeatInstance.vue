@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
+import type { Translate } from '@/lib/locale/useLocale.ts';
 import type { GeneralChildNode, GroupNode, RepeatInstanceNode } from '@getodk/xforms-engine';
 import { type MenuItem } from 'primevue/menuitem';
-import { computed } from 'vue';
+import { computed, inject } from 'vue';
 import FormPanel from './FormPanel.vue';
 import QuestionList from './QuestionList.vue';
 
+const t: Translate = inject(TRANSLATE)!;
 const props = defineProps<{ instance: RepeatInstanceNode; instanceIndex: number }>();
 
 const isGroup = (child: GeneralChildNode | undefined) => {
@@ -28,8 +31,7 @@ const label = computed(() => {
 		return { formatted: parentLabel.formatted };
 	}
 
-	// TODO: translations
-	return { literal: `Repeat Item` };
+	return { literal: t('repeat.instance.placeholder') };
 });
 
 const children = computed(() => {
@@ -54,8 +56,7 @@ const menuItems = computed((): MenuItem[] | undefined => {
 
 	return [
 		{
-			/* TODO: translations */
-			label: 'Remove',
+			label: t('odk_web_forms.remove.label'),
 			icon: 'icon-delete',
 			command: () => {
 				return parent.removeInstances(props.instanceIndex);
@@ -76,4 +77,3 @@ const menuItems = computed((): MenuItem[] | undefined => {
 		<QuestionList :nodes="children" />
 	</FormPanel>
 </template>
-

@@ -5,7 +5,8 @@
     "../common/types/**/*.ts",
     "env.d.ts",
     "src/**/*",
-    "src/**/*.vue"
+    "src/**/*.vue",
+    "locales/**/*"
   ],
   "exclude": [
     "../common/src/test/**/*.ts",
@@ -25,6 +26,7 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "paths": {
       "@/*": ["./src/*"],
+      "@locales/*": ["./locales/*"],
       "@getodk/common/test-utils/*": ["../common/test-utils/*"],
       "@getodk/common/types/*": ["../common/types/*"],
       "@getodk/common/*": ["../common/src/*"]

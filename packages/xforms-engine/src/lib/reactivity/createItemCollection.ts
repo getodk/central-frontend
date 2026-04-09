@@ -19,12 +19,12 @@ import type { ReactiveScope } from './scope.ts';
 import { createTextRange } from './text/createTextRange.ts';
 
 type ItemCollectionControl = RankControl | SelectControl;
-type DerivedItemLabel = ClientTextRange<'item-label', 'form-derived'>;
+type DerivedItemLabel = ClientTextRange<'item-label'>;
 
 const derivedItemLabel = (context: TranslationContext, value: string): DerivedItemLabel => {
 	const chunk = new TextChunk(context, 'literal', value);
 
-	return new TextRange('form-derived', 'item-label', [chunk]);
+	return new TextRange('item-label', [chunk]);
 };
 
 const createItemLabel = (

@@ -1,6 +1,6 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import { getBlobText } from '@getodk/common/lib/web-compat/blob.ts';
-import { constants, type ValidationCondition } from '@getodk/xforms-engine';
+import { type ValidationCondition } from '@getodk/xforms-engine';
 import { assert, expect } from 'vitest';
 import { ComparableAnswer } from '../../answer/ComparableAnswer.ts';
 import { ExpectedApproximateUOMAnswer } from '../../answer/ExpectedApproximateUOMAnswer.ts';
@@ -40,24 +40,16 @@ const assertAnswerResult: AssertAnswerResult = (value) => {
 };
 
 const matchDefaultMessage = (condition: ValidationCondition) => {
-	const expectedMessage = constants.VALIDATION_TEXT[`${condition}Msg`];
-
 	return {
 		node: {
 			validationState: {
 				[condition]: {
 					valid: false,
-					message: {
-						origin: 'engine',
-						asString: expectedMessage,
-					},
+					message: null,
 				},
 				violation: {
 					condition,
-					message: {
-						origin: 'engine',
-						asString: expectedMessage,
-					},
+					message: null,
 				},
 			},
 		},

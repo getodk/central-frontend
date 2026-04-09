@@ -22,7 +22,6 @@ class GeolocationService {
 		}
 
 		if (!navigator.geolocation) {
-			// TODO: translations
 			return Promise.reject(new Error('Geolocation is not supported by this browser.'));
 		}
 
@@ -33,7 +32,6 @@ class GeolocationService {
 					this.teardown();
 				},
 				(error) => {
-					// TODO: translations
 					reject(new Error(`Geolocation error (code ${error.code})`));
 					this.teardown();
 				},

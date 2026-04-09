@@ -155,6 +155,10 @@ export class XFormsXPathEvaluator<T extends XPathNode>
 		return this.itextTranslations.setActiveLanguage(language);
 	}
 
+	getExplicitDefaultLanguage(): XFormsItextTranslationLanguage | null {
+		return this.itextTranslations.getExplicitDefaultLanguage();
+	}
+
 	getSecondaryInstance(id: string) {
 		return this.secondaryInstancesById.get(id);
 	}

@@ -25,7 +25,7 @@ const mountComponent = async (fileName: string) => {
 		},
 		global: {
 			...globalMountOptions,
-			provide: { [IS_FORM_EDIT_MODE]: shallowRef(false) },
+			provide: { ...globalMountOptions.provide, [IS_FORM_EDIT_MODE]: shallowRef(false) },
 		},
 	});
 };
@@ -48,7 +48,7 @@ describe('RepeatRange', () => {
 
 		await component.find('.button-menu').trigger('click');
 
-		await component.find('li[aria-label="Remove"] a').trigger('click');
+		await component.find('li[aria-label="odk_web_forms.remove.label"] a').trigger('click');
 
 		expect(component.findAllComponents(RepeatInstance).length).toBe(0);
 	});

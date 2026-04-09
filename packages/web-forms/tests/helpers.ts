@@ -1,4 +1,4 @@
-import { SUBMIT_PRESSED } from '@/lib/constants/injection-keys.ts';
+import { TRANSLATE, SUBMIT_PRESSED } from '@/lib/constants/injection-keys.ts';
 import { xformFixturesByIdentifier } from '@getodk/common/fixtures/xforms.ts';
 import type { AnyFunction } from '@getodk/common/types/helpers.d.ts';
 import type { RootNode } from '@getodk/xforms-engine';
@@ -71,6 +71,7 @@ export const globalMountOptions: GlobalMountOptions = {
 	plugins: [[PrimeVue, { theme: { preset: odkThemePreset } }]],
 	provide: {
 		[SUBMIT_PRESSED]: ref(false),
+		[TRANSLATE]: (id: string) => id,
 	},
 	stubs: {
 		teleport: true,

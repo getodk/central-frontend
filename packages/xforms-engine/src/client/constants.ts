@@ -1,5 +1,4 @@
 import type { LoadForm } from './form/LoadForm.ts';
-import type { ValidationTextRole } from './TextRange.ts';
 
 export const MISSING_RESOURCE_BEHAVIOR = {
 	/**
@@ -58,15 +57,6 @@ export type MissingResourceBehavior =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| MissingResourceBehaviorError
 	| MissingResourceBehaviorBlank;
-
-export const VALIDATION_TEXT = {
-	constraintMsg: 'Condition not satisfied: constraint',
-	requiredMsg: 'Condition not satisfied: required',
-} as const satisfies Record<ValidationTextRole, string>;
-
-type ValidationTextDefaults = typeof VALIDATION_TEXT;
-
-export type ValidationTextDefault<Role extends ValidationTextRole> = ValidationTextDefaults[Role];
 
 export const INSTANCE_FILE_NAME = 'xml_submission_file';
 export type INSTANCE_FILE_NAME = typeof INSTANCE_FILE_NAME;

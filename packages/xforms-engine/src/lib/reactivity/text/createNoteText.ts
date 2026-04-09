@@ -8,9 +8,7 @@ import { createTextRange } from './createTextRange.ts';
 // eslint-disable-next-line @typescript-eslint/sort-type-constituents
 export type NoteTextRole = 'label' | 'hint';
 
-export type ComputedNoteText<Role extends NoteTextRole = NoteTextRole> = Accessor<
-	TextRange<Role, 'form'>
->;
+export type ComputedNoteText<Role extends NoteTextRole = NoteTextRole> = Accessor<TextRange<Role>>;
 
 interface BaseNoteText {
 	readonly role: NoteTextRole;

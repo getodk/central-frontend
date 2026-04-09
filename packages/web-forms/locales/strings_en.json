@@ -1,0 +1,422 @@
+{
+  "form_load_failure_dialog.header.title": {
+    "string": "An error occurred while loading this form",
+    "developer_comment": "The title text shown in the header of the dialog."
+  },
+  "form_load_failure_dialog.details.label": {
+    "string": "Technical error details",
+    "developer_comment": "The label for the clickable summary that reveals technical error information."
+  },
+  "odk_web_forms.submit.label": {
+    "string": "Send",
+    "developer_comment": "Label for the primary form submission button."
+  },
+  "odk_web_forms.validation.error": {
+    "string": "{count, plural, one {# question with error} other {# questions with errors}}",
+    "developer_comment": "Error banner message. {count} is the number of validation violations."
+  },
+  "odk_web_forms.geolocation.error": {
+    "string": "Location unavailable. Enable GPS and browser permissions, then restart the form to try again.",
+    "developer_comment": "Error message shown when background geolocation fails."
+  },
+  "odk_web_forms.delete.label": {
+    "string": "Delete",
+    "developer_comment": "Generic label for a delete action button."
+  },
+  "odk_web_forms.cancel.label": {
+    "string": "Cancel",
+    "developer_comment": "Generic label for a cancel action button."
+  },
+  "odk_web_forms.remove.label": {
+    "string": "Remove",
+    "developer_comment": "Generic label for a remove action button."
+  },
+  "odk_web_forms.save.label": {
+    "string": "Save",
+    "developer_comment": "Generic label for a save action button."
+  },
+  "geolocation_formatted_value.accuracy.label": {
+    "string": "Accuracy: {accuracy} m,",
+    "developer_comment": "Displays the GPS accuracy in metres. {accuracy} is the numeric accuracy value."
+  },
+  "geolocation_formatted_value.latitude.label": {
+    "string": "Latitude: {latitude},",
+    "developer_comment": "Displays the GPS latitude coordinate. {latitude} is the numeric latitude value."
+  },
+  "geolocation_formatted_value.longitude.label": {
+    "string": "Longitude: {longitude}.",
+    "developer_comment": "Displays the GPS longitude coordinate. {longitude} is the numeric longitude value."
+  },
+  "validation_message.required.error": {
+    "string": "This field is required.",
+    "developer_comment": "Default error shown when a required field has no value and the form designer did not specify a custom message."
+  },
+  "validation_message.constraint.error": {
+    "string": "This value doesn't meet the constraint.",
+    "developer_comment": "Default error shown when a field's value fails a constraint and the form designer did not specify a custom message."
+  },
+  "map_async.load_error.message": {
+    "string": "Unable to load map",
+    "developer_comment": "Error message shown when the map component fails to load."
+  },
+  "map_block.graphics_error.title": {
+    "string": "Graphics issue detected",
+    "developer_comment": "Title of the error shown when the browser cannot render the map due to WebGL being unavailable."
+  },
+  "map_block.graphics_error.message": {
+    "string": "Your browser cannot display the map now. Enable graphics acceleration settings.",
+    "developer_comment": "Description of the WebGL error, instructing the user to enable hardware acceleration in their browser."
+  },
+  "map_block.location_error.title": {
+    "string": "Cannot access location",
+    "developer_comment": "Title of the error shown in the map when the browser denies geolocation permission."
+  },
+  "map_block.location_error.message": {
+    "string": "Grant location permission in the browser settings and make sure location is turned on.",
+    "developer_comment": "Description of what the user should do to resolve a geolocation access error in the map."
+  },
+  "map_block.get_location.label": {
+    "string": "Get location",
+    "developer_comment": "Label for the button in the map overlay that starts watching the device's GPS location."
+  },
+  "map_block.drag_vertex_instruction.placed": {
+    "string": "Press and drag to move a point",
+    "developer_comment": "Instruction shown on the map when a point has been placed and the user can drag points and vertices."
+  },
+  "map_block.drag_vertex_instruction.default": {
+    "string": "Tap to place a point",
+    "developer_comment": "Instruction shown on the map before a point is placed, when the user can drag points and vertices."
+  },
+  "map_block.drag_instruction.placed": {
+    "string": "Tap to move point",
+    "developer_comment": "Instruction shown on the map when a point has been placed and the user can drag the feature."
+  },
+  "map_block.drag_instruction.default": {
+    "string": "Use the location button to center on your current location",
+    "developer_comment": "Instruction shown on the map before a point is placed, when the user can drag the feature."
+  },
+  "map_confirm_dialog.delete_shape.header": {
+    "string": "Delete entire shape?",
+    "developer_comment": "Title of the confirmation dialog shown before deleting a shape."
+  },
+  "map_confirm_dialog.delete_trace.header": {
+    "string": "Delete entire trace?",
+    "developer_comment": "Title of the confirmation dialog shown before deleting a trace."
+  },
+  "map_confirm_dialog.delete_shape.body": {
+    "string": "Are you sure you want to delete this entire shape and start over?",
+    "developer_comment": "Body text of the confirmation dialog shown before deleting a shape."
+  },
+  "map_confirm_dialog.delete_trace.body": {
+    "string": "Are you sure you want to delete this entire trace and start over?",
+    "developer_comment": "Body text of the confirmation dialog shown before deleting a trace."
+  },
+  "map_advanced_panel.longitude.label": {
+    "string": "Longitude",
+    "developer_comment": "Label for the longitude input field in the advanced panel."
+  },
+  "map_advanced_panel.longitude.error": {
+    "string": "Longitude is invalid",
+    "developer_comment": "Validation error shown when the longitude value entered is out of range."
+  },
+  "map_advanced_panel.latitude.label": {
+    "string": "Latitude",
+    "developer_comment": "Label for the latitude input field in the advanced panel."
+  },
+  "map_advanced_panel.latitude.error": {
+    "string": "Latitude is invalid",
+    "developer_comment": "Validation error shown when the latitude value entered is out of range."
+  },
+  "map_advanced_panel.altitude.label": {
+    "string": "Altitude",
+    "developer_comment": "Label for the altitude input field in the advanced panel."
+  },
+  "map_advanced_panel.accuracy.label": {
+    "string": "Accuracy",
+    "developer_comment": "Label for the accuracy input field in the advanced panel."
+  },
+  "map_advanced_panel.import_data.label": {
+    "string": "Import data to replace location",
+    "developer_comment": "Label for the link that opens the import/paste dialog from the advanced panel."
+  },
+  "map_controls.zoom_fit_all.description": {
+    "string": "Show all features on the map",
+    "developer_comment": "Aria-label for the map control button that zooms to fit all features in view."
+  },
+  "map_controls.current_location.description": {
+    "string": "Find your location",
+    "developer_comment": "Aria-label for the map control button that centers the map on the device's current GPS location."
+  },
+  "map_controls.undo.description": {
+    "string": "Undo last action",
+    "developer_comment": "Aria-label for the map control button that undoes the last map edit."
+  },
+  "map_controls.delete.description": {
+    "string": "Delete one vertex or all vertices",
+    "developer_comment": "Aria-label for the map control button that deletes the selected vertex or all vertices."
+  },
+  "map_controls.open_advanced.description": {
+    "string": "Advanced manual edits",
+    "developer_comment": "Aria-label for the map control button that opens the advanced coordinate editing panel."
+  },
+  "map_controls.open_full_screen.description": {
+    "string": "Expand to full screen",
+    "developer_comment": "Aria-label for the map control button that expands the map to full screen."
+  },
+  "map_controls.close_full_screen.description": {
+    "string": "Exit full screen",
+    "developer_comment": "Aria-label for the map control button that exits full-screen mode."
+  },
+  "map_controls.open_info.description": {
+    "string": "Show information of map actions",
+    "developer_comment": "Aria-label for the map control button that opens the info dialog listing available map actions."
+  },
+  "map_info_dialog.header.title": {
+    "string": "How to use the map?",
+    "developer_comment": "Title shown in the header of the dialog that explains available map actions."
+  },
+  "map_properties.remove_selection.label": {
+    "string": "Remove selection",
+    "developer_comment": "Label for the button that removes the currently saved feature selection."
+  },
+  "map_properties.save_selected.label": {
+    "string": "Save selected",
+    "developer_comment": "Label for the button that saves the currently selected map feature."
+  },
+  "map_status_bar.no_trace_saved.label": {
+    "string": "No trace saved",
+    "developer_comment": "Status bar message shown when no trace (linestring) has been saved yet."
+  },
+  "map_status_bar.no_shape_saved.label": {
+    "string": "No shape saved",
+    "developer_comment": "Status bar message shown when no shape (polygon) has been saved yet."
+  },
+  "map_status_bar.no_point_saved.label": {
+    "string": "No point saved",
+    "developer_comment": "Status bar message shown when no point has been saved yet."
+  },
+  "map_status_bar.point_saved.label": {
+    "string": "Point saved",
+    "developer_comment": "Status bar message shown when a point has been saved."
+  },
+  "map_status_bar.trace_saved.label": {
+    "string": "Trace saved",
+    "developer_comment": "Status bar message shown when a trace (linestring) has been saved."
+  },
+  "map_status_bar.shape_saved.label": {
+    "string": "Shape saved",
+    "developer_comment": "Status bar message shown when a shape (polygon) has been saved."
+  },
+  "map_status_bar.feature_saved.label": {
+    "string": "Feature saved",
+    "developer_comment": "Fallback status bar message shown when a feature of an unrecognised geometry type has been saved."
+  },
+  "map_status_bar.points_saved.label": {
+    "string": "{count} points saved",
+    "developer_comment": "Status bar message showing how many points have been saved. {count} is the number of saved points."
+  },
+  "map_status_bar.capturing.label": {
+    "string": "Capturing location...",
+    "developer_comment": "Status bar message shown while the device is actively capturing a GPS location."
+  },
+  "map_status_bar.remove_point.label": {
+    "string": "Remove point",
+    "developer_comment": "Full label for the remove button shown on larger screens in the map status bar."
+  },
+  "map_status_bar.view_details.label": {
+    "string": "View details",
+    "developer_comment": "Label for the button that opens the feature properties panel."
+  },
+  "map_status_bar.advanced.label": {
+    "string": "Advanced",
+    "developer_comment": "Label for the button that opens the advanced coordinate editing panel."
+  },
+  "map_status_bar.vertex_longitude.label": {
+    "string": "Longitude: {longitude}",
+    "developer_comment": "Longitude component of the selected vertex info shown in the map status bar. {longitude} is the numeric longitude value."
+  },
+  "map_status_bar.vertex_latitude.label": {
+    "string": "Latitude: {latitude}",
+    "developer_comment": "Latitude component of the selected vertex info shown in the map status bar. {latitude} is the numeric latitude value."
+  },
+  "map_status_bar.vertex_altitude.label": {
+    "string": "Altitude: {altitude} m",
+    "developer_comment": "Altitude component of the selected vertex info shown in the map status bar. {altitude} is the numeric altitude value in metres."
+  },
+  "map_status_bar.vertex_accuracy.label": {
+    "string": "Accuracy: {accuracy}",
+    "developer_comment": "Accuracy component of the selected vertex info shown in the map status bar. {accuracy} is the pre-formatted accuracy value."
+  },
+  "map_update_coords_dialog.header.title": {
+    "string": "Import data to replace location",
+    "developer_comment": "Title shown in the header of the dialog for importing coordinates via paste or file upload."
+  },
+  "map_update_coords_dialog.paste_data.label": {
+    "string": "Paste data in ODK format",
+    "developer_comment": "Label for the paste input field in the import coordinates dialog."
+  },
+  "map_update_coords_dialog.paste_data.hint": {
+    "string": "Enter coordinates as: Lat Long Altitude Accuracy. Separate multiple points with a semicolon (;).",
+    "developer_comment": "Helper text explaining the expected format for pasted coordinate data."
+  },
+  "map_update_coords_dialog.upload_file.label": {
+    "string": "Upload a GeoJSON file",
+    "developer_comment": "Label for the file upload section in the import coordinates dialog."
+  },
+  "map_update_coords_dialog.upload_file.action": {
+    "string": "Upload file",
+    "developer_comment": "Label for the button that opens the file chooser to upload a GeoJSON file."
+  },
+  "map_update_coords_dialog.file_empty.error": {
+    "string": "File is empty.",
+    "developer_comment": "Error shown when the uploaded file contains no content."
+  },
+  "map_update_coords_dialog.unsupported_file.error": {
+    "string": "Unsupported file type. Please upload a .geojson file.",
+    "developer_comment": "Error shown when the uploaded file is not a supported GeoJSON format."
+  },
+  "map_update_coords_dialog.parse_failed.error": {
+    "string": "Failed to parse file. Ensure it is a valid GeoJSON.",
+    "developer_comment": "Error shown when the uploaded file could not be parsed as valid GeoJSON."
+  },
+  "map_update_coords_dialog.incorrect_geometry.error": {
+    "string": "Incorrect geometry type.",
+    "developer_comment": "Error shown when the imported data contains a geometry type incompatible with the current field."
+  },
+  "media_block.fetch.error": {
+    "string": "Cannot fetch media. Verify the URL and fetch settings.",
+    "developer_comment": "Displayed when media (image, audio or video) fetching fails."
+  },
+  "media_block.not_found.error": {
+    "string": "Media not found. File: {file}",
+    "developer_comment": "Displayed when the server returns a 404 or non-200 status."
+  },
+  "media_block.unknown.error": {
+    "string": "Cannot fetch media. Unknown error. File: {file}",
+    "developer_comment": "Generic fallback for network failures or unexpected exceptions."
+  },
+  "video_block.load.error": {
+    "string": "Failed to load video. File: {file}",
+    "developer_comment": "Displayed when a video element fires a load error. {file} is the resource URL."
+  },
+  "audio_block.load.error": {
+    "string": "Failed to load audio. File: {file}",
+    "developer_comment": "Displayed when an audio element fires a load error. {file} is the resource URL."
+  },
+  "image_block.load.error": {
+    "string": "Failed to load image. File: {file}",
+    "developer_comment": "Displayed when an image element fires a load error. {file} is the resource URL."
+  },
+  "rank_control.open.label": {
+    "string": "Rank items",
+    "developer_comment": "The label for the button that opens the rank control."
+  },
+  "trigger_control.okay.label": {
+    "string": "Okay",
+    "developer_comment": "The label for the 'Okay' button."
+  },
+  "input_geopoint.get_location.label": {
+    "string": "Get location",
+    "developer_comment": "Label for the button to start capturing the device's current GPS location."
+  },
+  "input_geopoint.try_again.label": {
+    "string": "Try again",
+    "developer_comment": "Label for the button to retry capturing the GPS location after one has already been saved."
+  },
+  "input_geopoint.location_error.title": {
+    "string": "Cannot access location",
+    "developer_comment": "Title of the error message shown when the browser cannot access the device's location."
+  },
+  "input_geopoint.location_error.description": {
+    "string": "Grant location permission in the browser settings and make sure location is turned on.",
+    "developer_comment": "Description of what the user should do to resolve a location access error."
+  },
+  "geolocation_dialog.header.title": {
+    "string": "Finding your location",
+    "developer_comment": "Title shown in the header of the dialog while the device is searching for a GPS fix."
+  },
+  "geolocation_dialog.accuracy_threshold.info": {
+    "string": "Location will be saved at {accuracyThreshold} m",
+    "developer_comment": "Informational message shown while waiting for a GPS fix. {accuracyThreshold} is the accuracy threshold in metres at which the location will be automatically saved."
+  },
+  "geolocation_dialog.elapsed_time.label": {
+    "string": "Time taken to capture location:",
+    "developer_comment": "Label preceding the elapsed time counter shown while waiting for a GPS fix."
+  },
+  "geolocation_dialog.previous_accuracy.info": {
+    "string": "Previous saved location at {accuracy} m",
+    "developer_comment": "Shows the accuracy of the previously saved location in metres. {accuracy} is the numeric accuracy value."
+  },
+  "geolocation_dialog.save.label": {
+    "string": "Save location",
+    "developer_comment": "Label for the button to save the currently captured GPS location."
+  },
+  "geopoint_accuracy.good.label": {
+    "string": "Good accuracy",
+    "developer_comment": "Label shown when the GPS accuracy is within the good threshold."
+  },
+  "geopoint_accuracy.acceptable.label": {
+    "string": "Good accuracy",
+    "developer_comment": "Label shown when the GPS accuracy is within the acceptable threshold (between good and unacceptable)."
+  },
+  "geopoint_accuracy.poor.label": {
+    "string": "Poor accuracy",
+    "developer_comment": "Label shown when the GPS accuracy does not meet the acceptable threshold."
+  },
+  "geopoint_accuracy.unknown.label": {
+    "string": "Unknown accuracy",
+    "developer_comment": "Label shown when no GPS accuracy value is available yet."
+  },
+  "upload_image_header.take_picture.label": {
+    "string": "Take picture",
+    "developer_comment": "Label for the button to take a picture using the device's camera."
+  },
+  "upload_image_header.choose_image.label": {
+    "string": "Choose image",
+    "developer_comment": "Label for the button to choose an image from the device's gallery or file system."
+  },
+  "upload_control.choose_file.label": {
+    "string": "Choose file",
+    "developer_comment": "Label for the button to choose a file from the device. Used in the audio, video, and generic file upload headers."
+  },
+  "upload_control.drag_and_drop.placeholder": {
+    "string": "Drag and drop files here to upload",
+    "developer_comment": "Placeholder text shown in the upload area when no file has been selected."
+  },
+  "upload_control.file_too_large.error": {
+    "string": "Selected file size exceeds the maximum allowed",
+    "developer_comment": "Error message shown when the selected file exceeds the maximum allowed size."
+  },
+  "upload_control.must_be_image.error": {
+    "string": "Selected file must be an image file",
+    "developer_comment": "Error message shown when the selected file is not an image."
+  },
+  "upload_control.must_be_video.error": {
+    "string": "Selected file must be a video file",
+    "developer_comment": "Error message shown when the selected file is not a video."
+  },
+  "upload_control.must_be_audio.error": {
+    "string": "Selected file must be an audio file",
+    "developer_comment": "Error message shown when the selected file is not an audio file."
+  },
+  "upload_control.invalid_file_type.error": {
+    "string": "Selected file does not match expected type",
+    "developer_comment": "Error message shown when the selected file does not match the expected media type."
+  },
+  "upload_delete_dialog.header.title": {
+    "string": "Delete uploaded file?",
+    "developer_comment": "Title of the confirmation dialog shown before deleting an uploaded file."
+  },
+  "upload_delete_dialog.body.message": {
+    "string": "Are you sure you want to delete this file?",
+    "developer_comment": "Body text of the confirmation dialog shown before deleting an uploaded file."
+  },
+  "repeat.add.label": {
+    "string": "Add",
+    "developer_comment": "Label for the button to add a repeat instance."
+  },
+  "repeat.instance.placeholder": {
+    "string": "Repeat Item",
+    "developer_comment": "Placeholder for the label of a repeat instance."
+  }
+}

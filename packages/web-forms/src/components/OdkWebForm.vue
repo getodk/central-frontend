@@ -5,6 +5,7 @@ import FormHeader from '@/components/form-layout/FormHeader.vue';
 import QuestionList from '@/components/form-layout/QuestionList.vue';
 import { waitAllTasksToFinish } from '@/lib/async/event-loop.ts';
 import {
+	TRANSLATE,
 	FORM_MEDIA_CACHE,
 	FORM_OPTIONS,
 	IS_FORM_EDIT_MODE,
@@ -16,6 +17,7 @@ import { loadFormState } from '@/lib/init/load-form-state';
 import type { EditInstanceOptions, FormOptions } from '@/lib/init/load-form-state.ts';
 import { updateSubmittedFormState } from '@/lib/init/update-submitted-form-state.ts';
 import { geolocationService } from '@/lib/services/geolocationService.ts';
+import { useLocale } from '@/lib/locale/useLocale.ts';
 import type {
 	HostSubmissionResultCallback,
 	OptionalAwaitableHostSubmissionResult,
@@ -176,9 +178,7 @@ const getLocation = async (): Promise<string> => {
 	} catch (error) {
 		// eslint-disable-next-line no-console -- Skip silently to match Collect behaviour.
 		console.warn('Error occurred while retrieving background location.', error);
-		// TODO: translations
-		geolocationErrorMessage.value =
-			'Location unavailable. Enable GPS and browser permissions, then restart the form to try again.';
+		geolocationErrorMessage.value = t('odk_web_forms.geolocation.error');
 	}
 
 	floatingErrorActive.value = !!geolocationErrorMessage.value.length;
@@ -201,6 +201,8 @@ const showValidationError = ref(false);
 const geolocationErrorMessage = ref<string | null>(null);
 const isFormEditMode = ref(false);
 provide(IS_FORM_EDIT_MODE, readonly(isFormEditMode));
+const { setLanguage, t } = useLocale(computed(() => state.value.root));
+provide(TRANSLATE, t);
 
 watch(
 	() => state.value,
@@ -249,11 +251,8 @@ provide(SUBMIT_PRESSED, submitPressed);
 
 const validationErrorMessage = computed(() => {
 	const violationLength = state.value.root?.validationState.violations.length ?? 0;
-
-	// TODO: translations
 	if (violationLength === 0) return '';
-	else if (violationLength === 1) return '1 question with error.';
-	else return `${violationLength} questions with errors.`;
+	return t('odk_web_forms.validation.error', { count: violationLength });
 });
 
 watchEffect(() => {
@@ -318,7 +317,7 @@ onUnmounted(() => {
 				</ul>
 			</Message>
 
-			<FormHeader :form="state.root" />
+			<FormHeader :form="state.root" @change-language="setLanguage" />
 
 			<Card class="questions-card">
 				<template #content>
@@ -331,7 +330,7 @@ onUnmounted(() => {
 			</Card>
 
 			<div class="footer flex justify-content-end flex-wrap gap-3">
-				<Button label="Send" @click="handleSubmit(state)" />
+				<Button :label="t('odk_web_forms.submit.label')" @click="handleSubmit(state)" />
 			</div>
 		</div>
 

@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import IconSVG from '@/components/common/IconSVG.vue';
 import ControlText from '@/components/form-elements/ControlText.vue';
-import { FORM_OPTIONS } from '@/lib/constants/injection-keys.ts';
+import { FORM_OPTIONS, TRANSLATE } from '@/lib/constants/injection-keys.ts';
 import type { FormOptions } from '@/lib/init/load-form-state';
+import type { Translate } from '@/lib/locale/useLocale.ts';
 import type { UploadNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import Message from 'primevue/message';
@@ -28,6 +29,7 @@ export interface UploadControlProps {
 
 const props = defineProps<UploadControlProps>();
 const formOptions = inject<FormOptions>(FORM_OPTIONS);
+const t: Translate = inject(TRANSLATE)!;
 
 const isDisabled = computed(() => props.question.currentState.readonly === true);
 const fileName = computed(() => props.question.currentState.value?.name ?? '');
@@ -69,8 +71,7 @@ const objectURL = computed((previous: ObjectURL | null = null) => {
 
 const validateFile = (file: File) => {
 	if (file.size > maxFileSize.value) {
-		// TODO translations
-		fileError.value = 'Selected file size exceeds the maximum allowed';
+		fileError.value = t('upload_control.file_too_large.error');
 		return false;
 	}
 
@@ -98,15 +99,14 @@ const validateFile = (file: File) => {
 		}
 	}
 
-	// TODO translations
 	if (mediaType.value === 'image') {
-		fileError.value = 'Selected file must be an image file';
+		fileError.value = t('upload_control.must_be_image.error');
 	} else if (mediaType.value === 'video') {
-		fileError.value = 'Selected file must be a video file';
+		fileError.value = t('upload_control.must_be_video.error');
 	} else if (mediaType.value === 'audio') {
-		fileError.value = 'Selected file must be an audio file';
+		fileError.value = t('upload_control.must_be_audio.error');
 	} else {
-		fileError.value = 'Selected file does not match expected type';
+		fileError.value = t('upload_control.invalid_file_type.error');
 	}
 
 	return false;
@@ -185,7 +185,6 @@ const onDrop = (event: DragEvent) => {
 						<IconSVG name="mdiClose" variant="muted" size="sm" />
 					</Button>
 				</div>
-				<!-- TODO: translations -->
 				<Message
 					v-else-if="fileError"
 					severity="error"
@@ -195,7 +194,7 @@ const onDrop = (event: DragEvent) => {
 					{{ fileError }}
 				</Message>
 				<div v-else class="placeholder">
-					Drag and drop files here to upload
+					{{ t('upload_control.drag_and_drop.placeholder') }}
 				</div>
 			</div>
 		</template>

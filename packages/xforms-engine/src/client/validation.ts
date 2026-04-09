@@ -45,57 +45,17 @@ export type ValidationConditionMessageRole<Condition extends ValidationCondition
 	ValidationConditionMessageRoles[Condition];
 
 /**
- * Source of a condition's violation message.
+ * A form-defined violation message, present when the form designer specified `jr:constraintMsg`
+ * or `jr:requiredMsg`. The text may be translated ({@link https://getodk.github.io/xforms-spec/#fn:jr:itext | `jr:itext`})
+ * and dynamic (via {@link https://getodk.github.io/xforms-spec/#body-elements | `<output>`}).
  *
- * - Form-defined messages (specified by the
- *   {@link https://getodk.github.io/xforms-spec/#bind-attributes | `jr:constraintMsg` and `jr:requiredMsg`}
- *   attributes) will be favored when provided by the form, and will be
- *   translated according to the form's active language (where applicable).
- *
- * - Otherwise, an engine-defined message will be provided as a fallback. This
- *   fallback is provided mainly for API consistency, and may be referenced for
- *   testing purposes; user-facing clients are expected to provide fallback
- *   messaging language most appropriate for their user neeeds. Engine-defined
- *   fallback messages **are not translated**. They are intended to be used, if
- *   at all, as sentinel values when a form-defined message is not available.
+ * When absent, {@link ConditionViolation.message} is `null` and clients are expected to provide
+ * their own default messaging (e.g. a translated fallback).
  */
-// eslint-disable-next-line @typescript-eslint/sort-type-constituents
-export type ViolationMessageSource = 'form' | 'engine';
-
-/**
- * @see {@link ViolationMessage.asString}
- */
-// prettier-ignore
-type ViolationMessageAsString<
-	Source extends ViolationMessageSource,
-	Condition extends ValidationCondition,
-> =
-	Source extends 'form'
-		? string
-		: `Condition not satisfied: ${Condition}`;
-
-/**
- * A violation message is provided for every violation of a form-defined
- * {@link ValidationCondition}.
- */
-export interface ViolationMessage<
-	Condition extends ValidationCondition,
-	Source extends ViolationMessageSource = ViolationMessageSource,
-> extends TextRange<ValidationConditionMessageRole<Condition>> {
-	/**
-	 * - Form-defined violation messages may produce arbitrary text. This text may
-	 *   be translated
-	 *   ({@link https://getodk.github.io/xforms-spec/#fn:jr:itext | `jr:itext`}),
-	 *   and it may be dynamic (translations may reference form state with
-	 *   {@link https://getodk.github.io/xforms-spec/#body-elements | `<output>`}).
-	 *
-	 * - When a form-defined violation message is not available, an engine-defined
-	 *   message will be provided in its place. Engine-defined violation messages
-	 *   are statically defined (and therefore not presently translated by the
-	 *   engine). Their static value can also be referenced as a static type, by
-	 *   checking {@link isFallbackMessage}.
-	 */
-	get asString(): ViolationMessageAsString<Source, Condition>;
+export interface ViolationMessage<Condition extends ValidationCondition> extends TextRange<
+	ValidationConditionMessageRole<Condition>
+> {
+	get asString(): string;
 }
 
 export interface ConditionSatisfied<Condition extends ValidationCondition> extends BaseValidity {
@@ -107,7 +67,7 @@ export interface ConditionSatisfied<Condition extends ValidationCondition> exten
 export interface ConditionViolation<Condition extends ValidationCondition> extends BaseValidity {
 	readonly condition: Condition;
 	readonly valid: false;
-	readonly message: ViolationMessage<Condition>;
+	readonly message: ViolationMessage<Condition> | null;
 }
 
 export type ConditionValidation<Condition extends ValidationCondition> =

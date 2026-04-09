@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import IconSVG from '@/components/common/IconSVG.vue';
+import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
+import type { Translate } from '@/lib/locale/useLocale.ts';
 import type { UploadNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import type { HTMLInputElementEvent, Ref } from 'vue';
-import { ref, watchEffect } from 'vue';
+import { inject, ref, watchEffect } from 'vue';
+
+const t: Translate = inject(TRANSLATE)!;
 
 const selectFileInput = ref<HTMLInputElement | null>(null);
 
@@ -48,8 +52,7 @@ const emit = defineEmits(['change']);
 		@click="triggerInputField(selectFileInput)"
 	>
 		<IconSVG name="mdiPaperclip" variant="inverted" />
-		<!-- TODO: translations -->
-		<span>Choose file</span>
+		<span>{{ t('upload_control.choose_file.label') }}</span>
 	</Button>
 	<input
 		ref="selectFileInput"

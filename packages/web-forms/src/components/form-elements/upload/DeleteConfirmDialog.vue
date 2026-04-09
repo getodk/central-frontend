@@ -1,11 +1,15 @@
 <script setup lang="ts">
+import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
+import type { Translate } from '@/lib/locale/useLocale.ts';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
+import { inject } from 'vue';
 
 defineProps<{
 	visible: boolean;
 }>();
 
+const t: Translate = inject(TRANSLATE)!;
 const emit = defineEmits(['update:visible', 'deleteFile']);
 </script>
 
@@ -17,18 +21,15 @@ const emit = defineEmits(['update:visible', 'deleteFile']);
 		@update:visible="emit('update:visible', $event)"
 	>
 		<template #header>
-			<!-- TODO: translations -->
-			<strong>Delete uploaded file?</strong>
+			<strong>{{ t('upload_delete_dialog.header.title') }}</strong>
 		</template>
 
 		<template #default>
-			<!-- TODO: translations -->
-			<p>Are you sure you want to delete this file?</p>
+			<p>{{ t('upload_delete_dialog.body.message') }}</p>
 		</template>
 
 		<template #footer>
-			<!-- TODO: translations -->
-			<Button label="Delete" @click="emit('deleteFile')" />
+			<Button :label="t('odk_web_forms.delete.label')" @click="emit('deleteFile')" />
 		</template>
 	</Dialog>
 </template>

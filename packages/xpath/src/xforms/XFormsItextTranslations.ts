@@ -42,7 +42,7 @@ export type XFormsItextTranslationMap<T extends XPathNode> = ReadonlyMap<
 >;
 
 interface TranslationMetadata {
-	readonly defaultLanguage: XFormsItextTranslationLanguage | null;
+	readonly explicitDefaultLanguage: XFormsItextTranslationLanguage | null;
 	readonly languages: readonly XFormsItextTranslationLanguage[];
 }
 
@@ -56,6 +56,11 @@ export interface XFormsItextTranslationsState {
 	setActiveLanguage(
 		language: XFormsItextTranslationLanguage | null
 	): XFormsItextTranslationLanguage | null;
+	/**
+	 * Returns the language explicitly designated as default by the form designer via
+	 * the `default` attribute on an `<translation>` element, or `null` if no explicit default was specified.
+	 */
+	getExplicitDefaultLanguage(): XFormsItextTranslationLanguage | null;
 }
 
 /**
@@ -72,7 +77,7 @@ export interface XFormsItextTranslationsState {
  * @see {@link XFormsItextTranslationsState} for the corresponding public interface.
  */
 export class XFormsItextTranslations<T extends XPathNode> implements XFormsItextTranslationsState {
-	protected readonly defaultLanguage: XFormsItextTranslationLanguage | null = null;
+	protected readonly explicitDefaultLanguage: XFormsItextTranslationLanguage | null = null;
 	protected readonly languages: readonly XFormsItextTranslationLanguage[] = [];
 
 	protected activeLanguage: XFormsItextTranslationLanguage | null = null;
@@ -87,13 +92,13 @@ export class XFormsItextTranslations<T extends XPathNode> implements XFormsItext
 
 		this.translationElementMap = translationElementMap;
 
-		const { defaultLanguage, languages } = this.getTranslationMetadata(
+		const { explicitDefaultLanguage, languages } = this.getTranslationMetadata(
 			domProvider,
 			translationElementMap
 		);
 
-		this.defaultLanguage = defaultLanguage;
-		this.activeLanguage = defaultLanguage;
+		this.explicitDefaultLanguage = explicitDefaultLanguage;
+		this.activeLanguage = explicitDefaultLanguage ?? languages[0] ?? null;
 		this.languages = languages;
 	}
 
@@ -103,21 +108,19 @@ export class XFormsItextTranslations<T extends XPathNode> implements XFormsItext
 	): TranslationMetadata {
 		const languages: XFormsItextTranslationLanguage[] = [];
 
-		let defaultLanguage: XFormsItextTranslationLanguage | null = null;
+		let explicitDefaultLanguage: XFormsItextTranslationLanguage | null = null;
 
 		for (const [language, element] of translationElementMap) {
-			if (defaultLanguage == null && domProvider.hasLocalNamedAttribute(element, 'default')) {
-				defaultLanguage = language;
+			if (!explicitDefaultLanguage && domProvider.hasLocalNamedAttribute(element, 'default')) {
+				explicitDefaultLanguage = language;
 				languages.unshift(language);
 			} else {
 				languages.push(language);
 			}
 		}
 
-		defaultLanguage ??= languages[0] ?? null;
-
 		return {
-			defaultLanguage,
+			explicitDefaultLanguage,
 			languages,
 		};
 	}
@@ -209,10 +212,14 @@ export class XFormsItextTranslations<T extends XPathNode> implements XFormsItext
 		return this.activeLanguage;
 	}
 
+	getExplicitDefaultLanguage(): XFormsItextTranslationLanguage | null {
+		return this.explicitDefaultLanguage;
+	}
+
 	setActiveLanguage(
 		language: XFormsItextTranslationLanguage | null
 	): XFormsItextTranslationLanguage | null {
-		this.activeLanguage = language ?? this.defaultLanguage;
+		this.activeLanguage = language ?? this.languages[0] ?? null;
 
 		return this.activeLanguage;
 	}

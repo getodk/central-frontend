@@ -11,7 +11,9 @@ import type { Coordinate } from 'ol/coordinate';
 import { toLonLat } from 'ol/proj';
 import Button from 'primevue/button';
 import ProgressSpinner from 'primevue/progressspinner';
-import { computed } from 'vue';
+import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
+import type { Translate } from '@/lib/locale/useLocale.ts';
+import { computed, inject } from 'vue';
 
 interface StatusDetails {
 	message: string;
@@ -32,20 +34,21 @@ const props = defineProps<{
 
 const emit = defineEmits(['discard', 'toggle-advanced-panel', 'view-details']);
 
+const t: Translate = inject(TRANSLATE)!;
+
 const LINE_ICON = 'mdiVectorPolyline';
 const POLYGON_ICON = 'mdiVectorPolygon';
 
 const noSavedStatus = computed<StatusDetails>(() => {
-	// TODO: translations
 	if (props.singleFeatureType === SINGLE_FEATURE_TYPES.TRACE) {
-		return { message: 'No trace saved', icon: LINE_ICON };
+		return { message: t('map_status_bar.no_trace_saved.label'), icon: LINE_ICON };
 	}
 
 	if (props.singleFeatureType === SINGLE_FEATURE_TYPES.SHAPE) {
-		return { message: 'No shape saved', icon: POLYGON_ICON };
+		return { message: t('map_status_bar.no_shape_saved.label'), icon: POLYGON_ICON };
 	}
 
-	return { message: 'No point saved', icon: 'mdiMapMarkerOutline' };
+	return { message: t('map_status_bar.no_point_saved.label'), icon: 'mdiMapMarkerOutline' };
 });
 
 const selectedVertexInfo = computed(() => {
@@ -54,14 +57,17 @@ const selectedVertexInfo = computed(() => {
 	}
 
 	const [longitude, latitude, altitude, accuracy] = toLonLat(props.selectedVertex);
-	const parts = [`Longitude: ${longitude}`, `Latitude: ${latitude}`];
+	const parts = [
+		t('map_status_bar.vertex_longitude.label', { longitude }),
+		t('map_status_bar.vertex_latitude.label', { latitude }),
+	];
 
 	if (altitude != null) {
-		parts.push(`Altitude: ${altitude} m`);
+		parts.push(t('map_status_bar.vertex_altitude.label', { altitude }));
 	}
 
 	if (accuracy != null) {
-		parts.push(`Accuracy: ${truncateDecimals(accuracy, { decimals: 3 })}`);
+		parts.push(t('map_status_bar.vertex_accuracy.label', { accuracy: truncateDecimals(accuracy, { decimals: 3 }) }));
 	}
 
 	return parts.join(', ');
@@ -90,20 +96,19 @@ const countPoints = (coords: Position | Position[] | Position[][] | undefined = 
 
 const getSavedMessageForMultiFeature = (type: string) => {
 	const geometryType = type?.toLowerCase();
-	// TODO: translations
 	if (geometryType === 'point') {
-		return 'Point saved';
+		return t('map_status_bar.point_saved.label');
 	}
 
 	if (geometryType === 'linestring') {
-		return 'Trace saved';
+		return t('map_status_bar.trace_saved.label');
 	}
 
 	if (geometryType === 'polygon') {
-		return 'Shape saved';
+		return t('map_status_bar.shape_saved.label');
 	}
 
-	return 'Feature saved';
+	return t('map_status_bar.feature_saved.label');
 };
 
 const savedStatus = computed<StatusDetails | null>(() => {
@@ -122,8 +127,7 @@ const savedStatus = computed<StatusDetails | null>(() => {
 		return null;
 	}
 
-	// TODO: translations
-	const message = `${count} points saved`;
+	const message = t('map_status_bar.points_saved.label', { count });
 	if (props.singleFeatureType === SINGLE_FEATURE_TYPES.TRACE) {
 		return { message, icon: LINE_ICON };
 	}
@@ -132,7 +136,7 @@ const savedStatus = computed<StatusDetails | null>(() => {
 		return { message, icon: POLYGON_ICON };
 	}
 
-	return { message: 'Point saved', icon: 'mdiCheckCircle', highlight: true };
+	return { message: t('map_status_bar.point_saved.label'), icon: 'mdiCheckCircle', highlight: true };
 });
 
 const displayState = computed(() => {
@@ -149,8 +153,7 @@ const displayState = computed(() => {
 		<div class="map-status-container">
 			<div v-if="isCapturing" class="map-status">
 				<ProgressSpinner class="map-status-spinner" stroke-width="5px" />
-				<!-- TODO: translations -->
-				<span>Capturing location...</span>
+				<span>{{ t('map_status_bar.capturing.label') }}</span>
 			</div>
 
 			<div v-if="!isCapturing && displayState" class="map-status">
@@ -164,13 +167,11 @@ const displayState = computed(() => {
 			<div v-if="savedStatus" class="map-status-buttons">
 				<Button v-if="canRemove" outlined severity="contrast" @click="emit('discard')">
 					<span>–</span>
-					<!-- TODO: translations -->
-					<span class="mobile-only">Remove</span>
-					<span class="desktop-only">Remove point</span>
+					<span class="mobile-only">{{ t('odk_web_forms.remove.label') }}</span>
+					<span class="desktop-only">{{ t('map_status_bar.remove_point.label') }}</span>
 				</Button>
 				<Button v-if="canViewDetails" outlined severity="contrast" @click="emit('view-details')">
-					<!-- TODO: translations -->
-					<span>View details</span>
+					<span>{{ t('map_status_bar.view_details.label') }}</span>
 				</Button>
 			</div>
 		</div>
@@ -183,8 +184,7 @@ const displayState = computed(() => {
 			@click="emit('toggle-advanced-panel')"
 		>
 			<IconSVG name="mdiCogOutline" />
-			<!-- TODO: translations -->
-			<span>Advanced</span>
+			<span>{{ t('map_status_bar.advanced.label') }}</span>
 		</Button>
 	</div>
 </template>

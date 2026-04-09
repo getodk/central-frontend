@@ -3,9 +3,11 @@ import IconSVG from '@/components/common/IconSVG.vue';
 import MarkdownBlock from '@/components/common/MarkdownBlock.vue';
 import ValidationMessage from '@/components/common/ValidationMessage.vue';
 import ControlText from '@/components/form-elements/ControlText.vue';
+import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
+import type { Translate } from '@/lib/locale/useLocale.ts';
 import type { TimerID } from '@getodk/common/types/timers.ts';
 import type { RankNode } from '@getodk/xforms-engine';
-import type { Ref } from 'vue';
+import { inject, type Ref } from 'vue';
 import { computed, ref } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
 
@@ -18,6 +20,7 @@ interface HighlightOption {
 	timeoutID: TimerID | null;
 }
 
+const t: Translate = inject(TRANSLATE)!;
 const props = defineProps<RankControlProps>();
 const showOverlay = computed(() => !props.question.currentState.instanceValue.length);
 const disabled = computed(() => props.question.currentState.readonly === true);
@@ -117,8 +120,7 @@ const onDragEnd = (oldIndex: number | undefined, newIndex: number | undefined) =
 		<div v-if="showOverlay" class="rank-overlay">
 			<button :disabled="disabled" @click="selectDefaultOrder">
 				<IconSVG name="mdiUnfoldMoreHorizontal" size="sm" :variant="disabled ? 'muted' : 'base'" />
-				<!-- TODO: translations -->
-				<span>Rank items</span>
+				<span>{{ t('rank_control.open.label') }}</span>
 			</button>
 		</div>
 
@@ -145,7 +147,11 @@ const onDragEnd = (oldIndex: number | undefined, newIndex: number | undefined) =
 			>
 				<div class="rank-label">
 					<IconSVG name="mdiDragVertical" />
-					<MarkdownBlock v-for="elem in props.question.getValueLabel(value)?.formatted" :key="elem.id" :elem="elem" />
+					<MarkdownBlock
+						v-for="elem in props.question.getValueLabel(value)?.formatted"
+						:key="elem.id"
+						:elem="elem"
+					/>
 				</div>
 
 				<div class="rank-buttons">
@@ -155,7 +161,11 @@ const onDragEnd = (oldIndex: number | undefined, newIndex: number | undefined) =
 						@click="moveUp(index)"
 						@mousedown="setHighlight(index)"
 					>
-						<IconSVG name="mdiChevronUp" size="sm" :variant="disabled || index === 0 ? 'muted' : 'base'" />
+						<IconSVG
+							name="mdiChevronUp"
+							size="sm"
+							:variant="disabled || index === 0 ? 'muted' : 'base'"
+						/>
 					</button>
 
 					<button
@@ -164,14 +174,18 @@ const onDragEnd = (oldIndex: number | undefined, newIndex: number | undefined) =
 						@click="moveDown(index)"
 						@mousedown="setHighlight(index)"
 					>
-						<IconSVG name="mdiChevronDown" size="sm" :variant="disabled || index === values.length - 1 ? 'muted' : 'base'" />
+						<IconSVG
+							name="mdiChevronDown"
+							size="sm"
+							:variant="disabled || index === values.length - 1 ? 'muted' : 'base'"
+						/>
 					</button>
 				</div>
 			</div>
 		</VueDraggable>
 	</div>
 
-	<ValidationMessage :message="question.validationState.violation?.message.formatted" />
+	<ValidationMessage :violation="question.validationState.violation" />
 </template>
 
 <style scoped lang="scss">

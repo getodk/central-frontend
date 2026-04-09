@@ -27,10 +27,11 @@
     "yarn": "4.11.0"
   },
   "scripts": {
-    "build": "npm-run-all -nl 'build:*'",
+    "build": "npm-run-all -l build:clean build:translations build:demo build:js",
     "build:clean": "rimraf dist/ dist-demo/",
     "build:demo": "vite build --mode demo --outDir dist-demo",
     "build:js": "vite build",
+    "build:translations": "node scripts/merge-translations.js",
     "dev": "vite",
     "dist-demo": "yarn build && yarn vite serve dist-demo --port 5174",
     "test": "npm-run-all -nl 'test:*'",
@@ -86,10 +87,12 @@
     "vue": "^3.5.29"
   },
   "dependencies": {
+    "@formatjs/intl": "^4.1.4",
     "@mdi/js": "^7.4.47",
     "dompurify": "^3.3.0",
     "image-blob-reduce": "^4.1.0",
     "ol": "^10.7.0",
+    "primelocale": "^2.3.1",
     "vue-draggable-plus": "^0.6.1"
   },
   "publishConfig": {

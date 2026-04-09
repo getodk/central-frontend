@@ -21,9 +21,6 @@ const isErrorLikeCause = (cause: unknown): cause is ErrorLikeCause => {
 	return typeof message === 'string' && (typeof stack === 'string' || stack == null);
 };
 
-/**
- * @todo translations
- */
 const UNKNOWN_ERROR_MESSAGE = 'Unknown error';
 
 interface FormInitializationErrorOptions {

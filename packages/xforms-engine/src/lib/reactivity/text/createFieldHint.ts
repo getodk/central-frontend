@@ -7,7 +7,7 @@ import { createTextRange } from './createTextRange.ts';
 export const createFieldHint = (
 	context: EvaluationContext,
 	definition: LeafNodeDefinition
-): Accessor<TextRange<'hint', 'form'> | null> => {
+): Accessor<TextRange<'hint'> | null> => {
 	const hintDefinition = definition.bodyElement?.hint ?? null;
 
 	if (hintDefinition == null) {

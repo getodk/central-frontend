@@ -1,0 +1,46 @@
+{
+  "upload_image_header.take_picture.label": {
+    "string": "Take picture",
+    "developer_comment": "Label for the button to take a picture using the device's camera."
+  },
+  "upload_image_header.choose_image.label": {
+    "string": "Choose image",
+    "developer_comment": "Label for the button to choose an image from the device's gallery or file system."
+  },
+  "upload_control.choose_file.label": {
+    "string": "Choose file",
+    "developer_comment": "Label for the button to choose a file from the device. Used in the audio, video, and generic file upload headers."
+  },
+  "upload_control.drag_and_drop.placeholder": {
+    "string": "Drag and drop files here to upload",
+    "developer_comment": "Placeholder text shown in the upload area when no file has been selected."
+  },
+  "upload_control.file_too_large.error": {
+    "string": "Selected file size exceeds the maximum allowed",
+    "developer_comment": "Error message shown when the selected file exceeds the maximum allowed size."
+  },
+  "upload_control.must_be_image.error": {
+    "string": "Selected file must be an image file",
+    "developer_comment": "Error message shown when the selected file is not an image."
+  },
+  "upload_control.must_be_video.error": {
+    "string": "Selected file must be a video file",
+    "developer_comment": "Error message shown when the selected file is not a video."
+  },
+  "upload_control.must_be_audio.error": {
+    "string": "Selected file must be an audio file",
+    "developer_comment": "Error message shown when the selected file is not an audio file."
+  },
+  "upload_control.invalid_file_type.error": {
+    "string": "Selected file does not match expected type",
+    "developer_comment": "Error message shown when the selected file does not match the expected media type."
+  },
+  "upload_delete_dialog.header.title": {
+    "string": "Delete uploaded file?",
+    "developer_comment": "Title of the confirmation dialog shown before deleting an uploaded file."
+  },
+  "upload_delete_dialog.body.message": {
+    "string": "Are you sure you want to delete this file?",
+    "developer_comment": "Body text of the confirmation dialog shown before deleting an uploaded file."
+  }
+}

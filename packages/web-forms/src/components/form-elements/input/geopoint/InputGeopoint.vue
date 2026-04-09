@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import GeolocationFormattedValue from '@/components/common/GeolocationFormattedValue.vue';
 import IconSVG from '@/components/common/IconSVG.vue';
-import { QUESTION_HAS_ERROR } from '@/lib/constants/injection-keys.ts';
+import { TRANSLATE, QUESTION_HAS_ERROR } from '@/lib/constants/injection-keys.ts';
+import type { Translate } from '@/lib/locale/useLocale.ts';
 import { computed, type ComputedRef, inject, ref } from 'vue';
 import Button from 'primevue/button';
 import type { GeopointInputNode } from '@getodk/xforms-engine';
@@ -23,6 +24,7 @@ interface InputGeopointProps {
 
 const props = defineProps<InputGeopointProps>();
 
+const t: Translate = inject(TRANSLATE)!;
 const showErrorStyle = inject<ComputedRef<boolean>>(
 	QUESTION_HAS_ERROR,
 	computed(() => false)
@@ -126,8 +128,7 @@ const onSave = (saved: GeolocationRequestSuccess) => {
 			@click="initiateRequest()"
 		>
 			<IconSVG name="mdiMapMarkerOutline" variant="inverted" />
-			<!-- TODO: translations -->
-			<span>Get location</span>
+			<span>{{ t('input_geopoint.get_location.label') }}</span>
 		</Button>
 
 		<div v-if="committedValue != null" class="geopoint-value-container">
@@ -136,7 +137,7 @@ const onSave = (saved: GeolocationRequestSuccess) => {
 				<IconSVG v-else class="check-icon" name="mdiCheck" variant="primary" />
 			</div>
 			<div class="geopoint-value">
-				<strong class="geo-quality">{{ committedValueAccuracy.label }}</strong>
+				<strong class="geo-quality">{{ t(committedValueAccuracy.labelMessageId) }}</strong>
 				<GeolocationFormattedValue :question="question" />
 				<Button
 					v-if="!isDisabled"
@@ -146,8 +147,7 @@ const onSave = (saved: GeolocationRequestSuccess) => {
 					@click="initiateRequest()"
 				>
 					<IconSVG name="mdiRefresh" />
-					<!-- TODO: translations -->
-					<span>Try again</span>
+					<span>{{ t('input_geopoint.try_again.label') }}</span>
 				</Button>
 			</div>
 		</div>
@@ -157,8 +157,7 @@ const onSave = (saved: GeolocationRequestSuccess) => {
 			class="geopoint-error"
 			:class="{ 'stack-errors': showErrorStyle }"
 		>
-			<!-- TODO: translations -->
-			<strong>Cannot access location</strong>&nbsp;<span>Grant location permission in the browser settings and make sure location is turned on.</span>
+			<strong>{{ t('input_geopoint.location_error.title') }}</strong>&nbsp;<span>{{ t('input_geopoint.location_error.description') }}</span>
 		</div>
 	</div>
 

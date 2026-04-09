@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import DatePicker from 'primevue/datepicker';
-import type { DateInputNode } from '@getodk/xforms-engine';
 import { ISO_DATE_LIKE_PATTERN } from '@getodk/common/constants/datetime.ts';
+import type { DateInputNode } from '@getodk/xforms-engine';
+import { usePrimeVue } from 'primevue';
+import DatePicker from 'primevue/datepicker';
+import { computed } from 'vue';
 
 interface InputDateProps {
 	readonly question: DateInputNode;
 }
 
 const props = defineProps<InputDateProps>();
+const primevue = usePrimeVue();
 
 const value = computed({
 	get: () => {
@@ -29,11 +31,19 @@ const value = computed({
 	},
 });
 
+const localeDateFormat = computed(() => primevue.config.locale?.dateFormat ?? '');
 const isDisabled = computed(() => props.question.currentState.readonly === true);
 </script>
 
 <template>
-	<DatePicker v-model="value" show-icon icon-display="input" show-button-bar :disabled="isDisabled" />
+	<DatePicker
+		v-model="value"
+		show-icon
+		icon-display="input"
+		:placeholder="localeDateFormat"
+		show-button-bar
+		:disabled="isDisabled"
+	/>
 </template>
 
 <style lang="scss">

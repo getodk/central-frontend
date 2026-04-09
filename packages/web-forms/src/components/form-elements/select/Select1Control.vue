@@ -100,7 +100,7 @@ watchEffect(() => {
 	</template>
 
 	<ValidationMessage
-		:message="question.validationState.violation?.message.formatted"
+		:violation="question.validationState.violation"
 		:add-placeholder="!hasFieldListRelatedAppearance"
 	/>
 </template>

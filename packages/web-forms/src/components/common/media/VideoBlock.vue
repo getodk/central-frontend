@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import MediaBlockBase from '@/components/common/media/MediaBlockBase.vue';
+import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
+import type { Translate } from '@/lib/locale/useLocale.ts';
 import type { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL.ts';
+import { inject } from 'vue';
 
 defineProps<{
 	readonly resourceUrl: JRResourceURL;
 	readonly alt: string;
 }>();
+
+const t: Translate = inject(TRANSLATE)!;
 </script>
 
 <template>
@@ -22,7 +27,7 @@ defineProps<{
 			:src="mediaUrl"
 			:title="alt"
 			class="video-block"
-			@error="reportError(new Error(`Failed to load video. File: ${resourceUrl.href}`))"
+			@error="reportError(t('video_block.load.error', { file: resourceUrl.href ?? '' }))"
 		/>
 	</MediaBlockBase>
 </template>

@@ -7,7 +7,7 @@ import { createTextRange } from './createTextRange.ts';
 export const createNodeLabel = (
 	context: EvaluationContext,
 	definition: AnyNodeDefinition
-): Accessor<TextRange<'label', 'form'> | null> => {
+): Accessor<TextRange<'label'> | null> => {
 	const labelDefinition = definition.bodyElement?.label ?? null;
 
 	if (labelDefinition == null) {

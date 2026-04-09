@@ -82,34 +82,6 @@ export type ValidationTextRole = 'constraintMsg' | 'requiredMsg';
 export type TextRole = ElementTextRole | ValidationTextRole;
 
 /**
- * Specifies the origin of a {@link TextRange}.
- *
- * - 'form': text is computed from the form definition, as specified for the
- *   {@link TextRole}. User-facing clients should present text with this origin
- *   where appropriate.
- *
- * - 'form-derived': the form definition lacks a text definition for the
- *   {@link TextRole}, but an appropriate one has been derived from a related
- *   (and semantically appropriate) aspect of the form (example: a select item
- *   without a label may derive that label from the item's value). User-facing
- *   clients should generally present text with this origin where provided; this
- *   origin clarifies the source of such text.
- *
- * - 'engine': the form definition lacks a definition for the {@link TextRole},
- *   but provides a constant default in its absence. User facing clients may
- *   disregard these constant text values, or may use them where a sensible
- *   default is desired. Clients may also use these constants as keys for
- *   translation purposes, as appropriate. Non-user facing clients may reference
- *   these constants for e.g. testing purposes.
- */
-// prettier-ignore
-export type TextOrigin =
-	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
-	| 'form'
-	| 'form-derived'
-	| 'engine';
-
-/**
  * Represents aspects of a form which produce text, which _might_ be:
  *
  * - Computed from multiple sources
@@ -139,8 +111,7 @@ export type TextOrigin =
  * a text range's role may correspond to the "short" or "guidance" `form` of a
  * {@link https://getodk.github.io/xforms-spec/#languages | translation}).
  */
-export interface TextRange<Role extends TextRole, Origin extends TextOrigin = TextOrigin> {
-	readonly origin: Origin;
+export interface TextRange<Role extends TextRole> {
 	readonly role: Role;
 
 	[Symbol.iterator](): Iterable<TextChunk>;

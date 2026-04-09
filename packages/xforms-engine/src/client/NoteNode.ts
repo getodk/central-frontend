@@ -40,8 +40,8 @@ export interface NoteNodeState<V extends ValueType> extends BaseValueNodeState<N
 	 */
 	readonly readonly: true;
 
-	get label(): TextRange<'label', 'form'> | null;
-	get hint(): TextRange<'hint', 'form'> | null;
+	get label(): TextRange<'label'> | null;
+	get hint(): TextRange<'hint'> | null;
 	get children(): null;
 	get valueOptions(): null;
 

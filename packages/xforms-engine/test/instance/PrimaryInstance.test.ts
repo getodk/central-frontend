@@ -131,10 +131,14 @@ describe('PrimaryInstance engine representation of instance state', () => {
 
 			expect(languages).toEqual([
 				{
+					isDefault: false,
 					language: 'English',
+					locale: undefined,
 				},
 				{
+					isDefault: false,
 					language: 'Spanish',
+					locale: undefined,
 				},
 			]);
 		});
@@ -147,7 +151,9 @@ describe('PrimaryInstance engine representation of instance state', () => {
 			});
 
 			expect(activeLanguage).toEqual({
+				isDefault: false,
 				language: 'English',
+				locale: undefined,
 			});
 		});
 
@@ -156,14 +162,18 @@ describe('PrimaryInstance engine representation of instance state', () => {
 				const root = createRootNode(mutable);
 
 				root.setLanguage({
+					isDefault: false,
 					language: 'Spanish',
+					locale: undefined,
 				});
 
 				return root.currentState;
 			});
 
 			expect(activeLanguage).toEqual({
+				isDefault: false,
 				language: 'Spanish',
+				locale: undefined,
 			});
 		});
 
@@ -172,7 +182,7 @@ describe('PrimaryInstance engine representation of instance state', () => {
 				const root = createRootNode(mutable);
 
 				try {
-					root.setLanguage({ language: 'Not supported' });
+					root.setLanguage({ isDefault: false, language: 'Not supported', locale: undefined });
 				} catch (error) {
 					return error;
 				}
@@ -199,18 +209,73 @@ describe('PrimaryInstance engine representation of instance state', () => {
 					// The above `effect` was run immediately. Assert to confirm that
 					// assumption, then revert its state to `null` so we can be sure we're
 					// testing the subsequent effect after explicitly updating the state.
-					expect(observedClientLanguage).toEqual({ language: 'English' });
+					expect(observedClientLanguage).toEqual({
+						isDefault: false,
+						language: 'English',
+						locale: undefined,
+					});
 					observedClientLanguage = null;
 
 					// Here is the actual action under test: this call should trigger the
 					// client's `effect`.
-					root.setLanguage({ language: 'Spanish' });
+					root.setLanguage({ isDefault: false, language: 'Spanish', locale: undefined });
 
 					return observedClientLanguage;
 				}
 			);
 
-			expect(lastObservedClientLanguage).toEqual({ language: 'Spanish' });
+			expect(lastObservedClientLanguage).toEqual({
+				isDefault: false,
+				language: 'Spanish',
+				locale: undefined,
+			});
+		});
+
+		it('marks the explicitly-designated default language with isDefault: true', () => {
+			// prettier-ignore
+			const xform = html(
+				head(
+					title('Form title'),
+					model(
+						t('itext',
+							t('translation lang="English"', t('text id="q1:label"', t('value', '1. Question one'))),
+							t('translation lang="Spanish" default="true()"', t('text id="q1:label"', t('value', '1. Pregunta uno')))
+						),
+						mainInstance(
+							t('data id="test-form"', t('q1'))
+						),
+						bind('/data/q1').type('string')
+					)
+				),
+				body(input('/data/first-question', label('First question')))
+			);
+
+			const xformDOM = XFormDOM.from(xform.asXml());
+			const def = new XFormDefinition(xformDOM);
+
+			const languages = reactiveTestScope(({ mutable }) => {
+				return scope.runTask(
+					() =>
+						new PrimaryInstance({
+							mode: 'create',
+							initialState: null,
+							scope,
+							model: def.model,
+							secondaryInstances: SecondaryInstancesDefinition.loadSync(xformDOM),
+							config: {
+								clientStateFactory: mutable,
+								computeAttachmentName: () => null,
+								preloadProperties: {},
+								geolocationProvider: { getLocation: () => Promise.resolve('') },
+							},
+						}).root.languages
+				);
+			});
+
+			expect(languages).toEqual([
+				{ isDefault: true, language: 'Spanish', locale: undefined },
+				{ isDefault: false, language: 'English', locale: undefined },
+			]);
 		});
 	});
 

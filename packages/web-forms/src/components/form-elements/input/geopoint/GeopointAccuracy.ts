@@ -45,12 +45,11 @@ const computeAccuracyQuality = (
 
 type GeopointAccuracyQualityLabelMapping = Readonly<Record<GeopointAccuracyQuality, string>>;
 
-// TODO: translations
 const GEOPOINT_ACCURACY_QUALITY_LABEL: GeopointAccuracyQualityLabelMapping = {
-	[GEOPOINT_ACCURACY_QUALITY.GOOD]: 'Good accuracy',
-	[GEOPOINT_ACCURACY_QUALITY.ACCEPTABLE]: 'Good accuracy',
-	[GEOPOINT_ACCURACY_QUALITY.POOR]: 'Poor accuracy',
-	[GEOPOINT_ACCURACY_QUALITY.UNKNOWN]: 'Unknown accuracy',
+	[GEOPOINT_ACCURACY_QUALITY.GOOD]: 'geopoint_accuracy.good.label',
+	[GEOPOINT_ACCURACY_QUALITY.ACCEPTABLE]: 'geopoint_accuracy.acceptable.label',
+	[GEOPOINT_ACCURACY_QUALITY.POOR]: 'geopoint_accuracy.poor.label',
+	[GEOPOINT_ACCURACY_QUALITY.UNKNOWN]: 'geopoint_accuracy.unknown.label',
 };
 
 export class GeopointAccuracy {
@@ -61,7 +60,7 @@ export class GeopointAccuracy {
 
 	readonly value: number | null;
 	readonly quality: GeopointAccuracyQuality;
-	readonly label: string;
+	readonly labelMessageId: string;
 
 	constructor(source: GeopointValueObject | null, options: GeopointAccuracyThresholdOptions) {
 		const value = source?.accuracy ?? null;
@@ -69,6 +68,6 @@ export class GeopointAccuracy {
 
 		this.value = value;
 		this.quality = quality;
-		this.label = GEOPOINT_ACCURACY_QUALITY_LABEL[quality];
+		this.labelMessageId = GEOPOINT_ACCURACY_QUALITY_LABEL[quality];
 	}
 }

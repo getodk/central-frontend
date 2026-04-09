@@ -2,11 +2,6 @@ import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
 import type { OpaqueReactiveObjectFactory } from '../../../client/OpaqueReactiveObjectFactory.ts';
 import type {
-	TextRange as ClientTextRange,
-	ValidationTextRole,
-} from '../../../client/TextRange.ts';
-import { VALIDATION_TEXT } from '../../../client/constants.ts';
-import type {
 	AnyViolation,
 	ConditionSatisfied,
 	ConditionValidation,
@@ -14,9 +9,6 @@ import type {
 	ValidationCondition,
 } from '../../../client/validation.ts';
 import type { ValidationContext } from '../../../instance/internal-api/ValidationContext.ts';
-import { TextChunk } from '../../../instance/text/TextChunk.ts';
-import { TextRange } from '../../../instance/text/TextRange.ts';
-import type { MessageDefinition } from '../../../parse/text/MessageDefinition.ts';
 import { createComputedExpression } from '../createComputedExpression.ts';
 import type {
 	SharedNodeState,
@@ -25,29 +17,6 @@ import type {
 import { createSharedNodeState } from '../node-state/createSharedNodeState.ts';
 import type { ReactiveScope } from '../scope.ts';
 import { createTextRange } from '../text/createTextRange.ts';
-
-type EngineViolationMessage<Role extends ValidationTextRole> = ClientTextRange<Role, 'engine'>;
-
-const engineViolationMessage = <Role extends ValidationTextRole>(
-	context: ValidationContext,
-	role: Role
-): Accessor<EngineViolationMessage<Role>> => {
-	const messageText = VALIDATION_TEXT[role];
-	const chunk = new TextChunk(context, 'literal', messageText);
-	return () => new TextRange('engine', role, [chunk]);
-};
-
-const createViolationMessage = <Role extends ValidationTextRole>(
-	context: ValidationContext,
-	role: Role,
-	definition: MessageDefinition<Role> | null
-) => {
-	if (definition == null) {
-		return engineViolationMessage(context, role);
-	}
-
-	return createTextRange(context, role, definition);
-};
 
 // prettier-ignore
 type ComputedConditionValidation<
@@ -75,7 +44,7 @@ const createConstraintValidation = (
 		const isValid = createComputedExpression(context, constraint, {
 			defaultValue: true,
 		});
-		const message = createViolationMessage(context, 'constraintMsg', constraintMsg);
+		const message = constraintMsg ? createTextRange(context, 'constraintMsg', constraintMsg) : null;
 
 		return createMemo(() => {
 			if (!context.isRelevant() || context.isBlank() || isValid()) {
@@ -85,7 +54,7 @@ const createConstraintValidation = (
 			return {
 				condition: 'constraint',
 				valid: false,
-				message: message(),
+				message: message?.() ?? null,
 			} as const;
 		});
 	});
@@ -117,7 +86,7 @@ const createRequiredValidation = (
 			return true;
 		};
 
-		const message = createViolationMessage(context, 'requiredMsg', requiredMsg);
+		const message = requiredMsg ? createTextRange(context, 'requiredMsg', requiredMsg) : null;
 
 		return createMemo(() => {
 			if (!context.isRelevant() || isValid()) {
@@ -127,7 +96,7 @@ const createRequiredValidation = (
 			return {
 				condition: 'required',
 				valid: false,
-				message: message(),
+				message: message?.() ?? null,
 			} as const;
 		});
 	});

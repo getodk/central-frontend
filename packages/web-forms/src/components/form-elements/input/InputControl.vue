@@ -57,7 +57,7 @@ const isFormEditMode = inject(IS_FORM_EDIT_MODE);
 			<InputText :node="node" />
 		</template>
 	</div>
-	<ValidationMessage :message="node.validationState.violation?.message.formatted" />
+	<ValidationMessage :violation="node.validationState.violation" />
 </template>
 
 <style scoped lang="scss">

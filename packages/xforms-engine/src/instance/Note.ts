@@ -32,8 +32,8 @@ import type { ValidationContext } from './internal-api/ValidationContext.ts';
 interface NoteStateSpec<V extends ValueType> extends ValueNodeStateSpec<NoteValue<V>> {
 	readonly readonly: Accessor<true>;
 	readonly noteText: ComputedNoteText;
-	readonly label: Accessor<TextRange<'label', 'form'> | null>;
-	readonly hint: Accessor<TextRange<'hint', 'form'> | null>;
+	readonly label: Accessor<TextRange<'label'> | null>;
+	readonly hint: Accessor<TextRange<'hint'> | null>;
 	readonly valueOptions: null;
 }
 
@@ -76,8 +76,8 @@ export class Note<V extends ValueType = ValueType>
 		this.attributeState = createAttributeState(this.scope);
 
 		let noteText: ComputedNoteText;
-		let label: Accessor<TextRange<'label', 'form'> | null>;
-		let hint: Accessor<TextRange<'hint', 'form'> | null>;
+		let label: Accessor<TextRange<'label'> | null>;
+		let hint: Accessor<TextRange<'hint'> | null>;
 
 		switch (noteTextComputation.role) {
 			case 'label': {

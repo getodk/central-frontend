@@ -15,8 +15,7 @@ import {
 	title,
 } from '@getodk/common/test-utils/xform-dsl/index.ts';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { VALIDATION_TEXT } from '../../../src/client/constants.ts';
-import type { ValidationCondition } from '../../../src/client/validation.ts';
+import type { ValidationCondition, ViolationMessage } from '../../../src/client/validation.ts';
 import { createInstance } from '../../../src/entrypoints/createInstance.ts';
 import { reactiveTestScope } from '../../helpers/reactive/internal.ts';
 
@@ -81,7 +80,7 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
 	interface SimplifiedViolation {
 		readonly condition: ValidationCondition;
 		readonly valid: false;
-		readonly message: string;
+		readonly message: ViolationMessage<ValidationCondition> | null;
 	}
 
 	interface SimplifiedViolationReference {
@@ -129,7 +128,7 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
 							const violation: SimplifiedViolation = {
 								condition: violationReference.violation.condition,
 								valid: violationReference.violation.valid,
-								message: violationReference.violation.message.asString,
+								message: violationReference.violation.message,
 							};
 
 							return {
@@ -151,7 +150,7 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
 						violation: {
 							condition: 'required',
 							valid: false,
-							message: VALIDATION_TEXT.requiredMsg,
+							message: null,
 						},
 					},
 				],
@@ -192,7 +191,7 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
 							const violation: SimplifiedViolation = {
 								condition: violationReference.violation.condition,
 								valid: violationReference.violation.valid,
-								message: violationReference.violation.message.asString,
+								message: violationReference.violation.message,
 							};
 
 							return {
@@ -214,7 +213,7 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
 						violation: {
 							condition: 'required',
 							valid: false,
-							message: VALIDATION_TEXT.requiredMsg,
+							message: null,
 						},
 					},
 				],
@@ -257,7 +256,7 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
 							const violation: SimplifiedViolation = {
 								condition: violationReference.violation.condition,
 								valid: violationReference.violation.valid,
-								message: violationReference.violation.message.asString,
+								message: violationReference.violation.message,
 							};
 
 							return {
@@ -291,7 +290,7 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
 						violation: {
 							condition: 'required',
 							valid: false,
-							message: VALIDATION_TEXT.requiredMsg,
+							message: null,
 						},
 					},
 				],
@@ -335,7 +334,7 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
 							const violation: SimplifiedViolation = {
 								condition: violationReference.violation.condition,
 								valid: violationReference.violation.valid,
-								message: violationReference.violation.message.asString,
+								message: violationReference.violation.message,
 							};
 
 							return {
@@ -375,7 +374,7 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
 						violation: {
 							condition: 'required',
 							valid: false,
-							message: VALIDATION_TEXT.requiredMsg,
+							message: null,
 						},
 					},
 				],
@@ -412,7 +411,7 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
 							const violation: SimplifiedViolation = {
 								condition: violationReference.violation.condition,
 								valid: violationReference.violation.valid,
-								message: violationReference.violation.message.asString,
+								message: violationReference.violation.message,
 							};
 
 							return {
@@ -455,7 +454,7 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
 						violation: {
 							condition: 'required',
 							valid: false,
-							message: VALIDATION_TEXT.requiredMsg,
+							message: null,
 						},
 					},
 					{
@@ -463,7 +462,7 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
 						violation: {
 							condition: 'required',
 							valid: false,
-							message: VALIDATION_TEXT.requiredMsg,
+							message: null,
 						},
 					},
 				],
@@ -475,7 +474,7 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
 						violation: {
 							condition: 'required',
 							valid: false,
-							message: VALIDATION_TEXT.requiredMsg,
+							message: null,
 						},
 					},
 				],
@@ -507,7 +506,7 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
 							const violation: SimplifiedViolation = {
 								condition: violationReference.violation.condition,
 								valid: violationReference.violation.valid,
-								message: violationReference.violation.message.asString,
+								message: violationReference.violation.message,
 							};
 
 							return {
@@ -556,7 +555,7 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
 						violation: {
 							condition: 'required',
 							valid: false,
-							message: VALIDATION_TEXT.requiredMsg,
+							message: null,
 						},
 					},
 					{
@@ -564,7 +563,7 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
 						violation: {
 							condition: 'required',
 							valid: false,
-							message: VALIDATION_TEXT.requiredMsg,
+							message: null,
 						},
 					},
 				],
@@ -576,7 +575,7 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
 						violation: {
 							condition: 'required',
 							valid: false,
-							message: VALIDATION_TEXT.requiredMsg,
+							message: null,
 						},
 					},
 				],

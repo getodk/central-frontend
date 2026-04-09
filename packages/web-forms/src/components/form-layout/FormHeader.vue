@@ -5,31 +5,18 @@ import {
 	type SyntheticDefaultLanguage,
 } from '@getodk/xforms-engine';
 import Card from 'primevue/card';
-import { ref } from 'vue';
 import FormLanguageMenu from './FormLanguageMenu.vue';
 
 const props = defineProps<{ form: RootNode }>();
-const languageDialogState = ref(false);
+const emit = defineEmits<{ changeLanguage: [FormLanguage] }>();
 
 const isFormLanguage = (lang: FormLanguage | SyntheticDefaultLanguage): lang is FormLanguage => {
 	return !lang.isSyntheticDefault;
 };
-
-type DropdownItem = Array<{ label: string; icon: string; command: () => void }>;
-const items = ref<DropdownItem>([]);
-
 const languages = props.form.languages.filter(isFormLanguage);
-if (languages.length > 0) {
-	items.value.unshift({
-		// TODO: translations
-		label: 'Change language',
-		icon: 'mdiWeb',
-		command: () => (languageDialogState.value = true),
-	});
-}
 
 const handleLanguageChange = (event: FormLanguage) => {
-	props.form.setLanguage(event);
+	emit('changeLanguage', event);
 };
 </script>
 
@@ -47,11 +34,10 @@ const handleLanguageChange = (event: FormLanguage) => {
 			<template #content>
 				<!-- TODO/q: should the title be on the definition or definition.form be accessible instead of definition.bind.form -->
 				<h1>{{ form.definition.bind.form.title }}</h1>
-			<!-- last saved timestamp -->
+				<!-- last saved timestamp -->
 			</template>
 		</Card>
 	</div>
-
 
 	<!-- for mobile and tablet -->
 	<div class="flex lg:hidden align-items-start justify-content-between smaller-screens">

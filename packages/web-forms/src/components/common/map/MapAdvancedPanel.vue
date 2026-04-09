@@ -7,8 +7,12 @@ import {
 	toGeoJsonCoordinateArray,
 } from '@/components/common/map/geojson-parsers.ts';
 import { fromLonLat } from 'ol/proj';
-import { computed, ref, watch } from 'vue';
+import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
+import type { Translate } from '@/lib/locale/useLocale.ts';
+import { computed, inject, ref, watch } from 'vue';
 import type { Coordinate } from 'ol/coordinate';
+
+const t: Translate = inject(TRANSLATE)!;
 
 const props = defineProps<{
 	isOpen: boolean;
@@ -68,8 +72,7 @@ const updateVertex = () => {
 			<div class="fields-container">
 				<div :class="{ 'field-error': !disableInputs && !validLongitude }" class="field-set">
 					<div class="input-wrap">
-						<!-- TODO: translations -->
-						<label for="longitude">Longitude</label>
+						<label for="longitude">{{ t('map_advanced_panel.longitude.label') }}</label>
 						<input
 							id="longitude"
 							v-model="longitude"
@@ -78,15 +81,13 @@ const updateVertex = () => {
 							@change="updateVertex"
 						>
 					</div>
-					<!-- TODO: translations -->
 					<p class="field-error-message">
-						Longitude is invalid
+						{{ t('map_advanced_panel.longitude.error') }}
 					</p>
 				</div>
 				<div :class="{ 'field-error': !disableInputs && !validLatitude }" class="field-set">
 					<div class="input-wrap">
-						<!-- TODO: translations -->
-						<label for="latitude">Latitude</label>
+						<label for="latitude">{{ t('map_advanced_panel.latitude.label') }}</label>
 						<input
 							id="latitude"
 							v-model="latitude"
@@ -95,15 +96,13 @@ const updateVertex = () => {
 							@change="updateVertex"
 						>
 					</div>
-					<!-- TODO: translations -->
 					<p class="field-error-message">
-						Latitude is invalid
+						{{ t('map_advanced_panel.latitude.error') }}
 					</p>
 				</div>
 				<div class="field-set">
 					<div class="input-wrap">
-						<!-- TODO: translations -->
-						<label for="altitude">Altitude</label>
+						<label for="altitude">{{ t('map_advanced_panel.altitude.label') }}</label>
 						<input
 							id="altitude"
 							v-model="altitude"
@@ -115,8 +114,7 @@ const updateVertex = () => {
 				</div>
 				<div class="field-set">
 					<div class="input-wrap">
-						<!-- TODO: translations -->
-						<label for="accuracy">Accuracy</label>
+						<label for="accuracy">{{ t('map_advanced_panel.accuracy.label') }}</label>
 						<input
 							id="accuracy"
 							v-model="accuracy"
@@ -130,8 +128,7 @@ const updateVertex = () => {
 
 			<a class="paste-location" @click="emit('open-paste-dialog')">
 				<IconSVG name="mdiFileOutline" size="sm" />
-				<!-- TODO: translations -->
-				<strong>Import data to replace location</strong>
+				<strong>{{ t('map_advanced_panel.import_data.label') }}</strong>
 			</a>
 		</div>
 	</transition>
