@@ -4,10 +4,9 @@ shopt -s inherit_errexit || true
 
 log() { echo >&2 "[$(basename "$0")] $*"; }
 
-# MacOS/BSD compat
-if ! command -v sha256sum >/dev/null; then
-  sha256sum() { shasum -a 256 "$@"; }
-fi
+sha256() {
+  shasum -a 256 "$@" | cut -d" " -f1
+}
 
 fatal_error() {
   log "!!!"
@@ -24,7 +23,7 @@ downloadAndVerify() {
   wget "https://www.jonof.id.au/files/kenutils/$fileName"
 
   log "Verifying download integrity..."
-  [[ $(sha256sum "$fileName" | cut -d" " -f1) = "$expectedDownloadHash" ]]
+  [[ $(sha256 "$fileName") = "$expectedDownloadHash" ]]
 
   log "Extracting executable..."
   case "$fileName" in
@@ -36,7 +35,7 @@ downloadAndVerify() {
   pngoutExe="$(find . -type f -path "$archDir/pngout")"
 
   log "Verifying executable integrity..."
-  [[ $(sha256sum "$pngoutExe" | cut -d" " -f1) = "$expectedExeHash" ]]
+  [[ $(sha256 "$pngoutExe") = "$expectedExeHash" ]]
 }
 pngoutArchDir() {
   case "$(uname -m)" in
