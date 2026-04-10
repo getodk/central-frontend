@@ -35,7 +35,9 @@ describe('useFeatureFlags()', () => {
   });
 
   // Occasionally synthetic events can be fired without a .key prop, e.g.
-  // Chrome password manager filling form fields.
+  // Chrome password manager filling form fields.  Note that this *cannot*
+  // be recreated with `component.trigger()`, as that sends a `KeyEvent`,
+  // which _always_ has .key defined as a String.
   // See: https://github.com/getodk/central/issues/1280
   it('should not throw when a synthetic key event is fired', async () => {
     mountComponent();
