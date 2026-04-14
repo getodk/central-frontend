@@ -133,7 +133,7 @@ describe('Form instance state', () => {
 
 		it.each([
 			{ firstValue: '2', expected: '4' },
-			{ firstValue: '', expected: 'NaN' },
+			{ firstValue: '', expected: '' },
 		])(
 			'updates the calculation to $expected when its dependency value is updated to $firstValue',
 			({ firstValue, expected }) => {
@@ -331,7 +331,7 @@ describe('Form instance state', () => {
 		it.each([
 			{ firstValue: '2', expected: '6' },
 			{ firstValue: '0', expected: '0' },
-			{ firstValue: '', expected: 'NaN' },
+			{ firstValue: '', expected: '' },
 		])(
 			'updates the calculated value $expected while it is relevant',
 			({ firstValue, expected }) => {
@@ -350,7 +350,7 @@ describe('Form instance state', () => {
 		it.each([
 			{ firstValue: '2', expected: '6' },
 			{ firstValue: '0', expected: '0' },
-			{ firstValue: '', expected: 'NaN' },
+			{ firstValue: '', expected: '' },
 		])(
 			'updates the calculated value $expected when it becomes relevant after the calculated dependency has been updated',
 			({ firstValue, expected }) => {

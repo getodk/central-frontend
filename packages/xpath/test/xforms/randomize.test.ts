@@ -80,7 +80,7 @@ describe('randomize()', () => {
 			{ seed: 0, expected: 'CBEAFD' },
 			{ seed: NaN, expected: 'CBEAFD' },
 			{ seed: Infinity, expected: 'CBEAFD' },
-			{ seed: -Infinity, expected: 'CFBEAD' },
+			{ seed: -Infinity, expected: 'CBEAFD' },
 			{ seed: 'floor(1.1)', expected: 'BFEACD' },
 			{ seed: '//xhtml:div[@id="testFunctionNodeset2"]/xhtml:p', expected: 'BFEACD' },
 			{ seed: MIRROR_HASH_VALUE, expected: MIRROR_HASH_SORT_ORDER },

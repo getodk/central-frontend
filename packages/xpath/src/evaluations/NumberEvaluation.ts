@@ -18,6 +18,6 @@ export class NumberEvaluation<T extends XPathNode> extends ValueEvaluation<T, 'N
 
 		this.booleanValue = value !== 0 && !Number.isNaN(value);
 		this.numberValue = value;
-		this.stringValue = String(value);
+		this.stringValue = Number.isNaN(value) ? '' : String(value);
 	}
 }

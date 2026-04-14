@@ -27,8 +27,8 @@ describe('once()', () => {
 			});
 		});
 
-		it('should set value to NaN', () => {
-			testContext.assertStringValue('once(. * 10)', 'NaN', {
+		it('should set value to empty string when arithmetic on empty node produces NaN', () => {
+			testContext.assertStringValue('once(. * 10)', '', {
 				contextNode,
 			});
 		});

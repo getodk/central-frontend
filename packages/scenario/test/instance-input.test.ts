@@ -812,7 +812,7 @@ describe.each<InstanceRoundTripCase>([
 				readonly inner3: ComparableAnswer;
 			}
 
-			const NAN_ANSWER = stringAnswer(String(NaN));
+			const NAN_ANSWER = stringAnswer('');
 
 			interface MissingRepeatInstanceInputCase {
 				readonly detail: string;
