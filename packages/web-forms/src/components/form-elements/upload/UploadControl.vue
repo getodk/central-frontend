@@ -181,7 +181,14 @@ const onDrop = (event: DragEvent) => {
 					<template v-else>
 						<UploadFilePreview :file-name="fileName" />
 					</template>
-					<Button v-if="!isDisabled" severity="secondary" outlined class="clear-button" @click="clearValue">
+					<Button
+						v-if="!isDisabled"
+						:class="{ 'over-preview': fileType === 'image' || fileType === 'video' }"
+						severity="secondary"
+						outlined
+						class="clear-button"
+						@click="clearValue"
+					>
 						<IconSVG name="mdiClose" variant="muted" size="sm" />
 					</Button>
 				</div>
@@ -231,12 +238,22 @@ const onDrop = (event: DragEvent) => {
 }
 
 .upload-content {
+	width: fit-content;
+	min-width: min(100%, var(--odk-media-container-size));
 	display: flex;
 	align-items: center;
 	gap: var(--odk-spacing-l);
+	position: relative;
 
-	button {
+	button.clear-button:not(.over-preview) {
 		align-self: flex-start;
+	}
+
+	button.clear-button.over-preview {
+		position: absolute;
+		top: var(--odk-spacing-m);
+		right: var(--odk-spacing-m);
+		background: var(--odk-base-background-color);
 	}
 }
 

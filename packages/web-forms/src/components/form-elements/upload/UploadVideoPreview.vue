@@ -20,15 +20,22 @@ watchEffect(() => {
 </script>
 
 <template>
-	<div v-if="mediaUrl">
+	<div v-if="mediaUrl" class="video-container">
 		<video controls :src="mediaUrl" />
 	</div>
 </template>
 
 <style scoped lang="scss">
-video {
+.video-container {
+	background: var(--odk-muted-background-color);
 	width: 100%;
-	max-height: var(--odk-max-image-height);
+	justify-content: center;
 	border-radius: var(--odk-radius);
+
+	video {
+		width: 100%;
+		max-height: var(--odk-max-image-height);
+		border-radius: var(--odk-radius);
+	}
 }
 </style>

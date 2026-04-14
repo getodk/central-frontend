@@ -125,7 +125,7 @@ watchEffect(() => {
 	}
 
 	&.small-fixed {
-		max-width: var(--odk-image-container-size);
+		max-width: var(--odk-media-container-size);
 	}
 
 	&.fit-content {
@@ -133,7 +133,7 @@ watchEffect(() => {
 	}
 
 	&.broken-file {
-		max-width: var(--odk-image-container-size);
+		max-width: var(--odk-media-container-size);
 
 		img {
 			max-width: 90%;
