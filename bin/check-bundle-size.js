@@ -65,14 +65,15 @@ function isTooBig({ path, size }) {
 
   const type = extname(path).substr(1);
   switch (type) { // eslint-disable-line default-case
-    case 'css':  return size > 220_000;
-    case 'html': return size >   2_500;
-    case 'ico':  return size >  16_000;
-    case 'js':   return size > 200_000;
-    case 'png':  return size > 700_000;
-    case 'svg':  return size >  60_000;
-    case 'ttf':  return size >  18_000;
-    case 'woff': return size >  19_000;
+    case 'css':         return size > 220_000;
+    case 'html':        return size >   2_500;
+    case 'ico':         return size >  16_000;
+    case 'js':          return size > 200_000;
+    case 'png':         return size > 700_000;
+    case 'svg':         return size >  60_000;
+    case 'ttf':         return size >  18_000;
+    case 'webmanifest': return size >     500;
+    case 'woff':        return size >  19_000;
   }
   throw new Error(`No check written for file ${path} yet!  Please review this function.`);
 }
