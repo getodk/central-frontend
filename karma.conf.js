@@ -71,7 +71,7 @@ module.exports = (config) => {
       '/v1/config/public/logo': '/base/src/assets/images/odk-logo.png',
       '/img/banner@1x.6c9e9f21.png': '/base/src/assets/images/whats-new/banner@1x.png', // Smaller resolution for circleCI test
       '/img/map-location.b523ce2d.svg': '/base/src/assets/images/geojson-map/map-location.svg',
-      '/img/fullscreen.37a932a6.svg': '/base/src/assets/images/geojson-map/fullscreen.svg'
+      '/img/fullscreen.334affb3.svg': '/base/src/assets/images/geojson-map/fullscreen.svg'
     },
     preprocessors: {
       'test/index.js': ['webpack', 'sourcemap']

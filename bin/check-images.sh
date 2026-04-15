@@ -83,8 +83,25 @@ else
 fi
 
 touch .image-hashes
+
+minify_png() {
+  # pngout exit codes:
+  #   0: success
+  #   1: true error
+  #   2: "unable to compress further"
+  "$pngoutExe" "$1" ||
+      [[ $? -eq 2 ]] ||
+      fatal_error "An unexpected error occurred while executing $pngoutExe"
+}
+
+minify_svg() {
+  t="$(mktemp)"
+  npx --package svgo --no-yes svgo -- "$1" -o "$t"
+  mv "$t" "$1"
+}
+
 willFail=false
-for target in $(git ls-files '*.png'); do
+for target in $(git ls-files '*.png' '*.svg'); do
   log "Checking image: $target ..."
 
   expectedHash="$(grep "$target" .image-hashes | cut -d: -f2 || echo '<no previous hash>')"
@@ -99,14 +116,12 @@ for target in $(git ls-files '*.png'); do
 
     if [[ "$fix" = true ]]; then
       log "  Compressing image..."
-
-      # pngout exit codes:
-      #   0: success
-      #   1: true error
-      #   2: "unable to compress further"
-      "$pngoutExe" "$target" ||
-          [[ $? -eq 2 ]] ||
-          fatal_error "An unexpected error occurred while executing $pngoutExe"
+      extension="${target##*.}"
+      case "$extension" in
+        png) minify_png "$target" ;;
+        svg) minify_svg "$target" ;;
+        *)   fatal_error "Unrecognised file extension: $extension"
+      esac
 
       log "  Updating hash..."
       cat >"$tmpHashes" \
