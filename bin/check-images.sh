@@ -82,6 +82,20 @@ else
 fi
 
 touch .image-hashes
+
+log "Checking all files referenced in .image-hashes exist..."
+unreferenced=""
+while read -r line; do
+  f="$(cut -d: -f1 <<<"$line")"
+  if ! [[ -f "$f" ]]; then
+    unreferenced=true
+    log "  Not found: $f"
+  fi
+done < .image-hashes
+if [[ $unreferenced = true ]]; then
+  fatal_error "File(s) references in .image-hashes do not exist!"
+fi
+
 willFail=false
 for target in $(git ls-files '*.png'); do
   log "Checking image: $target ..."
