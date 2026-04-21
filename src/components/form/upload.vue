@@ -300,6 +300,7 @@ export default {
 
 <i18n lang="json5">
 {
+  // @transifexKey component.FormNew
   "en": {
     // This is the title at the top of a pop-up.
     "title": {
