@@ -110,6 +110,10 @@ const loaders = new Map()
     /* webpackChunkName: "component-form-edit" */
     '../components/form/edit.vue'
   )))
+  .set('FormNewPage', loader(() => import(
+    /* webpackChunkName: "component-form-new-page" */
+    '../components/form/new-page.vue'
+  )))
   .set('FormSettings', loader(() => import(
     /* webpackChunkName: "component-form-settings" */
     '../components/form/settings.vue'

@@ -23,14 +23,13 @@ except according to the terms contained in the LICENSE file.
         </div>
       </div>
       <template v-if="formDraft.isDefined()">
-        <form-edit-def @upload="uploadModal.show()"/>
+        <form-edit-def @after-upload="afterUpload"/>
         <form-draft-testing/>
         <form-edit-draft-controls @publish="publishModal.show()"
           @abandon="abandonModal.show()"/>
       </template>
     </template>
 
-    <form-new v-bind="uploadModal" @hide="uploadModal.hide()" @success="afterUpload"/>
     <form-draft-publish v-if="formDraft.dataExists && formDraft.isDefined()"
       v-bind="publishModal" @hide="publishModal.hide()"
       @success="afterPublish"/>
@@ -51,7 +50,6 @@ import FormEditCreateDraft from './edit/create-draft.vue';
 import FormEditDef from './edit/def.vue';
 import FormEditDraftControls from './edit/draft-controls.vue';
 import FormEditPublishedVersion from './edit/published-version.vue';
-import FormNew from './new.vue';
 import Loading from '../loading.vue';
 
 import useRoutes from '../../composables/routes';
@@ -173,6 +171,12 @@ const afterAbandon = () => {
 <style lang="scss">
 #form-edit {
   padding-inline: 10px;
+
+  #form-upload {
+    p {
+      max-width: unset;
+    }
+  }
 }
 
 body:has(#form-edit) { background-color: #fff; }

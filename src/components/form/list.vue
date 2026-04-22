@@ -14,11 +14,11 @@ except according to the terms contained in the LICENSE file.
     <page-section>
       <template #heading>
         <span>{{ $t('title') }}</span>
-        <button v-if="project.dataExists && project.permits('form.create')"
-          id="form-list-create-button" type="button" class="btn btn-primary"
-          @click="createModal.show()">
+        <router-link v-if="project.dataExists && project.permits('form.create')"
+          id="form-list-create-button" :to="projectPath('new-form')"
+          class="btn btn-primary">
           <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
-        </button>
+        </router-link>
         <form-sort v-model="sortMode"/>
       </template>
       <template #body>
@@ -31,13 +31,10 @@ except according to the terms contained in the LICENSE file.
         </p>
       </template>
     </page-section>
-    <form-new v-bind="createModal" @hide="createModal.hide()"
-      @success="afterCreate"/>
   </div>
 </template>
 
 <script>
-import FormNew from './new.vue';
 import FormTable from './table.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
@@ -45,41 +42,26 @@ import FormSort from './sort.vue';
 
 import sortFunctions from '../../util/sort';
 import useRoutes from '../../composables/routes';
-import { modalData } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormList',
-  components: { FormTable, FormNew, FormSort, Loading, PageSection },
-  inject: ['alert'],
+  components: { FormTable, FormSort, Loading, PageSection },
   setup() {
     // The component does not assume that this data will exist when the
     // component is created.
     const { project, forms } = useRequestData();
-    const { formPath } = useRoutes();
-    return { project, forms, formPath };
+    const { projectPath } = useRoutes();
+    return { project, forms, projectPath };
   },
   data() {
     return {
-      createModal: modalData(),
       sortMode: 'alphabetical'
     };
   },
   computed: {
     sortFunction() {
       return sortFunctions[this.sortMode];
-    }
-  },
-  methods: {
-    async afterCreate(form) {
-      const message = this.$t('alert.create', {
-        name: form.name != null ? form.name : form.xmlFormId
-      });
-      await this.$router.push(this.formPath(form.projectId, form.xmlFormId, 'draft'));
-      // Increment the count so that if the user returns to a project page, they
-      // will see the new count.
-      this.project.forms += 1;
-      this.alert.success(message);
     }
   }
 };
