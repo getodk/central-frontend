@@ -39,7 +39,7 @@ const upload = async (component, file = xlsForm()) => {
   return wait(1);
 };
 
-describe.skip('FormNew', () => {
+describe('FormUpload', () => {
   describe('new form modal', () => {
     beforeEach(() => {
       mockLogin();
