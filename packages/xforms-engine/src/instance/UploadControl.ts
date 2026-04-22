@@ -13,7 +13,10 @@ import {
 	createAttributeState,
 	type AttributeState,
 } from '../lib/reactivity/createAttributeState.ts';
-import { createInstanceAttachment } from '../lib/reactivity/createInstanceAttachment.ts';
+import {
+	createInstanceAttachment,
+	type BaseInstanceAttachmentState,
+} from '../lib/reactivity/createInstanceAttachment.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
@@ -67,6 +70,7 @@ interface UploadControlStateSpec extends DescendantNodeStateSpec<InstanceAttachm
 	readonly valueOptions: null;
 	readonly value: SimpleAtomicState<InstanceAttachmentRuntimeValue>;
 	readonly instanceValue: Accessor<InstanceAttachmentFileName>;
+	readonly attachmentState: Accessor<BaseInstanceAttachmentState>;
 }
 
 export class UploadControl
@@ -143,6 +147,7 @@ export class UploadControl
 		const instanceAttachment = createInstanceAttachment(this);
 
 		this.instanceAttachment = instanceAttachment;
+
 		this.attributeState = createAttributeState(this.scope);
 		this.decodeInstanceValue = instanceAttachment.decodeInstanceValue;
 		this.getXPathValue = instanceAttachment.getInstanceValue;
@@ -162,6 +167,7 @@ export class UploadControl
 				value: instanceAttachment.valueState,
 				attributes: this.attributeState.getAttributes,
 				instanceValue: instanceAttachment.getInstanceValue,
+				attachmentState: instanceAttachment.getState,
 			},
 			this.instanceConfig
 		);
@@ -197,5 +203,9 @@ export class UploadControl
 		this.instanceAttachment.setValue(value);
 
 		return this.root;
+	}
+
+	retryFetch() {
+		this.instanceAttachment.retry();
 	}
 }

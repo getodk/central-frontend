@@ -1,4 +1,5 @@
 import type { PartiallyKnownString } from '@getodk/common/types/string/PartiallyKnownString.ts';
+import type { BaseInstanceAttachmentState } from '../lib/reactivity/createInstanceAttachment.ts';
 import type { UnknownAppearanceDefinition } from '../parse/body/appearance/unknownAppearanceParser.ts';
 import type { UploadControlDefinition } from '../parse/body/control/UploadControlDefinition.ts';
 import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
@@ -15,6 +16,7 @@ export interface UploadNodeState extends BaseValueNodeState<UploadValue> {
 	get valueOptions(): null;
 	get value(): UploadValue;
 	get instanceValue(): InstanceAttachmentFileName;
+	get attachmentState(): BaseInstanceAttachmentState;
 }
 
 export interface UploadDefinition<V extends ValueType = ValueType> extends LeafNodeDefinition<V> {
@@ -76,4 +78,5 @@ export interface UploadNode extends BaseValueNode<'binary', UploadValue> {
 	readonly maxPixels: number | null;
 
 	setValue(value: UploadValue): RootNode;
+	retryFetch(): void;
 }

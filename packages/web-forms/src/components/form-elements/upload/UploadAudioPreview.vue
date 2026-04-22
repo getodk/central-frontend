@@ -28,6 +28,7 @@ watchEffect(() => {
 
 <style scoped lang="scss">
 div {
+	min-height: var(--odk-audio-height);
 	width: 100%;
 	max-width: 400px;
 

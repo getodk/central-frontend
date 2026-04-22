@@ -73,11 +73,12 @@ describe.each<InstanceRoundTripCase>([
 		});
 
 		scenario.answer('/data/file-upload', uploadValue);
-
 		const result = await scenarioFromCurrentInstanceState(scenario);
+		const expected = binaryAnswer(uploadValue);
 
-		await expect(result.answerOf('/data/file-upload')).toEqualUploadedAnswer(
-			binaryAnswer(uploadValue)
-		);
+		// we need to poll because serializing the file is async
+		await expect
+			.poll(() => result.answerOf('/data/file-upload'), { timeout: 1000 })
+			.toEqualUploadedAnswer(expected);
 	});
 });

@@ -411,6 +411,10 @@
     "string": "Are you sure you want to delete this file?",
     "developer_comment": "Body text of the confirmation dialog shown before deleting an uploaded file."
   },
+  "upload_control.downloading.error": {
+    "string": "Error downloading this file from the server",
+    "developer_comment": "Error message shown when downloading the attachment from the server failed."
+  },
   "repeat.add.label": {
     "string": "Add",
     "developer_comment": "Label for the button to add a repeat instance."

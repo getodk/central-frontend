@@ -784,4 +784,65 @@ describe('Instance attachments: binary output', () => {
 			expect(attachments.size).toBe(0);
 		});
 	});
+
+	describe('unmodified attachments', () => {
+		it('omits unmodified attachments in edits', async () => {
+			const scenario = await Scenario.init(
+				'Basic upload control',
+				// prettier-ignore
+				html(
+					head(
+						title('Basic upload control'),
+						model(
+							mainInstance(
+								t('data id="basic-upload-control"',
+									t('file-upload-1'),
+									t('file-upload-2'),
+									t('meta',
+										t('instanceID', FAKE_INSTANCE_ID)))),
+							bind('/data/file-upload-1').type('binary'),
+							bind('/data/file-upload-2').type('binary'),
+						)),
+					body(
+						upload('/data/file-upload-1'),
+						upload('/data/file-upload-2')
+					))
+			);
+
+			const uploadValue1 = new File(['first'], 'upload-1.txt', {
+				type: 'text/plain',
+			});
+			const uploadValue2 = new File(['second'], 'upload-2.txt', {
+				type: 'text/plain',
+			});
+
+			const uploadName = 'upload-2-edited.txt';
+			const uploadData = 'second edited';
+			const uploadValue2Edited = new File([uploadData], uploadName, {
+				type: 'text/plain',
+			});
+
+			scenario.answer('/data/file-upload-1', uploadValue1);
+			scenario.answer('/data/file-upload-2', uploadValue2);
+
+			const edited = await scenario.editCurrentInstance();
+			edited.answer('/data/file-upload-2', uploadValue2Edited);
+
+			const { data } = await edited.prepareWebFormsInstancePayload();
+			const attachments = new Map(
+				Array.from(data[0]).filter(([key]) => key !== ENGINE_CONSTANTS.INSTANCE_FILE_NAME)
+			);
+
+			expect(attachments.size).toBe(1);
+
+			const attachment = attachments.get(uploadName);
+
+			assert(attachment != null);
+			expect(attachment.name).toBe(uploadName);
+
+			const actualData = await getBlobText(attachment);
+
+			expect(actualData).toBe(uploadData);
+		});
+	});
 });

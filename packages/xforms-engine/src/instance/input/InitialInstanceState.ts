@@ -87,11 +87,8 @@ export class InitialInstanceState {
 			});
 		}
 
-		const [instanceXML, attachments] = await Promise.all([
-			resolveInstanceXML(input),
-			InstanceAttachmentMap.resolve(input.attachments),
-		]);
-
+		const instanceXML = await resolveInstanceXML(input);
+		const attachments = InstanceAttachmentMap.resolve(input.attachments);
 		return new this(model, {
 			instanceXML,
 			attachments,

@@ -36,6 +36,9 @@ const fileName = computed(() => props.question.currentState.value?.name ?? '');
 const accept = computed(() => props.question.nodeOptions.media.accept);
 const mediaType = computed(() => props.question.nodeOptions.media.type);
 const maxFileSize = computed(() => formOptions?.attachmentMaxSize ?? MAX_FILE_SIZE);
+const loading = computed(() => props.question.currentState.attachmentState.loading);
+const loadingError = computed(() => props.question.currentState.attachmentState.loadingError);
+const existingFileName = computed(() => props.question.currentState.attachmentState.intrinsicName ?? '');
 const confirmDeleteAction = ref(false);
 const fileError = ref<string | null>(null);
 
@@ -132,6 +135,10 @@ const clearValue = () => {
 	confirmDeleteAction.value = true;
 };
 
+const retryFetch = () => {
+	props.question.retryFetch();
+};
+
 const onChange = (file: File | null) => {
 	if (file) {
 		updateValue(file);
@@ -168,7 +175,10 @@ const onDrop = (event: DragEvent) => {
 		</template>
 		<template #default>
 			<div class="drag-and-drop" :class="{ 'disabled': isDisabled }" @drop.prevent.stop="onDrop" @dragover.prevent>
-				<div v-if="question.currentState.value" class="upload-content">
+				<div v-if="loading" class="skeleton-loading" :class="{ 'loading-image': mediaType === 'image', 'loading-video': mediaType === 'video', 'loading-audio': mediaType === 'audio' }">
+					{{ existingFileName }}
+				</div>
+				<div v-else-if="question.currentState.value" class="upload-content">
 					<template v-if="fileType === 'image'">
 						<UploadImagePreview :image="objectURL" />
 					</template>
@@ -199,6 +209,17 @@ const onDrop = (event: DragEvent) => {
 					@close="fileError = null"
 				>
 					{{ fileError }}
+				</Message>
+				<Message
+					v-else-if="loadingError"
+					severity="error"
+					:closable="true"
+					@close="retryFetch()"
+				>
+					<template #closeicon>
+						<IconSVG name="mdiRefresh" variant="muted" size="sm" />
+					</template>
+					{{ t('upload_control.downloading.error') }}
 				</Message>
 				<div v-else class="placeholder">
 					{{ t('upload_control.drag_and_drop.placeholder') }}
@@ -259,6 +280,23 @@ const onDrop = (event: DragEvent) => {
 
 .drag-and-drop {
 	padding: var(--odk-spacing-xxl);
+
+	.skeleton-loading {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 300px;
+		min-height: 40px;
+
+		&.loading-image,
+		&.loading-video {
+			height: var(--odk-max-image-height);
+		}
+
+		&.loading-audio {
+			height: var(--odk-audio-height);
+		}
+	}
 
 	&.disabled {
 		color: var(--odk-muted-text-color);

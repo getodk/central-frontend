@@ -4,8 +4,6 @@ import type {
 	EditedFormInstance,
 	InstancePayload,
 	ResolvableFormInstanceInput,
-	ResolvableInstanceAttachmentsMap,
-	ResolveFormInstanceResource,
 	RootNode,
 } from '@getodk/xforms-engine';
 import { constants as ENGINE_CONSTANTS } from '@getodk/xforms-engine';
@@ -44,21 +42,20 @@ const assertSubmittable: AssertSubmittable = (payload) => {
 	expect(payload).toBeReadyForSubmission();
 };
 
-const mockSubmissionIO = (payload: SubmittableInstancePayload): ResolvableFormInstanceInput => {
+const mockSubmissionIO = async (
+	payload: SubmittableInstancePayload
+): Promise<ResolvableFormInstanceInput> => {
 	const instanceFile = payload.data[0].get(ENGINE_CONSTANTS.INSTANCE_FILE_NAME);
 	const resolveInstance = () => getBlobText(instanceFile);
 	const attachmentFiles = Array.from(payload.data)
 		.flatMap((data) => Array.from(data.values()))
 		.filter((value): value is File => value !== instanceFile && value instanceof File);
-	const attachments: ResolvableInstanceAttachmentsMap = new Map(
-		attachmentFiles.map((file) => {
-			const resolveAttachment: ResolveFormInstanceResource = async () => {
-				return buildFileResponse(file);
-			};
 
-			return [file.name, resolveAttachment];
-		})
-	);
+	const attachments = new Map();
+	for (const file of attachmentFiles) {
+		const response = await buildFileResponse(file);
+		attachments.set(file.name, () => Promise.resolve(response));
+	}
 
 	return {
 		inputType: 'FORM_INSTANCE_INPUT_RESOLVABLE',
@@ -87,5 +84,5 @@ export const editInstance = async (
 
 	assertSubmittable(payload);
 
-	return form.editInstance(mockSubmissionIO(payload));
+	return form.editInstance(await mockSubmissionIO(payload));
 };

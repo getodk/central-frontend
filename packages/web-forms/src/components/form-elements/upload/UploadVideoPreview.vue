@@ -34,6 +34,7 @@ watchEffect(() => {
 
 	video {
 		width: 100%;
+		display: block;
 		max-height: var(--odk-max-image-height);
 		border-radius: var(--odk-radius);
 	}

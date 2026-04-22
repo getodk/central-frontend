@@ -1,5 +1,6 @@
 import type { Accessor } from 'solid-js';
 import type { InstancePayload } from '../../client/index.ts';
+import type { BaseInstanceAttachmentState } from '../../lib/reactivity/createInstanceAttachment.ts';
 import type { SimpleAtomicState, SimpleAtomicStateSetter } from '../../lib/reactivity/types.ts';
 import type { InstanceAttachmentContext } from '../internal-api/InstanceAttachmentContext.ts';
 import type { DecodeInstanceValue } from '../internal-api/InstanceValueContext.ts';
@@ -16,6 +17,10 @@ export interface InstanceAttachmentOptions {
 	readonly getValue: Accessor<InstanceAttachmentRuntimeValue>;
 	readonly setValue: SimpleAtomicStateSetter<InstanceAttachmentRuntimeValue>;
 	readonly valueState: SimpleAtomicState<InstanceAttachmentRuntimeValue>;
+
+	readonly getState: Accessor<BaseInstanceAttachmentState>;
+
+	readonly retry: () => void;
 }
 
 export class InstanceAttachment {
@@ -58,6 +63,10 @@ export class InstanceAttachment {
 	readonly setValue: SimpleAtomicStateSetter<InstanceAttachmentRuntimeValue>;
 	readonly valueState: SimpleAtomicState<InstanceAttachmentRuntimeValue>;
 
+	readonly getState: Accessor<BaseInstanceAttachmentState>;
+
+	readonly retry: () => void;
+
 	private constructor(options: InstanceAttachmentOptions) {
 		this.getFileName = options.getFileName;
 		this.getInstanceValue = options.getInstanceValue;
@@ -65,5 +74,7 @@ export class InstanceAttachment {
 		this.getValue = options.getValue;
 		this.setValue = options.setValue;
 		this.valueState = options.valueState;
+		this.getState = options.getState;
+		this.retry = options.retry;
 	}
 }
