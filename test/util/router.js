@@ -43,17 +43,19 @@ export const setInstallLocation = (router, location) => {
     : router.resolve(location).fullPath);
 };
 
-/* mockRouter() returns a function to create a router-like object that cannot
-navigate and never calls navigation hooks. In a sense, the object is like a
-read-only router: the object's current route will never change once the object
-is initialized. If installed on an app instance, the object will register stubs
-for <router-link> and <router-view>. If you need a router that can navigate, use
-testRouter(). */
+/* mockRouter() returns a function to create a router-like object that never
+calls navigation hooks. The current route can be changed via push() or
+replace(), but no navigation guards will run. If installed on an app instance,
+the object will register stubs for <router-link> and <router-view>. If you need a router
+with full navigation behavior, use testRouter(). */
 export const mockRouter = (location = undefined) => (container) => {
   const router = testRouter()(container);
   const currentRoute = shallowRef(location != null
     ? router.resolve(location)
     : START_LOCATION);
+  const routeProxy = new Proxy(currentRoute, {
+    get: (route, prop) => route.value[prop]
+  });
   const mock = {
     currentRoute,
     options: router.options,
@@ -67,15 +69,17 @@ export const mockRouter = (location = undefined) => (container) => {
       // eslint-disable-next-line no-param-reassign
       app.config.globalProperties.$router = mock;
       // eslint-disable-next-line no-param-reassign
-      app.config.globalProperties.$route = currentRoute.value;
+      app.config.globalProperties.$route = routeProxy;
 
       app.provide(routerKey, mock);
-      app.provide(routeLocationKey, currentRoute.value);
+      app.provide(routeLocationKey, routeProxy);
 
       app.component('RouterLink', RouterLinkStub);
       app.component('RouterView', RouterViewStub);
     },
-    push: sinon.fake(),
+    push: sinon.fake(loc => {
+      currentRoute.value = router.resolve(loc);
+    }),
     replace: (loc) => {
       currentRoute.value = router.resolve(loc);
     },
