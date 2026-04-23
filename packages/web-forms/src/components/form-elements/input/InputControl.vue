@@ -5,6 +5,7 @@ import ControlText from '@/components/form-elements/ControlText.vue';
 import InputGeopoint from '@/components/form-elements/input/geopoint/InputGeopoint.vue';
 import InputGeopointWithMap from '@/components/form-elements/input/InputGeopointWithMap.vue';
 import InputDate from '@/components/form-elements/input/InputDate.vue';
+import InputDateTime from '@/components/form-elements/input/InputDateTime.vue';
 import InputDecimal from '@/components/form-elements/input/InputDecimal.vue';
 import InputGeoMultiPoint from '@/components/form-elements/input/InputGeoMultiPoint.vue';
 import InputInt from '@/components/form-elements/input/InputInt.vue';
@@ -52,6 +53,9 @@ const isFormEditMode = inject(IS_FORM_EDIT_MODE);
 		</template>
 		<template v-else-if="node.valueType === 'time'">
 			<InputTime :question="node" />
+		</template>
+		<template v-else-if="node.valueType === 'dateTime'">
+			<InputDateTime :question="node" />
 		</template>
 		<template v-else>
 			<InputText :node="node" />

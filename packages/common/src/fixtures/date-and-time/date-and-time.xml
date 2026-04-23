@@ -23,6 +23,9 @@
           <text id="/data/dates/time:label">
             <value>What time is your first meal?</value>
           </text>
+          <text id="/data/dates/last_full_meal:label">
+            <value>When did you last have a full meal?</value>
+          </text>
         </translation>
         <translation lang="French (fr)">
           <text id="/data/dates/survey_date:label">
@@ -39,6 +42,9 @@
           </text>
           <text id="/data/dates/time:label">
             <value>À quelle heure prends-tu ton premier repas ?</value>
+          </text>
+          <text id="/data/dates/last_full_meal:label">
+            <value>Quand avez-vous mangé un repas complet pour la dernière fois ?</value>
           </text>
         </translation>
         <translation lang="Spanish (es)" default="true()">
@@ -57,6 +63,9 @@
           <text id="/data/dates/time:label">
             <value>¿A que hora es su primera comida?</value>
           </text>
+          <text id="/data/dates/last_full_meal:label">
+            <value>¿Cuándo fue la última vez que comió una comida completa?</value>
+          </text>
         </translation>
       </itext>
       <instance>
@@ -67,6 +76,7 @@
             <fruits_date/>
             <vegetables_date/>
             <time>22:02:10.562+07:00</time>
+            <last_full_meal/>
           </dates>
           <meta>
             <instanceID/>
@@ -80,6 +90,7 @@
       <bind nodeset="/data/dates/vegetables_date" type="date" required="false()"
             relevant=" /data/dates/date_of_birth  != &quot;&quot;" readonly="/data/dates/date_of_birth &lt;= today()"/>
       <bind nodeset="/data/dates/time" type="time" required="true()" />
+      <bind nodeset="/data/dates/last_full_meal" type="dateTime" required="false()"/>
       <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid"/>
     </model>
   </h:head>
@@ -99,6 +110,9 @@
       </input>
       <input ref="/data/dates/time">
         <label ref="jr:itext('/data/dates/time:label')"/>
+      </input>
+      <input ref="/data/dates/last_full_meal">
+        <label ref="jr:itext('/data/dates/last_full_meal:label')"/>
       </input>
     </group>
   </h:body>

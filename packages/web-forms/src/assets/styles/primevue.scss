@@ -8,6 +8,23 @@
 	.p-button:disabled {
 		cursor: default;
 	}
+
+	.p-datepicker-panel {
+		.p-datepicker-title button {
+			font-size: var(--odk-hint-font-size);
+		}
+	}
+
+	.p-datepicker {
+		.p-datepicker-input-icon-container {
+			top: 19px;
+
+			svg {
+				width: 20px;
+				height: 20px;
+			}
+		}
+	}
 }
 
 // Modals and dropdowns are outside the .odk-form class scope.

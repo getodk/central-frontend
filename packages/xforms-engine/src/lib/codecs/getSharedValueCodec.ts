@@ -2,6 +2,11 @@ import type { ValueType } from '../../client/ValueType.ts';
 import type { DatetimeInputValue, DatetimeRuntimeValue } from './DateValueCodec.ts';
 import { DateValueCodec } from './DateValueCodec.ts';
 import {
+	type DateTimeInputValue,
+	type DateTimeRuntimeValue,
+	DateTimeValueCodec,
+} from './DateTimeValueCodec.ts';
+import {
 	type DecimalInputValue,
 	type DecimalRuntimeValue,
 	DecimalValueCodec,
@@ -35,7 +40,7 @@ interface RuntimeValuesByType {
 	readonly boolean: string;
 	readonly date: DatetimeRuntimeValue;
 	readonly time: TimeRuntimeValue;
-	readonly dateTime: string;
+	readonly dateTime: DateTimeRuntimeValue;
 	readonly geopoint: GeopointRuntimeValue;
 	readonly geotrace: GeotraceRuntimeValue;
 	readonly geoshape: GeoshapeRuntimeValue;
@@ -53,7 +58,7 @@ interface RuntimeInputValuesByType {
 	readonly boolean: string;
 	readonly date: DatetimeInputValue;
 	readonly time: TimeInputValue;
-	readonly dateTime: string;
+	readonly dateTime: DateTimeInputValue;
 	readonly geopoint: GeopointInputValue;
 	readonly geotrace: GeotraceInputValue;
 	readonly geoshape: GeoshapeInputValue;
@@ -82,7 +87,7 @@ export const sharedValueCodecs: SharedValueCodecs = {
 	boolean: new ValueTypePlaceholderCodec('boolean'),
 	date: new DateValueCodec(),
 	time: new TimeValueCodec(),
-	dateTime: new ValueTypePlaceholderCodec('dateTime'),
+	dateTime: new DateTimeValueCodec(),
 	binary: new ValueTypePlaceholderCodec('binary'),
 	barcode: new ValueTypePlaceholderCodec('barcode'),
 	intent: new ValueTypePlaceholderCodec('intent'),

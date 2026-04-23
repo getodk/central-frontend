@@ -97,6 +97,7 @@ export type IntInputNode = InputNode<'int'>;
 export type DecimalInputNode = InputNode<'decimal'>;
 export type DateInputNode = InputNode<'date'>;
 export type TimeInputNode = InputNode<'time'>;
+export type DateTimeInputNode = InputNode<'dateTime'>;
 export type GeopointInputNode = InputNode<'geopoint'>;
 export type GeoshapeInputNode = InputNode<'geoshape'>;
 export type GeotraceInputNode = InputNode<'geotrace'>;
@@ -109,6 +110,7 @@ type SupportedInputValueType =
 	| 'decimal'
 	| 'date'
 	| 'time'
+	| 'dateTime'
 	| 'geopoint'
 	| 'geoshape'
 	| 'geotrace';
@@ -125,6 +127,7 @@ export type AnyInputNode =
 	| DecimalInputNode
 	| DateInputNode
 	| TimeInputNode
+	| DateTimeInputNode
 	| GeopointInputNode
 	| GeoshapeInputNode
 	| GeotraceInputNode

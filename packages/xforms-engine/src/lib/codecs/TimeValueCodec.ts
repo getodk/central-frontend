@@ -1,4 +1,5 @@
 import {
+	FRACTIONAL_SECOND_DIGITS,
 	ISO_TIME_WITH_OPTIONAL_OFFSET_PATTERN,
 	VALID_OFFSET_VALUE,
 } from '@getodk/common/constants/datetime.ts';
@@ -37,8 +38,7 @@ const parseZonedDateTimeToString = (value: Temporal.ZonedDateTime): string => {
 		return '';
 	}
 
-	const MILLISECONDS = 3;
-	const time = value.toPlainTime().toString({ fractionalSecondDigits: MILLISECONDS });
+	const time = value.toPlainTime().toString({ fractionalSecondDigits: FRACTIONAL_SECOND_DIGITS });
 	return `${time}${value.offset}`;
 };
 
