@@ -129,6 +129,25 @@ describe('SubmissionList', () => {
           });
         });
     });
+
+    it('makes the correct request after refresh button is pressed on second page', () => {
+      createSubmissions(251);
+      return loadSubmissionList()
+        .complete()
+        .request(component =>
+          component.find('button[aria-label="Next page"]').trigger('click'))
+        .respondWithData(() => testData.submissionOData(250, 250))
+        .complete()
+        .request(component =>
+          component.get('#refresh-button').trigger('click'))
+        .beforeEachResponse((_, { url }) => {
+          if (url.includes('.svc/Submissions')) {
+            const skip = relativeUrl(url).searchParams.get('$skip');
+            skip.should.be.equal('0');
+          }
+        })
+        .respondWithData(() => testData.submissionOData(250));
+    });
   });
 
   describe('refreshing keys', () => {
@@ -279,6 +298,26 @@ describe('SubmissionList', () => {
           $select(url).should.equal('__id,__system');
         })
         .respondWithData(testData.submissionOData));
+
+    // eslint-disable-next-line func-names
+    it('resets page if different field is selected on the second page', function() {
+      this.timeout(20 * 1000);
+      testData.extendedSubmissions.createPast(251);
+      return loadSubmissionList({ attachTo: document.body })
+        .complete()
+        .request(component =>
+          component.find('button[aria-label="Next page"]').trigger('click'))
+        .respondWithData(() => testData.submissionOData(250, 250))
+        .complete()
+        .request(changeMultiselect('#submission-field-dropdown', [19]))
+        .beforeEachResponse((_, { url }) => {
+          if (url.includes('.svc/Submissions')) {
+            const skip = relativeUrl(url).searchParams.get('$skip');
+            skip.should.be.equal('0');
+          }
+        })
+        .respondWithData(testData.submissionOData);
+    });
   });
 
   describe('deleted submissions', () => {
@@ -977,6 +1016,65 @@ describe('SubmissionList', () => {
             's1', '/s2', '/s3', '/s4', '/s5',
             '/s6', '/s7', '/s8', '/s9', '/s10'
           ]);
+        });
+    });
+
+    it('displays the correct page when page-number is provided in URL', () => {
+      createSubmissions(501);
+      return load('/projects/1/forms/f/submissions?page-number=2', { root: false })
+        .afterResponse(component => {
+          component.find('.pagination .form-group').text().should.be.equal('Rows 251–500 of 501');
+        });
+    });
+
+    it('displays correct number of rows when page-size is provided in URL', () => {
+      createSubmissions(600);
+      return load('/projects/1/forms/f/submissions?page-size=500', { root: false })
+        .afterResponse(component => {
+          component.find('.pagination select').element.value.should.be.eql('500');
+        });
+    });
+
+    it('selects first page when page-number is less than 1 in URL', () => {
+      createSubmissions(251);
+      return load('/projects/1/forms/f/submissions?page-number=0', { root: false })
+        .afterResponse(component => {
+          component.find('.pagination .form-group').text().should.be.eql('Rows 1–250 of 251');
+        });
+    });
+
+    it('selects last page when page-number is greater than last page in URL', () => {
+      createSubmissions(501);
+      return load('/projects/1/forms/f/submissions?page-number=999', { root: false })
+        .respondWithData(() => testData.submissionOData(250, 500))
+        .afterResponse(component => {
+          component.find('.pagination .form-group').text().should.be.eql('Row 501 of 501');
+        });
+    });
+
+    it('removes page-number from query parameter when switching to map view', () => {
+      const { geopoint } = testData.fields;
+      const fields = [geopoint('/location')];
+      testData.extendedForms.createPast(1, { fields });
+      testData.extendedSubmissions.createPast(251);
+
+      return load('/projects/1/forms/f/submissions', { container: { router: testRouter() } })
+        .complete()
+        .request(component =>
+          component.find('button[aria-label="Next page"]').trigger('click'))
+        .respondWithData(() => testData.submissionOData(250, 250))
+        .afterResponse(component => {
+          // Verify we're on page 2
+          component.vm.$route.query['page-number'].should.equal('2');
+        })
+        .request(component => {
+          const radioField = component.getComponent('.radio-field');
+          const mapOption = radioField.findAll('input[type="radio"]')[1];
+          return mapOption.trigger('change');
+        })
+        .respondWithData(testData.submissionGeojson)
+        .afterResponse(component => {
+          component.vm.$route.query.should.not.have.property('page-number');
         });
     });
   });
