@@ -30,3 +30,9 @@ npm-debug.log*
 public/index.html
 test-results
 playwright-report
+
+# context files for AI agents
+/AGENTS.md
+/CLAUDE.md
+/.github/copilot-instructions.md
+/.cursor
