@@ -32,7 +32,7 @@ import { noop } from '../util/util';
 export default {
   name: 'AsyncRoute',
   components: { Loading, PageBody },
-  inject: ['alert'],
+  inject: ['alert', 'location'],
   inheritAttrs: false,
   // See routes.js for more information about these props.
   props: {
@@ -118,7 +118,8 @@ export default {
             // example, if there is a 404 because Frontend was rebuilt, the
             // resulting error is a ChunkLoadError with a `type` property equal
             // to 'error'.
-            this.alert.danger(this.$t('alert.loadError'));
+            this.alert.danger(this.$t('alert.loadError'))
+              .cta(this.$t('action.refresh'), () => { this.location.reload(); });
             this.showsLoading = false;
           }
         });
@@ -178,6 +179,11 @@ export default {
   "sw": {
     "alert": {
       "loadError": "ukurasa ulioomba haukuweza kupakiwa. Tafadhali onyesha upya ukurasa na ujaribu tena"
+    }
+  },
+  "zh": {
+    "alert": {
+      "loadError": "无法加载您请求的页面。请刷新页面后重试。"
     }
   },
   "zh-Hant": {

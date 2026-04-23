@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
         <infonav v-if="project.dataExists && formDatasetDiff.dataExists && publishedAttachments.dataExists
           && uniqueDatasetCount > 0">
           <template #title>
-            <span class="icon-magic-wand"></span>{{ $tc('infoNav.entityLists', uniqueDatasetCount) }}
+            <span class="icon-magic"></span>{{ $tc('infoNav.entityLists', uniqueDatasetCount) }}
           </template>
           <template #dropdown>
             <li v-if="formDatasetDiff.length > 0">
@@ -181,7 +181,7 @@ export default {
       "tabTitle": "Publish this Draft Form to enable these functions"
     },
     "infoNav": {
-      "entityLists": "{count} Related Entity List | {count} Related Entity Lists",
+      "entityLists": "{count} Linked Entity List | {count} Linked Entity Lists",
       // This text is shown as a header in a dropdown about related entity lists updated by this form.
       "updatedDatasets": "Updates",
       // This text is shown as a header in a dropdown about related entity lists that are used as attachments by this form.
@@ -212,8 +212,10 @@ export default {
       "tabTitle": "Veröffentlichen Sie diesen Formularentwurf, um diese Funktionen zu aktivieren"
     },
     "infoNav": {
+      "entityLists": "{count} Verknüpfter Objektliste | {count} Verknüpfter Objektlisten",
       "updatedDatasets": "Aktualisierungen",
-      "attachedDatasets": "Verwendet"
+      "attachedDatasets": "Verwendet",
+      "appUsers": "{count} App-Benutzer zugewiesen | {count} App-Benutzer zugewiesen"
     }
   },
   "es": {
@@ -226,7 +228,7 @@ export default {
       "tabTitle": "Publique este borrador de formulario para habilitar estas funciones"
     },
     "infoNav": {
-      "entityLists": "{count} Lista de entidades relacionadas | {count} Listas de entidades relacionadas | {count} Listas de entidades relacionadas",
+      "entityLists": "{count} Lista de entidades conectada | {count} Listas de entidades conectadas | {count} Listas de entidades conectadas",
       "updatedDatasets": "Actualizaciones",
       "attachedDatasets": "Usos",
       "appUsers": "{count} Usuario de la aplicación asignados | {count} Usuarios de la aplicación asignados | {count} Usuarios de la aplicación asignados"
@@ -242,7 +244,7 @@ export default {
       "tabTitle": "Publier cette Ébauche de Formulaire pour activer ces fonctions"
     },
     "infoNav": {
-      "entityLists": "{count} Liste d'Entité liée | {count} Listes d'Entité liées | {count} Liste(s) d'Entité liée(s)",
+      "entityLists": "{count} liste d'entités liée | {count} listes d'entités liées | {count} de listes d'entités liées",
       "updatedDatasets": "Mises à jour",
       "attachedDatasets": "Utilise",
       "appUsers": "{count} Utilisateur mobile assigné | {count} Utilisateurs mobile assignés | {count} Utilisateur(s) mobile assigné(s)"
@@ -265,7 +267,7 @@ export default {
       "tabTitle": "Pubblicare questa bozza di formulario per abilitare queste funzioni"
     },
     "infoNav": {
-      "entityLists": "{count} Elenco di entità correlate | {count} Elenchi di entità correlate | {count} Elenchi di entità correlate",
+      "entityLists": "{count} Elenco di entità collegata | {count} Elenchi di entità collegate | {count} Elenchi di entità collegate",
       "updatedDatasets": "Aggiornamenti",
       "attachedDatasets": "Utilizzi",
       "appUsers": "{count} Utente App assegnato | {count} Utenti App assegnati | {count} Utenti App assegnati"
@@ -283,6 +285,13 @@ export default {
       "action": {
         "back": "Voltar à visão geral do projeto"
       }
+    },
+    "formNav": {
+      "tabTitle": "Publique esse Rascunho do formulário para habilitar essas funções"
+    },
+    "infoNav": {
+      "updatedDatasets": "Atualizações",
+      "attachedDatasets": "Utiliza"
     }
   },
   "sw": {
@@ -292,11 +301,34 @@ export default {
       }
     }
   },
+  "zh": {
+    "projectNav": {
+      "action": {
+        "back": "返回项目概览"
+      }
+    },
+    "formNav": {
+      "tabTitle": "发布此草稿表单以启用这些功能"
+    },
+    "infoNav": {
+      "updatedDatasets": "更新",
+      "attachedDatasets": "用途",
+      "appUsers": "已分配{count}个应用用户"
+    }
+  },
   "zh-Hant": {
     "projectNav": {
       "action": {
         "back": "返回專案概覽"
       }
+    },
+    "formNav": {
+      "tabTitle": "發布此表格草稿以啟用這些功能"
+    },
+    "infoNav": {
+      "updatedDatasets": "更新",
+      "attachedDatasets": "用途",
+      "appUsers": "已指派{count}位 App 使用者"
     }
   }
 }

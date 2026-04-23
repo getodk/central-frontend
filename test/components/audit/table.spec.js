@@ -38,7 +38,7 @@ const testTarget = async (row, text, ...linkOptions) => {
     span.text().should.equal(text);
     await span.should.have.textTooltip();
   } else if (typeof linkOptions[0] === 'string') {
-    testTarget(row, text, RouterLinkStub, (link) => {
+    await testTarget(row, text, RouterLinkStub, (link) => {
       link.props().to.should.equal(linkOptions[0]);
     });
   } else {
@@ -286,7 +286,10 @@ describe('AuditTable', () => {
   describe('dataset target', () => {
     const cases = [
       ['dataset.create', ['Entity List', 'Create']],
-      ['dataset.update', ['Entity List', 'Update']]
+      ['dataset.update', ['Entity List', 'Update']],
+      ['entity.bulk.delete', ['Entity List', 'Bulk Delete']],
+      ['entity.bulk.restore', ['Entity List', 'Bulk Restore']],
+      ['dataset.delete', ['Entity List', 'Delete']],
     ];
 
     for (const [action, type] of cases) {
@@ -357,7 +360,7 @@ describe('AuditTable', () => {
     await testTarget(row, '');
   });
 
-  describe('system operation', () => {
+  describe('system logging without a target', () => {
     it('renders an analytics audit correctly', async () => {
       testData.extendedAudits.createPast(1, { action: 'analytics' });
       const row = mountComponent();
@@ -385,6 +388,13 @@ describe('AuditTable', () => {
       });
       const row = mountComponent();
       testType(row, ['System Operation', 'Mark Files for Re-Upload to Storage']);
+      await testTarget(row, '');
+    });
+
+    it('renders an upgrade.server audit correctly', async () => {
+      testData.extendedAudits.createPast(1, { action: 'upgrade.server' });
+      const row = mountComponent();
+      testType(row, ['Server Upgrade', 'New Version']);
       await testTarget(row, '');
     });
   });

@@ -133,7 +133,7 @@ import { getCookieValue } from '../../util/util';
 export default {
   name: 'SubmissionDownload',
   components: { FormGroup, Modal },
-  inject: ['alert', 'logger'],
+  inject: ['toast', 'redAlert', 'logger'],
   props: {
     state: Boolean,
     formVersion: Object,
@@ -189,10 +189,15 @@ export default {
   watch: {
     state(state) {
       if (!state) {
-        // Reset the passphrase, but don't reset the other form fields.
+        // Reset the passphrase, but don't reset the other form fields. If the
+        // user reopens the modal, they won't want to have to re-select all the
+        // same options. Preserving the form fields is also needed for the
+        // "Try again" link to work.
         this.passphrase = '';
-        this.cancelCall('checkForProblem');
       }
+    },
+    'toast.state': function toastState(state) {
+      if (!state) this.cancelCall('checkForProblem');
     }
   },
   methods: {
@@ -272,9 +277,9 @@ export default {
         problem = JSON.parse(doc.body.textContent);
       } catch (e) {
         this.logger.log(doc.body.textContent);
-        this.alert.danger(this.$t('alert.parseError'));
+        this.redAlert.show(this.$t('alert.parseError'));
       }
-      if (isProblem(problem)) this.alert.danger(problem.message);
+      if (isProblem(problem)) this.redAlert.show(problem.message);
       return true;
     },
     decrypt(action) {
@@ -284,7 +289,7 @@ export default {
       // example, what if the user submits the form, but then closes the modal
       // before the iframe finishes loading?)
       if (this.$refs.iframe.contentWindow.document.readyState === 'loading') {
-        this.alert.info('alert.unavailable');
+        this.redAlert.show('alert.unavailable');
         return;
       }
 
@@ -295,15 +300,29 @@ export default {
         (tries < 300 ? 1000 : null));
     },
     download(event) {
+      // Return early if triggered from the "Try again" link.
+      if (!this.state) return;
+
       const a = event.target.closest('a');
       if (a == null) return;
+
+      // `true` if the click will go through and the download will be attempted;
+      // `false` if the form is invalid.
       const willDownload = this.managedKey == null ||
         this.$refs.form.reportValidity();
+
       if (this.managedKey != null) {
         event.preventDefault();
         if (willDownload) this.decrypt(a.getAttribute('href'));
       }
-      if (willDownload) this.alert.info(this.$t('alert.submit'));
+
+      if (willDownload) {
+        this.$emit('hide');
+
+        const { cta } = this.toast.show(this.$t('alert.submit'), { autoHide: false });
+        if (this.managedKey == null)
+          cta(this.$t('action.tryAgain'), () => { a.click(); });
+      }
     }
   }
 };
@@ -397,7 +416,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "alert": {
       "unavailable": "The data download is not yet available. Please try again in a moment.",
-      "submit": "Your data download should begin soon. Once it begins, you can close this box. If you have been waiting and it has not started, please try again.",
+      "submit": "Data download should begin soon. Once it begins, you can close this message. If it hasn’t started in 20 seconds, please try again.",
       "parseError": "Something went wrong while requesting your data."
     }
   }
@@ -433,7 +452,6 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "alert": {
       "unavailable": "Data ke stažení zatím nejsou k dispozici. Zkuste to prosím za chvíli znovu.",
-      "submit": "Stahování dat by mělo začít brzy. Jakmile to začne, můžete toto pole zavřít. Pokud jste čekali a nezačalo to, zkuste to znovu.",
       "parseError": "Při vyžádání vašich dat se něco pokazilo."
     }
   },
@@ -463,7 +481,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "alert": {
       "unavailable": "Der Datendownload ist noch nicht verfügbar. Bitte versuchen Sie es gleich noch einmal.",
-      "submit": "Ihr Daten-Download sollte bald beginnen. Sobald er beginnt, können Sie diese Box schließen. Wenn Sie gewartet haben und er hat nicht begonnen, versuchen Sie es erneut.",
+      "submit": "Ihr Daten-Download sollte bald beginnen. Sobald er beginnt, können Sie diese Box schliessen. Wenn er nach 20 Sekunden noch nicht begonnen hat, versuchen Sie es bitte erneut.",
       "parseError": "Beim Anfordern Ihrer Daten ist etwas nicht geklappt."
     }
   },
@@ -493,7 +511,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "alert": {
       "unavailable": "La descarga de datos aún no está disponible. Vuelva a intentarlo en un momento.",
-      "submit": "Su descarga de los datos comenzará pronto. Una vez que inicie, puede cerrar este cuadro. Si ha estado esperando y no ha comenzado, por favor inténtelo nuevamente.",
+      "submit": "Su descarga de datos debería comenzar en breve. Una vez que inicie, puede cerrar este mensaje. Si no se ha comenzado en 20 segundos, por favor inténtelo nuevamente.",
       "parseError": "Algo salió mal al solicitar tus datos."
     }
   },
@@ -523,7 +541,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "alert": {
       "unavailable": "Le téléchargement des données n'est pas encore disponible. Merci de réessayer dans un moment.",
-      "submit": "Le téléchargement de vos données devrait commencer bientôt. Une fois qu'il aura commencé, vous pourrez fermer cette boîte. Si vous avez attendu et que le téléchargement n'a pas commencé, veuillez réessayer.",
+      "submit": "Le téléchargement de vos données devrait commencer bientôt. Une fois qu'il aura commencé, vous pourrez fermer ce message. Si vous avez attendu et le téléchargement n'a pas commencé, veuillez réessayer.",
       "parseError": "Quelque chose s'est mal passé pendant la requête de vos données"
     }
   },
@@ -538,9 +556,6 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
       "download": {
         "mainTable": "Tabel data utama (tanpa pengulangan)"
       }
-    },
-    "alert": {
-      "submit": "Unduhan Anda akan segera dimulai. Setelah unduhan dimulai, Anda dapat menutup kotak ini. Apabila Anda sudah menunggu dan unduhan belum dimulai, silakan coba lagi."
     }
   },
   "it": {
@@ -569,7 +584,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "alert": {
       "unavailable": "Il download dei dati non è ancora disponibile. Si prega di riprovare in un altro momento.",
-      "submit": "Il download dei dati dovrebbe iniziare a breve. Una volta iniziato, puoi chiudere questa finestra. Se stai ancora aspettando e il download non è iniziato, riprova.",
+      "submit": "Il download dei dati dovrebbe iniziare a breve. Una volta iniziato, puoi chiudere questo messaggio. Se non è iniziato in 20 secondi, riprova.",
       "parseError": "Qualcosa è andato storto durante la richiesta dei tuoi dati"
     }
   },
@@ -595,8 +610,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
       }
     },
     "alert": {
-      "unavailable": "データのダウンロードはまだ利用できません。しばらく待って、再試行してください。",
-      "submit": "データダウンロードはすぐに始まります。始まり次第、このボックスを閉じて構いません。開始されない場合は、もう一度試して下さい。"
+      "unavailable": "データのダウンロードはまだ利用できません。しばらく待って、再試行してください。"
     }
   },
   "pt": {
@@ -625,7 +639,6 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "alert": {
       "unavailable": "O download de dados ainda não está disponível. Tente novamente em instantes.",
-      "submit": "O processo de baixar seus dados começará em breve. Assim que ele começar você poderá fechar essa caixa. Se você já está esperando e ele ainda não começou, por favor tente novamente.",
       "parseError": "Algo deu errado ao solicitar seus dados."
     }
   },
@@ -655,8 +668,37 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "alert": {
       "unavailable": "Upakuaji wa data bado haupatikani. Tafadhali jaribu tena baada ya muda mfupi",
-      "submit": "Upakuaji wa data yako unapaswa kuanza hivi karibuni. Mara tu inapoanza, unaweza kufunga kisanduku hiki. Ikiwa umekuwa ukingoja na haijaanza, tafadhali jaribu tena.",
       "parseError": "Hitilafu fulani imetokea wakati wa kuomba data yako."
+    }
+  },
+  "zh": {
+    "title": "下载提交的内容",
+    "exportOptions": "导出选项",
+    "field": {
+      "splitSelectMultiples": "将“多选”字段拆分为多个列",
+      "removeGroupNames": "删除群组名称",
+      "deletedFields": "包含未发布表单中的字段"
+    },
+    "deletedFieldsHelp": "若需查看以往表单版本中引用的字段，请使用此选项。",
+    "noSelectMultiple": "此表单不包含多选项",
+    "encryptedForm": "加密表单无法通过此方式处理。",
+    "deletedFieldsDisabledForDraft": "草稿表单无法通过此方式处理。",
+    "introduction": [
+      "若要下载此数据，您需要提供您的安全密钥。您的安全密钥仅用于解密您的数据以便下载，之后服务器将不会保留该密钥。"
+    ],
+    "hint": "提示：{hint}",
+    "noRepeat": "此表格没有重复值",
+    "action": {
+      "download": {
+        "mainTable": "主数据表（不包含重复数据）",
+        "allTables": "全部数据表",
+        "withAttachments": "全部数据与附件"
+      }
+    },
+    "alert": {
+      "unavailable": "数据下载尚不可用，请稍后重试。",
+      "submit": "数据下载即将开始。开始后即可关闭本提示。若20秒后仍未开始，请重新尝试。",
+      "parseError": "数据请求过程中出现错误。"
     }
   },
   "zh-Hant": {
@@ -685,7 +727,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     },
     "alert": {
       "unavailable": "資料下載尚不可用。請稍後重試。",
-      "submit": "您的資料下載應該很快就會開始。一旦開始，您可以關閉此框。如果您一直在等待但尚未開始，請重試。",
+      "submit": "資料下載即將開始。一旦開始，您可以關閉此訊息。如果 20 秒內仍未開始，請再試一次。",
       "parseError": "請求您的資料時出現問題。"
     }
   }

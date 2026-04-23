@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-    <div id="feedback-button">
+    <div id="feedback-button" class="hidden-xs hidden-sm">
       <a :href="surveyLink" target="_blank"><span>{{ $t('feedback') }}</span></a>
     </div>
 </template>
@@ -103,6 +103,9 @@ const surveyLink = computed(() => {
   },
   "pt": {
     "feedback": "Feedback"
+  },
+  "zh": {
+    "feedback": "反馈"
   },
   "zh-Hant": {
     "feedback": "回饋"

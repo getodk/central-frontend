@@ -197,6 +197,7 @@ describe('SubmissionFeedEntry', () => {
             entity: {
               uuid: 'xyz',
               dataset: 'DatasetName',
+              entityAvailable: true,
               currentVersion: { label: 'EntityName' }
             }
           }
@@ -212,6 +213,7 @@ describe('SubmissionFeedEntry', () => {
             entity: {
               uuid: 'xyz',
               dataset: 'DatasetName',
+              entityAvailable: true,
               currentVersion: { label: 'EntityName' }
             }
           }
@@ -236,12 +238,30 @@ describe('SubmissionFeedEntry', () => {
       it('does not render link if entity deleted (no currentVersion.label)', () => {
         testData.extendedAudits.createPast(1, {
           action: 'entity.create',
-          details: { entity: { uuid: 'xyz', dataset: 'DatasetName' } }
+          details: { entity: { uuid: 'xyz', dataset: 'DatasetName', entityAvailable: true } }
         });
         const component = mountComponent();
         component.get('.feed-entry-title').text().should.equal('Created Entity xyz in DatasetName Entity List');
         component.findComponent(EntityLink).exists().should.be.false;
         component.findComponent(DatasetLink).exists().should.be.true;
+      });
+
+      it('does not render links if dataset deleted', () => {
+        testData.extendedAudits.createPast(1, {
+          action: 'entity.create',
+          details: {
+            entity: {
+              uuid: 'xyz',
+              dataset: 'DatasetName',
+              entityAvailable: false
+            }
+          }
+        });
+        const component = mountComponent();
+        const title = component.get('.feed-entry-title').text();
+        title.should.equal('Created Entity (deleted)\u00a0xyz in DatasetName Entity List');
+        component.findComponent(EntityLink).exists().should.be.false;
+        component.findComponent(DatasetLink).exists().should.be.false;
       });
     });
 
@@ -253,6 +273,7 @@ describe('SubmissionFeedEntry', () => {
             entity: {
               uuid: 'xyz',
               dataset: 'DatasetName',
+              entityAvailable: true,
               currentVersion: { label: 'EntityName' }
             }
           }
@@ -268,6 +289,7 @@ describe('SubmissionFeedEntry', () => {
             entity: {
               uuid: 'xyz',
               dataset: 'DatasetName',
+              entityAvailable: true,
               currentVersion: { label: 'EntityName' }
             }
           }
@@ -292,12 +314,30 @@ describe('SubmissionFeedEntry', () => {
       it('does not render link if entity deleted (no currentVersion.label)', () => {
         testData.extendedAudits.createPast(1, {
           action: 'entity.update.version',
-          details: { entity: { uuid: 'xyz', dataset: 'DatasetName' } }
+          details: { entity: { uuid: 'xyz', dataset: 'DatasetName', entityAvailable: true } }
         });
         const component = mountComponent();
         component.get('.feed-entry-title').text().should.equal('Updated Entity xyz in DatasetName Entity List');
         component.findComponent(EntityLink).exists().should.be.false;
         component.findComponent(DatasetLink).exists().should.be.true;
+      });
+
+      it('does not render links if dataset deleted', () => {
+        testData.extendedAudits.createPast(1, {
+          action: 'entity.update.version',
+          details: {
+            entity: {
+              uuid: 'xyz',
+              dataset: 'DatasetName',
+              entityAvailable: false
+            }
+          }
+        });
+        const component = mountComponent();
+        const title = component.get('.feed-entry-title').text();
+        title.should.equal('Updated Entity (deleted)\u00a0xyz in DatasetName Entity List');
+        component.findComponent(EntityLink).exists().should.be.false;
+        component.findComponent(DatasetLink).exists().should.be.false;
       });
     });
 
@@ -307,10 +347,9 @@ describe('SubmissionFeedEntry', () => {
           action: 'entity.error',
           details: { problem: { problemCode: 409.14, problemDetails: { reason: 'ID empty or missing.' } } }
         });
-        const title = mountComponent().get('.feed-entry-title');
-        title.get('.submission-feed-entry-entity-error').text().should.equal('Problem processing Entity');
-        title.get('.entity-error-message').text().should.equal('ID empty or missing.');
-        await title.get('.entity-error-message').should.have.textTooltip();
+        const component = mountComponent();
+        component.get('.submission-feed-entry-entity-error').text().should.equal('Problem processing Entity');
+        component.get('.entity-error-message').text().should.equal('ID empty or missing.');
       });
 
       it('renders entity creation error message when it is included as an errorMessage', async () => {
@@ -321,10 +360,9 @@ describe('SubmissionFeedEntry', () => {
             errorMessage: 'A resource already exists with uuid value(s) abc.'
           }
         });
-        const title = mountComponent().get('.feed-entry-title');
-        title.get('.submission-feed-entry-entity-error').text().should.equal('Problem processing Entity');
-        title.get('.entity-error-message').text().should.equal('A resource already exists with uuid value(s) abc.');
-        await title.get('.entity-error-message').should.have.textTooltip();
+        const component = mountComponent();
+        component.get('.submission-feed-entry-entity-error').text().should.equal('Problem processing Entity');
+        component.get('.entity-error-message').text().should.equal('A resource already exists with uuid value(s) abc.');
       });
 
       it('renders error message when there is a problem without a reason and an error message', async () => {
@@ -335,10 +373,9 @@ describe('SubmissionFeedEntry', () => {
             errorMessage: 'Mystery Error'
           }
         });
-        const title = mountComponent().get('.feed-entry-title');
-        title.get('.submission-feed-entry-entity-error').text().should.equal('Problem processing Entity');
-        title.get('.entity-error-message').text().should.equal('Mystery Error');
-        await title.get('.entity-error-message').should.have.textTooltip();
+        const component = mountComponent();
+        component.get('.submission-feed-entry-entity-error').text().should.equal('Problem processing Entity');
+        component.get('.entity-error-message').text().should.equal('Mystery Error');
       });
 
       it('renders problem but no specific error message if audit details are malformed', async () => {
@@ -348,9 +385,9 @@ describe('SubmissionFeedEntry', () => {
             foo: 'bar'
           }
         });
-        const title = mountComponent().get('.feed-entry-title');
-        title.get('.submission-feed-entry-entity-error').text().should.equal('Problem processing Entity');
-        title.get('.entity-error-message').text().should.equal('');
+        const component = mountComponent();
+        component.get('.submission-feed-entry-entity-error').text().should.equal('Problem processing Entity');
+        component.get('.entity-error-message').text().should.equal('');
       });
     });
   });

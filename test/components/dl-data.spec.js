@@ -28,29 +28,11 @@ describe('DlData', () => {
     await span.should.have.textTooltip();
   });
 
-  it('shows the value', () => {
+  it('renders ExpandableText for the value', () => {
     const component = mountComponent({
       props: { name: 'height', value: '123' }
     });
-    component.get('dd').text().should.equal('123');
-  });
-
-  describe('tooltip for the value', () => {
-    it('shows a tooltip if the value does not fit within 3 lines', async () => {
-      const component = mountComponent({
-        props: { name: 'notes', value: 'The\ntree\nis\ntall.' },
-        attachTo: document.body
-      });
-      await component.get('dd div').should.have.tooltip('The\ntree\nis\ntall.');
-    });
-
-    it('does not show a tooltip if the value fits within 3 lines', async () => {
-      const component = mountComponent({
-        props: { name: 'notes', value: 'Tall' },
-        attachTo: document.body
-      });
-      await component.get('dd div').should.not.have.tooltip();
-    });
+    component.get('dd .expandable-text').text().should.equal('123');
   });
 
   it('renders correctly if the value is an empty string', () => {
@@ -58,8 +40,8 @@ describe('DlData', () => {
       props: { value: '' }
     });
     const dd = component.get('dd');
-    dd.text().should.equal('(empty)');
-    dd.classes('empty').should.be.true;
+    dd.find('.expandable-text').exists().should.be.false;
+    dd.get('.dl-data-empty').text().should.equal('(empty)');
   });
 
   it('renders correctly if the value of a property does not exist', () => {
@@ -67,7 +49,7 @@ describe('DlData', () => {
       props: { value: null }
     });
     const dd = component.get('dd');
-    dd.text().should.equal('(empty)');
-    dd.classes('empty').should.be.true;
+    dd.find('.expandable-text').exists().should.be.false;
+    dd.get('.dl-data-empty').text().should.equal('(empty)');
   });
 });

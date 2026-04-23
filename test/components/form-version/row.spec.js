@@ -1,5 +1,5 @@
 import DateTime from '../../../src/components/date-time.vue';
-import FormVersionStandardButtons from '../../../src/components/form-version/standard-buttons.vue';
+import EnketoPreview from '../../../src/components/enketo/preview.vue';
 import FormVersionDefDropdown from '../../../src/components/form-version/def-dropdown.vue';
 import FormVersionRow from '../../../src/components/form-version/row.vue';
 import FormVersionString from '../../../src/components/form-version/string.vue';
@@ -75,10 +75,14 @@ describe('FormVersionRow', () => {
       testData.extendedFormVersions.createPast(1, { version: '2' });
       const component = await load('/projects/1/forms/f/versions', { root: false });
       const rows = component.findAllComponents(FormVersionRow);
+
       rows[0].props().current.should.equal(true);
-      rows[0].findComponent(FormVersionStandardButtons).exists().should.be.true;
+      rows[0].findComponent(FormVersionDefDropdown).exists().should.be.true;
+      rows[0].findComponent(EnketoPreview).exists().should.be.true;
+
       rows[1].props().current.should.equal(false);
       rows[1].findComponent(FormVersionDefDropdown).exists().should.be.true;
+      rows[1].findComponent(EnketoPreview).exists().should.be.false;
     });
   });
 

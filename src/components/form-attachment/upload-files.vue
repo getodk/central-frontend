@@ -203,6 +203,19 @@ export default {
       }
     ]
   },
+  "zh": {
+    "title": "上传文件",
+    "introduction": [
+      {
+        "full": "要上传文件，您可以{dragAndDrop}，将一个或多个文件拖拽到本页面的表格中。",
+        "dragAndDrop": "拖放"
+      },
+      {
+        "full": "若希望从对话框选择文件，请确保文件名与表格中的名称一致，然后{clickHere}。",
+        "clickHere": "点击这里以选择"
+      }
+    ]
+  },
   "zh-Hant": {
     "title": "上傳檔案",
     "introduction": [

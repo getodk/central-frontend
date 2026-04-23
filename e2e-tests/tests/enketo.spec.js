@@ -27,7 +27,7 @@ test.afterAll(async () => {
 
 const login = async (page) => {
   await page.goto(appUrl);
-  await expect(page.getByRole('heading', { name: 'Log in' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Welcome to ODK Central' })).toBeVisible();
 
   await page.getByPlaceholder('email address').fill(user);
   await page.getByPlaceholder('password').fill(password);
@@ -44,10 +44,6 @@ test.describe('Enketo', () => {
         description: 'New Submission',
         url: ({ enketoId }) => `/-/${enketoId}`, requireLogin: true,
         newUrl: ({ xmlFormId }) => `/projects/${projectId}/forms/${xmlFormId}/submissions/new`
-      }, {
-        description: 'Edit Submission',
-        url: ({ enketoId, instanceId }) => `/-/edit/${enketoId}?instance_id=${instanceId}`, requireLogin: true,
-        newUrl: ({ xmlFormId, instanceId }) => `/projects/${projectId}/forms/${xmlFormId}/submissions/${instanceId}/edit`
       }, {
         description: 'Preview Form',
         url: ({ enketoId }) => `/-/preview/${enketoId}`, requireLogin: true,
@@ -103,6 +99,15 @@ test.describe('Enketo', () => {
         }
       });
     });
+  });
+
+  test('Edit submission link should be working', async ({ page }) => {
+    const { enketoId } = publishedForm;
+    const { instanceId } = firstSubmission;
+
+    await login(page);
+    await page.goto(`${appUrl}/-/edit/${enketoId}?instance_id=${instanceId}`);
+    await expect(page.getByRole('heading', { name: publishedForm.name })).toBeVisible();
   });
 
   test.describe('offline form', () => {
@@ -244,5 +249,23 @@ test.describe('Enketo', () => {
     await frame.getByRole('button', { name: 'submit' }).click();
 
     await expect(frame.getByRole('heading', { name: 'Successful' })).toBeVisible();
+  });
+
+  test('default value is consistent between rendering enketo directly and via iframe', async ({ page }) => {
+    await login(page);
+
+    const queryWithSpaces = '?d[/data/first_name]=hello earth + hello mars %20 hello jupiter %2B hello saturn';
+
+    await page.goto(`${appUrl}/enketo-passthrough/${publishedForm.enketoId}${queryWithSpaces}`);
+    await expect(page.getByRole('heading', { name: publishedForm.name })).toBeVisible();
+
+    await expect(page.getByLabel('First Name')).toHaveValue('hello earth + hello mars   hello jupiter + hello saturn');
+
+    await page.goto(`${appUrl}/projects/${projectId}/forms/${publishedForm.xmlFormId}/submissions/new${queryWithSpaces}`);
+    const iframe = await page.frameLocator('iframe');
+    await expect(iframe.getByRole('heading', { name: publishedForm.name })).toBeVisible();
+
+    // except we transform + into space as well in iframe
+    await expect(iframe.getByLabel('First Name')).toHaveValue('hello earth   hello mars   hello jupiter + hello saturn');
   });
 });

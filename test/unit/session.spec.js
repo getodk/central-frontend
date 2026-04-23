@@ -57,12 +57,12 @@ describe('util/session', () => {
         });
     });
 
-    it('removes sessionExpires from local storage after a 404', () => {
+    it('removes sessionExpires from local storage after a 401', () => {
       const container = createTestContainer();
       const { session } = container.requestData;
       return mockHttp(container)
         .request(() => restoreSession(session).catch(noop))
-        .respondWithProblem(404.1)
+        .respondWithProblem(401.2)
         .afterResponse(() => {
           should.not.exist(localStorage.getItem('sessionExpires'));
         });
@@ -323,6 +323,7 @@ describe('util/session', () => {
           .complete()
           .request(app => logOut(app.vm.$container, false))
           .respondWithSuccess()
+          .respondFor('/login')
           .afterResponse(app => {
             app.vm.$route.fullPath.should.equal('/login');
           }));
@@ -334,6 +335,7 @@ describe('util/session', () => {
           .complete()
           .request(app => logOut(app.vm.$container, false))
           .respondWithSuccess()
+          .respondFor('/login')
           .afterResponse(app => {
             const { requestData } = app.vm.$container;
             requestData.session.dataExists.should.be.false;
@@ -346,6 +348,7 @@ describe('util/session', () => {
           .complete()
           .request(app => logOut(app.vm.$container, true))
           .respondWithSuccess()
+          .respondFor('/login')
           .afterResponse(app => {
             const route = app.vm.$route;
             route.path.should.equal('/login');
@@ -361,6 +364,7 @@ describe('util/session', () => {
           })
           .request(app => logOut(app.vm.$container, false))
           .respondWithSuccess()
+          .respondFor('/login')
           .afterResponse(app => {
             app.vm.$route.path.should.equal('/login');
             app.vm.$container.unsavedChanges.count.should.equal(0);
@@ -388,9 +392,11 @@ describe('util/session', () => {
       });
 
       it('shows a danger alert', () => {
+        const reload = sinon.fake();
         const container = createTestContainer({
           router: mockRouter(),
-          requestData: { session: testData.sessions.createNew() }
+          requestData: { session: testData.sessions.createNew() },
+          location: { reload }
         });
         const { alert } = container;
         return mockHttp(container)
@@ -404,9 +410,10 @@ describe('util/session', () => {
           })
           .afterResponse(() => {
             alert.state.should.be.true;
-            alert.type.should.equal('danger');
-            alert.message.should.startWith('There was a problem, and you were not fully logged out.');
-            alert.message.should.endWith('logOut() problem.');
+            alert.type.should.equal('info');
+            alert.message.should.equal('There was a problem logging out. logOut() problem. Please refresh the page and try again.');
+            alert.cta.handler();
+            reload.called.should.be.true;
           });
       });
 
@@ -468,7 +475,8 @@ describe('util/session', () => {
               }
             })
             .restoreSession()
-            .respondWithProblem(401.2));
+            .respondWithProblem(401.2)
+            .respondFor('/login'));
 
         it('does not navigate to /login', () => {
           const replace = sinon.fake();
@@ -610,6 +618,7 @@ describe('util/session', () => {
           clock.tick(225000);
         })
         .respondWithSuccess()
+        .respondFor('/login')
         .afterResponse(app => {
           app.vm.$route.query.next.should.equal('/');
         });
@@ -739,7 +748,7 @@ describe('util/session', () => {
           clock.tick(1000);
           alert.state.should.be.true;
           alert.type.should.equal('info');
-          alert.message.should.startWith('Your session will expire in 2 minutes,');
+          alert.message.should.endWith('You will be logged out in 2 minutes.');
         });
     });
 
@@ -758,7 +767,7 @@ describe('util/session', () => {
         .afterResponse(() => {
           clock.tick(120000);
           alert.state.should.be.true;
-          alert.blank();
+          alert.last.hide();
           clock.tick(30000);
           alert.state.should.be.false;
         })
@@ -794,7 +803,7 @@ describe('util/session', () => {
         .request(() => logOut(container, false))
         .respondWithSuccess()
         .afterResponse(() => {
-          alert.blank();
+          alert.last.hide();
           clock.tick(120000);
           alert.state.should.be.false;
         });
@@ -901,6 +910,7 @@ describe('util/session', () => {
           }));
         })
         .respondWithProblem(401.2)
+        .respondFor('/login')
         .afterResponse(app => {
           app.vm.$route.query.next.should.equal('/users');
         });

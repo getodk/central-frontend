@@ -23,14 +23,29 @@ export const userLocale = () => {
   const storageLocale = localStore.getItem('locale');
   if (storageLocale != null && locales.has(storageLocale)) return storageLocale;
 
-  // Match on the language subtag, ignoring script and region.
-  const byLanguage = new Map();
-  for (const locale of locales.keys())
-    byLanguage.set(new Intl.Locale(locale).language, locale);
+  // Set it up so that we can match either on language or on language + script.
+  // Region is ignored.
+  const byTag = new Map();
+  for (const locale of locales.keys()) {
+    const { language, script } = new Intl.Locale(locale);
+    if (!byTag.has(language)) byTag.set(language, locale);
+    if (script != null) byTag.set(`${language}-${script}`, locale);
+  }
+
   for (const locale of navigator.languages) {
-    const match = byLanguage.get(new Intl.Locale(locale).language);
+    const { language, script } = new Intl.Locale(locale);
+
+    // Try to match on language + script.
+    if (script != null) {
+      const match = byTag.get(`${language}-${script}`);
+      if (match != null) return match;
+    }
+
+    // Try to match on language alone.
+    const match = byTag.get(language);
     if (match != null) return match;
   }
+
   return null;
 };
 
@@ -94,6 +109,9 @@ const listFormatOptions = {
   long: { style: 'long' }
 };
 
+export const joinSentences = (i18n, sentences) =>
+  sentences.join(locales.get(i18n.locale).sentenceSeparator);
+
 const useGlobalUtils = memoizeForContainer(({ i18n }) => {
   const numberFormats = {};
   const getNumberFormat = (key) => {
@@ -130,7 +148,8 @@ const useGlobalUtils = memoizeForContainer(({ i18n }) => {
       getListFormat(key).formatToParts(list),
 
     sentenceSeparator: computed(() =>
-      locales.get(i18n.locale).sentenceSeparator)
+      locales.get(i18n.locale).sentenceSeparator),
+    joinSentences: joinSentences.bind(null, i18n)
   };
 });
 

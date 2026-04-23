@@ -23,6 +23,7 @@
     "title": "System-Management",
     "tab": {
       "audits": "Server Audit Logs",
+      "customization": "Anpassung",
       "analytics": "Nutzungsberichterstattung"
     }
   },
@@ -49,13 +50,13 @@
   },
   "audit": {
     "category": {
-      "nonverbose": "(Alle Aktionen)",
+      "nonverbose": "Alle Aktionen",
       "user": "Webnutzer-Aktionen",
       "project": "Projekt-Aktionen",
       "form": "Formular-Aktionen",
       "field_key": "App-Benutzer-Aktionen",
       "public_link": "Öffentlicher Zugangslink-Aktionen",
-      "dataset": "Entitätslistenaktionen",
+      "dataset": "Objektlistenaktionen",
       "config": "Server-Konfigurationsaktionen",
       "upgrade": "Server-Aktualisierung",
       "task": "Systembetrieb"
@@ -78,7 +79,13 @@
       "dataset": {
         "update": "Aktualisieren",
         "update_publish": "Veröffentlichen",
-        "create": "@:audit.action.default.create"
+        "update_property_delete": "Eigenschaft löschen",
+        "create": "@:audit.action.default.create",
+        "delete": "@:audit.action.default.delete"
+      },
+      "entity": {
+        "bulk_delete": "Massenlöschung",
+        "bulk_restore": "Massenwiederherstellung"
       },
       "field_key": {
         "assignment_create": "Zugriff erteilen",
@@ -113,7 +120,8 @@
       "upgrade": {
         "process_form": "Formular verarbeiten",
         "process_form_draft": "Formularentwurf verarbeiten",
-        "process_form_entities_version": "Formular für Upgrade markieren"
+        "process_form_entities_version": "Formular für Upgrade markieren",
+        "server": "Neue Version"
       },
       "user": {
         "assignment_create": "Rolle zuweisen",
@@ -153,11 +161,13 @@
     "ok": "Okay",
     "proceed": "Fortfahren",
     "refresh": "Aktualisieren",
+    "refreshPage": "Seite aktualisieren",
     "resetPassword": "Passwort zurücksetzen",
     "review": "Überprüfen",
     "save": "Speichern",
     "saveSettings": "Einstellungen speichern",
     "sort": "Sortieren",
+    "undo": "Rückgängig machen",
     "update": "Aktualisieren",
     "yesProceed": "Ja, fortfahren",
     "showPreview": "Vorschau",
@@ -165,7 +175,10 @@
     "newPreview": "Neue Vorschau",
     "expand": "Vergrössern",
     "collapse": "Verkleinern",
+    "selectRow": "Zeile auswählen",
+    "reset": "Zurücksetzen",
     "reviewParallelUpdates": "Parallele Updates überprüfen",
+    "tryAgain": "Nochmals versuchen",
     "upload": "Hochladen",
     "restore": "Wiederherstellen"
   },
@@ -180,6 +193,7 @@
     "passphrase": "Passphrase",
     "password": "Passwort",
     "passwordConfirm": "Neues Passwort (bestätigen)",
+    "title": "Titel",
     "type": "Typ"
   },
   "header": {
@@ -199,8 +213,8 @@
     "submissionDate": "Übermittelt um",
     "time": "Zeit",
     "type": "Typ",
-    "entities": "Entitäten insgesamt",
-    "lastEntity": "Neueste Entität"
+    "entities": "Objekte insgesamt",
+    "lastEntity": "Neuestes Objekt"
   },
   "plural": {
     "appUser": "App-Benutzer | App-Benutzer",
@@ -222,10 +236,10 @@
     "appUsers": "App-Benutzer",
     "attachments": "Anhänge",
     "config": "Server-Konfiguration",
-    "entity": "Entität",
-    "entities": "Entitäten",
-    "entityList": "Entitätsliste",
-    "entityLists": "Entitätslisten",
+    "entity": "Objekt",
+    "entities": "Objekte",
+    "entityList": "Objektliste",
+    "entityLists": "Objektlisten",
     "form": "Formular",
     "forms": "Formulare",
     "formAttachments": "Formularanhänge",
@@ -246,14 +260,14 @@
     "draft": "Entwurf"
   },
   "alert": {
-    "passwordTooShort": "Bitte geben Sie ein mindestens 10 Zeichen langes Passwort ein.",
-    "updateEntity": "Das Objekt wurde aktualisiert!",
-    "updateReviewState": "Überprüfungsstatus gespeichert!",
-    "versionChange": "Der Server wurde aktualisiert. Bitte aktualisieren Sie die Seite, um technische Probleme zu vermeiden.",
-    "submissionDeleted": "Die Übermittlung wurde gelöscht.",
+    "passwordTooShort": "Das Passwort muss mindestens 10 Zeichen lang sein.",
+    "updateEntity": "Objekt wurde erfolgreich aktualisiert.",
+    "updateReviewState": "Überprüfung erfolgreich gespeichert.",
+    "versionChange": "Der Server wurde erfolgreich aktualisiert.",
+    "submissionDeleted": "Die Übermittlung wurde erfolgreich gelöscht.",
     "submissionRestored": "Die Übermittlung wurde wiederhergestellt.",
-    "entityRestored": "Die Entität \"{label}“ wurde wiederhergestellt.",
-    "entityDeleted": "Die Entität \"{label}“ wurde gelöscht."
+    "entityRestored": "Das Objekt \"{label}“ wurde wiederhergestellt.",
+    "entityDeleted": "Das Objekt \"{label}“ wurde gelöscht."
   },
   "moreInfo": {
     "clickHere": {
@@ -266,12 +280,19 @@
     },
     "learnMore": "Erfahren Sie mehr."
   },
+  "login": {
+    "odkLogo": "ODK-Logo",
+    "defaultTitle": "Willkommen bei ODK Central",
+    "defaultDescription": "Melden Sie sich bei Ihrem Konto an, um loszulegen",
+    "customLogoAlt": "Logo der Organisation"
+  },
   "analytics": {
     "alwaysImprove": "Wir sind stets bemüht, ODK Central zu verbessern.",
     "needFeedback": {
       "full": "Wir benötigen {your} Feedback, damit wir verstehen können, wie du Central verwendest und wie wir es für dich besser machen können.",
       "your": "dein"
-    }
+    },
+    "mailingListOptIn": "Senden Sie mir gelegentlich E-Mails über neue Funktionen und bewährte Verfahren."
   },
   "submission": {
     "missingAttachment": "Fehlender Anhang",
@@ -288,7 +309,7 @@
   "entity": {
     "label": "Etikett",
     "entityLabel": "Objektbezeichnung",
-    "entityId": "Entitäts-ID",
+    "entityId": "Objekt-ID",
     "noProperties": "Dieses Formular legt nur das \"Label“ fest.",
     "noEntity": "(keine)",
     "conflictsCount": "{count} Konflikt | {count} Konflikte"
@@ -303,12 +324,14 @@
     "dangerZone": "Gefahrenbereich",
     "data": "Daten",
     "docs": "Dokumentation",
+    "emptyMap": "Es sind noch keine Kartendaten verfügbar.",
     "emptyValue": "(leer)",
     "error": "Fehler",
     "filter": "Filter",
     "forum": "Forum",
     "lastUpdate": "Letzte Aktualisierung",
     "loading": "Wird geladen...",
+    "map": "Karte",
     "no": "Nein",
     "noResults": "Keine Ergebnisse",
     "noUndo": "Diese Aktion kann nicht rückgängig gemacht werden.",
@@ -319,18 +342,21 @@
     "tab": {
       "settings": "Einstellungen"
     },
+    "table": "Tabelle",
     "total": "Total",
     "totalSubmissions": "Gesamtzahl der Übermittlungen",
     "propertiesCount": "{inform} von {count} Eigenschaft | {inform} von {count} Eigenschaften",
     "new": "Neu!",
-    "totalEntities": "Entitäten insgesamt",
+    "totalEntities": "Objekte insgesamt",
     "versionShort": "v{version}",
     "warning": "Warnung",
     "beta": "Beta",
     "none": "(keine)",
+    "search": "Suchen",
     "reviewState": "Überprüfungsstatus",
     "status": "Status",
-    "version": "Version"
+    "version": "Version",
+    "trash": "Papierkorb"
   },
   "mixin": {
     "request": {
@@ -356,16 +382,19 @@
       "problem": {
         "404_1": "Die gesuchte Ressource kann nicht gefunden werden. Die Ressource wurde möglicherweise gelöscht.",
         "409_17": {
-          "message": "Mit diesem Formular wird versucht, eine neue Entitätseigenschaft zu erstellen, die bis auf die Gross- und Kleinschreibung mit einer vorhandenen übereinstimmt: | Dieses Formular versucht, neue Entitätseigenschaften zu erstellen, die mit Ausnahme der Gross- und Kleinschreibung mit den vorhandenen übereinstimmen:",
+          "message": "Mit diesem Formular wird versucht, eine neue Objekteigenschaft zu erstellen, die bis auf die Gross- und Kleinschreibung mit einer vorhandenen übereinstimmt: | Dieses Formular versucht, neue Objekteigenschaften zu erstellen, die mit Ausnahme der Groß- und Kleinschreibung mit den vorhandenen übereinstimmen:",
           "duplicateProperty": "{provided} (bestehende: {current})"
         }
       }
     },
     "session": {
       "alert": {
-        "expiresSoon": "Ihre Sitzung läuft in 2 Minuten ab und Sie werden automatisch ausgeloggt.",
-        "expired": "Ihre Sitzung ist abgelaufen. Um weiterzuarbeiten, bitte erneut einloggen.",
-        "logoutError": "Es gab ein Problem und Sie wurden nicht vollständig ausgeloggt. Bitte die Seite aktualisieren und versuchen sich erneut einzuloggen. {message}"
+        "expiresSoon": "Ihre Session läuft ab! Sie werden in 2 Minuten ausgeloggt.",
+        "expired": "Ihre Session ist abgelaufen. Melden Sie sich erneut an, um fortzufahren.",
+        "logoutError": {
+          "thereWasProblem": "Es gab ein Problem beim Ausloggen.",
+          "pleaseRefresh": "Bitte aktualisieren Sie die Seite und versuchen Sie es erneut."
+        }
       }
     }
   },

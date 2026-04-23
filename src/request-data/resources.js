@@ -33,7 +33,9 @@ export default (container, createResource) => {
     }
   }));
 
-  // Resources related to the system
+  // Resources related to configuration
+  // The `config` resource refers specifically to the client config. (It's
+  // probably named too generically.)
   createResource('config', (config) => ({
     // If client-config.json is completely invalid JSON, `data` seems to be a
     // string (e.g., '{]').
@@ -42,6 +44,12 @@ export default (container, createResource) => {
       : configDefaults),
     loaded: computed(() => config.dataExists && config.loadError == null)
   }));
+  createResource('serverConfig', () => ({
+    transformResponse: ({ data }) => shallowReactive(data)
+  }));
+  createResource('analyticsConfig', noargs(setupOption));
+
+  // Resources related to the system
   createResource('centralVersion', () => ({
     transformResponse: ({ data, headers }) =>
       shallowReactive({
@@ -50,7 +58,6 @@ export default (container, createResource) => {
         currentDate: new Date(headers.get('date'))
       })
   }));
-  createResource('analyticsConfig', noargs(setupOption));
   createResource('roles', (roles) => ({
     bySystem: computeIfExists(() => {
       // Using Object.create(null) in case there is a role whose `system`
@@ -83,7 +90,7 @@ export default (container, createResource) => {
   createResource('form', () => ({
     transformResponse: ({ data }) => shallowReactive(transformForm(data))
   }));
-  createResource('dataset', () => ({
+  createResource('dataset', (dataset) => ({
     transformResponse: ({ data }) => {
       // Add projectId to forms. FormLink expects this property to exist on form
       // objects.
@@ -95,6 +102,8 @@ export default (container, createResource) => {
       }
 
       return shallowReactive(data);
-    }
+    },
+    hasGeometry: computeIfExists(() =>
+      dataset.properties.some(({ name }) => name === 'geometry'))
   }));
 };

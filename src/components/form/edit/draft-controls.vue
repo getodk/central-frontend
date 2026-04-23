@@ -122,9 +122,11 @@ const abandonText = computed(() => (!form.dataExists
   },
   "pt": {
     "action": {
+      "delete": "Excluir Formulário",
       "abandon": "Abandonar rascunho",
       "publish": "Publicar rascunho"
-    }
+    },
+    "title": "Pronto para publicar"
   },
   "sw": {
     "action": {
@@ -132,11 +134,21 @@ const abandonText = computed(() => (!form.dataExists
       "publish": "Chapisha Rasimu"
     }
   },
+  "zh": {
+    "action": {
+      "delete": "删除表单",
+      "abandon": "放弃草稿",
+      "publish": "发布草稿"
+    },
+    "title": "准备发布"
+  },
   "zh-Hant": {
     "action": {
+      "delete": "刪除表單",
       "abandon": "放棄草案",
       "publish": "發布草稿"
-    }
+    },
+    "title": "準備發佈"
   }
 }
 </i18n>

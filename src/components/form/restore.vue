@@ -120,6 +120,25 @@ export default {
       "Il Formulario verrà ripristinato allo stato precedente, inclusi tutti i dati, le impostazioni e le autorizzazioni.",
       "Se il Formulario viene nuovamente eliminato, ci vorranno altri 30 giorni prima che venga rimosso."
     ]
+  },
+  "pt": {
+    "title": "Recuperar Formulário"
+  },
+  "zh": {
+    "title": "恢复表单",
+    "introduction": [
+      "确定要恢复表单{name}吗？",
+      "表单将恢复至先前状态，包括所有数据、设置和权限。",
+      "若该表单再次被删除，将再过30天才会被移除。"
+    ]
+  },
+  "zh-Hant": {
+    "title": "還原表格",
+    "introduction": [
+      "您確定要還原表格{name}吗？",
+      "表單將恢復到先前的狀態，包括所有資料、設定和權限。",
+      "如果再次刪除該表格，則需要再過 30 天才會被刪除。"
+    ]
   }
 }
 </i18n>

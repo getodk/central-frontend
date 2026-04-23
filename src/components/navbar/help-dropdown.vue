@@ -74,6 +74,9 @@ defineOptions({
   "sw": {
     "help": "msaada"
   },
+  "zh": {
+    "help": "帮助"
+  },
   "zh-Hant": {
     "help": "幫助"
   }

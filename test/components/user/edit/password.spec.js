@@ -117,7 +117,7 @@ describe('UserEditPassword', () => {
     it('shows a danger alert', async () => {
       const component = mount(UserEditPassword, mountOptions());
       await submit(component, { tooShort: true });
-      component.should.alert('danger', 'Please input a password at least 10 characters long.');
+      component.should.alert('danger', 'Password must be at least 10 characters long.');
     });
 
     it('marks the input as invalid', async () => {

@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="config-error" class="row">
+  <div class="row">
     <div class="col-xs-12 col-sm-offset-3 col-sm-6">
       <div class="panel panel-default panel-main">
         <div class="panel-heading">
@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
           <p>
             <span>{{ $t('body') }}</span>
             <sentence-separator/>
-            <span>{{ loadError }}</span>
+            <span>{{ errorMessage }}</span>
           </p>
         </div>
       </div>
@@ -29,9 +29,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { F } from 'ramda';
 import { computed, inject } from 'vue';
-import { onBeforeRouteLeave } from 'vue-router';
 
 import SentenceSeparator from './sentence-separator.vue';
 
@@ -40,15 +38,15 @@ import { requestAlertMessage } from '../util/request';
 defineOptions({
   name: 'ConfigError'
 });
+const props = defineProps({
+  error: {
+    type: Error,
+    required: true
+  }
+});
 
-// Since there was an error loading the config, we don't know how to render
-// important parts of the app. For example, we don't know config.oidcEnabled, so
-// we don't know how to render the login page. Here, we prevent the user from
-// navigating to elsewhere in the app.
-onBeforeRouteLeave(F);
-
-const { i18n, config } = inject('container');
-const loadError = computed(() => requestAlertMessage(i18n, config.loadError));
+const { i18n } = inject('container');
+const errorMessage = computed(() => requestAlertMessage(i18n, props.error));
 </script>
 
 <i18n lang="json5">
@@ -86,6 +84,10 @@ const loadError = computed(() => requestAlertMessage(i18n, config.loadError));
   "pt": {
     "title": "Erro ao carregar o Central",
     "body": "Ocorreu um erro ao carregar o Central."
+  },
+  "zh": {
+    "title": "载入Central时出错",
+    "body": "载入Central时发生错误。"
   },
   "zh-Hant": {
     "title": "載入 Central 時出錯",

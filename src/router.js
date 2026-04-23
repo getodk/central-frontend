@@ -29,7 +29,7 @@ export default (container, {
 } = {}) => {
   const routes = createRoutes(container);
   const router = createRouter({ history, routes, scrollBehavior });
-  const { requestData, alert, unsavedChanges, config } = container;
+  const { requestData, toast, redAlert, unsavedChanges, config } = container;
   const { session } = requestData;
 
 
@@ -236,7 +236,8 @@ router.afterEach(unlessFailure(() => {
 // OTHER NAVIGATION HOOKS
 
 router.afterEach(unlessFailure(() => {
-  alert.blank();
+  toast.hide();
+  redAlert.hide();
 }));
 
 

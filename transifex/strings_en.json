@@ -66,6 +66,10 @@
         "string": "Server Audit Logs",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       },
+      "customization": {
+        "string": "Customization",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      },
       "analytics": {
         "string": "Usage Reporting",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
@@ -137,7 +141,7 @@
   "audit": {
     "category": {
       "nonverbose": {
-        "string": "(All Actions)",
+        "string": "All Actions",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "user": {
@@ -224,6 +228,20 @@
         "update_publish": {
           "string": "Publish",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
+        },
+        "update_property_delete": {
+          "string": "Delete Property",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
+        }
+      },
+      "entity": {
+        "bulk_delete": {
+          "string": "Bulk Delete",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "bulk_restore": {
+          "string": "Bulk Restore",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "field_key": {
@@ -297,6 +315,10 @@
         },
         "process_form_entities_version": {
           "string": "Flag Form for Upgrade",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
+        },
+        "server": {
+          "string": "New Version",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
         }
       },
@@ -405,6 +427,10 @@
       "string": "Refresh",
       "developer_comment": "This is the text of a button that refreshes data."
     },
+    "refreshPage": {
+      "string": "Refresh page",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "resetPassword": {
       "string": "Reset password",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -424,6 +450,10 @@
     "sort": {
       "string": "Sort",
       "developer_comment": "This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms"
+    },
+    "undo": {
+      "string": "Undo",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "update": {
       "string": "Update",
@@ -452,6 +482,14 @@
     "collapse": {
       "string": "Collapse",
       "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "selectRow": {
+      "string": "Select row",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "reset": {
+      "string": "Reset",
+      "developer_comment": "This text is shown on a button that resets the data filters"
     }
   },
   "field": {
@@ -493,6 +531,10 @@
     },
     "passwordConfirm": {
       "string": "New password (confirm)",
+      "developer_comment": "This is the text of a form field."
+    },
+    "title": {
+      "string": "Title",
       "developer_comment": "This is the text of a form field."
     },
     "type": {
@@ -723,19 +765,19 @@
   },
   "alert": {
     "passwordTooShort": {
-      "string": "Please input a password at least 10 characters long."
+      "string": "Password must be at least 10 characters long."
     },
     "updateEntity": {
-      "string": "The Entity has been updated!"
+      "string": "Entity has been successfully updated."
     },
     "updateReviewState": {
-      "string": "Review State saved!"
+      "string": "Review successfully saved."
     },
     "versionChange": {
-      "string": "The server has been updated. Please refresh the page to avoid unpredictable behavior."
+      "string": "The server has been successfully updated."
     },
     "submissionDeleted": {
-      "string": "The Submission has been deleted."
+      "string": "Submission has been successfully deleted."
     },
     "submissionRestored": {
       "string": "The Submission has been restored."
@@ -770,6 +812,21 @@
       "developer_comment": "This is a link to more information."
     }
   },
+  "login": {
+    "odkLogo": {
+      "string": "ODK logo"
+    },
+    "defaultTitle": {
+      "string": "Welcome to ODK Central"
+    },
+    "defaultDescription": {
+      "string": "Log into your account to get started"
+    },
+    "heroImage": {
+      "string": "Login image",
+      "developer_comment": "An image shown on the login page"
+    }
+  },
   "analytics": {
     "alwaysImprove": {
       "string": "We are always trying to improve ODK Central."
@@ -783,6 +840,9 @@
         "string": "your",
         "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {your} is in the following text:\n\nTo do this, we need {your} feedback, so that we can understand how you are using Central, and how it could be better for you."
       }
+    },
+    "mailingListOptIn": {
+      "string": "Send me occasional emails about new features and best practices."
     }
   },
   "submission": {
@@ -874,6 +934,9 @@
       "string": "Docs",
       "developer_comment": "This is the text of a link that links to the documentation."
     },
+    "emptyMap": {
+      "string": "No map data available yet."
+    },
     "emptyValue": {
       "string": "(empty)",
       "developer_comment": "This is shown when the value of an Entity property is empty."
@@ -894,6 +957,9 @@
     },
     "loading": {
       "string": "Loading…"
+    },
+    "map": {
+      "string": "Map"
     },
     "no": {
       "string": "No"
@@ -925,6 +991,9 @@
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     },
+    "table": {
+      "string": "Table"
+    },
     "total": {
       "string": "Total"
     },
@@ -954,6 +1023,9 @@
     },
     "none": {
       "string": "(none)"
+    },
+    "search": {
+      "string": "Search"
     }
   },
   "mixin": {
@@ -1023,14 +1095,18 @@
     "session": {
       "alert": {
         "expiresSoon": {
-          "string": "Your session will expire in 2 minutes, and you be automatically logged out."
+          "string": "Your session is expiring! You will be logged out in 2 minutes."
         },
         "expired": {
-          "string": "Your session has expired. To continue working, please log in again."
+          "string": "Your session has expired. Log in again to continue."
         },
         "logoutError": {
-          "string": "There was a problem, and you were not fully logged out. Please refresh the page and try logging out again. {message}",
-          "developer_comment": "{message} is a more detailed error message."
+          "thereWasProblem": {
+            "string": "There was a problem logging out."
+          },
+          "pleaseRefresh": {
+            "string": "Please refresh the page and try again."
+          }
         }
       }
     }
@@ -1042,6 +1118,9 @@
   },
   "component": {
     "AccountClaim": {
+      "title": {
+        "string": "Set your new password"
+      },
       "action": {
         "set": {
           "string": "Set password",
@@ -1056,7 +1135,7 @@
       },
       "alert": {
         "success": {
-          "string": "The password was reset successfully."
+          "string": "Password successfully reset."
         }
       }
     },
@@ -1066,7 +1145,7 @@
           "string": "A user is already logged in. Please refresh the page to continue."
         },
         "changePassword": {
-          "string": "Your password is shorter than 10 characters. To protect your account, please change your password to make it longer."
+          "string": "To protect your account, make sure your password is 10 characters or longer."
         }
       },
       "oidc": {
@@ -1094,7 +1173,18 @@
         }
       }
     },
+    "AccountPageContainer": {
+      "customLogoAlt": {
+        "string": "Organization logo"
+      }
+    },
     "AccountResetPassword": {
+      "title": {
+        "string": "Reset your password"
+      },
+      "subtitle": {
+        "string": "Enter your email to reset your password"
+      },
       "alert": {
         "success": {
           "string": "An email has been sent to {email} with further instructions."
@@ -1163,7 +1253,7 @@
       },
       "alert": {
         "success": {
-          "string": "Settings saved!"
+          "string": "Settings successfully saved."
         }
       }
     },
@@ -1321,6 +1411,12 @@
         "description_length": {
           "string": "Length of the Project description"
         },
+        "num_datasets_deleted": {
+          "string": "Number of Entity List delete events"
+        },
+        "num_dataset_properties_deleted": {
+          "string": "Number of Entity property delete events"
+        },
         "num_properties": {
           "string": "Number of Properties"
         },
@@ -1362,6 +1458,18 @@
         },
         "sso_enabled": {
           "string": "SSO enabled on server"
+        },
+        "login_customization_logo_set": {
+          "string": "Custom login page logo set"
+        },
+        "login_customization_hero_image_set": {
+          "string": "Custom login page hero image set"
+        },
+        "login_customization_title_set": {
+          "string": "Custom login page title set"
+        },
+        "login_customization_description_set": {
+          "string": "Custom login page description set"
         },
         "num_client_audit_attachments": {
           "string": "Number of Client Audit Attachments"
@@ -1405,6 +1513,9 @@
         "max_entity_branch_delay": {
           "string": "Maximum time to process offline Entity update chain"
         },
+        "num_owner_only_datasets": {
+          "string": "Number of Entity Lists restricted to Owner Only"
+        },
         "num_xml_only_form_defs": {
           "string": "Number of Form Definitions with no associated XLSForm"
         },
@@ -1425,6 +1536,36 @@
         },
         "num_entity_creates_bulk": {
           "string": "Number of Entities created via bulk upload"
+        },
+        "max_geo_per_form": {
+          "string": "Maximum number of Submissions with geo data in a Form"
+        },
+        "num_entity_bulk_deletes": {
+          "string": "Number of bulk Entity delete Audit Log Events"
+        },
+        "num_datasets_with_geometry": {
+          "string": "Number of Entity Lists with geometry property"
+        },
+        "num_entity_create_forms": {
+          "string": "Number of Forms that create Entities"
+        },
+        "num_repeat_entity_create_forms": {
+          "string": "Number of Forms that create Entities in repeats"
+        },
+        "num_entity_update_forms": {
+          "string": "Number of Forms that update Entities"
+        },
+        "num_repeat_entity_update_forms": {
+          "string": "Number of Forms that update Entities in repeats"
+        },
+        "num_entity_create_update_forms": {
+          "string": "Number of Forms that both create and update Entities"
+        },
+        "num_entities_with_geometry": {
+          "string": "Number of Entities with geometry data"
+        },
+        "num_multi_entity_errors": {
+          "string": "Number of errors from repeat Entities"
         }
       }
     },
@@ -1535,13 +1676,98 @@
         "string": "There was an error loading Central."
       }
     },
+    "ConfigLogin": {
+      "title": {
+        "string": "Login page"
+      }
+    },
+    "ConfigLoginEdit": {
+      "logo": {
+        "label": {
+          "string": "Logo"
+        },
+        "help": {
+          "string": "We recommend using a PNG logo with transparent background of at least 150x150 pixels."
+        }
+      },
+      "title": {
+        "help": {
+          "string": "A title for your server login."
+        }
+      },
+      "description": {
+        "label": {
+          "string": "Subtitle"
+        },
+        "help": {
+          "string": "Instructions for your users, a welcome message or a description of this server."
+        }
+      },
+      "hero": {
+        "help": {
+          "string": "Upload a vertical image, we recommend a 4:5 crop. Use a visually engaging image that represents your brand or message. The image will be cropped on different screen sizes, so keep important content centered."
+        }
+      }
+    },
+    "ConfigLoginFileSelect": {
+      "select": {
+        "full": {
+          "string": "Drag image here or {upload}",
+          "developer_comment": "{upload} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nupload file"
+        },
+        "upload": {
+          "string": "upload file",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {upload} is in the following text:\n\nDrag image here or {upload}"
+        }
+      },
+      "action": {
+        "remove": {
+          "string": "Remove image",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "invalidType": {
+          "string": "File type not accepted."
+        },
+        "post": {
+          "string": "Image successfully saved."
+        },
+        "del": {
+          "string": "Image successfully removed."
+        }
+      }
+    },
+    "ConfigLoginPreview": {
+      "introduction": {
+        "string": "Your login page now looks like this:"
+      }
+    },
+    "DatasetDelete": {
+      "title": {
+        "string": "Delete Entity List",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "Are you sure you want to delete the Entity List “{name}”? This cannot be undone."
+        }
+      }
+    },
     "DatasetEntities": {
       "upload": {
         "string": "Upload Entities"
       },
+      "newEntity": {
+        "string": "New Entity",
+        "developer_comment": "This is shown on a button for creating new Entities"
+      },
       "alert": {
         "upload": {
-          "string": "Success! Your Entities have been uploaded."
+          "string": "Your Entities have been successfully uploaded."
+        },
+        "create": {
+          "string": "Entity has been successfully created."
         }
       },
       "purgeDescription": {
@@ -1600,10 +1826,6 @@
       }
     },
     "DatasetOverview": {
-      "connectionsToForms": {
-        "string": "Connections to Forms",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
       "entityProperties": {
         "string": "Entity Properties",
         "developer_comment": "This is a title shown above a section of the page."
@@ -1613,12 +1835,6 @@
         "developer_comment": "This is shown on a button for creating new Entity Properties"
       }
     },
-    "DatasetOverviewConnectionToForms": {
-      "formsUpdateEntities": {
-        "string": "{count, plural, one {Form updates Entities in this Entity List} other {Forms update Entities in this Entity List}}",
-        "developer_comment": "The number of Form(s) is shown separately above this text."
-      }
-    },
     "DatasetOverviewDatasetProperties": {
       "emptyTable": {
         "string": "The Entities in this Entity List do not have any user-defined properties."
@@ -1626,12 +1842,48 @@
       "none": {
         "string": "(None)",
         "developer_comment": "This is shown in an Entity property row in a column about Forms, and 'None' refers to Forms."
+      },
+      "confirmation": {
+        "title": {
+          "string": "Delete Property"
+        },
+        "body": {
+          "string": "Are you sure you want to delete the Property “{propertyName}”? This cannot be undone.",
+          "developer_comment": "This is shown on a confirmation dialog box. {propertyName} is the name of the property that is being deleted."
+        }
+      },
+      "deleted": {
+        "string": "Property “{name}” has been deleted.",
+        "developer_comment": "This is shown after a Property has been successfully deleted. {name} is the name of the deleted property."
       }
     },
-    "DatasetOverviewLinkedForms": {
-      "formsConsumeData": {
-        "string": "{count, plural, one {Form uses this Entity List} other {Forms use this Entity List}}",
-        "developer_comment": "Number of form(s) is shown separately above this text"
+    "DatasetOverviewDeletePropertyError": {
+      "title": {
+        "string": "Delete Property"
+      },
+      "intro": {
+        "string": "Before you can delete the Property “{propertyName}”, you must:",
+        "developer_comment": "This text is followed by a list of actions."
+      },
+      "clearEntities": {
+        "string": "{count, plural, one {Clear its value in {count} Entity} other {Clear its value in {count} Entities}}",
+        "developer_comment": "This text appears in a list of required actions. \"It\" refers to an Entity property."
+      },
+      "unlinkForms": {
+        "string": "{count, plural, one {Unlink {count} Form that sets it} other {Unlink {count} Forms that set it}}",
+        "developer_comment": "This text appears in a list of required actions. \"It\" refers to an Entity property."
+      },
+      "relatedToEntities": {
+        "string": "{count, plural, one {Set in {count} Entity} other {Set in {count} Entities}}",
+        "developer_comment": "This text refers to an Entity property that is set."
+      },
+      "moreEntities": {
+        "string": "{count, plural, one {and {count} more Entity} other {and {count} more Entities}}",
+        "developer_comment": "This text is shown beneath a partial list of Entities. If there are more than a few Entities, then only the first few Entities are shown, followed by this text."
+      },
+      "relatedToForms": {
+        "string": "{count, plural, one {Set by {count} Form} other {Set by {count} Forms}}",
+        "developer_comment": "This text refers to an Entity property that is set."
       }
     },
     "DatasetOverviewNewProperty": {
@@ -1653,6 +1905,55 @@
       "problem": {
         "409_3": {
           "string": "A property already exists in this Entity List with the name of “{propertyName}”."
+        }
+      }
+    },
+    "DatasetOwnerOnly": {
+      "panel": {
+        "title": {
+          "string": "App User and Data Collector Entity Access",
+          "developer_comment": "This is a title shown above a section of the page."
+        }
+      },
+      "accessAll": {
+        "string": "Access all Entities"
+      },
+      "accessAllDefault": {
+        "string": "Access all Entities (default)"
+      },
+      "ownerOnly": {
+        "string": "Only access own Entities"
+      },
+      "radio": {
+        "false": {
+          "string": "App Users and Data Collectors within this Project will have access to all Entities within their assigned Forms."
+        },
+        "true": {
+          "string": "App Users and Data Collectors within this Project will only have access to the Entities they create, promoting privacy and limiting data transfers."
+        }
+      },
+      "falseModal": {
+        "introduction": {
+          "string": "App Users and Data Collectors will have access to all Entities, including ones they did not create."
+        }
+      },
+      "trueModal": {
+        "introduction": {
+          "string": "App Users and Data Collectors will lose access to the Entities they have not created. All other user types keep access to all Entities."
+        },
+        "action": {
+          "confirm": {
+            "string": "Access own Entities",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
+      "alert": {
+        "changeToFalse": {
+          "string": "App Users and Data Collectors will now have access to all Entities."
+        },
+        "changeToTrue": {
+          "string": "App Users and Data Collectors will now only have access to Entities they create."
         }
       }
     },
@@ -1735,6 +2036,36 @@
         "successMessage": {
           "string": "Entities will be created when Submissions are marked as Approved."
         }
+      },
+      "action": {
+        "delete": {
+          "string": "Delete Entity List",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "delete": {
+          "string": "The Entity List “{name}” has been successfully deleted."
+        }
+      },
+      "dependentForms": {
+        "description": {
+          "0": {
+            "string": "The Entity List “{name}” is linked to {formsCount}.",
+            "developer_comment": "{formsCount} is the number of Forms that are dependent on the Entity List. Example: 4 Forms"
+          },
+          "1": {
+            "string": "Before you can delete it, you’ll need to unlink it from the related Forms.",
+            "developer_comment": "\"It\" refers to an Entity List."
+          },
+          "2": {
+            "string": "Learn more here."
+          }
+        },
+        "formsCount": {
+          "string": "{count, plural, one {{count} Form} other {{count} Forms}}",
+          "developer_comment": "This text will be inserted where {formsCount} is in the following sentence:\n\nThe Entity List “{name}” is linked to {formsCount}."
+        }
       }
     },
     "DatasetShow": {
@@ -1766,6 +2097,19 @@
     "DatasetTable": {
       "emptyTable": {
         "string": "No Entities have been created for this Project yet."
+      }
+    },
+    "DatasetTrashRow": {
+      "action": {
+        "download": {
+          "string": "Download data (.csv)",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "DatasetTrashTable": {
+      "message": {
+        "string": "Entity Lists are deleted after 30 days in the Trash"
       }
     },
     "Download": {
@@ -2069,25 +2413,43 @@
           "developer_comment": "This is the text of a form field."
         }
       },
-      "placeholder": {
-        "string": "{selected} of {total}",
-        "developer_comment": "This is the text of a dropdown that allows the user to select one or more conflict statuses. {selected} is the number of selected conflict statuses; {total} is the total number of conflict statuses."
-      },
       "action": {
-        "select": {
-          "all": {
-            "string": "All",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more conflict statuses. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
-          },
-          "none": {
-            "string": "None",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more conflict statuses. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
-          }
+        "all": {
+          "string": "All",
+          "developer_comment": "This is the text of the button in dropdown menu of conflict statuses filter, that allows the user to select all conflict statuses."
+        },
+        "none": {
+          "string": "None",
+          "developer_comment": "This is the text of the button in dropdown menu of conflict statuses filter, that allows the user to unselect all conflict statuses."
+        }
+      }
+    },
+    "EntityFiltersCreator": {
+      "field": {
+        "creator": {
+          "string": "Created by",
+          "developer_comment": "This is the text of a form field that shows the names of users that have created Entities."
+        },
+        "search": {
+          "string": "Search creators…",
+          "developer_comment": "This is the text of a form field."
         }
       },
-      "allSelectedConflictSelected": {
-        "string": "(All)",
-        "developer_comment": "Text shown when all conflict statuses are selected in the filter dropdown"
+      "action": {
+        "all": {
+          "string": "All",
+          "developer_comment": "This is the text of the button in dropdown menu of entity \"created by\" filter, that allows the user to select all creators."
+        },
+        "none": {
+          "string": "None",
+          "developer_comment": "This is the text of the button in dropdown menu of creator filter, that allows the user to unselect all creators."
+        }
+      },
+      "unknown": {
+        "string": "Unknown creator"
+      },
+      "emptyTable": {
+        "string": "There are no Entities yet."
       }
     },
     "EntityList": {
@@ -2098,8 +2460,8 @@
       "noMatching": {
         "string": "There are no matching Entities."
       },
-      "allDeleted": {
-        "string": "All Entities are deleted."
+      "emptyMap": {
+        "string": "Entities only appear if they include data in the geometry property."
       },
       "allDeletedOnPage": {
         "string": "All Entities on the page have been deleted."
@@ -2107,10 +2469,22 @@
       "alert": {
         "delete": {
           "string": "Entity “{label}” has been deleted."
+        },
+        "bulkDelete": {
+          "string": "{count, plural, one {{count} Entity successfully deleted.} other {{count} Entities successfully deleted.}}"
+        },
+        "restored": {
+          "string": "{count, plural, one {{count} Entity successfully restored.} other {{count} Entities successfully restored.}}"
         }
       },
       "filterDisabledMessage": {
         "string": "Filtering is unavailable for deleted Entities"
+      },
+      "searchDisabledMessage": {
+        "string": "Search is unavailable for deleted Entities"
+      },
+      "mapDisabled": {
+        "string": "Map is unavailable for deleted Entities"
       },
       "downloadDisabled": {
         "string": "Download is unavailable for deleted Entities"
@@ -2119,12 +2493,17 @@
         "emptyTable": {
           "string": "There are no deleted Entities."
         },
-        "allRestored": {
-          "string": "All deleted Entities are restored."
-        },
         "allRestoredOnPage": {
           "string": "All Entities on the page have been restored."
         }
+      },
+      "actionBar": {
+        "message": {
+          "string": "{count, plural, one {{count} Entity selected} other {{count} Entities selected}}"
+        }
+      },
+      "bulkOpInProgress": {
+        "string": "Bulk operation in progress"
       },
       "action": {
         "download": {
@@ -2134,15 +2513,23 @@
           },
           "filtered": {
             "withCount": {
-              "string": "{count, plural, one {Download {count} Entity matching the filter} other {Download {count} Entities matching the filter}}",
+              "string": "{count, plural, one {Download {count} matching Entity} other {Download {count} matching Entities}}",
               "developer_comment": "This is the text for an action, for example, the text of a button."
             },
             "withoutCount": {
-              "string": "Download all Entities matching the filter",
+              "string": "Download all matching Entities",
               "developer_comment": "This is the text of a button. This text is shown when the number of matching Entities is unknown."
             }
           }
         }
+      }
+    },
+    "EntityMapView": {
+      "loading": {
+        "string": "Preparing map. This could take a while."
+      },
+      "overlapTitle": {
+        "string": "{count, plural, one {{count} Entity in this area} other {{count} Entities in this area}}"
       }
     },
     "EntityMetadataRow": {
@@ -2244,15 +2631,8 @@
         "string": "Update {label}",
         "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
       },
-      "header": {
-        "currentValue": {
-          "string": "Current Value",
-          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
-        },
-        "updatedValue": {
-          "string": "Updated Value",
-          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
-        }
+      "geometryDisabled": {
+        "string": "Geometry can’t be updated from the map."
       },
       "problem": {
         "409_15": {
@@ -2282,7 +2662,7 @@
       },
       "alert": {
         "blankLabel": {
-          "string": "The label is missing."
+          "string": "Missing label."
         },
         "noData": {
           "string": "Your file does not contain any data."
@@ -2382,6 +2762,17 @@
         }
       }
     },
+    "EntityUpsert": {
+      "titleCreate": {
+        "string": "Create New Entity"
+      },
+      "header": {
+        "value": {
+          "string": "Value",
+          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
+        }
+      }
+    },
     "EntityVersionLink": {
       "submission": {
         "string": "Submission {instanceName}",
@@ -2463,7 +2854,7 @@
           "string": "The App User “{displayName}” was created successfully."
         },
         "revoke": {
-          "string": "Access was revoked for the App User “{displayName}”."
+          "string": "App User {displayName}’s access successfully revoked."
         }
       }
     },
@@ -2659,7 +3050,7 @@
           "string": "{count, plural, one {{count} file has been successfully uploaded.} other {{count} files have been successfully uploaded.}}"
         },
         "link": {
-          "string": "Entity List linked successfully."
+          "string": "Entity List successfully linked."
         }
       },
       "header": {
@@ -2923,7 +3314,7 @@
         }
       },
       "newProperties": {
-        "string": "{count, plural, one {Publishing this draft will create {count} property. It cannot be deleted.} other {Publishing this draft will create {count} properties. These cannot be deleted.}}"
+        "string": "{count, plural, one {Publishing this draft will create {count} property.} other {Publishing this draft will create {count} properties.}}"
       },
       "problem": {
         "409_6": {
@@ -2980,16 +3371,13 @@
       },
       "alert": {
         "upload": {
-          "string": "Success! The new Form definition has been saved as your Draft."
+          "string": "The new Form definition has been saved as your Draft."
         },
         "publish": {
-          "string": "Your Draft is now published. Any devices retrieving Forms for this Project will now receive the new Form definition and Form Attachments."
+          "string": "Your Draft has been published. Any devices using this Form will now get the updated Form definition and attachments."
         },
         "abandon": {
           "string": "The Draft version of this Form has been successfully deleted."
-        },
-        "delete": {
-          "string": "The Form “{name}” was deleted."
         }
       }
     },
@@ -3153,7 +3541,7 @@
       },
       "infoNav": {
         "entityLists": {
-          "string": "{count, plural, one {{count} Related Entity List} other {{count} Related Entity Lists}}"
+          "string": "{count, plural, one {{count} Linked Entity List} other {{count} Linked Entity Lists}}"
         },
         "updatedDatasets": {
           "string": "Updates",
@@ -3196,7 +3584,7 @@
       },
       "alert": {
         "create": {
-          "string": "Your new Form “{name}” has been created as a Draft. Upload files and test your Form below, and when you feel it’s ready, you can publish the Form for use."
+          "string": "“{name}” has been created as a Form Draft."
         }
       }
     },
@@ -3259,6 +3647,9 @@
       "alert": {
         "fileRequired": {
           "string": "Please choose a file."
+        },
+        "fileNotReadable": {
+          "string": "The file could not be read. It may have been modified or deleted. Please choose the file again."
         }
       },
       "problem": {
@@ -3377,7 +3768,7 @@
       },
       "alert": {
         "delete": {
-          "string": "The Form “{name}” was deleted."
+          "string": "The Form “{name}” has been successfully deleted."
         }
       },
       "webFormsSetting": {
@@ -3392,6 +3783,14 @@
         "enketoDefault": {
           "string": "Enketo (default)",
           "developer_comment": "The word \"Enketo\" should not be translated"
+        },
+        "enketoSelected": {
+          "string": "You’re now using Enketo to fill out, preview and edit your “{formName}” form.",
+          "developer_comment": "Success message when Enketo is selected as web form technology. {formName} is replaced with the name of the Form"
+        },
+        "owfSelected": {
+          "string": "You’re now using ODK Web Forms to fill out, preview and edit your “{formName}” form.",
+          "developer_comment": "Success message when ODK Web Forms is selected as web form technology. {formName} is replaced with the name of the Form"
         }
       }
     },
@@ -3459,7 +3858,7 @@
       },
       "alert": {
         "restore": {
-          "string": "The Form “{name}” has been restored."
+          "string": "The Form “{name}” has been successfully restored."
         }
       },
       "message": {
@@ -3568,6 +3967,24 @@
         }
       }
     },
+    "GeojsonMap": {
+      "showing": {
+        "string": "Showing {count} of {total}",
+        "developer_comment": "{count} and {total} are both numbers."
+      },
+      "zoomToFit": {
+        "string": "Zoom to fit all data",
+        "developer_comment": "Shown above control button on map to zoom out to show all features"
+      },
+      "noWebGL": {
+        "title": {
+          "string": "Graphics issue detected."
+        },
+        "message": {
+          "string": "Your browser cannot display the map now. Enable graphics acceleration settings."
+        }
+      }
+    },
     "Home": {
       "heading": {
         "0": {
@@ -3603,6 +4020,14 @@
         }
       }
     },
+    "MapPopup": {
+      "action": {
+        "back": {
+          "string": "Back to list",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
     "MarkdownTextarea": {
       "markdownSupported": {
         "string": "Markdown supported",
@@ -3615,9 +4040,9 @@
     },
     "Multiselect": {
       "action": {
-        "select": {
-          "string": "Select {all} / {none}",
-          "developer_comment": "This text is shown in a dropdown that allows the user to make one or more selections. {all} has the text \"All\", and {none} has the text \"None\". {all} and {none} will be translated separately based on what is being selected."
+        "apply": {
+          "string": "Apply",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -3770,6 +4195,10 @@
         "string": "{count, plural, one {Row {range} of {count}} other {Rows {range} of {count}}}",
         "developer_comment": "{range} is a range of row numbers, for example, 1-5. {count} is the total number of rows. The string will be pluralized based on the number of rows in the range."
       },
+      "zeroRow": {
+        "string": "Row 0 of {count}",
+        "developer_comment": "Shown when no row is displayed on the page because all rows are deleted or some other reasons. {count} is the total number of rows across all pages."
+      },
       "field": {
         "size": {
           "string": "per page",
@@ -3819,7 +4248,7 @@
       },
       "alert": {
         "success": {
-          "string": "Project settings saved!"
+          "string": "Project settings saved."
         }
       }
     },
@@ -3941,7 +4370,7 @@
       },
       "alert": {
         "success": {
-          "string": "Your changes have been saved!"
+          "string": "Your changes have been successfully saved."
         }
       }
     },
@@ -4159,7 +4588,7 @@
       },
       "alert": {
         "archive": {
-          "string": "The Project “{name}” was archived."
+          "string": "The Project “{name}” has been archived."
         }
       }
     },
@@ -4258,12 +4687,6 @@
           }
         }
       },
-      "action": {
-        "clearSearch": {
-          "string": "Clear search",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
       "field": {
         "q": {
           "canList": {
@@ -4297,7 +4720,13 @@
           "string": "Success! “{displayName}” has been given a Role of “{roleName}” on this Project."
         },
         "unassignRole": {
-          "string": "Success! “{displayName}” has been removed from this Project."
+          "string": "“{displayName}” has been removed from this Project."
+        }
+      },
+      "action": {
+        "clearSearch": {
+          "string": "Clear search",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -4367,7 +4796,7 @@
       },
       "alert": {
         "create": {
-          "string": "Success! Your Public Access Link has been created and is now live. Copy it below to distribute it."
+          "string": "Your Public Access Link has been created and is now live. Copy it below to distribute it."
         },
         "revoke": {
           "string": "The Public Access Link “{displayName}” was revoked successfully. No further Submissions will be accepted using this Link."
@@ -4580,7 +5009,7 @@
           "string": "The data download is not yet available. Please try again in a moment."
         },
         "submit": {
-          "string": "Your data download should begin soon. Once it begins, you can close this box. If you have been waiting and it has not started, please try again."
+          "string": "Data download should begin soon. Once it begins, you can close this message. If it hasn’t started in 20 seconds, please try again."
         },
         "parseError": {
           "string": "Something went wrong while requesting your data."
@@ -4732,13 +5161,13 @@
             "developer_comment": "This text is shown in the list of actions performed on a Submission."
           }
         }
+      },
+      "deleted": {
+        "string": "(deleted)",
+        "developer_comment": "This text is shown next to an Entity when the Entity has been deleted."
       }
     },
     "SubmissionFieldDropdown": {
-      "placeholder": {
-        "string": "{selected} of {total}",
-        "developer_comment": "This is the text of a dropdown that allows the user to select which columns to display in a table. {selected} is the number of columns selected; {total} is the total number of columns."
-      },
       "field": {
         "columns": {
           "string": "Columns shown",
@@ -4750,15 +5179,13 @@
         }
       },
       "action": {
-        "select": {
-          "all": {
-            "string": "All",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select which columns to display in a table. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
-          },
-          "none": {
-            "string": "None",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select which columns to display in a table. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
-          }
+        "all": {
+          "string": "All",
+          "developer_comment": "This is the text of the button in dropdown menu of column selector, that allows the user to select all columns."
+        },
+        "none": {
+          "string": "None",
+          "developer_comment": "This is the text of the button in dropdown menu of column selector, that allows the user to unselect all columns."
         }
       },
       "warning": {
@@ -4773,30 +5200,20 @@
         }
       },
       "allSubmissionDateSelected": {
-        "string": "(All)",
-        "developer_comment": "Text shown when in Submission date filter when Submissions for all dates are shown"
+        "string": "All time",
+        "developer_comment": "Text shown when in date filter when records for all dates are shown"
       }
     },
     "SubmissionFiltersReviewState": {
-      "placeholder": {
-        "string": "{selected} of {total}",
-        "developer_comment": "This is the text of a dropdown that allows the user to select one or more Review States. {selected} is the number of selected Review States; {total} is the total number of Review States."
-      },
       "action": {
-        "select": {
-          "all": {
-            "string": "All",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more Review States. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
-          },
-          "none": {
-            "string": "None",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more Review States. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
-          }
+        "all": {
+          "string": "All",
+          "developer_comment": "This is the text of the button in dropdown menu of Review States filter, that allows the user to select all Review States."
+        },
+        "none": {
+          "string": "None",
+          "developer_comment": "This is the text of the button in dropdown menu of Review States filter, that allows the user to unselect all Review States."
         }
-      },
-      "allReviewStateSelected": {
-        "string": "(All)",
-        "developer_comment": "Text shown when all Review States are selected in the filter"
       }
     },
     "SubmissionFiltersSubmitter": {
@@ -4810,28 +5227,18 @@
           "developer_comment": "This is the text of a form field."
         }
       },
-      "placeholder": {
-        "string": "{selected} of {total}",
-        "developer_comment": "This is the text of a dropdown that allows the user to select one or more \"submitters\". A submitter can be a user, a team of users, a Public Access Link, or an automation. {selected} is the number of submitters selected; {total} is the total number of submitters."
-      },
       "action": {
-        "select": {
-          "all": {
-            "string": "All",
-            "developer_comment": "This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
-          },
-          "none": {
-            "string": "None",
-            "developer_comment": "This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
-          }
+        "all": {
+          "string": "All",
+          "developer_comment": "This is the text of the button in dropdown menu of submitter filter, that allows the user to select all submitters."
+        },
+        "none": {
+          "string": "None",
+          "developer_comment": "This is the text of the button in dropdown menu of submitter filter, that allows the user to unselect all submitters."
         }
       },
       "unknown": {
         "string": "Unknown submitter"
-      },
-      "allSubmitterSelected": {
-        "string": "(All)",
-        "developer_comment": "Text shown when all Submitters are selected in the filter"
       }
     },
     "SubmissionList": {
@@ -4848,8 +5255,11 @@
       "noMatching": {
         "string": "There are no matching Submissions."
       },
-      "allDeleted": {
-        "string": "All Submissions are deleted."
+      "emptyMap": {
+        "string": "Submissions only appear if they include data in the first geo field."
+      },
+      "learnMoreMap": {
+        "string": "Learn more about mapping Submissions"
       },
       "allDeletedOnPage": {
         "string": "All Submissions on the page have been deleted."
@@ -4860,16 +5270,19 @@
       "filterDisabledMessage": {
         "string": "Filtering is unavailable for deleted Submissions"
       },
+      "noMapEncryption": {
+        "string": "Map is unavailable due to Form encryption"
+      },
       "deletedSubmission": {
         "emptyTable": {
           "string": "There are no deleted Submissions."
         },
-        "allRestored": {
-          "string": "All deleted Submissions are restored."
-        },
         "allRestoredOnPage": {
           "string": "All Submissions on the page have been restored."
         }
+      },
+      "noMapDeleted": {
+        "string": "Map is unavailable for deleted Submissions"
       },
       "loading": {
         "withoutCount": {
@@ -4913,6 +5326,24 @@
             }
           }
         }
+      }
+    },
+    "SubmissionMapPopup": {
+      "missingField": {
+        "string": "This Submission was mapped using {field}, which isn’t in the published Form version.",
+        "developer_comment": "{field} is the name of a Form field."
+      },
+      "mappedField": {
+        "string": "Map references this field",
+        "developer_comment": "Message of the tooltip of checkmark icon, which is shown next of the fieldname that is used to plot pins on the map"
+      }
+    },
+    "SubmissionMapView": {
+      "loading": {
+        "string": "Preparing map — loading known Submissions and scanning for new ones. This could take a while."
+      },
+      "overlapTitle": {
+        "string": "{count, plural, one {{count} Submission in this area} other {{count} Submissions in this area}}"
       }
     },
     "SubmissionRestore": {
@@ -4972,6 +5403,12 @@
           "string": "Notes and comments (optional)",
           "developer_comment": "This is the text of a form field."
         }
+      }
+    },
+    "TableRefreshBar": {
+      "dataRefreshTime": {
+        "string": "Data last refreshed on {date} at {time}",
+        "developer_comment": "Text shown above the data tables to tell users when data was last fetched / refreshed. {date} is only the date component and {time} is only the time component."
       }
     },
     "TimeAndUser": {
@@ -5054,6 +5491,10 @@
         "sitewideRole": {
           "string": "Sitewide Role",
           "developer_comment": "This is the text of a table column header."
+        },
+        "lastActive": {
+          "string": "Last Active",
+          "developer_comment": "Heading for a column that shows last login time of the users"
         }
       },
       "alert": {
@@ -5152,6 +5593,9 @@
           "string": "Retire user",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      },
+      "invitationPending": {
+        "string": "Invitation Pending"
       }
     },
     "WebFormRenderer": {
@@ -5241,17 +5685,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "Form drafts have moved",
+        "string": "🎨 Branded login pages, Entity List cleanups, and file uploads in Web Forms",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "Create a new Form and edit it on the new Edit Form tab"
-      },
-      "action": {
-        "gotIt": {
-          "string": "Got it!",
-          "developer_comment": "This is the text of a button that is used to close the modal."
-        }
+        "string": "Customize the login page with your branding, clean up Entity Lists and Properties when they are no longer needed, and upload any file to your Web Forms."
       }
     }
   },

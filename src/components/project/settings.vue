@@ -161,7 +161,7 @@ export default {
       ]
     },
     "alert": {
-      "archive": "The Project “{name}” was archived."
+      "archive": "The Project “{name}” has been archived."
     }
   }
 }
@@ -197,9 +197,6 @@ export default {
         "Tento projekt byl archivován.",
         "V této verzi ODK Central nelze archivovat Projekt. Schopnost vyjmout projekt z archivu je však naplánována na budoucí vydání."
       ]
-    },
-    "alert": {
-      "archive": "Projekt „{name}“ byl archivován."
     }
   },
   "de": {
@@ -263,7 +260,7 @@ export default {
       ]
     },
     "alert": {
-      "archive": "El proyecto \"{name}\" fue archivado."
+      "archive": "El proyecto \"{name}\" ha sido archivado."
     }
   },
   "fr": {
@@ -325,9 +322,6 @@ export default {
         "Proyek ini telah diarsipkan.",
         "Pada versi ODK Central sekarang, Anda tidak dapat membatalkan pengarsipan sebuah Proyek. Namun, pilihan untuk membantalkan pengarsipan sebuah Proyek telah direncanakan untuk versi mendatang."
       ]
-    },
-    "alert": {
-      "archive": "Proyek \"{name}\" telah diarsipkan."
     }
   },
   "it": {
@@ -389,9 +383,6 @@ export default {
         "このプロジェクトはアーカイブされました。",
         "このバージョンのODK Centralでは、プロジェクトの非アーカイブ化はできません。プロジェクトの非アーカイブ機能は将来的にリリースされる予定です。"
       ]
-    },
-    "alert": {
-      "archive": "プロジェクト\"{name}\"はアーカイブされました。"
     }
   },
   "pt": {
@@ -453,9 +444,38 @@ export default {
         "Mradi huu umewekwa kwenye kumbukumbu.",
         "Katika toleo hili la ODK Central, unaweza usiondoe Mradi kwenye kumbukumbu. Hata hivyo, uwezo wa kufuta Mradi umepangwa kwa ajili ya kutolewa siku zijazo."
       ]
+    }
+  },
+  "zh": {
+    "encryption": {
+      "title": "加密",
+      "body": {
+        "unencrypted": [
+          "此项目未启用提交数据加密功能。"
+        ],
+        "encrypted": [
+          {
+            "full": "此项目{enabled}提交数据加密功能。",
+            "enabled": "已启用"
+          },
+          "此版本ODK Central中，加密功能一旦开启将无法禁用。"
+        ]
+      },
+      "action": {
+        "enableEncryption": "启用加密"
+      }
+    },
+    "dangerZone": {
+      "action": {
+        "archive": "归档此项目"
+      },
+      "archived": [
+        "此项目已归档。",
+        "此版本ODK Central不支持项目取消归档，该功能计划在后续版本中推出。"
+      ]
     },
     "alert": {
-      "archive": "Mradi \"{name}\" uliwekwa kwenye kumbukumbu."
+      "archive": "项目“{name}”已归档。"
     }
   },
   "zh-Hant": {
@@ -487,7 +507,7 @@ export default {
       ]
     },
     "alert": {
-      "archive": "項目「{name}」已歸檔。"
+      "archive": "專案「{name}」已歸檔。"
     }
   }
 }

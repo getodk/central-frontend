@@ -12,7 +12,8 @@ import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
 
 const mountComponent = (props = undefined) => {
-  const { xmlFormId } = testData.extendedForms.last();
+  const form = testData.extendedForms.last();
+  const { xmlFormId } = form;
   const mergedProps = {
     projectId: '1',
     xmlFormId,
@@ -27,7 +28,8 @@ const mountComponent = (props = undefined) => {
     container: {
       router: mockRouter(!mergedProps.draft
         ? `/projects/1/forms/${encodeURIComponent(xmlFormId)}/submissions`
-        : `/projects/1/forms/${encodeURIComponent(xmlFormId)}/draft`)
+        : `/projects/1/forms/${encodeURIComponent(xmlFormId)}/draft`),
+      requestData: { project: testData.extendedProjects.last(), form }
     }
   });
 };

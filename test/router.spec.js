@@ -54,7 +54,9 @@ describe('createCentralRouter()', () => {
       ];
       for (const path of paths) {
         it(`does not restore session for a user navigating to ${path}`, () =>
-          load(path).testNoRequest());
+          load(path).beforeEachResponse((_, { url }) => {
+            url.should.not.equal('/v1/sessions/restore');
+          }));
       }
 
       it('does not restore the session in a later navigation', () =>
@@ -67,9 +69,8 @@ describe('createCentralRouter()', () => {
     describe('restoreSession is true for the first route', () => {
       it('sends the correct requests', () => {
         testData.extendedUsers.createPast(1, { role: 'none' });
-        return load('/account/edit', {}, false)
+        return load('/account/edit')
           .restoreSession()
-          .respondFor('/account/edit')
           .testRequests([
             { url: '/v1/sessions/restore' },
             { url: '/v1/users/current', extended: true },
@@ -79,9 +80,8 @@ describe('createCentralRouter()', () => {
 
       it('does not redirect the user from a location that requires login', () => {
         testData.extendedUsers.createPast(1, { role: 'none' });
-        return load('/account/edit', {}, false)
+        return load('/account/edit', {})
           .restoreSession()
-          .respondFor('/account/edit')
           .afterResponses(app => {
             app.vm.$route.path.should.equal('/account/edit');
           });
@@ -96,9 +96,8 @@ describe('createCentralRouter()', () => {
           sinon.useFakeTimers();
           testData.extendedUsers.createPast(1, { role: 'none' });
           testData.sessions.createPast(1, { expiresAt: '1970-01-01T00:05:00Z' });
-          return load('/account/edit', { container }, false)
+          return load('/account/edit', { container })
             .restoreSession()
-            .respondFor('/account/edit')
             .afterResponses(() => {
               localStorage.getItem('sessionExpires').should.equal('300000');
             });
@@ -109,9 +108,8 @@ describe('createCentralRouter()', () => {
           testData.extendedUsers.createPast(1, { role: 'none' });
           testData.sessions.createPast(1, { expiresAt: '1970-01-01T00:05:00Z' });
           localStorage.setItem('sessionExpires', '299999');
-          return load('/account/edit', { container }, false)
+          return load('/account/edit', { container })
             .restoreSession()
-            .respondFor('/account/edit')
             .afterResponses(() => {
               localStorage.getItem('sessionExpires').should.equal('300000');
             });
@@ -201,6 +199,7 @@ describe('createCentralRouter()', () => {
       '/users/2/edit',
       '/account/edit',
       '/system/audits',
+      '/system/config',
       '/system/analytics',
       '/dl/projects/1/forms/f/submissions/s/attachments/a'
     ];
@@ -208,6 +207,7 @@ describe('createCentralRouter()', () => {
       it(`redirects an anonymous user navigating to ${path}`, () =>
         load(path, {}, false)
           .restoreSession(false)
+          .respondFor('/login')
           .afterResponse(app => {
             const { $route } = app.vm;
             $route.path.should.equal('/login');
@@ -218,6 +218,7 @@ describe('createCentralRouter()', () => {
     it('redirects an anonymous user navigating to a redirect', () =>
       load('/projects/1/entity-lists/trees', {}, false)
         .restoreSession(false)
+        .respondFor('/login')
         .afterResponse(app => {
           const { $route } = app.vm;
           $route.path.should.equal('/login');
@@ -289,6 +290,31 @@ describe('createCentralRouter()', () => {
         .complete()
         .route('/projects/1/entity-lists/trees/entities/e?foo=bar#v1')
         .then(dataExists(['project', 'dataset']));
+    });
+
+    describe('navigating between account routes', () => {
+      beforeEach(() => {
+        mockLogin.reset();
+      });
+
+      it('preserves serverConfig while navigating between /login and /reset-password', () =>
+        load('/login')
+          .restoreSession(false)
+          .complete()
+          .route('/reset-password')
+          .complete()
+          .route('/login')
+          .then(dataExists(['serverConfig'])));
+
+      it('preserves serverConfig while navigating between /account/claim and /login', () => {
+        const path = `/account/claim?token=${'a'.repeat(64)}`;
+        return load(path)
+          .complete()
+          .route('/login')
+          .complete()
+          .route(path)
+          .then(dataExists(['serverConfig']));
+      });
     });
 
     describe('navigating between project routes', () => {
@@ -515,6 +541,7 @@ describe('createCentralRouter()', () => {
         '/users',
         '/users/2/edit',
         '/system/audits',
+        '/system/config',
         '/system/analytics'
       ];
       for (const path of paths) {
@@ -1052,6 +1079,12 @@ describe('createCentralRouter()', () => {
       document.title.should.equal('Server Audit Logs | System Management | ODK Central');
     });
 
+    it('shows static title for /system/config', async () => {
+      await load('/system/config');
+      const { title } = document;
+      title.should.equal('Customization | System Management | ODK Central');
+    });
+
     it('shows static title for /system/analytics', async () => {
       await load('/system/analytics');
       const { title } = document;
@@ -1084,7 +1117,7 @@ describe('createCentralRouter()', () => {
         }));
   });
 
-  describe('config', () => {
+  describe('client config', () => {
     it('requests the config', () => {
       // Using a role of 'none' in order to prevent some requests.
       const user = testData.extendedUsers
@@ -1124,12 +1157,11 @@ describe('createCentralRouter()', () => {
       });
 
       it('does not request the current user', () => {
-        testData.extendedUsers.createPast(1);
         const session = testData.sessions.createPast(1).last();
         const container = { config: false };
         return load('/login', { container })
           .respondWithData(() => session)
-          .respond(() => ({ status: 502 }))
+          .respond(() => ({ status: 502 })) // config
           .testRequests([
             { url: '/v1/sessions/restore' },
             { url: '/client-config.json' }
@@ -1137,12 +1169,11 @@ describe('createCentralRouter()', () => {
       });
 
       it('clears the session', () => {
-        testData.extendedUsers.createPast(1);
         const session = testData.sessions.createPast(1).last();
         const container = { config: false };
         return load('/login', { container })
           .respondWithData(() => session)
-          .respond(() => ({ status: 502 }))
+          .respond(() => ({ status: 502 })) // config
           .beforeEachResponse((app, config, i) => {
             if (i === 1)
               app.vm.$container.requestData.session.dataExists.should.be.true;
@@ -1155,6 +1186,7 @@ describe('createCentralRouter()', () => {
       it('redirects from /load-error if there was not an error', () =>
         load('/load-error')
           .restoreSession(false)
+          .respondFor('/login')
           .afterResponses(app => {
             app.vm.$route.path.should.equal('/login');
           }));

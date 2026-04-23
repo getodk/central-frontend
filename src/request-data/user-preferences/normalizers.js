@@ -49,13 +49,28 @@ export class SitePreferenceNormalizer extends PreferenceNormalizer {
     return null;
   }
 
-  static whatsNewDismissed2025_1(val) {
-    return val === true;
+  // Checks year + major release
+  // Validates that input is type string, has exactly 4 digits, then a `.`, then one or more digits, and then the end of the string.
+  // '2025.4' becomes '2025.4'
+  // but true / 'hello' / '25.4' / 3000 all become null.
+  static whatsNewDismissed(val) {
+    return typeof val === 'string' && /^\d{4}\.\d+$/.test(val) ? val : null;
+  }
+
+  // Return true, false, or null/undefined based on the value
+  // true if explicitly true, false if explicitly false, null/undefined otherwise
+  static mailingListOptIn(val) {
+    if (val === true || val === false) return val;
+    return null;
   }
 }
 
 export class ProjectPreferenceNormalizer extends PreferenceNormalizer {
   static formTrashCollapsed(val) {
+    return val === true;
+  }
+
+  static datasetTrashCollapsed(val) {
     return val === true;
   }
 }

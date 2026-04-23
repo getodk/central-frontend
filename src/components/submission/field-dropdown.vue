@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <multiselect id="submission-field-dropdown" :model-value="modelValue"
     :options="options" :label="$t('field.columns')" :placeholder="placeholder"
-    :all="$t('action.select.all')" :none="$t('action.select.none')"
+    :all="$t('action.all')" :none="$t('action.none')"
     :search="$t('field.search')"
     @update:model-value="$emit('update:modelValue', $event)">
     <template #after-list="{ selected }">
@@ -25,7 +25,6 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
 
 import Multiselect from '../multiselect.vue';
 import { useRequestData } from '../../request-data';
@@ -50,8 +49,7 @@ const options = computed(() => fields.selectable.map(field => ({
   text: field.name,
   description: field.header
 })));
-const { t } = useI18n();
-const placeholder = (counts) => t('placeholder', counts);
+const placeholder = (counts) => counts.selected;
 </script>
 
 <style lang="scss">
@@ -72,10 +70,6 @@ const placeholder = (counts) => t('placeholder', counts);
 <i18n lang="json5">
 {
   "en": {
-    // This is the text of a dropdown that allows the user to select which
-    // columns to display in a table. {selected} is the number of columns
-    // selected; {total} is the total number of columns.
-    "placeholder": "{selected} of {total}",
     "field": {
       // This is shown beneath text that indicates the number of columns that
       // the user has selected to display in a table. For example, that text may
@@ -85,24 +79,16 @@ const placeholder = (counts) => t('placeholder', counts);
       "search": "Search columns…"
     },
     "action": {
-      "select": {
-        /*
-        This text is shown in a dropdown that allows the user to select which
-        columns to display in a table. It will be inserted where {all} is in the
-        following text:
-
-        Select {all} / {none}
-        */
-        "all": "All",
-        /*
-        This text is shown in a dropdown that allows the user to select which
-        columns to display in a table. It will be inserted where {none} is in
-        the following text:
-
-        Select {all} / {none}
-        */
-        "none": "None"
-      }
+      /*
+      This is the text of the button in dropdown menu of column selector,
+      that allows the user to select all columns.
+      */
+      "all": "All",
+      /*
+      This is the text of the button in dropdown menu of column selector,
+      that allows the user to unselect all columns.
+      */
+      "none": "None"
     },
     "warning": "Selecting too many columns might slow down your computer."
   }
@@ -117,53 +103,38 @@ const placeholder = (counts) => t('placeholder', counts);
       "columns": "Zobrazené sloupce",
       "search": "Hledat sloupce…"
     },
-    "action": {
-      "select": {
-        "all": "Vše",
-        "none": "Nic"
-      }
-    },
     "warning": "Výběr příliš mnoha sloupců může zpomalit počítač."
   },
   "de": {
-    "placeholder": "{selected} von {total}",
     "field": {
       "columns": "angezeigte Spalten",
       "search": "Spalten suchen..."
     },
     "action": {
-      "select": {
-        "all": "Alle",
-        "none": "Keine"
-      }
+      "all": "Alle",
+      "none": "Keine"
     },
     "warning": "Die Auswahl zu vieler Spalten kann Ihren Computer verlangsamen."
   },
   "es": {
-    "placeholder": "{selected} de {total}",
     "field": {
       "columns": "Se muestran las columnas",
       "search": "Buscar columnas…"
     },
     "action": {
-      "select": {
-        "all": "Todas",
-        "none": "Ninguna"
-      }
+      "all": "Todos",
+      "none": "Ninguno"
     },
     "warning": "Seleccionar demasiadas columnas puede ralentizar su computadora."
   },
   "fr": {
-    "placeholder": "{selected} sur {total}",
     "field": {
       "columns": "Colonnes affichées",
       "search": "Chercher des colonnes"
     },
     "action": {
-      "select": {
-        "all": "Tous/toutes",
-        "none": "Aucun(e)"
-      }
+      "all": "Toutes",
+      "none": "Aucune"
     },
     "warning": "Sélectionner trop de colonnes peut ralentir votre ordinateur."
   },
@@ -171,25 +142,16 @@ const placeholder = (counts) => t('placeholder', counts);
     "field": {
       "columns": "Kolom terlihat",
       "search": "Mencari kolom..."
-    },
-    "action": {
-      "select": {
-        "all": "Semua",
-        "none": "Jangan Semua"
-      }
     }
   },
   "it": {
-    "placeholder": "{selected} di {total}",
     "field": {
       "columns": "Colonne mostrate",
       "search": "Cerca colonne..."
     },
     "action": {
-      "select": {
-        "all": "Tutto",
-        "none": "Nessuno/a"
-      }
+      "all": "Tutto",
+      "none": "Nessuno/a"
     },
     "warning": "La selezione di troppe colonne potrebbe rallentare il computer."
   },
@@ -197,12 +159,6 @@ const placeholder = (counts) => t('placeholder', counts);
     "field": {
       "columns": "表示された列",
       "search": "列を検索"
-    },
-    "action": {
-      "select": {
-        "all": "全て",
-        "none": "なし"
-      }
     }
   },
   "pt": {
@@ -211,10 +167,8 @@ const placeholder = (counts) => t('placeholder', counts);
       "search": "Colunas de busca..."
     },
     "action": {
-      "select": {
-        "all": "Todos",
-        "none": "Nenhum"
-      }
+      "all": "Todos",
+      "none": "Nenhum"
     },
     "warning": "Selecionar colunas em excesso pode deixar seu computador lento."
   },
@@ -223,13 +177,18 @@ const placeholder = (counts) => t('placeholder', counts);
       "columns": "Safu wima zimeonyeshwa",
       "search": "Tafuta safu wima..."
     },
-    "action": {
-      "select": {
-        "all": "zote",
-        "none": "hakuna"
-      }
-    },
     "warning": "Kuchagua safu wima nyingi kunaweza kupunguza kasi ya kompyuta yako."
+  },
+  "zh": {
+    "field": {
+      "columns": "显示列",
+      "search": "搜索列…"
+    },
+    "action": {
+      "all": "全部",
+      "none": "无"
+    },
+    "warning": "选择过多列可能导致设备运行缓慢。"
   },
   "zh-Hant": {
     "field": {
@@ -237,10 +196,8 @@ const placeholder = (counts) => t('placeholder', counts);
       "search": "搜尋欄位..."
     },
     "action": {
-      "select": {
-        "all": "全部",
-        "none": "無"
-      }
+      "all": "全部",
+      "none": "無"
     },
     "warning": "選擇太多列可能會降低計算機的速度。"
   }

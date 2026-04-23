@@ -1,4 +1,5 @@
 import { DateTime } from 'luxon';
+import { T } from 'ramda';
 
 import EntityFilters from '../../../src/components/entity/filters.vue';
 import EntityUpload from '../../../src/components/entity/upload.vue';
@@ -361,9 +362,7 @@ describe('EntityUpload', () => {
     const upload = (query = '') => {
       mockLogin();
       testData.extendedDatasets.createPast(1);
-      return load(`/projects/1/entity-lists/trees/entities${query}`, {
-        root: query !== ''
-      })
+      return load(`/projects/1/entity-lists/trees/entities${query}`)
         .complete()
         .request(async (component) => {
           await component.get('#dataset-entities-upload-button').trigger('click');
@@ -372,9 +371,11 @@ describe('EntityUpload', () => {
           return modal.get('.modal-actions .btn-primary').trigger('click');
         })
         .respondWithSuccess()
-        .respondWithData(() => {
+        .respondIf(T, ({ url }) => {
           testData.extendedEntities.createPast(1);
-          return testData.entityOData();
+          return url.includes('.svc')
+            ? testData.entityOData()
+            : testData.entityGeojson();
         });
     };
 
@@ -385,7 +386,7 @@ describe('EntityUpload', () => {
 
     it('shows a success alert', async () => {
       const component = await upload();
-      component.should.alert('success', 'Success! Your Entities have been uploaded.');
+      component.should.alert('success', 'Your Entities have been successfully uploaded.');
     });
 
     it('sends a new request for OData', () =>
@@ -394,11 +395,17 @@ describe('EntityUpload', () => {
         {
           url: ({ pathname, searchParams }) => {
             pathname.should.be.eql('/v1/projects/1/datasets/trees.svc/Entities');
-            searchParams.get('$filter').should.match(/__system\/createdAt le \S+ and \(__system\/deletedAt eq null or __system\/deletedAt gt \S+\)/);
+            expect(searchParams.get('$filter')).to.be.null;
             searchParams.get('$top').should.be.eql('250');
             searchParams.get('$count').should.be.eql('true');
           }
         }
+      ]));
+
+    it('sends a new request for GeoJSON', () =>
+      upload('?map=true').testRequests([
+        null,
+        { url: '/v1/projects/1/datasets/trees/entities.geojson' }
       ]));
 
     it('renders correctly during the request', () =>
@@ -406,24 +413,35 @@ describe('EntityUpload', () => {
         if (i === 0) return;
         component.get('#entity-table').should.be.hidden();
         const props = component.getComponent(OdataLoadingMessage).props();
-        props.odata.awaitingResponse.should.be.true;
-        props.refreshing.should.be.false;
+        props.state.should.be.true;
         props.totalCount.should.equal(1);
       }));
 
     it('resets the filter', () =>
       upload('?conflict=true').beforeEachResponse((app, { url }, i) => {
         if (i === 0) return;
-        // There should be only snapshot $filter query parameter.
         const { pathname, searchParams } = relativeUrl(url);
         pathname.should.be.eql('/v1/projects/1/datasets/trees.svc/Entities');
-        searchParams.get('$filter').should.match(/__system\/createdAt le \S+ and \(__system\/deletedAt eq null or __system\/deletedAt gt \S+\)/);
+        expect(searchParams.get('$filter')).to.be.null;
         searchParams.get('$top').should.be.eql('250');
         searchParams.get('$count').should.be.eql('true');
 
         app.getComponent(OdataLoadingMessage).props().filter.should.be.false;
         const filters = app.getComponent(EntityFilters).props();
         filters.conflict.should.eql([true, false]);
+      }));
+
+    it('resets the search', () =>
+      upload('?search=john').beforeEachResponse((app, { url }, i) => {
+        if (i === 0) return;
+        const { pathname, searchParams } = relativeUrl(url);
+        pathname.should.be.eql('/v1/projects/1/datasets/trees.svc/Entities');
+        expect(searchParams.get('$filter')).to.be.null;
+        searchParams.get('$top').should.be.eql('250');
+        searchParams.get('$count').should.be.eql('true');
+        expect(searchParams.get('$search')).to.be.null;
+
+        app.getComponent(OdataLoadingMessage).props().filter.should.be.false;
       }));
   });
 });

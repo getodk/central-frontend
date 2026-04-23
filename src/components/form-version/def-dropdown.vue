@@ -181,6 +181,14 @@ export default {
       "downloadXlsForm": "Pakua kama XLSForm ({extension})"
     }
   },
+  "zh": {
+    "action": {
+      "def": "定义",
+      "viewXml": "在浏览器中查看XML",
+      "downloadXForm": "下载为XForm格式(.xml)",
+      "downloadXlsForm": "下载为XLSForm格式（{extension}）"
+    }
+  },
   "zh-Hant": {
     "action": {
       "def": "定義",

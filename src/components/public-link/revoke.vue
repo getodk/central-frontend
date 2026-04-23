@@ -128,6 +128,12 @@ const revoke = () => {
       "Unakaribia kubatilisha Kiungo hiki cha Ufikiaji wa Umma. Hii ina maana kwamba majaribio yote ya kuwasilisha data kwa kutumia kiungo yatakataliwa, ikiwa ni pamoja na rekodi ambazo tayari zimeanzishwa"
     ]
   },
+  "zh": {
+    "title": "撤销公开访问链接",
+    "introduction": [
+      "您即将撤销此公开访问链接。此后使用该链接提交数据时（包括已开始填写的记录），都将被拒绝。"
+    ]
+  },
   "zh-Hant": {
     "title": "撤銷公共訪問鏈接",
     "introduction": [

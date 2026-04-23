@@ -184,22 +184,6 @@ defineExpose({ getRowPair });
     right: $padding-right-table-data;
   }
 
-  .btn-group .btn {
-    [class^="icon-"] { margin-right: 0; }
-    .icon-check { margin-right: -1px; }
-    .icon-pencil { margin-left: 1px; }
-  }
-
-  .more-button {
-    span:first-child { margin-right: 13px; }
-
-    .icon-angle-right {
-      font-size: 18px;
-      position: absolute;
-      right: $hpadding-btn;
-      top: #{$padding-top-btn - 2px};
-    }
-  }
+  .btn-group { @include icon-btn-group; }
 }
-
 </style>

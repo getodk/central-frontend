@@ -114,7 +114,7 @@ export default {
       "Sind Sie sicher, dass Sie das Formular {name} und alle dazugehörigen Übermittlungen löschen wollen?",
       "Diese Aktion verschiebt das Formular in den Papierkorb. Nach 30 Tagen im Papierkorb wird es dauerhaft gelöscht, kann aber vorher wiederhergestellt werden."
     ],
-    "noDeleteEntities": "Alle durch die Einreichungen dieses Formulars erstellten Entitäten werden nicht gelöscht. In einer zukünftigen Version von Central wird es möglich sein, Entitäten zu löschen."
+    "noDeleteEntities": "Alle durch die Einreichungen dieses Formulars erstellten Objekte werden nicht gelöscht. In einer zukünftigen Version von Central wird es möglich sein, Objekte zu löschen."
   },
   "es": {
     "title": "Borrar formulario",
@@ -166,10 +166,19 @@ export default {
     ],
     "noDeleteEntities": "Huluki zozote zilizoundwa na Mawasilisho ya Fomu hii hazitafutwa. Katika toleo la baadaye la Kati, itawezekana kufuta Huluki."
   },
+  "zh": {
+    "title": "删除表单",
+    "introduction": [
+      "您确定要删除表单{name}以及它的所有提交内容吗？",
+      "此操作将把表单移至回收站。表单在回收站保留30天后将被永久清除，但在此之前可以随时恢复。"
+    ],
+    "noDeleteEntities": "通过本表单提交所创建的任何实体均不会被删除。在今后的Central版本中，将支持实体删除功能。"
+  },
   "zh-Hant": {
     "title": "刪除表單",
     "introduction": [
-      "您確定要刪除表單{name}及其所有提交內容嗎？"
+      "您確定要刪除表單{name}及其所有提交內容嗎？",
+      "此動作會將表單移至垃圾桶。在垃圾桶中存放 30 天後，該表格將被永久清除，但在此之前可以還原。"
     ],
     "noDeleteEntities": "透過此表單提交建立的任何實體都不會被刪除。在 Central 的未來版本中，將可以刪除實體。"
   }

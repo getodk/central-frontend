@@ -11,12 +11,12 @@ except according to the terms contained in the LICENSE file.
 -->
 
 <template>
-  <loading :state="initiallyLoading"/>
   <template v-if="dataExists">
     <OdkWebForm
       :form-xml="formVersionXml.data"
       :edit-instance="editInstanceOptions"
       :fetch-form-attachment="getAttachment"
+      :track-device="true"
       @submit="handleSubmit"/>
   </template>
 
@@ -60,7 +60,7 @@ except according to the terms contained in the LICENSE file.
         || (submissionModal.type === 'sessionTimeoutModal' && !submissionModal.hideable)"
         class="modal-actions">
         <button type="button" class="btn btn-primary" @click="submitData()">
-          {{ $t('retryModal.action.tryAgain') }}
+          {{ $t('action.tryAgain') }}
         </button>
       </div>
       <!-- Preview modal or any type of error while submitting primary instance -->
@@ -77,11 +77,10 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { computed, createApp, getCurrentInstance, inject, onUnmounted } from 'vue';
+import { computed, getCurrentInstance, inject, onMounted, onUnmounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 /* eslint-disable-next-line import/no-unresolved -- not sure why eslint is complaining about it */
 import { OdkWebForm, webFormsPlugin, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
-import Loading from './loading.vue';
 import Modal from './modal.vue';
 
 import { apiPaths, isProblem, queryString, requestAlertMessage } from '../util/request';
@@ -113,18 +112,20 @@ const props = defineProps({
   instanceId: String
 });
 
-// Install WebFormsPlugin in the component instead of installing it at the
-// application level so that @getodk/web-forms package is not loaded for every
-// page, thus increasing the initial bundle
-const app = createApp({});
-app.use(webFormsPlugin);
+const emit = defineEmits(['loaded']);
+
+// Install webFormsPlugin lazily here (not at app startup) to avoid loading @getodk/web-forms on every page.
+// This is safe because this component is already loaded asynchronously.
 const inst = getCurrentInstance();
-// webFormsPlugin just adds globalProperty ($primevue)
-Object.assign(inst.appContext.config.globalProperties, app._context.config.globalProperties);
+inst.appContext.app.use(webFormsPlugin);
 
 const { i18n } = inject('container');
 
 const { initiallyLoading, dataExists } = props.actionType === 'edit' ? resourceStates([formVersionXml, submissionAttachments]) : resourceStates([formVersionXml]);
+
+watch(() => initiallyLoading.value, (value) => {
+  if (!value) emit('loaded');
+});
 
 const isPublicLink = computed(() => !!route.query.st);
 
@@ -151,7 +152,7 @@ const transformAttachmentResponse = (axiosResponse) => {
   }
 
   let body;
-  if (typeof (data) === 'string') {
+  if (typeof (data) === 'string' || data instanceof Blob) {
     body = data;
   } else if (headers['content-type'].includes('application/json') ||
             headers['content-type'].includes('application/geo+json')) {
@@ -187,12 +188,7 @@ const fetchSubmissionXml = () => {
 
 const fetchSubmissionAttachments = () => {
   const requestUrl = apiPaths.submissionAttachments(form.projectId, form.xmlFormId, props.instanceId);
-  return submissionAttachments.request({
-    url: requestUrl,
-    alert: false
-  })
-    .then(transformAttachmentResponse)
-    .catch(noop);
+  return submissionAttachments.request({ url: requestUrl, alert: false }).catch(noop);
 };
 
 const fetchSubmissionAttachment = (attachmentName) => {
@@ -200,7 +196,8 @@ const fetchSubmissionAttachment = (attachmentName) => {
   const requestUrl = apiPaths.submissionAttachment(form.projectId, form.xmlFormId, false, props.instanceId, attachmentName);
   return request({
     url: requestUrl,
-    alert: false
+    alert: false,
+    responseType: 'blob', // Handle all file types for attachments.
   })
     .then(transformAttachmentResponse)
     .catch(noop);
@@ -260,7 +257,8 @@ const getAttachment = (url) => {
   ));
   return request({
     url: requestUrl,
-    alert: false
+    alert: false,
+    responseType: 'blob', // Handle all file types for attachments.
   }).then(transformAttachmentResponse);
 };
 
@@ -277,7 +275,8 @@ const postPrimaryInstance = async (file) => {
       url,
       data: file,
       headers: {
-        'content-type': 'text/xml'
+        'content-type': 'text/xml',
+        'odk-client': `odk-web-forms/${__WEB_FORMS_VERSION__}`
       },
       alert: false,
     };
@@ -360,7 +359,7 @@ const handleResult = () => {
   // Error handler - Primary Instance
   if (!submissionResult.primaryInstanceResult.success) {
     const error = submissionResult.primaryInstanceResult.data;
-    if (error.response && isProblem(error.response.data) && error.response.data.code === 403.1) {
+    if (error.response && isProblem(error.response.data) && error.response.data.code === 401.2) {
       showModal({ type: 'sessionTimeoutModal' });
     } else {
       showModal({ type: 'errorModal', errorMessage: requestAlertMessage(i18n, error) });
@@ -371,7 +370,7 @@ const handleResult = () => {
   if (attachmentResultArr.some(r => !r.success)) {
     const isSessionTimeout = attachmentResultArr.some(r => {
       const error = r.data;
-      return error.response && isProblem(error.response.data) && error.response.data.code === 403.1;
+      return error.response && isProblem(error.response.data) && error.response.data.code === 401.2;
     });
     if (isSessionTimeout) {
       showModal({ type: 'sessionTimeoutModal', hideable: false });
@@ -422,13 +421,22 @@ const handleSubmit = async (payload, callback) => {
   await submitData();
 };
 
-// hack to remove ODK Web Form css styles
-onUnmounted(() => {
+// hack: enable/disable ODK Web Form css styles
+const setWfStylesDisabled = (disabled) => {
   document.querySelectorAll('style').forEach(styleTag => {
-    if (styleTag.textContent.includes('form-initialization-status')) {
-      styleTag.remove();
+    if (styleTag.textContent.includes('form-initialization-status') ||
+        // WF's reset.css
+        styleTag.textContent.replace(/\s+/g, '').includes('body{all:revert;')) {
+      // eslint-disable-next-line no-param-reassign
+      styleTag.disabled = disabled;
     }
   });
+};
+onMounted(() => {
+  setWfStylesDisabled(false);
+});
+onUnmounted(() => {
+  setWfStylesDisabled(true);
 });
 </script>
 
@@ -480,10 +488,7 @@ onUnmounted(() => {
       },
       "retryModal": {
         "title": "Submission error",
-        "body": "Your data was not fully submitted. Please press the “Try again” button to retry. If the error keeps happening, please contact the person who asked you to fill this Form or {supportEmail}.",
-        "action": {
-          "tryAgain": "Try again"
-        }
+        "body": "Your data was not fully submitted. Please press the “Try again” button to retry. If the error keeps happening, please contact the person who asked you to fill this Form or {supportEmail}."
       },
     }
   }
@@ -513,19 +518,23 @@ onUnmounted(() => {
       "body": "Sie werden nun weitergeleitet."
     },
     "errorModal": {
-      "title": "Übermittlungsfehler"
+      "title": "Übermittlungsfehler",
+      "body": "Ihre Daten wurden nicht übermittelt. Fehlermeldung: {errorMessage} Sie können dieses Dialogfeld schließen und es erneut versuchen. Wenn der Fehler weiterhin auftritt, wenden Sie sich bitte an die Person, die Sie gebeten hat, dieses Formular auszufüllen, oder an {supportEmail}."
     },
     "sendingDataModal": {
-      "title": "Übermittlung senden"
+      "title": "Übermittlung senden",
+      "body": "Ihre Daten werden jetzt übermittelt. Bitte schliessen Sie dieses Fenster nicht, bevor es fertig ist."
     },
     "sessionTimeoutModal": {
-      "title": "Sitzung abgelaufen"
+      "title": "Sitzung abgelaufen",
+      "body": {
+        "full": "Bitte {here} in einem anderen Browser-Tab einloggen und erneut versuchen.",
+        "here": "hier"
+      }
     },
     "retryModal": {
       "title": "Übermittlungsfehler",
-      "action": {
-        "tryAgain": "Nochmals versuchen"
-      }
+      "body": "Ihre Daten wurden nicht vollständig übermittelt. Bitte drücken Sie die Schaltfläche „Erneut versuchen“, um es noch einmal zu versuchen. Wenn der Fehler weiterhin auftritt, wenden Sie sich bitte an die Person, die Sie gebeten hat, dieses Formular auszufüllen, oder an {supportEmail}."
     }
   },
   "es": {
@@ -565,10 +574,7 @@ onUnmounted(() => {
     },
     "retryModal": {
       "title": "Error de envío",
-      "body": "Sus datos no se han enviado completamente. Por favor, pulse el botón «Inténtelo de nuevo» para volver a intentarlo. Si el error persiste, póngase en contacto con la persona que le pidió que rellenara este formulario o con {supportEmail}.",
-      "action": {
-        "tryAgain": "Inténtalo de nuevo"
-      }
+      "body": "Sus datos no se han enviado completamente. Por favor, pulse el botón «Inténtelo de nuevo» para volver a intentarlo. Si el error persiste, póngase en contacto con la persona que le pidió que rellenara este formulario o con {supportEmail}."
     }
   },
   "fr": {
@@ -608,10 +614,7 @@ onUnmounted(() => {
     },
     "retryModal": {
       "title": "Erreur de soumission",
-      "body": "Vos données n'ont pas été soumises. Veuillez cliquer le bouton \"Essayer encore\" pour réessayer. Si l'erreur persiste, merci de contacter la personne qui vous a demandé de remplir ce formulaire ou {supportEmail}.",
-      "action": {
-        "tryAgain": "Essayer encore"
-      }
+      "body": "Vos données n'ont pas été soumises. Veuillez cliquer le bouton \"Essayer encore\" pour réessayer. Si l'erreur persiste, merci de contacter la personne qui vous a demandé de remplir ce formulaire ou {supportEmail}."
     }
   },
   "it": {
@@ -651,10 +654,126 @@ onUnmounted(() => {
     },
     "retryModal": {
       "title": "Errore invio",
-      "body": "I dati non sono stati inviati completamente. Premere il pulsante “Riprova” per riprovare. Se l'errore continua a verificarsi, contattate la persona che vi ha chiesto di compilare il formulario oppure {supportEmail}.",
+      "body": "I dati non sono stati inviati completamente. Premere il pulsante “Riprova” per riprovare. Se l'errore continua a verificarsi, contattate la persona che vi ha chiesto di compilare il formulario oppure {supportEmail}."
+    }
+  },
+  "pt": {
+    "previewModal": {
+      "title": "Os dados são válidos",
+      "body": "Os dados que você digitou são válidos, mas não foram enviados por que essa é apenas uma Visualização do formulário."
+    },
+    "submissionModal": {
+      "title": "Formulário enviado com sucesso!",
+      "body": "Você pode preencher novamente esse formulário ou fechar a página se já tiver terminado.",
       "action": {
-        "tryAgain": "Ritenta ancora"
+        "fillOutAgain": "Preencher novamente"
       }
+    },
+    "thankYouModal": {
+      "title": "Obrigado pela sua participação!",
+      "body": "Você pode fechar essa janela agora."
+    },
+    "editSubmissionModal": {
+      "title": "Enviado com sucesso",
+      "body": "Você será redirecionado agora."
+    },
+    "errorModal": {
+      "title": "Erro no envio"
+    },
+    "sendingDataModal": {
+      "title": "Enviando a Resposta",
+      "body": "Seus dados estão sendo enviados, por favor não feche essa janela até que o envio tenha terminado."
+    },
+    "sessionTimeoutModal": {
+      "title": "Sessão expirada",
+      "body": {
+        "full": "Por favor, faça login {here} em uma aba diferente do navegador e tente novamente.",
+        "here": "aqui"
+      }
+    },
+    "retryModal": {
+      "title": "Erro no envio",
+      "body": "Seus dados não foram enviados completamente. Por favor, clique no botão “Tentar novamente” para tentar novamente. Se o erro persistir, entre em contato com a pessoa que solicitou o preenchimento deste formulário ou {supportEmail}."
+    }
+  },
+  "zh": {
+    "previewModal": {
+      "title": "数据有效",
+      "body": "您输入的数据格式正确，但因当前处于表单预览模式，故未执行提交。"
+    },
+    "submissionModal": {
+      "title": "表单提交成功！",
+      "body": "您可继续填写此表单，或完成后关闭页面。",
+      "action": {
+        "fillOutAgain": "再次填写"
+      }
+    },
+    "thankYouModal": {
+      "title": "感谢您的参与！",
+      "body": "您现在可以关闭此窗口。"
+    },
+    "editSubmissionModal": {
+      "title": "提交成功",
+      "body": "页面即将跳转"
+    },
+    "errorModal": {
+      "title": "提交错误",
+      "body": "数据提交失败。错误信息：{errorMessage} 请关闭对话框后重试。若问题持续，请联系表单发放方或{supportEmail}。"
+    },
+    "sendingDataModal": {
+      "title": "正在提交",
+      "body": "您的数据正在上传。在完成之前，请不要关闭此窗口。"
+    },
+    "sessionTimeoutModal": {
+      "title": "会话过期",
+      "body": {
+        "full": "请在新浏览器标签页中{here}登录后重试。",
+        "here": "这里"
+      }
+    },
+    "retryModal": {
+      "title": "提交错误",
+      "body": "数据未完全提交。请点击“重试”按钮再次提交。若问题持续，请联系表单发放方或{supportEmail}。"
+    }
+  },
+  "zh-Hant": {
+    "previewModal": {
+      "title": "資料有效",
+      "body": "您輸入的資料是有效的，但因為這是表單預覽，所以沒有提交。"
+    },
+    "submissionModal": {
+      "title": "表單已成功傳送！",
+      "body": "填寫完畢後，您可以再次填寫此表單或關閉。",
+      "action": {
+        "fillOutAgain": "再次填寫"
+      }
+    },
+    "thankYouModal": {
+      "title": "感謝您的參與！",
+      "body": "您現在可以關閉此視窗。"
+    },
+    "editSubmissionModal": {
+      "title": "提交成功",
+      "body": "現在您將會被重定向。"
+    },
+    "errorModal": {
+      "title": "提交錯誤",
+      "body": "您的資料未提交。錯誤訊息：{errorMessage} 您可以關閉此對話框再試一次。如果錯誤持續發生，請聯絡要求您填寫本表單的人員或{supportEmail}。"
+    },
+    "sendingDataModal": {
+      "title": "發送提交內容",
+      "body": "正在提交您的資料。在完成之前，請不要關閉此視窗。"
+    },
+    "sessionTimeoutModal": {
+      "title": "會期已過期",
+      "body": {
+        "full": "請在不同的瀏覽器標籤中{here}登入，然後再試一次。",
+        "here": "從這裡"
+      }
+    },
+    "retryModal": {
+      "title": "提交錯誤",
+      "body": "您的資料未完全提交。請按「再試一次」按鈕重試。如果錯誤持續發生，請聯絡要求您填寫此表格的人或{supportEmail}。"
     }
   }
 }

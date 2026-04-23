@@ -43,37 +43,40 @@ except according to the terms contained in the LICENSE file.
         </i18n-t>
       </template>
       <template v-else-if="entry.action === 'entity.create'">
-        <span class="icon-magic-wand entity-icon"></span>
+        <span class="icon-magic entity-icon"></span>
         <i18n-t keypath="title.entity.create">
           <template #label>
-            <entity-link v-if="entityDetails?.currentVersion?.label != null"
+            <span v-if="!entityDetails.entityAvailable" class="deleted">{{ $t('deleted') }}&nbsp;</span>
+            <entity-link v-if="entityDetails.entityAvailable && entityDetails?.currentVersion?.label != null"
               :project-id="projectId" :dataset="entityDetails.dataset"
               :entity="entityDetails"/>
             <span v-else class="entity-label">{{ entityDetails.uuid }}</span>
           </template>
           <template #dataset>
-            <dataset-link :project-id="projectId" :name="entityDetails.dataset"/>
+            <dataset-link v-if="entityDetails.entityAvailable" :project-id="projectId" :name="entityDetails.dataset"/>
+            <span v-else>{{ entityDetails.dataset }}</span>
           </template>
         </i18n-t>
       </template>
       <template v-else-if="entry.action === 'entity.update.version'">
-        <span class="icon-magic-wand entity-icon"></span>
+        <span class="icon-magic entity-icon"></span>
         <i18n-t keypath="title.entity.update">
           <template #label>
-            <entity-link v-if="entityDetails?.currentVersion?.label != null"
+            <span v-if="!entityDetails.entityAvailable" class="deleted">{{ $t('deleted') }}&nbsp;</span>
+            <entity-link v-if="entityDetails.entityAvailable && entityDetails?.currentVersion?.label != null"
               :project-id="projectId" :dataset="entityDetails.dataset"
               :entity="entityDetails"/>
             <span v-else class="entity-label">{{ entityDetails.uuid }}</span>
           </template>
           <template #dataset>
-            <dataset-link :project-id="projectId" :name="entityDetails.dataset"/>
+            <dataset-link v-if="entityDetails.entityAvailable" :project-id="projectId" :name="entityDetails.dataset"/>
+            <span v-else>{{ entityDetails.dataset }}</span>
           </template>
         </i18n-t>
       </template>
       <template v-else-if="entry.action === 'entity.error'">
         <span class="icon-warning"></span>
         <span class="submission-feed-entry-entity-error">{{ $t('title.entity.error') }}</span>
-        <span class="entity-error-message" v-tooltip.text>{{ entry.details.problem?.problemDetails?.reason ?? entry.details.errorMessage ?? '' }}</span>
       </template>
       <template v-else-if="entry.action?.startsWith('submission.backlog')">
         <span class="icon-clock-o"></span>
@@ -92,6 +95,9 @@ except according to the terms contained in the LICENSE file.
     </template>
     <template #body>
       <markdown-view v-if="comment != null" :raw-markdown="comment"/>
+      <template v-else-if="entry.action === 'entity.error'">
+        <div class="entity-error-message">{{ entry.details.problem?.problemDetails?.reason ?? entry.details.errorMessage ?? '' }}</div>
+      </template>
       <template v-else-if="entryDiffs != null">
         <submission-diff-item v-for="(diff, index) in entryDiffs" :key="index" :entry="diff"
           :project-id="projectId" :xml-form-id="xmlFormId" :instance-id="instanceId"
@@ -205,9 +211,7 @@ export default {
 
 .submission-feed-entry {
   .entity-error-message{
-    font-size: 12px;
-    margin-left: 10px;
-    font-weight: normal;
+    margin: 10px;
   }
 
   .icon-cloud-upload, .icon-comment, .icon-trash, .icon-recycle, .icon-clock-o {
@@ -216,6 +220,10 @@ export default {
   .entity-icon { color: $color-action-foreground; }
   .icon-warning { color: $color-danger; }
   .entity-label { font-weight: normal; }
+  .deleted {
+    color: $color-danger;
+    font-weight: normal;
+  }
 }
 </style>
 
@@ -240,7 +248,7 @@ export default {
       "entity": {
         "create": "Created Entity {label} in {dataset} Entity List",
         "update": "Updated Entity {label} in {dataset} Entity List",
-        "error": "Problem processing Entity",
+        "error": "Problem processing Entity"
       },
       "updateReviewState": {
         "null": {
@@ -379,7 +387,9 @@ export default {
         "force": "Processed Submission from backlog without previous Submission in offline update chain",
         "reprocess": "Previous Submission in offline update chain was received"
       }
-    }
+    },
+    // This text is shown next to an Entity when the Entity has been deleted.
+    "deleted": "(deleted)"
   }
 }
 </i18n>
@@ -419,9 +429,9 @@ export default {
     "title": {
       "create": "Übermittelt von {name}",
       "entity": {
-        "create": "Entität {label} in {dataset} Entitätsliste erzeugt",
-        "update": "Entität {label} in {dataset} Entitätsliste aktualisiert",
-        "error": "Problem beim Erstellen einer Entität"
+        "create": "Objekt {label} in {dataset} Objektliste erzeugt",
+        "update": "Objekt {label} in {dataset} Objektliste aktualisiert",
+        "error": "Problem beim Erstellen eines Objekts"
       },
       "updateReviewState": {
         "null": {
@@ -449,9 +459,12 @@ export default {
       "delete": "Gelöscht von {name}",
       "undelete": "Wiederhergestellt von {name}",
       "submissionBacklog": {
+        "hold": "Warten auf die vorherige Übermittlung in der Offline-Aktualisierungskette vor der Aktualisierung des Objekts",
+        "force": "Bearbeitete Übermittlung aus dem Rückstand ohne vorherige Übermittlung in der Offline-Verbuchungskette",
         "reprocess": "Die vorherige Übermittlung in der Offline-Aktualisierungskette wurde empfangen"
       }
-    }
+    },
+    "deleted": "(gelöscht)"
   },
   "es": {
     "title": {
@@ -491,7 +504,8 @@ export default {
         "force": "Presentación procesada desde la cartera de pedidos sin presentación previa en la cadena de actualización offline",
         "reprocess": "Se ha recibido el envío anterior en la cadena de actualización offline"
       }
-    }
+    },
+    "deleted": "(borrado)"
   },
   "fr": {
     "title": {
@@ -531,7 +545,8 @@ export default {
         "force": "Soumission retenue et puis traitée sans la soumission qui la précéderait dans la série de mises à jour effectuées hors ligne",
         "reprocess": "Soumission précédente dans une série de mises à jours hors ligne à été reçue"
       }
-    }
+    },
+    "deleted": "(supprimée)"
   },
   "id": {
     "title": {
@@ -599,7 +614,8 @@ export default {
         "force": "Invio elaborato dall'arretrato senza un invio precedente nella catena di aggiornamento offline",
         "reprocess": "È stato ricevuto l'invio precedente nella catena di aggiornamento offline"
       }
-    }
+    },
+    "deleted": "(cancellato)"
   },
   "ja": {
     "title": {
@@ -661,6 +677,7 @@ export default {
       },
       "comment": "Comentado por {name}",
       "delete": "Deletado por {name}",
+      "undelete": "Recuperado por {name}",
       "submissionBacklog": {
         "hold": "Aguardando Resposta anterior na cadeia de atualização offline antes de atualizar a Entidade",
         "force": "Resposta processada do backlog sem Resposta anterior na cadeia de atualização offline",
@@ -701,6 +718,47 @@ export default {
       "comment": "Maoni kutoka kwa {name}"
     }
   },
+  "zh": {
+    "title": {
+      "create": "由{name}提交",
+      "entity": {
+        "create": "在{dataset}实体清单中建立了实体{label}",
+        "update": "在{dataset}实体清单中更新了实体{label}",
+        "error": "实体处理异常"
+      },
+      "updateReviewState": {
+        "null": {
+          "full": "{name}{reviewState}",
+          "reviewState": "已接收"
+        },
+        "hasIssues": {
+          "full": "{name}{reviewState}",
+          "reviewState": "存在异常"
+        },
+        "edited": {
+          "full": "{name}{reviewState}",
+          "reviewState": "已编辑"
+        },
+        "approved": {
+          "full": "{name}{reviewState}",
+          "reviewState": "已批准"
+        },
+        "rejected": {
+          "full": "{name}{reviewState}",
+          "reviewState": "已拒绝"
+        }
+      },
+      "comment": "由{name}评论",
+      "delete": "由{name}删除",
+      "undelete": "由{name}复原",
+      "submissionBacklog": {
+        "hold": "正在等待离线更新链中的前序提交，随后将更新实体",
+        "force": "已处理积压队列中的提交（离线更新链中无前序提交）",
+        "reprocess": "离线更新链中的前序提交已接收"
+      }
+    },
+    "deleted": "（已删除）"
+  },
   "zh-Hant": {
     "title": {
       "create": "由{name}提交",
@@ -733,6 +791,7 @@ export default {
       },
       "comment": "由{name}評論",
       "delete": "已由 {name} 刪除",
+      "undelete": "已由{name}恢復",
       "submissionBacklog": {
         "hold": "在更新實體之前等待離線更新鏈中的先前提交",
         "force": "已處理來自積壓的提交，而離線更新鏈中沒有先前的提交",

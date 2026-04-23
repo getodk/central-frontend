@@ -13,9 +13,13 @@ except according to the terms contained in the LICENSE file.
   <multiselect id="submission-filters-submitter" :model-value="selectValue"
     :options="options" :loading="submitters.initiallyLoading"
     :label="$t('field.submitter')" :placeholder="placeholder"
-    :all="$t('action.select.all')" :none="$t('action.select.none')"
+    :all="$t('action.all')" :none="$t('action.none')"
     :search="$t('field.search')" :empty="$t('submission.emptyTable')"
-    @update:model-value="update"/>
+    @update:model-value="update">
+    <template #icon>
+      <span class="icon-user"></span>
+    </template>
+    </multiselect>
 </template>
 
 <script setup>
@@ -90,9 +94,9 @@ const update = (value) => {
 };
 
 const placeholder = (counts) => {
-  if (counts.total === counts.selected) return t('allSubmitterSelected');
+  if (counts.total === counts.selected) return t('action.all');
 
-  return t('placeholder', counts);
+  return counts.selected;
 };
 </script>
 
@@ -111,34 +115,19 @@ const placeholder = (counts) => {
       "submitter": "Submitted by",
       "search": "Search submitters…"
     },
-    // This is the text of a dropdown that allows the user to select one or more
-    // "submitters". A submitter can be a user, a team of users, a Public Access
-    // Link, or an automation. {selected} is the number of submitters selected;
-    // {total} is the total number of submitters.
-    "placeholder": "{selected} of {total}",
     "action": {
-      "select": {
-        /*
-        This is the text of a dropdown that allows the user to select one or
-        more submitters. It will be inserted where {all} is in the following
-        text:
-
-        Select {all} / {none}
-        */
-        "all": "All",
-        /*
-        This is the text of a dropdown that allows the user to select one or
-        more submitters. It will be inserted where {none} is in the following
-        text:
-
-        Select {all} / {none}
-        */
-        "none": "None"
-      }
+      /*
+      This is the text of the button in dropdown menu of submitter filter,
+      that allows the user to select all submitters.
+      */
+      "all": "All",
+      /*
+      This is the text of the button in dropdown menu of submitter filter,
+      that allows the user to unselect all submitters.
+      */
+      "none": "None"
     },
     "unknown": "Unknown submitter",
-    // Text shown when all Submitters are selected in the filter
-    "allSubmitterSelected": "(All)"
   }
 }
 </i18n>
@@ -151,13 +140,6 @@ const placeholder = (counts) => {
       "submitter": "Odesláno od",
       "search": "Hledat odesílatele..."
     },
-    "placeholder": "{selected} z {total}",
-    "action": {
-      "select": {
-        "all": "Vše",
-        "none": "Žádný"
-      }
-    },
     "unknown": "Neznámý odesílatel"
   },
   "de": {
@@ -165,56 +147,37 @@ const placeholder = (counts) => {
       "submitter": "Übermittelt von",
       "search": "Einsender suchen…"
     },
-    "placeholder": "{selected} von {total}",
     "action": {
-      "select": {
-        "all": "Alle",
-        "none": "Keine"
-      }
+      "all": "Alle",
+      "none": "Keine"
     },
-    "unknown": "Unbekannter Einsender",
-    "allSubmitterSelected": "(Alle)"
+    "unknown": "Unbekannter Einsender"
   },
   "es": {
     "field": {
       "submitter": "Enviado por",
       "search": "Buscar remitentes…"
     },
-    "placeholder": "{selected} de {total}",
     "action": {
-      "select": {
-        "all": "Todos",
-        "none": "Ninguno"
-      }
+      "all": "Todos",
+      "none": "Ninguno"
     },
-    "unknown": "Remitente desconocido",
-    "allSubmitterSelected": "(Todos)"
+    "unknown": "Remitente desconocido"
   },
   "fr": {
     "field": {
       "submitter": "Soumis par",
       "search": "Rechercher des expéditeurs"
     },
-    "placeholder": "{selected} sur {total}",
     "action": {
-      "select": {
-        "all": "Tous",
-        "none": "Aucun"
-      }
+      "all": "Tous",
+      "none": "Aucun"
     },
-    "unknown": "Expéditeur inconnu",
-    "allSubmitterSelected": "(Toutes)"
+    "unknown": "Expéditeur inconnu"
   },
   "id": {
     "field": {
       "submitter": "Terkirim oleh"
-    },
-    "placeholder": "{selected} dari {total}",
-    "action": {
-      "select": {
-        "all": "Semua",
-        "none": "Tidak Ada"
-      }
     }
   },
   "it": {
@@ -222,15 +185,11 @@ const placeholder = (counts) => {
       "submitter": "Inviato da",
       "search": "Cerca tra gli utenti..."
     },
-    "placeholder": "{selected} di {total}",
     "action": {
-      "select": {
-        "all": "Tutto",
-        "none": "Nessuno/a"
-      }
+      "all": "Tutto",
+      "none": "Nessuno/a"
     },
-    "unknown": "Utente invio sconosciuto",
-    "allSubmitterSelected": "(Tutto)"
+    "unknown": "Utente invio sconosciuto"
   },
   "ja": {
     "field": {
@@ -242,12 +201,9 @@ const placeholder = (counts) => {
       "submitter": "Enviado por",
       "search": "Pesquisar remetentes…"
     },
-    "placeholder": "{selected} de {total}",
     "action": {
-      "select": {
-        "all": "Todos",
-        "none": "Nenhum"
-      }
+      "all": "Todos",
+      "none": "Nenhum"
     },
     "unknown": "Remetente desconhecido"
   },
@@ -256,26 +212,27 @@ const placeholder = (counts) => {
       "submitter": "Iliyowasilishwa na",
       "search": "Tafuta wawasilishaji..."
     },
-    "placeholder": "{selected} kati ya {total}",
-    "action": {
-      "select": {
-        "all": "Wote",
-        "none": "Hakuna"
-      }
-    },
     "unknown": "Mwasilishaji asiyejulikana"
+  },
+  "zh": {
+    "field": {
+      "submitter": "上传于",
+      "search": "查找提交人..."
+    },
+    "action": {
+      "all": "全部",
+      "none": "无"
+    },
+    "unknown": "未知提交者"
   },
   "zh-Hant": {
     "field": {
       "submitter": "由提交者",
       "search": "搜尋提交者..."
     },
-    "placeholder": "{selected} /{total}",
     "action": {
-      "select": {
-        "all": "全部",
-        "none": "無"
-      }
+      "all": "全部",
+      "none": "無"
     },
     "unknown": "未知提交者"
   }

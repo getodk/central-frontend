@@ -19,6 +19,11 @@ except according to the terms contained in the LICENSE file.
             {{ $t('systemHome.tab.audits') }}
           </router-link>
         </li>
+        <li :class="tabClass('config')" role="presentation">
+          <router-link :to="tabPath('config')">
+            {{ $t('systemHome.tab.customization') }}
+          </router-link>
+        </li>
         <li v-show="config.showsAnalytics" :class="tabClass('analytics')"
           role="presentation">
           <router-link :to="tabPath('analytics')">

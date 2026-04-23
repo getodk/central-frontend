@@ -33,9 +33,9 @@ except according to the terms contained in the LICENSE file.
           </a>
         </template>
         <template #previewYourForm>
-          <router-link :to="previewPath" target="_blank">
+          <a href="https://getodk.org/web-forms-preview/" target="_blank">
             {{ $t('webformsConfirmation.description.previewYourForm') }}
-          </router-link>
+          </a>
         </template>
       </i18n-t>
       <div class="modal-actions">
@@ -53,7 +53,8 @@ except according to the terms contained in the LICENSE file.
         {{ $t('enketoConfirmation.description') }}
       </p>
       <div class="modal-actions">
-        <button class="btn btn-link" type="button" @click="$emit('hide')">
+        <button class="btn btn-link" type="button"
+          :aria-disabled="form.awaitingResponse" @click="$emit('hide')">
           {{ $t('action.cancel') }}
         </button>
         <button type="button" class="btn btn-primary"
@@ -66,16 +67,14 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { computed } from 'vue';
 import Modal from '../modal.vue';
 import Spinner from '../spinner.vue';
-import useRoutes from '../../composables/routes';
+
 import { useRequestData } from '../../request-data';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 
 const { form } = useRequestData();
-const { formPath } = useRoutes();
 
 defineOptions({
   name: 'FormWebFormsSettingsConfirmation'
@@ -87,12 +86,6 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['hide', 'success']);
-
-const previewPath = computed(() => formPath(
-  form.projectId,
-  form.xmlFormId,
-  'preview'
-));
 
 const setWebformsEnabled = () => {
   form.request({
@@ -140,7 +133,12 @@ const setWebformsEnabled = () => {
   "de": {
     "webformsConfirmation": {
       "useOdkWebForms": "ODK Web-Formulare verwenden",
-      "intro": "Wir bauen ein neues Web-Formularsystem auf, das schnell und benutzerfreundlich sein soll!"
+      "intro": "Wir bauen ein neues Web-Formularsystem auf, das schnell und benutzerfreundlich sein soll!",
+      "description": {
+        "full": "Einige Funktionen könnten verloren gehen; {seeSupportedFeatures} für Details und {previewYourForm}, bevor Sie zustimmen.",
+        "seeSupportedFeatures": "siehe unterstützte Funktionen",
+        "previewYourForm": "Vorschau auf Ihr Formular"
+      }
     },
     "enketoConfirmation": {
       "description": "Sind Sie sicher, dass Sie von ODK Web-Formulare zu Enketo wechseln wollen?",
@@ -190,6 +188,45 @@ const setWebformsEnabled = () => {
     "enketoConfirmation": {
       "description": "Siete sicuri di voler passare da ODK Web Forms a Enketo?",
       "useEnketo": "Usa Enketo"
+    }
+  },
+  "pt": {
+    "webformsConfirmation": {
+      "useOdkWebForms": "Utilizar ODK Web Forms"
+    },
+    "enketoConfirmation": {
+      "description": "Você tem certeza que deseja mudar do ODK Web Forms para o Enketo?",
+      "useEnketo": "Utilizar o Enketo"
+    }
+  },
+  "zh": {
+    "webformsConfirmation": {
+      "useOdkWebForms": "使用 ODK Web Forms",
+      "intro": "我们正在打造全新的Web表单体验，旨在提供更快速、更友好的操作界面！",
+      "description": {
+        "full": "部分功能可能受限；详情请{seeSupportedFeatures}，并在启用前{previewYourForm}。",
+        "seeSupportedFeatures": "查看支持的功能列表",
+        "previewYourForm": "预览表单效果"
+      }
+    },
+    "enketoConfirmation": {
+      "description": "确定要从ODK Web表单切换至Enketo吗？",
+      "useEnketo": "使用Enketo"
+    }
+  },
+  "zh-Hant": {
+    "webformsConfirmation": {
+      "useOdkWebForms": "使用 ODK Web Forms",
+      "intro": "我們正在建立一個全新的 web 表單體驗，設計快速且易於使用！",
+      "description": {
+        "full": "某些功能可能會遺失；{seeSupportedFeatures}瞭解詳情，{previewYourForm}再選擇加入。",
+        "seeSupportedFeatures": "查看支援的功能",
+        "previewYourForm": "預覽您的表格"
+      }
+    },
+    "enketoConfirmation": {
+      "description": "您確定要從 ODK Web Forms 轉換到 Enketo？",
+      "useEnketo": "使用 Enketo"
     }
   }
 }

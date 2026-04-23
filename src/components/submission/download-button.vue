@@ -153,6 +153,39 @@ export default {
         }
       }
     }
+  },
+  "pt": {
+    "action": {
+      "download": {
+        "unfiltered": "Baixar {count} Resposta | Baixar todas as {count} Respostas | Baixar todas as {count} Respostas",
+        "filtered": {
+          "withoutCount": "Baixar todas as Respostas filtradas",
+          "withCount": "Baixar {count} Resposta filtrada | Baixar {count} Respostas filtradas | Baixar {count} Respostas filtradas"
+        }
+      }
+    }
+  },
+  "zh": {
+    "action": {
+      "download": {
+        "unfiltered": "下载全部{count}个提交的内容",
+        "filtered": {
+          "withoutCount": "下载符合条件的所有提交内容",
+          "withCount": "下载个{count}个符合筛选条件的提交"
+        }
+      }
+    }
+  },
+  "zh-Hant": {
+    "action": {
+      "download": {
+        "unfiltered": "下載全部{count} 個提交資料",
+        "filtered": {
+          "withoutCount": "下載符合篩選條件的所有提交內容",
+          "withCount": "下載{count}個符合篩選條件的提交內容"
+        }
+      }
+    }
   }
 }
 </i18n>

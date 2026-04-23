@@ -44,7 +44,7 @@
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       },
       "editForm": {
-        "string": "",
+        "string": "Upravit formulář",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     },
@@ -64,6 +64,10 @@
     "tab": {
       "audits": {
         "string": "Protokoly auditu serveru",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      },
+      "customization": {
+        "string": "",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       },
       "analytics": {
@@ -137,7 +141,7 @@
   "audit": {
     "category": {
       "nonverbose": {
-        "string": "(Všechny akce)",
+        "string": "Všechny akce",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "user": {
@@ -173,7 +177,7 @@
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       },
       "task": {
-        "string": "",
+        "string": "Provoz systému",
         "developer_comment": "This is a category of actions performed on the server. It is shown in a dropdown when filtering the log of actions by type."
       }
     },
@@ -224,6 +228,20 @@
         "update_publish": {
           "string": "Zveřejnit",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
+        },
+        "update_property_delete": {
+          "string": "",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
+        }
+      },
+      "entity": {
+        "bulk_delete": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "bulk_restore": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "field_key": {
@@ -262,7 +280,7 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "restore": {
-          "string": "",
+          "string": "Obnovit",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "purge": {
@@ -282,7 +300,7 @@
       },
       "submission": {
         "purge": {
-          "string": "",
+          "string": "Vyčištění podání",
           "developer_comment": "This is shown in the log of actions performed on the server."
         }
       },
@@ -296,7 +314,11 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
         },
         "process_form_entities_version": {
-          "string": "",
+          "string": "Označit formulář pro aktualizaci",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
+        },
+        "server": {
+          "string": "Nová verze",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that the server performs when it is upgraded."
         }
       },
@@ -342,7 +364,7 @@
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "createSubmission": {
-      "string": "",
+      "string": "Nové Podání",
       "developer_comment": "This is the text of a button that is used to fill out a new Submission."
     },
     "delete": {
@@ -405,6 +427,10 @@
       "string": "Obnovit",
       "developer_comment": "This is the text of a button that refreshes data."
     },
+    "refreshPage": {
+      "string": "Obnovit stranu",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "resetPassword": {
       "string": "Resetovat heslo",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -424,6 +450,10 @@
     "sort": {
       "string": "Seřadit",
       "developer_comment": "This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms"
+    },
+    "undo": {
+      "string": "Zpět",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "update": {
       "string": "Aktualizovat",
@@ -452,6 +482,14 @@
     "collapse": {
       "string": "Sbalit",
       "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "selectRow": {
+      "string": "",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "reset": {
+      "string": "",
+      "developer_comment": "This text is shown on a button that resets the data filters"
     }
   },
   "field": {
@@ -493,6 +531,10 @@
     },
     "passwordConfirm": {
       "string": "Nové heslo (potvrzení)",
+      "developer_comment": "This is the text of a form field."
+    },
+    "title": {
+      "string": "",
       "developer_comment": "This is the text of a form field."
     },
     "type": {
@@ -629,7 +671,7 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "attachments": {
-      "string": "",
+      "string": "Přílohy",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "config": {
@@ -723,22 +765,22 @@
   },
   "alert": {
     "passwordTooShort": {
-      "string": "Zadejte heslo dlouhé alespoň 10 znaků."
+      "string": "Heslo musí mít nejméně 10 znaků."
     },
     "updateEntity": {
-      "string": "Entita byla aktualizována!"
+      "string": "Entita byla úspěšně aktualizována."
     },
     "updateReviewState": {
-      "string": "Stav kontroly uložen!"
+      "string": "Kontrola úspěšně uložena"
     },
     "versionChange": {
-      "string": "Server byl aktualizován. Obnovte prosím stránku, abyste se vyhnuli nepředvídatelnému chování."
+      "string": "Server byl úspěšně aktualizován."
     },
     "submissionDeleted": {
-      "string": "Podání bylo smazáno."
+      "string": "Odeslání bylo úspěšně smazáno."
     },
     "submissionRestored": {
-      "string": ""
+      "string": "Odeslání bylo obnoveno."
     },
     "entityRestored": {
       "string": ""
@@ -770,6 +812,21 @@
       "developer_comment": "This is a link to more information."
     }
   },
+  "login": {
+    "odkLogo": {
+      "string": ""
+    },
+    "defaultTitle": {
+      "string": ""
+    },
+    "defaultDescription": {
+      "string": ""
+    },
+    "heroImage": {
+      "string": "",
+      "developer_comment": "An image shown on the login page"
+    }
+  },
   "analytics": {
     "alwaysImprove": {
       "string": "Neustále se snažíme ODK Central vylepšovat."
@@ -783,6 +840,9 @@
         "string": "vaší",
         "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {your} is in the following text:\n\nTo do this, we need {your} feedback, so that we can understand how you are using Central, and how it could be better for you."
       }
+    },
+    "mailingListOptIn": {
+      "string": "Posílejte mi občas e-maily o nových funkcích a osvědčených postupech."
     }
   },
   "submission": {
@@ -814,7 +874,7 @@
       "string": "Zatím nejsou žádné příspěvky."
     },
     "fileDownloadUnavailable": {
-      "string": ""
+      "string": "Stažení souboru není k dispozici pro smazané příspěvky."
     }
   },
   "entity": {
@@ -874,6 +934,9 @@
       "string": "Dokumentace",
       "developer_comment": "This is the text of a link that links to the documentation."
     },
+    "emptyMap": {
+      "string": "Mapová data zatím nejsou k dispozici."
+    },
     "emptyValue": {
       "string": "(prázdný)",
       "developer_comment": "This is shown when the value of an Entity property is empty."
@@ -894,6 +957,9 @@
     },
     "loading": {
       "string": "Načítání..."
+    },
+    "map": {
+      "string": "Mapa"
     },
     "no": {
       "string": "Ne"
@@ -925,6 +991,9 @@
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     },
+    "table": {
+      "string": "Tabulka"
+    },
     "total": {
       "string": "Celkem"
     },
@@ -950,10 +1019,13 @@
       "developer_comment": "This text is shown on its own before details about a warning."
     },
     "beta": {
-      "string": ""
+      "string": "Beta"
     },
     "none": {
-      "string": ""
+      "string": "(žádný)"
+    },
+    "search": {
+      "string": "Hledat"
     }
   },
   "mixin": {
@@ -1023,14 +1095,18 @@
     "session": {
       "alert": {
         "expiresSoon": {
-          "string": "Vaše relace vyprší za 2 minuty a budete automaticky odhlášeni."
+          "string": ""
         },
         "expired": {
-          "string": "Vaše relace vypršela. Chcete-li pokračovat v práci, přihlaste se prosím znovu."
+          "string": ""
         },
         "logoutError": {
-          "string": "Došlo k problému a nebyli jste úplně odhlášeni. Obnovte stránku a zkuste se znovu odhlásit. {message}",
-          "developer_comment": "{message} is a more detailed error message."
+          "thereWasProblem": {
+            "string": ""
+          },
+          "pleaseRefresh": {
+            "string": ""
+          }
         }
       }
     }
@@ -1042,6 +1118,9 @@
   },
   "component": {
     "AccountClaim": {
+      "title": {
+        "string": ""
+      },
       "action": {
         "set": {
           "string": "Nastavit heslo",
@@ -1056,7 +1135,7 @@
       },
       "alert": {
         "success": {
-          "string": "Heslo bylo úspěšně resetováno."
+          "string": ""
         }
       }
     },
@@ -1066,7 +1145,7 @@
           "string": "Uživatel je již přihlášen. Chcete-li pokračovat, obnovte stránku."
         },
         "changePassword": {
-          "string": "Vaše heslo je kratší než 10 znaků. Chcete-li svůj účet chránit, změňte si heslo tak, aby bylo delší."
+          "string": ""
         }
       },
       "oidc": {
@@ -1094,7 +1173,18 @@
         }
       }
     },
+    "AccountPageContainer": {
+      "customLogoAlt": {
+        "string": ""
+      }
+    },
     "AccountResetPassword": {
+      "title": {
+        "string": ""
+      },
+      "subtitle": {
+        "string": ""
+      },
       "alert": {
         "success": {
           "string": "Byl odeslán e-mail na {email} s dalšími pokyny."
@@ -1163,7 +1253,7 @@
       },
       "alert": {
         "success": {
-          "string": "Nastavení uloženo!"
+          "string": ""
         }
       }
     },
@@ -1321,6 +1411,12 @@
         "description_length": {
           "string": "Délka popisu projektu"
         },
+        "num_datasets_deleted": {
+          "string": ""
+        },
+        "num_dataset_properties_deleted": {
+          "string": ""
+        },
         "num_properties": {
           "string": "Počet vlastností"
         },
@@ -1362,6 +1458,18 @@
         },
         "sso_enabled": {
           "string": "SSO povoleno na serveru"
+        },
+        "login_customization_logo_set": {
+          "string": ""
+        },
+        "login_customization_hero_image_set": {
+          "string": ""
+        },
+        "login_customization_title_set": {
+          "string": ""
+        },
+        "login_customization_description_set": {
+          "string": ""
         },
         "num_client_audit_attachments": {
           "string": "Počet příloh auditu klienta"
@@ -1405,6 +1513,9 @@
         "max_entity_branch_delay": {
           "string": ""
         },
+        "num_owner_only_datasets": {
+          "string": ""
+        },
         "num_xml_only_form_defs": {
           "string": ""
         },
@@ -1424,6 +1535,36 @@
           "string": ""
         },
         "num_entity_creates_bulk": {
+          "string": ""
+        },
+        "max_geo_per_form": {
+          "string": ""
+        },
+        "num_entity_bulk_deletes": {
+          "string": ""
+        },
+        "num_datasets_with_geometry": {
+          "string": ""
+        },
+        "num_entity_create_forms": {
+          "string": ""
+        },
+        "num_repeat_entity_create_forms": {
+          "string": ""
+        },
+        "num_entity_update_forms": {
+          "string": ""
+        },
+        "num_repeat_entity_update_forms": {
+          "string": ""
+        },
+        "num_entity_create_update_forms": {
+          "string": ""
+        },
+        "num_entities_with_geometry": {
+          "string": ""
+        },
+        "num_multi_entity_errors": {
           "string": ""
         }
       }
@@ -1535,12 +1676,97 @@
         "string": ""
       }
     },
+    "ConfigLogin": {
+      "title": {
+        "string": ""
+      }
+    },
+    "ConfigLoginEdit": {
+      "logo": {
+        "label": {
+          "string": ""
+        },
+        "help": {
+          "string": ""
+        }
+      },
+      "title": {
+        "help": {
+          "string": ""
+        }
+      },
+      "description": {
+        "label": {
+          "string": ""
+        },
+        "help": {
+          "string": ""
+        }
+      },
+      "hero": {
+        "help": {
+          "string": ""
+        }
+      }
+    },
+    "ConfigLoginFileSelect": {
+      "select": {
+        "full": {
+          "string": "",
+          "developer_comment": "{upload} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nupload file"
+        },
+        "upload": {
+          "string": "",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {upload} is in the following text:\n\nDrag image here or {upload}"
+        }
+      },
+      "action": {
+        "remove": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "invalidType": {
+          "string": ""
+        },
+        "post": {
+          "string": ""
+        },
+        "del": {
+          "string": ""
+        }
+      }
+    },
+    "ConfigLoginPreview": {
+      "introduction": {
+        "string": ""
+      }
+    },
+    "DatasetDelete": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": ""
+        }
+      }
+    },
     "DatasetEntities": {
       "upload": {
         "string": ""
       },
+      "newEntity": {
+        "string": "",
+        "developer_comment": "This is shown on a button for creating new Entities"
+      },
       "alert": {
         "upload": {
+          "string": ""
+        },
+        "create": {
           "string": ""
         }
       },
@@ -1600,10 +1826,6 @@
       }
     },
     "DatasetOverview": {
-      "connectionsToForms": {
-        "string": "Připojení k formulářům",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
       "entityProperties": {
         "string": "Vlastnosti entity",
         "developer_comment": "This is a title shown above a section of the page."
@@ -1613,12 +1835,6 @@
         "developer_comment": "This is shown on a button for creating new Entity Properties"
       }
     },
-    "DatasetOverviewConnectionToForms": {
-      "formsUpdateEntities": {
-        "string": "{count, plural, one {} few {} many {} other {}}",
-        "developer_comment": "The number of Form(s) is shown separately above this text."
-      }
-    },
     "DatasetOverviewDatasetProperties": {
       "emptyTable": {
         "string": "Entity v tomto seznamu entit nemají žádné uživatelsky definované vlastnosti."
@@ -1626,12 +1842,48 @@
       "none": {
         "string": "(žádný)",
         "developer_comment": "This is shown in an Entity property row in a column about Forms, and 'None' refers to Forms."
+      },
+      "confirmation": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": "",
+          "developer_comment": "This is shown on a confirmation dialog box. {propertyName} is the name of the property that is being deleted."
+        }
+      },
+      "deleted": {
+        "string": "",
+        "developer_comment": "This is shown after a Property has been successfully deleted. {name} is the name of the deleted property."
       }
     },
-    "DatasetOverviewLinkedForms": {
-      "formsConsumeData": {
+    "DatasetOverviewDeletePropertyError": {
+      "title": {
+        "string": ""
+      },
+      "intro": {
+        "string": "",
+        "developer_comment": "This text is followed by a list of actions."
+      },
+      "clearEntities": {
         "string": "{count, plural, one {} few {} many {} other {}}",
-        "developer_comment": "Number of form(s) is shown separately above this text"
+        "developer_comment": "This text appears in a list of required actions. \"It\" refers to an Entity property."
+      },
+      "unlinkForms": {
+        "string": "{count, plural, one {} few {} many {} other {}}",
+        "developer_comment": "This text appears in a list of required actions. \"It\" refers to an Entity property."
+      },
+      "relatedToEntities": {
+        "string": "{count, plural, one {} few {} many {} other {}}",
+        "developer_comment": "This text refers to an Entity property that is set."
+      },
+      "moreEntities": {
+        "string": "{count, plural, one {} few {} many {} other {}}",
+        "developer_comment": "This text is shown beneath a partial list of Entities. If there are more than a few Entities, then only the first few Entities are shown, followed by this text."
+      },
+      "relatedToForms": {
+        "string": "{count, plural, one {} few {} many {} other {}}",
+        "developer_comment": "This text refers to an Entity property that is set."
       }
     },
     "DatasetOverviewNewProperty": {
@@ -1652,6 +1904,55 @@
       },
       "problem": {
         "409_3": {
+          "string": ""
+        }
+      }
+    },
+    "DatasetOwnerOnly": {
+      "panel": {
+        "title": {
+          "string": "",
+          "developer_comment": "This is a title shown above a section of the page."
+        }
+      },
+      "accessAll": {
+        "string": ""
+      },
+      "accessAllDefault": {
+        "string": ""
+      },
+      "ownerOnly": {
+        "string": ""
+      },
+      "radio": {
+        "false": {
+          "string": ""
+        },
+        "true": {
+          "string": ""
+        }
+      },
+      "falseModal": {
+        "introduction": {
+          "string": ""
+        }
+      },
+      "trueModal": {
+        "introduction": {
+          "string": ""
+        },
+        "action": {
+          "confirm": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
+      "alert": {
+        "changeToFalse": {
+          "string": ""
+        },
+        "changeToTrue": {
           "string": ""
         }
       }
@@ -1735,6 +2036,36 @@
         "successMessage": {
           "string": "Entity se vytvoří, když jsou podání označena jako schválená."
         }
+      },
+      "action": {
+        "delete": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "delete": {
+          "string": ""
+        }
+      },
+      "dependentForms": {
+        "description": {
+          "0": {
+            "string": "",
+            "developer_comment": "{formsCount} is the number of Forms that are dependent on the Entity List. Example: 4 Forms"
+          },
+          "1": {
+            "string": "",
+            "developer_comment": "\"It\" refers to an Entity List."
+          },
+          "2": {
+            "string": ""
+          }
+        },
+        "formsCount": {
+          "string": "{count, plural, one {} few {} many {} other {}}",
+          "developer_comment": "This text will be inserted where {formsCount} is in the following sentence:\n\nThe Entity List “{name}” is linked to {formsCount}."
+        }
       }
     },
     "DatasetShow": {
@@ -1766,6 +2097,19 @@
     "DatasetTable": {
       "emptyTable": {
         "string": "Nebyly vytvořeny žádné entity pro tento projekt."
+      }
+    },
+    "DatasetTrashRow": {
+      "action": {
+        "download": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "DatasetTrashTable": {
+      "message": {
+        "string": ""
       }
     },
     "Download": {
@@ -2069,25 +2413,43 @@
           "developer_comment": "This is the text of a form field."
         }
       },
-      "placeholder": {
-        "string": "{selected} z {total}",
-        "developer_comment": "This is the text of a dropdown that allows the user to select one or more conflict statuses. {selected} is the number of selected conflict statuses; {total} is the total number of conflict statuses."
-      },
       "action": {
-        "select": {
-          "all": {
-            "string": "Vše",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more conflict statuses. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
-          },
-          "none": {
-            "string": "Žádný",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more conflict statuses. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
-          }
+        "all": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of conflict statuses filter, that allows the user to select all conflict statuses."
+        },
+        "none": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of conflict statuses filter, that allows the user to unselect all conflict statuses."
+        }
+      }
+    },
+    "EntityFiltersCreator": {
+      "field": {
+        "creator": {
+          "string": "",
+          "developer_comment": "This is the text of a form field that shows the names of users that have created Entities."
+        },
+        "search": {
+          "string": "",
+          "developer_comment": "This is the text of a form field."
         }
       },
-      "allSelectedConflictSelected": {
-        "string": "",
-        "developer_comment": "Text shown when all conflict statuses are selected in the filter dropdown"
+      "action": {
+        "all": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of entity \"created by\" filter, that allows the user to select all creators."
+        },
+        "none": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of creator filter, that allows the user to unselect all creators."
+        }
+      },
+      "unknown": {
+        "string": ""
+      },
+      "emptyTable": {
+        "string": ""
       }
     },
     "EntityList": {
@@ -2098,7 +2460,7 @@
       "noMatching": {
         "string": "Neexistují žádné odpovídající entity."
       },
-      "allDeleted": {
+      "emptyMap": {
         "string": ""
       },
       "allDeletedOnPage": {
@@ -2107,9 +2469,21 @@
       "alert": {
         "delete": {
           "string": ""
+        },
+        "bulkDelete": {
+          "string": "{count, plural, one {} few {} many {} other {}}"
+        },
+        "restored": {
+          "string": "{count, plural, one {} few {} many {} other {}}"
         }
       },
       "filterDisabledMessage": {
+        "string": ""
+      },
+      "searchDisabledMessage": {
+        "string": ""
+      },
+      "mapDisabled": {
         "string": ""
       },
       "downloadDisabled": {
@@ -2119,12 +2493,17 @@
         "emptyTable": {
           "string": ""
         },
-        "allRestored": {
-          "string": ""
-        },
         "allRestoredOnPage": {
           "string": ""
         }
+      },
+      "actionBar": {
+        "message": {
+          "string": "{count, plural, one {} few {} many {} other {}}"
+        }
+      },
+      "bulkOpInProgress": {
+        "string": ""
       },
       "action": {
         "download": {
@@ -2143,6 +2522,14 @@
             }
           }
         }
+      }
+    },
+    "EntityMapView": {
+      "loading": {
+        "string": ""
+      },
+      "overlapTitle": {
+        "string": "{count, plural, one {} few {} many {} other {}}"
       }
     },
     "EntityMetadataRow": {
@@ -2244,15 +2631,8 @@
         "string": "Aktualizace {label}",
         "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
       },
-      "header": {
-        "currentValue": {
-          "string": "Aktuální hodnota",
-          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
-        },
-        "updatedValue": {
-          "string": "Aktualizovaná hodnota",
-          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
-        }
+      "geometryDisabled": {
+        "string": ""
       },
       "problem": {
         "409_15": {
@@ -2382,6 +2762,17 @@
         }
       }
     },
+    "EntityUpsert": {
+      "titleCreate": {
+        "string": ""
+      },
+      "header": {
+        "value": {
+          "string": "",
+          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of an Entity property."
+        }
+      }
+    },
     "EntityVersionLink": {
       "submission": {
         "string": "Odeslání {instanceName}",
@@ -2463,7 +2854,7 @@
           "string": "Uživatel aplikace „{displayName}“ byl úspěšně vytvořen."
         },
         "revoke": {
-          "string": "Přístup k aplikaci byl  zrušen uživateli  „{displayName}“."
+          "string": ""
         }
       }
     },
@@ -2659,7 +3050,7 @@
           "string": "{count, plural, one {{count} soubor byl úspěšně nahrán.} few {{count} soubory byly úspěšně nahrány.} many {{count} souborů bylo úspěšně nahráno.} other {{count} souborů bylo úspěšně nahráno.}}"
         },
         "link": {
-          "string": "Seznam entit byl úspěšně propojen."
+          "string": ""
         }
       },
       "header": {
@@ -2980,16 +3371,13 @@
       },
       "alert": {
         "upload": {
-          "string": "Bezva! Nová definice formuláře byla uložena jako koncept."
+          "string": ""
         },
         "publish": {
-          "string": "Váš návrh je nyní zveřejněn. Všechna zařízení, která načítají formuláře pro tento projekt, nyní obdrží novou definici formuláře a přílohy formuláře."
+          "string": ""
         },
         "abandon": {
           "string": "Koncept verze tohoto formuláře byl úspěšně odstraněn."
-        },
-        "delete": {
-          "string": "Formulář „{name}“ byl odstraněn."
         }
       }
     },
@@ -3259,6 +3647,9 @@
       "alert": {
         "fileRequired": {
           "string": "Vyberte soubor."
+        },
+        "fileNotReadable": {
+          "string": ""
         }
       },
       "problem": {
@@ -3377,7 +3768,7 @@
       },
       "alert": {
         "delete": {
-          "string": "Formulář „{name}“ byl odstraněn."
+          "string": ""
         }
       },
       "webFormsSetting": {
@@ -3392,6 +3783,14 @@
         "enketoDefault": {
           "string": "",
           "developer_comment": "The word \"Enketo\" should not be translated"
+        },
+        "enketoSelected": {
+          "string": "",
+          "developer_comment": "Success message when Enketo is selected as web form technology. {formName} is replaced with the name of the Form"
+        },
+        "owfSelected": {
+          "string": "",
+          "developer_comment": "Success message when ODK Web Forms is selected as web form technology. {formName} is replaced with the name of the Form"
         }
       }
     },
@@ -3568,6 +3967,24 @@
         }
       }
     },
+    "GeojsonMap": {
+      "showing": {
+        "string": "",
+        "developer_comment": "{count} and {total} are both numbers."
+      },
+      "zoomToFit": {
+        "string": "",
+        "developer_comment": "Shown above control button on map to zoom out to show all features"
+      },
+      "noWebGL": {
+        "title": {
+          "string": ""
+        },
+        "message": {
+          "string": ""
+        }
+      }
+    },
     "Home": {
       "heading": {
         "0": {
@@ -3603,6 +4020,14 @@
         }
       }
     },
+    "MapPopup": {
+      "action": {
+        "back": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
     "MarkdownTextarea": {
       "markdownSupported": {
         "string": "Markdown podporován",
@@ -3615,9 +4040,9 @@
     },
     "Multiselect": {
       "action": {
-        "select": {
-          "string": "Vyberte {all} / {none}",
-          "developer_comment": "This text is shown in a dropdown that allows the user to make one or more selections. {all} has the text \"All\", and {none} has the text \"None\". {all} and {none} will be translated separately based on what is being selected."
+        "apply": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -3770,6 +4195,10 @@
         "string": "{count, plural, one {} few {} many {} other {}}",
         "developer_comment": "{range} is a range of row numbers, for example, 1-5. {count} is the total number of rows. The string will be pluralized based on the number of rows in the range."
       },
+      "zeroRow": {
+        "string": "",
+        "developer_comment": "Shown when no row is displayed on the page because all rows are deleted or some other reasons. {count} is the total number of rows across all pages."
+      },
       "field": {
         "size": {
           "string": "",
@@ -3819,7 +4248,7 @@
       },
       "alert": {
         "success": {
-          "string": "Nastavení projektu uloženo."
+          "string": ""
         }
       }
     },
@@ -3941,7 +4370,7 @@
       },
       "alert": {
         "success": {
-          "string": "Vaše změny byly uloženy!"
+          "string": ""
         }
       }
     },
@@ -4159,7 +4588,7 @@
       },
       "alert": {
         "archive": {
-          "string": "Projekt „{name}“ byl archivován."
+          "string": ""
         }
       }
     },
@@ -4258,12 +4687,6 @@
           }
         }
       },
-      "action": {
-        "clearSearch": {
-          "string": "Vymazat vyhledávání",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
       "field": {
         "q": {
           "canList": {
@@ -4297,7 +4720,13 @@
           "string": "Úspěch! Pro „{displayName}“ byla v tomto projektu udělena role „{roleName}“."
         },
         "unassignRole": {
-          "string": "Úspěch! „{displayName}“ byl z tohoto projektu odstraněn."
+          "string": ""
+        }
+      },
+      "action": {
+        "clearSearch": {
+          "string": "Vymazat vyhledávání",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -4367,7 +4796,7 @@
       },
       "alert": {
         "create": {
-          "string": "Úspěch! Váš veřejně přístupný odkaz byl vytvořen a je nyní aktivní. Zkopírujte jej níže a šiřte ho."
+          "string": ""
         },
         "revoke": {
           "string": "Veřejně přístupný odkaz  „{displayName}“ byl úspěšně odebrán. Pomocí tohoto odkazu nebudou přijata žádná další podání."
@@ -4580,7 +5009,7 @@
           "string": "Data ke stažení zatím nejsou k dispozici. Zkuste to prosím za chvíli znovu."
         },
         "submit": {
-          "string": "Stahování dat by mělo začít brzy. Jakmile to začne, můžete toto pole zavřít. Pokud jste čekali a nezačalo to, zkuste to znovu."
+          "string": ""
         },
         "parseError": {
           "string": "Při vyžádání vašich dat se něco pokazilo."
@@ -4732,13 +5161,13 @@
             "developer_comment": "This text is shown in the list of actions performed on a Submission."
           }
         }
+      },
+      "deleted": {
+        "string": "",
+        "developer_comment": "Shown in the Submission feed when dataset or entity has been deleted."
       }
     },
     "SubmissionFieldDropdown": {
-      "placeholder": {
-        "string": "",
-        "developer_comment": "This is the text of a dropdown that allows the user to select which columns to display in a table. {selected} is the number of columns selected; {total} is the total number of columns."
-      },
       "field": {
         "columns": {
           "string": "Zobrazené sloupce",
@@ -4750,15 +5179,13 @@
         }
       },
       "action": {
-        "select": {
-          "all": {
-            "string": "Vše",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select which columns to display in a table. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
-          },
-          "none": {
-            "string": "Nic",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select which columns to display in a table. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
-          }
+        "all": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of column selector, that allows the user to select all columns."
+        },
+        "none": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of column selector, that allows the user to unselect all columns."
         }
       },
       "warning": {
@@ -4774,29 +5201,19 @@
       },
       "allSubmissionDateSelected": {
         "string": "",
-        "developer_comment": "Text shown when in Submission date filter when Submissions for all dates are shown"
+        "developer_comment": "Text shown when in date filter when records for all dates are shown"
       }
     },
     "SubmissionFiltersReviewState": {
-      "placeholder": {
-        "string": "{selected} z {total}",
-        "developer_comment": "This is the text of a dropdown that allows the user to select one or more Review States. {selected} is the number of selected Review States; {total} is the total number of Review States."
-      },
       "action": {
-        "select": {
-          "all": {
-            "string": "Vše",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more Review States. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
-          },
-          "none": {
-            "string": "Nic",
-            "developer_comment": "This text is shown in a dropdown that allows the user to select one or more Review States. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
-          }
+        "all": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of Review States filter, that allows the user to select all Review States."
+        },
+        "none": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of Review States filter, that allows the user to unselect all Review States."
         }
-      },
-      "allReviewStateSelected": {
-        "string": "",
-        "developer_comment": "Text shown when all Review States are selected in the filter"
       }
     },
     "SubmissionFiltersSubmitter": {
@@ -4810,28 +5227,18 @@
           "developer_comment": "This is the text of a form field."
         }
       },
-      "placeholder": {
-        "string": "{selected} z {total}",
-        "developer_comment": "This is the text of a dropdown that allows the user to select one or more \"submitters\". A submitter can be a user, a team of users, a Public Access Link, or an automation. {selected} is the number of submitters selected; {total} is the total number of submitters."
-      },
       "action": {
-        "select": {
-          "all": {
-            "string": "Vše",
-            "developer_comment": "This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {all} is in the following text:\n\nSelect {all} / {none}"
-          },
-          "none": {
-            "string": "Žádný",
-            "developer_comment": "This is the text of a dropdown that allows the user to select one or more submitters. It will be inserted where {none} is in the following text:\n\nSelect {all} / {none}"
-          }
+        "all": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of submitter filter, that allows the user to select all submitters."
+        },
+        "none": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of submitter filter, that allows the user to unselect all submitters."
         }
       },
       "unknown": {
         "string": "Neznámý odesílatel"
-      },
-      "allSubmitterSelected": {
-        "string": "",
-        "developer_comment": "Text shown when all Submitters are selected in the filter"
       }
     },
     "SubmissionList": {
@@ -4848,7 +5255,10 @@
       "noMatching": {
         "string": "Neexistují žádné odpovídající příspěvky."
       },
-      "allDeleted": {
+      "emptyMap": {
+        "string": ""
+      },
+      "learnMoreMap": {
         "string": ""
       },
       "allDeletedOnPage": {
@@ -4860,16 +5270,19 @@
       "filterDisabledMessage": {
         "string": ""
       },
+      "noMapEncryption": {
+        "string": ""
+      },
       "deletedSubmission": {
         "emptyTable": {
-          "string": ""
-        },
-        "allRestored": {
           "string": ""
         },
         "allRestoredOnPage": {
           "string": ""
         }
+      },
+      "noMapDeleted": {
+        "string": ""
       },
       "loading": {
         "withoutCount": {
@@ -4913,6 +5326,24 @@
             }
           }
         }
+      }
+    },
+    "SubmissionMapPopup": {
+      "missingField": {
+        "string": "",
+        "developer_comment": "{field} is the name of a Form field."
+      },
+      "mappedField": {
+        "string": "",
+        "developer_comment": "Message of the tooltip of checkmark icon, which is shown next of the fieldname that is used to plot pins on the map"
+      }
+    },
+    "SubmissionMapView": {
+      "loading": {
+        "string": ""
+      },
+      "overlapTitle": {
+        "string": "{count, plural, one {} few {} many {} other {}}"
       }
     },
     "SubmissionRestore": {
@@ -4972,6 +5403,12 @@
           "string": "Poznámky a komentáře (volitelné)",
           "developer_comment": "This is the text of a form field."
         }
+      }
+    },
+    "TableRefreshBar": {
+      "dataRefreshTime": {
+        "string": "",
+        "developer_comment": "Text shown above the data tables to tell users when data was last fetched / refreshed. {date} is only the date component and {time} is only the time component."
       }
     },
     "TimeAndUser": {
@@ -5054,6 +5491,10 @@
         "sitewideRole": {
           "string": "Role úplného přístupu",
           "developer_comment": "This is the text of a table column header."
+        },
+        "lastActive": {
+          "string": "",
+          "developer_comment": "Heading for a column that shows last login time of the users"
         }
       },
       "alert": {
@@ -5152,6 +5593,9 @@
           "string": "Uspat uživatele",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      },
+      "invitationPending": {
+        "string": ""
       }
     },
     "WebFormRenderer": {
@@ -5246,12 +5690,6 @@
       },
       "body": {
         "string": ""
-      },
-      "action": {
-        "gotIt": {
-          "string": "",
-          "developer_comment": "This is the text of a button that is used to close the modal."
-        }
       }
     }
   },

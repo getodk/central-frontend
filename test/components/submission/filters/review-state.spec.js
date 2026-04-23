@@ -8,6 +8,7 @@ const mountComponent = (options = undefined) =>
     props: { modelValue: ['null'] }
   }));
 const toggle = (multiselect) => multiselect.get('select').trigger('click');
+const apply = (multiselect) => multiselect.get('.action-bar button').trigger('click');
 
 describe('SubmissionFiltersReviewState', () => {
   it('renders the correct options', () => {
@@ -44,7 +45,7 @@ describe('SubmissionFiltersReviewState', () => {
     const multiselect = component.getComponent(Multiselect);
     await toggle(multiselect);
     await multiselect.get('input[type="checkbox"]').setValue(false);
-    await toggle(multiselect);
+    await apply(multiselect);
     component.emitted('update:modelValue').should.eql([[["'approved'"]]]);
   });
 
@@ -59,7 +60,7 @@ describe('SubmissionFiltersReviewState', () => {
       const multiselect = component.getComponent(Multiselect);
       await toggle(multiselect);
       await multiselect.get('.select-none').trigger('click');
-      await toggle(multiselect);
+      await apply(multiselect);
       component.emitted('update:modelValue').should.eql([[all]]);
     });
 
@@ -71,7 +72,7 @@ describe('SubmissionFiltersReviewState', () => {
       const multiselect = component.getComponent(Multiselect);
       await toggle(multiselect);
       await multiselect.get('.select-none').trigger('click');
-      await toggle(multiselect);
+      await apply(multiselect);
       should.not.exist(component.emitted('update:modelValue'));
     });
   });

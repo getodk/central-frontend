@@ -106,7 +106,7 @@ export default {
     },
     "emptyTable": "There are no Forms to show.",
     "alert": {
-      "create": "Your new Form “{name}” has been created as a Draft. Upload files and test your Form below, and when you feel it’s ready, you can publish the Form for use."
+      "create": "“{name}” has been created as a Form Draft."
     }
   }
 }
@@ -127,7 +127,10 @@ export default {
     "action": {
       "create": "Neu"
     },
-    "emptyTable": "Keine Formulare zum Anzeigen vorhanden."
+    "emptyTable": "Keine Formulare zum Anzeigen vorhanden.",
+    "alert": {
+      "create": "\"{name}\" wurde als Formularentwurf erzeugt."
+    }
   },
   "es": {
     "title": "Formularios",
@@ -136,7 +139,7 @@ export default {
     },
     "emptyTable": "No hay formularios para mostrar.",
     "alert": {
-      "create": "Su nuevo formulario \"{name}\" se ha creado como un borrador. Cargue archivos y pruebe su formulario a continuación, y cuando considere que está listo, puede publicar el formulario para su uso."
+      "create": "\"{name}\" se ha creado como borrador de formulario."
     }
   },
   "fr": {
@@ -146,7 +149,7 @@ export default {
     },
     "emptyTable": "Il n'y a pas de formulaire à montrer.",
     "alert": {
-      "create": "Votre nouveau Formulaire \"{name}\" a été créé comme Ébauche. Téléversez les fichiers et testez votre formulaire ci-dessous, et quand vous penserez être prêt, vous pourrez publiez le Formulaire pour l'utiliser."
+      "create": "\"{name}\" a été créé comme ébauche."
     }
   },
   "id": {
@@ -163,7 +166,7 @@ export default {
     },
     "emptyTable": "Non ci sono formulari da mostrare.",
     "alert": {
-      "create": "Il tuo nuovo formulario\"{name}\" è stato creato come bozza. Caricate i file e testate il vostro Formulario qui sotto e, quando lo riterrete pronto, potrete pubblicarlo per l'uso."
+      "create": "“{name}” è stato creato come bozza di formulario."
     }
   },
   "ja": {
@@ -187,12 +190,25 @@ export default {
     },
     "emptyTable": "hakuna Fomu za kuonyesha"
   },
+  "zh": {
+    "title": "表单",
+    "action": {
+      "create": "更新"
+    },
+    "emptyTable": "暂无表单可显示。",
+    "alert": {
+      "create": "表单草稿“{name}”已创建。"
+    }
+  },
   "zh-Hant": {
     "title": "表單",
     "action": {
       "create": "新增"
     },
-    "emptyTable": "沒有可顯示的表單。"
+    "emptyTable": "沒有可顯示的表單。",
+    "alert": {
+      "create": "「{name}」已建立為表單草稿。"
+    }
   }
 }
 </i18n>

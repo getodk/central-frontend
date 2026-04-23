@@ -9,13 +9,13 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
+<!-- eslint-disable vuejs-accessibility/alt-text -->
 <template>
-  <modal :state="isVisible" backdrop :hideable="true" @hide="hideModal">
+  <modal id="whats-new-modal" :state="isVisible" backdrop :hideable="true" @hide="hideModal">
     <template #banner>
       <img
         srcset="../assets/images/whats-new/banner@1x.png, ../assets/images/whats-new/banner@2x.png 2x"
-        src="../assets/images/whats-new/banner@1x.png"
-        alt="Modal banner image showing Create a New Draft button with arrow pointing to Edit Form tab.">
+        src="../assets/images/whats-new/banner@1x.png">
     </template>
     <template #title>{{ $t('title') }}</template>
     <template #body>
@@ -23,9 +23,12 @@ except according to the terms contained in the LICENSE file.
         {{ $t('body') }}
       </p>
       <div class="modal-actions">
+        <div v-if="!initialOptIn" class="checkbox">
+          <label><input v-model="mailingListOptIn" type="checkbox">{{ $t('analytics.mailingListOptIn') }}</label>
+        </div>
         <button type="button" class="btn btn-primary"
           @click="hideModal">
-          {{ $t('action.gotIt') }}
+          {{ $t('action.done') }}
         </button>
       </div>
     </template>
@@ -33,47 +36,99 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { inject, ref, watch } from 'vue';
 
 import Modal from './modal.vue';
 
 import { useRequestData } from '../request-data';
 
-const { currentUser, projects } = useRequestData();
-const isVisible = ref(false);
-
 defineOptions({
   name: 'WhatsNew'
 });
 
+const { openModal } = inject('container');
+const { currentUser, projects } = useRequestData();
+
+const isVisible = ref(false);
+const initialOptIn = currentUser.preferences.site.mailingListOptIn;
+const mailingListOptIn = ref(currentUser.preferences.site.mailingListOptIn !== false);
+
+const currentVersion = '2026.1';
+
+const isOlderVersion = (stored, current) => {
+  // compare stored vs. current year & release
+  const [sy, sr] = stored.split('.').map(Number);
+  const [cy, cr] = current.split('.').map(Number);
+  return sy < cy || (sy === cy && sr < cr);
+};
+
 watch(() => projects.dataExists, () => {
-  const canUpdateForm = currentUser.can('form.update') ||
-    projects.data.some(project => project.verbs.has('form.update'));
+  const showModal = !currentUser.preferences.site.whatsNewDismissed ||
+    isOlderVersion(currentUser.preferences.site.whatsNewDismissed, currentVersion);
+
+  // When updating `canUpdateForm` in the future, consider the *verb* for the audience.
+  // For 2025.4, we decided it could be shown to project viewers as well,
+  // where the previous modal was only shown to admins and project managers.
+  const canUpdateForm = currentUser.can('submission.list') ||
+    projects.data.some(project => project.verbs.has('submission.list'));
   if (canUpdateForm && // Check that user is admin or is able to edit forms in at least one project
-    new Date(currentUser.data.createdAt) < new Date('2025-05-06') && // Check that user was created prior to 2025.1 release (approx)
-    !document.body.classList.contains('modal-open') && // Check that no other modal (e.g. new project) is open
-    !currentUser.preferences.site.whatsNewDismissed2025_1) {
+    !openModal.state && // Check that no other modal (e.g. new project) is open
+    showModal) {
     isVisible.value = true;
   }
 });
 
 function hideModal() {
-  currentUser.preferences.site.whatsNewDismissed2025_1 = true;
+  currentUser.preferences.site.whatsNewDismissed = currentVersion;
+
+  // If user was not already opted in and preference changed, then save preference.
+  if (!initialOptIn && mailingListOptIn.value !== initialOptIn) {
+    currentUser.preferences.site.mailingListOptIn = mailingListOptIn.value;
+  }
   isVisible.value = false;
 }
 
 </script>
 
+<style lang="scss">
+@import '../assets/scss/variables';
+
+#whats-new-modal h4 {
+  white-space: wrap;
+}
+
+#whats-new-modal .modal-actions {
+  display: flex;
+  column-gap: 10px;
+  align-items: center;
+
+  .checkbox {
+    flex: 1;
+    margin-bottom: 0px;
+    font-size: 12px;
+
+    label {
+      display: block;
+      text-align: left;
+    }
+
+    input[type=checkbox] {
+      margin-top: 2px;
+    }
+  }
+
+  .btn {
+    margin-left: auto;
+  }
+}
+</style>
+
 <i18n lang="json5">
   {
     "en": {
       // This is the title at the top of a pop-up.
-      "title": "Form drafts have moved",
-      "body": "Create a new Form and edit it on the new Edit Form tab",
-      "action": {
-        // This is the text of a button that is used to close the modal.
-        "gotIt": "Got it!"
-      }
+      "title": "🎨 Branded login pages, Entity List cleanups, and file uploads in Web Forms",
+      "body": "Customize the login page with your branding, clean up Entity Lists and Properties when they are no longer needed, and upload any file to your Web Forms."
     }
   }
 </i18n>
@@ -82,32 +137,20 @@ function hideModal() {
 <i18n>
 {
   "de": {
-    "title": "Formularentwürfe wurden verschoben",
-    "body": "Erstellen Sie ein neues Formular und bearbeiten Sie es auf der neuen Registerkarte Formular bearbeiten",
-    "action": {
-      "gotIt": "Ich hab's!"
-    }
+    "title": "🎨 Markenspezifische Anmeldeseiten, Bereinigung der Entitätsliste und Datei-Uploads in Web Forms",
+    "body": "Passen Sie die Anmeldeseite an Ihr Corporate Design an, bereinigen Sie Entitätslisten und Eigenschaften, wenn diese nicht mehr benötigt werden, und laden Sie beliebige Dateien in Ihre Webformulare hoch."
   },
   "es": {
-    "title": "Los borradores de formularios se han trasladado",
-    "body": "Cree un nuevo formulario y edítelo en la nueva pestaña Editar formulario",
-    "action": {
-      "gotIt": "¡Ya está!"
-    }
+    "title": "🎨 Páginas de inicio de sesión personalizadas, limpieza de la lista de entidades y carga de archivos en formularios web",
+    "body": "Personaliza la página de inicio de sesión con tu imagen de empresa, elimina las listas de entidades y las propiedades cuando ya no las necesites, y sube cualquier archivo a tus formularios web."
   },
   "fr": {
-    "title": "Les ébauches de Formulaires ont été déplacées.",
-    "body": "Créez un nouveau Formulaire et éditez le dans le nouvel onglet «Éditer Formulaire»",
-    "action": {
-      "gotIt": "J'ai compris !"
-    }
+    "title": "🎨 Page de connexion personnalisée, suppression de listes d'entités et téléchargement de fichiers dans Web Forms.",
+    "body": "Choisissez les images et le texte de votre page de connexion, faites disparaître les listes d'entités et les propriétés dont vous n'avez plus besoin et essayez la nouvelle expérience de formulaires web."
   },
   "it": {
-    "title": "Le bozze dei formulari sono state spostate",
-    "body": "Creare un nuovo formulario e modificarlo nella nuova scheda Modifica del formulario.",
-    "action": {
-      "gotIt": "Capito!"
-    }
+    "title": "🎨 Pagine di accesso personalizzate, eliminazione degli elementi dall'elenco delle entità e caricamento di file in Web Forms",
+    "body": "Personalizza la pagina di accesso con il tuo brand, elimina gli elenchi di entità e le proprietà quando non servono più e carica qualsiasi file nei tuoi Web Forms."
   }
 }
 </i18n>

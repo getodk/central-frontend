@@ -29,29 +29,21 @@ describe('useEnketoRedirector', () => {
         });
     });
 
+    it('should pass query parameters as it is after redirection', () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+      return load(`/f/${enketoId}/new?d[firstname]=john%20doe`)
+        .afterResponses(app => {
+          const iframe = app.find('iframe');
+          const src = iframe.attributes('src');
+          src.should.contain('john%20doe');
+        });
+    });
+
     it('should redirect to new draft submission page', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a', publishedAt: null, draft: true });
       return load(`/f/${enketoId}/new`)
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/projects/1/forms/a/draft/submissions/new');
-        });
-    });
-
-    it('should redirect to edit submission page', () => {
-      testData.extendedForms.createPast(1, { xmlFormId: 'a' });
-      return load(`/f/${enketoId}/edit?instance_id=123`)
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/projects/1/forms/a/submissions/123/edit');
-          app.vm.$route.query.should.be.deep.equal({});
-        });
-    });
-
-    it('should show Page Not Found when instance ID is missing for edit', () => {
-      testData.extendedForms.createPast(1, { xmlFormId: 'a' });
-      return load(`/f/${enketoId}/edit`)
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/projects/1/forms/a/submissions//edit');
-          app.find('.panel-title').text().should.equal('Page Not Found');
         });
     });
 

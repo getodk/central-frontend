@@ -188,7 +188,7 @@ export default {
       "organization": "Organization name"
     },
     "alert": {
-      "success": "Settings saved!"
+      "success": "Settings successfully saved."
     }
   }
 }
@@ -224,9 +224,6 @@ export default {
     "field": {
       "workEmail": "Pracovní e-mailová adresa",
       "organization": "Název organizace"
-    },
-    "alert": {
-      "success": "Nastavení uloženo!"
     }
   },
   "de": {
@@ -258,7 +255,7 @@ export default {
       "organization": "Name der Organisation"
     },
     "alert": {
-      "success": "Einstellungen gespeichert!"
+      "success": "Einstellungen erfolgreich gespeichert."
     }
   },
   "es": {
@@ -290,7 +287,7 @@ export default {
       "organization": "Nombre de la Organización"
     },
     "alert": {
-      "success": "¡Configuración guardada!"
+      "success": "Ajustes guardados correctamente."
     }
   },
   "fr": {
@@ -347,9 +344,6 @@ export default {
     "field": {
       "workEmail": "Alamat email kantor",
       "organization": "Nama Organisasi"
-    },
-    "alert": {
-      "success": "Pengaturan disimpan!"
     }
   },
   "it": {
@@ -381,7 +375,7 @@ export default {
       "organization": "Nome dell'Organizzazione"
     },
     "alert": {
-      "success": "Impostazioni salvate!"
+      "success": "Impostazioni salvate con successo!"
     }
   },
   "ja": {
@@ -411,9 +405,6 @@ export default {
     "field": {
       "workEmail": "職場のメールアドレス",
       "organization": "組織名"
-    },
-    "alert": {
-      "success": "設定が保存されました！"
     }
   },
   "pt": {
@@ -445,7 +436,7 @@ export default {
       "organization": "Nome da organização"
     },
     "alert": {
-      "success": "Configurações gravadas com sucesso!"
+      "success": "Configurações salvas com sucesso."
     }
   },
   "sw": {
@@ -475,9 +466,38 @@ export default {
     "field": {
       "workEmail": "Anwani ya barua pepe ya kazini",
       "organization": "Jina la shirika"
+    }
+  },
+  "zh": {
+    "enabled": {
+      "null": [
+        "稍后提醒",
+        "管理员仍将在屏幕上方看到此提示信息。"
+      ],
+      "true": [
+        {
+          "full": "{weWillShare}，并接受{termsOfService}和{privacyPolicy}。",
+          "weWillShare": "我们同意每月向Central团队共享匿名使用数据，",
+          "termsOfService": "服务条款",
+          "privacyPolicy": "隐私政策"
+        },
+        "发送了哪些指标？"
+      ],
+      "false": [
+        "我们不希望共享任何信息。",
+        "您不会再收到此相关提醒。"
+      ]
+    },
+    "contact": [
+      "我同意在报告中包含我的联系方式。",
+      "我们可能会联系您以进一步了解Central的使用情况。"
+    ],
+    "field": {
+      "workEmail": "工作邮箱地址",
+      "organization": "组织名称"
     },
     "alert": {
-      "success": "Mipangilio imehifadhiwa!"
+      "success": "设置已成功保存。"
     }
   },
   "zh-Hant": {
@@ -509,7 +529,7 @@ export default {
       "organization": "組織名稱"
     },
     "alert": {
-      "success": "設定已儲存！"
+      "success": "設定已成功儲存。"
     }
   }
 }

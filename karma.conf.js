@@ -9,20 +9,36 @@ This config is based on:
 
 // eslint-disable-next-line import/no-unresolved
 const VueI18nPlugin = require('@intlify/unplugin-vue-i18n/webpack');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const { DefinePlugin } = require('webpack');
 const { resolve } = require('node:path');
+const { readFileSync } = require('fs');
 // eslint-disable-next-line import/extensions
 const webpackConfig = require('./node_modules/@vue/cli-service/webpack.config.js');
 
+const webFormsPackage = JSON.parse(
+  readFileSync(resolve(__dirname, 'node_modules/@getodk/web-forms/package.json'), 'utf-8')
+);
+
 const { entry, ...webpackConfigForKarma } = webpackConfig;
-webpackConfigForKarma.plugins.push(VueI18nPlugin({
-  include: resolve(__dirname, './src/locales/**'),
-  compositionOnly: false,
-  defaultSFCLang: 'json5',
-  // `false` doesn't work for some reason. When `false` is specified, Vue I18n
-  // warns that it's been installed already.
-  fullInstall: true,
-  dropMessageCompiler: true
-}));
+webpackConfigForKarma.plugins.push(
+  VueI18nPlugin({
+    include: resolve(__dirname, './src/locales/**'),
+    compositionOnly: false,
+    defaultSFCLang: 'json5',
+    // `false` doesn't work for some reason. When `false` is specified, Vue I18n
+    // warns that it's been installed already.
+    fullInstall: true,
+    dropMessageCompiler: true
+  }),
+  new DefinePlugin({
+    __WEB_FORMS_VERSION__: JSON.stringify(webFormsPackage.version)
+  })
+);
+// eslint-disable-next-line arrow-body-style
+webpackConfigForKarma.plugins = webpackConfigForKarma.plugins.filter(plugin => {
+  return plugin.constructor.name !== 'HtmlWebpackPlugin';
+});
 webpackConfigForKarma.devtool = 'inline-source-map';
 // See additional warning information.
 webpackConfigForKarma.stats = {
@@ -37,30 +53,40 @@ webpackConfigForKarma.module.rules.push({
 
 module.exports = (config) => {
   config.set({
-    frameworks: ['webpack', 'mocha'],
+    frameworks: ['webpack', 'mocha', 'source-map-support'],
     files: [
       'test/index.js',
       { pattern: 'public/fonts/icomoon.ttf', served: true, included: false },
       { pattern: 'public/blank.html', served: true, included: false },
       { pattern: 'test/files/*', served: true, included: false },
-      { pattern: 'src/assets/images/whats-new/*', served: true, included: false }
+      { pattern: 'src/assets/images/**', served: true, included: false }
     ],
     proxies: {
       '/fonts/': '/base/public/fonts/',
       '/blank.html': '/base/public/blank.html',
       '/test/files/': '/base/test/files/',
-      '/img/banner@2x.d6298b0b.png': '/base/src/assets/images/whats-new/banner@2x.png', // Image in what's new modal with hash
-      '/img/banner@1x.eb0595a6.png': '/base/src/assets/images/whats-new/banner@1x.png' // Smaller resolution for circleCI test
+
+      // Images
+      '/v1/config/public/hero-image': '/base/src/assets/images/whats-new/banner@1x.png',
+      '/v1/config/public/logo': '/base/src/assets/images/odk-logo.png',
+      '/img/banner@1x.6c9e9f21.png': '/base/src/assets/images/whats-new/banner@1x.png', // Smaller resolution for circleCI test
+      '/img/map-location.b523ce2d.svg': '/base/src/assets/images/geojson-map/map-location.svg',
+      '/img/fullscreen.37a932a6.svg': '/base/src/assets/images/geojson-map/fullscreen.svg'
     },
     preprocessors: {
       'test/index.js': ['webpack', 'sourcemap']
     },
     webpack: webpackConfigForKarma,
     browsers: ['ChromeHeadless'],
+    browserDisconnectTimeout: 300_000,
+    browserDisconnectTolerance: 3,
     reporters: ['spec'],
     singleRun: true,
     client: {
-      mocha: { grep: process.env.TEST_PATTERN || '.' }
+      mocha: {
+        grep: process.env.TEST_PATTERN || '.',
+        timeout: 4000,
+      },
     },
     customLaunchers: {
       ChromeDebugging: {

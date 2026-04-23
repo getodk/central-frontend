@@ -48,7 +48,6 @@
   },
   "audit": {
     "category": {
-      "nonverbose": "vitendo vyote",
       "user": "vitendo vya mtumiaji wa wavuti",
       "project": "hatua za mradi",
       "form": "Vitendo vya fomu",
@@ -72,7 +71,8 @@
       "dataset": {
         "update": "Sasisha",
         "update_publish": "Kuchapisha",
-        "create": "@:audit.action.default.create"
+        "create": "@:audit.action.default.create",
+        "delete": "@:audit.action.default.delete"
       },
       "field_key": {
         "assignment_create": "kutoa ufikiaji",
@@ -221,12 +221,6 @@
     "projectRoles": "majukumu ya mradi",
     "draft": "Rasimu"
   },
-  "alert": {
-    "passwordTooShort": "Tafadhali weka nenosiri lenye urefu wa angalau vibambo 10.",
-    "updateEntity": "Huluki imesasishwa!",
-    "updateReviewState": "Kagua Jimbo limehifadhiwa!",
-    "versionChange": "Seva imesasishwa. Tafadhali onyesha upya ukurasa ili kuepuka tabia isiyotabirika."
-  },
   "moreInfo": {
     "clickHere": {
       "full": "For more information, {clickHere}.",
@@ -293,7 +287,8 @@
     "totalEntities": "Jumla ya Mashirika",
     "reviewState": "Kagua hali",
     "status": "Hali",
-    "version": "Toleo"
+    "version": "Toleo",
+    "trash": "Takataka"
   },
   "mixin": {
     "request": {
@@ -307,13 +302,6 @@
       "noRequest": "Hitilafu fulani imetokea: hakukuwa na ombi.",
       "noResponse": "Hitilafu fulani imetokea: hakukuwa na jibu kwa ombi lako.",
       "errorNotProblem": "Hitilafu fulani imetokea: msimbo wa hitilafu {status}."
-    },
-    "session": {
-      "alert": {
-        "expiresSoon": "Muda wa kipindi chako utaisha baada ya dakika 2, na utaondolewa kiotomatiki.",
-        "expired": "Muda wa kipindi chako umeisha. Ili kuendelea kufanya kazi, tafadhali ingia tena.",
-        "logoutError": "Kulikuwa na tatizo, na hukuwa umetoka nje kikamilifu. Tafadhali onyesha upya ukurasa na ujaribu kutoka tena. {message}"
-      }
     }
   },
   "router": {

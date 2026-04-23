@@ -182,6 +182,16 @@ const archive = () => {
       }
     ]
   },
+  "zh": {
+    "title": "正在归档项目",
+    "introduction": [
+      "您即将归档项目“{name}”。归档后项目功能保持不变，但将在Central首页项目列表中置底显示。",
+      {
+        "full": "{noUndo}，但项目取消归档功能计划在后续版本中推出。",
+        "noUndo": "此操作无法取消"
+      }
+    ]
+  },
   "zh-Hant": {
     "title": "歸檔專案",
     "introduction": [

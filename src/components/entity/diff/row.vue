@@ -130,6 +130,9 @@ const newValue = name === 'label' ? entityVersion.label : entityVersion.data[nam
   "pt": {
     "conflictingProp": "Outra atualização já foi gravada nesta propriedade."
   },
+  "zh": {
+    "conflictingProp": "该属性已被其他更新写入"
+  },
   "zh-Hant": {
     "conflictingProp": "另一個更新已寫入此屬性。"
   }

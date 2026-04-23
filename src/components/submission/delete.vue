@@ -94,7 +94,8 @@ const del = () => {
   "de": {
     "title": "Übermittlung löschen",
     "introduction": [
-      "Sind Sie sicher, dass Sie diese Übermittlung löschen möchten?"
+      "Sind Sie sicher, dass Sie diese Übermittlung löschen möchten?",
+      "Diese Aktion verschiebt die Übermittlung in den Papierkorb. Nach 30 Tagen im Papierkorb wird es dauerhaft gelöscht, kann aber vorher wiederhergestellt werden."
     ],
     "field": {
       "noConfirm": "Sofortiges Löschen ohne Bestätigung, bis ich die Seite verlasse"
@@ -133,16 +134,28 @@ const del = () => {
   "pt": {
     "title": "Deletar Resposta",
     "introduction": [
-      "Você tem certeza que quer deletar esta Resposta?"
+      "Você tem certeza que quer deletar esta Resposta?",
+      "Essa ação irá mover a Resposta para a Lixeira. Após 30 dias na Lixeira, ela será excluída de forma permanente, ela poderá ser recuperada antes disso."
     ],
     "field": {
       "noConfirm": "Excluir imediatamente sem confirmação até que eu saia da página"
     }
   },
+  "zh": {
+    "title": "删除提交内容",
+    "introduction": [
+      "您确定要删除此条提交吗？",
+      "此操作将把提交数据移至回收站。数据在回收站保留30天后将被永久清除，但在此之前可随时恢复。"
+    ],
+    "field": {
+      "noConfirm": "在离开本页面前，无需确认，立即删除。"
+    }
+  },
   "zh-Hant": {
     "title": "刪除提交內容",
     "introduction": [
-      "您確定要刪除此提交嗎？"
+      "您確定要刪除此提交嗎？",
+      "此操作會將提交內容移至垃圾箱。在垃圾箱中保留 30 天后，它將被永久清除，但在此之前可以還原。"
     ],
     "field": {
       "noConfirm": "立即刪除，無需確認，直到我離開頁面"

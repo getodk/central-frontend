@@ -15,6 +15,9 @@ except according to the terms contained in the LICENSE file.
     :frozen-only="properties == null" divider @action="afterAction">
     <template #head-frozen>
       <th><span class="sr-only">{{ $t('common.rowNumber') }}</span></th>
+      <th v-if="!deleted && project.verbs.has('entity.delete')">
+        <input type="checkbox" :aria-label="$t('action.selectRow')" :checked="allSelected" @change="changeAllSelection($event.target.checked)">
+      </th>
       <th>{{ $t('header.createdBy') }}</th>
       <th>{{ $t('header.createdAt') }}</th>
       <th v-if="!deleted">{{ $t('header.updatedAtAndActions') }}</th>
@@ -30,11 +33,12 @@ except according to the terms contained in the LICENSE file.
       <th>{{ $t('entity.entityId') }}</th>
     </template>
 
-    <template #data-frozen="{ data }">
+    <template #data-frozen="{ data, index }">
       <entity-metadata-row :entity="data"
         :row-number="data.__system.rowNumber"
         :verbs="project.verbs" :deleted="deleted"
-        :awaiting-response="awaitingDeletedResponses.has(data.__id)"/>
+        :awaiting-response="awaitingDeletedResponses.has(data.__id)"
+        @selection-changed="handleSelectionChanged($event, index)"/>
     </template>
     <template #data-scrolling="{ data }">
       <entity-data-row :entity="data" :properties="properties"/>
@@ -64,28 +68,58 @@ defineProps({
   awaitingDeletedResponses: {
     type: Set,
     required: true
-  }
+  },
+  allSelected: Boolean
 });
-const emit = defineEmits(['update', 'resolve', 'delete', 'restore']);
+const emit = defineEmits(['update', 'resolve', 'delete', 'restore', 'selectionChanged', 'update:allSelected']);
+
 
 // The component does not assume that this data will exist when the component is
 // created.
 const { project, odataEntities } = useRequestData();
 
-const afterAction = ({ target, data, index }) => {
+const afterAction = ({ target, data }) => {
   const { classList } = target;
   if (classList.contains('delete-button'))
     emit('delete', data);
   else if (classList.contains('update-button'))
-    emit('update', index);
+    emit('update', data);
   else if (classList.contains('resolve-button'))
-    emit('resolve', index);
+    emit('resolve', data);
   else if (target.classList.contains('restore-button'))
     emit('restore', data);
 };
 const table = ref(null);
-const afterUpdate = (index) => { markRowsChanged(table.value.getRowPair(index)); };
-const afterDelete = (index) => { markRowsDeleted(table.value.getRowPair(index)); };
+const findIndex = (uuid) =>
+  odataEntities.value.findIndex(entity => entity.__id === uuid);
+const afterUpdate = (uuid) => {
+  markRowsChanged(table.value.getRowPair(findIndex(uuid)));
+};
+const afterDelete = (uuid) => {
+  const index = findIndex(uuid);
+  markRowsDeleted(table.value.getRowPair(index));
+  odataEntities.value.splice(index, 1);
+};
+
+const handleSelectionChanged = (checked, index) => {
+  const data = odataEntities.value[index];
+  data.__system.selected = checked;
+
+  // If unchecking any item, uncheck the header
+  if (!checked) {
+    emit('update:allSelected', false);
+  }
+  emit('selectionChanged', data, checked);
+};
+
+const changeAllSelection = (checked) => {
+  emit('update:allSelected', checked);
+  odataEntities.value.forEach(e => {
+    e.__system.selected = checked;
+  });
+  emit('selectionChanged', 'all', checked);
+};
+
 defineExpose({ afterUpdate, afterDelete });
 </script>
 
@@ -93,12 +127,18 @@ defineExpose({ afterUpdate, afterDelete });
 @import '../../assets/scss/mixins';
 
 #entity-table {
+  table:has(tbody:empty) { display: none; }
+
   .table-freeze-scrolling {
     th, td {
       @include text-overflow-ellipsis;
       max-width: 250px;
       &:last-child { max-width: 325px; }
     }
+  }
+
+  input[type="checkbox"] {
+    margin-top: 0;
   }
 
 th.col-deleted-at { color: $color-danger; }
@@ -163,9 +203,16 @@ th.col-deleted-at { color: $color-danger; }
       "updatedAtAndActions": "Ilisasishwa Mwisho / Vitendo"
     }
   },
+  "zh": {
+    "header": {
+      "updatedAtAndActions": "最后更新/操作",
+      "deletedAt": "删除于"
+    }
+  },
   "zh-Hant": {
     "header": {
-      "updatedAtAndActions": "最後更新/操作"
+      "updatedAtAndActions": "最後更新/操作",
+      "deletedAt": "刪除於"
     }
   }
 }

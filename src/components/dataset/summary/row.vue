@@ -114,10 +114,7 @@ const propertiesCount = computed(() => tn(
     font-size: 18px;
   }
 
-  .property-list {
-    hyphens: auto;
-    overflow-wrap: break-word;
-  }
+  .property-list { @include break-word; }
 
   .no-properties { @include italic; }
 }
@@ -167,6 +164,10 @@ const propertiesCount = computed(() => tn(
   "sw": {
     "new": "mpya!",
     "addedByThisDraft": "Imeongezwa na Rasimu hii"
+  },
+  "zh": {
+    "new": "更新！",
+    "addedByThisDraft": "由此草稿添加"
   },
   "zh-Hant": {
     "new": "新增！",

@@ -222,8 +222,17 @@ export default {
   "sw": {
     "deletedDate": "Imefutwa {dateTime}"
   },
+  "zh": {
+    "deletedDate": "{dateTime}已删除",
+    "disabled": {
+      "conflict": "无法恢复此表单，因存在同名ID的活跃表单。"
+    }
+  },
   "zh-Hant": {
-    "deletedDate": "已刪除{dateTime}"
+    "deletedDate": "已刪除{dateTime}",
+    "disabled": {
+      "conflict": "該表單無法還原，因為存在具有相同 ID 的活動表單。"
+    }
   }
 }
 </i18n>

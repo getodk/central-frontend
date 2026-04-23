@@ -18,6 +18,7 @@ const mountComponent = (options) =>
     }
   }));
 const toggle = (component) => component.get('select').trigger('click');
+const apply = (component) => component.get('.action-bar button').trigger('click');
 const assertChecked = (component, checked) => {
   const inputs = component.findAll('input[type="checkbox"]');
   inputs.map(input => input.element.checked).should.eql(checked);
@@ -131,7 +132,7 @@ describe('Multiselect', () => {
       assertChecked(component, [false, true]);
     });
 
-    it('emits an update:modelValue event if a checkbox has changed', async () => {
+    it('emits an update:modelValue event apply button is clicked', async () => {
       const component = mountComponent({
         props: {
           options: [{ value: 0 }, { value: 1 }],
@@ -141,7 +142,7 @@ describe('Multiselect', () => {
       });
       await toggle(component);
       await component.findAll('input[type="checkbox"]')[1].setValue(true);
-      await toggle(component);
+      await apply(component);
       component.emitted('update:modelValue').should.eql([[[0, 1]]]);
     });
 
@@ -190,7 +191,7 @@ describe('Multiselect', () => {
         });
         await toggle(component);
         await component.findAll('input[type="checkbox"]')[1].setValue(true);
-        await toggle(component);
+        await apply(component);
         await toggle(component);
         assertChecked(component, [true, true]);
       });
@@ -205,9 +206,9 @@ describe('Multiselect', () => {
         });
         await toggle(component);
         await component.findAll('input[type="checkbox"]')[1].setValue(true);
+        await apply(component);
         await toggle(component);
-        await toggle(component);
-        await toggle(component);
+        await apply(component);
         component.emitted('update:modelValue').length.should.equal(1);
       });
     });
@@ -260,7 +261,7 @@ describe('Multiselect', () => {
         });
         await toggle(component);
         await component.get('input[type="checkbox"]').setValue(false);
-        await toggle(component);
+        await apply(component);
         component.emitted('update:modelValue').should.eql([[[0, 1]]]);
       });
 
@@ -459,7 +460,7 @@ describe('Multiselect', () => {
       await toggle(component);
       const input = component.get('.search input');
       await input.setValue('foo');
-      await toggle(component);
+      await apply(component);
       input.element.value.should.equal('');
     });
   });
@@ -559,7 +560,7 @@ describe('Multiselect', () => {
       });
       await toggle(component);
       await component.get('.select-all').trigger('click');
-      await toggle(component);
+      await apply(component);
       component.emitted('update:modelValue').should.eql([[[0, 1]]]);
     });
 
@@ -575,7 +576,7 @@ describe('Multiselect', () => {
       await toggle(component);
       await component.get('.search input').setValue('0');
       await component.get('.select-all').trigger('click');
-      await toggle(component);
+      await apply(component);
       assertChecked(component, [true, false]);
     });
   });
@@ -605,7 +606,7 @@ describe('Multiselect', () => {
       });
       await toggle(component);
       await component.get('.select-none').trigger('click');
-      await toggle(component);
+      await apply(component);
       component.emitted('update:modelValue').should.eql([[[]]]);
     });
 
@@ -621,7 +622,7 @@ describe('Multiselect', () => {
       await toggle(component);
       await component.get('.search input').setValue('0');
       await component.get('.select-none').trigger('click');
-      await toggle(component);
+      await apply(component);
       assertChecked(component, [false, true]);
     });
   });
@@ -666,7 +667,7 @@ describe('Multiselect', () => {
     const component = mountComponent({
       props: { label: 'Review State' }
     });
-    component.get('.form-label').text().should.equal('Review State');
+    component.get('.multiselect-label').text().should.equal('Review State');
     const select = component.get('select');
     select.attributes('aria-label').should.equal('Review State');
   });

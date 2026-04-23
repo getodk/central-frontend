@@ -307,6 +307,12 @@ $border-height: 3px;
     },
     "analyticsNotice": "Saidia kuboresha Central"
   },
+  "zh": {
+    "action": {
+      "toggle": "切换导航"
+    },
+    "analyticsNotice": "助力完善Central！"
+  },
   "zh-Hant": {
     "action": {
       "toggle": "切換導航鈕"

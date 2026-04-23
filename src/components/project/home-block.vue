@@ -324,9 +324,9 @@ export default {
     "encrypted": "Verschlüsselt",
     "encryptionTip": "Dieses Projekt verwendet verwaltete Verschlüsselung.",
     "showMore": "Zeige alle {count} Formular | Zeige alle {count} Formulare",
-    "showMoreDatasets": "Zeige alle {count} Entitätsliste | Zeige alle {count} Entitätslisten",
+    "showMoreDatasets": "Zeige alle {count} Objektliste | Zeige alle {count} Objektlisten",
     "showFewer": "Zeige weniger von insgesamt {count} Formular | Zeige weniger von insgesamt {count} Formularen",
-    "showFewerDatasets": "Zeige weniger von insgesamt {count} Entitätsliste | Zeige weniger von insgesamt {count} Entitätslisten",
+    "showFewerDatasets": "Zeige weniger von insgesamt {count} Objektliste | Zeige weniger von insgesamt {count} Objektlisten",
     "hidden": "versteckt"
   },
   "es": {
@@ -377,6 +377,15 @@ export default {
     "showFewer": "Onyesha idadi ndogo ya Fomu {count} jumla | Onyesha Jumla ya Fomu {count} chache",
     "showFewerDatasets": "Onyesha idadi ndogo ya Orodha ya Huluki chache kati ya {count} | Onyesha chini ya Orodha {count} jumla ya Huluki",
     "hidden": "Fiche"
+  },
+  "zh": {
+    "encrypted": "已加密",
+    "encryptionTip": "此项目使用托管加密。",
+    "showMore": "显示{count}个表单",
+    "showMoreDatasets": "显示{count}个实体列表",
+    "showFewer": "显示前几行的{count}个表单",
+    "showFewerDatasets": "显示前几行的{count}个实体列表",
+    "hidden": "隐藏"
   },
   "zh-Hant": {
     "encrypted": "加密",

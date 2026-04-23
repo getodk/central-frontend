@@ -30,5 +30,6 @@ export const loadEntityList = (mountOptions = {}) => {
   const { deleted } = mergedOptions.props;
   return mockHttp()
     .mount(EntityList, mergedOptions)
+    .respondWithData(() => testData.extendedFieldKeys.sorted())
     .respondWithData(() => (deleted ? testData.entityDeletedOData() : testData.entityOData()));
 };

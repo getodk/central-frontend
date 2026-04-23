@@ -159,7 +159,9 @@ const assertStandardButton = (component, {
   }
 
   if (modal != null) {
-    const parent = (modal === true ? component : component.getComponent(modal));
+    const parent = modal === true || modal === Modal
+      ? component
+      : component.getComponent(modal);
     parent.getComponent(Modal).props().hideable.should.equal(!awaitingResponse);
   }
 

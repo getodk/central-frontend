@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { DateTime } from 'luxon';
-import { clone, comparator, hasPath, lensPath, set } from 'ramda';
+import { T, clone, comparator, hasPath, lensPath, path as getPath, set } from 'ramda';
 
 import { dataStore, view } from './data-store';
 import { extendedForms } from './forms';
@@ -8,6 +8,7 @@ import { extendedUsers } from './users';
 import { fakePastDate, isBefore } from '../util/date-time';
 import { fields } from './fields';
 import { toActor } from './actors';
+import { wktToGeojson } from '../util/data';
 
 const fakeDateTime = () => {
   const date = faker.datatype.boolean() ? faker.date.past() : faker.date.future();
@@ -67,6 +68,23 @@ const randomOData = (instanceId, versionFields, partial) => versionFields
     },
     partial
   );
+
+const odataToGeojson = (odata, versionFields) => {
+  const field = versionFields.find(({ type }) => type === 'geopoint');
+  if (field == null) return null;
+
+  const path = field.path.split('/');
+  path.shift();
+
+  const geojson = wktToGeojson(getPath(path, odata));
+  return geojson == null
+    ? null
+    : {
+      ...geojson,
+      id: odata.__id,
+      properties: { fieldpath: field.path }
+    };
+};
 
 // eslint-disable-next-line import/prefer-default-export
 export const extendedSubmissions = dataStore({
@@ -158,7 +176,8 @@ export const extendedSubmissions = dataStore({
       // An actual submission JSON response does not have this property. We
       // include it here so that it is easy to match submission data and
       // metadata during testing.
-      _odata: odata
+      _odata: odata,
+      _geojson: odataToGeojson(odata, formVersion._fields)
     };
   },
   sort: comparator((submission1, submission2) =>
@@ -188,3 +207,11 @@ const restToOData = (filterExpression) => (top = 250, skip = 0) => {
 export const submissionOData = restToOData(submission => submission.deletedAt == null);
 
 export const submissionDeletedOData = restToOData(submission => submission.deletedAt != null);
+
+export const submissionGeojson = (filterExpression = T) => ({
+  type: 'FeatureCollection',
+  features: extendedSubmissions.sorted()
+    .filter(filterExpression)
+    .filter(submission => submission._geojson != null)
+    .map(submission => submission._geojson)
+});

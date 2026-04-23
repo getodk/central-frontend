@@ -12,16 +12,24 @@ describe('util/i18n', () => {
       userLocale().should.equal('es');
     });
 
-    it('ignores subtags of navigator language other than language subtag', () => {
-      setLanguages(['ja-JP-u-ca-japanese']);
-      userLocale().should.equal('ja');
-    });
-
-    it('ignores a mismatch on the script subtag', () => {
-      setLanguages(['zh']);
+    it('tries to use the script subtag of the navigator language', () => {
+      setLanguages(['zh-Hant']);
       userLocale().should.equal('zh-Hant');
       setLanguages(['zh-Hans']);
-      userLocale().should.equal('zh-Hant');
+      userLocale().should.equal('zh');
+      setLanguages(['zh']);
+      userLocale().should.equal('zh');
+    });
+
+    it('ignores other subtags', () => {
+      setLanguages(['ja-JP-u-ca-japanese']);
+      userLocale().should.equal('ja');
+
+      // Region is ignored, so zh-HK without a script subtag would fall back to
+      // zh, not zh-Hant. This is just for demonstration purposes -- I don't
+      // think zh-HK is actually a common tag in use.
+      setLanguages(['zh-HK']);
+      userLocale().should.equal('zh');
     });
 
     it('returns null if there is no matching locale', () => {
@@ -29,8 +37,16 @@ describe('util/i18n', () => {
       should.not.exist(userLocale());
     });
 
-    it('returns the first locale that matches on the language subtag', () => {
+    it('returns locale for first navigator language that matches on language subtag', () => {
+      // zh-Hans is not an exact match, yet because it comes first, it is
+      // preferred over es.
       setLanguages(['la', 'zh-Hans', 'es']);
+      userLocale().should.equal('zh');
+
+      setLanguages(['zh-Hans', 'zh-Hant']);
+      userLocale().should.equal('zh');
+
+      setLanguages(['zh-Hant', 'zh-Hans']);
       userLocale().should.equal('zh-Hant');
     });
 
@@ -220,6 +236,20 @@ describe('util/i18n', () => {
         const { sentenceSeparator } = withSetup(useI18nUtils, { container });
         container.i18n.locale = 'ja';
         sentenceSeparator.value.should.equal('');
+      });
+    });
+
+    describe('joinSentences()', () => {
+      it('uses a space for en', () => {
+        const { joinSentences } = withSetup(useI18nUtils);
+        joinSentences(['foo.', 'bar.']).should.equal('foo. bar.');
+      });
+
+      it('does not use a space for ja', () => {
+        const container = createTestContainer();
+        const { joinSentences } = withSetup(useI18nUtils, { container });
+        container.i18n.locale = 'ja';
+        joinSentences(['ほげ。', 'ふが。']).should.equal('ほげ。ふが。');
       });
     });
   });

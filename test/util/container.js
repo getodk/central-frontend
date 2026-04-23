@@ -1,7 +1,7 @@
 import createContainer from '../../src/container';
 
 import { mockAxios } from './axios';
-import { mockLogger } from './util';
+import { mockLocation, mockLogger } from './util';
 import { testRequestData } from './request-data';
 
 /*
@@ -17,13 +17,19 @@ createTestContainer() creates a container with sensible defaults for testing.
   initial navigation. To not set the config, specify `false`. You can also set
   the config with values different from the default.
 */
-export default ({ requestData, config = {}, ...options } = {}) => {
+export default ({
+  requestData,
+  config = {},
+  location = {},
+  ...options
+} = {}) => {
   const container = createContainer({
     router: null,
     requestData: typeof requestData === 'function'
       ? requestData
       : testRequestData([], requestData),
     http: mockAxios(),
+    location: mockLocation(location),
     logger: mockLogger(),
     buildMode: 'test',
     ...options

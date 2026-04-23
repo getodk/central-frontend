@@ -1,6 +1,5 @@
 import { nextTick } from 'vue';
 
-import Alert from '../../src/components/alert.vue';
 import Modal from '../../src/components/modal.vue';
 
 import { mergeMountOptions, mount } from '../util/lifecycle';
@@ -43,10 +42,6 @@ describe('Modal', () => {
     modal.get('.modal-banner .test-banner').text().should.equal('foo');
   });
 
-  it('shows any alert', () => {
-    mountComponent().findComponent(Alert).exists().should.be.true;
-  });
-
   describe('state prop is initially true', () => {
     it('shows the modal', () => {
       mountComponent({
@@ -73,6 +68,16 @@ describe('Modal', () => {
       });
       modal.emitted().resize.should.eql([[22]]);
     });
+
+    it('updates openModal', () => {
+      const modal = mountComponent({
+        props: { state: true }
+      });
+      modal.vm.$container.openModal.should.eql({
+        state: true,
+        el: modal.get('.modal').element
+      });
+    });
   });
 
   describe('after the state prop changes to true', () => {
@@ -83,15 +88,6 @@ describe('Modal', () => {
       });
       await modal.setProps({ state: true });
       document.body.classList.contains('modal-open').should.be.true;
-    });
-
-    it('hides the current alert', async () => {
-      const modal = mountComponent({
-        props: { state: false }
-      });
-      modal.vm.$container.alert.info('Some alert');
-      await modal.setProps({ state: true });
-      modal.should.not.alert();
     });
   });
 
@@ -105,25 +101,6 @@ describe('Modal', () => {
       document.body.classList.contains('modal-open').should.be.false;
     });
 
-    it('hides an alert that was shown before modal was hidden', async () => {
-      const modal = mountComponent({
-        props: { state: true }
-      });
-      modal.vm.$container.alert.info('Some alert');
-      await modal.vm.$nextTick();
-      await modal.setProps({ state: false });
-      modal.should.not.alert();
-    });
-
-    it('does not hide an alert that is set as modal is hidden', async () => {
-      const modal = mountComponent({
-        props: { state: true }
-      });
-      modal.vm.$container.alert.info('Some alert');
-      await modal.setProps({ state: false });
-      modal.should.alert();
-    });
-
     it('emits a resize event', async () => {
       const modal = mountComponent({
         slots: {
@@ -133,6 +110,14 @@ describe('Modal', () => {
       });
       await modal.setProps({ state: false });
       modal.emitted().resize.should.eql([[22], [0]]);
+    });
+
+    it('updates openModal', async () => {
+      const modal = mountComponent({
+        props: { state: true }
+      });
+      await modal.setProps({ state: false });
+      modal.vm.$container.openModal.should.eql({ state: false, el: null });
     });
   });
 

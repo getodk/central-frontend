@@ -159,7 +159,7 @@ export default {
     // {count} is the number of Forms in the trash.
     "trashCount": "({count})",
     "alert": {
-      "restore": "The Form “{name}” has been restored."
+      "restore": "The Form “{name}” has been successfully restored."
     },
     "message": "Forms and Form-related data are deleted after 30 days in the Trash"
   }
@@ -178,7 +178,7 @@ export default {
     "title": "Papierkorb",
     "trashCount": "{count}",
     "alert": {
-      "restore": "Das Formular {name} wurde wiederhergestellt."
+      "restore": "Das Formular \"{name}\" wurde erfolgreich wiederhergestellt."
     },
     "message": "Formulare und formularbezogene Daten werden nach 30 Tagen im Papierkorb gelöscht"
   },
@@ -186,7 +186,7 @@ export default {
     "title": "Papelera",
     "trashCount": "({count})",
     "alert": {
-      "restore": "El formulario {name} fue restablecido."
+      "restore": "El formulario {name} fue restablecido correctamente."
     },
     "message": "Los formularios y los datos relacionados con los formularios se eliminan después de 30 días en la Papelera"
   },
@@ -205,7 +205,7 @@ export default {
     "title": "Cestino",
     "trashCount": "({count})",
     "alert": {
-      "restore": "Il formulario “{name}” è stato ripristinato."
+      "restore": "Il formulario “{name}” è stato ripristinato con successo."
     },
     "message": "I formulari e i dati relativi ai formulari vengono eliminati dopo 30 giorni nel Cestino"
   },
@@ -217,6 +217,9 @@ export default {
   "pt": {
     "title": "Lixeira",
     "trashCount": "({count})",
+    "alert": {
+      "restore": "O Formulário \"{name}\" foi recuperado com sucesso."
+    },
     "message": "Formulários e dados relacionados a Formulários são excluídos após 30 dias na Lixeira"
   },
   "sw": {
@@ -224,9 +227,20 @@ export default {
     "trashCount": "({count})",
     "message": "Fomu na data inayohusiana na Fomu hufutwa baada ya siku 30 kwenye Tupio"
   },
+  "zh": {
+    "title": "回收站",
+    "trashCount": "（{count}）",
+    "alert": {
+      "restore": "表单“{name}”已成功恢复。"
+    },
+    "message": "表单及相关数据在回收站保留30天后将被删除"
+  },
   "zh-Hant": {
     "title": "垃圾桶",
     "trashCount": "({count})",
+    "alert": {
+      "restore": "表單「{name}」已成功還原。"
+    },
     "message": "表單和表單相關資料將在 30 天後從垃圾箱中刪除"
   }
 }

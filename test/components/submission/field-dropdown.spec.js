@@ -108,7 +108,7 @@ describe('SubmissionFieldDropdown', () => {
       const select = dropdown.get('select');
       await select.trigger('click');
       await dropdown.get('input[type="checkbox"]').setValue(false);
-      return select.trigger('click');
+      return dropdown.find('.action-bar button').trigger('click');
     };
 
     it('sends a request for submissions', () =>

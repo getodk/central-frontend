@@ -43,6 +43,7 @@ describe('EntityTable', () => {
       const table = component.get('.table-freeze-frozen');
       headers(table).should.eql([
         'Row',
+        '',
         'Created by',
         'Created at',
         'Last Updated / Actions'

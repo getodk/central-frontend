@@ -1,0 +1,144 @@
+#!/bin/bash -eu
+set -o pipefail
+shopt -s inherit_errexit || true
+
+log() { echo >&2 "[$(basename "$0")] $*"; }
+
+sha256() {
+  shasum -a 256 "$@" | cut -d" " -f1
+}
+
+fatal_error() {
+  log "!!!"
+  log "!!! $*"
+  log "!!!"
+  exit 1;
+}
+downloadAndVerify() {
+  fileName="$1"
+  archDir="$2"
+  expectedDownloadHash="$3"
+  expectedExeHash="$4"
+
+  wget "https://www.jonof.id.au/files/kenutils/$fileName"
+
+  log "Verifying download integrity..."
+  [[ $(sha256 "$fileName") = "$expectedDownloadHash" ]]
+
+  log "Extracting executable..."
+  case "$fileName" in
+    *.tar.gz) tar -xf "$fileName" ;;
+    *.zip)    unzip   "$fileName" ;;
+    *) fatal_error "Unsupported file format for $fileName" ;;
+  esac
+
+  pngoutExe="$(find . -type f -path "$archDir/pngout")"
+
+  log "Verifying executable integrity..."
+  [[ $(sha256 "$pngoutExe") = "$expectedExeHash" ]]
+}
+pngoutArchDir() {
+  case "$(uname -m)" in
+    aarch64) echo aarch64 ;;
+    armv7l)  echo armv7   ;;
+    i686)    echo i686    ;;
+    x86_64)  echo amd64   ;;
+    *)       echo amd64   ;;
+  esac
+}
+ensurePngout() {
+  if command -v pngout &> /dev/null; then
+    log "Local pngout found."
+    pngoutExe=pngout
+  else
+    log "Local pngout not found; downloading..."
+
+    tmpDir="$(mktemp -d)"
+    cd "$tmpDir"
+
+    case "$(uname -s)" in
+      Linux*)   downloadAndVerify pngout-20200115-linux.tar.gz "*/$(pngoutArchDir)" \
+                    ac38bba6f0de29033de866538c3afa64341319b695bbe388efbc5fd9e830e928 \
+                    c509286fccedd7529b32dfdee2b39906f06d35350034df6dfbf75a4c7dc9a0b5 ;;
+      Darwin*)  downloadAndVerify pngout-20230322-mac.zip "*" \
+                    2e3eb79345206040ae3a0d0d0ecfe9ad01d92fe5002b8a1676a65632a56840e1 \
+                    1981cd0aadc6b2f70353f41d483810285b67ad282cc9cf8877f79d87e33f7c4a ;;
+      *) fatal_error "Unsupported operating system?" ;;
+    esac
+
+    pngoutExe="$tmpDir/$pngoutExe"
+
+    cd -
+  fi
+}
+
+if [[ "${1-}" = "--fix" ]]; then
+  fix=true
+  log "--fix requested; checking pngout is available..."
+  ensurePngout
+  tmpHashes="$(mktemp)"
+else
+  fix=false
+fi
+
+touch .image-hashes
+
+log "Checking all files referenced in .image-hashes exist..."
+unreferenced=""
+while read -r line; do
+  f="$(cut -d: -f1 <<<"$line")"
+  if ! [[ -f "$f" ]]; then
+    unreferenced=true
+    log "  Not found: $f"
+  fi
+done < .image-hashes
+if [[ $unreferenced = true ]]; then
+  fatal_error "File(s) references in .image-hashes do not exist!"
+fi
+
+willFail=false
+for target in $(git ls-files '*.png'); do
+  log "Checking image: $target ..."
+
+  expectedHash="$(grep "$target" .image-hashes | cut -d: -f2 || echo '<no previous hash>')"
+  actualHash="$(sha256sum "$target" | awk '{print $1}')"
+
+  if [[ "$expectedHash" = "$actualHash" ]]; then
+    log "  Hashes match OK."
+  else
+    log "  Hash mismatch:"
+    log "    expected: $expectedHash"
+    log "      actual: $actualHash"
+
+    if [[ "$fix" = true ]]; then
+      log "  Compressing image..."
+
+      # pngout exit codes:
+      #   0: success
+      #   1: true error
+      #   2: "unable to compress further"
+      "$pngoutExe" "$target" ||
+          [[ $? -eq 2 ]] ||
+          fatal_error "An unexpected error occurred while executing $pngoutExe"
+
+      log "  Updating hash..."
+      cat >"$tmpHashes" \
+          <(grep -v "^$target:" .image-hashes) \
+          <(echo "$target:$(sha256sum "$target" | awk '{print $1}')")
+      sort "$tmpHashes" > .image-hashes
+    else
+      willFail=true
+    fi
+  fi
+done
+
+if [[ $willFail = true ]]; then
+  log "!!!"
+  log "!!! To fix errors, re-run with the --fix flag:"
+  log "!!!"
+  log "!!!     $0 --fix"
+  log "!!!"
+  exit 1
+fi
+
+log "All OK."

@@ -99,7 +99,7 @@ const submit = () => {
       "note": "Add notes, links, instructions and other resources here."
     },
     "alert": {
-      "success": "Project settings saved!"
+      "success": "Project settings saved."
     }
   }
 }
@@ -114,9 +114,6 @@ const submit = () => {
       "name": "Název projektu",
       "description": "Popis Projektu",
       "note": "Sem přidejte poznámky, odkazy, návody a další zdroje."
-    },
-    "alert": {
-      "success": "Nastavení projektu uloženo."
     }
   },
   "de": {
@@ -138,7 +135,7 @@ const submit = () => {
       "note": "Agregue notas, enlaces, instrucciones y otros recursos aquí."
     },
     "alert": {
-      "success": "¡Configuración del proyecto guardada!"
+      "success": "Configuración del proyecto guardada."
     }
   },
   "fr": {
@@ -149,7 +146,7 @@ const submit = () => {
       "note": "Ajoutez des notes, des liens, des instructions ou autres ressources ici."
     },
     "alert": {
-      "success": "Paramètres du projet enregistrés !"
+      "success": "Paramètres du projet enregistrés."
     }
   },
   "id": {
@@ -157,9 +154,6 @@ const submit = () => {
     "field": {
       "name": "Nama Proyek",
       "description": "Deskripsi Proyek"
-    },
-    "alert": {
-      "success": "Pengaturan proyek tersimpan!"
     }
   },
   "it": {
@@ -170,16 +164,13 @@ const submit = () => {
       "note": "Aggiungi note, collegamenti, istruzioni e altre risorse qui."
     },
     "alert": {
-      "success": "Impostazioni del progetto salvate!"
+      "success": "Impostazioni progetto salvate."
     }
   },
   "ja": {
     "title": "基本詳細",
     "field": {
       "name": "プロジェクト名"
-    },
-    "alert": {
-      "success": "プロジェクト設定の保存完了！"
     }
   },
   "pt": {
@@ -190,7 +181,7 @@ const submit = () => {
       "note": "Adicione notas, links, instruções e outros recursos aqui."
     },
     "alert": {
-      "success": "Configurações do projeto salvas!"
+      "success": "Configurações do projeto salvas."
     }
   },
   "sw": {
@@ -199,9 +190,17 @@ const submit = () => {
       "name": "Jina la mradi",
       "description": "Maelezo ya mradi",
       "note": "Ongeza vidokezo, viungo, maagizo na nyenzo zingine hapa."
+    }
+  },
+  "zh": {
+    "title": "基础信息",
+    "field": {
+      "name": "项目名称",
+      "description": "项目描述",
+      "note": "请在此处添加备注、链接、说明及其他资料。"
     },
     "alert": {
-      "success": "Mipangilio ya mradi imehifadhiwa!"
+      "success": "项目设置已保存。"
     }
   },
   "zh-Hant": {
@@ -212,7 +211,7 @@ const submit = () => {
       "note": "在此處新增註釋、連結、指示和其他資源。"
     },
     "alert": {
-      "success": "專案設定已儲存！"
+      "success": "專案設定已儲存。"
     }
   }
 }

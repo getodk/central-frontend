@@ -312,6 +312,13 @@ export default {
     },
     "empty": "tupu"
   },
+  "zh": {
+    "editCaption": {
+      "added": "（已添加）",
+      "deleted": "（已删除）"
+    },
+    "empty": "空"
+  },
   "zh-Hant": {
     "editCaption": {
       "added": "(已增加)",

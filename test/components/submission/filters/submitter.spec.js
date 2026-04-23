@@ -21,6 +21,7 @@ const mountComponent = (options = undefined) => {
   }));
 };
 const toggle = (multiselect) => multiselect.get('select').trigger('click');
+const apply = (multiselect) => multiselect.get('.action-bar button').trigger('click');
 
 describe('SubmissionFiltersSubmitter', () => {
   it('indicates whether the submitters are loading', () => {
@@ -97,7 +98,7 @@ describe('SubmissionFiltersSubmitter', () => {
     const multiselect = component.getComponent(Multiselect);
     await toggle(multiselect);
     await multiselect.get('input[type="checkbox"]').setValue(false);
-    await toggle(multiselect);
+    await apply(multiselect);
     multiselect.emitted('update:modelValue').should.eql([[[fieldKey2.id]]]);
     component.emitted('update:modelValue').should.eql([[[fieldKey2.id]]]);
   });
@@ -113,7 +114,7 @@ describe('SubmissionFiltersSubmitter', () => {
       const multiselect = component.getComponent(Multiselect);
       await toggle(multiselect);
       await multiselect.get('.select-none').trigger('click');
-      await toggle(multiselect);
+      await apply(multiselect);
       multiselect.emitted('update:modelValue').should.eql([[[]]]);
       component.emitted('update:modelValue').should.eql([[
         [fieldKey1.id, fieldKey2.id]
@@ -130,7 +131,7 @@ describe('SubmissionFiltersSubmitter', () => {
         const multiselect = component.getComponent(Multiselect);
         await toggle(multiselect);
         await multiselect.get('.select-none').trigger('click');
-        await toggle(multiselect);
+        await apply(multiselect);
         multiselect.emitted('update:modelValue').should.eql([[[]]]);
         should.not.exist(component.emitted('update:modelValue'));
       });
@@ -144,7 +145,7 @@ describe('SubmissionFiltersSubmitter', () => {
         const multiselect = component.getComponent(Multiselect);
         await toggle(multiselect);
         await multiselect.get('.select-none').trigger('click');
-        await toggle(multiselect);
+        await apply(multiselect);
         expect(multiselect.props().modelValue).to.eql([fieldKey.id]);
         await toggle(multiselect);
         const input = multiselect.get('input[type="checkbox"]');
@@ -177,7 +178,7 @@ describe('SubmissionFiltersSubmitter', () => {
       const multiselect = component.getComponent(Multiselect);
       await toggle(multiselect);
       await multiselect.findAll('input[type="checkbox"]')[2].setValue(true);
-      await toggle(multiselect);
+      await apply(multiselect);
       multiselect.emitted('update:modelValue').should.eql([[[23, 42, fieldKey.id]]]);
       component.emitted('update:modelValue').should.eql([[[fieldKey.id]]]);
     });
@@ -191,7 +192,7 @@ describe('SubmissionFiltersSubmitter', () => {
       const multiselect = component.getComponent(Multiselect);
       await toggle(multiselect);
       await multiselect.get('input[type="checkbox"]').setValue(false);
-      await toggle(multiselect);
+      await apply(multiselect);
       multiselect.emitted('update:modelValue').should.eql([[[42]]]);
       component.emitted('update:modelValue').should.eql([[[fieldKey.id]]]);
     });

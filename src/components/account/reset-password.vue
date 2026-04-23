@@ -10,31 +10,24 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="account-reset-password" class="row">
-    <div class="col-xs-12 col-sm-offset-3 col-sm-6">
-      <div class="panel panel-default panel-main">
-        <div class="panel-heading">
-          <h1 class="panel-title">{{ $t('title.resetPassword') }}</h1>
-        </div>
-        <div class="panel-body">
-          <form @submit.prevent="submit">
-            <form-group ref="email" v-model.trim="email" type="email"
-              :placeholder="$t('field.email')" required autocomplete="off"/>
-            <div class="panel-footer">
-              <button type="submit" class="btn btn-primary"
-                :aria-disabled="awaitingResponse">
-                {{ $t('action.resetPassword') }} <spinner :state="awaitingResponse"/>
-              </button>
-              <router-link v-slot="{ navigate }" to="/login" custom>
-                <button type="button" class="btn btn-link" @click="navigate">
-                  {{ $t('action.cancel') }}
-                </button>
-              </router-link>
-            </div>
-          </form>
-        </div>
+  <div id="account-reset-password">
+    <h1>{{ $t('title') }}</h1>
+    <p>{{ $t('subtitle') }}</p>
+    <form @submit.prevent="submit">
+      <form-group ref="email" v-model.trim="email" type="email"
+        :placeholder="$t('field.email')" required autocomplete="off"/>
+      <div>
+        <button type="submit" class="btn btn-primary"
+          :aria-disabled="awaitingResponse">
+          {{ $t('action.resetPassword') }} <spinner :state="awaitingResponse"/>
+        </button>
+        <router-link v-slot="{ navigate }" to="/login" custom>
+          <button type="button" class="btn btn-link" @click="navigate">
+            {{ $t('action.cancel') }}
+          </button>
+        </router-link>
       </div>
-    </div>
+    </form>
   </div>
 </template>
 
@@ -83,6 +76,8 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    "title": "Reset your password",
+    "subtitle": "Enter your email to reset your password",
     "alert": {
       "success": "An email has been sent to {email} with further instructions."
     }
@@ -99,16 +94,22 @@ export default {
     }
   },
   "de": {
+    "title": "Passwort zurücksetzen",
+    "subtitle": "Gib deine E-Mail-Adresse ein, um dein Passwort zurückzusetzen",
     "alert": {
       "success": "Eine E-Mail mit weiteren Anweisungen wurde an {email} gesendet."
     }
   },
   "es": {
+    "title": "Restablece tu contraseña",
+    "subtitle": "Introduce tu correo electrónico para restablecer tu contraseña",
     "alert": {
       "success": "Se ha enviado un correo electrónico {email} con más instrucciones"
     }
   },
   "fr": {
+    "title": "Réinitialiser votre mot de passe",
+    "subtitle": "Entrez votre adresse email pour réinitialiser votre mot de passe",
     "alert": {
       "success": "Un courriel a été envoyé à {email} avec de plus amples instructions"
     }
@@ -119,6 +120,8 @@ export default {
     }
   },
   "it": {
+    "title": "Reimposta la tua password",
+    "subtitle": "Inserisci il tuo indirizzo e-mail per reimpostare la password",
     "alert": {
       "success": "È stata inviata un'email a {email} con ulteriori istruzioni."
     }
@@ -136,6 +139,13 @@ export default {
   "sw": {
     "alert": {
       "success": "Barua pepe imetumwa kwa {email} ikiwa na maagizo zaidi."
+    }
+  },
+  "zh": {
+    "title": "重置密码",
+    "subtitle": "输入您的电子邮件以重置密码",
+    "alert": {
+      "success": "已向{email}发送邮件，内含后续操作说明。"
     }
   },
   "zh-Hant": {

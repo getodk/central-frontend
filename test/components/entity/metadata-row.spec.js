@@ -23,7 +23,8 @@ const mountComponent = (props = undefined) => {
     },
     props: mergedProps,
     container: {
-      router: mockRouter('/projects/1/entity-lists/trees/entities')
+      router: mockRouter('/projects/1/entity-lists/trees/entities'),
+      requestData: { project: testData.extendedProjects.last() }
     }
   });
 };
@@ -42,7 +43,7 @@ describe('EntityMetadataRow', () => {
     const creator = testData.extendedUsers.first();
     testData.extendedEntities.createPast(1, { creator }).last();
     const row = mountComponent();
-    const td = row.findAll('td')[1];
+    const td = row.findAll('td')[2];
     td.classes('creator-name').should.be.true;
     td.text().should.equal(creator.displayName);
     await td.get('span').should.have.textTooltip();

@@ -108,9 +108,9 @@ export default {
     }
   },
   "de": {
-    "title": "Entitätsliste verknüpfen",
+    "title": "Objektliste verknüpfen",
     "introduction": [
-      "Sind Sie sicher, dass Sie die Entitätsliste verknüpfen möchten?",
+      "Sind Sie sicher, dass Sie die Objektliste verknüpfen möchten?",
       "Die von Ihnen hochgeladene Datei wird gelöscht. Sie können es später jederzeit erneut hochladen."
     ],
     "action": {
@@ -165,6 +165,16 @@ export default {
     ],
     "action": {
       "link": "Kiungo"
+    }
+  },
+  "zh": {
+    "title": "关联实体列表",
+    "introduction": [
+      "您确定要关联该实体列表吗？",
+      "您上传的温江将被删除，您可以随时重新上传。"
+    ],
+    "action": {
+      "link": "链接"
     }
   },
   "zh-Hant": {

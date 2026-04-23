@@ -211,6 +211,13 @@ export default {
       "appUserAccess": "Ufikiaji wa Mtumiaji wa Programu"
     }
   },
+  "zh": {
+    "draftTitle": "此表单尚未发布版本。在草稿发布前，设备端将不会显示该表单。发布后，当前设置将生效。",
+    "field": {
+      "state": "状态",
+      "appUserAccess": "App用户权限"
+    }
+  },
   "zh-Hant": {
     "draftTitle": "該表單尚無發布版本。在草稿發布之前，它不會出現在裝置上。發布表單後，將使用此處顯示的設定。",
     "field": {

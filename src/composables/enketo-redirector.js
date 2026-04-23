@@ -21,7 +21,7 @@ import useRoutes from './routes';
 export default memoizeForContainer(({ router, requestData }) => {
   const route = useRoute();
   const { form } = requestData;
-  const { submissionPath, newSubmissionPath, formPreviewPath, offlineSubmissionPath } = useRoutes();
+  const { newSubmissionPath, formPreviewPath, offlineSubmissionPath } = useRoutes();
   const { location } = inject('container');
 
   const ensureCanonicalPath = (actionType) => {
@@ -32,11 +32,6 @@ export default memoizeForContainer(({ router, requestData }) => {
     if (route.path.startsWith('/f/') && !route.query.st && form.dataExists) {
       if (actionType === 'new') {
         target = newSubmissionPath(form.projectId, form.xmlFormId, !form.publishedAt);
-      } else if (actionType === 'edit') {
-        // note: we don't support editing of draft submissions
-        // if route.query.instance_id is not there then it will not match any path and page not found
-        // will be displayed.
-        target = submissionPath(form.projectId, form.xmlFormId, route.query.instance_id ?? '', 'edit');
       } else if (actionType === 'preview') {
         target = formPreviewPath(form.projectId, form.xmlFormId, !form.publishedAt);
       } else if (actionType === 'offline') {

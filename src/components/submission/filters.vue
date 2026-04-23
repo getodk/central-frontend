@@ -11,9 +11,6 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <span id="submission-filters">
-    <div class="form-group">
-      <span class="icon-filter"></span>
-    </div>
     <submission-filters-submitter :model-value="submitterId"
       :disabled="disabled" :disabled-message="disabledMessage"
       @update:model-value="$emit('update:submitterId', $event)"/>
@@ -74,8 +71,8 @@ export default {
       // Submissions by a date range.
       "submissionDate": "Submitted at"
     },
-    // Text shown when in Submission date filter when Submissions for all dates are shown
-    "allSubmissionDateSelected": "(All)"
+    // Text shown when in date filter when records for all dates are shown
+    "allSubmissionDateSelected": "All time"
   }
 }
 </i18n>
@@ -92,19 +89,19 @@ export default {
     "field": {
       "submissionDate": "Übermittelt um"
     },
-    "allSubmissionDateSelected": "(Alle)"
+    "allSubmissionDateSelected": "Alle Zeit"
   },
   "es": {
     "field": {
       "submissionDate": "Enviado a"
     },
-    "allSubmissionDateSelected": "(Todos)"
+    "allSubmissionDateSelected": "Todos los tiempos"
   },
   "fr": {
     "field": {
       "submissionDate": "Soumis à"
     },
-    "allSubmissionDateSelected": "(Toutes)"
+    "allSubmissionDateSelected": "Tout temps"
   },
   "id": {
     "field": {
@@ -115,7 +112,7 @@ export default {
     "field": {
       "submissionDate": "Inviato alle"
     },
-    "allSubmissionDateSelected": "(Tutto)"
+    "allSubmissionDateSelected": "Per tutto il tempo"
   },
   "ja": {
     "field": {
@@ -125,17 +122,25 @@ export default {
   "pt": {
     "field": {
       "submissionDate": "Enviado em"
-    }
+    },
+    "allSubmissionDateSelected": "Todas as datas"
   },
   "sw": {
     "field": {
       "submissionDate": "Imewasilishwa kwa"
     }
   },
+  "zh": {
+    "field": {
+      "submissionDate": "上传于："
+    },
+    "allSubmissionDateSelected": "所有时间"
+  },
   "zh-Hant": {
     "field": {
       "submissionDate": "提交於"
-    }
+    },
+    "allSubmissionDateSelected": "全部時間"
   }
 }
 </i18n>

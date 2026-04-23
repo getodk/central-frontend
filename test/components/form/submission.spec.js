@@ -79,6 +79,17 @@ describe('FormSubmission', () => {
 
       webForm.exists().should.be.true;
     });
+
+    it('shows not found when edit is requested with Enketo', async () => {
+      testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+
+      const app = await load('/projects/1/forms/a/submissions/uuid:1/edit', mountOptions())
+        .complete();
+
+      app.find('iframe').exists().should.be.false;
+
+      app.find('.panel-title').text().should.be.equal('Page Not Found');
+    });
   });
 
   describe('hasAccess', () => {

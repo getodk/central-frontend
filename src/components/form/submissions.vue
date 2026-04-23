@@ -27,15 +27,18 @@ except according to the terms contained in the LICENSE file.
             </button>
           </template>
           <p v-show="deleted" class="purge-description">{{ $t('purgeDescription') }}</p>
-          <odata-data-access :analyze-disabled="analyzeDisabled"
-            :analyze-disabled-message="analyzeDisabledMessage"
-            @analyze="analyzeModal.show()"/>
+          <div class="form-submissions-heading-row-right-side">
+            <odata-data-access :analyze-disabled="hasEncryption || deleted"
+              :analyze-disabled-message="analyzeDisabledMessage"
+              @analyze="analyzeModal.show()"/>
+            <!-- download button is teleported here -->
+          </div>
         </div>
         </template>
       <template #body>
         <submission-list ref="submissionList" :project-id="projectId"
-          :xml-form-id="xmlFormId" :deleted="deleted" @fetch-keys="fetchKeys"
-          @fetch-deleted-count="fetchDeletedCount"/>
+          :xml-form-id="xmlFormId" :deleted="deleted" :encrypted="hasEncryption"
+          @fetch-keys="fetchKeys" @fetch-deleted-count="fetchDeletedCount"/>
       </template>
     </page-section>
     <odata-analyze v-bind="analyzeModal" :odata-url="odataUrl"
@@ -116,20 +119,18 @@ export default {
         this.project.permits('submission.create') && this.form.dataExists;
     },
     /*
-    Disable the "Analyze via OData" button if:
+    Disable some functionality (e.g., the "Analyze via OData" button) if:
 
       - There are encrypted submissions, or
       - There are no submissions yet, but the form is encrypted. In that case,
         there will never be decrypted submissions available to OData (as long as
-        the form remains encrypted), or
-      - Showing deleted Submissions
+        the form remains encrypted).
     */
-    analyzeDisabled() {
+    hasEncryption() {
       if (this.keys.dataExists && this.keys.length !== 0) return true;
       if (this.form.dataExists && this.form.keyId != null &&
         this.form.submissions === 0)
         return true;
-      if (this.deleted) return true;
       return false;
     },
     analyzeDisabledMessage() {
@@ -164,6 +165,7 @@ export default {
             $filter: '__system/deletedAt ne null',
           }
         ),
+        clear: false,
       }).catch(noop);
     },
     toggleDeleted() {
@@ -200,10 +202,15 @@ export default {
     display: flex;
     align-items: center;
     gap: 10px;
+
+    .form-submissions-heading-row-right-side{
+      display: flex;
+      gap: 10px;
+      margin-left: auto;
+    }
   }
 
   #odata-data-access {
-    margin-left: auto;
     font-size: initial;
   }
 }
@@ -249,7 +256,7 @@ export default {
     "analyzeDisabledDeletedData": "L'accès OData n'est pas possible pour les soumissions supprimées.",
     "purgeDescription": "Les soumissions et les données associées sont supprimées aprés 30 jours passés dans la corbeille.",
     "action": {
-      "toggleDeletedSubmissions": "{count} Soumission supprimée | {count} Soumissions supprimées | {count} Soumission supprimée"
+      "toggleDeletedSubmissions": "{count} Soumission supprimée | {count} Soumissions supprimées | {count} Soumissions supprimées"
     }
   },
   "it": {
@@ -270,6 +277,14 @@ export default {
   },
   "sw": {
     "analyzeDisabled": "Ufikiaji wa OData haupatikani kwa sababu ya usimbaji fiche wa Fomu"
+  },
+  "zh": {
+    "analyzeDisabled": "由于表单加密，OData访问不可用",
+    "analyzeDisabledDeletedData": "OData访问对已删除的提交不可用",
+    "purgeDescription": "提交数据及相关数据在回收站保留30天后将被删除",
+    "action": {
+      "toggleDeletedSubmissions": "{count}条已删除的提交"
+    }
   },
   "zh-Hant": {
     "analyzeDisabled": "由於表單加密，OData 存取不可用",

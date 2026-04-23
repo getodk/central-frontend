@@ -11,7 +11,10 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <label id="audit-filters-action" class="form-group">
-    <span class="form-label">{{ $t('field.type') }}</span>
+    <span>{{ $t('field.type') }}</span>
+    <div class="display-value" aria-hidden="true">
+      {{ displayValue }}
+    </div>
     <select class="form-control" :value="modelValue"
       @change="$emit('update:modelValue', $event.target.value)">
       <option v-for="option of options" :key="option.value"
@@ -81,15 +84,23 @@ export default {
         this.categoryOption('dataset'),
         this.actionOption('dataset.create'),
         this.actionOption('dataset.update'),
+        this.actionOption('entity.bulk.delete'),
+        this.actionOption('entity.bulk.restore'),
+        this.actionOption('dataset.delete'),
+        this.actionOption('dataset.update.property.delete'),
         this.categoryOption('config'),
-        this.actionOption('config.set')
+        this.actionOption('config.set'),
+        this.categoryOption('upgrade')
       ];
+    },
+    displayValue() {
+      return this.categoryMessage(this.modelValue) ? this.categoryMessage(this.modelValue) : this.actionMessage(this.modelValue);
     }
   },
   methods: {
     categoryOption(category) {
       return {
-        text: this.categoryMessage(category),
+        text: `» ${this.categoryMessage(category)}`,
         value: category,
         htmlClass: 'audit-filters-action-category'
       };
@@ -97,7 +108,7 @@ export default {
     actionOption(action) {
       return {
         // Adding non-breaking spaces: see #323 on GitHub.
-        text: `\u00a0\u00a0\u00a0${this.actionMessage(action)}`,
+        text: `\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0${this.actionMessage(action)}`,
         value: action
       };
     }
@@ -106,34 +117,28 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../../../assets/scss/mixins';
+@import '../../../assets/scss/variables';
+
 #audit-filters-action {
+  @include filter-control;
+
   select {
-    appearance: none;
-    cursor: pointer;
-    padding-top: 23px;
-    padding-right: 25px;
-    min-height: 48px;
-  }
-  .form-label {
     position: absolute;
-    top: 0px;
-    left: 0px;
-    z-index: 2;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+
   }
   .icon-angle-down {
     font-size: 16px;
     color: #555555;
     font-weight: bold;
-    position: absolute;
-    right: 10px;
-    top: 25px;
     z-index: 1;
     pointer-events: none;
   }
-
-  .audit-filters-action-category {
-    // Not all browsers support styling an <option> element this way.
-      font-weight: bold;
-    }
 }
 </style>

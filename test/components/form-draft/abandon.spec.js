@@ -129,7 +129,7 @@ describe('FormDraftAbandon', () => {
 
     it('shows a success alert', () =>
       abandon().then(app => {
-        app.should.alert('success', 'The Form “My Form” was deleted.');
+        app.should.alert('success', 'The Form “My Form” has been successfully deleted.');
       }));
 
     it('redirects to the forms page', () =>

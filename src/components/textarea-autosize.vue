@@ -14,6 +14,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <textarea ref="el" class="textarea-autosize form-control"
     :class="{ 'user-resized': userResized }" :value="props.modelValue"
+    :aria-disabled="disabled"
+    v-tooltip.aria-describedby="disabled ? disabledMessage : null"
     @input="$emit('update:modelValue', $event.target.value)"
     @mousedown="listenForUserResize">
   </textarea>
@@ -35,6 +37,8 @@ const props = defineProps({
     type: String,
     required: true
   },
+  disabled: Boolean,
+  disabledMessage: String,
   minHeight: {
     type: Number,
     default: 0

@@ -10,48 +10,52 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="account-login" class="row">
-    <div class="col-xs-12 col-sm-offset-3 col-sm-6">
-      <div class="panel panel-default panel-main">
-        <div class="panel-heading">
-          <h1 class="panel-title">{{ $t('action.logIn') }}</h1>
-        </div>
-        <div v-if="config.oidcEnabled" class="panel-body">
-          <p>{{ $t('oidc.body') }}</p>
-          <div class="panel-footer">
-            <a :href="oidcLoginPath" class="btn btn-primary"
-              :class="{ disabled }" @click="loginByOIDC">
-              {{ $t('action.continue') }} <spinner :state="disabled"/>
-            </a>
-          </div>
-        </div>
-        <div v-else class="panel-body">
-          <form @submit.prevent="submit">
-            <form-group ref="email" v-model.trim="email" type="email"
-              :placeholder="$t('field.email')" required autocomplete="off"/>
-            <form-group v-model="password" type="password"
-              :placeholder="$t('field.password')" required
-              autocomplete="current-password"/>
-            <div class="panel-footer">
-              <button type="submit" class="btn btn-primary"
-                :aria-disabled="disabled">
-                {{ $t('action.logIn') }} <spinner :state="disabled"/>
-              </button>
-              <router-link v-slot="{ navigate }" to="/reset-password" custom>
-                <button type="button" class="btn btn-link" :aria-disabled="disabled"
-                  @click="navigate">
-                  {{ $t('action.resetPassword') }}
-                </button>
-              </router-link>
-            </div>
-          </form>
-        </div>
+  <div id="account-login">
+    <h1>{{ loginAppearance?.title || $t('login.defaultTitle') }}</h1>
+    <p>{{ loginAppearance?.description || $t('login.defaultDescription') }}</p>
+
+    <template v-if="config.oidcEnabled">
+      <p>{{ $t('oidc.body') }}</p>
+      <a :href="oidcLoginPath" class="btn btn-primary" :class="{ disabled }"
+        @click="loginByOIDC">
+        {{ $t('action.continue') }} <spinner :state="disabled"/>
+      </a>
+    </template>
+    <form v-else @submit.prevent="submit">
+      <form-group ref="email" v-model.trim="email" :type="preview ? 'text' : 'email'"
+        :placeholder="$t('field.email')" required autocomplete="off"/>
+      <form-group v-model="password" :type="preview ? 'text' : 'password'"
+        :placeholder="$t('field.password')" required
+        :autocomplete="preview ? 'off' : 'current-password'"/>
+      <div v-if="showMailingListOptIn" id="mailing-list-opt-in" class="checkbox">
+        <label>
+          <input v-model="mailingListOptIn" type="checkbox">{{ $t('analytics.mailingListOptIn') }}
+        </label>
       </div>
+      <div>
+        <button type="submit" class="btn btn-primary" :aria-disabled="disabled">
+          {{ $t('action.logIn') }} <spinner :state="disabled"/>
+        </button>
+        <router-link v-slot="{ navigate }" to="/reset-password" custom>
+          <button type="button" class="btn btn-link" :aria-disabled="disabled"
+            @click="navigate">
+            {{ $t('action.resetPassword') }}
+          </button>
+        </router-link>
+      </div>
+    </form>
+
+    <div id="account-login-footer">
+      <img src="../../assets/images/odk-logo.png" :alt="$t('login.odkLogo')">
+      <span>{{ hostname }}</span>
     </div>
   </div>
 </template>
 
 <script>
+import { onBeforeUnmount, ref } from 'vue';
+import { useRouter } from 'vue-router';
+
 import FormGroup from '../form-group.vue';
 import Spinner from '../spinner.vue';
 
@@ -64,40 +68,61 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'AccountLogin',
   components: { FormGroup, Spinner },
-  inject: ['container', 'alert', 'config'],
-  beforeRouteLeave() {
-    return !this.disabled;
+  inject: ['container', 'alert', 'config', 'location'],
+  props: {
+    // `true` if the component is being previewed in ConfigLoginPreview
+    preview: Boolean
   },
-  setup() {
-    const { session } = useRequestData();
-    return { session };
+  setup(props) {
+    const router = useRouter();
+    const { currentUser, session, serverConfig } = useRequestData();
+
+    const disabled = ref(false);
+    if (!props.preview) {
+      const removeGuard = router.beforeEach(() => !disabled.value);
+      onBeforeUnmount(removeGuard);
+    }
+
+    return { currentUser, session, serverConfig, disabled };
   },
   data() {
     return {
-      disabled: false,
       email: '',
-      password: ''
+      password: '',
+      mailingListOptIn: true,
     };
   },
   computed: {
+    loginAppearance() {
+      return this.serverConfig.dataExists
+        ? this.serverConfig['login-appearance']?.value
+        : null;
+    },
     oidcLoginPath() {
       const { query } = this.$route;
       const next = typeof query.next === 'string' ? query.next : null;
       const qs = queryString({ next });
       return `/v1/oidc/login${qs}`;
+    },
+    showMailingListOptIn() {
+      return this.$route.query.source === 'claim' && !this.preview;
+    },
+    hostname() {
+      return window.location.hostname;
     }
   },
   created() {
-    this.handleOIDCError();
+    if (!this.preview) this.handleOIDCError();
   },
   mounted() {
+    if (this.preview) return;
     if (this.config.oidcEnabled)
       window.addEventListener('pageshow', this.reenableIfPersisted);
     else
       this.$refs.email.focus();
   },
   beforeUnmount() {
-    if (this.config.oidcEnabled)
+    if (!this.preview && this.config.oidcEnabled)
       window.removeEventListener('pageshow', this.reenableIfPersisted);
   },
   methods: {
@@ -105,7 +130,10 @@ export default {
       const sessionExpires = localStore.getItem('sessionExpires');
       const newSession = sessionExpires == null ||
         Number.parseInt(sessionExpires, 10) < Date.now();
-      if (!newSession) this.alert.info(this.$t('alert.alreadyLoggedIn'));
+      if (!newSession) {
+        this.alert.info(this.$t('alert.alreadyLoggedIn'))
+          .cta(this.$t('action.refresh'), () => { this.location.reload(); });
+      }
       return newSession;
     },
     loginByOIDC(event) {
@@ -175,6 +203,9 @@ export default {
       })
         .then(() => logIn(this.container, true))
         .then(() => {
+          if (this.showMailingListOptIn) {
+            this.currentUser.preferences.site.mailingListOptIn = this.mailingListOptIn;
+          }
           this.navigateToNext(
             this.$route.query.next,
             (location) => {
@@ -203,12 +234,39 @@ export default {
 };
 </script>
 
+<style lang="scss">
+@import '../../assets/scss/variables';
+
+#account-login-footer {
+  display: flex;
+  align-items: center;
+  column-gap: 12px;
+
+  margin-top: 40px;
+
+  img {
+    max-width: 39px;
+    max-height: 39px;
+  }
+
+  span {
+    color: #555;
+    font-family: $font-family-monospace;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1.25px;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}
+</style>
+
 <i18n lang="json5">
 {
   "en": {
     "alert": {
       "alreadyLoggedIn": "A user is already logged in. Please refresh the page to continue.",
-      "changePassword": "Your password is shorter than 10 characters. To protect your account, please change your password to make it longer."
+      "changePassword": "To protect your account, make sure your password is 10 characters or longer."
     },
     "oidc": {
       "body": "Click Continue to proceed to the login page.",
@@ -231,8 +289,7 @@ export default {
 {
   "cs": {
     "alert": {
-      "alreadyLoggedIn": "Uživatel je již přihlášen. Chcete-li pokračovat, obnovte stránku.",
-      "changePassword": "Vaše heslo je kratší než 10 znaků. Chcete-li svůj účet chránit, změňte si heslo tak, aby bylo delší."
+      "alreadyLoggedIn": "Uživatel je již přihlášen. Chcete-li pokračovat, obnovte stránku."
     },
     "oidc": {
       "body": "Kliknutím na tlačítko Pokračovat přejdete na přihlašovací stránku.",
@@ -250,7 +307,7 @@ export default {
   "de": {
     "alert": {
       "alreadyLoggedIn": "Ein Benutzer ist bereits eingeloggt. Bitte die Seite aktualisieren um weiterzuarbeiten.",
-      "changePassword": "Ihr Passwort ist kürzer als 10 Zeichen. Um Ihr Konto zu schützen, verlängerns Sie bitte Ihr Passwort."
+      "changePassword": "Um Ihr Konto zu schützen, achten Sie darauf, dass Ihr Passwort mindestens 10 Zeichen lang ist."
     },
     "oidc": {
       "body": "Klicken Sie auf Weiter, um zur Anmeldeseite zu gelangen.",
@@ -268,7 +325,7 @@ export default {
   "es": {
     "alert": {
       "alreadyLoggedIn": "Un usuario ya ha iniciado sesión. Actualice la página para continuar.",
-      "changePassword": "Su contraseña tiene menos de 10 caracteres. Para proteger su cuenta, cambie su contraseña para que sea más larga."
+      "changePassword": "Para proteger tu cuenta, asegúrate de que tu contraseña tiene 10 caracteres o más."
     },
     "oidc": {
       "body": "Haga clic en Continuar para pasar a la página de inicio de sesión.",
@@ -286,7 +343,7 @@ export default {
   "fr": {
     "alert": {
       "alreadyLoggedIn": "Un utilisateur est déjà connecté. Merci de rafraîchir la page pour continuer.",
-      "changePassword": "Votre mot de passe fait moins de 10 caractères. Pour protéger votre compte, merci de choisir un mot de passe plus long."
+      "changePassword": "Pour protéger votre compte, assurez vous de choisir un mot de passe d'au moins 10 caractères."
     },
     "oidc": {
       "body": "Cliquez sur Continuer pour accéder à la page de connexion.",
@@ -312,7 +369,7 @@ export default {
   "it": {
     "alert": {
       "alreadyLoggedIn": "Un utente ha già effettuato l'accesso. Aggiorna la pagina per continuare.",
-      "changePassword": "La tua password è lunga meno di 10 caratteri. Per proteggere il tuo account, cambia la password per renderla più lunga."
+      "changePassword": "Per proteggere il tuo account, assicurati che la password sia lunga almeno 10 caratteri."
     },
     "oidc": {
       "body": "Fare clic su Continua per passare alla pagina di Login.",
@@ -329,8 +386,7 @@ export default {
   },
   "ja": {
     "alert": {
-      "alreadyLoggedIn": "すでにユーザーでログインされています。 続けるにはページを更新してください。",
-      "changePassword": "あなたのパスワードは10文字以下です。アカウントを守るため、パスワードを長いものに変更してください。"
+      "alreadyLoggedIn": "すでにユーザーでログインされています。 続けるにはページを更新してください。"
     },
     "problem": {
       "401_2": "メールアドレスとパスワードの一方、または両方が違います。"
@@ -339,7 +395,7 @@ export default {
   "pt": {
     "alert": {
       "alreadyLoggedIn": "O usuário encontrasse logado atualmente. Por favor atualize a página para continuar.",
-      "changePassword": "Sua senha é menor que 10 caracteres. Para proteger sua conta, por favor crie uma senha mais longa."
+      "changePassword": "Para proteger a sua conta, certifique-se que sua senha tem 10 caracteres ou mais."
     },
     "oidc": {
       "body": "Clique em Continuar para prosseguir para a página de login.",
@@ -356,8 +412,7 @@ export default {
   },
   "sw": {
     "alert": {
-      "alreadyLoggedIn": "Mtumiaji tayari ameingia. Tafadhali onyesha upya ukurasa ili kuendelea.",
-      "changePassword": "Nenosiri lako ni fupi kuliko vibambo 10. Ili kulinda akaunti yako, tafadhali badilisha nenosiri lako ili kuifanya iwe ndefu."
+      "alreadyLoggedIn": "Mtumiaji tayari ameingia. Tafadhali onyesha upya ukurasa ili kuendelea."
     },
     "oidc": {
       "body": "Bofya Endelea ili kuendelea na ukurasa wa kuingia.",
@@ -372,10 +427,28 @@ export default {
       "401_2": "Anwani ya barua pepe na/au nenosiri si sahihi."
     }
   },
+  "zh": {
+    "alert": {
+      "alreadyLoggedIn": "已有用户登录，请刷新页面继续。",
+      "changePassword": "为保护您的账户安全，请确保密码长度不少于10个字符。"
+    },
+    "oidc": {
+      "body": "点击“继续”前往登录页面。",
+      "error": {
+        "auth-ok-user-not-found": "您的邮箱地址没有关联的Central账户。请联系Central管理员为您创建账户以继续操作。",
+        "email-not-verified": "您的邮箱地址尚未通过登录服务器验证。请联系系统管理员。",
+        "email-claim-not-provided": "Central无法访问您账户关联的邮箱地址。这可能是因为服务器管理员配置有误，或未为您的账户设置邮箱地址。也可能是您在登录过程中选择了隐私选项所致。如是后者，请重试并确保已勾选共享邮箱信息。",
+        "internal-server-error": "登录过程中出现错误，请联系服务器管理员。"
+      }
+    },
+    "problem": {
+      "401_2": "邮箱地址和/或密码不正确。"
+    }
+  },
   "zh-Hant": {
     "alert": {
       "alreadyLoggedIn": "使用者已登入，重新載入頁面再繼續進行。",
-      "changePassword": "您的密碼少於 10 個字元。為了保護您的帳戶，請變更密碼並增加密碼長度。"
+      "changePassword": "為了保護您的帳戶，請確保您的密碼為 10 個字元以上。"
     },
     "oidc": {
       "body": "點選繼續進入登入頁面。",

@@ -25,8 +25,14 @@ export const queryString = (query) => {
   const entries = Object.entries(query);
   if (entries.length === 0) return '';
   const params = new URLSearchParams();
-  for (const [name, value] of entries)
-    if (value != null) params.set(name, value.toString());
+  for (const [name, value] of entries) {
+    if (Array.isArray(value)) {
+      for (const element of value)
+        params.append(name, element === null ? 'null' : element.toString());
+    } else if (value != null) {
+      params.set(name, value.toString());
+    }
+  }
   const qs = params.toString();
   return qs !== '' ? `?${qs}` : qs;
 };
@@ -168,11 +174,17 @@ export const apiPaths = {
   datasets: projectPath('/datasets'),
   dataset: datasetPath(''),
   datasetProperties: datasetPath('/properties'),
-  entities: (projectId, datasetName, extension = '', query = undefined) => {
+  datasetProperty: (projectId, datasetName, propertyName) => {
+    const suffix = `/properties/${encodeURIComponent(propertyName)}`;
+    return datasetPath(suffix)(projectId, datasetName);
+  },
+  entityCreators: datasetPath('/entities/creators'),
+  entities: (projectId, datasetName, suffix = '', query = undefined) => {
     const encodedName = encodeURIComponent(datasetName);
     const qs = queryString(query);
-    return `/v1/projects/${projectId}/datasets/${encodedName}/entities${extension}${qs}`;
+    return `/v1/projects/${projectId}/datasets/${encodedName}/entities${suffix}${qs}`;
   },
+  deletedDatasetCsv: (projectId, datasetId) => `/v1/projects/${projectId}/trash/datasets/${datasetId}/entities.csv`,
   odataEntitiesSvc: datasetPath('.svc'),
   odataEntities: datasetPath('.svc/Entities'),
   entity: entityPath(''),
@@ -183,6 +195,15 @@ export const apiPaths = {
   serverUrlForFieldKey: (token, projectId) =>
     `/v1/key/${token}/projects/${projectId}`,
   audits: (query) => `/v1/audits${queryString(query)}`,
+  config: (key) => {
+    const encodedKey = encodeURIComponent(key);
+    return `/v1/config/${encodedKey}`;
+  },
+  publicConfig: (key, query = undefined) => {
+    const encodedKey = encodeURIComponent(key);
+    const qs = queryString(query);
+    return `/v1/config/public/${encodedKey}${qs}`;
+  }
 };
 
 

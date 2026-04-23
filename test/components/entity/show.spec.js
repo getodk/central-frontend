@@ -264,5 +264,25 @@ describe('EntityShow', () => {
         app.should.alert('success', 'Entity “My Entity” has been deleted.');
       });
     });
+
+    it('ignores the 404 error', () => {
+      testData.extendedEntities.createPast(1, {
+        uuid: 'e',
+        label: 'My Entity'
+      });
+      return load('/projects/1/entity-lists/trees/entities/e')
+        .complete()
+        .request(async (app) => {
+          await app.get('#entity-activity-delete-button').trigger('click');
+          return app.get('#entity-delete .btn-danger').trigger('click');
+        })
+        .respondWithProblem(404.1)
+        .respondFor('/projects/1/entity-lists/trees/entities', {
+          project: false
+        })
+        .afterResponses((app) => {
+          app.should.alert('success', 'Entity “My Entity” has been deleted.');
+        });
+    });
   });
 });

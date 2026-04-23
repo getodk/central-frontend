@@ -7,14 +7,32 @@ import { fakePastDate } from '../util/date-time';
 // objects with createdAt and updatedAt properties, then create a view that sets
 // setAt by combining createdAt and updatedAt.
 const configs = dataStore({
-  factory: ({ inPast, lastCreatedAt, key, value, setAt = undefined }) => ({
+  factory: ({
+    inPast,
+    lastCreatedAt,
+
     key,
-    value,
-    createdAt: setAt != null
-      ? setAt
-      : (inPast ? fakePastDate([lastCreatedAt]) : new Date().toISOString()),
-    updatedAt: null
-  })
+    value = undefined,
+    blobExists = undefined,
+    setAt = undefined
+  }) => {
+    const config = {
+      key,
+      createdAt: setAt != null
+        ? setAt
+        : (inPast ? fakePastDate([lastCreatedAt]) : new Date().toISOString()),
+      updatedAt: null
+    };
+
+    if (value !== undefined)
+      config.value = value;
+    else if (blobExists === true)
+      config.blobExists = true;
+    else
+      throw new Error('config must have either a value or a blob');
+
+    return config;
+  }
 });
 
 // eslint-disable-next-line import/prefer-default-export
@@ -24,9 +42,15 @@ export const standardConfigs = view(configs, (config) => {
   return withSetAt;
 });
 
-standardConfigs.forKey = (key) => {
-  for (let i = 0; i < configs.size; i += 1) {
-    if (configs.get(i).key === key) return standardConfigs.get(i);
-  }
-  return null;
+standardConfigs.update = (index, props = {}) => {
+  const { setAt, ...rest } = props;
+  return configs.update(index, { ...rest, updatedAt: setAt });
 };
+
+standardConfigs.byKey = () => {
+  const result = Object.create(null);
+  for (const config of standardConfigs) result[config.key] = config;
+  return result;
+};
+standardConfigs.forKey = (key) =>
+  standardConfigs.find(config => config.key === key);

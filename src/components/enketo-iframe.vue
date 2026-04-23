@@ -11,19 +11,15 @@ except according to the terms contained in the LICENSE file.
 -->
 
 <template>
-  <loading :state="!enketoSrc"/>
   <iframe v-if="enketoSrc" id="enketo-iframe" title="Enketo" :src="enketoSrc"></iframe>
 </template>
 
 <script setup>
 import { computed, inject, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { queryString } from '../util/request';
 import { useRequestData } from '../request-data';
 
-import Loading from './loading.vue';
 import useEventListener from '../composables/event-listener';
-import useRoutes from '../composables/routes';
 import { getCookieValue } from '../util/util';
 
 defineOptions({
@@ -42,12 +38,13 @@ const props = defineProps({
   instanceId: String
 });
 
+const emit = defineEmits(['loaded']);
+
 const { location, buildMode } = inject('container');
 
 const { form } = useRequestData();
 const route = useRoute();
 const router = useRouter();
-const { submissionPath } = useRoutes();
 
 const redirectUrl = computed(() => {
   const { return_url: returnUrlPascalCase, returnUrl } = route.query;
@@ -73,6 +70,12 @@ const lastSubmitted = (enketoOnceId) => {
 
 const enketoSrc = ref();
 
+const single = computed(() => {
+  const { query } = route;
+  return (props.actionType === 'public-link' && query.single !== 'false') ||
+         (props.actionType === 'new' && query.single === 'true');
+});
+
 const setEnketoSrc = () => {
   let basePath = '/enketo-passthrough';
   // this is to avoid 404 warning
@@ -84,18 +87,26 @@ const setEnketoSrc = () => {
 
   query.parentWindowOrigin = location.origin;
 
+  // We need to use encodeURIComponent here instead of URLSearchParams because enketo expects space
+  // to pass as either ' ' (literal space character) or '%20'. Whereas URLSearchParams converts
+  // space into '+' sign.
+  const qs = `?${Object.entries(query)
+    .filter(([, value]) => typeof value === 'string')
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+    .join('&')}`;
+
   if (props.actionType === 'offline') {
     return; // we don't render offline Enketo through central-frontend
   }
-  if (props.actionType === 'public-link') {
+  // for actionType 'new', we add '/single' only if 'single' query parameter is true
+  // for actionType 'public-link', we add '/single' only if 'single' query parameter is not false
+  if (single.value) {
     prefix += '/single';
-  } else if (props.actionType === 'edit') {
-    prefix += `/${props.actionType}`;
-    query.instance_id = props.instanceId;
   } else if (props.actionType === 'preview') {
     prefix += `/${props.actionType}`;
   }
-  // for actionType 'new', we don't need to add anything to the prefix.
+
+  // we no longer render Enketo for Edit Submission from central-frontend.
 
   if (props.enketoId === form.enketoOnceId) {
     lastSubmitted(props.enketoId)
@@ -103,12 +114,14 @@ const setEnketoSrc = () => {
         if (result) {
           enketoSrc.value = `${basePath}/thanks?taken=${result}`;
         } else {
-          enketoSrc.value = `${prefix}/${props.enketoId}${queryString(query)}`;
+          enketoSrc.value = `${prefix}/${props.enketoId}${qs}`;
         }
       });
   } else {
-    enketoSrc.value = `${prefix}/${props.enketoId}${queryString(query)}`;
+    enketoSrc.value = `${prefix}/${props.enketoId}${qs}`;
   }
+
+  emit('loaded');
 };
 
 setEnketoSrc();
@@ -128,10 +141,7 @@ const handleIframeMessage = (event) => {
     try { eventData = JSON.parse(event.data); } catch {}
 
     if (eventData?.enketoEvent === 'submissionsuccess') {
-      if (props.actionType === 'edit') {
-        // for edit we always redirect to Submission details page
-        router.push(submissionPath(form.projectId, form.xmlFormId, props.instanceId));
-      } else if (props.actionType === 'public-link' && redirectUrl.value) {
+      if (redirectUrl.value && single.value) {
         // for public link, we read return value from query parameter. The value could be 3rd party
         // site as well, typically a thank you page
         try {

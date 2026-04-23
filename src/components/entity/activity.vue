@@ -164,7 +164,7 @@ watchEffect(() => {
 {
   "de": {
     "action": {
-      "delete": "Entität löschen"
+      "delete": "Objekt löschen"
     }
   },
   "es": {
@@ -185,6 +185,11 @@ watchEffect(() => {
   "pt": {
     "action": {
       "delete": "Excluir Entidade"
+    }
+  },
+  "zh": {
+    "action": {
+      "delete": "删除实体"
     }
   },
   "zh-Hant": {

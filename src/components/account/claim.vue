@@ -10,30 +10,20 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="account-claim" class="row">
-    <div class="col-xs-12 col-sm-offset-3 col-sm-6">
-      <div class="panel panel-default panel-main">
-        <div class="panel-heading">
-          <h1 class="panel-title">{{ $t('title.setPassword') }}</h1>
-        </div>
-        <div class="panel-body">
-          <form @submit.prevent="submit">
-            <!-- Chrome displays a message in the console indicating that there
-            should be a username input (even if it is hidden). However, we do
-            not know the user's email address on this page. -->
-            <form-group ref="password" v-model="password" type="password"
-              :placeholder="$t('field.newPassword')" required
-              autocomplete="new-password"/>
-            <div class="panel-footer">
-              <button type="submit" class="btn btn-primary"
-                :aria-disabled="awaitingResponse">
-                {{ $t('action.set') }} <spinner :state="awaitingResponse"/>
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+  <div id="account-claim">
+    <h1 class="panel-title">{{ $t('title') }}</h1>
+    <form @submit.prevent="submit">
+      <!-- Chrome displays a message in the console indicating that there should
+      be a username input (even if it is hidden). However, we do not know the
+      user's email address on this page. -->
+      <form-group ref="password" v-model="password" type="password"
+        :placeholder="$t('field.newPassword')" required
+        autocomplete="new-password"/>
+      <button type="submit" class="btn btn-primary"
+        :aria-disabled="awaitingResponse">
+        {{ $t('action.set') }} <spinner :state="awaitingResponse"/>
+      </button>
+    </form>
   </div>
 </template>
 
@@ -80,7 +70,7 @@ export default {
       })
         .then(() => {
           const message = this.$t('alert.success');
-          return this.$router.push('/login')
+          return this.$router.push({ path: '/login', query: { source: 'claim' } })
             .then(() => { this.alert.success(message); });
         })
         .catch(noop);
@@ -92,6 +82,7 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    "title": "Set your new password",
     "action": {
       "set": "Set password"
     },
@@ -100,7 +91,7 @@ export default {
       "401_2": "{message} The link in your email may have expired, and a new email may have to be sent."
     },
     "alert": {
-      "success": "The password was reset successfully."
+      "success": "Password successfully reset."
     }
   }
 }
@@ -115,12 +106,10 @@ export default {
     },
     "problem": {
       "401_2": "{message} Platnost odkazu ve vašem e-mailu pravděpodobně skončila a možná bude nutné zaslat nový e-mail."
-    },
-    "alert": {
-      "success": "Heslo bylo úspěšně resetováno."
     }
   },
   "de": {
+    "title": "Legen Sie Ihr neues Passwort fest",
     "action": {
       "set": "Passwort festlegen"
     },
@@ -128,10 +117,11 @@ export default {
       "401_2": "{message} Der Hyperlink in Ihrer E-Mail könnte abgelaufen sein und vielleicht sollte eine neue E-Mail gesendet werden."
     },
     "alert": {
-      "success": "Das Passwort wurde erfolgreich zurückgesetzt."
+      "success": "Passwort erfolgreich zurückgesetzt."
     }
   },
   "es": {
+    "title": "Establece tu nueva contraseña",
     "action": {
       "set": "Establecer contraseña"
     },
@@ -139,10 +129,11 @@ export default {
       "401_2": "{message} Es posible que el enlace de su correo electrónico haya expirado y tenga que enviarse un nuevo correo electrónico."
     },
     "alert": {
-      "success": "La contraseña fue restablecida exitosamente."
+      "success": "Contraseña restablecida correctamente."
     }
   },
   "fr": {
+    "title": "Définissez votre nouveau mot de passe",
     "action": {
       "set": "Définir le mot de passe"
     },
@@ -159,12 +150,10 @@ export default {
     },
     "problem": {
       "401_2": "{message} Tautan menuju email Anda sudah kedaluwarsa, Anda harus mengirimkan email baru."
-    },
-    "alert": {
-      "success": "Kata sandi berhasil diatur ulang."
     }
   },
   "it": {
+    "title": "Configurare la tua nuova password",
     "action": {
       "set": "Configurare la password"
     },
@@ -172,7 +161,7 @@ export default {
       "401_2": "{message} Il link nella tua e-mail potrebbe essere scaduto e potrebbe essere necessario inviare una nuova e-mail."
     },
     "alert": {
-      "success": "La password è stata reimpostata con successo."
+      "success": "Password ristabilita con successo."
     }
   },
   "ja": {
@@ -181,9 +170,6 @@ export default {
     },
     "problem": {
       "401_2": "{message} メールに記載されているリンクの有効期限が切れている可能性があり、新たにメールを送信する必要があるようです。"
-    },
-    "alert": {
-      "success": "パスワードが正常にリセットされました。"
     }
   },
   "pt": {
@@ -194,7 +180,7 @@ export default {
       "401_2": "{message} O link de seu email expirou e um novo link precisa ser enviado."
     },
     "alert": {
-      "success": "A senha foi redefinida com sucesso."
+      "success": "Senha redefinida com sucesso."
     }
   },
   "sw": {
@@ -203,9 +189,18 @@ export default {
     },
     "problem": {
       "401_2": "{message} Huenda muda wa kiungo katika barua pepe yako umeisha, na huenda barua pepe mpya ikatumwa."
+    }
+  },
+  "zh": {
+    "title": "设置您的新密码",
+    "action": {
+      "set": "设置密码"
+    },
+    "problem": {
+      "401_2": "{message}您邮件中的链接可能已失效，需要重新发送邮件。"
     },
     "alert": {
-      "success": "Nenosiri limewekwa upya."
+      "success": "密码重设成功"
     }
   },
   "zh-Hant": {
@@ -216,7 +211,7 @@ export default {
       "401_2": "{message} 您電子郵件中的連結可能已過期，可能需要發送新電子郵件。"
     },
     "alert": {
-      "success": "密碼已重設成功。"
+      "success": "密碼重設成功。"
     }
   }
 }

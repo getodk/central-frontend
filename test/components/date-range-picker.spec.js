@@ -264,14 +264,14 @@ describe('DateRangePicker', () => {
       const component = mountComponent({
         props: { label: 'My date range', required: false }
       });
-      component.get('.form-label').text().should.equal('My date range');
+      component.get('.date-range-picker-label').text().should.equal('My date range');
     });
 
     it('appends * to the label if the required prop is true', () => {
       const component = mountComponent({
         props: { label: 'My date range', required: true }
       });
-      component.get('.form-label').text().should.equal('My date range *');
+      component.get('.date-range-picker-label').text().should.equal('My date range *');
     });
   });
 

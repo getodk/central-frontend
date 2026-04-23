@@ -11,21 +11,30 @@ except according to the terms contained in the LICENSE file.
 -->
 
 <template>
-  <loading :state="initiallyLoading"/>
-  <web-form-renderer v-if="dataExists && form.webformsEnabled && hasAccess" :action-type="actionType" :instance-id="instanceId"/>
+  <page-body v-if="loadingState">
+    <loading :state="true"/>
+  </page-body>
+  <not-found v-if="dataExists && !form.webformsEnabled && actionType === 'edit'"/>
+  <web-form-renderer v-else-if="dataExists && form.webformsEnabled && hasAccess"
+    :action-type="actionType"
+    :instance-id="instanceId"
+    @loaded="hideLoading"/>
   <!-- enketoId can be enketoOnceId so first try to read it from the prop (route.params)-->
-  <enketo-iframe v-if="dataExists && !form.webformsEnabled && hasAccess"
+  <enketo-iframe v-else-if="dataExists && !form.webformsEnabled && hasAccess"
     :enketo-id="enketoId ?? form.enketoId"
     :action-type="actionType"
-    :instance-id="instanceId"/>
+    :instance-id="instanceId"
+    @loaded="hideLoading"/>
 </template>
 
 <script setup>
-import { defineAsyncComponent, watchEffect, computed } from 'vue';
+import { defineAsyncComponent, watchEffect, computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 
 import Loading from '../loading.vue';
+import PageBody from '../page/body.vue';
+import notFound from '../not-found.vue';
 
 import { noop } from '../../util/util';
 import { apiPaths } from '../../util/request';
@@ -47,7 +56,7 @@ const props = defineProps({
  * **preview**:     Displays the Form in preview mode. Submissions cannot be created.
  *
  * **edit**:        Displays the Form pre-filled with data from an existing Submission (instance),
- *                  which can be modified.
+ *                  which can be modified. Only OWF is supported via central-frontend
  *
  * **public-link**: Displays the Form for creating a new Submission. After a successful Submission,
  *                  a thank-you message/page is shown. This route is intended for anonymous users;
@@ -80,6 +89,11 @@ const { t } = useI18n();
 const { ensureEnketoOfflinePath, ensureCanonicalPath } = useEnketoRedirector();
 
 const resources = computed(() => (props.projectId ? [project, form] : [form]));
+
+const loadingState = ref(true);
+const hideLoading = () => {
+  loadingState.value = false;
+};
 
 const { initiallyLoading, dataExists } = computed(() => {
   const state = resourceStates(resources.value);
@@ -143,6 +157,10 @@ const hasAccess = computed(() => {
   return result;
 });
 
+watch(() => initiallyLoading.value, (value) => {
+  if (!value) loadingState.value = dataExists.value;
+});
+
 watchEffect(() => {
   if (dataExists.value) {
     if (!hasAccess.value) {
@@ -179,6 +197,15 @@ if (!form.dataExists) fetchForm();
   },
   "it": {
     "formNotFound": "Non è stato trovato alcun modulo con questo URL, si prega di ricontrollare."
+  },
+  "pt": {
+    "formNotFound": "Nenhum Formulário encontrado com esse endereço, por favor verifique."
+  },
+  "zh": {
+    "formNotFound": "未找到与此URL对应的表单，请仔细核对。"
+  },
+  "zh-Hant": {
+    "formNotFound": "此 URL 未找到表單，請仔細檢查。"
   }
 }
 </i18n>

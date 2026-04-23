@@ -63,6 +63,7 @@ import { computed, inject, onBeforeUnmount, provide } from 'vue';
 
 import { afterNextNavigation, forceReplace } from './router';
 import { apiPaths, isProblem, requestAlertMessage } from './request';
+import { joinSentences } from './i18n';
 import { localStore } from './storage';
 import { noop } from './util';
 
@@ -82,7 +83,7 @@ const removeSessionFromStorage = () => {
   localStore.removeItem('sessionExpires');
 };
 
-const requestLogout = ({ i18n, alert, http }) => http.delete(apiPaths.currentSession())
+const requestLogout = ({ i18n, alert, http, location }) => http.delete(apiPaths.currentSession())
   .catch(error => {
     // logOutBeforeSessionExpires() and logOutAfterStorageChange() may try to
     // log out a session that has already been logged out. That will result in
@@ -93,9 +94,13 @@ const requestLogout = ({ i18n, alert, http }) => http.delete(apiPaths.currentSes
       return;
     }
 
-    alert.danger(i18n.t('util.session.alert.logoutError', {
-      message: requestAlertMessage(i18n, error)
-    }));
+    const message = joinSentences(i18n, [
+      i18n.t('util.session.alert.logoutError.thereWasProblem'),
+      requestAlertMessage(i18n, error),
+      i18n.t('util.session.alert.logoutError.pleaseRefresh')
+    ]);
+    alert.info(message)
+      .cta(i18n.t('action.refresh'), () => { location.reload(); });
     throw error;
   });
 
@@ -218,11 +223,11 @@ export const restoreSession = (session) =>
     .catch(error => {
       // The user's session may be deleted without the user logging out, for
       // example, if a backup is restored. In that case, the request will result
-      // in a 404. We remove sessionExpires from local storage so that
+      // in a 401. We remove sessionExpires from local storage so that
       // AccountLogin doesn't prevent the user from logging in.
       const { response } = error;
       if (response != null && isProblem(response.data) &&
-        response.data.code === 404.1) {
+        response.data.code === 401.2) {
         removeSessionFromStorage();
       }
 

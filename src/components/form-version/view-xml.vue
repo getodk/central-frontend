@@ -127,6 +127,9 @@ export default {
   "sw": {
     "title": "Tazama XML"
   },
+  "zh": {
+    "title": "查看XML"
+  },
   "zh-Hant": {
     "title": "檢視XML"
   }

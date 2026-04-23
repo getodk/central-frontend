@@ -123,6 +123,12 @@ const { formVersions } = useRequestData();
       "definition": "Ufafanuzi"
     }
   },
+  "zh": {
+    "header": {
+      "published": "已发布",
+      "definition": "定义"
+    }
+  },
   "zh-Hant": {
     "header": {
       "published": "已發布",

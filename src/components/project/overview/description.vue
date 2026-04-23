@@ -272,6 +272,13 @@ const toggle = () => {
     },
     "note": "Wasimamizi wa Miradi pekee ndio wanaoweza kuona pendekezo hili."
   },
+  "zh": {
+    "instructions": {
+      "full": "请在 {projectSettings} 中为此区域添加项目备注、链接、说明及其他资源。",
+      "projectSettings": "项目设置"
+    },
+    "note": "仅项目管理员可以看到此条建议。"
+  },
   "zh-Hant": {
     "instructions": {
       "full": "可由 {projectSettings} ，新增專案註釋、連結、指示和其他資源至以下空間。",

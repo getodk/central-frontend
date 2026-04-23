@@ -5,10 +5,18 @@ import AccountLogin from '../../../src/components/account/login.vue';
 
 import testData from '../../data';
 import { load, mockHttp } from '../../util/http';
+import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
-import { mount } from '../../util/lifecycle';
 
+const mountOptions = (options = undefined) => mergeMountOptions(options, {
+  container: {
+    router: mockRouter('/account/login'),
+    requestData: { serverConfig: testData.standardConfigs.byKey() }
+  }
+});
+const mountComponent = (options = undefined) =>
+  mount(AccountLogin, mountOptions(options));
 const submit = async (component) => {
   const form = component.get('#account-login form');
   await form.get('input[type="email"]').setValue('test@email.com');
@@ -20,19 +28,74 @@ const oidcContainer = {
 };
 
 describe('AccountLogin', () => {
-  it('focuses the first input', () => {
-    const component = mount(AccountLogin, {
-      container: { router: mockRouter('/account/login') },
-      attachTo: document.body
+  describe('login-appearance config', () => {
+    it('shows a default title and description if there is no config', () => {
+      const component = mountComponent();
+      component.get('h1').text().should.equal('Welcome to ODK Central');
+      component.get('h1 + p').text().should.startWith('Log into your account');
     });
+
+    it('uses the configured title', () => {
+      testData.standardConfigs.createPast(1, {
+        key: 'login-appearance',
+        value: { title: 'foo' }
+      });
+      const component = mountComponent();
+      component.get('h1').text().should.equal('foo');
+      component.get('h1 + p').text().should.startWith('Log into your account');
+    });
+
+    it('uses the configured description', () => {
+      testData.standardConfigs.createPast(1, {
+        key: 'login-appearance',
+        value: { description: 'foo' }
+      });
+      const component = mountComponent();
+      component.get('h1').text().should.equal('Welcome to ODK Central');
+      component.get('h1 + p').text().should.equal('foo');
+    });
+  });
+
+  describe('autofill', () => {
+    it('facilitates autofill by default', () => {
+      const component = mountComponent();
+      const inputs = component.findAll('input');
+      inputs.length.should.equal(2);
+      inputs[0].attributes().type.should.equal('email');
+      inputs[1].attributes().should.include({
+        type: 'password',
+        autocomplete: 'current-password'
+      });
+    });
+
+    it('discourages autofill during preview', () => {
+      const component = mountComponent({
+        props: { preview: true }
+      });
+      const inputs = component.findAll('input');
+      inputs.length.should.equal(2);
+      inputs[0].attributes().type.should.equal('text');
+      inputs[1].attributes().should.include({
+        type: 'text',
+        autocomplete: 'off'
+      });
+    });
+  });
+
+  it('shows the hostname', () => {
+    const component = mountComponent();
+    const text = component.get('#account-login-footer span').text();
+    text.should.equal('localhost');
+  });
+
+  it('focuses the first input', () => {
+    const component = mountComponent({ attachTo: document.body });
     component.get('input[type="email"]').should.be.focused();
   });
 
   it('sends the correct request', () =>
     mockHttp()
-      .mount(AccountLogin, {
-        container: { router: mockRouter('/account/login') }
-      })
+      .mount(AccountLogin, mountOptions())
       .request(submit)
       .beforeEachResponse((_, { method, url, data }) => {
         method.should.equal('POST');
@@ -54,9 +117,7 @@ describe('AccountLogin', () => {
 
   it('shows a danger alert for incorrect credentials', () =>
     mockHttp()
-      .mount(AccountLogin, {
-        container: { router: mockRouter('/account/login') }
-      })
+      .mount(AccountLogin, mountOptions())
       .request(submit)
       .respondWithProblem(401.2)
       .afterResponse(component => {
@@ -109,7 +170,7 @@ describe('AccountLogin', () => {
       .respondFor('/', { users: false })
       .afterResponses(app => {
         app.should.alert('info', (message) => {
-          message.should.startWith('Your password is shorter than 10 characters.');
+          message.should.endWith('make sure your password is 10 characters or longer.');
         });
       });
   });
@@ -201,7 +262,7 @@ describe('AccountLogin', () => {
 
     it("does not use the param if the user's session is restored", () => {
       testData.extendedUsers.createPast(1, { role: 'none' });
-      return load('/login?next=%2Faccount%2Fedit')
+      return load('/login?next=%2Faccount%2Fedit', {}, false)
         .restoreSession()
         .respondFor('/', { users: false })
         .afterResponses(app => {
@@ -241,6 +302,53 @@ describe('AccountLogin', () => {
           app.get('#account-login .btn-primary').attributes('aria-disabled').should.equal('true');
           app.get('#account-login .btn-link').attributes('aria-disabled').should.equal('true');
         });
+    });
+  });
+
+  describe('source=claim query param', () => {
+    it('shows the mailing list opt-in checkbox and is checked by default', () =>
+      load('/login?source=claim')
+        .restoreSession(false)
+        .complete()
+        .request(app => app.find('#mailing-list-opt-in').get('input[type="checkbox"]').element.checked.should.be.true));
+
+    it('does not show the checkbox if query parameter is not included', () =>
+      load('/login?source=other')
+        .restoreSession(false)
+        .complete()
+        .request(app => app.find('#mailing-list-opt-in').exists().should.be.false));
+
+    it('sends a request to opt-in to the mailing list', () => {
+      testData.extendedUsers.createPast(1, { email: 'test@email.com', role: 'none' });
+      return load('/login?source=claim')
+        .restoreSession(false)
+        .complete()
+        .request(submit) // checkbox is checked by default
+        .respondWithData(() => testData.sessions.createNew())
+        .respondWithData(() => testData.extendedUsers.first())
+        .respondWithSuccess()
+        .respondFor('/', { users: false })
+        .testRequestsInclude([
+          { url: '/v1/user-preferences/site/mailingListOptIn', method: 'PUT', data: { propertyValue: true } },
+        ]);
+    });
+
+    it('sends a request to opt-out of the mailing list', () => {
+      testData.extendedUsers.createPast(1, { email: 'test@email.com', role: 'none' });
+      return load('/login?source=claim')
+        .restoreSession(false)
+        .complete()
+        .request(async (app) => {
+          await app.find('#mailing-list-opt-in').get('input[type="checkbox"]').setValue(false);
+          return submit(app);
+        })
+        .respondWithData(() => testData.sessions.createNew())
+        .respondWithData(() => testData.extendedUsers.first())
+        .respondWithSuccess()
+        .respondFor('/', { users: false })
+        .testRequestsInclude([
+          { url: '/v1/user-preferences/site/mailingListOptIn', method: 'PUT', data: { propertyValue: false } },
+        ]);
     });
   });
 
@@ -354,9 +462,11 @@ describe('AccountLogin', () => {
   });
 
   describe('existing session', () => {
+    const in5Min = () => (Date.now() + 300000).toString();
+
     it('shows an info alert if OIDC is not enabled', async () => {
       const component = await load('/login', { root: false });
-      localStorage.setItem('sessionExpires', (Date.now() + 300000).toString());
+      localStorage.setItem('sessionExpires', in5Min());
       await submit(component);
       component.should.alert('info', (message) => {
         message.should.startWith('A user is already logged in.');
@@ -368,7 +478,7 @@ describe('AccountLogin', () => {
         container: oidcContainer,
         root: false
       });
-      localStorage.setItem('sessionExpires', (Date.now() + 300000).toString());
+      localStorage.setItem('sessionExpires', in5Min());
       await component.get('a[href^="/v1/oidc/login"]').trigger('click');
       component.should.alert('info', (message) => {
         message.should.startWith('A user is already logged in.');
@@ -380,13 +490,28 @@ describe('AccountLogin', () => {
         container: oidcContainer,
         root: false
       });
-      localStorage.setItem('sessionExpires', (Date.now() + 300000).toString());
+      localStorage.setItem('sessionExpires', in5Min());
       const a = component.get('a[href^="/v1/oidc/login"]');
       const event = new MouseEvent('click', {
         bubbles: true,
         cancelable: true
       });
       a.element.dispatchEvent(event).should.be.false;
+    });
+
+    it('shows a CTA to refresh', () => {
+      const reload = sinon.fake();
+      return load('/login', {
+        container: { location: { reload } }
+      })
+        .restoreSession(false)
+        .afterResponses(async (app) => {
+          localStorage.setItem('sessionExpires', in5Min());
+          await submit(app);
+          app.should.alert();
+          await app.get('.alert-cta').trigger('click');
+          reload.called.should.be.true;
+        });
     });
   });
 });

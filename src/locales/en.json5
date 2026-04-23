@@ -30,6 +30,7 @@
     "title": "System Management",
     "tab": {
       "audits": "Server Audit Logs",
+      "customization": "Customization",
       "analytics": "Usage Reporting"
     }
   },
@@ -74,7 +75,7 @@
     // This is a category of actions performed on the server. It is shown in a
     // dropdown when filtering the log of actions by type.
     "category": {
-      "nonverbose": "(All Actions)",
+      "nonverbose": "All Actions",
       "user": "Web User Actions",
       "project": "Project Actions",
       "form": "Form Actions",
@@ -111,7 +112,13 @@
       "dataset": {
         "create": "@:audit.action.default.create",
         "update": "Update",
-        "update_publish": "Publish"
+        "update_publish": "Publish",
+        "delete": "@:audit.action.default.delete",
+        "update_property_delete": "Delete Property"
+      },
+      "entity": {
+        "bulk_delete": "Bulk Delete",
+        "bulk_restore": "Bulk Restore"
       },
       // This is shown in the log of actions performed on the server. It is a
       // type of action that can be taken on an App User.
@@ -162,7 +169,8 @@
       "upgrade": {
         "process_form": "Process Form",
         "process_form_draft": "Process Form Draft",
-        "process_form_entities_version": "Flag Form for Upgrade"
+        "process_form_entities_version": "Flag Form for Upgrade",
+        "server": "New Version"
       },
       // This is shown in the log of actions performed on the server. It is a
       // type of action that can be taken on or for a Web User.
@@ -201,6 +209,7 @@
     "proceed": "Proceed",
     // This is the text of a button that refreshes data.
     "refresh": "Refresh",
+    "refreshPage": "Refresh page",
     "resetPassword": "Reset password",
     "review": "Review",
     // @transifexKey component.EntityMetadataRow.reviewParallelUpdates
@@ -209,6 +218,9 @@
     "saveSettings": "Save settings",
     // This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms
     "sort": "Sort",
+    // @transifexKey component.WebFormRenderer.retryModal.action.tryAgain
+    "tryAgain": "Try again",
+    "undo": "Undo",
     "update": "Update",
     // @transifexKey component.FormNew.action.upload
     "upload": "Upload",
@@ -222,7 +234,10 @@
     "expand": "Expand",
     "collapse": "Collapse",
     // @transifexKey component.FormTrashRow.action.restore
-    "restore": "Restore"
+    "restore": "Restore",
+    "selectRow": "Select row",
+    // This text is shown on a button that resets the data filters
+    "reset": "Reset"
   },
   "field": {
     "comment": "Leave a comment…",
@@ -235,6 +250,7 @@
     "passphrase": "Passphrase",
     "password": "Password",
     "passwordConfirm": "New password (confirm)",
+    "title": "Title",
     "type": "Type"
   },
   "header": {
@@ -325,11 +341,11 @@
     "formPreview": "Form Preview"
   },
   "alert": {
-    "passwordTooShort": "Please input a password at least 10 characters long.",
-    "updateEntity": "The Entity has been updated!",
-    "updateReviewState": "Review State saved!",
-    "versionChange": "The server has been updated. Please refresh the page to avoid unpredictable behavior.",
-    "submissionDeleted": "The Submission has been deleted.",
+    "passwordTooShort": "Password must be at least 10 characters long.",
+    "updateEntity": "Entity has been successfully updated.",
+    "updateReviewState": "Review successfully saved.",
+    "versionChange": "The server has been successfully updated.",
+    "submissionDeleted": "Submission has been successfully deleted.",
     "submissionRestored": "The Submission has been restored.",
     // @transifexKey component.EntityList.alert.delete
     "entityDeleted": "Entity “{label}” has been deleted.",
@@ -347,13 +363,23 @@
     // This is a link to more information.
     "learnMore": "Learn more."
   },
+  "login": {
+    "odkLogo": "ODK logo",
+    // @transifexKey component.AccountPageContainer.customLogoAlt
+    "customLogoAlt": "Organization logo",
+    "defaultTitle": "Welcome to ODK Central",
+    "defaultDescription": "Log into your account to get started",
+    // An image shown on the login page
+    "heroImage": "Login image"
+  },
   "analytics": {
     "alwaysImprove": "We are always trying to improve ODK Central.",
     "needFeedback": {
       // "This" refers to improving Central.
       "full": "To do this, we need {your} feedback, so that we can understand how you are using Central, and how it could be better for you.",
       "your": "your"
-    }
+    },
+    "mailingListOptIn": "Send me occasional emails about new features and best practices."
   },
   "submission": {
     // This is a possible state for a Submission. It means that the Submission
@@ -402,6 +428,7 @@
     "data": "Data",
     // This is the text of a link that links to the documentation.
     "docs": "Docs",
+    "emptyMap": "No map data available yet.",
     // This is shown when the value of an Entity property is empty.
     "emptyValue": "(empty)",
     "error": "Error",
@@ -411,6 +438,7 @@
     "forum": "Forum",
     "lastUpdate": "Last update",
     "loading": "Loading…",
+    "map": "Map",
     "no": "No",
     // This is shown if a search returned no results.
     "noResults": "No results",
@@ -429,6 +457,7 @@
     "tab": {
       "settings": "Settings"
     },
+    "table": "Table",
     "total": "Total",
     "totalSubmissions": "Total Submissions",
     // {inform} is the number of Entity Properties defined by the form.
@@ -446,7 +475,10 @@
     // This text is shown on its own before details about a warning.
     "warning": "Warning",
     "beta": "Beta",
-    "none": "(none)"
+    "none": "(none)",
+    "search": "Search",
+    // @transifexKey component.FormTrashList.title
+    "trash": "Trash"
   },
   "mixin": {
     "request": {
@@ -500,10 +532,12 @@
     },
     "session": {
       "alert": {
-        "expiresSoon": "Your session will expire in 2 minutes, and you be automatically logged out.",
-        "expired": "Your session has expired. To continue working, please log in again.",
-        // {message} is a more detailed error message.
-        "logoutError": "There was a problem, and you were not fully logged out. Please refresh the page and try logging out again. {message}"
+        "expiresSoon": "Your session is expiring! You will be logged out in 2 minutes.",
+        "expired": "Your session has expired. Log in again to continue.",
+        "logoutError": {
+          "thereWasProblem": "There was a problem logging out.",
+          "pleaseRefresh": "Please refresh the page and try again."
+        }
       }
     }
   },

@@ -22,8 +22,10 @@ definition for an existing form -->
       <div v-show="warnings != null" class="modal-warnings">
         <p>{{ $t('warningsText[0]') }}</p>
 
-        <p v-if="warnings?.xlsFormWarnings">
-          <strong>{{ $t('warningsText[1]') }}</strong>
+        <template v-if="warnings?.xlsFormWarnings">
+          <p>
+            <strong>{{ $t('warningsText[1]') }}</strong>
+          </p>
           <ul>
             <!-- eslint-disable-next-line vue/require-v-for-key -->
             <li v-for="warning of warnings.xlsFormWarnings">
@@ -34,10 +36,12 @@ definition for an existing form -->
               </template>
             </li>
           </ul>
-        </p>
+        </template>
 
-        <p v-if="warnings?.workflowWarnings">
-          <strong>{{ $t('warningsText[2]') }}</strong>
+        <template v-if="warnings?.workflowWarnings">
+          <p>
+            <strong>{{ $t('warningsText[2]') }}</strong>
+          </p>
           <ul>
             <!-- eslint-disable-next-line vue/require-v-for-key -->
             <li v-for="warning of warnings.workflowWarnings">
@@ -59,7 +63,7 @@ definition for an existing form -->
               </template>
             </li>
           </ul>
-        </p>
+        </template>
 
         <p>
           <span>{{ $t('warningsText[4]') }}</span>
@@ -132,7 +136,7 @@ import { apiPaths, isProblem } from '../../util/request';
 export default {
   name: 'FormNew',
   components: { DocLink, FileDropZone, Modal, SentenceSeparator, Spinner },
-  inject: ['alert'],
+  inject: ['redAlert'],
   props: {
     state: {
       type: Boolean,
@@ -175,14 +179,17 @@ export default {
   watch: {
     state(state) {
       if (!state) {
-        this.file = null;
-        this.warnings = null;
+        this.clear();
       }
     }
   },
   methods: {
+    clear() {
+      this.file = null;
+      this.warnings = null;
+    },
     afterFileSelection(file) {
-      this.alert.blank();
+      this.redAlert.hide();
       this.file = file;
       this.warnings = null;
     },
@@ -192,10 +199,19 @@ export default {
     },
     upload(ignoreWarnings) {
       if (this.file == null) {
-        this.alert.info(this.$t('alert.fileRequired'));
+        this.redAlert.show(this.$t('alert.fileRequired'));
         return;
       }
-
+      // Try to read the file, error means file is modified or deleted or moved
+      const reader = new FileReader();
+      reader.onload = () => this.postFile(ignoreWarnings);
+      reader.onerror = () => {
+        this.redAlert.show(this.$t('alert.fileNotReadable'));
+        this.clear();
+      };
+      reader.readAsArrayBuffer(this.file);
+    },
+    postFile(ignoreWarnings) {
       const query = ignoreWarnings ? { ignoreWarnings } : null;
       const headers = { 'Content-Type': this.contentType };
       if (this.contentType !== 'application/xml') {
@@ -231,7 +247,7 @@ export default {
       })
         .then(({ data }) => {
           if (isProblem(data)) {
-            this.alert.blank();
+            this.redAlert.hide();
             this.warnings = data.details.warnings;
           } else {
             this.$emit('success', data);
@@ -310,7 +326,8 @@ export default {
       "uploadAnyway": "Upload anyway"
     },
     "alert": {
-      "fileRequired": "Please choose a file."
+      "fileRequired": "Please choose a file.",
+      "fileNotReadable": "The file could not be read. It may have been modified or deleted. Please choose the file again."
     },
     "problem": {
       "400_8": "The Form definition you have uploaded does not appear to be for this Form. It has the wrong formId (expected “{expected}”, got “{actual}”).",
@@ -412,7 +429,8 @@ export default {
       "uploadAnyway": "Trotzdem hochladen"
     },
     "alert": {
-      "fileRequired": "Bitte wählen Sie eine Datei aus."
+      "fileRequired": "Bitte wählen Sie eine Datei aus.",
+      "fileNotReadable": "Die Datei konnte nicht gelesen werden. Möglicherweise wurde sie geändert oder gelöscht. Bitte wählen Sie die Datei erneut aus."
     },
     "problem": {
       "400_8": "Die hochgeladene Formulardefinition scheint nicht für dieses Formular zu sein. Es hat die falsche formId (\"{expected}\" erwartet, \"{actual}\" erhalten).",
@@ -425,7 +443,9 @@ export default {
       "Warnungen zum Formulardesign:",
       "Workflow-Warnungen:",
       {
-        "structureChanged": "Die folgenden Felder wurden gelöscht, umbenannt oder befinden sich jetzt in anderen Gruppen oder Wiederholungen. Diese Felder sind in der Überermittlungstabelle nicht sichtbar oder standardmässig in Exporten enthalten."
+        "deletedFormExists": "Es befindet sich ein Formular mit der ID \"{value}\" im Papierkorb. Wenn Sie dieses Formular hochladen, können Sie das andere mit derselben ID nicht mehr wiederherstellen.",
+        "structureChanged": "Die folgenden Felder wurden gelöscht, umbenannt oder befinden sich jetzt in anderen Gruppen oder Wiederholungen. Diese Felder sind in der Überermittlungstabelle nicht sichtbar oder standardmässig in Exporten enthalten.",
+        "oldEntityVersion": "Die Objektspezifikationsversion \"{version}\" ist nicht mit Offline-Objekten kompatibel. Wir empfehlen die Verwendung von Version 2024.1.0 oder neuer."
       },
       "Bitte beheben Sie die Probleme und versuchen es erneut.",
       {
@@ -458,7 +478,8 @@ export default {
       "uploadAnyway": "Subir de todos modos"
     },
     "alert": {
-      "fileRequired": "Por favor, elija un archivo."
+      "fileRequired": "Por favor, elija un archivo.",
+      "fileNotReadable": "No se ha podido leer el archivo. Es posible que se haya modificado o eliminado. Selecciona el archivo de nuevo."
     },
     "problem": {
       "400_8": "La definición del formulario que ha subido no parece ser para este formulario. Tiene el FormId equivocado (esperado \"{expected}\", got \"{actual}\").",
@@ -506,7 +527,8 @@ export default {
       "uploadAnyway": "Téléverser malgré tout"
     },
     "alert": {
-      "fileRequired": "Merci de choisir un fichier."
+      "fileRequired": "Merci de choisir un fichier.",
+      "fileNotReadable": "Le fichier n'a pas pu être lu. Il a peut-être été modifié ou supprimé. Veuillez choisir le fichier à nouveau."
     },
     "problem": {
       "400_8": "La définition de formulaire que vous avez envoyé ne semble pas correspondre à ce formulaire. Elle a un mauvais formid ( “{expected}” attendu, “{actual}” reçu).",
@@ -585,7 +607,8 @@ export default {
       "uploadAnyway": "Carica comunque"
     },
     "alert": {
-      "fileRequired": "Selezionare un file per favore"
+      "fileRequired": "Selezionare un file per favore",
+      "fileNotReadable": "Impossibile leggere il file. Potrebbe essere stato modificato o eliminato. Seleziona nuovamente il file."
     },
     "problem": {
       "400_8": "La definizione del formulario che hai caricato non sembra essere per questo formulario. Ha il formId sbagliato (previsto \"{expected}\", ottenuto \"{actual}\").",
@@ -733,6 +756,55 @@ export default {
       }
     ]
   },
+  "zh": {
+    "title": {
+      "create": "创建表单",
+      "update": "上传新表单定义"
+    },
+    "introduction": [
+      {
+        "create": "请上传XForms XML文件或XLSForm Excel文件以创建表单。",
+        "update": "请上传XForms XML文件或XLSForm Excel文件以更新草稿。"
+      },
+      {
+        "full": "若尚无表单文件，可使用{tools}辅助设计。",
+        "tools": "可用工具"
+      },
+      "若需上传表单附件，可在创建表单后的下一页进行操作。"
+    ],
+    "dropZone": {
+      "full": "请将文件拖放至此，或{chooseOne}上传。",
+      "chooseOne": "选择文件"
+    },
+    "action": {
+      "uploadAnyway": "仍然上传"
+    },
+    "alert": {
+      "fileRequired": "请选择文件。",
+      "fileNotReadable": "无法读取该文件。它可能已被修改或删除。请重新选择文件。"
+    },
+    "problem": {
+      "400_8": "您上传的表单定义文件与此表单不匹配：表单ID应为“{expected}”，但上传文件为“{actual}”。",
+      "400_15": "XLSForm转换失败：{error}",
+      "409_3": "此项目中已存在表单ID为“{xmlFormId}”的表单"
+    },
+    "fields": "字段：",
+    "warningsText": [
+      "此文件可用，但存在以下潜在问题：",
+      "表单设计警告：",
+      "工作流警告：",
+      {
+        "deletedFormExists": "回收站中已存在ID为“{value}”的表单。若上传此表单，将无法恢复同名ID的表单。",
+        "structureChanged": "以下字段已被删除、重命名或移至其他组/重复节段。默认情况下，这些字段将不会在提交表格中显示，也不会包含在导出数据中。",
+        "oldEntityVersion": "实体规范版本“{version}”与离线实体功能不兼容。建议使用2024.1.0或更高版本。"
+      },
+      "请修正问题后重试。",
+      {
+        "create": "若确认可忽略这些问题，请点击下方按钮继续创建表单：",
+        "update": "若确认可忽略这些问题，请点击下方按钮继续更新草稿："
+      }
+    ]
+  },
   "zh-Hant": {
     "title": {
       "create": "建立表單",
@@ -770,6 +842,7 @@ export default {
       "表單設計警告：",
       "工作流程警告：",
       {
+        "deletedFormExists": "垃圾箱中有一個 ID 為「{value}」的表單。如果您上傳此表單，您將無法還原具有符合 ID 的另一張表單。",
         "structureChanged": "以下欄位已被刪除、重新命名或現在位於不同的群組中或重複。預設情況下，這些欄位在提交表中不可見，也不包含在匯出中。",
         "oldEntityVersion": "實體規範版本 “{version}” 與離線實體不相容。我們建議使用2024.1.0或更高版本。"
       },

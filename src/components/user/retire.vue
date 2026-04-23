@@ -179,6 +179,16 @@ export default {
       }
     ]
   },
+  "zh": {
+    "title": "停用使用者",
+    "introduction": [
+      "您即将停用用户账户 “{displayName}” \u003c{email}>。该用户将立即被禁止执行任何操作并强制退出登录。",
+      {
+        "full": "此操作{noUndo}，但随时可使用该邮箱地址为相关用户新建账户。",
+        "noUndo": "此操作无法取消"
+      }
+    ]
+  },
   "zh-Hant": {
     "title": "停用使用者",
     "introduction": [

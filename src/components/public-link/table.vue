@@ -125,6 +125,12 @@ const { publicLinks } = useRequestData();
       "accessLink": "Kiungo cha Ufikiaji"
     }
   },
+  "zh": {
+    "header": {
+      "once": "单次提交",
+      "accessLink": "访问链接"
+    }
+  },
   "zh-Hant": {
     "header": {
       "once": "單次提交",

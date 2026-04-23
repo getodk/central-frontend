@@ -19,6 +19,11 @@ except according to the terms contained in the LICENSE file.
             class="btn btn-primary" @click="upload.show()">
             <span class="icon-upload"></span>{{ $t('upload') }}
           </button>
+          <button v-if="project.dataExists && project.permits('entity.create')"
+            id="dataset-entities-create-button" type="button"
+            class="btn btn-primary" @click="create.show()">
+            <span class="icon-plus-circle"></span>{{ $t('newEntity') }}
+          </button>
           <template v-if="deletedEntityCount.dataExists">
             <button v-if="canDelete && (deletedEntityCount.value > 0 || deleted)" type="button"
               class="btn toggle-deleted-entities" :class="{ 'btn-danger': deleted, 'btn-link': !deleted }"
@@ -28,9 +33,12 @@ except according to the terms contained in the LICENSE file.
             </button>
           </template>
           <p v-show="deleted" class="purge-description">{{ $t('purgeDescription') }}</p>
-          <odata-data-access :analyze-disabled="deleted"
-            :analyze-disabled-message="$t('analyzeDisabledDeletedData')"
-            @analyze="analyze.show()"/>
+          <div class="dataset-entities-heading-row-right-side">
+            <odata-data-access :analyze-disabled="deleted"
+              :analyze-disabled-message="$t('analyzeDisabledDeletedData')"
+              @analyze="analyze.show()"/>
+            <!-- download button is teleported here -->
+          </div>
         </div>
       </template>
       <template #body>
@@ -42,6 +50,8 @@ except according to the terms contained in the LICENSE file.
 
     <entity-upload v-if="dataset.dataExists" v-bind="upload"
       @hide="upload.hide()" @success="afterUpload"/>
+    <entity-create v-if="dataset.dataExists" v-bind="create"
+      @hide="create.hide()" @success="afterCreate"/>
     <odata-analyze v-bind="analyze" :odata-url="odataUrl" @hide="analyze.hide()"/>
   </div>
 </template>
@@ -50,6 +60,7 @@ except according to the terms contained in the LICENSE file.
 import { defineAsyncComponent, watchEffect, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
+import EntityCreate from '../entity/create.vue';
 import EntityList from '../entity/list.vue';
 import OdataAnalyze from '../odata/analyze.vue';
 import OdataDataAccess from '../odata/data-access.vue';
@@ -66,6 +77,7 @@ import { noop } from '../../util/util';
 export default {
   name: 'DatasetEntities',
   components: {
+    EntityCreate,
     OdataAnalyze,
     OdataDataAccess,
     EntityList,
@@ -114,6 +126,7 @@ export default {
   data() {
     return {
       upload: modalData('EntityUpload'),
+      create: modalData(),
       analyze: modalData()
     };
   },
@@ -135,6 +148,12 @@ export default {
       // reflects the new entities.
       this.dataset.entities += count;
     },
+    afterCreate() {
+      this.create.hide();
+      this.alert.success(this.$t('alert.create'));
+      this.$refs.list.reset();
+      this.dataset.entities += 1;
+    },
     fetchDeletedCount() {
       this.deletedEntityCount.request({
         method: 'GET',
@@ -147,6 +166,7 @@ export default {
             $filter: '__system/deletedAt ne null',
           }
         ),
+        clear: false,
       }).catch(noop);
     },
     toggleDeleted() {
@@ -183,10 +203,15 @@ export default {
     display: flex;
     align-items: center;
     gap: 10px;
+
+    .dataset-entities-heading-row-right-side {
+      display: flex;
+      margin-left: auto;
+      gap: 10px;
+    }
   }
 
   #odata-data-access {
-    margin-left: auto;
     font-size: initial;
   }
 }
@@ -196,8 +221,11 @@ export default {
 {
   "en": {
     "upload": "Upload Entities",
+    // This is shown on a button for creating new Entities
+    "newEntity": "New Entity",
     "alert": {
-      "upload": "Success! Your Entities have been uploaded."
+      "upload": "Your Entities have been successfully uploaded.",
+      "create": "Entity has been successfully created."
     },
     "purgeDescription": "Entities are deleted after 30 days in the Trash",
     "action": {
@@ -212,20 +240,22 @@ export default {
 <i18n>
 {
   "de": {
-    "upload": "Entitäten hochladen",
+    "upload": "Objekte hochladen",
     "alert": {
-      "upload": "Erfolgreich! Ihre Entitäten wurden hochgeladen."
+      "upload": "Ihre Objekte wurden erfolgreich hochgeladen.",
+      "create": "Die Entität wurde erfolgreich erstellt."
     },
-    "purgeDescription": "Entitäten werden nach 30 Tagen im Papierkorb gelöscht",
+    "purgeDescription": "Objekte werden nach 30 Tagen im Papierkorb gelöscht",
     "action": {
-      "toggleDeletedEntities": "{count} gelöscht Entität | {count} gelöschte Entitäten"
+      "toggleDeletedEntities": "{count} gelöschtes Objekt | {count} gelöschte Objekte"
     },
-    "analyzeDisabledDeletedData": "Der OData-Zugriff ist für gelöschte Entitäten nicht verfügbar"
+    "analyzeDisabledDeletedData": "Der OData-Zugriff ist für gelöschte Objekte nicht verfügbar"
   },
   "es": {
     "upload": "Subir entidades",
     "alert": {
-      "upload": "¡Éxito! Tus entidades han sido cargadas."
+      "upload": "Sus Entidades han sido cargadas con éxito.",
+      "create": "La entidad ha sido creado exitosamente."
     },
     "purgeDescription": "Las Entidades se eliminan después de 30 días en la Papelera",
     "action": {
@@ -235,8 +265,10 @@ export default {
   },
   "fr": {
     "upload": "Téléverser des entités",
+    "newEntity": "Nouvelle entité",
     "alert": {
-      "upload": "Succès : Vos Entités ont été téléversées.."
+      "upload": "Vos Entités ont été téléversées.",
+      "create": "Entité a été créée avec succès."
     },
     "purgeDescription": "Les entités sont supprimées après 30 jours passés dans la corbeille.",
     "action": {
@@ -247,7 +279,8 @@ export default {
   "it": {
     "upload": "Caricare Entità",
     "alert": {
-      "upload": "L'operazione è riuscita con successo! Le tue Entità sono state caricate."
+      "upload": "Le entità sono state caricate con successo.",
+      "create": "L'Entità è stata creata con successo."
     },
     "purgeDescription": "Le Entità vengono eliminate dopo 30 giorni nel Cestino",
     "action": {
@@ -256,8 +289,9 @@ export default {
     "analyzeDisabledDeletedData": "L'accesso OData non è disponibile per gli Entità cancellate"
   },
   "pt": {
+    "upload": "Carregar Entidades",
     "alert": {
-      "upload": "Sucesso! Suas entidades foram carregadas."
+      "upload": "Suas Entidades foram carregadas com sucesso."
     },
     "purgeDescription": "Entidades são excluídas após 30 dias na Lixeira",
     "action": {
@@ -265,10 +299,28 @@ export default {
     },
     "analyzeDisabledDeletedData": "O acesso OData não está disponível para Entidades excluídas"
   },
-  "zh-Hant": {
+  "zh": {
+    "upload": "上传实体",
     "alert": {
-      "upload": "成功！您的實體已上傳。"
-    }
+      "upload": "您的实体已成功上传。",
+      "create": "实体已成功创建。"
+    },
+    "purgeDescription": "实体将在30天后从垃圾箱中删除",
+    "action": {
+      "toggleDeletedEntities": "{count}个已删除的实体"
+    },
+    "analyzeDisabledDeletedData": "已删除的实体无法使用 OData 访问"
+  },
+  "zh-Hant": {
+    "upload": "上傳實體",
+    "alert": {
+      "upload": "您的實體已成功上傳。"
+    },
+    "purgeDescription": "實體將在 30 天後從垃圾箱中刪除",
+    "action": {
+      "toggleDeletedEntities": "{count} 個已刪除的實體"
+    },
+    "analyzeDisabledDeletedData": "已刪除實體的 OData 存取不可用"
   }
 }
 </i18n>

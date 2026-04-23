@@ -18,7 +18,7 @@ describe('AccountClaim', () => {
     const component = mount(AccountClaim);
     await component.get('input').setValue('x');
     await component.get('form').trigger('submit');
-    component.should.alert('danger', 'Please input a password at least 10 characters long.');
+    component.should.alert('danger', 'Password must be at least 10 characters long.');
   });
 
   it('sends the correct request', () =>
@@ -69,6 +69,7 @@ describe('AccountClaim', () => {
 
   describe('after a successful response', () => {
     const submit = () => load('/account/claim?token=foo')
+      .complete()
       .request(async (app) => {
         const component = app.getComponent(AccountClaim);
         await component.get('input').setValue('testPassword');
@@ -79,6 +80,12 @@ describe('AccountClaim', () => {
     it('redirects to login', async () => {
       const app = await submit();
       app.vm.$route.path.should.equal('/login');
+    });
+
+    it('includes source=claim query param when redirecting to login', async () => {
+      const app = await submit();
+      app.vm.$route.path.should.equal('/login');
+      app.vm.$route.query.source.should.equal('claim');
     });
 
     it('shows a success alert', async () => {

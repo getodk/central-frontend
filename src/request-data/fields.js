@@ -27,8 +27,8 @@ export default () => {
       return data;
     },
     /* eslint-enable no-param-reassign */
-    selectable: computeIfExists(() => {
-      const selectable = [];
+    outsideRepeat: computeIfExists(() => {
+      const result = [];
       // The path of the top-level repeat group currently being traversed
       let repeat = null;
       for (const field of fields) {
@@ -39,19 +39,21 @@ export default () => {
           // in the Widgets sample form (<branch>):
           // https://github.com/getodk/sample-forms/blob/e9fe5838e106b04bf69f43a8a791327093571443/Widgets.xml
           const { type } = field;
-          if (type === 'repeat') {
+          if (type === 'repeat')
             repeat = `${path}/`;
-          } else if (type !== 'structure' && path !== '/meta/instanceID' &&
-            path !== '/instanceID') {
-            selectable.push(field);
-          }
+          else if (type !== 'structure')
+            result.push(field);
         }
       }
-      return selectable;
+      return result;
     }),
+    selectable: computeIfExists(() => fields.outsideRepeat.filter(({ path }) =>
+      path !== '/meta/instanceID' && path !== '/instanceID')),
     binaryPaths: computeIfExists(() => fields.reduce(
       (acc, cur) => (cur.binary ? acc.add(cur.path) : acc),
       new Set()
-    ))
+    )),
+    hasMappable: computeIfExists(() => fields.outsideRepeat.some(({ type }) =>
+      type === 'geopoint' || type === 'geotrace' || type === 'geoshape'))
   }));
 };

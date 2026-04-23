@@ -34,36 +34,8 @@ except according to the terms contained in the LICENSE file.
         </span>
         <span class="icon-angle-right"></span>
       </div>
-      <div class="btn-group">
-        <button v-if="verbs.has('submission.delete')" type="button"
-          class="delete-button btn btn-default"
-          :aria-label="$t('action.delete')" v-tooltip.aria-label>
-          <span class="icon-trash"></span><spinner :state="awaitingResponse"/>
-        </button>
-        <template v-if="verbs.has('submission.update')">
-          <button type="button" class="review-button btn btn-default"
-            :aria-label="$t('action.review')" v-tooltip.aria-label>
-            <span class="icon-check"></span>
-          </button>
-          <a v-if="submission.__system.status == null" class="btn btn-default"
-            :href="editPath" target="_blank" :aria-label="editLabel"
-            v-tooltip.aria-label>
-            <span class="icon-pencil"></span>
-          </a>
-          <button v-else type="button" class="btn btn-default"
-            :aria-label="editLabel" aria-disabled="true"
-            v-tooltip.aria-describedby="$t('submission.editDisabled')">
-            <span class="icon-pencil"></span>
-          </button>
-        </template>
-        <router-link v-slot="{ href }"
-          :to="submissionPath(projectId, xmlFormId, submission.__id)" custom>
-          <a class="more-button btn btn-default" :href="href" target="_blank">
-            <span>{{ $t('action.more') }}</span>
-            <span class="icon-angle-right"></span>
-          </a>
-        </router-link>
-      </div>
+      <submission-actions :submission="submission"
+        :awaiting-response="awaitingResponse"/>
     </td>
     <td v-if="!draft && deleted" class="state-and-actions">
       <div class="col-content col-deleted-at">
@@ -84,14 +56,12 @@ except according to the terms contained in the LICENSE file.
 <script>
 import DateTime from '../date-time.vue';
 import Spinner from '../spinner.vue';
+import SubmissionActions from './actions.vue';
 import SubmissionReviewState from './review-state.vue';
-
-import { useRequestData } from '../../request-data';
-import useRoutes from '../../composables/routes';
 
 export default {
   name: 'SubmissionMetadataRow',
-  components: { DateTime, Spinner, SubmissionReviewState },
+  components: { DateTime, Spinner, SubmissionActions, SubmissionReviewState },
   props: {
     projectId: {
       type: String,
@@ -120,29 +90,11 @@ export default {
     },
     awaitingResponse: Boolean
   },
-  setup() {
-    const { form } = useRequestData();
-    const { submissionPath, editSubmissionPath } = useRoutes();
-    return { form, submissionPath, editSubmissionPath };
-  },
   computed: {
     missingAttachment() {
       const { __system } = this.submission;
       return __system.reviewState == null &&
         __system.attachmentsPresent !== __system.attachmentsExpected;
-    },
-    editPath() {
-      return this.editSubmissionPath(
-        this.projectId,
-        this.xmlFormId,
-        this.submission.__id,
-        this.form.webformsEnabled
-      );
-    },
-    editLabel() {
-      return this.$t('submission.action.edit', {
-        count: this.$n(this.submission.__system.edits, 'default')
-      });
     }
   }
 };
@@ -184,14 +136,7 @@ export default {
 
     .icon-pencil { margin-right: 5px; }
   }
-  .col-content .icon-angle-right {
-    color: $color-accent-primary;
-    font-size: 20px;
-    margin-top: -1px;
-  }
-
-  .delete-button .icon-trash { color: $color-danger; }
-
   .col-deleted-at { color: $color-danger; }
+  // The actions themselves are styled via the icon-btn-group mixin.
 }
 </style>

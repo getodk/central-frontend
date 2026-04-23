@@ -14,18 +14,15 @@ except according to the terms contained in the LICENSE file.
     <template v-if="submission.__system.status == null">
       <td v-for="field of fields" :key="field.path" :class="fieldClass(field)">
         <template v-if="field.binary === true">
-          <a v-if="rawValue(submission, field) != null" class="binary-link"
-            :href="formattedValue(submission, field)" target="_blank"
-            :aria-disabled="deleted"
-            :aria-label="deleted ? $t('submission.fileDownloadUnavailable') : $t('submission.binaryLinkTitle')"
-            v-tooltip.aria-label>
-            <span class="icon-check"></span> <span class="icon-download"></span>
-          </a>
+          <submission-attachment-link v-if="getValue(submission, field) != null"
+            :project-id="projectId" :xml-form-id="xmlFormId" :draft="draft"
+            :instance-id="submission.__id"
+            :attachment-name="getValue(submission, field)" :deleted="deleted"/>
         </template>
         <template v-else-if="needsTooltip(field.type)">
-          <span v-tooltip.text>{{ formattedValue(submission, field) }}</span>
+          <span v-tooltip.text>{{ formatValue(submission, field, $i18n) }}</span>
         </template>
-        <template v-else>{{ formattedValue(submission, field) }}</template>
+        <template v-else>{{ formatValue(submission, field, $i18n) }}</template>
       </td>
     </template>
     <template v-else-if="fields.length !== 0">
@@ -40,143 +37,68 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { DateTime, Settings } from 'luxon';
-import { path } from 'ramda';
-
-import { apiPaths } from '../../util/request';
-import { formatDate, formatDateTime, formatTime } from '../../util/date-time';
-
 /*
 We may render many rows and/or many columns, so performance matters in this
 component. SubmissionDataRow components may be frequently created or unmounted,
 so it matters how long it takes to render a component and how long it takes to
 unmount one. (Note that unmounting may take longer than rendering!)
 
-We used to have a SubmissionCell component, but that was too slow: now
+We used to have a SubmissionCell component, but that was too slow: now almost
 everything is done in this component. We also used to have an i18n custom block,
 but that again was significantly slower.
 */
 
-const typesWithoutTooltips = ['int', 'decimal', 'date', 'time', 'dateTime', 'geopoint'];
-
-export default {
-  name: 'SubmissionDataRow',
-  props: {
-    projectId: {
-      type: String,
-      required: true
-    },
-    xmlFormId: {
-      type: String,
-      required: true
-    },
-    draft: Boolean,
-    submission: {
-      type: Object,
-      required: true
-    },
-    fields: {
-      type: Array,
-      required: true
-    },
-    deleted: {
-      type: Boolean,
-      default: false
-    },
-  },
-  computed: {
-    htmlClass() {
-      return {
-        'encrypted-submission': this.submission.__system.status != null
-      };
-    }
-  },
-  methods: {
-    fieldClass(field) {
-      if (field.binary === true) return 'binary-field';
-      if (field.type === 'int') return 'int-field';
-      if (field.type === 'decimal') return 'decimal-field';
-      if (field.type === 'geopoint') return 'geopoint-field';
-      return null;
-    },
-    rawValue(submission, field) {
-      return path(field.pathElements, submission);
-    },
-    formattedValue(submission, field) {
-      const rawValue = this.rawValue(submission, field);
-      if (rawValue == null) return null;
-      // A field could have a `binary` property that is `true` but a `type`
-      // property that does not equal 'binary'. Backend treats the `binary`
-      // property as authoritative.
-      if (field.binary === true) {
-        return apiPaths.submissionAttachment(
-          this.projectId,
-          this.xmlFormId,
-          this.draft,
-          this.submission.__id,
-          rawValue
-        );
-      }
-      switch (field.type) {
-        case 'int':
-          return this.$n(rawValue, 'default');
-        // The ODK XForms specification seems to allow decimal values that
-        // cannot be precisely stored as a Number. However, Collect limits
-        // decimal input to 15 characters, resulting in only values that can be
-        // precisely stored as a Number.
-        case 'decimal': {
-          if (Number.isInteger(rawValue)) return this.$n(rawValue, 'default');
-          // Non-integers outside this range are more than 15 characters
-          // (including the sign and decimal point).
-          if (rawValue >= 10000000000000 || rawValue <= -1000000000000)
-            return this.$n(rawValue, 'maximumFractionDigits1');
-          const integerDigits = Math.floor(Math.abs(rawValue)).toString().length;
-          const signCharacters = rawValue < 0 ? 1 : 0;
-          // 14, not 15, because the decimal point consumes a character.
-          const fractionDigits = 14 - integerDigits - signCharacters;
-          return this.$n(rawValue, `maximumFractionDigits${fractionDigits}`);
-        }
-
-        // There may be differences between ISO 8601 and the the ODK XForms
-        // specification for date or time values, but the values that Collect
-        // sends seem to be ISO 8601. Here, we attempt to parse a date or time
-        // value as ISO 8601, but if the resulting DateTime is invalid, we
-        // indicate that to the user.
-        case 'date':
-          return formatDate(DateTime.fromISO(rawValue));
-        case 'time': {
-          /* Collect does not allow the user to select a time value's associated
-          time zone. However, Collect may add a time zone designator to the
-          value nonetheless. In that case, we will remove the time zone
-          designator before displaying the value in the table. By default,
-          DateTime.fromISO() returns a local DateTime. However, if the system
-          date is the date of a DST shift, rawValue may imply an invalid or
-          ambiguous time: since rawValue includes a time but not a date,
-          DateTime will use the system date. To avoid that, we temporarily set
-          the default time zone to UTC. */
-          const originalZoneName = Settings.defaultZoneName;
-          Settings.defaultZoneName = 'utc';
-          const time = DateTime.fromISO(rawValue, { setZone: true });
-          Settings.defaultZoneName = originalZoneName;
-          return formatTime(time);
-        }
-        // rawValue is an Edm.DateTimeOffset. Again, there may be differences
-        // between ISO 8601 and the Edm.DateTimeOffset specification. However,
-        // ISO 8601 is the only likely format for rawValue. As with a date or
-        // time value, we attempt to parse a dateTime value as ISO 8601,
-        // indicating any failure to the user.
-        case 'dateTime':
-          return formatDateTime(DateTime.fromISO(rawValue));
-
-        default:
-          return rawValue;
-      }
-    },
-    needsTooltip(type) {
-      return !typesWithoutTooltips.includes(type);
-    }
-  }
+const fieldClass = (field) => {
+  // A field could have a `binary` property that is `true` but a `type` property
+  // that does not equal 'binary'. Backend treats the `binary` property as
+  // authoritative.
+  if (field.binary === true) return 'binary-field';
+  if (field.type === 'int') return 'int-field';
+  if (field.type === 'decimal') return 'decimal-field';
+  if (field.type === 'geopoint') return 'geopoint-field';
+  return null;
 };
+
+const typesWithoutTooltips = ['int', 'decimal', 'date', 'time', 'dateTime', 'geopoint'];
+const needsTooltip = (type) => !typesWithoutTooltips.includes(type);
+</script>
+
+<script setup>
+import { computed } from 'vue';
+
+import SubmissionAttachmentLink from './attachment-link.vue';
+
+import { getValue, formatValue } from '../../util/submission';
+
+defineOptions({
+  name: 'SubmissionDataRow'
+});
+const props = defineProps({
+  projectId: {
+    type: String,
+    required: true
+  },
+  xmlFormId: {
+    type: String,
+    required: true
+  },
+  draft: Boolean,
+  submission: {
+    type: Object,
+    required: true
+  },
+  fields: {
+    type: Array,
+    required: true
+  },
+  deleted: {
+    type: Boolean,
+    default: false
+  },
+});
+
+const htmlClass = computed(() =>
+  ({ 'encrypted-submission': props.submission.__system.status != null }));
 </script>
 
 <style lang="scss">
@@ -191,24 +113,6 @@ export default {
   .table-freeze-scrolling .geopoint-field { max-width: 500px; }
 
   .binary-field { text-align: center; }
-  .binary-link {
-    background-color: $color-subpanel-background;
-    border-radius: 99px;
-    padding: 4px 7px;
-    text-decoration: none;
-
-    .icon-check {
-      color: $color-success;
-      margin-right: 0;
-    }
-
-    .icon-download {
-      border-left: 1px dotted #ccc;
-      color: #bbb;
-      padding-left: 5px;
-    }
-    &:hover .icon-download { color: $color-action-foreground; }
-  }
 
   .encrypted-submission {
     $icon-lock-margin-left: 3px;

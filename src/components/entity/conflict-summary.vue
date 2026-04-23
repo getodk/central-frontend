@@ -254,7 +254,7 @@ const markAsResolved = () => {
       "Wenn alles in Ordnung aussieht, klicken Sie auf „Als 'In Ordnung' markieren“, um diese Warnung zu schließen."
     ],
     "confirmation": {
-      "title": "Ist diese Entität OK?",
+      "title": "Ist dieses Objekt OK?",
       "body": "Nachdem Sie die möglicherweise widersprüchlichen Aktualisierungen überprüft und alle erforderlichen Aktualisierungen vorgenommen haben, können Sie unten auf „Bestätigen“ klicken, um die Warnung zu parallelen Aktualisierungen zu löschen.",
       "confirm": "Bestätigen"
     },
@@ -371,6 +371,28 @@ const markAsResolved = () => {
     "markAsResolved": "Tia alama kuwa imesuluhishwa",
     "problem": {
       "409_15": "Data imerekebishwa na mtumiaji mwingine. Tafadhali onyesha upya ili kuona data iliyosasishwa."
+    }
+  },
+  "zh": {
+    "title": "数据同步更新",
+    "subtitle": [
+      "已根据可能过期的数据进行了一个或多个更新。",
+      "请查看并核对以下同步更新的摘要。"
+    ],
+    "footer": [
+      "如果需要调整任何数值，您可以直接编辑实体数据。",
+      "如果一切正常，请点击“标记为已解决”以忽略此警告。"
+    ],
+    "confirmation": {
+      "title": "此实体是否正常？",
+      "body": "在您查看并处理可能存在冲突的更新后，可点击下方的“确认”以清除同步更新警告。",
+      "confirm": "确认"
+    },
+    "conflictResolved": "此冲突警告已清除。",
+    "markAsResolved": "标记为已解决",
+    "problem": {
+      "400_32": "其他用户已将此冲突标记为已解决，请刷新查看更新后的数据。",
+      "409_15": "数据已被其他用户修改，请刷新以查看最新数据。"
     }
   },
   "zh-Hant": {

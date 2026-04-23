@@ -102,6 +102,9 @@ onMounted(() => { link.value.click(); });
   "sw": {
     "body": "{filename} itaanza kupakuliwa hivi karibuni. Mara tu upakuaji unapoanza, unaweza kuondoka kwenye ukurasa huu"
   },
+  "zh": {
+    "body": "{filename}将开始下载。当下载开始后，您可以离开此页面。"
+  },
   "zh-Hant": {
     "body": "{filename}即將開始下載。下載開始後，您可以離開此頁面。"
   }

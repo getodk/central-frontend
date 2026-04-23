@@ -1,0 +1,181 @@
+<!--
+Copyright 2026 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+
+<template>
+  <modal id="delete-property-error-modal" :state="state" backdrop hideable @hide="$emit('hide')">
+    <template #title>{{ $t('title') }}</template>
+    <template #body>
+      <div v-if="state && errorObject" class="modal-introduction">
+        <p>{{ $t('intro', { propertyName: errorObject.details.propertyName }) }}</p>
+        <ul>
+          <li v-if="nonEmptyEntities">
+            {{ $tcn('clearEntities', nonEmptyEntities.details.totalCount) }}
+          </li>
+          <li v-if="dependentForms">
+            {{ $tcn('unlinkForms', dependentForms.details.forms.length) }}
+          </li>
+        </ul>
+        <details v-if="nonEmptyEntities" open>
+          <summary>
+            {{ $t('relatedToEntities', nonEmptyEntities.details.totalCount) }}
+            <span class="icon-chevron-down"></span>
+          </summary>
+          <ul>
+            <li v-for="entity in nonEmptyEntities.details.entities" :key="entity.uuid">
+              <router-link :to="entityPath(projectId, datasetName, entity.uuid)" target="_blank">{{ entity.label }}</router-link>
+            </li>
+          </ul>
+          <p v-if="nonEmptyEntities.details.totalCount > 3" class="more-entities">
+            {{ $t('moreEntities', nonEmptyEntities.details.totalCount - 3) }}
+          </p>
+        </details>
+        <details v-if="dependentForms" open>
+          <summary>
+            {{ $t('relatedToForms', dependentForms.details.forms.length) }}
+            <span class="icon-chevron-down"></span>
+          </summary>
+          <ul>
+            <li v-for="form in dependentForms.details.forms" :key="form.xmlFormId">
+              <router-link :to="formPath(projectId, form.xmlFormId, 'draft')" target="_blank">{{ form.formName }}</router-link>
+            </li>
+          </ul>
+        </details>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-default" @click="$emit('hide')">
+          {{ $t('action.close') }}
+        </button>
+      </div>
+    </template>
+  </modal>
+</template>
+
+<script setup>
+import { computed } from 'vue';
+
+import Modal from '../../modal.vue';
+
+import useRoutes from '../../../composables/routes';
+
+defineOptions({
+  name: 'DeletePropertyError'
+});
+
+const props = defineProps({
+  state: {
+    type: Boolean,
+    required: true
+  },
+  projectId: [Number, String],
+  datasetName: String,
+  errorObject: Object,
+});
+const { formPath, entityPath } = useRoutes();
+
+const nonEmptyEntities = computed(() => (props.errorObject ? props.errorObject.details.prerequisites.nonEmptyEntities : null));
+const dependentForms = computed(() => (props.errorObject ? props.errorObject.details.prerequisites.dependentForms : null));
+defineEmits(['hide']);
+</script>
+
+<style lang="scss">
+@import '../../../assets/scss/variables';
+
+#delete-property-error-modal{
+  details {
+    summary {
+      cursor: pointer;
+      list-style: none;
+      font-weight: bold;
+      padding: 10px 0;
+      color: $color-action-foreground;
+
+      .icon-chevron-down {
+        display: inline-block;
+        margin-right: 6px;
+      }
+    }
+
+    &[open] summary .icon-chevron-down {
+      transform: rotate(0deg);
+    }
+
+    &:not([open]) summary .icon-chevron-down {
+      transform: rotate(-90deg);
+    }
+  }
+  .more-entities {
+    margin-left: 20px;
+    margin-bottom: 10px;
+  }
+}
+</style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "title": "Delete Property",
+    // This text is followed by a list of actions.
+    "intro": "Before you can delete the Property “{propertyName}”, you must:",
+    // This text appears in a list of required actions. "It" refers to an Entity
+    // property.
+    "clearEntities": "Clear its value in {count} Entity | Clear its value in {count} Entities",
+    // This text appears in a list of required actions. "It" refers to an Entity
+    // property.
+    "unlinkForms": "Unlink {count} Form that sets it | Unlink {count} Forms that set it",
+    // This text refers to an Entity property that is set.
+    "relatedToEntities": "Set in {count} Entity | Set in {count} Entities",
+    // This text is shown beneath a partial list of Entities. If there are more
+    // than a few Entities, then only the first few Entities are shown, followed
+    // by this text.
+    "moreEntities": "and {count} more Entity | and {count} more Entities",
+    // This text refers to an Entity property that is set.
+    "relatedToForms": "Set by {count} Form | Set by {count} Forms"
+  }
+}
+</i18n>
+
+<!-- Autogenerated by destructure.js -->
+<i18n>
+{
+  "de": {
+    "title": "Eigenschaft löschen",
+    "relatedToEntities": "Eingestellt auf {count} Objekt | Eingestellt auf {count} Objekte",
+    "moreEntities": "und {count} weitere Entität | und {count} weitere Entitäten",
+    "relatedToForms": "Festgelegt von {count} Formular | Festgelegt von {count} Formulare"
+  },
+  "es": {
+    "title": "Borrar propiedad",
+    "relatedToEntities": "Establecido en {count} Entidad... | Establecido en {count} Entidades... | Establecido en {count} Entidades...",
+    "moreEntities": "y otra {count} entidad | y otras {count} entidades | y otras {count} entidades",
+    "relatedToForms": "Establecido por {count} formulario | Establecido por {count} formularios | Establecido por {count} Forms"
+  },
+  "fr": {
+    "title": "Supprimer la propriété",
+    "intro": "Avant de pouvoir supprimer la propriété \"{propertyName}\", vous devrez :",
+    "clearEntities": "Supprimer sa valeur dans {count} entité | Supprimer sa valeur dans {count} entités | Supprimer sa valeur dans {count} d’entités",
+    "unlinkForms": "Dissocier {count} formulaire qui définit sa valeur | Dissocier {count} formulaires qui définissent sa valeur | Dissocier {count} de formulaires qui définissent sa valeur",
+    "relatedToEntities": "Définie dans {count} entité | Définie dans {count} entités | Définie dans {count} d'entités",
+    "moreEntities": "et {count} autre entité | et {count} autres entités | et {count} d'autres entités",
+    "relatedToForms": "Définie par {count} de formulaire | Définie par {count} formulaires | Définie par {count} de formulaires"
+  },
+  "it": {
+    "title": "Elimina proprietà",
+    "relatedToEntities": "Impostato in {count} Entità... | Impostato in {count} Entità... | Impostato in {count} Entità...",
+    "moreEntities": "e {count} Entità in più | e {count} Entità in più | e {count} Entità in più",
+    "relatedToForms": "Impostato da {count} Formulario | Impostato da {count} Formulari | Impostato da {count} Formulari"
+  },
+  "zh": {
+    "title": "删除属性",
+    "moreEntities": "以及其他 {count} 个实体"
+  }
+}
+</i18n>

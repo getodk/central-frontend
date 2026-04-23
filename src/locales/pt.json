@@ -15,7 +15,8 @@
   "formHead": {
     "tab": {
       "publicAccess": "Acesso Público",
-      "versions": "Versões"
+      "versions": "Versões",
+      "editForm": "Editar Formulário"
     }
   },
   "systemHome": {
@@ -48,7 +49,7 @@
   },
   "audit": {
     "category": {
-      "nonverbose": "(Todas as ações)",
+      "nonverbose": "Todas as ações",
       "user": "Ações de usuários do site",
       "project": "Ações do projeto",
       "form": "Ações de formulário",
@@ -77,7 +78,12 @@
       "dataset": {
         "update": "Atualizar",
         "update_publish": "Publicar",
-        "create": "@:audit.action.default.create"
+        "create": "@:audit.action.default.create",
+        "delete": "@:audit.action.default.delete"
+      },
+      "entity": {
+        "bulk_delete": "Exclusão em massa",
+        "bulk_restore": "Recuperação em massa"
       },
       "field_key": {
         "assignment_create": "Conceder acesso",
@@ -93,6 +99,7 @@
         "update_draft_delete": "Abandonar rascunho",
         "attachment_update": "Atualizar anexos",
         "submission_export": "Baixar respostas",
+        "restore": "Recuperar",
         "purge": "Limpar",
         "create": "@:audit.action.default.create",
         "update": "@:audit.action.default.update",
@@ -111,7 +118,8 @@
       "upgrade": {
         "process_form": "Processar formulário",
         "process_form_draft": "Processar formulário de teste",
-        "process_form_entities_version": "Marcar Formulário para Atualização"
+        "process_form_entities_version": "Marcar Formulário para Atualização",
+        "server": "Nova versão"
       },
       "user": {
         "assignment_create": "Atribuir função",
@@ -135,6 +143,7 @@
     "comment": "Comentário",
     "continue": "Continuar",
     "create": "Criar",
+    "createSubmission": "Nova Resposta",
     "delete": "Excluir",
     "done": "Concluído",
     "download": "Baixar",
@@ -150,11 +159,13 @@
     "ok": "Tudo certo",
     "proceed": "Prosseguir",
     "refresh": "Atualizar",
+    "refreshPage": "Atualizar a página",
     "resetPassword": "Redefinir senha",
     "review": "Revisar",
     "save": "Salvar",
     "saveSettings": "Salvar configuração",
     "sort": "Ordenar",
+    "undo": "Desfazer",
     "update": "Atualizar",
     "yesProceed": "Sim, prossiga",
     "showPreview": "Visualizar",
@@ -162,8 +173,12 @@
     "newPreview": "Nova Visualização Prévia",
     "expand": "Expandir",
     "collapse": "Condensar",
+    "selectRow": "Selecionar linha",
+    "reset": "Reiniciar",
     "reviewParallelUpdates": "Revisar atualizações paralelas",
-    "upload": "Carregar"
+    "tryAgain": "Tentar novamente",
+    "upload": "Carregar",
+    "restore": "Recuperar"
   },
   "field": {
     "comment": "Deixe um comentário",
@@ -208,6 +223,7 @@
   },
   "count": {
     "appUser": "{count} usuário de aplicativo | {count} usuários de aplicativo | {count} usuários de aplicativo",
+    "attachments": "{count} anexo | {count} anexos | {count} anexos",
     "form": "{count} formulário | {count} formulários | {count} formulários",
     "submission": "{count} resposta | {count} respostas | {count} respostas",
     "warning": "{count} aviso | {count} avisos | {count} avisos"
@@ -215,6 +231,7 @@
   "resource": {
     "appUser": "Usuário de aplicativo",
     "appUsers": "Usuários de aplicativo",
+    "attachments": "Anexos",
     "config": "Configuração do servidor",
     "entity": "Entidade",
     "entities": "Entidades",
@@ -240,11 +257,13 @@
     "draft": "Rascunho"
   },
   "alert": {
-    "passwordTooShort": "Por favor, insira uma senha com pelo menos 10 caracteres.",
-    "updateEntity": "A Entidade foi atualizada!",
-    "updateReviewState": "Status de revisão salvo!",
-    "versionChange": "O servidor foi atualizado. Por favor atualize a página para evitar comportamentos indesejáveis.",
-    "submissionDeleted": "A Resposta foi deletada.",
+    "passwordTooShort": "A senha precisa ter no mínimo 10 caracteres.",
+    "updateEntity": "A entidade foi atualizada com sucesso.",
+    "updateReviewState": "Revisão salva com sucesso.",
+    "versionChange": "O servidor foi atualizado com sucesso.",
+    "submissionDeleted": "A Resposta foi excluída com sucesso.",
+    "submissionRestored": "A Resposta foi recuperada.",
+    "entityRestored": "A Entidade \"{label}\" foi recuperada.",
     "entityDeleted": "A Entidade \"{label}\" foi excluída."
   },
   "moreInfo": {
@@ -263,7 +282,8 @@
     "needFeedback": {
       "full": "Para fazer isso nós precisamos do {your} comentário, assim poderemos entender o uso do Central e como torná-lo melhor para você.",
       "your": "seu"
-    }
+    },
+    "mailingListOptIn": "Envie-me ocasionalmente mensagens sobre novas funcionalidades e boas práticas."
   },
   "submission": {
     "missingAttachment": "Sem anexo",
@@ -295,12 +315,14 @@
     "dangerZone": "Zona de perigo",
     "data": "Dados",
     "docs": "Documentação",
+    "emptyMap": "Ainda não há dados de mapa disponíveis.",
     "emptyValue": "(vazio)",
     "error": "Erro",
     "filter": "Filtrar",
     "forum": "Fórum",
     "lastUpdate": "Última atualização",
     "loading": "Carregando...",
+    "map": "Mapa",
     "no": "Não",
     "noResults": "Não há resultados",
     "noUndo": "Esta ação não pode se desfeita.",
@@ -311,6 +333,7 @@
     "tab": {
       "settings": "Configurações"
     },
+    "table": "Tabela",
     "total": "Total",
     "totalSubmissions": "Total de Respostas",
     "propertiesCount": "{inform} de {count} propriedade | {inform} de {count} propriedades | {inform} de {count} propriedades",
@@ -318,9 +341,13 @@
     "totalEntities": "Total de Entidades",
     "versionShort": "v{version}",
     "warning": "Aviso",
+    "beta": "Beta",
+    "none": "(nenhum)",
+    "search": "Busca",
     "reviewState": "Status da revisão",
     "status": "Situação",
-    "version": "Versão"
+    "version": "Versão",
+    "trash": "Lixeira"
   },
   "mixin": {
     "request": {
@@ -353,9 +380,12 @@
     },
     "session": {
       "alert": {
-        "expiresSoon": "Sua sessão irá expirar em 2 minutos e será encerrada automaticamente.",
-        "expired": "Sua sessão expirou. Para continuar trabalhando efetue login novamente.",
-        "logoutError": "Houve um problema e sua última sessão não foi encerrada corretamente. Por favor, atualize a página ou tente efetuar login novamente. {message}"
+        "expiresSoon": "Sua sessão está prestes a expirar! Você será desconectado em 2 minutos.",
+        "expired": "Sua sessão expirou. Efetue o login novamente para continuar.",
+        "logoutError": {
+          "thereWasProblem": "Ocorreu um problema ao sair.",
+          "pleaseRefresh": "Por favor, atualize a página e tente novamente."
+        }
       }
     }
   },

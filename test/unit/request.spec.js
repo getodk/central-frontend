@@ -16,6 +16,14 @@ describe('util/request', () => {
       queryString({ x: 1, y: null }).should.eql('?x=1');
     });
 
+    it('supports arrays', () => {
+      queryString({ x: [1, 2] }).should.equal('?x=1&x=2');
+    });
+
+    it('allows an array to include null', () => {
+      queryString({ x: [1, null] }).should.equal('?x=1&x=null');
+    });
+
     it('returns an empty string for an empty object', () => {
       queryString({}).should.equal('');
     });
@@ -392,6 +400,15 @@ describe('util/request', () => {
     it('audits?limit', () => {
       const path = apiPaths.audits({ action: 'nonverbose', limit: 10 });
       path.should.equal('/v1/audits?action=nonverbose&limit=10');
+    });
+
+    it('config', () => {
+      apiPaths.config('a b').should.equal('/v1/config/a%20b');
+    });
+
+    it('publicCOnfig', () => {
+      const path = apiPaths.publicConfig('a b', { ts: 123 });
+      path.should.equal('/v1/config/public/a%20b?ts=123');
     });
   });
 

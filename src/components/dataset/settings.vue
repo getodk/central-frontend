@@ -11,46 +11,85 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="dataset-settings">
-    <div v-if="dataset.dataExists" class="panel panel-simple">
-      <div class="panel-heading">
-        <h1 class="panel-title">{{ $t('entityWorkflow') }}</h1>
+    <div class="row">
+      <div class="col-xs-6">
+        <div v-if="dataset.dataExists" class="panel panel-simple">
+          <div class="panel-heading">
+            <h1 class="panel-title">{{ $t('entityWorkflow') }}</h1>
+          </div>
+          <div class="panel-body">
+            <form id="dataset-settings-form">
+              <div class="radio" :class="{ disabled: dataset.awaitingResponse }">
+                <label>
+                  <input v-model="approvalRequired" name="approvalRequired" type="radio" :value="false"
+                    aria-describedby="dataset-setting-on-receipt" :disabled="dataset.awaitingResponse"
+                    @change="update()">
+                  <strong>{{ $t('onReceipt.label') }}</strong>
+                </label>
+                <p id="dataset-setting-on-receipt" class="help-block">
+                  {{ $t('onReceipt.description') }}
+                </p>
+              </div>
+              <div class="radio" :class="{ disabled: dataset.awaitingResponse }">
+                <label>
+                  <input v-model="approvalRequired" name="approvalRequired" type="radio" :value="true"
+                    aria-describedby="dataset-setting-on-approval" :disabled="dataset.awaitingResponse"
+                    @change="update()">
+                  <strong>{{ $t('onApproval.label') }}</strong>
+                </label>
+                <p id="dataset-setting-on-approval" class="help-block">
+                  {{ $t('onApproval.description') }}
+                </p>
+              </div>
+            </form>
+          </div>
+
+          <dataset-owner-only/>
+        </div>
       </div>
-      <div class="panel-body">
-        <form id="dataset-settings-form">
-          <div class="radio" :class="{ disabled: dataset.awaitingResponse }">
-            <label>
-              <input v-model="approvalRequired" name="approvalRequired" type="radio" :value="false"
-                aria-describedby="dataset-setting-on-receipt" :disabled="dataset.awaitingResponse" @change="update()">
-              <strong>{{ $t('onReceipt.label') }}</strong>
-            </label>
-            <p id="dataset-setting-on-receipt" class="help-block">
-              {{ $t('onReceipt.description') }}
+      <div class="col-xs-6">
+        <div class="panel panel-simple-danger">
+          <div class="panel-heading">
+            <h1 class="panel-title">{{ $t('common.dangerZone') }}</h1>
+          </div>
+          <div class="panel-body">
+            <p v-if="dependentFormsCount > 0" class="dependent-forms-help">
+              <i18n-t tag="span" keypath="dependentForms.description[0]">
+                <template #name> {{ dataset.name }}</template>
+                <template #formsCount>
+                  <strong>{{ $tc('dependentForms.formsCount', dependentFormsCount) }}</strong>
+                </template>
+              </i18n-t>
+              <br>
+              <span>{{ $t('dependentForms.description[1]') }}</span>&nbsp;
+              <a href="https://docs.getodk.org/central-entities/#deleting-entity-lists" target="_blank">{{ $t('dependentForms.description[2]') }}</a>
+            </p>
+            <p>
+              <button type="button" class="btn btn-danger" :aria-disabled="dependentFormsCount > 0" @click="deleteModal.show()">
+                {{ $t('action.delete') }}&hellip;
+              </button>
             </p>
           </div>
-          <div class="radio" :class="{ disabled: dataset.awaitingResponse }">
-            <label>
-              <input v-model="approvalRequired" name="approvalRequired" type="radio" :value="true"
-                aria-describedby="dataset-setting-on-approval" :disabled="dataset.awaitingResponse" @change="update()">
-              <strong>{{ $t('onApproval.label') }}</strong>
-            </label>
-            <p id="dataset-setting-on-approval" class="help-block">
-              {{ $t('onApproval.description') }}
-            </p>
-          </div>
-        </form>
+        </div>
       </div>
     </div>
 
+    <dataset-delete v-bind="deleteModal" @hide="deleteModal.hide()"
+      @success="afterDelete"/>
     <dataset-pending-submissions v-bind="pendingSubmissionModal" @hide="hideAndReset" @success="hideAndUpdate"/>
   </div>
 </template>
 
 <script setup>
-import { ref, watch, inject } from 'vue';
+import { ref, watch, inject, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 
+import DatasetOwnerOnly from './owner-only.vue';
 import DatasetPendingSubmissions from './pending-submissions.vue';
+import DatasetDelete from './delete.vue';
 
+import useRoutes from '../../composables/routes';
 import { apiPaths, isProblem } from '../../util/request';
 import { modalData } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
@@ -60,6 +99,8 @@ defineOptions({
 });
 
 const { t } = useI18n();
+const router = useRouter();
+const { projectPath } = useRoutes();
 
 const alert = inject('alert');
 
@@ -68,6 +109,8 @@ const { project, dataset } = useRequestData();
 const approvalRequired = ref(dataset.approvalRequired);
 
 const pendingSubmissionModal = modalData();
+
+const deleteModal = modalData();
 
 watch(() => dataset.dataExists, () => {
   approvalRequired.value = dataset.approvalRequired;
@@ -104,11 +147,43 @@ const hideAndReset = () => {
   pendingSubmissionModal.hide();
   approvalRequired.value = dataset.approvalRequired;
 };
+
+const afterDelete = () => {
+  const message = t('alert.delete', { name: dataset.name });
+  router.push(projectPath('entity-lists'))
+    .then(() => { alert.success(message); });
+};
+
+const dependentFormsCount = computed(() => {
+  if (!dataset.dataExists) return 0;
+
+  const publishedForm = new Set();
+  if (dataset.sourceForms) dataset.sourceForms.forEach(f => publishedForm.add(f.xmlFormId));
+  if (dataset.linkedForms) dataset.linkedForms.forEach(f => publishedForm.add(f.xmlFormId));
+
+  const draftForm = new Set();
+  if (dataset.draftSourceForms) dataset.draftSourceForms.forEach(f => draftForm.add(f.xmlFormId));
+  if (dataset.draftLinkedForms) dataset.draftLinkedForms.forEach(f => draftForm.add(f.xmlFormId));
+
+  return publishedForm.size + draftForm.size;
+});
 </script>
 
+<style lang="scss">
+@import '../../assets/scss/_variables.scss';
 
-<style lang="scss"></style>
+#dataset-settings {
+  .panel-simple-danger .panel-body {
+    margin-bottom: 15px;
+    margin-top: 10px;
+    text-align: center;
 
+    .dependent-forms-help {
+      text-align: left;
+    }
+  }
+}
+</style>
 <i18n lang="json5">
 {
   "en": {
@@ -123,6 +198,28 @@ const hideAndReset = () => {
       "label": "Create Entities when Submissions are marked as Approved",
       "description": "Entity data will not update until a person reviews the data. Corrections can be made if necessary.",
       "successMessage": "Entities will be created when Submissions are marked as Approved."
+    },
+    "action": {
+      "delete": "Delete Entity List"
+    },
+    "alert": {
+      "delete": "The Entity List “{name}” has been successfully deleted."
+    },
+    "dependentForms" : {
+      "description": [
+        // {formsCount} is the number of Forms that are dependent on the Entity List.
+        // Example: 4 Forms
+        "The Entity List “{name}” is linked to {formsCount}.",
+        // "It" refers to an Entity List.
+        "Before you can delete it, you’ll need to unlink it from the related Forms.",
+        "Learn more here."
+      ],
+      /*
+      This text will be inserted where {formsCount} is in the following sentence:
+
+      The Entity List “{name}” is linked to {formsCount}.
+      */
+      "formsCount": "{count} Form | {count} Forms",
     }
   }
 }
@@ -145,16 +242,30 @@ const hideAndReset = () => {
     }
   },
   "de": {
-    "entityWorkflow": "Entitätsworkflow",
+    "entityWorkflow": "Objektworkflow",
     "onReceipt": {
-      "label": "Entitäten anlegen, sobald die Einsendungen bei der Zentrale eingegangen sind",
-      "description": "Sie haben keine Gelegenheit zur Überprüfung oder Überarbeitung der Daten, bevor Entitäten erstellt werden.",
-      "successMessage": "Die Entitäten werden erstellt, sobald die Einsendungen bei der Central eingegangen sind."
+      "label": "Objekte anlegen, sobald die Einsendungen bei der Zentrale eingegangen sind",
+      "description": "Sie haben keine Gelegenheit zur Überprüfung oder Überarbeitung der Daten, bevor Objekte erstellt werden.",
+      "successMessage": "Die Objekte werden erstellt, sobald die Einsendungen bei der Central eingegangen sind."
     },
     "onApproval": {
-      "label": "Entitäten erstellen, wenn Einsendungen als genehmigt markiert sind",
-      "description": "Entitätsdaten werden erst aktualisiert, wenn eine Person die Daten überprüft. Korrekturen können bei Bedarf vorgenommen werden.",
-      "successMessage": "Die Entitäten werden erstellt, wenn die Einsendungen als genehmigt markiert werden."
+      "label": "Objekte erstellen, wenn Einsendungen als genehmigt markiert sind",
+      "description": "Objektdaten werden erst aktualisiert, wenn eine Person die Daten überprüft. Korrekturen können bei Bedarf vorgenommen werden.",
+      "successMessage": "Die Objekte werden erstellt, wenn die Einsendungen als genehmigt markiert werden."
+    },
+    "action": {
+      "delete": "Objektliste löschen"
+    },
+    "alert": {
+      "delete": "Die Objektliste \"{name}\" wurde erfolgreich gelöscht."
+    },
+    "dependentForms": {
+      "description": [
+        "Die Objektliste \"{name}\" steht im Verbindung mit {formsCount}.",
+        "Bevor Sie es löschen können, müssen Sie die Verknüpfung zu den zugehörigen Formularen aufheben.",
+        "Erfahren Sie mehr hier."
+      ],
+      "formsCount": "{count} Formular | {count} Formulare"
     }
   },
   "es": {
@@ -168,6 +279,20 @@ const hideAndReset = () => {
       "label": "Crear Entidades cuando los envíos se marcan como aprobados",
       "description": "Los datos de la entidad no se actualizarán hasta que una persona los revise. Se pueden hacer correcciones si es necesario.",
       "successMessage": "Las entidades se crearán cuando los Envíos se marquen como Aprobados."
+    },
+    "action": {
+      "delete": "Borrar lista de entidades"
+    },
+    "alert": {
+      "delete": "La lista de entidades {name} fue eliminada correctamente."
+    },
+    "dependentForms": {
+      "description": [
+        "La lista de entidades “{name}” está conectada con {formsCount}.",
+        "Antes de poder Eliminarlo, tendrás que desvincularlo de los formularios relacionados.",
+        "Aprende más aquí."
+      ],
+      "formsCount": "{count} formulario | {count} formularios | {count} formularios"
     }
   },
   "fr": {
@@ -181,6 +306,20 @@ const hideAndReset = () => {
       "label": "Créer les Entités quand les Soumissions sont marquées comme Approuvées.",
       "description": "Les données de l'Entité ne seront pas mises à jour tant qu'une personne n'aura pas révisé les données. Des corrections peuvent être apportées si nécessaires.",
       "successMessage": "Les Entités seront créées quand les Soumissions seront marquées comme Approuvées."
+    },
+    "action": {
+      "delete": "Supprimer la liste d'entités"
+    },
+    "alert": {
+      "delete": "La liste d'entités \"{name}\" a été supprimée avec succès."
+    },
+    "dependentForms": {
+      "description": [
+        "La liste d'entités \"{name}\" est liée à {formsCount}.",
+        "Avant de pouvoir la supprimer, vous devrez la dissocier des formulaires associés.",
+        "En apprendre plus ici."
+      ],
+      "formsCount": "{count} formulaire | {count} formulaires | {count} de formulaires"
     }
   },
   "it": {
@@ -194,6 +333,20 @@ const hideAndReset = () => {
       "label": "Crea Entità quando gli invii sono contrassegnati come approvati",
       "description": "I dati dell'entità non verranno aggiornati fino a quando una persona non li esamina. Se necessario, possono essere apportate correzioni.",
       "successMessage": "Le entità verranno create non appena gli Invii saranno contrassegnati come approvati."
+    },
+    "action": {
+      "delete": "Elimina l'elenco di entità"
+    },
+    "alert": {
+      "delete": "La Lista Entità “{name}” è stato eliminato con successo."
+    },
+    "dependentForms": {
+      "description": [
+        "La Lista Entità “{name}” è collegata a {formsCount}.",
+        "Prima di poterlo eliminare, dovrai scollegarlo dai formulari correlati.",
+        "Impara di più qui."
+      ],
+      "formsCount": "{count} Formulario | {count} Formulari | {count} Formulari"
     }
   },
   "pt": {
@@ -220,6 +373,28 @@ const hideAndReset = () => {
       "label": "Unda Huluki wakati Mawasilisho yametiwa alama kuwa Yameidhinishwa",
       "description": "Data ya huluki haitasasishwa hadi mtu aikague data. Marekebisho yanaweza kufanywa ikiwa ni lazima.",
       "successMessage": "Huluki zitaundwa Mawasilisho yanapotiwa alama kuwa Yameidhinishwa."
+    }
+  },
+  "zh": {
+    "entityWorkflow": "实体工作流程",
+    "onReceipt": {
+      "label": "在 Central 接收到提交后立即创建实体",
+      "description": "在建立实体之前，您将没有机会查看或修改数据。",
+      "successMessage": "Central 在接收到提交后将立即创建实体。"
+    },
+    "onApproval": {
+      "label": "当提交被标记为“已批准”时创建实体",
+      "description": "在有人查看资料之前，实体数据不会更新。如有必要，可修改。",
+      "successMessage": "当提交标记为“已批准”时，将创建实体。"
+    },
+    "action": {
+      "delete": "删除实体列表"
+    },
+    "alert": {
+      "delete": "实体列表“{name}”已成功删除。"
+    },
+    "dependentForms": {
+      "formsCount": "{count} 个表单"
     }
   },
   "zh-Hant": {

@@ -10,6 +10,7 @@ import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
+import { wait } from '../../util/util';
 
 const mountOptions = () => {
   const formVersion = testData.extendedForms.size !== 0
@@ -33,7 +34,9 @@ const xlsForm = () => new File([''], 'my_form.xlsx', {
 });
 const upload = async (component, file = xlsForm()) => {
   await setFiles(component.get('#form-new input'), [file]);
-  return component.get('#form-new-upload-button').trigger('click');
+  await component.get('#form-new-upload-button').trigger('click');
+  // wait for file to be verified and then actual request to be sent
+  return wait(1);
 };
 
 describe('FormNew', () => {
@@ -108,10 +111,10 @@ describe('FormNew', () => {
       testData.extendedProjects.createPast(1);
     });
 
-    it('shows an info alert if no file is selected', async () => {
+    it('shows an alert if no file is selected', async () => {
       const modal = mount(FormNew, mountOptions());
       await modal.get('#form-new-upload-button').trigger('click');
-      modal.should.alert('info');
+      modal.should.alert('danger');
     });
 
     it('hides the alert after a file is selected', async () => {
@@ -279,9 +282,7 @@ describe('FormNew', () => {
 
     it('shows a success alert', () =>
       createForm().then(app => {
-        app.should.alert('success', (message) => {
-          message.should.startWith('Your new Form “Form 2” has been created as a Draft.');
-        });
+        app.should.alert('success', '“Form 2” has been created as a Form Draft.');
       }));
 
     it('increments the form count', () =>
@@ -336,7 +337,7 @@ describe('FormNew', () => {
         })
         .respondForComponent('FormEdit')
         .afterResponses(app => {
-          app.should.alert('success', 'Success! The new Form definition has been saved as your Draft.');
+          app.should.alert('success', 'The new Form definition has been saved as your Draft.');
         });
     });
 
@@ -625,7 +626,10 @@ describe('FormNew', () => {
           modal.should.alert('danger');
           modal.get('.modal-warnings').should.be.hidden();
         })
-        .request(modal => modal.get('#form-new-upload-button').trigger('click'))
+        .request(async modal => {
+          await modal.get('#form-new-upload-button').trigger('click');
+          return wait(1);
+        })
         .respondWithProblem(xlsFormWarning)
         .afterResponse(modal => {
           modal.should.not.alert();
@@ -683,8 +687,10 @@ describe('FormNew', () => {
         })
         .respondWithProblem(xlsFormWarning)
         .complete()
-        .request(modal =>
-          modal.get('.modal-warnings .btn-primary').trigger('click'))
+        .request(async modal => {
+          await modal.get('.modal-warnings .btn-primary').trigger('click');
+          return wait(1);
+        })
         .beforeEachResponse((_, { url }) => {
           url.should.equal('/v1/projects/1/forms?ignoreWarnings=true');
         })

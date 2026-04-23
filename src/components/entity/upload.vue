@@ -244,7 +244,7 @@ const rowToEntity = (values, columns) => {
   obj.data = noPropertyData;
   return obj;
 };
-const { i18n: globalI18n, alert } = inject('container');
+const { i18n: globalI18n, redAlert } = inject('container');
 const parseEntities = async (file, headerResults, signal) => {
   const results = await parseCSV(globalI18n, file, headerResults.columns, {
     delimiter: headerResults.meta.delimiter,
@@ -257,7 +257,7 @@ const parseEntities = async (file, headerResults, signal) => {
   warnings.value = results.warnings;
 };
 const selectFile = (file) => {
-  alert.blank();
+  redAlert.hide();
   headerErrors.value = null;
   dataError.value = null;
 
@@ -268,7 +268,7 @@ const selectFile = (file) => {
   parsing.value = true;
   return parseCSVHeader(globalI18n, file, signal)
     .catch(error => {
-      if (!signal.aborted) alert.danger(error.message);
+      if (!signal.aborted) redAlert.show(error.message);
       throw error;
     })
     .then(headerResults => (validateHeader(headerResults, file)
@@ -447,7 +447,7 @@ watch(() => props.state, (state) => {
       "append": "Append data"
     },
     "alert": {
-      "blankLabel": "The label is missing.",
+      "blankLabel": "Missing label.",
       "noData": "Your file does not contain any data."
     }
   }
@@ -470,10 +470,10 @@ watch(() => props.state, (state) => {
       "append": "Daten hinzufügen"
     },
     "alert": {
-      "blankLabel": "Das Etikett fehlt.",
+      "blankLabel": "Fehlende Etikett.",
       "noData": "Ihre Datei enthält keine Daten."
     },
-    "noEntities": "Es gibt keine Entitäten zum Anzeigen."
+    "noEntities": "Es gibt keine Objekte zum Anzeigen."
   },
   "es": {
     "title": "Importar datos de un archivo",
@@ -500,7 +500,7 @@ watch(() => props.state, (state) => {
       "append": "Ajouter les données"
     },
     "alert": {
-      "blankLabel": "Le label manque",
+      "blankLabel": "Étiquette manquante.",
       "noData": "Votre fichier ne contient aucune donnée"
     },
     "noEntities": "Pas d'entités à montrer."
@@ -515,7 +515,7 @@ watch(() => props.state, (state) => {
       "append": "Aggiungi dati"
     },
     "alert": {
-      "blankLabel": "Manca l'etichetta.",
+      "blankLabel": "Etichetta mancante",
       "noData": "Il tuo file non contiene alcun dato."
     },
     "noEntities": "Non ci sono entità da mostrare."
@@ -530,13 +530,28 @@ watch(() => props.state, (state) => {
       "append": "Anexar dados"
     },
     "alert": {
-      "blankLabel": "Está faltando o rótulo.",
+      "blankLabel": "Rótulo faltando.",
       "noData": "Seu arquivo não contém dados."
     },
     "noEntities": "Não há Entidades para mostrar."
   },
   "sw": {
     "noEntities": "Hakuna Fomu za kuonyesha."
+  },
+  "zh": {
+    "title": "从文件导入数据",
+    "table": {
+      "server": "{name}服务器数据",
+      "file": "要导入的数据"
+    },
+    "action": {
+      "append": "添加数据"
+    },
+    "alert": {
+      "blankLabel": "无标签",
+      "noData": "您的文件不包含任何数据。"
+    },
+    "noEntities": "暂无实体可显示。"
   },
   "zh-Hant": {
     "title": "從文件匯入數據",

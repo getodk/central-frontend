@@ -1,5 +1,6 @@
 import sinon from 'sinon';
 
+import { nextTick } from 'vue';
 import Modal from '../../../src/components/modal.vue';
 import SubmissionDownload from '../../../src/components/submission/download.vue';
 
@@ -84,7 +85,7 @@ describe('SubmissionDownload', () => {
         // click first button of the dropdown menu which is download filtered submissions
         await component.find('#submission-download-button li:nth-of-type(1) button').trigger('click');
         const modal = component.getComponent(SubmissionDownload);
-        const urls = modal.findAll('a').map(aUrl);
+        const urls = modal.findAll('a[href]').map(aUrl);
         // Assert that it includes odata filters
         urls[0].searchParams.get('$filter').should.match(/reviewState/);
       });
@@ -99,7 +100,7 @@ describe('SubmissionDownload', () => {
         // click second button of the dropdown menu which is download all submissions
         await component.find('#submission-download-button li:nth-of-type(2) button').trigger('click');
         const modal = component.getComponent(SubmissionDownload);
-        const urls = modal.findAll('a').map(aUrl);
+        const urls = modal.findAll('a[href]').map(aUrl);
         expect(urls[0].searchParams.get('$filter')).to.be.null;
       });
   });
@@ -163,7 +164,7 @@ describe('SubmissionDownload', () => {
         fields: [testData.fields.selectMultiple('/sm')]
       });
       const modal = mountComponent();
-      const a = modal.findAll('a');
+      const a = modal.findAll('a[href]');
       for (const url of a.map(aUrl))
         url.searchParams.get('splitSelectMultiples').should.equal('false');
       await modal.get('input[type="checkbox"]').setValue(true);
@@ -175,7 +176,7 @@ describe('SubmissionDownload', () => {
   it('includes groupPaths in each download link', async () => {
     testData.extendedForms.createPast(1);
     const modal = mountComponent();
-    const a = modal.findAll('a');
+    const a = modal.findAll('a[href]');
     for (const url of a.map(aUrl))
       url.searchParams.get('groupPaths').should.equal('true');
     await modal.findAll('input[type="checkbox"]')[1].setValue(true);
@@ -187,7 +188,7 @@ describe('SubmissionDownload', () => {
     it('includes deletedFields in each download link', async () => {
       testData.extendedForms.createPast(1);
       const modal = mountComponent();
-      const a = modal.findAll('a');
+      const a = modal.findAll('a[href]');
       for (const url of a.map(aUrl))
         url.searchParams.get('deletedFields').should.equal('false');
       await modal.findAll('input[type="checkbox"]')[2].setValue(true);
@@ -287,7 +288,7 @@ describe('SubmissionDownload', () => {
   describe('href attributes', () => {
     it('sets the correct href attributes for a form', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b' });
-      const urls = mountComponent().findAll('a').map(aUrl);
+      const urls = mountComponent().findAll('a[href]').map(aUrl);
       urls[0].pathname.should.equal('/v1/projects/1/forms/a%20b/submissions.csv');
       urls[1].pathname.should.equal('/v1/projects/1/forms/a%20b/submissions.csv.zip');
       urls[1].searchParams.get('attachments').should.equal('false');
@@ -300,7 +301,7 @@ describe('SubmissionDownload', () => {
       const modal = mountComponent({
         props: { formVersion: testData.extendedFormDrafts.last() }
       });
-      const urls = modal.findAll('a').map(aUrl);
+      const urls = modal.findAll('a[href]').map(aUrl);
       urls[0].pathname.should.equal('/v1/projects/1/forms/a%20b/draft/submissions.csv');
       urls[1].pathname.should.equal('/v1/projects/1/forms/a%20b/draft/submissions.csv.zip');
       urls[1].searchParams.get('attachments').should.equal('false');
@@ -314,7 +315,7 @@ describe('SubmissionDownload', () => {
     const modal = mountComponent({
       props: { odataFilter: '__system/submitterId eq 1' }
     });
-    for (const url of modal.findAll('a').map(aUrl))
+    for (const url of modal.findAll('a[href]').map(aUrl))
       url.searchParams.get('$filter').should.equal('__system/submitterId eq 1');
   });
 
@@ -371,7 +372,9 @@ describe('SubmissionDownload', () => {
         event.preventDefault();
       });
       modal.get('a').trigger('click');
+      modal.emitted('hide').should.eql([[]]);
       modal.should.alert('info');
+      should.exist(modal.vm.$container.alert.cta);
     });
   });
 
@@ -467,10 +470,13 @@ describe('SubmissionDownload', () => {
       onSubmit.called.should.be.true;
     });
 
-    it('shows an info alert', async () => {
+    it('hides the modal and shows a toast', async () => {
       const modal = await setup();
       modal.get('a').trigger('click');
+      modal.emitted('hide').should.eql([[]]);
+      await modal.setProps({ state: false });
       modal.should.alert('info');
+      should.not.exist(modal.vm.$container.alert.cta);
     });
 
     it('does nothing if the passphrase is empty', async () => {
@@ -483,6 +489,7 @@ describe('SubmissionDownload', () => {
       });
       modal.get('a').element.dispatchEvent(event).should.be.false;
       onSubmit.called.should.be.false;
+      should.not.exist(modal.emitted('hide'));
       modal.should.not.alert();
     });
 
@@ -492,6 +499,7 @@ describe('SubmissionDownload', () => {
       const a = modal.get('a');
       a.element.setAttribute('href', '/test/files/problem.html');
       a.trigger('click');
+      await modal.setProps({ state: false });
       const iframe = modal.get('iframe').element;
       await waitForIframe(iframe, '/test/files/problem.html');
       clock.tick(1000);
@@ -510,6 +518,7 @@ describe('SubmissionDownload', () => {
           body.textContent = '500 Internal Server Error';
         });
         modal.get('a').trigger('click');
+        await modal.setProps({ state: false });
         clock.tick(1000);
         modal.should.alert('danger', 'Something went wrong while requesting your data.');
       });
@@ -522,6 +531,7 @@ describe('SubmissionDownload', () => {
           body.textContent = '500 Internal Server Error';
         });
         modal.get('a').trigger('click');
+        await modal.setProps({ state: false });
         clock.tick(1000);
         const { logger } = modal.vm.$container;
         logger.log.calledWith('500 Internal Server Error').should.be.true;
@@ -533,6 +543,7 @@ describe('SubmissionDownload', () => {
       const modal = await setup();
       const checkForProblem = sinon.spy(modal.vm, 'checkForProblem');
       modal.get('a').trigger('click');
+      await modal.setProps({ state: false });
       clock.tick(1000);
       checkForProblem.callCount.should.equal(1);
       // Calling tickAsync() rather than tick() so that the callWait promise
@@ -540,5 +551,33 @@ describe('SubmissionDownload', () => {
       await clock.tickAsync(1000);
       checkForProblem.callCount.should.equal(2);
     });
+  });
+
+  it('does not remove filter from link after modal is hidden', async () => {
+    testData.extendedForms.createPast(1);
+    const component = await load('/projects/1/forms/f/submissions?reviewState=null');
+
+    let clickCount = 0;
+    let failure = false;
+    component.element.addEventListener('click', (event) => {
+      if (event.target.tagName !== 'A') return;
+      event.preventDefault(); // Don't actually download the file.
+      clickCount += 1;
+      const url = relativeUrl(event.target.getAttribute('href'));
+      const filter = url.searchParams.get('$filter');
+      if (filter == null || !filter.includes('reviewState')) failure = true;
+    });
+
+    // Click the link in the modal.
+    await component.find('#submission-download-button .btn-primary').trigger('click');
+    await component.find('#submission-download-button li:nth-of-type(1) button').trigger('click');
+    await component.getComponent(SubmissionDownload).get('a').trigger('click');
+
+    // Click the link via the CTA in the toast.
+    component.vm.$container.toast.cta.handler();
+    await nextTick();
+
+    clickCount.should.equal(2);
+    failure.should.be.false;
   });
 });

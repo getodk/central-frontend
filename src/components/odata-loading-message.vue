@@ -10,11 +10,9 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div v-show="message != null" id="odata-loading-message">
-    <div id="odata-loading-spinner-container">
-      <spinner :state="message != null"/>
-    </div>
-    <div id="odata-loading-message-text">{{ message }}</div>
+  <div v-show="state" id="odata-loading-message">
+    <spinner :state="state" inline/>
+    <span id="odata-loading-message-text">{{ message }}</span>
   </div>
 </template>
 
@@ -23,87 +21,54 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import Spinner from './spinner.vue';
-import { useI18nUtils } from '../util/i18n';
 
-const { t } = useI18n();
-const { tn } = useI18nUtils();
+import { useI18nUtils } from '../util/i18n';
 
 defineOptions({
   name: 'OdataLoadingMessage'
 });
 
 const props = defineProps({
-  odata: {
-    type: Object,
-    required: true
-  },
+  state: Boolean,
   type: {
     type: String,
     required: true
   },
-  refreshing: {
-    type: Boolean,
-    required: true
-  },
-  filter: {
-    type: Boolean,
-    default: false
-  },
-  totalCount: {
-    type: Number,
-    required: true
-  },
-  top: {
-    type: Number,
-    required: true
-  }
+  filter: Boolean,
+  totalCount: Number,
+  top: Number
 });
 
-
+const { t } = useI18n();
+const { tn } = useI18nUtils();
 
 const message = computed(() => {
-  if (!props.odata.awaitingResponse || props.refreshing) return null;
+  if (!props.state) return null;
 
-  if (!props.odata.dataExists) {
-    if (props.filter)
-      return t(`${props.type}.filtered.withoutCount`);
+  if (props.filter)
+    return t(`${props.type}.filtered.withoutCount`);
 
-    if (props.totalCount === 0)
-      return t(`${props.type}.withoutCount`);
+  if (props.totalCount == null || props.totalCount === 0)
+    return t(`${props.type}.withoutCount`);
 
-    if (props.totalCount <= props.top)
-      return tn(`${props.type}.all`, props.totalCount);
+  if (props.top == null || props.totalCount <= props.top)
+    return tn(`${props.type}.all`, props.totalCount);
 
-    return tn(`${props.type}.first`, props.totalCount, {
-      top: props.top
-    });
-  }
-  return null;
+  return tn(`${props.type}.first`, props.totalCount, {
+    top: props.top
+  });
 });
-
 </script>
 
 <style lang="scss">
-@import '../assets/scss/variables';
-
 #odata-loading-message {
-  margin-left: 28px;
-  margin-top: 20px;
-  padding-bottom: 38px;
-  position: relative;
+  font-size: 12px;
+  padding: 20px 0 38px 28px;
+}
 
-  #odata-loading-spinner-container {
-    margin-right: 8px;
-    position: absolute;
-    top: 8px;
-    width: 16px; // eventually probably better not to default spinner to center.
-  }
-
-  #odata-loading-message-text {
-    color: #555;
-    font-size: 12px;
-    padding-left: 24px;
-  }
+#odata-loading-message-text {
+  color: #555;
+  margin-left: 8px;
 }
 </style>
 
@@ -206,20 +171,20 @@ const message = computed(() => {
   },
   "de": {
     "entity": {
-      "withoutCount": "Lade Entitäten ...",
-      "all": "Lade {count} Entität ... | Lade {count} Entitäten ...",
-      "first": "Laden der ersten {top} von {count} Entität ... | Laden der ersten {top} von {count} Entitäten ...",
-      "middle": "Lade {top} weitere Entität von {count} übrigen... | Lade weitere {top} von {count} übrigen Entitäten...",
+      "withoutCount": "Lade Objekte ...",
+      "all": "Lade {count} Objekt ... | Lade {count} Objekte ...",
+      "first": "Laden des ersten {top} von {count} Objekt ... | Laden der ersten {top} von {count} Objekten ...",
+      "middle": "Lade {top} weiteres Objekt von {count} übrigen... | Lade weitere {top} von {count} übrigen Objekte...",
       "last": {
-        "multiple": "Lade die letzte {count} Entität... | Lade die letzten {count} Entitäten...",
-        "one": "Die letzte Entität wird geladen…"
+        "multiple": "Lade das letzte {count} Objekt... | Lade die letzten {count} Objekte...",
+        "one": "Das letzte Objekt wird geladen…"
       },
       "filtered": {
-        "withoutCount": "Lade passende Entitäten...",
-        "middle": "Lade {top} weitere passende Entität von {count} übrigen... | Lade weitere {top} von {count} übrigen passenden Entitäten...",
+        "withoutCount": "Lade passende Objekte...",
+        "middle": "Lade {top} weitere passende Objekte von {count} übrigen... | Lade weitere {top} von {count} übrigen passenden Objekte...",
         "last": {
-          "multiple": "Lade die letzte {count} passende Entität... | Lade die letzten {count} passenden Entitäten...",
-          "one": "Lade die letzte passende Entität..."
+          "multiple": "Lade das letzte {count} passende Objekt... | Lade die letzten {count} passenden Objekte...",
+          "one": "Lade das letzte passende Objekt..."
         }
       }
     },
@@ -468,6 +433,44 @@ const message = computed(() => {
         "last": {
           "multiple": "Inapakia Mawasilisho {count} ya mwisho yanayolingana... | Inapakia Mawasilisho {count} ya mwisho yanayolingana...",
           "one": "Inapakia Wasilisho linalolingana la mwisho..."
+        }
+      }
+    }
+  },
+  "zh": {
+    "entity": {
+      "withoutCount": "正在加载实体…",
+      "all": "正在加载{count}个实体…",
+      "first": "正在加载前{top}项（共{count}项）实体…",
+      "middle": "正在继续加载剩余{count}项中的{top}项实体…",
+      "last": {
+        "multiple": "正在加载最后{count}项实体…",
+        "one": "正在加载最后1项实体…"
+      },
+      "filtered": {
+        "withoutCount": "正在加载匹配的实体…",
+        "middle": "正在继续加载剩余{count}项匹配实体中的{top}项…",
+        "last": {
+          "multiple": "正在加载最后{count}项匹配实体…",
+          "one": "正在加载最后1项匹配实体…"
+        }
+      }
+    },
+    "submission": {
+      "withoutCount": "正在加载提交内容...",
+      "all": "正在加载{count}个提交内容...",
+      "first": "正在加载前 {top} 条提交（共 {count} 条）…",
+      "middle": "正在继续加载 {top} 条提交（剩余 {count} 条）…",
+      "last": {
+        "multiple": "正在加载{count}条提交...",
+        "one": "正在加载最后一条提交..."
+      },
+      "filtered": {
+        "withoutCount": "正在加载符合的提交...",
+        "middle": "正在继续加载 {top} 条匹配的提交（剩余 {count} 条）…",
+        "last": {
+          "multiple": "正在加载最后 {count} 条匹配的提交…",
+          "one": "正在加载最后一条匹配的提交…"
         }
       }
     }

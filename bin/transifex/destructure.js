@@ -17,7 +17,7 @@ for (const basename of fs.readdirSync('transifex')) {
   const match = basename.match(/^strings_([-\w]+)\.json$/);
   if (match == null) logThenThrow(basename, 'invalid filename');
   const locale = match[1];
-  console.log(`destructuring ${locale}`); // eslint-disable-line no-console
+  console.log(`destructuring ${locale}`);
 
   const json = fs.readFileSync(`transifex/${basename}`).toString();
   const translated = destructure(json, locale);
@@ -30,4 +30,4 @@ for (const basename of fs.readdirSync('transifex')) {
     filenamesByComponent
   );
 }
-console.log('done'); // eslint-disable-line no-console
+console.log('done');

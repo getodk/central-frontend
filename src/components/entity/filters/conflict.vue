@@ -12,8 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <multiselect id="entity-filters-conflict" :model-value="modelValue"
     :options="options" default-to-all :label="$t('field.conflict')"
-    :placeholder="placeholder" :all="$t('action.select.all')"
-    :none="$t('action.select.none')"
+    :placeholder="placeholder" :all="$t('action.all')"
+    :none="$t('action.none')"
     @update:model-value="$emit('update:modelValue', $event)"/>
 </template>
 
@@ -38,9 +38,10 @@ const { t } = useI18n();
 const options = computed(() => [true, false].map(value =>
   ({ value, text: t(`conflict.${value}`) })));
 const placeholder = (counts) => {
-  if (counts.total === counts.selected) return t('allSelectedConflictSelected');
+  if (counts.total === counts.selected) return t('action.all');
 
-  return t('placeholder', counts);
+  // counts are already localized by multiselect component
+  return counts.selected;
 };
 </script>
 
@@ -62,32 +63,18 @@ const placeholder = (counts) => {
     "field": {
       "conflict": "Conflict status"
     },
-    // This is the text of a dropdown that allows the user to select one or more
-    // conflict statuses. {selected} is the number of selected conflict
-    // statuses; {total} is the total number of conflict statuses.
-    "placeholder": "{selected} of {total}",
     "action": {
-      "select": {
-        /*
-        This text is shown in a dropdown that allows the user to select one or
-        more conflict statuses. It will be inserted where {all} is in the
-        following text:
-
-        Select {all} / {none}
-        */
-        "all": "All",
-        /*
-        This text is shown in a dropdown that allows the user to select one or
-        more conflict statuses. It will be inserted where {none} is in the
-        following text:
-
-        Select {all} / {none}
-        */
-        "none": "None"
-      }
+      /*
+      This is the text of the button in dropdown menu of conflict statuses filter,
+      that allows the user to select all conflict statuses.
+      */
+      "all": "All",
+      /*
+        This is the text of the button in dropdown menu of conflict statuses filter,
+      that allows the user to unselect all conflict statuses.
+      */
+      "none": "None"
     },
-    // Text shown when all conflict statuses are selected in the filter dropdown
-    "allSelectedConflictSelected": "(All)"
   }
 }
 </i18n>
@@ -102,13 +89,6 @@ const placeholder = (counts) => {
     },
     "field": {
       "conflict": "Stav konfliktu"
-    },
-    "placeholder": "{selected} z {total}",
-    "action": {
-      "select": {
-        "all": "Vše",
-        "none": "Žádný"
-      }
     }
   },
   "de": {
@@ -119,14 +99,10 @@ const placeholder = (counts) => {
     "field": {
       "conflict": "Konfliktstatus"
     },
-    "placeholder": "{selected} von {total}",
     "action": {
-      "select": {
-        "all": "Alle",
-        "none": "Keine"
-      }
-    },
-    "allSelectedConflictSelected": "(Alle)"
+      "all": "Alle",
+      "none": "Keine"
+    }
   },
   "es": {
     "conflict": {
@@ -136,14 +112,10 @@ const placeholder = (counts) => {
     "field": {
       "conflict": "Estado de conflicto"
     },
-    "placeholder": "{selected} de {total}",
     "action": {
-      "select": {
-        "all": "Todos",
-        "none": "Ninguno"
-      }
-    },
-    "allSelectedConflictSelected": "(Todos)"
+      "all": "Todos",
+      "none": "Ninguno"
+    }
   },
   "fr": {
     "conflict": {
@@ -153,14 +125,10 @@ const placeholder = (counts) => {
     "field": {
       "conflict": "Statut du conflit"
     },
-    "placeholder": "{selected} sur {total}",
     "action": {
-      "select": {
-        "all": "Tous",
-        "none": "Aucun"
-      }
-    },
-    "allSelectedConflictSelected": "(Tous)"
+      "all": "Tous",
+      "none": "Aucun"
+    }
   },
   "it": {
     "conflict": {
@@ -170,14 +138,10 @@ const placeholder = (counts) => {
     "field": {
       "conflict": "Stato sui conflitti"
     },
-    "placeholder": "{selected} di {total}",
     "action": {
-      "select": {
-        "all": "Tutto",
-        "none": "Nessuno/a"
-      }
-    },
-    "allSelectedConflictSelected": "(Tutto)"
+      "all": "Tutto",
+      "none": "Nessuno/a"
+    }
   },
   "pt": {
     "conflict": {
@@ -187,12 +151,9 @@ const placeholder = (counts) => {
     "field": {
       "conflict": "Status de conflitos"
     },
-    "placeholder": "{selected} de {total}",
     "action": {
-      "select": {
-        "all": "Todos",
-        "none": "Nenhum"
-      }
+      "all": "Todos",
+      "none": "Nenhum"
     }
   },
   "sw": {
@@ -202,13 +163,19 @@ const placeholder = (counts) => {
     },
     "field": {
       "conflict": "Hali ya migogoro"
+    }
+  },
+  "zh": {
+    "conflict": {
+      "true": "可能存在冲突",
+      "false": "无冲突"
     },
-    "placeholder": "{selected} kati ya {total}",
+    "field": {
+      "conflict": "冲突状态"
+    },
     "action": {
-      "select": {
-        "all": "Wote",
-        "none": "Hakuna"
-      }
+      "all": "全部",
+      "none": "无"
     }
   },
   "zh-Hant": {
@@ -219,12 +186,9 @@ const placeholder = (counts) => {
     "field": {
       "conflict": "衝突狀態"
     },
-    "placeholder": "{selected}/{total}",
     "action": {
-      "select": {
-        "all": "全部",
-        "none": "無"
-      }
+      "all": "全部",
+      "none": "無"
     }
   }
 }

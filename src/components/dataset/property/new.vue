@@ -37,8 +37,8 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { inject, ref, watch } from 'vue';
 import { equals } from 'ramda';
+import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import Modal from '../../modal.vue';
@@ -66,7 +66,6 @@ const nameGroup = ref(null);
 const name = ref('');
 
 const emit = defineEmits(['hide', 'success']);
-const alert = inject('alert');
 
 watch(() => props.state, (state) => {
   if (!state) name.value = '';
@@ -84,7 +83,6 @@ const submit = () => {
         : null)
   })
     .then(() => {
-      alert.blank();
       emit('success');
     })
     .catch(noop);
@@ -116,14 +114,14 @@ const submit = () => {
     "newPropertyName": "Název nové vlastnosti"
   },
   "de": {
-    "title": "Entitätseigenschaft hinzufügen",
+    "title": "Objekteigenschaft hinzufügen",
     "introduction": [
-      "Um eine Entitätseigenschaft hinzuzufügen, wählen Sie unten einen eindeutigen Eigenschaftsnamen.",
+      "Um eine Objekteigenschaft hinzuzufügen, wählen Sie unten einen eindeutigen Eigenschaftsnamen.",
       "Sie können auch neue Eigenschaften hinzufügen, indem Sie ein Formular hochladen, das auf sie verweist. In diesem Fall werden die Eigenschaften erstellt, wenn das Formular veröffentlicht wird."
     ],
     "newPropertyName": "Neuer Eigenschaftsname",
     "problem": {
-      "409_3": "In dieser Entitätsliste existiert bereits eine Eigenschaft mit dem Namen “{propertyName}”."
+      "409_3": "In dieser Objektliste existiert bereits eine Eigenschaft mit dem Namen “{propertyName}”."
     }
   },
   "es": {
@@ -168,6 +166,17 @@ const submit = () => {
     "newPropertyName": "Nome da nova propriedade",
     "problem": {
       "409_3": "Uma propriedade já existe nesta Lista de Entidades com o nome de “{propertyName}”."
+    }
+  },
+  "zh": {
+    "title": "新增实体属性",
+    "introduction": [
+      "若要新增实体属性，请在下方选择一个属性名称。",
+      "您也可以通过上传引用新属性的表单来添加属性，这种情况下属性将在表单发布时自动创建。"
+    ],
+    "newPropertyName": "新属性名称",
+    "problem": {
+      "409_3": "名为“{propertyName}”的属性已存在于该实体列表中。"
     }
   },
   "zh-Hant": {

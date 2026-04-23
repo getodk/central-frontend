@@ -235,6 +235,18 @@ export default {
       "success": "Mafanikio! Nenosiri lako limesasishwa."
     }
   },
+  "zh": {
+    "title": "更改密码",
+    "oidcBody": "此 Central 服务器不管理任何登录密码。",
+    "action": {
+      "change": "更改密码"
+    },
+    "cannotChange": "仅账户所有者可直接设置其本人密码。",
+    "alert": {
+      "mismatch": "请确认两次输入的新密码一致。",
+      "success": "完成！您的密码已更新。"
+    }
+  },
   "zh-Hant": {
     "title": "變更密碼",
     "oidcBody": "此 Central 服器不管理任何登入密碼。",

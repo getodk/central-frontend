@@ -42,18 +42,7 @@ are Project Manager, Project Viewer, and Data Collector. -->
     </div>
     <form id="project-user-list-search-form" class="form-inline"
       @submit.prevent>
-      <label class="form-group">
-        <input class="form-control" :value="q" :placeholder="searchLabel"
-          :aria-disabled="searchDisabled" autocomplete="off"
-          @change="changeQ($event.target.value)">
-        <!-- When search is disabled, we hide rather than disable this button,
-        because Bootstrap does not have CSS for .close[disabled]. -->
-        <button v-show="q !== '' && !searchDisabled" type="button" class="close"
-          :aria-label="$t('action.clearSearch')" @click="clearSearch">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <span class="form-label">{{ searchLabel }}</span>
-      </label>
+      <search-textbox v-model="searchTerm" :label="searchLabel" :disabled="searchDisabled"/>
     </form>
 
     <table class="table">
@@ -81,6 +70,7 @@ are Project Manager, Project Viewer, and Data Collector. -->
 import DocLink from '../../doc-link.vue';
 import Loading from '../../loading.vue';
 import ProjectUserRow from './row.vue';
+import SearchTextbox from '../../search-textbox.vue';
 
 import { apiPaths } from '../../../util/request';
 import { noop } from '../../../util/util';
@@ -88,7 +78,7 @@ import { useRequestData } from '../../../request-data';
 
 export default {
   name: 'ProjectUserList',
-  components: { DocLink, Loading, ProjectUserRow },
+  components: { DocLink, Loading, ProjectUserRow, SearchTextbox },
   inject: ['alert'],
   props: {
     projectId: {
@@ -117,7 +107,7 @@ export default {
   data() {
     return {
       // Search term
-      q: '',
+      searchTerm: '',
       // The number of POST or DELETE requests in progress
       assignRequestCount: 0
     };
@@ -142,7 +132,7 @@ export default {
     },
     // The assignments to show in the table
     tableAssignments() {
-      return this.q !== '' ? this.searchAssignments : this.projectAssignments;
+      return this.searchTerm !== '' ? this.searchAssignments : this.projectAssignments;
     },
     emptyMessage() {
       if (!(this.tableAssignments.dataExists && this.tableAssignments.length === 0))
@@ -150,6 +140,15 @@ export default {
       return this.tableAssignments === this.projectAssignments
         ? this.$t('emptyTable')
         : this.$t('common.noResults');
+    }
+  },
+  watch: {
+    searchTerm(searchTerm) {
+      if (!searchTerm) {
+        this.clearSearch();
+      } else {
+        this.search();
+      }
     }
   },
   created() {
@@ -168,19 +167,11 @@ export default {
     },
     clearSearch() {
       this.fetchData(true);
-      this.q = '';
       this.searchAssignments.data = null;
     },
     search() {
-      this.searchAssignments.request({ url: apiPaths.users({ q: this.q }) })
+      this.searchAssignments.request({ url: apiPaths.users({ q: this.searchTerm }) })
         .catch(noop);
-    },
-    changeQ(q) {
-      this.q = q;
-      if (this.q === '')
-        this.clearSearch();
-      else
-        this.search();
     },
     incrementCount() {
       this.assignRequestCount += 1;
@@ -229,8 +220,6 @@ export default {
 @import '../../../assets/scss/variables';
 
 #project-user-list-search-form .form-control {
-  // Add padding so that the .close button does not overlay long input text.
-  padding-right: 21px;
   width: 250px;
 }
 
@@ -261,9 +250,6 @@ export default {
         "dataCollectors": "Data Collectors"
       }
     ],
-    "action": {
-      "clearSearch": "Clear search"
-    },
     "field": {
       "q": {
         "canList": "Search for a user…",
@@ -278,7 +264,7 @@ export default {
     "alert": {
       "unassignWithoutReassign": "Something went wrong. “{displayName}” has been removed from the Project.",
       "assignRole": "Success! “{displayName}” has been given a Role of “{roleName}” on this Project.",
-      "unassignRole": "Success! “{displayName}” has been removed from this Project."
+      "unassignRole": "“{displayName}” has been removed from this Project."
     }
   }
 }
@@ -303,9 +289,6 @@ export default {
         "dataCollectors": "Sběrači dat"
       }
     ],
-    "action": {
-      "clearSearch": "Vymazat vyhledávání"
-    },
     "field": {
       "q": {
         "canList": "Vyhledat uživatele…",
@@ -319,8 +302,7 @@ export default {
     "emptyTable": "K tomuto projektu zatím nejsou přiřazeni žádní uživatelé. Chcete-li přidat jednoho, vyhledejte uživatele výše.",
     "alert": {
       "unassignWithoutReassign": "Něco se pokazilo. „{displayName}“ Byl z projektu odstraněn.",
-      "assignRole": "Úspěch! Pro „{displayName}“ byla v tomto projektu udělena role „{roleName}“.",
-      "unassignRole": "Úspěch! „{displayName}“ byl z tohoto projektu odstraněn."
+      "assignRole": "Úspěch! Pro „{displayName}“ byla v tomto projektu udělena role „{roleName}“."
     }
   },
   "de": {
@@ -331,7 +313,7 @@ export default {
         "projectManagers": "Projekt-Manager"
       },
       {
-        "full": "{projectViewers} können auf alle Formular- und Entitätsdaten in diesem Projekt zugreifen und sie herunterladen, können jedoch keine Änderungen an Einstellungen oder Daten vornehmen.",
+        "full": "{projectViewers} können auf alle Formular- und Objektdaten in diesem Projekt zugreifen und sie herunterladen, können jedoch keine Änderungen an Einstellungen oder Daten vornehmen.",
         "projectViewers": "Projekt-Viewer"
       },
       {
@@ -339,9 +321,6 @@ export default {
         "dataCollectors": "Datensammler"
       }
     ],
-    "action": {
-      "clearSearch": "Suche löschen"
-    },
     "field": {
       "q": {
         "canList": "Suche nach einem Benutzer...",
@@ -375,9 +354,6 @@ export default {
         "dataCollectors": "Recolectores de datos"
       }
     ],
-    "action": {
-      "clearSearch": "Limpiar la búsqueda"
-    },
     "field": {
       "q": {
         "canList": "Buscar un usuario...",
@@ -392,7 +368,7 @@ export default {
     "alert": {
       "unassignWithoutReassign": "Algo salió mal. \"{displayName}\" ha sido removido del proyecto",
       "assignRole": "A \"{displayName}\" se le ha asignado exitosamente el rol de \"{roleName}\" en este proyecto.",
-      "unassignRole": "\"{displayName}\" ha sido removido exitosamente de este proyecto."
+      "unassignRole": "\"{displayName}\" ha sido removido de este proyecto."
     }
   },
   "fr": {
@@ -411,13 +387,10 @@ export default {
         "dataCollectors": "collecteurs de données"
       }
     ],
-    "action": {
-      "clearSearch": "Effacer la recherche"
-    },
     "field": {
       "q": {
         "canList": "Rechercher un utilisateur...",
-        "cannotList": "Entrez l'adresse de courriel exacte de l'utilisateur..."
+        "cannotList": "Entrez l'adresse email exacte de l'utilisateur..."
       }
     },
     "header": {
@@ -428,7 +401,7 @@ export default {
     "alert": {
       "unassignWithoutReassign": "Quelque chose a mal tourné. \"{displayName}\" a été retiré du projet.",
       "assignRole": "Succès ! \"{displayName}\" a reçu un rôle de \"{roleName}\" dans ce projet.",
-      "unassignRole": "Succès ! “{displayName}” a été retiré de ce projet."
+      "unassignRole": "“{displayName}” a été retiré de ce projet."
     }
   },
   "id": {
@@ -444,9 +417,6 @@ export default {
         "dataCollectors": "Pengumpul Data"
       }
     ],
-    "action": {
-      "clearSearch": "Hapus pencarian"
-    },
     "field": {
       "q": {
         "canList": "Cari pengguna...",
@@ -460,8 +430,7 @@ export default {
     "emptyTable": "Belum ada Pengguna yang ditugaskan dalam Proyek ini. Untuk menambah Pengguna, cari nama Pengguna di atas.",
     "alert": {
       "unassignWithoutReassign": "Terjadi kesalahan. \"{displayName}\" sudah dihapus dari Proyek.",
-      "assignRole": "Berhasil! \"{displayName}\" telah diberikan Peran sebagai \"{roleName}\" dalam Proyek ini.",
-      "unassignRole": "Berhasil! \"{displayName}\" telah dihapus dari Proyek ini."
+      "assignRole": "Berhasil! \"{displayName}\" telah diberikan Peran sebagai \"{roleName}\" dalam Proyek ini."
     }
   },
   "it": {
@@ -480,9 +449,6 @@ export default {
         "dataCollectors": "Raccoglitori di dati"
       }
     ],
-    "action": {
-      "clearSearch": "Cancella ricerca"
-    },
     "field": {
       "q": {
         "canList": "Cerca un utente...",
@@ -497,7 +463,7 @@ export default {
     "alert": {
       "unassignWithoutReassign": "Qualcosa è andato storto. “{displayName}” è stato rimosso dal progetto.",
       "assignRole": "Successo! A \"{displayName}\" è stato assegnato un ruolo di \"{roleName}\" in questo progetto.",
-      "unassignRole": "Successo! \"{displayName}\" è stato rimosso da questo progetto."
+      "unassignRole": "\"{displayName}\" è stato rimosso da questo progetto."
     }
   },
   "ja": {
@@ -513,9 +479,6 @@ export default {
         "dataCollectors": "データ収集者"
       }
     ],
-    "action": {
-      "clearSearch": "検索条件の解除"
-    },
     "field": {
       "q": {
         "canList": "ユーザーの検索",
@@ -529,8 +492,7 @@ export default {
     "emptyTable": "このプロジェクトに割り当てられたユーザーはまだいません。ユーザーを追加するには、上の検索ボックスでユーザーを検索してください。",
     "alert": {
       "unassignWithoutReassign": "問題が発生しました 。\"{displayName}\"はプロジェクトから除外されました。",
-      "assignRole": "成功です！\"{displayName}\"には、このプロジェクトで\"{roleName}\"の役割が割当てられました。",
-      "unassignRole": "成功です！\"{displayName}\"はこのプロジェクトから除外されました。"
+      "assignRole": "成功です！\"{displayName}\"には、このプロジェクトで\"{roleName}\"の役割が割当てられました。"
     }
   },
   "pt": {
@@ -549,9 +511,6 @@ export default {
         "dataCollectors": "Coletores de dados"
       }
     ],
-    "action": {
-      "clearSearch": "Limpar a busca"
-    },
     "field": {
       "q": {
         "canList": "Localizar um usuário...",
@@ -565,8 +524,7 @@ export default {
     "emptyTable": "Não existem usuário designados para esse projeto ainda. Para adicionar um usuário utilize a busca acima.",
     "alert": {
       "unassignWithoutReassign": "Algo deu errado. \"{displayName}\" foi removido do projeto.",
-      "assignRole": "Sucesso! \"{displayName}\" recebeu a função de \"{roleName}\" nesse projeto.",
-      "unassignRole": "Sucesso! \"{displayName}\" foi removido deste projeto."
+      "assignRole": "Sucesso! \"{displayName}\" recebeu a função de \"{roleName}\" nesse projeto."
     }
   },
   "sw": {
@@ -585,9 +543,6 @@ export default {
         "dataCollectors": "Wakusanyaji Data"
       }
     ],
-    "action": {
-      "clearSearch": "Futa utafutaji"
-    },
     "field": {
       "q": {
         "canList": "Tafuta mtumiaji...",
@@ -601,8 +556,40 @@ export default {
     "emptyTable": "Bado hakuna watumiaji waliokabidhiwa kwa Mradi huu. Ili kuongeza moja, tafuta mtumiaji hapo juu.",
     "alert": {
       "unassignWithoutReassign": "Hitilafu fulani imetokea. \"{displayName}\" imeondolewa kwenye Mradi.",
-      "assignRole": "Mafanikio! \"{displayName}\" imepewa Jukumu la \"{roleName}\" kwenye Mradi huu.",
-      "unassignRole": "Mafanikio! \"{displayName}\" imeondolewa kwenye Mradi huu."
+      "assignRole": "Mafanikio! \"{displayName}\" imepewa Jukumu la \"{roleName}\" kwenye Mradi huu."
+    }
+  },
+  "zh": {
+    "heading": [
+      "网站管理员自动成为所有项目的经理。其他用户可被授予本项目特定角色：",
+      {
+        "full": "{projectManagers}可执行本项目所有管理任务，并可通过网页浏览器填写表单",
+        "projectManagers": "项目经理"
+      },
+      {
+        "full": "{projectViewers}可访问并下载本项目所有表单和实体数据，但无法更改设置或数据",
+        "projectViewers": "项目查看者"
+      },
+      {
+        "full": "{dataCollectors}可通过网页浏览器填写表单，但无法查看或修改数据及设置",
+        "dataCollectors": "数据收集员"
+      }
+    ],
+    "field": {
+      "q": {
+        "canList": "搜索用户…",
+        "cannotList": "输入完整用户邮箱地址…"
+      }
+    },
+    "header": {
+      "user": "用户",
+      "projectRole": "项目角色"
+    },
+    "emptyTable": "当前项目暂无分配用户。请通过上方搜索框添加用户。",
+    "alert": {
+      "unassignWithoutReassign": "出现错误。“{displayName}”已被移出项目。",
+      "assignRole": "操作成功！“{displayName}”已被授予本项目“{roleName}”角色。",
+      "unassignRole": "“{displayName}”已被移出本项目。"
     }
   },
   "zh-Hant": {
@@ -621,9 +608,6 @@ export default {
         "dataCollectors": "資料收集者"
       }
     ],
-    "action": {
-      "clearSearch": "清除搜尋"
-    },
     "field": {
       "q": {
         "canList": "搜尋使用者",
@@ -638,7 +622,7 @@ export default {
     "alert": {
       "unassignWithoutReassign": "出了些問題。 「{displayName}」已從專案中刪除。",
       "assignRole": "成功！ 「{displayName}」在此專案中被賦予「{roleName}」角色。",
-      "unassignRole": "成功！ 「{displayName}」已從此項目中刪除。"
+      "unassignRole": "「{displayName}」已從本專案中刪除。"
     }
   }
 }

@@ -30,6 +30,10 @@ except according to the terms contained in the LICENSE file.
         </div>
       </form>
     </td>
+    <td class="last-active">
+      <date-time v-if="user.lastLoginAt" :iso="user.lastLoginAt"/>
+      <span v-else class="invitation-pending">{{ $t('invitationPending') }}</span>
+    </td>
     <td>
       <div class="dropdown">
         <button :id="actionsButtonId" type="button"
@@ -66,6 +70,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import Spinner from '../spinner.vue';
+import DateTime from '../date-time.vue';
 
 import useRequest from '../../composables/request';
 import useRoutes from '../../composables/routes';
@@ -75,7 +80,7 @@ import { useRequestData } from '../../request-data';
 
 export default {
   name: 'UserRow',
-  components: { Spinner },
+  components: { Spinner, DateTime },
   inject: ['config'],
   props: {
     user: {
@@ -142,6 +147,10 @@ export default {
       width: 150px;
     }
   }
+
+  .invitation-pending {
+    color: #555555;
+  }
 }
 </style>
 
@@ -159,7 +168,8 @@ export default {
     "cannotRetire": "You may not retire yourself.",
     "action": {
       "retire": "Retire user"
-    }
+    },
+    "invitationPending": "Invitation Pending"
   }
 }
 </i18n>
@@ -187,7 +197,8 @@ export default {
     "cannotRetire": "Sie dürfen sich nicht selbst deaktivieren.",
     "action": {
       "retire": "User deaktivieren"
-    }
+    },
+    "invitationPending": "Einladung ausstehend"
   },
   "es": {
     "cannotAssignRole": "No puede editar su propio rol en el proyecto",
@@ -198,7 +209,8 @@ export default {
     "cannotRetire": "No puede retirar su propio usuario",
     "action": {
       "retire": "Retirar usuario"
-    }
+    },
+    "invitationPending": "Invitación pendiente"
   },
   "fr": {
     "cannotAssignRole": "Vous ne pouvez pas modifier votre propre rôle sur le site.",
@@ -209,7 +221,8 @@ export default {
     "cannotRetire": "Vous ne pouvez pas supprimer votre propre compte.",
     "action": {
       "retire": "Supprimer l'utilisateur"
-    }
+    },
+    "invitationPending": "Invitation en attente"
   },
   "id": {
     "cannotAssignRole": "Anda tidak dapat mengubah Peran Seluruh Situs Anda sendiri.",
@@ -230,7 +243,8 @@ export default {
     "cannotRetire": "Non è possibile ritirare se stessi",
     "action": {
       "retire": "Ritira utente"
-    }
+    },
+    "invitationPending": "Invito in sospeso"
   },
   "ja": {
     "cannotAssignRole": "自分自身のサーバーでの役割を編集できません。",
@@ -251,7 +265,8 @@ export default {
     "cannotRetire": "Você não pode desativar você mesmo.",
     "action": {
       "retire": "Desativar usuário"
-    }
+    },
+    "invitationPending": "Convite Pendente"
   },
   "sw": {
     "cannotAssignRole": "Huenda usihariri Jukumu lako la Tovuti nzima.",
@@ -264,6 +279,18 @@ export default {
       "retire": "Staafu mtumiaji"
     }
   },
+  "zh": {
+    "cannotAssignRole": "您无权修改自身的全局角色。",
+    "field": {
+      "sitewideRole": "全局角色"
+    },
+    "cannotResetPassword": "您无权在此页面重置自身密码。如需修改密码，请前往个人资料设置。",
+    "cannotRetire": "您无法停用自己。",
+    "action": {
+      "retire": "停用使用者"
+    },
+    "invitationPending": "待确认邀请"
+  },
   "zh-Hant": {
     "cannotAssignRole": "您不得編輯自己的網站範圍角色",
     "field": {
@@ -273,7 +300,8 @@ export default {
     "cannotRetire": "您無法自己停用。",
     "action": {
       "retire": "停用使用者"
-    }
+    },
+    "invitationPending": "邀請待處理"
   }
 }
 </i18n>

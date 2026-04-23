@@ -196,6 +196,10 @@ export default {
     "markdownSupported": "Markdown inatumika",
     "preview": "Hakiki"
   },
+  "zh": {
+    "markdownSupported": "支持Markdown语法",
+    "preview": "预览"
+  },
   "zh-Hant": {
     "markdownSupported": "支持 Markdown 語法",
     "preview": "預覽"

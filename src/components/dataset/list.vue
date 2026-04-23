@@ -34,6 +34,7 @@ except according to the terms contained in the LICENSE file.
       </p>
     </div>
     <dataset-table/>
+    <dataset-trash-table/>
     <loading :state="datasets.initiallyLoading"/>
     <dataset-new v-bind="newDatasetModal" @hide="newDatasetModal.hide()" @success="afterCreateDataset"/>
   </div>
@@ -43,6 +44,7 @@ except according to the terms contained in the LICENSE file.
 import { useRouter } from 'vue-router';
 import DatasetNew from './new.vue';
 import DatasetTable from './table.vue';
+import DatasetTrashTable from './trash-table.vue';
 import DocLink from '../doc-link.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
@@ -64,12 +66,18 @@ const props = defineProps({
   }
 });
 
-const { project, datasets } = useRequestData();
+const { project, datasets, deletedDatasets } = useRequestData();
 const { datasetPath } = useRoutes();
 const router = useRouter();
 
 datasets.request({
   url: apiPaths.datasets(props.projectId),
+  extended: true,
+  resend: false
+}).catch(noop);
+
+deletedDatasets.request({
+  url: apiPaths.datasets(props.projectId, { deleted: true }),
   extended: true,
   resend: false
 }).catch(noop);
@@ -112,8 +120,8 @@ const afterCreateDataset = async (dataset) => {
   },
   "de": {
     "heading": [
-      "Entitäten ermöglichen es Ihnen, Informationen zwischen Formularen zu teilen, sodass Sie longitudinale Daten sammeln, Fälle im Laufe der Zeit verwalten und andere Arbeitsabläufe mit mehreren Schritten darstellen können.",
-      "Entitäten werden durch Formulardesign erstellt und können jedem Formular angefügt werden."
+      "Objekte ermöglichen es Ihnen, Informationen zwischen Formularen zu teilen, sodass Sie longitudinale Daten sammeln, Fälle im Laufe der Zeit verwalten und andere Arbeitsabläufe mit mehreren Schritten darstellen können.",
+      "Objekte werden durch Formulardesign erstellt und können jedem Formular angefügt werden."
     ],
     "new": "Neu"
   },
@@ -150,6 +158,13 @@ const afterCreateDataset = async (dataset) => {
       "Huluki hukuruhusu kushiriki maelezo kati ya Fomu ili uweze kukusanya data ya longitudinal, kudhibiti matukio baada ya muda, na kuwakilisha utendakazi mwingine kwa hatua nyingi.",
       "Mashirika huundwa kupitia muundo wa fomu na yanaweza kuambatishwa kwa Fomu yoyote."
     ]
+  },
+  "zh": {
+    "heading": [
+      "实体功能支持跨表单共享信息，便于您收集纵向数据、进行长期案例管理，以及实现多步骤工作流程。",
+      "实体通过表单设计创建，可关联至任意表单。"
+    ],
+    "new": "更新"
   },
   "zh-Hant": {
     "heading": [

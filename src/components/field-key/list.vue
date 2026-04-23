@@ -211,7 +211,7 @@ export default {
     "emptyTable": "There are no App Users yet. You will need to create some to download Forms and submit data from your device.",
     "alert": {
       "create": "The App User “{displayName}” was created successfully.",
-      "revoke": "Access was revoked for the App User “{displayName}”."
+      "revoke": "App User {displayName}’s access successfully revoked."
     }
   }
 }
@@ -240,8 +240,7 @@ export default {
     },
     "emptyTable": "Zatím nejsou žádní uživatelé aplikace. Pro stažení formulářů a odeslání dat z vašeho zařízení budete muset vytvořit nějaké.",
     "alert": {
-      "create": "Uživatel aplikace „{displayName}“ byl úspěšně vytvořen.",
-      "revoke": "Přístup k aplikaci byl zrušen uživateli „{displayName}“."
+      "create": "Uživatel aplikace „{displayName}“ byl úspěšně vytvořen."
     }
   },
   "de": {
@@ -265,7 +264,7 @@ export default {
     "emptyTable": "Ès gibt noch keine Benutzer der App. Sie müssen zumindest einen erstellen, um Formulare herunterladen zu können und um Daten aus Ihrem Gerät hochzuladen.",
     "alert": {
       "create": "Der App-Benutzer \"{displayName}\" ist erstellt worden.",
-      "revoke": "Die Zugriffsberechtigng für App-Benuzter \"{displayName}\" wurde entzogen."
+      "revoke": "Der Zugriff des App-Benutzers {displayName} wurde erfolgreich widerrufen."
     }
   },
   "es": {
@@ -289,7 +288,7 @@ export default {
     "emptyTable": "Todavía no hay usuarios móviles. Deberá crear algunos para descargar formularios y enviar datos desde su dispositivo.",
     "alert": {
       "create": "El usuario móvil \"{displayName}\" se creó correctamente.",
-      "revoke": "Se revocó el acceso para el usuario móvil \"{displayName}\"."
+      "revoke": "El usuario móvil \"{displayName}\" ha sido revocado con éxito."
     }
   },
   "fr": {
@@ -336,8 +335,7 @@ export default {
     },
     "emptyTable": "Belum ada Pengguna Aplikasi. Anda harus membuatnya terlebih dahulu untuk mengunduh formulir dan mengajukan data lewat perangkat Anda.",
     "alert": {
-      "create": "Pengguna Aplikasi \"{displayName}\" sukses dibuat.",
-      "revoke": "Akses untuk Pengguna Aplikasi \"{displayName}\" telah dicabut."
+      "create": "Pengguna Aplikasi \"{displayName}\" sukses dibuat."
     }
   },
   "it": {
@@ -361,7 +359,7 @@ export default {
     "emptyTable": "Non ci sono ancora utenti dell'app. Dovrai crearne alcuni per scaricare i formulari e inviare i dati dal tuo dispositivo.",
     "alert": {
       "create": "L'Utente App \"{displayName}\" è stato creato correttamente.",
-      "revoke": "L'accesso per l'Utente App “{displayName}” è stato revocato."
+      "revoke": "L'accesso per Utente App {displayName} è stato revocato con successo."
     }
   },
   "ja": {
@@ -384,8 +382,7 @@ export default {
     },
     "emptyTable": "アプリユーザーが登録されていません。デバイスからフォームのダウンロードと提出を行うには、アプリユーザーを作成する必要があります。",
     "alert": {
-      "create": "アプリユーザー\"{displayName}\"は正常に作成されました。",
-      "revoke": "アプリユーザー\"{displayName}\"のアクセス権は取り消されました。"
+      "create": "アプリユーザー\"{displayName}\"は正常に作成されました。"
     }
   },
   "pt": {
@@ -409,7 +406,7 @@ export default {
     "emptyTable": "Não existe nenhum usuário de aplicativo ainda. Você terá que criar um para baixar formulários e enviar dados a partir do seu dispositivo.",
     "alert": {
       "create": "O usuário de aplicativo \"{displayName}\" foi criado com sucesso.",
-      "revoke": "O acesso foi revogado para o usuário de aplicativo \"{displayName}\"."
+      "revoke": "Acesso do Usuário de Aplicativo {displayName} removido com sucesso."
     }
   },
   "sw": {
@@ -432,8 +429,31 @@ export default {
     },
     "emptyTable": "Bado hakuna Watumiaji wa Programu. Utahitaji kuunda baadhi ili kupakua Fomu na kuwasilisha data kutoka kwa kifaa chako",
     "alert": {
-      "create": "Mtumiaji wa Programu \"{displayName}\" ameundwa.",
-      "revoke": "Ufikiaji umebatilishwa kwa Mtumiaji wa Programu \"{displayName}\"."
+      "create": "Mtumiaji wa Programu \"{displayName}\" ameundwa."
+    }
+  },
+  "zh": {
+    "action": {
+      "create": "新建App用户"
+    },
+    "heading": [
+      {
+        "full": "App用户通常从数据收集应用（如 {collect}）中收集数据。他们通常代表“疫苗接种员”等角色，也可代表个人用户。本项目中的App用户仅能下载并使用本项目内的表单。新创建的App用户一开始将无法访问任何表单，请使用 {formAccess} 选项，设置各App用户可访问的表单。",
+        "formAccess": "表单权限"
+      },
+      {
+        "full": "App用户最适合以下场景：数据收集员需使用多个表单、处于离线工作状态，或需处理复杂表单。若需受访者自主填报或只使用在线表单，请{clickHere}了解其他选项。",
+        "clickHere": "点击此处"
+      }
+    ],
+    "header": {
+      "lastUsed": "上次更新",
+      "configureClient": "设置Client"
+    },
+    "emptyTable": "目前没有App用户。您需要新建表格并从您的设备上传数据。",
+    "alert": {
+      "create": "App用户“{displayName}”已成功建立。",
+      "revoke": "App用户{displayName}的权限已成功撤销。"
     }
   },
   "zh-Hant": {
@@ -457,7 +477,7 @@ export default {
     "emptyTable": "還沒有應用程式用戶。您將需要建立一些表格來下載表格並從您的裝置提交資料。",
     "alert": {
       "create": "APP使用者「{displayName}」已成功建立。",
-      "revoke": "APP使用者「{displayName}」的存取權限已被撤銷。"
+      "revoke": "App 使用者{displayName}的存取權成功撤銷。"
     }
   }
 }

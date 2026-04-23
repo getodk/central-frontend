@@ -1,4 +1,5 @@
 import Selectable from '../../../src/components/selectable.vue';
+import EntityCreate from '../../../src/components/entity/create.vue';
 import OdataAnalyze from '../../../src/components/odata/analyze.vue';
 
 import testData from '../../data';
@@ -8,6 +9,19 @@ import { mockLogin } from '../../util/session';
 
 describe('DatasetEntities', () => {
   beforeEach(mockLogin);
+
+  describe('create modal', () => {
+    beforeEach(() => {
+      testData.extendedDatasets.createPast(1, { name: 'trees' });
+    });
+
+    it('toggles the modal', () =>
+      load('/projects/1/entity-lists/trees/entities', { root: false }).testModalToggles({
+        modal: EntityCreate,
+        show: '#dataset-entities-create-button',
+        hide: '#entity-create .btn-link'
+      }));
+  });
 
   describe('OData modal', () => {
     beforeEach(() => {
@@ -64,7 +78,7 @@ describe('DatasetEntities', () => {
           showDeletedButton.text().should.equal('1 deleted Entity');
         })
         .request((component) => {
-          component.find('#entity-list-refresh-button').trigger('click');
+          component.find('#refresh-button').trigger('click');
         })
         .beforeAnyResponse(() => {
           testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() });

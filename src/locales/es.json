@@ -23,6 +23,7 @@
     "title": "Gestión del sistema",
     "tab": {
       "audits": "Registro y auditoría de la actividad del servidor",
+      "customization": "Personalización",
       "analytics": "Informes de uso"
     }
   },
@@ -49,7 +50,7 @@
   },
   "audit": {
     "category": {
-      "nonverbose": "(Todas las acciones)",
+      "nonverbose": "Todas las acciones",
       "user": "Acciones de usuarios web",
       "project": "Acciones de proyectos",
       "form": "Acciones de formulario",
@@ -78,7 +79,13 @@
       "dataset": {
         "update": "Actualizar",
         "update_publish": "Publicar",
-        "create": "@:audit.action.default.create"
+        "update_property_delete": "Borrar propiedad",
+        "create": "@:audit.action.default.create",
+        "delete": "@:audit.action.default.delete"
+      },
+      "entity": {
+        "bulk_delete": "Eliminación masiva",
+        "bulk_restore": "Restauración masiva"
       },
       "field_key": {
         "assignment_create": "Dar acceso",
@@ -113,7 +120,8 @@
       "upgrade": {
         "process_form": "Procesar formulario",
         "process_form_draft": "Procesar borrador de formulario",
-        "process_form_entities_version": "Marcar formulario para actualización"
+        "process_form_entities_version": "Marcar formulario para actualización",
+        "server": "Nueva versión"
       },
       "user": {
         "assignment_create": "Asignar rol",
@@ -153,11 +161,13 @@
     "ok": "De acuerdo",
     "proceed": "Continuar",
     "refresh": "Actualizar",
+    "refreshPage": "Refresque la página",
     "resetPassword": "Restablecer contraseña",
     "review": "Revisar",
     "save": "Guardar",
     "saveSettings": "Guardar las configuraciónes",
     "sort": "Ordenar",
+    "undo": "Deshacer",
     "update": "Actualizar",
     "yesProceed": "Sí, continuar",
     "showPreview": "Vista previa",
@@ -165,7 +175,10 @@
     "newPreview": "Nuevo Avance",
     "expand": "Expandir",
     "collapse": "Contraer",
+    "selectRow": "Seleccionar fila",
+    "reset": "Restablecer",
     "reviewParallelUpdates": "Revisar actualizaciones paralelas",
+    "tryAgain": "Inténtalo de nuevo",
     "upload": "Subir",
     "restore": "Restablecer"
   },
@@ -180,6 +193,7 @@
     "passphrase": "Frase de contraseña",
     "password": "Contraseña",
     "passwordConfirm": "Contraseña nueva (confirmar)",
+    "title": "Título",
     "type": "Tipo"
   },
   "header": {
@@ -246,11 +260,11 @@
     "draft": "Borrador"
   },
   "alert": {
-    "passwordTooShort": "Introduzca una contraseña de al menos 10 caracteres.",
-    "updateEntity": "¡La Entidad ha sido actualizada!",
-    "updateReviewState": "Estado de revisión guardado!",
-    "versionChange": "El servidor se ha actualizado. Actualice la página para evitar comportamientos impredecibles.",
-    "submissionDeleted": "El envío ha sido eliminado.",
+    "passwordTooShort": "La contraseña debe tener al menos 10 caracteres.",
+    "updateEntity": "La entidad se ha actualizado correctamente.",
+    "updateReviewState": "Revisión guardada correctamente.",
+    "versionChange": "El servidor se ha actualizado correctamente.",
+    "submissionDeleted": "El envío se ha eliminado correctamente.",
     "submissionRestored": "La Sumisión ha sido restablecida.",
     "entityRestored": "Entidad “{label}” fue recuperada.",
     "entityDeleted": "Entidad “{label}” se ha eliminado."
@@ -266,12 +280,19 @@
     },
     "learnMore": "Aprende más."
   },
+  "login": {
+    "odkLogo": "Logotipo de ODK",
+    "defaultTitle": "Bienvenido a ODK Central.",
+    "defaultDescription": "Inicia sesión en tu cuenta para empezar",
+    "customLogoAlt": "Logotipo de la organización"
+  },
   "analytics": {
     "alwaysImprove": "Siempre estamos tratando de mejorar ODK Central.",
     "needFeedback": {
       "full": "Para hacer esto, necesitamos {your} comentarios, para que podamos entender cómo está utilizando Central y cómo podría ser mejor para usted.",
       "your": "Tu"
-    }
+    },
+    "mailingListOptIn": "Envíame correos electrónicos ocasionales sobre nuevas funciones y mejores prácticas."
   },
   "submission": {
     "missingAttachment": "Archivo adjunto faltante",
@@ -303,12 +324,14 @@
     "dangerZone": "Zona de peligro",
     "data": "Datos",
     "docs": "Documentos",
+    "emptyMap": "Aún no hay datos cartográficos disponibles.",
     "emptyValue": "(vacío)",
     "error": "Error",
     "filter": "Filtrar",
     "forum": "Foro",
     "lastUpdate": "Última actualización",
     "loading": "Cargando...",
+    "map": "Mapa",
     "no": "No",
     "noResults": "Sin resultados",
     "noUndo": "Esta acción no se puede deshacer.",
@@ -319,6 +342,7 @@
     "tab": {
       "settings": "Ajustes"
     },
+    "table": "Tabla",
     "total": "Total",
     "totalSubmissions": "Envíos totales",
     "propertiesCount": "{inform} de {count} propiedad | {inform} de {count} propiedades | {inform} de {count} propiedades",
@@ -328,9 +352,11 @@
     "warning": "Advertencia",
     "beta": "Beta",
     "none": "(ninguno)",
+    "search": "Buscar",
     "reviewState": "Estado de revisión",
     "status": "Estado",
-    "version": "Versión"
+    "version": "Versión",
+    "trash": "Papelera"
   },
   "mixin": {
     "request": {
@@ -363,9 +389,12 @@
     },
     "session": {
       "alert": {
-        "expiresSoon": "Su sesión caducará en 2 minutos y se cerrará automáticamente.",
-        "expired": "Su sesión ha caducado. Para seguir trabajando, por favor conectarse de nuevo.",
-        "logoutError": "Hubo un problema y no se desconectó por completo. Actualice la página e intente cerrar la sesión nuevamente. {message}"
+        "expiresSoon": "Su sesión está caducando. Se cerrará su sesión en 2 minutos.",
+        "expired": "Su sesión ha caducado. Inicie sesión de nuevo para continuar.",
+        "logoutError": {
+          "thereWasProblem": "Hubo un problema al cerrar la sesión.",
+          "pleaseRefresh": "Por favor, actualice la página e inténtelo de nuevo."
+        }
       }
     }
   },

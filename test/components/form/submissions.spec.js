@@ -45,6 +45,68 @@ describe('FormSubmissions', () => {
           findTab(app, 'Submissions').get('.badge').text().should.equal('11');
         });
     });
+
+    it('should not change submission count when viewing deleted submissions', () => {
+      testData.extendedForms.createPast(1, { submissions: 5 });
+      testData.extendedSubmissions.createPast(5);
+      testData.extendedSubmissions.createPast(2, { deletedAt: new Date().toISOString() });
+      return load('/projects/1/forms/f/submissions')
+        .afterResponses(app => {
+          findTab(app, 'Submissions').get('.badge').text().should.equal('5');
+        })
+        .complete()
+        .request(app => {
+          app.find('.toggle-deleted-submissions').text().should.equal('2 deleted Submissions');
+          return app.find('.toggle-deleted-submissions').trigger('click');
+        })
+        .respondWithData(() => testData.submissionDeletedOData())
+        .afterResponses(app => {
+          findTab(app, 'Submissions').get('.badge').text().should.equal('5');
+        });
+    });
+
+    it('correctly updates submission count through delete and restore operations', () => {
+      testData.extendedForms.createPast(1, { submissions: 5 });
+      testData.extendedSubmissions.createPast(5);
+      testData.extendedSubmissions.createPast(2, { deletedAt: new Date().toISOString() });
+
+      return load('/projects/1/forms/f/submissions')
+        .afterResponses(app => {
+          findTab(app, 'Submissions').get('.badge').text().should.equal('5');
+          app.find('.toggle-deleted-submissions').text().should.equal('2 deleted Submissions');
+        })
+        .complete()
+        .request(async app => {
+          await app.get('.submission-metadata-row .delete-button').trigger('click');
+          return app.get('#submission-delete .btn-danger').trigger('click');
+        })
+        .respondWithSuccess()
+        .afterResponse(app => {
+          findTab(app, 'Submissions').get('.badge').text().should.equal('4');
+          app.find('.toggle-deleted-submissions').text().should.equal('3 deleted Submissions');
+        })
+        .request(async app => {
+          await app.get('.submission-metadata-row .delete-button').trigger('click');
+          return app.get('#submission-delete .btn-danger').trigger('click');
+        })
+        .respondWithSuccess()
+        .afterResponse(app => {
+          findTab(app, 'Submissions').get('.badge').text().should.equal('3');
+        })
+        .request(app => app.get('.toggle-deleted-submissions').trigger('click'))
+        .respondWithData(() => testData.submissionDeletedOData())
+        .afterResponse(app => {
+          findTab(app, 'Submissions').get('.badge').text().should.equal('3');
+        })
+        .request(async app => {
+          await app.get('.submission-metadata-row .restore-button').trigger('click');
+          return app.get('#submission-restore .btn-danger').trigger('click');
+        })
+        .respondWithSuccess()
+        .afterResponse(app => {
+          findTab(app, 'Submissions').get('.badge').text().should.equal('4');
+        });
+    });
   });
 
   describe('deleted submissions', () => {
@@ -83,7 +145,7 @@ describe('FormSubmissions', () => {
           showDeletedButton.text().should.equal('1 deleted Submission');
         })
         .request((component) => {
-          component.find('#submission-list-refresh-button').trigger('click');
+          component.find('#refresh-button').trigger('click');
         })
         .beforeAnyResponse(() => {
           testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() });

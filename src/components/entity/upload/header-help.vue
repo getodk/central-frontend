@@ -86,6 +86,9 @@ $border-radius: 3px;
   "pt": {
     "headersNote": "A primeira linha do seu arquivo de dados deve corresponder exatamente ao cabeçalho da tabela que você vê acima."
   },
+  "zh": {
+    "headersNote": "您数据文件的首行必须和以上表头完全一致。"
+  },
   "zh-Hant": {
     "headersNote": "資料檔案中的第一行必須與上面看到的表標題完全相符。"
   }

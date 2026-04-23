@@ -126,7 +126,7 @@ describe('FormRestore', () => {
       const app = await restore(trashedForms, 111);
       app.findAllComponents(FormRow).length.should.equal(1);
       app.findAllComponents(FormTrashRow).length.should.equal(1);
-      app.should.alert('success', 'The Form “Delete Me” has been restored.');
+      app.should.alert('success', 'The Form “Delete Me” has been successfully restored.');
     });
 
     it('sends the correct requests', () => {

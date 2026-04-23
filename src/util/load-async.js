@@ -55,9 +55,12 @@ const loaders = new Map()
     /* webpackChunkName: "component-audit-list" */
     '../components/audit/list.vue'
   )))
-  .set('ConfigError', loader(() => import(
-    /* webpackChunkName: "component-config-error" */
-    '../components/config-error.vue'
+  .set('ClientConfigError', loader(() => import(
+    /* webpackChunkName: "component-client-config-error" */
+    '../components/client-config-error.vue'
+  )))
+  .set('ConfigLogin', loader(() => import(
+    '../components/config/login.vue'
   )))
   .set('DatasetList', loader(() => import(
     /* webpackChunkName: "component-dataset-list" */
@@ -123,6 +126,9 @@ const loaders = new Map()
     /* webpackChunkName: "component-form-submission" */
     '../components/form/submission.vue'
   )))
+  .set('GeojsonMap', loader(() => import(
+    '../components/geojson-map.vue'
+  )))
   .set('WebFormRenderer', loader(() => import(
     /* webpackChunkName: "component-web-form-renderer" */
     '../components/web-form-renderer.vue'
@@ -142,6 +148,9 @@ const loaders = new Map()
   .set('FormVersionViewXml', loader(() => import(
     /* webpackChunkName: "component-form-version-view-xml" */
     '../components/form-version/view-xml.vue'
+  )))
+  .set('GeojsonMapDevTools', loader(() => import(
+    '../components/geojson-map/dev-tools.vue'
   )))
   .set('Home', loader(() => import(
     /* webpackChunkName: "component-home" */

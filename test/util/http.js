@@ -298,9 +298,17 @@ const resolveRoute = (location) => routeResolver.resolve(location);
 // any async component will be unwrapped from AsyncRoute.
 const routeComponents = (route) => route.matched.map(routeRecord => {
   const { asyncRoute } = routeRecord.meta;
-  return asyncRoute == null
-    ? routeRecord.components.default
-    : loadAsyncCache.get(asyncRoute.componentName).default;
+  if (asyncRoute == null) return routeRecord.components.default;
+
+  const m = loadAsyncCache.get(asyncRoute.componentName);
+  if (m == null) {
+    // eslint-disable-next-line no-console
+    console.error(`Component ${asyncRoute.componentName} was not found in the loadAsync() cache.`);
+    // eslint-disable-next-line no-console
+    console.error('The loadAsync() cache contains', loadAsyncCache.size, 'entries.');
+    throw new Error('component not found in loadAsync() cache');
+  }
+  return m.default;
 });
 
 class MockHttp {
@@ -434,19 +442,31 @@ class MockHttp {
   // Specifies a response to return for a matching request.
   respondIf(f, responseCallback) {
     return this._with({
-      respondIf: [...this._respondIf, [f, responseCallback]]
+      respondIf: [
+        ...this._respondIf,
+        [f, (config) => mockResponse.of(responseCallback(config))]
+      ]
     });
   }
 
   restoreSession(restore = true) {
-    if (!restore) return this.respondWithProblem(404.1);
+    if (!restore) {
+      return this.respondIf(
+        ({ url }) => url === '/v1/sessions/restore',
+        () => mockResponse.problem(404.1)
+      );
+    }
+
     if (testData.extendedUsers.size === 0) throw new Error('user not found');
     const session = testData.sessions.size !== 0
       ? testData.sessions.last()
       : testData.sessions.createPast(1).last();
     return this
-      .respondWithData(() => session)
-      .respondWithData(() => testData.extendedUsers.first());
+      .respondIf(({ url }) => url === '/v1/sessions/restore', () => session)
+      .respondIf(
+        ({ url }) => url === '/v1/users/current',
+        () => testData.extendedUsers.first()
+      );
   }
 
   // respondForComponent() responds with all the responses expected for the
@@ -459,12 +479,8 @@ class MockHttp {
         if (option === false) return series;
         if (typeof response === 'function')
           return series.respond(() => mockResponse.of((option ?? response)()));
-        if (Array.isArray(response)) {
-          return series.respondIf(
-            response[0],
-            () => mockResponse.of((option ?? response[1])())
-          );
-        }
+        if (Array.isArray(response))
+          return series.respondIf(response[0], option ?? response[1]);
         throw new Error(`invalid response for component ${componentName}`);
       },
       this
@@ -699,7 +715,7 @@ class MockHttp {
       let isOrdered = false;
       for (const [i, [f, ifCallback]] of this._respondIf.entries()) {
         if (!respondedIf.has(i) && f(config)) {
-          responseCallback = ifCallback;
+          responseCallback = () => ifCallback(config);
           respondedIf.add(i);
           break;
         }
