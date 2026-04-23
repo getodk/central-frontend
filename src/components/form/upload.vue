@@ -108,7 +108,7 @@ definition for an existing form -->
         @click="$emit('cancel')">
         {{ $t('action.cancel') }}
       </button>
-      <button id="form-upload-upload-button" type="button"
+      <button id="upload-button" type="button"
         class="btn btn-primary" :aria-disabled="awaitingResponse"
         @click="upload(false)">
         {{ $t('action.upload') }} <spinner :state="awaitingResponse"/>

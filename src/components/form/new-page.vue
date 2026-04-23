@@ -16,9 +16,10 @@ import { inject } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 
+import { useRequestData } from '../../request-data';
+
 import PageSection from '../page/section.vue';
 import FormUpload from './upload.vue';
-
 import useRoutes from '../../composables/routes';
 
 defineOptions({
@@ -29,11 +30,13 @@ const router = useRouter();
 const { t } = useI18n();
 const { formPath, projectPath } = useRoutes();
 const alert = inject('alert');
+const { project } = useRequestData();
 
 const afterCreate = async (form) => {
   const message = t('alert.create', {
     name: form.name != null ? form.name : form.xmlFormId
   });
+  project.forms += 1;
   await router.push(formPath(form.projectId, form.xmlFormId, 'draft'));
   alert.success(message);
 };
