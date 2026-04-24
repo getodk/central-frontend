@@ -1,3 +1,0 @@
-# @getodk/tree-sitter-xpath
-
-...

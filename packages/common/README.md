@@ -16,5 +16,5 @@ Being an internal package, for now there is no build step: downstream packages s
 - downstream package setup concerns
 - consideration for downstream build and bundle impact
 - usage in a package intended for both internal and external purposes (i.e.
-  packages such as `@getodk/tree-sitter-xpath` or `@getodk/xpath` which are used
-  in `@getodk/xforms-engine` but may also be used on their own)
+  packages such as `@getodk/xpath` which are used in `@getodk/xforms-engine`
+  but may also be used on their own)

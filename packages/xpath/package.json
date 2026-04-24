@@ -58,7 +58,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",
-    "@getodk/tree-sitter-xpath": "0.2.2",
+    "@getodk/tree-sitter-xpath": "^0.2.2",
     "@playwright/test": "^1.58.2",
     "@types/crypto-js": "^4.2.2",
     "babel-plugin-transform-jsbi-to-bigint": "^1.4.2",

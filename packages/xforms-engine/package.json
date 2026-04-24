@@ -62,7 +62,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",
-    "@getodk/tree-sitter-xpath": "0.2.2",
+    "@getodk/tree-sitter-xpath": "^0.2.2",
     "@getodk/xpath": "0.10.4",
     "@playwright/test": "^1.58.2",
     "@types/papaparse": "^5.5.0",
