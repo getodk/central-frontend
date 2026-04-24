@@ -40,6 +40,10 @@
 	}
 }
 
+.p-datepicker-panel.hide-today-button .p-datepicker-today-button {
+	display: none;
+}
+
 .p-dialog {
 	margin: 0 24px;
 

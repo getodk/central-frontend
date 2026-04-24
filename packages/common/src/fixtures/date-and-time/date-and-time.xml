@@ -12,13 +12,13 @@
             <value>When are you filling out this survey?</value>
           </text>
           <text id="/data/dates/date_of_birth:label">
-            <value>When were you born?</value>
+            <value>What month and year were you born?</value>
           </text>
           <text id="/data/dates/fruits_date:label">
             <value>When was the last time you ate fruits?</value>
           </text>
           <text id="/data/dates/vegetables_date:label">
-            <value>When was the last time you ate vegetables?</value>
+            <value>What year did you start cultivating vegetables?</value>
           </text>
           <text id="/data/dates/time:label">
             <value>What time is your first meal?</value>
@@ -32,13 +32,13 @@
             <value>Quand allez-vous remplir ce questionnaire?</value>
           </text>
           <text id="/data/dates/date_of_birth:label">
-            <value>Quand êtes-vous né(e) ?</value>
+            <value>En quel mois et année êtes-vous né(e) ?</value>
           </text>
           <text id="/data/dates/fruits_date:label">
             <value>Quand est-ce que vous avez mangé des fruits pour la dernière fois ?</value>
           </text>
           <text id="/data/dates/vegetables_date:label">
-            <value>Quand est-ce que vous avez mangé des légumes pour la dernière fois ?</value>
+            <value>En quelle année avez-vous commencé à cultiver des légumes ?</value>
           </text>
           <text id="/data/dates/time:label">
             <value>À quelle heure prends-tu ton premier repas ?</value>
@@ -52,13 +52,13 @@
             <value>¿Cuando está completando este formulario?</value>
           </text>
           <text id="/data/dates/date_of_birth:label">
-            <value>¿Cuál es su fecha de nacimiento?</value>
+            <value>¿En qué mes y año nació?</value>
           </text>
           <text id="/data/dates/fruits_date:label">
             <value>¿Cuando fué la ultima vez que comió frutas?</value>
           </text>
           <text id="/data/dates/vegetables_date:label">
-            <value>¿Cuando fué la ultima vez que comió verduras?</value>
+            <value>¿En qué año empezó a cultivar verduras?</value>
           </text>
           <text id="/data/dates/time:label">
             <value>¿A que hora es su primera comida?</value>
@@ -99,13 +99,13 @@
       <input ref="/data/dates/survey_date">
         <label ref="jr:itext('/data/dates/survey_date:label')"/>
       </input>
-      <input ref="/data/dates/date_of_birth">
+      <input ref="/data/dates/date_of_birth" appearance="month-year">
         <label ref="jr:itext('/data/dates/date_of_birth:label')"/>
       </input>
       <input ref="/data/dates/fruits_date">
         <label ref="jr:itext('/data/dates/fruits_date:label')"/>
       </input>
-      <input ref="/data/dates/vegetables_date">
+      <input ref="/data/dates/vegetables_date" appearance="year">
         <label ref="jr:itext('/data/dates/vegetables_date:label')"/>
       </input>
       <input ref="/data/dates/time">
