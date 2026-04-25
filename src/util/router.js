@@ -112,6 +112,8 @@ export const preservedData = (to, from, requestData) => {
 // validateData condition specified for the `to` route. Otherwise it returns
 // `true`.
 export const canRoute = (to, from, requestData) => {
+  if (!to.meta.validateData) return true;
+
   const preserved = preservedData(to, from, requestData);
   return to.meta.validateData.every(([resource, validator]) =>
     !(preserved.has(resource) && resource.dataExists && !validator()));
