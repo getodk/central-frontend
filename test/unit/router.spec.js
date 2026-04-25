@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import { F } from 'ramda';
 
-import { afterNextNavigation, beforeNextNavigation, arrayQuery, forceReplace, routeProps } from '../../src/util/router';
+import { afterNextNavigation, beforeNextNavigation, arrayQuery, forceReplace, routeProps, canRoute } from '../../src/util/router';
 
 import createTestContainer from '../util/container';
 import testData from '../data';
@@ -204,6 +204,26 @@ describe('util/router', () => {
         await forceReplace(container, '/');
         unsavedChanges.count.should.equal(0);
       });
+    });
+  });
+
+  describe('canRoute()', () => {
+    it('should return true if validateData is not defined', () => {
+      canRoute({
+				to: {
+					fullPath: '/account/',
+					path: '/account/',
+					meta: {},
+				},
+				from: {
+					path: '/',
+					fullPath: '/',
+					meta: {},
+				},
+				requestData: {
+					resources: {},
+				},
+      }).should.be.true;
     });
   });
 });
