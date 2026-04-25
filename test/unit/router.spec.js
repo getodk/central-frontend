@@ -1,5 +1,6 @@
 import sinon from 'sinon';
 import { F } from 'ramda';
+import { START_LOCATION } from 'vue-router';
 
 import { afterNextNavigation, beforeNextNavigation, arrayQuery, forceReplace, routeProps, canRoute } from '../../src/util/router';
 
@@ -215,11 +216,7 @@ describe('util/router', () => {
           path: '/account/',
           meta: {},
         },
-        {
-          path: '/',
-          fullPath: '/',
-          meta: {},
-        },
+        START_LOCATION,
         {
           resources: {},
         },
