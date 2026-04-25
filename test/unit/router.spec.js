@@ -210,19 +210,19 @@ describe('util/router', () => {
   describe('canRoute()', () => {
     it('should return true if validateData is not defined', () => {
       canRoute({
-				to: {
-					fullPath: '/account/',
-					path: '/account/',
-					meta: {},
-				},
-				from: {
-					path: '/',
-					fullPath: '/',
-					meta: {},
-				},
-				requestData: {
-					resources: {},
-				},
+        to: {
+          fullPath: '/account/',
+          path: '/account/',
+          meta: {},
+        },
+        from: {
+          path: '/',
+          fullPath: '/',
+          meta: {},
+        },
+        requestData: {
+          resources: {},
+        },
       }).should.be.true;
     });
   });
