@@ -105,6 +105,12 @@ const del = () => {
       "¿Está seguro que desea eliminar la lista de entidades “{name}”? Esto es irreversible."
     ]
   },
+  "fr": {
+    "title": "Supprimer liste d'entités",
+    "introduction": [
+      "Voulez-vous vraiment supprimer la liste d'entités \"{name}\"? Ceci ne peut pas être annulé."
+    ]
+  },
   "it": {
     "title": "Elimina l'elenco di entità",
     "introduction": [

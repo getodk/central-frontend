@@ -42,11 +42,15 @@ export const standardConfigs = view(configs, (config) => {
   return withSetAt;
 });
 
+standardConfigs.update = (index, props = {}) => {
+  const { setAt, ...rest } = props;
+  return configs.update(index, { ...rest, updatedAt: setAt });
+};
+
 standardConfigs.byKey = () => {
   const result = Object.create(null);
   for (const config of standardConfigs) result[config.key] = config;
   return result;
 };
-
 standardConfigs.forKey = (key) =>
   standardConfigs.find(config => config.key === key);

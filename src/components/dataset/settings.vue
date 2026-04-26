@@ -62,7 +62,7 @@ except according to the terms contained in the LICENSE file.
               </i18n-t>
               <br>
               <span>{{ $t('dependentForms.description[1]') }}</span>&nbsp;
-              <a href="#">{{ $t('dependentForms.description[2]') }}</a>
+              <a href="https://docs.getodk.org/central-entities/#deleting-entity-lists" target="_blank">{{ $t('dependentForms.description[2]') }}</a>
             </p>
             <p>
               <button type="button" class="btn btn-danger" :aria-disabled="dependentFormsCount > 0" @click="deleteModal.show()">
@@ -210,9 +210,15 @@ const dependentFormsCount = computed(() => {
         // {formsCount} is the number of Forms that are dependent on the Entity List.
         // Example: 4 Forms
         "The Entity List “{name}” is linked to {formsCount}.",
+        // "It" refers to an Entity List.
         "Before you can delete it, you’ll need to unlink it from the related Forms.",
         "Learn more here."
       ],
+      /*
+      This text will be inserted where {formsCount} is in the following sentence:
+
+      The Entity List “{name}” is linked to {formsCount}.
+      */
       "formsCount": "{count} Form | {count} Forms",
     }
   }
@@ -282,7 +288,7 @@ const dependentFormsCount = computed(() => {
     },
     "dependentForms": {
       "description": [
-        "La lista de entidades “{name}” está relacionada con {formsCount}.",
+        "La lista de entidades “{name}” está conectada con {formsCount}.",
         "Antes de poder Eliminarlo, tendrás que desvincularlo de los formularios relacionados.",
         "Aprende más aquí."
       ],
@@ -300,6 +306,20 @@ const dependentFormsCount = computed(() => {
       "label": "Créer les Entités quand les Soumissions sont marquées comme Approuvées.",
       "description": "Les données de l'Entité ne seront pas mises à jour tant qu'une personne n'aura pas révisé les données. Des corrections peuvent être apportées si nécessaires.",
       "successMessage": "Les Entités seront créées quand les Soumissions seront marquées comme Approuvées."
+    },
+    "action": {
+      "delete": "Supprimer la liste d'entités"
+    },
+    "alert": {
+      "delete": "La liste d'entités \"{name}\" a été supprimée avec succès."
+    },
+    "dependentForms": {
+      "description": [
+        "La liste d'entités \"{name}\" est liée à {formsCount}.",
+        "Avant de pouvoir la supprimer, vous devrez la dissocier des formulaires associés.",
+        "En apprendre plus ici."
+      ],
+      "formsCount": "{count} formulaire | {count} formulaires | {count} de formulaires"
     }
   },
   "it": {
@@ -322,7 +342,7 @@ const dependentFormsCount = computed(() => {
     },
     "dependentForms": {
       "description": [
-        "La Lista Entità “{name}” è correlata a {formsCount}.",
+        "La Lista Entità “{name}” è collegata a {formsCount}.",
         "Prima di poterlo eliminare, dovrai scollegarlo dai formulari correlati.",
         "Impara di più qui."
       ],
@@ -374,11 +394,6 @@ const dependentFormsCount = computed(() => {
       "delete": "实体列表“{name}”已成功删除。"
     },
     "dependentForms": {
-      "description": [
-        "实体列表“{name}”与 {formsCount} 个表单相关。",
-        "在删除它之前，您需要先解除它与相关表单的关联。",
-        "在此了解更多。"
-      ],
       "formsCount": "{count} 个表单"
     }
   },

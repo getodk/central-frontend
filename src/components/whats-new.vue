@@ -137,23 +137,20 @@ function hideModal() {
 <i18n>
 {
   "de": {
-    "title": "Löschen von Entitäten und Eigenschaften ️🗑️, Erstellung von Entitäten 🪄sowie individuelles Branding auf der Anmeldeseite 🎨",
-    "body": "Bereinigen Sie Entitätslisten und Eigenschaften, wenn diese nicht mehr benötigt werden, erstellen Sie Entitäten schnell direkt über die Benutzeroberfläche von Central und passen Sie die Anmeldeseite so an, dass Ihr Server das Corporate Design Ihrer Organisation widerspiegelt und das Vertrauen der Benutzer stärkt."
+    "title": "🎨 Markenspezifische Anmeldeseiten, Bereinigung der Entitätsliste und Datei-Uploads in Web Forms",
+    "body": "Passen Sie die Anmeldeseite an Ihr Corporate Design an, bereinigen Sie Entitätslisten und Eigenschaften, wenn diese nicht mehr benötigt werden, und laden Sie beliebige Dateien in Ihre Webformulare hoch."
   },
   "es": {
-    "title": "Eliminación de la lista de entidades y de propiedades ️🗑️, Creación de entidades 🪄y personalización de la identidad corporativa en la página de inicio de sesión 🎨",
-    "body": "Elimina las listas de entidades y las propiedades cuando ya no sean necesarias, crea rápidamente entidades directamente desde la interfaz de usuario de Central y personaliza la página de inicio de sesión para que tu servidor refleje la imagen de tu organización y genere confianza entre los usuarios."
+    "title": "🎨 Páginas de inicio de sesión personalizadas, limpieza de la lista de entidades y carga de archivos en formularios web",
+    "body": "Personaliza la página de inicio de sesión con tu imagen de empresa, elimina las listas de entidades y las propiedades cuando ya no las necesites, y sube cualquier archivo a tus formularios web."
   },
   "fr": {
-    "title": "Suppression de listes d'entités 🗑️, création d'entités 🪄 et personnalisation de la page de connexion 🎨"
+    "title": "🎨 Page de connexion personnalisée, suppression de listes d'entités et téléchargement de fichiers dans Web Forms.",
+    "body": "Choisissez les images et le texte de votre page de connexion, faites disparaître les listes d'entités et les propriétés dont vous n'avez plus besoin et essayez la nouvelle expérience de formulaires web."
   },
   "it": {
-    "title": "Eliminazione dell'elenco delle entità e delle proprietà ️🗑️, Creazione di entità 🪄e personalizzazione del branding nella pagina di accesso 🎨",
-    "body": "Elimina gli elenchi di entità e le proprietà quando non sono più necessari, crea rapidamente entità direttamente dall'interfaccia utente di Central e personalizza la pagina di accesso in modo che il tuo server rispecchi l'immagine del tuo brand e rafforzi la fiducia degli utenti."
-  },
-  "zh": {
-    "title": "实体列表与属性删除🗑️、实体创建🪄以及登录页面的自定义品牌标识🎨",
-    "body": "当实体列表和属性不再需要时进行清理，直接从 Central 用户界面快速创建实体，并自定义登录页面，使您的服务器体现组织品牌形象，建立用户信任。"
+    "title": "🎨 Pagine di accesso personalizzate, eliminazione degli elementi dall'elenco delle entità e caricamento di file in Web Forms",
+    "body": "Personalizza la pagina di accesso con il tuo brand, elimina gli elenchi di entità e le proprietà quando non servono più e carica qualsiasi file nei tuoi Web Forms."
   }
 }
 </i18n>

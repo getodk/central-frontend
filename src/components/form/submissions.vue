@@ -27,9 +27,12 @@ except according to the terms contained in the LICENSE file.
             </button>
           </template>
           <p v-show="deleted" class="purge-description">{{ $t('purgeDescription') }}</p>
-          <odata-data-access :analyze-disabled="hasEncryption || deleted"
-            :analyze-disabled-message="analyzeDisabledMessage"
-            @analyze="analyzeModal.show()"/>
+          <div class="form-submissions-heading-row-right-side">
+            <odata-data-access :analyze-disabled="hasEncryption || deleted"
+              :analyze-disabled-message="analyzeDisabledMessage"
+              @analyze="analyzeModal.show()"/>
+            <!-- download button is teleported here -->
+          </div>
         </div>
         </template>
       <template #body>
@@ -199,10 +202,15 @@ export default {
     display: flex;
     align-items: center;
     gap: 10px;
+
+    .form-submissions-heading-row-right-side{
+      display: flex;
+      gap: 10px;
+      margin-left: auto;
+    }
   }
 
   #odata-data-access {
-    margin-left: auto;
     font-size: initial;
   }
 }

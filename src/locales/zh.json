@@ -185,7 +185,6 @@
   "field": {
     "comment": "写评论...",
     "dateRange": "日期范围",
-    "description": "描述",
     "displayName": "展示名称",
     "email": "邮件地址",
     "name": "名字",
@@ -284,7 +283,8 @@
   "login": {
     "odkLogo": "ODK 标志",
     "defaultTitle": "欢迎使用 ODK Central",
-    "defaultDescription": "登录您的帐户以开始使用"
+    "defaultDescription": "登录您的帐户以开始使用",
+    "customLogoAlt": "组织标志"
   },
   "analytics": {
     "alwaysImprove": "我们一直努力改进ODK Central",

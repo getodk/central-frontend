@@ -24,6 +24,8 @@ export default function useFeatureFlags() {
   };
 
   function updateCheatKeys(event, isKeydownEvent) {
+    if (!event.key) return;
+
     if (event.key.toLowerCase() === 'w') {
       cheatKeys.w = isKeydownEvent;
     }
