@@ -320,6 +320,7 @@
     "entityLists": "Entity Lists",
     "form": "Form",
     "forms": "Forms",
+    "newForm": "New Form",
     // @transifexKey component.FormHead.draftNav.title
     "draft": "Draft",
     "formAttachments": "Form Attachments",

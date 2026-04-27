@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
         <template #tabs>
         <!-- Everyone with access to the project should be able to navigate to
         the forms page. -->
-        <li :class="tabClass('')" role="presentation">
+        <li :class="tabClass('', 'new-form')" role="presentation">
           <router-link :to="tabPath('')">
             {{ $t('resource.forms') }}
             <span v-if="project.dataExists" class="badge">
