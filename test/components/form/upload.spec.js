@@ -21,7 +21,6 @@ const mountOptions = () => {
     ? encodeURIComponent(formVersion.xmlFormId)
     : null;
   return {
-    props: { state: true },
     container: {
       router: mockRouter(!draft
         ? '/projects/1'
@@ -40,6 +39,38 @@ const upload = async (component, file = xlsForm()) => {
 };
 
 describe('FormUpload', () => {
+  describe('introduction text for new Form', () => {
+    it('shows the correct text for the first paragraph', () => {
+      const modal = mount(FormUpload, mountOptions());
+      const text = modal.get('.introduction p').text();
+      text.should.startWith('To create a Form,');
+    });
+
+    it('renders the paragraph about form attachments', () => {
+      const modal = mount(FormUpload, mountOptions());
+      const text = modal.findAll('.introduction p')[1].text();
+      text.should.include('Form Attachments');
+    });
+  });
+
+  describe('introduction text for existing Form', () => {
+    beforeEach(() => {
+      // mockLogin();
+      testData.extendedForms.createPast(1, { draft: true });
+    });
+
+    it('shows the correct text', () => {
+      const modal = mount(FormUpload, mountOptions());
+      const text = modal.get('.introduction p').text();
+      text.should.startWith('To update the Draft,');
+    });
+
+    it('does not render the paragraph about form attachments', () => {
+      const modal = mount(FormUpload, mountOptions());
+      modal.findAll('.introduction p').length.should.equal(1);
+    });
+  });
+
   describe('file selection', () => {
     beforeEach(() => {
       mockLogin();
@@ -172,8 +203,7 @@ describe('FormUpload', () => {
       .testStandardButton({
         button: '#upload-button',
         request: upload,
-        disabled: ['.form-upload-warnings .btn-primary', '.btn-link'],
-        component: true
+        disabled: ['.form-upload-warnings .btn-primary', '.btn-link']
       });
   });
 
@@ -228,6 +258,20 @@ describe('FormUpload', () => {
           // updated form list is received.
           app.get('#page-head-tabs li.active .badge').text().should.equal('2');
         }));
+  });
+
+  describe('after cancelling form creation', () => {
+    it('redirects to the project overview', () => {
+      mockLogin();
+      testData.extendedProjects.createPast(1);
+      return load('/projects/1/new-form')
+        .complete()
+        .request(app => app.get('#form-upload .btn-link').trigger('click'))
+        .respondFor('/projects/1', { project: false })
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/projects/1');
+        });
+    });
   });
 
   // TODO: to be updated in https://github.com/getodk/central/issues/1831
@@ -604,8 +648,7 @@ describe('FormUpload', () => {
         .complete()
         .testStandardButton({
           button: '.form-upload-warnings .btn-primary',
-          disabled: ['#upload-button', '.btn-link'],
-          component: true
+          disabled: ['#upload-button', '.btn-link']
         });
     });
 

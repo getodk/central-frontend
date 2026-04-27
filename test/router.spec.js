@@ -425,6 +425,14 @@ describe('createCentralRouter()', () => {
           .complete()
           .route('/projects/1')
           .then(dataExists(['project'])));
+
+      it('preserves data while navigating to/from .../new-form', () =>
+        load('/projects/1')
+          .complete()
+          .route('/projects/1/new-form')
+          .complete()
+          .route('/projects/1')
+          .then(dataExists(['project'])));
     });
 
     describe('navigating between form routes', () => {
@@ -606,6 +614,17 @@ describe('createCentralRouter()', () => {
         });
       });
 
+      describe('FormNewPage', () => {
+        it('redirects a user without form.create permission', () => {
+          testData.extendedProjects.createPast(1, { role: 'viewer' });
+          return load('/projects/1/new-form')
+            .respondFor('/', { users: false })
+            .afterResponses(app => {
+              app.vm.$route.path.should.equal('/');
+            });
+        });
+      });
+
       describe('other project routes', () => {
         beforeEach(() => {
           testData.extendedProjects.createPast(1, {
@@ -656,6 +675,12 @@ describe('createCentralRouter()', () => {
           const app = await load('/projects/1/entity-lists');
           app.vm.$route.path.should.equal('/projects/1/entity-lists');
         });
+
+        it('redirects the user from .../new-form', () => load('/projects/1/new-form')
+          .respondFor('/', { users: false })
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          }));
       });
 
       describe('form routes', () => {
@@ -984,6 +1009,11 @@ describe('createCentralRouter()', () => {
     it('shows project name in title for /projects/1/settings', async () => {
       await load('/projects/1/settings');
       document.title.should.equal('Settings | My Project Name | ODK Central');
+    });
+
+    it('shows project name in title for /projects/1/new-form', async () => {
+      await load('/projects/1/new-form');
+      document.title.should.equal('New Form | My Project Name | ODK Central');
     });
 
     // Form routes
