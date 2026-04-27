@@ -122,7 +122,6 @@ provide('dragDisabled', dragDisabled);
 const dragHandler = ref(noop);
 provide('dragHandler', dragHandler);
 
-const uploadModal = modalData();
 const { router, alert } = inject('container');
 const { t } = useI18n();
 const afterUpload = () => {
@@ -130,7 +129,6 @@ const afterUpload = () => {
   draftAttachments.reset();
   formDraftDatasetDiff.reset();
 
-  uploadModal.hide();
   alert.success(t('alert.upload'));
 };
 
@@ -171,12 +169,6 @@ const afterAbandon = () => {
 <style lang="scss">
 #form-edit {
   padding-inline: 10px;
-
-  #form-upload {
-    p {
-      max-width: unset;
-    }
-  }
 }
 
 body:has(#form-edit) { background-color: #fff; }

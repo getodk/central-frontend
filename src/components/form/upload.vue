@@ -281,6 +281,10 @@ export default {
     display: flex;
     justify-content: flex-end;
   }
+
+  p {
+    max-width: unset;
+  }
 }
 
 #form-upload-filename {

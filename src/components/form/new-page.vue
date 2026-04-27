@@ -47,14 +47,6 @@ const afterCancel = async () => {
 
 </script>
 
-<style lang="scss">
-#form-new {
-  p {
-    max-width: unset;
-  }
-}
-</style>
-
 <i18n lang="json5">
 {
   "en": {
