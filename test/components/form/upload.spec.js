@@ -1,7 +1,7 @@
 import { clone } from 'ramda';
 
 import FileDropZone from '../../../src/components/file-drop-zone.vue';
-import FormNew from '../../../src/components/form/new.vue';
+import FormUpload from '../../../src/components/form/upload.vue';
 import FormVersionString from '../../../src/components/form-version/string.vue';
 
 import testData from '../../data';
@@ -21,7 +21,6 @@ const mountOptions = () => {
     ? encodeURIComponent(formVersion.xmlFormId)
     : null;
   return {
-    props: { state: true },
     container: {
       router: mockRouter(!draft
         ? '/projects/1'
@@ -33,75 +32,42 @@ const xlsForm = () => new File([''], 'my_form.xlsx', {
   type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 });
 const upload = async (component, file = xlsForm()) => {
-  await setFiles(component.get('#form-new input'), [file]);
-  await component.get('#form-new-upload-button').trigger('click');
+  await setFiles(component.get('#form-upload input'), [file]);
+  await component.get('#upload-button').trigger('click');
   // wait for file to be verified and then actual request to be sent
   return wait(1);
 };
 
-describe('FormNew', () => {
-  describe('new form modal', () => {
-    beforeEach(() => {
-      mockLogin();
-      testData.extendedProjects.createPast(1);
+describe('FormUpload', () => {
+  describe('introduction text for new Form', () => {
+    it('shows the correct text for the first paragraph', () => {
+      const modal = mount(FormUpload, mountOptions());
+      const text = modal.get('.introduction p').text();
+      text.should.startWith('To create a Form,');
     });
 
-    it('toggles the modal', () =>
-      load('/projects/1').testModalToggles({
-        modal: FormNew,
-        show: '#form-list-create-button',
-        hide: '.btn-link'
-      }));
-
-    it('shows the correct modal title', () => {
-      const text = mount(FormNew, mountOptions()).get('.modal-title').text();
-      text.should.equal('Create Form');
-    });
-
-    describe('.modal-introduction', () => {
-      it('shows the correct text for the first paragraph', () => {
-        const modal = mount(FormNew, mountOptions());
-        const text = modal.get('.modal-introduction p').text();
-        text.should.startWith('To create a Form,');
-      });
-
-      it('renders the paragraph about form attachments', () => {
-        const modal = mount(FormNew, mountOptions());
-        const text = modal.findAll('.modal-introduction p')[1].text();
-        text.should.include('Form Attachments');
-      });
+    it('renders the paragraph about form attachments', () => {
+      const modal = mount(FormUpload, mountOptions());
+      const text = modal.findAll('.introduction p')[1].text();
+      text.should.include('Form Attachments');
     });
   });
 
-  describe('modal for uploading a new definition', () => {
+  describe('introduction text for existing Form', () => {
     beforeEach(() => {
-      mockLogin();
+      // mockLogin();
       testData.extendedForms.createPast(1, { draft: true });
     });
 
-    it('toggles the modal', () =>
-      load('/projects/1/forms/f/draft', { root: false }).testModalToggles({
-        modal: FormNew,
-        show: '#form-edit-upload-button',
-        hide: '.btn-link'
-      }));
-
-    it('shows the correct modal title', () => {
-      const text = mount(FormNew, mountOptions()).get('.modal-title').text();
-      text.should.equal('Upload New Form Definition');
+    it('shows the correct text', () => {
+      const modal = mount(FormUpload, mountOptions());
+      const text = modal.get('.introduction p').text();
+      text.should.startWith('To update the Draft,');
     });
 
-    describe('.modal-introduction', () => {
-      it('shows the correct text', () => {
-        const modal = mount(FormNew, mountOptions());
-        const text = modal.get('.modal-introduction p').text();
-        text.should.startWith('To update the Draft,');
-      });
-
-      it('does not render the paragraph about form attachments', () => {
-        const modal = mount(FormNew, mountOptions());
-        modal.findAll('.modal-introduction p').length.should.equal(1);
-      });
+    it('does not render the paragraph about form attachments', () => {
+      const modal = mount(FormUpload, mountOptions());
+      modal.findAll('.introduction p').length.should.equal(1);
     });
   });
 
@@ -112,36 +78,36 @@ describe('FormNew', () => {
     });
 
     it('shows an alert if no file is selected', async () => {
-      const modal = mount(FormNew, mountOptions());
-      await modal.get('#form-new-upload-button').trigger('click');
-      modal.should.alert('danger');
+      const component = mount(FormUpload, mountOptions());
+      await component.get('#upload-button').trigger('click');
+      component.should.alert('danger');
     });
 
     it('hides the alert after a file is selected', async () => {
-      const modal = mount(FormNew, mountOptions());
-      await modal.get('#form-new-upload-button').trigger('click');
-      await setFiles(modal.get('input'), [xlsForm()]);
-      modal.should.not.alert();
+      const component = mount(FormUpload, mountOptions());
+      await component.get('#upload-button').trigger('click');
+      await setFiles(component.get('input'), [xlsForm()]);
+      component.should.not.alert();
     });
 
     describe('after a file is selected using the file input', () => {
       it('shows the filename', async () => {
-        const modal = mount(FormNew, mountOptions());
-        await setFiles(modal.get('input'), [xlsForm()]);
-        modal.get('#form-new-filename').text().should.equal('my_form.xlsx');
+        const component = mount(FormUpload, mountOptions());
+        await setFiles(component.get('input'), [xlsForm()]);
+        component.get('#form-upload-filename').text().should.equal('my_form.xlsx');
       });
 
       it('resets the input', async () => {
-        const modal = mount(FormNew, mountOptions());
-        await setFiles(modal.get('input'), [xlsForm()]);
-        modal.get('input').element.value.should.equal('');
+        const component = mount(FormUpload, mountOptions());
+        await setFiles(component.get('input'), [xlsForm()]);
+        component.get('input').element.value.should.equal('');
       });
     });
 
     it('shows the filename after a file is dropped', async () => {
-      const modal = mount(FormNew, mountOptions());
-      await dragAndDrop(modal.getComponent(FileDropZone), [xlsForm()]);
-      modal.get('#form-new-filename').text().should.equal('my_form.xlsx');
+      const component = mount(FormUpload, mountOptions());
+      await dragAndDrop(component.getComponent(FileDropZone), [xlsForm()]);
+      component.get('#form-upload-filename').text().should.equal('my_form.xlsx');
     });
   });
 
@@ -151,7 +117,7 @@ describe('FormNew', () => {
     it('sends the correct request when creating a form', () => {
       testData.extendedProjects.createPast(1);
       return mockHttp()
-        .mount(FormNew, mountOptions())
+        .mount(FormUpload, mountOptions())
         .request(upload)
         .beforeEachResponse((_, { method, url, data }) => {
           method.should.equal('POST');
@@ -166,7 +132,7 @@ describe('FormNew', () => {
     it('sends the correct request when uploading a new definition', () => {
       testData.extendedForms.createPast(1, { draft: true });
       return mockHttp()
-        .mount(FormNew, mountOptions())
+        .mount(FormUpload, mountOptions())
         .request(upload)
         .beforeEachResponse((_, { method, url, data }) => {
           method.should.equal('POST');
@@ -186,8 +152,8 @@ describe('FormNew', () => {
 
     it('sends the correct Content-Type header for an XML file', () =>
       mockHttp()
-        .mount(FormNew, mountOptions())
-        .request(modal => upload(modal, new File([''], 'my_form.xml')))
+        .mount(FormUpload, mountOptions())
+        .request(component => upload(component, new File([''], 'my_form.xml')))
         .beforeEachResponse((_, { headers }) => {
           headers['Content-Type'].should.equal('application/xml');
         })
@@ -195,8 +161,8 @@ describe('FormNew', () => {
 
     it('sends the correct headers for an .xlsx file', () =>
       mockHttp()
-        .mount(FormNew, mountOptions())
-        .request(modal => upload(modal, new File([''], 'formulář.xlsx', {
+        .mount(FormUpload, mountOptions())
+        .request(component => upload(component, new File([''], 'formulář.xlsx', {
           type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         })))
         .beforeEachResponse((_, { headers }) => {
@@ -207,8 +173,8 @@ describe('FormNew', () => {
 
     it('sends the correct headers for an .xls file', () =>
       mockHttp()
-        .mount(FormNew, mountOptions())
-        .request(modal => upload(modal, new File([''], 'formulář.xls', {
+        .mount(FormUpload, mountOptions())
+        .request(component => upload(component, new File([''], 'formulář.xls', {
           type: 'application/vnd.ms-excel'
         })))
         .beforeEachResponse((_, { headers }) => {
@@ -219,8 +185,8 @@ describe('FormNew', () => {
 
     it('determines the content type based on the file extension', () =>
       mockHttp()
-        .mount(FormNew, mountOptions())
-        .request(modal => upload(modal, new File([''], 'my_form.xlsx', {
+        .mount(FormUpload, mountOptions())
+        .request(component => upload(component, new File([''], 'my_form.xlsx', {
           type: 'application/xml'
         })))
         .beforeEachResponse((_, { headers }) => {
@@ -233,12 +199,11 @@ describe('FormNew', () => {
     mockLogin();
     testData.extendedProjects.createPast(1);
     return mockHttp()
-      .mount(FormNew, mountOptions())
+      .mount(FormUpload, mountOptions())
       .testStandardButton({
-        button: '#form-new-upload-button',
+        button: '#upload-button',
         request: upload,
-        disabled: ['.modal-warnings .btn-primary', '.btn-link'],
-        modal: true
+        disabled: ['.form-upload-warnings .btn-primary', '.btn-link']
       });
   });
 
@@ -246,10 +211,10 @@ describe('FormNew', () => {
     mockLogin();
     testData.extendedProjects.createPast(1);
     return mockHttp()
-      .mount(FormNew, mountOptions())
+      .mount(FormUpload, mountOptions())
       .request(upload)
-      .beforeEachResponse(modal => {
-        const dropZone = modal.getComponent(FileDropZone);
+      .beforeEachResponse(component => {
+        const dropZone = component.getComponent(FileDropZone);
         dropZone.props().disabled.should.be.true;
         const button = dropZone.get('.btn-primary');
         button.attributes('aria-disabled').should.equal('true');
@@ -261,9 +226,8 @@ describe('FormNew', () => {
     const createForm = () => {
       mockLogin();
       testData.extendedForms.createPast(1, { xmlFormId: 'f1', name: 'Form 1' });
-      return load('/projects/1')
-        .afterResponses(app =>
-          app.get('#form-list-create-button').trigger('click'))
+      return load('/projects/1/new-form')
+        .complete()
         .request(upload)
         .respondWithData(() =>
           testData.standardForms.createNew({ xmlFormId: 'f2', name: 'Form 2' }))
@@ -296,7 +260,22 @@ describe('FormNew', () => {
         }));
   });
 
-  describe('after uploading a new definition', () => {
+  describe('after cancelling form creation', () => {
+    it('redirects to the project overview', () => {
+      mockLogin();
+      testData.extendedProjects.createPast(1);
+      return load('/projects/1/new-form')
+        .complete()
+        .request(app => app.get('#form-upload .btn-link').trigger('click'))
+        .respondFor('/projects/1', { project: false })
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/projects/1');
+        });
+    });
+  });
+
+  // TODO: to be updated in https://github.com/getodk/central/issues/1831
+  describe.skip('after uploading a new definition', () => {
     beforeEach(mockLogin);
 
     it('hides the modal', () => {
@@ -314,10 +293,7 @@ describe('FormNew', () => {
           });
           return { success: true };
         })
-        .respondForComponent('FormEdit')
-        .afterResponses(app => {
-          app.getComponent(FormNew).props().state.should.be.false;
-        });
+        .respondForComponent('FormEdit');
     });
 
     it('shows a success alert', () => {
@@ -398,7 +374,7 @@ describe('FormNew', () => {
     it('shows a message for an XLSForm error', () => {
       testData.extendedProjects.createPast(1);
       return mockHttp()
-        .mount(FormNew, mountOptions())
+        .mount(FormUpload, mountOptions())
         .request(upload)
         .respondWithProblem({
           code: 400.15,
@@ -409,15 +385,15 @@ describe('FormNew', () => {
             warnings: null
           }
         })
-        .afterResponse(modal => {
-          modal.should.alert('danger', 'The XLSForm could not be converted: Some XLSForm error');
+        .afterResponse(component => {
+          component.should.alert('danger', 'The XLSForm could not be converted: Some XLSForm error');
         });
     });
 
     it('shows a message for a projectId,xmlFormId duplicate', () => {
       testData.extendedProjects.createPast(1);
       return mockHttp()
-        .mount(FormNew, mountOptions())
+        .mount(FormUpload, mountOptions())
         .request(upload)
         .respondWithProblem({
           code: 409.3,
@@ -428,8 +404,8 @@ describe('FormNew', () => {
             values: ['1', 'f']
           }
         })
-        .afterResponse(modal => {
-          modal.should.alert('danger', 'A Form already exists in this Project with the Form ID of “f”.');
+        .afterResponse(component => {
+          component.should.alert('danger', 'A Form already exists in this Project with the Form ID of “f”.');
         });
     });
 
@@ -439,15 +415,15 @@ describe('FormNew', () => {
         draft: true
       });
       return mockHttp()
-        .mount(FormNew, mountOptions())
+        .mount(FormUpload, mountOptions())
         .request(upload)
         .respondWithProblem({
           code: 400.8,
           message: 'Some message',
           details: { field: 'xmlFormId', value: 'uploaded_id' }
         })
-        .afterResponse(modal => {
-          modal.should.alert(
+        .afterResponse(component => {
+          component.should.alert(
             'danger',
             'The Form definition you have uploaded does not appear to be for this Form. It has the wrong formId (expected “expected_id”, got “uploaded_id”).'
           );
@@ -457,15 +433,15 @@ describe('FormNew', () => {
     it('shows a message for duplicate entity property', () => {
       testData.extendedForms.createPast(1);
       return mockHttp()
-        .mount(FormNew, mountOptions())
+        .mount(FormUpload, mountOptions())
         .request(upload)
         .respondWithProblem({
           code: 409.17,
           message: 'This Form attempts to create new Entity properties that match with existing ones except for capitalization.',
           details: { duplicateProperties: [{ current: 'first_name', provided: 'FIRST_NAME' }] }
         })
-        .afterResponse(modal => {
-          modal.should.alert(
+        .afterResponse(component => {
+          component.should.alert(
             'danger',
             /This Form attempts to create a new Entity property that matches with an existing one except for capitalization:.*FIRST_NAME \(existing: first_name\)/s
           );
@@ -499,11 +475,11 @@ describe('FormNew', () => {
       delete xlsWarnings.details.warnings.workflowWarnings;
 
       return mockHttp()
-        .mount(FormNew, mountOptions())
+        .mount(FormUpload, mountOptions())
         .request(upload)
         .respondWithProblem(xlsWarnings)
-        .afterResponse(modal => {
-          const warnings = modal.get('.modal-warnings');
+        .afterResponse(component => {
+          const warnings = component.get('.form-upload-warnings');
           warnings.should.be.visible();
           const text = warnings.findAll('li').map(li => li.text());
           text.should.eql(['warning 1', 'warning 2']);
@@ -516,11 +492,11 @@ describe('FormNew', () => {
       delete workflowWarnings.details.warnings.xlsFormWarnings;
 
       return mockHttp()
-        .mount(FormNew, mountOptions())
+        .mount(FormUpload, mountOptions())
         .request(upload)
         .respondWithProblem(workflowWarnings)
-        .afterResponse(modal => {
-          const warnings = modal.get('.modal-warnings');
+        .afterResponse(component => {
+          const warnings = component.get('.form-upload-warnings');
           warnings.should.be.visible();
           const items = warnings.findAll('li');
           items[0].text().should.startWith('The following fields have been');
@@ -537,11 +513,11 @@ describe('FormNew', () => {
     it('shows xls and workflow warnings', () => {
       testData.extendedProjects.createPast(1);
       return mockHttp()
-        .mount(FormNew, mountOptions())
+        .mount(FormUpload, mountOptions())
         .request(upload)
         .respondWithProblem(xlsFormWarning)
-        .afterResponse(modal => {
-          const warnings = modal.get('.modal-warnings');
+        .afterResponse(component => {
+          const warnings = component.get('.form-upload-warnings');
           warnings.should.be.visible();
           const items = warnings.findAll('li');
 
@@ -567,11 +543,11 @@ describe('FormNew', () => {
       xlsWarnings.details.warnings.xlsFormWarnings[1] += '. Learn more: https://xlsform.org#multiple-language-support';
 
       return mockHttp()
-        .mount(FormNew, mountOptions())
+        .mount(FormUpload, mountOptions())
         .request(upload)
         .respondWithProblem(xlsWarnings)
-        .afterResponse(modal => {
-          const warnings = modal.get('.modal-warnings');
+        .afterResponse(component => {
+          const warnings = component.get('.form-upload-warnings');
           warnings.should.be.visible();
           const items = warnings.findAll('li');
           items[0].element.childNodes[0].nodeValue.should.eql('warning 1. ');
@@ -587,65 +563,65 @@ describe('FormNew', () => {
     it('hides the warnings after a new file is selected', () => {
       testData.extendedProjects.createPast(1);
       return mockHttp()
-        .mount(FormNew, mountOptions())
+        .mount(FormUpload, mountOptions())
         .request(upload)
         .respondWithProblem(xlsFormWarning)
-        .afterResponse(async (modal) => {
-          modal.get('.modal-warnings').should.be.visible();
-          await setFiles(modal.get('input'), [xlsForm()]);
-          modal.get('.modal-warnings').should.be.hidden();
+        .afterResponse(async (component) => {
+          component.get('.form-upload-warnings').should.be.visible();
+          await setFiles(component.get('input'), [xlsForm()]);
+          component.get('.form-upload-warnings').should.be.hidden();
         });
     });
 
     it('hides the warnings after a Problem is received', () => {
       testData.extendedProjects.createPast(1);
       return mockHttp()
-        .mount(FormNew, mountOptions())
+        .mount(FormUpload, mountOptions())
         .request(upload)
         .respondWithProblem(xlsFormWarning)
-        .afterResponse(modal => {
-          modal.get('.modal-warnings').should.be.visible();
-          modal.should.not.alert();
+        .afterResponse(component => {
+          component.get('.form-upload-warnings').should.be.visible();
+          component.should.not.alert();
         })
-        .request(modal =>
-          modal.get('.modal-warnings .btn-primary').trigger('click'))
+        .request(component =>
+          component.get('.form-upload-warnings .btn-primary').trigger('click'))
         .respondWithProblem()
-        .afterResponse(modal => {
-          modal.get('.modal-warnings').should.be.hidden();
-          modal.should.alert('danger');
+        .afterResponse(component => {
+          component.get('.form-upload-warnings').should.be.hidden();
+          component.should.alert('danger');
         });
     });
 
     it('hides an alert after warnings are received', () => {
       testData.extendedProjects.createPast(1);
       return mockHttp()
-        .mount(FormNew, mountOptions())
+        .mount(FormUpload, mountOptions())
         .request(upload)
         .respondWithProblem()
-        .afterResponse(modal => {
-          modal.should.alert('danger');
-          modal.get('.modal-warnings').should.be.hidden();
+        .afterResponse(component => {
+          component.should.alert('danger');
+          component.get('.form-upload-warnings').should.be.hidden();
         })
-        .request(async modal => {
-          await modal.get('#form-new-upload-button').trigger('click');
+        .request(async component => {
+          await component.get('#upload-button').trigger('click');
           return wait(1);
         })
         .respondWithProblem(xlsFormWarning)
-        .afterResponse(modal => {
-          modal.should.not.alert();
-          modal.get('.modal-warnings').should.be.visible();
+        .afterResponse(component => {
+          component.should.not.alert();
+          component.get('.form-upload-warnings').should.be.visible();
         });
     });
 
     describe('explanatory text', () => {
-      it('shows the correct text for the new form modal', () => {
+      it('shows the correct text for the new form component', () => {
         testData.extendedProjects.createPast(1);
         return mockHttp()
-          .mount(FormNew, mountOptions())
+          .mount(FormUpload, mountOptions())
           .request(upload)
           .respondWithProblem(xlsFormWarning)
           .afterResponse(component => {
-            const text = component.findAll('.modal-warnings p')[3].text();
+            const text = component.findAll('.form-upload-warnings p')[3].text();
             text.should.include('create the Form');
           });
       });
@@ -653,11 +629,11 @@ describe('FormNew', () => {
       it('shows the correct text when uploading a new definition', () => {
         testData.extendedForms.createPast(1, { draft: true });
         return mockHttp()
-          .mount(FormNew, mountOptions())
+          .mount(FormUpload, mountOptions())
           .request(upload)
           .respondWithProblem(xlsFormWarning)
           .afterResponse(component => {
-            const text = component.findAll('.modal-warnings p')[3].text();
+            const text = component.findAll('.form-upload-warnings p')[3].text();
             text.should.include('update the Draft');
           });
       });
@@ -666,29 +642,28 @@ describe('FormNew', () => {
     it('implements some standard button things for "Upload anyway" button', () => {
       testData.extendedProjects.createPast(1);
       return mockHttp()
-        .mount(FormNew, mountOptions())
+        .mount(FormUpload, mountOptions())
         .request(upload)
         .respondWithProblem(xlsFormWarning)
         .complete()
         .testStandardButton({
-          button: '.modal-warnings .btn-primary',
-          disabled: ['#form-new-upload-button', '.btn-link'],
-          modal: true
+          button: '.form-upload-warnings .btn-primary',
+          disabled: ['#upload-button', '.btn-link']
         });
     });
 
     it('specifies ?ignoreWarnings=true if "Upload anyway" is clicked', () => {
       testData.extendedProjects.createPast(1);
       return mockHttp()
-        .mount(FormNew, mountOptions())
+        .mount(FormUpload, mountOptions())
         .request(upload)
         .beforeEachResponse((_, { url }) => {
           url.should.equal('/v1/projects/1/forms');
         })
         .respondWithProblem(xlsFormWarning)
         .complete()
-        .request(async modal => {
-          await modal.get('.modal-warnings .btn-primary').trigger('click');
+        .request(async component => {
+          await component.get('.form-upload-warnings .btn-primary').trigger('click');
           return wait(1);
         })
         .beforeEachResponse((_, { url }) => {
@@ -699,14 +674,15 @@ describe('FormNew', () => {
 
     it('redirects to .../draft if "Upload anyway" is clicked', () => {
       testData.extendedProjects.createPast(1);
-      return load('/projects/1')
-        .afterResponses(app =>
-          app.get('#form-list-create-button').trigger('click'))
+      return load('/projects/1/new-form')
+        .complete()
         .request(upload)
         .respondWithProblem(xlsFormWarning)
         .complete()
-        .request(app =>
-          app.get('#form-new .modal-warnings .btn-primary').trigger('click'))
+        .request(async app => {
+          await app.get('#form-upload .form-upload-warnings .btn-primary').trigger('click');
+          return wait(1);
+        })
         .respondWithData(() =>
           testData.standardForms.createNew({ xmlFormId: 'f' }))
         .respondFor('/projects/1/forms/f/draft', { project: false })

@@ -97,6 +97,7 @@ const responsesByComponent = {
     deletedDatasets: () => []
   }),
   ProjectSettings: [],
+  FormNewPage: [],
   FormShow: componentResponses({
     project: true,
     form: () => testData.extendedForms.last(),

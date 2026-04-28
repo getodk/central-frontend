@@ -376,7 +376,18 @@ const routes = [
           },
           title: () => [i18n.t('common.tab.settings'), project.name]
         }
-      })
+      }),
+      asyncRoute({
+        path: 'new-form',
+        component: 'FormNewPage',
+        loading: 'tab',
+        meta: {
+          validateData: {
+            project: () => project.permits('form.create')
+          },
+          title: () => [i18n.t('resource.newForm'), project.name]
+        }
+      }),
     ]
   }),
   asyncRoute({
@@ -860,7 +871,8 @@ const routesByName = new Map();
     'FieldKeyList',
     'ProjectFormAccess',
     'DatasetList',
-    'ProjectSettings'
+    'ProjectSettings',
+    'FormNewPage'
   ];
   const formRoutes = [
     'FormSubmissions',

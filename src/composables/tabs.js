@@ -24,6 +24,6 @@ export default (pathPrefix = undefined) => {
     const slash = path !== '' ? '/' : '';
     return `${pathPrefix}${slash}${path}`;
   };
-  const tabClass = (path) => ({ active: route.path === tabPath(path) });
+  const tabClass = (...paths) => ({ active: paths.some(path => route.path === tabPath(path)) });
   return { tabPath, tabClass };
 };
