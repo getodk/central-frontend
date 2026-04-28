@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import type { InputNumberInputEvent } from 'primevue/inputnumber';
 import InputNumber from 'primevue/inputnumber';
-import { type ComponentPublicInstance, nextTick, watch } from 'vue';
-import { customRef, ref } from 'vue';
+import { type ComponentPublicInstance, computed, nextTick, ref, watch } from 'vue';
 
 interface NumericNodeState {
 	get required(): boolean;
@@ -63,37 +62,32 @@ if (props.isDecimal) {
  * - If the assigned value differs from the effective value (due to clamping or rollback),
  *   triggers a re-render via `renderKey` to update the displayed value.
  */
-const modelValue = customRef<number | null>(() => {
-	const internalValue = ref(props.numericValue);
-	return {
-		get: () => internalValue.value,
-		set: (assignedValue) => {
-			const currentValue = internalValue.value;
-			const stringValue = assignedValue != null ? assignedValue.toString() : '';
-			let newValue = stringValue.length <= props.maxCharacters ? assignedValue : currentValue;
+const modelValue = computed<number | null>({
+	get: () => props.numericValue,
+	set: (assignedValue) => {
+		const currentValue = props.numericValue;
+		const stringValue = assignedValue != null ? assignedValue.toString() : '';
+		let newValue = stringValue.length <= props.maxCharacters ? assignedValue : currentValue;
 
-			if (newValue != null) {
-				const { min = newValue, max = newValue } = props;
+		if (newValue != null) {
+			const { min = newValue, max = newValue } = props;
 
-				if (min !== newValue || max !== newValue) {
-					newValue = Math.max(min, Math.min(newValue, max));
-				}
+			if (min !== newValue || max !== newValue) {
+				newValue = Math.max(min, Math.min(newValue, max));
 			}
+		}
 
-			try {
-				props.setNumericValue(newValue);
-				internalValue.value = newValue;
-				if (newValue !== assignedValue) {
-					// Re-render if value is clamped
-					renderKey.value++;
-				}
-			} catch {
-				internalValue.value = currentValue;
-				// Re-render to restore previous value if something fails
+		try {
+			props.setNumericValue(newValue);
+			if (newValue !== assignedValue) {
+				// Re-render if value is clamped
 				renderKey.value++;
 			}
-		},
-	};
+		} catch {
+			// Re-render to restore previous value if something fails
+			renderKey.value++;
+		}
+	}
 });
 
 // After re-render, refocus input so user can continue typing seamlessly
