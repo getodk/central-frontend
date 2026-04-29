@@ -240,11 +240,11 @@ const createValueChangedCalculation = (
 		// No element to listen to
 		return;
 	}
-	let previous: string;
 	const sourceElementExpression = new ActionComputationExpression('string', source);
 	const calculateValueSource = createComputedExpression(context, sourceElementExpression); // Registers listener
+	let previous: string;
 	createComputed(() => {
-		if (context.isAttached() && context.isRelevant()) {
+		if (context.isAttached()) {
 			const valueSource = calculateValueSource();
 			if (
 				previous !== undefined &&

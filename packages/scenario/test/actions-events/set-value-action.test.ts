@@ -734,6 +734,108 @@ describe('setvalue action', () => {
 			scenario.answer('/data/source', 12);
 			expect(scenario.answerOf('/data/destination')).not.toEqualAnswer(stringAnswer(originalDate));
 		});
+
+		it('is triggered when target is made relevant', async () => {
+			const scenario = await Scenario.init(
+				'xforms-value-changed-event',
+				html(
+					head(
+						title('Value changed event'),
+						model(
+							mainInstance(
+								t('data id="xforms-value-changed-event"', t('source'), t('destination'))
+							),
+							bind('/data/source').type('string'),
+							bind('/data/destination').type('string').relevant("/data/source != ''")
+						)
+					),
+					body(
+						input(
+							'/data/source',
+							setvalue('xforms-value-changed', '/data/destination', '/data/source')
+						)
+					)
+				)
+			);
+
+			scenario.answer('/data/source', 'myvalue');
+
+			expect(scenario.answerOf('/data/destination')).toEqualAnswer(stringAnswer('myvalue'));
+		});
+
+		it('is triggered only once target is relevant', async () => {
+			const scenario = await Scenario.init(
+				'xforms-value-changed-event',
+				html(
+					head(
+						title('Value changed event'),
+						model(
+							mainInstance(
+								t(
+									'data id="xforms-value-changed-event"',
+									t('source', 'foo'),
+									t('trigger'),
+									t('grp', t('destination'))
+								)
+							),
+							bind('/data/source').type('string'),
+							bind('/data/trigger').type('string'),
+							bind('/data/grp/destination').type('string').relevant("/data/trigger = 'yes'")
+						)
+					),
+					body(
+						input(
+							'/data/source',
+							setvalue('xforms-value-changed', '/data/grp/destination', '/data/source')
+						),
+						input('/data/trigger'),
+						group('/data/grp', input('/data/grp/destination'))
+					)
+				)
+			);
+
+			expect(scenario.answerOf('/data/grp/destination')).toEqualAnswer(stringAnswer(''));
+			scenario.answer('/data/trigger', 'yes'); // make destination relevant
+			expect(scenario.answerOf('/data/grp/destination')).toEqualAnswer(stringAnswer(''));
+		});
+
+		it('sets value even if not relevant (yet)', async () => {
+			const scenario = await Scenario.init(
+				'xforms-value-changed-event',
+				html(
+					head(
+						title('Value changed event'),
+						model(
+							mainInstance(
+								t(
+									'data id="xforms-value-changed-event"',
+									t('source', 'foo'),
+									t('trigger'),
+									t('grp', t('destination'))
+								)
+							),
+							bind('/data/source').type('string'),
+							bind('/data/trigger').type('string'),
+							bind('/data/grp/destination').type('string').relevant("/data/trigger = 'yes'")
+						)
+					),
+					body(
+						input(
+							'/data/source',
+							setvalue('xforms-value-changed', '/data/grp/destination', '/data/source')
+						),
+						input('/data/trigger'),
+						group('/data/grp', input('/data/grp/destination'))
+					)
+				)
+			);
+
+			expect(scenario.answerOf('/data/grp/destination')).toEqualAnswer(stringAnswer(''));
+			scenario.answer('/data/trigger', 'no');
+			scenario.answer('/data/source', 'bar');
+			scenario.answer('/data/trigger', 'yes');
+			expect(scenario.answerOf('/data/grp/destination')).toEqualAnswer(stringAnswer('bar'));
+		});
 	});
 
 	describe('`setvalue`', () => {
