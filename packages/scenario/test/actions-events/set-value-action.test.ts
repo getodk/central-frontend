@@ -763,7 +763,7 @@ describe('setvalue action', () => {
 			expect(scenario.answerOf('/data/destination')).toEqualAnswer(stringAnswer('myvalue'));
 		});
 
-		it('is triggered only once target is relevant', async () => {
+		it('does not trigger when source has an initial value', async () => {
 			const scenario = await Scenario.init(
 				'xforms-value-changed-event',
 				html(
