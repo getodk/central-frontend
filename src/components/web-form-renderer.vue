@@ -77,7 +77,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { computed, getCurrentInstance, inject, onMounted, onUnmounted, watch } from 'vue';
+import { computed, createApp, getCurrentInstance, inject, onMounted, onUnmounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 /* eslint-disable-next-line import/no-unresolved -- not sure why eslint is complaining about it */
 import { OdkWebForm, webFormsPlugin, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
@@ -114,10 +114,14 @@ const props = defineProps({
 
 const emit = defineEmits(['loaded']);
 
-// Install webFormsPlugin lazily here (not at app startup) to avoid loading @getodk/web-forms on every page.
-// This is safe because this component is already loaded asynchronously.
+// Install WebFormsPlugin in the component instead of installing it at the
+// application level so that @getodk/web-forms package is not loaded for every
+// page, thus increasing the initial bundle
+const app = createApp({});
+app.use(webFormsPlugin);
 const inst = getCurrentInstance();
-inst.appContext.app.use(webFormsPlugin);
+// webFormsPlugin just adds globalProperty ($primevue)
+Object.assign(inst.appContext.config.globalProperties, app._context.config.globalProperties);
 
 const { i18n } = inject('container');
 
