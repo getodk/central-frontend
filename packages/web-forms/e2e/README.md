@@ -34,26 +34,26 @@ e2e/
    In the root folder run:
 
    ```bash
-   yarn build
+   npm run build
    ```
 
 2. **Run tests**
    Execute all functional E2E tests:
 
    ```bash
-    yarn workspace @getodk/web-forms test:e2e:functional:all
+    npm run test:e2e:functional:all -w=packages/web-forms
    ```
 
    Or run specific tests:
 
    ```bash
-   yarn workspace @getodk/web-forms test:e2e:functional:<browser, e.g webkit, chromium or firefox> <filepath, e.g. e2e/test-cases/geopoint.test.ts>
+   npm run test:e2e:functional:<browser, e.g webkit, chromium or firefox> <filepath, e.g. e2e/test-cases/geopoint.test.ts> -w=packages/web-forms
    ```
 
    Execute visual tests, but note that they are designed to work only in the CI environment. Running them locally may cause issues due to differences in snapshot sizes.
 
    ```bash
-    yarn workspace @getodk/web-forms test:e2e:visual:<browser, e.g webkit, chromium or firefox>
+    npm run test:e2e:visual:<browser, e.g webkit, chromium or firefox> -w=packages/web-forms
    ```
 
 ## Contributing

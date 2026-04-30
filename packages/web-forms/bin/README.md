@@ -1,6 +1,6 @@
 # Scripts
 
-This directory contains utility scripts to support the **ODK Web Forms** project workflows, mostly run via Yarn.
+This directory contains utility scripts to support the **ODK Web Forms** project workflows, mostly run via npm.
 
 ## Overview
 
@@ -11,12 +11,11 @@ The folder includes scripts for:
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/) installed
-- [Yarn](https://yarnpkg.com/) installed (the project uses Yarn as the package manager)
 
 Install dependencies before running scripts:
 
 ```bash
-yarn install
+npm run ci
 ```
 
 ## Available Scripts

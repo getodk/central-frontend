@@ -22,16 +22,16 @@ Test commands:
 
 ```sh
 # Single run
-yarn workspace @getodk/xforms-engine test-node:jsdom
-yarn workspace @getodk/xforms-engine test-browser:chromium
-yarn workspace @getodk/xforms-engine test-browser:firefox
-yarn workspace @getodk/xforms-engine test-browser:webkit
+npm run test-node:jsdom -w=packages/xforms-engine
+npm run test-browser:chromium -w=packages/xforms-engine
+npm run test-browser:firefox -w=packages/xforms-engine
+npm run test-browser:webkit -w=packages/xforms-engine
 
 # Watch mode (convenient during development)
-yarn workspace @getodk/xforms-engine test-watch:jsdom
-yarn workspace @getodk/xforms-engine test-watch:chromium
-yarn workspace @getodk/xforms-engine test-watch:firefox
-yarn workspace @getodk/xforms-engine test-watch:webkit
+npm run test-watch:jsdom -w=packages/xforms-engine
+npm run test-watch:chromium -w=packages/xforms-engine
+npm run test-watch:firefox -w=packages/xforms-engine
+npm run test-watch:webkit -w=packages/xforms-engine
 ```
 
 ## Supported/tested environments

@@ -65,7 +65,7 @@ We will eventually publish a framework-agnostic custom element.
 To run in development, run this command at the monorepo root:
 
 ```sh
-yarn workspace @getodk/web-forms dev
+npm run dev -w=packages/web-forms
 ```
 
 Individual test environments, and their corresponding watch modes, also have separate commands which can be found in [`package.json`](./package.json).

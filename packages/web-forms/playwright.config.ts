@@ -130,7 +130,7 @@ export default defineConfig({
 		 * Serve dev mode: for testing with demo/fixtures
 		 */
 		{
-			command: 'yarn dev',
+			command: 'npm run dev',
 			port: 5173,
 			reuseExistingServer: !process.env.CI,
 		},
@@ -140,7 +140,7 @@ export default defineConfig({
 		 * aspects of build product we wish to validate.
 		 */
 		{
-			command: 'yarn dist-demo',
+			command: 'npm run dist-demo',
 			port: 5174,
 			reuseExistingServer: false,
 		},

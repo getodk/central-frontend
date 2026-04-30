@@ -47,8 +47,8 @@ other automated checks throughout the [ODK Web Forms monorepo](../../).
 To run in development, run this command at the monorepo root:
 
 ```sh
-yarn workspace @getodk/scenario benchmark
-yarn workspace @getodk/scenario test
+npm run benchmark -w=packages/scenario
+npm run test -w=packages/scenario
 ```
 
 Individual target environments, and their corresponding watch modes, also have separate commands which can be found in [`package.json`](./package.json).

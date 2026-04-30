@@ -23,8 +23,8 @@
     "README.md"
   ],
   "engines": {
-    "node": "^20.19.3 || ^22.12.0 || ^24.11.0",
-    "yarn": "4.11.0"
+    "node": "^20.19.3 || ^22.12.0 || ^24.13.0",
+    "npm": "11"
   },
   "scripts": {
     "build": "npm-run-all -l build:clean build:translations build:demo build:js",
@@ -33,7 +33,7 @@
     "build:js": "vite build",
     "build:translations": "node scripts/merge-translations.js",
     "dev": "vite",
-    "dist-demo": "yarn build && yarn vite serve dist-demo --port 5174",
+    "dist-demo": "npm run build && vite serve dist-demo --port 5174",
     "test": "npm-run-all -nl 'test:*'",
     "test:e2e:functional:all": "playwright test --project=functional-*",
     "test:e2e:functional:chromium": "playwright test --project=functional-chromium",
