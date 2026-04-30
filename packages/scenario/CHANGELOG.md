@@ -1,5 +1,16 @@
 # @getodk/scenario
 
+## 0.12.0
+
+### Minor Changes
+
+- 86a54ab: Editing submissions no longer blocks until attachments have been downloaded
+
+### Patch Changes
+
+- 7ac5a19: Add support to datetime question type.
+- 4fc0e56: Fixed setvalue not firing when the field becomes relevant
+
 ## 0.11.7
 
 ### Patch Changes

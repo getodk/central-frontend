@@ -1,5 +1,17 @@
 # @getodk/xforms-engine
 
+## 0.22.0
+
+### Minor Changes
+
+- 86a54ab: Editing submissions no longer blocks until attachments have been downloaded
+- 7ac5a19: Add support to datetime question type.
+- 500c8b2: Adds translation support.
+
+### Patch Changes
+
+- 4fc0e56: Fixed setvalue not firing when the field becomes relevant
+
 ## 0.21.1
 
 ### Patch Changes

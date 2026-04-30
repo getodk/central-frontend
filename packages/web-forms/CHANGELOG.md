@@ -1,5 +1,21 @@
 # @getodk/web-forms
 
+## 0.24.0
+
+### Minor Changes
+
+- 86a54ab: Editing submissions no longer blocks until attachments have been downloaded
+- 7ac5a19: Add support to datetime question type.
+- a64d092: Add support for "month-year" and "year" date question type appearances.
+- 500c8b2: Adds translation support.
+- 024287c: Moved monorepo tree-sitter-xpath into separate repo
+
+### Patch Changes
+
+- 9ac1901: Fixed numeric inputs to update the UI when setvalue actions trigger
+- c6856c5: Adjust the position of the media preview clear button.
+- 4fc0e56: Fixed setvalue not firing when the field becomes relevant
+
 ## 0.23.1
 
 ### Patch Changes

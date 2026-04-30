@@ -1,426 +1,426 @@
 {
   "form_load_failure_dialog.header.title": {
-    "string": "Ocurrió un error al cargar este formulario",
+    "string": "Il y a eu une erreur lors du chargement de ce formulaire",
     "developer_comment": "The title text shown in the header of the dialog."
   },
   "form_load_failure_dialog.details.label": {
-    "string": "Detalles técnicos del error",
+    "string": "Détails techniques de l'erreur",
     "developer_comment": "The label for the clickable summary that reveals technical error information."
   },
   "odk_web_forms.submit.label": {
-    "string": "Enviar",
+    "string": "Envoyer",
     "developer_comment": "Label for the primary form submission button."
   },
   "odk_web_forms.validation.error": {
-    "string": "{count, plural, one {# pregunta con error} many {# preguntas con errores} other {# preguntas con errores}}",
+    "string": "{count, plural, one {# question avec erreur} many {# questions avec erreurs} other {# questions avec erreurs}}",
     "developer_comment": "Error banner message. {count} is the number of validation violations."
   },
   "odk_web_forms.geolocation.error": {
-    "string": "Ubicación no disponible. Active el GPS y los permisos del navegador, luego reinicie el formulario para intentarlo de nuevo.",
+    "string": "La position n'est pas disponible. Activez le GPS et les autorisations du navigateur, puis rechargez le formulaire pour réessayer.",
     "developer_comment": "Error message shown when background geolocation fails."
   },
   "odk_web_forms.delete.label": {
-    "string": "Eliminar",
+    "string": "Supprimer",
     "developer_comment": "Generic label for a delete action button."
   },
   "odk_web_forms.cancel.label": {
-    "string": "Cancelar",
+    "string": "Annuler",
     "developer_comment": "Generic label for a cancel action button."
   },
   "odk_web_forms.remove.label": {
-    "string": "Quitar",
+    "string": "Retirer",
     "developer_comment": "Generic label for a remove action button."
   },
   "odk_web_forms.save.label": {
-    "string": "Guardar",
+    "string": "Enregistrer",
     "developer_comment": "Generic label for a save action button."
   },
   "geolocation_formatted_value.accuracy.label": {
-    "string": "Precisión: {accuracy} m,",
+    "string": "Précision : {accuracy} m,",
     "developer_comment": "Displays the GPS accuracy in metres. {accuracy} is the numeric accuracy value."
   },
   "geolocation_formatted_value.latitude.label": {
-    "string": "Latitud: {latitude},",
+    "string": "Latitude : {latitude},",
     "developer_comment": "Displays the GPS latitude coordinate. {latitude} is the numeric latitude value."
   },
   "geolocation_formatted_value.longitude.label": {
-    "string": "Longitud: {longitude}.",
+    "string": "Longitude : {longitude}.",
     "developer_comment": "Displays the GPS longitude coordinate. {longitude} is the numeric longitude value."
   },
   "validation_message.required.error": {
-    "string": "Este campo es obligatorio.",
+    "string": "Ce champ est obligatoire.",
     "developer_comment": "Default error shown when a required field has no value and the form designer did not specify a custom message."
   },
   "validation_message.constraint.error": {
-    "string": "Este campo no cumple los requisitos.",
+    "string": "Ne respecte pas les critères.",
     "developer_comment": "Default error shown when a field's value fails a constraint and the form designer did not specify a custom message."
   },
   "map_async.load_error.message": {
-    "string": "No se puede cargar el mapa",
+    "string": "Impossible de charger la carte",
     "developer_comment": "Error message shown when the map component fails to load."
   },
   "map_block.graphics_error.title": {
-    "string": "Se detectó un problema de gráficos",
+    "string": "Un problème d'affichage a été détecté",
     "developer_comment": "Title of the error shown when the browser cannot render the map due to WebGL being unavailable."
   },
   "map_block.graphics_error.message": {
-    "string": "Su navegador no puede mostrar el mapa en este momento. Active la configuración de aceleración de gráficos.",
+    "string": "Votre navigateur ne peut pas afficher la carte pour le moment. Activez l'accélération matérielle dans vos paramètres.",
     "developer_comment": "Description of the WebGL error, instructing the user to enable hardware acceleration in their browser."
   },
   "map_block.location_error.title": {
-    "string": "No se puede acceder a la ubicación",
+    "string": "Accès à la position impossible",
     "developer_comment": "Title of the error shown in the map when the browser denies geolocation permission."
   },
   "map_block.location_error.message": {
-    "string": "Otorgue permisos de ubicación en la configuración del navegador y asegúrese de que la ubicación esté activada.",
+    "string": "Accordez les autorisations de localisation dans les paramètres du navigateur et assurez-vous que la localisation est activée.",
     "developer_comment": "Description of what the user should do to resolve a geolocation access error in the map."
   },
   "map_block.get_location.label": {
-    "string": "Obtener ubicación",
+    "string": "Obtenir la position",
     "developer_comment": "Label for the button in the map overlay that starts watching the device's GPS location."
   },
   "map_block.drag_vertex_instruction.placed": {
-    "string": "Presione y arrastre para mover un punto",
+    "string": "Appuyez et faites glisser pour déplacer un point",
     "developer_comment": "Instruction shown on the map when a point has been placed and the user can drag points and vertices."
   },
   "map_block.drag_vertex_instruction.default": {
-    "string": "Presione para colocar un punto",
+    "string": "Appuyez pour placer un point",
     "developer_comment": "Instruction shown on the map before a point is placed, when the user can drag points and vertices."
   },
   "map_block.drag_instruction.placed": {
-    "string": "Presione para mover el punto",
+    "string": "Appuyez pour déplacer le point",
     "developer_comment": "Instruction shown on the map when a point has been placed and the user can drag the feature."
   },
   "map_block.drag_instruction.default": {
-    "string": "Use el botón de ubicación para centrar el mapa en su posición actual",
+    "string": "Utilisez le bouton de localisation pour centrer la carte sur votre position actuelle",
     "developer_comment": "Instruction shown on the map before a point is placed, when the user can drag the feature."
   },
   "map_confirm_dialog.delete_shape.header": {
-    "string": "¿Eliminar todo el polígono?",
+    "string": "Supprimer tout le polygone ?",
     "developer_comment": "Title of the confirmation dialog shown before deleting a shape."
   },
   "map_confirm_dialog.delete_trace.header": {
-    "string": "¿Eliminar toda la linea?",
+    "string": "Supprimer tout le tracé ?",
     "developer_comment": "Title of the confirmation dialog shown before deleting a trace."
   },
   "map_confirm_dialog.delete_shape.body": {
-    "string": "¿Está seguro de que desea eliminar todo el polígono y comenzar de nuevo?",
+    "string": "Voulez-vous vraiment supprimer tout le polygone et recommencer ?",
     "developer_comment": "Body text of the confirmation dialog shown before deleting a shape."
   },
   "map_confirm_dialog.delete_trace.body": {
-    "string": "¿Está seguro de que desea eliminar toda la linea y comenzar de nuevo?",
+    "string": "Voulez-vous vraiment supprimer tout le tracé et recommencer ?",
     "developer_comment": "Body text of the confirmation dialog shown before deleting a trace."
   },
   "map_advanced_panel.longitude.label": {
-    "string": "Longitud",
+    "string": "Longitude",
     "developer_comment": "Label for the longitude input field in the advanced panel."
   },
   "map_advanced_panel.longitude.error": {
-    "string": "La longitud no es válida",
+    "string": "La longitude n'est pas valide",
     "developer_comment": "Validation error shown when the longitude value entered is out of range."
   },
   "map_advanced_panel.latitude.label": {
-    "string": "Latitud",
+    "string": "Latitude",
     "developer_comment": "Label for the latitude input field in the advanced panel."
   },
   "map_advanced_panel.latitude.error": {
-    "string": "La latitud no es válida",
+    "string": "La latitude n'est pas valide",
     "developer_comment": "Validation error shown when the latitude value entered is out of range."
   },
   "map_advanced_panel.altitude.label": {
-    "string": "Altitud",
+    "string": "Altitude",
     "developer_comment": "Label for the altitude input field in the advanced panel."
   },
   "map_advanced_panel.accuracy.label": {
-    "string": "Precisión",
+    "string": "Précision",
     "developer_comment": "Label for the accuracy input field in the advanced panel."
   },
   "map_advanced_panel.import_data.label": {
-    "string": "Importar datos para reemplazar ubicación",
+    "string": "Importer des données pour remplacer la position",
     "developer_comment": "Label for the link that opens the import/paste dialog from the advanced panel."
   },
   "map_controls.zoom_fit_all.description": {
-    "string": "Mostrar todos los elementos en el mapa",
+    "string": "Afficher tous les éléments sur la carte",
     "developer_comment": "Aria-label for the map control button that zooms to fit all features in view."
   },
   "map_controls.current_location.description": {
-    "string": "Encuentre su ubicación",
+    "string": "Trouver votre position",
     "developer_comment": "Aria-label for the map control button that centers the map on the device's current GPS location."
   },
   "map_controls.undo.description": {
-    "string": "Deshacer última acción",
+    "string": "Annuler la dernière action",
     "developer_comment": "Aria-label for the map control button that undoes the last map edit."
   },
   "map_controls.delete.description": {
-    "string": "Eliminar un vértice o todos los vértices",
+    "string": "Supprimer un sommet ou tous les sommets",
     "developer_comment": "Aria-label for the map control button that deletes the selected vertex or all vertices."
   },
   "map_controls.open_advanced.description": {
-    "string": "Ediciones avanzadas manuales",
+    "string": "Modifications manuelles avancées",
     "developer_comment": "Aria-label for the map control button that opens the advanced coordinate editing panel."
   },
   "map_controls.open_full_screen.description": {
-    "string": "Expandir a pantalla completa",
+    "string": "Passer en plein écran",
     "developer_comment": "Aria-label for the map control button that expands the map to full screen."
   },
   "map_controls.close_full_screen.description": {
-    "string": "Salir de pantalla completa",
+    "string": "Quitter le plein écran",
     "developer_comment": "Aria-label for the map control button that exits full-screen mode."
   },
   "map_controls.open_info.description": {
-    "string": "Mostrar información sobre las acciones del mapa",
+    "string": "Afficher les informations sur les actions de la carte",
     "developer_comment": "Aria-label for the map control button that opens the info dialog listing available map actions."
   },
   "map_info_dialog.header.title": {
-    "string": "¿Cómo usar el mapa?",
+    "string": "Comment utiliser la carte ?",
     "developer_comment": "Title shown in the header of the dialog that explains available map actions."
   },
   "map_properties.remove_selection.label": {
-    "string": "Quitar selección",
+    "string": "Annuler la sélection",
     "developer_comment": "Label for the button that removes the currently saved feature selection."
   },
   "map_properties.save_selected.label": {
-    "string": "Guardar selección",
+    "string": "Enregistrer la sélection",
     "developer_comment": "Label for the button that saves the currently selected map feature."
   },
   "map_status_bar.no_trace_saved.label": {
-    "string": "Ninguna linea guardada",
+    "string": "Aucun tracé enregistré",
     "developer_comment": "Status bar message shown when no trace (linestring) has been saved yet."
   },
   "map_status_bar.no_shape_saved.label": {
-    "string": "Ningún polígono guardado",
+    "string": "Aucun polygone enregistré",
     "developer_comment": "Status bar message shown when no shape (polygon) has been saved yet."
   },
   "map_status_bar.no_point_saved.label": {
-    "string": "Ningún punto guardado",
+    "string": "Aucun point enregistré",
     "developer_comment": "Status bar message shown when no point has been saved yet."
   },
   "map_status_bar.point_saved.label": {
-    "string": "Punto guardado",
+    "string": "Point enregistré",
     "developer_comment": "Status bar message shown when a point has been saved."
   },
   "map_status_bar.trace_saved.label": {
-    "string": "Linea guardada",
+    "string": "Tracé enregistré",
     "developer_comment": "Status bar message shown when a trace (linestring) has been saved."
   },
   "map_status_bar.shape_saved.label": {
-    "string": "Polígono guardado",
+    "string": "Polygone enregistré",
     "developer_comment": "Status bar message shown when a shape (polygon) has been saved."
   },
   "map_status_bar.feature_saved.label": {
-    "string": "Elemento guardado",
+    "string": "Élément enregistré",
     "developer_comment": "Fallback status bar message shown when a feature of an unrecognised geometry type has been saved."
   },
   "map_status_bar.points_saved.label": {
-    "string": "{count} puntos guardados",
+    "string": "{count} points enregistrés",
     "developer_comment": "Status bar message showing how many points have been saved. {count} is the number of saved points."
   },
   "map_status_bar.capturing.label": {
-    "string": "Obteniendo ubicación...",
+    "string": "Obtention de la position...",
     "developer_comment": "Status bar message shown while the device is actively capturing a GPS location."
   },
   "map_status_bar.remove_point.label": {
-    "string": "Eliminar punto",
+    "string": "Supprimer le point",
     "developer_comment": "Full label for the remove button shown on larger screens in the map status bar."
   },
   "map_status_bar.view_details.label": {
-    "string": "Ver detalles",
+    "string": "Voir les détails",
     "developer_comment": "Label for the button that opens the feature properties panel."
   },
   "map_status_bar.advanced.label": {
-    "string": "Avanzado",
+    "string": "Avancé",
     "developer_comment": "Label for the button that opens the advanced coordinate editing panel."
   },
   "map_status_bar.vertex_longitude.label": {
-    "string": "Longitud: {longitude}",
+    "string": "Longitude : {longitude}",
     "developer_comment": "Longitude component of the selected vertex info shown in the map status bar. {longitude} is the numeric longitude value."
   },
   "map_status_bar.vertex_latitude.label": {
-    "string": "Latitud: {latitude}",
+    "string": "Latitude : {latitude}",
     "developer_comment": "Latitude component of the selected vertex info shown in the map status bar. {latitude} is the numeric latitude value."
   },
   "map_status_bar.vertex_altitude.label": {
-    "string": "Altitud: {altitude} m",
+    "string": "Altitude : {altitude} m",
     "developer_comment": "Altitude component of the selected vertex info shown in the map status bar. {altitude} is the numeric altitude value in metres."
   },
   "map_status_bar.vertex_accuracy.label": {
-    "string": "Precisión: {accuracy}",
+    "string": "Précision : {accuracy}",
     "developer_comment": "Accuracy component of the selected vertex info shown in the map status bar. {accuracy} is the pre-formatted accuracy value."
   },
   "map_update_coords_dialog.header.title": {
-    "string": "Importar datos para reemplazar ubicación",
+    "string": "Importer des données pour remplacer la position",
     "developer_comment": "Title shown in the header of the dialog for importing coordinates via paste or file upload."
   },
   "map_update_coords_dialog.paste_data.label": {
-    "string": "Pegue los datos en formato ODK",
+    "string": "Collez les données en format ODK",
     "developer_comment": "Label for the paste input field in the import coordinates dialog."
   },
   "map_update_coords_dialog.paste_data.hint": {
-    "string": "Ingrese las coordenadas como: Latitud Longitud Altitud Precisión. Separe múltiples puntos con un punto y coma (;).",
+    "string": "Saisissez les coordonnées comme suit : Latitude Longitude Altitude Précision. Séparez plusieurs points par un point-virgule (;).",
     "developer_comment": "Helper text explaining the expected format for pasted coordinate data."
   },
   "map_update_coords_dialog.upload_file.label": {
-    "string": "Subir un archivo GeoJSON",
+    "string": "Importer un fichier GeoJSON",
     "developer_comment": "Label for the file upload section in the import coordinates dialog."
   },
   "map_update_coords_dialog.upload_file.action": {
-    "string": "Subir archivo",
+    "string": "Importer le fichier",
     "developer_comment": "Label for the button that opens the file chooser to upload a GeoJSON file."
   },
   "map_update_coords_dialog.file_empty.error": {
-    "string": "El archivo está vacío.",
+    "string": "Le fichier est vide.",
     "developer_comment": "Error shown when the uploaded file contains no content."
   },
   "map_update_coords_dialog.unsupported_file.error": {
-    "string": "Tipo de archivo no compatible. Por favor, suba un archivo .geojson.",
+    "string": "Type de fichier non reconnu. Veuillez importer un fichier .geojson.",
     "developer_comment": "Error shown when the uploaded file is not a supported GeoJSON format."
   },
   "map_update_coords_dialog.parse_failed.error": {
-    "string": "Error al convertir el archivo. Asegúrese de que sea un GeoJSON válido.",
+    "string": "Erreur d'analyse du fichier. Assurez-vous qu'il s'agit d'un fichier GeoJSON valide.",
     "developer_comment": "Error shown when the uploaded file could not be parsed as valid GeoJSON."
   },
   "map_update_coords_dialog.incorrect_geometry.error": {
-    "string": "Tipo de geometría incorrecto.",
+    "string": "Type de géométrie incorrect.",
     "developer_comment": "Error shown when the imported data contains a geometry type incompatible with the current field."
   },
   "media_block.fetch.error": {
-    "string": "No fue posible obtener el archivo multimedia. Compruebe la URL y los ajustes de descarga",
+    "string": "Impossible de récupérer le fichier multimédia. Vérifiez l'URL et les paramètres de téléchargement.",
     "developer_comment": "Displayed when media (image, audio or video) fetching fails."
   },
   "media_block.not_found.error": {
-    "string": "Archivo multimedia no encontrado. Archivo: {file}",
+    "string": "Fichier multimédia introuvable. Fichier : {file}",
     "developer_comment": "Displayed when the server returns a 404 or non-200 status."
   },
   "media_block.unknown.error": {
-    "string": "No fue posible obtener el archivo multimedia. Error desconocido. Archivo: {file}",
+    "string": "Impossible de récupérer le fichier multimédia. Erreur inconnue. Fichier : {file}",
     "developer_comment": "Generic fallback for network failures or unexpected exceptions."
   },
   "video_block.load.error": {
-    "string": "Error al cargar el video. Archivo: {file}",
+    "string": "Erreur lors du chargement de la vidéo. Fichier : {file}",
     "developer_comment": "Displayed when a video element fires a load error. {file} is the resource URL."
   },
   "audio_block.load.error": {
-    "string": "Error al cargar el audio. Archivo: {file}",
+    "string": "Erreur lors du chargement de l'audio. Fichier : {file}",
     "developer_comment": "Displayed when an audio element fires a load error. {file} is the resource URL."
   },
   "image_block.load.error": {
-    "string": "Error al cargar la imagen. Archivo: {file}",
+    "string": "Erreur lors du chargement de l'image. Fichier : {file}",
     "developer_comment": "Displayed when an image element fires a load error. {file} is the resource URL."
   },
   "rank_control.open.label": {
-    "string": "Ordenar elementos",
+    "string": "Ordonner les éléments",
     "developer_comment": "The label for the button that opens the rank control."
   },
   "trigger_control.okay.label": {
-    "string": "Aceptar",
+    "string": "OK",
     "developer_comment": "The label for the 'Okay' button."
   },
   "input_geopoint.get_location.label": {
-    "string": "Obtener ubicación",
+    "string": "Obtenir la position",
     "developer_comment": "Label for the button to start capturing the device's current GPS location."
   },
   "input_geopoint.try_again.label": {
-    "string": "Intentar de nuevo",
+    "string": "Réessayer",
     "developer_comment": "Label for the button to retry capturing the GPS location after one has already been saved."
   },
   "input_geopoint.location_error.title": {
-    "string": "No se puede acceder a la ubicación",
+    "string": "Accès à la position impossible",
     "developer_comment": "Title of the error message shown when the browser cannot access the device's location."
   },
   "input_geopoint.location_error.description": {
-    "string": "Otorgue permisos de ubicación en la configuración del navegador y asegúrese de que la ubicación esté activada.",
+    "string": "Accordez les autorisations de localisation dans les paramètres de votre navigateur et assurez-vous que la localisation est activée.",
     "developer_comment": "Description of what the user should do to resolve a location access error."
   },
   "geolocation_dialog.header.title": {
-    "string": "Buscando su ubicación",
+    "string": "Recherche de votre position",
     "developer_comment": "Title shown in the header of the dialog while the device is searching for a GPS fix."
   },
   "geolocation_dialog.accuracy_threshold.info": {
-    "string": "La ubicación se guardará a los {accuracyThreshold} m",
+    "string": "La position sera enregistrée à {accuracyThreshold} m",
     "developer_comment": "Informational message shown while waiting for a GPS fix. {accuracyThreshold} is the accuracy threshold in metres at which the location will be automatically saved."
   },
   "geolocation_dialog.elapsed_time.label": {
-    "string": "Tiempo transcurrido para capturar la ubicación:",
+    "string": "Temps écoulé pour capturer la position :",
     "developer_comment": "Label preceding the elapsed time counter shown while waiting for a GPS fix."
   },
   "geolocation_dialog.previous_accuracy.info": {
-    "string": "Ubicación anterior guardada a los {accuracy} m",
+    "string": "Position précédente enregistrée à {accuracy} m",
     "developer_comment": "Shows the accuracy of the previously saved location in metres. {accuracy} is the numeric accuracy value."
   },
   "geolocation_dialog.save.label": {
-    "string": "Guardar ubicación",
+    "string": "Enregistrer la position",
     "developer_comment": "Label for the button to save the currently captured GPS location."
   },
   "geopoint_accuracy.good.label": {
-    "string": "Buena precisión",
+    "string": "Bonne précision",
     "developer_comment": "Label shown when the GPS accuracy is within the good threshold."
   },
   "geopoint_accuracy.acceptable.label": {
-    "string": "Precisión aceptable",
+    "string": "Précision acceptable",
     "developer_comment": "Label shown when the GPS accuracy is within the acceptable threshold (between good and unacceptable)."
   },
   "geopoint_accuracy.poor.label": {
-    "string": "Precisión deficiente",
+    "string": "Précision faible",
     "developer_comment": "Label shown when the GPS accuracy does not meet the acceptable threshold."
   },
   "geopoint_accuracy.unknown.label": {
-    "string": "Precisión desconocida",
+    "string": "Précision inconnue",
     "developer_comment": "Label shown when no GPS accuracy value is available yet."
   },
   "upload_image_header.take_picture.label": {
-    "string": "Tomar una foto",
+    "string": "Prendre une photo",
     "developer_comment": "Label for the button to take a picture using the device's camera."
   },
   "upload_image_header.choose_image.label": {
-    "string": "Seleccionar imagen",
+    "string": "Sélectionner une image",
     "developer_comment": "Label for the button to choose an image from the device's gallery or file system."
   },
   "upload_control.choose_file.label": {
-    "string": "Seleccionar archivo",
+    "string": "Sélectionner un fichier",
     "developer_comment": "Label for the button to choose a file from the device. Used in the audio, video, and generic file upload headers."
   },
   "upload_control.drag_and_drop.placeholder": {
-    "string": "Arrastre y suelte los archivos aquí para cargarlos",
+    "string": "Glissez et déposez les fichiers ici pour les importer",
     "developer_comment": "Placeholder text shown in the upload area when no file has been selected."
   },
   "upload_control.file_too_large.error": {
-    "string": "El tamaño del archivo seleccionado excede el máximo permitido",
+    "string": "La taille du fichier sélectionné dépasse le maximum autorisé",
     "developer_comment": "Error message shown when the selected file exceeds the maximum allowed size."
   },
   "upload_control.must_be_image.error": {
-    "string": "El archivo seleccionado debe ser una imagen",
+    "string": "Le fichier sélectionné doit être une image",
     "developer_comment": "Error message shown when the selected file is not an image."
   },
   "upload_control.must_be_video.error": {
-    "string": "El archivo seleccionado debe ser un video",
+    "string": "Le fichier sélectionné doit être une vidéo",
     "developer_comment": "Error message shown when the selected file is not a video."
   },
   "upload_control.must_be_audio.error": {
-    "string": "El archivo seleccionado debe ser un audio",
+    "string": "Le fichier sélectionné doit être un fichier audio",
     "developer_comment": "Error message shown when the selected file is not an audio file."
   },
   "upload_control.invalid_file_type.error": {
-    "string": "El tipo de archivo no es válido",
+    "string": "Le type de fichier n'est pas valide",
     "developer_comment": "Error message shown when the selected file does not match the expected media type."
   },
   "upload_delete_dialog.header.title": {
-    "string": "¿Eliminar el archivo cargado?",
+    "string": "Supprimer le fichier importé ?",
     "developer_comment": "Title of the confirmation dialog shown before deleting an uploaded file."
   },
   "upload_delete_dialog.body.message": {
-    "string": "¿Está seguro de que desea eliminar este archivo?",
+    "string": "Voulez-vous vraiment supprimer ce fichier ?",
     "developer_comment": "Body text of the confirmation dialog shown before deleting an uploaded file."
   },
   "upload_control.downloading.error": {
-    "string": "Hubo un error al descargar este archivo.",
+    "string": "Erreur lors du téléchargement.",
     "developer_comment": "Error message shown when downloading the attachment from the server failed."
   },
   "repeat.add.label": {
-    "string": "Agregar",
+    "string": "Ajouter",
     "developer_comment": "Label for the button to add a repeat instance."
   },
   "repeat.instance.placeholder": {
-    "string": "Elemento",
+    "string": "Élément répété",
     "developer_comment": "Placeholder for the label of a repeat instance."
   }
 }

@@ -1,5 +1,22 @@
 # @getodk/xpath
 
+## 0.11.0
+
+### Minor Changes
+
+- 024287c: Moved monorepo tree-sitter-xpath into separate repo
+
+### Patch Changes
+
+- 0485972: Fix the number() on the dateTime string to return day count.
+- 7ac5a19: Add support to datetime question type.
+- 7a91129: Stringify NaN as an empty string according to the XForms specs.
+- Updated dependencies [86a54ab]
+- Updated dependencies [7ac5a19]
+- Updated dependencies [a64d092]
+- Updated dependencies [024287c]
+  - @getodk/common@0.15.0
+
 ## 0.10.4
 
 ### Patch Changes

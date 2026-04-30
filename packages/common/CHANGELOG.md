@@ -1,5 +1,17 @@
 # @getodk/common
 
+## 0.15.0
+
+### Minor Changes
+
+- 86a54ab: Editing submissions no longer blocks until attachments have been downloaded
+- 024287c: Moved monorepo tree-sitter-xpath into separate repo
+
+### Patch Changes
+
+- 7ac5a19: Add support to datetime question type.
+- a64d092: Add support for "month-year" and "year" date question type appearances.
+
 ## 0.14.0
 
 ### Minor Changes
