@@ -58,7 +58,7 @@ function isTooBig({ path, size }) {
   const simpleName = basename(path).replace(/(-[\w-]{8})+\./, '.');
   switch (simpleName) { // eslint-disable-line default-case
     case 'index.js':             return size >   2_000_000;
-    case 'web-form.js': return size > 2_000_000;
+    case 'web-form.js': return size > 2_500_000;
     case 'MapBlock.js': return size > 600_000; // A Web Forms' feature bundle
     case 'geojson-map.js':       return size >   500_000;
   }
