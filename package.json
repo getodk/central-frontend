@@ -6,18 +6,21 @@
     "dev": "nf start vite,nginx",
     "dev:build": "nf start build,nginx",
     "build": "vite build",
-    "eslint": "eslint --max-warnings 0 --cache --ext .js,.vue src/ bin/ test/ e2e-tests/ *.js",
-    "eslint:fix": "eslint --max-warnings 0 --fix --cache --ext .js,.vue src/ bin/ test/ *.js",
+    "eslint": "eslint --max-warnings 0 --cache --ext .js,.vue apps/*/src/ bin/ apps/*/test/ e2e-tests/ *.js",
+    "eslint:fix": "eslint --max-warnings 0 --fix --cache --ext .js,.vue apps/*/src/ bin/ apps/*/test/ *.js",
     "lint": "npm run eslint && npm run transifex:lint",
     "lint:fix": "npm run eslint:fix && npm run transifex:fix",
-    "test": "./test/run.sh",
+    "test": "./apps/central/test/run.sh",
     "test:e2e": "e2e-tests/run-tests.sh",
-    "transifex:fix": "node bin/transifex/restructure.js > transifex/strings_en.json",
-    "transifex:lint": "bash -c 'diff transifex/strings_en.json <(node bin/transifex/restructure.js)'"
+    "transifex:fix": "node bin/transifex/restructure.js > apps/central/transifex/strings_en.json",
+    "transifex:lint": "bash -c 'diff apps/central/transifex/strings_en.json <(node bin/transifex/restructure.js)'"
   },
   "volta": {
     "node": "24.13.0"
   },
+  "workspaces": [
+    "apps/*"
+  ],
   "dependencies": {
     "@floating-ui/dom": "^1.1.0",
     "@getodk/web-forms": "^0.23.1",

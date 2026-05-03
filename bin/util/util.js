@@ -24,7 +24,7 @@ const mapComponentsToFiles = (componentsDir) => {
         dirs.push(path);
       } else if (path.endsWith('.vue')) {
         const componentName = path
-          .replace('src/components', '')
+          .replace('apps/central/src/components', '')
           .replace(/\.vue$/, '')
           .replace(/[-/](.)/g, (_, c) => c.toUpperCase());
         sfcs.push({ componentName, filename: path });

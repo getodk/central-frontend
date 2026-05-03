@@ -23,7 +23,7 @@ const webFormsPackage = JSON.parse(
 const { entry, ...webpackConfigForKarma } = webpackConfig;
 webpackConfigForKarma.plugins.push(
   VueI18nPlugin({
-    include: resolve(__dirname, './src/locales/**'),
+    include: resolve(__dirname, './apps/central/src/locales/**'),
     compositionOnly: false,
     defaultSFCLang: 'json5',
     // `false` doesn't work for some reason. When `false` is specified, Vue I18n
@@ -55,26 +55,26 @@ module.exports = (config) => {
   config.set({
     frameworks: ['webpack', 'mocha', 'source-map-support'],
     files: [
-      'test/index.js',
+      'apps/central/test/index.js',
       { pattern: 'public/fonts/icomoon.ttf', served: true, included: false },
       { pattern: 'public/blank.html', served: true, included: false },
-      { pattern: 'test/files/*', served: true, included: false },
-      { pattern: 'src/assets/images/**', served: true, included: false }
+      { pattern: 'apps/central/test/files/*', served: true, included: false },
+      { pattern: 'apps/central/src/assets/images/**', served: true, included: false }
     ],
     proxies: {
       '/fonts/': '/base/public/fonts/',
       '/blank.html': '/base/public/blank.html',
-      '/test/files/': '/base/test/files/',
+      '/test/files/': '/base/apps/central/test/files/',
 
       // Images
-      '/v1/config/public/hero-image': '/base/src/assets/images/whats-new/banner@1x.png',
-      '/v1/config/public/logo': '/base/src/assets/images/odk-logo.png',
-      '/img/banner@1x.6c9e9f21.png': '/base/src/assets/images/whats-new/banner@1x.png', // Smaller resolution for circleCI test
-      '/img/map-location.b523ce2d.svg': '/base/src/assets/images/geojson-map/map-location.svg',
-      '/img/fullscreen.37a932a6.svg': '/base/src/assets/images/geojson-map/fullscreen.svg'
+      '/v1/config/public/hero-image': '/base/apps/central/src/assets/images/whats-new/banner@1x.png',
+      '/v1/config/public/logo': '/base/apps/central/src/assets/images/odk-logo.png',
+      '/img/banner@1x.6c9e9f21.png': '/base/apps/central/src/assets/images/whats-new/banner@1x.png', // Smaller resolution for circleCI test
+      '/img/map-location.b523ce2d.svg': '/base/apps/central/src/assets/images/geojson-map/map-location.svg',
+      '/img/fullscreen.37a932a6.svg': '/base/apps/central/src/assets/images/geojson-map/fullscreen.svg'
     },
     preprocessors: {
-      'test/index.js': ['webpack', 'sourcemap']
+      'apps/central/test/index.js': ['webpack', 'sourcemap']
     },
     webpack: webpackConfigForKarma,
     browsers: ['ChromeHeadless'],

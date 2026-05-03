@@ -52,7 +52,7 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     vue(),
     VueI18nPlugin({
-      include: resolve(dirname(fileURLToPath(import.meta.url)), './src/locales/**'),
+      include: resolve(dirname(fileURLToPath(import.meta.url)), './apps/central/src/locales/**'),
       compositionOnly: false,
       defaultSFCLang: 'json5',
       // We install what we need in src/container.js.
