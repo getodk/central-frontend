@@ -19,7 +19,7 @@ defineEmits(['update:activeLanguage']);
 		@update:model-value="$emit('update:activeLanguage', $event)"
 	>
 		<template #value="slotProps">
-			<IconSVG name="mdiWeb" />
+			<IconSVG name="mdiTranslate" />
 			<span>
 				{{ slotProps.value.language }}
 			</span>
@@ -44,15 +44,13 @@ defineEmits(['update:activeLanguage']);
 	}
 
 	:deep(.p-select-label) {
-		padding: var(--odk-spacing-m) 12px;
+		padding-right: 0;
 
 		span {
 			vertical-align: middle;
+			margin-left: var(--odk-spacing-m);
 		}
 	}
 
-	.odk-icon {
-		margin-right: 0.5rem;
-	}
 }
 </style>

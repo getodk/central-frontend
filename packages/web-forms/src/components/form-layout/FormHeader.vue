@@ -110,35 +110,10 @@ const handleLanguageChange = (event: FormLanguage) => {
 
 	.form-options {
 		padding-right: var(--odk-spacing-m);
-		min-width: 50px;
-		container-type: size;
-		container-name: formOptionsContainer;
-		height: 40px;
 		margin-top: var(--odk-spacing-m);
-
 		.language-changer {
-			display: flex;
-			justify-content: end;
-			width: 45px;
-			gap: 0.5rem;
-
-			:deep(.p-select-label) {
-				text-overflow: unset;
-			}
-
-			:deep(.p-select-label) span,
-			:deep(.p-select-dropdown) {
+			:deep(.p-select-label) span {
 				display: none;
-			}
-
-			:deep(.odk-icon) {
-				margin-right: 0;
-			}
-		}
-
-		@container formOptionsContainer (min-width: 260px) {
-			.language-changer {
-				max-width: 220px;
 			}
 		}
 	}

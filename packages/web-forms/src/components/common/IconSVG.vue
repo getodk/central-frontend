@@ -34,13 +34,13 @@ import {
 	mdiPrinter,
 	mdiRefresh,
 	mdiStopCircleOutline,
+	mdiTranslate,
 	mdiTrashCanOutline,
 	mdiUnfoldMoreHorizontal,
 	mdiUpload,
 	mdiVectorPolygon,
 	mdiVectorPolyline,
 	mdiVolumeHigh,
-	mdiWeb,
 } from '@mdi/js';
 import { computed } from 'vue';
 
@@ -80,13 +80,13 @@ const iconMap: Record<string, string> = {
 	mdiPrinter,
 	mdiRefresh,
 	mdiStopCircleOutline,
+	mdiTranslate,
 	mdiTrashCanOutline,
 	mdiUnfoldMoreHorizontal,
 	mdiUpload,
 	mdiVectorPolygon,
 	mdiVectorPolyline,
 	mdiVolumeHigh,
-	mdiWeb,
 };
 
 type IconName = keyof typeof iconMap;
