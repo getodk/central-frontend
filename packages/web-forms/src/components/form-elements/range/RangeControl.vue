@@ -161,6 +161,15 @@ const orientation = props.node.appearances.vertical ? 'vertical' : 'horizontal';
 .p-slider {
 	background-color: var(--odk-primary-light-background-color);
 
+	&::before { // Increasing range hit target.
+		content: "";
+		position: absolute;
+		top: -10px;
+		bottom: -10px;
+		left: -10px;
+		right: -10px;
+	}
+
 	// = emphasized range between `min` and current value
 	:deep(.p-slider-range) {
 		border-radius: calc((var(--track-size) + var(--track-value-emphasis)) / 2);
