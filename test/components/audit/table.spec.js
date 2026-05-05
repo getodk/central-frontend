@@ -289,6 +289,7 @@ describe('AuditTable', () => {
       ['dataset.update', ['Entity List', 'Update']],
       ['entity.bulk.delete', ['Entity List', 'Bulk Delete']],
       ['entity.bulk.restore', ['Entity List', 'Bulk Restore']],
+      ['dataset.delete', ['Entity List', 'Delete']],
     ];
 
     for (const [action, type] of cases) {

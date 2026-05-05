@@ -67,7 +67,8 @@
         "set": "設定"
       },
       "dataset": {
-        "create": "@:audit.action.default.create"
+        "create": "@:audit.action.default.create",
+        "delete": "@:audit.action.default.delete"
       },
       "field_key": {
         "assignment_create": "アクセス権の付与",
@@ -243,7 +244,8 @@
     "total": "全期間",
     "reviewState": "レビュー・ステータス",
     "status": "ステータス",
-    "version": "バージョン"
+    "version": "バージョン",
+    "trash": "ゴミ箱"
   },
   "mixin": {
     "request": {

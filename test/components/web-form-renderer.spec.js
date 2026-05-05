@@ -15,7 +15,7 @@ import formWithAttachmentXml from '../data/xml/with-attachment/form.xml';
 import { mockLogin } from '../util/session';
 import { mergeMountOptions } from '../util/lifecycle';
 import { setFiles } from '../util/trigger';
-import { waitUntil } from '../util/util';
+import { wait, waitUntil } from '../util/util';
 
 describe('WebFormRenderer', () => {
   let WebFormRenderer;
@@ -83,14 +83,14 @@ describe('WebFormRenderer', () => {
       .complete()
       .request((c) => c.find('.odk-form .footer button').trigger('click'))
       .respondWithData(() => ({ currentVersion: { instanceId: '123' } }))
-      .testRequests([
-        {
-          url: '/v1/projects/1/forms/a/submissions',
-          method: 'POST',
-          headers: { 'content-type': 'text/xml' },
-          data: { name: 'xml_submission_file', type: 'text/xml' }
-        }
-      ]);
+      .beforeEachResponse((_, config) => {
+        const { headers, url, method, data } = config;
+        url.should.be.eql('/v1/projects/1/forms/a/submissions');
+        method.should.be.eql('POST');
+        JSON.stringify(data).should.match(/xml_submission_file/);
+        headers['content-type'].should.be.eql('text/xml');
+        headers['odk-client'].should.be.match(/odk-web-forms/);
+      });
   });
 
   it('should show success modal after submission request', async () => {
@@ -171,6 +171,8 @@ describe('WebFormRenderer', () => {
 
     await component.find('.odk-form .footer button').trigger('click');
 
+    await wait();
+
     const modal = component.get('#web-form-renderer-submission-modal');
 
     modal.find('.modal-introduction').text().should.equal('The data you entered is valid, but it was not submitted because this is a Form preview.');
@@ -191,7 +193,11 @@ describe('WebFormRenderer', () => {
       .respondWithData(() => ({ currentVersion: { instanceId: '123' } }));
   });
 
-  const fileToUpload = new File(['dummy content'], '1746140510984.jpg', { type: 'image/jpeg' });
+  // Minimal valid 1x1 pixel GIF
+  const gifBase64 = 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+  const gifBinary = atob(gifBase64);
+  const gifBytes = Uint8Array.from(gifBinary, c => c.charCodeAt(0));
+  const fileToUpload = new File([gifBytes], '1746140510984.gif', { type: 'image/gif' });
 
   const uploadFile = async (component) => {
     await setFiles(component.find('.odk-form input[type="file"]'), [fileToUpload]);
@@ -254,9 +260,9 @@ describe('WebFormRenderer', () => {
       .testRequests([
         {
           method: 'POST',
-          url: ({ pathname }) => pathname.should.match(/attachments.*jpg/),
+          url: ({ pathname }) => pathname.should.match(/attachments.*gif/),
           data: fileToUpload,
-          headers: { 'content-type': 'image/jpeg' }
+          headers: { 'content-type': 'image/gif' }
         }
       ]);
 
@@ -314,16 +320,19 @@ describe('WebFormRenderer', () => {
         .respondWithData(() => [])
         .respondWithData(() => simpleSubmission)
         .complete()
-        .request((c) => c.find('.odk-form .footer button').trigger('click'))
+        .request(async (c) => {
+          await c.find('.odk-form .footer button').trigger('click');
+          await clock.tick(0);
+        })
         .respondWithData(() => ({ currentVersion: { instanceId: '123' } }))
-        .testRequests([
-          {
-            url: '/v1/projects/1/forms/a/submissions/uuid%3A01f165e1-8814-43b8-83ec-741222b00f25',
-            method: 'PUT',
-            headers: { 'content-type': 'text/xml' },
-            data: { name: 'xml_submission_file', type: 'text/xml' }
-          }
-        ])
+        .beforeEachResponse((_, config) => {
+          const { headers, url, method, data } = config;
+          url.should.be.eql('/v1/projects/1/forms/a/submissions/uuid%3A01f165e1-8814-43b8-83ec-741222b00f25');
+          method.should.be.eql('PUT');
+          JSON.stringify(data).should.match(/xml_submission_file/);
+          headers['content-type'].should.be.eql('text/xml');
+          headers['odk-client'].should.be.match(/odk-web-forms/);
+        })
         .afterResponses(async c => {
           await clock.tick(2000);
           c.vm.$router.push.calledWith('/projects/1/forms/a/submissions/uuid%3A01f165e1-8814-43b8-83ec-741222b00f25').should.be.true;
@@ -346,7 +355,7 @@ describe('WebFormRenderer', () => {
         })
         .respondWithData(() => [{ name: '1746140510984.jpg', exists: true }])
         .respondWithData(() => imageUploaderSubmission)
-        .respondWithData(() => 'dummy content');
+        .respondWithData(() => gifBinary);
 
       await waitUntil(() => component.find('.odk-form').exists());
       component.find('.odk-form h1').text().should.be.equal('Display Picture');

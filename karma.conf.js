@@ -9,20 +9,32 @@ This config is based on:
 
 // eslint-disable-next-line import/no-unresolved
 const VueI18nPlugin = require('@intlify/unplugin-vue-i18n/webpack');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const { DefinePlugin } = require('webpack');
 const { resolve } = require('node:path');
+const { readFileSync } = require('fs');
 // eslint-disable-next-line import/extensions
 const webpackConfig = require('./node_modules/@vue/cli-service/webpack.config.js');
 
+const webFormsPackage = JSON.parse(
+  readFileSync(resolve(__dirname, 'node_modules/@getodk/web-forms/package.json'), 'utf-8')
+);
+
 const { entry, ...webpackConfigForKarma } = webpackConfig;
-webpackConfigForKarma.plugins.push(VueI18nPlugin({
-  include: resolve(__dirname, './src/locales/**'),
-  compositionOnly: false,
-  defaultSFCLang: 'json5',
-  // `false` doesn't work for some reason. When `false` is specified, Vue I18n
-  // warns that it's been installed already.
-  fullInstall: true,
-  dropMessageCompiler: true
-}));
+webpackConfigForKarma.plugins.push(
+  VueI18nPlugin({
+    include: resolve(__dirname, './src/locales/**'),
+    compositionOnly: false,
+    defaultSFCLang: 'json5',
+    // `false` doesn't work for some reason. When `false` is specified, Vue I18n
+    // warns that it's been installed already.
+    fullInstall: true,
+    dropMessageCompiler: true
+  }),
+  new DefinePlugin({
+    __WEB_FORMS_VERSION__: JSON.stringify(webFormsPackage.version)
+  })
+);
 // eslint-disable-next-line arrow-body-style
 webpackConfigForKarma.plugins = webpackConfigForKarma.plugins.filter(plugin => {
   return plugin.constructor.name !== 'HtmlWebpackPlugin';
@@ -55,7 +67,9 @@ module.exports = (config) => {
       '/test/files/': '/base/test/files/',
 
       // Images
-      '/img/banner@1x.2ab8c238.png': '/base/src/assets/images/whats-new/banner@1x.png', // Smaller resolution for circleCI test
+      '/v1/config/public/hero-image': '/base/src/assets/images/whats-new/banner@1x.png',
+      '/v1/config/public/logo': '/base/src/assets/images/odk-logo.png',
+      '/img/banner@1x.6c9e9f21.png': '/base/src/assets/images/whats-new/banner@1x.png', // Smaller resolution for circleCI test
       '/img/map-location.b523ce2d.svg': '/base/src/assets/images/geojson-map/map-location.svg',
       '/img/fullscreen.37a932a6.svg': '/base/src/assets/images/geojson-map/fullscreen.svg'
     },

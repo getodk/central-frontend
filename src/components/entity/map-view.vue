@@ -104,6 +104,10 @@ defineExpose({
     "loading": "Preparazione della mappa. L'operazione potrebbe richiedere alcuni minuti.",
     "overlapTitle": "{count} Entità in quest'area | {count} Entità in quest'area | {count} Entità in quest'area"
   },
+  "pt": {
+    "loading": "Preparando o mapa. Isso pode demorar um pouco.",
+    "overlapTitle": "{count} entidade nessa área. | {count} entidades nessa área. | {count} entidades nessa área."
+  },
   "zh": {
     "loading": "正在准备地图。这可能需要一段时间。",
     "overlapTitle": "此区域内有{count}个实体"

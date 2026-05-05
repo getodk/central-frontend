@@ -14,13 +14,13 @@ describe('util/sort', () => {
   describe('sort forms', () => {
     beforeEach(() => {
       testData.extendedProjects.createPast(1);
-      testData.extendedForms.createPast(1, { name: 'C', lastSubmission: ago({ days: 15 }).toISO() });
-      testData.extendedForms.createPast(1, { name: 'D', lastSubmission: ago({ days: 20 }).toISO() });
-      testData.extendedForms.createPast(1, { name: 'E', lastSubmission: ago({ days: 10 }).toISO() });
-      testData.extendedForms.createPast(1, { name: 'F', lastSubmission: ago({ days: 5 }).toISO() });
-      testData.extendedForms.createPast(1, { name: 'G', lastSubmission: ago({ days: 12 }).toISO() });
-      testData.extendedForms.createPast(1, { name: 'A' });
-      testData.extendedForms.createPast(1, { name: 'B' });
+      testData.extendedForms.createPast(1, { name: 'C', createdAt: ago({ seconds: 7 }), lastSubmission: ago({ days: 15 }).toISO() });
+      testData.extendedForms.createPast(1, { name: 'D', createdAt: ago({ seconds: 6 }), lastSubmission: ago({ days: 20 }).toISO() });
+      testData.extendedForms.createPast(1, { name: 'E', createdAt: ago({ seconds: 5 }), lastSubmission: ago({ days: 10 }).toISO() });
+      testData.extendedForms.createPast(1, { name: 'F', createdAt: ago({ seconds: 4 }), lastSubmission: ago({ days: 5 }).toISO() });
+      testData.extendedForms.createPast(1, { name: 'G', createdAt: ago({ seconds: 3 }), lastSubmission: ago({ days: 12 }).toISO() });
+      testData.extendedForms.createPast(1, { name: 'A', createdAt: ago({ seconds: 2 }) });
+      testData.extendedForms.createPast(1, { name: 'B', createdAt: ago({ seconds: 1 }) });
     });
 
     it('can sort forms by latest activity including breaking ties (null submissions) alphabetically', () => {

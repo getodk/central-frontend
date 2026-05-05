@@ -69,6 +69,7 @@ describe('AccountClaim', () => {
 
   describe('after a successful response', () => {
     const submit = () => load('/account/claim?token=foo')
+      .complete()
       .request(async (app) => {
         const component = app.getComponent(AccountClaim);
         await component.get('input').setValue('testPassword');

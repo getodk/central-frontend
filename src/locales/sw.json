@@ -71,7 +71,8 @@
       "dataset": {
         "update": "Sasisha",
         "update_publish": "Kuchapisha",
-        "create": "@:audit.action.default.create"
+        "create": "@:audit.action.default.create",
+        "delete": "@:audit.action.default.delete"
       },
       "field_key": {
         "assignment_create": "kutoa ufikiaji",
@@ -286,7 +287,8 @@
     "totalEntities": "Jumla ya Mashirika",
     "reviewState": "Kagua hali",
     "status": "Hali",
-    "version": "Toleo"
+    "version": "Toleo",
+    "trash": "Takataka"
   },
   "mixin": {
     "request": {

@@ -1,3 +1,4 @@
+import DatasetDelete from '../../../src/components/dataset/delete.vue';
 import DatasetPendingSubmissions from '../../../src/components/dataset/pending-submissions.vue';
 
 import testData from '../../data';
@@ -119,5 +120,57 @@ describe('DatasetSettings', () => {
         modal.props().state.should.be.false;
         component.get('input[value="false"]').element.checked.should.be.true;
       });
+  });
+
+  describe('DatasetDelete', () => {
+    it('toggles the modal', () => {
+      testData.extendedDatasets.createPast(1);
+      return load('/projects/1/entity-lists/trees/settings', { root: false })
+        .testModalToggles({
+          modal: DatasetDelete,
+          show: '#dataset-settings .panel-simple-danger .btn-danger',
+          hide: '.btn-link'
+        });
+    });
+
+    describe('dependent forms', () => {
+      it('shows help text if there are dependent forms', async () => {
+        testData.extendedDatasets.createPast(1, {
+          sourceForms: [{ xmlFormId: 'f1', name: 'Form 1' }],
+          linkedForms: [{ xmlFormId: 'f2', name: 'Form 2' }]
+        });
+        const component = await load('/projects/1/entity-lists/trees/settings');
+        const help = component.get('.dependent-forms-help');
+        help.text().should.match(/2 Forms/);
+      });
+
+      it('does not show help text if there are no dependent forms', async () => {
+        testData.extendedDatasets.createPast(1, {
+          sourceForms: [],
+          linkedForms: []
+        });
+        const component = await load('/projects/1/entity-lists/trees/settings');
+        component.find('.dependent-forms-help').exists().should.be.false;
+      });
+
+      it('disables delete button if there are dependent forms', async () => {
+        testData.extendedDatasets.createPast(1, {
+          sourceForms: [{ xmlFormId: 'f1', name: 'Form 1' }]
+        });
+        const component = await load('/projects/1/entity-lists/trees/settings');
+        const button = component.get('#dataset-settings .panel-simple-danger .btn-danger');
+        button.attributes('aria-disabled').should.equal('true');
+      });
+
+      it('enables delete button if there are no dependent forms', async () => {
+        testData.extendedDatasets.createPast(1, {
+          sourceForms: [],
+          linkedForms: []
+        });
+        const component = await load('/projects/1/entity-lists/trees/settings');
+        const button = component.get('#dataset-settings .panel-simple-danger .btn-danger');
+        button.attributes('aria-disabled').should.equal('false');
+      });
+    });
   });
 });

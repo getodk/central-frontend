@@ -195,7 +195,7 @@ export default {
       "Every version of a Form requires a unique version name. Right now, your Draft Form has the same version name as a previously published version. You can set a new one by uploading a Form definition with your desired name, or you can type a new one below and the server will change it for you.",
       "Would you like to proceed?"
     ],
-    "newProperties": "Publishing this draft will create {count} property. It cannot be deleted. | Publishing this draft will create {count} properties. These cannot be deleted.",
+    "newProperties": "Publishing this draft will create {count} property. | Publishing this draft will create {count} properties.",
     "problem": {
       "409_6": "The version name of this Draft conflicts with a past version of this Form or a deleted Form. Please use the field below to change it to something new or upload a new Form definition."
     }
@@ -246,7 +246,7 @@ export default {
       "Jede Version eines Formulars benötigt einen eindeutigen Versionsnamen. Ihr Entwurfs-Formular hat noch den gleichen Namen wie die vorher veröffentlichte Version. Sie können eine neue Version erstellen, indem Sie den gewünschten Namen eingeben. Wenn Sie keinen neuen Namen eingeben wird der Server die Änderung selbständig vornehmen.",
       "Möchten Sie fortfahren?"
     ],
-    "newProperties": "Die Veröffentlichung dieses Entwurfs wird {count} Eigenschaft erstellen. Sie kann nicht gelöscht werden. | Die Veröffentlichung dieses Entwurfs wird {count} Eigenschaften erstellen. Diese können nicht gelöscht werden.",
+    "newProperties": "Veröffentlichen dieses Entwurfs erstellt {count} Eigenschaft. | Veröffentlichen dieses Entwurfs erstellt {count} Eigenschaften .",
     "problem": {
       "409_6": "Der Versionsname dieses Entwurfs steht in Konflikt mit einer früheren Version dieses Formulars oder einem gelöschten Formular. Bitte verwenden Sie das Feld unten, um dies zu ändern oder eine neue Formulardefinition hochzuladen"
     }
@@ -269,7 +269,7 @@ export default {
       "Cada versión de un formulario requiere un nombre de versión único. En este momento, su borrador de formulario tiene el mismo nombre de versión que una versión publicada anteriormente. Puede establecer una nueva cargando una definición de formulario con su nombre deseado, o puede escribir una nueva a continuación y el servidor la cambiará por usted.",
       "¿Le gustaría continuar?"
     ],
-    "newProperties": "La publicación de este borrador actualizará {count} propiedad. Esta no se puede eliminar. | La publicación de este borrador actualizará {count} propiedades. Estas no se pueden eliminar. | La publicación de este borrador actualizará {count} propiedades. Estas no se pueden eliminar.",
+    "newProperties": "La publicación de este borrador actualizará {count} propiedad. | La publicación de este borrador actualizará {count} propiedades. | La publicación de este borrador actualizará {count} propiedades.",
     "problem": {
       "409_6": "El nombre de la versión de este borrador entra en conflicto con una versión anterior de este formulario o un formulario eliminado. Utilice el campo a continuación para cambiarlo a algo nuevo o cargar una nueva definición de formulario."
     }
@@ -318,7 +318,7 @@ export default {
       "Ogni versione di un formulario richiede un nome di versione univoco. In questo momento, la tua bozza di formulario ha lo stesso nome della versione pubblicata in precedenza. Puoi impostarne uno nuovo caricando una definizione del formulario con il nome desiderato, oppure puoi digitarne uno nuovo di seguito e il server lo cambierà per te.",
       "Vuoi procedere?"
     ],
-    "newProperties": "La pubblicazione di questa bozza creerà {count} proprietà. Questa non può essere eliminata. | La pubblicazione di questa bozza creerà {count} proprietà. Queste non possono essere eliminate. | La pubblicazione di questa bozza creerà {count} proprietà. Queste non possono essere eliminate.",
+    "newProperties": "La pubblicazione di questa bozza creerà {count} proprietà. | La pubblicazione di questa bozza creerà {count} proprietà. | La pubblicazione di questa bozza creerà {count} proprietà.",
     "problem": {
       "409_6": "Il nome della versione di questa bozza è in conflitto con una versione precedente di questo formulario o con un formulario eliminato. Utilizza il campo sottostante per cambiarlo in qualcosa di nuovo o caricare una nuova definizione del formulario."
     }
@@ -397,7 +397,7 @@ export default {
       "表单的每个版本都必须具有唯一的版本名称。当前您的草稿表单与已发布的某个版本名称重复。您可以通过上传包含新版本名的表单定义来设置，也可以在下框输入新名称，服务器将自动为您更新。",
       "您是否要继续？"
     ],
-    "newProperties": "发布此草稿将创建 {count} 个属性，这些属性一经创建即无法删除。",
+    "newProperties": "发布此草稿将创建 {count} 个属性。",
     "problem": {
       "409_6": "此草稿的版本名称与历史表单版本或已删除表单冲突。请使用下方字段修改为新名称，或上传新的表单定义文件。"
     }
@@ -420,7 +420,6 @@ export default {
       "表單的每個版本，都需要獨一版本名稱。現在，您的草稿表單與先前發布的版本具有相同的版本名稱。您可以透過上傳具有所需名稱的表單定義來設定新的，也可以在下面輸入一個新的版本名稱，伺服器將為您更改它。",
       "您想繼續嗎？"
     ],
-    "newProperties": "發布此草稿將建立{count}種屬性。這些屬性無法刪除。",
     "problem": {
       "409_6": "此草案的版本名稱與此表單的過去版本或已刪除的表單衝突。請使用下面的欄位將其變更為新內容或上傳新的表單定義。"
     }

@@ -12,6 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div class="file-drop-zone"
     :class="{ styled, disabled, dragover: dragging && !disabled }"
+    :inert="disabled"
     @dragenter="dragenter" @dragover="dragover" @dragleave="dragleave" @drop="drop">
     <slot></slot>
   </div>

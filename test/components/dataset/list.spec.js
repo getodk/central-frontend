@@ -9,7 +9,8 @@ describe('DatasetList', () => {
     return load('/projects/1/entity-lists', {
       root: false
     }).testRequests([
-      { url: '/v1/projects/1/datasets', extended: true }
+      { url: '/v1/projects/1/datasets', extended: true },
+      { url: '/v1/projects/1/datasets?deleted=true', extended: true }
     ]);
   });
 

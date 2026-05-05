@@ -21,6 +21,8 @@ $screen-sm-min: 768px;
 $screen-md-min: 992px;
 $screen-lg-min: 1200px;
 
+$padding-inline-container: 15px;
+
 $z-index-toast: 1061; // 1 greater than the Bootstrap maximum
 $z-index-modal: 1050;
 $z-index-modal-backdrop: 1040;
@@ -101,6 +103,8 @@ $color-subpanel-background: #eee;
 $color-subpanel-active: #ddd;
 $color-subpanel-border: #e6e6e6;
 $color-subpanel-border-strong: #c3c3c3;
+
+$box-shadow-offset-y-body: -2px;
 
 // Easing
 $ease-extreme-out: cubic-bezier(.05, .9, 0, 1);

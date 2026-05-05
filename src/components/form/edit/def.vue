@@ -15,6 +15,12 @@ except according to the terms contained in the LICENSE file.
     <template #subtitle>{{ $t('subtitle') }}</template>
     <template v-if="changed" #tag>{{ $t('changed') }}</template>
     <template #body>
+      <div v-if="uploadSectionState">
+        <p class="form-edit-section-title">{{ $t('uploadSection.title') }}</p>
+        <div class="form-edit-section-body">
+          <form-upload @success="afterUpload" @cancel="setUploadSectionState(false)"/>
+        </div>
+      </div>
       <div id="form-edit-def-container">
         <div>
           <i18n-t keypath="versionName">
@@ -28,7 +34,7 @@ except according to the terms contained in the LICENSE file.
           <form-version-def-dropdown :version="formDraft" outlined
             @view-xml="viewXml.show()"/>
           <button id="form-edit-upload-button" type="button"
-            class="btn btn-primary" @click="$emit('upload')">
+            class="btn btn-primary" @click="setUploadSectionState(true)">
             <span class="icon-upload"></span>{{ $t('action.upload') }}
           </button>
         </div>
@@ -45,7 +51,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { computed, defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent, ref } from 'vue';
 
 import EnketoPreview from '../../enketo/preview.vue';
 import FormEditAttachments from './attachments.vue';
@@ -53,6 +59,7 @@ import FormEditEntities from './entities.vue';
 import FormEditSection from './section.vue';
 import FormVersionDefDropdown from '../../form-version/def-dropdown.vue';
 import FormVersionString from '../../form-version/string.vue';
+import FormUpload from '../upload.vue';
 
 import { loadAsync } from '../../../util/load-async';
 import { modalData } from '../../../util/reactivity';
@@ -61,8 +68,8 @@ import { useRequestData } from '../../../request-data';
 defineOptions({
   name: 'FormEditDef'
 });
-defineEmits(['upload']);
 
+const emits = defineEmits(['afterUpload']);
 const { form, resourceView } = useRequestData();
 const formDraft = resourceView('formDraft', (data) => data.get());
 
@@ -71,6 +78,16 @@ const changed = computed(() =>
 
 const FormVersionViewXml = defineAsyncComponent(loadAsync('FormVersionViewXml'));
 const viewXml = modalData('FormVersionViewXml');
+
+const uploadSectionState = ref(false);
+const setUploadSectionState = (v) => {
+  uploadSectionState.value = v;
+};
+const afterUpload = () => {
+  uploadSectionState.value = false;
+  emits('afterUpload');
+};
+
 </script>
 
 <style lang="scss">
@@ -124,6 +141,11 @@ const viewXml = modalData('FormVersionViewXml');
 <i18n lang="json5">
 {
   "en": {
+    "uploadSection": {
+      // @transifexKey component.FormNew.title.update
+      // This is the title at the top of a section.
+      "title": "Upload New Form Definition"
+    },
     // @transifexKey component.FormEditCreateDraft.title
     "title": "Draft version",
     // This refers to the draft version of a Form.

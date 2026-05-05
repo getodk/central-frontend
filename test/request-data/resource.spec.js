@@ -26,6 +26,19 @@ describe('createResource()', () => {
     });
   });
 
+  describe('setting data properties', () => {
+    it('deletes a property', () => {
+      testData.standardConfigs.createNew({ key: 'logo', blobExists: true });
+      const { requestData } = createTestContainer({
+        requestData: { serverConfig: testData.standardConfigs.byKey() }
+      });
+      const { serverConfig } = requestData;
+      should.exist(serverConfig.logo);
+      delete serverConfig.logo;
+      should.not.exist(serverConfig.logo);
+    });
+  });
+
   describe('request()', () => {
     it('updates setAt', () => {
       const projectData = testData.standardProjects.createNew();

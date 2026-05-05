@@ -335,6 +335,10 @@ const proxyHandler = {
     else
       resource.data[prop] = value;
     return true;
+  },
+  deleteProperty: (resource, prop) => {
+    delete resource.data[prop];
+    return true;
   }
   /* eslint-enable no-param-reassign */
 };

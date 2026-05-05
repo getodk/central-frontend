@@ -77,7 +77,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { computed, createApp, getCurrentInstance, inject, onMounted, onUnmounted, watch } from 'vue';
+import { computed, getCurrentInstance, inject, onMounted, onUnmounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 /* eslint-disable-next-line import/no-unresolved -- not sure why eslint is complaining about it */
 import { OdkWebForm, webFormsPlugin, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
@@ -114,14 +114,10 @@ const props = defineProps({
 
 const emit = defineEmits(['loaded']);
 
-// Install WebFormsPlugin in the component instead of installing it at the
-// application level so that @getodk/web-forms package is not loaded for every
-// page, thus increasing the initial bundle
-const app = createApp({});
-app.use(webFormsPlugin);
+// Install webFormsPlugin lazily here (not at app startup) to avoid loading @getodk/web-forms on every page.
+// This is safe because this component is already loaded asynchronously.
 const inst = getCurrentInstance();
-// webFormsPlugin just adds globalProperty ($primevue)
-Object.assign(inst.appContext.config.globalProperties, app._context.config.globalProperties);
+inst.appContext.app.use(webFormsPlugin);
 
 const { i18n } = inject('container');
 
@@ -279,7 +275,8 @@ const postPrimaryInstance = async (file) => {
       url,
       data: file,
       headers: {
-        'content-type': 'text/xml'
+        'content-type': 'text/xml',
+        'odk-client': `odk-web-forms/${__WEB_FORMS_VERSION__}`
       },
       alert: false,
     };
@@ -695,7 +692,8 @@ onUnmounted(() => {
       }
     },
     "retryModal": {
-      "title": "Erro no envio"
+      "title": "Erro no envio",
+      "body": "Seus dados não foram enviados completamente. Por favor, clique no botão “Tentar novamente” para tentar novamente. Se o erro persistir, entre em contato com a pessoa que solicitou o preenchimento deste formulário ou {supportEmail}."
     }
   },
   "zh": {

@@ -10,123 +10,116 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 
-<!-- A modal that can be used to create a new form or to upload a new form
+<!-- A component that can be used to create a new form or to upload a new form
 definition for an existing form -->
 <template>
-  <modal id="form-new" :state="state" :hideable="!awaitingResponse" backdrop
-    @hide="$emit('hide')">
-    <template #title>
-      {{ !draft ? $t('title.create') : $t('title.update') }}
-    </template>
-    <template #body>
-      <div v-show="warnings != null" class="modal-warnings">
-        <p>{{ $t('warningsText[0]') }}</p>
+  <div id="form-upload">
+    <div v-show="warnings != null" class="form-upload-warnings">
+      <p>{{ $t('warningsText[0]') }}</p>
 
-        <template v-if="warnings?.xlsFormWarnings">
-          <p>
-            <strong>{{ $t('warningsText[1]') }}</strong>
-          </p>
-          <ul>
-            <!-- eslint-disable-next-line vue/require-v-for-key -->
-            <li v-for="warning of warnings.xlsFormWarnings">
-              {{ removeLearnMore(warning) }}
-              <template v-if="hasLearnMoreLink(warning)">
-                <sentence-separator/>
-                <a :href="getLearnMoreLink(warning)" target="_blank">{{ $t('moreInfo.learnMore') }}</a>
-              </template>
-            </li>
-          </ul>
-        </template>
-
-        <template v-if="warnings?.workflowWarnings">
-          <p>
-            <strong>{{ $t('warningsText[2]') }}</strong>
-          </p>
-          <ul>
-            <!-- eslint-disable-next-line vue/require-v-for-key -->
-            <li v-for="warning of warnings.workflowWarnings">
-              <template v-if="warning.type === 'deletedFormExists'">
-                {{ $t('warningsText[3].deletedFormExists', { value: warning.details.xmlFormId }) }}
-                <doc-link to="central-forms/#deleting-a-form">{{ $t('moreInfo.learnMore') }}</doc-link>
-              </template>
-              <template v-else-if="warning.type === 'structureChanged'">
-                {{ $t('warningsText[3].structureChanged') }}
-                <doc-link to="central-forms/#central-forms-updates">{{ $t('moreInfo.learnMore') }}</doc-link>
-                <span>
-                  <br>
-                  <strong>{{ $t('fields') }}</strong> {{ warning.details.join(', ') }}
-                </span>
-              </template>
-              <template v-else-if="warning.type === 'oldEntityVersion'">
-                {{ $t('warningsText[3].oldEntityVersion', { version: warning.details.version }) }}
-                <a href="https://getodk.github.io/xforms-spec/entities" target="_blank">{{ $t('moreInfo.learnMore') }}</a>
-              </template>
-            </li>
-          </ul>
-        </template>
-
+      <template v-if="warnings?.xlsFormWarnings">
         <p>
-          <span>{{ $t('warningsText[4]') }}</span>
-          <sentence-separator/>
-          <template v-if="!draft">{{ $t('warningsText[5].create') }}</template>
-          <template v-else>{{ $t('warningsText[5].update') }}</template>
+          <strong>{{ $t('warningsText[1]') }}</strong>
         </p>
-        <p>
-          <button type="button" class="btn btn-primary"
-            :aria-disabled="awaitingResponse" @click="upload(true)">
-            {{ $t('action.uploadAnyway') }} <spinner :state="awaitingResponse"/>
-          </button>
-        </p>
-      </div>
-      <div class="modal-introduction">
-        <p>
-          <template v-if="!draft">{{ $t('introduction[0].create') }}</template>
-          <template v-else>{{ $t('introduction[0].update') }}</template>
-          <sentence-separator/>
-          <i18n-t keypath="introduction[1].full">
-            <template #tools>
-              <doc-link to="form-tools/">{{ $t('introduction[1].tools') }}</doc-link>
+        <ul>
+          <!-- eslint-disable-next-line vue/require-v-for-key -->
+          <li v-for="warning of warnings.xlsFormWarnings">
+            {{ removeLearnMore(warning) }}
+            <template v-if="hasLearnMoreLink(warning)">
+              <sentence-separator/>
+              <a :href="getLearnMoreLink(warning)" target="_blank">{{ $t('moreInfo.learnMore') }}</a>
             </template>
-          </i18n-t>
+          </li>
+        </ul>
+      </template>
+
+      <template v-if="warnings?.workflowWarnings">
+        <p>
+          <strong>{{ $t('warningsText[2]') }}</strong>
         </p>
-        <p v-if="!draft">{{ $t('introduction[2]') }}</p>
-      </div>
-      <file-drop-zone :disabled="awaitingResponse"
-        @drop="afterFileSelection($event.dataTransfer.files[0])">
-        <i18n-t tag="div" keypath="dropZone.full">
-          <template #chooseOne>
-            <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
-            <input v-show="false" ref="input" type="file" accept=".xls,.xlsx,.xml"
-              @change="afterInputChange">
-            <button type="button" class="btn btn-primary"
-              :aria-disabled="awaitingResponse" @click="$refs.input.click()">
-              <span class="icon-folder-open"></span>{{ $t('dropZone.chooseOne') }}
-            </button>
+        <ul>
+          <!-- eslint-disable-next-line vue/require-v-for-key -->
+          <li v-for="warning of warnings.workflowWarnings">
+            <template v-if="warning.type === 'deletedFormExists'">
+              {{ $t('warningsText[3].deletedFormExists', { value: warning.details.xmlFormId }) }}
+              <doc-link to="central-forms/#deleting-a-form">{{ $t('moreInfo.learnMore') }}</doc-link>
+            </template>
+            <template v-else-if="warning.type === 'structureChanged'">
+              {{ $t('warningsText[3].structureChanged') }}
+              <doc-link to="central-forms/#central-forms-updates">{{ $t('moreInfo.learnMore') }}</doc-link>
+              <span>
+                <br>
+                <strong>{{ $t('fields') }}</strong> {{ warning.details.join(', ') }}
+              </span>
+            </template>
+            <template v-else-if="warning.type === 'oldEntityVersion'">
+              {{ $t('warningsText[3].oldEntityVersion', { version: warning.details.version }) }}
+              <a href="https://getodk.github.io/xforms-spec/entities" target="_blank">{{ $t('moreInfo.learnMore') }}</a>
+            </template>
+          </li>
+        </ul>
+      </template>
+
+      <p>
+        <span>{{ $t('warningsText[4]') }}</span>
+        <sentence-separator/>
+        <template v-if="!draft">{{ $t('warningsText[5].create') }}</template>
+        <template v-else>{{ $t('warningsText[5].update') }}</template>
+      </p>
+      <p>
+        <button type="button" class="btn btn-primary"
+          :aria-disabled="awaitingResponse" @click="upload(true)">
+          {{ $t('action.uploadAnyway') }} <spinner :state="awaitingResponse"/>
+        </button>
+      </p>
+    </div>
+    <div class="introduction">
+      <p>
+        <template v-if="!draft">{{ $t('introduction[0].create') }}</template>
+        <template v-else>{{ $t('introduction[0].update') }}</template>
+        <sentence-separator/>
+        <i18n-t keypath="introduction[1].full">
+          <template #tools>
+            <doc-link to="form-tools/">{{ $t('introduction[1].tools') }}</doc-link>
           </template>
         </i18n-t>
-        <div v-show="file != null" id="form-new-filename">
-          {{ file != null ? file.name : '' }}
-        </div>
-      </file-drop-zone>
-      <div class="modal-actions">
-        <button type="button" class="btn btn-link" :aria-disabled="awaitingResponse"
-          @click="$emit('hide')">
-          {{ $t('action.cancel') }}
-        </button>
-        <button id="form-new-upload-button" type="button"
-          class="btn btn-primary" :aria-disabled="awaitingResponse"
-          @click="upload(false)">
-          {{ $t('action.upload') }} <spinner :state="awaitingResponse"/>
-        </button>
+      </p>
+      <p v-if="!draft">{{ $t('introduction[2]') }}</p>
+    </div>
+    <file-drop-zone :disabled="awaitingResponse"
+      @drop="afterFileSelection($event.dataTransfer.files[0])">
+      <i18n-t tag="div" keypath="dropZone.full">
+        <template #chooseOne>
+          <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
+          <input v-show="false" ref="input" type="file" accept=".xls,.xlsx,.xml"
+            @change="afterInputChange">
+          <button type="button" class="btn btn-primary"
+            :aria-disabled="awaitingResponse" @click="$refs.input.click()">
+            <span class="icon-folder-open"></span>{{ $t('dropZone.chooseOne') }}
+          </button>
+        </template>
+      </i18n-t>
+      <div v-show="file != null" id="form-upload-filename">
+        {{ file != null ? file.name : '' }}
       </div>
-    </template>
-  </modal>
+    </file-drop-zone>
+    <div class="actions">
+      <button type="button" class="btn btn-link" :aria-disabled="awaitingResponse"
+        @click="$emit('cancel')">
+        {{ $t('action.cancel') }}
+      </button>
+      <button id="upload-button" type="button"
+        class="btn btn-primary" :aria-disabled="awaitingResponse"
+        @click="upload(false)">
+        {{ $t('action.upload') }} <spinner :state="awaitingResponse"/>
+      </button>
+    </div>
+  </div>
 </template>
 
 <script>
 import DocLink from '../doc-link.vue';
 import FileDropZone from '../file-drop-zone.vue';
-import Modal from '../modal.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
 
@@ -134,16 +127,10 @@ import useRequest from '../../composables/request';
 import { apiPaths, isProblem } from '../../util/request';
 
 export default {
-  name: 'FormNew',
-  components: { DocLink, FileDropZone, Modal, SentenceSeparator, Spinner },
+  name: 'FormUpload',
+  components: { DocLink, FileDropZone, SentenceSeparator, Spinner },
   inject: ['redAlert'],
-  props: {
-    state: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: ['hide', 'success'],
+  emits: ['cancel', 'success'],
   setup() {
     const { request, awaitingResponse } = useRequest();
     return { request, awaitingResponse };
@@ -176,15 +163,11 @@ export default {
       return 'application/xml';
     }
   },
-  watch: {
-    state(state) {
-      if (!state) {
-        this.file = null;
-        this.warnings = null;
-      }
-    }
-  },
   methods: {
+    clear() {
+      this.file = null;
+      this.warnings = null;
+    },
     afterFileSelection(file) {
       this.redAlert.hide();
       this.file = file;
@@ -199,7 +182,16 @@ export default {
         this.redAlert.show(this.$t('alert.fileRequired'));
         return;
       }
-
+      // Try to read the file, error means file is modified or deleted or moved
+      const reader = new FileReader();
+      reader.onload = () => this.postFile(ignoreWarnings);
+      reader.onerror = () => {
+        this.redAlert.show(this.$t('alert.fileNotReadable'));
+        this.clear();
+      };
+      reader.readAsArrayBuffer(this.file);
+    },
+    postFile(ignoreWarnings) {
       const query = ignoreWarnings ? { ignoreWarnings } : null;
       const headers = { 'Content-Type': this.contentType };
       if (this.contentType !== 'application/xml') {
@@ -261,11 +253,21 @@ export default {
 <style lang="scss">
 @import '../../assets/scss/variables';
 
-#form-new {
-  .modal-warnings ul {
-    overflow-wrap: break-word;
-    white-space: pre-wrap;
-    margin-top: 10px;
+#form-upload {
+  .form-upload-warnings {
+    background-color: $color-warning-light;
+    margin-bottom: 15px;
+    padding: 15px;
+
+    :last-child {
+      margin-bottom: 0;
+    }
+
+    ul {
+      overflow-wrap: break-word;
+      white-space: pre-wrap;
+      margin-top: 10px;
+    }
   }
 
   .file-drop-zone {
@@ -274,9 +276,18 @@ export default {
     padding-left: 0;
     padding-right: 0;
   }
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  p {
+    max-width: unset;
+  }
 }
 
-#form-new-filename {
+#form-upload-filename {
   background-color: #eee;
   border-top: 1px solid #ddd;
   font-family: $font-family-monospace;
@@ -288,12 +299,8 @@ export default {
 
 <i18n lang="json5">
 {
+  // @transifexKey component.FormNew
   "en": {
-    // This is the title at the top of a pop-up.
-    "title": {
-      "create": "Create Form",
-      "update": "Upload New Form Definition"
-    },
     "introduction": [
       // The words "XForms" and "XLSForm" should not be translated.
       {
@@ -314,7 +321,8 @@ export default {
       "uploadAnyway": "Upload anyway"
     },
     "alert": {
-      "fileRequired": "Please choose a file."
+      "fileRequired": "Please choose a file.",
+      "fileNotReadable": "The file could not be read. It may have been modified or deleted. Please choose the file again."
     },
     "problem": {
       "400_8": "The Form definition you have uploaded does not appear to be for this Form. It has the wrong formId (expected “{expected}”, got “{actual}”).",
@@ -416,7 +424,8 @@ export default {
       "uploadAnyway": "Trotzdem hochladen"
     },
     "alert": {
-      "fileRequired": "Bitte wählen Sie eine Datei aus."
+      "fileRequired": "Bitte wählen Sie eine Datei aus.",
+      "fileNotReadable": "Die Datei konnte nicht gelesen werden. Möglicherweise wurde sie geändert oder gelöscht. Bitte wählen Sie die Datei erneut aus."
     },
     "problem": {
       "400_8": "Die hochgeladene Formulardefinition scheint nicht für dieses Formular zu sein. Es hat die falsche formId (\"{expected}\" erwartet, \"{actual}\" erhalten).",
@@ -464,7 +473,8 @@ export default {
       "uploadAnyway": "Subir de todos modos"
     },
     "alert": {
-      "fileRequired": "Por favor, elija un archivo."
+      "fileRequired": "Por favor, elija un archivo.",
+      "fileNotReadable": "No se ha podido leer el archivo. Es posible que se haya modificado o eliminado. Selecciona el archivo de nuevo."
     },
     "problem": {
       "400_8": "La definición del formulario que ha subido no parece ser para este formulario. Tiene el FormId equivocado (esperado \"{expected}\", got \"{actual}\").",
@@ -512,7 +522,8 @@ export default {
       "uploadAnyway": "Téléverser malgré tout"
     },
     "alert": {
-      "fileRequired": "Merci de choisir un fichier."
+      "fileRequired": "Merci de choisir un fichier.",
+      "fileNotReadable": "Le fichier n'a pas pu être lu. Il a peut-être été modifié ou supprimé. Veuillez choisir le fichier à nouveau."
     },
     "problem": {
       "400_8": "La définition de formulaire que vous avez envoyé ne semble pas correspondre à ce formulaire. Elle a un mauvais formid ( “{expected}” attendu, “{actual}” reçu).",
@@ -591,7 +602,8 @@ export default {
       "uploadAnyway": "Carica comunque"
     },
     "alert": {
-      "fileRequired": "Selezionare un file per favore"
+      "fileRequired": "Selezionare un file per favore",
+      "fileNotReadable": "Impossibile leggere il file. Potrebbe essere stato modificato o eliminato. Seleziona nuovamente il file."
     },
     "problem": {
       "400_8": "La definizione del formulario che hai caricato non sembra essere per questo formulario. Ha il formId sbagliato (previsto \"{expected}\", ottenuto \"{actual}\").",
@@ -763,7 +775,8 @@ export default {
       "uploadAnyway": "仍然上传"
     },
     "alert": {
-      "fileRequired": "请选择文件。"
+      "fileRequired": "请选择文件。",
+      "fileNotReadable": "无法读取该文件。它可能已被修改或删除。请重新选择文件。"
     },
     "problem": {
       "400_8": "您上传的表单定义文件与此表单不匹配：表单ID应为“{expected}”，但上传文件为“{actual}”。",

@@ -33,6 +33,7 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 // OpenLayers
+import Attribution from 'ol/control/Attribution';
 import Cluster from 'ol/source/Cluster';
 import Feature from 'ol/Feature';
 import GeoJSON from 'ol/format/GeoJSON';
@@ -132,7 +133,7 @@ const mapInstance = new Map({
   // which happens when panning at low zoom. See
   // https://github.com/getodk/central-frontend/pull/1384
   view: new View({ projection, extent: getProjection(projection).getExtent() }),
-  controls: [new Zoom()]
+  controls: [new Zoom(), new Attribution({ collapsible: false })]
 });
 
 
@@ -770,7 +771,7 @@ $muted-background-color: #F1F5F9;
   .ol-zoom {
     position: absolute;
     right: $spacing;
-    bottom: $spacing;
+    bottom: 35px;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -834,6 +835,28 @@ $muted-background-color: #F1F5F9;
     position: absolute;
     right: #{$spacing + 72px};
     bottom: $spacing;
+  }
+
+  .ol-attribution {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    background: rgba(245, 245, 245, 0.8);
+
+    button { display: none; }
+
+    ul {
+      margin: 0;
+      padding: 5px;
+    }
+
+    li { list-style: none; }
+
+    li, a {
+      font-size: 10px;
+      line-height: 14px;
+      color: #777;
+    }
   }
 }
 </style>

@@ -35,6 +35,11 @@
   overflow: hidden;
 }
 
+@mixin break-word {
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
 @mixin text-link {
   &, &:hover, &:focus {
     color: inherit;
@@ -43,9 +48,10 @@
 }
 
 @mixin text-block {
+  @include break-word;
+
   // 15-17 words per line in English
   max-width: 77ch;
-  overflow-wrap: break-word;
   // 35 characters per line in Hiragino Kaku Gothic ProN
   &:lang(ja), &:lang(zh) { max-width: 54ch; }
 }

@@ -32,6 +32,7 @@ describe('NavbarActions', () => {
         .complete()
         .request(app => app.get('#navbar-actions-log-out').trigger('click'))
         .respondWithSuccess()
+        .respondFor('/login')
         .afterResponse(app => {
           app.vm.$container.requestData.session.dataExists.should.be.false;
         }));
@@ -41,6 +42,7 @@ describe('NavbarActions', () => {
         .complete()
         .request(app => app.get('#navbar-actions-log-out').trigger('click'))
         .respondWithSuccess()
+        .respondFor('/login')
         .afterResponse(app => {
           app.vm.$route.fullPath.should.equal('/login');
         }));
@@ -50,6 +52,7 @@ describe('NavbarActions', () => {
         .complete()
         .request(app => app.get('#navbar-actions-log-out').trigger('click'))
         .respondWithSuccess()
+        .respondFor('/login')
         .afterResponse(app => {
           app.should.alert('success', 'You have logged out successfully.');
         }));

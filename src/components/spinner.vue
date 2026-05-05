@@ -62,14 +62,14 @@ $spinner-width: 3px;
     transition-delay: 0.15s;
   }
 
-  select + &, &.inline {
+  select + &, input + &, &.inline {
     display: inline-block;
     left: 0;
     position: relative;
     top: 0;
     vertical-align: text-top;
   }
-  select + & { margin-left: 7px; }
+  select + &, input + & { margin-left: 7px; }
 }
 .spinner-glyph {
   height: $spinner-size;

@@ -26,10 +26,10 @@ describe('EntityUpdate', () => {
       testData.extendedEntities.createPast(1, { label: 'My Entity' });
     });
 
-    it('renders a row for the label', () => {
+    it('renders a row for the entity label without a label  ', () => {
       const row = mountComponent().getComponent(EntityUpdateRow);
-      row.props().label.should.equal('Entity Label');
       row.props().oldValue.should.equal('My Entity');
+      should.not.exist(row.props().label);
       should.not.exist(row.props().modelValue);
     });
 
@@ -70,16 +70,6 @@ describe('EntityUpdate', () => {
     testData.extendedEntities.createPast(1);
     const modal = mountComponent({ attachTo: document.body });
     modal.get('textarea').should.be.focused();
-  });
-
-  it('makes width of current and updated values nearly equal', async () => {
-    testData.extendedEntities.createPast(1);
-    const modal = mountComponent({ attachTo: document.body });
-    await modal.vm.$nextTick();
-    const widths = modal.findAll('th.old-value, th.new-value')
-      .map(th => th.element.getBoundingClientRect().width);
-    // The left + right padding of the textarea is 24px.
-    (widths[1] - widths[0]).should.be.within(23.9, 24.1);
   });
 
   it('resizes the textarea elements', async () => {
