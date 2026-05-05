@@ -14,16 +14,16 @@ const { DefinePlugin } = require('webpack');
 const { resolve } = require('node:path');
 const { readFileSync } = require('fs');
 // eslint-disable-next-line import/extensions
-const webpackConfig = require('./node_modules/@vue/cli-service/webpack.config.js');
+const webpackConfig = require('../../node_modules/@vue/cli-service/webpack.config.js');
 
 const webFormsPackage = JSON.parse(
-  readFileSync(resolve(__dirname, 'node_modules/@getodk/web-forms/package.json'), 'utf-8')
+  readFileSync(resolve(__dirname, '../../node_modules/@getodk/web-forms/package.json'), 'utf-8')
 );
 
 const { entry, ...webpackConfigForKarma } = webpackConfig;
 webpackConfigForKarma.plugins.push(
   VueI18nPlugin({
-    include: resolve(__dirname, './apps/central/src/locales/**'),
+    include: resolve(__dirname, './src/locales/**'),
     compositionOnly: false,
     defaultSFCLang: 'json5',
     // `false` doesn't work for some reason. When `false` is specified, Vue I18n
@@ -53,6 +53,7 @@ webpackConfigForKarma.module.rules.push({
 
 module.exports = (config) => {
   config.set({
+    basePath: '../../',
     frameworks: ['webpack', 'mocha', 'source-map-support'],
     files: [
       'apps/central/test/index.js',
