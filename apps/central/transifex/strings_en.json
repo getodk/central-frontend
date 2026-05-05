@@ -3910,6 +3910,10 @@
       "current": {
         "string": "Current Published Version",
         "developer_comment": "This is a label shown for the current version of a Form."
+      },
+      "notes": {
+        "string": "Notes",
+        "developer_comment": "This is the label shown before the notes entered when a Form version was published."
       }
     },
     "FormVersionString": {
