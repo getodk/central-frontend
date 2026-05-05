@@ -33,7 +33,7 @@ Follow these steps to set up your development environment:
 
 - Install Node.js 20.
 - Install dependencies by running `npm install`.
-- Install NGINX.
+- Install docker or NGINX.
 - Set up [ODK Central Backend](https://github.com/getodk/central-backend).
   - You will need to create a user using an ODK Central Backend command line script.
   - You will probably also want to promote that user to a sitewide administrator.
