@@ -2,7 +2,7 @@ const { readFileSync } = require('node:fs');
 
 const { containsSubarray } = require('../util/util');
 
-const structured = JSON.parse(readFileSync('transifex/strings_en.json').toString());
+const structured = JSON.parse(readFileSync('apps/central/transifex/strings_en.json').toString());
 
 const pathsByString = new Map();
 const addString = (s, path) => {
