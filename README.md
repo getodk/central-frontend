@@ -25,7 +25,7 @@ You can learn more about ODK Central by visiting the [docs](https://docs.getodk.
 
 ## Contributing
 
-We need your help to make ODK Central Frontend as useful as possible! Please see the [Contribution Guide](/CONTRIBUTING.md) for detailed information on discussion forums, project policies, code guidelines, and an overview of the software architecture.
+We need your help to make ODK Central Frontend as useful as possible! Please see the [Contribution Guide](/apps/central/docs/CONTRIBUTING.md) for detailed information on discussion forums, project policies, code guidelines, and an overview of the software architecture.
 
 ## Setting up your development environment
 

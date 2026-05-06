@@ -39,7 +39,7 @@ Our **code style** is loosely based on the [Airbnb Javascript Style Guide](https
 
 As you write code, please try to follow **existing conventions** in the codebase.
 
-We try to **test** as much of our code as possible. To run tests, type `npm run test`. See the section below on [Testing](https://github.com/getodk/central-frontend/blob/master/CONTRIBUTING.md#testing) for more information about our approach to testing.
+We try to **test** as much of our code as possible. To run tests, type `npm run test`. See the section below on [Testing](https://github.com/getodk/central-frontend/blob/master/apps/central/docs/CONTRIBUTING.md#testing) for more information about our approach to testing.
 
 Please format your **commit messages** as follows:
 
@@ -66,7 +66,7 @@ ODK Central Frontend uses Bootstrap 3.
 
 Frontend's [global styles](/apps/central/src/assets/scss/app.scss) override some of Bootstrap's, as do the styles of Frontend components that correspond to a Bootstrap component (for example, `Modal`). However, we tend to stick pretty closely to Bootstrap, and you should be able to use many of Bootstrap's examples with only small changes. If you are creating a new component that is similar to an existing Frontend component, you may find it useful to base the new component off the existing one.
 
-We use a limited number of Bootstrap's jQuery plugins: see the [section above](https://github.com/getodk/central-frontend/blob/master/CONTRIBUTING.md#jquery) on jQuery.
+We use a limited number of Bootstrap's jQuery plugins: see the [section above](https://github.com/getodk/central-frontend/blob/master/apps/central/docs/CONTRIBUTING.md#jquery) on jQuery.
 
 ### Global Utilities
 
@@ -80,7 +80,7 @@ If a utility is used in a limited number of components, consider using a mixin i
 
 ### HTTP Requests
 
-We use axios to send requests. We set `Vue.prototype.$http` to `axios`, so components can use `this.$http` rather than importing `axios`. That said, components rarely need to access `this.$http` directly. Most of the time, to send a GET request, you can use the [`request` module](/apps/central/src/store/modules/request.js) of the Vuex store; to send a non-GET request, you can use the [`request` mixin](/apps/central/src/mixins/request.js). The module and mixin both accept options and complete common tasks like error handling. See the section below on [Response Data](https://github.com/getodk/central-frontend/blob/master/CONTRIBUTING.md#response-data) for more on sending a GET request.
+We use axios to send requests. We set `Vue.prototype.$http` to `axios`, so components can use `this.$http` rather than importing `axios`. That said, components rarely need to access `this.$http` directly. Most of the time, to send a GET request, you can use the [`request` module](/apps/central/src/store/modules/request.js) of the Vuex store; to send a non-GET request, you can use the [`request` mixin](/apps/central/src/mixins/request.js). The module and mixin both accept options and complete common tasks like error handling. See the section below on [Response Data](https://github.com/getodk/central-frontend/blob/master/apps/central/docs/CONTRIBUTING.md#response-data) for more on sending a GET request.
 
 ### Learning About a Component
 
@@ -90,7 +90,7 @@ To learn how a given component works, one of the best places to start is how the
 - Does it have slots?
 - Does it emit events?
 
-A component can also communicate with other components using the Vuex store. For example, a component may use [response data](https://github.com/getodk/central-frontend/blob/master/CONTRIBUTING.md#response-data) that another component requested.
+A component can also communicate with other components using the Vuex store. For example, a component may use [response data](https://github.com/getodk/central-frontend/blob/master/apps/central/docs/CONTRIBUTING.md#response-data) that another component requested.
 
 ### Component Names
 
@@ -262,8 +262,8 @@ By following the steps above, you should minimize the diff. However, in the JSON
 
 Here are a few screenshots of the IcoMoon interface from March 2021:
 
-![Using IcoMoon Interface](docs/img/icomoon-choose-new-icons.png)
-![Choosing Font Awesome Icon Set](docs/img/icomoon-font-awesome.png)
+![Using IcoMoon Interface](img/icomoon-choose-new-icons.png)
+![Choosing Font Awesome Icon Set](img/icomoon-font-awesome.png)
 
 ### Standard Actions
 

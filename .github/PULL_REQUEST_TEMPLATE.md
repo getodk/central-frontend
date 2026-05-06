@@ -4,7 +4,7 @@ Closes #
 Thank you for contributing to ODK Central!
 
 Before sending this PR, please read
-https://github.com/getodk/central-frontend/blob/master/CONTRIBUTING.md
+https://github.com/getodk/central-frontend/blob/master/apps/central/docs/CONTRIBUTING.md
 -->
 
 #### What has been done to verify that this works as intended?
