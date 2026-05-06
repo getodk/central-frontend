@@ -126,6 +126,22 @@ export const select1 = (ref: string, ...children: XFormsElement[]): XFormsElemen
 	return t(`select1 ref="${ref}"`, ...children);
 };
 
+interface RangeAttributes {
+	start: number;
+	end: number;
+	step: number;
+}
+export const range = (
+	ref: string,
+	attributes: RangeAttributes,
+	...children: XFormsElement[]
+): XFormsElement => {
+	return t(
+		`range ref="${ref}" start="${attributes.start}" end="${attributes.end}" step="${attributes.step}"`,
+		...children
+	);
+};
+
 type Select1DynamicParameters =
 	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
 	| readonly [ref: string, nodesetRef: string]
