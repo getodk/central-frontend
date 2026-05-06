@@ -56,6 +56,9 @@ const orientation = props.node.appearances.vertical ? 'vertical' : 'horizontal';
 
 	<template v-else>
 		<div :class="['range-control-container', orientation]">
+			<div class="range-value">
+				<span>{{ numberValue }}</span>
+			</div>
 			<div class="range-bound range-min">
 				{{ start }}
 			</div>
@@ -88,10 +91,6 @@ const orientation = props.node.appearances.vertical ? 'vertical' : 'horizontal';
 //   non-trivial to integrate with PrimeVue's styling. I backed out due to the
 //   complexity.
 //
-// - There is no way to indicate the present value. The official MUI (React)
-//   component does this with a tooltip which shows when hovering the "thumb"
-//   control.
-//
 // - Should we flip either of the following in RTL languages?
 //
 //    - Horizontal direction of the control
@@ -110,17 +109,24 @@ const orientation = props.node.appearances.vertical ? 'vertical' : 'horizontal';
 	--track-value-emphasis: 0.125rem;
 	--thumb-size: 1.25rem;
 	--tick-size: 0.125rem;
+	--gutter-width: 2lh;
 
 	position: relative;
 
 	.range-bound {
 		position: absolute;
 		line-height: 1;
+		font-size: var(--odk-hint-font-size);
+		color: var(--odk-muted-text-color);
+	}
+
+	.range-value {
+		font-weight: bold;
 	}
 
 	&.horizontal {
 		height: var(--track-size);
-		padding: 0 0.5rem 2lh 0.5rem;
+		padding: var(--gutter-width) var(--odk-spacing-m);
 
 		.range-bound {
 			bottom: 0;
@@ -133,11 +139,20 @@ const orientation = props.node.appearances.vertical ? 'vertical' : 'horizontal';
 		.range-max {
 			right: 0;
 		}
+
+		.range-value {
+			text-align: center;
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+		}
 	}
 
 	&.vertical {
+
 		width: var(--track-size);
-		padding: 0.5lh 3rem 0.5lh;
+		padding: var(--odk-spacing-m) var(--gutter-width);
 
 		// Vertical appearance is centered. Consistent with
 		// https://docs.getodk.org/form-question-types/#vertical-range-widget
@@ -145,6 +160,7 @@ const orientation = props.node.appearances.vertical ? 'vertical' : 'horizontal';
 
 		.range-bound {
 			right: 0;
+			width: 1rem;
 		}
 
 		.range-min {
@@ -153,6 +169,22 @@ const orientation = props.node.appearances.vertical ? 'vertical' : 'horizontal';
 
 		.range-max {
 			bottom: 0;
+		}
+
+		.range-value {
+			display: flex;
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			align-items: center;
+			right: var(--gutter-width);
+			padding-right: var(--odk-spacing-l);
+
+			span {
+				display: inline-block;
+				width: var(--gutter-width);
+				text-align: right;
+			}
 		}
 	}
 }
