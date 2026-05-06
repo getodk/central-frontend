@@ -157,7 +157,7 @@ We use [Transifex](https://www.transifex.com/getodk/central/) to manage our tran
 
 `strings_en.json` is formatted as Transifex [Structured JSON](https://docs.transifex.com/formats/json/structured-json). One benefit of Structured JSON is that it supports developer comments. However, Structured JSON is a different format from the JSON that Vue I18n expects.
 
-We use a script to convert Vue I18n JSON to Structured JSON: [`/bin/transifex/restructure.js`](/bin/transifex/restructure.js) reads the Vue I18n JSON in `/apps/central/src/locales/en.json5` and in single file component `i18n` custom blocks, then converts that JSON to a single Structured JSON file, `strings_en.json`. You can run `restructure.js` via:
+We use a script to convert Vue I18n JSON to Structured JSON: [`/apps/central/bin/transifex/restructure.js`](/apps/central/bin/transifex/restructure.js) reads the Vue I18n JSON in `/apps/central/src/locales/en.json5` and in single file component `i18n` custom blocks, then converts that JSON to a single Structured JSON file, `strings_en.json`. You can run `restructure.js` via:
 
 ```bash
 npm run transifex:fix
@@ -193,7 +193,7 @@ Before each release, we download all translations from Transifex and save them i
 tx pull --mode translator --force
 ```
 
-Once they are downloaded, we convert the Structured JSON files to Vue I18n JSON by running [`/bin/transifex/destructure.js`](/bin/transifex/destructure.js). `destructure.js` generates all locale files in `/apps/central/src/locales/` other than `en.json5`.
+Once they are downloaded, we convert the Structured JSON files to Vue I18n JSON by running [`/apps/central/bin/transifex/destructure.js`](/apps/central/bin/transifex/destructure.js). `destructure.js` generates all locale files in `/apps/central/src/locales/` other than `en.json5`.
 
 To summarize the workflow:
 
@@ -221,7 +221,7 @@ For more background on Transifex, see these articles:
 To add a new locale to ODK Central Frontend:
 
 1. Add the locale to Transifex.
-2. Add the locale to `locales` in [`/apps/central/src/i18n.js`](/apps/central/src/i18n.js) and [`/bin/util/transifex.js`](/bin/util/transifex.js).
+2. Add the locale to `locales` in [`/apps/central/src/i18n.js`](/apps/central/src/i18n.js) and [`/apps/central/bin/util/transifex.js`](/apps/central/bin/util/transifex.js).
 3. If the locale pluralizes differently from the default, specify its pluralization rules in `/apps/central/src/i18n.js`.
 4. Check whether there is a [flatpickr localization](https://github.com/flatpickr/flatpickr/tree/master/src/l10n) for the locale. If there is, add it to [`DateRangePicker`](/apps/central/src/components/date-range-picker.vue). If there isn't, let us know about it in the ODK forum.
 5. Consider spot-checking the translations. In particular, check that messages used in component interpolation have been translated correctly.

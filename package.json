@@ -12,8 +12,8 @@
     "lint:fix": "npm run eslint:fix && npm run transifex:fix",
     "test": "./apps/central/test/run.sh",
     "test:e2e": "e2e-tests/run-tests.sh",
-    "transifex:fix": "node bin/transifex/restructure.js > apps/central/transifex/strings_en.json",
-    "transifex:lint": "bash -c 'diff apps/central/transifex/strings_en.json <(node bin/transifex/restructure.js)'"
+    "transifex:fix": "node apps/central/bin/transifex/restructure.js > apps/central/apps/central/transifex/strings_en.json",
+    "transifex:lint": "bash -c 'diff apps/central/transifex/strings_en.json <(node apps/central/bin/transifex/restructure.js)'"
   },
   "volta": {
     "node": "24.13.0"
