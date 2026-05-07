@@ -2,7 +2,7 @@
 set -o pipefail
 shopt -s inherit_errexit || true
 
-git ls-files -z \
+git ls-files -z -- . ':!:packages/common/*' \
 | xargs -0 ls -l -- \
 | awk '
   BEGIN {
