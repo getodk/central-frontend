@@ -59,9 +59,6 @@ const orientation = props.node.appearances.vertical ? 'vertical' : 'horizontal';
 			<div class="range-value">
 				<span>{{ numberValue }}</span>
 			</div>
-			<div class="range-bound range-min">
-				{{ start }}
-			</div>
 			<RangeSlider
 				:id="node.nodeId"
 				:disabled="node.currentState.readonly"
@@ -72,6 +69,9 @@ const orientation = props.node.appearances.vertical ? 'vertical' : 'horizontal';
 				:model-value="numberValue"
 				@update:model-value="setValue"
 			/>
+			<div class="range-bound range-min">
+				{{ start }}
+			</div>
 			<div class="range-bound range-max">
 				{{ end }}
 			</div>
@@ -164,11 +164,11 @@ const orientation = props.node.appearances.vertical ? 'vertical' : 'horizontal';
 		}
 
 		.range-min {
-			top: 0;
+			bottom: 0;
 		}
 
 		.range-max {
-			bottom: 0;
+			top: 0;
 		}
 
 		.range-value {
