@@ -1,0 +1,6 @@
+{
+  "trigger_control.okay.label": {
+    "string": "Okay",
+    "developer_comment": "The label for the 'Okay' button."
+  }
+}

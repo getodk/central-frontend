@@ -1,0 +1,263 @@
+<?xml version="1.0"?>
+<!-- This fixture is loosely derived from the Enketo test fixture itemset-relevant-2.xml -->
+<h:html xmlns="http://www.w3.org/2002/xforms"
+  xmlns:ev="http://www.w3.org/2001/xml-events"
+  xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:jr="http://openrosa.org/javarosa"
+  xmlns:odk="http://www.opendatakit.org/xforms"
+  xmlns:orx="http://openrosa.org/xforms"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>Dynamic selects (itemset)</h:title>
+    <model odk:xforms-version="1.0.0">
+      <instance>
+        <data id="dynamic-selects-itemsets">
+          <g1>
+            <state-prefix />
+            <state />
+          </g1>
+          <g2>
+            <states-prefix />
+            <states />
+          </g2>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <instance id="state">
+        <root>
+          <item>
+            <label>Alaska</label>
+            <name>AK</name>
+          </item>
+          <item>
+            <label>Hawaii</label>
+            <name>HI</name>
+          </item>
+          <item>
+            <label>Alabama</label>
+            <name>AL</name>
+          </item>
+          <item>
+            <label>Arkansas</label>
+            <name>AR</name>
+          </item>
+          <item>
+            <label>Arizona</label>
+            <name>AZ</name>
+          </item>
+          <item>
+            <label>California</label>
+            <name>CA</name>
+          </item>
+          <item>
+            <label>Colorado</label>
+            <name>CO</name>
+          </item>
+          <item>
+            <label>Connecticut</label>
+            <name>CT</name>
+          </item>
+          <item>
+            <label>Delaware</label>
+            <name>DE</name>
+          </item>
+          <item>
+            <label>Florida</label>
+            <name>FL</name>
+          </item>
+          <item>
+            <label>Georgia</label>
+            <name>GA</name>
+          </item>
+          <item>
+            <label>Iowa</label>
+            <name>IA</name>
+          </item>
+          <item>
+            <label>Idaho</label>
+            <name>ID</name>
+          </item>
+          <item>
+            <label>Ilinois</label>
+            <name>IL</name>
+          </item>
+          <item>
+            <label>Indiana</label>
+            <name>IN</name>
+          </item>
+          <item>
+            <label>Kansas</label>
+            <name>KS</name>
+          </item>
+          <item>
+            <label>Louisiana</label>
+            <name>LA</name>
+          </item>
+          <item>
+            <label>Massachusetts</label>
+            <name>MA</name>
+          </item>
+          <item>
+            <label>Maryland</label>
+            <name>MD</name>
+          </item>
+          <item>
+            <label>Maine</label>
+            <name>ME</name>
+          </item>
+          <item>
+            <label>Michigan</label>
+            <name>MI</name>
+          </item>
+          <item>
+            <label>Minnesota</label>
+            <name>MN</name>
+          </item>
+          <item>
+            <label>Missouri</label>
+            <name>MO</name>
+          </item>
+          <item>
+            <label>Mississippi</label>
+            <name>MS</name>
+          </item>
+          <item>
+            <label>Montana</label>
+            <name>MT</name>
+          </item>
+          <item>
+            <label>North Carolina</label>
+            <name>NC</name>
+          </item>
+          <item>
+            <label>North Dakota</label>
+            <name>ND</name>
+          </item>
+          <item>
+            <label>Nebraska</label>
+            <name>NE</name>
+          </item>
+          <item>
+            <label>New Hampshire</label>
+            <name>NH</name>
+          </item>
+          <item>
+            <label>New Jersey</label>
+            <name>NJ</name>
+          </item>
+          <item>
+            <label>New Mexico</label>
+            <name>NM</name>
+          </item>
+          <item>
+            <label>Nevada</label>
+            <name>NV</name>
+          </item>
+          <item>
+            <label>New York</label>
+            <name>NY</name>
+          </item>
+          <item>
+            <label>Ohio</label>
+            <name>OH</name>
+          </item>
+          <item>
+            <label>Oklahoma</label>
+            <name>OK</name>
+          </item>
+          <item>
+            <label>Oregon</label>
+            <name>OR</name>
+          </item>
+          <item>
+            <label>Pennsylvania</label>
+            <name>PA</name>
+          </item>
+          <item>
+            <label>South Carolina</label>
+            <name>SC</name>
+          </item>
+          <item>
+            <label>South Dakota</label>
+            <name>SD</name>
+          </item>
+          <item>
+            <label>Tenessee</label>
+            <name>TN</name>
+          </item>
+          <item>
+            <label>Texas</label>
+            <name>TX</name>
+          </item>
+          <item>
+            <label>Utah</label>
+            <name>UT</name>
+          </item>
+          <item>
+            <label>Virginia</label>
+            <name>VA</name>
+          </item>
+          <item>
+            <label>Vermont</label>
+            <name>VT</name>
+          </item>
+          <item>
+            <label>Washington</label>
+            <name>WA</name>
+          </item>
+          <item>
+            <label>Wisconsin</label>
+            <name>WI</name>
+          </item>
+          <item>
+            <label>West Virgina</label>
+            <name>WV</name>
+          </item>
+          <item>
+            <label>Wyoming</label>
+            <name>WY</name>
+          </item>
+          <item>
+            <label>District Capital</label>
+            <name>DC</name>
+          </item>
+        </root>
+      </instance>
+      <bind nodeset="/data/g1/state-prefix" type="string"/>
+      <bind nodeset="/data/g1/state" type="string"/>
+      <bind nodeset="/data/g2/states-prefix" type="string"/>
+      <bind nodeset="/data/g2/states" type="string"/>
+    </model>
+  </h:head>
+  <h:body>
+    <group ref="/data/g1">
+      <label>Select one</label>
+      <input ref="/data/g1/state-prefix">
+        <label>1. Filter question #2 (prefix, case-sensitive)</label>
+      </input>
+      <select1 ref="/data/g1/state">
+        <label>2. Select a state</label>
+        <itemset nodeset="instance('state')/root/item[starts-with(label,  /data/g1/state-prefix )]">
+          <value ref="name"/>
+          <label ref="label"/>
+        </itemset>
+      </select1>
+    </group>
+
+    <group ref="/data/g2">
+      <label>Select multiple</label>
+      <input ref="/data/g2/states-prefix">
+        <label>3. Filter question #4 (prefix, case-sensitive)</label>
+      </input>
+      <select ref="/data/g2/states">
+        <label>4. Select a state</label>
+        <itemset nodeset="instance('state')/root/item[starts-with(label,  /data/g2/states-prefix )]">
+          <value ref="name"/>
+          <label ref="label"/>
+        </itemset>
+      </select>
+    </group>
+  </h:body>
+</h:html>

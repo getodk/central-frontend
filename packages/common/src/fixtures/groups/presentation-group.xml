@@ -1,0 +1,79 @@
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa">
+  <h:head>
+    <h:title>requiredOnePage</h:title>
+    <model>
+      <instance>
+        <data id="build_requiredOnePage_1518518934">
+          <meta>
+            <instanceID/>
+          </meta>
+          <group>
+            <text/>
+            <number/>
+            <date/>
+            <time/>
+            <location/>
+            <barcode/>
+          </group>
+        </data>
+      </instance>
+      <itext>
+        <translation lang="English">
+          <text id="/data/group:label">
+            <value>group</value>
+          </text>
+          <text id="/data/group/text:label">
+            <value>text</value>
+          </text>
+          <text id="/data/group/number:label">
+            <value>number</value>
+          </text>
+          <text id="/data/group/number:hint">
+            <value>hint number</value>
+          </text>
+          <text id="/data/group/time:hint">
+            <value>hint time</value>
+          </text>
+          <text id="/data/group/location:requiredMsg">
+            <value>requiredLocation</value>
+          </text>
+          <text id="/data/group/barcode:label">
+            <value>barcode</value>
+          </text>
+          <text id="/data/group/barcode:requiredMsg">
+            <value>requiredBarcode</value>
+          </text>
+        </translation>
+      </itext>
+      <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" calculate="concat('uuid:', uuid())"/>
+      <bind nodeset="/data/group/text" type="string" required="true()"/>
+      <bind nodeset="/data/group/number" type="int" required="true()"/>
+      <bind nodeset="/data/group/date" type="date" required="true()"/>
+      <bind nodeset="/data/group/time" type="time" required="true()"/>
+      <bind nodeset="/data/group/location" type="geopoint" required="true()" jr:requiredMsg="jr:itext('/data/group/location:requiredMsg')"/>
+      <bind nodeset="/data/group/barcode" type="barcode" required="true()" jr:requiredMsg="jr:itext('/data/group/barcode:requiredMsg')"/>
+    </model>
+  </h:head>
+  <h:body>
+    <group appearance="field-list">
+      <label ref="jr:itext('/data/group:label')"/>
+      <input ref="/data/group/text">
+        <label ref="jr:itext('/data/group/text:label')"/>
+      </input>
+      <input ref="/data/group/number">
+        <label ref="jr:itext('/data/group/number:label')"/>
+        <hint ref="jr:itext('/data/group/number:hint')"/>
+      </input>
+      <input ref="/data/group/date">
+      </input>
+      <input ref="/data/group/time">
+        <hint ref="jr:itext('/data/group/time:hint')"/>
+      </input>
+      <input ref="/data/group/location">
+      </input>
+      <input ref="/data/group/barcode">
+        <label ref="jr:itext('/data/group/barcode:label')"/>
+      </input>
+    </group>
+  </h:body>
+</h:html>

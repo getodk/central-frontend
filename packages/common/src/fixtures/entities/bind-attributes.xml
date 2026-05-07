@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms" xmlns:odk="http://www.opendatakit.org/xforms" xmlns:entities="http://www.opendatakit.org/xforms/entities">
+  <h:head>
+    <h:title>Create or update beneficiary</h:title>
+    <model odk:xforms-version="1.0.0" entities:entities-version="2024.1.0">
+      <instance>
+        <data id="create_update_beneficiary" version="20251103154221">
+          <beneficiary/>
+          <info>
+            <summary/>
+            <update_full_name/>
+            <update_number/>
+          </info>
+          <new>
+            <new_full_name/>
+            <new_number/>
+            <new_uuid/>
+          </new>
+          <full_name/>
+          <phone_number/>
+          <meta>
+            <instanceID/>
+            <instanceName/>
+            <entity dataset="beneficiaries" create="1" update="1" baseVersion="" trunkVersion="" branchId="" id="">
+              <label/>
+            </entity>
+          </meta>
+        </data>
+      </instance>
+      <instance id="beneficiaries" src="jr://file-csv/beneficiaries.csv"/>
+      <bind nodeset="/data/beneficiary" type="string"/>
+      <bind nodeset="/data/info" relevant=" /data/beneficiary  != ''"/>
+      <bind nodeset="/data/info/summary" readonly="true()" type="string"/>
+      <bind nodeset="/data/info/update_full_name" type="string"/>
+      <bind nodeset="/data/info/update_number" type="string"/>
+      <bind nodeset="/data/new" relevant=" /data/beneficiary  = ''"/>
+      <bind nodeset="/data/new/new_full_name" type="string"/>
+      <bind nodeset="/data/new/new_number" type="string"/>
+      <bind nodeset="/data/new/new_uuid" type="string" calculate="once(uuid())"/>
+      <bind nodeset="/data/full_name" type="string" entities:saveto="full_name" calculate="coalesce( /data/info/update_full_name ,  /data/new/new_full_name )"/>
+      <bind nodeset="/data/phone_number" type="string" entities:saveto="phone_number" calculate="coalesce( /data/info/update_number ,  /data/new/new_number )"/>
+      <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid"/>
+      <bind nodeset="/data/meta/instanceName" type="string" calculate="concat( /data/full_name , &quot; - &quot;,  /data/phone_number )"/>
+      <bind nodeset="/data/meta/entity/@create" calculate=" /data/beneficiary  = ''" readonly="true()" type="string"/>
+      <bind nodeset="/data/meta/entity/@update" calculate=" /data/beneficiary  != ''" readonly="true()" type="string"/>
+      <bind nodeset="/data/meta/entity/@baseVersion" calculate="instance('beneficiaries')/root/item[name=if ( /data/beneficiary  != '',  /data/beneficiary ,  /data/new/new_uuid )]/__version" readonly="true()" type="string"/>
+      <bind nodeset="/data/meta/entity/@trunkVersion" calculate="instance('beneficiaries')/root/item[name=if ( /data/beneficiary  != '',  /data/beneficiary ,  /data/new/new_uuid )]/__trunkVersion" readonly="true()" type="string"/>
+      <bind nodeset="/data/meta/entity/@branchId" calculate="instance('beneficiaries')/root/item[name=if ( /data/beneficiary  != '',  /data/beneficiary ,  /data/new/new_uuid )]/__branchId" readonly="true()" type="string"/>
+      <bind nodeset="/data/meta/entity/@id" readonly="true()" type="string" calculate="if ( /data/beneficiary  != '',  /data/beneficiary ,  /data/new/new_uuid )"/>
+      <setvalue ref="/data/meta/entity/@id" event="odk-instance-first-load" value="uuid()"/>
+      <bind nodeset="/data/meta/entity/label" calculate="concat( /data/full_name , &quot; - &quot;,  /data/phone_number )" readonly="true()" type="string"/>
+    </model>
+  </h:head>
+  <h:body>
+    <select1 ref="/data/beneficiary" appearance="search">
+      <label>Select beneficiary to update their basic information. You can search by name or phone number.
+
+If you can't find the desired beneficiary, go to the next screen to register a new one.</label>
+      <itemset nodeset="instance('beneficiaries')/root/item">
+        <value ref="name"/>
+        <label ref="label"/>
+      </itemset>
+      <setvalue ref="/data/info/update_full_name" event="xforms-value-changed" value="instance('beneficiaries')/root/item[name= /data/beneficiary ]/full_name"/>
+      <setvalue ref="/data/info/update_number" event="xforms-value-changed" value="instance('beneficiaries')/root/item[name= /data/beneficiary ]/phone_number"/>
+    </select1>
+    <group appearance="field-list" ref="/data/info">
+      <input ref="/data/info/summary">
+        <label> Currently registered as
+          <output value="instance('beneficiaries')/root/item[name= /data/beneficiary ]/full_name"/> with phone number
+          <output value="instance('beneficiaries')/root/item[name= /data/beneficiary ]/phone_number"/>
+
+Latest mood:
+          <output value="instance('beneficiaries')/root/item[name= /data/beneficiary ]/latest_mood"/>
+
+Kiwis received:
+          <output value="instance('beneficiaries')/root/item[name= /data/beneficiary ]/kiwis_received"/>
+        </label>
+      </input>
+      <input ref="/data/info/update_full_name">
+        <label>Update beneficiary name</label>
+      </input>
+      <input ref="/data/info/update_number">
+        <label>Update beneficiary phone number</label>
+      </input>
+    </group>
+    <group appearance="field-list" ref="/data/new">
+      <input ref="/data/new/new_full_name">
+        <label>Beneficiary full name</label>
+      </input>
+      <input ref="/data/new/new_number">
+        <label>Beneficiary phone number</label>
+      </input>
+    </group>
+  </h:body>
+</h:html>

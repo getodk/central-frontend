@@ -1,0 +1,10 @@
+name,label,geometry,population_size,num_hospitals
+1,Lisbon,38.7 -9.15,500000,120
+2,Dublin,53.33 -6.25,1200000,200
+3,Edinburgh,55.953251 -3.188267,500000,150
+4,Amsterdam-Brussels-Luxembourg,52.37 4.9; 50.85 4.35; 49.6 6.13,3000000,450
+5,Zurich-Geneva-Basel,47.3667 8.55; 46.2022 6.1457; 47.55839 7.57327,1500000,300
+6,Barcelona-Madrid,41.390205 2.154007; 40.38 -3.7,5000000,600
+7,London-Paris-Amsterdam-London,51.5 -0.12; 48.85 2.35; 52.37 4.9; 51.5 -0.12,20000000,1000
+8,Berlin-Frankfurt-Munich-Berlin,52.52 13.4; 50.11552 8.68417; 48.13743 11.57549; 52.52 13.4,7000000,800
+9,Vienna-Salzburg-Innsbruck-Vienna,48.2 16.37; 47.79941 13.04399; 47.26266 11.39454; 48.2 16.37,3000000,400
