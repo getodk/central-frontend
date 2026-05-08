@@ -53,7 +53,8 @@ jobs:
     - run: npm run build
     - run: ./bin/check-bundle-size.js
 
-    - if: github.ref_type == 'tag'
+    - name: Upload Release Artefact
+      if: github.ref_type == 'tag'
       run: |
         tar -cvzf dist.tar.gz dist/
         gh release create ${{ github.ref_name }} dist.tar.gz --generate-notes
