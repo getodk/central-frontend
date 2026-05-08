@@ -2,6 +2,10 @@ name: Tests
 
 on:
   push:
+    branches:
+      - '**'
+    tags:
+      - 'v*'
   pull_request:
 
 jobs:
@@ -32,6 +36,10 @@ jobs:
     - uses: browser-actions/setup-chrome@v2
     - run: npm run test
   build:
+    needs:
+    - image-compression
+    - shellcheck
+    - unit-tests
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
@@ -44,12 +52,16 @@ jobs:
     - run: npm ci
     - run: npm run build
     - run: ./bin/check-bundle-size.js
+
+    - if: github.ref_type == 'tag'
+      run: |
+        tar -cvzf dist.tar.gz dist/
+        gh release create ${{ github.ref_name }} dist.tar.gz --generate-notes
+
   e2e-tests:
+    if: github.ref_type != 'tag'
     needs:
     - build
-    - image-compression
-    - shellcheck
-    - unit-tests
     timeout-minutes: 120
     runs-on: ubuntu-latest
     steps:
