@@ -58,7 +58,7 @@ jobs:
       run: |
         tar -cvzf dist.tar.gz dist/
         echo "Uploading dist bundle..."
-        gh release create ${{ github.ref_name }} dist.tar.gz --generate-notes
+        gh release create ${{ github.ref_name }} dist.tar.gz
         echo "Upload complete.  See above for URL."
       env:
         GH_TOKEN: ${{ github.token }}
