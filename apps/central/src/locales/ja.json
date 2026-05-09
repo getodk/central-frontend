@@ -1,0 +1,277 @@
+{
+  "title": {
+    "resetPassword": "パスワードのリセット",
+    "setPassword": "パスワードの設定",
+    "editProfile": "プロフィールを編集",
+    "download": "ダウンロード",
+    "pageNotFound": "ページが見つかりません。",
+    "details": "詳細"
+  },
+  "projectShow": {
+    "tab": {
+      "formAccess": "フォームへのアクセス"
+    }
+  },
+  "formHead": {
+    "tab": {
+      "publicAccess": "一般公開",
+      "versions": "バージョン"
+    }
+  },
+  "systemHome": {
+    "title": "システム管理",
+    "tab": {
+      "audits": "サーバー監査ログ",
+      "analytics": "利用状況報告"
+    }
+  },
+  "role": {
+    "none": "なし",
+    "admin": "管理者",
+    "manager": "プロジェクト・マネジャー",
+    "viewer": "プロジェクト・閲覧者",
+    "formfill": "データ収集者"
+  },
+  "formState": {
+    "open": "公開",
+    "closing": "クロージング状態",
+    "closed": "終了"
+  },
+  "reviewState": {
+    "received": "受信済み",
+    "hasIssues": "問題有り",
+    "edited": "編集済み",
+    "approved": "承認済み",
+    "rejected": "リジェクト済み",
+    "null": "@:reviewState.received"
+  },
+  "audit": {
+    "category": {
+      "user": "Webユーザーに対する操作",
+      "project": "プロジェクトに対する操作",
+      "form": "フォームに対する操作",
+      "field_key": "アプリユーザーに対する操作",
+      "public_link": "一般公開リンクに対する操作",
+      "config": "サーバー設定に対する操作",
+      "upgrade": "サーバーの更新"
+    },
+    "action": {
+      "default": {
+        "create": "作成",
+        "update": "詳細の更新",
+        "session_end": "無効化",
+        "delete": "削除"
+      },
+      "analytics": "利用状況報告",
+      "config": {
+        "set": "設定"
+      },
+      "dataset": {
+        "create": "@:audit.action.default.create",
+        "delete": "@:audit.action.default.delete"
+      },
+      "field_key": {
+        "assignment_create": "アクセス権の付与",
+        "assignment_delete": "アクセス権の取消",
+        "create": "@:audit.action.default.create",
+        "session_end": "@:audit.action.default.session_end",
+        "delete": "@:audit.action.default.delete"
+      },
+      "form": {
+        "update_draft_set": "下書きの作成・更新",
+        "update_publish": "下書きの公開",
+        "update_draft_delete": "下書きの削除",
+        "attachment_update": "メディアファイルの更新",
+        "submission_export": "提出済フォームのダウンロード",
+        "purge": "完全に削除",
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      },
+      "public_link": {
+        "assignment_create": "アクセス権の付与",
+        "assignment_delete": "アクセス権の取消",
+        "create": "@:audit.action.default.create",
+        "session_end": "@:audit.action.default.session_end",
+        "delete": "@:audit.action.default.delete"
+      },
+      "upgrade": {
+        "process_form": "フォームの処理",
+        "process_form_draft": "下書きフォームの処理"
+      },
+      "user": {
+        "assignment_create": "役割の指定",
+        "assignment_delete": "役割の取消",
+        "delete": "除外",
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "session_create": "@:action.logIn"
+      },
+      "project": {
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      }
+    }
+  },
+  "action": {
+    "cancel": "キャンセル",
+    "clear": "クリアする",
+    "close": "閉じる",
+    "comment": "コメント",
+    "create": "作成",
+    "done": "完了",
+    "download": "ダウンロード",
+    "edit": "編集",
+    "editProfile": "プロフィールを編集",
+    "logIn": "ログイン",
+    "looksGood": "進んで問題ありません。",
+    "more": "詳細",
+    "neverMind": "大丈夫です、キャンセルします。",
+    "next": "次へ",
+    "noCancel": "いいえ、キャンセルします。",
+    "ok": "OK",
+    "proceed": "次へ進む",
+    "refresh": "更新",
+    "resetPassword": "パスワードのリセット",
+    "review": "レビュー",
+    "save": "保存",
+    "saveSettings": "設定の保存",
+    "update": "更新",
+    "yesProceed": "はい、続けます。",
+    "showPreview": "プレビュー",
+    "hidePreview": "プレビューを隠す",
+    "upload": "アップロード"
+  },
+  "field": {
+    "comment": "コメントを残す...",
+    "dateRange": "期間",
+    "displayName": "表示名",
+    "email": "メールアドレス",
+    "name": "名前",
+    "newPassword": "新しいパスワード",
+    "oldPassword": "現在のパスワード",
+    "passphrase": "パスフレーズ",
+    "password": "パスワード",
+    "passwordConfirm": "新しいパスワード（確認用）",
+    "type": "タイプ"
+  },
+  "header": {
+    "actions": "操作",
+    "created": "作成済み",
+    "createdBy": "作成者",
+    "displayName": "表示名",
+    "email": "メールアドレス",
+    "instanceId": "インスタンスID",
+    "lastSubmission": "最新のフォーム提出日時",
+    "name": "名前",
+    "submitterName": "フォーム提出者",
+    "submissionDate": "フォームの提出日時",
+    "time": "時刻",
+    "type": "タイプ"
+  },
+  "plural": {
+    "appUser": "アプリユーザー",
+    "form": "フォーム",
+    "project": "プロジェクト",
+    "submission": "提出済フォーム",
+    "webUser": "Webユーザー"
+  },
+  "count": {
+    "appUser": "{count}名のアプリユーザー",
+    "form": "{count}件のフォーム",
+    "submission": "{count}件の提出済フォーム"
+  },
+  "resource": {
+    "appUser": "アプリユーザー",
+    "appUsers": "アプリユーザー",
+    "config": "サーバー設定",
+    "form": "フォーム",
+    "forms": "フォーム",
+    "project": "プロジェクト",
+    "projects": "プロジェクト",
+    "publicLink": "一般公開リンク",
+    "user": "ユーザー",
+    "users": "ユーザー",
+    "webUser": "Webユーザー",
+    "webUsers": "Webユーザー",
+    "session": "セッション",
+    "submissions": "提出済フォーム",
+    "projectRoles": "プロジェクトでの役割",
+    "draft": "下書き"
+  },
+  "moreInfo": {
+    "clickHere": {
+      "full": "さらに詳細を表示するには、{clickHere}して下さい。",
+      "clickHere": "こちらをクリック"
+    },
+    "helpArticle": {
+      "full": "さらに詳細を表示するには、{helpArticle}を参照して下さい。",
+      "helpArticle": "こちらのヘルプ"
+    },
+    "learnMore": "さらに詳しく知る。"
+  },
+  "analytics": {
+    "alwaysImprove": "私たちは常にODK Centralを改良しようとしています。",
+    "needFeedback": {
+      "full": "そのために、私たちは{your}フィードバックが必要です。それによりあなたがどの様にCentralを使い、またどの様にすればあなたにとって良くなるのかが分かります。",
+      "your": "あなたの"
+    }
+  },
+  "submission": {
+    "action": {
+      "edit": "編集回数（{count}）"
+    },
+    "editDisabled": "暗号化され、提出済フォームは編集できません。",
+    "binaryLinkTitle": "ファイルが提出されました。クリックしてダウンロードします。",
+    "encryptionMessage": "暗号化されているのため、データプレビューは利用できません。"
+  },
+  "common": {
+    "activity": "アクティビティ",
+    "anybody": "（全員）",
+    "areYouSure": "本当に続けて問題ないですか？",
+    "basicInfo": "基本情報",
+    "dangerZone": "危険エリア",
+    "filter": "フィルター",
+    "no": "いいえ",
+    "noResults": "該当なし",
+    "success": "成功です！",
+    "system": "システム",
+    "yes": "はい",
+    "tab": {
+      "settings": "設定"
+    },
+    "total": "全期間",
+    "reviewState": "レビュー・ステータス",
+    "status": "ステータス",
+    "version": "バージョン",
+    "trash": "ゴミ箱"
+  },
+  "mixin": {
+    "request": {
+      "alert": {
+        "fileSize": "アップロードを試みているファイル\"{name}\"は、100MB制限を超過しています。"
+      }
+    }
+  },
+  "util": {
+    "request": {
+      "noRequest": "問題発生：リクエストがありません。",
+      "noResponse": "問題発生：リクエストへの応答がありません。",
+      "errorNotProblem": "問題発生：エラーコード{status}"
+    }
+  },
+  "router": {
+    "unsavedChanges": "このページを終了してもよろしいですか？変更が保存されていない可能性があります。"
+  },
+  "formStateDescription": {
+    "open": "このフォームはダウンロードでき、フォームの提出も受け付けています。",
+    "closing": "このフォームはダウンロードできませんが、フォームの提出は受け付けています。",
+    "closed": "このフォームはダウンロードできませんし、フォームの提出も受け付けていません。"
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name}（アーカイブ済）"
+    }
+  }
+}

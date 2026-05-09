@@ -1,0 +1,414 @@
+{
+  "title": {
+    "resetPassword": "Passwort zurücksetzen",
+    "setPassword": "Passwort festlegen",
+    "editProfile": "Profil bearbeiten",
+    "download": "Herunterladen",
+    "pageNotFound": "Seite nicht gefunden",
+    "details": "Details"
+  },
+  "projectShow": {
+    "tab": {
+      "formAccess": "Formular-Zugriff"
+    }
+  },
+  "formHead": {
+    "tab": {
+      "publicAccess": "Öffentlicher Zugriff",
+      "versions": "Versionen",
+      "editForm": "Formular bearbeiten"
+    }
+  },
+  "systemHome": {
+    "title": "System-Management",
+    "tab": {
+      "audits": "Server Audit Logs",
+      "customization": "Anpassung",
+      "analytics": "Nutzungsberichterstattung"
+    }
+  },
+  "role": {
+    "none": "Keine",
+    "admin": "Administrator",
+    "manager": "Projekt-Manager",
+    "viewer": "Projekt-Viewer",
+    "formfill": "Datensammler"
+  },
+  "formState": {
+    "open": "Offen",
+    "closing": "Schließen",
+    "closed": "Geschlossen",
+    "unpublished": "Noch nicht veröffentlicht"
+  },
+  "reviewState": {
+    "received": "Empfangen",
+    "hasIssues": "Hat Probleme",
+    "edited": "Bearbeitet",
+    "approved": "Bestätigt",
+    "rejected": "Abgelehnt",
+    "null": "@:reviewState.received"
+  },
+  "audit": {
+    "category": {
+      "nonverbose": "Alle Aktionen",
+      "user": "Webnutzer-Aktionen",
+      "project": "Projekt-Aktionen",
+      "form": "Formular-Aktionen",
+      "field_key": "App-Benutzer-Aktionen",
+      "public_link": "Öffentlicher Zugangslink-Aktionen",
+      "dataset": "Objektlistenaktionen",
+      "config": "Server-Konfigurationsaktionen",
+      "upgrade": "Server-Aktualisierung",
+      "task": "Systembetrieb"
+    },
+    "action": {
+      "default": {
+        "create": "Erstellen",
+        "update": "Details aktualisieren",
+        "session_end": "Widerrufen",
+        "delete": "Löschen"
+      },
+      "analytics": "Berichtsnutzung",
+      "blobs": {
+        "s3_upload": "Dateien in den Speicher hochladen",
+        "s3_failed_to_pending": "Dateien für erneuten Upload zum Speicher markieren"
+      },
+      "config": {
+        "set": "Setzen"
+      },
+      "dataset": {
+        "update": "Aktualisieren",
+        "update_publish": "Veröffentlichen",
+        "update_property_delete": "Eigenschaft löschen",
+        "create": "@:audit.action.default.create",
+        "delete": "@:audit.action.default.delete"
+      },
+      "entity": {
+        "bulk_delete": "Massenlöschung",
+        "bulk_restore": "Massenwiederherstellung"
+      },
+      "field_key": {
+        "assignment_create": "Zugriff erteilen",
+        "assignment_delete": "Zugriff entziehen",
+        "create": "@:audit.action.default.create",
+        "session_end": "@:audit.action.default.session_end",
+        "delete": "@:audit.action.default.delete"
+      },
+      "form": {
+        "update_draft_set": "Entwurf verfassen oder aktualisieren",
+        "update_draft_replace": "Ersetzen des Entwurfs",
+        "update_publish": "Entwurf veröffentlichen",
+        "update_draft_delete": "Entwurf löschen",
+        "attachment_update": "Anhänge aktualisieren",
+        "submission_export": "Übermittlungen downloaden",
+        "restore": "Wiederherstellen",
+        "purge": "Säubern",
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      },
+      "public_link": {
+        "assignment_create": "Zugriff erteilen",
+        "assignment_delete": "Zugriff entziehen",
+        "create": "@:audit.action.default.create",
+        "session_end": "@:audit.action.default.session_end",
+        "delete": "@:audit.action.default.delete"
+      },
+      "submission": {
+        "purge": "Übermittlungen bereinigen"
+      },
+      "upgrade": {
+        "process_form": "Formular verarbeiten",
+        "process_form_draft": "Formularentwurf verarbeiten",
+        "process_form_entities_version": "Formular für Upgrade markieren",
+        "server": "Neue Version"
+      },
+      "user": {
+        "assignment_create": "Rolle zuweisen",
+        "assignment_delete": "Rolle entziehen",
+        "delete": "Abschalten",
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "session_create": "@:action.logIn"
+      },
+      "project": {
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      }
+    }
+  },
+  "action": {
+    "cancel": "Abbrechen",
+    "clear": "Löschen",
+    "close": "Schließen",
+    "comment": "Kommentieren",
+    "continue": "Weitermachen",
+    "create": "Anlegen",
+    "createSubmission": "Neue Übermittlung",
+    "delete": "Löschen",
+    "done": "Fertig",
+    "download": "Herunterladen",
+    "edit": "Bearbeiten",
+    "editProfile": "Profil bearbeiten",
+    "finish": "Beenden",
+    "logIn": "Einloggen",
+    "looksGood": "Sieht gut aus, weiter",
+    "more": "Mehr",
+    "neverMind": "Nein danke, abbrechen",
+    "next": "Weiter",
+    "noCancel": "Nein, abbrechen",
+    "ok": "Okay",
+    "proceed": "Fortfahren",
+    "refresh": "Aktualisieren",
+    "refreshPage": "Seite aktualisieren",
+    "resetPassword": "Passwort zurücksetzen",
+    "review": "Überprüfen",
+    "save": "Speichern",
+    "saveSettings": "Einstellungen speichern",
+    "sort": "Sortieren",
+    "undo": "Rückgängig machen",
+    "update": "Aktualisieren",
+    "yesProceed": "Ja, fortfahren",
+    "showPreview": "Vorschau",
+    "hidePreview": "Vorschau ausblenden",
+    "newPreview": "Neue Vorschau",
+    "expand": "Vergrössern",
+    "collapse": "Verkleinern",
+    "selectRow": "Zeile auswählen",
+    "reset": "Zurücksetzen",
+    "reviewParallelUpdates": "Parallele Updates überprüfen",
+    "tryAgain": "Nochmals versuchen",
+    "upload": "Hochladen",
+    "restore": "Wiederherstellen"
+  },
+  "field": {
+    "comment": "Kommentieren...",
+    "dateRange": "Zeitraum",
+    "displayName": "Anzeigename",
+    "email": "E-Mail-Adresse",
+    "name": "Name",
+    "newPassword": "Neues Passwort",
+    "oldPassword": "Altes Passwort",
+    "passphrase": "Passphrase",
+    "password": "Passwort",
+    "passwordConfirm": "Neues Passwort (bestätigen)",
+    "title": "Titel",
+    "type": "Typ"
+  },
+  "header": {
+    "actions": "Aktionen",
+    "created": "Erstellt",
+    "createdBy": "Erstellt von",
+    "createdAt": "Erstellt am",
+    "updatedBy": "Aktualisiert von",
+    "displayName": "Anzeigename",
+    "email": "E-Mail-Adresse",
+    "instanceId": "Instanz-ID",
+    "lastSubmission": "Letzte Übermittlung",
+    "recentActivity": "Letzte Aktivität",
+    "name": "Name",
+    "listName": "Name der Liste",
+    "submitterName": "Übermittelt von",
+    "submissionDate": "Übermittelt um",
+    "time": "Zeit",
+    "type": "Typ",
+    "entities": "Objekte insgesamt",
+    "lastEntity": "Neuestes Objekt"
+  },
+  "plural": {
+    "appUser": "App-Benutzer | App-Benutzer",
+    "form": "Formular | Formulare",
+    "project": "Projekt | Projekte",
+    "submission": "Übermittlung | Übermittlungen",
+    "user": "Benutzer | Benutzer",
+    "webUser": "Web-Benutzer | Web-Benutzer"
+  },
+  "count": {
+    "appUser": "{count} App-Benutzer | {count} App-Benutzer",
+    "attachments": "{count} Anhang | {count} Anhänge",
+    "form": "{count} Formular | {count} Formulare",
+    "submission": "{count} Übermittlung | {count} Übermittlungen",
+    "warning": "{count} Warnung | {count} Warnungen"
+  },
+  "resource": {
+    "appUser": "App-Benutzer",
+    "appUsers": "App-Benutzer",
+    "attachments": "Anhänge",
+    "config": "Server-Konfiguration",
+    "entity": "Objekt",
+    "entities": "Objekte",
+    "entityList": "Objektliste",
+    "entityLists": "Objektlisten",
+    "form": "Formular",
+    "forms": "Formulare",
+    "formAttachments": "Formularanhänge",
+    "project": "Projekt",
+    "projects": "Projekte",
+    "property": "Eigenschaft",
+    "properties": "Eigenschaften",
+    "publicLink": "Öffentlicher Zugangslink",
+    "user": "Benutzer",
+    "users": "Benutzer",
+    "webUser": "Web-Benutzer",
+    "webUsers": "Web-Benutzer",
+    "session": "Sitzung",
+    "submission": "Übermittlung",
+    "submissions": "Übermittlungen",
+    "projectRoles": "Projektrollen",
+    "formPreview": "Formular Vorschau",
+    "draft": "Entwurf"
+  },
+  "alert": {
+    "passwordTooShort": "Das Passwort muss mindestens 10 Zeichen lang sein.",
+    "updateEntity": "Objekt wurde erfolgreich aktualisiert.",
+    "updateReviewState": "Überprüfung erfolgreich gespeichert.",
+    "versionChange": "Der Server wurde erfolgreich aktualisiert.",
+    "submissionDeleted": "Die Übermittlung wurde erfolgreich gelöscht.",
+    "submissionRestored": "Die Übermittlung wurde wiederhergestellt.",
+    "entityRestored": "Das Objekt \"{label}“ wurde wiederhergestellt.",
+    "entityDeleted": "Das Objekt \"{label}“ wurde gelöscht."
+  },
+  "moreInfo": {
+    "clickHere": {
+      "full": "Weitere Informationen: {clickHere}.",
+      "clickHere": "klicken Sie hier"
+    },
+    "helpArticle": {
+      "full": "Weitere Informationen: {helpArticle}",
+      "helpArticle": "Hilfe-Artikel"
+    },
+    "learnMore": "Erfahren Sie mehr."
+  },
+  "login": {
+    "odkLogo": "ODK-Logo",
+    "defaultTitle": "Willkommen bei ODK Central",
+    "defaultDescription": "Melden Sie sich bei Ihrem Konto an, um loszulegen",
+    "customLogoAlt": "Logo der Organisation"
+  },
+  "analytics": {
+    "alwaysImprove": "Wir sind stets bemüht, ODK Central zu verbessern.",
+    "needFeedback": {
+      "full": "Wir benötigen {your} Feedback, damit wir verstehen können, wie du Central verwendest und wie wir es für dich besser machen können.",
+      "your": "dein"
+    },
+    "mailingListOptIn": "Senden Sie mir gelegentlich E-Mails über neue Funktionen und bewährte Verfahren."
+  },
+  "submission": {
+    "missingAttachment": "Fehlender Anhang",
+    "action": {
+      "edit": "Bearbeiten ({count})"
+    },
+    "editDisabled": "Sie können verschlüsselte Übermittlungen nicht bearbeiten.",
+    "binaryLinkTitle": "Datei wurde übermittelt. Zum Downloaden klicken.",
+    "encryptionMessage": "Datenvorschau wegen Verschlüsselung nicht verfügbar",
+    "noSubmission": "(keine)",
+    "emptyTable": "Es gibt noch keine Übermittlungen.",
+    "fileDownloadUnavailable": "Datei-Download ist für gelöschte Einsendungen nicht verfügbar."
+  },
+  "entity": {
+    "label": "Etikett",
+    "entityLabel": "Objektbezeichnung",
+    "entityId": "Objekt-ID",
+    "noProperties": "Dieses Formular legt nur das \"Label“ fest.",
+    "noEntity": "(keine)",
+    "conflictsCount": "{count} Konflikt | {count} Konflikte"
+  },
+  "common": {
+    "activity": "Aktivität",
+    "anybody": "(Jeder)",
+    "areYouSure": "Wollen Sie wirklich fortfahren?",
+    "basicInfo": "Basis-Informationen",
+    "conflict": "Konflikt",
+    "conflicts": "Konflikte",
+    "dangerZone": "Gefahrenbereich",
+    "data": "Daten",
+    "docs": "Dokumentation",
+    "emptyMap": "Es sind noch keine Kartendaten verfügbar.",
+    "emptyValue": "(leer)",
+    "error": "Fehler",
+    "filter": "Filter",
+    "forum": "Forum",
+    "lastUpdate": "Letzte Aktualisierung",
+    "loading": "Wird geladen...",
+    "map": "Karte",
+    "no": "Nein",
+    "noResults": "Keine Ergebnisse",
+    "noUndo": "Diese Aktion kann nicht rückgängig gemacht werden.",
+    "rowNumber": "Reihe",
+    "success": "Das hat geklappt!",
+    "system": "System",
+    "yes": "Ja",
+    "tab": {
+      "settings": "Einstellungen"
+    },
+    "table": "Tabelle",
+    "total": "Total",
+    "totalSubmissions": "Gesamtzahl der Übermittlungen",
+    "propertiesCount": "{inform} von {count} Eigenschaft | {inform} von {count} Eigenschaften",
+    "new": "Neu!",
+    "totalEntities": "Objekte insgesamt",
+    "versionShort": "v{version}",
+    "warning": "Warnung",
+    "beta": "Beta",
+    "none": "(keine)",
+    "search": "Suchen",
+    "reviewState": "Überprüfungsstatus",
+    "status": "Status",
+    "version": "Version",
+    "trash": "Papierkorb"
+  },
+  "mixin": {
+    "request": {
+      "alert": {
+        "fileSize": "Die Datei \"{name}\", die Sie versuchen hochzuladen ist größer als das 100 MB Limit.",
+        "entityTooLarge": "Die Daten, die Sie hochzuladen versuchen, sind zu gross."
+      }
+    }
+  },
+  "util": {
+    "csv": {
+      "readError": "Beim Lesen Ihrer Datei ist ein Problem aufgetreten: {message}",
+      "invalidCSV": "Die Datei “{name}” ist keine gültige .csv-Datei. Sie kann nicht gelesen werden.",
+      "rowError": "Es gibt ein Problem in Zeile {row} der Datei: {message}",
+      "invalidQuotes": "Ein angegebenes Feld ist ungültig. Überprüfen Sie die Zeile, um zu sehen, ob es irgendwelche ungewöhnlichen Werte gibt.",
+      "emptyRow": "Die Reihe ist leer.",
+      "dataWithoutHeader": "Erwartet {expected} column, but found {actual}. | Erwartet {expected} Spalte, aber {actual} gefunden."
+    },
+    "request": {
+      "noRequest": "Etwas ging schief: Wir haben keine Anfrage empfangen.",
+      "noResponse": "Etwas ging schief: Wir haben keine Antwort auf Ihre Anfrage bekommen.",
+      "errorNotProblem": "Etwas ging schief: Fehlercode {status}.",
+      "problem": {
+        "404_1": "Die gesuchte Ressource kann nicht gefunden werden. Die Ressource wurde möglicherweise gelöscht.",
+        "409_17": {
+          "message": "Mit diesem Formular wird versucht, eine neue Objekteigenschaft zu erstellen, die bis auf die Gross- und Kleinschreibung mit einer vorhandenen übereinstimmt: | Dieses Formular versucht, neue Objekteigenschaften zu erstellen, die mit Ausnahme der Groß- und Kleinschreibung mit den vorhandenen übereinstimmen:",
+          "duplicateProperty": "{provided} (bestehende: {current})"
+        }
+      }
+    },
+    "session": {
+      "alert": {
+        "expiresSoon": "Ihre Session läuft ab! Sie werden in 2 Minuten ausgeloggt.",
+        "expired": "Ihre Session ist abgelaufen. Melden Sie sich erneut an, um fortzufahren.",
+        "logoutError": {
+          "thereWasProblem": "Es gab ein Problem beim Ausloggen.",
+          "pleaseRefresh": "Bitte aktualisieren Sie die Seite und versuchen Sie es erneut."
+        }
+      }
+    }
+  },
+  "router": {
+    "unsavedChanges": "Wollen Sie diese Seite wirklich verlassen? Ihre Änderungen sind noch nicht gespeichert."
+  },
+  "formStateDescription": {
+    "open": "Dieses Formular kann heruntergeladen werden und Übermittlungen werden akzeptiert.",
+    "closing": "Dieses Formular kann nicht heruntergeladen werden, aber Übermittlungen werden noch akzeptiert.",
+    "closed": "Dieses Formular kann nicht heruntergeladen werden und Übermittlungen werden nicht akzeptiert."
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name} (archiviert)"
+    }
+  }
+}

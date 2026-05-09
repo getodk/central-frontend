@@ -1,0 +1,308 @@
+{
+  "title": {
+    "resetPassword": "Atur Ulang Kata Sandi",
+    "setPassword": "Atur Kata Sandi",
+    "editProfile": "Ubah Profil",
+    "download": "Unduh",
+    "pageNotFound": "Laman tidak ditemui",
+    "details": "Rincian"
+  },
+  "projectShow": {
+    "tab": {
+      "formAccess": "Akses Formulir"
+    }
+  },
+  "formHead": {
+    "tab": {
+      "publicAccess": "Akses Publik",
+      "versions": "Versi"
+    }
+  },
+  "systemHome": {
+    "title": "Manajemen Sistem",
+    "tab": {
+      "audits": "Catatan Server Audit",
+      "analytics": "Pelaporan Penggunaan"
+    }
+  },
+  "role": {
+    "none": "Tidak Ada",
+    "admin": "Administrator",
+    "manager": "Manajer Proyek",
+    "viewer": "Pemerhati Proyek",
+    "formfill": "Pengumpul Data"
+  },
+  "formState": {
+    "open": "Buka",
+    "closing": "Menutup",
+    "closed": "Tutup",
+    "unpublished": "Belum diterbitkan"
+  },
+  "reviewState": {
+    "received": "Diterima",
+    "hasIssues": "Memiliki isu",
+    "edited": "Telah Diubah",
+    "approved": "Disetujui",
+    "rejected": "Ditolak",
+    "null": "@:reviewState.received"
+  },
+  "audit": {
+    "category": {
+      "user": "Tindakan Pengguna Web",
+      "project": "Tindakan Proyek",
+      "form": "Tindakan Formulir",
+      "field_key": "Tindakan Pengguna Aplikasi",
+      "public_link": "Tindakan Tautan Akses Publik",
+      "config": "Aksi Konfigurasi Peladen",
+      "upgrade": "Peningkatan Server"
+    },
+    "action": {
+      "default": {
+        "create": "Buat",
+        "update": "Pembaruan Rincian",
+        "session_end": "Cabut",
+        "delete": "Hapus"
+      },
+      "analytics": "Laporkan Penggunaan",
+      "config": {
+        "set": "Set"
+      },
+      "dataset": {
+        "update": "Perbarui",
+        "update_publish": "Terbitkan",
+        "create": "@:audit.action.default.create",
+        "delete": "@:audit.action.default.delete"
+      },
+      "field_key": {
+        "assignment_create": "Memberi Akses",
+        "assignment_delete": "Menghapus Akses",
+        "create": "@:audit.action.default.create",
+        "session_end": "@:audit.action.default.session_end",
+        "delete": "@:audit.action.default.delete"
+      },
+      "form": {
+        "update_draft_set": "Buat atau Perbarui Draf",
+        "update_publish": "Terbitkan Draf",
+        "update_draft_delete": "Buang Draf",
+        "attachment_update": "Perbarui Lampiran",
+        "submission_export": "Unduh kiriman",
+        "purge": "Hapus",
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      },
+      "public_link": {
+        "assignment_create": "Beri Akses",
+        "assignment_delete": "Hapus akses",
+        "create": "@:audit.action.default.create",
+        "session_end": "@:audit.action.default.session_end",
+        "delete": "@:audit.action.default.delete"
+      },
+      "upgrade": {
+        "process_form": "Memproses Formulir",
+        "process_form_draft": "Draf Formulir Proses"
+      },
+      "user": {
+        "assignment_create": "Tetapkan Peran",
+        "assignment_delete": "Cabut Peran",
+        "delete": "Mengundurkan Diri",
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "session_create": "@:action.logIn"
+      },
+      "project": {
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      }
+    }
+  },
+  "action": {
+    "cancel": "Batal",
+    "clear": "Bersihkan",
+    "close": "Tutup",
+    "comment": "Komentar",
+    "create": "Buat",
+    "done": "Selesai",
+    "download": "Unduh",
+    "edit": "Ubah",
+    "editProfile": "Ubah Profil",
+    "finish": "Selesai",
+    "logIn": "Masuk",
+    "looksGood": "Terlihat bagus, lanjutkan",
+    "more": "Lebih banyak",
+    "neverMind": "Tidak jadi, batalkan",
+    "next": "Lanjut",
+    "noCancel": "Tidak, batalkan",
+    "ok": "OK",
+    "proceed": "Lanjutkan",
+    "refresh": "Segarkan",
+    "resetPassword": "Atur Ulang Kata Sandi",
+    "review": "Tinjau",
+    "save": "Simpan",
+    "saveSettings": "Simpan pengaturan",
+    "sort": "Sortir",
+    "update": "Memperbarui",
+    "yesProceed": "Ya, lanjutkan",
+    "showPreview": "Pratinjau",
+    "hidePreview": "Sembunyikan pratinjau",
+    "expand": "Perluas",
+    "collapse": "Tutup",
+    "upload": "Unggah"
+  },
+  "field": {
+    "comment": "Tinggalkan komentar",
+    "dateRange": "Rentang Tanggal",
+    "displayName": "Nama tampilan",
+    "email": "Alamat email",
+    "name": "Nama",
+    "newPassword": "Kata sandi baru",
+    "oldPassword": "Kata sandi lama",
+    "passphrase": "Frasa sandi",
+    "password": "Kata sandi",
+    "passwordConfirm": "Kata sandi baru (konfirmasi)",
+    "type": "Tipe"
+  },
+  "header": {
+    "actions": "Tindakan",
+    "created": "Dibuat",
+    "createdBy": "Dibuat oleh",
+    "createdAt": "Dibuat pada",
+    "updatedBy": "Diperbarui oleh",
+    "displayName": "Nama tampilan",
+    "email": "Alamat Email",
+    "instanceId": "ID Instansi",
+    "lastSubmission": "Kiriman Terakhir",
+    "name": "Nama",
+    "submitterName": "Terkirim oleh",
+    "submissionDate": "Terkirim pada",
+    "time": "Waktu",
+    "type": "Tipe",
+    "entities": "Total Entitas",
+    "lastEntity": "Entitas Terbaru"
+  },
+  "plural": {
+    "appUser": "Pengguna Aplikasi",
+    "form": "Formulir",
+    "project": "Proyek",
+    "submission": "Kiriman",
+    "user": "Pengguna",
+    "webUser": "Pengguna Web"
+  },
+  "count": {
+    "appUser": "{count} Pengguna Aplikasi",
+    "form": "{count} Formulir",
+    "submission": "{count} Kiriman"
+  },
+  "resource": {
+    "appUser": "Pengguna Aplikasi",
+    "appUsers": "Pengguna Aplikasi",
+    "config": "Konfigurasi server",
+    "entities": "Entitas",
+    "form": "Formulir",
+    "forms": "Formulir",
+    "formAttachments": "Lampiran Formulir",
+    "project": "Proyek",
+    "projects": "Proyek",
+    "property": "Properti",
+    "publicLink": "Tautan Akses Publik",
+    "user": "Pengguna",
+    "users": "Pengguna",
+    "webUser": "Pengguna Web",
+    "webUsers": "Pengguna Web",
+    "session": "Sesi",
+    "submissions": "Kiriman",
+    "projectRoles": "Peran Proyek",
+    "draft": "Draf"
+  },
+  "moreInfo": {
+    "clickHere": {
+      "full": "Untuk informasi lebih lanjut, {clickHere}.",
+      "clickHere": "klik disini"
+    },
+    "helpArticle": {
+      "full": "Untuk informasi lebih lanjut, silakan lihat {helpArticle}.",
+      "helpArticle": "artikel bantuan ini"
+    },
+    "learnMore": "Pelajari lebih lanjut."
+  },
+  "analytics": {
+    "alwaysImprove": "Kami selalu berusaha untuk meningkatkan ODK Central.",
+    "needFeedback": {
+      "full": "Untuk melakukan hal ini, kami membutuhkan umpan balik {your}, sehingga kami dapat memahami bagaimana Anda menggunakan Central, dan bagaimana aplikasi tersebut bisa lebih baik untuk Anda.",
+      "your": "Anda"
+    }
+  },
+  "submission": {
+    "missingAttachment": "Kehilangan Lampiran",
+    "action": {
+      "edit": "Ubah ({count})"
+    },
+    "editDisabled": "Anda tidak dapat mengubah kiriman terenkripsi",
+    "binaryLinkTitle": "Berkas telah dikirim. Klik untuk mengunduh.",
+    "encryptionMessage": "Pratinjau data tidak memungkinkan karena enkripsi",
+    "noSubmission": "(tidak ada)",
+    "emptyTable": "Belum ada kiriman data."
+  },
+  "entity": {
+    "label": "Label",
+    "entityLabel": "Label Entitas",
+    "entityId": "ID Entitas"
+  },
+  "common": {
+    "activity": "Aktivitas",
+    "anybody": "(Semua orang)",
+    "areYouSure": "Apakah Anda yakin ingin melanjutkan?",
+    "basicInfo": "Informasi dasar",
+    "dangerZone": "Zona Bahaya",
+    "data": "Data",
+    "docs": "Dokumentasi",
+    "emptyValue": "(kosong)",
+    "error": "Error",
+    "filter": "Filter",
+    "forum": "Forum",
+    "loading": "Memuat...",
+    "no": "Tidak",
+    "noResults": "Tidak ada hasil",
+    "success": "Sukses!",
+    "system": "Sistem",
+    "yes": "Iya",
+    "tab": {
+      "settings": "Pengaturan"
+    },
+    "total": "Total",
+    "totalSubmissions": "Total Kiriman",
+    "propertiesCount": "{inform} dari {count} properti",
+    "reviewState": "Status ulasan",
+    "status": "Status",
+    "version": "Versi",
+    "trash": "Sampah"
+  },
+  "mixin": {
+    "request": {
+      "alert": {
+        "fileSize": "File \"{name}\" yang anda coba unggah lebih besar dari batas 100 MB."
+      }
+    }
+  },
+  "util": {
+    "request": {
+      "noRequest": "Terjadi kesalahan: tidak ada permintaan.",
+      "noResponse": "Terjadi kesalahan: tidak ada respon atas permintaan Anda",
+      "errorNotProblem": "Terjadi kesalahan: kode error {status}."
+    }
+  },
+  "router": {
+    "unsavedChanges": "Apakah Anda yakin ingin meninggalkan laman ini? Pembaruan Anda mungkin tidak tersimpan."
+  },
+  "formStateDescription": {
+    "open": "Formulir ini bisa diunduh dan sedang menerima kiriman data.",
+    "closing": "Formulir ini tidak bisa diunduh, tetapi masih menerima kiriman data.",
+    "closed": "Formulir ini tidak bisa diunduh dan tidak menerima kiriman data."
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name} (diarsipkan)"
+    }
+  }
+}

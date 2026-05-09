@@ -1,0 +1,241 @@
+<!--
+Copyright 2025 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+<template>
+  <form-edit-section id="form-edit-def" icon="code">
+    <template #title>{{ $t('title') }}</template>
+    <template #subtitle>{{ $t('subtitle') }}</template>
+    <template v-if="changed" #tag>{{ $t('changed') }}</template>
+    <template #body>
+      <div v-if="uploadSectionState">
+        <p class="form-edit-section-title">{{ $t('uploadSection.title') }}</p>
+        <div class="form-edit-section-body">
+          <form-upload @success="afterUpload" @cancel="setUploadSectionState(false)"/>
+        </div>
+      </div>
+      <div id="form-edit-def-container">
+        <div>
+          <i18n-t keypath="versionName">
+            <template #name>
+              <form-version-string :version="formDraft.version"/>
+            </template>
+          </i18n-t>
+        </div>
+        <div>
+          <enketo-preview :form-version="formDraft" outlined/>
+          <form-version-def-dropdown :version="formDraft" outlined
+            @view-xml="viewXml.show()"/>
+          <button id="form-edit-upload-button" type="button"
+            class="btn btn-primary" @click="setUploadSectionState(true)">
+            <span class="icon-upload"></span>{{ $t('action.upload') }}
+          </button>
+        </div>
+      </div>
+      <div id="form-edit-def-within">
+        <span class="icon-file-code-o"></span>{{ $t('withinDef') }}
+      </div>
+      <form-edit-attachments/>
+      <form-edit-entities/>
+    </template>
+  </form-edit-section>
+
+  <form-version-view-xml v-bind="viewXml" @hide="viewXml.hide()"/>
+</template>
+
+<script setup>
+import { computed, defineAsyncComponent, ref } from 'vue';
+
+import EnketoPreview from '../../enketo/preview.vue';
+import FormEditAttachments from './attachments.vue';
+import FormEditEntities from './entities.vue';
+import FormEditSection from './section.vue';
+import FormVersionDefDropdown from '../../form-version/def-dropdown.vue';
+import FormVersionString from '../../form-version/string.vue';
+import FormUpload from '../upload.vue';
+
+import { loadAsync } from '../../../util/load-async';
+import { modalData } from '../../../util/reactivity';
+import { useRequestData } from '../../../request-data';
+
+defineOptions({
+  name: 'FormEditDef'
+});
+
+const emits = defineEmits(['afterUpload']);
+const { form, resourceView } = useRequestData();
+const formDraft = resourceView('formDraft', (data) => data.get());
+
+const changed = computed(() =>
+  form.dataExists && form.publishedAt != null && formDraft.hash !== form.hash);
+
+const FormVersionViewXml = defineAsyncComponent(loadAsync('FormVersionViewXml'));
+const viewXml = modalData('FormVersionViewXml');
+
+const uploadSectionState = ref(false);
+const setUploadSectionState = (v) => {
+  uploadSectionState.value = v;
+};
+const afterUpload = () => {
+  uploadSectionState.value = false;
+  emits('afterUpload');
+};
+
+</script>
+
+<style lang="scss">
+@import '../../../assets/scss/mixins';
+
+#form-edit-def-container {
+  display: flex;
+  align-items: center;
+  column-gap: 15px;
+
+  background-color: $background-color-feed-entry;
+  border: 2px solid $color-subpanel-border;
+  border-radius: 15px;
+  padding: 12px 15px;
+
+  > :first-child {
+    @include text-overflow-ellipsis;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  > :nth-child(2) {
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
+  .form-version-def-dropdown, #form-edit-upload-button { margin-left: 5px; }
+}
+
+#form-edit-def-within {
+  color: #888;
+  font-size: 12px;
+  margin-block: 5px 6px;
+
+  .icon-file-code-o {
+    color: #777;
+    margin-inline: 32px 5px;
+  }
+
+  &::after {
+    border-left: 2px dotted #999;
+    content: '';
+    display: block;
+    height: 18px;
+    margin-left: 36px;
+    margin-top: 3px;
+  }
+}
+</style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "uploadSection": {
+      // @transifexKey component.FormNew.title.update
+      // This is the title at the top of a section.
+      "title": "Upload New Form Definition"
+    },
+    // @transifexKey component.FormEditCreateDraft.title
+    "title": "Draft version",
+    // This refers to the draft version of a Form.
+    "subtitle": "Uploaded",
+    // This refers to the draft version of a Form.
+    "changed": "Changed from published version",
+    // This is shown for a Form version.
+    "versionName": "Version name: {name}",
+    "action": {
+      "upload": "Upload new Form Definition"
+    },
+    // This text is shown above a list of items that are part of the Form
+    // Definition.
+    "withinDef": "Within this Form Definition:"
+  }
+}
+</i18n>
+
+<!-- Autogenerated by destructure.js -->
+<i18n>
+{
+  "de": {
+    "subtitle": "Hochgeladen",
+    "changed": "Geändert gegenüber der veröffentlichten Version",
+    "versionName": "Versionsname:{name}",
+    "action": {
+      "upload": "Neue Formulardefinition hochladen"
+    },
+    "withinDef": "Innerhalb dieser Formulardefinition:",
+    "title": "Entwurfsversion"
+  },
+  "es": {
+    "subtitle": "Subido",
+    "changed": "Cambiado respecto a la versión publicada",
+    "versionName": "Nombre de la versión: {name}",
+    "action": {
+      "upload": "Cargar nueva definición de formulario"
+    },
+    "withinDef": "Dentro de esta definición de formulario:",
+    "title": "Versión borrador"
+  },
+  "fr": {
+    "subtitle": "Téléversée",
+    "changed": "Différente de la version publiée",
+    "versionName": "Nom de version : {name}",
+    "action": {
+      "upload": "Téléverser une nouvelle définition de formulaire"
+    },
+    "withinDef": "Dans cette définition de formulaire",
+    "title": "Version de l'ébauche"
+  },
+  "it": {
+    "subtitle": "Caricati",
+    "changed": "Modificato rispetto alla versione pubblicata",
+    "versionName": "Nome della versione: {name}",
+    "action": {
+      "upload": "Carica la nuova definizione del formulario"
+    },
+    "withinDef": "All'interno di questa definizione del formulario:",
+    "title": "Versione bozza"
+  },
+  "pt": {
+    "subtitle": "Carregado",
+    "changed": "Mudanças em relação à versão publicada",
+    "versionName": "Nome da versão: {name}",
+    "action": {
+      "upload": "Carregar nova Definição do Formulário"
+    },
+    "withinDef": "Nesta Definição de Formulário:",
+    "title": "Versão Rascunho"
+  },
+  "zh": {
+    "subtitle": "已上传",
+    "changed": "自发布版本以来",
+    "versionName": "版本名称：{name}",
+    "action": {
+      "upload": "上传新表单定义"
+    },
+    "withinDef": "在此表单定义中：",
+    "title": "草稿版本"
+  },
+  "zh-Hant": {
+    "subtitle": "已上傳",
+    "changed": "與發布版本相比有變更",
+    "versionName": "版本名稱：{name}",
+    "action": {
+      "upload": "上傳新表單定義"
+    },
+    "withinDef": "在此表格定義內：",
+    "title": "草稿版本"
+  }
+}
+</i18n>

@@ -1,0 +1,694 @@
+import { clone } from 'ramda';
+
+import FileDropZone from '../../../src/components/file-drop-zone.vue';
+import FormUpload from '../../../src/components/form/upload.vue';
+import FormVersionString from '../../../src/components/form-version/string.vue';
+
+import testData from '../../data';
+import { dragAndDrop, setFiles } from '../../util/trigger';
+import { load, mockHttp } from '../../util/http';
+import { mockLogin } from '../../util/session';
+import { mockRouter } from '../../util/router';
+import { mount } from '../../util/lifecycle';
+import { wait } from '../../util/util';
+
+const mountOptions = () => {
+  const formVersion = testData.extendedForms.size !== 0
+    ? testData.extendedFormVersions.last()
+    : null;
+  const draft = formVersion != null && formVersion.publishedAt == null;
+  const encodedFormId = draft
+    ? encodeURIComponent(formVersion.xmlFormId)
+    : null;
+  return {
+    container: {
+      router: mockRouter(!draft
+        ? '/projects/1'
+        : `/projects/1/forms/${encodedFormId}/draft`)
+    }
+  };
+};
+const xlsForm = () => new File([''], 'my_form.xlsx', {
+  type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+});
+const upload = async (component, file = xlsForm()) => {
+  await setFiles(component.get('#form-upload input'), [file]);
+  await component.get('#upload-button').trigger('click');
+  // wait for file to be verified and then actual request to be sent
+  return wait(1);
+};
+
+describe('FormUpload', () => {
+  describe('introduction text for new Form', () => {
+    it('shows the correct text for the first paragraph', () => {
+      const modal = mount(FormUpload, mountOptions());
+      const text = modal.get('.introduction p').text();
+      text.should.startWith('To create a Form,');
+    });
+
+    it('renders the paragraph about form attachments', () => {
+      const modal = mount(FormUpload, mountOptions());
+      const text = modal.findAll('.introduction p')[1].text();
+      text.should.include('Form Attachments');
+    });
+  });
+
+  describe('introduction text for existing Form', () => {
+    beforeEach(() => {
+      // mockLogin();
+      testData.extendedForms.createPast(1, { draft: true });
+    });
+
+    it('shows the correct text', () => {
+      const modal = mount(FormUpload, mountOptions());
+      const text = modal.get('.introduction p').text();
+      text.should.startWith('To update the Draft,');
+    });
+
+    it('does not render the paragraph about form attachments', () => {
+      const modal = mount(FormUpload, mountOptions());
+      modal.findAll('.introduction p').length.should.equal(1);
+    });
+  });
+
+  describe('file selection', () => {
+    beforeEach(() => {
+      mockLogin();
+      testData.extendedProjects.createPast(1);
+    });
+
+    it('shows an alert if no file is selected', async () => {
+      const component = mount(FormUpload, mountOptions());
+      await component.get('#upload-button').trigger('click');
+      component.should.alert('danger');
+    });
+
+    it('hides the alert after a file is selected', async () => {
+      const component = mount(FormUpload, mountOptions());
+      await component.get('#upload-button').trigger('click');
+      await setFiles(component.get('input'), [xlsForm()]);
+      component.should.not.alert();
+    });
+
+    describe('after a file is selected using the file input', () => {
+      it('shows the filename', async () => {
+        const component = mount(FormUpload, mountOptions());
+        await setFiles(component.get('input'), [xlsForm()]);
+        component.get('#form-upload-filename').text().should.equal('my_form.xlsx');
+      });
+
+      it('resets the input', async () => {
+        const component = mount(FormUpload, mountOptions());
+        await setFiles(component.get('input'), [xlsForm()]);
+        component.get('input').element.value.should.equal('');
+      });
+    });
+
+    it('shows the filename after a file is dropped', async () => {
+      const component = mount(FormUpload, mountOptions());
+      await dragAndDrop(component.getComponent(FileDropZone), [xlsForm()]);
+      component.get('#form-upload-filename').text().should.equal('my_form.xlsx');
+    });
+  });
+
+  describe('request', () => {
+    beforeEach(mockLogin);
+
+    it('sends the correct request when creating a form', () => {
+      testData.extendedProjects.createPast(1);
+      return mockHttp()
+        .mount(FormUpload, mountOptions())
+        .request(upload)
+        .beforeEachResponse((_, { method, url, data }) => {
+          method.should.equal('POST');
+          url.should.equal('/v1/projects/1/forms');
+          data.should.be.an.instanceof(File);
+          data.name.should.equal('my_form.xlsx');
+          // We test request headers separately below.
+        })
+        .respondWithProblem();
+    });
+
+    it('sends the correct request when uploading a new definition', () => {
+      testData.extendedForms.createPast(1, { draft: true });
+      return mockHttp()
+        .mount(FormUpload, mountOptions())
+        .request(upload)
+        .beforeEachResponse((_, { method, url, data }) => {
+          method.should.equal('POST');
+          url.should.equal('/v1/projects/1/forms/f/draft');
+          data.should.be.an.instanceof(File);
+          data.name.should.equal('my_form.xlsx');
+        })
+        .respondWithProblem();
+    });
+  });
+
+  describe('request headers', () => {
+    beforeEach(() => {
+      mockLogin();
+      testData.extendedProjects.createPast(1);
+    });
+
+    it('sends the correct Content-Type header for an XML file', () =>
+      mockHttp()
+        .mount(FormUpload, mountOptions())
+        .request(component => upload(component, new File([''], 'my_form.xml')))
+        .beforeEachResponse((_, { headers }) => {
+          headers['Content-Type'].should.equal('application/xml');
+        })
+        .respondWithProblem());
+
+    it('sends the correct headers for an .xlsx file', () =>
+      mockHttp()
+        .mount(FormUpload, mountOptions())
+        .request(component => upload(component, new File([''], 'formulář.xlsx', {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        })))
+        .beforeEachResponse((_, { headers }) => {
+          headers['Content-Type'].should.equal('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+          headers['X-XlsForm-FormId-Fallback'].should.equal('formul%C3%A1%C5%99');
+        })
+        .respondWithProblem());
+
+    it('sends the correct headers for an .xls file', () =>
+      mockHttp()
+        .mount(FormUpload, mountOptions())
+        .request(component => upload(component, new File([''], 'formulář.xls', {
+          type: 'application/vnd.ms-excel'
+        })))
+        .beforeEachResponse((_, { headers }) => {
+          headers['Content-Type'].should.equal('application/vnd.ms-excel');
+          headers['X-XlsForm-FormId-Fallback'].should.equal('formul%C3%A1%C5%99');
+        })
+        .respondWithProblem());
+
+    it('determines the content type based on the file extension', () =>
+      mockHttp()
+        .mount(FormUpload, mountOptions())
+        .request(component => upload(component, new File([''], 'my_form.xlsx', {
+          type: 'application/xml'
+        })))
+        .beforeEachResponse((_, { headers }) => {
+          headers['Content-Type'].should.equal('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        })
+        .respondWithProblem());
+  });
+
+  it('implements some standard button things for the upload button', () => {
+    mockLogin();
+    testData.extendedProjects.createPast(1);
+    return mockHttp()
+      .mount(FormUpload, mountOptions())
+      .testStandardButton({
+        button: '#upload-button',
+        request: upload,
+        disabled: ['.form-upload-warnings .btn-primary', '.btn-link']
+      });
+  });
+
+  it('disables the drop zone while the request is in progress', () => {
+    mockLogin();
+    testData.extendedProjects.createPast(1);
+    return mockHttp()
+      .mount(FormUpload, mountOptions())
+      .request(upload)
+      .beforeEachResponse(component => {
+        const dropZone = component.getComponent(FileDropZone);
+        dropZone.props().disabled.should.be.true;
+        const button = dropZone.get('.btn-primary');
+        button.attributes('aria-disabled').should.equal('true');
+      })
+      .respondWithProblem();
+  });
+
+  describe('after creating a form', () => {
+    const createForm = () => {
+      mockLogin();
+      testData.extendedForms.createPast(1, { xmlFormId: 'f1', name: 'Form 1' });
+      return load('/projects/1/new-form')
+        .complete()
+        .request(upload)
+        .respondWithData(() =>
+          testData.standardForms.createNew({ xmlFormId: 'f2', name: 'Form 2' }))
+        .respondFor('/projects/1/forms/f2/draft', { project: false });
+    };
+
+    it('redirects to .../draft', () =>
+      createForm().then(app => {
+        app.vm.$route.path.should.equal('/projects/1/forms/f2/draft');
+      }));
+
+    it('shows the form name', () =>
+      createForm().then(app => {
+        app.get('#page-head-title').text().should.equal('Form 2');
+      }));
+
+    it('shows a success alert', () =>
+      createForm().then(app => {
+        app.should.alert('success', '“Form 2” has been created as a Form Draft.');
+      }));
+
+    it('increments the form count', () =>
+      createForm()
+        .complete()
+        .load('/projects/1', { project: false })
+        .beforeAnyResponse(app => {
+          // The form count should be seen to be incremented even before the
+          // updated form list is received.
+          app.get('#page-head-tabs li.active .badge').text().should.equal('2');
+        }));
+  });
+
+  describe('after cancelling form creation', () => {
+    it('redirects to the project overview', () => {
+      mockLogin();
+      testData.extendedProjects.createPast(1);
+      return load('/projects/1/new-form')
+        .complete()
+        .request(app => app.get('#form-upload .btn-link').trigger('click'))
+        .respondFor('/projects/1', { project: false })
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/projects/1');
+        });
+    });
+  });
+
+  // TODO: to be updated in https://github.com/getodk/central/issues/1831
+  describe.skip('after uploading a new definition', () => {
+    beforeEach(mockLogin);
+
+    it('hides the modal', () => {
+      testData.extendedForms.createPast(1, { draft: true });
+      return load('/projects/1/forms/f/draft')
+        .complete()
+        .request(async (app) => {
+          await app.get('#form-edit-upload-button').trigger('click');
+          return upload(app);
+        })
+        .respondWithData(() => {
+          testData.extendedFormVersions.createNew({
+            version: 'v2',
+            draft: true
+          });
+          return { success: true };
+        })
+        .respondForComponent('FormEdit');
+    });
+
+    it('shows a success alert', () => {
+      testData.extendedForms.createPast(1, { draft: true });
+      return load('/projects/1/forms/f/draft')
+        .complete()
+        .request(async (app) => {
+          await app.get('#form-edit-upload-button').trigger('click');
+          return upload(app);
+        })
+        .respondWithData(() => {
+          testData.extendedFormVersions.createNew({
+            version: 'v2',
+            draft: true
+          });
+          return { success: true };
+        })
+        .respondForComponent('FormEdit')
+        .afterResponses(app => {
+          app.should.alert('success', 'The new Form definition has been saved as your Draft.');
+        });
+    });
+
+    it('shows the new version string', () => {
+      testData.extendedForms.createPast(1, { draft: true });
+      return load('/projects/1/forms/f/draft')
+        .afterResponses(app => {
+          const { version } = app.getComponent(FormVersionString).props();
+          version.should.equal('v1');
+        })
+        .request(async (app) => {
+          await app.get('#form-edit-upload-button').trigger('click');
+          return upload(app);
+        })
+        .respondWithData(() => {
+          testData.extendedFormVersions.createNew({
+            version: 'v2',
+            draft: true
+          });
+          return { success: true };
+        })
+        .respondForComponent('FormEdit')
+        .afterResponses(app => {
+          const { version } = app.getComponent(FormVersionString).props();
+          version.should.equal('v2');
+        });
+    });
+
+    it('updates the list of attachments', () => {
+      testData.extendedForms.createPast(1, { draft: true });
+      testData.standardFormAttachments.createPast(1, { blobExists: false });
+      return load('/projects/1/forms/f/draft')
+        .afterResponses(app => {
+          app.findAll('.form-attachment-row').length.should.equal(1);
+        })
+        .request(async (app) => {
+          await app.get('#form-edit-upload-button').trigger('click');
+          return upload(app);
+        })
+        .respondWithData(() => {
+          testData.extendedFormVersions.createNew({
+            version: 'v2',
+            draft: true
+          });
+          testData.standardFormAttachments.createNew({ blobExists: false });
+          return { success: true };
+        })
+        .respondForComponent('FormEdit')
+        .afterResponses(app => {
+          app.findAll('.form-attachment-row').length.should.equal(2);
+        });
+    });
+  });
+
+  describe('custom alert messages', () => {
+    beforeEach(mockLogin);
+
+    it('shows a message for an XLSForm error', () => {
+      testData.extendedProjects.createPast(1);
+      return mockHttp()
+        .mount(FormUpload, mountOptions())
+        .request(upload)
+        .respondWithProblem({
+          code: 400.15,
+          message: 'The given XLSForm file was not valid.',
+          details: {
+            error: 'Some XLSForm error',
+            result: null,
+            warnings: null
+          }
+        })
+        .afterResponse(component => {
+          component.should.alert('danger', 'The XLSForm could not be converted: Some XLSForm error');
+        });
+    });
+
+    it('shows a message for a projectId,xmlFormId duplicate', () => {
+      testData.extendedProjects.createPast(1);
+      return mockHttp()
+        .mount(FormUpload, mountOptions())
+        .request(upload)
+        .respondWithProblem({
+          code: 409.3,
+          message: 'Some message',
+          details: {
+            table: 'forms',
+            fields: ['projectId', 'xmlFormId'],
+            values: ['1', 'f']
+          }
+        })
+        .afterResponse(component => {
+          component.should.alert('danger', 'A Form already exists in this Project with the Form ID of “f”.');
+        });
+    });
+
+    it('shows a message for an xmlFormId mismatch', () => {
+      testData.extendedForms.createPast(1, {
+        xmlFormId: 'expected_id',
+        draft: true
+      });
+      return mockHttp()
+        .mount(FormUpload, mountOptions())
+        .request(upload)
+        .respondWithProblem({
+          code: 400.8,
+          message: 'Some message',
+          details: { field: 'xmlFormId', value: 'uploaded_id' }
+        })
+        .afterResponse(component => {
+          component.should.alert(
+            'danger',
+            'The Form definition you have uploaded does not appear to be for this Form. It has the wrong formId (expected “expected_id”, got “uploaded_id”).'
+          );
+        });
+    });
+
+    it('shows a message for duplicate entity property', () => {
+      testData.extendedForms.createPast(1);
+      return mockHttp()
+        .mount(FormUpload, mountOptions())
+        .request(upload)
+        .respondWithProblem({
+          code: 409.17,
+          message: 'This Form attempts to create new Entity properties that match with existing ones except for capitalization.',
+          details: { duplicateProperties: [{ current: 'first_name', provided: 'FIRST_NAME' }] }
+        })
+        .afterResponse(component => {
+          component.should.alert(
+            'danger',
+            /This Form attempts to create a new Entity property that matches with an existing one except for capitalization:.*FIRST_NAME \(existing: first_name\)/s
+          );
+        });
+    });
+  });
+
+  describe('XLSForm warnings', () => {
+    beforeEach(mockLogin);
+
+    const xlsFormWarning = {
+      code: 400.16,
+      message: 'The XLSForm is valid, but with warnings.',
+      details: {
+        error: null,
+        result: '<a><b/></a>',
+        warnings: {
+          xlsFormWarnings: ['warning 1', 'warning 2'],
+          workflowWarnings: [
+            { type: 'structureChanged', details: ['Name', 'Age'] },
+            { type: 'deletedFormExists', details: { xmlFormId: 'simple' } },
+            { type: 'oldEntityVersion', details: { version: '2022.1.0' } }
+          ]
+        }
+      }
+    };
+
+    it('shows only xls warnings', () => {
+      testData.extendedProjects.createPast(1);
+      const xlsWarnings = clone(xlsFormWarning);
+      delete xlsWarnings.details.warnings.workflowWarnings;
+
+      return mockHttp()
+        .mount(FormUpload, mountOptions())
+        .request(upload)
+        .respondWithProblem(xlsWarnings)
+        .afterResponse(component => {
+          const warnings = component.get('.form-upload-warnings');
+          warnings.should.be.visible();
+          const text = warnings.findAll('li').map(li => li.text());
+          text.should.eql(['warning 1', 'warning 2']);
+        });
+    });
+
+    it('shows only workflow warnings', () => {
+      testData.extendedProjects.createPast(1);
+      const workflowWarnings = clone(xlsFormWarning);
+      delete workflowWarnings.details.warnings.xlsFormWarnings;
+
+      return mockHttp()
+        .mount(FormUpload, mountOptions())
+        .request(upload)
+        .respondWithProblem(workflowWarnings)
+        .afterResponse(component => {
+          const warnings = component.get('.form-upload-warnings');
+          warnings.should.be.visible();
+          const items = warnings.findAll('li');
+          items[0].text().should.startWith('The following fields have been');
+          items[0].get('span').text().should.eql('Fields: Name, Age');
+
+          items[1].text().should.startWith('There is a form with ID "simple" in the Trash');
+          items[1].find('span').exists().should.be.false;
+
+          items[2].text().should.startWith('Entities specification version “2022.1.0” is not compatible with Offline Entities');
+          items[2].find('span').exists().should.be.false;
+        });
+    });
+
+    it('shows xls and workflow warnings', () => {
+      testData.extendedProjects.createPast(1);
+      return mockHttp()
+        .mount(FormUpload, mountOptions())
+        .request(upload)
+        .respondWithProblem(xlsFormWarning)
+        .afterResponse(component => {
+          const warnings = component.get('.form-upload-warnings');
+          warnings.should.be.visible();
+          const items = warnings.findAll('li');
+
+          items[0].text().should.eql('warning 1');
+          items[1].text().should.eql('warning 2');
+
+          items[2].text().should.startWith('The following fields have been');
+          items[2].get('span').text().should.eql('Fields: Name, Age');
+
+          items[3].text().should.startWith('There is a form with ID "simple" in the Trash');
+          items[3].find('span').exists().should.be.false;
+
+          items[4].text().should.startWith('Entities specification version “2022.1.0” is not compatible with Offline Entities');
+          items[4].find('span').exists().should.be.false;
+        });
+    });
+
+    it('shows create hyperlink for learn more in xls warnings', () => {
+      testData.extendedProjects.createPast(1);
+      const xlsWarnings = clone(xlsFormWarning);
+      delete xlsWarnings.details.warnings.workflowWarnings;
+      xlsWarnings.details.warnings.xlsFormWarnings[0] += '. Learn more: https://xlsform.org/en/#image';
+      xlsWarnings.details.warnings.xlsFormWarnings[1] += '. Learn more: https://xlsform.org#multiple-language-support';
+
+      return mockHttp()
+        .mount(FormUpload, mountOptions())
+        .request(upload)
+        .respondWithProblem(xlsWarnings)
+        .afterResponse(component => {
+          const warnings = component.get('.form-upload-warnings');
+          warnings.should.be.visible();
+          const items = warnings.findAll('li');
+          items[0].element.childNodes[0].nodeValue.should.eql('warning 1. ');
+          items[0].find('a').attributes('href').should.eql('https://xlsform.org/en/#image');
+          items[0].find('a').text().should.eql('Learn more.');
+
+          items[1].element.childNodes[0].nodeValue.should.eql('warning 2. ');
+          items[1].find('a').attributes('href').should.eql('https://xlsform.org#multiple-language-support');
+          items[1].find('a').text().should.eql('Learn more.');
+        });
+    });
+
+    it('hides the warnings after a new file is selected', () => {
+      testData.extendedProjects.createPast(1);
+      return mockHttp()
+        .mount(FormUpload, mountOptions())
+        .request(upload)
+        .respondWithProblem(xlsFormWarning)
+        .afterResponse(async (component) => {
+          component.get('.form-upload-warnings').should.be.visible();
+          await setFiles(component.get('input'), [xlsForm()]);
+          component.get('.form-upload-warnings').should.be.hidden();
+        });
+    });
+
+    it('hides the warnings after a Problem is received', () => {
+      testData.extendedProjects.createPast(1);
+      return mockHttp()
+        .mount(FormUpload, mountOptions())
+        .request(upload)
+        .respondWithProblem(xlsFormWarning)
+        .afterResponse(component => {
+          component.get('.form-upload-warnings').should.be.visible();
+          component.should.not.alert();
+        })
+        .request(component =>
+          component.get('.form-upload-warnings .btn-primary').trigger('click'))
+        .respondWithProblem()
+        .afterResponse(component => {
+          component.get('.form-upload-warnings').should.be.hidden();
+          component.should.alert('danger');
+        });
+    });
+
+    it('hides an alert after warnings are received', () => {
+      testData.extendedProjects.createPast(1);
+      return mockHttp()
+        .mount(FormUpload, mountOptions())
+        .request(upload)
+        .respondWithProblem()
+        .afterResponse(component => {
+          component.should.alert('danger');
+          component.get('.form-upload-warnings').should.be.hidden();
+        })
+        .request(async component => {
+          await component.get('#upload-button').trigger('click');
+          return wait(1);
+        })
+        .respondWithProblem(xlsFormWarning)
+        .afterResponse(component => {
+          component.should.not.alert();
+          component.get('.form-upload-warnings').should.be.visible();
+        });
+    });
+
+    describe('explanatory text', () => {
+      it('shows the correct text for the new form component', () => {
+        testData.extendedProjects.createPast(1);
+        return mockHttp()
+          .mount(FormUpload, mountOptions())
+          .request(upload)
+          .respondWithProblem(xlsFormWarning)
+          .afterResponse(component => {
+            const text = component.findAll('.form-upload-warnings p')[3].text();
+            text.should.include('create the Form');
+          });
+      });
+
+      it('shows the correct text when uploading a new definition', () => {
+        testData.extendedForms.createPast(1, { draft: true });
+        return mockHttp()
+          .mount(FormUpload, mountOptions())
+          .request(upload)
+          .respondWithProblem(xlsFormWarning)
+          .afterResponse(component => {
+            const text = component.findAll('.form-upload-warnings p')[3].text();
+            text.should.include('update the Draft');
+          });
+      });
+    });
+
+    it('implements some standard button things for "Upload anyway" button', () => {
+      testData.extendedProjects.createPast(1);
+      return mockHttp()
+        .mount(FormUpload, mountOptions())
+        .request(upload)
+        .respondWithProblem(xlsFormWarning)
+        .complete()
+        .testStandardButton({
+          button: '.form-upload-warnings .btn-primary',
+          disabled: ['#upload-button', '.btn-link']
+        });
+    });
+
+    it('specifies ?ignoreWarnings=true if "Upload anyway" is clicked', () => {
+      testData.extendedProjects.createPast(1);
+      return mockHttp()
+        .mount(FormUpload, mountOptions())
+        .request(upload)
+        .beforeEachResponse((_, { url }) => {
+          url.should.equal('/v1/projects/1/forms');
+        })
+        .respondWithProblem(xlsFormWarning)
+        .complete()
+        .request(async component => {
+          await component.get('.form-upload-warnings .btn-primary').trigger('click');
+          return wait(1);
+        })
+        .beforeEachResponse((_, { url }) => {
+          url.should.equal('/v1/projects/1/forms?ignoreWarnings=true');
+        })
+        .respondWithProblem();
+    });
+
+    it('redirects to .../draft if "Upload anyway" is clicked', () => {
+      testData.extendedProjects.createPast(1);
+      return load('/projects/1/new-form')
+        .complete()
+        .request(upload)
+        .respondWithProblem(xlsFormWarning)
+        .complete()
+        .request(async app => {
+          await app.get('#form-upload .form-upload-warnings .btn-primary').trigger('click');
+          return wait(1);
+        })
+        .respondWithData(() =>
+          testData.standardForms.createNew({ xmlFormId: 'f' }))
+        .respondFor('/projects/1/forms/f/draft', { project: false })
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/projects/1/forms/f/draft');
+        });
+    });
+  });
+});

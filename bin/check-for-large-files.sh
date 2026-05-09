@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 set -o pipefail
-shopt -s inherit_errexit
+shopt -s inherit_errexit || true
 
 git ls-files -z \
 | xargs -0 ls -l -- \

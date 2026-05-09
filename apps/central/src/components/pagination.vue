@@ -1,0 +1,298 @@
+<!--
+Copyright 2024 ODK Central Developers
+See the NOTICE file at the top-level directory of this distribution and at
+https://github.com/getodk/central-frontend/blob/master/NOTICE.
+
+This file is part of ODK Central. It is subject to the license terms in
+the LICENSE file found in the top-level directory of this distribution and at
+https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+-->
+<template>
+  <div v-if="computedCount > 0" class="pagination">
+    <form class="form-inline">
+      <button type="button" class="btn btn-link" :aria-label="$t('action.first')"
+        :aria-disabled="page === 0" v-tooltip.aria-label
+        @click="$emit('update:page', 0)">
+        <span class="icon-angle-double-left"></span>
+      </button>
+      <button type="button" class="btn btn-link" :aria-label="$t('action.previous')"
+        :aria-disabled="page === 0" v-tooltip.aria-label
+        @click="$emit('update:page', page - 1)">
+        <span class="icon-angle-left"></span>
+      </button>
+      <button type="button" class="btn btn-link" :aria-label="$t('action.next')"
+        :aria-disabled="page === lastPage" v-tooltip.aria-label
+        @click="$emit('update:page', page + 1)">
+        <span class="icon-angle-right"></span>
+      </button>
+      <button type="button" class="btn btn-link" :aria-label="$t('action.last')"
+        :aria-disabled="page === lastPage" v-tooltip.aria-label
+        @click="$emit('update:page', lastPage)">
+        <span class="icon-angle-double-right"></span>
+      </button>
+      <div class="form-group">{{ pageRange }}</div>
+      <label class="form-group">
+        <select v-model="sizeModel" class="form-control">
+          <option v-for="x of sizeOptions" :key="x" :value="x">
+            {{ $n(x, 'default') }}
+          </option>
+        </select>
+        <span>{{ $t('field.size') }}</span>
+      </label>
+      <spinner :state="spinner" inline/>
+    </form>
+  </div>
+</template>
+
+<script setup>
+import { computed } from 'vue';
+
+import { useI18n } from 'vue-i18n';
+import Spinner from './spinner.vue';
+
+import { useI18nUtils } from '../util/i18n';
+
+const props = defineProps({
+  count: {
+    type: Number,
+    required: true
+  },
+  /** Number of rows removed from the current page, e.g. by means of deletion. */
+  removed: {
+    type: Number,
+    default: 0
+  },
+  page: {
+    type: Number,
+    required: true
+  },
+  size: {
+    type: Number,
+    required: true
+  },
+  sizeOptions: {
+    type: Array,
+    required: true
+  },
+  spinner: Boolean
+});
+const emit = defineEmits(['update:page', 'update:size']);
+
+const lastPage = computed(() => Math.ceil(props.count / props.size) - 1);
+
+const computedCount = computed(() => props.count - props.removed);
+
+const { formatRange, tn } = useI18nUtils();
+const { t, n } = useI18n();
+
+const sizeOfCurrentPage = computed(() => {
+  if (props.page < lastPage.value) return props.size - props.removed;
+  const r = computedCount.value % props.size;
+  return r === 0 ? props.size : r;
+});
+
+const empty = computed(() => props.count === 0 || sizeOfCurrentPage.value === 0 || sizeOfCurrentPage.value === props.removed || props.page > lastPage.value);
+
+// Returns the formatted range of rows shown on the specified page.
+const pageRange = computed(() => {
+  // Copy of `zeroRow` breaks the general pluralization rules. We want to say "Row 0 of N", general
+  // words get pluralized for 0, here we don't want to do that.
+  if (empty.value) return tn('zeroRow', computedCount.value);
+  const start = props.page * props.size + 1;
+  const end = props.page < lastPage.value ? start + props.size - 1 - props.removed : computedCount.value;
+  return t('rows', { range: formatRange(start, end), count: n(computedCount.value, 'default') }, sizeOfCurrentPage.value);
+});
+
+const sizeModel = computed({
+  get: () => props.size,
+  set: (value) => {
+    emit('update:size', value);
+    emit('update:page', 0);
+  }
+});
+</script>
+
+<i18n lang="json5">
+{
+  "en": {
+    "action": {
+      "first": "First page",
+      "previous": "Previous page",
+      "next": "Next page",
+      "last": "Last page"
+    },
+    // {range} is a range of row numbers, for example, 1-5. {count} is the total
+    // number of rows. The string will be pluralized based on the number of rows
+    // in the range.
+    "rows": "Row {range} of {count} | Rows {range} of {count}",
+    // Shown when no row is displayed on the page because all rows are deleted or
+    // some other reasons. {count} is the total number of rows across all pages.
+    "zeroRow": "Row 0 of {count}",
+    "field": {
+      // This is shown next to a field to select the number of rows to show on
+      // each page.
+      "size": "per page"
+    }
+  }
+}
+</i18n>
+
+<style lang="scss">
+@import '../assets/scss/mixins';
+
+.pagination {
+  align-items: center;
+  display: flex;
+
+  .form-inline, .form-control { font-size: 12px; }
+
+  .btn {
+    &:not([aria-disabled="true"]) {
+      &, &:hover { color: $color-action-background; }
+    }
+
+    padding: 2px 6px;
+    &:nth-child(1) { padding-left: 0; }
+    &:nth-child(4) { padding-right: 0; }
+  }
+
+  [class^="icon-"] {
+    font-size: 15px;
+
+    &:first-child { margin-right: 0; }
+  }
+
+  .form-inline {
+    @include form-control-background;
+    width: 100%;
+    align-items: center;
+    display: flex;
+    border-radius: 5px;
+    margin-bottom: 0;
+    padding: 6px 10px;
+  }
+
+  .form-control {
+    height: auto;
+    padding: 2px;
+    padding-right: 0;
+    vertical-align: baseline;
+  }
+  .form-group .form-control { background-color: #fff; }
+
+  .btn + .form-group {
+    margin-left: 18px;
+  }
+
+  .form-group + .form-group {
+    margin-left: 21px;
+
+    .form-control { margin-right: 5px; }
+  }
+
+  .spinner { margin-left: 7px; }
+
+  .table ~ & {
+    margin-top: -$margin-bottom-table;
+
+    .form-inline { margin-left: $padding-left-table-data; }
+  }
+}
+</style>
+
+<!-- Autogenerated by destructure.js -->
+<i18n>
+{
+  "de": {
+    "action": {
+      "first": "Erste Seite",
+      "previous": "Vorherige Seite",
+      "next": "Nächste Seite",
+      "last": "Letzte Seite"
+    },
+    "rows": "Reihe {range} von {count} | Reihen {range} von {count}",
+    "zeroRow": "Reihe 0 von {count}",
+    "field": {
+      "size": "pro Seite"
+    }
+  },
+  "es": {
+    "action": {
+      "first": "Primera página",
+      "previous": "Pagina anterior",
+      "next": "Pagina siguiente",
+      "last": "Última página"
+    },
+    "rows": "Fila {range} de {count} | Filas {range} de {count} | Filas {range} de {count}",
+    "zeroRow": "Fila 0 de {count}",
+    "field": {
+      "size": "por página"
+    }
+  },
+  "fr": {
+    "action": {
+      "first": "Première page",
+      "previous": "Page précédente",
+      "next": "Prochaine page",
+      "last": "Dernière page"
+    },
+    "rows": "Ligne {range} de {count} | Lignes {range} de {count} | Lignes {range} de {count}",
+    "zeroRow": "Ligne 0 de {count}",
+    "field": {
+      "size": "par page"
+    }
+  },
+  "it": {
+    "action": {
+      "first": "Prima pagina",
+      "previous": "Pagina precedente",
+      "next": "Prossima pagina",
+      "last": "Ultima pagina"
+    },
+    "rows": "Riga {range} di {count} | Righe {range} di {count} | Righe {range} di {count}",
+    "zeroRow": "Riga 0 di {count}",
+    "field": {
+      "size": "per pagina"
+    }
+  },
+  "pt": {
+    "action": {
+      "first": "Primeira página",
+      "previous": "Página anterior",
+      "next": "Próxima página",
+      "last": "Última página"
+    },
+    "rows": "Linha {range} de {count} | Linhas {range} de {count} | Linhas {range} de {count}",
+    "field": {
+      "size": "por página"
+    }
+  },
+  "zh": {
+    "action": {
+      "first": "首页",
+      "previous": "上一页",
+      "next": "下一页",
+      "last": "末页"
+    },
+    "rows": "第{range}行/共{count}行",
+    "zeroRow": "第 0 行，共 {count} 行",
+    "field": {
+      "size": "每页显示"
+    }
+  },
+  "zh-Hant": {
+    "action": {
+      "first": "第一頁",
+      "previous": "上一頁",
+      "next": "下一頁",
+      "last": "最後一頁"
+    },
+    "rows": "第 {range} 行，共 {count} 行",
+    "field": {
+      "size": "每頁"
+    }
+  }
+}
+</i18n>

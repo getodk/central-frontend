@@ -25,7 +25,7 @@ You can learn more about ODK Central by visiting the [docs](https://docs.getodk.
 
 ## Contributing
 
-We need your help to make ODK Central Frontend as useful as possible! Please see the [Contribution Guide](/CONTRIBUTING.md) for detailed information on discussion forums, project policies, code guidelines, and an overview of the software architecture.
+We need your help to make ODK Central Frontend as useful as possible! Please see the [Contribution Guide](/apps/central/docs/CONTRIBUTING.md) for detailed information on discussion forums, project policies, code guidelines, and an overview of the software architecture.
 
 ## Setting up your development environment
 
@@ -33,7 +33,7 @@ Follow these steps to set up your development environment:
 
 - Install Node.js 20.
 - Install dependencies by running `npm install`.
-- Install NGINX.
+- Install docker or NGINX.
 - Set up [ODK Central Backend](https://github.com/getodk/central-backend).
   - You will need to create a user using an ODK Central Backend command line script.
   - You will probably also want to promote that user to a sitewide administrator.

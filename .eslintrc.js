@@ -15,7 +15,8 @@ module.exports = {
     alert: 'readonly',
     document: 'readonly',
     window: 'readonly',
-    defineModel: 'readonly'
+    defineModel: 'readonly',
+    __WEB_FORMS_VERSION__: 'readonly'
   },
   rules: {
     '@intlify/vue-i18n/no-unused-keys': [ 'error', {
@@ -47,6 +48,7 @@ module.exports = {
     curly: 'off',
     'implicit-arrow-linebreak': 'off',
     'import/first': 'off',
+    "import/no-extraneous-dependencies": ['error', {'devDependencies': ['**/test/**', 'vite.config.js']}],
     'lines-between-class-members': ['error', 'always', {
       exceptAfterSingleLine: true
     }],

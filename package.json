@@ -3,24 +3,29 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "nf start vite,nginx",
-    "dev:build": "nf start build,nginx",
+    "dev": "          nf start vite,nginx-docker",
+    "dev-no-docker": "nf start vite,nginx-host",
+    "dev:build": "nf start build,nginx-docker",
+    "dev-no-docker:build": "nf start build,nginx-host",
     "build": "vite build",
-    "eslint": "eslint --max-warnings 0 --cache --ext .js,.vue src/ bin/ test/ e2e-tests/ *.js",
-    "eslint:fix": "eslint --max-warnings 0 --fix --cache --ext .js,.vue src/ bin/ test/ *.js",
+    "eslint": "eslint --max-warnings 0 --cache --ext .js,.vue apps/*/src/ apps/*/test/ e2e-tests/ bin/ apps/*/bin/ *.js",
+    "eslint:fix": "eslint --max-warnings 0 --fix --cache --ext .js,.vue apps/*/src/ apps/*/test/ bin/ apps/*/bin/ *.js",
     "lint": "npm run eslint && npm run transifex:lint",
     "lint:fix": "npm run eslint:fix && npm run transifex:fix",
-    "test": "./test/run.sh",
+    "test": "./apps/central/test/run.sh",
     "test:e2e": "e2e-tests/run-tests.sh",
-    "transifex:fix": "node bin/transifex/restructure.js > transifex/strings_en.json",
-    "transifex:lint": "bash -c 'diff transifex/strings_en.json <(node bin/transifex/restructure.js)'"
+    "transifex:fix": "node apps/central/bin/transifex/restructure.js > apps/central/transifex/strings_en.json",
+    "transifex:lint": "bash -c 'diff apps/central/transifex/strings_en.json <(node apps/central/bin/transifex/restructure.js)'"
   },
   "volta": {
-    "node": "22.21.1"
+    "node": "24.13.0"
   },
+  "workspaces": [
+    "apps/*"
+  ],
   "dependencies": {
     "@floating-ui/dom": "^1.1.0",
-    "@getodk/web-forms": "^0.18.2",
+    "@getodk/web-forms": "^0.24.0",
     "axios": "^1.6.2",
     "bootstrap": "~3",
     "dompurify": "^3.2.5",
@@ -41,7 +46,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^9.7.0",
-    "@intlify/eslint-plugin-vue-i18n": "^4.1.0",
+    "@intlify/eslint-plugin-vue-i18n": "^4.3.0",
     "@intlify/unplugin-vue-i18n": "^6.0.8",
     "@playwright/test": "^1.51.1",
     "@vitejs/plugin-vue": "^5.2.3",
@@ -73,7 +78,7 @@
     "vite": "^6.3.5"
   },
   "engines": {
-    "node": "22",
-    "npm": "10"
+    "node": "24",
+    "npm": "11"
   }
 }
