@@ -60,6 +60,16 @@ module.exports = {
           'header.idAndVersion', // TODO maybe removed in a3d695dcff139dcfefc37e13250b68a7965c4975
           'heading[0]', // TODO maybe removed in b8dd9d76b312df3ad0e4e5be0508eae918298ac6
 
+          // TODO apparently in apps/central/src/components/form/upload.vue, but usage unclear
+          'title.create',
+          'title.update',
+
+          // TODO in apps/central/src/components/entity/list.vue; usage unclear
+          'alert.delete',
+
+          // TODO in apps/central/src/components/form/list.vue; usage unclear
+          'alert.create',
+
           // Keys referenced from $tcn(), t(), tn(), deletedSubmission(), redAlert.show()
           // Unfortunately these need to be tracekd manually (https://github.com/intlify/eslint-plugin-vue-i18n/issues/643).
           //
