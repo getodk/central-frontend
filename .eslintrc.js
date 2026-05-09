@@ -35,6 +35,7 @@ module.exports = {
           'audit.category',
           'component.WebFormRenderer', // dynamic modals
           'conflict',
+          'editCaption',
           'fields',
           'oidc.error',
           'outdatedVersionHtml', // check that file's comments
@@ -55,15 +56,17 @@ module.exports = {
           'steps[0].introduction[1][0]',
 
           // seeminly-unused keys: these should be removed, or their use documented
+          'header.definition', // TODO maybe removed in 48c0da87f727e30b487e31eb93ab56156558caa8
           'header.idAndVersion', // TODO maybe removed in a3d695dcff139dcfefc37e13250b68a7965c4975
+          'heading[0]', // TODO maybe removed in b8dd9d76b312df3ad0e4e5be0508eae918298ac6
 
-          // Keys referenced from $tcn(), tn(), deletedSubmission(), redAlert.show()
+          // Keys referenced from $tcn(), t(), tn(), deletedSubmission(), redAlert.show()
           // Unfortunately these need to be tracekd manually (https://github.com/intlify/eslint-plugin-vue-i18n/issues/643).
           //
           // To regenerate:
           //
           // ```sh
-          // git grep -E "(\\\$tcn|\btn|\bdeletedSubmission|\bredAlert\.show)\('" -- apps/central/src/ | grep -Eo "'[^']+'" | tr -d "'" | sort -u | xargs -I{} echo "'{}',"
+          // git grep -E "(\\\$tcn|\btn| t|\bdeletedSubmission|\bredAlert\.show)\('" -- apps/central/src/ | grep -Eo "'[^']+'" | tr -d "'" | sort -u | xargs -I{} echo "'{}',"
           // ```
           //
           'actionBar.message',
