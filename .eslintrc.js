@@ -1,3 +1,7 @@
+// should match all locale keys, e.g. "en", "zh-Hant" etc.
+const localePrefix = '^[\\w-]+\\.';
+const regescape = s => s.replace(/[\[\].]/g, '\\$&');
+
 module.exports = {
   root: true,
   parserOptions: {
@@ -21,26 +25,97 @@ module.exports = {
   rules: {
     '@intlify/vue-i18n/no-unused-keys': [ 'error', {
       src: 'src/',
-      callExpression: '^(\\$t|t|\\$tc|tc|\\$tcn|tcn|\\$tn|tn)$',
       ignores: [
-        // /^[\w-]+\./ should match all locale keys, e.g. "en", "zh-Hant" etc.
-        /^[\w-]+\.audit\.action\./,
-        /^[\w-]+\.audit\.category\./,
-        /^[\w-]+\.back\.back$/,
-        /^[\w-]+\.back\.title$/,
-        /^[\w-]+\.component\.WebFormRenderer\./, // dynamic modals
-        /^[\w-]+\.conflict\./,
-        /^[\w-]+\.fields\./,
-        /^[\w-]+\.oidc.error\./,
-        /^[\w-]+\.outdatedVersionHtml\./, // check that file's comments
-        /^[\w-]+\.reviewState\./,
-        /^[\w-]+\.steps\[0\]\.introduction\[1\]\[0\]$/,
-        /^[\w-]+\.tab\./,
-        /^[\w-]+\.title\.submissionBacklog\./,
-        /^[\w-]+\.title\.updateReviewState\./,
-        /^[\w-]+\.type\./,
-        /Modal\.(body|title)$/,
-      ].map(re => re.toString()),
+        // Key use is determined by static analysis, so dynamically-generated key
+        // and keys used indirectly must be listed here.
+        // Detecting when to _remove_ a key from this list will be difficult.
+
+        ...[
+          'audit.action',
+          'audit.category',
+          'component.WebFormRenderer', // dynamic modals
+          'conflict',
+          'fields',
+          'oidc.error',
+          'outdatedVersionHtml', // check that file's comments
+          'reviewState',
+          'tab',
+          'title.submissionBacklog',
+          'title.updateReviewState',
+          'type',
+
+          // seeminly-unused keys: these should be removed, or their use documented
+          'projectNav', // TODO maybe removed in 0b55d7d9f98f145c919c6e3476813275c4b69af7
+        ].map(prefix => '/' + localePrefix + regescape(prefix) + '\\.' + '/'),
+
+        ...[
+          'back',
+          'back.back',
+          'back.title',
+          'steps[0].introduction[1][0]',
+
+          // seeminly-unused keys: these should be removed, or their use documented
+          'header.idAndVersion', // TODO maybe removed in a3d695dcff139dcfefc37e13250b68a7965c4975
+
+          // Keys referenced from $tcn(), tn(), deletedSubmission(), redAlert.show()
+          // Unfortunately these need to be tracekd manually (https://github.com/intlify/eslint-plugin-vue-i18n/issues/643).
+          //
+          // To regenerate:
+          //
+          // ```sh
+          // git grep -E "(\\\$tcn|\btn|\bdeletedSubmission|\bredAlert\.show)\('" -- apps/central/src/ | grep -Eo "'[^']+'" | tr -d "'" | sort -u | xargs -I{} echo "'{}',"
+          // ```
+          //
+          'actionBar.message',
+          'action.download.filtered.withCount',
+          'action.download.unfiltered',
+          'action.toggleDeletedEntities',
+          'action.toggleDeletedSubmissions',
+          'afterSelection.matched.countOfFiles',
+          'afterSelection.someUnmatched.countOfFiles',
+          'alert.bulkDelete',
+          'alert.restored',
+          'alert.success',
+          'alert.unavailable',
+          'clearEntities',
+          'count.attachments',
+          'count.warning',
+          'datasetCount',
+          'diff.changedCount',
+          'diffCounts.datasetsOnly',
+          'diffCounts.newProperties.entityLists',
+          'diffCounts.newProperties.properties',
+          'diff.newCount',
+          'duringDragover.dropToPrepare.countOfFiles',
+          'duringUpload.remaining.beforeLast',
+          'duringUpload.total',
+          'entities.subtitle',
+          'entity.conflictsCount',
+          'expected',
+          'explanation.implication.records',
+          'missingCount',
+          'newProperties',
+          'overlapTitle',
+          'possibleConflictsCount',
+          'present',
+          'projects.subtitle',
+          'rowCount',
+          'showFewer',
+          'showFewerDatasets',
+          'showMore',
+          'showMoreDatasets',
+          'title.entity.update_version.submission.deleted.deletedSubmission',
+          'title.submission.create.deleted.deletedSubmission',
+          'unlinkForms',
+          'zeroRow',
+        ].map(exact => '/' + localePrefix + regescape(exact) + '$' + '/'),
+
+
+        '/Modal.(body|title)$/',
+
+        // odata-loading-message:
+        `/${localePrefix}(entity|submission)\.(all|(filtered\.)?(withoutCount|first|middle|last\.(one|multiple)))$/`,
+      ],
     }],
     'arrow-parens': 'off',
     'class-methods-use-this': 'off',
