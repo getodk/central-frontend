@@ -31,7 +31,7 @@
     "build:clean": "rimraf dist/ dist-demo/",
     "build:demo": "vite build --mode demo --outDir dist-demo",
     "build:js": "vite build",
-    "build:translations": "node scripts/merge-translations.js",
+    "build:translations": "node bin/merge-translations.js",
     "dev": "vite",
     "dist-demo": "npm run build && vite serve dist-demo --port 5174",
     "test": "npm-run-all -nl 'test:*'",
