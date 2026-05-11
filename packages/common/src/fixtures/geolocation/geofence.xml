@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml"
+        xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms"
+        xmlns:odk="http://www.opendatakit.org/xforms">
+  <h:head>
+    <h:title>Geofence</h:title>
+    <model odk:xforms-version="1.0.0">
+      
+      <instance>
+        <data id="geofence_test" version="202510311">
+          <kenya>4.422999031048619 34.232889315986995;3.932561564992426 41.457767618067;-1.7002591367439237 41.53342079400501;-4.562120072949384 39.43137845871903;-0.9439342743115873 33.85462343629687;4.422999031048619 34.232889315986995</kenya>
+          <geo/>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+
+      <bind nodeset="/data/geo" type="geopoint"
+            constraint="geofence(/data/geo, /data/kenya)"
+            jr:constraintMsg="That's not in Kenya"
+            required="true()"/>
+
+      <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid"/>
+    </model>
+  </h:head>
+  <h:body>
+
+    <input ref="/data/geo" appearance="placement-map">
+      <label>Pick somewhere in Kenya</label>
+    </input>
+
+  </h:body>
+</h:html>

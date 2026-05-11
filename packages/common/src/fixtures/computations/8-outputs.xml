@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms"
+  xmlns:ev="http://www.w3.org/2001/xml-events"
+  xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:jr="http://openrosa.org/javarosa"
+  xmlns:orx="http://openrosa.org/xforms/"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>Outputs</h:title>
+    <model>
+      <instance>
+        <root id="outputs">
+          <a />
+          <b />
+          <d>10</d>
+          <e />
+          <c>default value of c</c>
+          <meta>
+            <instanceID/>
+          </meta>
+        </root>
+      </instance>
+      <bind nodeset="/root/a" />
+      <bind nodeset="/root/b" calculate="now()" />
+      <bind nodeset="/root/c" />
+      <bind nodeset="/root/d" />
+      <bind nodeset="/root/e" calculate="/root/d * 2" />
+    </model>
+  </h:head>
+  <h:body>
+    <input ref="/root/a">
+      <label>
+        1. Whoops, accidentally built part of output functionality!
+        now() calculated by /root/b: <output value="/root/b" />
+      </label>
+    </input>
+    <input ref="/root/d">
+      <label>/root/d</label>
+    </input>
+    <input ref="/root/e">
+      <label>/root/e</label>
+    </input>
+    <input ref="/root/c">
+      <label>
+        2. Wonder if calculate also works...
+        d: <output value="/root/d" />, e (d * 2): <output value="/root/e" />
+      </label>
+    </input>
+  </h:body>
+</h:html>

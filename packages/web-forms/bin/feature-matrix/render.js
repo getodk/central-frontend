@@ -1,0 +1,103 @@
+/* eslint-disable */
+// @ts-nocheck
+
+import Mustache from 'mustache';
+import { spawnSync } from 'node:child_process';
+import fs from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+
+const rootUrl = new URL('../..', import.meta.url);
+const featureMatrix = JSON.parse(
+	await fs.readFile(new URL('./feature-matrix.json', rootUrl), 'utf-8')
+);
+const template = await fs.readFile(
+	new URL('scripts/feature-matrix/template.mustache', rootUrl),
+	'utf-8'
+);
+const readmeFile = await fs.readFile(new URL('./README.md', rootUrl), 'utf-8');
+
+// Modified version of https://gist.github.com/rougier/c0d31f5cbdaac27b876c?permalink_comment_id=2269298#gistcomment-2269298
+const progress = (fraction) => {
+	const totalLength = 15;
+	const barLength = Math.floor(fraction * totalLength);
+	const bar = Array(barLength).fill('🟩').join('');
+	const remaining = Array(totalLength - barLength)
+		.fill('⬜')
+		.join('');
+	return `${bar}${remaining} ${Math.floor(fraction * 100)}\\%`;
+};
+
+const isMarkdownLink = (s) => /^\[[^\]]+\]\([^)]+\)$/.test(s);
+
+const visibleText = (token) => {
+	// Replace markdown links with just their visible label
+	// "[Foo Bar](https://example.com)" -> "Foo Bar"
+	return token.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+};
+
+const visibleLength = (token) => visibleText(token).length;
+
+// Tokenize by either a full markdown link OR a non-space run.
+// This keeps "[Foo Bar](...)" together even though it contains spaces.
+const tokenizePreservingLinks = (str) => str.match(/\[[^\]]+\]\([^)]+\)|\S+/g) ?? [];
+
+const wrapString = (str, maxLength) => {
+	if (visibleText(str).length <= maxLength) return str;
+
+	const tokens = tokenizePreservingLinks(str);
+	const lines = [];
+	let currentLine = '';
+	let currentLen = 0;
+
+	for (const token of tokens) {
+		const tokenLen = visibleLength(token);
+
+		// +1 for the space if not first token in the line
+		const extra = currentLine === '' ? 0 : 1;
+
+		if (currentLen + extra + tokenLen > maxLength) {
+			if (currentLine !== '') lines.push(currentLine);
+			currentLine = token;
+			currentLen = tokenLen;
+		} else {
+			currentLine = currentLine === '' ? token : `${currentLine} ${token}`;
+			currentLen += extra + tokenLen;
+		}
+	}
+
+	if (currentLine !== '') lines.push(currentLine);
+	return lines.join('<br/>');
+};
+
+// Transform feature-matrix.json object into array
+const featureCategories = Object.keys(featureMatrix).map((featureCategory) => {
+	const features = Object.keys(featureMatrix[featureCategory]).map((feature) => {
+		return {
+			label: wrapString(feature.replaceAll('|', '\\|'), 40),
+			status: featureMatrix[featureCategory][feature],
+		};
+	});
+
+	// no points for 🚧
+	const progressFraction = features.filter((f) => f.status === '✅').length / features.length;
+
+	return {
+		label: `##### ${featureCategory}<br/>${progress(progressFraction)}`,
+		features,
+	};
+});
+
+const featureMatrixMd = Mustache.render(template, { categories: featureCategories });
+
+const autogenOpen = '<!-- autogen: feature-matrix -->';
+const autogenClose = '<!-- /autogen: feature-matrix -->';
+
+const regex = new RegExp(`(${autogenOpen})[\\s\\S]*?(${autogenClose})`, 'm');
+
+const updatedReadme = readmeFile.replace(regex, `$1\n${featureMatrixMd}\n$2`);
+
+await fs.writeFile(new URL('./README.md', rootUrl), updatedReadme, { encoding: 'utf-8' });
+
+const rootDir = fileURLToPath(rootUrl);
+
+spawnSync('npm', ['run', 'format:readme-only'], { cwd: rootDir });

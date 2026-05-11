@@ -1,0 +1,123 @@
+@use 'primeflex/core/_variables.scss' as pf;
+
+.value-option {
+	display: flex;
+	align-items: center;
+	outline: 1px solid var(--odk-border-color);
+	border-radius: var(--odk-radius);
+	padding: 12px;
+	cursor: pointer;
+	background: var(--odk-base-background-color);
+	overflow: hidden;
+	font-weight: 400;
+
+	&:has(.p-checkbox-input:hover),
+	&:has(.p-checkbox-input:focus-visible),
+	&:has(.p-radiobutton-input:hover),
+	&:has(.p-radiobutton-input:focus-visible) {
+		outline-color: var(--odk-primary-border-color);
+		background-color: var(--odk-primary-light-background-color);
+	}
+
+	:deep(.p-radiobutton:not(.p-disabled):has(.p-radiobutton-input:focus-visible)),
+	:deep(.p-radiobutton:not(.p-disabled):has(.p-radiobutton-input:hover)) {
+		box-shadow: none;
+	}
+
+	&:deep(:has(.p-radiobutton-input:focus-visible)),
+	&:hover {
+		outline-color: var(--odk-primary-border-color);
+		background-color: var(--odk-primary-lighter-background-color);
+	}
+
+	&.active,
+	&.active:hover {
+		outline: 2px solid var(--odk-primary-border-color);
+		background-color: var(--odk-primary-lighter-background-color);
+	}
+
+	&.disabled,
+	&.disabled label {
+		cursor: default;
+		opacity: 0.5;
+
+		&:not(.active):hover {
+			outline-color: var(--odk-border-color);
+			background: var(--odk-base-background-color);
+		}
+	}
+
+	:deep(.text-content) {
+		width: calc(100% - 40px);
+		word-break: break-word;
+	}
+
+	:deep(.media-content) {
+		background: transparent;
+		height: calc(100% - (var(--odk-base-font-size) + (var(--odk-spacing-l) * 2)));
+		min-height: 54px;
+		flex: 0 1 auto;
+		margin-left: auto;
+		align-content: center;
+	}
+
+	&:has(.media-content) {
+		padding: 0;
+
+		:deep(.p-checkbox),
+		:deep(.p-radiobutton) {
+			margin: auto 0 auto var(--odk-spacing-xl);
+			align-self: flex-start;
+		}
+
+		:deep(.text-content) {
+			width: fit-content;
+			min-width: unset;
+			max-width: calc(100% - 70px);
+			margin: var(--odk-spacing-l) var(--odk-spacing-xl);
+			flex: 1 1 auto;
+		}
+	}
+}
+
+.value-option.no-buttons {
+	:deep(.p-checkbox),
+	:deep(.p-radiobutton) {
+		opacity: 0;
+		width: 0; /* Radio or checkbox button isn't visible */
+		margin: 0;
+	}
+}
+
+.value-option:not(.no-buttons) :deep(.text-content) {
+	margin-left: var(--odk-spacing-m);
+}
+
+.select-with-images .value-option {
+	background: var(--odk-light-background-color);
+	align-content: flex-start;
+	flex-wrap: wrap;
+
+	:deep(.media-content) {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
+		justify-content: flex-start;
+		gap: var(--odk-spacing-m);
+
+		.media-block {
+			border-radius: 0;
+		}
+	}
+}
+
+@media screen and (max-width: #{pf.$sm}) {
+	:not(.select-with-images) .value-option {
+		flex-wrap: wrap;
+
+		:deep(.media-content) {
+			margin-left: unset;
+		}
+	}
+}

@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms"
+  xmlns:ev="http://www.w3.org/2001/xml-events"
+  xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:jr="http://openrosa.org/javarosa"
+  xmlns:orx="http://openrosa.org/xforms/"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>Relevant and calculate</h:title>
+    <model>
+      <instance>
+        <root id="relevant-calculate">
+          <first-question>0</first-question>
+          <second-question>no</second-question>
+          <third-question/>
+          <meta>
+            <instanceID/>
+          </meta>
+        </root>
+      </instance>
+      <bind nodeset="/root/first-question"/>
+      <bind nodeset="/root/second-question" />
+      <bind nodeset="/root/third-question" calculate="/root/first-question * 3" relevant="selected(/root/second-question, 'yes')"/>
+      <bind nodeset="/root/meta/instanceID" type="string"/>
+    </model>
+  </h:head>
+  <h:body>
+    <input ref="/root/first-question">
+      <label>1. Enter a number</label>
+    </input>
+    <input ref="/root/second-question">
+      <label>2. Enter "yes" to make #3 relevant</label>
+    </input>
+    <input ref="/root/third-question">
+      <label>3. Calculation of #1 × 3, relevant if #2 is "yes"</label>
+    </input>
+  </h:body>
+</h:html>

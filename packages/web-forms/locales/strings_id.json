@@ -1,0 +1,426 @@
+{
+  "form_load_failure_dialog.header.title": {
+    "string": "Terjadi kesalahan saat memuat formulir ini",
+    "developer_comment": "The title text shown in the header of the dialog."
+  },
+  "form_load_failure_dialog.details.label": {
+    "string": "Kesalahan detail teknis",
+    "developer_comment": "The label for the clickable summary that reveals technical error information."
+  },
+  "odk_web_forms.submit.label": {
+    "string": "Kirim",
+    "developer_comment": "Label for the primary form submission button."
+  },
+  "odk_web_forms.validation.error": {
+    "string": "{count, plural, other {# pertanyaan dojawab dengan tidak tepat}}",
+    "developer_comment": "Error banner message. {count} is the number of validation violations."
+  },
+  "odk_web_forms.geolocation.error": {
+    "string": "Lokasi tidak tersedia. Aktifkan GPS dan izin browser, lalu muat ulang formulir untuk mencoba lagi.",
+    "developer_comment": "Error message shown when background geolocation fails."
+  },
+  "odk_web_forms.delete.label": {
+    "string": "Hapus",
+    "developer_comment": "Generic label for a delete action button."
+  },
+  "odk_web_forms.cancel.label": {
+    "string": "Batal",
+    "developer_comment": "Generic label for a cancel action button."
+  },
+  "odk_web_forms.remove.label": {
+    "string": "Keluarkan",
+    "developer_comment": "Generic label for a remove action button."
+  },
+  "odk_web_forms.save.label": {
+    "string": "Simpan",
+    "developer_comment": "Generic label for a save action button."
+  },
+  "geolocation_formatted_value.accuracy.label": {
+    "string": "Akurasi: {accuracy} m,",
+    "developer_comment": "Displays the GPS accuracy in metres. {accuracy} is the numeric accuracy value."
+  },
+  "geolocation_formatted_value.latitude.label": {
+    "string": "Lintang: {latitude},",
+    "developer_comment": "Displays the GPS latitude coordinate. {latitude} is the numeric latitude value."
+  },
+  "geolocation_formatted_value.longitude.label": {
+    "string": "Bujur: {longitude}.",
+    "developer_comment": "Displays the GPS longitude coordinate. {longitude} is the numeric longitude value."
+  },
+  "validation_message.required.error": {
+    "string": "Bidang ini wajib diisi.",
+    "developer_comment": "Default error shown when a required field has no value and the form designer did not specify a custom message."
+  },
+  "validation_message.constraint.error": {
+    "string": "Tidak memenuhi syarat.",
+    "developer_comment": "Default error shown when a field's value fails a constraint and the form designer did not specify a custom message."
+  },
+  "map_async.load_error.message": {
+    "string": "Tidak dapat memuat peta",
+    "developer_comment": "Error message shown when the map component fails to load."
+  },
+  "map_block.graphics_error.title": {
+    "string": "Masalah grafis terdeteksi",
+    "developer_comment": "Title of the error shown when the browser cannot render the map due to WebGL being unavailable."
+  },
+  "map_block.graphics_error.message": {
+    "string": "Browser Anda tidak dapat menampilkan peta saat ini. Aktifkan pengaturan akselerasi perangkat keras.",
+    "developer_comment": "Description of the WebGL error, instructing the user to enable hardware acceleration in their browser."
+  },
+  "map_block.location_error.title": {
+    "string": "Lokasi tidak dapat diakses",
+    "developer_comment": "Title of the error shown in the map when the browser denies geolocation permission."
+  },
+  "map_block.location_error.message": {
+    "string": "Berikan izin lokasi di pengaturan browser dan pastikan lokasi diaktifkan.",
+    "developer_comment": "Description of what the user should do to resolve a geolocation access error in the map."
+  },
+  "map_block.get_location.label": {
+    "string": "Dapatkan lokasi",
+    "developer_comment": "Label for the button in the map overlay that starts watching the device's GPS location."
+  },
+  "map_block.drag_vertex_instruction.placed": {
+    "string": "Tekan dan tarik untuk memindahkan titik",
+    "developer_comment": "Instruction shown on the map when a point has been placed and the user can drag points and vertices."
+  },
+  "map_block.drag_vertex_instruction.default": {
+    "string": "Tekan untuk menempatkan titik",
+    "developer_comment": "Instruction shown on the map before a point is placed, when the user can drag points and vertices."
+  },
+  "map_block.drag_instruction.placed": {
+    "string": "Tekan untuk memindahkan titik",
+    "developer_comment": "Instruction shown on the map when a point has been placed and the user can drag the feature."
+  },
+  "map_block.drag_instruction.default": {
+    "string": "Gunakan tombol lokasi untuk memusatkan peta pada posisi Anda saat ini",
+    "developer_comment": "Instruction shown on the map before a point is placed, when the user can drag the feature."
+  },
+  "map_confirm_dialog.delete_shape.header": {
+    "string": "Hapus seluruh poligon?",
+    "developer_comment": "Title of the confirmation dialog shown before deleting a shape."
+  },
+  "map_confirm_dialog.delete_trace.header": {
+    "string": "Hapus seluruh garis?",
+    "developer_comment": "Title of the confirmation dialog shown before deleting a trace."
+  },
+  "map_confirm_dialog.delete_shape.body": {
+    "string": "Apakah Anda yakin ingin menghapus seluruh poligon dan mengulang kembali?",
+    "developer_comment": "Body text of the confirmation dialog shown before deleting a shape."
+  },
+  "map_confirm_dialog.delete_trace.body": {
+    "string": "Apakah Anda yakin ingin menghapus seluruh garis dan mengulang kembali?",
+    "developer_comment": "Body text of the confirmation dialog shown before deleting a trace."
+  },
+  "map_advanced_panel.longitude.label": {
+    "string": "Bujur",
+    "developer_comment": "Label for the longitude input field in the advanced panel."
+  },
+  "map_advanced_panel.longitude.error": {
+    "string": "Bujur tidak valid",
+    "developer_comment": "Validation error shown when the longitude value entered is out of range."
+  },
+  "map_advanced_panel.latitude.label": {
+    "string": "Lintang",
+    "developer_comment": "Label for the latitude input field in the advanced panel."
+  },
+  "map_advanced_panel.latitude.error": {
+    "string": "Lintang tidak valid",
+    "developer_comment": "Validation error shown when the latitude value entered is out of range."
+  },
+  "map_advanced_panel.altitude.label": {
+    "string": "Ketinggian",
+    "developer_comment": "Label for the altitude input field in the advanced panel."
+  },
+  "map_advanced_panel.accuracy.label": {
+    "string": "Akurasi",
+    "developer_comment": "Label for the accuracy input field in the advanced panel."
+  },
+  "map_advanced_panel.import_data.label": {
+    "string": "Impor data untuk mengganti lokasi",
+    "developer_comment": "Label for the link that opens the import/paste dialog from the advanced panel."
+  },
+  "map_controls.zoom_fit_all.description": {
+    "string": "Tampilkan semua elemen di peta",
+    "developer_comment": "Aria-label for the map control button that zooms to fit all features in view."
+  },
+  "map_controls.current_location.description": {
+    "string": "Temukan lokasi Anda",
+    "developer_comment": "Aria-label for the map control button that centers the map on the device's current GPS location."
+  },
+  "map_controls.undo.description": {
+    "string": "Urungkan tindakan terakhir",
+    "developer_comment": "Aria-label for the map control button that undoes the last map edit."
+  },
+  "map_controls.delete.description": {
+    "string": "Hapus satu titik sudut atau semua titik sudut",
+    "developer_comment": "Aria-label for the map control button that deletes the selected vertex or all vertices."
+  },
+  "map_controls.open_advanced.description": {
+    "string": "Pengeditan manual lanjutan",
+    "developer_comment": "Aria-label for the map control button that opens the advanced coordinate editing panel."
+  },
+  "map_controls.open_full_screen.description": {
+    "string": "Perluas ke layar penuh",
+    "developer_comment": "Aria-label for the map control button that expands the map to full screen."
+  },
+  "map_controls.close_full_screen.description": {
+    "string": "Keluar dari layar penuh",
+    "developer_comment": "Aria-label for the map control button that exits full-screen mode."
+  },
+  "map_controls.open_info.description": {
+    "string": "Tampilkan informasi tentang tindakan peta",
+    "developer_comment": "Aria-label for the map control button that opens the info dialog listing available map actions."
+  },
+  "map_info_dialog.header.title": {
+    "string": "Bagaimana cara menggunakan peta?",
+    "developer_comment": "Title shown in the header of the dialog that explains available map actions."
+  },
+  "map_properties.remove_selection.label": {
+    "string": "Hapus pilihan",
+    "developer_comment": "Label for the button that removes the currently saved feature selection."
+  },
+  "map_properties.save_selected.label": {
+    "string": "Simpan pilihan",
+    "developer_comment": "Label for the button that saves the currently selected map feature."
+  },
+  "map_status_bar.no_trace_saved.label": {
+    "string": "Belum ada garis yang disimpan",
+    "developer_comment": "Status bar message shown when no trace (linestring) has been saved yet."
+  },
+  "map_status_bar.no_shape_saved.label": {
+    "string": "Belum ada poligon yang disimpan",
+    "developer_comment": "Status bar message shown when no shape (polygon) has been saved yet."
+  },
+  "map_status_bar.no_point_saved.label": {
+    "string": "Belum ada titik yang disimpan",
+    "developer_comment": "Status bar message shown when no point has been saved yet."
+  },
+  "map_status_bar.point_saved.label": {
+    "string": "Titik disimpan",
+    "developer_comment": "Status bar message shown when a point has been saved."
+  },
+  "map_status_bar.trace_saved.label": {
+    "string": "Garis disimpan",
+    "developer_comment": "Status bar message shown when a trace (linestring) has been saved."
+  },
+  "map_status_bar.shape_saved.label": {
+    "string": "Poligon disimpan",
+    "developer_comment": "Status bar message shown when a shape (polygon) has been saved."
+  },
+  "map_status_bar.feature_saved.label": {
+    "string": "Elemen disimpan",
+    "developer_comment": "Fallback status bar message shown when a feature of an unrecognised geometry type has been saved."
+  },
+  "map_status_bar.points_saved.label": {
+    "string": "{count} titik disimpan",
+    "developer_comment": "Status bar message showing how many points have been saved. {count} is the number of saved points."
+  },
+  "map_status_bar.capturing.label": {
+    "string": "Mendapatkan lokasi...",
+    "developer_comment": "Status bar message shown while the device is actively capturing a GPS location."
+  },
+  "map_status_bar.remove_point.label": {
+    "string": "Hapus titik",
+    "developer_comment": "Full label for the remove button shown on larger screens in the map status bar."
+  },
+  "map_status_bar.view_details.label": {
+    "string": "Lihat detail",
+    "developer_comment": "Label for the button that opens the feature properties panel."
+  },
+  "map_status_bar.advanced.label": {
+    "string": "Lanjutan",
+    "developer_comment": "Label for the button that opens the advanced coordinate editing panel."
+  },
+  "map_status_bar.vertex_longitude.label": {
+    "string": "Bujur: {longitude}",
+    "developer_comment": "Longitude component of the selected vertex info shown in the map status bar. {longitude} is the numeric longitude value."
+  },
+  "map_status_bar.vertex_latitude.label": {
+    "string": "Lintang: {latitude}",
+    "developer_comment": "Latitude component of the selected vertex info shown in the map status bar. {latitude} is the numeric latitude value."
+  },
+  "map_status_bar.vertex_altitude.label": {
+    "string": "Ketinggian: {altitude} m",
+    "developer_comment": "Altitude component of the selected vertex info shown in the map status bar. {altitude} is the numeric altitude value in metres."
+  },
+  "map_status_bar.vertex_accuracy.label": {
+    "string": "Akurasi: {accuracy}",
+    "developer_comment": "Accuracy component of the selected vertex info shown in the map status bar. {accuracy} is the pre-formatted accuracy value."
+  },
+  "map_update_coords_dialog.header.title": {
+    "string": "Impor data untuk mengganti lokasi",
+    "developer_comment": "Title shown in the header of the dialog for importing coordinates via paste or file upload."
+  },
+  "map_update_coords_dialog.paste_data.label": {
+    "string": "Tempel data dalam format ODK",
+    "developer_comment": "Label for the paste input field in the import coordinates dialog."
+  },
+  "map_update_coords_dialog.paste_data.hint": {
+    "string": "Masukkan koordinat sebagai: Lintang Bujur Ketinggian Akurasi. Pisahkan beberapa titik dengan titik koma (;).",
+    "developer_comment": "Helper text explaining the expected format for pasted coordinate data."
+  },
+  "map_update_coords_dialog.upload_file.label": {
+    "string": "Unggah file GeoJSON",
+    "developer_comment": "Label for the file upload section in the import coordinates dialog."
+  },
+  "map_update_coords_dialog.upload_file.action": {
+    "string": "Unggah file",
+    "developer_comment": "Label for the button that opens the file chooser to upload a GeoJSON file."
+  },
+  "map_update_coords_dialog.file_empty.error": {
+    "string": "File kosong.",
+    "developer_comment": "Error shown when the uploaded file contains no content."
+  },
+  "map_update_coords_dialog.unsupported_file.error": {
+    "string": "Jenis file tidak didukung. Harap unggah file .geojson.",
+    "developer_comment": "Error shown when the uploaded file is not a supported GeoJSON format."
+  },
+  "map_update_coords_dialog.parse_failed.error": {
+    "string": "Kesalahan saat mengurai file. Pastikan itu adalah GeoJSON yang valid.",
+    "developer_comment": "Error shown when the uploaded file could not be parsed as valid GeoJSON."
+  },
+  "map_update_coords_dialog.incorrect_geometry.error": {
+    "string": "Jenis geometri salah.",
+    "developer_comment": "Error shown when the imported data contains a geometry type incompatible with the current field."
+  },
+  "media_block.fetch.error": {
+    "string": "Tidak dapat mengambil file media. Periksa URL dan pengaturan unduhan.",
+    "developer_comment": "Displayed when media (image, audio or video) fetching fails."
+  },
+  "media_block.not_found.error": {
+    "string": "File media tidak ditemukan. File: {file}",
+    "developer_comment": "Displayed when the server returns a 404 or non-200 status."
+  },
+  "media_block.unknown.error": {
+    "string": "Tidak dapat mengambil file media. Kesalahan tidak diketahui. File: {file}",
+    "developer_comment": "Generic fallback for network failures or unexpected exceptions."
+  },
+  "video_block.load.error": {
+    "string": "Kesalahan saat memuat video. File: {file}",
+    "developer_comment": "Displayed when a video element fires a load error. {file} is the resource URL."
+  },
+  "audio_block.load.error": {
+    "string": "Kesalahan saat memuat audio. File: {file}",
+    "developer_comment": "Displayed when an audio element fires a load error. {file} is the resource URL."
+  },
+  "image_block.load.error": {
+    "string": "Kesalahan saat memuat gambar. File: {file}",
+    "developer_comment": "Displayed when an image element fires a load error. {file} is the resource URL."
+  },
+  "rank_control.open.label": {
+    "string": "Urutkan elemen",
+    "developer_comment": "The label for the button that opens the rank control."
+  },
+  "trigger_control.okay.label": {
+    "string": "Oke",
+    "developer_comment": "The label for the 'Okay' button."
+  },
+  "input_geopoint.get_location.label": {
+    "string": "Dapatkan lokasi",
+    "developer_comment": "Label for the button to start capturing the device's current GPS location."
+  },
+  "input_geopoint.try_again.label": {
+    "string": "Coba lagi",
+    "developer_comment": "Label for the button to retry capturing the GPS location after one has already been saved."
+  },
+  "input_geopoint.location_error.title": {
+    "string": "Lokasi tidak dapat diakses",
+    "developer_comment": "Title of the error message shown when the browser cannot access the device's location."
+  },
+  "input_geopoint.location_error.description": {
+    "string": "Berikan izin lokasi di pengaturan browser Anda dan pastikan lokasi diaktifkan.",
+    "developer_comment": "Description of what the user should do to resolve a location access error."
+  },
+  "geolocation_dialog.header.title": {
+    "string": "Mencari lokasi Anda",
+    "developer_comment": "Title shown in the header of the dialog while the device is searching for a GPS fix."
+  },
+  "geolocation_dialog.accuracy_threshold.info": {
+    "string": "Lokasi akan disimpan pada {accuracyThreshold} m",
+    "developer_comment": "Informational message shown while waiting for a GPS fix. {accuracyThreshold} is the accuracy threshold in metres at which the location will be automatically saved."
+  },
+  "geolocation_dialog.elapsed_time.label": {
+    "string": "Waktu untuk menangkap lokasi:",
+    "developer_comment": "Label preceding the elapsed time counter shown while waiting for a GPS fix."
+  },
+  "geolocation_dialog.previous_accuracy.info": {
+    "string": "Lokasi sebelumnya disimpan pada {accuracy} m",
+    "developer_comment": "Shows the accuracy of the previously saved location in metres. {accuracy} is the numeric accuracy value."
+  },
+  "geolocation_dialog.save.label": {
+    "string": "Simpan lokasi",
+    "developer_comment": "Label for the button to save the currently captured GPS location."
+  },
+  "geopoint_accuracy.good.label": {
+    "string": "Akurasi baik",
+    "developer_comment": "Label shown when the GPS accuracy is within the good threshold."
+  },
+  "geopoint_accuracy.acceptable.label": {
+    "string": "Akurasi dapat diterima",
+    "developer_comment": "Label shown when the GPS accuracy is within the acceptable threshold (between good and unacceptable)."
+  },
+  "geopoint_accuracy.poor.label": {
+    "string": "Akurasi buruk",
+    "developer_comment": "Label shown when the GPS accuracy does not meet the acceptable threshold."
+  },
+  "geopoint_accuracy.unknown.label": {
+    "string": "Akurasi tidak diketahui",
+    "developer_comment": "Label shown when no GPS accuracy value is available yet."
+  },
+  "upload_image_header.take_picture.label": {
+    "string": "Ambil gambar",
+    "developer_comment": "Label for the button to take a picture using the device's camera."
+  },
+  "upload_image_header.choose_image.label": {
+    "string": "Pilih gambar",
+    "developer_comment": "Label for the button to choose an image from the device's gallery or file system."
+  },
+  "upload_control.choose_file.label": {
+    "string": "Pilih file",
+    "developer_comment": "Label for the button to choose a file from the device. Used in the audio, video, and generic file upload headers."
+  },
+  "upload_control.drag_and_drop.placeholder": {
+    "string": "Tarik dan lepas file di sini untuk mengunggah",
+    "developer_comment": "Placeholder text shown in the upload area when no file has been selected."
+  },
+  "upload_control.file_too_large.error": {
+    "string": "Ukuran file yang dipilih melebihi batas maksimum yang diizinkan",
+    "developer_comment": "Error message shown when the selected file exceeds the maximum allowed size."
+  },
+  "upload_control.must_be_image.error": {
+    "string": "File yang dipilih harus berupa gambar",
+    "developer_comment": "Error message shown when the selected file is not an image."
+  },
+  "upload_control.must_be_video.error": {
+    "string": "File yang dipilih harus berupa video",
+    "developer_comment": "Error message shown when the selected file is not a video."
+  },
+  "upload_control.must_be_audio.error": {
+    "string": "File yang dipilih harus berupa audio",
+    "developer_comment": "Error message shown when the selected file is not an audio file."
+  },
+  "upload_control.invalid_file_type.error": {
+    "string": "Jenis file tidak valid",
+    "developer_comment": "Error message shown when the selected file does not match the expected media type."
+  },
+  "upload_delete_dialog.header.title": {
+    "string": "Hapus file yang diunggah?",
+    "developer_comment": "Title of the confirmation dialog shown before deleting an uploaded file."
+  },
+  "upload_delete_dialog.body.message": {
+    "string": "Apakah Anda yakin ingin menghapus file ini?",
+    "developer_comment": "Body text of the confirmation dialog shown before deleting an uploaded file."
+  },
+  "upload_control.downloading.error": {
+    "string": "Terjadi kesalahan saat mengunduh.",
+    "developer_comment": "Error message shown when downloading the attachment from the server failed."
+  },
+  "repeat.add.label": {
+    "string": "Tambah",
+    "developer_comment": "Label for the button to add a repeat instance."
+  },
+  "repeat.instance.placeholder": {
+    "string": "Elemen",
+    "developer_comment": "Placeholder for the label of a repeat instance."
+  }
+}
