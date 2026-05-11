@@ -31,8 +31,22 @@ jobs:
     - run: npm run lint
     - uses: browser-actions/setup-chrome@v2
     - run: npm run test
+  build:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+    - uses: actions/setup-node@v6
+      with:
+        node-version-file: package.json
+        cache: 'npm'
+    - run: ./bin/check-for-large-files.sh
+    - run: npm ci
+    - run: npm run build
+    - run: ./bin/check-bundle-size.js
   e2e-tests:
     needs:
+    - build
     - image-compression
     - shellcheck
     - unit-tests
