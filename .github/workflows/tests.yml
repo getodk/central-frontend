@@ -36,10 +36,6 @@ jobs:
     - uses: browser-actions/setup-chrome@v2
     - run: npm run test
   build:
-    needs:
-    - image-compression
-    - shellcheck
-    - unit-tests
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
@@ -52,18 +48,18 @@ jobs:
     - run: npm ci
     - run: npm run build
     - run: ./bin/check-bundle-size.js
-
     - name: Upload Release Artefact
       if: github.ref_type == 'tag'
+      env:
+        GH_TOKEN: ${{ github.token }}
       run: |
         tar -cvzf dist.tar.gz dist/
         echo "Uploading dist bundle..."
         gh release create ${{ github.ref_name }} dist.tar.gz --generate-notes
         echo "Upload complete.  See above for URL."
-      env:
-        GH_TOKEN: ${{ github.token }}
   e2e-tests:
     needs:
+    - build
     - image-compression
     - shellcheck
     - unit-tests
