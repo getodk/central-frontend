@@ -1121,7 +1121,664 @@
     }
   },
   "component": {
-    "AccountClaim": {
+    "AccountPageContainer": {
+      "customLogoAlt": {
+        "string": "Organization logo"
+      }
+    },
+    "AuditRow": {
+      "deletedMessage": {
+        "string": "This resource has been deleted."
+      }
+    },
+    "DatasetList": {
+      "heading": {
+        "0": {
+          "string": "Entities let you share information between Forms so you can collect longitudinal data, manage cases over time, and represent other workflows with multiple steps."
+        }
+      }
+    },
+    "DatasetOverviewNewProperty": {
+      "title": {
+        "string": "Add Entity Property",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "To add an Entity property, choose a unique property name below."
+        },
+        "1": {
+          "string": "You can also add new properties by uploading a Form that references them, in which case the properties are created when the Form is published."
+        }
+      },
+      "newPropertyName": {
+        "string": "New property name"
+      },
+      "problem": {
+        "409_3": {
+          "string": "A property already exists in this Entity List with the name of “{propertyName}”."
+        }
+      }
+    },
+    "EntityDelete": {
+      "field": {
+        "noConfirm": {
+          "string": "Delete immediately without confirmation until I leave the page",
+          "developer_comment": "This is the text of a form field."
+        }
+      }
+    },
+    "EntityFeedEntry": {
+      "offlineUpdate": {
+        "string": "Offline update"
+      }
+    },
+    "EntityList": {
+      "noEntities": {
+        "string": "There are no Entities to show."
+      },
+      "action": {
+        "download": {
+          "unfiltered": {
+            "string": "{count, plural, one {Download {count} Entity} other {Download all {count} Entities}}",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "filtered": {
+            "withCount": {
+              "string": "{count, plural, one {Download {count} matching Entity} other {Download {count} matching Entities}}",
+              "developer_comment": "This is the text for an action, for example, the text of a button."
+            },
+            "withoutCount": {
+              "string": "Download all matching Entities",
+              "developer_comment": "This is the text of a button. This text is shown when the number of matching Entities is unknown."
+            }
+          }
+        }
+      },
+      "alert": {
+        "delete": {
+          "string": "Entity “{label}” has been deleted."
+        }
+      }
+    },
+    "EntityMetadataRow": {
+      "reviewParallelUpdates": {
+        "string": "Review parallel updates",
+        "developer_comment": "This is the text for an action, for example, the text of a button."
+      }
+    },
+    "EntityResolve": {
+      "action": {
+        "markAsResolved": {
+          "string": "Mark as resolved"
+        }
+      },
+      "problem": {
+        "400_32": {
+          "string": "Another user has already marked the conflict as resolved. Please refresh to see the updated data."
+        }
+      }
+    },
+    "EntityTable": {
+      "header": {
+        "deletedAt": {
+          "string": "Deleted at"
+        }
+      }
+    },
+    "EntityUpdate": {
+      "title": {
+        "string": "Update {label}",
+        "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
+      },
+      "geometryDisabled": {
+        "string": "Geometry can’t be updated from the map."
+      },
+      "problem": {
+        "409_15": {
+          "string": "Data has been modified by another user. Please refresh to see the updated data."
+        }
+      }
+    },
+    "EntityUpload": {
+      "headersNote": {
+        "string": "The first row in your data file must exactly match the table header you see above."
+      }
+    },
+    "FieldKeyQrPanel": {
+      "title": {
+        "managed": {
+          "string": "Client Configuration Code"
+        }
+      }
+    },
+    "FormAttachmentList": {
+      "header": {
+        "uploaded": {
+          "string": "Uploaded",
+          "developer_comment": "This is the text of a table column header. The column shows when each Media File was uploaded."
+        }
+      }
+    },
+    "FormDelete": {
+      "title": {
+        "string": "Delete Form",
+        "developer_comment": "This is the title at the top of a pop-up."
+      }
+    },
+    "FormDraftStatus": {
+      "actions": {
+        "action": {
+          "abandon": {
+            "string": "Abandon Draft",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "publish": {
+            "string": "Publish Draft",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      },
+      "alert": {
+        "upload": {
+          "string": "The new Form definition has been saved as your Draft."
+        },
+        "publish": {
+          "string": "Your Draft has been published. Any devices using this Form will now get the updated Form definition and attachments."
+        },
+        "abandon": {
+          "string": "The Draft version of this Form has been successfully deleted."
+        }
+      }
+    },
+    "FormDraftTesting": {
+      "subtitle": {
+        "full": {
+          "string": "Submissions made here {willBeDeleted} when you publish this Draft!",
+          "developer_comment": "{willBeDeleted} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nwill be deleted"
+        },
+        "willBeDeleted": {
+          "string": "will be deleted",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {willBeDeleted} is in the following text:\n\nSubmissions made here {willBeDeleted} when you publish this Draft!"
+        }
+      },
+      "collectProjectName": {
+        "string": "[Draft] {name}",
+        "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
+      }
+    },
+    "FormEditCreateDraft": {
+      "title": {
+        "string": "Draft version"
+      }
+    },
+    "FormEditDef": {
+      "versionName": {
+        "string": "Version name: {name}"
+      }
+    },
+    "FormEditDraftControls": {
+      "subtitle": {
+        "string": "Ready to publish",
+        "developer_comment": "This refers to the draft version of a Form."
+      }
+    },
+    "FormHead": {
+      "draftNav": {
+        "action": {
+          "create": {
+            "string": "Create a new Draft",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        },
+        "title": {
+          "string": "Draft",
+          "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+        }
+      }
+    },
+    "FormList": {
+      "alert": {
+        "create": {
+          "string": "“{name}” has been created as a Form Draft."
+        }
+      }
+    },
+    "FormNew": {
+      "introduction": {
+        "0": {
+          "create": {
+            "string": "To create a Form, upload an XForms XML file or an XLSForm Excel file.",
+            "developer_comment": "The words \"XForms\" and \"XLSForm\" should not be translated."
+          },
+          "update": {
+            "string": "To update the Draft, upload an XForms XML file or an XLSForm Excel file.",
+            "developer_comment": "The words \"XForms\" and \"XLSForm\" should not be translated."
+          }
+        },
+        "1": {
+          "full": {
+            "string": "If you don’t already have one, there are {tools} to help you design your Form.",
+            "developer_comment": "{tools} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntools available"
+          },
+          "tools": {
+            "string": "tools available",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {tools} is in the following text:\n\nIf you don’t already have one, there are {tools} to help you design your Form."
+          }
+        },
+        "2": {
+          "string": "If you have Form Attachments, you will be able to provide those on the next page, after the Form has been created."
+        }
+      },
+      "dropZone": {
+        "full": {
+          "string": "Drop a file here, or {chooseOne} to upload.",
+          "developer_comment": "{chooseOne} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose one"
+        },
+        "chooseOne": {
+          "string": "choose one",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseOne} is in the following text:\n\nDrop a file here, or {chooseOne} to upload."
+        }
+      },
+      "action": {
+        "uploadAnyway": {
+          "string": "Upload anyway",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "upload": {
+          "string": "Upload",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "fileRequired": {
+          "string": "Please choose a file."
+        },
+        "fileNotReadable": {
+          "string": "The file could not be read. It may have been modified or deleted. Please choose the file again."
+        }
+      },
+      "problem": {
+        "400_8": {
+          "string": "The Form definition you have uploaded does not appear to be for this Form. It has the wrong formId (expected “{expected}”, got “{actual}”)."
+        },
+        "400_15": {
+          "string": "The XLSForm could not be converted: {error}",
+          "developer_comment": "The word \"XLSForm\" should not be translated."
+        },
+        "409_3": {
+          "string": "A Form already exists in this Project with the Form ID of “{xmlFormId}”."
+        }
+      },
+      "fields": {
+        "string": "Fields:",
+        "developer_comment": "Sub-heading for a warning details, followed by the list of fields"
+      },
+      "warningsText": {
+        "0": {
+          "string": "This file can be used, but it has the following possible problems:"
+        },
+        "1": {
+          "string": "Form design warnings:"
+        },
+        "2": {
+          "string": "Workflow warnings:"
+        },
+        "3": {
+          "deletedFormExists": {
+            "string": "There is a form with ID \"{value}\" in the Trash. If you upload this Form, you won’t be able to restore the other one with the matching ID."
+          },
+          "structureChanged": {
+            "string": "The following fields have been deleted, renamed or are now in different groups or repeats. These fields will not be visible in the Submission table or included in exports by default."
+          },
+          "oldEntityVersion": {
+            "string": "Entities specification version “{version}” is not compatible with Offline Entities. We recommend using version 2024.1.0 or later."
+          }
+        },
+        "4": {
+          "string": "Please correct the problems and try again."
+        },
+        "5": {
+          "create": {
+            "string": "If you are sure these problems can be ignored, click the button to create the Form anyway:"
+          },
+          "update": {
+            "string": "If you are sure these problems can be ignored, click the button to update the Draft anyway:"
+          }
+        }
+      },
+      "title": {
+        "create": {
+          "string": "Create Form",
+          "developer_comment": "This is the title at the top of a page."
+        },
+        "update": {
+          "string": "Upload New Form Definition",
+          "developer_comment": "This is the title at the top of a section."
+        }
+      }
+    },
+    "FormOverviewRightNow": {
+      "stateCaption": {
+        "open": {
+          "string": "This Form is downloadable and is accepting Submissions."
+        },
+        "closing": {
+          "string": "This Form is not downloadable but still accepts Submissions."
+        },
+        "closed": {
+          "string": "This Form is not downloadable and does not accept Submissions."
+        }
+      }
+    },
+    "FormSettings": {
+      "alert": {
+        "delete": {
+          "string": "The Form “{name}” has been successfully deleted."
+        }
+      }
+    },
+    "FormTrashList": {
+      "trashCount": {
+        "string": "({count})"
+      },
+      "title": {
+        "string": "Trash"
+      }
+    },
+    "FormTrashRow": {
+      "action": {
+        "restore": {
+          "string": "Restore",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "MarkdownTextarea": {
+      "preview": {
+        "string": "Preview"
+      }
+    },
+    "NavbarHelpDropdown": {
+      "version": {
+        "string": "Version",
+        "developer_comment": "An identifier of a particular version of something (of Central, of a Form, of an Entity)"
+      }
+    },
+    "ProjectUserList": {
+      "action": {
+        "clearSearch": {
+          "string": "Clear search",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "SubmissionAnalyze": {
+      "title": {
+        "string": "Using OData",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "0": {
+          "string": "OData is a standard for transferring data between tools and services. Powerful analysis tools like {powerBi}, {excel}, {python}, and {r} can fetch data via OData for analysis.",
+          "developer_comment": "The text of {powerBi} is \"Microsoft Power BI\". The text of {r} is \"R\". The text of {python} is \"Python\". The text of {excel} is \"Excel\". {powerBi}, {r}, {excel} and {python} are all links."
+        },
+        "1": {
+          "string": "To connect to this OData feed, select your tool and copy the link into it."
+        }
+      },
+      "tab": {
+        "microsoft": {
+          "string": "Power BI or Excel",
+          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+        },
+        "other": {
+          "string": "Other (API)",
+          "developer_comment": "This is the text of a navigation tab. \"Other\" refers to \"other tool\"."
+        }
+      },
+      "help": {
+        "microsoft": {
+          "full": {
+            "string": "For help using OData with Power BI, see {pageForPowerBi}. For help with Excel, see {pageForExcel}.",
+            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {pageForExcel} has the text: this page\n- {pageForPowerBi} has the text: this page"
+          },
+          "pageForExcel": {
+            "string": "this page",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {pageForExcel} is in the following text:\n\nFor help using OData with Power BI, see {pageForPowerBi}. For help with Excel, see {pageForExcel}."
+          },
+          "pageForPowerBi": {
+            "string": "this page",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {pageForPowerBi} is in the following text:\n\nFor help using OData with Power BI, see {pageForPowerBi}. For help with Excel, see {pageForExcel}."
+          }
+        },
+        "python": {
+          "string": "To connect to Central from Python, we recommend {pyODK}. pyODK is the official Python client for Central. It simplifies data analysis and workflow automation.",
+          "developer_comment": "{pyODK} is a link. Its text is \"pyODK\"."
+        },
+        "r": {
+          "string": "To connect to Central from R, we recommend {ruODK}. ruODK is developed and supported by ODK community members.",
+          "developer_comment": "{ruODK} is a link. Its text is \"ruODK\"."
+        },
+        "other": {
+          "full": {
+            "string": "For a full description of our OData support, please see {article}.",
+            "developer_comment": "{article} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthis article"
+          },
+          "article": {
+            "string": "this article",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {article} is in the following text:\n\nFor a full description of our OData support, please see {article}."
+          }
+        }
+      }
+    },
+    "SubmissionBasicDetails": {
+      "submissionDetails": {
+        "string": "Submission Details"
+      }
+    },
+    "SubmissionDecrypt": {
+      "title": {
+        "string": "Download Submissions",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "exportOptions": {
+        "string": "Export options",
+        "developer_comment": "This text is shown above options for downloading Submissions."
+      },
+      "field": {
+        "splitSelectMultiples": {
+          "string": "Split “select multiple” choices into columns",
+          "developer_comment": "This is the text of a form field."
+        },
+        "removeGroupNames": {
+          "string": "Remove group names",
+          "developer_comment": "This is the text of a form field."
+        },
+        "deletedFields": {
+          "string": "Include fields not in the published Form",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "deletedFieldsHelp": {
+        "string": "Use this option if you need to see fields referenced in previous Form versions."
+      },
+      "noSelectMultiple": {
+        "string": "This Form does not have any select multiple fields."
+      },
+      "encryptedForm": {
+        "string": "Encrypted Forms cannot be processed in this way."
+      },
+      "deletedFieldsDisabledForDraft": {
+        "string": "Draft Forms cannot be processed in this way."
+      },
+      "introduction": {
+        "0": {
+          "string": "In order to download this data, you will need to provide your passphrase. Your passphrase will be used only to decrypt your data for download, after which the server will forget it again."
+        }
+      },
+      "hint": {
+        "string": "Hint: {hint}",
+        "developer_comment": "This text is shown if there is a passphrase hint. {hint} is the passphrase hint."
+      },
+      "noRepeat": {
+        "string": "This Form does not have repeats.",
+        "developer_comment": "\"Repeats\" refers to repeat groups."
+      },
+      "action": {
+        "download": {
+          "mainTable": {
+            "string": "Main data table (no repeats)",
+            "developer_comment": "This is the text of a button. \"Repeats\" refers to repeat groups."
+          },
+          "allTables": {
+            "string": "All data tables",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "withAttachments": {
+            "string": "All data and Attachments",
+            "developer_comment": "\"Attachments\" refers to Submission Attachments."
+          }
+        }
+      },
+      "alert": {
+        "unavailable": {
+          "string": "The data download is not yet available. Please try again in a moment."
+        },
+        "submit": {
+          "string": "Data download should begin soon. Once it begins, you can close this message. If it hasn’t started in 20 seconds, please try again."
+        },
+        "parseError": {
+          "string": "Something went wrong while requesting your data."
+        }
+      }
+    },
+    "SubmissionDiffItem": {
+      "editCaption": {
+        "added": {
+          "string": "(added)",
+          "developer_comment": "The description of how a specific field in a form submission changed"
+        },
+        "deleted": {
+          "string": "(deleted)",
+          "developer_comment": "The description of how a specific field in a form submission changed"
+        }
+      },
+      "empty": {
+        "string": "empty",
+        "developer_comment": "Text showing that a value in a submission edit is empty"
+      }
+    },
+    "SubmissionDownloadDropdown": {
+      "action": {
+        "download": {
+          "unfiltered": {
+            "string": "{count, plural, one {Download {count} Submission} other {Download all {count} Submissions}}",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          },
+          "filtered": {
+            "withoutCount": {
+              "string": "Download all Submissions matching the filter",
+              "developer_comment": "This is the text of a button. This text is shown when the number of matching Submissions is unknown."
+            },
+            "withCount": {
+              "string": "{count, plural, one {Download {count} Submission matching the filter} other {Download {count} Submissions matching the filter}}",
+              "developer_comment": "This is the text for an action, for example, the text of a button."
+            }
+          }
+        }
+      }
+    },
+    "SubmissionFeedEntry": {
+      "title": {
+        "entity": {
+          "create": {
+            "string": "Created Entity {label} in {dataset} Entity List"
+          }
+        },
+        "updateReviewState": {
+          "approved": {
+            "full": {
+              "string": "{reviewState} by {name}",
+              "developer_comment": "{reviewState} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nApproved"
+            },
+            "reviewState": {
+              "string": "Approved",
+              "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {reviewState} is in the following text:\n\n{reviewState} by {name}"
+            }
+          }
+        }
+      }
+    },
+    "SubmissionFilters": {
+      "allSubmissionDateSelected": {
+        "string": "All time"
+      }
+    },
+    "SubmissionList": {
+      "loading": {
+        "withoutCount": {
+          "string": "Loading Submissions…",
+          "developer_comment": "This text is shown when the number of Submissions loading is unknown."
+        },
+        "all": {
+          "string": "{count, plural, one {Loading {count} Submission…} other {Loading {count} Submissions…}}"
+        },
+        "first": {
+          "string": "{count, plural, one {Loading the first {top} of {count} Submission…} other {Loading the first {top} of {count} Submissions…}}",
+          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
+        },
+        "middle": {
+          "string": "{count, plural, one {Loading {top} more of {count} remaining Submission…} other {Loading {top} more of {count} remaining Submissions…}}",
+          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
+        },
+        "last": {
+          "multiple": {
+            "string": "{count, plural, one {Loading the last {count} Submission…} other {Loading the last {count} Submissions…}}"
+          },
+          "one": {
+            "string": "Loading the last Submission…"
+          }
+        },
+        "filtered": {
+          "withoutCount": {
+            "string": "Loading matching Submissions…",
+            "developer_comment": "This text is shown when the number of Submissions loading is unknown."
+          },
+          "middle": {
+            "string": "{count, plural, one {Loading {top} more of {count} remaining matching Submission…} other {Loading {top} more of {count} remaining matching Submissions…}}",
+            "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
+          },
+          "last": {
+            "multiple": {
+              "string": "{count, plural, one {Loading the last {count} matching Submission…} other {Loading the last {count} matching Submissions…}}"
+            },
+            "one": {
+              "string": "Loading the last matching Submission…"
+            }
+          }
+        }
+      }
+    },
+    "SubmissionRestore": {
+      "field": {
+        "noConfirm": {
+          "string": "Restore immediately without confirmation until I leave the page",
+          "developer_comment": "This is the text of a form field."
+        }
+      }
+    },
+    "WebFormRenderer": {
+      "retryModal": {
+        "action": {
+          "tryAgain": {
+            "string": "Try again",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        }
+      }
+    },
+    "srcComponentsAccountClaim": {
       "title": {
         "string": "Set your new password"
       },
@@ -1143,7 +1800,7 @@
         }
       }
     },
-    "AccountLogin": {
+    "srcComponentsAccountLogin": {
       "alert": {
         "alreadyLoggedIn": {
           "string": "A user is already logged in. Please refresh the page to continue."
@@ -1177,12 +1834,7 @@
         }
       }
     },
-    "AccountPageContainer": {
-      "customLogoAlt": {
-        "string": "Organization logo"
-      }
-    },
-    "AccountResetPassword": {
+    "srcComponentsAccountResetPassword": {
       "title": {
         "string": "Reset your password"
       },
@@ -1195,7 +1847,7 @@
         }
       }
     },
-    "AnalyticsForm": {
+    "srcComponentsAnalyticsForm": {
       "enabled": {
         "null": {
           "0": {
@@ -1261,7 +1913,7 @@
         }
       }
     },
-    "AnalyticsIntroduction": {
+    "srcComponentsAnalyticsIntroduction": {
       "title": {
         "string": "Help Improve Central!",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -1288,7 +1940,7 @@
         }
       }
     },
-    "AnalyticsList": {
+    "srcComponentsAnalyticsList": {
       "heading": {
         "0": {
           "string": "Below, you can choose whether this Central server will share anonymous usage information with the Central team. This setting affects the entire server."
@@ -1299,7 +1951,7 @@
         "developer_comment": "This is a title shown above a section of the page."
       }
     },
-    "AnalyticsMetricsTable": {
+    "srcComponentsAnalyticsMetricsTable": {
       "recent": {
         "string": "in the past 45 days"
       },
@@ -1573,7 +2225,7 @@
         }
       }
     },
-    "AnalyticsPreview": {
+    "srcComponentsAnalyticsPreview": {
       "title": {
         "string": "Anonymized Usage Report",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -1616,20 +2268,20 @@
         "developer_comment": "This is the title of a single table in the analytics metrics report of other additional metrics that don't fit into other categories"
       }
     },
-    "AsyncRoute": {
+    "srcComponentsAsyncRoute": {
       "alert": {
         "loadError": {
           "string": "The page you requested could not be loaded. Please refresh the page and try again."
         }
       }
     },
-    "AuditFilters": {
+    "srcComponentsAuditFilters": {
       "noLogDateSelected": {
         "string": "(none)",
         "developer_comment": "Text shown when no Audit log date is selected in the filter"
       }
     },
-    "AuditList": {
+    "srcComponentsAuditList": {
       "heading": {
         "0": {
           "string": "Here you will find a log of significant actions performed on this server. Changes made to user, Project, or Form settings can be found here."
@@ -1639,7 +2291,7 @@
         "string": "There are no matching audit log entries."
       }
     },
-    "AuditRow": {
+    "srcComponentsAuditRow": {
       "deletedMessage": {
         "string": "This resource has been deleted.",
         "developer_comment": "This shows as a tool tip in the audit log explaining that a resource has been deleted."
@@ -1649,7 +2301,7 @@
         "developer_comment": "This shows as a tool tip in the audit log explaining that a resource has been purged (deleted forever)."
       }
     },
-    "AuditTable": {
+    "srcComponentsAuditTable": {
       "header": {
         "initiator": {
           "string": "Initiator",
@@ -1665,13 +2317,13 @@
         }
       }
     },
-    "CollectQr": {
+    "srcComponentsCollectQr": {
       "draft": {
         "string": "Temporary Testing Code",
         "developer_comment": "This is shown below a QR code for a draft form."
       }
     },
-    "ConfigError": {
+    "srcComponentsConfigError": {
       "title": {
         "string": "Error Loading Central",
         "developer_comment": "This is the title at the top of a panel."
@@ -1680,12 +2332,12 @@
         "string": "There was an error loading Central."
       }
     },
-    "ConfigLogin": {
+    "srcComponentsConfigLogin": {
       "title": {
         "string": "Login page"
       }
     },
-    "ConfigLoginEdit": {
+    "srcComponentsConfigLoginEdit": {
       "logo": {
         "label": {
           "string": "Logo"
@@ -1713,7 +2365,7 @@
         }
       }
     },
-    "ConfigLoginFileSelect": {
+    "srcComponentsConfigLoginFileSelect": {
       "select": {
         "full": {
           "string": "Drag image here or {upload}",
@@ -1742,12 +2394,12 @@
         }
       }
     },
-    "ConfigLoginPreview": {
+    "srcComponentsConfigLoginPreview": {
       "introduction": {
         "string": "Your login page now looks like this:"
       }
     },
-    "DatasetDelete": {
+    "srcComponentsDatasetDelete": {
       "title": {
         "string": "Delete Entity List",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -1758,7 +2410,7 @@
         }
       }
     },
-    "DatasetEntities": {
+    "srcComponentsDatasetEntities": {
       "upload": {
         "string": "Upload Entities"
       },
@@ -1787,7 +2439,7 @@
         "string": "OData access is unavailable for deleted Entities"
       }
     },
-    "DatasetList": {
+    "srcComponentsDatasetList": {
       "heading": {
         "0": {
           "string": "Entities let you share information between Forms so you can collect longitudinal data, manage cases over time, and represent other workflows with multiple steps.",
@@ -1802,7 +2454,7 @@
         "developer_comment": "This is the text of a button that is used to create a new Entity List. It is shown next to a heading whose text is \"Entity Lists\"."
       }
     },
-    "DatasetNew": {
+    "srcComponentsDatasetNew": {
       "title": {
         "string": "Create Entity List",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -1829,7 +2481,7 @@
         }
       }
     },
-    "DatasetOverview": {
+    "srcComponentsDatasetOverview": {
       "entityProperties": {
         "string": "Entity Properties",
         "developer_comment": "This is a title shown above a section of the page."
@@ -1839,7 +2491,7 @@
         "developer_comment": "This is shown on a button for creating new Entity Properties"
       }
     },
-    "DatasetOverviewDatasetProperties": {
+    "srcComponentsDatasetOverviewDatasetProperties": {
       "emptyTable": {
         "string": "The Entities in this Entity List do not have any user-defined properties."
       },
@@ -1861,7 +2513,7 @@
         "developer_comment": "This is shown after a Property has been successfully deleted. {name} is the name of the deleted property."
       }
     },
-    "DatasetOverviewDeletePropertyError": {
+    "srcComponentsDatasetOverviewDeletePropertyError": {
       "title": {
         "string": "Delete Property"
       },
@@ -1890,29 +2542,7 @@
         "developer_comment": "This text refers to an Entity property that is set."
       }
     },
-    "DatasetOverviewNewProperty": {
-      "title": {
-        "string": "Add Entity Property",
-        "developer_comment": "This is the title at the top of a pop-up."
-      },
-      "introduction": {
-        "0": {
-          "string": "To add an Entity property, choose a unique property name below."
-        },
-        "1": {
-          "string": "You can also add new properties by uploading a Form that references them, in which case the properties are created when the Form is published."
-        }
-      },
-      "newPropertyName": {
-        "string": "New property name"
-      },
-      "problem": {
-        "409_3": {
-          "string": "A property already exists in this Entity List with the name of “{propertyName}”."
-        }
-      }
-    },
-    "DatasetOwnerOnly": {
+    "srcComponentsDatasetOwnerOnly": {
       "panel": {
         "title": {
           "string": "App User and Data Collector Entity Access",
@@ -1961,7 +2591,7 @@
         }
       }
     },
-    "DatasetPendingSubmissions": {
+    "srcComponentsDatasetPendingSubmissions": {
       "title": {
         "string": "Pending Submissions"
       },
@@ -2003,7 +2633,7 @@
         }
       }
     },
-    "DatasetRow": {
+    "srcComponentsDatasetRow": {
       "action": {
         "download": {
           "string": "Download data (.csv)",
@@ -2014,7 +2644,7 @@
         "string": "{count, plural, one {{count} possible conflict} other {{count} possible conflicts}}"
       }
     },
-    "DatasetSettings": {
+    "srcComponentsDatasetSettings": {
       "entityWorkflow": {
         "string": "Entity Workflow",
         "developer_comment": "This is a title shown above a section of the page."
@@ -2072,7 +2702,7 @@
         }
       }
     },
-    "DatasetShow": {
+    "srcComponentsDatasetShow": {
       "back": {
         "string": "Back to Project Entities",
         "developer_comment": "This is shown at the top of the page."
@@ -2088,7 +2718,7 @@
         }
       }
     },
-    "DatasetSummaryRow": {
+    "srcComponentsDatasetSummaryRow": {
       "new": {
         "string": "new!",
         "developer_comment": "This is shown when an Entity List is new"
@@ -2098,12 +2728,12 @@
         "developer_comment": "This is shown when mouse hovers over plus icon of new Entity Property"
       }
     },
-    "DatasetTable": {
+    "srcComponentsDatasetTable": {
       "emptyTable": {
         "string": "No Entities have been created for this Project yet."
       }
     },
-    "DatasetTrashRow": {
+    "srcComponentsDatasetTrashRow": {
       "action": {
         "download": {
           "string": "Download data (.csv)",
@@ -2111,17 +2741,17 @@
         }
       }
     },
-    "DatasetTrashTable": {
+    "srcComponentsDatasetTrashTable": {
       "message": {
         "string": "Entity Lists are deleted after 30 days in the Trash"
       }
     },
-    "Download": {
+    "srcComponentsDownload": {
       "body": {
         "string": "{filename} will begin downloading soon. Once the download begins, you can leave this page."
       }
     },
-    "EnketoFill": {
+    "srcComponentsEnketoFill": {
       "disabled": {
         "processing": {
           "string": "Web Form is not available yet. It has not finished being processed. Please refresh later and try again."
@@ -2131,7 +2761,7 @@
         }
       }
     },
-    "EnketoPreview": {
+    "srcComponentsEnketoPreview": {
       "disabled": {
         "processing": {
           "string": "Preview has not finished processing for this Form. Please refresh later and try again."
@@ -2141,7 +2771,7 @@
         }
       }
     },
-    "EntityActivity": {
+    "srcComponentsEntityActivity": {
       "action": {
         "delete": {
           "string": "Delete Entity",
@@ -2149,7 +2779,7 @@
         }
       }
     },
-    "EntityBasicDetails": {
+    "srcComponentsEntityBasicDetails": {
       "entityDetails": {
         "string": "Entity Details"
       },
@@ -2169,7 +2799,7 @@
         "string": "This Submission has been deleted."
       }
     },
-    "EntityConflictSummary": {
+    "srcComponentsEntityConflictSummary": {
       "title": {
         "string": "Data updates in parallel"
       },
@@ -2204,7 +2834,7 @@
         "string": "The conflict warning has been cleared."
       }
     },
-    "EntityConflictTable": {
+    "srcComponentsEntityConflictTable": {
       "noConflicts": {
         "string": "There are no conflicts to show.",
         "developer_comment": "This is shown if all conflicts between versions have been resolved for an Entity."
@@ -2245,7 +2875,7 @@
         "developer_comment": "A series of updates that were made offline"
       }
     },
-    "EntityDelete": {
+    "srcComponentsEntityDelete": {
       "title": {
         "string": "Delete {label}",
         "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
@@ -2255,20 +2885,14 @@
           "string": "Are you sure you want to delete “{label}”?",
           "developer_comment": "{label} is the label of an Entity."
         }
-      },
-      "field": {
-        "noConfirm": {
-          "string": "Delete immediately without confirmation until I leave the page",
-          "developer_comment": "This is the text of a form field."
-        }
       }
     },
-    "EntityDiff": {
+    "srcComponentsEntityDiff": {
       "noChange": {
         "string": "There are no changes to show."
       }
     },
-    "EntityDiffHead": {
+    "srcComponentsEntityDiffHead": {
       "introduction": {
         "string": "This Submission update was applied to version {version} of this Entity, but it was created based on version {baseVersion}.",
         "developer_comment": "{version} and {baseVersion} are version numbers."
@@ -2299,13 +2923,13 @@
         }
       }
     },
-    "EntityDiffRow": {
+    "srcComponentsEntityDiffRow": {
       "conflictingProp": {
         "string": "Another update already wrote to this property.",
         "developer_comment": "This is shown for an Entity property that is part of a conflict between versions of the Entity."
       }
     },
-    "EntityDiffTable": {
+    "srcComponentsEntityDiffTable": {
       "header": {
         "oldValue": {
           "string": "Old value",
@@ -2329,7 +2953,7 @@
         "developer_comment": "The author's view is a comparison between two versions of an Entity, from the point of view of the data collector (the author)."
       }
     },
-    "EntityFeedEntry": {
+    "srcComponentsEntityFeedEntry": {
       "title": {
         "submission": {
           "create": {
@@ -2400,7 +3024,7 @@
         "developer_comment": "This is shown for an update to an Entity when the update was made offline as part of a chain of updates."
       }
     },
-    "EntityFiltersConflict": {
+    "srcComponentsEntityFiltersConflict": {
       "conflict": {
         "true": {
           "string": "Possible conflict",
@@ -2428,7 +3052,7 @@
         }
       }
     },
-    "EntityFiltersCreator": {
+    "srcComponentsEntityFiltersCreator": {
       "field": {
         "creator": {
           "string": "Created by",
@@ -2456,7 +3080,7 @@
         "string": "There are no Entities yet."
       }
     },
-    "EntityList": {
+    "srcComponentsEntityList": {
       "noEntities": {
         "string": "There are no Entities to show.",
         "developer_comment": "This text is shown when there are no Entities to show in a table."
@@ -2508,27 +3132,9 @@
       },
       "bulkOpInProgress": {
         "string": "Bulk operation in progress"
-      },
-      "action": {
-        "download": {
-          "unfiltered": {
-            "string": "{count, plural, one {Download {count} Entity} other {Download all {count} Entities}}",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          },
-          "filtered": {
-            "withCount": {
-              "string": "{count, plural, one {Download {count} matching Entity} other {Download {count} matching Entities}}",
-              "developer_comment": "This is the text for an action, for example, the text of a button."
-            },
-            "withoutCount": {
-              "string": "Download all matching Entities",
-              "developer_comment": "This is the text of a button. This text is shown when the number of matching Entities is unknown."
-            }
-          }
-        }
       }
     },
-    "EntityMapView": {
+    "srcComponentsEntityMapView": {
       "loading": {
         "string": "Preparing map. This could take a while."
       },
@@ -2536,13 +3142,7 @@
         "string": "{count, plural, one {{count} Entity in this area} other {{count} Entities in this area}}"
       }
     },
-    "EntityMetadataRow": {
-      "reviewParallelUpdates": {
-        "string": "Review parallel updates",
-        "developer_comment": "This is the text for an action, for example, the text of a button."
-      }
-    },
-    "EntityResolve": {
+    "srcComponentsEntityResolve": {
       "title": {
         "string": "Parallel updates to “{label}”",
         "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
@@ -2588,7 +3188,7 @@
         }
       }
     },
-    "EntityRestore": {
+    "srcComponentsEntityRestore": {
       "title": {
         "string": "Restore {label}",
         "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
@@ -2606,7 +3206,7 @@
         }
       }
     },
-    "EntityShow": {
+    "srcComponentsEntityShow": {
       "back": {
         "title": {
           "string": "Entity Detail",
@@ -2618,7 +3218,7 @@
         }
       }
     },
-    "EntityTable": {
+    "srcComponentsEntityTable": {
       "header": {
         "updatedAtAndActions": {
           "string": "Last Updated / Actions",
@@ -2630,21 +3230,7 @@
         }
       }
     },
-    "EntityUpdate": {
-      "title": {
-        "string": "Update {label}",
-        "developer_comment": "This is the title at the top of a pop-up. {label} is the label of an Entity."
-      },
-      "geometryDisabled": {
-        "string": "Geometry can’t be updated from the map."
-      },
-      "problem": {
-        "409_15": {
-          "string": "Data has been modified by another user. Please refresh to see the updated data."
-        }
-      }
-    },
-    "EntityUpload": {
+    "srcComponentsEntityUpload": {
       "title": {
         "string": "Import Data from File",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -2671,17 +3257,14 @@
         "noData": {
           "string": "Your file does not contain any data."
         }
-      },
-      "headersNote": {
-        "string": "The first row in your data file must exactly match the table header you see above."
       }
     },
-    "EntityUploadDataError": {
+    "srcComponentsEntityUploadDataError": {
       "title": {
         "string": "Data error"
       }
     },
-    "EntityUploadDataTemplate": {
+    "srcComponentsEntityUploadDataTemplate": {
       "text": {
         "full": {
           "string": "If you aren’t sure, you can {downloadTemplate}",
@@ -2693,7 +3276,7 @@
         }
       }
     },
-    "EntityUploadFileSelect": {
+    "srcComponentsEntityUploadFileSelect": {
       "text": {
         "full": {
           "string": "Drag a .csv file here, or {chooseOne} to import.",
@@ -2708,7 +3291,7 @@
         "string": "Reading data…"
       }
     },
-    "EntityUploadHeaderErrors": {
+    "srcComponentsEntityUploadHeaderErrors": {
       "expectedHeader": {
         "string": "Expected header",
         "developer_comment": "This refers to the header row of a spreadsheet."
@@ -2739,7 +3322,7 @@
         }
       }
     },
-    "EntityUploadPopup": {
+    "srcComponentsEntityUploadPopup": {
       "rowCount": {
         "string": "{count, plural, one {{count} data row found} other {{count} data rows found}}"
       },
@@ -2754,7 +3337,7 @@
         }
       }
     },
-    "EntityUploadWarnings": {
+    "srcComponentsEntityUploadWarnings": {
       "row": {
         "raggedRows": {
           "string": "Fewer columns were found than expected in some rows:",
@@ -2766,7 +3349,7 @@
         }
       }
     },
-    "EntityUpsert": {
+    "srcComponentsEntityUpsert": {
       "titleCreate": {
         "string": "Create New Entity"
       },
@@ -2777,7 +3360,7 @@
         }
       }
     },
-    "EntityVersionLink": {
+    "srcComponentsEntityVersionLink": {
       "submission": {
         "string": "Submission {instanceName}",
         "developer_comment": "This text is shown for a Submission. {instanceName} is the instance name of the Submission."
@@ -2791,7 +3374,7 @@
         "developer_comment": "This refers to creation of an Entity. {filename} is the name of an uploaded file containing the Entity. {name} is the name of a Web User."
       }
     },
-    "ExtraTranslations": {
+    "srcComponentsExtraTranslations": {
       "outdatedVersionHtml": {
         "heading": {
           "string": "You’re using a significantly outdated version of ODK Central"
@@ -2805,13 +3388,13 @@
         }
       }
     },
-    "FeedbackButton": {
+    "srcComponentsFeedbackButton": {
       "feedback": {
         "string": "Feedback",
         "developer_comment": "Text for a hovering feedback button shown anchored to right of screen. If your language doesn't have a single word or short phrase for \"feedback\", consider something like \"comments\" or \"reactions\"."
       }
     },
-    "FieldKeyList": {
+    "srcComponentsFieldKeyList": {
       "action": {
         "create": {
           "string": "Create App User",
@@ -2862,7 +3445,7 @@
         }
       }
     },
-    "FieldKeyNew": {
+    "srcComponentsFieldKeyNew": {
       "title": {
         "string": "Create App User",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -2898,7 +3481,7 @@
         }
       }
     },
-    "FieldKeyQrPanel": {
+    "srcComponentsFieldKeyQrPanel": {
       "title": {
         "managed": {
           "string": "Client Configuration Code",
@@ -2977,7 +3560,7 @@
         }
       }
     },
-    "FieldKeyRevoke": {
+    "srcComponentsFieldKeyRevoke": {
       "title": {
         "string": "Revoke User Access",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -2992,7 +3575,7 @@
         }
       }
     },
-    "FieldKeyRow": {
+    "srcComponentsFieldKeyRow": {
       "seeCode": {
         "string": "See code",
         "developer_comment": "Clicking on this text displays an App User QR code for configuring ODK Collect."
@@ -3008,7 +3591,7 @@
         }
       }
     },
-    "FormAttachmentLinkDataset": {
+    "srcComponentsFormAttachmentLinkDataset": {
       "title": {
         "string": "Link Entity List",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -3028,7 +3611,7 @@
         }
       }
     },
-    "FormAttachmentList": {
+    "srcComponentsFormAttachmentList": {
       "action": {
         "upload": {
           "string": "Choose files",
@@ -3056,15 +3639,9 @@
         "link": {
           "string": "Entity List successfully linked."
         }
-      },
-      "header": {
-        "uploaded": {
-          "string": "Uploaded",
-          "developer_comment": "This is the text of a table column header. The column shows when each Media File was uploaded."
-        }
       }
     },
-    "FormAttachmentNameMismatch": {
+    "srcComponentsFormAttachmentNameMismatch": {
       "title": {
         "upload": {
           "string": "Upload File",
@@ -3085,7 +3662,7 @@
         }
       }
     },
-    "FormAttachmentPopups": {
+    "srcComponentsFormAttachmentPopups": {
       "title": {
         "string": "Upload Files",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -3152,7 +3729,7 @@
         }
       }
     },
-    "FormAttachmentRow": {
+    "srcComponentsFormAttachmentRow": {
       "type": {
         "image": {
           "string": "Image",
@@ -3202,7 +3779,7 @@
         "developer_comment": "This is a label that is shown next to a Form Attachment that is linked to an Entity List, which would be overriden if the selected files were uploaded."
       }
     },
-    "FormAttachmentUploadFiles": {
+    "srcComponentsFormAttachmentUploadFiles": {
       "title": {
         "string": "Upload Files",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -3230,7 +3807,7 @@
         }
       }
     },
-    "FormDelete": {
+    "srcComponentsFormDelete": {
       "title": {
         "string": "Delete Form",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -3247,7 +3824,7 @@
         "string": "Any Entities created by this Form’s Submissions will not be deleted. In a future version of Central, it will be possible to delete Entities."
       }
     },
-    "FormDraftAbandon": {
+    "srcComponentsFormDraftAbandon": {
       "title": {
         "abandon": {
           "string": "Abandon Draft",
@@ -3276,7 +3853,7 @@
         }
       }
     },
-    "FormDraftPublish": {
+    "srcComponentsFormDraftPublish": {
       "title": {
         "string": "Publish Draft",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -3326,7 +3903,7 @@
         }
       }
     },
-    "FormDraftQrPanel": {
+    "srcComponentsFormDraftQrPanel": {
       "title": {
         "string": "Testing Code",
         "developer_comment": "This is the title at the top of a pop-up. \"Code\" refers to a QR code."
@@ -3360,55 +3937,16 @@
         }
       }
     },
-    "FormDraftStatus": {
-      "actions": {
-        "action": {
-          "abandon": {
-            "string": "Abandon Draft",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          },
-          "publish": {
-            "string": "Publish Draft",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          }
-        }
-      },
-      "alert": {
-        "upload": {
-          "string": "The new Form definition has been saved as your Draft."
-        },
-        "publish": {
-          "string": "Your Draft has been published. Any devices using this Form will now get the updated Form definition and attachments."
-        },
-        "abandon": {
-          "string": "The Draft version of this Form has been successfully deleted."
-        }
-      }
-    },
-    "FormDraftTesting": {
+    "srcComponentsFormDraftTesting": {
       "title": {
         "string": "Test this Draft",
         "developer_comment": "This is a title shown above a section of the page."
       },
       "entitiesTesting": {
         "string": "This Form Definition creates or updates Entities. For now, Entities are not created or updated by Draft Forms, so you will need to publish the Form to verify Entity functionality."
-      },
-      "subtitle": {
-        "full": {
-          "string": "Submissions made here {willBeDeleted} when you publish this Draft!",
-          "developer_comment": "{willBeDeleted} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nwill be deleted"
-        },
-        "willBeDeleted": {
-          "string": "will be deleted",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {willBeDeleted} is in the following text:\n\nSubmissions made here {willBeDeleted} when you publish this Draft!"
-        }
-      },
-      "collectProjectName": {
-        "string": "[Draft] {name}",
-        "developer_comment": "This text will be shown in ODK Collect when testing a Draft Form. {name} is the title of the Draft Form."
       }
     },
-    "FormEditAttachments": {
+    "srcComponentsFormEditAttachments": {
       "noAttachments": {
         "string": "This definition requires no attachments, so there is nothing to upload.",
         "developer_comment": "\"Definition\" refers to a Form Definition, and \"attachments\" refers to Form Attachments."
@@ -3429,7 +3967,7 @@
         }
       }
     },
-    "FormEditCreateDraft": {
+    "srcComponentsFormEditCreateDraft": {
       "title": {
         "string": "Draft version",
         "developer_comment": "This refers to the draft version of a Form."
@@ -3445,7 +3983,7 @@
         "string": "The published version will not be affected until you publish your Draft."
       }
     },
-    "FormEditDef": {
+    "srcComponentsFormEditDef": {
       "subtitle": {
         "string": "Uploaded",
         "developer_comment": "This refers to the draft version of a Form."
@@ -3469,19 +4007,15 @@
         "developer_comment": "This text is shown above a list of items that are part of the Form Definition."
       }
     },
-    "FormEditDraftControls": {
+    "srcComponentsFormEditDraftControls": {
       "action": {
         "delete": {
           "string": "Delete Form",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
-      },
-      "subtitle": {
-        "string": "Ready to publish",
-        "developer_comment": "This refers to the draft version of a Form."
       }
     },
-    "FormEditEntities": {
+    "srcComponentsFormEditEntities": {
       "datasetCount": {
         "string": "{count, plural, one {Submissions to this Form definition will update {count} Entity List.} other {Submissions to this Form definition will update {count} Entity Lists.}}"
       },
@@ -3516,7 +4050,7 @@
         "string": "What are Entities?"
       }
     },
-    "FormEditPublishedVersion": {
+    "srcComponentsFormEditPublishedVersion": {
       "title": {
         "string": "Current version",
         "developer_comment": "This refers to the current version of a Form."
@@ -3528,7 +4062,7 @@
         }
       }
     },
-    "FormHead": {
+    "srcComponentsFormHead": {
       "projectNav": {
         "action": {
           "back": {
@@ -3558,21 +4092,9 @@
         "appUsers": {
           "string": "{count, plural, one {{count} App User assigned} other {{count} App Users assigned}}"
         }
-      },
-      "draftNav": {
-        "action": {
-          "create": {
-            "string": "Create a new Draft",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          }
-        },
-        "title": {
-          "string": "Draft",
-          "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
-        }
       }
     },
-    "FormList": {
+    "srcComponentsFormList": {
       "title": {
         "string": "Forms",
         "developer_comment": "This is a title shown above a section of the page."
@@ -3592,134 +4114,7 @@
         }
       }
     },
-    "FormNew": {
-      "introduction": {
-        "0": {
-          "create": {
-            "string": "To create a Form, upload an XForms XML file or an XLSForm Excel file.",
-            "developer_comment": "The words \"XForms\" and \"XLSForm\" should not be translated."
-          },
-          "update": {
-            "string": "To update the Draft, upload an XForms XML file or an XLSForm Excel file.",
-            "developer_comment": "The words \"XForms\" and \"XLSForm\" should not be translated."
-          }
-        },
-        "1": {
-          "full": {
-            "string": "If you don’t already have one, there are {tools} to help you design your Form.",
-            "developer_comment": "{tools} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\ntools available"
-          },
-          "tools": {
-            "string": "tools available",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {tools} is in the following text:\n\nIf you don’t already have one, there are {tools} to help you design your Form."
-          }
-        },
-        "2": {
-          "string": "If you have Form Attachments, you will be able to provide those on the next page, after the Form has been created."
-        }
-      },
-      "dropZone": {
-        "full": {
-          "string": "Drop a file here, or {chooseOne} to upload.",
-          "developer_comment": "{chooseOne} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose one"
-        },
-        "chooseOne": {
-          "string": "choose one",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseOne} is in the following text:\n\nDrop a file here, or {chooseOne} to upload."
-        }
-      },
-      "action": {
-        "uploadAnyway": {
-          "string": "Upload anyway",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
-        "upload": {
-          "string": "Upload",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
-      "alert": {
-        "fileRequired": {
-          "string": "Please choose a file."
-        },
-        "fileNotReadable": {
-          "string": "The file could not be read. It may have been modified or deleted. Please choose the file again."
-        }
-      },
-      "problem": {
-        "400_8": {
-          "string": "The Form definition you have uploaded does not appear to be for this Form. It has the wrong formId (expected “{expected}”, got “{actual}”)."
-        },
-        "400_15": {
-          "string": "The XLSForm could not be converted: {error}",
-          "developer_comment": "The word \"XLSForm\" should not be translated."
-        },
-        "409_3": {
-          "string": "A Form already exists in this Project with the Form ID of “{xmlFormId}”."
-        }
-      },
-      "fields": {
-        "string": "Fields:",
-        "developer_comment": "Sub-heading for a warning details, followed by the list of fields"
-      },
-      "warningsText": {
-        "0": {
-          "string": "This file can be used, but it has the following possible problems:"
-        },
-        "1": {
-          "string": "Form design warnings:"
-        },
-        "2": {
-          "string": "Workflow warnings:"
-        },
-        "3": {
-          "deletedFormExists": {
-            "string": "There is a form with ID \"{value}\" in the Trash. If you upload this Form, you won’t be able to restore the other one with the matching ID."
-          },
-          "structureChanged": {
-            "string": "The following fields have been deleted, renamed or are now in different groups or repeats. These fields will not be visible in the Submission table or included in exports by default."
-          },
-          "oldEntityVersion": {
-            "string": "Entities specification version “{version}” is not compatible with Offline Entities. We recommend using version 2024.1.0 or later."
-          }
-        },
-        "4": {
-          "string": "Please correct the problems and try again."
-        },
-        "5": {
-          "create": {
-            "string": "If you are sure these problems can be ignored, click the button to create the Form anyway:"
-          },
-          "update": {
-            "string": "If you are sure these problems can be ignored, click the button to update the Draft anyway:"
-          }
-        }
-      },
-      "title": {
-        "create": {
-          "string": "Create Form",
-          "developer_comment": "This is the title at the top of a page."
-        },
-        "update": {
-          "string": "Upload New Form Definition",
-          "developer_comment": "This is the title at the top of a section."
-        }
-      }
-    },
-    "FormOverviewRightNow": {
-      "stateCaption": {
-        "open": {
-          "string": "This Form is downloadable and is accepting Submissions."
-        },
-        "closing": {
-          "string": "This Form is not downloadable but still accepts Submissions."
-        },
-        "closed": {
-          "string": "This Form is not downloadable and does not accept Submissions."
-        }
-      }
-    },
-    "FormRestore": {
+    "srcComponentsFormRestore": {
       "title": {
         "string": "Restore Form",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -3736,7 +4131,7 @@
         }
       }
     },
-    "FormRow": {
+    "srcComponentsFormRow": {
       "action": {
         "fill": {
           "string": "Fill Form",
@@ -3747,7 +4142,7 @@
         "string": "This Form is Closing and accepting its final Submissions. It is not downloadable but still accepts Submissions."
       }
     },
-    "FormSettings": {
+    "srcComponentsFormSettings": {
       "state": {
         "title": {
           "string": "Form State",
@@ -3798,7 +4193,7 @@
         }
       }
     },
-    "FormSort": {
+    "srcComponentsFormSort": {
       "sortOptions": {
         "alphabetical": {
           "string": "Alphabetical",
@@ -3810,12 +4205,12 @@
         }
       }
     },
-    "FormSubmission": {
+    "srcComponentsFormSubmission": {
       "formNotFound": {
         "string": "No Form found with this URL, please double check."
       }
     },
-    "FormSubmissions": {
+    "srcComponentsFormSubmissions": {
       "analyzeDisabled": {
         "string": "OData access is unavailable due to Form encryption"
       },
@@ -3832,7 +4227,7 @@
         }
       }
     },
-    "FormTable": {
+    "srcComponentsFormTable": {
       "header": {
         "closedForms": {
           "string": "Closed Forms",
@@ -3852,7 +4247,7 @@
         }
       }
     },
-    "FormTrashList": {
+    "srcComponentsFormTrashList": {
       "title": {
         "string": "Trash"
       },
@@ -3869,7 +4264,7 @@
         "string": "Forms and Form-related data are deleted after 30 days in the Trash"
       }
     },
-    "FormTrashRow": {
+    "srcComponentsFormTrashRow": {
       "deletedDate": {
         "string": "Deleted {dateTime}",
         "developer_comment": "This text shows when the Form was deleted. {dateTime} shows the date and time, for example: \"2020/01/01 01:23\". It may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
@@ -3878,15 +4273,9 @@
         "conflict": {
           "string": "This Form cannot be restored because an active Form with the same ID exists."
         }
-      },
-      "action": {
-        "restore": {
-          "string": "Restore",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
       }
     },
-    "FormVersionDefDropdown": {
+    "srcComponentsFormVersionDefDropdown": {
       "action": {
         "def": {
           "string": "Definition",
@@ -3906,19 +4295,19 @@
         }
       }
     },
-    "FormVersionRow": {
+    "srcComponentsFormVersionRow": {
       "current": {
         "string": "Current Published Version",
         "developer_comment": "This is a label shown for the current version of a Form."
       }
     },
-    "FormVersionString": {
+    "srcComponentsFormVersionString": {
       "blank": {
         "string": "(blank)",
         "developer_comment": "This is shown for a Form with a blank version name."
       }
     },
-    "FormVersionTable": {
+    "srcComponentsFormVersionTable": {
       "header": {
         "published": {
           "string": "Published",
@@ -3930,13 +4319,13 @@
         }
       }
     },
-    "FormVersionViewXml": {
+    "srcComponentsFormVersionViewXml": {
       "title": {
         "string": "View XML",
         "developer_comment": "This is the title at the top of a pop-up."
       }
     },
-    "FormWebFormsSettingsConfirmation": {
+    "srcComponentsFormWebFormsSettingsConfirmation": {
       "webformsConfirmation": {
         "useOdkWebForms": {
           "string": "Use ODK Web Forms",
@@ -3971,7 +4360,7 @@
         }
       }
     },
-    "GeojsonMap": {
+    "srcComponentsGeojsonMap": {
       "showing": {
         "string": "Showing {count} of {total}",
         "developer_comment": "{count} and {total} are both numbers."
@@ -3989,20 +4378,20 @@
         }
       }
     },
-    "Home": {
+    "srcComponentsHome": {
       "heading": {
         "0": {
           "string": "Welcome to Central."
         }
       }
     },
-    "HomeNews": {
+    "srcComponentsHomeNews": {
       "title": {
         "string": "News",
         "developer_comment": "This is a title shown above a section of the page."
       }
     },
-    "HomeSummary": {
+    "srcComponentsHomeSummary": {
       "projects": {
         "body": {
           "string": "Central is organized into Projects, each containing its own Forms and related data."
@@ -4024,7 +4413,7 @@
         }
       }
     },
-    "MapPopup": {
+    "srcComponentsMapPopup": {
       "action": {
         "back": {
           "string": "Back to list",
@@ -4032,7 +4421,7 @@
         }
       }
     },
-    "MarkdownTextarea": {
+    "srcComponentsMarkdownTextarea": {
       "markdownSupported": {
         "string": "Markdown supported",
         "developer_comment": "This is a link to an external website with Markdown style guidelines"
@@ -4042,7 +4431,7 @@
         "developer_comment": "This is text shown as a label above the preview of Markdown formatting (special formatting of user-submitted text)"
       }
     },
-    "Multiselect": {
+    "srcComponentsMultiselect": {
       "action": {
         "apply": {
           "string": "Apply",
@@ -4050,7 +4439,7 @@
         }
       }
     },
-    "Navbar": {
+    "srcComponentsNavbar": {
       "action": {
         "toggle": {
           "string": "Toggle navigation",
@@ -4061,7 +4450,7 @@
         "string": "Help improve Central!"
       }
     },
-    "NavbarActions": {
+    "srcComponentsNavbarActions": {
       "notLoggedIn": {
         "string": "Not logged in",
         "developer_comment": "This text is shown if the user is not logged in. It is shown in the navigation bar at the top of the page."
@@ -4078,34 +4467,30 @@
         }
       }
     },
-    "NavbarHelpDropdown": {
+    "srcComponentsNavbarHelpDropdown": {
       "help": {
         "string": "Help",
         "developer_comment": "This text is used to label a help menu that lists links to useful resources."
-      },
-      "version": {
-        "string": "Version",
-        "developer_comment": "An identifier of a particular version of something (of Central, of a Form, of an Entity)"
       }
     },
-    "NavbarLinks": {
+    "srcComponentsNavbarLinks": {
       "current": {
         "string": "current",
         "developer_comment": "Used by screen readers to identify the currently-selected navigation tab"
       }
     },
-    "NavbarLocaleDropdown": {
+    "srcComponentsNavbarLocaleDropdown": {
       "helpTranslate": {
         "string": "Help translate Central",
         "developer_comment": "This is shown below the list of languages and links to the ODK Central translation guide."
       }
     },
-    "NotFound": {
+    "srcComponentsNotFound": {
       "body": {
         "string": "The page you requested could not be found."
       }
     },
-    "OdataDataAccess": {
+    "srcComponentsOdataDataAccess": {
       "action": {
         "connectData": {
           "string": "Connect Data",
@@ -4113,7 +4498,7 @@
         }
       }
     },
-    "OdataLoadingMessage": {
+    "srcComponentsOdataLoadingMessage": {
       "entity": {
         "withoutCount": {
           "string": "Loading Entities…",
@@ -4158,7 +4543,7 @@
         }
       }
     },
-    "OutdatedVersion": {
+    "srcComponentsOutdatedVersion": {
       "title": {
         "string": "Outdated Version",
         "developer_comment": "This is a title for the outdated version banner shown for the screenreaders only"
@@ -4176,7 +4561,7 @@
         "string": "Click here to dismiss this warning for 30 days."
       }
     },
-    "Pagination": {
+    "srcComponentsPagination": {
       "action": {
         "first": {
           "string": "First page",
@@ -4210,7 +4595,7 @@
         }
       }
     },
-    "ProjectArchive": {
+    "srcComponentsProjectArchive": {
       "title": {
         "string": "Archiving Project",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -4231,7 +4616,7 @@
         }
       }
     },
-    "ProjectEdit": {
+    "srcComponentsProjectEdit": {
       "title": {
         "string": "Basic Details",
         "developer_comment": "This is a title shown above a section of the page."
@@ -4256,7 +4641,7 @@
         }
       }
     },
-    "ProjectEnableEncryption": {
+    "srcComponentsProjectEnableEncryption": {
       "title": {
         "string": "Enable Encryption",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -4363,7 +4748,7 @@
         }
       }
     },
-    "ProjectFormAccess": {
+    "srcComponentsProjectFormAccess": {
       "heading": {
         "0": {
           "string": "App Users can only see and fill the Forms that they are explicity given access to in the table below. Project Managers and Data Collectors can use a web browser to fill out any Form in the Project that is in the Open state."
@@ -4378,7 +4763,7 @@
         }
       }
     },
-    "ProjectFormAccessRow": {
+    "srcComponentsProjectFormAccessRow": {
       "draftTitle": {
         "string": "This Form does not yet have a published version. It will not appear on devices until a Draft is published. Once you publish the Form, the settings shown here will be used."
       },
@@ -4393,7 +4778,7 @@
         }
       }
     },
-    "ProjectFormAccessStates": {
+    "srcComponentsProjectFormAccessStates": {
       "title": {
         "string": "Form States",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -4446,7 +4831,7 @@
         }
       }
     },
-    "ProjectFormAccessTable": {
+    "srcComponentsProjectFormAccessTable": {
       "header": {
         "form": {
           "string": "Form",
@@ -4458,7 +4843,7 @@
         }
       }
     },
-    "ProjectHomeBlock": {
+    "srcComponentsProjectHomeBlock": {
       "encrypted": {
         "string": "Encrypted",
         "developer_comment": "This text is shown in a small label next to a Project name to indicate that the Project is encrypted."
@@ -4487,7 +4872,7 @@
         "developer_comment": "Static text shown besides hidden Entity Lists with number of conflicts on the Homepage"
       }
     },
-    "ProjectList": {
+    "srcComponentsProjectList": {
       "archived": {
         "string": "Archived Projects",
         "developer_comment": "This header is shown above a section of a page, specificially a list of names of archived projects."
@@ -4512,7 +4897,7 @@
         }
       }
     },
-    "ProjectNew": {
+    "srcComponentsProjectNew": {
       "title": {
         "string": "Create Project",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -4523,7 +4908,7 @@
         }
       }
     },
-    "ProjectOverviewDescription": {
+    "srcComponentsProjectOverviewDescription": {
       "instructions": {
         "full": {
           "string": "Add Project notes, links, instructions and other resources to this space in {projectSettings}.",
@@ -4539,7 +4924,7 @@
         "developer_comment": "This note is also shown with an empty project description explaining who sees the message and can take action on it."
       }
     },
-    "ProjectSettings": {
+    "srcComponentsProjectSettings": {
       "encryption": {
         "title": {
           "string": "Encryption",
@@ -4596,7 +4981,7 @@
         }
       }
     },
-    "ProjectSort": {
+    "srcComponentsProjectSort": {
       "sortOptions": {
         "alphabetical": {
           "string": "Alphabetical",
@@ -4608,7 +4993,7 @@
         }
       }
     },
-    "ProjectSubmissionOptions": {
+    "srcComponentsProjectSubmissionOptions": {
       "title": {
         "string": "Submission Options",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -4654,7 +5039,7 @@
         }
       }
     },
-    "ProjectUserList": {
+    "srcComponentsProjectUserList": {
       "heading": {
         "0": {
           "string": "Sitewide Administrators are automatically considered Managers of every Project. Other Users can have Roles specific to this Project:",
@@ -4726,15 +5111,9 @@
         "unassignRole": {
           "string": "“{displayName}” has been removed from this Project."
         }
-      },
-      "action": {
-        "clearSearch": {
-          "string": "Clear search",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
       }
     },
-    "ProjectUserRow": {
+    "srcComponentsProjectUserRow": {
       "cannotAssignRole": {
         "string": "You may not edit your own Project Role."
       },
@@ -4745,7 +5124,7 @@
         }
       }
     },
-    "PublicLinkCreate": {
+    "srcComponentsPublicLinkCreate": {
       "title": {
         "string": "Create Public Access Link",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -4766,7 +5145,7 @@
         "developer_comment": "This is help text for the \"Single Submission\" checkbox."
       }
     },
-    "PublicLinkList": {
+    "srcComponentsPublicLinkList": {
       "action": {
         "create": {
           "string": "Create Public Access Link",
@@ -4807,7 +5186,7 @@
         }
       }
     },
-    "PublicLinkRevoke": {
+    "srcComponentsPublicLinkRevoke": {
       "title": {
         "string": "Revoke Public Access Link",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -4818,7 +5197,7 @@
         }
       }
     },
-    "PublicLinkRow": {
+    "srcComponentsPublicLinkRow": {
       "action": {
         "revoke": {
           "string": "Revoke",
@@ -4839,7 +5218,7 @@
         }
       }
     },
-    "PublicLinkTable": {
+    "srcComponentsPublicLinkTable": {
       "header": {
         "once": {
           "string": "Single Submission",
@@ -4851,66 +5230,7 @@
         }
       }
     },
-    "SubmissionAnalyze": {
-      "title": {
-        "string": "Using OData",
-        "developer_comment": "This is the title at the top of a pop-up."
-      },
-      "introduction": {
-        "0": {
-          "string": "OData is a standard for transferring data between tools and services. Powerful analysis tools like {powerBi}, {excel}, {python}, and {r} can fetch data via OData for analysis.",
-          "developer_comment": "The text of {powerBi} is \"Microsoft Power BI\". The text of {r} is \"R\". The text of {python} is \"Python\". The text of {excel} is \"Excel\". {powerBi}, {r}, {excel} and {python} are all links."
-        },
-        "1": {
-          "string": "To connect to this OData feed, select your tool and copy the link into it."
-        }
-      },
-      "tab": {
-        "microsoft": {
-          "string": "Power BI or Excel",
-          "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-        },
-        "other": {
-          "string": "Other (API)",
-          "developer_comment": "This is the text of a navigation tab. \"Other\" refers to \"other tool\"."
-        }
-      },
-      "help": {
-        "microsoft": {
-          "full": {
-            "string": "For help using OData with Power BI, see {pageForPowerBi}. For help with Excel, see {pageForExcel}.",
-            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {pageForExcel} has the text: this page\n- {pageForPowerBi} has the text: this page"
-          },
-          "pageForExcel": {
-            "string": "this page",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {pageForExcel} is in the following text:\n\nFor help using OData with Power BI, see {pageForPowerBi}. For help with Excel, see {pageForExcel}."
-          },
-          "pageForPowerBi": {
-            "string": "this page",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {pageForPowerBi} is in the following text:\n\nFor help using OData with Power BI, see {pageForPowerBi}. For help with Excel, see {pageForExcel}."
-          }
-        },
-        "python": {
-          "string": "To connect to Central from Python, we recommend {pyODK}. pyODK is the official Python client for Central. It simplifies data analysis and workflow automation.",
-          "developer_comment": "{pyODK} is a link. Its text is \"pyODK\"."
-        },
-        "r": {
-          "string": "To connect to Central from R, we recommend {ruODK}. ruODK is developed and supported by ODK community members.",
-          "developer_comment": "{ruODK} is a link. Its text is \"ruODK\"."
-        },
-        "other": {
-          "full": {
-            "string": "For a full description of our OData support, please see {article}.",
-            "developer_comment": "{article} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nthis article"
-          },
-          "article": {
-            "string": "this article",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {article} is in the following text:\n\nFor a full description of our OData support, please see {article}."
-          }
-        }
-      }
-    },
-    "SubmissionBasicDetails": {
+    "srcComponentsSubmissionBasicDetails": {
       "submissionDetails": {
         "string": "Submission Details"
       },
@@ -4939,88 +5259,12 @@
         "developer_comment": "{present} shows the number of files that were submitted, and {expected} shows the number of files that were expected to be submitted. For example: \"2 files / 3 expected\""
       }
     },
-    "SubmissionComment": {
+    "srcComponentsSubmissionComment": {
       "editWithoutComment": {
         "string": "You have made edits to this data. Please describe the changes you made."
       }
     },
-    "SubmissionDecrypt": {
-      "title": {
-        "string": "Download Submissions",
-        "developer_comment": "This is the title at the top of a pop-up."
-      },
-      "exportOptions": {
-        "string": "Export options",
-        "developer_comment": "This text is shown above options for downloading Submissions."
-      },
-      "field": {
-        "splitSelectMultiples": {
-          "string": "Split “select multiple” choices into columns",
-          "developer_comment": "This is the text of a form field."
-        },
-        "removeGroupNames": {
-          "string": "Remove group names",
-          "developer_comment": "This is the text of a form field."
-        },
-        "deletedFields": {
-          "string": "Include fields not in the published Form",
-          "developer_comment": "This is the text of a form field."
-        }
-      },
-      "deletedFieldsHelp": {
-        "string": "Use this option if you need to see fields referenced in previous Form versions."
-      },
-      "noSelectMultiple": {
-        "string": "This Form does not have any select multiple fields."
-      },
-      "encryptedForm": {
-        "string": "Encrypted Forms cannot be processed in this way."
-      },
-      "deletedFieldsDisabledForDraft": {
-        "string": "Draft Forms cannot be processed in this way."
-      },
-      "introduction": {
-        "0": {
-          "string": "In order to download this data, you will need to provide your passphrase. Your passphrase will be used only to decrypt your data for download, after which the server will forget it again."
-        }
-      },
-      "hint": {
-        "string": "Hint: {hint}",
-        "developer_comment": "This text is shown if there is a passphrase hint. {hint} is the passphrase hint."
-      },
-      "noRepeat": {
-        "string": "This Form does not have repeats.",
-        "developer_comment": "\"Repeats\" refers to repeat groups."
-      },
-      "action": {
-        "download": {
-          "mainTable": {
-            "string": "Main data table (no repeats)",
-            "developer_comment": "This is the text of a button. \"Repeats\" refers to repeat groups."
-          },
-          "allTables": {
-            "string": "All data tables",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          },
-          "withAttachments": {
-            "string": "All data and Attachments",
-            "developer_comment": "\"Attachments\" refers to Submission Attachments."
-          }
-        }
-      },
-      "alert": {
-        "unavailable": {
-          "string": "The data download is not yet available. Please try again in a moment."
-        },
-        "submit": {
-          "string": "Data download should begin soon. Once it begins, you can close this message. If it hasn’t started in 20 seconds, please try again."
-        },
-        "parseError": {
-          "string": "Something went wrong while requesting your data."
-        }
-      }
-    },
-    "SubmissionDelete": {
+    "srcComponentsSubmissionDelete": {
       "title": {
         "string": "Delete Submission",
         "developer_comment": "This is the title at the top of Submission delete pop-up."
@@ -5034,43 +5278,7 @@
         }
       }
     },
-    "SubmissionDiffItem": {
-      "editCaption": {
-        "added": {
-          "string": "(added)",
-          "developer_comment": "The description of how a specific field in a form submission changed"
-        },
-        "deleted": {
-          "string": "(deleted)",
-          "developer_comment": "The description of how a specific field in a form submission changed"
-        }
-      },
-      "empty": {
-        "string": "empty",
-        "developer_comment": "Text showing that a value in a submission edit is empty"
-      }
-    },
-    "SubmissionDownloadDropdown": {
-      "action": {
-        "download": {
-          "unfiltered": {
-            "string": "{count, plural, one {Download {count} Submission} other {Download all {count} Submissions}}",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          },
-          "filtered": {
-            "withoutCount": {
-              "string": "Download all Submissions matching the filter",
-              "developer_comment": "This is the text of a button. This text is shown when the number of matching Submissions is unknown."
-            },
-            "withCount": {
-              "string": "{count, plural, one {Download {count} Submission matching the filter} other {Download {count} Submissions matching the filter}}",
-              "developer_comment": "This is the text for an action, for example, the text of a button."
-            }
-          }
-        }
-      }
-    },
-    "SubmissionFeedEntry": {
+    "srcComponentsSubmissionFeedEntry": {
       "title": {
         "create": {
           "string": "Submitted by {name}",
@@ -5171,7 +5379,7 @@
         "developer_comment": "This text is shown next to an Entity when the Entity has been deleted."
       }
     },
-    "SubmissionFieldDropdown": {
+    "srcComponentsSubmissionFieldDropdown": {
       "field": {
         "columns": {
           "string": "Columns shown",
@@ -5196,7 +5404,7 @@
         "string": "Selecting too many columns might slow down your computer."
       }
     },
-    "SubmissionFilters": {
+    "srcComponentsSubmissionFilters": {
       "field": {
         "submissionDate": {
           "string": "Submitted at",
@@ -5208,7 +5416,7 @@
         "developer_comment": "Text shown when in date filter when records for all dates are shown"
       }
     },
-    "SubmissionFiltersReviewState": {
+    "srcComponentsSubmissionFiltersReviewState": {
       "action": {
         "all": {
           "string": "All",
@@ -5220,7 +5428,7 @@
         }
       }
     },
-    "SubmissionFiltersSubmitter": {
+    "srcComponentsSubmissionFiltersSubmitter": {
       "field": {
         "submitter": {
           "string": "Submitted by",
@@ -5245,7 +5453,7 @@
         "string": "Unknown submitter"
       }
     },
-    "SubmissionList": {
+    "srcComponentsSubmissionList": {
       "action": {
         "testOnDevice": {
           "string": "Test on device",
@@ -5287,52 +5495,9 @@
       },
       "noMapDeleted": {
         "string": "Map is unavailable for deleted Submissions"
-      },
-      "loading": {
-        "withoutCount": {
-          "string": "Loading Submissions…",
-          "developer_comment": "This text is shown when the number of Submissions loading is unknown."
-        },
-        "all": {
-          "string": "{count, plural, one {Loading {count} Submission…} other {Loading {count} Submissions…}}"
-        },
-        "first": {
-          "string": "{count, plural, one {Loading the first {top} of {count} Submission…} other {Loading the first {top} of {count} Submissions…}}",
-          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
-        },
-        "middle": {
-          "string": "{count, plural, one {Loading {top} more of {count} remaining Submission…} other {Loading {top} more of {count} remaining Submissions…}}",
-          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
-        },
-        "last": {
-          "multiple": {
-            "string": "{count, plural, one {Loading the last {count} Submission…} other {Loading the last {count} Submissions…}}"
-          },
-          "one": {
-            "string": "Loading the last Submission…"
-          }
-        },
-        "filtered": {
-          "withoutCount": {
-            "string": "Loading matching Submissions…",
-            "developer_comment": "This text is shown when the number of Submissions loading is unknown."
-          },
-          "middle": {
-            "string": "{count, plural, one {Loading {top} more of {count} remaining matching Submission…} other {Loading {top} more of {count} remaining matching Submissions…}}",
-            "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
-          },
-          "last": {
-            "multiple": {
-              "string": "{count, plural, one {Loading the last {count} matching Submission…} other {Loading the last {count} matching Submissions…}}"
-            },
-            "one": {
-              "string": "Loading the last matching Submission…"
-            }
-          }
-        }
       }
     },
-    "SubmissionMapPopup": {
+    "srcComponentsSubmissionMapPopup": {
       "missingField": {
         "string": "This Submission was mapped using {field}, which isn’t in the published Form version.",
         "developer_comment": "{field} is the name of a Form field."
@@ -5342,7 +5507,7 @@
         "developer_comment": "Message of the tooltip of checkmark icon, which is shown next of the fieldname that is used to plot pins on the map"
       }
     },
-    "SubmissionMapView": {
+    "srcComponentsSubmissionMapView": {
       "loading": {
         "string": "Preparing map — loading known Submissions and scanning for new ones. This could take a while."
       },
@@ -5350,7 +5515,7 @@
         "string": "{count, plural, one {{count} Submission in this area} other {{count} Submissions in this area}}"
       }
     },
-    "SubmissionRestore": {
+    "srcComponentsSubmissionRestore": {
       "title": {
         "string": "Restore Submission",
         "developer_comment": "This is the title at the top of Submission restore pop-up."
@@ -5373,7 +5538,7 @@
         }
       }
     },
-    "SubmissionShow": {
+    "srcComponentsSubmissionShow": {
       "back": {
         "title": {
           "string": "Submission Detail",
@@ -5385,7 +5550,7 @@
         }
       }
     },
-    "SubmissionTable": {
+    "srcComponentsSubmissionTable": {
       "header": {
         "stateAndActions": {
           "string": "State and actions",
@@ -5397,7 +5562,7 @@
         }
       }
     },
-    "SubmissionUpdateReviewState": {
+    "srcComponentsSubmissionUpdateReviewState": {
       "title": {
         "string": "Update Review State",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -5409,19 +5574,19 @@
         }
       }
     },
-    "TableRefreshBar": {
+    "srcComponentsTableRefreshBar": {
       "dataRefreshTime": {
         "string": "Data last refreshed on {date} at {time}",
         "developer_comment": "Text shown above the data tables to tell users when data was last fetched / refreshed. {date} is only the date component and {time} is only the time component."
       }
     },
-    "TimeAndUser": {
+    "srcComponentsTimeAndUser": {
       "text": {
         "string": "{dateTime} by {displayName}",
         "developer_comment": "This shows the date and time at which a particular user completed an action, for example: \"2020/01/01 01:23 by Alice\". {dateTime} may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
       }
     },
-    "UserEditBasicDetails": {
+    "srcComponentsUserEditBasicDetails": {
       "title": {
         "string": "Basic Details",
         "developer_comment": "This is a title shown above a section of the page."
@@ -5446,7 +5611,7 @@
         }
       }
     },
-    "UserEditPassword": {
+    "srcComponentsUserEditPassword": {
       "title": {
         "string": "Change Password",
         "developer_comment": "This is a title shown above a section of the page."
@@ -5472,13 +5637,13 @@
         }
       }
     },
-    "UserHome": {
+    "srcComponentsUserHome": {
       "title": {
         "string": "User Settings",
         "developer_comment": "This is shown as the title at the top of the page."
       }
     },
-    "UserList": {
+    "srcComponentsUserList": {
       "action": {
         "create": {
           "string": "Create Web User",
@@ -5516,7 +5681,7 @@
         }
       }
     },
-    "UserNew": {
+    "srcComponentsUserNew": {
       "title": {
         "string": "Create Web User",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -5537,7 +5702,7 @@
         }
       }
     },
-    "UserResetPassword": {
+    "srcComponentsUserResetPassword": {
       "title": {
         "string": "Reset Password",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -5553,7 +5718,7 @@
         }
       }
     },
-    "UserRetire": {
+    "srcComponentsUserRetire": {
       "title": {
         "string": "Retiring User",
         "developer_comment": "This is the title at the top of a pop-up. An Administrator can use the pop-up to retire another Web User."
@@ -5574,7 +5739,7 @@
         }
       }
     },
-    "UserRow": {
+    "srcComponentsUserRow": {
       "cannotAssignRole": {
         "string": "You may not edit your own Sitewide Role."
       },
@@ -5602,7 +5767,7 @@
         "string": "Invitation Pending"
       }
     },
-    "WebFormRenderer": {
+    "srcComponentsWebFormRenderer": {
       "previewModal": {
         "title": {
           "string": "Data is valid"
@@ -5678,16 +5843,10 @@
         },
         "body": {
           "string": "Your data was not fully submitted. Please press the “Try again” button to retry. If the error keeps happening, please contact the person who asked you to fill this Form or {supportEmail}."
-        },
-        "action": {
-          "tryAgain": {
-            "string": "Try again",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          }
         }
       }
     },
-    "WhatsNew": {
+    "srcComponentsWhatsNew": {
       "title": {
         "string": "🎨 Branded login pages, Entity List cleanups, and file uploads in Web Forms",
         "developer_comment": "This is the title at the top of a pop-up."

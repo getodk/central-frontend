@@ -35,6 +35,7 @@
     "benchmark-browser:chromium": "BROWSER_NAME=chromium vitest bench --run",
     "benchmark-browser:firefox": "BROWSER_NAME=firefox vitest bench --run",
     "benchmark-browser:webkit": "BROWSER_NAME=webkit vitest bench --run",
+    "eslint": "eslint . --report-unused-disable-directives --cache --max-warnings 0",
     "test": "npm-run-all -nl 'test-node:*' 'test-browser:*' 'test:*'",
     "test-node:jsdom": "vitest run",
     "test-browser:chromium": "BROWSER_NAME=chromium vitest run",

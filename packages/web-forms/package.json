@@ -34,6 +34,7 @@
     "build:translations": "node bin/merge-translations.js",
     "dev": "vite",
     "dist-demo": "npm run build && vite serve dist-demo --port 5174",
+    "eslint": "eslint . --report-unused-disable-directives --cache --max-warnings 0",
     "test": "npm-run-all -nl 'test:*'",
     "test:e2e:functional:all": "playwright test --project=functional-*",
     "test:e2e:functional:chromium": "playwright test --project=functional-chromium",

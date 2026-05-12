@@ -37,13 +37,13 @@ describe('useLocale', () => {
 	};
 
 	beforeEach(() => {
-		localStorage.removeItem(STORAGE_KEY as string);
+		localStorage.removeItem(STORAGE_KEY);
 		document.documentElement.removeAttribute('lang');
 	});
 
 	afterEach(() => {
 		vi.restoreAllMocks();
-		localStorage.removeItem(STORAGE_KEY as string);
+		localStorage.removeItem(STORAGE_KEY);
 
 		wrappers.forEach((w) => w.unmount());
 		wrappers = [];
@@ -51,7 +51,7 @@ describe('useLocale', () => {
 
 	describe('language priority order (saved > designer default > browser > first)', () => {
 		it('prefers saved locale over browser language', () => {
-			localStorage.setItem(STORAGE_KEY as string, 'fr');
+			localStorage.setItem(STORAGE_KEY, 'fr');
 			vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['en']);
 
 			const formRef = makeFormRef([makeLanguage('English', 'en'), makeLanguage('French', 'fr')]);

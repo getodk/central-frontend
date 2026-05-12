@@ -39,6 +39,7 @@
     "build:clean": "rimraf dist/",
     "build:js": "vite build",
     "dev": "vite",
+    "eslint": "eslint . --report-unused-disable-directives --cache --max-warnings 0",
     "test": "npm-run-all -nl 'test-node:*' 'test-browser:*'",
     "test-node:jsdom": "vitest run",
     "test-browser:chromium": "BROWSER_NAME=chromium vitest run",

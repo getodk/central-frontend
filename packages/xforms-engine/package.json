@@ -42,6 +42,7 @@
     "docs:clean": "rimraf api-docs/",
     "docs:api": "typedoc --readme none --out api-docs --entryPoints \"src/**/*\"",
     "docs:serve": "http-server api-docs -o modules/client",
+    "eslint": "eslint . --report-unused-disable-directives --cache --max-warnings 0",
     "test": "npm-run-all -nl 'test-node:*' 'test-browser:*'",
     "test-node:jsdom": "vitest run",
     "test-browser:chromium": "BROWSER_NAME=chromium vitest run",
@@ -56,6 +57,7 @@
   "dependencies": {
     "bin-packer": "1.7.0",
     "mdast-util-from-markdown": "^2.0.2",
+    "mdast-util-newline-to-break": "^2.0.0",
     "papaparse": "^5.5.3",
     "solid-js": "^1.9.11",
     "temporal-polyfill": "^0.3.0"
