@@ -7,7 +7,6 @@
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
-    "rootDir": ".",
     "skipLibCheck": true,
     "outDir": "./dist",
     "paths": {

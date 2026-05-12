@@ -20,7 +20,7 @@ import { readFileSync } from 'fs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const webFormsPackage = JSON.parse(
-  readFileSync(resolve(__dirname, 'node_modules/@getodk/web-forms/package.json'), 'utf-8')
+  readFileSync(resolve(__dirname, 'packages/web-forms/package.json'), 'utf-8')
 );
 
 // The default is es2020, but we need es2022 or later because Web Forms uses

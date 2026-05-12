@@ -9,6 +9,8 @@
     "--dev:build": "nf start build,nginx-docker",
     "--dev-no-docker:build": "nf start build,nginx-host",
     "--build": "vite build",
+    "build": "turbo run build",
+    "build:web": "vite build",
     "eslint": "npm run eslint --workspaces",
     "--lint": "npm run eslint && npm run transifex:lint",
     "--lint:fix": "npm run eslint:fix && npm run transifex:fix",
@@ -18,6 +20,7 @@
   "volta": {
     "node": "24.13.0"
   },
+  "packageManager": "npm@11.6.1",
   "workspaces": [
     "apps/*",
     "packages/*"
