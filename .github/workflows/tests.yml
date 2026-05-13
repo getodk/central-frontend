@@ -30,7 +30,7 @@ jobs:
     - run: npm ci
     - run: npm run lint
     - uses: browser-actions/setup-chrome@v2
-    - run: npm run test
+    - run: npm run test -w=@getodk/central-frontend
   build:
     timeout-minutes: 5
     runs-on: ubuntu-latest
@@ -98,3 +98,20 @@ jobs:
       with:
         name: Playwright Artifacts
         path: central/client/test-results
+
+  wf-tests:
+    name: 'Run Web Forms Tests'
+    needs:
+    - build
+    - image-compression
+    - shellcheck
+    uses: ./.github/workflows/wf-ci.yml
+
+  wf-e2e-tests:
+    name: 'Run Web Forms E2E Tests'
+    needs:
+    - build
+    - image-compression
+    - shellcheck
+    - wf-tests
+    uses: ./.github/workflows/wf-ci-e2e.yml
