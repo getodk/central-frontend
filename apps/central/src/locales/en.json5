@@ -16,6 +16,7 @@
   "projectShow": {
     "tab": {
       "formAccess": "Form Access",
+      "customProperties": "Custom Properties",
     }
   },
   "formHead": {
