@@ -16,59 +16,9 @@ env:
   LOCALE_ID: 'en-US'
 
 jobs:
-  ci-conditions:
-    name: 'CI conditions'
-    runs-on: 'ubuntu-latest'
-    outputs:
-      IS_FORK: ${{ github.event.pull_request.head.repo.fork }}
-      IS_PR: ${{ github.event_name == 'pull_request' }}
-
-    steps:
-      - name: Capture CI conditions
-        id: capture-ci-conditions
-        run: exit 0
-
-  install-and-build:
-    needs: ci-conditions
-    if: ${{ needs.ci-conditions.outputs.IS_PR != 'true' || needs.ci-conditions.outputs.IS_FORK == 'true' }}
-    name: 'Install dependencies and build packages'
-    runs-on: 'ubuntu-latest'
-
-    strategy:
-      fail-fast: false
-      matrix:
-        node-version: ['20.19.3', '22.12.0', '24.13.0']
-
-    steps:
-      - uses: 'actions/checkout@v5'
-
-      - uses: 'volta-cli/action@v5'
-        with:
-          node-version: '${{ matrix.node-version }}'
-
-      - uses: 'actions/cache@v5'
-        id: cache-install
-        with:
-          path: |
-            node_modules
-            **/node_modules
-          key: install-${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/ci.yml', 'examples/*/package-lock.json', 'packages/*/package.json', 'packages/*/package-lock.json') }}
-
-      - uses: 'actions/cache@v5'
-        id: cache-build
-        with:
-          path: |
-            examples/*/dist
-            packages/*/dist
-            packages/web-forms/dist-demo
-          key: build-${{ matrix.node-version }}-${{ github.sha }}
-
-      - run: 'npm ci'
-      - run: 'npm run build'
 
   odk-common:
     name: '@getodk/common'
-    needs: ['install-and-build']
     runs-on: 'ubuntu-latest'
 
     strategy:
@@ -127,7 +77,6 @@ jobs:
 
   xforms-engine:
     name: '@getodk/xforms-engine'
-    needs: ['install-and-build']
     runs-on: 'ubuntu-latest'
 
     strategy:
@@ -186,7 +135,6 @@ jobs:
 
   scenario:
     name: '@getodk/scenario'
-    needs: ['install-and-build']
     runs-on: 'ubuntu-latest'
 
     strategy:
@@ -245,7 +193,6 @@ jobs:
 
   xpath:
     name: '@getodk/xpath'
-    needs: ['install-and-build']
     runs-on: 'ubuntu-latest'
 
     strategy:
@@ -304,7 +251,6 @@ jobs:
 
   web-forms:
     name: '@getodk/web-forms'
-    needs: ['install-and-build']
     runs-on: 'ubuntu-latest'
 
     strategy:
