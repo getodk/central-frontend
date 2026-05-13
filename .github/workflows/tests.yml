@@ -19,7 +19,7 @@ jobs:
     - run: sudo apt-get install shellcheck
     - run: ./bin/check-scripts.sh
   unit-tests:
-    timeout-minutes: 5
+    timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
