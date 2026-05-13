@@ -9,9 +9,9 @@
     "--dev-no-docker:build": "nf start build,nginx-host",
     "eslint": "eslint --max-warnings 0 --cache --ext .js,.vue src/ test/ bin/ *.js",
     "eslint:fix": "eslint --max-warnings 0 --fix --cache --ext .js,.vue src/ test/ bin/ *.js",
-    "--lint": "npm run eslint && npm run transifex:lint",
-    "--lint:fix": "npm run eslint:fix && npm run transifex:fix",
-    "--test": "./apps/central/test/run.sh",
+    "lint": "npm run eslint && npm run transifex:lint",
+    "lint:fix": "npm run eslint:fix && npm run transifex:fix",
+    "test": "./test/run.sh",
     "--test:e2e": "e2e-tests/run-tests.sh",
     "transifex:fix": "node bin/transifex/restructure.js > transifex/strings_en.json",
     "transifex:lint": "bash -c 'diff transifex/strings_en.json <(node bin/transifex/restructure.js)'"
@@ -40,7 +40,7 @@
     "@faker-js/faker": "^9.7.0",
     "@intlify/unplugin-vue-i18n": "^6.0.8",
     "@playwright/test": "^1.51.1",
-    "@vitejs/plugin-vue": "^5.2.3",
+    "@vitejs/plugin-vue": "^6.0.6",
     "@vue/cli-service": "^5.0.8",
     "@vue/compiler-sfc": "~3",
     "@vue/eslint-config-airbnb": "^7.0.0",
@@ -66,7 +66,7 @@
     "sass-loader": "^13.2.0",
     "sinon": "~9",
     "util": "^0.12.5",
-    "vite": "^6.3.5"
+    "vite": "^7.3.1"
   },
   "engines": {
     "node": "24",

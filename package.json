@@ -11,10 +11,9 @@
     "--build": "vite build",
     "build": "turbo run build",
     "build:web": "vite build",
-    "eslint": "npm run eslint --workspaces",
-    "--lint": "npm run eslint && npm run transifex:lint",
-    "--lint:fix": "npm run eslint:fix && npm run transifex:fix",
-    "--test": "./apps/central/test/run.sh",
+    "lint": "npm run lint --workspaces",
+    "lint:fix": "npm run lint:fix --workspaces",
+    "test": "npm run test --workspaces",
     "--test:e2e": "e2e-tests/run-tests.sh"
   },
   "volta": {

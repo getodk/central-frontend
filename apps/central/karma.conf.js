@@ -17,10 +17,13 @@ const { readFileSync } = require('fs');
 const webpackConfig = require('../../node_modules/@vue/cli-service/webpack.config.js');
 
 const webFormsPackage = JSON.parse(
-  readFileSync(resolve(__dirname, '../../node_modules/@getodk/web-forms/package.json'), 'utf-8')
+  readFileSync(resolve(__dirname, '../../packages/web-forms/package.json'), 'utf-8')
 );
 
+const publicAssets = resolve(__dirname, '../../public');
+
 const { entry, ...webpackConfigForKarma } = webpackConfig;
+webpackConfigForKarma.resolve = { roots: [ __dirname, publicAssets ] };
 webpackConfigForKarma.plugins.push(
   VueI18nPlugin({
     include: resolve(__dirname, './src/locales/**'),
