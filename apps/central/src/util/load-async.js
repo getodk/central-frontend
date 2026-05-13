@@ -180,6 +180,10 @@ const loaders = new Map()
     /* webpackChunkName: "component-project-user-list" */
     '../components/project/user/list.vue'
   )))
+  .set('CustomPropertyList', loader(() => import(
+    /* webpackChunkName: "component-custom-properties-list" */
+    '../components/project/custom-properties/list.vue'
+  )))
   .set('PublicLinkList', loader(() => import(
     /* webpackChunkName: "component-public-link-list" */
     '../components/public-link/list.vue'
