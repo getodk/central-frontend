@@ -23,7 +23,7 @@ const webFormsPackage = JSON.parse(
 const publicAssets = resolve(__dirname, '../../public');
 
 const { entry, ...webpackConfigForKarma } = webpackConfig;
-webpackConfigForKarma.resolve = { roots: [ __dirname, publicAssets ] };
+webpackConfigForKarma.resolve = { roots: [__dirname, publicAssets] };
 webpackConfigForKarma.plugins.push(
   VueI18nPlugin({
     include: resolve(__dirname, './src/locales/**'),

@@ -43,7 +43,7 @@ jobs:
     - run: ./bin/check-for-large-files.sh
     - run: npm ci
     - run: npm run build
-    - run: ./bin/check-bundle-size.js
+    - run: ./bin/check-bundle-size.cjs
   e2e-tests:
     needs:
     - build
