@@ -8,7 +8,6 @@
     "dev-no-docker": "nf start vite,nginx-host",
     "--dev:build": "nf start build,nginx-docker",
     "--dev-no-docker:build": "nf start build,nginx-host",
-    "--build": "vite build",
     "build": "turbo run build",
     "build:web": "vite build",
     "lint": "npm run lint --workspaces",
