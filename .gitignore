@@ -15,6 +15,7 @@ npm-debug.log*
 packages/web-forms/dist-demo
 *.local
 .turbo
+*.tsbuildinfo
 
 # Editor directories and files
 .idea

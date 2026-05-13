@@ -3,16 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "--dev": "          nf start vite,nginx-docker",
-    "--dev-no-docker": "nf start vite,nginx-host",
-    "--dev:build": "nf start build,nginx-docker",
-    "--dev-no-docker:build": "nf start build,nginx-host",
     "eslint": "eslint --max-warnings 0 --cache --ext .js,.vue src/ test/ bin/ *.js",
     "eslint:fix": "eslint --max-warnings 0 --fix --cache --ext .js,.vue src/ test/ bin/ *.js",
     "lint": "npm run eslint && npm run transifex:lint",
     "lint:fix": "npm run eslint:fix && npm run transifex:fix",
     "test": "./test/run.sh",
-    "--test:e2e": "e2e-tests/run-tests.sh",
     "transifex:fix": "node bin/transifex/restructure.js > transifex/strings_en.json",
     "transifex:lint": "bash -c 'diff transifex/strings_en.json <(node bin/transifex/restructure.js)'"
   },

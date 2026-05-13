@@ -6,14 +6,14 @@
   "scripts": {
     "dev": "          nf start vite,nginx-docker",
     "dev-no-docker": "nf start vite,nginx-host",
-    "--dev:build": "nf start build,nginx-docker",
-    "--dev-no-docker:build": "nf start build,nginx-host",
+    "dev:build": "nf start build,nginx-docker",
+    "dev-no-docker:build": "nf start build,nginx-host",
     "build": "turbo run build",
     "build:web": "vite build",
     "lint": "npm run lint --workspaces",
     "lint:fix": "npm run lint:fix --workspaces",
     "test": "npm run test --workspaces",
-    "--test:e2e": "e2e-tests/run-tests.sh"
+    "test:e2e": "e2e-tests/run-tests.sh"
   },
   "volta": {
     "node": "24.13.0"
