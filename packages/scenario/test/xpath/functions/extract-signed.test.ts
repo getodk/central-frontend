@@ -277,9 +277,7 @@ describe('`extract-signed`', () => {
 				const keyPair = createKeyPair();
 
 				const signedMessage = signMessage(message, keyPair.getPrivate());
-				const encodedPublicKey = Encoding.BASE64.encode(
-					(keyPair.getPublic()).getEncoded()
-				);
+				const encodedPublicKey = Encoding.BASE64.encode(keyPair.getPublic().getEncoded());
 				const encodedContents = Encoding.BASE64.encode(signedMessage);
 
 				const scenario = await createScenario(encodedContents, encodedPublicKey);
