@@ -2739,6 +2739,16 @@
         }
       }
     },
+    "EntityUploadHeaderReview": {
+      "title": {
+        "string": "Review data",
+        "developer_comment": "This text is shown above a section where the user can review warnings about their data."
+      },
+      "missingProperties": {
+        "string": "{count, plural, one {This property is not included in your file and will be left empty:} other {These properties are not included in your file and will be left empty:}}",
+        "developer_comment": "This text is followed by a list of Entity property names."
+      }
+    },
     "EntityUploadPopup": {
       "rowCount": {
         "string": "{count, plural, one {{count} data row found} other {{count} data rows found}}"

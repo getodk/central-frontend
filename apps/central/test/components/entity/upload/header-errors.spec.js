@@ -21,36 +21,20 @@ describe('EntityUploadHeaderErrors', () => {
 
     it('shows the expected header', () => {
       const component = mountComponent({
-        props: { header: 'label', missingProperty: true }
+        props: { header: 'height', missingLabel: true }
       });
       component.get('dd').text().should.equal('label,height');
     });
 
     it('uses the delimiter from the CSV file', () => {
       const component = mountComponent({
-        props: { header: 'label', delimiter: ';', missingProperty: true }
+        props: { header: 'height', delimiter: ';', missingLabel: true }
       });
       component.get('dd').text().should.equal('label;height');
     });
   });
 
   describe('suggestions', () => {
-    const getSuggestion = (component) => {
-      const p = component.findAll('.entity-upload-header-errors-suggestions p');
-      p.length.should.equal(1);
-      return p[0];
-    };
-
-    it('does not show a suggestion for a missing property', () => {
-      testData.extendedDatasets.createPast(1, {
-        properties: [{ name: 'height' }]
-      });
-      const component = mountComponent({
-        props: { header: 'label', missingProperty: true }
-      });
-      component.find('.entity-upload-header-errors-suggestions').exists().should.be.false;
-    });
-
     describe('delimiter is not a comma', () => {
       beforeEach(() => {
         testData.extendedDatasets.createPast(1, {
@@ -61,23 +45,25 @@ describe('EntityUploadHeaderErrors', () => {
       it('shows a suggestion if the delimiter is not a comma', () => {
         const component = mountComponent({
           props: {
-            header: 'label;height',
+            header: 'height;circumference',
             delimiter: ';',
-            missingProperty: true
+            missingLabel: true
           }
         });
-        getSuggestion(component).text().should.endWith('We used ;.');
+        const p = component.get('.entity-upload-header-errors-suggestions p:last-child');
+        p.text().should.endWith('We used ;.');
       });
 
       it('shows ⇥ for tab', () => {
         const component = mountComponent({
           props: {
-            header: 'label\theight',
+            header: 'height\tcircumference',
             delimiter: '\t',
             missingProperty: true
           }
         });
-        getSuggestion(component).get('code').text().should.equal('⇥');
+        const p = component.get('.entity-upload-header-errors-suggestions p:last-child');
+        p.get('code').text().should.equal('⇥');
       });
     });
   });
