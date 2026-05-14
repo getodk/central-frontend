@@ -50,7 +50,6 @@ export default defineConfig(
 		ignores: [
 			'.changeset',
 			'.github',
-			'examples/**/*',
 			'*/index.d.ts',
 			'**/*.min.js',
 			'**/dist/**/*',
