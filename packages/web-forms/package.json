@@ -39,7 +39,7 @@
     "format:prettier": "prettier -w \"**/*\" --ignore-unknown --cache",
     "format:vue": "eslint ./**/*.vue  --report-unused-disable-directives --cache --fix",
     "lint": "eslint . --report-unused-disable-directives --cache --max-warnings 0 && npm run format:lint",
-    "lint:fix": "eslint . --fix --report-unused-disable-directives --cache --max-warnings 0 && run format:fix",
+    "lint:fix": "eslint . --fix --report-unused-disable-directives --cache --max-warnings 0 && npm run format:fix",
     "test": "npm-run-all -nl 'test:*'",
     "test:e2e:functional:all": "playwright test --project=functional-*",
     "test:e2e:functional:chromium": "playwright test --project=functional-chromium",

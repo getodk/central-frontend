@@ -38,7 +38,7 @@ jobs:
             browser: webkit
 
     steps:
-      - uses: 'actions/checkout@v5'
+      - uses: 'actions/checkout@v6'
 
       - uses: 'volta-cli/action@v5'
         with:
@@ -96,7 +96,7 @@ jobs:
             browser: webkit
 
     steps:
-      - uses: 'actions/checkout@v5'
+      - uses: 'actions/checkout@v6'
 
       - uses: 'volta-cli/action@v5'
         with:
@@ -154,7 +154,7 @@ jobs:
             browser: webkit
 
     steps:
-      - uses: 'actions/checkout@v5'
+      - uses: 'actions/checkout@v6'
 
       - uses: 'volta-cli/action@v5'
         with:
@@ -212,7 +212,7 @@ jobs:
             browser: webkit
 
     steps:
-      - uses: 'actions/checkout@v5'
+      - uses: 'actions/checkout@v6'
 
       - uses: 'volta-cli/action@v5'
         with:
@@ -270,7 +270,7 @@ jobs:
             browser: webkit
 
     steps:
-      - uses: 'actions/checkout@v5'
+      - uses: 'actions/checkout@v6'
 
       - uses: 'volta-cli/action@v5'
         with:
