@@ -118,7 +118,8 @@ describe('FormDraftPublish', () => {
       const modal = mount(FormDraftPublish, mountOptions());
       await modal.setProps({ state: true });
       modal.find('input').exists().should.be.false;
-      modal.find('.modal-introduction').text().should.not.match(/your Draft Form has the same version name/);
+      modal.findAll('.modal-introduction p').length.should.equal(2);
+      modal.findAll('form p').length.should.equal(1);
     });
 
     it('does not show the version input for a form without a published version', async () => {
@@ -126,7 +127,8 @@ describe('FormDraftPublish', () => {
       const modal = mount(FormDraftPublish, mountOptions());
       await modal.setProps({ state: true });
       modal.find('input').exists().should.be.false;
-      modal.find('.modal-introduction').text().should.not.match(/your Draft Form has the same version name/);
+      modal.findAll('.modal-introduction p').length.should.equal(2);
+      modal.findAll('form p').length.should.equal(1);
     });
 
     it('focuses the input', async () => {
@@ -161,6 +163,30 @@ describe('FormDraftPublish', () => {
       await modal.setProps({ state: false });
       await modal.setProps({ state: true });
       input.element.value.should.equal('v1');
+    });
+  });
+
+  describe('publish notes', () => {
+    it('focuses the textarea if version input is not shown', async () => {
+      testData.extendedForms.createPast(1);
+      testData.extendedFormVersions.createPast(1, { version: 'v2', draft: true });
+      const modal = mount(FormDraftPublish, mountOptions({
+        attachTo: document.body
+      }));
+      await modal.setProps({ state: true });
+      modal.get('textarea').should.be.focused();
+    });
+
+    it('resets the input if the modal is hidden', async () => {
+      testData.extendedForms.createPast(1);
+      testData.extendedFormVersions.createPast(1, { version: 'v2', draft: true });
+      const modal = mount(FormDraftPublish, mountOptions());
+      await modal.setProps({ state: true });
+      const input = modal.get('textarea');
+      await input.setValue('fixed validation error');
+      await modal.setProps({ state: false });
+      await modal.setProps({ state: true });
+      input.element.value.should.equal('');
     });
   });
 
@@ -323,7 +349,8 @@ describe('FormDraftPublish', () => {
       .afterResponse(modal => {
         modal.should.alert('danger');
         modal.find('input').exists().should.be.false;
-        modal.find('.modal-introduction').text().should.not.match(/your Draft Form has the same version name/);
+        modal.findAll('.modal-introduction p').length.should.equal(2);
+        modal.findAll('form p').length.should.equal(1);
       });
   });
 

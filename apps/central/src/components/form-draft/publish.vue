@@ -46,7 +46,7 @@ except according to the terms contained in the LICENSE file.
         <form-group v-if="draftVersionStringIsDuplicate || versionConflict" ref="versionString" v-model.trim="versionString" :placeholder="$t('common.version')"
           required autocomplete="off"/>
         <div class="form-group">
-          <textarea id="form-draft-publish-note" v-model="notes" class="form-control"
+          <textarea id="form-draft-publish-note" ref="publishNote" v-model="notes" class="form-control"
             :placeholder="$t('placeholder.note')" rows="3"></textarea>
           <label for="form-draft-publish-note" class="form-label">{{ $t('field.note') }}</label>
         </div>
@@ -139,6 +139,7 @@ export default {
   methods: {
     focusInput() {
       if (this.draftVersionStringIsDuplicate) this.$refs.versionString.focus();
+      else this.$refs.publishNote.focus();
     },
     publish() {
       const headers = {};
@@ -198,10 +199,10 @@ export default {
       "409_6": "The version name of this Draft conflicts with a past version of this Form or a deleted Form. Please use the field below to change it to something new or upload a new Form definition."
     },
     "field": {
-      "note": "Notes (optional)"
+      "note": "Notes"
     },
     "placeholder": {
-      "note": "Add optional publishing notes..."
+      "note": "Add optional publishing notes…"
     }
   }
 }

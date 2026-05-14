@@ -3327,13 +3327,13 @@
       },
       "field": {
         "note": {
-          "string": "Notes (optional)",
+          "string": "Notes",
           "developer_comment": "This is the text of a form field."
         }
       },
       "placeholder": {
         "note": {
-          "string": "Add optional publishing notes..."
+          "string": "Add optional publishing notes…"
         }
       }
     },
