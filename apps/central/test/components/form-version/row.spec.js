@@ -99,19 +99,19 @@ describe('FormVersionRow', () => {
   describe('publishing notes', () => {
     const cases = [
       /* eslint-disable no-multi-spaces */
-      { description: 'shows notes when present',                  publishingNotes: 'removed few questions', expected: true },
-      { description: 'does not show notes row when null',         publishingNotes: null,                   expected: false },
-      { description: 'does not show notes row when empty string', publishingNotes: '',                     expected: false }
+      { description: 'shows notes when present',                  publishNotes: 'removed few questions', expected: true },
+      { description: 'does not show notes row when null',         publishNotes: null,                   expected: false },
+      { description: 'does not show notes row when empty string', publishNotes: '',                     expected: false }
       /* eslint-enable no-multi-spaces */
     ];
-    cases.forEach(({ description, publishingNotes, expected }) => {
+    cases.forEach(({ description, publishNotes, expected }) => {
       it(description, async () => {
-        testData.extendedForms.createPast(1, { publishingNotes });
+        testData.extendedForms.createPast(1, { publishNotes });
         const component = await load('/projects/1/forms/f/versions', { root: false });
         const rows = component.findAll('tbody tr');
         if (expected) {
           rows.length.should.equal(2);
-          rows[1].text().should.include(publishingNotes);
+          rows[1].text().should.include(publishNotes);
         } else {
           rows.length.should.equal(1);
         }
@@ -122,7 +122,7 @@ describe('FormVersionRow', () => {
       mockLogin.reset();
       mockLogin({ role: 'none' });
       testData.extendedProjects.createPast(1, { role: 'viewer' });
-      testData.extendedForms.createPast(1, { publishingNotes: 'Some notes' });
+      testData.extendedForms.createPast(1, { publishNotes: 'Some notes' });
       const component = await load('/projects/1/forms/f/versions', { root: false });
       const rows = component.findAll('tbody tr');
       rows.length.should.equal(1);

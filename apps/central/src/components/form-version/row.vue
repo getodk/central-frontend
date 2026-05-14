@@ -26,10 +26,10 @@ except according to the terms contained in the LICENSE file.
         @view-xml="$emit('view-xml')"/>
     </td>
   </tr>
-  <tr v-if="version.publishingNotes && project.permits('form.update')"
+  <tr v-if="version.publishNotes && project.dataExists && project.permits('form.update')"
     class="form-version-notes-row">
     <td colspan="3">
-      {{ $t('notes') }}: {{ version.publishingNotes }}
+      {{ $t('notes', { notes: version.publishNotes }) }}
     </td>
   </tr>
 </template>
@@ -79,9 +79,12 @@ defineEmits(['view-xml']);
   * + .form-version-def-dropdown { margin-left: 5px; }
 }
 
-.form-version-notes-row td {
-  border-top: none;
-  padding-top: 0;
+.form-version-notes-row {
+  .table tbody & td {
+    border-top: none;
+    padding-top: 0;
+    white-space: pre-wrap;
+  }
 }
 </style>
 
@@ -90,8 +93,8 @@ defineEmits(['view-xml']);
   "en": {
     // This is a label shown for the current version of a Form.
     "current": "Current Published Version",
-    // This is the label shown before the notes entered when a Form version was published.
-    "notes": "Notes"
+    // This is the label shown before the notes entered when a Form version was published. {notes} is the actual notes text.
+    "notes": "Notes: {notes}"
   }
 }
 </i18n>
