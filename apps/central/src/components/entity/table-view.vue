@@ -126,7 +126,7 @@ const handlePageChange = () => {
 };
 // For defineExpose()
 const exposedFetch = {
-  fetchData: (clear = true) => fetchChunk(clear, clear ? 0 : pagination.page),
+  fetchData: (clear = true) => fetchChunk(clear),
   cancelFetch: () => { odataEntities.cancelRequest(); }
 };
 

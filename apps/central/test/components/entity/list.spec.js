@@ -880,6 +880,12 @@ describe('EntityList', () => {
         .request(component =>
           component.get('#refresh-button').trigger('click'))
         .respondWithData(() => testData.entityOData(250))
+        .beforeEachResponse((_, { url }) => {
+          if (url.includes('.svc/Entities')) {
+            const skip = relativeUrl(url).searchParams.get('$skip');
+            skip.should.be.equal('0');
+          }
+        })
         .afterResponse(async component => {
           checkIds(component, 250);
         });
