@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
     type="entity"
     :top="pagination.size"
     :filter="filter != null || !!searchTerm"
-    :total-count="dataset.dataExists && !pagination.page ? dataset.entities : 0"/>
+    :total-count="dataset.dataExists ? dataset.entities : 0"/>
   <!-- @update:page is emitted on size change as well -->
   <Pagination v-if="pagination.count > 0"
     v-model:page="pagination.page" v-model:size="pagination.size"
