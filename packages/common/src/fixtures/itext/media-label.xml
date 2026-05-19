@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms"
+        xmlns:h="http://www.w3.org/1999/xhtml"
+        xmlns:jr="http://openrosa.org/javarosa">
+  <h:head>
+    <h:title>Media Label Test</h:title>
+    <model>
+      <itext>
+        <translation lang="en" default="true()">
+          <text id="/data/audio_question:label">
+            <value>Question with audio label</value>
+            <value form="audio">jr://audio/test-audio.mp3</value>
+          </text>
+          <text id="/data/video_question:label">
+            <value>Question with video label</value>
+            <value form="video">jr://video/test-video.mp4</value>
+          </text>
+          <text id="/data/image_question:label">
+            <value>Question with image label</value>
+            <value form="image">jr://images/test-image.jpg</value>
+          </text>
+          <text id="/data/combined_question:label">
+            <value>Edge case: question with all media in label</value>
+            <value form="audio">jr://audio/test-audio.mp3</value>
+            <value form="video">jr://video/test-video.mp4</value>
+            <value form="image">jr://images/test-image.jpg</value>
+          </text>
+          <text id="/data/select_one_media:label">
+            <value>Select one with media options (special style when it contains images)</value>
+          </text>
+          <text id="/data/select_multiple_media:label">
+            <value>Select multiple with media options (special style when it contains images)</value>
+          </text>
+          <text id="/data/select_one_no_image:label">
+            <value>Select one audio or video</value>
+          </text>
+          <text id="/data/select_multiple_no_image:label">
+            <value>Select multiple audio or video</value>
+          </text>
+          <text id="choice_audio">
+            <value>Option 1: Audio</value>
+            <value form="audio">jr://audio/test-audio.mp3</value>
+          </text>
+          <text id="choice_video">
+            <value>Option 2: Video</value>
+            <value form="video">jr://video/test-video.mp4</value>
+          </text>
+          <text id="choice_image">
+            <value>Option 3: Image</value>
+            <value form="image">jr://images/test-image.jpg</value>
+          </text>
+          <text id="choice_image_audio">
+            <value>Option 4: Audio + Image</value>
+            <value form="image">jr://images/test-image.jpg</value>
+            <value form="audio">jr://audio/test-audio.mp3</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <data id="media-test">
+          <meta>
+            <instanceID/>
+          </meta>
+          <audio_question/>
+          <video_question/>
+          <image_question/>
+          <combined_question/>
+          <select_one_media/>
+          <select_multiple_media/>
+          <select_one_no_image/>
+          <select_multiple_no_image/>
+        </data>
+      </instance>
+      <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid"/>
+      <bind nodeset="/data/audio_question" type="string"/>
+      <bind nodeset="/data/video_question" type="string"/>
+      <bind nodeset="/data/image_question" type="string"/>
+      <bind nodeset="/data/combined_question" type="string"/>
+      <bind nodeset="/data/select_one_media" type="select1"/>
+      <bind nodeset="/data/select_multiple_media" type="select"/>
+      <bind nodeset="/data/select_one_no_image" type="select1"/>
+      <bind nodeset="/data/select_multiple_no_image" type="select"/>
+    </model>
+  </h:head>
+  <h:body>
+    <input ref="/data/audio_question">
+      <label ref="jr:itext('/data/audio_question:label')"/>
+    </input>
+    <input ref="/data/video_question">
+      <label ref="jr:itext('/data/video_question:label')"/>
+    </input>
+    <input ref="/data/image_question">
+      <label ref="jr:itext('/data/image_question:label')"/>
+    </input>
+    <input ref="/data/combined_question">
+      <label ref="jr:itext('/data/combined_question:label')"/>
+    </input>
+    <select1 ref="/data/select_one_media">
+      <label ref="jr:itext('/data/select_one_media:label')"/>
+      <item>
+        <label ref="jr:itext('choice_audio')"/>
+        <value>audio</value>
+      </item>
+      <item>
+        <label ref="jr:itext('choice_video')"/>
+        <value>video</value>
+      </item>
+      <item>
+        <label ref="jr:itext('choice_image')"/>
+        <value>image</value>
+      </item>
+      <item>
+        <label ref="jr:itext('choice_image_audio')"/>
+        <value>image-audio</value>
+      </item>
+    </select1>
+    <select ref="/data/select_multiple_media">
+      <label ref="jr:itext('/data/select_multiple_media:label')"/>
+      <item>
+        <label ref="jr:itext('choice_audio')"/>
+        <value>audio</value>
+      </item>
+      <item>
+        <label ref="jr:itext('choice_video')"/>
+        <value>video</value>
+      </item>
+      <item>
+        <label ref="jr:itext('choice_image')"/>
+        <value>image</value>
+      </item>
+      <item>
+        <label ref="jr:itext('choice_image_audio')"/>
+        <value>image-audio</value>
+      </item>
+    </select>
+    <select1 ref="/data/select_one_no_image">
+      <label ref="jr:itext('/data/select_one_no_image:label')"/>
+      <item>
+        <label ref="jr:itext('choice_audio')"/>
+        <value>audio</value>
+      </item>
+      <item>
+        <label ref="jr:itext('choice_video')"/>
+        <value>video</value>
+      </item>
+    </select1>
+    <select ref="/data/select_multiple_no_image">
+      <label ref="jr:itext('/data/select_multiple_no_image:label')"/>
+      <item>
+        <label ref="jr:itext('choice_audio')"/>
+        <value>audio</value>
+      </item>
+      <item>
+        <label ref="jr:itext('choice_video')"/>
+        <value>video</value>
+      </item>
+    </select>
+  </h:body>
+</h:html>

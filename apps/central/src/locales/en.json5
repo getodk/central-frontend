@@ -1,0 +1,548 @@
+// action: This is the text for an action, for example, the text of a button.
+// field: This is the text of a form field.
+// header: This is the text of a table column header.
+// tab: This is the text of a navigation tab, which may also be shown as the page title (browser tab).
+
+{
+  // This is the text shown as the title of a page including in the browser tab.
+  "title": {
+    "resetPassword": "Reset Password",
+    "setPassword": "Set Password",
+    "editProfile": "Edit Profile",
+    "download": "Download",
+    "pageNotFound": "Page Not Found",
+    "details": "Details"
+  },
+  "projectShow": {
+    "tab": {
+      "formAccess": "Form Access",
+    }
+  },
+  "formHead": {
+    "tab": {
+      "publicAccess": "Public Access",
+      "versions": "Versions",
+      "editForm": "Edit Form"
+    }
+  },
+  "systemHome": {
+    // This is the title of the page for audit logs and other system-level functions.
+    "title": "System Management",
+    "tab": {
+      "audits": "Server Audit Logs",
+      "customization": "Customization",
+      "analytics": "Usage Reporting"
+    }
+  },
+  // This is the name of a user Role.
+  "role": {
+    // This is shown when a user does not have a Role.
+    "none": "None",
+    "admin": "Administrator",
+    "manager": "Project Manager",
+    "viewer": "Project Viewer",
+    "formfill": "Data Collector"
+  },
+  "formState": {
+    // Form States control the lifecycle state of each Form. "Open" is one Form
+    // State.
+    "open": "Open",
+    // Form States control the lifecycle state of each Form. "Closing" is one
+    // Form State.
+    "closing": "Closing",
+    // Form States control the lifecycle state of each Form. "Closed" is one
+    // Form State.
+    "closed": "Closed",
+    // This is a note about a Form that is not yet published.
+    "unpublished": "Not published yet"
+  },
+  // @transifexKey component.FormOverviewRightNow.stateCaption
+  "formStateDescription": {
+    "open": "This Form is downloadable and is accepting Submissions.",
+    "closing": "This Form is not downloadable but still accepts Submissions.",
+    "closed": "This Form is not downloadable and does not accept Submissions."
+  },
+  // This is a possible Review State for a Submission.
+  "reviewState": {
+    "received": "Received",
+    "null": "@:reviewState.received",
+    "hasIssues": "Has issues",
+    "edited": "Edited",
+    "approved": "Approved",
+    "rejected": "Rejected"
+  },
+  "audit": {
+    // This is a category of actions performed on the server. It is shown in a
+    // dropdown when filtering the log of actions by type.
+    "category": {
+      "nonverbose": "All Actions",
+      "user": "Web User Actions",
+      "project": "Project Actions",
+      "form": "Form Actions",
+      "field_key": "App User Actions",
+      "public_link": "Public Access Link Actions",
+      "dataset": "Entity List Actions",
+      "config": "Server Configuration Actions",
+      "upgrade": "Server Upgrade",
+      "task": "System Operation"
+    },
+    "action": {
+      // This is shown in the log of actions performed on the server. It is a
+      // type of action.
+      "default": {
+        "create": "Create",
+        "update": "Update Details",
+        "session_end": "Revoke",
+        "delete": "Delete"
+      },
+      // This is shown in the log of actions performed on the server.
+      "analytics": "Report Usage",
+      // This is shown in the log of actions performed on the server.
+      "blobs": {
+        "s3_upload": "Upload Files to Storage",
+        "s3_failed_to_pending": "Mark Files for Re-Upload to Storage"
+      },
+      // This is shown in the log of actions performed on the server. It is a
+      // type of action that can be taken on a Server Configuration.
+      "config": {
+        "set": "Set"
+      },
+      // This is shown in the log of actions performed on the server. It is a
+      // type of action that can be taken on an Entity List.
+      "dataset": {
+        "create": "@:audit.action.default.create",
+        "update": "Update",
+        "update_publish": "Publish",
+        "delete": "@:audit.action.default.delete",
+        "update_property_delete": "Delete Property"
+      },
+      "entity": {
+        "bulk_delete": "Bulk Delete",
+        "bulk_restore": "Bulk Restore"
+      },
+      // This is shown in the log of actions performed on the server. It is a
+      // type of action that can be taken on an App User.
+      "field_key": {
+        "create": "@:audit.action.default.create",
+        "assignment_create": "Give Access",
+        "assignment_delete": "Remove Access",
+        "session_end": "@:audit.action.default.session_end",
+        "delete": "@:audit.action.default.delete"
+      },
+      // This is shown in the log of actions performed on the server. It is a
+      // type of action that can be taken on a Form.
+      "form": {
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "update_draft_set": "Create or Update Draft",
+        "update_draft_replace": "Replace Draft",
+        "update_publish": "Publish Draft",
+        "update_draft_delete": "Abandon Draft",
+        "attachment_update": "Update Attachments",
+        "submission_export": "Download Submissions",
+        "delete": "@:audit.action.default.delete",
+        "restore": "Restore",
+        "purge": "Purge"
+      },
+      // This is shown in the log of actions performed on the server. It is a
+      // type of action that can be taken on a Project.
+      "project": {
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "delete": "@:audit.action.default.delete"
+      },
+      // This is shown in the log of actions performed on the server. It is a
+      // type of action that can be taken on a Public Access Link.
+      "public_link": {
+        "create": "@:audit.action.default.create",
+        "assignment_create": "Give Access",
+        "assignment_delete": "Remove Access",
+        "session_end": "@:audit.action.default.session_end",
+        "delete": "@:audit.action.default.delete"
+      },
+      // This is shown in the log of actions performed on the server.
+      "submission": {
+        "purge": "Purge Submissions"
+      },
+      // This is shown in the log of actions performed on the server. It is a
+      // type of action that the server performs when it is upgraded.
+      "upgrade": {
+        "process_form": "Process Form",
+        "process_form_draft": "Process Form Draft",
+        "process_form_entities_version": "Flag Form for Upgrade",
+        "server": "New Version"
+      },
+      // This is shown in the log of actions performed on the server. It is a
+      // type of action that can be taken on or for a Web User.
+      "user": {
+        "create": "@:audit.action.default.create",
+        "update": "@:audit.action.default.update",
+        "assignment_create": "Assign Role",
+        "assignment_delete": "Revoke Role",
+        "session_create": "@:action.logIn",
+        "delete": "Retire"
+      }
+    }
+  },
+  "action": {
+    "cancel": "Cancel",
+    "clear": "Clear",
+    "close": "Close",
+    "comment": "Comment",
+    "continue": "Continue",
+    "create": "Create",
+    // This is the text of a button that is used to fill out a new Submission.
+    "createSubmission": "New Submission",
+    "delete": "Delete",
+    "done": "Done",
+    "download": "Download",
+    "edit": "Edit",
+    "editProfile": "Edit profile",
+    "finish": "Finish",
+    "logIn": "Log in",
+    "looksGood": "Looks good, proceed",
+    "more": "More",
+    "neverMind": "Never mind, cancel",
+    "next": "Next",
+    "noCancel": "No, cancel",
+    "ok": "Okay",
+    "proceed": "Proceed",
+    // This is the text of a button that refreshes data.
+    "refresh": "Refresh",
+    "refreshPage": "Refresh page",
+    "resetPassword": "Reset password",
+    "review": "Review",
+    // @transifexKey component.EntityMetadataRow.reviewParallelUpdates
+    "reviewParallelUpdates": "Review parallel updates",
+    "save": "Save",
+    "saveSettings": "Save settings",
+    // This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms
+    "sort": "Sort",
+    // @transifexKey component.WebFormRenderer.retryModal.action.tryAgain
+    "tryAgain": "Try again",
+    "undo": "Undo",
+    "update": "Update",
+    // @transifexKey component.FormNew.action.upload
+    "upload": "Upload",
+    "yesProceed": "Yes, proceed",
+    // This text is shown on a button that the user clicks to show a preview of something
+    "showPreview": "Preview",
+    // This text is shown on a button that the user clicks to hide a preview of something
+    "hidePreview": "Hide preview",
+    // This text is show on a button that the user clicks to see the Form preview in the new Web Forms component
+    "newPreview": "New Preview",
+    "expand": "Expand",
+    "collapse": "Collapse",
+    // @transifexKey component.FormTrashRow.action.restore
+    "restore": "Restore",
+    "selectRow": "Select row",
+    // This text is shown on a button that resets the data filters
+    "reset": "Reset"
+  },
+  "field": {
+    "comment": "Leave a comment…",
+    "dateRange": "Date range",
+    "displayName": "Display name",
+    "email": "Email address",
+    "name": "Name",
+    "newPassword": "New password",
+    "oldPassword": "Old password",
+    "passphrase": "Passphrase",
+    "password": "Password",
+    "passwordConfirm": "New password (confirm)",
+    "title": "Title",
+    "type": "Type"
+  },
+  "header": {
+    "actions": "Actions",
+    // This is the text of a table column header. The column shows who created
+    // each App User and possibly also when they did so.
+    "created": "Created",
+    // This is the text of a table column header. The column shows the user or
+    // Public Access Link that created each Entity.
+    "createdBy": "Created by",
+    // This is the text of a table column header. The column shows when each
+    // Entity was created.
+    "createdAt": "Created at",
+    // This is the text of a table column header. For each Entity property, the
+    // column shows the Forms that can update the property.
+    "updatedBy": "Updated by",
+    "displayName": "Display Name",
+    "email": "Email Address",
+    "instanceId": "Instance ID",
+    "lastSubmission": "Latest Submission",
+    "recentActivity": "Recent Activity",
+    "name": "Name",
+    "listName": "List Name",
+    // This is the text of a table column header. The column shows the user or
+    // Public Access Link that submitted each Submission.
+    "submitterName": "Submitted by",
+    // This is the text of a table column header. The column indicates when each
+    // Submission was submitted.
+    "submissionDate": "Submitted at",
+    // This is the text of a table column header for a column that shows dates
+    // and times.
+    "time": "Time",
+    "type": "Type",
+    // This is the text of a table column header. The column shows the number of entities
+    // for the Entity List
+    "entities": "Total Entities",
+    // This is the text of a table column header. The column shows the date and time of the 
+    // newest entity
+    "lastEntity": "Latest Entity"
+  },
+  "plural": {
+    "appUser": "App User | App Users",
+    "form": "Form | Forms",
+    "project": "Project | Projects",
+    "submission": "Submission | Submissions",
+    "user": "User | Users",
+    "webUser": "Web User | Web Users"
+  },
+  // This text appears on its own and is not part of a longer sentence.
+  "count": {
+    "appUser": "{count} App User | {count} App Users",
+    "attachments": "{count} attachment | {count} attachments",
+    "form": "{count} Form | {count} Forms",
+    "submission": "{count} Submission | {count} Submissions",
+    "warning": "{count} warning | {count} warnings"
+  },
+  // This text appears on its own and is not part of a longer sentence. It may
+  // be shown as a title, for example, at the top of the page.
+  "resource": {
+    "appUser": "App User",
+    "appUsers": "App Users",
+    "attachments": "Attachments",
+    "config": "Server Configuration",
+    "entity": "Entity",
+    "entities": "Entities",
+    "entityList": "Entity List",
+    "entityLists": "Entity Lists",
+    "form": "Form",
+    "forms": "Forms",
+    "newForm": "New Form",
+    // @transifexKey component.FormHead.draftNav.title
+    "draft": "Draft",
+    "formAttachments": "Form Attachments",
+    "project": "Project",
+    "projects": "Projects",
+    // This is a data property of an Entity.
+    "property": "Property",
+    // This refers to the data properties of an Entity.
+    "properties": "Properties",
+    "publicLink": "Public Access Link",
+    "user": "User",
+    "users": "Users",
+    "webUser": "Web User",
+    "webUsers": "Web Users",
+    "session": "Session",
+    "submission": "Submission",
+    "submissions": "Submissions",
+    "projectRoles": "Project Roles",
+    "formPreview": "Form Preview"
+  },
+  "alert": {
+    "passwordTooShort": "Password must be at least 10 characters long.",
+    "updateEntity": "Entity has been successfully updated.",
+    "updateReviewState": "Review successfully saved.",
+    "versionChange": "The server has been successfully updated.",
+    "submissionDeleted": "Submission has been successfully deleted.",
+    "submissionRestored": "The Submission has been restored.",
+    // @transifexKey component.EntityList.alert.delete
+    "entityDeleted": "Entity “{label}” has been deleted.",
+    "entityRestored": "Entity “{label}” has been restored."
+  },
+  "moreInfo": {
+    "clickHere": {
+      "full": "For more information, {clickHere}.",
+      "clickHere": "click here"
+    },
+    "helpArticle": {
+      "full": "For more information, please see {helpArticle}.",
+      "helpArticle": "this help article"
+    },
+    // This is a link to more information.
+    "learnMore": "Learn more."
+  },
+  "login": {
+    "odkLogo": "ODK logo",
+    // @transifexKey component.AccountPageContainer.customLogoAlt
+    "customLogoAlt": "Organization logo",
+    "defaultTitle": "Welcome to ODK Central",
+    "defaultDescription": "Log into your account to get started",
+    // An image shown on the login page
+    "heroImage": "Login image"
+  },
+  "analytics": {
+    "alwaysImprove": "We are always trying to improve ODK Central.",
+    "needFeedback": {
+      // "This" refers to improving Central.
+      "full": "To do this, we need {your} feedback, so that we can understand how you are using Central, and how it could be better for you.",
+      "your": "your"
+    },
+    "mailingListOptIn": "Send me occasional emails about new features and best practices."
+  },
+  "submission": {
+    // This is a possible state for a Submission. It means that the Submission
+    // is missing one or more expected Attachments.
+    "missingAttachment": "Missing Attachment",
+    "action": {
+      // {count} is the number of previous edits.
+      "edit": "Edit ({count})"
+    },
+    // This is shown when the Edit button is disabled.
+    "editDisabled": "You cannot edit encrypted Submissions.",
+    "binaryLinkTitle": "File was submitted. Click to download.",
+    "encryptionMessage": "Data preview is not available due to encryption.",
+    // This text is shown under the "Latest Submission" column of the tables
+    // for Projects and Forms. It is shown for a Project or Form with no Submissions.
+    "noSubmission": "(none)",
+    "emptyTable": "There are no Submissions yet.",
+    "fileDownloadUnavailable": "File download is not available for deleted Submissions."
+  },
+  "entity": {
+    // This is the label of an Entity.
+    "label": "Label",
+    "entityLabel": "Entity Label",
+    // This is the UUID of an Entity.
+    "entityId": "Entity ID",
+    "noProperties": "This Form only sets the “label”.",
+    "noEntity": "(none)",
+    "conflictsCount": "{count} conflict | {count} conflicts"
+  },
+  "common": {
+    // This is a title shown above a section of the page.
+    "activity": "Activity",
+    // This is shown in a dropdown that allows the user to filter to only show
+    // data for particular users.
+    "anybody": "(Anybody)",
+    // Here we ask the user to confirm that they wish to complete an action that
+    // they have initiated.
+    "areYouSure": "Are you sure you wish to proceed?",
+    // This is a title shown above a section of the page.
+    "basicInfo": "Basic Information",
+    "conflict": "Conflict",
+    "conflicts": "Conflicts",
+    // This is a title shown above a section of the page.
+    "dangerZone": "Danger Zone",
+    // This is shown in the tab above a table of data.
+    "data": "Data",
+    // This is the text of a link that links to the documentation.
+    "docs": "Docs",
+    "emptyMap": "No map data available yet.",
+    // This is shown when the value of an Entity property is empty.
+    "emptyValue": "(empty)",
+    "error": "Error",
+    // This text is shown next to options for filtering a table.
+    "filter": "Filter",
+    // This is the text of a link that links to the ODK forum.
+    "forum": "Forum",
+    "lastUpdate": "Last update",
+    "loading": "Loading…",
+    "map": "Map",
+    "no": "No",
+    // This is shown if a search returned no results.
+    "noResults": "No results",
+    "noUndo": "This action cannot be undone.",
+    // @transifexKey field.reviewState
+    "reviewState": "Review State",
+    // This is shown for the row number.
+    "rowNumber": "Row",
+    // @transifexKey formHead.draftNav.tab.status
+    "status": "Status",
+    "success": "Success!",
+    // "System" refers to the server and how it is configured. It may be shown
+    // as a title, for example, at the top of the page.
+    "system": "System",
+    "yes": "Yes",
+    "tab": {
+      "settings": "Settings"
+    },
+    "table": "Table",
+    "total": "Total",
+    "totalSubmissions": "Total Submissions",
+    // {inform} is the number of Entity Properties defined by the form.
+    // {count} is the total number of Properties. The string will be pluralized based on {count}.
+    "propertiesCount": "{inform} of {count} property | {inform} of {count} properties",
+    "new": "New!",
+    "totalEntities": "Total Entities",
+    // @transifexKey component.NavbarHelpDropdown.version
+    // An identifier of a particular version of something (of Central, of a
+    // Form, of an Entity)
+    "version": "Version",
+    // A short identifier of an Entity version. "v" is short for "version".
+    // {version} is a version number.
+    "versionShort": "v{version}",
+    // This text is shown on its own before details about a warning.
+    "warning": "Warning",
+    "beta": "Beta",
+    "none": "(none)",
+    "search": "Search",
+    // @transifexKey component.FormTrashList.title
+    "trash": "Trash"
+  },
+  "mixin": {
+    "request": {
+      "alert": {
+        "fileSize": "The file “{name}” that you are trying to upload is larger than the 100 MB limit.",
+        "entityTooLarge":  "The data that you are trying to upload is too large.",
+      }
+    }
+  },
+  "requestData": {
+    "project": {
+      // @transifexKey presenter.Project.nameWithArchived
+      // {name} is the name of a Project. We append "(archived)" to the name if
+      // the Project is archived.
+      "nameWithArchived": "{name} (archived)"
+    }
+  },
+  "util": {
+    "csv": {
+      // {message} is a description of the problem.
+      "readError": "There was a problem reading your file: {message}",
+      "invalidCSV": "The file “{name}” is not a valid .csv file. It cannot be read.",
+      // {row} is a row number. {message} is a description of the problem.
+      "rowError": "There is a problem on row {row} of the file: {message}",
+      // This is an error that is shown for a spreadsheet. The field may be any
+      // cell in the spreadsheet.
+      "invalidQuotes": "A quoted field is invalid. Check the row to see if there are any unusual values.",
+      "emptyRow": "The row is empty.",
+      // This is an error that is shown for a data file. {expected} and {actual}
+      // are each a number of columns. The string will be pluralized based on
+      // {expected}.
+      "dataWithoutHeader": "Expected {expected} column, but found {actual}. | Expected {expected} columns, but found {actual}."
+    },
+    "request": {
+      "noRequest": "Something went wrong: there was no request.",
+      "noResponse": "Something went wrong: there was no response to your request.",
+      // {status} is an HTTP status code, for example, 404.
+      "errorNotProblem": "Something went wrong: error code {status}.",
+      "problem": {
+        // A "resource" is a generic term for something in Central, for example,
+        // a Project, a Web User, or a Form.
+        "404_1": "The resource you are looking for cannot be found. The resource may have been deleted.",
+        "409_17": {
+          "message": "This Form attempts to create a new Entity property that matches with an existing one except for capitalization: | This Form attempts to create new Entity properties that match with existing ones except for capitalization:",
+          // Error message format for the duplicate properties (different capitalization) in an Entity-list.
+          // {provided} is the property name in the uploaded Form.
+          // {current} is the existing property name in the Entity-list.
+          "duplicateProperty": "{provided} (existing: {current})"
+        }
+      }
+    },
+    "session": {
+      "alert": {
+        "expiresSoon": "Your session is expiring! You will be logged out in 2 minutes.",
+        "expired": "Your session has expired. Log in again to continue.",
+        "logoutError": {
+          "thereWasProblem": "There was a problem logging out.",
+          "pleaseRefresh": "Please refresh the page and try again."
+        }
+      }
+    }
+  },
+  "router": {
+    "unsavedChanges": "Are you sure you want to leave this page? Your changes might not be saved."
+  }
+}

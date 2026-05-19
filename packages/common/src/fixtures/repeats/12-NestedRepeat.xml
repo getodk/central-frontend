@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms"
+  xmlns:odk="http://www.opendatakit.org/xforms">
+  <h:head>
+    <h:title>NestedRepeat</h:title>
+    <model odk:xforms-version="1.0.0">
+      <instance>
+        <data id="NestedRepeat" version="20240415142016">
+          <person_repeat jr:template="">
+            <person_name />
+            <language_repeat jr:template="">
+              <language />
+            </language_repeat>
+            <country />
+          </person_repeat>
+          <person_repeat>
+            <person_name />
+            <language_repeat>
+              <language />
+            </language_repeat>
+            <country />
+          </person_repeat>
+          <meta>
+            <instanceID />
+          </meta>
+        </data>
+      </instance>
+      <bind nodeset="/data/person_repeat/person_name" type="string" />
+      <bind nodeset="/data/person_repeat/language_repeat/language" type="string" />
+      <bind nodeset="/data/person_repeat/country" type="string" />
+      <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid" />
+    </model>
+  </h:head>
+  <h:body>
+    <group ref="/data/person_repeat">
+      <label>Persons</label>
+      <repeat nodeset="/data/person_repeat">
+        <input ref="/data/person_repeat/person_name">
+          <label>Person Name</label>
+        </input>
+        <group ref="/data/person_repeat/language_repeat">
+          <label>Languages</label>
+          <repeat nodeset="/data/person_repeat/language_repeat">
+            <input ref="/data/person_repeat/language_repeat/language">
+              <label>Language</label>
+            </input>
+          </repeat>
+        </group>
+        <input ref="/data/person_repeat/country">
+          <label>Country</label>
+        </input>
+      </repeat>
+    </group>
+  </h:body>
+</h:html>

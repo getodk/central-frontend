@@ -1,0 +1,61 @@
+{
+  "name": "@getodk/scenario",
+  "private": true,
+  "version": "0.12.0",
+  "description": "@getodk/scenario",
+  "type": "module",
+  "author": "getodk",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/getodk/web-forms",
+    "directory": "packages/scenario"
+  },
+  "bugs": "https://github.com/getodk/web-forms/issues",
+  "homepage": "https://getodk.org/",
+  "exports": {
+    "types": "./types/do-not-import.d.ts",
+    "solid": "./do-not-import.js",
+    "import": "./do-not-import.js",
+    "browser": "./do-not-import.js",
+    "development": "./do-not-import.js",
+    "default": "./do-not-import.js"
+  },
+  "files": [
+    "README.md",
+    "./do-not-import.js",
+    "./types/do-not-import.d.ts"
+  ],
+  "engines": {
+    "node": "^20.19.3 || ^22.12.0 || ^24.13.0",
+    "npm": "11"
+  },
+  "scripts": {
+    "benchmark": "npm-run-all -nl 'benchmark-node:*' 'benchmark-browser:*'",
+    "benchmark-node:jsdom": "vitest bench --run",
+    "benchmark-browser:chromium": "BROWSER_NAME=chromium vitest bench --run",
+    "benchmark-browser:firefox": "BROWSER_NAME=firefox vitest bench --run",
+    "benchmark-browser:webkit": "BROWSER_NAME=webkit vitest bench --run",
+    "test": "npm-run-all -nl 'test-node:*' 'test-browser:*' 'test:*'",
+    "test-node:jsdom": "vitest run",
+    "test-browser:chromium": "BROWSER_NAME=chromium vitest run",
+    "test-browser:firefox": "BROWSER_NAME=firefox vitest run",
+    "test-browser:webkit": "BROWSER_NAME=webkit vitest run",
+    "test-watch:jsdom": "vitest",
+    "test-watch:chromium": "BROWSER_NAME=chromium vitest",
+    "test-watch:firefox": "BROWSER_NAME=firefox vitest",
+    "test-watch:webkit": "BROWSER_NAME=webkit vitest",
+    "test:types": "tsc --project ./tsconfig.json --emitDeclarationOnly false --noEmit"
+  },
+  "devDependencies": {
+    "@getodk/xforms-engine": "0.22.0",
+    "@js-joda/core": "^5.6.5",
+    "jsdom": "^27.2.0",
+    "npm-run-all2": "^8.0.4",
+    "solid-js": "^1.9.11",
+    "vite": "^7.3.1",
+    "vitest": "^4.0.18"
+  },
+  "dependencies": {
+    "temporal-polyfill": "^0.3.0"
+  }
+}

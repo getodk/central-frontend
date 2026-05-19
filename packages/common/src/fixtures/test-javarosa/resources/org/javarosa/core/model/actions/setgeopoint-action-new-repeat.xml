@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa" xmlns:odk="http://www.opendatakit.org/xforms">
+  <h:head>
+    <h:title>setgeopoint-action-new-repeat</h:title>
+    <model>
+      <instance>
+        <data id="setgeopoint-action-new-repeat">
+          <person jr:template="">
+            <age />
+            <location />
+          </person>
+        </data>
+      </instance>
+      <bind nodeset="/data/person/age" type="integer" />
+      <bind nodeset="/data/person/location" type="string" readonly="true()" />
+    </model>
+  </h:head>
+  <h:body>
+    <group ref="/data/person">
+      <label>Person Repeat Group</label>
+      <repeat nodeset="/data/person">
+        <input ref="/data/person/age">
+          <label>Age</label>
+        </input>
+
+        <odk:setgeopoint event="odk-new-repeat" ref="/data/person/location" />
+
+        <input ref="/data/person/location">
+          <label>Location (auto-captured and prefilled on new repeat instance)</label>
+        </input>
+      </repeat>
+    </group>
+  </h:body>
+</h:html>

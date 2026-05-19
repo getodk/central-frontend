@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa">
+    <h:head>
+        <h:title>jr:preload</h:title>
+        <model>
+            <instance>
+                <data id="preload" version="1">
+                    <today/>
+                    <start/>
+                    <end/>
+                    <deviceid/>
+                    <phonenumber/>
+                    <email/>
+                    <username/>
+                    <meta>
+                        <instanceID/>
+                    </meta>
+                </data>
+            </instance>
+            <bind jr:preload="date" jr:preloadParams="today" nodeset="/data/today" type="date" readonly="true()"/>
+            <bind jr:preload="timestamp" jr:preloadParams="start" nodeset="/data/start" type="dateTime" readonly="true()"/>
+            <bind jr:preload="timestamp" jr:preloadParams="end" nodeset="/data/end" type="dateTime" readonly="true()"/>
+            <bind jr:preload="property" jr:preloadParams="deviceid" nodeset="/data/deviceid" type="string" readonly="true()"/>
+            <bind jr:preload="property" jr:preloadParams="phonenumber" nodeset="/data/phonenumber" type="string" readonly="true()"/>
+            <bind jr:preload="property" jr:preloadParams="email" nodeset="/data/email" type="string" readonly="true()"/>
+            <bind jr:preload="property" jr:preloadParams="username" nodeset="/data/username" type="string" readonly="true()"/>
+            <bind jr:preload="uid" nodeset="/data/meta/instanceID" type="string" readonly="true()"/>
+        </model>
+    </h:head>
+    <h:body>
+        <input ref="/data/today">
+            <label>today</label>
+        </input>
+        <input ref="/data/start">
+            <label>start</label>
+        </input>
+        <input ref="/data/end">
+            <label>end</label>
+        </input>
+        <input ref="/data/deviceid">
+            <label>deviceid</label>
+        </input>
+        <input ref="/data/phonenumber">
+            <label>phonenumber</label>
+        </input>
+        <input ref="/data/email">
+            <label>email</label>
+        </input>
+        <input ref="/data/username">
+            <label>username</label>
+        </input>
+        <input ref="/data/meta/instanceID">
+            <label>instanceID</label>
+        </input>
+    </h:body>
+</h:html>

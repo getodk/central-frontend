@@ -1,0 +1,125 @@
+import { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL.ts';
+import type { ActiveLanguage } from './FormLanguage.ts';
+import type { MarkdownNode } from './MarkdownNode.ts';
+
+/**
+ * **COMMENTARY**
+ *
+ * The spec makes naming and mapping these cases a bit more complex than would
+ * be ideal. The intent is to clearly identify distinct text definitions (and
+ * sub-structural parts) from a source form, in a way that semantically lines up
+ * with the ways they will need to be handled at runtime and conveyed to
+ * clients. This is the mapping:
+ *
+ * - 'output': All output values, i.e.:
+ *   - `output/@value`
+ *
+ * - 'translation':
+ *
+ *   - Valid XPath translation expressions, in a context accepting mixed
+ *     translation/static syntax, i.e.:
+ *
+ *     - `h:head//bind/@jr:constraintMsg[is-translation-expr()]`
+ *     - `h:head//bind/@jr:requiredMsg[is-translation-expr()]`
+ *
+ *       Here, `is-translation-expr()` is a fictional shorthand for checking
+ *       that the attribute's value is a valid `jr:itext(...)` FunctionCall
+ *       expression. Note that, per spec, these attributes **do not accept
+ *       arbitrary XPath expressions**! The non-translation case is treated as
+ *       static text, not parsed for e.g. an XPath [string] Literal expression.
+ *       This is why we have introduced this 'translation' case, distinct from
+ *       'reference', which previously handled translated labels and hints.
+ *
+ *   - Valid XPath translation expressions, in a context accepting arbitrary
+ *     XPath expressions, i.e.:
+ *
+ *     - `h:body//label/@ref[is-translation-expr()]`
+ *
+ * - 'literal':
+ *   - `h:head//bind/@jr:constraintMsg[not(is-translation-expr())]`
+ *   - `h:head//bind/@jr:requiredMsg[not(is-translation-expr())]`
+ *   - `h:body//label/text()`
+ *   - `h:body//hint/text()`
+ *
+ *   (See notes above for clarification of `is-translation-expr()`.)
+ *
+ * - 'reference': Any XPath **non-translation** expression defined as a label's
+ *   (or hint's) `ref` attribute, i.e.
+ *   - `h:body//label/@ref[not(is-translation-expr())]`
+ *   - `h:body//hint/@ref[not(is-translation-expr())]`
+ *
+ *   (See notes above for clarification of `is-translation-expr()`.)
+ */
+// prettier-ignore
+export type TextChunkSource =
+	| 'literal'
+	| 'output'
+	| 'reference'
+	| 'translation';
+
+/**
+ * @todo This (and everything else to do with {@link TextRange}s is for
+ * illustration purposes, as a starting point where any particular detail is of
+ * unknown utility. We can iterate on all aspects of text ranges in actual
+ * clients and refine from there.
+ *
+ * @see {@link TextRange}
+ */
+export interface TextChunk {
+	readonly source: TextChunkSource;
+
+	/**
+	 * @see {@link ActiveLanguage} for additional commentary
+	 */
+	get language(): ActiveLanguage;
+
+	get asString(): string;
+}
+
+// eslint-disable-next-line @typescript-eslint/sort-type-constituents
+export type ElementTextRole = 'hint' | 'label' | 'item-label';
+export type ValidationTextRole = 'constraintMsg' | 'requiredMsg';
+export type TextRole = ElementTextRole | ValidationTextRole;
+
+/**
+ * Represents aspects of a form which produce text, which _might_ be:
+ *
+ * - Computed from multiple sources
+ * - Capable of conveying certain formatting (which may be presentational and/or
+ *   structural)
+ *
+ * Computed text values may be updated by:
+ *
+ * - Changing a {@link RootNodeState.activeLanguage | form's active language}
+ * - Changes to any state referenced by an
+ *   {@link https://getodk.github.io/xforms-spec/#body-elements | output},
+ *   within any text-presenting aspect of a form (e.g. labels and hints, as well
+ *   as itext translations referenced by those)
+ *
+ * As a client interface, the intent is to convey that this text may be dynamic
+ * (and thus potentially reactive for clients supplying a
+ * {@link OpaqueReactiveObjectFactory}), and may produce multiple spans of text
+ * (or none at all) depending on the structure and state of the form.
+ *
+ * @todo This interface should be considered **incomplete and in flux**, and
+ * subject to change as we evaluate client needs and engine responsibilities. In
+ * particular, we've deferred a notion of an interface for formatting aspects,
+ * while leaving open the possibility that it may come in future iterations.
+ *
+ * {@link role} is intended to convey that individual text ranges may be
+ * reasoned about differently by clients depending on their role (for instance,
+ * a text range's role may correspond to the "short" or "guidance" `form` of a
+ * {@link https://getodk.github.io/xforms-spec/#languages | translation}).
+ */
+export interface TextRange<Role extends TextRole> {
+	readonly role: Role;
+
+	[Symbol.iterator](): Iterable<TextChunk>;
+
+	get asString(): string;
+	get formatted(): MarkdownNode[];
+
+	get imageSource(): JRResourceURL | undefined;
+	get audioSource(): JRResourceURL | undefined;
+	get videoSource(): JRResourceURL | undefined;
+}
