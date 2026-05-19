@@ -44,7 +44,7 @@ jobs:
     - run: ./bin/check-for-large-files.sh
     - run: npm ci
     - run: npm run build
-    - run: ./bin/check-bundle-size.cjs
+    - run: ./bin/check-bundle-size.js
   build-wf:
     if: ${{ github.event_name == 'pull_request' || github.event.pull_request.head.repo.fork }}
     name: 'Build Web Forms'

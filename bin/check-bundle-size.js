@@ -2,8 +2,8 @@
 
 /* eslint-disable array-bracket-spacing, indent, key-spacing, no-confusing-arrow, no-else-return, no-multi-spaces, no-plusplus, no-use-before-define, prefer-template, semi-style */
 
-const { execSync } = require('node:child_process');
-const { basename, extname } = require('node:path');
+import { execSync } from 'node:child_process';
+import { basename, extname } from 'node:path';
 
 const log = (...args) => console.log('[check-bundle-size]', ...args);
 
