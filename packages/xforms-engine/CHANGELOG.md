@@ -1,0 +1,291 @@
+# @getodk/xforms-engine
+
+## 0.22.0
+
+### Minor Changes
+
+- 86a54ab: Editing submissions no longer blocks until attachments have been downloaded
+- 7ac5a19: Add support to datetime question type.
+- 500c8b2: Adds translation support.
+
+### Patch Changes
+
+- 4fc0e56: Fixed setvalue not firing when the field becomes relevant
+
+## 0.21.1
+
+### Patch Changes
+
+- 8f1865c: Fixed images not allowed in file uploads
+
+## 0.21.0
+
+### Minor Changes
+
+- 2eccd28: Added support for the file, audio, and video upload types, and implemented drag and drop for uploads
+
+### Patch Changes
+
+- 1795a20: Fixed csv parsing to allow files with single column
+- 7b47bb1: Fixed a bug with markdown rendering outputs with empty values
+
+## 0.20.0
+
+### Minor Changes
+
+- b454f1f: Added support for max-pixels parameter to scale down image files before upload
+
+### Patch Changes
+
+- e9f4e28: Fixed markdown to support computed link urls
+- 5a9faa8: Fixed bug where unknown mimetype on an attachment would error when loading a form
+- b83577f: Fix markdown to preserve line breaks
+
+## 0.19.0
+
+### Minor Changes
+
+- 965f6a9: Prevent displaying groups or repeats without relevant questions.
+
+### Patch Changes
+
+- 72bac16: Fixed markdown parser to ignore single labels that start with numbers instead of turning them into ordered lists
+- 53e60da: Handle last-saved virtual secondary instance gracefully pending full implementation later
+- aa8090a: Fixes integer and range codecs to not throw errors when given invalid data
+- 14d6c9a: Fixed markdown to not interpret leading whitespace as a code block
+
+## 0.18.0
+
+### Minor Changes
+
+- 90e5a03: Adds time question type
+
+### Patch Changes
+
+- f382254: Fixed a bug where editing forms with repeat counts caused odk-new-repeat events to fire and overwrite user entered values
+- 507344e: Decimals and geopoint values are now serialized with a minimum of one digit after the decimal point
+
+## 0.17.0
+
+### Minor Changes
+
+- 8f49cfa: Adds geofence xpath function
+- 4346971: Adds support for Geoshape and Geotrace.
+- 126e11d: Adds support for setgeopoint
+
+### Patch Changes
+
+- 72a4961: Allow for multiple setvalue actions to reference the same element
+- 2276870: Removes temporal-polyfill from xpath bundle
+- a3839c1: Fixes a range of memory leaks when resetting form instances
+- b6ed538: Parsing external instance csvs should be permissive of empty rows
+- cd382fb: Set attribute value to instance value when editing submission
+- 031d0d1: Adds a generated ID to markdown nodes to use as the key in vue loops
+- c44525a: Fixed xforms-value-changed firing when loading submission for edit
+- ad6d0ba: Fixes odk-instance-first-load so it doesn't run on add repeat
+- 14b65e4: Defer evaluation of translation elements to improve performance
+- d1811f2: Fixes preload bindings so they only set the value on first load
+
+## 0.16.1
+
+### Patch Changes
+
+- f5b706e: Fixes the xpath traversal code to support dynamic attributes
+- 7908b30: Fixes actions so they are no longer reactive to model updates
+- 40ea005: Fix Attributes to have the correct contextNode so `current()` works as expected
+
+## 0.16.0
+
+### Minor Changes
+
+- bac8412: Add support for all jr:preload options
+- 6da0c6c: Add support for setvalue action and odk-instance-first-load, odk-new-repeat, xforms-value-changed events
+- 3ec1d26: Support attributes on leaf nodes
+
+### Patch Changes
+
+- 0be7d7c: Upgrade dependencies
+
+## 0.15.0
+
+### Minor Changes
+
+- cf1c541: Support binding and serializing element attributes
+
+### Patch Changes
+
+- 7936df6: Minor increases in dependancies to resolve disclosed vulnerabilities
+
+## 0.14.0
+
+### Minor Changes
+
+- 36b977f: Support select one from map
+- ca8dc64: Refactor Group types so groups without a ref attribute are displayed
+- d210211: Added support for markdown formatting in labels, hints, and constraints
+
+## 0.13.0
+
+### Minor Changes
+
+- 05db2e6: Added support for jr:choice-name function
+- a2d3912: Support references to form fields in translated form text
+
+## 0.12.0
+
+### Minor Changes
+
+- 6b3e6c0: Dropped support for Node.js version 18.
+  - Added support for Node.js version 24.
+  - Upgraded Vite to version 7, along with Vitest and other libraries that support Node.js versions greater than 20.
+
+### Patch Changes
+
+- 8a56391: Upgrade dependencies to latest minor versions
+
+## 0.11.0
+
+### Minor Changes
+
+- f8000cf: Fixes an issue where a submission with an XML declaration causes a crash during edits.
+
+### Patch Changes
+
+- b05498c: Improves error dialog message and style.
+
+## 0.10.0
+
+### Minor Changes
+
+- f0e2745: Adds support for downloading image attachments referenced in a form's IText
+
+## 0.9.0
+
+### Minor Changes
+
+- ab3be86: Support for date questions with no appearance and support for date notes.
+
+### Patch Changes
+
+- f620cf4: Improves XPath processing performance.
+
+## 0.8.0
+
+### Minor Changes
+
+- 8261eee: Support for instance attachments
+
+### Patch Changes
+
+- fd88153: Updates versions of dependencies
+- e91e403: Updates versions of major dependencies
+
+## 0.7.0
+
+### Minor Changes
+
+- cc96814: Support for restoring serialized `InstancePayload` as instance state
+- dfccc78: **BREAKING CHANGE** Rename instance payload property `definition` to `SubmissionMeta`
+- 0005cc6: **BREAKING CHANGE** Instance payload data is always produced as a tuple. The shape for a "chunked" payload is unchanged. The shape for a "monolithic" payload is now more like a "chunked" payload, except that it is guaranteed to always have only one item.
+- 8491d8a: Decouple form definition and instance input in instance state initialization
+- bc23f85: Edited instance `instanceID` metadata is transfered to `deprecatedID`
+  - On forms defining `instanceID` to be computed by `preload="uid"`, edited instance `instanceID` metadata is recomputed after its previous value is transferred to `deprecatedID`
+- 58ebb58: Revised naming convention: "submission" to "instance" (except for concepts which truly are submission-specific)
+- 50e944d: **BREAKING CHANGE** The main engine entrypoint (formerly `initializeForm`) has been split into:
+  - `loadForm`, producing an intermediate result from which many instances of the same form can be created (with a `createInstance` method on that result)
+  - `createInstance`, a convenience wrapper composing the result from `loadForm` and its `createInstance` method to create a single instance; this entrypoint effectively restores the behavior of `initializeForm`
+    Some interfaces related to the former `initializeForm` have also been refined to reflect this change.
+- 87523b7: Partial support for editing submitted instances:
+  - Introduce `editInstance` entrypoints, intended for editing previously submitted instance state
+  - Implement resource resolution for `editInstance` entrypoints, intended for supporting I/O-bound submission edit workflows
+
+## 0.6.0
+
+### Minor Changes
+
+- 4d97e54: Compute `jr:preload="uid"` on form initialization.
+  - Ensure submission XML incluces `instanceID` metadata. If not present in form definition, defaults to computing `jr:preload="uid"`.
+  - Support for use of non-default (XForms) namespaces by primary instance elements, including:
+    - Production of form-defined namespace declarations in submission XML;
+    - Preservation of form-defined namespace prefix;
+    - Use of namespace prefix in bind nodeset;
+    - Use of namespace prefix in computed expressions.
+  - Support for use of non-default namespaces by internal secondary instances.
+  - Partial support for use of non-default namespaces by external XML secondary instances. (Namespaces may be resolved to engine-internal defaults.)
+- 8892010: The `xf:distance` XPath function now accepts multiple arguments. This makes it easier to compute the distance between multiple points within a form's primary instance. Previously, to achieve this, you'd have to introduce a `calculate` which concatenates those points together, then call the distance function with a reference to that `calculate` as the argument.
+- 81a57c3: Support for rank question types (`<odk:rank>`)
+- 99295eb: Support for geopoint questions with no appearance
+  - Support for geopoint notes
+
+### Patch Changes
+
+- 0287a16: Fix: include namespace declarations in submission XML
+- a08e77b: Fix: include primary instance root attributes in submission XML
+- 2bf859e: Fix: relax parsing of `jr:preload` and `jr:preloadParams`. Any value for either attribute is accepted. Known (specified in ODK XForms, at time of writing) values are provided as type hints, similarly to how known appearances are specified.
+- dac0d0b: Fix: correct types for chunked/monolithic submission result
+- 00517c2: Fix: illegal invocation when fetching form xml
+
+## 0.5.0
+
+### Minor Changes
+
+- fcda4d8: Support for decimal and int bind types (model values and inputs)
+- 2fddcec: Support for external secondary instances (XML, CSV, GeoJSON)
+- e636a9c: XPath support for evaluation of arbitrary DOM implementations (XPathDOMAdapter)
+- 8edf375: Initial engine support for preparing submissions
+
+## 0.4.0
+
+### Minor Changes
+
+- 6fb1054: Engine support for `<trigger>`
+
+### Patch Changes
+
+- c3b7165: - Fix: unsupported controls treated as `ModelValueNode`
+  - Stub unsupported control nodes: `range`, `odk:rank`, `upload`
+- 5f50bd3: Fixed the name of upload node for parsing the Form
+
+## 0.3.0
+
+### Minor Changes
+
+- 596c1fe: Add engine support for 'note' nodes
+- 0c1534d: Improve path resolution and updating computations
+  - Support tracking `current()` references in computations
+  - Support tracking references in computations where path references include predicates
+  - Improve support for repeat-based itemsets
+  - Improve relative path resolution across the board, fixing many computation update edge cases where expressions include complex path expressions
+  - Support relative `ref`/`nodeset` body attributes, as well as those with a `current()/` prefix
+  - Improve function call analysis in XPath expressions, particularly identification of functions called with no arguments
+  - Lay more mature foundation for general syntax analysis of XPath expressions
+- 7b63159: Add support for count-controlled (`jr:count`) and fixed (`jr:noAddRemove`) repeat ranges.
+- 573b06b: Engine support for `constraint`, `required` validation
+
+### Patch Changes
+
+- e81aa43: Fix: reactive aggregation of validation violations from selects
+- 1e72854: Fix: reactivity of aggregated validation violations on deep descendants
+- aa3a84a: Fix: evaluate `jr:count` in context of affected repeat
+
+## 0.2.0
+
+### Minor Changes
+
+- e7bef0c: Add initial engine support for appearances
+
+### Patch Changes
+
+- 7859da4: Several repeat-related fixes:
+  - Fix: most cases of inconsistent children state in Solid-based clients
+  - Fix: many cases of incomplete functionality on/within N > 1 repeat instances
+  - Fix: computation of bind states (`relevant` especially) before values, properly clear non-relevant default values
+  - Fix: timing inconsistency of some computations on init, adding repeat instances
+  - Fix: application of `relevant` state where expression is on repeat itself
+
+## 0.1.1
+
+### Patch Changes
+
+- aa0e214: Update to latest stable Node versions: 18.20.3, 20.13.1, 22.2.0
+- a26788b: Updated external dependencies

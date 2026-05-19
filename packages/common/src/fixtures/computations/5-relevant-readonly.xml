@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms"
+  xmlns:ev="http://www.w3.org/2001/xml-events"
+  xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:jr="http://openrosa.org/javarosa"
+  xmlns:orx="http://openrosa.org/xforms/"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>Relevant and readonly</h:title>
+    <model>
+      <instance>
+        <root id="relevant-readonly">
+          <first-question>1</first-question>
+          <second-question>2</second-question>
+          <third-question>3</third-question>
+          <meta>
+            <instanceID/>
+          </meta>
+        </root>
+      </instance>
+      <bind nodeset="/root/first-question"/>
+      <bind nodeset="/root/second-question" relevant="/root/first-question &lt; 2" readonly="true()" />
+      <bind nodeset="/root/third-question" relevant="/root/first-question &gt; 2" readonly="/root/first-question &lt; 4" />
+      <bind nodeset="/root/meta/instanceID" type="string"/>
+    </model>
+  </h:head>
+  <h:body>
+    <input ref="/root/first-question">
+      <label>1. Default value is 1</label>
+    </input>
+    <input ref="/root/second-question">
+      <label>2. Relevant if #1 is less than 2, always read-only</label>
+    </input>
+    <input ref="/root/third-question">
+      <label>3. Relevant if #1 is greater than 2, read-only if #1 is less than 4</label>
+    </input>
+  </h:body>
+</h:html>

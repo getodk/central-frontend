@@ -1,0 +1,251 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.56,
+          45.52
+        ]
+      },
+      "properties": {
+        "nurses": 19,
+        "doctors": 10,
+        "patients": 390,
+        "id": "fea-07",
+        "title": "Chinatown Medical Center"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.585,
+          45.5
+        ]
+      },
+      "properties": {
+        "nurses": 23,
+        "doctors": 13,
+        "patients": 550,
+        "id": "fea-08",
+        "title": "West End Health Clinic"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.555,
+          45.485
+        ]
+      },
+      "properties": {
+        "nurses": 16,
+        "doctors": 6,
+        "patients": 300,
+        "id": "fea-09",
+        "title": "Verdun Community Clinic"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -73.59,
+            45.53
+          ],
+          [
+            -73.58,
+            45.53
+          ],
+          [
+            -73.57,
+            45.53
+          ]
+        ]
+      },
+      "properties": {
+        "id": "fea-018",
+        "title": "Canada Goose",
+        "quantities": 4000,
+        "migration_days": 12,
+        "start_date": "2024-09-10",
+        "end_date": "2024-09-22"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -73.59,
+            45.47
+          ],
+          [
+            -73.58,
+            45.47
+          ],
+          [
+            -73.57,
+            45.47
+          ]
+        ]
+      },
+      "properties": {
+        "id": "fea-019",
+        "title": "Snowy Owl",
+        "quantities": 150,
+        "migration_days": 8,
+        "start_date": "2024-11-15",
+        "end_date": "2024-11-23"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -73.6,
+            45.5
+          ],
+          [
+            -73.6,
+            45.51
+          ],
+          [
+            -73.6,
+            45.52
+          ]
+        ]
+      },
+      "properties": {
+        "id": "fea-020",
+        "title": "Peregrine Falcon",
+        "quantities": 300,
+        "migration_days": 5,
+        "start_date": "2024-10-01",
+        "end_date": "2024-10-06"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -73.59,
+              45.54
+            ],
+            [
+              -73.58,
+              45.54
+            ],
+            [
+              -73.58,
+              45.55
+            ],
+            [
+              -73.59,
+              45.55
+            ],
+            [
+              -73.59,
+              45.54
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "fea-021",
+        "title": "Montreal Urban Farm 1",
+        "size": "200 hectares",
+        "harvest_quantity": "400 tons",
+        "harvest_date": "2024-09-05"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -73.61,
+              45.46
+            ],
+            [
+              -73.6,
+              45.46
+            ],
+            [
+              -73.6,
+              45.47
+            ],
+            [
+              -73.61,
+              45.47
+            ],
+            [
+              -73.61,
+              45.46
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "fea-022",
+        "title": "Montreal Urban Farm 2",
+        "size": "150 hectares",
+        "harvest_quantity": "300 tons",
+        "harvest_date": "2024-10-10"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -73.54,
+              45.53
+            ],
+            [
+              -73.53,
+              45.53
+            ],
+            [
+              -73.53,
+              45.54
+            ],
+            [
+              -73.54,
+              45.54
+            ],
+            [
+              -73.54,
+              45.53
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "fea-023",
+        "title": "Montreal Urban Farm 3",
+        "size": "250 hectares",
+        "harvest_quantity": "500 tons",
+        "harvest_date": "2024-08-15"
+      }
+    }
+  ]
+}

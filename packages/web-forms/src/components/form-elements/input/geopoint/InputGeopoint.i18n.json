@@ -1,0 +1,54 @@
+{
+  "input_geopoint.get_location.label": {
+    "string": "Get location",
+    "developer_comment": "Label for the button to start capturing the device's current GPS location."
+  },
+  "input_geopoint.try_again.label": {
+    "string": "Try again",
+    "developer_comment": "Label for the button to retry capturing the GPS location after one has already been saved."
+  },
+  "input_geopoint.location_error.title": {
+    "string": "Cannot access location",
+    "developer_comment": "Title of the error message shown when the browser cannot access the device's location."
+  },
+  "input_geopoint.location_error.description": {
+    "string": "Grant location permission in the browser settings and make sure location is turned on.",
+    "developer_comment": "Description of what the user should do to resolve a location access error."
+  },
+  "geolocation_dialog.header.title": {
+    "string": "Finding your location",
+    "developer_comment": "Title shown in the header of the dialog while the device is searching for a GPS fix."
+  },
+  "geolocation_dialog.accuracy_threshold.info": {
+    "string": "Location will be saved at {accuracyThreshold} m",
+    "developer_comment": "Informational message shown while waiting for a GPS fix. {accuracyThreshold} is the accuracy threshold in metres at which the location will be automatically saved."
+  },
+  "geolocation_dialog.elapsed_time.label": {
+    "string": "Time taken to capture location:",
+    "developer_comment": "Label preceding the elapsed time counter shown while waiting for a GPS fix."
+  },
+  "geolocation_dialog.previous_accuracy.info": {
+    "string": "Previous saved location at {accuracy} m",
+    "developer_comment": "Shows the accuracy of the previously saved location in metres. {accuracy} is the numeric accuracy value."
+  },
+  "geolocation_dialog.save.label": {
+    "string": "Save location",
+    "developer_comment": "Label for the button to save the currently captured GPS location."
+  },
+  "geopoint_accuracy.good.label": {
+    "string": "Good accuracy",
+    "developer_comment": "Label shown when the GPS accuracy is within the good threshold."
+  },
+  "geopoint_accuracy.acceptable.label": {
+    "string": "Good accuracy",
+    "developer_comment": "Label shown when the GPS accuracy is within the acceptable threshold (between good and unacceptable)."
+  },
+  "geopoint_accuracy.poor.label": {
+    "string": "Poor accuracy",
+    "developer_comment": "Label shown when the GPS accuracy does not meet the acceptable threshold."
+  },
+  "geopoint_accuracy.unknown.label": {
+    "string": "Unknown accuracy",
+    "developer_comment": "Label shown when no GPS accuracy value is available yet."
+  }
+}
