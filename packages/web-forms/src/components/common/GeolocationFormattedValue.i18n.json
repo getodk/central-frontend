@@ -1,0 +1,14 @@
+{
+  "geolocation_formatted_value.accuracy.label": {
+    "string": "Accuracy: {accuracy} m,",
+    "developer_comment": "Displays the GPS accuracy in metres. {accuracy} is the numeric accuracy value."
+  },
+  "geolocation_formatted_value.latitude.label": {
+    "string": "Latitude: {latitude},",
+    "developer_comment": "Displays the GPS latitude coordinate. {latitude} is the numeric latitude value."
+  },
+  "geolocation_formatted_value.longitude.label": {
+    "string": "Longitude: {longitude}.",
+    "developer_comment": "Displays the GPS longitude coordinate. {longitude} is the numeric longitude value."
+  }
+}

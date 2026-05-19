@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml"
+        xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms"
+        xmlns:odk="http://www.opendatakit.org/xforms">
+  <h:head>
+    <h:title>Video Capture</h:title>
+    <model odk:xforms-version="1.0.0">
+      <itext>
+        <translation lang="English (en)">
+          <text id="/data/cat_video:label">
+            <value>Upload a video of a cat</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <data id="video_capture" version="2025020401">
+          <cat_video/>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+
+      <bind nodeset="/data/cat_video" type="binary" required="true()" />
+      <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid"/>
+    </model>
+  </h:head>
+  <h:body>
+    <upload mediatype="video/*" ref="/data/cat_video">
+      <label ref="jr:itext('/data/cat_video:label')"/>
+    </upload>
+  </h:body>
+</h:html>

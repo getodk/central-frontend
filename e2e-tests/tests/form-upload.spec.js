@@ -38,24 +38,20 @@ test.describe('Form Upload', () => {
       await login(page);
 
       // Navigate to create form page
-      await page.goto(`${appUrl}/projects/${projectId}`);
-      await page.getByRole('button', { name: 'New' }).click();
-
-      // Verify modal is open
-      await expect(page.locator('#form-new')).toBeVisible();
+      await page.goto(`${appUrl}/projects/${projectId}/new-form`);
 
       // Upload the temp file
-      await page.locator('#form-new input[type="file"]').setInputFiles(tempFilePath);
+      await page.locator('#form-upload input[type="file"]').setInputFiles(tempFilePath);
 
       // Verify filename is displayed
-      await expect(page.locator('#form-new-filename')).toContainText(publishedForm.xmlFormId);
+      await expect(page.locator('#form-upload-filename')).toContainText(publishedForm.xmlFormId);
 
       // Click upload
       await page.getByRole('button', { name: 'Upload' }).click();
 
       // Expect a warning that form with the same ID exists in the trash
-      await expect(page.locator('.modal-warnings')).toBeVisible();
-      await expect(page.locator('.modal-warnings')).toContainText('Trash');
+      await expect(page.locator('.form-upload-warnings')).toBeVisible();
+      await expect(page.locator('.form-upload-warnings')).toContainText('Trash');
 
       // Modify the temp file
       fs.writeFileSync(tempFilePath, formXml.replaceAll(publishedForm.xmlFormId, `${publishedForm.xmlFormId}_new`));
@@ -64,11 +60,11 @@ test.describe('Form Upload', () => {
       await page.getByRole('button', { name: 'Upload anyway' }).click();
 
       // Expect error that file has been modified
-      await expect(page.locator('#form-new .red-alert')).toContainText('could not be read');
+      await expect(page.locator('#alerts .red-alert')).toContainText('could not be read');
 
       // Verify file input and warnings are cleared
-      await expect(page.locator('#form-new-filename')).not.toBeVisible();
-      await expect(page.locator('.modal-warnings')).not.toBeVisible();
+      await expect(page.locator('#form-upload-filename')).not.toBeVisible();
+      await expect(page.locator('.form-upload-warnings')).not.toBeVisible();
     } finally {
       // Clean up temp directory
       fs.rmSync(tempDir, { recursive: true, force: true });

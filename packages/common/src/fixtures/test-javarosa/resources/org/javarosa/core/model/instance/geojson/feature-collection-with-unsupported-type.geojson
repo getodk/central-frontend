@@ -1,0 +1,20 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Foo",
+                "coordinates": [
+                    102,
+                    0.5
+                ]
+            },
+            "properties": {
+                "id": "fs87b",
+                "name": "My cool line",
+                "foo": "bar"
+            }
+        }
+    ]
+}

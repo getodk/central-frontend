@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms"
+    xmlns:odk="http://www.opendatakit.org/xforms">
+    <h:head>
+        <h:title>Groups and Repeats</h:title>
+        <model odk:xforms-version="1.0.0">
+            <instance>
+                <data id="groups_and_repeats" version="20240326122412">
+                    <simple_text />
+                    <group_without_label>
+                        <first_name />
+                    </group_without_label>
+                    <repeat_without_anything_count />
+                    <repeat_without_anything jr:template="">
+                        <last_name />
+                    </repeat_without_anything>
+                    <repeat_without_anything>
+                        <last_name />
+                    </repeat_without_anything>
+                    <repeat_with_label jr:template="">
+                        <middle_name />
+                    </repeat_with_label>
+                    <repeat_with_label>
+                        <middle_name />
+                    </repeat_with_label>
+                    <repeat_with_label>
+                        <middle_name />
+                    </repeat_with_label>
+                    <nested_group_without_label_1>
+                        <nested_group_without_label_1_1>
+                            <a_name />
+                        </nested_group_without_label_1_1>
+                    </nested_group_without_label_1>
+                    <repeat_with_child_group_1 jr:template="">
+                        <repeat_with_child_group_1_1>
+                            <b_name />
+                        </repeat_with_child_group_1_1>
+                    </repeat_with_child_group_1>
+                    <repeat_with_child_group_1>
+                        <repeat_with_child_group_1_1>
+                            <b_name />
+                        </repeat_with_child_group_1_1>
+                    </repeat_with_child_group_1>
+                    <repeat_without_parent_group>
+                        <c_name />
+                    </repeat_without_parent_group>
+                    <nested_group_1>
+                        <child_group_1_1>
+                            <d_name />
+                        </child_group_1_1>
+                    </nested_group_1>
+                    <meta>
+                        <instanceID />
+                    </meta>
+                </data>
+            </instance>
+            <bind nodeset="/data/simple_text" type="string" />
+            <bind nodeset="/data/group_without_label/first_name" type="string" />
+            <bind nodeset="/data/repeat_without_anything_count" type="string" readonly="true()"
+                calculate="3" />
+            <bind nodeset="/data/repeat_without_anything/last_name" type="string" />
+            <bind nodeset="/data/repeat_with_label/middle_name" type="string" />
+            <bind nodeset="/data/nested_group_without_label_1/nested_group_without_label_1_1/a_name"
+                type="string" />
+            <bind nodeset="/data/repeat_with_child_group_1/repeat_with_child_group_1_1/b_name"
+                type="string" />
+            <bind nodeset="/data/repeat_without_parent_group/c_name" type="string" />
+            <bind nodeset="/data/nested_group_1/child_group_1_1/d_name" type="string" />
+            <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid" />
+        </model>
+    </h:head>
+    <h:body>
+        <input ref="/data/simple_text">
+            <label>Simple textbox</label>
+        </input>
+        <group ref="/data/group_without_label">
+            <input ref="/data/group_without_label/first_name">
+                <label>First Name</label>
+            </input>
+        </group>
+        <group ref="/data/repeat_without_anything">
+            <label></label>
+            <repeat nodeset="/data/repeat_without_anything"
+                jr:count=" /data/repeat_without_anything_count ">
+                <input ref="/data/repeat_without_anything/last_name">
+                    <label>Last Name</label>
+                </input>
+            </repeat>
+        </group>
+        <group ref="/data/repeat_with_label">
+            <label>Repeat with label</label>
+            <repeat nodeset="/data/repeat_with_label">
+                <input ref="/data/repeat_with_label/middle_name">
+                    <label>Middle Name</label>
+                </input>
+            </repeat>
+        </group>
+        <group ref="/data/nested_group_without_label_1">
+            <group ref="/data/nested_group_without_label_1/nested_group_without_label_1_1">
+                <input
+                    ref="/data/nested_group_without_label_1/nested_group_without_label_1_1/a_name">
+                    <label>A name (I have two group ancestors without labels)</label>
+                </input>
+            </group>
+        </group>
+        <group ref="/data/repeat_with_child_group_1">
+            <label>Repeat label</label>
+            <repeat nodeset="/data/repeat_with_child_group_1">
+                <group ref="/data/repeat_with_child_group_1/repeat_with_child_group_1_1">
+                    <label>
+                        <output
+                            value=" /data/repeat_with_child_group_1/repeat_with_child_group_1_1/b_name " />
+                    </label>
+                    <input ref="/data/repeat_with_child_group_1/repeat_with_child_group_1_1/b_name">
+                        <label>B Name</label>
+                    </input>
+                </group>
+            </repeat>
+        </group>
+        <repeat nodeset="/data/repeat_without_parent_group">
+            <input ref="/data/repeat_without_parent_group/c_name">
+                <label>C Name</label>
+            </input>
+        </repeat>
+
+        <group ref="/data/nested_group_1">
+            <label>Top group label</label>
+            <group ref="/data/nested_group_1/child_group_1_1">
+                <label>child group label</label>
+                <input ref="/data/nested_group_1/child_group_1_1/d_name">
+                    <label>D Name</label>
+                </input>
+            </group>
+        </group>
+    </h:body>
+</h:html>

@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml"
+        xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms"
+        xmlns:odk="http://www.opendatakit.org/xforms">
+  <h:head>
+    <h:title>select-one-from-map-external-files</h:title>
+    <model odk:xforms-version="1.0.0">
+      <instance>
+        <data id="select-one-from-map-external-files">
+          <show_q1/>
+          <q1/>
+          <disable_q2/>
+          <q2/>
+          <q3/>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <instance id="geodataGeoJson" src="jr://file/geodataGeoJson.geojson"/>
+      <instance id="geodataCsv" src="jr://file-csv/geodataCsv.csv"/>
+      <instance id="geodataXml">
+        <root>
+          <item>
+            <name>1</name>
+            <label>Madrid</label>
+            <geometry>40.446254412914385 -3.7445467750577563</geometry>
+          </item>
+          <item>
+            <name>2</name>
+            <label>Warsaw</label>
+            <geometry>52.18544754541023 21.1006145352125</geometry>
+          </item>
+          <item>
+            <name>3</name>
+            <label>Stockholm-Copenhagen-Berlin</label>
+            <geometry>59.31284185390564 18.04203801493341; 55.7237702447557 12.59922155107742; 52.48574101841746
+              13.337427033540052
+            </geometry>
+          </item>
+          <item>
+            <name>4</name>
+            <label>Prague-Vienna-Budapest</label>
+            <geometry>47.485570717616696 19.04921763281365; 48.19954394662233 16.42105774490628; 50.139932923435055
+              14.417694964430638
+            </geometry>
+          </item>
+          <item>
+            <name>5</name>
+            <label>London-Leeds-Liverpool-London</label>
+            <geometry>53.40903732686215 -2.991905620523312; 51.505094241512666 -0.1321803079139272; 53.8052722823615
+              -1.5363611594108022; 53.40903732686215 -2.991905620523312
+            </geometry>
+          </item>
+          <item>
+            <name>6</name>
+            <label>Paris-Basel-Frankfurt-Paris</label>
+            <geometry>48.840915452897946 2.3146557958955327; 47.54579786412256 7.63542665300713; 50.10149750150822
+              8.703168961933983; 48.840915452897946 2.3146557958955327
+            </geometry>
+          </item>
+        </root>
+      </instance>
+      <bind nodeset="/data/show_q1" type="string"/>
+      <bind nodeset="/data/q1" type="string" relevant="selected(/data/show_q1, 'yes')"/>
+      <bind nodeset="/data/disable_q2" type="string"/>
+      <bind nodeset="/data/q2" type="string" readonly="selected(/data/disable_q2, 'yes')"/>
+      <bind nodeset="/data/q3" type="string"/>
+      <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid"/>
+    </model>
+  </h:head>
+
+  <h:body>
+    <select1 ref="/data/show_q1">
+      <label>Do you want to show the select with geojson file?</label>
+      <item>
+        <value>yes</value>
+        <label>Yes</label>
+      </item>
+      <item>
+        <value>no</value>
+        <label>No</label>
+      </item>
+    </select1>
+
+    <select1 ref="/data/q1" appearance="map">
+      <label>Select one from geojson file</label>
+      <itemset nodeset="instance('geodataGeoJson')/root/item">
+        <value ref="id"/>
+        <label ref="title"/>
+      </itemset>
+    </select1>
+
+
+    <select1 ref="/data/disable_q2">
+      <label>Do you want to disable the select with csv file?</label>
+      <item>
+        <value>yes</value>
+        <label>Yes</label>
+      </item>
+      <item>
+        <value>no</value>
+        <label>No</label>
+      </item>
+    </select1>
+
+    <select1 ref="/data/q2" appearance="map">
+      <label>Select one from csv file</label>
+      <itemset nodeset="instance('geodataCsv')/root/item">
+        <value ref="name"/>
+        <label ref="label"/>
+      </itemset>
+    </select1>
+
+    <select1 ref="/data/q3" appearance="map">
+      <label>Select one from xml file</label>
+      <itemset nodeset="instance('geodataXml')/root/item[true()]">
+        <value ref="name"/>
+        <label ref="label"/>
+      </itemset>
+    </select1>
+  </h:body>
+</h:html>

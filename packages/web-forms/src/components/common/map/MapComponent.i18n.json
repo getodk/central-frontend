@@ -1,0 +1,239 @@
+{
+  "map_async.load_error.message": {
+    "string": "Unable to load map",
+    "developer_comment": "Error message shown when the map component fails to load."
+  },
+
+  "map_block.graphics_error.title": {
+    "string": "Graphics issue detected",
+    "developer_comment": "Title of the error shown when the browser cannot render the map due to WebGL being unavailable."
+  },
+  "map_block.graphics_error.message": {
+    "string": "Your browser cannot display the map now. Enable graphics acceleration settings.",
+    "developer_comment": "Description of the WebGL error, instructing the user to enable hardware acceleration in their browser."
+  },
+  "map_block.location_error.title": {
+    "string": "Cannot access location",
+    "developer_comment": "Title of the error shown in the map when the browser denies geolocation permission."
+  },
+  "map_block.location_error.message": {
+    "string": "Grant location permission in the browser settings and make sure location is turned on.",
+    "developer_comment": "Description of what the user should do to resolve a geolocation access error in the map."
+  },
+
+  "map_block.get_location.label": {
+    "string": "Get location",
+    "developer_comment": "Label for the button in the map overlay that starts watching the device's GPS location."
+  },
+  "map_block.drag_vertex_instruction.placed": {
+    "string": "Press and drag to move a point",
+    "developer_comment": "Instruction shown on the map when a point has been placed and the user can drag points and vertices."
+  },
+  "map_block.drag_vertex_instruction.default": {
+    "string": "Tap to place a point",
+    "developer_comment": "Instruction shown on the map before a point is placed, when the user can drag points and vertices."
+  },
+  "map_block.drag_instruction.placed": {
+    "string": "Tap to move point",
+    "developer_comment": "Instruction shown on the map when a point has been placed and the user can drag the feature."
+  },
+  "map_block.drag_instruction.default": {
+    "string": "Use the location button to center on your current location",
+    "developer_comment": "Instruction shown on the map before a point is placed, when the user can drag the feature."
+  },
+
+  "map_confirm_dialog.delete_shape.header": {
+    "string": "Delete entire shape?",
+    "developer_comment": "Title of the confirmation dialog shown before deleting a shape."
+  },
+  "map_confirm_dialog.delete_trace.header": {
+    "string": "Delete entire trace?",
+    "developer_comment": "Title of the confirmation dialog shown before deleting a trace."
+  },
+  "map_confirm_dialog.delete_shape.body": {
+    "string": "Are you sure you want to delete this entire shape and start over?",
+    "developer_comment": "Body text of the confirmation dialog shown before deleting a shape."
+  },
+  "map_confirm_dialog.delete_trace.body": {
+    "string": "Are you sure you want to delete this entire trace and start over?",
+    "developer_comment": "Body text of the confirmation dialog shown before deleting a trace."
+  },
+
+  "map_advanced_panel.longitude.label": {
+    "string": "Longitude",
+    "developer_comment": "Label for the longitude input field in the advanced panel."
+  },
+  "map_advanced_panel.longitude.error": {
+    "string": "Longitude is invalid",
+    "developer_comment": "Validation error shown when the longitude value entered is out of range."
+  },
+  "map_advanced_panel.latitude.label": {
+    "string": "Latitude",
+    "developer_comment": "Label for the latitude input field in the advanced panel."
+  },
+  "map_advanced_panel.latitude.error": {
+    "string": "Latitude is invalid",
+    "developer_comment": "Validation error shown when the latitude value entered is out of range."
+  },
+  "map_advanced_panel.altitude.label": {
+    "string": "Altitude",
+    "developer_comment": "Label for the altitude input field in the advanced panel."
+  },
+  "map_advanced_panel.accuracy.label": {
+    "string": "Accuracy",
+    "developer_comment": "Label for the accuracy input field in the advanced panel."
+  },
+  "map_advanced_panel.import_data.label": {
+    "string": "Import data to replace location",
+    "developer_comment": "Label for the link that opens the import/paste dialog from the advanced panel."
+  },
+
+  "map_controls.zoom_fit_all.description": {
+    "string": "Show all features on the map",
+    "developer_comment": "Aria-label for the map control button that zooms to fit all features in view."
+  },
+  "map_controls.current_location.description": {
+    "string": "Find your location",
+    "developer_comment": "Aria-label for the map control button that centers the map on the device's current GPS location."
+  },
+  "map_controls.undo.description": {
+    "string": "Undo last action",
+    "developer_comment": "Aria-label for the map control button that undoes the last map edit."
+  },
+  "map_controls.delete.description": {
+    "string": "Delete one vertex or all vertices",
+    "developer_comment": "Aria-label for the map control button that deletes the selected vertex or all vertices."
+  },
+  "map_controls.open_advanced.description": {
+    "string": "Advanced manual edits",
+    "developer_comment": "Aria-label for the map control button that opens the advanced coordinate editing panel."
+  },
+  "map_controls.open_full_screen.description": {
+    "string": "Expand to full screen",
+    "developer_comment": "Aria-label for the map control button that expands the map to full screen."
+  },
+  "map_controls.close_full_screen.description": {
+    "string": "Exit full screen",
+    "developer_comment": "Aria-label for the map control button that exits full-screen mode."
+  },
+  "map_controls.open_info.description": {
+    "string": "Show information of map actions",
+    "developer_comment": "Aria-label for the map control button that opens the info dialog listing available map actions."
+  },
+
+  "map_info_dialog.header.title": {
+    "string": "How to use the map?",
+    "developer_comment": "Title shown in the header of the dialog that explains available map actions."
+  },
+
+  "map_properties.remove_selection.label": {
+    "string": "Remove selection",
+    "developer_comment": "Label for the button that removes the currently saved feature selection."
+  },
+  "map_properties.save_selected.label": {
+    "string": "Save selected",
+    "developer_comment": "Label for the button that saves the currently selected map feature."
+  },
+
+  "map_status_bar.no_trace_saved.label": {
+    "string": "No trace saved",
+    "developer_comment": "Status bar message shown when no trace (linestring) has been saved yet."
+  },
+  "map_status_bar.no_shape_saved.label": {
+    "string": "No shape saved",
+    "developer_comment": "Status bar message shown when no shape (polygon) has been saved yet."
+  },
+  "map_status_bar.no_point_saved.label": {
+    "string": "No point saved",
+    "developer_comment": "Status bar message shown when no point has been saved yet."
+  },
+  "map_status_bar.point_saved.label": {
+    "string": "Point saved",
+    "developer_comment": "Status bar message shown when a point has been saved."
+  },
+  "map_status_bar.trace_saved.label": {
+    "string": "Trace saved",
+    "developer_comment": "Status bar message shown when a trace (linestring) has been saved."
+  },
+  "map_status_bar.shape_saved.label": {
+    "string": "Shape saved",
+    "developer_comment": "Status bar message shown when a shape (polygon) has been saved."
+  },
+  "map_status_bar.feature_saved.label": {
+    "string": "Feature saved",
+    "developer_comment": "Fallback status bar message shown when a feature of an unrecognised geometry type has been saved."
+  },
+  "map_status_bar.points_saved.label": {
+    "string": "{count} points saved",
+    "developer_comment": "Status bar message showing how many points have been saved. {count} is the number of saved points."
+  },
+  "map_status_bar.capturing.label": {
+    "string": "Capturing location...",
+    "developer_comment": "Status bar message shown while the device is actively capturing a GPS location."
+  },
+  "map_status_bar.remove_point.label": {
+    "string": "Remove point",
+    "developer_comment": "Full label for the remove button shown on larger screens in the map status bar."
+  },
+  "map_status_bar.view_details.label": {
+    "string": "View details",
+    "developer_comment": "Label for the button that opens the feature properties panel."
+  },
+  "map_status_bar.advanced.label": {
+    "string": "Advanced",
+    "developer_comment": "Label for the button that opens the advanced coordinate editing panel."
+  },
+  "map_status_bar.vertex_longitude.label": {
+    "string": "Longitude: {longitude}",
+    "developer_comment": "Longitude component of the selected vertex info shown in the map status bar. {longitude} is the numeric longitude value."
+  },
+  "map_status_bar.vertex_latitude.label": {
+    "string": "Latitude: {latitude}",
+    "developer_comment": "Latitude component of the selected vertex info shown in the map status bar. {latitude} is the numeric latitude value."
+  },
+  "map_status_bar.vertex_altitude.label": {
+    "string": "Altitude: {altitude} m",
+    "developer_comment": "Altitude component of the selected vertex info shown in the map status bar. {altitude} is the numeric altitude value in metres."
+  },
+  "map_status_bar.vertex_accuracy.label": {
+    "string": "Accuracy: {accuracy}",
+    "developer_comment": "Accuracy component of the selected vertex info shown in the map status bar. {accuracy} is the pre-formatted accuracy value."
+  },
+
+  "map_update_coords_dialog.header.title": {
+    "string": "Import data to replace location",
+    "developer_comment": "Title shown in the header of the dialog for importing coordinates via paste or file upload."
+  },
+  "map_update_coords_dialog.paste_data.label": {
+    "string": "Paste data in ODK format",
+    "developer_comment": "Label for the paste input field in the import coordinates dialog."
+  },
+  "map_update_coords_dialog.paste_data.hint": {
+    "string": "Enter coordinates as: Lat Long Altitude Accuracy. Separate multiple points with a semicolon (;).",
+    "developer_comment": "Helper text explaining the expected format for pasted coordinate data."
+  },
+  "map_update_coords_dialog.upload_file.label": {
+    "string": "Upload a GeoJSON file",
+    "developer_comment": "Label for the file upload section in the import coordinates dialog."
+  },
+  "map_update_coords_dialog.upload_file.action": {
+    "string": "Upload file",
+    "developer_comment": "Label for the button that opens the file chooser to upload a GeoJSON file."
+  },
+  "map_update_coords_dialog.file_empty.error": {
+    "string": "File is empty.",
+    "developer_comment": "Error shown when the uploaded file contains no content."
+  },
+  "map_update_coords_dialog.unsupported_file.error": {
+    "string": "Unsupported file type. Please upload a .geojson file.",
+    "developer_comment": "Error shown when the uploaded file is not a supported GeoJSON format."
+  },
+  "map_update_coords_dialog.parse_failed.error": {
+    "string": "Failed to parse file. Ensure it is a valid GeoJSON.",
+    "developer_comment": "Error shown when the uploaded file could not be parsed as valid GeoJSON."
+  },
+  "map_update_coords_dialog.incorrect_geometry.error": {
+    "string": "Incorrect geometry type.",
+    "developer_comment": "Error shown when the imported data contains a geometry type incompatible with the current field."
+  }
+}
