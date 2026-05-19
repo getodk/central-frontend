@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms"
+  xmlns:ev="http://www.w3.org/2001/xml-events"
+  xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:jr="http://openrosa.org/javarosa"
+  xmlns:orx="http://openrosa.org/xforms/"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>Calculate and required</h:title>
+    <model>
+      <instance>
+        <root id="calculate-required">
+          <first-question>10</first-question>
+          <second-question/>
+          <meta>
+            <instanceID/>
+          </meta>
+        </root>
+      </instance>
+      <bind nodeset="/root/first-question"/>
+      <bind nodeset="/root/second-question" calculate="/root/first-question * 2" required="/root/first-question &gt; 1"/>
+      <bind nodeset="/root/meta/instanceID" type="string"/>
+    </model>
+  </h:head>
+  <h:body>
+    <input ref="/root/first-question">
+      <label>1. Default value is 10</label>
+    </input>
+    <input ref="/root/second-question">
+      <label>2. Required if #1 is greater than 1, calculates #1 × 2</label>
+    </input>
+  </h:body>
+</h:html>

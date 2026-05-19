@@ -1,0 +1,6 @@
+{
+  "rank_control.open.label": {
+    "string": "Rank items",
+    "developer_comment": "The label for the button that opens the rank control."
+  }
+}

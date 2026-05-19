@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms"
+  xmlns:odk="http://www.opendatakit.org/xforms">
+  <h:head>
+    <h:title>Examples using the base64-decode function</h:title>
+    <model odk:xforms-version="1.0.0">
+      <instance>
+        <data id="distance_examples" version="20241025195211">
+          <emoji></emoji>
+          <accents></accents>
+          <input></input>
+          <calc></calc>
+          <meta>
+            <instanceID />
+          </meta>
+        </data>
+      </instance>
+      <bind nodeset="/data/emoji" readonly="true()" type="string" calculate="base64-decode('8J+lsA==')" />
+      <bind nodeset="/data/accents" readonly="true()" type="string" calculate="base64-decode('SMOpbMOobmU=')" />
+      <bind nodeset="/data/input" type="string" />
+      <bind nodeset="/data/calc" readonly="true()" type="string" calculate="base64-decode(/data/input)" />
+    </model>
+  </h:head>
+  <h:body>
+    <input ref="/data/emoji">
+      <label>emoji</label>
+    </input>
+    <input ref="/data/accents">
+      <label>accents</label>
+    </input>
+    <input ref="/data/input">
+      <label>test input</label>
+    </input>
+    <input ref="/data/calc">
+      <label>calculated output</label>
+    </input>
+  </h:body>
+</h:html>

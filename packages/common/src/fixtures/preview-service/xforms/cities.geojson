@@ -1,0 +1,53 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {
+                "title": "Last time red kangaroo was spotted",
+                "info": "A a large red kangaroo was observed at 10:45 AM",
+                "id": "1"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [134.795, -28.978]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "title": "Red kangaroo feeding trail",
+                "info": "The trail that red kangaroos follow to reach their favorite spot food",
+                "id": "2"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [134.75, -28.981],
+                    [134.76, -28.981],
+                    [134.77, -28.981]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "title": "Red kangaroo resting area",
+                "info": "The area where kangaroos are typically found when resting",
+                "id": "3"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [134.77, -28.957],
+                        [134.79, -28.957],
+                        [134.79, -28.945],
+                        [134.77, -28.945],
+                        [134.77, -28.957]
+                    ]
+                ]
+            }
+        }
+    ]
+}
