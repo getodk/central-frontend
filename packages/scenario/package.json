@@ -54,10 +54,7 @@
     "@getodk/xforms-engine": "0.22.0",
     "@js-joda/core": "^5.6.5",
     "jsdom": "^27.2.0",
-    "npm-run-all2": "^8.0.4",
-    "solid-js": "^1.9.11",
-    "vite": "^7.3.1",
-    "vitest": "^4.0.18"
+    "solid-js": "^1.9.11"
   },
   "dependencies": {
     "temporal-polyfill": "^0.3.0"
