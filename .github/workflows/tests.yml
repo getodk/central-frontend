@@ -56,7 +56,7 @@ jobs:
         tar -cvzf dist.tar.gz dist/
         echo "Uploading dist bundle..."
         gh release upload ${{ github.ref_name }} dist.tar.gz
-        echo "Upload complete.  See above for URL."
+        echo "Upload complete."
   e2e-tests:
     needs:
     - build
