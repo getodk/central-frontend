@@ -10,7 +10,7 @@ import {
 	t,
 	title,
 } from '@getodk/common/test-utils/xform-dsl/index.ts';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ActiveLanguage } from '../../src/client/FormLanguage.ts';
 import type { OpaqueReactiveObjectFactory } from '../../src/client/OpaqueReactiveObjectFactory.ts';
 import type { RootNode } from '../../src/client/RootNode.ts';
@@ -69,6 +69,10 @@ describe('PrimaryInstance engine representation of instance state', () => {
 		scope.dispose();
 	});
 
+	const unusedFetchFormAttachment = vi.fn(() => {
+		throw new Error('fetchFormAttachment should not be called in this test');
+	});
+
 	// Warning: this is a convenience function to slightly reduce repetitive
 	// boilerplate across tests. Most tests should use `createRootNode` below.
 	// Tests concerned with some aspects of internals may use this function
@@ -83,6 +87,7 @@ describe('PrimaryInstance engine representation of instance state', () => {
 				scope,
 				model: xformDefinition.model,
 				secondaryInstances,
+				fetchFormAttachment: unusedFetchFormAttachment,
 				config: {
 					clientStateFactory,
 					computeAttachmentName: () => null,
@@ -262,6 +267,7 @@ describe('PrimaryInstance engine representation of instance state', () => {
 							scope,
 							model: def.model,
 							secondaryInstances: SecondaryInstancesDefinition.loadSync(xformDOM),
+							fetchFormAttachment: unusedFetchFormAttachment,
 							config: {
 								clientStateFactory: mutable,
 								computeAttachmentName: () => null,

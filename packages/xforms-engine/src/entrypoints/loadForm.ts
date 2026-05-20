@@ -84,6 +84,7 @@ const loadFormResult = async (
 			scope,
 			model,
 			secondaryInstances,
+			fetchFormAttachment,
 		};
 
 		return new FormSuccessResult({

@@ -1,14 +1,16 @@
 <script setup lang="ts">
+import { getModeConfig, MODES, VALID_CANVAS_MODES } from '@/components/common/canvas/getModeConfig.ts';
 import IconSVG from '@/components/common/IconSVG.vue';
 import ControlText from '@/components/form-elements/ControlText.vue';
 import { FORM_OPTIONS, TRANSLATE } from '@/lib/constants/injection-keys.ts';
+import { resize } from '@/lib/services/resizeImage';
 import type { FormOptions } from '@/lib/init/load-form-state';
 import type { Translate } from '@/lib/locale/useLocale.ts';
 import type { UploadNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import Message from 'primevue/message';
 import Panel from 'primevue/panel';
-import { computed, inject, ref } from 'vue';
+import { computed, inject, onUnmounted, ref, watchEffect } from 'vue';
 import DeleteConfirmDialog from './DeleteConfirmDialog.vue';
 import UploadAudioHeader from './UploadAudioHeader.vue';
 import UploadAudioPreview from './UploadAudioPreview.vue';
@@ -22,6 +24,7 @@ import UploadVideoPreview from './UploadVideoPreview.vue';
 type ObjectURL = `blob:${string}`;
 
 const MAX_FILE_SIZE = 100_000_000; // 100MB
+const SUPPORTED_MEDIA_TYPES = ['audio', 'image', 'video'];
 
 export interface UploadControlProps {
 	readonly question: UploadNode;
@@ -40,9 +43,46 @@ const loading = computed(() => props.question.currentState.attachmentState.loadi
 const loadingError = computed(() => props.question.currentState.attachmentState.loadingError);
 const existingFileName = computed(() => props.question.currentState.attachmentState.intrinsicName ?? '');
 const confirmDeleteAction = ref(false);
+const isCanvasFullScreen = ref(false);
+const sourceImageKey = ref(0);
 const fileError = ref<string | null>(null);
+const canvasMode = computed(() => VALID_CANVAS_MODES.find((mode) => props.question.appearances[mode]));
+const fileType = computed(() => getFileType(props.question.currentState.value?.type));
+const isBlankCanvas = computed(() => {
+	return canvasMode.value != null && !getModeConfig(canvasMode.value).hasBackgroundImage;
+});
+const showImagePreview = computed(() => fileType.value === 'image' || isBlankCanvas.value);
+const canvasEmptyPlaceholder = computed(() => {
+	if (canvasMode.value === MODES.SIGNATURE) {
+		return t('upload_control.no_signature.placeholder');
+	}
+	if (canvasMode.value === MODES.DRAW) {
+		return t('upload_control.no_drawing.placeholder');
+	}
+	return '';
+});
 
-const SUPPORTED_MEDIA_TYPES = ['audio', 'image', 'video'];
+const objectURL = computed((previous: ObjectURL | null = null) => {
+	if (previous != null) {
+		URL.revokeObjectURL(previous);
+	}
+
+	const file = props.question.currentState.value;
+	if (!file) {
+		return null;
+	}
+
+	const type = getFileType(file.type);
+	if (!type || type === '*') {
+		return null;
+	}
+
+	return URL.createObjectURL(file) satisfies string as ObjectURL;
+});
+
+// Original (unresized) image URL so the canvas draws at full resolution, while the
+// submission uses the resized version from question.currentState.value.
+const canvasBaseImage = ref<ObjectURL | null>(null);
 
 const getFileType = (type: string | undefined) => {
 	if (!type) {
@@ -54,23 +94,6 @@ const getFileType = (type: string | undefined) => {
 	}
 	return '*';
 };
-
-const fileType = computed(() => getFileType(props.question.currentState.value?.type));
-
-const objectURL = computed((previous: ObjectURL | null = null) => {
-	if (previous != null) {
-		URL.revokeObjectURL(previous);
-	}
-
-	const file = props.question.currentState.value;
-	if (file) {
-		const type = getFileType(file.type);
-		if (type && type !== '*') {
-			return URL.createObjectURL(file) satisfies string as ObjectURL;
-		}
-	}
-	return null;
-});
 
 const validateFile = (file: File) => {
 	if (file.size > maxFileSize.value) {
@@ -115,15 +138,65 @@ const validateFile = (file: File) => {
 	return false;
 };
 
-const updateValue = (file: File) => {
+const setCanvasBaseImage = (file: File) => {
+	if (canvasBaseImage.value) {
+		URL.revokeObjectURL(canvasBaseImage.value);
+	}
+
+	canvasBaseImage.value = URL.createObjectURL(file) as ObjectURL;
+};
+
+watchEffect(() => {
+	// Initialize for edit submissions, default images cases.
+	const file = props.question.currentState.value;
+	if (file && canvasMode.value && !canvasBaseImage.value) {
+		setCanvasBaseImage(file);
+	}
+});
+
+const resizeImage = async (file: File): Promise<File> => {
+	const max = props.question.maxPixels;
+	return mediaType.value === 'image' && max ? resize(file, max) : file;
+};
+
+const updateValue = async (file: File | null) => {
 	if (isDisabled.value) {
 		return;
 	}
-	props.question.setValue(validateFile(file) ? file : null);
+
+	// Null comes from the canvas when the user has explicitly cleared the strokes.
+	if (file === null) {
+		props.question.setValue(null);
+		return;
+	}
+
+	if (!validateFile(file)) {
+		return;
+	}
+
+	if (canvasMode.value) {
+		setCanvasBaseImage(file);
+	}
+
+	try {
+		const processed = await resizeImage(file);
+		props.question.setValue(processed);
+	} catch {
+		// Resize failed — save the original file.
+		props.question.setValue(file);
+	}
+};
+
+const revokeOriginalImage = () => {
+	if (canvasBaseImage.value) {
+		URL.revokeObjectURL(canvasBaseImage.value);
+		canvasBaseImage.value = null;
+	}
 };
 
 const clearValueConfirmed = () => {
 	confirmDeleteAction.value = false;
+	revokeOriginalImage();
 	props.question.setValue(null);
 };
 
@@ -140,28 +213,50 @@ const retryFetch = () => {
 };
 
 const onChange = (file: File | null) => {
-	if (file) {
-		updateValue(file);
-	} else {
+	if (!file) {
 		clearValue();
+		return;
 	}
+
+	sourceImageKey.value++;
+	if (canvasMode.value) {
+		isCanvasFullScreen.value = true;
+	}
+	void updateValue(file);
 };
 
 const onDrop = (event: DragEvent) => {
-	const files = event.dataTransfer?.files;
-	if (files && files.length > 0 && files[0]) {
-		updateValue(files[0]);
+	if (isBlankCanvas.value) {
+		return;
+	}
+	const file = event.dataTransfer?.files?.[0];
+	if (file) {
+		onChange(file);
 	}
 };
+
+onUnmounted(() => {
+	if (objectURL.value) {
+		URL.revokeObjectURL(objectURL.value);
+	}
+	revokeOriginalImage();
+});
 </script>
 
 <template>
 	<ControlText :question="question" />
 
-	<Panel>
+	<Panel :class="{ 'mobile-only-header': isBlankCanvas }">
 		<template #header>
 			<template v-if="mediaType === 'image'">
-				<UploadImageHeader :question="question" :accept="accept" :is-disabled="isDisabled" @change="onChange" />
+				<UploadImageHeader
+					:question="question"
+					:accept="accept"
+					:canvas-mode="canvasMode"
+					:is-disabled="isDisabled"
+					@change="onChange"
+					@mark-up-image="isCanvasFullScreen = true"
+				/>
 			</template>
 			<template v-else-if="mediaType === 'video'">
 				<UploadVideoHeader :question="question" :accept="accept" :is-disabled="isDisabled" @change="onChange" />
@@ -174,13 +269,24 @@ const onDrop = (event: DragEvent) => {
 			</template>
 		</template>
 		<template #default>
-			<div class="drag-and-drop" :class="{ 'disabled': isDisabled }" @drop.prevent.stop="onDrop" @dragover.prevent>
+			<div class="drag-and-drop" :class="{ 'disabled': isDisabled, 'canvas-mode': !!canvasMode && showImagePreview }" @drop.prevent.stop="onDrop" @dragover.prevent>
+				<div v-if="canvasEmptyPlaceholder.length && !question.currentState.value" class="canvas-empty-placeholder">
+					{{ canvasEmptyPlaceholder }}
+				</div>
 				<div v-if="loading" class="skeleton-loading" :class="{ 'loading-image': mediaType === 'image', 'loading-video': mediaType === 'video', 'loading-audio': mediaType === 'audio' }">
 					{{ existingFileName }}
 				</div>
-				<div v-else-if="question.currentState.value" class="upload-content">
-					<template v-if="fileType === 'image'">
-						<UploadImagePreview :image="objectURL" />
+				<div v-else-if="question.currentState.value || showImagePreview" class="upload-content" :class="{ 'canvas-no-value': canvasEmptyPlaceholder.length && !question.currentState.value }">
+					<template v-if="showImagePreview">
+						<UploadImagePreview
+							:key="sourceImageKey"
+							v-model:is-canvas-full-screen="isCanvasFullScreen"
+							:image-preview-url="objectURL"
+							:canvas-base-image="canvasBaseImage"
+							:canvas-mode="canvasMode"
+							:is-disabled="isDisabled"
+							@save-image="(file) => void updateValue(file)"
+						/>
 					</template>
 					<template v-else-if="fileType === 'video'">
 						<UploadVideoPreview :video="objectURL" />
@@ -192,30 +298,20 @@ const onDrop = (event: DragEvent) => {
 						<UploadFilePreview :file-name="fileName" />
 					</template>
 					<Button
-						v-if="!isDisabled"
+						v-if="!isDisabled && !canvasMode"
 						:class="{ 'over-preview': fileType === 'image' || fileType === 'video' }"
 						severity="secondary"
 						outlined
 						class="clear-button"
 						@click="clearValue"
 					>
-						<IconSVG name="mdiClose" variant="muted" size="sm" />
+						<IconSVG name="mdiClose" size="sm" />
 					</Button>
 				</div>
-				<Message
-					v-else-if="fileError"
-					severity="error"
-					:closable="true"
-					@close="fileError = null"
-				>
+				<Message v-else-if="fileError" severity="error" :closable="true" @close="fileError = null">
 					{{ fileError }}
 				</Message>
-				<Message
-					v-else-if="loadingError"
-					severity="error"
-					:closable="true"
-					@close="retryFetch()"
-				>
+				<Message v-else-if="loadingError" severity="error" :closable="true" @close="retryFetch()">
 					<template #closeicon>
 						<IconSVG name="mdiRefresh" variant="muted" size="sm" />
 					</template>
@@ -235,6 +331,9 @@ const onDrop = (event: DragEvent) => {
 </template>
 
 <style scoped lang="scss">
+@use 'primeflex/core/_variables.scss' as pf;
+@use '../../../assets/styles/style' as odk;
+
 .p-panel {
 	background: var(--odk-base-background-color);
 	box-shadow: none;
@@ -245,16 +344,15 @@ const onDrop = (event: DragEvent) => {
 		background: var(--odk-light-background-color);
 		justify-content: flex-start;
 		gap: var(--odk-spacing-xl);
+		border-bottom: 1px solid var(--odk-border-color);
 	}
 
-	:deep(.p-panel-content-container) {
-		.p-panel-content {
-			border-top: 1px solid var(--odk-border-color);
-			padding: 0;
-		}
-		.upload-content.disabled {
-			color: var(--odk-muted-text-color);
-		}
+	:deep(.p-panel-content-container .p-panel-content) {
+		padding: 0;
+	}
+
+	&.mobile-only-header :deep(.p-panel-header) {
+		display: none;
 	}
 }
 
@@ -271,10 +369,20 @@ const onDrop = (event: DragEvent) => {
 	}
 
 	button.clear-button.over-preview {
+		// Align position with canvas mode buttons
+		--odk-upload-clear-spacing: calc(var(--odk-spacing-m) + 1px);
 		position: absolute;
-		top: var(--odk-spacing-m);
-		right: var(--odk-spacing-m);
+		top: var(--odk-upload-clear-spacing);
+		right: var(--odk-upload-clear-spacing);
 		background: var(--odk-base-background-color);
+	}
+}
+
+.drag-and-drop.canvas-mode {
+	padding: 0;
+
+	.upload-content {
+		width: 100%;
 	}
 }
 
@@ -303,6 +411,38 @@ const onDrop = (event: DragEvent) => {
 	}
 	.placeholder {
 		text-align: center;
+	}
+}
+
+.canvas-empty-placeholder {
+	display: none;
+}
+
+@include odk.sm-constrained {
+	.p-panel :deep(.p-panel-header) {
+		flex-direction: column;
+		justify-content: center;
+
+		.p-panel-header-actions {
+			display: none;
+		}
+	}
+
+	.p-panel.mobile-only-header :deep(.p-panel-header) {
+		display: flex;
+	}
+
+	.canvas-empty-placeholder {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: var(--odk-spacing-xxl);
+		color: var(--odk-muted-text-color);
+	}
+
+	.upload-content.canvas-no-value {
+		height: 0;
+		overflow: hidden;
 	}
 }
 </style>
