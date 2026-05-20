@@ -11,7 +11,9 @@ jobs:
     steps:
     - uses: actions/checkout@v6
     - run: sudo apt-get install shellcheck
-    - run: ./bin/run-static-checks.sh
+    - run: ./bin/check-scripts.sh
+    - run: ./bin/check-for-large-files.sh
+    - run: ./bin/check-images.sh
   unit-tests:
     timeout-minutes: 5
     runs-on: ubuntu-latest
