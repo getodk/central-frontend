@@ -54,9 +54,7 @@ const message = computed(() => {
   if (props.top == null || props.totalCount <= props.top)
     return tn(`${props.type}.all`, props.totalCount);
 
-  return tn(`${props.type}.first`, props.totalCount, {
-    top: props.top
-  });
+  return t(`${props.type}.withoutCount`);
 });
 </script>
 
@@ -80,54 +78,18 @@ const message = computed(() => {
         // This text is shown when the number of Submissions loading is unknown.
         "withoutCount": "Loading Submissions…",
         "all": "Loading {count} Submission… | Loading {count} Submissions…",
-        // {top} is a number that is either 250 or 1000. {count} may be any number
-        // that is at least 250. The string will be pluralized based on {count}.
-        "first": "Loading the first {top} of {count} Submission… | Loading the first {top} of {count} Submissions…",
-        // {top} is a number that is either 250 or 1000. {count} may be any number
-        // that is at least 250. The string will be pluralized based on {count}.
-        "middle": "Loading {top} more of {count} remaining Submission… | Loading {top} more of {count} remaining Submissions…",
-        "last": {
-          "multiple": "Loading the last {count} Submission… | Loading the last {count} Submissions…",
-          "one": "Loading the last Submission…"
-        },
         "filtered": {
           // This text is shown when the number of Submissions loading is unknown.
-          "withoutCount": "Loading matching Submissions…",
-          // {top} is a number that is either 250 or 1000. {count} may be any
-          // number that is at least 250. The string will be pluralized based on
-          // {count}.
-          "middle": "Loading {top} more of {count} remaining matching Submission… | Loading {top} more of {count} remaining matching Submissions…",
-          "last": {
-            "multiple": "Loading the last {count} matching Submission… | Loading the last {count} matching Submissions…",
-            "one": "Loading the last matching Submission…"
-          }
+          "withoutCount": "Loading matching Submissions…"
         }
       },
       "entity": {
         // This text is shown when the number of Entities loading is unknown.
         "withoutCount": "Loading Entities…",
         "all": "Loading {count} Entity… | Loading {count} Entities…",
-        // {top} is a number that is either 250 or 1000. {count} may be any number
-        // that is at least 250. The string will be pluralized based on {count}.
-        "first": "Loading the first {top} of {count} Entity… | Loading the first {top} of {count} Entities…",
-        // {top} is a number that is either 250 or 1000. {count} may be any number
-        // that is at least 250. The string will be pluralized based on {count}.
-        "middle": "Loading {top} more of {count} remaining Entity… | Loading {top} more of {count} remaining Entities…",
-        "last": {
-          "multiple": "Loading the last {count} Entity… | Loading the last {count} Entities…",
-          "one": "Loading the last Entity…"
-        },
         "filtered": {
           // This text is shown when the number of Entities loading is unknown.
-          "withoutCount": "Loading matching Entities…",
-          // {top} is a number that is either 250 or 1000. {count} may be any
-          // number that is at least 250. The string will be pluralized based on
-          // {count}.
-          "middle": "Loading {top} more of {count} remaining matching Entity… | Loading {top} more of {count} remaining matching Entities…",
-          "last": {
-            "multiple": "Loading the last {count} matching Entity… | Loading the last {count} matching Entities…",
-            "one": "Loading the last matching Entity…"
-          }
+          "withoutCount": "Loading matching Entities…"
         }
       }
     }
