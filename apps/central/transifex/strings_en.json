@@ -4122,38 +4122,10 @@
         "all": {
           "string": "{count, plural, one {Loading {count} Entity…} other {Loading {count} Entities…}}"
         },
-        "first": {
-          "string": "{count, plural, one {Loading the first {top} of {count} Entity…} other {Loading the first {top} of {count} Entities…}}",
-          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
-        },
-        "middle": {
-          "string": "{count, plural, one {Loading {top} more of {count} remaining Entity…} other {Loading {top} more of {count} remaining Entities…}}",
-          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
-        },
-        "last": {
-          "multiple": {
-            "string": "{count, plural, one {Loading the last {count} Entity…} other {Loading the last {count} Entities…}}"
-          },
-          "one": {
-            "string": "Loading the last Entity…"
-          }
-        },
         "filtered": {
           "withoutCount": {
             "string": "Loading matching Entities…",
             "developer_comment": "This text is shown when the number of Entities loading is unknown."
-          },
-          "middle": {
-            "string": "{count, plural, one {Loading {top} more of {count} remaining matching Entity…} other {Loading {top} more of {count} remaining matching Entities…}}",
-            "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
-          },
-          "last": {
-            "multiple": {
-              "string": "{count, plural, one {Loading the last {count} matching Entity…} other {Loading the last {count} matching Entities…}}"
-            },
-            "one": {
-              "string": "Loading the last matching Entity…"
-            }
           }
         }
       }
@@ -5296,38 +5268,10 @@
         "all": {
           "string": "{count, plural, one {Loading {count} Submission…} other {Loading {count} Submissions…}}"
         },
-        "first": {
-          "string": "{count, plural, one {Loading the first {top} of {count} Submission…} other {Loading the first {top} of {count} Submissions…}}",
-          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
-        },
-        "middle": {
-          "string": "{count, plural, one {Loading {top} more of {count} remaining Submission…} other {Loading {top} more of {count} remaining Submissions…}}",
-          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
-        },
-        "last": {
-          "multiple": {
-            "string": "{count, plural, one {Loading the last {count} Submission…} other {Loading the last {count} Submissions…}}"
-          },
-          "one": {
-            "string": "Loading the last Submission…"
-          }
-        },
         "filtered": {
           "withoutCount": {
             "string": "Loading matching Submissions…",
             "developer_comment": "This text is shown when the number of Submissions loading is unknown."
-          },
-          "middle": {
-            "string": "{count, plural, one {Loading {top} more of {count} remaining matching Submission…} other {Loading {top} more of {count} remaining matching Submissions…}}",
-            "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
-          },
-          "last": {
-            "multiple": {
-              "string": "{count, plural, one {Loading the last {count} matching Submission…} other {Loading the last {count} matching Submissions…}}"
-            },
-            "one": {
-              "string": "Loading the last matching Submission…"
-            }
           }
         }
       }
