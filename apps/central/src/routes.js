@@ -483,7 +483,7 @@ const routes = [
             ])
           },
           title: () => [i18n.t('formHead.tab.editForm'), form.nameOrId],
-          fullWidth: true
+          fullWidth: false
         }
       })
     ]

@@ -10,53 +10,34 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <form-edit-section id="form-edit-def" icon="code">
-    <template #title>{{ $t('title') }}</template>
-    <template #subtitle>{{ $t('subtitle') }}</template>
-    <template v-if="changed" #tag>{{ $t('changed') }}</template>
-    <template #body>
-      <div v-if="uploadSectionState">
-        <p class="form-edit-section-title">{{ $t('uploadSection.title') }}</p>
-        <div class="form-edit-section-body">
-          <form-upload @success="afterUpload" @cancel="setUploadSectionState(false)"/>
-        </div>
+  <div id="form-edit-def" class="container">
+    <div class="row form-edit-def-header">
+      <div class="col-xs-6">
+        <i18n-t keypath="title" tag="div" class="form-edit-section-title">
+          <template #version>
+            <form-version-string :version="formDraft.version"/>
+          </template>
+        </i18n-t>
+
+        <div v-if="changed" class="form-edit-section-subtitle">{{ $t('changed') }}</div>
+        <div v-else class="form-edit-section-subtitle">{{ $t('subtitle') }}</div>
       </div>
-      <div id="form-edit-def-container">
-        <div>
-          <i18n-t keypath="versionName">
-            <template #name>
-              <form-version-string :version="formDraft.version"/>
-            </template>
-          </i18n-t>
-        </div>
-        <div>
-          <enketo-preview :form-version="formDraft" outlined/>
-          <form-version-def-dropdown :version="formDraft" outlined
+      <div class="col-xs-6 text-right">
+        <form-version-def-dropdown :version="formDraft" outlined
             @view-xml="viewXml.show()"/>
-          <button id="form-edit-upload-button" type="button"
-            class="btn btn-primary" @click="setUploadSectionState(true)">
-            <span class="icon-upload"></span>{{ $t('action.upload') }}
-          </button>
-        </div>
       </div>
-      <div id="form-edit-def-within">
-        <span class="icon-file-code-o"></span>{{ $t('withinDef') }}
-      </div>
-      <form-edit-attachments/>
-      <form-edit-entities/>
-    </template>
-  </form-edit-section>
+    </div>
+    <div class="row form-edit-def-upload">
+      <form-upload @success="afterUpload"/>
+    </div>
+  </div>
 
   <form-version-view-xml v-bind="viewXml" @hide="viewXml.hide()"/>
 </template>
 
 <script setup>
-import { computed, defineAsyncComponent, ref } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
 
-import EnketoPreview from '../../enketo/preview.vue';
-import FormEditAttachments from './attachments.vue';
-import FormEditEntities from './entities.vue';
-import FormEditSection from './section.vue';
 import FormVersionDefDropdown from '../../form-version/def-dropdown.vue';
 import FormVersionString from '../../form-version/string.vue';
 import FormUpload from '../upload.vue';
@@ -79,62 +60,17 @@ const changed = computed(() =>
 const FormVersionViewXml = defineAsyncComponent(loadAsync('FormVersionViewXml'));
 const viewXml = modalData('FormVersionViewXml');
 
-const uploadSectionState = ref(false);
-const setUploadSectionState = (v) => {
-  uploadSectionState.value = v;
-};
 const afterUpload = () => {
-  uploadSectionState.value = false;
   emits('afterUpload');
 };
 
 </script>
 
 <style lang="scss">
-@import '../../../assets/scss/mixins';
-
-#form-edit-def-container {
-  display: flex;
-  align-items: center;
-  column-gap: 15px;
-
-  background-color: $background-color-feed-entry;
-  border: 2px solid $color-subpanel-border;
-  border-radius: 15px;
-  padding: 12px 15px;
-
-  > :first-child {
-    @include text-overflow-ellipsis;
-    font-size: 16px;
-    font-weight: bold;
-  }
-
-  > :nth-child(2) {
-    flex-shrink: 0;
-    margin-left: auto;
-  }
-
-  .form-version-def-dropdown, #form-edit-upload-button { margin-left: 5px; }
-}
-
-#form-edit-def-within {
-  color: #888;
-  font-size: 12px;
-  margin-block: 5px 6px;
-
-  .icon-file-code-o {
-    color: #777;
-    margin-inline: 32px 5px;
-  }
-
-  &::after {
-    border-left: 2px dotted #999;
-    content: '';
-    display: block;
-    height: 18px;
-    margin-left: 36px;
-    margin-top: 3px;
-  }
+#form-edit-def {
+  width: 100%;
+  .form-edit-def-header .col-xs-6 { padding: 0; }
+  .form-edit-def-upload { margin-top: 10px; }
 }
 </style>
 
@@ -146,8 +82,7 @@ const afterUpload = () => {
       // This is the title at the top of a section.
       "title": "Upload New Form Definition"
     },
-    // @transifexKey component.FormEditCreateDraft.title
-    "title": "Draft version",
+    "title": "Draft version: {version}",
     // This refers to the draft version of a Form.
     "subtitle": "Uploaded",
     // This refers to the draft version of a Form.

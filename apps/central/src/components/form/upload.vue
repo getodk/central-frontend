@@ -103,7 +103,7 @@ definition for an existing form -->
         {{ file != null ? file.name : '' }}
       </div>
     </file-drop-zone>
-    <div class="actions">
+    <div v-show="file != null" class="actions">
       <button type="button" class="btn btn-link" :aria-disabled="awaitingResponse"
         @click="$emit('cancel')">
         {{ $t('action.cancel') }}
@@ -271,6 +271,7 @@ export default {
   }
 
   .file-drop-zone {
+    border-radius: 12px;
     // Zero out the horizontal padding so that the border above the filename
     // stretches across the entire width of the drop zone.
     padding-left: 0;

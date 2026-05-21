@@ -19,28 +19,28 @@ describe('FormEditDef', () => {
     version.should.equal('v2');
   });
 
-  describe('tag', () => {
-    it('shows tag if form draft differs from published definition', async () => {
+  describe('subtitle', () => {
+    it('shows subtitle if form draft differs from published definition', async () => {
       testData.extendedForms.createPast(1, { hash: 'foo' });
       testData.extendedFormVersions.createPast(1, { hash: 'bar', draft: true });
       const app = await load('/projects/1/forms/f/draft');
-      const tag = app.get('#form-edit-def .form-edit-section-tag').text();
-      tag.should.equal('Changed from published version');
+      const subtitle = app.get('#form-edit-def .form-edit-section-subtitle').text();
+      subtitle.should.equal('Changed from published version');
     });
 
-    it('does not show the tag if the form is not published', async () => {
+    it('does not show the subtitle if the form is not published', async () => {
       testData.extendedForms.createPast(1, { draft: true });
       const app = await load('/projects/1/forms/f/draft');
-      const tag = app.get('#form-edit-def .form-edit-section-tag').text();
-      tag.should.equal('');
+      const subtitle = app.get('#form-edit-def .form-edit-section-subtitle').text();
+      subtitle.should.equal('Uploaded');
     });
 
-    it('does not show the tag if the form draft does not differ', async () => {
+    it('does not show the subtitle if the form draft does not differ', async () => {
       testData.extendedForms.createPast(1, { hash: 'foo' });
       testData.extendedFormVersions.createPast(1, { hash: 'foo', draft: true });
       const app = await load('/projects/1/forms/f/draft');
-      const tag = app.get('#form-edit-def .form-edit-section-tag').text();
-      tag.should.equal('');
+      const subtitle = app.get('#form-edit-def .form-edit-section-subtitle').text();
+      subtitle.should.equal('Uploaded');
     });
   });
 

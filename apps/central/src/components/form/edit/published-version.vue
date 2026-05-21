@@ -10,21 +10,18 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <form-edit-section id="form-edit-published-version" icon="star"
-    :dotted="formDraft.isDefined()">
-    <template #title>{{ $t('title') }}</template>
+  <form-edit-section id="form-edit-published-version" no-border>
+    <template #title>
+      <i18n-t keypath="title">
+        <template #version>
+          <form-version-string :version="form.version"/>
+        </template>
+      </i18n-t>
+    </template>
     <template #subtitle>
       <i18n-t keypath="subtitle.published">
         <template #dateTime>
           <date-time :iso="form.publishedAt"/>
-        </template>
-      </i18n-t>
-    </template>
-    <template #body>
-      <i18n-t id="form-edit-published-version-string" tag="div"
-        keypath="versionName">
-        <template #name>
-          <form-version-string :version="form.version"/>
         </template>
       </i18n-t>
     </template>
@@ -44,7 +41,7 @@ defineOptions({
 
 // The component assumes that this data will exist when the component is
 // created.
-const { form, formDraft } = useRequestData();
+const { form } = useRequestData();
 </script>
 
 <style lang="scss">
@@ -61,8 +58,8 @@ const { form, formDraft } = useRequestData();
 <i18n lang="json5">
 {
   "en": {
-    // This refers to the current version of a Form.
-    "title": "Current version",
+    // This refers to the current version of a Form. {version} is the version of the Form.
+    "title": "Current version: {version}",
     "subtitle": {
       // This shows the date and time at which the current version of the Form
       // was published, for example: "Published 2020/01/01 01:23". {dateTime}

@@ -14,20 +14,22 @@ except according to the terms contained in the LICENSE file.
     @dragenter="dragHandler" @dragleave="dragHandler" @drop="dragHandler">
     <loading :state="formDraft.initiallyLoading"/>
     <template v-if="formDraft.dataExists">
-      <div class="row">
-        <div v-if="formDraft.isEmpty()" class="col-xs-6">
-          <form-edit-create-draft @success="fetchDraft(true)"/>
-        </div>
-        <div v-if="form.dataExists && form.publishedAt != null" class="col-xs-6">
-          <form-edit-published-version/>
-        </div>
+      <!-- When there is no active Form draft -->
+      <div v-if="formDraft.isEmpty()" class="form-sections-container">
+        <form-edit-published-version v-if="form.dataExists"/>
+        <form-edit-create-draft @success="fetchDraft(true)"/>
       </div>
-      <template v-if="formDraft.isDefined()">
+
+      <!-- When there is an active Form draft -->
+      <div v-if="formDraft.isDefined()" class="form-sections-container">
+        <form-edit-published-version v-if="form.dataExists && form.publishedAt != null"/>
         <form-edit-def @after-upload="afterUpload"/>
+        <form-edit-attachments/>
+        <form-edit-entities/>
         <form-draft-testing/>
         <form-edit-draft-controls @publish="publishModal.show()"
           @abandon="abandonModal.show()"/>
-      </template>
+      </div>
     </template>
 
     <form-draft-publish v-if="formDraft.dataExists && formDraft.isDefined()"
@@ -46,6 +48,8 @@ import FileDropZone from '../file-drop-zone.vue';
 import FormDraftAbandon from '../form-draft/abandon.vue';
 import FormDraftPublish from '../form-draft/publish.vue';
 import FormDraftTesting from '../form-draft/testing.vue';
+import FormEditAttachments from './edit/attachments.vue';
+import FormEditEntities from './edit/entities.vue';
 import FormEditCreateDraft from './edit/create-draft.vue';
 import FormEditDef from './edit/def.vue';
 import FormEditDraftControls from './edit/draft-controls.vue';
@@ -172,6 +176,13 @@ const afterAbandon = () => {
 }
 
 body:has(#form-edit) { background-color: #fff; }
+
+// Probably needs to be in a common place, so that it can be shared by publish form page
+.form-sections-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 </style>
 
 <i18n lang="json5">
