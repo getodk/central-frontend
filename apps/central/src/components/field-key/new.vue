@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
       <template v-if="step === 0">
         <p class="modal-introduction">{{ $t('introduction[0]') }}</p>
         <form @submit.prevent="submit">
-          <form-group ref="displayName" v-model.trim="displayName"
+          <form-group ref="displayNameGroup" v-model.trim="displayName"
             :placeholder="$t('field.displayName')" required autocomplete="off"/>
           <div class="modal-actions">
             <button type="button" class="btn btn-link"
@@ -65,7 +65,10 @@ except according to the terms contained in the LICENSE file.
   </modal>
 </template>
 
-<script>
+<script setup>
+import { inject, nextTick, ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
+
 import FormGroup from '../form-group.vue';
 import Spinner from '../spinner.vue';
 import Modal from '../modal.vue';
@@ -79,90 +82,81 @@ import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
-export default {
-  name: 'FieldKeyNew',
-  components: { FormGroup, Spinner, Modal, FieldKeyQrPanel, SentenceSeparator },
-  inject: ['redAlert'],
-  props: {
-    state: {
-      type: Boolean,
-      default: false
-    },
-    managed: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: ['hide', 'success'],
-  setup() {
-    // The modal assumes that this data will exist when the modal is shown.
-    const { project, fieldKeys } = useRequestData();
-    const { request, awaitingResponse } = useRequest();
-    const { projectPath } = useRoutes();
-    return { project, fieldKeys, request, awaitingResponse, projectPath };
-  },
-  data() {
-    return {
-      // There are two steps/screens in the app user creation process. `step`
-      // indicates the current step.
-      step: 0,
-      displayName: '',
-      created: null
-    };
-  },
-  watch: {
-    state(state) {
-      if (!state) {
-        this.step = 0;
-        this.displayName = '';
-        this.created = null;
-      }
-    }
-  },
-  methods: {
-    focusInput() {
-      this.$refs.displayName.focus();
-    },
-    submit() {
-      this.request({
-        method: 'POST',
-        url: apiPaths.fieldKeys(this.project.id),
-        data: { displayName: this.displayName }
-      })
-        .then(({ data }) => {
-          // Reset the form.
-          this.redAlert.hide();
-          this.displayName = '';
+defineOptions({
+  name: 'FieldKeyNew'
+});
 
-          this.step = 1;
-          this.created = data;
-        })
-        .catch(noop);
-    },
-    complete() {
-      this.$emit('success', this.created);
-    },
-    hideOrComplete() {
-      if (this.created == null)
-        this.$emit('hide');
-      else
-        this.complete();
-    },
-    navigateToFormAccess(navigate, event) {
-      afterNextNavigation(this.$router, () => {
-        // Clear this.fieldKeys so that the Form Access tab will fetch it again.
-        this.fieldKeys.data = null;
-      });
-      navigate(event);
-    },
-    createAnother() {
-      this.step = 0;
-      // We do not reset this.created, because it will still be used once the
-      // modal is hidden.
-      this.$nextTick(this.focusInput);
-    }
-  }
+const props = defineProps({
+  state: Boolean,
+  managed: Boolean
+});
+
+const emit = defineEmits(['hide', 'success']);
+
+const redAlert = inject('redAlert');
+const router = useRouter();
+
+// The modal assumes that this data will exist when the modal is shown.
+const { project, fieldKeys } = useRequestData();
+const { request, awaitingResponse } = useRequest();
+const { projectPath } = useRoutes();
+
+// There are two steps/screens in the app user creation process. `step`
+// indicates the current step.
+const step = ref(0);
+const displayName = ref('');
+const created = ref(null);
+const displayNameGroup = ref(null);
+
+const focusInput = () => { displayNameGroup.value.focus(); };
+
+const submit = () => {
+  request({
+    method: 'POST',
+    url: apiPaths.fieldKeys(project.id),
+    data: { displayName: displayName.value }
+  })
+    .then(({ data }) => {
+      // Reset the form.
+      redAlert.hide();
+      displayName.value = '';
+
+      step.value = 1;
+      created.value = data;
+    })
+    .catch(noop);
 };
+
+const complete = () => { emit('success', created.value); };
+
+const hideOrComplete = () => {
+  if (created.value == null)
+    emit('hide');
+  else
+    complete();
+};
+
+const navigateToFormAccess = (navigate, event) => {
+  afterNextNavigation(router, () => {
+    // Clear fieldKeys so that the Form Access tab will fetch it again.
+    fieldKeys.data = null;
+  });
+  navigate(event);
+};
+
+const createAnother = () => {
+  step.value = 0;
+  // We do not reset created, because it will still be used once the modal is hidden.
+  nextTick(focusInput);
+};
+
+watch(() => props.state, (state) => {
+  if (!state) {
+    step.value = 0;
+    displayName.value = '';
+    created.value = null;
+  }
+});
 </script>
 
 <style lang="scss">
