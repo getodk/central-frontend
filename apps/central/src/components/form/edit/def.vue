@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <form-edit-section id="form-edit-def" icon="code">
+  <form-edit-section id="form-edit-def">
     <template #title>{{ $t('title') }}</template>
     <template #subtitle>{{ $t('subtitle') }}</template>
     <template v-if="changed" #tag>{{ $t('changed') }}</template>
@@ -38,9 +38,6 @@ except according to the terms contained in the LICENSE file.
             <span class="icon-upload"></span>{{ $t('action.upload') }}
           </button>
         </div>
-      </div>
-      <div id="form-edit-def-within">
-        <span class="icon-file-code-o"></span>{{ $t('withinDef') }}
       </div>
       <form-edit-attachments/>
       <form-edit-entities/>
@@ -97,6 +94,7 @@ const afterUpload = () => {
   display: flex;
   align-items: center;
   column-gap: 15px;
+  margin-bottom: 10px;
 
   background-color: $background-color-feed-entry;
   border: 2px solid $color-subpanel-border;
