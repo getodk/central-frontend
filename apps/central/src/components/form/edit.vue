@@ -24,6 +24,8 @@ except according to the terms contained in the LICENSE file.
       </div>
       <template v-if="formDraft.isDefined()">
         <form-edit-def @after-upload="afterUpload"/>
+        <form-edit-attachments/>
+        <form-edit-entities/>
         <form-draft-testing/>
         <form-edit-draft-controls @publish="publishModal.show()"
           @abandon="abandonModal.show()"/>
@@ -46,6 +48,8 @@ import FileDropZone from '../file-drop-zone.vue';
 import FormDraftAbandon from '../form-draft/abandon.vue';
 import FormDraftPublish from '../form-draft/publish.vue';
 import FormDraftTesting from '../form-draft/testing.vue';
+import FormEditAttachments from './edit/attachments.vue';
+import FormEditEntities from './edit/entities.vue';
 import FormEditCreateDraft from './edit/create-draft.vue';
 import FormEditDef from './edit/def.vue';
 import FormEditDraftControls from './edit/draft-controls.vue';

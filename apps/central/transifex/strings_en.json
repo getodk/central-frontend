@@ -3466,14 +3466,7 @@
         "developer_comment": "This refers to the draft version of a Form."
       },
       "versionName": {
-        "string": "Version name: {name}",
-        "developer_comment": "This is shown for a Form version."
-      },
-      "action": {
-        "upload": {
-          "string": "Upload new Form Definition",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
+        "string": "Version name: {name}"
       }
     },
     "FormEditDraftControls": {
@@ -3706,10 +3699,6 @@
         "create": {
           "string": "Create Form",
           "developer_comment": "This is the title at the top of a page."
-        },
-        "update": {
-          "string": "Upload New Form Definition",
-          "developer_comment": "This is the title at the top of a section."
         }
       }
     },
