@@ -15,7 +15,7 @@ const mountOptions = (options = undefined) => mergeMountOptions(options, {
   }
 });
 
-describe.only('FieldKeyNew', () => {
+describe('FieldKeyNew', () => {
   beforeEach(mockLogin);
 
   it('toggles the modal', () => {
