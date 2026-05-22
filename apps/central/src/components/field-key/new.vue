@@ -19,6 +19,13 @@ except according to the terms contained in the LICENSE file.
         <form @submit.prevent="submit">
           <form-group ref="displayNameGroup" v-model.trim="displayName"
             :placeholder="$t('field.displayName')" required autocomplete="off"/>
+          <div class="field-key-set-properties">
+            <template v-if="actorProperties.dataExists">
+              <actor-properties-upsert v-model:propertyValues="propertyValues" :create="true"
+                :property-defs="actorProperties.data"/>
+            </template>
+            <spinner :state="actorProperties.awaitingResponse"/>
+          </div>
           <div class="modal-actions">
             <button type="button" class="btn btn-link"
               :aria-disabled="awaitingResponse" @click="hideOrComplete">
@@ -69,6 +76,7 @@ except according to the terms contained in the LICENSE file.
 import { inject, nextTick, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
+import ActorPropertiesUpsert from '../actor-properties/upsert.vue';
 import FormGroup from '../form-group.vue';
 import Spinner from '../spinner.vue';
 import Modal from '../modal.vue';
@@ -97,7 +105,7 @@ const redAlert = inject('redAlert');
 const router = useRouter();
 
 // The modal assumes that this data will exist when the modal is shown.
-const { project, fieldKeys } = useRequestData();
+const { project, fieldKeys, createResource } = useRequestData();
 const { request, awaitingResponse } = useRequest();
 const { projectPath } = useRoutes();
 
@@ -107,6 +115,14 @@ const step = ref(0);
 const displayName = ref('');
 const created = ref(null);
 const displayNameGroup = ref(null);
+const propertyValues = ref(Object.create(null));
+
+const actorProperties = createResource('actorProperties');
+
+const fetchActorProperties = () => {
+  const url = apiPaths.actorProperties(project.id);
+  return actorProperties.request({ url }).catch(() => { emit('hide'); });
+};
 
 const focusInput = () => { displayNameGroup.value.focus(); };
 
@@ -114,7 +130,7 @@ const submit = () => {
   request({
     method: 'POST',
     url: apiPaths.fieldKeys(project.id),
-    data: { displayName: displayName.value }
+    data: { displayName: displayName.value, properties: propertyValues.value }
   })
     .then(({ data }) => {
       // Reset the form.
@@ -155,7 +171,9 @@ watch(() => props.state, (state) => {
     step.value = 0;
     displayName.value = '';
     created.value = null;
-  }
+    propertyValues.value = Object.create(null);
+  } else if (!actorProperties.dataExists)
+    fetchActorProperties();
 });
 </script>
 
