@@ -110,7 +110,7 @@ watch(() => props.state, (state) => {
     displayName.value = '';
     once.value = false;
     propertyValues.value = Object.create(null);
-  } else
+  } else if (!actorProperties.dataExists)
     fetchActorProperties();
 });
 </script>
