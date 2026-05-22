@@ -114,26 +114,6 @@ const afterUpload = () => {
 
   .form-version-def-dropdown, #form-edit-upload-button { margin-left: 5px; }
 }
-
-#form-edit-def-within {
-  color: #888;
-  font-size: 12px;
-  margin-block: 5px 6px;
-
-  .icon-file-code-o {
-    color: #777;
-    margin-inline: 32px 5px;
-  }
-
-  &::after {
-    border-left: 2px dotted #999;
-    content: '';
-    display: block;
-    height: 18px;
-    margin-left: 36px;
-    margin-top: 3px;
-  }
-}
 </style>
 
 <i18n lang="json5">
@@ -154,10 +134,7 @@ const afterUpload = () => {
     "versionName": "Version name: {name}",
     "action": {
       "upload": "Upload new Form Definition"
-    },
-    // This text is shown above a list of items that are part of the Form
-    // Definition.
-    "withinDef": "Within this Form Definition:"
+    }
   }
 }
 </i18n>

@@ -32,16 +32,16 @@ defineOptions({
 
 <style lang="scss">
 @import '../../../assets/scss/mixins';
+@import '../../../assets/scss/variables';
 
 $heading-margin-bottom: 10px;
 
 .form-edit-section {
 
   border-radius: 12px;
-  border: 1px solid var(--Central-Grey-2, #E3E4E4);
+  border: 1px solid $central-grey-2;
   padding: 20px;
   margin-bottom: 10px;
-  column-gap: 15px;
   display: flex;
   flex-direction: column;
 }
@@ -69,7 +69,6 @@ $heading-margin-bottom: 10px;
 .form-edit-section-tag {
   display: flex;
   align-items: center;
-  column-gap: $margin-right-icon;
 
   background-color: rgba($color-accent-primary, 0.04);
   border-radius: 6px;
