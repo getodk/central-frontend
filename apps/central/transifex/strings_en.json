@@ -1215,6 +1215,14 @@
         }
       }
     },
+    "ActorPropertiesUpsert": {
+      "header": {
+        "value": {
+          "string": "Value",
+          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of a public link property."
+        }
+      }
+    },
     "AnalyticsForm": {
       "enabled": {
         "null": {

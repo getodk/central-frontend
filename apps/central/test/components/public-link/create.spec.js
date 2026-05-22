@@ -12,7 +12,7 @@ const mountOptions = (options = undefined) => mergeMountOptions(options, {
   }
 });
 
-describe.only('PublicLinkCreate', () => {
+describe('PublicLinkCreate', () => {
   beforeEach(() => {
     mockLogin();
     testData.extendedForms.createPast(1);
