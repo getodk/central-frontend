@@ -123,6 +123,8 @@ const makeClientPosition = (evt: PointerEvent): Vector2d => {
 	return { x: evt.clientX, y: evt.clientY };
 };
 
+const isMultiFingerTouch = (event: PointerEvent): boolean => event && !event.isPrimary;
+
 const cancelDrawRaf = (activeStroke: ActiveStrokeState) => {
 	if (activeStroke.rafId !== null) {
 		cancelAnimationFrame(activeStroke.rafId);
@@ -275,7 +277,10 @@ export const useCanvasDrawing = (options: UsePointerDrawingOptions) => {
 		options.onStrokeCommitted();
 	};
 
-	const handlePointerUp = () => {
+	const handlePointerUp = (konvaEvent: Konva.KonvaEventObject<PointerEvent>) => {
+		if (isMultiFingerTouch(konvaEvent.evt)) {
+			return;
+		}
 		if (panState.active) {
 			panState.active = false;
 			return;
@@ -291,6 +296,9 @@ export const useCanvasDrawing = (options: UsePointerDrawingOptions) => {
 	};
 
 	const handlePointerMove = (konvaEvent: Konva.KonvaEventObject<PointerEvent>) => {
+		if (isMultiFingerTouch(konvaEvent.evt)) {
+			return;
+		}
 		if (panState.active) {
 			movePan(konvaEvent.evt, panState, options.containerRef);
 			return;
@@ -304,6 +312,9 @@ export const useCanvasDrawing = (options: UsePointerDrawingOptions) => {
 
 	const handlePointerDown = (konvaEvent: Konva.KonvaEventObject<PointerEvent>) => {
 		konvaEvent.evt.preventDefault();
+		if (isMultiFingerTouch(konvaEvent.evt)) {
+			return;
+		}
 		if (!options.isStrokeActive.value) {
 			startPan(konvaEvent, options.containerRef, panState);
 			return;
@@ -351,7 +362,7 @@ export const useCanvasDrawing = (options: UsePointerDrawingOptions) => {
 			handlePointerDown(konvaEvent),
 		onPointerMove: (konvaEvent: Konva.KonvaEventObject<PointerEvent>) =>
 			handlePointerMove(konvaEvent),
-		onPointerUp: () => handlePointerUp(),
+		onPointerUp: (konvaEvent: Konva.KonvaEventObject<PointerEvent>) => handlePointerUp(konvaEvent),
 		undo: () => undoStroke(),
 		zoomIn: () => (zoom.value = Math.min(MAX_ZOOM, zoom.value + ZOOM_STEP)),
 		zoomOut: () => (zoom.value = Math.max(MIN_ZOOM, zoom.value - ZOOM_STEP)),

@@ -12,6 +12,7 @@ const CONTROL_ICONS = {
 	clearAll: 'mdiTrashCanOutline',
 	closeFullScreen: 'mdiArrowCollapse',
 	colorPicker: 'mdiPalette',
+	exitAfterSave: 'mdiCheck',
 	openInfo: 'mdiInformationSlabCircleOutline',
 	pan: 'mdiHandBackRightOutline',
 	undo: 'mdiArrowULeftTop',
@@ -19,12 +20,13 @@ const CONTROL_ICONS = {
 	zoomOut: 'mdiMinus',
 } as const;
 
-defineProps<{
+const props = defineProps<{
 	modeConfig: CanvasModeConfig;
 	disableClearAll: boolean;
 	disableUndo: boolean;
 	disableZoomIn: boolean;
 	disableZoomOut: boolean;
+	isBlankCanvas: boolean;
 	isFullScreen: boolean;
 	isPanActive: boolean;
 }>();
@@ -45,18 +47,28 @@ const colorPickerPanel = ref<HTMLElement>();
 const isColorPickerVisible = ref(false);
 const selectedColor = ref(DEFAULT_STROKE_COLOR);
 const showActionsInfo = ref(false);
+const exitFullScreenControl = computed(() => {
+	if (props.isBlankCanvas) {
+		return {
+			icon: CONTROL_ICONS.closeFullScreen,
+			description: t('common_actions.close_full_screen.description'),
+			infoClasses: ['mobile-only'],
+		};
+	}
+	return {
+		icon: CONTROL_ICONS.exitAfterSave,
+		description: t('canvas_controls.exit_after_save.description'),
+		infoClasses: ['mobile-only'],
+	};
+});
 const processedCanvasActions = computed<ActionInfo[]>(() => [
+	exitFullScreenControl.value,
 	{ icon: CONTROL_ICONS.colorPicker, description: t('canvas_controls.color_picker.description') },
 	{ icon: CONTROL_ICONS.pan, description: t('canvas_controls.pan.description') },
+	{ icon: CONTROL_ICONS.zoomIn, description: t('common_actions.zoom_in.description') },
+	{ icon: CONTROL_ICONS.zoomOut, description: t('common_actions.zoom_out.description') },
 	{ icon: CONTROL_ICONS.clearAll, description: t('canvas_controls.clear_all.description') },
-	{ icon: CONTROL_ICONS.undo, description: t('canvas_controls.undo.description') },
-	{ icon: CONTROL_ICONS.zoomIn, description: t('canvas_controls.zoom_in.description') },
-	{ icon: CONTROL_ICONS.zoomOut, description: t('canvas_controls.zoom_out.description') },
-	{
-		icon: CONTROL_ICONS.closeFullScreen,
-		infoClasses: ['mobile-only'],
-		description: t('canvas_controls.close_full_screen.description')
-	},
+	{ icon: CONTROL_ICONS.undo, description: t('common_actions.undo.description') },
 ]);
 
 const onColorChange = (event: ColorPickerChangeEvent) => {
@@ -89,11 +101,11 @@ onBeforeUnmount(() => {
 		<div class="control-bar-vertical">
 			<button
 				v-if="isFullScreen"
-				:aria-label="t('canvas_controls.close_full_screen.description')"
+				:aria-label="exitFullScreenControl.description"
 				class="close-fullscreen"
 				@click="emit('closeFullScreen')"
 			>
-				<IconSVG :name="CONTROL_ICONS.closeFullScreen" />
+				<IconSVG :name="exitFullScreenControl.icon" />
 			</button>
 
 			<button
@@ -122,7 +134,7 @@ onBeforeUnmount(() => {
 
 			<button
 				v-if="modeConfig.hasInfoDialog"
-				:aria-label="t('canvas_controls.open_info.description')"
+				:aria-label="t('common_actions.open_info.description')"
 				class="info-dialog"
 				@click="showActionsInfo = true"
 			>
@@ -132,7 +144,7 @@ onBeforeUnmount(() => {
 
 		<div v-if="modeConfig.hasZoom" class="control-bar-zoom">
 			<button
-				:aria-label="t('canvas_controls.zoom_in.description')"
+				:aria-label="t('common_actions.zoom_in.description')"
 				:disabled="disableZoomIn"
 				@click="emit('zoomIn')"
 			>
@@ -140,7 +152,7 @@ onBeforeUnmount(() => {
 			</button>
 
 			<button
-				:aria-label="t('canvas_controls.zoom_out.description')"
+				:aria-label="t('common_actions.zoom_out.description')"
 				:disabled="disableZoomOut"
 				@click="emit('zoomOut')"
 			>
@@ -160,7 +172,7 @@ onBeforeUnmount(() => {
 
 			<button
 				v-if="modeConfig.hasUndo"
-				:aria-label="t('canvas_controls.undo.description')"
+				:aria-label="t('common_actions.undo.description')"
 				:disabled="disableUndo"
 				@click="emit('undo')"
 			>
@@ -175,7 +187,7 @@ onBeforeUnmount(() => {
 
 	<ActionsInfoDialog
 		v-model:visible="showActionsInfo"
-		:title="t('canvas_info_dialog.header.title')"
+		:title="t('common_actions.info_dialog.title')"
 		:actions-info="processedCanvasActions"
 	/>
 </template>

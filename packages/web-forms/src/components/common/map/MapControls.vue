@@ -37,8 +37,8 @@ const MAP_ICONS = {
 const showActionsInfo = ref(false);
 const processedMapActions = computed((): ActionInfo[] => {
 	const actions: ActionInfo[] = props.isFullScreen
-		? [{ icon: MAP_ICONS.closeFullScreen, description: t('map_controls.close_full_screen.description') }]
-		: [{ icon: MAP_ICONS.openFullScreen, description: t('map_controls.open_full_screen.description') }];
+		? [{ icon: MAP_ICONS.closeFullScreen, description: t('common_actions.close_full_screen.description') }]
+		: [{ icon: MAP_ICONS.openFullScreen, description: t('common_actions.open_full_screen.description') }];
 
 	actions.push(
 		{ icon: MAP_ICONS.zoomFitAll, description: t('map_controls.zoom_fit_all.description') },
@@ -47,7 +47,7 @@ const processedMapActions = computed((): ActionInfo[] => {
 
 	if (props.showSecondaryControls) {
 		actions.push(
-			{ icon: MAP_ICONS.undo, description: t('map_controls.undo.description') },
+			{ icon: MAP_ICONS.undo, description: t('common_actions.undo.description') },
 			{ icon: MAP_ICONS.delete, description: t('map_controls.delete.description') },
 			{ icon: MAP_ICONS.openAdvanced, infoClasses: ['mobile-only'], description: t('map_controls.open_advanced.description') },
 		);
@@ -61,7 +61,7 @@ const processedMapActions = computed((): ActionInfo[] => {
 	<div class="control-bar" :class="{ 'full-screen-active': isFullScreen }">
 		<div class="control-bar-vertical">
 			<button
-				:aria-label="isFullScreen ? t('map_controls.close_full_screen.description') : t('map_controls.open_full_screen.description')"
+				:aria-label="isFullScreen ? t('common_actions.close_full_screen.description') : t('common_actions.open_full_screen.description')"
 				class="fullscreen"
 				@click="emit('toggleFullScreen')"
 			>
@@ -84,7 +84,7 @@ const processedMapActions = computed((): ActionInfo[] => {
 				<IconSVG :name="MAP_ICONS.currentLocation" size="sm" />
 			</button>
 			<button
-				:aria-label="t('map_controls.open_info.description')"
+				:aria-label="t('common_actions.open_info.description')"
 				class="info-dialog"
 				@click="showActionsInfo = true"
 			>
@@ -101,7 +101,7 @@ const processedMapActions = computed((): ActionInfo[] => {
 				<IconSVG :name="MAP_ICONS.delete" />
 			</button>
 			<button
-				:aria-label="t('map_controls.undo.description')"
+				:aria-label="t('common_actions.undo.description')"
 				:disabled="disableUndo"
 				@click="emit('undoLastChange')"
 			>
@@ -110,7 +110,7 @@ const processedMapActions = computed((): ActionInfo[] => {
 		</div>
 	</div>
 
-	<ActionsInfoDialog v-model:visible="showActionsInfo" :title="t('map_info_dialog.header.title')" :actions-info="processedMapActions" />
+	<ActionsInfoDialog v-model:visible="showActionsInfo" :title="t('common_actions.info_dialog.title')" :actions-info="processedMapActions" />
 </template>
 
 <style scoped lang="scss">

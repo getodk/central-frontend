@@ -5,23 +5,27 @@
  */
 import CanvasControls from '@/components/common/canvas/CanvasControls.vue';
 import { type CanvasMode, getModeConfig, MODES } from '@/components/common/canvas/getModeConfig.ts';
-import Message from 'primevue/message';
-import { DEFAULT_STROKE_COLOR, STROKE_WIDTH, useCanvasDrawing } from '@/components/common/canvas/useCanvasDrawing.ts';
+import {
+	DEFAULT_STROKE_COLOR,
+	STROKE_WIDTH,
+	useCanvasDrawing,
+} from '@/components/common/canvas/useCanvasDrawing.ts';
 import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
 import type { Translate } from '@/lib/locale/useLocale.ts';
-import { inject, ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import type Konva from 'konva';
+import Message from 'primevue/message';
+import { computed, inject, onMounted, onUnmounted, ref, watch } from 'vue';
 import type { VueKonvaRef } from 'vue-konva';
 
 const FLATTEN_DEBOUNCE_MS = 500;
 const GUIDE_LINE_Y_RATIO = 0.65;
-// Placeholder prevents division by zero before container loads, keeping computed values safe (e.g. baseScale).
+// Placeholder prevents division by zero before container loads, keeping computed values safe (e.g., baseScale).
 const SAFE_INITIAL_SIZE = { width: 1, height: 1 };
 
 const props = defineProps<{
 	mode: CanvasMode;
 	baseImageSrc?: `blob:${string}` | null;
-	isDisabled?: boolean
+	isDisabled?: boolean;
 }>();
 
 const emit = defineEmits<(e: 'saveImage', file: File | null) => void>();
@@ -144,10 +148,10 @@ const updateContainerFit = () => {
 	if (!imageEl.value && isFullScreen.value && !draw.committedStrokes.value.length) {
 		imageSize.value = {
 			width: containerSize.value.width,
-			height: props.mode === MODES.SIGNATURE ? imageSize.value.height : containerSize.value.height };
+			height: props.mode === MODES.SIGNATURE ? imageSize.value.height : containerSize.value.height,
+		};
 	}
 };
-
 
 const onCanvasReady = (size: { width: number; height: number }) => {
 	imageSize.value = size;
@@ -155,7 +159,7 @@ const onCanvasReady = (size: { width: number; height: number }) => {
 	updateContainerFit();
 };
 
-// Schedules an initial flatten on load so the unmodified image is saved as the starting answer.
+// Schedules initial flatten on load so the unmodified image is saved as the starting answer.
 const loadImage = (src: string) => {
 	isLoading.value = true;
 	loadError.value = false;
@@ -198,20 +202,6 @@ const closeFullScreen = () => {
 	void emitSaveImage();
 };
 
-const onKeyDown = (event: KeyboardEvent) => {
-	if (event.key === 'Escape') {
-		closeFullScreen();
-	}
-};
-
-watch(isFullScreen, (active) => {
-	if (active) {
-		document.addEventListener('keydown', onKeyDown);
-		return;
-	}
-	document.removeEventListener('keydown', onKeyDown);
-});
-
 watch(
 	() => draw.committedStrokes.value.length,
 	(newLen, oldLen) => {
@@ -242,7 +232,6 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-	document.removeEventListener('keydown', onKeyDown);
 	resizeObserver.current?.disconnect();
 	cancelFlatten();
 	abortPendingLoad();
@@ -251,23 +240,27 @@ onUnmounted(() => {
 
 <template>
 	<!-- eslint-disable vue/no-undef-components -- vue-konva registers v-stage and other components on lazy loading -->
-	<div class="canvas-block" :class="{'canvas-full-screen': isFullScreen, 'canvas-compact': modeConfig.isCompact }">
+	<div
+		class="canvas-block"
+		:class="{ 'canvas-full-screen': isFullScreen, 'canvas-compact': modeConfig.isCompact }"
+	>
 		<CanvasControls
 			v-if="!isDisabled"
 			:is-pan-active="!isStrokeActive"
 			:mode-config="modeConfig"
 			:is-full-screen="isFullScreen"
+			:is-blank-canvas="!draw.committedStrokes.value.length"
 			:disable-clear-all="!draw.committedStrokes.value.length"
 			:disable-undo="!draw.committedStrokes.value.length"
 			:disable-zoom-in="draw.isZoomInDisabled.value"
 			:disable-zoom-out="draw.isZoomOutDisabled.value"
-			@change-pan="(val) => isStrokeActive = !val"
+			@change-pan="(val) => (isStrokeActive = !val)"
 			@clear-all="draw.clearAll"
 			@close-full-screen="closeFullScreen"
 			@zoom-in="draw.zoomIn"
 			@zoom-out="draw.zoomOut"
 			@undo="draw.undo"
-			@change-color="(color) => activeColor = color"
+			@change-color="(color) => (activeColor = color)"
 		/>
 		<div ref="containerRef" class="canvas-stage-wrap">
 			<div
@@ -310,8 +303,15 @@ onUnmounted(() => {
 				</v-layer>
 
 				<v-layer ref="strokesLayerRef" :config="layerConfig">
-					<v-line v-for="stroke in draw.committedStrokes.value" :key="stroke.id" :config="stroke.config" />
-					<v-line v-if="draw.liveStrokePoints.value.length >= 2" :config="draw.liveStrokeConfig.value" />
+					<v-line
+						v-for="stroke in draw.committedStrokes.value"
+						:key="stroke.id"
+						:config="stroke.config"
+					/>
+					<v-line
+						v-if="draw.liveStrokePoints.value.length >= 2"
+						:config="draw.liveStrokeConfig.value"
+					/>
 				</v-layer>
 			</v-stage>
 		</div>

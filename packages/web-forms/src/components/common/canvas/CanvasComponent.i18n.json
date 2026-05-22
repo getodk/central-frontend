@@ -3,9 +3,9 @@
     "string": "Unable to load canvas",
     "developer_comment": "Error message shown when the canvas component fails to load."
   },
-  "canvas_controls.close_full_screen.description": {
-    "string": "Exit full screen",
-    "developer_comment": "Explains the canvas control button that exits full-screen mode."
+  "canvas_controls.exit_after_save.description": {
+    "string": "Exit full screen, changes saved",
+    "developer_comment": "Explains the canvas control button that exits full-screen mode after autosave has captured the user's drawing."
   },
   "canvas_controls.color_picker.description": {
     "string": "Pick a color",
@@ -15,25 +15,9 @@
     "string": "Toggle pan mode",
     "developer_comment": "Explains the canvas control button that activates or deactivates pan mode. When active, dragging moves the canvas instead of drawing."
   },
-  "canvas_controls.zoom_in.description": {
-    "string": "Zoom in",
-    "developer_comment": "Explains the canvas control button that zooms in."
-  },
-  "canvas_controls.zoom_out.description": {
-    "string": "Zoom out",
-    "developer_comment": "Explains the canvas control button that zooms out."
-  },
   "canvas_controls.clear_all.description": {
     "string": "Clear all strokes",
     "developer_comment": "Explains the canvas control button that removes all drawn strokes."
-  },
-  "canvas_controls.undo.description": {
-    "string": "Undo last action",
-    "developer_comment": "Explains the canvas control button that undoes the last stroke."
-  },
-  "canvas_controls.open_info.description": {
-    "string": "Show information of actions",
-    "developer_comment": "Explains the canvas control button that opens the info dialog listing available canvas actions."
   },
   "canvas_block.loading_image.message": {
     "string": "Loading image...",
@@ -46,9 +30,5 @@
   "canvas_block.draw_instruction.message": {
     "string": "Start drawing here",
     "developer_comment": "Instruction message shown in draw mode before the user has made any strokes."
-  },
-  "canvas_info_dialog.header.title": {
-    "string": "How to use this tool?",
-    "developer_comment": "Title shown in the header of the dialog that explains available canvas actions."
   }
 }
