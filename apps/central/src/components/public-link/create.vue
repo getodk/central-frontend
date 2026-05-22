@@ -18,6 +18,13 @@ except according to the terms contained in the LICENSE file.
       <form @submit.prevent="submit">
         <form-group ref="displayNameGroup" v-model.trim="displayName"
           :placeholder="$t('field.displayName')" required autocomplete="off"/>
+        <div class="public-link-set-properties">
+          <template v-if="actorProperties.dataExists">
+            <actor-properties-upsert v-model:propertyValues="propertyValues" :create="true"
+              :property-defs="actorProperties.data"/>
+          </template>
+          <spinner :state="actorProperties.awaitingResponse"/>
+        </div>
         <div class="checkbox">
           <label>
             <input v-model="once" type="checkbox"
@@ -48,6 +55,7 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 import { ref, watch } from 'vue';
 
+import ActorPropertiesUpsert from '../actor-properties/upsert.vue';
 import DocLink from '../doc-link.vue';
 import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
@@ -71,30 +79,40 @@ const emit = defineEmits(['hide', 'success']);
 const displayNameGroup = ref(null);
 const displayName = ref('');
 const once = ref(false);
-
-watch(() => props.state, (state) => {
-  if (!state) {
-    displayName.value = '';
-    once.value = false;
-  }
-});
+const propertyValues = ref(Object.create(null));
 
 import { useRequestData } from '../../request-data';
 
 // The modal assumes that this data will exist when the modal is shown.
 const { request, awaitingResponse } = useRequest();
-const { form } = useRequestData();
+const { form, createResource } = useRequestData();
+
+const actorProperties = createResource('actorProperties');
+
+const fetchActorProperties = () => {
+  const url = apiPaths.actorProperties(form.projectId);
+  return actorProperties.request({ url }).catch(() => { emit('hide'); });
+};
 
 const submit = () => {
   request.post(
     apiPaths.publicLinks(form.projectId, form.xmlFormId),
-    { displayName: displayName.value, once: once.value }
+    { displayName: displayName.value, once: once.value, properties: propertyValues.value }
   )
     .then(response => {
       emit('success', response.data);
     })
     .catch(noop);
 };
+
+watch(() => props.state, (state) => {
+  if (!state) {
+    displayName.value = '';
+    once.value = false;
+    propertyValues.value = Object.create(null);
+  } else
+    fetchActorProperties();
+});
 </script>
 
 <i18n lang="json5">
