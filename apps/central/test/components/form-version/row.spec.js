@@ -100,8 +100,9 @@ describe('FormVersionRow', () => {
     const cases = [
       /* eslint-disable no-multi-spaces */
       { description: 'shows notes when present',                  publishNotes: 'removed few questions', expected: true },
-      { description: 'does not show notes row when null',         publishNotes: null,                   expected: false },
-      { description: 'does not show notes row when empty string', publishNotes: '',                     expected: false }
+      { description: 'does not show notes row when null',         publishNotes: null,                    expected: false },
+      { description: 'does not show notes row when empty string', publishNotes: '',                      expected: false },
+      { description: 'does not show notes row when undefined',    publishNotes: undefined,               expected: false }
       /* eslint-enable no-multi-spaces */
     ];
     cases.forEach(({ description, publishNotes, expected }) => {
@@ -116,16 +117,6 @@ describe('FormVersionRow', () => {
           rows.length.should.equal(1);
         }
       });
-    });
-
-    it('does not show notes when user lacks form.update permission', async () => {
-      mockLogin.reset();
-      mockLogin({ role: 'none' });
-      testData.extendedProjects.createPast(1, { role: 'viewer' });
-      testData.extendedForms.createPast(1, { publishNotes: 'Some notes' });
-      const component = await load('/projects/1/forms/f/versions', { root: false });
-      const rows = component.findAll('tbody tr');
-      rows.length.should.equal(1);
     });
   });
 });

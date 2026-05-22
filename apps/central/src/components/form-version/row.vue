@@ -26,8 +26,7 @@ except according to the terms contained in the LICENSE file.
         @view-xml="$emit('view-xml')"/>
     </td>
   </tr>
-  <tr v-if="version.publishNotes && project.dataExists && project.permits('form.update')"
-    class="form-version-notes-row">
+  <tr v-if="version.publishNotes" class="form-version-notes-row">
     <td colspan="3">
       {{ $t('notes', { notes: version.publishNotes }) }}
     </td>
@@ -39,10 +38,6 @@ import EnketoPreview from '../enketo/preview.vue';
 import FormVersionDefDropdown from './def-dropdown.vue';
 import FormVersionString from './string.vue';
 import TimeAndUser from '../time-and-user.vue';
-
-import { useRequestData } from '../../request-data';
-
-const { project } = useRequestData();
 
 defineOptions({
   name: 'FormVersionRow'
