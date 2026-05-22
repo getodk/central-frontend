@@ -333,8 +333,8 @@ onUnmounted(() => {
 .canvas-stage-wrap {
 	position: relative;
 	display: flex;
-	align-items: center;
-	justify-content: center;
+  align-items: safe center; // The top/left edge stays reachable when panning
+  justify-content: safe center;
 	background: var(--odk-inactive-background-color);
 	width: 100%;
 	height: 445px;
