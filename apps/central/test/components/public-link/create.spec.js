@@ -12,7 +12,7 @@ const mountOptions = (options = undefined) => mergeMountOptions(options, {
   }
 });
 
-describe('PublicLinkCreate', () => {
+describe.only('PublicLinkCreate', () => {
   beforeEach(() => {
     mockLogin();
     testData.extendedForms.createPast(1);
@@ -22,7 +22,11 @@ describe('PublicLinkCreate', () => {
     load('/projects/1/forms/f/public-links', { root: false }).testModalToggles({
       modal: PublicLinkCreate,
       show: '.heading-with-button .btn-primary',
-      hide: '.btn-link'
+      hide: '.btn-link',
+      respond: (series) => series.respondIf(
+        ({ url }) => url.includes('actor-properties'),
+        () => []
+      )
     }));
 
   it('focuses the display name input', () => {
@@ -53,7 +57,7 @@ describe('PublicLinkCreate', () => {
         .beforeEachResponse((_, { method, url, data }) => {
           method.should.equal('POST');
           url.should.equal('/v1/projects/1/forms/f/public-links');
-          data.should.eql({ displayName: 'My Public Link', once: false });
+          data.should.eql({ displayName: 'My Public Link', once: false, properties: {} });
         })
         .respondWithProblem());
 
@@ -95,8 +99,9 @@ describe('PublicLinkCreate', () => {
           await modal.get('input').setValue('My Public Link');
           return modal.get('form').trigger('submit');
         })
+        .respondWithData(() => []) // actor-properties
         .respondWithData(() => testData.standardPublicLinks.createNew({
-          displayName: 'My Public Link'
+          displayName: 'My Public Link',
         }))
         .respondWithData(() => testData.standardPublicLinks.sorted());
     };
