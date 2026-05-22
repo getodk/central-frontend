@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms"
+  xmlns:odk="http://www.opendatakit.org/xforms">
+  <h:head>
+    <h:title>Examples using the distance() and area() function</h:title>
+    <model odk:xforms-version="1.0.0">
+      <instance>
+        <data id="distance_examples" version="20241025195211">
+          <location1>-6.8137120026589315 39.29392995851879 400 10</location1>
+          <location2>-6.815178491608137 39.29533915133268</location2>
+          <location3>-6.81189589956027 39.2973513889647 600</location3>
+          <location4>-6.81223343508222 39.29735351357036</location4>
+          <geoshape_12341 />
+          <distance_1234 />
+          <area_1234 />
+          <distance_mixed />
+          <distance_via_geoshape />
+          <meta>
+            <instanceID />
+          </meta>
+        </data>
+      </instance>
+      <bind nodeset="/data/location1" readonly="true()" type="string" />
+      <bind nodeset="/data/location2" readonly="true()" type="string" />
+      <bind nodeset="/data/location3" readonly="true()" type="string" />
+      <bind nodeset="/data/location4" readonly="true()" type="string" />
+      <bind nodeset="/data/geoshape_12341" readonly="true()" type="string"
+        calculate="join(&quot;; &quot;,  /data/location1 ,  /data/location2 ,  /data/location3 ,  /data/location4 ,  /data/location1 )" />
+      <bind nodeset="/data/distance_1234" readonly="true()" type="string"
+        calculate="distance( /data/location1 ,  /data/location2 ,  /data/location3 ,  /data/location4 )" />
+      <bind nodeset="/data/area_1234" readonly="true()" type="string"
+        calculate="area( /data/geoshape_12341 )" />
+      <bind nodeset="/data/distance_mixed" readonly="true()" type="string"
+        calculate="distance( /data/location1 ,  /data/location2 ,  /data/location3 ,  /data/location4 , '-6.8137120026589315 39.29392995851879 400 10')" />
+      <bind nodeset="/data/distance_via_geoshape" readonly="true()" type="string"
+        calculate="distance( /data/geoshape_12341 )" />
+      <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid" />
+    </model>
+  </h:head>
+  <h:body>
+    <input ref="/data/location1">
+      <label>where 1</label>
+    </input>
+    <input ref="/data/location2">
+      <label>where 2</label>
+    </input>
+    <input ref="/data/location3">
+      <label>where 3</label>
+    </input>
+    <input ref="/data/location4">
+      <label>where 4</label>
+    </input>
+    <input ref="/data/geoshape_12341">
+      <label>geoshape 12341</label>
+    </input>
+    <input ref="/data/distance_1234">
+      <label>distance 1234</label>
+    </input>
+    <input ref="/data/area_1234">
+      <label>area 1234</label>
+    </input>
+    <input ref="/data/distance_mixed">
+      <label>distance 12341 mixed-type arguments</label>
+    </input>
+    <input ref="/data/distance_via_geoshape">
+      <label>distance 12341 via geoshape</label>
+    </input>
+  </h:body>
+</h:html>

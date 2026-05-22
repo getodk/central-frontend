@@ -1,0 +1,392 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms"
+  xmlns:odk="http://www.opendatakit.org/xforms">
+  <h:head>
+    <h:title>Appearances</h:title>
+    <model odk:xforms-version="1.0.0">
+      <instance>
+        <data id="appearances" version="20240617163057">
+          <minimal />
+          <search />
+          <minimal_search />
+          <quick />
+          <columns-pack />
+          <columns />
+          <columns-n />
+          <no-buttons />
+          <image-map />
+          <likert />
+          <map />
+          <label />
+          <list-nolabel />
+          <list />
+          <underlying_conditions>
+            <condition_labels />
+            <Comcond_preg />
+            <Comcond_partum />
+          </underlying_conditions>
+          <underlying_conditions2>
+            <generated_table_list_label_24 />
+            <reserved_name_for_field_list_labels_25 />
+            <Comcond_preg2 />
+            <Comcond_partum2 />
+          </underlying_conditions2>
+          <section_break />
+          <minimal_m />
+          <search_m />
+          <minimal_search_m />
+          <columns-pack_m />
+          <columns_m />
+          <columns-n_m />
+          <no-buttons_m />
+          <image-map_m />
+          <label_m />
+          <list-nolabel_m />
+          <list_m />
+          <underlying_conditions_n>
+            <condition_labels_n />
+            <Comcond_preg_n />
+            <Comcond_partum_n />
+          </underlying_conditions_n>
+          <meta>
+            <instanceID />
+          </meta>
+        </data>
+      </instance>
+      <instance id="cities">
+        <root>
+          <item>
+            <name>karachi</name>
+            <label>Karachi</label>
+          </item>
+          <item>
+            <name>toronto</name>
+            <label>Toronto</label>
+          </item>
+          <item>
+            <name>lahore</name>
+            <label>Lahore</label>
+          </item>
+          <item>
+            <name>islamabad</name>
+            <label>Islamabad</label>
+          </item>
+          <item>
+            <name>vancouver</name>
+            <label>Vancouver</label>
+          </item>
+        </root>
+      </instance>
+      <instance id="yes_no">
+        <root>
+          <item>
+            <name>yes</name>
+            <label>Yes</label>
+          </item>
+          <item>
+            <name>no</name>
+            <label>No</label>
+          </item>
+        </root>
+      </instance>
+      <bind nodeset="/data/minimal" type="string" />
+      <bind nodeset="/data/search" type="string" />
+      <bind nodeset="/data/quick" type="string" />
+      <bind nodeset="/data/columns-pack" type="string" />
+      <bind nodeset="/data/columns" type="string" />
+      <bind nodeset="/data/columns-n" type="string" />
+      <bind nodeset="/data/no-buttons" type="string" />
+      <bind nodeset="/data/image-map" type="string" />
+      <bind nodeset="/data/likert" type="string" />
+      <bind nodeset="/data/map" type="string" />
+      <bind nodeset="/data/label" type="string" />
+      <bind nodeset="/data/list-nolabel" type="string" />
+      <bind nodeset="/data/list" type="string" />
+      <bind nodeset="/data/minimal_search" type="string" />
+      <bind nodeset="/data/underlying_conditions/condition_labels" type="string" />
+      <bind nodeset="/data/underlying_conditions/Comcond_preg" type="string" />
+      <bind nodeset="/data/underlying_conditions/Comcond_partum" type="string" />
+      <bind nodeset="/data/underlying_conditions2/generated_table_list_label_24" readonly="true()"
+        type="string" />
+      <bind nodeset="/data/underlying_conditions2/reserved_name_for_field_list_labels_25"
+        type="string" />
+      <bind nodeset="/data/underlying_conditions2/Comcond_preg2" type="string" />
+      <bind nodeset="/data/underlying_conditions2/Comcond_partum2" type="string" />
+      <bind nodeset="/data/section_break" readonly="true()" type="string" />
+      <bind nodeset="/data/minimal_m" type="string" />
+      <bind nodeset="/data/search_m" type="string" />
+      <bind nodeset="/data/columns-pack_m" type="string" />
+      <bind nodeset="/data/columns_m" type="string" />
+      <bind nodeset="/data/columns-n_m" type="string" />
+      <bind nodeset="/data/no-buttons_m" type="string" />
+      <bind nodeset="/data/image-map_m" type="string" />
+      <bind nodeset="/data/label_m" type="string" />
+      <bind nodeset="/data/list-nolabel_m" type="string" />
+      <bind nodeset="/data/list_m" type="string" />
+      <bind nodeset="/data/minimal_search_m" type="string" />
+      <bind nodeset="/data/underlying_conditions_n/condition_labels_n" type="string" />
+      <bind nodeset="/data/underlying_conditions_n/Comcond_preg_n" type="string" />
+      <bind nodeset="/data/underlying_conditions_n/Comcond_partum_n" type="string" />
+      <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid" />
+    </model>
+  </h:head>
+  <h:body>
+    <select1 appearance="minimal" ref="/data/minimal">
+      <label>minimal</label>
+      <itemset nodeset="instance('cities')/root/item">
+        <value ref="name" />
+        <label ref="label" />
+      </itemset>
+    </select1>
+    <select1 appearance="search" ref="/data/search">
+      <label>search</label>
+      <itemset nodeset="instance('cities')/root/item">
+        <value ref="name" />
+        <label ref="label" />
+      </itemset>
+    </select1>
+    <select1 appearance="minimal search" ref="/data/minimal_search">
+      <label>minimal plus search</label>
+      <itemset nodeset="instance('cities')/root/item">
+        <value ref="name" />
+        <label ref="label" />
+      </itemset>
+    </select1>
+    <select1 appearance="quick" ref="/data/quick">
+      <label>quick</label>
+      <itemset nodeset="instance('cities')/root/item">
+        <value ref="name" />
+        <label ref="label" />
+      </itemset>
+    </select1>
+    <select1 appearance="columns-pack " ref="/data/columns-pack">
+      <label>columns-pack</label>
+      <itemset nodeset="instance('cities')/root/item">
+        <value ref="name" />
+        <label ref="label" />
+      </itemset>
+    </select1>
+    <select1 appearance="columns" ref="/data/columns">
+      <label>columns</label>
+      <itemset nodeset="instance('cities')/root/item">
+        <value ref="name" />
+        <label ref="label" />
+      </itemset>
+    </select1>
+    <select1 appearance="columns-5" ref="/data/columns-n">
+      <label>columns-n</label>
+      <itemset nodeset="instance('cities')/root/item">
+        <value ref="name" />
+        <label ref="label" />
+      </itemset>
+    </select1>
+    <select1 appearance="no-buttons" ref="/data/no-buttons">
+      <label>no-buttons</label>
+      <itemset nodeset="instance('cities')/root/item">
+        <value ref="name" />
+        <label ref="label" />
+      </itemset>
+    </select1>
+    <select1 appearance="image-map" ref="/data/image-map">
+      <label>image-map</label>
+      <itemset nodeset="instance('cities')/root/item">
+        <value ref="name" />
+        <label ref="label" />
+      </itemset>
+    </select1>
+    <select1 appearance="likert" ref="/data/likert">
+      <label>likert</label>
+      <itemset nodeset="instance('cities')/root/item">
+        <value ref="name" />
+        <label ref="label" />
+      </itemset>
+    </select1>
+    <select1 appearance="map" ref="/data/map">
+      <label>map</label>
+      <itemset nodeset="instance('cities')/root/item">
+        <value ref="name" />
+        <label ref="label" />
+      </itemset>
+    </select1>
+    <select1 appearance="label" ref="/data/label">
+      <label>label</label>
+      <itemset nodeset="instance('cities')/root/item">
+        <value ref="name" />
+        <label ref="label" />
+      </itemset>
+    </select1>
+    <select1 appearance="list-nolabel" ref="/data/list-nolabel">
+      <label>list-nolabel</label>
+      <itemset nodeset="instance('cities')/root/item">
+        <value ref="name" />
+        <label ref="label" />
+      </itemset>
+    </select1>
+    <select1 appearance="list" ref="/data/list">
+      <label>list</label>
+      <itemset nodeset="instance('cities')/root/item">
+        <value ref="name" />
+        <label ref="label" />
+      </itemset>
+    </select1>
+
+    <group appearance="field-list" ref="/data/underlying_conditions">
+      <label>Underlying conditions</label>
+      <select1 appearance="label" ref="/data/underlying_conditions/condition_labels">
+        <label>Conditions</label>
+        <itemset nodeset="instance('yes_no')/root/item">
+          <value ref="name" />
+          <label ref="label" />
+        </itemset>
+      </select1>
+      <select1 appearance="list-nolabel" ref="/data/underlying_conditions/Comcond_preg">
+        <label>Pregnancy</label>
+        <itemset nodeset="instance('yes_no')/root/item">
+          <value ref="name" />
+          <label ref="label" />
+        </itemset>
+      </select1>
+      <select1 appearance="list-nolabel" ref="/data/underlying_conditions/Comcond_partum">
+        <label>Post-partum (&lt; 6 weeks)</label>
+        <itemset nodeset="instance('yes_no')/root/item">
+          <value ref="name" />
+          <label ref="label" />
+        </itemset>
+      </select1>
+    </group>
+    <group appearance="field-list" ref="/data/underlying_conditions2">
+      <input ref="/data/underlying_conditions2/generated_table_list_label_24">
+        <label>Underlying conditions</label>
+      </input>
+      <select1 appearance="label"
+        ref="/data/underlying_conditions2/reserved_name_for_field_list_labels_25">
+        <label> </label>
+        <itemset nodeset="instance('yes_no')/root/item">
+          <value ref="name" />
+          <label ref="label" />
+        </itemset>
+      </select1>
+      <select1 appearance="list-nolabel" ref="/data/underlying_conditions2/Comcond_preg2">
+        <label>Pregnancy</label>
+        <itemset nodeset="instance('yes_no')/root/item">
+          <value ref="name" />
+          <label ref="label" />
+        </itemset>
+      </select1>
+      <select1 appearance="list-nolabel" ref="/data/underlying_conditions2/Comcond_partum2">
+        <label>Post-partum (&lt; 6 weeks)</label>
+        <itemset nodeset="instance('yes_no')/root/item">
+          <value ref="name" />
+          <label ref="label" />
+        </itemset>
+      </select1>
+    </group>
+    <input ref="/data/section_break">
+      <label>Select Multiple Appearances start here:</label>
+    </input>
+    <select appearance="minimal no-buttons" ref="/data/minimal_m">
+      <label>minimal</label>
+      <itemset nodeset="instance('cities')/root/item">
+        <value ref="name" />
+        <label ref="label" />
+      </itemset>
+    </select>
+    <select appearance="search" ref="/data/search_m">
+      <label>search</label>
+      <itemset nodeset="instance('cities')/root/item">
+        <value ref="name" />
+        <label ref="label" />
+      </itemset>
+    </select>
+    <select appearance="minimal search" ref="/data/minimal_search_m">
+      <label>minimal plus search</label>
+      <itemset nodeset="instance('cities')/root/item">
+        <value ref="name" />
+        <label ref="label" />
+      </itemset>
+    </select>
+    <select appearance="columns-pack" ref="/data/columns-pack_m">
+      <label>columns-pack</label>
+      <itemset nodeset="instance('cities')/root/item">
+        <value ref="name" />
+        <label ref="label" />
+      </itemset>
+    </select>
+    <select appearance="columns" ref="/data/columns_m">
+      <label>columns</label>
+      <itemset nodeset="instance('cities')/root/item">
+        <value ref="name" />
+        <label ref="label" />
+      </itemset>
+    </select>
+    <select appearance="columns-5" ref="/data/columns-n_m">
+      <label>columns-n</label>
+      <itemset nodeset="instance('cities')/root/item">
+        <value ref="name" />
+        <label ref="label" />
+      </itemset>
+    </select>
+    <select appearance="no-buttons" ref="/data/no-buttons_m">
+      <label>no-buttons</label>
+      <itemset nodeset="instance('cities')/root/item">
+        <value ref="name" />
+        <label ref="label" />
+      </itemset>
+    </select>
+    <select appearance="image-map" ref="/data/image-map_m">
+      <label>image-map</label>
+      <itemset nodeset="instance('cities')/root/item">
+        <value ref="name" />
+        <label ref="label" />
+      </itemset>
+    </select>
+    <select appearance="label" ref="/data/label_m">
+      <label>label</label>
+      <itemset nodeset="instance('cities')/root/item">
+        <value ref="name" />
+        <label ref="label" />
+      </itemset>
+    </select>
+    <select appearance="list-nolabel" ref="/data/list-nolabel_m">
+      <label>list-nolabel</label>
+      <itemset nodeset="instance('cities')/root/item">
+        <value ref="name" />
+        <label ref="label" />
+      </itemset>
+    </select>
+    <select appearance="list" ref="/data/list_m">
+      <label>list</label>
+      <itemset nodeset="instance('cities')/root/item">
+        <value ref="name" />
+        <label ref="label" />
+      </itemset>
+    </select>
+
+    <group appearance="field-list" ref="/data/underlying_conditions_n">
+      <label>Underlying conditions</label>
+      <select appearance="label" ref="/data/underlying_conditions_n/condition_labels_n">
+        <label>Conditions</label>
+        <itemset nodeset="instance('yes_no')/root/item">
+          <value ref="name" />
+          <label ref="label" />
+        </itemset>
+      </select>
+      <select appearance="list-nolabel" ref="/data/underlying_conditions_n/Comcond_preg_n">
+        <label>Pregnancy</label>
+        <itemset nodeset="instance('yes_no')/root/item">
+          <value ref="name" />
+          <label ref="label" />
+        </itemset>
+      </select>
+      <select appearance="list-nolabel" ref="/data/underlying_conditions_n/Comcond_partum_n">
+        <label>Post-partum (&lt; 6 weeks)</label>
+        <itemset nodeset="instance('yes_no')/root/item">
+          <value ref="name" />
+          <label ref="label" />
+        </itemset>
+      </select>
+    </group>
+  </h:body>
+</h:html>

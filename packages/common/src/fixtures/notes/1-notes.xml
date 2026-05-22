@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms"
+  xmlns:ev="http://www.w3.org/2001/xml-events"
+  xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:jr="http://openrosa.org/javarosa"
+  xmlns:orx="http://openrosa.org/xforms/"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>Notes</h:title>
+    <model>
+      <instance>
+        <root id="notes">
+          <top-level-note />
+          <top-level-inp />
+          <grp>
+            <grp-note />
+            <grp-inp />
+          </grp>
+          <rep>
+            <rep-note />
+            <rep-inp />
+          </rep>
+          <meta>
+            <instanceID/>
+          </meta>
+        </root>
+      </instance>
+      <bind nodeset="/root/top-level-note" readonly="1" />
+      <bind nodeset="/root/top-level-inp" />
+      <bind nodeset="/root/grp/grp-note" readonly="true()" relevant="count(../../rep) &lt;= 2" />
+      <bind nodeset="/root/grp/grp-inp" />
+      <bind nodeset="/root/rep/rep-note" readonly="true()" relevant="position(..) mod 2 = 0" />
+      <bind nodeset="/root/rep/rep-inp" />
+      <bind nodeset="/root/meta/instanceID" type="string"/>
+    </model>
+  </h:head>
+  <h:body>
+    <input ref="/root/top-level-note">
+      <label>top-level note!</label>
+    </input>
+
+    <input ref="/root/top-level-inp">
+      <label>top-level input</label>
+    </input>
+
+    <group ref="/root/grp">
+      <label>grp</label>
+
+      <input ref="/root/grp/grp-note">
+        <label>grp note!</label>
+      </input>
+
+      <input ref="/root/grp/grp-inp">
+        <label>grp input</label>
+      </input>
+    </group>
+
+    <group ref="/root/rep">
+      <label>rep</label>
+
+      <repeat nodeset="/root/rep">
+        <input ref="/root/rep/rep-note">
+          <label>rep note!</label>
+        </input>
+
+        <input ref="/root/rep/rep-inp">
+          <label>Repeat input</label>
+        </input>
+      </repeat>
+    </group>
+  </h:body>
+</h:html>

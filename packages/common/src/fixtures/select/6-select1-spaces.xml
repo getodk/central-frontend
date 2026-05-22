@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!-- This fixture is loosely derived from the Enketo test fixture itemset-relevant-2.xml -->
+<h:html xmlns="http://www.w3.org/2002/xforms"
+  xmlns:ev="http://www.w3.org/2001/xml-events"
+  xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:jr="http://openrosa.org/javarosa"
+  xmlns:odk="http://www.opendatakit.org/xforms"
+  xmlns:orx="http://openrosa.org/xforms"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>Select1, values with spaces</h:title>
+    <model odk:xforms-version="1.0.0">
+      <instance>
+        <data id="static-selects">
+          <dessert>cherry pie</dessert>
+          <meta>
+            <instanceID />
+          </meta>
+        </data>
+      </instance>
+      <bind nodeset="/data/dessert" type="string" />
+    </model>
+  </h:head>
+  <h:body>
+    <select1 ref="/data/dessert">
+      <label>Dessert</label>
+      <item>
+        <value>cherry pie</value>
+        <label>Cherry pie</label>
+      </item>
+      <item>
+        <value>apple pie</value>
+        <label>Apple pie</label>
+      </item>
+      <item>
+        <value>cheesecake</value>
+        <label>Cheesecake</label>
+      </item>
+    </select1>
+  </h:body>
+</h:html>

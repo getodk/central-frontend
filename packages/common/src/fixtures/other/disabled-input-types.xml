@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms"
+  xmlns:ev="http://www.w3.org/2001/xml-events"
+  xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:jr="http://openrosa.org/javarosa"
+  xmlns:orx="http://openrosa.org/xforms/"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>Disabled inputs</h:title>
+    <model>
+      <instance>
+        <root id="minimal">
+          <slider>8</slider>
+          <rating>3</rating>
+          <pic/>
+          <geopoint/>
+          <meta>
+            <instanceID/>
+          </meta>
+        </root>
+      </instance>
+      <bind nodeset="/root/slider" type="int" readonly="true()"/>
+      <bind nodeset="/root/rating" type="int" readonly="true()"/>
+      <bind nodeset="/root/pic" type="binary" readonly="true()"/>
+      <bind nodeset="/root/geopoint" type="geopoint" readonly="true()"/>
+      <bind nodeset="/root/meta/instanceID" type="string"/>
+    </model>
+  </h:head>
+  <h:body>
+    <range ref="/root/slider" appearance="picker" start="1" end="10" step="1">
+      <label>Range picker integer</label>
+    </range>
+    <range ref="/root/rating" appearance="rating" start="1" end="5" step="1">
+      <label>Range rating integer</label>
+    </range>
+    <upload ref="/root/pic" mediatype="image/*">
+      <label>Image</label>
+    </upload>
+    <input ref="/root/geopoint">
+      <label>Point with user confirmation</label>
+    </input>
+  </h:body>
+</h:html>
