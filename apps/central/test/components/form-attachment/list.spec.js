@@ -1140,7 +1140,7 @@ describe('FormAttachmentList', () => {
           .complete()
           .request(async (app) => {
             await app.get('#form-edit-publish-button').trigger('click');
-            return app.get('#form-draft-publish .btn-primary').trigger('click');
+            return app.get('#form-draft-publish form').trigger('submit');
           })
           .respondWithData(() => {
             testData.extendedFormDrafts.publish(-1);
@@ -1184,7 +1184,7 @@ describe('FormAttachmentList', () => {
           .complete()
           .request(async (app) => {
             await app.get('#form-edit-publish-button').trigger('click');
-            return app.get('#form-draft-publish .btn-primary').trigger('click');
+            return app.get('#form-draft-publish form').trigger('submit');
           })
           .respondWithData(() => {
             testData.extendedFormDrafts.publish(-1);
