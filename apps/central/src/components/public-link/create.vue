@@ -11,12 +11,12 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="public-link-create" :state="state" :hideable="!awaitingResponse"
-    backdrop @hide="$emit('hide')" @shown="$refs.displayName.focus()">
+    backdrop @hide="$emit('hide')" @shown="displayNameGroup.focus()">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <p class="modal-introduction">{{ $t('introduction[0]') }}</p>
       <form @submit.prevent="submit">
-        <form-group ref="displayName" v-model.trim="displayName"
+        <form-group ref="displayNameGroup" v-model.trim="displayName"
           :placeholder="$t('field.displayName')" required autocomplete="off"/>
         <div class="checkbox">
           <label>
@@ -45,7 +45,9 @@ except according to the terms contained in the LICENSE file.
   </modal>
 </template>
 
-<script>
+<script setup>
+import { ref, watch } from 'vue';
+
 import DocLink from '../doc-link.vue';
 import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
@@ -55,51 +57,43 @@ import Spinner from '../spinner.vue';
 import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
+
+defineOptions({
+  name: 'PublicLinkCreate'
+});
+
+const props = defineProps({
+  state: Boolean
+});
+
+const emit = defineEmits(['hide', 'success']);
+
+const displayNameGroup = ref(null);
+const displayName = ref('');
+const once = ref(false);
+
+watch(() => props.state, (state) => {
+  if (!state) {
+    displayName.value = '';
+    once.value = false;
+  }
+});
+
 import { useRequestData } from '../../request-data';
 
-export default {
-  name: 'PublicLinkCreate',
-  components: { DocLink, FormGroup, Modal, SentenceSeparator, Spinner },
-  props: {
-    state: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: ['hide', 'success'],
-  setup() {
-    // The modal assumes that this data will exist when the modal is shown.
-    const { form } = useRequestData();
-    const { request, awaitingResponse } = useRequest();
-    return { form, request, awaitingResponse };
-  },
-  data() {
-    return {
-      displayName: '',
-      once: false
-    };
-  },
-  watch: {
-    state(state) {
-      if (!state) {
-        this.displayName = '';
-        this.once = false;
-      }
-    }
-  },
-  methods: {
-    submit() {
-      this.request({
-        method: 'POST',
-        url: apiPaths.publicLinks(this.form.projectId, this.form.xmlFormId),
-        data: { displayName: this.displayName, once: this.once }
-      })
-        .then(({ data }) => {
-          this.$emit('success', data);
-        })
-        .catch(noop);
-    }
-  }
+// The modal assumes that this data will exist when the modal is shown.
+const { request, awaitingResponse } = useRequest();
+const { form } = useRequestData();
+
+const submit = () => {
+  request.post(
+    apiPaths.publicLinks(form.projectId, form.xmlFormId),
+    { displayName: displayName.value, once: once.value }
+  )
+    .then(response => {
+      emit('success', response.data);
+    })
+    .catch(noop);
 };
 </script>
 
