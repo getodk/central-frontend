@@ -19,6 +19,7 @@
   "volta": {
     "node": "24.13.0"
   },
+  "packageManager": "npm@11.6.1",
   "workspaces": [
     "apps/*",
     "packages/*"
