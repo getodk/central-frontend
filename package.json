@@ -10,7 +10,8 @@
     "dev-no-docker:build": "nf start build,nginx-host",
     "build": "turbo run build",
     "build:web": "vite build",
-    "lint": "npm run lint --workspaces",
+    "eslint": "eslint bin/ e2e-tests/ *.js -c bin/eslint.config.js --cache --max-warnings 0",
+    "lint": "npm run lint --workspaces && npm run eslint",
     "lint:fix": "npm run lint:fix --workspaces",
     "test": "npm run test --workspaces",
     "test:e2e": "e2e-tests/run-tests.sh"
@@ -18,7 +19,6 @@
   "volta": {
     "node": "24.13.0"
   },
-  "packageManager": "npm@11.6.1",
   "workspaces": [
     "apps/*",
     "packages/*"
@@ -41,9 +41,11 @@
     "@types/node": "^24.10.1",
     "@typescript-eslint/eslint-plugin": "^8.57.0",
     "@typescript-eslint/parser": "^8.57.0",
+    "@vitejs/plugin-vue": "^6.0.6",
     "@vitest/browser-playwright": "^4.0.18",
     "@vue/eslint-config-prettier": "^10.2.0",
     "@vue/eslint-config-typescript": "^14.7.0",
+    "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.8.1",
     "eslint": "^10.0.3",
     "eslint-config-prettier": "^10.1.8",
@@ -51,6 +53,7 @@
     "eslint-plugin-no-only-tests": "^3.3.0",
     "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-vue": "^10.8.0",
+    "foreman": "^3.0.1",
     "npm-run-all2": "^8.0.4",
     "prettier": "^3.8.1",
     "rimraf": "^6.1.3",

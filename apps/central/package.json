@@ -34,18 +34,15 @@
   "devDependencies": {
     "@faker-js/faker": "^9.7.0",
     "@intlify/unplugin-vue-i18n": "^6.0.8",
-    "@vitejs/plugin-vue": "^6.0.6",
     "@vue/cli-service": "^5.0.8",
     "@vue/compiler-sfc": "~3",
     "@vue/eslint-config-airbnb": "^7.0.0",
-    "@vue/test-utils": "^2.4.6",
     "chai": "^5.1.1",
     "chai-as-promised": "^8.0.0",
     "comment-json": "~4",
     "eslint": "^8.28.0",
     "eslint-plugin-import": "~2",
     "eslint-plugin-vue": "~9",
-    "foreman": "^3.0.1",
     "jsqr": "~1.0",
     "karma": "~6",
     "karma-chrome-launcher": "~3",
@@ -60,9 +57,5 @@
     "sass-loader": "^13.2.0",
     "sinon": "~9",
     "util": "^0.12.5"
-  },
-  "engines": {
-    "node": "24",
-    "npm": "11"
   }
 }
