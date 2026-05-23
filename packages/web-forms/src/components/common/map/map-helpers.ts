@@ -76,7 +76,7 @@ export const getValidCoordinates = (
 		return;
 	}
 
-	const coords = geometry.coordinates as Coordinate | Coordinate[] | Coordinate[][];
+	const coords = geometry.coordinates;
 	if (
 		geometry.type === 'Point' &&
 		singleFeatureType === SINGLE_FEATURE_TYPES.POINT &&

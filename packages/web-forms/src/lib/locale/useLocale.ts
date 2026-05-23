@@ -37,7 +37,7 @@ export const normalizeMessages = (raw: TransifexTranslation): ICUMessage => {
 	return result;
 };
 
-const enMessages = normalizeMessages(enRaw as TransifexTranslation);
+const enMessages = normalizeMessages(enRaw);
 
 const loadMessages = async (locale: string): Promise<ICUMessage> => {
 	if (locale === FALLBACK) {

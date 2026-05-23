@@ -29,7 +29,7 @@ export type EngineRepresentation<T extends object> = TypedRepresentation<
 export const declareEngineRepresentation = <T extends object>(
 	stateObject: T
 ): EngineRepresentation<T> => {
-	return stateObject as EngineRepresentation<T>;
+	return stateObject;
 };
 
 // prettier-ignore
@@ -41,7 +41,7 @@ export type InternalClientRepresentation<T extends object> = TypedRepresentation
 export const declareInternalClientRepresentation = <T extends object>(
 	stateObject: T
 ): InternalClientRepresentation<T> => {
-	return stateObject as InternalClientRepresentation<T>;
+	return stateObject;
 };
 
 // prettier-ignore
@@ -60,5 +60,5 @@ export type ReadonlyClientRepresentation<T> = TypedRepresentation<
 export const declareReadonlyClientRepresentation = <T extends object>(
 	stateObject: Readonly<T>
 ): ReadonlyClientRepresentation<T> => {
-	return stateObject as ReadonlyClientRepresentation<T>;
+	return stateObject;
 };
