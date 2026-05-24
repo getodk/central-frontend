@@ -481,7 +481,7 @@ export class Scenario {
 		if (attribute == null) {
 			throw new Error(`No attribute node for reference: ${reference}/@${attributeName}`);
 		}
-		return new AttributeNodeAnswer(attribute);
+		return new AttributeNodeAnswer(attribute.currentState.value);
 	}
 
 	/**

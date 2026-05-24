@@ -12,7 +12,10 @@ import {
 } from '@getodk/common/test-utils/xform-dsl/index.ts';
 import type { ExpectStatic, JestAssertion } from 'vitest';
 import { describe, expect, it } from 'vitest';
-import { expectedArea, expectedDistance } from '../../scenario/answer/ExpectedApproximateUOMAnswer.ts';
+import {
+	expectedArea,
+	expectedDistance,
+} from '../../scenario/answer/ExpectedApproximateUOMAnswer.ts';
 import { floatAnswer } from '../../scenario/answer/ExpectedFloatAnswer.ts';
 import { stringAnswer } from '../../scenario/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../../scenario/jr/Scenario.ts';

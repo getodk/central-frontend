@@ -1,4 +1,3 @@
-import type { AttributeNode } from '../../../src/index.ts';
 import { ComparableAnswer } from './ComparableAnswer.ts';
 
 export class AttributeNodeAnswer extends ComparableAnswer {
@@ -6,9 +5,9 @@ export class AttributeNodeAnswer extends ComparableAnswer {
 	readonly stringValue: string;
 	readonly value: string;
 
-	constructor(readonly node: AttributeNode) {
+	constructor(readonly attributeValue: string) {
 		super();
-		this.stringValue = node.currentState.value;
-		this.value = node.currentState.value;
+		this.stringValue = attributeValue;
+		this.value = attributeValue;
 	}
 }

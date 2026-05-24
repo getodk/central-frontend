@@ -1,7 +1,7 @@
-# @getodk/scenario (private package)
+# Scenario testing
 
 This package implements a client of
-[`@getodk/xforms-engine`](../xforms-engine/), and a suite of tests and
+[`@getodk/xforms-engine`](../../README.md), and a suite of tests and
 benchmarks against that engine. These tests/benchmarks are either:
 
 - Directly ported from [JavaRosa](https://github.com/getodk/javarosa)
