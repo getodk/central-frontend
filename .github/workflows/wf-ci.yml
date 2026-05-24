@@ -120,73 +120,16 @@ jobs:
           fail-on-cache-miss: true
 
       - if: ${{ matrix.target == 'Node' }}
-        run: 'npm run test:types -w=packages/xforms-engine'
-
-      - if: ${{ matrix.target == 'Node' }}
-        run: 'npm run test-node:jsdom -w=packages/xforms-engine'
-
-      - if: ${{ matrix.target == 'Web' }}
-        run: 'npx playwright install ${{ matrix.browser }} --with-deps'
+        run: |
+          npm run test:types -w=packages/xforms-engine
+          npm run test-node:jsdom -w=packages/xforms-engine
+          npm run integration-test-node:jsdom -w=packages/xforms-engine
 
       - if: ${{ matrix.target == 'Web' }}
-        run: 'npm run test-browser:${{ matrix.browser }} -w=packages/xforms-engine'
-
-  scenario:
-    name: '@getodk/scenario'
-    runs-on: 'ubuntu-latest'
-
-    strategy:
-      fail-fast: false
-      matrix:
-        target: ['Node']
-        node-version: ['24.14.1']
-        include:
-          - target: 'Web'
-            node-version: '24.14.1'
-            browser: chromium
-          - target: 'Web'
-            node-version: '24.14.1'
-            browser: firefox
-          - target: 'Web'
-            node-version: '24.14.1'
-            browser: webkit
-
-    steps:
-      - uses: 'actions/checkout@v6'
-
-      - uses: 'volta-cli/action@v5'
-        with:
-          node-version: '${{ matrix.node-version }}'
-
-      - uses: 'actions/cache@v5'
-        id: cache-install
-        with:
-          path: |
-            node_modules
-            **/node_modules
-          key: install-${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
-          fail-on-cache-miss: true
-
-      - uses: 'actions/cache@v5'
-        id: cache-build
-        with:
-          path: |
-            packages/*/dist
-            packages/web-forms/dist-demo
-          key: build-${{ matrix.node-version }}-${{ github.sha }}
-          fail-on-cache-miss: true
-
-      - if: ${{ matrix.target == 'Node' }}
-        run: 'npm run test:types -w=packages/scenario'
-
-      - if: ${{ matrix.target == 'Node' }}
-        run: 'npm run test-node:jsdom -w=packages/scenario'
-
-      - if: ${{ matrix.target == 'Web' }}
-        run: 'npx playwright install ${{ matrix.browser }} --with-deps'
-
-      - if: ${{ matrix.target == 'Web' }}
-        run: 'npm run test-browser:${{ matrix.browser }} -w=packages/scenario'
+        run: |
+          npx playwright install ${{ matrix.browser }} --with-deps
+          npm run test-browser:${{ matrix.browser }} -w=packages/xforms-engine
+          npm run integration-test-browser:${{ matrix.browser }} -w=packages/xforms-engine
 
   xpath:
     name: '@getodk/xpath'
