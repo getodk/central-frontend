@@ -15,7 +15,8 @@
     "lint": "npm run lint --workspaces && npm run eslint",
     "lint:fix": "npm run lint:fix --workspaces",
     "test": "npm run test --workspaces",
-    "test:e2e": "e2e-tests/run-tests.sh"
+    "test:e2e": "e2e-tests/run-tests.sh",
+    "version": "changeset version"
   },
   "volta": {
     "node": "24.13.0"
