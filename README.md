@@ -31,7 +31,7 @@ We need your help to make ODK Central Frontend as useful as possible! Please see
 
 Follow these steps to set up your development environment:
 
-- Install Node.js 20.
+- Install Node.js 24+
 - Install dependencies by running `npm install`.
 - Install docker or NGINX.
 - Set up [ODK Central Backend](https://github.com/getodk/central-backend).
