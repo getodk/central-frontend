@@ -14,7 +14,6 @@ defaults:
 env:
   TZ: 'America/Phoenix'
   LOCALE_ID: 'en-US'
-  NODE_LTS_VERSION: '24.14.1'
 
 jobs:
 
@@ -26,16 +25,16 @@ jobs:
       fail-fast: false
       matrix:
         target: ['Node']
-        node-version: [ '${{ env.NODE_LTS_VERSION }}' ]
+        node-version: ['24.14.1']
         include:
           - target: 'Web'
-            node-version: ${{ env.NODE_LTS_VERSION }}
+            node-version: '24.14.1'
             browser: chromium
           - target: 'Web'
-            node-version: ${{ env.NODE_LTS_VERSION }}
+            node-version: '24.14.1'
             browser: firefox
           - target: 'Web'
-            node-version: ${{ env.NODE_LTS_VERSION }}
+            node-version: '24.14.1'
             browser: webkit
 
     steps:
@@ -83,16 +82,16 @@ jobs:
       fail-fast: false
       matrix:
         target: ['Node']
-        node-version: [ '${{ env.NODE_LTS_VERSION }}' ]
+        node-version: ['24.14.1']
         include:
           - target: 'Web'
-            node-version: ${{ env.NODE_LTS_VERSION }}
+            node-version: '24.14.1'
             browser: chromium
           - target: 'Web'
-            node-version: ${{ env.NODE_LTS_VERSION }}
+            node-version: '24.14.1'
             browser: firefox
           - target: 'Web'
-            node-version: ${{ env.NODE_LTS_VERSION }}
+            node-version: '24.14.1'
             browser: webkit
 
     steps:
@@ -140,16 +139,16 @@ jobs:
       fail-fast: false
       matrix:
         target: ['Node']
-        node-version: [ '${{ env.NODE_LTS_VERSION }}' ]
+        node-version: ['24.14.1']
         include:
           - target: 'Web'
-            node-version: ${{ env.NODE_LTS_VERSION }}
+            node-version: '24.14.1'
             browser: chromium
           - target: 'Web'
-            node-version: ${{ env.NODE_LTS_VERSION }}
+            node-version: '24.14.1'
             browser: firefox
           - target: 'Web'
-            node-version: ${{ env.NODE_LTS_VERSION }}
+            node-version: '24.14.1'
             browser: webkit
 
     steps:
@@ -197,16 +196,16 @@ jobs:
       fail-fast: false
       matrix:
         target: ['Node']
-        node-version: [ '${{ env.NODE_LTS_VERSION }}' ]
+        node-version: ['24.14.1']
         include:
           - target: 'Web'
-            node-version: ${{ env.NODE_LTS_VERSION }}
+            node-version: '24.14.1'
             browser: chromium
           - target: 'Web'
-            node-version: ${{ env.NODE_LTS_VERSION }}
+            node-version: '24.14.1'
             browser: firefox
           - target: 'Web'
-            node-version: ${{ env.NODE_LTS_VERSION }}
+            node-version: '24.14.1'
             browser: webkit
 
     steps:
@@ -254,16 +253,16 @@ jobs:
       fail-fast: false
       matrix:
         target: ['Node']
-        node-version: [ '${{ env.NODE_LTS_VERSION }}' ]
+        node-version: ['24.14.1']
         include:
           - target: 'Web'
-            node-version: ${{ env.NODE_LTS_VERSION }}
+            node-version: '24.14.1'
             browser: chromium
           - target: 'Web'
-            node-version: ${{ env.NODE_LTS_VERSION }}
+            node-version: '24.14.1'
             browser: firefox
           - target: 'Web'
-            node-version: ${{ env.NODE_LTS_VERSION }}
+            node-version: '24.14.1'
             browser: webkit
 
     steps:
@@ -309,7 +308,7 @@ jobs:
       - if: ${{ matrix.target == 'Web' && matrix.browser != 'webkit' }}
         run: 'npm run test-browser:${{ matrix.browser }} -w=packages/web-forms'
 
-      - if: ${{ matrix.node-version == ${{ env.NODE_LTS_VERSION }} && matrix.target == 'Node' }}
+      - if: ${{ matrix.node-version == '24.14.1' && matrix.target == 'Node' }}
         uses: actions/upload-artifact@v7
         with:
           name: dist-demo
