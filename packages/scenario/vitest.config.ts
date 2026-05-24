@@ -4,18 +4,8 @@ import { resolve } from 'path';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig(({ mode }) => {
-	let include: string[];
-	let exclude: string[];
-
-	const isBenchmark = mode === 'benchmark';
-
-	if (isBenchmark) {
-		include = ['./benchmark/**/*.bench.ts'];
-		exclude = ['./src/**/*', './test/**/*'];
-	} else {
-		include = ['./test/**/*.test.ts'];
-		exclude = ['./src/**/*', './benchmark/**/*'];
-	}
+	const include: string[] = ['./test/**/*.test.ts'];
+	const exclude: string[] = ['./src/**/*'];
 
 	const supportedBrowsers = new Set(['chromium', 'firefox', 'webkit'] as const);
 
