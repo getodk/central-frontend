@@ -25,16 +25,16 @@ jobs:
       fail-fast: false
       matrix:
         target: ['Node']
-        node-version: ['24.13.0']
+        node-version: ['24.14.1']
         include:
           - target: 'Web'
-            node-version: '24.13.0'
+            node-version: '24.14.1'
             browser: chromium
           - target: 'Web'
-            node-version: '24.13.0'
+            node-version: '24.14.1'
             browser: firefox
           - target: 'Web'
-            node-version: '24.13.0'
+            node-version: '24.14.1'
             browser: webkit
 
     steps:
@@ -82,16 +82,16 @@ jobs:
       fail-fast: false
       matrix:
         target: ['Node']
-        node-version: ['24.13.0']
+        node-version: ['24.14.1']
         include:
           - target: 'Web'
-            node-version: '24.13.0'
+            node-version: '24.14.1'
             browser: chromium
           - target: 'Web'
-            node-version: '24.13.0'
+            node-version: '24.14.1'
             browser: firefox
           - target: 'Web'
-            node-version: '24.13.0'
+            node-version: '24.14.1'
             browser: webkit
 
     steps:
@@ -139,16 +139,16 @@ jobs:
       fail-fast: false
       matrix:
         target: ['Node']
-        node-version: ['24.13.0']
+        node-version: ['24.14.1']
         include:
           - target: 'Web'
-            node-version: '24.13.0'
+            node-version: '24.14.1'
             browser: chromium
           - target: 'Web'
-            node-version: '24.13.0'
+            node-version: '24.14.1'
             browser: firefox
           - target: 'Web'
-            node-version: '24.13.0'
+            node-version: '24.14.1'
             browser: webkit
 
     steps:
@@ -196,16 +196,16 @@ jobs:
       fail-fast: false
       matrix:
         target: ['Node']
-        node-version: ['24.13.0']
+        node-version: ['24.14.1']
         include:
           - target: 'Web'
-            node-version: '24.13.0'
+            node-version: '24.14.1'
             browser: chromium
           - target: 'Web'
-            node-version: '24.13.0'
+            node-version: '24.14.1'
             browser: firefox
           - target: 'Web'
-            node-version: '24.13.0'
+            node-version: '24.14.1'
             browser: webkit
 
     steps:
@@ -253,16 +253,16 @@ jobs:
       fail-fast: false
       matrix:
         target: ['Node']
-        node-version: ['24.13.0']
+        node-version: ['24.14.1']
         include:
           - target: 'Web'
-            node-version: '24.13.0'
+            node-version: '24.14.1'
             browser: chromium
           - target: 'Web'
-            node-version: '24.13.0'
+            node-version: '24.14.1'
             browser: firefox
           - target: 'Web'
-            node-version: '24.13.0'
+            node-version: '24.14.1'
             browser: webkit
 
     steps:
@@ -308,7 +308,7 @@ jobs:
       - if: ${{ matrix.target == 'Web' && matrix.browser != 'webkit' }}
         run: 'npm run test-browser:${{ matrix.browser }} -w=packages/web-forms'
 
-      - if: ${{ matrix.node-version == '24.13.0' && matrix.target == 'Node' }}
+      - if: ${{ matrix.node-version == '24.14.1' && matrix.target == 'Node' }}
         uses: actions/upload-artifact@v7
         with:
           name: dist-demo
