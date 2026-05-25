@@ -26,7 +26,7 @@
     "./types/do-not-import.d.ts"
   ],
   "engines": {
-    "node": "^20.19.3 || ^22.12.0 || ^24.13.0",
+    "node": "^24.14.1",
     "npm": "11"
   },
   "scripts": {
