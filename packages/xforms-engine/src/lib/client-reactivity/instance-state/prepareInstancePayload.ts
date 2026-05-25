@@ -14,6 +14,21 @@ import type { DescendantNodeViolationReference } from '../../../client/validatio
 import { ErrorProductionDesignPendingError } from '../../../error/ErrorProductionDesignPendingError.ts';
 import type { InstanceAttachmentsState } from '../../../instance/attachments/InstanceAttachmentsState.ts';
 import type { ClientReactiveSerializableInstance } from '../../../instance/internal-api/serialization/ClientReactiveSerializableInstance.ts';
+import type { Root } from '../../../instance/Root.ts';
+import { encryptSubmission } from './quarantine/encryption.ts';
+
+const getAttribute = (root: Root, name: string) => {
+	const attribute = root.getAttributes().find((a) => a.definition.qualifiedName.localName === name);
+	return attribute?.definition.value;
+};
+
+const getInstanceID = (root: Root) => {
+	const meta = root.getChildren().find((c) => c.definition.qualifiedName.localName === 'meta');
+	const instanceID = meta
+		?.getChildren()
+		.find((c) => c.definition.qualifiedName.localName === 'instanceID');
+	return instanceID?.getXPathValue();
+};
 
 const collectInstanceAttachmentFiles = (attachments: InstanceAttachmentsState): readonly File[] => {
 	const files = Array.from(attachments.entries()).map(([context, attachment]) => {
@@ -37,14 +52,46 @@ class InstanceFile extends File implements ClientInstanceFile {
 	override readonly name = INSTANCE_FILE_NAME;
 	override readonly type = INSTANCE_FILE_TYPE;
 
-	constructor(instanceRoot: ClientReactiveSerializableInstance) {
-		const { instanceXML } = instanceRoot.instanceState;
-
+	constructor(instanceXML: string) {
 		super([instanceXML], INSTANCE_FILE_NAME, {
 			type: INSTANCE_FILE_TYPE,
 		});
 	}
 }
+
+export interface Submission {
+	readonly instanceXML: string;
+	readonly attachments: readonly File[];
+}
+
+const collectInstanceFiles = async (
+	instanceRoot: ClientReactiveSerializableInstance,
+	submissionMeta: SubmissionMeta
+): Promise<Submission> => {
+	const instanceXML = instanceRoot.instanceState.instanceXML;
+	const attachments = collectInstanceAttachmentFiles(instanceRoot.attachments);
+	if (submissionMeta.encryptionKey) {
+		const root = instanceRoot.root;
+		const formId = getAttribute(root, 'id');
+		const instanceId = getInstanceID(root);
+		const formVersion = getAttribute(root, 'version');
+		if (!formId) {
+			throw new Error('Encrypted submissions are required to have a form ID');
+		}
+		if (!instanceId) {
+			throw new Error('Encrypted submissions are required to have an instance ID');
+		}
+		return await encryptSubmission(
+			formId,
+			formVersion,
+			instanceId,
+			instanceXML,
+			attachments,
+			submissionMeta.encryptionKey
+		);
+	}
+	return { instanceXML, attachments };
+};
 
 type AssertFile = (value: FormDataEntryValue) => asserts value is File;
 
@@ -210,15 +257,16 @@ export interface PrepareInstancePayloadOptions<PayloadType extends InstancePaylo
 	readonly maxSize: number;
 }
 
-export const prepareInstancePayload = <PayloadType extends InstancePayloadType>(
+export const prepareInstancePayload = async <PayloadType extends InstancePayloadType>(
 	instanceRoot: ClientReactiveSerializableInstance,
 	options: PrepareInstancePayloadOptions<PayloadType>
-): InstancePayload<PayloadType> => {
+): Promise<InstancePayload<PayloadType>> => {
 	instanceRoot.root.parent.model.triggerXformsRevalidateListeners();
 	const validation = validateInstance(instanceRoot);
 	const submissionMeta = instanceRoot.definition.submission;
-	const instanceFile = new InstanceFile(instanceRoot);
-	const attachments = collectInstanceAttachmentFiles(instanceRoot.attachments);
+
+	const { instanceXML, attachments } = await collectInstanceFiles(instanceRoot, submissionMeta);
+	const instanceFile = new InstanceFile(instanceXML);
 
 	switch (options.payloadType) {
 		case 'chunked':
