@@ -14,7 +14,7 @@ import {
 import type { XFormsElement } from '@getodk/common/test-utils/xform-dsl/XFormsElement.ts';
 import type { TextRange } from '@getodk/xforms-engine';
 import { describe, expect, it } from 'vitest';
-import { Scenario } from '../src/jr/Scenario.ts';
+import { Scenario } from '../scenario/jr/Scenario.ts';
 
 describe('`<label>` with media', () => {
 	const FORMS = ['image', 'video', 'audio'] as const;
