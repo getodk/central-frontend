@@ -8,10 +8,8 @@ const projectId = process.env.PROJECT_ID;
 const projectIdEncrypted = process.env.PROJECT_ID_ENCRYPTED;
 
 teardown('delete project', async () => {
-  for (const project of [ projectId, projectIdEncrypted ]) {
-    if (!project) return;
-
-    const result = await fetch(`${appUrl}/v1/projects/${project}`, {
+  const promises = [ projectId, projectIdEncrypted ].map((project) => {
+    return fetch(`${appUrl}/v1/projects/${project}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -19,8 +17,8 @@ teardown('delete project', async () => {
       }
     })
       .then(res => res.json())
-      .then(r => r.success);
-
-    expect(result).toEqual(true);
-  }
+      .then(res => res.success);
+  });
+  const results = await Promise.all(promises);
+  results.forEach(result => expect(result).toEqual(true));
 });

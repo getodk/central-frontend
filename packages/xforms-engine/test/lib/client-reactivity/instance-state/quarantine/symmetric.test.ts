@@ -28,7 +28,7 @@ describe('symmetric encryption', () => {
 				const wordArray = arrayBufferToWordArray(data);
 
 				expect(wordArray.words.length).toBe(1);
-				const unsignedWord = wordArray.words[0]! >>> 0;
+				const unsignedWord = wordArray.words[0]! >>> 0; // shift to convert to unsigned int
 				expect(unsignedWord).toBe(0xaabbcc00);
 				expect(wordArray.sigBytes).toBe(3);
 			});
@@ -66,7 +66,7 @@ describe('symmetric encryption', () => {
 			});
 
 			it('should handle high-bit (negative) signed integers correctly', () => {
-				const words = [0xaabbccdd >>> 0];
+				const words = [0xaabbccdd];
 				const wordArray = CryptoJS.lib.WordArray.create(words, 4);
 				const result = wordArrayToArrayBuffer(wordArray);
 				expect(Array.from(result)).toEqual([0xaa, 0xbb, 0xcc, 0xdd]);
