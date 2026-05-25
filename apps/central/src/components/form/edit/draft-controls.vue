@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <form-edit-section id="form-edit-draft-controls" icon="pencil">
+  <form-edit-section id="form-edit-draft-controls">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <button id="form-edit-abandon-button" type="button" class="btn btn-danger-outlined"

@@ -188,7 +188,6 @@ describe('`extract-signed`', () => {
 
 		type AsymmetricCipherKeyPair = org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 		type AsymmetricKeyParameter = org.bouncycastle.crypto.params.AsymmetricKeyParameter;
-		type Ed25519PublicKeyParameters = org.bouncycastle.crypto.params.Ed25519PublicKeyParameters;
 
 		const { Ed25519KeyPairGenerator } = org.bouncycastle.crypto.generators;
 		const { Ed25519KeyGenerationParameters } = org.bouncycastle.crypto.params;
@@ -278,9 +277,7 @@ describe('`extract-signed`', () => {
 				const keyPair = createKeyPair();
 
 				const signedMessage = signMessage(message, keyPair.getPrivate());
-				const encodedPublicKey = Encoding.BASE64.encode(
-					(keyPair.getPublic() as Ed25519PublicKeyParameters).getEncoded()
-				);
+				const encodedPublicKey = Encoding.BASE64.encode(keyPair.getPublic().getEncoded());
 				const encodedContents = Encoding.BASE64.encode(signedMessage);
 
 				const scenario = await createScenario(encodedContents, encodedPublicKey);

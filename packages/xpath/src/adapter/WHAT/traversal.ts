@@ -107,7 +107,7 @@ export const getNextSiblingWHATElement = (node: WHATNode): WHATElement | null =>
 };
 
 export const isDescendantWHATNode = (ancestor: WHATNode, other: WHATNode) => {
-	return ancestor.contains(other satisfies WHATNode as Node);
+	return ancestor.contains(other);
 };
 
 type WHATDocumentPositionComparableNode = Exclude<WHATNode, Attr>;

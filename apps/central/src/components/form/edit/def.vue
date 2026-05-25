@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <form-edit-section id="form-edit-def" icon="code">
+  <form-edit-section id="form-edit-def">
     <template #title>{{ $t('title') }}</template>
     <template #subtitle>{{ $t('subtitle') }}</template>
     <template v-if="changed" #tag>{{ $t('changed') }}</template>
@@ -38,9 +38,6 @@ except according to the terms contained in the LICENSE file.
             <span class="icon-upload"></span>{{ $t('action.upload') }}
           </button>
         </div>
-      </div>
-      <div id="form-edit-def-within">
-        <span class="icon-file-code-o"></span>{{ $t('withinDef') }}
       </div>
       <form-edit-attachments/>
       <form-edit-entities/>
@@ -97,6 +94,7 @@ const afterUpload = () => {
   display: flex;
   align-items: center;
   column-gap: 15px;
+  margin-bottom: 10px;
 
   background-color: $background-color-feed-entry;
   border: 2px solid $color-subpanel-border;
@@ -115,26 +113,6 @@ const afterUpload = () => {
   }
 
   .form-version-def-dropdown, #form-edit-upload-button { margin-left: 5px; }
-}
-
-#form-edit-def-within {
-  color: #888;
-  font-size: 12px;
-  margin-block: 5px 6px;
-
-  .icon-file-code-o {
-    color: #777;
-    margin-inline: 32px 5px;
-  }
-
-  &::after {
-    border-left: 2px dotted #999;
-    content: '';
-    display: block;
-    height: 18px;
-    margin-left: 36px;
-    margin-top: 3px;
-  }
 }
 </style>
 
@@ -156,10 +134,7 @@ const afterUpload = () => {
     "versionName": "Version name: {name}",
     "action": {
       "upload": "Upload new Form Definition"
-    },
-    // This text is shown above a list of items that are part of the Form
-    // Definition.
-    "withinDef": "Within this Form Definition:"
+    }
   }
 }
 </i18n>
