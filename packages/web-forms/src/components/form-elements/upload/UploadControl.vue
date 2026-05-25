@@ -331,8 +331,7 @@ onUnmounted(() => {
 </template>
 
 <style scoped lang="scss">
-@use 'primeflex/core/_variables.scss' as pf;
-@use '../../../assets/styles/style' as odk;
+@use '../../../assets/styles/breakpoints' as odk;
 
 .p-panel {
 	background: var(--odk-base-background-color);

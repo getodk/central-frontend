@@ -194,7 +194,7 @@ onBeforeUnmount(() => {
 
 <style scoped lang="scss">
 @use '../../../assets/styles/panel-controls' as pc;
-@use '../../../assets/styles/style' as odk;
+@use '../../../assets/styles/breakpoints' as odk;
 
 .control-bar {
 	button {

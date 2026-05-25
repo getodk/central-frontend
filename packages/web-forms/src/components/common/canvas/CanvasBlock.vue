@@ -319,7 +319,7 @@ onUnmounted(() => {
 </template>
 
 <style scoped lang="scss">
-@use '../../../assets/styles/style' as odk;
+@use '../../../assets/styles/breakpoints' as odk;
 
 .canvas-block {
 	position: relative;

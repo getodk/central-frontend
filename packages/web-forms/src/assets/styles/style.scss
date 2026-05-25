@@ -5,6 +5,7 @@
 
 @use 'primeflex/primeflex.scss' as pf;
 @use 'sass:map';
+@forward 'breakpoints';
 
 /**
  * ODK CSS Variables
@@ -120,12 +121,6 @@
 		.mobile-only {
 			display: #{$display} !important;
 		}
-	}
-}
-
-@mixin sm-constrained {
-	@media (width <= #{pf.$sm}) and (orientation: portrait), (height <= #{pf.$sm}) and (orientation: landscape) {
-		@content;
 	}
 }
 

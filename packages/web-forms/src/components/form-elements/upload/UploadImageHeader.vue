@@ -128,7 +128,7 @@ const canvasButtonLabel = computed(() => {
 </template>
 
 <style scoped lang="scss">
-@use '../../../assets/styles/style' as odk;
+@use '../../../assets/styles/breakpoints' as odk;
 
 .canvas-mobile-button {
 	display: none;
