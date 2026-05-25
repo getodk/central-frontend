@@ -32,7 +32,9 @@ const TEST_ENVIRONMENT = BROWSER_ENABLED ? 'node' : 'jsdom';
 export default defineConfig(({ mode }) => {
 	const { VITE_BUILD_TARGET } = process.env;
 	const IS_SOLID_BUILD_TARGET = VITE_BUILD_TARGET === 'solid';
-	const isTest = mode === 'test';
+	const IS_INTEGRATION_TEST = mode === 'integration';
+	const IS_TEST = mode === 'test' || IS_INTEGRATION_TEST;
+
 	const entry = './src/index.ts';
 	const entryKey = IS_SOLID_BUILD_TARGET ? 'solid' : 'index';
 	const libEntry = {
@@ -106,7 +108,7 @@ export default defineConfig(({ mode }) => {
 
 			// prettier-ignore
 			conditions:
-				isTest
+				IS_TEST
 					// Without this, anything using Solid reactivity fails inexplicably...
 					? ['solid', 'development', 'browser']
 					: ['solid', 'import', 'browser'],
@@ -123,9 +125,10 @@ export default defineConfig(({ mode }) => {
 
 			environment: TEST_ENVIRONMENT,
 			globals: false,
-			include: ['src/**/*.test.ts', 'test/**/*.test.ts'],
-			exclude: ['src/**/*.tsx', 'test/**/*.tsx'],
+			include: IS_INTEGRATION_TEST ? ['test/integration/**/*.test.ts'] : ['test/**/*.test.ts'],
+			exclude: IS_INTEGRATION_TEST ? [] : ['test/integration/**/*.test.ts'],
 			reporters: process.env.GITHUB_ACTIONS ? ['default', 'github-actions'] : 'default',
+			setupFiles: IS_INTEGRATION_TEST ? ['./test/scenario/vitest/setup.ts'] : [],
 
 			server: {
 				deps: {
