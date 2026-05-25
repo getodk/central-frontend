@@ -170,14 +170,8 @@ export class PrimaryInstance<
 	override readonly contextNode = this;
 
 	constructor(options: PrimaryInstanceOptions<Mode>) {
-		const {
-		  mode,
-		  initialState,
-		  scope, model,
-		  secondaryInstances,
-		  fetchFormAttachment,
-		  config
-		} = options;
+		const { mode, initialState, scope, model, secondaryInstances, fetchFormAttachment, config } =
+			options;
 		const { instance: modelInstance } = model;
 		const activeInstance = initialState?.document ?? modelInstance;
 		const definition = model.getRootDefinition(activeInstance);
