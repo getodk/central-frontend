@@ -11,7 +11,7 @@ const featureMatrix = JSON.parse(
 	await fs.readFile(new URL('./feature-matrix.json', rootUrl), 'utf-8')
 );
 const template = await fs.readFile(
-	new URL('scripts/feature-matrix/template.mustache', rootUrl),
+	new URL('bin/feature-matrix/template.mustache', rootUrl),
 	'utf-8'
 );
 const readmeFile = await fs.readFile(new URL('./README.md', rootUrl), 'utf-8');
