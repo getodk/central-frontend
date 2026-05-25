@@ -16,5 +16,4 @@ const login = async (page) => {
   await page.waitForURL(appUrl);
 };
 
-// eslint-disable-next-line import/prefer-default-export
 export { login };

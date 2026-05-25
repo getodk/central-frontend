@@ -7,6 +7,7 @@ import { login } from '../util';
 
 const appUrl = process.env.ODK_URL;
 const projectId = process.env.PROJECT_ID;
+const __dirname = import.meta.dirname;
 
 let publishedForm;
 
