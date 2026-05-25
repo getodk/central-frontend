@@ -120,7 +120,6 @@ export default class BackendClient {
 
   createFormAndChildren = async () => {
     const form = await this.createForm();
-    await this.setWebForms(form.xmlFormId, true); // this shouldn't be necessary - remove before pushing
     const submission = await this.createSubmission(form.xmlFormId);
     await this.editSubmission(form.xmlFormId, submission.instanceId);
     const formDraft = await this.createDraftVersion(form.xmlFormId);
