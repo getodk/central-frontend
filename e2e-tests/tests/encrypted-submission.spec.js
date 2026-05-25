@@ -46,7 +46,7 @@ const checkResponse = async (response, column, values) => {
 };
 
 test.describe('ODK Web Forms Encrypted', () => {
-  test.only('allows multiple submission', async ({ page }) => {
+  test('allows multiple submission', async ({ page }) => {
     await login(page);
 
     await page.goto(`${appUrl}/projects/${projectId}/forms/${publishedForm.xmlFormId}/submissions/new`);
