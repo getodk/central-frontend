@@ -10,8 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <form-edit-section id="form-edit-published-version" icon="star"
-    :dotted="formDraft.isDefined()">
+  <form-edit-section id="form-edit-published-version">
     <template #title>{{ $t('title') }}</template>
     <template #subtitle>
       <i18n-t keypath="subtitle.published">
@@ -44,7 +43,7 @@ defineOptions({
 
 // The component assumes that this data will exist when the component is
 // created.
-const { form, formDraft } = useRequestData();
+const { form } = useRequestData();
 </script>
 
 <style lang="scss">

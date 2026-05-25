@@ -1,9 +1,7 @@
 #!/usr/bin/env node
 
-/* eslint-disable array-bracket-spacing, indent, key-spacing, no-confusing-arrow, no-else-return, no-multi-spaces, no-plusplus, no-use-before-define, prefer-template, semi-style */
-
-const { execSync } = require('node:child_process');
-const { basename, extname } = require('node:path');
+import { execSync } from 'node:child_process';
+import { basename, extname } from 'node:path';
 
 const log = (...args) => console.log('[check-bundle-size]', ...args);
 
@@ -56,15 +54,16 @@ log('File sizes look OK.');
 function isTooBig({ path, size }) {
   // Special cases:
   const simpleName = basename(path).replace(/(-[\w-]{8})+\./, '.');
-  switch (simpleName) { // eslint-disable-line default-case
+  switch (simpleName) {
     case 'index.js':             return size >   2_300_000;
     case 'web-form.js': return size > 2_000_000;
     case 'MapBlock.js': return size > 600_000; // A Web Forms' feature bundle
     case 'geojson-map.js':       return size >   500_000;
+    default: // do nothing
   }
 
   const type = extname(path).substr(1);
-  switch (type) { // eslint-disable-line default-case
+  switch (type) {
     case 'css':         return size > 220_000;
     case 'html':        return size >   2_500;
     case 'ico':         return size >  16_000;
@@ -74,6 +73,7 @@ function isTooBig({ path, size }) {
     case 'ttf':         return size >  18_000;
     case 'webmanifest': return size >     500;
     case 'woff':        return size >  19_000;
+    default: // do nothing
   }
   throw new Error(`No check written for file ${path} yet!  Please review this function.`);
 }

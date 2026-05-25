@@ -180,7 +180,7 @@ export const createFeatureCollectionAndProps = (
 export const getGeometryFromJSON = (json: string): Geometry | undefined => {
 	try {
 		const geojson = JSON.parse(json) as FeatureCollection<LineString | Point | Polygon>;
-		return geojson?.features?.[0]?.geometry as Geometry | undefined;
+		return geojson?.features?.[0]?.geometry;
 	} catch {
 		// eslint-disable-next-line no-console -- Skip silently to match createFeatureCollectionAndProps
 		console.warn('Invalid GeoJSON', json);

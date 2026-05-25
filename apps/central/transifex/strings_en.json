@@ -3324,6 +3324,17 @@
         "409_6": {
           "string": "The version name of this Draft conflicts with a past version of this Form or a deleted Form. Please use the field below to change it to something new or upload a new Form definition."
         }
+      },
+      "field": {
+        "note": {
+          "string": "Notes",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "placeholder": {
+        "note": {
+          "string": "Add optional publishing notes…"
+        }
       }
     },
     "FormDraftQrPanel": {
@@ -3463,10 +3474,6 @@
           "string": "Upload new Form Definition",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
-      },
-      "withinDef": {
-        "string": "Within this Form Definition:",
-        "developer_comment": "This text is shown above a list of items that are part of the Form Definition."
       }
     },
     "FormEditDraftControls": {
@@ -3910,6 +3917,10 @@
       "current": {
         "string": "Current Published Version",
         "developer_comment": "This is a label shown for the current version of a Form."
+      },
+      "notes": {
+        "string": "Notes: {notes}",
+        "developer_comment": "This is the label shown before the notes entered when a Form version was published. {notes} is the actual notes text."
       }
     },
     "FormVersionString": {

@@ -122,7 +122,7 @@ export class ExternalSecondaryInstanceResource<
 
 		return new this(response.status ?? null, instanceId, resourceURL, metadata, data, {
 			isExplicitlyBlank: false,
-		}) satisfies ExternalSecondaryInstanceResource as LoadedExternalSecondaryInstanceResource;
+		});
 	}
 
 	readonly isBlank: boolean;

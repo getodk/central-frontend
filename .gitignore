@@ -11,8 +11,11 @@
 .DS_Store
 node_modules
 npm-debug.log*
-/dist
+**/dist
+packages/web-forms/dist-demo
 *.local
+.turbo
+*.tsbuildinfo
 
 # Editor directories and files
 .idea
@@ -26,7 +29,7 @@ npm-debug.log*
 /.nginx/*
 !/.nginx/.gitkeep
 
-/.eslintcache
+.eslintcache
 public/index.html
 test-results
 playwright-report

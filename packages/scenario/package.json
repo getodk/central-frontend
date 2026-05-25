@@ -35,6 +35,10 @@
     "benchmark-browser:chromium": "BROWSER_NAME=chromium vitest bench --run",
     "benchmark-browser:firefox": "BROWSER_NAME=firefox vitest bench --run",
     "benchmark-browser:webkit": "BROWSER_NAME=webkit vitest bench --run",
+    "format:fix": "prettier -w \"**/*\" --ignore-unknown --cache",
+    "format:lint": "prettier -c \"**/*\" --ignore-unknown",
+    "lint": "eslint . --report-unused-disable-directives --cache --max-warnings 0 && npm run format:lint",
+    "lint:fix": "eslint . --fix --report-unused-disable-directives --cache --max-warnings 0 && npm run format:fix",
     "test": "npm-run-all -nl 'test-node:*' 'test-browser:*' 'test:*'",
     "test-node:jsdom": "vitest run",
     "test-browser:chromium": "BROWSER_NAME=chromium vitest run",
@@ -50,10 +54,7 @@
     "@getodk/xforms-engine": "0.22.0",
     "@js-joda/core": "^5.6.5",
     "jsdom": "^27.2.0",
-    "npm-run-all2": "^8.0.4",
-    "solid-js": "^1.9.11",
-    "vite": "^7.3.1",
-    "vitest": "^4.0.18"
+    "solid-js": "^1.9.11"
   },
   "dependencies": {
     "temporal-polyfill": "^0.3.0"

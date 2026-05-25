@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <form-edit-section id="form-edit-entities" icon="database">
+  <form-edit-section id="form-edit-entities">
     <template #title>{{ $t('resource.entities') }}</template>
     <template #body>
       <template v-if="formDraft.entityRelated">
