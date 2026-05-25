@@ -58,7 +58,7 @@ const updateVertex = () => {
 		Number(latitude.value),
 		Number(altitude.value),
 		Number(accuracy.value)
-	) as Coordinate;
+	);
 
 	if (newVertex.length) {
 		emit('save', fromLonLat(newVertex));

@@ -9,6 +9,7 @@ const user = process.env.ODK_USER;
 const password = process.env.ODK_PASSWORD;
 const credentials = Buffer.from(`${user}:${password}`, 'utf-8').toString('base64');
 const projectId = process.env.PROJECT_ID;
+const __dirname = import.meta.dirname;
 
 export default class BackendClient {
   #request;

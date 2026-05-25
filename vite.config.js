@@ -10,7 +10,6 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 
-// eslint-disable-next-line import/no-unresolved
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
 import vue from '@vitejs/plugin-vue';
 import { defineConfig } from 'vite';
@@ -20,7 +19,7 @@ import { readFileSync } from 'fs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const webFormsPackage = JSON.parse(
-  readFileSync(resolve(__dirname, 'node_modules/@getodk/web-forms/package.json'), 'utf-8')
+  readFileSync(resolve(__dirname, 'packages/web-forms/package.json'), 'utf-8')
 );
 
 // The default is es2020, but we need es2022 or later because Web Forms uses

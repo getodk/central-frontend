@@ -54,6 +54,8 @@ class SyntaxTree implements TreeSitterTree {
 		const { language, rootNode } = tsTree;
 
 		this.language = new SyntaxLanguage(language);
+
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
 		this.rootNode = new SyntaxNode(rootNode as UnknownSyntaxNode) as XPathNode;
 	}
 }

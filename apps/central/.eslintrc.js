@@ -54,6 +54,7 @@ module.exports = {
       asyncArrow: 'always'
     }],
     'spaced-comment': 'off',
+    'vue/attribute-hyphenation': 'off',
     'vue/attributes-order': ['error', {
       order: [
         'LIST_RENDERING',
@@ -94,6 +95,7 @@ module.exports = {
     'vue/no-template-target-blank': 'off',
     'vue/object-curly-newline': 'off',
     'vue/require-default-prop': 'off',
+    'vue/require-prop-types': 'off',
     'vue/singleline-html-element-content-newline': 'off',
     'vuejs-accessibility/label-has-for': ['error', {
       controlComponents: ['flatpickr'],

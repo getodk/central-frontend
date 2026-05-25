@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <form-edit-section icon="pencil">
+  <form-edit-section>
     <template #title>{{ $t('title') }}</template>
     <template #subtitle>{{ $t('subtitle') }}</template>
     <template #body>

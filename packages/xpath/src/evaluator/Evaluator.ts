@@ -190,7 +190,7 @@ export class Evaluator<T extends XPathNode> {
 			throw new Error(`Failed to evaluate node for expression ${expression}`);
 		}
 
-		return node as EvaluatedNode<T, U, AssertExists>;
+		return node;
 	}
 
 	evaluateElement<
