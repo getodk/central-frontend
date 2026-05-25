@@ -84,9 +84,9 @@ const hostSubmissionResultCallbackFactory = (
 			trackDevice: props.trackDevice,
 		};
 		state.value = updateSubmittedFormState(submissionResult, currentState, options);
-    if (submissionResult?.next === POST_SUBMIT__NEW_INSTANCE) {
-      document.scrollingElement?.scrollTo(0, 0);
-    }
+		if (submissionResult?.next === POST_SUBMIT__NEW_INSTANCE) {
+			document.scrollingElement?.scrollTo(0, 0);
+		}
 	};
 
 	return (hostResult) => {
