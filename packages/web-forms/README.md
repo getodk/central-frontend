@@ -60,7 +60,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-  ##### Appearances<br/>🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜⬜ 47\%
+  ##### Appearances<br/>🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜ 54\%
 
   </summary>
   <br/>
@@ -79,9 +79,9 @@ This section is auto generated. Please update `feature-matrix.json` and then run
 | [rating](https://github.com/getodk/web-forms/issues/711)        |    ✅    |
 | new                                                             |          |
 | new-front                                                       |          |
-| draw                                                            |          |
-| [annotate](https://github.com/getodk/web-forms/issues/15)       |          |
-| signature                                                       |          |
+| [draw](https://github.com/getodk/web-forms/issues/698)          |    ✅    |
+| [annotate](https://github.com/getodk/web-forms/issues/15)       |    ✅    |
+| [signature](https://github.com/getodk/web-forms/issues/699)     |    ✅    |
 | [no-calendar](https://github.com/getodk/web-forms/issues/781)   |          |
 | [month-year](https://github.com/getodk/web-forms/issues/782)    |    ✅    |
 | [year](https://github.com/getodk/web-forms/issues/782)          |    ✅    |
