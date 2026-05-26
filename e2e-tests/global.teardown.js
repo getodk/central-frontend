@@ -19,6 +19,6 @@ teardown('delete project', async () => {
       .then(res => res.json())
       .then(res => res.success);
   });
-  const results = await Promise.all(promises);
+  const results = await Promise.allSettled(promises);
   results.forEach(result => expect(result).toEqual(true));
 });

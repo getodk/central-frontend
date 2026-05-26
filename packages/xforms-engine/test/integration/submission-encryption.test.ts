@@ -49,7 +49,7 @@ describe('Form submission encryption', () => {
 		return scenario;
 	};
 
-	it('includes a form-specified `base64RsaPublicKey` as encryptionKey', async () => {
+	it('generates an encrypted submission with a submission metadata file and an encoded attachment', async () => {
 		const base64RsaPublicKey =
 			'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwkP+HQEqkyb4HPLOekvn6imYW6Ze2dF2sLCspnzimOnbiF7C1mcd01xiau+9WgU23kM35URhBQVbDHtbQMgZL/Ol+xdA0zdbcUW00Z7EkYmM4sGu4wwJA2eQ6yhBbY2np+kDTvmVHlhP8DDYsXJKqtm+8bXlI36qjVgkVPXjT9YNAA4vRxPReP5wuXHrMGjclPyU6SlFZZm8QLknYV9cmGh1CquKxK7/hIoGIZ3j+edh2GZg8XJo3ZkgAwOwNUqF9b4kXw+tnbpqLXfcETX3fp6iXqLqNMt3E1MXXMnePfDqsa9wrcykUMKfxLXF/EyhIZ+2+iBoyRKeIkExwJRMdQIDAQAB';
 		const scenario = await buildSubmissionPayloadScenario({

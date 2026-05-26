@@ -1,4 +1,5 @@
 import { test as setup, expect } from '@playwright/test';
+import { ENCRYPTION_SECRET } from './util';
 
 const appUrl = process.env.ODK_URL;
 const user = process.env.ODK_USER;
@@ -40,7 +41,7 @@ const createProject = async(request, encrypted) => {
           Authorization: `Basic ${credentials}`
         },
         data: {
-          passphrase: "encryptionsecret",
+          passphrase: ENCRYPTION_SECRET,
           hint: "it was a secret"
         }
       });
