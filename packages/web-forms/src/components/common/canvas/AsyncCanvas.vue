@@ -40,6 +40,7 @@ const load = async () => {
 			'canvas-blank': !modeConfig.hasBackgroundImage,
 		}"
 	>
+		<div v-if="isDisabled" class="canvas-disabled-overlay" />
 		<component
 			:is="canvasComponent"
 			v-model:is-full-screen="isFullScreen"
@@ -53,5 +54,13 @@ const load = async () => {
 <style scoped lang="scss">
 .canvas-blank {
   overflow: hidden;
+}
+
+.canvas-disabled-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(from var(--odk-muted-background-color) r g b / 0.7);
+  z-index: var(--odk-z-index-top-overlay);
+  pointer-events: none;
 }
 </style>

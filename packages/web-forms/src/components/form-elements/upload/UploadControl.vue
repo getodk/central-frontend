@@ -337,6 +337,7 @@ onUnmounted(() => {
 	background: var(--odk-base-background-color);
 	box-shadow: none;
 	border: 1px solid var(--odk-border-color);
+  overflow: hidden;
 
 	:deep(.p-panel-header) {
 		border-radius: var(--odk-radius) var(--odk-radius) 0 0;
