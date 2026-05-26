@@ -48,7 +48,7 @@ const collectInstanceAttachmentFiles = (attachments: InstanceAttachmentsState): 
 	return files.filter((file) => file != null);
 };
 
-class InstanceFile extends File implements ClientInstanceFile {
+export class InstanceFile extends File implements ClientInstanceFile {
 	override readonly name = INSTANCE_FILE_NAME;
 	override readonly type = INSTANCE_FILE_TYPE;
 
@@ -60,11 +60,11 @@ class InstanceFile extends File implements ClientInstanceFile {
 }
 
 export interface Submission {
-	readonly instanceXML: string;
+	readonly instanceFile: InstanceFile;
 	readonly attachments: readonly File[];
 }
 
-const collectInstanceFiles = async (
+const createSubmission = async (
 	instanceRoot: ClientReactiveSerializableInstance,
 	submissionMeta: SubmissionMeta
 ): Promise<Submission> => {
@@ -90,7 +90,8 @@ const collectInstanceFiles = async (
 			submissionMeta.encryptionKey
 		);
 	}
-	return { instanceXML, attachments };
+	const instanceFile = new InstanceFile(instanceXML);
+	return { instanceFile, attachments };
 };
 
 type AssertFile = (value: FormDataEntryValue) => asserts value is File;
@@ -265,8 +266,7 @@ export const prepareInstancePayload = async <PayloadType extends InstancePayload
 	const validation = validateInstance(instanceRoot);
 	const submissionMeta = instanceRoot.definition.submission;
 
-	const { instanceXML, attachments } = await collectInstanceFiles(instanceRoot, submissionMeta);
-	const instanceFile = new InstanceFile(instanceXML);
+	const { instanceFile, attachments } = await createSubmission(instanceRoot, submissionMeta);
 
 	switch (options.payloadType) {
 		case 'chunked':

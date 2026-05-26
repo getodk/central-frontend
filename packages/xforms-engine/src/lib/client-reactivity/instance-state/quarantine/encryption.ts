@@ -5,7 +5,7 @@
  */
 
 import { EncryptedSubmissionManifestDefinition } from '../../../../parse/model/EncryptedSubmissionManifestDefinition';
-import { type Submission } from '../prepareInstancePayload';
+import { InstanceFile, type Submission } from '../prepareInstancePayload';
 import { getEncryptedSymmetricKey } from './asymmetric';
 import { encryptAttachments } from './symmetric';
 
@@ -44,8 +44,7 @@ export const encryptSubmission = async (
 		attachments
 	);
 
-	return {
-		instanceXML: manifest.serialize(),
-		attachments: encryptedAttachments,
-	};
+	const instanceFile = new InstanceFile(manifest.serialize());
+
+	return { instanceFile, attachments: encryptedAttachments };
 };
