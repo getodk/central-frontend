@@ -34,6 +34,7 @@
     "build:translations": "node bin/merge-translations.js",
     "dev": "vite",
     "dist-demo": "npm run build && vite serve dist-demo --port 5174",
+    "feature-matrix": "node bin/feature-matrix/render.js",
     "format:fix": "npm-run-all --print-name format:vue format:prettier",
     "format:lint": "prettier -c \"**/*\" --ignore-unknown",
     "format:prettier": "prettier -w \"**/*\" --ignore-unknown --cache",

@@ -19,3 +19,4 @@ https://github.com/getodk/central-frontend/blob/master/apps/central/docs/CONTRIB
 
 - [ ] run `npm run test` and `npm run lint` and confirmed all checks still pass OR confirm CircleCI build passes
 - [ ] verified that any code or assets from external sources are properly credited in comments or that everything is internally sourced
+- [ ] run `npm run changeset` to generate a changeset file for changes that should be included in the release notes
