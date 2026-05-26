@@ -22,11 +22,7 @@ export const inputAppearanceParser = new TokenListParser([
 	'placement-map',
 	'maps',
 
-	// image/media (TODO: move to eventual `<upload>`?)
 	'hidden-answer',
-	'annotate',
-	'draw',
-	'signature',
 	'new-front',
 	'new',
 	'front',
