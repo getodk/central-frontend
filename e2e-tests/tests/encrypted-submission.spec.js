@@ -28,7 +28,7 @@ const assertCsvResponse = async (response, column, expected) => {
   const rows = text.split('\n');
   rows.shift(); // remove the header row
   const actual = rows.map(r => r.split(',')[column]);
-  expect(actual).to.deep.equal(expected);
+  expect(actual).toEqual(expected);
 };
 
 test.describe('ODK Web Forms Encrypted', () => {
