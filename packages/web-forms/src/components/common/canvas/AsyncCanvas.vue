@@ -32,7 +32,14 @@ const load = async () => {
 </script>
 
 <template>
-	<AsyncLoader :load="load" :error-message="t('canvas_async.load_error.message')" :class="{ 'canvas-compact': modeConfig.isCompact }">
+	<AsyncLoader
+		:load="load"
+		:error-message="t('canvas_async.load_error.message')"
+		:class="{
+			'canvas-compact': modeConfig.isCompact,
+			'canvas-blank': !modeConfig.hasBackgroundImage,
+		}"
+	>
 		<component
 			:is="canvasComponent"
 			v-model:is-full-screen="isFullScreen"
@@ -43,3 +50,8 @@ const load = async () => {
 		/>
 	</AsyncLoader>
 </template>
+<style scoped lang="scss">
+.canvas-blank {
+  overflow: hidden;
+}
+</style>

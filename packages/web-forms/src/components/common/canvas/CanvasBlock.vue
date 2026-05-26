@@ -242,7 +242,11 @@ onUnmounted(() => {
 	<!-- eslint-disable vue/no-undef-components -- vue-konva registers v-stage and other components on lazy loading -->
 	<div
 		class="canvas-block"
-		:class="{ 'canvas-full-screen': isFullScreen, 'canvas-compact': modeConfig.isCompact }"
+		:class="{
+			'canvas-full-screen': isFullScreen,
+			'canvas-compact': modeConfig.isCompact,
+			'canvas-blank': !modeConfig.hasBackgroundImage,
+		}"
 	>
 		<CanvasControls
 			v-if="!isDisabled"
@@ -357,6 +361,10 @@ onUnmounted(() => {
 		cursor: default;
 		pointer-events: none;
 	}
+}
+
+.canvas-blank :deep(.konvajs-content) {
+	overflow: hidden;
 }
 
 .canvas-snackbar {
