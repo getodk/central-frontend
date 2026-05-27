@@ -30,23 +30,21 @@ describe('Form submission encryption', () => {
 	const buildSubmissionPayloadScenario = async (
 		options?: BuildSubmissionPayloadScenario
 	): Promise<Scenario> => {
-		const scenario = await Scenario.init(
-			'Encrypted',
+		return await Scenario.init(
+			'My secret form',
 			html(
 				head(
-					title('Encrypted'),
+					title('My secret form'),
 					model(
-						mainInstance(t('data id="encrypted"', t('inp', 'test'), t('meta', t('instanceID')))),
+						mainInstance(t('data id="my-secret-form"', t('inp', 'test'), t('meta', t('instanceID')))),
 						...(options?.submissionElements ?? []),
 						bind('/data/inp').required(),
 						bind('/data/meta/instanceID').calculate(`'${DEFAULT_INSTANCE_ID}'`)
 					)
 				),
-				body(input('/data/rep/inp', label('inp')))
+				body(input('/data/inp', label('inp')))
 			)
 		);
-
-		return scenario;
 	};
 
 	it('generates an encrypted submission with a submission metadata file and an encoded attachment', async () => {
@@ -55,6 +53,8 @@ describe('Form submission encryption', () => {
 		const scenario = await buildSubmissionPayloadScenario({
 			submissionElements: [t(`submission base64RsaPublicKey="${base64RsaPublicKey}"`)],
 		});
+		const userEnteredValue = 'secret value';
+		scenario.answer('/data/inp', userEnteredValue)
 		const submissionResult = await scenario.prepareWebFormsInstancePayload();
 
 		expect(submissionResult.submissionMeta).toMatchObject({
@@ -68,14 +68,18 @@ describe('Form submission encryption', () => {
 		expect(submissionFilename).to.equal('xml_submission_file');
 		const submission = await getBlobText(file);
 		expect(submission).to.contain(
-			'<data xmlns="http://www.opendatakit.org/xforms/encrypted" encrypted="yes" id="encrypted">'
+			'<data xmlns="http://www.opendatakit.org/xforms/encrypted" encrypted="yes" id="my-secret-form">'
 		);
+		expect(submission).to.match(/<base64EncryptedKey>.*<\/base64EncryptedKey>/);
 		expect(submission).to.contain('<encryptedXmlFile>submission.xml.enc</encryptedXmlFile>');
 		expect(submission).to.contain(
 			'<meta xmlns="http://openrosa.org/xforms"><instanceID>uuid:TODO-mock-xpath-functions</instanceID></meta>'
 		);
 
-		const [encodedFilename] = entries.next().value!;
+		const [encodedFilename, attachedFile] = entries.next().value!;
 		expect(encodedFilename).to.equal('submission.xml.enc');
+		const attached = await getBlobText(attachedFile);
+		expect(attached.length).to.be.greaterThan(userEnteredValue.length);
+		expect(attached).to.not.contain(userEnteredValue);
 	});
 });
