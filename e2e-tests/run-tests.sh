@@ -9,7 +9,7 @@ log() {
 # default values
 ODK_DOMAIN="central-dev.localhost"
 ODK_PORT="8989"
-ODK_PROTOCOL="http://"
+ODK_PROTOCOL="https://"
 ODK_USER="alice@example.com"
 ODK_PASSWORD="Testpassword@12345"
 SKIP_INSTALL=false
