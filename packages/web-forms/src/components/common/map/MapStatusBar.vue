@@ -66,7 +66,7 @@ const selectedVertexInfo = computed(() => {
 		parts.push(t('map_status_bar.vertex_altitude.label', { altitude }));
 	}
 
-	if (accuracy != null) {
+	if (accuracy) {
 		parts.push(t('map_status_bar.vertex_accuracy.label', { accuracy: truncateDecimals(accuracy, { decimals: 3 }) }));
 	}
 

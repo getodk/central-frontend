@@ -25,26 +25,30 @@ class Accuracy<Value extends number | null = number> extends SemanticValue<'accu
 export interface LocationPoint {
 	readonly latitude: number;
 	readonly longitude: number;
-	readonly altitude: number | null;
-	readonly accuracy: number | null;
+	readonly altitude: number;
+	readonly accuracy: number;
+}
+
+export interface LocationPointInput {
+	readonly latitude: number;
+	readonly longitude: number;
+	readonly altitude?: number | null;
+	readonly accuracy?: number | null;
 }
 
 interface GeolocationInternalValue {
 	readonly latitude: Latitude;
 	readonly longitude: Longitude;
-	readonly altitude: Altitude<null> | Altitude<number>;
-	readonly accuracy: Accuracy<null> | Accuracy<number>;
+	readonly altitude: Altitude;
+	readonly accuracy: Accuracy;
 }
 
-type LocationPointTuple =
-	| readonly [
-			latitude: Latitude,
-			longitude: Longitude,
-			altitude: Altitude<null> | Altitude<number>,
-			accuracy: Accuracy,
-	  ]
-	| readonly [latitude: Latitude, longitude: Longitude, altitude: Altitude]
-	| readonly [latitude: Latitude, longitude: Longitude];
+type LocationPointTuple = readonly [
+	latitude: Latitude,
+	longitude: Longitude,
+	altitude: Altitude,
+	accuracy: Accuracy,
+];
 
 export const SEGMENT_SEPARATOR = ';';
 
@@ -58,29 +62,21 @@ type CoordinateType = keyof typeof DEGREES_MAX;
 export class Geolocation {
 	private readonly internalValue: GeolocationInternalValue;
 
-	constructor(coordinates: LocationPoint) {
+	constructor(coordinates: LocationPointInput) {
 		const { latitude, longitude, altitude, accuracy } = coordinates;
 
 		this.internalValue = {
 			latitude: new Latitude(latitude),
 			longitude: new Longitude(longitude),
-			altitude: this.isValidNumber(altitude) ? new Altitude(altitude) : new Altitude(null),
-			accuracy: this.isValidNumber(accuracy) ? new Accuracy(accuracy) : new Accuracy(null),
+			altitude: Number.isFinite(altitude) ? new Altitude(altitude!) : new Altitude(0),
+			accuracy: Number.isFinite(accuracy) ? new Accuracy(accuracy!) : new Accuracy(0),
 		};
 	}
 
 	getTuple(): LocationPointTuple {
 		const { latitude, longitude, altitude, accuracy } = this.internalValue;
 
-		if (accuracy.value != null) {
-			return [latitude, longitude, altitude, accuracy];
-		}
-
-		if (altitude.value != null) {
-			return [latitude, longitude, altitude];
-		}
-
-		return [latitude, longitude];
+		return [latitude, longitude, altitude, accuracy];
 	}
 
 	getRuntimeValue(): LocationPoint | null {
@@ -122,7 +118,7 @@ export class Geolocation {
 			return null;
 		}
 
-		const [latitude, longitude, altitude = null, accuracy = null] = value.split(/\s+/).map(Number);
+		const [latitude, longitude, altitude = 0, accuracy = 0] = value.split(/\s+/).map(Number);
 
 		if (latitude == null || longitude == null || Number.isNaN(altitude) || Number.isNaN(accuracy)) {
 			return null;
@@ -131,7 +127,7 @@ export class Geolocation {
 		return new this({ latitude, longitude, altitude, accuracy }).getRuntimeValue();
 	}
 
-	static toCoordinatesString(value: LocationPoint | string | null): string {
+	static toCoordinatesString(value: LocationPointInput | string | null): string {
 		const decodedValue = typeof value === 'string' ? Geolocation.parseString(value) : value;
 
 		if (
@@ -143,7 +139,7 @@ export class Geolocation {
 
 		return new this(decodedValue)
 			.getTuple()
-			.map((item) => formatDecimal(item.value ?? 0))
+			.map((item) => formatDecimal(item.value))
 			.join(' ');
 	}
 

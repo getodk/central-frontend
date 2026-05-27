@@ -29,7 +29,7 @@ describe('Map Helpers', () => {
 			const coords = fromLonLat([lon, lat]);
 			const geom = new Point(coords, COORDINATE_LAYOUT_XYZM);
 			const feature = new Feature({ geometry: geom });
-			expect(formatODKValue(feature)).toBe('48.85840000000002 2.2945');
+			expect(formatODKValue(feature)).toBe('48.85840000000002 2.2945 0 0');
 		});
 
 		it('formats Point with latitude, longitude, and altitude', () => {
@@ -39,7 +39,7 @@ describe('Map Helpers', () => {
 			const coords = fromLonLat([lon, lat, alt]);
 			const geom = new Point(coords, COORDINATE_LAYOUT_XYZM);
 			const feature = new Feature({ geometry: geom });
-			expect(formatODKValue(feature)).toBe('48.85840000000002 2.2945 170');
+			expect(formatODKValue(feature)).toBe('48.85840000000002 2.2945 170 0');
 		});
 
 		it('formats Point with latitude, longitude, altitude, and accuracy', () => {
@@ -57,7 +57,7 @@ describe('Map Helpers', () => {
 			const coords = [fromLonLat([0, 0]), fromLonLat([1, 1]), fromLonLat([2, 2])];
 			const geom = new LineString(coords, COORDINATE_LAYOUT_XYZM);
 			const feature = new Feature({ geometry: geom });
-			expect(formatODKValue(feature)).toBe('0 0; 1 1; 2 2');
+			expect(formatODKValue(feature)).toBe('0 0 0 0; 1 1 0 0; 2 2 0 0');
 		});
 
 		it('formats Polygon', () => {
@@ -66,19 +66,19 @@ describe('Map Helpers', () => {
 			];
 			const geom = new Polygon(coords, COORDINATE_LAYOUT_XYZM);
 			const feature = new Feature({ geometry: geom });
-			expect(formatODKValue(feature)).toBe('0 0; 0 1; 1 1; 0 0');
+			expect(formatODKValue(feature)).toBe('0 0 0 0; 0 1 0 0; 1 1 0 0; 0 0 0 0');
 		});
 	});
 
 	describe('toODKCoordinateArray', () => {
-		it('returns longitude and latitude only when altitude and accuracy were not provided', () => {
+		it('defaults altitude and accuracy to 0 when not provided', () => {
 			const result = toODKCoordinateArray(2.2945, 48.8584, null, null);
-			expect(result).toEqual([48.8584, 2.2945]);
+			expect(result).toEqual([48.8584, 2.2945, 0, 0]);
 		});
 
-		it('returns coordinates with altitude', () => {
+		it('returns coordinates with altitude and defaults accuracy to 0', () => {
 			const result = toODKCoordinateArray(2.2945, 48.8584, 170, null);
-			expect(result).toEqual([48.8584, 2.2945, 170]);
+			expect(result).toEqual([48.8584, 2.2945, 170, 0]);
 		});
 
 		it('returns coordinates with accuracy and defaults altitude to 0', () => {

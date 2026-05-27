@@ -14,24 +14,23 @@ import type {
 } from 'geojson';
 
 // Latitude is first for ODK and longitude is second.
+// Altitude and accuracy default to 0 when not from device sensors, to match Collect behavior.
 export const toODKCoordinateArray = (
 	longitude: number,
 	latitude: number,
 	altitude: number | null | undefined,
 	accuracy: number | null | undefined
 ): number[] => {
-	const coords = [];
 	if (Number.isFinite(latitude) && Number.isFinite(longitude)) {
-		coords.push(latitude, longitude);
-
-		if (Number.isFinite(accuracy)) {
-			coords.push(Number.isFinite(altitude) ? altitude! : 0, accuracy!);
-		} else if (Number.isFinite(altitude)) {
-			coords.push(altitude!);
-		}
+		return [
+			latitude,
+			longitude,
+			Number.isFinite(altitude) ? altitude! : 0,
+			Number.isFinite(accuracy) ? accuracy! : 0,
+		];
 	}
 
-	return coords;
+	return [];
 };
 
 export const formatODKValue = (feature: Feature): string => {
