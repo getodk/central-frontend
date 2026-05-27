@@ -63,7 +63,7 @@ const afterUpload = () => {
 </script>
 
 <style lang="scss">
-.form-edit-section-actions .form-version-def-dropdown { margin-left: 5px; }
+#form-edit-def .form-edit-section-actions .form-version-def-dropdown { margin-left: 5px; }
 </style>
 
 <i18n lang="json5">
