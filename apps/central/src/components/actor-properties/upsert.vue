@@ -12,7 +12,7 @@
         <tbody>
           <entity-update-row v-for="{ name } of propertyDefs"
             :key="name" ref="propertyRows" v-model="data[name]"
-            :old-value="propertyValues?.[name]" :label="name"
+            :old-value="originalValues?.[name]" :label="name"
             :mark-value-changed="!create"/>
         </tbody>
       </table>
@@ -36,8 +36,11 @@ const props = defineProps({
   propertyDefs: Object
 });
 
+// Snapshot original values so old-value isn't clobbered by the sync watch.
+const originalValues = { ...propertyValues.value };
+
 const data = ref(Object.fromEntries(
-  props.propertyDefs.map(({ name }) => [name, propertyValues.value?.[name] ?? ''])
+  props.propertyDefs.map(({ name }) => [name, undefined])
 ));
 
 // Sync changes back to the parent model.
