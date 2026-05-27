@@ -47,7 +47,7 @@ jobs:
         cache-dependency-path: 'central/client/package-lock.json'
     - name: Run tests
       working-directory: central
-      run: client/e2e-tests/run-tests.sh --domain=central-test.localhost --port=80
+      run: client/e2e-tests/run-tests.sh --domain=central-test.localhost --port=443
     - name: Archive playwright result
       if: failure()
       uses: actions/upload-artifact@v4
