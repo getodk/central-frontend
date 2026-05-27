@@ -34,6 +34,7 @@ Follow these steps to set up your development environment:
 - Install [Volta](https://volta.sh/)
 - Install dependencies by running `npm install`.
 - Install docker or NGINX.
+  - On macOS, `npm run dev` runs NGINX in a Docker container using `--network=host`, which requires host networking to be enabled in your Docker settings. If you'd rather skip that, install NGINX directly and use `npm run dev-no-docker` instead.
 - Set up [ODK Central Backend](https://github.com/getodk/central-backend).
   - You will need to create a user using an ODK Central Backend command line script.
   - You will probably also want to promote that user to a sitewide administrator.
@@ -44,7 +45,7 @@ Follow these instructions to run ODK Central Frontend in development. For deploy
 
 First, run ODK Central Backend.
 
-Next, run ODK Central Frontend in development by running `npm run dev`. This will start a Vite dev server. ODK Central Frontend will be available on port 8989. `npm run dev` will also start NGINX, which will forward requests to ODK Central Backend.
+Next, run ODK Central Frontend in development by running `npm run dev`. This will start a Vite dev server. ODK Central Frontend will be available on port 8989. `npm run dev` will also start NGINX, which will forward requests to ODK Central Backend. On macOS, if you see a "error code 500" on page load, check that host networking is enabled in your Docker settings — without it, `--network=host` does nothing and port 8686 will not bind. Alternatively, run `npm run dev-no-docker` to use a locally installed NGINX instead.
 
 ODK Central Frontend communicates with ODK Central Backend in part using a session cookie. The cookie is `Secure`, but will be sent over HTTP on localhost. ODK Central Frontend also interacts with data collection clients and with services:
 
