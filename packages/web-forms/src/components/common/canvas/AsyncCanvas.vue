@@ -53,14 +53,14 @@ const load = async () => {
 </template>
 <style scoped lang="scss">
 .canvas-blank {
-  overflow: hidden;
+	overflow: hidden;
 }
 
 .canvas-disabled-overlay {
-  position: absolute;
-  inset: 0;
-  background-color: rgba(from var(--odk-muted-background-color) r g b / 0.7);
-  z-index: var(--odk-z-index-top-overlay);
-  pointer-events: none;
+	position: absolute;
+	inset: 0;
+	background-color: rgba(from var(--odk-muted-background-color) r g b / 0.7);
+	z-index: var(--odk-z-index-top-overlay);
+	pointer-events: none;
 }
 </style>
