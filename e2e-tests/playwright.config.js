@@ -2,6 +2,7 @@ import { defineConfig, devices } from '@playwright/test';
 
 const reporter = [ ['list'] ];
 if(process.env.CI) reporter.push(['github']);
+else               reporter.push(['html']);
 
 /**
  * @see https://playwright.dev/docs/test-configuration
