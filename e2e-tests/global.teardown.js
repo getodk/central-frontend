@@ -6,18 +6,15 @@ const password = process.env.ODK_PASSWORD;
 const credentials = Buffer.from(`${user}:${password}`, 'utf-8').toString('base64');
 const projectId = process.env.PROJECT_ID;
 
-teardown('delete project', async () => {
+teardown('delete project', async ({ request }) => {
   if (!projectId) return;
 
-  const result = await fetch(`${appUrl}/v1/projects/${projectId}`, {
-    method: 'DELETE',
+  const res = await request.delete(`${appUrl}/v1/projects/${projectId}`, {
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Basic ${credentials}`
     }
-  })
-    .then(res => res.json())
-    .then(r => r.success);
+  });
 
-  expect(result).toEqual(true);
+  expect(res).toBeOK();
 });
