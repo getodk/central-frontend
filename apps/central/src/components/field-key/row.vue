@@ -34,6 +34,12 @@ except according to the terms contained in the LICENSE file.
       </div>
       <div class="btn-group">
         <button v-if="fieldKey.token != null" type="button"
+          class="edit-button btn btn-default"
+          :aria-label="$t('action.editAppUser')" v-tooltip.aria-label
+          @click="$emit('edit', fieldKey)">
+          <span class="icon-pencil"></span>
+        </button>
+        <button v-if="fieldKey.token != null" type="button"
           class="revoke-button btn btn-default"
           :aria-label="$t('action.revokeAccess')" v-tooltip.aria-label
           @click="$emit('revoke', fieldKey)">
@@ -57,7 +63,7 @@ export default {
     },
     highlighted: Number
   },
-  emits: ['toggle-qr', 'revoke'],
+  emits: ['toggle-qr', 'revoke', 'edit'],
   methods: {
     toggleQr() {
       this.$emit('toggle-qr', this.fieldKey, this.$refs.popoverLink);
@@ -105,6 +111,7 @@ export default {
     // This text is shown for an App User whose access has been revoked.
     "accessRevoked": "Access revoked",
     "action": {
+      "editAppUser": "Edit App User",
       "revokeAccess": "Revoke access"
     }
   }
