@@ -4,9 +4,9 @@
  * actual usage as ported from JavaRosa.
  */
 export class Consumer<T> {
-	constructor(readonly fn: (value: T) => void) {}
+  constructor(readonly fn: (value: T) => void) {}
 
-	accept(value: T): void {
-		this.fn(value);
-	}
+  accept(value: T): void {
+    this.fn(value);
+  }
 }

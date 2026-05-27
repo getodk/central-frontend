@@ -1,33 +1,33 @@
 import {
-	isUnknownObject,
-	type UnknownObject,
+  isUnknownObject,
+  type UnknownObject,
 } from '@getodk/common/lib/runtime-types/shared-type-predicates.ts';
 import type { createInstance } from '@getodk/xforms-engine';
 
 interface ErrorLike {
-	readonly message: string;
-	readonly stack?: string | null;
+  readonly message: string;
+  readonly stack?: string | null;
 }
 
 interface ErrorLikeCause extends ErrorLike, UnknownObject {}
 
 const isErrorLikeCause = (cause: unknown): cause is ErrorLikeCause => {
-	if (!isUnknownObject(cause)) {
-		return false;
-	}
+  if (!isUnknownObject(cause)) {
+    return false;
+  }
 
-	const { message, stack } = cause;
+  const { message, stack } = cause;
 
-	return typeof message === 'string' && (typeof stack === 'string' || stack == null);
+  return typeof message === 'string' && (typeof stack === 'string' || stack == null);
 };
 
 const UNKNOWN_ERROR_MESSAGE = 'Unknown error';
 
 interface FormInitializationErrorOptions {
-	readonly message: string;
-	readonly cause?: unknown;
-	readonly unknownCauseDetail?: string | null;
-	readonly stack?: string | null;
+  readonly message: string;
+  readonly cause?: unknown;
+  readonly unknownCauseDetail?: string | null;
+  readonly stack?: string | null;
 }
 
 /**
@@ -92,67 +92,67 @@ interface FormInitializationErrorOptions {
  * to `@getodk/xforms-engine`.
  */
 export class FormInitializationError extends Error {
-	static fromError(cause: ErrorLike): FormInitializationError {
-		return new this(cause);
-	}
+  static fromError(cause: ErrorLike): FormInitializationError {
+    return new this(cause);
+  }
 
-	static from(cause: unknown): FormInitializationError {
-		if (cause instanceof Error || isErrorLikeCause(cause)) {
-			return this.fromError(cause);
-		}
+  static from(cause: unknown): FormInitializationError {
+    if (cause instanceof Error || isErrorLikeCause(cause)) {
+      return this.fromError(cause);
+    }
 
-		if (isUnknownObject(cause) && typeof cause.message === 'string') {
-			return new this({
-				message: cause.message,
-				cause,
-			});
-		}
+    if (isUnknownObject(cause) && typeof cause.message === 'string') {
+      return new this({
+        message: cause.message,
+        cause,
+      });
+    }
 
-		if (typeof cause === 'string') {
-			return new this({
-				message: cause,
-				cause,
-			});
-		}
+    if (typeof cause === 'string') {
+      return new this({
+        message: cause,
+        cause,
+      });
+    }
 
-		let unknownCauseDetail: string | null = null;
+    let unknownCauseDetail: string | null = null;
 
-		try {
-			unknownCauseDetail = JSON.stringify(cause, null, 2);
-		} catch {
-			// Ignore JSON serialization error
-		}
+    try {
+      unknownCauseDetail = JSON.stringify(cause, null, 2);
+    } catch {
+      // Ignore JSON serialization error
+    }
 
-		return new this({
-			message: 'Unknown error',
-			cause,
-			unknownCauseDetail,
-		});
-	}
+    return new this({
+      message: 'Unknown error',
+      cause,
+      unknownCauseDetail,
+    });
+  }
 
-	readonly cause: unknown;
-	readonly unknownCauseDetail: string | null;
-	readonly stack?: string | undefined;
+  readonly cause: unknown;
+  readonly unknownCauseDetail: string | null;
+  readonly stack?: string | undefined;
 
-	private constructor(options: FormInitializationErrorOptions) {
-		let message = options.message;
+  private constructor(options: FormInitializationErrorOptions) {
+    let message = options.message;
 
-		// TODO: this occurs when Solid's production build detects a "potential
-		// infinite loop" (i.e. either a form cycle, or potentially a serious bug in
-		// the engine!).
-		if (message === '') {
-			message = 'Unknown error';
-		}
+    // TODO: this occurs when Solid's production build detects a "potential
+    // infinite loop" (i.e. either a form cycle, or potentially a serious bug in
+    // the engine!).
+    if (message === '') {
+      message = 'Unknown error';
+    }
 
-		const { cause, unknownCauseDetail, stack } = options;
+    const { cause, unknownCauseDetail, stack } = options;
 
-		super(message, { cause });
+    super(message, { cause });
 
-		this.cause = cause;
-		this.unknownCauseDetail = unknownCauseDetail ?? null;
+    this.cause = cause;
+    this.unknownCauseDetail = unknownCauseDetail ?? null;
 
-		if (stack != null) {
-			this.stack = stack;
-		}
-	}
+    if (stack != null) {
+      this.stack = stack;
+    }
+  }
 }

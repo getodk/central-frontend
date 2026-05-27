@@ -19,12 +19,12 @@ import { createReactiveScope, type ReactiveScope } from '../lib/reactivity/scope
  * reactivity indefinitely.
  */
 export const createPotentiallyClientOwnedReactiveScope = (): ReactiveScope => {
-	/**
-	 * A {@link clientOwner | client owner} is the owner of a client's Solid
-	 * reactive context, if one exists. If none exists, the {@link ReactiveScope}
-	 * is fully owned by the engine.
-	 */
-	const clientOwner: Owner | null = getOwner();
+  /**
+   * A {@link clientOwner | client owner} is the owner of a client's Solid
+   * reactive context, if one exists. If none exists, the {@link ReactiveScope}
+   * is fully owned by the engine.
+   */
+  const clientOwner: Owner | null = getOwner();
 
-	return createReactiveScope({ owner: clientOwner });
+  return createReactiveScope({ owner: clientOwner });
 };

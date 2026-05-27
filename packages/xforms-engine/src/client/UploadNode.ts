@@ -13,14 +13,14 @@ import type { ValueType } from './ValueType.ts';
 export type UploadValue = File | null;
 
 export interface UploadNodeState extends BaseValueNodeState<UploadValue> {
-	get valueOptions(): null;
-	get value(): UploadValue;
-	get instanceValue(): InstanceAttachmentFileName;
-	get attachmentState(): BaseInstanceAttachmentState;
+  get valueOptions(): null;
+  get value(): UploadValue;
+  get instanceValue(): InstanceAttachmentFileName;
+  get attachmentState(): BaseInstanceAttachmentState;
 }
 
 export interface UploadDefinition<V extends ValueType = ValueType> extends LeafNodeDefinition<V> {
-	readonly bodyElement: UploadControlDefinition;
+  readonly bodyElement: UploadControlDefinition;
 }
 
 // prettier-ignore
@@ -40,19 +40,19 @@ export type UploadMediaAccept = PartiallyKnownString<
 >;
 
 interface BaseUploadMediaOptions {
-	readonly accept: UploadMediaAccept;
-	readonly type: UploadMediaType | null;
-	readonly subtype: UploadMediaSubtype | null;
+  readonly accept: UploadMediaAccept;
+  readonly type: UploadMediaType | null;
+  readonly subtype: UploadMediaSubtype | null;
 }
 
 export interface ExplicitUploadMediaOptions extends BaseUploadMediaOptions {
-	readonly type: UploadMediaType;
-	readonly subtype: UploadMediaSubtype;
+  readonly type: UploadMediaType;
+  readonly subtype: UploadMediaSubtype;
 }
 
 export interface UnspecifiedUploadMediaOptions extends BaseUploadMediaOptions {
-	readonly type: null;
-	readonly subtype: null;
+  readonly type: null;
+  readonly subtype: null;
 }
 
 // prettier-ignore
@@ -61,22 +61,22 @@ export type UploadMediaOptions =
 	| UnspecifiedUploadMediaOptions;
 
 export interface UploadNodeOptions {
-	readonly media: UploadMediaOptions;
+  readonly media: UploadMediaOptions;
 }
 
 export interface UploadNode extends BaseValueNode<'binary', UploadValue> {
-	readonly nodeType: 'upload';
-	/** @todo */
-	readonly appearances: UnknownAppearanceDefinition;
-	readonly nodeOptions: UploadNodeOptions;
-	readonly valueType: 'binary';
-	readonly definition: UploadDefinition<'binary'>;
-	readonly root: RootNode;
-	readonly parent: GeneralParentNode;
-	readonly currentState: UploadNodeState;
-	readonly validationState: LeafNodeValidationState;
-	readonly maxPixels: number | null;
+  readonly nodeType: 'upload';
+  /** @todo */
+  readonly appearances: UnknownAppearanceDefinition;
+  readonly nodeOptions: UploadNodeOptions;
+  readonly valueType: 'binary';
+  readonly definition: UploadDefinition<'binary'>;
+  readonly root: RootNode;
+  readonly parent: GeneralParentNode;
+  readonly currentState: UploadNodeState;
+  readonly validationState: LeafNodeValidationState;
+  readonly maxPixels: number | null;
 
-	setValue(value: UploadValue): RootNode;
-	retryFetch(): void;
+  setValue(value: UploadValue): RootNode;
+  retryFetch(): void;
 }

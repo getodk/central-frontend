@@ -1,54 +1,54 @@
 import { assertType, type Exact } from '../../type-safety';
 import type {
-	AbbreviatedAbsoluteLocationPathType,
-	AbbreviatedAxisTestType,
-	AbbreviatedStepType,
-	AbsoluteLocationPathType,
-	AbsoluteRootLocationPathType,
-	AdditionExprType,
-	AndExprType,
-	AnyBinaryExprType,
-	AnySyntaxType,
-	AnyUnaryExprType,
-	ArgumentType,
-	AxisNameType,
-	AxisTestType,
-	DivisionExprType,
-	EqExprType,
-	ExprType,
-	FilterExprType,
-	FilterPathExprType,
-	FunctionCallType,
-	FunctionNameType,
-	GteExprType,
-	GtExprType,
-	LiteralType,
-	LocalPartType,
-	LteExprType,
-	LtExprType,
-	ModuloExprType,
-	MultiplicationExprType,
-	NeExprType,
-	NodeTestType,
-	NodeTypeTestType,
-	NumberType,
-	OrExprType,
-	ParentType,
-	PredicateType,
-	PrefixedNameType,
-	PrefixedWildcardNameTestType,
-	PrefixType,
-	ProcessingInstructionNameTestType,
-	RelativeLocationPathType,
-	RelativeStepSyntaxLiteral,
-	SelfType,
-	StepType,
-	SubtractionExprType,
-	UnionExprType,
-	UnprefixedNameType,
-	UnprefixedWildcardNameTestType,
-	VariableReferenceType,
-	XPathType,
+  AbbreviatedAbsoluteLocationPathType,
+  AbbreviatedAxisTestType,
+  AbbreviatedStepType,
+  AbsoluteLocationPathType,
+  AbsoluteRootLocationPathType,
+  AdditionExprType,
+  AndExprType,
+  AnyBinaryExprType,
+  AnySyntaxType,
+  AnyUnaryExprType,
+  ArgumentType,
+  AxisNameType,
+  AxisTestType,
+  DivisionExprType,
+  EqExprType,
+  ExprType,
+  FilterExprType,
+  FilterPathExprType,
+  FunctionCallType,
+  FunctionNameType,
+  GteExprType,
+  GtExprType,
+  LiteralType,
+  LocalPartType,
+  LteExprType,
+  LtExprType,
+  ModuloExprType,
+  MultiplicationExprType,
+  NeExprType,
+  NodeTestType,
+  NodeTypeTestType,
+  NumberType,
+  OrExprType,
+  ParentType,
+  PredicateType,
+  PrefixedNameType,
+  PrefixedWildcardNameTestType,
+  PrefixType,
+  ProcessingInstructionNameTestType,
+  RelativeLocationPathType,
+  RelativeStepSyntaxLiteral,
+  SelfType,
+  StepType,
+  SubtractionExprType,
+  UnionExprType,
+  UnprefixedNameType,
+  UnprefixedWildcardNameTestType,
+  VariableReferenceType,
+  XPathType,
 } from './type-names.ts';
 
 /*
@@ -58,23 +58,23 @@ import type {
  */
 
 export interface SyntaxNode<
-	Type extends AnySyntaxType,
-	Children extends readonly UnknownSyntaxNode[],
-	Text extends string = string,
+  Type extends AnySyntaxType,
+  Children extends readonly UnknownSyntaxNode[],
+  Text extends string = string,
 > {
-	readonly type: Type;
+  readonly type: Type;
 
-	readonly childCount: Children['length'];
-	readonly children: Children;
-	readonly text: Text;
+  readonly childCount: Children['length'];
+  readonly children: Children;
+  readonly text: Text;
 
-	child<Index extends number>(
-		index: Index
-	): `${Index}` extends keyof Children
-		? Children[Index]
-		: Exclude<Children[Index], undefined> | null;
+  child<Index extends number>(
+    index: Index
+  ): `${Index}` extends keyof Children
+    ? Children[Index]
+    : Exclude<Children[Index], undefined> | null;
 
-	child(index: number): Exclude<Children[number], undefined> | null;
+  child(index: number): Exclude<Children[number], undefined> | null;
 }
 
 // TODO naming
@@ -84,23 +84,23 @@ export interface ASyntaxNode extends SyntaxNode<AnySyntaxType, readonly ASyntaxN
 export interface UnknownSyntaxNode extends SyntaxNode<any, any> {}
 
 export interface TerminalSyntaxNode<Type extends AnySyntaxType> extends SyntaxNode<
-	Type,
-	readonly []
+  Type,
+  readonly []
 > {}
 
 export interface UnaryExprSyntaxNode<Type extends AnyUnaryExprType> extends SyntaxNode<
-	Type,
-	readonly [AnyExprNode]
+  Type,
+  readonly [AnyExprNode]
 > {}
 
 export interface BinaryExprSyntaxNode<Type extends AnyBinaryExprType> extends SyntaxNode<
-	Type,
-	readonly [AnyExprNode, AnyExprNode]
+  Type,
+  readonly [AnyExprNode, AnyExprNode]
 > {}
 
 export interface TerminalTextLiteralSyntaxNode<
-	Type extends AnySyntaxType,
-	Text extends string,
+  Type extends AnySyntaxType,
+  Text extends string,
 > extends SyntaxNode<Type, readonly [], Text> {}
 
 /*
@@ -151,20 +151,20 @@ export interface UnionExprNode extends BinaryExprSyntaxNode<UnionExprType> {}
 type AnyUnaryExprNode = UnaryExprNode;
 
 export type AnyBinaryExprNode =
-	| AdditionExprNode
-	| AndExprNode
-	| DivisionExprNode
-	| EqExprNode
-	| GteExprNode
-	| GtExprNode
-	| LteExprNode
-	| LtExprNode
-	| ModuloExprNode
-	| MultiplicationExprNode
-	| NeExprNode
-	| OrExprNode
-	| SubtractionExprNode
-	| UnionExprNode;
+  | AdditionExprNode
+  | AndExprNode
+  | DivisionExprNode
+  | EqExprNode
+  | GteExprNode
+  | GtExprNode
+  | LteExprNode
+  | LtExprNode
+  | ModuloExprNode
+  | MultiplicationExprNode
+  | NeExprNode
+  | OrExprNode
+  | SubtractionExprNode
+  | UnionExprNode;
 
 /*
  * ----------------------------------------------------------------------------
@@ -173,84 +173,84 @@ export type AnyBinaryExprNode =
  */
 
 export type FilterExprNodes =
-	// | VariableReferenceNode
-	| readonly [ExprNode]
-	| readonly [FunctionCallNode]
-	| readonly [LiteralNode]
-	| readonly [NumberNode];
+  // | VariableReferenceNode
+  | readonly [ExprNode]
+  | readonly [FunctionCallNode]
+  | readonly [LiteralNode]
+  | readonly [NumberNode];
 
 export interface FilterExprNode extends SyntaxNode<FilterExprType, FilterExprNodes> {}
 
 export interface FilterPathExprNode extends SyntaxNode<
-	FilterPathExprType,
-	readonly [FilterExprNode, ...Array<RelativeStepSyntaxLiteralNode | StepNode>]
+  FilterPathExprType,
+  readonly [FilterExprNode, ...Array<RelativeStepSyntaxLiteralNode | StepNode>]
 > {}
 
 type AbsoluteLocationPathNodes =
-	| readonly [AbbreviatedAbsoluteLocationPathNode]
-	| readonly [AbsoluteRootLocationPathNode, ...RelativeLocationPathNodes];
+  | readonly [AbbreviatedAbsoluteLocationPathNode]
+  | readonly [AbsoluteRootLocationPathNode, ...RelativeLocationPathNodes];
 
 export interface AbsoluteLocationPathNode extends SyntaxNode<
-	AbsoluteLocationPathType,
-	AbsoluteLocationPathNodes
+  AbsoluteLocationPathType,
+  AbsoluteLocationPathNodes
 > {}
 
 export interface AbsoluteRootLocationPathNode extends TerminalTextLiteralSyntaxNode<
-	AbsoluteRootLocationPathType,
-	'/'
+  AbsoluteRootLocationPathType,
+  '/'
 > {}
 
 type RelativeLocationPathNodes = readonly [
-	StepNode,
-	...Array<RelativeStepSyntaxLiteralNode | StepNode>,
+  StepNode,
+  ...Array<RelativeStepSyntaxLiteralNode | StepNode>,
 ];
 
 export interface RelativeLocationPathNode extends SyntaxNode<
-	RelativeLocationPathType,
-	RelativeLocationPathNodes
+  RelativeLocationPathType,
+  RelativeLocationPathNodes
 > {}
 
 export interface AbbreviatedAbsoluteLocationPathNode extends SyntaxNode<
-	AbbreviatedAbsoluteLocationPathType,
-	readonly [RelativeStepSyntaxLiteralNode, ...RelativeLocationPathNodes]
+  AbbreviatedAbsoluteLocationPathType,
+  readonly [RelativeStepSyntaxLiteralNode, ...RelativeLocationPathNodes]
 > {}
 
 export interface AbbreviatedAxisTestNode extends SyntaxNode<
-	AbbreviatedAxisTestType,
-	readonly [NameTestNode]
+  AbbreviatedAxisTestType,
+  readonly [NameTestNode]
 > {}
 
 export interface AbbreviatedStepNode extends TerminalTextLiteralSyntaxNode<
-	AbbreviatedStepType,
-	'..' | '.'
+  AbbreviatedStepType,
+  '..' | '.'
 > {}
 
 export type AxisNameText =
-	| 'ancestor-or-self'
-	| 'ancestor'
-	| 'attribute'
-	| 'child'
-	| 'descendant-or-self'
-	| 'descendant'
-	| 'following-sibling'
-	| 'following'
-	| 'namespace'
-	| 'parent'
-	| 'preceding-sibling'
-	| 'preceding'
-	| 'self';
+  | 'ancestor-or-self'
+  | 'ancestor'
+  | 'attribute'
+  | 'child'
+  | 'descendant-or-self'
+  | 'descendant'
+  | 'following-sibling'
+  | 'following'
+  | 'namespace'
+  | 'parent'
+  | 'preceding-sibling'
+  | 'preceding'
+  | 'self';
 
 export interface AxisNameNode extends TerminalTextLiteralSyntaxNode<AxisNameType, AxisNameText> {}
 
 export interface AxisTestNode extends SyntaxNode<
-	AxisTestType,
-	readonly [AxisNameNode, ...NodeTestNodes]
+  AxisTestType,
+  readonly [AxisNameNode, ...NodeTestNodes]
 > {}
 
 export type NameTestNode =
-	| ExplicitNameNode
-	| PrefixedWildcardNameTestNode
-	| UnprefixedWildcardNameTestNode;
+  | ExplicitNameNode
+  | PrefixedWildcardNameTestNode
+  | UnprefixedWildcardNameTestNode;
 
 export type NodeTypeTest = 'comment' | 'node' | 'processing-instruction' | 'text';
 
@@ -259,19 +259,19 @@ export type NodeTypeTest = 'comment' | 'node' | 'processing-instruction' | 'text
 export type NodeTypeTestText = `${NodeTypeTest}${string}`;
 
 export interface NodeTypeTestNode extends TerminalTextLiteralSyntaxNode<
-	NodeTypeTestType,
-	NodeTypeTestText
+  NodeTypeTestType,
+  NodeTypeTestText
 > {}
 
 export interface ProcessingInstructionNameTestNode extends SyntaxNode<
-	ProcessingInstructionNameTestType,
-	readonly [LiteralNode]
+  ProcessingInstructionNameTestType,
+  readonly [LiteralNode]
 > {}
 
 export type NodeTestNodes =
-	| readonly [NameTestNode]
-	| readonly [NodeTypeTestNode]
-	| readonly [ProcessingInstructionNameTestNode];
+  | readonly [NameTestNode]
+  | readonly [NodeTypeTestNode]
+  | readonly [ProcessingInstructionNameTestNode];
 
 export interface NodeTestNode extends SyntaxNode<NodeTestType, NodeTestNodes> {}
 
@@ -288,32 +288,32 @@ export interface SelfNode extends TerminalTextLiteralSyntaxNode<SelfType, '.'> {
 export interface PredicateNode extends SyntaxNode<PredicateType, readonly [ExprNode]> {}
 
 export interface RelativeStepSyntaxLiteralNode extends TerminalTextLiteralSyntaxNode<
-	RelativeStepSyntaxLiteral,
-	'//'
+  RelativeStepSyntaxLiteral,
+  '//'
 > {}
 
 type AnyLocationPathExprNode =
-	| AbsoluteLocationPathNode
-	| FilterPathExprNode
-	| RelativeLocationPathNode;
+  | AbsoluteLocationPathNode
+  | FilterPathExprNode
+  | RelativeLocationPathNode;
 
 type AnyLocationPathNode =
-	| AbbreviatedAbsoluteLocationPathNode
-	| AbbreviatedAxisTestNode
-	| AbbreviatedStepNode
-	| AbsoluteRootLocationPathNode
-	| AnyLocationPathExprNode
-	| AxisNameNode
-	| AxisTestNode
-	| FilterExprNode
-	| NodeTestNode
-	| NodeTypeTestNode
-	| ParentNode
-	| PredicateNode
-	| ProcessingInstructionNameTestNode
-	| RelativeStepSyntaxLiteralNode
-	| SelfNode
-	| StepNode;
+  | AbbreviatedAbsoluteLocationPathNode
+  | AbbreviatedAxisTestNode
+  | AbbreviatedStepNode
+  | AbsoluteRootLocationPathNode
+  | AnyLocationPathExprNode
+  | AxisNameNode
+  | AxisTestNode
+  | FilterExprNode
+  | NodeTestNode
+  | NodeTypeTestNode
+  | ParentNode
+  | PredicateNode
+  | ProcessingInstructionNameTestNode
+  | RelativeStepSyntaxLiteralNode
+  | SelfNode
+  | StepNode;
 
 /*
  * ----------------------------------------------------------------------------
@@ -322,13 +322,13 @@ type AnyLocationPathNode =
  */
 
 export interface FunctionCallNode extends SyntaxNode<
-	FunctionCallType,
-	readonly [FunctionNameNode, ...ArgumentNode[]]
+  FunctionCallType,
+  readonly [FunctionNameNode, ...ArgumentNode[]]
 > {}
 
 export interface FunctionNameNode extends SyntaxNode<
-	FunctionNameType,
-	readonly [ExplicitNameNode]
+  FunctionNameType,
+  readonly [ExplicitNameNode]
 > {}
 
 export interface ArgumentNode extends SyntaxNode<ArgumentType, readonly [ExprNode]> {}
@@ -346,15 +346,15 @@ export interface PrefixNode extends TerminalSyntaxNode<PrefixType> {}
 export interface LocalPartNode extends TerminalSyntaxNode<LocalPartType> {}
 
 export interface PrefixedWildcardNameTestNode extends SyntaxNode<
-	PrefixedWildcardNameTestType,
-	readonly [PrefixNode]
+  PrefixedWildcardNameTestType,
+  readonly [PrefixNode]
 > {}
 
 export interface UnprefixedWildcardNameTestNode extends TerminalSyntaxNode<UnprefixedWildcardNameTestType> {}
 
 export interface PrefixedNameNode extends SyntaxNode<
-	PrefixedNameType,
-	readonly [PrefixNode, LocalPartNode]
+  PrefixedNameType,
+  readonly [PrefixNode, LocalPartNode]
 > {}
 
 export interface UnprefixedNameNode extends TerminalSyntaxNode<UnprefixedNameType> {}
@@ -362,12 +362,12 @@ export interface UnprefixedNameNode extends TerminalSyntaxNode<UnprefixedNameTyp
 type ExplicitNameNode = PrefixedNameNode | UnprefixedNameNode;
 
 export type AnyNameNode =
-	| LocalPartNode
-	| PrefixedNameNode
-	| PrefixedWildcardNameTestNode
-	| PrefixNode
-	| UnprefixedNameNode
-	| UnprefixedWildcardNameTestNode;
+  | LocalPartNode
+  | PrefixedNameNode
+  | PrefixedWildcardNameTestNode
+  | PrefixNode
+  | UnprefixedNameNode
+  | UnprefixedWildcardNameTestNode;
 
 /*
  * ----------------------------------------------------------------------------
@@ -399,25 +399,25 @@ type AnyContextuallyScopedNode = VariableReferenceNode;
  */
 
 export type AnyExprNode =
-	| AdditionExprNode
-	| AndExprNode
-	| AnyLocationPathExprNode
-	| DivisionExprNode
-	| EqExprNode
-	| FunctionCallNode
-	| GteExprNode
-	| GtExprNode
-	| LiteralNode
-	| LteExprNode
-	| LtExprNode
-	| ModuloExprNode
-	| MultiplicationExprNode
-	| NeExprNode
-	| NumberNode
-	| OrExprNode
-	| SubtractionExprNode
-	| UnaryExprNode
-	| UnionExprNode;
+  | AdditionExprNode
+  | AndExprNode
+  | AnyLocationPathExprNode
+  | DivisionExprNode
+  | EqExprNode
+  | FunctionCallNode
+  | GteExprNode
+  | GtExprNode
+  | LiteralNode
+  | LteExprNode
+  | LtExprNode
+  | ModuloExprNode
+  | MultiplicationExprNode
+  | NeExprNode
+  | NumberNode
+  | OrExprNode
+  | SubtractionExprNode
+  | UnaryExprNode
+  | UnionExprNode;
 
 /**
  * @alias {@link LiteralNode}
@@ -425,16 +425,16 @@ export type AnyExprNode =
 export type StringLiteralNode = LiteralNode;
 
 export type AnySyntaxNode =
-	| AnyBinaryExprNode
-	| AnyContextuallyScopedNode
-	| AnyExprNode
-	| AnyFunctionNode
-	| AnyLiteralNode
-	| AnyLocationPathNode
-	| AnyNameNode
-	| AnyUnaryExprNode
-	| ExprNode
-	| XPathNode;
+  | AnyBinaryExprNode
+  | AnyContextuallyScopedNode
+  | AnyExprNode
+  | AnyFunctionNode
+  | AnyLiteralNode
+  | AnyLocationPathNode
+  | AnyNameNode
+  | AnyUnaryExprNode
+  | ExprNode
+  | XPathNode;
 
 type AnySyntaxNodeType = AnySyntaxNode['type'];
 

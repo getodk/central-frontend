@@ -5,18 +5,18 @@ import type { ExternalSecondaryInstanceSourceFormat } from './SecondaryInstanceS
 import { SecondaryInstanceSource } from './SecondaryInstanceSource.ts';
 
 export abstract class ExternalSecondaryInstanceSource<
-	Format extends ExternalSecondaryInstanceSourceFormat = ExternalSecondaryInstanceSourceFormat,
+  Format extends ExternalSecondaryInstanceSourceFormat = ExternalSecondaryInstanceSourceFormat,
 > extends SecondaryInstanceSource<Format> {
-	override readonly resourceURL: JRResourceURL;
+  override readonly resourceURL: JRResourceURL;
 
-	constructor(
-		domElement: DOMSecondaryInstanceElement,
-		protected readonly resource: ExternalSecondaryInstanceResource<Format>
-	) {
-		const { format, instanceId, resourceURL } = resource;
+  constructor(
+    domElement: DOMSecondaryInstanceElement,
+    protected readonly resource: ExternalSecondaryInstanceResource<Format>
+  ) {
+    const { format, instanceId, resourceURL } = resource;
 
-		super(format, instanceId, resourceURL, domElement);
+    super(format, instanceId, resourceURL, domElement);
 
-		this.resourceURL = resourceURL;
-	}
+    this.resourceURL = resourceURL;
+  }
 }

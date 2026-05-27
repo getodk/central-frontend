@@ -6,67 +6,67 @@ import type { DeriveStaticVitestExpectExtension } from '../vitest/shared-extensi
 import { assertArrayOfStrings, assertEngineNode, assertString } from './shared-type-assertions.ts';
 
 const hasAppearance = (node: AnyNode, appearance: string): boolean => {
-	return node.appearances?.[appearance] === true;
+  return node.appearances?.[appearance] === true;
 };
 
 export const appearanceExtensions = extendExpect(expect, {
-	toHaveAppearance: new AsymmetricTypedExpectExtension(
-		assertEngineNode,
-		assertString,
-		(actual, expected) => {
-			if (hasAppearance(actual, expected)) {
-				return true;
-			}
+  toHaveAppearance: new AsymmetricTypedExpectExtension(
+    assertEngineNode,
+    assertString,
+    (actual, expected) => {
+      if (hasAppearance(actual, expected)) {
+        return true;
+      }
 
-			return new Error(
-				`Node ${actual.currentState.reference} does not have appearance "${expected}"`
-			);
-		}
-	),
+      return new Error(
+        `Node ${actual.currentState.reference} does not have appearance "${expected}"`
+      );
+    }
+  ),
 
-	notToHaveAppearance: new AsymmetricTypedExpectExtension(
-		assertEngineNode,
-		assertString,
-		(actual, expected) => {
-			if (hasAppearance(actual, expected)) {
-				return new Error(
-					`Node ${actual.currentState.reference} has appearance "${expected}", which was not expected`
-				);
-			}
+  notToHaveAppearance: new AsymmetricTypedExpectExtension(
+    assertEngineNode,
+    assertString,
+    (actual, expected) => {
+      if (hasAppearance(actual, expected)) {
+        return new Error(
+          `Node ${actual.currentState.reference} has appearance "${expected}", which was not expected`
+        );
+      }
 
-			return true;
-		}
-	),
+      return true;
+    }
+  ),
 
-	toYieldAppearances: new AsymmetricTypedExpectExtension(
-		assertEngineNode,
-		assertArrayOfStrings,
-		(actual, expected) => {
-			const yielded = new Set<string>();
+  toYieldAppearances: new AsymmetricTypedExpectExtension(
+    assertEngineNode,
+    assertArrayOfStrings,
+    (actual, expected) => {
+      const yielded = new Set<string>();
 
-			for (const appearance of actual.appearances ?? []) {
-				yielded.add(appearance);
-			}
+      for (const appearance of actual.appearances ?? []) {
+        yielded.add(appearance);
+      }
 
-			const notYielded = expected.filter((item) => {
-				return !yielded.has(item);
-			});
+      const notYielded = expected.filter((item) => {
+        return !yielded.has(item);
+      });
 
-			if (notYielded.length === 0) {
-				return true;
-			}
+      if (notYielded.length === 0) {
+        return true;
+      }
 
-			return new Error(
-				`Node ${actual.currentState.reference} did not yield expected appearances ${notYielded.join(', ')}`
-			);
-		}
-	),
+      return new Error(
+        `Node ${actual.currentState.reference} did not yield expected appearances ${notYielded.join(', ')}`
+      );
+    }
+  ),
 });
 
 type AppearanceExtensions = typeof appearanceExtensions;
 
 declare module 'vitest' {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	interface Assertion<T = any> extends DeriveStaticVitestExpectExtension<AppearanceExtensions, T> {}
-	interface AsymmetricMatchersContaining extends DeriveStaticVitestExpectExtension<AppearanceExtensions> {}
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  interface Assertion<T = any> extends DeriveStaticVitestExpectExtension<AppearanceExtensions, T> {}
+  interface AsymmetricMatchersContaining extends DeriveStaticVitestExpectExtension<AppearanceExtensions> {}
 }

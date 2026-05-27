@@ -10,12 +10,12 @@ import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPat
 import type { StaticLeafElement } from '../integration/xpath/static-dom/StaticElement.ts';
 import { createValueNodeInstanceState } from '../lib/client-reactivity/instance-state/createValueNodeInstanceState.ts';
 import {
-	createAttributeState,
-	type AttributeState,
+  createAttributeState,
+  type AttributeState,
 } from '../lib/reactivity/createAttributeState.ts';
 import {
-	createInstanceAttachment,
-	type BaseInstanceAttachmentState,
+  createInstanceAttachment,
+  type BaseInstanceAttachmentState,
 } from '../lib/reactivity/createInstanceAttachment.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
@@ -32,180 +32,180 @@ import type { Root } from './Root.ts';
 import type { DescendantNodeStateSpec } from './abstract/DescendantNode.ts';
 import { DescendantNode } from './abstract/DescendantNode.ts';
 import type {
-	InstanceAttachment,
-	InstanceAttachmentRuntimeValue,
+  InstanceAttachment,
+  InstanceAttachmentRuntimeValue,
 } from './attachments/InstanceAttachment.ts';
 import { buildAttributes } from './attachments/buildAttributes.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { InstanceAttachmentContext } from './internal-api/InstanceAttachmentContext.ts';
 import type {
-	DecodeInstanceValue,
-	InstanceValueContext,
+  DecodeInstanceValue,
+  InstanceValueContext,
 } from './internal-api/InstanceValueContext.ts';
 import type { ValidationContext } from './internal-api/ValidationContext.ts';
 import type { ClientReactiveSerializableValueNode } from './internal-api/serialization/ClientReactiveSerializableValueNode.ts';
 
 export type AnyUploadDefinition = {
-	[V in ValueType]: UploadDefinition<V>;
+  [V in ValueType]: UploadDefinition<V>;
 }[ValueType];
 
 type AssertUploadDefinition = (
-	definition: AnyUploadDefinition
+  definition: AnyUploadDefinition
 ) => asserts definition is UploadDefinition<'binary'>;
 
 const assertUploadDefinition: AssertUploadDefinition = (definition) => {
-	const { valueType } = definition;
+  const { valueType } = definition;
 
-	if (valueType !== 'binary') {
-		throw new UploadValueTypeError(definition);
-	}
+  if (valueType !== 'binary') {
+    throw new UploadValueTypeError(definition);
+  }
 };
 
 interface UploadControlStateSpec extends DescendantNodeStateSpec<InstanceAttachmentRuntimeValue> {
-	readonly label: Accessor<TextRange<'label'> | null>;
-	readonly hint: Accessor<TextRange<'hint'> | null>;
-	readonly children: null;
-	readonly attributes: Accessor<readonly Attribute[]>;
-	readonly valueOptions: null;
-	readonly value: SimpleAtomicState<InstanceAttachmentRuntimeValue>;
-	readonly instanceValue: Accessor<InstanceAttachmentFileName>;
-	readonly attachmentState: Accessor<BaseInstanceAttachmentState>;
+  readonly label: Accessor<TextRange<'label'> | null>;
+  readonly hint: Accessor<TextRange<'hint'> | null>;
+  readonly children: null;
+  readonly attributes: Accessor<readonly Attribute[]>;
+  readonly valueOptions: null;
+  readonly value: SimpleAtomicState<InstanceAttachmentRuntimeValue>;
+  readonly instanceValue: Accessor<InstanceAttachmentFileName>;
+  readonly attachmentState: Accessor<BaseInstanceAttachmentState>;
 }
 
 export class UploadControl
-	extends DescendantNode<
-		UploadDefinition<'binary'>,
-		UploadControlStateSpec,
-		GeneralParentNode,
-		null
-	>
-	implements
-		UploadNode,
-		XFormsXPathElement,
-		EvaluationContext,
-		InstanceAttachmentContext,
-		InstanceValueContext,
-		ValidationContext,
-		ClientReactiveSerializableValueNode
+  extends DescendantNode<
+    UploadDefinition<'binary'>,
+    UploadControlStateSpec,
+    GeneralParentNode,
+    null
+  >
+  implements
+    UploadNode,
+    XFormsXPathElement,
+    EvaluationContext,
+    InstanceAttachmentContext,
+    InstanceValueContext,
+    ValidationContext,
+    ClientReactiveSerializableValueNode
 {
-	static from(
-		parent: GeneralParentNode,
-		instanceNode: StaticLeafElement | null,
-		definition: UploadDefinition
-	): UploadControl;
-	static from(
-		parent: GeneralParentNode,
-		instanceNode: StaticLeafElement | null,
-		definition: AnyUploadDefinition
-	): UploadControl {
-		assertUploadDefinition(definition);
+  static from(
+    parent: GeneralParentNode,
+    instanceNode: StaticLeafElement | null,
+    definition: UploadDefinition
+  ): UploadControl;
+  static from(
+    parent: GeneralParentNode,
+    instanceNode: StaticLeafElement | null,
+    definition: AnyUploadDefinition
+  ): UploadControl {
+    assertUploadDefinition(definition);
 
-		return new this(parent, instanceNode, definition);
-	}
+    return new this(parent, instanceNode, definition);
+  }
 
-	private readonly validation: SharedValidationState;
-	private readonly instanceAttachment: InstanceAttachment;
+  private readonly validation: SharedValidationState;
+  private readonly instanceAttachment: InstanceAttachment;
 
-	// XFormsXPathElement
-	override readonly [XPathNodeKindKey] = 'element';
-	override readonly getXPathValue: () => InstanceAttachmentFileName;
+  // XFormsXPathElement
+  override readonly [XPathNodeKindKey] = 'element';
+  override readonly getXPathValue: () => InstanceAttachmentFileName;
 
-	// InstanceNode
-	protected readonly state: SharedNodeState<UploadControlStateSpec>;
-	protected readonly engineState: EngineState<UploadControlStateSpec>;
-	readonly attributeState: AttributeState;
+  // InstanceNode
+  protected readonly state: SharedNodeState<UploadControlStateSpec>;
+  protected readonly engineState: EngineState<UploadControlStateSpec>;
+  readonly attributeState: AttributeState;
 
-	// InstanceValueContext
-	readonly decodeInstanceValue: DecodeInstanceValue;
+  // InstanceValueContext
+  readonly decodeInstanceValue: DecodeInstanceValue;
 
-	// UploadNode
-	readonly nodeType = 'upload';
-	readonly valueType = 'binary';
-	readonly maxPixels: number | null;
-	readonly appearances: UnknownAppearanceDefinition;
-	readonly nodeOptions: UploadNodeOptions;
-	readonly currentState: CurrentState<UploadControlStateSpec>;
+  // UploadNode
+  readonly nodeType = 'upload';
+  readonly valueType = 'binary';
+  readonly maxPixels: number | null;
+  readonly appearances: UnknownAppearanceDefinition;
+  readonly nodeOptions: UploadNodeOptions;
+  readonly currentState: CurrentState<UploadControlStateSpec>;
 
-	get validationState(): LeafNodeValidationState {
-		return this.validation.currentState;
-	}
+  get validationState(): LeafNodeValidationState {
+    return this.validation.currentState;
+  }
 
-	readonly instanceState: InstanceState;
+  readonly instanceState: InstanceState;
 
-	private constructor(
-		parent: GeneralParentNode,
-		override readonly instanceNode: StaticLeafElement | null,
-		definition: UploadDefinition<'binary'>
-	) {
-		super(parent, instanceNode, definition);
+  private constructor(
+    parent: GeneralParentNode,
+    override readonly instanceNode: StaticLeafElement | null,
+    definition: UploadDefinition<'binary'>
+  ) {
+    super(parent, instanceNode, definition);
 
-		this.appearances = definition.bodyElement.appearances;
-		this.nodeOptions = definition.bodyElement.options;
-		this.maxPixels = definition.bind.maxPixels;
+    this.appearances = definition.bodyElement.appearances;
+    this.nodeOptions = definition.bodyElement.options;
+    this.maxPixels = definition.bind.maxPixels;
 
-		const instanceAttachment = createInstanceAttachment(this);
+    const instanceAttachment = createInstanceAttachment(this);
 
-		this.instanceAttachment = instanceAttachment;
+    this.instanceAttachment = instanceAttachment;
 
-		this.attributeState = createAttributeState(this.scope);
-		this.decodeInstanceValue = instanceAttachment.decodeInstanceValue;
-		this.getXPathValue = instanceAttachment.getInstanceValue;
+    this.attributeState = createAttributeState(this.scope);
+    this.decodeInstanceValue = instanceAttachment.decodeInstanceValue;
+    this.getXPathValue = instanceAttachment.getInstanceValue;
 
-		const state = createSharedNodeState(
-			this.scope,
-			{
-				reference: this.contextReference,
-				readonly: this.isReadonly,
-				relevant: this.isRelevant,
-				required: this.isRequired,
+    const state = createSharedNodeState(
+      this.scope,
+      {
+        reference: this.contextReference,
+        readonly: this.isReadonly,
+        relevant: this.isRelevant,
+        required: this.isRequired,
 
-				label: createNodeLabel(this, definition),
-				hint: createFieldHint(this, definition),
-				children: null,
-				valueOptions: null,
-				value: instanceAttachment.valueState,
-				attributes: this.attributeState.getAttributes,
-				instanceValue: instanceAttachment.getInstanceValue,
-				attachmentState: instanceAttachment.getState,
-			},
-			this.instanceConfig
-		);
+        label: createNodeLabel(this, definition),
+        hint: createFieldHint(this, definition),
+        children: null,
+        valueOptions: null,
+        value: instanceAttachment.valueState,
+        attributes: this.attributeState.getAttributes,
+        instanceValue: instanceAttachment.getInstanceValue,
+        attachmentState: instanceAttachment.getState,
+      },
+      this.instanceConfig
+    );
 
-		this.state = state;
-		this.engineState = state.engineState;
-		this.currentState = state.currentState;
-		this.validation = createValidationState(this, this.instanceConfig);
-		this.attributeState.setAttributes(buildAttributes(this));
-		this.instanceState = createValueNodeInstanceState(this);
-	}
+    this.state = state;
+    this.engineState = state.engineState;
+    this.currentState = state.currentState;
+    this.validation = createValidationState(this, this.instanceConfig);
+    this.attributeState.setAttributes(buildAttributes(this));
+    this.instanceState = createValueNodeInstanceState(this);
+  }
 
-	// ValidationContext
-	getViolation(): AnyViolation | null {
-		return this.validation.engineState.violation;
-	}
+  // ValidationContext
+  getViolation(): AnyViolation | null {
+    return this.validation.engineState.violation;
+  }
 
-	isBlank(): boolean {
-		return this.getXPathValue() === '';
-	}
+  isBlank(): boolean {
+    return this.getXPathValue() === '';
+  }
 
-	// InstanceNode
-	getChildren(): readonly [] {
-		return [];
-	}
+  // InstanceNode
+  getChildren(): readonly [] {
+    return [];
+  }
 
-	override getAttributes(): readonly Attribute[] {
-		return this.attributeState.getAttributes();
-	}
+  override getAttributes(): readonly Attribute[] {
+    return this.attributeState.getAttributes();
+  }
 
-	// UploadNode
-	setValue(value: InstanceAttachmentRuntimeValue): Root {
-		this.instanceAttachment.setValue(value);
+  // UploadNode
+  setValue(value: InstanceAttachmentRuntimeValue): Root {
+    this.instanceAttachment.setValue(value);
 
-		return this.root;
-	}
+    return this.root;
+  }
 
-	retryFetch() {
-		this.instanceAttachment.retry();
-	}
+  retryFetch() {
+    this.instanceAttachment.retry();
+  }
 }

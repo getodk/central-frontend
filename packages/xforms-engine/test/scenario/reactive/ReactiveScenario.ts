@@ -8,34 +8,34 @@ import type { ScenarioConfig } from '../jr/Scenario.ts';
 import { Scenario } from '../jr/Scenario.ts';
 
 export class ReactiveScenario extends Scenario {
-	static override getTestFormOptions(): TestFormOptions {
-		return super.getTestFormOptions({
-			stateFactory: createMutable,
-		});
-	}
+  static override getTestFormOptions(): TestFormOptions {
+    return super.getTestFormOptions({
+      stateFactory: createMutable,
+    });
+  }
 
-	private readonly testScopedOwner: Owner;
+  private readonly testScopedOwner: Owner;
 
-	constructor(baseConfig: ScenarioConfig, form: InitializableForm, instanceRoot: RootNode) {
-		let dispose!: VoidFunction;
+  constructor(baseConfig: ScenarioConfig, form: InitializableForm, instanceRoot: RootNode) {
+    let dispose!: VoidFunction;
 
-		const testScopedOwner = createRoot((disposeRoot) => {
-			dispose = () => {
-				disposeRoot();
-				baseConfig.dispose();
-			};
+    const testScopedOwner = createRoot((disposeRoot) => {
+      dispose = () => {
+        disposeRoot();
+        baseConfig.dispose();
+      };
 
-			return getAssertedOwner();
-		});
+      return getAssertedOwner();
+    });
 
-		super({ ...baseConfig, dispose }, form, instanceRoot);
+    super({ ...baseConfig, dispose }, form, instanceRoot);
 
-		this.testScopedOwner = testScopedOwner;
-	}
+    this.testScopedOwner = testScopedOwner;
+  }
 
-	createEffect<Next>(fn: EffectFunction<NoInfer<Next> | undefined, Next>): void {
-		runInSolidScope(this.testScopedOwner, () => {
-			createEffect(fn);
-		});
-	}
+  createEffect<Next>(fn: EffectFunction<NoInfer<Next> | undefined, Next>): void {
+    runInSolidScope(this.testScopedOwner, () => {
+      createEffect(fn);
+    });
+  }
 }

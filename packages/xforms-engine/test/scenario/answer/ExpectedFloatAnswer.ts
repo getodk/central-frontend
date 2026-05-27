@@ -1,15 +1,15 @@
 import { ComparableAnswer } from './ComparableAnswer.ts';
 
 export class ExpectedFloatAnswer extends ComparableAnswer {
-	readonly stringValue: string;
+  readonly stringValue: string;
 
-	constructor(floatValue: number) {
-		super();
+  constructor(floatValue: number) {
+    super();
 
-		this.stringValue = `${floatValue}`;
-	}
+    this.stringValue = `${floatValue}`;
+  }
 }
 
 export const floatAnswer = (floatValue: number): ExpectedFloatAnswer => {
-	return new ExpectedFloatAnswer(floatValue);
+  return new ExpectedFloatAnswer(floatValue);
 };

@@ -4,21 +4,21 @@ import type { InstanceAttachmentContext } from '../internal-api/InstanceAttachme
 import type { InstanceAttachment } from './InstanceAttachment.ts';
 
 export class InstanceAttachmentsState extends Map<InstanceAttachmentContext, InstanceAttachment> {
-	constructor(private readonly sourceAttachments: InstanceAttachmentMap | null = null) {
-		super();
-	}
+  constructor(private readonly sourceAttachments: InstanceAttachmentMap | null = null) {
+    super();
+  }
 
-	getInitialFileValue(instanceNode: StaticLeafElement | null): Promise<File> | null {
-		if (instanceNode == null) {
-			return null;
-		}
+  getInitialFileValue(instanceNode: StaticLeafElement | null): Promise<File> | null {
+    if (instanceNode == null) {
+      return null;
+    }
 
-		return this.sourceAttachments?.get(instanceNode.value) ?? null;
-	}
+    return this.sourceAttachments?.get(instanceNode.value) ?? null;
+  }
 
-	retryFileValue(instanceNode: StaticLeafElement | null) {
-		if (instanceNode !== null) {
-			this.sourceAttachments?.retry(instanceNode.value);
-		}
-	}
+  retryFileValue(instanceNode: StaticLeafElement | null) {
+    if (instanceNode !== null) {
+      this.sourceAttachments?.retry(instanceNode.value);
+    }
+  }
 }

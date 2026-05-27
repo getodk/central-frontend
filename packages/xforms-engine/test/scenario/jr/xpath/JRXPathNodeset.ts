@@ -17,6 +17,6 @@ import type { XPathPathExprEval } from './XPathPathExprEval.ts';
  * @see {@link XPathPathExprEval} for additional details.
  */
 export interface JRXPathNodeset {
-	getReferences(): JavaUtilList<JRTreeReference>;
-	size(): number;
+  getReferences(): JavaUtilList<JRTreeReference>;
+  size(): number;
 }
