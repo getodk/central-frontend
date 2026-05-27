@@ -36,7 +36,9 @@ describe('Form submission encryption', () => {
 				head(
 					title('My secret form'),
 					model(
-						mainInstance(t('data id="my-secret-form"', t('inp', 'test'), t('meta', t('instanceID')))),
+						mainInstance(
+							t('data id="my-secret-form"', t('inp', 'test'), t('meta', t('instanceID')))
+						),
 						...(options?.submissionElements ?? []),
 						bind('/data/inp').required(),
 						bind('/data/meta/instanceID').calculate(`'${DEFAULT_INSTANCE_ID}'`)
@@ -54,7 +56,7 @@ describe('Form submission encryption', () => {
 			submissionElements: [t(`submission base64RsaPublicKey="${base64RsaPublicKey}"`)],
 		});
 		const userEnteredValue = 'secret value';
-		scenario.answer('/data/inp', userEnteredValue)
+		scenario.answer('/data/inp', userEnteredValue);
 		const submissionResult = await scenario.prepareWebFormsInstancePayload();
 
 		expect(submissionResult.submissionMeta).toMatchObject({
