@@ -20,29 +20,47 @@ interface ChunksAndMedia {
 	mediaSources: MediaSources;
 }
 
+const generateResourceChunk = (context: EvaluationContext, child: Element, type: ResourceType) => {
+	const parts = [];
+	for (const grandchild of child.childNodes) {
+		if (isElementNode(grandchild)) {
+			const expression = TextChunkExpression.fromOutput(grandchild);
+			if (expression) {
+				parts.push(createComputedExpression(context, expression)());
+			}
+		} else if (isTextNode(grandchild)) {
+			parts.push(grandchild.data);
+		}
+	}
+	const url = parts.join('') as JRResourceURLString;
+	return TextChunkExpression.fromResource(url, type);
+};
+
 const generateChunk = (node: Node): TextChunkExpression<'string'> | null => {
 	if (isElementNode(node)) {
 		return TextChunkExpression.fromOutput(node);
 	}
 	if (isTextNode(node)) {
-		const formAttribute = node.parentElement!.getAttribute('form') as ResourceType;
-		if (isResourceType(formAttribute)) {
-			return TextChunkExpression.fromResource(node.data as JRResourceURLString, formAttribute);
-		}
 		return TextChunkExpression.fromLiteral(node.data);
 	}
 	return null;
 };
 
 const generateChunksForTranslation = (
+	context: EvaluationContext,
 	textElement: Element
 ): Array<TextChunkExpression<'string'>> => {
 	const chunks = [];
-	for (const child of textElement.childNodes) {
-		for (const grandchild of child.childNodes) {
-			const chunk = generateChunk(grandchild);
-			if (chunk) {
-				chunks.push(chunk);
+	for (const child of textElement.children) {
+		const formAttribute = child.getAttribute('form') as ResourceType;
+		if (isResourceType(formAttribute)) {
+			chunks.push(generateResourceChunk(context, child, formAttribute));
+		} else {
+			for (const grandchild of child.childNodes) {
+				const chunk = generateChunk(grandchild);
+				if (chunk) {
+					chunks.push(chunk);
+				}
 			}
 		}
 	}
@@ -62,7 +80,7 @@ const getChunkExpressions = <Role extends TextRole>(
 	});
 	const lang = context.getActiveLanguage();
 	const elem = definition.form.model.getItextElement(lang, itextId);
-	return elem ? generateChunksForTranslation(elem) : [];
+	return elem ? generateChunksForTranslation(context, elem) : [];
 };
 
 /**
@@ -83,9 +101,10 @@ const createTextChunks = <Role extends TextRole>(
 	const chunkExpressions = getChunkExpressions(context, definition);
 	chunkExpressions.forEach((chunkExpression) => {
 		if (chunkExpression.resourceType) {
-			mediaSources[chunkExpression.resourceType] = JRResourceURL.from(
-				chunkExpression.stringValue as JRResourceURLString
-			);
+			const url = chunkExpression.stringValue?.trim();
+			if (JRResourceURL.isJRResourceReference(url)) {
+				mediaSources[chunkExpression.resourceType] = JRResourceURL.from(url);
+			}
 			return;
 		}
 
