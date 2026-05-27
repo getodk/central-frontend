@@ -85,7 +85,7 @@ const hostSubmissionResultCallbackFactory = (
 		};
 		state.value = updateSubmittedFormState(submissionResult, currentState, options);
 		if (submissionResult?.next === POST_SUBMIT__NEW_INSTANCE) {
-			document.scrollingElement?.scrollTo(0, 0);
+      document.scrollingElement?.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
 		}
 	};
 
