@@ -50,7 +50,9 @@ export ODK_PORT
 export ODK_PROTOCOL
 export ODK_USER
 export ODK_PASSWORD
-if [ "$ODK_PORT" = "80" ]; then
+if [[ "$ODK_PORT" = 80 ]] && [[ $ODK_PROTOCOL = http:// ]]; then
+  export ODK_URL="${ODK_PROTOCOL}${ODK_DOMAIN}"
+elif [[ "$ODK_PORT" = 443 ]] && [[ $ODK_PROTOCOL = https:// ]]; then
   export ODK_URL="${ODK_PROTOCOL}${ODK_DOMAIN}"
 else
   export ODK_URL="${ODK_PROTOCOL}${ODK_DOMAIN}:$ODK_PORT"
