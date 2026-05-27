@@ -50,6 +50,7 @@ export ODK_PORT
 export ODK_PROTOCOL
 export ODK_USER
 export ODK_PASSWORD
+
 if [[ "$ODK_PORT" = 80 ]] && [[ $ODK_PROTOCOL = http:// ]]; then
   export ODK_URL="${ODK_PROTOCOL}${ODK_DOMAIN}"
 elif [[ "$ODK_PORT" = 443 ]] && [[ $ODK_PROTOCOL = https:// ]]; then
@@ -57,6 +58,7 @@ elif [[ "$ODK_PORT" = 443 ]] && [[ $ODK_PROTOCOL = https:// ]]; then
 else
   export ODK_URL="${ODK_PROTOCOL}${ODK_DOMAIN}:$ODK_PORT"
 fi
+log "Using ODK_URL: '$ODK_URL'"
 
 export PW_EXPERIMENTAL_SERVICE_WORKER_NETWORK_EVENTS=1
 if [[ ${CI-} = true ]]; then
