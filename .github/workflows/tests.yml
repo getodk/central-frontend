@@ -30,6 +30,7 @@ jobs:
     - name: Modify files
       working-directory: central
       run: |
+        yq -i '.services.enketo.environment += ["NODE_TLS_REJECT_UNAUTHORIZED=0"]' docker-compose.yml
         yq e '.services.enketo.extra_hosts += ["${DOMAIN}:host-gateway"]' -i docker-compose.yml
         sed -i 's|\${BASE_URL}|https://${DOMAIN}|g' files/enketo/config.json.template # remove?
         sed -i 's|\${BASE_URL}|https://${DOMAIN}|g' files/service/config.json.template # remove?
