@@ -19,6 +19,7 @@ jobs:
       with:
         path: client
         fetch-depth: 0
+    - run: sudo sed -i '/azure.archive.ubuntu.com\/ubuntu\/\tpriority/ s/priority:0/priority:1/' /etc/apt/apt-mirrors.txt
     - name: Clone getodk/central repo
       run: |
         git clone -b next https://github.com/getodk/central.git
