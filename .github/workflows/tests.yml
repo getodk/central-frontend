@@ -6,10 +6,6 @@ on:
 
 jobs:
   e2e-tests:
-    needs:
-    - build
-    - static-checks
-    - unit-tests
     timeout-minutes: 120
     runs-on: ubuntu-latest
     steps:
