@@ -47,9 +47,28 @@ const devServer = {
   cors: false
 };
 
+// used to route requests to the right app in development
+const devAppRouter = () => ({
+  name: 'dev-app-router',
+  configureServer(server) {
+    server.middlewares.use((req, res, next) => {
+      // must match the regex paths defined in Nginx
+      // TODO need to do all the other forms URLs 
+      // TODO can we change the URLs that aren't legacy ones??
+      const newSubmissionRegex = /^\/projects\/[0-9]+\/forms\/([^\/]+)\/submissions\/new/;
+
+      if (newSubmissionRegex.test(req.url)) {
+        req.url = '/apps/forms/index.html';
+      }
+      next();
+    })
+  }
+});
+
 export default defineConfig(({ mode }) => ({
   plugins: [
     vue(),
+    devAppRouter(),
     VueI18nPlugin({
       include: resolve(dirname(fileURLToPath(import.meta.url)), './apps/central/src/locales/**'),
       compositionOnly: false,
@@ -66,8 +85,15 @@ export default defineConfig(({ mode }) => ({
     target: buildTarget,
     // `false` during dev for performance reasons
     reportCompressedSize: mode === 'production',
-    cssCodeSplit: false
+    cssCodeSplit: false,
+    rolldownOptions: {
+      input: {
+        main: resolve(import.meta.dirname, 'index.html'), // TODO I think move this html up in to /apps/central - it's no longer needed for forms
+        forms: resolve(import.meta.dirname, 'apps/forms/index.html'),
+      },
+    },
   },
+
   // Not sure why this is needed in addition to build.target above and why it's
   // only an issue in development. `npm run dev` doesn't work without this.
   optimizeDeps: mode === 'development'

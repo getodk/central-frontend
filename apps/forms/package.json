@@ -1,0 +1,12 @@
+{
+  "name": "@getodk/forms",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "eslint": "",
+    "eslint:fix": "",
+    "lint": "",
+    "lint:fix": "",
+    "test": ""
+  }
+}
