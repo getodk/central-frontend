@@ -103,9 +103,9 @@ definition for an existing form -->
         {{ file != null ? file.name : '' }}
       </div>
     </file-drop-zone>
-    <div class="actions">
+    <div v-if="file != null" class="actions">
       <button type="button" class="btn btn-link" :aria-disabled="awaitingResponse"
-        @click="$emit('cancel')">
+        @click="clear()">
         {{ $t('action.cancel') }}
       </button>
       <button id="upload-button" type="button"

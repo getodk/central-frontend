@@ -77,19 +77,6 @@ describe('FormUpload', () => {
       testData.extendedProjects.createPast(1);
     });
 
-    it('shows an alert if no file is selected', async () => {
-      const component = mount(FormUpload, mountOptions());
-      await component.get('#upload-button').trigger('click');
-      component.should.alert('danger');
-    });
-
-    it('hides the alert after a file is selected', async () => {
-      const component = mount(FormUpload, mountOptions());
-      await component.get('#upload-button').trigger('click');
-      await setFiles(component.get('input'), [xlsForm()]);
-      component.should.not.alert();
-    });
-
     describe('after a file is selected using the file input', () => {
       it('shows the filename', async () => {
         const component = mount(FormUpload, mountOptions());
@@ -198,8 +185,11 @@ describe('FormUpload', () => {
   it('implements some standard button things for the upload button', () => {
     mockLogin();
     testData.extendedProjects.createPast(1);
+    // await setFiles(component.get('input'), [xlsForm()]);
     return mockHttp()
       .mount(FormUpload, mountOptions())
+      .request(component => setFiles(component.get('input'), [xlsForm()]))
+      .complete()
       .testStandardButton({
         button: '#upload-button',
         request: upload,
@@ -258,20 +248,6 @@ describe('FormUpload', () => {
           // updated form list is received.
           app.get('#page-head-tabs li.active .badge').text().should.equal('2');
         }));
-  });
-
-  describe('after cancelling form creation', () => {
-    it('redirects to the project overview', () => {
-      mockLogin();
-      testData.extendedProjects.createPast(1);
-      return load('/projects/1/new-form')
-        .complete()
-        .request(app => app.get('#form-upload .btn-link').trigger('click'))
-        .respondFor('/projects/1', { project: false })
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/projects/1');
-        });
-    });
   });
 
   // TODO: to be updated in https://github.com/getodk/central/issues/1831
