@@ -35,6 +35,7 @@ setup('create new project', async ({ request }) => {
     process.env.PROJECT_ID = project.id;
   } catch (err) {
     if (err.message.includes('ECONNREFUSED')) {
+      // eslint-disable-next-line preserve-caught-error
       throw Error(`
         Failed to connect to central-backend.
 

@@ -231,7 +231,7 @@ export const proposed_rankDynamic = (ref: string, nodesetRef: string): XFormsEle
 	const rankAttributes = new Map<string, string>();
 	rankAttributes.set('ref', ref);
 
-	return new TagXFormsElement('odk:rank', rankAttributes, [itemset]) as XFormsElement;
+	return new TagXFormsElement('odk:rank', rankAttributes, [itemset]);
 };
 
 export { proposed_rankDynamic as rankDynamic };

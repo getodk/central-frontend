@@ -15,7 +15,7 @@ jobs:
     - run: ./bin/check-for-large-files.sh
     - run: ./bin/check-images.sh
   unit-tests:
-    timeout-minutes: 5
+    timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
@@ -24,9 +24,10 @@ jobs:
         node-version-file: package.json
         cache: 'npm'
     - run: npm ci
+    - run: npm run build
     - run: npm run lint
     - uses: browser-actions/setup-chrome@v2
-    - run: npm run test
+    - run: npm run test -w=@getodk/central-frontend
   build:
     timeout-minutes: 5
     runs-on: ubuntu-latest
@@ -39,6 +40,34 @@ jobs:
     - run: npm ci
     - run: npm run build
     - run: ./bin/check-bundle-size.js
+  build-wf:
+    name: 'Build Web Forms'
+    runs-on: 'ubuntu-latest'
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ['24.14.1']
+    steps:
+      - uses: 'actions/checkout@v6'
+      - uses: 'volta-cli/action@v5'
+        with:
+          node-version: '${{ matrix.node-version }}'
+      - uses: 'actions/cache@v5'
+        id: cache-install
+        with:
+          path: |
+            node_modules
+            **/node_modules
+          key: install-${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
+      - uses: 'actions/cache@v5'
+        id: cache-build
+        with:
+          path: |
+            packages/*/dist
+            packages/web-forms/dist-demo
+          key: build-${{ matrix.node-version }}-${{ github.sha }}
+      - run: 'npm ci'
+      - run: 'npm run build'
   e2e-tests:
     needs:
     - build
@@ -71,6 +100,7 @@ jobs:
         sed -i 's|\${BASE_URL}|http://${DOMAIN}|g' files/enketo/config.json.template
         sed -i 's|\${BASE_URL}|http://${DOMAIN}|g' files/service/config.json.template
         sed -i 's/\$scheme/https/g' files/nginx/odk.conf.template
+        sed -i 's/Content-Security-Policy/Content-Security-Report-Only/g' files/nginx/odk.conf.template
         sed 's/your.domain.com/central-test.localhost/; s/^SSL_TYPE=letsencrypt/SSL_TYPE=upstream/' .env.template > .env
     - name: Add domain
       run: echo '127.0.0.1 central-test.localhost' | sudo tee --append /etc/hosts
@@ -92,3 +122,13 @@ jobs:
       with:
         name: Playwright Artifacts
         path: central/client/test-results
+  wf-tests:
+    name: 'Run Web Forms Tests'
+    needs:
+    - build-wf
+    uses: ./.github/workflows/wf-ci.yml
+  wf-e2e-tests:
+    name: 'Run Web Forms E2E Tests'
+    needs:
+    - wf-tests
+    uses: ./.github/workflows/wf-ci-e2e.yml

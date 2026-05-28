@@ -32,7 +32,7 @@ describe('Engine/Client state', () => {
 			toJSON() {
 				return `Accessor<${String(value)}>`;
 			},
-		}) as Accessor<T>;
+		});
 	};
 
 	interface DefaultTestStateSpec {
