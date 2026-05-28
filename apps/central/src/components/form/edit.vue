@@ -14,14 +14,9 @@ except according to the terms contained in the LICENSE file.
     @dragenter="dragHandler" @dragleave="dragHandler" @drop="dragHandler">
     <loading :state="formDraft.initiallyLoading"/>
     <template v-if="formDraft.dataExists">
-      <div class="row">
-        <div v-if="formDraft.isEmpty()" class="col-xs-6">
-          <form-edit-create-draft @success="fetchDraft(true)"/>
-        </div>
-        <div v-if="form.dataExists && form.publishedAt != null" class="col-xs-6">
-          <form-edit-published-version/>
-        </div>
-      </div>
+      <form-edit-published-version v-if="form.dataExists && form.publishedAt != null"/>
+      <form-edit-create-draft v-if="formDraft.isEmpty()" @success="fetchDraft(true)"/>
+
       <template v-if="formDraft.isDefined()">
         <form-edit-def @after-upload="afterUpload"/>
         <form-edit-attachments/>
