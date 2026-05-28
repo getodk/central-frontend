@@ -2,7 +2,7 @@ import { Geolocation, type LocationPoint, type LocationPointInput } from './Geol
 
 export type GeopointRuntimeValue = LocationPoint | null;
 
-export type GeopointInputValue = LocationPointInput | null | string;
+export type GeopointInputValue = LocationPointInput | string | null;
 
 export class Geopoint extends Geolocation {
 	static parseStringToGeopoint(value: string): GeopointRuntimeValue {
