@@ -12,6 +12,7 @@ except according to the terms contained in the LICENSE file.
 
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
 import vue from '@vitejs/plugin-vue';
+import vueJsx from '@vitejs/plugin-vue-jsx';
 import { defineConfig } from 'vite';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'url';
@@ -50,6 +51,7 @@ const devServer = {
 export default defineConfig(({ mode }) => ({
   plugins: [
     vue(),
+    ...(mode === 'development' ? [vueJsx()] : []), // Web Forms source uses JSX
     VueI18nPlugin({
       include: resolve(dirname(fileURLToPath(import.meta.url)), './apps/central/src/locales/**'),
       compositionOnly: false,
@@ -59,6 +61,22 @@ export default defineConfig(({ mode }) => ({
       dropMessageCompiler: true
     })
   ],
+  resolve: {
+    /*
+     * In development, resolve @getodk/web-forms to its SOURCE so edits (including SCSS) hot-reload on the dev server.
+     * In production, automatically resolve @getodk/web-forms to its dist.
+     */
+    alias: mode === 'development'
+      ? {
+          '@getodk/web-forms': resolve(__dirname, 'packages/web-forms/src/index.ts'),
+          // todo: should xforms-engine stays pinned to its dist so we don't pull a second package's source into the dev graph?
+          '@getodk/xforms-engine': resolve(__dirname, 'packages/xforms-engine/dist/index.js'),
+          '@': resolve(__dirname, 'packages/web-forms/src'),
+          '@locales': resolve(__dirname, 'packages/web-forms/locales'),
+          'primevue/menuitem': 'primevue/menu'
+        }
+      : {}
+  },
   define: {
     __WEB_FORMS_VERSION__: JSON.stringify(webFormsPackage.version)
   },
