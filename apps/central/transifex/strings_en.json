@@ -3457,6 +3457,10 @@
       }
     },
     "FormEditDef": {
+      "title": {
+        "string": "Draft version: {version}",
+        "developer_comment": "This is shown for the Draft Form. {version} is the version of the Form defined in its definition."
+      },
       "subtitle": {
         "string": "Uploaded",
         "developer_comment": "This refers to the draft version of a Form."
@@ -3464,10 +3468,6 @@
       "changed": {
         "string": "Changed from published version",
         "developer_comment": "This refers to the draft version of a Form."
-      },
-      "versionName": {
-        "string": "Version name: {name}",
-        "developer_comment": "This is shown for a Form version."
       }
     },
     "FormEditDraftControls": {
@@ -3515,8 +3515,8 @@
     },
     "FormEditPublishedVersion": {
       "title": {
-        "string": "Current version",
-        "developer_comment": "This refers to the current version of a Form."
+        "string": "Current version: {version}",
+        "developer_comment": "This refers to the current version of a Form. {version} is the version of the published Form, defined in its definition."
       },
       "subtitle": {
         "published": {
