@@ -77,7 +77,12 @@ $heading-margin-bottom: 10px;
   border-radius: 6px;
   color: $color-accent-primary;
   padding: 5px 9px;
+
+  // Hide the entire element if no tag slot is provided. We don't want the icon
+  // to be shown in that case.
+  &:has(> :nth-child(2):empty) { display: none; }
 }
+
 
 .form-edit-section:has(.form-edit-section-subtitle:empty) .form-edit-section-body > p:first-of-type {
   margin-top: -$heading-margin-bottom;
