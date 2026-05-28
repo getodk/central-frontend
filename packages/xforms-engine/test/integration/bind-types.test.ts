@@ -606,22 +606,20 @@ describe('Data (<bind type>) type support', () => {
 				expect(answer.stringValue).toBe('');
 			});
 
-			it('normalizes a lat/lon-only initial value to 4 components (altitude and accuracy default to 0)', async () => {
-				// prettier-ignore
-				const presetScenario = await Scenario.init('Preset geopoint', html(
-					head(
-						title('Preset geopoint'),
-						model(
-							mainInstance(
-								t('root id="preset-geopoint"',
-									t('gp', '9.1021 -79.3976')
-								)
-							),
-							bind('/root/gp').type('geopoint')
-						)
-					),
-					body(input('/root/gp'))
-				));
+			it('defaults altitude and accuracy to 0 for an initial value with only latitude and longitude', async () => {
+				const presetScenario = await Scenario.init(
+					'Preset geopoint',
+					html(
+						head(
+							title('Preset geopoint'),
+							model(
+								mainInstance(t('root id="preset-geopoint"', t('gp', '9.1021 -79.3976'))),
+								bind('/root/gp').type('geopoint')
+							)
+						),
+						body(input('/root/gp'))
+					)
+				);
 
 				const presetAnswer = presetScenario.answerOf('/root/gp');
 				assertTypedInputNodeAnswer(presetAnswer, 'geopoint');

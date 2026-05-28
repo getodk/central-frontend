@@ -22,18 +22,18 @@ class Accuracy<Value extends number | null = number> extends SemanticValue<'accu
 	readonly semantic = 'accuracy';
 }
 
-export interface LocationPoint {
-	readonly latitude: number;
-	readonly longitude: number;
-	readonly altitude: number;
-	readonly accuracy: number;
-}
-
 export interface LocationPointInput {
 	readonly latitude: number;
 	readonly longitude: number;
 	readonly altitude?: number | null;
 	readonly accuracy?: number | null;
+}
+
+export interface LocationPoint {
+	readonly latitude: number;
+	readonly longitude: number;
+	readonly altitude: number;
+	readonly accuracy: number;
 }
 
 interface GeolocationInternalValue {

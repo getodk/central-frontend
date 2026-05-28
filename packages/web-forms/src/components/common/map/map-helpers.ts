@@ -13,8 +13,7 @@ import type {
 	Polygon as PolygonGeoJSON,
 } from 'geojson';
 
-// Latitude is first for ODK and longitude is second.
-// Altitude and accuracy default to 0 when not from device sensors, to match Collect behavior.
+// Latitude is first for ODK, and longitude is second. Altitude and accuracy default to 0 to match Collect behavior.
 export const toODKCoordinateArray = (
 	longitude: number,
 	latitude: number,

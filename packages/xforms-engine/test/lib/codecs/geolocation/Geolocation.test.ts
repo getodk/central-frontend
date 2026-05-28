@@ -4,14 +4,8 @@ import { Geolocation } from '../../../../src/lib/codecs/geolocation/Geolocation'
 describe('Geolocation', () => {
 	describe('toCoordinatesString', () => {
 		it.each([
-			{
-				input: '1 2',
-				expected: '1.0 2.0 0.0 0.0',
-			},
-			{
-				input: '1 2 0',
-				expected: '1.0 2.0 0.0 0.0',
-			},
+			{ input: '1 2', expected: '1.0 2.0 0.0 0.0' },
+			{ input: '1 2 0', expected: '1.0 2.0 0.0 0.0' },
 			{
 				input: { latitude: 1, longitude: 2, altitude: 0, accuracy: 0 },
 				expected: '1.0 2.0 0.0 0.0',
