@@ -70,6 +70,7 @@ const { form } = useRequestData();
       "published": "Published {dateTime}"
     },
     // @transifexKey component.FormEditDef.versionName
+    // This is shown for a Form version.
     "versionName": "Version name: {name}"
   }
 }
