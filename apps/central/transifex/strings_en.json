@@ -3478,7 +3478,7 @@
         }
       },
       "subtitle": {
-        "string": "Ready to publish",
+        "string": "Ready to publish?",
         "developer_comment": "This refers to the draft version of a Form."
       }
     },
