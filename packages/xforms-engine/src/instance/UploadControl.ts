@@ -26,7 +26,7 @@ import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
 import type { SimpleAtomicState } from '../lib/reactivity/types.ts';
 import type { SharedValidationState } from '../lib/reactivity/validation/createValidation.ts';
 import { createValidationState } from '../lib/reactivity/validation/createValidation.ts';
-import type { UnknownAppearanceDefinition } from '../parse/body/appearance/unknownAppearanceParser.ts';
+import type { UploadAppearanceDefinition } from '../parse/body/appearance/uploadAppearanceParser.ts';
 import type { Attribute } from './Attribute.ts';
 import type { Root } from './Root.ts';
 import type { DescendantNodeStateSpec } from './abstract/DescendantNode.ts';
@@ -123,7 +123,7 @@ export class UploadControl
 	readonly nodeType = 'upload';
 	readonly valueType = 'binary';
 	readonly maxPixels: number | null;
-	readonly appearances: UnknownAppearanceDefinition;
+	readonly appearances: UploadAppearanceDefinition;
 	readonly nodeOptions: UploadNodeOptions;
 	readonly currentState: CurrentState<UploadControlStateSpec>;
 

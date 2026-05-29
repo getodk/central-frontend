@@ -1,0 +1,7 @@
+@use 'primeflex/core/_variables.scss' as pf;
+
+@mixin sm-constrained {
+	@media (width <= #{pf.$sm}) and (orientation: portrait), (height <= #{pf.$sm}) and (orientation: landscape) {
+		@content;
+	}
+}

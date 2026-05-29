@@ -180,6 +180,16 @@ export const odkThemePreset = definePreset(Aura, {
 				},
 			},
 		},
+		colorpicker: {
+			colorScheme: {
+				light: {
+					panel: {
+						background: 'var(--odk-base-background-color)',
+						borderColor: 'var(--odk-border-color)',
+					},
+				},
+			},
+		},
 		rating: {
 			root: {
 				gap: '0.3rem',

@@ -35,6 +35,7 @@ import type { SimpleAtomicStateSetter } from '../lib/reactivity/types.ts';
 import type { BodyClassList } from '../parse/body/BodyDefinition.ts';
 import type { ModelDefinition } from '../parse/model/ModelDefinition.ts';
 import type { RootDefinition } from '../parse/model/RootDefinition.ts';
+import type { FetchFormAttachment } from '../client/resources.ts';
 import type { SecondaryInstancesDefinition } from '../parse/model/SecondaryInstance/SecondaryInstancesDefinition.ts';
 import { InstanceNode } from './abstract/InstanceNode.ts';
 import { buildAttributes } from './attachments/buildAttributes.ts';
@@ -100,6 +101,7 @@ export interface BasePrimaryInstanceOptions {
 	scope: ReactiveScope;
 	readonly model: ModelDefinition;
 	readonly secondaryInstances: SecondaryInstancesDefinition;
+	readonly fetchFormAttachment: FetchFormAttachment;
 }
 
 export interface ModelessPrimaryInstanceOptions extends BasePrimaryInstanceOptions {
@@ -168,7 +170,8 @@ export class PrimaryInstance<
 	override readonly contextNode = this;
 
 	constructor(options: PrimaryInstanceOptions<Mode>) {
-		const { mode, initialState, scope, model, secondaryInstances, config } = options;
+		const { mode, initialState, scope, model, secondaryInstances, fetchFormAttachment, config } =
+			options;
 		const { instance: modelInstance } = model;
 		const activeInstance = initialState?.document ?? modelInstance;
 		const definition = model.getRootDefinition(activeInstance);
@@ -182,7 +185,7 @@ export class PrimaryInstance<
 
 		this.initializationMode = mode;
 		this.model = model;
-		this.attachments = new InstanceAttachmentsState(initialState?.attachments);
+		this.attachments = new InstanceAttachmentsState(initialState?.attachments, fetchFormAttachment);
 		this.instanceNode = activeInstance;
 		this.geolocationProvider = config.geolocationProvider;
 

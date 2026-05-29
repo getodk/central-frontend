@@ -1,15 +1,4 @@
-.map-block-component {
-	--odk-map-controls-spacing: 8px;
-	--odk-map-bottom-placeholder-height: 60px;
-}
-
-@mixin map-block-sm {
-	@container map-block (max-height: 333px) {
-		@content;
-	}
-}
-
-@mixin map-control-bar {
+@mixin panel-control-bar {
 	position: absolute;
 	display: flex;
 	flex-wrap: nowrap;
@@ -17,22 +6,40 @@
 	box-shadow: none;
 	background: none;
 	overflow: hidden;
-	gap: var(--odk-map-controls-spacing);
+	gap: var(--odk-spacing-m);
 	z-index: var(--odk-z-index-form-content);
 }
 
-@mixin map-control-bar-vertical {
-	@include map-control-bar;
-	right: var(--odk-map-controls-spacing);
+@mixin panel-control-bar-vertical {
+	@include panel-control-bar;
+	right: var(--odk-spacing-m);
 	flex-direction: column;
 }
 
-@mixin map-control-button {
+@mixin panel-control-bar-horizontal {
+	@include panel-control-bar;
+	flex-direction: row;
+	left: var(--odk-spacing-m);
+	bottom: var(--odk-spacing-m);
+	background: var(--odk-base-background-color);
+	border: 1px solid var(--odk-border-color);
+	border-radius: var(--odk-radius);
+	gap: 4px;
+	padding: 7px;
+
+	button {
+		height: 48px;
+		width: 48px;
+		border: none;
+	}
+}
+
+@mixin panel-control-button {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	height: 42px;
-	width: 42px;
+	height: 40px;
+	width: 40px;
 	border: 1px solid var(--odk-border-color);
 	border-radius: var(--odk-radius);
 	background: var(--odk-base-background-color);
@@ -53,5 +60,11 @@
 		svg {
 			opacity: 0.5;
 		}
+	}
+}
+
+@mixin panel-control-sm {
+	@container panel-control-container (max-height: 333px) {
+		@content;
 	}
 }

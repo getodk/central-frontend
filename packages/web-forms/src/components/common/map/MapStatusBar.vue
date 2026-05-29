@@ -207,7 +207,7 @@ const displayState = computed(() => {
 }
 
 .map-status {
-	gap: var(--odk-map-controls-spacing);
+	gap: var(--odk-spacing-m);
 	-webkit-user-select: text;
 	user-select: text;
 }
@@ -215,7 +215,7 @@ const displayState = computed(() => {
 .map-status-container {
 	justify-content: space-between;
 	width: 100%;
-	gap: var(--odk-map-controls-spacing);
+	gap: var(--odk-spacing-m);
 }
 
 .map-status-bar :deep(.p-button).p-button-contrast.p-button-outlined {
@@ -229,13 +229,13 @@ const displayState = computed(() => {
 }
 
 .map-status-spinner {
-	width: 20px;
-	height: 20px;
+	width: var(--odk-icon-m);
+	height: var(--odk-icon-m);
 }
 
 .map-status-buttons {
 	display: flex;
-	gap: var(--odk-map-controls-spacing);
+	gap: var(--odk-spacing-m);
 }
 
 @media screen and (max-width: #{pf.$sm}) {
