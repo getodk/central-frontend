@@ -20,16 +20,16 @@ export const toODKCoordinateArray = (
   altitude: number | null | undefined,
   accuracy: number | null | undefined
 ): number[] => {
-  if (Number.isFinite(latitude) && Number.isFinite(longitude)) {
-    return [
-      latitude,
-      longitude,
-      Number.isFinite(altitude) ? altitude! : 0,
-      Number.isFinite(accuracy) ? accuracy! : 0,
-    ];
+  if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+    return [];
   }
 
-  return [];
+  return [
+    latitude,
+    longitude,
+    Number.isFinite(altitude) ? altitude! : 0,
+    Number.isFinite(accuracy) ? accuracy! : 0,
+  ];
 };
 
 export const formatODKValue = (feature: Feature): string => {
