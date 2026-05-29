@@ -17,7 +17,7 @@ import { computed, getCurrentInstance, inject, onMounted, onUnmounted, ref, watc
 import { useRoute, useRouter } from 'vue-router';
 /* eslint-disable-next-line import/no-unresolved -- not sure why eslint is complaining about it */
 import { OdkWebForm, /*webFormsPlugin,*/ POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
-import {  InstanceData, MonolithicInstancePayload } from '@getodk/xforms-engine';
+import { InstanceData, MonolithicInstancePayload } from '@getodk/xforms-engine';
 import { type Form } from './preview.vue';
 // import Modal from './modal.vue';
 
@@ -70,7 +70,6 @@ const props = defineProps<WebFormsRendererProps>();
 
 const formXml = ref<string>();
 const submissionResult:any = {};
-let submissionData: InstanceData | null = null;
 let clearForm:Function;
 
 // const withToken = (url) => `${url}${queryString({ st: route.query.st })}`;
@@ -161,71 +160,71 @@ const handleResult = () => {
   //   }
   // }
 };
-/*
-const uploadAttachment = async (attachment, instanceId) => {
-  throw new Error('todo');
+
+const uploadAttachment = async (attachment: File, instanceId: string) => {
   // const url = withToken(apiPaths.submissionAttachment(form.projectId, form.xmlFormId, !form.publishedAt, instanceId, attachment.name));
-  // const result = {};
-  // try {
-  //   const requestOptions = {
-  //     method: 'POST',
-  //     url,
-  //     data: attachment,
-  //     alert: false,
-  //     headers: {
-  //       'content-type': attachment.type
-  //     }
-  //   };
-  //   const { data } = await request(requestOptions);
-  //   result.success = true;
-  //   result.data = data;
-  // } catch (error) {
-  //   result.success = false;
-  //   result.data = error;
-  // }
 
-  // return { name: attachment.name, result };
+  const draftPath = '';
+  const encodedInstanceId = encodeURIComponent(instanceId);
+  const encodedName = encodeURIComponent(attachment.name);
+
+  const url = `/v1/projects/${props.projectId}/forms/${props.form.xmlFormId}${draftPath}/submissions/${encodedInstanceId}/attachments/${encodedName}`;
+
+  let result;
+  try {
+    const headers = {
+      'Content-Type': attachment.type,
+      'X-Requested-With': 'XMLHttpRequest'
+    };
+    const response = await fetch(url, { body: attachment, headers, method: 'POST' });
+    if (response.ok) {
+      const data = await response.json();
+      result = { success: true, data };
+    }
+  } catch (error) {
+    result = { success: false, data: error };
+  }
+
+  return { name: attachment.name, result };
 };
-*/
-const submitData = async () => {
+
+const submitData = async (data: any, clearFormCallback: Function) => {
   // showModal({ type: 'sendingDataModal', hideable: false });
-
-  if (submissionData && !submissionResult.primaryInstanceResult.success) {
-    submissionResult.primaryInstanceResult = await postPrimaryInstance(submissionData.values().next().value!);
-  }
-/*
-  if (submissionResult.primaryInstanceResult.success) {
-    const attachmentRequests = submissionData.attachments
-      .filter(a => !submissionResult.attachmentResult.get(a.name).success)
-      .map(a => () => uploadAttachment(a, submissionResult.primaryInstanceResult.data.instanceId));
-    const attachmentResult = await runSequentially(attachmentRequests);
-    attachmentResult.forEach(r => {
-      submissionResult.attachmentResult.set(r.name, r.result);
-    });
-  }
-*/
-  handleResult();
-};
-
-const initializeSubmissionState = (data: InstanceData, clearFormCallback: Function) => {
-  submissionData = data;
-
+  const instanceFile = data.instanceFile as File;
+  const attachments = data.attachments as File[];
+  
   submissionResult.primaryInstanceResult = {
     success: false
   };
-/*
+
   submissionResult.attachmentResult = new Map();
-  data.attachments.forEach(attachment => {
+  attachments.forEach(attachment => {
     submissionResult.attachmentResult.set(attachment.name, {
       success: false
     });
   });
-*/
+
   clearForm = () => {
     clearFormCallback({ next: POST_SUBMIT__NEW_INSTANCE });
   };
-};
 
+  if (!submissionResult.primaryInstanceResult.success) {
+    submissionResult.primaryInstanceResult = await postPrimaryInstance(instanceFile);
+  }
+
+  if (submissionResult.primaryInstanceResult.success) {
+    const instanceId = submissionResult.primaryInstanceResult.data.instanceId;
+    const attachmentRequests = attachments
+      .filter(a => !submissionResult.attachmentResult.get(a.name).success)
+      .map(a => uploadAttachment(a, instanceId));
+    const attachmentResult = await Promise.all(attachmentRequests);
+    attachmentResult.forEach(r => {
+      submissionResult.attachmentResult.set(r.name, r.result);
+    });
+  }
+
+  handleResult();
+};
 
 const handleSubmit = async (
   payload: MonolithicInstancePayload,
@@ -242,8 +241,7 @@ const handleSubmit = async (
     return;
   }
 
-  initializeSubmissionState(data, clearFormCallback);
-  await submitData();
+  await submitData(data, clearFormCallback);
 };
 
 // getFormXml();
