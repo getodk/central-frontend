@@ -100,4 +100,4 @@ await fs.writeFile(new URL('./README.md', rootUrl), updatedReadme, { encoding: '
 
 const rootDir = fileURLToPath(rootUrl);
 
-spawnSync('npm', ['run', 'format:readme-only'], { cwd: rootDir });
+spawnSync('npx', ['prettier', '--write', 'README.md'], { cwd: rootDir });

@@ -4,6 +4,7 @@ import IconSVG from '@/components/common/IconSVG.vue';
 import FormHeader from '@/components/form-layout/FormHeader.vue';
 import QuestionList from '@/components/form-layout/QuestionList.vue';
 import { waitAllTasksToFinish } from '@/lib/async/event-loop.ts';
+import { POST_SUBMIT__NEW_INSTANCE } from '@/lib/constants/control-flow.ts';
 import {
 	TRANSLATE,
 	FORM_MEDIA_CACHE,
@@ -83,6 +84,9 @@ const hostSubmissionResultCallbackFactory = (
 			trackDevice: props.trackDevice,
 		};
 		state.value = updateSubmittedFormState(submissionResult, currentState, options);
+		if (submissionResult?.next === POST_SUBMIT__NEW_INSTANCE) {
+			document.scrollingElement?.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+		}
 	};
 
 	return (hostResult) => {
