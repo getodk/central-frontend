@@ -4,9 +4,9 @@ import { INSTANCE_FILE_NAME, INSTANCE_FILE_TYPE } from '../../../client/constant
 import type { InstanceData as ClientInstanceData } from '../../../client/serialization/InstanceData.ts';
 import type { InstanceFile as ClientInstanceFile } from '../../../client/serialization/InstanceFile.ts';
 import type {
-	ChunkedInstancePayload,
-	InstancePayload,
-	MonolithicInstancePayload,
+  ChunkedInstancePayload,
+  InstancePayload,
+  MonolithicInstancePayload,
 } from '../../../client/serialization/InstancePayload.ts';
 import type { InstancePayloadType } from '../../../client/serialization/InstancePayloadOptions.ts';
 import type { SubmissionMeta } from '../../../client/submission/SubmissionMeta.ts';
@@ -18,275 +18,275 @@ import type { Root } from '../../../instance/Root.ts';
 import { encryptSubmission } from './quarantine/encryption.ts';
 
 const getAttribute = (root: Root, name: string) => {
-	const attribute = root.getAttributes().find((a) => a.definition.qualifiedName.localName === name);
-	return attribute?.definition.value;
+  const attribute = root.getAttributes().find((a) => a.definition.qualifiedName.localName === name);
+  return attribute?.definition.value;
 };
 
 const getInstanceID = (root: Root) => {
-	const meta = root.getChildren().find((c) => c.definition.qualifiedName.localName === 'meta');
-	const instanceID = meta
-		?.getChildren()
-		.find((c) => c.definition.qualifiedName.localName === 'instanceID');
-	return instanceID?.getXPathValue();
+  const meta = root.getChildren().find((c) => c.definition.qualifiedName.localName === 'meta');
+  const instanceID = meta
+    ?.getChildren()
+    .find((c) => c.definition.qualifiedName.localName === 'instanceID');
+  return instanceID?.getXPathValue();
 };
 
 const collectInstanceAttachmentFiles = (attachments: InstanceAttachmentsState): readonly File[] => {
-	const files = Array.from(attachments.entries()).map(([context, attachment]) => {
-		if (!context.isAttached() || !context.isRelevant()) {
-			return null;
-		}
+  const files = Array.from(attachments.entries()).map(([context, attachment]) => {
+    if (!context.isAttached() || !context.isRelevant()) {
+      return null;
+    }
 
-		const state = attachment.getState();
-		if (!state.dirty) {
-			// File not set by client. During editing this means it's unchanged and we don't need to upload it again.
-			return null;
-		}
+    const state = attachment.getState();
+    if (!state.dirty) {
+      // File not set by client. During editing this means it's unchanged and we don't need to upload it again.
+      return null;
+    }
 
-		return attachment.getValue();
-	});
+    return attachment.getValue();
+  });
 
-	return files.filter((file) => file != null);
+  return files.filter((file) => file != null);
 };
 
 export class InstanceFile extends File implements ClientInstanceFile {
-	override readonly name = INSTANCE_FILE_NAME;
-	override readonly type = INSTANCE_FILE_TYPE;
+  override readonly name = INSTANCE_FILE_NAME;
+  override readonly type = INSTANCE_FILE_TYPE;
 
-	constructor(instanceXML: string) {
-		super([instanceXML], INSTANCE_FILE_NAME, {
-			type: INSTANCE_FILE_TYPE,
-		});
-	}
+  constructor(instanceXML: string) {
+    super([instanceXML], INSTANCE_FILE_NAME, {
+      type: INSTANCE_FILE_TYPE,
+    });
+  }
 }
 
 export interface Submission {
-	readonly instanceFile: InstanceFile;
-	readonly attachments: readonly File[];
+  readonly instanceFile: InstanceFile;
+  readonly attachments: readonly File[];
 }
 
 const createSubmission = async (
-	instanceRoot: ClientReactiveSerializableInstance,
-	submissionMeta: SubmissionMeta
+  instanceRoot: ClientReactiveSerializableInstance,
+  submissionMeta: SubmissionMeta
 ): Promise<Submission> => {
-	const instanceXML = instanceRoot.instanceState.instanceXML;
-	const attachments = collectInstanceAttachmentFiles(instanceRoot.attachments);
-	if (submissionMeta.encryptionKey) {
-		const root = instanceRoot.root;
-		const formId = getAttribute(root, 'id');
-		const instanceId = getInstanceID(root);
-		const formVersion = getAttribute(root, 'version');
-		if (!formId) {
-			throw new Error('Encrypted submissions are required to have a form ID');
-		}
-		if (!instanceId) {
-			throw new Error('Encrypted submissions are required to have an instance ID');
-		}
-		return await encryptSubmission(
-			formId,
-			formVersion,
-			instanceId,
-			instanceXML,
-			attachments,
-			submissionMeta.encryptionKey
-		);
-	}
-	const instanceFile = new InstanceFile(instanceXML);
-	return { instanceFile, attachments };
+  const instanceXML = instanceRoot.instanceState.instanceXML;
+  const attachments = collectInstanceAttachmentFiles(instanceRoot.attachments);
+  if (submissionMeta.encryptionKey) {
+    const root = instanceRoot.root;
+    const formId = getAttribute(root, 'id');
+    const instanceId = getInstanceID(root);
+    const formVersion = getAttribute(root, 'version');
+    if (!formId) {
+      throw new Error('Encrypted submissions are required to have a form ID');
+    }
+    if (!instanceId) {
+      throw new Error('Encrypted submissions are required to have an instance ID');
+    }
+    return await encryptSubmission(
+      formId,
+      formVersion,
+      instanceId,
+      instanceXML,
+      attachments,
+      submissionMeta.encryptionKey
+    );
+  }
+  const instanceFile = new InstanceFile(instanceXML);
+  return { instanceFile, attachments };
 };
 
 type AssertFile = (value: FormDataEntryValue) => asserts value is File;
 
 const assertFile: AssertFile = (value) => {
-	if (!(value instanceof File)) {
-		throw new ErrorProductionDesignPendingError('Expected an instance of File');
-	}
+  if (!(value instanceof File)) {
+    throw new ErrorProductionDesignPendingError('Expected an instance of File');
+  }
 };
 
 type AssertInstanceData = (data: FormData) => asserts data is ClientInstanceData;
 
 const assertInstanceData: AssertInstanceData = (data) => {
-	let instanceFile: File | null = null;
+  let instanceFile: File | null = null;
 
-	for (const [key, value] of data.entries()) {
-		assertFile(value);
+  for (const [key, value] of data.entries()) {
+    assertFile(value);
 
-		if (key === INSTANCE_FILE_NAME) {
-			instanceFile = value;
-		}
-	}
+    if (key === INSTANCE_FILE_NAME) {
+      instanceFile = value;
+    }
+  }
 
-	if (!(instanceFile instanceof InstanceFile)) {
-		throw new Error(`Invalid InstanceData`);
-	}
+  if (!(instanceFile instanceof InstanceFile)) {
+    throw new Error(`Invalid InstanceData`);
+  }
 };
 
 class InstanceData extends FormData {
-	static from(instanceFile: InstanceFile, attachments: readonly File[]): ClientInstanceData {
-		const data = new this(instanceFile, attachments);
+  static from(instanceFile: InstanceFile, attachments: readonly File[]): ClientInstanceData {
+    const data = new this(instanceFile, attachments);
 
-		assertInstanceData(data);
+    assertInstanceData(data);
 
-		return data;
-	}
+    return data;
+  }
 
-	private constructor(
-		readonly instanceFile: InstanceFile,
-		readonly attachments: readonly File[]
-	) {
-		super();
+  private constructor(
+    readonly instanceFile: InstanceFile,
+    readonly attachments: readonly File[]
+  ) {
+    super();
 
-		this.set(INSTANCE_FILE_NAME, instanceFile);
+    this.set(INSTANCE_FILE_NAME, instanceFile);
 
-		attachments.forEach((attachment) => {
-			const { name } = attachment;
+    attachments.forEach((attachment) => {
+      const { name } = attachment;
 
-			if (name === INSTANCE_FILE_NAME && attachment !== instanceFile) {
-				throw new Error(`Failed to add conflicting attachment with name ${INSTANCE_FILE_NAME}`);
-			}
+      if (name === INSTANCE_FILE_NAME && attachment !== instanceFile) {
+        throw new Error(`Failed to add conflicting attachment with name ${INSTANCE_FILE_NAME}`);
+      }
 
-			this.set(name, attachment);
-		});
-	}
+      this.set(name, attachment);
+    });
+  }
 }
 
 interface PendingValidation {
-	readonly status: 'pending';
-	readonly violations: readonly DescendantNodeViolationReference[];
+  readonly status: 'pending';
+  readonly violations: readonly DescendantNodeViolationReference[];
 }
 
 interface ReadyValidation {
-	readonly status: 'ready';
-	readonly violations: null;
+  readonly status: 'ready';
+  readonly violations: null;
 }
 
 type InstanceStateValidation = PendingValidation | ReadyValidation;
 
 const validateInstance = (
-	instanceRoot: ClientReactiveSerializableInstance
+  instanceRoot: ClientReactiveSerializableInstance
 ): InstanceStateValidation => {
-	const { violations } = instanceRoot.validationState;
+  const { violations } = instanceRoot.validationState;
 
-	if (violations.length === 0) {
-		return {
-			status: 'ready',
-			violations: null,
-		};
-	}
+  if (violations.length === 0) {
+    return {
+      status: 'ready',
+      violations: null,
+    };
+  }
 
-	return {
-		status: 'pending',
-		violations,
-	};
+  return {
+    status: 'pending',
+    violations,
+  };
 };
 
 const monolithicInstancePayload = (
-	validation: InstanceStateValidation,
-	submissionMeta: SubmissionMeta,
-	instanceFile: InstanceFile,
-	attachments: readonly File[]
+  validation: InstanceStateValidation,
+  submissionMeta: SubmissionMeta,
+  instanceFile: InstanceFile,
+  attachments: readonly File[]
 ): MonolithicInstancePayload => {
-	const data = InstanceData.from(instanceFile, attachments);
+  const data = InstanceData.from(instanceFile, attachments);
 
-	return {
-		payloadType: 'monolithic',
-		...validation,
-		submissionMeta,
-		data: [data],
-	};
+  return {
+    payloadType: 'monolithic',
+    ...validation,
+    submissionMeta,
+    data: [data],
+  };
 };
 
 interface ChunkedInstancePayloadOptions {
-	readonly maxSize: number;
+  readonly maxSize: number;
 }
 
 type PartitionedInstanceData = readonly [ClientInstanceData, ...ClientInstanceData[]];
 
 const partitionInstanceData = (
-	instanceFile: InstanceFile,
-	attachments: readonly File[],
-	options: ChunkedInstancePayloadOptions
+  instanceFile: InstanceFile,
+  attachments: readonly File[],
+  options: ChunkedInstancePayloadOptions
 ): PartitionedInstanceData => {
-	const { maxSize } = options;
-	const maxAttachmentSize = maxSize - instanceFile.size;
-	const { bins, oversized } = bestFitDecreasing(
-		attachments,
-		(attachment) => {
-			return attachment.size;
-		},
-		maxAttachmentSize
-	);
+  const { maxSize } = options;
+  const maxAttachmentSize = maxSize - instanceFile.size;
+  const { bins, oversized } = bestFitDecreasing(
+    attachments,
+    (attachment) => {
+      return attachment.size;
+    },
+    maxAttachmentSize
+  );
 
-	const errors = oversized.map((attachment) => {
-		return new Error(
-			`Combined size of instance XML (${instanceFile.size}) and attachment (${attachment.size}) exceeds maxSize (${maxSize}).`
-		);
-	});
+  const errors = oversized.map((attachment) => {
+    return new Error(
+      `Combined size of instance XML (${instanceFile.size}) and attachment (${attachment.size}) exceeds maxSize (${maxSize}).`
+    );
+  });
 
-	if (errors.length > 0) {
-		throw new AggregateError(errors, 'Failed to produce chunked instance payload');
-	}
+  if (errors.length > 0) {
+    throw new AggregateError(errors, 'Failed to produce chunked instance payload');
+  }
 
-	const [
-		// Ensure at least one `InstanceData` is produced, in case there are no
-		// attachments present at all
-		head = InstanceData.from(instanceFile, []),
-		...tail
-	] = bins.map((bin) => InstanceData.from(instanceFile, bin));
+  const [
+    // Ensure at least one `InstanceData` is produced, in case there are no
+    // attachments present at all
+    head = InstanceData.from(instanceFile, []),
+    ...tail
+  ] = bins.map((bin) => InstanceData.from(instanceFile, bin));
 
-	return [head, ...tail];
+  return [head, ...tail];
 };
 
 const chunkedInstancePayload = (
-	validation: InstanceStateValidation,
-	submissionMeta: SubmissionMeta,
-	instanceFile: InstanceFile,
-	attachments: readonly File[],
-	options: ChunkedInstancePayloadOptions
+  validation: InstanceStateValidation,
+  submissionMeta: SubmissionMeta,
+  instanceFile: InstanceFile,
+  attachments: readonly File[],
+  options: ChunkedInstancePayloadOptions
 ): ChunkedInstancePayload => {
-	const data = partitionInstanceData(instanceFile, attachments, options);
+  const data = partitionInstanceData(instanceFile, attachments, options);
 
-	return {
-		payloadType: 'chunked',
-		...validation,
-		submissionMeta,
-		data,
-	};
+  return {
+    payloadType: 'chunked',
+    ...validation,
+    submissionMeta,
+    data,
+  };
 };
 
 export interface PrepareInstancePayloadOptions<PayloadType extends InstancePayloadType> {
-	readonly payloadType: PayloadType;
-	readonly maxSize: number;
+  readonly payloadType: PayloadType;
+  readonly maxSize: number;
 }
 
 export const prepareInstancePayload = async <PayloadType extends InstancePayloadType>(
-	instanceRoot: ClientReactiveSerializableInstance,
-	options: PrepareInstancePayloadOptions<PayloadType>
+  instanceRoot: ClientReactiveSerializableInstance,
+  options: PrepareInstancePayloadOptions<PayloadType>
 ): Promise<InstancePayload<PayloadType>> => {
-	instanceRoot.root.parent.model.triggerXformsRevalidateListeners();
-	const validation = validateInstance(instanceRoot);
-	const submissionMeta = instanceRoot.definition.submission;
+  instanceRoot.root.parent.model.triggerXformsRevalidateListeners();
+  const validation = validateInstance(instanceRoot);
+  const submissionMeta = instanceRoot.definition.submission;
 
-	const { instanceFile, attachments } = await createSubmission(instanceRoot, submissionMeta);
+  const { instanceFile, attachments } = await createSubmission(instanceRoot, submissionMeta);
 
-	switch (options.payloadType) {
-		case 'chunked':
-			return chunkedInstancePayload(
-				validation,
-				submissionMeta,
-				instanceFile,
-				attachments,
-				options
-			) satisfies ChunkedInstancePayload as InstancePayload<PayloadType>;
+  switch (options.payloadType) {
+    case 'chunked':
+      return chunkedInstancePayload(
+        validation,
+        submissionMeta,
+        instanceFile,
+        attachments,
+        options
+      ) satisfies ChunkedInstancePayload as InstancePayload<PayloadType>;
 
-		case 'monolithic':
-			return monolithicInstancePayload(
-				validation,
-				submissionMeta,
-				instanceFile,
-				attachments
-			) satisfies MonolithicInstancePayload as InstancePayload<PayloadType>;
+    case 'monolithic':
+      return monolithicInstancePayload(
+        validation,
+        submissionMeta,
+        instanceFile,
+        attachments
+      ) satisfies MonolithicInstancePayload as InstancePayload<PayloadType>;
 
-		default:
-			throw new UnreachableError(options.payloadType);
-	}
+    default:
+      throw new UnreachableError(options.payloadType);
+  }
 };
