@@ -17,6 +17,8 @@ import { computed, getCurrentInstance, inject, onMounted, onUnmounted, ref, watc
 import { useRoute, useRouter } from 'vue-router';
 /* eslint-disable-next-line import/no-unresolved -- not sure why eslint is complaining about it */
 import { OdkWebForm, /*webFormsPlugin,*/ POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
+import {  InstanceData, MonolithicInstancePayload } from '@getodk/xforms-engine';
+import { type Form } from './preview.vue';
 // import Modal from './modal.vue';
 
 // import { apiPaths, isProblem, queryString, requestAlertMessage } from '../util/request';
@@ -32,26 +34,24 @@ import { OdkWebForm, /*webFormsPlugin,*/ POST_SUBMIT__NEW_INSTANCE } from '@geto
 // const { request } = useRequest();
 // const submissionAttachments = createResource('submissionAttachments');
 // const submissionModal = modalData();
-const route = useRoute();
-const router = useRouter();
+// const route = useRoute();
+// const router = useRouter();
 // const { submissionPath } = useRoutes();
 
-const projectParam = route.params.projectId; // TODO don't trust anything!
-const formParam = route.params.xmlFormId;
+// const projectParam = route.params.projectId; // TODO don't trust anything!
 
 defineOptions({
   name: 'WebFormRenderer'
 });
 
-// const props = defineProps({
-//   actionType: {
-//     type: String,
-//     required: true
-//   },
-//   instanceId: String
-// });
+export interface WebFormsRendererProps {
+  projectId: number;
+  form: Form;
+}
 
-const emit = defineEmits(['loaded']);
+const props = defineProps<WebFormsRendererProps>();
+
+// const emit = defineEmits(['loaded']);
 
 // Install webFormsPlugin lazily here (not at app startup) to avoid loading @getodk/web-forms on every page.
 // This is safe because this component is already loaded asynchronously.
@@ -69,37 +69,34 @@ const emit = defineEmits(['loaded']);
 // const isPublicLink = computed(() => !!route.query.st);
 
 const formXml = ref<string>();
-const submissionResult = {};
-let submissionData = {};
-let clearForm;
+const submissionResult:any = {};
+let submissionData: InstanceData | null = null;
+let clearForm:Function;
 
-const withToken = (url) => `${url}${queryString({ st: route.query.st })}`;
-const getFormXml = () => {
-  const encodedFormId = encodeURIComponent(formParam);
+// const withToken = (url) => `${url}${queryString({ st: route.query.st })}`;
+// const getFormXml = () => {
+//   const encodedFormId = encodeURIComponent(formParam);
+//   const draftPath = '';
+//   const qs = '';
+//   const url = `/v1/projects/${projectParam}/forms/${encodedFormId}${draftPath}.xml${qs}`;
+//   fetch(url)
+//     .then((response) => response.text())
+//     .then((xml) => { formXml.value = xml })
+//     .catch((e) => console.err);
+// };
+
+const getAttachment = (requestUrl: URL) => {
+  const encodedName = encodeURIComponent(requestUrl.pathname.split('/').pop()!);
   const draftPath = '';
-  const qs = '';
-  const url = `/v1/projects/${projectParam}/forms/${encodedFormId}${draftPath}.xml${qs}`;
-  fetch(url)
-    .then((response) => response.text())
-    .then((xml) => { formXml.value = xml })
-    .catch((e) => console.err);
+  const url = `/v1/projects/${props.projectId}/forms/${props.form.xmlFormId}${draftPath}/attachments/${encodedName}`;
+  return fetch(url);
 };
 
-const getAttachment = (requestUrl) => {
-  const encodedFormId = encodeURIComponent(formParam);
-  const encodedName = encodeURIComponent(requestUrl.pathname.split('/').pop());
-  const draftPath = '';
-  const url = `/v1/projects/${projectParam}/forms/${encodedFormId}${draftPath}/attachments/${encodedName}`;
-  return fetch(url)
-    .catch((e) => console.err);
-};
-
-const postPrimaryInstance = async (file) => {
-  const encodedFormId = encodeURIComponent(formParam);
+const postPrimaryInstance = async (file:File) => {
   const draftPath = '';
   const qs = '';
   const extension = '';
-  const url = `/v1/projects/${projectParam}/forms/${encodedFormId}${draftPath}/submissions${extension}${qs}`;
+  const url = `/v1/projects/${props.projectId}/forms/${props.form.xmlFormId}${draftPath}/submissions${extension}${qs}`;
   // isEdit.value ? 'PUT' : 'POST',
   const headers = {
     'Content-Type': 'text/xml',
@@ -118,15 +115,17 @@ const postPrimaryInstance = async (file) => {
   };
 };
 
-const showModal = (opts) => {
+const showModal = (opts:any) => {
+  console.log(opts);
   alert('show modal');
 };
 
 const handleResult = () => {
+  /*
   const attachmentResultArr = [...submissionResult.attachmentResult.values()];
   // Success handler
   if (submissionResult.primaryInstanceResult.success && attachmentResultArr.every(r => r.success)) {
-    clearForm();
+    */clearForm();/*
     // if (isPublicLink.value) {
     //   showModal({ type: 'thankYouModal', hideable: false });
     // } else if (isEdit.value) {
@@ -138,7 +137,7 @@ const handleResult = () => {
       showModal({ type: 'submissionModal', hideable: false });
     // }
   }
-
+*/
   // Error handler - Primary Instance
   // if (!submissionResult.primaryInstanceResult.success) {
   //   const error = submissionResult.primaryInstanceResult.data;
@@ -158,11 +157,11 @@ const handleResult = () => {
   //   if (isSessionTimeout) {
   //     showModal({ type: 'sessionTimeoutModal', hideable: false });
   //   } else {
-  //     showModal({ type: 'retryModal', hideable: false });postPrimaryInstance
+  //     showModal({ type: 'retryModal', hideable: false });
   //   }
   // }
 };
-
+/*
 const uploadAttachment = async (attachment, instanceId) => {
   throw new Error('todo');
   // const url = withToken(apiPaths.submissionAttachment(form.projectId, form.xmlFormId, !form.publishedAt, instanceId, attachment.name));
@@ -187,12 +186,12 @@ const uploadAttachment = async (attachment, instanceId) => {
 
   // return { name: attachment.name, result };
 };
-
+*/
 const submitData = async () => {
   // showModal({ type: 'sendingDataModal', hideable: false });
 
-  if (!submissionResult.primaryInstanceResult.success) {
-    submissionResult.primaryInstanceResult = await postPrimaryInstance(submissionData.instanceFile);
+  if (submissionData && !submissionResult.primaryInstanceResult.success) {
+    submissionResult.primaryInstanceResult = await postPrimaryInstance(submissionData.values().next().value!);
   }
 /*
   if (submissionResult.primaryInstanceResult.success) {
@@ -208,27 +207,30 @@ const submitData = async () => {
   handleResult();
 };
 
-const initializeSubmissionState = (data, clearFormCallback) => {
+const initializeSubmissionState = (data: InstanceData, clearFormCallback: Function) => {
   submissionData = data;
 
   submissionResult.primaryInstanceResult = {
     success: false
   };
-
+/*
   submissionResult.attachmentResult = new Map();
   data.attachments.forEach(attachment => {
     submissionResult.attachmentResult.set(attachment.name, {
       success: false
     });
   });
-
+*/
   clearForm = () => {
     clearFormCallback({ next: POST_SUBMIT__NEW_INSTANCE });
   };
 };
 
 
-const handleSubmit = async (payload, callback) => {
+const handleSubmit = async (
+  payload: MonolithicInstancePayload,
+	clearFormCallback: Function
+) => {
   // if (props.actionType === 'preview') {
   //   showModal({ type: 'previewModal' });
   //   return;
@@ -240,26 +242,18 @@ const handleSubmit = async (payload, callback) => {
     return;
   }
 
-  initializeSubmissionState(data, callback);
+  initializeSubmissionState(data, clearFormCallback);
   await submitData();
 };
 
-getFormXml();
+// getFormXml();
 
 </script>
-<!--
-    <OdkWebForm
-      :form-xml="formXml"
-      :edit-instance="editInstanceOptions"
-      :fetch-form-attachment="getAttachment"
-      :track-device="true"
-      @submit="handleSubmit"/>
--->
 
 <template>
-  <template v-if="formXml">
+  <template v-if="props.form">
     <OdkWebForm
-      :form-xml="formXml"
+      :form-xml="props.form.xform"
       :fetch-form-attachment="getAttachment"
       :track-device="true"
       @submit="handleSubmit"/>
