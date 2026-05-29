@@ -1,14 +1,14 @@
 import type { CreateFormInstance } from '../../client/form/CreateFormInstance.ts';
 import type {
-	EditFormInstance,
-	EditFormInstanceInput,
+  EditFormInstance,
+  EditFormInstanceInput,
 } from '../../client/form/EditFormInstance.ts';
 import type { FormInstanceConfig } from '../../client/form/FormInstanceConfig.ts';
 import type { FormResultStatus } from '../../client/form/LoadFormResult.ts';
 import type { ResetFormInstance } from '../../client/form/ResetFormInstance.ts';
 import type {
-	RestoreFormInstance,
-	RestoreFormInstanceInput,
+  RestoreFormInstance,
+  RestoreFormInstanceInput,
 } from '../../client/form/RestoreFormInstance.ts';
 import { ErrorProductionDesignPendingError } from '../../error/ErrorProductionDesignPendingError.ts';
 import { InitialInstanceState } from '../../instance/input/InitialInstanceState.ts';
@@ -27,92 +27,92 @@ export type InstantiableFormResultStatus =
 	| 'warning';
 
 export interface BaseInstantiableFormResultOptions<Status extends InstantiableFormResultStatus> {
-	readonly status: Status;
-	readonly warnings: BaseFormResultProperty<Status, 'warnings'>;
-	readonly error: null;
-	readonly scope: ReactiveScope;
-	readonly formResource: FormResource;
-	readonly instanceOptions: BasePrimaryInstanceOptions;
+  readonly status: Status;
+  readonly warnings: BaseFormResultProperty<Status, 'warnings'>;
+  readonly error: null;
+  readonly scope: ReactiveScope;
+  readonly formResource: FormResource;
+  readonly instanceOptions: BasePrimaryInstanceOptions;
 }
 
 export abstract class BaseInstantiableFormResult<
-	Status extends InstantiableFormResultStatus,
+  Status extends InstantiableFormResultStatus,
 > extends BaseFormResult<Status> {
-	readonly createInstance: CreateFormInstance;
-	readonly resetInstance: ResetFormInstance;
-	readonly editInstance: EditFormInstance;
-	readonly restoreInstance: RestoreFormInstance;
+  readonly createInstance: CreateFormInstance;
+  readonly resetInstance: ResetFormInstance;
+  readonly editInstance: EditFormInstance;
+  readonly restoreInstance: RestoreFormInstance;
 
-	constructor(options: BaseInstantiableFormResultOptions<Status>) {
-		const { status, warnings, error, instanceOptions } = options;
+  constructor(options: BaseInstantiableFormResultOptions<Status>) {
+    const { status, warnings, error, instanceOptions } = options;
 
-		super({
-			status,
-			warnings,
-			error,
-		});
+    super({
+      status,
+      warnings,
+      error,
+    });
 
-		this.createInstance = (instanceConfig: FormInstanceConfig = {}) => {
-			this.assertInstantiable();
+    this.createInstance = (instanceConfig: FormInstanceConfig = {}) => {
+      this.assertInstantiable();
 
-			return new FormInstance(this, {
-				mode: 'create',
-				instanceOptions,
-				initialState: null,
-				instanceConfig,
-			});
-		};
+      return new FormInstance(this, {
+        mode: 'create',
+        instanceOptions,
+        initialState: null,
+        instanceConfig,
+      });
+    };
 
-		this.resetInstance = (instanceConfig: FormInstanceConfig = {}) => {
-			instanceOptions.scope.dispose();
-			instanceOptions.scope = createPotentiallyClientOwnedReactiveScope();
-			return this.createInstance(instanceConfig);
-		};
+    this.resetInstance = (instanceConfig: FormInstanceConfig = {}) => {
+      instanceOptions.scope.dispose();
+      instanceOptions.scope = createPotentiallyClientOwnedReactiveScope();
+      return this.createInstance(instanceConfig);
+    };
 
-		this.editInstance = async (
-			input: EditFormInstanceInput,
-			instanceConfig: FormInstanceConfig = {}
-		) => {
-			this.assertInstantiable();
+    this.editInstance = async (
+      input: EditFormInstanceInput,
+      instanceConfig: FormInstanceConfig = {}
+    ) => {
+      this.assertInstantiable();
 
-			const initialState = await InitialInstanceState.resolve(instanceOptions.model, input);
+      const initialState = await InitialInstanceState.resolve(instanceOptions.model, input);
 
-			return new FormInstance(this, {
-				mode: 'edit',
-				instanceOptions,
-				initialState,
-				instanceConfig,
-			});
-		};
+      return new FormInstance(this, {
+        mode: 'edit',
+        instanceOptions,
+        initialState,
+        instanceConfig,
+      });
+    };
 
-		this.restoreInstance = async (
-			input: RestoreFormInstanceInput,
-			instanceConfig: FormInstanceConfig = {}
-		) => {
-			this.assertInstantiable();
+    this.restoreInstance = async (
+      input: RestoreFormInstanceInput,
+      instanceConfig: FormInstanceConfig = {}
+    ) => {
+      this.assertInstantiable();
 
-			const initialState = await InitialInstanceState.from(instanceOptions.model, input.data);
+      const initialState = await InitialInstanceState.from(instanceOptions.model, input.data);
 
-			return new FormInstance(this, {
-				mode: 'restore',
-				instanceOptions,
-				initialState,
-				instanceConfig,
-			});
-		};
-	}
+      return new FormInstance(this, {
+        mode: 'restore',
+        instanceOptions,
+        initialState,
+        instanceConfig,
+      });
+    };
+  }
 
-	isInstantiable(): this is InstantiableFormResult {
-		const self: BaseFormResult<FormResultStatus> = this satisfies BaseFormResult<FormResultStatus>;
+  isInstantiable(): this is InstantiableFormResult {
+    const self: BaseFormResult<FormResultStatus> = this satisfies BaseFormResult<FormResultStatus>;
 
-		return self.status !== 'failure';
-	}
+    return self.status !== 'failure';
+  }
 
-	assertInstantiable(): asserts this is InstantiableFormResult {
-		if (!this.isInstantiable()) {
-			throw new ErrorProductionDesignPendingError(
-				'Failed to instantiate from result with status: "failure"'
-			);
-		}
-	}
+  assertInstantiable(): asserts this is InstantiableFormResult {
+    if (!this.isInstantiable()) {
+      throw new ErrorProductionDesignPendingError(
+        'Failed to instantiate from result with status: "failure"'
+      );
+    }
+  }
 }

@@ -23,8 +23,8 @@ import type { DefineMutableObject } from '../../test/helpers/reactive/internal.t
 // but that didn't pan out (within the timebox allotted thus far). This, too, is
 // left as a remnant in case we want to revisit this in the future.
 interface BaseOpaqueReactiveObjectFactory<in out Input extends object = object> {
-	<T extends Input>(object: T): T;
-	<T extends object>(object: T): T;
+  <T extends Input>(object: T): T;
+  <T extends object>(object: T): T;
 }
 
 /**

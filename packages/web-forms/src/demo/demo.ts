@@ -15,13 +15,13 @@ import appStyles from '../assets/styles/style.scss?inline';
 import router from './router';
 
 const styles = [
-	roboto300,
-	roboto400,
-	roboto500,
-	hankenGrotesk300,
-	hankenGrotesk400,
-	primeflex,
-	appStyles,
+  roboto300,
+  roboto400,
+  roboto500,
+  hankenGrotesk300,
+  hankenGrotesk400,
+  primeflex,
+  appStyles,
 ].join('\n\n');
 const stylesheet = new CSSStyleSheet();
 

@@ -1,6 +1,6 @@
 export interface GeopointValueObject {
-	readonly latitude: number;
-	readonly longitude: number;
-	readonly altitude: number | null;
-	readonly accuracy: number | null;
+  readonly latitude: number;
+  readonly longitude: number;
+  readonly altitude: number | null;
+  readonly accuracy: number | null;
 }

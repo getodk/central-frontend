@@ -8,13 +8,13 @@ import type { StaticConditionExpectExtension } from './StaticConditionExpectExte
 import type { SymmetricTypedExpectExtension } from './SymmetricTypedExpectExtension.ts';
 
 export interface CustomInspectable {
-	inspectValue(): JSONValue;
+  inspectValue(): JSONValue;
 }
 
 export type Inspectable = CustomInspectable | Primitive;
 
 export interface ErrorLike {
-	readonly message: string;
+  readonly message: string;
 }
 
 type Message = string;
@@ -29,9 +29,9 @@ type Message = string;
 export type SimpleAssertionResult = true | ErrorLike | Message;
 
 export type ExpectExtensionMethod<
-	Actual = unknown,
-	Expected = Actual,
-	Result = SimpleAssertionResult,
+  Actual = unknown,
+  Expected = Actual,
+  Result = SimpleAssertionResult,
 > = (actual: Actual, expected: Expected) => Result;
 
 // prettier-ignore
@@ -42,15 +42,15 @@ export type TypedExpectExtension<Actual = any, Expected = Actual> =
 	| SymmetricTypedExpectExtension<Expected>;
 
 type AsyncUntypedExpectExtensionFunction = ExpectExtensionMethod<
-	unknown,
-	unknown,
-	Promise<SyncExpectationResult>
+  unknown,
+  unknown,
+  Promise<SyncExpectationResult>
 >;
 
 type SyncUntypedExpectExtensionFunction = ExpectExtensionMethod<
-	unknown,
-	unknown,
-	SyncExpectationResult
+  unknown,
+  unknown,
+  SyncExpectationResult
 >;
 
 // prettier-ignore
@@ -59,7 +59,7 @@ export type UntypedExpectExtensionFunction =
 	| SyncUntypedExpectExtensionFunction;
 
 export interface UntypedExpectExtensionObject {
-	readonly extensionMethod: UntypedExpectExtensionFunction;
+  readonly extensionMethod: UntypedExpectExtensionFunction;
 }
 
 // prettier-ignore
@@ -73,7 +73,7 @@ export type ExpectExtension =
 	| UntypedExpectExtension;
 
 export type ExpectExtensionRecord<MethodName extends string> = Readonly<
-	Record<MethodName, ExpectExtension>
+  Record<MethodName, ExpectExtension>
 >;
 
 // prettier-ignore

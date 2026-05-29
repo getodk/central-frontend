@@ -2,20 +2,20 @@ import type { Scenario } from '../jr/Scenario.ts';
 import { ComparableAnswer } from './ComparableAnswer.ts';
 
 interface MaybeStringable {
-	toString?(): string;
+  toString?(): string;
 }
 
 const STRINGABLE_BRAND = Symbol('STRINGABLE');
 
 interface Stringable {
-	// ... otherwise `isStringable` doesn't actually narrow the type...
-	[STRINGABLE_BRAND]?: true;
+  // ... otherwise `isStringable` doesn't actually narrow the type...
+  [STRINGABLE_BRAND]?: true;
 
-	toString(): string;
+  toString(): string;
 }
 
 const isExplicitlyCastableToString = (value: unknown): value is Stringable => {
-	return typeof (value as MaybeStringable).toString === 'function';
+  return typeof (value as MaybeStringable).toString === 'function';
 };
 
 /**
@@ -68,49 +68,49 @@ const isExplicitlyCastableToString = (value: unknown): value is Stringable => {
  *   XPath `boolean` casting semantics are themselves complex).
  */
 export class UntypedAnswer extends ComparableAnswer {
-	constructor(readonly unknownValue: unknown) {
-		super();
-	}
+  constructor(readonly unknownValue: unknown) {
+    super();
+  }
 
-	override get booleanValue(): boolean {
-		const { unknownValue } = this;
+  override get booleanValue(): boolean {
+    const { unknownValue } = this;
 
-		if (typeof unknownValue === 'boolean') {
-			return unknownValue;
-		}
+    if (typeof unknownValue === 'boolean') {
+      return unknownValue;
+    }
 
-		throw new Error(`Conversion of type ${typeof unknownValue} to boolean not currently supported`);
-	}
+    throw new Error(`Conversion of type ${typeof unknownValue} to boolean not currently supported`);
+  }
 
-	get stringValue(): string {
-		const { unknownValue } = this;
+  get stringValue(): string {
+    const { unknownValue } = this;
 
-		if (unknownValue instanceof ComparableAnswer) {
-			return unknownValue.stringValue;
-		}
+    if (unknownValue instanceof ComparableAnswer) {
+      return unknownValue.stringValue;
+    }
 
-		switch (typeof unknownValue) {
-			case 'string':
-			case 'number':
-			case 'bigint':
-				return String(unknownValue);
+    switch (typeof unknownValue) {
+      case 'string':
+      case 'number':
+      case 'bigint':
+        return String(unknownValue);
 
-			case 'boolean':
-				return unknownValue ? '1' : '0';
+      case 'boolean':
+        return unknownValue ? '1' : '0';
 
-			case 'undefined':
-			case 'object':
-				if (unknownValue == null) {
-					return '';
-				}
+      case 'undefined':
+      case 'object':
+        if (unknownValue == null) {
+          return '';
+        }
 
-				if (isExplicitlyCastableToString(unknownValue)) {
-					return unknownValue.toString();
-				}
+        if (isExplicitlyCastableToString(unknownValue)) {
+          return unknownValue.toString();
+        }
 
-				break;
-		}
+        break;
+    }
 
-		throw new Error('Could not cast answer to string');
-	}
+    throw new Error('Could not cast answer to string');
+  }
 }

@@ -1,12 +1,12 @@
 import {
-	bind,
-	body,
-	head,
-	html,
-	mainInstance,
-	model,
-	t,
-	title,
+  bind,
+  body,
+  head,
+  html,
+  mainInstance,
+  model,
+  t,
+  title,
 } from '@getodk/common/test-utils/xform-dsl/index.ts';
 import { describe, expect, it } from 'vitest';
 import { Scenario } from '../scenario/jr/Scenario.ts';
@@ -31,34 +31,34 @@ import { Scenario } from '../scenario/jr/Scenario.ts';
  * passing, we may want to remove this entire comment.
  */
 describe('Form-wide functionality', () => {
-	/**
-	 * @todo When these tests are resolved, consider whether it would be
-	 * appropriate to remove the "PORTING NOTES" comment above.
-	 */
-	describe('form title', () => {
-		it.fails('gets a static form title', async () => {
-			const staticTitle = 'Static form title';
+  /**
+   * @todo When these tests are resolved, consider whether it would be
+   * appropriate to remove the "PORTING NOTES" comment above.
+   */
+  describe('form title', () => {
+    it.fails('gets a static form title', async () => {
+      const staticTitle = 'Static form title';
 
-			const scenario = await Scenario.init(
-				staticTitle,
-				html(
-					head(
-						title(staticTitle),
-						model(mainInstance(t('data id="static-title-test-form"', t('a'))), bind('/data/a'))
-					),
-					body()
-				)
-			);
+      const scenario = await Scenario.init(
+        staticTitle,
+        html(
+          head(
+            title(staticTitle),
+            model(mainInstance(t('data id="static-title-test-form"', t('a'))), bind('/data/a'))
+          ),
+          body()
+        )
+      );
 
-			expect(scenario.proposed_getTitle()).toBe(staticTitle);
-		});
+      expect(scenario.proposed_getTitle()).toBe(staticTitle);
+    });
 
-		/**
-		 * @todo If this functionality were to exist, it would be based on a spec
-		 * change to support it. While a translated title definition would probably
-		 * have a pretty predictable format, it doesn't seem predictable _enough_
-		 * to warrant speculating on what the fixture would look like yet.
-		 */
-		it.todo('gets a translated form title');
-	});
+    /**
+     * @todo If this functionality were to exist, it would be based on a spec
+     * change to support it. While a translated title definition would probably
+     * have a pretty predictable format, it doesn't seem predictable _enough_
+     * to warrant speculating on what the fixture would look like yet.
+     */
+    it.todo('gets a translated form title');
+  });
 });

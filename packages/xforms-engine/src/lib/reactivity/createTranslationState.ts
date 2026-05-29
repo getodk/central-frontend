@@ -15,33 +15,33 @@ const LOCALE_AFTER_SPACE_REGEX = new RegExp(` (${IANA_PATTERN.source})$`);
 const EXACT_LOCALE_REGEX = new RegExp(`^${IANA_PATTERN.source}$`);
 
 interface TranslationState {
-	readonly languages: FormLanguages;
-	readonly getActiveLanguage: Accessor<ActiveLanguage>;
-	readonly setActiveLanguage: SimpleAtomicStateSetter<FormLanguage>;
+  readonly languages: FormLanguages;
+  readonly getActiveLanguage: Accessor<ActiveLanguage>;
+  readonly setActiveLanguage: SimpleAtomicStateSetter<FormLanguage>;
 }
 
 const extractLocale = (lang: string): Intl.Locale | undefined => {
-	const cleanLang = lang?.trim();
-	if (!cleanLang) {
-		return;
-	}
+  const cleanLang = lang?.trim();
+  if (!cleanLang) {
+    return;
+  }
 
-	const match =
-		LOCALE_IN_PARENS_REGEX.exec(cleanLang)?.[1] ??
-		LOCALE_AFTER_SPACE_REGEX.exec(cleanLang)?.[1] ??
-		(EXACT_LOCALE_REGEX.test(cleanLang) ? cleanLang : undefined);
+  const match =
+    LOCALE_IN_PARENS_REGEX.exec(cleanLang)?.[1] ??
+    LOCALE_AFTER_SPACE_REGEX.exec(cleanLang)?.[1] ??
+    (EXACT_LOCALE_REGEX.test(cleanLang) ? cleanLang : undefined);
 
-	if (match) {
-		try {
-			return new Intl.Locale(match.trim());
-		} catch {
-			// eslint-disable-next-line no-console
-			console.warn(`ODK XForms Engine: Could not parse locale from "${lang}"`);
-			return;
-		}
-	}
+  if (match) {
+    try {
+      return new Intl.Locale(match.trim());
+    } catch {
+      // eslint-disable-next-line no-console
+      console.warn(`ODK XForms Engine: Could not parse locale from "${lang}"`);
+      return;
+    }
+  }
 
-	return;
+  return;
 };
 
 /**
@@ -52,45 +52,45 @@ const extractLocale = (lang: string): Intl.Locale | undefined => {
  * in a subsequent refactor.
  */
 export const createTranslationState = (
-	scope: ReactiveScope,
-	evaluator: EngineXPathEvaluator
+  scope: ReactiveScope,
+  evaluator: EngineXPathEvaluator
 ): TranslationState => {
-	const activeLanguageName = evaluator.getActiveLanguage();
-	const languageNames = evaluator.getLanguages();
-	const explicitDefaultLanguageName = evaluator.getExplicitDefaultLanguage();
+  const activeLanguageName = evaluator.getActiveLanguage();
+  const languageNames = evaluator.getLanguages();
+  const explicitDefaultLanguageName = evaluator.getExplicitDefaultLanguage();
 
-	let defaultLanguage: ActiveLanguage;
-	let languages: FormLanguages;
+  let defaultLanguage: ActiveLanguage;
+  let languages: FormLanguages;
 
-	if (activeLanguageName == null) {
-		defaultLanguage = { isSyntheticDefault: true, language: '', isDefault: false };
-		languages = [defaultLanguage];
-	} else {
-		const formLanguages = languageNames.map((language) => ({
-			language,
-			locale: extractLocale(language),
-			isDefault: language === explicitDefaultLanguageName,
-		}));
+  if (activeLanguageName == null) {
+    defaultLanguage = { isSyntheticDefault: true, language: '', isDefault: false };
+    languages = [defaultLanguage];
+  } else {
+    const formLanguages = languageNames.map((language) => ({
+      language,
+      locale: extractLocale(language),
+      isDefault: language === explicitDefaultLanguageName,
+    }));
 
-		defaultLanguage = formLanguages.find((l) => l.language === activeLanguageName)!;
-		languages = formLanguages as [FormLanguage, ...FormLanguage[]];
-	}
+    defaultLanguage = formLanguages.find((l) => l.language === activeLanguageName)!;
+    languages = formLanguages as [FormLanguage, ...FormLanguage[]];
+  }
 
-	const [getActiveLanguage, baseSetActiveLanguage] = createSignal(defaultLanguage);
+  const [getActiveLanguage, baseSetActiveLanguage] = createSignal(defaultLanguage);
 
-	const setActiveLanguage: SimpleAtomicStateSetter<FormLanguage> = (value) => {
-		return baseSetActiveLanguage(value);
-	};
+  const setActiveLanguage: SimpleAtomicStateSetter<FormLanguage> = (value) => {
+    return baseSetActiveLanguage(value);
+  };
 
-	scope.runTask(() => {
-		createComputed(() => {
-			evaluator.setActiveLanguage(getActiveLanguage().language);
-		});
-	});
+  scope.runTask(() => {
+    createComputed(() => {
+      evaluator.setActiveLanguage(getActiveLanguage().language);
+    });
+  });
 
-	return {
-		languages,
-		getActiveLanguage,
-		setActiveLanguage,
-	};
+  return {
+    languages,
+    getActiveLanguage,
+    setActiveLanguage,
+  };
 };

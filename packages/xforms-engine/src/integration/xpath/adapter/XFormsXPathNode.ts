@@ -1,9 +1,9 @@
 import type {
-	XPathAttributeKind,
-	XPathCommentKind,
-	XPathDocumentKind,
-	XPathElementKind,
-	XPathTextKind,
+  XPathAttributeKind,
+  XPathCommentKind,
+  XPathDocumentKind,
+  XPathElementKind,
+  XPathTextKind,
 } from '@getodk/xpath';
 import { XPathNodeKindKey } from '@getodk/xpath';
 
@@ -46,39 +46,39 @@ export type XFormsXPathNodeKind =
 	| XPathCommentKind;
 
 export interface XFormsXPathNode {
-	readonly [XPathNodeKindKey]: XFormsXPathNodeKind;
-	readonly rootDocument: XFormsXPathDocument;
-	readonly root: XFormsXPathElement;
+  readonly [XPathNodeKindKey]: XFormsXPathNodeKind;
+  readonly rootDocument: XFormsXPathDocument;
+  readonly root: XFormsXPathElement;
 
-	getXPathChildNodes(this: XFormsXPathNode): readonly XFormsXPathDescendantNode[];
-	getXPathValue(this: XFormsXPathNode): string;
+  getXPathChildNodes(this: XFormsXPathNode): readonly XFormsXPathDescendantNode[];
+  getXPathValue(this: XFormsXPathNode): string;
 }
 
 export interface XFormsXPathDocument extends XFormsXPathNode {
-	readonly [XPathNodeKindKey]: XPathDocumentKind;
+  readonly [XPathNodeKindKey]: XPathDocumentKind;
 }
 
 export interface XFormsXPathElement extends XFormsXPathNode {
-	readonly [XPathNodeKindKey]: XPathElementKind;
+  readonly [XPathNodeKindKey]: XPathElementKind;
 }
 
 /**
  * @see {@link XFormsXPathNodeRangeKind}
  */
 export interface XFormsXPathNodeRange extends XFormsXPathNode {
-	readonly [XPathNodeKindKey]: XFormsXPathNodeRangeKind;
+  readonly [XPathNodeKindKey]: XFormsXPathNodeRangeKind;
 }
 
 export interface XFormsXPathAttribute extends XFormsXPathNode {
-	readonly [XPathNodeKindKey]: XPathAttributeKind;
+  readonly [XPathNodeKindKey]: XPathAttributeKind;
 }
 
 export interface XFormsXPathText extends XFormsXPathNode {
-	readonly [XPathNodeKindKey]: XPathTextKind;
+  readonly [XPathNodeKindKey]: XPathTextKind;
 }
 
 export interface XFormsXPathComment extends XFormsXPathNode {
-	readonly [XPathNodeKindKey]: XPathCommentKind;
+  readonly [XPathNodeKindKey]: XPathCommentKind;
 }
 
 // prettier-ignore
@@ -88,7 +88,7 @@ export type XPathNamedNodeKind =
 	| XPathAttributeKind;
 
 export interface XFormsXPathNamedNode extends XFormsXPathNode {
-	readonly [XPathNodeKindKey]: XPathNamedNodeKind;
+  readonly [XPathNodeKindKey]: XPathNamedNodeKind;
 }
 
 // prettier-ignore
@@ -101,7 +101,7 @@ export type XFormsXPathDescendantNodeKind =
 	| XPathAttributeKind;
 
 export interface XFormsXPathDescendantNode extends XFormsXPathNode {
-	readonly [XPathNodeKindKey]: XFormsXPathDescendantNodeKind;
+  readonly [XPathNodeKindKey]: XFormsXPathDescendantNodeKind;
 }
 
 // prettier-ignore
@@ -114,7 +114,7 @@ export type XFormsXPathPrimaryInstanceNodeKind =
 	| XPathTextKind;
 
 export interface XFormsXPathPrimaryInstanceNode extends XFormsXPathNode {
-	readonly [XPathNodeKindKey]: XFormsXPathPrimaryInstanceNodeKind;
+  readonly [XPathNodeKindKey]: XFormsXPathPrimaryInstanceNodeKind;
 }
 
 // prettier-ignore
@@ -125,5 +125,5 @@ export type XFormsXPathPrimaryInstanceDescendantNodeKind =
 	| XPathTextKind;
 
 export interface XFormsXPathPrimaryInstanceDescendantNode extends XFormsXPathNode {
-	readonly [XPathNodeKindKey]: XFormsXPathPrimaryInstanceDescendantNodeKind;
+  readonly [XPathNodeKindKey]: XFormsXPathPrimaryInstanceDescendantNodeKind;
 }

@@ -15,7 +15,7 @@ const STRICT_ISO_TIME_SUBPATTERN = `(${[...STRICT_TIME_FORMATS].join('|')})`;
 
 // "Like" (lenient): also accepts partial times (e.g., HH:MM or HH alone).
 const ISO_TIME_LIKE_SUBPATTERN = `(${[...STRICT_TIME_FORMATS, '\\d{2}:\\d{2}', '\\d{2}'].join(
-	'|'
+  '|'
 )})`;
 
 const TIMEZONE_OFFSET_SUBPATTERN = '[-+]\\d{2}:\\d{2}';
@@ -33,30 +33,30 @@ export const VALID_OFFSET_VALUE = new RegExp('^([+-]([0][0-9]|1[0-4]):([0-5][0-9
 
 // Used by XPath coercion. It accepts offset-bearing strings (e.g. 2026-04-22T14:30:00+07:00).
 export const ISO_DATE_OR_DATE_TIME_LIKE_PATTERN = new RegExp(
-	[
-		'^',
-		ISO_DATE_LIKE_SUBPATTERN,
-		`(T${ISO_TIME_LIKE_SUBPATTERN}(${ISO_OFFSET_SUBPATTERN})?)?`,
-		'$',
-	].join('')
+  [
+    '^',
+    ISO_DATE_LIKE_SUBPATTERN,
+    `(T${ISO_TIME_LIKE_SUBPATTERN}(${ISO_OFFSET_SUBPATTERN})?)?`,
+    '$',
+  ].join('')
 );
 
 // Used by DateValueCodec. It intentionally rejects strings with timezone offsets.
 export const ISO_DATE_OR_DATE_TIME_NO_OFFSET_PATTERN = new RegExp(
-	['^', ISO_DATE_LIKE_SUBPATTERN, `(T${ISO_TIME_LIKE_SUBPATTERN})?`, '$'].join('')
+  ['^', ISO_DATE_LIKE_SUBPATTERN, `(T${ISO_TIME_LIKE_SUBPATTERN})?`, '$'].join('')
 );
 
 export const ISO_DATE_TIME_WITH_OPTIONAL_OFFSET_PATTERN = new RegExp(
-	[
-		'^',
-		ISO_DATE_LIKE_SUBPATTERN,
-		'T',
-		STRICT_ISO_TIME_SUBPATTERN,
-		`(${ISO_OFFSET_SUBPATTERN})?`,
-		'$',
-	].join('')
+  [
+    '^',
+    ISO_DATE_LIKE_SUBPATTERN,
+    'T',
+    STRICT_ISO_TIME_SUBPATTERN,
+    `(${ISO_OFFSET_SUBPATTERN})?`,
+    '$',
+  ].join('')
 );
 
 export const ISO_TIME_WITH_OPTIONAL_OFFSET_PATTERN = new RegExp(
-	['^', STRICT_ISO_TIME_SUBPATTERN, `(${ISO_OFFSET_SUBPATTERN})?`, '$'].join('')
+  ['^', STRICT_ISO_TIME_SUBPATTERN, `(${ISO_OFFSET_SUBPATTERN})?`, '$'].join('')
 );

@@ -10,14 +10,14 @@ import { parseStaticDocumentFromDOMSubtree } from './parseStaticDocumentFromDOMS
 type WrappedInstanceXML = `<wrapped${string}</wrapped>`;
 
 const wrapInstanceXML = (model: ModelDefinition, instanceXML: string): WrappedInstanceXML => {
-	const defaultNamespace = model.root.namespaceDeclarations.get(null);
-	const defaultNamespaceURI = defaultNamespace?.declaredURI?.href;
+  const defaultNamespace = model.root.namespaceDeclarations.get(null);
+  const defaultNamespaceURI = defaultNamespace?.declaredURI?.href;
 
-	if (defaultNamespaceURI == null) {
-		return `<wrapped>${instanceXML}</wrapped>`;
-	}
+  if (defaultNamespaceURI == null) {
+    return `<wrapped>${instanceXML}</wrapped>`;
+  }
 
-	return /* xml */ `<wrapped xmlns="${escapeXMLText(defaultNamespaceURI, true)}">
+  return /* xml */ `<wrapped xmlns="${escapeXMLText(defaultNamespaceURI, true)}">
 		${instanceXML}
 	</wrapped>`;
 };
@@ -25,32 +25,32 @@ const wrapInstanceXML = (model: ModelDefinition, instanceXML: string): WrappedIn
 type AssertSoleChildElement = (element?: Element | null) => asserts element is Element;
 
 const assertSoleChildElement: AssertSoleChildElement = (element) => {
-	if (element == null) {
-		throw new ErrorProductionDesignPendingError('Expected a child element');
-	}
+  if (element == null) {
+    throw new ErrorProductionDesignPendingError('Expected a child element');
+  }
 
-	const { parentNode } = element;
+  const { parentNode } = element;
 
-	if (parentNode == null) {
-		throw new ErrorProductionDesignPendingError('Expected element to be a child of a parent node');
-	}
+  if (parentNode == null) {
+    throw new ErrorProductionDesignPendingError('Expected element to be a child of a parent node');
+  }
 
-	if (element !== parentNode.firstElementChild || element !== parentNode.lastElementChild) {
-		throw new ErrorProductionDesignPendingError(
-			"Expected child element to be parent node's only element child."
-		);
-	}
+  if (element !== parentNode.firstElementChild || element !== parentNode.lastElementChild) {
+    throw new ErrorProductionDesignPendingError(
+      "Expected child element to be parent node's only element child."
+    );
+  }
 };
 
 const getWrappedInstanceRootElement = (xml: WrappedInstanceXML): Element => {
-	const domParser = new DOMParser();
-	const doc = domParser.parseFromString(xml, 'text/xml');
-	const { documentElement } = doc;
-	const [root] = documentElement.children;
+  const domParser = new DOMParser();
+  const doc = domParser.parseFromString(xml, 'text/xml');
+  const { documentElement } = doc;
+  const [root] = documentElement.children;
 
-	assertSoleChildElement(root);
+  assertSoleChildElement(root);
 
-	return root;
+  return root;
 };
 
 /**
@@ -72,10 +72,10 @@ const getWrappedInstanceRootElement = (xml: WrappedInstanceXML): Element => {
  * - Instance XML **definitely** declares non-default namespaces
  */
 export const parseInstanceXML = (model: ModelDefinition, instanceXML: string): StaticDocument => {
-	// Remove XML declaration if present: xforms-engine defaults to UTF-8
-	const cleanedXML = instanceXML.replace(/<\?xml\s+[^?]*\?>\s*/, '');
-	const wrappedXML = wrapInstanceXML(model, cleanedXML);
-	const root = getWrappedInstanceRootElement(wrappedXML);
+  // Remove XML declaration if present: xforms-engine defaults to UTF-8
+  const cleanedXML = instanceXML.replace(/<\?xml\s+[^?]*\?>\s*/, '');
+  const wrappedXML = wrapInstanceXML(model, cleanedXML);
+  const root = getWrappedInstanceRootElement(wrappedXML);
 
-	return parseStaticDocumentFromDOMSubtree(root);
+  return parseStaticDocumentFromDOMSubtree(root);
 };

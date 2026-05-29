@@ -3,9 +3,9 @@ import type { Accessor } from 'solid-js';
 import { createComputed, createSignal, on } from 'solid-js';
 import type { FormNodeID } from '../../client/identity.ts';
 import type {
-	AnyRepeatDefinition,
-	RepeatInstanceNode,
-	RepeatInstanceNodeAppearances,
+  AnyRepeatDefinition,
+  RepeatInstanceNode,
+  RepeatInstanceNodeAppearances,
 } from '../../client/repeat/RepeatInstanceNode.ts';
 import type { InstanceState } from '../../client/serialization/InstanceState.ts';
 import type { TextRange } from '../../client/TextRange.ts';
@@ -14,8 +14,8 @@ import type { XFormsXPathElement } from '../../integration/xpath/adapter/XFormsX
 import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import { createTemplatedNodeInstanceState } from '../../lib/client-reactivity/instance-state/createTemplatedNodeInstanceState.ts';
 import {
-	createAttributeState,
-	type AttributeState,
+  createAttributeState,
+  type AttributeState,
 } from '../../lib/reactivity/createAttributeState.ts';
 import type { ChildrenState } from '../../lib/reactivity/createChildrenState.ts';
 import { createChildrenState } from '../../lib/reactivity/createChildrenState.ts';
@@ -36,170 +36,170 @@ import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { ClientReactiveSerializableTemplatedNode } from '../internal-api/serialization/ClientReactiveSerializableTemplatedNode.ts';
 
 interface RepeatInstanceStateSpec extends DescendantNodeSharedStateSpec {
-	readonly label: Accessor<TextRange<'label'> | null>;
-	readonly hint: null;
+  readonly label: Accessor<TextRange<'label'> | null>;
+  readonly hint: null;
 
-	readonly attributes: Accessor<readonly Attribute[]>;
-	readonly children: Accessor<readonly FormNodeID[]>;
-	readonly hasRelevantBodyNodes: Accessor<boolean>;
-	readonly valueOptions: null;
-	readonly value: null;
+  readonly attributes: Accessor<readonly Attribute[]>;
+  readonly children: Accessor<readonly FormNodeID[]>;
+  readonly hasRelevantBodyNodes: Accessor<boolean>;
+  readonly valueOptions: null;
+  readonly value: null;
 }
 
 interface RepeatInstanceOptions {
-	readonly precedingInstance: RepeatInstance | null;
+  readonly precedingInstance: RepeatInstance | null;
 }
 
 export class RepeatInstance
-	extends DescendantNode<
-		AnyRepeatDefinition,
-		RepeatInstanceStateSpec,
-		RepeatRange,
-		GeneralChildNode
-	>
-	implements
-		RepeatInstanceNode,
-		XFormsXPathElement,
-		EvaluationContext,
-		ClientReactiveSerializableTemplatedNode
+  extends DescendantNode<
+    AnyRepeatDefinition,
+    RepeatInstanceStateSpec,
+    RepeatRange,
+    GeneralChildNode
+  >
+  implements
+    RepeatInstanceNode,
+    XFormsXPathElement,
+    EvaluationContext,
+    ClientReactiveSerializableTemplatedNode
 {
-	private readonly childrenState: ChildrenState<GeneralChildNode>;
-	private readonly attributeState: AttributeState;
-	private readonly currentIndex: Accessor<number>;
+  private readonly childrenState: ChildrenState<GeneralChildNode>;
+  private readonly attributeState: AttributeState;
+  private readonly currentIndex: Accessor<number>;
 
-	override readonly [XPathNodeKindKey] = 'element';
+  override readonly [XPathNodeKindKey] = 'element';
 
-	// InstanceNode
-	protected readonly state: SharedNodeState<RepeatInstanceStateSpec>;
-	protected readonly engineState: EngineState<RepeatInstanceStateSpec>;
+  // InstanceNode
+  protected readonly state: SharedNodeState<RepeatInstanceStateSpec>;
+  protected readonly engineState: EngineState<RepeatInstanceStateSpec>;
 
-	/**
-	 * @todo Should we special case repeat `readonly` inheritance the same way
-	 * we do for `relevant`?
-	 *
-	 * @see {@link hasNonRelevantAncestor}
-	 */
-	declare readonly hasReadonlyAncestor: Accessor<boolean>;
+  /**
+   * @todo Should we special case repeat `readonly` inheritance the same way
+   * we do for `relevant`?
+   *
+   * @see {@link hasNonRelevantAncestor}
+   */
+  declare readonly hasReadonlyAncestor: Accessor<boolean>;
 
-	/**
-	 * A repeat instance can inherit non-relevance, just like any other node. That
-	 * inheritance is derived from the repeat instance's parent node in the
-	 * primary instance XML/DOM tree (and would be semantically expected to do so
-	 * even if we move away from that implementation detail).
-	 *
-	 * Since {@link RepeatInstance.parent} is a {@link RepeatRange}, which is a
-	 * runtime data model fiction that does not exist in that hierarchy, we pass
-	 * this call through, allowing the {@link RepeatRange} to check the actual
-	 * primary instance parent node's relevance state.
-	 *
-	 * @todo Should we apply similar reasoning in {@link hasReadonlyAncestor}?
-	 */
-	override readonly hasNonRelevantAncestor: Accessor<boolean> = () => {
-		return this.parent.hasNonRelevantAncestor();
-	};
+  /**
+   * A repeat instance can inherit non-relevance, just like any other node. That
+   * inheritance is derived from the repeat instance's parent node in the
+   * primary instance XML/DOM tree (and would be semantically expected to do so
+   * even if we move away from that implementation detail).
+   *
+   * Since {@link RepeatInstance.parent} is a {@link RepeatRange}, which is a
+   * runtime data model fiction that does not exist in that hierarchy, we pass
+   * this call through, allowing the {@link RepeatRange} to check the actual
+   * primary instance parent node's relevance state.
+   *
+   * @todo Should we apply similar reasoning in {@link hasReadonlyAncestor}?
+   */
+  override readonly hasNonRelevantAncestor: Accessor<boolean> = () => {
+    return this.parent.hasNonRelevantAncestor();
+  };
 
-	// RepeatInstanceNode
-	readonly nodeType = 'repeat-instance';
+  // RepeatInstanceNode
+  readonly nodeType = 'repeat-instance';
 
-	/**
-	 * @see {@link RepeatRange.appearances}
-	 */
-	readonly appearances: RepeatInstanceNodeAppearances;
-	readonly nodeOptions = null;
+  /**
+   * @see {@link RepeatRange.appearances}
+   */
+  readonly appearances: RepeatInstanceNodeAppearances;
+  readonly nodeOptions = null;
 
-	readonly currentState: MaterializedChildren<
-		CurrentState<RepeatInstanceStateSpec>,
-		GeneralChildNode
-	>;
-	readonly validationState: AncestorNodeValidationState;
-	readonly instanceState: InstanceState;
+  readonly currentState: MaterializedChildren<
+    CurrentState<RepeatInstanceStateSpec>,
+    GeneralChildNode
+  >;
+  readonly validationState: AncestorNodeValidationState;
+  readonly instanceState: InstanceState;
 
-	constructor(
-		override readonly parent: RepeatRange,
-		instanceNode: StaticElement | null,
-		options: RepeatInstanceOptions
-	) {
-		const { definition } = parent;
-		const { precedingInstance } = options;
-		const precedingIndex = precedingInstance?.currentIndex ?? (() => -1);
-		const initialIndex = precedingIndex() + 1;
-		const [currentIndex, setCurrentIndex] = createSignal(initialIndex);
+  constructor(
+    override readonly parent: RepeatRange,
+    instanceNode: StaticElement | null,
+    options: RepeatInstanceOptions
+  ) {
+    const { definition } = parent;
+    const { precedingInstance } = options;
+    const precedingIndex = precedingInstance?.currentIndex ?? (() => -1);
+    const initialIndex = precedingIndex() + 1;
+    const [currentIndex, setCurrentIndex] = createSignal(initialIndex);
 
-		super(parent, instanceNode, definition, {
-			computeReference: (): string => {
-				const currentPosition = currentIndex() + 1;
+    super(parent, instanceNode, definition, {
+      computeReference: (): string => {
+        const currentPosition = currentIndex() + 1;
 
-				return `${parent.contextReference()}[${currentPosition}]`;
-			},
-		});
+        return `${parent.contextReference()}[${currentPosition}]`;
+      },
+    });
 
-		this.appearances = definition.bodyElement.appearances;
+    this.appearances = definition.bodyElement.appearances;
 
-		const childrenState = createChildrenState<RepeatInstance, GeneralChildNode>(this);
-		this.attributeState = createAttributeState(this.scope);
+    const childrenState = createChildrenState<RepeatInstance, GeneralChildNode>(this);
+    this.attributeState = createAttributeState(this.scope);
 
-		this.childrenState = childrenState;
-		this.currentIndex = currentIndex;
+    this.childrenState = childrenState;
+    this.currentIndex = currentIndex;
 
-		const state = createSharedNodeState(
-			this.scope,
-			{
-				reference: this.contextReference,
-				readonly: this.isReadonly,
-				relevant: this.isRelevant,
-				required: this.isRequired,
+    const state = createSharedNodeState(
+      this.scope,
+      {
+        reference: this.contextReference,
+        readonly: this.isReadonly,
+        relevant: this.isRelevant,
+        required: this.isRequired,
 
-				// TODO: only-child <group><label>
-				label: createNodeLabel(this, definition),
-				hint: null,
-				attributes: this.attributeState.getAttributes,
-				children: childrenState.childIds,
-				hasRelevantBodyNodes: this.hasRelevantBodyNodes,
-				valueOptions: null,
-				value: null,
-			},
-			this.instanceConfig
-		);
+        // TODO: only-child <group><label>
+        label: createNodeLabel(this, definition),
+        hint: null,
+        attributes: this.attributeState.getAttributes,
+        children: childrenState.childIds,
+        hasRelevantBodyNodes: this.hasRelevantBodyNodes,
+        valueOptions: null,
+        value: null,
+      },
+      this.instanceConfig
+    );
 
-		this.state = state;
-		this.engineState = state.engineState;
-		this.currentState = materializeCurrentStateChildren(
-			this.scope,
-			state.currentState,
-			childrenState
-		);
+    this.state = state;
+    this.engineState = state.engineState;
+    this.currentState = materializeCurrentStateChildren(
+      this.scope,
+      state.currentState,
+      childrenState
+    );
 
-		// Maintain current index state, updating as the parent range's children
-		// state is changed. Notable Solid reactivity nuances:
-		//
-		// - `createComputed` is the Solid API which is explicitly called out for
-		//   supporting performing reactive writes. It's also generally considered a
-		//   "smell", but it seems the most appropriate for a first pass on this.
-		// - `on(..., { defer: true })` allows us to *synchronously* delay reactive
-		//   index updates until after the full form tree is built, where this
-		//   `RepeatInstance` is being constructed but it hasn't yet been appended
-		//   to the parent range's reactive `children`.
-		// - the same logic for deferring reaction on form init should apply for
-		//   adding new instances to a live form.
-		this.scope.runTask(() => {
-			// TODO: even as minimal as this currently is, maybe we should move this
-			// into a named function under src/lib/reactivity (for consistency with
-			// other reactive implementations of specific XForms semantics)?
-			const computeCurrentIndex = parent.getInstanceIndex.bind(parent, this);
+    // Maintain current index state, updating as the parent range's children
+    // state is changed. Notable Solid reactivity nuances:
+    //
+    // - `createComputed` is the Solid API which is explicitly called out for
+    //   supporting performing reactive writes. It's also generally considered a
+    //   "smell", but it seems the most appropriate for a first pass on this.
+    // - `on(..., { defer: true })` allows us to *synchronously* delay reactive
+    //   index updates until after the full form tree is built, where this
+    //   `RepeatInstance` is being constructed but it hasn't yet been appended
+    //   to the parent range's reactive `children`.
+    // - the same logic for deferring reaction on form init should apply for
+    //   adding new instances to a live form.
+    this.scope.runTask(() => {
+      // TODO: even as minimal as this currently is, maybe we should move this
+      // into a named function under src/lib/reactivity (for consistency with
+      // other reactive implementations of specific XForms semantics)?
+      const computeCurrentIndex = parent.getInstanceIndex.bind(parent, this);
 
-			createComputed(on<number, number>(computeCurrentIndex, setCurrentIndex, { defer: true }));
-		});
+      createComputed(on<number, number>(computeCurrentIndex, setCurrentIndex, { defer: true }));
+    });
 
-		childrenState.setChildren(buildChildren(this));
-		this.validationState = createAggregatedViolations(this, this.instanceConfig);
-		this.instanceState = createTemplatedNodeInstanceState(this);
-	}
+    childrenState.setChildren(buildChildren(this));
+    this.validationState = createAggregatedViolations(this, this.instanceConfig);
+    this.instanceState = createTemplatedNodeInstanceState(this);
+  }
 
-	getChildren(): readonly GeneralChildNode[] {
-		return this.childrenState.getChildren();
-	}
+  getChildren(): readonly GeneralChildNode[] {
+    return this.childrenState.getChildren();
+  }
 
-	override getAttributes(): readonly Attribute[] {
-		return this.attributeState.getAttributes();
-	}
+  override getAttributes(): readonly Attribute[] {
+    return this.attributeState.getAttributes();
+  }
 }

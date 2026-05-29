@@ -7,19 +7,19 @@ import { TextElementDefinition } from './abstract/TextElementDefinition.ts';
 interface LabelElement extends LocalNamedElement<'label'> {}
 
 export class ItemLabelDefinition extends TextElementDefinition<'item-label'> {
-	static from(form: XFormDefinition, owner: ItemDefinition): ItemLabelDefinition | null {
-		const labelElement = getLabelElement(owner.element);
+  static from(form: XFormDefinition, owner: ItemDefinition): ItemLabelDefinition | null {
+    const labelElement = getLabelElement(owner.element);
 
-		if (labelElement == null) {
-			return null;
-		}
+    if (labelElement == null) {
+      return null;
+    }
 
-		return new this(form, owner, labelElement);
-	}
+    return new this(form, owner, labelElement);
+  }
 
-	readonly role = 'item-label';
+  readonly role = 'item-label';
 
-	private constructor(form: XFormDefinition, owner: ItemDefinition, element: LabelElement) {
-		super(form, owner, element);
-	}
+  private constructor(form: XFormDefinition, owner: ItemDefinition, element: LabelElement) {
+    super(form, owner, element);
+  }
 }
