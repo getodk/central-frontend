@@ -8,36 +8,36 @@ import { LAST_PATH_SEGMENT_PATTERN } from './constants.ts';
  * differs in that it will throw for an empty or root path.
  */
 export class FileNamePath implements JavaNIOPath {
-	readonly absolutePath: FileSystemPath;
-	readonly rawFileName: string;
+  readonly absolutePath: FileSystemPath;
+  readonly rawFileName: string;
 
-	constructor(sourcePath: JavaNIOPath | string) {
-		this.absolutePath = new FileSystemPath(sourcePath);
+  constructor(sourcePath: JavaNIOPath | string) {
+    this.absolutePath = new FileSystemPath(sourcePath);
 
-		const rawPath = this.absolutePath.toString();
+    const rawPath = this.absolutePath.toString();
 
-		const rawFileNameMatches = rawPath.match(LAST_PATH_SEGMENT_PATTERN);
+    const rawFileNameMatches = rawPath.match(LAST_PATH_SEGMENT_PATTERN);
 
-		if (rawFileNameMatches == null) {
-			throw new Error(`Could not determine file name of path ${rawPath}`);
-		}
+    if (rawFileNameMatches == null) {
+      throw new Error(`Could not determine file name of path ${rawPath}`);
+    }
 
-		this.rawFileName = rawFileNameMatches[0];
-	}
+    this.rawFileName = rawFileNameMatches[0];
+  }
 
-	getFileName(): JavaNIOPath {
-		return this;
-	}
+  getFileName(): JavaNIOPath {
+    return this;
+  }
 
-	getParent(): JavaNIOPath {
-		return this.absolutePath.getParent();
-	}
+  getParent(): JavaNIOPath {
+    return this.absolutePath.getParent();
+  }
 
-	toAbsolutePath(): JavaNIOPath {
-		return this.absolutePath;
-	}
+  toAbsolutePath(): JavaNIOPath {
+    return this.absolutePath;
+  }
 
-	toString(): string {
-		return this.rawFileName;
-	}
+  toString(): string {
+    return this.rawFileName;
+  }
 }

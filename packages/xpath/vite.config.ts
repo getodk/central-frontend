@@ -10,20 +10,20 @@ const supportedBrowsers = new Set(['chromium', 'firefox', 'webkit'] as const);
 type SupportedBrowser = CollectionValues<typeof supportedBrowsers>;
 
 const isSupportedBrowser = (browserName: string): browserName is SupportedBrowser =>
-	supportedBrowsers.has(browserName as SupportedBrowser);
+  supportedBrowsers.has(browserName as SupportedBrowser);
 
 const BROWSER_NAME = (() => {
-	const envBrowserName = process.env.BROWSER_NAME;
+  const envBrowserName = process.env.BROWSER_NAME;
 
-	if (envBrowserName == null) {
-		return null;
-	}
+  if (envBrowserName == null) {
+    return null;
+  }
 
-	if (isSupportedBrowser(envBrowserName)) {
-		return envBrowserName;
-	}
+  if (isSupportedBrowser(envBrowserName)) {
+    return envBrowserName;
+  }
 
-	throw new Error(`Unsupported browser: ${envBrowserName}`);
+  throw new Error(`Unsupported browser: ${envBrowserName}`);
 })();
 
 const BROWSER_ENABLED = BROWSER_NAME != null;
@@ -54,92 +54,92 @@ const TEST_TIME_ZONE = 'America/Phoenix';
 const TEST_LOCALE = 'en-US';
 
 export default defineConfig(({ mode }) => {
-	const isTest = mode === 'test';
+  const isTest = mode === 'test';
 
-	let timeZoneId: string | null = process.env.TZ ?? null;
-	let localeId: string | null = process.env.LOCALE_ID ?? null;
+  let timeZoneId: string | null = process.env.TZ ?? null;
+  let localeId: string | null = process.env.LOCALE_ID ?? null;
 
-	if (isTest) {
-		timeZoneId = timeZoneId ?? TEST_TIME_ZONE;
-		localeId = localeId ?? TEST_LOCALE;
-	}
+  if (isTest) {
+    timeZoneId = timeZoneId ?? TEST_TIME_ZONE;
+    localeId = localeId ?? TEST_LOCALE;
+  }
 
-	// `expressionParser.ts` is built as a separate entry so it can be consumed
-	// directly (once instantiated, with top-level await in its containin module)
-	// where the same parser instance is used downstream for static analysis.
-	const entries = ['./src/index.ts', './src/expressionParser.ts'];
+  // `expressionParser.ts` is built as a separate entry so it can be consumed
+  // directly (once instantiated, with top-level await in its containin module)
+  // where the same parser instance is used downstream for static analysis.
+  const entries = ['./src/index.ts', './src/expressionParser.ts'];
 
-	// Mapping entry names with path-based keys gives a more predictable output which
-	// we control at the filesystem level, so the exports in package.json are stable
-	// along with their paths and this config.
-	const libEntry = Object.fromEntries(
-		entries.map((entry) => [entry.replaceAll(/^\.\/src\/|\.ts$/g, ''), entry])
-	);
+  // Mapping entry names with path-based keys gives a more predictable output which
+  // we control at the filesystem level, so the exports in package.json are stable
+  // along with their paths and this config.
+  const libEntry = Object.fromEntries(
+    entries.map((entry) => [entry.replaceAll(/^\.\/src\/|\.ts$/g, ''), entry])
+  );
 
-	return {
-		build: {
-			target: 'esnext',
-			minify: false,
-			sourcemap: true,
-			emptyOutDir: false,
-			outDir: './dist',
-			manifest: true,
-			lib: {
-				entry: libEntry,
-				formats: ['es'],
-			},
-			rollupOptions: {
-				external: ['fs', 'path', 'temporal-polyfill'],
-			},
-		},
-		define: {
-			TZ: JSON.stringify(timeZoneId),
-			LOCALE_ID: JSON.stringify(localeId),
-		},
-		esbuild: {
-			target: 'esnext',
-			format: 'esm',
-		},
-		optimizeDeps: {
-			force: true,
-		},
-		plugins: [
-			// Transform the BigInt polyfill (used by the Temporal polyfill) to use native
-			// APIs. We can safely assume BigInt is available for our target platforms.
-			babel({
-				babelConfig: {
-					babelrc: false,
-					configFile: false,
-					plugins: ['transform-jsbi-to-bigint'],
-				},
-			}),
+  return {
+    build: {
+      target: 'esnext',
+      minify: false,
+      sourcemap: true,
+      emptyOutDir: false,
+      outDir: './dist',
+      manifest: true,
+      lib: {
+        entry: libEntry,
+        formats: ['es'],
+      },
+      rollupOptions: {
+        external: ['fs', 'path', 'temporal-polyfill'],
+      },
+    },
+    define: {
+      TZ: JSON.stringify(timeZoneId),
+      LOCALE_ID: JSON.stringify(localeId),
+    },
+    esbuild: {
+      target: 'esnext',
+      format: 'esm',
+    },
+    optimizeDeps: {
+      force: true,
+    },
+    plugins: [
+      // Transform the BigInt polyfill (used by the Temporal polyfill) to use native
+      // APIs. We can safely assume BigInt is available for our target platforms.
+      babel({
+        babelConfig: {
+          babelrc: false,
+          configFile: false,
+          plugins: ['transform-jsbi-to-bigint'],
+        },
+      }),
 
-			// Generate type definitions. This is somehow more reliable than directly calling tsc
-			dts({
-				exclude: ['test', 'vite-env.d.ts'],
-				entryRoot: './src',
-			}),
-		].filter((plugin) => plugin != null),
-		resolve: {
-			alias: {
-				'@getodk/common/test-utils': resolvePath(__dirname, '../common/test-utils'),
-				'@getodk/common/types': resolvePath(__dirname, '../common/types'),
-				'@getodk/common': resolvePath(__dirname, '../common/src'),
-			},
-		},
-		test: {
-			browser: {
-				enabled: BROWSER_ENABLED,
-				instances: BROWSER_NAME != null ? [{ browser: BROWSER_NAME }] : [],
-				provider: playwright(),
-				headless: true,
-				screenshotFailures: false,
-			},
-			setupFiles: ['test/setup.ts'],
-			environment: TEST_ENVIRONMENT,
-			globals: false,
-			include: ['test/**/*.test.ts'],
-			reporters: process.env.GITHUB_ACTIONS ? ['default', 'github-actions'] : 'default',
-		},
-	};
+      // Generate type definitions. This is somehow more reliable than directly calling tsc
+      dts({
+        exclude: ['test', 'vite-env.d.ts'],
+        entryRoot: './src',
+      }),
+    ].filter((plugin) => plugin != null),
+    resolve: {
+      alias: {
+        '@getodk/common/test-utils': resolvePath(__dirname, '../common/test-utils'),
+        '@getodk/common/types': resolvePath(__dirname, '../common/types'),
+        '@getodk/common': resolvePath(__dirname, '../common/src'),
+      },
+    },
+    test: {
+      browser: {
+        enabled: BROWSER_ENABLED,
+        instances: BROWSER_NAME != null ? [{ browser: BROWSER_NAME }] : [],
+        provider: playwright(),
+        headless: true,
+        screenshotFailures: false,
+      },
+      setupFiles: ['test/setup.ts'],
+      environment: TEST_ENVIRONMENT,
+      globals: false,
+      include: ['test/**/*.test.ts'],
+      reporters: process.env.GITHUB_ACTIONS ? ['default', 'github-actions'] : 'default',
+    },
+  };
 });

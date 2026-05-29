@@ -7,13 +7,13 @@ import { toGlobLoaderEntries } from './import-glob-helper.ts';
  * @todo Support Windows paths?
  */
 const getFileName = (absolutePath: string): string => {
-	const fileName = absolutePath.split('/').at(-1);
+  const fileName = absolutePath.split('/').at(-1);
 
-	if (fileName == null) {
-		throw new Error(`Failed to get file name for file system path: ${absolutePath}`);
-	}
+  if (fileName == null) {
+    throw new Error(`Failed to get file name for file system path: ${absolutePath}`);
+  }
 
-	return fileName;
+  return fileName;
 };
 
 // prettier-ignore
@@ -39,104 +39,104 @@ type XFormAttachmentFileExtensions = typeof xformAttachmentFileExtensions;
 type XFormAttachmentFileExtension = XFormAttachmentFileExtensions[number];
 
 const getFileExtension = (absolutePath: string): XFormAttachmentFileExtension => {
-	for (const extension of xformAttachmentFileExtensions) {
-		if (absolutePath.endsWith(extension)) {
-			return extension;
-		}
-	}
+  for (const extension of xformAttachmentFileExtensions) {
+    if (absolutePath.endsWith(extension)) {
+      return extension;
+    }
+  }
 
-	throw new Error(`Unknown file extension for file name: ${getFileName(absolutePath)}`);
+  throw new Error(`Unknown file extension for file name: ${getFileName(absolutePath)}`);
 };
 
 const getParentDirectory = (absolutePath: string): string => {
-	const fileName = getFileName(absolutePath);
+  const fileName = getFileName(absolutePath);
 
-	return absolutePath.slice(0, absolutePath.length - fileName.length - 1);
+  return absolutePath.slice(0, absolutePath.length - fileName.length - 1);
 };
 
 const xformAttachmentFixtureLoaderEntries = toGlobLoaderEntries(
-	import.meta,
-	import.meta.glob<true, 'url', string>('./*/**/*', {
-		query: '?url',
-		import: 'default',
-		eager: true,
-	})
+  import.meta,
+  import.meta.glob<true, 'url', string>('./*/**/*', {
+    query: '?url',
+    import: 'default',
+    eager: true,
+  })
 );
 
 export class XFormAttachmentFixture {
-	readonly fileName: string;
-	readonly fileExtension: string;
-	readonly mimeType: string;
+  readonly fileName: string;
+  readonly fileExtension: string;
+  readonly mimeType: string;
 
-	constructor(
-		readonly absolutePath: string,
-		readonly load: GlobFixtureLoader
-	) {
-		const fileName = getFileName(absolutePath);
-		const fileExtension = getFileExtension(fileName);
+  constructor(
+    readonly absolutePath: string,
+    readonly load: GlobFixtureLoader
+  ) {
+    const fileName = getFileName(absolutePath);
+    const fileExtension = getFileExtension(fileName);
 
-		this.fileName = fileName;
-		this.fileExtension = fileExtension;
+    this.fileName = fileName;
+    this.fileExtension = fileExtension;
 
-		switch (fileExtension) {
-			case '.csv':
-				this.mimeType = 'text/csv';
-				break;
+    switch (fileExtension) {
+      case '.csv':
+        this.mimeType = 'text/csv';
+        break;
 
-			case '.geojson':
-				this.mimeType = 'application/geo+json';
-				break;
+      case '.geojson':
+        this.mimeType = 'application/geo+json';
+        break;
 
-			case '.xml':
-			case '.xml.example':
-				this.mimeType = 'text/xml';
-				break;
+      case '.xml':
+      case '.xml.example':
+        this.mimeType = 'text/xml';
+        break;
 
-			case '.xlsx':
-				this.mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-				break;
+      case '.xlsx':
+        this.mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+        break;
 
-			case '.png':
-				this.mimeType = 'image/png';
-				break;
+      case '.png':
+        this.mimeType = 'image/png';
+        break;
 
-			case '.jpg':
-			case '.jpeg':
-				this.mimeType = 'image/jpeg';
-				break;
+      case '.jpg':
+      case '.jpeg':
+        this.mimeType = 'image/jpeg';
+        break;
 
-			case '.gif':
-				this.mimeType = 'image/gif';
-				break;
+      case '.gif':
+        this.mimeType = 'image/gif';
+        break;
 
-			case '.svg':
-				this.mimeType = 'image/svg+xml';
-				break;
+      case '.svg':
+        this.mimeType = 'image/svg+xml';
+        break;
 
-			case '.mp4':
-				this.mimeType = 'video/mp4';
-				break;
+      case '.mp4':
+        this.mimeType = 'video/mp4';
+        break;
 
-			case '.mp3':
-				this.mimeType = 'audio/mpeg';
-				break;
+      case '.mp3':
+        this.mimeType = 'audio/mpeg';
+        break;
 
-			case '.m4a':
-				this.mimeType = 'audio/mp4';
-				break;
+      case '.m4a':
+        this.mimeType = 'audio/mp4';
+        break;
 
-			case '.wav':
-				this.mimeType = 'audio/wav';
-				break;
+      case '.wav':
+        this.mimeType = 'audio/wav';
+        break;
 
-			case '.3gp':
-				this.mimeType = 'video/3gpp';
-				break;
+      case '.3gp':
+        this.mimeType = 'video/3gpp';
+        break;
 
-			default:
-				throw new UnreachableError(fileExtension);
-		}
-	}
+      default:
+        throw new UnreachableError(fileExtension);
+    }
+  }
 }
 
 type XFormAttachmentFixtureEntry = readonly [absolutePath: string, fixture: XFormAttachmentFixture];
@@ -144,29 +144,29 @@ type XFormAttachmentFixtureEntry = readonly [absolutePath: string, fixture: XFor
 type XFormAttachmentFixtureEntries = readonly XFormAttachmentFixtureEntry[];
 
 const xformAttachmentFixtureEntries: XFormAttachmentFixtureEntries =
-	xformAttachmentFixtureLoaderEntries.map(([absolutePath, { load }]) => {
-		const fixture = new XFormAttachmentFixture(absolutePath, load);
+  xformAttachmentFixtureLoaderEntries.map(([absolutePath, { load }]) => {
+    const fixture = new XFormAttachmentFixture(absolutePath, load);
 
-		return [absolutePath, fixture];
-	});
+    return [absolutePath, fixture];
+  });
 
 type XFormAttachmentFixturesByDirectory = ReadonlyMap<string, readonly XFormAttachmentFixture[]>;
 
 const buildXFormAttachmentFixturesByDirectory = (
-	entries: XFormAttachmentFixtureEntries
+  entries: XFormAttachmentFixtureEntries
 ): XFormAttachmentFixturesByDirectory => {
-	const result = new UpsertableMap<string, XFormAttachmentFixture[]>();
+  const result = new UpsertableMap<string, XFormAttachmentFixture[]>();
 
-	for (const [absolutePath, fixture] of entries) {
-		const parentDirectory = getParentDirectory(absolutePath);
-		const subset = result.upsert(parentDirectory, () => []);
+  for (const [absolutePath, fixture] of entries) {
+    const parentDirectory = getParentDirectory(absolutePath);
+    const subset = result.upsert(parentDirectory, () => []);
 
-		subset.push(fixture);
-	}
+    subset.push(fixture);
+  }
 
-	return result;
+  return result;
 };
 
 export const xformAttachmentFixturesByDirectory = buildXFormAttachmentFixturesByDirectory(
-	xformAttachmentFixtureEntries
+  xformAttachmentFixtureEntries
 );

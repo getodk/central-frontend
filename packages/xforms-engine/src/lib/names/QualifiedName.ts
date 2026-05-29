@@ -5,17 +5,17 @@ export type NamespaceURI = NamespaceURL | null;
 export type QualifiedNamePrefix = string | null;
 
 export interface NamespaceQualifiedNameSource {
-	readonly namespaceURI: NamespaceURI | string;
-	readonly localName: string;
+  readonly namespaceURI: NamespaceURI | string;
+  readonly localName: string;
 
-	/**
-	 * Note that this property is intentionally optional as one of the
-	 * {@link QualifiedNameSource | QualifiedName source input}, and its absence
-	 * is treated differently from an explicitly assigned `null` value.
-	 *
-	 * @see {@link SourcePrefixUnspecified}, {@link DeferredPrefix}
-	 */
-	readonly prefix?: QualifiedNamePrefix;
+  /**
+   * Note that this property is intentionally optional as one of the
+   * {@link QualifiedNameSource | QualifiedName source input}, and its absence
+   * is treated differently from an explicitly assigned `null` value.
+   *
+   * @see {@link SourcePrefixUnspecified}, {@link DeferredPrefix}
+   */
+  readonly prefix?: QualifiedNamePrefix;
 }
 
 const SOURCE_PREFIX_UNSPECIFIED = Symbol('SOURCE_PREFIX_UNSPECIFIED');
@@ -44,9 +44,9 @@ type DeferredPrefix =
 	| SourcePrefixUnspecified;
 
 interface DeferredPrefixedQualifiedNameSource {
-	readonly namespaceURI: NamespaceURI | string;
-	readonly prefix: DeferredPrefix;
-	readonly localName: string;
+  readonly namespaceURI: NamespaceURI | string;
+  readonly prefix: DeferredPrefix;
+  readonly localName: string;
 }
 
 // prettier-ignore
@@ -56,7 +56,7 @@ export type QualifiedNameSource =
 	| DeferredPrefixedQualifiedNameSource;
 
 interface PrefixResolutionOptions {
-	lookupPrefix(namespaceURI: NamespaceURI | string): string | null;
+  lookupPrefix(namespaceURI: NamespaceURI | string): string | null;
 }
 
 /**
@@ -106,65 +106,65 @@ interface PrefixResolutionOptions {
  * (but note that this syntax is mutually exclusive with the prefixed `QName`).
  */
 export class QualifiedName implements DeferredPrefixedQualifiedNameSource {
-	private readonly defaultPrefixResolutionOptions: PrefixResolutionOptions;
+  private readonly defaultPrefixResolutionOptions: PrefixResolutionOptions;
 
-	readonly namespaceURI: NamespaceURI;
+  readonly namespaceURI: NamespaceURI;
 
-	/**
-	 * @see {@link SourcePrefixUnspecified}, {@link DeferredPrefix}
-	 */
-	readonly prefix: DeferredPrefix;
+  /**
+   * @see {@link SourcePrefixUnspecified}, {@link DeferredPrefix}
+   */
+  readonly prefix: DeferredPrefix;
 
-	readonly localName: string;
+  readonly localName: string;
 
-	constructor(source: QualifiedNameSource) {
-		const { localName } = source;
+  constructor(source: QualifiedNameSource) {
+    const { localName } = source;
 
-		let prefix = source.prefix;
+    let prefix = source.prefix;
 
-		if (typeof prefix === 'undefined') {
-			prefix = SOURCE_PREFIX_UNSPECIFIED;
-		}
+    if (typeof prefix === 'undefined') {
+      prefix = SOURCE_PREFIX_UNSPECIFIED;
+    }
 
-		const namespaceURI = NamespaceURL.from(source.namespaceURI);
+    const namespaceURI = NamespaceURL.from(source.namespaceURI);
 
-		this.namespaceURI = namespaceURI;
-		this.prefix = prefix;
-		this.localName = localName;
+    this.namespaceURI = namespaceURI;
+    this.prefix = prefix;
+    this.localName = localName;
 
-		this.defaultPrefixResolutionOptions = {
-			lookupPrefix: () => {
-				if (prefix === SOURCE_PREFIX_UNSPECIFIED) {
-					throw new Error(`Failed to resolve prefix for namespace URI: ${String(namespaceURI)}`);
-				}
+    this.defaultPrefixResolutionOptions = {
+      lookupPrefix: () => {
+        if (prefix === SOURCE_PREFIX_UNSPECIFIED) {
+          throw new Error(`Failed to resolve prefix for namespace URI: ${String(namespaceURI)}`);
+        }
 
-				return prefix;
-			},
-		};
-	}
+        return prefix;
+      },
+    };
+  }
 
-	/**
-	 * @todo at time of writing, it's not expected we will actually supply
-	 * {@link options} in calls to this method! Current calls are from definitions
-	 * whose prefixes are known at parse time (i.e. they are prefixed in the
-	 * source XML from which they're parsed).
-	 *
-	 * The intent of accepting the options here now is to leave a fairly large
-	 * breadcrumb, for any use case where we might want to serialize XML from
-	 * artificially constructed DOM-like trees (e.g. `StaticNode` implementations
-	 * defined by parsing non-XML external secondary instances such as CSV and
-	 * GeoJSON). AFAIK this doesn't correspond to any known feature in the "like
-	 * Collect" scope, but it could have implications for inspecting form details
-	 * in e.g. "debug/form design/dev mode" scenarios.
-	 */
-	getPrefixedName(options: PrefixResolutionOptions = this.defaultPrefixResolutionOptions): string {
-		const { namespaceURI, localName } = this;
-		const prefix = options.lookupPrefix(namespaceURI);
+  /**
+   * @todo at time of writing, it's not expected we will actually supply
+   * {@link options} in calls to this method! Current calls are from definitions
+   * whose prefixes are known at parse time (i.e. they are prefixed in the
+   * source XML from which they're parsed).
+   *
+   * The intent of accepting the options here now is to leave a fairly large
+   * breadcrumb, for any use case where we might want to serialize XML from
+   * artificially constructed DOM-like trees (e.g. `StaticNode` implementations
+   * defined by parsing non-XML external secondary instances such as CSV and
+   * GeoJSON). AFAIK this doesn't correspond to any known feature in the "like
+   * Collect" scope, but it could have implications for inspecting form details
+   * in e.g. "debug/form design/dev mode" scenarios.
+   */
+  getPrefixedName(options: PrefixResolutionOptions = this.defaultPrefixResolutionOptions): string {
+    const { namespaceURI, localName } = this;
+    const prefix = options.lookupPrefix(namespaceURI);
 
-		if (prefix == null) {
-			return localName;
-		}
+    if (prefix == null) {
+      return localName;
+    }
 
-		return `${prefix}:${localName}`;
-	}
+    return `${prefix}:${localName}`;
+  }
 }

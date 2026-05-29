@@ -1,8 +1,8 @@
 import {
-	isResourceType,
-	JRResourceURL,
-	type JRResourceURLString,
-	type ResourceType,
+  isResourceType,
+  JRResourceURL,
+  type JRResourceURLString,
+  type ResourceType,
 } from '@getodk/common/jr-resources/JRResourceURL.ts';
 import { isElementNode, isTextNode } from '@getodk/common/lib/dom/predicates.ts';
 import type { Accessor } from 'solid-js';
@@ -16,71 +16,71 @@ import type { TextRangeDefinition } from '../../../parse/text/abstract/TextRange
 import { createComputedExpression } from '../createComputedExpression.ts';
 
 interface ChunksAndMedia {
-	chunks: readonly TextChunk[];
-	mediaSources: MediaSources;
+  chunks: readonly TextChunk[];
+  mediaSources: MediaSources;
 }
 
 const generateResourceChunk = (context: EvaluationContext, child: Element, type: ResourceType) => {
-	const parts = [];
-	for (const grandchild of child.childNodes) {
-		if (isElementNode(grandchild)) {
-			const expression = TextChunkExpression.fromOutput(grandchild);
-			if (expression) {
-				parts.push(createComputedExpression(context, expression)());
-			}
-		} else if (isTextNode(grandchild)) {
-			parts.push(grandchild.data);
-		}
-	}
-	const url = parts.join('') as JRResourceURLString;
-	return TextChunkExpression.fromResource(url, type);
+  const parts = [];
+  for (const grandchild of child.childNodes) {
+    if (isElementNode(grandchild)) {
+      const expression = TextChunkExpression.fromOutput(grandchild);
+      if (expression) {
+        parts.push(createComputedExpression(context, expression)());
+      }
+    } else if (isTextNode(grandchild)) {
+      parts.push(grandchild.data);
+    }
+  }
+  const url = parts.join('') as JRResourceURLString;
+  return TextChunkExpression.fromResource(url, type);
 };
 
 const generateChunk = (node: Node): TextChunkExpression<'string'> | null => {
-	if (isElementNode(node)) {
-		return TextChunkExpression.fromOutput(node);
-	}
-	if (isTextNode(node)) {
-		return TextChunkExpression.fromLiteral(node.data);
-	}
-	return null;
+  if (isElementNode(node)) {
+    return TextChunkExpression.fromOutput(node);
+  }
+  if (isTextNode(node)) {
+    return TextChunkExpression.fromLiteral(node.data);
+  }
+  return null;
 };
 
 const generateChunksForTranslation = (
-	context: EvaluationContext,
-	textElement: Element
+  context: EvaluationContext,
+  textElement: Element
 ): Array<TextChunkExpression<'string'>> => {
-	const chunks = [];
-	for (const child of textElement.children) {
-		const formAttribute = child.getAttribute('form') as ResourceType;
-		if (isResourceType(formAttribute)) {
-			chunks.push(generateResourceChunk(context, child, formAttribute));
-		} else {
-			for (const grandchild of child.childNodes) {
-				const chunk = generateChunk(grandchild);
-				if (chunk) {
-					chunks.push(chunk);
-				}
-			}
-		}
-	}
-	return chunks;
+  const chunks = [];
+  for (const child of textElement.children) {
+    const formAttribute = child.getAttribute('form') as ResourceType;
+    if (isResourceType(formAttribute)) {
+      chunks.push(generateResourceChunk(context, child, formAttribute));
+    } else {
+      for (const grandchild of child.childNodes) {
+        const chunk = generateChunk(grandchild);
+        if (chunk) {
+          chunks.push(chunk);
+        }
+      }
+    }
+  }
+  return chunks;
 };
 
 const getChunkExpressions = <Role extends TextRole>(
-	context: EvaluationContext,
-	definition: TextRangeDefinition<Role>
+  context: EvaluationContext,
+  definition: TextRangeDefinition<Role>
 ): ReadonlyArray<TextChunkExpression<'string'>> => {
-	if (definition.chunks[0]?.source !== 'translation') {
-		// only translations have 'nodes' chunks
-		return definition.chunks as Array<TextChunkExpression<'string'>>;
-	}
-	const itextId = context.evaluator.evaluateString(definition.chunks[0].toString()!, {
-		contextNode: context.contextNode,
-	});
-	const lang = context.getActiveLanguage();
-	const elem = definition.form.model.getItextElement(lang, itextId);
-	return elem ? generateChunksForTranslation(context, elem) : [];
+  if (definition.chunks[0]?.source !== 'translation') {
+    // only translations have 'nodes' chunks
+    return definition.chunks as Array<TextChunkExpression<'string'>>;
+  }
+  const itextId = context.evaluator.evaluateString(definition.chunks[0].toString()!, {
+    contextNode: context.contextNode,
+  });
+  const lang = context.getActiveLanguage();
+  const elem = definition.form.model.getItextElement(lang, itextId);
+  return elem ? generateChunksForTranslation(context, elem) : [];
 };
 
 /**
@@ -93,30 +93,30 @@ const getChunkExpressions = <Role extends TextRole>(
  * @returns An accessor for an object with all chunks and the first image, audio and video (if any).
  */
 const createTextChunks = <Role extends TextRole>(
-	context: EvaluationContext,
-	definition: TextRangeDefinition<Role>
+  context: EvaluationContext,
+  definition: TextRangeDefinition<Role>
 ): ChunksAndMedia => {
-	const chunks: TextChunk[] = [];
-	const mediaSources: MediaSources = {};
-	const chunkExpressions = getChunkExpressions(context, definition);
-	chunkExpressions.forEach((chunkExpression) => {
-		if (chunkExpression.resourceType) {
-			const url = chunkExpression.stringValue?.trim();
-			if (JRResourceURL.isJRResourceReference(url)) {
-				mediaSources[chunkExpression.resourceType] = JRResourceURL.from(url);
-			}
-			return;
-		}
+  const chunks: TextChunk[] = [];
+  const mediaSources: MediaSources = {};
+  const chunkExpressions = getChunkExpressions(context, definition);
+  chunkExpressions.forEach((chunkExpression) => {
+    if (chunkExpression.resourceType) {
+      const url = chunkExpression.stringValue?.trim();
+      if (JRResourceURL.isJRResourceReference(url)) {
+        mediaSources[chunkExpression.resourceType] = JRResourceURL.from(url);
+      }
+      return;
+    }
 
-		if (chunkExpression.source === 'literal') {
-			chunks.push(new TextChunk(context, chunkExpression.source, chunkExpression.stringValue));
-			return;
-		}
+    if (chunkExpression.source === 'literal') {
+      chunks.push(new TextChunk(context, chunkExpression.source, chunkExpression.stringValue));
+      return;
+    }
 
-		const computed = createComputedExpression(context, chunkExpression)();
-		chunks.push(new TextChunk(context, chunkExpression.source, computed));
-	});
-	return { chunks, mediaSources };
+    const computed = createComputedExpression(context, chunkExpression)();
+    chunks.push(new TextChunk(context, chunkExpression.source, computed));
+  });
+  return { chunks, mediaSources };
 };
 
 type ComputedFormTextRange<Role extends TextRole> = Accessor<TextRange<Role>>;
@@ -128,14 +128,14 @@ type ComputedFormTextRange<Role extends TextRole> = Accessor<TextRange<Role>>;
  * - Direct `<output>` references within the label's children
  */
 export const createTextRange = <Role extends TextRole>(
-	context: EvaluationContext,
-	role: Role,
-	definition: TextRangeDefinition<Role>
+  context: EvaluationContext,
+  role: Role,
+  definition: TextRangeDefinition<Role>
 ): ComputedFormTextRange<Role> => {
-	return context.scope.runTask(() => {
-		return createMemo(() => {
-			const chunks = createTextChunks(context, definition);
-			return new TextRange(role, chunks.chunks, chunks.mediaSources);
-		});
-	});
+  return context.scope.runTask(() => {
+    return createMemo(() => {
+      const chunks = createTextChunks(context, definition);
+      return new TextRange(role, chunks.chunks, chunks.mediaSources);
+    });
+  });
 };

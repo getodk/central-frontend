@@ -1,15 +1,15 @@
 import {
-	bind,
-	body,
-	group,
-	head,
-	html,
-	input,
-	mainInstance,
-	model,
-	repeat,
-	t,
-	title,
+  bind,
+  body,
+  group,
+  head,
+  html,
+  input,
+  mainInstance,
+  model,
+  repeat,
+  t,
+  title,
 } from '@getodk/common/test-utils/xform-dsl/index.ts';
 import { assert, beforeEach, describe, expect, it } from 'vitest';
 import { intAnswer } from '../../../scenario/answer/ExpectedIntAnswer.ts';
@@ -17,181 +17,181 @@ import { stringAnswer } from '../../../scenario/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../../../scenario/jr/Scenario.ts';
 
 describe('Tests ported from JavaRosa', () => {
-	describe('IndexedRepeatRelativeRefsTest.java', () => {
-		const ABSOLUTE_TARGET = '/data/some-group/item/value';
-		const RELATIVE_TARGET = '../item/value';
-		const ABSOLUTE_GROUP = '/data/some-group/item';
-		const RELATIVE_GROUP = '../item';
-		const ABSOLUTE_INDEX = '/data/total-items';
-		const RELATIVE_INDEX = '../../total-items';
+  describe('IndexedRepeatRelativeRefsTest.java', () => {
+    const ABSOLUTE_TARGET = '/data/some-group/item/value';
+    const RELATIVE_TARGET = '../item/value';
+    const ABSOLUTE_GROUP = '/data/some-group/item';
+    const RELATIVE_GROUP = '../item';
+    const ABSOLUTE_INDEX = '/data/total-items';
+    const RELATIVE_INDEX = '../../total-items';
 
-		interface IndexedRepeatRelativeRefsOptions {
-			readonly testName: string;
-			readonly target: string;
-			readonly group: string;
-			readonly index: string;
-		}
+    interface IndexedRepeatRelativeRefsOptions {
+      readonly testName: string;
+      readonly target: string;
+      readonly group: string;
+      readonly index: string;
+    }
 
-		const parameters: readonly IndexedRepeatRelativeRefsOptions[] = [
-			{
-				testName: 'Target: absolute, group: absolute, index: absolute',
-				target: ABSOLUTE_TARGET,
-				group: ABSOLUTE_GROUP,
-				index: ABSOLUTE_INDEX,
-			},
-			{
-				testName: 'Target: absolute, group: absolute, index: relative',
-				target: ABSOLUTE_TARGET,
-				group: ABSOLUTE_GROUP,
-				index: RELATIVE_INDEX,
-			},
-			{
-				testName: 'Target: absolute, group: relative, index: absolute',
-				target: ABSOLUTE_TARGET,
-				group: RELATIVE_GROUP,
-				index: ABSOLUTE_INDEX,
-			},
-			{
-				testName: 'Target: absolute, group: relative, index: relative',
-				target: ABSOLUTE_TARGET,
-				group: RELATIVE_GROUP,
-				index: RELATIVE_INDEX,
-			},
-			{
-				testName: 'Target: relative, group: absolute, index: absolute',
-				target: RELATIVE_TARGET,
-				group: ABSOLUTE_GROUP,
-				index: ABSOLUTE_INDEX,
-			},
-			{
-				testName: 'Target: relative, group: absolute, index: relative',
-				target: RELATIVE_TARGET,
-				group: ABSOLUTE_GROUP,
-				index: RELATIVE_INDEX,
-			},
-			{
-				testName: 'Target: relative, group: relative, index: absolute',
-				target: RELATIVE_TARGET,
-				group: RELATIVE_GROUP,
-				index: ABSOLUTE_INDEX,
-			},
-			{
-				testName: 'Target: relative, group: relative, index: relative',
-				target: RELATIVE_TARGET,
-				group: RELATIVE_GROUP,
-				index: RELATIVE_INDEX,
-			},
-		];
+    const parameters: readonly IndexedRepeatRelativeRefsOptions[] = [
+      {
+        testName: 'Target: absolute, group: absolute, index: absolute',
+        target: ABSOLUTE_TARGET,
+        group: ABSOLUTE_GROUP,
+        index: ABSOLUTE_INDEX,
+      },
+      {
+        testName: 'Target: absolute, group: absolute, index: relative',
+        target: ABSOLUTE_TARGET,
+        group: ABSOLUTE_GROUP,
+        index: RELATIVE_INDEX,
+      },
+      {
+        testName: 'Target: absolute, group: relative, index: absolute',
+        target: ABSOLUTE_TARGET,
+        group: RELATIVE_GROUP,
+        index: ABSOLUTE_INDEX,
+      },
+      {
+        testName: 'Target: absolute, group: relative, index: relative',
+        target: ABSOLUTE_TARGET,
+        group: RELATIVE_GROUP,
+        index: RELATIVE_INDEX,
+      },
+      {
+        testName: 'Target: relative, group: absolute, index: absolute',
+        target: RELATIVE_TARGET,
+        group: ABSOLUTE_GROUP,
+        index: ABSOLUTE_INDEX,
+      },
+      {
+        testName: 'Target: relative, group: absolute, index: relative',
+        target: RELATIVE_TARGET,
+        group: ABSOLUTE_GROUP,
+        index: RELATIVE_INDEX,
+      },
+      {
+        testName: 'Target: relative, group: relative, index: absolute',
+        target: RELATIVE_TARGET,
+        group: RELATIVE_GROUP,
+        index: ABSOLUTE_INDEX,
+      },
+      {
+        testName: 'Target: relative, group: relative, index: relative',
+        target: RELATIVE_TARGET,
+        group: RELATIVE_GROUP,
+        index: RELATIVE_INDEX,
+      },
+    ];
 
-		/**
-		 * **PORTING NOTES**
-		 *
-		 * - Fails pending implementation of `indexed-repeat` XPath function.
-		 *
-		 * - Parameters adapted to match values in JavaRosa. Note that the
-		 *   parameters are passed as {@link options} rather than destructured. Java
-		 *   lets you reference `group` (the class property) and `group` (the
-		 *   imported static method) in the same scope. TypeScript/JavaScript don't
-		 *   let you do that... which is fine, because doing that is really weird!
-		 *
-		 * - Includes proposed explicit repeat creation.
-		 *
-		 * - `answer` calls updated to omit superfluous position predicate on
-		 *   the non-repeat `some-group` step (we do this lookup by `reference`,
-		 *   not evaluating arbitrary XPath expressions to identify the question
-		 *   being answered).
-		 */
-		it.each<IndexedRepeatRelativeRefsOptions>(parameters)('$testName', async (options) => {
-			const scenario = await Scenario.init(
-				'Some form',
-				html(
-					head(
-						title('Some form'),
-						model(
-							mainInstance(
-								t(
-									'data id="some-form"',
-									t('some-group', t('item jr:template=""', t('value')), t('last-value')),
-									t('total-items')
-								)
-							),
-							bind(ABSOLUTE_TARGET).type('int'),
-							bind('/data/total-items').type('int').calculate('count(/data/some-group/item)'),
-							bind('/data/some-group/last-value')
-								.type('int')
-								.calculate(
-									'indexed-repeat(' +
-										options.target +
-										', ' +
-										options.group +
-										', ' +
-										options.index +
-										')'
-								)
-						)
-					),
-					body(
-						group(
-							'/data/some-group',
-							group(
-								'/data/some-group/item',
-								repeat('/data/some-group/item', input('/data/some-group/item/value'))
-							)
-						)
-					)
-				)
-			);
+    /**
+     * **PORTING NOTES**
+     *
+     * - Fails pending implementation of `indexed-repeat` XPath function.
+     *
+     * - Parameters adapted to match values in JavaRosa. Note that the
+     *   parameters are passed as {@link options} rather than destructured. Java
+     *   lets you reference `group` (the class property) and `group` (the
+     *   imported static method) in the same scope. TypeScript/JavaScript don't
+     *   let you do that... which is fine, because doing that is really weird!
+     *
+     * - Includes proposed explicit repeat creation.
+     *
+     * - `answer` calls updated to omit superfluous position predicate on
+     *   the non-repeat `some-group` step (we do this lookup by `reference`,
+     *   not evaluating arbitrary XPath expressions to identify the question
+     *   being answered).
+     */
+    it.each<IndexedRepeatRelativeRefsOptions>(parameters)('$testName', async (options) => {
+      const scenario = await Scenario.init(
+        'Some form',
+        html(
+          head(
+            title('Some form'),
+            model(
+              mainInstance(
+                t(
+                  'data id="some-form"',
+                  t('some-group', t('item jr:template=""', t('value')), t('last-value')),
+                  t('total-items')
+                )
+              ),
+              bind(ABSOLUTE_TARGET).type('int'),
+              bind('/data/total-items').type('int').calculate('count(/data/some-group/item)'),
+              bind('/data/some-group/last-value')
+                .type('int')
+                .calculate(
+                  'indexed-repeat(' +
+                    options.target +
+                    ', ' +
+                    options.group +
+                    ', ' +
+                    options.index +
+                    ')'
+                )
+            )
+          ),
+          body(
+            group(
+              '/data/some-group',
+              group(
+                '/data/some-group/item',
+                repeat('/data/some-group/item', input('/data/some-group/item/value'))
+              )
+            )
+          )
+        )
+      );
 
-			scenario.proposed_addExplicitCreateNewRepeatCallHere('/data/some-group/item', {
-				explicitRepeatCreation: true,
-			});
-			// scenario.answer('/data/some-group[1]/item[1]/value', 11);
-			scenario.answer('/data/some-group/item[1]/value', 11);
+      scenario.proposed_addExplicitCreateNewRepeatCallHere('/data/some-group/item', {
+        explicitRepeatCreation: true,
+      });
+      // scenario.answer('/data/some-group[1]/item[1]/value', 11);
+      scenario.answer('/data/some-group/item[1]/value', 11);
 
-			scenario.proposed_addExplicitCreateNewRepeatCallHere('/data/some-group/item', {
-				explicitRepeatCreation: true,
-			});
-			// scenario.answer('/data/some-group[1]/item[2]/value', 22);
-			scenario.answer('/data/some-group/item[2]/value', 22);
+      scenario.proposed_addExplicitCreateNewRepeatCallHere('/data/some-group/item', {
+        explicitRepeatCreation: true,
+      });
+      // scenario.answer('/data/some-group[1]/item[2]/value', 22);
+      scenario.answer('/data/some-group/item[2]/value', 22);
 
-			scenario.proposed_addExplicitCreateNewRepeatCallHere('/data/some-group/item', {
-				explicitRepeatCreation: true,
-			});
-			// scenario.answer('/data/some-group[1]/item[3]/value', 33);
-			scenario.answer('/data/some-group/item[3]/value', 33);
+      scenario.proposed_addExplicitCreateNewRepeatCallHere('/data/some-group/item', {
+        explicitRepeatCreation: true,
+      });
+      // scenario.answer('/data/some-group[1]/item[3]/value', 33);
+      scenario.answer('/data/some-group/item[3]/value', 33);
 
-			expect(scenario.answerOf('/data/total-items')).toEqualAnswer(intAnswer(3));
-			expect(scenario.answerOf('/data/some-group/last-value')).toEqualAnswer(intAnswer(33));
-		});
-	});
+      expect(scenario.answerOf('/data/total-items')).toEqualAnswer(intAnswer(3));
+      expect(scenario.answerOf('/data/some-group/last-value')).toEqualAnswer(intAnswer(33));
+    });
+  });
 
-	// https://github.com/getodk/javarosa/pull/776
-	describe('JavaRosa draft PR: "Add indexed-repeat tests"', () => {
-		/**
-		 * **PORTING NOTES**
-		 *
-		 * - Test is ported to use a more general error check, and assertion
-		 *   messaging is updated accordingly. Error message is asserted **not to
-		 *   be** the error thrown by `@getodk/xpath` for missing function support,
-		 *   so we start with an expected failure throughout the suite.
-		 *
-		 * - Bind for `calc` is updated to reference `/data/calc`, as is clearly
-		 *   intended in the original draft PR.
-		 *
-		 * - Failure is due to function implementation in `@getodk/xpath`, which has
-		 *   little if any concept of repeats or what "is" a repeat. Unclear if this
-		 *   failure is meaningful for users, or if the test is mostly demonstrating
-		 *   that aspect of JavaRosa implementation detail.
-		 *
-		 * JR: firstArgNotChildOfRepeat_throwsException
-		 */
-		describe('first argument not child of a repeat', () => {
-			it.fails('produces an error', async () => {
-				let caught: unknown;
+  // https://github.com/getodk/javarosa/pull/776
+  describe('JavaRosa draft PR: "Add indexed-repeat tests"', () => {
+    /**
+     * **PORTING NOTES**
+     *
+     * - Test is ported to use a more general error check, and assertion
+     *   messaging is updated accordingly. Error message is asserted **not to
+     *   be** the error thrown by `@getodk/xpath` for missing function support,
+     *   so we start with an expected failure throughout the suite.
+     *
+     * - Bind for `calc` is updated to reference `/data/calc`, as is clearly
+     *   intended in the original draft PR.
+     *
+     * - Failure is due to function implementation in `@getodk/xpath`, which has
+     *   little if any concept of repeats or what "is" a repeat. Unclear if this
+     *   failure is meaningful for users, or if the test is mostly demonstrating
+     *   that aspect of JavaRosa implementation detail.
+     *
+     * JR: firstArgNotChildOfRepeat_throwsException
+     */
+    describe('first argument not child of a repeat', () => {
+      it.fails('produces an error', async () => {
+        let caught: unknown;
 
-				try {
-					// prettier-ignore
-					await Scenario.init('indexed-repeat', html(
+        try {
+          // prettier-ignore
+          await Scenario.init('indexed-repeat', html(
 						head(
 							title('indexed-repeat'),
 							model(
@@ -211,25 +211,25 @@ describe('Tests ported from JavaRosa', () => {
 								input('/data/repeat/inside'))
 						))
 					);
-				} catch (error) {
-					caught = error;
-				}
+        } catch (error) {
+          caught = error;
+        }
 
-				assert(caught instanceof Error);
-				expect(caught.message).not.toContain('function not defined: indexed-repeat');
-			});
-		});
+        assert(caught instanceof Error);
+        expect(caught.message).not.toContain('function not defined: indexed-repeat');
+      });
+    });
 
-		/**
-		 * **PORTING NOTES**
-		 *
-		 * - Removes superfluous position predicates on `outer_group`.
-		 *
-		 * JR: getsIndexedValueInSingleRepeat
-		 */
-		it('gets an indexed value in a single repeat instance', async () => {
-			// prettier-ignore
-			const scenario = await Scenario.init('indexed-repeat', html(
+    /**
+     * **PORTING NOTES**
+     *
+     * - Removes superfluous position predicates on `outer_group`.
+     *
+     * JR: getsIndexedValueInSingleRepeat
+     */
+    it('gets an indexed value in a single repeat instance', async () => {
+      // prettier-ignore
+      const scenario = await Scenario.init('indexed-repeat', html(
 				head(
 					title('indexed-repeat'),
 					model(
@@ -251,43 +251,43 @@ describe('Tests ported from JavaRosa', () => {
 				))
 			);
 
-			// scenario.createNewRepeat('/data/outer_group[1]/repeat');
-			scenario.createNewRepeat('/data/outer_group/repeat');
-			// scenario.answer('/data/outer_group[1]/repeat[1]/inside', 'index1');
-			scenario.answer('/data/outer_group/repeat[1]/inside', 'index1');
+      // scenario.createNewRepeat('/data/outer_group[1]/repeat');
+      scenario.createNewRepeat('/data/outer_group/repeat');
+      // scenario.answer('/data/outer_group[1]/repeat[1]/inside', 'index1');
+      scenario.answer('/data/outer_group/repeat[1]/inside', 'index1');
 
-			// scenario.createNewRepeat('/data/outer_group[1]/repeat');
-			scenario.createNewRepeat('/data/outer_group/repeat');
-			// scenario.answer('/data/outer_group[1]/repeat[2]/inside', 'index2');
-			scenario.answer('/data/outer_group/repeat[2]/inside', 'index2');
+      // scenario.createNewRepeat('/data/outer_group[1]/repeat');
+      scenario.createNewRepeat('/data/outer_group/repeat');
+      // scenario.answer('/data/outer_group[1]/repeat[2]/inside', 'index2');
+      scenario.answer('/data/outer_group/repeat[2]/inside', 'index2');
 
-			// scenario.createNewRepeat('/data/outer_group[1]/repeat');
-			scenario.createNewRepeat('/data/outer_group/repeat');
-			// scenario.answer('/data/outer_group[1]/repeat[3]/inside', 'index3');
-			scenario.answer('/data/outer_group/repeat[3]/inside', 'index3');
+      // scenario.createNewRepeat('/data/outer_group[1]/repeat');
+      scenario.createNewRepeat('/data/outer_group/repeat');
+      // scenario.answer('/data/outer_group[1]/repeat[3]/inside', 'index3');
+      scenario.answer('/data/outer_group/repeat[3]/inside', 'index3');
 
-			scenario.answer('/data/index', '2');
+      scenario.answer('/data/index', '2');
 
-			expect(scenario.answerOf('/data/calc')).toEqualAnswer(stringAnswer('index2'));
+      expect(scenario.answerOf('/data/calc')).toEqualAnswer(stringAnswer('index2'));
 
-			scenario.answer('/data/index', '1');
+      scenario.answer('/data/index', '1');
 
-			expect(scenario.answerOf('/data/calc')).toEqualAnswer(stringAnswer('index1'));
-		});
+      expect(scenario.answerOf('/data/calc')).toEqualAnswer(stringAnswer('index1'));
+    });
 
-		/**
-		 * **PORTING NOTES**
-		 *
-		 * - Updated body reference to `/data/repeat2/inside2`, as seems the likely
-		 *   intent for that input. (`xforms-engine` otherwise fails to parse the
-		 *   form when it encounters an input with the same reference as its parent
-		 *   repeat element)
-		 *
-		 * JR: getsIndexedValueUsingParallelRepeatPosition
-		 */
-		it('gets an indexed value using parallel repeat position', async () => {
-			// prettier-ignore
-			const scenario = await Scenario.init('indexed-repeat', html(
+    /**
+     * **PORTING NOTES**
+     *
+     * - Updated body reference to `/data/repeat2/inside2`, as seems the likely
+     *   intent for that input. (`xforms-engine` otherwise fails to parse the
+     *   form when it encounters an input with the same reference as its parent
+     *   repeat element)
+     *
+     * JR: getsIndexedValueUsingParallelRepeatPosition
+     */
+    it('gets an indexed value using parallel repeat position', async () => {
+      // prettier-ignore
+      const scenario = await Scenario.init('indexed-repeat', html(
 				head(
 					title('indexed-repeat'),
 					model(
@@ -315,34 +315,34 @@ describe('Tests ported from JavaRosa', () => {
 				))
 			);
 
-			scenario.createNewRepeat('/data/repeat1');
-			scenario.createNewRepeat('/data/repeat2');
-			scenario.answer('/data/repeat1[1]/inside1', 'index1');
+      scenario.createNewRepeat('/data/repeat1');
+      scenario.createNewRepeat('/data/repeat2');
+      scenario.answer('/data/repeat1[1]/inside1', 'index1');
 
-			scenario.createNewRepeat('/data/repeat1');
-			scenario.createNewRepeat('/data/repeat2');
-			scenario.answer('/data/repeat1[2]/inside1', 'index2');
+      scenario.createNewRepeat('/data/repeat1');
+      scenario.createNewRepeat('/data/repeat2');
+      scenario.answer('/data/repeat1[2]/inside1', 'index2');
 
-			scenario.createNewRepeat('/data/repeat1');
-			scenario.createNewRepeat('/data/repeat2');
-			scenario.answer('/data/repeat1[3]/inside1', 'index3');
+      scenario.createNewRepeat('/data/repeat1');
+      scenario.createNewRepeat('/data/repeat2');
+      scenario.answer('/data/repeat1[3]/inside1', 'index3');
 
-			expect(scenario.answerOf('/data/repeat2[1]/from_repeat1')).toEqualAnswer(
-				stringAnswer('index1')
-			);
-			expect(scenario.answerOf('/data/repeat2[2]/from_repeat1')).toEqualAnswer(
-				stringAnswer('index2')
-			);
-		});
-	});
+      expect(scenario.answerOf('/data/repeat2[1]/from_repeat1')).toEqualAnswer(
+        stringAnswer('index1')
+      );
+      expect(scenario.answerOf('/data/repeat2[2]/from_repeat1')).toEqualAnswer(
+        stringAnswer('index2')
+      );
+    });
+  });
 });
 
 describe('Nested repeats', () => {
-	let scenario: Scenario;
+  let scenario: Scenario;
 
-	beforeEach(async () => {
-		// prettier-ignore
-		scenario = await Scenario.init('indexed-repeat', html(
+  beforeEach(async () => {
+    // prettier-ignore
+    scenario = await Scenario.init('indexed-repeat', html(
 			head(
 				title('indexed-repeat'),
 				model(
@@ -402,135 +402,135 @@ describe('Nested repeats', () => {
 							input('/data/r2-d1/r2-d2/r2-d3/inside-r2-d3'))))
 		)));
 
-		// Create two r1-d1
-		scenario.createNewRepeat('/data/r1-d1');
-		expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[1]');
-		scenario.createNewRepeat('/data/r1-d1');
-		expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[2]');
+    // Create two r1-d1
+    scenario.createNewRepeat('/data/r1-d1');
+    expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[1]');
+    scenario.createNewRepeat('/data/r1-d1');
+    expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[2]');
 
-		// For each r1-d1, create two r1-d2
-		scenario.createNewRepeat('/data/r1-d1[1]/r1-d2');
-		expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[1]/r1-d2[1]');
-		scenario.createNewRepeat('/data/r1-d1[1]/r1-d2');
-		expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[1]/r1-d2[2]');
+    // For each r1-d1, create two r1-d2
+    scenario.createNewRepeat('/data/r1-d1[1]/r1-d2');
+    expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[1]/r1-d2[1]');
+    scenario.createNewRepeat('/data/r1-d1[1]/r1-d2');
+    expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[1]/r1-d2[2]');
 
-		scenario.createNewRepeat('/data/r1-d1[2]/r1-d2');
-		expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[2]/r1-d2[1]');
-		scenario.createNewRepeat('/data/r1-d1[2]/r1-d2');
-		expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[2]/r1-d2[2]');
+    scenario.createNewRepeat('/data/r1-d1[2]/r1-d2');
+    expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[2]/r1-d2[1]');
+    scenario.createNewRepeat('/data/r1-d1[2]/r1-d2');
+    expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[2]/r1-d2[2]');
 
-		// For each r1-d2, create two r1-d3
-		scenario.createNewRepeat('/data/r1-d1[1]/r1-d2[1]/r1-d3');
-		expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[1]/r1-d2[1]/r1-d3[1]');
-		scenario.createNewRepeat('/data/r1-d1[1]/r1-d2[1]/r1-d3');
-		expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[1]/r1-d2[1]/r1-d3[2]');
+    // For each r1-d2, create two r1-d3
+    scenario.createNewRepeat('/data/r1-d1[1]/r1-d2[1]/r1-d3');
+    expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[1]/r1-d2[1]/r1-d3[1]');
+    scenario.createNewRepeat('/data/r1-d1[1]/r1-d2[1]/r1-d3');
+    expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[1]/r1-d2[1]/r1-d3[2]');
 
-		scenario.createNewRepeat('/data/r1-d1[1]/r1-d2[2]/r1-d3');
-		expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[1]/r1-d2[2]/r1-d3[1]');
-		scenario.createNewRepeat('/data/r1-d1[1]/r1-d2[2]/r1-d3');
-		expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[1]/r1-d2[2]/r1-d3[2]');
+    scenario.createNewRepeat('/data/r1-d1[1]/r1-d2[2]/r1-d3');
+    expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[1]/r1-d2[2]/r1-d3[1]');
+    scenario.createNewRepeat('/data/r1-d1[1]/r1-d2[2]/r1-d3');
+    expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[1]/r1-d2[2]/r1-d3[2]');
 
-		scenario.createNewRepeat('/data/r1-d1[2]/r1-d2[1]/r1-d3');
-		expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[2]/r1-d2[1]/r1-d3[1]');
-		scenario.createNewRepeat('/data/r1-d1[2]/r1-d2[1]/r1-d3');
-		expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[2]/r1-d2[1]/r1-d3[2]');
+    scenario.createNewRepeat('/data/r1-d1[2]/r1-d2[1]/r1-d3');
+    expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[2]/r1-d2[1]/r1-d3[1]');
+    scenario.createNewRepeat('/data/r1-d1[2]/r1-d2[1]/r1-d3');
+    expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[2]/r1-d2[1]/r1-d3[2]');
 
-		scenario.createNewRepeat('/data/r1-d1[2]/r1-d2[2]/r1-d3');
-		expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[2]/r1-d2[2]/r1-d3[1]');
-		scenario.createNewRepeat('/data/r1-d1[2]/r1-d2[2]/r1-d3');
-		expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[2]/r1-d2[2]/r1-d3[2]');
+    scenario.createNewRepeat('/data/r1-d1[2]/r1-d2[2]/r1-d3');
+    expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[2]/r1-d2[2]/r1-d3[1]');
+    scenario.createNewRepeat('/data/r1-d1[2]/r1-d2[2]/r1-d3');
+    expect(scenario.refAtIndex().xpathReference).toBe('/data/r1-d1[2]/r1-d2[2]/r1-d3[2]');
 
-		// Create two r2-d1
-		scenario.createNewRepeat('/data/r2-d1');
-		expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[1]');
-		scenario.createNewRepeat('/data/r2-d1');
-		expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[2]');
+    // Create two r2-d1
+    scenario.createNewRepeat('/data/r2-d1');
+    expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[1]');
+    scenario.createNewRepeat('/data/r2-d1');
+    expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[2]');
 
-		// For each r2-d1, create two r1-d2
-		scenario.createNewRepeat('/data/r2-d1[1]/r2-d2');
-		expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[1]/r2-d2[1]');
-		scenario.createNewRepeat('/data/r2-d1[1]/r2-d2');
-		expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[1]/r2-d2[2]');
+    // For each r2-d1, create two r1-d2
+    scenario.createNewRepeat('/data/r2-d1[1]/r2-d2');
+    expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[1]/r2-d2[1]');
+    scenario.createNewRepeat('/data/r2-d1[1]/r2-d2');
+    expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[1]/r2-d2[2]');
 
-		scenario.createNewRepeat('/data/r2-d1[2]/r2-d2');
-		expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[2]/r2-d2[1]');
-		scenario.createNewRepeat('/data/r2-d1[2]/r2-d2');
-		expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[2]/r2-d2[2]');
+    scenario.createNewRepeat('/data/r2-d1[2]/r2-d2');
+    expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[2]/r2-d2[1]');
+    scenario.createNewRepeat('/data/r2-d1[2]/r2-d2');
+    expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[2]/r2-d2[2]');
 
-		// For each r2-d2, create two r2-d3
-		scenario.createNewRepeat('/data/r2-d1[1]/r2-d2[1]/r2-d3');
-		expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[1]/r2-d2[1]/r2-d3[1]');
-		scenario.createNewRepeat('/data/r2-d1[1]/r2-d2[1]/r2-d3');
-		expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[1]/r2-d2[1]/r2-d3[2]');
+    // For each r2-d2, create two r2-d3
+    scenario.createNewRepeat('/data/r2-d1[1]/r2-d2[1]/r2-d3');
+    expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[1]/r2-d2[1]/r2-d3[1]');
+    scenario.createNewRepeat('/data/r2-d1[1]/r2-d2[1]/r2-d3');
+    expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[1]/r2-d2[1]/r2-d3[2]');
 
-		scenario.createNewRepeat('/data/r2-d1[1]/r2-d2[2]/r2-d3');
-		expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[1]/r2-d2[2]/r2-d3[1]');
-		scenario.createNewRepeat('/data/r2-d1[1]/r2-d2[2]/r2-d3');
-		expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[1]/r2-d2[2]/r2-d3[2]');
+    scenario.createNewRepeat('/data/r2-d1[1]/r2-d2[2]/r2-d3');
+    expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[1]/r2-d2[2]/r2-d3[1]');
+    scenario.createNewRepeat('/data/r2-d1[1]/r2-d2[2]/r2-d3');
+    expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[1]/r2-d2[2]/r2-d3[2]');
 
-		scenario.createNewRepeat('/data/r2-d1[2]/r2-d2[1]/r2-d3');
-		expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[2]/r2-d2[1]/r2-d3[1]');
-		scenario.createNewRepeat('/data/r2-d1[2]/r2-d2[1]/r2-d3');
-		expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[2]/r2-d2[1]/r2-d3[2]');
+    scenario.createNewRepeat('/data/r2-d1[2]/r2-d2[1]/r2-d3');
+    expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[2]/r2-d2[1]/r2-d3[1]');
+    scenario.createNewRepeat('/data/r2-d1[2]/r2-d2[1]/r2-d3');
+    expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[2]/r2-d2[1]/r2-d3[2]');
 
-		scenario.createNewRepeat('/data/r2-d1[2]/r2-d2[2]/r2-d3');
-		expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[2]/r2-d2[2]/r2-d3[1]');
-		scenario.createNewRepeat('/data/r2-d1[2]/r2-d2[2]/r2-d3');
-		expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[2]/r2-d2[2]/r2-d3[2]');
-	});
+    scenario.createNewRepeat('/data/r2-d1[2]/r2-d2[2]/r2-d3');
+    expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[2]/r2-d2[2]/r2-d3[1]');
+    scenario.createNewRepeat('/data/r2-d1[2]/r2-d2[2]/r2-d3');
+    expect(scenario.refAtIndex().xpathReference).toBe('/data/r2-d1[2]/r2-d2[2]/r2-d3[2]');
+  });
 
-	it('handles top-level repeats', () => {
-		expect(scenario.answerOf('/data/r2-d1[1]/from-r1-d1')).toEqualAnswer(stringAnswer('[1]'));
-		expect(scenario.answerOf('/data/r2-d1[2]/from-r1-d1')).toEqualAnswer(stringAnswer('[2]'));
-	});
+  it('handles top-level repeats', () => {
+    expect(scenario.answerOf('/data/r2-d1[1]/from-r1-d1')).toEqualAnswer(stringAnswer('[1]'));
+    expect(scenario.answerOf('/data/r2-d1[2]/from-r1-d1')).toEqualAnswer(stringAnswer('[2]'));
+  });
 
-	it.each([{ calculatedField: 'from-r1-d2-a' }, { calculatedField: 'from-r1-d2-b' }])(
-		'handles repeats two deep (field: $calculatedField)',
-		({ calculatedField }) => {
-			expect(scenario.answerOf(`/data/r2-d1[1]/r2-d2[1]/${calculatedField}`)).toEqualAnswer(
-				stringAnswer('[1][1]')
-			);
-			expect(scenario.answerOf(`/data/r2-d1[1]/r2-d2[2]/${calculatedField}`)).toEqualAnswer(
-				stringAnswer('[1][2]')
-			);
-			expect(scenario.answerOf(`/data/r2-d1[2]/r2-d2[1]/${calculatedField}`)).toEqualAnswer(
-				stringAnswer('[2][1]')
-			);
-			expect(scenario.answerOf(`/data/r2-d1[2]/r2-d2[2]/${calculatedField}`)).toEqualAnswer(
-				stringAnswer('[2][2]')
-			);
-		}
-	);
+  it.each([{ calculatedField: 'from-r1-d2-a' }, { calculatedField: 'from-r1-d2-b' }])(
+    'handles repeats two deep (field: $calculatedField)',
+    ({ calculatedField }) => {
+      expect(scenario.answerOf(`/data/r2-d1[1]/r2-d2[1]/${calculatedField}`)).toEqualAnswer(
+        stringAnswer('[1][1]')
+      );
+      expect(scenario.answerOf(`/data/r2-d1[1]/r2-d2[2]/${calculatedField}`)).toEqualAnswer(
+        stringAnswer('[1][2]')
+      );
+      expect(scenario.answerOf(`/data/r2-d1[2]/r2-d2[1]/${calculatedField}`)).toEqualAnswer(
+        stringAnswer('[2][1]')
+      );
+      expect(scenario.answerOf(`/data/r2-d1[2]/r2-d2[2]/${calculatedField}`)).toEqualAnswer(
+        stringAnswer('[2][2]')
+      );
+    }
+  );
 
-	it.each([{ calculatedField: 'from-r1-d3-a' }, { calculatedField: 'from-r1-d3-b' }])(
-		'handles repeats three deep (field: $calculatedField)',
-		({ calculatedField }) => {
-			expect(
-				scenario.answerOf(`/data/r2-d1[1]/r2-d2[1]/r2-d3[1]/${calculatedField}`)
-			).toEqualAnswer(stringAnswer('[1][1][1]'));
-			expect(
-				scenario.answerOf(`/data/r2-d1[1]/r2-d2[1]/r2-d3[2]/${calculatedField}`)
-			).toEqualAnswer(stringAnswer('[1][1][2]'));
-			expect(
-				scenario.answerOf(`/data/r2-d1[1]/r2-d2[2]/r2-d3[1]/${calculatedField}`)
-			).toEqualAnswer(stringAnswer('[1][2][1]'));
-			expect(
-				scenario.answerOf(`/data/r2-d1[1]/r2-d2[2]/r2-d3[2]/${calculatedField}`)
-			).toEqualAnswer(stringAnswer('[1][2][2]'));
-			expect(
-				scenario.answerOf(`/data/r2-d1[2]/r2-d2[1]/r2-d3[1]/${calculatedField}`)
-			).toEqualAnswer(stringAnswer('[2][1][1]'));
-			expect(
-				scenario.answerOf(`/data/r2-d1[2]/r2-d2[1]/r2-d3[2]/${calculatedField}`)
-			).toEqualAnswer(stringAnswer('[2][1][2]'));
-			expect(
-				scenario.answerOf(`/data/r2-d1[2]/r2-d2[2]/r2-d3[1]/${calculatedField}`)
-			).toEqualAnswer(stringAnswer('[2][2][1]'));
-			expect(
-				scenario.answerOf(`/data/r2-d1[2]/r2-d2[2]/r2-d3[2]/${calculatedField}`)
-			).toEqualAnswer(stringAnswer('[2][2][2]'));
-		}
-	);
+  it.each([{ calculatedField: 'from-r1-d3-a' }, { calculatedField: 'from-r1-d3-b' }])(
+    'handles repeats three deep (field: $calculatedField)',
+    ({ calculatedField }) => {
+      expect(
+        scenario.answerOf(`/data/r2-d1[1]/r2-d2[1]/r2-d3[1]/${calculatedField}`)
+      ).toEqualAnswer(stringAnswer('[1][1][1]'));
+      expect(
+        scenario.answerOf(`/data/r2-d1[1]/r2-d2[1]/r2-d3[2]/${calculatedField}`)
+      ).toEqualAnswer(stringAnswer('[1][1][2]'));
+      expect(
+        scenario.answerOf(`/data/r2-d1[1]/r2-d2[2]/r2-d3[1]/${calculatedField}`)
+      ).toEqualAnswer(stringAnswer('[1][2][1]'));
+      expect(
+        scenario.answerOf(`/data/r2-d1[1]/r2-d2[2]/r2-d3[2]/${calculatedField}`)
+      ).toEqualAnswer(stringAnswer('[1][2][2]'));
+      expect(
+        scenario.answerOf(`/data/r2-d1[2]/r2-d2[1]/r2-d3[1]/${calculatedField}`)
+      ).toEqualAnswer(stringAnswer('[2][1][1]'));
+      expect(
+        scenario.answerOf(`/data/r2-d1[2]/r2-d2[1]/r2-d3[2]/${calculatedField}`)
+      ).toEqualAnswer(stringAnswer('[2][1][2]'));
+      expect(
+        scenario.answerOf(`/data/r2-d1[2]/r2-d2[2]/r2-d3[1]/${calculatedField}`)
+      ).toEqualAnswer(stringAnswer('[2][2][1]'));
+      expect(
+        scenario.answerOf(`/data/r2-d1[2]/r2-d2[2]/r2-d3[2]/${calculatedField}`)
+      ).toEqualAnswer(stringAnswer('[2][2][2]'));
+    }
+  );
 });
 
 /**
@@ -558,11 +558,11 @@ describe('Nested repeats', () => {
  * further capture the fact that this decision is intentional.
  */
 describe('Behavior of node-set results', () => {
-	let scenario: Scenario;
+  let scenario: Scenario;
 
-	beforeEach(async () => {
-		// prettier-ignore
-		scenario = await Scenario.init('indexed-repeat', html(
+  beforeEach(async () => {
+    // prettier-ignore
+    scenario = await Scenario.init('indexed-repeat', html(
 			head(
 				title('indexed-repeat'),
 				model(
@@ -596,36 +596,36 @@ describe('Behavior of node-set results', () => {
 				input('/data/indexed-repeat-concat'),
 				input('/data/indexed-repeat-count')
 			)));
-	});
+  });
 
-	it('includes multiple target nodes in a node-set', () => {
-		scenario.createNewRepeat('/data/repeat1');
-		scenario.createNewRepeat('/data/repeat1[1]/repeat2');
-		scenario.answer('/data/repeat1[1]/repeat2[1]/value', 'a');
-		scenario.createNewRepeat('/data/repeat1[1]/repeat2');
-		scenario.answer('/data/repeat1[1]/repeat2[2]/value', 'b');
+  it('includes multiple target nodes in a node-set', () => {
+    scenario.createNewRepeat('/data/repeat1');
+    scenario.createNewRepeat('/data/repeat1[1]/repeat2');
+    scenario.answer('/data/repeat1[1]/repeat2[1]/value', 'a');
+    scenario.createNewRepeat('/data/repeat1[1]/repeat2');
+    scenario.answer('/data/repeat1[1]/repeat2[2]/value', 'b');
 
-		expect(scenario.answerOf('/data/indexed-repeat-concat')).toEqualAnswer(stringAnswer('ab'));
-		expect(scenario.answerOf('/data/indexed-repeat-count')).toEqualAnswer(intAnswer(2));
-	});
+    expect(scenario.answerOf('/data/indexed-repeat-concat')).toEqualAnswer(stringAnswer('ab'));
+    expect(scenario.answerOf('/data/indexed-repeat-count')).toEqualAnswer(intAnswer(2));
+  });
 
-	it('excludes target nodes outside the indexed-repeat subtree', () => {
-		scenario.createNewRepeat('/data/repeat1');
-		scenario.createNewRepeat('/data/repeat1[1]/repeat2');
-		scenario.answer('/data/repeat1[1]/repeat2[1]/value', 'a');
-		scenario.createNewRepeat('/data/repeat1[1]/repeat2');
-		scenario.answer('/data/repeat1[1]/repeat2[2]/value', 'b');
+  it('excludes target nodes outside the indexed-repeat subtree', () => {
+    scenario.createNewRepeat('/data/repeat1');
+    scenario.createNewRepeat('/data/repeat1[1]/repeat2');
+    scenario.answer('/data/repeat1[1]/repeat2[1]/value', 'a');
+    scenario.createNewRepeat('/data/repeat1[1]/repeat2');
+    scenario.answer('/data/repeat1[1]/repeat2[2]/value', 'b');
 
-		// Add second repeat1 and subtree, structurally matching the first. We'll
-		// check that nothing added here is considered (since the `indexed-repeat`
-		// calls are hardcoded to index 1).
-		scenario.createNewRepeat('/data/repeat1');
-		scenario.createNewRepeat('/data/repeat1[2]/repeat2');
-		scenario.answer('/data/repeat1[2]/repeat2[1]/value', 'a');
-		scenario.createNewRepeat('/data/repeat1[2]/repeat2');
-		scenario.answer('/data/repeat1[2]/repeat2[2]/value', 'b');
+    // Add second repeat1 and subtree, structurally matching the first. We'll
+    // check that nothing added here is considered (since the `indexed-repeat`
+    // calls are hardcoded to index 1).
+    scenario.createNewRepeat('/data/repeat1');
+    scenario.createNewRepeat('/data/repeat1[2]/repeat2');
+    scenario.answer('/data/repeat1[2]/repeat2[1]/value', 'a');
+    scenario.createNewRepeat('/data/repeat1[2]/repeat2');
+    scenario.answer('/data/repeat1[2]/repeat2[2]/value', 'b');
 
-		expect(scenario.answerOf('/data/indexed-repeat-concat')).toEqualAnswer(stringAnswer('ab'));
-		expect(scenario.answerOf('/data/indexed-repeat-count')).toEqualAnswer(intAnswer(2));
-	});
+    expect(scenario.answerOf('/data/indexed-repeat-concat')).toEqualAnswer(stringAnswer('ab'));
+    expect(scenario.answerOf('/data/indexed-repeat-count')).toEqualAnswer(intAnswer(2));
+  });
 });

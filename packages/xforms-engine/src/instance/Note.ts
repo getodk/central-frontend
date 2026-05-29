@@ -9,8 +9,8 @@ import type { StaticLeafElement } from '../integration/xpath/static-dom/StaticEl
 import { getNoteCodec } from '../lib/codecs/getNoteCodec.ts';
 import type { NoteInputValue, NoteRuntimeValue } from '../lib/codecs/NoteCodec.ts';
 import {
-	createAttributeState,
-	type AttributeState,
+  createAttributeState,
+  type AttributeState,
 } from '../lib/reactivity/createAttributeState.ts';
 import { createNoteReadonlyThunk } from '../lib/reactivity/createNoteReadonlyThunk.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
@@ -30,120 +30,120 @@ import type { ClientReactiveSerializableValueNode } from './internal-api/seriali
 import type { ValidationContext } from './internal-api/ValidationContext.ts';
 
 interface NoteStateSpec<V extends ValueType> extends ValueNodeStateSpec<NoteValue<V>> {
-	readonly readonly: Accessor<true>;
-	readonly noteText: ComputedNoteText;
-	readonly label: Accessor<TextRange<'label'> | null>;
-	readonly hint: Accessor<TextRange<'hint'> | null>;
-	readonly valueOptions: null;
+  readonly readonly: Accessor<true>;
+  readonly noteText: ComputedNoteText;
+  readonly label: Accessor<TextRange<'label'> | null>;
+  readonly hint: Accessor<TextRange<'hint'> | null>;
+  readonly valueOptions: null;
 }
 
 export class Note<V extends ValueType = ValueType>
-	extends ValueNode<V, NoteNodeDefinition<V>, NoteRuntimeValue<V>, NoteInputValue<V>>
-	implements
-		NoteNode,
-		XFormsXPathElement,
-		EvaluationContext,
-		ValidationContext,
-		ClientReactiveSerializableValueNode
+  extends ValueNode<V, NoteNodeDefinition<V>, NoteRuntimeValue<V>, NoteInputValue<V>>
+  implements
+    NoteNode,
+    XFormsXPathElement,
+    EvaluationContext,
+    ValidationContext,
+    ClientReactiveSerializableValueNode
 {
-	// XFormsXPathElement
-	override readonly [XPathNodeKindKey] = 'element';
+  // XFormsXPathElement
+  override readonly [XPathNodeKindKey] = 'element';
 
-	// InstanceNode
-	protected readonly state: SharedNodeState<NoteStateSpec<V>>;
-	protected readonly engineState: EngineState<NoteStateSpec<V>>;
-	readonly attributeState: AttributeState;
+  // InstanceNode
+  protected readonly state: SharedNodeState<NoteStateSpec<V>>;
+  protected readonly engineState: EngineState<NoteStateSpec<V>>;
+  readonly attributeState: AttributeState;
 
-	// NoteNode
-	readonly nodeType = 'note';
-	readonly appearances: NoteNodeAppearances;
-	readonly nodeOptions = null;
-	readonly currentState: CurrentState<NoteStateSpec<V>>;
+  // NoteNode
+  readonly nodeType = 'note';
+  readonly appearances: NoteNodeAppearances;
+  readonly nodeOptions = null;
+  readonly currentState: CurrentState<NoteStateSpec<V>>;
 
-	constructor(
-		parent: GeneralParentNode,
-		instanceNode: StaticLeafElement | null,
-		definition: NoteNodeDefinition<V>
-	) {
-		const codec = getNoteCodec(definition.valueType);
+  constructor(
+    parent: GeneralParentNode,
+    instanceNode: StaticLeafElement | null,
+    definition: NoteNodeDefinition<V>
+  ) {
+    const codec = getNoteCodec(definition.valueType);
 
-		super(parent, instanceNode, definition, codec);
+    super(parent, instanceNode, definition, codec);
 
-		this.appearances = definition.bodyElement.appearances;
+    this.appearances = definition.bodyElement.appearances;
 
-		const isReadonly = createNoteReadonlyThunk(this, definition);
-		const noteTextComputation = createNoteText(this, definition.noteTextDefinition);
-		this.attributeState = createAttributeState(this.scope);
+    const isReadonly = createNoteReadonlyThunk(this, definition);
+    const noteTextComputation = createNoteText(this, definition.noteTextDefinition);
+    this.attributeState = createAttributeState(this.scope);
 
-		let noteText: ComputedNoteText;
-		let label: Accessor<TextRange<'label'> | null>;
-		let hint: Accessor<TextRange<'hint'> | null>;
+    let noteText: ComputedNoteText;
+    let label: Accessor<TextRange<'label'> | null>;
+    let hint: Accessor<TextRange<'hint'> | null>;
 
-		switch (noteTextComputation.role) {
-			case 'label': {
-				noteText = noteTextComputation.label;
-				label = noteTextComputation.label;
-				hint = createFieldHint(this, definition);
+    switch (noteTextComputation.role) {
+      case 'label': {
+        noteText = noteTextComputation.label;
+        label = noteTextComputation.label;
+        hint = createFieldHint(this, definition);
 
-				break;
-			}
+        break;
+      }
 
-			case 'hint': {
-				noteText = noteTextComputation.hint;
-				label = createNodeLabel(this, definition);
-				hint = noteTextComputation.hint;
+      case 'hint': {
+        noteText = noteTextComputation.hint;
+        label = createNodeLabel(this, definition);
+        hint = noteTextComputation.hint;
 
-				break;
-			}
+        break;
+      }
 
-			default:
-				throw new UnreachableError(noteTextComputation);
-		}
+      default:
+        throw new UnreachableError(noteTextComputation);
+    }
 
-		const state = createSharedNodeState(
-			this.scope,
-			{
-				reference: this.contextReference,
-				readonly: isReadonly,
-				relevant: this.isRelevant,
-				required: this.isRequired,
+    const state = createSharedNodeState(
+      this.scope,
+      {
+        reference: this.contextReference,
+        readonly: isReadonly,
+        relevant: this.isRelevant,
+        required: this.isRequired,
 
-				label,
-				hint,
-				noteText,
+        label,
+        hint,
+        noteText,
 
-				children: null,
-				attributes: this.attributeState.getAttributes,
-				valueOptions: null,
-				value: this.valueState,
-				instanceValue: this.getInstanceValue,
-			},
-			this.instanceConfig
-		);
+        children: null,
+        attributes: this.attributeState.getAttributes,
+        valueOptions: null,
+        value: this.valueState,
+        instanceValue: this.getInstanceValue,
+      },
+      this.instanceConfig
+    );
 
-		this.attributeState.setAttributes(buildAttributes(this));
+    this.attributeState.setAttributes(buildAttributes(this));
 
-		this.state = state;
-		this.engineState = state.engineState;
-		this.currentState = state.currentState;
-	}
+    this.state = state;
+    this.engineState = state.engineState;
+    this.currentState = state.currentState;
+  }
 
-	override getAttributes(): readonly Attribute[] {
-		return this.attributeState.getAttributes();
-	}
+  override getAttributes(): readonly Attribute[] {
+    return this.attributeState.getAttributes();
+  }
 }
 
 export type AnyNote =
-	| Note<'barcode'>
-	| Note<'binary'>
-	| Note<'boolean'>
-	| Note<'date'>
-	| Note<'dateTime'>
-	| Note<'decimal'>
-	| Note<'geopoint'>
-	| Note<'geoshape'>
-	| Note<'geotrace'>
-	| Note<'int'>
-	| Note<'intent'>
-	| Note<'string'>
-	| Note<'time'>;
+  | Note<'barcode'>
+  | Note<'binary'>
+  | Note<'boolean'>
+  | Note<'date'>
+  | Note<'dateTime'>
+  | Note<'decimal'>
+  | Note<'geopoint'>
+  | Note<'geoshape'>
+  | Note<'geotrace'>
+  | Note<'int'>
+  | Note<'intent'>
+  | Note<'string'>
+  | Note<'time'>;

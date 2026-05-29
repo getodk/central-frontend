@@ -66,14 +66,14 @@ export type TextChunkSource =
  * @see {@link TextRange}
  */
 export interface TextChunk {
-	readonly source: TextChunkSource;
+  readonly source: TextChunkSource;
 
-	/**
-	 * @see {@link ActiveLanguage} for additional commentary
-	 */
-	get language(): ActiveLanguage;
+  /**
+   * @see {@link ActiveLanguage} for additional commentary
+   */
+  get language(): ActiveLanguage;
 
-	get asString(): string;
+  get asString(): string;
 }
 
 // eslint-disable-next-line @typescript-eslint/sort-type-constituents
@@ -112,14 +112,14 @@ export type TextRole = ElementTextRole | ValidationTextRole;
  * {@link https://getodk.github.io/xforms-spec/#languages | translation}).
  */
 export interface TextRange<Role extends TextRole> {
-	readonly role: Role;
+  readonly role: Role;
 
-	[Symbol.iterator](): Iterable<TextChunk>;
+  [Symbol.iterator](): Iterable<TextChunk>;
 
-	get asString(): string;
-	get formatted(): MarkdownNode[];
+  get asString(): string;
+  get formatted(): MarkdownNode[];
 
-	get imageSource(): JRResourceURL | undefined;
-	get audioSource(): JRResourceURL | undefined;
-	get videoSource(): JRResourceURL | undefined;
+  get imageSource(): JRResourceURL | undefined;
+  get audioSource(): JRResourceURL | undefined;
+  get videoSource(): JRResourceURL | undefined;
 }

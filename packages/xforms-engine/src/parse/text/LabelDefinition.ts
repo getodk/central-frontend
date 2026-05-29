@@ -15,42 +15,42 @@ export type LabelOwner =
 interface LabelElement extends LocalNamedElement<'label'> {}
 
 export class LabelDefinition extends TextElementDefinition<'label'> {
-	static forControl(form: XFormDefinition, control: AnyControlDefinition): LabelDefinition | null {
-		const labelElement = getLabelElement(control.element);
+  static forControl(form: XFormDefinition, control: AnyControlDefinition): LabelDefinition | null {
+    const labelElement = getLabelElement(control.element);
 
-		if (labelElement == null) {
-			return null;
-		}
+    if (labelElement == null) {
+      return null;
+    }
 
-		return new this(form, control, labelElement);
-	}
+    return new this(form, control, labelElement);
+  }
 
-	static forRepeatGroup(
-		form: XFormDefinition,
-		repeat: RepeatElementDefinition
-	): LabelDefinition | null {
-		const repeatGroupLabel = getRepeatGroupLabelElement(repeat.element);
+  static forRepeatGroup(
+    form: XFormDefinition,
+    repeat: RepeatElementDefinition
+  ): LabelDefinition | null {
+    const repeatGroupLabel = getRepeatGroupLabelElement(repeat.element);
 
-		if (repeatGroupLabel == null) {
-			return null;
-		}
+    if (repeatGroupLabel == null) {
+      return null;
+    }
 
-		return new this(form, repeat, repeatGroupLabel);
-	}
+    return new this(form, repeat, repeatGroupLabel);
+  }
 
-	static forGroup(form: XFormDefinition, group: GroupElementDefinition): LabelDefinition | null {
-		const labelElement = getLabelElement(group.element);
+  static forGroup(form: XFormDefinition, group: GroupElementDefinition): LabelDefinition | null {
+    const labelElement = getLabelElement(group.element);
 
-		if (labelElement == null) {
-			return null;
-		}
+    if (labelElement == null) {
+      return null;
+    }
 
-		return new this(form, group, labelElement);
-	}
+    return new this(form, group, labelElement);
+  }
 
-	readonly role = 'label';
+  readonly role = 'label';
 
-	private constructor(form: XFormDefinition, owner: LabelOwner, element: LabelElement) {
-		super(form, owner, element);
-	}
+  private constructor(form: XFormDefinition, owner: LabelOwner, element: LabelElement) {
+    super(form, owner, element);
+  }
 }

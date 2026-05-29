@@ -3,23 +3,23 @@ import { Scenario } from '../scenario/jr/Scenario.ts';
 import { r } from '../scenario/jr/resource/ResourcePathHelper.ts';
 
 describe('Range', () => {
-	let scenario: Scenario;
+  let scenario: Scenario;
 
-	beforeEach(async () => {
-		scenario = await Scenario.init(r('range-form.xml'));
-	});
+  beforeEach(async () => {
+    scenario = await Scenario.init(r('range-form.xml'));
+  });
 
-	it('should allow range to be read', () => {
-		expect(scenario.answerOf('/stats/balance').getValue()).toBe('');
-	});
+  it('should allow range to be read', () => {
+    expect(scenario.answerOf('/stats/balance').getValue()).toBe('');
+  });
 
-	it('should allow range to be set', () => {
-		scenario.answer('/stats/balance', '-1');
-		expect(scenario.answerOf('/stats/balance').getValue()).toBe('-1.0');
-	});
+  it('should allow range to be set', () => {
+    scenario.answer('/stats/balance', '-1');
+    expect(scenario.answerOf('/stats/balance').getValue()).toBe('-1.0');
+  });
 
-	it('nulls out value if value is out of range', () => {
-		scenario.answer('/stats/balance', '-5');
-		expect(scenario.answerOf('/stats/balance').getValue()).toBe('');
-	});
+  it('nulls out value if value is out of range', () => {
+    scenario.answer('/stats/balance', '-5');
+    expect(scenario.answerOf('/stats/balance').getValue()).toBe('');
+  });
 });

@@ -4,9 +4,9 @@ import type { Attribute } from '../../instance/Attribute.ts';
 import type { ReactiveScope } from './scope.ts';
 
 export interface AttributeState {
-	readonly attributes: Signal<readonly Attribute[]>;
-	readonly getAttributes: Accessor<readonly Attribute[]>;
-	readonly setAttributes: Setter<readonly Attribute[]>;
+  readonly attributes: Signal<readonly Attribute[]>;
+  readonly getAttributes: Accessor<readonly Attribute[]>;
+  readonly setAttributes: Setter<readonly Attribute[]>;
 }
 
 /**
@@ -17,35 +17,35 @@ export interface AttributeState {
  * and update that state when appropriate.
  */
 export const createAttributeState = (scope: ReactiveScope): AttributeState => {
-	return scope.runTask(() => {
-		const baseState = createSignal<readonly Attribute[]>([]);
-		const [getAttributes, baseSetAttributes] = baseState;
+  return scope.runTask(() => {
+    const baseState = createSignal<readonly Attribute[]>([]);
+    const [getAttributes, baseSetAttributes] = baseState;
 
-		type AttributeSetterCallback = (prev: readonly Attribute[]) => readonly Attribute[];
-		type AttributeOrSetterCallback = AttributeSetterCallback | readonly Attribute[];
+    type AttributeSetterCallback = (prev: readonly Attribute[]) => readonly Attribute[];
+    type AttributeOrSetterCallback = AttributeSetterCallback | readonly Attribute[];
 
-		const setAttributes: Setter<readonly Attribute[]> = (
-			valueOrSetterCallback: AttributeOrSetterCallback
-		) => {
-			let setterCallback: AttributeSetterCallback;
+    const setAttributes: Setter<readonly Attribute[]> = (
+      valueOrSetterCallback: AttributeOrSetterCallback
+    ) => {
+      let setterCallback: AttributeSetterCallback;
 
-			if (typeof valueOrSetterCallback === 'function') {
-				setterCallback = valueOrSetterCallback;
-			} else {
-				setterCallback = (_) => valueOrSetterCallback;
-			}
+      if (typeof valueOrSetterCallback === 'function') {
+        setterCallback = valueOrSetterCallback;
+      } else {
+        setterCallback = (_) => valueOrSetterCallback;
+      }
 
-			return baseSetAttributes((prev) => {
-				return setterCallback(prev);
-			});
-		};
+      return baseSetAttributes((prev) => {
+        return setterCallback(prev);
+      });
+    };
 
-		const attributes: Signal<readonly Attribute[]> = [getAttributes, setAttributes];
+    const attributes: Signal<readonly Attribute[]> = [getAttributes, setAttributes];
 
-		return {
-			attributes,
-			getAttributes,
-			setAttributes,
-		};
-	});
+    return {
+      attributes,
+      getAttributes,
+      setAttributes,
+    };
+  });
 };

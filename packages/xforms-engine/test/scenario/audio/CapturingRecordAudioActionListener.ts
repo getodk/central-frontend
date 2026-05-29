@@ -8,21 +8,21 @@ import type { RecordAudioActionListener } from './RecordAudioActionListener.ts';
  * detailed thoughts on this.
  */
 export class CapturingRecordAudioActionListener implements RecordAudioActionListener {
-	constructor() {
-		throw new UnclearApplicabilityError('CapturingRecordAudioActionListener');
-	}
+  constructor() {
+    throw new UnclearApplicabilityError('CapturingRecordAudioActionListener');
+  }
 
-	recordAudioTriggered(): never {
-		throw new UnclearApplicabilityError(
-			'CapturingRecordAudioActionListener (as RecordAudioActionListener)'
-		);
-	}
+  recordAudioTriggered(): never {
+    throw new UnclearApplicabilityError(
+      'CapturingRecordAudioActionListener (as RecordAudioActionListener)'
+    );
+  }
 
-	getAbsoluteTargetRef(): JRTreeReference {
-		throw new UnclearApplicabilityError('CapturingRecordAudioActionListener');
-	}
+  getAbsoluteTargetRef(): JRTreeReference {
+    throw new UnclearApplicabilityError('CapturingRecordAudioActionListener');
+  }
 
-	getQuality(): string {
-		throw new UnclearApplicabilityError('CapturingRecordAudioActionListener');
-	}
+  getQuality(): string {
+    throw new UnclearApplicabilityError('CapturingRecordAudioActionListener');
+  }
 }

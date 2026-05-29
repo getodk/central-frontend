@@ -3,118 +3,118 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { parseItems } from '../../../../../src/parse/model/SecondaryInstance/sources/external-instance-csv-parser';
 
 describe('external-instance-csv-parser', () => {
-	let url: JRResourceURL;
-	beforeEach(() => {
-		url = JRResourceURL.create('csv', 'mock.csv');
-	});
+  let url: JRResourceURL;
+  beforeEach(() => {
+    url = JRResourceURL.create('csv', 'mock.csv');
+  });
 
-	it('parses empty csv', () => {
-		const actual = parseItems(url, 'name,value');
-		expect(actual).to.deep.equal([]);
-	});
+  it('parses empty csv', () => {
+    const actual = parseItems(url, 'name,value');
+    expect(actual).to.deep.equal([]);
+  });
 
-	const delimiters = [';', '\t', '|'];
-	for (const delimiter of delimiters) {
-		it(`parses columns with delimiter "${delimiter}"`, () => {
-			const csv = `name${delimiter}value\na${delimiter}1`;
-			const actual = parseItems(url, csv);
-			expect(actual).to.deep.equal([
-				[
-					{ columnName: 'name', cellValue: 'a' },
-					{ columnName: 'value', cellValue: '1' },
-				],
-			]);
-		});
-	}
+  const delimiters = [';', '\t', '|'];
+  for (const delimiter of delimiters) {
+    it(`parses columns with delimiter "${delimiter}"`, () => {
+      const csv = `name${delimiter}value\na${delimiter}1`;
+      const actual = parseItems(url, csv);
+      expect(actual).to.deep.equal([
+        [
+          { columnName: 'name', cellValue: 'a' },
+          { columnName: 'value', cellValue: '1' },
+        ],
+      ]);
+    });
+  }
 
-	it('errors when given no columns', () => {
-		expect(() => parseItems(url, '')).to.throw('Failed to parse CSV jr://csv/mock.csv');
-	});
+  it('errors when given no columns', () => {
+    expect(() => parseItems(url, '')).to.throw('Failed to parse CSV jr://csv/mock.csv');
+  });
 
-	it('errors when given null character in header', () => {
-		expect(() => parseItems(url, 'f\0o,bar')).to.throw(
-			'Failed to parse CSV jr://csv/mock.csv: null character'
-		);
-	});
+  it('errors when given null character in header', () => {
+    expect(() => parseItems(url, 'f\0o,bar')).to.throw(
+      'Failed to parse CSV jr://csv/mock.csv: null character'
+    );
+  });
 
-	it('parses csv with single column', () => {
-		const csv = `name
+  it('parses csv with single column', () => {
+    const csv = `name
 a
 b
 `;
-		const actual = parseItems(url, csv);
-		expect(actual).to.deep.equal([
-			[
-				{
-					cellValue: 'a',
-					columnName: 'name',
-				},
-			],
-			[
-				{
-					cellValue: 'b',
-					columnName: 'name',
-				},
-			],
-		]);
-	});
+    const actual = parseItems(url, csv);
+    expect(actual).to.deep.equal([
+      [
+        {
+          cellValue: 'a',
+          columnName: 'name',
+        },
+      ],
+      [
+        {
+          cellValue: 'b',
+          columnName: 'name',
+        },
+      ],
+    ]);
+  });
 
-	it('parses csv with single column with quoted commas', () => {
-		const csv = `name
+  it('parses csv with single column with quoted commas', () => {
+    const csv = `name
 a
 "2,3"
 `;
-		const actual = parseItems(url, csv);
-		expect(actual).to.deep.equal([
-			[
-				{
-					cellValue: 'a',
-					columnName: 'name',
-				},
-			],
-			[
-				{
-					cellValue: '2,3',
-					columnName: 'name',
-				},
-			],
-		]);
-	});
+    const actual = parseItems(url, csv);
+    expect(actual).to.deep.equal([
+      [
+        {
+          cellValue: 'a',
+          columnName: 'name',
+        },
+      ],
+      [
+        {
+          cellValue: '2,3',
+          columnName: 'name',
+        },
+      ],
+    ]);
+  });
 
-	it('errors when given invalid CSV with commas on non-header lines as a single-column', () => {
-		expect(() => parseItems(url, 'a\n1,2')).to.throw('Failed to parse CSV jr://csv/mock.csv');
-	});
+  it('errors when given invalid CSV with commas on non-header lines as a single-column', () => {
+    expect(() => parseItems(url, 'a\n1,2')).to.throw('Failed to parse CSV jr://csv/mock.csv');
+  });
 
-	it('parses csv with rows with extra columns that are empty', () => {
-		const csv = `name,value
+  it('parses csv with rows with extra columns that are empty', () => {
+    const csv = `name,value
 a,1,,,,,,
 `;
-		const actual = parseItems(url, csv);
-		expect(actual).to.deep.equal([
-			[
-				{
-					cellValue: 'a',
-					columnName: 'name',
-				},
-				{
-					cellValue: '1',
-					columnName: 'value',
-				},
-			],
-		]);
-	});
+    const actual = parseItems(url, csv);
+    expect(actual).to.deep.equal([
+      [
+        {
+          cellValue: 'a',
+          columnName: 'name',
+        },
+        {
+          cellValue: '1',
+          columnName: 'value',
+        },
+      ],
+    ]);
+  });
 
-	it('errors when given row with extra columns with values', () => {
-		const csv = `name,value
+  it('errors when given row with extra columns with values', () => {
+    const csv = `name,value
 a,1,q
 `;
-		expect(() => parseItems(url, csv)).to.throw(
-			'Failed to parse CSV jr://csv/mock.csv: row 1, expected 2 columns, got 3'
-		);
-	});
+    expect(() => parseItems(url, csv)).to.throw(
+      'Failed to parse CSV jr://csv/mock.csv: row 1, expected 2 columns, got 3'
+    );
+  });
 
-	it('strips empty trailing rows', () => {
-		const csv = `name,value
+  it('strips empty trailing rows', () => {
+    const csv = `name,value
 a,1
 c,2
 
@@ -122,41 +122,41 @@ c,2
 
 
 `;
-		const expected = [
-			[
-				{ columnName: 'name', cellValue: 'a' },
-				{ columnName: 'value', cellValue: '1' },
-			],
-			[
-				{ columnName: 'name', cellValue: 'c' },
-				{ columnName: 'value', cellValue: '2' },
-			],
-		];
-		const actual = parseItems(url, csv);
-		expect(actual).to.deep.equal(expected);
-	});
+    const expected = [
+      [
+        { columnName: 'name', cellValue: 'a' },
+        { columnName: 'value', cellValue: '1' },
+      ],
+      [
+        { columnName: 'name', cellValue: 'c' },
+        { columnName: 'value', cellValue: '2' },
+      ],
+    ];
+    const actual = parseItems(url, csv);
+    expect(actual).to.deep.equal(expected);
+  });
 
-	it('gracefully handles empty rows', () => {
-		const csv = `name,value
+  it('gracefully handles empty rows', () => {
+    const csv = `name,value
 a,1
 ,
 c,2`;
-		const expected = [
-			[
-				{ columnName: 'name', cellValue: 'a' },
-				{ columnName: 'value', cellValue: '1' },
-			],
-			[
-				{ columnName: 'name', cellValue: '' },
-				{ columnName: 'value', cellValue: '' },
-			],
-			[
-				{ columnName: 'name', cellValue: 'c' },
-				{ columnName: 'value', cellValue: '2' },
-			],
-		];
+    const expected = [
+      [
+        { columnName: 'name', cellValue: 'a' },
+        { columnName: 'value', cellValue: '1' },
+      ],
+      [
+        { columnName: 'name', cellValue: '' },
+        { columnName: 'value', cellValue: '' },
+      ],
+      [
+        { columnName: 'name', cellValue: 'c' },
+        { columnName: 'value', cellValue: '2' },
+      ],
+    ];
 
-		const actual = parseItems(url, csv);
-		expect(actual).to.deep.equal(expected);
-	});
+    const actual = parseItems(url, csv);
+    expect(actual).to.deep.equal(expected);
+  });
 });

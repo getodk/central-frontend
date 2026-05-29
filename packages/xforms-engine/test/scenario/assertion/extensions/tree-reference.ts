@@ -13,45 +13,45 @@ import { SymmetricTypedExpectExtension } from '../vitest/SymmetricTypedExpectExt
 const assertJRTreeReference = instanceAssertion(JRTreeReference);
 
 export const treeReferenceExtensions = extendExpect(expect, {
-	/**
-	 * **PORTING NOTES**
-	 *
-	 * This is pre-emptively marked as deprecated, based on assumptions detailed
-	 * below. If we agree on these assumptions, let's remove this preamble (or
-	 * just migrate the affected tests and remove this custom assertion entirely).
-	 *
-	 * @deprecated
-	 *
-	 * Exists only to support direct ports of `TreeReference` equality assertions,
-	 * generally about the current progress state while a test advances through a
-	 * form. Insofar as such tests are meaningful, they'll tend to be about the
-	 * availability of certain nodes (e.g. relevance, repeat instance presence, or
-	 * just generally about the presence of certain features as parsed and
-	 * represented by the engine's state).
-	 *
-	 * Tests calling this assertion should very likely be updated to use other
-	 * mechanisms to assert these conditions (which they may already be doing, by
-	 * advancing through form state with {@link Scenario} methods (e.g. {@link Scenario.next}) which assert the
-	 * same expected reference on each call).
-	 *
-	 */
-	toEqualTreeReference: new SymmetricTypedExpectExtension(
-		assertJRTreeReference,
-		(actual, expected) => {
-			const pass = actual.xpathReference === expected.xpathReference;
+  /**
+   * **PORTING NOTES**
+   *
+   * This is pre-emptively marked as deprecated, based on assumptions detailed
+   * below. If we agree on these assumptions, let's remove this preamble (or
+   * just migrate the affected tests and remove this custom assertion entirely).
+   *
+   * @deprecated
+   *
+   * Exists only to support direct ports of `TreeReference` equality assertions,
+   * generally about the current progress state while a test advances through a
+   * form. Insofar as such tests are meaningful, they'll tend to be about the
+   * availability of certain nodes (e.g. relevance, repeat instance presence, or
+   * just generally about the presence of certain features as parsed and
+   * represented by the engine's state).
+   *
+   * Tests calling this assertion should very likely be updated to use other
+   * mechanisms to assert these conditions (which they may already be doing, by
+   * advancing through form state with {@link Scenario} methods (e.g. {@link Scenario.next}) which assert the
+   * same expected reference on each call).
+   *
+   */
+  toEqualTreeReference: new SymmetricTypedExpectExtension(
+    assertJRTreeReference,
+    (actual, expected) => {
+      const pass = actual.xpathReference === expected.xpathReference;
 
-			return pass || new InspectableComparisonError(actual, expected, 'equal');
-		}
-	),
+      return pass || new InspectableComparisonError(actual, expected, 'equal');
+    }
+  ),
 });
 
 type TreeReferenceExtensions = typeof treeReferenceExtensions;
 
 declare module 'vitest' {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	interface Assertion<T = any> extends DeriveStaticVitestExpectExtension<
-		TreeReferenceExtensions,
-		T
-	> {}
-	interface AsymmetricMatchersContaining extends DeriveStaticVitestExpectExtension<TreeReferenceExtensions> {}
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  interface Assertion<T = any> extends DeriveStaticVitestExpectExtension<
+    TreeReferenceExtensions,
+    T
+  > {}
+  interface AsymmetricMatchersContaining extends DeriveStaticVitestExpectExtension<TreeReferenceExtensions> {}
 }

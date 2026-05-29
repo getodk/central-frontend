@@ -8,13 +8,13 @@ export type StaticNodeNameSource =
 	| string;
 
 export const staticNodeName = (source: StaticNodeNameSource): QualifiedName => {
-	if (source instanceof QualifiedName) {
-		return source;
-	}
+  if (source instanceof QualifiedName) {
+    return source;
+  }
 
-	if (typeof source === 'string') {
-		return new UnprefixedXFormsName(source);
-	}
+  if (typeof source === 'string') {
+    return new UnprefixedXFormsName(source);
+  }
 
-	return new QualifiedName(source);
+  return new QualifiedName(source);
 };

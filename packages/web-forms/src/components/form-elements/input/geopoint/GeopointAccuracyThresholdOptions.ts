@@ -9,24 +9,24 @@ const ACCURACY_THRESHOLD_DEFAULT = 5;
 const UNACCEPTABLE_ACCURACY_THRESHOLD_DEFAULT = 100;
 
 interface BaseGeopointAccuracyThresholdOptions {
-	/**
-	 * @default ACCURACY_THRESHOLD_DEFAULT
-	 */
-	readonly accuracyThreshold: number | null;
+  /**
+   * @default ACCURACY_THRESHOLD_DEFAULT
+   */
+  readonly accuracyThreshold: number | null;
 
-	/**
-	 * @default UNACCEPTABLE_ACCURACY_THRESHOLD_DEFAULT
-	 */
-	readonly unacceptableAccuracyThreshold: number | null;
+  /**
+   * @default UNACCEPTABLE_ACCURACY_THRESHOLD_DEFAULT
+   */
+  readonly unacceptableAccuracyThreshold: number | null;
 }
 
 export class GeopointAccuracyThresholdOptions {
-	readonly accuracyThreshold: number;
-	readonly unacceptableAccuracyThreshold: number;
+  readonly accuracyThreshold: number;
+  readonly unacceptableAccuracyThreshold: number;
 
-	constructor(options: BaseGeopointAccuracyThresholdOptions) {
-		this.accuracyThreshold = options.accuracyThreshold ?? ACCURACY_THRESHOLD_DEFAULT;
-		this.unacceptableAccuracyThreshold =
-			options.unacceptableAccuracyThreshold ?? UNACCEPTABLE_ACCURACY_THRESHOLD_DEFAULT;
-	}
+  constructor(options: BaseGeopointAccuracyThresholdOptions) {
+    this.accuracyThreshold = options.accuracyThreshold ?? ACCURACY_THRESHOLD_DEFAULT;
+    this.unacceptableAccuracyThreshold =
+      options.unacceptableAccuracyThreshold ?? UNACCEPTABLE_ACCURACY_THRESHOLD_DEFAULT;
+  }
 }

@@ -13,38 +13,38 @@ export const ENCRYPTED_SUFFIX = '.enc';
 export const ENCRYPTED_SUBMISSION_ATTACHMENT_NAME = 'submission.xml.enc';
 
 const generateSymmetricKey = () => {
-	const bytes = new Uint8Array(32);
-	crypto.getRandomValues(bytes);
-	return bytes;
+  const bytes = new Uint8Array(32);
+  crypto.getRandomValues(bytes);
+  return bytes;
 };
 
 export const encryptSubmission = async (
-	formId: string,
-	formVersion: string | undefined,
-	instanceId: string,
-	instanceXML: string,
-	attachments: readonly File[],
-	encryptionKey: string
+  formId: string,
+  formVersion: string | undefined,
+  instanceId: string,
+  instanceXML: string,
+  attachments: readonly File[],
+  encryptionKey: string
 ): Promise<Submission> => {
-	const symmetricKey = generateSymmetricKey();
-	const encryptedSymmetricKey = await getEncryptedSymmetricKey(encryptionKey, symmetricKey);
+  const symmetricKey = generateSymmetricKey();
+  const encryptedSymmetricKey = await getEncryptedSymmetricKey(encryptionKey, symmetricKey);
 
-	const manifest = new EncryptedSubmissionManifestDefinition(
-		formId,
-		formVersion,
-		instanceId,
-		encryptedSymmetricKey,
-		attachments
-	);
+  const manifest = new EncryptedSubmissionManifestDefinition(
+    formId,
+    formVersion,
+    instanceId,
+    encryptedSymmetricKey,
+    attachments
+  );
 
-	const encryptedAttachments = await encryptAttachments(
-		instanceXML,
-		instanceId,
-		symmetricKey,
-		attachments
-	);
+  const encryptedAttachments = await encryptAttachments(
+    instanceXML,
+    instanceId,
+    symmetricKey,
+    attachments
+  );
 
-	const instanceFile = new InstanceFile(manifest.serialize());
+  const instanceFile = new InstanceFile(manifest.serialize());
 
-	return { instanceFile, attachments: encryptedAttachments };
+  return { instanceFile, attachments: encryptedAttachments };
 };
