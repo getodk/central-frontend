@@ -90,9 +90,10 @@ export default {
     }
   },
   setup() {
-    const { publicLinks } = useRequestData();
+    const { publicLinks, createResource } = useRequestData();
+    const actorProperties = createResource('actorProperties');
     const { projectPath } = useRoutes();
-    return { publicLinks, projectPath };
+    return { publicLinks, actorProperties, projectPath };
   },
   data() {
     return {
@@ -106,11 +107,15 @@ export default {
   },
   created() {
     this.fetchData(false);
+    this.actorProperties.request({
+      url: apiPaths.actorProperties(this.projectId)
+    }).catch(noop);
   },
   methods: {
     fetchData(resend) {
       this.publicLinks.request({
         url: apiPaths.publicLinks(this.projectId, this.xmlFormId),
+        extended: true,
         resend
       }).catch(noop);
       this.highlighted = null;

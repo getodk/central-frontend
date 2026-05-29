@@ -53,15 +53,8 @@ const props = defineProps({
 
 const emit = defineEmits(['hide', 'success']);
 
-const { project, createResource } = useRequestData();
+const { project, actorProperties } = useRequestData();
 const { request, awaitingResponse } = useRequest();
-
-const actorProperties = createResource('actorProperties');
-
-const fetchActorProperties = () => {
-  const url = apiPaths.actorProperties(project.id);
-  return actorProperties.request({ url }).catch(() => { emit('hide'); });
-};
 
 const propertyValues = ref(Object.create(null));
 
@@ -87,8 +80,6 @@ watch(() => props.state, (state) => {
     propertyValues.value = Object.create(null);
   } else {
     propertyValues.value = { ...props.fieldKey?.properties };
-    if (!actorProperties.dataExists)
-      fetchActorProperties();
   }
 });
 </script>

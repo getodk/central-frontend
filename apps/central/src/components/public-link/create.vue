@@ -23,7 +23,6 @@ except according to the terms contained in the LICENSE file.
             <actor-properties-upsert v-model:propertyValues="propertyValues" :create="true"
               :property-defs="actorProperties.data"/>
           </template>
-          <spinner :state="actorProperties.awaitingResponse"/>
         </div>
         <div class="checkbox">
           <label>
@@ -85,14 +84,7 @@ import { useRequestData } from '../../request-data';
 
 // The modal assumes that this data will exist when the modal is shown.
 const { request, awaitingResponse } = useRequest();
-const { form, createResource } = useRequestData();
-
-const actorProperties = createResource('actorProperties');
-
-const fetchActorProperties = () => {
-  const url = apiPaths.actorProperties(form.projectId);
-  return actorProperties.request({ url }).catch(() => { emit('hide'); });
-};
+const { form, actorProperties } = useRequestData();
 
 const submit = () => {
   request.post(
@@ -110,8 +102,7 @@ watch(() => props.state, (state) => {
     displayName.value = '';
     once.value = false;
     propertyValues.value = Object.create(null);
-  } else if (!actorProperties.dataExists)
-    fetchActorProperties();
+  }
 });
 </script>
 

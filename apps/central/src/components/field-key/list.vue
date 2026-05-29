@@ -104,7 +104,7 @@ export default {
       required: true
     }
   },
-  emits: ['fetch-field-keys'],
+  emits: ['fetch-field-keys', 'fetch-custom-properties'],
   setup() {
     const { fieldKeys } = useRequestData();
     const { projectPath } = useRoutes();
@@ -139,6 +139,7 @@ export default {
   methods: {
     fetchData(resend) {
       this.$emit('fetch-field-keys', resend);
+      this.$emit('fetch-custom-properties', resend);
       this.highlighted = null;
     },
     hidePopover() {
