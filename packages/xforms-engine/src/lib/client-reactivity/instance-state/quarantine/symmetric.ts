@@ -9,6 +9,7 @@ import { ENCRYPTED_SUBMISSION_ATTACHMENT_NAME, ENCRYPTED_SUFFIX } from './encryp
 import { arrayBufferToWordArray, wordArrayToArrayBuffer } from './wordArrayUtils';
 
 class Seed {
+	private readonly SEED_ARRAY_LENGTH = 16; // guaranteed by the md5 algorithm
 	readonly ivSeedArray;
 	private counter = 0;
 
@@ -23,7 +24,7 @@ class Seed {
 	}
 
 	next(): string {
-		++this.ivSeedArray[this.counter % this.ivSeedArray.length]!;
+		++this.ivSeedArray[this.counter % this.SEED_ARRAY_LENGTH]!;
 		++this.counter;
 		return String.fromCharCode(...new Uint8Array(this.ivSeedArray));
 	}

@@ -9,6 +9,10 @@ const user = process.env.ODK_USER;
 const password = process.env.ODK_PASSWORD;
 const credentials = Buffer.from(`${user}:${password}`, 'utf-8').toString('base64');
 const __dirname = import.meta.dirname;
+const FORM_TEMPLATES = {
+  'simple': path.join(__dirname, './data/form.template.xml'),
+  'attachment': path.join(__dirname, './data/form-with-attachment.template.xml'),
+};
 
 export default class BackendClient {
   #request;
@@ -34,8 +38,9 @@ export default class BackendClient {
     return this.#request;
   }
 
-  createForm = async () => {
-    const formTemplate = fs.readFileSync(path.join(__dirname, './data/form.template.xml'), 'utf8');
+  createForm = async (templateFile) => {
+    const template = templateFile || FORM_TEMPLATES.simple;
+    const formTemplate = fs.readFileSync(template, 'utf8');
     const request = await this.#getRequest();
 
     const response = await request.post(`/v1/projects/${this.#projectId}/forms?publish=true`, {
@@ -47,6 +52,10 @@ export default class BackendClient {
     });
     expect(response).toBeOK();
     return response.json();
+  };
+
+  createAttachmentForm = async () => {
+    return this.createForm(FORM_TEMPLATES.attachment);
   };
 
   createSubmission = async (xmlFormId) => {
@@ -144,6 +153,17 @@ export default class BackendClient {
   downloadCsv = async (xmlFormId, passphrase) => {
     const keyId = process.env.ENCRYPTION_KEY_ID;
     let downloadUrl = `/v1/projects/${this.#projectId}/forms/${xmlFormId}/submissions.csv`;
+    if (passphrase) {
+      downloadUrl += `?${keyId}=${passphrase}`;
+    }
+    const request = await this.#getRequest();
+    const response = await request.get(downloadUrl);
+    return response;
+  };
+
+  downloadZip = async (xmlFormId, passphrase) => {
+    const keyId = process.env.ENCRYPTION_KEY_ID;
+    let downloadUrl = `/v1/projects/${this.#projectId}/forms/${xmlFormId}/submissions.csv.zip`;
     if (passphrase) {
       downloadUrl += `?${keyId}=${passphrase}`;
     }
