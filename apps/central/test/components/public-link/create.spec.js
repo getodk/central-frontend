@@ -1,14 +1,17 @@
 import PublicLinkCreate from '../../../src/components/public-link/create.vue';
 
+import useProject from '../../../src/request-data/project';
+
 import testData from '../../data';
 import { load, mockHttp } from '../../util/http';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
+import { testRequestData } from '../../util/request-data';
 
 const mountOptions = (options = undefined) => mergeMountOptions(options, {
   props: { state: true },
   container: {
-    requestData: { form: testData.extendedForms.last() }
+    requestData: testRequestData([useProject], { form: testData.extendedForms.last(), actorProperties: [] })
   }
 });
 
@@ -53,7 +56,7 @@ describe('PublicLinkCreate', () => {
         .beforeEachResponse((_, { method, url, data }) => {
           method.should.equal('POST');
           url.should.equal('/v1/projects/1/forms/f/public-links');
-          data.should.eql({ displayName: 'My Public Link', once: false });
+          data.should.eql({ displayName: 'My Public Link', once: false, properties: Object.create(null) });
         })
         .respondWithProblem());
 

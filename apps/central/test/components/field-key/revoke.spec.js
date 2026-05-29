@@ -13,7 +13,7 @@ describe('FieldKeyRevoke', () => {
       testData.extendedFieldKeys.createPast(1);
       return load('/projects/1/app-users').testModalToggles({
         modal: FieldKeyRevoke,
-        show: '.field-key-row .dropdown-menu a',
+        show: '.field-key-row .dropdown-menu li:last-child a', // Edit option added above revoke
         hide: '.btn-link'
       });
     });
@@ -46,14 +46,15 @@ describe('FieldKeyRevoke', () => {
       return load('/projects/1/app-users')
         .complete()
         .request(async (app) => {
-          await app.get('#field-key-list-table .dropdown-menu a').trigger('click');
+          await app.get('#field-key-list-table .dropdown-menu li:last-child a').trigger('click');
           return app.get('#field-key-revoke .btn-danger').trigger('click');
         })
         .respondWithData(() => {
           testData.extendedFieldKeys.update(0, { token: null });
           return { success: true };
         })
-        .respondWithData(() => testData.extendedFieldKeys.sorted());
+        .respondWithData(() => testData.extendedFieldKeys.sorted())
+        .respondWithData(() => []);
     };
 
     it('hides the modal', async () => {
