@@ -23,7 +23,8 @@ export class ModelDefinition {
 	readonly instance: StaticDocument;
 	readonly itextTranslations: ItextTranslationsDefinition;
 	readonly itextElements: Map<string, Map<string, Element>>;
-	readonly xformsRevalidateListeners: Map<string, XformsRevalidateListener>;
+	/** Keyed by the listening node, not its reference, so entries can be removed when the node is (else removed repeat instances leak). */
+	readonly xformsRevalidateListeners: Map<object, XformsRevalidateListener>;
 
 	constructor(readonly form: XFormDefinition) {
 		const submission = new SubmissionDefinition(form.xformDOM);
@@ -60,8 +61,12 @@ export class ModelDefinition {
 		return definition;
 	}
 
-	registerXformsRevalidateListener(ref: string, listener: XformsRevalidateListener) {
-		this.xformsRevalidateListeners.set(ref, listener);
+	registerXformsRevalidateListener(owner: object, listener: XformsRevalidateListener) {
+		this.xformsRevalidateListeners.set(owner, listener);
+	}
+
+	unregisterXformsRevalidateListener(owner: object) {
+		this.xformsRevalidateListeners.delete(owner);
 	}
 
 	triggerXformsRevalidateListeners() {

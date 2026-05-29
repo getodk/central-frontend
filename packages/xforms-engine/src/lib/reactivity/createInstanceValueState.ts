@@ -1,5 +1,5 @@
 import type { Signal } from 'solid-js';
-import { createComputed, createMemo, createSignal, untrack } from 'solid-js';
+import { createComputed, createMemo, createSignal, onCleanup, untrack } from 'solid-js';
 import type { AttributeContext } from '../../instance/internal-api/AttributeContext.ts';
 import type { InstanceValueContext } from '../../instance/internal-api/InstanceValueContext.ts';
 import { ActionComputationExpression } from '../../parse/expression/ActionComputationExpression.ts';
@@ -112,9 +112,14 @@ const postloadValue = (
 	setValue: SimpleAtomicStateSetter<string>,
 	preload: AnyBindPreloadDefinition
 ) => {
-	const ref = context.contextReference();
-	context.definition.model.registerXformsRevalidateListener(ref, () => {
+	const { model } = context.definition;
+
+	model.registerXformsRevalidateListener(context, () => {
 		setValueIfPreloadDefined(context, setValue, preload);
+	});
+
+	onCleanup(() => {
+		model.unregisterXformsRevalidateListener(context);
 	});
 };
 
