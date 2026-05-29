@@ -1,76 +1,76 @@
 @use './style' as odk;
 
 .odk-form {
-  .p-datepicker-input:disabled,
-  .p-datepicker-input:disabled + .p-datepicker-input-icon-container,
-  .p-inputtext:disabled,
-  .p-inputtext:read-only,
-  .p-button:disabled {
-    cursor: default;
-  }
+	.p-datepicker-input:disabled,
+	.p-datepicker-input:disabled + .p-datepicker-input-icon-container,
+	.p-inputtext:disabled,
+	.p-inputtext:read-only,
+	.p-button:disabled {
+		cursor: default;
+	}
 
-  .p-datepicker-panel {
-    .p-datepicker-title button {
-      font-size: var(--odk-hint-font-size);
-    }
-  }
+	.p-datepicker-panel {
+		.p-datepicker-title button {
+			font-size: var(--odk-hint-font-size);
+		}
+	}
 
-  .p-datepicker {
-    .p-datepicker-input-icon-container {
-      top: 19px;
+	.p-datepicker {
+		.p-datepicker-input-icon-container {
+			top: 19px;
 
-      svg {
-        width: 20px;
-        height: 20px;
-      }
-    }
-  }
+			svg {
+				width: var(--odk-icon-m);
+				height: var(--odk-icon-m);
+			}
+		}
+	}
 }
 
 // Modals and dropdowns are outside the .odk-form class scope.
 .p-datepicker-panel,
 .p-dialog {
-  .p-button.p-button-secondary:focus-visible {
-    outline: none;
-    outline-offset: unset;
-  }
+	.p-button.p-button-secondary:focus-visible {
+		outline: none;
+		outline-offset: unset;
+	}
 
-  .p-button:disabled {
-    cursor: default;
-  }
+	.p-button:disabled {
+		cursor: default;
+	}
 }
 
 .p-datepicker-panel.hide-today-button .p-datepicker-today-button {
-  display: none;
+	display: none;
 }
 
 .p-dialog {
-  margin: 0 24px;
+	margin: 0 24px;
 
-  .p-dialog-header {
-    font-size: var(--odk-dialog-title-font-size);
-  }
+	.p-dialog-header {
+		font-size: var(--odk-dialog-title-font-size);
+	}
 
-  .p-dialog-content *,
-  .p-dialog-footer * {
-    font-size: var(--odk-base-font-size);
-  }
+	.p-dialog-content *,
+	.p-dialog-footer * {
+		font-size: var(--odk-base-font-size);
+	}
 
-  .p-dialog-header,
-  .p-dialog-content,
-  .p-dialog-footer {
-    padding: var(--odk-spacing-xl);
-  }
+	.p-dialog-header,
+	.p-dialog-content,
+	.p-dialog-footer {
+		padding: var(--odk-spacing-xl);
+	}
 
-  .p-dialog-content,
-  .p-dialog-footer {
-    padding-top: 0;
-  }
+	.p-dialog-content,
+	.p-dialog-footer {
+		padding-top: 0;
+	}
 
-  @include odk.toggle-visibility();
+	@include odk.toggle-visibility();
 }
 
 .p-disabled,
 .p-component:disabled {
-  filter: grayscale(1);
+	filter: grayscale(1);
 }

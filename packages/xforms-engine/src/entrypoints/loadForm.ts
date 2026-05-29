@@ -22,13 +22,13 @@ type UnboundGlobalFetch = (this: void, ...args: Parameters<GlobalFetch>) => Retu
 let unboundGlobalFetch: UnboundGlobalFetch;
 
 if (typeof globalThis.fetch === 'function') {
-  unboundGlobalFetch = (...args) => {
-    return globalThis.fetch(...args);
-  };
+	unboundGlobalFetch = (...args) => {
+		return globalThis.fetch(...args);
+	};
 } else {
-  unboundGlobalFetch = () => {
-    throw new Error('fetch is not supported in this environment');
-  };
+	unboundGlobalFetch = () => {
+		throw new Error('fetch is not supported in this environment');
+	};
 }
 
 interface ResolvedOptions extends Required<LoadFormOptions> {}
@@ -45,11 +45,11 @@ interface ResolvedOptions extends Required<LoadFormOptions> {}
  * client, and especially host application, integrations.
  */
 const resolveOptions = (options?: LoadFormOptions): ResolvedOptions => {
-  return {
-    fetchFormDefinition: options?.fetchFormDefinition ?? unboundGlobalFetch,
-    fetchFormAttachment: options?.fetchFormAttachment ?? unboundGlobalFetch,
-    missingResourceBehavior: options?.missingResourceBehavior ?? MISSING_RESOURCE_BEHAVIOR.DEFAULT,
-  };
+	return {
+		fetchFormDefinition: options?.fetchFormDefinition ?? unboundGlobalFetch,
+		fetchFormAttachment: options?.fetchFormAttachment ?? unboundGlobalFetch,
+		missingResourceBehavior: options?.missingResourceBehavior ?? MISSING_RESOURCE_BEHAVIOR.DEFAULT,
+	};
 };
 
 /**
@@ -58,67 +58,68 @@ const resolveOptions = (options?: LoadFormOptions): ResolvedOptions => {
  * requirements of {@link createPotentiallyClientOwnedReactiveScope}.
  */
 const loadFormResult = async (
-  scope: ReactiveScope,
-  formResource: FormResource,
-  options: ResolvedOptions
+	scope: ReactiveScope,
+	formResource: FormResource,
+	options: ResolvedOptions
 ): Promise<LoadFormResult> => {
-  const { fetchFormDefinition, fetchFormAttachment, missingResourceBehavior } = options;
+	const { fetchFormDefinition, fetchFormAttachment, missingResourceBehavior } = options;
 
-  // TODO: Currently, **all** of the intermediate calls in this `try` block
-  // may throw! Handling that fact at the source would provide a much more
-  // specific `LoadFormFailureResult`, and address performance regressions
-  // inherent to such a broad/mixed use of `try`/`catch`.
-  //
-  // Addressing this is deferred for now, to limit scope.
-  try {
-    const sourceXML = await retrieveFormDefinition(formResource, {
-      fetchFormDefinition,
-    });
-    const xformDOM = XFormDOM.from(sourceXML);
-    const { model } = new XFormDefinition(xformDOM);
-    const secondaryInstances = await SecondaryInstancesDefinition.load(xformDOM, {
-      fetchResource: fetchFormAttachment,
-      missingResourceBehavior,
-    });
-    const instanceOptions = {
-      scope,
-      model,
-      secondaryInstances,
-    };
+	// TODO: Currently, **all** of the intermediate calls in this `try` block
+	// may throw! Handling that fact at the source would provide a much more
+	// specific `LoadFormFailureResult`, and address performance regressions
+	// inherent to such a broad/mixed use of `try`/`catch`.
+	//
+	// Addressing this is deferred for now, to limit scope.
+	try {
+		const sourceXML = await retrieveFormDefinition(formResource, {
+			fetchFormDefinition,
+		});
+		const xformDOM = XFormDOM.from(sourceXML);
+		const { model } = new XFormDefinition(xformDOM);
+		const secondaryInstances = await SecondaryInstancesDefinition.load(xformDOM, {
+			fetchResource: fetchFormAttachment,
+			missingResourceBehavior,
+		});
+		const instanceOptions = {
+			scope,
+			model,
+			secondaryInstances,
+			fetchFormAttachment,
+		};
 
-    return new FormSuccessResult({
-      warnings: null,
-      error: null,
-      scope,
-      formResource,
-      instanceOptions,
-    });
-  } catch (caught) {
-    let cause: Error;
+		return new FormSuccessResult({
+			warnings: null,
+			error: null,
+			scope,
+			formResource,
+			instanceOptions,
+		});
+	} catch (caught) {
+		let cause: Error;
 
-    if (caught instanceof Error) {
-      cause = caught;
-    } else {
-      cause = new Error('Unknown form load error', { cause: caught });
-    }
+		if (caught instanceof Error) {
+			cause = caught;
+		} else {
+			cause = new Error('Unknown form load error', { cause: caught });
+		}
 
-    const error = new LoadFormFailureError(formResource, [cause]);
+		const error = new LoadFormFailureError(formResource, [cause]);
 
-    return new FormFailureResult({
-      warnings: null,
-      error,
-    });
-  }
+		return new FormFailureResult({
+			warnings: null,
+			error,
+		});
+	}
 };
 
 export const loadForm = (
-  formResource: FormResource,
-  options?: LoadFormOptions
+	formResource: FormResource,
+	options?: LoadFormOptions
 ): Promise<LoadFormResult> => {
-  const scope = createPotentiallyClientOwnedReactiveScope();
-  const resolvedOptions = resolveOptions(options);
+	const scope = createPotentiallyClientOwnedReactiveScope();
+	const resolvedOptions = resolveOptions(options);
 
-  return loadFormResult(scope, formResource, resolvedOptions);
+	return loadFormResult(scope, formResource, resolvedOptions);
 };
 
 loadForm satisfies LoadForm;
