@@ -24,11 +24,7 @@ describe('FieldKeyNew', () => {
     return load('/projects/1/app-users').testModalToggles({
       modal: FieldKeyNew,
       show: '#field-key-list-create-button',
-      hide: '.btn-link',
-      respond: (series) => series.respondIf(
-        ({ url }) => url.includes('actor-properties'),
-        () => []
-      )
+      hide: '.btn-link'
     });
   });
 
@@ -63,10 +59,9 @@ describe('FieldKeyNew', () => {
       .request(async (app) => {
         await app.get('.heading-with-button button').trigger('click');
         const modal = app.get('#field-key-new');
-        await modal.get('input').setValue('My App User');
+        await modal.get('input').setValue('input', 'My App User');
         return modal.get('form').trigger('submit');
       })
-      .respondWithData(() => []) // actor-properties
       .respondWithData(() => testData.standardFieldKeys.createNew({
         displayName: 'My App User'
       }));

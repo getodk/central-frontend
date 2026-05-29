@@ -116,6 +116,7 @@ export default {
     fetchData(resend) {
       this.publicLinks.request({
         url: apiPaths.publicLinks(this.projectId, this.xmlFormId),
+        extended: true,
         resend
       }).catch(noop);
       this.highlighted = null;

@@ -24,7 +24,6 @@ except according to the terms contained in the LICENSE file.
               <actor-properties-upsert v-model:propertyValues="propertyValues" :create="true"
                 :property-defs="actorProperties.data"/>
             </template>
-            <spinner :state="actorProperties.awaitingResponse"/>
           </div>
           <div class="modal-actions">
             <button type="button" class="btn btn-link"
@@ -105,7 +104,7 @@ const redAlert = inject('redAlert');
 const router = useRouter();
 
 // The modal assumes that this data will exist when the modal is shown.
-const { project, fieldKeys, createResource } = useRequestData();
+const { project, fieldKeys, actorProperties } = useRequestData();
 const { request, awaitingResponse } = useRequest();
 const { projectPath } = useRoutes();
 
@@ -117,12 +116,6 @@ const created = ref(null);
 const displayNameGroup = ref(null);
 const propertyValues = ref(Object.create(null));
 
-const actorProperties = createResource('actorProperties');
-
-const fetchActorProperties = () => {
-  const url = apiPaths.actorProperties(project.id);
-  return actorProperties.request({ url }).catch(() => { emit('hide'); });
-};
 
 const focusInput = () => { displayNameGroup.value.focus(); };
 
@@ -172,8 +165,7 @@ watch(() => props.state, (state) => {
     displayName.value = '';
     created.value = null;
     propertyValues.value = Object.create(null);
-  } else if (!actorProperties.dataExists)
-    fetchActorProperties();
+  }
 });
 </script>
 

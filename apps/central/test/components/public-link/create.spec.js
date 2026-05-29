@@ -22,11 +22,7 @@ describe('PublicLinkCreate', () => {
     load('/projects/1/forms/f/public-links').testModalToggles({
       modal: PublicLinkCreate,
       show: '.heading-with-button .btn-primary',
-      hide: '.btn-link',
-      respond: (series) => series.respondIf(
-        ({ url }) => url.includes('actor-properties'),
-        () => []
-      )
+      hide: '.btn-link'
     }));
 
   it('focuses the display name input', () => {
@@ -57,7 +53,7 @@ describe('PublicLinkCreate', () => {
         .beforeEachResponse((_, { method, url, data }) => {
           method.should.equal('POST');
           url.should.equal('/v1/projects/1/forms/f/public-links');
-          data.should.eql({ displayName: 'My Public Link', once: false, properties: {} });
+          data.should.eql({ displayName: 'My Public Link', once: false });
         })
         .respondWithProblem());
 
@@ -99,9 +95,8 @@ describe('PublicLinkCreate', () => {
           await modal.get('input').setValue('My Public Link');
           return modal.get('form').trigger('submit');
         })
-        .respondWithData(() => []) // actor-properties
         .respondWithData(() => testData.standardPublicLinks.createNew({
-          displayName: 'My Public Link',
+          displayName: 'My Public Link'
         }))
         .respondWithData(() => testData.standardPublicLinks.sorted());
     };
