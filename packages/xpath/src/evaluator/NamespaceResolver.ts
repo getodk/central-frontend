@@ -102,10 +102,19 @@ export const staticNamespaces = new StaticNamespaces('xf', XFORMS_NAMESPACE_URI,
 	[XMLNS_PREFIX]: XMLNS_NAMESPACE_URI,
 });
 
-const namespaceURIs = new UpsertableMap<
-	XPathNSResolver,
-	UpsertableMap<string | null, string | null>
->();
+/**
+ * Caches resolved prefix → namespace URI lookups, keyed by a **stable**
+ * resolution source (a context node, or a caller-provided resolver).
+ *
+ * This was previously keyed by each resolver's per-instance `contextResolver`
+ * closure. Since a fresh resolver (and closure) is constructed for every
+ * `evaluate` call, that key was never reused: the cache never produced a hit
+ * across evaluations, and instead accumulated one entry per evaluation for the
+ * lifetime of the cache — an unbounded memory leak in long form sessions. Keying
+ * by the stable source instead bounds this to one entry per document/resolver,
+ * and makes the cache effective across evaluations.
+ */
+const namespaceURIs = new UpsertableMap<object, UpsertableMap<string | null, string | null>>();
 
 export const clearCache = () => {
 	namespaceURIs.clear();
@@ -145,6 +154,14 @@ export class NamespaceResolver<T extends XPathNode> implements XPathNSResolverOb
 
 	protected readonly contextResolver: XPathNSResolverFunction;
 
+  /**
+   * The cache key for prefix lookups in {@link namespaceURIs} is the context node, or a caller-provided resolver.
+   * It must not be the {@link contextResolver} closure, which is recreated per evaluation. That would miss the cache
+   * every time and leak one entry per evaluation.
+   */
+
+	protected readonly resolutionKey: object;
+
 	private constructor(
 		protected readonly domProvider: XPathDOMProvider<T>,
 		protected readonly rootNode: AdapterParentNode<T>,
@@ -154,12 +171,15 @@ export class NamespaceResolver<T extends XPathNode> implements XPathNSResolverOb
 		const contextResolverNode = referenceNode ?? rootNode;
 
 		if (contextResolver == null) {
+			this.resolutionKey = contextResolverNode;
 			this.contextResolver = (prefix) => {
 				return domProvider.resolveNamespaceURI(contextResolverNode, prefix);
 			};
 		} else if (typeof contextResolver === 'function') {
+			this.resolutionKey = contextResolver;
 			this.contextResolver = contextResolver;
 		} else {
+			this.resolutionKey = contextResolver;
 			this.contextResolver = (prefix) => contextResolver.lookupNamespaceURI(prefix);
 		}
 	}
@@ -174,7 +194,7 @@ export class NamespaceResolver<T extends XPathNode> implements XPathNSResolverOb
 	 */
 	lookupNamespaceURI(prefix: string | null) {
 		return namespaceURIs
-			.upsert(this.contextResolver, () => new UpsertableMap())
+			.upsert(this.resolutionKey, () => new UpsertableMap())
 			.upsert(prefix, () => {
 				return this.contextResolver(prefix) ?? staticNamespaces.get(prefix) ?? null;
 			});
