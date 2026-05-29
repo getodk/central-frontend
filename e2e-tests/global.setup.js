@@ -1,11 +1,12 @@
 import { test as setup, expect } from '@playwright/test';
+import { ENCRYPTION_SECRET } from './util';
 
 const appUrl = process.env.ODK_URL;
 const user = process.env.ODK_USER;
 const password = process.env.ODK_PASSWORD;
 const credentials = Buffer.from(`${user}:${password}`, 'utf-8').toString('base64');
 
-setup('create new project', async ({ request }) => {
+const createProject = async(request, encrypted) => {
   try {
     const createProjectResponse = await request.post(`${appUrl}/v1/projects`, {
       headers: {
@@ -32,7 +33,30 @@ setup('create new project', async ({ request }) => {
     const project = await createProjectResponse.json();
 
     expect(project.id).not.toBeFalsy();
-    process.env.PROJECT_ID = project.id;
+
+    if (encrypted) {
+      const encryptionResponse = await request.post(`${appUrl}/v1/projects/${project.id}/key`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Basic ${credentials}`
+        },
+        data: {
+          passphrase: ENCRYPTION_SECRET,
+          hint: "it was a secret"
+        }
+      });
+      expect(encryptionResponse).toBeOK();
+      const getProjectResponse = await request.get(`${appUrl}/v1/projects/${project.id}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Basic ${credentials}`
+        }
+      });
+      expect(getProjectResponse).toBeOK();
+      const getProjectBody = await getProjectResponse.json();
+      process.env.ENCRYPTION_KEY_ID = getProjectBody.keyId;
+    }
+    return project.id;
   } catch (err) {
     if (err.message.includes('ECONNREFUSED')) {
       // eslint-disable-next-line preserve-caught-error
@@ -48,4 +72,9 @@ setup('create new project', async ({ request }) => {
       throw err;
     }
   }
+};
+
+setup('create new project', async ({ request }) => {
+  process.env.PROJECT_ID = await createProject(request, false);
+  process.env.PROJECT_ID_ENCRYPTED = await createProject(request, true);
 });
