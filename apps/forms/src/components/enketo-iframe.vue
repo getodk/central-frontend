@@ -17,10 +17,16 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 import { computed, inject, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useRequestData } from '../request-data';
+// import { useRequestData } from '../request-data';
 
-import useEventListener from '../composables/event-listener';
-import { getCookieValue } from '../util/util';
+// import useEventListener from '../composables/event-listener';
+// import { getCookieValue } from '../util/util';
+
+// TODO move to common?
+const getCookieValue = (key, doc = document) => decodeURIComponent(doc.cookie.split(';')
+  .map(cookie => cookie.trim())
+  .find(cookie => cookie.startsWith(`${key}=`))
+  ?.split('=')[1] || '');
 
 defineOptions({
   name: 'EnketoIframe'
@@ -35,15 +41,20 @@ const props = defineProps({
     type: String,
     required: true
   },
+  enketoOnceId: {
+    type: String
+  },
   instanceId: String
 });
 
 const emit = defineEmits(['loaded']);
 
-const { location, buildMode } = inject('container');
+const buildMode = import.meta.env?.MODE ?? 'production';
 
-const { form } = useRequestData();
-const route = useRoute();
+// const { location, buildMode } = inject('container');
+
+// const { form } = useRequestData();
+const route = useRoute(); // TODO would be better to have all url processing in the parent
 const router = useRouter();
 
 const redirectUrl = computed(() => {
@@ -85,7 +96,7 @@ const setEnketoSrc = () => {
   let prefix = basePath;
   const { return_url: _, returnUrl: __, ...query } = route.query;
 
-  query.parentWindowOrigin = location.origin;
+  query.parentWindowOrigin = window.location.origin;
 
   // We need to use encodeURIComponent here instead of URLSearchParams because enketo expects space
   // to pass as either ' ' (literal space character) or '%20'. Whereas URLSearchParams converts
@@ -108,7 +119,7 @@ const setEnketoSrc = () => {
 
   // we no longer render Enketo for Edit Submission from central-frontend.
 
-  if (props.enketoId === form.enketoOnceId) {
+  if (props.enketoId === props.enketoOnceId) {
     lastSubmitted(props.enketoId)
       .then(result => {
         if (result) {
@@ -127,11 +138,11 @@ const setEnketoSrc = () => {
 setEnketoSrc();
 
 const handleIframeMessage = (event) => {
-  if (event.origin === location.origin) {
+  if (event.origin === window.location.origin) {
     const { parentWindowOrigin } = route.query;
     // For the cases where this page is embedded in external iframe, pass the event data to the
     // parent.
-    if (location !== window.parent.location &&
+    if (window.location !== window.parent.location &&
         parentWindowOrigin &&
         typeof parentWindowOrigin === 'string') {
       window.parent.postMessage(event.data, parentWindowOrigin);
@@ -147,10 +158,10 @@ const handleIframeMessage = (event) => {
         try {
           const normalizedUrl = new URL(redirectUrl.value);
           if (['http:', 'https:'].includes(normalizedUrl.protocol)) {
-            if (normalizedUrl.origin === location.origin) {
+            if (normalizedUrl.origin === window.location.origin) {
               router.push(normalizedUrl.pathname);
             } else {
-              location.assign(normalizedUrl);
+              window.location.assign(normalizedUrl);
             }
           }
         } catch (e) {}
@@ -159,7 +170,7 @@ const handleIframeMessage = (event) => {
   }
 };
 
-useEventListener(window, 'message', handleIframeMessage, false);
+// useEventListener(window, 'message', handleIframeMessage, false);
 </script>
 
 <style lang="scss">
