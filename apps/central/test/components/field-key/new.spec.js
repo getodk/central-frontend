@@ -6,11 +6,12 @@ import { load, mockHttp } from '../../util/http';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
+import { testRequestData } from '../../util/request-data';
 
 const mountOptions = (options = undefined) => mergeMountOptions(options, {
   props: { state: true, managed: true },
   container: {
-    requestData: { project: testData.extendedProjects.last() },
+    requestData: testRequestData(['actorProperties'], { project: testData.extendedProjects.last(), actorProperties: [] }),
     router: mockRouter('/')
   }
 });
