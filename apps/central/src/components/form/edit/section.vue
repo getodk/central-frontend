@@ -19,6 +19,9 @@ except according to the terms contained in the LICENSE file.
       <div class="form-edit-section-tag">
         <span><slot name="tag"></slot></span>
       </div>
+      <div class="form-edit-section-actions">
+        <slot name="actions"></slot>
+      </div>
     </div>
     <div class="form-edit-section-body"><slot name="body"></slot></div>
   </div>
@@ -78,6 +81,10 @@ $heading-margin-bottom: 10px;
 
 .form-edit-section:has(.form-edit-section-subtitle:empty) .form-edit-section-body > p:first-of-type {
   margin-top: -$heading-margin-bottom;
+}
+
+.form-edit-section-actions {
+  margin-left: auto;
 }
 
 </style>

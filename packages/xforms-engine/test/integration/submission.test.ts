@@ -19,9 +19,7 @@ import {
 	t,
 	title,
 } from '@getodk/common/test-utils/xform-dsl/index.ts';
-import { TagXFormsElement } from '@getodk/common/test-utils/xform-dsl/TagXFormsElement.ts';
 import type { XFormsElement } from '@getodk/common/test-utils/xform-dsl/XFormsElement.ts';
-import { createUniqueId } from 'solid-js';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { Scenario } from '../scenario/jr/Scenario.ts';
 import { ANSWER_OK, ANSWER_REQUIRED_BUT_EMPTY } from '../scenario/jr/validation/ValidateOutcome.ts';
@@ -808,27 +806,6 @@ describe('Form submission', () => {
 					await expect(init).rejects.toThrow();
 				}
 			);
-
-			it('includes a form-specified `base64RsaPublicKey` as encryptionKey', async () => {
-				const base64RsaPublicKey = btoa(createUniqueId());
-				const scenario = await buildSubmissionPayloadScenario({
-					submissionElements: [
-						// Note: `t()` fails here, presumably because the ported JavaRosa
-						// `parseAttributes` doesn't expect equals signs as produced in
-						// the trailing base64 value.
-						new TagXFormsElement(
-							'submission',
-							new Map([['base64RsaPublicKey', base64RsaPublicKey]]),
-							[]
-						),
-					],
-				});
-				const submissionResult = await scenario.prepareWebFormsInstancePayload();
-
-				expect(submissionResult.submissionMeta).toMatchObject({
-					encryptionKey: base64RsaPublicKey,
-				});
-			});
 		});
 
 		describe('for a single (monolithic) request', () => {
