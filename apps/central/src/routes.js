@@ -904,7 +904,7 @@ const routesByName = new Map();
       ? [project]
       : false)
   );
-/*
+  /*
   // Preserve Form data when redirected to canoncial path
   [
     'SubmissionNew',
@@ -917,7 +917,7 @@ const routesByName = new Map();
       (from.name === 'EnketoRedirector' || from.name === 'WebFormDirectLink') && [form];
     routesByName.get(redirectTo).meta.preserveData.push(preserve);
   });
-*/
+  */
 
   //////////////////////////////////////////////////////////////////////////////
   // RETURN

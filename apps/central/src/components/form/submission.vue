@@ -28,7 +28,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { defineAsyncComponent, watchEffect, computed, ref, watch } from 'vue';
+import { watchEffect, computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 
@@ -38,7 +38,6 @@ import notFound from '../not-found.vue';
 
 import { noop } from '../../util/util';
 import { apiPaths } from '../../util/request';
-import { loadAsync } from '../../util/load-async';
 import { useRequestData } from '../../request-data';
 import useEnketoRedirector from '../../composables/enketo-redirector';
 
