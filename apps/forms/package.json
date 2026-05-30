@@ -7,6 +7,7 @@
     "eslint:fix": "",
     "lint": "",
     "lint:fix": "",
-    "test": ""
+    "test": "",
+    "// TODO get the above working": ""
   }
 }

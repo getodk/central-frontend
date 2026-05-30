@@ -55,7 +55,7 @@ const devAppRouter = () => ({
       // must match the regex paths defined in Nginx
       // TODO need to do all the other forms URLs 
       // TODO can we change the URLs that aren't legacy ones??
-      const newSubmissionRegex = /^\/projects\/[0-9]+\/forms\/([^\/]+)\/submissions\/new/;
+      const newSubmissionRegex = /^\/projects\/[0-9]+\/forms\/([^/]+)\/submissions\/new/;
 
       if (newSubmissionRegex.test(req.url)) {
         req.url = '/apps/forms/index.html';
