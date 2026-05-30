@@ -103,8 +103,8 @@ const { initiallyLoading, dataExists } = computed(() => {
   };
 }).value;
 
-const WebFormRenderer = defineAsyncComponent(loadAsync('WebFormRenderer'));
-const EnketoIframe = defineAsyncComponent(loadAsync('EnketoIframe'));
+// const WebFormRenderer = defineAsyncComponent(loadAsync('WebFormRenderer'));
+// const EnketoIframe = defineAsyncComponent(loadAsync('EnketoIframe'));
 
 const fetchProject = () => project.request({
   url: apiPaths.project(props.projectId),

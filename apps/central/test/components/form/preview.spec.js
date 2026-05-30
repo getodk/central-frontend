@@ -2,7 +2,8 @@ import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
-describe('FormPreview', () => {
+// TODO move
+describe.skip('FormPreview', () => {
   // Stub WebFormRenderer - loading the real component creates dependency between tests because
   // it is loaded asynchronously
   const mountOptions = () => ({

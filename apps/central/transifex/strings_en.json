@@ -5540,16 +5540,6 @@
         "string": "Invitation Pending"
       }
     },
-    "WebFormRenderer": {
-      "retryModal": {
-        "action": {
-          "tryAgain": {
-            "string": "Try again",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          }
-        }
-      }
-    },
     "WhatsNew": {
       "title": {
         "string": "🎨 Branded login pages, Entity List cleanups, and file uploads in Web Forms",

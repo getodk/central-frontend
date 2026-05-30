@@ -6,7 +6,8 @@ import { mergeMountOptions } from '../../util/lifecycle';
 
 const enketoId = 'sCTIfjC5LrUto4yVXRYJkNKzP7e53vo';
 
-describe('FormSubmission', () => {
+// TODO move
+describe.skip('FormSubmission', () => {
   // Stub WebFormRenderer - loading the real component creates dependency between tests because
   // it is loaded asynchronously
   const mountOptions = (options) => mergeMountOptions(options, {

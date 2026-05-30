@@ -498,6 +498,7 @@ const routes = [
       }
     }
   }),
+  /*
   asyncRoute({
     path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/preview',
     component: 'FormPreview',
@@ -525,6 +526,7 @@ const routes = [
       title: () => [`✨ ${i18n.t('resource.formPreview')}`, form.nameOrId ? `${form.nameOrId} (${i18n.t('resource.draft')})` : '']
     }
   }),
+  */
   asyncRoute({
     path: '/projects/:projectId([1-9]\\d*)/entity-lists/:datasetName',
     component: 'DatasetShow',
@@ -902,7 +904,7 @@ const routesByName = new Map();
       ? [project]
       : false)
   );
-
+/*
   // Preserve Form data when redirected to canoncial path
   [
     'SubmissionNew',
@@ -915,7 +917,7 @@ const routesByName = new Map();
       (from.name === 'EnketoRedirector' || from.name === 'WebFormDirectLink') && [form];
     routesByName.get(redirectTo).meta.preserveData.push(preserve);
   });
-
+*/
 
   //////////////////////////////////////////////////////////////////////////////
   // RETURN

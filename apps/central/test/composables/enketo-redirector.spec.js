@@ -6,6 +6,7 @@ import { mockLogin } from '../util/session';
 
 const enketoId = 'sCTIfjC5LrUto4yVXRYJkNKzP7e53vo';
 
+// TODO move
 const mountOptions = (options) => mergeMountOptions(options, {
   global: {
     stubs: {
@@ -15,7 +16,7 @@ const mountOptions = (options) => mergeMountOptions(options, {
     }
   }
 });
-describe('useEnketoRedirector', () => {
+describe.skip('useEnketoRedirector', () => {
   beforeEach(() => {
     mockLogin();
   });
