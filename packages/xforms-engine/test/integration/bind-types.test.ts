@@ -199,8 +199,8 @@ describe('Data (<bind type>) type support', () => {
         interface ExpectedGeopointValue {
           readonly latitude: number;
           readonly longitude: number;
-          readonly altitude: number | null;
-          readonly accuracy: number | null;
+          readonly altitude: number;
+          readonly accuracy: number;
         }
         expectTypeOf(answer.value).toEqualTypeOf<ExpectedGeopointValue | null>();
       });
@@ -556,8 +556,8 @@ describe('Data (<bind type>) type support', () => {
         interface ExpectedGeopointValue {
           readonly latitude: number;
           readonly longitude: number;
-          readonly altitude: number | null;
-          readonly accuracy: number | null;
+          readonly altitude: number;
+          readonly accuracy: number;
         }
         expectTypeOf(answer.value).toEqualTypeOf<ExpectedGeopointValue | null>();
       });
@@ -606,11 +606,37 @@ describe('Data (<bind type>) type support', () => {
         expect(answer.stringValue).toBe('');
       });
 
+      it('defaults altitude and accuracy to 0 for an initial value with only latitude and longitude', async () => {
+        const presetScenario = await Scenario.init(
+          'Preset geopoint',
+          html(
+            head(
+              title('Preset geopoint'),
+              model(
+                mainInstance(t('root id="preset-geopoint"', t('gp', '9.1021 -79.3976'))),
+                bind('/root/gp').type('geopoint')
+              )
+            ),
+            body(input('/root/gp'))
+          )
+        );
+
+        const presetAnswer = presetScenario.answerOf('/root/gp');
+        assertTypedInputNodeAnswer(presetAnswer, 'geopoint');
+        expect(presetAnswer.value).toEqual({
+          latitude: 9.1021,
+          longitude: -79.3976,
+          altitude: 0,
+          accuracy: 0,
+        });
+        expect(presetAnswer.stringValue).toEqual('9.1021 -79.3976 0.0 0.0');
+      });
+
       it.each([
         {
           expression: { latitude: 20.663, longitude: 16.763 },
-          expectedAsObject: { latitude: 20.663, longitude: 16.763, altitude: null, accuracy: null },
-          expectedAsText: '20.663 16.763',
+          expectedAsObject: { latitude: 20.663, longitude: 16.763, altitude: 0, accuracy: 0 },
+          expectedAsText: '20.663 16.763 0.0 0.0',
         },
         {
           expression: { latitude: 19.899, longitude: 100.55559, accuracy: 15 },
@@ -619,8 +645,8 @@ describe('Data (<bind type>) type support', () => {
         },
         {
           expression: { latitude: 45.111, longitude: 127.23, altitude: 1350 },
-          expectedAsObject: { latitude: 45.111, longitude: 127.23, altitude: 1350, accuracy: null },
-          expectedAsText: '45.111 127.23 1350.0',
+          expectedAsObject: { latitude: 45.111, longitude: 127.23, altitude: 1350, accuracy: 0 },
+          expectedAsText: '45.111 127.23 1350.0 0.0',
         },
         {
           expression: { latitude: 14.66599, longitude: 179.9009, altitude: 200, accuracy: 5 },

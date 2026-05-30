@@ -1,8 +1,8 @@
-import { Geolocation, type LocationPoint } from './Geolocation.ts';
+import { Geolocation, type LocationPoint, type LocationPointInput } from './Geolocation.ts';
 
 export type GeopointRuntimeValue = LocationPoint | null;
 
-export type GeopointInputValue = GeopointRuntimeValue | string;
+export type GeopointInputValue = LocationPointInput | string | null;
 
 export class Geopoint extends Geolocation {
   static parseStringToGeopoint(value: string): GeopointRuntimeValue {

@@ -8,7 +8,7 @@ import type { GeopointValueObject } from './GeopointValueObject.ts';
  * @property {string} GOOD - if accuracy is <= accuracyThreshold
  * @property {string} ACCEPTABLE - if accuracy is > accuracyThreshold and <= unacceptableAccuracyThreshold
  * @property {string} POOR - if accuracy > unacceptableAccuracyThreshold
- * @property {string} UNKNOWN - if accuracy is null or undefined
+ * @property {string} UNKNOWN - if accuracy is null, undefined, 0, or NaN (manually placed / no sensor data)
  */
 const GEOPOINT_ACCURACY_QUALITY = {
   ACCEPTABLE: 'ACCEPTABLE',
@@ -26,7 +26,7 @@ const computeAccuracyQuality = (
   value: number | null,
   options: GeopointAccuracyThresholdOptions
 ): GeopointAccuracyQuality => {
-  if (value == null) {
+  if (!value) {
     return GEOPOINT_ACCURACY_QUALITY.UNKNOWN;
   }
 

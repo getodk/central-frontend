@@ -13,25 +13,23 @@ import type {
   Polygon as PolygonGeoJSON,
 } from 'geojson';
 
-// Latitude is first for ODK and longitude is second.
+// Latitude is first for ODK, and longitude is second. Altitude and accuracy default to 0 to match Collect behavior.
 export const toODKCoordinateArray = (
   longitude: number,
   latitude: number,
   altitude: number | null | undefined,
   accuracy: number | null | undefined
 ): number[] => {
-  const coords = [];
-  if (Number.isFinite(latitude) && Number.isFinite(longitude)) {
-    coords.push(latitude, longitude);
-
-    if (Number.isFinite(accuracy)) {
-      coords.push(Number.isFinite(altitude) ? altitude! : 0, accuracy!);
-    } else if (Number.isFinite(altitude)) {
-      coords.push(altitude!);
-    }
+  if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+    return [];
   }
 
-  return coords;
+  return [
+    latitude,
+    longitude,
+    Number.isFinite(altitude) ? altitude! : 0,
+    Number.isFinite(accuracy) ? accuracy! : 0,
+  ];
 };
 
 export const formatODKValue = (feature: Feature): string => {

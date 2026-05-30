@@ -62,11 +62,13 @@ const selectedVertexInfo = computed(() => {
 		t('map_status_bar.vertex_latitude.label', { latitude }),
 	];
 
+	// Altitude 0 is a valid value (sea level), so show it whenever present.
 	if (altitude != null) {
 		parts.push(t('map_status_bar.vertex_altitude.label', { altitude }));
 	}
 
-	if (accuracy != null) {
+	// Accuracy 0 is not a valid measurement, so hide it (sensor unavailable or manually entered)
+	if (accuracy) {
 		parts.push(t('map_status_bar.vertex_accuracy.label', { accuracy: truncateDecimals(accuracy, { decimals: 3 }) }));
 	}
 
