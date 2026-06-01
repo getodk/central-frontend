@@ -44,7 +44,8 @@ except according to the terms contained in the LICENSE file.
         <field-key-row v-for="fieldKey of fieldKeys" :key="fieldKey.id"
           :field-key="fieldKey" :highlighted="highlighted"
           @toggle-qr="togglePopover"
-          @revoke="revokeModal.show({ fieldKey: $event })"/>
+          @revoke="revokeModal.show({ fieldKey: $event })"
+          @edit="editModal.show({ fieldKey: $event })"/>
       </tbody>
     </table>
     <loading :state="fieldKeys.initiallyLoading"/>
@@ -59,6 +60,8 @@ except according to the terms contained in the LICENSE file.
     </popover>
     <field-key-new v-bind="createModal" :managed="managed"
       @hide="createModal.hide()" @success="afterCreate"/>
+    <field-key-edit v-bind="editModal"
+      @hide="editModal.hide()" @success="afterEdit"/>
     <project-submission-options v-bind="submissionOptions"
       @hide="submissionOptions.hide()"/>
     <field-key-revoke v-bind="revokeModal" @hide="revokeModal.hide()"
@@ -72,6 +75,7 @@ import DocLink from '../doc-link.vue';
 import Loading from '../loading.vue';
 import FieldKeyQrPanel from './qr-panel.vue';
 import FieldKeyRow from './row.vue';
+import FieldKeyEdit from './edit.vue';
 import FieldKeyNew from './new.vue';
 import FieldKeyRevoke from './revoke.vue';
 import ProjectSubmissionOptions from '../project/submission-options.vue';
@@ -88,6 +92,7 @@ export default {
     Loading,
     FieldKeyQrPanel,
     FieldKeyRow,
+    FieldKeyEdit,
     FieldKeyNew,
     FieldKeyRevoke,
     ProjectSubmissionOptions
@@ -99,7 +104,7 @@ export default {
       required: true
     }
   },
-  emits: ['fetch-field-keys'],
+  emits: ['fetch-field-keys', 'fetch-custom-properties'],
   setup() {
     const { fieldKeys } = useRequestData();
     const { projectPath } = useRoutes();
@@ -117,6 +122,7 @@ export default {
       },
       // Modals
       createModal: modalData(),
+      editModal: modalData(),
       submissionOptions: modalData(),
       revokeModal: modalData()
     };
@@ -133,6 +139,7 @@ export default {
   methods: {
     fetchData(resend) {
       this.$emit('fetch-field-keys', resend);
+      this.$emit('fetch-custom-properties', resend);
       this.highlighted = null;
     },
     hidePopover() {
@@ -166,6 +173,11 @@ export default {
       this.createModal.hide();
       this.alert.success(this.$t('alert.create', fieldKey));
       this.highlighted = fieldKey.id;
+    },
+    afterEdit(fieldKey) {
+      this.fetchData(true);
+      this.editModal.hide();
+      this.alert.success(this.$t('alert.edit', fieldKey));
     },
     afterRevoke(fieldKey) {
       this.fetchData(true);
@@ -211,6 +223,7 @@ export default {
     "emptyTable": "There are no App Users yet. You will need to create some to download Forms and submit data from your device.",
     "alert": {
       "create": "The App User “{displayName}” was created successfully.",
+      "edit": "The App User “{displayName}” was updated successfully.",
       "revoke": "App User {displayName}’s access successfully revoked."
     }
   }

@@ -38,6 +38,11 @@ except according to the terms contained in the LICENSE file.
         <ul class="dropdown-menu dropdown-menu-right"
           :aria-labelledby="actionsId">
           <li :class="{ disabled: fieldKey.token == null }">
+            <a href="#" @click.prevent="$emit('edit', fieldKey)">
+              {{ $t('action.editAppUser') }}&hellip;
+            </a>
+          </li>
+          <li :class="{ disabled: fieldKey.token == null }">
             <a href="#" @click.prevent="$emit('revoke', fieldKey)">
               {{ $t('action.revokeAccess') }}&hellip;
             </a>
@@ -62,7 +67,7 @@ export default {
     },
     highlighted: Number
   },
-  emits: ['toggle-qr', 'revoke'],
+  emits: ['toggle-qr', 'revoke', 'edit'],
   computed: {
     actionsId() {
       return `field-key-row-actions${this.fieldKey.id}`;
@@ -96,6 +101,7 @@ export default {
     // This text is shown for an App User whose access has been revoked.
     "accessRevoked": "Access revoked",
     "action": {
+      "editAppUser": "Edit App User",
       "revokeAccess": "Revoke access"
     }
   }

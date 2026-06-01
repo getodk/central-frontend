@@ -85,7 +85,7 @@ const responsesByComponent = {
     roles: true,
     projectAssignments: () => testData.extendedProjectAssignments.sorted()
   }),
-  FieldKeyList: componentResponses({ fieldKeys: true }),
+  FieldKeyList: componentResponses({ fieldKeys: true, actorProperties: () => [] }),
   ProjectFormAccess: componentResponses({
     forms: true,
     fieldKeys: true,
@@ -181,7 +181,8 @@ const responsesByComponent = {
     ]
   }),
   PublicLinkList: componentResponses({
-    publicLinks: () => testData.standardPublicLinks.sorted()
+    publicLinks: () => testData.standardPublicLinks.sorted(),
+    actorProperties: () => []
   }),
   FormVersionList: componentResponses({ formVersions: true }),
   FormEdit: componentResponses({

@@ -364,6 +364,7 @@ describe('createCentralRouter()', () => {
         load('/projects/1/form-access')
           .complete()
           .route('/projects/1/app-users')
+          .respondWithData(() => [])
           .complete()
           .route('/projects/1/form-access')
           .then(dataExists(['project', 'fieldKeys'])));
@@ -464,6 +465,7 @@ describe('createCentralRouter()', () => {
             .route('/projects/1/forms/f/settings')
             .complete()
             .route('/projects/1/forms/f/public-links')
+            .respondWithData(() => [])
             .then(dataExists(['publicLinks'])));
       });
     });

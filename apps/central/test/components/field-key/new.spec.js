@@ -1,16 +1,19 @@
 import FieldKeyNew from '../../../src/components/field-key/new.vue';
 import FieldKeyQrPanel from '../../../src/components/field-key/qr-panel.vue';
 
+import useProject from '../../../src/request-data/project';
+
 import testData from '../../data';
 import { load, mockHttp } from '../../util/http';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
+import { testRequestData } from '../../util/request-data';
 
 const mountOptions = (options = undefined) => mergeMountOptions(options, {
   props: { state: true, managed: true },
   container: {
-    requestData: { project: testData.extendedProjects.last() },
+    requestData: testRequestData([useProject], { project: testData.extendedProjects.last(), actorProperties: [] }),
     router: mockRouter('/')
   }
 });
@@ -116,7 +119,8 @@ describe('FieldKeyNew', () => {
               await app.get('#field-key-new .btn-primary').trigger('click');
             })
             .respondWithData(() => testData.extendedFieldKeys.sorted())
-            .afterResponse(async (app) => {
+            .respondWithData(() => [])
+            .afterResponses(async (app) => {
               await app.get('.field-key-row-popover-link').trigger('click');
               await app.vm.$nextTick();
               const panel = document.querySelector('.popover .field-key-qr-panel');
@@ -157,7 +161,8 @@ describe('FieldKeyNew', () => {
           .complete()
           .request(app => app.get('#field-key-new .btn-primary').trigger('click'))
           .respondWithData(() => testData.extendedFieldKeys.sorted())
-          .afterResponse(app => {
+          .respondWithData(() => [])
+          .afterResponses(app => {
             app.getComponent(FieldKeyNew).props().state.should.be.false;
           }));
 
@@ -168,7 +173,8 @@ describe('FieldKeyNew', () => {
           .complete()
           .request(app => app.get('#field-key-new .btn-primary').trigger('click'))
           .respondWithData(() => testData.extendedFieldKeys.sorted())
-          .afterResponse(app => {
+          .respondWithData(() => [])
+          .afterResponses(app => {
             app.findAll('#field-key-list-table tbody tr').length.should.equal(2);
           }));
 
@@ -179,7 +185,8 @@ describe('FieldKeyNew', () => {
           .complete()
           .request(app => app.get('#field-key-new .btn-primary').trigger('click'))
           .respondWithData(() => testData.extendedFieldKeys.sorted())
-          .afterResponse(app => {
+          .respondWithData(() => [])
+          .afterResponses(app => {
             app.should.alert('success');
           }));
     });
@@ -224,7 +231,8 @@ describe('FieldKeyNew', () => {
             return app.get('#field-key-new .btn-link').trigger('click');
           })
           .respondWithData(() => testData.extendedFieldKeys.sorted())
-          .afterResponse(app => {
+          .respondWithData(() => [])
+          .afterResponses(app => {
             app.getComponent(FieldKeyNew).props().state.should.be.false;
           }));
 
@@ -238,7 +246,8 @@ describe('FieldKeyNew', () => {
             return app.get('#field-key-new .btn-link').trigger('click');
           })
           .respondWithData(() => testData.extendedFieldKeys.sorted())
-          .afterResponse(app => {
+          .respondWithData(() => [])
+          .afterResponses(app => {
             app.findAll('#field-key-list-table tbody tr').length.should.equal(2);
           }));
 
@@ -252,7 +261,8 @@ describe('FieldKeyNew', () => {
             return app.get('#field-key-new .btn-link').trigger('click');
           })
           .respondWithData(() => testData.extendedFieldKeys.sorted())
-          .afterResponse(app => {
+          .respondWithData(() => [])
+          .afterResponses(app => {
             app.should.alert('success');
           }));
     });
