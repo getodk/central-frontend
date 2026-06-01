@@ -3800,11 +3800,6 @@
         }
       }
     },
-    "FormSubmission": {
-      "formNotFound": {
-        "string": "No Form found with this URL, please double check."
-      }
-    },
     "FormSubmissions": {
       "analyzeDisabled": {
         "string": "OData access is unavailable due to Form encryption"

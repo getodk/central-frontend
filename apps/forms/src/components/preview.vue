@@ -14,6 +14,7 @@ except according to the terms contained in the LICENSE file.
 import { DefineComponent, ref, shallowRef } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
+// TODO pull this out into common component somewhere
 export type Form = {
   xmlFormId: string;
   xform: string;
@@ -23,6 +24,7 @@ export type Form = {
 type WebFormRendererComponent = DefineComponent<{
   projectId: number;
   form: Form;
+  actionType: string;
 }>;
 
 type EnketoIframeComponent = DefineComponent<{
@@ -34,10 +36,11 @@ type EnketoIframeComponent = DefineComponent<{
 const route = useRoute();
 
 const projectId: number = Number.parseInt(encodeURIComponent(route.params.projectId as string));
-const formParam: string = encodeURIComponent(route.params.xmlFormId as string);
+const formId: string = encodeURIComponent(route.params.xmlFormId as string);
+
 const useWebForms = route.query.webforms === 'true';
 const loadingState = ref(true);
-const webFormsEndabled = ref(true); // TODO put this in the `form` (below)
+const webFormsEnabled = ref(true); // TODO put this in the `form` (below)
 const form = ref<Form>();
 const hideLoading = () => {
   loadingState.value = false;
@@ -67,29 +70,26 @@ const loadEnketo = async () => {
 };
 
 const getFormXml = async () => {
-  const encodedFormId = formParam;
   const draftPath = '';
   const qs = '';
-  const url = `/v1/projects/${projectId}/forms/${encodedFormId}${draftPath}.xml${qs}`;
+  const url = `/v1/projects/${projectId}/forms/${formId}${draftPath}.xml${qs}`;
   const response = await fetch(url);
   return await response.text();
 };
 
 const fetchForm = async () => {
-  const encodedFormId = formParam;
   const draftPath = '';
   const qs = '';
-  const url = `/v1/projects/${projectId}/forms/${encodedFormId}${draftPath}${qs}`;
+  const url = `/v1/projects/${projectId}/forms/${formId}${draftPath}${qs}`;
   fetch(url)
     .then((response) => response.json())
     .then((formConfig) => {
-      console.log({formConfig});
       if (formConfig.webformsEnabled || useWebForms) {
         return Promise.all([getFormXml(), loadWebFormRenderer()])
           .then(([xform]) => { form.value = { xmlFormId: formConfig.xmlFormId, xform, enketoId: formConfig.enketoId } });
       } else {
         return loadEnketo().then(() => {
-          webFormsEndabled.value = false;
+          webFormsEnabled.value = false;
           // TODO also need form.enketoOnceId
           form.value = { xmlFormId: formConfig.xmlFormId, xform: '', enketoId: formConfig.enketoId };
         });
@@ -113,8 +113,8 @@ fetchForm();
   <div v-if="loadingState || !form">
     LOADING
   </div>
-  <template v-else-if="webFormsEndabled">
-    <component :is="WebFormRenderer" :projectId="projectId" :form="form"/>
+  <template v-else-if="webFormsEnabled">
+    <component :is="WebFormRenderer" :projectId="projectId" :form="form" :action-type="'preview'"/>
   </template>
   <template v-else>
     <enketo-iframe :enketo-id="form.enketoId" action-type="preview"/>

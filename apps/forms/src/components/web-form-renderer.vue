@@ -47,6 +47,8 @@ defineOptions({
 export interface WebFormsRendererProps {
   projectId: number;
   form: Form;
+  actionType: string; // TODO type this? ['new', 'edit', 'public-link', 'offline', 'preview']
+  instanceId?: string;
 }
 
 const props = defineProps<WebFormsRendererProps>();
@@ -71,6 +73,9 @@ const props = defineProps<WebFormsRendererProps>();
 const formXml = ref<string>();
 const submissionResult:any = {};
 let clearForm:Function;
+const loading = ref<boolean>(true);
+const isEdit = computed(() => props.actionType === 'edit');
+const attachmentNames = ref<string[]>();
 
 // const withToken = (url) => `${url}${queryString({ st: route.query.st })}`;
 // const getFormXml = () => {
@@ -94,16 +99,22 @@ const getAttachment = (requestUrl: URL) => {
 const postPrimaryInstance = async (file:File) => {
   const draftPath = '';
   const qs = '';
-  const extension = '';
-  const url = `/v1/projects/${props.projectId}/forms/${props.form.xmlFormId}${draftPath}/submissions${extension}${qs}`;
-  // isEdit.value ? 'PUT' : 'POST',
+  let url;
+  let method;
+  if (isEdit.value) {
+    url = `/v1/projects/${props.projectId}/forms/${props.form.xmlFormId}/submissions/${props.instanceId}${qs}`;
+    method = 'PUT';
+  } else {
+    url = `/v1/projects/${props.projectId}/forms/${props.form.xmlFormId}${draftPath}/submissions${qs}`;
+    method = 'POST';
+  }
   const headers = {
     'Content-Type': 'text/xml',
     'odk-client': `odk-web-forms/${__WEB_FORMS_VERSION__}`,
     'Accept': 'application/json, text/plain, */*',
     'X-Requested-With': 'XMLHttpRequest'
   };
-  const response = await fetch(url, { body: file, headers, method: 'POST' });
+  const response = await fetch(url, { body: file, headers, method });
   if (response.ok) {
     const data = await response.json();
     return { success: true, data };
@@ -244,14 +255,95 @@ const handleSubmit = async (
   await submitData(data, clearFormCallback);
 };
 
+/**
+ * Convert AxiosResponse into subset of web standard  {@link Response} that satisfies Web-Forms'
+ * requirements
+ */
+const transformAttachmentResponse = async (response: Response) => {
+  const { status, statusText, headers } = response;
+
+  const fetchHeaders = new Headers();
+  for (const [key, value] of Object.entries(headers)) {
+    if (key === 'content-type') {
+      // because web-forms doesn't want space between media type and charset
+      // https://github.com/getodk/web-forms/issues/269
+      fetchHeaders.append(key, value.replace('; charset', ';charset'));
+    } else {
+      fetchHeaders.append(key, value);
+    }
+  }
+
+  let body;
+  const contentType = headers.get('content-type');
+  if (contentType && (contentType.includes('application/json') || contentType.includes('application/geo+json'))) {
+    body = await response.json();
+  } else {
+    body = await response.text();
+  }
+
+  return new Response(body, {
+    status,
+    statusText,
+    headers: fetchHeaders,
+  });
+};
+
+const fetchSubmissionXml = async () => {
+  // const encodedFormId = encodeURIComponent(props.form.xmlFormId);
+  // const encodedInstanceId = encodeURIComponent(props.instanceId);
+  const qs = '';//queryString(query);
+  const url = `/v1/projects/${props.projectId}/forms/${props.form.xmlFormId}/submissions/${props.instanceId}.xml${qs}`;
+  const response = await fetch(url);
+  return await response.text();
+};
+
+const fetchSubmissionAttachments = async () => {
+  const qs = '';//queryString(query);
+  const url = `/v1/projects/${props.projectId}/forms/${props.form.xmlFormId}/submissions/${props.instanceId}/attachments${qs}`;
+  const response = await fetch(url);
+  const attachments = await response.json();
+  attachmentNames.value = attachments
+    .filter((a:any) => a.exists)
+    .map((a:any) => a.name);
+};
+
+const fetchSubmissionAttachment = async (attachmentName: string) => {
+  // Draft is always false because we don't support editing of draft submissions
+  const encodedName = encodeURIComponent(attachmentName);
+  const url = `/v1/projects/${props.projectId}/forms/${props.form.xmlFormId}/submissions/${props.instanceId}/attachments/${encodedName}`;
+  const response = await fetch(url);
+  return transformAttachmentResponse(response);
+};
+
+const editInstanceOptions = computed(() => {
+  if (isEdit.value) {
+    return {
+      resolveInstance: fetchSubmissionXml,
+      attachmentFileNames: attachmentNames.value,
+      resolveAttachment: fetchSubmissionAttachment
+    };
+  }
+  return null;
+}); 
+
+
+if (isEdit.value) {
+  fetchSubmissionAttachments().then(() => {
+    loading.value = false;
+  })
+} else {
+  loading.value = false;
+}
+
 // getFormXml();
 
 </script>
 
 <template>
-  <template v-if="props.form">
+  <template v-if="!loading">
     <OdkWebForm
       :form-xml="props.form.xform"
+      :edit-instance="editInstanceOptions"
       :fetch-form-attachment="getAttachment"
       :track-device="true"
       @submit="handleSubmit"/>

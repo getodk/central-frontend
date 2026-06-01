@@ -705,7 +705,7 @@ const routes = [
       title: () => [i18n.t('title.download')]
     }
   }),
-
+/*
   asyncRoute({
     path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/:instanceId/:actionType(edit)',
     component: 'FormSubmission',
@@ -787,6 +787,7 @@ const routes = [
       title: () => [form.nameOrId]
     }
   }),
+  */
 
   asyncRoute({
     path: '/:_(.*)',

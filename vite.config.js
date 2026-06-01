@@ -56,8 +56,9 @@ const devAppRouter = () => ({
       // TODO need to do all the other forms URLs 
       // TODO can we change the URLs that aren't legacy ones??
       const newSubmissionRegex = /^\/projects\/[0-9]+\/forms\/([^/]+)\/submissions\/new/;
+      const editSubmissionRegex = /^\/projects\/[0-9]+\/forms\/([^/]+)\/submissions\/(.+)\/edit/;
 
-      if (newSubmissionRegex.test(req.url)) {
+      if (newSubmissionRegex.test(req.url) || editSubmissionRegex.test(req.url)) {
         req.url = '/apps/forms/index.html';
       }
       next();
