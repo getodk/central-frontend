@@ -2823,6 +2823,15 @@
         "developer_comment": "Text for a hovering feedback button shown anchored to right of screen. If your language doesn't have a single word or short phrase for \"feedback\", consider something like \"comments\" or \"reactions\"."
       }
     },
+    "FieldKeyEdit": {
+      "title": {
+        "string": "Edit App User",
+        "developer_comment": "This is the title at the top of a pop-up for editing an App User."
+      },
+      "displayNameLabel": {
+        "string": "App User"
+      }
+    },
     "FieldKeyList": {
       "action": {
         "create": {
@@ -2868,6 +2877,9 @@
       "alert": {
         "create": {
           "string": "The App User “{displayName}” was created successfully."
+        },
+        "edit": {
+          "string": "The App User “{displayName}” was updated successfully."
         },
         "revoke": {
           "string": "App User {displayName}’s access successfully revoked."
@@ -3014,6 +3026,10 @@
         "developer_comment": "This text is shown for an App User whose access has been revoked."
       },
       "action": {
+        "editAppUser": {
+          "string": "Edit App User",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
         "revokeAccess": {
           "string": "Revoke access",
           "developer_comment": "This is the text for an action, for example, the text of a button."
