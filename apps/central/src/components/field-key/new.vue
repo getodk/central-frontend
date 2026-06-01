@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
           <div class="field-key-set-properties">
             <template v-if="actorProperties.dataExists">
               <actor-properties-upsert v-model:propertyValues="propertyValues" :create="true"
-                :property-defs="actorProperties.data"/>
+                :property-defs="actorProperties.data" :parent-modal-state="state"/>
             </template>
           </div>
           <div class="modal-actions">

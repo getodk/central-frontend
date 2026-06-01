@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { nextTick, ref, watch } from 'vue';
 
 import EntityUpdateRow from '../entity/update/row.vue';
 
@@ -32,21 +32,31 @@ defineOptions({
 const propertyValues = defineModel('propertyValues');
 
 const props = defineProps({
+  parentModalState: Boolean,
   create: Boolean,
   propertyDefs: Object
 });
 
-// Snapshot original values so old-value isn't clobbered by the sync watch.
-const originalValues = { ...propertyValues.value };
-
-const data = ref(Object.fromEntries(
-  props.propertyDefs.map(({ name }) => [name, undefined])
-));
+const originalValues = ref(null);
+const data = ref(Object.create(null));
+const propertyRows = ref([]);
 
 // Sync changes back to the parent model.
 watch(data, (newData) => {
   propertyValues.value = { ...newData };
 }, { deep: true });
+
+// Initialize from propertyValues once the modal opens
+watch(() => props.parentModalState, (state) => {
+  if (state) {
+    originalValues.value = { ...propertyValues.value };
+    for (const { name } of props.propertyDefs)
+      data.value[name] = propertyValues.value?.[name];
+    nextTick(() => {
+      for (const row of propertyRows.value) row.textarea.resize();
+    });
+  }
+});
 
 </script>
 

@@ -13,7 +13,7 @@
       <div class="field-key-edit-properties">
         <actor-properties-upsert v-if="actorProperties.dataExists"
           v-model:propertyValues="propertyValues"
-          :create="false" :property-defs="actorProperties.data"/>
+          :create="false" :property-defs="actorProperties.data" :parent-modal-state="state"/>
       </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-link"
