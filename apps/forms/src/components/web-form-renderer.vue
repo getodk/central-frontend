@@ -127,7 +127,10 @@ const postPrimaryInstance = async (file:File) => {
 
 const showModal = (opts:any) => {
   console.log(opts);
-  alert('show modal');
+  const dialog = document.getElementById('submission-result-dialog');
+  if (dialog) {
+    dialog.showModal();
+  }
 };
 
 const handleResult = () => {
@@ -135,7 +138,12 @@ const handleResult = () => {
   const attachmentResultArr = [...submissionResult.attachmentResult.values()];
   // Success handler
   if (submissionResult.primaryInstanceResult.success && attachmentResultArr.every(r => r.success)) {
-    */clearForm();/*
+    */
+  clearForm();
+  showModal({});
+   
+    
+    /*
     // if (isPublicLink.value) {
     //   showModal({ type: 'thankYouModal', hideable: false });
     // } else if (isEdit.value) {
@@ -348,6 +356,11 @@ if (isEdit.value) {
       :track-device="true"
       @submit="handleSubmit"/>
   </template>
+
+  <dialog id="submission-result-dialog">
+    <h1>Successful</h1>
+    <button commandfor="submission-result-dialog" command="close">Fill out again</button>
+  </dialog>
 <!--
   <modal id="web-form-renderer-submission-modal" :state="submissionModal.state" :hideable="submissionModal.hideable" backdrop @hide="hideModal()">
     <template #title>{{ $t(submissionModal.type + '.title') }}</template>
