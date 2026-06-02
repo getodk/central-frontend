@@ -11,7 +11,13 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <form-edit-section id="form-edit-def" no-border>
-    <template #title>{{ $t('title') }}</template>
+    <template #title>
+      <i18n-t keypath="title">
+        <template #version>
+          <form-version-string :version="formDraft.version"/>
+        </template>
+      </i18n-t>
+    </template>
     <template #subtitle>{{ $t('subtitle') }}</template>
     <template v-if="changed" #tag>{{ $t('changed') }}</template>
     <template #actions>
@@ -37,6 +43,7 @@ import EnketoPreview from '../../enketo/preview.vue';
 import FormEditSection from './section.vue';
 import FormVersionDefDropdown from '../../form-version/def-dropdown.vue';
 import FormUpload from '../upload.vue';
+import FormVersionString from '../../form-version/string.vue';
 
 import { loadAsync } from '../../../util/load-async';
 import { modalData } from '../../../util/reactivity';
@@ -69,8 +76,8 @@ const afterUpload = () => {
 <i18n lang="json5">
 {
   "en": {
-    // @transifexKey component.FormEditCreateDraft.title
-    "title": "Draft version",
+    // This is shown for the Draft Form. {version} is the version of the Form defined in its definition.
+    "title": "Draft version: {version}",
     // This refers to the draft version of a Form.
     "subtitle": "Uploaded",
     // This refers to the draft version of a Form.

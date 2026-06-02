@@ -11,19 +11,17 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <form-edit-section id="form-edit-published-version" no-border>
-    <template #title>{{ $t('title') }}</template>
+    <template #title>
+      <i18n-t keypath="title">
+        <template #version>
+          <form-version-string :version="form.version"/>
+        </template>
+      </i18n-t>
+    </template>
     <template #subtitle>
       <i18n-t keypath="subtitle.published">
         <template #dateTime>
           <date-time :iso="form.publishedAt"/>
-        </template>
-      </i18n-t>
-    </template>
-    <template #body>
-      <i18n-t id="form-edit-published-version-string" tag="div"
-        keypath="versionName">
-        <template #name>
-          <form-version-string :version="form.version"/>
         </template>
       </i18n-t>
     </template>
@@ -46,32 +44,18 @@ defineOptions({
 const { form } = useRequestData();
 </script>
 
-<style lang="scss">
-@import '../../../assets/scss/mixins';
-
-#form-edit-published-version-string {
-  @include text-overflow-ellipsis;
-  font-size: 16px;
-  font-weight: bold;
-  line-height: 1.2;
-}
-</style>
-
 <i18n lang="json5">
 {
   "en": {
-    // This refers to the current version of a Form.
-    "title": "Current version",
+    // This refers to the current version of a Form. {version} is the version of the published Form, defined in its definition.
+    "title": "Current version: {version}",
     "subtitle": {
       // This shows the date and time at which the current version of the Form
       // was published, for example: "Published 2020/01/01 01:23". {dateTime}
       // may show a formatted date like "2020/01/01", or it may use a word like
       // "today", "yesterday", or "Sunday".
       "published": "Published {dateTime}"
-    },
-    // @transifexKey component.FormEditDef.versionName
-    // This is shown for a Form version.
-    "versionName": "Version name: {name}"
+    }
   }
 }
 </i18n>
