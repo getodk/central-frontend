@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <form-edit-section id="form-edit-def">
+  <form-edit-section id="form-edit-def" no-border>
     <template #title>{{ $t('title') }}</template>
     <template #subtitle>{{ $t('subtitle') }}</template>
     <template v-if="changed" #tag>{{ $t('changed') }}</template>
