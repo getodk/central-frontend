@@ -81,5 +81,18 @@ describe('#position()', () => {
 			contextNode,
 		});
 	});
+	it('position(node) returns correct position among many same-name siblings', () => {
+		const repeatCount = 400;
+		const items = Array.from({ length: repeatCount }, (_, i) => `<item/>`).join('\n');
+		testContext = createXFormsTestContext(`<root>${items}</root>`);
+
+		const items$ = testContext.document.querySelectorAll('item');
+
+		// First, middle, and last item positions
+		testContext.assertNumberValue('position(.)', 1, { contextNode: items$[0] });
+		testContext.assertNumberValue('position(.)', 200, { contextNode: items$[199] });
+		testContext.assertNumberValue('position(.)', 400, { contextNode: items$[399] });
+	});
+
 	//   throw new Error('nodeset provided to position() contained multiple nodes');
 });
