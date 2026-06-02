@@ -37,7 +37,12 @@ export default defineConfig({
     },
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        launchOptions: {
+          args: ['--ignore-certificate-errors'], // force-bypass service worker SSL checks
+        },
+      },
       dependencies: ['setup'],
     },
 
