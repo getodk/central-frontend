@@ -13,10 +13,10 @@ except according to the terms contained in the LICENSE file.
   <form-edit-section id="form-edit-def" no-border>
     <template #title>
       <i18n-t keypath="title">
-          <template #version>
-            <form-version-string :version="formDraft.version"/>
-          </template>
-        </i18n-t>
+        <template #version>
+          <form-version-string :version="formDraft.version"/>
+        </template>
+      </i18n-t>
     </template>
     <template #subtitle>{{ $t('subtitle') }}</template>
     <template v-if="changed" #tag>{{ $t('changed') }}</template>

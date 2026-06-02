@@ -44,17 +44,6 @@ defineOptions({
 const { form } = useRequestData();
 </script>
 
-<style lang="scss">
-@import '../../../assets/scss/mixins';
-
-#form-edit-published-version-string {
-  @include text-overflow-ellipsis;
-  font-size: 16px;
-  font-weight: bold;
-  line-height: 1.2;
-}
-</style>
-
 <i18n lang="json5">
 {
   "en": {
