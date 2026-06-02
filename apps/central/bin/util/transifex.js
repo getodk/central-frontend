@@ -891,8 +891,7 @@ class Translations {
       const rawValue = this.get(k);
       if (rawValue == null) {
         let keyPath = k;
-        for(let curr = this; curr.parent != null; curr = curr.parent) keyPath = curr.key + '.' + keyPath;
-        console.log({ keyPath, ths:this });
+        for (let curr = this; curr.parent != null; curr = curr.parent) keyPath = `${curr.key}.${keyPath}`;
         throw new Error(`No value found for ${keyPath} in locale "${this._locale}".`);
       }
 
