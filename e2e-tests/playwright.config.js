@@ -51,5 +51,7 @@ export default defineConfig({
       },
       dependencies: ['setup'],
     },
+    // TODO reintroduce firefox
+    // TODO implement trusted root CA to avoid ignoreHTTPSErrors and ensure both service workers AND CSP are tested correctly
   ]
 });
