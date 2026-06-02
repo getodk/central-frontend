@@ -4,13 +4,13 @@ import type { RepeatRange } from '../../instance/hierarchy.ts';
 import type { PrimaryInstance } from '../../instance/PrimaryInstance.ts';
 import type { RepeatInstance } from '../../instance/repeat/RepeatInstance.ts';
 import type {
-	StaticAttribute,
-	StaticAttributeOptions,
+  StaticAttribute,
+  StaticAttributeOptions,
 } from '../../integration/xpath/static-dom/StaticAttribute.ts';
 import { StaticDocument } from '../../integration/xpath/static-dom/StaticDocument.ts';
 import type {
-	StaticElement,
-	StaticElementOptions,
+  StaticElement,
+  StaticElementOptions,
 } from '../../integration/xpath/static-dom/StaticElement.ts';
 import type { StaticNode } from '../../integration/xpath/static-dom/StaticNode.ts';
 import type { StaticText } from '../../integration/xpath/static-dom/StaticText.ts';
@@ -28,37 +28,37 @@ import type { ChildNodeDefinition, ParentNodeDefinition } from './NodeDefinition
 import type { RootDefinition } from './RootDefinition.ts';
 
 interface JavaRosaNamespaceURI extends NamespaceURL {
-	readonly href: JAVAROSA_NAMESPACE_URI;
+  readonly href: JAVAROSA_NAMESPACE_URI;
 }
 
 interface JRTemplateAttributeName extends QualifiedName {
-	readonly namespaceURI: JavaRosaNamespaceURI;
-	readonly localName: 'template';
+  readonly namespaceURI: JavaRosaNamespaceURI;
+  readonly localName: 'template';
 }
 
 const isJRTemplateAttributeName = (name: QualifiedNameSource) => {
-	if (name.localName !== 'template') {
-		return false;
-	}
+  if (name.localName !== 'template') {
+    return false;
+  }
 
-	const namespaceURI = (name.namespaceURI as NamespaceURL)?.href ?? name.namespaceURI;
+  const namespaceURI = (name.namespaceURI as NamespaceURL)?.href ?? name.namespaceURI;
 
-	return namespaceURI === JAVAROSA_NAMESPACE_URI;
+  return namespaceURI === JAVAROSA_NAMESPACE_URI;
 };
 
 interface JRTemplateAttribute extends StaticAttribute {
-	readonly qualifiedName: JRTemplateAttributeName;
+  readonly qualifiedName: JRTemplateAttributeName;
 }
 
 const isJRTemplateAttribute = (attribute: StaticAttribute): attribute is JRTemplateAttribute => {
-	return isJRTemplateAttributeName(attribute.qualifiedName);
+  return isJRTemplateAttributeName(attribute.qualifiedName);
 };
 
 interface ExplicitRepeatTemplateElement extends StaticElement {
-	readonly [XFORMS_KNOWN_ATTRIBUTE]: 'template';
+  readonly [XFORMS_KNOWN_ATTRIBUTE]: 'template';
 
-	getAttributeValue(localName: 'template'): string;
-	getAttributeValue(localName: string): string | null;
+  getAttributeValue(localName: 'template'): string;
+  getAttributeValue(localName: string): string | null;
 }
 
 /**
@@ -68,33 +68,33 @@ interface ExplicitRepeatTemplateElement extends StaticElement {
  * @see {@link https://getodk.github.io/xforms-spec/#default-values-in-repeats}
  */
 const isExplicitRepeatTemplateElement = (
-	sourceElement: StaticElement
+  sourceElement: StaticElement
 ): sourceElement is ExplicitRepeatTemplateElement => {
-	return sourceElement.attributes.some(isJRTemplateAttribute);
+  return sourceElement.attributes.some(isJRTemplateAttribute);
 };
 
 const cloneStaticAttributeOptions = (attribute: StaticAttribute): StaticAttributeOptions => {
-	return {
-		name: attribute.qualifiedName,
-		value: attribute.value,
-	};
+  return {
+    name: attribute.qualifiedName,
+    value: attribute.value,
+  };
 };
 
 interface ClonedSubtreeStructure extends StaticElementOptions {
-	readonly attributes: readonly StaticAttributeOptions[];
-	readonly children: readonly StaticElementOptions[];
+  readonly attributes: readonly StaticAttributeOptions[];
+  readonly children: readonly StaticElementOptions[];
 }
 
 const cloneStaticSubtreeStructure = (sourceElement: StaticElement): ClonedSubtreeStructure => {
-	const name = sourceElement.qualifiedName;
-	const attributes = sourceElement.attributes.map(cloneStaticAttributeOptions);
-	const children = sourceElement.childElements.map(cloneStaticSubtreeStructure);
+  const name = sourceElement.qualifiedName;
+  const attributes = sourceElement.attributes.map(cloneStaticAttributeOptions);
+  const children = sourceElement.childElements.map(cloneStaticSubtreeStructure);
 
-	return {
-		name,
-		attributes,
-		children,
-	};
+  return {
+    name,
+    attributes,
+    children,
+  };
 };
 
 /**
@@ -128,12 +128,12 @@ const cloneStaticSubtreeStructure = (sourceElement: StaticElement): ClonedSubtre
  * consuming the abstraction.
  */
 const cloneStaticElementStructure = (sourceElement: StaticElement): StaticElement => {
-	const { root: clone } = new StaticDocument({
-		documentRoot: cloneStaticSubtreeStructure(sourceElement),
-		nodesetPrefix: sourceElement.parent.nodeset,
-	});
+  const { root: clone } = new StaticDocument({
+    documentRoot: cloneStaticSubtreeStructure(sourceElement),
+    nodesetPrefix: sourceElement.parent.nodeset,
+  });
 
-	return clone;
+  return clone;
 };
 
 export type RepeatInstanceNodes = readonly [StaticElement, ...StaticElement[]];
@@ -240,45 +240,45 @@ export type RepeatInstanceNodes = readonly [StaticElement, ...StaticElement[]];
  * node)_, associated by each instance node's nodeset.
  */
 const parseRepeatTemplateElement = (firstRepeatInstanceNode: StaticElement) => {
-	if (isExplicitRepeatTemplateElement(firstRepeatInstanceNode)) {
-		return firstRepeatInstanceNode;
-	}
+  if (isExplicitRepeatTemplateElement(firstRepeatInstanceNode)) {
+    return firstRepeatInstanceNode;
+  }
 
-	return cloneStaticElementStructure(firstRepeatInstanceNode);
+  return cloneStaticElementStructure(firstRepeatInstanceNode);
 
-	// TODO: We previously **intended** to check for duplicate explicit repeat
-	// templates (i.e. defined with a `jr:template` attribute). This was
-	// **partially** handled by defining a (temporary/local) mapping from the
-	// repeat's `BindDefinition` to an already-parsed explicit template element
-	// (if any). Identifying duplicates **should** have been handled by
-	// determining that an entry for the same binding already existed. **BUT NO
-	// ENTRY WAS NEVER WRITTEN!** This comment is now intended to recognize:
-	//
-	// 1. ... that the intended behavior was never implemented correctly in the
-	//    first place, and we are not making any changes to that intended aspect
-	//    of engine behavior/semantics by eliminating the flawed implementation
-	//    now.
-	//
-	// 2. ... that whether this behavior should have even been implemented was
-	//    also an open question! The previous text of this
-	//    comment's conceptual successor is preserved below, either for clarity in review or for logner-term posterity.
-	//
-	// - - -
-	//
-	// Previous text of this comment:
-	//
-	// > TODO: this is under the assumption that for any depth > 1, if a
-	// > template has already been defined for the given form definition, any
-	// > subsequent nodes matching the repeat's nodeset are implicitly default
-	// > instances. Is this right?
+  // TODO: We previously **intended** to check for duplicate explicit repeat
+  // templates (i.e. defined with a `jr:template` attribute). This was
+  // **partially** handled by defining a (temporary/local) mapping from the
+  // repeat's `BindDefinition` to an already-parsed explicit template element
+  // (if any). Identifying duplicates **should** have been handled by
+  // determining that an entry for the same binding already existed. **BUT NO
+  // ENTRY WAS NEVER WRITTEN!** This comment is now intended to recognize:
+  //
+  // 1. ... that the intended behavior was never implemented correctly in the
+  //    first place, and we are not making any changes to that intended aspect
+  //    of engine behavior/semantics by eliminating the flawed implementation
+  //    now.
+  //
+  // 2. ... that whether this behavior should have even been implemented was
+  //    also an open question! The previous text of this
+  //    comment's conceptual successor is preserved below, either for clarity in review or for logner-term posterity.
+  //
+  // - - -
+  //
+  // Previous text of this comment:
+  //
+  // > TODO: this is under the assumption that for any depth > 1, if a
+  // > template has already been defined for the given form definition, any
+  // > subsequent nodes matching the repeat's nodeset are implicitly default
+  // > instances. Is this right?
 };
 
 export interface ControlledRepeatDefinition extends RepeatDefinition {
-	readonly count: RepeatCountControlExpression;
+  readonly count: RepeatCountControlExpression;
 }
 
 export interface UncontrolledRepeatDefinition extends RepeatDefinition {
-	readonly count: null;
+  readonly count: null;
 }
 
 /**
@@ -314,73 +314,73 @@ export interface UncontrolledRepeatDefinition extends RepeatDefinition {
  * associated with a defined repeat.
  */
 export class RepeatDefinition extends DescendentNodeDefinition<'repeat', RepeatElementDefinition> {
-	static from(
-		model: ModelDefinition,
-		parent: ParentNodeDefinition,
-		bind: BindDefinition,
-		bodyElement: RepeatElementDefinition,
-		instanceNodes: RepeatInstanceNodes
-	): AnyRepeatDefinition;
-	static from(
-		model: ModelDefinition,
-		parent: ParentNodeDefinition,
-		bind: BindDefinition,
-		bodyElement: RepeatElementDefinition,
-		instanceNodes: RepeatInstanceNodes
-	): RepeatDefinition {
-		return new this(model, parent, bind, bodyElement, instanceNodes);
-	}
+  static from(
+    model: ModelDefinition,
+    parent: ParentNodeDefinition,
+    bind: BindDefinition,
+    bodyElement: RepeatElementDefinition,
+    instanceNodes: RepeatInstanceNodes
+  ): AnyRepeatDefinition;
+  static from(
+    model: ModelDefinition,
+    parent: ParentNodeDefinition,
+    bind: BindDefinition,
+    bodyElement: RepeatElementDefinition,
+    instanceNodes: RepeatInstanceNodes
+  ): RepeatDefinition {
+    return new this(model, parent, bind, bodyElement, instanceNodes);
+  }
 
-	readonly type = 'repeat';
-	readonly children: readonly ChildNodeDefinition[];
-	readonly count: RepeatCountControlExpression | null;
-	readonly template: StaticElement;
-	readonly namespaceDeclarations: NamespaceDeclarationMap;
-	readonly qualifiedName: QualifiedName;
-	readonly attributes: AttributeDefinitionMap;
+  readonly type = 'repeat';
+  readonly children: readonly ChildNodeDefinition[];
+  readonly count: RepeatCountControlExpression | null;
+  readonly template: StaticElement;
+  readonly namespaceDeclarations: NamespaceDeclarationMap;
+  readonly qualifiedName: QualifiedName;
+  readonly attributes: AttributeDefinitionMap;
 
-	private constructor(
-		model: ModelDefinition,
-		parent: ParentNodeDefinition,
-		bind: BindDefinition,
-		bodyElement: RepeatElementDefinition,
-		instanceNodes: RepeatInstanceNodes
-	) {
-		super(parent, bind, bodyElement);
+  private constructor(
+    model: ModelDefinition,
+    parent: ParentNodeDefinition,
+    bind: BindDefinition,
+    bodyElement: RepeatElementDefinition,
+    instanceNodes: RepeatInstanceNodes
+  ) {
+    super(parent, bind, bodyElement);
 
-		const { root } = parent;
-		const [instanceNode] = instanceNodes;
-		const template = parseRepeatTemplateElement(instanceNode);
-		const self = this as AnyRepeatDefinition;
+    const { root } = parent;
+    const [instanceNode] = instanceNodes;
+    const template = parseRepeatTemplateElement(instanceNode);
+    const self = this as AnyRepeatDefinition;
 
-		this.template = template;
-		this.qualifiedName = template.qualifiedName;
-		this.namespaceDeclarations = new NamespaceDeclarationMap(this);
-		this.children = root.buildSubtree(self, template);
+    this.template = template;
+    this.qualifiedName = template.qualifiedName;
+    this.namespaceDeclarations = new NamespaceDeclarationMap(this);
+    this.children = root.buildSubtree(self, template);
 
-		const initialCount = this.omitTemplate(instanceNodes).length;
-		this.attributes = AttributeDefinitionMap.from(model, template);
+    const initialCount = this.omitTemplate(instanceNodes).length;
+    this.attributes = AttributeDefinitionMap.from(model, template);
 
-		this.count = RepeatCountControlExpression.from(bodyElement, initialCount);
-	}
+    this.count = RepeatCountControlExpression.from(bodyElement, initialCount);
+  }
 
-	isControlled(): this is ControlledRepeatDefinition {
-		return this.count != null;
-	}
+  isControlled(): this is ControlledRepeatDefinition {
+    return this.count != null;
+  }
 
-	isUncontrolled(): this is UncontrolledRepeatDefinition {
-		return this.count == null;
-	}
+  isUncontrolled(): this is UncontrolledRepeatDefinition {
+    return this.count == null;
+  }
 
-	omitTemplate(instanceNodes: readonly StaticElement[]): readonly StaticElement[] {
-		return instanceNodes.filter((instanceNode) => {
-			return instanceNode !== this.template;
-		});
-	}
+  omitTemplate(instanceNodes: readonly StaticElement[]): readonly StaticElement[] {
+    return instanceNodes.filter((instanceNode) => {
+      return instanceNode !== this.template;
+    });
+  }
 
-	toJSON(): object {
-		return {};
-	}
+  toJSON(): object {
+    return {};
+  }
 }
 
 // prettier-ignore

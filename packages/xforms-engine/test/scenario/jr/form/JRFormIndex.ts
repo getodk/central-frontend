@@ -5,9 +5,9 @@ import type { AnyPositionalEvent } from '../event/getPositionalEvents.ts';
  * exists only to allow minimal change to APIs called in ported tests.
  */
 export class JRFormIndex {
-	constructor(private readonly event: AnyPositionalEvent) {}
+  constructor(private readonly event: AnyPositionalEvent) {}
 
-	isEndOfFormIndex(): boolean {
-		return this.event.eventType === 'END_OF_FORM';
-	}
+  isEndOfFormIndex(): boolean {
+    return this.event.eventType === 'END_OF_FORM';
+  }
 }

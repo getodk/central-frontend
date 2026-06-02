@@ -8,33 +8,33 @@ import { TextRangeDefinition } from './abstract/TextRangeDefinition.ts';
 interface LabelElement extends LocalNamedElement<'label'> {}
 
 export class ItemsetLabelDefinition extends TextRangeDefinition<'item-label'> {
-	static from(form: XFormDefinition, owner: ItemsetDefinition): ItemsetLabelDefinition | null {
-		const labelElement = getLabelElement(owner.element);
+  static from(form: XFormDefinition, owner: ItemsetDefinition): ItemsetLabelDefinition | null {
+    const labelElement = getLabelElement(owner.element);
 
-		if (labelElement == null) {
-			return null;
-		}
+    if (labelElement == null) {
+      return null;
+    }
 
-		return new this(form, owner, labelElement);
-	}
+    return new this(form, owner, labelElement);
+  }
 
-	readonly role = 'item-label';
-	readonly chunks: ReadonlyArray<TextChunkExpression<'nodes' | 'string'>>;
+  readonly role = 'item-label';
+  readonly chunks: ReadonlyArray<TextChunkExpression<'nodes' | 'string'>>;
 
-	private constructor(form: XFormDefinition, owner: ItemsetDefinition, element: LabelElement) {
-		super(form, owner, element);
+  private constructor(form: XFormDefinition, owner: ItemsetDefinition, element: LabelElement) {
+    super(form, owner, element);
 
-		const refExpression = element.getAttribute('ref');
+    const refExpression = element.getAttribute('ref');
 
-		if (refExpression == null) {
-			throw new Error('<itemset><label> missing ref attribute');
-		}
+    if (refExpression == null) {
+      throw new Error('<itemset><label> missing ref attribute');
+    }
 
-		const translationChunk = TextChunkExpression.fromTranslation(refExpression);
-		if (translationChunk) {
-			this.chunks = [translationChunk];
-		} else {
-			this.chunks = [TextChunkExpression.fromReference(refExpression)];
-		}
-	}
+    const translationChunk = TextChunkExpression.fromTranslation(refExpression);
+    if (translationChunk) {
+      this.chunks = [translationChunk];
+    } else {
+      this.chunks = [TextChunkExpression.fromReference(refExpression)];
+    }
+  }
 }

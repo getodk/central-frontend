@@ -13,47 +13,47 @@ export type InputValue<V extends ValueType> = RuntimeValue<V>;
 export type InputNodeInputValue<V extends ValueType> = RuntimeInputValue<V>;
 
 export interface InputNodeState<V extends ValueType> extends BaseValueNodeState<InputValue<V>> {
-	get children(): null;
-	get valueOptions(): null;
+  get children(): null;
+  get valueOptions(): null;
 
-	/**
-	 * Reflects the current value of a {@link InputNode}. This value may be
-	 * populated when a form is loaded, and it may be updated by certain
-	 * computations defined by the form. It may also be updated by a client, using
-	 * the {@link InputNode.setValue} method.
-	 */
-	get value(): InputValue<V>;
+  /**
+   * Reflects the current value of a {@link InputNode}. This value may be
+   * populated when a form is loaded, and it may be updated by certain
+   * computations defined by the form. It may also be updated by a client, using
+   * the {@link InputNode.setValue} method.
+   */
+  get value(): InputValue<V>;
 }
 
 export interface InputDefinition<V extends ValueType = ValueType> extends LeafNodeDefinition<V> {
-	readonly bodyElement: InputControlDefinition;
+  readonly bodyElement: InputControlDefinition;
 }
 
 export type InputNodeAppearances = NodeAppearances<InputDefinition>;
 
 interface StringInputNodeOptions {
-	readonly rows: number | null;
+  readonly rows: number | null;
 }
 
 interface GeoInputNodeOptions {
-	readonly accuracyThreshold: number | null;
-	readonly unacceptableAccuracyThreshold: number | null;
+  readonly accuracyThreshold: number | null;
+  readonly unacceptableAccuracyThreshold: number | null;
 }
 
 interface InputNodeOptionsByValueType {
-	readonly string: StringInputNodeOptions;
-	readonly int: null;
-	readonly boolean: null;
-	readonly decimal: null;
-	readonly date: null;
-	readonly time: null;
-	readonly dateTime: null;
-	readonly geopoint: GeoInputNodeOptions;
-	readonly geotrace: null;
-	readonly geoshape: null;
-	readonly binary: null;
-	readonly barcode: null;
-	readonly intent: null;
+  readonly string: StringInputNodeOptions;
+  readonly int: null;
+  readonly boolean: null;
+  readonly decimal: null;
+  readonly date: null;
+  readonly time: null;
+  readonly dateTime: null;
+  readonly geopoint: GeoInputNodeOptions;
+  readonly geotrace: null;
+  readonly geoshape: null;
+  readonly binary: null;
+  readonly barcode: null;
+  readonly intent: null;
 }
 
 export type InputNodeOptions<V extends ValueType> = InputNodeOptionsByValueType[V];
@@ -64,23 +64,23 @@ export type InputNodeOptions<V extends ValueType> = InputNodeOptionsByValueType[
  * which a user-facing client would likely present for a user to fill.
  */
 export interface InputNode<V extends ValueType = ValueType> extends BaseValueNode<
-	V,
-	InputValue<V>
+  V,
+  InputValue<V>
 > {
-	readonly nodeType: 'input';
-	readonly valueType: V;
-	readonly appearances: InputNodeAppearances;
-	readonly nodeOptions: InputNodeOptions<V>;
-	readonly definition: InputDefinition<V>;
-	readonly root: RootNode;
-	readonly parent: GeneralParentNode;
-	readonly currentState: InputNodeState<V>;
-	readonly validationState: LeafNodeValidationState;
+  readonly nodeType: 'input';
+  readonly valueType: V;
+  readonly appearances: InputNodeAppearances;
+  readonly nodeOptions: InputNodeOptions<V>;
+  readonly definition: InputDefinition<V>;
+  readonly root: RootNode;
+  readonly parent: GeneralParentNode;
+  readonly currentState: InputNodeState<V>;
+  readonly validationState: LeafNodeValidationState;
 
-	/**
-	 * For use by a client to update the value of an {@link InputNode}.
-	 */
-	setValue(value: InputNodeInputValue<V>): RootNode;
+  /**
+   * For use by a client to update the value of an {@link InputNode}.
+   */
+  setValue(value: InputNodeInputValue<V>): RootNode;
 }
 
 export type StringInputValue = InputValue<'string'>;

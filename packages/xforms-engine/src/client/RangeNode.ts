@@ -13,9 +13,9 @@ export type RangeValue<V extends RangeValueType> = RuntimeValue<V>;
 export type RangeInputValue<V extends RangeValueType> = RuntimeInputValue<V>;
 
 export interface RangeNodeState<V extends RangeValueType> extends BaseValueNodeState<
-	RangeValue<V>
+  RangeValue<V>
 > {
-	get valueOptions(): null;
+  get valueOptions(): null;
 }
 
 export type RangeNodeAppearances = NodeAppearances<RangeNodeDefinition>;
@@ -25,23 +25,23 @@ export type RangeNodeAppearances = NodeAppearances<RangeNodeDefinition>;
  * {@link https://getodk.github.io/xforms-spec/#body-elements | XForms `<range>`}.
  */
 export interface RangeNode<V extends RangeValueType = RangeValueType> extends BaseValueNode<
-	V,
-	RangeValue<V>
+  V,
+  RangeValue<V>
 > {
-	readonly nodeType: 'range';
-	readonly valueType: V;
-	readonly appearances: RangeNodeAppearances;
-	readonly nodeOptions: null;
-	readonly definition: RangeNodeDefinition<V>;
-	readonly root: RootNode;
-	readonly parent: GeneralParentNode;
-	readonly currentState: RangeNodeState<V>;
-	readonly validationState: LeafNodeValidationState;
+  readonly nodeType: 'range';
+  readonly valueType: V;
+  readonly appearances: RangeNodeAppearances;
+  readonly nodeOptions: null;
+  readonly definition: RangeNodeDefinition<V>;
+  readonly root: RootNode;
+  readonly parent: GeneralParentNode;
+  readonly currentState: RangeNodeState<V>;
+  readonly validationState: LeafNodeValidationState;
 
-	/**
-	 * For use by a client to update the value of an {@link RangeNode}.
-	 */
-	setValue(value: RangeInputValue<V>): RootNode;
+  /**
+   * For use by a client to update the value of an {@link RangeNode}.
+   */
+  setValue(value: RangeInputValue<V>): RootNode;
 }
 
 export type IntRangeNode = RangeNode<'int'>;

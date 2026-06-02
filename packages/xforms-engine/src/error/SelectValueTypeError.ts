@@ -12,11 +12,11 @@ import { XFormsSpecViolationError } from './XFormsSpecViolationError.ts';
  * @see {@link https://github.com/getodk/web-forms/issues/276}
  */
 export class SelectValueTypeError extends XFormsSpecViolationError {
-	constructor(definition: SelectDefinition<UnsupportedBaseItemValueType>) {
-		const { valueType } = definition;
+  constructor(definition: SelectDefinition<UnsupportedBaseItemValueType>) {
+    const { valueType } = definition;
 
-		super(
-			`Selects of type ${valueType} are not currently supported. If this functionality would be useful for your form, your feedback is welcome!`
-		);
-	}
+    super(
+      `Selects of type ${valueType} are not currently supported. If this functionality would be useful for your form, your feedback is welcome!`
+    );
+  }
 }

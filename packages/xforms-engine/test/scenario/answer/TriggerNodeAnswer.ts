@@ -5,37 +5,37 @@ import type { ComparableAnswer } from './ComparableAnswer.ts';
 import { ValueNodeAnswer } from './ValueNodeAnswer.ts';
 
 class TriggerNodeAnswerComparisonError extends Error {
-	constructor() {
-		super('Trigger value should be compared with/asserted as a boolean');
-	}
+  constructor() {
+    super('Trigger value should be compared with/asserted as a boolean');
+  }
 }
 
 export class TriggerNodeAnswer extends ValueNodeAnswer<TriggerNode> {
-	private readonly triggerValue: boolean;
+  private readonly triggerValue: boolean;
 
-	override get booleanValue(): boolean {
-		return this.triggerValue;
-	}
+  override get booleanValue(): boolean {
+    return this.triggerValue;
+  }
 
-	constructor(node: TriggerNode) {
-		super(node);
+  constructor(node: TriggerNode) {
+    super(node);
 
-		this.triggerValue = node.currentState.value;
-	}
+    this.triggerValue = node.currentState.value;
+  }
 
-	override equals(expected: ComparableAnswer): SimpleAssertionResult | null {
-		const { booleanValue } = expected;
+  override equals(expected: ComparableAnswer): SimpleAssertionResult | null {
+    const { booleanValue } = expected;
 
-		if (booleanValue == null) {
-			throw new TriggerNodeAnswerComparisonError();
-		}
+    if (booleanValue == null) {
+      throw new TriggerNodeAnswerComparisonError();
+    }
 
-		const pass = this.booleanValue === booleanValue;
+    const pass = this.booleanValue === booleanValue;
 
-		return pass || new InspectableComparisonError(expected, this, 'equal');
-	}
+    return pass || new InspectableComparisonError(expected, this, 'equal');
+  }
 
-	get stringValue(): string {
-		throw new TriggerNodeAnswerComparisonError();
-	}
+  get stringValue(): string {
+    throw new TriggerNodeAnswerComparisonError();
+  }
 }

@@ -4,9 +4,9 @@
  * necessary to support calls from ported JavaRosa `Scenario` tests.
  */
 interface List<T> {
-	get(index: number): T | null;
-	isEmpty(): boolean;
-	size(): number;
+  get(index: number): T | null;
+  isEmpty(): boolean;
+  size(): number;
 }
 
 export type { List as JavaUtilList };

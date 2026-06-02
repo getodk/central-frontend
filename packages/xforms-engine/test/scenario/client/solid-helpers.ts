@@ -3,20 +3,20 @@ import { getOwner, runWithOwner } from 'solid-js';
 import { assert } from 'vitest';
 
 export const getAssertedOwner = (): Owner => {
-	const owner = getOwner();
+  const owner = getOwner();
 
-	assert(owner);
+  assert(owner);
 
-	return owner;
+  return owner;
 };
 
 interface RunInSolidScope {
-	<T>(owner: Owner, fn: () => T): T;
-	<T>(owner: Owner | null | undefined, fn: () => T): T | undefined;
+  <T>(owner: Owner, fn: () => T): T;
+  <T>(owner: Owner | null | undefined, fn: () => T): T | undefined;
 }
 
 export const runInSolidScope: RunInSolidScope = (owner, fn) => {
-	assert(owner);
+  assert(owner);
 
-	return runWithOwner(owner ?? null, fn);
+  return runWithOwner(owner ?? null, fn);
 };

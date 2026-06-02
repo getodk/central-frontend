@@ -15,21 +15,21 @@ import { validatedExtensionMethod } from './validatedExtensionMethod.ts';
  * expected by all of our custom assertion interfaces.
  */
 const staticConditionExtensionMethodFactory = <Parameter>(
-	staticCondition: JSONObject
+  staticCondition: JSONObject
 ): ExpectExtensionMethod<Parameter, void> => {
-	return (actual) => {
-		try {
-			expect(actual).toMatchObject(staticCondition);
+  return (actual) => {
+    try {
+      expect(actual).toMatchObject(staticCondition);
 
-			return true;
-		} catch (error) {
-			if (error instanceof Error) {
-				return error;
-			}
+      return true;
+    } catch (error) {
+      if (error instanceof Error) {
+        return error;
+      }
 
-			return new Error('Unknown error in assertion');
-		}
-	};
+      return new Error('Unknown error in assertion');
+    }
+  };
 };
 
 /**
@@ -55,21 +55,21 @@ const staticConditionExtensionMethodFactory = <Parameter>(
  * as a parameter at the assertion's call site.
  */
 export class StaticConditionExpectExtension<
-	StaticCondition extends JSONObject,
-	Parameter extends StaticCondition = StaticCondition,
+  StaticCondition extends JSONObject,
+  Parameter extends StaticCondition = StaticCondition,
 > {
-	readonly extensionMethod: ExpectExtensionMethod<unknown, unknown, SyncExpectationResult>;
+  readonly extensionMethod: ExpectExtensionMethod<unknown, unknown, SyncExpectationResult>;
 
-	constructor(
-		readonly validateArgument: AssertIs<Parameter>,
-		readonly expectedStaticCondition: StaticCondition
-	) {
-		const validatedMethod = validatedExtensionMethod(
-			validateArgument,
-			assertVoidExpectedArgument,
-			staticConditionExtensionMethodFactory(expectedStaticCondition)
-		);
+  constructor(
+    readonly validateArgument: AssertIs<Parameter>,
+    readonly expectedStaticCondition: StaticCondition
+  ) {
+    const validatedMethod = validatedExtensionMethod(
+      validateArgument,
+      assertVoidExpectedArgument,
+      staticConditionExtensionMethodFactory(expectedStaticCondition)
+    );
 
-		this.extensionMethod = expandSimpleExpectExtensionResult(validatedMethod);
-	}
+    this.extensionMethod = expandSimpleExpectExtensionResult(validatedMethod);
+  }
 }

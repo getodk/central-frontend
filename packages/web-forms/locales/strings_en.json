@@ -35,6 +35,34 @@
     "string": "Save",
     "developer_comment": "Generic label for a save action button."
   },
+  "common_actions.open_full_screen.description": {
+    "string": "Expand to full screen",
+    "developer_comment": "Aria-label/description for the control button that expands the view to full screen. Shared across the canvas and map components."
+  },
+  "common_actions.close_full_screen.description": {
+    "string": "Exit full screen",
+    "developer_comment": "Aria-label/description for the control button that exits full-screen mode. Shared across the canvas and map components."
+  },
+  "common_actions.zoom_in.description": {
+    "string": "Zoom in",
+    "developer_comment": "Aria-label/description for the control button that zooms in. Shared across the canvas and map components."
+  },
+  "common_actions.zoom_out.description": {
+    "string": "Zoom out",
+    "developer_comment": "Aria-label/description for the control button that zooms out. Shared across the canvas and map components."
+  },
+  "common_actions.undo.description": {
+    "string": "Undo last action",
+    "developer_comment": "Aria-label/description for the control button that undoes the last action. Shared across the canvas and map components."
+  },
+  "common_actions.open_info.description": {
+    "string": "Show information of actions",
+    "developer_comment": "Aria-label/description for the control button that opens the info dialog listing available actions. Shared across the canvas and map components."
+  },
+  "common_actions.info_dialog.title": {
+    "string": "How to use this tool",
+    "developer_comment": "Title shown in the header of the dialog that explains the available actions. Shared across the canvas and map components."
+  },
   "geolocation_formatted_value.accuracy.label": {
     "string": "Accuracy: {accuracy} m,",
     "developer_comment": "Displays the GPS accuracy in metres. {accuracy} is the numeric accuracy value."
@@ -54,6 +82,38 @@
   "validation_message.constraint.error": {
     "string": "This value doesn't meet the constraint.",
     "developer_comment": "Default error shown when a field's value fails a constraint and the form designer did not specify a custom message."
+  },
+  "canvas_async.load_error.message": {
+    "string": "Unable to load canvas",
+    "developer_comment": "Error message shown when the canvas component fails to load."
+  },
+  "canvas_controls.exit_after_save.description": {
+    "string": "Exit full screen, changes saved",
+    "developer_comment": "Explains the canvas control button that exits full-screen mode after autosave has captured the user's drawing."
+  },
+  "canvas_controls.color_picker.description": {
+    "string": "Pick a color",
+    "developer_comment": "Explains the canvas control button that opens the color picker."
+  },
+  "canvas_controls.pan.description": {
+    "string": "Toggle pan mode",
+    "developer_comment": "Explains the canvas control button that activates or deactivates pan mode. When active, dragging moves the canvas instead of drawing."
+  },
+  "canvas_controls.clear_all.description": {
+    "string": "Clear all strokes",
+    "developer_comment": "Explains the canvas control button that removes all drawn strokes."
+  },
+  "canvas_block.loading_image.message": {
+    "string": "Loading image...",
+    "developer_comment": "Status text shown while the background image is loading in the canvas."
+  },
+  "canvas_block.load_image.error": {
+    "string": "Failed to load image.",
+    "developer_comment": "Error message shown when the background image fails to load in the canvas."
+  },
+  "canvas_block.draw_instruction.message": {
+    "string": "Start drawing here",
+    "developer_comment": "Instruction message shown in draw mode before the user has made any strokes."
   },
   "map_async.load_error.message": {
     "string": "Unable to load map",
@@ -147,10 +207,6 @@
     "string": "Find your location",
     "developer_comment": "Aria-label for the map control button that centers the map on the device's current GPS location."
   },
-  "map_controls.undo.description": {
-    "string": "Undo last action",
-    "developer_comment": "Aria-label for the map control button that undoes the last map edit."
-  },
   "map_controls.delete.description": {
     "string": "Delete one vertex or all vertices",
     "developer_comment": "Aria-label for the map control button that deletes the selected vertex or all vertices."
@@ -158,22 +214,6 @@
   "map_controls.open_advanced.description": {
     "string": "Advanced manual edits",
     "developer_comment": "Aria-label for the map control button that opens the advanced coordinate editing panel."
-  },
-  "map_controls.open_full_screen.description": {
-    "string": "Expand to full screen",
-    "developer_comment": "Aria-label for the map control button that expands the map to full screen."
-  },
-  "map_controls.close_full_screen.description": {
-    "string": "Exit full screen",
-    "developer_comment": "Aria-label for the map control button that exits full-screen mode."
-  },
-  "map_controls.open_info.description": {
-    "string": "Show information of map actions",
-    "developer_comment": "Aria-label for the map control button that opens the info dialog listing available map actions."
-  },
-  "map_info_dialog.header.title": {
-    "string": "How to use the map?",
-    "developer_comment": "Title shown in the header of the dialog that explains available map actions."
   },
   "map_properties.remove_selection.label": {
     "string": "Remove selection",
@@ -375,6 +415,18 @@
     "string": "Choose image",
     "developer_comment": "Label for the button to choose an image from the device's gallery or file system."
   },
+  "upload_image_header.annotation.label": {
+    "string": "Mark up image",
+    "developer_comment": "Label for the button to open the canvas in full-screen mode for annotating the image. Only visible on mobile devices."
+  },
+  "upload_image_header.draw.label": {
+    "string": "Sketch",
+    "developer_comment": "Label for the button to open the canvas in full-screen mode for drawing. Only visible on mobile devices."
+  },
+  "upload_image_header.signature.label": {
+    "string": "Gather signature",
+    "developer_comment": "Label for the button to open the canvas in full-screen mode for capturing a signature. Only visible on mobile devices."
+  },
   "upload_control.choose_file.label": {
     "string": "Choose file",
     "developer_comment": "Label for the button to choose a file from the device. Used in the audio, video, and generic file upload headers."
@@ -382,6 +434,14 @@
   "upload_control.drag_and_drop.placeholder": {
     "string": "Drag and drop files here to upload",
     "developer_comment": "Placeholder text shown in the upload area when no file has been selected."
+  },
+  "upload_control.no_signature.placeholder": {
+    "string": "No signature captured",
+    "developer_comment": "Placeholder text shown on mobile when no signature has been captured yet."
+  },
+  "upload_control.no_drawing.placeholder": {
+    "string": "No drawing captured",
+    "developer_comment": "Placeholder text shown on mobile when no drawing has been captured yet."
   },
   "upload_control.file_too_large.error": {
     "string": "Selected file size exceeds the maximum allowed",

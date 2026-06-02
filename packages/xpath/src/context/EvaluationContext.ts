@@ -1,8 +1,8 @@
 import { Temporal } from 'temporal-polyfill';
 import type { XPathNode } from '../adapter/interface/XPathNode.ts';
 import type {
-	AdapterDocument,
-	AdapterParentNode,
+  AdapterDocument,
+  AdapterParentNode,
 } from '../adapter/interface/XPathNodeKindAdapter.ts';
 import type { XPathDOMProvider } from '../adapter/xpathDOMProvider.ts';
 import { LocationPathEvaluation } from '../evaluations/LocationPathEvaluation.ts';
@@ -12,10 +12,10 @@ import type { FunctionLibraryCollection } from '../evaluator/functions/FunctionL
 import type { Context } from './Context.ts';
 
 export interface EvaluationContextOptions<T extends XPathNode> {
-	readonly rootNode: AdapterParentNode<T> | null;
-	readonly functions: FunctionLibraryCollection;
-	readonly namespaceResolver: XPathNSResolver | null;
-	readonly timeZone: Temporal.TimeZoneLike;
+  readonly rootNode: AdapterParentNode<T> | null;
+  readonly functions: FunctionLibraryCollection;
+  readonly namespaceResolver: XPathNSResolver | null;
+  readonly timeZone: Temporal.TimeZoneLike;
 }
 
 /**
@@ -23,64 +23,64 @@ export interface EvaluationContextOptions<T extends XPathNode> {
  * is evaluated.
  */
 export class EvaluationContext<T extends XPathNode> implements Context<T> {
-	readonly domProvider: XPathDOMProvider<T>;
+  readonly domProvider: XPathDOMProvider<T>;
 
-	/**
-	 * @see {@link Context.evaluationContextNode}
-	 */
-	readonly evaluationContextNode: T;
+  /**
+   * @see {@link Context.evaluationContextNode}
+   */
+  readonly evaluationContextNode: T;
 
-	readonly contextDocument: AdapterDocument<T>;
-	readonly rootNode: AdapterParentNode<T>;
+  readonly contextDocument: AdapterDocument<T>;
+  readonly rootNode: AdapterParentNode<T>;
 
-	readonly contextNodes: ReadonlySet<T>;
+  readonly contextNodes: ReadonlySet<T>;
 
-	readonly functions: FunctionLibraryCollection;
-	readonly namespaceResolver: NamespaceResolver<T>;
+  readonly functions: FunctionLibraryCollection;
+  readonly namespaceResolver: NamespaceResolver<T>;
 
-	readonly timeZone: Temporal.TimeZoneLike;
+  readonly timeZone: Temporal.TimeZoneLike;
 
-	constructor(
-		readonly evaluator: Evaluator<T>,
-		contextNode: T,
-		options: Partial<EvaluationContextOptions<T>> = {}
-	) {
-		const { domProvider } = evaluator;
+  constructor(
+    readonly evaluator: Evaluator<T>,
+    contextNode: T,
+    options: Partial<EvaluationContextOptions<T>> = {}
+  ) {
+    const { domProvider } = evaluator;
 
-		this.domProvider = domProvider;
+    this.domProvider = domProvider;
 
-		const { namespaceResolver } = options;
+    const { namespaceResolver } = options;
 
-		const rootNode = options.rootNode ?? domProvider.getContainingDocument(contextNode);
-		const contextDocument = domProvider.getContainingDocument(rootNode);
+    const rootNode = options.rootNode ?? domProvider.getContainingDocument(contextNode);
+    const contextDocument = domProvider.getContainingDocument(rootNode);
 
-		this.contextDocument = contextDocument;
-		this.evaluationContextNode = contextNode;
-		this.contextNodes = new Set([contextNode]);
-		this.rootNode = rootNode;
-		this.functions = options.functions ?? evaluator.functions;
-		this.namespaceResolver = NamespaceResolver.from(
-			domProvider,
-			contextDocument,
-			contextDocument,
-			namespaceResolver
-		);
-		this.timeZone = options.timeZone ?? evaluator.timeZone;
-	}
+    this.contextDocument = contextDocument;
+    this.evaluationContextNode = contextNode;
+    this.contextNodes = new Set([contextNode]);
+    this.rootNode = rootNode;
+    this.functions = options.functions ?? evaluator.functions;
+    this.namespaceResolver = NamespaceResolver.from(
+      domProvider,
+      contextDocument,
+      contextDocument,
+      namespaceResolver
+    );
+    this.timeZone = options.timeZone ?? evaluator.timeZone;
+  }
 
-	contextPosition(): number {
-		return 1;
-	}
+  contextPosition(): number {
+    return 1;
+  }
 
-	contextSize(): number {
-		return 1;
-	}
+  contextSize(): number {
+    return 1;
+  }
 
-	currentContext<U extends XPathNode>(this: EvaluationContext<U>): LocationPathEvaluation<U> {
-		return LocationPathEvaluation.fromCurrentContext(this);
-	}
+  currentContext<U extends XPathNode>(this: EvaluationContext<U>): LocationPathEvaluation<U> {
+    return LocationPathEvaluation.fromCurrentContext(this);
+  }
 
-	rootContext<U extends XPathNode>(this: EvaluationContext<U>): LocationPathEvaluation<U> {
-		return LocationPathEvaluation.fromRoot(this);
-	}
+  rootContext<U extends XPathNode>(this: EvaluationContext<U>): LocationPathEvaluation<U> {
+    return LocationPathEvaluation.fromRoot(this);
+  }
 }

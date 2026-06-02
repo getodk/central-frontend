@@ -10,77 +10,77 @@ import type { XPathEvaluationResult, XPathEvaluationResultType } from './XPathEv
 import { XPATH_EVALUATION_RESULT } from './XPathEvaluationResult.ts';
 
 const {
-	ANY_TYPE,
-	NUMBER_TYPE,
-	STRING_TYPE,
-	BOOLEAN_TYPE,
-	UNORDERED_NODE_ITERATOR_TYPE,
-	ORDERED_NODE_ITERATOR_TYPE,
-	UNORDERED_NODE_SNAPSHOT_TYPE,
-	ORDERED_NODE_SNAPSHOT_TYPE,
-	ANY_UNORDERED_NODE_TYPE,
-	FIRST_ORDERED_NODE_TYPE,
+  ANY_TYPE,
+  NUMBER_TYPE,
+  STRING_TYPE,
+  BOOLEAN_TYPE,
+  UNORDERED_NODE_ITERATOR_TYPE,
+  ORDERED_NODE_ITERATOR_TYPE,
+  UNORDERED_NODE_SNAPSHOT_TYPE,
+  ORDERED_NODE_SNAPSHOT_TYPE,
+  ANY_UNORDERED_NODE_TYPE,
+  FIRST_ORDERED_NODE_TYPE,
 } = XPATH_EVALUATION_RESULT;
 
 export const toXPathEvaluationResult = <T extends XPathNode>(
-	domProvider: XPathDOMProvider<T>,
-	resultType: XPathEvaluationResultType,
-	evaluation: Evaluation<T>
+  domProvider: XPathDOMProvider<T>,
+  resultType: XPathEvaluationResultType,
+  evaluation: Evaluation<T>
 ): XPathEvaluationResult<T> => {
-	const { nodes } = evaluation;
+  const { nodes } = evaluation;
 
-	switch (resultType) {
-		case ANY_TYPE:
-			switch (evaluation.type) {
-				case 'BOOLEAN':
-					return new BooleanResult(evaluation);
+  switch (resultType) {
+    case ANY_TYPE:
+      switch (evaluation.type) {
+        case 'BOOLEAN':
+          return new BooleanResult(evaluation);
 
-				case 'NUMBER':
-					return new NumberResult(evaluation);
+        case 'NUMBER':
+          return new NumberResult(evaluation);
 
-				case 'STRING':
-					return new StringResult(evaluation);
+        case 'STRING':
+          return new StringResult(evaluation);
 
-				case 'NODE': {
-					return new NodeSetIteratorResult(
-						domProvider,
-						UNORDERED_NODE_ITERATOR_TYPE,
-						evaluation.nodes ?? new Set()
-					);
-				}
+        case 'NODE': {
+          return new NodeSetIteratorResult(
+            domProvider,
+            UNORDERED_NODE_ITERATOR_TYPE,
+            evaluation.nodes ?? new Set()
+          );
+        }
 
-				default:
-					throw new UnreachableError(evaluation.type);
-			}
+        default:
+          throw new UnreachableError(evaluation.type);
+      }
 
-		case BOOLEAN_TYPE:
-			return new BooleanResult(evaluation);
+    case BOOLEAN_TYPE:
+      return new BooleanResult(evaluation);
 
-		case NUMBER_TYPE:
-			return new NumberResult(evaluation);
+    case NUMBER_TYPE:
+      return new NumberResult(evaluation);
 
-		case STRING_TYPE:
-			return new StringResult(evaluation);
+    case STRING_TYPE:
+      return new StringResult(evaluation);
 
-		case UNORDERED_NODE_ITERATOR_TYPE:
-		case ORDERED_NODE_ITERATOR_TYPE:
-		case ANY_UNORDERED_NODE_TYPE:
-		case FIRST_ORDERED_NODE_TYPE:
-			if (nodes == null) {
-				throw new Error('Expected a node-set for node iterator result, but received null.');
-			}
+    case UNORDERED_NODE_ITERATOR_TYPE:
+    case ORDERED_NODE_ITERATOR_TYPE:
+    case ANY_UNORDERED_NODE_TYPE:
+    case FIRST_ORDERED_NODE_TYPE:
+      if (nodes == null) {
+        throw new Error('Expected a node-set for node iterator result, but received null.');
+      }
 
-			return new NodeSetIteratorResult(domProvider, resultType, nodes);
+      return new NodeSetIteratorResult(domProvider, resultType, nodes);
 
-		case UNORDERED_NODE_SNAPSHOT_TYPE:
-		case ORDERED_NODE_SNAPSHOT_TYPE:
-			if (nodes == null) {
-				throw new Error('Expected a node-set for node snapshot result, but received null.');
-			}
+    case UNORDERED_NODE_SNAPSHOT_TYPE:
+    case ORDERED_NODE_SNAPSHOT_TYPE:
+      if (nodes == null) {
+        throw new Error('Expected a node-set for node snapshot result, but received null.');
+      }
 
-			return new NodeSetSnapshotResult(domProvider, resultType, nodes);
+      return new NodeSetSnapshotResult(domProvider, resultType, nodes);
 
-		default:
-			throw new UnreachableError(resultType);
-	}
+    default:
+      throw new UnreachableError(resultType);
+  }
 };

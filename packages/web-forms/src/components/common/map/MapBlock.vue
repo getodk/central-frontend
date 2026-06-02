@@ -340,7 +340,7 @@ const toggleFullScreen = () => {
 
 <style scoped lang="scss">
 @use 'primeflex/core/_variables.scss' as pf;
-@use '../../../assets/styles/map-block' as mb;
+@use '../../../assets/styles/panel-controls' as pc;
 @use '../../../assets/styles/buttons' as btn;
 @use '../../../assets/styles/style' as odk;
 
@@ -363,7 +363,7 @@ const toggleFullScreen = () => {
 	-webkit-touch-callout: none;
 
 	.map-block {
-		container: map-block / size;
+		container: panel-control-container / size;
 		position: relative;
 		background: var(--odk-base-background-color);
 		width: 100%;
@@ -386,8 +386,8 @@ const toggleFullScreen = () => {
 		.close-full-screen {
 			@include btn.clear-button;
 			display: none;
-			top: var(--odk-map-controls-spacing);
-			left: var(--odk-map-controls-spacing);
+			top: var(--odk-spacing-m);
+			left: var(--odk-spacing-m);
 		}
 
 		.p-button.p-button-contrast.p-button-outlined {
@@ -439,7 +439,7 @@ const toggleFullScreen = () => {
 }
 
 .map-block-component :deep(.ol-zoom) {
-	@include mb.map-control-bar-vertical;
+	@include pc.panel-control-bar-vertical;
 	bottom: 35px;
 	height: fit-content;
 
@@ -447,7 +447,7 @@ const toggleFullScreen = () => {
 	button:hover,
 	button:focus,
 	button:active {
-		@include mb.map-control-button;
+		@include pc.panel-control-button;
 	}
 }
 
@@ -497,9 +497,9 @@ const toggleFullScreen = () => {
 		align-items: center;
 		justify-content: space-between;
 		position: fixed;
-		top: var(--odk-map-controls-spacing);
-		left: var(--odk-map-controls-spacing);
-		right: var(--odk-map-controls-spacing);
+		top: var(--odk-spacing-m);
+		left: var(--odk-spacing-m);
+		right: var(--odk-spacing-m);
 		z-index: var(--odk-z-index-topmost);
 		margin-top: 0;
 	}
@@ -511,7 +511,7 @@ const toggleFullScreen = () => {
 
 .map-message {
 	width: max-content;
-	max-width: calc(100% - (var(--odk-map-controls-spacing) * 2));
+	max-width: calc(100% - (var(--odk-spacing-m) * 2));
 	position: absolute;
 	z-index: var(--odk-z-index-form-floating);
 	bottom: -11px;
@@ -562,7 +562,7 @@ const toggleFullScreen = () => {
 
 		.map-bottom-section-placeholder.is-advanced-panel-active {
 			width: 100vw;
-			height: var(--odk-map-bottom-placeholder-height);
+			height: 60px;
 		}
 	}
 }

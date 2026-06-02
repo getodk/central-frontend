@@ -1,9 +1,9 @@
 import { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL.ts';
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import type {
-	XFORMS_KNOWN_ATTRIBUTE,
-	XFORMS_LOCAL_NAME,
-	XFormsSecondaryInstanceMap,
+  XFORMS_KNOWN_ATTRIBUTE,
+  XFORMS_LOCAL_NAME,
+  XFormsSecondaryInstanceMap,
 } from '@getodk/xpath';
 import { ErrorProductionDesignPendingError } from '../../../error/ErrorProductionDesignPendingError.ts';
 import type { EngineXPathNode } from '../../../integration/xpath/adapter/kind.ts';
@@ -20,109 +20,109 @@ import type { SecondaryInstanceSource } from './sources/SecondaryInstanceSource.
 import { XMLExternalSecondaryInstanceSource } from './sources/XMLExternalSecondaryInstanceSource.ts';
 
 export interface SecondaryInstanceDefinition extends StaticDocument {
-	readonly rootDocument: SecondaryInstanceDefinition;
-	readonly root: SecondaryInstanceRootDefinition;
+  readonly rootDocument: SecondaryInstanceDefinition;
+  readonly root: SecondaryInstanceRootDefinition;
 }
 
 export interface SecondaryInstanceRootDefinition extends StaticElement {
-	readonly [XFORMS_LOCAL_NAME]: 'instance';
-	readonly [XFORMS_KNOWN_ATTRIBUTE]: 'id';
+  readonly [XFORMS_LOCAL_NAME]: 'instance';
+  readonly [XFORMS_KNOWN_ATTRIBUTE]: 'id';
 
-	readonly rootDocument: SecondaryInstanceDefinition;
-	readonly root: SecondaryInstanceRootDefinition;
+  readonly rootDocument: SecondaryInstanceDefinition;
+  readonly root: SecondaryInstanceRootDefinition;
 
-	getAttributeValue(localName: 'id'): string;
-	getAttributeValue(localName: string): string | null;
+  getAttributeValue(localName: 'id'): string;
+  getAttributeValue(localName: string): string | null;
 }
 
 export class SecondaryInstancesDefinition
-	extends Map<string, SecondaryInstanceRootDefinition>
-	implements XFormsSecondaryInstanceMap<EngineXPathNode>
+  extends Map<string, SecondaryInstanceRootDefinition>
+  implements XFormsSecondaryInstanceMap<EngineXPathNode>
 {
-	/**
-	 * @package Only to be used for testing
-	 */
-	static loadSync(xformDOM: XFormDOM): SecondaryInstancesDefinition {
-		const { secondaryInstanceElements } = xformDOM;
-		const sources = secondaryInstanceElements.map((domElement) => {
-			const instanceId = domElement.getAttribute('id');
-			const src = domElement.getAttribute('src');
+  /**
+   * @package Only to be used for testing
+   */
+  static loadSync(xformDOM: XFormDOM): SecondaryInstancesDefinition {
+    const { secondaryInstanceElements } = xformDOM;
+    const sources = secondaryInstanceElements.map((domElement) => {
+      const instanceId = domElement.getAttribute('id');
+      const src = domElement.getAttribute('src');
 
-			if (src != null) {
-				throw new ErrorProductionDesignPendingError(
-					`Unexpected external secondary instance src attribute: ${src}`
-				);
-			}
+      if (src != null) {
+        throw new ErrorProductionDesignPendingError(
+          `Unexpected external secondary instance src attribute: ${src}`
+        );
+      }
 
-			return new InternalSecondaryInstanceSource(instanceId, src, domElement);
-		});
+      return new InternalSecondaryInstanceSource(instanceId, src, domElement);
+    });
 
-		return new this(sources);
-	}
+    return new this(sources);
+  }
 
-	static async load(
-		xformDOM: XFormDOM,
-		options: ExternalSecondaryInstanceResourceLoadOptions
-	): Promise<SecondaryInstancesDefinition> {
-		const { secondaryInstanceElements } = xformDOM;
+  static async load(
+    xformDOM: XFormDOM,
+    options: ExternalSecondaryInstanceResourceLoadOptions
+  ): Promise<SecondaryInstancesDefinition> {
+    const { secondaryInstanceElements } = xformDOM;
 
-		const sources = await Promise.all(
-			secondaryInstanceElements.map(async (domElement) => {
-				const instanceId = domElement.getAttribute('id');
-				const src = domElement.getAttribute('src');
+    const sources = await Promise.all(
+      secondaryInstanceElements.map(async (domElement) => {
+        const instanceId = domElement.getAttribute('id');
+        const src = domElement.getAttribute('src');
 
-				if (src == null) {
-					return new InternalSecondaryInstanceSource(instanceId, src, domElement);
-				}
+        if (src == null) {
+          return new InternalSecondaryInstanceSource(instanceId, src, domElement);
+        }
 
-				if (!JRResourceURL.isJRResourceReference(src)) {
-					throw new ErrorProductionDesignPendingError(
-						`Unexpected external secondary instance src attribute: ${src}`
-					);
-				}
+        if (!JRResourceURL.isJRResourceReference(src)) {
+          throw new ErrorProductionDesignPendingError(
+            `Unexpected external secondary instance src attribute: ${src}`
+          );
+        }
 
-				const resourceURL = JRResourceURL.from(src);
+        const resourceURL = JRResourceURL.from(src);
 
-				if (resourceURL.isLastSavedInstance()) {
-					return new BlankSecondaryInstanceSource(instanceId, resourceURL, domElement);
-				}
+        if (resourceURL.isLastSavedInstance()) {
+          return new BlankSecondaryInstanceSource(instanceId, resourceURL, domElement);
+        }
 
-				const resource = await ExternalSecondaryInstanceResource.load(
-					instanceId,
-					resourceURL,
-					options
-				);
+        const resource = await ExternalSecondaryInstanceResource.load(
+          instanceId,
+          resourceURL,
+          options
+        );
 
-				if (resource.isBlank) {
-					return new BlankSecondaryInstanceSource(instanceId, resourceURL, domElement);
-				}
+        if (resource.isBlank) {
+          return new BlankSecondaryInstanceSource(instanceId, resourceURL, domElement);
+        }
 
-				switch (resource.format) {
-					case 'csv':
-						return new CSVExternalSecondaryInstanceSource(domElement, resource);
+        switch (resource.format) {
+          case 'csv':
+            return new CSVExternalSecondaryInstanceSource(domElement, resource);
 
-					case 'geojson':
-						return new GeoJSONExternalSecondaryInstanceSource(domElement, resource);
+          case 'geojson':
+            return new GeoJSONExternalSecondaryInstanceSource(domElement, resource);
 
-					case 'xml':
-						return new XMLExternalSecondaryInstanceSource(domElement, resource);
+          case 'xml':
+            return new XMLExternalSecondaryInstanceSource(domElement, resource);
 
-					default:
-						throw new UnreachableError(resource);
-				}
-			})
-		);
+          default:
+            throw new UnreachableError(resource);
+        }
+      })
+    );
 
-		return new this(sources);
-	}
+    return new this(sources);
+  }
 
-	private constructor(sources: readonly SecondaryInstanceSource[]) {
-		super(
-			sources.map((source) => {
-				const { root } = source.parseDefinition();
+  private constructor(sources: readonly SecondaryInstanceSource[]) {
+    super(
+      sources.map((source) => {
+        const { root } = source.parseDefinition();
 
-				return [root.getAttributeValue('id'), root];
-			})
-		);
-	}
+        return [root.getAttributeValue('id'), root];
+      })
+    );
+  }
 }

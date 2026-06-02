@@ -7,6 +7,18 @@
     "string": "Choose image",
     "developer_comment": "Label for the button to choose an image from the device's gallery or file system."
   },
+  "upload_image_header.annotation.label": {
+    "string": "Mark up image",
+    "developer_comment": "Label for the button to open the canvas in full-screen mode for annotating the image. Only visible on mobile devices."
+  },
+  "upload_image_header.draw.label": {
+    "string": "Sketch",
+    "developer_comment": "Label for the button to open the canvas in full-screen mode for drawing. Only visible on mobile devices."
+  },
+  "upload_image_header.signature.label": {
+    "string": "Gather signature",
+    "developer_comment": "Label for the button to open the canvas in full-screen mode for capturing a signature. Only visible on mobile devices."
+  },
   "upload_control.choose_file.label": {
     "string": "Choose file",
     "developer_comment": "Label for the button to choose a file from the device. Used in the audio, video, and generic file upload headers."
@@ -14,6 +26,14 @@
   "upload_control.drag_and_drop.placeholder": {
     "string": "Drag and drop files here to upload",
     "developer_comment": "Placeholder text shown in the upload area when no file has been selected."
+  },
+  "upload_control.no_signature.placeholder": {
+    "string": "No signature captured",
+    "developer_comment": "Placeholder text shown on mobile when no signature has been captured yet."
+  },
+  "upload_control.no_drawing.placeholder": {
+    "string": "No drawing captured",
+    "developer_comment": "Placeholder text shown on mobile when no drawing has been captured yet."
   },
   "upload_control.file_too_large.error": {
     "string": "Selected file size exceeds the maximum allowed",

@@ -1,8 +1,8 @@
 import type { UnwrapAdapterNode } from '../adapter/interface/XPathCustomUnwrappableNode.ts';
 import type { XPathNode } from '../adapter/interface/XPathNode.ts';
 import type {
-	AdapterDocument,
-	AdapterParentNode,
+  AdapterDocument,
+  AdapterParentNode,
 } from '../adapter/interface/XPathNodeKindAdapter.ts';
 import type { EvaluationContext } from '../context/EvaluationContext.ts';
 import type { EvaluatorOptions } from '../evaluator/Evaluator.ts';
@@ -13,15 +13,15 @@ import { fn } from '../functions/fn/index.ts';
 import { jr } from '../functions/javarosa/index.ts';
 import { xf } from '../functions/xforms/index.ts';
 import type {
-	XFormsItextTranslationLanguage,
-	XFormsItextTranslationMap,
-	XFormsItextTranslationsState,
-	XFormsItextTranslationValueElement,
+  XFormsItextTranslationLanguage,
+  XFormsItextTranslationMap,
+  XFormsItextTranslationsState,
+  XFormsItextTranslationValueElement,
 } from './XFormsItextTranslations.ts';
 import { XFormsItextTranslations } from './XFormsItextTranslations.ts';
 import type {
-	XFormsSecondaryInstanceElement,
-	XFormsSecondaryInstanceMap,
+  XFormsSecondaryInstanceElement,
+  XFormsSecondaryInstanceMap,
 } from './XFormsSecondaryInstances.ts';
 
 // Note: order of `FunctionLibrary` items matters! `xf` overrides `fn`, and
@@ -29,7 +29,7 @@ import type {
 //
 // TODO: break out yet another Enketo entry?
 const functions = new FunctionLibraryCollection([enk, xf, fn, jr], {
-	defaultNamespaceURIs: [enk.namespaceURI, xf.namespaceURI, fn.namespaceURI],
+  defaultNamespaceURIs: [enk.namespaceURI, xf.namespaceURI, fn.namespaceURI],
 });
 
 /**
@@ -43,9 +43,9 @@ export type XFormsXPathRootNode<T extends XPathNode> =
 	| UnwrapAdapterNode<AdapterParentNode<T>>;
 
 export interface XFormsXPathEvaluatorOptions<T extends XPathNode> extends EvaluatorOptions<T> {
-	readonly rootNode: XFormsXPathRootNode<T>;
-	readonly itextTranslationsByLanguage: XFormsItextTranslationMap<T>;
-	readonly secondaryInstancesById: XFormsSecondaryInstanceMap<T>;
+  readonly rootNode: XFormsXPathRootNode<T>;
+  readonly itextTranslationsByLanguage: XFormsItextTranslationMap<T>;
+  readonly secondaryInstancesById: XFormsSecondaryInstanceMap<T>;
 }
 
 /**
@@ -57,109 +57,109 @@ export interface XFormsXPathEvaluatorOptions<T extends XPathNode> extends Evalua
  * - {@link itextTranslations}, which is **package** private.
  */
 declare class InternalXFormsXPathEvaluator<T extends XPathNode> extends XFormsXPathEvaluator<T> {
-	readonly itextTranslations: XFormsItextTranslations<T>;
+  readonly itextTranslations: XFormsItextTranslations<T>;
 }
 
 interface InternalXFormsXPathEvaluatorContext<T extends XPathNode> extends EvaluationContext<T> {
-	readonly evaluator: InternalXFormsXPathEvaluator<T>;
+  readonly evaluator: InternalXFormsXPathEvaluator<T>;
 }
 
 type AssertInternalXFormsXPathEvaluatorContext = <T extends XPathNode>(
-	context: EvaluationContext<T>
+  context: EvaluationContext<T>
 ) => asserts context is InternalXFormsXPathEvaluatorContext<T>;
 
 const assertInternalXFormsXPathEvaluatorContext: AssertInternalXFormsXPathEvaluatorContext = (
-	context
+  context
 ) => {
-	const { evaluator } = context;
+  const { evaluator } = context;
 
-	if (
-		evaluator instanceof XFormsXPathEvaluator &&
-		/**
-		 * This check ensures that we apply consistent DOM adapter access where an
-		 * (ODK XForms) XPath expression crosses tree boundaries (e.g. any two of
-		 * primary instance, secondary instance, itext translations).
-		 *
-		 * It's not totally clear whether this check is strictly necessary! Even if
-		 * not, it should be cheap enough not to bother finding out.
-		 */
-		evaluator.domProvider === context.domProvider
-	) {
-		return;
-	}
+  if (
+    evaluator instanceof XFormsXPathEvaluator &&
+    /**
+     * This check ensures that we apply consistent DOM adapter access where an
+     * (ODK XForms) XPath expression crosses tree boundaries (e.g. any two of
+     * primary instance, secondary instance, itext translations).
+     *
+     * It's not totally clear whether this check is strictly necessary! Even if
+     * not, it should be cheap enough not to bother finding out.
+     */
+    evaluator.domProvider === context.domProvider
+  ) {
+    return;
+  }
 
-	throw new Error('Expected evaluation context initiated by XFormsXPathEvaluator');
+  throw new Error('Expected evaluation context initiated by XFormsXPathEvaluator');
 };
 
 export class XFormsXPathEvaluator<T extends XPathNode>
-	extends Evaluator<T>
-	implements XFormsItextTranslationsState
+  extends Evaluator<T>
+  implements XFormsItextTranslationsState
 {
-	static getSecondaryInstance<T extends XPathNode>(
-		context: EvaluationContext<T>,
-		id: string
-	): XFormsSecondaryInstanceElement<T> | null {
-		assertInternalXFormsXPathEvaluatorContext(context);
+  static getSecondaryInstance<T extends XPathNode>(
+    context: EvaluationContext<T>,
+    id: string
+  ): XFormsSecondaryInstanceElement<T> | null {
+    assertInternalXFormsXPathEvaluatorContext(context);
 
-		return context.evaluator.secondaryInstancesById.get(id) ?? null;
-	}
+    return context.evaluator.secondaryInstancesById.get(id) ?? null;
+  }
 
-	static getTranslationValues<T extends XPathNode>(
-		context: EvaluationContext<T>,
-		itextID: string
-	): Array<XFormsItextTranslationValueElement<T>> {
-		assertInternalXFormsXPathEvaluatorContext(context);
+  static getTranslationValues<T extends XPathNode>(
+    context: EvaluationContext<T>,
+    itextID: string
+  ): Array<XFormsItextTranslationValueElement<T>> {
+    assertInternalXFormsXPathEvaluatorContext(context);
 
-		return context.evaluator.itextTranslations.getTranslationValues(itextID);
-	}
+    return context.evaluator.itextTranslations.getTranslationValues(itextID);
+  }
 
-	override readonly rootNode: AdapterParentNode<T>;
+  override readonly rootNode: AdapterParentNode<T>;
 
-	/**
-	 * @package
-	 * @see {@link InternalXFormsXPathEvaluator}
-	 */
-	protected readonly itextTranslations: XFormsItextTranslationsState;
+  /**
+   * @package
+   * @see {@link InternalXFormsXPathEvaluator}
+   */
+  protected readonly itextTranslations: XFormsItextTranslationsState;
 
-	/**
-	 * @package
-	 * @see {@link InternalXFormsXPathEvaluator}
-	 */
-	protected readonly secondaryInstancesById: XFormsSecondaryInstanceMap<T>;
+  /**
+   * @package
+   * @see {@link InternalXFormsXPathEvaluator}
+   */
+  protected readonly secondaryInstancesById: XFormsSecondaryInstanceMap<T>;
 
-	constructor(options: XFormsXPathEvaluatorOptions<T>) {
-		super({
-			functions,
-			...options,
-		});
+  constructor(options: XFormsXPathEvaluatorOptions<T>) {
+    super({
+      functions,
+      ...options,
+    });
 
-		this.secondaryInstancesById = options.secondaryInstancesById;
-		this.rootNode = options.rootNode as AdapterParentNode<T>;
-		this.itextTranslations = new XFormsItextTranslations(
-			this.domProvider,
-			options.itextTranslationsByLanguage
-		);
-	}
+    this.secondaryInstancesById = options.secondaryInstancesById;
+    this.rootNode = options.rootNode as AdapterParentNode<T>;
+    this.itextTranslations = new XFormsItextTranslations(
+      this.domProvider,
+      options.itextTranslationsByLanguage
+    );
+  }
 
-	getLanguages(): readonly XFormsItextTranslationLanguage[] {
-		return this.itextTranslations.getLanguages();
-	}
+  getLanguages(): readonly XFormsItextTranslationLanguage[] {
+    return this.itextTranslations.getLanguages();
+  }
 
-	getActiveLanguage(): XFormsItextTranslationLanguage | null {
-		return this.itextTranslations.getActiveLanguage();
-	}
+  getActiveLanguage(): XFormsItextTranslationLanguage | null {
+    return this.itextTranslations.getActiveLanguage();
+  }
 
-	setActiveLanguage(
-		language: XFormsItextTranslationLanguage | null
-	): XFormsItextTranslationLanguage | null {
-		return this.itextTranslations.setActiveLanguage(language);
-	}
+  setActiveLanguage(
+    language: XFormsItextTranslationLanguage | null
+  ): XFormsItextTranslationLanguage | null {
+    return this.itextTranslations.setActiveLanguage(language);
+  }
 
-	getExplicitDefaultLanguage(): XFormsItextTranslationLanguage | null {
-		return this.itextTranslations.getExplicitDefaultLanguage();
-	}
+  getExplicitDefaultLanguage(): XFormsItextTranslationLanguage | null {
+    return this.itextTranslations.getExplicitDefaultLanguage();
+  }
 
-	getSecondaryInstance(id: string) {
-		return this.secondaryInstancesById.get(id);
-	}
+  getSecondaryInstance(id: string) {
+    return this.secondaryInstancesById.get(id);
+  }
 }

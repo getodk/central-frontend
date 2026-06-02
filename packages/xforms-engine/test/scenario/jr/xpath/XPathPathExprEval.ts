@@ -21,7 +21,7 @@ import type { JRXPathNodeset } from './JRXPathNodeset.ts';
  * are clearly transferrable to more pertinent client-facing APIs.
  */
 export class XPathPathExprEval {
-	eval(_treeReference: JRTreeReference, _evaluationContext: JREvaluationContext): JRXPathNodeset {
-		throw new UnclearApplicabilityError('exposure of XPath evaluation implementation details');
-	}
+  eval(_treeReference: JRTreeReference, _evaluationContext: JREvaluationContext): JRXPathNodeset {
+    throw new UnclearApplicabilityError('exposure of XPath evaluation implementation details');
+  }
 }

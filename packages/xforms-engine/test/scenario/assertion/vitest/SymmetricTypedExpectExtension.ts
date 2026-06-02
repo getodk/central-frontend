@@ -19,18 +19,18 @@ import { validatedExtensionMethod } from './validatedExtensionMethod.ts';
  *   base `expect` type
  */
 export class SymmetricTypedExpectExtension<Parameter = unknown> {
-	readonly extensionMethod: ExpectExtensionMethod<unknown, unknown, SyncExpectationResult>;
+  readonly extensionMethod: ExpectExtensionMethod<unknown, unknown, SyncExpectationResult>;
 
-	constructor(
-		readonly validateArgument: AssertIs<Parameter>,
-		extensionMethod: ExpectExtensionMethod<Parameter, Parameter>
-	) {
-		const validatedMethod = validatedExtensionMethod(
-			validateArgument,
-			validateArgument,
-			extensionMethod
-		);
+  constructor(
+    readonly validateArgument: AssertIs<Parameter>,
+    extensionMethod: ExpectExtensionMethod<Parameter, Parameter>
+  ) {
+    const validatedMethod = validatedExtensionMethod(
+      validateArgument,
+      validateArgument,
+      extensionMethod
+    );
 
-		this.extensionMethod = expandSimpleExpectExtensionResult(validatedMethod);
-	}
+    this.extensionMethod = expandSimpleExpectExtensionResult(validatedMethod);
+  }
 }
