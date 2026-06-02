@@ -8,19 +8,19 @@ import type { BindElement } from './BindElement.ts';
  * As specified by {@link https://getodk.github.io/xforms-spec/#data-types}
  */
 const BIND_TYPES = [
-	'string',
-	'int',
-	'boolean',
-	'decimal',
-	'date',
-	'time',
-	'dateTime',
-	'geopoint',
-	'geotrace',
-	'geoshape',
-	'binary',
-	'barcode',
-	'intent',
+  'string',
+  'int',
+  'boolean',
+  'decimal',
+  'date',
+  'time',
+  'dateTime',
+  'geopoint',
+  'geotrace',
+  'geoshape',
+  'binary',
+  'barcode',
+  'intent',
 ] as const;
 
 type BindTypes = typeof BIND_TYPES;
@@ -47,7 +47,7 @@ const SPEC_BIND_TYPE_DEFAULT = 'string' satisfies BindType;
 const UPLOAD_BIND_TYPE_DEFAULT = 'binary' satisfies BindType;
 
 const BODY_BIND_TYPE_DEFAULT_OVERRIDES = {
-	upload: UPLOAD_BIND_TYPE_DEFAULT,
+  upload: UPLOAD_BIND_TYPE_DEFAULT,
 } as const satisfies BindTypeDefaultOverridesByBodyType;
 
 type BodyBindTypeDefaultOverrides = typeof BODY_BIND_TYPE_DEFAULT_OVERRIDES;
@@ -55,34 +55,34 @@ type BodyBindTypeDefaultOverrides = typeof BODY_BIND_TYPE_DEFAULT_OVERRIDES;
 type BodyBindTypeDefaultOverride = keyof BodyBindTypeDefaultOverrides;
 
 const isBodyBindTypeDefaultOverride = (
-	bodyElementType: AnyBodyElementType | null
+  bodyElementType: AnyBodyElementType | null
 ): bodyElementType is BodyBindTypeDefaultOverride => {
-	return bodyElementType != null && bodyElementType in BODY_BIND_TYPE_DEFAULT_OVERRIDES;
+  return bodyElementType != null && bodyElementType in BODY_BIND_TYPE_DEFAULT_OVERRIDES;
 };
 
 const resolveDefaultBindType = (bodyElementType: AnyBodyElementType | null): BindType => {
-	if (isBodyBindTypeDefaultOverride(bodyElementType)) {
-		return BODY_BIND_TYPE_DEFAULT_OVERRIDES[bodyElementType];
-	}
+  if (isBodyBindTypeDefaultOverride(bodyElementType)) {
+    return BODY_BIND_TYPE_DEFAULT_OVERRIDES[bodyElementType];
+  }
 
-	return SPEC_BIND_TYPE_DEFAULT;
+  return SPEC_BIND_TYPE_DEFAULT;
 };
 
 const isBindType = (value: string): value is BindType => {
-	return BIND_TYPES.includes(value as BindType);
+  return BIND_TYPES.includes(value as BindType);
 };
 
 const resolveSupportedBindType = (sourceType: string): BindType | null => {
-	return isBindType(sourceType) ? sourceType : null;
+  return isBindType(sourceType) ? sourceType : null;
 };
 
 type BindTypeAliasMapping = Readonly<Record<string, BindType>>;
 
 const BIND_TYPE_ALIASES: BindTypeAliasMapping = {
-	select1: SPEC_BIND_TYPE_DEFAULT,
-	rank: SPEC_BIND_TYPE_DEFAULT,
-	'odk:rank': SPEC_BIND_TYPE_DEFAULT,
-	integer: 'int',
+  select1: SPEC_BIND_TYPE_DEFAULT,
+  rank: SPEC_BIND_TYPE_DEFAULT,
+  'odk:rank': SPEC_BIND_TYPE_DEFAULT,
+  integer: 'int',
 };
 
 /**
@@ -90,19 +90,19 @@ const BIND_TYPE_ALIASES: BindTypeAliasMapping = {
  * @todo Should we warn on alias resolution?
  */
 const resolveAliasedBindType = (sourceType: string): BindType | null => {
-	return BIND_TYPE_ALIASES[sourceType] ?? null;
+  return BIND_TYPE_ALIASES[sourceType] ?? null;
 };
 
 /**
  * @todo Should we warn on this fallback?
  */
 const resolveUnsupportedBindType = (_unsupportedType: string): BindType => {
-	return SPEC_BIND_TYPE_DEFAULT;
+  return SPEC_BIND_TYPE_DEFAULT;
 };
 
 interface BindDataTypeNamespaceResolver {
-	lookupNamespaceURI(prefix: string | null): string | null;
-	lookupPrefix(namespaceURI: string | null): string | null;
+  lookupNamespaceURI(prefix: string | null): string | null;
+  lookupPrefix(namespaceURI: string | null): string | null;
 }
 
 /**
@@ -113,104 +113,104 @@ interface BindDataTypeNamespaceResolver {
  *   namespace URI_
  */
 const resolveXMLSchemaNamespacePrefix = (
-	resolver: BindDataTypeNamespaceResolver
+  resolver: BindDataTypeNamespaceResolver
 ): string | null => {
-	const declaredPrefix = resolver.lookupPrefix(XSD_NAMESPACE_URI);
+  const declaredPrefix = resolver.lookupPrefix(XSD_NAMESPACE_URI);
 
-	if (declaredPrefix != null) {
-		return declaredPrefix;
-	}
+  if (declaredPrefix != null) {
+    return declaredPrefix;
+  }
 
-	if (resolver.lookupNamespaceURI(XSD_PREFIX) == null) {
-		return XSD_PREFIX;
-	}
+  if (resolver.lookupNamespaceURI(XSD_PREFIX) == null) {
+    return XSD_PREFIX;
+  }
 
-	return null;
+  return null;
 };
 
 interface MaybeBindElementNamespaceResolver
-	extends BindElement, Partial<BindDataTypeNamespaceResolver> {}
+  extends BindElement, Partial<BindDataTypeNamespaceResolver> {}
 
 interface BindElementNamespaceResolver extends BindElement, BindDataTypeNamespaceResolver {}
 
 const isNamespaceResolver = (
-	bindElement: MaybeBindElementNamespaceResolver
+  bindElement: MaybeBindElementNamespaceResolver
 ): bindElement is BindElementNamespaceResolver => {
-	return (
-		typeof bindElement.lookupNamespaceURI === 'function' &&
-		typeof bindElement.lookupPrefix === 'function'
-	);
+  return (
+    typeof bindElement.lookupNamespaceURI === 'function' &&
+    typeof bindElement.lookupPrefix === 'function'
+  );
 };
 
 const resolveNamespacedBindType = (
-	bindElement: BindElement,
-	sourceType: string
+  bindElement: BindElement,
+  sourceType: string
 ): BindType | null => {
-	if (!isNamespaceResolver(bindElement)) {
-		return null;
-	}
+  if (!isNamespaceResolver(bindElement)) {
+    return null;
+  }
 
-	const qualifiedName = parseQualifiedNameExpression(sourceType);
+  const qualifiedName = parseQualifiedNameExpression(sourceType);
 
-	if (qualifiedName == null) {
-		return null;
-	}
+  if (qualifiedName == null) {
+    return null;
+  }
 
-	const xsdPrefix = resolveXMLSchemaNamespacePrefix(bindElement);
+  const xsdPrefix = resolveXMLSchemaNamespacePrefix(bindElement);
 
-	if (xsdPrefix == null) {
-		return null;
-	}
+  if (xsdPrefix == null) {
+    return null;
+  }
 
-	const { prefix, localPart } = qualifiedName;
+  const { prefix, localPart } = qualifiedName;
 
-	if (prefix === xsdPrefix) {
-		return (
-			resolveSupportedBindType(localPart) ??
-			resolveAliasedBindType(localPart) ??
-			resolveUnsupportedBindType(localPart)
-		);
-	}
+  if (prefix === xsdPrefix) {
+    return (
+      resolveSupportedBindType(localPart) ??
+      resolveAliasedBindType(localPart) ??
+      resolveUnsupportedBindType(localPart)
+    );
+  }
 
-	return null;
+  return null;
 };
 
 const resolveBindType = (
-	bodyElementType: AnyBodyElementType | null,
-	bindElement: BindElement,
-	sourceType: string | null
+  bodyElementType: AnyBodyElementType | null,
+  bindElement: BindElement,
+  sourceType: string | null
 ): BindType => {
-	if (sourceType == null) {
-		return resolveDefaultBindType(bodyElementType);
-	}
+  if (sourceType == null) {
+    return resolveDefaultBindType(bodyElementType);
+  }
 
-	return (
-		resolveSupportedBindType(sourceType) ??
-		resolveAliasedBindType(sourceType) ??
-		resolveNamespacedBindType(bindElement, sourceType) ??
-		resolveUnsupportedBindType(sourceType)
-	);
+  return (
+    resolveSupportedBindType(sourceType) ??
+    resolveAliasedBindType(sourceType) ??
+    resolveNamespacedBindType(bindElement, sourceType) ??
+    resolveUnsupportedBindType(sourceType)
+  );
 };
 
 export class BindTypeDefinition<T extends BindType = BindType> {
-	static from<T extends BindType>(
-		form: XFormDefinition,
-		nodeset: string,
-		bindElement: BindElement
-	): BindTypeDefinition<T> {
-		const bodyElementType = form.body.getBodyElementType(nodeset);
-		const sourceType = bindElement.getAttribute('type');
-		const resolved = resolveBindType(
-			bodyElementType,
-			bindElement,
-			sourceType
-		) satisfies BindType as T;
+  static from<T extends BindType>(
+    form: XFormDefinition,
+    nodeset: string,
+    bindElement: BindElement
+  ): BindTypeDefinition<T> {
+    const bodyElementType = form.body.getBodyElementType(nodeset);
+    const sourceType = bindElement.getAttribute('type');
+    const resolved = resolveBindType(
+      bodyElementType,
+      bindElement,
+      sourceType
+    ) satisfies BindType as T;
 
-		return new this(sourceType, resolved);
-	}
+    return new this(sourceType, resolved);
+  }
 
-	private constructor(
-		readonly source: string | null,
-		readonly resolved: T
-	) {}
+  private constructor(
+    readonly source: string | null,
+    readonly resolved: T
+  ) {}
 }

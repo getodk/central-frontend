@@ -63,6 +63,7 @@ const loadMedia = async (src?: JRResourceURL): Promise<void> => {
 const setMedia = (value: string) => {
 	mediaUrl.value = value;
 	loading.value = false;
+	errorMessage.value = '';
 };
 
 const handleError = (error: string) => {

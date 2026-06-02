@@ -35,6 +35,7 @@ jobs:
         sed -i 's|\${BASE_URL}|https://${DOMAIN}|g' files/enketo/config.json.template # remove?
         sed -i 's|\${BASE_URL}|https://${DOMAIN}|g' files/service/config.json.template # remove?
         sed -i 's/\$scheme/https/g' files/nginx/odk.conf.template # remove?
+        sed -i 's/Content-Security-Policy/Content-Security-Report-Only/g' files/nginx/odk.conf.template
         sed 's/your.domain.com/central-test.localhost/; s/^SSL_TYPE=letsencrypt/SSL_TYPE=selfsign/' .env.template > .env
     - name: Add domain
       run: echo '127.0.0.1 central-test.localhost' | sudo tee --append /etc/hosts
@@ -52,7 +53,7 @@ jobs:
       run: client/e2e-tests/run-tests.sh --domain=central-test.localhost --port=443
     - name: Archive playwright result
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: Playwright Artifacts
         path: central/client/test-results

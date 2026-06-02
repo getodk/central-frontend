@@ -3,20 +3,20 @@ import type { ClientReactiveSerializableValueNode } from '../../../instance/inte
 import { escapeXMLText, serializeLeafElementXML } from '../../xml-serialization.ts';
 
 export const createValueNodeInstanceState = (
-	node: ClientReactiveSerializableValueNode
+  node: ClientReactiveSerializableValueNode
 ): InstanceState => {
-	const { qualifiedName } = node.definition;
+  const { qualifiedName } = node.definition;
 
-	return {
-		get instanceXML() {
-			if (!node.currentState.relevant) {
-				return '';
-			}
+  return {
+    get instanceXML() {
+      if (!node.currentState.relevant) {
+        return '';
+      }
 
-			const xmlValue = escapeXMLText(node.currentState.instanceValue);
-			const attributes = node.currentState.attributes;
+      const xmlValue = escapeXMLText(node.currentState.instanceValue);
+      const attributes = node.currentState.attributes;
 
-			return serializeLeafElementXML(qualifiedName, xmlValue, attributes);
-		},
-	};
+      return serializeLeafElementXML(qualifiedName, xmlValue, attributes);
+    },
+  };
 };

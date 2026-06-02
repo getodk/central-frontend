@@ -1,16 +1,16 @@
 import { assertInstanceType } from '@getodk/common/lib/runtime-types/instance-predicates.ts';
 import type {
-	AnyInputNode,
-	AnyNoteNode,
-	AnyRangeNode,
-	GroupNode,
-	RankNode,
-	RepeatInstanceNode,
-	RepeatRangeUncontrolledNode,
-	RootNode,
-	SelectNode,
-	TriggerNode,
-	UploadNode,
+  AnyInputNode,
+  AnyNoteNode,
+  AnyRangeNode,
+  GroupNode,
+  RankNode,
+  RepeatInstanceNode,
+  RepeatRangeUncontrolledNode,
+  RootNode,
+  SelectNode,
+  TriggerNode,
+  UploadNode,
 } from '@getodk/xforms-engine';
 import type { Scenario } from '../Scenario.ts';
 
@@ -26,13 +26,13 @@ export type QuestionPositionalEventNode =
 	| UploadNode;
 
 export interface PositionalEventTypeMapping {
-	readonly BEGINNING_OF_FORM: RootNode;
-	readonly QUESTION: QuestionPositionalEventNode;
-	readonly GROUP: GroupNode;
-	readonly REPEAT: RepeatInstanceNode;
-	readonly REPEAT_JUNCTURE: never; // per @lognaturel: this can be ignored
-	readonly PROMPT_NEW_REPEAT: RepeatRangeUncontrolledNode;
-	readonly END_OF_FORM: null;
+  readonly BEGINNING_OF_FORM: RootNode;
+  readonly QUESTION: QuestionPositionalEventNode;
+  readonly GROUP: GroupNode;
+  readonly REPEAT: RepeatInstanceNode;
+  readonly REPEAT_JUNCTURE: never; // per @lognaturel: this can be ignored
+  readonly PROMPT_NEW_REPEAT: RepeatRangeUncontrolledNode;
+  readonly END_OF_FORM: null;
 }
 
 export type PositionalEventType = keyof PositionalEventTypeMapping;
@@ -71,34 +71,34 @@ const singletons = new Map<AnyEventNode, UnknownPositionalEvent>();
  * instance of the {@link Scenario} client might interact.
  */
 export abstract class PositionalEvent<Type extends PositionalEventType> {
-	static from<Type extends PositionalEventType, Inst extends PositionalEvent<Type>>(
-		this: PositionalEventConstructor<Type, Inst>,
-		node: PositionalEventConstructorNode<Type, Inst>
-	): Inst {
-		let singleton = singletons.get(node);
+  static from<Type extends PositionalEventType, Inst extends PositionalEvent<Type>>(
+    this: PositionalEventConstructor<Type, Inst>,
+    node: PositionalEventConstructorNode<Type, Inst>
+  ): Inst {
+    let singleton = singletons.get(node);
 
-		if (singleton == null) {
-			singleton = new this(node);
-			singletons.set(node, singleton);
-		}
+    if (singleton == null) {
+      singleton = new this(node);
+      singletons.set(node, singleton);
+    }
 
-		assertInstanceType(this, singleton);
+    assertInstanceType(this, singleton);
 
-		return singleton;
-	}
+    return singleton;
+  }
 
-	static cleanup(): void {
-		singletons.clear();
-	}
+  static cleanup(): void {
+    singletons.clear();
+  }
 
-	abstract readonly eventType: Type;
+  abstract readonly eventType: Type;
 
-	constructor(readonly node: PositionalEventNode<Type>) {}
+  constructor(readonly node: PositionalEventNode<Type>) {}
 }
 
 type PositionalEventConstructor<
-	Type extends PositionalEventType,
-	Inst extends PositionalEvent<Type>,
+  Type extends PositionalEventType,
+  Inst extends PositionalEvent<Type>,
 > = new (node: Inst['node']) => Inst;
 
 // prettier-ignore

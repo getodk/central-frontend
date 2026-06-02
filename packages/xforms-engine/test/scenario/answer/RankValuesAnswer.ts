@@ -7,15 +7,15 @@ import { ComparableAnswer } from './ComparableAnswer.ts';
  * as part of a test's "act" phase.
  */
 export class RankValuesAnswer extends ComparableAnswer {
-	readonly stringValue: string;
+  readonly stringValue: string;
 
-	constructor(readonly values: readonly string[]) {
-		super();
+  constructor(readonly values: readonly string[]) {
+    super();
 
-		this.stringValue = values.join(' ');
-	}
+    this.stringValue = values.join(' ');
+  }
 
-	override inspectValue(): JSONValue {
-		return this.values;
-	}
+  override inspectValue(): JSONValue {
+    return this.values;
+  }
 }

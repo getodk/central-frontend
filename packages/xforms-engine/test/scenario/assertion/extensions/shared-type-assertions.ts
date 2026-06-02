@@ -6,18 +6,18 @@ import { type TypeofAssertion, typeofAssertion } from '../typeofAssertion.ts';
 type AssertRootNode = (node: unknown) => asserts node is RootNode;
 
 export const assertRootNode: AssertRootNode = (node) => {
-	assertUnknownObject(node);
+  assertUnknownObject(node);
 
-	const maybeRootNode = node as Partial<RootNode>;
+  const maybeRootNode = node as Partial<RootNode>;
 
-	if (
-		maybeRootNode.nodeType !== 'root' ||
-		typeof maybeRootNode.setLanguage !== 'function' ||
-		typeof maybeRootNode.currentState !== 'object' ||
-		maybeRootNode.currentState == null
-	) {
-		throw new Error('Node is not a `RootNode`');
-	}
+  if (
+    maybeRootNode.nodeType !== 'root' ||
+    typeof maybeRootNode.setLanguage !== 'function' ||
+    typeof maybeRootNode.currentState !== 'object' ||
+    maybeRootNode.currentState == null
+  ) {
+    throw new Error('Node is not a `RootNode`');
+  }
 };
 
 type AssertEngineNode = (node: unknown) => asserts node is AnyNode;
@@ -26,34 +26,34 @@ type AnyNodeType = AnyNode['nodeType'];
 type NonRootNodeType = Exclude<AnyNodeType, 'root'>;
 
 const nonRootNodeTypes = new Set<NonRootNodeType>([
-	'group',
-	'input',
-	'model-value',
-	'note',
-	'range',
-	'rank',
-	'repeat-instance',
-	'repeat-range:controlled',
-	'repeat-range:uncontrolled',
-	'select',
-	'trigger',
-	'upload',
+  'group',
+  'input',
+  'model-value',
+  'note',
+  'range',
+  'rank',
+  'repeat-instance',
+  'repeat-range:controlled',
+  'repeat-range:uncontrolled',
+  'select',
+  'trigger',
+  'upload',
 ]);
 
 export const assertEngineNode: AssertEngineNode = (node) => {
-	assertUnknownObject(node);
+  assertUnknownObject(node);
 
-	const maybeNode = node as Partial<AnyNode>;
+  const maybeNode = node as Partial<AnyNode>;
 
-	assertRootNode(maybeNode.root);
+  assertRootNode(maybeNode.root);
 
-	if (maybeNode === maybeNode.root) {
-		return;
-	}
+  if (maybeNode === maybeNode.root) {
+    return;
+  }
 
-	if (!nonRootNodeTypes.has(maybeNode.nodeType as NonRootNodeType)) {
-		throw new Error('Not an engine node');
-	}
+  if (!nonRootNodeTypes.has(maybeNode.nodeType as NonRootNodeType)) {
+    throw new Error('Not an engine node');
+  }
 };
 
 export const assertString: TypeofAssertion<'string'> = typeofAssertion('string');
@@ -61,9 +61,9 @@ export const assertString: TypeofAssertion<'string'> = typeofAssertion('string')
 type AssertNullableString = (value: unknown) => asserts value is string | null | undefined;
 
 export const assertNullableString: AssertNullableString = (value) => {
-	if (value != null) {
-		assertString(value);
-	}
+  if (value != null) {
+    assertString(value);
+  }
 };
 
 export const assertArrayOfStrings = arrayOfAssertion(assertString, 'string');

@@ -5,16 +5,19 @@ const user = process.env.ODK_USER;
 const password = process.env.ODK_PASSWORD;
 const credentials = Buffer.from(`${user}:${password}`, 'utf-8').toString('base64');
 const projectId = process.env.PROJECT_ID;
+const projectIdEncrypted = process.env.PROJECT_ID_ENCRYPTED;
 
 teardown('delete project', async ({ request }) => {
-  if (!projectId) return;
-
-  const res = await request.delete(`${appUrl}/v1/projects/${projectId}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Basic ${credentials}`
-    }
+  const promises = [ projectId, projectIdEncrypted ].map((project) => {
+    return request.delete(`${appUrl}/v1/projects/${project}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Basic ${credentials}`
+      }
+    })
+      .then(res => res.json())
+      .then(res => res.success);
   });
-
-  expect(res).toBeOK();
+  const results = await Promise.allSettled(promises);
+  results.forEach(result => expect(result.value).toEqual(true));
 });

@@ -12,5 +12,5 @@ export type JSONArray = readonly JSONValue[];
 
 // This must be an interface to avoid a circular type reference error
 export interface JSONObject {
-	readonly [key: string]: JSONValue;
+  readonly [key: string]: JSONValue;
 }

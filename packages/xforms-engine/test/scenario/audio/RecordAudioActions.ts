@@ -7,7 +7,7 @@ import type { RecordAudioActionListener } from './RecordAudioActionListener.ts';
  * detailed thoughts on this.
  */
 export class RecordAudioActions {
-	static setRecordAudioListener(_listener: RecordAudioActionListener): void {
-		throw new UnclearApplicabilityError('RecordAudioActions');
-	}
+  static setRecordAudioListener(_listener: RecordAudioActionListener): void {
+    throw new UnclearApplicabilityError('RecordAudioActions');
+  }
 }

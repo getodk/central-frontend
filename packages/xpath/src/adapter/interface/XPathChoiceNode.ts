@@ -1,3 +1,3 @@
 export interface XPathChoiceNode {
-	readonly getChoiceName: (value: string) => string | null;
+  readonly getChoiceName: (value: string) => string | null;
 }

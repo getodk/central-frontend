@@ -5,34 +5,34 @@ import { resolveDependencyNodesets } from '../../parse/xpath/dependency-analysis
 import { createComputedExpression } from './createComputedExpression.ts';
 
 export const createNoteReadonlyThunk = (
-	context: EvaluationContext,
-	definition: NoteNodeDefinition
+  context: EvaluationContext,
+  definition: NoteNodeDefinition
 ): Accessor<true> => {
-	const { reference } = definition.bodyElement;
-	const { readonly } = definition.bind;
+  const { reference } = definition.bodyElement;
+  const { readonly } = definition.bind;
 
-	if (!readonly.isConstantTruthyExpression()) {
-		throw new Error('Expected a static readonly expression');
-	}
+  if (!readonly.isConstantTruthyExpression()) {
+    throw new Error('Expected a static readonly expression');
+  }
 
-	let result = true;
+  let result = true;
 
-	if (import.meta.env.DEV) {
-		const { expression } = readonly;
-		const dependencyReferences = resolveDependencyNodesets(reference, expression);
+  if (import.meta.env.DEV) {
+    const { expression } = readonly;
+    const dependencyReferences = resolveDependencyNodesets(reference, expression);
 
-		if (dependencyReferences.length > 0) {
-			throw new Error(`Expected expression ${expression} to have no dependencies`);
-		}
+    if (dependencyReferences.length > 0) {
+      throw new Error(`Expected expression ${expression} to have no dependencies`);
+    }
 
-		const computedExpression = createComputedExpression(context, readonly);
+    const computedExpression = createComputedExpression(context, readonly);
 
-		result = computedExpression();
+    result = computedExpression();
 
-		if (result !== true) {
-			throw new Error(`Expected expression ${readonly.expression} to return true`);
-		}
-	}
+    if (result !== true) {
+      throw new Error(`Expected expression ${readonly.expression} to return true`);
+    }
+  }
 
-	return () => result;
+  return () => result;
 };

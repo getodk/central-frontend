@@ -17,5 +17,5 @@
 declare var atob: (value: string) => string;
 
 class TextDecoder {
-	decode(other: Uint8Array): string;
+  decode(other: Uint8Array): string;
 }

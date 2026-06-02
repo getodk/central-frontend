@@ -8,31 +8,31 @@ import { fileURLToPath } from 'node:url';
 
 const rootUrl = new URL('../..', import.meta.url);
 const featureMatrix = JSON.parse(
-	await fs.readFile(new URL('./feature-matrix.json', rootUrl), 'utf-8')
+  await fs.readFile(new URL('./feature-matrix.json', rootUrl), 'utf-8')
 );
 const template = await fs.readFile(
-	new URL('bin/feature-matrix/template.mustache', rootUrl),
-	'utf-8'
+  new URL('bin/feature-matrix/template.mustache', rootUrl),
+  'utf-8'
 );
 const readmeFile = await fs.readFile(new URL('./README.md', rootUrl), 'utf-8');
 
 // Modified version of https://gist.github.com/rougier/c0d31f5cbdaac27b876c?permalink_comment_id=2269298#gistcomment-2269298
 const progress = (fraction) => {
-	const totalLength = 15;
-	const barLength = Math.floor(fraction * totalLength);
-	const bar = Array(barLength).fill('🟩').join('');
-	const remaining = Array(totalLength - barLength)
-		.fill('⬜')
-		.join('');
-	return `${bar}${remaining} ${Math.floor(fraction * 100)}\\%`;
+  const totalLength = 15;
+  const barLength = Math.floor(fraction * totalLength);
+  const bar = Array(barLength).fill('🟩').join('');
+  const remaining = Array(totalLength - barLength)
+    .fill('⬜')
+    .join('');
+  return `${bar}${remaining} ${Math.floor(fraction * 100)}\\%`;
 };
 
 const isMarkdownLink = (s) => /^\[[^\]]+\]\([^)]+\)$/.test(s);
 
 const visibleText = (token) => {
-	// Replace markdown links with just their visible label
-	// "[Foo Bar](https://example.com)" -> "Foo Bar"
-	return token.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+  // Replace markdown links with just their visible label
+  // "[Foo Bar](https://example.com)" -> "Foo Bar"
+  return token.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
 };
 
 const visibleLength = (token) => visibleText(token).length;
@@ -42,49 +42,49 @@ const visibleLength = (token) => visibleText(token).length;
 const tokenizePreservingLinks = (str) => str.match(/\[[^\]]+\]\([^)]+\)|\S+/g) ?? [];
 
 const wrapString = (str, maxLength) => {
-	if (visibleText(str).length <= maxLength) return str;
+  if (visibleText(str).length <= maxLength) return str;
 
-	const tokens = tokenizePreservingLinks(str);
-	const lines = [];
-	let currentLine = '';
-	let currentLen = 0;
+  const tokens = tokenizePreservingLinks(str);
+  const lines = [];
+  let currentLine = '';
+  let currentLen = 0;
 
-	for (const token of tokens) {
-		const tokenLen = visibleLength(token);
+  for (const token of tokens) {
+    const tokenLen = visibleLength(token);
 
-		// +1 for the space if not first token in the line
-		const extra = currentLine === '' ? 0 : 1;
+    // +1 for the space if not first token in the line
+    const extra = currentLine === '' ? 0 : 1;
 
-		if (currentLen + extra + tokenLen > maxLength) {
-			if (currentLine !== '') lines.push(currentLine);
-			currentLine = token;
-			currentLen = tokenLen;
-		} else {
-			currentLine = currentLine === '' ? token : `${currentLine} ${token}`;
-			currentLen += extra + tokenLen;
-		}
-	}
+    if (currentLen + extra + tokenLen > maxLength) {
+      if (currentLine !== '') lines.push(currentLine);
+      currentLine = token;
+      currentLen = tokenLen;
+    } else {
+      currentLine = currentLine === '' ? token : `${currentLine} ${token}`;
+      currentLen += extra + tokenLen;
+    }
+  }
 
-	if (currentLine !== '') lines.push(currentLine);
-	return lines.join('<br/>');
+  if (currentLine !== '') lines.push(currentLine);
+  return lines.join('<br/>');
 };
 
 // Transform feature-matrix.json object into array
 const featureCategories = Object.keys(featureMatrix).map((featureCategory) => {
-	const features = Object.keys(featureMatrix[featureCategory]).map((feature) => {
-		return {
-			label: wrapString(feature.replaceAll('|', '\\|'), 40),
-			status: featureMatrix[featureCategory][feature],
-		};
-	});
+  const features = Object.keys(featureMatrix[featureCategory]).map((feature) => {
+    return {
+      label: wrapString(feature.replaceAll('|', '\\|'), 40),
+      status: featureMatrix[featureCategory][feature],
+    };
+  });
 
-	// no points for 🚧
-	const progressFraction = features.filter((f) => f.status === '✅').length / features.length;
+  // no points for 🚧
+  const progressFraction = features.filter((f) => f.status === '✅').length / features.length;
 
-	return {
-		label: `##### ${featureCategory}<br/>${progress(progressFraction)}`,
-		features,
-	};
+  return {
+    label: `##### ${featureCategory}<br/>${progress(progressFraction)}`,
+    features,
+  };
 });
 
 const featureMatrixMd = Mustache.render(template, { categories: featureCategories });
@@ -100,4 +100,4 @@ await fs.writeFile(new URL('./README.md', rootUrl), updatedReadme, { encoding: '
 
 const rootDir = fileURLToPath(rootUrl);
 
-spawnSync('npm', ['run', 'format:readme-only'], { cwd: rootDir });
+spawnSync('npx', ['prettier', '--write', 'README.md'], { cwd: rootDir });

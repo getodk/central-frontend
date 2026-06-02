@@ -4,6 +4,6 @@ import { FunctionLibrary } from '../../evaluator/functions/FunctionLibrary.ts';
 import { date, formatDateTime } from '../xforms/datetime.ts';
 
 export const enk = new FunctionLibrary(ENKETO_NAMESPACE_URI, [
-	new FunctionAlias('date-time', date),
-	new FunctionAlias('format-date', formatDateTime),
+  new FunctionAlias('date-time', date),
+  new FunctionAlias('format-date', formatDateTime),
 ]);

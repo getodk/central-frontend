@@ -1,14 +1,14 @@
 import {
-	bind,
-	body,
-	head,
-	html,
-	input,
-	mainInstance,
-	model,
-	repeat,
-	t,
-	title,
+  bind,
+  body,
+  head,
+  html,
+  input,
+  mainInstance,
+  model,
+  repeat,
+  t,
+  title,
 } from '@getodk/common/test-utils/xform-dsl/index.ts';
 import type { ValueType } from '@getodk/xforms-engine';
 import { Temporal } from 'temporal-polyfill';
@@ -20,13 +20,13 @@ import type { ValueNodeAnswer } from '../scenario/answer/ValueNodeAnswer.ts';
 import { Scenario } from '../scenario/jr/Scenario.ts';
 
 describe('Data (<bind type>) type support', () => {
-	describe('model-only values', () => {
-		const formTitle = 'Model value types';
-		const modelNodeRelevancePath = '/root/model-node-relevance';
-		const modelNodeRelevanceExpression = `${modelNodeRelevancePath} = 'yes'`;
+  describe('model-only values', () => {
+    const formTitle = 'Model value types';
+    const modelNodeRelevancePath = '/root/model-node-relevance';
+    const modelNodeRelevanceExpression = `${modelNodeRelevancePath} = 'yes'`;
 
-		// prettier-ignore
-		const formDefinition = html(
+    // prettier-ignore
+    const formDefinition = html(
 			head(
 				title(formTitle),
 				model(
@@ -54,203 +54,203 @@ describe('Data (<bind type>) type support', () => {
 				input('/root/model-node-relevance'))
 		);
 
-		type AssertTypedModelValueNodeAnswer = <V extends ValueType>(
-			answer: ValueNodeAnswer,
-			valueType: V
-		) => asserts answer is ModelValueNodeAnswer<V>;
+    type AssertTypedModelValueNodeAnswer = <V extends ValueType>(
+      answer: ValueNodeAnswer,
+      valueType: V
+    ) => asserts answer is ModelValueNodeAnswer<V>;
 
-		const assertTypedModelValueNodeAnswer: AssertTypedModelValueNodeAnswer = (
-			answer,
-			valueType
-		) => {
-			assert(answer instanceof ModelValueNodeAnswer);
-			assert(answer.valueType === valueType);
-		};
+    const assertTypedModelValueNodeAnswer: AssertTypedModelValueNodeAnswer = (
+      answer,
+      valueType
+    ) => {
+      assert(answer instanceof ModelValueNodeAnswer);
+      assert(answer.valueType === valueType);
+    };
 
-		const getTypedModelValueNodeAnswer = <V extends ValueType>(
-			reference: string,
-			valueType: V
-		): ModelValueNodeAnswer<V> => {
-			const answer = scenario.answerOf(reference);
+    const getTypedModelValueNodeAnswer = <V extends ValueType>(
+      reference: string,
+      valueType: V
+    ): ModelValueNodeAnswer<V> => {
+      const answer = scenario.answerOf(reference);
 
-			assertTypedModelValueNodeAnswer(answer, valueType);
+      assertTypedModelValueNodeAnswer(answer, valueType);
 
-			return answer;
-		};
+      return answer;
+    };
 
-		let scenario: Scenario;
+    let scenario: Scenario;
 
-		beforeEach(async () => {
-			scenario = await Scenario.init(formTitle, formDefinition);
-		});
+    beforeEach(async () => {
+      scenario = await Scenario.init(formTitle, formDefinition);
+    });
 
-		describe('explicit type="string"', () => {
-			let answer: ModelValueNodeAnswer<'string'>;
+    describe('explicit type="string"', () => {
+      let answer: ModelValueNodeAnswer<'string'>;
 
-			beforeEach(() => {
-				answer = getTypedModelValueNodeAnswer('/root/string-value', 'string');
-			});
+      beforeEach(() => {
+        answer = getTypedModelValueNodeAnswer('/root/string-value', 'string');
+      });
 
-			it('has a string runtime value', () => {
-				expect(answer.value).toBeTypeOf('string');
-			});
+      it('has a string runtime value', () => {
+        expect(answer.value).toBeTypeOf('string');
+      });
 
-			it('has a string static type', () => {
-				expectTypeOf(answer.value).toBeString();
-			});
+      it('has a string static type', () => {
+        expectTypeOf(answer.value).toBeString();
+      });
 
-			it('has a string populated value', () => {
-				expect(answer.value).toBe('explicit string');
-			});
+      it('has a string populated value', () => {
+        expect(answer.value).toBe('explicit string');
+      });
 
-			it('has an empty string blank value', () => {
-				scenario.answer(modelNodeRelevancePath, 'no');
-				answer = getTypedModelValueNodeAnswer('/root/string-value', 'string');
-				expect(answer.value).toBe('');
-			});
-		});
+      it('has an empty string blank value', () => {
+        scenario.answer(modelNodeRelevancePath, 'no');
+        answer = getTypedModelValueNodeAnswer('/root/string-value', 'string');
+        expect(answer.value).toBe('');
+      });
+    });
 
-		describe('implicit string type (default)', () => {
-			let answer: ModelValueNodeAnswer<'string'>;
+    describe('implicit string type (default)', () => {
+      let answer: ModelValueNodeAnswer<'string'>;
 
-			beforeEach(() => {
-				answer = getTypedModelValueNodeAnswer('/root/implicit-string-value', 'string');
-			});
+      beforeEach(() => {
+        answer = getTypedModelValueNodeAnswer('/root/implicit-string-value', 'string');
+      });
 
-			it('has a string runtime value', () => {
-				expect(answer.value).toBeTypeOf('string');
-			});
+      it('has a string runtime value', () => {
+        expect(answer.value).toBeTypeOf('string');
+      });
 
-			it('has a string static type', () => {
-				expectTypeOf(answer.value).toBeString();
-			});
+      it('has a string static type', () => {
+        expectTypeOf(answer.value).toBeString();
+      });
 
-			it('has a string populated value', () => {
-				expect(answer.value).toBe('implicit string');
-			});
+      it('has a string populated value', () => {
+        expect(answer.value).toBe('implicit string');
+      });
 
-			it('has an empty string blank value', () => {
-				scenario.answer(modelNodeRelevancePath, 'no');
-				answer = getTypedModelValueNodeAnswer('/root/implicit-string-value', 'string');
-				expect(answer.value).toBe('');
-			});
-		});
+      it('has an empty string blank value', () => {
+        scenario.answer(modelNodeRelevancePath, 'no');
+        answer = getTypedModelValueNodeAnswer('/root/implicit-string-value', 'string');
+        expect(answer.value).toBe('');
+      });
+    });
 
-		describe('type="int"', () => {
-			let answer: ModelValueNodeAnswer<'int'>;
+    describe('type="int"', () => {
+      let answer: ModelValueNodeAnswer<'int'>;
 
-			beforeEach(() => {
-				answer = getTypedModelValueNodeAnswer('/root/int-value', 'int');
-			});
+      beforeEach(() => {
+        answer = getTypedModelValueNodeAnswer('/root/int-value', 'int');
+      });
 
-			it('has a bigint runtime value', () => {
-				expect(answer.value).toBeTypeOf('bigint');
-			});
+      it('has a bigint runtime value', () => {
+        expect(answer.value).toBeTypeOf('bigint');
+      });
 
-			it('has a bigint | null static type', () => {
-				expectTypeOf(answer.value).toEqualTypeOf<bigint | null>();
-			});
+      it('has a bigint | null static type', () => {
+        expectTypeOf(answer.value).toEqualTypeOf<bigint | null>();
+      });
 
-			it('has a bigint populated value', () => {
-				expect(answer.value).toBe(123n);
-			});
+      it('has a bigint populated value', () => {
+        expect(answer.value).toBe(123n);
+      });
 
-			it('has a null blank value', () => {
-				scenario.answer(modelNodeRelevancePath, 'no');
-				answer = getTypedModelValueNodeAnswer('/root/int-value', 'int');
-				expect(answer.value).toBe(null);
-			});
-		});
+      it('has a null blank value', () => {
+        scenario.answer(modelNodeRelevancePath, 'no');
+        answer = getTypedModelValueNodeAnswer('/root/int-value', 'int');
+        expect(answer.value).toBe(null);
+      });
+    });
 
-		describe('type="decimal"', () => {
-			let answer: ModelValueNodeAnswer<'decimal'>;
+    describe('type="decimal"', () => {
+      let answer: ModelValueNodeAnswer<'decimal'>;
 
-			beforeEach(() => {
-				answer = getTypedModelValueNodeAnswer('/root/decimal-value', 'decimal');
-			});
+      beforeEach(() => {
+        answer = getTypedModelValueNodeAnswer('/root/decimal-value', 'decimal');
+      });
 
-			it('has a number runtime value', () => {
-				expect(answer.value).toBeTypeOf('number');
-			});
+      it('has a number runtime value', () => {
+        expect(answer.value).toBeTypeOf('number');
+      });
 
-			it('has a number | null static type', () => {
-				expectTypeOf(answer.value).toEqualTypeOf<number | null>();
-			});
+      it('has a number | null static type', () => {
+        expectTypeOf(answer.value).toEqualTypeOf<number | null>();
+      });
 
-			it('has a number populated value', () => {
-				expect(answer.value).toBe(45.67);
-			});
+      it('has a number populated value', () => {
+        expect(answer.value).toBe(45.67);
+      });
 
-			it('has a null blank value', () => {
-				scenario.answer(modelNodeRelevancePath, 'no');
-				answer = getTypedModelValueNodeAnswer('/root/decimal-value', 'decimal');
-				expect(answer.value).toBe(null);
-			});
-		});
+      it('has a null blank value', () => {
+        scenario.answer(modelNodeRelevancePath, 'no');
+        answer = getTypedModelValueNodeAnswer('/root/decimal-value', 'decimal');
+        expect(answer.value).toBe(null);
+      });
+    });
 
-		describe('type="geopoint"', () => {
-			let answer: ModelValueNodeAnswer<'geopoint'>;
+    describe('type="geopoint"', () => {
+      let answer: ModelValueNodeAnswer<'geopoint'>;
 
-			beforeEach(() => {
-				answer = getTypedModelValueNodeAnswer('/root/geopoint-value', 'geopoint');
-			});
+      beforeEach(() => {
+        answer = getTypedModelValueNodeAnswer('/root/geopoint-value', 'geopoint');
+      });
 
-			it('has a (nullable) structured geopoint static type', () => {
-				interface ExpectedGeopointValue {
-					readonly latitude: number;
-					readonly longitude: number;
-					readonly altitude: number | null;
-					readonly accuracy: number | null;
-				}
-				expectTypeOf(answer.value).toEqualTypeOf<ExpectedGeopointValue | null>();
-			});
+      it('has a (nullable) structured geopoint static type', () => {
+        interface ExpectedGeopointValue {
+          readonly latitude: number;
+          readonly longitude: number;
+          readonly altitude: number;
+          readonly accuracy: number;
+        }
+        expectTypeOf(answer.value).toEqualTypeOf<ExpectedGeopointValue | null>();
+      });
 
-			it('has a GeopointValue populated value', () => {
-				expect(answer.value).toEqual({
-					accuracy: 0,
-					altitude: 0,
-					latitude: 38.25146813817506,
-					longitude: 21.758421137528785,
-				});
-			});
+      it('has a GeopointValue populated value', () => {
+        expect(answer.value).toEqual({
+          accuracy: 0,
+          altitude: 0,
+          latitude: 38.25146813817506,
+          longitude: 21.758421137528785,
+        });
+      });
 
-			it('has a null as blank value', () => {
-				scenario.answer(modelNodeRelevancePath, 'no');
-				answer = getTypedModelValueNodeAnswer('/root/geopoint-value', 'geopoint');
-				expect(answer.value).toBeNull();
-			});
-		});
+      it('has a null as blank value', () => {
+        scenario.answer(modelNodeRelevancePath, 'no');
+        answer = getTypedModelValueNodeAnswer('/root/geopoint-value', 'geopoint');
+        expect(answer.value).toBeNull();
+      });
+    });
 
-		describe('type="date"', () => {
-			let answer: ModelValueNodeAnswer<'date'>;
+    describe('type="date"', () => {
+      let answer: ModelValueNodeAnswer<'date'>;
 
-			beforeEach(() => {
-				answer = getTypedModelValueNodeAnswer('/root/date-value', 'date');
-			});
+      beforeEach(() => {
+        answer = getTypedModelValueNodeAnswer('/root/date-value', 'date');
+      });
 
-			it('has a PlainDate | null static type', () => {
-				expectTypeOf(answer.value).toEqualTypeOf<Temporal.PlainDate | null>();
-			});
+      it('has a PlainDate | null static type', () => {
+        expectTypeOf(answer.value).toEqualTypeOf<Temporal.PlainDate | null>();
+      });
 
-			it('has a date populated value', () => {
-				expect(answer.value).to.deep.equal(Temporal.PlainDate.from('1999-11-23'));
-			});
+      it('has a date populated value', () => {
+        expect(answer.value).to.deep.equal(Temporal.PlainDate.from('1999-11-23'));
+      });
 
-			it('has a null as blank value', () => {
-				scenario.answer(modelNodeRelevancePath, 'no');
-				answer = getTypedModelValueNodeAnswer('/root/date-value', 'date');
-				expect(answer.value).toBeNull();
-			});
-		});
-	});
+      it('has a null as blank value', () => {
+        scenario.answer(modelNodeRelevancePath, 'no');
+        answer = getTypedModelValueNodeAnswer('/root/date-value', 'date');
+        expect(answer.value).toBeNull();
+      });
+    });
+  });
 
-	describe('inputs', () => {
-		const formTitle = 'Input types';
-		const inputRelevancePath = '/root/input-relevance';
-		const inputRelevanceExpression = `${inputRelevancePath} = 'yes'`;
+  describe('inputs', () => {
+    const formTitle = 'Input types';
+    const inputRelevancePath = '/root/input-relevance';
+    const inputRelevanceExpression = `${inputRelevancePath} = 'yes'`;
 
-		// prettier-ignore
-		const formDefinition = html(
+    // prettier-ignore
+    const formDefinition = html(
 			head(
 				title('Input types'),
 				model(
@@ -285,451 +285,477 @@ describe('Data (<bind type>) type support', () => {
 			)
 		);
 
-		let scenario: Scenario;
-
-		type AssertTypedInputNodeAnswer = <V extends ValueType>(
-			answer: ValueNodeAnswer,
-			valueType: V
-		) => asserts answer is InputNodeAnswer<V>;
-
-		const assertTypedInputNodeAnswer: AssertTypedInputNodeAnswer = (answer, valueType) => {
-			assert(answer instanceof InputNodeAnswer);
-			assert(answer.valueType === valueType);
-		};
-
-		const getTypedInputNodeAnswer = <V extends ValueType>(
-			reference: string,
-			valueType: V
-		): InputNodeAnswer<V> => {
-			const answer = scenario.answerOf(reference);
-
-			assertTypedInputNodeAnswer(answer, valueType);
-
-			return answer;
-		};
-
-		beforeEach(async () => {
-			scenario = await Scenario.init(formTitle, formDefinition);
-		});
-
-		describe('explicit type="string"', () => {
-			let answer: InputNodeAnswer<'string'>;
-
-			beforeEach(() => {
-				answer = getTypedInputNodeAnswer('/root/string-value', 'string');
-			});
-
-			it('has a string runtime value', () => {
-				expect(answer.value).toBeTypeOf('string');
-			});
-
-			it('has a string static type', () => {
-				expectTypeOf(answer.value).toBeString();
-			});
-
-			it('has a string populated value', () => {
-				expect(answer.value).toBe('explicit string');
-			});
-
-			it('has an empty string blank value', () => {
-				scenario.answer(inputRelevancePath, 'no');
-				answer = getTypedInputNodeAnswer('/root/string-value', 'string');
-				expect(answer.value).toBe('');
-			});
-
-			it('sets a string value', () => {
-				scenario.answer('/root/string-value', 'updated string');
-				answer = getTypedInputNodeAnswer('/root/string-value', 'string');
-				expect(answer.value).toBe('updated string');
-			});
-		});
-
-		describe('implicit string type (default)', () => {
-			let answer: InputNodeAnswer<'string'>;
-
-			beforeEach(() => {
-				answer = getTypedInputNodeAnswer('/root/implicit-string-value', 'string');
-			});
-
-			it('has a string runtime value', () => {
-				expect(answer.value).toBeTypeOf('string');
-			});
-
-			it('has a string static type', () => {
-				expectTypeOf(answer.value).toBeString();
-			});
-
-			it('has a string populated value', () => {
-				expect(answer.value).toBe('implicit string');
-			});
-
-			it('has an empty string blank value', () => {
-				scenario.answer(inputRelevancePath, 'no');
-				answer = getTypedInputNodeAnswer('/root/implicit-string-value', 'string');
-				expect(answer.value).toBe('');
-			});
-
-			it('sets a string value', () => {
-				scenario.answer('/root/implicit-string-value', 'updated string');
-				answer = getTypedInputNodeAnswer('/root/implicit-string-value', 'string');
-				expect(answer.value).toBe('updated string');
-			});
-		});
-
-		describe('type="int"', () => {
-			let answer: InputNodeAnswer<'int'>;
-
-			beforeEach(() => {
-				answer = getTypedInputNodeAnswer('/root/int-value', 'int');
-			});
-
-			it('has a bigint runtime value', () => {
-				expect(answer.value).toBeTypeOf('bigint');
-			});
-
-			it('has a bigint | null static type', () => {
-				expectTypeOf(answer.value).toEqualTypeOf<bigint | null>();
-			});
-
-			it('has a bigint populated value', () => {
-				expect(answer.value).toBe(123n);
-			});
-
-			it('has a null blank value', () => {
-				scenario.answer(inputRelevancePath, 'no');
-				answer = getTypedInputNodeAnswer('/root/int-value', 'int');
-				expect(answer.value).toBe(null);
-			});
-
-			describe('setting int values', () => {
-				interface SetIntInputValueByType {
-					readonly bigint: bigint;
-					readonly number: number;
-					readonly string: string;
-					readonly null: null;
-				}
-
-				type SetIntInputValueType = keyof SetIntInputValueByType;
-
-				describe('sets value', () => {
-					interface BaseSetIntInputValueCase<T extends SetIntInputValueType> {
-						readonly inputType: T;
-						readonly inputValue: SetIntInputValueByType[T];
-						readonly expectedValue: bigint | null;
-					}
-
-					type SetIntInputValueCase = {
-						[T in SetIntInputValueType]: BaseSetIntInputValueCase<T>;
-					}[SetIntInputValueType];
-
-					it.each<SetIntInputValueCase>([
-						{ inputType: 'bigint', inputValue: 89n, expectedValue: 89n },
-						{ inputType: 'number', inputValue: 10, expectedValue: 10n },
-						{ inputType: 'string', inputValue: '23', expectedValue: 23n },
-						{ inputType: 'null', inputValue: null, expectedValue: null },
-						{ inputType: 'string', inputValue: '10.1', expectedValue: 10n },
-						{ inputType: 'number', inputValue: 10.1, expectedValue: 10n },
-					])(
-						'$inputValue ($inputType), resulting in value $expectedValue',
-						({ inputValue, expectedValue }) => {
-							scenario.answer('/root/int-value', inputValue);
-							answer = getTypedInputNodeAnswer('/root/int-value', 'int');
-
-							expectTypeOf(answer.value).toEqualTypeOf<bigint | null>();
-
-							if (expectedValue == null) {
-								expect(answer.value).toBeNull();
-								expect(answer.stringValue).toBe('');
-							} else {
-								expect(answer.value).toBeTypeOf('bigint');
-								expect(answer.value).toBe(expectedValue);
-								expect(answer.stringValue).toBe(`${expectedValue}`);
-							}
-						}
-					);
-				});
-
-				describe('fails to set when out of bounds', () => {
-					interface BaseSetIntInputErrorCase<T extends SetIntInputValueType> {
-						readonly inputType: T;
-						readonly inputValue: SetIntInputValueByType[T];
-					}
-
-					type SetIntInputErrorCase = {
-						[T in SetIntInputValueType]: BaseSetIntInputErrorCase<T>;
-					}[SetIntInputValueType];
-
-					it.each<SetIntInputErrorCase>([
-						{ inputType: 'bigint', inputValue: -2_147_483_649n },
-						{ inputType: 'bigint', inputValue: 2_147_483_648n },
-						{ inputType: 'number', inputValue: -2_147_483_649 },
-						{ inputType: 'number', inputValue: 2_147_483_648 },
-						{ inputType: 'string', inputValue: '-2147483649' },
-						{ inputType: 'string', inputValue: '2147483648' },
-					])('$inputValue ($inputType)', ({ inputValue }) => {
-						scenario.answer('/root/int-value', inputValue);
-						answer = getTypedInputNodeAnswer('/root/int-value', 'int');
-						expect(answer.value).toBeNull();
-						expect(answer.stringValue).toBe('');
-					});
-				});
-			});
-		});
-
-		describe('type="decimal"', () => {
-			let answer: InputNodeAnswer<'decimal'>;
-
-			beforeEach(() => {
-				answer = getTypedInputNodeAnswer('/root/decimal-value', 'decimal');
-			});
-
-			it('has a number runtime value', () => {
-				expect(answer.value).toBeTypeOf('number');
-			});
-
-			it('has a number | null static type', () => {
-				expectTypeOf(answer.value).toEqualTypeOf<number | null>();
-			});
-
-			it('has a number populated value', () => {
-				expect(answer.value).toBe(45.67);
-			});
-
-			it('has a null blank value', () => {
-				scenario.answer(inputRelevancePath, 'no');
-				answer = getTypedInputNodeAnswer('/root/decimal-value', 'decimal');
-				expect(answer.value).toBe(null);
-			});
-
-			describe('setting decimal values', () => {
-				interface SetDecimalInputValueByType {
-					readonly bigint: bigint;
-					readonly number: number;
-					readonly string: string;
-					readonly null: null;
-				}
-
-				type SetDecimalInputValueType = keyof SetDecimalInputValueByType;
-
-				interface BaseSetDecimalInputValueCase<T extends SetDecimalInputValueType> {
-					readonly inputType: T;
-					readonly inputValue: SetDecimalInputValueByType[T];
-					readonly expectedValue: number | null;
-					readonly expectedStringValue: string;
-				}
-
-				type SetDecimalInputValueCase = {
-					[T in SetDecimalInputValueType]: BaseSetDecimalInputValueCase<T>;
-				}[SetDecimalInputValueType];
-
-				it.each<SetDecimalInputValueCase>([
-					{ inputType: 'bigint', inputValue: 89n, expectedValue: 89, expectedStringValue: '89.0' },
-					{ inputType: 'number', inputValue: 10, expectedValue: 10, expectedStringValue: '10.0' },
-					{ inputType: 'string', inputValue: '23', expectedValue: 23, expectedStringValue: '23.0' },
-					{ inputType: 'null', inputValue: null, expectedValue: null, expectedStringValue: '' },
-				])('sets value ($inputType)', ({ inputValue, expectedValue, expectedStringValue }) => {
-					scenario.answer('/root/decimal-value', inputValue);
-					answer = getTypedInputNodeAnswer('/root/decimal-value', 'decimal');
-
-					expectTypeOf(answer.value).toEqualTypeOf<number | null>();
-
-					if (expectedValue == null) {
-						expect(answer.value).toBeNull();
-						expect(answer.stringValue).toBe('');
-					} else {
-						expect(answer.value).toBeTypeOf('number');
-						expect(answer.value).toBe(expectedValue);
-						expect(answer.stringValue).toBe(`${expectedStringValue}`);
-					}
-				});
-			});
-		});
-
-		describe('type="geopoint"', () => {
-			let answer: InputNodeAnswer<'geopoint'>;
-
-			beforeEach(() => {
-				answer = getTypedInputNodeAnswer('/root/geopoint-value', 'geopoint');
-			});
-
-			it('has a (nullable) structured geopoint static type', () => {
-				interface ExpectedGeopointValue {
-					readonly latitude: number;
-					readonly longitude: number;
-					readonly altitude: number | null;
-					readonly accuracy: number | null;
-				}
-				expectTypeOf(answer.value).toEqualTypeOf<ExpectedGeopointValue | null>();
-			});
-
-			it('has a GeopointValue populated value', () => {
-				expect(answer.value).toEqual({
-					latitude: 38.25146813817506,
-					longitude: 21.758421137528785,
-					altitude: 1000,
-					accuracy: 25,
-				});
-				expect(answer.stringValue).toEqual('38.25146813817506 21.758421137528785 1000.0 25.0');
-			});
-
-			it('has an null as blank value', () => {
-				scenario.answer(inputRelevancePath, 'no');
-				answer = getTypedInputNodeAnswer('/root/geopoint-value', 'geopoint');
-				expect(answer.value).toBeNull();
-				expect(answer.stringValue).toBe('');
-			});
-
-			it('sets altitude with value zero', () => {
-				scenario.answer('/root/geopoint-value', '-5.299 46.663 0 5');
-				answer = getTypedInputNodeAnswer('/root/geopoint-value', 'geopoint');
-				expect(answer.value).toEqual({
-					latitude: -5.299,
-					longitude: 46.663,
-					altitude: 0,
-					accuracy: 5,
-				});
-				expect(answer.stringValue).toEqual('-5.299 46.663 0.0 5.0');
-			});
-
-			it.each([
-				'ZYX %% ABC $$',
-				'ZYX %% 1200 10',
-				'-15.2936673 120.7260063 ABC $$',
-				'-2.33373 36.7260063 ABC 15',
-				'20.2936673 -16.7260063 1200 ABCD',
-				'99 179.99999 1200 0',
-				'89.999 180.1111 1300 0',
-			])('has null when incorrect value is passed', (expression) => {
-				scenario.answer('/root/geopoint-value', expression);
-				answer = getTypedInputNodeAnswer('/root/geopoint-value', 'geopoint');
-				expect(answer.value).toBeNull();
-				expect(answer.stringValue).toBe('');
-			});
-
-			it.each([
-				{
-					expression: { latitude: 20.663, longitude: 16.763 },
-					expectedAsObject: { latitude: 20.663, longitude: 16.763, altitude: null, accuracy: null },
-					expectedAsText: '20.663 16.763',
-				},
-				{
-					expression: { latitude: 19.899, longitude: 100.55559, accuracy: 15 },
-					expectedAsObject: { latitude: 19.899, longitude: 100.55559, altitude: 0, accuracy: 15 },
-					expectedAsText: '19.899 100.55559 0.0 15.0',
-				},
-				{
-					expression: { latitude: 45.111, longitude: 127.23, altitude: 1350 },
-					expectedAsObject: { latitude: 45.111, longitude: 127.23, altitude: 1350, accuracy: null },
-					expectedAsText: '45.111 127.23 1350.0',
-				},
-				{
-					expression: { latitude: 14.66599, longitude: 179.9009, altitude: 200, accuracy: 5 },
-					expectedAsObject: { latitude: 14.66599, longitude: 179.9009, altitude: 200, accuracy: 5 },
-					expectedAsText: '14.66599 179.9009 200.0 5.0',
-				},
-				{
-					expression: { latitude: 0, longitude: 0, altitude: 0, accuracy: 0 },
-					expectedAsObject: null,
-					expectedAsText: '',
-				},
-			])(
-				'sets value with GeopointValue object',
-				({ expression, expectedAsObject, expectedAsText }) => {
-					scenario.answer('/root/geopoint-value', expression);
-					answer = getTypedInputNodeAnswer('/root/geopoint-value', 'geopoint');
-					expect(answer.value).toEqual(expectedAsObject);
-					expect(answer.stringValue).toEqual(expectedAsText);
-				}
-			);
-		});
-
-		describe('type="date"', () => {
-			let answer: InputNodeAnswer<'date'>;
-
-			beforeEach(() => {
-				answer = getTypedInputNodeAnswer('/root/date-value', 'date');
-			});
-
-			it('has a PlainDate | null static type', () => {
-				expectTypeOf(answer.value).toEqualTypeOf<Temporal.PlainDate | null>();
-			});
-
-			it('has a date populated value', () => {
-				expect(answer.value).to.deep.equal(Temporal.PlainDate.from('2025-12-20'));
-				expect(answer.stringValue).toEqual('2025-12-20');
-			});
-
-			it('has an null as blank value', () => {
-				scenario.answer(inputRelevancePath, 'no');
-				answer = getTypedInputNodeAnswer('/root/date-value', 'date');
-				expect(answer.value).toBeNull();
-				expect(answer.stringValue).toBe('');
-			});
-
-			/**
-			 * TODO: Datetimes with a valid timezone offset are treated as errors.
-			 *       User research is needed to determine whether the date should honor
-			 *       the timezone or be truncated to the yyyy-mm-dd format only.
-			 */
-			it.each([
-				'13:30:55',
-				'2025-23-23',
-				'ZYX',
-				'2025-03-07T14:30:00+invalid',
-				'2025-03-07T14:30:00-08:00',
-				'2025-03-07T14:30:00Z',
-			])('has null when incorrect value is passed', (expression) => {
-				scenario.answer('/root/date-value', expression);
-				answer = getTypedInputNodeAnswer('/root/date-value', 'date');
-				expect(answer.value).toBeNull();
-				expect(answer.stringValue).toBe('');
-			});
-
-			it.each([
-				{
-					expression: '2025-03-14',
-					expectedAsObject: Temporal.PlainDate.from('2025-03-14'),
-					expectedAsText: '2025-03-14',
-				},
-				{
-					expression: '2025-12-21T14:30:00',
-					expectedAsObject: Temporal.PlainDate.from('2025-12-21'),
-					expectedAsText: '2025-12-21',
-				},
-			])('sets value with valid date', ({ expression, expectedAsObject, expectedAsText }) => {
-				scenario.answer('/root/date-value', expression);
-				answer = getTypedInputNodeAnswer('/root/date-value', 'date');
-				expect(answer.value).to.deep.equal(expectedAsObject);
-				expect(answer.stringValue).toEqual(expectedAsText);
-			});
-		});
-	});
-
-	describe('casting fractional values to int', () => {
-		/**
-		 * **PORTING NOTES**
-		 *
-		 * This test is distilled/derived from a test
-		 * {@link https://github.com/getodk/web-forms/commit/fd7c7b7659e5babdf218c70d1b580b8460be49b9#diff-82a9bf61dc4ac99cbc7c0f624cb952fe99767787d0c1e11bbc13d563be1e2935R685-R701 | originally ported from JavaRosa}.
-		 * In JavaRosa, that test is defined in situ with tests exercising the
-		 * `odk-new-repeat` event, but the test itself was not intended to exercise
-		 * that functionality. Instead, it was conceptually
-		 * {@link https://github.com/getodk/web-forms/pull/110#discussion_r1612400634 | intended}
-		 * to exercise the behavior of casting a fractional value _in the form
-		 * definition_ to an integer, as specified for an `int` bind type.
-		 *
-		 * Since implementing `int` support has caused that test to pass, this is an
-		 * opportune time to derive a test explicitly exercising that functionality
-		 * as intended.
-		 */
-		describe('jr:count computed from an int node', () => {
-			let scenario: Scenario;
-
-			beforeEach(async () => {
-				scenario = await Scenario.init(
-					'Cast fractional value to int',
-					// prettier-ignore
-					html(
+    let scenario: Scenario;
+
+    type AssertTypedInputNodeAnswer = <V extends ValueType>(
+      answer: ValueNodeAnswer,
+      valueType: V
+    ) => asserts answer is InputNodeAnswer<V>;
+
+    const assertTypedInputNodeAnswer: AssertTypedInputNodeAnswer = (answer, valueType) => {
+      assert(answer instanceof InputNodeAnswer);
+      assert(answer.valueType === valueType);
+    };
+
+    const getTypedInputNodeAnswer = <V extends ValueType>(
+      reference: string,
+      valueType: V
+    ): InputNodeAnswer<V> => {
+      const answer = scenario.answerOf(reference);
+
+      assertTypedInputNodeAnswer(answer, valueType);
+
+      return answer;
+    };
+
+    beforeEach(async () => {
+      scenario = await Scenario.init(formTitle, formDefinition);
+    });
+
+    describe('explicit type="string"', () => {
+      let answer: InputNodeAnswer<'string'>;
+
+      beforeEach(() => {
+        answer = getTypedInputNodeAnswer('/root/string-value', 'string');
+      });
+
+      it('has a string runtime value', () => {
+        expect(answer.value).toBeTypeOf('string');
+      });
+
+      it('has a string static type', () => {
+        expectTypeOf(answer.value).toBeString();
+      });
+
+      it('has a string populated value', () => {
+        expect(answer.value).toBe('explicit string');
+      });
+
+      it('has an empty string blank value', () => {
+        scenario.answer(inputRelevancePath, 'no');
+        answer = getTypedInputNodeAnswer('/root/string-value', 'string');
+        expect(answer.value).toBe('');
+      });
+
+      it('sets a string value', () => {
+        scenario.answer('/root/string-value', 'updated string');
+        answer = getTypedInputNodeAnswer('/root/string-value', 'string');
+        expect(answer.value).toBe('updated string');
+      });
+    });
+
+    describe('implicit string type (default)', () => {
+      let answer: InputNodeAnswer<'string'>;
+
+      beforeEach(() => {
+        answer = getTypedInputNodeAnswer('/root/implicit-string-value', 'string');
+      });
+
+      it('has a string runtime value', () => {
+        expect(answer.value).toBeTypeOf('string');
+      });
+
+      it('has a string static type', () => {
+        expectTypeOf(answer.value).toBeString();
+      });
+
+      it('has a string populated value', () => {
+        expect(answer.value).toBe('implicit string');
+      });
+
+      it('has an empty string blank value', () => {
+        scenario.answer(inputRelevancePath, 'no');
+        answer = getTypedInputNodeAnswer('/root/implicit-string-value', 'string');
+        expect(answer.value).toBe('');
+      });
+
+      it('sets a string value', () => {
+        scenario.answer('/root/implicit-string-value', 'updated string');
+        answer = getTypedInputNodeAnswer('/root/implicit-string-value', 'string');
+        expect(answer.value).toBe('updated string');
+      });
+    });
+
+    describe('type="int"', () => {
+      let answer: InputNodeAnswer<'int'>;
+
+      beforeEach(() => {
+        answer = getTypedInputNodeAnswer('/root/int-value', 'int');
+      });
+
+      it('has a bigint runtime value', () => {
+        expect(answer.value).toBeTypeOf('bigint');
+      });
+
+      it('has a bigint | null static type', () => {
+        expectTypeOf(answer.value).toEqualTypeOf<bigint | null>();
+      });
+
+      it('has a bigint populated value', () => {
+        expect(answer.value).toBe(123n);
+      });
+
+      it('has a null blank value', () => {
+        scenario.answer(inputRelevancePath, 'no');
+        answer = getTypedInputNodeAnswer('/root/int-value', 'int');
+        expect(answer.value).toBe(null);
+      });
+
+      describe('setting int values', () => {
+        interface SetIntInputValueByType {
+          readonly bigint: bigint;
+          readonly number: number;
+          readonly string: string;
+          readonly null: null;
+        }
+
+        type SetIntInputValueType = keyof SetIntInputValueByType;
+
+        describe('sets value', () => {
+          interface BaseSetIntInputValueCase<T extends SetIntInputValueType> {
+            readonly inputType: T;
+            readonly inputValue: SetIntInputValueByType[T];
+            readonly expectedValue: bigint | null;
+          }
+
+          type SetIntInputValueCase = {
+            [T in SetIntInputValueType]: BaseSetIntInputValueCase<T>;
+          }[SetIntInputValueType];
+
+          it.each<SetIntInputValueCase>([
+            { inputType: 'bigint', inputValue: 89n, expectedValue: 89n },
+            { inputType: 'number', inputValue: 10, expectedValue: 10n },
+            { inputType: 'string', inputValue: '23', expectedValue: 23n },
+            { inputType: 'null', inputValue: null, expectedValue: null },
+            { inputType: 'string', inputValue: '10.1', expectedValue: 10n },
+            { inputType: 'number', inputValue: 10.1, expectedValue: 10n },
+          ])(
+            '$inputValue ($inputType), resulting in value $expectedValue',
+            ({ inputValue, expectedValue }) => {
+              scenario.answer('/root/int-value', inputValue);
+              answer = getTypedInputNodeAnswer('/root/int-value', 'int');
+
+              expectTypeOf(answer.value).toEqualTypeOf<bigint | null>();
+
+              if (expectedValue == null) {
+                expect(answer.value).toBeNull();
+                expect(answer.stringValue).toBe('');
+              } else {
+                expect(answer.value).toBeTypeOf('bigint');
+                expect(answer.value).toBe(expectedValue);
+                expect(answer.stringValue).toBe(`${expectedValue}`);
+              }
+            }
+          );
+        });
+
+        describe('fails to set when out of bounds', () => {
+          interface BaseSetIntInputErrorCase<T extends SetIntInputValueType> {
+            readonly inputType: T;
+            readonly inputValue: SetIntInputValueByType[T];
+          }
+
+          type SetIntInputErrorCase = {
+            [T in SetIntInputValueType]: BaseSetIntInputErrorCase<T>;
+          }[SetIntInputValueType];
+
+          it.each<SetIntInputErrorCase>([
+            { inputType: 'bigint', inputValue: -2_147_483_649n },
+            { inputType: 'bigint', inputValue: 2_147_483_648n },
+            { inputType: 'number', inputValue: -2_147_483_649 },
+            { inputType: 'number', inputValue: 2_147_483_648 },
+            { inputType: 'string', inputValue: '-2147483649' },
+            { inputType: 'string', inputValue: '2147483648' },
+          ])('$inputValue ($inputType)', ({ inputValue }) => {
+            scenario.answer('/root/int-value', inputValue);
+            answer = getTypedInputNodeAnswer('/root/int-value', 'int');
+            expect(answer.value).toBeNull();
+            expect(answer.stringValue).toBe('');
+          });
+        });
+      });
+    });
+
+    describe('type="decimal"', () => {
+      let answer: InputNodeAnswer<'decimal'>;
+
+      beforeEach(() => {
+        answer = getTypedInputNodeAnswer('/root/decimal-value', 'decimal');
+      });
+
+      it('has a number runtime value', () => {
+        expect(answer.value).toBeTypeOf('number');
+      });
+
+      it('has a number | null static type', () => {
+        expectTypeOf(answer.value).toEqualTypeOf<number | null>();
+      });
+
+      it('has a number populated value', () => {
+        expect(answer.value).toBe(45.67);
+      });
+
+      it('has a null blank value', () => {
+        scenario.answer(inputRelevancePath, 'no');
+        answer = getTypedInputNodeAnswer('/root/decimal-value', 'decimal');
+        expect(answer.value).toBe(null);
+      });
+
+      describe('setting decimal values', () => {
+        interface SetDecimalInputValueByType {
+          readonly bigint: bigint;
+          readonly number: number;
+          readonly string: string;
+          readonly null: null;
+        }
+
+        type SetDecimalInputValueType = keyof SetDecimalInputValueByType;
+
+        interface BaseSetDecimalInputValueCase<T extends SetDecimalInputValueType> {
+          readonly inputType: T;
+          readonly inputValue: SetDecimalInputValueByType[T];
+          readonly expectedValue: number | null;
+          readonly expectedStringValue: string;
+        }
+
+        type SetDecimalInputValueCase = {
+          [T in SetDecimalInputValueType]: BaseSetDecimalInputValueCase<T>;
+        }[SetDecimalInputValueType];
+
+        it.each<SetDecimalInputValueCase>([
+          { inputType: 'bigint', inputValue: 89n, expectedValue: 89, expectedStringValue: '89.0' },
+          { inputType: 'number', inputValue: 10, expectedValue: 10, expectedStringValue: '10.0' },
+          { inputType: 'string', inputValue: '23', expectedValue: 23, expectedStringValue: '23.0' },
+          { inputType: 'null', inputValue: null, expectedValue: null, expectedStringValue: '' },
+        ])('sets value ($inputType)', ({ inputValue, expectedValue, expectedStringValue }) => {
+          scenario.answer('/root/decimal-value', inputValue);
+          answer = getTypedInputNodeAnswer('/root/decimal-value', 'decimal');
+
+          expectTypeOf(answer.value).toEqualTypeOf<number | null>();
+
+          if (expectedValue == null) {
+            expect(answer.value).toBeNull();
+            expect(answer.stringValue).toBe('');
+          } else {
+            expect(answer.value).toBeTypeOf('number');
+            expect(answer.value).toBe(expectedValue);
+            expect(answer.stringValue).toBe(`${expectedStringValue}`);
+          }
+        });
+      });
+    });
+
+    describe('type="geopoint"', () => {
+      let answer: InputNodeAnswer<'geopoint'>;
+
+      beforeEach(() => {
+        answer = getTypedInputNodeAnswer('/root/geopoint-value', 'geopoint');
+      });
+
+      it('has a (nullable) structured geopoint static type', () => {
+        interface ExpectedGeopointValue {
+          readonly latitude: number;
+          readonly longitude: number;
+          readonly altitude: number;
+          readonly accuracy: number;
+        }
+        expectTypeOf(answer.value).toEqualTypeOf<ExpectedGeopointValue | null>();
+      });
+
+      it('has a GeopointValue populated value', () => {
+        expect(answer.value).toEqual({
+          latitude: 38.25146813817506,
+          longitude: 21.758421137528785,
+          altitude: 1000,
+          accuracy: 25,
+        });
+        expect(answer.stringValue).toEqual('38.25146813817506 21.758421137528785 1000.0 25.0');
+      });
+
+      it('has an null as blank value', () => {
+        scenario.answer(inputRelevancePath, 'no');
+        answer = getTypedInputNodeAnswer('/root/geopoint-value', 'geopoint');
+        expect(answer.value).toBeNull();
+        expect(answer.stringValue).toBe('');
+      });
+
+      it('sets altitude with value zero', () => {
+        scenario.answer('/root/geopoint-value', '-5.299 46.663 0 5');
+        answer = getTypedInputNodeAnswer('/root/geopoint-value', 'geopoint');
+        expect(answer.value).toEqual({
+          latitude: -5.299,
+          longitude: 46.663,
+          altitude: 0,
+          accuracy: 5,
+        });
+        expect(answer.stringValue).toEqual('-5.299 46.663 0.0 5.0');
+      });
+
+      it.each([
+        'ZYX %% ABC $$',
+        'ZYX %% 1200 10',
+        '-15.2936673 120.7260063 ABC $$',
+        '-2.33373 36.7260063 ABC 15',
+        '20.2936673 -16.7260063 1200 ABCD',
+        '99 179.99999 1200 0',
+        '89.999 180.1111 1300 0',
+      ])('has null when incorrect value is passed', (expression) => {
+        scenario.answer('/root/geopoint-value', expression);
+        answer = getTypedInputNodeAnswer('/root/geopoint-value', 'geopoint');
+        expect(answer.value).toBeNull();
+        expect(answer.stringValue).toBe('');
+      });
+
+      it('defaults altitude and accuracy to 0 for an initial value with only latitude and longitude', async () => {
+        const presetScenario = await Scenario.init(
+          'Preset geopoint',
+          html(
+            head(
+              title('Preset geopoint'),
+              model(
+                mainInstance(t('root id="preset-geopoint"', t('gp', '9.1021 -79.3976'))),
+                bind('/root/gp').type('geopoint')
+              )
+            ),
+            body(input('/root/gp'))
+          )
+        );
+
+        const presetAnswer = presetScenario.answerOf('/root/gp');
+        assertTypedInputNodeAnswer(presetAnswer, 'geopoint');
+        expect(presetAnswer.value).toEqual({
+          latitude: 9.1021,
+          longitude: -79.3976,
+          altitude: 0,
+          accuracy: 0,
+        });
+        expect(presetAnswer.stringValue).toEqual('9.1021 -79.3976 0.0 0.0');
+      });
+
+      it.each([
+        {
+          expression: { latitude: 20.663, longitude: 16.763 },
+          expectedAsObject: { latitude: 20.663, longitude: 16.763, altitude: 0, accuracy: 0 },
+          expectedAsText: '20.663 16.763 0.0 0.0',
+        },
+        {
+          expression: { latitude: 19.899, longitude: 100.55559, accuracy: 15 },
+          expectedAsObject: { latitude: 19.899, longitude: 100.55559, altitude: 0, accuracy: 15 },
+          expectedAsText: '19.899 100.55559 0.0 15.0',
+        },
+        {
+          expression: { latitude: 45.111, longitude: 127.23, altitude: 1350 },
+          expectedAsObject: { latitude: 45.111, longitude: 127.23, altitude: 1350, accuracy: 0 },
+          expectedAsText: '45.111 127.23 1350.0 0.0',
+        },
+        {
+          expression: { latitude: 14.66599, longitude: 179.9009, altitude: 200, accuracy: 5 },
+          expectedAsObject: { latitude: 14.66599, longitude: 179.9009, altitude: 200, accuracy: 5 },
+          expectedAsText: '14.66599 179.9009 200.0 5.0',
+        },
+        {
+          expression: { latitude: 0, longitude: 0, altitude: 0, accuracy: 0 },
+          expectedAsObject: null,
+          expectedAsText: '',
+        },
+      ])(
+        'sets value with GeopointValue object',
+        ({ expression, expectedAsObject, expectedAsText }) => {
+          scenario.answer('/root/geopoint-value', expression);
+          answer = getTypedInputNodeAnswer('/root/geopoint-value', 'geopoint');
+          expect(answer.value).toEqual(expectedAsObject);
+          expect(answer.stringValue).toEqual(expectedAsText);
+        }
+      );
+    });
+
+    describe('type="date"', () => {
+      let answer: InputNodeAnswer<'date'>;
+
+      beforeEach(() => {
+        answer = getTypedInputNodeAnswer('/root/date-value', 'date');
+      });
+
+      it('has a PlainDate | null static type', () => {
+        expectTypeOf(answer.value).toEqualTypeOf<Temporal.PlainDate | null>();
+      });
+
+      it('has a date populated value', () => {
+        expect(answer.value).to.deep.equal(Temporal.PlainDate.from('2025-12-20'));
+        expect(answer.stringValue).toEqual('2025-12-20');
+      });
+
+      it('has an null as blank value', () => {
+        scenario.answer(inputRelevancePath, 'no');
+        answer = getTypedInputNodeAnswer('/root/date-value', 'date');
+        expect(answer.value).toBeNull();
+        expect(answer.stringValue).toBe('');
+      });
+
+      /**
+       * TODO: Datetimes with a valid timezone offset are treated as errors.
+       *       User research is needed to determine whether the date should honor
+       *       the timezone or be truncated to the yyyy-mm-dd format only.
+       */
+      it.each([
+        '13:30:55',
+        '2025-23-23',
+        'ZYX',
+        '2025-03-07T14:30:00+invalid',
+        '2025-03-07T14:30:00-08:00',
+        '2025-03-07T14:30:00Z',
+      ])('has null when incorrect value is passed', (expression) => {
+        scenario.answer('/root/date-value', expression);
+        answer = getTypedInputNodeAnswer('/root/date-value', 'date');
+        expect(answer.value).toBeNull();
+        expect(answer.stringValue).toBe('');
+      });
+
+      it.each([
+        {
+          expression: '2025-03-14',
+          expectedAsObject: Temporal.PlainDate.from('2025-03-14'),
+          expectedAsText: '2025-03-14',
+        },
+        {
+          expression: '2025-12-21T14:30:00',
+          expectedAsObject: Temporal.PlainDate.from('2025-12-21'),
+          expectedAsText: '2025-12-21',
+        },
+      ])('sets value with valid date', ({ expression, expectedAsObject, expectedAsText }) => {
+        scenario.answer('/root/date-value', expression);
+        answer = getTypedInputNodeAnswer('/root/date-value', 'date');
+        expect(answer.value).to.deep.equal(expectedAsObject);
+        expect(answer.stringValue).toEqual(expectedAsText);
+      });
+    });
+  });
+
+  describe('casting fractional values to int', () => {
+    /**
+     * **PORTING NOTES**
+     *
+     * This test is distilled/derived from a test
+     * {@link https://github.com/getodk/web-forms/commit/fd7c7b7659e5babdf218c70d1b580b8460be49b9#diff-82a9bf61dc4ac99cbc7c0f624cb952fe99767787d0c1e11bbc13d563be1e2935R685-R701 | originally ported from JavaRosa}.
+     * In JavaRosa, that test is defined in situ with tests exercising the
+     * `odk-new-repeat` event, but the test itself was not intended to exercise
+     * that functionality. Instead, it was conceptually
+     * {@link https://github.com/getodk/web-forms/pull/110#discussion_r1612400634 | intended}
+     * to exercise the behavior of casting a fractional value _in the form
+     * definition_ to an integer, as specified for an `int` bind type.
+     *
+     * Since implementing `int` support has caused that test to pass, this is an
+     * opportune time to derive a test explicitly exercising that functionality
+     * as intended.
+     */
+    describe('jr:count computed from an int node', () => {
+      let scenario: Scenario;
+
+      beforeEach(async () => {
+        scenario = await Scenario.init(
+          'Cast fractional value to int',
+          // prettier-ignore
+          html(
 						head(
 							title('Cast fractional value to int'),
 							model(
@@ -742,36 +768,36 @@ describe('Data (<bind type>) type support', () => {
 						body(
 							input('/data/count-default'),
 							repeat('/data/repeat-count', '/data/count-default')))
-				);
-			});
+        );
+      });
 
-			it('casts a fractional value from a model-defined default', () => {
-				expect(scenario.answerOf('/data/count-default')).toEqualAnswer(intAnswer(2));
-				expect(scenario.countRepeatInstancesOf('/data/repeat-count')).toBe(2);
-			});
+      it('casts a fractional value from a model-defined default', () => {
+        expect(scenario.answerOf('/data/count-default')).toEqualAnswer(intAnswer(2));
+        expect(scenario.countRepeatInstancesOf('/data/repeat-count')).toBe(2);
+      });
 
-			it('casts an updated fractional value', () => {
-				scenario.answer('/data/count-default', '4.5');
-				expect(scenario.answerOf('/data/count-default')).toEqualAnswer(intAnswer(4));
-				expect(scenario.countRepeatInstancesOf('/data/repeat-count')).toBe(4);
-			});
-		});
+      it('casts an updated fractional value', () => {
+        scenario.answer('/data/count-default', '4.5');
+        expect(scenario.answerOf('/data/count-default')).toEqualAnswer(intAnswer(4));
+        expect(scenario.countRepeatInstancesOf('/data/repeat-count')).toBe(4);
+      });
+    });
 
-		/**
-		 * The tests immediately above, which exercise parsing an `int` from a form
-		 * definition's fractional value, revealed a gap in that functionality! We
-		 * also add these test to ensure the same logic is applied for various
-		 * `calculate` expressions and references.
-		 *
-		 * @todo Coming full circle: we will likely also want to add new tests in
-		 * `actions-events.test.ts` to exercise the same for `<setvalue>` events!
-		 */
-		describe('jr:count computed from a calculate expressions', () => {
-			it('casts a fractional value computed from a node with type="string"', async () => {
-				const scenario = await Scenario.init(
-					'Cast fractional value to int',
-					// prettier-ignore
-					html(
+    /**
+     * The tests immediately above, which exercise parsing an `int` from a form
+     * definition's fractional value, revealed a gap in that functionality! We
+     * also add these test to ensure the same logic is applied for various
+     * `calculate` expressions and references.
+     *
+     * @todo Coming full circle: we will likely also want to add new tests in
+     * `actions-events.test.ts` to exercise the same for `<setvalue>` events!
+     */
+    describe('jr:count computed from a calculate expressions', () => {
+      it('casts a fractional value computed from a node with type="string"', async () => {
+        const scenario = await Scenario.init(
+          'Cast fractional value to int',
+          // prettier-ignore
+          html(
 						head(
 							title('Cast fractional value to int'),
 							model(
@@ -787,19 +813,19 @@ describe('Data (<bind type>) type support', () => {
 						body(
 							input('/data/count-calc-input-str'),
 							repeat('/data/repeat-count', '/data/count-calc')))
-				);
+        );
 
-				scenario.answer('/data/count-calc-input-str', '3.5');
+        scenario.answer('/data/count-calc-input-str', '3.5');
 
-				expect(scenario.answerOf('/data/count-calc')).toEqualAnswer(intAnswer(3));
-				expect(scenario.countRepeatInstancesOf('/data/repeat-count')).toBe(3);
-			});
+        expect(scenario.answerOf('/data/count-calc')).toEqualAnswer(intAnswer(3));
+        expect(scenario.countRepeatInstancesOf('/data/repeat-count')).toBe(3);
+      });
 
-			it('casts a fractional value computed from a node with type="decimal"', async () => {
-				const scenario = await Scenario.init(
-					'Cast fractional value to int',
-					// prettier-ignore
-					html(
+      it('casts a fractional value computed from a node with type="decimal"', async () => {
+        const scenario = await Scenario.init(
+          'Cast fractional value to int',
+          // prettier-ignore
+          html(
 						head(
 							title('Cast fractional value to int'),
 							model(
@@ -815,19 +841,19 @@ describe('Data (<bind type>) type support', () => {
 						body(
 							input('/data/count-calc-input-dec'),
 							repeat('/data/repeat-count', '/data/count-calc')))
-				);
+        );
 
-				scenario.answer('/data/count-calc-input-dec', 4.5);
+        scenario.answer('/data/count-calc-input-dec', 4.5);
 
-				expect(scenario.answerOf('/data/count-calc')).toEqualAnswer(intAnswer(4));
-				expect(scenario.countRepeatInstancesOf('/data/repeat-count')).toBe(4);
-			});
+        expect(scenario.answerOf('/data/count-calc')).toEqualAnswer(intAnswer(4));
+        expect(scenario.countRepeatInstancesOf('/data/repeat-count')).toBe(4);
+      });
 
-			it('casts a fractional value computed from a number literal', async () => {
-				const scenario = await Scenario.init(
-					'Cast fractional value to int',
-					// prettier-ignore
-					html(
+      it('casts a fractional value computed from a number literal', async () => {
+        const scenario = await Scenario.init(
+          'Cast fractional value to int',
+          // prettier-ignore
+          html(
 						head(
 							title('Cast fractional value to int'),
 							model(
@@ -840,11 +866,11 @@ describe('Data (<bind type>) type support', () => {
 									.calculate('5.5'))),
 						body(
 							repeat('/data/repeat-count', '/data/count-calc')))
-				);
+        );
 
-				expect(scenario.answerOf('/data/count-calc')).toEqualAnswer(intAnswer(5));
-				expect(scenario.countRepeatInstancesOf('/data/repeat-count')).toBe(5);
-			});
-		});
-	});
+        expect(scenario.answerOf('/data/count-calc')).toEqualAnswer(intAnswer(5));
+        expect(scenario.countRepeatInstancesOf('/data/repeat-count')).toBe(5);
+      });
+    });
+  });
 });

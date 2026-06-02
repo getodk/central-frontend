@@ -9,10 +9,10 @@ import type { CurrentState } from './node-state/createCurrentState.ts';
 import type { EngineState } from './node-state/createEngineState.ts';
 
 export interface ChildrenState<Child extends AnyChildNode> {
-	readonly children: Signal<readonly Child[]>;
-	readonly getChildren: Accessor<readonly Child[]>;
-	readonly setChildren: Setter<readonly Child[]>;
-	readonly childIds: Accessor<readonly FormNodeID[]>;
+  readonly children: Signal<readonly Child[]>;
+  readonly getChildren: Accessor<readonly Child[]>;
+  readonly setChildren: Setter<readonly Child[]>;
+  readonly childIds: Accessor<readonly FormNodeID[]>;
 }
 
 /**
@@ -44,64 +44,64 @@ export interface ChildrenState<Child extends AnyChildNode> {
  * {@link materializeCurrentStateChildren}.
  */
 export const createChildrenState = <Parent extends AnyParentNode, Child extends AnyChildNode>(
-	parent: Parent
+  parent: Parent
 ): ChildrenState<Child> => {
-	return parent.scope.runTask(() => {
-		const baseState = createSignal<readonly Child[]>([]);
-		const [getChildren, baseSetChildren] = baseState;
+  return parent.scope.runTask(() => {
+    const baseState = createSignal<readonly Child[]>([]);
+    const [getChildren, baseSetChildren] = baseState;
 
-		/**
-		 * Note: this is clearly derived state. It would be obvious to use
-		 * `createMemo`, which is exactly what a previous iteration did. This caused
-		 * mysterious issues when clients:
-		 *
-		 * - Also used Solid-based reactivity
-		 * - Accessed node children state within their own `createMemo` calls
-		 *
-		 * It's quite likely that there's a more robust and general solution, which
-		 * may be applicable if we also generalize this approach to
-		 * encode/materialize shared structured state (e.g. it may be applicable for
-		 * select values, form language, probably much more in coming features).
-		 *
-		 * In the meantime, while this approach is marginally more complex, it is
-		 * likely also slightly more efficient. We can revisit the tradeoff if/when
-		 * those hypothetical generalizations become a priority.
-		 */
-		const ids = createSignal<readonly FormNodeID[]>([]);
-		const [childIds, setChildIds] = ids;
+    /**
+     * Note: this is clearly derived state. It would be obvious to use
+     * `createMemo`, which is exactly what a previous iteration did. This caused
+     * mysterious issues when clients:
+     *
+     * - Also used Solid-based reactivity
+     * - Accessed node children state within their own `createMemo` calls
+     *
+     * It's quite likely that there's a more robust and general solution, which
+     * may be applicable if we also generalize this approach to
+     * encode/materialize shared structured state (e.g. it may be applicable for
+     * select values, form language, probably much more in coming features).
+     *
+     * In the meantime, while this approach is marginally more complex, it is
+     * likely also slightly more efficient. We can revisit the tradeoff if/when
+     * those hypothetical generalizations become a priority.
+     */
+    const ids = createSignal<readonly FormNodeID[]>([]);
+    const [childIds, setChildIds] = ids;
 
-		type ChildrenSetterCallback = (prev: readonly Child[]) => readonly Child[];
-		type ChildrenOrSetterCallback = ChildrenSetterCallback | readonly Child[];
+    type ChildrenSetterCallback = (prev: readonly Child[]) => readonly Child[];
+    type ChildrenOrSetterCallback = ChildrenSetterCallback | readonly Child[];
 
-		const setChildren: Setter<readonly Child[]> = (
-			valueOrSetterCallback: ChildrenOrSetterCallback
-		) => {
-			let setterCallback: ChildrenSetterCallback;
+    const setChildren: Setter<readonly Child[]> = (
+      valueOrSetterCallback: ChildrenOrSetterCallback
+    ) => {
+      let setterCallback: ChildrenSetterCallback;
 
-			if (typeof valueOrSetterCallback === 'function') {
-				setterCallback = valueOrSetterCallback;
-			} else {
-				setterCallback = (_) => valueOrSetterCallback;
-			}
+      if (typeof valueOrSetterCallback === 'function') {
+        setterCallback = valueOrSetterCallback;
+      } else {
+        setterCallback = (_) => valueOrSetterCallback;
+      }
 
-			return baseSetChildren((prev) => {
-				const result = setterCallback(prev);
+      return baseSetChildren((prev) => {
+        const result = setterCallback(prev);
 
-				setChildIds(() => {
-					return result.map((child) => child.nodeId);
-				});
+        setChildIds(() => {
+          return result.map((child) => child.nodeId);
+        });
 
-				return result;
-			});
-		};
+        return result;
+      });
+    };
 
-		const children: Signal<readonly Child[]> = [getChildren, setChildren];
+    const children: Signal<readonly Child[]> = [getChildren, setChildren];
 
-		return {
-			children,
-			getChildren,
-			setChildren,
-			childIds,
-		};
-	});
+    return {
+      children,
+      getChildren,
+      setChildren,
+      childIds,
+    };
+  });
 };

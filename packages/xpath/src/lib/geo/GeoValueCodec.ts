@@ -34,11 +34,11 @@ export type GeoValueDecoder<RuntimeValue> = (value: string) => RuntimeValue;
  *   those ODK XForms data types
  */
 export interface GeoValueCodec<
-	V extends GeoValueType,
-	RuntimeValue extends RuntimeInputValue,
-	RuntimeInputValue = RuntimeValue,
+  V extends GeoValueType,
+  RuntimeValue extends RuntimeInputValue,
+  RuntimeInputValue = RuntimeValue,
 > {
-	readonly valueType: V;
-	readonly encodeValue: GeoValueEncoder<RuntimeInputValue>;
-	readonly decodeValue: GeoValueDecoder<RuntimeValue>;
+  readonly valueType: V;
+  readonly encodeValue: GeoValueEncoder<RuntimeInputValue>;
+  readonly decodeValue: GeoValueDecoder<RuntimeValue>;
 }
