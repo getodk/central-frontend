@@ -1,15 +1,9 @@
 <script setup lang="ts">
 import IconSVG from '@/components/common/IconSVG.vue';
-import MapInfoDialog from '@/components/common/map/MapInfoDialog.vue';
+import ActionsInfoDialog, { type ActionInfo } from '@/components/common/ActionsInfoDialog.vue';
 import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
 import type { Translate } from '@/lib/locale/useLocale.ts';
 import { computed, inject, ref } from 'vue';
-
-interface MapAction {
-	readonly icon: string;
-	readonly description: string;
-	infoClasses?: string[];
-}
 
 const props = defineProps<{
 	isFullScreen: boolean;
@@ -41,10 +35,10 @@ const MAP_ICONS = {
 } as const;
 
 const showActionsInfo = ref(false);
-const processedMapActions = computed<MapAction[]>(() => {
-	const actions: MapAction[] = props.isFullScreen
-		? [{ icon: MAP_ICONS.closeFullScreen, description: t('map_controls.close_full_screen.description') }]
-		: [{ icon: MAP_ICONS.openFullScreen, description: t('map_controls.open_full_screen.description') }];
+const processedMapActions = computed((): ActionInfo[] => {
+	const actions: ActionInfo[] = props.isFullScreen
+		? [{ icon: MAP_ICONS.closeFullScreen, description: t('common_actions.close_full_screen.description') }]
+		: [{ icon: MAP_ICONS.openFullScreen, description: t('common_actions.open_full_screen.description') }];
 
 	actions.push(
 		{ icon: MAP_ICONS.zoomFitAll, description: t('map_controls.zoom_fit_all.description') },
@@ -53,7 +47,7 @@ const processedMapActions = computed<MapAction[]>(() => {
 
 	if (props.showSecondaryControls) {
 		actions.push(
-			{ icon: MAP_ICONS.undo, description: t('map_controls.undo.description') },
+			{ icon: MAP_ICONS.undo, description: t('common_actions.undo.description') },
 			{ icon: MAP_ICONS.delete, description: t('map_controls.delete.description') },
 			{ icon: MAP_ICONS.openAdvanced, infoClasses: ['mobile-only'], description: t('map_controls.open_advanced.description') },
 		);
@@ -67,7 +61,7 @@ const processedMapActions = computed<MapAction[]>(() => {
 	<div class="control-bar" :class="{ 'full-screen-active': isFullScreen }">
 		<div class="control-bar-vertical">
 			<button
-				:aria-label="isFullScreen ? t('map_controls.close_full_screen.description') : t('map_controls.open_full_screen.description')"
+				:aria-label="isFullScreen ? t('common_actions.close_full_screen.description') : t('common_actions.open_full_screen.description')"
 				class="fullscreen"
 				@click="emit('toggleFullScreen')"
 			>
@@ -90,7 +84,7 @@ const processedMapActions = computed<MapAction[]>(() => {
 				<IconSVG :name="MAP_ICONS.currentLocation" size="sm" />
 			</button>
 			<button
-				:aria-label="t('map_controls.open_info.description')"
+				:aria-label="t('common_actions.open_info.description')"
 				class="info-dialog"
 				@click="showActionsInfo = true"
 			>
@@ -107,7 +101,7 @@ const processedMapActions = computed<MapAction[]>(() => {
 				<IconSVG :name="MAP_ICONS.delete" />
 			</button>
 			<button
-				:aria-label="t('map_controls.undo.description')"
+				:aria-label="t('common_actions.undo.description')"
 				:disabled="disableUndo"
 				@click="emit('undoLastChange')"
 			>
@@ -116,46 +110,32 @@ const processedMapActions = computed<MapAction[]>(() => {
 		</div>
 	</div>
 
-	<MapInfoDialog v-model:visible="showActionsInfo" :actions-info="processedMapActions" />
+	<ActionsInfoDialog v-model:visible="showActionsInfo" :title="t('common_actions.info_dialog.title')" :actions-info="processedMapActions" />
 </template>
 
 <style scoped lang="scss">
 @use 'primeflex/core/_variables.scss' as pf;
-@use '../../../assets/styles/map-block' as mb;
+@use '../../../assets/styles/panel-controls' as pc;
 
 .control-bar {
 	button {
-		@include mb.map-control-button;
+		@include pc.panel-control-button;
 	}
 
 	.control-bar-vertical {
-		@include mb.map-control-bar-vertical;
-		top: var(--odk-map-controls-spacing);
+		@include pc.panel-control-bar-vertical;
+		top: var(--odk-spacing-m);
 	}
 
 	.control-bar-horizontal {
-		@include mb.map-control-bar;
-		flex-direction: row;
-		left: var(--odk-map-controls-spacing);
-		bottom: var(--odk-map-controls-spacing);
-		background: var(--odk-base-background-color);
-		border: 1px solid var(--odk-border-color);
-		border-radius: var(--odk-spacing-m);
-		gap: 4px;
-		padding: 7px;
-
-		button {
-			height: 48px;
-			width: 48px;
-			border: none;
-		}
+		@include pc.panel-control-bar-horizontal;
 	}
 }
 
 @media screen and (max-width: #{pf.$sm}) {
 	.control-bar {
-		top: var(--odk-map-controls-spacing);
-		right: var(--odk-map-controls-spacing);
+		top: var(--odk-spacing-m);
+		right: var(--odk-spacing-m);
 	}
 
 	.control-bar:not(.full-screen-active) {
@@ -168,7 +148,7 @@ const processedMapActions = computed<MapAction[]>(() => {
 	}
 }
 
-@include mb.map-block-sm {
+@include pc.panel-control-sm {
 	.control-bar-vertical .info-dialog {
 		display: none;
 	}

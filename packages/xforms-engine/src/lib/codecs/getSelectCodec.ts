@@ -14,14 +14,14 @@ export type SelectCodec =
 	| SingleValueItemCodec;
 
 export const getSelectCodec = (definition: SelectDefinition<'string'>): SelectCodec => {
-	switch (definition.bodyElement.type) {
-		case 'select':
-			return multipleValueSelectCodec;
+  switch (definition.bodyElement.type) {
+    case 'select':
+      return multipleValueSelectCodec;
 
-		case 'select1':
-			return singleValueSelectCodec;
+    case 'select1':
+      return singleValueSelectCodec;
 
-		default:
-			throw new UnreachableError(definition.bodyElement.type);
-	}
+    default:
+      throw new UnreachableError(definition.bodyElement.type);
+  }
 };

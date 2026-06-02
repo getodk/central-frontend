@@ -1,8 +1,8 @@
 import type {
-	AnyFormInstance,
-	LoadFormSuccessResult,
-	LoadFormWarningResult,
-	RootNode,
+  AnyFormInstance,
+  LoadFormSuccessResult,
+  LoadFormWarningResult,
+  RootNode,
 } from '@getodk/xforms-engine';
 import type { FormInitializationError } from '../error/FormInitializationError.ts';
 
@@ -20,40 +20,40 @@ export type FormStateLoadingStatus = 'FORM_STATE_LOADING';
 export type FormStateSuccessStatus = 'FORM_STATE_SUCCESS';
 
 export type FormStateStatus =
-	| FormStateFailureStatus
-	| FormStateLoadingStatus
-	| FormStateSuccessStatus;
+  | FormStateFailureStatus
+  | FormStateLoadingStatus
+  | FormStateSuccessStatus;
 
 interface FormStateResult {
-	readonly status: FormStateStatus;
-	readonly error: FormInitializationError | null;
-	readonly form: InstantiableForm | null;
-	readonly instance: AnyFormInstance | null;
-	readonly root: RootNode | null;
+  readonly status: FormStateStatus;
+  readonly error: FormInitializationError | null;
+  readonly form: InstantiableForm | null;
+  readonly instance: AnyFormInstance | null;
+  readonly root: RootNode | null;
 }
 
 export interface FormStateFailureResult extends FormStateResult {
-	readonly status: FormStateFailureStatus;
-	readonly error: FormInitializationError;
-	readonly form: null;
-	readonly instance: null;
-	readonly root: null;
+  readonly status: FormStateFailureStatus;
+  readonly error: FormInitializationError;
+  readonly form: null;
+  readonly instance: null;
+  readonly root: null;
 }
 
 export interface FormStateLoadingResult extends FormStateResult {
-	readonly status: FormStateLoadingStatus;
-	readonly error: null;
-	readonly form: null;
-	readonly instance: null;
-	readonly root: null;
+  readonly status: FormStateLoadingStatus;
+  readonly error: null;
+  readonly form: null;
+  readonly instance: null;
+  readonly root: null;
 }
 
 export interface FormStateSuccessResult extends FormStateResult {
-	readonly status: FormStateSuccessStatus;
-	readonly error: null;
-	readonly form: InstantiableForm;
-	readonly instance: AnyFormInstance;
-	readonly root: RootNode;
+  readonly status: FormStateSuccessStatus;
+  readonly error: null;
+  readonly form: InstantiableForm;
+  readonly instance: AnyFormInstance;
+  readonly root: RootNode;
 }
 
 // prettier-ignore

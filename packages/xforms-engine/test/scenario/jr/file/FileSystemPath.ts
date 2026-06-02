@@ -3,29 +3,29 @@ import { FileNamePath } from './FileNamePath.ts';
 import { LAST_PATH_SEGMENT_PATTERN } from './constants.ts';
 
 export class FileSystemPath implements JavaNIOPath {
-	readonly rawPath: string;
+  readonly rawPath: string;
 
-	constructor(readonly path: JavaNIOPath | string) {
-		if (typeof path === 'string') {
-			this.rawPath = path;
-		} else {
-			this.rawPath = path.toAbsolutePath().toString();
-		}
-	}
+  constructor(readonly path: JavaNIOPath | string) {
+    if (typeof path === 'string') {
+      this.rawPath = path;
+    } else {
+      this.rawPath = path.toAbsolutePath().toString();
+    }
+  }
 
-	getFileName(): JavaNIOPath {
-		return new FileNamePath(this);
-	}
+  getFileName(): JavaNIOPath {
+    return new FileNamePath(this);
+  }
 
-	getParent(): JavaNIOPath {
-		return new FileSystemPath(this.rawPath.replace(LAST_PATH_SEGMENT_PATTERN, ''));
-	}
+  getParent(): JavaNIOPath {
+    return new FileSystemPath(this.rawPath.replace(LAST_PATH_SEGMENT_PATTERN, ''));
+  }
 
-	toAbsolutePath(): JavaNIOPath {
-		return this;
-	}
+  toAbsolutePath(): JavaNIOPath {
+    return this;
+  }
 
-	toString(): string {
-		return this.rawPath;
-	}
+  toString(): string {
+    return this.rawPath;
+  }
 }

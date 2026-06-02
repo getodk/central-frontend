@@ -13,9 +13,9 @@ export interface RepeatRangeUncontrolledState extends BaseRepeatRangeNodeState {
  * @see {@link BaseRepeatRangeNode}
  */
 export interface RepeatRangeUncontrolledNode extends BaseRepeatRangeNode {
-	readonly nodeType: 'repeat-range:uncontrolled';
-	readonly definition: UncontrolledRepeatDefinition;
+  readonly nodeType: 'repeat-range:uncontrolled';
+  readonly definition: UncontrolledRepeatDefinition;
 
-	addInstances(afterIndex?: number, count?: number): RootNode;
-	removeInstances(startIndex: number, count?: number): RootNode;
+  addInstances(afterIndex?: number, count?: number): RootNode;
+  removeInstances(startIndex: number, count?: number): RootNode;
 }

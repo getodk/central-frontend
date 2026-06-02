@@ -31,10 +31,10 @@ import { FileSystemPath } from './FileSystemPath.ts';
  * above considerations around synchrony and cross-platform consideration.
  */
 export class TextFileResourcePath extends FileSystemPath implements JavaNIOPath {
-	constructor(
-		sourcePath: JavaNIOPath | string,
-		readonly textContents: string
-	) {
-		super(sourcePath);
-	}
+  constructor(
+    sourcePath: JavaNIOPath | string,
+    readonly textContents: string
+  ) {
+    super(sourcePath);
+  }
 }

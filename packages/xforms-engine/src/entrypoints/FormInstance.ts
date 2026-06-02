@@ -1,14 +1,14 @@
 import { identity } from '@getodk/common/lib/identity.ts';
 import type {
-	FormInstance as ClientFormInstance,
-	FormInstanceInitializationMode,
+  FormInstance as ClientFormInstance,
+  FormInstanceInitializationMode,
 } from '../client/form/FormInstance.ts';
 import type { FormInstanceConfig } from '../client/index.ts';
 import type { InstanceConfig } from '../instance/internal-api/InstanceConfig.ts';
 import type {
-	BasePrimaryInstanceOptions,
-	PrimaryInstanceInitialState,
-	PrimaryInstanceOptions,
+  BasePrimaryInstanceOptions,
+  PrimaryInstanceInitialState,
+  PrimaryInstanceOptions,
 } from '../instance/PrimaryInstance.ts';
 import { PrimaryInstance } from '../instance/PrimaryInstance.ts';
 import type { Root } from '../instance/Root.ts';
@@ -21,39 +21,39 @@ export type InstantiableFormResult =
 	| FormWarningResult;
 
 interface FormInstanceOptions<Mode extends FormInstanceInitializationMode> {
-	readonly mode: Mode;
-	readonly initialState: PrimaryInstanceInitialState<Mode>;
-	readonly instanceOptions: BasePrimaryInstanceOptions;
-	readonly instanceConfig: FormInstanceConfig;
+  readonly mode: Mode;
+  readonly initialState: PrimaryInstanceInitialState<Mode>;
+  readonly instanceOptions: BasePrimaryInstanceOptions;
+  readonly instanceConfig: FormInstanceConfig;
 }
 
 export class FormInstance<
-	Mode extends FormInstanceInitializationMode,
+  Mode extends FormInstanceInitializationMode,
 > implements ClientFormInstance<Mode> {
-	readonly mode: Mode;
-	readonly root: Root;
+  readonly mode: Mode;
+  readonly root: Root;
 
-	constructor(
-		readonly formResult: InstantiableFormResult,
-		options: FormInstanceOptions<Mode>
-	) {
-		const { mode, initialState, instanceConfig } = options;
-		const config: InstanceConfig = {
-			clientStateFactory: instanceConfig.stateFactory ?? identity,
-			computeAttachmentName: instanceConfig.instanceAttachments?.fileNameFactory ?? (() => null),
-			preloadProperties: instanceConfig.preloadProperties ?? {},
-			geolocationProvider: instanceConfig.geolocationProvider,
-		};
-		const primaryInstanceOptions: PrimaryInstanceOptions<Mode> = {
-			...options.instanceOptions,
-			mode,
-			initialState,
-			config,
-		};
+  constructor(
+    readonly formResult: InstantiableFormResult,
+    options: FormInstanceOptions<Mode>
+  ) {
+    const { mode, initialState, instanceConfig } = options;
+    const config: InstanceConfig = {
+      clientStateFactory: instanceConfig.stateFactory ?? identity,
+      computeAttachmentName: instanceConfig.instanceAttachments?.fileNameFactory ?? (() => null),
+      preloadProperties: instanceConfig.preloadProperties ?? {},
+      geolocationProvider: instanceConfig.geolocationProvider,
+    };
+    const primaryInstanceOptions: PrimaryInstanceOptions<Mode> = {
+      ...options.instanceOptions,
+      mode,
+      initialState,
+      config,
+    };
 
-		const { root } = new PrimaryInstance(primaryInstanceOptions);
+    const { root } = new PrimaryInstance(primaryInstanceOptions);
 
-		this.mode = mode;
-		this.root = root;
-	}
+    this.mode = mode;
+    this.root = root;
+  }
 }

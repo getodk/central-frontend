@@ -7,22 +7,22 @@ type QuestionNode = PositionalEventNode<'QUESTION'>;
 export type QuestionNodeType = QuestionNode['nodeType'];
 
 export type TypedQuestionNode<Type extends QuestionNodeType> = Extract<
-	QuestionNode,
-	{ readonly nodeType: Type }
+  QuestionNode,
+  { readonly nodeType: Type }
 >;
 
 export abstract class QuestionEvent<
-	Type extends QuestionNodeType,
+  Type extends QuestionNodeType,
 > extends PositionalEvent<'QUESTION'> {
-	readonly eventType = 'QUESTION';
+  readonly eventType = 'QUESTION';
 
-	constructor(override readonly node: TypedQuestionNode<Type>) {
-		super(node);
-	}
+  constructor(override readonly node: TypedQuestionNode<Type>) {
+    super(node);
+  }
 
-	abstract getAnswer(): ComparableAnswer;
+  abstract getAnswer(): ComparableAnswer;
 
-	abstract answerQuestion(answerValue: unknown): ComparableAnswer;
+  abstract answerQuestion(answerValue: unknown): ComparableAnswer;
 }
 
 export type AnyQuestionEvent = QuestionEvent<QuestionNodeType>;
