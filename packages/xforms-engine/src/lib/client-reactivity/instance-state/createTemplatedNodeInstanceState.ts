@@ -3,19 +3,19 @@ import type { ClientReactiveSerializableTemplatedNode } from '../../../instance/
 import { serializeParentElementXML } from '../../xml-serialization.ts';
 
 export const createTemplatedNodeInstanceState = (
-	node: ClientReactiveSerializableTemplatedNode
+  node: ClientReactiveSerializableTemplatedNode
 ): InstanceState => {
-	return {
-		get instanceXML() {
-			if (!node.currentState.relevant) {
-				return '';
-			}
+  return {
+    get instanceXML() {
+      if (!node.currentState.relevant) {
+        return '';
+      }
 
-			return serializeParentElementXML(
-				node.definition.qualifiedName,
-				node.currentState.children,
-				node.currentState.attributes
-			);
-		},
-	};
+      return serializeParentElementXML(
+        node.definition.qualifiedName,
+        node.currentState.children,
+        node.currentState.attributes
+      );
+    },
+  };
 };

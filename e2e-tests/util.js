@@ -3,6 +3,7 @@ import { expect } from '@playwright/test';
 const appUrl = process.env.ODK_URL;
 const user = process.env.ODK_USER;
 const password = process.env.ODK_PASSWORD;
+const ENCRYPTION_SECRET = 'encryptionsecret';
 
 const login = async (page) => {
   await page.goto(appUrl);
@@ -16,4 +17,7 @@ const login = async (page) => {
   await page.waitForURL(appUrl);
 };
 
-export { login };
+export {
+  login,
+  ENCRYPTION_SECRET
+};

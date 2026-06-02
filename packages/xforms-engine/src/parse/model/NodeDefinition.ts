@@ -1,8 +1,8 @@
 import type { StaticAttribute } from '../../integration/xpath/static-dom/StaticAttribute.ts';
 import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import type {
-	NamedSubtreeDefinition,
-	NamespaceDeclarationMap,
+  NamedSubtreeDefinition,
+  NamespaceDeclarationMap,
 } from '../../lib/names/NamespaceDeclarationMap.ts';
 import type { QualifiedName } from '../../lib/names/QualifiedName.ts';
 import type { AnyBodyElementDefinition } from '../body/BodyDefinition.ts';
@@ -73,24 +73,24 @@ export type ChildNodeDefinition =
 	| LeafNodeDefinition;
 
 export abstract class NodeDefinition<
-	Type extends NodeDefinitionType,
+  Type extends NodeDefinitionType,
 > implements NamedSubtreeDefinition {
-	abstract readonly type: Type;
-	abstract readonly namespaceDeclarations: NamespaceDeclarationMap;
-	abstract readonly qualifiedName: QualifiedName;
-	abstract readonly bodyElement: AnyBodyElementDefinition | RepeatElementDefinition | null;
-	abstract readonly isTranslated: boolean;
-	abstract readonly root: RootDefinition;
-	abstract readonly parent: ParentNodeDefinition | null;
-	abstract readonly template: StaticAttribute | StaticElement;
-	abstract readonly children: readonly ChildNodeDefinition[] | null;
-	abstract readonly attributes: AttributeDefinitionMap | null;
+  abstract readonly type: Type;
+  abstract readonly namespaceDeclarations: NamespaceDeclarationMap;
+  abstract readonly qualifiedName: QualifiedName;
+  abstract readonly bodyElement: AnyBodyElementDefinition | RepeatElementDefinition | null;
+  abstract readonly isTranslated: boolean;
+  abstract readonly root: RootDefinition;
+  abstract readonly parent: ParentNodeDefinition | null;
+  abstract readonly template: StaticAttribute | StaticElement;
+  abstract readonly children: readonly ChildNodeDefinition[] | null;
+  abstract readonly attributes: AttributeDefinitionMap | null;
 
-	readonly nodeset: string;
+  readonly nodeset: string;
 
-	constructor(readonly bind: BindDefinition) {
-		this.nodeset = bind.nodeset;
-	}
+  constructor(readonly bind: BindDefinition) {
+    this.nodeset = bind.nodeset;
+  }
 }
 
 // prettier-ignore

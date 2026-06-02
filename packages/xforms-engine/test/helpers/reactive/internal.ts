@@ -84,9 +84,9 @@ export type DefineMutableObject = <T extends object>(object: T) => T;
  * test scope.
  */
 export interface ReactiveTestScope {
-	readonly mutable: DefineMutableObject;
-	readonly computed: DefineComputation;
-	readonly effect: DefineEffect;
+  readonly mutable: DefineMutableObject;
+  readonly computed: DefineComputation;
+  readonly effect: DefineEffect;
 }
 
 /**
@@ -108,161 +108,161 @@ type ReactiveTestScopeCallback<T> = (context: ReactiveTestScope) => T;
  * both for additional detail and considerations.
  */
 export const reactiveTestScope = <Result>(callback: ReactiveTestScopeCallback<Result>): Result => {
-	interface Dependency {
-		readonly subscribers: Set<Subscriber>;
-	}
+  interface Dependency {
+    readonly subscribers: Set<Subscriber>;
+  }
 
-	interface Subscriber {
-		readonly execute: VoidFunction;
-		readonly dependencies: Set<Dependency>;
-	}
+  interface Subscriber {
+    readonly execute: VoidFunction;
+    readonly dependencies: Set<Dependency>;
+  }
 
-	const subscribers: Subscriber[] = [];
+  const subscribers: Subscriber[] = [];
 
-	/**
-	 * A thunk which produces a (potentially) reactive value when called, and which
-	 * establishes a subscription when called within a reactive context.
-	 */
-	type ReadAtom<T> = Thunk<T>;
+  /**
+   * A thunk which produces a (potentially) reactive value when called, and which
+   * establishes a subscription when called within a reactive context.
+   */
+  type ReadAtom<T> = Thunk<T>;
 
-	/**
-	 * A function used to update an atomic reactive value, and which updates
-	 * reactive subscriptions when called with an updated value.
-	 *
-	 * @todo "updated value" is not currently checked
-	 * @todo we don't currently accept a callback with the current value, but it
-	 * might be a good idea if we expand usage
-	 */
-	type WriteAtom<T> = (value: T) => T;
+  /**
+   * A function used to update an atomic reactive value, and which updates
+   * reactive subscriptions when called with an updated value.
+   *
+   * @todo "updated value" is not currently checked
+   * @todo we don't currently accept a callback with the current value, but it
+   * might be a good idea if we expand usage
+   */
+  type WriteAtom<T> = (value: T) => T;
 
-	/**
-	 * Provides both read and write access to an atomic reactive value (e.g. a
-	 * "signal"). Note that this is not the interface for mutables.
-	 */
-	interface Atom<T> {
-		readonly read: ReadAtom<T>;
-		readonly write: WriteAtom<T>;
-	}
+  /**
+   * Provides both read and write access to an atomic reactive value (e.g. a
+   * "signal"). Note that this is not the interface for mutables.
+   */
+  interface Atom<T> {
+    readonly read: ReadAtom<T>;
+    readonly write: WriteAtom<T>;
+  }
 
-	/**
-	 * Produces an atomic reactive value (e.g. a "signal").
-	 */
-	type DefineAtom = <T>(initialValue: T) => Atom<T>;
+  /**
+   * Produces an atomic reactive value (e.g. a "signal").
+   */
+  type DefineAtom = <T>(initialValue: T) => Atom<T>;
 
-	const cleanupSubscriber = (running: Subscriber) => {
-		const { dependencies } = running;
+  const cleanupSubscriber = (running: Subscriber) => {
+    const { dependencies } = running;
 
-		for (const dependency of dependencies) {
-			dependency.subscribers.delete(running);
-		}
+    for (const dependency of dependencies) {
+      dependency.subscribers.delete(running);
+    }
 
-		dependencies.clear();
-	};
+    dependencies.clear();
+  };
 
-	class AtomicState<T> implements Atom<T>, Dependency {
-		readonly read: ReadAtom<T>;
-		readonly write: WriteAtom<T>;
-		readonly subscribers = new Set<Subscriber>();
+  class AtomicState<T> implements Atom<T>, Dependency {
+    readonly read: ReadAtom<T>;
+    readonly write: WriteAtom<T>;
+    readonly subscribers = new Set<Subscriber>();
 
-		constructor(value: T) {
-			this.read = (): T => {
-				const running = subscribers[subscribers.length - 1];
+    constructor(value: T) {
+      this.read = (): T => {
+        const running = subscribers[subscribers.length - 1];
 
-				if (running) {
-					this.subscribers.add(running);
+        if (running) {
+          this.subscribers.add(running);
 
-					running.dependencies.add(this);
-				}
+          running.dependencies.add(this);
+        }
 
-				return value;
-			};
+        return value;
+      };
 
-			this.write = (nextValue: T) => {
-				/**
-				 * @see {@link WriteAtom}, this is likely where we'd think about checking
-				 * whether a value change has actually occurred to determine whether
-				 * any subscriptions should be notified.
-				 */
-				value = nextValue;
+      this.write = (nextValue: T) => {
+        /**
+         * @see {@link WriteAtom}, this is likely where we'd think about checking
+         * whether a value change has actually occurred to determine whether
+         * any subscriptions should be notified.
+         */
+        value = nextValue;
 
-				for (const subscriber of [...this.subscribers]) {
-					subscriber.execute();
-				}
+        for (const subscriber of [...this.subscribers]) {
+          subscriber.execute();
+        }
 
-				return value;
-			};
-		}
-	}
+        return value;
+      };
+    }
+  }
 
-	const atom: DefineAtom = (value) => {
-		return new AtomicState(value);
-	};
+  const atom: DefineAtom = (value) => {
+    return new AtomicState(value);
+  };
 
-	const computed: DefineComputation = <T>(fn: Thunk<T>): Thunk<T> => {
-		const { read, write } = atom<T>(undefined!);
+  const computed: DefineComputation = <T>(fn: Thunk<T>): Thunk<T> => {
+    const { read, write } = atom<T>(undefined!);
 
-		effect(() => write(fn()));
+    effect(() => write(fn()));
 
-		return read;
-	};
+    return read;
+  };
 
-	const effect: DefineEffect = (effectFn: VoidFunction) => {
-		const execute = () => {
-			cleanupSubscriber(running);
+  const effect: DefineEffect = (effectFn: VoidFunction) => {
+    const execute = () => {
+      cleanupSubscriber(running);
 
-			subscribers.push(running);
+      subscribers.push(running);
 
-			try {
-				effectFn();
-			} finally {
-				subscribers.pop();
-			}
-		};
+      try {
+        effectFn();
+      } finally {
+        subscribers.pop();
+      }
+    };
 
-		const running: Subscriber = {
-			execute,
-			dependencies: new Set(),
-		};
+    const running: Subscriber = {
+      execute,
+      dependencies: new Set(),
+    };
 
-		execute();
-	};
+    execute();
+  };
 
-	const mutable = <T extends object>(object: T): T => {
-		// Creating a null-property object ensures we're *only* creating reactive
-		// properties for the explicitly defined members of the input object.
-		const reactiveObject = Object.create(null) as T;
+  const mutable = <T extends object>(object: T): T => {
+    // Creating a null-property object ensures we're *only* creating reactive
+    // properties for the explicitly defined members of the input object.
+    const reactiveObject = Object.create(null) as T;
 
-		// Map each "normal" (read/writable) property to a computed get/set property
-		// backed by an Atom. For other properties:
-		//
-		// - Existing computed properties are preserved exactly as they're defined.
-		// - Inherited (e.g. by prototype/class extension) properties are omitted.
-		Object.entries(Object.getOwnPropertyDescriptors(object)).forEach(([key, inputDescriptor]) => {
-			if (inputDescriptor.writable) {
-				const { read, write } = atom(inputDescriptor.value);
+    // Map each "normal" (read/writable) property to a computed get/set property
+    // backed by an Atom. For other properties:
+    //
+    // - Existing computed properties are preserved exactly as they're defined.
+    // - Inherited (e.g. by prototype/class extension) properties are omitted.
+    Object.entries(Object.getOwnPropertyDescriptors(object)).forEach(([key, inputDescriptor]) => {
+      if (inputDescriptor.writable) {
+        const { read, write } = atom(inputDescriptor.value);
 
-				Object.defineProperty(reactiveObject, key, {
-					configurable: false,
-					enumerable: true,
-					get: read,
-					set: write,
-				});
-			} else {
-				Object.defineProperty(reactiveObject, key, inputDescriptor);
-			}
-		});
+        Object.defineProperty(reactiveObject, key, {
+          configurable: false,
+          enumerable: true,
+          get: read,
+          set: write,
+        });
+      } else {
+        Object.defineProperty(reactiveObject, key, inputDescriptor);
+      }
+    });
 
-		return reactiveObject;
-	};
+    return reactiveObject;
+  };
 
-	// Having now established the API available to the reactive scope, we execute
-	// the provided callback with that API. We would likely perform any cleanup
-	// after this call.
-	const result = callback({
-		mutable,
-		computed,
-		effect,
-	});
+  // Having now established the API available to the reactive scope, we execute
+  // the provided callback with that API. We would likely perform any cleanup
+  // after this call.
+  const result = callback({
+    mutable,
+    computed,
+    effect,
+  });
 
-	return result;
+  return result;
 };

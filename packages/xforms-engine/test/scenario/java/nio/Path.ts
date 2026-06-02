@@ -4,10 +4,10 @@
  * necessary to support calls from ported JavaRosa `Scenario` tests.
  */
 export interface Path {
-	getFileName(): Path;
-	getParent(): Path;
-	toAbsolutePath(): Path;
-	toString(): string;
+  getFileName(): Path;
+  getParent(): Path;
+  toAbsolutePath(): Path;
+  toString(): string;
 }
 
 export type { Path as JavaNIOPath };

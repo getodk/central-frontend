@@ -5,127 +5,127 @@ import type { EvaluationType, EvaluationTypes } from './EvaluationType.ts';
 import { LocationPathEvaluation } from './LocationPathEvaluation.ts';
 
 export abstract class ValueEvaluation<
-	T extends XPathNode,
-	Type extends EvaluationType,
+  T extends XPathNode,
+  Type extends EvaluationType,
 > implements Evaluation<T, Type> {
-	protected readonly _values: readonly [this] = [this];
+  protected readonly _values: readonly [this] = [this];
 
-	abstract readonly context: LocationPathEvaluation<T>;
+  abstract readonly context: LocationPathEvaluation<T>;
 
-	abstract readonly type: Type;
-	abstract readonly value: EvaluationTypes<T>[Type];
-	abstract readonly nodes: Type extends 'NODE' ? ReadonlySet<T> : null;
+  abstract readonly type: Type;
+  abstract readonly value: EvaluationTypes<T>[Type];
+  abstract readonly nodes: Type extends 'NODE' ? ReadonlySet<T> : null;
 
-	protected abstract readonly booleanValue: boolean;
-	protected abstract readonly numberValue: number;
-	protected abstract readonly stringValue: string;
+  protected abstract readonly booleanValue: boolean;
+  protected abstract readonly numberValue: number;
+  protected abstract readonly stringValue: string;
 
-	[Symbol.iterator]() {
-		return this.values().values();
-	}
+  [Symbol.iterator]() {
+    return this.values().values();
+  }
 
-	first(): this {
-		return this;
-	}
+  first(): this {
+    return this;
+  }
 
-	values(): readonly this[] {
-		return this._values;
-	}
+  values(): readonly this[] {
+    return this._values;
+  }
 
-	toBoolean(): boolean {
-		return this.booleanValue;
-	}
+  toBoolean(): boolean {
+    return this.booleanValue;
+  }
 
-	toNumber(): number {
-		return this.numberValue;
-	}
+  toNumber(): number {
+    return this.numberValue;
+  }
 
-	toString(): string {
-		return this.stringValue;
-	}
+  toString(): string {
+    return this.stringValue;
+  }
 
-	eq(operand: Evaluation<T>): boolean {
-		if (this.type === 'BOOLEAN') {
-			return this.toBoolean() === operand.toBoolean();
-		}
+  eq(operand: Evaluation<T>): boolean {
+    if (this.type === 'BOOLEAN') {
+      return this.toBoolean() === operand.toBoolean();
+    }
 
-		if (operand instanceof LocationPathEvaluation) {
-			return operand.some((rhs) => this.eq(rhs));
-		}
+    if (operand instanceof LocationPathEvaluation) {
+      return operand.some((rhs) => this.eq(rhs));
+    }
 
-		if (this.type === 'NODE') {
-			switch (operand.type) {
-				case 'BOOLEAN':
-					return this.toBoolean() === operand.toBoolean();
+    if (this.type === 'NODE') {
+      switch (operand.type) {
+        case 'BOOLEAN':
+          return this.toBoolean() === operand.toBoolean();
 
-				case 'NUMBER':
-					return this.toNumber() === operand.toNumber();
+        case 'NUMBER':
+          return this.toNumber() === operand.toNumber();
 
-				case 'NODE':
-				case 'STRING':
-					return this.toString() === operand.toString();
+        case 'NODE':
+        case 'STRING':
+          return this.toString() === operand.toString();
 
-				default:
-					throw new UnreachableError(operand.type);
-			}
-		}
+        default:
+          throw new UnreachableError(operand.type);
+      }
+    }
 
-		if (operand.type === 'NODE') {
-			return operand.eq(this);
-		}
+    if (operand.type === 'NODE') {
+      return operand.eq(this);
+    }
 
-		if (this.type === 'BOOLEAN' || operand.type === 'BOOLEAN') {
-			return this.toBoolean() === operand.toBoolean();
-		}
+    if (this.type === 'BOOLEAN' || operand.type === 'BOOLEAN') {
+      return this.toBoolean() === operand.toBoolean();
+    }
 
-		if (this.type === 'NUMBER' || operand.type === 'NUMBER') {
-			return this.toNumber() === operand.toNumber();
-		}
+    if (this.type === 'NUMBER' || operand.type === 'NUMBER') {
+      return this.toNumber() === operand.toNumber();
+    }
 
-		return this.toString() === operand.toString();
-	}
+    return this.toString() === operand.toString();
+  }
 
-	ne(operand: Evaluation<T>): boolean {
-		if (this.type === 'BOOLEAN') {
-			return this.toBoolean() !== operand.toBoolean();
-		}
+  ne(operand: Evaluation<T>): boolean {
+    if (this.type === 'BOOLEAN') {
+      return this.toBoolean() !== operand.toBoolean();
+    }
 
-		if (operand instanceof LocationPathEvaluation) {
-			return operand.some((rhs) => this.ne(rhs));
-		}
+    if (operand instanceof LocationPathEvaluation) {
+      return operand.some((rhs) => this.ne(rhs));
+    }
 
-		return !this.eq(operand);
-	}
+    return !this.eq(operand);
+  }
 
-	lt(operand: Evaluation<T>): boolean {
-		if (operand instanceof LocationPathEvaluation) {
-			return operand.some((rhs) => this.lt(rhs));
-		}
+  lt(operand: Evaluation<T>): boolean {
+    if (operand instanceof LocationPathEvaluation) {
+      return operand.some((rhs) => this.lt(rhs));
+    }
 
-		return this.toNumber() < operand.toNumber();
-	}
+    return this.toNumber() < operand.toNumber();
+  }
 
-	lte(operand: Evaluation<T>): boolean {
-		if (operand instanceof LocationPathEvaluation) {
-			return operand.some((rhs) => this.lte(rhs));
-		}
+  lte(operand: Evaluation<T>): boolean {
+    if (operand instanceof LocationPathEvaluation) {
+      return operand.some((rhs) => this.lte(rhs));
+    }
 
-		return this.toNumber() <= operand.toNumber();
-	}
+    return this.toNumber() <= operand.toNumber();
+  }
 
-	gt(operand: Evaluation<T>): boolean {
-		if (operand instanceof LocationPathEvaluation) {
-			return operand.some((rhs) => this.gt(rhs));
-		}
+  gt(operand: Evaluation<T>): boolean {
+    if (operand instanceof LocationPathEvaluation) {
+      return operand.some((rhs) => this.gt(rhs));
+    }
 
-		return this.toNumber() > operand.toNumber();
-	}
+    return this.toNumber() > operand.toNumber();
+  }
 
-	gte(operand: Evaluation<T>): boolean {
-		if (operand instanceof LocationPathEvaluation) {
-			return operand.some((rhs) => this.gte(rhs));
-		}
+  gte(operand: Evaluation<T>): boolean {
+    if (operand instanceof LocationPathEvaluation) {
+      return operand.some((rhs) => this.gte(rhs));
+    }
 
-		return this.toNumber() >= operand.toNumber();
-	}
+    return this.toNumber() >= operand.toNumber();
+  }
 }

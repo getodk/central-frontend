@@ -5,17 +5,17 @@ import type { SecondaryInstanceDefinition } from '../SecondaryInstancesDefinitio
 import { SecondaryInstanceSource } from './SecondaryInstanceSource.ts';
 
 export class InternalSecondaryInstanceSource extends SecondaryInstanceSource<'internal'> {
-	constructor(instanceId: string, resourceURL: null, domElement: DOMSecondaryInstanceElement) {
-		super('internal', instanceId, resourceURL, domElement);
-	}
+  constructor(instanceId: string, resourceURL: null, domElement: DOMSecondaryInstanceElement) {
+    super('internal', instanceId, resourceURL, domElement);
+  }
 
-	parseDefinition(): SecondaryInstanceDefinition {
-		const doc = parseStaticDocumentFromDOMSubtree(this.domElement, {
-			nodesetPrefix: `instance('${this.instanceId}')`,
-		});
+  parseDefinition(): SecondaryInstanceDefinition {
+    const doc = parseStaticDocumentFromDOMSubtree(this.domElement, {
+      nodesetPrefix: `instance('${this.instanceId}')`,
+    });
 
-		assertSecondaryInstanceDefinition(doc);
+    assertSecondaryInstanceDefinition(doc);
 
-		return doc;
-	}
+    return doc;
+  }
 }

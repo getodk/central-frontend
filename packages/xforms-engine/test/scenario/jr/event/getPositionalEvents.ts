@@ -49,64 +49,64 @@ export type PositionalEvents = readonly [
 type AnyRelevantNode = AnyNode & { readonly currentState: { readonly relevant: true } };
 
 const isRelevant = (node: AnyNode): node is AnyRelevantNode => {
-	return node.currentState.relevant === true;
+  return node.currentState.relevant === true;
 };
 
 export const getPositionalEvents = (instanceRoot: RootNode): PositionalEvents => {
-	const beginning = BeginningOfFormEvent.from(instanceRoot);
-	const nodes = collectFlatNodeList(instanceRoot);
-	const relevantNodes = nodes.filter(isRelevant);
-	const nonTerminalEvents = relevantNodes.flatMap(
-		(node): NonTerminalPositionalEvent | readonly [] => {
-			switch (node.nodeType) {
-				case 'root':
-					return [];
+  const beginning = BeginningOfFormEvent.from(instanceRoot);
+  const nodes = collectFlatNodeList(instanceRoot);
+  const relevantNodes = nodes.filter(isRelevant);
+  const nonTerminalEvents = relevantNodes.flatMap(
+    (node): NonTerminalPositionalEvent | readonly [] => {
+      switch (node.nodeType) {
+        case 'root':
+          return [];
 
-				case 'repeat-instance':
-					return RepeatInstanceEvent.from(node);
+        case 'repeat-instance':
+          return RepeatInstanceEvent.from(node);
 
-				case 'repeat-range:controlled':
-					return [];
+        case 'repeat-range:controlled':
+          return [];
 
-				case 'repeat-range:uncontrolled':
-					return PromptNewRepeatEvent.from(node);
+        case 'repeat-range:uncontrolled':
+          return PromptNewRepeatEvent.from(node);
 
-				case 'group':
-					if (node.appearances === null) {
-						return [];
-					}
-					return GroupEvent.from(node);
+        case 'group':
+          if (node.appearances === null) {
+            return [];
+          }
+          return GroupEvent.from(node);
 
-				case 'model-value':
-					return [];
+        case 'model-value':
+          return [];
 
-				case 'note':
-					return NoteQuestionEvent.from(node);
+        case 'note':
+          return NoteQuestionEvent.from(node);
 
-				case 'select':
-					return SelectQuestionEvent.from(node);
+        case 'select':
+          return SelectQuestionEvent.from(node);
 
-				case 'input':
-					return InputQuestionEvent.from(node);
+        case 'input':
+          return InputQuestionEvent.from(node);
 
-				case 'trigger':
-					return TriggerQuestionEvent.from(node);
+        case 'trigger':
+          return TriggerQuestionEvent.from(node);
 
-				case 'range':
-					return RangeQuestionEvent.from(node);
+        case 'range':
+          return RangeQuestionEvent.from(node);
 
-				case 'rank':
-					return RankQuestionEvent.from(node);
+        case 'rank':
+          return RankQuestionEvent.from(node);
 
-				case 'upload':
-					return UploadQuestionEvent.from(node);
+        case 'upload':
+          return UploadQuestionEvent.from(node);
 
-				default:
-					throw new UnreachableError(node);
-			}
-		}
-	);
-	const end = EndOfFormEvent.from(null);
+        default:
+          throw new UnreachableError(node);
+      }
+    }
+  );
+  const end = EndOfFormEvent.from(null);
 
-	return [beginning, ...nonTerminalEvents, end];
+  return [beginning, ...nonTerminalEvents, end];
 };
