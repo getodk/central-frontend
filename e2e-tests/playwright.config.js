@@ -42,7 +42,13 @@ export default defineConfig({
     },
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'], ignoreHTTPSErrors:true },
+      use: {
+        ...devices['Desktop Chrome'],
+        ignoreHTTPSErrors: true, // TODO should be enough to define above?
+        launchOptions: {
+          args: ['--ignore-certificate-errors'], // force-bypass service worker SSL checks
+        },
+      },
       dependencies: ['setup'],
     },
   ]
