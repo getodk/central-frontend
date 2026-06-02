@@ -10,7 +10,7 @@
     "test": "./test/run.sh",
     "transifex:destructure": "node bin/transifex/destructure.js",
     "transifex:fix": "node bin/transifex/restructure.js > transifex/strings_en.json",
-    "transifex:lint": "bash -c 'diff transifex/strings_en.json <(node bin/transifex/restructure.js)'"
+    "transifex:lint": "bash -c 'diff transifex/strings_en.json <(node bin/transifex/restructure.js)' && node bin/transifex/destructure.js"
   },
   "dependencies": {
     "@floating-ui/dom": "^1.1.0",
