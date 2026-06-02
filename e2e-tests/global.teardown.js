@@ -7,10 +7,9 @@ const credentials = Buffer.from(`${user}:${password}`, 'utf-8').toString('base64
 const projectId = process.env.PROJECT_ID;
 const projectIdEncrypted = process.env.PROJECT_ID_ENCRYPTED;
 
-teardown('delete project', async () => {
+teardown('delete project', async ({ request }) => {
   const promises = [ projectId, projectIdEncrypted ].map((project) => {
-    return fetch(`${appUrl}/v1/projects/${project}`, {
-      method: 'DELETE',
+    return request.delete(`${appUrl}/v1/projects/${project}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Basic ${credentials}`
