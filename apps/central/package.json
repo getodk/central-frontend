@@ -8,6 +8,7 @@
     "lint": "npm run eslint && npm run transifex:lint",
     "lint:fix": "npm run eslint:fix && npm run transifex:fix",
     "test": "./test/run.sh",
+    "transifex:destructure": "node bin/transifex/destructure.js",
     "transifex:fix": "node bin/transifex/restructure.js > transifex/strings_en.json",
     "transifex:lint": "bash -c 'diff transifex/strings_en.json <(node bin/transifex/restructure.js)'"
   },

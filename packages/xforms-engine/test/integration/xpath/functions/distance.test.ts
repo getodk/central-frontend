@@ -1,13 +1,13 @@
 import {
-	bind,
-	body,
-	head,
-	html,
-	input,
-	mainInstance,
-	model,
-	t,
-	title,
+  bind,
+  body,
+  head,
+  html,
+  input,
+  mainInstance,
+  model,
+  t,
+  title,
 } from '@getodk/common/test-utils/xform-dsl/index.ts';
 import { describe, expect, it } from 'vitest';
 import { expectedDistance } from '../../../scenario/answer/ExpectedApproximateUOMAnswer.ts';
@@ -39,11 +39,11 @@ import { Scenario } from '../../../scenario/jr/Scenario.ts';
  *    opportunity to bring those tests more in line with project goals/idioms.
  */
 describe('XPath function support: `distance`', () => {
-	describe('GeoDistanceTest.java', () => {
-		// JR: distance_isComputedForInlineString
-		it('computes distance for a string (Literal) argument', async () => {
-			// prettier-ignore
-			const scenario = await Scenario.init('string distance', html(
+  describe('GeoDistanceTest.java', () => {
+    // JR: distance_isComputedForInlineString
+    it('computes distance for a string (Literal) argument', async () => {
+      // prettier-ignore
+      const scenario = await Scenario.init('string distance', html(
 				head(
 					title('String distance'),
 					model(
@@ -67,29 +67,29 @@ describe('XPath function support: `distance`', () => {
 				)
 			));
 
-			// JR:
-			//
-			// // http://www.mapdevelopers.com/area_finder.php?&points=%5B%5B38.253094215699576%2C21.756382658677467%5D%2C%5B38.25021274773806%2C21.756382658677467%5D%2C%5B38.25007793942195%2C21.763892843919166%5D%2C%5B38.25290886154963%2C21.763935759263404%5D%2C%5B38.25146813817506%2C21.758421137528785%5D%5D
-			// assertThat(Double.parseDouble(scenario.answerOf("/data/distance").getDisplayText()),
-			// 		IsCloseTo.closeTo(1801, 0.5));
+      // JR:
+      //
+      // // http://www.mapdevelopers.com/area_finder.php?&points=%5B%5B38.253094215699576%2C21.756382658677467%5D%2C%5B38.25021274773806%2C21.756382658677467%5D%2C%5B38.25007793942195%2C21.763892843919166%5D%2C%5B38.25290886154963%2C21.763935759263404%5D%2C%5B38.25146813817506%2C21.758421137528785%5D%5D
+      // assertThat(Double.parseDouble(scenario.answerOf("/data/distance").getDisplayText()),
+      // 		IsCloseTo.closeTo(1801, 0.5));
 
-			expect(scenario.answerOf('/data/distance')).toHaveAnswerCloseTo(expectedDistance(1801, 0.5));
-		});
+      expect(scenario.answerOf('/data/distance')).toHaveAnswerCloseTo(expectedDistance(1801, 0.5));
+    });
 
-		/**
-		 * **PORTING NOTES**
-		 *
-		 * Adapts JavaRosa's use of `try`/`catch` to typical Web Forms error
-		 * condition assertion style.
-		 *
-		 * @todo The shape of this test may change (like many others) when we
-		 * address error production broadly.
-		 */
-		// JR: distance_throwsForNonPoint
-		it('produces an error when the string value is not a valid point', async () => {
-			const init = async () => {
-				// prettier-ignore
-				await Scenario.init('string distance', html(
+    /**
+     * **PORTING NOTES**
+     *
+     * Adapts JavaRosa's use of `try`/`catch` to typical Web Forms error
+     * condition assertion style.
+     *
+     * @todo The shape of this test may change (like many others) when we
+     * address error production broadly.
+     */
+    // JR: distance_throwsForNonPoint
+    it('produces an error when the string value is not a valid point', async () => {
+      const init = async () => {
+        // prettier-ignore
+        await Scenario.init('string distance', html(
 						head(
 							title('String distance'),
 							model(
@@ -102,28 +102,28 @@ describe('XPath function support: `distance`', () => {
 							input('distance')
 						)
 				));
-			};
+      };
 
-			// **PORTING NOTES**
-			//
-			// We've currently copied this error message verbatim.
-			await expect(init).rejects.toThrowError(
-				"The function 'distance' received a value that does not represent GPS coordinates"
-			);
-		});
+      // **PORTING NOTES**
+      //
+      // We've currently copied this error message verbatim.
+      await expect(init).rejects.toThrowError(
+        "The function 'distance' received a value that does not represent GPS coordinates"
+      );
+    });
 
-		/**
-		 * **PORTING NOTES**
-		 *
-		 * The difference in language here is semantically important! Note that the
-		 * JavaRosa test name references "path" arguments, but the test exercises a
-		 * spec expansion where the path may be composed of multiple **point**
-		 * arguments.
-		 */
-		// JR: distance_isComputedForMultiplePathArguments
-		it('computes a distance from multiple node-set arguments, where each node has a `geopoint` value', async () => {
-			// prettier-ignore
-			const scenario = await Scenario.init('string distance', html(
+    /**
+     * **PORTING NOTES**
+     *
+     * The difference in language here is semantically important! Note that the
+     * JavaRosa test name references "path" arguments, but the test exercises a
+     * spec expansion where the path may be composed of multiple **point**
+     * arguments.
+     */
+    // JR: distance_isComputedForMultiplePathArguments
+    it('computes a distance from multiple node-set arguments, where each node has a `geopoint` value', async () => {
+      // prettier-ignore
+      const scenario = await Scenario.init('string distance', html(
 				head(
 					title('Multi parameter distance'),
 					model(
@@ -147,19 +147,19 @@ describe('XPath function support: `distance`', () => {
 				)
 			));
 
-			// JR:
-			//
-			// // http://www.mapdevelopers.com/area_finder.php?&points=%5B%5B38.253094215699576%2C21.756382658677467%5D%2C%5B38.25021274773806%2C21.756382658677467%5D%2C%5B38.25007793942195%2C21.763892843919166%5D%2C%5B38.25290886154963%2C21.763935759263404%5D%2C%5B38.25146813817506%2C21.758421137528785%5D%5D
-			// assertThat(Double.parseDouble(scenario.answerOf("/data/distance").getDisplayText()),
-			// 		IsCloseTo.closeTo(1801, 0.5));
+      // JR:
+      //
+      // // http://www.mapdevelopers.com/area_finder.php?&points=%5B%5B38.253094215699576%2C21.756382658677467%5D%2C%5B38.25021274773806%2C21.756382658677467%5D%2C%5B38.25007793942195%2C21.763892843919166%5D%2C%5B38.25290886154963%2C21.763935759263404%5D%2C%5B38.25146813817506%2C21.758421137528785%5D%5D
+      // assertThat(Double.parseDouble(scenario.answerOf("/data/distance").getDisplayText()),
+      // 		IsCloseTo.closeTo(1801, 0.5));
 
-			expect(scenario.answerOf('/data/distance')).toHaveAnswerCloseTo(expectedDistance(1801, 0.5));
-		});
+      expect(scenario.answerOf('/data/distance')).toHaveAnswerCloseTo(expectedDistance(1801, 0.5));
+    });
 
-		// JR: distance_isComputedForMixedPathAndStringArguments
-		it('computes a distance from mixed node-set and string (Literal) arguments', async () => {
-			// prettier-ignore
-			const scenario = await Scenario.init('string distance', html(
+    // JR: distance_isComputedForMixedPathAndStringArguments
+    it('computes a distance from mixed node-set and string (Literal) arguments', async () => {
+      // prettier-ignore
+      const scenario = await Scenario.init('string distance', html(
 				head(
 					title('Multi parameter distance'),
 					model(
@@ -179,48 +179,48 @@ describe('XPath function support: `distance`', () => {
 				)
 			));
 
-			// JR:
-			//
-			// // http://www.mapdevelopers.com/area_finder.php?&points=%5B%5B38.253094215699576%2C21.756382658677467%5D%2C%5B38.25021274773806%2C21.756382658677467%5D%2C%5B38.25007793942195%2C21.763892843919166%5D%2C%5B38.25290886154963%2C21.763935759263404%5D%2C%5B38.25146813817506%2C21.758421137528785%5D%5D
-			// assertThat(Double.parseDouble(scenario.answerOf("/data/distance").getDisplayText()),
-			// 		IsCloseTo.closeTo(1801, 0.5));
+      // JR:
+      //
+      // // http://www.mapdevelopers.com/area_finder.php?&points=%5B%5B38.253094215699576%2C21.756382658677467%5D%2C%5B38.25021274773806%2C21.756382658677467%5D%2C%5B38.25007793942195%2C21.763892843919166%5D%2C%5B38.25290886154963%2C21.763935759263404%5D%2C%5B38.25146813817506%2C21.758421137528785%5D%5D
+      // assertThat(Double.parseDouble(scenario.answerOf("/data/distance").getDisplayText()),
+      // 		IsCloseTo.closeTo(1801, 0.5));
 
-			expect(scenario.answerOf('/data/distance')).toHaveAnswerCloseTo(expectedDistance(1801, 0.5));
-		});
-	});
+      expect(scenario.answerOf('/data/distance')).toHaveAnswerCloseTo(expectedDistance(1801, 0.5));
+    });
+  });
 
-	describe('multiple arguments, mixed value types', () => {
-		it('produces an error for a non-geopoint value in a multiple argument call', async () => {
-			const init = async () => {
-				await Scenario.init(
-					'geoshape distance',
-					html(
-						head(
-							title('Geoshape distance'),
-							model(
-								mainInstance(
-									t(
-										'data id="geoshape-distance"',
-										t('polygon-start-trace', '0 1 0 0; 0 91 0 0;'),
-										t('polygon-close-point', '0 1 0 0'),
-										t('distance')
-									)
-								),
-								bind('/data/polygon-start-trace').type('geotrace'),
-								bind('/data/polygon-close-point').type('geopoint'),
-								bind('/data/distance')
-									.type('decimal')
-									.calculate('distance(/data/polygon-start-trace, /data/polygon-close-point)')
-							)
-						),
-						body(input('/data/polygon-start-trace'), input('/data/polygon-close-point'))
-					)
-				);
-			};
+  describe('multiple arguments, mixed value types', () => {
+    it('produces an error for a non-geopoint value in a multiple argument call', async () => {
+      const init = async () => {
+        await Scenario.init(
+          'geoshape distance',
+          html(
+            head(
+              title('Geoshape distance'),
+              model(
+                mainInstance(
+                  t(
+                    'data id="geoshape-distance"',
+                    t('polygon-start-trace', '0 1 0 0; 0 91 0 0;'),
+                    t('polygon-close-point', '0 1 0 0'),
+                    t('distance')
+                  )
+                ),
+                bind('/data/polygon-start-trace').type('geotrace'),
+                bind('/data/polygon-close-point').type('geopoint'),
+                bind('/data/distance')
+                  .type('decimal')
+                  .calculate('distance(/data/polygon-start-trace, /data/polygon-close-point)')
+              )
+            ),
+            body(input('/data/polygon-start-trace'), input('/data/polygon-close-point'))
+          )
+        );
+      };
 
-			await expect(init).rejects.toThrowError(
-				"The function 'distance' received a value that does not represent GPS coordinates"
-			);
-		});
-	});
+      await expect(init).rejects.toThrowError(
+        "The function 'distance' received a value that does not represent GPS coordinates"
+      );
+    });
+  });
 });

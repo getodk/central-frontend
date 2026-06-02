@@ -3,13 +3,13 @@ import type { XFormsTestContext } from '../helpers.ts';
 import { createXFormsTestContext } from '../helpers.ts';
 
 describe('instance(id)', () => {
-	let testContext: XFormsTestContext;
+  let testContext: XFormsTestContext;
 
-	let instancesByID: Map<string | null, Element>;
+  let instancesByID: Map<string | null, Element>;
 
-	beforeEach(() => {
-		testContext = createXFormsTestContext(
-			/* xml */ `<?xml version="1.0" encoding="utf-8"?>
+  beforeEach(() => {
+    testContext = createXFormsTestContext(
+      /* xml */ `<?xml version="1.0" encoding="utf-8"?>
 		<h:html
 			xmlns="http://www.w3.org/2002/xforms"
 			xmlns:ev="http://www.w3.org/2001/xml-events"
@@ -65,54 +65,54 @@ describe('instance(id)', () => {
 			<h:body>
 			</h:body>
 		</h:html>`,
-			{
-				getRootNode: (document) => document.querySelector('instance')!,
-			}
-		);
-		const instances = Array.from(testContext.document.querySelectorAll('instance'));
+      {
+        getRootNode: (document) => document.querySelector('instance')!,
+      }
+    );
+    const instances = Array.from(testContext.document.querySelectorAll('instance'));
 
-		instancesByID = new Map(instances.map((instance) => [instance.getAttribute('id'), instance]));
-	});
+    instancesByID = new Map(instances.map((instance) => [instance.getAttribute('id'), instance]));
+  });
 
-	it.each([{ instanceID: 'secondary-1' }, { instanceID: 'secondary-b' }])(
-		'gets the instance with the specified id: $instanceID',
-		({ instanceID }) => {
-			const expression = `instance(${JSON.stringify(instanceID)})`;
-			const expected = instancesByID.get(instanceID)!;
+  it.each([{ instanceID: 'secondary-1' }, { instanceID: 'secondary-b' }])(
+    'gets the instance with the specified id: $instanceID',
+    ({ instanceID }) => {
+      const expression = `instance(${JSON.stringify(instanceID)})`;
+      const expected = instancesByID.get(instanceID)!;
 
-			expect(expected).toBeInstanceOf(Element);
+      expect(expected).toBeInstanceOf(Element);
 
-			testContext.assertNodeSet(expression, [expected]);
-		}
-	);
+      testContext.assertNodeSet(expression, [expected]);
+    }
+  );
 
-	it.each([
-		{ expression: 'instance("secondary-1")/root/item/thing-1', expected: '1.1' },
-		{ expression: 'instance("secondary-b")/@id', expected: 'secondary-b' },
-		{
-			expression: 'instance("secondary-b")/root/item[2]/thing-b',
-			expected: '2.b',
-		},
-	])(
-		'evaluates expressions with an instance(id) and additional steps (expression: $expression)',
-		({ expression, expected }) => {
-			testContext.assertStringValue(expression, expected);
-		}
-	);
+  it.each([
+    { expression: 'instance("secondary-1")/root/item/thing-1', expected: '1.1' },
+    { expression: 'instance("secondary-b")/@id', expected: 'secondary-b' },
+    {
+      expression: 'instance("secondary-b")/root/item[2]/thing-b',
+      expected: '2.b',
+    },
+  ])(
+    'evaluates expressions with an instance(id) and additional steps (expression: $expression)',
+    ({ expression, expected }) => {
+      testContext.assertStringValue(expression, expected);
+    }
+  );
 
-	it.each([
-		{ expression: 'instance("secondary-1")/root/item/*[. = /root/one-dot-one]', expected: '1.1' },
-		{ expression: 'instance("secondary-1")/root/item/*[. = /root/one-dot-two]', expected: '1.2' },
-		{ expression: 'instance("secondary-1")/root/item/*[. = /root/two-dot-one]', expected: '2.1' },
-		{ expression: 'instance("secondary-1")/root/item/*[. = /root/two-dot-two]', expected: '2.2' },
-		{ expression: 'instance("secondary-b")/root/item/*[. = /root/one-dot-a]', expected: '1.a' },
-		{ expression: 'instance("secondary-b")/root/item/*[. = /root/one-dot-b]', expected: '1.b' },
-		{ expression: 'instance("secondary-b")/root/item/*[. = /root/two-dot-a]', expected: '2.a' },
-		{ expression: 'instance("secondary-b")/root/item/*[. = /root/two-dot-b]', expected: '2.b' },
-	])(
-		'evaluates $expression (with predicate reference into the primary instance root context) to $expected',
-		({ expression, expected }) => {
-			testContext.assertStringValue(expression, expected);
-		}
-	);
+  it.each([
+    { expression: 'instance("secondary-1")/root/item/*[. = /root/one-dot-one]', expected: '1.1' },
+    { expression: 'instance("secondary-1")/root/item/*[. = /root/one-dot-two]', expected: '1.2' },
+    { expression: 'instance("secondary-1")/root/item/*[. = /root/two-dot-one]', expected: '2.1' },
+    { expression: 'instance("secondary-1")/root/item/*[. = /root/two-dot-two]', expected: '2.2' },
+    { expression: 'instance("secondary-b")/root/item/*[. = /root/one-dot-a]', expected: '1.a' },
+    { expression: 'instance("secondary-b")/root/item/*[. = /root/one-dot-b]', expected: '1.b' },
+    { expression: 'instance("secondary-b")/root/item/*[. = /root/two-dot-a]', expected: '2.a' },
+    { expression: 'instance("secondary-b")/root/item/*[. = /root/two-dot-b]', expected: '2.b' },
+  ])(
+    'evaluates $expression (with predicate reference into the primary instance root context) to $expected',
+    ({ expression, expected }) => {
+      testContext.assertStringValue(expression, expected);
+    }
+  );
 });

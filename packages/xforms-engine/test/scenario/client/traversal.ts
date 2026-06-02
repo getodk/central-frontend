@@ -13,62 +13,62 @@ import type { Scenario } from '../jr/Scenario.ts';
  * performing writes in {@link Scenario.answer}).
  */
 export const collectFlatNodeList = (currentNode: AnyNode): readonly AnyNode[] => {
-	switch (currentNode.nodeType) {
-		case 'root':
-		case 'repeat-instance':
-		case 'group':
-			return [currentNode, currentNode.currentState.children.map(collectFlatNodeList)].flat(2);
+  switch (currentNode.nodeType) {
+    case 'root':
+    case 'repeat-instance':
+    case 'group':
+      return [currentNode, currentNode.currentState.children.map(collectFlatNodeList)].flat(2);
 
-		case 'repeat-range:controlled':
-		case 'repeat-range:uncontrolled':
-			return [currentNode.currentState.children.map(collectFlatNodeList), currentNode].flat(2);
+    case 'repeat-range:controlled':
+    case 'repeat-range:uncontrolled':
+      return [currentNode.currentState.children.map(collectFlatNodeList), currentNode].flat(2);
 
-		case 'model-value':
-		case 'note':
-		case 'select':
-		case 'input':
-		case 'range':
-		case 'rank':
-		case 'trigger':
-		case 'upload':
-			return [currentNode];
+    case 'model-value':
+    case 'note':
+    case 'select':
+    case 'input':
+    case 'range':
+    case 'rank':
+    case 'trigger':
+    case 'upload':
+      return [currentNode];
 
-		default:
-			throw new UnreachableError(currentNode);
-	}
+    default:
+      throw new UnreachableError(currentNode);
+  }
 };
 
 export const getNodeForReference = (instanceRoot: RootNode, reference: string): AnyNode | null => {
-	const nodes = collectFlatNodeList(instanceRoot);
-	const result = nodes.find((node) => node.currentState.reference === reference);
+  const nodes = collectFlatNodeList(instanceRoot);
+  const result = nodes.find((node) => node.currentState.reference === reference);
 
-	return result ?? null;
+  return result ?? null;
 };
 
 export const getClosestRepeatRange = (currentNode: AnyNode): RepeatRangeNode | null => {
-	switch (currentNode.nodeType) {
-		case 'root':
-			return null;
+  switch (currentNode.nodeType) {
+    case 'root':
+      return null;
 
-		case 'repeat-range:controlled':
-		case 'repeat-range:uncontrolled':
-			return currentNode;
+    case 'repeat-range:controlled':
+    case 'repeat-range:uncontrolled':
+      return currentNode;
 
-		case 'repeat-instance':
-			return currentNode.parent;
+    case 'repeat-instance':
+      return currentNode.parent;
 
-		case 'group':
-		case 'model-value':
-		case 'note':
-		case 'input':
-		case 'select':
-		case 'range':
-		case 'rank':
-		case 'trigger':
-		case 'upload':
-			return getClosestRepeatRange(currentNode.parent);
+    case 'group':
+    case 'model-value':
+    case 'note':
+    case 'input':
+    case 'select':
+    case 'range':
+    case 'rank':
+    case 'trigger':
+    case 'upload':
+      return getClosestRepeatRange(currentNode.parent);
 
-		default:
-			throw new UnreachableError(currentNode);
-	}
+    default:
+      throw new UnreachableError(currentNode);
+  }
 };

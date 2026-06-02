@@ -3,29 +3,29 @@ import type { XFormsTestContext } from '../helpers.ts';
 import { createXFormsTestContext, namespaceResolver } from '../helpers.ts';
 
 describe('randomize()', () => {
-	let testContext: XFormsTestContext;
+  let testContext: XFormsTestContext;
 
-	beforeEach(() => {
-		testContext = createXFormsTestContext();
-	});
+  beforeEach(() => {
+    testContext = createXFormsTestContext();
+  });
 
-	describe('called on a non-nodeset', () => {
-		[{ expression: 'randomize(1, 2)' }].forEach(({ expression }) => {
-			it.fails(`should evaluate '${expression}' as ___TODO___`, () => {
-				testContext.evaluate(expression);
-			});
-		});
-	});
+  describe('called on a non-nodeset', () => {
+    [{ expression: 'randomize(1, 2)' }].forEach(({ expression }) => {
+      it.fails(`should evaluate '${expression}' as ___TODO___`, () => {
+        testContext.evaluate(expression);
+      });
+    });
+  });
 
-	const SELECTOR = '//xhtml:div[@id="FunctionRandomize"]/xhtml:div';
-	const MIRROR = 'mirror';
-	const MIRROR_HASH_VALUE = 5989458117437254;
-	const MIRROR_HASH_SORT_ORDER = 'ACBEDF';
+  const SELECTOR = '//xhtml:div[@id="FunctionRandomize"]/xhtml:div';
+  const MIRROR = 'mirror';
+  const MIRROR_HASH_VALUE = 5989458117437254;
+  const MIRROR_HASH_SORT_ORDER = 'ACBEDF';
 
-	describe('shuffles nodesets', () => {
-		beforeEach(() => {
-			testContext = createXFormsTestContext(
-				`
+  describe('shuffles nodesets', () => {
+    beforeEach(() => {
+      testContext = createXFormsTestContext(
+        `
         <!DOCTYPE html>
         <html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://some-namespace.com/nss">
           <head>
@@ -52,61 +52,61 @@ describe('randomize()', () => {
             </div>
 					</body>
         </html>`,
-				{ namespaceResolver }
-			);
-		});
+        { namespaceResolver }
+      );
+    });
 
-		it('without a seed', { retry: 5 }, () => {
-			const expression = `randomize(${SELECTOR})`;
+    it('without a seed', { retry: 5 }, () => {
+      const expression = `randomize(${SELECTOR})`;
 
-			testContext.assertBooleanValue(expression, true);
+      testContext.assertBooleanValue(expression, true);
 
-			const nodes = testContext.evaluateUnorderedNodeSet(expression);
-			const text = nodes.map(({ textContent }) => textContent ?? '').join('');
+      const nodes = testContext.evaluateUnorderedNodeSet(expression);
+      const text = nodes.map(({ textContent }) => textContent ?? '').join('');
 
-			expect(nodes.length).toEqual(6);
-			expect(text.length).toEqual(6);
-			expect(text).not.toEqual('ABCDEF');
-		});
+      expect(nodes.length).toEqual(6);
+      expect(text.length).toEqual(6);
+      expect(text).not.toEqual('ABCDEF');
+    });
 
-		[
-			{ seed: 42, expected: 'AFCBDE' },
-			{ seed: '42', expected: 'AFCBDE' },
-			{ seed: -42, expected: 'EDAFBC' },
-			{ seed: 1, expected: 'BFEACD' },
-			{ seed: 11111111, expected: 'ACDBFE' },
-			{ seed: 'int(1)', expected: 'BFEACD' },
-			{ seed: 1.1, expected: 'BFEACD' },
-			{ seed: 0, expected: 'CBEAFD' },
-			{ seed: NaN, expected: 'CBEAFD' },
-			{ seed: Infinity, expected: 'CBEAFD' },
-			{ seed: -Infinity, expected: 'CBEAFD' },
-			{ seed: 'floor(1.1)', expected: 'BFEACD' },
-			{ seed: '//xhtml:div[@id="testFunctionNodeset2"]/xhtml:p', expected: 'BFEACD' },
-			{ seed: MIRROR_HASH_VALUE, expected: MIRROR_HASH_SORT_ORDER },
-			{ seed: '//xhtml:div[@id="testFunctionNodeset3"]/xhtml:p', expected: MIRROR_HASH_SORT_ORDER },
-		].forEach(({ seed, expected }) => {
-			it(`with a seed: ${seed}`, () => {
-				const expression = `randomize(${SELECTOR}, ${seed})`;
+    [
+      { seed: 42, expected: 'AFCBDE' },
+      { seed: '42', expected: 'AFCBDE' },
+      { seed: -42, expected: 'EDAFBC' },
+      { seed: 1, expected: 'BFEACD' },
+      { seed: 11111111, expected: 'ACDBFE' },
+      { seed: 'int(1)', expected: 'BFEACD' },
+      { seed: 1.1, expected: 'BFEACD' },
+      { seed: 0, expected: 'CBEAFD' },
+      { seed: NaN, expected: 'CBEAFD' },
+      { seed: Infinity, expected: 'CBEAFD' },
+      { seed: -Infinity, expected: 'CBEAFD' },
+      { seed: 'floor(1.1)', expected: 'BFEACD' },
+      { seed: '//xhtml:div[@id="testFunctionNodeset2"]/xhtml:p', expected: 'BFEACD' },
+      { seed: MIRROR_HASH_VALUE, expected: MIRROR_HASH_SORT_ORDER },
+      { seed: '//xhtml:div[@id="testFunctionNodeset3"]/xhtml:p', expected: MIRROR_HASH_SORT_ORDER },
+    ].forEach(({ seed, expected }) => {
+      it(`with a seed: ${seed}`, () => {
+        const expression = `randomize(${SELECTOR}, ${seed})`;
 
-				const nodes = testContext.evaluateUnorderedNodeSet(expression);
-				const text = nodes.map(({ textContent }) => textContent ?? '').join('');
+        const nodes = testContext.evaluateUnorderedNodeSet(expression);
+        const text = nodes.map(({ textContent }) => textContent ?? '').join('');
 
-				expect(text).toEqual(expected);
-			});
-		});
-	});
+        expect(text).toEqual(expected);
+      });
+    });
+  });
 
-	[{ expression: 'randomize()' }, { expression: `randomize(${SELECTOR}, 1, 2)` }].forEach(
-		({ expression }) => {
-			it.fails(`${expression} with invalid argument count, throws an error`, () => {
-				testContext.evaluate(expression);
-			});
-		}
-	);
+  [{ expression: 'randomize()' }, { expression: `randomize(${SELECTOR}, 1, 2)` }].forEach(
+    ({ expression }) => {
+      it.fails(`${expression} with invalid argument count, throws an error`, () => {
+        testContext.evaluate(expression);
+      });
+    }
+  );
 
-	it('randomizes nodes', () => {
-		testContext = createXFormsTestContext(`
+  it('randomizes nodes', () => {
+    testContext = createXFormsTestContext(`
       <model>
           <instance>
               <rank id="rank">
@@ -150,10 +150,10 @@ describe('randomize()', () => {
           </instance>
         </model>`);
 
-		const expression = 'randomize(/model/instance[@id="crop_list"]/root/item)';
-		const result = testContext.evaluate(expression, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE);
+    const expression = 'randomize(/model/instance[@id="crop_list"]/root/item)';
+    const result = testContext.evaluate(expression, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE);
 
-		expect(result.resultType).toEqual(XPathResult.ORDERED_NODE_SNAPSHOT_TYPE);
-		expect(result.snapshotLength).toEqual(6);
-	});
+    expect(result.resultType).toEqual(XPathResult.ORDERED_NODE_SNAPSHOT_TYPE);
+    expect(result.snapshotLength).toEqual(6);
+  });
 });

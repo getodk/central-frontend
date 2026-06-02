@@ -4,6 +4,6 @@
  * that implementations must provide.
  */
 export interface XFormsElement {
-	getName(): string;
-	asXml(): string;
+  getName(): string;
+  asXml(): string;
 }

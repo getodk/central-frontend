@@ -4,8 +4,8 @@ import type { StaticLeafElement } from '../../integration/xpath/static-dom/Stati
 import type { RuntimeValue, SharedValueCodec } from '../../lib/codecs/getSharedValueCodec.ts';
 import { getSharedValueCodec } from '../../lib/codecs/getSharedValueCodec.ts';
 import type {
-	RangeControlBoundsDefinition,
-	RangeControlDefinition,
+  RangeControlBoundsDefinition,
+  RangeControlDefinition,
 } from '../body/control/RangeControlDefinition.ts';
 import type { BindDefinition } from './BindDefinition.ts';
 import { LeafNodeDefinition } from './LeafNodeDefinition.ts';
@@ -19,57 +19,57 @@ export type RangeValueType = (typeof RANGE_VALUE_TYPES)[number];
 type AssertedRangeValueType<V extends ValueType> = Extract<V, RangeValueType>;
 
 type AssertRangeBindDefinition = <V extends ValueType>(
-	bind: BindDefinition<V>
+  bind: BindDefinition<V>
 ) => asserts bind is BindDefinition<AssertedRangeValueType<V>>;
 
 const assertRangeBindDefinition: AssertRangeBindDefinition = (bind) => {
-	if (!RANGE_VALUE_TYPES.includes(bind.type.resolved as RangeValueType)) {
-		throw new ErrorProductionDesignPendingError(
-			`Expected range to have bind type "decimal" or "int", got: ${bind.type.resolved}`
-		);
-	}
+  if (!RANGE_VALUE_TYPES.includes(bind.type.resolved as RangeValueType)) {
+    throw new ErrorProductionDesignPendingError(
+      `Expected range to have bind type "decimal" or "int", got: ${bind.type.resolved}`
+    );
+  }
 };
 
 export interface RangeLeafNodeDefinition<
-	V extends ValueType = ValueType,
+  V extends ValueType = ValueType,
 > extends LeafNodeDefinition<V> {
-	readonly bodyElement: RangeControlDefinition;
+  readonly bodyElement: RangeControlDefinition;
 }
 
 const decodeBoundsValue = <V extends ValueType>(
-	codec: SharedValueCodec<V>,
-	value: string
+  codec: SharedValueCodec<V>,
+  value: string
 ): NonNullable<RuntimeValue<V>> => {
-	const decoded = codec.decodeValue(value);
+  const decoded = codec.decodeValue(value);
 
-	if (decoded == null) {
-		throw new ErrorProductionDesignPendingError(
-			`Failed to decode bounds value (encoded as ${JSON.stringify(value)})`
-		);
-	}
+  if (decoded == null) {
+    throw new ErrorProductionDesignPendingError(
+      `Failed to decode bounds value (encoded as ${JSON.stringify(value)})`
+    );
+  }
 
-	return decoded;
+  return decoded;
 };
 
 class RangeNodeBoundsDefinition<V extends RangeValueType = RangeValueType> {
-	static from<V extends RangeValueType>(
-		bounds: RangeControlBoundsDefinition,
-		bind: BindDefinition<V>
-	): RangeNodeBoundsDefinition<V> {
-		const type = bind.type.resolved;
-		const codec = getSharedValueCodec(type);
-		const start = decodeBoundsValue(codec, bounds.start);
-		const end = decodeBoundsValue(codec, bounds.end);
-		const step = decodeBoundsValue(codec, bounds.step);
+  static from<V extends RangeValueType>(
+    bounds: RangeControlBoundsDefinition,
+    bind: BindDefinition<V>
+  ): RangeNodeBoundsDefinition<V> {
+    const type = bind.type.resolved;
+    const codec = getSharedValueCodec(type);
+    const start = decodeBoundsValue(codec, bounds.start);
+    const end = decodeBoundsValue(codec, bounds.end);
+    const step = decodeBoundsValue(codec, bounds.step);
 
-		return new this(start, end, step);
-	}
+    return new this(start, end, step);
+  }
 
-	constructor(
-		readonly start: NonNullable<RuntimeValue<V>>,
-		readonly end: NonNullable<RuntimeValue<V>>,
-		readonly step: NonNullable<RuntimeValue<V>>
-	) {}
+  constructor(
+    readonly start: NonNullable<RuntimeValue<V>>,
+    readonly end: NonNullable<RuntimeValue<V>>,
+    readonly step: NonNullable<RuntimeValue<V>>
+  ) {}
 }
 
 /**
@@ -87,34 +87,34 @@ class RangeNodeBoundsDefinition<V extends RangeValueType = RangeValueType> {
  * opportunities to take on the churn.
  */
 export class RangeNodeDefinition<V extends RangeValueType = RangeValueType>
-	extends LeafNodeDefinition<V>
-	implements RangeLeafNodeDefinition<V>
+  extends LeafNodeDefinition<V>
+  implements RangeLeafNodeDefinition<V>
 {
-	static from<V extends ValueType>(
-		model: ModelDefinition,
-		parent: ParentNodeDefinition,
-		bind: BindDefinition<V>,
-		bodyElement: RangeControlDefinition,
-		node: StaticLeafElement
-	): RangeNodeDefinition<Extract<V, RangeValueType>> {
-		assertRangeBindDefinition(bind);
+  static from<V extends ValueType>(
+    model: ModelDefinition,
+    parent: ParentNodeDefinition,
+    bind: BindDefinition<V>,
+    bodyElement: RangeControlDefinition,
+    node: StaticLeafElement
+  ): RangeNodeDefinition<Extract<V, RangeValueType>> {
+    assertRangeBindDefinition(bind);
 
-		return new this(model, parent, bind, bodyElement, node);
-	}
+    return new this(model, parent, bind, bodyElement, node);
+  }
 
-	readonly bounds: RangeNodeBoundsDefinition<V>;
+  readonly bounds: RangeNodeBoundsDefinition<V>;
 
-	private constructor(
-		model: ModelDefinition,
-		parent: ParentNodeDefinition,
-		override readonly bind: BindDefinition<V>,
-		override readonly bodyElement: RangeControlDefinition,
-		node: StaticLeafElement
-	) {
-		super(model, parent, bind, bodyElement, node);
+  private constructor(
+    model: ModelDefinition,
+    parent: ParentNodeDefinition,
+    override readonly bind: BindDefinition<V>,
+    override readonly bodyElement: RangeControlDefinition,
+    node: StaticLeafElement
+  ) {
+    super(model, parent, bind, bodyElement, node);
 
-		this.bounds = RangeNodeBoundsDefinition.from(bodyElement.bounds, bind);
-	}
+    this.bounds = RangeNodeBoundsDefinition.from(bodyElement.bounds, bind);
+  }
 }
 
 // prettier-ignore

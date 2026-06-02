@@ -5,10 +5,10 @@
  * `@getodk/xpath-engine` internals).
  */
 export class JREvaluationContext {
-	/**
-	 * This property only serves as a means to have TypeScript treat the class and
-	 * instances of it as a nominal type (i.e. so that it won't be confused with
-	 * an empty object type).
-	 */
-	protected readonly IS_STUB_OF_JAVAROSA_EVALUATION_CONTEXT = true;
+  /**
+   * This property only serves as a means to have TypeScript treat the class and
+   * instances of it as a nominal type (i.e. so that it won't be confused with
+   * an empty object type).
+   */
+  protected readonly IS_STUB_OF_JAVAROSA_EVALUATION_CONTEXT = true;
 }

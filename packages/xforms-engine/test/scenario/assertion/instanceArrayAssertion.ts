@@ -9,9 +9,9 @@ import { instanceAssertion } from './instanceAssertion.ts';
  * of the provided {@link Constructor}.
  */
 export const instanceArrayAssertion = <T>(
-	Constructor: ConstructorOf<T>
+  Constructor: ConstructorOf<T>
 ): AssertIs<readonly T[]> => {
-	const assertInstance: AssertIs<T> = instanceAssertion(Constructor);
+  const assertInstance: AssertIs<T> = instanceAssertion(Constructor);
 
-	return arrayOfAssertion(assertInstance, Constructor.name);
+  return arrayOfAssertion(assertInstance, Constructor.name);
 };

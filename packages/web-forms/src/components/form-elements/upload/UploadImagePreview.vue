@@ -1,17 +1,41 @@
 <script setup lang="ts">
+import AsyncCanvas from '@/components/common/canvas/AsyncCanvas.vue';
+import { getModeConfig, type CanvasMode } from '@/components/common/canvas/getModeConfig.ts';
 import ImageBlock from '@/components/common/media/ImageBlock.vue';
+import { computed } from 'vue';
 
 type ObjectURL = `blob:${string}`;
 
 export interface UploadImagePreviewProps {
-	readonly image: ObjectURL | null;
+	readonly imagePreviewUrl: ObjectURL | null;
+	readonly canvasBaseImage: ObjectURL | null;
+	readonly canvasMode?: CanvasMode;
+	readonly isDisabled?: boolean;
 }
 
-defineProps<UploadImagePreviewProps>();
+const props = defineProps<UploadImagePreviewProps>();
+const emit = defineEmits<(e: 'saveImage', file: File | null) => void>();
+const isCanvasFullScreen = defineModel<boolean>('isCanvasFullScreen', { default: false });
+
+const activeCanvasMode = computed<CanvasMode | undefined>(() => {
+	const { canvasMode, canvasBaseImage } = props;
+	if (!canvasMode || (getModeConfig(canvasMode).hasBackgroundImage && !canvasBaseImage)) {
+		return;
+	}
+	return canvasMode;
+});
 </script>
 
 <template>
-	<ImageBlock v-if="image" :blob-url="image" alt="Captured image preview" />
+	<AsyncCanvas
+		v-if="activeCanvasMode"
+		v-model:is-full-screen="isCanvasFullScreen"
+		:mode="activeCanvasMode"
+		:base-image-src="canvasBaseImage"
+		:is-disabled="isDisabled"
+		@save-image="emit('saveImage', $event)"
+	/>
+	<ImageBlock v-else-if="imagePreviewUrl" :blob-url="imagePreviewUrl" alt="Captured image preview" />
 </template>
 
 <style scoped lang="scss">

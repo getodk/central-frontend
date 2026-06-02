@@ -10,7 +10,7 @@ import { reactiveTestScope } from '../helpers/reactive/internal.ts';
  * used in further such checks if other failure cases are found in the future.
  */
 const checkReactiveFactoryAssignability = <Factory extends OpaqueReactiveObjectFactory<object>>(
-	factory: Factory
+  factory: Factory
 ): Factory => factory;
 
 // Note: we are not currently running Vitest's type checking runner, but we
@@ -21,72 +21,72 @@ const checkReactiveFactoryAssignability = <Factory extends OpaqueReactiveObjectF
 // If we do want a full fledged type test suite, we may want to consider a
 // distinct filename suffix, like `.test-d.ts` (as recommended by Vitest).
 describe('OpaqueReactiveObjectFactory types', () => {
-	describe('explicitly supported factory function types', () => {
-		describe('internal reactivity helper `mutable`', () => {
-			it('satisfies the type of OpaqueReactiveObjectFactory', () => {
-				// We're not really doing anything with the test scope, but the internal
-				// reactivity helper is intentionally designed so you need a scope to
-				// access the APIs which depend on it.
-				reactiveTestScope(({ mutable }) => {
-					mutable satisfies OpaqueReactiveObjectFactory;
-				});
-			});
+  describe('explicitly supported factory function types', () => {
+    describe('internal reactivity helper `mutable`', () => {
+      it('satisfies the type of OpaqueReactiveObjectFactory', () => {
+        // We're not really doing anything with the test scope, but the internal
+        // reactivity helper is intentionally designed so you need a scope to
+        // access the APIs which depend on it.
+        reactiveTestScope(({ mutable }) => {
+          mutable satisfies OpaqueReactiveObjectFactory;
+        });
+      });
 
-			it('is assignable where an OpaqueReactiveObjectFactory parameter is expected', () => {
-				reactiveTestScope(({ mutable }) => {
-					type InternalMutableFactory = typeof mutable;
+      it('is assignable where an OpaqueReactiveObjectFactory parameter is expected', () => {
+        reactiveTestScope(({ mutable }) => {
+          type InternalMutableFactory = typeof mutable;
 
-					const result = checkReactiveFactoryAssignability(mutable);
+          const result = checkReactiveFactoryAssignability(mutable);
 
-					expectTypeOf(result).toMatchTypeOf<InternalMutableFactory>();
-				});
-			});
-		});
+          expectTypeOf(result).toMatchTypeOf<InternalMutableFactory>();
+        });
+      });
+    });
 
-		describe("Solid's `createMutable`", () => {
-			it('satisfies the type of OpaqueReactiveObjectFactory', () => {
-				createMutable satisfies OpaqueReactiveObjectFactory;
-			});
+    describe("Solid's `createMutable`", () => {
+      it('satisfies the type of OpaqueReactiveObjectFactory', () => {
+        createMutable satisfies OpaqueReactiveObjectFactory;
+      });
 
-			it('is assignable where an OpaqueReactiveObjectFactory parameter is expected', () => {
-				type SolidCreateMutable = typeof createMutable;
+      it('is assignable where an OpaqueReactiveObjectFactory parameter is expected', () => {
+        type SolidCreateMutable = typeof createMutable;
 
-				const result = checkReactiveFactoryAssignability(createMutable);
+        const result = checkReactiveFactoryAssignability(createMutable);
 
-				expectTypeOf(result).toMatchTypeOf<SolidCreateMutable>();
-			});
-		});
+        expectTypeOf(result).toMatchTypeOf<SolidCreateMutable>();
+      });
+    });
 
-		describe("Vue's `reactive`", () => {
-			it('satisfies the type of OpaqueReactiveObjectFactory', () => {
-				reactive satisfies OpaqueReactiveObjectFactory;
-			});
+    describe("Vue's `reactive`", () => {
+      it('satisfies the type of OpaqueReactiveObjectFactory', () => {
+        reactive satisfies OpaqueReactiveObjectFactory;
+      });
 
-			it('is assignable where an OpaqueReactiveObjectFactory parameter is expected', () => {
-				type VueReactive = typeof reactive;
+      it('is assignable where an OpaqueReactiveObjectFactory parameter is expected', () => {
+        type VueReactive = typeof reactive;
 
-				const result = checkReactiveFactoryAssignability(reactive);
+        const result = checkReactiveFactoryAssignability(reactive);
 
-				expectTypeOf(result).toMatchTypeOf<VueReactive>();
-			});
-		});
+        expectTypeOf(result).toMatchTypeOf<VueReactive>();
+      });
+    });
 
-		describe('invalid factories', () => {
-			describe('string factory', () => {
-				type StringFactory = <T extends string>(value: T) => T;
+    describe('invalid factories', () => {
+      describe('string factory', () => {
+        type StringFactory = <T extends string>(value: T) => T;
 
-				const stringFactory: StringFactory = (value) => value;
+        const stringFactory: StringFactory = (value) => value;
 
-				it('does not satisfy the type of OpaqueReactiveObjectFactory', () => {
-					// @ts-expect-error - intentionally does not pass type check
-					stringFactory satisfies OpaqueReactiveObjectFactory;
-				});
+        it('does not satisfy the type of OpaqueReactiveObjectFactory', () => {
+          // @ts-expect-error - intentionally does not pass type check
+          stringFactory satisfies OpaqueReactiveObjectFactory;
+        });
 
-				it('is not assignable where an OpaqueReactiveObjectFactory parameter is expected', () => {
-					// @ts-expect-error - intentionally does not pass type check
-					checkReactiveFactoryAssignability(stringFactory);
-				});
-			});
-		});
-	});
+        it('is not assignable where an OpaqueReactiveObjectFactory parameter is expected', () => {
+          // @ts-expect-error - intentionally does not pass type check
+          checkReactiveFactoryAssignability(stringFactory);
+        });
+      });
+    });
+  });
 });

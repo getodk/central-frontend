@@ -7,26 +7,26 @@ export type FileSeparator = '/' | '\\';
  * with a `define` config.
  */
 export const FILE_SEPARATOR: FileSeparator = await (async () => {
-	let result: FileSeparator | null = null;
+  let result: FileSeparator | null = null;
 
-	if (IS_NODE_RUNTIME) {
-		try {
-			const { sep } = await import('node:path');
+  if (IS_NODE_RUNTIME) {
+    try {
+      const { sep } = await import('node:path');
 
-			result = sep;
-		} catch {
-			// This will fail in non-Node environments, without module `node:*` module
-			// stubs (which Vitest may provide automatically)
-		}
-	}
+      result = sep;
+    } catch {
+      // This will fail in non-Node environments, without module `node:*` module
+      // stubs (which Vitest may provide automatically)
+    }
+  }
 
-	result ??= '/';
-	return result;
+  result ??= '/';
+  return result;
 })();
 
 export const FILE_SEPARATOR_SUBPATTERN: string =
-	FILE_SEPARATOR === '/' ? FILE_SEPARATOR : `\\${FILE_SEPARATOR}`;
+  FILE_SEPARATOR === '/' ? FILE_SEPARATOR : `\\${FILE_SEPARATOR}`;
 
 export const LAST_PATH_SEGMENT_PATTERN = new RegExp(
-	`${FILE_SEPARATOR_SUBPATTERN}?[^${FILE_SEPARATOR}]+$`
+  `${FILE_SEPARATOR_SUBPATTERN}?[^${FILE_SEPARATOR}]+$`
 );

@@ -6,15 +6,15 @@ import type { InstanceAttachmentsState } from '../attachments/InstanceAttachment
 import type { InstanceConfig } from './InstanceConfig.ts';
 
 interface InstanceAttachmentRootDocument {
-	readonly attachments: InstanceAttachmentsState;
+  readonly attachments: InstanceAttachmentsState;
 }
 
 export interface InstanceAttachmentContext {
-	readonly instanceConfig: InstanceConfig;
-	readonly scope: ReactiveScope;
-	readonly rootDocument: InstanceAttachmentRootDocument;
-	readonly nodeId: FormNodeID;
-	readonly instanceNode: StaticLeafElement | null;
-	readonly isRelevant: Accessor<boolean>;
-	readonly isAttached: Accessor<boolean>;
+  readonly instanceConfig: InstanceConfig;
+  readonly scope: ReactiveScope;
+  readonly rootDocument: InstanceAttachmentRootDocument;
+  readonly nodeId: FormNodeID;
+  readonly instanceNode: StaticLeafElement | null;
+  readonly isRelevant: Accessor<boolean>;
+  readonly isAttached: Accessor<boolean>;
 }

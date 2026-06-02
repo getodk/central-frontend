@@ -1,7 +1,7 @@
 import { PRELOAD_UID_PATTERN } from '@getodk/common/constants/regex.ts';
 import {
-	OPENROSA_XFORMS_NAMESPACE_URI,
-	XFORMS_NAMESPACE_URI,
+  OPENROSA_XFORMS_NAMESPACE_URI,
+  XFORMS_NAMESPACE_URI,
 } from '@getodk/common/constants/xmlns.ts';
 import { assertUnknownArray } from '@getodk/common/lib/type-assertions/assertUnknownArray.ts';
 import { assertUnknownObject } from '@getodk/common/lib/type-assertions/assertUnknownObject.ts';
@@ -19,22 +19,22 @@ import { AsymmetricTypedExpectExtension } from '../vitest/AsymmetricTypedExpectE
 import { AsyncAsymmetricTypedExpectExtension } from '../vitest/AsyncAsymmetricTypedExpectExtension.ts';
 import { extendExpect } from '../vitest/extendExpect.ts';
 import type {
-	DeriveStaticVitestExpectExtension,
-	SimpleAssertionResult,
+  DeriveStaticVitestExpectExtension,
+  SimpleAssertionResult,
 } from '../vitest/shared-extension-types.ts';
 import { assertString } from './shared-type-assertions.ts';
 
 type AssertScenario = AssertIs<Scenario>;
 
 const assertScenario: AssertScenario = (value) => {
-	assert(value instanceof Scenario);
+  assert(value instanceof Scenario);
 };
 
 const compareSubmissionXML = (actual: string, expected: string): SimpleAssertionResult => {
-	const comparableActual = new ComparableXMLSerialization(actual);
-	const comparableExpected = new ComparableXMLSerialization(expected);
+  const comparableActual = new ComparableXMLSerialization(actual);
+  const comparableExpected = new ComparableXMLSerialization(expected);
 
-	return comparableActual.equals(comparableExpected);
+  return comparableActual.equals(comparableExpected);
 };
 
 const assertFormData: AssertIs<FormData> = instanceAssertion(FormData);
@@ -52,20 +52,20 @@ type AnyInstancePayload = InstancePayload<InstancePayloadType>;
  * exercising aspects of a prepared submission result.
  */
 const assertInstancePayload: AssertIs<AnyInstancePayload> = (value) => {
-	assertUnknownObject(value);
-	assertString(value.status);
-	if (value.violations !== null) {
-		assertUnknownArray(value.violations);
-	}
-	assertUnknownObject(value.submissionMeta);
+  assertUnknownObject(value);
+  assertString(value.status);
+  if (value.violations !== null) {
+    assertUnknownArray(value.violations);
+  }
+  assertUnknownObject(value.submissionMeta);
 
-	if (Array.isArray(value.data)) {
-		value.data.forEach((item) => {
-			assertFormData(item);
-		});
-	} else {
-		assertFormData(value.data);
-	}
+  if (Array.isArray(value.data)) {
+    value.data.forEach((item) => {
+      assertFormData(item);
+    });
+  } else {
+    assertFormData(value.data);
+  }
 };
 
 const assertFile: AssertIs<File> = instanceAssertion(File);
@@ -73,24 +73,24 @@ const assertFile: AssertIs<File> = instanceAssertion(File);
 const { INSTANCE_FILE_NAME, INSTANCE_FILE_TYPE } = constants;
 
 const assertInstanceFile: AssertIs<InstanceFile> = (value) => {
-	assertFile(value);
+  assertFile(value);
 
-	if (value.name !== INSTANCE_FILE_NAME) {
-		throw new Error(`Expected file named ${INSTANCE_FILE_NAME}, got ${value.name}`);
-	}
+  if (value.name !== INSTANCE_FILE_NAME) {
+    throw new Error(`Expected file named ${INSTANCE_FILE_NAME}, got ${value.name}`);
+  }
 
-	if (value.type !== INSTANCE_FILE_TYPE) {
-		throw new Error(`Expected file of type ${INSTANCE_FILE_TYPE}, got ${value.type}`);
-	}
+  if (value.type !== INSTANCE_FILE_TYPE) {
+    throw new Error(`Expected file of type ${INSTANCE_FILE_TYPE}, got ${value.type}`);
+  }
 };
 
 const getInstanceFile = (payload: AnyInstancePayload): InstanceFile => {
-	const [instanceData] = payload.data;
-	const file = instanceData.get(INSTANCE_FILE_NAME);
+  const [instanceData] = payload.data;
+  const file = instanceData.get(INSTANCE_FILE_NAME);
 
-	assertInstanceFile(file);
+  assertInstanceFile(file);
 
-	return file;
+  return file;
 };
 
 const META_NAMESPACE_URIS = [OPENROSA_XFORMS_NAMESPACE_URI, XFORMS_NAMESPACE_URI] as const;
@@ -103,27 +103,27 @@ type AssertEnumeratedString<T extends string> = (actual: unknown) => asserts act
  * @todo This is probably general enough to be exported from {@link CommonAssertionHelpers}
  */
 const enumeratedStringAssertion = <T extends string>(
-	expected: readonly T[]
+  expected: readonly T[]
 ): AssertEnumeratedString<T> => {
-	return (actual) => {
-		assertString(actual);
+  return (actual) => {
+    assertString(actual);
 
-		expect(expected).toContain(actual);
-	};
+    expect(expected).toContain(actual);
+  };
 };
 
 const assertMetaNamespaceURI: AssertEnumeratedString<MetaNamespaceURI> =
-	enumeratedStringAssertion(META_NAMESPACE_URIS);
+  enumeratedStringAssertion(META_NAMESPACE_URIS);
 
 interface SerializedMetaChildValues {
-	readonly instanceID: string | null;
-	readonly deprecatedID: string | null;
+  readonly instanceID: string | null;
+  readonly deprecatedID: string | null;
 }
 
 type MetaChildLocalName = ExpandUnion<keyof SerializedMetaChildValues>;
 
 interface SerializedMeta extends SerializedMetaChildValues {
-	readonly meta: Element | null;
+  readonly meta: Element | null;
 }
 
 type MetaElementLocalName = ExpandUnion<keyof SerializedMeta>;
@@ -144,261 +144,261 @@ type MetaElementLocalName = ExpandUnion<keyof SerializedMeta>;
  * simplification of a lot of their use cases.
  */
 const findExclusiveMatch = <T>(
-	values: readonly T[],
-	predicate: (value: T) => boolean
+  values: readonly T[],
+  predicate: (value: T) => boolean
 ): T | null => {
-	const results = values.filter(predicate);
+  const results = values.filter(predicate);
 
-	expect(results.length).toBeLessThanOrEqual(1);
+  expect(results.length).toBeLessThanOrEqual(1);
 
-	return results[0] ?? null;
+  return results[0] ?? null;
 };
 
 const getMetaElement = (
-	parent: ParentNode | null,
-	namespaceURI: MetaNamespaceURI,
-	localName: MetaElementLocalName
+  parent: ParentNode | null,
+  namespaceURI: MetaNamespaceURI,
+  localName: MetaElementLocalName
 ): Element | null => {
-	if (parent == null) {
-		return null;
-	}
+  if (parent == null) {
+    return null;
+  }
 
-	const children = Array.from(parent.children);
+  const children = Array.from(parent.children);
 
-	return findExclusiveMatch(children, (child) => {
-		return child.namespaceURI === namespaceURI && child.localName === localName;
-	});
+  return findExclusiveMatch(children, (child) => {
+    return child.namespaceURI === namespaceURI && child.localName === localName;
+  });
 };
 
 const getMetaChildValue = (
-	metaElement: Element | null,
-	namespaceURI: MetaNamespaceURI,
-	localName: MetaChildLocalName
+  metaElement: Element | null,
+  namespaceURI: MetaNamespaceURI,
+  localName: MetaChildLocalName
 ): string | null => {
-	const element = getMetaElement(metaElement, namespaceURI, localName);
+  const element = getMetaElement(metaElement, namespaceURI, localName);
 
-	if (element == null) {
-		return null;
-	}
+  if (element == null) {
+    return null;
+  }
 
-	expect(element.childElementCount).toBe(0);
+  expect(element.childElementCount).toBe(0);
 
-	const { textContent } = element;
+  const { textContent } = element;
 
-	assert(typeof textContent === 'string');
+  assert(typeof textContent === 'string');
 
-	return textContent;
+  return textContent;
 };
 
 interface MetaNamespaceOptions {
-	readonly [key: string]: unknown;
-	readonly metaNamespaceURI: MetaNamespaceURI;
+  readonly [key: string]: unknown;
+  readonly metaNamespaceURI: MetaNamespaceURI;
 }
 
 type AssertMetaNamespaceOptions = (value: unknown) => asserts value is MetaNamespaceOptions;
 
 const assertMetaNamespaceOptions: AssertMetaNamespaceOptions = (value) => {
-	assertUnknownObject(value);
-	assertMetaNamespaceURI(value.metaNamespaceURI);
+  assertUnknownObject(value);
+  assertMetaNamespaceURI(value.metaNamespaceURI);
 };
 
 const getSerializedMeta = (scenario: Scenario, namespaceURI: MetaNamespaceURI): SerializedMeta => {
-	const serializedInstanceBody = scenario.proposed_serializeInstance();
-	/**
-	 * Important: we intentionally omit the default namespace when serializing instance XML. We need to restore it here to reliably traverse nodes when {@link metaNamespaceURI} is {@link XFORMS_NAMESPACE_URI}.
-	 */
-	const instanceXML = `<instance xmlns="${XFORMS_NAMESPACE_URI}">${serializedInstanceBody}</instance>`;
+  const serializedInstanceBody = scenario.proposed_serializeInstance();
+  /**
+   * Important: we intentionally omit the default namespace when serializing instance XML. We need to restore it here to reliably traverse nodes when {@link metaNamespaceURI} is {@link XFORMS_NAMESPACE_URI}.
+   */
+  const instanceXML = `<instance xmlns="${XFORMS_NAMESPACE_URI}">${serializedInstanceBody}</instance>`;
 
-	const parser = new DOMParser();
-	const instanceDocument = parser.parseFromString(instanceXML, 'text/xml');
-	const instanceElement = instanceDocument.documentElement;
-	const instanceRoot = instanceElement.firstElementChild;
+  const parser = new DOMParser();
+  const instanceDocument = parser.parseFromString(instanceXML, 'text/xml');
+  const instanceElement = instanceDocument.documentElement;
+  const instanceRoot = instanceElement.firstElementChild;
 
-	assert(
-		instanceRoot != null,
-		`Failed to find instance root element.\n\nActual serialized XML: ${serializedInstanceBody}\n\nActual instance DOM state: ${instanceElement.outerHTML}`
-	);
+  assert(
+    instanceRoot != null,
+    `Failed to find instance root element.\n\nActual serialized XML: ${serializedInstanceBody}\n\nActual instance DOM state: ${instanceElement.outerHTML}`
+  );
 
-	const meta = getMetaElement(instanceRoot, namespaceURI, 'meta');
-	const instanceID = getMetaChildValue(meta, namespaceURI, 'instanceID');
-	const deprecatedID = getMetaChildValue(meta, namespaceURI, 'deprecatedID');
+  const meta = getMetaElement(instanceRoot, namespaceURI, 'meta');
+  const instanceID = getMetaChildValue(meta, namespaceURI, 'instanceID');
+  const deprecatedID = getMetaChildValue(meta, namespaceURI, 'deprecatedID');
 
-	return {
-		meta,
-		instanceID,
-		deprecatedID,
-	};
+  return {
+    meta,
+    instanceID,
+    deprecatedID,
+  };
 };
 
 const assertPreloadUIDValue = (actual: string | null) => {
-	assert(actual != null, 'Expected preload uid value to be serialized');
-	expect(actual, 'Expected preload uid value to match pattern').toMatch(PRELOAD_UID_PATTERN);
+  assert(actual != null, 'Expected preload uid value to be serialized');
+  expect(actual, 'Expected preload uid value to match pattern').toMatch(PRELOAD_UID_PATTERN);
 };
 
 interface EditedMetaOptions extends MetaNamespaceOptions {
-	readonly sourceScenario: Scenario;
+  readonly sourceScenario: Scenario;
 }
 
 type AssertEditedMetaOptions = (value: unknown) => asserts value is EditedMetaOptions;
 
 const assertEditedMetaOptions: AssertEditedMetaOptions = (value) => {
-	assertMetaNamespaceOptions(value);
-	assertScenario(value.sourceScenario);
+  assertMetaNamespaceOptions(value);
+  assertScenario(value.sourceScenario);
 };
 
 export const submissionExtensions = extendExpect(expect, {
-	toHaveSerializedSubmissionXML: new AsymmetricTypedExpectExtension(
-		assertScenario,
-		assertString,
-		(actual, expected) => {
-			const actualXML = actual.proposed_serializeInstance();
+  toHaveSerializedSubmissionXML: new AsymmetricTypedExpectExtension(
+    assertScenario,
+    assertString,
+    (actual, expected) => {
+      const actualXML = actual.proposed_serializeInstance();
 
-			return compareSubmissionXML(actualXML, expected);
-		}
-	),
+      return compareSubmissionXML(actualXML, expected);
+    }
+  ),
 
-	toBeReadyForSubmission: new ArbitraryConditionExpectExtension(assertInstancePayload, (result) => {
-		try {
-			expect(result).toMatchObject({
-				status: 'ready',
-				violations: null,
-			});
+  toBeReadyForSubmission: new ArbitraryConditionExpectExtension(assertInstancePayload, (result) => {
+    try {
+      expect(result).toMatchObject({
+        status: 'ready',
+        violations: null,
+      });
 
-			return true;
-		} catch (error) {
-			if (error instanceof Error) {
-				return error;
-			}
+      return true;
+    } catch (error) {
+      if (error instanceof Error) {
+        return error;
+      }
 
-			// eslint-disable-next-line no-console
-			console.error(error);
-			return new Error('Unknown error');
-		}
-	}),
+      // eslint-disable-next-line no-console
+      console.error(error);
+      return new Error('Unknown error');
+    }
+  }),
 
-	toBePendingSubmissionWithViolations: new ArbitraryConditionExpectExtension(
-		assertInstancePayload,
-		(result) => {
-			try {
-				expect(result.status).toBe('pending');
-				expect(result.violations).toMatchObject([expect.any(Object)]);
-				expect(result).toMatchObject({
-					status: 'pending',
-					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-					violations: expect.arrayContaining([expect.any(Object)]),
-				});
+  toBePendingSubmissionWithViolations: new ArbitraryConditionExpectExtension(
+    assertInstancePayload,
+    (result) => {
+      try {
+        expect(result.status).toBe('pending');
+        expect(result.violations).toMatchObject([expect.any(Object)]);
+        expect(result).toMatchObject({
+          status: 'pending',
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          violations: expect.arrayContaining([expect.any(Object)]),
+        });
 
-				return true;
-			} catch (error) {
-				if (error instanceof Error) {
-					return error;
-				}
+        return true;
+      } catch (error) {
+        if (error instanceof Error) {
+          return error;
+        }
 
-				// eslint-disable-next-line no-console
-				console.error(error);
-				return new Error('Unknown error');
-			}
-		}
-	),
+        // eslint-disable-next-line no-console
+        console.error(error);
+        return new Error('Unknown error');
+      }
+    }
+  ),
 
-	toHavePreparedSubmissionXML: new AsyncAsymmetricTypedExpectExtension(
-		assertInstancePayload,
-		assertString,
-		async (actual, expected): Promise<SimpleAssertionResult> => {
-			const instanceFile = getInstanceFile(actual);
-			const actualText = await getBlobText(instanceFile);
+  toHavePreparedSubmissionXML: new AsyncAsymmetricTypedExpectExtension(
+    assertInstancePayload,
+    assertString,
+    async (actual, expected): Promise<SimpleAssertionResult> => {
+      const instanceFile = getInstanceFile(actual);
+      const actualText = await getBlobText(instanceFile);
 
-			return compareSubmissionXML(actualText, expected);
-		}
-	),
+      return compareSubmissionXML(actualText, expected);
+    }
+  ),
 
-	toHaveComputedPreloadInstanceID: new AsymmetricTypedExpectExtension(
-		assertScenario,
-		assertMetaNamespaceOptions,
-		(scenario, options): SimpleAssertionResult => {
-			try {
-				const meta = getSerializedMeta(scenario, options.metaNamespaceURI);
+  toHaveComputedPreloadInstanceID: new AsymmetricTypedExpectExtension(
+    assertScenario,
+    assertMetaNamespaceOptions,
+    (scenario, options): SimpleAssertionResult => {
+      try {
+        const meta = getSerializedMeta(scenario, options.metaNamespaceURI);
 
-				assertPreloadUIDValue(meta.instanceID);
+        assertPreloadUIDValue(meta.instanceID);
 
-				return true;
-			} catch (error) {
-				if (error instanceof Error) {
-					return error;
-				}
+        return true;
+      } catch (error) {
+        if (error instanceof Error) {
+          return error;
+        }
 
-				// eslint-disable-next-line no-console
-				console.error(error);
-				return new Error('Unknown error');
-			}
-		}
-	),
+        // eslint-disable-next-line no-console
+        console.error(error);
+        return new Error('Unknown error');
+      }
+    }
+  ),
 
-	toHaveEditedPreloadInstanceID: new AsymmetricTypedExpectExtension(
-		assertScenario,
-		assertEditedMetaOptions,
-		(editedScenario, options): SimpleAssertionResult => {
-			try {
-				const { metaNamespaceURI, sourceScenario } = options;
-				const sourceMeta = getSerializedMeta(sourceScenario, metaNamespaceURI);
-				const editedMeta = getSerializedMeta(editedScenario, metaNamespaceURI);
+  toHaveEditedPreloadInstanceID: new AsymmetricTypedExpectExtension(
+    assertScenario,
+    assertEditedMetaOptions,
+    (editedScenario, options): SimpleAssertionResult => {
+      try {
+        const { metaNamespaceURI, sourceScenario } = options;
+        const sourceMeta = getSerializedMeta(sourceScenario, metaNamespaceURI);
+        const editedMeta = getSerializedMeta(editedScenario, metaNamespaceURI);
 
-				assertPreloadUIDValue(sourceMeta.instanceID);
-				assertPreloadUIDValue(editedMeta.instanceID);
+        assertPreloadUIDValue(sourceMeta.instanceID);
+        assertPreloadUIDValue(editedMeta.instanceID);
 
-				expect(
-					editedMeta.instanceID,
-					'Expected preloaded instanceID metadata to be recomputed on edit'
-				).not.toBe(sourceMeta.instanceID);
+        expect(
+          editedMeta.instanceID,
+          'Expected preloaded instanceID metadata to be recomputed on edit'
+        ).not.toBe(sourceMeta.instanceID);
 
-				return true;
-			} catch (error) {
-				if (error instanceof Error) {
-					return error;
-				}
+        return true;
+      } catch (error) {
+        if (error instanceof Error) {
+          return error;
+        }
 
-				// eslint-disable-next-line no-console
-				console.error(error);
-				return new Error('Unknown error');
-			}
-		}
-	),
+        // eslint-disable-next-line no-console
+        console.error(error);
+        return new Error('Unknown error');
+      }
+    }
+  ),
 
-	toHaveDeprecatedIDFromSource: new AsymmetricTypedExpectExtension(
-		assertScenario,
-		assertEditedMetaOptions,
-		(editedScenario, options): SimpleAssertionResult => {
-			try {
-				const { metaNamespaceURI, sourceScenario } = options;
-				const sourceMeta = getSerializedMeta(sourceScenario, metaNamespaceURI);
-				const editedMeta = getSerializedMeta(editedScenario, metaNamespaceURI);
+  toHaveDeprecatedIDFromSource: new AsymmetricTypedExpectExtension(
+    assertScenario,
+    assertEditedMetaOptions,
+    (editedScenario, options): SimpleAssertionResult => {
+      try {
+        const { metaNamespaceURI, sourceScenario } = options;
+        const sourceMeta = getSerializedMeta(sourceScenario, metaNamespaceURI);
+        const editedMeta = getSerializedMeta(editedScenario, metaNamespaceURI);
 
-				assertPreloadUIDValue(sourceMeta.instanceID);
-				assertPreloadUIDValue(editedMeta.deprecatedID);
+        assertPreloadUIDValue(sourceMeta.instanceID);
+        assertPreloadUIDValue(editedMeta.deprecatedID);
 
-				expect(
-					editedMeta.deprecatedID,
-					'Expected edited deprecatedID metadata to be assigned from source instanceID'
-				).toBe(sourceMeta.instanceID);
+        expect(
+          editedMeta.deprecatedID,
+          'Expected edited deprecatedID metadata to be assigned from source instanceID'
+        ).toBe(sourceMeta.instanceID);
 
-				return true;
-			} catch (error) {
-				if (error instanceof Error) {
-					return error;
-				}
+        return true;
+      } catch (error) {
+        if (error instanceof Error) {
+          return error;
+        }
 
-				// eslint-disable-next-line no-console
-				console.error(error);
-				return new Error('Unknown error');
-			}
-		}
-	),
+        // eslint-disable-next-line no-console
+        console.error(error);
+        return new Error('Unknown error');
+      }
+    }
+  ),
 });
 
 type SubmissionExtensions = typeof submissionExtensions;
 
 declare module 'vitest' {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	interface Assertion<T = any> extends DeriveStaticVitestExpectExtension<SubmissionExtensions, T> {}
-	interface AsymmetricMatchersContaining extends DeriveStaticVitestExpectExtension<SubmissionExtensions> {}
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  interface Assertion<T = any> extends DeriveStaticVitestExpectExtension<SubmissionExtensions, T> {}
+  interface AsymmetricMatchersContaining extends DeriveStaticVitestExpectExtension<SubmissionExtensions> {}
 }

@@ -1,0 +1,34 @@
+{
+  "canvas_async.load_error.message": {
+    "string": "Unable to load canvas",
+    "developer_comment": "Error message shown when the canvas component fails to load."
+  },
+  "canvas_controls.exit_after_save.description": {
+    "string": "Exit full screen, changes saved",
+    "developer_comment": "Explains the canvas control button that exits full-screen mode after autosave has captured the user's drawing."
+  },
+  "canvas_controls.color_picker.description": {
+    "string": "Pick a color",
+    "developer_comment": "Explains the canvas control button that opens the color picker."
+  },
+  "canvas_controls.pan.description": {
+    "string": "Toggle pan mode",
+    "developer_comment": "Explains the canvas control button that activates or deactivates pan mode. When active, dragging moves the canvas instead of drawing."
+  },
+  "canvas_controls.clear_all.description": {
+    "string": "Clear all strokes",
+    "developer_comment": "Explains the canvas control button that removes all drawn strokes."
+  },
+  "canvas_block.loading_image.message": {
+    "string": "Loading image...",
+    "developer_comment": "Status text shown while the background image is loading in the canvas."
+  },
+  "canvas_block.load_image.error": {
+    "string": "Failed to load image.",
+    "developer_comment": "Error message shown when the background image fails to load in the canvas."
+  },
+  "canvas_block.draw_instruction.message": {
+    "string": "Start drawing here",
+    "developer_comment": "Instruction message shown in draw mode before the user has made any strokes."
+  }
+}

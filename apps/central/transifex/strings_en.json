@@ -3468,12 +3468,6 @@
       "versionName": {
         "string": "Version name: {name}",
         "developer_comment": "This is shown for a Form version."
-      },
-      "action": {
-        "upload": {
-          "string": "Upload new Form Definition",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
       }
     },
     "FormEditDraftControls": {
@@ -3510,10 +3504,6 @@
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {properties} is in the following text:\n\nPublishing this draft will update {entityLists} and create {properties}."
           }
         }
-      },
-      "cannotDeleteProperties": {
-        "string": "Properties cannot be deleted.",
-        "developer_comment": "\"Properties\" refers to Entity properties."
       },
       "notEntityRelated": {
         "string": "This definition does not update any Entities.",
@@ -3706,10 +3696,6 @@
         "create": {
           "string": "Create Form",
           "developer_comment": "This is the title at the top of a page."
-        },
-        "update": {
-          "string": "Upload New Form Definition",
-          "developer_comment": "This is the title at the top of a section."
         }
       }
     },

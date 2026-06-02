@@ -50,28 +50,28 @@ type TypeofObject = object | null;
  * mapped to more complex types than one might assume from their names).
  */
 interface TypeofTypes {
-	bigint: bigint;
-	boolean: boolean;
-	function: TypeofFunction;
-	number: number;
-	object: TypeofObject;
-	string: string;
-	symbol: symbol;
-	undefined: undefined;
+  bigint: bigint;
+  boolean: boolean;
+  function: TypeofFunction;
+  number: number;
+  object: TypeofObject;
+  string: string;
+  symbol: symbol;
+  undefined: undefined;
 }
 
 type TypeofType<T extends Typeof> = TypeofTypes[T];
 
 export type TypeofAssertion<T extends Typeof> = <U>(
-	value: U
+  value: U
 ) => asserts value is Extract<TypeofType<T>, U>;
 
 export const typeofAssertion = <T extends Typeof>(expected: T): TypeofAssertion<T> => {
-	return (value) => {
-		const actual = typeof value;
+  return (value) => {
+    const actual = typeof value;
 
-		if (actual !== expected) {
-			throw new Error(`Expected typeof value to be ${expected}, got ${actual}`);
-		}
-	};
+    if (actual !== expected) {
+      throw new Error(`Expected typeof value to be ${expected}, got ${actual}`);
+    }
+  };
 };

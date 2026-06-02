@@ -3,27 +3,27 @@ import type { XPathDOMAdapter } from './interface/XPathDOMAdapter.ts';
 import type { XPathDOMOptimizableOperations } from './interface/XPathDOMOptimizableOperations.ts';
 import type { XPathNode } from './interface/XPathNode.ts';
 import type {
-	AdapterAttribute,
-	AdapterChildNode,
-	AdapterComment,
-	AdapterDocument,
-	AdapterElement,
-	AdapterNamespaceDeclaration,
-	AdapterParentNode,
-	AdapterProcessingInstruction,
-	AdapterQualifiedNamedNode,
-	AdapterText,
-	XPathNodeKindAdapter,
+  AdapterAttribute,
+  AdapterChildNode,
+  AdapterComment,
+  AdapterDocument,
+  AdapterElement,
+  AdapterNamespaceDeclaration,
+  AdapterParentNode,
+  AdapterProcessingInstruction,
+  AdapterQualifiedNamedNode,
+  AdapterText,
+  XPathNodeKindAdapter,
 } from './interface/XPathNodeKindAdapter.ts';
 
 type AssertXPathNode<T extends XPathNode> = <U>(
-	value: U,
-	message?: string
+  value: U,
+  message?: string
 ) => asserts value is Extract<U, T>;
 
 type AssertParentNode<T extends XPathNode> = <U>(
-	value: U,
-	message?: string
+  value: U,
+  message?: string
 ) => asserts value is Extract<U, AdapterParentNode<T>>;
 
 type NodeKindPredicate<T extends XPathNode, U extends T> = (node: T) => node is U;
@@ -37,21 +37,21 @@ type NodeKindPredicate<T extends XPathNode, U extends T> = (node: T) => node is 
  * - Useful unions of any subset thereof
  */
 interface NodeKindGuards<T extends XPathNode> {
-	readonly assertXPathNode: AssertXPathNode<T>;
-	readonly assertParentNode: AssertParentNode<T>;
-	readonly isDocument: NodeKindPredicate<T, AdapterDocument<T>>;
-	readonly isElement: NodeKindPredicate<T, AdapterElement<T>>;
-	readonly isNamespaceDeclaration: NodeKindPredicate<T, AdapterNamespaceDeclaration<T>>;
-	readonly isAttribute: NodeKindPredicate<T, AdapterAttribute<T>>;
-	readonly isText: NodeKindPredicate<T, AdapterText<T>>;
-	readonly isComment: NodeKindPredicate<T, AdapterComment<T>>;
-	readonly isProcessingInstruction: NodeKindPredicate<T, AdapterProcessingInstruction<T>>;
-	readonly isParentNode: NodeKindPredicate<T, AdapterParentNode<T>>;
-	readonly isQualifiedNamedNode: NodeKindPredicate<T, AdapterQualifiedNamedNode<T>>;
+  readonly assertXPathNode: AssertXPathNode<T>;
+  readonly assertParentNode: AssertParentNode<T>;
+  readonly isDocument: NodeKindPredicate<T, AdapterDocument<T>>;
+  readonly isElement: NodeKindPredicate<T, AdapterElement<T>>;
+  readonly isNamespaceDeclaration: NodeKindPredicate<T, AdapterNamespaceDeclaration<T>>;
+  readonly isAttribute: NodeKindPredicate<T, AdapterAttribute<T>>;
+  readonly isText: NodeKindPredicate<T, AdapterText<T>>;
+  readonly isComment: NodeKindPredicate<T, AdapterComment<T>>;
+  readonly isProcessingInstruction: NodeKindPredicate<T, AdapterProcessingInstruction<T>>;
+  readonly isParentNode: NodeKindPredicate<T, AdapterParentNode<T>>;
+  readonly isQualifiedNamedNode: NodeKindPredicate<T, AdapterQualifiedNamedNode<T>>;
 }
 
 interface ExtendedNodeKindGuards<T extends XPathNode>
-	extends XPathDOMAdapter<T>, NodeKindGuards<T> {}
+  extends XPathDOMAdapter<T>, NodeKindGuards<T> {}
 
 /**
  * Derives frequently used {@link NodeKindGuards | node kind predicates}
@@ -59,261 +59,261 @@ interface ExtendedNodeKindGuards<T extends XPathNode>
  * {@link XPathNodeKindAdapter.getNodeKind | getNodeKind} implementation.
  */
 const extendNodeKindGuards = <T extends XPathNode>(
-	base: XPathDOMAdapter<T>
+  base: XPathDOMAdapter<T>
 ): ExtendedNodeKindGuards<T> => {
-	const assertXPathNode: AssertXPathNode<T> = (value, message = 'Invalid context node') => {
-		if (!base.isXPathNode(value)) {
-			throw new Error(message);
-		}
-	};
+  const assertXPathNode: AssertXPathNode<T> = (value, message = 'Invalid context node') => {
+    if (!base.isXPathNode(value)) {
+      throw new Error(message);
+    }
+  };
 
-	const isParentNode: NodeKindPredicate<T, AdapterParentNode<T>> = (
-		value: T
-	): value is AdapterParentNode<T> => {
-		const kind = base.getNodeKind(value);
+  const isParentNode: NodeKindPredicate<T, AdapterParentNode<T>> = (
+    value: T
+  ): value is AdapterParentNode<T> => {
+    const kind = base.getNodeKind(value);
 
-		return kind === 'document' || kind === 'element';
-	};
+    return kind === 'document' || kind === 'element';
+  };
 
-	const extensions: NodeKindGuards<T> = {
-		assertXPathNode,
-		assertParentNode: (value, message = 'Invalid parent node') => {
-			assertXPathNode(value);
+  const extensions: NodeKindGuards<T> = {
+    assertXPathNode,
+    assertParentNode: (value, message = 'Invalid parent node') => {
+      assertXPathNode(value);
 
-			if (!isParentNode(value)) {
-				throw new Error(message);
-			}
-		},
-		isDocument: (node: T): node is AdapterDocument<T> => {
-			return base.getNodeKind(node) === 'document';
-		},
-		isElement: (node): node is AdapterElement<T> => {
-			return base.getNodeKind(node) === 'element';
-		},
-		isNamespaceDeclaration: (node): node is AdapterNamespaceDeclaration<T> => {
-			return base.getNodeKind(node) === 'namespace_declaration';
-		},
-		isAttribute: (node): node is AdapterAttribute<T> => {
-			return base.getNodeKind(node) === 'attribute';
-		},
-		isText: (node): node is AdapterText<T> => {
-			return base.getNodeKind(node) === 'text';
-		},
-		isComment: (node): node is AdapterComment<T> => {
-			return base.getNodeKind(node) === 'comment';
-		},
-		isProcessingInstruction: (node): node is AdapterProcessingInstruction<T> => {
-			return base.getNodeKind(node) === 'processing_instruction';
-		},
-		isParentNode,
-		isQualifiedNamedNode: (node): node is AdapterQualifiedNamedNode<T> => {
-			const kind = base.getNodeKind(node);
+      if (!isParentNode(value)) {
+        throw new Error(message);
+      }
+    },
+    isDocument: (node: T): node is AdapterDocument<T> => {
+      return base.getNodeKind(node) === 'document';
+    },
+    isElement: (node): node is AdapterElement<T> => {
+      return base.getNodeKind(node) === 'element';
+    },
+    isNamespaceDeclaration: (node): node is AdapterNamespaceDeclaration<T> => {
+      return base.getNodeKind(node) === 'namespace_declaration';
+    },
+    isAttribute: (node): node is AdapterAttribute<T> => {
+      return base.getNodeKind(node) === 'attribute';
+    },
+    isText: (node): node is AdapterText<T> => {
+      return base.getNodeKind(node) === 'text';
+    },
+    isComment: (node): node is AdapterComment<T> => {
+      return base.getNodeKind(node) === 'comment';
+    },
+    isProcessingInstruction: (node): node is AdapterProcessingInstruction<T> => {
+      return base.getNodeKind(node) === 'processing_instruction';
+    },
+    isParentNode,
+    isQualifiedNamedNode: (node): node is AdapterQualifiedNamedNode<T> => {
+      const kind = base.getNodeKind(node);
 
-			return kind === 'element' || kind === 'attribute';
-		},
-	};
+      return kind === 'element' || kind === 'attribute';
+    },
+  };
 
-	return Object.assign(base, extensions);
+  return Object.assign(base, extensions);
 };
 
 type UniqueIDElementLookup<T extends XPathNode> = (
-	node: AdapterDocument<T>,
-	id: string
+  node: AdapterDocument<T>,
+  id: string
 ) => AdapterElement<T> | null;
 
 const getElementByUniqueIdFactory = <T extends XPathNode>(
-	adapter: ExtendedNodeKindGuards<T>,
-	getNamedAttributeValue: LocalNamedAttributeValueLookup<T>
+  adapter: ExtendedNodeKindGuards<T>,
+  getNamedAttributeValue: LocalNamedAttributeValueLookup<T>
 ): UniqueIDElementLookup<T> => {
-	const adapterImplementation = adapter.getElementByUniqueId?.bind(adapter);
+  const adapterImplementation = adapter.getElementByUniqueId?.bind(adapter);
 
-	if (adapterImplementation != null) {
-		return adapterImplementation;
-	}
+  if (adapterImplementation != null) {
+    return adapterImplementation;
+  }
 
-	const getElementByUniqueId = (
-		node: AdapterParentNode<T>,
-		id: string
-	): AdapterElement<T> | null => {
-		if (adapter.isElement(node) && getNamedAttributeValue(node, 'id') === id) {
-			return node;
-		}
+  const getElementByUniqueId = (
+    node: AdapterParentNode<T>,
+    id: string
+  ): AdapterElement<T> | null => {
+    if (adapter.isElement(node) && getNamedAttributeValue(node, 'id') === id) {
+      return node;
+    }
 
-		for (const childElement of adapter.getChildElements(node)) {
-			const element = getElementByUniqueId(childElement, id);
+    for (const childElement of adapter.getChildElements(node)) {
+      const element = getElementByUniqueId(childElement, id);
 
-			if (element != null) {
-				return element;
-			}
-		}
+      if (element != null) {
+        return element;
+      }
+    }
 
-		return null;
-	};
+    return null;
+  };
 
-	return getElementByUniqueId;
+  return getElementByUniqueId;
 };
 
 type QualifiedNamedAttributeValueLookup<T extends XPathNode> = (
-	node: AdapterElement<T>,
-	namespaceURI: string | null,
-	localName: string
+  node: AdapterElement<T>,
+  namespaceURI: string | null,
+  localName: string
 ) => string | null;
 
 const getQualifiedNamedAttributeValueFactory = <T extends XPathNode>(
-	adapter: XPathDOMAdapter<T>
+  adapter: XPathDOMAdapter<T>
 ): QualifiedNamedAttributeValueLookup<T> => {
-	const adapterImplementation = adapter.getQualifiedNamedAttributeValue?.bind(adapter);
+  const adapterImplementation = adapter.getQualifiedNamedAttributeValue?.bind(adapter);
 
-	if (adapterImplementation != null) {
-		return adapterImplementation;
-	}
+  if (adapterImplementation != null) {
+    return adapterImplementation;
+  }
 
-	return (node, namespaceURI, localName) => {
-		const attributes = adapter.getAttributes(node);
+  return (node, namespaceURI, localName) => {
+    const attributes = adapter.getAttributes(node);
 
-		for (const attribute of attributes) {
-			if (
-				adapter.getNamespaceURI(attribute) === namespaceURI &&
-				adapter.getLocalName(attribute) === localName
-			) {
-				return adapter.getNodeValue(attribute);
-			}
-		}
+    for (const attribute of attributes) {
+      if (
+        adapter.getNamespaceURI(attribute) === namespaceURI &&
+        adapter.getLocalName(attribute) === localName
+      ) {
+        return adapter.getNodeValue(attribute);
+      }
+    }
 
-		return null;
-	};
+    return null;
+  };
 };
 
 type LocalNamedAttributeValueLookup<T extends XPathNode> = (
-	node: AdapterElement<T>,
-	localName: string
+  node: AdapterElement<T>,
+  localName: string
 ) => string | null;
 
 const getLocalNamedAttributeValueFactory = <T extends XPathNode>(
-	adapter: XPathDOMAdapter<T>
+  adapter: XPathDOMAdapter<T>
 ): LocalNamedAttributeValueLookup<T> => {
-	const adapterImplementation = adapter.getLocalNamedAttributeValue?.bind(adapter);
+  const adapterImplementation = adapter.getLocalNamedAttributeValue?.bind(adapter);
 
-	if (adapterImplementation != null) {
-		return adapterImplementation;
-	}
+  if (adapterImplementation != null) {
+    return adapterImplementation;
+  }
 
-	return (node, localName) => {
-		const attributes = adapter.getAttributes(node);
+  return (node, localName) => {
+    const attributes = adapter.getAttributes(node);
 
-		for (const attribute of attributes) {
-			if (adapter.getLocalName(attribute) === localName) {
-				return adapter.getNodeValue(attribute);
-			}
-		}
+    for (const attribute of attributes) {
+      if (adapter.getLocalName(attribute) === localName) {
+        return adapter.getNodeValue(attribute);
+      }
+    }
 
-		return null;
-	};
+    return null;
+  };
 };
 
 type LocalNamedAttributePredicate<T extends XPathNode> = (
-	node: AdapterElement<T>,
-	localName: string
+  node: AdapterElement<T>,
+  localName: string
 ) => boolean;
 
 const hasLocalNamedAttributeFactory = <T extends XPathNode>(
-	adapter: XPathDOMAdapter<T>,
-	lookup: LocalNamedAttributeValueLookup<T>
+  adapter: XPathDOMAdapter<T>,
+  lookup: LocalNamedAttributeValueLookup<T>
 ): LocalNamedAttributePredicate<T> => {
-	const adapterImplementation = adapter.hasLocalNamedAttribute?.bind(adapter);
+  const adapterImplementation = adapter.hasLocalNamedAttribute?.bind(adapter);
 
-	if (adapterImplementation != null) {
-		return adapterImplementation;
-	}
+  if (adapterImplementation != null) {
+    return adapterImplementation;
+  }
 
-	return (node, localName) => {
-		return lookup(node, localName) != null;
-	};
+  return (node, localName) => {
+    return lookup(node, localName) != null;
+  };
 };
 
 type LocalNamedChildElementsLookup<T extends XPathNode> = (
-	node: AdapterParentNode<T>,
-	localName: string
+  node: AdapterParentNode<T>,
+  localName: string
 ) => ReadonlyArray<AdapterElement<T>>;
 
 const getChildrenByLocalNameFactory = <T extends XPathNode>(
-	adapter: XPathDOMAdapter<T>
+  adapter: XPathDOMAdapter<T>
 ): LocalNamedChildElementsLookup<T> => {
-	const adapterImplementation = adapter.getChildrenByLocalName?.bind(adapter);
+  const adapterImplementation = adapter.getChildrenByLocalName?.bind(adapter);
 
-	if (adapterImplementation != null) {
-		return adapterImplementation;
-	}
+  if (adapterImplementation != null) {
+    return adapterImplementation;
+  }
 
-	return (node, localName) => {
-		return adapter.getChildElements(node).filter((element) => {
-			return adapter.getLocalName(element) === localName;
-		});
-	};
+  return (node, localName) => {
+    return adapter.getChildElements(node).filter((element) => {
+      return adapter.getLocalName(element) === localName;
+    });
+  };
 };
 
 type ChildNodeLookup<T extends XPathNode> = (node: T) => AdapterChildNode<T> | null;
 
 const getFirstChildNodeFactory = <T extends XPathNode>(
-	adapter: XPathDOMAdapter<T>
+  adapter: XPathDOMAdapter<T>
 ): ChildNodeLookup<T> => {
-	const adapterImplementation = adapter.getFirstChildNode?.bind(adapter);
+  const adapterImplementation = adapter.getFirstChildNode?.bind(adapter);
 
-	if (adapterImplementation != null) {
-		return adapterImplementation;
-	}
+  if (adapterImplementation != null) {
+    return adapterImplementation;
+  }
 
-	return (node) => {
-		const [childNode] = adapter.getChildNodes(node);
+  return (node) => {
+    const [childNode] = adapter.getChildNodes(node);
 
-		return childNode ?? null;
-	};
+    return childNode ?? null;
+  };
 };
 
 const getLastChildNodeFactory = <T extends XPathNode>(
-	adapter: XPathDOMAdapter<T>
+  adapter: XPathDOMAdapter<T>
 ): ChildNodeLookup<T> => {
-	const adapterImplementation = adapter.getLastChildNode?.bind(adapter);
+  const adapterImplementation = adapter.getLastChildNode?.bind(adapter);
 
-	if (adapterImplementation != null) {
-		return adapterImplementation;
-	}
+  if (adapterImplementation != null) {
+    return adapterImplementation;
+  }
 
-	return (node) => {
-		return Array.from(adapter.getChildNodes(node)).at(-1) ?? null;
-	};
+  return (node) => {
+    return Array.from(adapter.getChildNodes(node)).at(-1) ?? null;
+  };
 };
 
 type ChildElementLookup<T extends XPathNode> = (node: T) => AdapterElement<T> | null;
 
 const getFirstChildElementFactory = <T extends XPathNode>(
-	adapter: XPathDOMAdapter<T>
+  adapter: XPathDOMAdapter<T>
 ): ChildElementLookup<T> => {
-	const adapterImplementation = adapter.getFirstChildElement?.bind(adapter);
+  const adapterImplementation = adapter.getFirstChildElement?.bind(adapter);
 
-	if (adapterImplementation != null) {
-		return adapterImplementation;
-	}
+  if (adapterImplementation != null) {
+    return adapterImplementation;
+  }
 
-	return (node) => {
-		const [childElement] = adapter.getChildElements(node);
+  return (node) => {
+    const [childElement] = adapter.getChildElements(node);
 
-		return childElement ?? null;
-	};
+    return childElement ?? null;
+  };
 };
 
 const getLastChildElementFactory = <T extends XPathNode>(
-	adapter: XPathDOMAdapter<T>
+  adapter: XPathDOMAdapter<T>
 ): ChildElementLookup<T> => {
-	const adapterImplementation = adapter.getLastChildElement?.bind(adapter);
+  const adapterImplementation = adapter.getLastChildElement?.bind(adapter);
 
-	if (adapterImplementation != null) {
-		return adapterImplementation;
-	}
+  if (adapterImplementation != null) {
+    return adapterImplementation;
+  }
 
-	return (node) => {
-		return adapter.getChildElements(node).at(-1) ?? null;
-	};
+  return (node) => {
+    return adapter.getChildElements(node).at(-1) ?? null;
+  };
 };
 
 /**
@@ -324,9 +324,9 @@ const getLastChildElementFactory = <T extends XPathNode>(
 type OmitOptionalOptimizableOperations<T> = Omit<T, keyof XPathDOMOptimizableOperations<XPathNode>>;
 
 interface ExtendedOptimizableOperations<T extends XPathNode>
-	extends
-		OmitOptionalOptimizableOperations<ExtendedNodeKindGuards<T>>,
-		XPathDOMOptimizableOperations<T> {}
+  extends
+    OmitOptionalOptimizableOperations<ExtendedNodeKindGuards<T>>,
+    XPathDOMOptimizableOperations<T> {}
 
 /**
  * Derives concrete implementations for all of an {@link XPathDOMAdapter}'s
@@ -340,23 +340,23 @@ interface ExtendedOptimizableOperations<T extends XPathNode>
  *    will be derived from other aspects of the adapter's required APIs.
  */
 const extendOptimizableOperations = <T extends XPathNode>(
-	base: ExtendedNodeKindGuards<T>
+  base: ExtendedNodeKindGuards<T>
 ): ExtendedOptimizableOperations<T> => {
-	const getLocalNamedAttributeValue = getLocalNamedAttributeValueFactory(base);
+  const getLocalNamedAttributeValue = getLocalNamedAttributeValueFactory(base);
 
-	const extensions: XPathDOMOptimizableOperations<T> = {
-		getElementByUniqueId: getElementByUniqueIdFactory(base, getLocalNamedAttributeValue),
-		getQualifiedNamedAttributeValue: getQualifiedNamedAttributeValueFactory(base),
-		getLocalNamedAttributeValue,
-		hasLocalNamedAttribute: hasLocalNamedAttributeFactory(base, getLocalNamedAttributeValue),
-		getChildrenByLocalName: getChildrenByLocalNameFactory(base),
-		getFirstChildNode: getFirstChildNodeFactory(base),
-		getFirstChildElement: getFirstChildElementFactory(base),
-		getLastChildNode: getLastChildNodeFactory(base),
-		getLastChildElement: getLastChildElementFactory(base),
-	};
+  const extensions: XPathDOMOptimizableOperations<T> = {
+    getElementByUniqueId: getElementByUniqueIdFactory(base, getLocalNamedAttributeValue),
+    getQualifiedNamedAttributeValue: getQualifiedNamedAttributeValueFactory(base),
+    getLocalNamedAttributeValue,
+    hasLocalNamedAttribute: hasLocalNamedAttributeFactory(base, getLocalNamedAttributeValue),
+    getChildrenByLocalName: getChildrenByLocalNameFactory(base),
+    getFirstChildNode: getFirstChildNodeFactory(base),
+    getFirstChildElement: getFirstChildElementFactory(base),
+    getLastChildNode: getLastChildNodeFactory(base),
+    getLastChildElement: getLastChildElementFactory(base),
+  };
 
-	return Object.assign(base, extensions);
+  return Object.assign(base, extensions);
 };
 
 /**
@@ -385,48 +385,48 @@ const DERIVED_DOM_PROVIDER = Symbol('DERIVED_DOM_PROVIDER');
  * @see {@link DERIVED_DOM_PROVIDER}
  */
 interface DerivedDOMProvider {
-	readonly [DERIVED_DOM_PROVIDER]: true;
+  readonly [DERIVED_DOM_PROVIDER]: true;
 }
 
 /**
  * @see {@link DERIVED_DOM_PROVIDER}
  */
 const derivedDOMProvider = <T>(base: T): DerivedDOMProvider & T => {
-	return Object.assign({}, base, {
-		[DERIVED_DOM_PROVIDER]: true as const,
-	});
+  return Object.assign({}, base, {
+    [DERIVED_DOM_PROVIDER]: true as const,
+  });
 };
 
 export interface XPathDOMProvider<T extends XPathNode>
-	extends
-		OmitOptionalOptimizableOperations<XPathDOMAdapter<T>>,
-		NodeKindGuards<T>,
-		XPathDOMOptimizableOperations<T>,
-		DerivedDOMProvider {}
+  extends
+    OmitOptionalOptimizableOperations<XPathDOMAdapter<T>>,
+    NodeKindGuards<T>,
+    XPathDOMOptimizableOperations<T>,
+    DerivedDOMProvider {}
 
 /**
  * @see {@link DERIVED_DOM_PROVIDER}
  */
 const isXPathDOMProvider = <T extends XPathNode>(
-	adapter: XPathDOMAdapter<T>
+  adapter: XPathDOMAdapter<T>
 ): adapter is XPathDOMProvider<T> => {
-	return DERIVED_DOM_PROVIDER in adapter && adapter[DERIVED_DOM_PROVIDER] === true;
+  return DERIVED_DOM_PROVIDER in adapter && adapter[DERIVED_DOM_PROVIDER] === true;
 };
 
 export const xpathDOMProvider = <T extends XPathNode>(
-	adapter: XPathDOMAdapter<T>
+  adapter: XPathDOMAdapter<T>
 ): XPathDOMProvider<T> => {
-	if (isXPathDOMProvider(adapter)) {
-		// eslint-disable-next-line no-console
-		console.warn(
-			'Repeat call to xpathDOMProvider: provider has already been derived from provided adapter'
-		);
+  if (isXPathDOMProvider(adapter)) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      'Repeat call to xpathDOMProvider: provider has already been derived from provided adapter'
+    );
 
-		return adapter;
-	}
+    return adapter;
+  }
 
-	const extendedGuards = extendNodeKindGuards(adapter);
-	const exended = extendOptimizableOperations(extendedGuards);
+  const extendedGuards = extendNodeKindGuards(adapter);
+  const exended = extendOptimizableOperations(extendedGuards);
 
-	return derivedDOMProvider(exended);
+  return derivedDOMProvider(exended);
 };

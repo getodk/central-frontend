@@ -4,5 +4,5 @@
  * detailed thoughts on this.
  */
 export interface RecordAudioActionListener {
-	recordAudioTriggered(absoluteTargetRef: unknown, quality: unknown): never;
+  recordAudioTriggered(absoluteTargetRef: unknown, quality: unknown): never;
 }

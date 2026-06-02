@@ -5,12 +5,12 @@ import { type CodecDecoder, type CodecEncoder, ValueCodec } from './ValueCodec.t
 export type DatetimeRuntimeValue = Temporal.PlainDate | null;
 
 export type DatetimeInputValue =
-	| Date
-	| Temporal.PlainDate
-	| Temporal.PlainDateTime
-	| Temporal.ZonedDateTime
-	| string
-	| null;
+  | Date
+  | Temporal.PlainDate
+  | Temporal.PlainDateTime
+  | Temporal.ZonedDateTime
+  | string
+  | null;
 
 /**
  * Parses a string in the format 'YYYY-MM-DD' or 'YYYY-MM-DDTHH:MM:SS' (no offset)
@@ -23,21 +23,21 @@ export type DatetimeInputValue =
  * @returns A {@link DatetimeRuntimeValue}
  */
 const parseString = (value: string): DatetimeRuntimeValue => {
-	if (
-		value == null ||
-		typeof value !== 'string' ||
-		!ISO_DATE_OR_DATE_TIME_NO_OFFSET_PATTERN.test(value)
-	) {
-		return null;
-	}
+  if (
+    value == null ||
+    typeof value !== 'string' ||
+    !ISO_DATE_OR_DATE_TIME_NO_OFFSET_PATTERN.test(value)
+  ) {
+    return null;
+  }
 
-	try {
-		const dateOnly = value.split('T')[0]!;
-		return Temporal.PlainDate.from(dateOnly);
-	} catch {
-		// TODO: should we throw when codec cannot interpret the value?
-		return null;
-	}
+  try {
+    const dateOnly = value.split('T')[0]!;
+    return Temporal.PlainDate.from(dateOnly);
+  } catch {
+    // TODO: should we throw when codec cannot interpret the value?
+    return null;
+  }
 };
 
 /**
@@ -50,44 +50,44 @@ const parseString = (value: string): DatetimeRuntimeValue => {
  * @returns A date string or empty string if invalid.
  */
 const toDateString = (value: DatetimeInputValue): string => {
-	if (value == null || value instanceof Temporal.ZonedDateTime) {
-		return '';
-	}
+  if (value == null || value instanceof Temporal.ZonedDateTime) {
+    return '';
+  }
 
-	try {
-		if (value instanceof Temporal.PlainDate) {
-			return value.toString();
-		}
+  try {
+    if (value instanceof Temporal.PlainDate) {
+      return value.toString();
+    }
 
-		if (value instanceof Temporal.PlainDateTime) {
-			return value.toPlainDate().toString();
-		}
+    if (value instanceof Temporal.PlainDateTime) {
+      return value.toPlainDate().toString();
+    }
 
-		if (value instanceof Date) {
-			return Temporal.PlainDate.from({
-				year: value.getFullYear(),
-				month: value.getMonth() + 1,
-				day: value.getDate(),
-			}).toString();
-		}
+    if (value instanceof Date) {
+      return Temporal.PlainDate.from({
+        year: value.getFullYear(),
+        month: value.getMonth() + 1,
+        day: value.getDate(),
+      }).toString();
+    }
 
-		const parsed = parseString(String(value));
-		return parsed?.toString() ?? '';
-	} catch {
-		return '';
-	}
+    const parsed = parseString(String(value));
+    return parsed?.toString() ?? '';
+  } catch {
+    return '';
+  }
 };
 
 export class DateValueCodec extends ValueCodec<'date', DatetimeRuntimeValue, DatetimeInputValue> {
-	constructor() {
-		const encodeValue: CodecEncoder<DatetimeInputValue> = (value) => {
-			return toDateString(value);
-		};
+  constructor() {
+    const encodeValue: CodecEncoder<DatetimeInputValue> = (value) => {
+      return toDateString(value);
+    };
 
-		const decodeValue: CodecDecoder<DatetimeRuntimeValue> = (value: string) => {
-			return parseString(value);
-		};
+    const decodeValue: CodecDecoder<DatetimeRuntimeValue> = (value: string) => {
+      return parseString(value);
+    };
 
-		super('date', encodeValue, decodeValue);
-	}
+    super('date', encodeValue, decodeValue);
+  }
 }

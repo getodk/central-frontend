@@ -6,18 +6,18 @@ import type { ExpectExtensionMethod } from './shared-extension-types.ts';
 import { validatedExtensionMethod } from './validatedExtensionMethod.ts';
 
 export class ArbitraryConditionExpectExtension<Parameter> {
-	readonly extensionMethod: ExpectExtensionMethod<unknown, unknown, SyncExpectationResult>;
+  readonly extensionMethod: ExpectExtensionMethod<unknown, unknown, SyncExpectationResult>;
 
-	constructor(
-		readonly validateArgument: AssertIs<Parameter>,
-		readonly arbitraryCondition: ExpectExtensionMethod<Parameter, void>
-	) {
-		const validatedMethod = validatedExtensionMethod(
-			validateArgument,
-			assertVoidExpectedArgument,
-			arbitraryCondition
-		);
+  constructor(
+    readonly validateArgument: AssertIs<Parameter>,
+    readonly arbitraryCondition: ExpectExtensionMethod<Parameter, void>
+  ) {
+    const validatedMethod = validatedExtensionMethod(
+      validateArgument,
+      assertVoidExpectedArgument,
+      arbitraryCondition
+    );
 
-		this.extensionMethod = expandSimpleExpectExtensionResult(validatedMethod);
-	}
+    this.extensionMethod = expandSimpleExpectExtensionResult(validatedMethod);
+  }
 }

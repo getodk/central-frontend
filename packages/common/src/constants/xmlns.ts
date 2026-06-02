@@ -24,6 +24,9 @@ export type JAVAROSA_NAMESPACE_URI = typeof JAVAROSA_NAMESPACE_URI;
 export const ODK_NAMESPACE_URI = 'http://www.opendatakit.org/xforms';
 export type ODK_NAMESPACE_URI = typeof ODK_NAMESPACE_URI;
 
+export const ODK_ENCRYPTED_NAMESPACE_URI = 'http://www.opendatakit.org/xforms/encrypted';
+export type ODK_ENCRYPTED_NAMESPACE_URI = typeof ODK_ENCRYPTED_NAMESPACE_URI;
+
 export const OPENROSA_XFORMS_NAMESPACE_URI = 'http://openrosa.org/xforms';
 export type OPENROSA_XFORMS_NAMESPACE_URI = typeof OPENROSA_XFORMS_NAMESPACE_URI;
 

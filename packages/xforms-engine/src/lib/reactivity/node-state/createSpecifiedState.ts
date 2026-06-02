@@ -128,40 +128,40 @@ export type StatePropertySpec<T = any> =
 	| StaticPropertySpec<T>;
 
 type ParametersOfArity<Arity extends number> = unknown[] & {
-	length: Arity;
+  length: Arity;
 };
 
 type FunctionOfArity<Arity extends number> = (...args: ParametersOfArity<Arity>) => unknown;
 
 const isFunctionOfArity = <Arity extends number>(
-	arity: Arity,
-	value: unknown
+  arity: Arity,
+  value: unknown
 ): value is FunctionOfArity<Arity> => {
-	return typeof value === 'function' && value.length === arity;
+  return typeof value === 'function' && value.length === arity;
 };
 
 export const isMutablePropertySpec = <T>(
-	propertySpec: StatePropertySpec<T>
+  propertySpec: StatePropertySpec<T>
 ): propertySpec is MutablePropertySpec<T> => {
-	if (!Array.isArray(propertySpec) || propertySpec.length !== 2) {
-		return false;
-	}
+  if (!Array.isArray(propertySpec) || propertySpec.length !== 2) {
+    return false;
+  }
 
-	const [read, write] = propertySpec;
+  const [read, write] = propertySpec;
 
-	return isFunctionOfArity(0, read) && isFunctionOfArity(1, write);
+  return isFunctionOfArity(0, read) && isFunctionOfArity(1, write);
 };
 
 export const isComputedPropertySpec = <T>(
-	propertySpec: StatePropertySpec<T>
+  propertySpec: StatePropertySpec<T>
 ): propertySpec is ComputedPropertySpec<T> => {
-	return isFunctionOfArity(0, propertySpec);
+  return isFunctionOfArity(0, propertySpec);
 };
 
 export const isStaticPropertySpec = <T>(
-	propertySpec: StatePropertySpec<T>
+  propertySpec: StatePropertySpec<T>
 ): propertySpec is StaticPropertySpec<T> => {
-	return !isMutablePropertySpec(propertySpec) && !isComputedPropertySpec(propertySpec);
+  return !isMutablePropertySpec(propertySpec) && !isComputedPropertySpec(propertySpec);
 };
 
 export type StateSpec = Record<string, StatePropertySpec>;
@@ -182,13 +182,13 @@ type DerivedMutableKeys<Spec extends StateSpec> = {
 }[keyof Spec];
 
 type DerivedMutableState<Spec extends StateSpec> = {
-	-readonly [K in DerivedMutableKeys<Spec>]: SpecifiedStatePropertyValue<Spec[K]>;
+  -readonly [K in DerivedMutableKeys<Spec>]: SpecifiedStatePropertyValue<Spec[K]>;
 };
 
 type DerivedReadableKeys<Spec extends StateSpec> = Exclude<keyof Spec, DerivedMutableKeys<Spec>>;
 
 type DerivedReadableState<Spec extends StateSpec> = {
-	readonly [K in DerivedReadableKeys<Spec>]: SpecifiedStatePropertyValue<Spec[K]>;
+  readonly [K in DerivedReadableKeys<Spec>]: SpecifiedStatePropertyValue<Spec[K]>;
 };
 
 // prettier-ignore
@@ -215,15 +215,15 @@ export type SpecifiedState<Spec extends StateSpec> =(
  *   statically propagated as read-only to clients)
  */
 export const createSpecifiedState = <Spec extends StateSpec>(spec: Spec): SpecifiedState<Spec> => {
-	const keys = getPropertyKeys(spec);
-	const descriptors = Object.fromEntries(
-		keys.map((key) => {
-			const propertySpec = spec[key];
-			const descriptor = createSpecifiedPropertyDescriptor(propertySpec);
+  const keys = getPropertyKeys(spec);
+  const descriptors = Object.fromEntries(
+    keys.map((key) => {
+      const propertySpec = spec[key];
+      const descriptor = createSpecifiedPropertyDescriptor(propertySpec);
 
-			return [key, descriptor];
-		})
-	) satisfies Record<string, SpecifiedPropertyDescriptor>;
+      return [key, descriptor];
+    })
+  ) satisfies Record<string, SpecifiedPropertyDescriptor>;
 
-	return Object.create(null, descriptors) as SpecifiedState<Spec>;
+  return Object.create(null, descriptors) as SpecifiedState<Spec>;
 };

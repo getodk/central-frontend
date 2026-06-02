@@ -18,35 +18,35 @@ export type StaticNodeKind =
 export type StaticNodeType<Kind extends StaticNodeKind> = `static-${Kind}`;
 
 export abstract class StaticNode<Kind extends StaticNodeKind> implements XFormsXPathNode {
-	abstract readonly [XPathNodeKindKey]: Kind;
+  abstract readonly [XPathNodeKindKey]: Kind;
 
-	abstract readonly nodeType: StaticNodeType<Kind>;
+  abstract readonly nodeType: StaticNodeType<Kind>;
 
-	/**
-	 * A concrete {@link StaticDocument} instance, representing the topmost node
-	 * of a static document tree, containing all of:
-	 *
-	 * - {@link root}
-	 * - {@link children}
-	 * - any {@link StaticChildNode} descendants of either of the above
-	 */
-	abstract readonly rootDocument: StaticDocument;
+  /**
+   * A concrete {@link StaticDocument} instance, representing the topmost node
+   * of a static document tree, containing all of:
+   *
+   * - {@link root}
+   * - {@link children}
+   * - any {@link StaticChildNode} descendants of either of the above
+   */
+  abstract readonly rootDocument: StaticDocument;
 
-	/**
-	 * A concrete {@link StaticElement} instance, representing the single,
-	 * immediate child of {@link rootDocument}, containing all other descendants
-	 * of its document tree.
-	 */
-	abstract readonly root: StaticElement;
+  /**
+   * A concrete {@link StaticElement} instance, representing the single,
+   * immediate child of {@link rootDocument}, containing all other descendants
+   * of its document tree.
+   */
+  abstract readonly root: StaticElement;
 
-	abstract readonly children: readonly StaticChildNode[] | null;
+  abstract readonly children: readonly StaticChildNode[] | null;
 
-	// XFormsXPathNode
-	getXPathChildNodes(): readonly StaticChildNode[] {
-		return this.children ?? [];
-	}
+  // XFormsXPathNode
+  getXPathChildNodes(): readonly StaticChildNode[] {
+    return this.children ?? [];
+  }
 
-	abstract getXPathValue(): string;
+  abstract getXPathValue(): string;
 }
 
 // prettier-ignore
