@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
         <p class="form-edit-section-subtitle"><slot name="subtitle"></slot></p>
       </div>
       <div class="form-edit-section-tag">
-        <span><slot name="tag"></slot></span>
+        <slot name="tag"></slot>
       </div>
       <div class="form-edit-section-actions">
         <slot name="actions"></slot>
@@ -86,7 +86,11 @@ $heading-margin-bottom: 10px;
   border-radius: 6px;
   color: $color-accent-primary;
   padding: 5px 9px;
+
+  // Hide the entire element if no tag slot is provided.
+  &:empty { display: none; }
 }
+
 
 .form-edit-section:has(.form-edit-section-subtitle:empty) .form-edit-section-body > p:first-of-type {
   margin-top: -$heading-margin-bottom;
