@@ -5,51 +5,51 @@ import type { ValueNodeAnswer } from '../../answer/ValueNodeAnswer.ts';
 import { QuestionEvent } from './QuestionEvent.ts';
 
 export class RangeQuestionEvent extends QuestionEvent<'range'> {
-	getAnswer(): RangeNodeAnswer {
-		return new RangeNodeAnswer(this.node);
-	}
+  getAnswer(): RangeNodeAnswer {
+    return new RangeNodeAnswer(this.node);
+  }
 
-	private answerDefault(node: AnyRangeNode, answerValue: unknown): ValueNodeAnswer {
-		const { stringValue } = new UntypedAnswer(answerValue);
+  private answerDefault(node: AnyRangeNode, answerValue: unknown): ValueNodeAnswer {
+    const { stringValue } = new UntypedAnswer(answerValue);
 
-		node.setValue(stringValue);
+    node.setValue(stringValue);
 
-		return new RangeNodeAnswer(node);
-	}
+    return new RangeNodeAnswer(node);
+  }
 
-	private answerNumericQuestionNode(
-		node: DecimalRangeNode | IntRangeNode,
-		answerValue: unknown
-	): ValueNodeAnswer {
-		if (answerValue === null) {
-			node.setValue(answerValue);
+  private answerNumericQuestionNode(
+    node: DecimalRangeNode | IntRangeNode,
+    answerValue: unknown
+  ): ValueNodeAnswer {
+    if (answerValue === null) {
+      node.setValue(answerValue);
 
-			return new RangeNodeAnswer(node);
-		}
+      return new RangeNodeAnswer(node);
+    }
 
-		switch (typeof answerValue) {
-			case 'bigint':
-			case 'number':
-			case 'string':
-				node.setValue(answerValue);
+    switch (typeof answerValue) {
+      case 'bigint':
+      case 'number':
+      case 'string':
+        node.setValue(answerValue);
 
-				return new RangeNodeAnswer(node);
+        return new RangeNodeAnswer(node);
 
-			default:
-				return this.answerDefault(node, answerValue);
-		}
-	}
+      default:
+        return this.answerDefault(node, answerValue);
+    }
+  }
 
-	answerQuestion(answerValue: unknown): ValueNodeAnswer {
-		const { node } = this;
+  answerQuestion(answerValue: unknown): ValueNodeAnswer {
+    const { node } = this;
 
-		switch (node.valueType) {
-			case 'int':
-			case 'decimal':
-				return this.answerNumericQuestionNode(node, answerValue);
+    switch (node.valueType) {
+      case 'int':
+      case 'decimal':
+        return this.answerNumericQuestionNode(node, answerValue);
 
-			default:
-				return this.answerDefault(node, answerValue);
-		}
-	}
+      default:
+        return this.answerDefault(node, answerValue);
+    }
+  }
 }

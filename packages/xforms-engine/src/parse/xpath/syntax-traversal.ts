@@ -1,37 +1,37 @@
 import type { Identity } from '@getodk/common/types/helpers.js';
 import type {
-	AnySyntaxNode,
-	SyntaxNode,
-	XPathNode,
+  AnySyntaxNode,
+  SyntaxNode,
+  XPathNode,
 } from '@getodk/xpath/static/grammar/SyntaxNode.js';
 import type { AnySyntaxType } from '@getodk/xpath/static/grammar/type-names.js';
 
 export type TypedSyntaxNode<Type extends AnySyntaxType> = Extract<
-	AnySyntaxNode,
-	{ readonly type: Type }
+  AnySyntaxNode,
+  { readonly type: Type }
 >;
 
 type CollectedNodes<Type extends AnySyntaxType> = Identity<ReadonlyArray<TypedSyntaxNode<Type>>>;
 
 const isTypedNodeMatch = <const Type extends AnySyntaxType>(
-	types: readonly [Type, ...Type[]],
-	syntaxNode: AnySyntaxNode
+  types: readonly [Type, ...Type[]],
+  syntaxNode: AnySyntaxNode
 ): syntaxNode is TypedSyntaxNode<Type> => {
-	return types.includes(syntaxNode.type as Type);
+  return types.includes(syntaxNode.type as Type);
 };
 
 interface CollectNodesOptions {
-	readonly recurseMatchedNodes?: boolean;
+  readonly recurseMatchedNodes?: boolean;
 }
 
 const collectTypedChildren = <const Type extends AnySyntaxType>(
-	types: readonly [Type, ...Type[]],
-	currentNode: AnySyntaxNode,
-	options: CollectNodesOptions = {}
+  types: readonly [Type, ...Type[]],
+  currentNode: AnySyntaxNode,
+  options: CollectNodesOptions = {}
 ): CollectedNodes<Type> => {
-	return currentNode.children.flatMap((child) => {
-		return collectTypedNodes(types, child, options);
-	});
+  return currentNode.children.flatMap((child) => {
+    return collectTypedNodes(types, child, options);
+  });
 };
 
 /**
@@ -48,19 +48,19 @@ const collectTypedChildren = <const Type extends AnySyntaxType>(
  * identifying all LocationPaths referenced by a broader expression.
  */
 export const collectTypedNodes = <const Type extends AnySyntaxType>(
-	types: readonly [Type, ...Type[]],
-	currentNode: AnySyntaxNode,
-	options: CollectNodesOptions = {}
+  types: readonly [Type, ...Type[]],
+  currentNode: AnySyntaxNode,
+  options: CollectNodesOptions = {}
 ): CollectedNodes<Type> => {
-	if (isTypedNodeMatch(types, currentNode)) {
-		if (options.recurseMatchedNodes) {
-			return [currentNode, ...collectTypedChildren(types, currentNode, options)];
-		}
+  if (isTypedNodeMatch(types, currentNode)) {
+    if (options.recurseMatchedNodes) {
+      return [currentNode, ...collectTypedChildren(types, currentNode, options)];
+    }
 
-		return [currentNode];
-	}
+    return [currentNode];
+  }
 
-	return collectTypedChildren(types, currentNode, options);
+  return collectTypedChildren(types, currentNode, options);
 };
 
 /**
@@ -91,10 +91,10 @@ export const collectTypedNodes = <const Type extends AnySyntaxType>(
  * ```
  */
 export const isCompleteSubExpression = (
-	subExpressionNode: AnySyntaxNode,
-	descendantNode: AnySyntaxNode
+  subExpressionNode: AnySyntaxNode,
+  descendantNode: AnySyntaxNode
 ): boolean => {
-	return descendantNode.text.trim() === subExpressionNode.text.trim();
+  return descendantNode.text.trim() === subExpressionNode.text.trim();
 };
 
 /**
@@ -112,18 +112,18 @@ export const isCompleteSubExpression = (
  * in `foo[position() = 2]`).
  */
 export const findTypedPrincipalExpressionNode = <const Type extends AnySyntaxType>(
-	types: readonly [Type, ...Type[]],
-	xpathNode: XPathNode
+  types: readonly [Type, ...Type[]],
+  xpathNode: XPathNode
 ): TypedSyntaxNode<Type> | null => {
-	const [first, ...rest] = collectTypedNodes(types, xpathNode);
+  const [first, ...rest] = collectTypedNodes(types, xpathNode);
 
-	if (first == null || rest.length > 0) {
-		return null;
-	}
+  if (first == null || rest.length > 0) {
+    return null;
+  }
 
-	if (isCompleteSubExpression(xpathNode, first)) {
-		return first;
-	}
+  if (isCompleteSubExpression(xpathNode, first)) {
+    return first;
+  }
 
-	return null;
+  return null;
 };

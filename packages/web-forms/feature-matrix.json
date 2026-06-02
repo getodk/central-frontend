@@ -48,9 +48,9 @@
     "[rating](https://github.com/getodk/web-forms/issues/711)": "✅",
     "new": "",
     "new-front": "",
-    "draw": "",
-    "[annotate](https://github.com/getodk/web-forms/issues/15)": "",
-    "signature": "",
+    "[draw](https://github.com/getodk/web-forms/issues/698)": "✅",
+    "[annotate](https://github.com/getodk/web-forms/issues/15)": "✅",
+    "[signature](https://github.com/getodk/web-forms/issues/699)": "✅",
     "[no-calendar](https://github.com/getodk/web-forms/issues/781)": "",
     "[month-year](https://github.com/getodk/web-forms/issues/782)": "✅",
     "[year](https://github.com/getodk/web-forms/issues/782)": "✅",
@@ -223,6 +223,6 @@
     "save as draft": "",
     "offline entities": "",
     "MBtiles / offline map layers": "",
-    "[submission encryption](https://github.com/getodk/web-forms/issues/448)": ""
+    "[submission encryption](https://github.com/getodk/web-forms/issues/448)": "✅"
   }
 }

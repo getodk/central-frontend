@@ -19,8 +19,8 @@ import { findLocationPathSubExpressionNodes } from './semantic-analysis.ts';
  *   defined.)
  */
 export interface PredicateReference {
-	readonly predicatePathNode: PathExpressionNode;
-	readonly stepContextNodes: PathNodeList;
+  readonly predicatePathNode: PathExpressionNode;
+  readonly stepContextNodes: PathNodeList;
 }
 
 /**
@@ -30,32 +30,32 @@ export interface PredicateReference {
  * @see {@link PredicateReference} for details on the produced structures.
  */
 export const findPredicateReferences = (pathNodes: PathNodeList): readonly PredicateReference[] => {
-	const [head, ...tail] = pathNodes;
+  const [head, ...tail] = pathNodes;
 
-	return pathNodes.flatMap((targetNode, i) => {
-		const cumulativePath: PathNodeList = [head, ...tail.slice(0, i)];
+  return pathNodes.flatMap((targetNode, i) => {
+    const cumulativePath: PathNodeList = [head, ...tail.slice(0, i)];
 
-		switch (targetNode.type) {
-			case 'absolute_root_location_path':
-			case '//':
-				return [];
-		}
+    switch (targetNode.type) {
+      case 'absolute_root_location_path':
+      case '//':
+        return [];
+    }
 
-		const [, ...predicates] = targetNode.children;
+    const [, ...predicates] = targetNode.children;
 
-		if (predicates.length === 0) {
-			return [];
-		}
+    if (predicates.length === 0) {
+      return [];
+    }
 
-		return predicates.flatMap((predicate) => {
-			const predicateSubExpressions = findLocationPathSubExpressionNodes(predicate);
+    return predicates.flatMap((predicate) => {
+      const predicateSubExpressions = findLocationPathSubExpressionNodes(predicate);
 
-			return predicateSubExpressions.map((predicatePathNode) => {
-				return {
-					predicatePathNode,
-					stepContextNodes: cumulativePath,
-				};
-			});
-		});
-	});
+      return predicateSubExpressions.map((predicatePathNode) => {
+        return {
+          predicatePathNode,
+          stepContextNodes: cumulativePath,
+        };
+      });
+    });
+  });
 };

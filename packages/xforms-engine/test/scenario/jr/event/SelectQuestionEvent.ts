@@ -8,62 +8,62 @@ import { SelectChoice } from '../select/SelectChoice.ts';
 import { QuestionEvent } from './QuestionEvent.ts';
 
 export class SelectQuestionEvent extends QuestionEvent<'select'> {
-	getAnswer(): SelectNodeAnswer {
-		return new SelectNodeAnswer(this.node);
-	}
+  getAnswer(): SelectNodeAnswer {
+    return new SelectNodeAnswer(this.node);
+  }
 
-	getChoice(choiceIndex: number): SelectChoice {
-		const items = this.node.currentState.valueOptions;
-		const item = items[choiceIndex];
+  getChoice(choiceIndex: number): SelectChoice {
+    const items = this.node.currentState.valueOptions;
+    const item = items[choiceIndex];
 
-		if (item == null) {
-			throw new Error(`No choice at index ${choiceIndex}`);
-		}
+    if (item == null) {
+      throw new Error(`No choice at index ${choiceIndex}`);
+    }
 
-		return new SelectChoice(item);
-	}
+    return new SelectChoice(item);
+  }
 
-	/**
-	 * @todo This is yet another case where it would make more sense to split up
-	 * the {@link SelectNode} by control type.
-	 */
-	answerQuestion(answerValue: unknown): ValueNodeAnswer {
-		const { node } = this;
+  /**
+   * @todo This is yet another case where it would make more sense to split up
+   * the {@link SelectNode} by control type.
+   */
+  answerQuestion(answerValue: unknown): ValueNodeAnswer {
+    const { node } = this;
 
-		if (answerValue == null) {
-			node.selectValue(null);
+    if (answerValue == null) {
+      node.selectValue(null);
 
-			return new SelectNodeAnswer(node);
-		}
+      return new SelectNodeAnswer(node);
+    }
 
-		const { stringValue } = new UntypedAnswer(answerValue);
-		const { selectType } = this.node;
+    const { stringValue } = new UntypedAnswer(answerValue);
+    const { selectType } = this.node;
 
-		let stringValues: readonly string[];
+    let stringValues: readonly string[];
 
-		switch (selectType) {
-			case 'select':
-				stringValues = xmlXPathWhitespaceSeparatedList(stringValue, {
-					ignoreEmpty: true,
-				});
+    switch (selectType) {
+      case 'select':
+        stringValues = xmlXPathWhitespaceSeparatedList(stringValue, {
+          ignoreEmpty: true,
+        });
 
-				break;
+        break;
 
-			case 'select1':
-				if (stringValue === '') {
-					stringValues = [];
-				} else {
-					stringValues = [stringValue];
-				}
+      case 'select1':
+        if (stringValue === '') {
+          stringValues = [];
+        } else {
+          stringValues = [stringValue];
+        }
 
-				break;
+        break;
 
-			default:
-				throw new UnreachableError(selectType);
-		}
+      default:
+        throw new UnreachableError(selectType);
+    }
 
-		this.node.selectValues(stringValues);
+    this.node.selectValues(stringValues);
 
-		return new SelectNodeAnswer(node);
-	}
+    return new SelectNodeAnswer(node);
+  }
 }

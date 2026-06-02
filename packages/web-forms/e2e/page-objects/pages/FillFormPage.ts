@@ -8,39 +8,39 @@ import { SelectControl } from '../controls/SelectControl.js';
 import { TextControl } from '../controls/TextControl.js';
 
 export class FillFormPage {
-	private readonly page: Page;
+  private readonly page: Page;
 
-	public readonly geopoint: GeopointControl;
-	public readonly input: InputControl;
-	public readonly map: MapControl;
-	public readonly repeat: RepeatControl;
-	public readonly text: TextControl;
-	public readonly select: SelectControl;
-	public readonly note: NoteControl;
+  public readonly geopoint: GeopointControl;
+  public readonly input: InputControl;
+  public readonly map: MapControl;
+  public readonly repeat: RepeatControl;
+  public readonly text: TextControl;
+  public readonly select: SelectControl;
+  public readonly note: NoteControl;
 
-	constructor(page: Page) {
-		this.page = page;
+  constructor(page: Page) {
+    this.page = page;
 
-		this.geopoint = new GeopointControl(page);
-		this.input = new InputControl(page);
-		this.map = new MapControl(page);
-		this.repeat = new RepeatControl(page);
-		this.text = new TextControl(page);
-		this.select = new SelectControl(page);
-		this.note = new NoteControl(page);
-	}
+    this.geopoint = new GeopointControl(page);
+    this.input = new InputControl(page);
+    this.map = new MapControl(page);
+    this.repeat = new RepeatControl(page);
+    this.text = new TextControl(page);
+    this.select = new SelectControl(page);
+    this.note = new NoteControl(page);
+  }
 
-	async copyToClipboard(valueToCopy: string) {
-		await this.page.evaluate((value) => {
-			return navigator.clipboard.writeText(value);
-		}, valueToCopy);
-	}
+  async copyToClipboard(valueToCopy: string) {
+    await this.page.evaluate((value) => {
+      return navigator.clipboard.writeText(value);
+    }, valueToCopy);
+  }
 
-	async waitForNetworkIdle() {
-		return this.page.waitForLoadState('networkidle');
-	}
+  async waitForNetworkIdle() {
+    return this.page.waitForLoadState('networkidle');
+  }
 
-	async reload() {
-		await this.page.reload();
-	}
+  async reload() {
+    await this.page.reload();
+  }
 }

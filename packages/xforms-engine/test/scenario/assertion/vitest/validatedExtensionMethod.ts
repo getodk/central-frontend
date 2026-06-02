@@ -1,8 +1,8 @@
 import type { AssertIs } from '../AssertIs.ts';
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import {
-	assertVoidExpectedArgument,
-	type AssertVoidExpectedArgument,
+  assertVoidExpectedArgument,
+  type AssertVoidExpectedArgument,
 } from './assertVoidExpectedArgument.ts';
 import type { ExpectExtensionMethod } from './shared-extension-types.ts';
 
@@ -12,15 +12,15 @@ type ValidateExpectedArgument<Expected> =
 	| AssertVoidExpectedArgument
 
 const isAssertVoidValidation = <Expected>(
-	validateExpectedArgument: ValidateExpectedArgument<Expected>
+  validateExpectedArgument: ValidateExpectedArgument<Expected>
 ): validateExpectedArgument is AssertVoidExpectedArgument => {
-	return validateExpectedArgument === assertVoidExpectedArgument;
+  return validateExpectedArgument === assertVoidExpectedArgument;
 };
 
 const isArbitraryTypeAssertion = <Expected>(
-	validateExpectedArgument: ValidateExpectedArgument<Expected>
+  validateExpectedArgument: ValidateExpectedArgument<Expected>
 ): validateExpectedArgument is AssertIs<Expected> => {
-	return validateExpectedArgument !== assertVoidExpectedArgument;
+  return validateExpectedArgument !== assertVoidExpectedArgument;
 };
 
 /**
@@ -28,34 +28,34 @@ const isArbitraryTypeAssertion = <Expected>(
  * helping to ensure those values match the extension's static parameter types.
  */
 export const validatedExtensionMethod = <Actual, Expected, Result>(
-	validateActualArgument: AssertIs<Actual>,
-	validateExpectedArgument: ValidateExpectedArgument<Expected>,
-	typedExtensionMethod: ExpectExtensionMethod<Actual, Expected, Result>
+  validateActualArgument: AssertIs<Actual>,
+  validateExpectedArgument: ValidateExpectedArgument<Expected>,
+  typedExtensionMethod: ExpectExtensionMethod<Actual, Expected, Result>
 ): ExpectExtensionMethod<unknown, unknown, Result> => {
-	return (actual, ...rest) => {
-		validateActualArgument(actual);
+  return (actual, ...rest) => {
+    validateActualArgument(actual);
 
-		let expected: Expected;
+    let expected: Expected;
 
-		if (isArbitraryTypeAssertion(validateExpectedArgument)) {
-			const arbitraryTypeAssertion: AssertIs<Expected> = validateExpectedArgument;
-			const [expectedArg] = rest;
+    if (isArbitraryTypeAssertion(validateExpectedArgument)) {
+      const arbitraryTypeAssertion: AssertIs<Expected> = validateExpectedArgument;
+      const [expectedArg] = rest;
 
-			arbitraryTypeAssertion(expectedArg);
+      arbitraryTypeAssertion(expectedArg);
 
-			expected = expectedArg;
-		} else if (isAssertVoidValidation(validateExpectedArgument)) {
-			const assertVoid: AssertVoidExpectedArgument = validateExpectedArgument;
+      expected = expectedArg;
+    } else if (isAssertVoidValidation(validateExpectedArgument)) {
+      const assertVoid: AssertVoidExpectedArgument = validateExpectedArgument;
 
-			assertVoid(rest);
+      assertVoid(rest);
 
-			// @ts-expect-error - this seems like it should be narrowable so it
-			// doesn't need a cast, but I'm throwing in the towel for now.
-			expected = rest[0];
-		} else {
-			throw new UnreachableError(validateExpectedArgument);
-		}
+      // @ts-expect-error - this seems like it should be narrowable so it
+      // doesn't need a cast, but I'm throwing in the towel for now.
+      expected = rest[0];
+    } else {
+      throw new UnreachableError(validateExpectedArgument);
+    }
 
-		return typedExtensionMethod(actual, expected);
-	};
+    return typedExtensionMethod(actual, expected);
+  };
 };

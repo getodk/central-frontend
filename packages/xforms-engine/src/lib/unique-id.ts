@@ -28,7 +28,7 @@ export type CreateUniqueId = () => string;
  * interfaces expect stronger uniqueness guarantees.
  */
 export const createUniqueId: CreateUniqueId = (() => {
-	const { crypto } = globalThis;
+  const { crypto } = globalThis;
 
-	return crypto?.randomUUID?.bind(crypto) ?? baseCreateUniqueId;
+  return crypto?.randomUUID?.bind(crypto) ?? baseCreateUniqueId;
 })();

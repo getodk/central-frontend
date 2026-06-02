@@ -1,10 +1,10 @@
 import type {
-	AnyLeafNode,
-	InputNode,
-	ModelValueNode,
-	RangeNode,
-	RankNode,
-	SelectNode,
+  AnyLeafNode,
+  InputNode,
+  ModelValueNode,
+  RangeNode,
+  RankNode,
+  SelectNode,
 } from '@getodk/xforms-engine';
 import { ComparableAnswer } from './ComparableAnswer.ts';
 
@@ -18,7 +18,7 @@ export type ValueNode =
 	| SelectNode;
 
 export abstract class ValueNodeAnswer<Node extends ValueNode = ValueNode> extends ComparableAnswer {
-	constructor(readonly node: Node) {
-		super();
-	}
+  constructor(readonly node: Node) {
+    super();
+  }
 }

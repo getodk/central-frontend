@@ -27,13 +27,13 @@ import { SharedJRResourceService } from '../../resources/SharedJRResourceService
  * become dependent on ordering of test runs.
  */
 export const setUpSimpleReferenceManager = (path: JavaNIOPath, ...schemes: string[]): void => {
-	const service = SharedJRResourceService.init();
+  const service = SharedJRResourceService.init();
 
-	service.activateFixtures(path.toAbsolutePath().toString(), schemes, {
-		get suppressMissingFixturesDirectoryWarning(): boolean {
-			const stack = new Error().stack;
+  service.activateFixtures(path.toAbsolutePath().toString(), schemes, {
+    get suppressMissingFixturesDirectoryWarning(): boolean {
+      const stack = new Error().stack;
 
-			return stack?.includes('configureReferenceManagerIncorrectly') ?? false;
-		},
-	});
+      return stack?.includes('configureReferenceManagerIncorrectly') ?? false;
+    },
+  });
 };

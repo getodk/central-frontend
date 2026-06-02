@@ -1,13 +1,13 @@
 interface AmbiguousRuntimeEnvironmentGlobalThis {
-	readonly process?: unknown;
+  readonly process?: unknown;
 }
 
 const ambiguousGlobalThis = globalThis as unknown as AmbiguousRuntimeEnvironmentGlobalThis;
 
 interface MaybeNodeJSProcess {
-	readonly versions?: {
-		readonly node?: string;
-	};
+  readonly versions?: {
+    readonly node?: string;
+  };
 }
 
 /**

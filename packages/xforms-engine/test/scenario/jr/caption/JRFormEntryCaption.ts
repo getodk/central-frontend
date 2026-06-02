@@ -22,11 +22,11 @@ type AnyNodeCurrentState = AnyNode['currentState'];
  * {@link Scenario}.
  */
 export class JRFormEntryCaption {
-	constructor(_form: JRFormDef, _index: JRFormIndex) {
-		throw new UnclearApplicabilityError("JavaRosa's `FormEntryCaption` API");
-	}
+  constructor(_form: JRFormDef, _index: JRFormIndex) {
+    throw new UnclearApplicabilityError("JavaRosa's `FormEntryCaption` API");
+  }
 
-	getQuestionText(): string {
-		throw new UnclearApplicabilityError("JavaRosa's `FormEntryCaption` API");
-	}
+  getQuestionText(): string {
+    throw new UnclearApplicabilityError("JavaRosa's `FormEntryCaption` API");
+  }
 }

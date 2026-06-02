@@ -7,19 +7,19 @@ import { TextElementDefinition } from './abstract/TextElementDefinition.ts';
 interface HintElement extends LocalNamedElement<'hint'> {}
 
 export class HintDefinition extends TextElementDefinition<'hint'> {
-	static forElement(form: XFormDefinition, owner: AnyControlDefinition): HintDefinition | null {
-		const hintElement = getHintElement(owner.element);
+  static forElement(form: XFormDefinition, owner: AnyControlDefinition): HintDefinition | null {
+    const hintElement = getHintElement(owner.element);
 
-		if (hintElement == null) {
-			return null;
-		}
+    if (hintElement == null) {
+      return null;
+    }
 
-		return new this(form, owner, hintElement);
-	}
+    return new this(form, owner, hintElement);
+  }
 
-	readonly role = 'hint';
+  readonly role = 'hint';
 
-	private constructor(form: XFormDefinition, owner: AnyControlDefinition, element: HintElement) {
-		super(form, owner, element);
-	}
+  private constructor(form: XFormDefinition, owner: AnyControlDefinition, element: HintElement) {
+    super(form, owner, element);
+  }
 }

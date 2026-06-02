@@ -19,19 +19,19 @@ import { validatedExtensionMethod } from './validatedExtensionMethod.ts';
  *   `expect` type
  */
 export class AsymmetricTypedExpectExtension<Actual = unknown, Expected = Actual> {
-	readonly extensionMethod: ExpectExtensionMethod<unknown, unknown, SyncExpectationResult>;
+  readonly extensionMethod: ExpectExtensionMethod<unknown, unknown, SyncExpectationResult>;
 
-	constructor(
-		readonly validateActualArgument: AssertIs<Actual>,
-		readonly validateExpectedArgument: AssertIs<Expected>,
-		extensionMethod: ExpectExtensionMethod<Actual, Expected>
-	) {
-		const validatedMethod = validatedExtensionMethod(
-			validateActualArgument,
-			validateExpectedArgument,
-			extensionMethod
-		);
+  constructor(
+    readonly validateActualArgument: AssertIs<Actual>,
+    readonly validateExpectedArgument: AssertIs<Expected>,
+    extensionMethod: ExpectExtensionMethod<Actual, Expected>
+  ) {
+    const validatedMethod = validatedExtensionMethod(
+      validateActualArgument,
+      validateExpectedArgument,
+      extensionMethod
+    );
 
-		this.extensionMethod = expandSimpleExpectExtensionResult(validatedMethod);
-	}
+    this.extensionMethod = expandSimpleExpectExtensionResult(validatedMethod);
+  }
 }
