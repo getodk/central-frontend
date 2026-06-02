@@ -96,6 +96,28 @@ describe('FormUpload', () => {
       await dragAndDrop(component.getComponent(FileDropZone), [xlsForm()]);
       component.get('#form-upload-filename').text().should.equal('my_form.xlsx');
     });
+
+    it('does not render actions initially', () => {
+      const component = mount(FormUpload, mountOptions());
+      component.find('.actions').exists().should.be.false;
+    });
+
+    it('renders actions after a file is selected', async () => {
+      const component = mount(FormUpload, mountOptions());
+      component.find('.actions').exists().should.be.false;
+      await setFiles(component.get('input'), [xlsForm()]);
+      component.find('.actions').exists().should.be.true;
+    });
+
+    it('clears the file when cancel button is clicked', async () => {
+      const component = mount(FormUpload, mountOptions());
+      await setFiles(component.get('input'), [xlsForm()]);
+      component.find('.actions').exists().should.be.true;
+      component.get('#form-upload-filename').text().should.equal('my_form.xlsx');
+      await component.get('.actions .btn-link').trigger('click');
+      component.find('.actions').exists().should.be.false;
+      component.get('#form-upload-filename').text().should.equal('');
+    });
   });
 
   describe('request', () => {
@@ -185,7 +207,6 @@ describe('FormUpload', () => {
   it('implements some standard button things for the upload button', () => {
     mockLogin();
     testData.extendedProjects.createPast(1);
-    // await setFiles(component.get('input'), [xlsForm()]);
     return mockHttp()
       .mount(FormUpload, mountOptions())
       .request(component => setFiles(component.get('input'), [xlsForm()]))

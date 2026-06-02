@@ -130,7 +130,7 @@ export default {
   name: 'FormUpload',
   components: { DocLink, FileDropZone, SentenceSeparator, Spinner },
   inject: ['redAlert'],
-  emits: ['cancel', 'success'],
+  emits: ['success'],
   setup() {
     const { request, awaitingResponse } = useRequest();
     return { request, awaitingResponse };
@@ -178,10 +178,6 @@ export default {
       this.$refs.input.value = '';
     },
     upload(ignoreWarnings) {
-      if (this.file == null) {
-        this.redAlert.show(this.$t('alert.fileRequired'));
-        return;
-      }
       // Try to read the file, error means file is modified or deleted or moved
       const reader = new FileReader();
       reader.onload = () => this.postFile(ignoreWarnings);
@@ -321,7 +317,6 @@ export default {
       "uploadAnyway": "Upload anyway"
     },
     "alert": {
-      "fileRequired": "Please choose a file.",
       "fileNotReadable": "The file could not be read. It may have been modified or deleted. Please choose the file again."
     },
     "problem": {
