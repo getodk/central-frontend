@@ -154,11 +154,11 @@ export class NamespaceResolver<T extends XPathNode> implements XPathNSResolverOb
 
 	protected readonly contextResolver: XPathNSResolverFunction;
 
-  /**
-   * The cache key for prefix lookups in {@link namespaceURIs} is the context node, or a caller-provided resolver.
-   * It must not be the {@link contextResolver} closure, which is recreated per evaluation. That would miss the cache
-   * every time and leak one entry per evaluation.
-   */
+	/**
+	 * The cache key for prefix lookups in {@link namespaceURIs} is the context node, or a caller-provided resolver.
+	 * It must not be the {@link contextResolver} closure, which is recreated per evaluation. That would miss the cache
+	 * every time and leak one entry per evaluation.
+	 */
 
 	protected readonly resolutionKey: object;
 
