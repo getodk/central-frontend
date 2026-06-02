@@ -131,7 +131,7 @@ class PluralForms {
       categories.sort();
       const expectedCategories = locales[locale].pluralCategories;
       if (!equalsInAnyOrder(categories, expectedCategories))
-        logThenThrow(string, `.${key} in locale "${locale}" expected the plural categories [${expectedCategories.join(', ')}], but found [${categories.join(', ')}]. Did you download the translations "to translate"?`);
+        logThenThrow(string, `Expected the plural categories [${expectedCategories.join(', ')}], but found [${categories.join(', ')}]. Did you download the translations "to translate"?`);
     }
 
     for (let i = 0; i < forms.length; i += 1)
