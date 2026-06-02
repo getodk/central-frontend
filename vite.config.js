@@ -87,9 +87,9 @@ export default defineConfig(({ mode }) => ({
     // `false` during dev for performance reasons
     reportCompressedSize: mode === 'production',
     cssCodeSplit: false,
-    rolldownOptions: {
+    rollupOptions: {
       input: {
-        main: resolve(import.meta.dirname, 'index.html'), // TODO I think move this html up in to /apps/central - it's no longer needed for forms
+        main: resolve(import.meta.dirname, 'index.html'), // move this to /apps/central?
         forms: resolve(import.meta.dirname, 'apps/forms/index.html'),
       },
     },
