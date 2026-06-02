@@ -15,9 +15,9 @@ except according to the terms contained in the LICENSE file.
     <loading :state="formDraft.initiallyLoading"/>
     <template v-if="formDraft.dataExists">
       <form-edit-published-version v-if="form.dataExists && form.publishedAt != null"/>
-      <form-edit-create-draft v-if="formDraft.isEmpty()" @success="fetchDraft(true)"/>
 
-      <template v-if="formDraft.isDefined()">
+      <form-edit-create-draft v-if="formDraft.isEmpty()" @success="fetchDraft(true)"/>
+      <template v-else>
         <form-edit-def @after-upload="afterUpload"/>
         <form-edit-attachments/>
         <form-edit-entities/>
