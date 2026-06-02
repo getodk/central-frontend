@@ -1,9 +1,11 @@
 const fs = require('fs');
-const { equals, hasPath, last, path: getPath, startsWith } = require('ramda');
+const { ascend, equals, eqBy, hasPath, identity, last, path: getPath, sort, startsWith } = require('ramda');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { parse } = require('comment-json');
 
 const { deletePath, logThenThrow, setPath, sortProps } = require('./util');
+
+const equalsInAnyOrder = eqBy(sort(ascend(identity)));
 
 
 
@@ -128,8 +130,8 @@ class PluralForms {
 
       categories.sort();
       const expectedCategories = locales[locale].pluralCategories;
-      if (!equals(categories, expectedCategories))
-        logThenThrow(string, `Expected the plural categories [${expectedCategories.join(', ')}], but found [${categories.join(', ')}]. Did you download the translations "to translate"?`);
+      if (!equalsInAnyOrder(categories, expectedCategories))
+        logThenThrow(string, `.${key} in locale "${locale}" expected the plural categories [${expectedCategories.join(', ')}], but found [${categories.join(', ')}]. Did you download the translations "to translate"?`);
     }
 
     for (let i = 0; i < forms.length; i += 1)
