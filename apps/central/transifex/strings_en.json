@@ -3533,6 +3533,32 @@
         }
       }
     },
+    "FormEditWebForm": {
+      "title": {
+        "string": "New default web form experience"
+      },
+      "description": {
+        "full": {
+          "string": "Newly created forms now use the new ODK web forms experience by default for previews, web submissions and submission editing. Some advanced form features may not yet be fully supported, {learnMore}.",
+          "developer_comment": "{learnMore} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nlearn more"
+        },
+        "learnMore": {
+          "string": "learn more",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {learnMore} is in the following text:\n\nNewly created forms now use the new ODK web forms experience by default for previews, web submissions and submission editing. Some advanced form features may not yet be fully supported, {learnMore}."
+        }
+      },
+      "option": {
+        "webForms": {
+          "string": "New ODK Web Forms (recommended)"
+        },
+        "enketo": {
+          "string": "Enketo compatibility mode"
+        }
+      },
+      "updateInProgress": {
+        "string": "Update request in progress"
+      }
+    },
     "FormHead": {
       "projectNav": {
         "action": {
