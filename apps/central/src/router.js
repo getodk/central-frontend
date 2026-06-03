@@ -85,7 +85,13 @@ router.afterEach(unlessFailure(to => {
   // gives percentage encoded value - central#919.
   // Note: to.path is '/#/some/path' when the route has query parameter after '#'
   // e.g. /#/some/path?next=/ - central#939
-  router.beforeEach(to => (to.fullPath.startsWith('/#/') ? to.fullPath.substring(2) : true));
+  router.beforeEach(to => {
+    if (to.fullPath.startsWith('/#/')) {
+      container.location.replace(to.fullPath.substring(2));
+      return false;
+    }
+    return true;
+  });
 
 
   //////////////////////////////////////////////////////////////////////////////
