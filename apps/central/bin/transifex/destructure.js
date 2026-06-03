@@ -33,7 +33,7 @@ try {
     );
   }
   console.log('done');
-} catch(err) {
+} catch (err) {
   console.log(err);
   console.log();
   console.log('!!!');
