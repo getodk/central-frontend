@@ -3,14 +3,14 @@ import type { XFormsTestContext } from '../helpers.ts';
 import { createXFormsTestContext } from '../helpers.ts';
 
 describe('#position()', () => {
-	let testContext: XFormsTestContext;
+  let testContext: XFormsTestContext;
 
-	beforeEach(() => {
-		testContext = createXFormsTestContext();
-	});
+  beforeEach(() => {
+    testContext = createXFormsTestContext();
+  });
 
-	it('position(node) with an argument', () => {
-		testContext = createXFormsTestContext(`
+  it('position(node) with an argument', () => {
+    testContext = createXFormsTestContext(`
       <!DOCTYPE html>
       <html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://some-namespace.com/nss">
         <head>
@@ -40,18 +40,18 @@ describe('#position()', () => {
         </body>
       </html>`);
 
-		const contextNode = testContext.document.getElementById('FunctionNumberCaseNumberMultiple');
+    const contextNode = testContext.document.getElementById('FunctionNumberCaseNumberMultiple');
 
-		testContext.assertNumberValue('position(..)', 6, {
-			contextNode,
-		});
-		testContext.assertNumberValue('position(.)', 3, {
-			contextNode,
-		});
-	});
+    testContext.assertNumberValue('position(..)', 6, {
+      contextNode,
+    });
+    testContext.assertNumberValue('position(.)', 3, {
+      contextNode,
+    });
+  });
 
-	it('position(node) with p node', () => {
-		testContext = createXFormsTestContext(`
+  it('position(node) with p node', () => {
+    testContext = createXFormsTestContext(`
       <div id="testFunctionNodeset">
         <div id="testFunctionNodeset2">
           <p>1</p>
@@ -75,24 +75,25 @@ describe('#position()', () => {
         </div>
       </div>`);
 
-		const contextNode = testContext.document.getElementById('testFunctionNodeset3NodeP');
+    const contextNode = testContext.document.getElementById('testFunctionNodeset3NodeP');
 
-		testContext.assertNumberValue('position(../..)', 2, {
-			contextNode,
-		});
-	});
-	it('position(node) returns correct position among many same-name siblings', () => {
-		const repeatCount = 400;
-		const items = Array.from({ length: repeatCount }, (_, i) => `<item/>`).join('\n');
-		testContext = createXFormsTestContext(`<root>${items}</root>`);
+    testContext.assertNumberValue('position(../..)', 2, {
+      contextNode,
+    });
+  });
 
-		const items$ = testContext.document.querySelectorAll('item');
+  it('position(node) returns correct position among many same-name siblings', () => {
+    const repeatCount = 400;
+    const items = Array.from({ length: repeatCount }, () => `<item/>`).join('\n');
+    testContext = createXFormsTestContext(`<root>${items}</root>`);
 
-		// First, middle, and last item positions
-		testContext.assertNumberValue('position(.)', 1, { contextNode: items$[0] });
-		testContext.assertNumberValue('position(.)', 200, { contextNode: items$[199] });
-		testContext.assertNumberValue('position(.)', 400, { contextNode: items$[399] });
-	});
+    const items$ = testContext.document.querySelectorAll('item');
 
-	//   throw new Error('nodeset provided to position() contained multiple nodes');
+    // First, middle, and last item positions
+    testContext.assertNumberValue('position(.)', 1, { contextNode: items$[0] });
+    testContext.assertNumberValue('position(.)', 200, { contextNode: items$[199] });
+    testContext.assertNumberValue('position(.)', 400, { contextNode: items$[399] });
+  });
+
+  //   throw new Error('nodeset provided to position() contained multiple nodes');
 });
