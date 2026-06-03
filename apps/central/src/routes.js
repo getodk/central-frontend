@@ -482,8 +482,7 @@ const routes = [
               'submission.read'
             ])
           },
-          title: () => [i18n.t('formHead.tab.editForm'), form.nameOrId],
-          fullWidth: true
+          title: () => [i18n.t('formHead.tab.editForm'), form.nameOrId]
         }
       })
     ]
