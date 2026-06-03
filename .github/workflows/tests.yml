@@ -31,7 +31,6 @@ jobs:
       working-directory: central
       run: |
         yq e '.services.enketo.environment += ["NODE_TLS_REJECT_UNAUTHORIZED=0"]' -i docker-compose.yml
-        yq e '.services.enketo.extra_hosts += ["${DOMAIN}:host-gateway"]'         -i docker-compose.yml
         sed -i 's/Content-Security-Policy/Content-Security-Report-Only/g' files/nginx/odk.conf.template
         sed 's/your.domain.com/central-test.localhost/; s/^SSL_TYPE=letsencrypt/SSL_TYPE=selfsign/' .env.template > .env
     - name: Add domain
