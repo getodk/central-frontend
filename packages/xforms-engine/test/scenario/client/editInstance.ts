@@ -1,10 +1,10 @@
 import { getBlobText } from '@getodk/common/lib/web-compat/blob.ts';
 import { buildFileResponse } from '@getodk/common/lib/web-compat/response.ts';
 import type {
-	EditedFormInstance,
-	InstancePayload,
-	ResolvableFormInstanceInput,
-	RootNode,
+  EditedFormInstance,
+  InstancePayload,
+  ResolvableFormInstanceInput,
+  RootNode,
 } from '@getodk/xforms-engine';
 import { constants as ENGINE_CONSTANTS } from '@getodk/xforms-engine';
 import { assert, expect } from 'vitest';
@@ -25,12 +25,12 @@ import type { InitializableForm } from './init.ts';
  * value is deferred for now to avoid a confusing mismatch between names.
  */
 type SubmittableInstancePayload = Extract<
-	InstancePayload<'monolithic'>,
-	{ readonly status: 'ready' }
+  InstancePayload<'monolithic'>,
+  { readonly status: 'ready' }
 >;
 
 type AssertSubmittable = (
-	payload: InstancePayload<'monolithic'>
+  payload: InstancePayload<'monolithic'>
 ) => asserts payload is SubmittableInstancePayload;
 
 /**
@@ -39,29 +39,29 @@ type AssertSubmittable = (
  * `toBeReadyForSubmission`, with much clearer intent and semantics.
  */
 const assertSubmittable: AssertSubmittable = (payload) => {
-	expect(payload).toBeReadyForSubmission();
+  expect(payload).toBeReadyForSubmission();
 };
 
 const mockSubmissionIO = async (
-	payload: SubmittableInstancePayload
+  payload: SubmittableInstancePayload
 ): Promise<ResolvableFormInstanceInput> => {
-	const instanceFile = payload.data[0].get(ENGINE_CONSTANTS.INSTANCE_FILE_NAME);
-	const resolveInstance = () => getBlobText(instanceFile);
-	const attachmentFiles = Array.from(payload.data)
-		.flatMap((data) => Array.from(data.values()))
-		.filter((value): value is File => value !== instanceFile && value instanceof File);
+  const instanceFile = payload.data[0].get(ENGINE_CONSTANTS.INSTANCE_FILE_NAME);
+  const resolveInstance = () => getBlobText(instanceFile);
+  const attachmentFiles = Array.from(payload.data)
+    .flatMap((data) => Array.from(data.values()))
+    .filter((value): value is File => value !== instanceFile && value instanceof File);
 
-	const attachments = new Map();
-	for (const file of attachmentFiles) {
-		const response = await buildFileResponse(file);
-		attachments.set(file.name, () => Promise.resolve(response));
-	}
+  const attachments = new Map();
+  for (const file of attachmentFiles) {
+    const response = await buildFileResponse(file);
+    attachments.set(file.name, () => Promise.resolve(response));
+  }
 
-	return {
-		inputType: 'FORM_INSTANCE_INPUT_RESOLVABLE',
-		resolveInstance,
-		attachments,
-	};
+  return {
+    inputType: 'FORM_INSTANCE_INPUT_RESOLVABLE',
+    resolveInstance,
+    attachments,
+  };
 };
 
 /**
@@ -77,12 +77,12 @@ const mockSubmissionIO = async (
  * 4. Create an {@link EditedFormInstance} from that I/O-mocked input
  */
 export const editInstance = async (
-	form: InitializableForm,
-	instanceRoot: RootNode
+  form: InitializableForm,
+  instanceRoot: RootNode
 ): Promise<EditedFormInstance> => {
-	const payload = await instanceRoot.prepareInstancePayload();
+  const payload = await instanceRoot.prepareInstancePayload();
 
-	assertSubmittable(payload);
+  assertSubmittable(payload);
 
-	return form.editInstance(await mockSubmissionIO(payload));
+  return form.editInstance(await mockSubmissionIO(payload));
 };

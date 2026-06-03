@@ -2,8 +2,8 @@ import { inspect } from './inspect.ts';
 import type { Inspectable } from './shared-extension-types.ts';
 
 interface InspectableComparisonErrorOptions {
-	readonly comparisonQualifier?: string;
-	readonly details?: string;
+  readonly comparisonQualifier?: string;
+  readonly details?: string;
 }
 
 /**
@@ -16,24 +16,24 @@ interface InspectableComparisonErrorOptions {
  * > $comparisonQualifier? ...$details?
  */
 export class InspectableComparisonError extends Error {
-	constructor(
-		actual: Inspectable,
-		expected: Inspectable,
-		comparisonVerb: string,
-		options: InspectableComparisonErrorOptions = {}
-	) {
-		const { comparisonQualifier, details } = options;
+  constructor(
+    actual: Inspectable,
+    expected: Inspectable,
+    comparisonVerb: string,
+    options: InspectableComparisonErrorOptions = {}
+  ) {
+    const { comparisonQualifier, details } = options;
 
-		const messageParts = [
-			'Expected',
-			inspect(actual),
-			'to',
-			comparisonVerb,
-			inspect(expected),
-			comparisonQualifier,
-			details,
-		].filter((value): value is string => typeof value === 'string');
+    const messageParts = [
+      'Expected',
+      inspect(actual),
+      'to',
+      comparisonVerb,
+      inspect(expected),
+      comparisonQualifier,
+      details,
+    ].filter((value): value is string => typeof value === 'string');
 
-		super(messageParts.join(' '));
-	}
+    super(messageParts.join(' '));
+  }
 }

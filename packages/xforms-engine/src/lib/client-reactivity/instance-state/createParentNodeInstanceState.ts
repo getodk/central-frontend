@@ -4,19 +4,19 @@ import type { ClientReactiveSerializableParentNode } from '../../../instance/int
 import { serializeParentElementXML } from '../../xml-serialization.ts';
 
 export const createParentNodeInstanceState = (
-	node: ClientReactiveSerializableParentNode<GeneralChildNode>
+  node: ClientReactiveSerializableParentNode<GeneralChildNode>
 ): InstanceState => {
-	return {
-		get instanceXML() {
-			if (!node.currentState.relevant) {
-				return '';
-			}
+  return {
+    get instanceXML() {
+      if (!node.currentState.relevant) {
+        return '';
+      }
 
-			return serializeParentElementXML(
-				node.definition.qualifiedName,
-				node.currentState.children,
-				node.currentState.attributes
-			);
-		},
-	};
+      return serializeParentElementXML(
+        node.definition.qualifiedName,
+        node.currentState.children,
+        node.currentState.attributes
+      );
+    },
+  };
 };

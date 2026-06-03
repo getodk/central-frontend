@@ -26,22 +26,22 @@ export type ResolvableFormInstance = Thunk<Awaitable<ResolvedFormInstance>>;
 export type ResolveFormInstanceResource = Thunk<Promise<FetchResourceResponse>>;
 
 export type ResolvableInstanceAttachmentsMap = ReadonlyMap<
-	InstanceAttachmentFileName,
-	ResolveFormInstanceResource
+  InstanceAttachmentFileName,
+  ResolveFormInstanceResource
 >;
 
 interface BaseEditFormInstanceInput {
-	readonly inputType: EditFormInstanceInputType;
-	readonly data?: readonly [InstanceData, ...InstanceData[]];
-	readonly resolveInstance?: ResolvableFormInstance;
-	readonly attachments?: ResolvableInstanceAttachmentsMap;
+  readonly inputType: EditFormInstanceInputType;
+  readonly data?: readonly [InstanceData, ...InstanceData[]];
+  readonly resolveInstance?: ResolvableFormInstance;
+  readonly attachments?: ResolvableInstanceAttachmentsMap;
 }
 
 export interface ResolvableFormInstanceInput extends BaseEditFormInstanceInput {
-	readonly inputType: ResolvableFormInstanceInputType;
-	readonly resolveInstance: ResolvableFormInstance;
-	readonly attachments: ResolvableInstanceAttachmentsMap;
-	readonly data?: never;
+  readonly inputType: ResolvableFormInstanceInputType;
+  readonly resolveInstance: ResolvableFormInstance;
+  readonly attachments: ResolvableInstanceAttachmentsMap;
+  readonly data?: never;
 }
 
 /**
@@ -72,11 +72,11 @@ export interface ResolvableFormInstanceInput extends BaseEditFormInstanceInput {
  *   without sacrificing resource loading optimizations)
  */
 export interface ResolvedFormInstanceInput
-	extends BaseEditFormInstanceInput, RestoreFormInstanceInput {
-	readonly inputType: ResolvedFormInstanceInputType;
-	readonly data: readonly [InstanceData, ...InstanceData[]];
-	readonly resolveInstance?: never;
-	readonly attachments?: never;
+  extends BaseEditFormInstanceInput, RestoreFormInstanceInput {
+  readonly inputType: ResolvedFormInstanceInputType;
+  readonly data: readonly [InstanceData, ...InstanceData[]];
+  readonly resolveInstance?: never;
+  readonly attachments?: never;
 }
 
 // prettier-ignore
@@ -87,6 +87,6 @@ export type EditFormInstanceInput =
 export type EditedFormInstance = FormInstance<FormInstanceEditMode>;
 
 export type EditFormInstance = (
-	input: EditFormInstanceInput,
-	config?: FormInstanceConfig
+  input: EditFormInstanceInput,
+  config?: FormInstanceConfig
 ) => Promise<EditedFormInstance>;

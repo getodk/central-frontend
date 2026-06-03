@@ -19,25 +19,25 @@ import type { ExpectExtension, UntypedExpectExtensionFunction } from './shared-e
  * first place).
  */
 export const extendExpect = <const T extends Record<string, ExpectExtension>>(
-	expect: ExpectStatic,
-	extension: T
+  expect: ExpectStatic,
+  extension: T
 ): T => {
-	const extensionEntries = Object.entries(extension);
-	const extensions = extensionEntries.map(
-		([key, value]): readonly [string, UntypedExpectExtensionFunction] => {
-			let extensionMethod: UntypedExpectExtensionFunction;
+  const extensionEntries = Object.entries(extension);
+  const extensions = extensionEntries.map(
+    ([key, value]): readonly [string, UntypedExpectExtensionFunction] => {
+      let extensionMethod: UntypedExpectExtensionFunction;
 
-			if (typeof value === 'function') {
-				extensionMethod = value;
-			} else {
-				extensionMethod = value.extensionMethod;
-			}
+      if (typeof value === 'function') {
+        extensionMethod = value;
+      } else {
+        extensionMethod = value.extensionMethod;
+      }
 
-			return [key, extensionMethod];
-		}
-	);
+      return [key, extensionMethod];
+    }
+  );
 
-	expect.extend(Object.fromEntries(extensions));
+  expect.extend(Object.fromEntries(extensions));
 
-	return extension;
+  return extension;
 };

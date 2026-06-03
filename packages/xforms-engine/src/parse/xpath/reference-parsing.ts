@@ -24,67 +24,67 @@ import { getPathExpressionNode } from './semantic-analysis.ts';
  *   contain predicates defining specific form behavior
  */
 const resolveParsedNodesetReference = (
-	contextReference: string | null,
-	reference: string
+  contextReference: string | null,
+  reference: string
 ): string => {
-	const referenceNode = getPathExpressionNode(reference);
+  const referenceNode = getPathExpressionNode(reference);
 
-	if (referenceNode == null) {
-		return reference;
-	}
+  if (referenceNode == null) {
+    return reference;
+  }
 
-	const contextNode = contextReference == null ? null : getPathExpressionNode(contextReference);
-	const resolved = resolvePath(contextNode, referenceNode);
+  const contextNode = contextReference == null ? null : getPathExpressionNode(contextReference);
+  const resolved = resolvePath(contextNode, referenceNode);
 
-	return serializeNodesetReference(resolved, {
-		stripPredicates: false,
-	});
+  return serializeNodesetReference(resolved, {
+    stripPredicates: false,
+  });
 };
 
 interface ReferenceParsingContext {
-	readonly reference: string | null;
-	readonly parent?: ReferenceParsingContext | null;
+  readonly reference: string | null;
+  readonly parent?: ReferenceParsingContext | null;
 }
 
 type ReferenceAttributeName = PartiallyKnownString<'nodeset' | 'ref'>;
 
 interface KnownAttributeElement<AttributeName extends string> extends Element {
-	getAttribute(name: AttributeName): string;
-	getAttribute(name: string): string | null;
+  getAttribute(name: AttributeName): string;
+  getAttribute(name: string): string | null;
 }
 
 type ParsedReferenceAttribute<T extends Element, AttributeName extends string> =
-	T extends KnownAttributeElement<AttributeName> ? string : string | null;
+  T extends KnownAttributeElement<AttributeName> ? string : string | null;
 
 /**
  * Parses a `nodeset` reference from an arbitrary form definition element, and
  * resolves that (potentially relative) reference to the provided context.
  */
 export const parseNodesetReference = <
-	const AttributeName extends ReferenceAttributeName,
-	T extends Element | KnownAttributeElement<AttributeName>,
+  const AttributeName extends ReferenceAttributeName,
+  T extends Element | KnownAttributeElement<AttributeName>,
 >(
-	parentContext: ReferenceParsingContext,
-	element: T,
-	attributeName: AttributeName
+  parentContext: ReferenceParsingContext,
+  element: T,
+  attributeName: AttributeName
 ): ParsedReferenceAttribute<T, AttributeName> => {
-	const referenceExpression = element.getAttribute(attributeName);
+  const referenceExpression = element.getAttribute(attributeName);
 
-	if (referenceExpression == null) {
-		return referenceExpression as ParsedReferenceAttribute<T, AttributeName>;
-	}
+  if (referenceExpression == null) {
+    return referenceExpression as ParsedReferenceAttribute<T, AttributeName>;
+  }
 
-	let currentContext: ReferenceParsingContext | null = parentContext;
-	let parentReference: string | null = parentContext.reference;
+  let currentContext: ReferenceParsingContext | null = parentContext;
+  let parentReference: string | null = parentContext.reference;
 
-	while (currentContext != null && parentReference == null) {
-		parentReference = currentContext?.parent?.reference ?? null;
-		currentContext = currentContext.parent ?? null;
-	}
+  while (currentContext != null && parentReference == null) {
+    parentReference = currentContext?.parent?.reference ?? null;
+    currentContext = currentContext.parent ?? null;
+  }
 
-	if (parentReference == null) {
-		return referenceExpression;
-	}
+  if (parentReference == null) {
+    return referenceExpression;
+  }
 
-	return resolveParsedNodesetReference(parentReference, referenceExpression);
+  return resolveParsedNodesetReference(parentReference, referenceExpression);
 };

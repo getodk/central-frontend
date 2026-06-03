@@ -8,11 +8,11 @@ import { QuestionEvent } from './QuestionEvent.ts';
  * cannot set an "answer".
  */
 export class NoteQuestionEvent extends QuestionEvent<'note'> {
-	getAnswer(): NoteNodeAnswer {
-		return new NoteNodeAnswer(this.node);
-	}
+  getAnswer(): NoteNodeAnswer {
+    return new NoteNodeAnswer(this.node);
+  }
 
-	answerQuestion(_answerValue: unknown): ValueNodeAnswer {
-		throw new Error("Cannot set answer value of readonly node: type is 'note'");
-	}
+  answerQuestion(_answerValue: unknown): ValueNodeAnswer {
+    throw new Error("Cannot set answer value of readonly node: type is 'note'");
+  }
 }

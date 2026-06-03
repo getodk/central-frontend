@@ -6,12 +6,12 @@
  */
 import { createFeatureCollectionAndProps } from '@/components/common/map/geojson-parsers.ts';
 import type { Mode, SingleFeatureType } from '@/components/common/map/getModeConfig.ts';
-import type { SelectItem } from '@getodk/xforms-engine';
-import type { Feature } from 'geojson';
-import ProgressSpinner from 'primevue/progressspinner';
+import AsyncLoader from '@/components/common/AsyncLoader.vue';
 import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
 import type { Translate } from '@/lib/locale/useLocale.ts';
-import { computed, type DefineComponent, inject, onMounted, shallowRef } from 'vue';
+import type { SelectItem } from '@getodk/xforms-engine';
+import type { Feature } from 'geojson';
+import { computed, type DefineComponent, inject, shallowRef } from 'vue';
 
 type MapBlockComponent = DefineComponent<{
 	featureCollection: { type: string; features: Feature[] };
@@ -35,14 +35,7 @@ const emit = defineEmits(['save']);
 
 const t: Translate = inject(TRANSLATE)!;
 
-const STATES = {
-	READY: 'ready',
-	LOADING: 'loading',
-	ERROR: 'error',
-} as const;
-
 const mapComponent = shallowRef<MapBlockComponent | null>(null);
-const currentState = shallowRef<(typeof STATES)[keyof typeof STATES]>(STATES.LOADING);
 const featureCollectionAndProps = computed(() => createFeatureCollectionAndProps(props.features));
 const savedFeatureValue = computed(() => {
 	if (!props.savedFeatureValue) {
@@ -53,38 +46,20 @@ const savedFeatureValue = computed(() => {
 });
 
 const loadMap = async () => {
-	currentState.value = STATES.LOADING;
-
-	try {
-		mapComponent.value = (
-			(await import('./MapBlock.vue')) as {
-				default: MapBlockComponent;
-			}
-		).default;
-		currentState.value = STATES.READY;
-	} catch {
-		currentState.value = STATES.ERROR;
-	}
+	mapComponent.value = (
+		(await import('./MapBlock.vue')) as {
+			default: MapBlockComponent;
+		}
+	).default;
 };
 
 const save = (value: string | undefined) => emit('save', value);
-
-onMounted(loadMap);
 </script>
 
 <template>
-	<div class="async-map-container">
-		<div v-if="currentState === STATES.ERROR" class="map-error">
-			<p class="map-error-message">
-				{{ t('map_async.load_error.message') }}
-			</p>
-		</div>
-
-		<ProgressSpinner v-else-if="currentState === STATES.LOADING" class="map-spinner" />
-
+	<AsyncLoader :load="loadMap" :error-message="t('map_async.load_error.message')">
 		<component
 			:is="mapComponent"
-			v-else
 			:single-feature-type="singleFeatureType"
 			:feature-collection="featureCollectionAndProps.featureCollection"
 			:mode="mode"
@@ -93,45 +68,5 @@ onMounted(loadMap);
 			:disabled="disabled"
 			@save="save"
 		/>
-	</div>
+	</AsyncLoader>
 </template>
-
-<style scoped lang="scss">
-.async-map-container {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: fit-content;
-	width: 100%;
-	min-height: 445px;
-	background: var(--odk-light-background-color);
-	border-radius: var(--odk-radius);
-	color: var(--odk-text-color);
-}
-
-.map-error {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 40px;
-}
-
-.map-error-message {
-	font-size: var(--odk-sub-group-font-size);
-	font-weight: 600;
-	margin: 0;
-}
-
-.map-spinner {
-	width: 70px;
-	height: 70px;
-}
-
-.p-button.p-button-contrast.p-button-outlined.retry-button {
-	background: var(--odk-base-background-color);
-
-	&:hover {
-		background: var(--odk-muted-background-color);
-	}
-}
-</style>

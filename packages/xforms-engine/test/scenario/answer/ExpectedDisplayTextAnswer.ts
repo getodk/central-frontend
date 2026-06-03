@@ -57,27 +57,27 @@ import { ComparableAnswer } from './ComparableAnswer.ts';
  * {@link https://en.wikipedia.org/wiki/You_aren%27t_gonna_need_it | YAGNI}).
  */
 export class ExpectedDisplayTextAnswer extends ComparableAnswer {
-	readonly values: readonly string[];
-	readonly stringValue: string;
+  readonly values: readonly string[];
+  readonly stringValue: string;
 
-	constructor(selectValuesAsCSV: string) {
-		super();
+  constructor(selectValuesAsCSV: string) {
+    super();
 
-		/**
-		 * @see {@link ExpectedDisplayTextAnswer} notes on applicability of ordering
-		 * in assertions
-		 */
-		const values = selectValuesAsCSV.split(', ').sort();
+    /**
+     * @see {@link ExpectedDisplayTextAnswer} notes on applicability of ordering
+     * in assertions
+     */
+    const values = selectValuesAsCSV.split(', ').sort();
 
-		this.values = values;
-		this.stringValue = values.join(' ');
-	}
+    this.values = values;
+    this.stringValue = values.join(' ');
+  }
 
-	override inspectValue(): JSONValue {
-		return this.values;
-	}
+  override inspectValue(): JSONValue {
+    return this.values;
+  }
 }
 
 export const answerText = (selectValuesAsCSV: string): ExpectedDisplayTextAnswer => {
-	return new ExpectedDisplayTextAnswer(selectValuesAsCSV);
+  return new ExpectedDisplayTextAnswer(selectValuesAsCSV);
 };

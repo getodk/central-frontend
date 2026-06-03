@@ -3,15 +3,15 @@ import type { ClientReactiveSerializableParentNode } from '../../../instance/int
 import type { RepeatInstance } from '../../../instance/repeat/RepeatInstance.ts';
 
 export const createNodeRangeInstanceState = (
-	node: ClientReactiveSerializableParentNode<RepeatInstance>
+  node: ClientReactiveSerializableParentNode<RepeatInstance>
 ): InstanceState => {
-	return {
-		get instanceXML() {
-			const serializedChildren = node.currentState.children.map((child) => {
-				return child.instanceState.instanceXML;
-			});
+  return {
+    get instanceXML() {
+      const serializedChildren = node.currentState.children.map((child) => {
+        return child.instanceState.instanceXML;
+      });
 
-			return serializedChildren.join('');
-		},
-	};
+      return serializedChildren.join('');
+    },
+  };
 };

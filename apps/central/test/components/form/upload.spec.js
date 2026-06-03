@@ -77,19 +77,6 @@ describe('FormUpload', () => {
       testData.extendedProjects.createPast(1);
     });
 
-    it('shows an alert if no file is selected', async () => {
-      const component = mount(FormUpload, mountOptions());
-      await component.get('#upload-button').trigger('click');
-      component.should.alert('danger');
-    });
-
-    it('hides the alert after a file is selected', async () => {
-      const component = mount(FormUpload, mountOptions());
-      await component.get('#upload-button').trigger('click');
-      await setFiles(component.get('input'), [xlsForm()]);
-      component.should.not.alert();
-    });
-
     describe('after a file is selected using the file input', () => {
       it('shows the filename', async () => {
         const component = mount(FormUpload, mountOptions());
@@ -108,6 +95,28 @@ describe('FormUpload', () => {
       const component = mount(FormUpload, mountOptions());
       await dragAndDrop(component.getComponent(FileDropZone), [xlsForm()]);
       component.get('#form-upload-filename').text().should.equal('my_form.xlsx');
+    });
+
+    it('does not render actions initially', () => {
+      const component = mount(FormUpload, mountOptions());
+      component.find('.actions').exists().should.be.false;
+    });
+
+    it('renders actions after a file is selected', async () => {
+      const component = mount(FormUpload, mountOptions());
+      component.find('.actions').exists().should.be.false;
+      await setFiles(component.get('input'), [xlsForm()]);
+      component.find('.actions').exists().should.be.true;
+    });
+
+    it('clears the file when cancel button is clicked', async () => {
+      const component = mount(FormUpload, mountOptions());
+      await setFiles(component.get('input'), [xlsForm()]);
+      component.find('.actions').exists().should.be.true;
+      component.get('#form-upload-filename').text().should.equal('my_form.xlsx');
+      await component.get('.actions .btn-link').trigger('click');
+      component.find('.actions').exists().should.be.false;
+      component.get('#form-upload-filename').text().should.equal('');
     });
   });
 
@@ -200,6 +209,8 @@ describe('FormUpload', () => {
     testData.extendedProjects.createPast(1);
     return mockHttp()
       .mount(FormUpload, mountOptions())
+      .request(component => setFiles(component.get('input'), [xlsForm()]))
+      .complete()
       .testStandardButton({
         button: '#upload-button',
         request: upload,
@@ -258,20 +269,6 @@ describe('FormUpload', () => {
           // updated form list is received.
           app.get('#page-head-tabs li.active .badge').text().should.equal('2');
         }));
-  });
-
-  describe('after cancelling form creation', () => {
-    it('redirects to the project overview', () => {
-      mockLogin();
-      testData.extendedProjects.createPast(1);
-      return load('/projects/1/new-form')
-        .complete()
-        .request(app => app.get('#form-upload .btn-link').trigger('click'))
-        .respondFor('/projects/1', { project: false })
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/projects/1');
-        });
-    });
   });
 
   // TODO: to be updated in https://github.com/getodk/central/issues/1831

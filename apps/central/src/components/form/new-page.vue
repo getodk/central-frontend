@@ -5,7 +5,7 @@
         <span>{{ $t('title') }}</span>
       </template>
       <template #body>
-        <form-upload @success="afterCreate" @cancel="afterCancel"/>
+        <form-upload @success="afterCreate"/>
       </template>
     </page-section>
   </div>
@@ -28,7 +28,7 @@ defineOptions({
 
 const router = useRouter();
 const { t } = useI18n();
-const { formPath, projectPath } = useRoutes();
+const { formPath } = useRoutes();
 const alert = inject('alert');
 const { project } = useRequestData();
 
@@ -39,10 +39,6 @@ const afterCreate = async (form) => {
   project.forms += 1;
   await router.push(formPath(form.projectId, form.xmlFormId, 'draft'));
   alert.success(message);
-};
-
-const afterCancel = async () => {
-  await router.push(projectPath());
 };
 
 </script>

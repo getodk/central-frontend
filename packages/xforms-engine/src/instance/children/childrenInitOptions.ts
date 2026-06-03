@@ -3,9 +3,9 @@ import type { StaticDocument } from '../../integration/xpath/static-dom/StaticDo
 import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import type { ModelDefinition } from '../../parse/model/ModelDefinition.ts';
 import type {
-	AnyNodeDefinition,
-	ChildNodeDefinition,
-	NodeDefinition,
+  AnyNodeDefinition,
+  ChildNodeDefinition,
+  NodeDefinition,
 } from '../../parse/model/NodeDefinition.ts';
 import type { InstanceNode } from '../abstract/InstanceNode.ts';
 import type { GeneralParentNode } from '../hierarchy.ts';
@@ -28,91 +28,91 @@ import { normalizeChildInitOptions } from './normalizeChildInitOptions.ts';
  * we may want to warn for such nodes if/when we do drop them.
  */
 const collectModelChildNodesets = (parentTemplate: StaticElement): readonly string[] => {
-	const nodesets = parentTemplate.childElements.map(({ nodeset }) => {
-		return nodeset;
-	});
+  const nodesets = parentTemplate.childElements.map(({ nodeset }) => {
+    return nodeset;
+  });
 
-	return Array.from(new Set(nodesets));
+  return Array.from(new Set(nodesets));
 };
 
 type InstanceNodesByNodeset = ReadonlyMap<string, readonly [StaticElement, ...StaticElement[]]>;
 
 const groupChildElementsByNodeset = (
-	parent: StaticAttribute | StaticDocument | StaticElement
+  parent: StaticAttribute | StaticDocument | StaticElement
 ): InstanceNodesByNodeset => {
-	const result = new Map<string, [StaticElement, ...StaticElement[]]>();
+  const result = new Map<string, [StaticElement, ...StaticElement[]]>();
 
-	for (const child of parent.childElements) {
-		const { nodeset } = child;
-		const group = result.get(nodeset);
+  for (const child of parent.childElements) {
+    const { nodeset } = child;
+    const group = result.get(nodeset);
 
-		if (group == null) {
-			result.set(nodeset, [child]);
-		} else {
-			group.push(child);
-		}
-	}
+    if (group == null) {
+      result.set(nodeset, [child]);
+    } else {
+      group.push(child);
+    }
+  }
 
-	return result;
+  return result;
 };
 
 type AssertChildNodeDefinition = (
-	definition: AnyNodeDefinition,
-	childNodeset: string
+  definition: AnyNodeDefinition,
+  childNodeset: string
 ) => asserts definition is ChildNodeDefinition;
 
 const assertChildNodeDefinition: AssertChildNodeDefinition = (definition, childNodeset) => {
-	if (definition.type === 'root') {
-		throw new Error(`Unexpected root definition for child nodeset: ${childNodeset}`);
-	}
+  if (definition.type === 'root') {
+    throw new Error(`Unexpected root definition for child nodeset: ${childNodeset}`);
+  }
 };
 
 export interface ChildrenInitOptions {
-	readonly parent: GeneralParentNode;
-	readonly model: ModelDefinition;
-	readonly children: readonly DescendantNodeInitOptions[];
+  readonly parent: GeneralParentNode;
+  readonly model: ModelDefinition;
+  readonly children: readonly DescendantNodeInitOptions[];
 }
 
 export const childrenInitOptions = (parent: GeneralParentNode): ChildrenInitOptions => {
-	const { model } = parent.rootDocument;
-	const childNodesets = collectModelChildNodesets(parent.definition.template);
+  const { model } = parent.rootDocument;
+  const childNodesets = collectModelChildNodesets(parent.definition.template);
 
-	let instanceChildren: InstanceNodesByNodeset | null;
+  let instanceChildren: InstanceNodesByNodeset | null;
 
-	if (parent.instanceNode == null) {
-		instanceChildren = null;
-	} else {
-		instanceChildren = groupChildElementsByNodeset(parent.instanceNode);
-	}
+  if (parent.instanceNode == null) {
+    instanceChildren = null;
+  } else {
+    instanceChildren = groupChildElementsByNodeset(parent.instanceNode);
+  }
 
-	const children = childNodesets.map((childNodeset) => {
-		const definition = model.getNodeDefinition(childNodeset);
+  const children = childNodesets.map((childNodeset) => {
+    const definition = model.getNodeDefinition(childNodeset);
 
-		assertChildNodeDefinition(definition, childNodeset);
+    assertChildNodeDefinition(definition, childNodeset);
 
-		/**
-		 * Get children of the target nodeset from {@link parent.instanceNode}, if
-		 * that node exists, and if children with that nodeset exist.
-		 *
-		 * If either does not exist (e.g. it was omitted as non-relevant in a prior
-		 * serialization), we continue to reference model-defined templates as we
-		 * recurse down the {@link InstanceNode} subtree.
-		 *
-		 * @see {@link childNodesets}
-		 */
-		const instanceNodes = instanceChildren?.get(childNodeset) ?? [];
+    /**
+     * Get children of the target nodeset from {@link parent.instanceNode}, if
+     * that node exists, and if children with that nodeset exist.
+     *
+     * If either does not exist (e.g. it was omitted as non-relevant in a prior
+     * serialization), we continue to reference model-defined templates as we
+     * recurse down the {@link InstanceNode} subtree.
+     *
+     * @see {@link childNodesets}
+     */
+    const instanceNodes = instanceChildren?.get(childNodeset) ?? [];
 
-		return {
-			childNodeset,
-			definition,
-			instanceNodes,
-		};
-	});
-	const baseResult: ChildrenInitOptions = {
-		parent,
-		model,
-		children,
-	};
+    return {
+      childNodeset,
+      definition,
+      instanceNodes,
+    };
+  });
+  const baseResult: ChildrenInitOptions = {
+    parent,
+    model,
+    children,
+  };
 
-	return normalizeChildInitOptions(baseResult);
+  return normalizeChildInitOptions(baseResult);
 };

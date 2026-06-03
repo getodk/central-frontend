@@ -6,9 +6,9 @@
  * assertion values, of which "answer" may be a more specific case.
  */
 export class ExpectedNullValue {
-	constructor() {
-		throw new Error('TODO: see `ExpectedNullValue` JSDoc');
-	}
+  constructor() {
+    throw new Error('TODO: see `ExpectedNullValue` JSDoc');
+  }
 }
 
 export const nullValue = () => null;
