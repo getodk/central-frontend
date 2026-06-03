@@ -20,7 +20,7 @@ try {
     if (match == null) logThenThrow(basename, 'invalid filename');
     const locale = match[1];
     console.log(`destructuring ${locale}`);
-  
+
     const json = fs.readFileSync(`transifex/${basename}`).toString();
     const translated = destructure(json, locale);
     rekeyTranslations(sourceMessages, translated, transifexPaths);
