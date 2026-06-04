@@ -118,65 +118,75 @@ const postPrimaryInstance = async (file:File) => {
     const data = await response.json();
     return { success: true, data };
   }
-  return {
-    success: false,
-    data: 'i think we need an error message here?'
-  };
+  const data = await response.json();
+  return { success: false, data: { response: { data } } };
 };
 
 const showModal = (opts:any) => {
-  console.log(opts);
-  const dialog = document.getElementById('submission-result-dialog');
-  if (dialog) {
-    dialog.showModal();
+  if (opts?.type === 'sessionTimeoutModal') {
+    const dialog = document.getElementById('session-expired-dialog');
+    if (dialog) {
+      dialog.showModal();
+    }
+  } else {
+    const dialog = document.getElementById('submission-result-dialog');
+    if (dialog) {
+      dialog.showModal();
+    }
   }
 };
 
+const isProblem = (data:any) => {
+  return data != null && typeof data === 'object' &&
+    typeof data.code === 'number' && typeof data.message === 'string';
+};
+
 const handleResult = () => {
-  /*
+
   const attachmentResultArr = [...submissionResult.attachmentResult.values()];
   // Success handler
   if (submissionResult.primaryInstanceResult.success && attachmentResultArr.every(r => r.success)) {
-    */
-  clearForm();
-  showModal({});
+
+    clearForm();
+    showModal({});
    
     
     /*
-    // if (isPublicLink.value) {
-    //   showModal({ type: 'thankYouModal', hideable: false });
-    // } else if (isEdit.value) {
-    //   showModal({ type: 'editSubmissionModal', hideable: false });
-    //   setTimeout(() => {
-    //     router.push(submissionPath(form.projectId, form.xmlFormId, props.instanceId));
-    //   }, 2000);
-    // } else {
+    if (isPublicLink.value) {
+      showModal({ type: 'thankYouModal', hideable: false });
+    } else if (isEdit.value) {
+      showModal({ type: 'editSubmissionModal', hideable: false });
+      setTimeout(() => {
+        router.push(submissionPath(form.projectId, form.xmlFormId, props.instanceId));
+      }, 2000);
+    } else {
       showModal({ type: 'submissionModal', hideable: false });
-    // }
+    }
+    */
   }
-*/
-  // Error handler - Primary Instance
-  // if (!submissionResult.primaryInstanceResult.success) {
-  //   const error = submissionResult.primaryInstanceResult.data;
-  //   if (error.response && isProblem(error.response.data) && error.response.data.code === 401.2) {
-  //     showModal({ type: 'sessionTimeoutModal' });
-  //   } else {
-  //     showModal({ type: 'errorModal', errorMessage: requestAlertMessage(i18n, error) });
-  //   }
-  // }
 
-  // // Error handler - Attachments
-  // if (attachmentResultArr.some(r => !r.success)) {
-  //   const isSessionTimeout = attachmentResultArr.some(r => {
-  //     const error = r.data;
-  //     return error.response && isProblem(error.response.data) && error.response.data.code === 401.2;
-  //   });
-  //   if (isSessionTimeout) {
-  //     showModal({ type: 'sessionTimeoutModal', hideable: false });
-  //   } else {
-  //     showModal({ type: 'retryModal', hideable: false });
-  //   }
-  // }
+  // Error handler - Primary Instance
+  if (!submissionResult.primaryInstanceResult.success) {
+    const error = submissionResult.primaryInstanceResult.data;
+    if (error.response && isProblem(error.response.data) && error.response.data.code === 401.2) {
+      showModal({ type: 'sessionTimeoutModal' });
+    } else {
+      showModal({ type: 'errorModal', errorMessage: '' });//requestAlertMessage(i18n, error) });
+    }
+  }
+
+  // Error handler - Attachments
+  if (attachmentResultArr.some(r => !r.success)) {
+    const isSessionTimeout = attachmentResultArr.some(r => {
+      const error = r.data;
+      return error.response && isProblem(error.response.data) && error.response.data.code === 401.2;
+    });
+    if (isSessionTimeout) {
+      showModal({ type: 'sessionTimeoutModal', hideable: false });
+    } else {
+      showModal({ type: 'retryModal', hideable: false });
+    }
+  }
 };
 
 const uploadAttachment = async (attachment: File, instanceId: string) => {
@@ -355,6 +365,12 @@ if (isEdit.value) {
       :track-device="true"
       @submit="handleSubmit"/>
   </template>
+
+  <dialog id="session-expired-dialog">
+    <h1>Session expired</h1>
+    <p>Log in again, <a href="/login" target="_blank">here</a>.</p>
+    <button commandfor="session-expired-dialog" command="close">Close</button>
+  </dialog>
 
   <dialog id="submission-result-dialog">
     <h1>Successful</h1>

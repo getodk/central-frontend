@@ -132,7 +132,7 @@ test.describe('ODK Web Forms', () => {
 
     await login(page3);
 
-    await page2.locator('.modal-actions .btn-primary').click();
+    await page2.getByRole('button', { name: 'close' }).click();
 
     await page2.getByRole('button', { name: 'send' }).click();
 
