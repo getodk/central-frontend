@@ -102,7 +102,7 @@ class PluralForms {
   }
 
   // Transifex uses ICU plurals.
-  static fromTransifex(string, locale) {
+  static fromTransifex(key, string, locale) {
     const forms = [];
     const icuMatch = string.match(/^({count, plural,).+}$/s);
     if (icuMatch == null) {
@@ -131,7 +131,7 @@ class PluralForms {
       categories.sort();
       const expectedCategories = locales[locale].pluralCategories;
       if (!equalsInAnyOrder(categories, expectedCategories))
-        logThenThrow(string, `Expected the plural categories [${expectedCategories.join(', ')}], but found [${categories.join(', ')}]. Did you download the translations "to translate"?`);
+        logThenThrow(string, `.${key} in locale "${locale}" expected the plural categories [${expectedCategories.join(', ')}], but found [${categories.join(', ')}]. Did you download the translations "to translate"?`);
     }
 
     for (let i = 0; i < forms.length; i += 1)
@@ -524,10 +524,10 @@ const restructure = (messages) =>
 // message is a PluralForms object.
 const destructure = (json, locale) => JSON.parse(
   json,
-  (_, value) => {
+  (key, value) => {
     if (value != null && typeof value === 'object' &&
       typeof value.string === 'string')
-      return PluralForms.fromTransifex(value.string, locale);
+      return PluralForms.fromTransifex(key, value.string, locale);
     return value;
   }
 );
