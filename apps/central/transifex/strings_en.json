@@ -1030,8 +1030,8 @@
       "string": "Warning",
       "developer_comment": "This text is shown on its own before details about a warning."
     },
-    "beta": {
-      "string": "Beta"
+    "recommended": {
+      "string": "recommended"
     },
     "none": {
       "string": "(none)"
@@ -3818,8 +3818,14 @@
           "developer_comment": "Description of a section. {formName} is replaced with the name of the Form"
         },
         "enketoDefault": {
-          "string": "Enketo (default)",
+          "string": "Enketo compatibility mode",
           "developer_comment": "The word \"Enketo\" should not be translated"
+        },
+        "enketoDescription": {
+          "string": "No longer actively developed. Use for specialized features not yet supported by the new system."
+        },
+        "odkWebFormsDescription": {
+          "string": "A faster, updated experience that will replace the current version over time."
         },
         "enketoSelected": {
           "string": "You’re now using Enketo to fill out, preview and edit your “{formName}” form.",
