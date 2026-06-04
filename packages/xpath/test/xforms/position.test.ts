@@ -1,4 +1,4 @@
-import { beforeEach, describe, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import type { XFormsTestContext } from '../helpers.ts';
 import { createXFormsTestContext } from '../helpers.ts';
 
@@ -87,12 +87,33 @@ describe('#position()', () => {
     const items = Array.from({ length: repeatCount }, () => `<item/>`).join('\n');
     testContext = createXFormsTestContext(`<root>${items}</root>`);
 
-    const items$ = testContext.document.querySelectorAll('item');
+    const itemNodes = testContext.document.querySelectorAll('item');
 
     // First, middle, and last item positions
-    testContext.assertNumberValue('position(.)', 1, { contextNode: items$[0] });
-    testContext.assertNumberValue('position(.)', 200, { contextNode: items$[199] });
-    testContext.assertNumberValue('position(.)', 400, { contextNode: items$[399] });
+    testContext.assertNumberValue('position(.)', 1, { contextNode: itemNodes[0] });
+    testContext.assertNumberValue('position(.)', 200, { contextNode: itemNodes[199] });
+    testContext.assertNumberValue('position(.)', 400, { contextNode: itemNodes[399] });
+  });
+
+  it('position(node) returns 1 for the document element', () => {
+    testContext = createXFormsTestContext(`<root><a/></root>`);
+    testContext.assertNumberValue('position(/root)', 1);
+  });
+
+  it('position(node) throws when given a non-qualified-named node', () => {
+    testContext = createXFormsTestContext(`<root>some text</root>`);
+    expect(() => testContext.evaluate('position(/root/text()[1])')).toThrow(/not a named node/);
+  });
+
+  it('position(node) resets the count after a different-name sibling', () => {
+    testContext = createXFormsTestContext(`<root><a/><a/><b/><a/><a/></root>`);
+    const aNodes = testContext.document.querySelectorAll('a');
+
+    testContext.assertNumberValue('position(.)', 1, { contextNode: aNodes[0] });
+    testContext.assertNumberValue('position(.)', 2, { contextNode: aNodes[1] });
+    // after the break, the count resets
+    testContext.assertNumberValue('position(.)', 1, { contextNode: aNodes[2] });
+    testContext.assertNumberValue('position(.)', 2, { contextNode: aNodes[3] });
   });
 
   //   throw new Error('nodeset provided to position() contained multiple nodes');
