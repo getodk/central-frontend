@@ -196,7 +196,8 @@ const formOptions = readonly<FormOptions>({
 	attachmentMaxSize: props.attachmentMaxSize,
 });
 provide(FORM_OPTIONS, formOptions);
-provide(FORM_MEDIA_CACHE, new Map<JRResourceURLString, ObjectURL>());
+const mediaCache = new Map<JRResourceURLString, ObjectURL>();
+provide(FORM_MEDIA_CACHE, mediaCache);
 
 const state = initializeFormState();
 const submitPressed = ref(false);
@@ -271,6 +272,8 @@ watchEffect(() => {
 });
 
 onUnmounted(() => {
+	mediaCache.forEach((url) => URL.revokeObjectURL(url));
+	mediaCache.clear();
 	resetComponentState();
 });
 </script>
