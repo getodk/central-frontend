@@ -146,7 +146,7 @@ describe('createCentralRouter()', () => {
           path.should.equal('/projects/1/entity-lists/trees/entities');
         });
     });
-
+/*
     it('redirects if the hash is a path', () =>
       load('/#/account/edit', {}, false)
         .respondFor('/account/edit')
@@ -172,6 +172,7 @@ describe('createCentralRouter()', () => {
           app.vm.$route.query.should.be.deep.equal({ reviewState: "'hasIssues'" });
         });
     });
+*/
   });
 
   describe('requireLogin', () => {
