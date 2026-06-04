@@ -43,7 +43,7 @@ import { Form } from './preview.vue';
 // import { noop } from '../../util/util';
 // import { apiPaths } from '../../util/request';
 // import { useRequestData } from '../../request-data';
-// import useEnketoRedirector from '../../composables/enketo-redirector';
+// import useEnketoRedirector from '../composables/enketo-redirector';
 
 
 type WebFormRendererComponent = DefineComponent<{
@@ -105,7 +105,7 @@ defineOptions({
 *                  supports this action.
 */
 const route = useRoute();
-// const router = useRouter();
+const router = useRouter();
 
 const projectId: number | null = route.params.projectId ? Number.parseInt(route.params.projectId as string) : null;
 const formId: string | null = route.params.xmlFormId ? encodeURIComponent(route.params.xmlFormId as string) : null;
@@ -145,14 +145,68 @@ const EnketoIframe = shallowRef<EnketoIframeComponent | null>(null);
 
 
 const getFormXml = async (projectId:number, formId:string) => {
-  const url = `/v1/projects/${projectId}/forms/${formId}.xml`;
+  const qs = queryString({ st: route.query.st });
+  const url = `/v1/projects/${projectId}/forms/${formId}.xml${qs}`;
   const response = await fetch(url);
   return await response.text();
 };
 
+const newSubmissionPath = (projectId:string, xmlFormId:string, draft:boolean) => {
+  const suffix = draft ? 'draft/submissions/new' : 'submissions/new';
+  return `/projects/${projectId}/forms/${xmlFormId}/${suffix}`;
+};
+
+const formPreviewPath = (projectId:string, xmlFormId:string, draft:boolean) => {
+  const suffix = draft ? 'draft/preview' : 'preview';
+  return `/projects/${projectId}/forms/${xmlFormId}/${suffix}`;
+};
+
+const offlineSubmissionPath = (projectId:string, xmlFormId:string, draft:boolean) => {
+  return `${newSubmissionPath(projectId, xmlFormId, draft)}/offline`;
+};
+
+// TODO make common
+const queryString = (query:any) => {
+  if (query == null) return '';
+  const entries = Object.entries(query);
+  if (entries.length === 0) return '';
+  const params = new URLSearchParams();
+  for (const [name, value] of entries) {
+    if (Array.isArray(value)) {
+      for (const element of value)
+        params.append(name, element === null ? 'null' : element.toString());
+    } else if (value != null) {
+      params.set(name, value.toString());
+    }
+  }
+  const qs = params.toString();
+  return qs !== '' ? `?${qs}` : qs;
+};
+
+
+const redirectEnketoUrls = (formConfig:any) => {
+  let target;
+  if (route.path.startsWith('/f/') && !route.query.st && formConfig) {
+    if (actionType === 'new') {
+      target = newSubmissionPath(formConfig.projectId, formConfig.xmlFormId, !formConfig.publishedAt);
+    } else if (actionType === 'preview') {
+      target = formPreviewPath(formConfig.projectId, formConfig.xmlFormId, !formConfig.publishedAt);
+    } else if (actionType === 'offline') {
+      target = offlineSubmissionPath(formConfig.projectId, formConfig.xmlFormId, !formConfig.publishedAt);
+    } else if (actionType === 'public-link') {
+    // if it is public link without st and we got the data then it means user is logged in
+      target = newSubmissionPath(formConfig.projectId, formConfig.xmlFormId, !formConfig.publishedAt);
+    }
+  }
+  if (target) {
+    const { instance_id: _, ...query } = route.query;
+    router.replace(`${target}${queryString(query)}`);
+  }
+};
+
 const fetchForm = async () => {
   const draftPath = '';
-  const qs = '';
+  const qs = queryString({ st: route.query.st });
 
   let url = '';
 
@@ -160,12 +214,19 @@ const fetchForm = async () => {
     url = `/v1/form-links/${enketoId}/form${qs}`;
 
   } else {
+    // TODO draft path
     url = `/v1/projects/${projectId}/forms/${formId}${draftPath}${qs}`;
   }
 
   fetch(url)
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('failed to fetch form');
+      }
+      return response.json();
+    })
     .then((formConfig) => {
+      redirectEnketoUrls(formConfig);
       if (formConfig.webformsEnabled || useWebForms) {
         return Promise.all([getFormXml(formConfig.projectId, formConfig.xmlFormId), loadWebFormRenderer()])
           .then(([xform]) => {
@@ -178,6 +239,15 @@ const fetchForm = async () => {
           form.value = { xmlFormId: formConfig.xmlFormId, xform: '', enketoId: formConfig.enketoId, projectId: formConfig.projectId };
         });
       }
+    })
+    .then(() => {
+      // const redirected = ensureEnketoOfflinePath(actionType);
+      // if (redirected) {
+      //   project.cancelRequest();
+      // } else {
+      //   ensureCanonicalPath(actionType);
+      // }
+
     })
     .then(() => {
       // TODO we want to put this off until after the async load happens

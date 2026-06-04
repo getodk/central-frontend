@@ -54,7 +54,7 @@ const devAppRouter = () => ({
   configureServer(server) {
     server.middlewares.use((req, res, next) => {
       // must match the regex paths defined in Nginx
-      const newSubmissionUrlRegex = /^\/projects\/\d+\/forms\/[^/]+(?:\/draft)?(?:\/preview|\/submissions\/new(?:\/offline)?\/?|\/submissions\/\d+\/edit)\/?$/;
+      const newSubmissionUrlRegex = /^\/projects\/\d+\/forms\/[^/]+(?:\/draft)?(?:\/preview|\/submissions\/new(?:\/offline)?\/?|\/submissions\/[^/]+\/edit)\/?$/;
       const enketoRegex = /^\/f\//;
 
       if (newSubmissionUrlRegex.test(req.url) || enketoRegex.test(req.url)) {
