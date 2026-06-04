@@ -14,6 +14,11 @@ except according to the terms contained in the LICENSE file.
 import { DefineComponent, ref, shallowRef } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
+// TODO probably better to pass all params as props instead?
+const props = defineProps({
+  draft: Boolean,
+});
+
 // TODO pull this out into common component somewhere
 export type Form = {
   xmlFormId: string;
@@ -70,7 +75,7 @@ const loadEnketo = async () => {
 };
 
 const getFormXml = async () => {
-  const draftPath = '';
+  const draftPath = props.draft ? '/draft' : '';
   const qs = '';
   const url = `/v1/projects/${projectId}/forms/${formId}${draftPath}.xml${qs}`;
   const response = await fetch(url);
@@ -78,7 +83,8 @@ const getFormXml = async () => {
 };
 
 const fetchForm = async () => {
-  const draftPath = '';
+  console.log({draft: props.draft});
+  const draftPath = props.draft ? '/draft' : '';
   const qs = '';
   const url = `/v1/projects/${projectId}/forms/${formId}${draftPath}${qs}`;
   fetch(url)

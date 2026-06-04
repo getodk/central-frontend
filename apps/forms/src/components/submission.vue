@@ -45,6 +45,10 @@ import { Form } from './preview.vue';
 // import { useRequestData } from '../../request-data';
 // import useEnketoRedirector from '../composables/enketo-redirector';
 
+// TODO probably better to pass all params as props instead?
+const props = defineProps({
+  draft: Boolean,
+});
 
 type WebFormRendererComponent = DefineComponent<{
   form: Form;
@@ -144,9 +148,10 @@ const EnketoIframe = shallowRef<EnketoIframeComponent | null>(null);
 // }).catch(noop);
 
 
-const getFormXml = async (projectId:number, formId:string) => {
+const getFormXml = async (projectId:number, formId:string, draft:boolean) => {
+  const draftPath = draft ? '/draft' : '';
   const qs = queryString({ st: route.query.st });
-  const url = `/v1/projects/${projectId}/forms/${formId}.xml${qs}`;
+  const url = `/v1/projects/${projectId}/forms/${formId}${draftPath}.xml${qs}`;
   const response = await fetch(url);
   return await response.text();
 };
@@ -183,7 +188,7 @@ const queryString = (query:any) => {
   return qs !== '' ? `?${qs}` : qs;
 };
 
-
+// TODO handle this in a separate component
 const redirectEnketoUrls = (formConfig:any) => {
   let target;
   if (route.path.startsWith('/f/') && !route.query.st && formConfig) {
@@ -205,8 +210,9 @@ const redirectEnketoUrls = (formConfig:any) => {
 };
 
 const fetchForm = async () => {
-  const draftPath = '';
+  const draftPath = props.draft ? '/draft' : '';
   const qs = queryString({ st: route.query.st });
+
 
   let url = '';
 
@@ -214,7 +220,6 @@ const fetchForm = async () => {
     url = `/v1/form-links/${enketoId}/form${qs}`;
 
   } else {
-    // TODO draft path
     url = `/v1/projects/${projectId}/forms/${formId}${draftPath}${qs}`;
   }
 
@@ -228,7 +233,10 @@ const fetchForm = async () => {
     .then((formConfig) => {
       redirectEnketoUrls(formConfig);
       if (formConfig.webformsEnabled || useWebForms) {
-        return Promise.all([getFormXml(formConfig.projectId, formConfig.xmlFormId), loadWebFormRenderer()])
+        return Promise.all([
+          getFormXml(formConfig.projectId, formConfig.xmlFormId, !formConfig.publishedAt),
+          loadWebFormRenderer()
+        ])
           .then(([xform]) => {
             form.value = { xmlFormId: formConfig.xmlFormId, xform, enketoId: formConfig.enketoId, projectId: formConfig.projectId };
           });

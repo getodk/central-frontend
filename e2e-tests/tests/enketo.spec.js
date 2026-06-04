@@ -44,7 +44,7 @@ test.describe('Enketo', () => {
         url: ({ draftEnketoId }) => `/-/${draftEnketoId}`, requireLogin: true, draft: true,
         newUrl: ({ xmlFormId }) => `/projects/${projectId}/forms/${xmlFormId}/draft/submissions/new`
       }, {
-        description: 'Prevew Draft Form',
+        description: 'Preview Draft Form',
         url: ({ draftEnketoId }) => `/-/preview/${draftEnketoId}`, requireLogin: true, draft: true,
         newUrl: ({ xmlFormId }) => `/projects/${projectId}/forms/${xmlFormId}/draft/preview`
       }, {
@@ -80,9 +80,9 @@ test.describe('Enketo', () => {
         const frame = await page.frameLocator('iframe');
 
         if (t.draft) {
-          await expect(frame.getByRole('heading', { name: `${publishedForm.name} - v2` })).toBeVisible();
+          await expect(frame.getByRole('heading', { name: `${publishedForm.name} - v2`, exact: true })).toBeVisible();
         } else {
-          await expect(frame.getByRole('heading', { name: publishedForm.name })).toBeVisible();
+          await expect(frame.getByRole('heading', { name: publishedForm.name, exact: true })).toBeVisible();
         }
       });
     });
