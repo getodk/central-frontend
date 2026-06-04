@@ -1,0 +1,6 @@
+{
+  "select.placeholder": {
+    "string": "Select Answer",
+    "developer_comment": "Placeholder text shown in a minimal select dropdown when no option has been selected yet."
+  }
+}

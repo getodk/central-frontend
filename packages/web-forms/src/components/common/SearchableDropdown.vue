@@ -3,12 +3,16 @@ import type { SelectNode } from '@getodk/xforms-engine';
 import Select from 'primevue/select';
 import { computed } from 'vue';
 import MarkdownBlock from './MarkdownBlock.vue';
+import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
+import type { Translate } from '@/lib/locale/useLocale.ts';
+import { inject } from 'vue';
 
 interface SearchableDropdownProps {
 	readonly question: SelectNode;
 	readonly style?: string;
 }
 
+const t: Translate = inject(TRANSLATE)!;
 const props = defineProps<SearchableDropdownProps>();
 
 defineEmits(['update:modelValue', 'change']);
@@ -62,7 +66,10 @@ const selectValue = (value: string) => {
 			<MarkdownBlock v-for="elem in slotProps.option.label" :key="elem.id" :elem="elem" />
 		</template>
 		<template #value>
-			<MarkdownBlock v-for="elem in selectedLabel" :key="elem.id" :elem="elem" />
+				<span v-if="!selectedLabel.length" class="dropdown-placeholder">{{
+					t('select.placeholder')
+				}}</span>
+				<MarkdownBlock v-for="elem in selectedLabel" :key="elem.id" :elem="elem" />
 		</template>
 	</Select>
 </template>
@@ -81,6 +88,9 @@ const selectValue = (value: string) => {
 
 	@media screen and (min-width: #{pf.$md}) {
 		width: 50%;
+	}
+	.dropdown-placeholder {
+		color: var(--odk-placeholder-color, #6c757d);
 	}
 }
 </style>
