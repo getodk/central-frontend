@@ -263,6 +263,10 @@
           "string": "Replace Draft",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
+        "update_draft_update": {
+          "string": "Draft Settings Changed",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
         "update_publish": {
           "string": "Publish Draft",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
