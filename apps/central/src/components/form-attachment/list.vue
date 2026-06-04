@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
     <p>
       <button id="form-attachment-list-upload-button" type="button"
         class="btn btn-primary" @click="uploadFilesModal.show()">
-        <span class="icon-cloud-upload"></span>{{ $t('action.upload') }}
+        <span class="icon-folder-open"></span>{{ $t('action.upload') }}
       </button>
       <span>{{ $t('orDrag') }}</span>
     </p>
@@ -320,7 +320,7 @@ export default {
 {
   "en": {
     "action": {
-      "upload": "Choose files"
+      "upload": "choose files"
     },
     // This text is shown next to a button with the text "Choose files".
     "orDrag": "or drag files onto this section to upload",
