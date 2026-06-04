@@ -18,8 +18,7 @@ except according to the terms contained in the LICENSE file.
   <component
     :is="WebFormRenderer"
     v-else-if="/*dataExists &&*/ webFormsEnabled && form /*&& hasAccess*/"
-    :projectId="projectId"
-    :instanceId="instanceId"
+    :instance-id="instanceId"
     :action-type="actionType"
     :form="form"
   />
@@ -48,16 +47,15 @@ import { Form } from './preview.vue';
 
 
 type WebFormRendererComponent = DefineComponent<{
-  projectId: number;
   form: Form;
-  instanceId: string;
+  instanceId?: string | null;
   actionType: string;
 }>;
 
 type EnketoIframeComponent = DefineComponent<{
   enketoId: string;
   actionType: string;
-  instanceId?: string;
+  instanceId?: string | null;
 }>;
 
 const loadWebFormRenderer = async () => {
@@ -109,9 +107,10 @@ defineOptions({
 const route = useRoute();
 // const router = useRouter();
 
-const projectId: number = Number.parseInt(encodeURIComponent(route.params.projectId as string));
-const formId: string = encodeURIComponent(route.params.xmlFormId as string);
-const instanceId: string = encodeURIComponent(route.params.instanceId as string);
+const projectId: number | null = route.params.projectId ? Number.parseInt(route.params.projectId as string) : null;
+const formId: string | null = route.params.xmlFormId ? encodeURIComponent(route.params.xmlFormId as string) : null;
+const instanceId: string | null = route.params.instanceId ? encodeURIComponent(route.params.instanceId as string) : null;
+const enketoId: string | null = route.params.enketoId ? encodeURIComponent(route.params.enketoId as string) : null;
 const actionType: string = route.params.actionType as string; // TODO validate (as above)
 const useWebForms = route.query.webforms === 'true';
 const webFormsEnabled = ref(true); 
@@ -145,10 +144,8 @@ const EnketoIframe = shallowRef<EnketoIframeComponent | null>(null);
 // }).catch(noop);
 
 
-const getFormXml = async () => {
-  const draftPath = '';
-  const qs = '';
-  const url = `/v1/projects/${projectId}/forms/${formId}${draftPath}.xml${qs}`;
+const getFormXml = async (projectId:number, formId:string) => {
+  const url = `/v1/projects/${projectId}/forms/${formId}.xml`;
   const response = await fetch(url);
   return await response.text();
 };
@@ -156,19 +153,29 @@ const getFormXml = async () => {
 const fetchForm = async () => {
   const draftPath = '';
   const qs = '';
-  const url = `/v1/projects/${projectId}/forms/${formId}${draftPath}${qs}`;
+
+  let url = '';
+
+  if (enketoId) {
+    url = `/v1/form-links/${enketoId}/form${qs}`;
+
+  } else {
+    url = `/v1/projects/${projectId}/forms/${formId}${draftPath}${qs}`;
+  }
+
   fetch(url)
     .then((response) => response.json())
     .then((formConfig) => {
-      console.log({formConfig});
       if (formConfig.webformsEnabled || useWebForms) {
-        return Promise.all([getFormXml(), loadWebFormRenderer()])
-          .then(([xform]) => { form.value = { xmlFormId: formConfig.xmlFormId, xform, enketoId: formConfig.enketoId } });
+        return Promise.all([getFormXml(formConfig.projectId, formConfig.xmlFormId), loadWebFormRenderer()])
+          .then(([xform]) => {
+            form.value = { xmlFormId: formConfig.xmlFormId, xform, enketoId: formConfig.enketoId, projectId: formConfig.projectId };
+          });
       } else {
         return loadEnketo().then(() => {
           webFormsEnabled.value = false;
           // TODO also need form.enketoOnceId
-          form.value = { xmlFormId: formConfig.xmlFormId, xform: '', enketoId: formConfig.enketoId };
+          form.value = { xmlFormId: formConfig.xmlFormId, xform: '', enketoId: formConfig.enketoId, projectId: formConfig.projectId };
         });
       }
     })

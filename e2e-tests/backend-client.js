@@ -130,7 +130,8 @@ export default class BackendClient {
   createFormAndChildren = async () => {
     const form = await this.createForm();
     const submission = await this.createSubmission(form.xmlFormId);
-    await this.editSubmission(form.xmlFormId, submission.instanceId);
+    // console.log({submission});
+    // await this.editSubmission(form.xmlFormId, submission.instanceId);
     const formDraft = await this.createDraftVersion(form.xmlFormId);
     const publicLink = await this.createPublicLink(form.xmlFormId);
 

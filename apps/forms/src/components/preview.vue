@@ -18,11 +18,11 @@ import { useRoute, useRouter } from 'vue-router';
 export type Form = {
   xmlFormId: string;
   xform: string;
+  projectId: number;
   enketoId: string; // TODO what type is this?
 };
 
 type WebFormRendererComponent = DefineComponent<{
-  projectId: number;
   form: Form;
   actionType: string;
 }>;
@@ -86,12 +86,12 @@ const fetchForm = async () => {
     .then((formConfig) => {
       if (formConfig.webformsEnabled || useWebForms) {
         return Promise.all([getFormXml(), loadWebFormRenderer()])
-          .then(([xform]) => { form.value = { xmlFormId: formConfig.xmlFormId, xform, enketoId: formConfig.enketoId } });
+          .then(([xform]) => { form.value = { xmlFormId: formConfig.xmlFormId, xform, enketoId: formConfig.enketoId, projectId: formConfig.projectId } });
       } else {
         return loadEnketo().then(() => {
           webFormsEnabled.value = false;
           // TODO also need form.enketoOnceId
-          form.value = { xmlFormId: formConfig.xmlFormId, xform: '', enketoId: formConfig.enketoId };
+          form.value = { xmlFormId: formConfig.xmlFormId, xform: '', enketoId: formConfig.enketoId, projectId: formConfig.projectId };
         });
       }
     })
@@ -117,7 +117,7 @@ fetchForm();
     <component :is="WebFormRenderer" :projectId="projectId" :form="form" :action-type="'preview'"/>
   </template>
   <template v-else>
-    <enketo-iframe :enketo-id="form.enketoId" action-type="preview"/>
+    <enketo-iframe :enketo-id="form.enketoId" action-type="'new'"/>
   </template>
 </template>
 

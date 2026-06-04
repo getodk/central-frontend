@@ -39,6 +39,7 @@ const devServer = {
   // bind it on `127.0.0.1` instead of `localhost` (default).
   // See https://github.com/vitejs/vite/issues/16522
   host: '127.0.0.1',
+  allowedHosts: ['central-dev', 'localhost'],
   port: 8989,
   proxy: Object.fromEntries(proxyPaths.map(path => [path, 'http://localhost:8686'])),
   // Because we proxy to nginx, which itself proxies to Backend and other
@@ -53,12 +54,10 @@ const devAppRouter = () => ({
   configureServer(server) {
     server.middlewares.use((req, res, next) => {
       // must match the regex paths defined in Nginx
-      // TODO need to do all the other forms URLs 
-      // TODO can we change the URLs that aren't legacy ones??
-      const newSubmissionRegex = /^\/projects\/[0-9]+\/forms\/([^/]+)\/submissions\/new/;
-      const editSubmissionRegex = /^\/projects\/[0-9]+\/forms\/([^/]+)\/submissions\/(.+)\/edit/;
+      const newSubmissionUrlRegex = /^\/projects\/\d+\/forms\/[^/]+(?:\/draft)?(?:\/preview|\/submissions\/new(?:\/offline)?\/?|\/submissions\/\d+\/edit)\/?$/;
+      const enketoRegex = /^\/f\//;
 
-      if (newSubmissionRegex.test(req.url) || editSubmissionRegex.test(req.url)) {
+      if (newSubmissionUrlRegex.test(req.url) || enketoRegex.test(req.url)) {
         req.url = '/apps/forms/index.html';
       }
       next();

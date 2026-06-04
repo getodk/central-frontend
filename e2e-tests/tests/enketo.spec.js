@@ -35,10 +35,10 @@ test.describe('Enketo', () => {
         description: 'Preview Form',
         url: ({ enketoId }) => `/-/preview/${enketoId}`, requireLogin: true,
         newUrl: ({ xmlFormId }) => `/projects/${projectId}/forms/${xmlFormId}/preview`
-      }, {
-        description: 'Preview Web Forms',
-        url: ({ xmlFormId }) => `/#/projects/${projectId}/forms/${xmlFormId}/preview`, requireLogin: true,
-        newUrl: ({ xmlFormId }) => `/projects/${projectId}/forms/${xmlFormId}/preview`
+      // }, { TODO (as discussed in web-forms.spec.js)
+      //   description: 'Preview Web Forms',
+      //   url: ({ xmlFormId }) => `/#/projects/${projectId}/forms/${xmlFormId}/preview`, requireLogin: true,
+      //   newUrl: ({ xmlFormId }) => `/projects/${projectId}/forms/${xmlFormId}/preview`
       }, {
         description: 'New Draft Submission',
         url: ({ draftEnketoId }) => `/-/${draftEnketoId}`, requireLogin: true, draft: true,
@@ -47,10 +47,10 @@ test.describe('Enketo', () => {
         description: 'Prevew Draft Form',
         url: ({ draftEnketoId }) => `/-/preview/${draftEnketoId}`, requireLogin: true, draft: true,
         newUrl: ({ xmlFormId }) => `/projects/${projectId}/forms/${xmlFormId}/draft/preview`
-      }, {
-        description: 'Preview Draft Web Form',
-        url: ({ xmlFormId }) => `/#/projects/${projectId}/forms/${xmlFormId}/draft/preview`, requireLogin: true, draft: true,
-        newUrl: ({ xmlFormId }) => `/projects/${projectId}/forms/${xmlFormId}/draft/preview`
+      // }, {
+      //   description: 'Preview Draft Web Form',
+      //   url: ({ xmlFormId }) => `/#/projects/${projectId}/forms/${xmlFormId}/draft/preview`, requireLogin: true, draft: true,
+      //   newUrl: ({ xmlFormId }) => `/projects/${projectId}/forms/${xmlFormId}/draft/preview`
       }, {
         description: 'Public Link',
         url: ({ enketoId, st }) => `/-/single/${enketoId}?st=${st}`, requireLogin: false,

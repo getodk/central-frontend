@@ -79,7 +79,7 @@ const lastSubmitted = (enketoOnceId) => {
   });
 };
 
-const enketoSrc = ref();
+const enketoSrc = ref(null);
 
 const single = computed(() => {
   const { query } = route;
