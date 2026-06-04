@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { computed, inject, ref } from 'vue';
+import { computed, onBeforeUnmount, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 // import { useRequestData } from '../request-data';
 
@@ -170,7 +170,15 @@ const handleIframeMessage = (event) => {
   }
 };
 
-// useEventListener(window, 'message', handleIframeMessage, false);
+const addListener = () => {
+  window.addEventListener('message', handleIframeMessage, false);
+
+  onBeforeUnmount(() => {
+    window.removeEventListener('message', handleIframeMessage, false);
+  });
+};
+
+addListener();
 </script>
 
 <style lang="scss">

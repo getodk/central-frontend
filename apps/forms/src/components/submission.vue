@@ -27,6 +27,7 @@ except according to the terms contained in the LICENSE file.
     :enketo-id="form.enketoId"
     :action-type="actionType"
     :instance-id="instanceId"
+    :enketo-once-id="form.enketoOnceId"
     @loaded="hideLoading"/>
 </template>
 
@@ -60,6 +61,7 @@ type EnketoIframeComponent = DefineComponent<{
   enketoId: string;
   actionType: string;
   instanceId?: string | null;
+  enketoOnceId?: string | null;
 }>;
 
 const loadWebFormRenderer = async () => {
@@ -117,6 +119,7 @@ const instanceId: string | null = route.params.instanceId ? encodeURIComponent(r
 const enketoId: string | null = route.params.enketoId ? encodeURIComponent(route.params.enketoId as string) : null;
 const actionType: string = route.params.actionType as string; // TODO validate (as above)
 const useWebForms = route.query.webforms === 'true';
+const offline: boolean = route.params.offline === 'offline';
 const webFormsEnabled = ref(true); 
 
 // const { project, resourceStates, form } = useRequestData();
@@ -238,24 +241,28 @@ const fetchForm = async () => {
           loadWebFormRenderer()
         ])
           .then(([xform]) => {
-            form.value = { xmlFormId: formConfig.xmlFormId, xform, enketoId: formConfig.enketoId, projectId: formConfig.projectId };
+            form.value = {
+              xmlFormId: formConfig.xmlFormId,
+              xform,
+              enketoId: formConfig.enketoId,
+              projectId: formConfig.projectId
+            };
           });
       } else {
+        if (offline) {
+          window.location.replace(`/-/x/${formConfig.enketoId}${queryString(route.query)}`);
+          return;
+        }
         return loadEnketo().then(() => {
           webFormsEnabled.value = false;
-          // TODO also need form.enketoOnceId
-          form.value = { xmlFormId: formConfig.xmlFormId, xform: '', enketoId: formConfig.enketoId, projectId: formConfig.projectId };
+          form.value = {
+            xmlFormId: formConfig.xmlFormId,
+            enketoId: formConfig.enketoId,
+            projectId: formConfig.projectId,
+            enketoOnceId: formConfig.enketoOnceId
+          };
         });
       }
-    })
-    .then(() => {
-      // const redirected = ensureEnketoOfflinePath(actionType);
-      // if (redirected) {
-      //   project.cancelRequest();
-      // } else {
-      //   ensureCanonicalPath(actionType);
-      // }
-
     })
     .then(() => {
       // TODO we want to put this off until after the async load happens

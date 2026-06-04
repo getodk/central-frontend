@@ -22,9 +22,10 @@ const props = defineProps({
 // TODO pull this out into common component somewhere
 export type Form = {
   xmlFormId: string;
-  xform: string;
+  xform?: string;
   projectId: number;
-  enketoId: string; // TODO what type is this?
+  enketoId: string;
+  enketoOnceId?: string;
 };
 
 type WebFormRendererComponent = DefineComponent<{
@@ -83,7 +84,6 @@ const getFormXml = async () => {
 };
 
 const fetchForm = async () => {
-  console.log({draft: props.draft});
   const draftPath = props.draft ? '/draft' : '';
   const qs = '';
   const url = `/v1/projects/${projectId}/forms/${formId}${draftPath}${qs}`;

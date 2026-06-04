@@ -40,7 +40,14 @@ const routes = [
   },
   {
     path: '/f/:enketoId([a-zA-Z0-9]+)/:actionType(new|preview)?',
-    component: Submission as Component
+    component: Submission as Component,
+    props: (route:any) => {
+      const { offline, ...params } = route.params;
+      return {
+        ...params,
+        actionType: offline === 'offline' ? 'offline' : 'public-link',
+      };
+    },
   }
 ];
 
