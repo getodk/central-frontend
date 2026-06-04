@@ -35,18 +35,18 @@ test.describe('ODK Web Forms', () => {
       }, {
         description: 'Preview Form',
         url: ({ enketoId }) => `/-/preview/${enketoId}`, requireLogin: true
-      // }, { TODO - suggest we drop support for /# in the forms app because it would need a full redirect to go between apps
-      //   description: 'Preview Web Forms',
-      //   url: ({ xmlFormId }) => `/#/projects/${projectId}/forms/${xmlFormId}/preview`, requireLogin: true
+      }, {
+        description: 'Preview Web Forms',
+        url: ({ xmlFormId }) => `/#/projects/${projectId}/forms/${xmlFormId}/preview`, requireLogin: true
       }, {
         description: 'New Draft Submission',
         url: ({ draftEnketoId }) => `/-/${draftEnketoId}`, requireLogin: true
       }, {
         description: 'Prevew Draft Form',
         url: ({ draftEnketoId }) => `/-/preview/${draftEnketoId}`, requireLogin: true
-      // }, { TODO - as above
-      //   description: 'Preview Draft Web Form',
-      //   url: ({ xmlFormId }) => `/#/projects/${projectId}/forms/${xmlFormId}/draft/preview`, requireLogin: true
+      }, {
+        description: 'Preview Draft Web Form',
+        url: ({ xmlFormId }) => `/#/projects/${projectId}/forms/${xmlFormId}/draft/preview`, requireLogin: true
       }, {
         description: 'Public Link',
         url: ({ enketoId, st }) => `/-/single/${enketoId}?st=${st}`, requireLogin: false
