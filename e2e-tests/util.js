@@ -1,4 +1,4 @@
-import { expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 const appUrl = process.env.ODK_URL;
 const user = process.env.ODK_USER;
@@ -17,7 +17,22 @@ const login = async (page) => {
   await page.waitForURL(appUrl);
 };
 
+const extendedTest = test.extend({
+  // See: https://playwright.dev/docs/test-fixtures#adding-global-beforeeachaftereach-hooks
+  browserConsoleToTestStdout: [
+    async ({ page }, use) => {
+      page.on('console', msg => {                                                                                           
+        console.log(new Date(), msg.type(), msg.text());
+      });
+      await use();
+    },
+    { auto:true },
+  ],
+});
+
 export {
+  expect,
+  test: extendedTest,
   login,
   ENCRYPTION_SECRET
 };
