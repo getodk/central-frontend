@@ -35,7 +35,7 @@ const test = testBase.extend({
         }
 
         console.log(
-          `[${browserName}] [console.${msg.type()}] ${url}:${line}:${column}` +
+          `[${browserName}|console.${msg.type()}] ${url}:${line}:${column}` +
           `\n    message:`, ...args,
         );
       });
