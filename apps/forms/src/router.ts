@@ -2,6 +2,7 @@ import type { Component } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import Preview from './components/preview.vue';
 import Submission from './components/submission.vue';
+import { loadLocale, userLocale, i18n } from './i18n';
 
 const routes = [
   // TODO have some intermediary which loads the form to figure out whether to load WF or Enketo
@@ -54,6 +55,14 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  const locale = userLocale();
+  if (locale) {
+    loadLocale(i18n.global, locale);
+  }
+  next();
 });
 
 export default router;

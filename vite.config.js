@@ -70,7 +70,7 @@ export default defineConfig(({ mode }) => ({
     vue(),
     devAppRouter(),
     VueI18nPlugin({
-      include: resolve(dirname(fileURLToPath(import.meta.url)), './apps/central/src/locales/**'),
+      include: resolve(dirname(fileURLToPath(import.meta.url)), './apps/*/src/locales/**'),
       compositionOnly: false,
       defaultSFCLang: 'json5',
       // We install what we need in src/container.js.
