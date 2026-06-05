@@ -3,11 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "eslint": "",
-    "eslint:fix": "",
-    "lint": "",
-    "lint:fix": "",
+    "lint": "eslint . --report-unused-disable-directives --cache --max-warnings 0",
+    "lint:fix": "eslint . --fix --report-unused-disable-directives --cache --max-warnings 0",
     "test": "",
     "// TODO get the above working": ""
+  },
+  "dependencies": {
+    "vue-i18n": "^10.0.7"
+  },
+  "devDependencies": {
+    "@vue/eslint-config-airbnb": "^7.0.0",
+    "eslint": "^8.28.0",
+    "eslint-plugin-import": "~2",
+    "eslint-plugin-vue": "~9"
   }
 }

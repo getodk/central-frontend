@@ -18,6 +18,7 @@ import { createI18n } from 'vue-i18n';
 // import fallbackMessages from './locales/en.json5';
 
 const fallbackLocale = 'en';
+export const locales = new Map();
 
 export const localStore = {
   getItem(name) {
@@ -83,7 +84,7 @@ const setLocale = (i18n, locale) => {
 
 // Loads a locale.
 export const loadLocale = (i18n, locale) => {
-  if (!locales.has(locale)) return Promise.reject(new Error('unknown locale'));
+  if (!locales.has(locale)) throw new Error('unknown locale');
   setLocale(i18n, locale);
 
   // return import(
@@ -104,7 +105,7 @@ export const loadLocale = (i18n, locale) => {
 
 // Maps each locale tag to metadata about the locale that is useful outside this
 // file.
-export const locales = new Map();
+
 
 /*
 Adds a locale to `locales`. Options:

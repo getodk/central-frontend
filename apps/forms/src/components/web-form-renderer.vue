@@ -21,6 +21,7 @@ import { InstanceData, MonolithicInstancePayload } from '@getodk/xforms-engine';
 import { type Form } from './preview.vue';
 import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
+import { Translation } from 'vue-i18n'
 
 import PrimeVue from 'primevue/config';
 import { odkThemePreset } from '../../../../packages/web-forms/src/odk-theme-preset';
@@ -387,13 +388,13 @@ const closeWindow = () => {
       @submit="handleSubmit"/>
   </template>
 
-  <Dialog :visible="visibleModal" :draggable="false" :closable="visibleModal?.hideable">
+  <Dialog :visible="visibleModal" :draggable="false" :closable="visibleModal?.hideable" @update:visible="visibleModal = null">
 		<template #header>
 			<p role="heading">{{ $t(visibleModal.type + '.title') }}</p>
 		</template>
 
     <template #default>
-      <i18n-t v-if="visibleModal.type === 'errorModal'" tag="p" keypath="errorModal.body">
+      <Translation v-if="visibleModal.type === 'errorModal'" tag="p" keypath="errorModal.body">
         <template #errorMessage>
           <br><br>
           <pre>{{ visibleModal.errorMessage }}</pre>
@@ -401,17 +402,17 @@ const closeWindow = () => {
         <template #supportEmail>
           <a href="emailto:support@getodk.org">support@getodk.org</a>
         </template>
-      </i18n-t>
-      <i18n-t v-else-if="visibleModal.type === 'retryModal'" tag="p" keypath="retryModal.body">
+      </Translation>
+      <Translation v-else-if="visibleModal.type === 'retryModal'" tag="p" keypath="retryModal.body">
         <template #supportEmail>
           <a href="emailto:support@getodk.org">support@getodk.org</a>
         </template>
-      </i18n-t>
-      <i18n-t v-else-if="visibleModal.type === 'sessionTimeoutModal'" tag="p" keypath="sessionTimeoutModal.body.full">
+      </Translation>
+      <Translation v-else-if="visibleModal.type === 'sessionTimeoutModal'" tag="p" keypath="sessionTimeoutModal.body.full">
         <template #here>
           <a href="/login" target="_blank">{{ $t('sessionTimeoutModal.body.here') }}</a>
         </template>
-      </i18n-t>
+      </Translation>
       <p v-else>
         {{ $t(visibleModal.type + '.body') }}
       </p>
