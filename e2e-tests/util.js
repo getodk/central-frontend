@@ -22,7 +22,7 @@ const test = testBase.extend({
   browserConsoleToTestStdout: [
     async ({ browserName, page }, use) => {
       page.on('console', msg => {                                                                                           
-        console.log(new Date(), `[${browserName}]`, msg.type(), msg.text());
+        console.log(new Date(), `[${browserName}]`, msg.type().toUpperCase(), msg.text());
       });
       await use();
     },
