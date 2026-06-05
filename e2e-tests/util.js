@@ -20,9 +20,9 @@ const login = async (page) => {
 const extendedTest = test.extend({
   // See: https://playwright.dev/docs/test-fixtures#adding-global-beforeeachaftereach-hooks
   browserConsoleToTestStdout: [
-    async ({ page }, use) => {
+    async ({ browserName, page }, use) => {
       page.on('console', msg => {                                                                                           
-        console.log(new Date(), msg.type(), msg.text());
+        console.log(new Date(), `[${browserName}]`, msg.type(), msg.text());
       });
       await use();
     },
