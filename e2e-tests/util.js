@@ -30,7 +30,7 @@ const test = testBase.extend({
           for(const arg of msg.args()) args.push(await arg.jsonValue());
         } catch(err) {
           // Avoid errors thrown when trying to destructure args() asynchronously.
-          if(err.message !== 'Execution context was destroyed, most likely because of a navigation') throw err;
+          if(!err.message.startsWith('Execution context was destroyed')) throw err;
           args.push(msg.text());
         }
 
