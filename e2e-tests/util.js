@@ -35,7 +35,6 @@ const test = testBase.extend({
 });
 
 export {
-  expect,
   test,
   login,
   ENCRYPTION_SECRET
