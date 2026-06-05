@@ -24,7 +24,7 @@ const test = testBase.extend({
       page.on('console', msg => {
         const { url, line, column } = msg.location();
         console.log(
-          `${testInfo.duration}ms [${browserName}] [${msg.type().toUpperCase()}] ${url}:${line}:${column}\n` +
+          `${testInfo.duration}ms [${browserName}] [console.${msg.type()}] ${url}:${line}:${column}\n` +
           `    message: ${msg.text()}`
         );
       });
