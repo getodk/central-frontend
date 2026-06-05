@@ -21,22 +21,11 @@ const test = testBase.extend({
   // See: https://playwright.dev/docs/test-fixtures#adding-global-beforeeachaftereach-hooks
   browserConsoleToTestStdout: [
     async ({ browserName, page }, use) => {
-      page.on('console', async msg => {
+      page.on('console', msg => {
         const { url, line, column } = msg.location();
-
-        const args = [];
-
-        try {
-          for(const arg of msg.args()) args.push(await arg.jsonValue());
-        } catch(err) {
-          // Avoid errors thrown when trying to destructure args() asynchronously.
-          if(!err.message.startsWith('Execution context was destroyed')) throw err;
-          args.push(msg.text());
-        }
-
         console.log(
           `[${browserName}|console.${msg.type()}] ${url}:${line}:${column}` +
-          `\n    message:`, ...args,
+          `\n    message:`, msg.text(),
         );
       });
       await use();
