@@ -1,5 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
 
+const reporter = [ ['list'] ];
+if(process.env.CI) reporter.push(['github']);
+else               reporter.push(['html']);
+
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
@@ -12,16 +16,17 @@ export default defineConfig({
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
-  retries: process.env.CI ? 2 : 0,
+  retries: process.env.CI ? 0 : 0,
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  reporter,
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
+    ignoreHTTPSErrors: true,
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
-    serviceWorkers: 'allow'
+    serviceWorkers: 'allow',
   },
 
   /* Configure projects for major browsers */
@@ -37,14 +42,20 @@ export default defineConfig({
     },
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        ignoreHTTPSErrors: true, // TODO should be enough to define above?
+        launchOptions: {
+          args: ['--ignore-certificate-errors'], // force-bypass service worker SSL checks
+        },
+      },
       dependencies: ['setup'],
     },
-
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
       dependencies: ['setup'],
     }
+    // TODO implement trusted root CA to avoid ignoreHTTPSErrors and ensure both service workers AND CSP are tested correctly
   ]
 });
