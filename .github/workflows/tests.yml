@@ -73,7 +73,7 @@ jobs:
     - build
     - static-checks
     - unit-tests
-    timeout-minutes: 120
+    timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
 
