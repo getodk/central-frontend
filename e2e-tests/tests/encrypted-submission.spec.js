@@ -1,6 +1,6 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import BackendClient from '../backend-client';
-import { login, ENCRYPTION_SECRET } from '../util';
+import { login, test, ENCRYPTION_SECRET } from '../util';
 import Zip from 'adm-zip';
 
 const appUrl = process.env.ODK_URL;
