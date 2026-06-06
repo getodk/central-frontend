@@ -13,11 +13,10 @@ except according to the terms contained in the LICENSE file.
 
 <script setup lang="ts">
 
-import { computed, getCurrentInstance, inject, onMounted, onUnmounted, ref, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-/* eslint-disable-next-line import/no-unresolved -- not sure why eslint is complaining about it */
-import { OdkWebForm, webFormsPlugin, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
-import { InstanceData, MonolithicInstancePayload } from '@getodk/xforms-engine';
+import { computed, getCurrentInstance, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { OdkWebForm, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
+import { type MonolithicInstancePayload } from '@getodk/xforms-engine';
 import { type Form } from './preview.vue';
 import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
@@ -26,26 +25,7 @@ import { Translation } from 'vue-i18n'
 import PrimeVue from 'primevue/config';
 import { odkThemePreset } from '../../../../packages/web-forms/src/odk-theme-preset';
 
-// import Modal from './modal.vue';
-
-// import { apiPaths, isProblem, queryString, requestAlertMessage } from '../util/request';
-// import { modalData } from '../util/reactivity';
-// import { noop } from '../util/util';
-// import { runSequentially } from '../util/promise';
-// import { useRequestData } from '../request-data';
-// import useRequest from '../composables/request';
-// import useRoutes from '../composables/routes';
-
-// const { resourceStates, form, createResource } = useRequestData();
-// const formVersionXml = createResource('formVersionXml');
-// const { request } = useRequest();
-// const submissionAttachments = createResource('submissionAttachments');
-// const submissionModal = modalData();
-// const route = useRoute();
 const router = useRouter();
-// const { submissionPath } = useRoutes();
-
-// const projectParam = route.params.projectId; // TODO don't trust anything!
 
 defineOptions({
   name: 'WebFormRenderer'
@@ -59,8 +39,6 @@ export interface WebFormsRendererProps {
 
 const props = defineProps<WebFormsRendererProps>();
 
-// const emit = defineEmits(['loaded']);
-
 // Install webFormsPlugin lazily here (not at app startup) to avoid loading @getodk/web-forms on every page.
 // This is safe because this component is already loaded asynchronously.
 const inst = getCurrentInstance();
@@ -70,19 +48,10 @@ if (inst) {
   // inst.appContext.app.use(webFormsPlugin);
 }
 
-// const { i18n } = inject('container');
-
-// const { initiallyLoading, dataExists } = props.actionType === 'edit' ? resourceStates([formVersionXml, submissionAttachments]) : resourceStates([formVersionXml]);
-
-// watch(() => initiallyLoading.value, (value) => {
-//   if (!value) emit('loaded');
-// });
-
 interface SubmissionData {
   instanceFile: File;
   attachments: File[];
 }
-
 
 let clearForm:Function;
 let submissionData: SubmissionData;
@@ -95,18 +64,6 @@ const attachmentNames = ref<string[]>();
 
 const visibleModal = ref();
 
-// const withToken = (url) => `${url}${queryString({ st: route.query.st })}`;
-// const getFormXml = () => {
-//   const encodedFormId = encodeURIComponent(formParam);
-//   const draftPath = '';
-//   const qs = '';
-//   const url = `/v1/projects/${projectParam}/forms/${encodedFormId}${draftPath}.xml${qs}`;
-//   fetch(url)
-//     .then((response) => response.text())
-//     .then((xml) => { formXml.value = xml })
-//     .catch((e) => console.err);
-// };
-
 const getAttachment = (requestUrl: URL) => {
   const encodedName = encodeURIComponent(requestUrl.pathname.split('/').pop()!);
   const draftPath = '';
@@ -115,7 +72,7 @@ const getAttachment = (requestUrl: URL) => {
 };
 
 const postPrimaryInstance = async (file:File) => {
-  const draftPath = '';
+  const draftPath = props.form.draft ? '/draft' : '';
   const qs = '';
   let url;
   let method;
@@ -225,8 +182,6 @@ const uploadAttachment = async (attachment: File, instanceId: string) => {
 
   return { name: attachment.name, result };
 };
-
-
 
 const submitData = async () => {
   visibleModal.value = { type: 'sendingDataModal', hideable: false };
@@ -373,8 +328,6 @@ const closeWindow = () => {
   window.close();
 };
 
-// getFormXml();
-
 </script>
 
 <template>
@@ -390,7 +343,7 @@ const closeWindow = () => {
 
   <Dialog :visible="visibleModal" :draggable="false" :closable="visibleModal?.hideable" @update:visible="visibleModal = null">
 		<template #header>
-			<p role="heading">{{ $t(visibleModal.type + '.title') }}</p>
+			<span role="heading">{{ $t(visibleModal.type + '.title') }}</span>
 		</template>
 
     <template #default>
@@ -413,26 +366,26 @@ const closeWindow = () => {
           <a href="/login" target="_blank">{{ $t('sessionTimeoutModal.body.here') }}</a>
         </template>
       </Translation>
-      <p v-else>
+      <span v-else>
         {{ $t(visibleModal.type + '.body') }}
-      </p>
+      </span>
     </template>
     <template #footer>
-      <div v-if="visibleModal.type === 'submissionModal'">
-        <Button type="button" @click="closeWindow()">{{ $t('action.close') }}</Button>
+      <template v-if="visibleModal.type === 'submissionModal'">
+        <Button type="button" @click="closeWindow()" variant="text">{{ $t('action.close') }}</Button>
         <Button type="button" @click="visibleModal = null">{{ $t('submissionModal.action.fillOutAgain') }}</Button>
-      </div>
+      </template>
       <!-- Any type of error while sending attachments -->
-      <div v-else-if="visibleModal.type === 'retryModal'
+      <template v-else-if="visibleModal.type === 'retryModal'
         || (visibleModal.type === 'sessionTimeoutModal' && !visibleModal.hideable)">
         <Button type="button" @click="submitData()">{{ $t('action.tryAgain') }}</Button>
-      </div>
+      </template>
       <!-- Preview modal or any type of error while submitting primary instance -->
-      <div v-else-if="visibleModal.type === 'previewModal'
+      <template v-else-if="visibleModal.type === 'previewModal'
         || visibleModal.type === 'errorModal'
         || visibleModal.type === 'sessionTimeoutModal' && visibleModal.hideable">
         <Button type="button" @click="visibleModal = null">{{ $t('action.close') }}</Button>
-      </div>
+      </template>
     </template>
   </Dialog>
 

@@ -9,7 +9,7 @@
 
     // Module system and compilation target/environment
     "isolatedModules": true,
-    "lib": ["ES2022"],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "moduleDetection": "force",
     "moduleResolution": "Bundler",
@@ -37,9 +37,7 @@
     "noUnusedParameters": true,
     "strict": true,
 
-    // No installed types used by default, to be overridden in individual
-    // configs as necessary
-    "types": []
+    "types": ["node", "vite/client"]
   },
   "include": ["src", "test", "env.d.ts", "eslint.config.js"],
   "files": ["./tsconfig.json"],

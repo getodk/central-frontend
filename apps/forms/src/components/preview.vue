@@ -11,8 +11,8 @@ except according to the terms contained in the LICENSE file.
 -->
 
 <script setup lang="ts">
-import { DefineComponent, ref, shallowRef } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { ref, defineAsyncComponent } from 'vue';
+import { useRoute } from 'vue-router';
 
 // TODO probably better to pass all params as props instead?
 const props = defineProps({
@@ -26,18 +26,11 @@ export type Form = {
   projectId: number;
   enketoId: string;
   enketoOnceId?: string;
+  draft: boolean;
 };
 
-type WebFormRendererComponent = DefineComponent<{
-  form: Form;
-  actionType: string;
-}>;
-
-type EnketoIframeComponent = DefineComponent<{
-  enketoId: string;
-  actionType: string;
-  instanceId?: string;
-}>;
+const WebFormRenderer = defineAsyncComponent(() => import('./web-form-renderer.vue'));
+const EnketoIframe = defineAsyncComponent(() => import('./enketo-iframe.vue'));
 
 const route = useRoute();
 
@@ -48,32 +41,6 @@ const useWebForms = route.query.webforms === 'true';
 const loadingState = ref(true);
 const webFormsEnabled = ref(true); // TODO put this in the `form` (below)
 const form = ref<Form>();
-const hideLoading = () => {
-  loadingState.value = false;
-};
-
-const WebFormRenderer = shallowRef<WebFormRendererComponent | null>(null);
-const EnketoIframe = shallowRef<EnketoIframeComponent | null>(null);
-
-const loadWebFormRenderer = async () => {
-	try {
-		WebFormRenderer.value = (
-			(await import('./web-form-renderer.vue'))
-		).default as WebFormRendererComponent;
-	} catch {
-		throw new Error('todo');
-	}
-};
-
-const loadEnketo = async () => {
-	try {
-		EnketoIframe.value = (
-			(await import('./enketo-iframe.vue'))
-		).default as EnketoIframeComponent;
-	} catch {
-		throw new Error('todo');
-	}
-};
 
 const getFormXml = async () => {
   const draftPath = props.draft ? '/draft' : '';
@@ -87,24 +54,25 @@ const fetchForm = async () => {
   const draftPath = props.draft ? '/draft' : '';
   const qs = '';
   const url = `/v1/projects/${projectId}/forms/${formId}${draftPath}${qs}`;
-  fetch(url)
-    .then((response) => response.json())
-    .then((formConfig) => {
-      if (formConfig.webformsEnabled || useWebForms) {
-        return Promise.all([getFormXml(), loadWebFormRenderer()])
-          .then(([xform]) => { form.value = { xmlFormId: formConfig.xmlFormId, xform, enketoId: formConfig.enketoId, projectId: formConfig.projectId } });
-      } else {
-        return loadEnketo().then(() => {
-          webFormsEnabled.value = false;
-          // TODO also need form.enketoOnceId
-          form.value = { xmlFormId: formConfig.xmlFormId, xform: '', enketoId: formConfig.enketoId, projectId: formConfig.projectId };
-        });
-      }
-    })
-    .then(() => {
-      // TODO we want to put this off until after the async load happens
-      loadingState.value = false;
-    });
+  const response = await fetch(url);
+  const formConfig = await response.json();
+  const formParam:Form = {
+    xmlFormId: formConfig.xmlFormId,
+    enketoId: formConfig.enketoId,
+    projectId: formConfig.projectId,
+    draft: !formConfig.publishedAt,
+    enketoOnceId: formConfig.enketoOnceId
+  };
+
+  if (formConfig.webformsEnabled || useWebForms) {
+    formParam.xform = await getFormXml();
+    webFormsEnabled.value = true;
+  } else {
+    webFormsEnabled.value = false;
+    // TODO also need form.enketoOnceId
+  }
+  form.value = formParam;
+  loadingState.value = false;
 };
 
 fetchForm();
@@ -120,10 +88,10 @@ fetchForm();
     LOADING
   </div>
   <template v-else-if="webFormsEnabled">
-    <component :is="WebFormRenderer" :projectId="projectId" :form="form" :action-type="'preview'"/>
+    <WebFormRenderer :projectId="projectId" :form="form" :action-type="'preview'"/>
   </template>
   <template v-else>
-    <enketo-iframe :enketo-id="form.enketoId" action-type="'new'"/>
+    <EnketoIframe :enketo-id="form.enketoId" action-type="'new'"/>
   </template>
 </template>
 

@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
   <iframe v-if="enketoSrc" id="enketo-iframe" title="Enketo" :src="enketoSrc"></iframe>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, onBeforeUnmount, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 // import { useRequestData } from '../request-data';
@@ -23,10 +23,13 @@ import { useRoute, useRouter } from 'vue-router';
 // import { getCookieValue } from '../util/util';
 
 // TODO move to common?
-const getCookieValue = (key, doc = document) => decodeURIComponent(doc.cookie.split(';')
-  .map(cookie => cookie.trim())
-  .find(cookie => cookie.startsWith(`${key}=`))
-  ?.split('=')[1] || '');
+const getCookieValue = (key, doc) => {
+  const cookie = doc.cookie.split(';')
+    .map(cookie => cookie.trim())
+    .find(cookie => cookie.startsWith(`${key}=`));
+  return decodeURIComponent(cookie?.split('=')[1] || '');
+};
+
 
 defineOptions({
   name: 'EnketoIframe'
@@ -79,7 +82,7 @@ const lastSubmitted = (enketoOnceId) => {
   });
 };
 
-const enketoSrc = ref(null);
+const enketoSrc = ref<string | null>(null);
 
 const single = computed(() => {
   const { query } = route;
@@ -101,9 +104,11 @@ const setEnketoSrc = () => {
   // We need to use encodeURIComponent here instead of URLSearchParams because enketo expects space
   // to pass as either ' ' (literal space character) or '%20'. Whereas URLSearchParams converts
   // space into '+' sign.
+
+  // TODO querystring common util?
   const qs = `?${Object.entries(query)
     .filter(([, value]) => typeof value === 'string')
-    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`)
     .join('&')}`;
 
   if (props.actionType === 'offline') {

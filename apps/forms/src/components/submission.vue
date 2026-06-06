@@ -15,74 +15,26 @@ except according to the terms contained in the LICENSE file.
     LOADING
   </div>
   <!--<not-found v-if="dataExists && !form.webformsEnabled && actionType === 'edit'"/>-->
-  <component
-    :is="WebFormRenderer"
-    v-else-if="/*dataExists &&*/ webFormsEnabled && form /*&& hasAccess*/"
-    :instance-id="instanceId"
-    :action-type="actionType"
-    :form="form"
-  />
-  <!-- enketoId can be enketoOnceId so first try to read it from the prop (route.params)-->
-  <enketo-iframe v-else-if="/*dataExists && */!webFormsEnabled && form/* && hasAccess*/"
-    :enketo-id="form.enketoId"
-    :action-type="actionType"
-    :instance-id="instanceId"
-    :enketo-once-id="form.enketoOnceId"
-    @loaded="hideLoading"/>
+  <template v-else-if="webFormsEnabled">
+    <WebFormRenderer :projectId="projectId" :form="form" :action-type="'new'" :instance-id="instanceId"/>
+  </template>
+  <template v-else>
+    <EnketoIframe :enketo-id="form.enketoId" action-type="'new'"/>
+  </template>
 </template>
 
 <script setup lang="ts">
-import { DefineComponent, watchEffect, computed, shallowRef, ref, watch } from 'vue';
+import { ref, defineAsyncComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useI18n } from 'vue-i18n';
-import { Form } from './preview.vue';
-
-// import Loading from '../loading.vue';
-// import PageBody from '../page/body.vue';
-// import notFound from '../not-found.vue';
-
-// import { noop } from '../../util/util';
-// import { apiPaths } from '../../util/request';
-// import { useRequestData } from '../../request-data';
-// import useEnketoRedirector from '../composables/enketo-redirector';
+import { type Form } from './preview.vue';
 
 // TODO probably better to pass all params as props instead?
 const props = defineProps({
   draft: Boolean,
 });
 
-type WebFormRendererComponent = DefineComponent<{
-  form: Form;
-  instanceId?: string | null;
-  actionType: string;
-}>;
-
-type EnketoIframeComponent = DefineComponent<{
-  enketoId: string;
-  actionType: string;
-  instanceId?: string | null;
-  enketoOnceId?: string | null;
-}>;
-
-const loadWebFormRenderer = async () => {
-	try {
-		WebFormRenderer.value = (
-			(await import('./web-form-renderer.vue'))
-		).default as WebFormRendererComponent;
-	} catch {
-		throw new Error('todo');
-	}
-};
-
-const loadEnketo = async () => {
-	try {
-		EnketoIframe.value = (
-			(await import('./enketo-iframe.vue'))
-		).default as EnketoIframeComponent;
-	} catch {
-		throw new Error('todo');
-	}
-};
+const WebFormRenderer = defineAsyncComponent(() => import('./web-form-renderer.vue'));
+const EnketoIframe = defineAsyncComponent(() => import('./enketo-iframe.vue'));
 
 defineOptions({
   name: 'FormSubmission'
@@ -122,34 +74,9 @@ const useWebForms = route.query.webforms === 'true';
 const offline: boolean = route.params.offline === 'offline';
 const webFormsEnabled = ref(true); 
 
-// const { project, resourceStates, form } = useRequestData();
-// const { t } = useI18n();
-// const { ensureEnketoOfflinePath, ensureCanonicalPath } = useEnketoRedirector();
-
-// const resources = computed(() => (props.projectId ? [project, form] : [form]));
 const form = ref<Form>();
 
 const loadingState = ref(true);
-const hideLoading = () => {
-  loadingState.value = false;
-};
-
-// const { initiallyLoading, dataExists } = computed(() => {
-//   const state = resourceStates(resources.value);
-//   return {
-//     initiallyLoading: state.initiallyLoading,
-//     dataExists: state.dataExists
-//   };
-// }).value;
-
-const WebFormRenderer = shallowRef<WebFormRendererComponent | null>(null);
-const EnketoIframe = shallowRef<EnketoIframeComponent | null>(null);
-
-// const fetchProject = () => project.request({
-//   url: apiPaths.project(props.projectId),
-//   extended: true
-// }).catch(noop);
-
 
 const getFormXml = async (projectId:number, formId:string, draft:boolean) => {
   const draftPath = draft ? '/draft' : '';
@@ -212,62 +139,48 @@ const redirectEnketoUrls = (formConfig:any) => {
   }
 };
 
-const fetchForm = async () => {
+const getFormConfig = async () => {
   const draftPath = props.draft ? '/draft' : '';
   const qs = queryString({ st: route.query.st });
 
-
-  let url = '';
-
+  let url:string;
   if (enketoId) {
     url = `/v1/form-links/${enketoId}/form${qs}`;
-
   } else {
     url = `/v1/projects/${projectId}/forms/${formId}${draftPath}${qs}`;
   }
 
-  fetch(url)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('failed to fetch form');
-      }
-      return response.json();
-    })
-    .then((formConfig) => {
-      redirectEnketoUrls(formConfig);
-      if (formConfig.webformsEnabled || useWebForms) {
-        return Promise.all([
-          getFormXml(formConfig.projectId, formConfig.xmlFormId, !formConfig.publishedAt),
-          loadWebFormRenderer()
-        ])
-          .then(([xform]) => {
-            form.value = {
-              xmlFormId: formConfig.xmlFormId,
-              xform,
-              enketoId: formConfig.enketoId,
-              projectId: formConfig.projectId
-            };
-          });
-      } else {
-        if (offline) {
-          window.location.replace(`/-/x/${formConfig.enketoId}${queryString(route.query)}`);
-          return;
-        }
-        return loadEnketo().then(() => {
-          webFormsEnabled.value = false;
-          form.value = {
-            xmlFormId: formConfig.xmlFormId,
-            enketoId: formConfig.enketoId,
-            projectId: formConfig.projectId,
-            enketoOnceId: formConfig.enketoOnceId
-          };
-        });
-      }
-    })
-    .then(() => {
-      // TODO we want to put this off until after the async load happens
-      loadingState.value = false;
-    });
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error('failed to fetch form');
+  }
+  return await response.json();
+};
+
+const fetchForm = async () => {
+  const formConfig = await getFormConfig();
+  const formParam:Form = {
+    xmlFormId: formConfig.xmlFormId,
+    enketoId: formConfig.enketoId,
+    projectId: formConfig.projectId,
+    draft: !formConfig.publishedAt,
+    enketoOnceId: formConfig.enketoOnceId
+  };
+  redirectEnketoUrls(formConfig);
+
+  if (formConfig.webformsEnabled || useWebForms) {
+    formParam.xform = await getFormXml(formConfig.projectId, formConfig.xmlFormId, !formConfig.publishedAt)
+    webFormsEnabled.value = true;
+  } else {
+    if (offline) {
+      window.location.replace(`/-/x/${formConfig.enketoId}${queryString(route.query)}`);
+      return;
+    }
+    webFormsEnabled.value = false;
+    // TODO also need form.enketoOnceId
+  }
+  form.value = formParam;
+  loadingState.value = false;
 };
 
 // const hasAccess = computed(() => {
