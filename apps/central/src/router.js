@@ -87,8 +87,8 @@ router.afterEach(unlessFailure(to => {
   // e.g. /#/some/path?next=/ - central#939
   router.beforeEach(to => {
     if (to.fullPath.startsWith('/#/')) {
+      // This must do a full page refresh because the page may end up in a different vue app
       window.location.href = to.fullPath.substring(2);
-      return true;
     }
     return true;
   });

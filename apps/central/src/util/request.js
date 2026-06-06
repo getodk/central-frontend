@@ -15,7 +15,7 @@ import { odataLiteral } from './odata';
 export const isProblem = (data) => data != null && typeof data === 'object' &&
   typeof data.code === 'number' && typeof data.message === 'string';
 
-// TODO consider moving this to common
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // API PATHS

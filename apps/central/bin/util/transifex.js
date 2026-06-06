@@ -1,4 +1,3 @@
-// TODO need to also extract for apps/forms
 const fs = require('fs');
 const { equals, hasPath, last, path: getPath, startsWith } = require('ramda');
 // eslint-disable-next-line import/no-extraneous-dependencies

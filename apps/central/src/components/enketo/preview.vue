@@ -9,8 +9,6 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
-
-<!-- TODO what is this? -->
 <template>
   <a v-if="disabledDescription == null" class="enketo-preview btn" :class="btnClass" :href="previewPath"
     target="_blank">
