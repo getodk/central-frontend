@@ -96,16 +96,16 @@ const offlineSubmissionPath = (projectId:number, xmlFormId:string, draft:boolean
 // TODO handle this in a separate component
 const redirectEnketoUrls = (form:Form) => {
   let target;
-  if (route.path.startsWith('/f/') && !route.query.st && form && projectId) {
+  if (route.path.startsWith('/f/') && !route.query.st && form) {
     if (actionType === 'new') {
-      target = newSubmissionPath(projectId, form.xmlFormId, form.draft);
+      target = newSubmissionPath(form.projectId, form.xmlFormId, form.draft);
     } else if (actionType === 'preview') {
-      target = formPreviewPath(projectId, form.xmlFormId, form.draft);
+      target = formPreviewPath(form.projectId, form.xmlFormId, form.draft);
     } else if (actionType === 'offline') {
-      target = offlineSubmissionPath(projectId, form.xmlFormId, form.draft);
+      target = offlineSubmissionPath(form.projectId, form.xmlFormId, form.draft);
     } else if (actionType === 'public-link') {
     // if it is public link without st and we got the data then it means user is logged in
-      target = newSubmissionPath(projectId, form.xmlFormId, form.draft);
+      target = newSubmissionPath(form.projectId, form.xmlFormId, form.draft);
     }
   }
   if (target) {

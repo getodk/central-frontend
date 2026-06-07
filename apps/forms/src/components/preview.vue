@@ -62,7 +62,7 @@ fetchForm();
     <WebFormRenderer :form="form" :xform="xform!" :action-type="'preview'"/>
   </template>
   <template v-else>
-    <EnketoIframe :form="form" action-type="'preview'"/>
+    <EnketoIframe :form="form" :enketo-id="form.enketoId" action-type="'preview'"/>
   </template>
 </template>
 
