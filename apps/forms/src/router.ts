@@ -20,34 +20,34 @@ const routes = [
     },
   },
   {
-    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/draft/submissions/:actionType(new)/:offline(offline)?',
+    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/draft/submissions/new/:offline(offline)?',
     component: Submission as Component,
     props: (route:any) => {
       const { offline, ...params } = route.params;
       return {
         ...params,
         draft: true,
-        actionType: offline === 'offline' ? 'offline' : 'public-link',
+        actionType: offline === 'offline' ? 'offline' : 'new',
       };
     },
   },
   {
-    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/:actionType(new)/:offline(offline)?',
+    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/new/:offline(offline)?',
     component: Submission as Component,
     props: (route:any) => {
       const { offline, ...params } = route.params;
       return {
         ...params,
-        actionType: offline === 'offline' ? 'offline' : 'public-link',
+        actionType: offline === 'offline' ? 'offline' : 'new',
       };
     },
   },
   {
-    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/:instanceId/:actionType/',
+    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/:instanceId/:actionType(edit)',
     component: Submission as Component,
-    props: (route:any) => {
+    props: () => {
       return {
-        actionType: route.params.actionType
+        actionType: 'edit'
       };
     },
   },
