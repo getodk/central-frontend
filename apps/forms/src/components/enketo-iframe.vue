@@ -27,7 +27,7 @@ const getCookieValue = (key, doc) => {
 };
 
 interface EnketoIframeProps {
-  enketoId: string; // may be the enketoOnceId
+  enketoId: string | null; // may be the enketoOnceId
   form: Form;
   actionType: string;
   instanceId?: string | undefined;

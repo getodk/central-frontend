@@ -10,19 +10,6 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 
-<template>
-  <div v-if="loadingState || !form">
-    LOADING
-  </div>
-  <!--<not-found v-if="dataExists && !form.webformsEnabled && actionType === 'edit'"/>-->
-  <template v-else-if="webFormsEnabled">
-    <WebFormRenderer :form="form" :xform="xform!" :instance-id="instanceId" :action-type="'new'"/>
-  </template>
-  <template v-else>
-    <EnketoIframe :form="form" :enketo-id="enketoId!" action-type="'new'"/>
-  </template>
-</template>
-
 <script setup lang="ts">
 import { ref, defineAsyncComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -93,7 +80,6 @@ const offlineSubmissionPath = (projectId:number, xmlFormId:string, draft:boolean
   return `${newSubmissionPath(projectId, xmlFormId, draft)}/offline`;
 };
 
-// TODO handle this in a separate component
 const redirectEnketoUrls = (form:Form) => {
   let target;
   if (route.path.startsWith('/f/') && !route.query.st && form) {
@@ -173,6 +159,19 @@ const fetchForm = async () => {
 // if (!form.dataExists) fetchForm();
 fetchForm();
 </script>
+
+<template>
+  <div v-if="loadingState || !form">
+    LOADING
+  </div>
+  <!--<not-found v-if="dataExists && !form.webformsEnabled && actionType === 'edit'"/>-->
+  <template v-else-if="webFormsEnabled">
+    <WebFormRenderer :form="form" :xform="xform!" :instance-id="instanceId" :action-type="'new'"/>
+  </template>
+  <template v-else>
+    <EnketoIframe :form="form" :enketo-id="enketoId" action-type="'new'"/>
+  </template>
+</template>
 
 <i18n lang="json5">
   {

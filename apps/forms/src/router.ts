@@ -5,8 +5,6 @@ import Submission from './components/submission.vue';
 import { loadLocale, userLocale, i18n } from './i18n';
 
 const routes = [
-  // TODO have some intermediary which loads the form to figure out whether to load WF or Enketo
-  // ... OR combine into one component
   {
     path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/preview',
     component: Preview as Component
