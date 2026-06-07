@@ -39,6 +39,10 @@ const routes = [
   },
   {
     path: '/f/:enketoId([a-zA-Z0-9]+)/:actionType(new|preview)?',
+    component: Submission as Component
+  },
+  {
+    path: '/f/:enketoId([a-zA-Z0-9]+)/:offline(offline)?',
     component: Submission as Component,
     props: (route:any) => {
       const { offline, ...params } = route.params;
