@@ -55,3 +55,7 @@ jobs:
       with:
         name: Playwright Artifacts
         path: central/client/test-results
+    - if: always()
+      name: Docker Container Logs
+      working-directory: central
+      run: docker compose logs
