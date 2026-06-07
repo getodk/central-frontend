@@ -16,17 +16,17 @@ except according to the terms contained in the LICENSE file.
   </div>
   <!--<not-found v-if="dataExists && !form.webformsEnabled && actionType === 'edit'"/>-->
   <template v-else-if="webFormsEnabled">
-    <WebFormRenderer :form="form" :instance-id="instanceId" :action-type="'new'"/>
+    <WebFormRenderer :form="form" :xform="xform!" :instance-id="instanceId" :action-type="'new'"/>
   </template>
   <template v-else>
-    <EnketoIframe :form="form" action-type="'new'"/>
+    <EnketoIframe :form="form" :enketo-id="enketoId!" action-type="'new'"/>
   </template>
 </template>
 
 <script setup lang="ts">
 import { ref, defineAsyncComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { type Form } from './preview.vue';
+import { type Form, getFormConfig, getFormXml, queryString } from '../utils/api.ts';
 
 // TODO probably better to pass all params as props instead?
 const props = defineProps({
@@ -75,62 +75,37 @@ const offline: boolean = route.params.offline === 'offline';
 const webFormsEnabled = ref(true); 
 
 const form = ref<Form>();
+const xform = ref<string>();
 
 const loadingState = ref(true);
 
-const getFormXml = async (projectId:number, formId:string, draft:boolean) => {
-  const draftPath = draft ? '/draft' : '';
-  const qs = queryString({ st: route.query.st });
-  const url = `/v1/projects/${projectId}/forms/${formId}${draftPath}.xml${qs}`;
-  const response = await fetch(url);
-  return await response.text();
-};
-
-const newSubmissionPath = (projectId:string, xmlFormId:string, draft:boolean) => {
+const newSubmissionPath = (projectId:number, xmlFormId:string, draft:boolean) => {
   const suffix = draft ? 'draft/submissions/new' : 'submissions/new';
   return `/projects/${projectId}/forms/${xmlFormId}/${suffix}`;
 };
 
-const formPreviewPath = (projectId:string, xmlFormId:string, draft:boolean) => {
+const formPreviewPath = (projectId:number, xmlFormId:string, draft:boolean) => {
   const suffix = draft ? 'draft/preview' : 'preview';
   return `/projects/${projectId}/forms/${xmlFormId}/${suffix}`;
 };
 
-const offlineSubmissionPath = (projectId:string, xmlFormId:string, draft:boolean) => {
+const offlineSubmissionPath = (projectId:number, xmlFormId:string, draft:boolean) => {
   return `${newSubmissionPath(projectId, xmlFormId, draft)}/offline`;
 };
 
-// TODO make common
-const queryString = (query:any) => {
-  if (query == null) return '';
-  const entries = Object.entries(query);
-  if (entries.length === 0) return '';
-  const params = new URLSearchParams();
-  for (const [name, value] of entries) {
-    if (Array.isArray(value)) {
-      for (const element of value)
-        params.append(name, element === null ? 'null' : element.toString());
-    } else if (value != null) {
-      params.set(name, value.toString());
-    }
-  }
-  const qs = params.toString();
-  return qs !== '' ? `?${qs}` : qs;
-};
-
 // TODO handle this in a separate component
-const redirectEnketoUrls = (formConfig:any) => {
+const redirectEnketoUrls = (form:Form) => {
   let target;
-  if (route.path.startsWith('/f/') && !route.query.st && formConfig) {
+  if (route.path.startsWith('/f/') && !route.query.st && form && projectId) {
     if (actionType === 'new') {
-      target = newSubmissionPath(formConfig.projectId, formConfig.xmlFormId, !formConfig.publishedAt);
+      target = newSubmissionPath(projectId, form.xmlFormId, form.draft);
     } else if (actionType === 'preview') {
-      target = formPreviewPath(formConfig.projectId, formConfig.xmlFormId, !formConfig.publishedAt);
+      target = formPreviewPath(projectId, form.xmlFormId, form.draft);
     } else if (actionType === 'offline') {
-      target = offlineSubmissionPath(formConfig.projectId, formConfig.xmlFormId, !formConfig.publishedAt);
+      target = offlineSubmissionPath(projectId, form.xmlFormId, form.draft);
     } else if (actionType === 'public-link') {
     // if it is public link without st and we got the data then it means user is logged in
-      target = newSubmissionPath(formConfig.projectId, formConfig.xmlFormId, !formConfig.publishedAt);
+      target = newSubmissionPath(projectId, form.xmlFormId, form.draft);
     }
   }
   if (target) {
@@ -139,37 +114,14 @@ const redirectEnketoUrls = (formConfig:any) => {
   }
 };
 
-const getFormConfig = async () => {
-  const draftPath = props.draft ? '/draft' : '';
-  const qs = queryString({ st: route.query.st });
-
-  let url:string;
-  if (enketoId) {
-    url = `/v1/form-links/${enketoId}/form${qs}`;
-  } else {
-    url = `/v1/projects/${projectId}/forms/${formId}${draftPath}${qs}`;
-  }
-
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error('failed to fetch form');
-  }
-  return await response.json();
-};
-
 const fetchForm = async () => {
-  const formConfig = await getFormConfig();
-  const formParam:Form = {
-    xmlFormId: formConfig.xmlFormId,
-    enketoId: formConfig.enketoId,
-    projectId: formConfig.projectId,
-    draft: !formConfig.publishedAt,
-    enketoOnceId: formConfig.enketoOnceId
-  };
+  const st = route.query.st as string ?? null;
+  const formConfig = await getFormConfig(projectId!, formId!, enketoId, props.draft, st);
+
   redirectEnketoUrls(formConfig);
 
   if (formConfig.webformsEnabled || useWebForms) {
-    formParam.xform = await getFormXml(formConfig.projectId, formConfig.xmlFormId, !formConfig.publishedAt)
+    xform.value = await getFormXml(formConfig.projectId, formConfig.xmlFormId, formConfig.draft, st)
     webFormsEnabled.value = true;
   } else {
     if (offline) {
@@ -177,9 +129,8 @@ const fetchForm = async () => {
       return;
     }
     webFormsEnabled.value = false;
-    // TODO also need form.enketoOnceId
   }
-  form.value = formParam;
+  form.value = formConfig;
   loadingState.value = false;
 };
 

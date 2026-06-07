@@ -17,7 +17,7 @@ import { computed, getCurrentInstance, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { OdkWebForm, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
 import { type MonolithicInstancePayload } from '@getodk/xforms-engine';
-import { type Form } from './preview.vue';
+import { type Form } from '../utils/api';
 import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
 import { Translation } from 'vue-i18n'
@@ -33,6 +33,7 @@ defineOptions({
 
 export interface WebFormsRendererProps {
   form: Form;
+  xform: string;
   actionType: string; // TODO type this? ['new', 'edit', 'public-link', 'offline', 'preview']
   instanceId?: string | null;
 }
@@ -334,7 +335,7 @@ const closeWindow = () => {
 
   <template v-if="!loading">
     <OdkWebForm
-      :form-xml="props.form.xform"
+      :form-xml="props.xform"
       :edit-instance="editInstanceOptions"
       :fetch-form-attachment="getAttachment"
       :track-device="true"
