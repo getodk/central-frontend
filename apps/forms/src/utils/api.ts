@@ -42,17 +42,7 @@ export const getFormXml = async (projectId: number, formId: string, draft: boole
   return await response.text();
 };
 
-export const getFormConfig = async (projectId: number, formId: string, enketoId: string | null, draft: boolean, st?: string | null): Promise<Form> => {
-  const draftPath = draft ? '/draft' : '';
-  const qs = queryString({ st });
-
-  let url:string;
-  if (enketoId) {
-    url = `/v1/form-links/${enketoId}/form${qs}`;
-  } else {
-    url = `/v1/projects/${projectId}/forms/${formId}${draftPath}${qs}`;
-  }
-
+const getForm = async (url: string): Promise<Form> => {
   const response = await fetch(url);
   if (!response.ok) {
     // TODO handle gracefully
@@ -68,6 +58,19 @@ export const getFormConfig = async (projectId: number, formId: string, enketoId:
     enketoOnceId: config.enketoOnceId,
     webformsEnabled: !!config.webformsEnabled
   };
+};
+
+export const getFormByEnketoId = async (enketoId: string, st?: string | null): Promise<Form> => {
+  const qs = queryString({ st });
+  const url = `/v1/form-links/${enketoId}/form${qs}`;
+   return getForm(url);
+};
+
+export const getFormByFormId = async (projectId: number, formId: string, draft: boolean, st?: string | null): Promise<Form> => {
+  const draftPath = draft ? '/draft' : '';
+  const qs = queryString({ st });
+  const url = `/v1/projects/${projectId}/forms/${formId}${draftPath}${qs}`;
+  return getForm(url);
 };
 
 export const getProject = async (projectId: number): Promise<Project> => {

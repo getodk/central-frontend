@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
 <script setup lang="ts">
 import { ref, defineAsyncComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { type Form, getFormConfig, getFormXml, getProject, type Project, queryString } from '../utils/api.ts';
+import { type Form, getFormByEnketoId, getFormByFormId, getFormXml, getProject, type Project, queryString } from '../utils/api.ts';
 
 // TODO probably better to pass all params as props instead?
 const props = defineProps({
@@ -101,12 +101,16 @@ const redirectEnketoUrls = (form:Form) => {
 };
 
 const fetchForm = async (): Promise<Form | undefined> => {
-  if (!projectId || !formId) {
-    return;
-  }
-
   const st = route.query.st as string ?? null;
-  const formConfig = await getFormConfig(projectId, formId, enketoId, props.draft, st);
+  let formConfig;
+  if (enketoId) {
+    formConfig = await getFormByEnketoId(enketoId, st);
+  } else if (projectId && formId) {
+    formConfig = await getFormByFormId(projectId, formId, props.draft, st);
+  } else {
+    // TODO
+    throw new Error('404');
+  }
 
   redirectEnketoUrls(formConfig);
 
@@ -133,7 +137,6 @@ const hasAccess = async (form:Form | undefined) => {
     return true;
   }
   const project = await getProject(projectId);
-  console.log({form, project, name: route.name});
 
   if ((route.name === 'SubmissionNew' || route.name === 'DraftSubmissionNew') && permits(project, ['submission.create'])) {
     return false;

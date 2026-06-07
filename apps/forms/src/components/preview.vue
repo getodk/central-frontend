@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
 <script setup lang="ts">
 import { ref, defineAsyncComponent } from 'vue';
 import { useRoute } from 'vue-router';
-import { getFormConfig, getFormXml, type Form } from '../utils/api.ts';
+import { getFormByFormId, getFormXml, type Form } from '../utils/api.ts';
 
 // TODO probably better to pass all params as props instead?
 const props = defineProps({
@@ -35,7 +35,7 @@ const form = ref<Form>();
 const xform = ref<string>();
 
 const fetchForm = async () => {
-  const formConfig = await getFormConfig(projectId, formId, null, props.draft);
+  const formConfig = await getFormByFormId(projectId, formId, props.draft);
   if (formConfig.webformsEnabled || useWebForms) {
     xform.value = await getFormXml(projectId, formId, props.draft);
     webFormsEnabled.value = true;
