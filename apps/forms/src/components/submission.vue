@@ -18,6 +18,7 @@ import { type Form, getFormConfig, getFormXml, queryString } from '../utils/api.
 // TODO probably better to pass all params as props instead?
 const props = defineProps({
   draft: Boolean,
+  actionType: String
 });
 
 const WebFormRenderer = defineAsyncComponent(() => import('./web-form-renderer.vue'));
@@ -56,7 +57,6 @@ const projectId: number | null = route.params.projectId ? Number.parseInt(route.
 const formId: string | null = route.params.xmlFormId ? encodeURIComponent(route.params.xmlFormId as string) : null;
 const instanceId: string | null = route.params.instanceId ? encodeURIComponent(route.params.instanceId as string) : null;
 const enketoId: string | null = route.params.enketoId ? encodeURIComponent(route.params.enketoId as string) : null;
-const actionType: string = route.params.actionType as string;
 const useWebForms = route.query.webforms === 'true';
 const offline: boolean = route.params.offline === 'offline';
 const webFormsEnabled = ref(true); 
@@ -83,13 +83,13 @@ const offlineSubmissionPath = (projectId:number, xmlFormId:string, draft:boolean
 const redirectEnketoUrls = (form:Form) => {
   let target;
   if (route.path.startsWith('/f/') && !route.query.st && form) {
-    if (actionType === 'new') {
+    if (props.actionType === 'new') {
       target = newSubmissionPath(form.projectId, form.xmlFormId, form.draft);
-    } else if (actionType === 'preview') {
+    } else if (props.actionType === 'preview') {
       target = formPreviewPath(form.projectId, form.xmlFormId, form.draft);
-    } else if (actionType === 'offline') {
+    } else if (props.actionType === 'offline') {
       target = offlineSubmissionPath(form.projectId, form.xmlFormId, form.draft);
-    } else if (actionType === 'public-link') {
+    } else if (props.actionType === 'public-link') {
     // if it is public link without st and we got the data then it means user is logged in
       target = newSubmissionPath(form.projectId, form.xmlFormId, form.draft);
     }
@@ -166,10 +166,10 @@ fetchForm();
   </div>
   <!--<not-found v-if="dataExists && !form.webformsEnabled && actionType === 'edit'"/>-->
   <template v-else-if="webFormsEnabled">
-    <WebFormRenderer :form="form" :xform="xform!" :instance-id="instanceId" action-type="new"/>
+    <WebFormRenderer :form="form" :xform="xform!" :instance-id="instanceId" :action-type="props.actionType ?? 'new'"/>
   </template>
   <template v-else>
-    <EnketoIframe :form="form" :enketo-id="enketoId" action-type="new"/>
+    <EnketoIframe :form="form" :enketo-id="enketoId" :action-type="props.actionType ?? 'new'"/>
   </template>
 </template>
 
