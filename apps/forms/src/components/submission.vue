@@ -56,7 +56,7 @@ const projectId: number | null = route.params.projectId ? Number.parseInt(route.
 const formId: string | null = route.params.xmlFormId ? encodeURIComponent(route.params.xmlFormId as string) : null;
 const instanceId: string | null = route.params.instanceId ? encodeURIComponent(route.params.instanceId as string) : null;
 const enketoId: string | null = route.params.enketoId ? encodeURIComponent(route.params.enketoId as string) : null;
-const actionType: string = route.params.actionType as string; // TODO validate (as above)
+const actionType: string = route.params.actionType as string;
 const useWebForms = route.query.webforms === 'true';
 const offline: boolean = route.params.offline === 'offline';
 const webFormsEnabled = ref(true); 
