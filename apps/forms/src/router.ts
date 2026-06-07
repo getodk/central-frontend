@@ -59,7 +59,7 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((_to, _from, next) => {
   const locale = userLocale();
   if (locale) {
     loadLocale(i18n.global, locale);

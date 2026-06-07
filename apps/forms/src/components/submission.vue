@@ -166,10 +166,10 @@ fetchForm();
   </div>
   <!--<not-found v-if="dataExists && !form.webformsEnabled && actionType === 'edit'"/>-->
   <template v-else-if="webFormsEnabled">
-    <WebFormRenderer :form="form" :xform="xform!" :instance-id="instanceId" :action-type="'new'"/>
+    <WebFormRenderer :form="form" :xform="xform!" :instance-id="instanceId" action-type="new"/>
   </template>
   <template v-else>
-    <EnketoIframe :form="form" :enketo-id="enketoId" action-type="'new'"/>
+    <EnketoIframe :form="form" :enketo-id="enketoId" action-type="new"/>
   </template>
 </template>
 
