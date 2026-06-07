@@ -17,10 +17,7 @@ except according to the terms contained in the LICENSE file.
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-// import { useRequestData } from '../request-data';
-
-// import useEventListener from '../composables/event-listener';
-// import { getCookieValue } from '../util/util';
+import type { Form } from './preview.vue';
 
 // TODO move to common?
 const getCookieValue = (key, doc) => {
@@ -30,24 +27,16 @@ const getCookieValue = (key, doc) => {
   return decodeURIComponent(cookie?.split('=')[1] || '');
 };
 
+interface EnketoIframeProps {
+  form: Form;
+  actionType: string;
+  instanceId?: string | undefined;
+}
+
+const props = defineProps<EnketoIframeProps>();
 
 defineOptions({
   name: 'EnketoIframe'
-});
-
-const props = defineProps({
-  enketoId: {
-    type: String,
-    required: true
-  },
-  actionType: {
-    type: String,
-    required: true
-  },
-  enketoOnceId: {
-    type: String
-  },
-  instanceId: String
 });
 
 const emit = defineEmits(['loaded']);
@@ -124,17 +113,17 @@ const setEnketoSrc = () => {
 
   // we no longer render Enketo for Edit Submission from central-frontend.
 
-  if (props.enketoId === props.enketoOnceId) {
-    lastSubmitted(props.enketoId)
+  if (props.form.enketoId === props.form.enketoOnceId) {
+    lastSubmitted(props.form.enketoId)
       .then(result => {
         if (result) {
           enketoSrc.value = `${basePath}/thanks?taken=${result}`;
         } else {
-          enketoSrc.value = `${prefix}/${props.enketoId}${qs}`;
+          enketoSrc.value = `${prefix}/${props.form.enketoId}${qs}`;
         }
       });
   } else {
-    enketoSrc.value = `${prefix}/${props.enketoId}${qs}`;
+    enketoSrc.value = `${prefix}/${props.form.enketoId}${qs}`;
   }
 
   emit('loaded');

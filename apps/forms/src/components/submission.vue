@@ -16,10 +16,10 @@ except according to the terms contained in the LICENSE file.
   </div>
   <!--<not-found v-if="dataExists && !form.webformsEnabled && actionType === 'edit'"/>-->
   <template v-else-if="webFormsEnabled">
-    <WebFormRenderer :projectId="projectId" :form="form" :action-type="'new'" :instance-id="instanceId"/>
+    <WebFormRenderer :form="form" :instance-id="instanceId" :action-type="'new'"/>
   </template>
   <template v-else>
-    <EnketoIframe :enketo-id="form.enketoId" action-type="'new'"/>
+    <EnketoIframe :form="form" action-type="'new'"/>
   </template>
 </template>
 

@@ -88,10 +88,10 @@ fetchForm();
     LOADING
   </div>
   <template v-else-if="webFormsEnabled">
-    <WebFormRenderer :projectId="projectId" :form="form" :action-type="'preview'"/>
+    <WebFormRenderer :form="form" :action-type="'preview'"/>
   </template>
   <template v-else>
-    <EnketoIframe :enketo-id="form.enketoId" action-type="'new'"/>
+    <EnketoIframe :form="form" action-type="'preview'"/>
   </template>
 </template>
 
