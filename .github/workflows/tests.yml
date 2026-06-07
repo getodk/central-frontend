@@ -58,4 +58,4 @@ jobs:
     - if: always()
       name: Docker Container Logs
       working-directory: central
-      run: docker compose logs
+      run: docker compose logs || true
