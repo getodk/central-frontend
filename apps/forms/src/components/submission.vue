@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
 <script setup lang="ts">
 import { ref, defineAsyncComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { type Form, getFormConfig, getFormXml, queryString } from '../utils/api.ts';
+import { type Form, getFormConfig, getFormXml, getProject, type Project, queryString } from '../utils/api.ts';
 
 // TODO probably better to pass all params as props instead?
 const props = defineProps({
@@ -57,7 +57,7 @@ const projectId: number | null = route.params.projectId ? Number.parseInt(route.
 const formId: string | null = route.params.xmlFormId ? encodeURIComponent(route.params.xmlFormId as string) : null;
 const instanceId: string | null = route.params.instanceId ? encodeURIComponent(route.params.instanceId as string) : null;
 const enketoId: string | null = route.params.enketoId ? encodeURIComponent(route.params.enketoId as string) : null;
-const useWebForms = route.query.webforms === 'true';
+const useWebForms: boolean = route.query.webforms === 'true';
 const offline: boolean = route.params.offline === 'offline';
 const webFormsEnabled = ref(true); 
 
@@ -100,9 +100,13 @@ const redirectEnketoUrls = (form:Form) => {
   }
 };
 
-const fetchForm = async () => {
+const fetchForm = async (): Promise<Form | undefined> => {
+  if (!projectId || !formId) {
+    return;
+  }
+
   const st = route.query.st as string ?? null;
-  const formConfig = await getFormConfig(projectId!, formId!, enketoId, props.draft, st);
+  const formConfig = await getFormConfig(projectId, formId, enketoId, props.draft, st);
 
   redirectEnketoUrls(formConfig);
 
@@ -116,48 +120,52 @@ const fetchForm = async () => {
     }
     webFormsEnabled.value = false;
   }
-  form.value = formConfig;
-  loadingState.value = false;
+  return formConfig;
+
 };
 
-// const hasAccess = computed(() => {
-//   if (!project.dataExists || !form.dataExists) return true;
+const permits = (project: Project, verbs: string[]) => {
+  return !verbs.every(verb => project.verbs.includes(verb));
+}
 
-//   let result = true;
+const hasAccess = async (form:Form | undefined) => {
+  if (!projectId || !form) {
+    return true;
+  }
+  const project = await getProject(projectId);
+  console.log({form, project, name: route.name});
 
-//   if ((route.name === 'SubmissionNew' || route.name === 'DraftSubmissionNew') &&
-//       !project.permits('submission.create'))
-//     result = false;
+  if ((route.name === 'SubmissionNew' || route.name === 'DraftSubmissionNew') && permits(project, ['submission.create'])) {
+    return false;
+  }
 
-//   if (route.name === 'SubmissionEdit' && !project.permits(['submission.read', 'submission.update']))
-//     result = false;
+  if (route.name === 'SubmissionEdit' && !permits(project, ['submission.read', 'submission.update'])) {
+    return false;
+  }
 
-//   if (!project.permits('form.read') && !project.permits('open_form.read'))
-//     result = false;
+  if (!permits(project, ['form.read']) && !permits(project, ['open_form.read'])) {
+    return false;
+  }
 
-//   if (!project.permits('form.read') && project.permits('open_form.read') && form.state !== 'open')
-//     result = false;
+  if (!permits(project, ['form.read']) && permits(project, ['open_form.read']) && form.state !== 'open') {
+    return false;
+  }
 
-//   return result;
-// });
+  return true;
+};
 
-// watch(() => initiallyLoading.value, (value) => {
-//   if (!value) loadingState.value = dataExists.value;
-// });
+const load = async () => {
+  const formConfig = await fetchForm();
+  const access = await hasAccess(formConfig);
+  if (!access) {
+    window.location.replace('/');
+  } else {
+    form.value = formConfig;
+    loadingState.value = false;
+  }
+};
 
-// watchEffect(() => {
-//   if (dataExists.value) {
-//     if (!hasAccess.value) {
-//       router.push('/');
-//     }
-//   }
-// });
-
-// Required to check permissions in hasAccess
-// if (projectId) fetchProject();
-
-// if (!form.dataExists) fetchForm();
-fetchForm();
+load();
 </script>
 
 <template>

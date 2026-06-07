@@ -22,6 +22,7 @@ const routes = [
   {
     path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/draft/submissions/new/:offline(offline)?',
     component: Submission as Component,
+    name: 'DraftSubmissionNew',
     props: (route:any) => {
       const { offline, ...params } = route.params;
       return {
@@ -34,6 +35,7 @@ const routes = [
   {
     path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/new/:offline(offline)?',
     component: Submission as Component,
+    name: 'SubmissionNew',
     props: (route:any) => {
       const { offline, ...params } = route.params;
       return {
@@ -45,6 +47,7 @@ const routes = [
   {
     path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/:instanceId/:actionType(edit)',
     component: Submission as Component,
+    name: 'SubmissionEdit',
     props: () => {
       return {
         actionType: 'edit'

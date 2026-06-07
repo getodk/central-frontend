@@ -2,9 +2,14 @@ export type Form = {
   xmlFormId: string;
   projectId: number;
   enketoId: string;
+  state: string;
   enketoOnceId?: string;
   draft: boolean;
   webformsEnabled: boolean;
+};
+
+export type Project = {
+  verbs: string[]
 };
 
 export const queryString = (query:any) => {
@@ -58,8 +63,23 @@ export const getFormConfig = async (projectId: number, formId: string, enketoId:
     xmlFormId: config.xmlFormId,
     enketoId: config.enketoId,
     projectId: config.projectId,
+    state: config.state,
     draft: !config.publishedAt,
     enketoOnceId: config.enketoOnceId,
     webformsEnabled: !!config.webformsEnabled
   };
+};
+
+export const getProject = async (projectId: number): Promise<Project> => {
+  const url = `/v1/projects/${projectId}`;
+  const headers = new Headers({
+    'Content-Type': 'application/json',
+    'X-Extended-Metadata': 'true'
+  });
+  const response = await fetch(url, { headers });
+  if (!response.ok) {
+    // TODO handle gracefully
+    throw new Error('failed to fetch form');
+  }
+  return await response.json();
 };
