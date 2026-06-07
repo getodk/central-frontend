@@ -23,23 +23,42 @@ const routes = [
     path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/draft/submissions/:actionType(new)/:offline(offline)?',
     component: Submission as Component,
     props: (route:any) => {
+      const { offline, ...params } = route.params;
       return {
-        ...route.params,
-        draft: true
+        ...params,
+        draft: true,
+        actionType: offline === 'offline' ? 'offline' : 'public-link',
       };
     },
   },
   {
     path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/:actionType(new)/:offline(offline)?',
-    component: Submission as Component
+    component: Submission as Component,
+    props: (route:any) => {
+      const { offline, ...params } = route.params;
+      return {
+        ...params,
+        actionType: offline === 'offline' ? 'offline' : 'public-link',
+      };
+    },
   },
   {
     path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/:instanceId/:actionType/',
-    component: Submission as Component
+    component: Submission as Component,
+    props: (route:any) => {
+      return {
+        actionType: route.params.actionType
+      };
+    },
   },
   {
     path: '/f/:enketoId([a-zA-Z0-9]+)/:actionType(new|preview)',
-    component: Submission as Component
+    component: Submission as Component,
+    props: (route:any) => {
+      return {
+        actionType: route.params.actionType
+      };
+    },
   },
   {
     path: '/f/:enketoId([a-zA-Z0-9]+)/:offline(offline)?',
