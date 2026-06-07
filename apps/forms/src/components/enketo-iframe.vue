@@ -94,7 +94,6 @@ const setEnketoSrc = () => {
   // to pass as either ' ' (literal space character) or '%20'. Whereas URLSearchParams converts
   // space into '+' sign.
 
-  // TODO querystring common util?
   const qs = `?${Object.entries(query)
     .filter(([, value]) => typeof value === 'string')
     .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`)
@@ -113,17 +112,18 @@ const setEnketoSrc = () => {
 
   // we no longer render Enketo for Edit Submission from central-frontend.
 
-  if (props.enketoId === props.form.enketoOnceId) {
-    lastSubmitted(props.enketoId)
+  const enketoId = props.enketoId ?? props.form.enketoId;
+  if (enketoId === props.form.enketoOnceId) {
+    lastSubmitted(enketoId)
       .then(result => {
         if (result) {
           enketoSrc.value = `${basePath}/thanks?taken=${result}`;
         } else {
-          enketoSrc.value = `${prefix}/${props.enketoId}${qs}`;
+          enketoSrc.value = `${prefix}/${enketoId}${qs}`;
         }
       });
   } else {
-    enketoSrc.value = `${prefix}/${props.enketoId}${qs}`;
+    enketoSrc.value = `${prefix}/${enketoId}${qs}`;
   }
 
   emit('loaded');

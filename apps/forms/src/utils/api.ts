@@ -14,8 +14,9 @@ export const queryString = (query:any) => {
   const params = new URLSearchParams();
   for (const [name, value] of entries) {
     if (Array.isArray(value)) {
-      for (const element of value)
+      for (const element of value) {
         params.append(name, element === null ? 'null' : element.toString());
+      }
     } else if (value != null) {
       params.set(name, value.toString());
     }
@@ -29,6 +30,10 @@ export const getFormXml = async (projectId: number, formId: string, draft: boole
   const qs = queryString({ st });
   const url = `/v1/projects/${projectId}/forms/${formId}${draftPath}.xml${qs}`;
   const response = await fetch(url);
+  if (!response.ok) {
+    // TODO handle gracefully
+    throw new Error('failed to fetch form');
+  }
   return await response.text();
 };
 
@@ -45,6 +50,7 @@ export const getFormConfig = async (projectId: number, formId: string, enketoId:
 
   const response = await fetch(url);
   if (!response.ok) {
+    // TODO handle gracefully
     throw new Error('failed to fetch form');
   }
   const config = await response.json();
