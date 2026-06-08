@@ -125,8 +125,6 @@ const setEnketoSrc = () => {
   } else {
     enketoSrc.value = `${prefix}/${enketoId}${qs}`;
   }
-
-  emit('loaded');
 };
 
 setEnketoSrc();
