@@ -14,6 +14,7 @@ except according to the terms contained in the LICENSE file.
 import { ref, defineAsyncComponent } from 'vue';
 import { useRoute } from 'vue-router';
 import { getFormByFormId, getFormXml, type Form } from '../utils/api.ts';
+import ProgressSpinner from 'primevue/progressspinner';
 
 const props = defineProps({
   draft: Boolean,
@@ -57,10 +58,10 @@ fetchForm();
 </script>
 
 <template>
-  <div v-if="loadingState">
-    LOADING
+  <div v-if="loadingState" class="spinner-container">
+    <ProgressSpinner/>
   </div>
-  <div v-if="errorState" class="form-load-error">
+  <div v-else-if="errorState" class="form-load-error">
     {{ $t('formNotFound') }}
   </div>
   <template v-else-if="webFormsEnabled">
