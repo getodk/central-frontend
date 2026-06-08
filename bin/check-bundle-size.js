@@ -60,7 +60,7 @@ function isTooBig({ path, size }) {
     case 'index.js':       return size > 2_300_000;
     case 'main.js':        return size >   400_000;
     case 'forms.js':       return size > 2_000_000;
-    case 'web-form.js':    return size > 2_000_000;
+    case 'web-form.js':    return size > 2_000_000; // Matches web-form-renderer.js
     case 'MapBlock.js':    return size >   600_000; // A Web Forms' feature bundle
     case 'geojson-map.js': return size >   500_000;
     default: // do nothing
