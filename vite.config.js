@@ -69,7 +69,7 @@ export default defineConfig(({ mode }) => ({
     vue(),
     devAppRouter(),
     VueI18nPlugin({
-      include: resolve(dirname(fileURLToPath(import.meta.url)), './apps/*/src/locales/**'),
+      include: resolve(dirname(fileURLToPath(import.meta.url)), './apps/central/src/locales/**'),
       compositionOnly: false,
       defaultSFCLang: 'json5',
       // We install what we need in src/container.js.
@@ -84,11 +84,19 @@ export default defineConfig(({ mode }) => ({
     target: buildTarget,
     // `false` during dev for performance reasons
     reportCompressedSize: mode === 'production',
-    cssCodeSplit: false,
     rollupOptions: {
       input: {
         main: resolve(import.meta.dirname, 'index.html'),
         forms: resolve(import.meta.dirname, 'apps/forms/index.html'),
+      },
+      output: {
+        entryFileNames: (chunkInfo) => {
+          const moduleId = chunkInfo.facadeModuleId;
+          if (moduleId && moduleId.includes('/apps/forms/')) {
+            return 'forms/[name].[hash].js';
+          }
+          return 'central/[name].[hash].js';
+        }
       },
     },
   },
