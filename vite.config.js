@@ -39,7 +39,6 @@ const devServer = {
   // bind it on `127.0.0.1` instead of `localhost` (default).
   // See https://github.com/vitejs/vite/issues/16522
   host: '127.0.0.1',
-  allowedHosts: ['central-dev', 'localhost'],
   port: 8989,
   proxy: Object.fromEntries(proxyPaths.map(path => [path, 'http://localhost:8686'])),
   // Because we proxy to nginx, which itself proxies to Backend and other
@@ -88,7 +87,7 @@ export default defineConfig(({ mode }) => ({
     cssCodeSplit: false,
     rollupOptions: {
       input: {
-        main: resolve(import.meta.dirname, 'index.html'), // move this to /apps/central?
+        main: resolve(import.meta.dirname, 'index.html'),
         forms: resolve(import.meta.dirname, 'apps/forms/index.html'),
       },
     },

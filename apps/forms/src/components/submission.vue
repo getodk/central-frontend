@@ -15,7 +15,6 @@ import { ref, defineAsyncComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { type Form, getFormByEnketoId, getFormByFormId, getFormXml, getProject, type Project, queryString } from '../utils/api.ts';
 
-// TODO probably better to pass all params as props instead?
 const props = defineProps({
   draft: Boolean,
   actionType: String
@@ -27,7 +26,6 @@ const EnketoIframe = defineAsyncComponent(() => import('./enketo-iframe.vue'));
 defineOptions({
   name: 'FormSubmission'
 });
-
 
 /**
 * Specifies the action to be performed. The possible values and their purposes are:
@@ -175,7 +173,6 @@ load();
   <div v-if="loadingState || !form">
     LOADING
   </div>
-  <!--<not-found v-if="dataExists && !form.webformsEnabled && actionType === 'edit'"/>-->
   <template v-else-if="webFormsEnabled">
     <WebFormRenderer :form="form" :xform="xform!" :instance-id="instanceId" :action-type="props.actionType ?? 'new'"/>
   </template>

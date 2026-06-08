@@ -34,7 +34,7 @@ defineOptions({
 export interface WebFormsRendererProps {
   form: Form;
   xform: string;
-  actionType: string; // TODO type this? ['new', 'edit', 'public-link', 'offline', 'preview']
+  actionType: string;
   instanceId?: string | null;
 }
 
@@ -74,14 +74,13 @@ const getAttachment = (requestUrl: URL) => {
 
 const postPrimaryInstance = async (file:File) => {
   const draftPath = props.form.draft ? '/draft' : '';
-  const qs = '';
   let url;
   let method;
   if (isEdit.value) {
-    url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}/submissions/${props.instanceId}${qs}`;
+    url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}/submissions/${props.instanceId}`;
     method = 'PUT';
   } else {
-    url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath}/submissions${qs}`;
+    url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath}/submissions`;
     method = 'POST';
   }
   const headers = {
@@ -158,13 +157,10 @@ const handleResult = () => {
 };
 
 const uploadAttachment = async (attachment: File, instanceId: string) => {
-  // const url = withToken(apiPaths.submissionAttachment(form.projectId, form.xmlFormId, !form.publishedAt, instanceId, attachment.name));
-
-  const draftPath = '';
   const encodedInstanceId = encodeURIComponent(instanceId);
   const encodedName = encodeURIComponent(attachment.name);
 
-  const url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath}/submissions/${encodedInstanceId}/attachments/${encodedName}`;
+  const url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}/submissions/${encodedInstanceId}/attachments/${encodedName}`;
 
   let result;
   try {
@@ -245,10 +241,6 @@ const handleSubmit = async (
   await submitData();
 };
 
-/**
- * Convert AxiosResponse into subset of web standard  {@link Response} that satisfies Web-Forms'
- * requirements
- */
 const transformAttachmentResponse = async (response: Response) => {
   const { status, statusText, headers } = response;
 
@@ -279,17 +271,13 @@ const transformAttachmentResponse = async (response: Response) => {
 };
 
 const fetchSubmissionXml = async () => {
-  // const encodedFormId = encodeURIComponent(props.form.xmlFormId);
-  // const encodedInstanceId = encodeURIComponent(props.instanceId);
-  const qs = '';//queryString(query);
-  const url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}/submissions/${props.instanceId}.xml${qs}`;
+  const url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}/submissions/${props.instanceId}.xml`;
   const response = await fetch(url);
   return await response.text();
 };
 
 const fetchSubmissionAttachments = async () => {
-  const qs = '';//queryString(query);
-  const url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}/submissions/${props.instanceId}/attachments${qs}`;
+  const url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}/submissions/${props.instanceId}/attachments`;
   const response = await fetch(url);
   const attachments = await response.json();
   attachmentNames.value = attachments

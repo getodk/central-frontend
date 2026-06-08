@@ -27,7 +27,7 @@ const enketoId = 'sCTIfjC5LrUto4yVXRYJkNKzP7e53vo';
 // };
 
 let query = {};
-let push = vi.fn();
+const push = vi.fn();
 
 vi.mock('vue-router', () => ({
   useRoute: () => ({
@@ -37,7 +37,7 @@ vi.mock('vue-router', () => ({
   useRouter: () => ({
     push
   })
-}))
+}));
 
 describe('EnketoIframe', () => {
   [
@@ -54,7 +54,7 @@ describe('EnketoIframe', () => {
         }
       });
       const iframe = component.find('iframe');
-      expect(iframe.exists()).to.be.true;
+      expect(iframe.exists()).to.equal(true);
       expect(iframe.attributes('src')).to.contain(expected);
     });
   });
@@ -300,5 +300,4 @@ describe('EnketoIframe', () => {
     const iframe = component.find('iframe');
     expect(iframe.attributes('src')).to.contain('hello%20%2B%20world');
   });
-
 });

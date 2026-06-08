@@ -43,10 +43,7 @@ const emit = defineEmits(['loaded']);
 
 const buildMode = import.meta.env?.MODE ?? 'production';
 
-// const { location, buildMode } = inject('container');
-
-// const { form } = useRequestData();
-const route = useRoute(); // TODO would be better to have all url processing in the parent
+const route = useRoute();
 const router = useRouter();
 
 const redirectUrl = computed(() => {
@@ -93,7 +90,6 @@ const setEnketoSrc = () => {
   // We need to use encodeURIComponent here instead of URLSearchParams because enketo expects space
   // to pass as either ' ' (literal space character) or '%20'. Whereas URLSearchParams converts
   // space into '+' sign.
-
   const qs = `?${Object.entries(query)
     .filter(([, value]) => typeof value === 'string')
     .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`)

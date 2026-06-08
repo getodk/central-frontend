@@ -1,6 +1,5 @@
 module.exports = {
   root: true,
-  ignorePatterns: ['test/**'],
   parserOptions: {
     ecmaVersion: 'latest'
   },

@@ -15,7 +15,6 @@ import { ref, defineAsyncComponent } from 'vue';
 import { useRoute } from 'vue-router';
 import { getFormByFormId, getFormXml, type Form } from '../utils/api.ts';
 
-// TODO probably better to pass all params as props instead?
 const props = defineProps({
   draft: Boolean,
 });
@@ -47,11 +46,6 @@ const fetchForm = async () => {
 };
 
 fetchForm();
-
-
-// watch(() => form.initiallyLoading, (value) => {
-//   if (!value) loadingState.value = form.dataExists;
-// });
 </script>
 
 <template>
