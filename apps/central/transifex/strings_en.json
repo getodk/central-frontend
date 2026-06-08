@@ -3037,7 +3037,7 @@
       },
       "orDrag": {
         "string": "or drag files onto this section to upload",
-        "developer_comment": "This text is shown next to a button with the text \"Choose files\"."
+        "developer_comment": "This text is shown next to a button with the text \"choose files\"."
       },
       "problem": {
         "noneUploaded": {

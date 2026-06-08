@@ -322,7 +322,7 @@ export default {
     "action": {
       "upload": "choose files"
     },
-    // This text is shown next to a button with the text "Choose files".
+    // This text is shown next to a button with the text "choose files".
     "orDrag": "or drag files onto this section to upload",
     "problem": {
       // {message} is an error message from the server.
