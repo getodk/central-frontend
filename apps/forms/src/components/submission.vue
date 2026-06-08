@@ -63,6 +63,7 @@ const form = ref<Form>();
 const xform = ref<string>();
 
 const loadingState = ref(true);
+const errorState = ref(false);
 
 const newSubmissionPath = (projectId:number, xmlFormId:string, draft:boolean) => {
   const suffix = draft ? 'draft/submissions/new' : 'submissions/new';
@@ -106,8 +107,7 @@ const fetchForm = async (): Promise<Form | undefined> => {
   } else if (projectId && formId) {
     formConfig = await getFormByFormId(projectId, formId, props.draft, st);
   } else {
-    // TODO
-    throw new Error('404');
+    throw new Error('form not found');
   }
 
   redirectEnketoUrls(formConfig);
@@ -156,12 +156,19 @@ const hasAccess = async (form:Form | undefined) => {
 };
 
 const load = async () => {
-  const formConfig = await fetchForm();
-  const access = await hasAccess(formConfig);
-  if (!access) {
-    window.location.replace('/');
-  } else {
-    form.value = formConfig;
+  loadingState.value = true;
+  errorState.value = false;
+  try {
+    const formConfig = await fetchForm();
+    const access = await hasAccess(formConfig);
+    if (!access) {
+      window.location.replace('/');
+    } else {
+      form.value = formConfig;
+      loadingState.value = false;
+    }
+  } catch (e) {
+    errorState.value = true;
     loadingState.value = false;
   }
 };
@@ -170,16 +177,28 @@ load();
 </script>
 
 <template>
-  <div v-if="loadingState || !form">
+  <div v-if="loadingState">
     LOADING
   </div>
+  <div v-if="errorState" class="form-load-error">
+    {{ $t('formNotFound') }}
+  </div>
   <template v-else-if="webFormsEnabled">
-    <WebFormRenderer :form="form" :xform="xform!" :instance-id="instanceId" :action-type="props.actionType ?? 'new'"/>
+    <WebFormRenderer :form="form!" :xform="xform!" :instance-id="instanceId" :action-type="props.actionType ?? 'new'"/>
   </template>
   <template v-else>
-    <EnketoIframe :form="form" :enketo-id="enketoId" :action-type="props.actionType ?? 'new'"/>
+    <EnketoIframe :form="form!" :enketo-id="enketoId" :action-type="props.actionType ?? 'new'"/>
   </template>
 </template>
+
+<style lang="scss">
+.form-load-error {
+  text-align: center;
+  width: 100%;
+  font-weight: bold;
+  padding: 50px;
+}
+</style>
 
 <i18n lang="json5">
   {
