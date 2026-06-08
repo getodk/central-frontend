@@ -15,10 +15,6 @@ except according to the terms contained in the LICENSE file.
       <span v-tooltip.text>{{ fieldKey.displayName }}</span>
     </td>
     <td>
-      <time-and-user :iso="fieldKey.createdAt" :user="fieldKey.createdBy"/>
-    </td>
-    <td><date-time :iso="fieldKey.lastUsed"/></td>
-    <td>
       <a v-if="fieldKey.token != null" ref="popoverLink" href="#"
         class="field-key-row-popover-link" role="button"
         @click.prevent="toggleQr">
@@ -28,21 +24,21 @@ except according to the terms contained in the LICENSE file.
         {{ $t('accessRevoked') }}
       </template>
     </td>
-    <td>
-      <div class="dropdown">
-        <button :id="actionsId" type="button"
-          class="btn btn-default dropdown-toggle" data-toggle="dropdown"
-          aria-haspopup="true" aria-expanded="false">
-          <span class="icon-cog"></span><span class="caret"></span>
+    <td><date-time :iso="fieldKey.createdAt"/></td>
+    <td class="created-by">
+      <span v-tooltip.text>{{ fieldKey.createdBy.displayName }}</span>
+    </td>
+    <td class="last-used-and-actions">
+      <div class="col-content">
+        <date-time :iso="fieldKey.lastUsed"/>
+      </div>
+      <div class="btn-group">
+        <button v-if="fieldKey.token != null" type="button"
+          class="revoke-button btn btn-default"
+          :aria-label="$t('action.revokeAccess')" v-tooltip.aria-label
+          @click="$emit('revoke', fieldKey)">
+          <span class="icon-ban"></span>
         </button>
-        <ul class="dropdown-menu dropdown-menu-right"
-          :aria-labelledby="actionsId">
-          <li :class="{ disabled: fieldKey.token == null }">
-            <a href="#" @click.prevent="$emit('revoke', fieldKey)">
-              {{ $t('action.revokeAccess') }}&hellip;
-            </a>
-          </li>
-        </ul>
       </div>
     </td>
   </tr>
@@ -50,11 +46,10 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import DateTime from '../date-time.vue';
-import TimeAndUser from '../time-and-user.vue';
 
 export default {
   name: 'FieldKeyRow',
-  components: { DateTime, TimeAndUser },
+  components: { DateTime },
   props: {
     fieldKey: {
       type: Object,
@@ -63,11 +58,6 @@ export default {
     highlighted: Number
   },
   emits: ['toggle-qr', 'revoke'],
-  computed: {
-    actionsId() {
-      return `field-key-row-actions${this.fieldKey.id}`;
-    }
-  },
   methods: {
     toggleQr() {
       this.$emit('toggle-qr', this.fieldKey, this.$refs.popoverLink);
@@ -77,13 +67,32 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../../assets/scss/mixins';
+@import '../../assets/scss/variables';
+
 .field-key-row {
   .table tbody & td { vertical-align: middle; }
 
-  .display-name {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  .display-name, .created-by {
+    @include text-overflow-ellipsis;
+    max-width: 250px;
+  }
+
+  .last-used-and-actions {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    min-width: 120px;
+  }
+
+  .col-content {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 3px;
+  }
+
+  .btn-group {
+    @include icon-btn-group;
+    .icon-ban { color: $color-danger; }
   }
 }
 </style>
