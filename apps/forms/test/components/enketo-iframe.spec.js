@@ -4,7 +4,6 @@ import EnketoIframe from '../../src/components/enketo-iframe.vue';
 
 const enketoId = 'sCTIfjC5LrUto4yVXRYJkNKzP7e53vo';
 
-
 // const wait = async () => new Promise(resolve => { setTimeout(resolve, 100) });
 
 // const postMessageToParent = async (iframe, data) => {

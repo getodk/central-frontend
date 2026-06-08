@@ -13,10 +13,6 @@ except according to the terms contained in the LICENSE file.
 // TODO duplication with /apps/central - move to common or migrate to web-forms process
 import { createI18n } from 'vue-i18n';
 
-// Bundle en messages, since en is the fallback locale. Other locales are loaded
-// asynchronously.
-// import fallbackMessages from './locales/en.json5';
-
 const fallbackLocale = 'en';
 export const locales = new Map();
 
@@ -86,18 +82,6 @@ const setLocale = (i18n, locale) => {
 export const loadLocale = (i18n, locale) => {
   if (!locales.has(locale)) throw new Error('unknown locale');
   setLocale(i18n, locale);
-
-  // return import(
-  //   /* webpackChunkName: "i18n-[request]" */
-  //   `./locales/${locale}.json`
-  // )
-  //   .then(m => {
-  //     i18n.setLocaleMessage(locale, m.default);
-  //     setLocale(i18n, locale);
-  //   })
-  //   .catch(error => {
-  //     throw error;
-  //   });
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -208,13 +192,6 @@ for (let i = 1; i < 8; i += 1) {
   };
 }
 
-const numberFormatsByLocale = {};
-for (const locale of locales.keys()) {
-  // There must be a property for each locale, even though the value is the
-  // same. Otherwise, $n() will use the fallback locale.
-  numberFormatsByLocale[locale] = numberFormats;
-}
-
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -225,7 +202,6 @@ export const i18n = createI18n({
   fallbackLocale,
   messages: { },
   pluralizationRules,
-  numberFormats: numberFormatsByLocale,
   // No message in the fallback locale should use HTML, because we use component
   // interpolation instead. We also use a Transifex translation check to check
   // that no translation contains HTML.
