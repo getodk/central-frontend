@@ -6,6 +6,10 @@ on:
 
 jobs:
   e2e-tests:
+    needs:
+    - build
+    - static-checks
+    - unit-tests
     timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
@@ -59,3 +63,13 @@ jobs:
       name: Docker Container Logs
       working-directory: central
       run: docker compose logs || true
+  wf-tests:
+    name: 'Run Web Forms Tests'
+    needs:
+    - build-wf
+    uses: ./.github/workflows/wf-ci.yml
+  wf-e2e-tests:
+    name: 'Run Web Forms E2E Tests'
+    needs:
+    - wf-tests
+    uses: ./.github/workflows/wf-ci-e2e.yml
