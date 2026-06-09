@@ -1,19 +1,6 @@
-<!--
-Copyright 2025 ODK Central Developers
-See the NOTICE file at the top-level directory of this distribution and at
-https://github.com/getodk/central-frontend/blob/master/NOTICE.
-
-This file is part of ODK Central. It is subject to the license terms in
-the LICENSE file found in the top-level directory of this distribution and at
-https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
-including this file, may be copied, modified, propagated, or distributed
-except according to the terms contained in the LICENSE file.
--->
-
-
 <script setup lang="ts">
 
-import { computed, getCurrentInstance, ref } from 'vue';
+import { computed, getCurrentInstance, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { OdkWebForm, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
 import { type MonolithicInstancePayload } from '@getodk/xforms-engine';
@@ -23,6 +10,7 @@ import Button from 'primevue/button';
 import { Translation } from 'vue-i18n'
 
 import PrimeVue from 'primevue/config';
+import ProgressSpinner from 'primevue/progressspinner';
 import { odkThemePreset } from '../../../../packages/web-forms/src/odk-theme-preset';
 
 const router = useRouter();
@@ -245,7 +233,7 @@ const transformAttachmentResponse = async (response: Response) => {
   const { status, statusText, headers } = response;
 
   const fetchHeaders = new Headers();
-  for (const [key, value] of Object.entries(headers)) {
+  for (const [key, value] of headers.entries()) {
     if (key === 'content-type') {
       // because web-forms doesn't want space between media type and charset
       // https://github.com/getodk/web-forms/issues/269
@@ -302,26 +290,30 @@ const editInstanceOptions = computed(() => {
     };
   }
   return null;
-}); 
-
-
-if (isEdit.value) {
-  fetchSubmissionAttachments().then(() => {
-    loading.value = false;
-  })
-} else {
-  loading.value = false;
-}
+});
 
 const closeWindow = () => {
   window.close();
 };
 
+onMounted(() => {
+  if (isEdit.value) {
+    fetchSubmissionAttachments().then(() => {
+      loading.value = false;
+    })
+  } else {
+    loading.value = false;
+  }
+});
 </script>
 
 <template>
 
-  <template v-if="!loading">
+  <div v-if="loading" class="spinner-container">
+    <ProgressSpinner/>
+  </div>
+
+  <template v-else="!loading">
     <OdkWebForm
       :form-xml="props.xform"
       :edit-instance="editInstanceOptions"

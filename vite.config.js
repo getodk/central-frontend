@@ -52,11 +52,15 @@ const devAppRouter = () => ({
   name: 'dev-app-router',
   configureServer(server) {
     server.middlewares.use((req, res, next) => {
-      // must match the regex paths defined in Nginx
-      const newSubmissionUrlRegex = /^\/projects\/\d+\/forms\/[^/]+(?:\/draft)?(?:\/preview|\/submissions\/new(?:\/offline)?\/?|\/submissions\/[^/]+\/edit)\/?/;
+      // NOTE: must match the regex paths defined in Nginx
+
+      // matches public link paths and Enketo style paths, eg: /f/{enketoId}?st={token}
       const enketoRegex = /^\/f\//;
 
-      if (newSubmissionUrlRegex.test(req.url) || enketoRegex.test(req.url)) {
+      // matches restful forms paths, eg: /projects/{projectId}/forms/{formId}/submissions/{submissionId}/edit
+      const restRegex = /^\/projects\/\d+\/forms\/[^/]+(?:\/draft)?(?:\/preview|\/submissions\/new(?:\/offline)?\/?|\/submissions\/[^/]+\/edit)\/?/;
+
+      if (enketoRegex.test(req.url) || restRegex.test(req.url)) {
         req.url = '/apps/forms/index.html';
       }
       next();

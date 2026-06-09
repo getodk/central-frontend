@@ -88,7 +88,8 @@ router.afterEach(unlessFailure(to => {
   router.beforeEach(to => {
     if (to.fullPath.startsWith('/#/')) {
       // This must do a full page refresh because the page may end up in a different vue app
-      window.location.href = to.fullPath.substring(2);
+      window.location.replace(to.fullPath.slice(2));
+      return false;
     }
     return true;
   });

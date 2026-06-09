@@ -1,15 +1,3 @@
-<!--
-Copyright 2025 ODK Central Developers
-See the NOTICE file at the top-level directory of this distribution and at
-https://github.com/getodk/central-frontend/blob/master/NOTICE.
-
-This file is part of ODK Central. It is subject to the license terms in
-the LICENSE file found in the top-level directory of this distribution and at
-https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
-including this file, may be copied, modified, propagated, or distributed
-except according to the terms contained in the LICENSE file.
--->
-
 <script setup lang="ts">
 import { ref, defineAsyncComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -128,7 +116,7 @@ const fetchForm = async (): Promise<Form | undefined> => {
 };
 
 const permits = (project: Project, verbs: string[]) => {
-  return !verbs.every(verb => project.verbs.includes(verb));
+  return verbs.every(verb => project.verbs.includes(verb));
 }
 
 const hasAccess = async (form:Form | undefined) => {
@@ -137,7 +125,7 @@ const hasAccess = async (form:Form | undefined) => {
   }
   const project = await getProject(projectId);
 
-  if ((route.name === 'SubmissionNew' || route.name === 'DraftSubmissionNew') && permits(project, ['submission.create'])) {
+  if ((route.name === 'SubmissionNew' || route.name === 'DraftSubmissionNew') && !permits(project, ['submission.create'])) {
     return false;
   }
 
