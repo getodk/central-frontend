@@ -75,8 +75,8 @@
     "string": "Longitude: {longitude}.",
     "developer_comment": "Displays the GPS longitude coordinate. {longitude} is the numeric longitude value."
   },
-  "select.placeholder": {
-    "string": "Select Answer",
+  "searchable_dropdown.select.placeholder": {
+    "string": "Select answer",
     "developer_comment": "Placeholder text shown in a minimal select dropdown when no option has been selected yet."
   },
   "validation_message.required.error": {

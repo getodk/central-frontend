@@ -1,6 +1,6 @@
 {
-  "select.placeholder": {
-    "string": "Select Answer",
+  "searchable_dropdown.select.placeholder": {
+    "string": "Select answer",
     "developer_comment": "Placeholder text shown in a minimal select dropdown when no option has been selected yet."
   }
 }
