@@ -75,7 +75,7 @@ test.describe('Enketo', () => {
 
         await page.goto(appUrl + t.url({ enketoId, enketoOnceId, draftEnketoId, xmlFormId, instanceId, st }));
 
-        await page.waitForURL(appUrl + t.newUrl({ enketoId, enketoOnceId, draftEnketoId, xmlFormId, instanceId, st }));
+        await expect(page).toHaveURL(appUrl + t.newUrl({ enketoId, enketoOnceId, draftEnketoId, xmlFormId, instanceId, st }));
 
         const frame = await page.frameLocator('iframe');
 
@@ -121,7 +121,7 @@ test.describe('Enketo', () => {
 
         await page.goto(appUrl + t.url({ enketoId, enketoOnceId, draftEnketoId, xmlFormId, instanceId, st }));
 
-        await page.waitForURL(appUrl + t.newUrl({ enketoId, enketoOnceId, draftEnketoId, xmlFormId, instanceId, st }));
+        await expect(page).toHaveURL(appUrl + t.newUrl({ enketoId, enketoOnceId, draftEnketoId, xmlFormId, instanceId, st }));
 
         await expect(page.getByRole('heading', { name: publishedForm.name })).toBeVisible();
 
