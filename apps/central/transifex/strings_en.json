@@ -3031,13 +3031,13 @@
     "FormAttachmentList": {
       "action": {
         "upload": {
-          "string": "Choose files",
+          "string": "choose files",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "orDrag": {
         "string": "or drag files onto this section to upload",
-        "developer_comment": "This text is shown next to a button with the text \"Choose files\"."
+        "developer_comment": "This text is shown next to a button with the text \"choose files\"."
       },
       "problem": {
         "noneUploaded": {
