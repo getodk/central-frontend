@@ -1,7 +1,7 @@
 import { attachErrorHandler, browserTracingIntegration, init, setTag } from '@sentry/vue';
 
 const initSentry = (app, source) => {
-  const dsn = import.meta.env.VITE_SENTRY_DSN;
+  const dsn = import.meta.env.ODK_CENTRAL_FRONTEND_SENTRY_DSN;
   if (!dsn) {
     return;
   }
