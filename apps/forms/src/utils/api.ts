@@ -12,6 +12,16 @@ export type Project = {
   verbs: string[]
 };
 
+export class RequestError extends Error {
+  public statusCode: number;
+
+  constructor(message: string, statusCode: number) {
+    super(message);
+    this.statusCode = statusCode;
+    Object.setPrototypeOf(this, new.target.prototype);
+  }
+}
+
 export const queryString = (query:any) => {
   if (query == null) return '';
   const entries = Object.entries(query);
@@ -36,27 +46,26 @@ export const getFormXml = async (projectId: number, formId: string, draft: boole
   const url = `/v1/projects/${projectId}/forms/${formId}${draftPath}.xml${qs}`;
   const response = await fetch(url);
   if (!response.ok) {
-    // TODO handle gracefully
-    throw new Error('failed to fetch form');
+    const result = await response.json();
+    throw new RequestError(result.message, result.code);
   }
   return await response.text();
 };
 
 const getForm = async (url: string): Promise<Form> => {
   const response = await fetch(url);
+  const result = await response.json();
   if (!response.ok) {
-    // TODO handle gracefully
-    throw new Error('failed to fetch form');
+    throw new RequestError(result.message, result.code);
   }
-  const config = await response.json();
   return {
-    xmlFormId: config.xmlFormId,
-    enketoId: config.enketoId,
-    projectId: config.projectId,
-    state: config.state,
-    draft: !config.publishedAt,
-    enketoOnceId: config.enketoOnceId,
-    webformsEnabled: !!config.webformsEnabled
+    xmlFormId: result.xmlFormId,
+    enketoId: result.enketoId,
+    projectId: result.projectId,
+    state: result.state,
+    draft: !result.publishedAt,
+    enketoOnceId: result.enketoOnceId,
+    webformsEnabled: !!result.webformsEnabled
   };
 };
 
@@ -80,9 +89,9 @@ export const getProject = async (projectId: number): Promise<Project> => {
     'X-Extended-Metadata': 'true'
   });
   const response = await fetch(url, { headers });
+  const result = await response.json();
   if (!response.ok) {
-    // TODO handle gracefully
-    throw new Error('failed to fetch form');
+    throw new RequestError(result.message, result.code);
   }
-  return await response.json();
+  return result;
 };

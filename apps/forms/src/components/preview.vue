@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, defineAsyncComponent } from 'vue';
 import { useRoute } from 'vue-router';
-import { getFormByFormId, getFormXml, type Form } from '../utils/api.ts';
+import { getFormByFormId, getFormXml, RequestError, type Form } from '../utils/api.ts';
 import ProgressSpinner from 'primevue/progressspinner';
 
 const props = defineProps({
@@ -37,8 +37,14 @@ const fetchForm = async () => {
     form.value = formConfig;
     loadingState.value = false;
   } catch (e) {
-    errorState.value = true;
-    loadingState.value = false;
+    if (e instanceof RequestError && e.statusCode >= 401 && e.statusCode < 404) {
+      // not logged in
+      window.location.href = '/login?next=/wf' + window.location.pathname;
+    } else {
+      // unknown error
+      errorState.value = true;
+      loadingState.value = false;
+    }
   }
 };
 

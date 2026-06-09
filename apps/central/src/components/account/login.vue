@@ -59,7 +59,7 @@ import { useRouter } from 'vue-router';
 import FormGroup from '../form-group.vue';
 import Spinner from '../spinner.vue';
 
-import { enketoBasePath, noop } from '../../util/util';
+import { enketoBasePath, noop, webFormsBasePath } from '../../util/util';
 import { localStore } from '../../util/storage';
 import { logIn } from '../../util/session';
 import { queryString } from '../../util/request';
@@ -186,9 +186,10 @@ export default {
       }
       if (url.origin !== window.location.origin || url.pathname === '/login')
         return internal('/');
-
       if (url.pathname.startsWith(`${enketoBasePath}/`))
         return external(url.href);
+      if (url.pathname.startsWith(`${webFormsBasePath}/`))
+        return external(url.pathname.slice(webFormsBasePath.length + 1));
       return internal(url.pathname + url.search + url.hash);
     },
     submit() {

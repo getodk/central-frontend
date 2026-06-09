@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, defineAsyncComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { type Form, getFormByEnketoId, getFormByFormId, getFormXml, getProject, type Project, queryString } from '../utils/api.ts';
+import { type Form, getFormByEnketoId, getFormByFormId, getFormXml, getProject, type Project, queryString, RequestError } from '../utils/api.ts';
 import ProgressSpinner from 'primevue/progressspinner';
 
 const props = defineProps({
@@ -96,7 +96,7 @@ const fetchForm = async (): Promise<Form | undefined> => {
   } else if (projectId && formId) {
     formConfig = await getFormByFormId(projectId, formId, props.draft, st);
   } else {
-    throw new Error('form not found');
+    throw new RequestError('Form not found', 404);
   }
 
   redirectEnketoUrls(formConfig);
@@ -157,8 +157,14 @@ const load = async () => {
       loadingState.value = false;
     }
   } catch (e) {
-    errorState.value = true;
-    loadingState.value = false;
+    if (e instanceof RequestError && e.statusCode >= 401 && e.statusCode < 404) {
+      // not logged in
+      window.location.href = '/login?next=/wf' + window.location.pathname;
+    } else {
+      // unknown error
+      errorState.value = true;
+      loadingState.value = false;
+    }
   }
 };
 
