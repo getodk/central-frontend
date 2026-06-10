@@ -263,6 +263,10 @@
           "string": "Replace Draft",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
+        "update_draft_update": {
+          "string": "Draft Settings Changed",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
         "update_publish": {
           "string": "Publish Draft",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
@@ -3523,6 +3527,32 @@
           "string": "Published {dateTime}",
           "developer_comment": "This shows the date and time at which the current version of the Form was published, for example: \"Published 2020/01/01 01:23\". {dateTime} may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
         }
+      }
+    },
+    "FormEditWebForm": {
+      "title": {
+        "string": "New default web form experience"
+      },
+      "description": {
+        "full": {
+          "string": "Newly created forms now use the new ODK web forms experience by default for previews, web submissions and submission editing. Some advanced form features may not yet be fully supported, {learnMore}.",
+          "developer_comment": "{learnMore} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nlearn more"
+        },
+        "learnMore": {
+          "string": "learn more",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {learnMore} is in the following text:\n\nNewly created forms now use the new ODK web forms experience by default for previews, web submissions and submission editing. Some advanced form features may not yet be fully supported, {learnMore}."
+        }
+      },
+      "option": {
+        "webForms": {
+          "string": "New ODK Web Forms (recommended)"
+        },
+        "enketo": {
+          "string": "Enketo compatibility mode"
+        }
+      },
+      "updateInProgress": {
+        "string": "Update request in progress"
       }
     },
     "FormHead": {
