@@ -113,7 +113,7 @@ export default defineConfig(({ mode }) => ({
       headless: true,
       screenshotFailures: false,
       provider: playwright(),
-      instances: [{ browser: 'chromium' }],
+      instances: [{ browser: 'ChromeHeadless' }],
     },
   },
   // Not sure why this is needed in addition to build.target above and why it's
