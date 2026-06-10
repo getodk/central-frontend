@@ -28,6 +28,7 @@ jobs:
     - run: npm run lint
     - uses: browser-actions/setup-chrome@v2
     - run: npm run test -w=@getodk/central-frontend
+    - run: npx playwright install chromium --with-deps
     - run: npm run test -w=@getodk/forms
   build:
     timeout-minutes: 5
