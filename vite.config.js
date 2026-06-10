@@ -16,6 +16,7 @@ import { defineConfig } from 'vite';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'url';
 import { readFileSync } from 'fs';
+import { playwright } from '@vitest/browser-playwright'
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const webFormsPackage = JSON.parse(
@@ -105,7 +106,15 @@ export default defineConfig(({ mode }) => ({
     },
   },
   test: {
-    environment: 'jsdom'
+    plugins: [vue(), devAppRouter()],
+    environment: 'jsdom',
+    browser: {
+      enabled: true,
+      headless: true,
+      screenshotFailures: false,
+      provider: playwright(),
+      instances: [{ browser: 'chromium' }],
+    },
   },
   // Not sure why this is needed in addition to build.target above and why it's
   // only an issue in development. `npm run dev` doesn't work without this.

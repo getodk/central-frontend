@@ -1,101 +1,151 @@
-// import sinon from 'sinon';
+import { createRouter, createWebHistory } from 'vue-router';
+import { describe, expect, it, vi } from 'vitest';
+import { mount } from '@vue/test-utils';
+import WebFormRenderer from '../../src/components/web-form-renderer.vue';
+import { flushPromises } from '@vue/test-utils'
+import { createI18n } from 'vue-i18n'
 
-// import Modal from '../../src/components/modal.vue';
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [{ path: '/', component: { template: '<div>Home</div>' } }],
+})
 
-// import { mockHttp } from '../util/http';
-// import createTestContainer from '../util/container';
-// import { mockRouter } from '../util/router';
-// import { testRequestData } from '../util/request-data';
-// import testData from '../data';
-// import simpleXml from '../data/xml/simple/form.xml';
-// import simpleSubmission from '../data/xml/simple/submission.xml';
-// import imageUploaderXml from '../data/xml/image-uploader/form.xml';
-// import imageUploaderSubmission from '../data/xml/image-uploader/submission.xml';
-// import formWithAttachmentXml from '../data/xml/with-attachment/form.xml';
-// import { mockLogin } from '../util/session';
-// import { mergeMountOptions } from '../util/lifecycle';
-// import { setFiles } from '../util/trigger';
-// import { wait, waitUntil } from '../util/util';
+const simpleForm = `
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa">
+    <h:head>
+        <h:title>simple</h:title>
+        <model>
+            <instance>
+                <data id="simple">
+                    <meta>
+                        <instanceID/>
+                    </meta>
+                    <first_name/>
+                </data>
+            </instance>
+            <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" calculate="concat('uuid:', uuid())"/>
+            <bind nodeset="/data/first_name" type="string"/>
+        </model>
+    </h:head>
+    <h:body>
+        <input ref="/data/first_name">
+            <label>First Name</label>
+        </input>
+    </h:body>
+</h:html>
+`;
 
-import { it } from 'vitest';
+const formWithAttachmentXml = `<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa">
+    <h:head>
+        <h:title>simple</h:title>
+        <model>
+            <instance>
+                <data id="simple">
+                    <meta>
+                        <instanceID/>
+                    </meta>
+                    <first_name/>
+                    <city/>
+                </data>
+            </instance>
+            <instance id="cities" src="jr://file-csv/cities.csv"/>
+            <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" calculate="concat('uuid:', uuid())"/>
+            <bind nodeset="/data/first_name" type="string"/>
+            <bind nodeset="/data/city" type="string"/>
+        </model>
+    </h:head>
+    <h:body>
+        <input ref="/data/first_name">
+            <label>First Name</label>
+        </input>
+        <select1 ref="/data/city">
+            <label>City</label>
+            <itemset nodeset="instance('cities')/root/item">
+                <value ref="name"/>
+                <label ref="label"/>
+            </itemset>
+        </select1>
+    </h:body>
+</h:html>`
 
-it.skip('wf tests', async () => {});
+const i18n = createI18n({
+  legacy: false,
+  locale: 'en',
+  messages: {
+    en: {
+      'sendingDataModal.title': () => 'sending',
+      'sendingDataModal.body': () => '',
+      'action.close': () => 'close',
+      'submissionModal.title': () => 'Form successfully sent!',
+      'submissionModal.body': () => '',
+      'submissionModal.action.fillOutAgain': () => '',
+    },
+  },
+});
 
-// describe('WebFormRenderer', () => {
-//   let WebFormRenderer;
+describe('WebFormRenderer', () => {
+  const mountComponent = async (xform) => {
 
-//   beforeAll(async () => {
-//     // importing this at the top causes this file to be skipped by karma/mocha
-//     const webFormRenderer = await import('../../src/components/web-form-renderer.vue');
-//     WebFormRenderer = webFormRenderer.default;
-//   });
+    const component = mount(WebFormRenderer, {
+      global: {
+        plugins: [router, i18n]
+      },
+      props: {
+        xform,
+        form: { xmlFormId: 'simple', projectId: 1, enketoId: '', state: 'open', draft: false, webformsEnabled: false },
+        actionType: 'new'
+      }
+    });
+    await flushPromises();
+    return component;
+  };
 
-//   beforeEach(() => {
-//     mockLogin();
-//   });
+  it.skip('should show ODK Web Form', async () => {
+    const component = await mountComponent(simpleForm);
+    const form = component.find('.odk-form');
+    expect(form.exists()).to.equal(true);
+  });
 
-//   const mountComponent = (options, formXml = simpleXml) => {
-//     const container = createTestContainer({
-//       requestData: testRequestData([], {
-//         form: testData.extendedForms.last()
-//       }),
-//       router: mockRouter('/')
-//     });
-//     return mockHttp()
-//       .mount(WebFormRenderer, mergeMountOptions(options, {
-//         container,
-//         props: { actionType: 'new' }
-//       }))
-//       .respondWithData(() => formXml);
-//   };
+  it.skip('should load form attachments', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      status: 200,
+      text: async () => 'name,label\ntoronto,Toronto',
+    } as Response);
+    const component = await mountComponent(formWithAttachmentXml);
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    const form = component.find('.odk-form');
+    expect(form.exists()).to.equal(true);
+    expect(form.text()).to.match(/Toronto/);
+    fetchSpy.mockReset();
+  });
 
-//   it('should send xml request', () => {
-//     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+  it.skip('should send submission xml request', async () => {
+    
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({ instanceId: 1 }),
+    } as Response);
+    const component = await mountComponent(simpleForm);
+    component.find('.odk-form .footer button').trigger('click');
+    await vi.waitFor(() => {
+      const el = document.querySelector('.p-dialog-header')
+      if (!el) throw new Error('Not ready yet')
+    })
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    expect(fetchSpy.mock.calls.length).to.equal(1);
+    const firstCall = fetchSpy.mock.calls[0]!;
+    const url = firstCall[0]!;
+    const args = firstCall[1]!;
+    expect(url).to.equal(`/v1/projects/1/forms/simple/submissions`);
+    expect(args.method).to.equal('POST');
+    expect(args.headers!['Content-Type']).to.equal('text/xml');
+    expect((args.body as File).name).to.equal('xml_submission_file');
+  });
 
-//     return mountComponent()
-//       .testRequests([
-//         { url: '/v1/projects/1/forms/a.xml' }
-//       ]);
-//   });
 
-//   it('should show ODK Web Form', async () => {
-//     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
 
-//     const component = await mountComponent();
-
-//     component.find('.odk-form').exists().should.be.true;
-//   });
-
-//   it('should load form attachments', async () => {
-//     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
-
-//     const component = await mountComponent({}, formWithAttachmentXml)
-//       .respondWithData(() => 'name,label\ntoronto,Toronto')
-//       .testRequests([
-//         { url: '/v1/projects/1/forms/a.xml' },
-//         { url: '/v1/projects/1/forms/a/attachments/cities.csv' },
-//       ]);
-
-//     component.find('.odk-form').exists().should.be.true;
-//     component.find('.odk-form').text().should.match(/Toronto/);
-//   });
-
-//   it('should send submission xml request', async () => {
-//     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
-
-//     await mountComponent()
-//       .complete()
-//       .request((c) => c.find('.odk-form .footer button').trigger('click'))
-//       .respondWithData(() => ({ currentVersion: { instanceId: '123' } }))
-//       .beforeEachResponse((_, config) => {
-//         const { headers, url, method, data } = config;
-//         url.should.be.eql('/v1/projects/1/forms/a/submissions');
-//         method.should.be.eql('POST');
-//         JSON.stringify(data).should.match(/xml_submission_file/);
-//         headers['content-type'].should.be.eql('text/xml');
-//         headers['odk-client'].should.be.match(/odk-web-forms/);
-//       });
-//   });
 
 //   it('should show success modal after submission request', async () => {
 //     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
@@ -381,4 +431,5 @@ it.skip('wf tests', async () => {});
 //       component.find('.odk-form h1').text().should.be.equal('Display Picture');
 //     });
 //   });
-// });
+
+});

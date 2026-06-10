@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "lint": "eslint . --report-unused-disable-directives --cache --max-warnings 0",
-    "lint:fix": "eslint . --fix --report-unused-disable-directives --cache --max-warnings 0",
-    "test": "BROWSER_NAME=chromium vitest run"
+    "lint": "eslint *.{js,vue} --report-unused-disable-directives --cache --max-warnings 0",
+    "lint:fix": "eslint *.{js,vue} --fix --report-unused-disable-directives --cache --max-warnings 0",
+    "test": "vitest run"
   },
   "dependencies": {
     "vue": "^3.5.29",
@@ -18,6 +18,7 @@
     "eslint": "^8.28.0",
     "eslint-plugin-import": "~2",
     "eslint-plugin-vue": "~9",
+    "jsdom": "^27.4.0",
     "vitest": "^4.0.18"
   }
 }

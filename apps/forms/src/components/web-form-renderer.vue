@@ -188,7 +188,6 @@ const submitData = async () => {
       submissionResult.attachmentResult.set(r.name, r.result);
     });
   }
-
   handleResult();
 };
 
@@ -322,7 +321,7 @@ onMounted(() => {
       @submit="handleSubmit"/>
   </template>
 
-  <Dialog :visible="visibleModal" :draggable="false" :closable="visibleModal?.hideable" @update:visible="visibleModal = null">
+  <Dialog :visible="!!visibleModal" :draggable="false" :closable="visibleModal?.hideable" @update:visible="visibleModal = null">
 		<template #header>
 			<span role="heading">{{ $t(visibleModal.type + '.title') }}</span>
 		</template>
