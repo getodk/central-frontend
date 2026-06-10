@@ -2,7 +2,6 @@
 import { computed, ref, defineAsyncComponent } from 'vue';
 import { useRoute } from 'vue-router';
 import { getFormByFormId, getFormXml, RequestError, type Form } from '../utils/api.ts';
-import ProgressSpinner from 'primevue/progressspinner';
 
 const props = defineProps({
   draft: Boolean,
@@ -53,8 +52,8 @@ fetchForm();
 </script>
 
 <template>
-  <div v-if="loadingState" class="spinner-container">
-    <ProgressSpinner/>
+  <div v-if="loadingState" class="loading-container">
+    <span class="spinner"></span>
   </div>
   <div v-else-if="errorState" class="form-load-error">
     {{ $t('formNotFound') }}
@@ -67,15 +66,30 @@ fetchForm();
   </template>
 </template>
 
-<style lang="scss">
-:root {
-  font-size: 16px;
+<style>
+.loading-container {
+  text-align: center;
+  padding-top: 35vh;
 }
-html, body {
-  box-shadow: none;
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 8px solid #f1f5f9;
+  border-bottom-color: #3e9fcc;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
-
 
 <i18n lang="json5">
   {

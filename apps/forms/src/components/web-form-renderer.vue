@@ -10,7 +10,6 @@ import Button from 'primevue/button';
 import { Translation } from 'vue-i18n'
 
 import PrimeVue from 'primevue/config';
-import ProgressSpinner from 'primevue/progressspinner';
 import { odkThemePreset } from '../../../../packages/web-forms/src/odk-theme-preset';
 
 const router = useRouter();
@@ -276,11 +275,7 @@ onMounted(() => {
 
 <template>
 
-  <div v-if="loading" class="spinner-container">
-    <ProgressSpinner/>
-  </div>
-
-  <template v-else="!loading">
+  <template v-if="!loading">
     <OdkWebForm
       :form-xml="props.xform"
       :edit-instance="editInstanceOptions"
