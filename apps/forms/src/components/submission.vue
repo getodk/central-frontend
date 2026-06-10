@@ -110,11 +110,11 @@ const fetchForm = async (): Promise<Form | undefined> => {
 
   redirectEnketoUrls(formConfig);
 
-  if (formConfig.webformsEnabled || useWebForms) {
+  if (formConfig.webformsEnabled || useWebForms.value) {
     xform.value = await getFormXml(formConfig.projectId, formConfig.xmlFormId, formConfig.draft, st)
     webFormsEnabled.value = true;
   } else {
-    if (offline) {
+    if (offline.value) {
       // TODO: Update once Web Forms has support for offline
       window.location.replace(`/-/x/${formConfig.enketoId}${queryString(route.query)}`);
       return;
