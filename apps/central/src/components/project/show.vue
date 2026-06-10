@@ -52,6 +52,12 @@ except according to the terms contained in the LICENSE file.
             {{ $t('resource.appUsers') }}
           </router-link>
         </li>
+        <li v-if="canRoute(tabPath('custom-properties'))"
+          :class="tabClass('custom-properties')" role="presentation">
+          <router-link :to="tabPath('custom-properties')">
+            {{ $t('projectShow.tab.customProperties') }}
+          </router-link>
+        </li>
         <li v-if="canRoute(tabPath('form-access'))"
           :class="tabClass('form-access')" role="presentation">
           <router-link :to="tabPath('form-access')">
@@ -71,7 +77,8 @@ except according to the terms contained in the LICENSE file.
       <!-- <router-view> may send its own requests before the server has
       responded to ProjectShow's request for the project. -->
       <router-view v-show="project.dataExists" @fetch-project="fetchProject"
-        @fetch-forms="fetchForms" @fetch-field-keys="fetchFieldKeys"/>
+        @fetch-forms="fetchForms" @fetch-field-keys="fetchFieldKeys"
+        @fetch-custom-properties="fetchCustomProperties"/>
     </page-body>
   </div>
 </template>
@@ -100,12 +107,12 @@ export default {
     }
   },
   setup() {
-    const { project, forms, fieldKeys } = useProject();
+    const { project, forms, fieldKeys, actorProperties } = useProject();
     const { datasets, deletedDatasets } = useDatasets();
     const { projectPath, canRoute } = useRoutes();
     const { tabPath, tabClass } = useTabs(projectPath());
     return {
-      project, forms, datasets, deletedDatasets, fieldKeys,
+      project, forms, datasets, deletedDatasets, fieldKeys, actorProperties,
       tabPath, tabClass, projectPath, canRoute
     };
   },
@@ -148,6 +155,12 @@ export default {
       this.fieldKeys.request({
         url: apiPaths.fieldKeys(this.projectId),
         extended: true,
+        resend
+      }).catch(noop);
+    },
+    fetchCustomProperties(resend) {
+      this.actorProperties.request({
+        url: apiPaths.actorProperties(this.projectId),
         resend
       }).catch(noop);
     }

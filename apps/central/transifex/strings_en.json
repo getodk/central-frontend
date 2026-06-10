@@ -30,6 +30,10 @@
       "formAccess": {
         "string": "Form Access",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      },
+      "customProperties": {
+        "string": "Custom Properties",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     }
   },
@@ -4194,6 +4198,45 @@
             "string": "This action cannot be undone",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {noUndo} is in the following text:\n\n{noUndo}, but the ability to unarchive a Project is planned for a future release."
           }
+        }
+      }
+    },
+    "ProjectCustomPropertiesList": {
+      "heading": {
+        "0": {
+          "string": "Some helper intro text",
+          "developer_comment": "A brief introduction to Custom Properties shown for the current project"
+        },
+        "1": {
+          "string": "Custom Properties are custom fields that can be attached to project app users and public links to store additional metadata."
+        }
+      },
+      "emptyTable": {
+        "string": "No custom properties have been defined for this project."
+      },
+      "created": {
+        "string": "Custom property created successfully.",
+        "developer_comment": "Shown after a custom property is successfully created."
+      },
+      "new": {
+        "string": "New",
+        "developer_comment": "This is the text of a button that is used to create a new Custom Property for users. It is shown next to a heading whose text is \"Custom Properties\"."
+      }
+    },
+    "ProjectCustomPropertiesNew": {
+      "title": {
+        "string": "Add Custom Property",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "string": "To add a custom property for this project, choose a unique property name below."
+      },
+      "newPropertyName": {
+        "string": "New property name"
+      },
+      "problem": {
+        "409_3": {
+          "string": "A custom property already exists in this project with the name of \"{propertyName}\"."
         }
       }
     },
