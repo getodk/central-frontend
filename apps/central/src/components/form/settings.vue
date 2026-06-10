@@ -28,9 +28,6 @@ except according to the terms contained in the LICENSE file.
         <div class="panel panel-simple panel-web-forms">
           <div class="panel-heading">
             <h1 class="panel-title">
-              <span class="badge beta">
-                {{ $t('common.beta') }}
-              </span>
               {{ $t('webFormsSetting.webForms') }}
             </h1>
           </div>
@@ -43,16 +40,27 @@ except according to the terms contained in the LICENSE file.
             <form id="web-form-settings-form">
               <div class="radio">
                 <label>
-                  <input v-model="webformsEnabled" name="webformsEnabled" type="radio" :value="false"
-                    @change="confirmationModal.show({ webformsEnabled: false })">
-                  {{ $t('webFormsSetting.enketoDefault') }}
+                  <input v-model="webformsEnabled" name="webformsEnabled" type="radio" :value="true"
+                    @change="confirmationModal.show({ webformsEnabled: true })">
+                  <span class="label-title">
+                    ODK Web Forms
+                  </span>
+                  <span class="badge recommended">
+                    {{ $t('common.recommended') }}
+                  </span>
+                  <br>
+                  {{ $t('webFormsSetting.odkWebFormsDescription') }}
                 </label>
               </div>
               <div class="radio">
                 <label>
-                  <input v-model="webformsEnabled" name="webformsEnabled" type="radio" :value="true"
-                    @change="confirmationModal.show({ webformsEnabled: true })">
-                  ODK Web Forms
+                  <input v-model="webformsEnabled" name="webformsEnabled" type="radio" :value="false"
+                    @change="confirmationModal.show({ webformsEnabled: false })">
+                    <span class="label-title">
+                      {{ $t('webFormsSetting.enketoDefault') }}
+                    </span>
+                  <br>
+                  {{ $t('webFormsSetting.enketoDescription') }}
                 </label>
               </div>
             </form>
@@ -146,11 +154,18 @@ const hideAndReset = () => {
     .panel-body > p {
       margin-bottom: 20px;
     }
-    .beta {
+
+    #web-form-settings-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .recommended {
       text-transform: uppercase;
-      background: #F1DEE7;
+      background: $color-success-light;
       padding: 5px 10px;
-      color: $color-accent-primary;
+      color: $color-success;
       font-family: Helvetica;
       font-weight: 400;
       vertical-align: baseline;
@@ -158,9 +173,14 @@ const hideAndReset = () => {
     .radio {
       min-height: 48px;
       margin-bottom: 0;
+
       label {
         cursor: pointer;
         padding-left: 30px;
+
+        .label-title {
+          font-weight: bold;
+        }
       }
     }
   }
@@ -190,7 +210,9 @@ const hideAndReset = () => {
       // Description of a section. {formName} is replaced with the name of the Form
       "description": "Fill out, preview and edit your “{formName}” Form using",
       // The word "Enketo" should not be translated
-      "enketoDefault": "Enketo (default)",
+      "enketoDefault": "Enketo compatibility mode",
+      "enketoDescription": "No longer actively developed. Use for specialized features not yet supported by the new system.",
+      "odkWebFormsDescription": "A faster, updated experience that will replace the current version over time.",
       // Success message when Enketo is selected as web form technology. {formName} is replaced with the name of the Form
       "enketoSelected": "You’re now using Enketo to fill out, preview and edit your “{formName}” form.",
       // Success message when ODK Web Forms is selected as web form technology. {formName} is replaced with the name of the Form
