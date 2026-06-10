@@ -23,9 +23,13 @@ export class RequestError extends Error {
 }
 
 export const queryString = (query:any) => {
-  if (query == null) return '';
+  if (query == null) {
+    return '';
+  }
   const entries = Object.entries(query);
-  if (entries.length === 0) return '';
+  if (entries.length === 0) {
+    return '';
+  }
   const params = new URLSearchParams();
   for (const [name, value] of entries) {
     if (Array.isArray(value)) {
@@ -72,7 +76,7 @@ const getForm = async (url: string): Promise<Form> => {
 export const getFormByEnketoId = async (enketoId: string, st?: string | null): Promise<Form> => {
   const qs = queryString({ st });
   const url = `/v1/form-links/${enketoId}/form${qs}`;
-   return getForm(url);
+  return getForm(url);
 };
 
 export const getFormByFormId = async (projectId: number, formId: string, draft: boolean, st?: string | null): Promise<Form> => {

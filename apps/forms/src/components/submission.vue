@@ -1,7 +1,16 @@
 <script setup lang="ts">
-import { ref, defineAsyncComponent } from 'vue';
+import { computed, ref, defineAsyncComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { type Form, getFormByEnketoId, getFormByFormId, getFormXml, getProject, type Project, queryString, RequestError } from '../utils/api.ts';
+import {
+  type Form,
+  getFormByEnketoId,
+  getFormByFormId,
+  getFormXml,
+  getProject,
+  type Project,
+  queryString,
+  RequestError
+} from '../utils/api.ts';
 import ProgressSpinner from 'primevue/progressspinner';
 
 const props = defineProps({
@@ -40,13 +49,13 @@ defineOptions({
 const route = useRoute();
 const router = useRouter();
 
-const projectId: number | null = route.params.projectId ? Number.parseInt(route.params.projectId as string) : null;
-const formId: string | null = route.params.xmlFormId ? encodeURIComponent(route.params.xmlFormId as string) : null;
-const instanceId: string | null = route.params.instanceId ? encodeURIComponent(route.params.instanceId as string) : null;
-const enketoId: string | null = route.params.enketoId ? encodeURIComponent(route.params.enketoId as string) : null;
-const useWebForms: boolean = route.query.webforms === 'true';
-const offline: boolean = route.params.offline === 'offline';
-const webFormsEnabled = ref(true); 
+const projectId = computed(() => route.params.projectId ? Number.parseInt(route.params.projectId as string) : null);
+const formId = computed(() => route.params.xmlFormId ? encodeURIComponent(route.params.xmlFormId as string) : null);
+const instanceId = computed(() => route.params.instanceId ? encodeURIComponent(route.params.instanceId as string) : null);
+const enketoId = computed(() => route.params.enketoId ? encodeURIComponent(route.params.enketoId as string) : null);
+const useWebForms = computed(() => route.query.webforms === 'true');
+const offline = computed(() => route.params.offline === 'offline');
+const webFormsEnabled = ref(true);
 
 const form = ref<Form>();
 const xform = ref<string>();
@@ -91,10 +100,10 @@ const redirectEnketoUrls = (form:Form) => {
 const fetchForm = async (): Promise<Form | undefined> => {
   const st = route.query.st as string ?? null;
   let formConfig;
-  if (enketoId) {
-    formConfig = await getFormByEnketoId(enketoId, st);
-  } else if (projectId && formId) {
-    formConfig = await getFormByFormId(projectId, formId, props.draft, st);
+  if (enketoId.value) {
+    formConfig = await getFormByEnketoId(enketoId.value, st);
+  } else if (projectId.value && formId.value) {
+    formConfig = await getFormByFormId(projectId.value, formId.value, props.draft, st);
   } else {
     throw new RequestError('Form not found', 404);
   }
@@ -106,6 +115,7 @@ const fetchForm = async (): Promise<Form | undefined> => {
     webFormsEnabled.value = true;
   } else {
     if (offline) {
+      // TODO: Update once Web Forms has support for offline
       window.location.replace(`/-/x/${formConfig.enketoId}${queryString(route.query)}`);
       return;
     }
@@ -120,10 +130,10 @@ const permits = (project: Project, verbs: string[]) => {
 }
 
 const hasAccess = async (form:Form | undefined) => {
-  if (!projectId || !form) {
+  if (!projectId.value || !form) {
     return true;
   }
-  const project = await getProject(projectId);
+  const project = await getProject(projectId.value);
 
   if ((route.name === 'SubmissionNew' || route.name === 'DraftSubmissionNew') && !permits(project, ['submission.create'])) {
     return false;
@@ -159,7 +169,8 @@ const load = async () => {
   } catch (e) {
     if (e instanceof RequestError && e.statusCode >= 401 && e.statusCode < 404) {
       // not logged in
-      window.location.href = '/login?next=/wf' + window.location.pathname;
+      const relativeUrl = window.location.href.substring(window.location.origin.length);
+      window.location.href = '/login?next=/wf' + relativeUrl;
     } else {
       // unknown error
       errorState.value = true;
@@ -175,7 +186,7 @@ load();
   <div v-if="loadingState" class="spinner-container">
     <ProgressSpinner/>
   </div>
-  <div v-else-if="errorState" class="form-load-error">
+  <div v-else-if="errorState || (props.actionType === 'edit' && !webFormsEnabled)" class="form-load-error">
     {{ $t('formNotFound') }}
   </div>
   <template v-else-if="webFormsEnabled">

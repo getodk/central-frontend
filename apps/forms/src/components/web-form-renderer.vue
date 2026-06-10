@@ -55,7 +55,7 @@ const visibleModal = ref();
 
 const getAttachment = (requestUrl: URL) => {
   const encodedName = encodeURIComponent(requestUrl.pathname.split('/').pop()!);
-  const draftPath = '';
+  const draftPath = props.form.draft ? '/draft' : '';
   const url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath}/attachments/${encodedName}`;
   return fetch(url);
 };
@@ -96,7 +96,7 @@ const isProblem = (data:any) => {
 };
 
 const submissionPath = () => {
-  return `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}/submissions/${props.instanceId}`;
+  return `/projects/${props.form.projectId}/forms/${props.form.xmlFormId}/submissions/${props.instanceId}`;
 };
 
 const handleResult = () => {
@@ -157,10 +157,8 @@ const uploadAttachment = async (attachment: File, instanceId: string) => {
       'X-Requested-With': 'XMLHttpRequest'
     };
     const response = await fetch(url, { body: attachment, headers, method: 'POST' });
-    if (response.ok) {
-      const data = await response.json();
-      result = { success: true, data };
-    }
+    const data = await response.json();
+    result = { success: response.ok, data };
   } catch (error) {
     result = { success: false, data: error };
   }
@@ -212,7 +210,7 @@ const initializeSubmissionState = (data:SubmissionData, clearFormCallback:Functi
 
 const handleSubmit = async (
   payload: MonolithicInstancePayload,
-	clearFormCallback: Function
+  clearFormCallback: Function
 ) => {
   if (props.actionType === 'preview') {
     visibleModal.value = { type: 'previewModal', hideable: true };
@@ -226,35 +224,6 @@ const handleSubmit = async (
   }
   initializeSubmissionState(data as unknown as SubmissionData, clearFormCallback);
   await submitData();
-};
-
-const transformAttachmentResponse = async (response: Response) => {
-  const { status, statusText, headers } = response;
-
-  const fetchHeaders = new Headers();
-  for (const [key, value] of headers.entries()) {
-    if (key === 'content-type') {
-      // because web-forms doesn't want space between media type and charset
-      // https://github.com/getodk/web-forms/issues/269
-      fetchHeaders.append(key, value.replace('; charset', ';charset'));
-    } else {
-      fetchHeaders.append(key, value);
-    }
-  }
-
-  let body;
-  const contentType = headers.get('content-type');
-  if (contentType && (contentType.includes('application/json') || contentType.includes('application/geo+json'))) {
-    body = await response.json();
-  } else {
-    body = await response.text();
-  }
-
-  return new Response(body, {
-    status,
-    statusText,
-    headers: fetchHeaders,
-  });
 };
 
 const fetchSubmissionXml = async () => {
@@ -276,8 +245,7 @@ const fetchSubmissionAttachment = async (attachmentName: string) => {
   // Draft is always false because we don't support editing of draft submissions
   const encodedName = encodeURIComponent(attachmentName);
   const url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}/submissions/${props.instanceId}/attachments/${encodedName}`;
-  const response = await fetch(url);
-  return transformAttachmentResponse(response);
+  return fetch(url);
 };
 
 const editInstanceOptions = computed(() => {
@@ -299,7 +267,7 @@ onMounted(() => {
   if (isEdit.value) {
     fetchSubmissionAttachments().then(() => {
       loading.value = false;
-    })
+    });
   } else {
     loading.value = false;
   }

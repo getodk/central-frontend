@@ -34,8 +34,12 @@ const router = useRouter();
 
 const redirectUrl = computed(() => {
   const { return_url: returnUrlPascalCase, returnUrl } = route.query;
-  if (returnUrlPascalCase && typeof returnUrlPascalCase === 'string') return returnUrlPascalCase;
-  if (returnUrl && typeof returnUrl === 'string') return returnUrl;
+  if (returnUrlPascalCase && typeof returnUrlPascalCase === 'string') {
+    return returnUrlPascalCase;
+  }
+  if (returnUrl && typeof returnUrl === 'string') {
+    return returnUrl;
+  }
   return null;
 });
 

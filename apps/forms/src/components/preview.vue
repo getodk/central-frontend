@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, defineAsyncComponent } from 'vue';
+import { computed, ref, defineAsyncComponent } from 'vue';
 import { useRoute } from 'vue-router';
 import { getFormByFormId, getFormXml, RequestError, type Form } from '../utils/api.ts';
 import ProgressSpinner from 'primevue/progressspinner';
@@ -13,8 +13,8 @@ const EnketoIframe = defineAsyncComponent(() => import('./enketo-iframe.vue'));
 
 const route = useRoute();
 
-const projectId: number = Number.parseInt(encodeURIComponent(route.params.projectId as string));
-const formId: string = encodeURIComponent(route.params.xmlFormId as string);
+const projectId = computed(() => Number.parseInt(encodeURIComponent(route.params.projectId as string)));
+const formId = computed(() => encodeURIComponent(route.params.xmlFormId as string));
 
 const useWebForms = route.query.webforms === 'true';
 const loadingState = ref(true);
@@ -27,9 +27,9 @@ const fetchForm = async () => {
   loadingState.value = true;
   errorState.value = false;
   try {
-    const formConfig = await getFormByFormId(projectId, formId, props.draft);
+    const formConfig = await getFormByFormId(projectId.value, formId.value, props.draft);
     if (formConfig.webformsEnabled || useWebForms) {
-      xform.value = await getFormXml(projectId, formId, props.draft);
+      xform.value = await getFormXml(projectId.value, formId.value, props.draft);
       webFormsEnabled.value = true;
     } else {
       webFormsEnabled.value = false;
@@ -39,7 +39,8 @@ const fetchForm = async () => {
   } catch (e) {
     if (e instanceof RequestError && e.statusCode >= 401 && e.statusCode < 404) {
       // not logged in
-      window.location.href = '/login?next=/wf' + window.location.pathname;
+      const relativeUrl = window.location.href.substring(window.location.origin.length);
+      window.location.href = '/login?next=/wf' + relativeUrl;
     } else {
       // unknown error
       errorState.value = true;

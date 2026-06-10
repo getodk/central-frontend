@@ -29,15 +29,21 @@ export const localStore = {
 // their preferences.
 export const userLocale = () => {
   const storageLocale = localStore.getItem('locale');
-  if (storageLocale != null && locales.has(storageLocale)) return storageLocale;
+  if (storageLocale != null && locales.has(storageLocale)) {
+    return storageLocale;
+  }
 
   // Set it up so that we can match either on language or on language + script.
   // Region is ignored.
   const byTag = new Map();
   for (const locale of locales.keys()) {
     const { language, script } = new Intl.Locale(locale);
-    if (!byTag.has(language)) byTag.set(language, locale);
-    if (script != null) byTag.set(`${language}-${script}`, locale);
+    if (!byTag.has(language)) {
+      byTag.set(language, locale);
+    }
+    if (script != null) {
+      byTag.set(`${language}-${script}`, locale);
+    }
   }
 
   for (const locale of navigator.languages) {
@@ -46,12 +52,16 @@ export const userLocale = () => {
     // Try to match on language + script.
     if (script != null) {
       const match = byTag.get(`${language}-${script}`);
-      if (match != null) return match;
+      if (match != null) {
+        return match;
+      }
     }
 
     // Try to match on language alone.
     const match = byTag.get(language);
-    if (match != null) return match;
+    if (match != null) {
+      return match;
+    }
   }
 
   return null;
@@ -68,7 +78,9 @@ const setLocale = (i18n, locale) => {
 
 // Loads a locale.
 export const loadLocale = (i18n, locale) => {
-  if (!locales.has(locale)) throw new Error('unknown locale');
+  if (!locales.has(locale)) {
+    throw new Error('unknown locale');
+  }
   setLocale(i18n, locale);
 };
 
@@ -170,8 +182,9 @@ const numberFormats = {
   percent: { style: 'percent' }
 };
 
-for (let i = 1; i < 15; i += 1)
+for (let i = 1; i < 15; i += 1) {
   numberFormats[`maximumFractionDigits${i}`] = { maximumFractionDigits: i };
+}
 
 for (let i = 1; i < 8; i += 1) {
   numberFormats[`fractionDigits${i}`] = {
