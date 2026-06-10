@@ -65,9 +65,9 @@ const selectValue = (value: string) => {
 			<MarkdownBlock v-for="elem in slotProps.option.label" :key="elem.id" :elem="elem" />
 		</template>
 		<template #value>
-			<span v-if="!selectedLabel?.length" class="dropdown-placeholder">{{
-				t('searchable_dropdown.select.placeholder')
-			}}</span>
+			<span v-if="!selectedLabel?.length" class="dropdown-placeholder">
+				{{ t('searchable_dropdown.select.placeholder') }}
+			</span>
 			<MarkdownBlock v-for="elem in selectedLabel" :key="elem.id" :elem="elem" />
 		</template>
 	</Select>
@@ -75,6 +75,7 @@ const selectValue = (value: string) => {
 
 <style scoped lang="scss">
 @use 'primeflex/core/_variables.scss' as pf;
+@use '../../assets/styles/select-options';
 
 .dropdown {
 	width: 100%;
@@ -87,9 +88,6 @@ const selectValue = (value: string) => {
 
 	@media screen and (min-width: #{pf.$md}) {
 		width: 50%;
-	}
-	.dropdown-placeholder {
-		color: var(--odk-muted-text-color);
 	}
 }
 </style>

@@ -112,6 +112,10 @@
   }
 }
 
+.dropdown-placeholder {
+  color: var(--odk-muted-text-color);
+}
+
 @media screen and (max-width: #{pf.$sm}) {
   :not(.select-with-images) .value-option {
     flex-wrap: wrap;
