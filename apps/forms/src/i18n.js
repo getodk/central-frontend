@@ -1,4 +1,10 @@
 // TODO duplication with /apps/central - move to common or migrate to web-forms process
+
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
 import { createI18n } from 'vue-i18n';
 
 const fallbackLocale = 'en';
@@ -8,19 +14,21 @@ export const localStore = {
   getItem(name) {
     try {
       return localStorage.getItem(name);
-    } catch (e) {
+    } catch (e) { // eslint-disable-line @typescript-eslint/no-unused-vars
       return null;
     }
   },
   setItem(name, value) {
     try {
       localStorage.setItem(name, value);
-    } catch (e) {}
+    } catch (e) { // eslint-disable-line @typescript-eslint/no-unused-vars
+    }
   },
   removeItem(name) {
     try {
       localStorage.removeItem(name);
-    } catch (e) {}
+    } catch (e) { // eslint-disable-line @typescript-eslint/no-unused-vars
+    }
   }
 };
 
@@ -72,7 +80,7 @@ export const userLocale = () => {
 // loadLocale()
 
 const setLocale = (i18n, locale) => {
-  i18n.locale = locale; // eslint-disable-line no-param-reassign
+  i18n.locale = locale;
   document.documentElement.setAttribute('lang', locale);
 };
 

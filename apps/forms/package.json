@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "lint": "eslint src/**/*.js --report-unused-disable-directives --cache --max-warnings 0",
-    "lint:fix": "eslint src/**/*.js --fix --report-unused-disable-directives --cache --max-warnings 0",
+    "lint": "eslint . --report-unused-disable-directives --cache --max-warnings 0",
+    "lint:fix": "eslint . --fix --report-unused-disable-directives --cache --max-warnings 0",
     "test": "vitest run"
   },
   "dependencies": {
@@ -14,11 +14,7 @@
     "vue-router": "^4.6.3"
   },
   "devDependencies": {
-    "@vue/eslint-config-airbnb": "^7.0.0",
     "@vue/test-utils": "^2.4.6",
-    "eslint": "^8.28.0",
-    "eslint-plugin-import": "~2",
-    "eslint-plugin-vue": "~9",
     "jsdom": "^27.4.0",
     "vitest": "^4.0.18"
   }

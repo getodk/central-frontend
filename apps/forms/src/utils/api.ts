@@ -1,4 +1,4 @@
-export type Form = {
+export interface Form {
   xmlFormId: string;
   projectId: number;
   enketoId: string;
@@ -8,9 +8,24 @@ export type Form = {
   webformsEnabled: boolean;
 };
 
-export type Project = {
-  verbs: string[]
+export interface Project {
+  verbs: string[];
 };
+
+interface BackendStatusResponseBody {
+  message: string;
+  code: number;
+}
+
+interface BackendFormResponseBody {
+  xmlFormId: string;
+  enketoId: string;
+  projectId: number;
+  state: string;
+  publishedAt: string;
+  enketoOnceId: string;
+  webformsEnabled: string;
+}
 
 export class RequestError extends Error {
   public statusCode: number;
@@ -22,7 +37,7 @@ export class RequestError extends Error {
   }
 }
 
-export const queryString = (query:any) => {
+export const queryString = (query:object) => {
   if (query == null) {
     return '';
   }
@@ -34,10 +49,11 @@ export const queryString = (query:any) => {
   for (const [name, value] of entries) {
     if (Array.isArray(value)) {
       for (const element of value) {
-        params.append(name, element === null ? 'null' : element.toString());
+        const val = element === null ? 'null' : (element as string).toString();
+        params.append(name, val);
       }
     } else if (value != null) {
-      params.set(name, value.toString());
+      params.set(name, (value as string).toString());
     }
   }
   const qs = params.toString();
@@ -50,7 +66,7 @@ export const getFormXml = async (projectId: number, formId: string, draft: boole
   const url = `/v1/projects/${projectId}/forms/${formId}${draftPath}.xml${qs}`;
   const response = await fetch(url);
   if (!response.ok) {
-    const result = await response.json();
+    const result = (await response.json()) as BackendStatusResponseBody;
     throw new RequestError(result.message, result.code);
   }
   return await response.text();
@@ -58,10 +74,11 @@ export const getFormXml = async (projectId: number, formId: string, draft: boole
 
 const getForm = async (url: string): Promise<Form> => {
   const response = await fetch(url);
-  const result = await response.json();
   if (!response.ok) {
+    const result = await response.json() as BackendStatusResponseBody;
     throw new RequestError(result.message, result.code);
   }
+  const result = await response.json() as BackendFormResponseBody;
   return {
     xmlFormId: result.xmlFormId,
     enketoId: result.enketoId,
@@ -93,9 +110,9 @@ export const getProject = async (projectId: number): Promise<Project> => {
     'X-Extended-Metadata': 'true'
   });
   const response = await fetch(url, { headers });
-  const result = await response.json();
   if (!response.ok) {
+    const result = await response.json() as BackendStatusResponseBody;
     throw new RequestError(result.message, result.code);
   }
-  return result;
+  return await response.json() as Project;
 };

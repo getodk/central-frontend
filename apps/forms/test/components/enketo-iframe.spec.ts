@@ -58,7 +58,7 @@ describe('EnketoIframe', () => {
     });
   });
 
-  it('renders iframe with /single prefix when single=true query parameter for new submission', async () => {
+  it('renders iframe with /single prefix when single=true query parameter for new submission', () => {
     query = { single: 'true' };
     const component = mount(EnketoIframe, {
       props: {
@@ -71,7 +71,7 @@ describe('EnketoIframe', () => {
     expect(iframe.attributes('src')).to.contain('/enketo-passthrough/single/');
   });
 
-  it('renders iframe without /single prefix when single=false for public-link', async () => {
+  it('renders iframe without /single prefix when single=false for public-link', () => {
     query = {
       single: 'false',
       st: 'token'

@@ -110,7 +110,7 @@ describe('WebFormRenderer', () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
       ok: true,
       status: 200,
-      text: async () => 'name,label\ntoronto,Toronto',
+      text: () => Promise.resolve('name,label\ntoronto,Toronto'),
     } as Response);
     const component = await mountComponent(formWithAttachmentXml);
     expect(fetchSpy).toHaveBeenCalledTimes(1);
@@ -125,10 +125,10 @@ describe('WebFormRenderer', () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
       ok: true,
       status: 200,
-      json: async () => ({ instanceId: 1 }),
+      json: () =>  Promise.resolve({ instanceId: 1 }),
     } as Response);
     const component = await mountComponent(simpleForm);
-    component.find('.odk-form .footer button').trigger('click');
+    await component.find('.odk-form .footer button').trigger('click');
     await vi.waitFor(() => {
       const el = document.querySelector('.p-dialog-header')
       if (!el) throw new Error('Not ready yet')
@@ -136,7 +136,7 @@ describe('WebFormRenderer', () => {
     expect(fetchSpy).toHaveBeenCalledTimes(1);
     expect(fetchSpy.mock.calls.length).to.equal(1);
     const firstCall = fetchSpy.mock.calls[0]!;
-    const url = firstCall[0]!;
+    const url = firstCall[0];
     const args = firstCall[1]!;
     expect(url).to.equal(`/v1/projects/1/forms/simple/submissions`);
     expect(args.method).to.equal('POST');

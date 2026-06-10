@@ -4,6 +4,9 @@ import Preview from './components/preview.vue';
 import Submission from './components/submission.vue';
 import { loadLocale, userLocale, i18n } from './i18n';
 
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 const routes = [
   {
     path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/preview',
@@ -12,7 +15,7 @@ const routes = [
   {
     path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/draft/preview',
     component: Preview as Component,
-    props: (route:any) => {
+    props: (route) => {
       return {
         ...route.params,
         draft: true
@@ -23,7 +26,7 @@ const routes = [
     path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/draft/submissions/new/:offline(offline)?',
     component: Submission as Component,
     name: 'DraftSubmissionNew',
-    props: (route:any) => {
+    props: (route) => {
       const { offline, ...params } = route.params;
       return {
         ...params,
@@ -36,7 +39,7 @@ const routes = [
     path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/new/:offline(offline)?',
     component: Submission as Component,
     name: 'SubmissionNew',
-    props: (route:any) => {
+    props: (route) => {
       const { offline, ...params } = route.params;
       return {
         ...params,
@@ -57,7 +60,7 @@ const routes = [
   {
     path: '/f/:enketoId([a-zA-Z0-9]+)/:actionType(new|preview)',
     component: Submission as Component,
-    props: (route:any) => {
+    props: (route) => {
       return {
         actionType: route.params.actionType
       };
@@ -66,7 +69,7 @@ const routes = [
   {
     path: '/f/:enketoId([a-zA-Z0-9]+)/:offline(offline)?',
     component: Submission as Component,
-    props: (route:any) => {
+    props: (route) => {
       const { offline, ...params } = route.params;
       return {
         ...params,
