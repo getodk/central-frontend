@@ -32,6 +32,8 @@
     "build:demo": "vite build --mode demo --outDir dist-demo",
     "build:js": "vite build",
     "build:translations": "node bin/merge-translations.js",
+    "translations:pull": "cd ../.. && tx pull -r web_forms.strings -a -f --mode translator",
+    "translations:push": "cd ../.. && tx push -r web_forms.strings -s",
     "dev": "vite",
     "dist-demo": "npm run build && vite serve dist-demo --port 5174",
     "feature-matrix": "node bin/feature-matrix/render.js",
