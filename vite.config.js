@@ -106,7 +106,6 @@ export default defineConfig(({ mode }) => ({
     },
   },
   test: {
-    plugins: [vue(), devAppRouter()],
     environment: 'jsdom',
     browser: {
       enabled: true,

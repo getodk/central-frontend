@@ -1,7 +1,6 @@
 <script setup lang="ts">
 
-import { computed, getCurrentInstance, onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { computed, getCurrentInstance, ref } from 'vue';
 import { OdkWebForm, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
 import { type MonolithicInstancePayload } from '@getodk/xforms-engine';
 import { type Form } from '../utils/api';
@@ -12,8 +11,6 @@ import { Translation } from 'vue-i18n'
 import PrimeVue from 'primevue/config';
 import { odkThemePreset } from '../../../../packages/web-forms/src/odk-theme-preset';
 
-const router = useRouter();
-
 defineOptions({
   name: 'WebFormRenderer'
 });
@@ -23,12 +20,11 @@ export interface WebFormsRendererProps {
   xform: string;
   actionType: string;
   instanceId?: string | null;
+  submissionAttachments?: string[] | null;
 }
 
 const props = defineProps<WebFormsRendererProps>();
 
-// Install webFormsPlugin lazily here (not at app startup) to avoid loading @getodk/web-forms on every page.
-// This is safe because this component is already loaded asynchronously.
 const inst = getCurrentInstance();
 if (inst) {
   inst.appContext.app.use(PrimeVue, { theme: { preset: odkThemePreset, options: { darkModeSelector: false } } });
@@ -45,10 +41,8 @@ let clearForm:Function;
 let submissionData: SubmissionData;
 
 const submissionResult:any = {};
-const loading = ref<boolean>(true);
 const isEdit = computed(() => props.actionType === 'edit');
 const isPublicLink = computed(() => props.actionType === 'public-link');
-const attachmentNames = ref<string[]>();
 
 const visibleModal = ref();
 
@@ -98,8 +92,23 @@ const submissionPath = () => {
   return `/projects/${props.form.projectId}/forms/${props.form.xmlFormId}/submissions/${props.instanceId}`;
 };
 
-const handleResult = () => {
+const isSessionTimeout = (error) => error.response && isProblem(error.response.data) && error.response.data.code === 401.2;
 
+const getErrorMessage = (data) => {
+  if (!data.code) {
+    // undefined error
+    return 'util.request.noResponse';
+  }
+  if (data.code === 413) {
+    return 'mixin.request.alert.entityTooLarge';
+  }
+  if (data.code === 404.1) {
+    return 'util.request.problem.404_1';
+  }
+  return data.message;
+};
+
+const handleResult = () => {
   const attachmentResultArr = [...submissionResult.attachmentResult.values()];
 
   // Success handler
@@ -112,30 +121,30 @@ const handleResult = () => {
     } else if (isEdit.value) {
       visibleModal.value = { type: 'editSubmissionModal', hideable: false };
       setTimeout(() => {
-        router.push(submissionPath());
+        window.location.assign(submissionPath());
       }, 2000);
     } else {
       visibleModal.value = { type: 'submissionModal', hideable: false };
     }
+    return;
   }
 
   // Error handler - Primary Instance
   if (!submissionResult.primaryInstanceResult.success) {
     const error = submissionResult.primaryInstanceResult.data;
-    if (error.response && isProblem(error.response.data) && error.response.data.code === 401.2) {
+    if (isSessionTimeout(error)) {
       visibleModal.value = { type: 'sessionTimeoutModal', hideable: true };
     } else {
-      visibleModal.value = { type: 'errorModal', errorMessage: 'errormsg', hideable: true }; // TODO requestAlertMessage(i18n, error) });
+      const errorMessage = getErrorMessage(error);
+      visibleModal.value = { type: 'errorModal', errorMessage, hideable: true };
     }
+    return;
   }
 
   // Error handler - Attachments
   if (attachmentResultArr.some(r => !r.success)) {
-    const isSessionTimeout = attachmentResultArr.some(r => {
-      const error = r.data;
-      return error.response && isProblem(error.response.data) && error.response.data.code === 401.2;
-    });
-    if (isSessionTimeout) {
+    const sessionTimeout = attachmentResultArr.some(r => isSessionTimeout(r.data));
+    if (sessionTimeout) {
       visibleModal.value = { type: 'sessionTimeoutModal', hideable: false };
     } else {
       visibleModal.value = { type: 'retryModal', hideable: false };
@@ -231,15 +240,6 @@ const fetchSubmissionXml = async () => {
   return await response.text();
 };
 
-const fetchSubmissionAttachments = async () => {
-  const url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}/submissions/${props.instanceId}/attachments`;
-  const response = await fetch(url);
-  const attachments = await response.json();
-  attachmentNames.value = attachments
-    .filter((a:any) => a.exists)
-    .map((a:any) => a.name);
-};
-
 const fetchSubmissionAttachment = async (attachmentName: string) => {
   // Draft is always false because we don't support editing of draft submissions
   const encodedName = encodeURIComponent(attachmentName);
@@ -251,7 +251,7 @@ const editInstanceOptions = computed(() => {
   if (isEdit.value) {
     return {
       resolveInstance: fetchSubmissionXml,
-      attachmentFileNames: attachmentNames.value,
+      attachmentFileNames: props.submissionAttachments,
       resolveAttachment: fetchSubmissionAttachment
     };
   }
@@ -261,30 +261,25 @@ const editInstanceOptions = computed(() => {
 const closeWindow = () => {
   window.close();
 };
-
-onMounted(() => {
-  if (isEdit.value) {
-    fetchSubmissionAttachments().then(() => {
-      loading.value = false;
-    });
-  } else {
-    loading.value = false;
-  }
-});
 </script>
+
+<style scoped>
+.p-dialog-content pre {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+</style>
 
 <template>
 
-  <template v-if="!loading">
-    <OdkWebForm
-      :form-xml="props.xform"
-      :edit-instance="editInstanceOptions"
-      :fetch-form-attachment="getAttachment"
-      :track-device="true"
-      @submit="handleSubmit"/>
-  </template>
+  <OdkWebForm
+    :form-xml="props.xform"
+    :edit-instance="editInstanceOptions"
+    :fetch-form-attachment="getAttachment"
+    :track-device="true"
+    @submit="handleSubmit"/>
 
-  <Dialog :visible="!!visibleModal" :draggable="false" :closable="visibleModal?.hideable" @update:visible="visibleModal = null">
+  <Dialog modal :visible="!!visibleModal" :draggable="false" :closable="visibleModal?.hideable" @update:visible="visibleModal = null">
 		<template #header>
 			<span role="heading">{{ $t(visibleModal.type + '.title') }}</span>
 		</template>
@@ -292,8 +287,7 @@ onMounted(() => {
     <template #default>
       <Translation v-if="visibleModal.type === 'errorModal'" tag="p" keypath="errorModal.body">
         <template #errorMessage>
-          <br><br>
-          <pre>{{ visibleModal.errorMessage }}</pre>
+          <pre>{{ $t(visibleModal.errorMessage) }}</pre>
         </template>
         <template #supportEmail>
           <a href="emailto:support@getodk.org">support@getodk.org</a>
@@ -379,6 +373,21 @@ onMounted(() => {
         "title": "Submission error",
         "body": "Your data was not fully submitted. Please press the “Try again” button to retry. If the error keeps happening, please contact the person who asked you to fill this Form or {supportEmail}."
       },
+      "util": {
+        "request": {
+          "noResponse": "Something went wrong: there was no response to your request.",
+          "problem": {
+            "404_1": "The resource you are looking for cannot be found. The resource may have been deleted."
+          }
+        }
+      },
+      "mixin": {
+        "request": {
+          "alert": {
+            "entityTooLarge":  "The data that you are trying to upload is too large.",
+          }
+        }
+      }
     }
   }
 </i18n>
@@ -427,6 +436,21 @@ onMounted(() => {
     "retryModal": {
       "title": "Übermittlungsfehler",
       "body": "Ihre Daten wurden nicht vollständig übermittelt. Bitte drücken Sie die Schaltfläche „Erneut versuchen“, um es noch einmal zu versuchen. Wenn der Fehler weiterhin auftritt, wenden Sie sich bitte an die Person, die Sie gebeten hat, dieses Formular auszufüllen, oder an {supportEmail}."
+    },
+    "util": {
+      "request": {
+        "noResponse": "Etwas ging schief: Wir haben keine Antwort auf Ihre Anfrage bekommen.",
+        "problem": {
+          "404_1": "Die gesuchte Ressource kann nicht gefunden werden. Die Ressource wurde möglicherweise gelöscht."
+        }
+      }
+    },
+    "mixin": {
+      "request": {
+        "alert": {
+          "entityTooLarge":  "Die Daten, die Sie hochzuladen versuchen, sind zu gross.",
+        }
+      }
     }
   },
   "es": {
@@ -471,6 +495,21 @@ onMounted(() => {
     "retryModal": {
       "title": "Error de envío",
       "body": "Sus datos no se han enviado completamente. Por favor, pulse el botón «Inténtelo de nuevo» para volver a intentarlo. Si el error persiste, póngase en contacto con la persona que le pidió que rellenara este formulario o con {supportEmail}."
+    },
+    "util": {
+      "request": {
+        "noResponse": "Algo salió mal: no hubo respuesta a su solicitud.",
+        "problem": {
+          "404_1": "El recurso que busca no se encuentra. Es posible que el recurso se haya eliminado."
+        }
+      }
+    },
+    "mixin": {
+      "request": {
+        "alert": {
+          "entityTooLarge":  "Los datos que estás intentando cargar son demasiado grandes.",
+        }
+      }
     }
   },
   "fr": {
@@ -515,6 +554,21 @@ onMounted(() => {
     "retryModal": {
       "title": "Erreur de soumission",
       "body": "Vos données n'ont pas été soumises. Veuillez cliquer le bouton \"Essayer encore\" pour réessayer. Si l'erreur persiste, merci de contacter la personne qui vous a demandé de remplir ce formulaire ou {supportEmail}."
+    },
+    "util": {
+      "request": {
+        "noResponse": "Quelque-chose s'est mal passé : il n'y a pas eu de réponse à votre requête.",
+        "problem": {
+          "404_1": "La ressource que vous cherchez ne peut être trouvée. Peut-être a-t-elle été supprimée."
+        }
+      }
+    },
+    "mixin": {
+      "request": {
+        "alert": {
+          "entityTooLarge":  "Les données que vous essayez d'envoyer sont trop volumineuses.",
+        }
+      }
     }
   },
   "it": {
@@ -559,6 +613,21 @@ onMounted(() => {
     "retryModal": {
       "title": "Errore invio",
       "body": "I dati non sono stati inviati completamente. Premere il pulsante “Riprova” per riprovare. Se l'errore continua a verificarsi, contattate la persona che vi ha chiesto di compilare il formulario oppure {supportEmail}."
+    },
+    "util": {
+      "request": {
+        "noResponse": "Qualcosa è andato storto: non c'era nessuna risposta alla tua request.",
+        "problem": {
+          "404_1": "Impossibile trovare la risorsa che stai cercando. La risorsa potrebbe essere stata eliminata."
+        }
+      }
+    },
+    "mixin": {
+      "request": {
+        "alert": {
+          "entityTooLarge":  "I dati che stai tentando di caricare sono troppo grandi.",
+        }
+      }
     }
   },
   "pt": {
@@ -602,6 +671,21 @@ onMounted(() => {
     "retryModal": {
       "title": "Erro no envio",
       "body": "Seus dados não foram enviados completamente. Por favor, clique no botão “Tentar novamente” para tentar novamente. Se o erro persistir, entre em contato com a pessoa que solicitou o preenchimento deste formulário ou {supportEmail}."
+    },
+    "util": {
+      "request": {
+        "noResponse": "Algo deu errado: não houve resposta à sua requisição.",
+        "problem": {
+          "404_1": "O recurso que você está procurando não foi encontrado. O recurso pode ter sido excluído."
+        }
+      }
+    },
+    "mixin": {
+      "request": {
+        "alert": {
+          "entityTooLarge":  "Os dados que você está tentando carregar são muito grandes.",
+        }
+      }
     }
   },
   "zh": {
@@ -646,6 +730,21 @@ onMounted(() => {
     "retryModal": {
       "title": "提交错误",
       "body": "数据未完全提交。请点击“重试”按钮再次提交。若问题持续，请联系表单发放方或{supportEmail}。"
+    },
+    "util": {
+      "request": {
+        "noResponse": "请求错误：未收到请求响应。",
+        "problem": {
+          "404_1": "无法找到您的资源。此资源可能已经删除。"
+        }
+      }
+    },
+    "mixin": {
+      "request": {
+        "alert": {
+          "entityTooLarge":  "您上传的数据过大。",
+        }
+      }
     }
   },
   "zh-Hant": {
@@ -690,6 +789,21 @@ onMounted(() => {
     "retryModal": {
       "title": "提交錯誤",
       "body": "您的資料未完全提交。請按「再試一次」按鈕重試。如果錯誤持續發生，請聯絡要求您填寫此表格的人或{supportEmail}。"
+    },
+    "util": {
+      "request": {
+        "noResponse": "出了點問題：您的請求沒有得到回應。",
+        "problem": {
+          "404_1": "找不到您要找的資源。該資源可能已被刪除。"
+        }
+      }
+    },
+    "mixin": {
+      "request": {
+        "alert": {
+          "entityTooLarge":  "您嘗試上傳的資料太大。",
+        }
+      }
     }
   }
 }

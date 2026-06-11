@@ -7,10 +7,12 @@ import {
   getFormByFormId,
   getFormXml,
   getProject,
+  getSubmissionAttachmentNames,
   type Project,
   queryString,
   RequestError
 } from '../utils/api.ts';
+import Spinner from './spinner.vue';
 
 const props = defineProps({
   draft: Boolean,
@@ -58,6 +60,7 @@ const webFormsEnabled = ref(true);
 
 const form = ref<Form>();
 const xform = ref<string>();
+const submissionAttachments = ref<string[] | null>(null);
 
 const loadingState = ref(true);
 const errorState = ref(false);
@@ -96,6 +99,13 @@ const redirectEnketoUrls = (form:Form) => {
   }
 };
 
+const setDocumentTitle = (formConfig: Form) => {
+  const formTitle = formConfig.name ?? formConfig.xmlFormId;
+  const suffix = 'ODK Web Forms';
+  const title = formTitle ? formTitle + ' | ' + suffix : suffix;
+  document.title = title;
+};
+
 const fetchForm = async (): Promise<Form | undefined> => {
   const st = route.query.st as string ?? null;
   let formConfig;
@@ -108,9 +118,18 @@ const fetchForm = async (): Promise<Form | undefined> => {
   }
 
   redirectEnketoUrls(formConfig);
+  setDocumentTitle(formConfig);
 
   if (formConfig.webformsEnabled || useWebForms.value) {
-    xform.value = await getFormXml(formConfig.projectId, formConfig.xmlFormId, formConfig.draft, st)
+    const promises: Promise<any>[] = [ getFormXml(formConfig.projectId, formConfig.xmlFormId, formConfig.draft, st) ];
+    if (props.actionType === 'edit' && instanceId.value) {
+      promises.push(getSubmissionAttachmentNames(formConfig.projectId, formConfig.xmlFormId, instanceId.value));
+    }
+    const [ formXml, attachments ] = await Promise.all(promises);
+    xform.value = formXml;
+    if (attachments) {
+      submissionAttachments.value = attachments;
+    }
     webFormsEnabled.value = true;
   } else {
     if (offline.value) {
@@ -182,44 +201,17 @@ load();
 </script>
 
 <template>
-  <div v-if="loadingState" class="loading-container">
-    <span class="spinner"></span>
-  </div>
+  <Spinner v-if="!!loadingState"/>
   <div v-else-if="errorState || (props.actionType === 'edit' && !webFormsEnabled)" class="form-load-error">
     {{ $t('formNotFound') }}
   </div>
   <template v-else-if="webFormsEnabled">
-    <WebFormRenderer :form="form!" :xform="xform!" :instance-id="instanceId" :action-type="props.actionType ?? 'new'"/>
+    <WebFormRenderer :form="form!" :xform="xform!" :instance-id="instanceId" :action-type="props.actionType ?? 'new'" :submission-attachments="submissionAttachments"/>
   </template>
   <template v-else>
     <EnketoIframe :form="form!" :enketo-id="enketoId" :action-type="props.actionType ?? 'new'"/>
   </template>
 </template>
-
-<style>
-.loading-container {
-  text-align: center;
-  padding-top: 35vh;
-}
-.spinner {
-  width: 60px;
-  height: 60px;
-  border: 8px solid #f1f5f9;
-  border-bottom-color: #3e9fcc;
-  border-radius: 50%;
-  display: inline-block;
-  box-sizing: border-box;
-  animation: rotation 1s linear infinite;
-}
-@keyframes rotation {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-</style>
 
 <style lang="scss">
 .form-load-error {

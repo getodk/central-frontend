@@ -1,4 +1,5 @@
 export interface Form {
+  name: string;
   xmlFormId: string;
   projectId: number;
   enketoId: string;
@@ -6,11 +7,11 @@ export interface Form {
   enketoOnceId?: string;
   draft: boolean;
   webformsEnabled: boolean;
-};
+}
 
 export interface Project {
   verbs: string[];
-};
+}
 
 interface BackendStatusResponseBody {
   message: string;
@@ -18,6 +19,7 @@ interface BackendStatusResponseBody {
 }
 
 interface BackendFormResponseBody {
+  name: string;
   xmlFormId: string;
   enketoId: string;
   projectId: number;
@@ -25,6 +27,11 @@ interface BackendFormResponseBody {
   publishedAt: string;
   enketoOnceId: string;
   webformsEnabled: string;
+}
+
+interface BackendAttachmentResponseBody {
+  name: string;
+  exists: boolean;
 }
 
 export class RequestError extends Error {
@@ -60,6 +67,19 @@ export const queryString = (query:object) => {
   return qs !== '' ? `?${qs}` : qs;
 };
 
+export const getSubmissionAttachmentNames = async (projectId: number, formId: string, instanceId: string): Promise<string[]> => {
+  const url = `/v1/projects/${projectId}/forms/${formId}/submissions/${instanceId}/attachments`;
+  const response = await fetch(url);
+  if (!response.ok) {
+    const result = await response.json() as BackendStatusResponseBody;
+    throw new RequestError(result.message, result.code);
+  }
+  const attachments = await response.json() as BackendAttachmentResponseBody[];
+  return attachments
+    .filter(attachment => attachment.exists)
+    .map(attachment => attachment.name);
+};
+
 export const getFormXml = async (projectId: number, formId: string, draft: boolean, st?: string | null) => {
   const draftPath = draft ? '/draft' : '';
   const qs = queryString({ st });
@@ -80,6 +100,7 @@ const getForm = async (url: string): Promise<Form> => {
   }
   const result = await response.json() as BackendFormResponseBody;
   return {
+    name: result.name,
     xmlFormId: result.xmlFormId,
     enketoId: result.enketoId,
     projectId: result.projectId,

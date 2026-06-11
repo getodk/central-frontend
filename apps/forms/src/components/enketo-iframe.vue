@@ -136,11 +136,7 @@ const handleIframeMessage = (event) => {
         try {
           const normalizedUrl = new URL(redirectUrl.value);
           if (['http:', 'https:'].includes(normalizedUrl.protocol)) {
-            if (normalizedUrl.origin === window.location.origin) {
-              router.push(normalizedUrl.pathname);
-            } else {
-              window.location.assign(normalizedUrl);
-            }
+            window.location.assign(normalizedUrl);
           }
         } catch (e) {}
       }

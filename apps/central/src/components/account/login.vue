@@ -189,7 +189,7 @@ export default {
       if (url.pathname.startsWith(`${enketoBasePath}/`))
         return external(url.href);
       if (url.pathname.startsWith(`${webFormsBasePath}/`))
-        return external(url.pathname.slice(webFormsBasePath.length + 1));
+        return external(url.pathname.slice(webFormsBasePath.length + 1) + url.search + url.hash);
       return internal(url.pathname + url.search + url.hash);
     },
     submit() {

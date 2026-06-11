@@ -2,6 +2,7 @@
 import { computed, ref, defineAsyncComponent } from 'vue';
 import { useRoute } from 'vue-router';
 import { getFormByFormId, getFormXml, RequestError, type Form } from '../utils/api.ts';
+import Spinner from './spinner.vue';
 
 const props = defineProps({
   draft: Boolean,
@@ -52,9 +53,7 @@ fetchForm();
 </script>
 
 <template>
-  <div v-if="loadingState" class="loading-container">
-    <span class="spinner"></span>
-  </div>
+  <Spinner v-if="!!loadingState"/>
   <div v-else-if="errorState" class="form-load-error">
     {{ $t('formNotFound') }}
   </div>
@@ -65,31 +64,6 @@ fetchForm();
     <EnketoIframe :form="form!" :enketo-id="form!.enketoId" action-type="preview"/>
   </template>
 </template>
-
-<style>
-.loading-container {
-  text-align: center;
-  padding-top: 35vh;
-}
-.spinner {
-  width: 60px;
-  height: 60px;
-  border: 8px solid #f1f5f9;
-  border-bottom-color: #3e9fcc;
-  border-radius: 50%;
-  display: inline-block;
-  box-sizing: border-box;
-  animation: rotation 1s linear infinite;
-}
-@keyframes rotation {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-</style>
 
 <i18n lang="json5">
   {
