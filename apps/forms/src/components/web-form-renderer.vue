@@ -84,17 +84,26 @@ const postPrimaryInstance = async (file:File) => {
 };
 
 const isProblem = (data:any) => {
-  return data != null && typeof data === 'object' &&
-    typeof data.code === 'number' && typeof data.message === 'string';
+  return data != null &&
+    typeof data === 'object' &&
+    typeof data.code === 'number' &&
+    typeof data.message === 'string';
 };
 
 const submissionPath = () => {
   return `/projects/${props.form.projectId}/forms/${props.form.xmlFormId}/submissions/${props.instanceId}`;
 };
 
-const isSessionTimeout = (error) => error.response && isProblem(error.response.data) && error.response.data.code === 401.2;
+const isSessionTimeout = (error) => {
+  return error?.response &&
+    isProblem(error.response.data) &&
+    error.response.data.code === 401.2;
+}
 
 const getErrorMessage = (data) => {
+  if (!data) {
+    return;
+  }
   if (!data.code) {
     // undefined error
     return 'util.request.noResponse';
@@ -290,12 +299,12 @@ const closeWindow = () => {
           <pre>{{ $t(visibleModal.errorMessage) }}</pre>
         </template>
         <template #supportEmail>
-          <a href="emailto:support@getodk.org">support@getodk.org</a>
+          <a href="mailto:support@getodk.org">support@getodk.org</a>
         </template>
       </Translation>
       <Translation v-else-if="visibleModal.type === 'retryModal'" tag="p" keypath="retryModal.body">
         <template #supportEmail>
-          <a href="emailto:support@getodk.org">support@getodk.org</a>
+          <a href="mailto:support@getodk.org">support@getodk.org</a>
         </template>
       </Translation>
       <Translation v-else-if="visibleModal.type === 'sessionTimeoutModal'" tag="p" keypath="sessionTimeoutModal.body.full">
