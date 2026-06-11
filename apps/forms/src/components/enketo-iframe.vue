@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import type { Form } from '../utils/api';
 
 const getCookieValue = (key, doc) => {
@@ -30,7 +30,6 @@ defineOptions({
 const buildMode = import.meta.env?.MODE ?? 'production';
 
 const route = useRoute();
-const router = useRouter();
 
 const redirectUrl = computed(() => {
   const { return_url: returnUrlPascalCase, returnUrl } = route.query;
