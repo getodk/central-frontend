@@ -92,7 +92,7 @@ describe('WebFormRenderer', () => {
       },
       props: {
         xform,
-        form: { xmlFormId: 'simple', projectId: 1, enketoId: '', state: 'open', draft: false, webformsEnabled: false },
+        form: { name: 'simple', xmlFormId: 'simple', projectId: 1, enketoId: '', state: 'open', draft: false, webformsEnabled: false },
         actionType: 'new'
       }
     });
@@ -142,6 +142,7 @@ describe('WebFormRenderer', () => {
     expect(args.method).to.equal('POST');
     expect(args.headers!['Content-Type']).to.equal('text/xml');
     expect((args.body as File).name).to.equal('xml_submission_file');
+    fetchSpy.mockReset();
   });
 
 

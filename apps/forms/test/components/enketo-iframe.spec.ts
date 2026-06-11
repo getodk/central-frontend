@@ -1,54 +1,49 @@
-import { describe, expect, it, vi } from 'vitest';
-import { mount } from '@vue/test-utils';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { enableAutoUnmount, flushPromises, mount } from '@vue/test-utils';
 import EnketoIframe from '../../src/components/enketo-iframe.vue';
+import Location from '../../src/utils/location';
 
 const enketoId = 'sCTIfjC5LrUto4yVXRYJkNKzP7e53vo';
 
-// const wait = async () => new Promise(resolve => { setTimeout(resolve, 100) });
+const postMessageToParent = async (iframe, data) => {
+  const script = document.createElement('script');
+  script.textContent = `window.parent.postMessage('${data}', "*");`;
+  iframe.element.contentDocument.body.appendChild(script);
+  await flushPromises();
+};
 
-// const postMessageToParent = async (iframe, data) => {
-//   // await new Promise((resolve) => {
-//   //   iframe.element.addEventListener('load', resolve, { once: true })
-//   // })
-
-//   await wait();
-//   const script = document.createElement('script');
-//   script.textContent = `window.parent.postMessage('${data}', "*");`;
-//   iframe.element.contentDocument.body.appendChild(script);
-//   // return wait();
-// };
-
-// const submit = async (component) => {
-//   const form = component.get('#account-login form');
-//   await form.get('input[type="email"]').setValue('test@email.com');
-//   await form.get('input[type="password"]').setValue('foo');
-//   return form.trigger('submit');
-// };
-
-let query = {};
-const push = vi.fn();
-
+const mockUseRoute = vi.fn()
 vi.mock('vue-router', () => ({
-  useRoute: () => ({
-    params: { id: 1 },
-    query
-  }),
-  useRouter: () => ({
-    push
-  })
-}));
+  useRoute: () => mockUseRoute(),
+}))
+
+let mockAssign = vi.fn();
+let mockOrigin = vi.fn();
 
 describe('EnketoIframe', () => {
+
+  enableAutoUnmount(afterEach);
+
+  beforeEach(() => {
+    vi.spyOn(Location, 'assign').mockImplementation(mockAssign);
+    vi.spyOn(Location, 'origin').mockImplementation(mockOrigin);
+  });
+
+  afterEach(() => {
+    vi.resetAllMocks();
+  });
+
   [
     { actionType: 'new', expected: `/enketo-passthrough/${enketoId}` },
     { actionType: 'public-link', expected: `/enketo-passthrough/single/${enketoId}` },
     { actionType: 'preview', expected: `/enketo-passthrough/preview/${enketoId}` },
   ].forEach(({ actionType, expected }) => {
     it(`renders iframe with correct src when actionType is ${actionType}`, () => {
+      mockUseRoute.mockReturnValue({ query: {} });
       const component = mount(EnketoIframe, {
         props: {
           enketoId,
-          form: { xmlFormId: '', projectId: 1, enketoId, state: 'open', draft: false, webformsEnabled: false },
+          form: { name: 'simple', xmlFormId: '', projectId: 1, enketoId, state: 'open', draft: false, webformsEnabled: false },
           actionType
         }
       });
@@ -59,11 +54,11 @@ describe('EnketoIframe', () => {
   });
 
   it('renders iframe with /single prefix when single=true query parameter for new submission', () => {
-    query = { single: 'true' };
+    mockUseRoute.mockReturnValue({ query: { single: 'true' } });
     const component = mount(EnketoIframe, {
       props: {
         enketoId,
-        form: { xmlFormId: 'a', projectId: 1, enketoId, state: 'open', draft: false, webformsEnabled: false },
+        form: { name: 'simple', xmlFormId: 'a', projectId: 1, enketoId, state: 'open', draft: false, webformsEnabled: false },
         actionType: 'new'
       }
     });
@@ -72,14 +67,14 @@ describe('EnketoIframe', () => {
   });
 
   it('renders iframe without /single prefix when single=false for public-link', () => {
-    query = {
+    mockUseRoute.mockReturnValue({ query: {
       single: 'false',
       st: 'token'
-    };
+    } });
     const component = mount(EnketoIframe, {
       props: {
         enketoId,
-        form: { xmlFormId: 'a', projectId: 1, enketoId, state: 'open', draft: false, webformsEnabled: false },
+        form: { name: 'simple', xmlFormId: 'a', projectId: 1, enketoId, state: 'open', draft: false, webformsEnabled: false },
         actionType: 'new'
       }
     });
@@ -88,198 +83,185 @@ describe('EnketoIframe', () => {
     expect(iframe.attributes('src')).to.not.contain('/single/');
   });
 
-  // it('redirects on submissionsuccess message with return_url - internal', async () => {
-  //   query = {
-  //     return_url: `${window.location.origin}/projects/1`
-  //   };
-  //   const component = mount(EnketoIframe, {
-  //     // attachTo: container,
-  //     props: {
-  //       enketoId,
-  //       form: { xmlFormId: 'a', projectId: 1, enketoId, state: 'open', draft: false, webformsEnabled: false },
-  //       actionType: 'public-link'
-  //     }
-  //   });
-  //   const iframe = component.find('iframe');
-  //   const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
-  //   await postMessageToParent(iframe, data);
-  //   expect(push).to.have.been.called.with('/projects/1');
+  it('redirects on submissionsuccess message with return_url', async () => {
+    mockUseRoute.mockReturnValue({
+      query: {
+        return_url: `${window.location.origin}/projects/1`
+      }
+    });
+    mockOrigin.mockReturnValue(window.location.origin);
+    const component = mount(EnketoIframe, {
+      attachTo: document.body,
+      props: {
+        enketoId,
+        form: { name: 'simple', xmlFormId: 'a', projectId: 1, enketoId, state: 'open', draft: false, webformsEnabled: false },
+        actionType: 'public-link'
+      }
+    });
+    const iframe = component.find('iframe');
+    const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
+    await postMessageToParent(iframe, data);
+    expect(Location.assign).toHaveBeenCalledTimes(1);
+    expect(Location.assign).toHaveBeenCalledWith(new URL(`${window.location.origin}/projects/1`));
+  });
 
-  //   const wrapper = mountComponent({
-  //     props: { enketoId, actionType: 'public-link' },
-  //     container: {
-  //       router: mockRouter(`/?return_url=${window.location.origin}/projects/1`)
-  //     }
-  //   });
-  //   const iframe = wrapper.find('iframe');
+  it('redirect on submissionsuccess for new submission when single=true', async () => {
+    mockUseRoute.mockReturnValue({
+      query: {
+        return_url: `${window.location.origin}/projects/1`,
+        single: 'true'
+      }
+    });
+    mockOrigin.mockReturnValue(window.location.origin);
 
-  //   const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
-  //   await postMessageToParent(iframe, data);
+    const component = mount(EnketoIframe, {
+      attachTo: document.body,
+      props: {
+        enketoId,
+        form: { name: 'simple', xmlFormId: 'a', projectId: 1, enketoId, state: 'open', draft: false, webformsEnabled: false },
+        actionType: 'new'
+      }
+    });
 
-  //   wrapper.vm.$router.push.calledWith('/projects/1').should.be.true;
-  // });
+    const iframe = component.find('iframe');
 
-  // it('redirects on submissionsuccess message with return_url - external', async () => {
-  //   const fakeAssign = sinon.fake();
-  //   const wrapper = mountComponent({
-  //     props: { enketoId, actionType: 'public-link' },
-  //     container: {
-  //       router: mockRouter('/?return_url=http://example.com/projects/1'),
-  //       location: {
-  //         origin: window.location.origin,
-  //         assign: (url) => {
-  //           fakeAssign(url);
-  //         }
-  //       }
-  //     }
-  //   });
-  //   const iframe = wrapper.find('iframe');
+    const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
+    await postMessageToParent(iframe, data);
 
-  //   const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
-  //   await postMessageToParent(iframe, data);
+    expect(Location.assign).toHaveBeenCalledTimes(1);
+    expect(Location.assign).toHaveBeenCalledWith(new URL(`${window.location.origin}/projects/1`));
+  });
 
-  //   fakeAssign.calledWith(new URL('http://example.com/projects/1')).should.be.true;
-  // });
+  it('does not redirect on invalid return URL', async () => {
+    mockUseRoute.mockReturnValue({
+      query: {
+        return_url: 'example.com',
+        single: 'true'
+      }
+    });
+    const component = mount(EnketoIframe, {
+      attachTo: document.body,
+      props: {
+        enketoId,
+        form: { name: 'simple', xmlFormId: 'a', projectId: 1, enketoId, state: 'open', draft: false, webformsEnabled: false },
+        actionType: 'new'
+      }
+    });
 
-  // it('redirect on submissionsuccess for new submission when single=true', async () => {
-  //   const fakeAssign = sinon.fake();
-  //   const wrapper = mountComponent({
-  //     props: { enketoId, actionType: 'new' },
-  //     container: {
-  //       router: mockRouter('/?return_url=http://example.com/projects/1&single=true'),
-  //       location: {
-  //         origin: window.location.origin,
-  //         assign: (url) => {
-  //           fakeAssign(url);
-  //         }
-  //       }
-  //     }
-  //   });
-  //   const iframe = wrapper.find('iframe');
+    const iframe = component.find('iframe');
 
-  //   const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
-  //   await postMessageToParent(iframe, data);
+    const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
+    await postMessageToParent(iframe, data);
 
-  //   fakeAssign.called.should.be.true;
-  //   fakeAssign.args[0][0].href.should.equal('http://example.com/projects/1');
-  // });
+    expect(Location.assign).toHaveBeenCalledTimes(0);
+  });
 
-  // it('does not redirect on invalid return URL', async () => {
-  //   const fakeAssign = sinon.fake();
-  //   const wrapper = mountComponent({
-  //     props: { enketoId, actionType: 'public-link' },
-  //     container: {
-  //       router: mockRouter('/?return_url=example.com'), //protocol is missing
-  //       location: {
-  //         origin: window.location.origin,
-  //         assign: (url) => {
-  //           fakeAssign(url);
-  //         }
-  //       }
-  //     }
-  //   });
-  //   const iframe = wrapper.find('iframe');
+  it('does not redirect on submissionsuccess for public-link when single=false', async () => {
+    mockUseRoute.mockReturnValue({
+      query: {
+        return_url: 'http://example.com/projects/1',
+        single: 'false'
+      }
+    });
+    const component = mount(EnketoIframe, {
+      attachTo: document.body,
+      props: {
+        enketoId,
+        form: { name: 'simple', xmlFormId: 'a', projectId: 1, enketoId, state: 'open', draft: false, webformsEnabled: false },
+        actionType: 'public-link'
+      }
+    });
+    const iframe = component.find('iframe');
 
-  //   const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
-  //   await postMessageToParent(iframe, data);
+    const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
+    await postMessageToParent(iframe, data);
 
-  //   fakeAssign.called.should.be.false;
-  //   wrapper.vm.$router.push.called.should.be.false;
-  // });
+    expect(Location.assign).toHaveBeenCalledTimes(0);
+  });
 
-  // it('does not redirect on submissionsuccess for public-link when single=false', async () => {
-  //   const fakeAssign = sinon.fake();
-  //   const wrapper = mountComponent({
-  //     props: { enketoId, actionType: 'public-link' },
-  //     container: {
-  //       router: mockRouter('/?return_url=http://example.com/projects/1&single=false'),
-  //       location: {
-  //         origin: window.location.origin,
-  //         assign: (url) => {
-  //           fakeAssign(url);
-  //         }
-  //       }
-  //     }
-  //   });
-  //   const iframe = wrapper.find('iframe');
+  // 'single' query parameter is false implicitly
+  it('does not redirects on submissionsuccess for new submission', async () => {
+    mockUseRoute.mockReturnValue({
+      query: {
+        return_url: 'http://example.com/projects/1'
+      }
+    });
+    const component = mount(EnketoIframe, {
+      attachTo: document.body,
+      props: {
+        enketoId,
+        form: { name: 'simple', xmlFormId: 'a', projectId: 1, enketoId, state: 'open', draft: false, webformsEnabled: false },
+        actionType: 'new'
+      }
+    });
 
-  //   const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
-  //   await postMessageToParent(iframe, data);
+    const iframe = component.find('iframe');
 
-  //   fakeAssign.called.should.be.false;
-  // });
+    const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
+    await postMessageToParent(iframe, data);
 
-  // // 'single' query parameter is false implicitly
-  // it('does not redirects on submissionsuccess for new submission', async () => {
-  //   const fakeAssign = sinon.fake();
-  //   const wrapper = mountComponent({
-  //     props: { enketoId, actionType: 'new' },
-  //     container: {
-  //       router: mockRouter('/?return_url=http://example.com/projects/1'),
-  //       location: {
-  //         origin: window.location.origin,
-  //         assign: (url) => {
-  //           fakeAssign(url);
-  //         }
-  //       }
-  //     }
-  //   });
-  //   const iframe = wrapper.find('iframe');
+    expect(Location.assign).toHaveBeenCalledTimes(0);
+  });
 
-  //   const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
-  //   await postMessageToParent(iframe, data);
+  it('bubbles up the message event', async () => {
+    mockUseRoute.mockReturnValue({
+      query: { parentWindowOrigin: window.location.origin }
+    });
+    mockOrigin.mockReturnValue(window.location.origin);
+    const postMessage = vi.fn();
+    vi.spyOn(window.parent, 'postMessage').mockImplementation(postMessage);
 
-  //   fakeAssign.called.should.be.false;
-  // });
+    const component = mount(EnketoIframe, {
+      attachTo: document.body,
+      props: {
+        enketoId,
+        form: { name: 'simple', xmlFormId: 'a', projectId: 1, enketoId, state: 'open', draft: false, webformsEnabled: false },
+        actionType: 'new'
+      }
+    });
 
-  // it('bubbles up the message event', async () => {
-  //   const wrapper = mountComponent({
-  //     props: { enketoId, actionType: 'new', instanceId: 'test-instance' },
-  //     container: {
-  //       router: mockRouter(`/?parentWindowOrigin=${window.location.origin}`)
-  //     }
-  //   });
+    const iframe = component.find('iframe');
 
-  //   const postMessage = sinon.fake();
-  //   sinon.replace(window.parent, 'postMessage', postMessage);
+    const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
 
-  //   const iframe = wrapper.find('iframe');
+    await postMessageToParent(iframe, data);
 
-  //   const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
+    expect(postMessage).toHaveBeenCalledTimes(1);
+    expect(postMessage).toHaveBeenCalledWith(data, window.location.origin);
+  });
 
-  //   await postMessageToParent(iframe, data);
+  it('should not bubble up the message event if origin is different', async () => {
+    mockUseRoute.mockReturnValue({
+      query: { parentWindowOrigin: window.location.origin }
+    });
+    mockOrigin.mockReturnValue('https://example.com');
+    const postMessage = vi.fn();
+    vi.spyOn(window.parent, 'postMessage').mockImplementation(postMessage);
 
-  //   postMessage.calledWith(data, window.location.origin).should.be.true;
-  // });
+    const component = mount(EnketoIframe, {
+      attachTo: document.body,
+      props: {
+        enketoId,
+        form: { name: 'simple', xmlFormId: 'a', projectId: 1, enketoId, state: 'open', draft: false, webformsEnabled: false },
+        actionType: 'new'
+      }
+    });
 
-  // it('should not bubble up the message event if origin is different', async () => {
-  //   const wrapper = mountComponent({
-  //     props: { enketoId, actionType: 'new', instanceId: 'test-instance' },
-  //     container: {
-  //       router: mockRouter(`/?parentWindowOrigin=${window.location.origin}`),
-  //       location: {
-  //         origin: 'https://example.com'
-  //       }
-  //     }
-  //   });
+    const iframe = component.find('iframe');
 
-  //   const postMessage = sinon.fake();
-  //   sinon.replace(window.parent, 'postMessage', postMessage);
+    const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
 
-  //   const iframe = wrapper.find('iframe');
+    await postMessageToParent(iframe, data);
 
-  //   const data = JSON.stringify({ enketoEvent: 'submissionsuccess' });
-  //   await postMessageToParent(iframe, data);
-
-  //   postMessage.called.should.be.false;
-  // });
+    expect(postMessage).toHaveBeenCalledTimes(0);
+  });
 
   it('encodes spaces as %20 instead of + in query parameters', () => {
-    query = { 'd[/some/path]': 'hello world' };
+    mockUseRoute.mockReturnValue({ query: { 'd[/some/path]': 'hello world' } });
     const component = mount(EnketoIframe, {
       props: {
         enketoId,
-        form: { xmlFormId: '', projectId: 1, enketoId, state: 'open', draft: false, webformsEnabled: false },
+        form: { name: 'simple', xmlFormId: '', projectId: 1, enketoId, state: 'open', draft: false, webformsEnabled: false },
         actionType: 'new'
       }
     });
@@ -288,11 +270,11 @@ describe('EnketoIframe', () => {
   });
 
   it('passes + sign as %20', () => {
-    query = { 'd[/some/path]': 'hello + world' };
+    mockUseRoute.mockReturnValue({ query: { 'd[/some/path]': 'hello + world' } });
     const component = mount(EnketoIframe, {
       props: {
         enketoId,
-        form: { xmlFormId: '', projectId: 1, enketoId, state: 'open', draft: false, webformsEnabled: false },
+        form: { name: 'simple', xmlFormId: '', projectId: 1, enketoId, state: 'open', draft: false, webformsEnabled: false },
         actionType: 'new'
       }
     });

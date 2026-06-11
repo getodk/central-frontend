@@ -6,6 +6,7 @@
 import { computed, onBeforeUnmount, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import type { Form } from '../utils/api';
+import Location from '../utils/location';
 
 const getCookieValue = (key, doc) => {
   const cookie = doc.cookie.split(';')
@@ -74,7 +75,7 @@ const setEnketoSrc = () => {
   let prefix = basePath;
   const { return_url: _, returnUrl: __, ...query } = route.query;
 
-  query.parentWindowOrigin = window.location.origin;
+  query.parentWindowOrigin = Location.origin();
 
   // We need to use encodeURIComponent here instead of URLSearchParams because enketo expects space
   // to pass as either ' ' (literal space character) or '%20'. Whereas URLSearchParams converts
@@ -115,7 +116,7 @@ const setEnketoSrc = () => {
 setEnketoSrc();
 
 const handleIframeMessage = (event) => {
-  if (event.origin === window.location.origin) {
+  if (event.origin === Location.origin()) {
     const { parentWindowOrigin } = route.query;
     // For the cases where this page is embedded in external iframe, pass the event data to the
     // parent.
@@ -135,7 +136,7 @@ const handleIframeMessage = (event) => {
         try {
           const normalizedUrl = new URL(redirectUrl.value);
           if (['http:', 'https:'].includes(normalizedUrl.protocol)) {
-            window.location.assign(normalizedUrl);
+            Location.assign(normalizedUrl);
           }
         } catch (e) {}
       }
