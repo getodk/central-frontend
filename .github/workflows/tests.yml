@@ -2,6 +2,10 @@ name: Tests
 
 on:
   push:
+    branches:
+      - '**'
+    tags:
+      - 'v**'
   pull_request:
 
 jobs:
@@ -40,6 +44,15 @@ jobs:
     - run: npm ci
     - run: npm run build
     - run: ./bin/check-bundle-size.js
+    - name: Upload Release Artefact
+      if: github.ref_type == 'tag'
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        tar -cvzf dist.tar.gz dist/
+        echo "Uploading dist bundle..."
+        gh release upload ${{ github.ref_name }} dist.tar.gz
+        echo "Upload complete."
   build-wf:
     name: 'Build Web Forms'
     runs-on: 'ubuntu-latest'
