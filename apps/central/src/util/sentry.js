@@ -7,6 +7,7 @@ const initSentry = (app, source) => {
   }
 
   init({
+    app,
     dsn,
     integrations: [browserTracingIntegration()],
     // Captures performance timing for 1 in 5 page loads.
