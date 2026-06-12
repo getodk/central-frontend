@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
-import { computed, getCurrentInstance, ref } from 'vue';
-import { OdkWebForm, POST_SUBMIT__NEW_INSTANCE, webFormsPlugin } from '@getodk/web-forms';
+import { computed, ref } from 'vue';
+import { OdkWebForm, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
 import { type MonolithicInstancePayload } from '@getodk/xforms-engine';
 import { queryString, type Form } from '../utils/api';
 import Dialog from 'primevue/dialog';
@@ -22,11 +22,6 @@ export interface WebFormsRendererProps {
 }
 
 const props = defineProps<WebFormsRendererProps>();
-
-const inst = getCurrentInstance();
-if (inst) {
-  inst.appContext.app.use(webFormsPlugin);
-}
 
 interface SubmissionData {
   instanceFile: File;

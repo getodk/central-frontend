@@ -6,6 +6,7 @@ import { flushPromises } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
 import PrimeVue from 'primevue/config';
 import Location from '../../src/utils/location';
+import { webFormsPlugin } from '@getodk/web-forms';
 
 import simpleForm from '../../../central/test/data/xml/simple/form.xml?raw';
 import formWithAttachmentXml from '../../../central/test/data/xml/with-attachment/form.xml?raw';
@@ -69,7 +70,7 @@ describe('WebFormRenderer', () => {
 
     const component = mount(WebFormRenderer, {
       global: {
-        plugins: [router, i18n, PrimeVue]
+        plugins: [router, i18n, PrimeVue, webFormsPlugin]
       },
       props: {
         xform: testProps.xform!,
