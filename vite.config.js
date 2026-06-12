@@ -12,6 +12,7 @@ except according to the terms contained in the LICENSE file.
 
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
 import vue from '@vitejs/plugin-vue';
+import { sentryVitePlugin } from '@sentry/vite-plugin';
 import { defineConfig } from 'vite';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'url';
@@ -58,7 +59,9 @@ export default defineConfig(({ mode }) => ({
       // We install what we need in src/container.js.
       fullInstall: false,
       dropMessageCompiler: true
-    })
+    }),
+    // Uploads source maps to Sentry on release builds; reads SENTRY_AUTH_TOKEN, SENTRY_ORG, SENTRY_PROJECT from environment automatically.
+    process.env.SENTRY_AUTH_TOKEN && sentryVitePlugin({ telemetry: false })
   ],
   define: {
     __WEB_FORMS_VERSION__: JSON.stringify(webFormsPackage.version)
@@ -67,7 +70,9 @@ export default defineConfig(({ mode }) => ({
     target: buildTarget,
     // `false` during dev for performance reasons
     reportCompressedSize: mode === 'production',
-    cssCodeSplit: false
+    cssCodeSplit: false,
+    // Hidden source maps for Sentry upload; not served publicly
+    sourcemap: process.env.SENTRY_AUTH_TOKEN ? 'hidden' : false
   },
   // Not sure why this is needed in addition to build.target above and why it's
   // only an issue in development. `npm run dev` doesn't work without this.
