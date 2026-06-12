@@ -55,20 +55,20 @@ export type SubtractionExprType = `${SyntaxType.SubtractionExpr}`;
 export type UnionExprType = `${SyntaxType.UnionExpr}`;
 
 export type BinaryExprType =
-	| AdditionExprType
-	| AndExprType
-	| DivisionExprType
-	| EqExprType
-	| GteExprType
-	| GtExprType
-	| LteExprType
-	| LtExprType
-	| ModuloExprType
-	| MultiplicationExprType
-	| NeExprType
-	| OrExprType
-	| SubtractionExprType
-	| UnionExprType;
+  | AdditionExprType
+  | AndExprType
+  | DivisionExprType
+  | EqExprType
+  | GteExprType
+  | GtExprType
+  | LteExprType
+  | LtExprType
+  | ModuloExprType
+  | MultiplicationExprType
+  | NeExprType
+  | OrExprType
+  | SubtractionExprType
+  | UnionExprType;
 
 assertType?.<Exact<AnyBinaryExprType, BinaryExprType>>();
 assertType?.<Exact<OperationExprType, BinaryExprType | UnaryExprType>>();
@@ -171,25 +171,25 @@ export type ErrorType = `${SyntaxType.ERROR}`;
 
 // These are manually identified by examining the grammar (for now...?)
 type AnyApparentExprType =
-	| AdditionExprType
-	| AndExprType
-	| DivisionExprType
-	| EqExprType
-	| FilterPathExprType
-	| FunctionCallType
-	| GteExprType
-	| GtExprType
-	| LiteralType
-	| LteExprType
-	| LtExprType
-	| ModuloExprType
-	| MultiplicationExprType
-	| NeExprType
-	| NumberType
-	| OrExprType
-	| SubtractionExprType
-	| UnaryExprType
-	| UnionExprType;
+  | AdditionExprType
+  | AndExprType
+  | DivisionExprType
+  | EqExprType
+  | FilterPathExprType
+  | FunctionCallType
+  | GteExprType
+  | GtExprType
+  | LiteralType
+  | LteExprType
+  | LtExprType
+  | ModuloExprType
+  | MultiplicationExprType
+  | NeExprType
+  | NumberType
+  | OrExprType
+  | SubtractionExprType
+  | UnaryExprType
+  | UnionExprType;
 
 export type AnyExprType = AnyApparentExprType;
 
@@ -198,49 +198,49 @@ export type AnyBinaryExprType = BinaryExprType;
 export type AnyUnaryExprType = UnaryExprType;
 
 export type AnyLocationPathType =
-	| AbbreviatedAbsoluteLocationPathType
-	| AbbreviatedAxisTestType
-	| AbbreviatedStepType
-	| AbsoluteLocationPathType
-	| AbsoluteRootLocationPathType
-	| AxisNameType
-	| AxisTestType
-	| FilterExprType
-	| FilterPathExprType
-	| NodeTestType
-	| NodeTypeTestType
-	| ParentType
-	| PredicateType
-	| ProcessingInstructionNameTestType
-	| RelativeLocationPathType
-	| RelativeStepSyntaxLiteral
-	| SelfType
-	| StepType;
+  | AbbreviatedAbsoluteLocationPathType
+  | AbbreviatedAxisTestType
+  | AbbreviatedStepType
+  | AbsoluteLocationPathType
+  | AbsoluteRootLocationPathType
+  | AxisNameType
+  | AxisTestType
+  | FilterExprType
+  | FilterPathExprType
+  | NodeTestType
+  | NodeTypeTestType
+  | ParentType
+  | PredicateType
+  | ProcessingInstructionNameTestType
+  | RelativeLocationPathType
+  | RelativeStepSyntaxLiteral
+  | SelfType
+  | StepType;
 
 export type AnyFunctionType = ArgumentType | FunctionCallType | FunctionNameType;
 
 export type AnyNameType =
-	| LocalPartType
-	| PrefixedNameType
-	| PrefixedWildcardNameTestType
-	| PrefixType
-	| UnprefixedNameType
-	| UnprefixedWildcardNameTestType;
+  | LocalPartType
+  | PrefixedNameType
+  | PrefixedWildcardNameTestType
+  | PrefixType
+  | UnprefixedNameType
+  | UnprefixedWildcardNameTestType;
 
 export type AnyLiteralType = LiteralType | NumberType;
 
 export type AnyContextuallyScopedType = VariableReferenceType;
 
 export type AnySyntaxType =
-	| AnyBinaryExprType
-	| AnyContextuallyScopedType
-	| AnyFunctionType
-	| AnyLiteralType
-	| AnyLocationPathType
-	| AnyNameType
-	| AnyUnaryExprType
-	| ExprType
-	| XPathType;
+  | AnyBinaryExprType
+  | AnyContextuallyScopedType
+  | AnyFunctionType
+  | AnyLiteralType
+  | AnyLocationPathType
+  | AnyNameType
+  | AnyUnaryExprType
+  | ExprType
+  | XPathType;
 
 /*
  * ============================================================================

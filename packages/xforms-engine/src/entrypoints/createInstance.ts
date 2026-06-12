@@ -5,19 +5,19 @@ import type { FormResource } from '../instance/resource.ts';
 import { loadForm } from './loadForm.ts';
 
 export interface CreateInstanceOptions {
-	readonly form?: LoadFormOptions;
-	readonly instance?: FormInstanceConfig;
+  readonly form?: LoadFormOptions;
+  readonly instance?: FormInstanceConfig;
 }
 
 export const createInstance = async (
-	formResource: FormResource,
-	options?: CreateInstanceOptions
+  formResource: FormResource,
+  options?: CreateInstanceOptions
 ): Promise<CreatedFormInstance> => {
-	const form = await loadForm(formResource, options?.form);
+  const form = await loadForm(formResource, options?.form);
 
-	if (form.status === 'failure') {
-		throw form.error;
-	}
+  if (form.status === 'failure') {
+    throw form.error;
+  }
 
-	return form.createInstance(options?.instance);
+  return form.createInstance(options?.instance);
 };

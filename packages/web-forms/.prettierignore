@@ -1,4 +1,6 @@
 **/node_modules
 **/dist
-**/fixtures
-**/vendor
+**/dist-demo
+
+# Exclude Vue. Formatting is handled by ESLint.
+**/*.vue

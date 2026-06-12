@@ -58,7 +58,7 @@ const updateVertex = () => {
 		Number(latitude.value),
 		Number(altitude.value),
 		Number(accuracy.value)
-	) as Coordinate;
+	);
 
 	if (newVertex.length) {
 		emit('save', fromLonLat(newVertex));
@@ -136,7 +136,7 @@ const updateVertex = () => {
 
 <style scoped lang="scss">
 .advanced-panel {
-	--odk-double-map-spacing: calc(var(--odk-map-controls-spacing) * 2);
+	--odk-double-map-spacing: calc(var(--odk-spacing-m) * 2);
 }
 
 .advanced-panel {
@@ -152,7 +152,7 @@ const updateVertex = () => {
 	display: flex;
 	flex-wrap: wrap;
 	gap: var(--odk-double-map-spacing);
-	padding: var(--odk-double-map-spacing) var(--odk-map-controls-spacing);
+	padding: var(--odk-double-map-spacing) var(--odk-spacing-m);
 
 	.field-set {
 		display: flex;
@@ -171,7 +171,7 @@ const updateVertex = () => {
 	}
 
 	label {
-		padding: var(--odk-map-controls-spacing);
+		padding: var(--odk-spacing-m);
 		background-color: var(--odk-light-background-color);
 		color: var(--odk-text-color);
 		font-weight: normal;
@@ -188,7 +188,7 @@ const updateVertex = () => {
 	}
 
 	input {
-		padding: var(--odk-map-controls-spacing);
+		padding: var(--odk-spacing-m);
 		width: 100%;
 		background-color: var(--odk-base-background-color);
 		border-radius: 0 var(--odk-radius) var(--odk-radius) 0;

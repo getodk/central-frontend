@@ -22,17 +22,17 @@ type SingleValueSelectCodecValues = readonly string[];
  * skipped for now, to reduce performance overhead.
  */
 const encodeValueFactory = (
-	baseCodec: SharedValueCodec<'string'>
+  baseCodec: SharedValueCodec<'string'>
 ): CodecEncoder<SingleValueSelectCodecValues> => {
-	return (values) => {
-		const [value] = values;
+  return (values) => {
+    const [value] = values;
 
-		if (value == null) {
-			return '';
-		}
+    if (value == null) {
+      return '';
+    }
 
-		return baseCodec.encodeValue(value);
-	};
+    return baseCodec.encodeValue(value);
+  };
 };
 
 /**
@@ -49,17 +49,17 @@ const encodeValueFactory = (
  *    forms which we monitor for performance.
  */
 export class SingleValueItemCodec extends BaseItemCodec<SingleValueSelectCodecValues> {
-	constructor(baseCodec: SharedValueCodec<'string'>) {
-		const encodeValue = encodeValueFactory(baseCodec);
+  constructor(baseCodec: SharedValueCodec<'string'>) {
+    const encodeValue = encodeValueFactory(baseCodec);
 
-		const decodeValue: CodecDecoder<SingleValueSelectRuntimeValues> = (value) => {
-			if (value == null) {
-				return [];
-			}
+    const decodeValue: CodecDecoder<SingleValueSelectRuntimeValues> = (value) => {
+      if (value == null) {
+        return [];
+      }
 
-			return [value];
-		};
+      return [value];
+    };
 
-		super(baseCodec, encodeValue, decodeValue);
-	}
+    super(baseCodec, encodeValue, decodeValue);
+  }
 }

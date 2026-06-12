@@ -10,9 +10,9 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <form-edit-section id="form-edit-draft-controls" icon="pencil">
-    <template #title>{{ $t('title') }}</template>
-    <template #body>
+  <div id="form-edit-draft-controls">
+    <div class="title">{{ $t('title') }}</div>
+    <div>
       <button id="form-edit-abandon-button" type="button" class="btn btn-danger-outlined"
         @click="$emit('abandon')">
         <span class="icon-trash"></span>{{ abandonText }}
@@ -21,15 +21,13 @@ except according to the terms contained in the LICENSE file.
         class="btn btn-primary" @click="$emit('publish')">
         <span class="icon-star"></span>{{ $t('action.publish') }}
       </button>
-    </template>
-  </form-edit-section>
+    </div>
+  </div>
 </template>
 
 <script setup>
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-
-import FormEditSection from './section.vue';
 
 import { useRequestData } from '../../../request-data';
 
@@ -47,7 +45,19 @@ const abandonText = computed(() => (!form.dataExists
 </script>
 
 <style lang="scss">
-#form-edit-publish-button { margin-left: 10px; }
+#form-edit-draft-controls {
+  text-align: center;
+  margin: 20px 0;
+
+  .title {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 20px;
+  }
+
+  #form-edit-publish-button { margin-left: 10px; }
+}
 </style>
 
 <i18n lang="json5">
@@ -55,7 +65,7 @@ const abandonText = computed(() => (!form.dataExists
   "en": {
     // @transifexKey component.FormEditDraftControls.subtitle
     // This refers to the draft version of a Form.
-    "title": "Ready to publish",
+    "title": "Ready to publish?",
     "action": {
       "delete": "Delete Form",
       // @transifexKey component.FormDraftStatus.actions.action.abandon

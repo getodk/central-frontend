@@ -1,6 +1,6 @@
 {
-  "extends": "../../tsconfig.json",
-  "include": ["src", "test", "tools/**/*.ts", "vite-env.d.ts"],
+  "extends": "../tsconfig.json",
+  "include": ["src", "test", "vite-env.d.ts"],
   "compilerOptions": {
     "allowSyntheticDefaultImports": false,
     "declarationDir": "./dist",
@@ -8,6 +8,7 @@
     "jsxImportSource": "solid-js",
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "skipLibCheck": true,
+    "rootDir": "../../",
     "outDir": "./dist",
     "paths": {
       "@getodk/common/test-utils/*": ["../common/test-utils/*"],

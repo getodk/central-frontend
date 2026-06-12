@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    // JavaScript without inline types, a necessary evil for some tools
+    "allowJs": true,
+    "checkJs": true,
+
+    // Module system and compilation target/environment
+    "isolatedModules": true,
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "moduleDetection": "force",
+    "moduleResolution": "Bundler",
+    "resolvePackageJsonImports": true,
+    "target": "ESNext", // Top-level await requires this
+
+    // Modules and TypeScript esoterica
+    "allowImportingTsExtensions": true,
+    "esModuleInterop": true,
+    "verbatimModuleSyntax": true,
+
+    // Build, if/when it goes through `tsc`
+    "declaration": true,
+    "emitDeclarationOnly": true,
+
+    // Type safety (strictness -> 11)
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strict": true,
+
+    // No installed types used by default, to be overridden in individual
+    // configs as necessary
+    "types": []
+  },
+  "include": [],
+  "files": ["./tsconfig.json"],
+  "exclude": [
+    "**/node_modules"
+  ]
+}

@@ -10,8 +10,8 @@ export type TriggerInputValue = boolean | '' | null;
 type BaseTriggerInstanceValueMapping = Readonly<Record<string, string>>;
 
 const TRIGGER_INSTANCE_VALUES = {
-	true: 'OK',
-	false: '',
+  true: 'OK',
+  false: '',
 } as const satisfies BaseTriggerInstanceValueMapping;
 
 type TriggerInstanceValueMapping = typeof TRIGGER_INSTANCE_VALUES;
@@ -19,30 +19,30 @@ type TriggerInstanceValueMapping = typeof TRIGGER_INSTANCE_VALUES;
 type TriggerInstanceValue = TriggerInstanceValueMapping[keyof TriggerInstanceValueMapping];
 
 const encodeTriggerValue = (value: TriggerInputValue): TriggerInstanceValue => {
-	switch (value) {
-		case true:
-			return TRIGGER_INSTANCE_VALUES.true;
+  switch (value) {
+    case true:
+      return TRIGGER_INSTANCE_VALUES.true;
 
-		case false:
-		case '':
-		case null:
-			return TRIGGER_INSTANCE_VALUES.false;
+    case false:
+    case '':
+    case null:
+      return TRIGGER_INSTANCE_VALUES.false;
 
-		default:
-			throw new UnreachableError(value);
-	}
+    default:
+      throw new UnreachableError(value);
+  }
 };
 
 const decodeTriggerValue = (value: string): TriggerRuntimeValue => {
-	return value.toLowerCase() === 'ok';
+  return value.toLowerCase() === 'ok';
 };
 
 export class TriggerCodec extends ValueCodec<
-	TriggerValueType,
-	TriggerRuntimeValue,
-	TriggerInputValue
+  TriggerValueType,
+  TriggerRuntimeValue,
+  TriggerInputValue
 > {
-	constructor() {
-		super('string', encodeTriggerValue, decodeTriggerValue);
-	}
+  constructor() {
+    super('string', encodeTriggerValue, decodeTriggerValue);
+  }
 }

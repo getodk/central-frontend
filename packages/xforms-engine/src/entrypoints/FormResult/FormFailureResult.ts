@@ -2,9 +2,9 @@ import type { AnyFunction } from '@getodk/common/types/helpers.js';
 import type { CreateFormInstance } from '../../client/form/CreateFormInstance.ts';
 import type { EditFormInstance } from '../../client/form/EditFormInstance.ts';
 import type {
-	FailedLoadFormResultMethod,
-	LoadFormFailureResult,
-	LoadFormWarnings,
+  FailedLoadFormResultMethod,
+  LoadFormFailureResult,
+  LoadFormWarnings,
 } from '../../client/form/LoadFormResult.ts';
 import type { ResetFormInstance } from '../../client/form/ResetFormInstance.ts';
 import type { RestoreFormInstance } from '../../client/form/RestoreFormInstance.ts';
@@ -12,36 +12,36 @@ import { LoadFormFailureError } from '../../error/LoadFormFailureError.ts';
 import { BaseFormResult } from './BaseFormResult.ts';
 
 interface FormFailureOptions {
-	readonly error: LoadFormFailureError;
-	readonly warnings: LoadFormWarnings | null;
+  readonly error: LoadFormFailureError;
+  readonly warnings: LoadFormWarnings | null;
 }
 
 const failedFormResultMethodFactory = <T extends AnyFunction>(
-	cause: LoadFormFailureError
+  cause: LoadFormFailureError
 ): FailedLoadFormResultMethod<T> => {
-	return () => {
-		throw new Error(cause.message, { cause });
-	};
+  return () => {
+    throw new Error(cause.message, { cause });
+  };
 };
 
 export class FormFailureResult extends BaseFormResult<'failure'> implements LoadFormFailureResult {
-	readonly createInstance: FailedLoadFormResultMethod<CreateFormInstance>;
-	readonly resetInstance: FailedLoadFormResultMethod<ResetFormInstance>;
-	readonly editInstance: FailedLoadFormResultMethod<EditFormInstance>;
-	readonly restoreInstance: FailedLoadFormResultMethod<RestoreFormInstance>;
+  readonly createInstance: FailedLoadFormResultMethod<CreateFormInstance>;
+  readonly resetInstance: FailedLoadFormResultMethod<ResetFormInstance>;
+  readonly editInstance: FailedLoadFormResultMethod<EditFormInstance>;
+  readonly restoreInstance: FailedLoadFormResultMethod<RestoreFormInstance>;
 
-	constructor(options: FormFailureOptions) {
-		const { error, warnings } = options;
+  constructor(options: FormFailureOptions) {
+    const { error, warnings } = options;
 
-		super({
-			status: 'failure',
-			warnings,
-			error,
-		});
+    super({
+      status: 'failure',
+      warnings,
+      error,
+    });
 
-		this.createInstance = failedFormResultMethodFactory(error);
-		this.resetInstance = failedFormResultMethodFactory(error);
-		this.editInstance = failedFormResultMethodFactory(error);
-		this.restoreInstance = failedFormResultMethodFactory(error);
-	}
+    this.createInstance = failedFormResultMethodFactory(error);
+    this.resetInstance = failedFormResultMethodFactory(error);
+    this.editInstance = failedFormResultMethodFactory(error);
+    this.restoreInstance = failedFormResultMethodFactory(error);
+  }
 }

@@ -5,21 +5,21 @@ import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
 import { BaseInstantiableFormResult } from './BaseInstantiableFormResult.ts';
 
 export interface FormSuccessResultOptions {
-	readonly warnings: null;
-	readonly error: null;
-	readonly scope: ReactiveScope;
-	readonly formResource: FormResource;
-	readonly instanceOptions: BasePrimaryInstanceOptions;
+  readonly warnings: null;
+  readonly error: null;
+  readonly scope: ReactiveScope;
+  readonly formResource: FormResource;
+  readonly instanceOptions: BasePrimaryInstanceOptions;
 }
 
 export class FormSuccessResult
-	extends BaseInstantiableFormResult<'success'>
-	implements LoadFormSuccessResult
+  extends BaseInstantiableFormResult<'success'>
+  implements LoadFormSuccessResult
 {
-	constructor(options: FormSuccessResultOptions) {
-		super({
-			status: 'success',
-			...options,
-		});
-	}
+  constructor(options: FormSuccessResultOptions) {
+    super({
+      status: 'success',
+      ...options,
+    });
+  }
 }

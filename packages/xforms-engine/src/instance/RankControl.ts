@@ -11,8 +11,8 @@ import type { StaticLeafElement } from '../integration/xpath/static-dom/StaticEl
 import { sharedValueCodecs } from '../lib/codecs/getSharedValueCodec.ts';
 import { MultipleValueItemCodec } from '../lib/codecs/items/MultipleValueItemCodec.ts';
 import {
-	createAttributeState,
-	type AttributeState,
+  createAttributeState,
+  type AttributeState,
 } from '../lib/reactivity/createAttributeState.ts';
 import { createItemCollection } from '../lib/reactivity/createItemCollection.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
@@ -34,25 +34,25 @@ import type { ValidationContext } from './internal-api/ValidationContext.ts';
 import type { ClientReactiveSerializableValueNode } from './internal-api/serialization/ClientReactiveSerializableValueNode.ts';
 
 export type AnyRankDefinition = {
-	[V in ValueType]: RankDefinition<V>;
+  [V in ValueType]: RankDefinition<V>;
 }[ValueType];
 
 type AssertRankNodeDefinition = (
-	definition: AnyRankDefinition
+  definition: AnyRankDefinition
 ) => asserts definition is RankDefinition<'string'>;
 
 const assertRankNodeDefinition: AssertRankNodeDefinition = (definition) => {
-	if (definition.valueType !== 'string') {
-		throw new RankValueTypeError(definition);
-	}
+  if (definition.valueType !== 'string') {
+    throw new RankValueTypeError(definition);
+  }
 };
 
 type RankItemMap = ReadonlyMap<string, RankItem>;
 
 interface RankControlStateSpec extends ValueNodeStateSpec<readonly string[]> {
-	readonly label: Accessor<TextRange<'label'> | null>;
-	readonly hint: Accessor<TextRange<'hint'> | null>;
-	readonly valueOptions: Accessor<RankValueOptions>;
+  readonly label: Accessor<TextRange<'label'> | null>;
+  readonly hint: Accessor<TextRange<'hint'> | null>;
+  readonly valueOptions: Accessor<RankValueOptions>;
 }
 
 /**
@@ -63,168 +63,168 @@ interface RankControlStateSpec extends ValueNodeStateSpec<readonly string[]> {
  */
 type TempBlankValueState = readonly [];
 const isBlankValueState = (values: readonly string[]): values is TempBlankValueState => {
-	return values.length === 0;
+  return values.length === 0;
 };
 
 export class RankControl
-	extends ValueNode<'string', RankDefinition<'string'>, readonly string[], readonly string[]>
-	implements
-		RankNode,
-		XFormsXPathElement,
-		EvaluationContext,
-		ValidationContext,
-		ClientReactiveSerializableValueNode,
-		XPathChoiceNode
+  extends ValueNode<'string', RankDefinition<'string'>, readonly string[], readonly string[]>
+  implements
+    RankNode,
+    XFormsXPathElement,
+    EvaluationContext,
+    ValidationContext,
+    ClientReactiveSerializableValueNode,
+    XPathChoiceNode
 {
-	static from(
-		parent: GeneralParentNode,
-		instanceNode: StaticLeafElement | null,
-		definition: RankDefinition
-	): RankControl;
-	static from(
-		parent: GeneralParentNode,
-		instanceNode: StaticLeafElement | null,
-		definition: AnyRankDefinition
-	): RankControl {
-		assertRankNodeDefinition(definition);
-		return new this(parent, instanceNode, definition);
-	}
+  static from(
+    parent: GeneralParentNode,
+    instanceNode: StaticLeafElement | null,
+    definition: RankDefinition
+  ): RankControl;
+  static from(
+    parent: GeneralParentNode,
+    instanceNode: StaticLeafElement | null,
+    definition: AnyRankDefinition
+  ): RankControl {
+    assertRankNodeDefinition(definition);
+    return new this(parent, instanceNode, definition);
+  }
 
-	private readonly mapOptionsByValue: Accessor<RankItemMap>;
+  private readonly mapOptionsByValue: Accessor<RankItemMap>;
 
-	protected override readonly getInstanceValue: Accessor<string>;
+  protected override readonly getInstanceValue: Accessor<string>;
 
-	// XFormsXPathElement
-	override readonly [XPathNodeKindKey] = 'element';
+  // XFormsXPathElement
+  override readonly [XPathNodeKindKey] = 'element';
 
-	// InstanceNode
-	protected readonly state: SharedNodeState<RankControlStateSpec>;
-	protected readonly engineState: EngineState<RankControlStateSpec>;
-	readonly attributeState: AttributeState;
+  // InstanceNode
+  protected readonly state: SharedNodeState<RankControlStateSpec>;
+  protected readonly engineState: EngineState<RankControlStateSpec>;
+  readonly attributeState: AttributeState;
 
-	// RankNode
-	readonly nodeType = 'rank';
-	readonly appearances: UnknownAppearanceDefinition;
-	readonly nodeOptions = null;
-	readonly currentState: CurrentState<RankControlStateSpec>;
+  // RankNode
+  readonly nodeType = 'rank';
+  readonly appearances: UnknownAppearanceDefinition;
+  readonly nodeOptions = null;
+  readonly currentState: CurrentState<RankControlStateSpec>;
 
-	private constructor(
-		parent: GeneralParentNode,
-		instanceNode: StaticLeafElement | null,
-		definition: RankDefinition<'string'>
-	) {
-		const codec = new MultipleValueItemCodec(sharedValueCodecs.string);
-		super(parent, instanceNode, definition, codec);
+  private constructor(
+    parent: GeneralParentNode,
+    instanceNode: StaticLeafElement | null,
+    definition: RankDefinition<'string'>
+  ) {
+    const codec = new MultipleValueItemCodec(sharedValueCodecs.string);
+    super(parent, instanceNode, definition, codec);
 
-		this.appearances = definition.bodyElement.appearances;
+    this.appearances = definition.bodyElement.appearances;
 
-		const valueOptions = createItemCollection(this);
-		const mapOptionsByValue: Accessor<RankItemMap> = this.scope.runTask(() => {
-			return createMemo(() => {
-				return new Map(valueOptions().map((item) => [item.value, item]));
-			});
-		});
+    const valueOptions = createItemCollection(this);
+    const mapOptionsByValue: Accessor<RankItemMap> = this.scope.runTask(() => {
+      return createMemo(() => {
+        return new Map(valueOptions().map((item) => [item.value, item]));
+      });
+    });
 
-		this.mapOptionsByValue = mapOptionsByValue;
+    this.mapOptionsByValue = mapOptionsByValue;
 
-		const baseValueState = this.valueState;
-		const [baseGetValue, setValue] = baseValueState;
+    const baseValueState = this.valueState;
+    const [baseGetValue, setValue] = baseValueState;
 
-		this.attributeState = createAttributeState(this.scope);
+    this.attributeState = createAttributeState(this.scope);
 
-		/**
-		 * @ToDo As new value options become available, they're not yet in the
-		 * `currentValues` state. This appends them. We intend to change this
-		 * behavior, likely clearing the previous state instead.
-		 *
-		 * However, there's an open question about what we should do when a filter
-		 * change **only removes values**.
-		 */
-		const getValue = this.scope.runTask(() => {
-			return createMemo(() => {
-				const options = valueOptions();
-				const values = baseGetValue();
+    /**
+     * @ToDo As new value options become available, they're not yet in the
+     * `currentValues` state. This appends them. We intend to change this
+     * behavior, likely clearing the previous state instead.
+     *
+     * However, there's an open question about what we should do when a filter
+     * change **only removes values**.
+     */
+    const getValue = this.scope.runTask(() => {
+      return createMemo(() => {
+        const options = valueOptions();
+        const values = baseGetValue();
 
-				if (isBlankValueState(values)) {
-					return values;
-				}
+        if (isBlankValueState(values)) {
+          return values;
+        }
 
-				const optionValues = new Set(options.map((option) => option.value));
+        const optionValues = new Set(options.map((option) => option.value));
 
-				/**
-				 * @see {@link getValue} ToDo paragraph 2.
-				 */
-				const currentValues = values.filter((value) => optionValues.has(value));
+        /**
+         * @see {@link getValue} ToDo paragraph 2.
+         */
+        const currentValues = values.filter((value) => optionValues.has(value));
 
-				return Array.from(
-					new Set([
-						...currentValues,
-						/**
-						 * @see {@link getValue} ToDo paragraph 1.
-						 */
-						...optionValues,
-					])
-				);
-			});
-		});
-		const valueState: SimpleAtomicState<readonly string[]> = [getValue, setValue];
+        return Array.from(
+          new Set([
+            ...currentValues,
+            /**
+             * @see {@link getValue} ToDo paragraph 1.
+             */
+            ...optionValues,
+          ])
+        );
+      });
+    });
+    const valueState: SimpleAtomicState<readonly string[]> = [getValue, setValue];
 
-		this.getInstanceValue = this.scope.runTask(() => {
-			return createMemo(() => codec.encodeValue(getValue()));
-		});
+    this.getInstanceValue = this.scope.runTask(() => {
+      return createMemo(() => codec.encodeValue(getValue()));
+    });
 
-		const state = createSharedNodeState(
-			this.scope,
-			{
-				reference: this.contextReference,
-				readonly: this.isReadonly,
-				relevant: this.isRelevant,
-				required: this.isRequired,
-				label: createNodeLabel(this, definition),
-				hint: createFieldHint(this, definition),
-				children: null,
-				attributes: this.attributeState.getAttributes,
-				valueOptions,
-				value: valueState,
-				instanceValue: this.getInstanceValue,
-			},
-			this.instanceConfig
-		);
+    const state = createSharedNodeState(
+      this.scope,
+      {
+        reference: this.contextReference,
+        readonly: this.isReadonly,
+        relevant: this.isRelevant,
+        required: this.isRequired,
+        label: createNodeLabel(this, definition),
+        hint: createFieldHint(this, definition),
+        children: null,
+        attributes: this.attributeState.getAttributes,
+        valueOptions,
+        value: valueState,
+        instanceValue: this.getInstanceValue,
+      },
+      this.instanceConfig
+    );
 
-		this.attributeState.setAttributes(buildAttributes(this));
+    this.attributeState.setAttributes(buildAttributes(this));
 
-		this.state = state;
-		this.engineState = state.engineState;
-		this.currentState = state.currentState;
-	}
+    this.state = state;
+    this.engineState = state.engineState;
+    this.currentState = state.currentState;
+  }
 
-	override getAttributes(): readonly Attribute[] {
-		return this.attributeState.getAttributes();
-	}
+  override getAttributes(): readonly Attribute[] {
+    return this.attributeState.getAttributes();
+  }
 
-	getValueLabel(value: string): TextRange<'item-label'> | null {
-		const valueOption = this.currentState.valueOptions.find((item) => item.value === value);
-		return valueOption?.label ?? null;
-	}
+  getValueLabel(value: string): TextRange<'item-label'> | null {
+    const valueOption = this.currentState.valueOptions.find((item) => item.value === value);
+    return valueOption?.label ?? null;
+  }
 
-	setValues(valuesInOrder: readonly string[]): Root {
-		if (isBlankValueState(valuesInOrder)) {
-			this.setValueState(valuesInOrder);
-			return this.root;
-		}
+  setValues(valuesInOrder: readonly string[]): Root {
+    if (isBlankValueState(valuesInOrder)) {
+      this.setValueState(valuesInOrder);
+      return this.root;
+    }
 
-		const sourceValues: string[] = Array.from(this.mapOptionsByValue().keys());
-		const hasAllValues = sourceValues.every((sourceValue) => valuesInOrder.includes(sourceValue));
-		if (!hasAllValues) {
-			throw new RankMissingValueError('There are missing options. Rank should have all options.');
-		}
+    const sourceValues: string[] = Array.from(this.mapOptionsByValue().keys());
+    const hasAllValues = sourceValues.every((sourceValue) => valuesInOrder.includes(sourceValue));
+    if (!hasAllValues) {
+      throw new RankMissingValueError('There are missing options. Rank should have all options.');
+    }
 
-		this.setValueState(valuesInOrder);
-		return this.root;
-	}
+    this.setValueState(valuesInOrder);
+    return this.root;
+  }
 
-	getChoiceName(value: string): string | null {
-		const option = this.mapOptionsByValue().get(value);
-		return option?.label?.asString ?? null;
-	}
+  getChoiceName(value: string): string | null {
+    const option = this.mapOptionsByValue().get(value);
+    return option?.label?.asString ?? null;
+  }
 }

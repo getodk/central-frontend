@@ -10,63 +10,63 @@ const trueFn = new BooleanFunction('true', [], (): boolean => true);
 export { trueFn as true };
 
 export const boolean = new BooleanFunction(
-	'boolean',
-	[{ arityType: 'required' }],
-	(context, [expression]): boolean => {
-		return expression!.evaluate(context).toBoolean();
-	}
+  'boolean',
+  [{ arityType: 'required' }],
+  (context, [expression]): boolean => {
+    return expression!.evaluate(context).toBoolean();
+  }
 );
 
 export const lang = new BooleanFunction(
-	'lang',
-	[{ arityType: 'required' }],
-	(context, [expression]): boolean => {
-		const language = expression!.evaluate(context).toString().toLowerCase();
+  'lang',
+  [{ arityType: 'required' }],
+  (context, [expression]): boolean => {
+    const language = expression!.evaluate(context).toString().toLowerCase();
 
-		if (language === '') {
-			return false;
-		}
+    if (language === '') {
+      return false;
+    }
 
-		// TODO: what happens with multiple? Probably use `some`?
-		const [contextNode] = context.contextNodes;
+    // TODO: what happens with multiple? Probably use `some`?
+    const [contextNode] = context.contextNodes;
 
-		if (contextNode == null) {
-			return false;
-		}
+    if (contextNode == null) {
+      return false;
+    }
 
-		const { domProvider } = context;
+    const { domProvider } = context;
 
-		let currentContextNode = domProvider.isElement(contextNode)
-			? contextNode
-			: domProvider.getParentNode(contextNode);
+    let currentContextNode = domProvider.isElement(contextNode)
+      ? contextNode
+      : domProvider.getParentNode(contextNode);
 
-		if (currentContextNode == null) {
-			return false;
-		}
+    if (currentContextNode == null) {
+      return false;
+    }
 
-		let langValue: string | null = null;
+    let langValue: string | null = null;
 
-		do {
-			if (currentContextNode == null || !domProvider.isElement(currentContextNode)) {
-				break;
-			}
+    do {
+      if (currentContextNode == null || !domProvider.isElement(currentContextNode)) {
+        break;
+      }
 
-			langValue =
-				domProvider
-					.getQualifiedNamedAttributeValue(currentContextNode, XML_NAMESPACE_URI, 'lang')
-					?.toLowerCase() ?? null;
+      langValue =
+        domProvider
+          .getQualifiedNamedAttributeValue(currentContextNode, XML_NAMESPACE_URI, 'lang')
+          ?.toLowerCase() ?? null;
 
-			currentContextNode = domProvider.getParentNode(currentContextNode);
-		} while (langValue == null && currentContextNode != null);
+      currentContextNode = domProvider.getParentNode(currentContextNode);
+    } while (langValue == null && currentContextNode != null);
 
-		return langValue != null && (langValue === language || langValue.startsWith(`${language}-`));
-	}
+    return langValue != null && (langValue === language || langValue.startsWith(`${language}-`));
+  }
 );
 
 export const not = new BooleanFunction(
-	'not',
-	[{ arityType: 'required' }],
-	(context, [expression]): boolean => {
-		return !expression!.evaluate(context).toBoolean();
-	}
+  'not',
+  [{ arityType: 'required' }],
+  (context, [expression]): boolean => {
+    return !expression!.evaluate(context).toBoolean();
+  }
 );

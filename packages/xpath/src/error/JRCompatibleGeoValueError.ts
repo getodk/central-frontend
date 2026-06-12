@@ -7,7 +7,7 @@ type JRCompatibleFallibleGeoFunction =
 	;
 
 export class JRCompatibleGeoValueError extends JRCompatibleError {
-	constructor(geoFunction: JRCompatibleFallibleGeoFunction) {
-		super(`The function '${geoFunction}' received a value that does not represent GPS coordinates`);
-	}
+  constructor(geoFunction: JRCompatibleFallibleGeoFunction) {
+    super(`The function '${geoFunction}' received a value that does not represent GPS coordinates`);
+  }
 }

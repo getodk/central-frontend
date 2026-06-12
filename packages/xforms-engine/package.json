@@ -29,7 +29,7 @@
     "README.md"
   ],
   "engines": {
-    "node": "^20.19.3 || ^22.12.0 || ^24.13.0",
+    "node": "^24.14.1",
     "npm": "11"
   },
   "scripts": {
@@ -42,11 +42,24 @@
     "docs:clean": "rimraf api-docs/",
     "docs:api": "typedoc --readme none --out api-docs --entryPoints \"src/**/*\"",
     "docs:serve": "http-server api-docs -o modules/client",
-    "test": "npm-run-all -nl 'test-node:*' 'test-browser:*'",
+    "format:fix": "prettier -w \"**/*\" --ignore-unknown --cache",
+    "format:lint": "prettier -c \"**/*\" --ignore-unknown",
+    "lint": "eslint . --report-unused-disable-directives --cache --max-warnings 0 && npm run format:lint",
+    "lint:fix": "eslint . --fix --report-unused-disable-directives --cache --max-warnings 0 && npm run format:fix",
+    "test": "npm-run-all -nl 'test-node:*' 'test-browser:*' 'integration-test'",
     "test-node:jsdom": "vitest run",
     "test-browser:chromium": "BROWSER_NAME=chromium vitest run",
     "test-browser:firefox": "BROWSER_NAME=firefox vitest run",
     "test-browser:webkit": "BROWSER_NAME=webkit vitest run",
+    "integration-test": "npm-run-all -nl 'integration-test-node:*' 'integration-test-browser:*'",
+    "integration-test-node:jsdom": "vitest run --mode integration",
+    "integration-test-browser:chromium": "BROWSER_NAME=chromium vitest run --mode integration",
+    "integration-test-browser:firefox": "BROWSER_NAME=firefox vitest run --mode integration",
+    "integration-test-browser:webkit": "BROWSER_NAME=webkit vitest run --mode integration",
+    "integration-test-watch:jsdom": "vitest --mode integration",
+    "integration-test-watch:chromium": "BROWSER_NAME=chromium vitest --mode integration",
+    "integration-test-watch:firefox": "BROWSER_NAME=firefox vitest --mode integration",
+    "integration-test-watch:webkit": "BROWSER_NAME=webkit vitest --mode integration",
     "test-watch:jsdom": "vitest",
     "test-watch:chromium": "BROWSER_NAME=chromium vitest",
     "test-watch:firefox": "BROWSER_NAME=firefox vitest",
@@ -56,6 +69,7 @@
   "dependencies": {
     "bin-packer": "1.7.0",
     "mdast-util-from-markdown": "^2.0.2",
+    "mdast-util-newline-to-break": "^2.0.0",
     "papaparse": "^5.5.3",
     "solid-js": "^1.9.11",
     "temporal-polyfill": "^0.3.0"
@@ -64,19 +78,15 @@
     "@babel/core": "^7.28.5",
     "@getodk/tree-sitter-xpath": "^0.2.2",
     "@getodk/xpath": "0.11.0",
-    "@playwright/test": "^1.58.2",
+    "@js-joda/core": "^5.7.0",
     "@types/papaparse": "^5.5.0",
     "babel-plugin-transform-jsbi-to-bigint": "^1.4.2",
     "http-server": "^14.1.1",
     "jsdom": "^27.2.0",
-    "npm-run-all2": "^8.0.4",
-    "rimraf": "^6.1.3",
     "typedoc": "^0.28.17",
     "typescript": "~5.9.3",
-    "vite": "^7.3.1",
     "vite-plugin-dts": "^4.5.4",
     "vite-plugin-no-bundle": "^4.0.0",
-    "vitest": "^4.0.18",
     "web-tree-sitter": "0.24.5"
   },
   "peerDependencies": {

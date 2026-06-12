@@ -40,37 +40,27 @@ except according to the terms contained in the LICENSE file.
 
         <hr v-if="draftVersionStringIsDuplicate">
         <p v-if="draftVersionStringIsDuplicate">{{ $t('introduction[2]') }}</p>
-
-        <p v-if="!draftVersionStringIsDuplicate && !versionConflict">{{ $t('introduction[3]') }}</p>
       </div>
-      <form v-if="draftVersionStringIsDuplicate || versionConflict" @submit.prevent="publish">
-        <form-group ref="versionString" v-model.trim="versionString"
-          :placeholder="$t('common.version')" required autocomplete="off"/>
+      <hr>
+      <form @submit.prevent="publish">
+        <form-group v-if="draftVersionStringIsDuplicate || versionConflict" ref="versionString" v-model.trim="versionString" :placeholder="$t('common.version')"
+          required autocomplete="off"/>
+        <div class="form-group">
+          <textarea id="form-draft-publish-note" ref="publishNote" v-model="notes" class="form-control"
+            :placeholder="$t('placeholder.note')" rows="3"></textarea>
+          <label for="form-draft-publish-note" class="form-label">{{ $t('field.note') }}</label>
+        </div>
         <p>{{ $t('introduction[3]') }}</p>
-        <!-- We specify two nearly identical .modal-actions, because here we
-        want the Proceed button to be a submit button (which means that browsers
-        will do some basic form validation when it is clicked). -->
         <div class="modal-actions">
           <button type="button" class="btn btn-link"
             :aria-disabled="awaitingResponse" @click="$emit('hide')">
             {{ $t('action.cancel') }}
           </button>
-          <button type="submit" class="btn btn-primary"
-            :aria-disabled="awaitingResponse">
+          <button type="submit" class="btn btn-primary" :aria-disabled="awaitingResponse">
             {{ $t('action.proceed') }} <spinner :state="awaitingResponse"/>
           </button>
         </div>
       </form>
-      <div v-else class="modal-actions">
-        <button type="button" class="btn btn-link" :aria-disabled="awaitingResponse"
-          @click="$emit('hide')">
-          {{ $t('action.cancel') }}
-        </button>
-        <button type="button" class="btn btn-primary"
-          :aria-disabled="awaitingResponse" @click="publish">
-          {{ $t('action.proceed') }} <spinner :state="awaitingResponse"/>
-        </button>
-      </div>
     </template>
   </modal>
 </template>
@@ -111,6 +101,7 @@ export default {
   data() {
     return {
       versionString: '',
+      notes: '',
       // versionConflict is used in a scenario where a user tries to
       // publish a form that conflicts with a form/version combo probably
       // found in the trash. This component doesn't have access to trashed
@@ -139,14 +130,21 @@ export default {
   },
   watch: {
     state(state) {
-      if (state) this.versionString = this.formDraft.version;
+      if (state) {
+        this.versionString = this.formDraft.version;
+        this.notes = '';
+      }
     }
   },
   methods: {
     focusInput() {
       if (this.draftVersionStringIsDuplicate) this.$refs.versionString.focus();
+      else this.$refs.publishNote.focus();
     },
     publish() {
+      const headers = {};
+      if (this.notes !== '')
+        headers['X-Action-Notes'] = encodeURIComponent(this.notes);
       this.request({
         method: 'POST',
         url: apiPaths.publishFormDraft(
@@ -156,6 +154,7 @@ export default {
             ? { version: this.versionString }
             : null
         ),
+        headers,
         fulfillProblem: (problem) => problem.code === 409.6
       })
         .then(({ data }) => {
@@ -198,6 +197,12 @@ export default {
     "newProperties": "Publishing this draft will create {count} property. | Publishing this draft will create {count} properties.",
     "problem": {
       "409_6": "The version name of this Draft conflicts with a past version of this Form or a deleted Form. Please use the field below to change it to something new or upload a new Form definition."
+    },
+    "field": {
+      "note": "Notes"
+    },
+    "placeholder": {
+      "note": "Add optional publishing notes…"
     }
   }
 }

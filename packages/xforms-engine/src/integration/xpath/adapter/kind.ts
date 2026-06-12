@@ -8,11 +8,11 @@ import type { StaticDocument } from '../static-dom/StaticDocument.ts';
 import type { StaticElement } from '../static-dom/StaticElement.ts';
 import type { StaticText } from '../static-dom/StaticText.ts';
 import type {
-	XFormsXPathAttribute,
-	XFormsXPathComment,
-	XFormsXPathDocument,
-	XFormsXPathElement,
-	XFormsXPathPrimaryInstanceNode,
+  XFormsXPathAttribute,
+  XFormsXPathComment,
+  XFormsXPathDocument,
+  XFormsXPathElement,
+  XFormsXPathPrimaryInstanceNode,
 } from './XFormsXPathNode.ts';
 
 export type PrimaryInstanceXPathNode = Extract<AnyNode, XFormsXPathPrimaryInstanceNode>;
@@ -80,13 +80,13 @@ export type EngineXPathNode =
 	| EngineXPathComment;
 
 export const isEngineXPathNode = (value: unknown): value is EngineXPathNode => {
-	return typeof value === 'object' && value != null && XPathNodeKindKey in value;
+  return typeof value === 'object' && value != null && XPathNodeKindKey in value;
 };
 
 export const getEngineXPathNodeKind = (node: EngineXPathNode): XPathNodeKind => {
-	return node[XPathNodeKindKey];
+  return node[XPathNodeKindKey];
 };
 
 export const isEngineXPathElement = (node: EngineXPathNode): node is EngineXPathElement => {
-	return getEngineXPathNodeKind(node) === 'element';
+  return getEngineXPathNodeKind(node) === 'element';
 };

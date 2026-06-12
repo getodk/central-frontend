@@ -3031,13 +3031,13 @@
     "FormAttachmentList": {
       "action": {
         "upload": {
-          "string": "Choose files",
+          "string": "choose files",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "orDrag": {
-        "string": "or drag files onto this page to upload",
-        "developer_comment": "This text is shown next to a button with the text \"Choose files\"."
+        "string": "or drag files onto this section to upload",
+        "developer_comment": "This text is shown next to a button with the text \"choose files\"."
       },
       "problem": {
         "noneUploaded": {
@@ -3324,6 +3324,17 @@
         "409_6": {
           "string": "The version name of this Draft conflicts with a past version of this Form or a deleted Form. Please use the field below to change it to something new or upload a new Form definition."
         }
+      },
+      "field": {
+        "note": {
+          "string": "Notes",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "placeholder": {
+        "note": {
+          "string": "Add optional publishing notes…"
+        }
       }
     },
     "FormDraftQrPanel": {
@@ -3446,6 +3457,10 @@
       }
     },
     "FormEditDef": {
+      "title": {
+        "string": "Draft version: {version}",
+        "developer_comment": "This is shown for the Draft Form. {version} is the version of the Form defined in its definition."
+      },
       "subtitle": {
         "string": "Uploaded",
         "developer_comment": "This refers to the draft version of a Form."
@@ -3453,20 +3468,6 @@
       "changed": {
         "string": "Changed from published version",
         "developer_comment": "This refers to the draft version of a Form."
-      },
-      "versionName": {
-        "string": "Version name: {name}",
-        "developer_comment": "This is shown for a Form version."
-      },
-      "action": {
-        "upload": {
-          "string": "Upload new Form Definition",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
-      "withinDef": {
-        "string": "Within this Form Definition:",
-        "developer_comment": "This text is shown above a list of items that are part of the Form Definition."
       }
     },
     "FormEditDraftControls": {
@@ -3477,7 +3478,7 @@
         }
       },
       "subtitle": {
-        "string": "Ready to publish",
+        "string": "Ready to publish?",
         "developer_comment": "This refers to the draft version of a Form."
       }
     },
@@ -3504,10 +3505,6 @@
           }
         }
       },
-      "cannotDeleteProperties": {
-        "string": "Properties cannot be deleted.",
-        "developer_comment": "\"Properties\" refers to Entity properties."
-      },
       "notEntityRelated": {
         "string": "This definition does not update any Entities.",
         "developer_comment": "\"Definition\" refers to a Form Definition."
@@ -3518,8 +3515,8 @@
     },
     "FormEditPublishedVersion": {
       "title": {
-        "string": "Current version",
-        "developer_comment": "This refers to the current version of a Form."
+        "string": "Current version: {version}",
+        "developer_comment": "This refers to the current version of a Form. {version} is the version of the published Form, defined in its definition."
       },
       "subtitle": {
         "published": {
@@ -3639,9 +3636,6 @@
         }
       },
       "alert": {
-        "fileRequired": {
-          "string": "Please choose a file."
-        },
         "fileNotReadable": {
           "string": "The file could not be read. It may have been modified or deleted. Please choose the file again."
         }
@@ -3699,10 +3693,6 @@
         "create": {
           "string": "Create Form",
           "developer_comment": "This is the title at the top of a page."
-        },
-        "update": {
-          "string": "Upload New Form Definition",
-          "developer_comment": "This is the title at the top of a section."
         }
       }
     },
@@ -3910,6 +3900,10 @@
       "current": {
         "string": "Current Published Version",
         "developer_comment": "This is a label shown for the current version of a Form."
+      },
+      "notes": {
+        "string": "Notes: {notes}",
+        "developer_comment": "This is the label shown before the notes entered when a Form version was published. {notes} is the actual notes text."
       }
     },
     "FormVersionString": {

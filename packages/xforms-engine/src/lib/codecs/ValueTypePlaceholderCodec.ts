@@ -10,10 +10,10 @@ import { ValueCodec } from './ValueCodec.ts';
  * as string values.
  */
 export class ValueTypePlaceholderCodec<V extends ValueType> extends ValueCodec<V, string, string> {
-	constructor(valueType: V) {
-		super(valueType, identity, identity, {
-			decodeInstanceValueFactory: () => identity,
-			runtimeValueStateFactory: () => identity,
-		});
-	}
+  constructor(valueType: V) {
+    super(valueType, identity, identity, {
+      decodeInstanceValueFactory: () => identity,
+      runtimeValueStateFactory: () => identity,
+    });
+  }
 }

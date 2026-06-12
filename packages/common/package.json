@@ -44,10 +44,14 @@
     "README.md"
   ],
   "engines": {
-    "node": "^20.19.3 || ^22.12.0 || ^24.13.0",
+    "node": "^24.14.1",
     "npm": "11"
   },
   "scripts": {
+    "format:fix": "prettier -w \"**/*\" --ignore-unknown --cache",
+    "format:lint": "prettier -c \"**/*\" --ignore-unknown",
+    "lint": "eslint . --report-unused-disable-directives --cache --max-warnings 0 && npm run format:lint",
+    "lint:fix": "eslint . --fix --report-unused-disable-directives --cache --max-warnings 0 && npm run format:fix",
     "test": "npm-run-all -nl 'test-node:*' 'test-browser:*'",
     "test-node:jsdom": "vitest run",
     "test-browser:chromium": "BROWSER_NAME=chromium vitest run",
@@ -60,9 +64,6 @@
     "test:types": "tsc --project ./tsconfig.json --emitDeclarationOnly false --noEmit"
   },
   "devDependencies": {
-    "jsdom": "^27.2.0",
-    "npm-run-all2": "^8.0.4",
-    "vite": "^7.3.1",
-    "vitest": "^4.0.18"
+    "jsdom": "^27.2.0"
   }
 }

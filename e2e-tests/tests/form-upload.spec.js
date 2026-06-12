@@ -1,12 +1,13 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import BackendClient from '../backend-client';
-import { login } from '../util';
+import { login, test } from '../util';
 
 const appUrl = process.env.ODK_URL;
 const projectId = process.env.PROJECT_ID;
+const __dirname = import.meta.dirname;
 
 let publishedForm;
 

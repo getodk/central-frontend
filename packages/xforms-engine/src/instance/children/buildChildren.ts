@@ -10,8 +10,8 @@ import { ErrorProductionDesignPendingError } from '../../error/ErrorProductionDe
 import type { LeafNodeDefinition } from '../../parse/model/LeafNodeDefinition.ts';
 import { NoteNodeDefinition } from '../../parse/model/NoteNodeDefinition.ts';
 import type {
-	AnyRangeNodeDefinition,
-	RangeLeafNodeDefinition,
+  AnyRangeNodeDefinition,
+  RangeLeafNodeDefinition,
 } from '../../parse/model/RangeNodeDefinition.ts';
 import { RangeNodeDefinition } from '../../parse/model/RangeNodeDefinition.ts';
 import { Group } from '../Group.ts';
@@ -41,31 +41,31 @@ type ControlNodeDefinition =
 type AnyLeafNodeDefinition = ControlNodeDefinition | ModelValueDefinition;
 
 const isModelValueDefinition = (
-	definition: LeafNodeDefinition
+  definition: LeafNodeDefinition
 ): definition is ModelValueDefinition => {
-	return definition.bodyElement == null;
+  return definition.bodyElement == null;
 };
 
 const isInputDefinition = (definition: ControlNodeDefinition): definition is InputDefinition => {
-	return definition.bodyElement.type === 'input';
+  return definition.bodyElement.type === 'input';
 };
 
 const isSelectDefinition = (definition: ControlNodeDefinition): definition is SelectDefinition => {
-	return definition.bodyElement.type === 'select' || definition.bodyElement.type === 'select1';
+  return definition.bodyElement.type === 'select' || definition.bodyElement.type === 'select1';
 };
 
 const isRankDefinition = (definition: ControlNodeDefinition): definition is RankDefinition => {
-	return definition.bodyElement.type === 'rank';
+  return definition.bodyElement.type === 'rank';
 };
 
 const isRangeLeafNodeDefinition = (
-	definition: ControlNodeDefinition
+  definition: ControlNodeDefinition
 ): definition is RangeLeafNodeDefinition => {
-	return definition.bodyElement.type === 'range';
+  return definition.bodyElement.type === 'range';
 };
 
 type AssertRangeNodeDefinition = (
-	definition: RangeLeafNodeDefinition
+  definition: RangeLeafNodeDefinition
 ) => asserts definition is AnyRangeNodeDefinition;
 
 /**
@@ -87,101 +87,101 @@ type AssertRangeNodeDefinition = (
  * - addition of range-specific properties: `min`, `max`, `step`
  */
 const assertRangeNodeDefinition: AssertRangeNodeDefinition = (definition) => {
-	if (definition instanceof RangeNodeDefinition) {
-		return;
-	}
+  if (definition instanceof RangeNodeDefinition) {
+    return;
+  }
 
-	/**
-	 * At time of writing we know there is no code path producing this
-	 * case, but appeasing the type checker for it now will guard against
-	 * it happening mistakenly in any future refactoring. (Hint: it
-	 * occurred during some refactoring that arrived here, which is why
-	 * this isn't a type cast!)
-	 */
-	throw new ErrorProductionDesignPendingError(
-		`Invalid <range> definition with value type: ${definition.valueType}`
-	);
+  /**
+   * At time of writing we know there is no code path producing this
+   * case, but appeasing the type checker for it now will guard against
+   * it happening mistakenly in any future refactoring. (Hint: it
+   * occurred during some refactoring that arrived here, which is why
+   * this isn't a type cast!)
+   */
+  throw new ErrorProductionDesignPendingError(
+    `Invalid <range> definition with value type: ${definition.valueType}`
+  );
 };
 
 const isTriggerNodeDefinition = (
-	definition: ControlNodeDefinition
+  definition: ControlNodeDefinition
 ): definition is TriggerNodeDefinition => {
-	return definition.bodyElement.type === 'trigger';
+  return definition.bodyElement.type === 'trigger';
 };
 
 const isUploadNodeDefinition = (
-	definition: ControlNodeDefinition
+  definition: ControlNodeDefinition
 ): definition is UploadDefinition => {
-	return definition.bodyElement.type === 'upload';
+  return definition.bodyElement.type === 'upload';
 };
 
 export const buildChildren = (parent: GeneralParentNode): GeneralChildNode[] => {
-	const { children } = childrenInitOptions(parent);
+  const { children } = childrenInitOptions(parent);
 
-	return children.map(({ instanceNodes, definition }): GeneralChildNode => {
-		const [instanceNode = null] = instanceNodes;
+  return children.map(({ instanceNodes, definition }): GeneralChildNode => {
+    const [instanceNode = null] = instanceNodes;
 
-		switch (definition.type) {
-			case 'group': {
-				return new Group(parent, instanceNode, definition as GroupDefinition);
-			}
+    switch (definition.type) {
+      case 'group': {
+        return new Group(parent, instanceNode, definition as GroupDefinition);
+      }
 
-			case 'repeat': {
-				if (definition.isControlled()) {
-					return new RepeatRangeControlled(parent, instanceNodes, definition);
-				}
+      case 'repeat': {
+        if (definition.isControlled()) {
+          return new RepeatRangeControlled(parent, instanceNodes, definition);
+        }
 
-				return new RepeatRangeUncontrolled(parent, instanceNodes, definition);
-			}
+        return new RepeatRangeUncontrolled(parent, instanceNodes, definition);
+      }
 
-			case 'leaf-node': {
-				if (instanceNode != null && !instanceNode.isLeafElement()) {
-					throw new ErrorProductionDesignPendingError();
-				}
+      case 'leaf-node': {
+        if (instanceNode != null && !instanceNode.isLeafElement()) {
+          throw new ErrorProductionDesignPendingError();
+        }
 
-				if (definition instanceof NoteNodeDefinition) {
-					return new Note(parent, instanceNode, definition);
-				}
+        if (definition instanceof NoteNodeDefinition) {
+          return new Note(parent, instanceNode, definition);
+        }
 
-				// More specific type helps with narrowing below
-				const leafChild: AnyLeafNodeDefinition = definition;
+        // More specific type helps with narrowing below
+        const leafChild: AnyLeafNodeDefinition = definition;
 
-				if (isModelValueDefinition(leafChild)) {
-					return ModelValue.from(parent, instanceNode, leafChild);
-				}
+        if (isModelValueDefinition(leafChild)) {
+          return ModelValue.from(parent, instanceNode, leafChild);
+        }
 
-				if (isInputDefinition(leafChild)) {
-					return InputControl.from(parent, instanceNode, leafChild);
-				}
+        if (isInputDefinition(leafChild)) {
+          return InputControl.from(parent, instanceNode, leafChild);
+        }
 
-				if (isSelectDefinition(leafChild)) {
-					return SelectControl.from(parent, instanceNode, leafChild);
-				}
+        if (isSelectDefinition(leafChild)) {
+          return SelectControl.from(parent, instanceNode, leafChild);
+        }
 
-				if (isRankDefinition(leafChild)) {
-					return RankControl.from(parent, instanceNode, leafChild);
-				}
+        if (isRankDefinition(leafChild)) {
+          return RankControl.from(parent, instanceNode, leafChild);
+        }
 
-				if (isTriggerNodeDefinition(leafChild)) {
-					return TriggerControl.from(parent, instanceNode, leafChild);
-				}
+        if (isTriggerNodeDefinition(leafChild)) {
+          return TriggerControl.from(parent, instanceNode, leafChild);
+        }
 
-				if (isRangeLeafNodeDefinition(leafChild)) {
-					assertRangeNodeDefinition(leafChild);
+        if (isRangeLeafNodeDefinition(leafChild)) {
+          assertRangeNodeDefinition(leafChild);
 
-					return RangeControl.from(parent, instanceNode, leafChild);
-				}
+          return RangeControl.from(parent, instanceNode, leafChild);
+        }
 
-				if (isUploadNodeDefinition(leafChild)) {
-					return UploadControl.from(parent, instanceNode, leafChild);
-				}
+        if (isUploadNodeDefinition(leafChild)) {
+          return UploadControl.from(parent, instanceNode, leafChild);
+        }
 
-				throw new UnreachableError(leafChild);
-			}
+        throw new UnreachableError(leafChild);
+      }
 
-			default: {
-				throw new UnreachableError(definition);
-			}
-		}
-	});
+      default: {
+        throw new UnreachableError(definition);
+      }
+    }
+  });
 };

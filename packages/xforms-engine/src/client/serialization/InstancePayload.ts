@@ -43,34 +43,34 @@ type InstancePayloadData<PayloadType extends InstancePayloadType> = {
  * {@link PendingInstancePayload} would then cover the case.
  */
 interface MaxSizeViolation {
-	/**
-	 * Specifies the index of
-	 * {@link InstancePayloadData<'chunked'> | chunked instance payload data}
-	 * where an instance attachment {@link File} exceeds the client-specified
-	 * {@link maxSize}.
-	 */
-	readonly dataIndex: number;
+  /**
+   * Specifies the index of
+   * {@link InstancePayloadData<'chunked'> | chunked instance payload data}
+   * where an instance attachment {@link File} exceeds the client-specified
+   * {@link maxSize}.
+   */
+  readonly dataIndex: number;
 
-	/**
-	 * Specifies the name of the file which exceeds the client-specified
-	 * {@link maxSize}. This name can also be used as a key to access the
-	 * violating {@link File}/instance attachment, in the {@link InstanceData} at
-	 * the specified {@link dataIndex}.
-	 */
-	readonly fileName: string;
+  /**
+   * Specifies the name of the file which exceeds the client-specified
+   * {@link maxSize}. This name can also be used as a key to access the
+   * violating {@link File}/instance attachment, in the {@link InstanceData} at
+   * the specified {@link dataIndex}.
+   */
+  readonly fileName: string;
 
-	/**
-	 * Reflects the client-specified maximum size for each chunk of a
-	 * {@link ChunkedInstancePayload | chunked instance payload}.
-	 */
-	readonly maxSize: number;
+  /**
+   * Reflects the client-specified maximum size for each chunk of a
+   * {@link ChunkedInstancePayload | chunked instance payload}.
+   */
+  readonly maxSize: number;
 
-	/**
-	 * Details the actual size of the violating {@link File}/instance attachment.
-	 * Along with {@link maxSize}. Clients may use the delta between this value
-	 * and {@link maxSize} to provide detailed guidance to users.
-	 */
-	readonly actualSize: number;
+  /**
+   * Details the actual size of the violating {@link File}/instance attachment.
+   * Along with {@link maxSize}. Clients may use the delta between this value
+   * and {@link maxSize} to provide detailed guidance to users.
+   */
+  readonly actualSize: number;
 }
 
 // prettier-ignore
@@ -79,36 +79,36 @@ type InstancePayloadViolation =
 	| MaxSizeViolation;
 
 interface BaseInstancePayload<PayloadType extends InstancePayloadType> {
-	readonly payloadType: PayloadType;
-	readonly status: InstancePayloadStatus;
-	readonly submissionMeta: SubmissionMeta;
+  readonly payloadType: PayloadType;
+  readonly status: InstancePayloadStatus;
+  readonly submissionMeta: SubmissionMeta;
 
-	get violations(): readonly InstancePayloadViolation[] | null;
+  get violations(): readonly InstancePayloadViolation[] | null;
 
-	/**
-	 * Instance attachment data may be chunked according to the
-	 * {@link InstancePayloadOptions.maxSize | maxSize instance payload option}
-	 */
-	readonly data: InstancePayloadData<PayloadType>;
+  /**
+   * Instance attachment data may be chunked according to the
+   * {@link InstancePayloadOptions.maxSize | maxSize instance payload option}
+   */
+  readonly data: InstancePayloadData<PayloadType>;
 }
 
 interface PendingInstancePayload<
-	PayloadType extends InstancePayloadType,
+  PayloadType extends InstancePayloadType,
 > extends BaseInstancePayload<PayloadType> {
-	readonly status: 'pending';
-	get violations(): readonly DescendantNodeViolationReference[];
+  readonly status: 'pending';
+  get violations(): readonly DescendantNodeViolationReference[];
 }
 
 interface MaxSizeExceededResult extends BaseInstancePayload<'chunked'> {
-	readonly status: 'max-size-exceeded';
-	get violations(): readonly MaxSizeViolation[];
+  readonly status: 'max-size-exceeded';
+  get violations(): readonly MaxSizeViolation[];
 }
 
 interface ReadyInstancePayload<
-	PayloadType extends InstancePayloadType,
+  PayloadType extends InstancePayloadType,
 > extends BaseInstancePayload<PayloadType> {
-	readonly status: 'ready';
-	get violations(): null;
+  readonly status: 'ready';
+  get violations(): null;
 }
 
 // prettier-ignore
@@ -118,8 +118,8 @@ export type ChunkedInstancePayload =
 	| ReadyInstancePayload<'chunked'>;
 
 export type MonolithicInstancePayload =
-	| PendingInstancePayload<'monolithic'>
-	| ReadyInstancePayload<'monolithic'>;
+  | PendingInstancePayload<'monolithic'>
+  | ReadyInstancePayload<'monolithic'>;
 
 // prettier-ignore
 export type InstancePayload<PayloadType extends InstancePayloadType> = {

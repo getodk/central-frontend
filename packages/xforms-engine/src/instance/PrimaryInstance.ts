@@ -8,8 +8,8 @@ import type { FormNodeID } from '../client/identity.ts';
 import type { RootNode } from '../client/RootNode.ts';
 import type { InstancePayload } from '../client/serialization/InstancePayload.ts';
 import type {
-	InstancePayloadOptions,
-	InstancePayloadType,
+  InstancePayloadOptions,
+  InstancePayloadType,
 } from '../client/serialization/InstancePayloadOptions.ts';
 import type { InstanceState } from '../client/serialization/InstanceState.ts';
 import type { AncestorNodeValidationState } from '../client/validation.ts';
@@ -19,8 +19,8 @@ import type { StaticDocument } from '../integration/xpath/static-dom/StaticDocum
 import { createPrimaryInstanceState } from '../lib/client-reactivity/instance-state/createPrimaryInstanceState.ts';
 import { prepareInstancePayload } from '../lib/client-reactivity/instance-state/prepareInstancePayload.ts';
 import {
-	createAttributeState,
-	type AttributeState,
+  createAttributeState,
+  type AttributeState,
 } from '../lib/reactivity/createAttributeState.ts';
 import { createChildrenState } from '../lib/reactivity/createChildrenState.ts';
 import { createTranslationState } from '../lib/reactivity/createTranslationState.ts';
@@ -35,6 +35,7 @@ import type { SimpleAtomicStateSetter } from '../lib/reactivity/types.ts';
 import type { BodyClassList } from '../parse/body/BodyDefinition.ts';
 import type { ModelDefinition } from '../parse/model/ModelDefinition.ts';
 import type { RootDefinition } from '../parse/model/RootDefinition.ts';
+import type { FetchFormAttachment } from '../client/resources.ts';
 import type { SecondaryInstancesDefinition } from '../parse/model/SecondaryInstance/SecondaryInstancesDefinition.ts';
 import { InstanceNode } from './abstract/InstanceNode.ts';
 import { buildAttributes } from './attachments/buildAttributes.ts';
@@ -71,244 +72,246 @@ import { Root } from './Root.ts';
 const PRIMARY_INSTANCE_REFERENCE = '/';
 
 interface PrimaryInstanceStateSpec {
-	readonly reference: string;
-	readonly readonly: boolean;
-	readonly relevant: boolean;
-	readonly required: boolean;
-	readonly label: null;
-	readonly hint: null;
-	readonly children: Accessor<readonly FormNodeID[]>;
-	readonly attributes: Accessor<readonly Attribute[]>;
-	readonly valueOptions: null;
-	readonly value: null;
+  readonly reference: string;
+  readonly readonly: boolean;
+  readonly relevant: boolean;
+  readonly required: boolean;
+  readonly label: null;
+  readonly hint: null;
+  readonly children: Accessor<readonly FormNodeID[]>;
+  readonly attributes: Accessor<readonly Attribute[]>;
+  readonly valueOptions: null;
+  readonly value: null;
 
-	// Root-specific
-	readonly activeLanguage: Accessor<ActiveLanguage>;
+  // Root-specific
+  readonly activeLanguage: Accessor<ActiveLanguage>;
 }
 
 interface PrimaryInstanceStateInputByMode {
-	readonly create: null;
-	readonly reset: null;
-	readonly edit: InitialInstanceState;
-	readonly restore: InitialInstanceState;
+  readonly create: null;
+  readonly reset: null;
+  readonly edit: InitialInstanceState;
+  readonly restore: InitialInstanceState;
 }
 
 export type PrimaryInstanceInitialState<Mode extends FormInstanceInitializationMode> =
-	PrimaryInstanceStateInputByMode[Mode];
+  PrimaryInstanceStateInputByMode[Mode];
 
 export interface BasePrimaryInstanceOptions {
-	scope: ReactiveScope;
-	readonly model: ModelDefinition;
-	readonly secondaryInstances: SecondaryInstancesDefinition;
+  scope: ReactiveScope;
+  readonly model: ModelDefinition;
+  readonly secondaryInstances: SecondaryInstancesDefinition;
+  readonly fetchFormAttachment: FetchFormAttachment;
 }
 
 export interface ModelessPrimaryInstanceOptions extends BasePrimaryInstanceOptions {
-	readonly config: InstanceConfig;
+  readonly config: InstanceConfig;
 }
 
 export interface PrimaryInstanceOptions<
-	Mode extends FormInstanceInitializationMode,
+  Mode extends FormInstanceInitializationMode,
 > extends ModelessPrimaryInstanceOptions {
-	readonly mode: Mode;
-	readonly initialState: PrimaryInstanceInitialState<Mode>;
+  readonly mode: Mode;
+  readonly initialState: PrimaryInstanceInitialState<Mode>;
 }
 
 export class PrimaryInstance<
-	Mode extends FormInstanceInitializationMode = FormInstanceInitializationMode,
+  Mode extends FormInstanceInitializationMode = FormInstanceInitializationMode,
 >
-	extends InstanceNode<RootDefinition, PrimaryInstanceStateSpec, null, Root>
-	implements
-		PrimaryInstanceDocument,
-		XFormsXPathDocument,
-		TranslationContext,
-		EvaluationContext,
-		ClientReactiveSerializableInstance
+  extends InstanceNode<RootDefinition, PrimaryInstanceStateSpec, null, Root>
+  implements
+    PrimaryInstanceDocument,
+    XFormsXPathDocument,
+    TranslationContext,
+    EvaluationContext,
+    ClientReactiveSerializableInstance
 {
-	readonly initializationMode: FormInstanceInitializationMode;
-	readonly model: ModelDefinition;
-	readonly attachments: InstanceAttachmentsState;
+  readonly initializationMode: FormInstanceInitializationMode;
+  readonly model: ModelDefinition;
+  readonly attachments: InstanceAttachmentsState;
 
-	// InstanceNode
-	protected readonly state: SharedNodeState<PrimaryInstanceStateSpec>;
-	protected readonly engineState: EngineState<PrimaryInstanceStateSpec>;
-	readonly attributeState: AttributeState;
+  // InstanceNode
+  protected readonly state: SharedNodeState<PrimaryInstanceStateSpec>;
+  protected readonly engineState: EngineState<PrimaryInstanceStateSpec>;
+  readonly attributeState: AttributeState;
 
-	override readonly instanceNode: StaticDocument;
-	readonly getChildren: Accessor<readonly Root[]>;
-	readonly hasReadonlyAncestor = () => false;
-	readonly isReadonly = () => false;
-	readonly hasNonRelevantAncestor = () => false;
-	readonly isRelevant = () => true;
-	readonly hasRelevantBodyNodes: Accessor<boolean> = () => this.root.hasRelevantBodyNodes();
+  override readonly instanceNode: StaticDocument;
+  readonly getChildren: Accessor<readonly Root[]>;
+  readonly hasReadonlyAncestor = () => false;
+  readonly isReadonly = () => false;
+  readonly hasNonRelevantAncestor = () => false;
+  readonly isRelevant = () => true;
+  readonly hasRelevantBodyNodes: Accessor<boolean> = () => this.root.hasRelevantBodyNodes();
 
-	private geolocationProvider: GeolocationProvider | undefined;
-	// TranslationContext (support)
-	private readonly setActiveLanguage: SimpleAtomicStateSetter<FormLanguage>;
+  private geolocationProvider: GeolocationProvider | undefined;
+  // TranslationContext (support)
+  private readonly setActiveLanguage: SimpleAtomicStateSetter<FormLanguage>;
 
-	// XFormsXPathDocument
-	readonly [XPathNodeKindKey] = 'document';
+  // XFormsXPathDocument
+  readonly [XPathNodeKindKey] = 'document';
 
-	// PrimaryInstanceDocument, ClientReactiveSerializableInstance
-	readonly nodeType = 'primary-instance';
-	readonly appearances = null;
-	readonly nodeOptions = null;
-	readonly classes: BodyClassList;
-	readonly root: Root;
-	readonly currentState: MaterializedChildren<CurrentState<PrimaryInstanceStateSpec>, Root>;
-	readonly validationState: AncestorNodeValidationState;
-	readonly instanceState: InstanceState;
-	readonly languages: FormLanguages;
+  // PrimaryInstanceDocument, ClientReactiveSerializableInstance
+  readonly nodeType = 'primary-instance';
+  readonly appearances = null;
+  readonly nodeOptions = null;
+  readonly classes: BodyClassList;
+  readonly root: Root;
+  readonly currentState: MaterializedChildren<CurrentState<PrimaryInstanceStateSpec>, Root>;
+  readonly validationState: AncestorNodeValidationState;
+  readonly instanceState: InstanceState;
+  readonly languages: FormLanguages;
 
-	// TranslationContext (+ EvaluationContext)
-	readonly getActiveLanguage: Accessor<ActiveLanguage>;
+  // TranslationContext (+ EvaluationContext)
+  readonly getActiveLanguage: Accessor<ActiveLanguage>;
 
-	// EvaluationContext
-	readonly isAttached: Accessor<boolean>;
-	readonly evaluator: EngineXPathEvaluator;
-	override readonly contextNode = this;
+  // EvaluationContext
+  readonly isAttached: Accessor<boolean>;
+  readonly evaluator: EngineXPathEvaluator;
+  override readonly contextNode = this;
 
-	constructor(options: PrimaryInstanceOptions<Mode>) {
-		const { mode, initialState, scope, model, secondaryInstances, config } = options;
-		const { instance: modelInstance } = model;
-		const activeInstance = initialState?.document ?? modelInstance;
-		const definition = model.getRootDefinition(activeInstance);
+  constructor(options: PrimaryInstanceOptions<Mode>) {
+    const { mode, initialState, scope, model, secondaryInstances, fetchFormAttachment, config } =
+      options;
+    const { instance: modelInstance } = model;
+    const activeInstance = initialState?.document ?? modelInstance;
+    const definition = model.getRootDefinition(activeInstance);
 
-		clearCache();
+    clearCache();
 
-		super(config, null, activeInstance, definition, {
-			scope,
-			computeReference: () => PRIMARY_INSTANCE_REFERENCE,
-		});
+    super(config, null, activeInstance, definition, {
+      scope,
+      computeReference: () => PRIMARY_INSTANCE_REFERENCE,
+    });
 
-		this.initializationMode = mode;
-		this.model = model;
-		this.attachments = new InstanceAttachmentsState(initialState?.attachments);
-		this.instanceNode = activeInstance;
-		this.geolocationProvider = config.geolocationProvider;
+    this.initializationMode = mode;
+    this.model = model;
+    this.attachments = new InstanceAttachmentsState(initialState?.attachments, fetchFormAttachment);
+    this.instanceNode = activeInstance;
+    this.geolocationProvider = config.geolocationProvider;
 
-		const [isAttached, setIsAttached] = createSignal(false);
+    const [isAttached, setIsAttached] = createSignal(false);
 
-		this.isAttached = isAttached;
+    this.isAttached = isAttached;
 
-		const evaluator = new EngineXPathEvaluator({
-			rootNode: this,
-			itextTranslationsByLanguage: model.itextTranslations,
-			secondaryInstancesById: secondaryInstances,
-		});
+    const evaluator = new EngineXPathEvaluator({
+      rootNode: this,
+      itextTranslationsByLanguage: model.itextTranslations,
+      secondaryInstancesById: secondaryInstances,
+    });
 
-		const { languages, getActiveLanguage, setActiveLanguage } = createTranslationState(
-			scope,
-			evaluator
-		);
+    const { languages, getActiveLanguage, setActiveLanguage } = createTranslationState(
+      scope,
+      evaluator
+    );
 
-		this.languages = languages;
-		this.getActiveLanguage = getActiveLanguage;
-		this.setActiveLanguage = setActiveLanguage;
+    this.languages = languages;
+    this.getActiveLanguage = getActiveLanguage;
+    this.setActiveLanguage = setActiveLanguage;
 
-		this.evaluator = evaluator;
-		this.classes = definition.classes;
+    this.evaluator = evaluator;
+    this.classes = definition.classes;
 
-		const childrenState = createChildrenState<this, Root>(this);
-		this.attributeState = createAttributeState(this.scope);
+    const childrenState = createChildrenState<this, Root>(this);
+    this.attributeState = createAttributeState(this.scope);
 
-		this.getChildren = childrenState.getChildren;
+    this.getChildren = childrenState.getChildren;
 
-		const stateSpec: PrimaryInstanceStateSpec = {
-			activeLanguage: getActiveLanguage,
-			reference: PRIMARY_INSTANCE_REFERENCE,
-			label: null,
-			hint: null,
-			readonly: false,
-			relevant: true,
-			required: false,
-			valueOptions: null,
-			value: null,
-			children: childrenState.childIds,
-			attributes: this.attributeState.getAttributes,
-		};
+    const stateSpec: PrimaryInstanceStateSpec = {
+      activeLanguage: getActiveLanguage,
+      reference: PRIMARY_INSTANCE_REFERENCE,
+      label: null,
+      hint: null,
+      readonly: false,
+      relevant: true,
+      required: false,
+      valueOptions: null,
+      value: null,
+      children: childrenState.childIds,
+      attributes: this.attributeState.getAttributes,
+    };
 
-		const state = createSharedNodeState(scope, stateSpec, config);
+    const state = createSharedNodeState(scope, stateSpec, config);
 
-		this.state = state;
-		this.engineState = state.engineState;
-		this.currentState = materializeCurrentStateChildren(scope, state.currentState, childrenState);
+    this.state = state;
+    this.engineState = state.engineState;
+    this.currentState = materializeCurrentStateChildren(scope, state.currentState, childrenState);
 
-		const root = new Root(this);
+    const root = new Root(this);
 
-		this.root = root;
+    this.root = root;
 
-		this.validationState = {
-			get violations() {
-				return root.validationState.violations;
-			},
-		};
-		this.instanceState = createPrimaryInstanceState(this);
+    this.validationState = {
+      get violations() {
+        return root.validationState.violations;
+      },
+    };
+    this.instanceState = createPrimaryInstanceState(this);
 
-		childrenState.setChildren([root]);
-		this.attributeState.setAttributes(buildAttributes(this));
-		setIsAttached(true);
-	}
+    childrenState.setChildren([root]);
+    this.attributeState.setAttributes(buildAttributes(this));
+    setIsAttached(true);
+  }
 
-	override getAttributes(): readonly Attribute[] {
-		return this.attributeState.getAttributes();
-	}
+  override getAttributes(): readonly Attribute[] {
+    return this.attributeState.getAttributes();
+  }
 
-	// PrimaryInstanceDocument
-	/**
-	 * @todo Note that this method's signature is intentionally derived from
-	 * {@link RootNode.setLanguage}, but its return type differs! The design
-	 * intent of returning {@link RootNode} from all of the client-facing state
-	 * setter methods has proven… interesting philosophically. But nothing
-	 * downstream has availed itself of that philosophy, and otherwise it's not
-	 * particularly pragmatic or ergonomic (internally or for clients alike).
-	 *
-	 * Since this class is (currently) engine-internal, this seems like an
-	 * excellent place to start a discussion around what we want longer term for
-	 * state setter signatures in _client-facing_ APIs. As a first pass, it seems
-	 * reasonable to borrow the idiomatic convention of returning the effective
-	 * value assigned by the setter.
-	 *
-	 * @see
-	 * {@link https://github.com/getodk/web-forms/issues/45#issuecomment-1967932261 | Initial read interface design between engine and UI - design summary comment}
-	 * (and some of the comments leading up to it) for background on the
-	 * philosophical reasoning behind the existing signature convention.
-	 */
-	setLanguage(language: FormLanguage): FormLanguage {
-		const availableFormLanguage = this.languages.find(
-			(formLanguage): formLanguage is FormLanguage => {
-				return (
-					formLanguage.isSyntheticDefault == null && formLanguage.language === language.language
-				);
-			}
-		);
+  // PrimaryInstanceDocument
+  /**
+   * @todo Note that this method's signature is intentionally derived from
+   * {@link RootNode.setLanguage}, but its return type differs! The design
+   * intent of returning {@link RootNode} from all of the client-facing state
+   * setter methods has proven… interesting philosophically. But nothing
+   * downstream has availed itself of that philosophy, and otherwise it's not
+   * particularly pragmatic or ergonomic (internally or for clients alike).
+   *
+   * Since this class is (currently) engine-internal, this seems like an
+   * excellent place to start a discussion around what we want longer term for
+   * state setter signatures in _client-facing_ APIs. As a first pass, it seems
+   * reasonable to borrow the idiomatic convention of returning the effective
+   * value assigned by the setter.
+   *
+   * @see
+   * {@link https://github.com/getodk/web-forms/issues/45#issuecomment-1967932261 | Initial read interface design between engine and UI - design summary comment}
+   * (and some of the comments leading up to it) for background on the
+   * philosophical reasoning behind the existing signature convention.
+   */
+  setLanguage(language: FormLanguage): FormLanguage {
+    const availableFormLanguage = this.languages.find(
+      (formLanguage): formLanguage is FormLanguage => {
+        return (
+          formLanguage.isSyntheticDefault == null && formLanguage.language === language.language
+        );
+      }
+    );
 
-		if (availableFormLanguage == null) {
-			throw new Error(`Language "${language.language}" not available`);
-		}
+    if (availableFormLanguage == null) {
+      throw new Error(`Language "${language.language}" not available`);
+    }
 
-		this.evaluator.setActiveLanguage(availableFormLanguage.language);
+    this.evaluator.setActiveLanguage(availableFormLanguage.language);
 
-		return this.setActiveLanguage(availableFormLanguage);
-	}
+    return this.setActiveLanguage(availableFormLanguage);
+  }
 
-	// PrimaryInstanceDocument
-	prepareInstancePayload<PayloadType extends InstancePayloadType = 'monolithic'>(
-		options?: InstancePayloadOptions<PayloadType>
-	): Promise<InstancePayload<PayloadType>> {
-		const result = prepareInstancePayload(this, {
-			payloadType: (options?.payloadType ?? 'monolithic') as PayloadType,
-			maxSize: options?.maxSize ?? Infinity,
-		});
+  // PrimaryInstanceDocument
+  prepareInstancePayload<PayloadType extends InstancePayloadType = 'monolithic'>(
+    options?: InstancePayloadOptions<PayloadType>
+  ): Promise<InstancePayload<PayloadType>> {
+    const result = prepareInstancePayload(this, {
+      payloadType: (options?.payloadType ?? 'monolithic') as PayloadType,
+      maxSize: options?.maxSize ?? Infinity,
+    });
 
-		return Promise.resolve(result);
-	}
+    return Promise.resolve(result);
+  }
 
-	async getBackgroundGeopoint(): Promise<string> {
-		if (!this.geolocationProvider) {
-			return '';
-		}
+  async getBackgroundGeopoint(): Promise<string> {
+    if (!this.geolocationProvider) {
+      return '';
+    }
 
-		const location = await this.geolocationProvider.getLocation();
-		return location ?? '';
-	}
+    const location = await this.geolocationProvider.getLocation();
+    return location ?? '';
+  }
 }
