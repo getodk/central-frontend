@@ -48,6 +48,7 @@ const devServer = {
 };
 
 export default defineConfig(({ mode }) => ({
+  envPrefix: ['VITE_', 'ODK_'],
   plugins: [
     vue(),
     VueI18nPlugin({
