@@ -16,7 +16,7 @@ const mockUseRoute = vi.fn()
 vi.mock('vue-router', () => ({
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   useRoute: () => mockUseRoute()
-}))
+}));
 
 const mockAssign = vi.fn();
 const mockOrigin = vi.fn();

@@ -1,16 +1,13 @@
 <script setup lang="ts">
 
 import { computed, getCurrentInstance, ref } from 'vue';
-import { OdkWebForm, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
+import { OdkWebForm, POST_SUBMIT__NEW_INSTANCE, webFormsPlugin } from '@getodk/web-forms';
 import { type MonolithicInstancePayload } from '@getodk/xforms-engine';
 import { type Form } from '../utils/api';
 import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
 import { Translation } from 'vue-i18n'
-
-import PrimeVue from 'primevue/config';
-import { odkThemePreset } from '../../../../packages/web-forms/src/odk-theme-preset';
-
+import Location from '../utils/location';
 defineOptions({
   name: 'WebFormRenderer'
 });
@@ -27,9 +24,7 @@ const props = defineProps<WebFormsRendererProps>();
 
 const inst = getCurrentInstance();
 if (inst) {
-  inst.appContext.app.use(PrimeVue, { theme: { preset: odkThemePreset, options: { darkModeSelector: false } } });
-  // TODO this should work instead of the above, but haven't got it working yet...
-  // inst.appContext.app.use(webFormsPlugin);
+  inst.appContext.app.use(webFormsPlugin);
 }
 
 interface SubmissionData {
@@ -91,7 +86,9 @@ const isProblem = (data:any) => {
 };
 
 const submissionPath = () => {
-  return `/projects/${props.form.projectId}/forms/${props.form.xmlFormId}/submissions/${props.instanceId}`;
+  const originalUrl = new URL(window.location.href);
+  const newPath = `/projects/${props.form.projectId}/forms/${props.form.xmlFormId}/submissions/${props.instanceId}`;
+  return new URL(newPath, originalUrl);
 };
 
 const isSessionTimeout = (error) => {
@@ -130,7 +127,7 @@ const handleResult = () => {
     } else if (isEdit.value) {
       visibleModal.value = { type: 'editSubmissionModal', hideable: false };
       setTimeout(() => {
-        window.location.assign(submissionPath());
+        Location.assign(submissionPath());
       }, 2000);
     } else {
       visibleModal.value = { type: 'submissionModal', hideable: false };
@@ -175,9 +172,9 @@ const uploadAttachment = async (attachment: File, instanceId: string) => {
     };
     const response = await fetch(url, { body: attachment, headers, method: 'POST' });
     const data = await response.json();
-    result = { success: response.ok, data };
+    result = { success: response.ok, data: { response: { data } } };
   } catch (error) {
-    result = { success: false, data: error };
+    result = { success: false, data: { response: error } };
   }
 
   return { name: attachment.name, result };

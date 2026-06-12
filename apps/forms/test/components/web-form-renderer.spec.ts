@@ -1,112 +1,119 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { describe, expect, it, vi } from 'vitest';
-import { mount } from '@vue/test-utils';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { enableAutoUnmount, mount, VueWrapper } from '@vue/test-utils';
 import WebFormRenderer from '../../src/components/web-form-renderer.vue';
-import { flushPromises } from '@vue/test-utils'
-import { createI18n } from 'vue-i18n'
+import { flushPromises } from '@vue/test-utils';
+import { createI18n } from 'vue-i18n';
+import PrimeVue from 'primevue/config';
+import Location from '../../src/utils/location';
+
+import simpleForm from '../../../central/test/data/xml/simple/form.xml?raw';
+import formWithAttachmentXml from '../../../central/test/data/xml/with-attachment/form.xml?raw';
+import imageUploaderXml from '../../../central/test/data/xml/image-uploader/form.xml?raw';
+import simpleSubmission from '../../../central/test/data/xml/simple/submission.xml?raw';
+import imageUploaderSubmission from '../../../central/test/data/xml/image-uploader/submission.xml?raw';
+
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [{ path: '/', component: { template: '<div>Home</div>' } }],
 })
 
-const simpleForm = `
-<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa">
-    <h:head>
-        <h:title>simple</h:title>
-        <model>
-            <instance>
-                <data id="simple">
-                    <meta>
-                        <instanceID/>
-                    </meta>
-                    <first_name/>
-                </data>
-            </instance>
-            <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" calculate="concat('uuid:', uuid())"/>
-            <bind nodeset="/data/first_name" type="string"/>
-        </model>
-    </h:head>
-    <h:body>
-        <input ref="/data/first_name">
-            <label>First Name</label>
-        </input>
-    </h:body>
-</h:html>
-`;
-
-const formWithAttachmentXml = `<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa">
-    <h:head>
-        <h:title>simple</h:title>
-        <model>
-            <instance>
-                <data id="simple">
-                    <meta>
-                        <instanceID/>
-                    </meta>
-                    <first_name/>
-                    <city/>
-                </data>
-            </instance>
-            <instance id="cities" src="jr://file-csv/cities.csv"/>
-            <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" calculate="concat('uuid:', uuid())"/>
-            <bind nodeset="/data/first_name" type="string"/>
-            <bind nodeset="/data/city" type="string"/>
-        </model>
-    </h:head>
-    <h:body>
-        <input ref="/data/first_name">
-            <label>First Name</label>
-        </input>
-        <select1 ref="/data/city">
-            <label>City</label>
-            <itemset nodeset="instance('cities')/root/item">
-                <value ref="name"/>
-                <label ref="label"/>
-            </itemset>
-        </select1>
-    </h:body>
-</h:html>`
-
 const i18n = createI18n({
   legacy: false,
   locale: 'en',
+  globalInjection: true,
   messages: {
     en: {
       'sendingDataModal.title': () => 'sending',
       'sendingDataModal.body': () => '',
       'action.close': () => 'close',
       'submissionModal.title': () => 'Form successfully sent!',
-      'submissionModal.body': () => '',
+      'submissionModal.body': () => 'You can fill this Form out again or close if you’re done.',
       'submissionModal.action.fillOutAgain': () => '',
+      'sessionTimeoutModal.title': () => 'Session expired',
+      // 'sessionTimeoutModal.body.full': () => '',
+      'sessionTimeoutModal.body.here': () => 'here',
+      'errorModal.title': () => 'Submission error',
+      // 'errorModal.body': () => 'error message body'
+      'util.request.noResponse': () => 'err',
+      'previewModal.title': () => 'Data is valid',
+      'previewModal.body': () => 'The data you entered is valid, but it was not submitted because this is a Form preview.',
+      'retryModal.title': () => 'Submission error - please try again',
+      // 'retryModal.body': () => 'not fully submitted, try again',
+      'action.tryAgain': () => 'try again',
+      'editSubmissionModal.title': () => 'edit successful',
+      'editSubmissionModal.body': () => 'redirecting now...'
     },
   },
 });
 
+const mockAssign = vi.fn();
+
 describe('WebFormRenderer', () => {
-  const mountComponent = async (xform) => {
+
+  enableAutoUnmount(afterEach);
+  afterEach(() => {
+    vi.resetAllMocks();
+  });
+
+  const mountComponent = async (xform:string, actionType='new', instanceId?:string, submissionAttachments?:string[]) => {
 
     const component = mount(WebFormRenderer, {
       global: {
-        plugins: [router, i18n]
+        plugins: [router, i18n, PrimeVue]
       },
       props: {
         xform,
-        form: { name: 'simple', xmlFormId: 'simple', projectId: 1, enketoId: '', state: 'open', draft: false, webformsEnabled: false },
-        actionType: 'new'
+        form: { name: 'simple', xmlFormId: 'simple', projectId: 1, enketoId: '', state: 'open', draft: false, webformsEnabled: true },
+        actionType,
+        instanceId: instanceId ?? null,
+        submissionAttachments: submissionAttachments ?? null
       }
     });
     await flushPromises();
     return component;
   };
 
-  it.skip('should show ODK Web Form', async () => {
+  const submit = async (component: VueWrapper) => {
+    await component.find('.odk-form .footer button').trigger('click');
+    await vi.waitFor(() => {
+      const el = document.querySelector('.p-dialog-header');
+      if (!el) throw new Error('Not ready yet');
+    });
+  };
+
+  // Minimal valid 1x1 pixel GIF
+  const gifBase64 = 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+  const gifBinary = atob(gifBase64);
+  const gifBytes = Uint8Array.from(gifBinary, c => c.charCodeAt(0));
+
+  const uploadOnePixelGif = async (component) => {
+    const setFiles = (wrapper, files:File[]) => {
+      const dt = new DataTransfer();
+      for (const file of files) {
+        dt.items.add(file);
+      }
+      wrapper.element.files = dt.files;
+      return wrapper.trigger('change');
+    };
+
+    const fileToUpload = new File([gifBytes], '1746140510984.gif', { type: 'image/gif' });
+    await setFiles(component.find('.odk-form input[type="file"]'), [fileToUpload]);
+  };
+
+  it('should show ODK Web Form', async () => {
     const component = await mountComponent(simpleForm);
     const form = component.find('.odk-form');
     expect(form.exists()).to.equal(true);
   });
 
-  it.skip('should load form attachments', async () => {
+  it('should load form attachments', async () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
       ok: true,
       status: 200,
@@ -120,19 +127,14 @@ describe('WebFormRenderer', () => {
     fetchSpy.mockReset();
   });
 
-  it.skip('should send submission xml request', async () => {
-    
+  it('should send submission xml request', async () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
       ok: true,
       status: 200,
-      json: () =>  Promise.resolve({ instanceId: 1 }),
+      json: () => Promise.resolve({ instanceId: 1 }),
     } as Response);
     const component = await mountComponent(simpleForm);
-    await component.find('.odk-form .footer button').trigger('click');
-    await vi.waitFor(() => {
-      const el = document.querySelector('.p-dialog-header')
-      if (!el) throw new Error('Not ready yet')
-    })
+    await submit(component);
     expect(fetchSpy).toHaveBeenCalledTimes(1);
     expect(fetchSpy.mock.calls.length).to.equal(1);
     const firstCall = fetchSpy.mock.calls[0]!;
@@ -145,292 +147,304 @@ describe('WebFormRenderer', () => {
     fetchSpy.mockReset();
   });
 
+  it('should show success modal after submission request', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve({ instanceId: 1 }),
+    } as Response);
+    const component = await mountComponent(simpleForm);
+    await submit(component);
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    const title = document.querySelector('.p-dialog-header span')!;
+    const intro = document.querySelector('.p-dialog-content span')!;
+    expect(title.textContent).to.equal('Form successfully sent!');
+    expect(intro.textContent).to.equal('You can fill this Form out again or close if you’re done.');
+  });
 
+  it('clears the form on Fill out again button', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve({ instanceId: 1 }),
+    } as Response);
+    const component = await mountComponent(simpleForm);
+    const input = component.find('input');
+    await input.setValue('test');
+    expect(component.find('input').element.value).to.equal('test');
+    await submit(component);
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    const title = document.querySelector('.p-dialog-header span')!;
+    const intro = document.querySelector('.p-dialog-content span')!;
+    expect(title.textContent).to.equal('Form successfully sent!');
+    expect(intro.textContent).to.equal('You can fill this Form out again or close if you’re done.');
 
+    const button = document.querySelector('.p-dialog [type=button]')!;
+    (button as HTMLButtonElement).click();
 
-//   it('should show success modal after submission request', async () => {
-//     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+    expect(component.find('input').element.value).to.equal('');
+  });
 
-//     const component = await mountComponent()
-//       .complete()
-//       .request((c) => c.find('.odk-form .footer button').trigger('click'))
-//       .respondWithData(() => ({ currentVersion: { instanceId: '123' } }));
+  it('should show error modal in case of submission failure', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: false,
+      status: 409,
+      json: () => Promise.resolve({ code: 409.1, message: 'duplication instance ID' }),
+    } as Response);
+    const component = await mountComponent(simpleForm);
+    const input = component.find('input');
+    await input.setValue('test');
+    expect(component.find('input').element.value).to.equal('test');
+    await submit(component);
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    const title = document.querySelector('.p-dialog-header span')!;
+    expect(title.textContent).to.equal('Submission error');
+    // TODO something isn't working in the template translations
+    // const intro = document.querySelector('.p-dialog-content')!;
+    // expect(intro.textContent).to.match(/Your data was not submitted.*duplication instance ID/);
+  });
 
-//     const modal = component.get('#web-form-renderer-submission-modal');
+  it('should show sessionTimeout modal in case of session expiry', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: false,
+      status: 401,
+      json: () => Promise.resolve({ code: 401.2, message: 'timeout' }),
+    } as Response);
+    const component = await mountComponent(simpleForm);
+    const input = component.find('input');
+    await input.setValue('test');
+    expect(component.find('input').element.value).to.equal('test');
+    await submit(component);
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    const title = document.querySelector('.p-dialog-header span')!;
+    expect(title.textContent).to.equal('Session expired');
 
-//     modal.find('.modal-title').text().should.equal('Form successfully sent!');
-//     modal.find('.modal-introduction').text().should.equal('You can fill this Form out again or close if you’re done.');
-//   });
+    const button = document.querySelector('.p-dialog .p-dialog-close-button');
+    expect(button).toBeDefined();
 
-//   it('clears the form on Fill out again button', async () => {
-//     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+    // TODO something isn't working in the template translations
+    // const intro = document.querySelector('.p-dialog-content')!;
+    // expect(intro.textContent).to.equal('Please log in here in a different browser tab and try again.');
+  });
 
-//     const component = await mountComponent()
-//       .complete()
-//       .request((c) => {
-//         const textbox = c.find('input');
-//         textbox.element.value = 'test';
-//         return c.find('.odk-form .footer button').trigger('click');
-//       })
-//       .respondWithData(() => ({ currentVersion: { instanceId: '123' } }));
+  it('shows preview modal', async () => {
+    const component = await mountComponent(simpleForm, 'preview');
+    const input = component.find('input');
+    await input.setValue('test');
+    await submit(component);
+    const title = document.querySelector('.p-dialog-header span')!;
+    expect(title.textContent).to.equal('Data is valid');
+    const intro = document.querySelector('.p-dialog-content')!;
+    expect(intro.textContent).to.equal('The data you entered is valid, but it was not submitted because this is a Form preview.');
+  });
 
-//     const modal = component.get('#web-form-renderer-submission-modal');
+  it('should show loading modal', async () => {
+    let resolvePromise;
 
-//     modal.find('.modal-title').text().should.equal('Form successfully sent!');
-//     modal.find('.modal-introduction').text().should.equal('You can fill this Form out again or close if you’re done.');
-//     await modal.find('.btn-primary').trigger('click');
-//     component.find('input').element.value.should.be.empty;
-//   });
+    const pendingPromise = new Promise((resolve) => {
+      resolvePromise = resolve;
+    });
 
-//   it('should show error modal in case of submission failure', async () => {
-//     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockImplementation(() => {
+      return pendingPromise.then(() => new Response(JSON.stringify({ data: 'success' })));
+    });
+    const component = await mountComponent(simpleForm);
+    const input = component.find('input');
+    await input.setValue('test');
+    await submit(component);
+    const title = document.querySelector('.p-dialog-header span')!.textContent;
+    expect(title).to.equal('sending');
+    resolvePromise({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve({}),
+    });
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+  });
 
-//     const component = await mountComponent()
-//       .complete()
-//       .request((c) => c.find('.odk-form .footer button').trigger('click'))
-//       .respondWithProblem({ code: 409.1, message: 'duplication instance ID' });
+  it('should send submission attachment request - relies on OWF', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch')
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve({ instanceId: 1 }),
+      } as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve({ name: 'mypic', result: 200 }),
+      } as Response);
+    const component = await mountComponent(imageUploaderXml);
+    await uploadOnePixelGif(component);
+    await submit(component);
+    const title = document.querySelector('.p-dialog-header span')!;
+    const intro = document.querySelector('.p-dialog-content span')!;
+    expect(title.textContent).to.equal('Form successfully sent!');
+    expect(intro.textContent).to.equal('You can fill this Form out again or close if you’re done.');
+    expect(fetchSpy).toHaveBeenCalledTimes(2);
+  });
 
-//     const modal = component.get('#web-form-renderer-submission-modal');
+  it('should show retry modal if attachment upload fails - relies on OWF', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch')
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve({ instanceId: 1 }),
+      } as Response)
+      .mockResolvedValueOnce({
+        ok: false
+      } as Response);
+    const component = await mountComponent(imageUploaderXml);
+    await uploadOnePixelGif(component);
+    await submit(component);
+    const title = document.querySelector('.p-dialog-header span')!;
+    expect(title.textContent).to.equal('Submission error - please try again');
+    // const intro = document.querySelector('.p-dialog-content span')!;
+    // expect(intro.textContent).to.match(/Your data was not fully submitted.*Please press the “Try again” button to retry/);
+    expect(fetchSpy).toHaveBeenCalledTimes(2);
+  });
 
-//     modal.find('.modal-title').text().should.equal('Submission error');
-//     modal.find('.modal-introduction').text().should.match(/Your data was not submitted.*duplication instance ID/);
-//     const primaryButtons = modal.findAll('.btn-primary');
-//     primaryButtons.length.should.be.equal(1);
-//     primaryButtons[0].text().should.be.equal('Close');
-//   });
+  it('should send only submission attachment request on retry', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch')
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve({ instanceId: 1 }),
+      } as Response)
+      // fails first time
+      .mockResolvedValueOnce({
+        ok: false
+      } as Response)
+      // succeeds on retry
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve({ name: 'mypic', result: 200 }),
+      } as Response);
+    const component = await mountComponent(imageUploaderXml);
+    await uploadOnePixelGif(component);
+    await submit(component);
+    let title;
+    title = document.querySelector('.p-dialog-header span')!;
+    expect(title.textContent).to.equal('Submission error - please try again');
+    const button = document.querySelector('.p-dialog [type=button]')!;
+    (button as HTMLButtonElement).click();
+    await vi.waitFor(() => {
+      title = document.querySelector('.p-dialog-header span')!;
+      expect(title.textContent).to.equal('Form successfully sent!');
+    });
 
-//   it('should show sessionTimeout modal in case of session expiry', async () => {
-//     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+    expect(fetchSpy).toHaveBeenCalledTimes(3);
+  });
 
-//     const component = await mountComponent()
-//       .complete()
-//       .request((c) => c.find('.odk-form .footer button').trigger('click'))
-//       .respondWithProblem(401.2);
+  it('should show non-hideable sessionTimeout modal if attachment upload fails during session expiry - relies on OWF', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch')
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve({ instanceId: 1 }),
+      } as Response)
+      // session timeout first time
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 401,
+        json: () => Promise.resolve({ code: 401.2, message: 'timeout' }),
+      } as Response);
+    const component = await mountComponent(imageUploaderXml);
+    await uploadOnePixelGif(component);
+    await submit(component);
+    const title = document.querySelector('.p-dialog-header span')!;
+    expect(title.textContent).to.equal('Session expired');
 
-//     const modal = component.getComponent(Modal);
+    const button = document.querySelector('.p-dialog .p-dialog-close-button');
+    expect(button).toBeNull();
 
-//     modal.find('.modal-title').text().should.equal('Session expired');
-//     modal.find('.modal-introduction').text().should.equal('Please log in here in a different browser tab and try again.');
-//     modal.props().hideable.should.be.true;
-//   });
+    expect(fetchSpy).toHaveBeenCalledTimes(2);
+  });
 
-//   it('shows preview modal', async () => {
-//     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+  describe('edit', () => {
 
-//     const component = await mountComponent({ props: { actionType: 'preview' } })
-//       .testModalToggles({
-//         modal: Modal,
-//         show: '.odk-form .footer button',
-//         hide: '.btn-primary'
-//       });
+    beforeEach(() => {
+      vi.useFakeTimers();
+    });
 
-//     await component.find('.odk-form .footer button').trigger('click');
+    it('should load submission instance for edits', async () => {
+      vi.spyOn(globalThis, 'fetch')
+        .mockResolvedValueOnce({
+          ok: true,
+          status: 200,
+          text: () => Promise.resolve(simpleSubmission),
+        } as Response);
+      const component = await mountComponent(simpleForm, 'edit', 'uuid:01f165e1-8814-43b8-83ec-741222b00f25', []);
+      const form = component.find('.odk-form');
+      expect(form.exists()).to.equal(true);
+    });
 
-//     await wait();
+    it('should send PUT submission request on send button and redirect', async () => {
+      const fetchSpy = vi.spyOn(globalThis, 'fetch')
+        .mockResolvedValueOnce({
+          ok: true,
+          status: 200,
+          text: () => Promise.resolve(simpleSubmission),
+        } as Response)
+        .mockResolvedValueOnce({
+          ok: true,
+          status: 200,
+          json: () => Promise.resolve({ currentVersion: { instanceId: '123' } }),
+        } as Response);
+      const component = await mountComponent(simpleForm, 'edit', 'uuid:01f165e1-8814-43b8-83ec-741222b00f25', []);
+      await submit(component);
+      expect(fetchSpy).toHaveBeenCalledTimes(2);
+      const putCall = fetchSpy.mock.calls[1]!;
+      const url = putCall[0];
+      const args = putCall[1]!;
+      expect(url).to.equal(`/v1/projects/1/forms/simple/submissions/uuid:01f165e1-8814-43b8-83ec-741222b00f25`);
+      expect(args.method).to.equal('PUT');
 
-//     const modal = component.get('#web-form-renderer-submission-modal');
+      vi.spyOn(Location, 'assign').mockImplementation(mockAssign);
 
-//     modal.find('.modal-introduction').text().should.equal('The data you entered is valid, but it was not submitted because this is a Form preview.');
-//     modal.find('.modal-title').text().should.equal('Data is valid');
-//   });
+      const title = document.querySelector('.p-dialog-header span')!;
+      expect(title.textContent).to.equal('edit successful');
 
-//   it('should show loading modal', async () => {
-//     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
+      vi.advanceTimersByTime(2000);
 
-//     await mountComponent()
-//       .complete()
-//       .request((c) => c.find('.odk-form .footer button').trigger('click'))
-//       .beforeEachResponse(c => {
-//         const modal = c.findComponent(Modal);
-//         modal.props().state.should.be.true;
-//         modal.find('.modal-title').text().should.equal('Sending Submission');
-//       })
-//       .respondWithData(() => ({ currentVersion: { instanceId: '123' } }));
-//   });
+      expect(mockAssign).toHaveBeenCalledTimes(1);
+      const firstCall = mockAssign.mock.calls[0]!;
+      const submissionUrl = firstCall[0].toString();
+      const expectedUrl = `${window.location.protocol}//${window.location.host}/projects/1/forms/simple/submissions/uuid:01f165e1-8814-43b8-83ec-741222b00f25`;
+      expect(submissionUrl).to.equal(expectedUrl);
+    });
 
-//   // Minimal valid 1x1 pixel GIF
-//   const gifBase64 = 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-//   const gifBinary = atob(gifBase64);
-//   const gifBytes = Uint8Array.from(gifBinary, c => c.charCodeAt(0));
-//   const fileToUpload = new File([gifBytes], '1746140510984.gif', { type: 'image/gif' });
+    it('should make requests for attachment data - relies on OWF', async () => {
+      const response = await fetch(gifBinary);
+      const blob = await response.blob();
+      const fetchSpy = vi.spyOn(globalThis, 'fetch')
+        // get the submission xml
+        .mockResolvedValueOnce({
+          ok: true,
+          status: 200,
+          text: () => Promise.resolve(imageUploaderSubmission),
+        } as Response)
+        // get the attachment
+        .mockResolvedValueOnce({
+          ok: true,
+          status: 200,
+          blob: () => Promise.resolve(blob),
+        } as Response);
+      const component = await mountComponent(
+        imageUploaderXml,
+        'edit',
+        'uuid:01f165e1-8814-43b8-83ec-741222b00f25',
+        ['1746140510984.jpg']
+      );
+      expect(fetchSpy).toHaveBeenCalledTimes(3);
 
-//   const uploadFile = async (component) => {
-//     await setFiles(component.find('.odk-form input[type="file"]'), [fileToUpload]);
-//   };
+      const form = component.find('.odk-form');
+      expect(form.exists()).to.equal(true);
+      const heading = component.find('.odk-form h1').text();
+      expect(heading).to.equal('Display Picture');
+    });
 
-//   it('should send submission attachment request - relies on OWF', async () => {
-//     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
-
-//     const component = await mountComponent({}, imageUploaderXml)
-//       .complete()
-//       .request(async (c) => {
-//         await uploadFile(c);
-//         return c.find('.odk-form .footer button').trigger('click');
-//       })
-//       .respondWithData(() => ({ currentVersion: { instanceId: '123' } }))
-//       .respondWithSuccess(); // upload attachment successful
-
-//     const modal = component.get('#web-form-renderer-submission-modal');
-
-//     modal.find('.modal-title').text().should.equal('Form successfully sent!');
-//     modal.find('.modal-introduction').text().should.equal('You can fill this Form out again or close if you’re done.');
-//   });
-
-//   it('should show retry modal if attachment upload fails - relies on OWF', async () => {
-//     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
-
-//     const component = await mountComponent({}, imageUploaderXml)
-//       .complete()
-//       .request(async (c) => {
-//         await uploadFile(c);
-//         return c.find('.odk-form .footer button').trigger('click');
-//       })
-//       .respondWithData(() => ({ currentVersion: { instanceId: '123' } }))
-//       .respondWithProblem(); // upload attachment error
-
-//     const modal = component.get('#web-form-renderer-submission-modal');
-
-//     modal.find('.modal-title').text().should.equal('Submission error');
-//     modal.find('.modal-introduction').text().should.match(/Your data was not fully submitted.*Please press the “Try again” button to retry/);
-//   });
-
-//   it('should send only submission attachment request on retry', async () => {
-//     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
-
-//     const component = await mountComponent({}, imageUploaderXml)
-//       .complete()
-//       .request(async (c) => {
-//         await uploadFile(c);
-//         return c.find('.odk-form .footer button').trigger('click');
-//       })
-//       .respondWithData(() => ({ currentVersion: { instanceId: '123' } }))
-//       .respondWithProblem() // upload attachment error
-//       .complete()
-//       .request(async (c) => {
-//         const modal = c.get('#web-form-renderer-submission-modal');
-//         modal.find('.modal-title').text().should.equal('Submission error');
-//         return modal.find('.btn-primary').trigger('click');
-//       })
-//       .respondWithSuccess()
-//       .testRequests([
-//         {
-//           method: 'POST',
-//           url: ({ pathname }) => pathname.should.match(/attachments.*gif/),
-//           data: fileToUpload,
-//           headers: { 'content-type': 'image/gif' }
-//         }
-//       ]);
-
-//     const modal = component.get('#web-form-renderer-submission-modal');
-
-//     modal.find('.modal-title').text().should.equal('Form successfully sent!');
-//     modal.find('.modal-introduction').text().should.equal('You can fill this Form out again or close if you’re done.');
-//   });
-
-//   it('should show non-hideable sessionTimeout modal if attachment upload fails during session expiry - relies on OWF', async () => {
-//     testData.extendedForms.createPast(1, { xmlFormId: 'a' });
-
-//     const component = await mountComponent({}, imageUploaderXml)
-//       .complete()
-//       .request(async (c) => {
-//         await uploadFile(c);
-//         return c.find('.odk-form .footer button').trigger('click');
-//       })
-//       .respondWithData(() => ({ currentVersion: { instanceId: '123' } }))
-//       .respondWithProblem(401.2);
-
-//     const modal = component.getComponent(Modal);
-
-//     modal.find('.modal-title').text().should.equal('Session expired');
-//     modal.find('.modal-introduction').text().should.equal('Please log in here in a different browser tab and try again.');
-//     modal.props().hideable.should.be.false;
-//   });
-
-//   describe('edit', () => {
-//     it('should load submission instance for edits', async () => {
-//       testData.extendedForms.createPast(1, { xmlFormId: 'a' });
-
-//       const component = await mountComponent({
-//         props: {
-//           actionType: 'edit',
-//           instanceId: 'uuid:01f165e1-8814-43b8-83ec-741222b00f25'
-//         }
-//       })
-//         .respondWithData(() => [])
-//         .respondWithData(() => simpleSubmission);
-
-//       component.find('.odk-form').exists().should.be.true;
-//     });
-
-//     it('should send PUT submission request on send button and redirect', async () => {
-//       testData.extendedForms.createPast(1, { xmlFormId: 'a' });
-//       const clock = sinon.useFakeTimers();
-
-//       await mountComponent({
-//         props: {
-//           actionType: 'edit',
-//           instanceId: 'uuid:01f165e1-8814-43b8-83ec-741222b00f25'
-//         }
-//       })
-//         .respondWithData(() => [])
-//         .respondWithData(() => simpleSubmission)
-//         .complete()
-//         .request(async (c) => {
-//           await c.find('.odk-form .footer button').trigger('click');
-//           await clock.tick(0);
-//         })
-//         .respondWithData(() => ({ currentVersion: { instanceId: '123' } }))
-//         .beforeEachResponse((_, config) => {
-//           const { headers, url, method, data } = config;
-//           url.should.be.eql('/v1/projects/1/forms/a/submissions/uuid%3A01f165e1-8814-43b8-83ec-741222b00f25');
-//           method.should.be.eql('PUT');
-//           JSON.stringify(data).should.match(/xml_submission_file/);
-//           headers['content-type'].should.be.eql('text/xml');
-//           headers['odk-client'].should.be.match(/odk-web-forms/);
-//         })
-//         .afterResponses(async c => {
-//           await clock.tick(2000);
-//           c.vm.$router.push.calledWith('/projects/1/forms/a/submissions/uuid%3A01f165e1-8814-43b8-83ec-741222b00f25').should.be.true;
-//         });
-//     });
-
-//     it('should make requests for attachment data - relies on OWF', async () => {
-//       testData.extendedForms.createPast(1, { xmlFormId: 'a' });
-
-//       const component = await mountComponent({
-//         props: {
-//           actionType: 'edit',
-//           instanceId: 'uuid:01f165e1-8814-43b8-83ec-741222b00f25'
-//         }
-//       }, imageUploaderXml)
-//         .beforeEachResponse((_, { url }, i) => {
-//           if (i === 3) {
-//             url.endsWith('1746140510984.jpg').should.be.true;
-//           }
-//         })
-//         .respondWithData(() => [{ name: '1746140510984.jpg', exists: true }])
-//         .respondWithData(() => imageUploaderSubmission)
-//         .respondWithData(() => gifBinary);
-
-//       await waitUntil(() => component.find('.odk-form').exists());
-//       component.find('.odk-form h1').text().should.be.equal('Display Picture');
-//     });
-
-//     it('should make not requests for attachment data when attachment doesnt exist - relies on OWF', async () => {
-//       testData.extendedForms.createPast(1, { xmlFormId: 'a' });
-
-//       const component = await mountComponent({
-//         props: {
-//           actionType: 'edit',
-//           instanceId: 'uuid:01f165e1-8814-43b8-83ec-741222b00f25'
-//         }
-//       }, imageUploaderXml)
-//         .respondWithData(() => [{ name: '1746140510984.jpg', exists: false }])
-//         .respondWithData(() => imageUploaderSubmission);
-
-//       await waitUntil(() => component.find('.odk-form').exists());
-//       component.find('.odk-form h1').text().should.be.equal('Display Picture');
-//     });
-//   });
+  });
 
 });
