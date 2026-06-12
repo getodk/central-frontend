@@ -1,6 +1,6 @@
 import DateTime from '../../../src/components/date-time.vue';
 import FieldKeyRow from '../../../src/components/field-key/row.vue';
-import TimeAndUser from '../../../src/components/time-and-user.vue';
+import FieldKeyDataRow from '../../../src/components/field-key/data-row.vue';
 
 import testData from '../../data';
 import { load } from '../../util/http';
@@ -20,14 +20,21 @@ describe('FieldKeyRow', () => {
     });
   });
 
-  it('renders the Created column correctly', () => {
+  it('shows createdAt', () => {
     testData.extendedProjects.createPast(1, { appUsers: 1 });
     const { createdAt } = testData.extendedFieldKeys.createPast(1).last();
     return load('/projects/1/app-users').then(app => {
-      const timeAndUser = app.getComponent(FieldKeyRow).getComponent(TimeAndUser);
-      const props = timeAndUser.props();
-      props.iso.should.equal(createdAt);
-      props.user.displayName.should.equal('Alice');
+      const row = app.getComponent(FieldKeyRow);
+      row.findAllComponents(DateTime)[0].props().iso.should.equal(createdAt);
+    });
+  });
+
+  it('shows createdBy', () => {
+    testData.extendedProjects.createPast(1, { appUsers: 1 });
+    testData.extendedFieldKeys.createPast(1);
+    return load('/projects/1/app-users').then(app => {
+      const row = app.getComponent(FieldKeyRow);
+      row.get('.created-by').text().should.equal('Alice');
     });
   });
 
@@ -116,8 +123,54 @@ describe('FieldKeyRow', () => {
     testData.extendedProjects.createPast(1, { appUsers: 1 });
     testData.extendedFieldKeys.createPast(1, { token: null });
     return load('/projects/1/app-users').then(app => {
-      const text = app.getComponent(FieldKeyRow).findAll('td')[3].text();
+      const text = app.getComponent(FieldKeyRow).findAll('td')[1].text();
       text.should.equal('Access revoked');
+    });
+  });
+
+  describe('custom properties', () => {
+    it('shows a column header for each actor property', () => {
+      testData.extendedProjects.createPast(1, { appUsers: 1 });
+      testData.extendedFieldKeys.createPast(1);
+      testData.actorProperties.createPast(1, { name: 'region' });
+      testData.actorProperties.createPast(1, { name: 'department' });
+      return load('/projects/1/app-users').then(app => {
+        const headers = app.findAll('#field-key-list-table th');
+        const headerTexts = headers.map(h => h.text());
+        headerTexts.should.include('region');
+        headerTexts.should.include('department');
+      });
+    });
+
+    it('shows property values for a field key', () => {
+      testData.extendedProjects.createPast(1, { appUsers: 1 });
+      testData.extendedFieldKeys.createPast(1, {
+        properties: {
+          region: 'North',
+          department: 'Health'
+        }
+      });
+      testData.actorProperties.createPast(1, { name: 'region' });
+      testData.actorProperties.createPast(1, { name: 'department' });
+      return load('/projects/1/app-users').then(app => {
+        const row = app.getComponent(FieldKeyDataRow);
+        const propertyCells = row.findAll('td');
+        propertyCells.length.should.equal(2);
+        propertyCells[0].text().should.equal('North');
+        propertyCells[1].text().should.equal('Health');
+      });
+    });
+
+    it('shows empty value when property is not set', () => {
+      testData.extendedProjects.createPast(1, { appUsers: 1 });
+      testData.extendedFieldKeys.createPast(1, { properties: {} });
+      testData.actorProperties.createPast(1, { name: 'region' });
+      return load('/projects/1/app-users').then(app => {
+        const row = app.getComponent(FieldKeyDataRow);
+        const propertyCells = row.findAll('td');
+        propertyCells.length.should.equal(1);
+        propertyCells[0].text().should.equal('');
+      });
     });
   });
 });
