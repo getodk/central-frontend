@@ -36,6 +36,7 @@
   "devDependencies": {
     "@faker-js/faker": "^9.7.0",
     "@intlify/unplugin-vue-i18n": "^6.0.8",
+    "@sentry/vite-plugin": "^5.3.0",
     "@vue/cli-service": "^5.0.8",
     "@vue/compiler-sfc": "~3",
     "@vue/eslint-config-airbnb": "^7.0.0",
