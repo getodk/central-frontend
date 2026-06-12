@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ODK Web Forms</title>
+    <link rel="icon" sizes="any" href="/favicon.ico"/>
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png"/>
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"/>
+    <link rel="manifest" href="/site.webmanifest"/>
+    <style>
+      .loading-container {
+        text-align: center;
+        padding-top: 35vh;
+      }
+      .spinner {
+        width: 60px;
+        height: 60px;
+        border: 8px solid #f1f5f9;
+        border-bottom-color: #3e9fcc;
+        border-radius: 50%;
+        display: inline-block;
+        box-sizing: border-box;
+        animation: rotation 1s linear infinite;
+      }
+      @keyframes rotation {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>
+      <p>Please enable JavaScript to continue.</p>
+      <p>Powered by <a href="https://getodk.org">ODK</a>.</p>
+    </noscript>
+    <div id="forms-app">
+      <div class="loading-container">
+        <span class="spinner"></span>
+      </div>
+    </div>
+    <script type="module" src="/apps/forms/src/main.ts"></script>
+  </body>
+</html>

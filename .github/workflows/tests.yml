@@ -28,6 +28,8 @@ jobs:
     - run: npm run lint
     - uses: browser-actions/setup-chrome@v2
     - run: npm run test -w=@getodk/central-frontend
+    - run: npx playwright install chromium --with-deps
+    - run: npm run test -w=@getodk/forms
   build:
     timeout-minutes: 5
     runs-on: ubuntu-latest
@@ -87,8 +89,9 @@ jobs:
         path: client
         fetch-depth: 0
     - name: Clone getodk/central repo
+    # TODO revert the URL below once nginx changes are pushed to central/next
       run: |
-        git clone -b next https://github.com/getodk/central.git
+        git clone -b separate-forms-app https://github.com/garethbowen/central.git
         cd central
         git submodule set-branch -b master server
         git submodule update --init --remote server
