@@ -54,6 +54,7 @@ const projectId = computed(() => route.params.projectId ? Number.parseInt(route.
 const formId = computed(() => route.params.xmlFormId ? encodeURIComponent(route.params.xmlFormId as string) : null);
 const instanceId = computed(() => route.params.instanceId ? encodeURIComponent(route.params.instanceId as string) : null);
 const enketoId = computed(() => route.params.enketoId ? encodeURIComponent(route.params.enketoId as string) : null);
+const st = computed(() => route.query.st ? route.query.st as string : null);
 const useWebForms = computed(() => route.query.webforms === 'true');
 const offline = computed(() => route.params.offline === 'offline');
 const webFormsEnabled = ref(true);
@@ -107,12 +108,11 @@ const setDocumentTitle = (formConfig: Form) => {
 };
 
 const fetchForm = async (): Promise<Form | undefined> => {
-  const st = route.query.st as string ?? null;
   let formConfig;
   if (enketoId.value) {
-    formConfig = await getFormByEnketoId(enketoId.value, st);
+    formConfig = await getFormByEnketoId(enketoId.value, st.value);
   } else if (projectId.value && formId.value) {
-    formConfig = await getFormByFormId(projectId.value, formId.value, props.draft, st);
+    formConfig = await getFormByFormId(projectId.value, formId.value, props.draft, st.value);
   } else {
     throw new RequestError('Form not found', 404);
   }
@@ -121,7 +121,8 @@ const fetchForm = async (): Promise<Form | undefined> => {
   setDocumentTitle(formConfig);
 
   if (formConfig.webformsEnabled || useWebForms.value) {
-    const promises: Promise<any>[] = [ getFormXml(formConfig.projectId, formConfig.xmlFormId, formConfig.draft, st) ];
+    const formXmlPromise = getFormXml(formConfig.projectId, formConfig.xmlFormId, formConfig.draft, st.value);
+    const promises: Promise<any>[] = [ formXmlPromise ];
     if (props.actionType === 'edit' && instanceId.value) {
       promises.push(getSubmissionAttachmentNames(formConfig.projectId, formConfig.xmlFormId, instanceId.value));
     }
@@ -206,10 +207,21 @@ load();
     {{ $t('formNotFound') }}
   </div>
   <template v-else-if="webFormsEnabled">
-    <WebFormRenderer :form="form!" :xform="xform!" :instance-id="instanceId" :action-type="props.actionType ?? 'new'" :submission-attachments="submissionAttachments"/>
+    <WebFormRenderer
+      :form="form!"
+      :xform="xform!"
+      :instance-id="instanceId"
+      :action-type="props.actionType ?? 'new'"
+      :submission-attachments="submissionAttachments"
+      :st="st"
+    />
   </template>
   <template v-else>
-    <EnketoIframe :form="form!" :enketo-id="enketoId" :action-type="props.actionType ?? 'new'"/>
+    <EnketoIframe
+      :form="form!"
+      :enketo-id="enketoId"
+      :action-type="props.actionType ?? 'new'"
+    />
   </template>
 </template>
 

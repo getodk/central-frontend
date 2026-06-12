@@ -14,4 +14,4 @@ app.use(PrimeVue, { theme: { preset: odkThemePreset, options: { darkModeSelector
 app.use(webFormsPlugin);
 app.use(i18n);
 app.use(router);
-app.mount('#app');
+app.mount('#forms-app');

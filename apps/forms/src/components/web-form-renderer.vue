@@ -3,7 +3,7 @@
 import { computed, getCurrentInstance, ref } from 'vue';
 import { OdkWebForm, POST_SUBMIT__NEW_INSTANCE, webFormsPlugin } from '@getodk/web-forms';
 import { type MonolithicInstancePayload } from '@getodk/xforms-engine';
-import { type Form } from '../utils/api';
+import { queryString, type Form } from '../utils/api';
 import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
 import { Translation } from 'vue-i18n'
@@ -18,6 +18,7 @@ export interface WebFormsRendererProps {
   actionType: string;
   instanceId?: string | null;
   submissionAttachments?: string[] | null;
+  st?: string | null
 }
 
 const props = defineProps<WebFormsRendererProps>();
@@ -41,10 +42,12 @@ const isPublicLink = computed(() => props.actionType === 'public-link');
 
 const visibleModal = ref();
 
+const withToken = (url) => `${url}${queryString({ st: props.st })}`;
+
 const getAttachment = (requestUrl: URL) => {
   const encodedName = encodeURIComponent(requestUrl.pathname.split('/').pop()!);
   const draftPath = props.form.draft ? '/draft' : '';
-  const url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath}/attachments/${encodedName}`;
+  const url = withToken(`/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath}/attachments/${encodedName}`);
   return fetch(url);
 };
 
@@ -59,6 +62,7 @@ const postPrimaryInstance = async (file:File) => {
     url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath}/submissions`;
     method = 'POST';
   }
+  url = withToken(url);
   const headers = {
     'Content-Type': 'text/xml',
     'odk-client': `odk-web-forms/${__WEB_FORMS_VERSION__}`,
@@ -162,7 +166,7 @@ const uploadAttachment = async (attachment: File, instanceId: string) => {
   const encodedInstanceId = encodeURIComponent(instanceId);
   const encodedName = encodeURIComponent(attachment.name);
 
-  const url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}/submissions/${encodedInstanceId}/attachments/${encodedName}`;
+  const url = withToken(`/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}/submissions/${encodedInstanceId}/attachments/${encodedName}`);
 
   let result;
   try {

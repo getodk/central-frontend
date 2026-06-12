@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { enableAutoUnmount, mount, VueWrapper } from '@vue/test-utils';
-import WebFormRenderer from '../../src/components/web-form-renderer.vue';
+import WebFormRenderer, { type WebFormsRendererProps } from '../../src/components/web-form-renderer.vue';
 import { flushPromises } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
 import PrimeVue from 'primevue/config';
@@ -48,7 +48,9 @@ const i18n = createI18n({
       // 'retryModal.body': () => 'not fully submitted, try again',
       'action.tryAgain': () => 'try again',
       'editSubmissionModal.title': () => 'edit successful',
-      'editSubmissionModal.body': () => 'redirecting now...'
+      'editSubmissionModal.body': () => 'redirecting now...',
+      'thankYouModal.title': () => 'cheers!',
+      'thankYouModal.body': () => 'successfully submitted through this public link',
     },
   },
 });
@@ -62,18 +64,20 @@ describe('WebFormRenderer', () => {
     vi.resetAllMocks();
   });
 
-  const mountComponent = async (xform:string, actionType='new', instanceId?:string, submissionAttachments?:string[]) => {
+
+  const mountComponent = async (testProps: Partial<WebFormsRendererProps>) => {
 
     const component = mount(WebFormRenderer, {
       global: {
         plugins: [router, i18n, PrimeVue]
       },
       props: {
-        xform,
+        xform: testProps.xform!,
         form: { name: 'simple', xmlFormId: 'simple', projectId: 1, enketoId: '', state: 'open', draft: false, webformsEnabled: true },
-        actionType,
-        instanceId: instanceId ?? null,
-        submissionAttachments: submissionAttachments ?? null
+        actionType: testProps.actionType ?? 'new',
+        instanceId: testProps.instanceId ?? null,
+        submissionAttachments: testProps.submissionAttachments ?? null,
+        st: testProps.st ?? null
       }
     });
     await flushPromises();
@@ -108,7 +112,7 @@ describe('WebFormRenderer', () => {
   };
 
   it('should show ODK Web Form', async () => {
-    const component = await mountComponent(simpleForm);
+    const component = await mountComponent({ xform: simpleForm });
     const form = component.find('.odk-form');
     expect(form.exists()).to.equal(true);
   });
@@ -119,7 +123,7 @@ describe('WebFormRenderer', () => {
       status: 200,
       text: () => Promise.resolve('name,label\ntoronto,Toronto'),
     } as Response);
-    const component = await mountComponent(formWithAttachmentXml);
+    const component = await mountComponent({ xform: formWithAttachmentXml});
     expect(fetchSpy).toHaveBeenCalledTimes(1);
     const form = component.find('.odk-form');
     expect(form.exists()).to.equal(true);
@@ -133,7 +137,7 @@ describe('WebFormRenderer', () => {
       status: 200,
       json: () => Promise.resolve({ instanceId: 1 }),
     } as Response);
-    const component = await mountComponent(simpleForm);
+    const component = await mountComponent({ xform: simpleForm });
     await submit(component);
     expect(fetchSpy).toHaveBeenCalledTimes(1);
     expect(fetchSpy.mock.calls.length).to.equal(1);
@@ -153,7 +157,43 @@ describe('WebFormRenderer', () => {
       status: 200,
       json: () => Promise.resolve({ instanceId: 1 }),
     } as Response);
-    const component = await mountComponent(simpleForm);
+    const component = await mountComponent({ xform: simpleForm });
+    await submit(component);
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    const title = document.querySelector('.p-dialog-header span')!;
+    const intro = document.querySelector('.p-dialog-content span')!;
+    expect(title.textContent).to.equal('Form successfully sent!');
+    expect(intro.textContent).to.equal('You can fill this Form out again or close if you’re done.');
+  });
+
+  it('should submit st token with public form submission', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve({ instanceId: 1 }),
+    } as Response);
+    const component = await mountComponent({ xform: simpleForm, st: 'sometoken', actionType: 'public-link' });
+    await submit(component);
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    expect(fetchSpy.mock.calls.length).to.equal(1);
+    const firstCall = fetchSpy.mock.calls[0]!;
+    const url = firstCall[0];
+    const args = firstCall[1]!;
+    expect(url).to.equal(`/v1/projects/1/forms/simple/submissions?st=sometoken`);
+    expect(args.method).to.equal('POST');
+    const title = document.querySelector('.p-dialog-header span')!;
+    const intro = document.querySelector('.p-dialog-content span')!;
+    expect(title.textContent).to.equal('cheers!');
+    expect(intro.textContent).to.equal('successfully submitted through this public link');
+  });
+
+  it('should attach st query param for public links', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve({ instanceId: 1 }),
+    } as Response);
+    const component = await mountComponent({ xform: simpleForm });
     await submit(component);
     expect(fetchSpy).toHaveBeenCalledTimes(1);
     const title = document.querySelector('.p-dialog-header span')!;
@@ -168,7 +208,7 @@ describe('WebFormRenderer', () => {
       status: 200,
       json: () => Promise.resolve({ instanceId: 1 }),
     } as Response);
-    const component = await mountComponent(simpleForm);
+    const component = await mountComponent({ xform: simpleForm });
     const input = component.find('input');
     await input.setValue('test');
     expect(component.find('input').element.value).to.equal('test');
@@ -191,7 +231,7 @@ describe('WebFormRenderer', () => {
       status: 409,
       json: () => Promise.resolve({ code: 409.1, message: 'duplication instance ID' }),
     } as Response);
-    const component = await mountComponent(simpleForm);
+    const component = await mountComponent({ xform: simpleForm });
     const input = component.find('input');
     await input.setValue('test');
     expect(component.find('input').element.value).to.equal('test');
@@ -210,7 +250,7 @@ describe('WebFormRenderer', () => {
       status: 401,
       json: () => Promise.resolve({ code: 401.2, message: 'timeout' }),
     } as Response);
-    const component = await mountComponent(simpleForm);
+    const component = await mountComponent({ xform: simpleForm });
     const input = component.find('input');
     await input.setValue('test');
     expect(component.find('input').element.value).to.equal('test');
@@ -228,7 +268,7 @@ describe('WebFormRenderer', () => {
   });
 
   it('shows preview modal', async () => {
-    const component = await mountComponent(simpleForm, 'preview');
+    const component = await mountComponent({ xform: simpleForm, actionType: 'preview' });
     const input = component.find('input');
     await input.setValue('test');
     await submit(component);
@@ -248,7 +288,7 @@ describe('WebFormRenderer', () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch').mockImplementation(() => {
       return pendingPromise.then(() => new Response(JSON.stringify({ data: 'success' })));
     });
-    const component = await mountComponent(simpleForm);
+    const component = await mountComponent({ xform: simpleForm });
     const input = component.find('input');
     await input.setValue('test');
     await submit(component);
@@ -274,7 +314,7 @@ describe('WebFormRenderer', () => {
         status: 200,
         json: () => Promise.resolve({ name: 'mypic', result: 200 }),
       } as Response);
-    const component = await mountComponent(imageUploaderXml);
+    const component = await mountComponent({ xform: imageUploaderXml });
     await uploadOnePixelGif(component);
     await submit(component);
     const title = document.querySelector('.p-dialog-header span')!;
@@ -294,7 +334,7 @@ describe('WebFormRenderer', () => {
       .mockResolvedValueOnce({
         ok: false
       } as Response);
-    const component = await mountComponent(imageUploaderXml);
+    const component = await mountComponent({ xform: imageUploaderXml });
     await uploadOnePixelGif(component);
     await submit(component);
     const title = document.querySelector('.p-dialog-header span')!;
@@ -321,7 +361,7 @@ describe('WebFormRenderer', () => {
         status: 200,
         json: () => Promise.resolve({ name: 'mypic', result: 200 }),
       } as Response);
-    const component = await mountComponent(imageUploaderXml);
+    const component = await mountComponent({ xform: imageUploaderXml });
     await uploadOnePixelGif(component);
     await submit(component);
     let title;
@@ -350,7 +390,7 @@ describe('WebFormRenderer', () => {
         status: 401,
         json: () => Promise.resolve({ code: 401.2, message: 'timeout' }),
       } as Response);
-    const component = await mountComponent(imageUploaderXml);
+    const component = await mountComponent({ xform: imageUploaderXml });
     await uploadOnePixelGif(component);
     await submit(component);
     const title = document.querySelector('.p-dialog-header span')!;
@@ -375,7 +415,12 @@ describe('WebFormRenderer', () => {
           status: 200,
           text: () => Promise.resolve(simpleSubmission),
         } as Response);
-      const component = await mountComponent(simpleForm, 'edit', 'uuid:01f165e1-8814-43b8-83ec-741222b00f25', []);
+      const component = await mountComponent({
+        xform: simpleForm,
+        actionType: 'edit',
+        instanceId: 'uuid:01f165e1-8814-43b8-83ec-741222b00f25',
+        submissionAttachments: []
+      });
       const form = component.find('.odk-form');
       expect(form.exists()).to.equal(true);
     });
@@ -392,7 +437,12 @@ describe('WebFormRenderer', () => {
           status: 200,
           json: () => Promise.resolve({ currentVersion: { instanceId: '123' } }),
         } as Response);
-      const component = await mountComponent(simpleForm, 'edit', 'uuid:01f165e1-8814-43b8-83ec-741222b00f25', []);
+      const component = await mountComponent({
+        xform: simpleForm,
+        actionType: 'edit',
+        instanceId: 'uuid:01f165e1-8814-43b8-83ec-741222b00f25',
+        submissionAttachments: []
+      });
       await submit(component);
       expect(fetchSpy).toHaveBeenCalledTimes(2);
       const putCall = fetchSpy.mock.calls[1]!;
@@ -431,12 +481,12 @@ describe('WebFormRenderer', () => {
           status: 200,
           blob: () => Promise.resolve(blob),
         } as Response);
-      const component = await mountComponent(
-        imageUploaderXml,
-        'edit',
-        'uuid:01f165e1-8814-43b8-83ec-741222b00f25',
-        ['1746140510984.jpg']
-      );
+      const component = await mountComponent({
+        xform: imageUploaderXml,
+        actionType: 'edit',
+        instanceId: 'uuid:01f165e1-8814-43b8-83ec-741222b00f25',
+        submissionAttachments: ['1746140510984.jpg']
+      });
       expect(fetchSpy).toHaveBeenCalledTimes(3);
 
       const form = component.find('.odk-form');
