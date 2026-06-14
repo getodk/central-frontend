@@ -89,9 +89,8 @@ jobs:
         path: client
         fetch-depth: 0
     - name: Clone getodk/central repo
-    # TODO revert the URL below once nginx changes are pushed to central/next
       run: |
-        git clone -b separate-forms-app https://github.com/garethbowen/central.git
+        git clone -b next https://github.com/getodk/central.git
         cd central
         git submodule set-branch -b master server
         git submodule update --init --remote server
