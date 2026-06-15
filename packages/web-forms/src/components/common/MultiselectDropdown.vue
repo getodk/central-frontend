@@ -1,14 +1,17 @@
 <script lang="ts" setup>
 import type { SelectNode } from '@getodk/xforms-engine';
 import MultiSelect from 'primevue/multiselect';
-import { computed } from 'vue';
+import { computed, inject } from 'vue';
 import MarkdownBlock from './MarkdownBlock.vue';
+import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
+import type { Translate } from '@/lib/locale/useLocale.ts';
 
 interface MultiselectDropdownProps {
 	readonly question: SelectNode;
 	readonly style?: string;
 }
 
+const t: Translate = inject(TRANSLATE)!;
 const props = defineProps<MultiselectDropdownProps>();
 
 defineEmits(['update:modelValue', 'change']);
@@ -72,6 +75,9 @@ const selectedLabels = computed(() => {
 			<MarkdownBlock v-for="elem in slotProps.option.label" :key="elem.id" :elem="elem" />
 		</template>
 		<template #value>
+			<span v-if="!selectedLabels?.length" class="dropdown-placeholder">
+				{{ t('searchable_dropdown.select.placeholder') }}
+			</span>
 			<template v-for="(markdown, index) in selectedLabels" :key="index">
 				<!-- eslint-disable-next-line -->
 				<template v-if="index > 0">, </template>
@@ -83,6 +89,7 @@ const selectedLabels = computed(() => {
 
 <style scoped lang="scss">
 @use 'primeflex/core/_variables.scss' as pf;
+@use '../../assets/styles/select-options';
 
 .multi-select-dropdown {
 	width: 100%;

@@ -1,55 +1,45 @@
-<!--
-Copyright 2025 ODK Central Developers
-See the NOTICE file at the top-level directory of this distribution and at
-https://github.com/getodk/central-frontend/blob/master/NOTICE.
-
-This file is part of ODK Central. It is subject to the license terms in
-the LICENSE file found in the top-level directory of this distribution and at
-https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
-including this file, may be copied, modified, propagated, or distributed
-except according to the terms contained in the LICENSE file.
--->
-
 <template>
   <iframe v-if="enketoSrc" id="enketo-iframe" title="Enketo" :src="enketoSrc"></iframe>
 </template>
 
-<script setup>
-import { computed, inject, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { useRequestData } from '../request-data';
+<script setup lang="ts">
+import { computed, onBeforeUnmount, ref } from 'vue';
+import { useRoute } from 'vue-router';
+import type { Form } from '../utils/api';
+import Location from '../utils/location';
 
-import useEventListener from '../composables/event-listener';
-import { getCookieValue } from '../util/util';
+const getCookieValue = (key, doc) => {
+  const cookie = doc.cookie.split(';')
+    .map(cookie => cookie.trim())
+    .find(cookie => cookie.startsWith(`${key}=`));
+  return decodeURIComponent(cookie?.split('=')[1] || '');
+};
+
+interface EnketoIframeProps {
+  enketoId: string | null; // may be the enketoOnceId
+  form: Form;
+  actionType: string;
+  instanceId?: string | undefined;
+}
+
+const props = defineProps<EnketoIframeProps>();
 
 defineOptions({
   name: 'EnketoIframe'
 });
 
-const props = defineProps({
-  enketoId: {
-    type: String,
-    required: true
-  },
-  actionType: {
-    type: String,
-    required: true
-  },
-  instanceId: String
-});
+const buildMode = import.meta.env?.MODE ?? 'production';
 
-const emit = defineEmits(['loaded']);
-
-const { location, buildMode } = inject('container');
-
-const { form } = useRequestData();
 const route = useRoute();
-const router = useRouter();
 
 const redirectUrl = computed(() => {
   const { return_url: returnUrlPascalCase, returnUrl } = route.query;
-  if (returnUrlPascalCase && typeof returnUrlPascalCase === 'string') return returnUrlPascalCase;
-  if (returnUrl && typeof returnUrl === 'string') return returnUrl;
+  if (returnUrlPascalCase && typeof returnUrlPascalCase === 'string') {
+    return returnUrlPascalCase;
+  }
+  if (returnUrl && typeof returnUrl === 'string') {
+    return returnUrl;
+  }
   return null;
 });
 
@@ -68,7 +58,7 @@ const lastSubmitted = (enketoOnceId) => {
   });
 };
 
-const enketoSrc = ref();
+const enketoSrc = ref<string | null>(null);
 
 const single = computed(() => {
   const { query } = route;
@@ -85,14 +75,14 @@ const setEnketoSrc = () => {
   let prefix = basePath;
   const { return_url: _, returnUrl: __, ...query } = route.query;
 
-  query.parentWindowOrigin = location.origin;
+  query.parentWindowOrigin = Location.origin();
 
   // We need to use encodeURIComponent here instead of URLSearchParams because enketo expects space
   // to pass as either ' ' (literal space character) or '%20'. Whereas URLSearchParams converts
   // space into '+' sign.
   const qs = `?${Object.entries(query)
     .filter(([, value]) => typeof value === 'string')
-    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`)
     .join('&')}`;
 
   if (props.actionType === 'offline') {
@@ -108,30 +98,29 @@ const setEnketoSrc = () => {
 
   // we no longer render Enketo for Edit Submission from central-frontend.
 
-  if (props.enketoId === form.enketoOnceId) {
-    lastSubmitted(props.enketoId)
+  const enketoId = props.enketoId ?? props.form.enketoId;
+  if (enketoId === props.form.enketoOnceId) {
+    lastSubmitted(enketoId)
       .then(result => {
         if (result) {
           enketoSrc.value = `${basePath}/thanks?taken=${result}`;
         } else {
-          enketoSrc.value = `${prefix}/${props.enketoId}${qs}`;
+          enketoSrc.value = `${prefix}/${enketoId}${qs}`;
         }
       });
   } else {
-    enketoSrc.value = `${prefix}/${props.enketoId}${qs}`;
+    enketoSrc.value = `${prefix}/${enketoId}${qs}`;
   }
-
-  emit('loaded');
 };
 
 setEnketoSrc();
 
 const handleIframeMessage = (event) => {
-  if (event.origin === location.origin) {
+  if (event.origin === Location.origin()) {
     const { parentWindowOrigin } = route.query;
     // For the cases where this page is embedded in external iframe, pass the event data to the
     // parent.
-    if (location !== window.parent.location &&
+    if (window.location !== window.parent.location &&
         parentWindowOrigin &&
         typeof parentWindowOrigin === 'string') {
       window.parent.postMessage(event.data, parentWindowOrigin);
@@ -147,11 +136,7 @@ const handleIframeMessage = (event) => {
         try {
           const normalizedUrl = new URL(redirectUrl.value);
           if (['http:', 'https:'].includes(normalizedUrl.protocol)) {
-            if (normalizedUrl.origin === location.origin) {
-              router.push(normalizedUrl.pathname);
-            } else {
-              location.assign(normalizedUrl);
-            }
+            Location.assign(normalizedUrl);
           }
         } catch (e) {}
       }
@@ -159,7 +144,15 @@ const handleIframeMessage = (event) => {
   }
 };
 
-useEventListener(window, 'message', handleIframeMessage, false);
+const addListener = () => {
+  window.addEventListener('message', handleIframeMessage, false);
+
+  onBeforeUnmount(() => {
+    window.removeEventListener('message', handleIframeMessage, false);
+  });
+};
+
+addListener();
 </script>
 
 <style lang="scss">

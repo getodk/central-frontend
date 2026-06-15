@@ -1,6 +1,13 @@
 @use './style' as odk;
 
 .odk-form {
+  // MultiSelect hides the label when empty, but we render a placeholder
+  // in a slot, so must stay visible.
+  .p-multiselect-label-empty {
+    visibility: visible;
+    overflow: visible;
+  }
+
   .p-datepicker-input:disabled,
   .p-datepicker-input:disabled + .p-datepicker-input-icon-container,
   .p-inputtext:disabled,

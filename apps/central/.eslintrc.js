@@ -12,8 +12,7 @@ module.exports = {
     alert: 'readonly',
     document: 'readonly',
     window: 'readonly',
-    defineModel: 'readonly',
-    __WEB_FORMS_VERSION__: 'readonly'
+    defineModel: 'readonly'
   },
   rules: {
     'arrow-parens': 'off',
