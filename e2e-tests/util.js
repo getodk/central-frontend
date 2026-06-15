@@ -23,9 +23,19 @@ const test = testBase.extend({
     async ({ browserName, page }, use) => {
       page.on('console', msg => {
         const { url, line, column } = msg.location();
+
+        const message = msg.text();
+
+        if(url.includes('/-/')) {
+          // Ensure enketo offline mode is activated as expected.
+          // See: https://github.com/getodk/central/issues/1987
+          if(message === 'App in offline-capable mode.' &&  url.includes('/x/')) return;
+          if(message === 'App in online-only mode.'     && !url.includes('/x/')) return;
+        }
+
         console.log(
           `[${browserName}|console.${msg.type()}] ${url}:${line}:${column}` +
-          `\n    message:`, msg.text(),
+          `\n    message:`, message,
         );
       });
       await use();
