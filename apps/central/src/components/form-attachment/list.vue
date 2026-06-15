@@ -10,7 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="form-attachment-list">
+  <file-drop-zone id="form-attachment-list" :disabled="uploading" :styled="false"
+    @dragenter="dragenter" @dragleave="dragleave" @drop="drop">
     <form-attachment-table
       :file-is-over-drop-zone="countOfFilesOverDropZone !== 0 && !uploading"
       :dragover-attachment="dragoverAttachment"
@@ -20,7 +21,7 @@ except according to the terms contained in the LICENSE file.
     <p>
       <button id="form-attachment-list-upload-button" type="button"
         class="btn btn-primary" @click="uploadFilesModal.show()">
-        <span class="icon-cloud-upload"></span>{{ $t('action.upload') }}
+        <span class="icon-folder-open"></span>{{ $t('action.upload') }}
       </button>
       <span>{{ $t('orDrag') }}</span>
     </p>
@@ -38,10 +39,11 @@ except according to the terms contained in the LICENSE file.
       @confirm="uploadFiles" @cancel="cancelUploads"/>
     <form-attachment-link-dataset v-bind="linkDatasetModal"
       @hide="linkDatasetModal.hide()" @success="afterLinkDataset"/>
-  </div>
+  </file-drop-zone>
 </template>
 
 <script>
+import FileDropZone from '../file-drop-zone.vue';
 import FormAttachmentLinkDataset from './link-dataset.vue';
 import FormAttachmentNameMismatch from './name-mismatch.vue';
 import FormAttachmentPopups from './popups.vue';
@@ -57,13 +59,14 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'FormAttachmentList',
   components: {
+    FileDropZone,
     FormAttachmentLinkDataset,
     FormAttachmentNameMismatch,
     FormAttachmentPopups,
     FormAttachmentTable,
     FormAttachmentUploadFiles
   },
-  inject: ['toast', 'redAlert', 'projectId', 'dragDisabled', 'dragHandler'],
+  inject: ['toast', 'redAlert', 'projectId'],
   setup() {
     const { project, form, draftAttachments, datasets } = useRequestData();
     const { request } = useRequest();
@@ -130,20 +133,7 @@ export default {
         if (dataExists && this.project.datasets > 0) this.fetchDatasets();
       },
       immediate: true
-    },
-    uploading(uploading) {
-      this.dragDisabled = uploading;
     }
-  },
-  created() {
-    this.dragHandler = (event, ...args) => {
-      // Delegate to one of the drag and drop methods below (e.g.,
-      // this.dragenter()).
-      this[event.type]?.(event, ...args);
-    };
-  },
-  beforeUnmount() {
-    this.dragHandler = noop;
   },
   methods: {
     ////////////////////////////////////////////////////////////////////////////
@@ -166,8 +156,6 @@ export default {
         if (items[i].kind === 'file') count += 1;
       return count;
     },
-    // this.dragenter(), this.dragleave(), and this.drop() are called via
-    // this.dragHandler.
     dragenter(event) {
       const { items } = event.dataTransfer;
       this.countOfFilesOverDropZone = this.fileItemCount(items);
@@ -332,10 +320,10 @@ export default {
 {
   "en": {
     "action": {
-      "upload": "Choose files"
+      "upload": "choose files"
     },
-    // This text is shown next to a button with the text "Choose files".
-    "orDrag": "or drag files onto this page to upload",
+    // This text is shown next to a button with the text "choose files".
+    "orDrag": "or drag files onto this section to upload",
     "problem": {
       // {message} is an error message from the server.
       "noneUploaded": "{message} No files were successfully uploaded.",

@@ -75,6 +75,10 @@
     "string": "Longitude: {longitude}.",
     "developer_comment": "Displays the GPS longitude coordinate. {longitude} is the numeric longitude value."
   },
+  "searchable_dropdown.select.placeholder": {
+    "string": "Select answer",
+    "developer_comment": "Placeholder text shown in a minimal select dropdown when no option has been selected yet."
+  },
   "validation_message.required.error": {
     "string": "This field is required.",
     "developer_comment": "Default error shown when a required field has no value and the form designer did not specify a custom message."

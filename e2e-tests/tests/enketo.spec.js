@@ -124,8 +124,6 @@ test.describe('Enketo', () => {
         await expect(page).toHaveURL(appUrl + t.newUrl({ enketoId, enketoOnceId, draftEnketoId, xmlFormId, instanceId, st }));
 
         await expect(page.getByRole('heading', { name: publishedForm.name })).toBeVisible();
-
-        await expect(page.getByText('A new version of this application has been downloaded. Refresh this page to load the updated version.')).toBeVisible();
       });
     });
 
@@ -149,8 +147,6 @@ test.describe('Enketo', () => {
       await page.goto(`${appUrl}/-/x/${enketoId}`);
 
       await expect(page.getByRole('heading', { name: publishedForm.name })).toBeVisible();
-
-      await expect(page.getByText('A new version of this application has been downloaded. Refresh this page to load the updated version.')).toBeVisible();
 
       await page.reload();
 

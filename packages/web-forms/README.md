@@ -198,7 +198,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-  ##### Theme and layouts<br/>🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ 30\%
+  ##### Theme and layouts<br/>🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜⬜⬜ 40\%
 
   </summary>
   <br/>
@@ -208,7 +208,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
 | [grid](https://github.com/getodk/web-forms/issues/16)                      |          |
 | [pages](https://github.com/getodk/web-forms/issues/254)                    |          |
 | [logo](https://github.com/getodk/web-forms/issues/353)                     |          |
-| [application translations](https://github.com/getodk/web-forms/issues/332) |          |
+| [application translations](https://github.com/getodk/web-forms/issues/332) |    ✅    |
 | [theme color](https://github.com/getodk/web-forms/issues/43)               |          |
 | preview form                                                               |    ✅    |
 | send instance                                                              |    ✅    |
@@ -311,7 +311,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-  ##### Misc<br/>⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ 0\%
+  ##### Misc<br/>🟩⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ 11\%
 
   </summary>
   <br/>
@@ -326,7 +326,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
 | save as draft                                                                    |          |
 | offline entities                                                                 |          |
 | MBtiles / offline map layers                                                     |          |
-| [submission encryption](https://github.com/getodk/web-forms/issues/448)          |          |
+| [submission encryption](https://github.com/getodk/web-forms/issues/448)          |    ✅    |
 
 </details>
 
@@ -477,3 +477,22 @@ To add a new icon:
 - Use the icon by passing its name to the `name` prop.
 
 Material Icons are available under the Apache License Version 2.0. Copy of the license can be found at [`./src/assets/fonts/LICENSE-2.0.txt`](./src/assets/fonts/LICENSE-2.0.txt)
+
+### Translations
+
+Translations are managed on Transifex. Translators can contribute at: https://app.transifex.com/getodk/web_forms
+
+For developers, see [TRANSLATIONS.md](./TRANSLATIONS.md) for details on how UI strings are managed and how to add or update translations.
+
+#### Pulling and pushing translations
+
+Use the npm scripts in this package to sync with Transifex. From the repository root:
+
+- Pull translations from Transifex into `locales/`:
+  ```sh
+  npm run translations:pull -w @getodk/web-forms
+  ```
+- Push the English source strings (`locales/strings_en.json`) to Transifex:
+  ```sh
+  npm run translations:push -w @getodk/web-forms
+  ```
