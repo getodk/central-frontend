@@ -13,6 +13,7 @@ import {
   queryString,
   RequestError
 } from '../utils/api.ts';
+import Dialog from 'primevue/dialog';
 import Spinner from './spinner.vue';
 
 const props = defineProps({
@@ -111,10 +112,22 @@ const setDocumentTitle = (formConfig: Form) => {
 const fetchForm = async (): Promise<Form | undefined> => {
   let formConfig;
   if (enketoId.value) {
-    formConfig = await getFormByEnketoId(enketoId.value, st.value);
+    try {
+      formConfig = await getFormByEnketoId(enketoId.value, st.value);
+    } catch(e) {
+      if (e instanceof RequestError && (e.statusCode === 401.2 || e.statusCode === 403.1)) {
+        // a public form with an invalid st or revoked enketoId should show as form not found
+        throw new RequestError('Form not found', 404);
+      }
+      throw e;
+    }
   } else if (projectId.value && formId.value) {
     formConfig = await getFormByFormId(projectId.value, formId.value, props.draft, st.value);
   } else {
+    throw new RequestError('Form not found', 404);
+  }
+
+  if (formConfig.state === 'closed') {
     throw new RequestError('Form not found', 404);
   }
 
@@ -204,9 +217,14 @@ load();
 
 <template>
   <Spinner v-if="!!loadingState"/>
-  <div v-else-if="errorState || (props.actionType === 'edit' && !webFormsEnabled)" class="form-load-error">
-    {{ $t('formNotFound') }}
-  </div>
+  <Dialog modal v-else-if="errorState || (props.actionType === 'edit' && !webFormsEnabled)" :draggable="false" :closable="false" :visible="true">
+    <template #header>
+      {{ $t('formNotFound') }}
+    </template>
+    <template #default>
+      {{ $t('formNotFound.body') }}
+    </template>
+  </Dialog>
   <template v-else-if="webFormsEnabled">
     <WebFormRenderer
       :form="form!"
@@ -226,19 +244,11 @@ load();
   </template>
 </template>
 
-<style lang="scss">
-.form-load-error {
-  text-align: center;
-  width: 100%;
-  font-weight: bold;
-  padding: 50px;
-}
-</style>
-
 <i18n lang="json5">
   {
     "en": {
-      "formNotFound": "No Form found with this URL, please double check."
+      "formNotFound": "Unable to open form",
+      "formNotFound.body": "Please check that the link is correct. The form may no longer be available, or your access may have expired. If the problem continues, contact the person who sent you the form link."
     }
   }
 </i18n>
