@@ -49,9 +49,9 @@ jobs:
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
-        tar -cvzf dist.tar.gz dist/
+        tar -cvzf dist-${{ github.ref_name }}.tar.gz dist/
         echo "Uploading dist bundle..."
-        gh release upload ${{ github.ref_name }} dist.tar.gz
+        gh release upload ${{ github.ref_name }} dist-${{ github.ref_name }}.tar.gz
         echo "Upload complete."
   build-wf:
     name: 'Build Web Forms'
