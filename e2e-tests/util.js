@@ -28,7 +28,7 @@ const test = testBase.extend({
 
         // See: https://github.com/getodk/central/issues/1986
         if(browserName === 'firefox') {
-          if(message.match(/^downloadable font: glyf: Glyph bbox was incorrect;.*font-family: "FontAwesome"/)) return;
+          if(message.match(/"downloadable font: glyf: Glyph bbox was incorrect;.*font-family: "FontAwesome"/)) return;
         }
 
         console.log(
