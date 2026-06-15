@@ -56,11 +56,11 @@
     "developer_comment": "Aria-label/description for the control button that undoes the last action. Shared across the canvas and map components."
   },
   "common_actions.open_info.description": {
-    "string": "Afficher les informations de l'action",
+    "string": "Afficher les instructions",
     "developer_comment": "Aria-label/description for the control button that opens the info dialog listing available actions. Shared across the canvas and map components."
   },
   "common_actions.info_dialog.title": {
-    "string": "Comment utiliser cet outil",
+    "string": "Instructions",
     "developer_comment": "Title shown in the header of the dialog that explains the available actions. Shared across the canvas and map components."
   },
   "geolocation_formatted_value.accuracy.label": {
