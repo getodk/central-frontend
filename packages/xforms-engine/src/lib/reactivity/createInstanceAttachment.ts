@@ -101,7 +101,6 @@ const instanceAttachmentState = (
   const existingName = context.instanceNode?.value ?? null;
   const { file, writtenAt, loading, error } = options;
 
-  // No file -> no intrinsic name, no name to compute
   if (file == null) {
     return {
       computedName: null,
@@ -109,7 +108,9 @@ const instanceAttachmentState = (
       file: null,
       loading: !!loading,
       loadingError: error ?? false,
-      dirty: false,
+      // writtenAt is set when the client calls setValue(null), meaning the user cleared the attachment.
+      // Mark dirty so the submission payload handles it correctly.
+      dirty: writtenAt != null,
     };
   }
 
@@ -150,13 +151,16 @@ const resolveFile = (
   setState: Setter<InstanceAttachmentState>,
   filePromise: Promise<File>
 ) => {
-  filePromise
-    .then((file: File) => {
-      setState(instanceAttachmentState(context, { file }));
-    })
-    .catch((_) => {
-      setState(instanceAttachmentState(context, { error: true }));
+  // Initial load must not overwrite a user-modified attachment.
+  filePromise.then((file: File) => {
+    setState((prev) => {
+      return prev.dirty ? prev : instanceAttachmentState(context, { file });
     });
+  }).catch(() => {
+    setState((prev) => {
+      return prev.dirty ? prev : instanceAttachmentState(context, { error: true });
+    });
+  });
 };
 
 const retryFetch = (
@@ -238,7 +242,13 @@ export const createInstanceAttachment = (
     const valueState = [getValue, setValue] as const;
 
     const getFileName = createMemo(() => {
-      const { computedName, intrinsicName } = getState();
+      const { computedName, intrinsicName, dirty, file } = getState();
+
+      // When the user explicitly cleared the value (dirty with no file), produce null so getInstanceValue() emits ""
+      // and the XML node is empty on submission.
+      if (dirty && file == null) {
+        return null;
+      }
 
       return computedName ?? intrinsicName;
     });
