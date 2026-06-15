@@ -152,15 +152,17 @@ const resolveFile = (
   filePromise: Promise<File>
 ) => {
   // Initial load must not overwrite a user-modified attachment.
-  filePromise.then((file: File) => {
-    setState((prev) => {
-      return prev.dirty ? prev : instanceAttachmentState(context, { file });
+  filePromise
+    .then((file: File) => {
+      setState((prev) => {
+        return prev.dirty ? prev : instanceAttachmentState(context, { file });
+      });
+    })
+    .catch(() => {
+      setState((prev) => {
+        return prev.dirty ? prev : instanceAttachmentState(context, { error: true });
+      });
     });
-  }).catch(() => {
-    setState((prev) => {
-      return prev.dirty ? prev : instanceAttachmentState(context, { error: true });
-    });
-  });
 };
 
 const retryFetch = (
