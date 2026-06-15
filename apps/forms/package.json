@@ -1,0 +1,22 @@
+{
+  "name": "@getodk/forms",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "eslint . --report-unused-disable-directives --cache --max-warnings 0",
+    "lint:fix": "eslint . --fix --report-unused-disable-directives --cache --max-warnings 0",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "primevue": "4.3.3",
+    "vue": "^3.5.29",
+    "vue-i18n": "^10.0.7",
+    "vue-router": "^4.6.3"
+  },
+  "devDependencies": {
+    "@vue/test-utils": "^2.4.6",
+    "jsdom": "^27.4.0",
+    "vitest": "^4.0.18"
+  }
+}

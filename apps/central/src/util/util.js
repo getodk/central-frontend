@@ -12,6 +12,7 @@ except according to the terms contained in the LICENSE file.
 import { computed } from 'vue';
 
 export const enketoBasePath = '/-';
+export const webFormsBasePath = '/wf';
 
 export const noop = () => {};
 export const noargs = (f) => () => f();
