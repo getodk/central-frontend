@@ -152,10 +152,10 @@ export default {
         resend
       }).catch(noop);
     },
-    fetchActorProperties(resend) {
+    fetchActorProperties() {
       this.actorProperties.request({
         url: apiPaths.actorProperties(this.projectId),
-        resend
+        resend: false
       }).catch(noop);
     }
   }

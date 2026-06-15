@@ -50,8 +50,8 @@ except according to the terms contained in the LICENSE file.
           @revoke="revokeModal.show({ fieldKey: $event })"/>
       </template>
       <template #data-scrolling="{ data: fieldKey }">
-        <field-key-data-row :field-key="fieldKey" :highlighted="highlighted"
-          :actor-properties="actorProperties"/>
+        <custom-props-data-row :actor="fieldKey" :highlighted="highlighted"
+          :properties="actorProperties"/>
       </template>
     </table-freeze>
     <loading :state="initiallyLoading"/>
@@ -80,7 +80,7 @@ import Loading from '../loading.vue';
 import TableFreeze from '../table/freeze.vue';
 import FieldKeyQrPanel from './qr-panel.vue';
 import FieldKeyRow from './row.vue';
-import FieldKeyDataRow from './data-row.vue';
+import CustomPropsDataRow from '../custom-props-data-row.vue';
 import FieldKeyNew from './new.vue';
 import FieldKeyRevoke from './revoke.vue';
 import ProjectSubmissionOptions from '../project/submission-options.vue';
@@ -98,7 +98,7 @@ export default {
     TableFreeze,
     FieldKeyQrPanel,
     FieldKeyRow,
-    FieldKeyDataRow,
+    CustomPropsDataRow,
     FieldKeyNew,
     FieldKeyRevoke,
     ProjectSubmissionOptions
@@ -137,6 +137,7 @@ export default {
     };
   },
   created() {
+    this.$emit('fetch-actor-properties');
     this.fetchData(false);
   },
   mounted() {
@@ -147,7 +148,6 @@ export default {
   },
   methods: {
     fetchData(resend) {
-      this.$emit('fetch-actor-properties', false);
       this.$emit('fetch-field-keys', resend);
       this.highlighted = null;
     },

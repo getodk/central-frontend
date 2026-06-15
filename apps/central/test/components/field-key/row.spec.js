@@ -1,6 +1,6 @@
 import DateTime from '../../../src/components/date-time.vue';
 import FieldKeyRow from '../../../src/components/field-key/row.vue';
-import FieldKeyDataRow from '../../../src/components/field-key/data-row.vue';
+import CustomPropsDataRow from '../../../src/components/custom-props-data-row.vue';
 
 import testData from '../../data';
 import { load } from '../../util/http';
@@ -135,7 +135,7 @@ describe('FieldKeyRow', () => {
       testData.actorProperties.createPast(1, { name: 'region' });
       testData.actorProperties.createPast(1, { name: 'department' });
       return load('/projects/1/app-users').then(app => {
-        const headers = app.findAll('#field-key-list-table th');
+        const headers = app.findAll('#field-key-list-table .table-freeze-scrolling th');
         const headerTexts = headers.map(h => h.text());
         headerTexts.should.include('region');
         headerTexts.should.include('department');
@@ -153,7 +153,7 @@ describe('FieldKeyRow', () => {
       testData.actorProperties.createPast(1, { name: 'region' });
       testData.actorProperties.createPast(1, { name: 'department' });
       return load('/projects/1/app-users').then(app => {
-        const row = app.getComponent(FieldKeyDataRow);
+        const row = app.getComponent(CustomPropsDataRow);
         const propertyCells = row.findAll('td');
         propertyCells.length.should.equal(2);
         propertyCells[0].text().should.equal('North');
@@ -166,7 +166,7 @@ describe('FieldKeyRow', () => {
       testData.extendedFieldKeys.createPast(1, { properties: {} });
       testData.actorProperties.createPast(1, { name: 'region' });
       return load('/projects/1/app-users').then(app => {
-        const row = app.getComponent(FieldKeyDataRow);
+        const row = app.getComponent(CustomPropsDataRow);
         const propertyCells = row.findAll('td');
         propertyCells.length.should.equal(1);
         propertyCells[0].text().should.equal('');
