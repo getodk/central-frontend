@@ -4946,7 +4946,7 @@
       },
       "introduction": {
         "0": {
-          "string": "Enter your encryption password to download this data. Your encryption password will be used only to decrypt the data for download and will not be stored by the server."
+          "string": "Your encryption password is needed to download this data."
         }
       },
       "hint": {

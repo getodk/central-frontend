@@ -398,7 +398,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "encryptedForm": "Encrypted Forms cannot be processed in this way.",
     "deletedFieldsDisabledForDraft": "Draft Forms cannot be processed in this way.",
     "introduction": [
-      "Enter your encryption password to download this data. Your encryption password will be used only to decrypt the data for download and will not be stored by the server."
+      "Your encryption password is needed to download this data."
     ],
     // This text is shown if there is an encryption password hint. {hint} is the
     // encryption password hint.
