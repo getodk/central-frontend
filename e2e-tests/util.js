@@ -23,9 +23,16 @@ const test = testBase.extend({
     async ({ browserName, page }, use) => {
       page.on('console', msg => {
         const { url, line, column } = msg.location();
+
+        const message = msg.text();
+
+        if(url.includes('/-/')) {
+          if(message === 'Keeping default theme.') return;
+        }
+
         console.log(
           `[${browserName}|console.${msg.type()}] ${url}:${line}:${column}` +
-          `\n    message:`, msg.text(),
+          `\n    message:`, message,
         );
       });
       await use();
