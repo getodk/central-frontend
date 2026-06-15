@@ -23,9 +23,17 @@ const test = testBase.extend({
     async ({ browserName, page }, use) => {
       page.on('console', msg => {
         const { url, line, column } = msg.location();
+
+        const message = msg.text();
+
+        if(browserName === 'firefox') {
+          // See: https://github.com/getodk/central/issues/1989
+          if(message.match(/"downloadable font: glyf: Glyph bbox was incorrect;.*font-family: "icomoon"/)) return;
+        }
+
         console.log(
           `[${browserName}|console.${msg.type()}] ${url}:${line}:${column}` +
-          `\n    message:`, msg.text(),
+          `\n    message:`, message,
         );
       });
       await use();
