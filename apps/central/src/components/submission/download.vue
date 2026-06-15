@@ -398,10 +398,10 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "encryptedForm": "Encrypted Forms cannot be processed in this way.",
     "deletedFieldsDisabledForDraft": "Draft Forms cannot be processed in this way.",
     "introduction": [
-      "In order to download this data, you will need to provide your passphrase. Your passphrase will be used only to decrypt your data for download, after which the server will forget it again."
+      "Enter your encryption password to download this data. Your encryption password will be used only to decrypt the data for download and will not be stored by the server."
     ],
-    // This text is shown if there is a passphrase hint. {hint} is the
-    // passphrase hint.
+    // This text is shown if there is an encryption password hint. {hint} is the
+    // encryption password hint.
     "hint": "Hint: {hint}",
     // "Repeats" refers to repeat groups.
     "noRepeat": "This Form does not have repeats.",

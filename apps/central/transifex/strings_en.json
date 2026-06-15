@@ -4296,16 +4296,16 @@
         "1": {
           "introduction": {
             "0": {
-              "string": "First, you will need to choose a passphrase. This passphrase will be required to decrypt your Submissions. For your privacy, the server will not remember this passphrase: only people with the passphrase will be able to decrypt and read your Submission data."
+              "string": "First, choose an encryption password. The server does not store this password. Only people who know it can decrypt and read your Submission data."
             },
             "1": {
               "full": {
-                "string": "If you lose the passphrase, there is {no} way to recover it or your data!",
+                "string": "If you lose this encryption password, there is {no} way to recover it or your data.",
                 "developer_comment": "{no} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nno"
               },
               "no": {
                 "string": "no",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {no} is in the following text:\n\nIf you lose the passphrase, there is {no} way to recover it or your data!"
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {no} is in the following text:\n\nIf you lose this encryption password, there is {no} way to recover it or your data."
               }
             }
           }
@@ -4318,13 +4318,13 @@
       },
       "field": {
         "hint": {
-          "string": "Passphrase hint (optional)",
+          "string": "Encryption password hint (optional)",
           "developer_comment": "This is the text of a form field."
         }
       },
       "alert": {
         "passphraseTooShort": {
-          "string": "Please input a passphrase at least 10 characters long."
+          "string": "Encryption password must be at least 10 characters long."
         }
       }
     },
@@ -4946,12 +4946,12 @@
       },
       "introduction": {
         "0": {
-          "string": "In order to download this data, you will need to provide your passphrase. Your passphrase will be used only to decrypt your data for download, after which the server will forget it again."
+          "string": "Enter your encryption password to download this data. Your encryption password will be used only to decrypt the data for download and will not be stored by the server."
         }
       },
       "hint": {
         "string": "Hint: {hint}",
-        "developer_comment": "This text is shown if there is a passphrase hint. {hint} is the passphrase hint."
+        "developer_comment": "This text is shown if there is an encryption password hint. {hint} is the encryption password hint."
       },
       "noRepeat": {
         "string": "This Form does not have repeats.",
