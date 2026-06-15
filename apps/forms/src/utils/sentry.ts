@@ -1,7 +1,8 @@
+import type { App } from 'vue';
 import { browserTracingIntegration, init, setTag } from '@sentry/vue';
 
-const initSentry = (app, source) => {
-  const dsn = import.meta.env.ODK_CENTRAL_FRONTEND_SENTRY_DSN;
+const initSentry = (app: App, source: string) => {
+  const dsn = import.meta.env.ODK_CENTRAL_FRONTEND_SENTRY_DSN as string | undefined;
   if (!dsn) {
     return;
   }
@@ -11,7 +12,6 @@ const initSentry = (app, source) => {
     dsn,
     integrations: [browserTracingIntegration()],
     // Captures performance timing for 1 in 5 page loads.
-    // Could be extracted to VITE_SENTRY_TRACES_SAMPLE_RATE in the future.
     tracesSampleRate: 0.2,
   });
 
