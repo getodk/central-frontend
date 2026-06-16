@@ -73,7 +73,7 @@ const submit = () => {
         : null)
   })
     .then(() => {
-      emit('success');
+      emit('success', name.value);
     })
     .catch(noop);
 };

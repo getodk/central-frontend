@@ -77,11 +77,11 @@ const { project, actorProperties } = useRequestData();
 
 const createModal = modalData();
 
-emit('fetch-actor-properties', false);
+emit('fetch-actor-properties');
 
-const afterCreate = () => {
+const afterCreate = (name) => {
   createModal.hide();
-  emit('fetch-actor-properties', true);
+  actorProperties.push({ name });
   alert.success(t('created'));
 };
 </script>
