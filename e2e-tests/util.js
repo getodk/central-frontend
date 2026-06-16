@@ -24,7 +24,16 @@ const test = testBase.extend({
       page.on('console', msg => {
         const { url, line, column } = msg.location();
 
-        const message = msg.text();
+        let message = msg.text();
+
+        if(message === 'JSHandle@object') {
+          try {
+            const args = msg.args();
+            message = args.join(' ');
+          } catch(err) {
+            message = `Failed to deserialise args: ${err.message}\n    stack: ${err.stack}`;
+          }
+        }
 
         if(browserName === 'firefox') {
           // See: https://github.com/getodk/central/issues/1986
