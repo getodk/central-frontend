@@ -35,6 +35,9 @@ const test = testBase.extend({
 
           // See: https://github.com/enketo/enketo/issues/1540
           if(message.match(/"downloadable font: glyf: Glyph bbox was incorrect;.*font-family: "OpenSans"/)) return;
+
+          // See: https://github.com/getodk/central/issues/1696
+          if(message === 'XML Parsing Error: unclosed token') return;
         }
 
         if(url.includes('/-/')) {
