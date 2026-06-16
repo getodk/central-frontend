@@ -37,7 +37,7 @@ const test = testBase.extend({
           if(message.match(/"downloadable font: glyf: Glyph bbox was incorrect;.*font-family: "OpenSans"/)) return;
 
           // See: https://github.com/getodk/central/issues/1696
-          if(message === 'XML Parsing Error: unclosed token') return;
+          if(message.includes('XML Parsing Error: unclosed token')) return;
         }
 
         if(url.includes('/-/')) {
