@@ -29,7 +29,7 @@ const test = testBase.extend({
         if(browserName === 'firefox') {
           try {
             const args = msg.args();
-            message = 'special-handling' + args.map(a => a.jsonValue()).join(' ');
+            message = 'special-handling' + args.map(a => a.jsonValue()).join(' '); // FIXME remove special-handling string - just a placeholder to confirm this code is running
           } catch(err) {
             message = `Failed to deserialise args: ${err.message}\n    stack: ${err.stack}`;
           }
