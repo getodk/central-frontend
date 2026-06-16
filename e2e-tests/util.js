@@ -26,9 +26,13 @@ const test = testBase.extend({
 
         const message = msg.text();
 
-        // See: https://github.com/getodk/central/issues/1986
-        if(browserName === 'firefox') {
-          if(message.match(/"downloadable font: glyf: Glyph bbox was incorrect;.*font-family: "FontAwesome"/)) return;
+        if(url.includes('/-/')) {
+          if(message === 'Keeping default theme.') return;
+
+          // See: https://github.com/getodk/central/issues/1986
+          if(browserName === 'firefox') {
+            if(message.match(/"downloadable font: glyf: Glyph bbox was incorrect;.*font-family: "FontAwesome"/)) return;
+          }
         }
 
         console.log(

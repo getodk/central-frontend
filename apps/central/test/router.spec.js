@@ -337,10 +337,10 @@ describe('createCentralRouter()', () => {
       it('preserves data while navigating to/from .../app-users', () =>
         load('/projects/1/form-access')
           .complete()
-          .route('/projects/1/app-users')
+          .load('/projects/1/app-users', { project: false, fieldKeys: false })
           .complete()
           .route('/projects/1/form-access')
-          .then(dataExists(['project', 'fieldKeys'])));
+          .then(dataExists(['project', 'fieldKeys', 'actorProperties'])));
 
       describe('navigating to/from .../form-access', () => {
         it('preserves project', () =>
