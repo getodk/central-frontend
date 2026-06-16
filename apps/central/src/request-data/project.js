@@ -28,6 +28,7 @@ export default () => {
     withToken: computeIfExists(() =>
       fieldKeys.filter(fieldKey => fieldKey.token != null))
   }));
+  const actorProperties = createResource('actorProperties');
 
   watchSyncEffect(() => {
     if (project.dataExists && forms.dataExists &&
@@ -58,6 +59,6 @@ export default () => {
 
   return {
     project, projectAssignments, forms, deletedForms, formSummaryAssignments,
-    fieldKeys, duplicateFormNames
+    fieldKeys, actorProperties, duplicateFormNames
   };
 };
