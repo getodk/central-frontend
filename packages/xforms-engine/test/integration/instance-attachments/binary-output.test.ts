@@ -848,19 +848,22 @@ describe('Instance attachments: binary output', () => {
     it('produces empty XML node and no attachment when an existing attachment is cleared in an edit', async () => {
       const scenario = await Scenario.init(
         'Basic upload control',
-        // prettier-ignore
         html(
-					head(
-						title('Basic upload control'),
-						model(
-							mainInstance(
-								t('data id="basic-upload-control"',
-									t('file-upload'),
-									t('meta',
-										t('instanceID', FAKE_INSTANCE_ID)))),
-							bind('/data/file-upload').type('binary'))),
-					body(
-						upload('/data/file-upload')))
+          head(
+            title('Basic upload control'),
+            model(
+              mainInstance(
+                t(
+                  'data id="basic-upload-control"',
+                  t('file-upload'),
+                  t('meta', t('instanceID', FAKE_INSTANCE_ID))
+                )
+              ),
+              bind('/data/file-upload').type('binary')
+            )
+          ),
+          body(upload('/data/file-upload'))
+        )
       );
 
       const uploadValue = new File(['data'], 'upload.txt', { type: 'text/plain' });

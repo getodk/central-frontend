@@ -102,15 +102,16 @@ const instanceAttachmentState = (
   const { file, writtenAt, loading, error } = options;
 
   if (file == null) {
+    // writtenAt is set when the client cleared the attachment via setValue(null).
+    const cleared = writtenAt != null;
+
     return {
       computedName: null,
-      intrinsicName: existingName,
+      intrinsicName: cleared ? null : existingName,
       file: null,
       loading: !!loading,
       loadingError: error ?? false,
-      // writtenAt is set when the client calls setValue(null), meaning the user cleared the attachment.
-      // Mark dirty so the submission payload handles it correctly.
-      dirty: writtenAt != null,
+      dirty: cleared,
     };
   }
 
@@ -244,13 +245,7 @@ export const createInstanceAttachment = (
     const valueState = [getValue, setValue] as const;
 
     const getFileName = createMemo(() => {
-      const { computedName, intrinsicName, dirty, file } = getState();
-
-      // When the user explicitly cleared the value (dirty with no file), produce null so getInstanceValue() emits ""
-      // and the XML node is empty on submission.
-      if (dirty && file == null) {
-        return null;
-      }
+      const { computedName, intrinsicName } = getState();
 
       return computedName ?? intrinsicName;
     });
