@@ -27,6 +27,11 @@ const test = testBase.extend({
         const message = msg.text();
 
         if(url.includes('/-/')) {
+          // Ensure enketo offline mode is activated as expected.
+          // See: https://github.com/getodk/central/issues/1987
+          if(message === 'App in offline-capable mode.' &&  url.includes('/x/')) return;
+          if(message === 'App in online-only mode.'     && !url.includes('/x/')) return;
+          
           if(message === 'Keeping default theme.') return;
         }
 
