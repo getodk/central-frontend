@@ -161,23 +161,12 @@ describe('`<label>` and/or `<hint>` text', () => {
         head(
           title('label-newline-after-output'),
           model(
-            mainInstance(
-              t(
-                'data id="label-newline-after-output"',
-                t('field'),
-                t('question')
-              )
-            ),
+            mainInstance(t('data id="label-newline-after-output"', t('field'), t('question'))),
             bind('/data/field').type('string').calculate("'value'"),
             bind('/data/question').type('string')
           )
         ),
-        body(
-          input(
-            '/data/question',
-            t('label', 'Line 1 <output value="/data/field"/>\nLine 2')
-          )
-        )
+        body(input('/data/question', t('label', 'Line 1 <output value="/data/field"/>\nLine 2')))
       )
     );
     scenario.next('/data/question');
