@@ -260,10 +260,16 @@ load();
     "formNotFound": "Für diese URL wurde kein Formular gefunden, bitte überprüfen Sie dies noch einmal."
   },
   "es": {
-    "formNotFound": "No se ha encontrado ningún formulario con esta URL, vuelva a comprobarlo."
+    "formNotFound": "No se puede abrir el formulario",
+    "formNotFound.body": "Por favor, verifique que el enlace es correcto. Es posible que el formulario ya no esté disponible o que su acceso haya expirado. Si el problema persiste, comuníquese con la persona que le envió el enlace del formulario."
   },
   "fr": {
-    "formNotFound": "Aucun Formulaire trouvé avec cette URL, merci de vérifier."
+    "formNotFound": "Impossible d'ouvrir le formulaire",
+    "formNotFound.body": "Veuillez vérifier que le lien est correct. Il est possible que le formulaire ne soit plus disponible ou que votre accès ait expiré. Si le problème persiste, veuillez contacter la personne qui vous a envoyé le lien vers le formulaire."
+  },
+  "id": {
+    "formNotFound": "Tidak dapat membuka formulir",
+    "formNotFound.body": "Pastikan tautan sudah benar. Formulir mungkin sudah tidak tersedia, atau akses Anda mungkin telah kedaluwarsa. Jika masalah berlanjut, hubungi orang yang mengirimkan tautan formulir tersebut kepada Anda."
   },
   "it": {
     "formNotFound": "Non è stato trovato alcun modulo con questo URL, si prega di ricontrollare."
