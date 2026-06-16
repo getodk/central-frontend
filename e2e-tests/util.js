@@ -33,6 +33,11 @@ const test = testBase.extend({
           if(message === 'App in online-only mode.'     && !url.includes('/x/')) return;
           
           if(message === 'Keeping default theme.') return;
+
+          // See: https://github.com/getodk/central/issues/1986
+          if(browserName === 'firefox') {
+            if(message.match(/"downloadable font: glyf: Glyph bbox was incorrect;.*font-family: "FontAwesome"/)) return;
+          }
         }
 
         console.log(
