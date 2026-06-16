@@ -182,6 +182,7 @@ const responsesByComponent = {
     ]
   }),
   PublicLinkList: componentResponses({
+    actorProperties: true,
     publicLinks: () => testData.standardPublicLinks.sorted()
   }),
   FormVersionList: componentResponses({ formVersions: true }),

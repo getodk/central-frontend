@@ -35,10 +35,10 @@ except according to the terms contained in the LICENSE file.
       </i18n-t>
     </div>
 
-    <public-link-table :highlighted="highlighted"
+    <public-link-table v-if="dataExists" :highlighted="highlighted"
       @revoke="revokeModal.show({ publicLink: $event })"/>
-    <loading :state="publicLinks.initiallyLoading"/>
-    <p v-if="publicLinks.dataExists && publicLinks.length === 0"
+    <loading :state="initiallyLoading"/>
+    <p v-if="dataExists && publicLinks.length === 0"
       class="empty-table-message">
       {{ $t('emptyTable') }}
     </p>
@@ -62,6 +62,7 @@ import PublicLinkTable from './table.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
 import useRoutes from '../../composables/routes';
+import useProject from '../../request-data/project';
 import { apiPaths } from '../../util/request';
 import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
@@ -90,9 +91,14 @@ export default {
     }
   },
   setup() {
-    const { publicLinks } = useRequestData();
+    const { publicLinks, resourceStates } = useRequestData();
+    const { actorProperties } = useProject();
+
     const { projectPath } = useRoutes();
-    return { publicLinks, projectPath };
+    return {
+      publicLinks, actorProperties, ...resourceStates([publicLinks, actorProperties]),
+      projectPath
+    };
   },
   data() {
     return {
@@ -105,6 +111,7 @@ export default {
     };
   },
   created() {
+    this.fetchActorProperties();
     this.fetchData(false);
   },
   methods: {
@@ -125,6 +132,12 @@ export default {
       this.fetchData(true);
       this.revokeModal.hide();
       this.alert.success(this.$t('alert.revoke', publicLink));
+    },
+    fetchActorProperties() {
+      this.actorProperties.request({
+        url: apiPaths.actorProperties(this.projectId),
+        resend: false
+      }).catch(noop);
     }
   }
 };

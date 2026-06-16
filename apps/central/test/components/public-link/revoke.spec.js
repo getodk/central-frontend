@@ -21,7 +21,7 @@ describe('PublicLinkRevoke', () => {
   it('toggles the modal', () =>
     load('/projects/1/forms/f/public-links', { root: false }).testModalToggles({
       modal: PublicLinkRevoke,
-      show: '.public-link-row .btn-danger',
+      show: '.public-link-row .revoke-button',
       hide: '.btn-link'
     }));
 
@@ -47,7 +47,7 @@ describe('PublicLinkRevoke', () => {
   describe('after a successful response', () => {
     const revoke = (series) => series
       .request(async (app) => {
-        await app.get('.public-link-row .btn-danger').trigger('click');
+        await app.get('.public-link-row .revoke-button').trigger('click');
         await app.get('#public-link-revoke .btn-danger').trigger('click');
       })
       .respondWithData(() => {

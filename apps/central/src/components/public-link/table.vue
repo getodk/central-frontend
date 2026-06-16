@@ -10,25 +10,34 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <table id="public-link-table" class="table">
-    <thead>
-      <tr>
-        <th class="display-name">{{ $t('header.displayName') }}</th>
-        <th>{{ $t('header.once') }}</th>
-        <th class="access-link">{{ $t('header.accessLink') }}</th>
-        <th class="actions">{{ $t('header.actions') }}</th>
-      </tr>
-    </thead>
-    <tbody v-if="publicLinks.dataExists">
-      <public-link-row v-for="publicLink of publicLinks" :key="publicLink.id"
-        :public-link="publicLink" :highlighted="highlighted"
+  <table-freeze v-if="dataExists" id="public-link-table" :data="publicLinks.data" key-prop="id"
+    :frozen-only="actorProperties.length === 0" :divider="actorProperties.length > 0">
+    <template #head-frozen>
+      <th>{{ $t('header.displayName') }}</th>
+      <th>{{ $t('header.once') }}</th>
+      <th class="access-link">{{ $t('header.accessLink') }}</th>
+      <th>{{ $t('header.createdAtAndActions', { createdAt: $t('header.createdAt'), actions: $t('header.actions') }) }}</th>
+    </template>
+    <template #head-scrolling>
+      <th v-for="property of actorProperties" :key="property.name">
+        <span v-tooltip.text>{{ property.name }}</span>
+      </th>
+    </template>
+    <template #data-frozen="{ data: publicLink }">
+      <public-link-row :public-link="publicLink" :highlighted="highlighted"
         @revoke="$emit('revoke', $event)"/>
-    </tbody>
-  </table>
+    </template>
+    <template #data-scrolling="{ data: publicLink }">
+      <custom-props-data-row :actor="publicLink" :highlighted="highlighted"
+        :properties="actorProperties"/>
+    </template>
+  </table-freeze>
 </template>
 
 <script setup>
+import TableFreeze from '../table/freeze.vue';
 import PublicLinkRow from './row.vue';
+import CustomPropsDataRow from '../custom-props-data-row.vue';
 
 import { useRequestData } from '../../request-data';
 
@@ -42,17 +51,30 @@ defineEmits(['revoke']);
 
 // The component does not assume that this data will exist when the component is
 // created.
-const { publicLinks } = useRequestData();
+const { publicLinks, actorProperties, resourceStates } = useRequestData();
+
+const { dataExists } = resourceStates([publicLinks, actorProperties]);
 </script>
 
 <style lang="scss">
-#public-link-table {
-  table-layout: fixed;
+@import '../../assets/scss/mixins';
 
-  th {
-    // TODO. Review this.
-    &.display-name, &.access-link { width: 33.33333333%; }
-    &.actions { width: 130px; }
+#public-link-table {
+  .table-freeze-scrolling {
+    th, td {
+      @include text-overflow-ellipsis;
+      max-width: 250px;
+    }
+  }
+  &.frozen-only .table-freeze-frozen {
+    width: 100%;
+  }
+  th.access-link, td.access-link {
+    max-width: 350px;
+  }
+  td {
+    height: 52px; // Access link cells has scrollbar
+    vertical-align: unset;
   }
 }
 </style>
@@ -62,7 +84,9 @@ const { publicLinks } = useRequestData();
   "en": {
     "header": {
       "once": "Single Submission",
-      "accessLink": "Access Link"
+      "accessLink": "Access Link",
+      // Header for the table column that shows the created at date and action buttons.
+      "createdAtAndActions": "{createdAt} / {actions}"
     }
   }
 }
