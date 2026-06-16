@@ -24,15 +24,17 @@ const test = testBase.extend({
       page.on('console', msg => {
         const { url, line, column } = msg.location();
 
-        let message = msg.text();
+        let message;
 
-        if(message === 'JSHandle@object') {
+        if(browserName === 'firefox') {
           try {
             const args = msg.args();
             message = args.join(' ');
           } catch(err) {
             message = `Failed to deserialise args: ${err.message}\n    stack: ${err.stack}`;
           }
+        } else {
+          message = msg.text();
         }
 
         if(browserName === 'firefox') {
