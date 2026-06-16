@@ -40,7 +40,7 @@ const INSTANCE_ATTACHMENTS_CONFIG: InstanceAttachmentsConfig = {
 };
 
 const getPreloadProperties = (options: GetFormInstanceConfigOptions) => {
-  if (!options.deviceId || options.preloadProperties?.deviceId) {
+  if (!options.deviceId || options.preloadProperties?.deviceID) {
     return options.preloadProperties;
   }
   return {
