@@ -7,14 +7,9 @@ import type {
 } from '@getodk/xforms-engine';
 import { reactive } from 'vue';
 
-const DEVICE_ID_KEY = 'odk-deviceid';
-const DEVICE_ID_PREFIX = 'wf';
-const DEVICE_ID_LENGTH = 16;
-const ALPHABET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-
 interface GetFormInstanceConfigOptions {
   readonly form: FormOptions;
-  readonly trackDevice?: boolean;
+  readonly deviceId?: string;
   readonly preloadProperties?: PreloadProperties;
 }
 
@@ -44,33 +39,13 @@ const INSTANCE_ATTACHMENTS_CONFIG: InstanceAttachmentsConfig = {
   },
 };
 
-const getRandomId = () => {
-  const bytes = new Uint8Array(DEVICE_ID_LENGTH);
-  crypto.getRandomValues(bytes);
-  const chars = [];
-  for (const byte of bytes) {
-    chars.push(ALPHABET[byte % ALPHABET.length]);
-  }
-  return chars.join('');
-};
-
-const getDeviceId = () => {
-  const id = localStorage.getItem(DEVICE_ID_KEY);
-  if (id) {
-    return id;
-  }
-  const deviceId = `${DEVICE_ID_PREFIX}:${getRandomId()}`;
-  localStorage.setItem(DEVICE_ID_KEY, deviceId);
-  return deviceId;
-};
-
 const getPreloadProperties = (options: GetFormInstanceConfigOptions) => {
-  if (!options.trackDevice || options.preloadProperties?.deviceID) {
+  if (!options.deviceId || options.preloadProperties?.deviceId) {
     return options.preloadProperties;
   }
   return {
     ...options.preloadProperties,
-    deviceID: getDeviceId(),
+    deviceId: options.deviceId,
   };
 };
 

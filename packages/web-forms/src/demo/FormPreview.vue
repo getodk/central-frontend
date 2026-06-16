@@ -86,6 +86,8 @@ const preloadProperties: PreloadProperties = {
 	phoneNumber: '+1235556789',
 	username: 'nousername',
 };
+
+const deviceId = 'wf-jhuS0ic9lFGT6ZOW';
 </script>
 <template>
 	<template v-if="formPreviewState">
@@ -95,7 +97,7 @@ const preloadProperties: PreloadProperties = {
 			:missing-resource-behavior="formPreviewState.missingResourceBehavior"
 			:submission-max-size="Infinity"
 			:preload-properties="preloadProperties"
-			:track-device="true"
+			:device-id="deviceId"
 			@submit="handleSubmit"
 			@submit-chunked="handleSubmitChunked"
 		/>

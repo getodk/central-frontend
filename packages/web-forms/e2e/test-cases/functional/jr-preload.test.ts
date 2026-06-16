@@ -39,8 +39,8 @@ test.describe('jr:preload', () => {
 
     await formPage.note.expectValueToBeEmpty('end'); // end isn't populated on load
 
-    const deviceID = await formPage.note.getValue('deviceid');
-    expect(deviceID).toMatch(DEVICE_ID_REGEX);
+    const deviceId = await formPage.note.getValue('deviceid');
+    expect(deviceId).toMatch(DEVICE_ID_REGEX);
 
     const instanceID = await formPage.note.getValue('instanceID');
     expect(instanceID).toMatch(INSTANCE_ID_REGEX);
@@ -53,7 +53,7 @@ test.describe('jr:preload', () => {
     await formPage.reload();
 
     // assert the deviceid hasn't changed - should be loaded from localstorage
-    await formPage.note.expectValue('deviceid', deviceID);
+    await formPage.note.expectValue('deviceid', deviceId);
 
     // assert the instanceID HAS changed
     const newInstanceID = await formPage.note.getValue('instanceID');

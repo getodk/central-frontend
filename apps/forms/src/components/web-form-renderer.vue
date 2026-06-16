@@ -8,6 +8,7 @@ import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
 import { Translation } from 'vue-i18n'
 import Location from '../utils/location';
+import { getDeviceId } from '../utils/device-id';
 defineOptions({
   name: 'WebFormRenderer'
 });
@@ -28,12 +29,18 @@ interface SubmissionData {
   attachments: File[];
 }
 
+interface PostPrimaryInstanceParams {
+  st: string | undefined;
+  deviceID?: string | undefined;
+}
+
 let clearForm:Function;
 let submissionData: SubmissionData;
 
 const submissionResult:any = {};
 const isEdit = computed(() => props.actionType === 'edit');
 const isPublicLink = computed(() => props.actionType === 'public-link');
+const deviceID = computed(() => getDeviceId());
 
 const visibleModal = ref();
 
@@ -47,17 +54,21 @@ const getAttachment = (requestUrl: URL) => {
 };
 
 const postPrimaryInstance = async (file:File) => {
-  const draftPath = props.form.draft ? '/draft' : '';
-  let url;
-  let method;
+  let url:string;
+  let method:string;
+  let params: PostPrimaryInstanceParams = {
+    st: props.st ?? undefined
+  }
   if (isEdit.value) {
     url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}/submissions/${props.instanceId}`;
     method = 'PUT';
   } else {
+    const draftPath = props.form.draft ? '/draft' : '';
+    params.deviceID = deviceID.value;
     url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath}/submissions`;
     method = 'POST';
   }
-  url = withToken(url);
+  url += queryString(params);
   const headers = {
     'Content-Type': 'text/xml',
     'odk-client': `odk-web-forms/${__WEB_FORMS_VERSION__}`,
@@ -281,7 +292,7 @@ const closeWindow = () => {
     :form-xml="props.xform"
     :edit-instance="editInstanceOptions"
     :fetch-form-attachment="getAttachment"
-    :track-device="true"
+    :device-id="deviceID"
     @submit="handleSubmit"/>
 
   <Dialog modal :visible="!!visibleModal" :draggable="false" :closable="visibleModal?.hideable" @update:visible="visibleModal = null">
