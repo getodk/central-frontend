@@ -1425,6 +1425,15 @@
         "num_dataset_properties_deleted": {
           "string": "Number of Entity property delete events"
         },
+        "num_owner_only_datasets_per_project": {
+          "string": "Number of Entity Lists restricted to Owner Only"
+        },
+        "num_custom_user_properties": {
+          "string": "Number of custom User Properties"
+        },
+        "num_user_property_filtered_datasets": {
+          "string": "Number of Entity Lists restricted by User Properties"
+        },
         "num_properties": {
           "string": "Number of Properties"
         },
