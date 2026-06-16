@@ -27,8 +27,20 @@ const test = testBase.extend({
         const message = msg.text();
 
         if(browserName === 'firefox') {
+          // See: https://github.com/getodk/central/issues/1986
+          if(message.match(/"downloadable font: glyf: Glyph bbox was incorrect;.*font-family: "FontAwesome"/)) return;
+
           // See: https://github.com/getodk/central/issues/1989
           if(message.match(/"downloadable font: glyf: Glyph bbox was incorrect;.*font-family: "icomoon"/)) return;
+        }
+
+        if(url.includes('/-/')) {
+          // Ensure enketo offline mode is activated as expected.
+          // See: https://github.com/getodk/central/issues/1987
+          if(message === 'App in offline-capable mode.' &&  url.includes('/x/')) return;
+          if(message === 'App in online-only mode.'     && !url.includes('/x/')) return;
+          
+          if(message === 'Keeping default theme.') return;
         }
 
         console.log(
