@@ -21,7 +21,7 @@ const test = testBase.extend({
   // See: https://playwright.dev/docs/test-fixtures#adding-global-beforeeachaftereach-hooks
   browserConsoleToTestStdout: [
     async ({ browserName, page }, use) => {
-      page.on('console', msg => {
+      page.on('console', async msg => {
         const { url, line, column } = msg.location();
 
         let message = msg.text();
