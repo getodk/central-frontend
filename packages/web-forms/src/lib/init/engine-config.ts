@@ -9,7 +9,7 @@ import { reactive } from 'vue';
 
 interface GetFormInstanceConfigOptions {
   readonly form: FormOptions;
-  readonly deviceId?: string;
+  readonly deviceID?: string;
   readonly preloadProperties?: PreloadProperties;
 }
 
@@ -40,12 +40,12 @@ const INSTANCE_ATTACHMENTS_CONFIG: InstanceAttachmentsConfig = {
 };
 
 const getPreloadProperties = (options: GetFormInstanceConfigOptions) => {
-  if (!options.deviceId || options.preloadProperties?.deviceID) {
+  if (!options.deviceID || options.preloadProperties?.deviceID) {
     return options.preloadProperties;
   }
   return {
     ...options.preloadProperties,
-    deviceId: options.deviceId,
+    deviceID: options.deviceID,
   };
 };
 

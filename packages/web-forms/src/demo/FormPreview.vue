@@ -87,7 +87,7 @@ const preloadProperties: PreloadProperties = {
 	username: 'nousername',
 };
 
-const deviceId = 'wf-jhuS0ic9lFGT6ZOW';
+const deviceId = 'wf:jhuS0ic9lFGT6ZOW';
 </script>
 <template>
 	<template v-if="formPreviewState">

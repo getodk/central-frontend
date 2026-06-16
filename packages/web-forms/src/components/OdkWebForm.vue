@@ -51,7 +51,7 @@ type ObjectURL = `blob:${string}`;
 export interface OdkWebFormsProps {
 	readonly formXml: string;
 	readonly fetchFormAttachment: FetchFormAttachment;
-	readonly deviceId?: string;
+	readonly deviceId?: string; // different case to make it easier to bind
 	readonly preloadProperties?: PreloadProperties;
 	readonly missingResourceBehavior?: MissingResourceBehavior;
 	readonly attachmentMaxSize?: number;
@@ -81,7 +81,7 @@ const hostSubmissionResultCallbackFactory = (
 		const options = {
 			form: formOptions,
 			preloadProperties: props.preloadProperties,
-			deviceId: props.deviceId,
+			deviceID: props.deviceId,
 		};
 		state.value = updateSubmittedFormState(submissionResult, currentState, options);
 		if (submissionResult?.next === POST_SUBMIT__NEW_INSTANCE) {
@@ -230,7 +230,7 @@ const init = async () => {
 		form: formOptions,
 		editInstance: props.editInstance ?? null,
 		preloadProperties: props.preloadProperties,
-		deviceId: props.deviceId,
+		deviceID: props.deviceId,
 	});
 };
 

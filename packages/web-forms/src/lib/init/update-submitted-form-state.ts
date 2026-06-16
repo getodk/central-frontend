@@ -7,7 +7,7 @@ import type { FormStateSuccessResult } from './form-state.ts';
 
 interface ResetFormStateOptions {
   readonly form: FormOptions;
-  readonly deviceId?: string;
+  readonly deviceID?: string;
   readonly preloadProperties?: PreloadProperties;
 }
 
