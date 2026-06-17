@@ -24,24 +24,7 @@ const test = testBase.extend({
       page.on('console', async msg => {
         const { url, line, column } = msg.location();
 
-        let message = msg.text();
-        if(browserName === 'firefox') {
-          try {
-            const args = await Promise.all(msg.args().map(arg => arg.evaluate(a => {
-              try {
-                if(a instanceof Error) return `${a}\n${a.stack}`;
-                if(a && typeof a === 'object') return JSON.stringify(a);
-                return String(a);
-              } catch(err) {
-                return `Failed to deserialise JSHandle: ${err}`;
-              }
-            })));
-            message = args.join(' ');
-          } catch(err) {
-            // Handle race condition: `Error: jsHandle.evaluate: Execution context was destroyed, most likely because of a navigation`
-            message = `Failed async deserialisation: ${err}; msg.text(): ${message}`;
-          }
-        }
+        const message = asText(msg);
 
         // See: /apps/central/src/composables/feature-flags.js
         if(message.includes('ODK Central Alpha Features:')) return;
@@ -81,6 +64,44 @@ const test = testBase.extend({
     { auto:true },
   ],
 });
+
+function asText(msg) {
+  if(browserName !== 'firefox') return msg.text();
+
+  const basicMessage = msg.text();
+  try {
+    const args = await Promise.all(msg.args().map(arg => arg.evaluate(a => {
+      try {
+        if(a instanceof Error) return `${a}\n${filteredStack(a)}`;
+        if(a && typeof a === 'object') return JSON.stringify(a);
+        return String(a);
+      } catch(err) {
+        return `Failed to deserialise JSHandle: ${err}`;
+      }
+    })));
+    return args.join(' ');
+  } catch(err) {
+    // Handle race condition: `Error: jsHandle.evaluate: Execution context was destroyed, most likely because of a navigation`
+    return `Failed async deserialisation: ${err}; msg.text(): ${basicMessage}`;
+  }
+
+  function filteredStack({ stack }) {
+    return stack
+        .split('\n')
+        .reduce((acc, line, idx) => {
+          const prev = acc.at(-1);
+
+          if(line.match(/@http:\/\/central-test\.localhost\/assets\/runtime-core\.esm-bundler-\w+\.js:\d+:\d+$/)) {
+            if(prev?.count) ++prev.count;
+            else acc.push({ count:1 });
+          } else acc.push(line);
+
+          return acc;
+        }, [])
+        .map(it => typeof it === 'string' ? it : `<${it.count} references to runtime-core.esm-bundler omitted>`)
+        .join('\n');
+  }
+}
 
 export {
   test,
