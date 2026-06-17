@@ -1,6 +1,7 @@
 <script setup lang="ts">
 
 import { computed, ref } from 'vue';
+import { captureException } from '@sentry/vue';
 import { OdkWebForm, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
 import { type MonolithicInstancePayload } from '@getodk/xforms-engine';
 import { queryString, type Form } from '../utils/api';
@@ -73,6 +74,7 @@ const postPrimaryInstance = async (file:File) => {
     const data = await response.json();
     return { success: false, data: { response: { data } } };
   } catch (error) {
+    captureException(error);
     return { success: false, data: error };
   }
 };
@@ -173,6 +175,7 @@ const uploadAttachment = async (attachment: File, instanceId: string) => {
     const data = await response.json();
     result = { success: response.ok, data: { response: { data } } };
   } catch (error) {
+    captureException(error);
     result = { success: false, data: { response: error } };
   }
 

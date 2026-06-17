@@ -19,12 +19,12 @@ import App from './components/app.vue';
 
 import createContainer from './container';
 import vTooltip from './directives/tooltip';
+import initSentry from './util/sentry';
 // ./jquery must be imported before any of Bootstrap's JavaScript plugins,
 // because the plugins require jQuery.
 import './jquery';
 import './bootstrap';
 
-createApp(App)
-  .use(createContainer())
-  .directive('tooltip', vTooltip)
-  .mount('#app');
+const app = createApp(App);
+initSentry(app, 'central-frontend');
+app.use(createContainer()).directive('tooltip', vTooltip).mount('#app');

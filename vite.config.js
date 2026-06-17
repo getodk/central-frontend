@@ -70,6 +70,7 @@ const devAppRouter = () => ({
 });
 
 export default defineConfig(({ mode }) => ({
+  envPrefix: ['VITE_', 'ODK_'],
   plugins: [
     vue(),
     devAppRouter(),

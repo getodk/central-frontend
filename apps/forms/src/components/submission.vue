@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, defineAsyncComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { captureException } from '@sentry/vue';
 import {
   type Form,
   getFormByEnketoId,
@@ -191,7 +192,7 @@ const load = async () => {
       const relativeUrl = window.location.href.substring(window.location.origin.length);
       window.location.href = '/login?next=/wf' + relativeUrl;
     } else {
-      // unknown error
+      captureException(e);
       errorState.value = true;
       loadingState.value = false;
     }
