@@ -99,9 +99,9 @@ export default defineConfig(({ mode }) => ({
         entryFileNames: (chunkInfo) => {
           const moduleId = chunkInfo.facadeModuleId;
           if (moduleId && moduleId.includes('/apps/forms/')) {
-            return 'forms/[name]-[hash].js';
+            return 'assets/forms/[name]-[hash].js';
           }
-          return 'central/[name]-[hash].js';
+          return 'assets/central/[name]-[hash].js';
         }
       },
     },
