@@ -76,28 +76,28 @@ async function asText(msg) {
       } catch(err) {
         return `Failed to deserialise JSHandle: ${err}`;
       }
+
+      function filteredStack({ stack }) {
+        return stack
+            .split('\n')
+            .reduce((acc, line) => {
+              const prev = acc.at(-1);
+
+              if(line.match(/@http:\/\/central-test\.localhost\/assets\/runtime-core\.esm-bundler-\w+\.js:\d+:\d+$/)) {
+                if(prev?.count) ++prev.count;
+                else acc.push({ count:1 });
+              } else acc.push(line);
+
+              return acc;
+            }, [])
+            .map(it => typeof it === 'string' ? it : `<${it.count} references to runtime-core.esm-bundler omitted>`)
+            .join('\n');
+      }
     })));
     return args.join(' ');
   } catch(err) {
     // Handle race condition: `Error: jsHandle.evaluate: Execution context was destroyed, most likely because of a navigation`
     return `Failed async deserialisation: ${err}; msg.text(): ${basicMessage}`;
-  }
-
-  function filteredStack({ stack }) {
-    return stack
-        .split('\n')
-        .reduce((acc, line) => {
-          const prev = acc.at(-1);
-
-          if(line.match(/@http:\/\/central-test\.localhost\/assets\/runtime-core\.esm-bundler-\w+\.js:\d+:\d+$/)) {
-            if(prev?.count) ++prev.count;
-            else acc.push({ count:1 });
-          } else acc.push(line);
-
-          return acc;
-        }, [])
-        .map(it => typeof it === 'string' ? it : `<${it.count} references to runtime-core.esm-bundler omitted>`)
-        .join('\n');
   }
 }
 
