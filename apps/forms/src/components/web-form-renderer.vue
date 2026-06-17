@@ -31,7 +31,7 @@ interface SubmissionData {
 
 interface PostPrimaryInstanceParams {
   st: string | undefined;
-  deviceID?: string | undefined;
+  deviceId?: string | undefined;
 }
 
 let clearForm:Function;
@@ -40,7 +40,7 @@ let submissionData: SubmissionData;
 const submissionResult:any = {};
 const isEdit = computed(() => props.actionType === 'edit');
 const isPublicLink = computed(() => props.actionType === 'public-link');
-const deviceID = computed(() => getDeviceId());
+const deviceId = computed(() => getDeviceId());
 
 const visibleModal = ref();
 
@@ -54,8 +54,8 @@ const getAttachment = (requestUrl: URL) => {
 };
 
 const postPrimaryInstance = async (file:File) => {
-  let url:string;
-  let method:string;
+  let url: string;
+  let method: string;
   let params: PostPrimaryInstanceParams = {
     st: props.st ?? undefined
   }
@@ -64,7 +64,7 @@ const postPrimaryInstance = async (file:File) => {
     method = 'PUT';
   } else {
     const draftPath = props.form.draft ? '/draft' : '';
-    params.deviceID = deviceID.value;
+    params.deviceId = deviceId.value;
     url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath}/submissions`;
     method = 'POST';
   }
@@ -292,7 +292,7 @@ const closeWindow = () => {
     :form-xml="props.xform"
     :edit-instance="editInstanceOptions"
     :fetch-form-attachment="getAttachment"
-    :device-id="deviceID"
+    :device-id="deviceId"
     @submit="handleSubmit"/>
 
   <Dialog modal :visible="!!visibleModal" :draggable="false" :closable="visibleModal?.hideable" @update:visible="visibleModal = null">
