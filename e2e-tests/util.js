@@ -24,16 +24,22 @@ const test = testBase.extend({
       page.on('console', async msg => {
         const { url, line, column } = msg.location();
 
-        const args = await Promise.all(msg.args().map(arg => arg.evaluate(a => {
-          try {
-            if(a instanceof Error) return `${a}\n${a.stack}`;
-            if(a && typeof a === 'object') return JSON.stringify(a);
-            return String(a);
-          } catch(err) {
-            return `Failed to deserialise JSHandle: ${err}`;
-          }
-        })));
-        const message = args.join(' ');
+        let message = msg.text();
+        try {
+          const args = await Promise.all(msg.args().map(arg => arg.evaluate(a => {
+            try {
+              if(a instanceof Error) return `${a}\n${a.stack}`;
+              if(a && typeof a === 'object') return JSON.stringify(a);
+              return String(a);
+            } catch(err) {
+              return `Failed to deserialise JSHandle: ${err}`;
+            }
+          })));
+          message = args.join(' ');
+        } catch(err) {
+          // Handle race condition: `Error: jsHandle.evaluate: Execution context was destroyed, most likely because of a navigation`
+          message = `Failed async deserialisation: ${err}; msg.text(): ${message}`;
+        }
 
         // See: /apps/central/src/composables/feature-flags.js
         if(message.includes('ODK Central Alpha Features:')) return;
