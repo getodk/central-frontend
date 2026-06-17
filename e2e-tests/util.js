@@ -24,7 +24,7 @@ const test = testBase.extend({
       page.on('console', async msg => {
         const { url, line, column } = msg.location();
 
-        const message = asText(msg);
+        const message = await asText(msg);
 
         // See: /apps/central/src/composables/feature-flags.js
         if(message.includes('ODK Central Alpha Features:')) return;
@@ -65,7 +65,7 @@ const test = testBase.extend({
   ],
 });
 
-function asText(msg) {
+async function asText(msg) {
   if(browserName !== 'firefox') return msg.text();
 
   const basicMessage = msg.text();
