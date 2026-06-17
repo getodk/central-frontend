@@ -25,7 +25,7 @@ const test = testBase.extend({
         const { url, line, column } = msg.location();
 
         let message = msg.text();
-        try {
+        if(browserName === 'firefox') {
           const args = await Promise.all(msg.args().map(arg => arg.evaluate(a => {
             try {
               if(a instanceof Error) return `${a}\n${a.stack}`;
@@ -36,9 +36,6 @@ const test = testBase.extend({
             }
           })));
           message = args.join(' ');
-        } catch(err) {
-          // Handle race condition: `Error: jsHandle.evaluate: Execution context was destroyed, most likely because of a navigation`
-          message = `Failed async deserialisation: ${err}; msg.text(): ${message}`;
         }
 
         // See: /apps/central/src/composables/feature-flags.js
