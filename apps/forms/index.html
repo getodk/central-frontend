@@ -34,7 +34,32 @@
           transform: rotate(360deg);
         }
       }
+      #loading-error {
+        display: none;
+        margin: 20px auto;
+        max-width: 800px;
+        padding: 1rem;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      }
     </style>
+    <script>
+      const handle = (message) => {
+        if (!document.getElementById('loading')) {
+          // do not intercept errors after the app has loaded
+          return;
+        }
+        console.error('FATAL ERROR: loading forms app');
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('loading-error').style.display = 'block';
+        document.getElementById('error-message').innerText = message;
+      };
+      window.addEventListener('error', event => {
+        handle(event.message);
+      });
+      window.addEventListener('unhandledrejection', event => {
+        handle(event.reason && event.reason.message);
+      });
+    </script>
   </head>
   <body>
     <noscript>
@@ -45,6 +70,12 @@
       <span class="spinner"></span>
     </div>
     <div id="forms-app">
+      <div id="loading-error">
+        <h1>Error loading forms application</h1>
+        <p>Please try updating to the latest version of your browser or contact support.</p>
+        <p id="error-message"></p>
+        <p>Powered by <a href="https://getodk.org">ODK</a>.</p>
+      </div>
     </div>
     <script type="module" src="/apps/forms/src/main.ts"></script>
   </body>
