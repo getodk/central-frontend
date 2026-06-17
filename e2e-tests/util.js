@@ -23,9 +23,43 @@ const test = testBase.extend({
     async ({ browserName, page }, use) => {
       page.on('console', msg => {
         const { url, line, column } = msg.location();
+
+        const message = msg.text();
+
+        // See: /apps/central/src/composables/feature-flags.js
+        if(message.includes('ODK Central Alpha Features:')) return;
+
+        if(browserName === 'firefox') {
+          // See: https://github.com/getodk/central/issues/1986
+          if(message.match(/"downloadable font: glyf: Glyph bbox was incorrect;.*font-family: "FontAwesome"/)) return;
+
+          // See: https://github.com/getodk/central/issues/1989
+          if(message.match(/"downloadable font: glyf: Glyph bbox was incorrect;.*font-family: "icomoon"/)) return;
+
+          // See: https://github.com/enketo/enketo/issues/1540
+          if(message.match(/"downloadable font: glyf: Glyph bbox was incorrect;.*font-family: "OpenSans"/)) return;
+
+          // See: https://github.com/getodk/central/issues/1696
+          if(message.includes('XML Parsing Error: unclosed token')) return;
+        }
+
+        if(browserName === 'chromium') {
+          // See: https://github.com/getodk/central/issues/1997
+          if(url.endsWith('/v1/config/analytics') && message.includes('404 (Not Found)')) return;
+        }
+
+        if(url.includes('/-/')) {
+          // Ensure enketo offline mode is activated as expected.
+          // See: https://github.com/getodk/central/issues/1987
+          if(message === 'App in offline-capable mode.' &&  url.includes('/x/')) return;
+          if(message === 'App in online-only mode.'     && !url.includes('/x/')) return;
+          
+          if(message === 'Keeping default theme.') return;
+        }
+
         console.log(
           `[${browserName}|console.${msg.type()}] ${url}:${line}:${column}` +
-          `\n    message:`, msg.text(),
+          `\n    message:`, message,
         );
       });
       await use();

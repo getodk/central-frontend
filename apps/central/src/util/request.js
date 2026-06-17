@@ -192,6 +192,7 @@ export const apiPaths = {
   entityVersions: entityPath('/versions'),
   entityRestore: entityPath('/restore'),
   fieldKeys: projectPath('/app-users'),
+  actorProperties: projectPath('/actor-properties'),
   serverUrlForFieldKey: (token, projectId) =>
     `/v1/key/${token}/projects/${projectId}`,
   audits: (query) => `/v1/audits${queryString(query)}`,

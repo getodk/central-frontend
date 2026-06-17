@@ -101,15 +101,17 @@ const instanceAttachmentState = (
   const existingName = context.instanceNode?.value ?? null;
   const { file, writtenAt, loading, error } = options;
 
-  // No file -> no intrinsic name, no name to compute
   if (file == null) {
+    // writtenAt is set when the client cleared the attachment via setValue(null).
+    const cleared = writtenAt != null;
+
     return {
       computedName: null,
-      intrinsicName: existingName,
+      intrinsicName: cleared ? null : existingName,
       file: null,
       loading: !!loading,
       loadingError: error ?? false,
-      dirty: false,
+      dirty: cleared,
     };
   }
 
@@ -150,12 +152,17 @@ const resolveFile = (
   setState: Setter<InstanceAttachmentState>,
   filePromise: Promise<File>
 ) => {
+  // Initial load must not overwrite a user-modified attachment.
   filePromise
     .then((file: File) => {
-      setState(instanceAttachmentState(context, { file }));
+      setState((prev) => {
+        return prev.dirty ? prev : instanceAttachmentState(context, { file });
+      });
     })
-    .catch((_) => {
-      setState(instanceAttachmentState(context, { error: true }));
+    .catch(() => {
+      setState((prev) => {
+        return prev.dirty ? prev : instanceAttachmentState(context, { error: true });
+      });
     });
 };
 

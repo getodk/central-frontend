@@ -2849,6 +2849,10 @@
           "string": "Last Used",
           "developer_comment": "This is the text of a table column header."
         },
+        "lastUsedAndActions": {
+          "string": "{lastUsed} / {actions}",
+          "developer_comment": "Header for the table column that shows the last used date and action buttons."
+        },
         "configureClient": {
           "string": "Configure Client",
           "developer_comment": "Header for the table column that shows QR codes to configure data collection clients such as ODK Collect."

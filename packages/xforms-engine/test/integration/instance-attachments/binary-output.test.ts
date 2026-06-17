@@ -844,5 +844,49 @@ describe('Instance attachments: binary output', () => {
 
       expect(actualData).toBe(uploadData);
     });
+
+    it('produces empty XML node and no attachment when an existing attachment is cleared in an edit', async () => {
+      const scenario = await Scenario.init(
+        'Basic upload control',
+        html(
+          head(
+            title('Basic upload control'),
+            model(
+              mainInstance(
+                t(
+                  'data id="basic-upload-control"',
+                  t('file-upload'),
+                  t('meta', t('instanceID', FAKE_INSTANCE_ID))
+                )
+              ),
+              bind('/data/file-upload').type('binary')
+            )
+          ),
+          body(upload('/data/file-upload'))
+        )
+      );
+
+      const uploadValue = new File(['data'], 'upload.txt', { type: 'text/plain' });
+      scenario.answer('/data/file-upload', uploadValue);
+
+      const edited = await scenario.editCurrentInstance();
+      edited.answer('/data/file-upload', null);
+
+      expect(edited.answerOf('/data/file-upload').stringValue).toBe('');
+
+      const { data } = await edited.prepareWebFormsInstancePayload();
+      const [payloadFiles] = data;
+
+      const instanceFile = payloadFiles.get(ENGINE_CONSTANTS.INSTANCE_FILE_NAME);
+      const instanceXML = await getBlobText(instanceFile);
+
+      expect(instanceXML).not.toContain('upload.txt');
+
+      const attachments = new Map(
+        Array.from(payloadFiles).filter(([key]) => key !== ENGINE_CONSTANTS.INSTANCE_FILE_NAME)
+      );
+
+      expect(attachments.size).toBe(0);
+    });
   });
 });

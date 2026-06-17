@@ -71,7 +71,8 @@ except according to the terms contained in the LICENSE file.
       <!-- <router-view> may send its own requests before the server has
       responded to ProjectShow's request for the project. -->
       <router-view v-show="project.dataExists" @fetch-project="fetchProject"
-        @fetch-forms="fetchForms" @fetch-field-keys="fetchFieldKeys"/>
+        @fetch-forms="fetchForms" @fetch-field-keys="fetchFieldKeys"
+        @fetch-actor-properties="fetchActorProperties"/>
     </page-body>
   </div>
 </template>
@@ -100,12 +101,12 @@ export default {
     }
   },
   setup() {
-    const { project, forms, fieldKeys } = useProject();
+    const { project, forms, fieldKeys, actorProperties } = useProject();
     const { datasets, deletedDatasets } = useDatasets();
     const { projectPath, canRoute } = useRoutes();
     const { tabPath, tabClass } = useTabs(projectPath());
     return {
-      project, forms, datasets, deletedDatasets, fieldKeys,
+      project, forms, datasets, deletedDatasets, fieldKeys, actorProperties,
       tabPath, tabClass, projectPath, canRoute
     };
   },
@@ -149,6 +150,12 @@ export default {
         url: apiPaths.fieldKeys(this.projectId),
         extended: true,
         resend
+      }).catch(noop);
+    },
+    fetchActorProperties() {
+      this.actorProperties.request({
+        url: apiPaths.actorProperties(this.projectId),
+        resend: false
       }).catch(noop);
     }
   }
