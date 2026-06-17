@@ -191,9 +191,7 @@ describe('`<label>` and/or `<hint>` text', () => {
             bind('/data/question').type('string')
           )
         ),
-        body(
-          input('/data/question', t('label', 'Parcel <output value="/data/field"/> not found'))
-        )
+        body(input('/data/question', t('label', 'Parcel <output value="/data/field"/> not found')))
       )
     );
     scenario.next('/data/question');
