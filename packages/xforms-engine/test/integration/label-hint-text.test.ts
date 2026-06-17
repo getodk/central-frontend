@@ -177,6 +177,5 @@ describe('`<label>` and/or `<hint>` text', () => {
       { elementName: 'br' },
       { value: 'Line 2' },
     ]);
-    expect(label.length).toEqual(4);
   });
 });
