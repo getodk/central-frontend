@@ -37,6 +37,11 @@ const test = testBase.extend({
           if(message.match(/"downloadable font: glyf: Glyph bbox was incorrect;.*font-family: "OpenSans"/)) return;
         }
 
+        if(browserName === 'chromium') {
+          // See: https://github.com/getodk/central/issues/1997
+          if(url.endsWith('/v1/config/analytics') && message.includes('404 (Not Found)')) return;
+        }
+
         if(url.includes('/-/')) {
           // Ensure enketo offline mode is activated as expected.
           // See: https://github.com/getodk/central/issues/1987
