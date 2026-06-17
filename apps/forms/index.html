@@ -43,22 +43,26 @@
       }
     </style>
     <script>
-      const handle = (message) => {
+      // NB use legacy JavaScript to support older browsers
+      var __handleInitializationErrors = function(event) {
         if (!document.getElementById('loading')) {
           // do not intercept errors after the app has loaded
           return;
         }
-        console.error('FATAL ERROR: loading forms app');
+        var message = event.message
+          || event.reason && event.reason.message
+          || 'An unknown error occurred.';
+        console.error('FATAL ERROR while loading forms app:', message);
         document.getElementById('loading').style.display = 'none';
         document.getElementById('loading-error').style.display = 'block';
-        document.getElementById('error-message').innerText = message ?? 'An unknown error occurred';
+        document.getElementById('error-message').innerText = message;
       };
-      window.addEventListener('error', event => {
-        handle(event.message);
-      });
-      window.addEventListener('unhandledrejection', event => {
-        handle(event.reason && event.reason.message);
-      });
+      var __deregisterInitializationErrorHandling = function() {
+        window.removeEventListener('error', __handleInitializationErrors, { capture: true, once: true });
+        window.removeEventListener('unhandledrejection', __handleInitializationErrors, { once: true });
+      };
+      window.addEventListener('error', __handleInitializationErrors, { capture: true, once: true });
+      window.addEventListener('unhandledrejection', __handleInitializationErrors, { once: true });
     </script>
   </head>
   <body>
@@ -72,7 +76,7 @@
     <div id="forms-app">
       <div id="loading-error">
         <h1>Error loading forms application</h1>
-        <p>Please try updating to the latest version of your browser or contact support.</p>
+        <p>Please try reloading the page, updating your browser to the latest version, or contacting support.</p>
         <p id="error-message"></p>
         <p>Powered by <a href="https://getodk.org">ODK</a>.</p>
       </div>
