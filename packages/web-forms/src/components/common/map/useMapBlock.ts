@@ -515,11 +515,21 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
   };
 
   const findAndSaveFeature = (feature: GeoJsonFeature | undefined) => {
-    return mapFeatures?.findAndSaveFeature(
-      featuresSource,
-      feature,
-      currentMode.capabilities.canViewProperties
-    );
+    if (currentMode.capabilities.canLoadMultiFeatures) {
+      return mapFeatures?.findAndSaveFeature(
+        featuresSource,
+        feature,
+        currentMode.capabilities.canViewProperties
+      );
+    }
+
+    if (!feature) {
+      clearMap();
+      return;
+    }
+
+    const newFeature = mapFeatures?.createFeatureFromGeoJSON(feature);
+    loadAndSaveSingleFeature(newFeature);
   };
 
   watch(
