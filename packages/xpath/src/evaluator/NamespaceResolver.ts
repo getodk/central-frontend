@@ -102,10 +102,11 @@ export const staticNamespaces = new StaticNamespaces('xf', XFORMS_NAMESPACE_URI,
   [XMLNS_PREFIX]: XMLNS_NAMESPACE_URI,
 });
 
-const namespaceURIs = new UpsertableMap<
-  XPathNSResolver,
-  UpsertableMap<string | null, string | null>
->();
+/**
+ * Keyed by a stable resolution source (context node or caller-provided resolver). A per-call closure key would never
+ * produce hits and would grow this cache unboundedly over the form session.
+ */
+const namespaceURIs = new UpsertableMap<object, UpsertableMap<string | null, string | null>>();
 
 export const clearCache = () => {
   namespaceURIs.clear();
@@ -145,6 +146,13 @@ export class NamespaceResolver<T extends XPathNode> implements XPathNSResolverOb
 
   protected readonly contextResolver: XPathNSResolverFunction;
 
+  /**
+   * The cache key for prefix lookups in {@link namespaceURIs} is the context node, or a caller-provided resolver.
+   * It must not be the {@link contextResolver} closure, which is recreated per evaluation. That would miss the cache
+   * every time and leak one entry per evaluation.
+   */
+  protected readonly resolutionKey: object;
+
   private constructor(
     protected readonly domProvider: XPathDOMProvider<T>,
     protected readonly rootNode: AdapterParentNode<T>,
@@ -154,12 +162,15 @@ export class NamespaceResolver<T extends XPathNode> implements XPathNSResolverOb
     const contextResolverNode = referenceNode ?? rootNode;
 
     if (contextResolver == null) {
+      this.resolutionKey = contextResolverNode;
       this.contextResolver = (prefix) => {
         return domProvider.resolveNamespaceURI(contextResolverNode, prefix);
       };
     } else if (typeof contextResolver === 'function') {
+      this.resolutionKey = contextResolver;
       this.contextResolver = contextResolver;
     } else {
+      this.resolutionKey = contextResolver;
       this.contextResolver = (prefix) => contextResolver.lookupNamespaceURI(prefix);
     }
   }
@@ -174,7 +185,7 @@ export class NamespaceResolver<T extends XPathNode> implements XPathNSResolverOb
    */
   lookupNamespaceURI(prefix: string | null) {
     return namespaceURIs
-      .upsert(this.contextResolver, () => new UpsertableMap())
+      .upsert(this.resolutionKey, () => new UpsertableMap())
       .upsert(prefix, () => {
         return this.contextResolver(prefix) ?? staticNamespaces.get(prefix) ?? null;
       });

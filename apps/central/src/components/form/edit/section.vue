@@ -10,14 +10,14 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="form-edit-section">
+  <div class="form-edit-section" :class="{ 'no-border': noBorder }">
     <div class="form-edit-section-heading">
       <div>
         <p class="form-edit-section-title"><slot name="title"></slot></p>
         <p class="form-edit-section-subtitle"><slot name="subtitle"></slot></p>
       </div>
       <div class="form-edit-section-tag">
-        <span><slot name="tag"></slot></span>
+        <slot name="tag"></slot>
       </div>
       <div class="form-edit-section-actions">
         <slot name="actions"></slot>
@@ -31,6 +31,12 @@ except according to the terms contained in the LICENSE file.
 defineOptions({
   name: 'FormEditSection'
 });
+defineProps({
+  noBorder: {
+    type: Boolean,
+    default: false
+  }
+});
 </script>
 
 <style lang="scss">
@@ -41,9 +47,12 @@ $heading-margin-bottom: 10px;
 
 .form-edit-section {
 
-  border-radius: 12px;
-  border: 1px solid $central-grey-2;
-  padding: 20px;
+  &:not(.no-border) {
+    border-radius: 12px;
+    border: 1px solid $central-grey-2;
+    padding: 20px;
+  }
+
   margin-bottom: 10px;
   display: flex;
   flex-direction: column;
@@ -77,7 +86,11 @@ $heading-margin-bottom: 10px;
   border-radius: 6px;
   color: $color-accent-primary;
   padding: 5px 9px;
+
+  // Hide the entire element if no tag slot is provided.
+  &:empty { display: none; }
 }
+
 
 .form-edit-section:has(.form-edit-section-subtitle:empty) .form-edit-section-body > p:first-of-type {
   margin-top: -$heading-margin-bottom;

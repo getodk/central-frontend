@@ -55,10 +55,13 @@ function isTooBig({ path, size }) {
   // Special cases:
   const simpleName = basename(path).replace(/(-[\w-]{8})+\./, '.');
   switch (simpleName) {
-    case 'index.js':             return size >   2_300_000;
-    case 'web-form.js': return size > 2_000_000;
-    case 'MapBlock.js': return size > 600_000; // A Web Forms' feature bundle
-    case 'geojson-map.js':       return size >   500_000;
+    case 'icomoon.svg':    return size >    60_000;
+    case 'index.js':       return size > 2_300_000;
+    case 'main.js':        return size >   400_000;
+    case 'forms.js':       return size > 2_000_000;
+    case 'web-form.js':    return size > 1_100_000; // Matches web-form-renderer.js
+    case 'MapBlock.js':    return size >   600_000; // A Web Forms' feature bundle
+    case 'geojson-map.js': return size >   500_000;
     default: // do nothing
   }
 
@@ -69,7 +72,7 @@ function isTooBig({ path, size }) {
     case 'ico':         return size >  16_000;
     case 'js':          return size > 200_000;
     case 'png':         return size > 700_000;
-    case 'svg':         return size >  60_000;
+    case 'svg':         return size >   5_000;
     case 'ttf':         return size >  18_000;
     case 'webmanifest': return size >     500;
     case 'woff':        return size >  19_000;

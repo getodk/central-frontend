@@ -10,19 +10,13 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <file-drop-zone id="form-edit" :disabled="dragDisabled" :styled="false"
-    @dragenter="dragHandler" @dragleave="dragHandler" @drop="dragHandler">
+  <div id="form-edit">
     <loading :state="formDraft.initiallyLoading"/>
     <template v-if="formDraft.dataExists">
-      <div class="row">
-        <div v-if="formDraft.isEmpty()" class="col-xs-6">
-          <form-edit-create-draft @success="fetchDraft(true)"/>
-        </div>
-        <div v-if="form.dataExists && form.publishedAt != null" class="col-xs-6">
-          <form-edit-published-version/>
-        </div>
-      </div>
-      <template v-if="formDraft.isDefined()">
+      <form-edit-published-version v-if="form.dataExists && form.publishedAt != null"/>
+
+      <form-edit-create-draft v-if="formDraft.isEmpty()" @success="fetchDraft(true)"/>
+      <template v-else>
         <form-edit-def @after-upload="afterUpload"/>
         <form-edit-attachments/>
         <form-edit-entities/>
@@ -37,14 +31,13 @@ except according to the terms contained in the LICENSE file.
       @success="afterPublish"/>
     <form-draft-abandon v-bind="abandonModal" @hide="abandonModal.hide()"
       @success="afterAbandon"/>
-  </file-drop-zone>
+  </div>
 </template>
 
 <script setup>
-import { inject, provide, ref, watchEffect } from 'vue';
+import { inject, provide, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import FileDropZone from '../file-drop-zone.vue';
 import FormDraftAbandon from '../form-draft/abandon.vue';
 import FormDraftPublish from '../form-draft/publish.vue';
 import FormDraftTesting from '../form-draft/testing.vue';
@@ -113,18 +106,6 @@ watchEffect(() => {
     }).catch(noop);
   }
 });
-
-/* We allow form attachments to be dragged and dropped anywhere in FormEdit.
-That's why FileDropZone is in this component. But it's FormAttachmentList that
-actually knows how to handle drag events. FormAttachmentList is a few layers
-away from FormEdit, so the two communicate using refs. FormEdit provides the
-refs, then FormAttachmentList sets their values. That approach allows the two
-components to interact directly without getting intermediate components
-involved. */
-const dragDisabled = ref(false);
-provide('dragDisabled', dragDisabled);
-const dragHandler = ref(noop);
-provide('dragHandler', dragHandler);
 
 const { router, alert } = inject('container');
 const { t } = useI18n();

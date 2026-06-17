@@ -19,6 +19,7 @@ const responseDefaults = {
   // useProject()
   forms: () => testData.extendedForms.sorted(),
   fieldKeys: () => testData.extendedFieldKeys.sorted(),
+  actorProperties: () => testData.actorProperties.sorted(),
   // useForm()
   formVersions: [
     ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/versions$/.test(url),
@@ -85,7 +86,7 @@ const responsesByComponent = {
     roles: true,
     projectAssignments: () => testData.extendedProjectAssignments.sorted()
   }),
-  FieldKeyList: componentResponses({ fieldKeys: true }),
+  FieldKeyList: componentResponses({ actorProperties: true, fieldKeys: true }),
   ProjectFormAccess: componentResponses({
     forms: true,
     fieldKeys: true,
