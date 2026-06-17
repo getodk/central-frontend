@@ -24,7 +24,7 @@ const test = testBase.extend({
       page.on('console', async msg => {
         const { url, line, column } = msg.location();
 
-        const message = await asText(msg);
+        const message = browserName === 'firefox' ? await asText(msg) : msg.text();
 
         // See: /apps/central/src/composables/feature-flags.js
         if(message.includes('ODK Central Alpha Features:')) return;
@@ -66,8 +66,6 @@ const test = testBase.extend({
 });
 
 async function asText(msg) {
-  if(browserName !== 'firefox') return msg.text();
-
   const basicMessage = msg.text();
   try {
     const args = await Promise.all(msg.args().map(arg => arg.evaluate(a => {
@@ -88,7 +86,7 @@ async function asText(msg) {
   function filteredStack({ stack }) {
     return stack
         .split('\n')
-        .reduce((acc, line, idx) => {
+        .reduce((acc, line) => {
           const prev = acc.at(-1);
 
           if(line.match(/@http:\/\/central-test\.localhost\/assets\/runtime-core\.esm-bundler-\w+\.js:\d+:\d+$/)) {
