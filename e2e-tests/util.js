@@ -24,18 +24,16 @@ const test = testBase.extend({
       page.on('console', async msg => {
         const { url, line, column } = msg.location();
 
-        let message = msg.text();
-
-        if(browserName === 'firefox') {
+        const args = await Promise.all(msg.args().map(arg => arg.evaluate(a => {
           try {
-            const args = await Promise.all(msg.args().map(a => a.jsonValue()));
-            message = 'standard: ' + message +
-                '\n' +
-                'special-handling: ' + args.join(' '); // FIXME remove special-handling string - just a placeholder to confirm this code is running
+            if(a instanceof Error) return `${a}\n${a.stack}`;
+            if(a && typeof a === 'object') return JSON.stringify(a);
+            return String(a);
           } catch(err) {
-            message = `Failed to deserialise args: ${err.message}\n    stack: ${err.stack}`;
+            return `Failed to deserialise JSHandle: ${err}`;
           }
-        }
+        })));
+        const message = args.join(' ');
 
         if(browserName === 'firefox') {
           // See: https://github.com/getodk/central/issues/1986
