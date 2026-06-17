@@ -58,6 +58,7 @@ export default function useFeatureFlags() {
   const { buildMode } = inject('container');
   onMounted(() => {
     if (buildMode !== 'test') {
+      // If this logging is removed, the corresponding filtering should be removed from e2e-tests/util.js
       // eslint-disable-next-line no-console
       console.log(
         '%c ODK Central Alpha Features: \n\n%c- Press and hold the %cW and F %ckeyboard keys on a screen with a form preview button to access the new %cWeb Forms%c preview.\n\n',

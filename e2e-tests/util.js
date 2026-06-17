@@ -35,6 +35,9 @@ const test = testBase.extend({
         })));
         const message = args.join(' ');
 
+        // See: /apps/central/src/composables/feature-flags.js
+        if(message.includes('ODK Central Alpha Features:')) return;
+
         if(browserName === 'firefox') {
           // See: https://github.com/getodk/central/issues/1986
           if(message.match(/"downloadable font: glyf: Glyph bbox was incorrect;.*font-family: "FontAwesome"/)) return;
@@ -44,6 +47,11 @@ const test = testBase.extend({
 
           // See: https://github.com/enketo/enketo/issues/1540
           if(message.match(/"downloadable font: glyf: Glyph bbox was incorrect;.*font-family: "OpenSans"/)) return;
+        }
+
+        if(browserName === 'chromium') {
+          // See: https://github.com/getodk/central/issues/1997
+          if(url.endsWith('/v1/config/analytics') && message.includes('404 (Not Found)')) return;
         }
 
         if(url.includes('/-/')) {
