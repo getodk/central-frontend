@@ -374,7 +374,7 @@ The `<OdkWebForm>` component accepts the following props:
 - `attachmentMaxSize` (`number`, optional, defaults to 100MB): Maximum size for submission attachments in bytes.
 - `editInstance` (`EditInstanceOptions`, optional): Options to resolve and load instance and attachment resources for editing.
 - `preloadProperties` (`PreloadProperties`, optional): Properties to make available for binding in the form using jr:preload.
-- `deviceId` (`string`, optional): If provided XXXXX. Ignored if `preloadProperties.deviceID` is given.
+- `deviceId` (`string`, optional): If provided is available for binding into the form using preload attributes. Ignored if `preloadProperties.deviceID` is given.
 
 ### Events (`OdkWebFormEmits`)
 

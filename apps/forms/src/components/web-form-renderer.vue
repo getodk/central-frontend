@@ -40,7 +40,8 @@ let submissionData: SubmissionData;
 const submissionResult:any = {};
 const isEdit = computed(() => props.actionType === 'edit');
 const isPublicLink = computed(() => props.actionType === 'public-link');
-const deviceID = computed(() => getDeviceId());
+
+const deviceID = getDeviceId();
 
 const visibleModal = ref();
 
@@ -64,7 +65,7 @@ const postPrimaryInstance = async (file:File) => {
     method = 'PUT';
   } else {
     const draftPath = props.form.draft ? '/draft' : '';
-    params.deviceID = deviceID.value;
+    params.deviceID = deviceID;
     url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath}/submissions`;
     method = 'POST';
   }
