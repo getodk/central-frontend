@@ -26,9 +26,6 @@ const test = testBase.extend({
 
         const message = browserName === 'firefox' ? await asText(msg) : msg.text();
 
-        // See: /apps/central/src/composables/feature-flags.js
-        if(message.includes('ODK Central Alpha Features:')) return;
-
         if(browserName === 'firefox') {
           // See: https://github.com/getodk/central/issues/1986
           if(message.match(/"downloadable font: glyf: Glyph bbox was incorrect;.*font-family: "FontAwesome"/)) return;
@@ -60,7 +57,7 @@ const test = testBase.extend({
           // See: https://github.com/getodk/central/issues/1987
           if(message === 'App in offline-capable mode.' &&  url.includes('/x/')) return;
           if(message === 'App in online-only mode.'     && !url.includes('/x/')) return;
-          
+
           if(message === 'Keeping default theme.') return;
         }
 

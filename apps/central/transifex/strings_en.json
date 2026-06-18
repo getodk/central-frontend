@@ -475,10 +475,6 @@
       "string": "Hide preview",
       "developer_comment": "This text is shown on a button that the user clicks to hide a preview of something"
     },
-    "newPreview": {
-      "string": "New Preview",
-      "developer_comment": "This text is show on a button that the user clicks to see the Form preview in the new Web Forms component"
-    },
     "expand": {
       "string": "Expand",
       "developer_comment": "This is the text for an action, for example, the text of a button."

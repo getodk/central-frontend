@@ -164,9 +164,6 @@ The following meta fields are supported for bottom-level routes:
     PageBody component, then the PageBody will use the full width of the page.
     By default, PageBody has a max width.
 
-  - standalone (default: false): If standalone is `true` then application layout
-    elements like navigation bar, background color, etc are not rendered.
-
 */
 
 /*
@@ -703,7 +700,6 @@ const routesByName = new Map();
     requireAnonymity: false,
     preserveData: [],
     fullWidth: false,
-    standalone: false,
     skipAutoLogout: false,
     ...meta,
     validateData: meta == null || meta.validateData == null
