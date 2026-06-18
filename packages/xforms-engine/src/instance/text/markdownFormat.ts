@@ -195,7 +195,7 @@ function escapeEditableChunks(chunks: readonly TextChunk[]) {
     .map((chunk, i) => {
       const str =
         chunk.source === 'literal'
-          ? chunk.asString.replace(LEADING_SPACES_AND_TABS_REGEX, '')
+          ? chunk.asString.replace(LEADING_SPACES_AND_TABS_REGEX, ' ')
           : chunk.asString;
       if (chunk.source === 'output') {
         // we need to process this separately otherwise user entered markup will

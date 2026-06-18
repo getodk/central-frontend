@@ -21,10 +21,10 @@ const test = testBase.extend({
   // See: https://playwright.dev/docs/test-fixtures#adding-global-beforeeachaftereach-hooks
   browserConsoleToTestStdout: [
     async ({ browserName, page }, use) => {
-      page.on('console', msg => {
+      page.on('console', async msg => {
         const { url, line, column } = msg.location();
 
-        const message = msg.text();
+        const message = browserName === 'firefox' ? await asText(msg) : msg.text();
 
         // See: /apps/central/src/composables/feature-flags.js
         if(message.includes('ODK Central Alpha Features:')) return;
@@ -46,6 +46,13 @@ const test = testBase.extend({
         if(browserName === 'chromium') {
           // See: https://github.com/getodk/central/issues/1997
           if(url.endsWith('/v1/config/analytics') && message.includes('404 (Not Found)')) return;
+
+          if(message.includes('Failed to load resource: the server responded with a status of 401 (Unauthorized)')) {
+            if(url.endsWith('/v1/sessions/restore')) return;
+
+            // See: https://github.com/getodk/central/issues/1686
+            if(url.includes('/-/submission/max-size/')) return;
+          }
         }
 
         if(url.includes('/-/')) {
@@ -67,6 +74,42 @@ const test = testBase.extend({
     { auto:true },
   ],
 });
+
+async function asText(msg) {
+  const basicMessage = msg.text();
+  try {
+    const args = await Promise.all(msg.args().map(arg => arg.evaluate(a => {
+      try {
+        if(a instanceof Error) return `${a}\n${filteredStack(a)}`;
+        if(a && typeof a === 'object') return JSON.stringify(a);
+        return String(a);
+      } catch(err) {
+        return `Failed to deserialise JSHandle: ${err}`;
+      }
+
+      function filteredStack({ stack }) {
+        return stack
+            .split('\n')
+            .reduce((acc, line) => {
+              const prev = acc.at(-1);
+
+              if(line.match(/@http:\/\/central-test\.localhost\/assets\/runtime-core\.esm-bundler-\w+\.js:\d+:\d+$/)) {
+                if(prev?.count) ++prev.count;
+                else acc.push({ count:1 });
+              } else acc.push(line);
+
+              return acc;
+            }, [])
+            .map(it => typeof it === 'string' ? it : `<${it.count} references to runtime-core.esm-bundler omitted>`)
+            .join('\n');
+      }
+    })));
+    return args.join(' ');
+  } catch(err) {
+    // Handle race condition: `Error: jsHandle.evaluate: Execution context was destroyed, most likely because of a navigation`
+    return `Failed async deserialisation: ${err}; msg.text(): ${basicMessage}`;
+  }
+}
 
 export {
   test,
