@@ -10,6 +10,8 @@ import router from './router';
 import { i18n } from './i18n'
 import initSentry from './utils/sentry';
 
+import './assets/style.scss';
+
 const app = createApp(Forms as Component);
 initSentry(app, 'web-forms');
 app.use(PrimeVue, { theme: { preset: odkThemePreset, options: { darkModeSelector: false } } });

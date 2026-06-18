@@ -13,6 +13,7 @@ import {
   queryString,
   RequestError
 } from '../utils/api.ts';
+import Dialog from 'primevue/dialog';
 import Spinner from './spinner.vue';
 
 const props = defineProps({
@@ -65,7 +66,7 @@ const xform = ref<string>();
 const submissionAttachments = ref<string[] | null>(null);
 
 const loadingState = ref(true);
-const errorState = ref(false);
+const errorCode = ref<number | null>(null);
 
 const newSubmissionPath = (projectId:number, xmlFormId:string, draft:boolean) => {
   const suffix = draft ? 'draft/submissions/new' : 'submissions/new';
@@ -108,15 +109,33 @@ const setDocumentTitle = (formConfig: Form) => {
   document.title = title;
 };
 
-const fetchForm = async (): Promise<Form | undefined> => {
-  let formConfig;
+const fetchFormConfig = async (): Promise<Form> => {
   if (enketoId.value) {
-    formConfig = await getFormByEnketoId(enketoId.value, st.value);
-  } else if (projectId.value && formId.value) {
-    formConfig = await getFormByFormId(projectId.value, formId.value, props.draft, st.value);
-  } else {
-    throw new RequestError('Form not found', 404);
+    try {
+      return await getFormByEnketoId(enketoId.value, st.value);
+    } catch(e) {
+      if (e instanceof RequestError && (e.statusCode === 401.2 || e.statusCode === 403.1)) {
+        // a public form with an invalid st or revoked enketoId should show as form not found
+        throw new RequestError('Form not found', 404);
+      }
+      throw e;
+    }
   }
+  if (projectId.value && formId.value) {
+    const [project, form] = await Promise.all([
+      getProject(projectId.value),
+      getFormByFormId(projectId.value, formId.value, props.draft, st.value)
+    ]);
+    if (!hasAccess(project, form)) {
+      throw new RequestError('Form not found', 404);
+    }
+    return form;
+  }
+  throw new RequestError('Form not found', 404);
+};
+
+const fetchForm = async (): Promise<Form | undefined> => {
+  const formConfig = await fetchFormConfig();
 
   redirectEnketoUrls(formConfig);
   setDocumentTitle(formConfig);
@@ -134,6 +153,10 @@ const fetchForm = async (): Promise<Form | undefined> => {
     }
     webFormsEnabled.value = true;
   } else {
+    if (props.actionType === 'edit') {
+      // editing in Enketo isn't supported
+      throw new RequestError('Form not found', 404);
+    }
     if (offline.value) {
       // TODO: Update once Web Forms has support for offline
       window.location.replace(`/-/x/${formConfig.enketoId}${queryString(route.query)}`);
@@ -149,12 +172,7 @@ const permits = (project: Project, verbs: string[]) => {
   return verbs.every(verb => project.verbs.includes(verb));
 }
 
-const hasAccess = async (form:Form | undefined) => {
-  if (!projectId.value || !form) {
-    return true;
-  }
-  const project = await getProject(projectId.value);
-
+const hasAccess = (project: Project, form: Form) => {
   if ((route.name === 'SubmissionNew' || route.name === 'DraftSubmissionNew') && !permits(project, ['submission.create'])) {
     return false;
   }
@@ -176,37 +194,60 @@ const hasAccess = async (form:Form | undefined) => {
 
 const load = async () => {
   loadingState.value = true;
-  errorState.value = false;
+  errorCode.value = null;
   try {
-    const formConfig = await fetchForm();
-    const access = await hasAccess(formConfig);
-    if (!access) {
-      window.location.replace('/');
-    } else {
-      form.value = formConfig;
-      loadingState.value = false;
-    }
+    form.value = await fetchForm();
+    loadingState.value = false;
   } catch (e) {
-    if (e instanceof RequestError && e.statusCode >= 401 && e.statusCode < 404) {
-      // not logged in
-      const relativeUrl = window.location.href.substring(window.location.origin.length);
-      window.location.href = '/login?next=/wf' + relativeUrl;
+    if (e instanceof RequestError) {
+      if (e.statusCode >= 401 && e.statusCode < 404) {
+        // not logged in
+        const relativeUrl = window.location.href.substring(window.location.origin.length);
+        window.location.href = '/login?next=/wf' + relativeUrl;
+      } else if (e.statusCode >= 404 && e.statusCode < 405) {
+        // form not found
+        errorCode.value = 404;
+      } else {
+        // unknown error
+        errorCode.value = e.statusCode ?? 500;
+      }
     } else {
       captureException(e);
-      errorState.value = true;
-      loadingState.value = false;
+      errorCode.value = 500;
     }
+    loadingState.value = false;
   }
 };
 
 load();
 </script>
 
+<style lang="scss" scoped>
+.error-code {
+  font-size: 14px;
+  color: #64748b;
+}
+</style>
+
 <template>
   <Spinner v-if="!!loadingState"/>
-  <div v-else-if="errorState || (props.actionType === 'edit' && !webFormsEnabled)" class="form-load-error">
-    {{ $t('formNotFound') }}
-  </div>
+  <Dialog modal v-else-if="errorCode === 404" :draggable="false" :closable="false" :visible="true">
+    <template #header>
+      {{ $t('formNotFound') }}
+    </template>
+    <template #default>
+      {{ $t('formNotFound.body') }}
+    </template>
+  </Dialog>
+  <Dialog modal v-else-if="errorCode" :draggable="false" :closable="false" :visible="true">
+    <template #header>
+      {{ $t('errorNotProblem') }}
+    </template>
+    <template #default>
+      <p>{{ $t('errorNotProblem.body') }}</p>
+      <p class="error-code">{{ $t('errorNotProblem.status', { status: errorCode }) }}</p>
+    </template>
+  </Dialog>
   <template v-else-if="webFormsEnabled">
     <WebFormRenderer
       :form="form!"
@@ -226,19 +267,14 @@ load();
   </template>
 </template>
 
-<style lang="scss">
-.form-load-error {
-  text-align: center;
-  width: 100%;
-  font-weight: bold;
-  padding: 50px;
-}
-</style>
-
 <i18n lang="json5">
   {
     "en": {
-      "formNotFound": "No Form found with this URL, please double check."
+      "formNotFound": "Unable to open form",
+      "formNotFound.body": "Please check that the link is correct. The form may no longer be available, or your access may have expired. If the problem continues, contact the person who sent you the form link.",
+      "errorNotProblem": "Something went wrong",
+      "errorNotProblem.body": "Please try again later. If the problem continues, contact the person who sent you the form link.",
+      "errorNotProblem.status": "Error code: {status}",
     }
   }
 </i18n>
@@ -247,25 +283,50 @@ load();
 <i18n>
 {
   "de": {
-    "formNotFound": "Für diese URL wurde kein Formular gefunden, bitte überprüfen Sie dies noch einmal."
+    "formNotFound": "Für diese URL wurde kein Formular gefunden, bitte überprüfen Sie dies noch einmal.",
+    "errorNotProblem": "Etwas ging schief",
+    "errorNotProblem.status": "Fehlercode {status}",
   },
   "es": {
-    "formNotFound": "No se ha encontrado ningún formulario con esta URL, vuelva a comprobarlo."
+    "formNotFound": "No se puede abrir el formulario",
+    "formNotFound.body": "Por favor, verifique que el enlace es correcto. Es posible que el formulario ya no esté disponible o que su acceso haya expirado. Si el problema persiste, comuníquese con la persona que le envió el enlace del formulario.",
+    "errorNotProblem": "Algo salió mal",
+    "errorNotProblem.body": "Inténtelo de nuevo más tarde. Si el problema persiste, comuníquese con la persona que le envió el enlace del formulario.",
+    "errorNotProblem.status": "Código de error: {status}",
   },
   "fr": {
-    "formNotFound": "Aucun Formulaire trouvé avec cette URL, merci de vérifier."
+    "formNotFound": "Impossible d'ouvrir le formulaire",
+    "formNotFound.body": "Veuillez vérifier que le lien est correct. Il est possible que le formulaire ne soit plus disponible ou que votre accès ait expiré. Si le problème persiste, veuillez contacter la personne qui vous a envoyé le lien vers le formulaire.",
+    "errorNotProblem": "Quelque-chose s'est mal passé",
+    "errorNotProblem.body": "Veuillez réessayer plus tard. Si le problème persiste, veuillez contacter la personne qui vous a envoyé le lien vers le formulaire.",
+    "errorNotProblem.status": "Code d'erreur: {status}",
+  },
+  "id": {
+    "formNotFound": "Tidak dapat membuka formulir",
+    "formNotFound.body": "Pastikan tautan sudah benar. Formulir mungkin sudah tidak tersedia, atau akses Anda mungkin telah kedaluwarsa. Jika masalah berlanjut, hubungi orang yang mengirimkan tautan formulir tersebut kepada Anda.",
+    "errorNotProblem": "Terjadi kesalahan",
+    "errorNotProblem.body": "Coba lagi nanti. Jika masalah berlanjut, hubungi orang yang mengirimkan tautan formulir tersebut kepada Anda.",
+    "errorNotProblem.status": "Kode error: {status}",
   },
   "it": {
-    "formNotFound": "Non è stato trovato alcun modulo con questo URL, si prega di ricontrollare."
+    "formNotFound": "Non è stato trovato alcun modulo con questo URL, si prega di ricontrollare.",
+    "errorNotProblem": "Qualcosa è andato storto",
+    "errorNotProblem.status": "Codice error {status}",
   },
   "pt": {
-    "formNotFound": "Nenhum Formulário encontrado com esse endereço, por favor verifique."
+    "formNotFound": "Nenhum Formulário encontrado com esse endereço, por favor verifique.",
+    "errorNotProblem": "Algo deu errado",
+    "errorNotProblem.status": "Código de erro {status}",
   },
   "zh": {
-    "formNotFound": "未找到与此URL对应的表单，请仔细核对。"
+    "formNotFound": "未找到与此URL对应的表单，请仔细核对。",
+    "errorNotProblem": "出现错误：错误代码",
+    "errorNotProblem.status": "{status}",
   },
   "zh-Hant": {
-    "formNotFound": "此 URL 未找到表單，請仔細檢查。"
+    "formNotFound": "此 URL 未找到表單，請仔細檢查。",
+    "errorNotProblem": "出了點問題：錯誤代碼",
+    "errorNotProblem.status": "{status}",
   }
 }
 </i18n>
