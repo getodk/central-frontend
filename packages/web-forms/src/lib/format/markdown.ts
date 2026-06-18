@@ -48,5 +48,6 @@ export const getUrl = (node: ParentMarkdownNode): string | undefined => {
 };
 
 export const purify = (node: HtmlMarkdownNode): string => {
-  return DOMPurify.sanitize(node.unsafeHtml, DOM_PURIFY_SETTINGS);
+  DOMPurify.setConfig(DOM_PURIFY_SETTINGS);
+  return DOMPurify.sanitize(node.unsafeHtml);
 };
