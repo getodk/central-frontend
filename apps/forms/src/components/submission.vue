@@ -292,7 +292,7 @@ load();
     "formNotFound.body": "Por favor, verifique que el enlace es correcto. Es posible que el formulario ya no esté disponible o que su acceso haya expirado. Si el problema persiste, comuníquese con la persona que le envió el enlace del formulario.",
     "errorNotProblem": "Algo salió mal",
     "errorNotProblem.body": "Inténtelo de nuevo más tarde. Si el problema persiste, comuníquese con la persona que le envió el enlace del formulario.",
-    "errorNotProblem.status": "Error de código: {status}",
+    "errorNotProblem.status": "Código de error: {status}",
   },
   "fr": {
     "formNotFound": "Impossible d'ouvrir le formulaire",
