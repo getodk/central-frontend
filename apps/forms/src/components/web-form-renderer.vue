@@ -10,6 +10,7 @@ import Button from 'primevue/button';
 import { Translation } from 'vue-i18n'
 import Location from '../utils/location';
 import { getDeviceId } from '../utils/device-id';
+import { hideSpinner } from '../utils/spinner';
 defineOptions({
   name: 'WebFormRenderer'
 });
@@ -237,7 +238,7 @@ const initializeSubmissionState = (data:SubmissionData, clearFormCallback:Functi
 };
 
 const webFormLoaded = () => {
-  globalThis.__hideInitSpinner();
+  hideSpinner();
 };
 
 const handleSubmit = async (

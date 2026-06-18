@@ -7,6 +7,7 @@ import { computed, onBeforeUnmount, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import type { Form } from '../utils/api';
 import Location from '../utils/location';
+import { hideSpinner } from '../utils/spinner';
 
 const getCookieValue = (key, doc) => {
   const cookie = doc.cookie.split(';')
@@ -67,6 +68,8 @@ const single = computed(() => {
 });
 
 const setEnketoSrc = () => {
+  hideSpinner();
+
   let basePath = '/enketo-passthrough';
   // this is to avoid 404 warning
   if (buildMode === 'test') {
@@ -96,7 +99,6 @@ const setEnketoSrc = () => {
     prefix += `/${props.actionType}`;
   }
 
-  globalThis.__hideInitSpinner();
   // we no longer render Enketo for Edit Submission from central-frontend.
   const enketoId = props.enketoId ?? props.form.enketoId;
   if (enketoId === props.form.enketoOnceId) {

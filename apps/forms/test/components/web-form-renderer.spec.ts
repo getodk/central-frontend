@@ -57,7 +57,6 @@ const i18n = createI18n({
 });
 
 const mockAssign = vi.fn();
-globalThis.__hideInitSpinner = vi.fn();
 
 describe('WebFormRenderer', () => {
 

@@ -2,6 +2,7 @@
 import { computed, ref, defineAsyncComponent } from 'vue';
 import { useRoute } from 'vue-router';
 import { getFormByFormId, getFormXml, RequestError, type Form } from '../utils/api.ts';
+import { hideSpinner } from '../utils/spinner.ts';
 
 const props = defineProps({
   draft: Boolean,
@@ -34,7 +35,6 @@ const fetchForm = async () => {
       webFormsEnabled.value = false;
     }
     form.value = formConfig;
-    loadingState.value = false;
   } catch (e) {
     globalThis.__hideInitSpinner();
     if (e instanceof RequestError && e.statusCode >= 401 && e.statusCode < 404) {
@@ -44,8 +44,10 @@ const fetchForm = async () => {
     } else {
       // unknown error
       errorState.value = true;
-      loadingState.value = false;
     }
+  } finally {
+    hideSpinner();
+    loadingState.value = false;
   }
 };
 

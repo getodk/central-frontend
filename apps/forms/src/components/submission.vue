@@ -14,6 +14,7 @@ import {
   RequestError
 } from '../utils/api.ts';
 import Dialog from 'primevue/dialog';
+import { hideSpinner } from '../utils/spinner.ts';
 
 const props = defineProps({
   draft: Boolean,
@@ -196,7 +197,6 @@ const load = async () => {
   errorCode.value = null;
   try {
     form.value = await fetchForm();
-    loadingState.value = false;
   } catch (e) {
     if (e instanceof RequestError) {
       if (e.statusCode >= 401 && e.statusCode < 404) {
@@ -214,7 +214,9 @@ const load = async () => {
       captureException(e);
       errorCode.value = 500;
     }
+  } finally {
     loadingState.value = false;
+    hideSpinner();
   }
 };
 
