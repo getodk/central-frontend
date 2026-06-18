@@ -36,6 +36,7 @@ const fetchForm = async () => {
     form.value = formConfig;
     loadingState.value = false;
   } catch (e) {
+    globalThis.__hideInitSpinner();
     if (e instanceof RequestError && e.statusCode >= 401 && e.statusCode < 404) {
       // not logged in
       const relativeUrl = window.location.href.substring(window.location.origin.length);

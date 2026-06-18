@@ -21,6 +21,8 @@ vi.mock('vue-router', () => ({
 const mockAssign = vi.fn();
 const mockOrigin = vi.fn();
 
+globalThis.__hideInitSpinner = vi.fn();
+
 describe('EnketoIframe', () => {
 
   enableAutoUnmount(afterEach);
