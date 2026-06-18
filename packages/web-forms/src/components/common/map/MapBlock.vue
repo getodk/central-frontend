@@ -126,7 +126,7 @@ watch(
 watch(
 	() => props.savedFeatureValue,
 	(newValue) => {
-		mapHandler.findAndSaveFeature(newValue);
+		mapHandler.applySavedFeatureValue(newValue);
 	}
 );
 

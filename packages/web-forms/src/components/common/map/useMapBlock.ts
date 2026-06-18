@@ -354,6 +354,9 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
     unselectFeature();
   };
 
+  /**
+   * Places a newly built feature onto the empty layer and marks it saved.
+   */
   const loadAndSaveSingleFeature = (feature: Feature | undefined) => {
     if (!mapInstance || currentMode.capabilities.canLoadMultiFeatures || !feature) {
       return;
@@ -514,7 +517,12 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
     mapViewControls?.stopWatchingCurrentLocation();
   };
 
-  const findAndSaveFeature = (feature: GeoJsonFeature | undefined) => {
+  /**
+   * Applies a saved feature value to the map.
+   * Looks it up in multi-feature mode, or builds and places it in single-feature mode
+   * @param feature
+   */
+  const applySavedFeatureValue = (feature: GeoJsonFeature | undefined) => {
     if (currentMode.capabilities.canLoadMultiFeatures) {
       return mapFeatures?.findAndSaveFeature(
         featuresSource,
@@ -559,7 +567,7 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 
     discardSavedFeature,
     saveSelectedFeature: () => mapFeatures?.saveSelectedFeature(),
-    findAndSaveFeature,
+    applySavedFeatureValue,
     getSavedFeature: () => mapFeatures?.getSavedFeature()?.clone(),
     getSavedFeatureValue: () => mapFeatures?.getSavedFeatureValue(),
     isSavedFeatureSelected: () => !!mapFeatures?.isSavedFeatureSelected(),
