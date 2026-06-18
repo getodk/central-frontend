@@ -215,8 +215,8 @@ const load = async () => {
       errorCode.value = 500;
     }
   } finally {
-    loadingState.value = false;
     hideSpinner();
+    loadingState.value = false;
   }
 };
 
