@@ -87,6 +87,8 @@ const preloadProperties: PreloadProperties = {
 	username: 'nousername',
 };
 
+// hardcoded deviceId used for testing
+// because demo forms never get submitted anywhere it's never read elsewhere
 const deviceId = 'wf:jhuS0ic9lFGT6ZOW';
 </script>
 <template>
