@@ -35,6 +35,7 @@ const fetchForm = async () => {
       webFormsEnabled.value = false;
     }
     form.value = formConfig;
+    loadingState.value = false;
   } catch (e) {
     if (e instanceof RequestError && e.statusCode >= 401 && e.statusCode < 404) {
       // not logged in
@@ -44,7 +45,6 @@ const fetchForm = async () => {
       // unknown error
       errorState.value = true;
     }
-  } finally {
     hideSpinner();
     loadingState.value = false;
   }

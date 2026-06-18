@@ -197,6 +197,7 @@ const load = async () => {
   errorCode.value = null;
   try {
     form.value = await fetchForm();
+    loadingState.value = false;
   } catch (e) {
     if (e instanceof RequestError) {
       if (e.statusCode >= 401 && e.statusCode < 404) {
@@ -214,7 +215,6 @@ const load = async () => {
       captureException(e);
       errorCode.value = 500;
     }
-  } finally {
     hideSpinner();
     loadingState.value = false;
   }
