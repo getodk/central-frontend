@@ -236,6 +236,10 @@ const initializeSubmissionState = (data:SubmissionData, clearFormCallback:Functi
   };
 };
 
+const webFormLoaded = () => {
+  globalThis.__hideInitSpinner();
+};
+
 const handleSubmit = async (
   payload: MonolithicInstancePayload,
   clearFormCallback: Function
@@ -297,6 +301,7 @@ const closeWindow = () => {
     :edit-instance="editInstanceOptions"
     :fetch-form-attachment="getAttachment"
     :device-id="deviceID"
+    @loaded="webFormLoaded"
     @submit="handleSubmit"/>
 
   <Dialog modal :visible="!!visibleModal" :draggable="false" :closable="visibleModal?.hideable" @update:visible="visibleModal = null">

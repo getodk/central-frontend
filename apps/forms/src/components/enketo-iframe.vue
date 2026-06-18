@@ -96,8 +96,8 @@ const setEnketoSrc = () => {
     prefix += `/${props.actionType}`;
   }
 
+  globalThis.__hideInitSpinner();
   // we no longer render Enketo for Edit Submission from central-frontend.
-
   const enketoId = props.enketoId ?? props.form.enketoId;
   if (enketoId === props.form.enketoOnceId) {
     lastSubmitted(enketoId)
