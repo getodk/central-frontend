@@ -46,6 +46,13 @@ const test = testBase.extend({
         if(browserName === 'chromium') {
           // See: https://github.com/getodk/central/issues/1997
           if(url.endsWith('/v1/config/analytics') && message.includes('404 (Not Found)')) return;
+
+          if(message.includes('Failed to load resource: the server responded with a status of 401 (Unauthorized)')) {
+            if(url.endsWith('/v1/sessions/restore')) return;
+
+            // See: https://github.com/getodk/central/issues/1686
+            if(url.includes('/-/submission/max-size/')) return;
+          }
         }
 
         if(url.includes('/-/')) {
