@@ -3,4 +3,4 @@
 "@getodk/forms": minor
 ---
 
-Added 'loaded' event to Web Form component
+Added 'loaded' event to Web Forms component
