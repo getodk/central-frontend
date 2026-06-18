@@ -348,7 +348,7 @@ To use this library in a Vue.js application:
     :submission-max-size="5242880"  <!-- 5MB -->
     :edit-instance="editOptions"
     :preload-properties="preloadProperties"
-    :track-device="true"
+    :device-id="abc123"
     @submit="handleSubmit"
     @submit-chunked="handleChunkedSubmit"
 />
@@ -374,7 +374,7 @@ The `<OdkWebForm>` component accepts the following props:
 - `attachmentMaxSize` (`number`, optional, defaults to 100MB): Maximum size for submission attachments in bytes.
 - `editInstance` (`EditInstanceOptions`, optional): Options to resolve and load instance and attachment resources for editing.
 - `preloadProperties` (`PreloadProperties`, optional): Properties to make available for binding in the form using jr:preload.
-- `trackDevice` (`boolean`, optional, defaults to `false`): If `true`, generates a unique identifier for this device and stores it in `localstorage` for use in subsequent submissions. Ignored if `preloadProperties.deviceID` is given.
+- `deviceId` (`string`, optional): If provided is available for binding into the form using preload attributes. Ignored if `preloadProperties.deviceID` is given.
 
 ### Events (`OdkWebFormEmits`)
 

@@ -65,6 +65,7 @@ describe('WebFormRenderer', () => {
     vi.resetAllMocks();
   });
 
+  let deviceId;
 
   const mountComponent = async (testProps: Partial<WebFormsRendererProps>) => {
 
@@ -143,9 +144,14 @@ describe('WebFormRenderer', () => {
     expect(fetchSpy).toHaveBeenCalledTimes(1);
     expect(fetchSpy.mock.calls.length).to.equal(1);
     const firstCall = fetchSpy.mock.calls[0]!;
-    const url = firstCall[0];
+    const url: string = firstCall[0] as string;
     const args = firstCall[1]!;
-    expect(url).to.equal(`/v1/projects/1/forms/simple/submissions`);
+    expect(deviceId).toBeUndefined(); // this is the first time we're setting it
+    const deviceIdMatch = /\?deviceID=(wf%3A.{16})/.exec(url);
+    expect(deviceIdMatch).not.toBeNull();
+    expect(deviceIdMatch!.length).to.equal(2);
+    deviceId = deviceIdMatch![1];
+    expect(url).to.equal(`/v1/projects/1/forms/simple/submissions?deviceID=${deviceId}`);
     expect(args.method).to.equal('POST');
     expect(args.headers!['Content-Type']).to.equal('text/xml');
     expect((args.body as File).name).to.equal('xml_submission_file');
@@ -180,7 +186,7 @@ describe('WebFormRenderer', () => {
     const firstCall = fetchSpy.mock.calls[0]!;
     const url = firstCall[0];
     const args = firstCall[1]!;
-    expect(url).to.equal(`/v1/projects/1/forms/simple/submissions?st=sometoken`);
+    expect(url).to.equal(`/v1/projects/1/forms/simple/submissions?st=sometoken&deviceID=${deviceId}`);
     expect(args.method).to.equal('POST');
     const title = document.querySelector('.p-dialog-header span')!;
     const intro = document.querySelector('.p-dialog-content span')!;
