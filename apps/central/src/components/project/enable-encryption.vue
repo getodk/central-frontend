@@ -307,9 +307,9 @@ export default {
       },
       {
         "introduction": [
-          "First, you will need to choose a passphrase. This passphrase will be required to decrypt your Submissions. For your privacy, the server will not remember this passphrase: only people with the passphrase will be able to decrypt and read your Submission data.",
+          "First, choose an encryption password. The server does not store this password. Only people who know it can decrypt and read your Submission data.",
           {
-            "full": "If you lose the passphrase, there is {no} way to recover it or your data!",
+            "full": "If you lose this encryption password, there is {no} way to recover it or your data.",
             "no": "no"
           }
         ]
@@ -319,10 +319,10 @@ export default {
       "Encryption has been configured for this Project. Any mobile devices will have to fetch or refetch the latest Forms for encryption to take place."
     ],
     "field": {
-      "hint": "Passphrase hint (optional)"
+      "hint": "Encryption password hint (optional)"
     },
     "alert": {
-      "passphraseTooShort": "Please input a passphrase at least 10 characters long."
+      "passphraseTooShort": "Encryption password must be at least 10 characters long."
     }
   }
 }
