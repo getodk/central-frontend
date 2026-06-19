@@ -62,6 +62,7 @@ function isTooBig({ path, size }) {
     case 'web-form.js':    return size > 1_000_000; // Matches web-form-renderer.js
     case 'MapBlock.js':    return size >   600_000; // A Web Forms' feature bundle
     case 'geojson-map.js': return size >   500_000;
+    case 'browserTracingIntegration.js': return size > 215_000; // Sentry bundled since DSN is runtime
     default: // do nothing
   }
 
