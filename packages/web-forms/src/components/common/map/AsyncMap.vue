@@ -6,21 +6,12 @@
  */
 import { createFeatureCollectionAndProps } from '@/components/common/map/geojson-parsers.ts';
 import type { Mode, SingleFeatureType } from '@/components/common/map/getModeConfig.ts';
+import { loadMapBlock, type MapBlockComponent } from '@/components/common/map/loadMapBlock.ts';
 import AsyncLoader from '@/components/common/AsyncLoader.vue';
 import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
 import type { Translate } from '@/lib/locale/useLocale.ts';
 import type { SelectItem } from '@getodk/xforms-engine';
-import type { Feature } from 'geojson';
-import { computed, type DefineComponent, inject, shallowRef } from 'vue';
-
-type MapBlockComponent = DefineComponent<{
-	featureCollection: { type: string; features: Feature[] };
-	disabled: boolean;
-	singleFeatureType?: SingleFeatureType;
-	mode: Mode;
-	orderedExtraProps: Map<string, Array<[key: string, value: string]>>;
-	savedFeatureValue: Feature | undefined;
-}>;
+import { computed, inject, shallowRef } from 'vue';
 
 interface AsyncMapProps {
 	features?: readonly SelectItem[];
@@ -46,11 +37,7 @@ const savedFeatureValue = computed(() => {
 });
 
 const loadMap = async () => {
-	mapComponent.value = (
-		(await import('./MapBlock.vue')) as {
-			default: MapBlockComponent;
-		}
-	).default;
+	mapComponent.value = await loadMapBlock();
 };
 
 const save = (value: string | undefined) => emit('save', value);
