@@ -30,7 +30,6 @@ const fetchClientConfig = async (): Promise<ClientConfig> => {
 const clientConfig = await fetchClientConfig();
 
 const app = createApp(Forms as Component);
-app.provide('clientConfig', clientConfig);
 initSentry(app, 'web-forms', clientConfig.sentryDsn);
 app.use(PrimeVue, { theme: { preset: odkThemePreset, options: { darkModeSelector: false } } });
 app.use(webFormsPlugin);
