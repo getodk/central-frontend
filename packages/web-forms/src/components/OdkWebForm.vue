@@ -37,6 +37,7 @@ import Message from 'primevue/message';
 import {
 	computed,
 	getCurrentInstance,
+	onErrorCaptured,
 	onUnmounted,
 	provide,
 	readonly,
@@ -44,6 +45,7 @@ import {
 	watch,
 	watchEffect,
 } from 'vue';
+import { FormInitializationError } from '@/lib/error/FormInitializationError';
 
 const webFormsVersion = __WEB_FORMS_VERSION__;
 type ObjectURL = `blob:${string}`;
@@ -200,6 +202,7 @@ const mediaCache = new Map<JRResourceURLString, ObjectURL>();
 provide(FORM_MEDIA_CACHE, mediaCache);
 
 const state = initializeFormState();
+const runtimeError = ref<FormInitializationError | null>(null);
 const submitPressed = ref(false);
 const floatingErrorActive = ref(false);
 const showValidationError = ref(false);
@@ -208,6 +211,10 @@ const isFormEditMode = ref(false);
 provide(IS_FORM_EDIT_MODE, readonly(isFormEditMode));
 const { setLanguage, t } = useLocale(computed(() => state.value.root));
 provide(TRANSLATE, t);
+
+onErrorCaptured(err => {
+	runtimeError.value = FormInitializationError.from(err);
+});
 
 watch(
 	() => state.value,
@@ -296,6 +303,10 @@ onUnmounted(() => {
 
 	<template v-if="state.status === 'FORM_STATE_FAILURE'">
 		<FormLoadFailureDialog severity="error" :error="state.error" />
+	</template>
+
+	<template v-else-if="runtimeError">
+		<FormLoadFailureDialog severity="error" :error="runtimeError" />
 	</template>
 
 	<div
