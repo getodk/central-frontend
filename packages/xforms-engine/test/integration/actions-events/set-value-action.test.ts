@@ -706,6 +706,33 @@ describe('setvalue action', () => {
       expect(scenario.answerOf('/data/destination')).toEqualAnswer(intAnswer(24));
     });
 
+    it("stores only today's date when `now()` is assigned to a `date` field", async () => {
+      const scenario = await Scenario.init(
+        'now() into date field',
+        html(
+          head(
+            title('now() into date field'),
+            model(
+              mainInstance(t('data id="now-into-date"', t('source'), t('destination'))),
+              bind('/data/destination').type('date')
+            )
+          ),
+          body(
+            input('/data/source', setvalue('xforms-value-changed', '/data/destination', 'now()'))
+          )
+        )
+      );
+
+      scenario.answer('/data/source', 'trigger');
+
+      const now = new Date();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const today = `${now.getFullYear()}-${month}-${day}`;
+
+      expect(scenario.answerOf('/data/destination')).toEqualAnswer(stringAnswer(today));
+    });
+
     it('is not triggered when loading form for editing', async () => {
       const originalDate = '2025-01-01T10:23:28.822+13:00';
       const instanceXML = `<data id="xforms-value-changed-event">

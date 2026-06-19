@@ -1,4 +1,4 @@
-import { ISO_DATE_OR_DATE_TIME_NO_OFFSET_PATTERN } from '@getodk/common/constants/datetime.ts';
+import { ISO_DATE_OR_DATE_TIME_LIKE_PATTERN } from '@getodk/common/constants/datetime.ts';
 import { Temporal } from 'temporal-polyfill';
 import { type CodecDecoder, type CodecEncoder, ValueCodec } from './ValueCodec.ts';
 
@@ -13,11 +13,9 @@ export type DatetimeInputValue =
   | null;
 
 /**
- * Parses a string in the format 'YYYY-MM-DD' or 'YYYY-MM-DDTHH:MM:SS' (no offset)
- * into a Temporal.PlainDate.
- * TODO: Datetimes with a valid timezone offset are treated as errors.
- *       User research is needed to determine whether the date should honor
- *       the timezone or be truncated to the yyyy-mm-dd format only.
+ * Parses a string in the format 'YYYY-MM-DD', 'YYYY-MM-DDTHH:MM:SS', or an ISO datetime with a timezone offset
+ * (e.g. the output of now()) into a Temporal.PlainDate. Only the date portion of the input is used — the time
+ * and offset are taken in the browser's local time and ignored.
  *
  * @param value - The string to parse.
  * @returns A {@link DatetimeRuntimeValue}
@@ -26,7 +24,7 @@ const parseString = (value: string): DatetimeRuntimeValue => {
   if (
     value == null ||
     typeof value !== 'string' ||
-    !ISO_DATE_OR_DATE_TIME_NO_OFFSET_PATTERN.test(value)
+    !ISO_DATE_OR_DATE_TIME_LIKE_PATTERN.test(value)
   ) {
     return null;
   }
@@ -42,15 +40,12 @@ const parseString = (value: string): DatetimeRuntimeValue => {
 
 /**
  * Converts a date-like value ({@link DatetimeInputValue}) to a 'YYYY-MM-DD' string.
- * TODO: Datetimes with a valid timezone offset are treated as errors.
- *       User research is needed to determine whether the date should honor
- *       the timezone or be truncated to the yyyy-mm-dd format only.
  *
  * @param value - The value to convert.
  * @returns A date string or empty string if invalid.
  */
 const toDateString = (value: DatetimeInputValue): string => {
-  if (value == null || value instanceof Temporal.ZonedDateTime) {
+  if (value == null) {
     return '';
   }
 
@@ -59,7 +54,7 @@ const toDateString = (value: DatetimeInputValue): string => {
       return value.toString();
     }
 
-    if (value instanceof Temporal.PlainDateTime) {
+    if (value instanceof Temporal.PlainDateTime || value instanceof Temporal.ZonedDateTime) {
       return value.toPlainDate().toString();
     }
 
