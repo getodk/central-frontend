@@ -9,6 +9,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"/>
     <link rel="manifest" href="/site.webmanifest"/>
+    <script src="/apps/forms/src/init.js"></script>
     <style>
       .loading-container {
         text-align: center;
@@ -42,28 +43,6 @@
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       }
     </style>
-    <script>
-      // NB use legacy JavaScript to support older browsers
-      var __handleInitializationErrors = function(event) {
-        if (!document.getElementById('loading')) {
-          // do not intercept errors after the app has loaded
-          return;
-        }
-        var message = event.message
-          || event.reason && event.reason.message
-          || 'An unknown error occurred.';
-        console.error('FATAL ERROR while loading forms app:', message);
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('loading-error').style.display = 'block';
-        document.getElementById('error-message').innerText = message;
-      };
-      var __deregisterInitializationErrorHandling = function() {
-        window.removeEventListener('error', __handleInitializationErrors, { capture: true, once: true });
-        window.removeEventListener('unhandledrejection', __handleInitializationErrors, { once: true });
-      };
-      window.addEventListener('error', __handleInitializationErrors, { capture: true, once: true });
-      window.addEventListener('unhandledrejection', __handleInitializationErrors, { once: true });
-    </script>
   </head>
   <body>
     <noscript>

@@ -3,7 +3,9 @@ import { onMounted } from 'vue';
 import { RouterView } from 'vue-router';
 
 onMounted(() => {
-  globalThis.__deregisterInitializationErrorHandling();
+  if (globalThis.__deregisterInitializationErrorHandling) {
+    globalThis.__deregisterInitializationErrorHandling();
+  }
 });
 </script>
 
