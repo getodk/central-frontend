@@ -58,6 +58,7 @@ export default defineConfig(
 			'web-forms/bin/**/*',
 			'xforms-engine/api-docs/**/*',
 			'**/vendor',
+			'src/init.js'
 		],
 	},
 
