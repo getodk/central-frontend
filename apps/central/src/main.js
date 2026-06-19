@@ -9,7 +9,7 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
-import { createApp } from 'vue';
+import { createApp, watch } from 'vue';
 
 // The global styles must be imported before any component so that they precede
 // components' styles.
@@ -26,5 +26,9 @@ import './jquery';
 import './bootstrap';
 
 const app = createApp(App);
-initSentry(app, 'central-frontend');
-app.use(createContainer()).directive('tooltip', vTooltip).mount('#app');
+const container = createContainer();
+app.use(container).directive('tooltip', vTooltip).mount('#app');
+
+watch(() => container.config.data, (data) => {
+  initSentry(app, 'central-frontend', data.sentryDsn);
+}, { once: true });

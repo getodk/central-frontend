@@ -12,8 +12,26 @@ import initSentry from './utils/sentry';
 
 import './assets/style.scss';
 
+interface ClientConfig {
+  sentryDsn?: string;
+}
+
+const fetchClientConfig = async (): Promise<ClientConfig> => {
+  try {
+    const response = await fetch('/client-config.json');
+    return await response.json() as ClientConfig;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Failed to fetch /client-config.json', error);
+    return {};
+  }
+};
+
+const clientConfig = await fetchClientConfig();
+
 const app = createApp(Forms as Component);
-initSentry(app, 'web-forms');
+app.provide('clientConfig', clientConfig);
+initSentry(app, 'web-forms', clientConfig.sentryDsn);
 app.use(PrimeVue, { theme: { preset: odkThemePreset, options: { darkModeSelector: false } } });
 app.use(webFormsPlugin);
 app.use(i18n);
