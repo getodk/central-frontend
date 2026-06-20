@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import type { SelectNode } from '@getodk/xforms-engine';
 import Select from 'primevue/select';
-import { computed } from 'vue';
+import { computed, inject } from 'vue';
 import MarkdownBlock from './MarkdownBlock.vue';
+import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
+import type { Translate } from '@/lib/locale/useLocale.ts';
 
 interface SearchableDropdownProps {
 	readonly question: SelectNode;
 	readonly style?: string;
 }
 
+const t: Translate = inject(TRANSLATE)!;
 const props = defineProps<SearchableDropdownProps>();
 
 defineEmits(['update:modelValue', 'change']);
@@ -62,6 +65,9 @@ const selectValue = (value: string) => {
 			<MarkdownBlock v-for="elem in slotProps.option.label" :key="elem.id" :elem="elem" />
 		</template>
 		<template #value>
+			<span v-if="!selectedLabel?.length" class="dropdown-placeholder">
+				{{ t('searchable_dropdown.select.placeholder') }}
+			</span>
 			<MarkdownBlock v-for="elem in selectedLabel" :key="elem.id" :elem="elem" />
 		</template>
 	</Select>
@@ -69,6 +75,7 @@ const selectValue = (value: string) => {
 
 <style scoped lang="scss">
 @use 'primeflex/core/_variables.scss' as pf;
+@use '../../assets/styles/select-options';
 
 .dropdown {
 	width: 100%;

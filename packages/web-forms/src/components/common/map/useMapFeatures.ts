@@ -92,6 +92,9 @@ export function useMapFeatures(
     }
   };
 
+  /**
+   * Single-feature modes: places a newly built feature onto the empty layer and marks it saved.
+   */
   const loadAndSaveSingleFeature = (source: VectorSource, feature: Feature) => {
     source.clear(true);
     source.addFeature(feature);
@@ -139,6 +142,10 @@ export function useMapFeatures(
     }
   };
 
+  /**
+   * Locates a feature already loaded in the collection (by ODK value) and marks it saved.
+   * Typically used in multi-feature mode.
+   */
   const findAndSaveFeature = (
     source: VectorSource,
     value: GeoJsonFeature | undefined,
