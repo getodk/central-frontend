@@ -1,28 +1,28 @@
 import type {
-	UnspecifiedNonXPathNodeKind,
-	XPathAttribute,
-	XPathComment,
-	XPathDocument,
-	XPathElement,
-	XPathNamespaceDeclaration,
-	XPathNode,
-	XPathNodeKind,
-	XPathProcessingInstruction,
-	XPathText,
+  UnspecifiedNonXPathNodeKind,
+  XPathAttribute,
+  XPathComment,
+  XPathDocument,
+  XPathElement,
+  XPathNamespaceDeclaration,
+  XPathNode,
+  XPathNodeKind,
+  XPathProcessingInstruction,
+  XPathText,
 } from './XPathNode.ts';
 
 export type AdapterDocument<T extends XPathNode> = Extract<T, XPathDocument>;
 export type AdapterElement<T extends XPathNode> = Extract<T, XPathElement>;
 export type AdapterNamespaceDeclaration<T extends XPathNode> = Extract<
-	T,
-	XPathNamespaceDeclaration
+  T,
+  XPathNamespaceDeclaration
 >;
 export type AdapterAttribute<T extends XPathNode> = Extract<T, XPathAttribute>;
 export type AdapterText<T extends XPathNode> = Extract<T, XPathText>;
 export type AdapterComment<T extends XPathNode> = Extract<T, XPathComment>;
 export type AdapterProcessingInstruction<T extends XPathNode> = Extract<
-	T,
-	XPathProcessingInstruction
+  T,
+  XPathProcessingInstruction
 >;
 
 export type AdapterNode<T extends XPathNode> = AdapterChildNode<T> | AdapterParentNode<T>;
@@ -48,8 +48,8 @@ export type AdapterQualifiedNamedNode<T extends XPathNode> =
 	| AdapterAttribute<T>;
 
 export interface XPathNodeKindAdapter<T extends XPathNode> {
-	readonly isXPathNode: (value: unknown) => value is T;
+  readonly isXPathNode: (value: unknown) => value is T;
 
-	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
-	readonly getNodeKind: (node: T) => XPathNodeKind | UnspecifiedNonXPathNodeKind;
+  // eslint-disable-next-line @typescript-eslint/sort-type-constituents
+  readonly getNodeKind: (node: T) => XPathNodeKind | UnspecifiedNonXPathNodeKind;
 }

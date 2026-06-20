@@ -25,57 +25,57 @@ import { odkThemePreset } from '../src/odk-theme-preset';
  * any other real module import.
  */
 export const getWebFormsTestFixture = (identifier: string): Promise<string> => {
-	const fixture = xformFixturesByIdentifier.get(identifier);
+  const fixture = xformFixturesByIdentifier.get(identifier);
 
-	if (fixture?.category !== 'test-web-forms') {
-		throw new Error(`Could not find web-forms test fixture with identifier: ${identifier}`);
-	}
+  if (fixture?.category !== 'test-web-forms') {
+    throw new Error(`Could not find web-forms test fixture with identifier: ${identifier}`);
+  }
 
-	return fixture.loadXML().then((xml) => {
-		if (typeof xml !== 'string') {
-			throw new Error('Wrong XML Form type. Expected a string');
-		}
-		return xml;
-	});
+  return fixture.loadXML().then((xml) => {
+    if (typeof xml !== 'string') {
+      throw new Error('Wrong XML Form type. Expected a string');
+    }
+    return xml;
+  });
 };
 
 export const getFormXml = (fileName: string): Promise<string> => {
-	const fixture = xformFixturesByIdentifier.get(fileName);
+  const fixture = xformFixturesByIdentifier.get(fileName);
 
-	if (fixture == null) {
-		throw new Error(`Could not find fixture with file name: ${fileName}`);
-	}
+  if (fixture == null) {
+    throw new Error(`Could not find fixture with file name: ${fileName}`);
+  }
 
-	return fixture.loadXML().then((xml) => {
-		if (typeof xml !== 'string') {
-			throw new Error('Wrong XML Form type. Expected a string');
-		}
-		return xml;
-	});
+  return fixture.loadXML().then((xml) => {
+    if (typeof xml !== 'string') {
+      throw new Error('Wrong XML Form type. Expected a string');
+    }
+    return xml;
+  });
 };
 
 export const getReactiveForm = async (formPath: string): Promise<RootNode> => {
-	const formXml = await getFormXml(formPath);
-	const instance = await createInstance(formXml, {
-		instance: {
-			stateFactory: reactive,
-		},
-	});
+  const formXml = await getFormXml(formPath);
+  const instance = await createInstance(formXml, {
+    instance: {
+      stateFactory: reactive,
+    },
+  });
 
-	return instance.root;
+  return instance.root;
 };
 
 type GlobalMountOptions = Required<MountingOptions<unknown>>['global'];
 
 export const globalMountOptions: GlobalMountOptions = {
-	plugins: [[PrimeVue, { theme: { preset: odkThemePreset } }]],
-	provide: {
-		[SUBMIT_PRESSED]: ref(false),
-		[TRANSLATE]: (id: string) => id,
-	},
-	stubs: {
-		teleport: true,
-	},
+  plugins: [[PrimeVue, { theme: { preset: odkThemePreset } }]],
+  provide: {
+    [SUBMIT_PRESSED]: ref(false),
+    [TRANSLATE]: (id: string) => id,
+  },
+  stubs: {
+    teleport: true,
+  },
 };
 
 // TODO: how the heck is `undefined` a key of anything?!
@@ -92,17 +92,17 @@ export type DocumentPropertyName = {
 }[StringKeyOfDocument];
 
 export const mockDocumentGetter = <PropertyName extends DocumentPropertyName>(
-	propertyName: PropertyName,
-	mockImplementation: () => Document[PropertyName]
+  propertyName: PropertyName,
+  mockImplementation: () => Document[PropertyName]
 ) => {
-	if (propertyName in document) {
-		return vi.spyOn(document, propertyName, 'get').mockImplementation(mockImplementation);
-	}
+  if (propertyName in document) {
+    return vi.spyOn(document, propertyName, 'get').mockImplementation(mockImplementation);
+  }
 
-	const mock = vi.fn(mockImplementation);
-	Object.defineProperty(document, propertyName, {
-		get: mock,
-		configurable: true,
-	});
-	return mock;
+  const mock = vi.fn(mockImplementation);
+  Object.defineProperty(document, propertyName, {
+    get: mock,
+    configurable: true,
+  });
+  return mock;
 };

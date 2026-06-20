@@ -4,20 +4,20 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "          nf start vite,nginx-docker",
-    "dev-no-docker": "nf start vite,nginx-host",
-    "dev:build": "nf start build,nginx-docker",
-    "dev-no-docker:build": "nf start build,nginx-host",
+    "dev": "      nf start vite,nginx",
+    "dev:build": "nf start build,nginx",
     "build": "turbo run build",
     "build:web": "vite build",
+    "changeset": "changeset",
     "eslint": "eslint bin/ e2e-tests/ *.js -c bin/eslint.config.js --cache --max-warnings 0",
     "lint": "npm run lint --workspaces && npm run eslint",
     "lint:fix": "npm run lint:fix --workspaces",
     "test": "npm run test --workspaces",
-    "test:e2e": "e2e-tests/run-tests.sh"
+    "test:e2e": "e2e-tests/run-tests.sh",
+    "version": "changeset version"
   },
   "volta": {
-    "node": "24.13.0"
+    "node": "24.14.1"
   },
   "packageManager": "npm@11.6.1",
   "workspaces": [
@@ -25,6 +25,7 @@
     "packages/*"
   ],
   "dependencies": {
+    "@sentry/vue": "10.55",
     "vue": "^3.5.29",
     "vue-router": "^4.6.3"
   },
@@ -48,6 +49,7 @@
     "@vue/eslint-config-typescript": "^14.7.0",
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.8.1",
+    "adm-zip": "^0.5.17",
     "eslint": "^10.0.3",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsdoc": "^62.8.0",
@@ -66,7 +68,7 @@
     "vue-tsc": "^3.1.5"
   },
   "engines": {
-    "node": "24",
+    "node": "^24.14.1",
     "npm": "11"
   }
 }

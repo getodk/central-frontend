@@ -10,15 +10,9 @@ This config is based on:
 // eslint-disable-next-line import/no-unresolved
 const VueI18nPlugin = require('@intlify/unplugin-vue-i18n/webpack');
 // eslint-disable-next-line import/no-extraneous-dependencies
-const { DefinePlugin } = require('webpack');
 const { resolve } = require('node:path');
-const { readFileSync } = require('fs');
 // eslint-disable-next-line import/extensions
 const webpackConfig = require('../../node_modules/@vue/cli-service/webpack.config.js');
-
-const webFormsPackage = JSON.parse(
-  readFileSync(resolve(__dirname, '../../packages/web-forms/package.json'), 'utf-8')
-);
 
 const publicAssets = resolve(__dirname, '../../public');
 
@@ -33,9 +27,6 @@ webpackConfigForKarma.plugins.push(
     // warns that it's been installed already.
     fullInstall: true,
     dropMessageCompiler: true
-  }),
-  new DefinePlugin({
-    __WEB_FORMS_VERSION__: JSON.stringify(webFormsPackage.version)
   })
 );
 // eslint-disable-next-line arrow-body-style
@@ -73,7 +64,6 @@ module.exports = (config) => {
       '/v1/config/public/hero-image': '/base/src/assets/images/whats-new/banner@1x.png',
       '/v1/config/public/logo': '/base/src/assets/images/odk-logo.png',
       '/img/banner@1x.6c9e9f21.png': '/base/src/assets/images/whats-new/banner@1x.png', // Smaller resolution for circleCI test
-      '/img/map-location.b523ce2d.svg': '/base/src/assets/images/geojson-map/map-location.svg',
       '/img/fullscreen.37a932a6.svg': '/base/src/assets/images/geojson-map/fullscreen.svg'
     },
     preprocessors: {

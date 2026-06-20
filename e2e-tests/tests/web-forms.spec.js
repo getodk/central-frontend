@@ -1,9 +1,8 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import BackendClient from '../backend-client';
+import { login, test } from '../util';
 
 const appUrl = process.env.ODK_URL;
-const user = process.env.ODK_USER;
-const password = process.env.ODK_PASSWORD;
 const projectId = process.env.PROJECT_ID;
 
 let publishedForm;
@@ -24,18 +23,6 @@ test.beforeAll(async ({ playwright }, testInfo) => {
   await backendClient.dispose();
 });
 
-const login = async (page) => {
-  await page.goto(appUrl);
-  await expect(page.getByRole('heading', { name: 'Welcome to ODK Central' })).toBeVisible();
-
-  await page.getByPlaceholder('email address').fill(user);
-  await page.getByPlaceholder('password').fill(password);
-
-  await page.getByRole('button', { name: 'Log in' }).click();
-
-  await page.waitForURL(appUrl);
-};
-
 test.describe('ODK Web Forms', () => {
   test.describe('all old URLs should be working', () => {
     const oldUrls = [
@@ -53,13 +40,13 @@ test.describe('ODK Web Forms', () => {
         url: ({ xmlFormId }) => `/#/projects/${projectId}/forms/${xmlFormId}/preview`, requireLogin: true
       }, {
         description: 'New Draft Submission',
-        url: ({ draftEnketoId }) => `/-/${draftEnketoId}`, requireLogin: true
+        url: ({ draftEnketoId }) => `/-/${draftEnketoId}`, requireLogin: true, draft: true
       }, {
-        description: 'Prevew Draft Form',
-        url: ({ draftEnketoId }) => `/-/preview/${draftEnketoId}`, requireLogin: true
+        description: 'Preview Draft Form',
+        url: ({ draftEnketoId }) => `/-/preview/${draftEnketoId}`, requireLogin: true, draft: true
       }, {
         description: 'Preview Draft Web Form',
-        url: ({ xmlFormId }) => `/#/projects/${projectId}/forms/${xmlFormId}/draft/preview`, requireLogin: true
+        url: ({ xmlFormId }) => `/#/projects/${projectId}/forms/${xmlFormId}/draft/preview`, requireLogin: true, draft: true
       }, {
         description: 'Public Link',
         url: ({ enketoId, st }) => `/-/single/${enketoId}?st=${st}`, requireLogin: false
@@ -89,9 +76,9 @@ test.describe('ODK Web Forms', () => {
         await page.goto(appUrl + t.url({ enketoId, enketoOnceId, draftEnketoId, xmlFormId, instanceId, st }));
 
         if (t.draft) {
-          await expect(page.getByRole('heading', { name: `${publishedForm.name} - v2` })).toBeVisible();
+          await expect(page.getByRole('heading', { name: `${publishedForm.name} - v2`, exact: true })).toBeVisible();
         } else {
-          await expect(page.getByRole('heading', { name: publishedForm.name })).toBeVisible();
+          await expect(page.getByRole('heading', { name: publishedForm.name, exact: true })).toBeVisible();
         }
       });
     });
@@ -145,7 +132,7 @@ test.describe('ODK Web Forms', () => {
 
     await login(page3);
 
-    await page2.locator('.modal-actions .btn-primary').click();
+    await page2.getByRole('button', { name: 'close' }).first().click();
 
     await page2.getByRole('button', { name: 'send' }).click();
 

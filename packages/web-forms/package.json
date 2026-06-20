@@ -23,7 +23,7 @@
     "README.md"
   ],
   "engines": {
-    "node": "^20.19.3 || ^22.12.0 || ^24.13.0",
+    "node": "^24.14.1",
     "npm": "11"
   },
   "scripts": {
@@ -32,8 +32,11 @@
     "build:demo": "vite build --mode demo --outDir dist-demo",
     "build:js": "vite build",
     "build:translations": "node bin/merge-translations.js",
+    "translations:pull": "cd ../.. && tx pull -r web_forms.strings -a -f --mode translator",
+    "translations:push": "cd ../.. && tx push -r web_forms.strings -s",
     "dev": "vite",
     "dist-demo": "npm run build && vite serve dist-demo --port 5174",
+    "feature-matrix": "node bin/feature-matrix/render.js",
     "format:fix": "npm-run-all --print-name format:vue format:prettier",
     "format:lint": "prettier -c \"**/*\" --ignore-unknown",
     "format:prettier": "prettier -w \"**/*\" --ignore-unknown --cache",
@@ -87,9 +90,11 @@
     "@mdi/js": "^7.4.47",
     "dompurify": "^3.3.0",
     "image-blob-reduce": "^4.1.0",
+    "konva": "^10.2.5",
     "ol": "^10.7.0",
     "primelocale": "^2.3.1",
-    "vue-draggable-plus": "^0.6.1"
+    "vue-draggable-plus": "^0.6.1",
+    "vue-konva": "^3.4.0"
   },
   "publishConfig": {
     "access": "public"

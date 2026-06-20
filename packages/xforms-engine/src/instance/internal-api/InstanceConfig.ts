@@ -1,20 +1,20 @@
 import type { InstanceAttachmentFileNameFactory } from '../../client/attachments/InstanceAttachmentsConfig.ts';
 import type {
-	FormInstanceConfig,
-	GeolocationProvider,
-	PreloadProperties,
+  FormInstanceConfig,
+  GeolocationProvider,
+  PreloadProperties,
 } from '../../client/form/FormInstanceConfig.ts';
 import type { OpaqueReactiveObjectFactory } from '../../client/OpaqueReactiveObjectFactory.ts';
 
 export interface InstanceConfig {
-	/**
-	 * @see {@link FormInstanceConfig.stateFactory}
-	 */
-	readonly clientStateFactory: OpaqueReactiveObjectFactory;
+  /**
+   * @see {@link FormInstanceConfig.stateFactory}
+   */
+  readonly clientStateFactory: OpaqueReactiveObjectFactory;
 
-	readonly computeAttachmentName: InstanceAttachmentFileNameFactory;
+  readonly computeAttachmentName: InstanceAttachmentFileNameFactory;
 
-	readonly preloadProperties: PreloadProperties;
+  readonly preloadProperties: PreloadProperties;
 
-	readonly geolocationProvider: GeolocationProvider | undefined;
+  readonly geolocationProvider: GeolocationProvider | undefined;
 }

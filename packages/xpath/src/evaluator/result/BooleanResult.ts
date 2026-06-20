@@ -4,21 +4,21 @@ import { PrimitiveResult } from './PrimitiveResult.ts';
 import type { XPathEvaluationResult } from './XPathEvaluationResult.ts';
 
 export class BooleanResult<T extends XPathNode>
-	extends PrimitiveResult<T>
-	implements XPathEvaluationResult<T>
+  extends PrimitiveResult<T>
+  implements XPathEvaluationResult<T>
 {
-	protected readonly nodes = null;
+  protected readonly nodes = null;
 
-	readonly resultType = PrimitiveResult.BOOLEAN_TYPE;
-	readonly booleanValue: boolean;
-	readonly numberValue: number;
-	readonly stringValue: string;
+  readonly resultType = PrimitiveResult.BOOLEAN_TYPE;
+  readonly booleanValue: boolean;
+  readonly numberValue: number;
+  readonly stringValue: string;
 
-	constructor(evaluation: Evaluation<T>) {
-		super();
+  constructor(evaluation: Evaluation<T>) {
+    super();
 
-		this.booleanValue = evaluation.toBoolean();
-		this.numberValue = evaluation.toNumber();
-		this.stringValue = evaluation.toString();
-	}
+    this.booleanValue = evaluation.toBoolean();
+    this.numberValue = evaluation.toNumber();
+    this.stringValue = evaluation.toString();
+  }
 }

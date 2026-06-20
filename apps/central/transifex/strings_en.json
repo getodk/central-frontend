@@ -451,6 +451,10 @@
       "string": "Sort",
       "developer_comment": "This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms"
     },
+    "tryAgain": {
+      "string": "Try again",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "undo": {
       "string": "Undo",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -2845,6 +2849,10 @@
           "string": "Last Used",
           "developer_comment": "This is the text of a table column header."
         },
+        "lastUsedAndActions": {
+          "string": "{lastUsed} / {actions}",
+          "developer_comment": "Header for the table column that shows the last used date and action buttons."
+        },
         "configureClient": {
           "string": "Configure Client",
           "developer_comment": "Header for the table column that shows QR codes to configure data collection clients such as ODK Collect."
@@ -3031,13 +3039,13 @@
     "FormAttachmentList": {
       "action": {
         "upload": {
-          "string": "Choose files",
+          "string": "choose files",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "orDrag": {
-        "string": "or drag files onto this page to upload",
-        "developer_comment": "This text is shown next to a button with the text \"Choose files\"."
+        "string": "or drag files onto this section to upload",
+        "developer_comment": "This text is shown next to a button with the text \"choose files\"."
       },
       "problem": {
         "noneUploaded": {
@@ -3457,6 +3465,10 @@
       }
     },
     "FormEditDef": {
+      "title": {
+        "string": "Draft version: {version}",
+        "developer_comment": "This is shown for the Draft Form. {version} is the version of the Form defined in its definition."
+      },
       "subtitle": {
         "string": "Uploaded",
         "developer_comment": "This refers to the draft version of a Form."
@@ -3464,16 +3476,6 @@
       "changed": {
         "string": "Changed from published version",
         "developer_comment": "This refers to the draft version of a Form."
-      },
-      "versionName": {
-        "string": "Version name: {name}",
-        "developer_comment": "This is shown for a Form version."
-      },
-      "action": {
-        "upload": {
-          "string": "Upload new Form Definition",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
       }
     },
     "FormEditDraftControls": {
@@ -3484,7 +3486,7 @@
         }
       },
       "subtitle": {
-        "string": "Ready to publish",
+        "string": "Ready to publish?",
         "developer_comment": "This refers to the draft version of a Form."
       }
     },
@@ -3511,10 +3513,6 @@
           }
         }
       },
-      "cannotDeleteProperties": {
-        "string": "Properties cannot be deleted.",
-        "developer_comment": "\"Properties\" refers to Entity properties."
-      },
       "notEntityRelated": {
         "string": "This definition does not update any Entities.",
         "developer_comment": "\"Definition\" refers to a Form Definition."
@@ -3525,8 +3523,8 @@
     },
     "FormEditPublishedVersion": {
       "title": {
-        "string": "Current version",
-        "developer_comment": "This refers to the current version of a Form."
+        "string": "Current version: {version}",
+        "developer_comment": "This refers to the current version of a Form. {version} is the version of the published Form, defined in its definition."
       },
       "subtitle": {
         "published": {
@@ -3646,9 +3644,6 @@
         }
       },
       "alert": {
-        "fileRequired": {
-          "string": "Please choose a file."
-        },
         "fileNotReadable": {
           "string": "The file could not be read. It may have been modified or deleted. Please choose the file again."
         }
@@ -3706,10 +3701,6 @@
         "create": {
           "string": "Create Form",
           "developer_comment": "This is the title at the top of a page."
-        },
-        "update": {
-          "string": "Upload New Form Definition",
-          "developer_comment": "This is the title at the top of a section."
         }
       }
     },
@@ -3815,11 +3806,6 @@
           "string": "Newest",
           "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Forms."
         }
-      }
-    },
-    "FormSubmission": {
-      "formNotFound": {
-        "string": "No Form found with this URL, please double check."
       }
     },
     "FormSubmissions": {
@@ -4314,16 +4300,16 @@
         "1": {
           "introduction": {
             "0": {
-              "string": "First, you will need to choose a passphrase. This passphrase will be required to decrypt your Submissions. For your privacy, the server will not remember this passphrase: only people with the passphrase will be able to decrypt and read your Submission data."
+              "string": "First, choose an encryption password. The server does not store this password. Only people who know it can decrypt and read your Submission data."
             },
             "1": {
               "full": {
-                "string": "If you lose the passphrase, there is {no} way to recover it or your data!",
+                "string": "If you lose this encryption password, there is {no} way to recover it or your data.",
                 "developer_comment": "{no} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nno"
               },
               "no": {
                 "string": "no",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {no} is in the following text:\n\nIf you lose the passphrase, there is {no} way to recover it or your data!"
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {no} is in the following text:\n\nIf you lose this encryption password, there is {no} way to recover it or your data."
               }
             }
           }
@@ -4336,13 +4322,13 @@
       },
       "field": {
         "hint": {
-          "string": "Passphrase hint (optional)",
+          "string": "Encryption password hint (optional)",
           "developer_comment": "This is the text of a form field."
         }
       },
       "alert": {
         "passphraseTooShort": {
-          "string": "Please input a passphrase at least 10 characters long."
+          "string": "Encryption password must be at least 10 characters long."
         }
       }
     },
@@ -4964,12 +4950,12 @@
       },
       "introduction": {
         "0": {
-          "string": "In order to download this data, you will need to provide your passphrase. Your passphrase will be used only to decrypt your data for download, after which the server will forget it again."
+          "string": "Your encryption password is needed to download this data."
         }
       },
       "hint": {
         "string": "Hint: {hint}",
-        "developer_comment": "This text is shown if there is a passphrase hint. {hint} is the passphrase hint."
+        "developer_comment": "This text is shown if there is an encryption password hint. {hint} is the encryption password hint."
       },
       "noRepeat": {
         "string": "This Form does not have repeats.",
@@ -5555,91 +5541,6 @@
       },
       "invitationPending": {
         "string": "Invitation Pending"
-      }
-    },
-    "WebFormRenderer": {
-      "previewModal": {
-        "title": {
-          "string": "Data is valid"
-        },
-        "body": {
-          "string": "The data you entered is valid, but it was not submitted because this is a Form preview."
-        }
-      },
-      "submissionModal": {
-        "title": {
-          "string": "Form successfully sent!"
-        },
-        "body": {
-          "string": "You can fill this Form out again or close if you’re done."
-        },
-        "action": {
-          "fillOutAgain": {
-            "string": "Fill out again",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          }
-        }
-      },
-      "thankYouModal": {
-        "title": {
-          "string": "Thank you for participating!"
-        },
-        "body": {
-          "string": "You can close this window now."
-        }
-      },
-      "editSubmissionModal": {
-        "title": {
-          "string": "Submission successful"
-        },
-        "body": {
-          "string": "You will now be redirected."
-        }
-      },
-      "errorModal": {
-        "title": {
-          "string": "Submission error"
-        },
-        "body": {
-          "string": "Your data was not submitted. Error message: {errorMessage} You can close this dialog and try again. If the error keeps happening, please contact the person who asked you to fill this Form or {supportEmail}."
-        }
-      },
-      "sendingDataModal": {
-        "title": {
-          "string": "Sending Submission"
-        },
-        "body": {
-          "string": "Your data is being submitted. Please don’t close this window until it’s finished."
-        }
-      },
-      "sessionTimeoutModal": {
-        "title": {
-          "string": "Session expired"
-        },
-        "body": {
-          "full": {
-            "string": "Please log in {here} in a different browser tab and try again.",
-            "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
-          },
-          "here": {
-            "string": "here",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nPlease log in {here} in a different browser tab and try again."
-          }
-        }
-      },
-      "retryModal": {
-        "title": {
-          "string": "Submission error"
-        },
-        "body": {
-          "string": "Your data was not fully submitted. Please press the “Try again” button to retry. If the error keeps happening, please contact the person who asked you to fill this Form or {supportEmail}."
-        },
-        "action": {
-          "tryAgain": {
-            "string": "Try again",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          }
-        }
       }
     },
     "WhatsNew": {

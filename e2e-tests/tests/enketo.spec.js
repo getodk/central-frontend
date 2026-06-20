@@ -1,9 +1,8 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import BackendClient from '../backend-client';
+import { login, test } from '../util';
 
 const appUrl = process.env.ODK_URL;
-const user = process.env.ODK_USER;
-const password = process.env.ODK_PASSWORD;
 const projectId = process.env.PROJECT_ID;
 
 let backendClient;
@@ -25,18 +24,6 @@ test.afterAll(async () => {
   await backendClient.dispose();
 });
 
-const login = async (page) => {
-  await page.goto(appUrl);
-  await expect(page.getByRole('heading', { name: 'Welcome to ODK Central' })).toBeVisible();
-
-  await page.getByPlaceholder('email address').fill(user);
-  await page.getByPlaceholder('password').fill(password);
-
-  await page.getByRole('button', { name: 'Log in' }).click();
-
-  await page.waitForURL(appUrl);
-};
-
 test.describe('Enketo', () => {
   test.describe('all old URLs should be working', () => {
     const oldUrls = [
@@ -57,7 +44,7 @@ test.describe('Enketo', () => {
         url: ({ draftEnketoId }) => `/-/${draftEnketoId}`, requireLogin: true, draft: true,
         newUrl: ({ xmlFormId }) => `/projects/${projectId}/forms/${xmlFormId}/draft/submissions/new`
       }, {
-        description: 'Prevew Draft Form',
+        description: 'Preview Draft Form',
         url: ({ draftEnketoId }) => `/-/preview/${draftEnketoId}`, requireLogin: true, draft: true,
         newUrl: ({ xmlFormId }) => `/projects/${projectId}/forms/${xmlFormId}/draft/preview`
       }, {
@@ -88,14 +75,14 @@ test.describe('Enketo', () => {
 
         await page.goto(appUrl + t.url({ enketoId, enketoOnceId, draftEnketoId, xmlFormId, instanceId, st }));
 
-        await page.waitForURL(appUrl + t.newUrl({ enketoId, enketoOnceId, draftEnketoId, xmlFormId, instanceId, st }));
+        await expect(page).toHaveURL(appUrl + t.newUrl({ enketoId, enketoOnceId, draftEnketoId, xmlFormId, instanceId, st }));
 
         const frame = await page.frameLocator('iframe');
 
         if (t.draft) {
-          await expect(frame.getByRole('heading', { name: `${publishedForm.name} - v2` })).toBeVisible();
+          await expect(frame.getByRole('heading', { name: `${publishedForm.name} - v2`, exact: true })).toBeVisible();
         } else {
-          await expect(frame.getByRole('heading', { name: publishedForm.name })).toBeVisible();
+          await expect(frame.getByRole('heading', { name: publishedForm.name, exact: true })).toBeVisible();
         }
       });
     });
@@ -134,11 +121,9 @@ test.describe('Enketo', () => {
 
         await page.goto(appUrl + t.url({ enketoId, enketoOnceId, draftEnketoId, xmlFormId, instanceId, st }));
 
-        await page.waitForURL(appUrl + t.newUrl({ enketoId, enketoOnceId, draftEnketoId, xmlFormId, instanceId, st }));
+        await expect(page).toHaveURL(appUrl + t.newUrl({ enketoId, enketoOnceId, draftEnketoId, xmlFormId, instanceId, st }));
 
         await expect(page.getByRole('heading', { name: publishedForm.name })).toBeVisible();
-
-        await expect(page.getByText('A new version of this application has been downloaded. Refresh this page to load the updated version.')).toBeVisible();
       });
     });
 
@@ -162,8 +147,6 @@ test.describe('Enketo', () => {
       await page.goto(`${appUrl}/-/x/${enketoId}`);
 
       await expect(page.getByRole('heading', { name: publishedForm.name })).toBeVisible();
-
-      await expect(page.getByText('A new version of this application has been downloaded. Refresh this page to load the updated version.')).toBeVisible();
 
       await page.reload();
 

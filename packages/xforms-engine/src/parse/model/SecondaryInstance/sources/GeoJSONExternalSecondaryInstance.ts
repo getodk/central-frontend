@@ -3,12 +3,12 @@ import { assertUnknownArray } from '@getodk/common/lib/type-assertions/assertUnk
 import type { UnknownObject } from '@getodk/common/lib/type-assertions/assertUnknownObject.ts';
 import { assertUnknownObject } from '@getodk/common/lib/type-assertions/assertUnknownObject.ts';
 import type {
-	GeoJsonProperties as BaseGeoJSONProperties,
-	LineString as BaseLineString,
-	Point as BasePoint,
-	Polygon as BasePolygon,
-	Feature as GeoJSONFeature,
-	FeatureCollection as GeoJSONFeatureCollection,
+  GeoJsonProperties as BaseGeoJSONProperties,
+  LineString as BaseLineString,
+  Point as BasePoint,
+  Polygon as BasePolygon,
+  Feature as GeoJSONFeature,
+  FeatureCollection as GeoJSONFeatureCollection,
 } from 'geojson';
 import { ErrorProductionDesignPendingError } from '../../../../error/ErrorProductionDesignPendingError.ts';
 import type { StaticElementOptions } from '../../../../integration/xpath/static-dom/StaticElement.ts';
@@ -40,7 +40,7 @@ const SUPPORTED_TYPES_MESSAGE = 'Only Points, LineStrings and Polygons are curre
 type LongLatCoordinates = readonly [longitude: number, latitude: number];
 
 interface UnknownCoordinatesObject {
-	readonly coordinates: unknown;
+  readonly coordinates: unknown;
 }
 
 // prettier-ignore
@@ -50,13 +50,13 @@ type ExtensibleBaseGeoJSONType<T> =
 		: Readonly<T>;
 
 interface Point extends ExtensibleBaseGeoJSONType<BasePoint> {
-	readonly coordinates: LongLatCoordinates;
+  readonly coordinates: LongLatCoordinates;
 }
 
 type LineStringCoordinates = readonly LongLatCoordinates[];
 
 interface LineString extends ExtensibleBaseGeoJSONType<BaseLineString> {
-	readonly coordinates: LineStringCoordinates;
+  readonly coordinates: LineStringCoordinates;
 }
 
 // prettier-ignore
@@ -65,7 +65,7 @@ type PolygonCoordinates =
 	| readonly [LineStringCoordinates];
 
 interface Polygon extends ExtensibleBaseGeoJSONType<BasePolygon> {
-	readonly coordinates: PolygonCoordinates;
+  readonly coordinates: PolygonCoordinates;
 }
 
 // prettier-ignore
@@ -75,12 +75,12 @@ type SupportedGeometry =
 	| Polygon;
 
 interface UnparsedGeometry<Type extends SupportedGeometryType> {
-	readonly type: Type;
-	readonly coordinates: readonly unknown[];
+  readonly type: Type;
+  readonly coordinates: readonly unknown[];
 }
 
 type UnknownGeometry = {
-	[Type in SupportedGeometryType]: UnparsedGeometry<Type>;
+  [Type in SupportedGeometryType]: UnparsedGeometry<Type>;
 }[SupportedGeometryType];
 
 /**
@@ -97,15 +97,15 @@ type GeoJSONProperties = UnknownObject;
  * - all properties and non-primitive property values are deeply `readonly`
  */
 interface Feature {
-	readonly type: FEATURE;
-	readonly geometry: SupportedGeometry;
-	readonly id?: number | string | undefined;
+  readonly type: FEATURE;
+  readonly geometry: SupportedGeometry;
+  readonly id?: number | string | undefined;
 
-	/**
-	 * Perhaps surprising: this property is required by the
-	 * {@link https://datatracker.ietf.org/doc/html/rfc7946#section-3.2 | GeoJSON spec}!
-	 */
-	readonly properties: GeoJSONProperties | null;
+  /**
+   * Perhaps surprising: this property is required by the
+   * {@link https://datatracker.ietf.org/doc/html/rfc7946#section-3.2 | GeoJSON spec}!
+   */
+  readonly properties: GeoJSONProperties | null;
 }
 
 /**
@@ -113,230 +113,230 @@ interface Feature {
  * described for {@link Feature}.
  */
 interface FeatureCollection {
-	readonly type: FEATURE_COLLECTION;
-	readonly features: readonly Feature[];
+  readonly type: FEATURE_COLLECTION;
+  readonly features: readonly Feature[];
 }
 
 type AssertLongLatCoordinates = (data: unknown) => asserts data is LongLatCoordinates;
 
 const assertLongLatCoordinates: AssertLongLatCoordinates = (data) => {
-	assertUnknownArray(data);
+  assertUnknownArray(data);
 
-	const [longitude, latitude, ...rest] = data;
+  const [longitude, latitude, ...rest] = data;
 
-	if (typeof longitude === 'number' && typeof latitude === 'number' && rest.length === 0) {
-		return;
-	}
+  if (typeof longitude === 'number' && typeof latitude === 'number' && rest.length === 0) {
+    return;
+  }
 
-	throw new ErrorProductionDesignPendingError(
-		`Only ${POINT}s with latitude and longitude are currently supported`
-	);
+  throw new ErrorProductionDesignPendingError(
+    `Only ${POINT}s with latitude and longitude are currently supported`
+  );
 };
 
 type AssertUnknownGeometry = (value: unknown) => asserts value is UnknownGeometry;
 
 const assertUnknownGeometry: AssertUnknownGeometry = (value) => {
-	assertUnknownObject(value);
+  assertUnknownObject(value);
 
-	if (!SUPPORTED_TYPES.has(value.type as SupportedGeometryType)) {
-		throw new ErrorProductionDesignPendingError(SUPPORTED_TYPES_MESSAGE);
-	}
+  if (!SUPPORTED_TYPES.has(value.type as SupportedGeometryType)) {
+    throw new ErrorProductionDesignPendingError(SUPPORTED_TYPES_MESSAGE);
+  }
 
-	assertUnknownArray(value.coordinates);
+  assertUnknownArray(value.coordinates);
 };
 
 type AssertSupportedGeometry = (value: unknown) => asserts value is SupportedGeometry;
 
 const assertSupportedGeometry: AssertSupportedGeometry = (value) => {
-	assertUnknownGeometry(value);
+  assertUnknownGeometry(value);
 
-	switch (value.type) {
-		case LINE_STRING:
-			value.coordinates.forEach(assertLongLatCoordinates);
-			break;
+  switch (value.type) {
+    case LINE_STRING:
+      value.coordinates.forEach(assertLongLatCoordinates);
+      break;
 
-		case POINT:
-			assertLongLatCoordinates(value.coordinates);
-			break;
+    case POINT:
+      assertLongLatCoordinates(value.coordinates);
+      break;
 
-		case POLYGON: {
-			const [coordinates, ...rest] = value.coordinates;
+    case POLYGON: {
+      const [coordinates, ...rest] = value.coordinates;
 
-			if (coordinates == null) {
-				return;
-			}
+      if (coordinates == null) {
+        return;
+      }
 
-			if (rest.length > 0) {
-				throw new ErrorProductionDesignPendingError(
-					`Unsupported ${POLYGON}: multiple sets of coordinates`
-				);
-			}
+      if (rest.length > 0) {
+        throw new ErrorProductionDesignPendingError(
+          `Unsupported ${POLYGON}: multiple sets of coordinates`
+        );
+      }
 
-			assertUnknownArray(coordinates);
-			coordinates.forEach(assertLongLatCoordinates);
+      assertUnknownArray(coordinates);
+      coordinates.forEach(assertLongLatCoordinates);
 
-			break;
-		}
+      break;
+    }
 
-		default:
-			throw new UnreachableError(value);
-	}
+    default:
+      throw new UnreachableError(value);
+  }
 };
 
 type AssertFeature = (value: unknown) => asserts value is Feature;
 
 const assertFeature: AssertFeature = (value) => {
-	assertUnknownObject(value);
+  assertUnknownObject(value);
 
-	const { geometry, type, id, properties } = value;
+  const { geometry, type, id, properties } = value;
 
-	if (type !== FEATURE) {
-		throw new ErrorProductionDesignPendingError(
-			`Expected Feature.type ${FEATURE}, got ${String(type)}`
-		);
-	}
+  if (type !== FEATURE) {
+    throw new ErrorProductionDesignPendingError(
+      `Expected Feature.type ${FEATURE}, got ${String(type)}`
+    );
+  }
 
-	assertSupportedGeometry(geometry);
+  assertSupportedGeometry(geometry);
 
-	if ('id' in value) {
-		const typeofId = typeof id;
+  if ('id' in value) {
+    const typeofId = typeof id;
 
-		switch (typeofId) {
-			case 'number':
-			case 'string':
-			case 'undefined':
-				break;
+    switch (typeofId) {
+      case 'number':
+      case 'string':
+      case 'undefined':
+        break;
 
-			default:
-				throw new ErrorProductionDesignPendingError(
-					`Unexpected type of feature id property: ${typeofId}`
-				);
-		}
-	}
+      default:
+        throw new ErrorProductionDesignPendingError(
+          `Unexpected type of feature id property: ${typeofId}`
+        );
+    }
+  }
 
-	// Note: atypical strict check for `null` value! The `properties` key is
-	// required per
-	if (properties === null) {
-		return;
-	}
+  // Note: atypical strict check for `null` value! The `properties` key is
+  // required per
+  if (properties === null) {
+    return;
+  }
 
-	assertUnknownObject(properties);
+  assertUnknownObject(properties);
 };
 
 type AssertFeatureCollection = (value: unknown) => asserts value is FeatureCollection;
 
 const assertFeatureCollection: AssertFeatureCollection = (value) => {
-	assertUnknownObject(value);
+  assertUnknownObject(value);
 
-	const { type, features } = value;
+  const { type, features } = value;
 
-	if (type !== FEATURE_COLLECTION) {
-		throw new ErrorProductionDesignPendingError(
-			`Expected FeatureCollection.type ${FEATURE_COLLECTION}, got ${String(type)}`
-		);
-	}
+  if (type !== FEATURE_COLLECTION) {
+    throw new ErrorProductionDesignPendingError(
+      `Expected FeatureCollection.type ${FEATURE_COLLECTION}, got ${String(type)}`
+    );
+  }
 
-	assertUnknownArray(features);
+  assertUnknownArray(features);
 
-	features.forEach(assertFeature);
+  features.forEach(assertFeature);
 };
 
 type SerializedCoordinates = `${LongLatCoordinates[1]} ${LongLatCoordinates[0]} 0 0`;
 
 const serializeCoordinates = (coordinates: LongLatCoordinates): SerializedCoordinates => {
-	const [longitude, latitude] = coordinates;
+  const [longitude, latitude] = coordinates;
 
-	return `${latitude} ${longitude} 0 0`;
+  return `${latitude} ${longitude} 0 0`;
 };
 
 const geometryValues = (geometry: SupportedGeometry): readonly string[] => {
-	switch (geometry.type) {
-		case 'LineString':
-			return geometry.coordinates.map(serializeCoordinates);
+  switch (geometry.type) {
+    case 'LineString':
+      return geometry.coordinates.map(serializeCoordinates);
 
-		case 'Point':
-			return [serializeCoordinates(geometry.coordinates)];
+    case 'Point':
+      return [serializeCoordinates(geometry.coordinates)];
 
-		case 'Polygon': {
-			const [coordinates = []] = geometry.coordinates;
+    case 'Polygon': {
+      const [coordinates = []] = geometry.coordinates;
 
-			return coordinates.map(serializeCoordinates);
-		}
+      return coordinates.map(serializeCoordinates);
+    }
 
-		default:
-			throw new UnreachableError(geometry);
-	}
+    default:
+      throw new UnreachableError(geometry);
+  }
 };
 
 const geometryChildElementOption = (feature: Feature): StaticElementOptions => {
-	const { geometry } = feature;
-	const values = geometryValues(geometry);
-	const value = values.join('; ');
+  const { geometry } = feature;
+  const values = geometryValues(geometry);
+  const value = values.join('; ');
 
-	return {
-		name: 'geometry',
-		children: [value],
-	};
+  return {
+    name: 'geometry',
+    children: [value],
+  };
 };
 
 const propertyChildOption = (propertyName: string, propertyValue: string): StaticElementOptions => {
-	return {
-		name: propertyName,
-		children: [propertyValue],
-	};
+  return {
+    name: propertyName,
+    children: [propertyValue],
+  };
 };
 
 function* propertyChildOptions(feature: Feature): Iterable<StaticElementOptions> {
-	const { properties } = feature;
+  const { properties } = feature;
 
-	if (properties == null) {
-		return [];
-	}
+  if (properties == null) {
+    return [];
+  }
 
-	const { id: propertiesId, ...nonIdProperties } = properties;
-	const { id = propertiesId } = feature;
+  const { id: propertiesId, ...nonIdProperties } = properties;
+  const { id = propertiesId } = feature;
 
-	if (id !== undefined) {
-		// eslint-disable-next-line @typescript-eslint/no-base-to-string -- Intentional fallback, we don't know what this is and it could be any permutation of JSON
-		yield propertyChildOption('id', String(id));
-	}
+  if (id !== undefined) {
+    // eslint-disable-next-line @typescript-eslint/no-base-to-string -- Intentional fallback, we don't know what this is and it could be any permutation of JSON
+    yield propertyChildOption('id', String(id));
+  }
 
-	for (const [propertyName, propertyValue] of Object.entries(nonIdProperties)) {
-		yield propertyChildOption(propertyName, String(propertyValue));
-	}
+  for (const [propertyName, propertyValue] of Object.entries(nonIdProperties)) {
+    yield propertyChildOption(propertyName, String(propertyValue));
+  }
 }
 
 const itemChildOption = (feature: Feature): StaticElementOptions => {
-	const geometry = geometryChildElementOption(feature);
-	const properties = propertyChildOptions(feature);
+  const geometry = geometryChildElementOption(feature);
+  const properties = propertyChildOptions(feature);
 
-	return {
-		name: 'item',
-		children: [geometry, ...properties],
-	};
+  return {
+    name: 'item',
+    children: [geometry, ...properties],
+  };
 };
 
 const rootChildOption = (featureCollection: FeatureCollection): StaticElementOptions => {
-	return {
-		name: 'root',
-		children: featureCollection.features.map(itemChildOption),
-	};
+  return {
+    name: 'root',
+    children: featureCollection.features.map(itemChildOption),
+  };
 };
 
 const geoJSONExternalSecondaryInstanceDefinition = (
-	instanceId: string,
-	featureCollection: FeatureCollection
+  instanceId: string,
+  featureCollection: FeatureCollection
 ): SecondaryInstanceDefinition => {
-	return defineSecondaryInstance(instanceId, rootChildOption(featureCollection));
+  return defineSecondaryInstance(instanceId, rootChildOption(featureCollection));
 };
 
 export class GeoJSONExternalSecondaryInstanceSource extends ExternalSecondaryInstanceSource<'geojson'> {
-	parseDefinition(): SecondaryInstanceDefinition {
-		const { data } = this.resource;
-		const value = JSON.parse(data) as unknown;
+  parseDefinition(): SecondaryInstanceDefinition {
+    const { data } = this.resource;
+    const value = JSON.parse(data) as unknown;
 
-		assertFeatureCollection(value);
+    assertFeatureCollection(value);
 
-		return geoJSONExternalSecondaryInstanceDefinition(this.instanceId, value);
-	}
+    return geoJSONExternalSecondaryInstanceDefinition(this.instanceId, value);
+  }
 }

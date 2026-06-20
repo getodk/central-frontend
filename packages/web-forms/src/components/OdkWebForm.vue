@@ -4,6 +4,7 @@ import IconSVG from '@/components/common/IconSVG.vue';
 import FormHeader from '@/components/form-layout/FormHeader.vue';
 import QuestionList from '@/components/form-layout/QuestionList.vue';
 import { waitAllTasksToFinish } from '@/lib/async/event-loop.ts';
+import { POST_SUBMIT__NEW_INSTANCE } from '@/lib/constants/control-flow.ts';
 import {
 	TRANSLATE,
 	FORM_MEDIA_CACHE,
@@ -50,7 +51,7 @@ type ObjectURL = `blob:${string}`;
 export interface OdkWebFormsProps {
 	readonly formXml: string;
 	readonly fetchFormAttachment: FetchFormAttachment;
-	readonly trackDevice?: boolean;
+	readonly deviceId?: string; // different case to make it easier to bind
 	readonly preloadProperties?: PreloadProperties;
 	readonly missingResourceBehavior?: MissingResourceBehavior;
 	readonly attachmentMaxSize?: number;
@@ -80,9 +81,12 @@ const hostSubmissionResultCallbackFactory = (
 		const options = {
 			form: formOptions,
 			preloadProperties: props.preloadProperties,
-			trackDevice: props.trackDevice,
+			deviceID: props.deviceId,
 		};
 		state.value = updateSubmittedFormState(submissionResult, currentState, options);
+		if (submissionResult?.next === POST_SUBMIT__NEW_INSTANCE) {
+			document.scrollingElement?.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+		}
 	};
 
 	return (hostResult) => {
@@ -192,7 +196,8 @@ const formOptions = readonly<FormOptions>({
 	attachmentMaxSize: props.attachmentMaxSize,
 });
 provide(FORM_OPTIONS, formOptions);
-provide(FORM_MEDIA_CACHE, new Map<JRResourceURLString, ObjectURL>());
+const mediaCache = new Map<JRResourceURLString, ObjectURL>();
+provide(FORM_MEDIA_CACHE, mediaCache);
 
 const state = initializeFormState();
 const submitPressed = ref(false);
@@ -225,7 +230,7 @@ const init = async () => {
 		form: formOptions,
 		editInstance: props.editInstance ?? null,
 		preloadProperties: props.preloadProperties,
-		trackDevice: props.trackDevice,
+		deviceID: props.deviceId,
 	});
 };
 
@@ -267,6 +272,8 @@ watchEffect(() => {
 });
 
 onUnmounted(() => {
+	mediaCache.forEach((url) => URL.revokeObjectURL(url));
+	mediaCache.clear();
 	resetComponentState();
 });
 </script>
