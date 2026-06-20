@@ -5,6 +5,7 @@ shopt -s inherit_errexit || true
 git ls-files -z -- . \
     ':!:packages/common/src/fixtures/test-javarosa/resources/smoketests/whova_form.xml' \
     ':!:packages/common/src/fixtures/test-javarosa/resources/wards.xml' \
+    ':!:packages/xforms-engine/test/integration/repeat.test.ts' \
     ':!:package-lock.json' \
 | xargs -0 ls -l -- \
 | awk '
