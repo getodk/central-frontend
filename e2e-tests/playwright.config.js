@@ -29,6 +29,7 @@ export default defineConfig({
   reporter,
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
+    ignoreHTTPSErrors: true,
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     serviceWorkers: 'allow'
@@ -47,14 +48,20 @@ export default defineConfig({
     },
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        ignoreHTTPSErrors: true, // TODO should be enough to define above?
+        launchOptions: {
+          args: ['--ignore-certificate-errors'], // force-bypass service worker SSL checks
+        },
+      },
       dependencies: ['setup'],
     },
-
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
       dependencies: ['setup'],
     }
+    // TODO implement trusted root CA to avoid ignoreHTTPSErrors and ensure both service workers AND CSP are tested correctly
   ]
 });
