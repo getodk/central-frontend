@@ -345,23 +345,30 @@ export const position = new NumberFunction(
     }
 
     const nodeName = domProvider.getQualifiedName(value);
+    const parent = domProvider.getParentNode(value);
+    if (parent == null) {
+      return 1;
+    }
 
-    let currentNode = value;
-    let result = 0;
-
-    do {
-      result += 1;
-
-      const previousNode = domProvider.getPreviousSiblingElement(currentNode);
-
-      if (previousNode == null) {
-        break;
+    const siblings = domProvider.getChildNodes(parent);
+    let blockPosition = 0;
+    for (const sibling of siblings) {
+      if (!domProvider.isQualifiedNamedNode(sibling)) {
+        continue;
       }
 
-      currentNode = previousNode;
-    } while (domProvider.getQualifiedName(currentNode) === nodeName);
+      if (domProvider.getQualifiedName(sibling) !== nodeName) {
+        blockPosition = 0;
+        continue;
+      }
 
-    return result;
+      blockPosition += 1;
+      if (sibling === value) {
+        return blockPosition;
+      }
+    }
+
+    return blockPosition;
   }
 );
 

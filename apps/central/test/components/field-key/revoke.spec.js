@@ -13,16 +13,16 @@ describe('FieldKeyRevoke', () => {
       testData.extendedFieldKeys.createPast(1);
       return load('/projects/1/app-users').testModalToggles({
         modal: FieldKeyRevoke,
-        show: '.field-key-row .dropdown-menu a',
+        show: '.field-key-row .revoke-button',
         hide: '.btn-link'
       });
     });
 
-    it("is disabled if the app user's access has been revoked", async () => {
+    it('does not show revoke button if access has been revoked', async () => {
       testData.extendedFieldKeys.createPast(1, { token: null });
       const app = await load('/projects/1/app-users');
-      const li = app.get('.field-key-row .dropdown-menu li');
-      li.classes('disabled').should.be.true;
+      const row = app.getComponent(FieldKeyRow);
+      row.find('.revoke-button').exists().should.be.false;
     });
   });
 
@@ -46,7 +46,7 @@ describe('FieldKeyRevoke', () => {
       return load('/projects/1/app-users')
         .complete()
         .request(async (app) => {
-          await app.get('#field-key-list-table .dropdown-menu a').trigger('click');
+          await app.get('#field-key-list-table .revoke-button').trigger('click');
           return app.get('#field-key-revoke .btn-danger').trigger('click');
         })
         .respondWithData(() => {
@@ -72,7 +72,7 @@ describe('FieldKeyRevoke', () => {
       rows.length.should.equal(2);
       rows[0].find('.field-key-row-popover-link').exists().should.be.true;
       rows[1].find('.field-key-row-popover-link').exists().should.be.false;
-      rows[1].findAll('td')[3].text().should.equal('Access revoked');
+      rows[1].findAll('td')[1].text().should.equal('Access revoked');
     });
   });
 });

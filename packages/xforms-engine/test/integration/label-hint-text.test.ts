@@ -153,4 +153,53 @@ describe('`<label>` and/or `<hint>` text', () => {
       }
     );
   });
+
+  it('newline following `<output>` element renders as line break', async () => {
+    const scenario = await Scenario.init(
+      'label-newline-after-output',
+      html(
+        head(
+          title('label-newline-after-output'),
+          model(
+            mainInstance(t('data id="label-newline-after-output"', t('field'), t('question'))),
+            bind('/data/field').type('string').calculate("'value'"),
+            bind('/data/question').type('string')
+          )
+        ),
+        body(input('/data/question', t('label', 'Line 1 <output value="/data/field"/>\nLine 2')))
+      )
+    );
+    scenario.next('/data/question');
+    const label = scenario.getQuestionLabel({ assertCurrentReference: '/data/question' }).formatted;
+    expect(label).toMatchObject([
+      { value: 'Line 1 ' },
+      { elementName: 'span', children: [{ value: 'value' }] },
+      { elementName: 'br' },
+      { value: 'Line 2' },
+    ]);
+  });
+
+  it('preserves space between `<output>` element and following text', async () => {
+    const scenario = await Scenario.init(
+      'label-space-after-output',
+      html(
+        head(
+          title('label-space-after-output'),
+          model(
+            mainInstance(t('data id="label-space-after-output"', t('field'), t('question'))),
+            bind('/data/field').type('string').calculate("'value'"),
+            bind('/data/question').type('string')
+          )
+        ),
+        body(input('/data/question', t('label', 'Parcel <output value="/data/field"/> not found')))
+      )
+    );
+    scenario.next('/data/question');
+    const label = scenario.getQuestionLabel({ assertCurrentReference: '/data/question' }).formatted;
+    expect(label).toMatchObject([
+      { value: 'Parcel ' },
+      { elementName: 'span', children: [{ value: 'value' }] },
+      { value: ' not found' },
+    ]);
+  });
 });

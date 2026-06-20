@@ -16,6 +16,7 @@ import { defineConfig } from 'vite';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'url';
 import { readFileSync } from 'fs';
+import { playwright } from '@vitest/browser-playwright'
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const webFormsPackage = JSON.parse(
@@ -47,9 +48,32 @@ const devServer = {
   cors: false
 };
 
+// used to route requests to the right app in development
+const devAppRouter = () => ({
+  name: 'dev-app-router',
+  configureServer(server) {
+    server.middlewares.use((req, res, next) => {
+      // NOTE: must match the regex paths defined in Nginx
+
+      // matches public link paths and Enketo style paths, eg: /f/{enketoId}?st={token}
+      const enketoRegex = /^\/f\//;
+
+      // matches restful forms paths, eg: /projects/{projectId}/forms/{formId}/submissions/{submissionId}/edit
+      const restRegex = /^\/projects\/\d+\/forms\/[^/]+(?:\/draft)?(?:\/preview|\/submissions\/new(?:\/offline)?\/?|\/submissions\/[^/]+\/edit)\/?/;
+
+      if (enketoRegex.test(req.url) || restRegex.test(req.url)) {
+        req.url = '/apps/forms/index.html';
+      }
+      next();
+    })
+  }
+});
+
 export default defineConfig(({ mode }) => ({
+  envPrefix: ['VITE_', 'ODK_'],
   plugins: [
     vue(),
+    devAppRouter(),
     VueI18nPlugin({
       include: resolve(dirname(fileURLToPath(import.meta.url)), './apps/central/src/locales/**'),
       compositionOnly: false,
@@ -66,7 +90,31 @@ export default defineConfig(({ mode }) => ({
     target: buildTarget,
     // `false` during dev for performance reasons
     reportCompressedSize: mode === 'production',
-    cssCodeSplit: false
+    rollupOptions: {
+      input: {
+        main: resolve(import.meta.dirname, 'index.html'),
+        forms: resolve(import.meta.dirname, 'apps/forms/index.html'),
+      },
+      output: {
+        entryFileNames: (chunkInfo) => {
+          const moduleId = chunkInfo.facadeModuleId;
+          if (moduleId && moduleId.includes('/apps/forms/')) {
+            return 'assets/forms/[name]-[hash].js';
+          }
+          return 'assets/central/[name]-[hash].js';
+        }
+      },
+    },
+  },
+  test: {
+    environment: 'jsdom',
+    browser: {
+      enabled: true,
+      headless: true,
+      screenshotFailures: false,
+      provider: playwright(),
+      instances: [{ browser: 'chromium' }],
+    },
   },
   // Not sure why this is needed in addition to build.target above and why it's
   // only an issue in development. `npm run dev` doesn't work without this.
