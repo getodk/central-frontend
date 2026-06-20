@@ -1,326 +1,223 @@
-<!--
-Copyright 2025 ODK Central Developers
-See the NOTICE file at the top-level directory of this distribution and at
-https://github.com/getodk/central-frontend/blob/master/NOTICE.
+<script setup lang="ts">
 
-This file is part of ODK Central. It is subject to the license terms in
-the LICENSE file found in the top-level directory of this distribution and at
-https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
-including this file, may be copied, modified, propagated, or distributed
-except according to the terms contained in the LICENSE file.
--->
-
-<template>
-  <template v-if="dataExists">
-    <OdkWebForm
-      :form-xml="formVersionXml.data"
-      :edit-instance="editInstanceOptions"
-      :fetch-form-attachment="getAttachment"
-      :track-device="true"
-      @submit="handleSubmit"/>
-  </template>
-
-  <modal id="web-form-renderer-submission-modal" :state="submissionModal.state" :hideable="submissionModal.hideable" backdrop @hide="hideModal()">
-    <template #title>{{ $t(submissionModal.type + '.title') }}</template>
-    <template #body>
-      <div class="modal-introduction">
-        <i18n-t v-if="submissionModal.type === 'errorModal'" tag="p" keypath="errorModal.body">
-          <template #errorMessage>
-            <br><br>
-              <pre>{{ submissionModal.errorMessage }}</pre>
-          </template>
-          <template #supportEmail>
-            <a href="emailto:support@getodk.org">support@getodk.org</a>
-          </template>
-        </i18n-t>
-        <i18n-t v-else-if="submissionModal.type === 'retryModal'" tag="p" keypath="retryModal.body">
-          <template #supportEmail>
-            <a href="emailto:support@getodk.org">support@getodk.org</a>
-          </template>
-        </i18n-t>
-        <i18n-t v-else-if="submissionModal.type === 'sessionTimeoutModal'" tag="p" keypath="sessionTimeoutModal.body.full">
-          <template #here>
-              <a href="/login" target="_blank">{{ $t('sessionTimeoutModal.body.here') }}</a>
-          </template>
-        </i18n-t>
-        <p v-else>
-          {{ $t(submissionModal.type + '.body') }}
-        </p>
-      </div>
-      <div v-if="submissionModal.type === 'submissionModal'" class="modal-actions">
-        <button type="button" class="btn btn-link" @click="closeWindow()">
-          {{ $t('action.close') }}
-        </button>
-        <button type="button" class="btn btn-primary" @click="hideModal()">
-          {{ $t('submissionModal.action.fillOutAgain') }}
-        </button>
-      </div>
-      <!-- Any type of error while sending attachments -->
-      <div v-else-if="submissionModal.type === 'retryModal'
-        || (submissionModal.type === 'sessionTimeoutModal' && !submissionModal.hideable)"
-        class="modal-actions">
-        <button type="button" class="btn btn-primary" @click="submitData()">
-          {{ $t('action.tryAgain') }}
-        </button>
-      </div>
-      <!-- Preview modal or any type of error while submitting primary instance -->
-      <div v-else-if="submissionModal.type === 'previewModal'
-        || submissionModal.type === 'errorModal'
-        || submissionModal.type === 'sessionTimeoutModal' && submissionModal.hideable"
-        class="modal-actions">
-        <button type="button" class="btn btn-primary" @click="hideModal()">
-          {{ $t('action.close') }}
-        </button>
-      </div>
-    </template>
-  </modal>
-</template>
-
-<script setup>
-import { computed, getCurrentInstance, inject, onMounted, onUnmounted, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-/* eslint-disable-next-line import/no-unresolved -- not sure why eslint is complaining about it */
-import { OdkWebForm, webFormsPlugin, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
-import Modal from './modal.vue';
-
-import { apiPaths, isProblem, queryString, requestAlertMessage } from '../util/request';
-import { modalData } from '../util/reactivity';
-import { noop } from '../util/util';
-import { runSequentially } from '../util/promise';
-import { useRequestData } from '../request-data';
-import useRequest from '../composables/request';
-import useRoutes from '../composables/routes';
-
-const { resourceStates, form, createResource } = useRequestData();
-const formVersionXml = createResource('formVersionXml');
-const { request } = useRequest();
-const submissionAttachments = createResource('submissionAttachments');
-const submissionModal = modalData();
-const route = useRoute();
-const router = useRouter();
-const { submissionPath } = useRoutes();
-
+import { computed, ref } from 'vue';
+import { captureException } from '@sentry/vue';
+import { OdkWebForm, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
+import { type MonolithicInstancePayload } from '@getodk/xforms-engine';
+import { queryString, type Form } from '../utils/api';
+import Dialog from 'primevue/dialog';
+import Button from 'primevue/button';
+import { Translation } from 'vue-i18n'
+import Location from '../utils/location';
+import { getDeviceId } from '../utils/device-id';
 defineOptions({
   name: 'WebFormRenderer'
 });
 
-const props = defineProps({
-  actionType: {
-    type: String,
-    required: true
-  },
-  instanceId: String
-});
+export interface WebFormsRendererProps {
+  form: Form;
+  xform: string;
+  actionType: string;
+  instanceId?: string | null;
+  submissionAttachments?: string[] | null;
+  st?: string | null
+}
 
-const emit = defineEmits(['loaded']);
+const props = defineProps<WebFormsRendererProps>();
 
-// Install webFormsPlugin lazily here (not at app startup) to avoid loading @getodk/web-forms on every page.
-// This is safe because this component is already loaded asynchronously.
-const inst = getCurrentInstance();
-inst.appContext.app.use(webFormsPlugin);
+interface SubmissionData {
+  instanceFile: File;
+  attachments: File[];
+}
 
-const { i18n } = inject('container');
+interface PostPrimaryInstanceParams {
+  st: string | undefined;
+  deviceID?: string | undefined;
+}
 
-const { initiallyLoading, dataExists } = props.actionType === 'edit' ? resourceStates([formVersionXml, submissionAttachments]) : resourceStates([formVersionXml]);
+let clearForm:Function;
+let submissionData: SubmissionData;
 
-watch(() => initiallyLoading.value, (value) => {
-  if (!value) emit('loaded');
-});
-
-const isPublicLink = computed(() => !!route.query.st);
-
-const withToken = (url) => `${url}${queryString({ st: route.query.st })}`;
-
+const submissionResult:any = {};
 const isEdit = computed(() => props.actionType === 'edit');
+const isPublicLink = computed(() => props.actionType === 'public-link');
 
-/**
- * Convert AxiosResponse into subset of web standard  {@link Response} that satisfies Web-Forms'
- * requirements
- */
-const transformAttachmentResponse = (axiosResponse) => {
-  const { data, status, statusText, headers } = axiosResponse;
+const deviceID = getDeviceId();
 
-  const fetchHeaders = new Headers();
-  for (const [key, value] of Object.entries(headers)) {
-    if (key === 'content-type') {
-      // because web-forms doesn't want space between media type and charset
-      // https://github.com/getodk/web-forms/issues/269
-      fetchHeaders.append(key, value.replace('; charset', ';charset'));
-    } else {
-      fetchHeaders.append(key, value);
-    }
+const visibleModal = ref();
+
+const withToken = (url) => `${url}${queryString({ st: props.st })}`;
+
+const getAttachment = (requestUrl: URL) => {
+  const encodedName = encodeURIComponent(requestUrl.pathname.split('/').pop()!);
+  const draftPath = props.form.draft ? '/draft' : '';
+  const url = withToken(`/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath}/attachments/${encodedName}`);
+  return fetch(url);
+};
+
+const postPrimaryInstance = async (file:File) => {
+  let url: string;
+  let method: string;
+  let params: PostPrimaryInstanceParams = {
+    st: props.st ?? undefined
   }
-
-  let body;
-  if (typeof (data) === 'string' || data instanceof Blob) {
-    body = data;
-  } else if (headers['content-type'].includes('application/json') ||
-            headers['content-type'].includes('application/geo+json')) {
-    body = JSON.stringify(data);
-  } else {
-    // eslint-disable-next-line no-console
-    console.error('response data is not a known text format');
-  }
-
-  return new Response(body, {
-    status,
-    statusText,
-    headers: fetchHeaders,
-  });
-};
-
-const fetchFormXml = () => {
-  const url = withToken(apiPaths.formXml(form.projectId, form.xmlFormId, !!form.draftToken));
-  return formVersionXml.request({
-    url
-  }).catch(noop);
-};
-
-const fetchSubmissionXml = () => {
-  const requestUrl = apiPaths.submissionXml(form.projectId, form.xmlFormId, props.instanceId);
-  return request({
-    url: requestUrl,
-    alert: false
-  })
-    .then(({ data }) => data)
-    .catch(noop);
-};
-
-const fetchSubmissionAttachments = () => {
-  const requestUrl = apiPaths.submissionAttachments(form.projectId, form.xmlFormId, props.instanceId);
-  return submissionAttachments.request({ url: requestUrl, alert: false }).catch(noop);
-};
-
-const fetchSubmissionAttachment = (attachmentName) => {
-  // Draft is always false because we don't support editing of draft submissions
-  const requestUrl = apiPaths.submissionAttachment(form.projectId, form.xmlFormId, false, props.instanceId, attachmentName);
-  return request({
-    url: requestUrl,
-    alert: false,
-    responseType: 'blob', // Handle all file types for attachments.
-  })
-    .then(transformAttachmentResponse)
-    .catch(noop);
-};
-
-const editInstanceOptions = computed(() => {
-  if (isEdit.value && submissionAttachments.dataExists) {
-    return {
-      resolveInstance: fetchSubmissionXml,
-      attachmentFileNames: submissionAttachments.data
-        .filter(a => a.exists)
-        .map(a => a.name),
-      resolveAttachment: fetchSubmissionAttachment
-    };
-  }
-  return null;
-});
-
-const fetchData = () => {
-  fetchFormXml();
-  if (isEdit.value) fetchSubmissionAttachments();
-};
-
-fetchData();
-
-/**
- * Hide the modal
- */
-const hideModal = () => {
-  submissionModal.hide();
-};
-
-/**
- * Displays the modal
- *
- * @param {Object} [options] - Optional parameters to pass to modal.show().
- */
-const showModal = (options) => {
-  submissionModal.show({ hideable: true, ...options });
-};
-
-const closeWindow = () => {
-  window.close();
-};
-
-/**
- * Web Form expects host application to provide a function that it can use to
- * fetch attachments. Signature of the function is (url) => Response; where
- * Response is subset of web standard  {@link Response}.
- */
-const getAttachment = (url) => {
-  const requestUrl = withToken(apiPaths.formAttachment(
-    form.projectId,
-    form.xmlFormId,
-    !form.publishedAt,
-    url.pathname.split('/').pop()
-  ));
-  return request({
-    url: requestUrl,
-    alert: false,
-    responseType: 'blob', // Handle all file types for attachments.
-  }).then(transformAttachmentResponse);
-};
-
-const postPrimaryInstance = async (file) => {
-  let url = apiPaths.submissions(form.projectId, form.xmlFormId, !form.publishedAt, '');
-
   if (isEdit.value) {
-    url = apiPaths.submission(form.projectId, form.xmlFormId, props.instanceId);
+    url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}/submissions/${props.instanceId}`;
+    method = 'PUT';
+  } else {
+    const draftPath = props.form.draft ? '/draft' : '';
+    params.deviceID = deviceID;
+    url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath}/submissions`;
+    method = 'POST';
   }
-  url = withToken(url);
+  url += queryString(params);
+  const headers = {
+    'Content-Type': 'text/xml',
+    'odk-client': `odk-web-forms/${__WEB_FORMS_VERSION__}`,
+    'Accept': 'application/json, text/plain, */*',
+    'X-Requested-With': 'XMLHttpRequest'
+  };
   try {
-    const requestOptions = {
-      method: isEdit.value ? 'PUT' : 'POST',
-      url,
-      data: file,
-      headers: {
-        'content-type': 'text/xml',
-        'odk-client': `odk-web-forms/${__WEB_FORMS_VERSION__}`
-      },
-      alert: false,
-    };
-    const { data } = await request(requestOptions);
-    return { success: true, data };
+    const response = await fetch(url, { body: file, headers, method });
+    if (response.ok) {
+      const data = await response.json();
+      return { success: true, data };
+    }
+    const data = await response.json();
+    return { success: false, data: { response: { data } } };
   } catch (error) {
+    captureException(error);
     return { success: false, data: error };
   }
 };
 
-const uploadAttachment = async (attachment, instanceId) => {
-  const url = withToken(apiPaths.submissionAttachment(form.projectId, form.xmlFormId, !form.publishedAt, instanceId, attachment.name));
-  const result = {};
+const isProblem = (data:any) => {
+  return data != null &&
+    typeof data === 'object' &&
+    typeof data.code === 'number' &&
+    typeof data.message === 'string';
+};
+
+const submissionPath = () => {
+  const originalUrl = new URL(window.location.href);
+  const newPath = `/projects/${props.form.projectId}/forms/${props.form.xmlFormId}/submissions/${props.instanceId}`;
+  return new URL(newPath, originalUrl);
+};
+
+const isSessionTimeout = (error) => {
+  return error?.response &&
+    isProblem(error.response.data) &&
+    error.response.data.code === 401.2;
+}
+
+const getErrorMessage = (data) => {
+  if (!data) {
+    return;
+  }
+  if (!data.code) {
+    // undefined error
+    return 'util.request.noResponse';
+  }
+  if (data.code === 413) {
+    return 'mixin.request.alert.entityTooLarge';
+  }
+  if (data.code === 404.1) {
+    return 'util.request.problem.404_1';
+  }
+  return data.message;
+};
+
+const handleResult = () => {
+  const attachmentResultArr = [...submissionResult.attachmentResult.values()];
+
+  // Success handler
+  if (submissionResult.primaryInstanceResult.success && attachmentResultArr.every(r => r.success)) {
+
+    clearForm();
+    
+    if (isPublicLink.value) {
+      visibleModal.value = { type: 'thankYouModal', hideable: false };
+    } else if (isEdit.value) {
+      visibleModal.value = { type: 'editSubmissionModal', hideable: false };
+      setTimeout(() => {
+        Location.assign(submissionPath());
+      }, 2000);
+    } else {
+      visibleModal.value = { type: 'submissionModal', hideable: false };
+    }
+    return;
+  }
+
+  // Error handler - Primary Instance
+  if (!submissionResult.primaryInstanceResult.success) {
+    const error = submissionResult.primaryInstanceResult.data;
+    if (isSessionTimeout(error)) {
+      visibleModal.value = { type: 'sessionTimeoutModal', hideable: true };
+    } else {
+      const errorMessage = getErrorMessage(error);
+      visibleModal.value = { type: 'errorModal', errorMessage, hideable: true };
+    }
+    return;
+  }
+
+  // Error handler - Attachments
+  if (attachmentResultArr.some(r => !r.success)) {
+    const sessionTimeout = attachmentResultArr.some(r => isSessionTimeout(r.data));
+    if (sessionTimeout) {
+      visibleModal.value = { type: 'sessionTimeoutModal', hideable: false };
+    } else {
+      visibleModal.value = { type: 'retryModal', hideable: false };
+    }
+  }
+};
+
+const uploadAttachment = async (attachment: File, instanceId: string) => {
+  const encodedInstanceId = encodeURIComponent(instanceId);
+  const encodedName = encodeURIComponent(attachment.name);
+
+  const url = withToken(`/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}/submissions/${encodedInstanceId}/attachments/${encodedName}`);
+
+  let result;
   try {
-    const requestOptions = {
-      method: 'POST',
-      url,
-      data: attachment,
-      alert: false,
-      headers: {
-        'content-type': attachment.type
-      }
+    const headers = {
+      'Content-Type': attachment.type,
+      'X-Requested-With': 'XMLHttpRequest'
     };
-    const { data } = await request(requestOptions);
-    result.success = true;
-    result.data = data;
+    const response = await fetch(url, { body: attachment, headers, method: 'POST' });
+    const data = await response.json();
+    result = { success: response.ok, data: { response: { data } } };
   } catch (error) {
-    result.success = false;
-    result.data = error;
+    captureException(error);
+    result = { success: false, data: { response: error } };
   }
 
   return { name: attachment.name, result };
 };
 
-const submissionResult = {};
-/**
- * Holds the data received from ODK Web Forms and sent to the server when the Send or Retry
- * buttons are pressed. This supports retry functionality, since ODK Web Forms does not provide
- * a way to access submission data at an arbitrary point in time.
- */
-let submissionData = {};
-let clearForm;
+const submitData = async () => {
+  visibleModal.value = { type: 'sendingDataModal', hideable: false };
 
-const initializeSubmissionState = (data, clearFormCallback) => {
+  const instanceFile = submissionData.instanceFile;
+  const attachments = submissionData.attachments;
+
+  if (!submissionResult.primaryInstanceResult.success) {
+    submissionResult.primaryInstanceResult = await postPrimaryInstance(instanceFile);
+  }
+
+  if (submissionResult.primaryInstanceResult.success) {
+    const instanceId = submissionResult.primaryInstanceResult.data.instanceId;
+    const attachmentRequests = attachments
+      .filter(a => !submissionResult.attachmentResult.get(a.name).success)
+      .map(a => uploadAttachment(a, instanceId));
+    const attachmentResult = await Promise.all(attachmentRequests);
+    attachmentResult.forEach(r => {
+      submissionResult.attachmentResult.set(r.name, r.result);
+    });
+  }
+  handleResult();
+};
+
+const initializeSubmissionState = (data:SubmissionData, clearFormCallback:Function) => {
   submissionData = data;
 
   submissionResult.primaryInstanceResult = {
@@ -328,7 +225,7 @@ const initializeSubmissionState = (data, clearFormCallback) => {
   };
 
   submissionResult.attachmentResult = new Map();
-  data.attachments.forEach(attachment => {
+  data.attachments.forEach((attachment:File) => {
     submissionResult.attachmentResult.set(attachment.name, {
       success: false
     });
@@ -339,75 +236,12 @@ const initializeSubmissionState = (data, clearFormCallback) => {
   };
 };
 
-const handleResult = () => {
-  const attachmentResultArr = [...submissionResult.attachmentResult.values()];
-  // Success handler
-  if (submissionResult.primaryInstanceResult.success && attachmentResultArr.every(r => r.success)) {
-    clearForm();
-    if (isPublicLink.value) {
-      showModal({ type: 'thankYouModal', hideable: false });
-    } else if (isEdit.value) {
-      showModal({ type: 'editSubmissionModal', hideable: false });
-      setTimeout(() => {
-        router.push(submissionPath(form.projectId, form.xmlFormId, props.instanceId));
-      }, 2000);
-    } else {
-      showModal({ type: 'submissionModal', hideable: false });
-    }
-  }
-
-  // Error handler - Primary Instance
-  if (!submissionResult.primaryInstanceResult.success) {
-    const error = submissionResult.primaryInstanceResult.data;
-    if (error.response && isProblem(error.response.data) && error.response.data.code === 401.2) {
-      showModal({ type: 'sessionTimeoutModal' });
-    } else {
-      showModal({ type: 'errorModal', errorMessage: requestAlertMessage(i18n, error) });
-    }
-  }
-
-  // Error handler - Attachments
-  if (attachmentResultArr.some(r => !r.success)) {
-    const isSessionTimeout = attachmentResultArr.some(r => {
-      const error = r.data;
-      return error.response && isProblem(error.response.data) && error.response.data.code === 401.2;
-    });
-    if (isSessionTimeout) {
-      showModal({ type: 'sessionTimeoutModal', hideable: false });
-    } else {
-      showModal({ type: 'retryModal', hideable: false });
-    }
-  }
-};
-
-const submitData = async () => {
-  showModal({ type: 'sendingDataModal', hideable: false });
-
-  if (!submissionResult.primaryInstanceResult.success) {
-    submissionResult.primaryInstanceResult = await postPrimaryInstance(submissionData.instanceFile);
-  }
-
-  if (submissionResult.primaryInstanceResult.success) {
-    const attachmentRequests = submissionData.attachments
-      .filter(a => !submissionResult.attachmentResult.get(a.name).success)
-      .map(a => () => uploadAttachment(a, submissionResult.primaryInstanceResult.data.instanceId));
-    const attachmentResult = await runSequentially(attachmentRequests);
-    attachmentResult.forEach(r => {
-      submissionResult.attachmentResult.set(r.name, r.result);
-    });
-  }
-
-  handleResult();
-};
-
-/**
- * When WebForms's submit button is clicked, it dispatches an event which is handed to
- * this handler, which can then upload the form and its attachments as present in the
- * event payload.
- */
-const handleSubmit = async (payload, callback) => {
+const handleSubmit = async (
+  payload: MonolithicInstancePayload,
+  clearFormCallback: Function
+) => {
   if (props.actionType === 'preview') {
-    showModal({ type: 'previewModal' });
+    visibleModal.value = { type: 'previewModal', hideable: true };
     return;
   }
   const { data: [data], status } = payload;
@@ -416,42 +250,111 @@ const handleSubmit = async (payload, callback) => {
     // hence this branch should never execute.
     return;
   }
-
-  initializeSubmissionState(data, callback);
+  initializeSubmissionState(data as unknown as SubmissionData, clearFormCallback);
   await submitData();
 };
 
-// hack: enable/disable ODK Web Form css styles
-const setWfStylesDisabled = (disabled) => {
-  document.querySelectorAll('style').forEach(styleTag => {
-    if (styleTag.textContent.includes('form-initialization-status') ||
-        // WF's reset.css
-        styleTag.textContent.replace(/\s+/g, '').includes('body{all:revert;')) {
-      // eslint-disable-next-line no-param-reassign
-      styleTag.disabled = disabled;
-    }
-  });
+const fetchSubmissionXml = async () => {
+  const url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}/submissions/${props.instanceId}.xml`;
+  const response = await fetch(url);
+  return await response.text();
 };
-onMounted(() => {
-  setWfStylesDisabled(false);
+
+const fetchSubmissionAttachment = async (attachmentName: string) => {
+  // Draft is always false because we don't support editing of draft submissions
+  const encodedName = encodeURIComponent(attachmentName);
+  const url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}/submissions/${props.instanceId}/attachments/${encodedName}`;
+  return fetch(url);
+};
+
+const editInstanceOptions = computed(() => {
+  if (isEdit.value) {
+    return {
+      resolveInstance: fetchSubmissionXml,
+      attachmentFileNames: props.submissionAttachments,
+      resolveAttachment: fetchSubmissionAttachment
+    };
+  }
+  return null;
 });
-onUnmounted(() => {
-  setWfStylesDisabled(true);
-});
+
+const closeWindow = () => {
+  window.close();
+};
 </script>
 
-<style lang="scss">
-@import '../assets/scss/_variables.scss';
-
-#web-form-renderer-submission-modal pre {
+<style scoped>
+.p-dialog-content pre {
   white-space: pre-wrap;
+  overflow-wrap: break-word;
 }
-
 </style>
+
+<template>
+
+  <OdkWebForm
+    :form-xml="props.xform"
+    :edit-instance="editInstanceOptions"
+    :fetch-form-attachment="getAttachment"
+    :device-id="deviceID"
+    @submit="handleSubmit"/>
+
+  <Dialog modal :visible="!!visibleModal" :draggable="false" :closable="visibleModal?.hideable" @update:visible="visibleModal = null">
+		<template #header>
+			<span role="heading">{{ $t(visibleModal.type + '.title') }}</span>
+		</template>
+
+    <template #default>
+      <Translation v-if="visibleModal.type === 'errorModal'" tag="p" keypath="errorModal.body">
+        <template #errorMessage>
+          <pre>{{ $t(visibleModal.errorMessage) }}</pre>
+        </template>
+        <template #supportEmail>
+          <a href="mailto:support@getodk.org">support@getodk.org</a>
+        </template>
+      </Translation>
+      <Translation v-else-if="visibleModal.type === 'retryModal'" tag="p" keypath="retryModal.body">
+        <template #supportEmail>
+          <a href="mailto:support@getodk.org">support@getodk.org</a>
+        </template>
+      </Translation>
+      <Translation v-else-if="visibleModal.type === 'sessionTimeoutModal'" tag="p" keypath="sessionTimeoutModal.body.full">
+        <template #here>
+          <a href="/login" target="_blank">{{ $t('sessionTimeoutModal.body.here') }}</a>
+        </template>
+      </Translation>
+      <span v-else>
+        {{ $t(visibleModal.type + '.body') }}
+      </span>
+    </template>
+    <template #footer>
+      <template v-if="visibleModal.type === 'submissionModal'">
+        <Button type="button" @click="closeWindow()" variant="text">{{ $t('action.close') }}</Button>
+        <Button type="button" @click="visibleModal = null">{{ $t('submissionModal.action.fillOutAgain') }}</Button>
+      </template>
+      <!-- Any type of error while sending attachments -->
+      <template v-else-if="visibleModal.type === 'retryModal'
+        || (visibleModal.type === 'sessionTimeoutModal' && !visibleModal.hideable)">
+        <Button type="button" @click="submitData()">{{ $t('action.tryAgain') }}</Button>
+      </template>
+      <!-- Preview modal or any type of error while submitting primary instance -->
+      <template v-else-if="visibleModal.type === 'previewModal'
+        || visibleModal.type === 'errorModal'
+        || visibleModal.type === 'sessionTimeoutModal' && visibleModal.hideable">
+        <Button type="button" @click="visibleModal = null">{{ $t('action.close') }}</Button>
+      </template>
+    </template>
+  </Dialog>
+
+</template>
 
 <i18n lang="json5">
   {
     "en": {
+      "action": {
+        "close": "Close",
+        "tryAgain": "Try again",
+      },
       "previewModal": {
         "title": "Data is valid",
         "body": "The data you entered is valid, but it was not submitted because this is a Form preview."
@@ -490,14 +393,32 @@ onUnmounted(() => {
         "title": "Submission error",
         "body": "Your data was not fully submitted. Please press the “Try again” button to retry. If the error keeps happening, please contact the person who asked you to fill this Form or {supportEmail}."
       },
+      "util": {
+        "request": {
+          "noResponse": "Something went wrong: there was no response to your request.",
+          "problem": {
+            "404_1": "The resource you are looking for cannot be found. The resource may have been deleted."
+          }
+        }
+      },
+      "mixin": {
+        "request": {
+          "alert": {
+            "entityTooLarge":  "The data that you are trying to upload is too large.",
+          }
+        }
+      }
     }
   }
 </i18n>
 
-<!-- Autogenerated by destructure.js -->
 <i18n>
 {
   "de": {
+    "action": {
+      "close": "Schließen",
+      "tryAgain": "Nochmals versuchen",
+    },
     "previewModal": {
       "title": "Daten sind gültig",
       "body": "Die von Ihnen eingegebenen Daten sind gültig, aber sie wurden nicht übermittelt, da es sich um eine Formularvorschau handelt."
@@ -535,9 +456,28 @@ onUnmounted(() => {
     "retryModal": {
       "title": "Übermittlungsfehler",
       "body": "Ihre Daten wurden nicht vollständig übermittelt. Bitte drücken Sie die Schaltfläche „Erneut versuchen“, um es noch einmal zu versuchen. Wenn der Fehler weiterhin auftritt, wenden Sie sich bitte an die Person, die Sie gebeten hat, dieses Formular auszufüllen, oder an {supportEmail}."
+    },
+    "util": {
+      "request": {
+        "noResponse": "Etwas ging schief: Wir haben keine Antwort auf Ihre Anfrage bekommen.",
+        "problem": {
+          "404_1": "Die gesuchte Ressource kann nicht gefunden werden. Die Ressource wurde möglicherweise gelöscht."
+        }
+      }
+    },
+    "mixin": {
+      "request": {
+        "alert": {
+          "entityTooLarge":  "Die Daten, die Sie hochzuladen versuchen, sind zu gross.",
+        }
+      }
     }
   },
   "es": {
+    "action": {
+      "close": "Cerrar",
+      "tryAgain": "Inténtalo de nuevo",
+    },
     "previewModal": {
       "title": "Los datos son válidos",
       "body": "Los datos introducidos son válidos, pero no se han enviado porque se trata de una vista previa del formulario."
@@ -575,9 +515,28 @@ onUnmounted(() => {
     "retryModal": {
       "title": "Error de envío",
       "body": "Sus datos no se han enviado completamente. Por favor, pulse el botón «Inténtelo de nuevo» para volver a intentarlo. Si el error persiste, póngase en contacto con la persona que le pidió que rellenara este formulario o con {supportEmail}."
+    },
+    "util": {
+      "request": {
+        "noResponse": "Algo salió mal: no hubo respuesta a su solicitud.",
+        "problem": {
+          "404_1": "El recurso que busca no se encuentra. Es posible que el recurso se haya eliminado."
+        }
+      }
+    },
+    "mixin": {
+      "request": {
+        "alert": {
+          "entityTooLarge":  "Los datos que estás intentando cargar son demasiado grandes.",
+        }
+      }
     }
   },
   "fr": {
+    "action": {
+      "close": "Fermer",
+      "tryAgain": "Essayer encore",
+    },
     "previewModal": {
       "title": "Les données sont valides",
       "body": "Les données renseignées sont valides, mais ne peuvent être soumises car il s'agit d'un aperçu du Formulaire."
@@ -615,9 +574,28 @@ onUnmounted(() => {
     "retryModal": {
       "title": "Erreur de soumission",
       "body": "Vos données n'ont pas été soumises. Veuillez cliquer le bouton \"Essayer encore\" pour réessayer. Si l'erreur persiste, merci de contacter la personne qui vous a demandé de remplir ce formulaire ou {supportEmail}."
+    },
+    "util": {
+      "request": {
+        "noResponse": "Quelque-chose s'est mal passé : il n'y a pas eu de réponse à votre requête.",
+        "problem": {
+          "404_1": "La ressource que vous cherchez ne peut être trouvée. Peut-être a-t-elle été supprimée."
+        }
+      }
+    },
+    "mixin": {
+      "request": {
+        "alert": {
+          "entityTooLarge":  "Les données que vous essayez d'envoyer sont trop volumineuses.",
+        }
+      }
     }
   },
   "it": {
+    "action": {
+      "close": "Chiudere",
+      "tryAgain": "Ritenta ancora",
+    },
     "previewModal": {
       "title": "I dati sono validi",
       "body": "I dati inseriti sono validi, ma non sono stati inviati perché si tratta di un'anteprima del formulario."
@@ -655,9 +633,28 @@ onUnmounted(() => {
     "retryModal": {
       "title": "Errore invio",
       "body": "I dati non sono stati inviati completamente. Premere il pulsante “Riprova” per riprovare. Se l'errore continua a verificarsi, contattate la persona che vi ha chiesto di compilare il formulario oppure {supportEmail}."
+    },
+    "util": {
+      "request": {
+        "noResponse": "Qualcosa è andato storto: non c'era nessuna risposta alla tua request.",
+        "problem": {
+          "404_1": "Impossibile trovare la risorsa che stai cercando. La risorsa potrebbe essere stata eliminata."
+        }
+      }
+    },
+    "mixin": {
+      "request": {
+        "alert": {
+          "entityTooLarge":  "I dati che stai tentando di caricare sono troppo grandi.",
+        }
+      }
     }
   },
   "pt": {
+    "action": {
+      "close": "Fechar",
+      "tryAgain": "Tentar novamente",
+    },
     "previewModal": {
       "title": "Os dados são válidos",
       "body": "Os dados que você digitou são válidos, mas não foram enviados por que essa é apenas uma Visualização do formulário."
@@ -694,9 +691,28 @@ onUnmounted(() => {
     "retryModal": {
       "title": "Erro no envio",
       "body": "Seus dados não foram enviados completamente. Por favor, clique no botão “Tentar novamente” para tentar novamente. Se o erro persistir, entre em contato com a pessoa que solicitou o preenchimento deste formulário ou {supportEmail}."
+    },
+    "util": {
+      "request": {
+        "noResponse": "Algo deu errado: não houve resposta à sua requisição.",
+        "problem": {
+          "404_1": "O recurso que você está procurando não foi encontrado. O recurso pode ter sido excluído."
+        }
+      }
+    },
+    "mixin": {
+      "request": {
+        "alert": {
+          "entityTooLarge":  "Os dados que você está tentando carregar são muito grandes.",
+        }
+      }
     }
   },
   "zh": {
+    "action": {
+      "close": "关闭",
+      "tryAgain": "重试",
+    },
     "previewModal": {
       "title": "数据有效",
       "body": "您输入的数据格式正确，但因当前处于表单预览模式，故未执行提交。"
@@ -734,9 +750,28 @@ onUnmounted(() => {
     "retryModal": {
       "title": "提交错误",
       "body": "数据未完全提交。请点击“重试”按钮再次提交。若问题持续，请联系表单发放方或{supportEmail}。"
+    },
+    "util": {
+      "request": {
+        "noResponse": "请求错误：未收到请求响应。",
+        "problem": {
+          "404_1": "无法找到您的资源。此资源可能已经删除。"
+        }
+      }
+    },
+    "mixin": {
+      "request": {
+        "alert": {
+          "entityTooLarge":  "您上传的数据过大。",
+        }
+      }
     }
   },
   "zh-Hant": {
+    "action": {
+      "close": "關閉",
+      "tryAgain": "再試一次",
+    },
     "previewModal": {
       "title": "資料有效",
       "body": "您輸入的資料是有效的，但因為這是表單預覽，所以沒有提交。"
@@ -774,6 +809,21 @@ onUnmounted(() => {
     "retryModal": {
       "title": "提交錯誤",
       "body": "您的資料未完全提交。請按「再試一次」按鈕重試。如果錯誤持續發生，請聯絡要求您填寫此表格的人或{supportEmail}。"
+    },
+    "util": {
+      "request": {
+        "noResponse": "出了點問題：您的請求沒有得到回應。",
+        "problem": {
+          "404_1": "找不到您要找的資源。該資源可能已被刪除。"
+        }
+      }
+    },
+    "mixin": {
+      "request": {
+        "alert": {
+          "entityTooLarge":  "您嘗試上傳的資料太大。",
+        }
+      }
     }
   }
 }

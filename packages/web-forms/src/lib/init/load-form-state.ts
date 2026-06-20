@@ -70,7 +70,7 @@ const resolvableFormInstanceInput = (options: EditInstanceOptions): ResolvableFo
 interface LoadFormStateOptions {
   readonly form: FormOptions;
   readonly editInstance?: EditInstanceOptions | null;
-  readonly trackDevice?: boolean;
+  readonly deviceID?: string;
   readonly preloadProperties?: PreloadProperties;
 }
 

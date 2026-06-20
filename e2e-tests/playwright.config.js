@@ -11,12 +11,18 @@ export default defineConfig({
   testDir: '.',
   /* Maximum time one test can run for. */
   timeout: 10 * 1000,
+  /* Maximum time a single assertion can wait for. */
+  expect: {
+    timeout: 2_000,
+  },
   /* Run tests in files in parallel */
   fullyParallel: false,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
-  retries: process.env.CI ? 0 : 0,
+  /* Bail after first test failure in CI */
+  maxFailures: process.env.CI ? 1 : undefined,
+  /* Do not retry failed tests. */
+  retries: 0,
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
@@ -26,7 +32,7 @@ export default defineConfig({
     ignoreHTTPSErrors: true,
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
-    serviceWorkers: 'allow',
+    serviceWorkers: 'allow'
   },
 
   /* Configure projects for major browsers */
