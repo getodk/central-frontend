@@ -10,9 +10,11 @@ var __handle = function(e) {
   if (error) error.style.display = 'block';
   if (message) message.innerText = msg;
 };
-globalThis.__deregisterInitializationErrorHandling = function() {
-  window.removeEventListener('error', __handle, { capture: true });
-  window.removeEventListener('unhandledrejection', __handle);
-};
+if (globalThis) {
+  globalThis.__deregisterInitializationErrorHandling = function() {
+    window.removeEventListener('error', __handle, { capture: true });
+    window.removeEventListener('unhandledrejection', __handle);
+  };
+}
 window.addEventListener('error', __handle, { capture: true, once: true });
 window.addEventListener('unhandledrejection', __handle, { once: true });
