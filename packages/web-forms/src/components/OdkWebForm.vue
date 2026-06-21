@@ -99,6 +99,7 @@ const hostSubmissionResultCallbackFactory = (
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- evidently a type must be used for this to be assigned to a name (which we use!); as an interface, it won't satisfy the `Record` constraint of `defineEmits`.
 type OdkWebFormEmits = {
+	loaded: [],
 	submit: [submissionPayload: MonolithicInstancePayload, callback: HostSubmissionResultCallback];
 	submitChunked: [
 		submissionPayload: ChunkedInstancePayload,
@@ -239,6 +240,7 @@ const init = async () => {
 		preloadProperties: props.preloadProperties,
 		deviceID: props.deviceId,
 	});
+	emit('loaded');
 };
 
 void init();
