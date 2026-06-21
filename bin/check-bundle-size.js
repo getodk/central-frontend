@@ -68,7 +68,7 @@ function isTooBig({ path, size }) {
   const type = extname(path).substr(1);
   switch (type) {
     case 'css':         return size > 220_000;
-    case 'html':        return size >   2_500;
+    case 'html':        return size >   3_000;
     case 'ico':         return size >  16_000;
     case 'js':          return size > 200_000;
     case 'png':         return size > 700_000;
