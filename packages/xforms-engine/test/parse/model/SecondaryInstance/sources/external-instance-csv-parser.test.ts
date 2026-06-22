@@ -37,6 +37,12 @@ describe('external-instance-csv-parser', () => {
     );
   });
 
+  it('errors when given whitespace character in header', () => {
+    expect(() => parseItems(url, 'foo bar,baz')).to.throw(
+      'Failed to parse CSV jr://csv/mock.csv: whitespace character'
+    );
+  });
+
   it('parses csv with single column', () => {
     const csv = `name
 a
