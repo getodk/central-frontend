@@ -1948,6 +1948,47 @@
           "string": "App Users and Data Collectors within this Project will only have access to the Entities they create, promoting privacy and limiting data transfers."
         }
       },
+      "filterByProperty": {
+        "label": {
+          "string": "Filter by Property"
+        },
+        "description": {
+          "string": "Define rules for which Entities are visible to App Users and Data Collectors by comparing their properties."
+        },
+        "entityPropertyLabel": {
+          "string": "Only see Entities where"
+        },
+        "entityPropertyPlaceholder": {
+          "string": "Entity property"
+        },
+        "userPropertyLabel": {
+          "string": "is equal to the user’s"
+        },
+        "userPropertyPlaceholder": {
+          "string": "User property"
+        },
+        "disabled": {
+          "datasetProperties": {
+            "string": "There are no dataset properties defined."
+          },
+          "userProperties": {
+            "string": "There are no user properties defined."
+          },
+          "both": {
+            "string": "There are no dataset and user properties defined."
+          }
+        },
+        "action": {
+          "change": {
+            "string": "Change",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
+        },
+        "currentRule": {
+          "string": "Rule: {entityProperty} (Entity property) = {userProperty} (User property)",
+          "developer_comment": "{entityProperty} is the name of an Entity property. {userProperty} is the name of a User property."
+        }
+      },
       "falseModal": {
         "introduction": {
           "string": "App Users and Data Collectors will have access to all Entities, including ones they did not create."
@@ -1970,6 +2011,23 @@
         },
         "changeToTrue": {
           "string": "App Users and Data Collectors will now only have access to Entities they create."
+        },
+        "changeToProperty": {
+          "string": "App Users and Data Collectors will now only have access to Entities matching the filter rule."
+        }
+      },
+      "accessByFilterRule": {
+        "title": {
+          "string": "Filter by Property"
+        },
+        "introduction": {
+          "string": "App Users and Data Collectors will only have access to Entities where the selected property matches their user property."
+        },
+        "action": {
+          "save": {
+            "string": "Save Filter Rule",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
         }
       }
     },
