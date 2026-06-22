@@ -49,7 +49,7 @@ describe('external-instance-csv-parser', () => {
     );
   });
 
-  it('passes when given inner whitespace character', () => { // NOT
+  it('passes when given inner whitespace character', () => {
     const csv = `name,baz bar
 a,1
 `;
@@ -64,7 +64,7 @@ a,1
           cellValue: '1',
           columnName: 'baz bar',
         },
-      ]
+      ],
     ]);
   });
 

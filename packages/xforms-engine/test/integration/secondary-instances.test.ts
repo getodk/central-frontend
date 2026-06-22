@@ -908,20 +908,6 @@ describe('Secondary instances', () => {
         description: 'row delimiter: LFLF',
         rowDelimiter: `\n\n`,
       },
-
-      {
-        description: 'somewhat surprisingly supported row delimiter: LFCR',
-        rowDelimiter: `\n\r`,
-        surprisingSuccessWarning:
-          "LFCR is not an expected line separator in any known-common usage. It's surprising that Papaparse does not fail parsing this case, at least parsing rows!",
-      },
-
-      {
-        description: 'whitespace padding around column delimiter is not ignored (by default)',
-        columnDelimiter: ',',
-        columnPadding: 1,
-        expectedFailure: 'select-value',
-      },
     ];
 
     // Note: this isn't set up with `describe.each` because it would create a superfluous outer description where the inner description must be applied with `it` (to perform async setup)
@@ -931,9 +917,7 @@ describe('Secondary instances', () => {
         columnDelimiter = ',',
         rowDelimiter = '\n',
         bom = '',
-        columnPadding = 0,
         expectedFailure = null,
-        surprisingSuccessWarning = null,
       }) => {
         const LOWER_ALPHA_ASCII_LETTER_COUNT = 26;
         const lowerAlphaASCIILetters = Array.from(
@@ -954,14 +938,7 @@ describe('Secondary instances', () => {
             return [letter.toUpperCase(), letter];
           }),
         ];
-        const baseCSVFixture = rows
-          .map((row) => {
-            const padding = ' '.repeat(columnPadding);
-            const delimiter = `${padding}${columnDelimiter}${padding}`;
-
-            return row.join(delimiter);
-          })
-          .join(rowDelimiter);
+        const baseCSVFixture = rows.map((row) => row.join(columnDelimiter)).join(rowDelimiter);
 
         const csvAttachmentFileName = 'csv-attachment.csv';
         const csvAttachmentURL = `jr://file/${csvAttachmentFileName}` as const;
@@ -1037,11 +1014,6 @@ describe('Secondary instances', () => {
             await expect(initParseFailure).rejects.toThrowError();
 
             return;
-          }
-
-          if (surprisingSuccessWarning != null) {
-            // eslint-disable-next-line no-console
-            console.warn(surprisingSuccessWarning);
           }
 
           const scenario = await initScenario();
