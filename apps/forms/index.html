@@ -12,7 +12,9 @@
     <style>
       .loading-container {
         text-align: center;
-        padding-top: 35vh;
+        position: absolute;
+        inset: 0;
+        padding-top: 30vh;
       }
       .spinner {
         width: 60px;
@@ -39,10 +41,10 @@
       <p>Please enable JavaScript to continue.</p>
       <p>Powered by <a href="https://getodk.org">ODK</a>.</p>
     </noscript>
+    <div id="loading-spinner" class="loading-container">
+      <span class="spinner"></span>
+    </div>
     <div id="forms-app">
-      <div class="loading-container">
-        <span class="spinner"></span>
-      </div>
     </div>
     <script type="module" src="/apps/forms/src/main.ts"></script>
   </body>

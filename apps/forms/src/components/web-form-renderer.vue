@@ -10,6 +10,7 @@ import Button from 'primevue/button';
 import { Translation } from 'vue-i18n'
 import Location from '../utils/location';
 import { getDeviceId } from '../utils/device-id';
+import { hideSpinner } from '../utils/spinner';
 defineOptions({
   name: 'WebFormRenderer'
 });
@@ -236,6 +237,10 @@ const initializeSubmissionState = (data:SubmissionData, clearFormCallback:Functi
   };
 };
 
+const webFormLoaded = () => {
+  hideSpinner();
+};
+
 const handleSubmit = async (
   payload: MonolithicInstancePayload,
   clearFormCallback: Function
@@ -297,6 +302,7 @@ const closeWindow = () => {
     :edit-instance="editInstanceOptions"
     :fetch-form-attachment="getAttachment"
     :device-id="deviceID"
+    @loaded="webFormLoaded"
     @submit="handleSubmit"/>
 
   <Dialog modal :visible="!!visibleModal" :draggable="false" :closable="visibleModal?.hideable" @update:visible="visibleModal = null">

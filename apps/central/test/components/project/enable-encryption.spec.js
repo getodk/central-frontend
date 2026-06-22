@@ -62,7 +62,7 @@ describe('ProjectEnableEncryption', () => {
     await modal.get('.btn-primary').trigger('click');
     await modal.get('input[placeholder="Passphrase *"]').setValue('x');
     await modal.get('form').trigger('submit');
-    modal.should.alert('danger', 'Please input a passphrase at least 10 characters long.');
+    modal.should.alert('danger', 'Encryption password must be at least 10 characters long.');
   });
 
   it('resets the modal after it is hidden', async () => {
@@ -103,7 +103,7 @@ describe('ProjectEnableEncryption', () => {
         .request(async (modal) => {
           await modal.get('.btn-primary').trigger('click');
           await modal.get('input[placeholder="Passphrase *"]').setValue('supersecret');
-          const hint = modal.get('input[placeholder="Passphrase hint (optional)"]');
+          const hint = modal.get('input[placeholder="Encryption password hint (optional)"]');
           await hint.setValue('bar');
           return modal.get('form').trigger('submit');
         })
