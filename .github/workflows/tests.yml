@@ -120,7 +120,7 @@ jobs:
       run: echo '127.0.0.1 central-test.localhost' | sudo tee --append /etc/hosts
     - name: Start services
       working-directory: central
-      run: touch ./files/allow-postgres14-upgrade && docker compose build && docker compose up -d
+      run: touch ./files/allow-postgres14-upgrade && docker compose build --build-arg FRONTEND_BUILD_MODE=source && docker compose up -d
     - name: Set node version
       uses: actions/setup-node@v6
       with:
