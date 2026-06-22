@@ -43,8 +43,8 @@ const rejectNullCharacters = (resourceURL: JRResourceURL, cell: string) => {
   }
 };
 
-const rejectWhitespaceCharacters = (resourceURL: JRResourceURL, cell: string) => {
-  if (/\s/.exec(cell)) {
+const rejectWrappingWhitespaceCharacters = (resourceURL: JRResourceURL, cell: string) => {
+  if (/^\s|\s$/.exec(cell)) {
     throw new ErrorProductionDesignPendingError(
       `Failed to parse CSV ${resourceURL.href}: whitespace character`
     );
@@ -80,7 +80,7 @@ const assertCSVRow: AssertCSVRow = (resourceURL: JRResourceURL, columns) => {
         `Failed to parse CSV ${resourceURL.href}: invalid column at ${index}`
       );
     }
-    rejectWhitespaceCharacters(resourceURL, column);
+    rejectWrappingWhitespaceCharacters(resourceURL, column);
     rejectNullCharacters(resourceURL, column);
   }
 };

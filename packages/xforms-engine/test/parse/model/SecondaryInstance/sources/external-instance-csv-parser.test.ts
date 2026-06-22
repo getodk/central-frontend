@@ -37,10 +37,35 @@ describe('external-instance-csv-parser', () => {
     );
   });
 
-  it('errors when given whitespace character in header', () => {
-    expect(() => parseItems(url, 'foo bar,baz')).to.throw(
+  it('errors when given leading whitespace character in header', () => {
+    expect(() => parseItems(url, 'foo, baz')).to.throw(
       'Failed to parse CSV jr://csv/mock.csv: whitespace character'
     );
+  });
+
+  it('errors when given trailing whitespace character in header', () => {
+    expect(() => parseItems(url, 'foo,baz ')).to.throw(
+      'Failed to parse CSV jr://csv/mock.csv: whitespace character'
+    );
+  });
+
+  it('passes when given inner whitespace character', () => { // NOT
+    const csv = `name,baz bar
+a,1
+`;
+    const actual = parseItems(url, csv);
+    expect(actual).to.deep.equal([
+      [
+        {
+          cellValue: 'a',
+          columnName: 'name',
+        },
+        {
+          cellValue: '1',
+          columnName: 'baz bar',
+        },
+      ]
+    ]);
   });
 
   it('parses csv with single column', () => {
