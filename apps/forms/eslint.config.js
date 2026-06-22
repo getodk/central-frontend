@@ -249,6 +249,8 @@ export default defineConfig(
 			reportUnusedDisableDirectives: true,
 		},
 
+		ignores: ['src/init.js'],
+
 		plugins: {
 			'no-only-tests': noOnlyTestsPlugin, // eslint-disable-line @typescript-eslint/no-unsafe-assignment
 		},
@@ -376,6 +378,22 @@ export default defineConfig(
 		rules: {
 			'@typescript-eslint/triple-slash-reference': 'off',
 		},
+	},
+
+
+	{
+		files: ['src/init.js'],
+		rules: eslint.configs.recommended.rules,
+		languageOptions: {
+			ecmaVersion: 5,
+			sourceType: 'script',
+			globals: {
+				document: 'readonly',
+				window: 'readonly',
+				console: 'readonly',
+				globalThis: 'readonly'
+			}
+		}
 	},
 
 	{
