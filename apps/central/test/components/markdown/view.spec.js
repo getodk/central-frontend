@@ -10,7 +10,7 @@ const mountComponent = (raw) => mount(MarkdownView, {
   }
 });
 
-describe.only('MarkdownView', () => {
+describe('MarkdownView', () => {
   [
     ['clean slate',                () => { DOMPurify.clearConfig(); DOMPurify.removeAllHooks(); }], // eslint-disable-line no-multi-spaces
     ['polluted persistent config', () => DOMPurify.setConfig({ ALLOWED_TAGS: [], ALLOWED_ATTR: [] })],
