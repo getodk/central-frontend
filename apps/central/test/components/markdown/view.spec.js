@@ -12,9 +12,9 @@ const mountComponent = (raw) => mount(MarkdownView, {
 
 describe.only('MarkdownView', () => {
   [
-    [ 'clean slate',                () => DOMPurify.clearConfig() ],
-    [ 'polluted persistent config', () => DOMPurify.setConfig({ ALLOWED_TAGS: [], ALLOWED_ATTR: [] }) ],
-  ].forEach(([ description, setupFn ]) => {
+    ['clean slate',                () => DOMPurify.clearConfig()], // eslint-disable-line no-multi-spaces
+    ['polluted persistent config', () => DOMPurify.setConfig({ ALLOWED_TAGS: [], ALLOWED_ATTR: [] })],
+  ].forEach(([description, setupFn]) => {
     describe(description, () => {
       beforeEach(setupFn);
 
