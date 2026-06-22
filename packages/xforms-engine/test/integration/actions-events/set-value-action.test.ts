@@ -13,7 +13,7 @@ import {
   t,
   title,
 } from '@getodk/common/test-utils/xform-dsl/index.ts';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { intAnswer } from '../../scenario/answer/ExpectedIntAnswer.ts';
 import { stringAnswer } from '../../scenario/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../../scenario/jr/Scenario.ts';
@@ -707,30 +707,30 @@ describe('setvalue action', () => {
     });
 
     it("stores only today's date when `now()` is assigned to a `date` field", async () => {
-      const scenario = await Scenario.init(
-        'now() into date field',
-        html(
-          head(
-            title('now() into date field'),
-            model(
-              mainInstance(t('data id="now-into-date"', t('source'), t('destination'))),
-              bind('/data/destination').type('date')
+      vi.useFakeTimers({ now: new Date('2025-06-15T12:00:00') });
+      try {
+        const scenario = await Scenario.init(
+          'now() into date field',
+          html(
+            head(
+              title('now() into date field'),
+              model(
+                mainInstance(t('data id="now-into-date"', t('source'), t('destination'))),
+                bind('/data/destination').type('date')
+              )
+            ),
+            body(
+              input('/data/source', setvalue('xforms-value-changed', '/data/destination', 'now()'))
             )
-          ),
-          body(
-            input('/data/source', setvalue('xforms-value-changed', '/data/destination', 'now()'))
           )
-        )
-      );
+        );
 
-      scenario.answer('/data/source', 'trigger');
+        scenario.answer('/data/source', 'trigger');
 
-      const now = new Date();
-      const month = String(now.getMonth() + 1).padStart(2, '0');
-      const day = String(now.getDate()).padStart(2, '0');
-      const today = `${now.getFullYear()}-${month}-${day}`;
-
-      expect(scenario.answerOf('/data/destination')).toEqualAnswer(stringAnswer(today));
+        expect(scenario.answerOf('/data/destination')).toEqualAnswer(stringAnswer('2025-06-15'));
+      } finally {
+        vi.useRealTimers();
+      }
     });
 
     it('is not triggered when loading form for editing', async () => {
