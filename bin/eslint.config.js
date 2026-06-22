@@ -11,6 +11,9 @@ export default defineConfig(
     },
 		extends: [
 			eslint.configs.recommended,
-    ]
+    ],
+    rules: {
+      'no-trailing-spaces': 'error',
+    },
   }
 );

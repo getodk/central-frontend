@@ -13,7 +13,7 @@ import {
   t,
   title,
 } from '@getodk/common/test-utils/xform-dsl/index.ts';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { intAnswer } from '../../scenario/answer/ExpectedIntAnswer.ts';
 import { stringAnswer } from '../../scenario/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../../scenario/jr/Scenario.ts';
@@ -704,6 +704,33 @@ describe('setvalue action', () => {
       scenario.answer('/data/source', 12);
 
       expect(scenario.answerOf('/data/destination')).toEqualAnswer(intAnswer(24));
+    });
+
+    it("stores only today's date when `now()` is assigned to a `date` field", async () => {
+      vi.useFakeTimers({ now: new Date('2025-06-15T12:00:00') });
+      try {
+        const scenario = await Scenario.init(
+          'now() into date field',
+          html(
+            head(
+              title('now() into date field'),
+              model(
+                mainInstance(t('data id="now-into-date"', t('source'), t('destination'))),
+                bind('/data/destination').type('date')
+              )
+            ),
+            body(
+              input('/data/source', setvalue('xforms-value-changed', '/data/destination', 'now()'))
+            )
+          )
+        );
+
+        scenario.answer('/data/source', 'trigger');
+
+        expect(scenario.answerOf('/data/destination')).toEqualAnswer(stringAnswer('2025-06-15'));
+      } finally {
+        vi.useRealTimers();
+      }
     });
 
     it('is not triggered when loading form for editing', async () => {
