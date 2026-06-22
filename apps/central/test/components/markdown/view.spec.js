@@ -14,7 +14,7 @@ describe('MarkdownView', () => {
   [
     ['clean slate',                () => { DOMPurify.clearConfig(); DOMPurify.removeAllHooks(); }], // eslint-disable-line no-multi-spaces
     ['polluted persistent config', () => DOMPurify.setConfig({ ALLOWED_TAGS: [], ALLOWED_ATTR: [] })],
-    ['stray hooks',                () => DOMPurify.addHook('uponSanitizeAttribute', (_, hookEvent) => hookEvent.forceKeepAttr = true)], // eslint-disable-line no-multi-spaces
+    ['stray hooks',                () => DOMPurify.addHook('uponSanitizeAttribute', (_, hookEvent) => { hookEvent.forceKeepAttr = true; })], // eslint-disable-line no-multi-spaces,no-param-reassign
   ].forEach(([description, setupFn]) => {
     describe(description, () => {
       beforeEach(setupFn);
