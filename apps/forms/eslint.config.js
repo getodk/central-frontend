@@ -57,7 +57,7 @@ export default defineConfig(
 			'web-forms/dist-demo/**/*',
 			'web-forms/bin/**/*',
 			'xforms-engine/api-docs/**/*',
-			'**/vendor'
+			'**/vendor',
 		],
 	},
 
