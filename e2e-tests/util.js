@@ -60,7 +60,7 @@ const test = testBase.extend({
           // See: https://github.com/getodk/central/issues/1987
           if(message === 'App in offline-capable mode.' &&  url.includes('/x/')) return;
           if(message === 'App in online-only mode.'     && !url.includes('/x/')) return;
-          
+
           if(message === 'Keeping default theme.') return;
         }
 

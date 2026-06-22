@@ -380,6 +380,7 @@ The `<OdkWebForm>` component accepts the following props:
 
 The component emits the following events:
 
+- `loaded`: Emitted when the form is loaded and displayed to the user
 - `submit`: Emitted when the user presses the "Send" button on a valid form
   - Payload: ([submissionPayload: MonolithicInstancePayload, callback: HostSubmissionResultCallback])
 - `submitChunked`: Emitted for chunked submissions when the form is valid
