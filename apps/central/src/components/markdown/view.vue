@@ -20,13 +20,6 @@ except according to the terms contained in the LICENSE file.
 import DOMPurify from 'dompurify';
 import { marked } from 'marked';
 
-DOMPurify.addHook('afterSanitizeAttributes', (node) => {
-  if ('target' in node) {
-    node.setAttribute('target', '_blank');
-    node.setAttribute('rel', 'noreferrer noopener');
-  }
-});
-
 const forbiddenAttributes = ['style', 'class', 'id', 'data'];
 const allowedTags = ['a', 'b', 'br', 'code', 'em',
   'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
@@ -44,7 +37,17 @@ export default {
   computed: {
     renderedMarkdown() {
       const md = marked.parse(this.rawMarkdown, { gfm: true, breaks: true });
+
       DOMPurify.clearConfig();
+      DOMPurify.removeAllHooks();
+
+      DOMPurify.addHook('afterSanitizeAttributes', (node) => {
+        if ('target' in node) {
+          node.setAttribute('target', '_blank');
+          node.setAttribute('rel', 'noreferrer noopener');
+        }
+      });
+
       const santized = DOMPurify.sanitize(md, {
         FORBID_ATTR: forbiddenAttributes,
         ALLOWED_TAGS: allowedTags,
