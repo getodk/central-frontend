@@ -136,6 +136,10 @@ jobs:
       with:
         name: Playwright Artifacts
         path: central/client/test-results
+    - if: always()
+      name: Docker Container Logs
+      working-directory: central
+      run: docker compose logs || true
   wf-tests:
     name: 'Run Web Forms Tests'
     needs:
