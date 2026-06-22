@@ -44,6 +44,7 @@ export default {
   computed: {
     renderedMarkdown() {
       const md = marked.parse(this.rawMarkdown, { gfm: true, breaks: true });
+      DOMPurify.clearConfig();
       const santized = DOMPurify.sanitize(md, {
         FORBID_ATTR: forbiddenAttributes,
         ALLOWED_TAGS: allowedTags,
