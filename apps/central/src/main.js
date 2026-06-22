@@ -26,7 +26,6 @@ import './jquery';
 import './bootstrap';
 
 const app = createApp(App);
-const container = createContainer();
 
 const { sentryDsn } = await fetch('/client-config.json')
   .then(r => r.json())
@@ -36,5 +35,4 @@ const { sentryDsn } = await fetch('/client-config.json')
     return {};
   });
 initSentry(app, 'central-frontend', sentryDsn);
-
-app.use(container).directive('tooltip', vTooltip).mount('#app');
+app.use(createContainer()).directive('tooltip', vTooltip).mount('#app');
