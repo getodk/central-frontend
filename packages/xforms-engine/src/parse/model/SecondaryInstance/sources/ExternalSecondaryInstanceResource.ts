@@ -5,23 +5,13 @@ import { ErrorProductionDesignPendingError } from '../../../../error/ErrorProduc
 import { getResponseContentType } from '../../../../lib/resource-helpers.ts';
 import { FormAttachmentResource } from '../../../attachments/FormAttachmentResource.ts';
 import type { ExternalSecondaryInstanceSourceFormat } from './SecondaryInstanceSource.ts';
-
-class ErrorLoadingSecondaryInstanceResource extends ErrorProductionDesignPendingError {
-  constructor(resourceURL: JRResourceURL, response: FetchResourceResponse) {
-    const filename = resourceURL.pathname.slice(1);
-    const message =
-      response.status === 404
-        ? 'is missing.'
-        : `failed to load with error code: ${response.status}`;
-    super(`Required attachment "${filename}" ${message}`);
-  }
-}
+import { SecondaryInstanceResourceLoadingError } from '../../../../error/SecondaryInstanceResourceLoadingError.ts';
 
 const assertResponseSuccess = (resourceURL: JRResourceURL, response: FetchResourceResponse) => {
   const { ok = true, status = 200 } = response;
 
   if (!ok || status !== 200) {
-    throw new ErrorLoadingSecondaryInstanceResource(resourceURL, response);
+    throw new SecondaryInstanceResourceLoadingError(resourceURL, response);
   }
 };
 
@@ -110,7 +100,7 @@ export class ExternalSecondaryInstanceResource<
       });
     }
 
-    throw new ErrorLoadingSecondaryInstanceResource(resourceURL, response);
+    throw new SecondaryInstanceResourceLoadingError(resourceURL, response);
   }
 
   static async load(
