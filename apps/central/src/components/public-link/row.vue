@@ -31,7 +31,7 @@ except according to the terms contained in the LICENSE file.
       </template>
     </td>
     <td class="created-at-and-actions">
-      <div class="col-content">
+      <div>
         <date-time :iso="publicLink.createdAt"/>
       </div>
       <div class="btn-group">
@@ -105,12 +105,6 @@ export default {
     padding-top: 4px;
     padding-bottom: 4px;
     min-width: 120px;
-  }
-
-  .col-content {
-    display: flex;
-    align-items: flex-start;
-    margin-top: 3px;
   }
 
   .btn-group {

@@ -19,7 +19,7 @@ describe('PublicLinkRevoke', () => {
   });
 
   it('toggles the modal', () =>
-    load('/projects/1/forms/f/public-links', { root: false }).testModalToggles({
+    load('/projects/1/forms/f/public-links').testModalToggles({
       modal: PublicLinkRevoke,
       show: '.public-link-row .revoke-button',
       hide: '.btn-link'

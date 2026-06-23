@@ -62,7 +62,6 @@ import PublicLinkTable from './table.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
 import useRoutes from '../../composables/routes';
-import useProject from '../../request-data/project';
 import { apiPaths } from '../../util/request';
 import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
@@ -91,8 +90,7 @@ export default {
     }
   },
   setup() {
-    const { publicLinks, resourceStates } = useRequestData();
-    const { actorProperties } = useProject();
+    const { publicLinks, actorProperties, resourceStates } = useRequestData();
 
     const { projectPath } = useRoutes();
     return {

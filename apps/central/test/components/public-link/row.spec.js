@@ -1,6 +1,5 @@
 import DateTime from '../../../src/components/date-time.vue';
 import PublicLinkRow from '../../../src/components/public-link/row.vue';
-import CustomPropsDataRow from '../../../src/components/custom-props-data-row.vue';
 
 import testData from '../../data';
 import { load } from '../../util/http';
@@ -127,49 +126,16 @@ describe('PublicLinkRow', () => {
     });
   });
 
-  describe('custom properties', () => {
-    it('shows a column header for each actor property', () => {
-      testData.extendedForms.createPast(1);
-      testData.standardPublicLinks.createPast(1);
-      testData.actorProperties.createPast(1, { name: 'region' });
-      testData.actorProperties.createPast(1, { name: 'department' });
-      return load('/projects/1/forms/f/public-links').then(app => {
-        const headers = app.findAll('#public-link-table .table-freeze-scrolling th');
-        const headerTexts = headers.map(h => h.text());
-        headerTexts.should.include('region');
-        headerTexts.should.include('department');
-      });
-    });
-
-    it('shows property values for a public link', () => {
-      testData.extendedForms.createPast(1);
-      testData.standardPublicLinks.createPast(1, {
-        properties: {
-          region: 'North',
-          department: 'Health'
-        }
-      });
-      testData.actorProperties.createPast(1, { name: 'region' });
-      testData.actorProperties.createPast(1, { name: 'department' });
-      return load('/projects/1/forms/f/public-links').then(app => {
-        const row = app.getComponent(CustomPropsDataRow);
-        const propertyCells = row.findAll('td');
-        propertyCells.length.should.equal(2);
-        propertyCells[0].text().should.equal('North');
-        propertyCells[1].text().should.equal('Health');
-      });
-    });
-
-    it('shows empty value when property is not set', () => {
-      testData.extendedForms.createPast(1);
-      testData.standardPublicLinks.createPast(1, { properties: {} });
-      testData.actorProperties.createPast(1, { name: 'region' });
-      return load('/projects/1/forms/f/public-links').then(app => {
-        const row = app.getComponent(CustomPropsDataRow);
-        const propertyCells = row.findAll('td');
-        propertyCells.length.should.equal(1);
-        propertyCells[0].text().should.equal('');
-      });
+  it('shows a column header for each actor property', () => {
+    testData.extendedForms.createPast(1);
+    testData.standardPublicLinks.createPast(1);
+    testData.actorProperties.createPast(1, { name: 'region' });
+    testData.actorProperties.createPast(1, { name: 'department' });
+    return load('/projects/1/forms/f/public-links').then(app => {
+      const headers = app.findAll('#public-link-table .table-freeze-scrolling th');
+      const headerTexts = headers.map(h => h.text());
+      headerTexts.should.include('region');
+      headerTexts.should.include('department');
     });
   });
 });

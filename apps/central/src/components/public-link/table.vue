@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <table-freeze v-if="dataExists" id="public-link-table" :data="publicLinks.data" key-prop="id"
+  <table-freeze id="public-link-table" :data="publicLinks.data" key-prop="id"
     :frozen-only="actorProperties.length === 0" :divider="actorProperties.length > 0">
     <template #head-frozen>
       <th>{{ $t('header.displayName') }}</th>
@@ -49,11 +49,7 @@ defineProps({
 });
 defineEmits(['revoke']);
 
-// The component does not assume that this data will exist when the component is
-// created.
-const { publicLinks, actorProperties, resourceStates } = useRequestData();
-
-const { dataExists } = resourceStates([publicLinks, actorProperties]);
+const { publicLinks, actorProperties } = useRequestData();
 </script>
 
 <style lang="scss">
@@ -85,7 +81,7 @@ const { dataExists } = resourceStates([publicLinks, actorProperties]);
     "header": {
       "once": "Single Submission",
       "accessLink": "Access Link",
-      // Header for the table column that shows the created at date and action buttons.
+      // This text combines existing translated words. And it is shown on a column on the Public Link table that shows created at and action buttons.
       "createdAtAndActions": "{createdAt} / {actions}"
     }
   }

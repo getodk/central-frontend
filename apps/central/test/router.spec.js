@@ -437,7 +437,7 @@ describe('createCentralRouter()', () => {
             .complete()
             .route('/projects/1/forms/f/settings')
             .complete()
-            .load('/projects/1/forms/f/public-links', { project: false, form: false, publicLinks: false })
+            .route('/projects/1/forms/f/public-links')
             .then(dataExists(['publicLinks', 'actorProperties'])));
       });
     });
