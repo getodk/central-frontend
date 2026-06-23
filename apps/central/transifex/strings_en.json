@@ -494,6 +494,10 @@
     "reset": {
       "string": "Reset",
       "developer_comment": "This text is shown on a button that resets the data filters"
+    },
+    "change": {
+      "string": "Change",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
     }
   },
   "field": {
@@ -1927,7 +1931,7 @@
     "DatasetOwnerOnly": {
       "panel": {
         "title": {
-          "string": "App User and Data Collector Entity Access",
+          "string": "Entity List Access",
           "developer_comment": "This is a title shown above a section of the page."
         }
       },
@@ -1956,32 +1960,30 @@
           "string": "Define rules for which Entities are visible to App Users and Data Collectors by comparing their properties."
         },
         "entityPropertyLabel": {
-          "string": "Only see Entities where"
+          "string": "Only see Entities where",
+          "developer_comment": "This text is shown above the access rule filter dropdown. Translators are free not to translate this literally"
         },
         "entityPropertyPlaceholder": {
-          "string": "Entity property"
+          "string": "Entity property",
+          "developer_comment": "Placeholder text shown on a access rule filter dropdown."
         },
         "userPropertyLabel": {
-          "string": "is equal to the user’s"
+          "string": "is equal to the user’s",
+          "developer_comment": "This text is shown above the access rule filter dropdown. Translators are free not to translate this literally"
         },
         "userPropertyPlaceholder": {
-          "string": "User property"
+          "string": "User property",
+          "developer_comment": "Placeholder text shown on a access rule filter dropdown"
         },
         "disabled": {
           "datasetProperties": {
-            "string": "There are no dataset properties defined."
+            "string": "There are no Entity properties defined."
           },
           "userProperties": {
             "string": "There are no user properties defined."
           },
           "both": {
-            "string": "There are no dataset and user properties defined."
-          }
-        },
-        "action": {
-          "change": {
-            "string": "Change",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
+            "string": "There are no Entity or user properties defined."
           }
         },
         "currentRule": {
@@ -2013,7 +2015,7 @@
           "string": "App Users and Data Collectors will now only have access to Entities they create."
         },
         "changeToProperty": {
-          "string": "App Users and Data Collectors will now only have access to Entities matching the filter rule."
+          "string": "App Users and Public Links will now only have access to Entities matching the filter rule."
         }
       },
       "accessByFilterRule": {
@@ -2021,7 +2023,7 @@
           "string": "Filter by Property"
         },
         "introduction": {
-          "string": "App Users and Data Collectors will only have access to Entities where the selected property matches their user property."
+          "string": "App Users and Public Links will only have access to Entities where the selected property matches their user property."
         },
         "action": {
           "save": {

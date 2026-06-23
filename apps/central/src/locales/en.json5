@@ -235,7 +235,8 @@
     "restore": "Restore",
     "selectRow": "Select row",
     // This text is shown on a button that resets the data filters
-    "reset": "Reset"
+    "reset": "Reset",
+    "change": "Change"
   },
   "field": {
     "comment": "Leave a comment…",

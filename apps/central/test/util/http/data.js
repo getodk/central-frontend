@@ -255,7 +255,9 @@ const responsesByComponent = {
       () => testData.entityGeojson(entity => entity.deletedAt == null)
     ]
   }),
-  DatasetSettings: [],
+  DatasetSettings: componentResponses({
+    actorProperties: true,
+  }),
   EntityShow: componentResponses({
     entity: () => testData.extendedEntities.last(),
     project: true,
