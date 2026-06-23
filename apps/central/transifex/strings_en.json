@@ -1031,7 +1031,8 @@
       "developer_comment": "This text is shown on its own before details about a warning."
     },
     "recommended": {
-      "string": "recommended"
+      "string": "recommended",
+      "developer_comment": "Standalone text shown as a badge next to a recommendation. Not part of a longer phrase."
     },
     "none": {
       "string": "(none)"
@@ -1040,7 +1041,8 @@
       "string": "Search"
     },
     "useEnketo": {
-      "string": "Enketo compatibility mode"
+      "string": "Enketo compatibility mode",
+      "developer_comment": "The word \"Enketo\" should not be translated"
     },
     "updateInProgress": {
       "string": "Update request in progress"
@@ -3817,12 +3819,9 @@
           "string": "Fill out, preview and edit your “{formName}” Form using",
           "developer_comment": "Description of a section. {formName} is replaced with the name of the Form"
         },
-        "enketoDefault": {
-          "string": "Enketo compatibility mode",
-          "developer_comment": "The word \"Enketo\" should not be translated"
-        },
         "enketoDescription": {
-          "string": "No longer actively developed. Use for specialized features not yet supported by the new system."
+          "string": "No longer actively developed. Use for specialized features not yet supported by the new system.",
+          "developer_comment": "This text is shown under the option of Enketo for Form settings."
         },
         "odkWebFormsDescription": {
           "string": "A faster, updated experience that will replace the current version over time."

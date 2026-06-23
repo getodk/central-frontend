@@ -56,9 +56,9 @@ except according to the terms contained in the LICENSE file.
                 <label>
                   <input v-model="webformsEnabled" name="webformsEnabled" type="radio" :value="false"
                     @change="confirmationModal.show({ webformsEnabled: false })">
-                    <span class="label-title">
-                      {{ $t('webFormsSetting.enketoDefault') }}
-                    </span>
+                  <span class="label-title">
+                    {{ $t('common.useEnketo') }}
+                  </span>
                   <br>
                   {{ $t('webFormsSetting.enketoDescription') }}
                 </label>
@@ -209,8 +209,7 @@ const hideAndReset = () => {
       "webForms": "Web Forms",
       // Description of a section. {formName} is replaced with the name of the Form
       "description": "Fill out, preview and edit your “{formName}” Form using",
-      // The word "Enketo" should not be translated
-      "enketoDefault": "Enketo compatibility mode",
+      // This text is shown under the option of Enketo for Form settings.
       "enketoDescription": "No longer actively developed. Use for specialized features not yet supported by the new system.",
       "odkWebFormsDescription": "A faster, updated experience that will replace the current version over time.",
       // Success message when Enketo is selected as web form technology. {formName} is replaced with the name of the Form
