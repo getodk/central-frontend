@@ -127,8 +127,11 @@ export default class BackendClient {
     expect(response).toBeOK();
   };
 
-  createFormAndChildren = async () => {
+  createFormAndChildren = async (disableWebForms) => {
     const form = await this.createForm();
+    if (disableWebForms) {
+      await this.setWebForms(form.xmlFormId, false);
+    }
     const submission = await this.createSubmission(form.xmlFormId);
     await this.editSubmission(form.xmlFormId, submission.instanceId);
     const formDraft = await this.createDraftVersion(form.xmlFormId);
