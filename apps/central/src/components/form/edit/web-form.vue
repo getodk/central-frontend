@@ -4,7 +4,7 @@
     <template #body>
       <i18n-t tag="p" keypath="description.full" class="form-edit-web-form-description">
         <template #learnMore>
-          <doc-link to="/web-forms-intro#features-not-yet-supported">{{ $t('description.learnMore') }}</doc-link>
+          <doc-link to="web-forms-intro#features-not-yet-supported">{{ $t('description.learnMore') }}</doc-link>
         </template>
       </i18n-t>
       <radio-field v-model="webformsEnabled" :options="options"
