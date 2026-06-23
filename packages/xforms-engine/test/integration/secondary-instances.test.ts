@@ -908,6 +908,13 @@ describe('Secondary instances', () => {
         description: 'row delimiter: LFLF',
         rowDelimiter: `\n\n`,
       },
+
+      {
+        description: 'somewhat surprisingly supported row delimiter: LFCR',
+        rowDelimiter: `\n\r`,
+        surprisingSuccessWarning:
+          "LFCR is not an expected line separator in any known-common usage. It's surprising that Papaparse does not fail parsing this case, at least parsing rows!",
+      },
     ];
 
     // Note: this isn't set up with `describe.each` because it would create a superfluous outer description where the inner description must be applied with `it` (to perform async setup)
@@ -918,6 +925,7 @@ describe('Secondary instances', () => {
         rowDelimiter = '\n',
         bom = '',
         expectedFailure = null,
+        surprisingSuccessWarning = null,
       }) => {
         const LOWER_ALPHA_ASCII_LETTER_COUNT = 26;
         const lowerAlphaASCIILetters = Array.from(
@@ -1014,6 +1022,11 @@ describe('Secondary instances', () => {
             await expect(initParseFailure).rejects.toThrowError();
 
             return;
+          }
+
+          if (surprisingSuccessWarning != null) {
+            // eslint-disable-next-line no-console
+            console.warn(surprisingSuccessWarning);
           }
 
           const scenario = await initScenario();
