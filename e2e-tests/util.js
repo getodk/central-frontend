@@ -26,9 +26,6 @@ const test = testBase.extend({
 
         const message = browserName === 'firefox' ? await asText(msg) : msg.text();
 
-        // See: /apps/central/src/composables/feature-flags.js
-        if(message.includes('ODK Central Alpha Features:')) return;
-
         if(browserName === 'firefox') {
           // See: https://github.com/getodk/central/issues/1986
           if(message.match(/"downloadable font: glyf: Glyph bbox was incorrect;.*font-family: "FontAwesome"/)) return;

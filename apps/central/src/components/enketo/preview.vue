@@ -18,16 +18,10 @@ except according to the terms contained in the LICENSE file.
     v-tooltip.aria-describedby="disabledDescription">
     <span class="icon-eye"></span>{{ $t('action.showPreview') }}
   </button>
-
-  <router-link class="btn btn-web-form" :class="btnClass" :to="webFormsPath"
-    target="_blank">
-    <span class="icon-eye"></span>{{ $t('action.newPreview') }}
-  </router-link>
 </template>
 
 <script>
 import useRoutes from '../../composables/routes';
-import { queryString } from '../../util/request';
 
 export default {
   name: 'EnketoPreview',
@@ -61,35 +55,11 @@ export default {
         this.formVersion.xmlFormId,
         !this.formVersion.publishedAt
       );
-    },
-    webFormsPath() {
-      return `${this.formPreviewPath(
-        this.formVersion.projectId,
-        this.formVersion.xmlFormId,
-        !this.formVersion.publishedAt
-      )}${queryString({ webforms: true })}`;
     }
   }
 };
 </script>
 
-<style lang="scss">
-.btn-web-form {
-  display: none;
-}
-
-// `new-web-forms` class is added to the root of App component when the
-// new web form feature is enabled.
-.new-web-forms {
-  .enketo-preview {
-    display: none;
-  }
-
-  .btn-web-form {
-    display: inline-block;
-  }
-}
-</style>
 
 <i18n lang="json5">
 {
