@@ -484,6 +484,14 @@ describe('createCentralRouter()', () => {
           .complete()
           .load('/projects/1/entity-lists/trees/properties', { project: false, dataset: false })
           .afterResponses(dataExists(['project', 'dataset'])));
+
+      it('preserves actorProperties while navigating between dataset tabs', () =>
+        load('/projects/1/entity-lists/trees/settings')
+          .complete()
+          .load('/projects/1/entity-lists/trees/properties', { project: false, dataset: false, actorProperties: false })
+          .complete()
+          .load('/projects/1/entity-lists/trees/settings', { project: false, dataset: false, actorProperties: false })
+          .afterResponses(dataExists(['actorProperties'])));
     });
 
     it('preserves project while navigating from entity list to project', () => {

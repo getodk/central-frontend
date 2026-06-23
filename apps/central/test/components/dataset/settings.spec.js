@@ -6,7 +6,9 @@ import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
 describe('DatasetSettings', () => {
-  beforeEach(mockLogin);
+  beforeEach(() => {
+    mockLogin();
+  });
 
   it('should have onReceipt selected', async () => {
     testData.extendedDatasets.createPast(1);
@@ -24,7 +26,7 @@ describe('DatasetSettings', () => {
 
   it('should sends the correct request - true', async () => {
     testData.extendedDatasets.createPast(1);
-    await load('/projects/1/entity-lists/trees/settings', { root: false })
+    await load('/projects/1/entity-lists/trees/settings')
       .complete()
       .request(async (component) => component.get('input[value="true"]').setValue(true))
       .beforeEachResponse((_, { method, url, data }) => {
@@ -37,7 +39,7 @@ describe('DatasetSettings', () => {
 
   it('should sends the correct request - false', async () => {
     testData.extendedDatasets.createPast(1, { approvalRequired: true });
-    await load('/projects/1/entity-lists/trees/settings', { root: false })
+    await load('/projects/1/entity-lists/trees/settings')
       .complete()
       .request(async (component) => component.get('input[value="false"]').setValue(true))
       .beforeEachResponse((_, { method, url, data }) => {
@@ -50,7 +52,7 @@ describe('DatasetSettings', () => {
 
   it('should change approvalRequired to true', async () => {
     testData.extendedDatasets.createPast(1);
-    await load('/projects/1/entity-lists/trees/settings', { root: false })
+    await load('/projects/1/entity-lists/trees/settings')
       .complete()
       .request(async (component) => component.get('input[value="true"]').setValue(true))
       .respondWithData(() => testData.extendedDatasets.last())
@@ -63,7 +65,7 @@ describe('DatasetSettings', () => {
 
   it('should revert approvalRequired flag if modal is cancelled', async () => {
     testData.extendedDatasets.createPast(1, { approvalRequired: true });
-    await load('/projects/1/entity-lists/trees/settings', { root: false })
+    await load('/projects/1/entity-lists/trees/settings')
       .complete()
       .request(async (component) => component.get('input[value="false"]').setValue(true))
       .respondWithProblem({
@@ -82,7 +84,7 @@ describe('DatasetSettings', () => {
 
   it('should revert approvalRequired flag there is an error', async () => {
     testData.extendedDatasets.createPast(1, { approvalRequired: true });
-    await load('/projects/1/entity-lists/trees/settings', { root: false })
+    await load('/projects/1/entity-lists/trees/settings')
       .complete()
       .request(async (component) => component.get('input[value="false"]').setValue(true))
       .respondWithProblem(500)
@@ -94,7 +96,7 @@ describe('DatasetSettings', () => {
 
   it('should send correct convert query param', async () => {
     testData.extendedDatasets.createPast(1, { approvalRequired: true });
-    await load('/projects/1/entity-lists/trees/settings', { root: false })
+    await load('/projects/1/entity-lists/trees/settings')
       .complete()
       .request(async (component) => component.get('input[value="false"]').setValue(true))
       .respondWithProblem({
@@ -125,7 +127,7 @@ describe('DatasetSettings', () => {
   describe('DatasetDelete', () => {
     it('toggles the modal', () => {
       testData.extendedDatasets.createPast(1);
-      return load('/projects/1/entity-lists/trees/settings', { root: false })
+      return load('/projects/1/entity-lists/trees/settings')
         .testModalToggles({
           modal: DatasetDelete,
           show: '#dataset-settings .panel-simple-danger .btn-danger',
