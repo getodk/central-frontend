@@ -6,9 +6,7 @@ import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
 describe('DatasetSettings', () => {
-  beforeEach(() => {
-    mockLogin();
-  });
+  beforeEach(mockLogin);
 
   it('should have onReceipt selected', async () => {
     testData.extendedDatasets.createPast(1);

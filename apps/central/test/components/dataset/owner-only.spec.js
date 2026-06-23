@@ -89,11 +89,27 @@ describe('DatasetOwnerOnly', () => {
   });
 
   describe('sends the correct request', () => {
+    it('sends correct initial request', () => {
+      testData.extendedDatasets.createPast(1);
+      return mockHttp()
+        .mount(DatasetOwnerOnly, {
+          container: {
+            requestData: testRequestData(['actorProperties'], {
+              dataset: testData.extendedDatasets.last()
+            })
+          }
+        })
+        .respondWithData(() => testData.actorProperties.sorted())
+        .testRequests([{
+          method: 'GET',
+          url: '/v1/projects/1/actor-properties'
+        }]);
+    });
+
     it('sends correct request when changing to "Access all"', () => {
       testData.extendedDatasets.createPast(1, { accessFilter: { type: 'ownerOnly' } });
       return mockHttp()
         .mount(DatasetOwnerOnly, mountOptions())
-        .complete()
         .request(async (component) => {
           await component.get('input[value="all"]').setChecked();
           await component.get('.modal-actions .btn-primary').trigger('click');
@@ -110,7 +126,6 @@ describe('DatasetOwnerOnly', () => {
       testData.extendedDatasets.createPast(1, { accessFilter: null });
       return mockHttp()
         .mount(DatasetOwnerOnly, mountOptions())
-        .complete()
         .request(async (component) => {
           await component.get('input[value="ownerOnly"]').setChecked();
           await component.get('.modal-actions .btn-primary').trigger('click');
@@ -131,7 +146,6 @@ describe('DatasetOwnerOnly', () => {
       });
       return mockHttp()
         .mount(DatasetOwnerOnly, mountOptions())
-        .complete()
         .request(async (component) => {
           await component.get('input[value="property"]').setChecked();
           await component.get('select').findAll('option')[1].setSelected();
@@ -166,14 +180,11 @@ describe('DatasetOwnerOnly', () => {
 
   describe('alert', () => {
     it('shows the correct text once accessFilter has been changed to null', () => {
-      testData.actorProperties.createPast(1, { name: 'region' });
       testData.extendedDatasets.createPast(1, {
-        accessFilter: { type: 'ownerOnly' },
-        properties: [{ name: 'city' }]
+        accessFilter: { type: 'ownerOnly' }
       });
       return mockHttp()
         .mount(DatasetOwnerOnly, mountOptions())
-        .complete()
         .request(async (component) => {
           await component.get('input[value="all"]').setChecked();
           await component.get('.modal-actions .btn-primary').trigger('click');
@@ -191,7 +202,6 @@ describe('DatasetOwnerOnly', () => {
       testData.extendedDatasets.createPast(1, { accessFilter: null });
       return mockHttp()
         .mount(DatasetOwnerOnly, mountOptions())
-        .complete()
         .request(async (component) => {
           await component.get('input[value="ownerOnly"]').setChecked();
           await component.get('.modal-actions .btn-primary').trigger('click');
@@ -213,7 +223,6 @@ describe('DatasetOwnerOnly', () => {
       });
       return mockHttp()
         .mount(DatasetOwnerOnly, mountOptions())
-        .complete()
         .request(async (component) => {
           await component.get('input[value="property"]').setChecked();
           await component.get('select').findAll('option')[1].setSelected();
@@ -242,7 +251,6 @@ describe('DatasetOwnerOnly', () => {
       });
       return mockHttp()
         .mount(DatasetOwnerOnly, mountOptions())
-        .complete()
         .request(async (component) => {
           await component.get('input[value="all"]').setChecked();
           await component.get('.modal-actions .btn-primary').trigger('click');
@@ -271,6 +279,60 @@ describe('DatasetOwnerOnly', () => {
           const inputs = component.findAll('input[type="radio"]');
           for (const input of inputs) input.element.disabled.should.be.false;
           inputs.map(input => input.element.checked).should.eql([false, true, false]);
+        });
+    });
+
+    it('shows a CTA to undo when changing filter by property rule', () => {
+      testData.actorProperties.createPast(1, { name: 'region' });
+      testData.actorProperties.createPast(1, { name: 'country' });
+      testData.extendedDatasets.createPast(1, {
+        accessFilter: {
+          type: 'property',
+          rules: [{ datasetProperty: 'city', actorProperty: 'region' }]
+        },
+        properties: [{ name: 'city' }, { name: 'state' }]
+      });
+      return mockHttp()
+        .mount(DatasetOwnerOnly, mountOptions())
+        .request(async (component) => {
+          await component.get('.current-filter-rule .btn-link').trigger('click');
+          await component.get('select').findAll('option')[2].setSelected();
+          await component.findAll('select')[1].findAll('option')[2].setSelected();
+          await component.get('#property-filter-form').trigger('submit');
+        })
+        .respondWithData(() =>
+          testData.extendedDatasets.update(-1, {
+            accessFilter: {
+              type: 'property',
+              rules: [{ datasetProperty: 'state', actorProperty: 'country' }]
+            }
+          }))
+        .complete()
+        .request(component => {
+          const { alert } = component.vm.$container;
+          alert.cta.text.should.equal('Undo');
+          return alert.cta.handler();
+        })
+        .respondWithData(() =>
+          testData.extendedDatasets.update(-1, {
+            accessFilter: {
+              type: 'property',
+              rules: [{ datasetProperty: 'city', actorProperty: 'region' }]
+            }
+          }))
+        .testRequests([{
+          method: 'PATCH',
+          url: '/v1/projects/1/datasets/trees',
+          data: {
+            accessFilter: {
+              type: 'property',
+              rules: [{ datasetProperty: 'city', actorProperty: 'region' }]
+            }
+          }
+        }])
+        .afterResponse(component => {
+          const ruleText = component.get('.current-filter-rule').text();
+          ruleText.should.startWith('Rule: city (Entity property) = region (User property)');
         });
     });
   });

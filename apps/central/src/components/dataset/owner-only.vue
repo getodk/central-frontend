@@ -218,16 +218,14 @@ const cancel = () => {
 let previousAccessFilter = null;
 
 const update = async (accessFilter) => {
-  const resp = await request({
+  const { data } = await request({
     method: 'PATCH',
     url: apiPaths.dataset(dataset.projectId, dataset.name),
     data: { accessFilter }
   });
 
-  if (resp?.data) {
-    previousAccessFilter = dataset.accessFilter;
-    Object.assign(dataset.data, { accessFilter: null }, resp.data);
-  }
+  previousAccessFilter = dataset.accessFilter;
+  Object.assign(dataset.data, { accessFilter: null }, data);
 };
 
 const undo = () => {
