@@ -304,11 +304,11 @@ onUnmounted(() => {
 	/>
 
 	<template v-if="state.status === 'FORM_STATE_FAILURE'">
-		<FormLoadFailureDialog severity="error" :error="state.error" />
+		<FormLoadFailureDialog :error="state.error" />
 	</template>
 
 	<template v-else-if="runtimeError">
-		<FormLoadFailureDialog severity="error" :error="runtimeError" />
+		<FormLoadFailureDialog :error="runtimeError" />
 	</template>
 
 	<div
