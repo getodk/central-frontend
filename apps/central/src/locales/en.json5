@@ -475,11 +475,13 @@
     "versionShort": "v{version}",
     // This text is shown on its own before details about a warning.
     "warning": "Warning",
-    "beta": "Beta",
+    // Standalone text shown as a badge next to a recommendation. Not part of a longer phrase.
+    "recommended": "recommended",
     "none": "(none)",
     "search": "Search",
     // @transifexKey component.FormTrashList.title
     "trash": "Trash",
+    // The word "Enketo" should not be translated
     "useEnketo": "Enketo compatibility mode",
     "updateInProgress": "Update request in progress"
   },
