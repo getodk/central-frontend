@@ -1,7 +1,7 @@
 **/node_modules
 **/dist
 **/dist-demo
-playwright-report
+/playwright-report/
 
 # Exclude Vue. Formatting is handled by ESLint.
 **/*.vue
