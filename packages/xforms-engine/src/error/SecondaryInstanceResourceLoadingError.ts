@@ -1,6 +1,6 @@
-import type { JRResourceURL } from "@getodk/common/jr-resources/JRResourceURL";
-import { ErrorProductionDesignPendingError } from "./ErrorProductionDesignPendingError";
-import type { FetchResourceResponse } from "../client";
+import type { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL';
+import { ErrorProductionDesignPendingError } from './ErrorProductionDesignPendingError';
+import type { FetchResourceResponse } from '../client';
 
 export class SecondaryInstanceResourceLoadingError extends ErrorProductionDesignPendingError {
   constructor(resourceURL: JRResourceURL, response: FetchResourceResponse) {
