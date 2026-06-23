@@ -90,6 +90,7 @@ import useRoutes from '../../composables/routes';
 import useTabs from '../../composables/tabs';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
+import { useRequestData } from '../../request-data';
 
 export default {
   name: 'ProjectShow',
@@ -101,10 +102,13 @@ export default {
     }
   },
   setup() {
-    const { project, forms, fieldKeys, actorProperties } = useProject();
+    const { createResource } = useRequestData();
+    const { project, forms, fieldKeys } = useProject();
     const { datasets, deletedDatasets } = useDatasets();
     const { projectPath, canRoute } = useRoutes();
     const { tabPath, tabClass } = useTabs(projectPath());
+    const actorProperties = createResource('actorProperties');
+
     return {
       project, forms, datasets, deletedDatasets, fieldKeys, actorProperties,
       tabPath, tabClass, projectPath, canRoute

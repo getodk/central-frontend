@@ -11,16 +11,14 @@ describe('PublicLinkList', () => {
   });
 
   it('toggles the "Submission Options" modal', () =>
-    load('/projects/1/forms/f/public-links', { root: false }).testModalToggles({
+    load('/projects/1/forms/f/public-links').testModalToggles({
       modal: ProjectSubmissionOptions,
       show: '.heading-with-button a[href="#"]',
       hide: '.btn-primary'
     }));
 
   it('shows a message if there are no public links', async () => {
-    const component = await load('/projects/1/forms/f/public-links', {
-      root: false
-    });
+    const component = await load('/projects/1/forms/f/public-links');
     component.get('.empty-table-message').should.be.visible();
   });
 });

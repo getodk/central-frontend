@@ -18,7 +18,8 @@ export const standardPublicLinks = dataStore({
       : extendedForms.createPast(1).last(),
     displayName = faker.word.noun(),
     once = false,
-    token = faker.string.alphanumeric(64)
+    token = faker.string.alphanumeric(64),
+    properties = {}
   }) => {
     if (extendedUsers.size === 0) throw new Error('user not found');
     const createdBy = extendedUsers.first();
@@ -32,7 +33,8 @@ export const standardPublicLinks = dataStore({
       createdAt: inPast
         ? fakePastDate([lastCreatedAt, form.createdAt, createdBy.createdAt])
         : new Date().toISOString(),
-      updatedAt: null
+      updatedAt: null,
+      properties
     };
   },
   sort: comparator((publicLink1, publicLink2) =>
