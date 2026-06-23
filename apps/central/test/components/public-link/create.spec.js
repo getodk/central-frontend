@@ -19,7 +19,7 @@ describe('PublicLinkCreate', () => {
   });
 
   it('toggles the modal', () =>
-    load('/projects/1/forms/f/public-links', { root: false }).testModalToggles({
+    load('/projects/1/forms/f/public-links').testModalToggles({
       modal: PublicLinkCreate,
       show: '.heading-with-button .btn-primary',
       hide: '.btn-link'
