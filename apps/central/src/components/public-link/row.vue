@@ -30,23 +30,31 @@ except according to the terms contained in the LICENSE file.
         </template>
       </template>
     </td>
-    <td>
-      <button v-if="publicLink.token != null" type="button"
-        class="btn btn-danger" @click="$emit('revoke', publicLink)">
-        <span class="icon-times-circle"></span>{{ $t('action.revoke') }}&hellip;
-      </button>
+    <td class="created-at-and-actions">
+      <div>
+        <date-time :iso="publicLink.createdAt"/>
+      </div>
+      <div class="btn-group">
+        <button v-if="publicLink.token != null" type="button"
+          class="revoke-button btn btn-default"
+          :aria-label="$t('action.revoke')" v-tooltip.aria-label
+          @click="$emit('revoke', publicLink)">
+          <span class="icon-times-circle"></span>
+        </button>
+      </div>
     </td>
   </tr>
 </template>
 
 <script>
+import DateTime from '../date-time.vue';
 import Selectable from '../selectable.vue';
 
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'PublicLinkRow',
-  components: { Selectable },
+  components: { DateTime, Selectable },
   props: {
     publicLink: {
       type: Object,
@@ -81,11 +89,28 @@ export default {
 
 <style lang="scss">
 @import '../../assets/scss/mixins';
+@import '../../assets/scss/variables';
 
 .public-link-row {
   .table tbody & td { vertical-align: middle; }
-  .display-name { @include text-overflow-ellipsis; }
+
+  .display-name {
+    @include text-overflow-ellipsis;
+    max-width: 250px;
+  }
+
   .icon-question-circle { margin-left: 5px; }
+
+  .created-at-and-actions {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    min-width: 120px;
+  }
+
+  .btn-group {
+    @include icon-btn-group;
+    .icon-times-circle { color: $color-danger; }
+  }
 }
 </style>
 

@@ -4853,6 +4853,10 @@
         "accessLink": {
           "string": "Access Link",
           "developer_comment": "This is the text of a table column header."
+        },
+        "createdAtAndActions": {
+          "string": "{createdAt} / {actions}",
+          "developer_comment": "This text combines existing translated words. And it is shown on a column on the Public Link table that shows created at and action buttons."
         }
       }
     },

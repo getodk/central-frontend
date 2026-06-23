@@ -19,7 +19,6 @@ const responseDefaults = {
   // useProject()
   forms: () => testData.extendedForms.sorted(),
   fieldKeys: () => testData.extendedFieldKeys.sorted(),
-  actorProperties: () => testData.actorProperties.sorted(),
   // useForm()
   formVersions: [
     ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/versions$/.test(url),
@@ -30,6 +29,7 @@ const responseDefaults = {
   users: () => testData.standardUsers.sorted(),
   user: () => testData.standardUsers.last(),
   audits: () => testData.extendedAudits.sorted(),
+  actorProperties: () => testData.actorProperties.sorted(),
   serverConfig: [
     ({ url }) => url === '/v1/config/public',
     () => testData.standardConfigs.byKey()
@@ -173,6 +173,7 @@ const responsesByComponent = {
     ]
   }),
   PublicLinkList: componentResponses({
+    actorProperties: true,
     publicLinks: () => testData.standardPublicLinks.sorted()
   }),
   FormVersionList: componentResponses({ formVersions: true }),
