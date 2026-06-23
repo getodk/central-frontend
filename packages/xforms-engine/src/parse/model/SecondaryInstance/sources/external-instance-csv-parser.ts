@@ -1,6 +1,7 @@
 import type { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL';
 import * as papa from 'papaparse';
 import { ErrorProductionDesignPendingError } from '../../../../error/ErrorProductionDesignPendingError';
+import { CSVExternalSecondaryInstanceValidationError } from '../../../../error/SecondaryInstanceCSVValidationError';
 
 type CSVColumn = string;
 type CSVRow = readonly CSVColumn[];
@@ -34,19 +35,6 @@ interface CSVExternalSecondaryInstanceItemColumn {
 }
 
 type CSVExternalSecondaryInstanceItem = readonly CSVExternalSecondaryInstanceItemColumn[];
-
-class CSVExternalSecondaryInstanceValidationError extends ErrorProductionDesignPendingError {
-  constructor(
-    resourceURL: JRResourceURL,
-    rowIndex: number | null,
-    columnIndex: number | null,
-    message: string
-  ) {
-    const rowMessage = rowIndex !== null ? `, row ${rowIndex + 1}` : '';
-    const columnMessage = columnIndex !== null ? `, column ${columnIndex + 1}` : '';
-    super(`Failed to parse CSV ${resourceURL.href}${rowMessage}${columnMessage}: ${message}`);
-  }
-}
 
 /**
  * Based on {@link https://github.com/getodk/central-frontend/commit/29cebcc870c9be70ab0d222e3349e34639045d19}
