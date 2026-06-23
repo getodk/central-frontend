@@ -519,8 +519,9 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 
   /**
    * Applies a saved feature value to the map.
-   * Looks it up in multi-feature mode, or builds and places it in single-feature mode
-   * @param feature
+   * Multi-feature mode: looks it up in the collection.
+   * Single-feature mode: places it only when the map is empty (e.g., a dynamic default).
+   * After the user modifies the feature, it shouldn't rerender the map.
    */
   const applySavedFeatureValue = (feature: GeoJsonFeature | undefined) => {
     if (currentMode.capabilities.canLoadMultiFeatures) {
@@ -531,8 +532,7 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
       );
     }
 
-    if (!feature) {
-      clearMap();
+    if (!feature || !featuresSource.isEmpty()) {
       return;
     }
 
