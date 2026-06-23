@@ -35,7 +35,7 @@
     "npm": "11"
   },
   "scripts": {
-    "build": "npm-run-all -nl 'build:*'",
+    "build": "npm-run-all2 -nl 'build:*'",
     "build:clean": "rimraf dist/",
     "build:js": "vite build",
     "dev": "vite",
@@ -43,7 +43,7 @@
     "format:lint": "prettier -c \"**/*\" --ignore-unknown",
     "lint": "eslint . --report-unused-disable-directives --cache --max-warnings 0 && npm run format:lint",
     "lint:fix": "eslint . --fix --report-unused-disable-directives --cache --max-warnings 0 && npm run format:fix",
-    "test": "npm-run-all -nl 'test-node:*' 'test-browser:*'",
+    "test": "npm-run-all2 -nl 'test-node:*' 'test-browser:*'",
     "test-node:jsdom": "TZ=America/Phoenix vitest run",
     "test-browser:chromium": "BROWSER_NAME=chromium vitest run",
     "test-browser:firefox": "BROWSER_NAME=firefox vitest run",
@@ -52,7 +52,7 @@
     "test-watch:chromium": "BROWSER_NAME=chromium vitest",
     "test-watch:firefox": "BROWSER_NAME=firefox vitest",
     "test-watch:webkit": "BROWSER_NAME=webkit vitest",
-    "test:types": "npm-run-all -nl 'test:types:*'",
+    "test:types": "npm-run-all2 -nl 'test:types:*'",
     "test:types:main": "tsc --project ./tsconfig.json --emitDeclarationOnly false --noEmit",
     "test:types:test": "tsc --project ./test/tsconfig.json --emitDeclarationOnly false --noEmit"
   },

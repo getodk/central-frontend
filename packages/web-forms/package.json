@@ -27,7 +27,7 @@
     "npm": "11"
   },
   "scripts": {
-    "build": "npm-run-all -l build:clean build:translations build:demo build:js",
+    "build": "npm-run-all2 -l build:clean build:translations build:demo build:js",
     "build:clean": "rimraf dist/ dist-demo/",
     "build:demo": "vite build --mode demo --outDir dist-demo",
     "build:js": "vite build",
@@ -37,13 +37,13 @@
     "dev": "vite",
     "dist-demo": "npm run build && vite serve dist-demo --port 5174",
     "feature-matrix": "node bin/feature-matrix/render.js",
-    "format:fix": "npm-run-all --print-name format:vue format:prettier",
+    "format:fix": "npm-run-all2 --print-name format:vue format:prettier",
     "format:lint": "prettier -c \"**/*\" --ignore-unknown",
     "format:prettier": "prettier -w \"**/*\" --ignore-unknown --cache",
     "format:vue": "eslint ./**/*.vue  --report-unused-disable-directives --cache --fix",
     "lint": "eslint . --report-unused-disable-directives --cache --max-warnings 0 && npm run format:lint",
     "lint:fix": "eslint . --fix --report-unused-disable-directives --cache --max-warnings 0 && npm run format:fix",
-    "test": "npm-run-all -nl 'test:*'",
+    "test": "npm-run-all2 -nl 'test:*'",
     "test:e2e:functional:all": "playwright test --project=functional-*",
     "test:e2e:functional:chromium": "playwright test --project=functional-chromium",
     "test:e2e:functional:firefox": "playwright test --project=functional-firefox",
@@ -59,7 +59,7 @@
     "test-watch:chromium": "BROWSER_NAME=chromium vitest",
     "test-watch:firefox": "BROWSER_NAME=firefox vitest",
     "test-watch:webkit": "BROWSER_NAME=webkit vitest",
-    "test:types": "npm-run-all -nl 'test:types:*'",
+    "test:types": "npm-run-all2 -nl 'test:types:*'",
     "test:types:app": "vue-tsc --project ./tsconfig.app.json --emitDeclarationOnly false --noEmit",
     "test:types:node": "vue-tsc --project ./tsconfig.node.json --emitDeclarationOnly false --noEmit",
     "test:types:vitest": "vue-tsc --project ./tsconfig.vitest.json --emitDeclarationOnly false --noEmit"

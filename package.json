@@ -10,7 +10,7 @@
     "build:web": "vite build",
     "changeset": "changeset",
     "eslint": "eslint bin/ e2e-tests/ *.js -c bin/eslint.config.js --cache --max-warnings 0",
-    "lint": "run-p eslint \"lint --workspaces\"",
+    "lint": "npm-run-all2 -p eslint 'lint --workspaces'",
     "lint:fix": "npm run lint:fix --workspaces",
     "test": "npm run test --workspaces",
     "test:e2e": "e2e-tests/run-tests.sh",

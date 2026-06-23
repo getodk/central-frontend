@@ -52,7 +52,7 @@
     "format:lint": "prettier -c \"**/*\" --ignore-unknown",
     "lint": "eslint . --report-unused-disable-directives --cache --max-warnings 0 && npm run format:lint",
     "lint:fix": "eslint . --fix --report-unused-disable-directives --cache --max-warnings 0 && npm run format:fix",
-    "test": "npm-run-all -nl 'test-node:*' 'test-browser:*'",
+    "test": "npm-run-all2 -nl 'test-node:*' 'test-browser:*'",
     "test-node:jsdom": "vitest run",
     "test-browser:chromium": "BROWSER_NAME=chromium vitest run",
     "test-browser:firefox": "BROWSER_NAME=firefox vitest run",
