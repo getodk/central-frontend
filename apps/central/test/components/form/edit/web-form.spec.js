@@ -40,7 +40,7 @@ describe('FormEditWebForm', () => {
         })
         .respondWithData(() => {
           testData.extendedFormDrafts.update(-1, { webformsEnabled: false });
-          return { success: true };
+          return testData.standardFormDrafts.last();
         })
         .testRequests([{
           method: 'PATCH',
@@ -59,7 +59,7 @@ describe('FormEditWebForm', () => {
         })
         .respondWithData(() => {
           testData.extendedFormDrafts.update(-1, { webformsEnabled: true });
-          return { success: true };
+          return testData.standardFormDrafts.last();
         })
         .testRequests([{
           method: 'PATCH',
@@ -83,7 +83,7 @@ describe('FormEditWebForm', () => {
         })
         .respondWithData(() => {
           testData.extendedFormDrafts.update(-1, { webformsEnabled: false });
-          return { success: true };
+          return testData.standardFormDrafts.last();
         })
         .afterResponse(app => {
           const radios = app.findAll('#form-edit-web-form input[type="radio"]');

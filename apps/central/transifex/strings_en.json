@@ -264,7 +264,7 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "update_draft_update": {
-          "string": "Draft Settings Changed",
+          "string": "Update Draft Settings",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "update_publish": {
@@ -1038,6 +1038,12 @@
     },
     "search": {
       "string": "Search"
+    },
+    "useEnketo": {
+      "string": "Enketo compatibility mode"
+    },
+    "updateInProgress": {
+      "string": "Update request in progress"
     }
   },
   "mixin": {
@@ -3543,24 +3549,23 @@
       },
       "description": {
         "full": {
-          "string": "Newly created forms now use the new ODK web forms experience by default for previews, web submissions and submission editing. Some advanced form features may not yet be fully supported, {learnMore}.",
+          "string": "Newly created Forms now use the new ODK Web Forms experience by default for previews, web submissions and submission editing. Some advanced form features may not yet be fully supported, {learnMore}.",
           "developer_comment": "{learnMore} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nlearn more"
         },
         "learnMore": {
           "string": "learn more",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {learnMore} is in the following text:\n\nNewly created forms now use the new ODK web forms experience by default for previews, web submissions and submission editing. Some advanced form features may not yet be fully supported, {learnMore}."
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {learnMore} is in the following text:\n\nNewly created Forms now use the new ODK Web Forms experience by default for previews, web submissions and submission editing. Some advanced form features may not yet be fully supported, {learnMore}."
         }
       },
       "option": {
         "webForms": {
           "string": "New ODK Web Forms (recommended)"
-        },
-        "enketo": {
-          "string": "Enketo compatibility mode"
         }
       },
-      "updateInProgress": {
-        "string": "Update request in progress"
+      "alert": {
+        "settingSaved": {
+          "string": "Draft Form setting saved."
+        }
       }
     },
     "FormHead": {

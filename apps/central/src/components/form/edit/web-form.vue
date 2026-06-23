@@ -9,7 +9,7 @@
       </i18n-t>
       <radio-field v-model="webformsEnabled" :options="options"
         class="form-edit-web-form-options" :disabled="awaitingResponse"
-        :disabled-message="$t('updateInProgress')"
+        :disabled-message="$t('common.updateInProgress')"
         @update:model-value="update"/>
     </template>
   </form-edit-section>
@@ -43,10 +43,12 @@ const { request, awaitingResponse } = useRequest();
 const webformsEnabled = ref(formDraft.webformsEnabled);
 
 const { t } = useI18n();
+const { alert } = inject('container');
+
 
 const options = computed(() => [
   { value: true, text: t('option.webForms') },
-  { value: false, text: t('option.enketo') }
+  { value: false, text: t('common.useEnketo') }
 ]);
 
 const update = (newVal) => {
@@ -56,6 +58,7 @@ const update = (newVal) => {
   )
     .then(() => {
       formDraft.webformsEnabled = newVal;
+      alert.success(t('alert.settingSaved'));
     })
     .catch(() => {
       webformsEnabled.value = formDraft.webformsEnabled;
@@ -81,7 +84,6 @@ const update = (newVal) => {
     display: inline;
 
     .radio {
-      cursor: pointer;
       margin-bottom: 6px;
       margin-top: 6px;
       padding-left: 20px;
@@ -96,14 +98,15 @@ const update = (newVal) => {
   "en": {
     "title": "New default web form experience",
     "description": {
-      "full": "Newly created forms now use the new ODK web forms experience by default for previews, web submissions and submission editing. Some advanced form features may not yet be fully supported, {learnMore}.",
+      "full": "Newly created Forms now use the new ODK Web Forms experience by default for previews, web submissions and submission editing. Some advanced form features may not yet be fully supported, {learnMore}.",
       "learnMore": "learn more"
     },
     "option": {
-      "webForms": "New ODK Web Forms (recommended)",
-      "enketo": "Enketo compatibility mode"
+      "webForms": "New ODK Web Forms (recommended)"
     },
-    "updateInProgress": "Update request in progress"
+    "alert": {
+      "settingSaved": "Draft Form setting saved."
+    }
   }
 }
 </i18n>
