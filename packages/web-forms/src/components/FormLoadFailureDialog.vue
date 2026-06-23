@@ -46,12 +46,9 @@ const detail = computed((): FormLoadErrorDetail | null => {
 				{{ error.message }}
 			</Message>
 
-			<details v-if="detail != null" class="initialize-form-failure-details">
+			<details v-if="detail?.unknownCauseDetail != null" class="initialize-form-failure-details">
 				<summary>{{ t('form_load_failure_dialog.details.label') }}</summary>
-
-				<pre v-if="detail.unknownCauseDetail != null">{{ detail.unknownCauseDetail }}</pre>
-
-				<pre v-if="detail.stack != null">{{ detail.stack }}</pre>
+				<pre>{{ detail.unknownCauseDetail }}</pre>
 			</details>
 		</div>
 	</Dialog>
