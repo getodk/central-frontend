@@ -43,7 +43,7 @@
     "docs:api": "typedoc --readme none --out api-docs --entryPoints \"src/**/*\"",
     "docs:serve": "http-server api-docs -o modules/client",
     "format:fix": "prettier -w \"**/*\" --ignore-unknown --cache",
-    "format:lint": "prettier -c \"**/*\" --ignore-unknown",
+    "format:lint": "prettier -c \"**/*\" --ignore-unknown --cache",
     "lint": "eslint . --report-unused-disable-directives --cache --max-warnings 0 && npm run format:lint",
     "lint:fix": "eslint . --fix --report-unused-disable-directives --cache --max-warnings 0 && npm run format:fix",
     "test": "npm-run-all -nl 'test-node:*' 'test-browser:*' 'integration-test'",

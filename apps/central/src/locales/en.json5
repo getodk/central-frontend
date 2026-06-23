@@ -136,6 +136,7 @@
         "update": "@:audit.action.default.update",
         "update_draft_set": "Create or Update Draft",
         "update_draft_replace": "Replace Draft",
+        "update_draft_update": "Update Draft Settings",
         "update_publish": "Publish Draft",
         "update_draft_delete": "Abandon Draft",
         "attachment_update": "Update Attachments",
@@ -286,7 +287,7 @@
     // This is the text of a table column header. The column shows the number of entities
     // for the Entity List
     "entities": "Total Entities",
-    // This is the text of a table column header. The column shows the date and time of the 
+    // This is the text of a table column header. The column shows the date and time of the
     // newest entity
     "lastEntity": "Latest Entity"
   },
@@ -478,7 +479,9 @@
     "none": "(none)",
     "search": "Search",
     // @transifexKey component.FormTrashList.title
-    "trash": "Trash"
+    "trash": "Trash",
+    "useEnketo": "Enketo compatibility mode",
+    "updateInProgress": "Update request in progress"
   },
   "mixin": {
     "request": {

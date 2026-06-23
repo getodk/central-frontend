@@ -9,6 +9,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"/>
     <link rel="manifest" href="/site.webmanifest"/>
+    <script src="/apps/forms/src/init.js" defer></script>
     <style>
       .loading-container {
         text-align: center;
@@ -34,6 +35,13 @@
           transform: rotate(360deg);
         }
       }
+      #loading-error {
+        display: none;
+        margin: 20px auto;
+        max-width: 800px;
+        padding: 1rem;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      }
     </style>
   </head>
   <body>
@@ -45,6 +53,12 @@
       <span class="spinner"></span>
     </div>
     <div id="forms-app">
+      <div id="loading-error">
+        <h1>Error loading forms application</h1>
+        <p>Please try reloading the page, updating your browser to the latest version, or contacting support.</p>
+        <p id="error-message"></p>
+        <p>Powered by <a href="https://getodk.org">ODK</a>.</p>
+      </div>
     </div>
     <script type="module" src="/apps/forms/src/main.ts"></script>
   </body>
