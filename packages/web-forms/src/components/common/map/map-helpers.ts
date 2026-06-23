@@ -13,7 +13,7 @@ import type {
   Polygon as PolygonGeoJSON,
 } from 'geojson';
 
-const toODKDecimal = (n: number): string => (Number.isInteger(n) ? `${n}.0` : String(n));
+const toODKDecimal = (num: number) => (Number.isInteger(num) ? `${num}.0` : String(num));
 
 // Latitude is first for ODK, and longitude is second. Altitude and accuracy default to 0.0 to match Collect behavior.
 export const toODKCoordinateArray = (
