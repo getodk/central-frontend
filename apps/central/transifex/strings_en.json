@@ -494,6 +494,10 @@
     "reset": {
       "string": "Reset",
       "developer_comment": "This text is shown on a button that resets the data filters"
+    },
+    "change": {
+      "string": "Change",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
     }
   },
   "field": {
@@ -1927,7 +1931,7 @@
     "DatasetOwnerOnly": {
       "panel": {
         "title": {
-          "string": "App User and Data Collector Entity Access",
+          "string": "Entity List Access",
           "developer_comment": "This is a title shown above a section of the page."
         }
       },
@@ -1946,6 +1950,45 @@
         },
         "true": {
           "string": "App Users and Data Collectors within this Project will only have access to the Entities they create, promoting privacy and limiting data transfers."
+        }
+      },
+      "filterByProperty": {
+        "label": {
+          "string": "Filter by Property"
+        },
+        "description": {
+          "string": "Define rules for which Entities are visible to App Users and Data Collectors by comparing their properties."
+        },
+        "entityPropertyLabel": {
+          "string": "Only see Entities where",
+          "developer_comment": "This text is shown above the access rule filter dropdown. Translators are free not to translate this literally"
+        },
+        "entityPropertyPlaceholder": {
+          "string": "Entity property",
+          "developer_comment": "Placeholder text shown on a access rule filter dropdown."
+        },
+        "userPropertyLabel": {
+          "string": "is equal to the user’s",
+          "developer_comment": "This text is shown above the access rule filter dropdown. Translators are free not to translate this literally"
+        },
+        "userPropertyPlaceholder": {
+          "string": "User property",
+          "developer_comment": "Placeholder text shown on a access rule filter dropdown"
+        },
+        "disabled": {
+          "datasetProperties": {
+            "string": "There are no Entity properties defined."
+          },
+          "userProperties": {
+            "string": "There are no user properties defined."
+          },
+          "both": {
+            "string": "There are no Entity or user properties defined."
+          }
+        },
+        "currentRule": {
+          "string": "Rule: {entityProperty} (Entity property) = {userProperty} (User property)",
+          "developer_comment": "{entityProperty} is the name of an Entity property. {userProperty} is the name of a User property."
         }
       },
       "falseModal": {
@@ -1970,6 +2013,23 @@
         },
         "changeToTrue": {
           "string": "App Users and Data Collectors will now only have access to Entities they create."
+        },
+        "changeToProperty": {
+          "string": "App Users and Public Links will now only have access to Entities matching the filter rule."
+        }
+      },
+      "accessByFilterRule": {
+        "title": {
+          "string": "Filter by Property"
+        },
+        "introduction": {
+          "string": "App Users and Public Links will only have access to Entities where the selected property matches their user property."
+        },
+        "action": {
+          "save": {
+            "string": "Save Filter Rule",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
         }
       }
     },
