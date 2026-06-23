@@ -356,9 +356,16 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 
   /**
    * Places a newly built feature onto the empty layer and marks it saved.
+   * Skips when the incoming geometry's ODK value already matches what's on the map,
+   * So user edits coming back through the engine don't rebuild the feature.
    */
   const loadAndSaveSingleFeature = (feature: Feature | undefined) => {
-    if (!mapInstance || currentMode.capabilities.canLoadMultiFeatures || !feature) {
+    if (
+      !mapInstance ||
+      currentMode.capabilities.canLoadMultiFeatures ||
+      !feature ||
+      feature.get(ODK_VALUE_PROPERTY) === mapFeatures?.getSavedFeatureValue()
+    ) {
       return;
     }
 
@@ -520,8 +527,7 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
   /**
    * Applies a saved feature value to the map.
    * Multi-feature mode: looks it up in the collection.
-   * Single-feature mode: places it only when the map is empty (e.g., a dynamic default).
-   * After the user modifies the feature, it shouldn't rerender the map.
+   * Single-feature mode: applies external updates (defaults, setvalue). Skips when the value matches what's on the map
    */
   const applySavedFeatureValue = (feature: GeoJsonFeature | undefined) => {
     if (currentMode.capabilities.canLoadMultiFeatures) {
@@ -532,7 +538,7 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
       );
     }
 
-    if (!feature || !featuresSource.isEmpty()) {
+    if (!feature) {
       return;
     }
 
