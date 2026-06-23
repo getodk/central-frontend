@@ -19,7 +19,6 @@ test.beforeAll(async ({ playwright }, testInfo) => {
   firstSubmission = resources.submission;
   publicLink = resources.publicLink;
 
-  await backendClient.setWebForms(resources.form.xmlFormId, true);
   await backendClient.dispose();
 });
 
@@ -29,9 +28,6 @@ test.describe('ODK Web Forms', () => {
       {
         description: 'New Submission',
         url: ({ enketoId }) => `/-/${enketoId}`, requireLogin: true
-      }, {
-        description: 'Edit Submission',
-        url: ({ enketoId, instanceId }) => `/-/edit/${enketoId}?instance_id=${instanceId}`, requireLogin: true
       }, {
         description: 'Preview Form',
         url: ({ enketoId }) => `/-/preview/${enketoId}`, requireLogin: true

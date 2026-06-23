@@ -14,9 +14,7 @@ test.beforeAll(async ({ playwright }, testInfo) => {
   backendClient = new BackendClient(playwright, `${testInfo.project.name}_wf`, projectId);
   await backendClient.alwaysHideModal();
   simpleForm = await backendClient.createForm();
-  await backendClient.setWebForms(simpleForm.xmlFormId, true);
   formWithAttachment = await backendClient.createAttachmentForm();
-  await backendClient.setWebForms(formWithAttachment.xmlFormId, true);
 });
 
 test.afterAll(async () => {

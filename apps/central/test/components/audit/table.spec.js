@@ -169,6 +169,7 @@ describe('AuditTable', () => {
       ['form.update', ['Form', 'Update Details']],
       ['form.update.draft.set', ['Form', 'Create or Update Draft']],
       ['form.update.draft.replace', ['Form', 'Replace Draft']],
+      ['form.update.draft.update', ['Form', 'Update Draft Settings']],
       ['form.update.publish', ['Form', 'Publish Draft']],
       ['form.update.draft.delete', ['Form', 'Abandon Draft']],
       ['form.attachment.update', ['Form', 'Update Attachments']],
