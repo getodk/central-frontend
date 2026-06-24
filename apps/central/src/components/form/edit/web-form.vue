@@ -47,7 +47,7 @@ const { alert } = inject('container');
 
 
 const options = computed(() => [
-  { value: true, text: 'ODK Web Forms (' + t('common.recommended') + ')' },
+  { value: true, text: `ODK Web Forms (${t('common.recommended')})` },
   { value: false, text: t('common.useEnketo') }
 ]);
 
