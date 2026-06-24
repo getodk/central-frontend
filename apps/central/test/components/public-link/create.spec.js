@@ -87,7 +87,7 @@ describe('PublicLinkCreate', () => {
 
   describe('after a successful response', () => {
     const submit = () => {
-      testData.standardPublicLinks.createPast(1);
+      testData.extendedPublicLinks.createPast(1);
       return load('/projects/1/forms/f/public-links')
         .complete()
         .request(async (app) => {
@@ -96,10 +96,10 @@ describe('PublicLinkCreate', () => {
           await modal.get('input').setValue('My Public Link');
           return modal.get('form').trigger('submit');
         })
-        .respondWithData(() => testData.standardPublicLinks.createNew({
+        .respondWithData(() => testData.extendedPublicLinks.createNew({
           displayName: 'My Public Link'
         }))
-        .respondWithData(() => testData.standardPublicLinks.sorted());
+        .respondWithData(() => testData.extendedPublicLinks.sorted());
     };
 
     it('hides the modal', async () => {
