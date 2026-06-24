@@ -1,5 +1,4 @@
 ---
-'@getodk/central-frontend': minor
 '@getodk/web-forms': minor
 ---
 
