@@ -36,7 +36,8 @@ except according to the terms contained in the LICENSE file.
     </div>
 
     <public-link-table v-if="dataExists" :highlighted="highlighted"
-      @revoke="revokeModal.show({ publicLink: $event })"/>
+      @revoke="revokeModal.show({ publicLink: $event })"
+      @edit="editModal.show({ publicLink: $event })"/>
     <loading :state="initiallyLoading"/>
     <p v-if="dataExists && publicLinks.length === 0"
       class="empty-table-message">
@@ -45,6 +46,8 @@ except according to the terms contained in the LICENSE file.
 
     <public-link-create v-bind="createModal" @hide="createModal.hide()"
       @success="afterCreate"/>
+    <public-link-edit v-bind="editModal" @hide="editModal.hide()"
+      @success="afterEdit"/>
     <project-submission-options v-bind="submissionOptions"
       @hide="submissionOptions.hide()"/>
     <public-link-revoke v-bind="revokeModal" @hide="revokeModal.hide()"
@@ -57,6 +60,7 @@ import DocLink from '../doc-link.vue';
 import Loading from '../loading.vue';
 import ProjectSubmissionOptions from '../project/submission-options.vue';
 import PublicLinkCreate from './create.vue';
+import PublicLinkEdit from './edit.vue';
 import PublicLinkRevoke from './revoke.vue';
 import PublicLinkTable from './table.vue';
 import SentenceSeparator from '../sentence-separator.vue';
@@ -74,6 +78,7 @@ export default {
     Loading,
     ProjectSubmissionOptions,
     PublicLinkCreate,
+    PublicLinkEdit,
     PublicLinkRevoke,
     PublicLinkTable,
     SentenceSeparator
@@ -104,6 +109,7 @@ export default {
       highlighted: null,
       // Modals
       createModal: modalData(),
+      editModal: modalData(),
       submissionOptions: modalData(),
       revokeModal: modalData()
     };
@@ -125,6 +131,12 @@ export default {
       this.fetchData(true);
       this.createModal.hide();
       this.alert.success(this.$t('alert.create'));
+      this.highlighted = publicLink.id;
+    },
+    afterEdit(publicLink) {
+      this.fetchData(true);
+      this.editModal.hide();
+      this.alert.success(this.$t('alert.edit', publicLink));
       this.highlighted = publicLink.id;
     },
     afterRevoke(publicLink) {
@@ -161,6 +173,7 @@ export default {
     "emptyTable": "There are no Public Access Links for this Form.",
     "alert": {
       "create": "Your Public Access Link has been created and is now live. Copy it below to distribute it.",
+      "edit": "The Public Access Link “{displayName}” was updated successfully.",
       "revoke": "The Public Access Link “{displayName}” was revoked successfully. No further Submissions will be accepted using this Link."
     }
   }

@@ -170,6 +170,10 @@ export const apiPaths = {
   },
   submissionXml: submissionPath('.xml'),
   publicLinks: formPath('/public-links'),
+  publicLink: (projectId, xmlFormId, publicLinkId) => {
+    const encodedFormId = encodeURIComponent(xmlFormId);
+    return `/v1/projects/${projectId}/forms/${encodedFormId}/public-links/${publicLinkId}`;
+  },
   datasets: projectPath('/datasets'),
   dataset: datasetPath(''),
   datasetProperties: datasetPath('/properties'),
