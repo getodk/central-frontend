@@ -3611,17 +3611,12 @@
       },
       "description": {
         "full": {
-          "string": "Newly created Forms now use the new ODK Web Forms experience by default for previews, web submissions and submission editing. Some advanced form features may not yet be fully supported, {learnMore}.",
+          "string": "Newly created Forms now use the ODK Web Forms experience by default for previews, web submissions and submission editing. Some advanced form features may not yet be fully supported, {learnMore}.",
           "developer_comment": "{learnMore} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nlearn more"
         },
         "learnMore": {
           "string": "learn more",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {learnMore} is in the following text:\n\nNewly created Forms now use the new ODK Web Forms experience by default for previews, web submissions and submission editing. Some advanced form features may not yet be fully supported, {learnMore}."
-        }
-      },
-      "option": {
-        "webForms": {
-          "string": "New ODK Web Forms (recommended)"
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {learnMore} is in the following text:\n\nNewly created Forms now use the ODK Web Forms experience by default for previews, web submissions and submission editing. Some advanced form features may not yet be fully supported, {learnMore}."
         }
       },
       "alert": {
@@ -3872,19 +3867,26 @@
       },
       "webFormsSetting": {
         "webForms": {
-          "string": "Web Forms",
-          "developer_comment": "Title of a section on Forms settings page, that allows users to opt-in for ODK Web Forms"
+          "string": "Web form experience",
+          "developer_comment": "Title of a section on Forms settings page, that allows users to choose which form experience they want to use"
         },
         "description": {
           "string": "Fill out, preview and edit your “{formName}” Form using",
           "developer_comment": "Description of a section. {formName} is replaced with the name of the Form"
         },
         "enketoDescription": {
-          "string": "No longer actively developed. Use for specialized features not yet supported by the new system.",
+          "string": "No longer actively developed. Use for specialized features not yet supported by ODK Web Forms.",
           "developer_comment": "This text is shown under the option of Enketo for Form settings."
         },
         "odkWebFormsDescription": {
-          "string": "A faster, updated experience that will replace the current version over time."
+          "full": {
+            "string": "A modern experience that will replace Enketo over time. {preview}.",
+            "developer_comment": "{preview} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nSee a preview"
+          },
+          "preview": {
+            "string": "See a preview",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {preview} is in the following text:\n\nA modern experience that will replace Enketo over time. {preview}."
+          }
         },
         "enketoSelected": {
           "string": "You’re now using Enketo to fill out, preview and edit your “{formName}” form.",
@@ -4035,26 +4037,13 @@
     },
     "FormWebFormsSettingsConfirmation": {
       "webformsConfirmation": {
+        "description": {
+          "string": "Are you sure you want to switch from Enketo to ODK Web Forms?",
+          "developer_comment": "The words \"ODK Web Forms\" and \"Enketo\" should not be translated"
+        },
         "useOdkWebForms": {
           "string": "Use ODK Web Forms",
           "developer_comment": "The words \"ODK Web Forms\" should not be translated"
-        },
-        "intro": {
-          "string": "We’re building a new web-forms experience designed to be fast and user-friendly!"
-        },
-        "description": {
-          "full": {
-            "string": "Some functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in.",
-            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {seeSupportedFeatures} has the text: see supported features\n- {previewYourForm} has the text: preview your form"
-          },
-          "seeSupportedFeatures": {
-            "string": "see supported features",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {seeSupportedFeatures} is in the following text:\n\nSome functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in."
-          },
-          "previewYourForm": {
-            "string": "preview your form",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {previewYourForm} is in the following text:\n\nSome functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in."
-          }
         }
       },
       "enketoConfirmation": {

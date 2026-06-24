@@ -48,8 +48,11 @@ except according to the terms contained in the LICENSE file.
                   <span class="badge recommended">
                     {{ $t('common.recommended') }}
                   </span>
-                  <br>
-                  {{ $t('webFormsSetting.odkWebFormsDescription') }}
+                  <i18n-t tag="p" keypath="webFormsSetting.odkWebFormsDescription.full">
+                    <template #preview>
+                      <router-link :to="formPreviewPathWebForms()" target="_blank">{{ $t('webFormsSetting.odkWebFormsDescription.preview') }}</router-link>
+                    </template>
+                  </i18n-t>
                 </label>
               </div>
               <div class="radio">
@@ -110,7 +113,7 @@ const toast = inject('toast');
 const { t } = useI18n();
 const router = useRouter();
 const { form } = useRequestData();
-const { projectPath } = useRoutes();
+const { projectPath, formPreviewPathWebForms } = useRoutes();
 
 const deleteModal = modalData();
 const confirmationModal = modalData();
@@ -205,13 +208,16 @@ const hideAndReset = () => {
       "delete": "The Form “{name}” has been successfully deleted."
     },
     "webFormsSetting": {
-      // Title of a section on Forms settings page, that allows users to opt-in for ODK Web Forms
-      "webForms": "Web Forms",
+      // Title of a section on Forms settings page, that allows users to choose which form experience they want to use
+      "webForms": "Web form experience",
       // Description of a section. {formName} is replaced with the name of the Form
       "description": "Fill out, preview and edit your “{formName}” Form using",
       // This text is shown under the option of Enketo for Form settings.
-      "enketoDescription": "No longer actively developed. Use for specialized features not yet supported by the new system.",
-      "odkWebFormsDescription": "A faster, updated experience that will replace the current version over time.",
+      "enketoDescription": "No longer actively developed. Use for specialized features not yet supported by ODK Web Forms.",
+      "odkWebFormsDescription": {
+        "full": "A modern experience that will replace Enketo over time. {preview}.",
+        "preview": "See a preview"
+      },
       // Success message when Enketo is selected as web form technology. {formName} is replaced with the name of the Form
       "enketoSelected": "You’re now using Enketo to fill out, preview and edit your “{formName}” form.",
       // Success message when ODK Web Forms is selected as web form technology. {formName} is replaced with the name of the Form

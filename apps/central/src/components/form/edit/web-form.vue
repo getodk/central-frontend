@@ -47,7 +47,7 @@ const { alert } = inject('container');
 
 
 const options = computed(() => [
-  { value: true, text: t('option.webForms') },
+  { value: true, text: 'ODK Web Forms (' + t('common.recommended') + ')' },
   { value: false, text: t('common.useEnketo') }
 ]);
 
@@ -98,11 +98,8 @@ const update = (newVal) => {
   "en": {
     "title": "New default web form experience",
     "description": {
-      "full": "Newly created Forms now use the new ODK Web Forms experience by default for previews, web submissions and submission editing. Some advanced form features may not yet be fully supported, {learnMore}.",
+      "full": "Newly created Forms now use the ODK Web Forms experience by default for previews, web submissions and submission editing. Some advanced form features may not yet be fully supported, {learnMore}.",
       "learnMore": "learn more"
-    },
-    "option": {
-      "webForms": "New ODK Web Forms (recommended)"
     },
     "alert": {
       "settingSaved": "Draft Form setting saved."
