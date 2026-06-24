@@ -1,5 +1,5 @@
-import type { XFormAttachmentFixture } from '../fixtures/xform-attachments.ts';
-import { JRResourceURL } from './JRResourceURL.ts';
+import type { XFormAttachmentFixture } from './xform-attachments.js';
+import { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL';
 
 type JRResourceLoader = (this: void) => Promise<Blob | string>;
 

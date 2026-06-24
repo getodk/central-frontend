@@ -1,6 +1,6 @@
-import { JRResourceService } from '../jr-resources/JRResourceService.ts';
-import type { JRResourceURL } from '../jr-resources/JRResourceURL.ts';
-import { UpsertableMap } from '../lib/collections/UpsertableMap.ts';
+import { JRResourceService } from './JRResourceService.ts';
+import type { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL';
+import { UpsertableMap } from '@getodk/common/lib/collections/UpsertableMap';
 import type { GlobFixture } from './import-glob-helper.ts';
 import { toGlobLoaderEntries } from './import-glob-helper.ts';
 
@@ -26,15 +26,6 @@ interface RemoteXFormResourceOptions extends BaseXFormResourceOptions {
   readonly category: string | null;
   readonly localPath: null;
   readonly identifier: string;
-
-  /**
-   * @todo Note that {@link RemoteXFormResourceOptions} corresponds to an API
-   * primarily serving
-   * {@link https://getodk.org/web-forms-preview/ | Web Forms Preview}
-   * functionality. In theory, we could allow a mechanism to support form
-   * attachments in for that use case, but we'd need to design for it. Until
-   * then, it doesn't make a whole lot of sense to accept arbitrary IO here.
-   */
   readonly initializeFormAttachmentService?: ResourceServiceFactory;
 }
 
@@ -64,7 +55,6 @@ const localFixtureDirectoryCategory = (localPath: string): string => {
   }
 
   const suffix = localPath.replace(FIXTURE_CATEGORY_DIRECTORY_PREFIX, '');
-
   return suffix.replace(/^([^/]+)\/.*$/, '$1');
 };
 
@@ -165,7 +155,7 @@ export class XFormResource<Type extends XFormResourceType> {
 
 const xformFixtureLoaderEntries = toGlobLoaderEntries(
   import.meta,
-  import.meta.glob<true, 'url', string>('./**/*.xml', {
+  import.meta.glob<true, 'url', string>('./**/*.xxml', {
     query: '?url',
     import: 'default',
     eager: true,

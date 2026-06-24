@@ -1,4 +1,4 @@
-import { xformFixtures } from '@getodk/common/fixtures/xforms.ts';
+import { xformFixtures } from '../../fixtures/xforms.js';
 import { FormDefinitionResource } from './FormDefinitionResource.ts';
 
 interface TestFixture {

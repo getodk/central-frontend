@@ -210,6 +210,9 @@ export class Scenario {
       };
     }
 
+    console.log( formMeta.formElement.asXml());
+    console.log(formMeta.formOptions);
+
     const { dispose, owner, form, instanceRoot } = await initializeTestForm(
       formMeta.formElement.asXml() satisfies FormResource,
       formMeta.formOptions

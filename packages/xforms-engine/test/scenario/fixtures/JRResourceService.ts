@@ -1,7 +1,7 @@
-import { xformAttachmentFixturesByDirectory } from '../fixtures/xform-attachments.ts';
+import { xformAttachmentFixturesByDirectory } from './xform-attachments.js';
 import { JRResource } from './JRResource.ts';
-import type { JRResourceURLString } from './JRResourceURL.ts';
-import { JRResourceURL } from './JRResourceURL.ts';
+import type { JRResourceURLString } from '@getodk/common/jr-resources/JRResourceURL';
+import { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL';
 
 export interface InlineFixtureMetadata {
   readonly url: JRResourceURLString;

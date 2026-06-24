@@ -1,5 +1,5 @@
-import type { Awaitable } from '../../types/helpers.d.ts';
-import { IS_NODE_RUNTIME } from '../env/detection.ts';
+import type { Awaitable } from '@getodk/common/types/helpers.d';
+import { IS_NODE_RUNTIME } from '@getodk/common/env/detection';
 
 interface GlobURLFetchResponse {
   text(): Promise<string>;
@@ -71,7 +71,7 @@ export const toGlobLoaderEntries = (
       url: new URL(value, import.meta.url),
       load: globFixtureLoader(value),
     };
-
+    
     let assetsPath: string;
     if (parentPathURL.pathname.includes('/assets/')) {
       const filename = /[^/\\]*$/.exec(relativePath)?.[0] ?? '';

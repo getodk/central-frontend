@@ -1,5 +1,5 @@
-import { xformAttachmentFixturesByDirectory } from '@getodk/common/fixtures/xform-attachments.ts';
-import { JRResourceService } from '@getodk/common/jr-resources/JRResourceService.ts';
+import { xformAttachmentFixturesByDirectory } from '../scenario/fixtures/xform-attachments.js';
+import { JRResourceService } from '../scenario/fixtures/JRResourceService.ts';
 import { getBlobText } from '@getodk/common/lib/web-compat/blob.ts';
 import {
   bind,

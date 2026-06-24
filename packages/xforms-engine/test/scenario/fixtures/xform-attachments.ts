@@ -1,5 +1,5 @@
-import { UpsertableMap } from '../lib/collections/UpsertableMap.ts';
-import { UnreachableError } from '../lib/error/UnreachableError.ts';
+import { UpsertableMap } from '@getodk/common/lib/collections/UpsertableMap';
+import { UnreachableError } from '@getodk/common/lib/error/UnreachableError';
 import type { GlobFixtureLoader } from './import-glob-helper.ts';
 import { toGlobLoaderEntries } from './import-glob-helper.ts';
 

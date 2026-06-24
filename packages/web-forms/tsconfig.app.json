@@ -7,7 +7,7 @@
     "src/**/*",
     "src/**/*.vue",
     "locales/**/*"
-  ],
+, "../xforms-engine/test/scenario/fixtures/JRResource.ts", "../xforms-engine/test/scenario/fixtures/JRResourceService.ts"  ],
   "exclude": [
     "../common/src/test/**/*.ts",
     "node_modules",
