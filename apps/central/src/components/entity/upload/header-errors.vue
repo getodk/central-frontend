@@ -27,10 +27,10 @@ except according to the terms contained in the LICENSE file.
       </div>
     </dd>
 
-    <dt v-if="hasSuggestion" class="entity-upload-header-errors-suggestions">
+    <dt class="entity-upload-header-errors-suggestions">
       {{ $t('suggestions.title') }}
     </dt>
-    <dd v-if="hasSuggestion" class="entity-upload-header-errors-suggestions">
+    <dd class="entity-upload-header-errors-suggestions">
       <p v-if="invalidQuotes">{{ $t('suggestions.invalidQuotes') }}</p>
       <i18n-t v-if="missingLabel" tag="p" keypath="suggestions.missingLabel">
         <template #label>
@@ -75,7 +75,6 @@ const props = defineProps({
   // Props for specific errors
   invalidQuotes: Boolean,
   missingLabel: Boolean,
-  missingProperty: Boolean,
   unknownProperty: Boolean,
   duplicateColumn: Boolean,
   emptyColumn: Boolean
@@ -99,10 +98,6 @@ const scrollHeader = (event) => {
   }
 };
 
-const hasSuggestion = computed(() => props.delimiter !== ',' ||
-  Object.entries(props).some(([name, value]) =>
-    // There isn't a suggestion for missing properties.
-    value === true && name !== 'missingProperty'));
 const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
 </script>
 
