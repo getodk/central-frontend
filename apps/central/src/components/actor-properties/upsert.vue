@@ -1,7 +1,6 @@
 <template>
   <div class="actor-properties-upsert">
-    <div class="eactor-properties-upsert-header">{{ $t('resource.properties') }}</div>
-    <div class="eactor-properties-upsert-table-scroll">
+    <div class="actor-properties-upsert-table-scroll">
       <table class="table">
         <thead>
           <tr>
@@ -59,6 +58,27 @@ watch(() => props.parentModalState, (state) => {
 });
 
 </script>
+
+<style lang="scss">
+.actor-properties-upsert {
+  .table > thead {
+    background-color: transparent;
+
+    tr > th {
+      border: none;
+      padding: 10px 0;
+    }
+
+    tr > td {
+      border: none;
+    }
+  }
+
+  .entity-update-row .new-value {
+    padding-left: 0;
+  }
+}
+</style>
 
 <i18n lang="json5">
 {
