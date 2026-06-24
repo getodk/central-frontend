@@ -6,18 +6,17 @@
         <button v-if="project.dataExists && project.permits('project.update')"
           id="custom-properties-list-new-button" type="button" class="btn btn-primary"
           @click="createModal.show()">
-          <span class="icon-plus-circle"></span>{{ $t('new') }}
+          <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
         </button>
       </template>
     </page-section>
     <div class="page-body-heading">
-      <p>{{ $t('heading[0]') }}</p>
       <p>
-        <span>{{ $t('heading[1]') }}</span>
+        <span>{{ $t('heading[0]') }}</span>
         <sentence-separator/>
         <i18n-t keypath="moreInfo.clickHere.full">
           <template #clickHere>
-            <doc-link to="TODO">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
+            <doc-link to="central-projects/#managing-custom-properties">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
           </template>
         </i18n-t>
       </p>
@@ -91,15 +90,14 @@ const afterCreate = (name) => {
   "en": {
     "heading": [
       // A brief introduction to Custom Properties shown for the current project
-      "Some helper intro text",
-      "Custom Properties are custom fields that can be attached to project app users and public links to store additional metadata."
+      "Custom Properties are custom fields that can be attached to App Users and Public Links to store additional metadata."
     ],
     "emptyTable": "No custom properties have been defined for this project.",
     // Shown after a custom property is successfully created.
     "created": "Custom property created successfully.",
-    // This is the text of a button that is used to create a new Custom Property for users.
-    // It is shown next to a heading whose text is "Custom Properties".
-    "new": "New"
+    "action": {
+      "create": "New"
+    }
   }
 }
 </i18n>
