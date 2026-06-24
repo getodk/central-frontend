@@ -11,18 +11,17 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="public-link-create" :state="state" :hideable="!awaitingResponse"
-    backdrop @hide="$emit('hide')" @shown="displayNameGroup.focus()">
+    backdrop @hide="$emit('hide')" @shown="displayNameRef.focus()">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <p class="modal-introduction">{{ $t('introduction[0]') }}</p>
       <form @submit.prevent="submit">
-        <form-group ref="displayNameGroup" v-model.trim="displayName"
+        <form-group ref="displayNameRef" v-model.trim="displayName"
           :placeholder="$t('field.displayName')" required autocomplete="off"/>
-        <div class="public-link-set-properties">
-          <template v-if="actorProperties.dataExists">
-            <actor-properties-upsert v-model:propertyValues="propertyValues" :create="true"
-              :property-defs="actorProperties.data" :parent-modal-state="state"/>
-          </template>
+        <div v-if="state && actorProperties.dataExists && actorProperties.length > 0"
+          class="public-link-set-properties">
+          <actor-properties-upsert v-model:propertyValues="propertyValues" :create="true"
+            :property-defs="actorProperties.data"/>
         </div>
         <div class="checkbox">
           <label>
@@ -64,6 +63,7 @@ import Spinner from '../spinner.vue';
 import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
+import { useRequestData } from '../../request-data';
 
 defineOptions({
   name: 'PublicLinkCreate'
@@ -75,24 +75,23 @@ const props = defineProps({
 
 const emit = defineEmits(['hide', 'success']);
 
-const displayNameGroup = ref(null);
+const displayNameRef = ref(null);
 const displayName = ref('');
 const once = ref(false);
 const propertyValues = ref(Object.create(null));
-
-import { useRequestData } from '../../request-data';
 
 // The modal assumes that this data will exist when the modal is shown.
 const { request, awaitingResponse } = useRequest();
 const { form, actorProperties } = useRequestData();
 
 const submit = () => {
-  request.post(
-    apiPaths.publicLinks(form.projectId, form.xmlFormId),
-    { displayName: displayName.value, once: once.value, properties: propertyValues.value }
-  )
-    .then(response => {
-      emit('success', response.data);
+  request({
+    method: 'POST',
+    url: apiPaths.publicLinks(form.projectId, form.xmlFormId),
+    data: { displayName: displayName.value, once: once.value, properties: propertyValues.value }
+  })
+    .then(({ data }) => {
+      emit('success', data);
     })
     .catch(noop);
 };

@@ -2901,7 +2901,8 @@
         "developer_comment": "This is the title at the top of a pop-up for editing an App User."
       },
       "displayNameLabel": {
-        "string": "App User"
+        "string": "App User",
+        "developer_comment": "Shown as label before the display name of the App User in the edit pop-up."
       }
     },
     "FieldKeyList": {

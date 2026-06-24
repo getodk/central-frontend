@@ -33,7 +33,7 @@ except according to the terms contained in the LICENSE file.
         <date-time :iso="fieldKey.lastUsed"/>
       </div>
       <div class="btn-group">
-        <button v-if="fieldKey.token != null" type="button"
+        <button v-if="fieldKey.token != null && showEdit" type="button"
           class="edit-button btn btn-default"
           :aria-label="$t('action.editAppUser')" v-tooltip.aria-label
           @click="$emit('edit', fieldKey)">
@@ -61,7 +61,8 @@ export default {
       type: Object,
       required: true
     },
-    highlighted: Number
+    highlighted: Number,
+    showEdit: Boolean
   },
   emits: ['toggle-qr', 'revoke', 'edit'],
   methods: {

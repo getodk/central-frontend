@@ -17,13 +17,12 @@ except according to the terms contained in the LICENSE file.
       <template v-if="step === 0">
         <p class="modal-introduction">{{ $t('introduction[0]') }}</p>
         <form @submit.prevent="submit">
-          <form-group ref="displayNameGroup" v-model.trim="displayName"
+          <form-group ref="displayNameRef" v-model.trim="displayName"
             :placeholder="$t('field.displayName')" required autocomplete="off"/>
-          <div class="field-key-set-properties">
-            <template v-if="actorProperties.dataExists">
-              <actor-properties-upsert v-model:propertyValues="propertyValues" :create="true"
-                :property-defs="actorProperties.data" :parent-modal-state="state"/>
-            </template>
+          <div v-if="state && actorProperties.dataExists && actorProperties.length > 0"
+            class="field-key-set-properties">
+            <actor-properties-upsert v-model:propertyValues="propertyValues" :create="true"
+              :property-defs="actorProperties.data"/>
           </div>
           <div class="modal-actions">
             <button type="button" class="btn btn-link"
@@ -113,11 +112,11 @@ const { projectPath } = useRoutes();
 const step = ref(0);
 const displayName = ref('');
 const created = ref(null);
-const displayNameGroup = ref(null);
+const displayNameRef = ref(null);
 const propertyValues = ref(Object.create(null));
 
 
-const focusInput = () => { displayNameGroup.value.focus(); };
+const focusInput = () => { displayNameRef.value.focus(); };
 
 const submit = () => {
   request({
@@ -129,6 +128,7 @@ const submit = () => {
       // Reset the form.
       redAlert.hide();
       displayName.value = '';
+      propertyValues.value = Object.create(null);
 
       step.value = 1;
       created.value = data;

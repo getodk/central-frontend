@@ -46,6 +46,7 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template #data-frozen="{ data: fieldKey }">
         <field-key-row :field-key="fieldKey" :highlighted="highlighted"
+          :show-edit="actorProperties.length > 0"
           @toggle-qr="togglePopover"
           @revoke="revokeModal.show({ fieldKey: $event })"
           @edit="editModal.show({ fieldKey: $event })"/>
@@ -193,6 +194,7 @@ export default {
       this.fetchData(true);
       this.editModal.hide();
       this.alert.success(this.$t('alert.edit', fieldKey));
+      this.highlighted = fieldKey.id;
     },
     afterRevoke(fieldKey) {
       this.fetchData(true);

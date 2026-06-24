@@ -30,10 +30,9 @@ defineOptions({
 
 const propertyValues = defineModel('propertyValues');
 
-const props = defineProps({
-  parentModalState: Boolean,
+defineProps({
   create: Boolean,
-  propertyDefs: Object
+  propertyDefs: Array
 });
 
 const originalValues = ref(null);
@@ -42,19 +41,13 @@ const propertyRows = ref([]);
 
 // Sync changes back to the parent model.
 watch(data, (newData) => {
-  propertyValues.value = { ...newData };
+  propertyValues.value = newData;
 }, { deep: true });
 
-// Initialize from propertyValues once the modal opens
-watch(() => props.parentModalState, (state) => {
-  if (state) {
-    originalValues.value = { ...propertyValues.value };
-    for (const { name } of props.propertyDefs)
-      data.value[name] = propertyValues.value?.[name];
-    nextTick(() => {
-      for (const row of propertyRows.value) row.textarea.resize();
-    });
-  }
+// This component is mounted when parent modal is shown
+originalValues.value = { ...propertyValues.value };
+nextTick(() => {
+  for (const row of propertyRows.value) row.textarea.resize();
 });
 
 </script>

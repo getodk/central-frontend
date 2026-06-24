@@ -11,9 +11,9 @@
         </p>
       </div>
       <div class="field-key-edit-properties">
-        <actor-properties-upsert v-if="actorProperties.dataExists"
+        <actor-properties-upsert v-if="state && actorProperties.dataExists"
           v-model:propertyValues="propertyValues"
-          :create="false" :property-defs="actorProperties.data" :parent-modal-state="state"/>
+          :create="false" :property-defs="actorProperties.data"/>
       </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-link"
@@ -59,7 +59,7 @@ const { request, awaitingResponse } = useRequest();
 const propertyValues = ref(Object.create(null));
 
 const focusFirstProperty = () => {
-  const input = document.querySelector('#field-key-edit .actor-properties-upsert input');
+  const input = document.querySelector('#field-key-edit .actor-properties-upsert textarea');
   input?.focus();
 };
 
@@ -79,7 +79,7 @@ watch(() => props.state, (state) => {
   if (!state) {
     propertyValues.value = Object.create(null);
   } else {
-    propertyValues.value = { ...props.fieldKey?.properties };
+    propertyValues.value = { ...props.fieldKey.properties };
   }
 });
 </script>
@@ -89,6 +89,7 @@ watch(() => props.state, (state) => {
   "en": {
     // This is the title at the top of a pop-up for editing an App User.
     "title": "Edit App User",
+    // Shown as label before the display name of the App User in the edit pop-up.
     "displayNameLabel": "App User"
   }
 }
