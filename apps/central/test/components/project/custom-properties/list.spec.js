@@ -14,7 +14,7 @@ const mountComponent = () => mount(CustomPropertyList, {
   props: { projectId: '1' },
   container: {
     router: mockRouter('/'),
-    requestData: testRequestData([useProject], {
+    requestData: testRequestData([useProject, 'actorProperties'], {
       project: testData.extendedProjects.last(),
       actorProperties: testData.actorProperties.sorted()
     })
