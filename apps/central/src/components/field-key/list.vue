@@ -60,7 +60,7 @@ except according to the terms contained in the LICENSE file.
       {{ $t('emptyTable') }}
     </p>
 
-    <popover ref="popover" :target="popover.target" placement="left"
+    <popover ref="popover" :target="popover.target" placement="right"
       @hide="hidePopover">
       <field-key-qr-panel :field-key="popover.fieldKey" :managed="managed"/>
     </popover>
