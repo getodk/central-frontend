@@ -175,7 +175,7 @@ const responsesByComponent = {
   }),
   PublicLinkList: componentResponses({
     actorProperties: true,
-    publicLinks: () => testData.standardPublicLinks.sorted()
+    publicLinks: () => testData.extendedPublicLinks.sorted()
   }),
   FormVersionList: componentResponses({ formVersions: true }),
   FormEdit: componentResponses({

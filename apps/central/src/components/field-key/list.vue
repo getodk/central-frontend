@@ -46,8 +46,10 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template #data-frozen="{ data: fieldKey }">
         <field-key-row :field-key="fieldKey" :highlighted="highlighted"
+          :show-edit="actorProperties.length > 0"
           @toggle-qr="togglePopover"
-          @revoke="revokeModal.show({ fieldKey: $event })"/>
+          @revoke="revokeModal.show({ fieldKey: $event })"
+          @edit="editModal.show({ fieldKey: $event })"/>
       </template>
       <template #data-scrolling="{ data: fieldKey }">
         <custom-props-data-row :actor="fieldKey" :highlighted="highlighted"
@@ -66,6 +68,8 @@ except according to the terms contained in the LICENSE file.
     </popover>
     <field-key-new v-bind="createModal" :managed="managed"
       @hide="createModal.hide()" @success="afterCreate"/>
+    <field-key-edit v-bind="editModal"
+      @hide="editModal.hide()" @success="afterEdit"/>
     <project-submission-options v-bind="submissionOptions"
       @hide="submissionOptions.hide()"/>
     <field-key-revoke v-bind="revokeModal" @hide="revokeModal.hide()"
@@ -81,6 +85,7 @@ import TableFreeze from '../table/freeze.vue';
 import FieldKeyQrPanel from './qr-panel.vue';
 import FieldKeyRow from './row.vue';
 import CustomPropsDataRow from '../custom-props-data-row.vue';
+import FieldKeyEdit from './edit.vue';
 import FieldKeyNew from './new.vue';
 import FieldKeyRevoke from './revoke.vue';
 import ProjectSubmissionOptions from '../project/submission-options.vue';
@@ -99,6 +104,7 @@ export default {
     FieldKeyQrPanel,
     FieldKeyRow,
     CustomPropsDataRow,
+    FieldKeyEdit,
     FieldKeyNew,
     FieldKeyRevoke,
     ProjectSubmissionOptions
@@ -132,6 +138,7 @@ export default {
       },
       // Modals
       createModal: modalData(),
+      editModal: modalData(),
       submissionOptions: modalData(),
       revokeModal: modalData()
     };
@@ -181,6 +188,12 @@ export default {
       this.fetchData(true);
       this.createModal.hide();
       this.alert.success(this.$t('alert.create', fieldKey));
+      this.highlighted = fieldKey.id;
+    },
+    afterEdit(fieldKey) {
+      this.fetchData(true);
+      this.editModal.hide();
+      this.alert.success(this.$t('alert.edit', fieldKey));
       this.highlighted = fieldKey.id;
     },
     afterRevoke(fieldKey) {
@@ -235,6 +248,7 @@ export default {
     "emptyTable": "There are no App Users yet. You will need to create some to download Forms and submit data from your device.",
     "alert": {
       "create": "The App User “{displayName}” was created successfully.",
+      "edit": "The App User “{displayName}” was updated successfully.",
       "revoke": "App User {displayName}’s access successfully revoked."
     }
   }

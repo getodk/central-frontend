@@ -25,7 +25,9 @@ except according to the terms contained in the LICENSE file.
     </template>
     <template #data-frozen="{ data: publicLink }">
       <public-link-row :public-link="publicLink" :highlighted="highlighted"
-        @revoke="$emit('revoke', $event)"/>
+        :show-edit="actorProperties.length > 0"
+        @revoke="$emit('revoke', $event)"
+        @edit="$emit('edit', $event)"/>
     </template>
     <template #data-scrolling="{ data: publicLink }">
       <custom-props-data-row :actor="publicLink" :highlighted="highlighted"
@@ -47,7 +49,7 @@ defineOptions({
 defineProps({
   highlighted: Number
 });
-defineEmits(['revoke']);
+defineEmits(['revoke', 'edit']);
 
 const { publicLinks, actorProperties } = useRequestData();
 </script>

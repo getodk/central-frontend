@@ -629,6 +629,10 @@
     "lastEntity": {
       "string": "Latest Entity",
       "developer_comment": "This is the text of a table column header. The column shows the date and time of the newest entity"
+    },
+    "value": {
+      "string": "Value",
+      "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of a property of an object (App User, Public Link and Data Collector)"
     }
   },
   "plural": {
@@ -2887,6 +2891,16 @@
         "developer_comment": "Text for a hovering feedback button shown anchored to right of screen. If your language doesn't have a single word or short phrase for \"feedback\", consider something like \"comments\" or \"reactions\"."
       }
     },
+    "FieldKeyEdit": {
+      "title": {
+        "string": "Edit App User “{displayName}”",
+        "developer_comment": "This is the title at the top of a pop-up for editing an App User. {displayName} is the the name of the App User"
+      },
+      "displayNameLabel": {
+        "string": "App User",
+        "developer_comment": "Shown as label before the display name of the App User in the edit pop-up."
+      }
+    },
     "FieldKeyList": {
       "action": {
         "create": {
@@ -2936,6 +2950,9 @@
       "alert": {
         "create": {
           "string": "The App User “{displayName}” was created successfully."
+        },
+        "edit": {
+          "string": "The App User “{displayName}” was updated successfully."
         },
         "revoke": {
           "string": "App User {displayName}’s access successfully revoked."
@@ -3082,6 +3099,10 @@
         "developer_comment": "This text is shown for an App User whose access has been revoked."
       },
       "action": {
+        "editAppUser": {
+          "string": "Edit App User",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
         "revokeAccess": {
           "string": "Revoke access",
           "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -4873,6 +4894,16 @@
         "developer_comment": "This is help text for the \"Single Submission\" checkbox."
       }
     },
+    "PublicLinkEdit": {
+      "title": {
+        "string": "Edit Public Access Link “{displayName}”",
+        "developer_comment": "This is the title at the top of a pop-up for editing a Public Access Link. {displayName} is the display name of the Public Link"
+      },
+      "displayNameLabel": {
+        "string": "Public Link",
+        "developer_comment": "Shown as label before the display name of the Public Access Link in the edit pop-up."
+      }
+    },
     "PublicLinkList": {
       "action": {
         "create": {
@@ -4909,6 +4940,9 @@
         "create": {
           "string": "Your Public Access Link has been created and is now live. Copy it below to distribute it."
         },
+        "edit": {
+          "string": "The Public Access Link “{displayName}” was updated successfully."
+        },
         "revoke": {
           "string": "The Public Access Link “{displayName}” was revoked successfully. No further Submissions will be accepted using this Link."
         }
@@ -4927,6 +4961,10 @@
     },
     "PublicLinkRow": {
       "action": {
+        "edit": {
+          "string": "Edit Public Access Link",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
         "revoke": {
           "string": "Revoke",
           "developer_comment": "This is the text for an action, for example, the text of a button."

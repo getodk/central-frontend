@@ -1,13 +1,13 @@
 import { faker } from '@faker-js/faker';
-import { comparator } from 'ramda';
+import { comparator, omit } from 'ramda';
 
-import { dataStore } from './data-store';
+import { dataStore, view } from './data-store';
 import { extendedForms } from './forms';
 import { extendedUsers } from './users';
 import { fakePastDate, isBefore } from '../util/date-time';
 
 // eslint-disable-next-line import/prefer-default-export
-export const standardPublicLinks = dataStore({
+export const extendedPublicLinks = dataStore({
   factory: ({
     inPast,
     id,
@@ -41,3 +41,8 @@ export const standardPublicLinks = dataStore({
     (publicLink1.token != null && publicLink2.token == null) ||
     isBefore(publicLink2.createdAt, publicLink1.createdAt))
 });
+
+export const standardPublicLinks = view(
+  extendedPublicLinks,
+  omit(['properties'])
+);
