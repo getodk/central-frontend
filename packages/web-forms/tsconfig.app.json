@@ -6,9 +6,7 @@
     "env.d.ts",
     "src/**/*",
     "src/**/*.vue",
-    "locales/**/*",
-    "../xforms-engine/test/scenario/fixtures/JRResource.ts",
-    "../xforms-engine/test/scenario/fixtures/JRResourceService.ts"
+    "locales/**/*"
   ],
   "exclude": [
     "../common/src/test/**/*.ts",
