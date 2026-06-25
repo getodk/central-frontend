@@ -201,9 +201,7 @@ describe('`constraint`', () => {
 
         testFn('enforces `constraint`s defined [on] in a field', async () => {
           const scenario = await Scenario.init(
-            temporarilyIncludePrimaryInstanceId
-              ? imageSelectAlt
-              : imageSelect
+            temporarilyIncludePrimaryInstanceId ? imageSelectAlt : imageSelect
           );
 
           scenario.next('/icons/id');

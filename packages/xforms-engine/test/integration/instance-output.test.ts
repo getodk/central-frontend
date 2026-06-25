@@ -81,7 +81,6 @@ describe('Instance output (serialization)', () => {
   });
 
   describe('SameRefDifferentInstancesIssue449Test.java (regression tests)', () => {
-
     let resourceService: JRResourceService;
 
     beforeEach(() => {
@@ -108,10 +107,12 @@ describe('Instance output (serialization)', () => {
        *   vague here.
        */
       it('is [~~]successfully[~~] deserialized', async () => {
-
         const attachmentFileName = 'issue_449_last_saved.xml';
         const attachmentURL = `jr://file/${attachmentFileName}` as const;
-        resourceService.activateResource({ url: attachmentURL, fileName: attachmentFileName, mimeType: 'application/xml' }, issue449LastSaved);
+        resourceService.activateResource(
+          { url: attachmentURL, fileName: attachmentFileName, mimeType: 'application/xml' },
+          issue449LastSaved
+        );
 
         const scenario = await Scenario.initNew(issue449, { resourceService });
 

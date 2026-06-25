@@ -476,7 +476,7 @@ describe('Form initialization smoke tests', () => {
 
       testFn('parseFormWithTemplateRepeat', async () => {
         const scenario = await Scenario.init(
-          (includeCommonNamespaces ? templateRepeatAlt : templateRepeat)
+          includeCommonNamespaces ? templateRepeatAlt : templateRepeat
         );
 
         expectNoInitializationErrors(scenario);

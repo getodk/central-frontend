@@ -88,8 +88,8 @@ type FormFileName = `${string}.xml`;
 // prettier-ignore
 type ScenarioStaticInitParameters =
 	| readonly [formFileName: FormFileName]
-  | readonly [formXml: string]
 	| readonly [formName: string, form: XFormsElement, overrideOptions?: Partial<TestFormOptions>]
+  | readonly [formXml: string]
 	| readonly [resource: FormDefinitionResource];
 
 interface AssertCurrentReferenceOptions {

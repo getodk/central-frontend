@@ -71,7 +71,7 @@ export const toGlobLoaderEntries = (
       url: new URL(value, import.meta.url),
       load: globFixtureLoader(value),
     };
-    
+
     let assetsPath: string;
     if (parentPathURL.pathname.includes('/assets/')) {
       const filename = /[^/\\]*$/.exec(relativePath)?.[0] ?? '';

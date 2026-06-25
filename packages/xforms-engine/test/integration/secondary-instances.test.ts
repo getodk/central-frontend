@@ -37,7 +37,6 @@ import externalDataCsv from '../scenario/fixtures/test-javarosa/resources/extern
 
 // Ported as of https://github.com/getodk/javarosa/commit/5ae68946c47419b83e7d28290132d846e457eea6
 describe('Secondary instances', () => {
-
   let resourceService: JRResourceService;
 
   beforeEach(() => {
@@ -559,7 +558,14 @@ describe('Secondary instances', () => {
 
             const attachmentFileName = 'external-data.geojson';
             const attachmentURL = `jr://file/${attachmentFileName}` as const;
-            resourceService.activateResource({ url: attachmentURL, fileName: attachmentFileName, mimeType: 'application/geo+json' }, externalDataGeoJSON);
+            resourceService.activateResource(
+              {
+                url: attachmentURL,
+                fileName: attachmentFileName,
+                mimeType: 'application/geo+json',
+              },
+              externalDataGeoJSON
+            );
 
             const scenario = await Scenario.initNew(externalSelectGeoJSON, { resourceService });
             const choiceWithIntId = scenario.choicesOf('/data/q').get(1);
@@ -606,9 +612,12 @@ describe('Secondary instances', () => {
         it.fails('[produces an error | fails to load | ?]', async () => {
           configureReferenceManagerCorrectly();
 
-        const csvAttachmentFileName = 'external-data.csv';
-        const csvAttachmentURL = `jr://file-csv/${csvAttachmentFileName}` as const;
-        resourceService.activateResource({ url: csvAttachmentURL, fileName: csvAttachmentFileName, mimeType: 'text/csv' }, externalDataCsv);
+          const csvAttachmentFileName = 'external-data.csv';
+          const csvAttachmentURL = `jr://file-csv/${csvAttachmentFileName}` as const;
+          resourceService.activateResource(
+            { url: csvAttachmentURL, fileName: csvAttachmentFileName, mimeType: 'text/csv' },
+            externalDataCsv
+          );
 
           const init = async () => {
             await Scenario.init(
@@ -651,7 +660,10 @@ describe('Secondary instances', () => {
 
         const csvAttachmentFileName = 'header_only.csv';
         const csvAttachmentURL = `jr://file-csv/${csvAttachmentFileName}` as const;
-        resourceService.activateResource({ url: csvAttachmentURL, fileName: csvAttachmentFileName, mimeType: 'text/csv' }, headerOnlyCsv);
+        resourceService.activateResource(
+          { url: csvAttachmentURL, fileName: csvAttachmentFileName, mimeType: 'text/csv' },
+          headerOnlyCsv
+        );
 
         const scenario = await Scenario.init(
           'Some form',
@@ -814,12 +826,14 @@ describe('Secondary instances', () => {
     );
 
     const activateFixtures = () => {
-      const xmlAttachmentFileName = 'xml-attachment.xml';
-      const xmlAttachmentURL = `jr://file/${xmlAttachmentFileName}` as const;
-      const csvAttachmentFileName = 'csv-attachment.csv';
-      const csvAttachmentURL = `jr://file/${csvAttachmentFileName}` as const;
-      resourceService.activateResource({ url: xmlAttachmentURL, fileName: xmlAttachmentFileName, mimeType: 'application/xml' }, xmlAttachment);
-      resourceService.activateResource({ url: csvAttachmentURL, fileName: csvAttachmentFileName, mimeType: 'text/csv' }, csvAttachment);
+      resourceService.activateResource(
+        { url: xmlAttachmentURL, fileName: xmlAttachmentFileName, mimeType: 'application/xml' },
+        xmlAttachment
+      );
+      resourceService.activateResource(
+        { url: csvAttachmentURL, fileName: csvAttachmentFileName, mimeType: 'text/csv' },
+        csvAttachment
+      );
     };
 
     it('supports external secondary instances (XML, file system fixture)', async () => {

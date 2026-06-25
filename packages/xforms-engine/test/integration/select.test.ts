@@ -631,7 +631,6 @@ describe('SelectChoiceTest.java', () => {
    *
    */
   describe('`getChild`', () => {
-
     let resourceService: JRResourceService;
 
     beforeEach(() => {
@@ -643,10 +642,12 @@ describe('SelectChoiceTest.java', () => {
     });
 
     it('returns properties in order when choices are from secondary instance', async () => {
-
       const attachmentFileName = 'external-data.geojson';
       const attachmentURL = `jr://file/${attachmentFileName}` as const;
-      resourceService.activateResource({ url: attachmentURL, fileName: attachmentFileName, mimeType: 'application/geo+json' }, externalDataGeoJSON);
+      resourceService.activateResource(
+        { url: attachmentURL, fileName: attachmentFileName, mimeType: 'application/geo+json' },
+        externalDataGeoJSON
+      );
 
       const scenario = await Scenario.initNew(externalSelectGeoJSON, { resourceService });
 

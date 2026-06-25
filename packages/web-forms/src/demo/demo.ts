@@ -33,3 +33,5 @@ const app = createApp(OdkWebFormDemo as Component);
 app.use(webFormsPlugin);
 app.use(router);
 app.mount('#app');
+
+// TODO delete this whole app
