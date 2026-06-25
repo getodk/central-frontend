@@ -10,7 +10,8 @@
     "src/components/**/*.vue",
     "src/components/**/*.ts",
     "src/lib/**/*.ts",
-    "src/odk-theme-preset.ts"
+    "src/odk-theme-preset.ts",
+    "src/web-forms-plugin.ts",
   ],
   "exclude": ["../common/src/test/**/*.ts"],
   "compilerOptions": {
