@@ -1,4 +1,3 @@
-import { xformAttachmentFixturesByDirectory } from '../scenario/fixtures/xform-attachments.js';
 import { JRResourceService } from '../scenario/fixtures/JRResourceService.ts';
 import { getBlobText } from '@getodk/common/lib/web-compat/blob.ts';
 import {
@@ -23,11 +22,32 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { stringAnswer } from '../scenario/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../scenario/jr/Scenario.ts';
 import { setUpSimpleReferenceManager } from '../scenario/jr/reference/ReferenceManagerTestUtils.ts';
-import { r } from '../scenario/jr/resource/ResourcePathHelper.ts';
 import type { SelectChoice } from '../scenario/jr/select/SelectChoice.ts';
+
+import externalSelectCsv from '../scenario/fixtures/test-javarosa/resources/external-select-csv.xml?raw';
+import externalSelectGeoJSON from '../scenario/fixtures/test-javarosa/resources/external-select-geojson.xml?raw';
+import repeatSecondaryInstance from '../scenario/fixtures/test-javarosa/resources/repeat-secondary-instance.xml?raw';
+import twoSecondaryInstances from '../scenario/fixtures/test-javarosa/resources/two-secondary-instances.xml?raw';
+import twoSecondaryInstancesAlt from '../scenario/fixtures/test-javarosa/resources/two-secondary-instances-alt.xml?raw';
+import xmlAttachment from '../scenario/fixtures/test-javarosa/resources/xml-attachment.xml?raw';
+import csvAttachment from '../scenario/fixtures/test-javarosa/resources/csv-attachment.csv?raw';
+import externalDataGeoJSON from '../scenario/fixtures/test-javarosa/resources/external-data.geojson?raw';
+import headerOnlyCsv from '../scenario/fixtures/test-javarosa/resources/header_only.csv?raw';
+import externalDataCsv from '../scenario/fixtures/test-javarosa/resources/external-data.csv?raw';
 
 // Ported as of https://github.com/getodk/javarosa/commit/5ae68946c47419b83e7d28290132d846e457eea6
 describe('Secondary instances', () => {
+
+  let resourceService: JRResourceService;
+
+  beforeEach(() => {
+    resourceService = new JRResourceService();
+  });
+
+  afterEach(() => {
+    resourceService.reset();
+  });
+
   /**
    * **PORTING NOTES**
    *
@@ -57,7 +77,7 @@ describe('Secondary instances', () => {
        * the original fixture (and perhaps revise both in JavaRosa).
        */
       it('[is] are not confused', async () => {
-        const scenario = await Scenario.init('two-secondary-instances.xml');
+        const scenario = await Scenario.init(twoSecondaryInstances);
 
         scenario.next('/data/choice');
         scenario.answer('a');
@@ -67,7 +87,7 @@ describe('Secondary instances', () => {
 
       describe('(potentially clearer variation of above test)', () => {
         it('produces distinct results from each secondary instance', async () => {
-          const scenario = await Scenario.init('two-secondary-instances-alt.xml');
+          const scenario = await Scenario.init(twoSecondaryInstancesAlt);
 
           scenario.next('/data/choice');
           scenario.answer('c');
@@ -93,7 +113,7 @@ describe('Secondary instances', () => {
        */
       // JR: `doNotGetConfused`
       it("[re]computes separately within each respective repeat instance, when the predicate's dependencies affecting that node change", async () => {
-        const scenario = await Scenario.init('repeat-secondary-instance.xml');
+        const scenario = await Scenario.init(repeatSecondaryInstance);
 
         scenario.createNewRepeat('/data/repeat');
         scenario.createNewRepeat('/data/repeat');
@@ -462,7 +482,8 @@ describe('Secondary instances', () => {
      * Configure the ReferenceManager to resolve URIs to that folder.
      */
     const configureReferenceManagerCorrectly = () => {
-      setUpSimpleReferenceManager(r('external-select-csv.xml').getParent(), 'file-csv', 'file');
+      // TODO
+      // setUpSimpleReferenceManager(r('external-select-csv.xml').getParent(), 'file-csv', 'file');
     };
 
     /**
@@ -479,7 +500,8 @@ describe('Secondary instances', () => {
      */
 
     const configureReferenceManagerIncorrectly = () => {
-      setUpSimpleReferenceManager(r('external-select-csv.xml'), 'file-csv', 'file');
+      // TODO
+      // setUpSimpleReferenceManager(r('external-select-csv.xml'), 'file-csv', 'file');
     };
 
     describe('//region Parsing of different file types into external secondary instances', () => {
@@ -535,7 +557,11 @@ describe('Secondary instances', () => {
           it('can be selected', async () => {
             configureReferenceManagerCorrectly();
 
-            const scenario = await Scenario.init(r('external-select-geojson.xml'));
+            const attachmentFileName = 'external-data.geojson';
+            const attachmentURL = `jr://file/${attachmentFileName}` as const;
+            resourceService.activateResource({ url: attachmentURL, fileName: attachmentFileName, mimeType: 'application/geo+json' }, externalDataGeoJSON);
+
+            const scenario = await Scenario.initNew(externalSelectGeoJSON, { resourceService });
             const choiceWithIntId = scenario.choicesOf('/data/q').get(1);
 
             expect(choiceWithIntId).not.toBeNull();
@@ -580,6 +606,10 @@ describe('Secondary instances', () => {
         it.fails('[produces an error | fails to load | ?]', async () => {
           configureReferenceManagerCorrectly();
 
+        const csvAttachmentFileName = 'external-data.csv';
+        const csvAttachmentURL = `jr://file-csv/${csvAttachmentFileName}` as const;
+        resourceService.activateResource({ url: csvAttachmentURL, fileName: csvAttachmentFileName, mimeType: 'text/csv' }, externalDataCsv);
+
           const init = async () => {
             await Scenario.init(
               'Some form',
@@ -598,7 +628,8 @@ describe('Secondary instances', () => {
                   // Define a select using value and label references that don't exist in the secondary instance
                   select1Dynamic('/data/first', "instance('external-csv')/root/item", 'foo', 'bar')
                 )
-              )
+              ),
+              { resourceService }
             );
 
             // JR:
@@ -618,6 +649,10 @@ describe('Secondary instances', () => {
       it('parses without error', async () => {
         configureReferenceManagerCorrectly();
 
+        const csvAttachmentFileName = 'header_only.csv';
+        const csvAttachmentURL = `jr://file-csv/${csvAttachmentFileName}` as const;
+        resourceService.activateResource({ url: csvAttachmentURL, fileName: csvAttachmentFileName, mimeType: 'text/csv' }, headerOnlyCsv);
+
         const scenario = await Scenario.init(
           'Some form',
           html(
@@ -632,7 +667,8 @@ describe('Secondary instances', () => {
               )
             ),
             body(select1Dynamic('/data/first', "instance('external-csv')/root/item"))
-          )
+          ),
+          { resourceService }
         );
 
         expect(scenario.choicesOf('/data/first').size()).toBe(0);
@@ -690,7 +726,7 @@ describe('Secondary instances', () => {
         async () => {
           configureReferenceManagerIncorrectly();
 
-          const scenario = await Scenario.init('external-select-csv.xml');
+          const scenario = await Scenario.init(externalSelectCsv);
 
           expect(scenario.choicesOf('/data/first').size()).toBe(0);
         }
@@ -778,35 +814,16 @@ describe('Secondary instances', () => {
     );
 
     const activateFixtures = () => {
-      resourceService.activateFixtures(fixturesDirectory, ['file', 'file-csv']);
+      const xmlAttachmentFileName = 'xml-attachment.xml';
+      const xmlAttachmentURL = `jr://file/${xmlAttachmentFileName}` as const;
+      const csvAttachmentFileName = 'csv-attachment.csv';
+      const csvAttachmentURL = `jr://file/${csvAttachmentFileName}` as const;
+      resourceService.activateResource({ url: xmlAttachmentURL, fileName: xmlAttachmentFileName, mimeType: 'application/xml' }, xmlAttachment);
+      resourceService.activateResource({ url: csvAttachmentURL, fileName: csvAttachmentFileName, mimeType: 'text/csv' }, csvAttachment);
     };
-
-    let fixturesDirectory: string;
-    let resourceService: JRResourceService;
-
-    beforeEach(() => {
-      const scenarioFixturesDirectory = Array.from(xformAttachmentFixturesByDirectory.keys()).find(
-        (key) => {
-          return key.endsWith('/test-scenario');
-        }
-      );
-
-      if (scenarioFixturesDirectory == null) {
-        throw new Error(`Failed to get file system path for fixtures directory: "test-scenario"`);
-      }
-
-      fixturesDirectory = scenarioFixturesDirectory;
-
-      resourceService = new JRResourceService();
-    });
-
-    afterEach(() => {
-      resourceService.reset();
-    });
 
     it('supports external secondary instances (XML, file system fixture)', async () => {
       activateFixtures();
-
       const scenario = await Scenario.init(formTitle, formDefinition, {
         resourceService,
       });
@@ -974,16 +991,6 @@ describe('Secondary instances', () => {
             )
           )
         );
-
-        let resourceService: JRResourceService;
-
-        beforeEach(() => {
-          resourceService = new JRResourceService();
-        });
-
-        afterEach(() => {
-          resourceService.reset();
-        });
 
         it(description, async () => {
           let csvFixture: string;

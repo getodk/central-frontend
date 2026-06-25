@@ -49,7 +49,7 @@ import {
 import { isQuestionEventOfType, type TypedQuestionEvent } from './event/predicates.ts';
 import { JRFormDef } from './form/JRFormDef.ts';
 import { JRFormIndex } from './form/JRFormIndex.ts';
-import type { FormDefinitionResource } from './resource/FormDefinitionResource.ts';
+import { FormDefinitionResource } from './resource/FormDefinitionResource.ts';
 import { r } from './resource/ResourcePathHelper.ts';
 import { SelectChoiceList } from './select/SelectChoiceList.ts';
 import { ValidateOutcome } from './validation/ValidateOutcome.ts';
@@ -85,13 +85,10 @@ export interface ScenarioConfig extends ScenarioFormMeta {
 
 type FormFileName = `${string}.xml`;
 
-const isFormFileName = (value: FormDefinitionResource | string): value is FormFileName => {
-  return typeof value === 'string' && value.endsWith('.xml');
-};
-
 // prettier-ignore
 type ScenarioStaticInitParameters =
 	| readonly [formFileName: FormFileName]
+  | readonly [formXml: string]
 	| readonly [formName: string, form: XFormsElement, overrideOptions?: Partial<TestFormOptions>]
 	| readonly [resource: FormDefinitionResource];
 
@@ -183,17 +180,48 @@ export class Scenario {
     };
   }
 
+  // TODO use this everywhere
+  static async initNew<This extends typeof Scenario>(
+    this: This,
+    formXml: string,
+    overrideOptions?: Partial<TestFormOptions>
+  ): Promise<This['prototype']> {
+    const resource = new FormDefinitionResource('name', formXml);
+    const formMeta: ScenarioFormMeta = {
+      formElement: xmlElement(resource.textContents),
+      formName: resource.formName,
+      formOptions: this.getTestFormOptions(overrideOptions),
+    };
+    const { dispose, owner, form, instanceRoot } = await initializeTestForm(
+      formMeta.formElement.asXml() satisfies FormResource,
+      formMeta.formOptions
+    );
+    return runInSolidScope(owner, () => {
+      return new this(
+        {
+          ...formMeta,
+          owner,
+          dispose,
+        },
+        form,
+        instanceRoot
+      );
+    });
+  }
+
   static async init<This extends typeof Scenario>(
     this: This,
     ...args: ScenarioStaticInitParameters
   ): Promise<This['prototype']> {
-    if (isFormFileName(args[0])) {
-      return this.init(r(args[0]));
-    }
-
     let formMeta: ScenarioFormMeta;
     if (args.length === 1) {
       const [resource] = args;
+      if (typeof resource === 'string') {
+        if (resource.endsWith('.xml')) {
+          return this.init(r(resource));
+        }
+        return this.init(new FormDefinitionResource('name', resource));
+      }
 
       formMeta = {
         formElement: xmlElement(resource.textContents),
@@ -209,9 +237,6 @@ export class Scenario {
         formOptions: this.getTestFormOptions(overrideOptions),
       };
     }
-
-    console.log( formMeta.formElement.asXml());
-    console.log(formMeta.formOptions);
 
     const { dispose, owner, form, instanceRoot } = await initializeTestForm(
       formMeta.formElement.asXml() satisfies FormResource,

@@ -13,12 +13,14 @@ import { describe, expect, it } from 'vitest';
 import type { ComparableAnswer } from '../scenario/answer/ComparableAnswer.ts';
 import { stringAnswer } from '../scenario/answer/ExpectedStringAnswer.ts';
 import { AnswerResult, Scenario } from '../scenario/jr/Scenario.ts';
-import { r } from '../scenario/jr/resource/ResourcePathHelper.ts';
 import {
   ANSWER_CONSTRAINT_VIOLATED,
   ANSWER_OK,
   ANSWER_REQUIRED_BUT_EMPTY,
 } from '../scenario/jr/validation/ValidateOutcome.ts';
+
+import imageSelect from '../scenario/fixtures/test-javarosa/resources/ImageSelectTester.xml?raw';
+import imageSelectAlt from '../scenario/fixtures/test-javarosa/resources/ImageSelectTester-alt.xml?raw';
 
 /**
  * **PORTING NOTES**
@@ -199,11 +201,9 @@ describe('`constraint`', () => {
 
         testFn('enforces `constraint`s defined [on] in a field', async () => {
           const scenario = await Scenario.init(
-            r(
-              temporarilyIncludePrimaryInstanceId
-                ? 'ImageSelectTester-alt.xml'
-                : 'ImageSelectTester.xml'
-            )
+            temporarilyIncludePrimaryInstanceId
+              ? imageSelectAlt
+              : imageSelect
           );
 
           scenario.next('/icons/id');

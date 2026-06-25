@@ -668,6 +668,10 @@ type KnownFailureTest = () => Promise<void>;
 
 type KnownFailureTestAPI = (description: string, fn: KnownFailureTest) => void;
 
+import vaccination from '../../scenario/fixtures/test-javarosa/resources/child_vaccination_VOL_tool_v12.xml?raw';
+import vaccinationAlt from '../../scenario/fixtures/test-javarosa/resources/child_vaccination_VOL_tool_v12-alt.xml?raw';
+
+
 describe('ChildVaccinationTest.java', () => {
   afterEach(() => {
     refSingletons.clear();
@@ -686,18 +690,21 @@ describe('ChildVaccinationTest.java', () => {
      * @see {@link https://github.com/getodk/web-forms/issues/205}
      */
     readonly failureMode: 'INFINITE_LOOP' | null;
+    readonly form: string;
   }
 
   describe.each<FixtureCase>([
     {
       fixtureName: 'child_vaccination_VOL_tool_v12.xml',
       failureMode: 'INFINITE_LOOP',
+      form: vaccination
     },
     {
       fixtureName: 'child_vaccination_VOL_tool_v12-alt.xml',
       failureMode: null,
+      form: vaccinationAlt
     },
-  ])('fixture: $fixtureName', { timeout: 40 * 1000 }, ({ fixtureName, failureMode }) => {
+  ])('fixture: $fixtureName', { timeout: 40 * 1000 }, ({ fixtureName, failureMode, form }) => {
     let testFn: KnownFailureTestAPI;
 
     if (failureMode != null) {
@@ -734,7 +741,7 @@ describe('ChildVaccinationTest.java', () => {
     }
 
     testFn('[smoke test]', async () => {
-      const scenario = await Scenario.init(fixtureName);
+      const scenario = await Scenario.init(form);
 
       scenario.next('/data/building_type');
 

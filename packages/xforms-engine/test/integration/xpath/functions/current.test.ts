@@ -3,8 +3,9 @@ import { stringAnswer } from '../../../scenario/answer/ExpectedStringAnswer.ts';
 import { choice } from '../../../scenario/choice/ExpectedChoice.ts';
 import { Scenario } from '../../../scenario/jr/Scenario.ts';
 
-import form from '../../../scenario/fixtures/test-javarosa/resources/org/javarosa/xpath/expr/relative-current-ref-field-ref.xml?raw';
-import { FormDefinitionResource } from '../../../scenario/jr/resource/FormDefinitionResource.ts';
+import relativeCurrentRefFieldRef from '../../../scenario/fixtures/test-javarosa/resources/relative-current-ref-field-ref.xml?raw';
+import relativeCurrentRefGroupCountRef from '../../../scenario/fixtures/test-javarosa/resources/relative-current-ref-group-count-ref.xml?raw';
+import relativeCurrentRef from '../../../scenario/fixtures/test-javarosa/resources/relative-current-ref.xml?raw';
 
 /**
  *
@@ -18,8 +19,7 @@ describe('XPath function support: `current`', () => {
   describe('CurrentFieldRefTest.java', () => {
     describe('`current()` in a field ref', () => {
       it('should be the same as a relative ref', async () => {
-        const res = new FormDefinitionResource('name', form);
-        const scenario = await Scenario.init(res);
+        const scenario = await Scenario.init(relativeCurrentRefFieldRef);
 
         // The ref on /data/my_group[1]/name uses current()/name instead of an absolute path
         scenario.answer('/data/my_group[1]/name', 'Bob');
@@ -49,7 +49,7 @@ describe('XPath function support: `current`', () => {
        *   removing that oddly timed second check. (It's commented out for now.)
        */
       it('[references the current repeat instance as its context node] should work as expected', async () => {
-        const scenario = await Scenario.init('relative-current-ref-group-count-ref.xml');
+        const scenario = await Scenario.init(relativeCurrentRefGroupCountRef);
 
         // JR:
         //
@@ -95,7 +95,7 @@ describe('XPath function support: `current`', () => {
      *   we should consider adding a couple repeat-specific tests too.
      */
     beforeEach(async () => {
-      scenario = await Scenario.init('relative-current-ref.xml');
+      scenario = await Scenario.init(relativeCurrentRef);
     });
 
     describe('`current()` as `calculate` root', () => {

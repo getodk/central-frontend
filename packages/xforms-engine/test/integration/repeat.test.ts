@@ -21,6 +21,9 @@ import { stringAnswer } from '../scenario/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../scenario/jr/Scenario.ts';
 import type { JRFormDef } from '../scenario/jr/form/JRFormDef.ts';
 
+import countNonEmpty from '../scenario/fixtures/test-javarosa/resources/countNonEmptyForm.xml?raw';
+import countNonEmptyAlt from '../scenario/fixtures/test-javarosa/resources/countNonEmptyForm-alt.xml?raw';
+
 /**
  * This is **not** intended to be a general purpose `range` implementation.
  * Insofar as we're going to reuse that aspect of JavaRosa test logic, it makes
@@ -2595,7 +2598,7 @@ describe('Tests ported from JavaRosa - repeats', () => {
 
         testFn('[calculates the count of non-empty nodes]', async () => {
           const scenario = await Scenario.init(
-            includeCommonNamespaces ? 'countNonEmptyForm-alt.xml' : 'countNonEmptyForm.xml'
+            includeCommonNamespaces ? countNonEmptyAlt : countNonEmpty
           );
 
           expect(scenario.answerOf('/test/count_value')).toEqualAnswer(intAnswer(4));
