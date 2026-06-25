@@ -1,15 +1,8 @@
 <template>
   <modal id="field-key-edit" :state="state" :hideable="!awaitingResponse"
     backdrop @hide="$emit('hide')" @shown="focusFirstProperty">
-    <template #title>{{ $t('title') }}</template>
+    <template #title>{{ $t('title', { displayName: fieldKey?.displayName }) }}</template>
     <template #body>
-      <div class="modal-introduction">
-        <p>
-          <strong>{{ $t('displayNameLabel') }}</strong>
-          <sentence-separator/>
-          <span>{{ fieldKey?.displayName }}</span>
-        </p>
-      </div>
       <div class="field-key-edit-properties">
         <actor-properties-upsert v-if="state && actorProperties.dataExists"
           v-model:propertyValues="propertyValues"
@@ -34,7 +27,6 @@ import { ref, watch } from 'vue';
 
 import ActorPropertiesUpsert from '../actor-properties/upsert.vue';
 import Modal from '../modal.vue';
-import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
 
 import useRequest from '../../composables/request';
@@ -79,7 +71,7 @@ watch(() => props.state, (state) => {
   if (!state) {
     propertyValues.value = Object.create(null);
   } else {
-    propertyValues.value = { ...props.fieldKey.properties };
+    propertyValues.value = Object.assign(Object.create(null), props.fieldKey.properties);
   }
 });
 </script>
@@ -87,8 +79,9 @@ watch(() => props.state, (state) => {
 <i18n lang="json5">
 {
   "en": {
-    // This is the title at the top of a pop-up for editing an App User.
-    "title": "Edit App User",
+    // This is the title at the top of a pop-up for editing an App User. {displayName} is the
+    // the name of the App User
+    "title": "Edit App User “{displayName}”",
     // Shown as label before the display name of the App User in the edit pop-up.
     "displayNameLabel": "App User"
   }

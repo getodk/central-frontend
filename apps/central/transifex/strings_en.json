@@ -629,6 +629,10 @@
     "lastEntity": {
       "string": "Latest Entity",
       "developer_comment": "This is the text of a table column header. The column shows the date and time of the newest entity"
+    },
+    "value": {
+      "string": "Value",
+      "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of a property of an object (App User, Public Link and Data Collector)"
     }
   },
   "plural": {
@@ -1212,14 +1216,6 @@
       "alert": {
         "success": {
           "string": "An email has been sent to {email} with further instructions."
-        }
-      }
-    },
-    "ActorPropertiesUpsert": {
-      "header": {
-        "value": {
-          "string": "Value",
-          "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of a public link property."
         }
       }
     },
@@ -2897,8 +2893,8 @@
     },
     "FieldKeyEdit": {
       "title": {
-        "string": "Edit App User",
-        "developer_comment": "This is the title at the top of a pop-up for editing an App User."
+        "string": "Edit App User “{displayName}”",
+        "developer_comment": "This is the title at the top of a pop-up for editing an App User. {displayName} is the the name of the App User"
       },
       "displayNameLabel": {
         "string": "App User",
@@ -4900,8 +4896,8 @@
     },
     "PublicLinkEdit": {
       "title": {
-        "string": "Edit Public Access Link",
-        "developer_comment": "This is the title at the top of a pop-up for editing a Public Access Link."
+        "string": "Edit Public Access Link “{displayName}”",
+        "developer_comment": "This is the title at the top of a pop-up for editing a Public Access Link. {displayName} is the display name of the Public Link"
       },
       "displayNameLabel": {
         "string": "Public Link",

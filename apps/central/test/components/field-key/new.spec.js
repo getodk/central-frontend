@@ -11,7 +11,7 @@ import { testRequestData } from '../../util/request-data';
 const mountOptions = (options = undefined) => mergeMountOptions(options, {
   props: { state: true, managed: true },
   container: {
-    requestData: testRequestData(['actorProperties'], { project: testData.extendedProjects.last(), actorProperties: [] }),
+    requestData: testRequestData(['actorProperties'], { project: testData.extendedProjects.last(), actorProperties: testData.actorProperties.sorted() }),
     router: mockRouter('/')
   }
 });
@@ -48,6 +48,24 @@ describe('FieldKeyNew', () => {
         disabled: ['.btn-link'],
         modal: true
       });
+  });
+
+  it('sends the correct request with custom properties', () => {
+    testData.extendedProjects.createPast(1);
+    testData.actorProperties.createPast(1, { name: 'prop1' });
+    return mockHttp()
+      .mount(FieldKeyNew, mountOptions())
+      .request(async (modal) => {
+        await modal.get('input').setValue('My App User');
+        await modal.get('textarea').setValue('value1');
+        return modal.get('form').trigger('submit');
+      })
+      .beforeEachResponse((_, { method, url, data }) => {
+        method.should.equal('POST');
+        url.should.equal('/v1/projects/1/app-users');
+        data.should.eql({ displayName: 'My App User', properties: { prop1: 'value1' } });
+      })
+      .respondWithProblem();
   });
 
   describe('after a successful response', () => {

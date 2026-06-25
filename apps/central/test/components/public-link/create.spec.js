@@ -9,7 +9,7 @@ import { testRequestData } from '../../util/request-data';
 const mountOptions = (options = undefined) => mergeMountOptions(options, {
   props: { state: true },
   container: {
-    requestData: testRequestData(['actorProperties'], { form: testData.extendedForms.last(), actorProperties: [] })
+    requestData: testRequestData(['actorProperties'], { form: testData.extendedForms.last(), actorProperties: testData.actorProperties.sorted() })
   }
 });
 
@@ -57,6 +57,23 @@ describe('PublicLinkCreate', () => {
           data.should.eql({ displayName: 'My Public Link', once: false, properties: Object.create(null) });
         })
         .respondWithProblem());
+
+    it('sends the correct request with custom properties', () => {
+      testData.actorProperties.createPast(1, { name: 'prop1' });
+      return mockHttp()
+        .mount(PublicLinkCreate, mountOptions())
+        .request(async (modal) => {
+          await modal.get('input').setValue('My Public Link');
+          await modal.get('textarea').setValue('value1');
+          return modal.get('form').trigger('submit');
+        })
+        .beforeEachResponse((_, { method, url, data }) => {
+          method.should.equal('POST');
+          url.should.equal('/v1/projects/1/forms/f/public-links');
+          data.should.eql({ displayName: 'My Public Link', once: false, properties: { prop1: 'value1' } });
+        })
+        .respondWithProblem();
+    });
 
     it('sends the correct once property if the checkbox is checked', () =>
       mockHttp()

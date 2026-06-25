@@ -31,8 +31,8 @@ describe('FieldKeyEdit', () => {
 
   it('shows the display name', () => {
     const modal = mount(FieldKeyEdit, mountOptions());
-    const intro = modal.get('.modal-introduction');
-    intro.text().should.include('My App User');
+    const title = modal.get('.modal-title');
+    title.text().should.include('My App User');
   });
 
   it('renders ActorPropertiesUpsert with property definitions', () => {
@@ -51,6 +51,7 @@ describe('FieldKeyEdit', () => {
 
   it('sends the correct request', () => {
     testData.actorProperties.createPast(1, { name: 'prop1' });
+    testData.actorProperties.createPast(1, { name: 'prop2' });
     return load('/projects/1/app-users')
       .complete()
       .request(async (app) => {
@@ -58,14 +59,14 @@ describe('FieldKeyEdit', () => {
         const modal = app.get('#field-key-edit');
         const textareas = modal.findAll('textarea');
         await textareas[0].setValue('newValue1');
+        await textareas[1].setValue('');
         return modal.get('.btn-primary').trigger('click');
       })
       .beforeEachResponse((_, { method, url, data }, i) => {
         if (i === 0) {
           method.should.equal('PATCH');
           url.should.equal('/v1/projects/1/app-users/1');
-          data.should.have.property('properties');
-          data.properties.prop1.should.equal('newValue1');
+          data.should.deep.equal({ properties: { prop1: 'newValue1', prop2: '' } });
         }
       })
       .respondWithData(() => testData.extendedFieldKeys.last())

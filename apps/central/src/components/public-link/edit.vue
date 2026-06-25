@@ -1,15 +1,8 @@
 <template>
   <modal id="public-link-edit" :state="state" :hideable="!awaitingResponse"
     backdrop @hide="$emit('hide')" @shown="focusFirstProperty">
-    <template #title>{{ $t('title') }}</template>
+    <template #title>{{ $t('title', { displayName: publicLink?.displayName }) }}</template>
     <template #body>
-      <div class="modal-introduction">
-        <p>
-          <strong>{{ $t('displayNameLabel') }}</strong>
-          <sentence-separator/>
-          <span>{{ publicLink?.displayName }}</span>
-        </p>
-      </div>
       <div class="public-link-edit-properties">
         <actor-properties-upsert v-if="state && actorProperties.dataExists"
           v-model:propertyValues="propertyValues"
@@ -34,7 +27,6 @@ import { ref, watch } from 'vue';
 
 import ActorPropertiesUpsert from '../actor-properties/upsert.vue';
 import Modal from '../modal.vue';
-import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
 
 import useRequest from '../../composables/request';
@@ -79,7 +71,7 @@ watch(() => props.state, (state) => {
   if (!state) {
     propertyValues.value = Object.create(null);
   } else {
-    propertyValues.value = { ...props.publicLink.properties };
+    propertyValues.value = Object.assign(Object.create(null), props.publicLink.properties);
   }
 });
 </script>
@@ -87,8 +79,9 @@ watch(() => props.state, (state) => {
 <i18n lang="json5">
 {
   "en": {
-    // This is the title at the top of a pop-up for editing a Public Access Link.
-    "title": "Edit Public Access Link",
+    // This is the title at the top of a pop-up for editing a Public Access Link. {displayName} is
+    // the display name of the Public Link
+    "title": "Edit Public Access Link “{displayName}”",
     // Shown as label before the display name of the Public Access Link in the edit pop-up.
     "displayNameLabel": "Public Link"
   }

@@ -29,10 +29,10 @@ describe('PublicLinkEdit', () => {
     });
   });
 
-  it('shows the display name', () => {
+  it('shows the display name in the title', () => {
     const modal = mount(PublicLinkEdit, mountOptions());
-    const intro = modal.get('.modal-introduction');
-    intro.text().should.include('My Public Link');
+    const title = modal.get('.modal-title');
+    title.text().should.include('My Public Link');
   });
 
   it('renders ActorPropertiesUpsert with property definitions', () => {
@@ -64,8 +64,7 @@ describe('PublicLinkEdit', () => {
         if (i === 0) {
           method.should.equal('PATCH');
           url.should.equal('/v1/projects/1/forms/f/public-links/1');
-          data.should.have.property('properties');
-          data.properties.prop1.should.equal('newValue1');
+          data.should.deep.equal({ properties: { prop1: 'newValue1' } });
         }
       })
       .respondWithData(() => testData.extendedPublicLinks.last())
