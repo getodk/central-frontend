@@ -248,6 +248,12 @@
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
+      "actor_property": {
+        "create": {
+          "string": "Create Custom Property",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Actor Property."
+        }
+      },
       "field_key": {
         "assignment_create": {
           "string": "Give Access",
@@ -255,6 +261,10 @@
         },
         "assignment_delete": {
           "string": "Remove Access",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an App User."
+        },
+        "property_set": {
+          "string": "Set Property",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an App User."
         }
       },
@@ -303,6 +313,10 @@
         },
         "assignment_delete": {
           "string": "Remove Access",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Public Access Link."
+        },
+        "property_set": {
+          "string": "Set Property",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Public Access Link."
         }
       },

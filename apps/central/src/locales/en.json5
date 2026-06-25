@@ -122,13 +122,19 @@
         "bulk_restore": "Bulk Restore"
       },
       // This is shown in the log of actions performed on the server. It is a
+      // type of action that can be taken on an Actor Property.
+      "actor_property": {
+        "create": "Create Custom Property"
+      },
+      // This is shown in the log of actions performed on the server. It is a
       // type of action that can be taken on an App User.
       "field_key": {
         "create": "@:audit.action.default.create",
         "assignment_create": "Give Access",
         "assignment_delete": "Remove Access",
         "session_end": "@:audit.action.default.session_end",
-        "delete": "@:audit.action.default.delete"
+        "delete": "@:audit.action.default.delete",
+        "property_set": "Set Property"
       },
       // This is shown in the log of actions performed on the server. It is a
       // type of action that can be taken on a Form.
@@ -160,7 +166,8 @@
         "assignment_create": "Give Access",
         "assignment_delete": "Remove Access",
         "session_end": "@:audit.action.default.session_end",
-        "delete": "@:audit.action.default.delete"
+        "delete": "@:audit.action.default.delete",
+        "property_set": "Set Property"
       },
       // This is shown in the log of actions performed on the server.
       "submission": {

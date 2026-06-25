@@ -137,6 +137,7 @@ export default {
     // having a "category" indicated by the first part. For example, the
     // category of project.create is project.
     category() {
+      if (this.audit.action.startsWith('actor_property.')) return 'project';
       const index = this.audit.action.indexOf('.');
       return index !== -1 ? this.audit.action.slice(0, index) : null;
     },

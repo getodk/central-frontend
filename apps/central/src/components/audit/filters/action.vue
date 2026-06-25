@@ -57,6 +57,7 @@ export default {
         this.actionOption('project.create'),
         this.actionOption('project.update'),
         this.actionOption('project.delete'),
+        this.actionOption('actor_property.create'),
         this.categoryOption('form'),
         this.actionOption('form.create'),
         this.actionOption('form.update'),
