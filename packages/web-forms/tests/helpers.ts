@@ -23,7 +23,7 @@ import xpathUnknownFunction from './fixtures/xpath-unknown-function.xml?raw';
 import xpathSyntaxError from './fixtures/xpath-syntax-error.xml?raw';
 import simpleDagCycle from './fixtures/simple-dag-cycle.xml?raw';
 
-const fixtures: Record<string, any> = {
+const fixtures: Record<string, string> = {
   'select-control.xml': selectControl,
   '1-validation.xml': validation,
   '10-repeat-with-multiple-children.xml': repeatWithMultipleChildren,
