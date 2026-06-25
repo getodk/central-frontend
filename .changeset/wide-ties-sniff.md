@@ -5,4 +5,4 @@
 "@getodk/xpath": major
 ---
 
-First stable release"
+First stable release
