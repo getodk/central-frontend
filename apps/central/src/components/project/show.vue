@@ -52,6 +52,12 @@ except according to the terms contained in the LICENSE file.
             {{ $t('resource.appUsers') }}
           </router-link>
         </li>
+        <li v-if="canRoute(tabPath('custom-properties'))"
+          :class="tabClass('custom-properties')" role="presentation">
+          <router-link :to="tabPath('custom-properties')">
+            {{ $t('projectShow.tab.customProperties') }}
+          </router-link>
+        </li>
         <li v-if="canRoute(tabPath('form-access'))"
           :class="tabClass('form-access')" role="presentation">
           <router-link :to="tabPath('form-access')">

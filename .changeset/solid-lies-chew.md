@@ -1,5 +1,4 @@
 ---
-"@getodk/forms": minor
 "@getodk/xforms-engine": minor
 ---
 

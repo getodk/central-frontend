@@ -35,6 +35,12 @@ except according to the terms contained in the LICENSE file.
         <date-time :iso="publicLink.createdAt"/>
       </div>
       <div class="btn-group">
+        <button v-if="publicLink.token != null && showEdit" type="button"
+          class="edit-button btn btn-default"
+          :aria-label="$t('action.edit')" v-tooltip.aria-label
+          @click="$emit('edit', publicLink)">
+          <span class="icon-pencil"></span>
+        </button>
         <button v-if="publicLink.token != null" type="button"
           class="revoke-button btn btn-default"
           :aria-label="$t('action.revoke')" v-tooltip.aria-label
@@ -60,9 +66,10 @@ export default {
       type: Object,
       required: true
     },
-    highlighted: Number
+    highlighted: Number,
+    showEdit: Boolean
   },
-  emits: ['revoke'],
+  emits: ['revoke', 'edit'],
   setup() {
     // The component does not assume that this data will exist when the
     // component is created.
@@ -118,6 +125,7 @@ export default {
 {
   "en": {
     "action": {
+      "edit": "Edit Public Access Link",
       "revoke": "Revoke"
     },
     // This text is shown for a Public Access Link that has been revoked. The

@@ -16,6 +16,7 @@
   "projectShow": {
     "tab": {
       "formAccess": "Form Access",
+      "customProperties": "Custom Properties",
     }
   },
   "formHead": {
@@ -235,7 +236,8 @@
     "restore": "Restore",
     "selectRow": "Select row",
     // This text is shown on a button that resets the data filters
-    "reset": "Reset"
+    "reset": "Reset",
+    "change": "Change"
   },
   "field": {
     "comment": "Leave a comment…",
@@ -287,7 +289,10 @@
     "entities": "Total Entities",
     // This is the text of a table column header. The column shows the date and time of the
     // newest entity
-    "lastEntity": "Latest Entity"
+    "lastEntity": "Latest Entity",
+    // This is the text of a table column header. "Value" refers to the value of a property of
+    // an object (App User, Public Link and Data Collector)
+    "value": "Value"
   },
   "plural": {
     "appUser": "App User | App Users",

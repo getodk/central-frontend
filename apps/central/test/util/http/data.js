@@ -98,6 +98,7 @@ const responsesByComponent = {
     deletedDatasets: () => []
   }),
   ProjectSettings: [],
+  CustomPropertyList: componentResponses({ actorProperties: true }),
   FormNewPage: [],
   FormShow: componentResponses({
     project: true,
@@ -174,7 +175,7 @@ const responsesByComponent = {
   }),
   PublicLinkList: componentResponses({
     actorProperties: true,
-    publicLinks: () => testData.standardPublicLinks.sorted()
+    publicLinks: () => testData.extendedPublicLinks.sorted()
   }),
   FormVersionList: componentResponses({ formVersions: true }),
   FormEdit: componentResponses({
@@ -255,7 +256,9 @@ const responsesByComponent = {
       () => testData.entityGeojson(entity => entity.deletedAt == null)
     ]
   }),
-  DatasetSettings: [],
+  DatasetSettings: componentResponses({
+    actorProperties: true,
+  }),
   EntityShow: componentResponses({
     entity: () => testData.extendedEntities.last(),
     project: true,

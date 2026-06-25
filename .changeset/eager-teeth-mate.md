@@ -1,5 +1,4 @@
 ---
-"@getodk/central-frontend": patch
 "@getodk/web-forms": patch
 ---
 

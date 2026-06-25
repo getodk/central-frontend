@@ -4,11 +4,12 @@ import testData from '../../data';
 import { load, mockHttp } from '../../util/http';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
+import { testRequestData } from '../../util/request-data';
 
 const mountOptions = (options = undefined) => mergeMountOptions(options, {
   props: { state: true },
   container: {
-    requestData: { form: testData.extendedForms.last() }
+    requestData: testRequestData(['actorProperties'], { form: testData.extendedForms.last(), actorProperties: testData.actorProperties.sorted() })
   }
 });
 
@@ -53,9 +54,26 @@ describe('PublicLinkCreate', () => {
         .beforeEachResponse((_, { method, url, data }) => {
           method.should.equal('POST');
           url.should.equal('/v1/projects/1/forms/f/public-links');
-          data.should.eql({ displayName: 'My Public Link', once: false });
+          data.should.eql({ displayName: 'My Public Link', once: false, properties: Object.create(null) });
         })
         .respondWithProblem());
+
+    it('sends the correct request with custom properties', () => {
+      testData.actorProperties.createPast(1, { name: 'prop1' });
+      return mockHttp()
+        .mount(PublicLinkCreate, mountOptions())
+        .request(async (modal) => {
+          await modal.get('input').setValue('My Public Link');
+          await modal.get('textarea').setValue('value1');
+          return modal.get('form').trigger('submit');
+        })
+        .beforeEachResponse((_, { method, url, data }) => {
+          method.should.equal('POST');
+          url.should.equal('/v1/projects/1/forms/f/public-links');
+          data.should.eql({ displayName: 'My Public Link', once: false, properties: { prop1: 'value1' } });
+        })
+        .respondWithProblem();
+    });
 
     it('sends the correct once property if the checkbox is checked', () =>
       mockHttp()
@@ -86,7 +104,7 @@ describe('PublicLinkCreate', () => {
 
   describe('after a successful response', () => {
     const submit = () => {
-      testData.standardPublicLinks.createPast(1);
+      testData.extendedPublicLinks.createPast(1);
       return load('/projects/1/forms/f/public-links')
         .complete()
         .request(async (app) => {
@@ -95,10 +113,10 @@ describe('PublicLinkCreate', () => {
           await modal.get('input').setValue('My Public Link');
           return modal.get('form').trigger('submit');
         })
-        .respondWithData(() => testData.standardPublicLinks.createNew({
+        .respondWithData(() => testData.extendedPublicLinks.createNew({
           displayName: 'My Public Link'
         }))
-        .respondWithData(() => testData.standardPublicLinks.sorted());
+        .respondWithData(() => testData.extendedPublicLinks.sorted());
     };
 
     it('hides the modal', async () => {

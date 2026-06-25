@@ -13,22 +13,24 @@ import type {
   Polygon as PolygonGeoJSON,
 } from 'geojson';
 
-// Latitude is first for ODK, and longitude is second. Altitude and accuracy default to 0 to match Collect behavior.
+const toODKDecimal = (num: number) => (Number.isInteger(num) ? `${num}.0` : String(num));
+
+// Latitude is first for ODK, and longitude is second. Altitude and accuracy default to 0.0 to match Collect behavior.
 export const toODKCoordinateArray = (
   longitude: number,
   latitude: number,
   altitude: number | null | undefined,
   accuracy: number | null | undefined
-): number[] => {
+): string[] => {
   if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
     return [];
   }
 
   return [
-    latitude,
-    longitude,
-    Number.isFinite(altitude) ? altitude! : 0,
-    Number.isFinite(accuracy) ? accuracy! : 0,
+    toODKDecimal(latitude),
+    toODKDecimal(longitude),
+    toODKDecimal(Number.isFinite(altitude) ? altitude! : 0),
+    toODKDecimal(Number.isFinite(accuracy) ? accuracy! : 0),
   ];
 };
 
@@ -50,7 +52,7 @@ export const formatODKValue = (feature: Feature): string => {
   }
 
   const coordinates: Coordinate[] = getFlatCoordinates(geometry as LineString | Polygon);
-  return coordinates.map((coord) => formatCoords(coord)).join('; ');
+  return coordinates.map((coord) => formatCoords(coord)).join(';');
 };
 
 export const isWebGLAvailable = () => {

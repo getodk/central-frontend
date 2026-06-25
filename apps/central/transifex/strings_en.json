@@ -30,6 +30,10 @@
       "formAccess": {
         "string": "Form Access",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      },
+      "customProperties": {
+        "string": "Custom Properties",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     }
   },
@@ -494,6 +498,10 @@
     "reset": {
       "string": "Reset",
       "developer_comment": "This text is shown on a button that resets the data filters"
+    },
+    "change": {
+      "string": "Change",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
     }
   },
   "field": {
@@ -621,6 +629,10 @@
     "lastEntity": {
       "string": "Latest Entity",
       "developer_comment": "This is the text of a table column header. The column shows the date and time of the newest entity"
+    },
+    "value": {
+      "string": "Value",
+      "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of a property of an object (App User, Public Link and Data Collector)"
     }
   },
   "plural": {
@@ -1927,7 +1939,7 @@
     "DatasetOwnerOnly": {
       "panel": {
         "title": {
-          "string": "App User and Data Collector Entity Access",
+          "string": "Entity List Access",
           "developer_comment": "This is a title shown above a section of the page."
         }
       },
@@ -1946,6 +1958,45 @@
         },
         "true": {
           "string": "App Users and Data Collectors within this Project will only have access to the Entities they create, promoting privacy and limiting data transfers."
+        }
+      },
+      "filterByProperty": {
+        "label": {
+          "string": "Filter by Property"
+        },
+        "description": {
+          "string": "Define rules for which Entities are visible to App Users and Data Collectors by comparing their properties."
+        },
+        "entityPropertyLabel": {
+          "string": "Only see Entities where",
+          "developer_comment": "This text is shown above the access rule filter dropdown. Translators are free not to translate this literally"
+        },
+        "entityPropertyPlaceholder": {
+          "string": "Entity property",
+          "developer_comment": "Placeholder text shown on a access rule filter dropdown."
+        },
+        "userPropertyLabel": {
+          "string": "is equal to the user’s",
+          "developer_comment": "This text is shown above the access rule filter dropdown. Translators are free not to translate this literally"
+        },
+        "userPropertyPlaceholder": {
+          "string": "User property",
+          "developer_comment": "Placeholder text shown on a access rule filter dropdown"
+        },
+        "disabled": {
+          "datasetProperties": {
+            "string": "There are no Entity properties defined."
+          },
+          "userProperties": {
+            "string": "There are no user properties defined."
+          },
+          "both": {
+            "string": "There are no Entity or user properties defined."
+          }
+        },
+        "currentRule": {
+          "string": "Rule: {entityProperty} (Entity property) = {userProperty} (User property)",
+          "developer_comment": "{entityProperty} is the name of an Entity property. {userProperty} is the name of a User property."
         }
       },
       "falseModal": {
@@ -1970,6 +2021,23 @@
         },
         "changeToTrue": {
           "string": "App Users and Data Collectors will now only have access to Entities they create."
+        },
+        "changeToProperty": {
+          "string": "App Users and Public Links will now only have access to Entities matching the filter rule."
+        }
+      },
+      "accessByFilterRule": {
+        "title": {
+          "string": "Filter by Property"
+        },
+        "introduction": {
+          "string": "App Users and Public Links will only have access to Entities where the selected property matches their user property."
+        },
+        "action": {
+          "save": {
+            "string": "Save Filter Rule",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
         }
       }
     },
@@ -2823,6 +2891,16 @@
         "developer_comment": "Text for a hovering feedback button shown anchored to right of screen. If your language doesn't have a single word or short phrase for \"feedback\", consider something like \"comments\" or \"reactions\"."
       }
     },
+    "FieldKeyEdit": {
+      "title": {
+        "string": "Edit App User “{displayName}”",
+        "developer_comment": "This is the title at the top of a pop-up for editing an App User. {displayName} is the the name of the App User"
+      },
+      "displayNameLabel": {
+        "string": "App User",
+        "developer_comment": "Shown as label before the display name of the App User in the edit pop-up."
+      }
+    },
     "FieldKeyList": {
       "action": {
         "create": {
@@ -2872,6 +2950,9 @@
       "alert": {
         "create": {
           "string": "The App User “{displayName}” was created successfully."
+        },
+        "edit": {
+          "string": "The App User “{displayName}” was updated successfully."
         },
         "revoke": {
           "string": "App User {displayName}’s access successfully revoked."
@@ -3018,6 +3099,10 @@
         "developer_comment": "This text is shown for an App User whose access has been revoked."
       },
       "action": {
+        "editAppUser": {
+          "string": "Edit App User",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
         "revokeAccess": {
           "string": "Revoke access",
           "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -4236,6 +4321,44 @@
         }
       }
     },
+    "ProjectCustomPropertiesList": {
+      "heading": {
+        "0": {
+          "string": "Custom Properties are custom fields that can be attached to App Users and Public Links to store additional metadata.",
+          "developer_comment": "A brief introduction to Custom Properties shown for the current project"
+        }
+      },
+      "emptyTable": {
+        "string": "No custom properties have been defined for this project."
+      },
+      "created": {
+        "string": "Custom property created successfully.",
+        "developer_comment": "Shown after a custom property is successfully created."
+      },
+      "action": {
+        "create": {
+          "string": "New",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "ProjectCustomPropertiesNew": {
+      "title": {
+        "string": "Add Custom Property",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "string": "To add a custom property for this project, choose a unique property name below."
+      },
+      "newPropertyName": {
+        "string": "New property name"
+      },
+      "problem": {
+        "409_3": {
+          "string": "A custom property already exists in this project with the name of \"{propertyName}\"."
+        }
+      }
+    },
     "ProjectEdit": {
       "title": {
         "string": "Basic Details",
@@ -4771,6 +4894,16 @@
         "developer_comment": "This is help text for the \"Single Submission\" checkbox."
       }
     },
+    "PublicLinkEdit": {
+      "title": {
+        "string": "Edit Public Access Link “{displayName}”",
+        "developer_comment": "This is the title at the top of a pop-up for editing a Public Access Link. {displayName} is the display name of the Public Link"
+      },
+      "displayNameLabel": {
+        "string": "Public Link",
+        "developer_comment": "Shown as label before the display name of the Public Access Link in the edit pop-up."
+      }
+    },
     "PublicLinkList": {
       "action": {
         "create": {
@@ -4807,6 +4940,9 @@
         "create": {
           "string": "Your Public Access Link has been created and is now live. Copy it below to distribute it."
         },
+        "edit": {
+          "string": "The Public Access Link “{displayName}” was updated successfully."
+        },
         "revoke": {
           "string": "The Public Access Link “{displayName}” was revoked successfully. No further Submissions will be accepted using this Link."
         }
@@ -4825,6 +4961,10 @@
     },
     "PublicLinkRow": {
       "action": {
+        "edit": {
+          "string": "Edit Public Access Link",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
         "revoke": {
           "string": "Revoke",
           "developer_comment": "This is the text for an action, for example, the text of a button."
