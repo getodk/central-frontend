@@ -17,7 +17,7 @@
     "version": "changeset version"
   },
   "volta": {
-    "node": "24.14.1"
+    "node": "24.16.0"
   },
   "packageManager": "npm@11.6.1",
   "workspaces": [
@@ -68,7 +68,7 @@
     "vue-tsc": "^3.1.5"
   },
   "engines": {
-    "node": "^24.14.1",
+    "node": "^24.16.0",
     "npm": "11"
   }
 }

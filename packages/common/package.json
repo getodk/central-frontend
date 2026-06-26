@@ -44,7 +44,7 @@
     "README.md"
   ],
   "engines": {
-    "node": "^24.14.1",
+    "node": "^24.16.0",
     "npm": "11"
   },
   "scripts": {
