@@ -61,7 +61,7 @@ test.describe('Form Upload', () => {
       await page.getByRole('button', { name: 'Upload anyway' }).click();
 
       // Expect error that file has been modified
-      await expect(page.locator('#alerts .red-alert')).toContainText('could not be read');
+      await expect(page.locator('.form-upload-error')).toContainText('could not be read');
 
       // Verify file input and warnings are cleared
       await expect(page.locator('#form-upload-filename')).not.toBeVisible();
