@@ -80,7 +80,10 @@ const typeByFirstPart = {
   submission: 'audit.category.task',
 
   // Server Upgrade
-  upgrade: 'audit.category.upgrade'
+  upgrade: 'audit.category.upgrade',
+
+  // We show actor_property related events under project
+  actor_property: 'resource.project'
 };
 
 const getDisplayName = (actee) => actee.displayName;
@@ -118,6 +121,9 @@ acteeSpeciesByCategory.upgrade = acteeSpeciesByCategory.form;
 // Actee of Entity Bulk Delete and Restore is dataset
 acteeSpeciesByCategory.entity = acteeSpeciesByCategory.dataset;
 
+// Actee is project for actor_property
+acteeSpeciesByCategory.actor_property = acteeSpeciesByCategory.project;
+
 export default {
   name: 'AuditRow',
   components: { ActorLink, DatasetLink, DateTime, FormLink, Selectable },
@@ -137,7 +143,6 @@ export default {
     // having a "category" indicated by the first part. For example, the
     // category of project.create is project.
     category() {
-      if (this.audit.action.startsWith('actor_property.')) return 'project';
       const index = this.audit.action.indexOf('.');
       return index !== -1 ? this.audit.action.slice(0, index) : null;
     },
