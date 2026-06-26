@@ -14,6 +14,22 @@ except according to the terms contained in the LICENSE file.
 definition for an existing form -->
 <template>
   <div id="form-upload">
+    <div class="introduction">
+      <p>
+        <template v-if="!draft">{{ $t('introduction[0].create') }}</template>
+        <template v-else>{{ $t('introduction[0].update') }}</template>
+        <sentence-separator/>
+        <i18n-t keypath="introduction[1].full">
+          <template #tools>
+            <doc-link to="form-tools/">{{ $t('introduction[1].tools') }}</doc-link>
+          </template>
+        </i18n-t>
+      </p>
+      <p v-if="!draft">{{ $t('introduction[2]') }}</p>
+    </div>
+    <div v-show="error != null" class="form-upload-error">
+      <p>{{ error }}</p>
+    </div>
     <div v-show="warnings != null" class="form-upload-warnings">
       <p>{{ $t('warningsText[0]') }}</p>
 
@@ -73,19 +89,6 @@ definition for an existing form -->
         </button>
       </p>
     </div>
-    <div class="introduction">
-      <p>
-        <template v-if="!draft">{{ $t('introduction[0].create') }}</template>
-        <template v-else>{{ $t('introduction[0].update') }}</template>
-        <sentence-separator/>
-        <i18n-t keypath="introduction[1].full">
-          <template #tools>
-            <doc-link to="form-tools/">{{ $t('introduction[1].tools') }}</doc-link>
-          </template>
-        </i18n-t>
-      </p>
-      <p v-if="!draft">{{ $t('introduction[2]') }}</p>
-    </div>
     <file-drop-zone :disabled="awaitingResponse"
       @drop="afterFileSelection($event.dataTransfer.files[0])">
       <i18n-t tag="div" keypath="dropZone.full">
@@ -124,12 +127,11 @@ import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
 
 import useRequest from '../../composables/request';
-import { apiPaths, isProblem } from '../../util/request';
+import { apiPaths, isProblem, requestAlertMessage } from '../../util/request';
 
 export default {
   name: 'FormUpload',
   components: { DocLink, FileDropZone, SentenceSeparator, Spinner },
-  inject: ['redAlert'],
   emits: ['success'],
   setup() {
     const { request, awaitingResponse } = useRequest();
@@ -138,7 +140,8 @@ export default {
   data() {
     return {
       file: null,
-      warnings: null
+      warnings: null,
+      error: null
     };
   },
   computed: {
@@ -167,9 +170,10 @@ export default {
     clear() {
       this.file = null;
       this.warnings = null;
+      this.error = null;
     },
     afterFileSelection(file) {
-      this.redAlert.hide();
+      this.error = null;
       this.file = file;
       this.warnings = null;
     },
@@ -182,8 +186,8 @@ export default {
       const reader = new FileReader();
       reader.onload = () => this.postFile(ignoreWarnings);
       reader.onerror = () => {
-        this.redAlert.show(this.$t('alert.fileNotReadable'));
         this.clear();
+        this.error = this.$t('alert.fileNotReadable');
       };
       reader.readAsArrayBuffer(this.file);
     },
@@ -195,6 +199,23 @@ export default {
         headers['X-XlsForm-FormId-Fallback'] = encodeURIComponent(fallback);
       }
       const initialRoute = this.$route;
+      const problemToAlert = ({ code, details }) => {
+        if (code === 400.15)
+          return this.$t('problem.400_15', details);
+        if (code === 409.3 && details.table === 'forms') {
+          const { fields } = details;
+          if (fields.length === 2 && fields[0] === 'projectId' &&
+            fields[1] === 'xmlFormId')
+            return this.$t('problem.409_3', { xmlFormId: details.values[1] });
+        }
+        if (code === 400.8 && details.field === 'xmlFormId') {
+          return this.$t('problem.400_8', {
+            expected: this.xmlFormId,
+            actual: details.value
+          });
+        }
+        return null;
+      };
       this.request({
         method: 'POST',
         url: !this.draft
@@ -203,34 +224,21 @@ export default {
         headers,
         data: this.file,
         fulfillProblem: ({ code }) => code === 400.16,
-        problemToAlert: ({ code, details }) => {
-          if (code === 400.15)
-            return this.$t('problem.400_15', details);
-          if (code === 409.3 && details.table === 'forms') {
-            const { fields } = details;
-            if (fields.length === 2 && fields[0] === 'projectId' &&
-              fields[1] === 'xmlFormId')
-              return this.$t('problem.409_3', { xmlFormId: details.values[1] });
-          }
-          if (code === 400.8 && details.field === 'xmlFormId') {
-            return this.$t('problem.400_8', {
-              expected: this.xmlFormId,
-              actual: details.value
-            });
-          }
-          return null;
-        }
+        alert: false
       })
         .then(({ data }) => {
           if (isProblem(data)) {
-            this.redAlert.hide();
+            this.error = null;
             this.warnings = data.details.warnings;
           } else {
             this.$emit('success', data);
           }
         })
-        .catch(() => {
-          if (this.$route === initialRoute) this.warnings = null;
+        .catch((error) => {
+          if (this.$route === initialRoute) {
+            this.warnings = null;
+            this.error = requestAlertMessage(this.$i18n, error, problemToAlert);
+          }
         });
     },
     removeLearnMore(value) {
@@ -250,6 +258,13 @@ export default {
 @import '../../assets/scss/variables';
 
 #form-upload {
+  .form-upload-error {
+    background-color: $color-danger-light;
+    padding: 15px;
+    margin-bottom: 15px;
+    white-space: pre-wrap;
+  }
+
   .form-upload-warnings {
     background-color: $color-warning-light;
     margin-bottom: 15px;
