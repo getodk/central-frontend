@@ -44,12 +44,6 @@ test.describe('Form Upload', () => {
       // Upload the temp file
       await page.locator('#form-upload input[type="file"]').setInputFiles(tempFilePath);
 
-      // Verify filename is displayed
-      await expect(page.locator('#form-upload-filename')).toContainText(publishedForm.xmlFormId);
-
-      // Click upload
-      await page.getByRole('button', { name: 'Upload' }).click();
-
       // Expect a warning that form with the same ID exists in the trash
       await expect(page.locator('.form-upload-warnings')).toBeVisible();
       await expect(page.locator('.form-upload-warnings')).toContainText('Trash');

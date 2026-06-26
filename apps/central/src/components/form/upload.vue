@@ -95,10 +95,12 @@ definition for an existing form -->
         <template #chooseOne>
           <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
           <input v-show="false" ref="input" type="file" accept=".xls,.xlsx,.xml"
-            @change="afterInputChange">
+            @change="afterFileSelection($event.target.files[0])">
           <button type="button" class="btn btn-primary"
             :aria-disabled="awaitingResponse" @click="$refs.input.click()">
-            <span class="icon-folder-open"></span>{{ $t('dropZone.chooseOne') }}
+            <span class="icon-folder-open"></span>
+            {{ $t('dropZone.chooseOne') }}
+            <spinner :state="awaitingResponse"/>
           </button>
         </template>
       </i18n-t>
@@ -106,17 +108,6 @@ definition for an existing form -->
         {{ file != null ? file.name : '' }}
       </div>
     </file-drop-zone>
-    <div v-if="file != null" class="actions">
-      <button type="button" class="btn btn-link" :aria-disabled="awaitingResponse"
-        @click="clear()">
-        {{ $t('action.cancel') }}
-      </button>
-      <button id="upload-button" type="button"
-        class="btn btn-primary" :aria-disabled="awaitingResponse"
-        @click="upload(false)">
-        {{ $t('action.upload') }} <spinner :state="awaitingResponse"/>
-      </button>
-    </div>
   </div>
 </template>
 
@@ -176,10 +167,8 @@ export default {
       this.error = null;
       this.file = file;
       this.warnings = null;
-    },
-    afterInputChange(event) {
-      this.afterFileSelection(event.target.files[0]);
       this.$refs.input.value = '';
+      this.upload(false);
     },
     upload(ignoreWarnings) {
       // Try to read the file, error means file is modified or deleted or moved
@@ -286,11 +275,6 @@ export default {
     // stretches across the entire width of the drop zone.
     padding-left: 0;
     padding-right: 0;
-  }
-
-  .actions {
-    display: flex;
-    justify-content: flex-end;
   }
 
   p {
