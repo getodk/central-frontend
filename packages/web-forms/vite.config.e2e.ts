@@ -1,12 +1,10 @@
 import { CollectionValues } from '@getodk/common/types/collections/CollectionValues';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
-import { playwright } from '@vitest/browser-playwright';
 import { execSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath, URL } from 'node:url';
-import type { LibraryOptions, PluginOption } from 'vite';
 import { defineConfig } from 'vite';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 
@@ -48,10 +46,6 @@ const BROWSER_NAME = (() => {
   throw new Error(`Unsupported browser: ${envBrowserName}`);
 })();
 
-const BROWSER_ENABLED = BROWSER_NAME != null;
-
-const TEST_ENVIRONMENT = BROWSER_ENABLED ? 'node' : 'jsdom';
-
 const globalSetup: string[] = [];
 
 /**
@@ -72,25 +66,6 @@ export default defineConfig(({ mode }) => {
   const isVueBundled = mode === 'demo';
   const isDev = mode === 'development';
 
-  let lib: LibraryOptions | undefined;
-  let external: string[];
-  let globals: Record<string, string>;
-  const extraPlugins: PluginOption[] = [];
-
-  if (isVueBundled) {
-    external = [];
-    globals = {};
-  } else {
-    external = ['vue'];
-    globals = { vue: 'Vue' };
-    lib = {
-      formats: ['es'],
-      entry: resolve(__dirname, 'src/index.ts'),
-      name: 'OdkWebForms',
-      fileName: 'index',
-    };
-  }
-
   const versionSuffix = buildNumber && (isVueBundled || isDev) ? ` - ${buildNumber}` : '';
 
   return {
@@ -98,7 +73,9 @@ export default defineConfig(({ mode }) => {
       __WEB_FORMS_VERSION__: `"v${version}${versionSuffix}"`,
     },
     base: './',
-    plugins: [vue(), vueJsx(), cssInjectedByJsPlugin(), ...extraPlugins],
+    plugins: [vue(), vueJsx(), cssInjectedByJsPlugin()],
+    root: 'tests/app/',
+
     resolve: {
       alias: {
         '@getodk/common': resolve(__dirname, '../common/src'),
@@ -110,76 +87,12 @@ export default defineConfig(({ mode }) => {
         './fonts': resolve('../../node_modules/@fontsource/roboto'),
       },
     },
-    build: {
-      target: 'esnext',
-      /**
-       * Prevent bundling XForm fixture assets as inlined `data:` URLs.
-       *
-       * Per Vite's documentation, returning `false` opts out of inlining for
-       * assets with a `.xml` extension; for all other assets, we do not return
-       * a value, deferring to Vite's default behavior. We'll generally want the
-       * default behavior, but this comment should serve as a breadcrumb if we
-       * need to reconsider that assumption.
-       *
-       * @see
-       * {@link https://vite.dev/config/build-options.html#build-assetsinlinelimit}
-       */
-      assetsInlineLimit: (filePath) => {
-        // Prevent inlining XML form fixture assets as `data:` URLs.
-        if (filePath.endsWith('.xml')) {
-          return false;
-        }
-
-        // Per Vite docs
-      },
-      lib,
-      rollupOptions: {
-        external,
-        output: {
-          globals,
-        },
-      },
-    },
     css: {
       preprocessorOptions: {
         scss: {
           api: 'modern',
           quietDeps: true, // Suppress warnings from node_modules
         },
-      },
-    },
-    optimizeDeps: {
-      force: true,
-      /**
-       * Linked dependencies outside the local node_modules (e.g., hoisted to the monorepo root)
-       * are not pre-bundled unless explicitly configured.
-       */
-      include: ['vue'],
-      entries: [resolve(__dirname, '../../node_modules/vue/dist/vue.esm-bundler.js')],
-    },
-    test: {
-      browser: {
-        enabled: BROWSER_ENABLED,
-        instances: BROWSER_NAME != null ? [{ browser: BROWSER_NAME }] : [],
-        provider: playwright(),
-        fileParallelism: false,
-        headless: true,
-        screenshotFailures: false,
-      },
-      environment: TEST_ENVIRONMENT,
-      exclude: ['e2e/**'],
-      root: fileURLToPath(new URL('./', import.meta.url)),
-
-      /** @see {@link webkitFlakinessMitigations} */
-      globalSetup,
-
-      // Suppress the console error log about parsing CSS stylesheet
-      // This is an open issue of jsdom
-      // see primefaces/primevue#4512 and jsdom/jsdom#2177
-      onConsoleLog(log: string, type: 'stderr' | 'stdout'): false | void {
-        if (log.includes('Error: Could not parse CSS stylesheet') && type === 'stderr') {
-          return false;
-        }
       },
     },
   };

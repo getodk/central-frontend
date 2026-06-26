@@ -33,7 +33,7 @@
     "build:translations": "node bin/merge-translations.js",
     "translations:pull": "cd ../.. && tx pull -r web_forms.strings -a -f --mode translator",
     "translations:push": "cd ../.. && tx push -r web_forms.strings -s",
-    "dev": "vite",
+    "dev": "vite --config vite.config.e2e.ts",
     "feature-matrix": "node bin/feature-matrix/render.js",
     "format:fix": "npm-run-all --print-name format:vue format:prettier",
     "format:lint": "prettier -c \"**/*\" --ignore-unknown --cache",
