@@ -6,7 +6,13 @@ describe('FormEditWebForm', () => {
   beforeEach(mockLogin);
 
   describe('initial render', () => {
-    it('renders the component', async () => {
+    it('does not render the component when published', async () => {
+      testData.extendedForms.createPast(1, { draft: false, webformsEnabled: true });
+      const app = await load('/projects/1/forms/f/draft');
+      app.find('#form-edit-web-form').exists().should.be.false;
+    });
+
+    it('renders the component when not yet published', async () => {
       testData.extendedForms.createPast(1, { draft: true, webformsEnabled: true });
       const app = await load('/projects/1/forms/f/draft');
       app.find('#form-edit-web-form').exists().should.be.true;
@@ -44,7 +50,7 @@ describe('FormEditWebForm', () => {
         })
         .testRequests([{
           method: 'PATCH',
-          url: '/v1/projects/1/forms/a/draft',
+          url: '/v1/projects/1/forms/a',
           data: { webformsEnabled: false }
         }]);
     });
@@ -63,7 +69,7 @@ describe('FormEditWebForm', () => {
         })
         .testRequests([{
           method: 'PATCH',
-          url: '/v1/projects/1/forms/a/draft',
+          url: '/v1/projects/1/forms/a',
           data: { webformsEnabled: true }
         }]);
     });

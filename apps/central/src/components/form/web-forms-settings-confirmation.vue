@@ -12,32 +12,13 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal :state="state" :hideable="!form.awaitingResponse" backdrop
   @hide="$emit('hide')">
-    <template v-if="webformsEnabled" #banner>
-      <img
-        srcset="../../assets/images/form/web-forms-settings-confirmation/banner@1x.png, ../../assets/images/form/web-forms-settings-confirmation/banner@2x.png 2x"
-        src="../../assets/images/form/web-forms-settings-confirmation/banner@1x.png"
-        alt="Modal banner image showing sample Web Form UI.">
-    </template>
     <template v-if="webformsEnabled" #title>ODK Web Forms</template>
     <template v-else #title>Enketo</template>
 
     <template v-if="webformsEnabled" #body>
       <p>
-        {{ $t('webformsConfirmation.intro') }}
+        {{ $t('webformsConfirmation.description') }}
       </p>
-      <i18n-t tag="p" keypath="webformsConfirmation.description.full">
-        <template #seeSupportedFeatures>
-          <a href="https://github.com/getodk/web-forms?tab=readme-ov-file#feature-matrix"
-            target="_blank">
-            {{ $t('webformsConfirmation.description.seeSupportedFeatures') }}
-          </a>
-        </template>
-        <template #previewYourForm>
-          <a href="https://getodk.org/web-forms-preview/" target="_blank">
-            {{ $t('webformsConfirmation.description.previewYourForm') }}
-          </a>
-        </template>
-      </i18n-t>
       <div class="modal-actions">
         <button class="btn btn-link" type="button" @click="$emit('hide')">
           {{ $t('action.cancel') }}
@@ -108,14 +89,10 @@ const setWebformsEnabled = () => {
   {
     "en": {
       "webformsConfirmation": {
+        // The words "ODK Web Forms" and "Enketo" should not be translated
+        "description": "Are you sure you want to switch from Enketo to ODK Web Forms?",
         // The words "ODK Web Forms" should not be translated
-        "useOdkWebForms": "Use ODK Web Forms",
-        "intro": "We’re building a new web-forms experience designed to be fast and user-friendly!",
-        "description": {
-          "full": "Some functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in.",
-          "seeSupportedFeatures": "see supported features",
-          "previewYourForm": "preview your form"
-        }
+        "useOdkWebForms": "Use ODK Web Forms"
       },
       "enketoConfirmation": {
         // The words "Enketo" and "ODK Web Forms" should not be translated
