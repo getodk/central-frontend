@@ -22,6 +22,14 @@ import simpleRequired from './fixtures/2-simple-required.xml?raw';
 import xpathUnknownFunction from './fixtures/xpath-unknown-function.xml?raw';
 import xpathSyntaxError from './fixtures/xpath-syntax-error.xml?raw';
 import simpleDagCycle from './fixtures/simple-dag-cycle.xml?raw';
+import allQuestionTypes from './fixtures/all-question-types-v2024091201-3.xml?raw';
+import geopoint from './fixtures/geopoint.xml?raw';
+import preload from './fixtures/preload.xml?raw';
+import allPossibleNotes from './fixtures/2-all-possible-notes.xml?raw';
+import basicRepeat from './fixtures/01-basic-repeat.xml?raw';
+import markdown from './fixtures/3-notes-with-markdown.xml?raw';
+
+import citiesGeoJson from './fixtures/attachments/cities.geojson?raw';
 
 const fixtures: Record<string, string> = {
   'select-control.xml': selectControl,
@@ -38,6 +46,16 @@ const fixtures: Record<string, string> = {
   'xpath-unknown-function.xml': xpathUnknownFunction,
   'xpath-syntax-error.xml': xpathSyntaxError,
   'simple-dag-cycle.xml': simpleDagCycle,
+  'all-question-types-v2024091201-3.xml': allQuestionTypes,
+  'geopoint.xml': geopoint,
+  'preload.xml': preload,
+  '2-all-possible-notes.xml': allPossibleNotes,
+  '01-basic-repeat.xml': basicRepeat,
+  '3-notes-with-markdown.xml': markdown,
+};
+
+const attachments: Record<string, string> = {
+  'jr://file/cities.geojson': citiesGeoJson,
 };
 
 /**
@@ -69,6 +87,14 @@ export const getFormXml = (fileName: string): Promise<string> => {
     throw new Error(`Could not find fixture with file name: ${fileName}`);
   }
   return Promise.resolve(xml);
+};
+
+export const getAttachment = (url: string): string => {
+  const attachment = attachments[url];
+  if (attachment == null) {
+    throw new Error(`Could not find attachment with url: ${url}`);
+  }
+  return attachment;
 };
 
 export const getReactiveForm = async (formPath: string): Promise<RootNode> => {
