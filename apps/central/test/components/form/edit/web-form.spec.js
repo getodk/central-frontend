@@ -50,7 +50,7 @@ describe('FormEditWebForm', () => {
         })
         .testRequests([{
           method: 'PATCH',
-          url: '/v1/projects/1/forms/a/draft',
+          url: '/v1/projects/1/forms/a',
           data: { webformsEnabled: false }
         }]);
     });
@@ -69,7 +69,7 @@ describe('FormEditWebForm', () => {
         })
         .testRequests([{
           method: 'PATCH',
-          url: '/v1/projects/1/forms/a/draft',
+          url: '/v1/projects/1/forms/a',
           data: { webformsEnabled: true }
         }]);
     });

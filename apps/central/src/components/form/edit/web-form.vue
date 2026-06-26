@@ -53,7 +53,7 @@ const options = computed(() => [
 
 const update = (newVal) => {
   request.patch(
-    apiPaths.formDraft(projectId, xmlFormId),
+    apiPaths.form(projectId, xmlFormId),
     { webformsEnabled: newVal }
   )
     .then(() => {
