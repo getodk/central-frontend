@@ -16,7 +16,7 @@
         <sentence-separator/>
         <i18n-t keypath="moreInfo.clickHere.full">
           <template #clickHere>
-            <doc-link to="central-projects/#managing-custom-properties">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
+            <doc-link to="central-projects#managing-custom-properties">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
           </template>
         </i18n-t>
       </p>
@@ -90,7 +90,7 @@ const afterCreate = (name) => {
   "en": {
     "heading": [
       // A brief introduction to Custom Properties shown for the current project
-      "Custom Properties are custom fields that can be attached to App Users and Public Links to store additional metadata."
+      "Control which Entities each App User or Public Link can access. Define Custom Properties here, assign values to App Users or Public Links, and use Entity List filters to show relevant Entities."
     ],
     "emptyTable": "No custom properties have been defined for this project.",
     // Shown after a custom property is successfully created.

@@ -4324,7 +4324,7 @@
     "ProjectCustomPropertiesList": {
       "heading": {
         "0": {
-          "string": "Custom Properties are custom fields that can be attached to App Users and Public Links to store additional metadata.",
+          "string": "Control which Entities each App User or Public Link can access. Define Custom Properties here, assign values to App Users or Public Links, and use Entity List filters to show relevant Entities.",
           "developer_comment": "A brief introduction to Custom Properties shown for the current project"
         }
       },
