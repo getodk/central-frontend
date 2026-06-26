@@ -307,18 +307,18 @@ const confirm = () => {
     },
     "filterByProperty": {
       "label": "Filter by Property",
-      "description": "Define rules for which Entities are visible to App Users and Data Collectors by comparing their properties.",
+      "description": "Define rules for which Entities are visible to App Users and Public Links by comparing their properties.",
       // This text is shown above the access rule filter dropdown. Translators are free not to translate this literally
       "entityPropertyLabel": "Only see Entities where",
       // Placeholder text shown on a access rule filter dropdown.
       "entityPropertyPlaceholder": "Entity property",
       // This text is shown above the access rule filter dropdown. Translators are free not to translate this literally
-      "userPropertyLabel": "is equal to the user’s",
+      "userPropertyLabel": "is equal to the user‘s",
       // Placeholder text shown on a access rule filter dropdown
       "userPropertyPlaceholder": "User property",
       "disabled": {
         "datasetProperties": "There are no Entity properties defined.",
-        "userProperties": "There are no user properties defined.",
+        "userProperties": "There are no Custom Properties defined.",
         "both": "There are no Entity or user properties defined."
       },
       // {entityProperty} is the name of an Entity property. {userProperty} is the name of a User property.

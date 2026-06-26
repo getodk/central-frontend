@@ -1965,7 +1965,7 @@
           "string": "Filter by Property"
         },
         "description": {
-          "string": "Define rules for which Entities are visible to App Users and Data Collectors by comparing their properties."
+          "string": "Define rules for which Entities are visible to App Users and Public Links by comparing their properties."
         },
         "entityPropertyLabel": {
           "string": "Only see Entities where",
@@ -1976,7 +1976,7 @@
           "developer_comment": "Placeholder text shown on a access rule filter dropdown."
         },
         "userPropertyLabel": {
-          "string": "is equal to the user’s",
+          "string": "is equal to the user‘s",
           "developer_comment": "This text is shown above the access rule filter dropdown. Translators are free not to translate this literally"
         },
         "userPropertyPlaceholder": {
@@ -1988,7 +1988,7 @@
             "string": "There are no Entity properties defined."
           },
           "userProperties": {
-            "string": "There are no user properties defined."
+            "string": "There are no Custom Properties defined."
           },
           "both": {
             "string": "There are no Entity or user properties defined."
@@ -4324,7 +4324,7 @@
     "ProjectCustomPropertiesList": {
       "heading": {
         "0": {
-          "string": "Custom Properties are custom fields that can be attached to App Users and Public Links to store additional metadata.",
+          "string": "Control which Entities each App User or Public Link can access. Define Custom Properties here, assign values to App Users or Public Links, and use Entity List filters to show relevant Entities.",
           "developer_comment": "A brief introduction to Custom Properties shown for the current project"
         }
       },
