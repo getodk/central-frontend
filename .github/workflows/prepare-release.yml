@@ -1,0 +1,29 @@
+name: Prepare release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  prepare-release:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+      with:
+        ref: master
+    - uses: actions/setup-node@v6
+      with:
+        node-version-file: package.json
+        cache: 'npm'
+    - run: npm ci
+    - name: Open release PR
+      uses: changesets/action@v1
+      with:
+        version: npm run version
+        title: 'chore: version bump and release notes'
+        commit: 'chore: version bump and release notes'
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
