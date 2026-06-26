@@ -98,7 +98,9 @@ definition for an existing form -->
             @change="afterFileSelection($event.target.files[0])">
           <button type="button" class="btn btn-primary"
             :aria-disabled="awaitingResponse" @click="$refs.input.click()">
-            <span class="icon-folder-open"></span>{{ $t('dropZone.chooseOne') }}
+            <span class="icon-folder-open"></span>
+            {{ $t('dropZone.chooseOne') }}
+            <spinner :state="awaitingResponse"/>
           </button>
         </template>
       </i18n-t>
@@ -165,6 +167,7 @@ export default {
       this.error = null;
       this.file = file;
       this.warnings = null;
+      this.$refs.input.value = '';
       this.upload(false);
     },
     upload(ignoreWarnings) {

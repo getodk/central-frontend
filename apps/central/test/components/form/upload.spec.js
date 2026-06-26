@@ -104,6 +104,7 @@ describe('FormUpload', () => {
           .request(upload)
           .beforeAnyResponse((component) => {
             component.get('#form-upload-filename').text().should.equal('my_form.xlsx');
+            component.get('input').element.value.should.equal('');
           })
           .respondWithProblem());
     });
@@ -116,6 +117,7 @@ describe('FormUpload', () => {
       })
       .beforeAnyResponse((component) => {
         component.get('#form-upload-filename').text().should.equal('my_form.xlsx');
+        component.get('input').element.value.should.equal('');
       })
       .respondWithProblem());
   });
