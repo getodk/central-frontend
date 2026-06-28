@@ -1,4 +1,3 @@
-import type { XFormAttachmentFixture } from './xform-attachments.js';
 import { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL';
 
 type JRResourceLoader = (this: void) => Promise<Blob | string>;
@@ -11,18 +10,6 @@ export interface JRResourceSource {
 }
 
 export class JRResource {
-  static fromFormAttachmentFixture(category: string, fixture: XFormAttachmentFixture): JRResource {
-    const { fileName, mimeType, load } = fixture;
-    const url = JRResourceURL.create(category, fileName);
-
-    return new JRResource({
-      url,
-      fileName,
-      mimeType,
-      load,
-    });
-  }
-
   readonly url: JRResourceURL;
   readonly fileName: string;
   readonly mimeType: string;

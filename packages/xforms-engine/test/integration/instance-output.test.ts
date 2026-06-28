@@ -114,7 +114,7 @@ describe('Instance output (serialization)', () => {
           issue449LastSaved
         );
 
-        const scenario = await Scenario.initNew(issue449, { resourceService });
+        const scenario = await Scenario.init(issue449, { resourceService });
 
         scenario.answer('/data/new-part', 'c');
 

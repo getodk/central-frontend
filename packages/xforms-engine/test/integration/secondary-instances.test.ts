@@ -21,7 +21,6 @@ import { constants as ENGINE_CONSTANTS } from '@getodk/xforms-engine';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { stringAnswer } from '../scenario/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../scenario/jr/Scenario.ts';
-import { setUpSimpleReferenceManager } from '../scenario/jr/reference/ReferenceManagerTestUtils.ts';
 import type { SelectChoice } from '../scenario/jr/select/SelectChoice.ts';
 
 import externalSelectCsv from '../scenario/fixtures/test-javarosa/resources/external-select-csv.xml?raw';
@@ -457,52 +456,6 @@ describe('Secondary instances', () => {
    *   the note: "Potentially test elsewhere and/or as integration test."
    */
   describe('ExternalSecondaryInstanceParseTest.java', () => {
-    /**
-     * **PORTING NOTES**
-     *
-     * This is setting up retrieval logic for external resource URLs. Getting
-     * it to do the expected setup may mostly involve completing the port of
-     * {@link setUpSimpleReferenceManager} (as this is just a call to that
-     * with pre-defined arguments). We may want to use more idiomatic setup
-     * and teardown (though that would be less portable).
-     *
-     * A naive first pass on this included the note "what other way would we
-     * configure it?" Evidently we will also be porting
-     * {@link configureReferenceManagerIncorrectly}. Makes sense! We'll also
-     * be testing behavior when resource retrieval fails.
-     *
-     * We may want to consider a single
-     *
-     * - - -
-     *
-     * JR:
-     *
-     * All external secondary instances and forms are in the same folder.
-     * Configure the ReferenceManager to resolve URIs to that folder.
-     */
-    const configureReferenceManagerCorrectly = () => {
-      // TODO
-      // setUpSimpleReferenceManager(r('external-select-csv.xml').getParent(), 'file-csv', 'file');
-    };
-
-    /**
-     * **PORTING NOTES**
-     *
-     * Consider a single setup function, with its "correctness" parameterized?
-     *
-     * - - -
-     *
-     * JR:
-     *
-     * Configure the ReferenceManager to resolve URIs to a folder that does
-     * not exist.
-     */
-
-    const configureReferenceManagerIncorrectly = () => {
-      // TODO
-      // setUpSimpleReferenceManager(r('external-select-csv.xml'), 'file-csv', 'file');
-    };
-
     describe('//region Parsing of different file types into external secondary instances', () => {
       describe('items from external secondary GeoJSON instance', () => {
         /**
@@ -554,8 +507,6 @@ describe('Secondary instances', () => {
            * - Typical `getDisplayText` -> `getValue`
            */
           it('can be selected', async () => {
-            configureReferenceManagerCorrectly();
-
             const attachmentFileName = 'external-data.geojson';
             const attachmentURL = `jr://file/${attachmentFileName}` as const;
             resourceService.activateResource(
@@ -567,7 +518,7 @@ describe('Secondary instances', () => {
               externalDataGeoJSON
             );
 
-            const scenario = await Scenario.initNew(externalSelectGeoJSON, { resourceService });
+            const scenario = await Scenario.init(externalSelectGeoJSON, { resourceService });
             const choiceWithIntId = scenario.choicesOf('/data/q').get(1);
 
             expect(choiceWithIntId).not.toBeNull();
@@ -610,8 +561,6 @@ describe('Secondary instances', () => {
          *   engine-produced errors to come in the form of a Result type.
          */
         it.fails('[produces an error | fails to load | ?]', async () => {
-          configureReferenceManagerCorrectly();
-
           const csvAttachmentFileName = 'external-data.csv';
           const csvAttachmentURL = `jr://file-csv/${csvAttachmentFileName}` as const;
           resourceService.activateResource(
@@ -656,8 +605,6 @@ describe('Secondary instances', () => {
 
     describe('CSV secondary instance with header only', () => {
       it('parses without error', async () => {
-        configureReferenceManagerCorrectly();
-
         const csvAttachmentFileName = 'header_only.csv';
         const csvAttachmentURL = `jr://file-csv/${csvAttachmentFileName}` as const;
         resourceService.activateResource(
@@ -736,8 +683,6 @@ describe('Secondary instances', () => {
       it.fails(
         '[uses an] empty placeholder [~~]is used[~~] when [referenced] external instance [is] not found',
         async () => {
-          configureReferenceManagerIncorrectly();
-
           const scenario = await Scenario.init(externalSelectCsv);
 
           expect(scenario.choicesOf('/data/first').size()).toBe(0);
@@ -751,8 +696,6 @@ describe('Secondary instances', () => {
        * behavior.
        */
       it('uses an empty/blank placeholder when not found, and when overriding configuration is specified', async () => {
-        configureReferenceManagerIncorrectly();
-
         const scenario = await Scenario.init(
           'Missing resource treated as blank',
           // prettier-ignore

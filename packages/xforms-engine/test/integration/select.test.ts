@@ -649,7 +649,7 @@ describe('SelectChoiceTest.java', () => {
         externalDataGeoJSON
       );
 
-      const scenario = await Scenario.initNew(externalSelectGeoJSON, { resourceService });
+      const scenario = await Scenario.init(externalSelectGeoJSON, { resourceService });
 
       const firstChoiceProperties = scenario.choicesOf('/data/q').get(0)?.getProperties();
       expect(firstChoiceProperties?.length).toEqual(4);

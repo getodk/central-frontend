@@ -49,8 +49,6 @@ import {
 import { isQuestionEventOfType, type TypedQuestionEvent } from './event/predicates.ts';
 import { JRFormDef } from './form/JRFormDef.ts';
 import { JRFormIndex } from './form/JRFormIndex.ts';
-import { FormDefinitionResource } from './resource/FormDefinitionResource.ts';
-import { r } from './resource/ResourcePathHelper.ts';
 import { SelectChoiceList } from './select/SelectChoiceList.ts';
 import { ValidateOutcome } from './validation/ValidateOutcome.ts';
 import { JREvaluationContext } from './xpath/JREvaluationContext.ts';
@@ -83,14 +81,10 @@ export interface ScenarioConfig extends ScenarioFormMeta {
   readonly dispose: VoidFunction;
 }
 
-type FormFileName = `${string}.xml`;
-
 // prettier-ignore
 type ScenarioStaticInitParameters =
-	| readonly [formFileName: FormFileName]
 	| readonly [formName: string, form: XFormsElement, overrideOptions?: Partial<TestFormOptions>]
-  | readonly [formXml: string]
-	| readonly [resource: FormDefinitionResource];
+  | readonly [formXml: string, overrideOptions?: Partial<TestFormOptions>];
 
 interface AssertCurrentReferenceOptions {
   readonly assertCurrentReference: string;
@@ -134,6 +128,14 @@ type ScenarioClass = typeof Scenario;
 export interface ScenarioConstructor<T extends Scenario = Scenario> extends ScenarioClass {
   new (meta: ScenarioConfig, form: InitializableForm, instanceRoot: RootNode): T;
 }
+
+const isXFormsElement = (
+  obj: Partial<TestFormOptions> | XFormsElement | undefined
+): obj is XFormsElement => {
+  return (
+    obj !== null && typeof obj === 'object' && typeof (obj as XFormsElement).asXml === 'function'
+  );
+};
 
 /**
  * **PORTING NOTES**
@@ -180,60 +182,24 @@ export class Scenario {
     };
   }
 
-  // TODO use this everywhere
-  static async initNew<This extends typeof Scenario>(
-    this: This,
-    formXml: string,
-    overrideOptions?: Partial<TestFormOptions>
-  ): Promise<This['prototype']> {
-    const resource = new FormDefinitionResource('name', formXml);
-    const formMeta: ScenarioFormMeta = {
-      formElement: xmlElement(resource.textContents),
-      formName: resource.formName,
-      formOptions: this.getTestFormOptions(overrideOptions),
-    };
-    const { dispose, owner, form, instanceRoot } = await initializeTestForm(
-      formMeta.formElement.asXml() satisfies FormResource,
-      formMeta.formOptions
-    );
-    return runInSolidScope(owner, () => {
-      return new this(
-        {
-          ...formMeta,
-          owner,
-          dispose,
-        },
-        form,
-        instanceRoot
-      );
-    });
-  }
-
   static async init<This extends typeof Scenario>(
     this: This,
     ...args: ScenarioStaticInitParameters
   ): Promise<This['prototype']> {
     let formMeta: ScenarioFormMeta;
-    if (args.length === 1) {
-      const [resource] = args;
-      if (typeof resource === 'string') {
-        if (resource.endsWith('.xml')) {
-          return this.init(r(resource));
-        }
-        return this.init(new FormDefinitionResource('name', resource));
-      }
 
-      formMeta = {
-        formElement: xmlElement(resource.textContents),
-        formName: resource.formName,
-        formOptions: this.getTestFormOptions(),
-      };
-    } else {
+    if (isXFormsElement(args[1])) {
       const [formName, formElement, overrideOptions] = args;
-
       formMeta = {
         formName,
         formElement,
+        formOptions: this.getTestFormOptions(overrideOptions),
+      };
+    } else {
+      const [xform, overrideOptions = {}] = args;
+      formMeta = {
+        formName: 'name',
+        formElement: xmlElement(xform),
         formOptions: this.getTestFormOptions(overrideOptions),
       };
     }

@@ -1,4 +1,3 @@
-import { xformAttachmentFixturesByDirectory } from './xform-attachments.js';
 import { JRResource } from './JRResource.ts';
 import type { JRResourceURLString } from '@getodk/common/jr-resources/JRResourceURL';
 import { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL';
@@ -10,10 +9,6 @@ export interface InlineFixtureMetadata {
 }
 
 class JRResourceServiceRegistry extends Map<JRResourceURLString, JRResource> {}
-
-interface ActivateFixturesOptions {
-  readonly suppressMissingFixturesDirectoryWarning?: boolean;
-}
 
 export class JRResourceService {
   readonly resources = new JRResourceServiceRegistry();
@@ -53,40 +48,6 @@ export class JRResourceService {
     }
 
     this.resources.set(url, resource);
-  }
-
-  activateFixtures(
-    fixtureDirectory: string,
-    categories: readonly string[],
-    options?: ActivateFixturesOptions
-  ): void {
-    this.reset();
-
-    try {
-      for (const category of categories) {
-        const fixtures = xformAttachmentFixturesByDirectory.get(fixtureDirectory);
-
-        if (fixtures == null) {
-          if (options?.suppressMissingFixturesDirectoryWarning !== true) {
-            // eslint-disable-next-line no-console
-            console.warn(`No form attachments in directory: ${fixtureDirectory}`);
-          }
-
-          continue;
-        }
-
-        for (const fixture of fixtures) {
-          const resource = JRResource.fromFormAttachmentFixture(category, fixture);
-
-          this.setRegisteredResourceState(resource);
-        }
-      }
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Error occurred during resource state setup:', error);
-
-      this.reset();
-    }
   }
 
   // Used to mock fetch in unit tests that work with attachments
