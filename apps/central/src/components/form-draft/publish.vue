@@ -199,10 +199,10 @@ export default {
       "409_6": "The version name of this Draft conflicts with a past version of this Form or a deleted Form. Please use the field below to change it to something new or upload a new Form definition."
     },
     "field": {
-      "note": "Notes"
+      "note": "Version notes"
     },
     "placeholder": {
-      "note": "Add optional publishing notes…"
+      "note": "Describe this version (optional)…"
     }
   }
 }
