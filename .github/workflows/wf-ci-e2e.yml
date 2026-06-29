@@ -22,22 +22,23 @@ jobs:
         with:
           node-version: '${{ matrix.node-version }}'
 
-      - uses: 'actions/cache/restore@v6'
+      - uses: 'actions/cache@v6'
         id: cache-install
         with:
           path: |
             node_modules
             **/node_modules
-          key: install-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
-          fail-on-cache-miss: true
-      - uses: 'actions/cache/restore@v6'
+          key: install-${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
+      - uses: 'actions/cache@v6'
         id: cache-build
         with:
-          path: |
-            dist
-            packages/*/dist
+          path: packages/*/dist
           key: build-${{ github.sha }}
           fail-on-cache-miss: true
+
+      - name: 'npm ci'
+        if: steps.cache-install.outputs.cache-hit != 'true'
+        run: npm ci
 
       - run: 'npx playwright install ${{ matrix.browser }} --with-deps'
 
@@ -71,22 +72,23 @@ jobs:
         with:
           node-version: '${{ matrix.node-version }}'
 
-      - uses: 'actions/cache/restore@v6'
+      - uses: 'actions/cache@v6'
         id: cache-install
         with:
           path: |
             node_modules
             **/node_modules
-          key: install-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
-          fail-on-cache-miss: true
-      - uses: 'actions/cache/restore@v6'
+          key: install-${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
+      - uses: 'actions/cache@v6'
         id: cache-build
         with:
-          path: |
-            dist
-            packages/*/dist
+          path: packages/*/dist
           key: build-${{ github.sha }}
           fail-on-cache-miss: true
+
+      - name: 'npm ci'
+        if: steps.cache-install.outputs.cache-hit != 'true'
+        run: npm ci
 
       - run: 'npx playwright install ${{ matrix.browser }} --with-deps'
 
