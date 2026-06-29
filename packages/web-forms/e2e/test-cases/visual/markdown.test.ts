@@ -29,5 +29,4 @@ test.describe('Markdown formatting', () => {
       maxDiffPixelRatio: 0.02,
     });
   });
-
 });
