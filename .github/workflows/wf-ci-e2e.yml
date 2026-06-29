@@ -7,6 +7,7 @@ jobs:
   web-forms-e2e-functional:
     name: '@getodk/web-forms (functional e2e)'
     runs-on: 'ubuntu-latest'
+    timeout-minutes: 5
 
     strategy:
       fail-fast: false
@@ -21,22 +22,21 @@ jobs:
         with:
           node-version: '${{ matrix.node-version }}'
 
-      - uses: 'actions/cache@v5'
+      - uses: 'actions/cache/restore@v6'
         id: cache-install
         with:
           path: |
             node_modules
             **/node_modules
-          key: install-${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
+          key: install-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
           fail-on-cache-miss: true
-
-      - uses: 'actions/cache@v5'
+      - uses: 'actions/cache/restore@v6'
         id: cache-build
         with:
           path: |
+            dist
             packages/*/dist
-            packages/web-forms/dist-demo
-          key: build-${{ matrix.node-version }}-${{ github.sha }}
+          key: build-${{ github.sha }}
           fail-on-cache-miss: true
 
       - run: 'npx playwright install ${{ matrix.browser }} --with-deps'
@@ -56,6 +56,7 @@ jobs:
   web-forms-e2e-visual:
     name: '@getodk/web-forms (visual e2e)'
     runs-on: 'ubuntu-latest'
+    timeout-minutes: 8
 
     strategy:
       fail-fast: false
@@ -70,22 +71,21 @@ jobs:
         with:
           node-version: '${{ matrix.node-version }}'
 
-      - uses: 'actions/cache@v5'
+      - uses: 'actions/cache/restore@v6'
         id: cache-install
         with:
           path: |
             node_modules
             **/node_modules
-          key: install-${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
+          key: install-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
           fail-on-cache-miss: true
-
-      - uses: 'actions/cache@v5'
+      - uses: 'actions/cache/restore@v6'
         id: cache-build
         with:
           path: |
+            dist
             packages/*/dist
-            packages/web-forms/dist-demo
-          key: build-${{ matrix.node-version }}-${{ github.sha }}
+          key: build-${{ github.sha }}
           fail-on-cache-miss: true
 
       - run: 'npx playwright install ${{ matrix.browser }} --with-deps'
