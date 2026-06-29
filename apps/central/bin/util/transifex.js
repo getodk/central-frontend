@@ -998,7 +998,7 @@ const validateTranslation = (locale) => ({ source, translated, path }) => {
       logThenThrow({ source, translated }, 'unexpected linked locale message');
 
     if (locales[locale].warnVariableSeparator) {
-      const noSeparator = '[^\\] !"\'(),./:;<>?[’“”„–—-]';
+      const noSeparator = '[^\\] !"\'(),./:;<>?[’“”„«»–—-]';
       if (new RegExp(`${noSeparator}\\{|\\}${noSeparator}`, 'u').test(translated[i])) {
         console.warn(`warning: ${path.join('.')}: variable without separator.`);
       }
