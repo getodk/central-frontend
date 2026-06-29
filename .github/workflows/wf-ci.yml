@@ -51,7 +51,7 @@ jobs:
           path: |
             node_modules
             **/node_modules
-          key: install-${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
+          key: install-v${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
 
       - uses: 'actions/cache@v6'
         id: cache-build
@@ -112,7 +112,7 @@ jobs:
           path: |
             node_modules
             **/node_modules
-          key: install-${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
+          key: install-v${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
       - uses: 'actions/cache@v6'
         id: cache-build
         with:
@@ -172,7 +172,7 @@ jobs:
           path: |
             node_modules
             **/node_modules
-          key: install-${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
+          key: install-v${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
       - uses: 'actions/cache@v6'
         id: cache-build
         with:
@@ -232,7 +232,7 @@ jobs:
           path: |
             node_modules
             **/node_modules
-          key: install-${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
+          key: install-v${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
       - uses: 'actions/cache@v6'
         id: cache-build
         with:
