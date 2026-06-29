@@ -445,6 +445,7 @@ $form-group-padding-bottom: 15px;
 
     &[aria-disabled="true"], fieldset[disabled] & { cursor: not-allowed; }
   }
+  textarea { resize: vertical; }
   textarea[aria-disabled="true"] { resize: none; }
 
   .form-label {
