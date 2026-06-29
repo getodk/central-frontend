@@ -9,7 +9,8 @@
   },
   "projectShow": {
     "tab": {
-      "formAccess": "Accès aux formulaires"
+      "formAccess": "Accès aux formulaires",
+      "customProperties": "Propriétés"
     }
   },
   "formHead": {
@@ -66,7 +67,8 @@
         "create": "Créer",
         "update": "Mettre à jour les détails",
         "session_end": "Révoquer",
-        "delete": "Supprimer"
+        "delete": "Supprimer",
+        "property_set": "Modifier propriété"
       },
       "analytics": "Rapport d'utilisation",
       "blobs": {
@@ -87,16 +89,21 @@
         "bulk_delete": "Supprimer sélection",
         "bulk_restore": "Restaurer sélection"
       },
+      "actor_property": {
+        "create": "Créer propriété personnalisée"
+      },
       "field_key": {
         "assignment_create": "Donner accès",
         "assignment_delete": "Retirer accès",
         "create": "@:audit.action.default.create",
         "session_end": "@:audit.action.default.session_end",
-        "delete": "@:audit.action.default.delete"
+        "delete": "@:audit.action.default.delete",
+        "property_set": "@:audit.action.default.property_set"
       },
       "form": {
         "update_draft_set": "Créer ou mettre à jour l'ébauche",
         "update_draft_replace": "Remplacer l'ébauche",
+        "update_draft_update": "Mettre à jour les paramètres d'ébauche",
         "update_publish": "Publier l'ébauche",
         "update_draft_delete": "Abandonner l'ébauche",
         "attachment_update": "Mettre à jour les fichiers joints",
@@ -112,7 +119,8 @@
         "assignment_delete": "Retirer accès",
         "create": "@:audit.action.default.create",
         "session_end": "@:audit.action.default.session_end",
-        "delete": "@:audit.action.default.delete"
+        "delete": "@:audit.action.default.delete",
+        "property_set": "@:audit.action.default.property_set"
       },
       "submission": {
         "purge": "Purger les Soumissions"
@@ -167,20 +175,20 @@
     "save": "Enregistrer",
     "saveSettings": "Enregistrer les réglages",
     "sort": "Trier",
+    "tryAgain": "Essayer encore",
     "undo": "Annuler",
     "update": "Actualiser",
     "yesProceed": "Oui, continuer",
     "showPreview": "Aperçu",
     "hidePreview": "Cacher l'aperçu",
-    "newPreview": "Nouvel Aperçu",
     "expand": "Déplier",
     "collapse": "Replier",
     "selectRow": "Sélectionner ligne",
     "reset": "Réinitialiser",
-    "reviewParallelUpdates": "Examiner les mises à jour parallèles",
-    "tryAgain": "Essayer encore",
+    "change": "Changer",
+    "restore": "Restaurer",
     "upload": "Téléverser",
-    "restore": "Restaurer"
+    "reviewParallelUpdates": "Examiner les mises à jour parallèles"
   },
   "field": {
     "comment": "Ajouter un commentaire...",
@@ -214,7 +222,8 @@
     "time": "Heure",
     "type": "Type",
     "entities": "Nombre total d'entités",
-    "lastEntity": "Dernière entité"
+    "lastEntity": "Dernière entité",
+    "value": "Valeur"
   },
   "plural": {
     "appUser": "Utilisateur mobile | Utilisateurs mobiles | Utilisateurs mobiles",
@@ -242,6 +251,7 @@
     "entityLists": "Listes d'entités",
     "form": "Formulaire",
     "forms": "Formulaires",
+    "newForm": "Nouveau formulaire",
     "formAttachments": "Fichiers joints du formulaire",
     "project": "Projet",
     "projects": "Projets",
@@ -351,13 +361,15 @@
     "totalEntities": "Nombre d'entités",
     "versionShort": "v {version}",
     "warning": "Avertissement",
-    "beta": "Beta",
+    "recommended": "recommandé",
     "none": "(aucun)",
     "search": "Recherche",
-    "reviewState": "État",
-    "status": "Statut",
+    "useEnketo": "Mode compatibilité Enketo",
+    "updateInProgress": "Demande de mise à jour en cours",
+    "trash": "Corbeille",
     "version": "Version",
-    "trash": "Corbeille"
+    "status": "Statut",
+    "reviewState": "État"
   },
   "mixin": {
     "request": {
@@ -402,14 +414,14 @@
   "router": {
     "unsavedChanges": "Êtes vous sûr de vouloir quitter cette page ? Vos modifications n'ont pas été enregistrées."
   },
-  "formStateDescription": {
-    "open": "Ce formulaire est téléchargeable et accepte les soumissions.",
-    "closing": "Ce formulaire n'est pas téléchargeable mais accepte tout de même les soumissions.",
-    "closed": "Ce formulaire n'est pas téléchargeable mais accepte tout de même les soumissions."
-  },
   "requestData": {
     "project": {
       "nameWithArchived": "{name} (archivé)"
     }
+  },
+  "formStateDescription": {
+    "open": "Ce formulaire est téléchargeable et accepte les soumissions.",
+    "closing": "Ce formulaire n'est pas téléchargeable mais accepte tout de même les soumissions.",
+    "closed": "Ce formulaire n'est pas téléchargeable mais accepte tout de même les soumissions."
   }
 }

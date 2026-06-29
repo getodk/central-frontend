@@ -172,15 +172,13 @@
     "yesProceed": "Sí, continuar",
     "showPreview": "Vista previa",
     "hidePreview": "Ocultar vista previa",
-    "newPreview": "Nuevo Avance",
     "expand": "Expandir",
     "collapse": "Contraer",
     "selectRow": "Seleccionar fila",
     "reset": "Restablecer",
-    "reviewParallelUpdates": "Revisar actualizaciones paralelas",
-    "tryAgain": "Inténtalo de nuevo",
+    "restore": "Restablecer",
     "upload": "Subir",
-    "restore": "Restablecer"
+    "reviewParallelUpdates": "Revisar actualizaciones paralelas"
   },
   "field": {
     "comment": "Deja un comentario…",
@@ -242,6 +240,7 @@
     "entityLists": "Listas de entidades",
     "form": "Formulario",
     "forms": "Formularios",
+    "newForm": "Formulario nuevo",
     "formAttachments": "Adjuntos de formulario",
     "project": "Proyecto",
     "projects": "Proyectos",
@@ -284,6 +283,7 @@
     "odkLogo": "Logotipo de ODK",
     "defaultTitle": "Bienvenido a ODK Central.",
     "defaultDescription": "Inicia sesión en tu cuenta para empezar",
+    "heroImage": "Imagen de inicio de sesión",
     "customLogoAlt": "Logotipo de la organización"
   },
   "analytics": {
@@ -350,13 +350,12 @@
     "totalEntities": "Entidades totales",
     "versionShort": "v{version}",
     "warning": "Advertencia",
-    "beta": "Beta",
     "none": "(ninguno)",
     "search": "Buscar",
-    "reviewState": "Estado de revisión",
-    "status": "Estado",
+    "trash": "Papelera",
     "version": "Versión",
-    "trash": "Papelera"
+    "status": "Estado",
+    "reviewState": "Estado de revisión"
   },
   "mixin": {
     "request": {
@@ -401,14 +400,14 @@
   "router": {
     "unsavedChanges": "¿Está seguro que desea abandonar esta página? Puede que no se guarden sus cambios."
   },
-  "formStateDescription": {
-    "open": "Este formulario se puede descargar y acepta envíos.",
-    "closing": "Este formulario no se puede descargar perro acepta envíos.",
-    "closed": "Este formulario no se puede descargar y no acepta envíos."
-  },
   "requestData": {
     "project": {
       "nameWithArchived": "{name} (archivado)"
     }
+  },
+  "formStateDescription": {
+    "open": "Este formulario se puede descargar y acepta envíos.",
+    "closing": "Este formulario no se puede descargar perro acepta envíos.",
+    "closed": "Este formulario no se puede descargar y no acepta envíos."
   }
 }

@@ -237,11 +237,11 @@ const markAsResolved = () => {
       "body": "Poté, co jste zkontrolovali možně konfliktní aktualizace a provedli všechny potřebné aktualizace, můžete kliknout na Potvrdit níže, abyste odstranili varování o paralelní aktualizaci.",
       "confirm": "Potvrdit"
     },
-    "markAsResolved": "Označit jako vyřešeno",
     "problem": {
-      "400_32": "Jiný uživatel již označil konflikt jako vyřešený. Aktualizujte prosím, abyste viděli aktualizovaná data.",
-      "409_15": "Data byla upravena jiným uživatelem. Aktualizujte prosím stránku, abyste viděli aktualizovaná data."
-    }
+      "409_15": "Data byla upravena jiným uživatelem. Aktualizujte prosím stránku, abyste viděli aktualizovaná data.",
+      "400_32": "Jiný uživatel již označil konflikt jako vyřešený. Aktualizujte prosím, abyste viděli aktualizovaná data."
+    },
+    "markAsResolved": "Označit jako vyřešeno"
   },
   "de": {
     "title": "Daten werden paralell aktualisiert.",
@@ -259,11 +259,11 @@ const markAsResolved = () => {
       "confirm": "Bestätigen"
     },
     "conflictResolved": "Der Konfliktwarnhinweis wurde aufgehoben.",
-    "markAsResolved": "Als gelöst markieren",
     "problem": {
-      "400_32": "Ein anderer Benutzer hat den Konflikt bereits als gelöst markiert. Bitte aktualisieren Sie, um die aktualisierten Daten zu sehen.",
-      "409_15": "Die Daten wurden von einem anderen Benutzer geändert. Bitte aktualisieren Sie die Seite, um die aktualisierten Daten anzuzeigen."
-    }
+      "409_15": "Die Daten wurden von einem anderen Benutzer geändert. Bitte aktualisieren Sie die Seite, um die aktualisierten Daten anzuzeigen.",
+      "400_32": "Ein anderer Benutzer hat den Konflikt bereits als gelöst markiert. Bitte aktualisieren Sie, um die aktualisierten Daten zu sehen."
+    },
+    "markAsResolved": "Als gelöst markieren"
   },
   "es": {
     "title": "Actualizaciones de datos en paralelo",
@@ -281,11 +281,11 @@ const markAsResolved = () => {
       "confirm": "Confirmar"
     },
     "conflictResolved": "La advertencia de conflicto ha sido eliminada.",
-    "markAsResolved": "Marcar como resuelto",
     "problem": {
-      "400_32": "Otro usuario ya ha marcado el conflicto como resuelto. Por favor, actualice para ver los datos actualizados.",
-      "409_15": "Los datos han sido modificados por otro usuario. Actualice para ver los datos actualizados."
-    }
+      "409_15": "Los datos han sido modificados por otro usuario. Actualice para ver los datos actualizados.",
+      "400_32": "Otro usuario ya ha marcado el conflicto como resuelto. Por favor, actualice para ver los datos actualizados."
+    },
+    "markAsResolved": "Marcar como resuelto"
   },
   "fr": {
     "title": "Mises à jour de données en parallèle",
@@ -303,11 +303,11 @@ const markAsResolved = () => {
       "confirm": "Confirmer"
     },
     "conflictResolved": "L'avertissement de conflit a été effacé.",
-    "markAsResolved": "Marquer comme résolu",
     "problem": {
-      "400_32": "Un autre utilisateur à déjà marqué ce conflit comme résolu. Merci de rafraîchir pour voir les données mises à jour.",
-      "409_15": "Les données ont été modifiées par un autre utilisateur. Merci de rafraîchir pour voir les données mises à jour."
-    }
+      "409_15": "Les données ont été modifiées par un autre utilisateur. Merci de rafraîchir pour voir les données mises à jour.",
+      "400_32": "Un autre utilisateur à déjà marqué ce conflit comme résolu. Merci de rafraîchir pour voir les données mises à jour."
+    },
+    "markAsResolved": "Marquer comme résolu"
   },
   "it": {
     "title": "Aggiornamenti Dati in parallelo",
@@ -325,11 +325,11 @@ const markAsResolved = () => {
       "confirm": "Conferma"
     },
     "conflictResolved": "L'avviso di conflitto è stato eliminato.",
-    "markAsResolved": "Segna come risolto",
     "problem": {
-      "400_32": "Un altro utente ha già segnato il conflitto come risolto. Aggiorna la pagina per vedere i dati aggiornati.",
-      "409_15": "I dati sono stati modificati da un altro utente. Aggiornare per vedere i dati aggiornati."
-    }
+      "409_15": "I dati sono stati modificati da un altro utente. Aggiornare per vedere i dati aggiornati.",
+      "400_32": "Un altro utente ha già segnato il conflitto come risolto. Aggiorna la pagina per vedere i dati aggiornati."
+    },
+    "markAsResolved": "Segna come risolto"
   },
   "pt": {
     "title": "Atualizações de dados em paralelo",
@@ -347,11 +347,11 @@ const markAsResolved = () => {
       "confirm": "Confirmar"
     },
     "conflictResolved": "O aviso de conflito foi resolvido.",
-    "markAsResolved": "Marcar como resolvido",
     "problem": {
-      "400_32": "Outro usuário já marcou o conflito como resolvido. Por favor, atualize a página para ver os dados atualizados.",
-      "409_15": "Os dados foram modificados por outro usuário. Por favor, atualize a página para ver os dados atualizados."
-    }
+      "409_15": "Os dados foram modificados por outro usuário. Por favor, atualize a página para ver os dados atualizados.",
+      "400_32": "Outro usuário já marcou o conflito como resolvido. Por favor, atualize a página para ver os dados atualizados."
+    },
+    "markAsResolved": "Marcar como resolvido"
   },
   "sw": {
     "title": "Masasisho ya data inafanyika sambamba",
@@ -368,10 +368,10 @@ const markAsResolved = () => {
       "body": "Baada ya kukagua masasisho yanayoweza kukinzana na kufanya masasisho yoyote unayohitaji, unaweza kubofya Thibitisha hapa chini ili kufuta onyo sambamba la sasisho.",
       "confirm": "Thibitisha"
     },
-    "markAsResolved": "Tia alama kuwa imesuluhishwa",
     "problem": {
       "409_15": "Data imerekebishwa na mtumiaji mwingine. Tafadhali onyesha upya ili kuona data iliyosasishwa."
-    }
+    },
+    "markAsResolved": "Tia alama kuwa imesuluhishwa"
   },
   "zh": {
     "title": "数据同步更新",
@@ -389,11 +389,11 @@ const markAsResolved = () => {
       "confirm": "确认"
     },
     "conflictResolved": "此冲突警告已清除。",
-    "markAsResolved": "标记为已解决",
     "problem": {
-      "400_32": "其他用户已将此冲突标记为已解决，请刷新查看更新后的数据。",
-      "409_15": "数据已被其他用户修改，请刷新以查看最新数据。"
-    }
+      "409_15": "数据已被其他用户修改，请刷新以查看最新数据。",
+      "400_32": "其他用户已将此冲突标记为已解决，请刷新查看更新后的数据。"
+    },
+    "markAsResolved": "标记为已解决"
   },
   "zh-Hant": {
     "title": "資料並行更新",
@@ -411,11 +411,11 @@ const markAsResolved = () => {
       "confirm": "確認"
     },
     "conflictResolved": "衝突警告已清除。",
-    "markAsResolved": "標記為已解決",
     "problem": {
-      "400_32": "另一位用戶已將衝突標記為已解決。請重新整理查看更新後的資料。",
-      "409_15": "資料已被另一用戶修改。請重新整理查看更新後的資料。"
-    }
+      "409_15": "資料已被另一用戶修改。請重新整理查看更新後的資料。",
+      "400_32": "另一位用戶已將衝突標記為已解決。請重新整理查看更新後的資料。"
+    },
+    "markAsResolved": "標記為已解決"
   }
 }
 </i18n>

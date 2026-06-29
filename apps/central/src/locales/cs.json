@@ -166,7 +166,6 @@
     "yesProceed": "Ano, pokračovat",
     "showPreview": "Náhled",
     "hidePreview": "Skrýt náhled",
-    "newPreview": "Nový náhled",
     "expand": "Rozbalit",
     "collapse": "Sbalit",
     "upload": "Nahrát"
@@ -327,13 +326,12 @@
     "totalEntities": "Celkem entit",
     "versionShort": "v{version}",
     "warning": "Upozornění",
-    "beta": "Beta",
     "none": "(žádný)",
     "search": "Hledat",
-    "reviewState": "Přezkoumání stavu",
-    "status": "Stav",
+    "trash": "Koš",
     "version": "Verze",
-    "trash": "Koš"
+    "status": "Stav",
+    "reviewState": "Přezkoumání stavu"
   },
   "mixin": {
     "request": {
@@ -366,14 +364,14 @@
   "router": {
     "unsavedChanges": "Opravdu chcete opustit tuto stránku? Vaše změny nemusí být uloženy."
   },
-  "formStateDescription": {
-    "open": "Tento formulář je ke stažení a přijímá příspěvky.",
-    "closing": "Tento formulář nelze stáhnout, ale stále přijímá příspěvky.",
-    "closed": "Tento formulář nelze stáhnout a nepřijímá příspěvky."
-  },
   "requestData": {
     "project": {
       "nameWithArchived": "{name} (archivováno)"
     }
+  },
+  "formStateDescription": {
+    "open": "Tento formulář je ke stažení a přijímá příspěvky.",
+    "closing": "Tento formulář nelze stáhnout, ale stále přijímá příspěvky.",
+    "closed": "Tento formulář nelze stáhnout a nepřijímá příspěvky."
   }
 }

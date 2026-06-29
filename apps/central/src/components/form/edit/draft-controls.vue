@@ -82,83 +82,77 @@ const abandonText = computed(() => (!form.dataExists
 {
   "cs": {
     "action": {
-      "abandon": "Opustit koncept",
-      "publish": "Publikovat koncept"
+      "publish": "Publikovat koncept",
+      "abandon": "Opustit koncept"
     }
   },
   "de": {
     "action": {
       "delete": "Formulare löschen",
-      "abandon": "Entwurf verwerfen",
-      "publish": "Entwurf veröffentlichen"
-    },
-    "title": "Bereit zur Veröffentlichung"
+      "publish": "Entwurf veröffentlichen",
+      "abandon": "Entwurf verwerfen"
+    }
   },
   "es": {
     "action": {
       "delete": "Borrar formulario",
-      "abandon": "Abandonar borrador",
-      "publish": "Publicar borrador"
-    },
-    "title": "Listo para publicar"
+      "publish": "Publicar borrador",
+      "abandon": "Abandonar borrador"
+    }
   },
   "fr": {
     "action": {
       "delete": "Supprimer le formulaire",
-      "abandon": "Abandonner l'ébauche",
-      "publish": "Publier l'ébauche"
+      "publish": "Publier l'ébauche",
+      "abandon": "Abandonner l'ébauche"
     },
-    "title": "Prêt à publier"
+    "title": "Prêt à publier?"
   },
   "id": {
     "action": {
-      "abandon": "Buang Draf",
-      "publish": "Terbitkan Draf"
+      "publish": "Terbitkan Draf",
+      "abandon": "Buang Draf"
     }
   },
   "it": {
     "action": {
       "delete": "Cancellare il formulario",
-      "abandon": "Abbandonare la bozza",
-      "publish": "Pubblicare la bozza"
-    },
-    "title": "Pronto per essere pubblicato"
+      "publish": "Pubblicare la bozza",
+      "abandon": "Abbandonare la bozza"
+    }
   },
   "ja": {
     "action": {
-      "abandon": "下書きの削除",
-      "publish": "下書きの公開"
+      "publish": "下書きの公開",
+      "abandon": "下書きの削除"
     }
   },
   "pt": {
     "action": {
       "delete": "Excluir Formulário",
-      "abandon": "Abandonar rascunho",
-      "publish": "Publicar rascunho"
-    },
-    "title": "Pronto para publicar"
+      "publish": "Publicar rascunho",
+      "abandon": "Abandonar rascunho"
+    }
   },
   "sw": {
     "action": {
-      "abandon": "Achana na Rasimu",
-      "publish": "Chapisha Rasimu"
+      "publish": "Chapisha Rasimu",
+      "abandon": "Achana na Rasimu"
     }
   },
   "zh": {
     "action": {
       "delete": "删除表单",
-      "abandon": "放弃草稿",
-      "publish": "发布草稿"
-    },
-    "title": "准备发布"
+      "publish": "发布草稿",
+      "abandon": "放弃草稿"
+    }
   },
   "zh-Hant": {
     "action": {
       "delete": "刪除表單",
-      "abandon": "放棄草案",
-      "publish": "發布草稿"
-    },
-    "title": "準備發佈"
+      "publish": "發布草稿",
+      "abandon": "放棄草案"
+    }
   }
 }
 </i18n>

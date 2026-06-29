@@ -438,9 +438,6 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "noSelectMultiple": "Tento formulář nemá žádná pole pro výběr více položek.",
     "encryptedForm": "Šifrované formuláře nelze tímto způsobem zpracovávat.",
     "deletedFieldsDisabledForDraft": "Návrhy formulářů nelze tímto způsobem zpracovávat.",
-    "introduction": [
-      "Abyste mohli tato data stáhnout, budete muset zadat vaše přístupové heslo. Vaše přístupové heslo bude použito pouze k dešifrování vašich dat ke stažení, a poté ho server znovu zapomene."
-    ],
     "hint": "Nápověda: {hint}",
     "noRepeat": "Tento formulář nemá opakování.",
     "action": {
@@ -467,9 +464,6 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "noSelectMultiple": "Dieses Formular enthält keine Mehrfachauswahlfelder.",
     "encryptedForm": "Verschlüsselte Formulare können auf diese Weise nicht verarbeitet werden.",
     "deletedFieldsDisabledForDraft": "Formularentwürfe können auf diese Weise nicht bearbeitet werden.",
-    "introduction": [
-      "Um die Daten herunterzuladen wird Ihre Passphrase benötigt. Diese wird nur zum Entschlüsseln der Daten für den Download benutzt und nicht gespeichert."
-    ],
     "hint": "Hinweis: {hint}",
     "noRepeat": "Diese Form hat keine repeats.",
     "action": {
@@ -497,9 +491,6 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "noSelectMultiple": "Este formulario no tiene ningún campo de selección múltiple.",
     "encryptedForm": "Los formularios cifrados no se pueden procesar de esta manera.",
     "deletedFieldsDisabledForDraft": "Los borradores no se pueden procesar de esta manera.",
-    "introduction": [
-      "Para descargar la información, usted necesitará ingresar su contraseña. Su contraseña se usará para desencriptar la información descargada, al finalizar el proceso el servidor la olvidará."
-    ],
     "hint": "Pista: {hint}",
     "noRepeat": "Este formulario no tiene campos repetidos.",
     "action": {
@@ -528,7 +519,7 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "encryptedForm": "Les formulaires chiffrés ne peuvent être traités de cette manière.",
     "deletedFieldsDisabledForDraft": "Les ébauches de formulaires ne peuvent être utilisées comme cela.",
     "introduction": [
-      "Pour télécharger ces données, vous devrez fournir votre phrase secrète. Votre phrase secrète sera utilisée uniquement pour déchiffrer vos données pour le téléchargement, après quoi le serveur l'oubliera à nouveau"
+      "Votre mot de passe de chiffrement est requis pour télécharger ces données."
     ],
     "hint": "Indice : {hint}",
     "noRepeat": "Ce formulaire ne contient pas de structures \"repeat\"",
@@ -547,9 +538,6 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
   },
   "id": {
     "exportOptions": "Opsi Ekspor",
-    "introduction": [
-      "Untuk mengunduh data ini, Anda harus menyediakan frasa sandi. Frasa sandi hanya akan digunakan untuk mendekripsi data anda untuk diunduh, dan akan terhapus dari server setelahnya."
-    ],
     "hint": "Petunjuk: {hint}",
     "noRepeat": "Formulir ini tidak memiliki pengulangan.",
     "action": {
@@ -570,9 +558,6 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "noSelectMultiple": "Questo formulario non ha campi a scelta multipla selezionati.",
     "encryptedForm": "I moduli crittografati non possono essere elaborati in questo modo.",
     "deletedFieldsDisabledForDraft": "Le bozze non possono essere elaborate in questo modo.",
-    "introduction": [
-      "Per scaricare questi dati, dovrai fornire la tua passphrase. La tua passphrase verrà utilizzata solo per decifrare i tuoi dati per il download, dopodiché il server la cancellerà."
-    ],
     "hint": "Suggerimento: {hint}",
     "noRepeat": "Questo formulario non ha repeats.",
     "action": {
@@ -598,9 +583,6 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "noSelectMultiple": "このフォームには複数選択項目がありません。",
     "encryptedForm": "この方法でフォームの暗号化は行えません。",
     "deletedFieldsDisabledForDraft": "この方法で下書きの処理は行えません。",
-    "introduction": [
-      "このデータをダウンロードするためには、パスフレーズを入力する必要があります。パスフレーズは、データをダウンロードする際の復号時にのみ使用され、その後、サーバーはパスフレーズを保持しません。"
-    ],
     "hint": "ヒント：{hint}",
     "noRepeat": "このフォームはリピート項目がありません。",
     "action": {
@@ -625,9 +607,6 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "noSelectMultiple": "Este Formulário não tem campos de seleção múltiplos.",
     "encryptedForm": "Formulários encriptados não podem ser processados dessa forma.",
     "deletedFieldsDisabledForDraft": "Formulários de rascunho não podem ser processados dessa forma.",
-    "introduction": [
-      "Para baixar esses dados, você precisará fornecer sua senha. Sua senha será usada apenas para descriptografar seus dados para download, após o qual o servidor irá esquecê-la novamente."
-    ],
     "hint": "Dica: {hint}",
     "noRepeat": "Este Formulário não tem repetições.",
     "action": {
@@ -654,9 +633,6 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "noSelectMultiple": "Fomu hii haina sehemu nyingi zilizochaguliwa",
     "encryptedForm": "Fomu Zilizosimbwa kwa njia fiche haziwezi kuchakatwa kwa njia hii",
     "deletedFieldsDisabledForDraft": "Rasimu za Fomu haziwezi kuchakatwa kwa njia hii.",
-    "introduction": [
-      "Ili kupakua data hii, utahitaji kutoa neno lako la siri. Kauli yako ya siri itatumika tu kusimbua data yako kwa ajili ya kupakua, na kisha seva itaisahau tena."
-    ],
     "hint": "Kidokezo: {hint}",
     "noRepeat": "Fomu hii haina marudio",
     "action": {
@@ -683,9 +659,6 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "noSelectMultiple": "此表单不包含多选项",
     "encryptedForm": "加密表单无法通过此方式处理。",
     "deletedFieldsDisabledForDraft": "草稿表单无法通过此方式处理。",
-    "introduction": [
-      "若要下载此数据，您需要提供您的安全密钥。您的安全密钥仅用于解密您的数据以便下载，之后服务器将不会保留该密钥。"
-    ],
     "hint": "提示：{hint}",
     "noRepeat": "此表格没有重复值",
     "action": {
@@ -713,9 +686,6 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "noSelectMultiple": "此表單沒有任何選擇多個欄位。",
     "encryptedForm": "加密表格不能以這種方式處理。",
     "deletedFieldsDisabledForDraft": "草稿表格不能以這種方式處理。",
-    "introduction": [
-      "為了下載此資料，您需要提供您的密碼。您的密碼將僅用於解密您的資料以供下載，之後伺服器將再次忘記它。"
-    ],
     "hint": "提示: {hint}",
     "noRepeat": "此表格沒有重複。",
     "action": {

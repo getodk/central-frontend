@@ -172,15 +172,13 @@
     "yesProceed": "Ja, fortfahren",
     "showPreview": "Vorschau",
     "hidePreview": "Vorschau ausblenden",
-    "newPreview": "Neue Vorschau",
     "expand": "Vergrössern",
     "collapse": "Verkleinern",
     "selectRow": "Zeile auswählen",
     "reset": "Zurücksetzen",
-    "reviewParallelUpdates": "Parallele Updates überprüfen",
-    "tryAgain": "Nochmals versuchen",
+    "restore": "Wiederherstellen",
     "upload": "Hochladen",
-    "restore": "Wiederherstellen"
+    "reviewParallelUpdates": "Parallele Updates überprüfen"
   },
   "field": {
     "comment": "Kommentieren...",
@@ -242,6 +240,7 @@
     "entityLists": "Objektlisten",
     "form": "Formular",
     "forms": "Formulare",
+    "newForm": "Neue Formular",
     "formAttachments": "Formularanhänge",
     "project": "Projekt",
     "projects": "Projekte",
@@ -284,6 +283,7 @@
     "odkLogo": "ODK-Logo",
     "defaultTitle": "Willkommen bei ODK Central",
     "defaultDescription": "Melden Sie sich bei Ihrem Konto an, um loszulegen",
+    "heroImage": "Anmeldebild",
     "customLogoAlt": "Logo der Organisation"
   },
   "analytics": {
@@ -350,13 +350,12 @@
     "totalEntities": "Objekte insgesamt",
     "versionShort": "v{version}",
     "warning": "Warnung",
-    "beta": "Beta",
     "none": "(keine)",
     "search": "Suchen",
-    "reviewState": "Überprüfungsstatus",
-    "status": "Status",
+    "trash": "Papierkorb",
     "version": "Version",
-    "trash": "Papierkorb"
+    "status": "Status",
+    "reviewState": "Überprüfungsstatus"
   },
   "mixin": {
     "request": {
@@ -401,14 +400,14 @@
   "router": {
     "unsavedChanges": "Wollen Sie diese Seite wirklich verlassen? Ihre Änderungen sind noch nicht gespeichert."
   },
-  "formStateDescription": {
-    "open": "Dieses Formular kann heruntergeladen werden und Übermittlungen werden akzeptiert.",
-    "closing": "Dieses Formular kann nicht heruntergeladen werden, aber Übermittlungen werden noch akzeptiert.",
-    "closed": "Dieses Formular kann nicht heruntergeladen werden und Übermittlungen werden nicht akzeptiert."
-  },
   "requestData": {
     "project": {
       "nameWithArchived": "{name} (archiviert)"
     }
+  },
+  "formStateDescription": {
+    "open": "Dieses Formular kann heruntergeladen werden und Übermittlungen werden akzeptiert.",
+    "closing": "Dieses Formular kann nicht heruntergeladen werden, aber Übermittlungen werden noch akzeptiert.",
+    "closed": "Dieses Formular kann nicht heruntergeladen werden und Übermittlungen werden nicht akzeptiert."
   }
 }

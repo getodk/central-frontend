@@ -170,15 +170,13 @@
     "yesProceed": "是的，請繼續",
     "showPreview": "預覽",
     "hidePreview": "隱藏預覽",
-    "newPreview": "新預覽",
     "expand": "開啟",
     "collapse": "閉合",
     "selectRow": "選取列",
     "reset": "重設",
-    "reviewParallelUpdates": "查看並行更新",
-    "tryAgain": "再試一次",
+    "restore": "還原",
     "upload": "上傳",
-    "restore": "還原"
+    "reviewParallelUpdates": "查看並行更新"
   },
   "field": {
     "comment": "發表評論...",
@@ -341,13 +339,12 @@
     "totalEntities": "實體總數",
     "versionShort": "v{version}",
     "warning": "警告",
-    "beta": "測試版",
     "none": "(無)",
     "search": "檢索",
-    "reviewState": "審核狀態",
-    "status": "狀態",
+    "trash": "垃圾桶",
     "version": "版本",
-    "trash": "垃圾桶"
+    "status": "狀態",
+    "reviewState": "審核狀態"
   },
   "mixin": {
     "request": {
@@ -392,14 +389,14 @@
   "router": {
     "unsavedChanges": "您確定要離開此頁面嗎？您的變更可能不會儲存。"
   },
-  "formStateDescription": {
-    "open": "該表格可供下載並接受提交。",
-    "closing": "表格不可下載，但仍接受提交。",
-    "closed": "該表格不可下載，也不接受提交。"
-  },
   "requestData": {
     "project": {
       "nameWithArchived": "{name} (已歸檔)"
     }
+  },
+  "formStateDescription": {
+    "open": "該表格可供下載並接受提交。",
+    "closing": "表格不可下載，但仍接受提交。",
+    "closed": "該表格不可下載，也不接受提交。"
   }
 }

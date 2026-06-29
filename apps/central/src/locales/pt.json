@@ -170,15 +170,13 @@
     "yesProceed": "Sim, prossiga",
     "showPreview": "Visualizar",
     "hidePreview": "Ocultar visualização",
-    "newPreview": "Nova Visualização Prévia",
     "expand": "Expandir",
     "collapse": "Condensar",
     "selectRow": "Selecionar linha",
     "reset": "Reiniciar",
-    "reviewParallelUpdates": "Revisar atualizações paralelas",
-    "tryAgain": "Tentar novamente",
+    "restore": "Recuperar",
     "upload": "Carregar",
-    "restore": "Recuperar"
+    "reviewParallelUpdates": "Revisar atualizações paralelas"
   },
   "field": {
     "comment": "Deixe um comentário",
@@ -341,13 +339,12 @@
     "totalEntities": "Total de Entidades",
     "versionShort": "v{version}",
     "warning": "Aviso",
-    "beta": "Beta",
     "none": "(nenhum)",
     "search": "Busca",
-    "reviewState": "Status da revisão",
-    "status": "Situação",
+    "trash": "Lixeira",
     "version": "Versão",
-    "trash": "Lixeira"
+    "status": "Situação",
+    "reviewState": "Status da revisão"
   },
   "mixin": {
     "request": {
@@ -392,14 +389,14 @@
   "router": {
     "unsavedChanges": "Você tem certeza que deseja sair da dessa página? Suas alterações podem não ter sido salvas."
   },
-  "formStateDescription": {
-    "open": "Esse formulário pode ser baixado e está aceitando respostas.",
-    "closing": "Esse formulário não pode ser baixado, mas ainda aceita respostas.",
-    "closed": "Esse formulário não pode ser baixado, e não aceita mais respostas."
-  },
   "requestData": {
     "project": {
       "nameWithArchived": "{name} (arquivado)"
     }
+  },
+  "formStateDescription": {
+    "open": "Esse formulário pode ser baixado e está aceitando respostas.",
+    "closing": "Esse formulário não pode ser baixado, mas ainda aceita respostas.",
+    "closed": "Esse formulário não pode ser baixado, e não aceita mais respostas."
   }
 }
