@@ -281,7 +281,7 @@ const confirm = () => {
 }
 
 .filter-select-label {
-  flex-grow: 1;
+  flex-basis: 50%;
   font-size: 12px;
 
   .form-control {
