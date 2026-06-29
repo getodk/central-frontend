@@ -20,6 +20,7 @@ jobs:
   odk-common:
     name: '@getodk/common'
     runs-on: 'ubuntu-latest'
+    timeout-minutes: 2
 
     strategy:
       fail-fast: false
@@ -43,23 +44,21 @@ jobs:
       - uses: 'volta-cli/action@v5'
         with:
           node-version: '${{ matrix.node-version }}'
-
-      - uses: 'actions/cache@v5'
+      - uses: 'actions/cache/restore@v6'
         id: cache-install
         with:
           path: |
             node_modules
             **/node_modules
-          key: install-${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
+          key: install-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
           fail-on-cache-miss: true
-
-      - uses: 'actions/cache@v5'
+      - uses: 'actions/cache/restore@v6'
         id: cache-build
         with:
           path: |
+            dist
             packages/*/dist
-            packages/web-forms/dist-demo
-          key: build-${{ matrix.node-version }}-${{ github.sha }}
+          key: build-${{ github.sha }}
           fail-on-cache-miss: true
 
       - if: ${{ matrix.target == 'Node' }}
@@ -77,6 +76,7 @@ jobs:
   xforms-engine:
     name: '@getodk/xforms-engine'
     runs-on: 'ubuntu-latest'
+    timeout-minutes: 3
 
     strategy:
       fail-fast: false
@@ -101,22 +101,21 @@ jobs:
         with:
           node-version: '${{ matrix.node-version }}'
 
-      - uses: 'actions/cache@v5'
+      - uses: 'actions/cache/restore@v6'
         id: cache-install
         with:
           path: |
             node_modules
             **/node_modules
-          key: install-${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
+          key: install-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
           fail-on-cache-miss: true
-
-      - uses: 'actions/cache@v5'
+      - uses: 'actions/cache/restore@v6'
         id: cache-build
         with:
           path: |
+            dist
             packages/*/dist
-            packages/web-forms/dist-demo
-          key: build-${{ matrix.node-version }}-${{ github.sha }}
+          key: build-${{ github.sha }}
           fail-on-cache-miss: true
 
       - if: ${{ matrix.target == 'Node' }}
@@ -134,6 +133,7 @@ jobs:
   xpath:
     name: '@getodk/xpath'
     runs-on: 'ubuntu-latest'
+    timeout-minutes: 2
 
     strategy:
       fail-fast: false
@@ -158,22 +158,21 @@ jobs:
         with:
           node-version: '${{ matrix.node-version }}'
 
-      - uses: 'actions/cache@v5'
+      - uses: 'actions/cache/restore@v6'
         id: cache-install
         with:
           path: |
             node_modules
             **/node_modules
-          key: install-${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
+          key: install-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
           fail-on-cache-miss: true
-
-      - uses: 'actions/cache@v5'
+      - uses: 'actions/cache/restore@v6'
         id: cache-build
         with:
           path: |
+            dist
             packages/*/dist
-            packages/web-forms/dist-demo
-          key: build-${{ matrix.node-version }}-${{ github.sha }}
+          key: build-${{ github.sha }}
           fail-on-cache-miss: true
 
       - if: ${{ matrix.target == 'Node' }}
@@ -191,6 +190,7 @@ jobs:
   web-forms:
     name: '@getodk/web-forms'
     runs-on: 'ubuntu-latest'
+    timeout-minutes: 2
 
     strategy:
       fail-fast: false
@@ -215,22 +215,21 @@ jobs:
         with:
           node-version: '${{ matrix.node-version }}'
 
-      - uses: 'actions/cache@v5'
+      - uses: 'actions/cache/restore@v6'
         id: cache-install
         with:
           path: |
             node_modules
             **/node_modules
-          key: install-${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
+          key: install-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
           fail-on-cache-miss: true
-
-      - uses: 'actions/cache@v5'
+      - uses: 'actions/cache/restore@v6'
         id: cache-build
         with:
           path: |
+            dist
             packages/*/dist
-            packages/web-forms/dist-demo
-          key: build-${{ matrix.node-version }}-${{ github.sha }}
+          key: build-${{ github.sha }}
           fail-on-cache-miss: true
 
       - if: ${{ matrix.target == 'Node' }}
@@ -242,17 +241,5 @@ jobs:
       - if: ${{ matrix.target == 'Web' }}
         run: 'npx playwright install ${{ matrix.browser }} --with-deps'
 
-      # TODO: hopefully temporary! Attempt to mitigate flakiness in webkit by
-      # running twice when first run fails. At least in local testing, this has
-      # been near (if not at) 100% success.
-      - if: ${{ matrix.target == 'Web' && matrix.browser == 'webkit' }}
-        run: 'npm run test-browser:${{ matrix.browser }} -w=packages/web-forms || npm run test-browser:${{ matrix.browser }} -w=packages/web-forms'
-
       - if: ${{ matrix.target == 'Web' && matrix.browser != 'webkit' }}
         run: 'npm run test-browser:${{ matrix.browser }} -w=packages/web-forms'
-
-      - if: ${{ matrix.node-version == '24.16.0' && matrix.target == 'Node' }}
-        uses: actions/upload-artifact@v7
-        with:
-          name: dist-demo
-          path: packages/web-forms/dist-demo
