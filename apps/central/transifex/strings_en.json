@@ -3447,13 +3447,13 @@
       },
       "field": {
         "note": {
-          "string": "Notes",
+          "string": "Version notes",
           "developer_comment": "This is the text of a form field."
         }
       },
       "placeholder": {
         "note": {
-          "string": "Add optional publishing notes…"
+          "string": "Describe this version (optional)…"
         }
       }
     },
