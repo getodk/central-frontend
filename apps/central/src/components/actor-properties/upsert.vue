@@ -50,12 +50,16 @@ nextTick(() => {
 
 <style lang="scss">
 .actor-properties-upsert {
-  .table > thead {
-    background-color: transparent;
+  .table {
+    table-layout: fixed;
 
-    tr > th {
-      border: none;
-      padding: 10px 0;
+    > thead {
+      background-color: transparent;
+
+      tr > th {
+        border: none;
+        padding: 10px 0;
+      }
     }
   }
 
