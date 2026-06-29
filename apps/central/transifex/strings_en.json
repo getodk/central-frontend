@@ -5326,6 +5326,9 @@
       "deleted": {
         "string": "(deleted)",
         "developer_comment": "This text is shown next to an Entity when the Entity has been deleted."
+      },
+      "entityErrorInstructions": {
+        "string": "Check the Form definition and Submission for issues. After making corrections, edit the Submission and submit to retry processing."
       }
     },
     "SubmissionFieldDropdown": {
