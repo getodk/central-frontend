@@ -23,8 +23,8 @@ jobs:
     - run: ./bin/check-for-large-files.sh
     - run: ./bin/check-images.sh
     - run: npm ci
-    - run: npm run lint ## TODO is it ok to run this before build
     - run: npm run build
+    - run: npm run lint
     - run: ./bin/check-bundle-size.js
     - uses: 'actions/cache/save@v6'
       id: cache-install
