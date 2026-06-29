@@ -149,42 +149,42 @@ const onToggleTrashExpansion = (evt) => {
   },
   "de": {
     "message": "Entitätslisten werden nach 30 Tagen im Papierkorb gelöscht",
-    "trashCount": "{count}",
-    "deletedAt": "Gelöscht am"
+    "deletedAt": "Gelöscht am",
+    "trashCount": "{count}"
   },
   "es": {
     "message": "Las listas de entidades se eliminan después de 30 días en la Papelera",
-    "trashCount": "({count})",
-    "deletedAt": "Suprimida el"
+    "deletedAt": "Suprimida el",
+    "trashCount": "({count})"
   },
   "fr": {
     "message": "Les listes d'entités sont supprimées après 30 jours dans la corbeille",
-    "trashCount": "({count})",
-    "deletedAt": "Supprimée le"
+    "deletedAt": "Supprimée le",
+    "trashCount": "({count})"
   },
   "it": {
     "message": "Gli elenchi delle entità vengono eliminati dopo 30 giorni nel Cestino",
-    "trashCount": "({count})",
-    "deletedAt": "Eliminato il"
+    "deletedAt": "Eliminato il",
+    "trashCount": "({count})"
   },
   "ja": {
     "trashCount": "({count})"
   },
   "pt": {
-    "trashCount": "({count})",
-    "deletedAt": "Excluída em"
+    "deletedAt": "Excluída em",
+    "trashCount": "({count})"
   },
   "sw": {
     "trashCount": "({count})"
   },
   "zh": {
     "message": "实体列表将在回收站中保留 30 天后被删除",
-    "trashCount": "（{count}）",
-    "deletedAt": "删除于"
+    "deletedAt": "删除于",
+    "trashCount": "（{count}）"
   },
   "zh-Hant": {
-    "trashCount": "({count})",
-    "deletedAt": "刪除於"
+    "deletedAt": "刪除於",
+    "trashCount": "({count})"
   }
 }
 </i18n>

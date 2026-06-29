@@ -228,85 +228,85 @@ const submit = () => {
 <i18n>
 {
   "cs": {
+    "title": "Aktualizace {label}",
     "problem": {
       "409_15": "Data byla upravena jiným uživatelem. Aktualizujte prosím stránku, abyste viděli aktualizovaná data."
-    },
-    "title": "Aktualizace {label}"
+    }
   },
   "de": {
     "titleCreate": "Neue Entität erstellen",
     "header": {
       "value": "Wert"
     },
+    "title": "Aktualisieren {label}",
+    "geometryDisabled": "Die Geometrie kann nicht über die Karte aktualisiert werden.",
     "problem": {
       "409_15": "Die Daten wurden von einem anderen Benutzer geändert. Bitte aktualisieren Sie die Seite, um die aktualisierten Daten anzuzeigen."
-    },
-    "geometryDisabled": "Die Geometrie kann nicht über die Karte aktualisiert werden.",
-    "title": "Aktualisieren {label}"
+    }
   },
   "es": {
     "titleCreate": "Crear una nueva entidad",
     "header": {
       "value": "Valor"
     },
+    "title": "Actualizar {label}",
+    "geometryDisabled": "La geometría no se puede actualizar desde el mapa.",
     "problem": {
       "409_15": "Los datos han sido modificados por otro usuario. Actualice para ver los datos actualizados."
-    },
-    "geometryDisabled": "La geometría no se puede actualizar desde el mapa.",
-    "title": "Actualizar {label}"
+    }
   },
   "fr": {
     "titleCreate": "Créer nouvelle entité",
     "header": {
       "value": "Valeur"
     },
+    "title": "Mise à jour {label}",
+    "geometryDisabled": "La géométrie ne peut être modifiée depuis la carte.",
     "problem": {
       "409_15": "Les données ont été modifiées par un autre utilisateur. Merci de rafraîchir pour voir les données mises à jour."
-    },
-    "geometryDisabled": "La géométrie ne peut être modifiée depuis la carte.",
-    "title": "Mise à jour {label}"
+    }
   },
   "it": {
     "titleCreate": "Crea una nuova Entità",
     "header": {
       "value": "Valore"
     },
+    "title": "Aggiorna {label}",
+    "geometryDisabled": "La geometria non può essere aggiornata dalla mappa.",
     "problem": {
       "409_15": "I dati sono stati modificati da un altro utente. Aggiornare per vedere i dati aggiornati."
-    },
-    "geometryDisabled": "La geometria non può essere aggiornata dalla mappa.",
-    "title": "Aggiorna {label}"
+    }
   },
   "pt": {
+    "title": "Atualizar {label}",
+    "geometryDisabled": "A geometria não pode ser atualizada a partir do mapa.",
     "problem": {
       "409_15": "Os dados foram modificados por outro usuário. Por favor, atualize a página para ver os dados atualizados."
-    },
-    "geometryDisabled": "A geometria não pode ser atualizada a partir do mapa.",
-    "title": "Atualizar {label}"
+    }
   },
   "sw": {
+    "title": "Sasisha {label}",
     "problem": {
       "409_15": "Data imerekebishwa na mtumiaji mwingine. Tafadhali onyesha upya ili kuona data iliyosasishwa."
-    },
-    "title": "Sasisha {label}"
+    }
   },
   "zh": {
     "titleCreate": "创建新实体",
     "header": {
       "value": "值"
     },
+    "title": "更新{label}",
+    "geometryDisabled": "无法通过地图更新几何数据。",
     "problem": {
       "409_15": "数据已被其他用户修改，请刷新以查看最新数据。"
-    },
-    "geometryDisabled": "无法通过地图更新几何数据。",
-    "title": "更新{label}"
+    }
   },
   "zh-Hant": {
+    "title": "更新{label}",
+    "geometryDisabled": "無法透過地圖更新地理資料。",
     "problem": {
       "409_15": "資料已被另一用戶修改。請重新整理查看更新後的資料。"
-    },
-    "geometryDisabled": "無法透過地圖更新地理資料。",
-    "title": "更新{label}"
+    }
   }
 }
 </i18n>

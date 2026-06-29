@@ -176,9 +176,9 @@
     "collapse": "Chiudere",
     "selectRow": "Seleziona riga",
     "reset": "Ripristina",
-    "restore": "Ripristino",
     "upload": "Carica",
-    "reviewParallelUpdates": "Rivedi gli aggiornamenti paralleli"
+    "reviewParallelUpdates": "Rivedi gli aggiornamenti paralleli",
+    "restore": "Ripristino"
   },
   "field": {
     "comment": "Lascia un commento...",
@@ -352,10 +352,10 @@
     "warning": "Avvertimento",
     "none": "(nessuno)",
     "search": "Cerca",
-    "trash": "Cestino",
-    "version": "Versione",
+    "reviewState": "Stato Revisione",
     "status": "Stato",
-    "reviewState": "Stato Revisione"
+    "version": "Versione",
+    "trash": "Cestino"
   },
   "mixin": {
     "request": {
@@ -400,14 +400,14 @@
   "router": {
     "unsavedChanges": "Sei sicuro di voler lasciare questa pagina? Le tue modifiche potrebbero non essere salvate."
   },
-  "requestData": {
-    "project": {
-      "nameWithArchived": "{name} (archiviato)"
-    }
-  },
   "formStateDescription": {
     "open": "Questo Formulario è scaricabile e accetta Invii.",
     "closing": "Questo Formulario non è scaricabile e ma tuttavia accetta Invii.",
     "closed": "Questo Formulario non è scaricabile e non accetta Invii."
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name} (archiviato)"
+    }
   }
 }

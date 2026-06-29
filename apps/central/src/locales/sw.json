@@ -285,10 +285,10 @@
     "propertiesCount": "{inform} ya sifa za {count} | {inform} ya sifa za {count}",
     "new": "Mpya!",
     "totalEntities": "Jumla ya Mashirika",
-    "trash": "Takataka",
-    "version": "Toleo",
+    "reviewState": "Kagua hali",
     "status": "Hali",
-    "reviewState": "Kagua hali"
+    "version": "Toleo",
+    "trash": "Takataka"
   },
   "mixin": {
     "request": {
@@ -307,14 +307,14 @@
   "router": {
     "unsavedChanges": "Je, una uhakika unataka kuondoka kwenye ukurasa huu? Mabadiliko yako huenda yasihifadhiwe."
   },
-  "requestData": {
-    "project": {
-      "nameWithArchived": "{name} (iliyohifadhiwa)"
-    }
-  },
   "formStateDescription": {
     "open": "Fomu hii inaweza kupakuliwa na inakubali Mawasilisho.",
     "closing": "Fomu hii haiwezi kupakuliwa lakini bado inakubali Mawasilisho.",
     "closed": "Fomu hii haiwezi kupakuliwa na haikubali Mawasilisho."
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name} (iliyohifadhiwa)"
+    }
   }
 }

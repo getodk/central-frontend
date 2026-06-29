@@ -188,26 +188,26 @@ body:has(#form-edit) { background-color: #fff; }
   },
   "de": {
     "alert": {
-      "delete": "Das Formular \"{name}\" wurde erfolgreich gelöscht.",
-      "abandon": "Die Entwurfsversion dieses Formulars wurde gelöscht.",
+      "upload": "Das neue Formular steht jetzt als Entwurf zur Verfügung.",
       "publish": "Ihr Entwurf wurde veröffentlicht. Alle Geräte, die dieses Formular verwenden, erhalten nun die aktualisierte Formular-Definition und die Anhänge.",
-      "upload": "Das neue Formular steht jetzt als Entwurf zur Verfügung."
+      "abandon": "Die Entwurfsversion dieses Formulars wurde gelöscht.",
+      "delete": "Das Formular \"{name}\" wurde erfolgreich gelöscht."
     }
   },
   "es": {
     "alert": {
-      "delete": "El formulario {name} fue eliminado correctamente.",
-      "abandon": "La versión borrador de este formulario ha sido eliminado con éxito.",
+      "upload": "La nueva definición del formulario se ha guardado como su borrador",
       "publish": "Su borrador ha sido publicado. Todos los dispositivos que utilicen este formulario recibirán ahora la definición actualizada del formulario y los archivos adjuntos.",
-      "upload": "La nueva definición del formulario se ha guardado como su borrador"
+      "abandon": "La versión borrador de este formulario ha sido eliminado con éxito.",
+      "delete": "El formulario {name} fue eliminado correctamente."
     }
   },
   "fr": {
     "alert": {
-      "delete": "Le formulaire \"{name}\" a été supprimé.",
-      "abandon": "La version d'ébauche de ce formulaire a été supprimée avec succès.",
+      "upload": "La nouvelle définition du formulaire a été enregistrée comme ébauche.",
       "publish": "Votre ébauche est maintenant publiée. Chaque terminal qui reçoit ce formulaires recevra désormais la nouvelle définition et les fichiers joints associés.",
-      "upload": "La nouvelle définition du formulaire a été enregistrée comme ébauche."
+      "abandon": "La version d'ébauche de ce formulaire a été supprimée avec succès.",
+      "delete": "Le formulaire \"{name}\" a été supprimé."
     }
   },
   "id": {
@@ -217,10 +217,10 @@ body:has(#form-edit) { background-color: #fff; }
   },
   "it": {
     "alert": {
-      "delete": "Il formulario “{name}” è stato eliminato con successo.",
-      "abandon": "La versione bozza di questo formulario è stata eliminata con successo.",
+      "upload": "La nuova definizione del formulario è stata salvata come bozza.",
       "publish": "La tua bozza è ora pubblicata. Tutti i dispositivi che utilizzano i formulari per questo progetto riceveranno ora la nuova definizione del formulario e i suoi allegati.",
-      "upload": "La nuova definizione del formulario è stata salvata come bozza."
+      "abandon": "La versione bozza di questo formulario è stata eliminata con successo.",
+      "delete": "Il formulario “{name}” è stato eliminato con successo."
     }
   },
   "ja": {
@@ -230,9 +230,9 @@ body:has(#form-edit) { background-color: #fff; }
   },
   "pt": {
     "alert": {
-      "abandon": "A versão de rascunho desse formulário foi excluída com sucesso.",
+      "upload": "A nova definição de Formulário foi armazenada como o seu rascunho.",
       "publish": "Seu Rascunho foi publicado. Quaisquer dispositivos usando esse Formulário irão receber a definição do Formulário atualizada e os anexos.",
-      "upload": "A nova definição de Formulário foi armazenada como o seu rascunho."
+      "abandon": "A versão de rascunho desse formulário foi excluída com sucesso."
     }
   },
   "sw": {
@@ -242,18 +242,18 @@ body:has(#form-edit) { background-color: #fff; }
   },
   "zh": {
     "alert": {
-      "delete": "表单“{name}”已成功删除。",
-      "abandon": "此表单的草稿版本已成功删除。",
+      "upload": "新的表单定义已保存为草稿。",
       "publish": "您的草稿已发布。所有使用此表单的设备现在将获取更新后的表单定义和附件。",
-      "upload": "新的表单定义已保存为草稿。"
+      "abandon": "此表单的草稿版本已成功删除。",
+      "delete": "表单“{name}”已成功删除。"
     }
   },
   "zh-Hant": {
     "alert": {
-      "delete": "表單 「{name}」 已成功刪除。",
-      "abandon": "此表格的草稿版本已成功刪除。",
+      "upload": "新的表單定義已儲存為您的草稿。",
       "publish": "您的草稿已發佈。任何使用此表格的裝置現在都會收到更新的表格定義和附件。",
-      "upload": "新的表單定義已儲存為您的草稿。"
+      "abandon": "此表格的草稿版本已成功刪除。",
+      "delete": "表單 「{name}」 已成功刪除。"
     }
   }
 }

@@ -328,10 +328,10 @@
     "warning": "Upozornění",
     "none": "(žádný)",
     "search": "Hledat",
-    "trash": "Koš",
-    "version": "Verze",
+    "reviewState": "Přezkoumání stavu",
     "status": "Stav",
-    "reviewState": "Přezkoumání stavu"
+    "version": "Verze",
+    "trash": "Koš"
   },
   "mixin": {
     "request": {
@@ -364,14 +364,14 @@
   "router": {
     "unsavedChanges": "Opravdu chcete opustit tuto stránku? Vaše změny nemusí být uloženy."
   },
-  "requestData": {
-    "project": {
-      "nameWithArchived": "{name} (archivováno)"
-    }
-  },
   "formStateDescription": {
     "open": "Tento formulář je ke stažení a přijímá příspěvky.",
     "closing": "Tento formulář nelze stáhnout, ale stále přijímá příspěvky.",
     "closed": "Tento formulář nelze stáhnout a nepřijímá příspěvky."
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name} (archivováno)"
+    }
   }
 }

@@ -64,31 +64,31 @@ const afterCreate = async (form) => {
     "title": "Vytvořit formulář"
   },
   "de": {
+    "title": "Formular erstellen",
     "alert": {
       "create": "\"{name}\" wurde als Formularentwurf erzeugt."
-    },
-    "title": "Formular erstellen"
+    }
   },
   "es": {
+    "title": "Crear formulario",
     "alert": {
       "create": "\"{name}\" se ha creado como borrador de formulario."
-    },
-    "title": "Crear formulario"
+    }
   },
   "fr": {
+    "title": "Créer un formulaire",
     "alert": {
       "create": "\"{name}\" a été créé comme ébauche."
-    },
-    "title": "Créer un formulaire"
+    }
   },
   "id": {
     "title": "Buat Formulir"
   },
   "it": {
+    "title": "Creare un formulario",
     "alert": {
       "create": "“{name}” è stato creato come bozza di formulario."
-    },
-    "title": "Creare un formulario"
+    }
   },
   "ja": {
     "title": "フォームの作成"
@@ -100,16 +100,16 @@ const afterCreate = async (form) => {
     "title": "unda fomu"
   },
   "zh": {
+    "title": "创建表单",
     "alert": {
       "create": "表单草稿“{name}”已创建。"
-    },
-    "title": "创建表单"
+    }
   },
   "zh-Hant": {
+    "title": "建立表單",
     "alert": {
       "create": "「{name}」已建立為表單草稿。"
-    },
-    "title": "建立表單"
+    }
   }
 }
 </i18n>

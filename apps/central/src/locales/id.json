@@ -273,10 +273,10 @@
     "total": "Total",
     "totalSubmissions": "Total Kiriman",
     "propertiesCount": "{inform} dari {count} properti",
-    "trash": "Sampah",
-    "version": "Versi",
+    "reviewState": "Status ulasan",
     "status": "Status",
-    "reviewState": "Status ulasan"
+    "version": "Versi",
+    "trash": "Sampah"
   },
   "mixin": {
     "request": {
@@ -295,14 +295,14 @@
   "router": {
     "unsavedChanges": "Apakah Anda yakin ingin meninggalkan laman ini? Pembaruan Anda mungkin tidak tersimpan."
   },
-  "requestData": {
-    "project": {
-      "nameWithArchived": "{name} (diarsipkan)"
-    }
-  },
   "formStateDescription": {
     "open": "Formulir ini bisa diunduh dan sedang menerima kiriman data.",
     "closing": "Formulir ini tidak bisa diunduh, tetapi masih menerima kiriman data.",
     "closed": "Formulir ini tidak bisa diunduh dan tidak menerima kiriman data."
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name} (diarsipkan)"
+    }
   }
 }

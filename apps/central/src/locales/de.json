@@ -176,9 +176,9 @@
     "collapse": "Verkleinern",
     "selectRow": "Zeile auswählen",
     "reset": "Zurücksetzen",
-    "restore": "Wiederherstellen",
     "upload": "Hochladen",
-    "reviewParallelUpdates": "Parallele Updates überprüfen"
+    "reviewParallelUpdates": "Parallele Updates überprüfen",
+    "restore": "Wiederherstellen"
   },
   "field": {
     "comment": "Kommentieren...",
@@ -352,10 +352,10 @@
     "warning": "Warnung",
     "none": "(keine)",
     "search": "Suchen",
-    "trash": "Papierkorb",
-    "version": "Version",
+    "reviewState": "Überprüfungsstatus",
     "status": "Status",
-    "reviewState": "Überprüfungsstatus"
+    "version": "Version",
+    "trash": "Papierkorb"
   },
   "mixin": {
     "request": {
@@ -400,14 +400,14 @@
   "router": {
     "unsavedChanges": "Wollen Sie diese Seite wirklich verlassen? Ihre Änderungen sind noch nicht gespeichert."
   },
-  "requestData": {
-    "project": {
-      "nameWithArchived": "{name} (archiviert)"
-    }
-  },
   "formStateDescription": {
     "open": "Dieses Formular kann heruntergeladen werden und Übermittlungen werden akzeptiert.",
     "closing": "Dieses Formular kann nicht heruntergeladen werden, aber Übermittlungen werden noch akzeptiert.",
     "closed": "Dieses Formular kann nicht heruntergeladen werden und Übermittlungen werden nicht akzeptiert."
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name} (archiviert)"
+    }
   }
 }

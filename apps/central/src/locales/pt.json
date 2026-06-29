@@ -174,9 +174,9 @@
     "collapse": "Condensar",
     "selectRow": "Selecionar linha",
     "reset": "Reiniciar",
-    "restore": "Recuperar",
     "upload": "Carregar",
-    "reviewParallelUpdates": "Revisar atualizações paralelas"
+    "reviewParallelUpdates": "Revisar atualizações paralelas",
+    "restore": "Recuperar"
   },
   "field": {
     "comment": "Deixe um comentário",
@@ -341,10 +341,10 @@
     "warning": "Aviso",
     "none": "(nenhum)",
     "search": "Busca",
-    "trash": "Lixeira",
-    "version": "Versão",
+    "reviewState": "Status da revisão",
     "status": "Situação",
-    "reviewState": "Status da revisão"
+    "version": "Versão",
+    "trash": "Lixeira"
   },
   "mixin": {
     "request": {
@@ -389,14 +389,14 @@
   "router": {
     "unsavedChanges": "Você tem certeza que deseja sair da dessa página? Suas alterações podem não ter sido salvas."
   },
-  "requestData": {
-    "project": {
-      "nameWithArchived": "{name} (arquivado)"
-    }
-  },
   "formStateDescription": {
     "open": "Esse formulário pode ser baixado e está aceitando respostas.",
     "closing": "Esse formulário não pode ser baixado, mas ainda aceita respostas.",
     "closed": "Esse formulário não pode ser baixado, e não aceita mais respostas."
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name} (arquivado)"
+    }
   }
 }

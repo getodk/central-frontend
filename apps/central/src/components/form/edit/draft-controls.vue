@@ -82,76 +82,76 @@ const abandonText = computed(() => (!form.dataExists
 {
   "cs": {
     "action": {
-      "publish": "Publikovat koncept",
-      "abandon": "Opustit koncept"
+      "abandon": "Opustit koncept",
+      "publish": "Publikovat koncept"
     }
   },
   "de": {
     "action": {
       "delete": "Formulare löschen",
-      "publish": "Entwurf veröffentlichen",
-      "abandon": "Entwurf verwerfen"
+      "abandon": "Entwurf verwerfen",
+      "publish": "Entwurf veröffentlichen"
     }
   },
   "es": {
     "action": {
       "delete": "Borrar formulario",
-      "publish": "Publicar borrador",
-      "abandon": "Abandonar borrador"
+      "abandon": "Abandonar borrador",
+      "publish": "Publicar borrador"
     }
   },
   "fr": {
     "action": {
       "delete": "Supprimer le formulaire",
-      "publish": "Publier l'ébauche",
-      "abandon": "Abandonner l'ébauche"
+      "abandon": "Abandonner l'ébauche",
+      "publish": "Publier l'ébauche"
     },
     "title": "Prêt à publier?"
   },
   "id": {
     "action": {
-      "publish": "Terbitkan Draf",
-      "abandon": "Buang Draf"
+      "abandon": "Buang Draf",
+      "publish": "Terbitkan Draf"
     }
   },
   "it": {
     "action": {
       "delete": "Cancellare il formulario",
-      "publish": "Pubblicare la bozza",
-      "abandon": "Abbandonare la bozza"
+      "abandon": "Abbandonare la bozza",
+      "publish": "Pubblicare la bozza"
     }
   },
   "ja": {
     "action": {
-      "publish": "下書きの公開",
-      "abandon": "下書きの削除"
+      "abandon": "下書きの削除",
+      "publish": "下書きの公開"
     }
   },
   "pt": {
     "action": {
       "delete": "Excluir Formulário",
-      "publish": "Publicar rascunho",
-      "abandon": "Abandonar rascunho"
+      "abandon": "Abandonar rascunho",
+      "publish": "Publicar rascunho"
     }
   },
   "sw": {
     "action": {
-      "publish": "Chapisha Rasimu",
-      "abandon": "Achana na Rasimu"
+      "abandon": "Achana na Rasimu",
+      "publish": "Chapisha Rasimu"
     }
   },
   "zh": {
     "action": {
       "delete": "删除表单",
-      "publish": "发布草稿",
-      "abandon": "放弃草稿"
+      "abandon": "放弃草稿",
+      "publish": "发布草稿"
     }
   },
   "zh-Hant": {
     "action": {
       "delete": "刪除表單",
-      "publish": "發布草稿",
-      "abandon": "放棄草案"
+      "abandon": "放棄草案",
+      "publish": "發布草稿"
     }
   }
 }

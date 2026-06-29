@@ -176,9 +176,9 @@
     "collapse": "收起",
     "selectRow": "选择行",
     "reset": "重设",
-    "restore": "恢复",
     "upload": "上传",
-    "reviewParallelUpdates": "审核并行更新"
+    "reviewParallelUpdates": "审核并行更新",
+    "restore": "恢复"
   },
   "field": {
     "comment": "写评论...",
@@ -350,10 +350,10 @@
     "warning": "警告",
     "none": "（无）",
     "search": "搜索",
-    "trash": "回收站",
-    "version": "版本",
+    "reviewState": "审核状态",
     "status": "状态",
-    "reviewState": "审核状态"
+    "version": "版本",
+    "trash": "回收站"
   },
   "mixin": {
     "request": {
@@ -398,14 +398,14 @@
   "router": {
     "unsavedChanges": "您确定要离开此页面吗？您的更改可能不会被保存。"
   },
-  "requestData": {
-    "project": {
-      "nameWithArchived": "{name}（已存档）"
-    }
-  },
   "formStateDescription": {
     "open": "此表单可供下载且正在接收提交。",
     "closing": "此表单不可下载但仍可接收提交。",
     "closed": "此表单不可下载且不接收提交。"
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name}（已存档）"
+    }
   }
 }

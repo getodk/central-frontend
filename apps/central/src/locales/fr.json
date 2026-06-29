@@ -186,9 +186,9 @@
     "selectRow": "Sélectionner ligne",
     "reset": "Réinitialiser",
     "change": "Changer",
-    "restore": "Restaurer",
     "upload": "Téléverser",
-    "reviewParallelUpdates": "Examiner les mises à jour parallèles"
+    "reviewParallelUpdates": "Examiner les mises à jour parallèles",
+    "restore": "Restaurer"
   },
   "field": {
     "comment": "Ajouter un commentaire...",
@@ -366,10 +366,10 @@
     "search": "Recherche",
     "useEnketo": "Mode compatibilité Enketo",
     "updateInProgress": "Demande de mise à jour en cours",
-    "trash": "Corbeille",
-    "version": "Version",
+    "reviewState": "État",
     "status": "Statut",
-    "reviewState": "État"
+    "version": "Version",
+    "trash": "Corbeille"
   },
   "mixin": {
     "request": {
@@ -414,14 +414,14 @@
   "router": {
     "unsavedChanges": "Êtes vous sûr de vouloir quitter cette page ? Vos modifications n'ont pas été enregistrées."
   },
-  "requestData": {
-    "project": {
-      "nameWithArchived": "{name} (archivé)"
-    }
-  },
   "formStateDescription": {
     "open": "Ce formulaire est téléchargeable et accepte les soumissions.",
     "closing": "Ce formulaire n'est pas téléchargeable mais accepte tout de même les soumissions.",
     "closed": "Ce formulaire n'est pas téléchargeable mais accepte tout de même les soumissions."
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name} (archivé)"
+    }
   }
 }

@@ -174,9 +174,9 @@
     "collapse": "閉合",
     "selectRow": "選取列",
     "reset": "重設",
-    "restore": "還原",
     "upload": "上傳",
-    "reviewParallelUpdates": "查看並行更新"
+    "reviewParallelUpdates": "查看並行更新",
+    "restore": "還原"
   },
   "field": {
     "comment": "發表評論...",
@@ -341,10 +341,10 @@
     "warning": "警告",
     "none": "(無)",
     "search": "檢索",
-    "trash": "垃圾桶",
-    "version": "版本",
+    "reviewState": "審核狀態",
     "status": "狀態",
-    "reviewState": "審核狀態"
+    "version": "版本",
+    "trash": "垃圾桶"
   },
   "mixin": {
     "request": {
@@ -389,14 +389,14 @@
   "router": {
     "unsavedChanges": "您確定要離開此頁面嗎？您的變更可能不會儲存。"
   },
-  "requestData": {
-    "project": {
-      "nameWithArchived": "{name} (已歸檔)"
-    }
-  },
   "formStateDescription": {
     "open": "該表格可供下載並接受提交。",
     "closing": "表格不可下載，但仍接受提交。",
     "closed": "該表格不可下載，也不接受提交。"
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name} (已歸檔)"
+    }
   }
 }

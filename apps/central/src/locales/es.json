@@ -176,9 +176,9 @@
     "collapse": "Contraer",
     "selectRow": "Seleccionar fila",
     "reset": "Restablecer",
-    "restore": "Restablecer",
     "upload": "Subir",
-    "reviewParallelUpdates": "Revisar actualizaciones paralelas"
+    "reviewParallelUpdates": "Revisar actualizaciones paralelas",
+    "restore": "Restablecer"
   },
   "field": {
     "comment": "Deja un comentario…",
@@ -352,10 +352,10 @@
     "warning": "Advertencia",
     "none": "(ninguno)",
     "search": "Buscar",
-    "trash": "Papelera",
-    "version": "Versión",
+    "reviewState": "Estado de revisión",
     "status": "Estado",
-    "reviewState": "Estado de revisión"
+    "version": "Versión",
+    "trash": "Papelera"
   },
   "mixin": {
     "request": {
@@ -400,14 +400,14 @@
   "router": {
     "unsavedChanges": "¿Está seguro que desea abandonar esta página? Puede que no se guarden sus cambios."
   },
-  "requestData": {
-    "project": {
-      "nameWithArchived": "{name} (archivado)"
-    }
-  },
   "formStateDescription": {
     "open": "Este formulario se puede descargar y acepta envíos.",
     "closing": "Este formulario no se puede descargar perro acepta envíos.",
     "closed": "Este formulario no se puede descargar y no acepta envíos."
+  },
+  "requestData": {
+    "project": {
+      "nameWithArchived": "{name} (archivado)"
+    }
   }
 }
