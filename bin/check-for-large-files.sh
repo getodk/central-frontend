@@ -4,7 +4,6 @@ shopt -s inherit_errexit || true
 
 git ls-files -z -- . \
     ':!:packages/xforms-engine/test/scenario/fixtures/test-javarosa/resources/whova_form.xml' \
-    ':!:packages/common/src/fixtures/test-javarosa/resources/wards.xml' \
 | xargs -0 ls -l -- \
 | awk '
   BEGIN {
