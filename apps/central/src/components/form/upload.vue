@@ -349,10 +349,6 @@ export default {
 <i18n>
 {
   "cs": {
-    "title": {
-      "create": "Vytvořit formulář",
-      "update": "Nahrát novou definici formuláře"
-    },
     "introduction": [
       {
         "create": "Chcete-li vytvořit formulář, nahrajte soubor XForms XML nebo XLSForm Excel.",
@@ -370,9 +366,6 @@ export default {
     },
     "action": {
       "uploadAnyway": "Přesto nahrát"
-    },
-    "alert": {
-      "fileRequired": "Vyberte soubor."
     },
     "problem": {
       "400_8": "Zdá se, že definice formuláře, kterou jste nahráli, není pro tento formulář. Má nesprávnou formu (očekává se „{expected}“, a máte „{actual}“).",
@@ -395,10 +388,6 @@ export default {
     ]
   },
   "de": {
-    "title": {
-      "create": "Formular erstellen",
-      "update": "Neue Formulardefinition hochladen"
-    },
     "introduction": [
       {
         "create": "Um ein Formular zu erstellen, laden Sie eine XML-Datei im Format XForms oder eine Excel-Datei im Format XLSForms hoch.",
@@ -418,7 +407,6 @@ export default {
       "uploadAnyway": "Trotzdem hochladen"
     },
     "alert": {
-      "fileRequired": "Bitte wählen Sie eine Datei aus.",
       "fileNotReadable": "Die Datei konnte nicht gelesen werden. Möglicherweise wurde sie geändert oder gelöscht. Bitte wählen Sie die Datei erneut aus."
     },
     "problem": {
@@ -444,10 +432,6 @@ export default {
     ]
   },
   "es": {
-    "title": {
-      "create": "Crear formulario",
-      "update": "Cargar nueva definición de formulario"
-    },
     "introduction": [
       {
         "create": "Para crear un formulario, cargue un archivo XML de XForms o un archivo XLSForm de Excel",
@@ -467,7 +451,6 @@ export default {
       "uploadAnyway": "Subir de todos modos"
     },
     "alert": {
-      "fileRequired": "Por favor, elija un archivo.",
       "fileNotReadable": "No se ha podido leer el archivo. Es posible que se haya modificado o eliminado. Selecciona el archivo de nuevo."
     },
     "problem": {
@@ -493,10 +476,6 @@ export default {
     ]
   },
   "fr": {
-    "title": {
-      "create": "Créer un formulaire",
-      "update": "Téléverser une nouvelle définition de formulaire"
-    },
     "introduction": [
       {
         "create": "Pour créer un formulaire, téléversez un fichier XML XForms ou un fichier excel XLSForm",
@@ -516,7 +495,6 @@ export default {
       "uploadAnyway": "Téléverser malgré tout"
     },
     "alert": {
-      "fileRequired": "Merci de choisir un fichier.",
       "fileNotReadable": "Le fichier n'a pas pu être lu. Il a peut-être été modifié ou supprimé. Veuillez choisir le fichier à nouveau."
     },
     "problem": {
@@ -542,10 +520,6 @@ export default {
     ]
   },
   "id": {
-    "title": {
-      "create": "Buat Formulir",
-      "update": "Unggah Definisi Formulir Baru"
-    },
     "introduction": [
       {
         "create": "Untuk membuat formulir, unggah dokumen XForms XML atau dokumen XLSForm Excel.",
@@ -563,9 +537,6 @@ export default {
     "action": {
       "uploadAnyway": "Lanjutkan unggah"
     },
-    "alert": {
-      "fileRequired": "Silakan pilih dokumen."
-    },
     "problem": {
       "400_8": "Definisi formulir yang Anda unggah tidak cocok dengan formulir ini. Terjadi kesalahan formld (seharusnya \"{expected}\", yang didapat \"{actual}\").",
       "400_15": "XLSForm tidak bisa diubah: {error}",
@@ -573,10 +544,6 @@ export default {
     }
   },
   "it": {
-    "title": {
-      "create": "Creare un formulario",
-      "update": "Carica la nuova definizione del formulario"
-    },
     "introduction": [
       {
         "create": "Per creare un formulario, caricare un file XML XForms o un file Excel XLSForm.",
@@ -596,7 +563,6 @@ export default {
       "uploadAnyway": "Carica comunque"
     },
     "alert": {
-      "fileRequired": "Selezionare un file per favore",
       "fileNotReadable": "Impossibile leggere il file. Potrebbe essere stato modificato o eliminato. Seleziona nuovamente il file."
     },
     "problem": {
@@ -622,10 +588,6 @@ export default {
     ]
   },
   "ja": {
-    "title": {
-      "create": "フォームの作成",
-      "update": "新規の定義フォームのアップロード"
-    },
     "introduction": [
       {
         "create": "フォーム作成のため、XForms（XMLファイル）、またはXLSForm（Excelファイル）をアップロードして下さい。",
@@ -643,9 +605,6 @@ export default {
     "action": {
       "uploadAnyway": "ひとまず、アップロード"
     },
-    "alert": {
-      "fileRequired": "ファイルを選択"
-    },
     "problem": {
       "400_8": "アップロードされた定義フォームは、このフォームのものとは異なるようです。formIdが間違っています（\"{expected}\"であるべきですが、\"{actual}\"となっています）。",
       "400_15": "XLSFormを変換できませんでした：{error}",
@@ -653,10 +612,6 @@ export default {
     }
   },
   "pt": {
-    "title": {
-      "create": "Criar formulário",
-      "update": "Carregar nova definição de formulário"
-    },
     "introduction": [
       {
         "create": "Para criar um formulário, carregue um arquivo XML do XForms ou um arquivo XLSForm do Excel.",
@@ -674,9 +629,6 @@ export default {
     },
     "action": {
       "uploadAnyway": "Carregar assim mesmo"
-    },
-    "alert": {
-      "fileRequired": "Por favor, selecione um arquivo."
     },
     "problem": {
       "400_8": "A especificação de formulário que você carregou não parece ser para esse formulário. Ela contém uma identificação de formulário errada (era esperado \"{expected}\", mas encontramos \"{actual}\").",
@@ -700,10 +652,6 @@ export default {
     ]
   },
   "sw": {
-    "title": {
-      "create": "unda fomu",
-      "update": "Pakia Ufafanuzi wa Fomu Mpya"
-    },
     "introduction": [
       {
         "create": "Ili kuunda Fomu, pakia faili ya XForms XML au faili ya XLSForm Excel.",
@@ -721,9 +669,6 @@ export default {
     },
     "action": {
       "uploadAnyway": "Pakia hata hivyo"
-    },
-    "alert": {
-      "fileRequired": "Tafadhali chagua faili."
     },
     "problem": {
       "400_8": "Ufafanuzi wa Fomu uliyopakia hauonekani kuwa wa Fomu hii. Ina formId isiyo sahihi (expected \"{expected}\", imepata \"{actual}\").",
@@ -746,10 +691,6 @@ export default {
     ]
   },
   "zh": {
-    "title": {
-      "create": "创建表单",
-      "update": "上传新表单定义"
-    },
     "introduction": [
       {
         "create": "请上传XForms XML文件或XLSForm Excel文件以创建表单。",
@@ -769,7 +710,6 @@ export default {
       "uploadAnyway": "仍然上传"
     },
     "alert": {
-      "fileRequired": "请选择文件。",
       "fileNotReadable": "无法读取该文件。它可能已被修改或删除。请重新选择文件。"
     },
     "problem": {
@@ -795,10 +735,6 @@ export default {
     ]
   },
   "zh-Hant": {
-    "title": {
-      "create": "建立表單",
-      "update": "上傳新表單定義"
-    },
     "introduction": [
       {
         "create": "若要建立表單，請上傳 XForms XML 檔案或 XLSForm Excel 檔案。",
@@ -816,9 +752,6 @@ export default {
     },
     "action": {
       "uploadAnyway": "無論如何上傳"
-    },
-    "alert": {
-      "fileRequired": "請選擇檔案"
     },
     "problem": {
       "400_8": "您上傳的表單定義似乎不適用於此表單。它的 formId (表單 ID)錯誤（預期為“{expected}”，得到“{actual}”）。",

@@ -104,7 +104,8 @@ defineEmits(['view-xml']);
     "current": "Versión actualmente publicada"
   },
   "fr": {
-    "current": "Version actuellement publiée"
+    "current": "Version actuellement publiée",
+    "notes": "Notes: {notes}"
   },
   "it": {
     "current": "Versione corrente pubblicata"

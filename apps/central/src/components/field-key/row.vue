@@ -147,6 +147,7 @@ export default {
     "seeCode": "Voir le code",
     "accessRevoked": "Accès retiré",
     "action": {
+      "editAppUser": "Modifier utilisateur mobile",
       "revokeAccess": "Retirer l'accès"
     }
   },

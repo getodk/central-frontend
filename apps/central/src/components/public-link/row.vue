@@ -175,6 +175,7 @@ export default {
   },
   "fr": {
     "action": {
+      "edit": "Modifier lien d'accès public",
       "revoke": "Révoquer"
     },
     "revoked": "Révoqué",

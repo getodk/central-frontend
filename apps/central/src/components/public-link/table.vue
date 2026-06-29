@@ -114,7 +114,8 @@ const { publicLinks, actorProperties } = useRequestData();
   "fr": {
     "header": {
       "once": "Soumission unique",
-      "accessLink": "Lien d'accès"
+      "accessLink": "Lien d'accès",
+      "createdAtAndActions": "{createdAt} / {actions}"
     }
   },
   "id": {

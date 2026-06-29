@@ -166,7 +166,6 @@
     "yesProceed": "Ano, pokračovat",
     "showPreview": "Náhled",
     "hidePreview": "Skrýt náhled",
-    "newPreview": "Nový náhled",
     "expand": "Rozbalit",
     "collapse": "Sbalit",
     "upload": "Nahrát"
@@ -327,7 +326,6 @@
     "totalEntities": "Celkem entit",
     "versionShort": "v{version}",
     "warning": "Upozornění",
-    "beta": "Beta",
     "none": "(žádný)",
     "search": "Hledat",
     "reviewState": "Přezkoumání stavu",

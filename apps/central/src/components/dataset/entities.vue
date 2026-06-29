@@ -241,6 +241,7 @@ export default {
 {
   "de": {
     "upload": "Objekte hochladen",
+    "newEntity": "Neues Objekt",
     "alert": {
       "upload": "Ihre Objekte wurden erfolgreich hochgeladen.",
       "create": "Die Entität wurde erfolgreich erstellt."
@@ -253,6 +254,7 @@ export default {
   },
   "es": {
     "upload": "Subir entidades",
+    "newEntity": "Nueva entidad",
     "alert": {
       "upload": "Sus Entidades han sido cargadas con éxito.",
       "create": "La entidad ha sido creado exitosamente."
@@ -278,6 +280,7 @@ export default {
   },
   "it": {
     "upload": "Caricare Entità",
+    "newEntity": "Nuova Entità",
     "alert": {
       "upload": "Le entità sono state caricate con successo.",
       "create": "L'Entità è stata creata con successo."

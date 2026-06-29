@@ -300,6 +300,12 @@ export default {
     "newProperties": "Publier cette ébauche créera {count} propriété. Cela ne peut être annulé. | Publier cette ébauche créera {count} propriétés. Cela ne peut être annulé. | Publier cette ébauche créera {count} propriété(s). Cela ne peut être annulé.",
     "problem": {
       "409_6": "Le nom de version de cette ébauche est en conflit avec une version antérieure de ce formulaire ou d’un formulaire supprimé. Merci d'utiliser le champ ci-dessous pour le changer ou téléverser une nouvelle définition de formulaire."
+    },
+    "field": {
+      "note": "Notes de la version"
+    },
+    "placeholder": {
+      "note": "Décrivez cette version (facultatif)..."
     }
   },
   "id": {

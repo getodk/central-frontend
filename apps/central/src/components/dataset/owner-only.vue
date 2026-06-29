@@ -353,9 +353,6 @@ const confirm = () => {
 <i18n>
 {
   "de": {
-    "panel": {
-      "title": "App-Benutzer und Datensammler-Objekt Zugriff"
-    },
     "accessAll": "Zugriff auf alle Objekte",
     "accessAllDefault": "Zugriff auf alle Objekte (Standard)",
     "ownerOnly": "Nur auf eigene Objekte zugreifen",
@@ -378,9 +375,6 @@ const confirm = () => {
     }
   },
   "es": {
-    "panel": {
-      "title": "Acceso a la entidad del Usuario de la aplicación y recopilador de datos"
-    },
     "accessAll": "Acceder a todas las entidades",
     "accessAllDefault": "Acceder a todas las Entidades (por defecto)",
     "ownerOnly": "Acceder sólo a Entidades propias",
@@ -404,7 +398,7 @@ const confirm = () => {
   },
   "fr": {
     "panel": {
-      "title": "Accès d'entités pour les utilisateurs mobiles et les collecteurs de données web"
+      "title": "Accès aux listes d'entités"
     },
     "accessAll": "Accès à toutes les entités",
     "accessAllDefault": "Accès à toutes les entités (défaut)",
@@ -412,6 +406,20 @@ const confirm = () => {
     "radio": {
       "false": "Les utilisateurs mobiles et les collecteurs de données web de ce projet auront accès à toutes les entités à partir des formulaires qu'ils leur sont assignés.",
       "true": "Les utilisateurs mobiles et les collecteurs de données web de ce projet n'auront accès qu'aux entités qu'ils ont créées. Ceci encourage la confidentialité et limite les transferts de données."
+    },
+    "filterByProperty": {
+      "label": "Filtrer par propriété",
+      "description": "Définissez des règles déterminant quelles entités sont visibles pour les utilisateurs mobiles et via les liens publics, en comparant leurs propriétés.",
+      "entityPropertyLabel": "Voir seulement les entités pour lesquelles",
+      "entityPropertyPlaceholder": "Propriété d'entité",
+      "userPropertyLabel": "est égale à cette propriété de l'utilisateur",
+      "userPropertyPlaceholder": "Propriété d'utilisateur",
+      "disabled": {
+        "datasetProperties": "Pas de propriétés d'entités définies.",
+        "userProperties": "Pas de propriétés d'utilisateur définies.",
+        "both": "Il n'y a pas de propriétés d'entités ou de propriétés d'utilisateur définies."
+      },
+      "currentRule": "Règle: {entityProperty} (propriété d'entité) = {userProperty} (propriété d'utilisateur)"
     },
     "falseModal": {
       "introduction": "Les utilisateurs mobiles et le collecteurs de données web auront accès à toutes les entités, incluant celles créées par d'autres utilisateurs."
@@ -424,13 +432,18 @@ const confirm = () => {
     },
     "alert": {
       "changeToFalse": "Les utilisateurs mobiles et les collecteurs de données web auront maintenant accès à toutes les entités.",
-      "changeToTrue": "Les utilisateurs mobiles et les collecteurs de données web auront maintenant accès seulement aux entités qu'ils ont créées."
+      "changeToTrue": "Les utilisateurs mobiles et les collecteurs de données web auront maintenant accès seulement aux entités qu'ils ont créées.",
+      "changeToProperty": "Les utilisateurs mobiles et les liens publics n'auront maintenant accès qu'aux entités correspondant à la règle de filtrage."
+    },
+    "accessByFilterRule": {
+      "title": "Filtrer par propriété",
+      "introduction": "Les utilisateurs mobiles et les liens publics n'auront maintenant accès qu'aux entités dont la propriété sélectionnée correspond à leur propriété d'utilisateur.",
+      "action": {
+        "save": "Sauvegarder la règle de filtrage."
+      }
     }
   },
   "it": {
-    "panel": {
-      "title": "Accesso dell'utente dell'app e del raccoglitore di dati alla Entità"
-    },
     "accessAll": "Accedi a tutte le entità",
     "accessAllDefault": "Accedi a tutte le entità (predefinito)",
     "ownerOnly": "Accedere solo alle proprie entità",
@@ -453,9 +466,6 @@ const confirm = () => {
     }
   },
   "pt": {
-    "panel": {
-      "title": "Acesso a Entidades para Usuários de Aplicativo e Coletores de Dados"
-    },
     "accessAll": "Acessa todas as Entidades",
     "accessAllDefault": "Acessa todas as Entidades (padrão)",
     "ownerOnly": "Acessa apenas suas próprias Entidades",
@@ -466,9 +476,6 @@ const confirm = () => {
     }
   },
   "zh": {
-    "panel": {
-      "title": "App用户与数据收集者实体权限"
-    },
     "accessAll": "访问所有实体",
     "accessAllDefault": "访问所有实体（默认）",
     "ownerOnly": "仅访问自己的实体",
@@ -491,9 +498,6 @@ const confirm = () => {
     }
   },
   "zh-Hant": {
-    "panel": {
-      "title": "應用程式使用者和資料收集器實體存取"
-    },
     "accessAll": "存取所有實體",
     "accessAllDefault": "存取所有實體 (預設)",
     "ownerOnly": "僅存取自己的實體",

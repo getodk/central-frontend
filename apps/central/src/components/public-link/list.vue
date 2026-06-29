@@ -259,6 +259,7 @@ export default {
     "emptyTable": "Il n'y a aucun lien d'accès public pour ce formulaire.",
     "alert": {
       "create": "Votre lien d'accès public a été créé et est désormais accessible. Copiez le ci-dessous pour le distribuer.",
+      "edit": "Le lien d'accès public «{displayName}» a été modifié.",
       "revoke": "Le lien d'accès public \"{displayName}\" a été révoqué avec succès. Aucune soumission ne sera acceptée depuis ce lien."
     }
   },

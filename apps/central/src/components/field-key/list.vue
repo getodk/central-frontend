@@ -345,11 +345,13 @@ export default {
     ],
     "header": {
       "lastUsed": "Dernière utilisation",
+      "lastUsedAndActions": "{lastUsed} / {actions}",
       "configureClient": "Configurer le client"
     },
     "emptyTable": "Il n'y a pas encore d’utilisateur mobile. Vous devez en créer pour télécharger des formulaires et soumettre des données depuis votre appareil.",
     "alert": {
       "create": "L'utilisateur mobile “{displayName}” a été correctement créé.",
+      "edit": "L'utilisateur mobile “{displayName}” a été modifié.",
       "revoke": "L'accès de l'utilisateur mobile “{displayName}” a été retiré ."
     }
   },

@@ -554,7 +554,8 @@ export default {
         "reprocess": "Soumission précédente dans une série de mises à jours hors ligne à été reçue"
       }
     },
-    "deleted": "(supprimée)"
+    "deleted": "(supprimée)",
+    "entityErrorInstructions": "Vérifiez la définition du formulaire et la soumission. Apportez les corrections nécessaires puis modifiez la soumission et soumettez-la à nouveau pour relancer le traitement."
   },
   "id": {
     "title": {
