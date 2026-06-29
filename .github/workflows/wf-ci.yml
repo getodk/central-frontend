@@ -18,7 +18,7 @@ env:
 jobs:
 
   odk-common:
-    name: '@getodk/common'
+    name: 'common'
     runs-on: 'ubuntu-latest'
     timeout-minutes: 2
 
@@ -74,7 +74,7 @@ jobs:
         run: 'npm run test-browser:${{ matrix.browser }} -w packages/common'
 
   xforms-engine:
-    name: '@getodk/xforms-engine'
+    name: 'xforms-engine'
     runs-on: 'ubuntu-latest'
     timeout-minutes: 3
 
@@ -131,7 +131,7 @@ jobs:
           npm run integration-test-browser:${{ matrix.browser }} -w=packages/xforms-engine
 
   xpath:
-    name: '@getodk/xpath'
+    name: 'xpath'
     runs-on: 'ubuntu-latest'
     timeout-minutes: 2
 
@@ -188,7 +188,7 @@ jobs:
         run: 'npm run test-browser:${{ matrix.browser }} -w=packages/xpath'
 
   web-forms:
-    name: '@getodk/web-forms'
+    name: 'web-forms'
     runs-on: 'ubuntu-latest'
     timeout-minutes: 2
 

@@ -5,7 +5,7 @@ on:
 
 jobs:
   web-forms-e2e-functional:
-    name: '@getodk/web-forms (functional e2e)'
+    name: 'Function e2e'
     runs-on: 'ubuntu-latest'
     timeout-minutes: 5
 
@@ -54,7 +54,7 @@ jobs:
           if-no-files-found: ignore
 
   web-forms-e2e-visual:
-    name: '@getodk/web-forms (visual e2e)'
+    name: 'Visual e2e'
     runs-on: 'ubuntu-latest'
     timeout-minutes: 8
 
