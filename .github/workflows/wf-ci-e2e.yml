@@ -5,7 +5,7 @@ on:
 
 jobs:
   web-forms-e2e-functional:
-    name: 'Function e2e'
+    name: 'Functional e2e'
     runs-on: 'ubuntu-latest'
     timeout-minutes: 5
 
