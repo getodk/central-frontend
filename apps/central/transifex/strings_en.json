@@ -5740,7 +5740,7 @@
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "Control which Entities users can download with filtering rules based on custom properties. Plus, Web Forms is now the default web form experience, bringing a faster, more intuitive experience for form previews, data editing, and web-based form filling."
+        "string": "Control which Entities each App User or Public Link receives with filtering rules based on custom properties. Plus, Web Forms is now the default web form experience, bringing a faster, more intuitive experience for form previews, data editing, and web-based form filling."
       }
     }
   },
