@@ -10,6 +10,7 @@ on:
 
 jobs:
   static-checks:
+    name: 'Static checks'
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
@@ -51,6 +52,7 @@ jobs:
         echo "Upload complete."
 
   test-central-app:
+    name: 'Test central app'
     needs:
     - static-checks
     timeout-minutes: 10
@@ -80,6 +82,7 @@ jobs:
     - run: npm run test -w=@getodk/central-frontend
 
   test-forms-app:
+    name: 'Test forms app'
     needs:
     - static-checks
     timeout-minutes: 2
@@ -110,6 +113,7 @@ jobs:
     - run: npm run test -w=@getodk/forms
 
   e2e-tests:
+    name: 'Test e2e'
     needs:
     - test-central-app
     - test-forms-app
@@ -161,13 +165,13 @@ jobs:
       run: docker compose logs || true
 
   wf-tests:
-    name: 'Run Web Forms Tests'
+    name: 'Test web-forms packages'
     needs:
     - static-checks
     uses: ./.github/workflows/wf-ci.yml
 
   wf-e2e-tests:
-    name: 'Run Web Forms E2E Tests'
+    name: 'Test web-forms e2e'
     needs:
     - wf-tests
     uses: ./.github/workflows/wf-ci-e2e.yml
