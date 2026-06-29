@@ -81,9 +81,8 @@ export interface ScenarioConfig extends ScenarioFormMeta {
   readonly dispose: VoidFunction;
 }
 
-// prettier-ignore
 type ScenarioStaticInitParameters =
-	| readonly [formName: string, form: XFormsElement, overrideOptions?: Partial<TestFormOptions>]
+  | readonly [formName: string, form: XFormsElement, overrideOptions?: Partial<TestFormOptions>]
   | readonly [formXml: string, overrideOptions?: Partial<TestFormOptions>];
 
 interface AssertCurrentReferenceOptions {
@@ -113,11 +112,10 @@ type AnswerItemCollectionParameters = readonly [
   ...selectionValues: [string, string, ...string[]],
 ];
 
-// prettier-ignore
 type AnswerParameters =
-	| AnswerItemCollectionParameters
-	| readonly [reference: string, value: unknown]
-	| readonly [value: unknown];
+  | AnswerItemCollectionParameters
+  | readonly [reference: string, value: unknown]
+  | readonly [value: unknown];
 
 const isAnswerItemCollectionParams = (args: AnswerParameters) => {
   return args.length > 2 && args.every((arg) => typeof arg === 'string');
