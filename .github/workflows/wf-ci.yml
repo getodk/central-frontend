@@ -56,7 +56,9 @@ jobs:
       - uses: 'actions/cache@v6'
         id: cache-build
         with:
-          path: packages/*/dist
+          path: |
+            dist
+            packages/*/dist
           key: build-${{ github.sha }}
           fail-on-cache-miss: true
 
@@ -114,7 +116,9 @@ jobs:
       - uses: 'actions/cache@v6'
         id: cache-build
         with:
-          path: packages/*/dist
+          path: |
+            dist
+            packages/*/dist
           key: build-${{ github.sha }}
           fail-on-cache-miss: true
 
@@ -172,7 +176,9 @@ jobs:
       - uses: 'actions/cache@v6'
         id: cache-build
         with:
-          path: packages/*/dist
+          path: |
+            dist
+            packages/*/dist
           key: build-${{ github.sha }}
           fail-on-cache-miss: true
 
@@ -230,7 +236,9 @@ jobs:
       - uses: 'actions/cache@v6'
         id: cache-build
         with:
-          path: packages/*/dist
+          path: |
+            dist
+            packages/*/dist
           key: build-${{ github.sha }}
           fail-on-cache-miss: true
 
