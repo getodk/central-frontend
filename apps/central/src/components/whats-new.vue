@@ -130,7 +130,7 @@ function hideModal() {
     "en": {
       // This is the title at the top of a pop-up.
       "title": "Entity Filtering 🎯 and ODK Web Forms by Default 🌐",
-      "body": "Control which Entities users can download with filtering rules based on Entity properties. Plus, Web Forms is now the default web form experience, bringing a faster, more intutive experience for form previews, data editing, and web-based form filling."
+      "body": "Control which Entities users can download with filtering rules based on custom properties. Plus, Web Forms is now the default web form experience, bringing a faster, more intuitive experience for form previews, data editing, and web-based form filling."
     }
   }
 </i18n>
