@@ -1456,13 +1456,13 @@
           "string": "Nombre d'événements de propriétés supprimées"
         },
         "num_owner_only_datasets_per_project": {
-          "string": "Nombre de listes d'entités avec accès du propriétaire seulement"
+          "string": "Nombre de listes d'entités restreintes au propriétaire"
         },
         "num_custom_user_properties": {
           "string": "Nombre de propriétés personalisées"
         },
         "num_user_property_filtered_datasets": {
-          "string": "Nombre de listes d'entités filtrées par des propriétés d'usagers"
+          "string": "Nombre de listes d'entités filtrées par propriété"
         },
         "num_properties": {
           "string": "Nombre de propriétés"
