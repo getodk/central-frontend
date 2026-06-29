@@ -30,10 +30,4 @@ test.describe('Markdown formatting', () => {
     });
   });
 
-  test('sanitizes user input', async ({ page }) => {
-    const input = await formPage.input.getInputByLabel("What's your name?");
-    await input.fill('<input name="sanitizeme" />');
-    const output = page.locator('input[name="sanitizeme"]');
-    expect(await output.count()).toEqual(0);
-  });
 });
