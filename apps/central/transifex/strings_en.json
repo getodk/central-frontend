@@ -5736,11 +5736,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "🎨 Branded login pages, Entity List cleanups, and file uploads in Web Forms",
+        "string": "Entity Filtering 🎯 and ODK Web Forms by Default 🌐",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "Customize the login page with your branding, clean up Entity Lists and Properties when they are no longer needed, and upload any file to your Web Forms."
+        "string": "Control which Entities users can download with filtering rules based on Entity properties. Plus, Web Forms is now the default web form experience, bringing a faster, more intutive experience for form previews, data editing, and web-based form filling."
       }
     }
   },

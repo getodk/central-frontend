@@ -53,7 +53,10 @@ const isVisible = ref(false);
 const initialOptIn = currentUser.preferences.site.mailingListOptIn;
 const mailingListOptIn = ref(currentUser.preferences.site.mailingListOptIn !== false);
 
-const currentVersion = '2026.1';
+const currentVersion = '2026.2';
+// You can use requiredVerb to limit who sees the What's New modal under the
+// current version. Specify project.read to show the modal to everyone.
+const requiredVerb = 'project.read';
 
 const isOlderVersion = (stored, current) => {
   // compare stored vs. current year & release
@@ -66,12 +69,11 @@ watch(() => projects.dataExists, () => {
   const showModal = !currentUser.preferences.site.whatsNewDismissed ||
     isOlderVersion(currentUser.preferences.site.whatsNewDismissed, currentVersion);
 
-  // When updating `canUpdateForm` in the future, consider the *verb* for the audience.
-  // For 2025.4, we decided it could be shown to project viewers as well,
-  // where the previous modal was only shown to admins and project managers.
-  const canUpdateForm = currentUser.can('submission.list') ||
-    projects.data.some(project => project.verbs.has('submission.list'));
-  if (canUpdateForm && // Check that user is admin or is able to edit forms in at least one project
+  // Check that the user has requiredVerb on at least one project.
+  const hasRequiredVerb = currentUser.can(requiredVerb) ||
+    projects.data.some(project => project.verbs.has(requiredVerb));
+
+  if (hasRequiredVerb &&
     !openModal.state && // Check that no other modal (e.g. new project) is open
     showModal) {
     isVisible.value = true;
@@ -127,8 +129,8 @@ function hideModal() {
   {
     "en": {
       // This is the title at the top of a pop-up.
-      "title": "🎨 Branded login pages, Entity List cleanups, and file uploads in Web Forms",
-      "body": "Customize the login page with your branding, clean up Entity Lists and Properties when they are no longer needed, and upload any file to your Web Forms."
+      "title": "Entity Filtering 🎯 and ODK Web Forms by Default 🌐",
+      "body": "Control which Entities users can download with filtering rules based on Entity properties. Plus, Web Forms is now the default web form experience, bringing a faster, more intutive experience for form previews, data editing, and web-based form filling."
     }
   }
 </i18n>
