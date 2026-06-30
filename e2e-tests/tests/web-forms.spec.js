@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import BackendClient from '../backend-client';
-import { login, test } from '../util';
+import { login, test, submitLogin } from '../util';
 
 const appUrl = process.env.ODK_URL;
 const projectId = process.env.PROJECT_ID;
@@ -112,7 +112,7 @@ test.describe('ODK Web Forms', () => {
       test(t.name, async ({ page }) => {
         await page.goto(appUrl + t.url(publishedForm));
         await expect(page.getByRole('heading', { name: 'Welcome to ODK Central' })).toBeVisible();
-        await login(page);
+        await submitLogin(page);
         await expect(page.getByRole('heading', { name: publishedForm.name })).toBeVisible();
       });
     });
