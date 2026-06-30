@@ -74,7 +74,7 @@ export default defineConfig(({ mode }) => {
     },
     base: './',
     plugins: [vue(), vueJsx(), cssInjectedByJsPlugin()],
-    root: 'tests/app/',
+    root: 'e2e/app/',
 
     resolve: {
       alias: {

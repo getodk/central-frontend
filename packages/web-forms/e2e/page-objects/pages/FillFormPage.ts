@@ -10,8 +10,7 @@ import { TextControl } from '../controls/TextControl.js';
 const BASE_URL = 'http://localhost:5173';
 
 export class FillFormPage {
-  private readonly page: Page;
-
+  public readonly page: Page;
   public readonly geopoint: GeopointControl;
   public readonly input: InputControl;
   public readonly map: MapControl;

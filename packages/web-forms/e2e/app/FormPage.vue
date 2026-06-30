@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
-import { getFormXml, getAttachment } from '../helpers.js';
+import { getFormXml, getAttachment } from '../../tests/helpers.js';
 import { ref } from 'vue';
 import OdkWebForm from '../../src/components/OdkWebForm.vue';
 import type { PreloadProperties } from '@getodk/xforms-engine';
@@ -17,11 +17,6 @@ const init = () => {
 			// eslint-disable-next-line no-console
 			console.error(err);
 		});
-};
-
-const fetchFormAttachment = (requestUrl: URL) => {
-	const attachment = getAttachment(requestUrl.toString());
-	return Promise.resolve(new Response(attachment));
 };
 
 const deviceId = 'wf:0123456789ABCDEF';
@@ -42,7 +37,7 @@ init();
 	<template v-if="formXml">
 		<OdkWebForm
 			:form-xml="formXml"
-			:fetch-form-attachment="fetchFormAttachment"
+			:fetch-form-attachment="getAttachment"
 			:device-id="deviceId"
 			:preload-properties="preloadProperties"
 			@submit="handleSubmit"

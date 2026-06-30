@@ -1,7 +1,7 @@
 import type { Component } from 'vue';
 import { createApp } from 'vue';
 
-import { webFormsPlugin } from '../../src/web-forms-plugin.ts';
+import { webFormsPlugin } from '../../src/web-forms-plugin.js';
 import testApp from './app.vue';
 
 import hankenGrotesk300 from '@fontsource/hanken-grotesk/300.css?inline';
@@ -11,7 +11,7 @@ import roboto400 from '@fontsource/roboto/400.css?inline';
 import roboto500 from '@fontsource/roboto/500.css?inline';
 import primeflex from 'primeflex/primeflex.css?inline';
 import appStyles from '../../src/assets/styles/style.scss?inline';
-import router from './router';
+import router from './router.js';
 
 const styles = [
   roboto300,

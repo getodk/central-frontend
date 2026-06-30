@@ -29,7 +29,17 @@ import allPossibleNotes from './fixtures/2-all-possible-notes.xml?raw';
 import basicRepeat from './fixtures/01-basic-repeat.xml?raw';
 import markdown from './fixtures/3-notes-with-markdown.xml?raw';
 
-import citiesGeoJson from './fixtures/attachments/cities.geojson?raw';
+import citiesGeoJson from './fixtures/attachments/cities.geojson?url';
+
+import angry from './fixtures/attachments/angry.jpg?url';
+import apple from './fixtures/attachments/apple.jpg?url';
+import excited from './fixtures/attachments/excited.svg?url';
+import fastFood from './fixtures/attachments/fast-food.svg?url';
+import happy from './fixtures/attachments/happy.svg?url';
+import neutral from './fixtures/attachments/neutral.png?url';
+import noodles from './fixtures/attachments/noodles.svg?url';
+import sad from './fixtures/attachments/sad.png?url';
+import turkey from './fixtures/attachments/turkey.svg?url';
 
 const fixtures: Record<string, string> = {
   'select-control.xml': selectControl,
@@ -56,6 +66,15 @@ const fixtures: Record<string, string> = {
 
 const attachments: Record<string, string> = {
   'jr://file/cities.geojson': citiesGeoJson,
+  'jr://images/angry.jpg': angry,
+  'jr://images/apple.jpg': apple,
+  'jr://images/excited.svg': excited,
+  'jr://images/fast-food.svg': fastFood,
+  'jr://images/happy.svg': happy,
+  'jr://images/neutral.png': neutral,
+  'jr://images/noodles.svg': noodles,
+  'jr://images/sad.png': sad,
+  'jr://images/turkey.svg': turkey,
 };
 
 /**
@@ -89,12 +108,13 @@ export const getFormXml = (fileName: string): Promise<string> => {
   return Promise.resolve(xml);
 };
 
-export const getAttachment = (url: string): string => {
-  const attachment = attachments[url];
+export const getAttachment = (url: URL): Promise<Response> => {
+  const path = url.toString();
+  const attachment = attachments[path];
   if (attachment == null) {
-    throw new Error(`Could not find attachment with url: ${url}`);
+    throw new Error(`Could not find attachment with url: ${path}`);
   }
-  return attachment;
+  return fetch(attachment);
 };
 
 export const getReactiveForm = async (formPath: string): Promise<RootNode> => {
