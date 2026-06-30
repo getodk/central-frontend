@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { expect, Page } from '@playwright/test';
 import { GeopointControl } from '../controls/GeopointControl.js';
 import { InputControl } from '../controls/InputControl.js';
 import { MapControl } from '../controls/MapControl.js';
@@ -7,9 +7,10 @@ import { RepeatControl } from '../controls/RepeatControl.js';
 import { SelectControl } from '../controls/SelectControl.js';
 import { TextControl } from '../controls/TextControl.js';
 
-export class FillFormPage {
-  private readonly page: Page;
+const BASE_URL = 'http://localhost:5173';
 
+export class FillFormPage {
+  public readonly page: Page;
   public readonly geopoint: GeopointControl;
   public readonly input: InputControl;
   public readonly map: MapControl;
@@ -17,6 +18,14 @@ export class FillFormPage {
   public readonly text: TextControl;
   public readonly select: SelectControl;
   public readonly note: NoteControl;
+
+  static async loadForm(page: Page, formId: string) {
+    await page.goto(`${BASE_URL}/form/${formId}`);
+    const formPage = new FillFormPage(page);
+    const formWrapper = page.locator('.form-wrapper');
+    await expect(formWrapper).toBeVisible();
+    return formPage;
+  }
 
   constructor(page: Page) {
     this.page = page;

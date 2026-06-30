@@ -1,7 +1,6 @@
 import { Locator, test } from '@playwright/test';
 import { BrowserContext } from 'playwright-core';
 import { FillFormPage } from '../../page-objects/pages/FillFormPage.ts';
-import { PreviewPage } from '../../page-objects/pages/PreviewPage.ts';
 
 test.describe('All Question Types (Visual)', () => {
   let formPage: FillFormPage;
@@ -21,14 +20,8 @@ test.describe('All Question Types (Visual)', () => {
       permissions: permissions,
     });
     const page = await context.newPage();
-    const previewPage = new PreviewPage(page);
-    await previewPage.goToDevPage();
 
-    const newPage = await previewPage.openPublicDemoForm(
-      'All question types',
-      'All question types'
-    );
-    formPage = new FillFormPage(newPage);
+    formPage = await FillFormPage.loadForm(page, 'all-question-types-v2024091201-3.xml');
   });
 
   test.afterAll(async () => {
@@ -232,14 +225,7 @@ test.describe('All Question Types - Geolocation permission denied', () => {
     });
 
     const page = await context.newPage();
-    const previewPage = new PreviewPage(page);
-    await previewPage.goToDevPage();
-
-    const newPage = await previewPage.openPublicDemoForm(
-      'All question types',
-      'All question types'
-    );
-    formPage = new FillFormPage(newPage);
+    formPage = await FillFormPage.loadForm(page, 'all-question-types-v2024091201-3.xml');
     await formPage.waitForNetworkIdle();
   });
 

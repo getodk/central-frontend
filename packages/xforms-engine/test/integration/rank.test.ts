@@ -13,12 +13,13 @@ import {
 } from '@getodk/common/test-utils/xform-dsl/index.ts';
 import { describe, it, expect } from 'vitest';
 import { Scenario } from '../scenario/jr/Scenario.ts';
-import { r } from '../scenario/jr/resource/ResourcePathHelper.ts';
+
+import rank from '../scenario/fixtures/test-javarosa/resources/rank-form.xml?raw';
 
 describe('Rank', () => {
   it('should preserve the order of values when set, if the rank contains <item>s', async () => {
     const RANK_QUESTION = '/data/rankWidget';
-    const scenario = await Scenario.init(r('rank-form.xml'));
+    const scenario = await Scenario.init(rank);
 
     expect(scenario.answerOf(RANK_QUESTION).getValue()).toBe('');
 
