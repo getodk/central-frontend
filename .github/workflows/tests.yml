@@ -65,7 +65,7 @@ jobs:
       with:
         node-version-file: package.json
         cache: 'npm'
-    - uses: 'actions/cache@v6'
+    - uses: 'actions/cache@v5'
       id: cache-install
       with:
         path: |
@@ -73,7 +73,7 @@ jobs:
           **/node_modules
         key: install-${{ steps.setup-node.outputs.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
         fail-on-cache-miss: true
-    - uses: 'actions/cache@v6'
+    - uses: 'actions/cache@v5'
       id: cache-build
       with:
         path: |
@@ -96,7 +96,7 @@ jobs:
       with:
         node-version-file: package.json
         cache: 'npm'
-    - uses: 'actions/cache@v6'
+    - uses: 'actions/cache@v5'
       id: cache-install
       with:
         path: |
@@ -104,7 +104,7 @@ jobs:
           **/node_modules
         key: install-${{ steps.setup-node.outputs.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
         fail-on-cache-miss: true
-    - uses: 'actions/cache@v6'
+    - uses: 'actions/cache@v5'
       id: cache-build
       with:
         path: |
@@ -116,13 +116,18 @@ jobs:
     - run: npm run test -w=@getodk/forms
 
   e2e-tests:
-    name: 'Test e2e'
+    name: 'Test apps e2e'
     needs:
     - test-central-app
     - test-forms-app
     timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
+
+    # This one weird trick speeds up every build!
+    # see: https://github.com/getodk/central-backend/pull/1642
+    # see: https://github.com/actions/runner/issues/4030
+    - run: sudo apt-get remove --purge man-db
     - uses: actions/checkout@v6
       with:
         path: client
