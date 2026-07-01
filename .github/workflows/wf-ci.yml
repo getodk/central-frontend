@@ -242,10 +242,7 @@ jobs:
       - if: ${{ matrix.target == 'Web' }}
         run: 'npx playwright install ${{ matrix.browser }} --with-deps'
 
-      - if: ${{ matrix.target == 'Web' && matrix.browser == 'webkit' }}
-        run: 'npm run test-browser:${{ matrix.browser }} -w=packages/web-forms'
-
-      - if: ${{ matrix.target == 'Web' && matrix.browser != 'webkit' }}
+      - if: ${{ matrix.target == 'Web' }}
         run: 'npm run test-browser:${{ matrix.browser }} -w=packages/web-forms'
 
       - if: ${{ matrix.node-version == '24.16.0' && matrix.target == 'Node' }}
