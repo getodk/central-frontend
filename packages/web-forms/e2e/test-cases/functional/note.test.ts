@@ -47,8 +47,8 @@ test.describe('Note Question Type', () => {
     await formPage.text.expectLabel('A note with geopoint type');
     await formPage.geopoint.expectGeopointFormattedValue([
       'Accuracy: 150 m,',
-      'Latitude: 38.253094215699576,',
-      'Longitude: 21.756382658677467.',
+      'Latitude: 38.25309,',
+      'Longitude: 21.75638.',
     ]);
   });
 });
