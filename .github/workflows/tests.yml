@@ -10,42 +10,38 @@ on:
 
 jobs:
   static-checks:
-    timeout-minutes: 2
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v6
-    - run: sudo apt-get install shellcheck
-    - run: ./bin/check-scripts.sh
-    - run: ./bin/check-for-large-files.sh
-    - run: ./bin/check-images.sh
-  unit-tests:
-    timeout-minutes: 10
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v6
-    - uses: actions/setup-node@v6
-      with:
-        node-version-file: package.json
-        cache: 'npm'
-    - run: npm ci
-    - run: npm run build
-    - run: npm run lint
-    - uses: browser-actions/setup-chrome@v2
-    - run: npm run test -w=@getodk/central-frontend
-    - run: npx playwright install chromium --with-deps
-    - run: npm run test -w=@getodk/forms
-  build:
+    name: 'Static checks'
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
     - uses: actions/setup-node@v6
+      id: setup-node
       with:
         node-version-file: package.json
         cache: 'npm'
+    - run: sudo apt-get install shellcheck
+    - run: ./bin/check-scripts.sh
+    - run: ./bin/check-for-large-files.sh
+    - run: ./bin/check-images.sh
     - run: npm ci
     - run: npm run build
+    - run: npm run lint
     - run: ./bin/check-bundle-size.js
+    - uses: 'actions/cache/save@v6'
+      id: cache-install
+      with:
+        path: |
+          node_modules
+          **/node_modules
+        key: install-${{ steps.setup-node.outputs.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
+    - uses: 'actions/cache/save@v6'
+      id: cache-build
+      with:
+        path: |
+          dist
+          packages/*/dist
+        key: build-${{ github.sha }}
     - name: Upload Release Artefact
       if: github.ref_type == 'tag'
       env:
@@ -55,39 +51,75 @@ jobs:
         echo "Uploading dist bundle..."
         gh release upload ${{ github.ref_name }} dist-${{ github.ref_name }}.tar.gz
         echo "Upload complete."
-  build-wf:
-    name: 'Build Web Forms'
-    runs-on: 'ubuntu-latest'
-    strategy:
-      fail-fast: false
-      matrix:
-        node-version: ['24.16.0']
-    steps:
-      - uses: 'actions/checkout@v6'
-      - uses: 'volta-cli/action@v5'
-        with:
-          node-version: '${{ matrix.node-version }}'
-      - uses: 'actions/cache@v5'
-        id: cache-install
-        with:
-          path: |
-            node_modules
-            **/node_modules
-          key: install-${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
-      - uses: 'actions/cache@v5'
-        id: cache-build
-        with:
-          path: |
-            packages/*/dist
-            packages/web-forms/dist-demo
-          key: build-${{ matrix.node-version }}-${{ github.sha }}
-      - run: 'npm ci'
-      - run: 'npm run build'
-  e2e-tests:
+
+  test-central-app:
+    name: 'Test central app'
     needs:
-    - build
     - static-checks
-    - unit-tests
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+    - uses: actions/setup-node@v6
+      id: setup-node
+      with:
+        node-version-file: package.json
+        cache: 'npm'
+    - uses: 'actions/cache@v5'
+      id: cache-install
+      with:
+        path: |
+          node_modules
+          **/node_modules
+        key: install-${{ steps.setup-node.outputs.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
+        fail-on-cache-miss: true
+    - uses: 'actions/cache@v5'
+      id: cache-build
+      with:
+        path: |
+          dist
+          packages/*/dist
+        key: build-${{ github.sha }}
+        fail-on-cache-miss: true
+    - run: npm run test -w=@getodk/central-frontend
+
+  test-forms-app:
+    name: 'Test forms app'
+    needs:
+    - static-checks
+    timeout-minutes: 2
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+    - uses: actions/setup-node@v6
+      id: setup-node
+      with:
+        node-version-file: package.json
+        cache: 'npm'
+    - uses: 'actions/cache@v5'
+      id: cache-install
+      with:
+        path: |
+          node_modules
+          **/node_modules
+        key: install-${{ steps.setup-node.outputs.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
+        fail-on-cache-miss: true
+    - uses: 'actions/cache@v5'
+      id: cache-build
+      with:
+        path: |
+          dist
+          packages/*/dist
+        key: build-${{ github.sha }}
+        fail-on-cache-miss: true
+    - run: npx playwright install chromium --with-deps
+    - run: npm run test -w=@getodk/forms
+
+  e2e-tests:
+    name: 'Test apps e2e'
+    needs:
+    - test-central-app
+    - test-forms-app
     timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
@@ -96,7 +128,6 @@ jobs:
     # see: https://github.com/getodk/central-backend/pull/1642
     # see: https://github.com/actions/runner/issues/4030
     - run: sudo apt-get remove --purge man-db
-
     - uses: actions/checkout@v6
       with:
         path: client
@@ -140,13 +171,15 @@ jobs:
       name: Docker Container Logs
       working-directory: central
       run: docker compose logs || true
+
   wf-tests:
-    name: 'Run Web Forms Tests'
+    name: 'Test web-forms packages'
     needs:
-    - build-wf
+    - static-checks
     uses: ./.github/workflows/wf-ci.yml
+
   wf-e2e-tests:
-    name: 'Run Web Forms E2E Tests'
+    name: 'Test web-forms e2e'
     needs:
     - wf-tests
     uses: ./.github/workflows/wf-ci-e2e.yml
