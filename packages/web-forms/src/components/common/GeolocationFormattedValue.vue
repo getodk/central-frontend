@@ -9,12 +9,10 @@ import type {
 	GeotraceNoteValue,
 	GeoshapeNoteValue,
 } from '@getodk/xforms-engine';
-import { truncateDecimals } from '@/lib/format/truncate-decimals.ts';
+import { truncateGeoCoordinates, truncateDecimals } from '@/lib/format/truncate-decimals.ts';
 import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
 import type { Translate } from '@/lib/locale/useLocale.ts';
 import { computed, inject } from 'vue';
-
-const COORDINATE_DECIMALS = 5;
 
 type GeolocationNode = GeopointInputNode | GeopointNoteNode | GeoshapeNoteNode | GeotraceNoteNode;
 
@@ -40,8 +38,8 @@ const locationPoints = computed<GeolocationValue>(() => {
 	<div v-for="(point, index) in locationPoints" :key="index">
 		<p class="geolocation-formatted-value">
 			<span v-if="point?.accuracy">{{ t('geolocation_formatted_value.accuracy.label', { accuracy: truncateDecimals(point.accuracy, { decimals: 3 }) }) }}</span>
-			<span v-if="point?.latitude != null">{{ t('geolocation_formatted_value.latitude.label', { latitude: truncateDecimals(point.latitude, { decimals: COORDINATE_DECIMALS }) }) }}</span>
-			<span v-if="point?.longitude != null">{{ t('geolocation_formatted_value.longitude.label', { longitude: truncateDecimals(point.longitude, { decimals: COORDINATE_DECIMALS }) }) }}</span>
+			<span v-if="point?.latitude != null">{{ t('geolocation_formatted_value.latitude.label', { latitude: truncateGeoCoordinates(point.latitude) }) }}</span>
+			<span v-if="point?.longitude != null">{{ t('geolocation_formatted_value.longitude.label', { longitude: truncateGeoCoordinates(point.longitude) }) }}</span>
 		</p>
 	</div>
 </template>

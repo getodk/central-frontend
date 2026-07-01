@@ -5,7 +5,7 @@ import {
 	type SingleFeatureType,
 } from '@/components/common/map/getModeConfig.ts';
 import { isCoordsEqual } from '@/components/common/map/vertex-geometry.ts';
-import { truncateDecimals } from '@/lib/format/truncate-decimals.ts';
+import { truncateGeoCoordinates, truncateDecimals } from '@/lib/format/truncate-decimals.ts';
 import type { Feature, LineString, Point, Polygon, Position } from 'geojson';
 import type { Coordinate } from 'ol/coordinate';
 import { toLonLat } from 'ol/proj';
@@ -36,7 +36,6 @@ const emit = defineEmits(['discard', 'toggle-advanced-panel', 'view-details']);
 
 const t: Translate = inject(TRANSLATE)!;
 
-const COORDINATE_DECIMALS = 5;
 const LINE_ICON = 'mdiVectorPolyline';
 const POLYGON_ICON = 'mdiVectorPolygon';
 
@@ -59,8 +58,8 @@ const selectedVertexInfo = computed(() => {
 
 	const [longitude, latitude, altitude, accuracy] = toLonLat(props.selectedVertex);
 	const parts = [
-		t('map_status_bar.vertex_longitude.label', { longitude: truncateDecimals(longitude!, { decimals: COORDINATE_DECIMALS }) }),
-		t('map_status_bar.vertex_latitude.label', { latitude: truncateDecimals(latitude!, { decimals: COORDINATE_DECIMALS }) }),
+		t('map_status_bar.vertex_longitude.label', { longitude: truncateGeoCoordinates(longitude!) }),
+		t('map_status_bar.vertex_latitude.label', { latitude: truncateGeoCoordinates(latitude!) }),
 	];
 
 	// Altitude 0 is a valid value (sea level), so show it whenever present.
