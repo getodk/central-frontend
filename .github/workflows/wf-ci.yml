@@ -243,37 +243,7 @@ jobs:
         run: 'npx playwright install ${{ matrix.browser }} --with-deps'
 
       - if: ${{ matrix.target == 'Web' && matrix.browser == 'webkit' }}
-        run: |
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
-          npm run test-browser:${{ matrix.browser }} -w=packages/web-forms
+        run: 'npm run test-browser:${{ matrix.browser }} -w=packages/web-forms'
 
       - if: ${{ matrix.target == 'Web' && matrix.browser != 'webkit' }}
         run: 'npm run test-browser:${{ matrix.browser }} -w=packages/web-forms'
