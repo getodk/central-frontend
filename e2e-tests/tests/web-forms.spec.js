@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import BackendClient from '../backend-client';
-import { login, test } from '../util';
+import { login, test, submitLogin } from '../util';
 
 const appUrl = process.env.ODK_URL;
 const projectId = process.env.PROJECT_ID;
@@ -102,7 +102,23 @@ test.describe('ODK Web Forms', () => {
     await expect(page.getByRole('heading', { name: 'Successful' })).toBeVisible();
   });
 
-  test('allows user to relogin on session expiry', async ({ page, context }) => {
+  test.describe('redirects to login if 401 on load', async () => {
+    const urls = [
+      { name: 'hyphen prefix', url: (form) => `/-/${form.enketoId}` },
+      { name: 'f prefix', url: (form) => `/f/${form.enketoId}` },
+      { name: 'restful', url: (form) => `/projects/${projectId}/forms/${form.xmlFormId}/submissions/new` }
+    ];
+    urls.forEach(t => {
+      test(t.name, async ({ page }) => {
+        await page.goto(appUrl + t.url(publishedForm));
+        await expect(page.getByRole('heading', { name: 'Welcome to ODK Central' })).toBeVisible();
+        await submitLogin(page);
+        await expect(page.getByRole('heading', { name: publishedForm.name })).toBeVisible();
+      });
+    });
+  });
+
+  test('allows user to relogin on session expiry during form fill', async ({ page, context }) => {
     await login(page);
 
     const page2 = await context.newPage();

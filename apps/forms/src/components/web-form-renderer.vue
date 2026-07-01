@@ -42,6 +42,7 @@ let submissionData: SubmissionData;
 const submissionResult:any = {};
 const isEdit = computed(() => props.actionType === 'edit');
 const isPublicLink = computed(() => props.actionType === 'public-link');
+const draftPath = computed(() => props.form.draft ? '/draft' : '');
 
 const deviceID = getDeviceId();
 
@@ -51,8 +52,7 @@ const withToken = (url) => `${url}${queryString({ st: props.st })}`;
 
 const getAttachment = (requestUrl: URL) => {
   const encodedName = encodeURIComponent(requestUrl.pathname.split('/').pop()!);
-  const draftPath = props.form.draft ? '/draft' : '';
-  const url = withToken(`/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath}/attachments/${encodedName}`);
+  const url = withToken(`/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath.value}/attachments/${encodedName}`);
   return fetch(url);
 };
 
@@ -66,9 +66,8 @@ const postPrimaryInstance = async (file:File) => {
     url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}/submissions/${props.instanceId}`;
     method = 'PUT';
   } else {
-    const draftPath = props.form.draft ? '/draft' : '';
     params.deviceID = deviceID;
-    url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath}/submissions`;
+    url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath.value}/submissions`;
     method = 'POST';
   }
   url += queryString(params);
@@ -176,7 +175,7 @@ const uploadAttachment = async (attachment: File, instanceId: string) => {
   const encodedInstanceId = encodeURIComponent(instanceId);
   const encodedName = encodeURIComponent(attachment.name);
 
-  const url = withToken(`/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}/submissions/${encodedInstanceId}/attachments/${encodedName}`);
+  const url = withToken(`/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath.value}/submissions/${encodedInstanceId}/attachments/${encodedName}`);
 
   let result;
   try {

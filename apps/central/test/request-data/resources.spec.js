@@ -114,6 +114,100 @@ describe('createResources()', () => {
       ];
       forms.length.should.equal(6);
       for (const form of forms) form.projectId.should.equal(1);
+      expect(dataset.accessFilter).to.be.null;
+    });
+
+    describe('replaceData', () => {
+      it('adds projectId to forms in replaced data and accessFilter is set to null', () => {
+        testData.extendedDatasets.createPast(1, {
+          properties: [],
+          sourceForms: [],
+          linkedForms: []
+        });
+        const dataset = createResource();
+
+        dataset.replaceData({
+          id: 1,
+          projectId: 1,
+          name: 'trees',
+          approvalRequired: false,
+          ownerOnly: false,
+          entities: 0,
+          lastEntity: undefined,
+          lastUpdate: undefined,
+          conflicts: 0,
+          properties: [
+            {
+              name: 'height',
+              forms: [
+                { name: 'Tree Registration', xmlFormId: 'tree_registration' },
+              ]
+            }
+          ],
+          sourceForms: [
+            { name: 'Tree Registration', xmlFormId: 'tree_registration' },
+          ],
+          linkedForms: [
+            { name: 'National Parks Survey', xmlFormId: 'national_parks_survey' }
+          ]
+        });
+
+        const forms = [
+          ...dataset.sourceForms,
+          ...dataset.linkedForms,
+          ...dataset.properties[0].forms
+        ];
+        forms.length.should.equal(3);
+        for (const form of forms) form.projectId.should.equal(1);
+        expect(dataset.accessFilter).to.be.null;
+      });
+
+      it('sets accessFilter from the response', () => {
+        testData.extendedDatasets.createPast(1, {
+          properties: [],
+          sourceForms: [],
+          linkedForms: []
+        });
+        const dataset = createResource();
+
+        dataset.replaceData({
+          id: 1,
+          projectId: 1,
+          name: 'trees',
+          approvalRequired: false,
+          ownerOnly: true,
+          accessFilter: {
+            type: 'ownerOnly'
+          },
+          entities: 0,
+          lastEntity: undefined,
+          lastUpdate: undefined,
+          conflicts: 0,
+          properties: [
+            {
+              name: 'height',
+              forms: [
+                { name: 'Tree Registration', xmlFormId: 'tree_registration' },
+              ]
+            }
+          ],
+          sourceForms: [
+            { name: 'Tree Registration', xmlFormId: 'tree_registration' },
+          ],
+          linkedForms: [
+            { name: 'National Parks Survey', xmlFormId: 'national_parks_survey' }
+          ]
+        });
+
+        const forms = [
+          ...dataset.sourceForms,
+          ...dataset.linkedForms,
+          ...dataset.properties[0].forms
+        ];
+        forms.length.should.equal(3);
+        for (const form of forms) form.projectId.should.equal(1);
+        dataset.accessFilter.type.should.be.equal('ownerOnly');
+      });
     });
   });
 });
