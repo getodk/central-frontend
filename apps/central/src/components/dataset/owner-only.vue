@@ -225,7 +225,7 @@ const update = async (accessFilter) => {
   });
 
   previousAccessFilter = dataset.accessFilter;
-  Object.assign(dataset.data, { accessFilter: null }, data);
+  dataset.replaceData(data);
 };
 
 const undo = () => {
