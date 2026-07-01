@@ -201,6 +201,7 @@ export class MapControl {
         }
         body, html {
           overflow: hidden !important;
+          scrollbar-gutter: auto !important;
         }
       `,
       });
