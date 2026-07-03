@@ -5736,11 +5736,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "🎨 Páginas de inicio de sesión personalizadas, limpieza de la lista de entidades y carga de archivos en formularios web",
+        "string": "",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "Personaliza la página de inicio de sesión con tu imagen de empresa, elimina las listas de entidades y las propiedades cuando ya no las necesites, y sube cualquier archivo a tus formularios web."
+        "string": ""
       }
     }
   },
