@@ -7,7 +7,7 @@
   "author": "getodk",
   "repository": {
     "type": "git",
-    "url": "https://github.com/getodk/web-forms",
+    "url": "https://github.com/getodk/central-frontend",
     "directory": "packages/common"
   },
   "bugs": "https://github.com/getodk/web-forms/issues",
