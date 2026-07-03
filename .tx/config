@@ -1,5 +1,5 @@
 [main]
-host = https://app.transifex.com
+host = https://www.transifex.com
 
 [o:getodk:p:central:r:strings]
 file_filter  = apps/central/transifex/strings_<lang>.json
