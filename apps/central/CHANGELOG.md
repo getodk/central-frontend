@@ -6,9 +6,6 @@
 
 - e620e5a: Separated web-forms and enketo into a new app
 - 6947cd1: Add Custom Properties tab in Project to manage App User/Public Link properties
-
-### Patch Changes
-
 - 84750ae: Change icon and text of the choose files button on Form draft's attachment section
 - 13d411a: Pass Sentry DSN at runtime via client-config.json
 - 18f994e: Added Sentry error reporting
