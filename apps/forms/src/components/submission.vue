@@ -297,6 +297,13 @@ load();
     "errorNotProblem": "Quelque-chose s'est mal passé",
     "errorNotProblem.body": "Veuillez réessayer plus tard. Si le problème persiste, veuillez contacter la personne qui vous a envoyé le lien vers le formulaire.",
     "errorNotProblem.status": "Code d'erreur: {status}"
+  },
+  "id": {
+    "formNotFound": "Tidak dapat membuka formulir",
+    "formNotFound.body": "Pastikan tautan sudah benar. Formulir mungkin sudah tidak tersedia, atau akses Anda mungkin telah kedaluwarsa. Jika masalah berlanjut, hubungi orang yang mengirimkan tautan formulir tersebut kepada Anda.",
+    "errorNotProblem": "Terjadi kesalahan",
+    "errorNotProblem.body": "Coba lagi nanti. Jika masalah berlanjut, hubungi orang yang mengirimkan tautan formulir tersebut kepada Anda.",
+    "errorNotProblem.status": "Kode error: {status}"
   }
 }
 </i18n>
