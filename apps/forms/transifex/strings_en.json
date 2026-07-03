@@ -1,0 +1,133 @@
+{
+  "component": {
+    "Preview": {
+      "formNotFound": {
+        "string": "No Form found with this URL, please double check."
+      }
+    },
+    "Submission": {
+      "formNotFound": {
+        "string": "Unable to open form"
+      },
+      "formNotFound.body": {
+        "string": "Please check that the link is correct. The form may no longer be available, or your access may have expired. If the problem continues, contact the person who sent you the form link."
+      },
+      "errorNotProblem": {
+        "string": "Something went wrong"
+      },
+      "errorNotProblem.body": {
+        "string": "Please try again later. If the problem continues, contact the person who sent you the form link."
+      },
+      "errorNotProblem.status": {
+        "string": "Error code: {status}"
+      }
+    },
+    "WebFormRenderer": {
+      "action": {
+        "close": {
+          "string": "Close"
+        },
+        "tryAgain": {
+          "string": "Try again"
+        }
+      },
+      "previewModal": {
+        "title": {
+          "string": "Data is valid"
+        },
+        "body": {
+          "string": "The data you entered is valid, but it was not submitted because this is a Form preview."
+        }
+      },
+      "submissionModal": {
+        "title": {
+          "string": "Form successfully sent!"
+        },
+        "body": {
+          "string": "You can fill this Form out again or close if you’re done."
+        },
+        "action": {
+          "fillOutAgain": {
+            "string": "Fill out again"
+          }
+        }
+      },
+      "thankYouModal": {
+        "title": {
+          "string": "Thank you for participating!"
+        },
+        "body": {
+          "string": "You can close this window now."
+        }
+      },
+      "editSubmissionModal": {
+        "title": {
+          "string": "Submission successful"
+        },
+        "body": {
+          "string": "You will now be redirected."
+        }
+      },
+      "errorModal": {
+        "title": {
+          "string": "Submission error"
+        },
+        "body": {
+          "string": "Your data was not submitted. Error message: {errorMessage} You can close this dialog and try again. If the error keeps happening, please contact the person who asked you to fill this Form or {supportEmail}."
+        }
+      },
+      "sendingDataModal": {
+        "title": {
+          "string": "Sending Submission"
+        },
+        "body": {
+          "string": "Your data is being submitted. Please don’t close this window until it’s finished."
+        }
+      },
+      "sessionTimeoutModal": {
+        "title": {
+          "string": "Session expired"
+        },
+        "body": {
+          "full": {
+            "string": "Please log in {here} in a different browser tab and try again.",
+            "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
+          },
+          "here": {
+            "string": "here",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nPlease log in {here} in a different browser tab and try again."
+          }
+        }
+      },
+      "retryModal": {
+        "title": {
+          "string": "Submission error"
+        },
+        "body": {
+          "string": "Your data was not fully submitted. Please press the “Try again” button to retry. If the error keeps happening, please contact the person who asked you to fill this Form or {supportEmail}."
+        }
+      },
+      "util": {
+        "request": {
+          "noResponse": {
+            "string": "Something went wrong: there was no response to your request."
+          },
+          "problem": {
+            "404_1": {
+              "string": "The resource you are looking for cannot be found. The resource may have been deleted."
+            }
+          }
+        }
+      },
+      "mixin": {
+        "request": {
+          "alert": {
+            "entityTooLarge": {
+              "string": "The data that you are trying to upload is too large."
+            }
+          }
+        }
+      }
+    }
+  }
+}

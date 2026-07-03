@@ -1,0 +1,133 @@
+{
+  "component": {
+    "Preview": {
+      "formNotFound": {
+        "string": ""
+      }
+    },
+    "Submission": {
+      "formNotFound": {
+        "string": ""
+      },
+      "formNotFound.body": {
+        "string": ""
+      },
+      "errorNotProblem": {
+        "string": ""
+      },
+      "errorNotProblem.body": {
+        "string": ""
+      },
+      "errorNotProblem.status": {
+        "string": ""
+      }
+    },
+    "WebFormRenderer": {
+      "action": {
+        "close": {
+          "string": ""
+        },
+        "tryAgain": {
+          "string": ""
+        }
+      },
+      "previewModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "submissionModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        },
+        "action": {
+          "fillOutAgain": {
+            "string": ""
+          }
+        }
+      },
+      "thankYouModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "editSubmissionModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "errorModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "sendingDataModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "sessionTimeoutModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "full": {
+            "string": "",
+            "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
+          },
+          "here": {
+            "string": "",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nPlease log in {here} in a different browser tab and try again."
+          }
+        }
+      },
+      "retryModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "util": {
+        "request": {
+          "noResponse": {
+            "string": ""
+          },
+          "problem": {
+            "404_1": {
+              "string": ""
+            }
+          }
+        }
+      },
+      "mixin": {
+        "request": {
+          "alert": {
+            "entityTooLarge": {
+              "string": ""
+            }
+          }
+        }
+      }
+    }
+  }
+}
