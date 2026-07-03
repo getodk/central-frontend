@@ -1,6 +1,6 @@
 {
   "name": "@getodk/central-frontend",
-  "version": "0.2.0",
+  "version": "2026.2.0",
   "private": true,
   "scripts": {
     "eslint": "eslint --max-warnings 0 --cache --ext .js,.vue src/ test/ bin/ *.js",

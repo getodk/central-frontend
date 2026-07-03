@@ -1,6 +1,6 @@
 # @getodk/forms
 
-## 0.2.0
+## 2026.2.0
 
 ### Minor Changes
 
