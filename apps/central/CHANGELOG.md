@@ -19,7 +19,7 @@
 **Improved form drafts**
 
 - getodk/central#1681: Update Form drafts experience
-- getodk/central#1944 (f9c0f85): Attachment files now can only be drag and drop to the attachment section. Previously, they could be drop to anywhere on the Form draft page.
+- f9c0f85: Attachment files now can only be drag and drop to the attachment section. Previously, they could be drop to anywhere on the Form draft page.
 - getodk/central#1945 (84750ae): Change icon and text of the choose files button on Form draft's attachment section
 
 **Other improvements + bug fixes**
@@ -34,5 +34,5 @@
 - 18f994e: Added Sentry error reporting
 - getodk/central#1847: Update What's New modal
 - getodk/central#1846: Update usage information metrics
-- getodk/central#1668: Update dependencies
+- getodk/central#1844: Update dependencies
 - getodk/central#1843: Update translations
