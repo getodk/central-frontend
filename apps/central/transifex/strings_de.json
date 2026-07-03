@@ -5736,11 +5736,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "🎨 Markenspezifische Anmeldeseiten, Bereinigung der Entitätsliste und Datei-Uploads in Web Forms",
+        "string": "",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "Passen Sie die Anmeldeseite an Ihr Corporate Design an, bereinigen Sie Entitätslisten und Eigenschaften, wenn diese nicht mehr benötigt werden, und laden Sie beliebige Dateien in Ihre Webformulare hoch."
+        "string": ""
       }
     }
   },

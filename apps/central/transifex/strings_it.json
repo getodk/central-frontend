@@ -5736,11 +5736,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "🎨 Pagine di accesso personalizzate, eliminazione degli elementi dall'elenco delle entità e caricamento di file in Web Forms",
+        "string": "",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "Personalizza la pagina di accesso con il tuo brand, elimina gli elenchi di entità e le proprietà quando non servono più e carica qualsiasi file nei tuoi Web Forms."
+        "string": ""
       }
     }
   },

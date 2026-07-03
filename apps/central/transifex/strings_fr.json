@@ -4332,7 +4332,7 @@
     "ProjectCustomPropertiesList": {
       "heading": {
         "0": {
-          "string": "Contrôlez les entités auxquelles chaque utilisateur de l'application ou chaque lien public peut accéder. Définissez ici des propriétés personnalisées, attribuez-leur des valeurs pour les utilisateurs mobiles ou les liens publics, et utilisez les filtres de liste d'entités pour transmettre les entités pertinentes.",
+          "string": "Contrôlez les entités auxquelles chaque utilisateur mobile ou chaque lien public peut accéder. Définissez ici des propriétés personnalisées, attribuez-leur des valeurs pour les utilisateurs mobiles ou les liens publics, et utilisez les filtres de liste d'entités pour transmettre seulement les entités pertinentes.",
           "developer_comment": "A brief introduction to Custom Properties shown for the current project"
         }
       },
@@ -5736,11 +5736,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "🎨 Page de connexion personnalisée, suppression de listes d'entités et téléchargement de fichiers dans Web Forms.",
+        "string": "Filtrez vos entités 🎯 et ODK Web Forms par défaut 🌐",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "Choisissez les images et le texte de votre page de connexion, faites disparaître les listes d'entités et les propriétés dont vous n'avez plus besoin et essayez la nouvelle expérience de formulaires web."
+        "string": "Contrôlez les entités reçues par chaque utilisateur mobile ou chaque lien public grâce à des règles de filtrage basées sur des propriétés. De plus, ODK Web Forms est maintenant l'expérience par défaut pour les formulaires web, offrant une expérience rapide et intuitive pour la prévisualisation de formulaire, la modification des données et la saisie en ligne."
       }
     }
   },
