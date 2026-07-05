@@ -77,7 +77,7 @@ export function testRequestsInclude(expectedConfigs) {
       }
     })
     .afterResponses(() => {
-      const nicely = cfgs => cfgs.map((c, idx) => `${idx}. ${c.method} ${c.url} body:${!!c.data && JSON.stringify(c.data)}`).join(', ');
+      const nicely = cfgs => '[' + cfgs.map((c, idx) => `${idx}. ${c.method} ${c.url} body:${!!c.data && JSON.stringify(c.data)}`).join(', ') + ']';
       if (matched.length !== expectedConfigs.length)
         throw new Error(`an expected request was not sent: expected: ${nicely(expectedConfigs)}, but got: ${nicely(actual)}`);
     });
