@@ -37,7 +37,6 @@
     "build:clean": "rimraf dist/",
     "build:js": "vite build",
     "build:solid": "VITE_BUILD_TARGET=solid vite build",
-    "build:types": "tsc --project ./tsconfig.json --declaration --emitDeclarationOnly",
     "dev": "vite",
     "docs": "npm-run-all -nl 'docs:*'",
     "docs:clean": "rimraf api-docs/",
