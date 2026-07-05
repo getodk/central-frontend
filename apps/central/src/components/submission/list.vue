@@ -256,9 +256,9 @@ export default {
       }
       if (this.submissionDateRange.length !== 0) {
         const start = this.submissionDateRange[0].toISO();
-        const end = this.submissionDateRange[1].endOf('day').toISO();
+        const end = this.submissionDateRange[1].plus({ days: 1 }).startOf('day').toISO();
         conditions.push(`__system/submissionDate ge ${start}`);
-        conditions.push(`__system/submissionDate le ${end}`);
+        conditions.push(`__system/submissionDate lt ${end}`);
       }
       if (this.reviewStates.length !== this.allReviewStates.length) {
         const condition = this.reviewStates
