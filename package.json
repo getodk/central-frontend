@@ -7,7 +7,7 @@
     "dev": "      nf start vite,nginx",
     "dev:build": "nf start build,nginx",
     "build": "turbo run build",
-    "build:types": "npm run build:types --workspaces --if-present",
+    "build:types": "npm-run-all 'build:types -w=@getodk/common' 'build:types -w=@getodk/xpath' 'build:types -w=@getodk/xforms-engine' 'build:types -w=@getodk/web-forms'",
     "build:web": "vite build",
     "changeset": "changeset",
     "eslint": "eslint bin/ e2e-tests/ *.js -c bin/eslint.config.js --cache --max-warnings 0",
