@@ -3,6 +3,7 @@
   "include": ["src/**/*.ts", "test-utils/**/*.ts", "test", "types/**/*.ts", "vite-env.d.ts"],
   "compilerOptions": {
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "outDir": "./dist",
     "types": ["node"],
     "skipLibCheck": true
   }

@@ -6,7 +6,7 @@
     "env.d.ts",
     "src/**/*",
     "src/**/*.vue",
-    "locales/**/*"
+    "locales/strings_en.json"
   ],
   "exclude": [
     "../common/src/test/**/*.ts",
@@ -23,6 +23,8 @@
     // the CLI. Ugh.
     "noEmit": false,
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "rootDir": "../",
+    "outDir": "./dist",
     "paths": {
       "@/*": ["./src/*"],
       "@locales/*": ["./locales/*"],

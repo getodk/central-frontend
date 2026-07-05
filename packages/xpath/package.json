@@ -38,6 +38,7 @@
     "build": "npm-run-all -nl 'build:*'",
     "build:clean": "rimraf dist/",
     "build:js": "vite build",
+    "build:types": "tsc --project ./tsconfig.json --declaration --emitDeclarationOnly",
     "dev": "vite",
     "format:fix": "prettier -w \"**/*\" --ignore-unknown --cache",
     "format:lint": "prettier -c \"**/*\" --ignore-unknown --cache",
