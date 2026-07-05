@@ -38,6 +38,9 @@ export const getStylePropertyMap = (node: ParentMarkdownNode): StyleValue | unde
 export const getUrl = (node: ParentMarkdownNode): string | undefined => {
   if (node.elementName === 'a') {
     const url = (node as AnchorMarkdownNode).url;
+    // validate that the URL isn't a javascript prompt
+    DOMPurify.removeAllHooks();
+    DOMPurify.setConfig({ ALLOWED_TAGS: ['a'], ALLOWED_ATTR: ['href'] });
     if (!DOMPurify.isValidAttribute('a', 'href', url)) {
       return 'about:blank';
     }
@@ -46,5 +49,7 @@ export const getUrl = (node: ParentMarkdownNode): string | undefined => {
 };
 
 export const purify = (node: HtmlMarkdownNode): string => {
-  return DOMPurify.sanitize(node.unsafeHtml, DOM_PURIFY_SETTINGS);
+  DOMPurify.removeAllHooks();
+  DOMPurify.setConfig(DOM_PURIFY_SETTINGS);
+  return DOMPurify.sanitize(node.unsafeHtml);
 };

@@ -164,9 +164,6 @@ The following meta fields are supported for bottom-level routes:
     PageBody component, then the PageBody will use the full width of the page.
     By default, PageBody has a max width.
 
-  - standalone (default: false): If standalone is `true` then application layout
-    elements like navigation bar, background color, etc are not rendered.
-
 */
 
 /*
@@ -367,6 +364,18 @@ const routes = [
         }
       }),
       asyncRoute({
+        path: 'custom-properties',
+        component: 'CustomPropertyList',
+        props: true,
+        loading: 'tab',
+        meta: {
+          validateData: {
+            project: () => project.permits('project.update')
+          },
+          title: () => [i18n.t('projectShow.tab.customProperties'), project.name]
+        }
+      }),
+      asyncRoute({
         path: 'settings',
         component: 'ProjectSettings',
         loading: 'tab',
@@ -496,33 +505,6 @@ const routes = [
       validateData: {
         project: () => project.permits('submission.read')
       }
-    }
-  }),
-  asyncRoute({
-    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/preview',
-    component: 'FormPreview',
-    props: (route) => ({
-      ...route.params,
-      draft: false
-    }),
-    loading: 'page',
-    meta: {
-      standalone: true,
-      title: () => [`✨ ${i18n.t('resource.formPreview')}`, form.nameOrId ?? '']
-    }
-  }),
-  asyncRoute({
-    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/draft/preview',
-    name: 'FormDraftPreview',
-    component: 'FormPreview',
-    props: (route) => ({
-      ...route.params,
-      draft: true
-    }),
-    loading: 'page',
-    meta: {
-      standalone: true,
-      title: () => [`✨ ${i18n.t('resource.formPreview')}`, form.nameOrId ? `${form.nameOrId} (${i18n.t('resource.draft')})` : '']
     }
   }),
   asyncRoute({
@@ -705,88 +687,6 @@ const routes = [
   }),
 
   asyncRoute({
-    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/:instanceId/:actionType(edit)',
-    component: 'FormSubmission',
-    name: 'SubmissionEdit',
-    props: true,
-    loading: 'page',
-    meta: {
-      standalone: true,
-      skipAutoLogout: true,
-      // validateData is done inside FormSubmission component
-      title: () => [form.nameOrId],
-    }
-  }),
-  asyncRoute({
-    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/submissions/new/:offline(offline)?',
-    component: 'FormSubmission',
-    name: 'SubmissionNew',
-    props: (route) => {
-      const { offline, ...params } = route.params;
-      return {
-        ...params,
-        actionType: offline === 'offline' ? 'offline' : 'new',
-      };
-    },
-    loading: 'page',
-    meta: {
-      standalone: true,
-      skipAutoLogout: true,
-      // validateData is done inside FormSubmission component
-      title: () => [form.nameOrId],
-    }
-  }),
-  asyncRoute({
-    path: '/projects/:projectId([1-9]\\d*)/forms/:xmlFormId/draft/submissions/new/:offline(offline)?',
-    component: 'FormSubmission',
-    name: 'DraftSubmissionNew',
-    props: (route) => {
-      const { offline, ...params } = route.params;
-      return {
-        ...params,
-        actionType: offline === 'offline' ? 'offline' : 'new',
-        draft: true
-      };
-    },
-    loading: 'page',
-    meta: {
-      standalone: true,
-      // validateData is done inside FormSubmission component
-      title: () => [form.nameOrId],
-    }
-  }),
-  asyncRoute({
-    path: '/f/:enketoId([a-zA-Z0-9]+)/:actionType(new|preview)',
-    component: 'FormSubmission',
-    name: 'EnketoRedirector',
-    props: true,
-    loading: 'page',
-    meta: {
-      standalone: true
-    }
-  }),
-  asyncRoute({
-    path: '/f/:enketoId([a-zA-Z0-9]+)/:offline(offline)?',
-    component: 'FormSubmission',
-    name: 'WebFormDirectLink',
-    props: (route) => {
-      const { offline, ...params } = route.params;
-      return {
-        ...params,
-        actionType: offline === 'offline' ? 'offline' : 'public-link',
-      };
-    },
-    loading: 'page',
-    meta: {
-      standalone: true,
-      restoreSession: true,
-      requireLogin: false,
-      skipAutoLogout: true,
-      title: () => [form.nameOrId]
-    }
-  }),
-
-  asyncRoute({
     path: '/:_(.*)',
     component: 'NotFound',
     loading: 'page',
@@ -812,7 +712,6 @@ const routesByName = new Map();
     requireAnonymity: false,
     preserveData: [],
     fullWidth: false,
-    standalone: false,
     skipAutoLogout: false,
     ...meta,
     validateData: meta == null || meta.validateData == null
@@ -868,6 +767,7 @@ const routesByName = new Map();
     'ProjectOverview',
     'ProjectUserList',
     'FieldKeyList',
+    'CustomPropertyList',
     'ProjectFormAccess',
     'DatasetList',
     'ProjectSettings',
@@ -902,20 +802,6 @@ const routesByName = new Map();
       ? [project]
       : false)
   );
-
-  // Preserve Form data when redirected to canoncial path
-  [
-    'SubmissionNew',
-    'DraftSubmissionNew',
-    'SubmissionEdit',
-    'FormPreview',
-    'FormDraftPreview'
-  ].forEach(redirectTo => {
-    const preserve = (_, from) =>
-      (from.name === 'EnketoRedirector' || from.name === 'WebFormDirectLink') && [form];
-    routesByName.get(redirectTo).meta.preserveData.push(preserve);
-  });
-
 
   //////////////////////////////////////////////////////////////////////////////
   // RETURN

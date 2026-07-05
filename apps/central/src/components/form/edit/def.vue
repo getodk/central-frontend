@@ -91,73 +91,32 @@ const afterUpload = () => {
 {
   "de": {
     "subtitle": "Hochgeladen",
-    "changed": "Geändert gegenüber der veröffentlichten Version",
-    "versionName": "Versionsname:{name}",
-    "action": {
-      "upload": "Neue Formulardefinition hochladen"
-    },
-    "withinDef": "Innerhalb dieser Formulardefinition:",
-    "title": "Entwurfsversion"
+    "changed": "Geändert gegenüber der veröffentlichten Version"
   },
   "es": {
     "subtitle": "Subido",
-    "changed": "Cambiado respecto a la versión publicada",
-    "versionName": "Nombre de la versión: {name}",
-    "action": {
-      "upload": "Cargar nueva definición de formulario"
-    },
-    "withinDef": "Dentro de esta definición de formulario:",
-    "title": "Versión borrador"
+    "changed": "Cambiado respecto a la versión publicada"
   },
   "fr": {
+    "title": "Version de de l'ébauche: {version}",
     "subtitle": "Téléversée",
-    "changed": "Différente de la version publiée",
-    "versionName": "Nom de version : {name}",
-    "action": {
-      "upload": "Téléverser une nouvelle définition de formulaire"
-    },
-    "withinDef": "Dans cette définition de formulaire",
-    "title": "Version de l'ébauche"
+    "changed": "Différente de la version publiée"
   },
   "it": {
     "subtitle": "Caricati",
-    "changed": "Modificato rispetto alla versione pubblicata",
-    "versionName": "Nome della versione: {name}",
-    "action": {
-      "upload": "Carica la nuova definizione del formulario"
-    },
-    "withinDef": "All'interno di questa definizione del formulario:",
-    "title": "Versione bozza"
+    "changed": "Modificato rispetto alla versione pubblicata"
   },
   "pt": {
     "subtitle": "Carregado",
-    "changed": "Mudanças em relação à versão publicada",
-    "versionName": "Nome da versão: {name}",
-    "action": {
-      "upload": "Carregar nova Definição do Formulário"
-    },
-    "withinDef": "Nesta Definição de Formulário:",
-    "title": "Versão Rascunho"
+    "changed": "Mudanças em relação à versão publicada"
   },
   "zh": {
     "subtitle": "已上传",
-    "changed": "自发布版本以来",
-    "versionName": "版本名称：{name}",
-    "action": {
-      "upload": "上传新表单定义"
-    },
-    "withinDef": "在此表单定义中：",
-    "title": "草稿版本"
+    "changed": "自发布版本以来"
   },
   "zh-Hant": {
     "subtitle": "已上傳",
-    "changed": "與發布版本相比有變更",
-    "versionName": "版本名稱：{name}",
-    "action": {
-      "upload": "上傳新表單定義"
-    },
-    "withinDef": "在此表格定義內：",
-    "title": "草稿版本"
+    "changed": "與發布版本相比有變更"
   }
 }
 </i18n>

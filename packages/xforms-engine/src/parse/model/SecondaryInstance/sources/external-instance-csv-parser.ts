@@ -1,10 +1,16 @@
 import type { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL';
 import * as papa from 'papaparse';
 import { ErrorProductionDesignPendingError } from '../../../../error/ErrorProductionDesignPendingError';
+import { CSVExternalSecondaryInstanceValidationError } from '../../../../error/SecondaryInstanceCSVValidationError';
 
 type CSVColumn = string;
 type CSVRow = readonly CSVColumn[];
-type AssertCSVRow = (resourceURL: JRResourceURL, columns: unknown) => asserts columns is CSVRow;
+type AssertCSVHeader = (resourceURL: JRResourceURL, columns: unknown) => asserts columns is CSVRow;
+type AssertCSVRow = (
+  resourceURL: JRResourceURL,
+  columns: unknown,
+  rowIndex: number
+) => asserts columns is CSVRow;
 
 interface ParsedCSVHeader {
   readonly columns: CSVRow;
@@ -35,10 +41,18 @@ type CSVExternalSecondaryInstanceItem = readonly CSVExternalSecondaryInstanceIte
  *
  * Central performs this check for header and rows. A comment is included there for the header check, but the logic is the same in both cases.
  */
-const rejectNullCharacters = (resourceURL: JRResourceURL, cell: string) => {
+const rejectNullCharacters = (
+  resourceURL: JRResourceURL,
+  cell: string,
+  rowIndex: number,
+  columnIndex: number
+) => {
   if (cell.includes('\0')) {
-    throw new ErrorProductionDesignPendingError(
-      `Failed to parse CSV ${resourceURL.href}: null character`
+    throw new CSVExternalSecondaryInstanceValidationError(
+      resourceURL,
+      rowIndex,
+      columnIndex,
+      'null character'
     );
   }
 };
@@ -53,27 +67,48 @@ const stripTrailingEmptyCells = (columns: CSVRow, row: CSVRow): CSVRow => {
   return result;
 };
 
-const assertCSVRow: AssertCSVRow = (resourceURL: JRResourceURL, columns) => {
+const assertCSVRow: AssertCSVRow = (resourceURL: JRResourceURL, columns, rowIndex: number) => {
   if (!Array.isArray(columns)) {
-    throw new ErrorProductionDesignPendingError(
-      `Failed to parse CSV ${resourceURL.href}: invalid columns`
-    );
-  }
-
-  if (columns.length === 0) {
-    throw new ErrorProductionDesignPendingError(
-      `Failed to parse CSV ${resourceURL.href}: no columns found`
+    throw new CSVExternalSecondaryInstanceValidationError(
+      resourceURL,
+      rowIndex,
+      0,
+      'invalid columns'
     );
   }
 
   for (const [index, column] of columns.entries()) {
     if (typeof column !== 'string') {
-      throw new ErrorProductionDesignPendingError(
-        `Failed to parse CSV ${resourceURL.href}: invalid column at ${index}`
+      throw new CSVExternalSecondaryInstanceValidationError(
+        resourceURL,
+        rowIndex,
+        index,
+        'invalid column'
       );
     }
+    rejectNullCharacters(resourceURL, column, rowIndex, index);
+  }
+};
 
-    rejectNullCharacters(resourceURL, column);
+const assertCSVHeader: AssertCSVHeader = (resourceURL: JRResourceURL, columns) => {
+  assertCSVRow(resourceURL, columns, 0);
+  if (columns.length === 0) {
+    throw new CSVExternalSecondaryInstanceValidationError(
+      resourceURL,
+      null,
+      null,
+      'no columns found'
+    );
+  }
+  for (const [index, cell] of columns.entries()) {
+    if (/^\s|\s$/.exec(cell)) {
+      throw new CSVExternalSecondaryInstanceValidationError(
+        resourceURL,
+        null,
+        index,
+        'whitespace character in column header'
+      );
+    }
   }
 };
 
@@ -110,17 +145,20 @@ const parseCSVRows = (
   const rowData = data.slice(1);
 
   const rows = rowData.map((values, index) => {
-    assertCSVRow(resourceURL, values);
+    const rowIndex = index + 1; // increment because we've stripped the header off
 
-    const rowIndex = index + 1;
+    assertCSVRow(resourceURL, values, rowIndex);
 
     // Central: Remove trailing empty cells.
     const row = stripTrailingEmptyCells(columns, values);
 
     // Central: Throw if there are too many cells.
     if (row.length > columns.length) {
-      throw new ErrorProductionDesignPendingError(
-        `Failed to parse CSV ${resourceURL.href}: row ${rowIndex}, expected ${columns.length} columns, got ${row.length}`
+      throw new CSVExternalSecondaryInstanceValidationError(
+        resourceURL,
+        rowIndex,
+        null,
+        `expected ${columns.length} columns, got ${row.length}`
       );
     }
 
@@ -175,7 +213,7 @@ const parseCSVHeaderWithRetry = (csvData: string, delimiter?: string) => {
 const parseCSVHeader = (resourceURL: JRResourceURL, csvData: string): ParsedCSVHeader => {
   const { data, errors, meta } = parseCSVHeaderWithRetry(csvData);
   const [columns = []] = data;
-  assertCSVRow(resourceURL, columns);
+  assertCSVHeader(resourceURL, columns);
   assertPapaparseSuccess(resourceURL, errors);
 
   return {

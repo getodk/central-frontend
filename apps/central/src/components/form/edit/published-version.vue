@@ -64,53 +64,40 @@ const { form } = useRequestData();
 <i18n>
 {
   "de": {
-    "title": "Aktuelle Version",
     "subtitle": {
       "published": "Veröffentlicht {dateTime}"
-    },
-    "versionName": "Versionsname:{name}"
+    }
   },
   "es": {
-    "title": "Versión actual",
     "subtitle": {
       "published": "Publicado en {dateTime}"
-    },
-    "versionName": "Nombre de la versión: {name}"
+    }
   },
   "fr": {
-    "title": "Version courante",
+    "title": "Version courante: {version}",
     "subtitle": {
       "published": "Publiée {dateTime}"
-    },
-    "versionName": "Nom de version : {name}"
+    }
   },
   "it": {
-    "title": "Versione corrente",
     "subtitle": {
       "published": "Pubblicato {dateTime}"
-    },
-    "versionName": "Nome della versione: {name}"
+    }
   },
   "pt": {
-    "title": "Versão atual",
     "subtitle": {
       "published": "Publicado em {dateTime}"
-    },
-    "versionName": "Nome da versão: {name}"
+    }
   },
   "zh": {
-    "title": "当前版本",
     "subtitle": {
       "published": "{dateTime}已发布"
-    },
-    "versionName": "版本名称：{name}"
+    }
   },
   "zh-Hant": {
-    "title": "當前版本",
     "subtitle": {
       "published": "{dateTime}已發布"
-    },
-    "versionName": "版本名稱：{name}"
+    }
   }
 }
 </i18n>

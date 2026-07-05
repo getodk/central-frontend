@@ -1,6 +1,6 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import BackendClient from '../backend-client';
-import { login } from '../util';
+import { login, test, submitLogin } from '../util';
 
 const appUrl = process.env.ODK_URL;
 const projectId = process.env.PROJECT_ID;
@@ -19,7 +19,6 @@ test.beforeAll(async ({ playwright }, testInfo) => {
   firstSubmission = resources.submission;
   publicLink = resources.publicLink;
 
-  await backendClient.setWebForms(resources.form.xmlFormId, true);
   await backendClient.dispose();
 });
 
@@ -30,9 +29,6 @@ test.describe('ODK Web Forms', () => {
         description: 'New Submission',
         url: ({ enketoId }) => `/-/${enketoId}`, requireLogin: true
       }, {
-        description: 'Edit Submission',
-        url: ({ enketoId, instanceId }) => `/-/edit/${enketoId}?instance_id=${instanceId}`, requireLogin: true
-      }, {
         description: 'Preview Form',
         url: ({ enketoId }) => `/-/preview/${enketoId}`, requireLogin: true
       }, {
@@ -40,13 +36,13 @@ test.describe('ODK Web Forms', () => {
         url: ({ xmlFormId }) => `/#/projects/${projectId}/forms/${xmlFormId}/preview`, requireLogin: true
       }, {
         description: 'New Draft Submission',
-        url: ({ draftEnketoId }) => `/-/${draftEnketoId}`, requireLogin: true
+        url: ({ draftEnketoId }) => `/-/${draftEnketoId}`, requireLogin: true, draft: true
       }, {
-        description: 'Prevew Draft Form',
-        url: ({ draftEnketoId }) => `/-/preview/${draftEnketoId}`, requireLogin: true
+        description: 'Preview Draft Form',
+        url: ({ draftEnketoId }) => `/-/preview/${draftEnketoId}`, requireLogin: true, draft: true
       }, {
         description: 'Preview Draft Web Form',
-        url: ({ xmlFormId }) => `/#/projects/${projectId}/forms/${xmlFormId}/draft/preview`, requireLogin: true
+        url: ({ xmlFormId }) => `/#/projects/${projectId}/forms/${xmlFormId}/draft/preview`, requireLogin: true, draft: true
       }, {
         description: 'Public Link',
         url: ({ enketoId, st }) => `/-/single/${enketoId}?st=${st}`, requireLogin: false
@@ -76,9 +72,9 @@ test.describe('ODK Web Forms', () => {
         await page.goto(appUrl + t.url({ enketoId, enketoOnceId, draftEnketoId, xmlFormId, instanceId, st }));
 
         if (t.draft) {
-          await expect(page.getByRole('heading', { name: `${publishedForm.name} - v2` })).toBeVisible();
+          await expect(page.getByRole('heading', { name: `${publishedForm.name} - v2`, exact: true })).toBeVisible();
         } else {
-          await expect(page.getByRole('heading', { name: publishedForm.name })).toBeVisible();
+          await expect(page.getByRole('heading', { name: publishedForm.name, exact: true })).toBeVisible();
         }
       });
     });
@@ -106,7 +102,23 @@ test.describe('ODK Web Forms', () => {
     await expect(page.getByRole('heading', { name: 'Successful' })).toBeVisible();
   });
 
-  test('allows user to relogin on session expiry', async ({ page, context }) => {
+  test.describe('redirects to login if 401 on load', async () => {
+    const urls = [
+      { name: 'hyphen prefix', url: (form) => `/-/${form.enketoId}` },
+      { name: 'f prefix', url: (form) => `/f/${form.enketoId}` },
+      { name: 'restful', url: (form) => `/projects/${projectId}/forms/${form.xmlFormId}/submissions/new` }
+    ];
+    urls.forEach(t => {
+      test(t.name, async ({ page }) => {
+        await page.goto(appUrl + t.url(publishedForm));
+        await expect(page.getByRole('heading', { name: 'Welcome to ODK Central' })).toBeVisible();
+        await submitLogin(page);
+        await expect(page.getByRole('heading', { name: publishedForm.name })).toBeVisible();
+      });
+    });
+  });
+
+  test('allows user to relogin on session expiry during form fill', async ({ page, context }) => {
     await login(page);
 
     const page2 = await context.newPage();
@@ -132,7 +144,7 @@ test.describe('ODK Web Forms', () => {
 
     await login(page3);
 
-    await page2.locator('.modal-actions .btn-primary').click();
+    await page2.getByRole('button', { name: 'close' }).first().click();
 
     await page2.getByRole('button', { name: 'send' }).click();
 

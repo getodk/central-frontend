@@ -12,8 +12,7 @@ module.exports = {
     alert: 'readonly',
     document: 'readonly',
     window: 'readonly',
-    defineModel: 'readonly',
-    __WEB_FORMS_VERSION__: 'readonly'
+    defineModel: 'readonly'
   },
   rules: {
     'arrow-parens': 'off',
@@ -22,7 +21,10 @@ module.exports = {
     curly: 'off',
     'implicit-arrow-linebreak': 'off',
     'import/first': 'off',
-    "import/no-extraneous-dependencies": ['error', {'devDependencies': ['**/test/**', 'vite.config.js']}],
+    "import/no-extraneous-dependencies": ['error', {
+      'devDependencies': ['**/test/**', 'vite.config.js'],
+      'packageDir': ['.', '../..'],
+    }],
     'lines-between-class-members': ['error', 'always', {
       exceptAfterSingleLine: true
     }],

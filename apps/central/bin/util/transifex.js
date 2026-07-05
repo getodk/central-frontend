@@ -775,7 +775,8 @@ JSON. It stores source messages along with the corresponding translations.
 class Translations {
   // `source` is either a non-array object or an array. `translated` is always
   // a non-array object: Structured JSON does not seem to support arrays.
-  constructor(parent, key, source, translated) {
+  constructor(locale, parent, key, source, translated) {
+    this._locale = locale;
     this.parent = parent;
     this.key = key;
     if (source == null || typeof source !== 'object')
@@ -805,6 +806,7 @@ class Translations {
       return new Translation(this, key.toString());
     if (this._translated[key] == null) this._translated[key] = {};
     return new Translations(
+      this._locale,
       this,
       key.toString(),
       sourceValue,
@@ -888,7 +890,14 @@ class Translations {
 
     const result = {};
     for (const k of Object.keys(this._translated)) {
-      const value = this.get(k).toJSON(k);
+      const rawValue = this.get(k);
+      if (rawValue == null) {
+        let keyPath = k;
+        for (let curr = this; curr.parent != null; curr = curr.parent) keyPath = `${curr.key}.${keyPath}`;
+        throw new Error(`No value found for ${keyPath} in locale "${this._locale}".`);
+      }
+
+      const value = rawValue.toJSON(k);
       if (value != null) result[k] = value;
     }
     return Object.keys(result).length !== 0 || /^\d+$/.test(key)
@@ -991,7 +1000,7 @@ const validateTranslation = (locale) => ({ source, translated, path }) => {
       logThenThrow({ source, translated }, 'unexpected linked locale message');
 
     if (locales[locale].warnVariableSeparator) {
-      const noSeparator = '[^\\] !"\'(),./:;<>?[’“”„–—-]';
+      const noSeparator = '[^\\] !"\'(),./:;<>?[’“”„«»–—-]';
       if (new RegExp(`${noSeparator}\\{|\\}${noSeparator}`, 'u').test(translated[i])) {
         console.warn(`warning: ${path.join('.')}: variable without separator.`);
       }
@@ -1009,7 +1018,7 @@ const writeTranslations = (
 ) => {
   if (locales[locale] == null) throw new Error(`unknown locale ${locale}`);
 
-  const translations = new Translations(null, null, source, translated);
+  const translations = new Translations(locale, null, null, source, translated);
 
   // Instead of overwriting the source messages, here we check that
   // destructuring the restructured source messages results in the original

@@ -146,32 +146,6 @@ describe('createCentralRouter()', () => {
           path.should.equal('/projects/1/entity-lists/trees/entities');
         });
     });
-
-    it('redirects if the hash is a path', () =>
-      load('/#/account/edit', {}, false)
-        .respondFor('/account/edit')
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/account/edit');
-        }));
-
-    it('redirects if the hash is a path and it contains non-ascii characters', () => {
-      testData.extendedForms.createPast(1);
-      return load("/#/projects/1/forms/'%3D%2B%2F*-451%25%2F%25/submissions", {}, false)
-        .respondFor("/projects/1/forms/'%3D%2B%2F*-451%25%2F%25/submissions")
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal("/projects/1/forms/'%3D%2B%2F*-451%25%2F%25/submissions");
-        });
-    });
-
-    it('redirects if URL starts with hash and contains query parameter', () => {
-      testData.extendedForms.createPast(1);
-      return load('/#/projects/1/forms/f/submissions?reviewState=%27hasIssues%27', {}, false)
-        .respondFor('/projects/1/forms/f/submissions?reviewState=%27hasIssues%27')
-        .afterResponses(app => {
-          app.vm.$route.path.should.be.equal('/projects/1/forms/f/submissions');
-          app.vm.$route.query.should.be.deep.equal({ reviewState: "'hasIssues'" });
-        });
-    });
   });
 
   describe('requireLogin', () => {
@@ -363,10 +337,10 @@ describe('createCentralRouter()', () => {
       it('preserves data while navigating to/from .../app-users', () =>
         load('/projects/1/form-access')
           .complete()
-          .route('/projects/1/app-users')
+          .load('/projects/1/app-users', { project: false, fieldKeys: false })
           .complete()
           .route('/projects/1/form-access')
-          .then(dataExists(['project', 'fieldKeys'])));
+          .then(dataExists(['project', 'fieldKeys', 'actorProperties'])));
 
       describe('navigating to/from .../form-access', () => {
         it('preserves project', () =>
@@ -464,7 +438,7 @@ describe('createCentralRouter()', () => {
             .route('/projects/1/forms/f/settings')
             .complete()
             .route('/projects/1/forms/f/public-links')
-            .then(dataExists(['publicLinks'])));
+            .then(dataExists(['publicLinks', 'actorProperties'])));
       });
     });
 
@@ -510,6 +484,14 @@ describe('createCentralRouter()', () => {
           .complete()
           .load('/projects/1/entity-lists/trees/properties', { project: false, dataset: false })
           .afterResponses(dataExists(['project', 'dataset'])));
+
+      it('preserves actorProperties while navigating between dataset tabs', () =>
+        load('/projects/1/entity-lists/trees/settings')
+          .complete()
+          .load('/projects/1/entity-lists/trees/properties', { project: false, dataset: false })
+          .complete()
+          .load('/projects/1/entity-lists/trees/settings', { project: false, dataset: false, actorProperties: false })
+          .afterResponses(dataExists(['actorProperties'])));
     });
 
     it('preserves project while navigating from entity list to project', () => {
@@ -1249,13 +1231,6 @@ describe('createCentralRouter()', () => {
       };
       const app = await load('/system/analytics', { container }, false);
       app.findComponent(NotFound).exists().should.be.true;
-    });
-  });
-
-  describe('standalone field', () => {
-    it('adds a background color if standalone is false', async () => {
-      await load('/login').restoreSession(false);
-      document.documentElement.style.backgroundColor.should.equal('var(--color-accent-secondary)');
     });
   });
 });

@@ -354,8 +354,18 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
     unselectFeature();
   };
 
+  /**
+   * Places a newly built feature onto the empty layer and marks it saved.
+   * Skips when the incoming geometry's ODK value already matches what's on the map,
+   * So user edits coming back through the engine don't rebuild the feature.
+   */
   const loadAndSaveSingleFeature = (feature: Feature | undefined) => {
-    if (!mapInstance || currentMode.capabilities.canLoadMultiFeatures || !feature) {
+    if (
+      !mapInstance ||
+      currentMode.capabilities.canLoadMultiFeatures ||
+      !feature ||
+      feature.get(ODK_VALUE_PROPERTY) === mapFeatures?.getSavedFeatureValue()
+    ) {
       return;
     }
 
@@ -514,12 +524,26 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
     mapViewControls?.stopWatchingCurrentLocation();
   };
 
-  const findAndSaveFeature = (feature: GeoJsonFeature | undefined) => {
-    return mapFeatures?.findAndSaveFeature(
-      featuresSource,
-      feature,
-      currentMode.capabilities.canViewProperties
-    );
+  /**
+   * Applies a saved feature value to the map.
+   * Multi-feature mode: looks it up in the collection.
+   * Single-feature mode: applies external updates (defaults, setvalue). Skips when the value matches what's on the map
+   */
+  const applySavedFeatureValue = (feature: GeoJsonFeature | undefined) => {
+    if (currentMode.capabilities.canLoadMultiFeatures) {
+      return mapFeatures?.findAndSaveFeature(
+        featuresSource,
+        feature,
+        currentMode.capabilities.canViewProperties
+      );
+    }
+
+    if (!feature) {
+      return;
+    }
+
+    const newFeature = mapFeatures?.createFeatureFromGeoJSON(feature);
+    loadAndSaveSingleFeature(newFeature);
   };
 
   watch(
@@ -549,7 +573,7 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 
     discardSavedFeature,
     saveSelectedFeature: () => mapFeatures?.saveSelectedFeature(),
-    findAndSaveFeature,
+    applySavedFeatureValue,
     getSavedFeature: () => mapFeatures?.getSavedFeature()?.clone(),
     getSavedFeatureValue: () => mapFeatures?.getSavedFeatureValue(),
     isSavedFeatureSelected: () => !!mapFeatures?.isSavedFeatureSelected(),

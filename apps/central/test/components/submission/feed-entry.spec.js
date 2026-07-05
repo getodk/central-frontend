@@ -349,7 +349,10 @@ describe('SubmissionFeedEntry', () => {
         });
         const component = mountComponent();
         component.get('.submission-feed-entry-entity-error').text().should.equal('Problem processing Entity');
-        component.get('.entity-error-message').text().should.equal('ID empty or missing.');
+
+        const p = component.findAll('.entity-error-message p');
+        p.length.should.equal(2);
+        p[0].text().should.equal('ID empty or missing.');
       });
 
       it('renders entity creation error message when it is included as an errorMessage', async () => {
@@ -362,7 +365,10 @@ describe('SubmissionFeedEntry', () => {
         });
         const component = mountComponent();
         component.get('.submission-feed-entry-entity-error').text().should.equal('Problem processing Entity');
-        component.get('.entity-error-message').text().should.equal('A resource already exists with uuid value(s) abc.');
+
+        const p = component.findAll('.entity-error-message p');
+        p.length.should.equal(2);
+        p[0].text().should.equal('A resource already exists with uuid value(s) abc.');
       });
 
       it('renders error message when there is a problem without a reason and an error message', async () => {
@@ -375,7 +381,10 @@ describe('SubmissionFeedEntry', () => {
         });
         const component = mountComponent();
         component.get('.submission-feed-entry-entity-error').text().should.equal('Problem processing Entity');
-        component.get('.entity-error-message').text().should.equal('Mystery Error');
+
+        const p = component.findAll('.entity-error-message p');
+        p.length.should.equal(2);
+        p[0].text().should.equal('Mystery Error');
       });
 
       it('renders problem but no specific error message if audit details are malformed', async () => {
@@ -387,7 +396,10 @@ describe('SubmissionFeedEntry', () => {
         });
         const component = mountComponent();
         component.get('.submission-feed-entry-entity-error').text().should.equal('Problem processing Entity');
-        component.get('.entity-error-message').text().should.equal('');
+
+        const p = component.findAll('.entity-error-message p');
+        p.length.should.equal(1);
+        p[0].text().should.startWith('Check the Form definition and Submission for issues.');
       });
     });
   });

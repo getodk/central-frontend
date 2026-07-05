@@ -1,6 +1,6 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import BackendClient from '../backend-client';
-import { login, ENCRYPTION_SECRET } from '../util';
+import { login, test, ENCRYPTION_SECRET } from '../util';
 import Zip from 'adm-zip';
 
 const appUrl = process.env.ODK_URL;
@@ -14,9 +14,7 @@ test.beforeAll(async ({ playwright }, testInfo) => {
   backendClient = new BackendClient(playwright, `${testInfo.project.name}_wf`, projectId);
   await backendClient.alwaysHideModal();
   simpleForm = await backendClient.createForm();
-  await backendClient.setWebForms(simpleForm.xmlFormId, true);
   formWithAttachment = await backendClient.createAttachmentForm();
-  await backendClient.setWebForms(formWithAttachment.xmlFormId, true);
 });
 
 test.afterAll(async () => {

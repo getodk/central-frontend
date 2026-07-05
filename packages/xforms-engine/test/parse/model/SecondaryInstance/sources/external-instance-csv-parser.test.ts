@@ -33,8 +33,58 @@ describe('external-instance-csv-parser', () => {
 
   it('errors when given null character in header', () => {
     expect(() => parseItems(url, 'f\0o,bar')).to.throw(
-      'Failed to parse CSV jr://csv/mock.csv: null character'
+      'Failed to parse CSV jr://csv/mock.csv, row 1, column 1: null character'
     );
+  });
+
+  it('errors when given leading whitespace character in header', () => {
+    expect(() => parseItems(url, 'foo, baz')).to.throw(
+      'Failed to parse CSV jr://csv/mock.csv, column 2: whitespace character in column header'
+    );
+  });
+
+  it('errors when given trailing whitespace character in header', () => {
+    expect(() => parseItems(url, 'foo,baz ')).to.throw(
+      'Failed to parse CSV jr://csv/mock.csv, column 2: whitespace character in column header'
+    );
+  });
+
+  it('passes when given inner whitespace character', () => {
+    const csv = `name,baz bar
+a,1
+`;
+    const actual = parseItems(url, csv);
+    expect(actual).to.deep.equal([
+      [
+        {
+          cellValue: 'a',
+          columnName: 'name',
+        },
+        {
+          cellValue: '1',
+          columnName: 'baz bar',
+        },
+      ],
+    ]);
+  });
+
+  it('passes when given non-header rows have wrapping whitespace', () => {
+    const csv = `name,value
+trailing , leading
+`;
+    const actual = parseItems(url, csv);
+    expect(actual).to.deep.equal([
+      [
+        {
+          cellValue: 'trailing ',
+          columnName: 'name',
+        },
+        {
+          cellValue: ' leading',
+          columnName: 'value',
+        },
+      ],
+    ]);
   });
 
   it('parses csv with single column', () => {
@@ -109,7 +159,7 @@ a,1,,,,,,
 a,1,q
 `;
     expect(() => parseItems(url, csv)).to.throw(
-      'Failed to parse CSV jr://csv/mock.csv: row 1, expected 2 columns, got 3'
+      'Failed to parse CSV jr://csv/mock.csv, row 2: expected 2 columns, got 3'
     );
   });
 

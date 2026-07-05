@@ -37,6 +37,7 @@ import Message from 'primevue/message';
 import {
 	computed,
 	getCurrentInstance,
+	onErrorCaptured,
 	onUnmounted,
 	provide,
 	readonly,
@@ -44,6 +45,7 @@ import {
 	watch,
 	watchEffect,
 } from 'vue';
+import { FormInitializationError } from '@/lib/error/FormInitializationError';
 
 const webFormsVersion = __WEB_FORMS_VERSION__;
 type ObjectURL = `blob:${string}`;
@@ -51,7 +53,7 @@ type ObjectURL = `blob:${string}`;
 export interface OdkWebFormsProps {
 	readonly formXml: string;
 	readonly fetchFormAttachment: FetchFormAttachment;
-	readonly trackDevice?: boolean;
+	readonly deviceId?: string; // different case to make it easier to bind
 	readonly preloadProperties?: PreloadProperties;
 	readonly missingResourceBehavior?: MissingResourceBehavior;
 	readonly attachmentMaxSize?: number;
@@ -81,7 +83,7 @@ const hostSubmissionResultCallbackFactory = (
 		const options = {
 			form: formOptions,
 			preloadProperties: props.preloadProperties,
-			trackDevice: props.trackDevice,
+			deviceID: props.deviceId,
 		};
 		state.value = updateSubmittedFormState(submissionResult, currentState, options);
 		if (submissionResult?.next === POST_SUBMIT__NEW_INSTANCE) {
@@ -97,6 +99,7 @@ const hostSubmissionResultCallbackFactory = (
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- evidently a type must be used for this to be assigned to a name (which we use!); as an interface, it won't satisfy the `Record` constraint of `defineEmits`.
 type OdkWebFormEmits = {
+	loaded: [],
 	submit: [submissionPayload: MonolithicInstancePayload, callback: HostSubmissionResultCallback];
 	submitChunked: [
 		submissionPayload: ChunkedInstancePayload,
@@ -196,9 +199,11 @@ const formOptions = readonly<FormOptions>({
 	attachmentMaxSize: props.attachmentMaxSize,
 });
 provide(FORM_OPTIONS, formOptions);
-provide(FORM_MEDIA_CACHE, new Map<JRResourceURLString, ObjectURL>());
+const mediaCache = new Map<JRResourceURLString, ObjectURL>();
+provide(FORM_MEDIA_CACHE, mediaCache);
 
 const state = initializeFormState();
+const runtimeError = ref<FormInitializationError | null>(null);
 const submitPressed = ref(false);
 const floatingErrorActive = ref(false);
 const showValidationError = ref(false);
@@ -207,6 +212,10 @@ const isFormEditMode = ref(false);
 provide(IS_FORM_EDIT_MODE, readonly(isFormEditMode));
 const { setLanguage, t } = useLocale(computed(() => state.value.root));
 provide(TRANSLATE, t);
+
+onErrorCaptured(err => {
+	runtimeError.value = FormInitializationError.from(err);
+});
 
 watch(
 	() => state.value,
@@ -229,8 +238,9 @@ const init = async () => {
 		form: formOptions,
 		editInstance: props.editInstance ?? null,
 		preloadProperties: props.preloadProperties,
-		trackDevice: props.trackDevice,
+		deviceID: props.deviceId,
 	});
+	emit('loaded');
 };
 
 void init();
@@ -271,6 +281,8 @@ watchEffect(() => {
 });
 
 onUnmounted(() => {
+	mediaCache.forEach((url) => URL.revokeObjectURL(url));
+	mediaCache.clear();
 	resetComponentState();
 });
 </script>
@@ -292,7 +304,11 @@ onUnmounted(() => {
 	/>
 
 	<template v-if="state.status === 'FORM_STATE_FAILURE'">
-		<FormLoadFailureDialog severity="error" :error="state.error" />
+		<FormLoadFailureDialog :error="state.error" />
+	</template>
+
+	<template v-else-if="runtimeError">
+		<FormLoadFailureDialog :error="runtimeError" />
 	</template>
 
 	<div
