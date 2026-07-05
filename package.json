@@ -7,7 +7,6 @@
     "dev": "      nf start vite,nginx",
     "dev:build": "nf start build,nginx",
     "build": "turbo run build",
-    "build:types": "npm run build:types --workspaces --if-present",
     "build:web": "vite build",
     "changeset": "changeset",
     "eslint": "eslint bin/ e2e-tests/ *.js -c bin/eslint.config.js --cache --max-warnings 0",
