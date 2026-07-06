@@ -16,6 +16,7 @@
   "projectShow": {
     "tab": {
       "formAccess": "Form Access",
+      "customProperties": "Custom Properties",
     }
   },
   "formHead": {
@@ -93,7 +94,8 @@
         "create": "Create",
         "update": "Update Details",
         "session_end": "Revoke",
-        "delete": "Delete"
+        "delete": "Delete",
+        "property_set": "Set Property"
       },
       // This is shown in the log of actions performed on the server.
       "analytics": "Report Usage",
@@ -121,13 +123,19 @@
         "bulk_restore": "Bulk Restore"
       },
       // This is shown in the log of actions performed on the server. It is a
+      // type of action that can be taken on an Actor Property.
+      "actor_property": {
+        "create": "Create Custom Property"
+      },
+      // This is shown in the log of actions performed on the server. It is a
       // type of action that can be taken on an App User.
       "field_key": {
         "create": "@:audit.action.default.create",
         "assignment_create": "Give Access",
         "assignment_delete": "Remove Access",
         "session_end": "@:audit.action.default.session_end",
-        "delete": "@:audit.action.default.delete"
+        "delete": "@:audit.action.default.delete",
+        "property_set": "@:audit.action.default.property_set"
       },
       // This is shown in the log of actions performed on the server. It is a
       // type of action that can be taken on a Form.
@@ -136,6 +144,7 @@
         "update": "@:audit.action.default.update",
         "update_draft_set": "Create or Update Draft",
         "update_draft_replace": "Replace Draft",
+        "update_draft_update": "Update Draft Settings",
         "update_publish": "Publish Draft",
         "update_draft_delete": "Abandon Draft",
         "attachment_update": "Update Attachments",
@@ -158,7 +167,8 @@
         "assignment_create": "Give Access",
         "assignment_delete": "Remove Access",
         "session_end": "@:audit.action.default.session_end",
-        "delete": "@:audit.action.default.delete"
+        "delete": "@:audit.action.default.delete",
+        "property_set": "@:audit.action.default.property_set"
       },
       // This is shown in the log of actions performed on the server.
       "submission": {
@@ -228,15 +238,14 @@
     "showPreview": "Preview",
     // This text is shown on a button that the user clicks to hide a preview of something
     "hidePreview": "Hide preview",
-    // This text is show on a button that the user clicks to see the Form preview in the new Web Forms component
-    "newPreview": "New Preview",
     "expand": "Expand",
     "collapse": "Collapse",
     // @transifexKey component.FormTrashRow.action.restore
     "restore": "Restore",
     "selectRow": "Select row",
     // This text is shown on a button that resets the data filters
-    "reset": "Reset"
+    "reset": "Reset",
+    "change": "Change"
   },
   "field": {
     "comment": "Leave a comment…",
@@ -286,9 +295,12 @@
     // This is the text of a table column header. The column shows the number of entities
     // for the Entity List
     "entities": "Total Entities",
-    // This is the text of a table column header. The column shows the date and time of the 
+    // This is the text of a table column header. The column shows the date and time of the
     // newest entity
-    "lastEntity": "Latest Entity"
+    "lastEntity": "Latest Entity",
+    // This is the text of a table column header. "Value" refers to the value of a property of
+    // an object (App User, Public Link and Data Collector)
+    "value": "Value"
   },
   "plural": {
     "appUser": "App User | App Users",
@@ -474,11 +486,15 @@
     "versionShort": "v{version}",
     // This text is shown on its own before details about a warning.
     "warning": "Warning",
-    "beta": "Beta",
+    // Standalone text shown as a badge next to a recommendation. Not part of a longer phrase.
+    "recommended": "recommended",
     "none": "(none)",
     "search": "Search",
     // @transifexKey component.FormTrashList.title
-    "trash": "Trash"
+    "trash": "Trash",
+    // The word "Enketo" should not be translated
+    "useEnketo": "Enketo compatibility mode",
+    "updateInProgress": "Update request in progress"
   },
   "mixin": {
     "request": {

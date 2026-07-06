@@ -170,14 +170,12 @@
     "yesProceed": "Sim, prossiga",
     "showPreview": "Visualizar",
     "hidePreview": "Ocultar visualização",
-    "newPreview": "Nova Visualização Prévia",
     "expand": "Expandir",
     "collapse": "Condensar",
     "selectRow": "Selecionar linha",
     "reset": "Reiniciar",
-    "reviewParallelUpdates": "Revisar atualizações paralelas",
-    "tryAgain": "Tentar novamente",
     "upload": "Carregar",
+    "reviewParallelUpdates": "Revisar atualizações paralelas",
     "restore": "Recuperar"
   },
   "field": {
@@ -341,7 +339,6 @@
     "totalEntities": "Total de Entidades",
     "versionShort": "v{version}",
     "warning": "Aviso",
-    "beta": "Beta",
     "none": "(nenhum)",
     "search": "Busca",
     "reviewState": "Status da revisão",

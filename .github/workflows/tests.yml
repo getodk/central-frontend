@@ -61,7 +61,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: ['24.14.1']
+        node-version: ['24.16.0']
     steps:
       - uses: 'actions/checkout@v6'
       - uses: 'volta-cli/action@v5'
@@ -120,7 +120,7 @@ jobs:
       run: echo '127.0.0.1 central-test.localhost' | sudo tee --append /etc/hosts
     - name: Start services
       working-directory: central
-      run: touch ./files/allow-postgres14-upgrade && docker compose build && docker compose up -d
+      run: touch ./files/allow-postgres14-upgrade && docker compose build --build-arg FRONTEND_BUILD_MODE=source && docker compose up -d
     - name: Set node version
       uses: actions/setup-node@v6
       with:

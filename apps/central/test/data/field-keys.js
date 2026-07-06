@@ -48,5 +48,5 @@ export const extendedFieldKeys = dataStore({
 
 export const standardFieldKeys = view(
   extendedFieldKeys,
-  omit(['lastUsed', 'createdBy'])
+  omit(['lastUsed', 'createdBy', 'properties'])
 );

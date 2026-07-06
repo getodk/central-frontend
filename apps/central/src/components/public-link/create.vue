@@ -11,13 +11,18 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="public-link-create" :state="state" :hideable="!awaitingResponse"
-    backdrop @hide="$emit('hide')" @shown="$refs.displayName.focus()">
+    backdrop @hide="$emit('hide')" @shown="displayNameRef.focus()">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <p class="modal-introduction">{{ $t('introduction[0]') }}</p>
       <form @submit.prevent="submit">
-        <form-group ref="displayName" v-model.trim="displayName"
+        <form-group ref="displayNameRef" v-model.trim="displayName"
           :placeholder="$t('field.displayName')" required autocomplete="off"/>
+        <div v-if="state && actorProperties.dataExists && actorProperties.length > 0"
+          class="public-link-set-properties">
+          <actor-properties-upsert v-model:propertyValues="propertyValues" :create="true"
+            :property-defs="actorProperties.data"/>
+        </div>
         <div class="checkbox">
           <label>
             <input v-model="once" type="checkbox"
@@ -45,7 +50,10 @@ except according to the terms contained in the LICENSE file.
   </modal>
 </template>
 
-<script>
+<script setup>
+import { ref, watch } from 'vue';
+
+import ActorPropertiesUpsert from '../actor-properties/upsert.vue';
 import DocLink from '../doc-link.vue';
 import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
@@ -57,50 +65,44 @@ import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
-export default {
-  name: 'PublicLinkCreate',
-  components: { DocLink, FormGroup, Modal, SentenceSeparator, Spinner },
-  props: {
-    state: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: ['hide', 'success'],
-  setup() {
-    // The modal assumes that this data will exist when the modal is shown.
-    const { form } = useRequestData();
-    const { request, awaitingResponse } = useRequest();
-    return { form, request, awaitingResponse };
-  },
-  data() {
-    return {
-      displayName: '',
-      once: false
-    };
-  },
-  watch: {
-    state(state) {
-      if (!state) {
-        this.displayName = '';
-        this.once = false;
-      }
-    }
-  },
-  methods: {
-    submit() {
-      this.request({
-        method: 'POST',
-        url: apiPaths.publicLinks(this.form.projectId, this.form.xmlFormId),
-        data: { displayName: this.displayName, once: this.once }
-      })
-        .then(({ data }) => {
-          this.$emit('success', data);
-        })
-        .catch(noop);
-    }
-  }
+defineOptions({
+  name: 'PublicLinkCreate'
+});
+
+const props = defineProps({
+  state: Boolean
+});
+
+const emit = defineEmits(['hide', 'success']);
+
+const displayNameRef = ref(null);
+const displayName = ref('');
+const once = ref(false);
+const propertyValues = ref(Object.create(null));
+
+// The modal assumes that this data will exist when the modal is shown.
+const { request, awaitingResponse } = useRequest();
+const { form, actorProperties } = useRequestData();
+
+const submit = () => {
+  request({
+    method: 'POST',
+    url: apiPaths.publicLinks(form.projectId, form.xmlFormId),
+    data: { displayName: displayName.value, once: once.value, properties: propertyValues.value }
+  })
+    .then(({ data }) => {
+      emit('success', data);
+    })
+    .catch(noop);
 };
+
+watch(() => props.state, (state) => {
+  if (!state) {
+    displayName.value = '';
+    once.value = false;
+    propertyValues.value = Object.create(null);
+  }
+});
 </script>
 
 <i18n lang="json5">
