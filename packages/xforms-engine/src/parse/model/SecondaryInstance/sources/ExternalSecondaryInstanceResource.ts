@@ -5,12 +5,13 @@ import { ErrorProductionDesignPendingError } from '../../../../error/ErrorProduc
 import { getResponseContentType } from '../../../../lib/resource-helpers.ts';
 import { FormAttachmentResource } from '../../../attachments/FormAttachmentResource.ts';
 import type { ExternalSecondaryInstanceSourceFormat } from './SecondaryInstanceSource.ts';
+import { SecondaryInstanceResourceLoadingError } from '../../../../error/SecondaryInstanceResourceLoadingError.ts';
 
 const assertResponseSuccess = (resourceURL: JRResourceURL, response: FetchResourceResponse) => {
   const { ok = true, status = 200 } = response;
 
   if (!ok || status !== 200) {
-    throw new ErrorProductionDesignPendingError(`Failed to load ${resourceURL.href}`);
+    throw new SecondaryInstanceResourceLoadingError(resourceURL, response);
   }
 };
 
@@ -99,9 +100,7 @@ export class ExternalSecondaryInstanceResource<
       });
     }
 
-    throw new ErrorProductionDesignPendingError(
-      `Failed to load resource: ${resourceURL.href}: resource is missing (status: ${response.status})`
-    );
+    throw new SecondaryInstanceResourceLoadingError(resourceURL, response);
   }
 
   static async load(

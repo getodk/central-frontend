@@ -30,6 +30,10 @@
       "formAccess": {
         "string": "Form Access",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      },
+      "customProperties": {
+        "string": "Custom Properties",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     }
   },
@@ -198,6 +202,10 @@
         "delete": {
           "string": "Delete",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
+        },
+        "property_set": {
+          "string": "Set Property",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
         }
       },
       "analytics": {
@@ -244,6 +252,12 @@
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
+      "actor_property": {
+        "create": {
+          "string": "Create Custom Property",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Actor Property."
+        }
+      },
       "field_key": {
         "assignment_create": {
           "string": "Give Access",
@@ -261,6 +275,10 @@
         },
         "update_draft_replace": {
           "string": "Replace Draft",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "update_draft_update": {
+          "string": "Update Draft Settings",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "update_publish": {
@@ -475,10 +493,6 @@
       "string": "Hide preview",
       "developer_comment": "This text is shown on a button that the user clicks to hide a preview of something"
     },
-    "newPreview": {
-      "string": "New Preview",
-      "developer_comment": "This text is show on a button that the user clicks to see the Form preview in the new Web Forms component"
-    },
     "expand": {
       "string": "Expand",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -494,6 +508,10 @@
     "reset": {
       "string": "Reset",
       "developer_comment": "This text is shown on a button that resets the data filters"
+    },
+    "change": {
+      "string": "Change",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
     }
   },
   "field": {
@@ -621,6 +639,10 @@
     "lastEntity": {
       "string": "Latest Entity",
       "developer_comment": "This is the text of a table column header. The column shows the date and time of the newest entity"
+    },
+    "value": {
+      "string": "Value",
+      "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of a property of an object (App User, Public Link and Data Collector)"
     }
   },
   "plural": {
@@ -1026,14 +1048,22 @@
       "string": "Warning",
       "developer_comment": "This text is shown on its own before details about a warning."
     },
-    "beta": {
-      "string": "Beta"
+    "recommended": {
+      "string": "recommended",
+      "developer_comment": "Standalone text shown as a badge next to a recommendation. Not part of a longer phrase."
     },
     "none": {
       "string": "(none)"
     },
     "search": {
       "string": "Search"
+    },
+    "useEnketo": {
+      "string": "Enketo compatibility mode",
+      "developer_comment": "The word \"Enketo\" should not be translated"
+    },
+    "updateInProgress": {
+      "string": "Update request in progress"
     }
   },
   "mixin": {
@@ -1424,6 +1454,15 @@
         },
         "num_dataset_properties_deleted": {
           "string": "Number of Entity property delete events"
+        },
+        "num_owner_only_datasets_per_project": {
+          "string": "Number of Entity Lists restricted to Owner Only"
+        },
+        "num_custom_user_properties": {
+          "string": "Number of custom User Properties"
+        },
+        "num_user_property_filtered_datasets": {
+          "string": "Number of Entity Lists restricted by User Properties"
         },
         "num_properties": {
           "string": "Number of Properties"
@@ -1919,7 +1958,7 @@
     "DatasetOwnerOnly": {
       "panel": {
         "title": {
-          "string": "App User and Data Collector Entity Access",
+          "string": "Entity List Access",
           "developer_comment": "This is a title shown above a section of the page."
         }
       },
@@ -1938,6 +1977,45 @@
         },
         "true": {
           "string": "App Users and Data Collectors within this Project will only have access to the Entities they create, promoting privacy and limiting data transfers."
+        }
+      },
+      "filterByProperty": {
+        "label": {
+          "string": "Filter by Property"
+        },
+        "description": {
+          "string": "Define rules for which Entities are visible to App Users and Public Links by comparing their properties."
+        },
+        "entityPropertyLabel": {
+          "string": "Only see Entities where",
+          "developer_comment": "This text is shown above the access rule filter dropdown. Translators are free not to translate this literally"
+        },
+        "entityPropertyPlaceholder": {
+          "string": "Entity property",
+          "developer_comment": "Placeholder text shown on a access rule filter dropdown."
+        },
+        "userPropertyLabel": {
+          "string": "is equal to the user‘s",
+          "developer_comment": "This text is shown above the access rule filter dropdown. Translators are free not to translate this literally"
+        },
+        "userPropertyPlaceholder": {
+          "string": "User property",
+          "developer_comment": "Placeholder text shown on a access rule filter dropdown"
+        },
+        "disabled": {
+          "datasetProperties": {
+            "string": "There are no Entity properties defined."
+          },
+          "userProperties": {
+            "string": "There are no Custom Properties defined."
+          },
+          "both": {
+            "string": "There are no Entity or user properties defined."
+          }
+        },
+        "currentRule": {
+          "string": "Rule: {entityProperty} (Entity property) = {userProperty} (User property)",
+          "developer_comment": "{entityProperty} is the name of an Entity property. {userProperty} is the name of a User property."
         }
       },
       "falseModal": {
@@ -1962,6 +2040,23 @@
         },
         "changeToTrue": {
           "string": "App Users and Data Collectors will now only have access to Entities they create."
+        },
+        "changeToProperty": {
+          "string": "App Users and Public Links will now only have access to Entities matching the filter rule."
+        }
+      },
+      "accessByFilterRule": {
+        "title": {
+          "string": "Filter by Property"
+        },
+        "introduction": {
+          "string": "App Users and Public Links will only have access to Entities where the selected property matches their user property."
+        },
+        "action": {
+          "save": {
+            "string": "Save Filter Rule",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
         }
       }
     },
@@ -2815,6 +2910,16 @@
         "developer_comment": "Text for a hovering feedback button shown anchored to right of screen. If your language doesn't have a single word or short phrase for \"feedback\", consider something like \"comments\" or \"reactions\"."
       }
     },
+    "FieldKeyEdit": {
+      "title": {
+        "string": "Edit App User “{displayName}”",
+        "developer_comment": "This is the title at the top of a pop-up for editing an App User. {displayName} is the the name of the App User"
+      },
+      "displayNameLabel": {
+        "string": "App User",
+        "developer_comment": "Shown as label before the display name of the App User in the edit pop-up."
+      }
+    },
     "FieldKeyList": {
       "action": {
         "create": {
@@ -2864,6 +2969,9 @@
       "alert": {
         "create": {
           "string": "The App User “{displayName}” was created successfully."
+        },
+        "edit": {
+          "string": "The App User “{displayName}” was updated successfully."
         },
         "revoke": {
           "string": "App User {displayName}’s access successfully revoked."
@@ -3010,6 +3118,10 @@
         "developer_comment": "This text is shown for an App User whose access has been revoked."
       },
       "action": {
+        "editAppUser": {
+          "string": "Edit App User",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
         "revokeAccess": {
           "string": "Revoke access",
           "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -3335,13 +3447,13 @@
       },
       "field": {
         "note": {
-          "string": "Notes",
+          "string": "Version notes",
           "developer_comment": "This is the text of a form field."
         }
       },
       "placeholder": {
         "note": {
-          "string": "Add optional publishing notes…"
+          "string": "Describe this version (optional)…"
         }
       }
     },
@@ -3530,6 +3642,26 @@
         "published": {
           "string": "Published {dateTime}",
           "developer_comment": "This shows the date and time at which the current version of the Form was published, for example: \"Published 2020/01/01 01:23\". {dateTime} may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+        }
+      }
+    },
+    "FormEditWebForm": {
+      "title": {
+        "string": "New default web form experience"
+      },
+      "description": {
+        "full": {
+          "string": "Newly created Forms now use the ODK Web Forms experience by default for previews, web submissions and submission editing. Some advanced form features may not yet be fully supported, {learnMore}.",
+          "developer_comment": "{learnMore} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nlearn more"
+        },
+        "learnMore": {
+          "string": "learn more",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {learnMore} is in the following text:\n\nNewly created Forms now use the ODK Web Forms experience by default for previews, web submissions and submission editing. Some advanced form features may not yet be fully supported, {learnMore}."
+        }
+      },
+      "alert": {
+        "settingSaved": {
+          "string": "Draft Form setting saved."
         }
       }
     },
@@ -3775,16 +3907,26 @@
       },
       "webFormsSetting": {
         "webForms": {
-          "string": "Web Forms",
-          "developer_comment": "Title of a section on Forms settings page, that allows users to opt-in for ODK Web Forms"
+          "string": "Web form experience",
+          "developer_comment": "Title of a section on Forms settings page, that allows users to choose which form experience they want to use"
         },
         "description": {
           "string": "Fill out, preview and edit your “{formName}” Form using",
           "developer_comment": "Description of a section. {formName} is replaced with the name of the Form"
         },
-        "enketoDefault": {
-          "string": "Enketo (default)",
-          "developer_comment": "The word \"Enketo\" should not be translated"
+        "enketoDescription": {
+          "string": "No longer actively developed. Use for specialized features not yet supported by ODK Web Forms.",
+          "developer_comment": "This text is shown under the option of Enketo for Form settings."
+        },
+        "odkWebFormsDescription": {
+          "full": {
+            "string": "A modern experience that will replace Enketo over time. {preview}.",
+            "developer_comment": "{preview} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nSee a preview"
+          },
+          "preview": {
+            "string": "See a preview",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {preview} is in the following text:\n\nA modern experience that will replace Enketo over time. {preview}."
+          }
         },
         "enketoSelected": {
           "string": "You’re now using Enketo to fill out, preview and edit your “{formName}” form.",
@@ -3935,26 +4077,13 @@
     },
     "FormWebFormsSettingsConfirmation": {
       "webformsConfirmation": {
+        "description": {
+          "string": "Are you sure you want to switch from Enketo to ODK Web Forms?",
+          "developer_comment": "The words \"ODK Web Forms\" and \"Enketo\" should not be translated"
+        },
         "useOdkWebForms": {
           "string": "Use ODK Web Forms",
           "developer_comment": "The words \"ODK Web Forms\" should not be translated"
-        },
-        "intro": {
-          "string": "We’re building a new web-forms experience designed to be fast and user-friendly!"
-        },
-        "description": {
-          "full": {
-            "string": "Some functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in.",
-            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {seeSupportedFeatures} has the text: see supported features\n- {previewYourForm} has the text: preview your form"
-          },
-          "seeSupportedFeatures": {
-            "string": "see supported features",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {seeSupportedFeatures} is in the following text:\n\nSome functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in."
-          },
-          "previewYourForm": {
-            "string": "preview your form",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {previewYourForm} is in the following text:\n\nSome functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in."
-          }
         }
       },
       "enketoConfirmation": {
@@ -4197,6 +4326,44 @@
             "string": "This action cannot be undone",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {noUndo} is in the following text:\n\n{noUndo}, but the ability to unarchive a Project is planned for a future release."
           }
+        }
+      }
+    },
+    "ProjectCustomPropertiesList": {
+      "heading": {
+        "0": {
+          "string": "Control which Entities each App User or Public Link can access. Define Custom Properties here, assign values to App Users or Public Links, and use Entity List filters to show relevant Entities.",
+          "developer_comment": "A brief introduction to Custom Properties shown for the current project"
+        }
+      },
+      "emptyTable": {
+        "string": "No custom properties have been defined for this project."
+      },
+      "created": {
+        "string": "Custom property created successfully.",
+        "developer_comment": "Shown after a custom property is successfully created."
+      },
+      "action": {
+        "create": {
+          "string": "New",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "ProjectCustomPropertiesNew": {
+      "title": {
+        "string": "Add Custom Property",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "string": "To add a custom property for this project, choose a unique property name below."
+      },
+      "newPropertyName": {
+        "string": "New property name"
+      },
+      "problem": {
+        "409_3": {
+          "string": "A custom property already exists in this project with the name of \"{propertyName}\"."
         }
       }
     },
@@ -4735,6 +4902,16 @@
         "developer_comment": "This is help text for the \"Single Submission\" checkbox."
       }
     },
+    "PublicLinkEdit": {
+      "title": {
+        "string": "Edit Public Access Link “{displayName}”",
+        "developer_comment": "This is the title at the top of a pop-up for editing a Public Access Link. {displayName} is the display name of the Public Link"
+      },
+      "displayNameLabel": {
+        "string": "Public Link",
+        "developer_comment": "Shown as label before the display name of the Public Access Link in the edit pop-up."
+      }
+    },
     "PublicLinkList": {
       "action": {
         "create": {
@@ -4771,6 +4948,9 @@
         "create": {
           "string": "Your Public Access Link has been created and is now live. Copy it below to distribute it."
         },
+        "edit": {
+          "string": "The Public Access Link “{displayName}” was updated successfully."
+        },
         "revoke": {
           "string": "The Public Access Link “{displayName}” was revoked successfully. No further Submissions will be accepted using this Link."
         }
@@ -4789,6 +4969,10 @@
     },
     "PublicLinkRow": {
       "action": {
+        "edit": {
+          "string": "Edit Public Access Link",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
         "revoke": {
           "string": "Revoke",
           "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -4817,6 +5001,10 @@
         "accessLink": {
           "string": "Access Link",
           "developer_comment": "This is the text of a table column header."
+        },
+        "createdAtAndActions": {
+          "string": "{createdAt} / {actions}",
+          "developer_comment": "This text combines existing translated words. And it is shown on a column on the Public Link table that shows created at and action buttons."
         }
       }
     },
@@ -5138,6 +5326,9 @@
       "deleted": {
         "string": "(deleted)",
         "developer_comment": "This text is shown next to an Entity when the Entity has been deleted."
+      },
+      "entityErrorInstructions": {
+        "string": "Check the Form definition and Submission for issues. After making corrections, edit the Submission and submit to retry processing."
       }
     },
     "SubmissionFieldDropdown": {
@@ -5545,11 +5736,11 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "🎨 Branded login pages, Entity List cleanups, and file uploads in Web Forms",
+        "string": "Entity Filtering 🎯 and ODK Web Forms by Default 🌐",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "Customize the login page with your branding, clean up Entity Lists and Properties when they are no longer needed, and upload any file to your Web Forms."
+        "string": "Control which Entities each App User or Public Link receives with filtering rules based on custom properties. Plus, Web Forms is now the default web form experience, bringing a faster, more intuitive experience for form previews, data editing, and web-based form filling."
       }
     }
   },

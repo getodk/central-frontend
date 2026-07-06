@@ -13,7 +13,7 @@ let publicLink;
 
 test.beforeAll(async ({ playwright }, testInfo) => {
   backendClient = new BackendClient(playwright, `${testInfo.project.name}_enketo`);
-  const resources = await backendClient.createFormAndChildren();
+  const resources = await backendClient.createFormAndChildren(true);
   publishedForm = resources.form;
   draftForm = resources.formDraft;
   firstSubmission = resources.submission;

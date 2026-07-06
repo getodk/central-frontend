@@ -91,16 +91,14 @@ const abandonText = computed(() => (!form.dataExists
       "delete": "Formulare löschen",
       "abandon": "Entwurf verwerfen",
       "publish": "Entwurf veröffentlichen"
-    },
-    "title": "Bereit zur Veröffentlichung"
+    }
   },
   "es": {
     "action": {
       "delete": "Borrar formulario",
       "abandon": "Abandonar borrador",
       "publish": "Publicar borrador"
-    },
-    "title": "Listo para publicar"
+    }
   },
   "fr": {
     "action": {
@@ -108,7 +106,7 @@ const abandonText = computed(() => (!form.dataExists
       "abandon": "Abandonner l'ébauche",
       "publish": "Publier l'ébauche"
     },
-    "title": "Prêt à publier"
+    "title": "Prêt à publier?"
   },
   "id": {
     "action": {
@@ -121,8 +119,7 @@ const abandonText = computed(() => (!form.dataExists
       "delete": "Cancellare il formulario",
       "abandon": "Abbandonare la bozza",
       "publish": "Pubblicare la bozza"
-    },
-    "title": "Pronto per essere pubblicato"
+    }
   },
   "ja": {
     "action": {
@@ -135,8 +132,7 @@ const abandonText = computed(() => (!form.dataExists
       "delete": "Excluir Formulário",
       "abandon": "Abandonar rascunho",
       "publish": "Publicar rascunho"
-    },
-    "title": "Pronto para publicar"
+    }
   },
   "sw": {
     "action": {
@@ -149,16 +145,14 @@ const abandonText = computed(() => (!form.dataExists
       "delete": "删除表单",
       "abandon": "放弃草稿",
       "publish": "发布草稿"
-    },
-    "title": "准备发布"
+    }
   },
   "zh-Hant": {
     "action": {
       "delete": "刪除表單",
       "abandon": "放棄草案",
       "publish": "發布草稿"
-    },
-    "title": "準備發佈"
+    }
   }
 }
 </i18n>

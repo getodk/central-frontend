@@ -1,3 +1,4 @@
+import { Assertion } from 'chai';
 import { clone } from 'ramda';
 
 import FileDropZone from '../../../src/components/file-drop-zone.vue';
@@ -33,12 +34,31 @@ const xlsForm = () => new File([''], 'my_form.xlsx', {
 });
 const upload = async (component, file = xlsForm()) => {
   await setFiles(component.get('#form-upload input'), [file]);
-  await component.get('#upload-button').trigger('click');
   // wait for file to be verified and then actual request to be sent
   return wait(1);
 };
 
 describe('FormUpload', () => {
+  // Override alert assertion to check inline error instead of toast
+  let originalAlert;
+  beforeAll(() => {
+    Assertion.overwriteMethod('alert', (_super) => {
+      originalAlert = _super;
+      return function AssertAlert(type, message) {
+        if (type === 'danger') {
+          const errorDiv = this._obj.get('.form-upload-error');
+          errorDiv.should.be.visible();
+          if (message != null) errorDiv.text().should.stringMatch(message);
+        } else {
+          _super.call(this, type, message);
+        }
+      };
+    });
+  });
+  afterAll(() => {
+    Assertion.overwriteMethod('alert', () => originalAlert);
+  });
+
   describe('introduction text for new Form', () => {
     it('shows the correct text for the first paragraph', () => {
       const modal = mount(FormUpload, mountOptions());
@@ -78,46 +98,28 @@ describe('FormUpload', () => {
     });
 
     describe('after a file is selected using the file input', () => {
-      it('shows the filename', async () => {
-        const component = mount(FormUpload, mountOptions());
-        await setFiles(component.get('input'), [xlsForm()]);
+      it('shows the filename', () =>
+        mockHttp()
+          .mount(FormUpload, mountOptions())
+          .request(upload)
+          .beforeAnyResponse((component) => {
+            component.get('#form-upload-filename').text().should.equal('my_form.xlsx');
+            component.get('input').element.value.should.equal('');
+          })
+          .respondWithProblem());
+    });
+
+    it('shows the filename after a file is dropped', () => mockHttp()
+      .mount(FormUpload, mountOptions())
+      .request(async (component) => {
+        await dragAndDrop(component.getComponent(FileDropZone), [xlsForm()]);
+        return wait(1);
+      })
+      .beforeAnyResponse((component) => {
         component.get('#form-upload-filename').text().should.equal('my_form.xlsx');
-      });
-
-      it('resets the input', async () => {
-        const component = mount(FormUpload, mountOptions());
-        await setFiles(component.get('input'), [xlsForm()]);
         component.get('input').element.value.should.equal('');
-      });
-    });
-
-    it('shows the filename after a file is dropped', async () => {
-      const component = mount(FormUpload, mountOptions());
-      await dragAndDrop(component.getComponent(FileDropZone), [xlsForm()]);
-      component.get('#form-upload-filename').text().should.equal('my_form.xlsx');
-    });
-
-    it('does not render actions initially', () => {
-      const component = mount(FormUpload, mountOptions());
-      component.find('.actions').exists().should.be.false;
-    });
-
-    it('renders actions after a file is selected', async () => {
-      const component = mount(FormUpload, mountOptions());
-      component.find('.actions').exists().should.be.false;
-      await setFiles(component.get('input'), [xlsForm()]);
-      component.find('.actions').exists().should.be.true;
-    });
-
-    it('clears the file when cancel button is clicked', async () => {
-      const component = mount(FormUpload, mountOptions());
-      await setFiles(component.get('input'), [xlsForm()]);
-      component.find('.actions').exists().should.be.true;
-      component.get('#form-upload-filename').text().should.equal('my_form.xlsx');
-      await component.get('.actions .btn-link').trigger('click');
-      component.find('.actions').exists().should.be.false;
-      component.get('#form-upload-filename').text().should.equal('');
-    });
+      })
+      .respondWithProblem());
   });
 
   describe('request', () => {
@@ -202,20 +204,6 @@ describe('FormUpload', () => {
           headers['Content-Type'].should.equal('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         })
         .respondWithProblem());
-  });
-
-  it('implements some standard button things for the upload button', () => {
-    mockLogin();
-    testData.extendedProjects.createPast(1);
-    return mockHttp()
-      .mount(FormUpload, mountOptions())
-      .request(component => setFiles(component.get('input'), [xlsForm()]))
-      .complete()
-      .testStandardButton({
-        button: '#upload-button',
-        request: upload,
-        disabled: ['.form-upload-warnings .btn-primary', '.btn-link']
-      });
   });
 
   it('disables the drop zone while the request is in progress', () => {
@@ -565,9 +553,12 @@ describe('FormUpload', () => {
         .respondWithProblem(xlsFormWarning)
         .afterResponse(async (component) => {
           component.get('.form-upload-warnings').should.be.visible();
-          await setFiles(component.get('input'), [xlsForm()]);
+        })
+        .request(upload)
+        .beforeAnyResponse((component) => {
           component.get('.form-upload-warnings').should.be.hidden();
-        });
+        })
+        .respondWithProblem();
     });
 
     it('hides the warnings after a Problem is received', () => {
@@ -578,34 +569,31 @@ describe('FormUpload', () => {
         .respondWithProblem(xlsFormWarning)
         .afterResponse(component => {
           component.get('.form-upload-warnings').should.be.visible();
-          component.should.not.alert();
+          component.get('.form-upload-error').should.be.hidden();
         })
         .request(component =>
           component.get('.form-upload-warnings .btn-primary').trigger('click'))
         .respondWithProblem()
         .afterResponse(component => {
           component.get('.form-upload-warnings').should.be.hidden();
-          component.should.alert('danger');
+          component.get('.form-upload-error').should.be.visible();
         });
     });
 
-    it('hides an alert after warnings are received', () => {
+    it('hides an error after warnings are received', () => {
       testData.extendedProjects.createPast(1);
       return mockHttp()
         .mount(FormUpload, mountOptions())
         .request(upload)
         .respondWithProblem()
         .afterResponse(component => {
-          component.should.alert('danger');
+          component.get('.form-upload-error').should.be.visible();
           component.get('.form-upload-warnings').should.be.hidden();
         })
-        .request(async component => {
-          await component.get('#upload-button').trigger('click');
-          return wait(1);
-        })
+        .request(upload)
         .respondWithProblem(xlsFormWarning)
         .afterResponse(component => {
-          component.should.not.alert();
+          component.get('.form-upload-error').should.be.hidden();
           component.get('.form-upload-warnings').should.be.visible();
         });
     });
@@ -645,7 +633,11 @@ describe('FormUpload', () => {
         .complete()
         .testStandardButton({
           button: '.form-upload-warnings .btn-primary',
-          disabled: ['#upload-button', '.btn-link']
+          request: async (component) => {
+            await component.get('.form-upload-warnings .btn-primary').trigger('click');
+            // wait for file to be verified and then actual request to be sent
+            return wait(1);
+          }
         });
     });
 

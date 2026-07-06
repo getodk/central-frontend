@@ -13,6 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div id="form-edit">
     <loading :state="formDraft.initiallyLoading"/>
     <template v-if="formDraft.dataExists">
+      <form-edit-web-form v-if="formDraft.isDefined() && form.publishedAt == null"/>
       <form-edit-published-version v-if="form.dataExists && form.publishedAt != null"/>
 
       <form-edit-create-draft v-if="formDraft.isEmpty()" @success="fetchDraft(true)"/>
@@ -47,6 +48,7 @@ import FormEditCreateDraft from './edit/create-draft.vue';
 import FormEditDef from './edit/def.vue';
 import FormEditDraftControls from './edit/draft-controls.vue';
 import FormEditPublishedVersion from './edit/published-version.vue';
+import FormEditWebForm from './edit/web-form.vue';
 import Loading from '../loading.vue';
 
 import useRoutes from '../../composables/routes';

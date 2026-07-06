@@ -692,25 +692,18 @@ describe('Data (<bind type>) type support', () => {
         expect(answer.stringValue).toBe('');
       });
 
-      /**
-       * TODO: Datetimes with a valid timezone offset are treated as errors.
-       *       User research is needed to determine whether the date should honor
-       *       the timezone or be truncated to the yyyy-mm-dd format only.
-       */
-      it.each([
-        '13:30:55',
-        '2025-23-23',
-        'ZYX',
-        '2025-03-07T14:30:00+invalid',
-        '2025-03-07T14:30:00-08:00',
-        '2025-03-07T14:30:00Z',
-      ])('has null when incorrect value is passed', (expression) => {
-        scenario.answer('/root/date-value', expression);
-        answer = getTypedInputNodeAnswer('/root/date-value', 'date');
-        expect(answer.value).toBeNull();
-        expect(answer.stringValue).toBe('');
-      });
+      it.each(['13:30:55', '2025-23-23', 'ZYX', '2025-03-07T14:30:00+invalid'])(
+        'has null when incorrect value is passed',
+        (expression) => {
+          scenario.answer('/root/date-value', expression);
+          answer = getTypedInputNodeAnswer('/root/date-value', 'date');
+          expect(answer.value).toBeNull();
+          expect(answer.stringValue).toBe('');
+        }
+      );
 
+      // When assigned an ISO datetime with a timezone offset (e.g. from now()), it keeps the date portion
+      // in browser-local time. (ref: web-forms#830)
       it.each([
         {
           expression: '2025-03-14',
@@ -721,6 +714,16 @@ describe('Data (<bind type>) type support', () => {
           expression: '2025-12-21T14:30:00',
           expectedAsObject: Temporal.PlainDate.from('2025-12-21'),
           expectedAsText: '2025-12-21',
+        },
+        {
+          expression: '2025-03-07T14:30:00-08:00',
+          expectedAsObject: Temporal.PlainDate.from('2025-03-07'),
+          expectedAsText: '2025-03-07',
+        },
+        {
+          expression: '2025-03-07T14:30:00Z',
+          expectedAsObject: Temporal.PlainDate.from('2025-03-07'),
+          expectedAsText: '2025-03-07',
         },
       ])('sets value with valid date', ({ expression, expectedAsObject, expectedAsText }) => {
         scenario.answer('/root/date-value', expression);
