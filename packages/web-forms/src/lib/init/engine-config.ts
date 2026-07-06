@@ -55,5 +55,6 @@ export const getFormInstanceConfig = (options: GetFormInstanceConfigOptions) => 
     instanceAttachments: INSTANCE_ATTACHMENTS_CONFIG,
     preloadProperties: getPreloadProperties(options),
     geolocationProvider: options.form.geolocationProvider,
+    defaultValues: { '/data/uuid' : 'hello' }
   };
 };

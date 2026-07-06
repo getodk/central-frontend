@@ -319,7 +319,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
 | Feature <img width=250px/>                                                       | Progress |
 | -------------------------------------------------------------------------------- | :------: |
 | [last saved instance](https://github.com/getodk/web-forms/issues/306)            |          |
-| [defaults from query parameters](https://github.com/getodk/web-forms/issues/464) |          |
+| [defaults from query parameters](https://github.com/getodk/web-forms/issues/464) |    ✅    |
 | multi-form app-like experience                                                   |          |
 | [prevent multiple submissions](https://github.com/getodk/web-forms/issues/461)   |          |
 | configure end of form experience                                                 |          |

@@ -78,6 +78,16 @@ export interface LoadFormOptions {
    * @default MissingResourceBehaviorDefault
    */
   readonly missingResourceBehavior?: MissingResourceBehavior;
+
+  /**
+   * The values to be set on the initialised form. Specifically for use when the
+   * value is based on data not available to this form, for example, providing a
+   * information based on the context only available on the system that invoked
+   * initialization.
+   *
+   * The Record key is the xpath path the set the Record value to.
+   */
+  readonly defaultValues?: Record<string, string> | null;
 }
 
 /**

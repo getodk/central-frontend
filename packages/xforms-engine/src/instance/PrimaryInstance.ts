@@ -102,6 +102,7 @@ export interface BasePrimaryInstanceOptions {
   readonly model: ModelDefinition;
   readonly secondaryInstances: SecondaryInstancesDefinition;
   readonly fetchFormAttachment: FetchFormAttachment;
+  readonly defaultValues: Record<string, string> | null; // TODO I'm typing this out so much, it probably deserves a named type
 }
 
 export interface ModelessPrimaryInstanceOptions extends BasePrimaryInstanceOptions {
@@ -129,6 +130,7 @@ export class PrimaryInstance<
   readonly initializationMode: FormInstanceInitializationMode;
   readonly model: ModelDefinition;
   readonly attachments: InstanceAttachmentsState;
+  readonly defaultValues: Record<string, string> | undefined;
 
   // InstanceNode
   protected readonly state: SharedNodeState<PrimaryInstanceStateSpec>;
@@ -184,6 +186,7 @@ export class PrimaryInstance<
     });
 
     this.initializationMode = mode;
+    this.defaultValues = config.defaultValues;
     this.model = model;
     this.attachments = new InstanceAttachmentsState(initialState?.attachments, fetchFormAttachment);
     this.instanceNode = activeInstance;

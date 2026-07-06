@@ -12,6 +12,7 @@ import { createComputedExpression } from './createComputedExpression.ts';
 import type { SimpleAtomicState, SimpleAtomicStateSetter } from './types.ts';
 import { ValueNode } from '../../instance/abstract/ValueNode.ts';
 import { Attribute } from '../../instance/Attribute.ts';
+import type { PrimaryInstance } from '../../instance/PrimaryInstance.ts';
 
 const REPEAT_INDEX_REGEX = /([^[]*)(\[[0-9]+\])/g;
 
@@ -33,8 +34,14 @@ const isEditInitialLoad = (context: ValueContext) => {
 };
 
 const getInitialValue = (context: ValueContext): string => {
-  const sourceNode = context.instanceNode ?? context.definition.template;
+  const defaultValues = (context.rootDocument as PrimaryInstance).defaultValues;
+  const reference = context.contextReference();
+  console.log({defaultValues, reference});
+  if (defaultValues && defaultValues[reference]) {
+    return context.decodeInstanceValue(defaultValues[reference]);
+  }
 
+  const sourceNode = context.instanceNode ?? context.definition.template;
   return context.decodeInstanceValue(sourceNode.value);
 };
 
@@ -318,6 +325,7 @@ export type InstanceValueState = SimpleAtomicState<string>;
  * - prevents downstream writes to nodes in a readonly state
  */
 export const createInstanceValueState = (context: ValueContext): InstanceValueState => {
+
   return context.scope.runTask(() => {
     const initialValue = getInitialValue(context);
     const baseValueState = createSignal(initialValue);

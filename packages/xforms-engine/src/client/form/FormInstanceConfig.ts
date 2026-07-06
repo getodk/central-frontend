@@ -41,4 +41,6 @@ export interface FormInstanceConfig {
   readonly preloadProperties?: PreloadProperties;
 
   readonly geolocationProvider?: GeolocationProvider;
+
+  readonly defaultValues?: Record<string, string>;
 }
