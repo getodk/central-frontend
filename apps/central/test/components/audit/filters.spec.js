@@ -143,7 +143,7 @@ describe('AuditFilters', () => {
         .beforeEachResponse(app => {
           const { modelValue } = app.getComponent(DateRangePicker).props();
           modelValue[0].toISO().should.startWith('2023-01-01T00:00:00.000');
-          modelValue[1].toISO().should.startWith('2023-02-01T00:00:00.000');
+          modelValue[1].toISO().should.startWith('2023-01-31T00:00:00.000');
         }));
 
     it('defaults to the current date', () =>
