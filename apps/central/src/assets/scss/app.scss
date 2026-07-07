@@ -18,6 +18,7 @@ html {
 }
 
 body {
+  min-width: 1000px;
   background-color: $color-page-background;
   box-shadow: 0 #{$box-shadow-offset-y-body} 0 #777 inset;
   color: $color-text;
@@ -25,7 +26,7 @@ body {
 
   // Always show the scrollbar so that content doesn't shift to the left if/when
   // the scrollbar happens to appear.
-  overflow: hidden scroll;
+  overflow: auto scroll;
   &.modal-open { overflow-y: hidden; }
 
   &:lang(ja) { font-family: "Hiragino Kaku Gothic ProN", Meiryo, sans-serif; }
