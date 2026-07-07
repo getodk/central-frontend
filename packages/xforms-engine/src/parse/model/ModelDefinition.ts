@@ -90,6 +90,10 @@ export class ModelDefinition {
     return this.itextElements.get(activeLanguage.language)?.get(itextId);
   }
 
+  restore() {
+    this.valueChangedEventListeners.clear();
+  }
+
   toJSON() {
     const { form, ...rest } = this;
 
