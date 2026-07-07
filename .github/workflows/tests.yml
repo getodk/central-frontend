@@ -15,15 +15,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
+    - run: sudo apt-get install shellcheck
+    - run: ./bin/check-scripts.sh
+    - run: ./bin/check-for-large-files.sh
+    - run: ./bin/check-images.sh
     - uses: actions/setup-node@v6
       id: setup-node
       with:
         node-version-file: package.json
         cache: 'npm'
-    - run: sudo apt-get install shellcheck
-    - run: ./bin/check-scripts.sh
-    - run: ./bin/check-for-large-files.sh
-    - run: ./bin/check-images.sh
     - run: npm ci
     - run: npm run build
     - run: npm run lint
