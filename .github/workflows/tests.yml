@@ -9,8 +9,8 @@ on:
   pull_request:
 
 jobs:
-  static-checks:
-    name: 'Static checks'
+  check-and-build:
+    name: 'Static check and build'
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
@@ -55,7 +55,7 @@ jobs:
   test-central-app:
     name: 'Test central app'
     needs:
-    - static-checks
+    - check-and-build
     timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
@@ -86,7 +86,7 @@ jobs:
   test-forms-app:
     name: 'Test forms app'
     needs:
-    - static-checks
+    - check-and-build
     timeout-minutes: 2
     runs-on: ubuntu-latest
     steps:
@@ -175,7 +175,7 @@ jobs:
   wf-tests:
     name: 'Test web-forms packages'
     needs:
-    - static-checks
+    - check-and-build
     uses: ./.github/workflows/wf-ci.yml
 
   wf-e2e-tests:
