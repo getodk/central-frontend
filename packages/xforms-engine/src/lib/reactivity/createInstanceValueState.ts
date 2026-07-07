@@ -11,6 +11,10 @@ import { SET_GEOPOINT_LOCAL_NAME } from '../../parse/XFormDOM.ts';
 import { sharedValueCodecs } from '../codecs/getSharedValueCodec.ts';
 import { createComputedExpression } from './createComputedExpression.ts';
 import type { SimpleAtomicState, SimpleAtomicStateSetter } from './types.ts';
+import type {
+  ModelDefinition,
+  ValueChangedEventListener,
+} from '../../parse/model/ModelDefinition.ts';
 
 const REPEAT_INDEX_REGEX = /([^[]*)(\[[0-9]+\])/g;
 
@@ -235,6 +239,38 @@ const resolveAndSetValueChanged = (
   setRelevantValue(value);
 };
 
+const updateValueChangedRefs = (model: ModelDefinition, source: string) => {
+  const listeners = model.valueChangedEventListeners.get(source)!;
+  for (const listener of listeners) {
+    const { context, ref, action, setRelevantValue } = listener;
+    if (referencesCurrentNode(context, ref)) {
+      // Only update if value has changed
+      if (action.element.nodeName === SET_GEOPOINT_LOCAL_NAME) {
+        getGeopointValue(context, (point) => {
+          setRelevantValue(point);
+        });
+      } else {
+        resolveAndSetValueChanged(context, setRelevantValue, action.computation.expression);
+      }
+    }
+  }
+};
+
+const registerValueChangedListener = (context: ValueContext, source: string) => {
+  const sourceElementExpression = new ActionComputationExpression('string', source);
+  const calculateValueSource = createComputedExpression(context, sourceElementExpression); // Registers listener
+  let previous: string;
+  createComputed(() => {
+    if (context.isAttached()) {
+      const valueSource = calculateValueSource();
+      if (previous !== undefined && previous !== valueSource) {
+        updateValueChangedRefs(context.definition.model, source);
+      }
+      previous = valueSource;
+    }
+  });
+};
+
 const createValueChangedCalculation = (
   context: ValueContext,
   setRelevantValue: SimpleAtomicStateSetter<string>,
@@ -245,29 +281,14 @@ const createValueChangedCalculation = (
     // No element to listen to
     return;
   }
-  const sourceElementExpression = new ActionComputationExpression('string', source);
-  const calculateValueSource = createComputedExpression(context, sourceElementExpression); // Registers listener
-  let previous: string;
-  createComputed(() => {
-    if (context.isAttached()) {
-      const valueSource = calculateValueSource();
-      if (
-        previous !== undefined &&
-        previous !== valueSource &&
-        referencesCurrentNode(context, ref)
-      ) {
-        // Only update if value has changed
-        if (action.element.nodeName === SET_GEOPOINT_LOCAL_NAME) {
-          getGeopointValue(context, (point) => {
-            setRelevantValue(point);
-          });
-        } else {
-          resolveAndSetValueChanged(context, setRelevantValue, action.computation.expression);
-        }
-      }
-      previous = valueSource;
-    }
-  });
+  const listener: ValueChangedEventListener = { context, ref, action, setRelevantValue };
+  const listeners = context.definition.model.valueChangedEventListeners;
+  if (listeners.has(source)) {
+    listeners.get(source)!.push(listener);
+  } else {
+    listeners.set(source, [listener]);
+    registerValueChangedListener(context, source);
+  }
 };
 
 const getGeopointValue = (context: ValueContext, callback: (value: string) => void) => {

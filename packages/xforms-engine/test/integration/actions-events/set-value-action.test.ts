@@ -669,6 +669,50 @@ describe('setvalue action', () => {
       expect(scenario.answerOf('/data/destination1')).toEqualAnswer(intAnswer(7));
       expect(scenario.answerOf('/data/destination2')).toEqualAnswer(intAnswer(11));
     });
+
+    it('sets the value of multiple fields in the order defined in the document', async () => {
+      const scenario = await Scenario.init(
+        'Setvalue multiple destinations',
+        html(
+          head(
+            title('Setvalue multiple destinations'),
+            model(
+              mainInstance(
+                t(
+                  'data id="setvalue-multiple"',
+                  t('my-value-1', '1'),
+                  t('my-value-2'),
+                  t('my-value-3'),
+                  t('my-value-4'),
+                  t('my-value-5')
+                )
+              ),
+              bind('/data/my-value-1').type('int'),
+              bind('/data/my-value-2').type('int'),
+              bind('/data/my-value-3').type('int'),
+              bind('/data/my-value-4').type('int'),
+              bind('/data/my-value-5').type('int')
+            )
+          ),
+          body(
+            input(
+              '/data/my-value-1',
+              setvalue('xforms-value-changed', '/data/my-value-2', '/data/my-value-1 + 1'),
+              setvalue('xforms-value-changed', '/data/my-value-3', '/data/my-value-2 + 1'),
+              setvalue('xforms-value-changed', '/data/my-value-4', '/data/my-value-3 + 1'),
+              setvalue('xforms-value-changed', '/data/my-value-5', '/data/my-value-4 + 1')
+            )
+          )
+        )
+      );
+
+      scenario.answer('/data/my-value-1', '2');
+      expect(scenario.answerOf('/data/my-value-1')).toEqualAnswer(intAnswer(2));
+      expect(scenario.answerOf('/data/my-value-2')).toEqualAnswer(intAnswer(3));
+      expect(scenario.answerOf('/data/my-value-3')).toEqualAnswer(intAnswer(4));
+      expect(scenario.answerOf('/data/my-value-4')).toEqualAnswer(intAnswer(5));
+      expect(scenario.answerOf('/data/my-value-5')).toEqualAnswer(intAnswer(6));
+    });
   });
 
   describe('`xforms-value-changed`', () => {
