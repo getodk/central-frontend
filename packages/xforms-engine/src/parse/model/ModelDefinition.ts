@@ -1,12 +1,8 @@
 import type { ActiveLanguage } from '../../client/FormLanguage.ts';
 import { ErrorProductionDesignPendingError } from '../../error/ErrorProductionDesignPendingError.ts';
-import type { AttributeContext } from '../../instance/internal-api/AttributeContext.ts';
-import type { InstanceValueContext } from '../../instance/internal-api/InstanceValueContext.ts';
 import type { StaticDocument } from '../../integration/xpath/static-dom/StaticDocument.ts';
-import type { SimpleAtomicStateSetter } from '../../lib/reactivity/types.ts';
 import { parseStaticDocumentFromDOMSubtree } from '../shared/parseStaticDocumentFromDOMSubtree.ts';
 import type { XFormDefinition } from '../XFormDefinition.ts';
-import type { ActionDefinition } from './ActionDefinition.ts';
 import { ItextTranslationsDefinition } from './ItextTranslationsDefinition.ts';
 import { ModelActionMap } from './ModelActionMap.ts';
 import { ModelBindMap } from './ModelBindMap.ts';
@@ -18,12 +14,6 @@ import { SubmissionDefinition } from './SubmissionDefinition.ts';
 import { TranslationDefinitionMap } from './TranslationDefinitionMap.ts';
 
 type XformsRevalidateListener = () => void;
-export interface ValueChangedEventListener {
-  context: AttributeContext | InstanceValueContext;
-  setRelevantValue: SimpleAtomicStateSetter<string>;
-  action: ActionDefinition;
-  ref: string;
-}
 
 export class ModelDefinition {
   readonly binds: ModelBindMap;
@@ -36,7 +26,6 @@ export class ModelDefinition {
   // Keyed by the node object (not its `ref` string), so each entry can be
   // removed when the node is removed. Otherwise removed repeat instances leak.
   readonly xformsRevalidateListeners: Map<object, XformsRevalidateListener>;
-  readonly valueChangedEventListeners: Map<string, ValueChangedEventListener[]>;
 
   constructor(readonly form: XFormDefinition) {
     const submission = new SubmissionDefinition(form.xformDOM);
@@ -51,7 +40,6 @@ export class ModelDefinition {
     this.itextTranslations = ItextTranslationsDefinition.from(form.xformDOM);
     this.itextElements = new TranslationDefinitionMap(form.xformDOM.itextTranslationElements);
     this.xformsRevalidateListeners = new Map();
-    this.valueChangedEventListeners = new Map();
   }
 
   getNodeDefinition(nodeset: string): AnyNodeDefinition {
@@ -88,10 +76,6 @@ export class ModelDefinition {
 
   getItextElement(activeLanguage: ActiveLanguage, itextId: string): Element | undefined {
     return this.itextElements.get(activeLanguage.language)?.get(itextId);
-  }
-
-  restore() {
-    this.valueChangedEventListeners.clear();
   }
 
   toJSON() {

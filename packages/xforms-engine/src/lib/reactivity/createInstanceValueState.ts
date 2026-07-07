@@ -11,10 +11,7 @@ import { SET_GEOPOINT_LOCAL_NAME } from '../../parse/XFormDOM.ts';
 import { sharedValueCodecs } from '../codecs/getSharedValueCodec.ts';
 import { createComputedExpression } from './createComputedExpression.ts';
 import type { SimpleAtomicState, SimpleAtomicStateSetter } from './types.ts';
-import type {
-  ModelDefinition,
-  ValueChangedEventListener,
-} from '../../parse/model/ModelDefinition.ts';
+import type { ValueChangedEventListener } from '../../instance/internal-api/ValueChangedEventListener.ts';
 
 const REPEAT_INDEX_REGEX = /([^[]*)(\[[0-9]+\])/g;
 
@@ -239,8 +236,7 @@ const resolveAndSetValueChanged = (
   setRelevantValue(value);
 };
 
-const updateValueChangedRefs = (model: ModelDefinition, source: string) => {
-  const listeners = model.valueChangedEventListeners.get(source)!;
+const updateValueChangedRefs = (listeners: ValueChangedEventListener[]) => {
   for (const listener of listeners) {
     const { context, ref, action, setRelevantValue } = listener;
     if (referencesCurrentNode(context, ref)) {
@@ -264,7 +260,8 @@ const registerValueChangedListener = (context: ValueContext, source: string) => 
     if (context.isAttached()) {
       const valueSource = calculateValueSource();
       if (previous !== undefined && previous !== valueSource) {
-        updateValueChangedRefs(context.definition.model, source);
+        const listeners = context.rootDocument.getValueChangedEventListeners().get(source) ?? [];
+        updateValueChangedRefs(listeners);
       }
       previous = valueSource;
     }
@@ -282,7 +279,7 @@ const createValueChangedCalculation = (
     return;
   }
   const listener: ValueChangedEventListener = { context, ref, action, setRelevantValue };
-  const listeners = context.definition.model.valueChangedEventListeners;
+  const listeners = context.rootDocument.getValueChangedEventListeners();
   if (listeners.has(source)) {
     listeners.get(source)!.push(listener);
   } else {
