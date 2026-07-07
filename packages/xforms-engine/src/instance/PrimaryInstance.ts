@@ -185,7 +185,9 @@ export class PrimaryInstance<
 
     this.initializationMode = mode;
     this.model = model;
-    this.model.restore(); // TODO does it make more sense for the listeners to be here?
+    if (mode !== 'restore') {
+      this.model.restore(); // TODO does it make more sense for the listeners to be here?
+    }
 
     this.attachments = new InstanceAttachmentsState(initialState?.attachments, fetchFormAttachment);
     this.instanceNode = activeInstance;
