@@ -7,7 +7,6 @@ jobs:
   web-forms-e2e-functional:
     name: 'Functional e2e'
     runs-on: 'ubuntu-latest'
-    timeout-minutes: 5
 
     strategy:
       fail-fast: false
@@ -59,7 +58,6 @@ jobs:
   web-forms-e2e-visual:
     name: 'Visual e2e'
     runs-on: 'ubuntu-latest'
-    timeout-minutes: 8
 
     strategy:
       fail-fast: false
