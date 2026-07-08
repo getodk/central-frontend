@@ -93,7 +93,7 @@ describe('EntityMapView', () => {
             searchParams.get('$filter').split(' and ').should.eql([
               '(__system/creatorId eq 1 or __system/creatorId eq 2)',
               '__system/createdAt ge 1970-01-01T00:00:00.000Z',
-              '__system/createdAt le 1970-01-02T23:59:59.999Z',
+              '__system/createdAt lt 1970-01-03T00:00:00.000Z',
               '__system/conflict ne null'
             ]);
             searchParams.get('$search').should.equal('foo');
