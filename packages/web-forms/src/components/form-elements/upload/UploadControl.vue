@@ -345,6 +345,7 @@ onUnmounted(() => {
 		justify-content: flex-start;
 		gap: var(--odk-spacing-xl);
 		border-bottom: 1px solid var(--odk-border-color);
+		padding: var(--p-panel-header-padding);
 	}
 
 	:deep(.p-panel-content-container .p-panel-content) {

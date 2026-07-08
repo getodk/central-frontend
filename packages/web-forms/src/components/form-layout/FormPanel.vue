@@ -104,7 +104,7 @@ h2 {
 		margin-bottom: var(--odk-spacing-xl);
 	}
 
-	:deep(.p-panel-header) {
+	> :deep(.p-panel-header) {
 		display: flex;
 		align-items: center;
 		background: var(--odk-light-background-color);
@@ -143,7 +143,7 @@ h2 {
 		border: none;
 		margin-bottom: 0;
 
-		:deep(.p-panel-header) {
+		> :deep(.p-panel-header) {
 			background: none;
 
 			h2 {
@@ -185,15 +185,15 @@ h2 {
 }
 
 .p-panel.is-repeat {
-	.p-panel.p-panel-toggleable.is-repeat :deep(.p-panel-header) {
+	.p-panel.p-panel-toggleable.is-repeat > :deep(.p-panel-header) {
 		// Nested repeats
 		border-radius: var(--odk-radius);
 		width: calc(100% - 30px);
 		margin: 0 auto;
 	}
 
-	:deep(.p-panel-header),
-	.p-panel.p-panel-toggleable.is-repeat :deep(.p-panel-header) {
+	> :deep(.p-panel-header),
+	.p-panel.p-panel-toggleable.is-repeat > :deep(.p-panel-header) {
 		background: var(--p-surface-200);
 	}
 }
