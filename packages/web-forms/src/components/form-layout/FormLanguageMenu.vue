@@ -10,7 +10,7 @@ defineEmits(['update:activeLanguage']);
 
 <template>
 	<Select
-		v-if="languages.length > 0"
+		v-if="languages.length > 1"
 		:model-value="activeLanguage"
 		:options="languages"
 		option-label="language"

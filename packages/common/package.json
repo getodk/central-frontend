@@ -1,13 +1,13 @@
 {
   "name": "@getodk/common",
   "private": true,
-  "version": "0.15.0",
+  "version": "1.0.0",
   "description": "@getodk/common",
   "type": "module",
   "author": "getodk",
   "repository": {
     "type": "git",
-    "url": "https://github.com/getodk/web-forms",
+    "url": "https://github.com/getodk/central-frontend",
     "directory": "packages/common"
   },
   "bugs": "https://github.com/getodk/web-forms/issues",
@@ -44,12 +44,12 @@
     "README.md"
   ],
   "engines": {
-    "node": "^24.14.1",
+    "node": "^24.16.0",
     "npm": "11"
   },
   "scripts": {
     "format:fix": "prettier -w \"**/*\" --ignore-unknown --cache",
-    "format:lint": "prettier -c \"**/*\" --ignore-unknown",
+    "format:lint": "prettier -c \"**/*\" --ignore-unknown --cache",
     "lint": "eslint . --report-unused-disable-directives --cache --max-warnings 0 && npm run format:lint",
     "lint:fix": "eslint . --fix --report-unused-disable-directives --cache --max-warnings 0 && npm run format:fix",
     "test": "npm-run-all -nl 'test-node:*' 'test-browser:*'",

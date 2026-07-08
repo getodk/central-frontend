@@ -12,32 +12,13 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal :state="state" :hideable="!form.awaitingResponse" backdrop
   @hide="$emit('hide')">
-    <template v-if="webformsEnabled" #banner>
-      <img
-        srcset="../../assets/images/form/web-forms-settings-confirmation/banner@1x.png, ../../assets/images/form/web-forms-settings-confirmation/banner@2x.png 2x"
-        src="../../assets/images/form/web-forms-settings-confirmation/banner@1x.png"
-        alt="Modal banner image showing sample Web Form UI.">
-    </template>
     <template v-if="webformsEnabled" #title>ODK Web Forms</template>
     <template v-else #title>Enketo</template>
 
     <template v-if="webformsEnabled" #body>
       <p>
-        {{ $t('webformsConfirmation.intro') }}
+        {{ $t('webformsConfirmation.description') }}
       </p>
-      <i18n-t tag="p" keypath="webformsConfirmation.description.full">
-        <template #seeSupportedFeatures>
-          <a href="https://github.com/getodk/web-forms?tab=readme-ov-file#feature-matrix"
-            target="_blank">
-            {{ $t('webformsConfirmation.description.seeSupportedFeatures') }}
-          </a>
-        </template>
-        <template #previewYourForm>
-          <a href="https://getodk.org/web-forms-preview/" target="_blank">
-            {{ $t('webformsConfirmation.description.previewYourForm') }}
-          </a>
-        </template>
-      </i18n-t>
       <div class="modal-actions">
         <button class="btn btn-link" type="button" @click="$emit('hide')">
           {{ $t('action.cancel') }}
@@ -108,14 +89,10 @@ const setWebformsEnabled = () => {
   {
     "en": {
       "webformsConfirmation": {
+        // The words "ODK Web Forms" and "Enketo" should not be translated
+        "description": "Are you sure you want to switch from Enketo to ODK Web Forms?",
         // The words "ODK Web Forms" should not be translated
-        "useOdkWebForms": "Use ODK Web Forms",
-        "intro": "We’re building a new web-forms experience designed to be fast and user-friendly!",
-        "description": {
-          "full": "Some functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in.",
-          "seeSupportedFeatures": "see supported features",
-          "previewYourForm": "preview your form"
-        }
+        "useOdkWebForms": "Use ODK Web Forms"
       },
       "enketoConfirmation": {
         // The words "Enketo" and "ODK Web Forms" should not be translated
@@ -132,13 +109,7 @@ const setWebformsEnabled = () => {
 {
   "de": {
     "webformsConfirmation": {
-      "useOdkWebForms": "ODK Web-Formulare verwenden",
-      "intro": "Wir bauen ein neues Web-Formularsystem auf, das schnell und benutzerfreundlich sein soll!",
-      "description": {
-        "full": "Einige Funktionen könnten verloren gehen; {seeSupportedFeatures} für Details und {previewYourForm}, bevor Sie zustimmen.",
-        "seeSupportedFeatures": "siehe unterstützte Funktionen",
-        "previewYourForm": "Vorschau auf Ihr Formular"
-      }
+      "useOdkWebForms": "ODK Web-Formulare verwenden"
     },
     "enketoConfirmation": {
       "description": "Sind Sie sicher, dass Sie von ODK Web-Formulare zu Enketo wechseln wollen?",
@@ -147,13 +118,7 @@ const setWebformsEnabled = () => {
   },
   "es": {
     "webformsConfirmation": {
-      "useOdkWebForms": "Utilizar Formularios web ODK",
-      "intro": "Estamos construyendo una nueva experiencia de formularios web diseñada para ser rápida y fácil de usar.",
-      "description": {
-        "full": "Es posible que se pierda parte de la funcionalidad; {seeSupportedFeatures} para más detalles y {previewYourForm} antes de optar por él.",
-        "seeSupportedFeatures": "ver funciones compatibles",
-        "previewYourForm": "previsualice su formulario"
-      }
+      "useOdkWebForms": "Utilizar Formularios web ODK"
     },
     "enketoConfirmation": {
       "description": "¿Está seguro de que desea cambiar de ODK Web Forms a Enketo?",
@@ -162,13 +127,8 @@ const setWebformsEnabled = () => {
   },
   "fr": {
     "webformsConfirmation": {
-      "useOdkWebForms": "Utiliser les Web Forms d'ODK",
-      "intro": "Nous construisons une nouvelle experience de formulaires web conçus pour être rapides et faciles à utiliser !",
-      "description": {
-        "full": "Certaines fonctionnalité peuvent être perdues ; {seeSupportedFeatures} pour détail et {previewYourForm} avant de choisir cette option.",
-        "seeSupportedFeatures": "voir les fonctionnalités supportées",
-        "previewYourForm": "Prévisualiser votre formulaire"
-      }
+      "description": "Êtes-vous sûr de vouloir passer de Enketo à ODK Web Forms?",
+      "useOdkWebForms": "Utiliser les Web Forms d'ODK"
     },
     "enketoConfirmation": {
       "description": "Êtes vous sûr de vouloir passer d'ODK Web Forms à Enketo ?",
@@ -177,13 +137,7 @@ const setWebformsEnabled = () => {
   },
   "it": {
     "webformsConfirmation": {
-      "useOdkWebForms": "Utilizza ODK Web Forms",
-      "intro": "Stiamo costruendo una nuova esperienza di web-forms progettata per essere veloce e facile da usare!",
-      "description": {
-        "full": "Alcune funzionalità potrebbero andare perse; {seeSupportedFeatures} per dettagli e {previewYourForm} prima di accettare.",
-        "seeSupportedFeatures": "vedere le funzioni supportate",
-        "previewYourForm": "anteprima del tuo formulario"
-      }
+      "useOdkWebForms": "Utilizza ODK Web Forms"
     },
     "enketoConfirmation": {
       "description": "Siete sicuri di voler passare da ODK Web Forms a Enketo?",
@@ -201,13 +155,7 @@ const setWebformsEnabled = () => {
   },
   "zh": {
     "webformsConfirmation": {
-      "useOdkWebForms": "使用 ODK Web Forms",
-      "intro": "我们正在打造全新的Web表单体验，旨在提供更快速、更友好的操作界面！",
-      "description": {
-        "full": "部分功能可能受限；详情请{seeSupportedFeatures}，并在启用前{previewYourForm}。",
-        "seeSupportedFeatures": "查看支持的功能列表",
-        "previewYourForm": "预览表单效果"
-      }
+      "useOdkWebForms": "使用 ODK Web Forms"
     },
     "enketoConfirmation": {
       "description": "确定要从ODK Web表单切换至Enketo吗？",
@@ -216,13 +164,7 @@ const setWebformsEnabled = () => {
   },
   "zh-Hant": {
     "webformsConfirmation": {
-      "useOdkWebForms": "使用 ODK Web Forms",
-      "intro": "我們正在建立一個全新的 web 表單體驗，設計快速且易於使用！",
-      "description": {
-        "full": "某些功能可能會遺失；{seeSupportedFeatures}瞭解詳情，{previewYourForm}再選擇加入。",
-        "seeSupportedFeatures": "查看支援的功能",
-        "previewYourForm": "預覽您的表格"
-      }
+      "useOdkWebForms": "使用 ODK Web Forms"
     },
     "enketoConfirmation": {
       "description": "您確定要從 ODK Web Forms 轉換到 Enketo？",

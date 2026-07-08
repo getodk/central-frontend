@@ -37,6 +37,7 @@ import Message from 'primevue/message';
 import {
 	computed,
 	getCurrentInstance,
+	onErrorCaptured,
 	onUnmounted,
 	provide,
 	readonly,
@@ -44,6 +45,7 @@ import {
 	watch,
 	watchEffect,
 } from 'vue';
+import { FormInitializationError } from '@/lib/error/FormInitializationError';
 
 const webFormsVersion = __WEB_FORMS_VERSION__;
 type ObjectURL = `blob:${string}`;
@@ -97,6 +99,7 @@ const hostSubmissionResultCallbackFactory = (
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- evidently a type must be used for this to be assigned to a name (which we use!); as an interface, it won't satisfy the `Record` constraint of `defineEmits`.
 type OdkWebFormEmits = {
+	loaded: [],
 	submit: [submissionPayload: MonolithicInstancePayload, callback: HostSubmissionResultCallback];
 	submitChunked: [
 		submissionPayload: ChunkedInstancePayload,
@@ -200,6 +203,7 @@ const mediaCache = new Map<JRResourceURLString, ObjectURL>();
 provide(FORM_MEDIA_CACHE, mediaCache);
 
 const state = initializeFormState();
+const runtimeError = ref<FormInitializationError | null>(null);
 const submitPressed = ref(false);
 const floatingErrorActive = ref(false);
 const showValidationError = ref(false);
@@ -208,6 +212,10 @@ const isFormEditMode = ref(false);
 provide(IS_FORM_EDIT_MODE, readonly(isFormEditMode));
 const { setLanguage, t } = useLocale(computed(() => state.value.root));
 provide(TRANSLATE, t);
+
+onErrorCaptured(err => {
+	runtimeError.value = FormInitializationError.from(err);
+});
 
 watch(
 	() => state.value,
@@ -232,6 +240,7 @@ const init = async () => {
 		preloadProperties: props.preloadProperties,
 		deviceID: props.deviceId,
 	});
+	emit('loaded');
 };
 
 void init();
@@ -295,7 +304,11 @@ onUnmounted(() => {
 	/>
 
 	<template v-if="state.status === 'FORM_STATE_FAILURE'">
-		<FormLoadFailureDialog severity="error" :error="state.error" />
+		<FormLoadFailureDialog :error="state.error" />
+	</template>
+
+	<template v-else-if="runtimeError">
+		<FormLoadFailureDialog :error="runtimeError" />
 	</template>
 
 	<div

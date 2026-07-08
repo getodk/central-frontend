@@ -19,7 +19,6 @@ const responseDefaults = {
   // useProject()
   forms: () => testData.extendedForms.sorted(),
   fieldKeys: () => testData.extendedFieldKeys.sorted(),
-  actorProperties: () => testData.actorProperties.sorted(),
   // useForm()
   formVersions: [
     ({ url }) => /^\/v1\/projects\/\d+\/forms\/[^/]+\/versions$/.test(url),
@@ -30,6 +29,7 @@ const responseDefaults = {
   users: () => testData.standardUsers.sorted(),
   user: () => testData.standardUsers.last(),
   audits: () => testData.extendedAudits.sorted(),
+  actorProperties: () => testData.actorProperties.sorted(),
   serverConfig: [
     ({ url }) => url === '/v1/config/public',
     () => testData.standardConfigs.byKey()
@@ -98,6 +98,7 @@ const responsesByComponent = {
     deletedDatasets: () => []
   }),
   ProjectSettings: [],
+  CustomPropertyList: componentResponses({ actorProperties: true }),
   FormNewPage: [],
   FormShow: componentResponses({
     project: true,
@@ -115,15 +116,6 @@ const responsesByComponent = {
     appUserCount: [
       ({ url }) => matchesApiPath(apiPaths.formActors, url),
       () => testData.extendedFieldKeys.sorted()
-    ]
-  }),
-  FormPreview: componentResponses({
-    form: [
-      ({ url }) => matchesApiPath(apiPaths.form, url) ||
-                   matchesApiPath(apiPaths.formDraft, url),
-      () => (testData.extendedFormVersions.last().publishedAt
-        ? testData.extendedForms.last()
-        : testData.extendedFormDrafts.last())
     ]
   }),
   FormSubmission: componentResponses({
@@ -182,7 +174,8 @@ const responsesByComponent = {
     ]
   }),
   PublicLinkList: componentResponses({
-    publicLinks: () => testData.standardPublicLinks.sorted()
+    actorProperties: true,
+    publicLinks: () => testData.extendedPublicLinks.sorted()
   }),
   FormVersionList: componentResponses({ formVersions: true }),
   FormEdit: componentResponses({
@@ -263,7 +256,9 @@ const responsesByComponent = {
       () => testData.entityGeojson(entity => entity.deletedAt == null)
     ]
   }),
-  DatasetSettings: [],
+  DatasetSettings: componentResponses({
+    actorProperties: true,
+  }),
   EntityShow: componentResponses({
     entity: () => testData.extendedEntities.last(),
     project: true,

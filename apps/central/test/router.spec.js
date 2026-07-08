@@ -438,7 +438,7 @@ describe('createCentralRouter()', () => {
             .route('/projects/1/forms/f/settings')
             .complete()
             .route('/projects/1/forms/f/public-links')
-            .then(dataExists(['publicLinks'])));
+            .then(dataExists(['publicLinks', 'actorProperties'])));
       });
     });
 
@@ -484,6 +484,14 @@ describe('createCentralRouter()', () => {
           .complete()
           .load('/projects/1/entity-lists/trees/properties', { project: false, dataset: false })
           .afterResponses(dataExists(['project', 'dataset'])));
+
+      it('preserves actorProperties while navigating between dataset tabs', () =>
+        load('/projects/1/entity-lists/trees/settings')
+          .complete()
+          .load('/projects/1/entity-lists/trees/properties', { project: false, dataset: false })
+          .complete()
+          .load('/projects/1/entity-lists/trees/settings', { project: false, dataset: false, actorProperties: false })
+          .afterResponses(dataExists(['actorProperties'])));
     });
 
     it('preserves project while navigating from entity list to project', () => {
@@ -1223,13 +1231,6 @@ describe('createCentralRouter()', () => {
       };
       const app = await load('/system/analytics', { container }, false);
       app.findComponent(NotFound).exists().should.be.true;
-    });
-  });
-
-  describe('standalone field', () => {
-    it('adds a background color if standalone is false', async () => {
-      await load('/login').restoreSession(false);
-      document.documentElement.style.backgroundColor.should.equal('var(--color-accent-secondary)');
     });
   });
 });

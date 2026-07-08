@@ -96,7 +96,10 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <markdown-view v-if="comment != null" :raw-markdown="comment"/>
       <template v-else-if="entry.action === 'entity.error'">
-        <div class="entity-error-message">{{ entry.details.problem?.problemDetails?.reason ?? entry.details.errorMessage ?? '' }}</div>
+        <div class="entity-error-message">
+          <p v-if="entityError != null">{{ entityError }}</p>
+          <p>{{ $t('entityErrorInstructions') }}</p>
+        </div>
       </template>
       <template v-else-if="entryDiffs != null">
         <submission-diff-item v-for="(diff, index) in entryDiffs" :key="index" :entry="diff"
@@ -169,6 +172,10 @@ export default {
     comment() {
       return this.entry.notes != null ? this.entry.notes : this.entry.body;
     },
+    entityError() {
+      const { details } = this.entry;
+      return details.problem?.problemDetails?.reason ?? details.errorMessage;
+    },
     allDiffs() {
       // Audit feed entries that represent a submission version change
       // will have a field called details with an instance ID
@@ -211,7 +218,15 @@ export default {
 
 .submission-feed-entry {
   .entity-error-message{
-    margin: 10px;
+    background-color: $color-danger-light;
+    color: $color-danger;
+    padding: 10px;
+
+    p {
+      max-width: none;
+
+      &:last-child { margin-bottom: 0; }
+    }
   }
 
   .icon-cloud-upload, .icon-comment, .icon-trash, .icon-recycle, .icon-clock-o {
@@ -389,7 +404,8 @@ export default {
       }
     },
     // This text is shown next to an Entity when the Entity has been deleted.
-    "deleted": "(deleted)"
+    "deleted": "(deleted)",
+    "entityErrorInstructions": "Check the Form definition and Submission for issues. After making corrections, edit the Submission and submit to retry processing."
   }
 }
 </i18n>
@@ -546,7 +562,8 @@ export default {
         "reprocess": "Soumission précédente dans une série de mises à jours hors ligne à été reçue"
       }
     },
-    "deleted": "(supprimée)"
+    "deleted": "(supprimée)",
+    "entityErrorInstructions": "Vérifiez la définition du formulaire et la soumission. Apportez les corrections nécessaires puis modifiez la soumission et soumettez-la à nouveau pour relancer le traitement."
   },
   "id": {
     "title": {

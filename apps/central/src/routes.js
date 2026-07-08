@@ -164,9 +164,6 @@ The following meta fields are supported for bottom-level routes:
     PageBody component, then the PageBody will use the full width of the page.
     By default, PageBody has a max width.
 
-  - standalone (default: false): If standalone is `true` then application layout
-    elements like navigation bar, background color, etc are not rendered.
-
 */
 
 /*
@@ -364,6 +361,18 @@ const routes = [
             project: () => project.permits(['dataset.list', 'entity.list'])
           },
           title: () => [i18n.t('resource.entities'), project.name]
+        }
+      }),
+      asyncRoute({
+        path: 'custom-properties',
+        component: 'CustomPropertyList',
+        props: true,
+        loading: 'tab',
+        meta: {
+          validateData: {
+            project: () => project.permits('project.update')
+          },
+          title: () => [i18n.t('projectShow.tab.customProperties'), project.name]
         }
       }),
       asyncRoute({
@@ -703,7 +712,6 @@ const routesByName = new Map();
     requireAnonymity: false,
     preserveData: [],
     fullWidth: false,
-    standalone: false,
     skipAutoLogout: false,
     ...meta,
     validateData: meta == null || meta.validateData == null
@@ -759,6 +767,7 @@ const routesByName = new Map();
     'ProjectOverview',
     'ProjectUserList',
     'FieldKeyList',
+    'CustomPropertyList',
     'ProjectFormAccess',
     'DatasetList',
     'ProjectSettings',

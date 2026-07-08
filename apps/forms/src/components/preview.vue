@@ -2,7 +2,7 @@
 import { computed, ref, defineAsyncComponent } from 'vue';
 import { useRoute } from 'vue-router';
 import { getFormByFormId, getFormXml, RequestError, type Form } from '../utils/api.ts';
-import Spinner from './spinner.vue';
+import { hideSpinner } from '../utils/spinner.ts';
 
 const props = defineProps({
   draft: Boolean,
@@ -44,8 +44,9 @@ const fetchForm = async () => {
     } else {
       // unknown error
       errorState.value = true;
-      loadingState.value = false;
     }
+    hideSpinner();
+    loadingState.value = false;
   }
 };
 
@@ -53,15 +54,16 @@ fetchForm();
 </script>
 
 <template>
-  <Spinner v-if="!!loadingState"/>
-  <div v-else-if="errorState" class="form-load-error">
-    {{ $t('formNotFound') }}
-  </div>
-  <template v-else-if="webFormsEnabled">
-    <WebFormRenderer :form="form!" :xform="xform!" action-type="preview"/>
-  </template>
-  <template v-else>
-    <EnketoIframe :form="form!" :enketo-id="form!.enketoId" action-type="preview"/>
+  <template v-if="!loadingState">
+    <div v-if="errorState" class="form-load-error">
+      {{ $t('formNotFound') }}
+    </div>
+    <template v-else-if="webFormsEnabled">
+      <WebFormRenderer :form="form!" :xform="xform!" action-type="preview"/>
+    </template>
+    <template v-else>
+      <EnketoIframe :form="form!" :enketo-id="form!.enketoId" action-type="preview"/>
+    </template>
   </template>
 </template>
 

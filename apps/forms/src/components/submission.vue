@@ -14,7 +14,7 @@ import {
   RequestError
 } from '../utils/api.ts';
 import Dialog from 'primevue/dialog';
-import Spinner from './spinner.vue';
+import { hideSpinner } from '../utils/spinner.ts';
 
 const props = defineProps({
   draft: Boolean,
@@ -114,7 +114,7 @@ const fetchFormConfig = async (): Promise<Form> => {
     try {
       return await getFormByEnketoId(enketoId.value, st.value);
     } catch(e) {
-      if (e instanceof RequestError && (e.statusCode === 401.2 || e.statusCode === 403.1)) {
+      if (st.value && e instanceof RequestError && (e.statusCode === 401.2 || e.statusCode === 403.1)) {
         // a public form with an invalid st or revoked enketoId should show as form not found
         throw new RequestError('Form not found', 404);
       }
@@ -215,6 +215,7 @@ const load = async () => {
       captureException(e);
       errorCode.value = 500;
     }
+    hideSpinner();
     loadingState.value = false;
   }
 };
@@ -230,40 +231,41 @@ load();
 </style>
 
 <template>
-  <Spinner v-if="!!loadingState"/>
-  <Dialog modal v-else-if="errorCode === 404" :draggable="false" :closable="false" :visible="true">
-    <template #header>
-      {{ $t('formNotFound') }}
+  <template v-if="!loadingState">
+    <Dialog modal v-if="errorCode === 404" :draggable="false" :closable="false" :visible="true">
+      <template #header>
+        {{ $t('formNotFound') }}
+      </template>
+      <template #default>
+        {{ $t('formNotFound.body') }}
+      </template>
+    </Dialog>
+    <Dialog modal v-else-if="errorCode" :draggable="false" :closable="false" :visible="true">
+      <template #header>
+        {{ $t('errorNotProblem') }}
+      </template>
+      <template #default>
+        <p>{{ $t('errorNotProblem.body') }}</p>
+        <p class="error-code">{{ $t('errorNotProblem.status', { status: errorCode }) }}</p>
+      </template>
+    </Dialog>
+    <template v-else-if="webFormsEnabled">
+      <WebFormRenderer
+        :form="form!"
+        :xform="xform!"
+        :instance-id="instanceId"
+        :action-type="props.actionType ?? 'new'"
+        :submission-attachments="submissionAttachments"
+        :st="st"
+      />
     </template>
-    <template #default>
-      {{ $t('formNotFound.body') }}
+    <template v-else>
+      <EnketoIframe
+        :form="form!"
+        :enketo-id="enketoId"
+        :action-type="props.actionType ?? 'new'"
+      />
     </template>
-  </Dialog>
-  <Dialog modal v-else-if="errorCode" :draggable="false" :closable="false" :visible="true">
-    <template #header>
-      {{ $t('errorNotProblem') }}
-    </template>
-    <template #default>
-      <p>{{ $t('errorNotProblem.body') }}</p>
-      <p class="error-code">{{ $t('errorNotProblem.status', { status: errorCode }) }}</p>
-    </template>
-  </Dialog>
-  <template v-else-if="webFormsEnabled">
-    <WebFormRenderer
-      :form="form!"
-      :xform="xform!"
-      :instance-id="instanceId"
-      :action-type="props.actionType ?? 'new'"
-      :submission-attachments="submissionAttachments"
-      :st="st"
-    />
-  </template>
-  <template v-else>
-    <EnketoIframe
-      :form="form!"
-      :enketo-id="enketoId"
-      :action-type="props.actionType ?? 'new'"
-    />
   </template>
 </template>
 

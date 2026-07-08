@@ -34,7 +34,6 @@ Follow these steps to set up your development environment:
 - Install [Volta](https://volta.sh/)
 - Install dependencies by running `npm install`.
 - Install docker (for `nginx`).
-- Copy `.env.example` to `.env.local` and fill in any optional settings (e.g. `ODK_CENTRAL_FRONTEND_SENTRY_DSN` for error monitoring).
 - Set up [ODK Central Backend](https://github.com/getodk/central-backend).
   - You will need to create a user using an ODK Central Backend command line script.
   - You will probably also want to promote that user to a sitewide administrator.

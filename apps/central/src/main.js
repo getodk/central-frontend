@@ -26,5 +26,13 @@ import './jquery';
 import './bootstrap';
 
 const app = createApp(App);
-initSentry(app, 'central-frontend');
+
+const { sentryDsn } = await fetch('/client-config.json')
+  .then(r => r.json())
+  .catch((error) => {
+    // eslint-disable-next-line no-console
+    console.error('Failed to fetch /client-config.json', error);
+    return {};
+  });
+initSentry(app, 'central-frontend', sentryDsn);
 app.use(createContainer()).directive('tooltip', vTooltip).mount('#app');

@@ -70,9 +70,11 @@ useEventListener(window, 'resize', rescale);
     "title": "Náhled"
   },
   "de": {
+    "introduction": "Ihre Anmeldeseite sieht nun wie folgt aus:",
     "title": "Vorschau"
   },
   "es": {
+    "introduction": "Tu página de inicio de sesión tiene ahora este aspecto:",
     "title": "Vista previa"
   },
   "fr": {
@@ -83,6 +85,7 @@ useEventListener(window, 'resize', rescale);
     "title": "Pratinjau"
   },
   "it": {
+    "introduction": "La tua pagina di accesso ora ha questo aspetto:",
     "title": "Anteprima"
   },
   "ja": {
