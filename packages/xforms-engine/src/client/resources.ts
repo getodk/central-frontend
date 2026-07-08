@@ -2,21 +2,21 @@ import type { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL.ts
 import type { loadForm } from '../entrypoints/loadForm.ts';
 
 interface FetchResourceHeadersIterator<T> extends IteratorObject<
-	T,
-	// Note: we use this weird TypeScript intrinsic type so a built-in
-	// `HeadersIterator` is assignable regardless of a client's configured
-	// TypeScript or linting strictness. We don't actually care about the type, or
-	// consume the value it represents.
-	BuiltinIteratorReturn,
-	unknown
+  T,
+  // Note: we use this weird TypeScript intrinsic type so a built-in
+  // `HeadersIterator` is assignable regardless of a client's configured
+  // TypeScript or linting strictness. We don't actually care about the type, or
+  // consume the value it represents.
+  BuiltinIteratorReturn,
+  unknown
 > {
-	[Symbol.iterator](): FetchResourceHeadersIterator<T>;
+  [Symbol.iterator](): FetchResourceHeadersIterator<T>;
 }
 
 type FetchResourceHeadersForEachCallbackFn = (
-	value: string,
-	key: string,
-	parent: FetchResourceResponseHeaders
+  value: string,
+  key: string,
+  parent: FetchResourceResponseHeaders
 ) => void;
 
 /**
@@ -49,15 +49,15 @@ type FetchResourceHeadersForEachCallbackFn = (
  *   generally at some expense of performance.
  */
 export interface FetchResourceResponseHeaders {
-	[Symbol.iterator](): FetchResourceHeadersIterator<[string, string]>;
+  [Symbol.iterator](): FetchResourceHeadersIterator<[string, string]>;
 
-	entries(): FetchResourceHeadersIterator<[string, string]>;
-	keys(): FetchResourceHeadersIterator<string>;
-	values(): FetchResourceHeadersIterator<string>;
+  entries(): FetchResourceHeadersIterator<[string, string]>;
+  keys(): FetchResourceHeadersIterator<string>;
+  values(): FetchResourceHeadersIterator<string>;
 
-	get(name: string): string | null;
-	has(name: string): boolean;
-	forEach(callbackfn: FetchResourceHeadersForEachCallbackFn): void;
+  get(name: string): string | null;
+  has(name: string): boolean;
+  forEach(callbackfn: FetchResourceHeadersForEachCallbackFn): void;
 }
 
 /**
@@ -88,14 +88,14 @@ export interface FetchResourceResponseHeaders {
  * {@link Promise<PrimaryInstance>} returned by that call is resolved.
  */
 export interface FetchResourceResponse {
-	readonly ok?: boolean;
-	readonly status?: number;
-	readonly body?: ReadableStream<Uint8Array> | null;
-	readonly bodyUsed?: boolean;
-	readonly headers?: FetchResourceResponseHeaders;
+  readonly ok?: boolean;
+  readonly status?: number;
+  readonly body?: ReadableStream<Uint8Array> | null;
+  readonly bodyUsed?: boolean;
+  readonly headers?: FetchResourceResponseHeaders;
 
-	readonly blob: () => Promise<Blob>;
-	readonly text: () => Promise<string>;
+  readonly blob: () => Promise<Blob>;
+  readonly text: () => Promise<string>;
 }
 
 /**
@@ -109,7 +109,7 @@ export interface FetchResourceResponse {
  * implementation).
  */
 export type FetchResource<Resource extends URL = URL> = (
-	resource: Resource
+  resource: Resource
 ) => Promise<FetchResourceResponse>;
 
 export type FormAttachmentURL = JRResourceURL;

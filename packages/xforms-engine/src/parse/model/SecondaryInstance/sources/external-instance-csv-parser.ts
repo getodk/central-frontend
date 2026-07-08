@@ -1,31 +1,37 @@
 import type { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL';
 import * as papa from 'papaparse';
 import { ErrorProductionDesignPendingError } from '../../../../error/ErrorProductionDesignPendingError';
+import { CSVExternalSecondaryInstanceValidationError } from '../../../../error/SecondaryInstanceCSVValidationError';
 
 type CSVColumn = string;
 type CSVRow = readonly CSVColumn[];
-type AssertCSVRow = (resourceURL: JRResourceURL, columns: unknown) => asserts columns is CSVRow;
+type AssertCSVHeader = (resourceURL: JRResourceURL, columns: unknown) => asserts columns is CSVRow;
+type AssertCSVRow = (
+  resourceURL: JRResourceURL,
+  columns: unknown,
+  rowIndex: number
+) => asserts columns is CSVRow;
 
 interface ParsedCSVHeader {
-	readonly columns: CSVRow;
-	readonly errors: readonly [];
-	readonly meta: papa.ParseMeta;
+  readonly columns: CSVRow;
+  readonly errors: readonly [];
+  readonly meta: papa.ParseMeta;
 }
 
 interface ParseCSVOptions {
-	readonly columns: readonly string[];
-	readonly delimiter: string;
+  readonly columns: readonly string[];
+  readonly delimiter: string;
 }
 
 interface ParsedCSVRows {
-	readonly rows: readonly CSVRow[];
-	readonly errors: readonly [];
-	readonly meta: papa.ParseMeta;
+  readonly rows: readonly CSVRow[];
+  readonly errors: readonly [];
+  readonly meta: papa.ParseMeta;
 }
 
 interface CSVExternalSecondaryInstanceItemColumn {
-	readonly columnName: string;
-	readonly cellValue: string;
+  readonly columnName: string;
+  readonly cellValue: string;
 }
 
 type CSVExternalSecondaryInstanceItem = readonly CSVExternalSecondaryInstanceItemColumn[];
@@ -35,130 +41,162 @@ type CSVExternalSecondaryInstanceItem = readonly CSVExternalSecondaryInstanceIte
  *
  * Central performs this check for header and rows. A comment is included there for the header check, but the logic is the same in both cases.
  */
-const rejectNullCharacters = (resourceURL: JRResourceURL, cell: string) => {
-	if (cell.includes('\0')) {
-		throw new ErrorProductionDesignPendingError(
-			`Failed to parse CSV ${resourceURL.href}: null character`
-		);
-	}
+const rejectNullCharacters = (
+  resourceURL: JRResourceURL,
+  cell: string,
+  rowIndex: number,
+  columnIndex: number
+) => {
+  if (cell.includes('\0')) {
+    throw new CSVExternalSecondaryInstanceValidationError(
+      resourceURL,
+      rowIndex,
+      columnIndex,
+      'null character'
+    );
+  }
 };
 
 const stripTrailingEmptyCells = (columns: CSVRow, row: CSVRow): CSVRow => {
-	const result = row.slice();
+  const result = row.slice();
 
-	while (result.length > columns.length && result.at(-1) === '') {
-		result.pop();
-	}
+  while (result.length > columns.length && result.at(-1) === '') {
+    result.pop();
+  }
 
-	return result;
+  return result;
 };
 
-const assertCSVRow: AssertCSVRow = (resourceURL: JRResourceURL, columns) => {
-	if (!Array.isArray(columns)) {
-		throw new ErrorProductionDesignPendingError(
-			`Failed to parse CSV ${resourceURL.href}: invalid columns`
-		);
-	}
+const assertCSVRow: AssertCSVRow = (resourceURL: JRResourceURL, columns, rowIndex: number) => {
+  if (!Array.isArray(columns)) {
+    throw new CSVExternalSecondaryInstanceValidationError(
+      resourceURL,
+      rowIndex,
+      0,
+      'invalid columns'
+    );
+  }
 
-	if (columns.length === 0) {
-		throw new ErrorProductionDesignPendingError(
-			`Failed to parse CSV ${resourceURL.href}: no columns found`
-		);
-	}
+  for (const [index, column] of columns.entries()) {
+    if (typeof column !== 'string') {
+      throw new CSVExternalSecondaryInstanceValidationError(
+        resourceURL,
+        rowIndex,
+        index,
+        'invalid column'
+      );
+    }
+    rejectNullCharacters(resourceURL, column, rowIndex, index);
+  }
+};
 
-	for (const [index, column] of columns.entries()) {
-		if (typeof column !== 'string') {
-			throw new ErrorProductionDesignPendingError(
-				`Failed to parse CSV ${resourceURL.href}: invalid column at ${index}`
-			);
-		}
-
-		rejectNullCharacters(resourceURL, column);
-	}
+const assertCSVHeader: AssertCSVHeader = (resourceURL: JRResourceURL, columns) => {
+  assertCSVRow(resourceURL, columns, 0);
+  if (columns.length === 0) {
+    throw new CSVExternalSecondaryInstanceValidationError(
+      resourceURL,
+      null,
+      null,
+      'no columns found'
+    );
+  }
+  for (const [index, cell] of columns.entries()) {
+    if (/^\s|\s$/.exec(cell)) {
+      throw new CSVExternalSecondaryInstanceValidationError(
+        resourceURL,
+        null,
+        index,
+        'whitespace character in column header'
+      );
+    }
+  }
 };
 
 type AssertPapaparseSuccess = (
-	resourceURL: JRResourceURL,
-	errors: readonly papa.ParseError[]
+  resourceURL: JRResourceURL,
+  errors: readonly papa.ParseError[]
 ) => asserts errors is readonly [];
 
 const assertPapaparseSuccess: AssertPapaparseSuccess = (resourceURL, errors) => {
-	if (errors.length > 0) {
-		const cause = new AggregateError(errors);
-		throw new ErrorProductionDesignPendingError(`Failed to parse CSV ${resourceURL.href}`, {
-			cause,
-		});
-	}
+  if (errors.length > 0) {
+    const cause = new AggregateError(errors);
+    throw new ErrorProductionDesignPendingError(`Failed to parse CSV ${resourceURL.href}`, {
+      cause,
+    });
+  }
 };
 
 /**
  * Largely based on {@link https://github.com/getodk/central-frontend/blob/42c9277709e593480d1462e28b4be5f1364532b7/src/util/csv.js#L170}
  */
 const parseCSVRows = (
-	resourceURL: JRResourceURL,
-	csvData: string,
-	options: ParseCSVOptions
+  resourceURL: JRResourceURL,
+  csvData: string,
+  options: ParseCSVOptions
 ): ParsedCSVRows => {
-	const { columns, delimiter } = options;
-	const { data, errors, meta } = papa.parse(csvData, {
-		delimiter,
-		download: false,
-	});
+  const { columns, delimiter } = options;
+  const { data, errors, meta } = papa.parse(csvData, {
+    delimiter,
+    download: false,
+  });
 
-	assertPapaparseSuccess(resourceURL, errors);
+  assertPapaparseSuccess(resourceURL, errors);
 
-	const rowData = data.slice(1);
+  const rowData = data.slice(1);
 
-	const rows = rowData.map((values, index) => {
-		assertCSVRow(resourceURL, values);
+  const rows = rowData.map((values, index) => {
+    const rowIndex = index + 1; // increment because we've stripped the header off
 
-		const rowIndex = index + 1;
+    assertCSVRow(resourceURL, values, rowIndex);
 
-		// Central: Remove trailing empty cells.
-		const row = stripTrailingEmptyCells(columns, values);
+    // Central: Remove trailing empty cells.
+    const row = stripTrailingEmptyCells(columns, values);
 
-		// Central: Throw if there are too many cells.
-		if (row.length > columns.length) {
-			throw new ErrorProductionDesignPendingError(
-				`Failed to parse CSV ${resourceURL.href}: row ${rowIndex}, expected ${columns.length} columns, got ${row.length}`
-			);
-		}
+    // Central: Throw if there are too many cells.
+    if (row.length > columns.length) {
+      throw new CSVExternalSecondaryInstanceValidationError(
+        resourceURL,
+        rowIndex,
+        null,
+        `expected ${columns.length} columns, got ${row.length}`
+      );
+    }
 
-		return row;
-	});
+    return row;
+  });
 
-	return {
-		errors,
-		meta,
-		rows,
-	};
+  return {
+    errors,
+    meta,
+    rows,
+  };
 };
 
 const toItems = (
-	columns: CSVRow,
-	rows: readonly CSVRow[]
+  columns: CSVRow,
+  rows: readonly CSVRow[]
 ): readonly CSVExternalSecondaryInstanceItem[] => {
-	return rows.map((row) => {
-		return columns.map((columnName, index) => {
-			return {
-				columnName,
-				cellValue: row[index] ?? '',
-			};
-		});
-	});
+  return rows.map((row) => {
+    return columns.map((columnName, index) => {
+      return {
+        columnName,
+        cellValue: row[index] ?? '',
+      };
+    });
+  });
 };
 
 const parseCSVHeaderWithRetry = (csvData: string, delimiter?: string) => {
-	const result = papa.parse(csvData, {
-		delimitersToGuess: [',', ';', '\t', '|'],
-		download: false,
-		preview: 1,
-		delimiter,
-	});
-	if (!delimiter && result.errors.some((error) => error.code === 'UndetectableDelimiter')) {
-		return parseCSVHeaderWithRetry(csvData, ',');
-	}
-	return result;
+  const result = papa.parse(csvData, {
+    delimitersToGuess: [',', ';', '\t', '|'],
+    download: false,
+    preview: 1,
+    delimiter,
+  });
+  if (!delimiter && result.errors.some((error) => error.code === 'UndetectableDelimiter')) {
+    return parseCSVHeaderWithRetry(csvData, ',');
+  }
+  return result;
 };
 
 /**
@@ -173,27 +211,27 @@ const parseCSVHeaderWithRetry = (csvData: string, delimiter?: string) => {
  *   {@link papa | papaparse} API/config.
  */
 const parseCSVHeader = (resourceURL: JRResourceURL, csvData: string): ParsedCSVHeader => {
-	const { data, errors, meta } = parseCSVHeaderWithRetry(csvData);
-	const [columns = []] = data;
-	assertCSVRow(resourceURL, columns);
-	assertPapaparseSuccess(resourceURL, errors);
+  const { data, errors, meta } = parseCSVHeaderWithRetry(csvData);
+  const [columns = []] = data;
+  assertCSVHeader(resourceURL, columns);
+  assertPapaparseSuccess(resourceURL, errors);
 
-	return {
-		errors,
-		meta,
-		columns,
-	};
+  return {
+    errors,
+    meta,
+    columns,
+  };
 };
 
 export const parseItems = (
-	resourceURL: JRResourceURL,
-	data: string
+  resourceURL: JRResourceURL,
+  data: string
 ): readonly CSVExternalSecondaryInstanceItem[] => {
-	const csvData = data.replace(/[\n\r]+$/, '');
-	const { columns, meta } = parseCSVHeader(resourceURL, csvData);
-	const { rows } = parseCSVRows(resourceURL, csvData, {
-		columns,
-		delimiter: meta.delimiter,
-	});
-	return toItems(columns, rows);
+  const csvData = data.replace(/[\n\r]+$/, '');
+  const { columns, meta } = parseCSVHeader(resourceURL, csvData);
+  const { rows } = parseCSVRows(resourceURL, csvData, {
+    columns,
+    delimiter: meta.delimiter,
+  });
+  return toItems(columns, rows);
 };

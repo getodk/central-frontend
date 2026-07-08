@@ -8,13 +8,13 @@ export type BaseItemValueType = 'string';
 export type UnsupportedBaseItemValueType = Exclude<ValueType, BaseItemValueType>;
 
 export abstract class BaseItemCodec<
-	Values extends readonly string[] = readonly string[],
+  Values extends readonly string[] = readonly string[],
 > extends ValueArrayCodec<BaseItemValueType, Values> {
-	constructor(
-		baseCodec: SharedValueCodec<'string'>,
-		encodeValue: CodecEncoder<Values>,
-		decodeValue: CodecDecoder<Values>
-	) {
-		super(baseCodec, encodeValue, decodeValue);
-	}
+  constructor(
+    baseCodec: SharedValueCodec<'string'>,
+    encodeValue: CodecEncoder<Values>,
+    decodeValue: CodecDecoder<Values>
+  ) {
+    super(baseCodec, encodeValue, decodeValue);
+  }
 }

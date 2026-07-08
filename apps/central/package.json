@@ -1,6 +1,6 @@
 {
   "name": "@getodk/central-frontend",
-  "version": "0.1.0",
+  "version": "2026.2.0",
   "private": true,
   "scripts": {
     "eslint": "eslint --max-warnings 0 --cache --ext .js,.vue src/ test/ bin/ *.js",
@@ -8,6 +8,7 @@
     "lint": "npm run eslint && npm run transifex:lint",
     "lint:fix": "npm run eslint:fix && npm run transifex:fix",
     "test": "./test/run.sh",
+    "transifex:destructure": "node bin/transifex/destructure.js",
     "transifex:fix": "node bin/transifex/restructure.js > transifex/strings_en.json",
     "transifex:lint": "bash -c 'diff transifex/strings_en.json <(node bin/transifex/restructure.js)'"
   },

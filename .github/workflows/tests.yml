@@ -2,6 +2,10 @@ name: Tests
 
 on:
   push:
+    branches:
+      - '**'
+    tags:
+      - 'v**'
   pull_request:
 
 jobs:
@@ -28,6 +32,8 @@ jobs:
     - run: npm run lint
     - uses: browser-actions/setup-chrome@v2
     - run: npm run test -w=@getodk/central-frontend
+    - run: npx playwright install chromium --with-deps
+    - run: npm run test -w=@getodk/forms
   build:
     timeout-minutes: 5
     runs-on: ubuntu-latest
@@ -40,13 +46,22 @@ jobs:
     - run: npm ci
     - run: npm run build
     - run: ./bin/check-bundle-size.js
+    - name: Upload Release Artefact
+      if: github.ref_type == 'tag'
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        tar -cvzf dist-${{ github.ref_name }}.tar.gz dist/
+        echo "Uploading dist bundle..."
+        gh release upload ${{ github.ref_name }} dist-${{ github.ref_name }}.tar.gz
+        echo "Upload complete."
   build-wf:
     name: 'Build Web Forms'
     runs-on: 'ubuntu-latest'
     strategy:
       fail-fast: false
       matrix:
-        node-version: ['20.19.3', '22.12.0', '24.13.0']
+        node-version: ['24.16.0']
     steps:
       - uses: 'actions/checkout@v6'
       - uses: 'volta-cli/action@v5'
@@ -73,7 +88,7 @@ jobs:
     - build
     - static-checks
     - unit-tests
-    timeout-minutes: 120
+    timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
 
@@ -105,7 +120,7 @@ jobs:
       run: echo '127.0.0.1 central-test.localhost' | sudo tee --append /etc/hosts
     - name: Start services
       working-directory: central
-      run: touch ./files/allow-postgres14-upgrade && docker compose build && docker compose up -d
+      run: touch ./files/allow-postgres14-upgrade && docker compose build --build-arg FRONTEND_BUILD_MODE=source && docker compose up -d
     - name: Set node version
       uses: actions/setup-node@v6
       with:
@@ -117,10 +132,14 @@ jobs:
       run: client/e2e-tests/run-tests.sh --domain=central-test.localhost --port=80
     - name: Archive playwright result
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: Playwright Artifacts
         path: central/client/test-results
+    - if: always()
+      name: Docker Container Logs
+      working-directory: central
+      run: docker compose logs || true
   wf-tests:
     name: 'Run Web Forms Tests'
     needs:

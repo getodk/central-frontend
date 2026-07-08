@@ -8,7 +8,7 @@ const { logThenThrow, mapComponentsToFiles } = require('../util/util');
 
 const filenamesByComponent = mapComponentsToFiles('src/components');
 const { messages: sourceMessages, transifexPaths } = readSourceMessages(
-  'apps/central/src/locales',
+  'src/locales',
   filenamesByComponent
 );
 for (const basename of fs.readdirSync('transifex')) {

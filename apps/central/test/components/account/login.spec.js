@@ -160,7 +160,11 @@ describe('AccountLogin', () => {
   });
 
   it('shows an info alert if the password is too short', () => {
-    testData.extendedUsers.createPast(1, { email: 'test@email.com', role: 'none' });
+    testData.extendedUsers.createPast(1, {
+      email: 'test@email.com',
+      role: 'none',
+      preferences: { site: { whatsNewDismissed: '2026.2' }, projects: {} }
+    });
     return load('/login')
       .restoreSession(false)
       .complete()

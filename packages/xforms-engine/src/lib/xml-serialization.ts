@@ -44,124 +44,124 @@ const CONTENT_REGEX = /[&<>]/;
  *   reconsider this assumption.
  */
 export const escapeXMLText = <Text extends string>(
-	text: Exclude<Text, EscapedXMLText>,
-	attr?: boolean
+  text: Exclude<Text, EscapedXMLText>,
+  attr?: boolean
 ): EscapedXMLText => {
-	const match = (attr ? ATTR_REGEX : CONTENT_REGEX).exec(text);
-	if (!match) return text as string as EscapedXMLText;
-	let index;
-	let lastIndex = 0;
-	let out = '';
-	let escape;
-	for (index = match.index; index < text.length; index++) {
-		switch (text.charCodeAt(index)) {
-			case 34: // "
-				if (!attr) continue;
-				escape = '&quot;';
-				break;
-			case 38: // &
-				escape = '&amp;';
-				break;
-			case 60: // <
-				escape = '&lt;';
-				break;
-			case 62: // >
-				escape = '&gt;';
-				break;
-			default:
-				continue;
-		}
-		if (lastIndex !== index) out += text.substring(lastIndex, index);
-		lastIndex = index + 1;
-		out += escape;
-	}
-	return lastIndex !== index
-		? ((out + text.substring(lastIndex, index)) as EscapedXMLText)
-		: (out as EscapedXMLText);
+  const match = (attr ? ATTR_REGEX : CONTENT_REGEX).exec(text);
+  if (!match) return text as string as EscapedXMLText;
+  let index;
+  let lastIndex = 0;
+  let out = '';
+  let escape;
+  for (index = match.index; index < text.length; index++) {
+    switch (text.charCodeAt(index)) {
+      case 34: // "
+        if (!attr) continue;
+        escape = '&quot;';
+        break;
+      case 38: // &
+        escape = '&amp;';
+        break;
+      case 60: // <
+        escape = '&lt;';
+        break;
+      case 62: // >
+        escape = '&gt;';
+        break;
+      default:
+        continue;
+    }
+    if (lastIndex !== index) out += text.substring(lastIndex, index);
+    lastIndex = index + 1;
+    out += escape;
+  }
+  return lastIndex !== index
+    ? ((out + text.substring(lastIndex, index)) as EscapedXMLText)
+    : (out as EscapedXMLText);
 };
 
 const serializeElementNamespaceDeclarationXML = (
-	namespaceDeclarations?: NamespaceDeclarationMap
+  namespaceDeclarations?: NamespaceDeclarationMap
 ): string => {
-	if (namespaceDeclarations == null) {
-		return '';
-	}
+  if (namespaceDeclarations == null) {
+    return '';
+  }
 
-	return Array.from(namespaceDeclarations.values())
-		.map((namespaceDeclaration) => {
-			return namespaceDeclaration.serializeNamespaceDeclarationXML({
-				omitDefaultNamespace: true,
-			});
-		})
-		.join('');
+  return Array.from(namespaceDeclarations.values())
+    .map((namespaceDeclaration) => {
+      return namespaceDeclaration.serializeNamespaceDeclarationXML({
+        omitDefaultNamespace: true,
+      });
+    })
+    .join('');
 };
 
 const serializeElementXML = (
-	qualifiedName: QualifiedName,
-	children: string,
-	attributes: string,
-	namespaceDeclarations?: NamespaceDeclarationMap
+  qualifiedName: QualifiedName,
+  children: string,
+  attributes: string,
+  namespaceDeclarations?: NamespaceDeclarationMap
 ): string => {
-	// See JSDoc for the `getPrefixedName` method. If we find we do actually need
-	// custom element (subtree) prefix resolution, we'd uncomment the argument
-	// below. (Either way, at time of writing the affected tests pass where
-	// expected when the option is passed. It's omitted on the presumption that it
-	// would be redundant, since the nodes being serialized are already resolved
-	// with the same set of namespace declarations which would affect them.)
-	//
-	// prettier-ignore
-	const nodeName = qualifiedName.getPrefixedName(
+  // See JSDoc for the `getPrefixedName` method. If we find we do actually need
+  // custom element (subtree) prefix resolution, we'd uncomment the argument
+  // below. (Either way, at time of writing the affected tests pass where
+  // expected when the option is passed. It's omitted on the presumption that it
+  // would be redundant, since the nodes being serialized are already resolved
+  // with the same set of namespace declarations which would affect them.)
+  //
+  // prettier-ignore
+  const nodeName = qualifiedName.getPrefixedName(
 		// options.namespaceDeclarations
 	);
-	const serializedNamespaceDeclarations =
-		serializeElementNamespaceDeclarationXML(namespaceDeclarations);
-	const prefix = `<${nodeName}${serializedNamespaceDeclarations}${attributes}`;
+  const serializedNamespaceDeclarations =
+    serializeElementNamespaceDeclarationXML(namespaceDeclarations);
+  const prefix = `<${nodeName}${serializedNamespaceDeclarations}${attributes}`;
 
-	if (children === '') {
-		return `${prefix}/>`;
-	}
+  if (children === '') {
+    return `${prefix}/>`;
+  }
 
-	return `${prefix}>${children}</${nodeName}>`;
+  return `${prefix}>${children}</${nodeName}>`;
 };
 
 export const serializeAttributeXML = (
-	qualifiedName: QualifiedName,
-	xmlValue: EscapedXMLText
+  qualifiedName: QualifiedName,
+  xmlValue: EscapedXMLText
 ): string => {
-	const nodeName = qualifiedName.getPrefixedName();
-	return ` ${nodeName}="${xmlValue.normalize()}"`;
+  const nodeName = qualifiedName.getPrefixedName();
+  return ` ${nodeName}="${xmlValue.normalize()}"`;
 };
 
 export const serializeParentElementXML = (
-	qualifiedName: QualifiedName,
-	children: readonly GeneralChildNode[],
-	attributes: readonly Attribute[],
-	namespaceDeclarations?: NamespaceDeclarationMap
+  qualifiedName: QualifiedName,
+  children: readonly GeneralChildNode[],
+  attributes: readonly Attribute[],
+  namespaceDeclarations?: NamespaceDeclarationMap
 ): string => {
-	const serializedChildren = children.map((child) => child.instanceState.instanceXML).join('');
-	const serializedAttributes = attributes
-		.map((attribute) => attribute.instanceState.instanceXML)
-		.join('');
-	return serializeElementXML(
-		qualifiedName,
-		serializedChildren,
-		serializedAttributes,
-		namespaceDeclarations
-	);
+  const serializedChildren = children.map((child) => child.instanceState.instanceXML).join('');
+  const serializedAttributes = attributes
+    .map((attribute) => attribute.instanceState.instanceXML)
+    .join('');
+  return serializeElementXML(
+    qualifiedName,
+    serializedChildren,
+    serializedAttributes,
+    namespaceDeclarations
+  );
 };
 
 export const serializeLeafElementXML = (
-	qualifiedName: QualifiedName,
-	xmlValue: EscapedXMLText,
-	attributes: readonly Attribute[],
-	namespaceDeclarations?: NamespaceDeclarationMap
+  qualifiedName: QualifiedName,
+  xmlValue: EscapedXMLText,
+  attributes: readonly Attribute[],
+  namespaceDeclarations?: NamespaceDeclarationMap
 ): string => {
-	const serializedAttributes =
-		attributes?.map((attribute) => attribute.instanceState.instanceXML).join('') ?? '';
-	return serializeElementXML(
-		qualifiedName,
-		xmlValue.normalize(),
-		serializedAttributes,
-		namespaceDeclarations
-	);
+  const serializedAttributes =
+    attributes?.map((attribute) => attribute.instanceState.instanceXML).join('') ?? '';
+  return serializeElementXML(
+    qualifiedName,
+    xmlValue.normalize(),
+    serializedAttributes,
+    namespaceDeclarations
+  );
 };

@@ -193,7 +193,7 @@ Before each release, we download all translations from Transifex and save them i
 tx pull --mode translator --force
 ```
 
-Once they are downloaded, we convert the Structured JSON files to Vue I18n JSON by running [`/apps/central/bin/transifex/destructure.js`](/apps/central/bin/transifex/destructure.js). `destructure.js` generates all locale files in `/apps/central/src/locales/` other than `en.json5`.
+Once they are downloaded, we convert the Structured JSON files to Vue I18n JSON by running `npm run transifex:destructure`.  This generates all locale files in `/apps/central/src/locales/` other than `en.json5`.
 
 To summarize the workflow:
 

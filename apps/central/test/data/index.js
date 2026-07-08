@@ -1,3 +1,4 @@
+import * as ActorProperties from './actor-properties';
 import * as Actors from './actors';
 import * as Assignments from './assignments';
 import * as Audits from './audits';
@@ -23,6 +24,7 @@ import { resetDataStores } from './data-store';
 
 const testData = Object.assign( // eslint-disable-line prefer-object-spread
   {},
+  ActorProperties,
   Actors,
   Assignments,
   Audits,

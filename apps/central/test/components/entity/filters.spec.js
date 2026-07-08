@@ -306,8 +306,8 @@ describe('EntityFilters', () => {
 
           DateTime.fromISO(start).zoneName.should.equal(Settings.defaultZoneName);
 
-          const end = filters[1].split(' le ')[1];
-          end.should.equal('1970-01-02T23:59:59.999Z');
+          const end = filters[1].split(' lt ')[1];
+          end.should.equal('1970-01-03T00:00:00.000Z');
           DateTime.fromISO(end).zoneName.should.equal(Settings.defaultZoneName);
         })
         .respondWithData(testData.entityOData));

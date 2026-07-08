@@ -124,18 +124,34 @@ const update = (prop) => {
 {
   "de": {
     "logo": {
-      "label": "Logo"
+      "label": "Logo",
+      "help": "Wir empfehlen die Verwendung eines PNG-Logos mit transparentem Hintergrund und einer Größe von mindestens 150 x 150 Pixel."
     },
     "title": {
       "help": "Ein Titel für Ihre Server-Anmeldeseite."
+    },
+    "description": {
+      "label": "Untertitel",
+      "help": "Anweisungen für Ihre Nutzer, eine Willkommensnachricht oder eine Beschreibung dieses Servers."
+    },
+    "hero": {
+      "help": "Laden Sie ein Hochformatbild hoch; wir empfehlen einen Bildausschnitt im Verhältnis 4:5. Verwenden Sie ein visuell ansprechendes Bild, das Ihre Brand oder Botschaft widerspiegelt. Das Bild wird auf verschiedenen Bildschirmgrößen zugeschnitten, platzieren Sie wichtige Inhalte daher in der Bildmitte."
     }
   },
   "es": {
     "logo": {
-      "label": "Logotipo"
+      "label": "Logotipo",
+      "help": "Recomendamos utilizar un logotipo en formato PNG con fondo transparente de al menos 150 x 150 píxeles."
     },
     "title": {
       "help": "Un título para tu inicio de sesión en el servidor."
+    },
+    "description": {
+      "label": "Subtítulo",
+      "help": "Instrucciones para los usuarios, un mensaje de bienvenida o una descripción de este servidor."
+    },
+    "hero": {
+      "help": "Sube una imagen vertical; te recomendamos un recorte de 4:5. Utiliza una imagen atractiva que represente tu marca o tu mensaje. La imagen se recortará en función del tamaño de la pantalla, así que mantén el contenido importante centrado."
     }
   },
   "fr": {
@@ -156,10 +172,18 @@ const update = (prop) => {
   },
   "it": {
     "logo": {
-      "label": "Logo"
+      "label": "Logo",
+      "help": "Si consiglia di utilizzare un logo in formato PNG con sfondo trasparente di almeno 150x150 pixel."
     },
     "title": {
       "help": "Un titolo per il tuo accesso al server."
+    },
+    "description": {
+      "label": "Sottotitolo",
+      "help": "Istruzioni per gli utenti, un messaggio di benvenuto o una descrizione di questo server."
+    },
+    "hero": {
+      "help": "Carica un'immagine verticale; ti consigliamo un formato 4:5. Scegli un'immagine accattivante che rappresenti il tuo brand o il tuo messaggio. L'immagine verrà ritagliata in base alle diverse dimensioni dello schermo, quindi mantieni i contenuti importanti al centro."
     }
   },
   "zh": {

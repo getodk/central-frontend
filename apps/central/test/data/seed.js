@@ -37,6 +37,7 @@ export default () => {
         'form.delete',
         'form.restore',
         'project.create',
+        'project.read',
         'project.update',
         'public_link.create',
         'public_link.list',
@@ -60,6 +61,7 @@ export default () => {
       system: 'app-user',
       verbs: [
         'form.read',
+        'project.read',
         'submission.create'
       ]
     })
@@ -89,6 +91,7 @@ export default () => {
         'form.update',
         'form.delete',
         'form.restore',
+        'project.read',
         'project.update',
         'public_link.create',
         'public_link.list',
@@ -111,6 +114,7 @@ export default () => {
         'entity.read',
         'form.list',
         'form.read',
+        'project.read',
         'submission.list',
         'submission.read'
       ]

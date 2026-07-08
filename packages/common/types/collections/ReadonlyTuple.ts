@@ -13,12 +13,12 @@
  * specific finite number.
  */
 type BuildTupleHelper<
-	Element,
-	Length extends number,
-	Rest extends Element[],
+  Element,
+  Length extends number,
+  Rest extends Element[],
 > = Rest['length'] extends Length
-	? readonly [...Rest] // Terminate with readonly array (aka tuple)
-	: BuildTupleHelper<Element, Length, [Element, ...Rest]>;
+  ? readonly [...Rest] // Terminate with readonly array (aka tuple)
+  : BuildTupleHelper<Element, Length, [Element, ...Rest]>;
 
 /**
  * Create a type that represents a read-only tuple of the given type and length.
@@ -48,10 +48,10 @@ type BuildTupleHelper<
  * @category Utilities
  */
 export type ReadonlyTuple<Element, Length extends number> = number extends Length
-	? // Because `Length extends number` and `number extends Length`, then
-		// `Length` is not a specific finite number.
+  ? // Because `Length extends number` and `number extends Length`, then
+    // `Length` is not a specific finite number.
 
-		// It's not fixed length.
-		readonly Element[]
-	: // Otherwise it is a fixed length tuple.
-		BuildTupleHelper<Element, Length, []>;
+    // It's not fixed length.
+    readonly Element[]
+  : // Otherwise it is a fixed length tuple.
+    BuildTupleHelper<Element, Length, []>;

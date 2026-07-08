@@ -9,24 +9,24 @@ type SecondaryInstanceRoot =
 	| '';
 
 export const defineSecondaryInstance = (
-	instanceId: string,
-	secondaryInstanceRoot: SecondaryInstanceRoot
+  instanceId: string,
+  secondaryInstanceRoot: SecondaryInstanceRoot
 ): SecondaryInstanceDefinition => {
-	const doc = new StaticDocument({
-		documentRoot: {
-			name: 'instance',
-			attributes: [
-				{
-					name: 'id',
-					value: instanceId,
-				},
-			],
-			children: [secondaryInstanceRoot],
-		},
-		nodesetPrefix: `instance('${instanceId}')`,
-	});
+  const doc = new StaticDocument({
+    documentRoot: {
+      name: 'instance',
+      attributes: [
+        {
+          name: 'id',
+          value: instanceId,
+        },
+      ],
+      children: [secondaryInstanceRoot],
+    },
+    nodesetPrefix: `instance('${instanceId}')`,
+  });
 
-	assertSecondaryInstanceDefinition(doc);
+  assertSecondaryInstanceDefinition(doc);
 
-	return doc;
+  return doc;
 };

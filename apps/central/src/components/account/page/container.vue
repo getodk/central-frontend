@@ -119,8 +119,11 @@ Notes about the layout:
 
 #account-page-container-logo {
   img {
-    max-width: 130px;
     max-height: 130px;
+    // Prevent the logo from overflowing horizontally. Other than that, we only
+    // want to cap the logo size vertically, not horizontally: see
+    // getodk/central#1761.
+    max-width: 100%;
   }
 
   &:not(:has(img[data-loaded])):not(:has(img[data-error])) {

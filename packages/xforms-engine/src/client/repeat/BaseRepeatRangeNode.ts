@@ -8,21 +8,21 @@ import type { AncestorNodeValidationState } from '../validation.ts';
 import type { AnyRepeatDefinition, RepeatInstanceNode } from './RepeatInstanceNode.ts';
 
 export interface BaseRepeatRangeNodeState extends BaseNodeState {
-	get hint(): null;
-	get label(): TextRange<'label'> | null;
+  get hint(): null;
+  get label(): TextRange<'label'> | null;
 
-	/**
-	 * A repeat range's children may only be {@link RepeatInstanceNode}s.
-	 *
-	 * Note: the web-forms engine's representation of this structure differs from
-	 * the underlying XForms specification's primary instance structure.
-	 *
-	 * @see {@link BaseRepeatRangeNode} for additional detail.
-	 */
-	get children(): readonly RepeatInstanceNode[];
-	get hasRelevantBodyNodes(): boolean;
-	get valueOptions(): null;
-	get value(): null;
+  /**
+   * A repeat range's children may only be {@link RepeatInstanceNode}s.
+   *
+   * Note: the web-forms engine's representation of this structure differs from
+   * the underlying XForms specification's primary instance structure.
+   *
+   * @see {@link BaseRepeatRangeNode} for additional detail.
+   */
+  get children(): readonly RepeatInstanceNode[];
+  get hasRelevantBodyNodes(): boolean;
+  get valueOptions(): null;
+  get value(): null;
 }
 
 export type RepeatRangeNodeAppearances = NodeAppearances<AnyRepeatDefinition>;
@@ -92,11 +92,11 @@ export type RepeatRangeNodeAppearances = NodeAppearances<AnyRepeatDefinition>;
  * its {@link BaseRepeatRangeNode}.
  */
 export interface BaseRepeatRangeNode extends BaseNode {
-	readonly nodeType: RepeatRangeNodeType;
-	readonly appearances: RepeatRangeNodeAppearances;
-	readonly definition: AnyRepeatDefinition;
-	readonly root: RootNode;
-	readonly parent: GeneralParentNode;
-	readonly currentState: BaseRepeatRangeNodeState;
-	readonly validationState: AncestorNodeValidationState;
+  readonly nodeType: RepeatRangeNodeType;
+  readonly appearances: RepeatRangeNodeAppearances;
+  readonly definition: AnyRepeatDefinition;
+  readonly root: RootNode;
+  readonly parent: GeneralParentNode;
+  readonly currentState: BaseRepeatRangeNodeState;
+  readonly validationState: AncestorNodeValidationState;
 }

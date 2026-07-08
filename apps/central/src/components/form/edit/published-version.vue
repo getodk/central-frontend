@@ -10,20 +10,18 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <form-edit-section id="form-edit-published-version">
-    <template #title>{{ $t('title') }}</template>
+  <form-edit-section id="form-edit-published-version" no-border>
+    <template #title>
+      <i18n-t keypath="title">
+        <template #version>
+          <form-version-string :version="form.version"/>
+        </template>
+      </i18n-t>
+    </template>
     <template #subtitle>
       <i18n-t keypath="subtitle.published">
         <template #dateTime>
           <date-time :iso="form.publishedAt"/>
-        </template>
-      </i18n-t>
-    </template>
-    <template #body>
-      <i18n-t id="form-edit-published-version-string" tag="div"
-        keypath="versionName">
-        <template #name>
-          <form-version-string :version="form.version"/>
         </template>
       </i18n-t>
     </template>
@@ -46,31 +44,18 @@ defineOptions({
 const { form } = useRequestData();
 </script>
 
-<style lang="scss">
-@import '../../../assets/scss/mixins';
-
-#form-edit-published-version-string {
-  @include text-overflow-ellipsis;
-  font-size: 16px;
-  font-weight: bold;
-  line-height: 1.2;
-}
-</style>
-
 <i18n lang="json5">
 {
   "en": {
-    // This refers to the current version of a Form.
-    "title": "Current version",
+    // This refers to the current version of a Form. {version} is the version of the published Form, defined in its definition.
+    "title": "Current version: {version}",
     "subtitle": {
       // This shows the date and time at which the current version of the Form
       // was published, for example: "Published 2020/01/01 01:23". {dateTime}
       // may show a formatted date like "2020/01/01", or it may use a word like
       // "today", "yesterday", or "Sunday".
       "published": "Published {dateTime}"
-    },
-    // @transifexKey component.FormEditDef.versionName
-    "versionName": "Version name: {name}"
+    }
   }
 }
 </i18n>
@@ -79,53 +64,40 @@ const { form } = useRequestData();
 <i18n>
 {
   "de": {
-    "title": "Aktuelle Version",
     "subtitle": {
       "published": "Veröffentlicht {dateTime}"
-    },
-    "versionName": "Versionsname:{name}"
+    }
   },
   "es": {
-    "title": "Versión actual",
     "subtitle": {
       "published": "Publicado en {dateTime}"
-    },
-    "versionName": "Nombre de la versión: {name}"
+    }
   },
   "fr": {
-    "title": "Version courante",
+    "title": "Version courante: {version}",
     "subtitle": {
       "published": "Publiée {dateTime}"
-    },
-    "versionName": "Nom de version : {name}"
+    }
   },
   "it": {
-    "title": "Versione corrente",
     "subtitle": {
       "published": "Pubblicato {dateTime}"
-    },
-    "versionName": "Nome della versione: {name}"
+    }
   },
   "pt": {
-    "title": "Versão atual",
     "subtitle": {
       "published": "Publicado em {dateTime}"
-    },
-    "versionName": "Nome da versão: {name}"
+    }
   },
   "zh": {
-    "title": "当前版本",
     "subtitle": {
       "published": "{dateTime}已发布"
-    },
-    "versionName": "版本名称：{name}"
+    }
   },
   "zh-Hant": {
-    "title": "當前版本",
     "subtitle": {
       "published": "{dateTime}已發布"
-    },
-    "versionName": "版本名稱：{name}"
+    }
   }
 }
 </i18n>

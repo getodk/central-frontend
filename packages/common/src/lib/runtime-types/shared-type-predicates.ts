@@ -7,5 +7,5 @@ export type UnknownObject = Readonly<Record<PropertyKey, unknown>>;
  * {@link value} without verbose/error prone inline type assertions.
  */
 export const isUnknownObject = (value: unknown): value is UnknownObject => {
-	return typeof value === 'object' && value != null;
+  return typeof value === 'object' && value != null;
 };

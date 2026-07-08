@@ -53,7 +53,7 @@ type UnwrappedAdapterNode = typeof UnwrappedAdapterNode;
  * {@link XPathNode} representation would otherwise be accepted.
  */
 export interface XPathCustomUnwrappableNode<T> {
-	readonly [UnwrappedAdapterNode]: T;
+  readonly [UnwrappedAdapterNode]: T;
 }
 
 // prettier-ignore

@@ -7,63 +7,63 @@ type GeopointEncodedSubstringValues = readonly [
 ];
 
 const isGeopointEncodedSubstringValues = (
-	values: ReadonlyArray<string | undefined>
+  values: ReadonlyArray<string | undefined>
 ): values is GeopointEncodedSubstringValues => {
-	const { length } = values;
+  const { length } = values;
 
-	return (
-		length >= 2 &&
-		length <= 4 &&
-		values.every((value) => {
-			return value != null;
-		})
-	);
+  return (
+    length >= 2 &&
+    length <= 4 &&
+    values.every((value) => {
+      return value != null;
+    })
+  );
 };
 
 const DEGREES_MAX = {
-	latitude: 90,
-	longitude: 180,
+  latitude: 90,
+  longitude: 180,
 } as const;
 
 type GeographicAngleCoordinate = keyof typeof DEGREES_MAX;
 
 const decodeDegrees = (coordinate: GeographicAngleCoordinate, value: string): number | null => {
-	const degrees = Number(value);
-	const absolute = Math.abs(degrees);
-	const max = DEGREES_MAX[coordinate];
+  const degrees = Number(value);
+  const absolute = Math.abs(degrees);
+  const max = DEGREES_MAX[coordinate];
 
-	if (absolute > max) {
-		return null;
-	}
+  if (absolute > max) {
+    return null;
+  }
 
-	return degrees;
+  return degrees;
 };
 
 export interface GeopointCoordinates {
-	readonly latitude: number;
-	readonly longitude: number;
+  readonly latitude: number;
+  readonly longitude: number;
 }
 
 const decodeGeopointCoordinates = (nodeValue: string): GeopointCoordinates | null => {
-	const substringValues = nodeValue.split(/\s+/);
+  const substringValues = nodeValue.split(/\s+/);
 
-	if (!isGeopointEncodedSubstringValues(substringValues)) {
-		return null;
-	}
+  if (!isGeopointEncodedSubstringValues(substringValues)) {
+    return null;
+  }
 
-	const [latitudeValue, longitudeValue] = substringValues;
+  const [latitudeValue, longitudeValue] = substringValues;
 
-	const latitude = decodeDegrees('latitude', latitudeValue);
-	const longitude = decodeDegrees('longitude', longitudeValue);
+  const latitude = decodeDegrees('latitude', latitudeValue);
+  const longitude = decodeDegrees('longitude', longitudeValue);
 
-	if (latitude == null || longitude == null) {
-		return null;
-	}
+  if (latitude == null || longitude == null) {
+    return null;
+  }
 
-	return {
-		latitude,
-		longitude,
-	};
+  return {
+    latitude,
+    longitude,
+  };
 };
 
 /**
@@ -85,21 +85,21 @@ const decodeGeopointCoordinates = (nodeValue: string): GeopointCoordinates | nul
  * with a {@link https://geojson.org/ | GeoJSON format}.
  */
 export class Geopoint implements GeopointCoordinates {
-	static fromNodeValue(nodeValue: string): Geopoint | null {
-		const coordinates = decodeGeopointCoordinates(nodeValue);
+  static fromNodeValue(nodeValue: string): Geopoint | null {
+    const coordinates = decodeGeopointCoordinates(nodeValue);
 
-		if (coordinates == null) {
-			return null;
-		}
+    if (coordinates == null) {
+      return null;
+    }
 
-		return new this(coordinates);
-	}
+    return new this(coordinates);
+  }
 
-	readonly latitude: number;
-	readonly longitude: number;
+  readonly latitude: number;
+  readonly longitude: number;
 
-	private constructor(coordinates: GeopointCoordinates) {
-		this.latitude = coordinates.latitude;
-		this.longitude = coordinates.longitude;
-	}
+  private constructor(coordinates: GeopointCoordinates) {
+    this.latitude = coordinates.latitude;
+    this.longitude = coordinates.longitude;
+  }
 }

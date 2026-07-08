@@ -26,42 +26,42 @@ type NumericString = `${number}`;
 const NUMERIC_STRING_PATTERN = /^-?\d+(\.\d+)?$/;
 
 const isNumericString = (value: string): value is NumericString => {
-	return NUMERIC_STRING_PATTERN.test(value);
+  return NUMERIC_STRING_PATTERN.test(value);
 };
 
 type AssertNumericStringAttribute = (
-	localName: string,
-	value: string | null
+  localName: string,
+  value: string | null
 ) => asserts value is NumericString;
 
 const assertNumericStringAttribute: AssertNumericStringAttribute = (localName, value) => {
-	if (value == null) {
-		throw new ErrorProductionDesignPendingError(`Expected attribute ${localName} is not defined`);
-	}
+  if (value == null) {
+    throw new ErrorProductionDesignPendingError(`Expected attribute ${localName} is not defined`);
+  }
 
-	if (!isNumericString(value)) {
-		throw new ErrorProductionDesignPendingError(
-			`Expected attribute ${localName} to be defined with numeric string, got: ${JSON.stringify(value)}`
-		);
-	}
+  if (!isNumericString(value)) {
+    throw new ErrorProductionDesignPendingError(
+      `Expected attribute ${localName} to be defined with numeric string, got: ${JSON.stringify(value)}`
+    );
+  }
 };
 
 const parseNumericStringAttribute = (element: Element, localName: string): NumericString => {
-	const value = element.getAttribute(localName);
+  const value = element.getAttribute(localName);
 
-	assertNumericStringAttribute(localName, value);
+  assertNumericStringAttribute(localName, value);
 
-	return value;
+  return value;
 };
 
 const abs = (value: string | null) => (value?.startsWith('-') ? value.substring(1) : value);
 
 const parseNumericStringAttributeAbs = (element: Element, localName: string): NumericString => {
-	const value = abs(element.getAttribute(localName));
+  const value = abs(element.getAttribute(localName));
 
-	assertNumericStringAttribute(localName, value);
+  assertNumericStringAttribute(localName, value);
 
-	return value;
+  return value;
 };
 
 /**
@@ -82,38 +82,38 @@ const parseNumericStringAttributeAbs = (element: Element, localName: string): Nu
  * Downstream, we parse these to their appropriate numeric runtime types.
  */
 export class RangeControlBoundsDefinition {
-	static from(element: Element) {
-		const start = parseNumericStringAttribute(element, 'start');
-		const end = parseNumericStringAttribute(element, 'end');
-		const step = parseNumericStringAttributeAbs(element, 'step');
+  static from(element: Element) {
+    const start = parseNumericStringAttribute(element, 'start');
+    const end = parseNumericStringAttribute(element, 'end');
+    const step = parseNumericStringAttributeAbs(element, 'step');
 
-		return new this(start, end, step);
-	}
+    return new this(start, end, step);
+  }
 
-	constructor(
-		readonly start: NumericString,
-		readonly end: NumericString,
-		readonly step: NumericString
-	) {}
+  constructor(
+    readonly start: NumericString,
+    readonly end: NumericString,
+    readonly step: NumericString
+  ) {}
 }
 
 export class RangeControlDefinition extends ControlDefinition<'range'> {
-	static override isCompatible(localName: string): boolean {
-		return localName === 'range';
-	}
+  static override isCompatible(localName: string): boolean {
+    return localName === 'range';
+  }
 
-	readonly type = 'range';
-	readonly appearances: RangeAppearanceDefinition;
-	readonly bounds: RangeControlBoundsDefinition;
+  readonly type = 'range';
+  readonly appearances: RangeAppearanceDefinition;
+  readonly bounds: RangeControlBoundsDefinition;
 
-	constructor(form: XFormDefinition, parent: BodyElementParentContext, element: Element) {
-		super(form, parent, element);
+  constructor(form: XFormDefinition, parent: BodyElementParentContext, element: Element) {
+    super(form, parent, element);
 
-		this.appearances = rangeAppearanceParser.parseFrom(element, 'appearance');
-		this.bounds = RangeControlBoundsDefinition.from(element);
-	}
+    this.appearances = rangeAppearanceParser.parseFrom(element, 'appearance');
+    this.bounds = RangeControlBoundsDefinition.from(element);
+  }
 
-	override toJSON(): object {
-		return {};
-	}
+  override toJSON(): object {
+    return {};
+  }
 }

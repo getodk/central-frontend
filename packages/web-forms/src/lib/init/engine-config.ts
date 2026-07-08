@@ -1,21 +1,16 @@
 import type { FormOptions } from '@/lib/init/load-form-state.ts';
 import type {
-	EditFormInstance,
-	InstanceAttachmentsConfig,
-	InstancePayload,
-	PreloadProperties,
+  EditFormInstance,
+  InstanceAttachmentsConfig,
+  InstancePayload,
+  PreloadProperties,
 } from '@getodk/xforms-engine';
 import { reactive } from 'vue';
 
-const DEVICE_ID_KEY = 'odk-deviceid';
-const DEVICE_ID_PREFIX = 'wf';
-const DEVICE_ID_LENGTH = 16;
-const ALPHABET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-
 interface GetFormInstanceConfigOptions {
-	readonly form: FormOptions;
-	readonly trackDevice?: boolean;
-	readonly preloadProperties?: PreloadProperties;
+  readonly form: FormOptions;
+  readonly deviceID?: string;
+  readonly preloadProperties?: PreloadProperties;
 }
 
 /**
@@ -37,48 +32,28 @@ interface GetFormInstanceConfigOptions {
  * directory path.
  */
 const INSTANCE_ATTACHMENTS_CONFIG: InstanceAttachmentsConfig = {
-	fileNameFactory: (meta) => {
-		const { writtenAt, extension } = meta;
+  fileNameFactory: (meta) => {
+    const { writtenAt, extension } = meta;
 
-		return `${writtenAt.getTime()}${extension ?? ''}`;
-	},
-};
-
-const getRandomId = () => {
-	const bytes = new Uint8Array(DEVICE_ID_LENGTH);
-	crypto.getRandomValues(bytes);
-	const chars = [];
-	for (const byte of bytes) {
-		chars.push(ALPHABET[byte % ALPHABET.length]);
-	}
-	return chars.join('');
-};
-
-const getDeviceId = () => {
-	const id = localStorage.getItem(DEVICE_ID_KEY);
-	if (id) {
-		return id;
-	}
-	const deviceId = `${DEVICE_ID_PREFIX}:${getRandomId()}`;
-	localStorage.setItem(DEVICE_ID_KEY, deviceId);
-	return deviceId;
+    return `${writtenAt.getTime()}${extension ?? ''}`;
+  },
 };
 
 const getPreloadProperties = (options: GetFormInstanceConfigOptions) => {
-	if (!options.trackDevice || options.preloadProperties?.deviceID) {
-		return options.preloadProperties;
-	}
-	return {
-		...options.preloadProperties,
-		deviceID: getDeviceId(),
-	};
+  if (!options.deviceID || options.preloadProperties?.deviceID) {
+    return options.preloadProperties;
+  }
+  return {
+    ...options.preloadProperties,
+    deviceID: options.deviceID,
+  };
 };
 
 export const getFormInstanceConfig = (options: GetFormInstanceConfigOptions) => {
-	return {
-		stateFactory: reactive,
-		instanceAttachments: INSTANCE_ATTACHMENTS_CONFIG,
-		preloadProperties: getPreloadProperties(options),
-		geolocationProvider: options.form.geolocationProvider,
-	};
+  return {
+    stateFactory: reactive,
+    instanceAttachments: INSTANCE_ATTACHMENTS_CONFIG,
+    preloadProperties: getPreloadProperties(options),
+    geolocationProvider: options.form.geolocationProvider,
+  };
 };

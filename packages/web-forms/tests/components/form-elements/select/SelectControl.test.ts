@@ -18,395 +18,395 @@ const CHECKBOX_SELECTOR = '.p-checkbox';
 const CHECKBOX_CHECKED_CLASS = 'p-checkbox-checked';
 
 const findSelectNodeByReference = (node: AnyNode, reference: string): SelectNode | null => {
-	const nodeReference = node.currentState.reference;
+  const nodeReference = node.currentState.reference;
 
-	if (nodeReference === reference) {
-		assert(node.nodeType === 'select');
+  if (nodeReference === reference) {
+    assert(node.nodeType === 'select');
 
-		return node;
-	}
+    return node;
+  }
 
-	const children = node.currentState.children ?? [];
+  const children = node.currentState.children ?? [];
 
-	for (const child of children) {
-		const result = findSelectNodeByReference(child, reference);
+  for (const child of children) {
+    const result = findSelectNodeByReference(child, reference);
 
-		if (result != null) {
-			return result;
-		}
-	}
+    if (result != null) {
+      return result;
+    }
+  }
 
-	return null;
+  return null;
 };
 
 const getSelectNodeByReference = (root: RootNode, reference: string): SelectNode => {
-	const result = findSelectNodeByReference(root, reference);
+  const result = findSelectNodeByReference(root, reference);
 
-	assert(result != null);
+  assert(result != null);
 
-	return result;
+  return result;
 };
 
 type MountedComponent = ReturnType<typeof mountComponent>;
 
 const mountComponent = (selectNode: SelectNode, submitPressed = false) => {
-	return mount(FormQuestion, {
-		props: {
-			question: selectNode,
-		},
-		global: {
-			...globalMountOptions,
-			provide: { ...globalMountOptions.provide, [SUBMIT_PRESSED]: ref(submitPressed) },
-		},
-		attachTo: document.body,
-	});
+  return mount(FormQuestion, {
+    props: {
+      question: selectNode,
+    },
+    global: {
+      ...globalMountOptions,
+      provide: { ...globalMountOptions.provide, [SUBMIT_PRESSED]: ref(submitPressed) },
+    },
+    attachTo: document.body,
+  });
 };
 
 const expectSelectedValuesState = (selectNode: SelectNode, expectedValues: readonly string[]) => {
-	const actualValues = selectNode.currentState.value;
+  const actualValues = selectNode.currentState.value;
 
-	expect(actualValues.length).toBe(expectedValues.length);
+  expect(actualValues.length).toBe(expectedValues.length);
 
-	for (const expectedValue of expectedValues) {
-		expect(actualValues).toContain(expectedValue);
-	}
+  for (const expectedValue of expectedValues) {
+    expect(actualValues).toContain(expectedValue);
+  }
 };
 
 const expectSelectedValueState = (selectNode: SelectNode, value: string | null) => {
-	if (value == null) {
-		return expectSelectedValuesState(selectNode, []);
-	}
+  if (value == null) {
+    return expectSelectedValuesState(selectNode, []);
+  }
 
-	return expectSelectedValuesState(selectNode, [value]);
+  return expectSelectedValuesState(selectNode, [value]);
 };
 
 const findMenu = (component: MountedComponent): DOMWrapper<HTMLElement> | null => {
-	const [menu = null] = component.findAll<HTMLElement>(
-		`${SELECT_OPTION_LIST_SELECTOR}, ${MULTISELECT_OPTION_LIST_SELECTOR}`
-	);
+  const [menu = null] = component.findAll<HTMLElement>(
+    `${SELECT_OPTION_LIST_SELECTOR}, ${MULTISELECT_OPTION_LIST_SELECTOR}`
+  );
 
-	return menu;
+  return menu;
 };
 
 const openMenu = async (
-	component: MountedComponent,
-	controlElement: DOMWrapper<HTMLElement>
+  component: MountedComponent,
+  controlElement: DOMWrapper<HTMLElement>
 ): Promise<DOMWrapper<HTMLElement>> => {
-	let menu = findMenu(component);
+  let menu = findMenu(component);
 
-	if (menu == null) {
-		await controlElement.trigger('click');
+  if (menu == null) {
+    await controlElement.trigger('click');
 
-		menu = findMenu(component);
-	}
+    menu = findMenu(component);
+  }
 
-	assert(menu != null);
+  assert(menu != null);
 
-	return menu;
+  return menu;
 };
 
 const getMenuItems = async (
-	component: MountedComponent,
-	controlElement: DOMWrapper<HTMLElement>
+  component: MountedComponent,
+  controlElement: DOMWrapper<HTMLElement>
 ): Promise<ReadonlyArray<DOMWrapper<HTMLElement>>> => {
-	const menu = await openMenu(component, controlElement);
+  const menu = await openMenu(component, controlElement);
 
-	return menu.findAll(`${SELECT_OPTION_SELECTOR}, ${MULTISELECT_OPTION_SELECTOR}`);
+  return menu.findAll(`${SELECT_OPTION_SELECTOR}, ${MULTISELECT_OPTION_SELECTOR}`);
 };
 
 const getMenuItem = async (
-	component: MountedComponent,
-	controlElement: DOMWrapper<HTMLElement>,
-	label: string
+  component: MountedComponent,
+  controlElement: DOMWrapper<HTMLElement>,
+  label: string
 ): Promise<DOMWrapper<HTMLElement> | null> => {
-	const menuItems = await getMenuItems(component, controlElement);
+  const menuItems = await getMenuItems(component, controlElement);
 
-	return menuItems.find((menuItem) => menuItem.text() === label) ?? null;
+  return menuItems.find((menuItem) => menuItem.text() === label) ?? null;
 };
 
 describe('SelectControl', () => {
-	describe('select1', () => {
-		let isMatchMediaMocked = false;
-
-		beforeAll(() => {
-			// PrimeVue's Select needs matchMedia, which isn't available
-			// when running in test-node:jsdom mode
-			if (window.matchMedia == null) {
-				isMatchMediaMocked = true;
-
-				Object.defineProperty(window, 'matchMedia', {
-					writable: true,
-					value: () => ({
-						matches: false,
-						media: null,
-						onchange: null,
-						addEventListener: () => false,
-						removeEventListener: () => false,
-						dispatchEvent: () => false,
-					}),
-				});
-			}
-		});
-
-		afterAll(() => {
-			if (isMatchMediaMocked) {
-				Object.defineProperty(window, 'matchMedia', { writable: true, value: undefined });
-			}
-		});
-
-		describe('no appearance (radio controls)', () => {
-			let root: RootNode;
-			let selectNode: SelectNode;
-			let component: MountedComponent;
-			let cherry: DOMWrapper<HTMLInputElement>;
-			let mango: DOMWrapper<HTMLInputElement>;
-
-			beforeEach(async () => {
-				root = await getReactiveForm('select-control.xml');
-				selectNode = getSelectNodeByReference(root, '/data/no-appearance/sel1');
-				component = mountComponent(selectNode);
-
-				const nodeId = selectNode.nodeId;
-
-				cherry = component.find(`input[id="${nodeId}_cherry"]`);
-				mango = component.find(`input[id="${nodeId}_mango"]`);
-
-				expectSelectedValueState(selectNode, 'cherry');
-			});
-
-			it('renders radio buttons for items of <select1> with no appearance', () => {
-				expect(cherry.element.type).toEqual('radio');
-				expect(mango.element.type).toEqual('radio');
-			});
-
-			it('renders the selected value as checked', () => {
-				expect(cherry.element.checked).toBe(true);
-				expect(mango.element.checked).toBe(false);
-			});
-
-			it('updates the selection when selecting a rendered radio', async () => {
-				await mango.trigger('click');
-
-				expectSelectedValueState(selectNode, 'mango');
-				expect(cherry.element.checked).toBe(false);
-				expect(mango.element.checked).toBe(true);
-			});
-		});
-
-		interface Select1MenuAppearanceCase {
-			readonly appearance: string;
-			readonly reference: string;
-		}
-
-		describe.each<Select1MenuAppearanceCase>([
-			{ appearance: 'minimal', reference: '/data/minimal' },
-			{ appearance: 'search', reference: '/data/search' },
-			{ appearance: 'minimal search', reference: '/data/minimal_search' },
-		])('dropdown with appearance: $appearance', ({ reference }) => {
-			let root: RootNode;
-			let selectNode: SelectNode;
-			let component: MountedComponent;
-			let controlElement: DOMWrapper<HTMLDivElement>;
-
-			beforeEach(async () => {
-				root = await getReactiveForm('select-control.xml');
-				selectNode = getSelectNodeByReference(root, reference);
-				component = mountComponent(selectNode);
-				controlElement = component.find(`[id="${selectNode.nodeId}"]`);
-			});
-
-			it('renders as a dropdown', () => {
-				expect(controlElement.classes()).toContain(SELECT_CLASS);
-			});
-
-			const expectedOptionLabels = ['Karachi', 'Toronto', 'Lahore', 'Islamabad', 'Vancouver'];
-
-			it('shows option items in a menu', async () => {
-				const menuItems = await getMenuItems(component, controlElement);
-
-				expect(menuItems.length).toBe(expectedOptionLabels.length);
-
-				for (const [index, expectedLabel] of expectedOptionLabels.entries()) {
-					const menuItem = menuItems[index];
-
-					assert(menuItem != null);
-
-					expect(menuItem.text()).toBe(expectedLabel);
-				}
-			});
-
-			it.each(expectedOptionLabels)('selects option: %s', async (expectedOptionLabel) => {
-				let menuItem = await getMenuItem(component, controlElement, expectedOptionLabel);
+  describe('select1', () => {
+    let isMatchMediaMocked = false;
+
+    beforeAll(() => {
+      // PrimeVue's Select needs matchMedia, which isn't available
+      // when running in test-node:jsdom mode
+      if (window.matchMedia == null) {
+        isMatchMediaMocked = true;
+
+        Object.defineProperty(window, 'matchMedia', {
+          writable: true,
+          value: () => ({
+            matches: false,
+            media: null,
+            onchange: null,
+            addEventListener: () => false,
+            removeEventListener: () => false,
+            dispatchEvent: () => false,
+          }),
+        });
+      }
+    });
+
+    afterAll(() => {
+      if (isMatchMediaMocked) {
+        Object.defineProperty(window, 'matchMedia', { writable: true, value: undefined });
+      }
+    });
+
+    describe('no appearance (radio controls)', () => {
+      let root: RootNode;
+      let selectNode: SelectNode;
+      let component: MountedComponent;
+      let cherry: DOMWrapper<HTMLInputElement>;
+      let mango: DOMWrapper<HTMLInputElement>;
+
+      beforeEach(async () => {
+        root = await getReactiveForm('select-control.xml');
+        selectNode = getSelectNodeByReference(root, '/data/no-appearance/sel1');
+        component = mountComponent(selectNode);
+
+        const nodeId = selectNode.nodeId;
+
+        cherry = component.find(`input[id="${nodeId}_cherry"]`);
+        mango = component.find(`input[id="${nodeId}_mango"]`);
+
+        expectSelectedValueState(selectNode, 'cherry');
+      });
+
+      it('renders radio buttons for items of <select1> with no appearance', () => {
+        expect(cherry.element.type).toEqual('radio');
+        expect(mango.element.type).toEqual('radio');
+      });
+
+      it('renders the selected value as checked', () => {
+        expect(cherry.element.checked).toBe(true);
+        expect(mango.element.checked).toBe(false);
+      });
+
+      it('updates the selection when selecting a rendered radio', async () => {
+        await mango.trigger('click');
+
+        expectSelectedValueState(selectNode, 'mango');
+        expect(cherry.element.checked).toBe(false);
+        expect(mango.element.checked).toBe(true);
+      });
+    });
+
+    interface Select1MenuAppearanceCase {
+      readonly appearance: string;
+      readonly reference: string;
+    }
+
+    describe.each<Select1MenuAppearanceCase>([
+      { appearance: 'minimal', reference: '/data/minimal' },
+      { appearance: 'search', reference: '/data/search' },
+      { appearance: 'minimal search', reference: '/data/minimal_search' },
+    ])('dropdown with appearance: $appearance', ({ reference }) => {
+      let root: RootNode;
+      let selectNode: SelectNode;
+      let component: MountedComponent;
+      let controlElement: DOMWrapper<HTMLDivElement>;
+
+      beforeEach(async () => {
+        root = await getReactiveForm('select-control.xml');
+        selectNode = getSelectNodeByReference(root, reference);
+        component = mountComponent(selectNode);
+        controlElement = component.find(`[id="${selectNode.nodeId}"]`);
+      });
+
+      it('renders as a dropdown', () => {
+        expect(controlElement.classes()).toContain(SELECT_CLASS);
+      });
+
+      const expectedOptionLabels = ['Karachi', 'Toronto', 'Lahore', 'Islamabad', 'Vancouver'];
+
+      it('shows option items in a menu', async () => {
+        const menuItems = await getMenuItems(component, controlElement);
+
+        expect(menuItems.length).toBe(expectedOptionLabels.length);
+
+        for (const [index, expectedLabel] of expectedOptionLabels.entries()) {
+          const menuItem = menuItems[index];
+
+          assert(menuItem != null);
+
+          expect(menuItem.text()).toBe(expectedLabel);
+        }
+      });
+
+      it.each(expectedOptionLabels)('selects option: %s', async (expectedOptionLabel) => {
+        let menuItem = await getMenuItem(component, controlElement, expectedOptionLabel);
 
-				assert(menuItem != null);
-				expectSelectedValueState(selectNode, null);
-				expect(menuItem.classes()).not.toContain(SELECT_SELECTED_CLASS);
+        assert(menuItem != null);
+        expectSelectedValueState(selectNode, null);
+        expect(menuItem.classes()).not.toContain(SELECT_SELECTED_CLASS);
 
-				await menuItem.trigger('mousedown');
+        await menuItem.trigger('mousedown');
 
-				menuItem = await getMenuItem(component, controlElement, expectedOptionLabel);
-				assert(menuItem != null);
+        menuItem = await getMenuItem(component, controlElement, expectedOptionLabel);
+        assert(menuItem != null);
 
-				expectSelectedValueState(selectNode, expectedOptionLabel.toLowerCase());
-				expect(menuItem.classes()).toContain(SELECT_SELECTED_CLASS);
-			});
-		});
-	});
+        expectSelectedValueState(selectNode, expectedOptionLabel.toLowerCase());
+        expect(menuItem.classes()).toContain(SELECT_SELECTED_CLASS);
+      });
+    });
+  });
 
-	describe('select', () => {
-		describe('no appearance (checkbox controls)', () => {
-			let root: RootNode;
-			let selectNode: SelectNode;
-			let component: MountedComponent;
-			let watermelon: DOMWrapper<HTMLInputElement>;
-			let peach: DOMWrapper<HTMLInputElement>;
+  describe('select', () => {
+    describe('no appearance (checkbox controls)', () => {
+      let root: RootNode;
+      let selectNode: SelectNode;
+      let component: MountedComponent;
+      let watermelon: DOMWrapper<HTMLInputElement>;
+      let peach: DOMWrapper<HTMLInputElement>;
 
-			beforeEach(async () => {
-				root = await getReactiveForm('select-control.xml');
-				selectNode = getSelectNodeByReference(root, '/data/no-appearance/sel');
-				component = mountComponent(selectNode);
+      beforeEach(async () => {
+        root = await getReactiveForm('select-control.xml');
+        selectNode = getSelectNodeByReference(root, '/data/no-appearance/sel');
+        component = mountComponent(selectNode);
 
-				const nodeId = selectNode.nodeId;
+        const nodeId = selectNode.nodeId;
 
-				watermelon = component.find(`input[id="${nodeId}_watermelon"]`);
-				peach = component.find(`input[id="${nodeId}_peach"]`);
+        watermelon = component.find(`input[id="${nodeId}_watermelon"]`);
+        peach = component.find(`input[id="${nodeId}_peach"]`);
 
-				expectSelectedValuesState(selectNode, ['peach']);
-			});
+        expectSelectedValuesState(selectNode, ['peach']);
+      });
 
-			it('renders checkboxes for items of <select> with no appearance', () => {
-				expect(watermelon.element.type).toEqual('checkbox');
-				expect(peach.element.type).toEqual('checkbox');
-			});
+      it('renders checkboxes for items of <select> with no appearance', () => {
+        expect(watermelon.element.type).toEqual('checkbox');
+        expect(peach.element.type).toEqual('checkbox');
+      });
 
-			it('renders the selected value as checked', () => {
-				expect(watermelon.element.checked).toBe(false);
-				expect(peach.element.checked).toBe(true);
-			});
+      it('renders the selected value as checked', () => {
+        expect(watermelon.element.checked).toBe(false);
+        expect(peach.element.checked).toBe(true);
+      });
 
-			it('updates the selection when selecting a rendered checkbox', async () => {
-				await watermelon.trigger('click');
+      it('updates the selection when selecting a rendered checkbox', async () => {
+        await watermelon.trigger('click');
 
-				expectSelectedValuesState(selectNode, ['peach', 'watermelon']);
-				expect(watermelon.element.checked).toBe(true);
-				expect(peach.element.checked).toBe(true);
+        expectSelectedValuesState(selectNode, ['peach', 'watermelon']);
+        expect(watermelon.element.checked).toBe(true);
+        expect(peach.element.checked).toBe(true);
 
-				await peach.trigger('click');
+        await peach.trigger('click');
 
-				expectSelectedValuesState(selectNode, ['watermelon']);
-				expect(watermelon.element.checked).toBe(true);
-				expect(peach.element.checked).toBe(false);
-			});
-		});
+        expectSelectedValuesState(selectNode, ['watermelon']);
+        expect(watermelon.element.checked).toBe(true);
+        expect(peach.element.checked).toBe(false);
+      });
+    });
 
-		interface SelectMultiMenuAppearanceCase {
-			readonly appearance: string;
-			readonly reference: string;
-		}
+    interface SelectMultiMenuAppearanceCase {
+      readonly appearance: string;
+      readonly reference: string;
+    }
 
-		describe.each<SelectMultiMenuAppearanceCase>([
-			{ appearance: 'minimal', reference: '/data/minimal_m' },
-			{ appearance: 'search', reference: '/data/search_m' },
-			{ appearance: 'minimal search', reference: '/data/minimal_search_m' },
-		])('dropdown with appearance: $appearance', ({ reference }) => {
-			let root: RootNode;
-			let selectNode: SelectNode;
-			let component: MountedComponent;
-			let controlElement: DOMWrapper<HTMLDivElement>;
+    describe.each<SelectMultiMenuAppearanceCase>([
+      { appearance: 'minimal', reference: '/data/minimal_m' },
+      { appearance: 'search', reference: '/data/search_m' },
+      { appearance: 'minimal search', reference: '/data/minimal_search_m' },
+    ])('dropdown with appearance: $appearance', ({ reference }) => {
+      let root: RootNode;
+      let selectNode: SelectNode;
+      let component: MountedComponent;
+      let controlElement: DOMWrapper<HTMLDivElement>;
 
-			beforeEach(async () => {
-				root = await getReactiveForm('select-control.xml');
-				selectNode = getSelectNodeByReference(root, reference);
-				component = mountComponent(selectNode);
-				controlElement = component.find(`[id="${selectNode.nodeId}-control"]`);
-			});
+      beforeEach(async () => {
+        root = await getReactiveForm('select-control.xml');
+        selectNode = getSelectNodeByReference(root, reference);
+        component = mountComponent(selectNode);
+        controlElement = component.find(`[id="${selectNode.nodeId}-control"]`);
+      });
 
-			it('renders as a dropdown', () => {
-				expect(controlElement.classes()).toContain(MULTISELECT_CLASS);
-			});
+      it('renders as a dropdown', () => {
+        expect(controlElement.classes()).toContain(MULTISELECT_CLASS);
+      });
 
-			const expectedOptionLabels = ['Karachi', 'Toronto', 'Lahore', 'Islamabad', 'Vancouver'];
+      const expectedOptionLabels = ['Karachi', 'Toronto', 'Lahore', 'Islamabad', 'Vancouver'];
 
-			it('shows option items in a menu', async () => {
-				const menuItems = await getMenuItems(component, controlElement);
+      it('shows option items in a menu', async () => {
+        const menuItems = await getMenuItems(component, controlElement);
 
-				expect(menuItems.length).toBe(expectedOptionLabels.length);
+        expect(menuItems.length).toBe(expectedOptionLabels.length);
 
-				for (const [index, expectedLabel] of expectedOptionLabels.entries()) {
-					const menuItem = menuItems[index];
+        for (const [index, expectedLabel] of expectedOptionLabels.entries()) {
+          const menuItem = menuItems[index];
 
-					assert(menuItem != null);
+          assert(menuItem != null);
 
-					expect(menuItem.text()).toBe(expectedLabel);
-				}
-			});
+          expect(menuItem.text()).toBe(expectedLabel);
+        }
+      });
 
-			it.each(expectedOptionLabels)('selects option: %s', async (expectedOptionLabel) => {
-				let menuItem = await getMenuItem(component, controlElement, expectedOptionLabel);
+      it.each(expectedOptionLabels)('selects option: %s', async (expectedOptionLabel) => {
+        let menuItem = await getMenuItem(component, controlElement, expectedOptionLabel);
 
-				assert(menuItem != null);
+        assert(menuItem != null);
 
-				let menuItemSelection = menuItem.find(CHECKBOX_SELECTOR);
+        let menuItemSelection = menuItem.find(CHECKBOX_SELECTOR);
 
-				expectSelectedValueState(selectNode, null);
+        expectSelectedValueState(selectNode, null);
 
-				expect(menuItemSelection.classes()).not.toContain(CHECKBOX_CHECKED_CLASS);
+        expect(menuItemSelection.classes()).not.toContain(CHECKBOX_CHECKED_CLASS);
 
-				await menuItem.trigger('click');
+        await menuItem.trigger('click');
 
-				expectSelectedValueState(selectNode, expectedOptionLabel.toLowerCase());
+        expectSelectedValueState(selectNode, expectedOptionLabel.toLowerCase());
 
-				menuItem = await getMenuItem(component, controlElement, expectedOptionLabel);
+        menuItem = await getMenuItem(component, controlElement, expectedOptionLabel);
 
-				assert(menuItem != null);
+        assert(menuItem != null);
 
-				menuItemSelection = menuItem.find(CHECKBOX_SELECTOR);
+        menuItemSelection = menuItem.find(CHECKBOX_SELECTOR);
 
-				expect(menuItemSelection.classes()).toContain(CHECKBOX_CHECKED_CLASS);
-			});
-		});
-	});
+        expect(menuItemSelection.classes()).toContain(CHECKBOX_CHECKED_CLASS);
+      });
+    });
+  });
 
-	describe('validation', () => {
-		it('does not show validation message on init', async () => {
-			const root = await getReactiveForm('select-control.xml');
-			const selectNode = getSelectNodeByReference(root, '/data/no-appearance/sel1');
-			const component = mountComponent(selectNode);
+  describe('validation', () => {
+    it('does not show validation message on init', async () => {
+      const root = await getReactiveForm('select-control.xml');
+      const selectNode = getSelectNodeByReference(root, '/data/no-appearance/sel1');
+      const component = mountComponent(selectNode);
 
-			expect(component.get('.validation-message').isVisible()).toBe(false);
-		});
+      expect(component.get('.validation-message').isVisible()).toBe(false);
+    });
 
-		it('shows validation message for invalid state', async () => {
-			const root = await getReactiveForm('1-validation.xml');
-			const selectNode = getSelectNodeByReference(root, '/data/citizen');
-			const component = mountComponent(selectNode);
-			const pakistan = component.find('input[id*=_pk]');
+    it('shows validation message for invalid state', async () => {
+      const root = await getReactiveForm('1-validation.xml');
+      const selectNode = getSelectNodeByReference(root, '/data/citizen');
+      const component = mountComponent(selectNode);
+      const pakistan = component.find('input[id*=_pk]');
 
-			await pakistan.setValue();
+      await pakistan.setValue();
 
-			expect(component.get('.validation-message').isVisible()).toBe(true);
-			expect(component.get('.validation-message').text()).toBe('It has to be two');
-		});
+      expect(component.get('.validation-message').isVisible()).toBe(true);
+      expect(component.get('.validation-message').text()).toBe('It has to be two');
+    });
 
-		it('hides validation message when user enters a valid value', async () => {
-			const root = await getReactiveForm('1-validation.xml');
-			const selectNode = getSelectNodeByReference(root, '/data/citizen');
-			const component = mountComponent(selectNode);
-			const pakistan = component.find('input[id*=_pk]');
+    it('hides validation message when user enters a valid value', async () => {
+      const root = await getReactiveForm('1-validation.xml');
+      const selectNode = getSelectNodeByReference(root, '/data/citizen');
+      const component = mountComponent(selectNode);
+      const pakistan = component.find('input[id*=_pk]');
 
-			await pakistan.setValue();
-			const canada = component.find('input[id*=_ca]');
-			await canada.setValue();
-			expect(component.get('.validation-message').text()).toBe('');
-		});
+      await pakistan.setValue();
+      const canada = component.find('input[id*=_ca]');
+      await canada.setValue();
+      expect(component.get('.validation-message').text()).toBe('');
+    });
 
-		it('shows validation message on submit pressed even when no interaction is made with the component', async () => {
-			const root = await getReactiveForm('1-validation.xml');
-			const selectNode = getSelectNodeByReference(root, '/data/citizen');
-			const component = mountComponent(selectNode, true);
+    it('shows validation message on submit pressed even when no interaction is made with the component', async () => {
+      const root = await getReactiveForm('1-validation.xml');
+      const selectNode = getSelectNodeByReference(root, '/data/citizen');
+      const component = mountComponent(selectNode, true);
 
-			expect(component.get('.validation-message').isVisible()).toBe(true);
-			expect(component.get('.validation-message').text()).toBe('validation_message.required.error');
-		});
-	});
+      expect(component.get('.validation-message').isVisible()).toBe(true);
+      expect(component.get('.validation-message').text()).toBe('validation_message.required.error');
+    });
+  });
 });

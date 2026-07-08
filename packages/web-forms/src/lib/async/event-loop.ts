@@ -9,5 +9,5 @@
  * Waiting for them to finish guarantees we capture the most accurate and up-to-date state of the data.
  */
 export const waitAllTasksToFinish = (): Promise<void> => {
-	return new Promise((resolve) => setTimeout(resolve, 0));
+  return new Promise((resolve) => setTimeout(resolve, 0));
 };
