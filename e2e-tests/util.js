@@ -107,7 +107,7 @@ function throwOnUnexpectedLogMessage(messageType, fullMessage) {
       return;
   }
 
-  if(expectedErrors.some(expected => typeof expected === 'string' ? fullMessage.includes(expected) : expected.match(fullMessage))) return;
+  if(expectedErrors.some(expected => typeof expected === 'string' ? fullMessage.includes(expected) : fullMessage.match(expected))) return;
 
   // Include fullMessage here, as it may otherwise be lost(??)
   throw new Error(`Unexpected message type '${messageType}' was logged:\n${fullMessage}`);
