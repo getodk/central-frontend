@@ -22,6 +22,8 @@ const test = testBase.extend({
   // See: https://playwright.dev/docs/test-fixtures#adding-global-beforeeachaftereach-hooks
   browserConsoleToTestStdout: [
     async ({ browserName, page }, use) => {
+      const fatals = [];
+
       page.on('console', async msg => {
         const { url, line, column } = msg.location();
 
@@ -67,7 +69,7 @@ const test = testBase.extend({
           `\n    message: ${message}`;
         console.log(fullMessage);
 
-        throwOnUnexpectedLogMessage(msg.type(), fullMessage);
+        throwOnUnexpectedLogMessage(fatals, msg.type(), fullMessage);
       });
       await use();
 
@@ -75,6 +77,8 @@ const test = testBase.extend({
       // not deterministic, it should significantly reduce instances of
       // orphaned log message and event-listener-triggered test failures.
       await page.waitForTimeout(50);
+
+      expect(fatals, `Unexpected logging: ${fatals.join(', ')}`).toHaveLength(0);
     },
     { auto:true },
   ],
@@ -91,7 +95,7 @@ const expectedErrors = [
   new RegExp(`Loading the image 'http://central-test.localhost/(${favicons.join('|')})' violates`),
 ];
 
-function throwOnUnexpectedLogMessage(messageType, fullMessage) {
+function throwOnUnexpectedLogMessage(fatals, messageType, fullMessage) {
   switch(messageType) {
     case 'log':
     case 'debug':
@@ -110,7 +114,7 @@ function throwOnUnexpectedLogMessage(messageType, fullMessage) {
   if(expectedErrors.some(expected => typeof expected === 'string' ? fullMessage.includes(expected) : fullMessage.match(expected))) return;
 
   // Include fullMessage here, as it may otherwise be lost(??)
-  throw new Error(`Unexpected message type '${messageType}' was logged:\n${fullMessage}`);
+  fatals.push(`Unexpected call to console.${messageType}():\n${fullMessage}`);
 }
 
 async function asText(msg) {
