@@ -1,13 +1,13 @@
 {
   "name": "@getodk/xpath",
-  "version": "0.11.0",
+  "version": "1.0.0",
   "license": "Apache-2.0",
   "description": "XPath implementation for ODK Web Forms",
   "type": "module",
   "author": "getodk",
   "repository": {
     "type": "git",
-    "url": "https://github.com/getodk/web-forms",
+    "url": "https://github.com/getodk/central-frontend",
     "directory": "packages/xpath"
   },
   "bugs": "https://github.com/getodk/web-forms/issues",
@@ -57,7 +57,7 @@
     "test:types:test": "tsc --project ./test/tsconfig.json --emitDeclarationOnly false --noEmit"
   },
   "dependencies": {
-    "@getodk/common": "0.15.0",
+    "@getodk/common": "1.0.0",
     "crypto-js": "^4.2.0"
   },
   "devDependencies": {

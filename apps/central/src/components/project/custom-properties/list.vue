@@ -107,7 +107,7 @@ const afterCreate = (name) => {
 {
   "fr": {
     "heading": [
-      "Contrôlez les entités auxquelles chaque utilisateur de l'application ou chaque lien public peut accéder. Définissez ici des propriétés personnalisées, attribuez-leur des valeurs pour les utilisateurs mobiles ou les liens publics, et utilisez les filtres de liste d'entités pour transmettre les entités pertinentes."
+      "Contrôlez les entités auxquelles chaque utilisateur mobile ou chaque lien public peut accéder. Définissez ici des propriétés personnalisées, attribuez-leur des valeurs pour les utilisateurs mobiles ou les liens publics, et utilisez les filtres de liste d'entités pour transmettre seulement les entités pertinentes."
     ],
     "emptyTable": "Aucunes propriétés personnalisées ont été définies pour ce projet.",
     "created": "Propriété créée avec succès.",

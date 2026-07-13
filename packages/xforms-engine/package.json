@@ -1,13 +1,13 @@
 {
   "name": "@getodk/xforms-engine",
-  "version": "0.22.0",
+  "version": "1.0.0",
   "license": "Apache-2.0",
   "description": "XForms engine for ODK Web Forms",
   "type": "module",
   "author": "getodk",
   "repository": {
     "type": "git",
-    "url": "https://github.com/getodk/web-forms",
+    "url": "https://github.com/getodk/central-frontend",
     "directory": "packages/xforms-engine"
   },
   "bugs": "https://github.com/getodk/web-forms/issues",
@@ -77,7 +77,7 @@
   "devDependencies": {
     "@babel/core": "^7.28.5",
     "@getodk/tree-sitter-xpath": "^0.2.2",
-    "@getodk/xpath": "0.11.0",
+    "@getodk/xpath": "1.0.0",
     "@js-joda/core": "^5.7.0",
     "@types/papaparse": "^5.5.0",
     "babel-plugin-transform-jsbi-to-bigint": "^1.4.2",

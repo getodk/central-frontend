@@ -1,12 +1,12 @@
 {
   "name": "@getodk/web-forms",
-  "version": "0.24.0",
+  "version": "1.0.0",
   "license": "Apache-2.0",
   "description": "ODK Web Forms",
   "author": "getodk",
   "repository": {
     "type": "git",
-    "url": "https://github.com/getodk/web-forms",
+    "url": "https://github.com/getodk/central-frontend",
     "directory": "packages/web-forms"
   },
   "bugs": "https://github.com/getodk/web-forms/issues",
@@ -68,7 +68,7 @@
     "@faker-js/faker": "^10.1.0",
     "@fontsource/hanken-grotesk": "^5.2.8",
     "@fontsource/roboto": "^5.2.9",
-    "@getodk/xforms-engine": "0.22.0",
+    "@getodk/xforms-engine": "1.0.0",
     "@primeuix/themes": "1.0.3",
     "@types/image-blob-reduce": "^4",
     "@types/ramda": "^0.31.1",
