@@ -21,9 +21,7 @@ const login = async (page) => {
 const test = testBase.extend({
   // See: https://playwright.dev/docs/test-fixtures#adding-global-beforeeachaftereach-hooks
   browserConsoleToTestStdout: [
-    async ({ browserName, page }, use) => {
-      const fatals = [];
-
+    async ({ browserName, page }, use, testInfo) => {
       page.on('console', async msg => {
         const { url, line, column } = msg.location();
 
@@ -69,15 +67,10 @@ const test = testBase.extend({
           `\n    message: ${message}`;
         console.log(fullMessage);
 
-        gatherUnexpectedLogging(fatals, msg.type(), fullMessage);
+        throwOnUnexpectedLogging(testInfo, msg.type(), fullMessage);
       });
 
       await use();
-
-      await expect(
-        fatals,
-        `Unexpected logging: ${fatals.map((err, idx) => `\n    ${idx}. ${err}`)}`,
-      ).toHaveLength(0);
     },
     { auto:true },
   ],
@@ -94,7 +87,7 @@ const expectedErrors = [
   new RegExp(`Loading the image 'http://central-test.localhost/(${favicons.join('|')})' violates`),
 ];
 
-function gatherUnexpectedLogging(fatals, messageType, fullMessage) {
+function throwOnUnexpectedLogging(testInfo, messageType, fullMessage) {
   switch(messageType) {
     case 'log':
     case 'debug':
@@ -113,7 +106,7 @@ function gatherUnexpectedLogging(fatals, messageType, fullMessage) {
   if(expectedErrors.some(expected => typeof expected === 'string' ? fullMessage.includes(expected) : fullMessage.match(expected))) return;
 
   // Include fullMessage here, as it may otherwise be lost(??)
-  fatals.push(`Unexpected call to console.${messageType}():\n${fullMessage}`);
+  testInfo.fail(`Unexpected call to console.${messageType}():\n${fullMessage}`);
 }
 
 async function asText(msg) {
