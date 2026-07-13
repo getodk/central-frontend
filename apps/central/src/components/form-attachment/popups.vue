@@ -39,45 +39,15 @@ some point. -->
           </i18n-t>
         </template>
         <template v-else-if="shownAfterSelection">
-          <template v-if="plannedUploads.length !== 0">
-            <i18n-t tag="p" keypath="afterSelection.matched.full"
-              :plural="plannedUploads.length">
-              <template #countOfFiles>
-                <strong>{{ $tcn('afterSelection.matched.countOfFiles', plannedUploads.length) }}</strong>
-              </template>
-            </i18n-t>
-            <p v-show="unmatchedFiles.length !== 0"
-              id="form-attachment-popups-unmatched">
-              <span class="icon-exclamation-triangle"></span>
-              <i18n-t tag="span" keypath="afterSelection.someUnmatched.full"
-                :plural="unmatchedFiles.length">
-                <template #countOfFiles>
-                  <strong>{{ $tcn('afterSelection.someUnmatched.countOfFiles', unmatchedFiles.length) }}</strong>
-                </template>
-              </i18n-t>
-            </p>
-            <p class="modal-actions">
-              <button type="button" class="btn btn-link"
-                @click="$emit('cancel')">
-                {{ $t('action.cancel') }}
-              </button>
-              <button type="button" class="btn btn-primary"
-                @click="$emit('confirm')">
-                {{ $t('action.looksGood') }}
-              </button>
-            </p>
-          </template>
-          <template v-else>
-            <p>
-              {{ $tc('afterSelection.noneMatched', unmatchedFiles.length) }}
-            </p>
-            <p class="modal-actions">
-              <button type="button" class="btn btn-primary"
-                @click="$emit('cancel')">
-                {{ $t('action.ok') }}
-              </button>
-            </p>
-          </template>
+          <p>
+            {{ $tc('afterSelection.noneMatched', unmatchedFiles.length) }}
+          </p>
+          <p class="modal-actions">
+            <button type="button" class="btn btn-primary"
+              @click="$emit('cancel')">
+              {{ $t('action.ok') }}
+            </button>
+          </p>
         </template>
         <template v-else-if="shownDuringUpload">
           <p>{{ $tcn('duringUpload.total', uploadStatus.total) }}</p>
@@ -117,26 +87,20 @@ export default {
       type: Array,
       required: true
     },
-    nameMismatch: {
-      type: Object,
-      required: true
-    },
     uploadStatus: {
       type: Object,
       required: true
     }
   },
-  emits: ['confirm', 'cancel'],
+  emits: ['cancel'],
   computed: {
     shownDuringDragover() {
       return this.countOfFilesOverDropZone !== 0;
     },
     shownAfterSelection() {
-      // If the user dropped a single file over a row, then
-      // FormAttachmentPopups is not used to confirm the selection:
-      // FormAttachmentNameMismatch is.
-      return (this.plannedUploads.length !== 0 && !this.nameMismatch.state) ||
-        this.unmatchedFiles.length !== 0;
+      // This popup only shows when all files are unmatched (no planned uploads).
+      // If some files match, they upload automatically without confirmation.
+      return this.unmatchedFiles.length > 0 && this.plannedUploads.length === 0;
     },
     shownDuringUpload() {
       return this.uploadStatus.current != null;
@@ -225,24 +189,6 @@ $popup-width: 300px;
     padding-bottom: 10px;
     border-radius: 0px;
 
-    #form-attachment-popups-unmatched {
-      $padding: 10px;
-
-      background-color: $color-warning-light;
-      font-size: 12px;
-      line-height: 14px;
-      margin-bottom: 17px;
-      padding: $padding;
-      padding-left: 30px;
-      position: relative;
-
-      .icon-exclamation-triangle {
-        left: $padding;
-        margin-top: 1px;
-        position: absolute;
-      }
-    }
-
     .modal-actions {
       text-align: right;
     }
@@ -278,14 +224,6 @@ $popup-width: 300px;
       }
     },
     "afterSelection": {
-      "matched": {
-        "full": "{countOfFiles} ready for upload. | {countOfFiles} ready for upload.",
-        "countOfFiles": "{count} file | {count} files"
-      },
-      "someUnmatched": {
-        "full": "{countOfFiles} has a name we don’t recognize and will be ignored. To upload it, rename it or drag it onto its target. | {countOfFiles} have a name we don’t recognize and will be ignored. To upload them, rename them or drag them individually onto their targets.",
-        "countOfFiles": "{count} file | {count} files"
-      },
       "noneMatched": "We don’t recognize the file you are trying to upload. Please rename it to match the names listed above, or drag it individually onto its target. | We don’t recognize any of the files you are trying to upload. Please rename them to match the names listed above, or drag them individually onto their targets."
     },
     "duringUpload": {
