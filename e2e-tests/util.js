@@ -67,7 +67,7 @@ const test = testBase.extend({
           `\n    message: ${message}`;
         console.log(fullMessage);
 
-        throwOnUnexpectedLogging(testInfo, msg.type(), fullMessage);
+        if(!failed) throwOnUnexpectedLogging(testInfo, msg.type(), fullMessage);
       });
 
       await use();
@@ -88,6 +88,8 @@ const expectedErrors = [
 ];
 
 function throwOnUnexpectedLogging(testInfo, messageType, fullMessage) {
+  if(testInfo.errors.length) return;
+
   switch(messageType) {
     case 'log':
     case 'debug':
@@ -106,8 +108,7 @@ function throwOnUnexpectedLogging(testInfo, messageType, fullMessage) {
   if(expectedErrors.some(expected => typeof expected === 'string' ? fullMessage.includes(expected) : fullMessage.match(expected))) return;
 
   // Include fullMessage here, as it may otherwise be lost(??)
-  testInfo.errors.push(new Error(`Unexpected call to console.${messageType}():\n${fullMessage}`));
-  testInfo.status = 'failed';
+  throw new Error(`Unexpected call to console.${messageType}():\n${fullMessage}`);
 }
 
 async function asText(msg) {
