@@ -3230,26 +3230,6 @@
         }
       },
       "afterSelection": {
-        "matched": {
-          "full": {
-            "string": "{count, plural, one {{countOfFiles} ready for upload.} other {{countOfFiles} ready for upload.}}",
-            "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
-          },
-          "countOfFiles": {
-            "string": "{count, plural, one {{count} file} other {{count} files}}",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text. (The plural form of the text is shown.)\n\n{countOfFiles} ready for upload."
-          }
-        },
-        "someUnmatched": {
-          "full": {
-            "string": "{count, plural, one {{countOfFiles} has a name we don’t recognize and will be ignored. To upload it, rename it or drag it onto its target.} other {{countOfFiles} have a name we don’t recognize and will be ignored. To upload them, rename them or drag them individually onto their targets.}}",
-            "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
-          },
-          "countOfFiles": {
-            "string": "{count, plural, one {{count} file} other {{count} files}}",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text. (The plural form of the text is shown.)\n\n{countOfFiles} have a name we don’t recognize and will be ignored. To upload them, rename them or drag them individually onto their targets."
-          }
-        },
         "noneMatched": {
           "string": "{count, plural, one {We don’t recognize the file you are trying to upload. Please rename it to match the names listed above, or drag it individually onto its target.} other {We don’t recognize any of the files you are trying to upload. Please rename them to match the names listed above, or drag them individually onto their targets.}}"
         }
