@@ -66,6 +66,23 @@ const test = testBase.extend({
           `[${browserName}|console.${msg.type()}] ${url}:${line}:${column}` +
           `\n    message:`, message,
         );
+
+        const messageType = msg.type();
+        switch(messageType) {
+          case 'log':
+          case 'debug':
+          case 'info':
+          case 'trace':
+          case 'startGroup':
+          case 'startGroupCollapsed':
+          case 'endGroup':
+          case 'profile':
+          case 'profileEnd':
+          case 'table':
+            /* probably not fatal */
+            return;
+          default: throw new Error(`Unexpected message type '${messageType}' was logged!`);
+        }
       });
       await use();
     },
