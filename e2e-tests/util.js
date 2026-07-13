@@ -67,7 +67,7 @@ const test = testBase.extend({
           `\n    message: ${message}`;
         console.log(fullMessage);
 
-        if(!failed) throwOnUnexpectedLogging(testInfo, msg.type(), fullMessage);
+        throwOnUnexpectedLogging(testInfo, msg.type(), fullMessage);
       });
 
       await use();
