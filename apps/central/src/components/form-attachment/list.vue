@@ -29,8 +29,8 @@ except according to the terms contained in the LICENSE file.
       :count-of-files-over-drop-zone="countOfFilesOverDropZone"
       :dragover-attachment="dragoverAttachment"
       :planned-uploads="plannedUploads" :unmatched-files="unmatchedFiles"
-      :name-mismatch="nameMismatch" :upload-status="uploadStatus"
-      @confirm="uploadFiles" @cancel="cancelUploads"/>
+      :upload-status="uploadStatus"
+      @cancel="cancelUploads"/>
 
     <form-attachment-upload-files v-bind="uploadFilesModal"
       @hide="uploadFilesModal.hide()" @select="afterFileInputSelection"/>
@@ -207,8 +207,13 @@ export default {
         else
           this.unmatchedFiles.push(file);
       }
+
+      // Automatically upload planned files without confirmation
+      if (this.plannedUploads.length > 0)
+        this.uploadFiles();
+
       // With the changes to this.plannedUploads and this.unmatchedFiles, the
-      // popup will show in the next tick.
+      // popup will show in the next tick if there are no plannedUploads, only unmatched files.
     },
     // cancelUploads() cancels the uploads before they start, after files have
     // been selected. (It does not cancel an upload in progress.)
