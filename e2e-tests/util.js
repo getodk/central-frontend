@@ -64,7 +64,7 @@ const test = testBase.extend({
 
         const fullMessage =
           `[${browserName}|console.${msg.type()}] ${url}:${line}:${column}` +
-          `\n    message:`, message;
+          `\n    message: ${message}`;
         console.log(fullMessage);
 
         const messageType = msg.type();
