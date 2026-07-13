@@ -70,6 +70,11 @@ const test = testBase.extend({
         throwOnUnexpectedLogMessage(msg.type(), fullMessage);
       });
       await use();
+
+      // Give a little moment for log messages to catch up.  Although this is
+      // not deterministic, it should significantly reduce instances of
+      // orphaned log message and event-listener-triggered test failures.
+      await page.waitForTimeout(50);
     },
     { auto:true },
   ],
