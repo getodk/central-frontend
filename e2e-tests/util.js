@@ -106,7 +106,8 @@ function throwOnUnexpectedLogging(testInfo, messageType, fullMessage) {
   if(expectedErrors.some(expected => typeof expected === 'string' ? fullMessage.includes(expected) : fullMessage.match(expected))) return;
 
   // Include fullMessage here, as it may otherwise be lost(??)
-  testInfo.fail(`Unexpected call to console.${messageType}():\n${fullMessage}`);
+  testInfo.errors.push(new Error(`Unexpected call to console.${messageType}():\n${fullMessage}`));
+  testInfo.status = 'failed';
 }
 
 async function asText(msg) {
