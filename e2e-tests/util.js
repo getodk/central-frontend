@@ -78,7 +78,7 @@ const test = testBase.extend({
       // orphaned log message and event-listener-triggered test failures.
       await page.waitForTimeout(50);
 
-      expect(fatals, `Unexpected logging: ${fatals.join(', ')}`).toHaveLength(0);
+      await expect(fatals, `Unexpected logging: ${fatals.join(', ')}`).toHaveLength(0);
     },
     { auto:true },
   ],
