@@ -69,7 +69,7 @@ const test = testBase.extend({
           `\n    message: ${message}`;
         console.log(fullMessage);
 
-        throwOnUnexpectedLogMessage(fatals, msg.type(), fullMessage);
+        gatherUnexpectedLogging(fatals, msg.type(), fullMessage);
       });
       await use();
 
@@ -98,7 +98,7 @@ const expectedErrors = [
   new RegExp(`Loading the image 'http://central-test.localhost/(${favicons.join('|')})' violates`),
 ];
 
-function throwOnUnexpectedLogMessage(fatals, messageType, fullMessage) {
+function gatherUnexpectedLogging(fatals, messageType, fullMessage) {
   switch(messageType) {
     case 'log':
     case 'debug':
