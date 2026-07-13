@@ -5,6 +5,7 @@ import EntityFilters from '../../../src/components/entity/filters.vue';
 import EntityUpload from '../../../src/components/entity/upload.vue';
 import EntityUploadDataError from '../../../src/components/entity/upload/data-error.vue';
 import EntityUploadHeaderErrors from '../../../src/components/entity/upload/header-errors.vue';
+import EntityUploadHeaderReview from '../../../src/components/entity/upload/header-review.vue';
 import EntityUploadPopup from '../../../src/components/entity/upload/popup.vue';
 import EntityUploadTable from '../../../src/components/entity/upload/table.vue';
 import EntityUploadWarnings from '../../../src/components/entity/upload/warnings.vue';
@@ -163,7 +164,6 @@ describe('EntityUpload', () => {
         delimiter: ',',
         invalidQuotes: false,
         missingLabel: true,
-        missingProperty: true,
         unknownProperty: true,
         duplicateColumn: true,
         emptyColumn: true
@@ -443,5 +443,31 @@ describe('EntityUpload', () => {
 
         app.getComponent(OdataLoadingMessage).props().filter.should.be.false;
       }));
+  });
+
+  it('allows upload despite missing properties', () => {
+    testData.extendedDatasets.createPast(1, {
+      properties: [{ name: 'height' }, { name: 'circumference' }]
+    });
+    return showModal()
+      .complete()
+      .request(async (modal) => {
+        await selectFile(modal, createCSV('label,height\ndogwood,1'));
+
+        // A warning is shown.
+        const review = modal.getComponent(EntityUploadHeaderReview);
+        review.props().missingProperties.should.eql(['circumference']);
+
+        return modal.get('.modal-actions .btn-primary').trigger('click');
+      })
+      .respondWithProblem()
+      .testRequests([{
+        method: 'POST',
+        url: '/v1/projects/1/datasets/trees/entities',
+        data: {
+          source: { name: 'my_data.csv', size: 22 },
+          entities: [{ label: 'dogwood', data: { height: '1' } }]
+        }
+      }]);
   });
 });
