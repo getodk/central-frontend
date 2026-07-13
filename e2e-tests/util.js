@@ -77,7 +77,7 @@ const test = testBase.extend({
       // Give a little moment for log messages to catch up.  Although this is
       // not deterministic, it should significantly reduce instances of
       // orphaned log message and event-listener-triggered test failures.
-      await page.waitForTimeout(50);
+      await page.waitForTimeout(500);
 
       await expect(
         fatals,
