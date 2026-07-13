@@ -67,29 +67,40 @@ const test = testBase.extend({
           `\n    message: ${message}`;
         console.log(fullMessage);
 
-        const messageType = msg.type();
-        switch(messageType) {
-          case 'log':
-          case 'debug':
-          case 'info':
-          case 'trace':
-          case 'startGroup':
-          case 'startGroupCollapsed':
-          case 'endGroup':
-          case 'profile':
-          case 'profileEnd':
-          case 'table':
-            /* probably not fatal */
-            return;
-          // Include fullMessage here, as it may otherwise be lost(??)
-          default: throw new Error(`Unexpected message type '${messageType}' was logged:\n${fullMessage}`);
-        }
+        throwOnUnexpectedLogMessage(msg.type(), fullMessage);
       });
       await use();
     },
     { auto:true },
   ],
 });
+
+const expectedErrors = [
+  // https://github.com/getodk/central/issues/1915
+  /Loading the image 'http:.*\/(favicon.ico|apple-touch-icon.png|favicon-16x16.png|favicon-32x32.png)' violates/,
+];
+
+function throwOnUnexpectedLogMessage(messageType, fullMessage) {
+  switch(messageType) {
+    case 'log':
+    case 'debug':
+    case 'info':
+    case 'trace':
+    case 'startGroup':
+    case 'startGroupCollapsed':
+    case 'endGroup':
+    case 'profile':
+    case 'profileEnd':
+    case 'table':
+      /* probably not fatal */
+      return;
+  }
+
+  if(expectedErrors.some(expected => typeof expected === 'string' ? fullMessage.includes(expected) : expected.match(fullMessage))) return;
+
+  // Include fullMessage here, as it may otherwise be lost(??)
+  throw new Error(`Unexpected message type '${messageType}' was logged:\n${fullMessage}`);
+}
 
 async function asText(msg) {
   const basicMessage = msg.text();
