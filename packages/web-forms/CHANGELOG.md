@@ -1,5 +1,38 @@
 # @getodk/web-forms
 
+## 1.0.0
+
+### Major Changes
+
+- 3045945: First stable release
+
+### Minor Changes
+
+- a16775d: Added 'Select answer' placeholder to select one and select multiple with dropdowns when no option has been selected yet.
+- 3882668: Changed the vue component parameter from track-device to device-id which now expects the app to provide the id rather than autogenerating one
+- 9918bea: Added support for submission encryption
+- b7abdc1: Improved display of range widget to include selected value
+- dc8b683: Add support for annotate, draw and signature question types
+- f2600da: Added 'loaded' event to Web Forms component
+- b7abdc1: Improved the UI of the language switcher on mobile
+
+### Patch Changes
+
+- b7abdc1: Fixed vertical range control to record the correct value
+- b7abdc1: Increases hit target of range control to make it easier to click on
+- ffc33b1: Revoke media's object URLs on Web Forms unmount
+- 536aeb9: Hid the language selector if there is only one language to choose from
+- 74837bf: Show point, trace, and shape on map when default value is set dynamically
+- ab71c5e: Catch undefined errors and show a user facing dialog
+- dcff72c: Improves usability of error message when external resource failed to load
+- 2c087b6: Fixes geopoint values to include altitude and accuracy, defaulting to 0 if missing, matching ODK Collect.
+- 06a3ed7: Detect whitespace in external instance csv files to make it easier to debug
+- f1c8db5: Fixed bug where computed image urls blocked form loading
+- 134a9e3: Serialise MapBlock dynamic import to fix map not loading on first load in iOS Safari
+- 5a836a2: Fix scroll to top when a new instance is requested in Web Forms
+- 69a48fe: Fixed markdown sanitization to reliably work for links
+- eb86fa2: Preserve map state during user edits
+
 ## 0.24.0
 
 ### Minor Changes

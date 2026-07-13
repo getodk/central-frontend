@@ -218,7 +218,15 @@ export default {
 
 .submission-feed-entry {
   .entity-error-message{
-    margin: 10px;
+    background-color: $color-danger-light;
+    color: $color-danger;
+    padding: 10px;
+
+    p {
+      max-width: none;
+
+      &:last-child { margin-bottom: 0; }
+    }
   }
 
   .icon-cloud-upload, .icon-comment, .icon-trash, .icon-recycle, .icon-clock-o {

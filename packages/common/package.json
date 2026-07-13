@@ -1,13 +1,13 @@
 {
   "name": "@getodk/common",
   "private": true,
-  "version": "0.15.0",
+  "version": "1.0.0",
   "description": "@getodk/common",
   "type": "module",
   "author": "getodk",
   "repository": {
     "type": "git",
-    "url": "https://github.com/getodk/web-forms",
+    "url": "https://github.com/getodk/central-frontend",
     "directory": "packages/common"
   },
   "bugs": "https://github.com/getodk/web-forms/issues",

@@ -249,6 +249,7 @@ export default {
 #form-upload {
   .form-upload-error {
     background-color: $color-danger-light;
+    color: $color-danger;
     padding: 15px;
     margin-bottom: 15px;
     white-space: pre-wrap;
