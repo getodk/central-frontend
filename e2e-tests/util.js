@@ -62,10 +62,10 @@ const test = testBase.extend({
           if(message === 'Keeping default theme.') return;
         }
 
-        console.log(
+        const fullMessage =
           `[${browserName}|console.${msg.type()}] ${url}:${line}:${column}` +
-          `\n    message:`, message,
-        );
+          `\n    message:`, message;
+        console.log(fullMessage);
 
         const messageType = msg.type();
         switch(messageType) {
@@ -81,7 +81,8 @@ const test = testBase.extend({
           case 'table':
             /* probably not fatal */
             return;
-          default: throw new Error(`Unexpected message type '${messageType}' was logged!`);
+          // Include fullMessage here, as it may otherwise be lost(??)
+          default: throw new Error(`Unexpected message type '${messageType}' was logged:\n${fullMessage}`);
         }
       });
       await use();
