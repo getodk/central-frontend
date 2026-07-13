@@ -71,7 +71,8 @@ const test = testBase.extend({
 
         gatherUnexpectedLogging(fatals, msg.type(), fullMessage);
       });
-      await use();
+
+      await use({ page });
 
       // Give a little moment for log messages to catch up.  Although this is
       // not deterministic, it should significantly reduce instances of
