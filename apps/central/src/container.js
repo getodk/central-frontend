@@ -76,8 +76,8 @@ export default ({
 
     const originalN = app.config.globalProperties.$n;
     if (originalN) {
-      app.config.globalProperties.$n = function (value, ...args) {
-        if (typeof value !== 'number' || !isFinite(value)) {
+      app.config.globalProperties.$n = function(value, ...args) {
+        if (typeof value !== 'number' || !Number.isFinite(value)) {
           // Extract component metadata from the `this` instance
           const componentName = this?.$options?.__name || this?.$options?.name || 'UnknownComponent';
           const fileSource = this?.$options?.__file || 'Unknown file source';
@@ -86,7 +86,7 @@ export default ({
           const currentProps = this?.$props ? JSON.parse(JSON.stringify(this.$props)) : null;
           const currentData = this?.$data ? JSON.parse(JSON.stringify(this.$data)) : null;
 
-          console.error(`[Playwright Debug] Invalid $n() call!`, {
+          console.error('[Playwright Debug] Invalid $n() call!', {
             invalidValue: value,
             valueType: typeof value,
             component: `<${componentName}>`,
