@@ -19,9 +19,11 @@ const login = async (page) => {
 };
 
 const test = testBase.extend({
+  allowedLogs: ({}, use) => use([]), // eslint-disable-line no-empty-pattern
+
   // See: https://playwright.dev/docs/test-fixtures#adding-global-beforeeachaftereach-hooks
   browserConsoleToTestStdout: [
-    async ({ browserName, page }, use) => {
+    async ({ allowedLogs, browserName, page }, use) => {
       const fatals = [];
 
       page.on('console', async msg => {
@@ -70,7 +72,7 @@ const test = testBase.extend({
         console.log(fullMessage);
 
         // Include fullMessage here, as it may otherwise be lost(??)
-        if(isFatalConsoleMessage(msg, message)) fatals.push(fullMessage);
+        if(isFatalConsoleMessage(allowedLogs, msg, message)) fatals.push(fullMessage);
       });
 
       await use();
@@ -84,7 +86,7 @@ const test = testBase.extend({
   ],
 });
 
-const expectedErrors = [
+const globalAllowedLogs = [
   // https://github.com/getodk/central/issues/1686
   'Error retrieving maximum submission size. Unexpected response:  {code: 401, message: Forbidden. Authorization Required.}',
 
@@ -93,17 +95,9 @@ const expectedErrors = [
 
   // https://github.com/getodk/central/issues/2056
   "Refused to execute script from 'http://central-test.localhost/apps/forms/src/init.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled.",
-
-  // https://github.com/getodk/central/issues/2069
-  (msg, message) => {
-    if(message !== 'Failed to load resource: net::ERR_FAILED') return;
-    const { pathname } = new URL(msg.location().url);
-    return pathname === '/-/connection' ||
-           pathname === '/-/x/images/offline-enabled.png';
-  },
 ];
 
-function isFatalConsoleMessage(msg, message) {
+function isFatalConsoleMessage(allowedLogs, msg, message) {
   switch(msg.type()) {
     case 'log':
     case 'debug':
@@ -118,7 +112,10 @@ function isFatalConsoleMessage(msg, message) {
       return false;
   }
 
-  return !expectedErrors.some(expected => {
+  return ![
+    ...allowedLogs,
+    ...globalAllowedLogs,
+  ].some(expected => {
     if(typeof expected === 'string')   return message === expected;
     if(typeof expected === 'function') return expected(msg, message);
     if(expected instanceof RegExp)     return message.match(expected);

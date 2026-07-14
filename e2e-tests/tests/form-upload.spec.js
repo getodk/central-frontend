@@ -19,7 +19,12 @@ test.beforeAll(async ({ playwright }, testInfo) => {
 });
 
 test.describe('Form Upload', () => {
-  test('shows error when file is modified before clicking upload anyway', async ({ page, playwright }, testInfo) => {
+  test('shows error when file is modified before clicking upload anyway', async ({ allowedLogs, page, playwright }, testInfo) => {
+    allowedLogs.push((msg, message) => {
+      return message === 'Failed to load resource: the server responded with a status of 400 (Bad Request)' &&
+             msg.location().url === 'http://central-test.localhost/v1/projects/1/forms';
+    });
+
     // Delete the form to put it in trash
     const backendClient = new BackendClient(playwright, `${testInfo.project.name}_form_upload`);
     await backendClient.deleteForm(publishedForm.xmlFormId);
