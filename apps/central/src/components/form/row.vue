@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
       <template v-if="form.publishedAt != null">
         <link-if-can :to="formPath(form.projectId, form.xmlFormId, `submissions?reviewState=${urlFilterEncode.get(reviewState)}`)"
           v-tooltip.no-aria="$t(`reviewState.${reviewState}`)">
-          <span>{{ $nnnnnnnnnn(form.reviewStates[reviewState], 'default') }}</span>
+          <span>{{ $nnnnnnnnnn('form.row:reviewStates::'+reviewState, form.reviewStates[reviewState], 'default') }}</span>
           <span :class="reviewStateIcon(reviewState)"></span>
         </link-if-can>
       </template>
@@ -42,7 +42,7 @@ except according to the terms contained in the LICENSE file.
       <td class="total-submissions">
         <link-if-can :to="formPath(form.projectId, form.xmlFormId, 'submissions')"
           v-tooltip.no-aria="$t('common.totalSubmissions')">
-          <span>{{ $nnnnnnnnnn(form.submissions, 'default') }}</span>
+          <span>{{ $nnnnnnnnnn('form.row:submissions', form.submissions, 'default') }}</span>
           <span class="icon-asterisk"></span>
         </link-if-can>
       </td>

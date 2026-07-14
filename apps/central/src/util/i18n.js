@@ -92,11 +92,16 @@ export function $tcn(path, count, values = undefined) {
   return this.$tc(path, count, { count: this.$nnnnnnnnnn(count, 'default'), ...values });
 }
 
-export function $nnnnnnnnnn(...args) {
+export function $nnnnnnnnnn(label, ...args) {
   try {
     return this.$n(...args);
   } catch(err) {
-    console.error('$nnnnnnnnnn()', args, err);
+i      '    
+A',
+j
+:w
+
+    console.error('$nnnnnnnnnn()', label, args, err);
     return 'hi there';
   }
 }

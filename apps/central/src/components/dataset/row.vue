@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
         v-tooltip.text/>
     </td>
     <td class="entities">
-      <span>{{ $nnnnnnnnnn(dataset.entities, 'default') }}</span>
+      <span>{{ $nnnnnnnnnn('dataset.row::entities', dataset.entities, 'default') }}</span>
     </td>
     <td>
       <span> <date-time :iso="dataset.lastEntity"/> </span>

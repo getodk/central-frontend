@@ -146,7 +146,7 @@ export default {
         this.shownDuringUpload;
     },
     percentUploaded() {
-      return this.$nnnnnnnnnn(this.uploadStatus.progress, 'percent');
+      return this.$nnnnnnnnnn('no-default', this.uploadStatus.progress, 'percent');
     }
   },
   updated() {

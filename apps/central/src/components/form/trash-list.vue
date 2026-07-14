@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
             <span class="icon-trash"></span>
             <span>{{ $t('title') }}</span>
           </span>
-          <span id="form-trash-list-count">{{ $t('trashCount', { count: $nnnnnnnnnn(count, 'default') }) }}</span>
+          <span id="form-trash-list-count">{{ $t('trashCount', { count: $nnnnnnnnnn('form.trashList:trashCount'), count, 'default') }) }}</span>
           <span id="form-trash-list-note">{{ $t('message') }}</span>
         </div>
       </summary>
