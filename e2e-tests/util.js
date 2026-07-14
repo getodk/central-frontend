@@ -90,6 +90,7 @@ const globalAllowedLogs = [
   // firefox; not considered bugs, but still informative:
   '"Layout was forced before the page was fully loaded. If stylesheets are not yet loaded this may cause a flash of unstyled content."',
   'Failed async deserialisation: Error: jsHandle.evaluate: Execution context was destroyed, most likely because of a navigation; msg.text(): JSHandle@object',
+  'Content-Security-Policy: Ignoring ‘x-frame-options’ because of ‘frame-ancestors’ directive.',
 
   // https://github.com/getodk/central/issues/1686
   'Error retrieving maximum submission size. Unexpected response:  {code: 401, message: Forbidden. Authorization Required.}',
@@ -98,14 +99,14 @@ const globalAllowedLogs = [
   // chromium:
   new RegExp(`Loading the image 'http://.*' violates the following Content Security Policy directive: "img-src .*https:.*".`),
   // firefox:
-  new RegExp(`\\(img-src\\) at http://central-test.localhost/\\S* because it violates the following directive: “img-src .*https:.*”"`),
+  new RegExp(`\\(img-src\\) at http://.* because it violates the following directive: “img-src .*https:.*”"`),
 
   // https://github.com/getodk/central/issues/2056
   // chromium:
   "Refused to execute script from 'http://central-test.localhost/apps/forms/src/init.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled.",
   // firefox:
-  `JavaScript Error: "The resource from “http://central-test.localhost/apps/forms/src/init.js” was blocked due to MIME type (“text/html”) mismatch (X-Content-Type-Options: nosniff)."`,
-  `JavaScript Warning: "Loading failed for the <script> with source “http://central-test.localhost/apps/forms/src/init.js”."`,
+  `The resource from “http://central-test.localhost/apps/forms/src/init.js” was blocked due to MIME type (“text/html”) mismatch (X-Content-Type-Options: nosniff)`,
+  `Loading failed for the <script> with source “http://central-test.localhost/apps/forms/src/init.js”`,
 ];
 
 function isFatalConsoleMessage(allowedLogs, msg, message) {
