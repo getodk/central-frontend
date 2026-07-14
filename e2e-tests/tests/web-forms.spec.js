@@ -109,7 +109,12 @@ test.describe('ODK Web Forms', () => {
       { name: 'restful', url: (form) => `/projects/${projectId}/forms/${form.xmlFormId}/submissions/new` }
     ];
     urls.forEach(t => {
-      test(t.name, async ({ page }) => {
+      test(t.name, async ({ allowedLogs, page }) => {
+        allowedLogs.push((msg, message) => {
+          return message === 'Failed to load resource: the server responded with a status of 401 (Unauthorized)'
+              && msg.location().url.startsWith('http://central-test.localhost/v1/form-links/');
+        });
+
         await page.goto(appUrl + t.url(publishedForm));
         await expect(page.getByRole('heading', { name: 'Welcome to ODK Central' })).toBeVisible();
         await submitLogin(page);
