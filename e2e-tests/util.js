@@ -22,30 +22,30 @@ const test = testBase.extend({
   // See: https://playwright.dev/docs/test-fixtures#adding-global-beforeeachaftereach-hooks
   browserConsoleToTestStdout: [
     async ({ browserName, page }, use) => {
-      page.on('console', async msg => {
-        const { url, line, column } = msg.location();
+      page.on('console', async consoleMsg => {
+        const { url, line, column } = consoleMsg.location();
 
-        const message = browserName === 'firefox' ? await asText(msg) : msg.text();
+        const normalisedMsg = browserName === 'firefox' ? await asText(consoleMsg) : consoleMsg.text();
 
         if(browserName === 'firefox') {
           // See: https://github.com/getodk/central/issues/1986
-          if(message.match(/"downloadable font: glyf: Glyph bbox was incorrect;.*font-family: "FontAwesome"/)) return;
+          if(normalisedMsg.match(/"downloadable font: glyf: Glyph bbox was incorrect;.*font-family: "FontAwesome"/)) return;
 
           // See: https://github.com/getodk/central/issues/1989
-          if(message.match(/"downloadable font: glyf: Glyph bbox was incorrect;.*font-family: "icomoon"/)) return;
+          if(normalisedMsg.match(/"downloadable font: glyf: Glyph bbox was incorrect;.*font-family: "icomoon"/)) return;
 
           // See: https://github.com/enketo/enketo/issues/1540
-          if(message.match(/"downloadable font: glyf: Glyph bbox was incorrect;.*font-family: "OpenSans"/)) return;
+          if(normalisedMsg.match(/"downloadable font: glyf: Glyph bbox was incorrect;.*font-family: "OpenSans"/)) return;
 
           // See: https://github.com/getodk/central/issues/1696
-          if(message.includes('XML Parsing Error: unclosed token')) return;
+          if(normalisedMsg.includes('XML Parsing Error: unclosed token')) return;
         }
 
         if(browserName === 'chromium') {
           // See: https://github.com/getodk/central/issues/1997
-          if(url.endsWith('/v1/config/analytics') && message.includes('404 (Not Found)')) return;
+          if(url.endsWith('/v1/config/analytics') && normalisedMsg.includes('404 (Not Found)')) return;
 
-          if(message.includes('Failed to load resource: the server responded with a status of 401 (Unauthorized)')) {
+          if(normalisedMsg.includes('Failed to load resource: the server responded with a status of 401 (Unauthorized)')) {
             if(url.endsWith('/v1/sessions/restore')) return;
 
             // See: https://github.com/getodk/central/issues/1686
@@ -56,15 +56,15 @@ const test = testBase.extend({
         if(url.includes('/-/')) {
           // Ensure enketo offline mode is activated as expected.
           // See: https://github.com/getodk/central/issues/1987
-          if(message === 'App in offline-capable mode.' &&  url.includes('/x/')) return;
-          if(message === 'App in online-only mode.'     && !url.includes('/x/')) return;
+          if(normalisedMsg === 'App in offline-capable mode.' &&  url.includes('/x/')) return;
+          if(normalisedMsg === 'App in online-only mode.'     && !url.includes('/x/')) return;
 
-          if(message === 'Keeping default theme.') return;
+          if(normalisedMsg === 'Keeping default theme.') return;
         }
 
         console.log(
-          `[${browserName}|console.${msg.type()}] ${url}:${line}:${column}` +
-          `\n    message:`, message,
+          `[${browserName}|console.${consoleMsg.type()}] ${url}:${line}:${column}` +
+          `\n    message:`, normalisedMsg,
         );
       });
       await use();
@@ -73,10 +73,10 @@ const test = testBase.extend({
   ],
 });
 
-async function asText(msg) {
-  const basicMessage = msg.text();
+async function asText(consoleMsg) {
+  const basicMessage = consoleMsg.text();
   try {
-    const args = await Promise.all(msg.args().map(arg => arg.evaluate(a => {
+    const args = await Promise.all(consoleMsg.args().map(arg => arg.evaluate(a => {
       try {
         if(a instanceof Error) return `${a}\n${filteredStack(a)}`;
         if(a && typeof a === 'object') return JSON.stringify(a);
@@ -105,7 +105,7 @@ async function asText(msg) {
     return args.join(' ');
   } catch(err) {
     // Handle race condition: `Error: jsHandle.evaluate: Execution context was destroyed, most likely because of a navigation`
-    return `Failed async deserialisation: ${err}; msg.text(): ${basicMessage}`;
+    return `Failed async deserialisation: ${err}; consoleMsg.text(): ${basicMessage}`;
   }
 }
 
