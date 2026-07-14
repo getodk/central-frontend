@@ -89,6 +89,9 @@ const expectedErrors = [
 
   // https://github.com/getodk/central/issues/2056
   `Refused to execute script from 'http://central-test.localhost/apps/forms/src/init.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled.`,
+
+  // 
+  'Error retrieving maximum submission size. Unexpected response:  {code: 401, message: Forbidden. Authorization Required.}',
 ];
 
 function gatherUnexpectedLogs(fatals, messageType, fullMessage) {
