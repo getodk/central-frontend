@@ -106,7 +106,10 @@ class Resource extends BaseResource {
   }
 
   transformResponse(response) { return response.data; }
-  setFromResponse(response) { this.data = this.transformResponse(response); }
+  setFromResponse(response) { 
+    const transformed = this.data = this.transformResponse(response);
+    console.debug('resource.setFromResponse()', transformed);
+  }
 
   /*
   request() sends a request and stores the response data. Specify a config
