@@ -88,6 +88,7 @@ export default defineConfig(({ mode }) => ({
   },
   build: {
     target: buildTarget,
+    minify: false,
     // `false` during dev for performance reasons
     reportCompressedSize: mode === 'production',
     rollupOptions: {
