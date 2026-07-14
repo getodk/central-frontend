@@ -93,7 +93,7 @@ export function $tcn(path, count, values = undefined) {
 }
 
 export function $nnnnnnnnnn(...args) {
-  console.log('$nnnnnnnnnn()', args);
+  console.error('$nnnnnnnnnn()', args, new Error('$nnnnn called - here is stack').stack);
   return this.$n(...args);
 }
 
