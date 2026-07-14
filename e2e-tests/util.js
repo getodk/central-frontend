@@ -53,7 +53,7 @@ const test = testBase.extend({
             if(url.endsWith('/v1/sessions/restore')) return;
 
             // See: https://github.com/getodk/central/issues/1686
-            if(url.includes('/-/submission/max-size/')) return;
+            if(url.includes('/-/submission/max-size/') || message.startsWith('Error retrieving maximum submission size.')) return;
           }
         }
 
@@ -91,9 +91,6 @@ const globalAllowedLogs = [
   '"Layout was forced before the page was fully loaded. If stylesheets are not yet loaded this may cause a flash of unstyled content."',
   'Failed async deserialisation: Error: jsHandle.evaluate: Execution context was destroyed, most likely because of a navigation; msg.text(): JSHandle@object',
   'Content-Security-Policy: Ignoring ‘x-frame-options’ because of ‘frame-ancestors’ directive.',
-
-  // https://github.com/getodk/central/issues/1686
-  'Error retrieving maximum submission size. Unexpected response:  {code: 401, message: Forbidden. Authorization Required.}',
 
   // https://github.com/getodk/central/issues/1915
   // chromium:
