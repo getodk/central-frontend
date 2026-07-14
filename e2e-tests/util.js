@@ -117,7 +117,7 @@ function gatherUnexpectedLogs(fatals, msg, message) {
   if(expectedErrors.some(expected => {
     if(typeof expected === 'string')   return message === expected;
     if(typeof expected === 'function') return expected(msg, message);
-    if(expected instanceof RegExp)     return expected.match(message);
+    if(expected instanceof RegExp)     return message.match(expected);
     throw new Error(`Unsupported expectation of type "${typeof expected}":`, expected);
   })) return;
 
