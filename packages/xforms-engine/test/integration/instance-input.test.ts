@@ -15,11 +15,7 @@ import {
   t,
   title,
 } from '@getodk/common/test-utils/xform-dsl/index.ts';
-import type {
-  InstanceData,
-  InstanceFile,
-  RestoreFormInstanceInput,
-} from '@getodk/xforms-engine';
+import type { InstanceData, InstanceFile, RestoreFormInstanceInput } from '@getodk/xforms-engine';
 import { constants } from '@getodk/xforms-engine';
 import { afterEach, assert, beforeEach, describe, expect, it } from 'vitest';
 import type { ComparableAnswer } from '../scenario/answer/ComparableAnswer.ts';

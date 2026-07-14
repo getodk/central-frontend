@@ -37,7 +37,10 @@ export class RepeatRangeControlled
     this.validationState = createAggregatedViolations(this, this.instanceConfig);
   }
 
-  private initChildrenState(definition: ControlledRepeatDefinition, instanceNodes: readonly StaticElement[]): void {
+  private initChildrenState(
+    definition: ControlledRepeatDefinition,
+    instanceNodes: readonly StaticElement[]
+  ): void {
     const { count, template } = definition;
     const savedNodes = definition.omitTemplate(instanceNodes);
     const initialCount = this.isInstanceCreation ? 0 : savedNodes.length;
@@ -52,7 +55,8 @@ export class RepeatRangeControlled
 
       const computeCount = createComputedExpression(this, count, { defaultValue: 0 });
       createComputed(
-        (previousCount: number) => this.applyCountChange(previousCount, computeCount(), savedNodes, template),
+        (previousCount: number) =>
+          this.applyCountChange(previousCount, computeCount(), savedNodes, template),
         seededCount
       );
     });
