@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
         <dd><form-version-string :version="form.version"/></dd>
 
         <dt>{{ $t('resource.submissions') }}</dt>
-        <dd>{{ $n(form.submissions, 'default') }}</dd>
+        <dd>{{ $nnnnnnnnnn(form.submissions, 'default') }}</dd>
 
         <dt>{{ $t('header.lastSubmission') }}</dt>
         <dd><date-time :iso="form.lastSubmission"/></dd>

@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr class="entity-metadata-row" :class="{ 'entity-row-selected': entity.__system.selected }">
-    <td class="row-number">{{ $n(rowNumber, 'noGrouping') }}</td>
+    <td class="row-number">{{ $nnnnnnnnnn(rowNumber, 'noGrouping') }}</td>
     <td v-if="!deleted && verbs.has('entity.delete')">
       <input type="checkbox" :aria-label="$t('action.selectRow')" :checked="entity.__system.selected" @change="$emit('selectionChanged', $event.target.checked)">
     </td>
@@ -30,7 +30,7 @@ except according to the terms contained in the LICENSE file.
           </template>
           <template v-else-if="entity.__system.updates !== 0">
             <span class="icon-pencil"></span>
-            <span>{{ $n(entity.__system.updates, 'default') }}</span>
+            <span>{{ $nnnnnnnnnn(entity.__system.updates, 'default') }}</span>
           </template>
         </span>
         <span class="icon-angle-right"></span>

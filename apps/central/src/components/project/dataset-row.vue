@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
     <td colspan="2" class="conflicts-count">
       <span v-tooltip.no-aria="dataset.conflicts > 0 ? null : $t('common.conflicts')">
         <router-link :class="{ 'btn btn-danger': dataset.conflicts > 0 }" :to="datasetPath(project.id, dataset.name, 'entities?conflict=true')">
-          {{ dataset.conflicts > 0 ? $tcn('entity.conflictsCount', dataset.conflicts) : $n(0) }}<span class="icon-warning"></span>
+          {{ dataset.conflicts > 0 ? $tcn('entity.conflictsCount', dataset.conflicts) : $nnnnnnnnnn(0) }}<span class="icon-warning"></span>
         </router-link>
       </span>
     </td>
@@ -39,7 +39,7 @@ except according to the terms contained in the LICENSE file.
     <td class="total-entities">
       <span v-tooltip.no-aria="$t('common.totalEntities')">
         <router-link :to="datasetPath(project.id, dataset.name, 'entities')">
-          <span>{{ $n(dataset.entities, 'default') }}</span>
+          <span>{{ $nnnnnnnnnn(dataset.entities, 'default') }}</span>
           <span class="icon-asterisk"></span>
         </router-link>
       </span>

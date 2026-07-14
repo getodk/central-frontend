@@ -27,7 +27,7 @@ except according to the terms contained in the LICENSE file.
         <tr v-for="(entity, entityIndex) in entities" :key="entityIndex"
           :class="{ highlight: isHighlighted(rowIndex + entityIndex) }">
           <td class="row-number">
-            {{ $n(rowIndex + entityIndex + 1, 'noGrouping') }}
+            {{ $nnnnnnnnnn(rowIndex + entityIndex + 1, 'noGrouping') }}
           </td>
           <td><div v-tooltip.text>{{ entity.label }}</div></td>
           <td v-for="{ name } of dataset.properties" :key="name">

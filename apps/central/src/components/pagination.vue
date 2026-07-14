@@ -36,7 +36,7 @@ except according to the terms contained in the LICENSE file.
       <label class="form-group">
         <select v-model="sizeModel" class="form-control">
           <option v-for="x of sizeOptions" :key="x" :value="x">
-            {{ $n(x, 'default') }}
+            {{ $nnnnnnnnnn(x, 'default') }}
           </option>
         </select>
         <span>{{ $t('field.size') }}</span>

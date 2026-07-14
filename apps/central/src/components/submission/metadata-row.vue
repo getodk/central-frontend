@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr class="submission-metadata-row">
-    <td class="row-number">{{ $n(rowNumber, 'noGrouping') }}</td>
+    <td class="row-number">{{ $nnnnnnnnnn(rowNumber, 'noGrouping') }}</td>
     <td v-if="!draft" class="submitter-name">
       <span v-tooltip.text>{{ submission.__system.submitterName }}</span>
     </td>
@@ -29,7 +29,7 @@ except according to the terms contained in the LICENSE file.
         <span class="edits">
           <template v-if="submission.__system.edits !== 0">
             <span class="icon-pencil"></span>
-            <span>{{ $n(submission.__system.edits, 'default') }}</span>
+            <span>{{ $nnnnnnnnnn(submission.__system.edits, 'default') }}</span>
           </template>
         </span>
         <span class="icon-angle-right"></span>

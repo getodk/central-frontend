@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
       </a>
     </div>
     <form v-show="expanded">
-      <p>Zoom level: {{ $n(zoom, 'maximumFractionDigits2') }}</p>
+      <p>Zoom level: {{ $nnnnnnnnnn(zoom, 'maximumFractionDigits2') }}</p>
       <form-group v-model="maxZoom" type="number" placeholder="Max auto-zoom"
         min="1" autocomplete="off"/>
       <hr>

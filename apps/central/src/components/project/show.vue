@@ -27,7 +27,7 @@ except according to the terms contained in the LICENSE file.
           <router-link :to="tabPath('')">
             {{ $t('resource.forms') }}
             <span v-if="project.dataExists" class="badge">
-              {{ $n(project.forms, 'default') }}
+              {{ $nnnnnnnnnn(project.forms, 'default') }}
             </span>
           </router-link>
         </li>
@@ -36,7 +36,7 @@ except according to the terms contained in the LICENSE file.
           <router-link :to="tabPath('entity-lists')">
             {{ $t('resource.entityLists') }}
             <span v-if="project.dataExists" class="badge">
-              {{ $n(project.datasets, 'default') }}
+              {{ $nnnnnnnnnn(project.datasets, 'default') }}
             </span>
           </router-link>
         </li>

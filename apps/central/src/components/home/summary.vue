@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
       <home-summary-item icon="archive">
         <template #header>
           <template v-if="!projects.initiallyLoading">
-            {{ $n(projects.length, 'default') }}
+            {{ $nnnnnnnnnn(projects.length, 'default') }}
           </template>
           <template v-else>
             <spinner inline/>
@@ -27,7 +27,7 @@ except according to the terms contained in the LICENSE file.
       <home-summary-item v-if="currentUser.can('user.list')" to="/users" icon="user-circle">
         <template #header>
           <template v-if="!users.initiallyLoading">
-            {{ $n(users.length, 'default') }}
+            {{ $nnnnnnnnnn(users.length, 'default') }}
           </template>
           <template v-else>
             <spinner inline/>

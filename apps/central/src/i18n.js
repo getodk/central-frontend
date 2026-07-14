@@ -130,7 +130,7 @@ for (let i = 1; i < 8; i += 1) {
 const numberFormatsByLocale = {};
 for (const locale of locales.keys()) {
   // There must be a property for each locale, even though the value is the
-  // same. Otherwise, $n() will use the fallback locale.
+  // same. Otherwise, $nnnnnnnnnn() will use the fallback locale.
   numberFormatsByLocale[locale] = numberFormats;
 }
 

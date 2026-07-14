@@ -48,7 +48,7 @@ except according to the terms contained in the LICENSE file.
             v-tooltip.aria-describedby="formTabDescription">
             {{ $t('resource.submissions') }}
             <span v-if="form.dataExists" class="badge">
-              {{ $n(form.submissions, 'default') }}
+              {{ $nnnnnnnnnn(form.submissions, 'default') }}
             </span>
           </router-link>
         </li>
@@ -61,7 +61,7 @@ except according to the terms contained in the LICENSE file.
             v-tooltip.aria-describedby="formTabDescription">
             {{ $t('formHead.tab.publicAccess') }}
             <span v-if="form.dataExists" class="badge">
-              {{ $n(form.publicLinks, 'default') }}
+              {{ $nnnnnnnnnn(form.publicLinks, 'default') }}
             </span>
           </router-link>
         </li>

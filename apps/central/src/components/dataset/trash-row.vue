@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
       <span>{{ dataset.name }}</span>
     </td>
     <td class="entities">
-      <span>{{ $n(dataset.entities, 'default') }}</span>
+      <span>{{ $nnnnnnnnnn(dataset.entities, 'default') }}</span>
     </td>
     <td>
       <span> <date-time :iso="dataset.lastEntity"/> </span>
