@@ -69,7 +69,8 @@ const test = testBase.extend({
           `\n    message: ${message}`;
         console.log(fullMessage);
 
-        gatherUnexpectedLogs(fatals, msg, message);
+        // Include fullMessage here, as it may otherwise be lost(??)
+        if(isFatalConsoleMessage(msg, message)) fatals.push(fullMessage);
       });
 
       await use();
@@ -98,7 +99,7 @@ const expectedErrors = [
   "Refused to execute script from 'http://central-test.localhost/apps/forms/src/init.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled.",
 ];
 
-function gatherUnexpectedLogs(fatals, msg, message) {
+function isFatalConsoleMessage(msg, message) {
   switch(msg.type()) {
     case 'log':
     case 'debug':
@@ -110,19 +111,15 @@ function gatherUnexpectedLogs(fatals, msg, message) {
     case 'profile':
     case 'profileEnd':
     case 'table':
-      /* probably not fatal */
-      return;
+      return false;
   }
 
-  if(expectedErrors.some(expected => {
+  return !expectedErrors.some(expected => {
     if(typeof expected === 'string')   return message === expected;
     if(typeof expected === 'function') return expected(msg, message);
     if(expected instanceof RegExp)     return message.match(expected);
     throw new Error(`Unsupported expectation of type "${typeof expected}":`, expected);
-  })) return;
-
-  // Include fullMessage here, as it may otherwise be lost(??)
-  fatals.push(fullMessage);
+  });
 }
 
 async function asText(msg) {
