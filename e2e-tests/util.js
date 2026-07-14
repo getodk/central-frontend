@@ -86,6 +86,9 @@ const test = testBase.extend({
 const expectedErrors = [
   // https://github.com/getodk/central/issues/1915
   new RegExp(`Loading the image 'http://.*' violates the following Content Security Policy directive: "img-src .*https:.*".`),
+
+  // https://github.com/getodk/central/issues/2056
+  `Refused to execute script from 'http://central-test.localhost/apps/forms/src/init.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled.`,
 ];
 
 function gatherUnexpectedLogs(fatals, messageType, fullMessage) {
