@@ -2791,21 +2791,23 @@ describe('jr:count', () => {
     });
 
     it('updates based on changes to the directly referenced question', () => {
-      let previousCount = initialCount;
+      let retainedCount = initialCount;
 
       for (let i = 0; i < 5; i += 1) {
         let updatedCount: number;
 
         do {
           updatedCount = randomCount();
-        } while (updatedCount === previousCount);
+        } while (updatedCount === retainedCount);
 
         scenario.answer('/data/rep-count', updatedCount);
 
-        expect(scenario.countRepeatInstancesOf('/data/rep')).not.toBe(previousCount);
-        expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(updatedCount);
+        // Decreasing jr:count never deletes repeat instances.
+        const expectedCount = Math.max(updatedCount, retainedCount);
 
-        previousCount = updatedCount;
+        expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(expectedCount);
+
+        retainedCount = expectedCount;
       }
     });
 
@@ -2894,22 +2896,21 @@ describe('jr:count', () => {
       // Gut check: non-relevance
       expect(scenario.getInstanceNode('/data/a')).toBeNonRelevant();
 
-      // Ensure count is updated to reflect /data/a's non-relevance
+      // Ensure count is updated to reflect /data/a's non-relevance (grows from 3 to 9)
       expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(9);
 
-      // Check that subsequent updates to b + c are reflected as well
+      // Decreasing jr:count never deletes repeat instances).
       scenario.answer('/data/b', 2);
 
-      expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(7);
+      expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(9);
 
       scenario.answer('/data/c', 3);
 
-      expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(5);
+      expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(9);
 
-      // Restore /data/a relevance, and its referenced value as count
       scenario.answer('/data/a-relevant', 'yes');
 
-      expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(3);
+      expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(9);
     });
   });
 
