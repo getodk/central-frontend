@@ -31,6 +31,9 @@ const test = testBase.extend({
 
         const message = browserName === 'firefox' ? await asText(msg) : msg.text();
 
+        // See: https://github.com/getodk/central/issues/1686
+        if(message.startsWith('Error retrieving maximum submission size.')) return;
+
         if(browserName === 'firefox') {
           // See: https://github.com/getodk/central/issues/1986
           if(message.match(/"downloadable font: glyf: Glyph bbox was incorrect;.*font-family: "FontAwesome"/)) return;
@@ -55,9 +58,6 @@ const test = testBase.extend({
             // See: https://github.com/getodk/central/issues/1686
             if(url.includes('/-/submission/max-size/')) return;
           }
-
-          // See: https://github.com/getodk/central/issues/1686
-          if(message.startsWith('Error retrieving maximum submission size.')) return;
         }
 
         if(url.includes('/-/')) {
