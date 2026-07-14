@@ -96,11 +96,6 @@ export function $nnnnnnnnnn(label, ...args) {
   try {
     return this.$n(...args);
   } catch(err) {
-i      '    
-A',
-j
-:w
-
     console.error('$nnnnnnnnnn()', label, args, err);
     return 'hi there';
   }
