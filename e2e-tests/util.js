@@ -53,8 +53,11 @@ const test = testBase.extend({
             if(url.endsWith('/v1/sessions/restore')) return;
 
             // See: https://github.com/getodk/central/issues/1686
-            if(url.includes('/-/submission/max-size/') || message.startsWith('Error retrieving maximum submission size.')) return;
+            if(url.includes('/-/submission/max-size/')) return;
           }
+
+          // See: https://github.com/getodk/central/issues/1686
+          if(message.startsWith('Error retrieving maximum submission size.')) return;
         }
 
         if(url.includes('/-/')) {
