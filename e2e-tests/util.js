@@ -69,7 +69,7 @@ const test = testBase.extend({
           `\n    message: ${message}`;
         console.log(fullMessage);
 
-        gatherUnexpectedLogs(fatals, msg.type(), fullMessage);
+        gatherUnexpectedLogs(fatals, msg, message);
       });
 
       await use();
@@ -84,6 +84,10 @@ const test = testBase.extend({
 });
 
 const expectedErrors = [
+  // https://github.com/enketo/enketo/issues/990#issuecomment-1831189281
+  (msg, message) => msg.location().url.endsWith('://central-test.localhost/-/x/images/offline-enabled.png')
+                    && message === 'Failed to load resource: net::ERR_FAILED',
+
   // https://github.com/getodk/central/issues/1686
   'Error retrieving maximum submission size. Unexpected response:  {code: 401, message: Forbidden. Authorization Required.}',
 
@@ -94,8 +98,8 @@ const expectedErrors = [
   "Refused to execute script from 'http://central-test.localhost/apps/forms/src/init.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled.",
 ];
 
-function gatherUnexpectedLogs(fatals, messageType, fullMessage) {
-  switch(messageType) {
+function gatherUnexpectedLogs(fatals, msg, message) {
+  switch(msg.type()) {
     case 'log':
     case 'debug':
     case 'info':
@@ -110,7 +114,12 @@ function gatherUnexpectedLogs(fatals, messageType, fullMessage) {
       return;
   }
 
-  if(expectedErrors.some(expected => typeof expected === 'string' ? fullMessage.includes(expected) : fullMessage.match(expected))) return;
+  if(expectedErrors.some(expected => {
+    if(typeof expected === 'string')   return message === expected;
+    if(typeof expected === 'function') return expected(msg, message);
+    if(expected instanceof RegExp)     return expected.match(message);
+    throw new Error(`Unsupported expectation of type "${typeof expected}":`, expected);
+  })) return;
 
   // Include fullMessage here, as it may otherwise be lost(??)
   fatals.push(fullMessage);
