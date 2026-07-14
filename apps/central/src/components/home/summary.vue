@@ -27,7 +27,7 @@ except according to the terms contained in the LICENSE file.
       <home-summary-item v-if="currentUser.can('user.list')" to="/users" icon="user-circle">
         <template #header>
           <template v-if="!users.initiallyLoading">
-            {{ $nnnnnnnnnn('home.summary:users:isArray?' + Array.isArray(users) + ':type=' + (typeof users) + ';users:' + users, users.length, 'default') }}
+            {{ $nnnnnnnnnn('home.summary:users:isArray?' + Array.isArray(users) + ':type=' + (typeof users) + ';users:' + users + ';json' + JSON.stringify(users), users.length, 'default') }}
           </template>
           <template v-else>
             <spinner inline/>
