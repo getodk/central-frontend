@@ -80,7 +80,7 @@ export default defineConfig(({ mode }) => ({
       defaultSFCLang: 'json5',
       // We install what we need in src/container.js.
       fullInstall: false,
-      dropMessageCompiler: true
+      dropMessageCompiler: false,
     })
   ],
   define: {
