@@ -92,6 +92,11 @@ export function $tcn(path, count, values = undefined) {
   return this.$tc(path, count, { count: this.$n(count, 'default'), ...values });
 }
 
+export function $nnnnnnnnnn(...args) {
+  console.log('$nnnnnnnnnn()', args);
+  return this.$n(...args);
+}
+
 // Combination of t() and n()
 const tn = (t, n) => (path, count, values) => {
   const list = { count: n(count, 'default') };

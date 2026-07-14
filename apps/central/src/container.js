@@ -18,7 +18,7 @@ import createCentralRouter from './router';
 import createHoverCard from './container/hover-card';
 import createOpenModal from './container/open-modal';
 import createUnsavedChanges from './unsaved-changes';
-import { $tcn } from './util/i18n';
+import { $nnnnnnnnnn, $tcn } from './util/i18n';
 import { createRequestData } from './request-data';
 
 const provide = [
@@ -73,32 +73,7 @@ export default ({
     if (buildMode !== 'test') app.component(Translation.name, Translation);
     // eslint-disable-next-line no-param-reassign
     app.config.globalProperties.$tcn = $tcn;
-
-    const originalN = app.config.globalProperties.$n;
-    if (originalN) {
-      app.config.globalProperties.$n = function(value, ...args) {
-        if (typeof value !== 'number' || !Number.isFinite(value)) {
-          // Extract component metadata from the `this` instance
-          const componentName = this?.$options?.__name || this?.$options?.name || 'UnknownComponent';
-          const fileSource = this?.$options?.__file || 'Unknown file source';
-
-          // Convert active props and reactive data into raw, readable objects
-          const currentProps = this?.$props ? JSON.parse(JSON.stringify(this.$props)) : null;
-          const currentData = this?.$data ? JSON.parse(JSON.stringify(this.$data)) : null;
-
-          console.error('[Playwright Debug] Invalid $n() call!', {
-            invalidValue: value,
-            valueType: typeof value,
-            component: `<${componentName}>`,
-            file: fileSource,
-            activeProps: currentProps,
-            activeData: currentData,
-            additionalArgs: args
-          });
-        }
-        return originalN.call(this, value, ...args);
-      };
-    }
+    app.config.globalProperties.$nnnnnnnnnn = $nnnnnnnnnn;
 
     app.use(container.requestData);
     if (container.router != null) app.use(container.router);
