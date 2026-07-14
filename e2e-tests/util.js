@@ -85,10 +85,6 @@ const test = testBase.extend({
 });
 
 const expectedErrors = [
-  // https://github.com/enketo/enketo/issues/990#issuecomment-1831189281
-  (msg, message) => msg.location().url.endsWith('://central-test.localhost/-/x/images/offline-enabled.png')
-                    && message === 'Failed to load resource: net::ERR_FAILED',
-
   // https://github.com/getodk/central/issues/1686
   'Error retrieving maximum submission size. Unexpected response:  {code: 401, message: Forbidden. Authorization Required.}',
 
@@ -97,6 +93,14 @@ const expectedErrors = [
 
   // https://github.com/getodk/central/issues/2056
   "Refused to execute script from 'http://central-test.localhost/apps/forms/src/init.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled.",
+
+  // https://github.com/getodk/central/issues/2069
+  (msg, message) => {
+    if(message !== 'Failed to load resource: net::ERR_FAILED') return;
+    const { pathname } = new URL(msg.location().url);
+    return pathname === '/-/connection' ||
+           pathname === '/-/x/images/offline-enabled.png';
+  },
 ];
 
 function isFatalConsoleMessage(msg, message) {
