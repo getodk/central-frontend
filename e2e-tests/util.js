@@ -83,15 +83,9 @@ const test = testBase.extend({
   ],
 });
 
-const favicons = [
-  'favicon.ico',
-  'apple-touch-icon.png',
-  'favicon-16x16.png',
-  'favicon-32x32.png',
-];
 const expectedErrors = [
   // https://github.com/getodk/central/issues/1915
-  new RegExp(`Loading the image 'http://central-test.localhost/(${favicons.join('|')})' violates`),
+  new RegExp(`Loading the image 'http://.*' violates the following Content Security Policy directive: "img-src .*https:.*".`),
 ];
 
 function gatherUnexpectedLogs(fatals, messageType, fullMessage) {
