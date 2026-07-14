@@ -93,6 +93,7 @@ class Resource extends BaseResource {
   get data() { return this[_store].data; }
 
   set data(value) {
+    console.debug('resource', _store, 'setting data:', value);
     this[_store].data = value;
     this[_store].setAt = new Date();
   }
