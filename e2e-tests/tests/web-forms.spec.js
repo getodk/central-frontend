@@ -115,7 +115,8 @@ test.describe('ODK Web Forms', () => {
           const { url } = msg.location();
           return url.startsWith('http://central-test.localhost/v1/form-links/') ||
                  url === `http://central-test.localhost/v1/projects/${projectId}` ||
-                 url === `http://central-test.localhost/v1/projects/${projectId}/forms/chromium_wf_airmail`;
+                 url === `http://central-test.localhost/v1/projects/${projectId}/forms/chromium_wf_airmail` ||
+                 url === `http://central-test.localhost/v1/projects/${projectId}/forms/chromium_wf_passport`;
         });
 
         await page.goto(appUrl + t.url(publishedForm));
