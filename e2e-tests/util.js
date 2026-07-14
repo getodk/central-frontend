@@ -58,6 +58,9 @@ const test = testBase.extend({
             // See: https://github.com/getodk/central/issues/1686
             if(url.includes('/-/submission/max-size/')) return;
           }
+
+          // See: https://github.com/getodk/central/issues/1914
+          if(url.endsWith('/csp-report') && message === 'Failed to load resource: the server responded with a status of 429 (Too Many Requests)') return;
         }
 
         if(url.includes('/-/')) {
