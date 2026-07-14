@@ -93,8 +93,12 @@ export function $tcn(path, count, values = undefined) {
 }
 
 export function $nnnnnnnnnn(...args) {
-  console.error('$nnnnnnnnnn()', args, new Error('$nnnnn called - here is stack').stack);
-  return this.$n(...args);
+  try {
+    return this.$n(...args);
+  } catch(err) {
+    console.error('$nnnnnnnnnn()', args, err);
+    return 'hi there';
+  }
 }
 
 // Combination of t() and n()
