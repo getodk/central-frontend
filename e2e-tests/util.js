@@ -87,14 +87,25 @@ const test = testBase.extend({
 });
 
 const globalAllowedLogs = [
+  // firefox; not considered bugs, but still informative:
+  '"Layout was forced before the page was fully loaded. If stylesheets are not yet loaded this may cause a flash of unstyled content."',
+  'Failed async deserialisation: Error: jsHandle.evaluate: Execution context was destroyed, most likely because of a navigation; msg.text(): JSHandle@object',
+
   // https://github.com/getodk/central/issues/1686
   'Error retrieving maximum submission size. Unexpected response:  {code: 401, message: Forbidden. Authorization Required.}',
 
   // https://github.com/getodk/central/issues/1915
+  // chromium:
   new RegExp(`Loading the image 'http://.*' violates the following Content Security Policy directive: "img-src .*https:.*".`),
+  // firefox:
+  new RegExp(`\\(img-src\\) at http://central-test.localhost/\\S* because it violates the following directive: “img-src .*https:.*”"`),
 
   // https://github.com/getodk/central/issues/2056
+  // chromium:
   "Refused to execute script from 'http://central-test.localhost/apps/forms/src/init.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled.",
+  // firefox:
+  `JavaScript Error: "The resource from “http://central-test.localhost/apps/forms/src/init.js” was blocked due to MIME type (“text/html”) mismatch (X-Content-Type-Options: nosniff)."`,
+  `JavaScript Warning: "Loading failed for the <script> with source “http://central-test.localhost/apps/forms/src/init.js”."`,
 ];
 
 function isFatalConsoleMessage(allowedLogs, msg, message) {
@@ -116,7 +127,7 @@ function isFatalConsoleMessage(allowedLogs, msg, message) {
     ...allowedLogs,
     ...globalAllowedLogs,
   ].some(expected => {
-    if(typeof expected === 'string')   return message === expected;
+    if(typeof expected === 'string')   return message.includes(expected);
     if(typeof expected === 'function') return expected(msg, message);
     if(expected instanceof RegExp)     return message.match(expected);
     throw new Error(`Unsupported expectation of type "${typeof expected}":`, expected);
