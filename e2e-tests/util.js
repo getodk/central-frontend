@@ -95,6 +95,8 @@ const globalAllowedLogs = [
   // firefox; not considered bugs, but still informative:
   '"Layout was forced before the page was fully loaded. If stylesheets are not yet loaded this may cause a flash of unstyled content."',
   'Failed async deserialisation: Error: jsHandle.evaluate: Execution context was destroyed, most likely because of a navigation; consoleMsg.text(): JSHandle@object',
+
+  // See: https://github.com/getodk/central/issues/1699
   'Content-Security-Policy: Ignoring ‘x-frame-options’ because of ‘frame-ancestors’ directive.',
 
   // See: https://github.com/getodk/central/issues/2056
