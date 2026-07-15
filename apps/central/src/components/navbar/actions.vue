@@ -15,14 +15,16 @@ except according to the terms contained in the LICENSE file.
       <span class="icon-user-circle-o"></span>{{ $t('notLoggedIn') }}
     </a>
   </li>
-  <li v-else id="navbar-actions" class="dropdown">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-      aria-haspopup="true" aria-expanded="false">
-      <span class="icon-user-circle-o"></span>
-      <span v-tooltip.text>{{ currentUser.displayName }}</span>
-      <span class="caret"></span>
-    </a>
-    <ul class="dropdown-menu">
+  <Dropdown v-else id="navbar-actions" tag="li" class="dropdown">
+    <template #toggle="{ toggle, attrs }">
+      <a href="#" class="dropdown-toggle" role="button" v-bind="attrs"
+        @click.prevent="toggle">
+        <span class="icon-user-circle-o"></span>
+        <span v-tooltip.text>{{ currentUser.displayName }}</span>
+        <span class="caret"></span>
+      </a>
+    </template>
+    <template #menu>
       <li>
         <router-link to="/account/edit">
           {{ $t('action.editProfile') }}
@@ -33,17 +35,19 @@ except according to the terms contained in the LICENSE file.
           {{ $t('action.logOut') }}
         </a>
       </li>
-    </ul>
-  </li>
+    </template>
+  </Dropdown>
 </template>
 
 <script>
+import Dropdown from '../dropdown.vue';
 import { logOut } from '../../util/session';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'NavbarActions',
+  components: { Dropdown },
   inject: ['container', 'alert', 'unsavedChanges', 'visiblyLoggedIn'],
   setup() {
     // The component does not assume that this data will exist when the

@@ -10,13 +10,15 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <li id="navbar-locale-dropdown" class="dropdown">
-    <a class="dropdown-toggle" href="#" data-toggle="dropdown" role="button"
-      :aria-label="locales.get($i18n.locale).name" aria-haspopup="true"
-      aria-expanded="false">
-      {{ languageSubtag }}<span class="caret"></span>
-    </a>
-    <ul class="dropdown-menu">
+  <Dropdown id="navbar-locale-dropdown" tag="li" class="dropdown">
+    <template #toggle="{ toggle, attrs }">
+      <a class="dropdown-toggle" href="#" role="button"
+        :aria-label="locales.get($i18n.locale).name" v-bind="attrs"
+        @click.prevent="toggle">
+        {{ languageSubtag }}<span class="caret"></span>
+      </a>
+    </template>
+    <template #menu>
       <li v-for="[locale, info] of locales" :key="locale"
         :class="{ disabled: loading }">
         <a href="#" @click.prevent="selectLocale(locale)">{{ info.name }}</a>
@@ -28,13 +30,14 @@ except according to the terms contained in the LICENSE file.
           {{ $t('helpTranslate') }}
         </a>
       </li>
-    </ul>
-  </li>
+    </template>
+  </Dropdown>
 </template>
 
 <script setup>
 import { computed, inject, ref } from 'vue';
 
+import Dropdown from '../dropdown.vue';
 import { loadLocale } from '../../util/i18n';
 import { localStore } from '../../util/storage';
 import { locales } from '../../i18n';
