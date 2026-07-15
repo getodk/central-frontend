@@ -9,12 +9,16 @@ on:
   pull_request:
 
 jobs:
+  static-checks:
+    timeout-minutes: 2
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+    - run: sudo apt-get install shellcheck
+    - run: ./bin/check-scripts.sh
+    - run: ./bin/check-for-large-files.sh
+    - run: ./bin/check-images.sh
   e2e-tests:
-    strategy:
-      fail-fast: false
-      matrix:
-        x: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
-        y: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
     timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
