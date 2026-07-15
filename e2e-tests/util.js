@@ -98,7 +98,7 @@ const globalAllowedLogs = [
   'Failed async deserialisation: Error: jsHandle.evaluate: Execution context was destroyed, most likely because of a navigation; consoleMsg.text(): JSHandle@object',
   'Content-Security-Policy: Ignoring ‘x-frame-options’ because of ‘frame-ancestors’ directive.',
 
-  // https://github.com/getodk/central/issues/2056
+  // See: https://github.com/getodk/central/issues/2056
   // chromium:
   "Refused to execute script from 'http://central-test.localhost/apps/forms/src/init.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled.",
   // firefox:
