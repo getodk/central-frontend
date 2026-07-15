@@ -80,7 +80,7 @@ export default defineConfig(({ mode }) => ({
       defaultSFCLang: 'json5',
       // We install what we need in src/container.js.
       fullInstall: false,
-      dropMessageCompiler: false,
+      dropMessageCompiler: true
     })
   ],
   define: {
@@ -88,7 +88,6 @@ export default defineConfig(({ mode }) => ({
   },
   build: {
     target: buildTarget,
-    minify: false,
     // `false` during dev for performance reasons
     reportCompressedSize: mode === 'production',
     rollupOptions: {
