@@ -28,37 +28,37 @@ test.describe('Enketo', () => {
   test.describe('all old URLs should be working', () => {
     const oldUrls = [
       {
-      //  description: 'New Submission',
-      //  url: ({ enketoId }) => `/-/${enketoId}`, requireLogin: true,
-      //  newUrl: ({ xmlFormId }) => `/projects/${projectId}/forms/${xmlFormId}/submissions/new`
-      //}, {
-      //  description: 'Preview Form',
-      //  url: ({ enketoId }) => `/-/preview/${enketoId}`, requireLogin: true,
-      //  newUrl: ({ xmlFormId }) => `/projects/${projectId}/forms/${xmlFormId}/preview`
-      //}, {
-      //  description: 'Preview Web Forms',
-      //  url: ({ xmlFormId }) => `/#/projects/${projectId}/forms/${xmlFormId}/preview`, requireLogin: true,
-      //  newUrl: ({ xmlFormId }) => `/projects/${projectId}/forms/${xmlFormId}/preview`
-      //}, {
+        description: 'New Submission',
+        url: ({ enketoId }) => `/-/${enketoId}`, requireLogin: true,
+        newUrl: ({ xmlFormId }) => `/projects/${projectId}/forms/${xmlFormId}/submissions/new`
+      }, {
+        description: 'Preview Form',
+        url: ({ enketoId }) => `/-/preview/${enketoId}`, requireLogin: true,
+        newUrl: ({ xmlFormId }) => `/projects/${projectId}/forms/${xmlFormId}/preview`
+      }, {
+        description: 'Preview Web Forms',
+        url: ({ xmlFormId }) => `/#/projects/${projectId}/forms/${xmlFormId}/preview`, requireLogin: true,
+        newUrl: ({ xmlFormId }) => `/projects/${projectId}/forms/${xmlFormId}/preview`
+      }, {
         description: 'New Draft Submission',
         url: ({ draftEnketoId }) => `/-/${draftEnketoId}`, requireLogin: true, draft: true,
         newUrl: ({ xmlFormId }) => `/projects/${projectId}/forms/${xmlFormId}/draft/submissions/new`
-      //}, {
-      //  description: 'Preview Draft Form',
-      //  url: ({ draftEnketoId }) => `/-/preview/${draftEnketoId}`, requireLogin: true, draft: true,
-      //  newUrl: ({ xmlFormId }) => `/projects/${projectId}/forms/${xmlFormId}/draft/preview`
-      //}, {
-      //  description: 'Preview Draft Web Form',
-      //  url: ({ xmlFormId }) => `/#/projects/${projectId}/forms/${xmlFormId}/draft/preview`, requireLogin: true, draft: true,
-      //  newUrl: ({ xmlFormId }) => `/projects/${projectId}/forms/${xmlFormId}/draft/preview`
-      //}, {
-      //  description: 'Public Link',
-      //  url: ({ enketoId, st }) => `/-/single/${enketoId}?st=${st}`, requireLogin: false,
-      //  newUrl: ({ enketoId, st }) => `/f/${enketoId}?st=${st}`
-      //}, {
-      //  description: 'Single Submission Public Link',
-      //  url: ({ enketoOnceId, st }) => `/-/single/${enketoOnceId}?st=${st}`, requireLogin: false,
-      //  newUrl: ({ enketoOnceId, st }) => `/f/${enketoOnceId}?st=${st}`
+      }, {
+        description: 'Preview Draft Form',
+        url: ({ draftEnketoId }) => `/-/preview/${draftEnketoId}`, requireLogin: true, draft: true,
+        newUrl: ({ xmlFormId }) => `/projects/${projectId}/forms/${xmlFormId}/draft/preview`
+      }, {
+        description: 'Preview Draft Web Form',
+        url: ({ xmlFormId }) => `/#/projects/${projectId}/forms/${xmlFormId}/draft/preview`, requireLogin: true, draft: true,
+        newUrl: ({ xmlFormId }) => `/projects/${projectId}/forms/${xmlFormId}/draft/preview`
+      }, {
+        description: 'Public Link',
+        url: ({ enketoId, st }) => `/-/single/${enketoId}?st=${st}`, requireLogin: false,
+        newUrl: ({ enketoId, st }) => `/f/${enketoId}?st=${st}`
+      }, {
+        description: 'Single Submission Public Link',
+        url: ({ enketoOnceId, st }) => `/-/single/${enketoOnceId}?st=${st}`, requireLogin: false,
+        newUrl: ({ enketoOnceId, st }) => `/f/${enketoOnceId}?st=${st}`
       }
     ];
 
