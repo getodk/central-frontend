@@ -2811,6 +2811,19 @@ describe('jr:count', () => {
       }
     });
 
+    it('adds instances when count increases beyond the previously retained count', () => {
+      const retainedMax = initialCount + 3;
+
+      scenario.answer('/data/rep-count', retainedMax);
+      expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(retainedMax);
+
+      scenario.answer('/data/rep-count', initialCount);
+      expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(retainedMax);
+
+      scenario.answer('/data/rep-count', retainedMax + 2);
+      expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(retainedMax + 2);
+    });
+
     it('delays updating count when expression produces blank value', () => {
       scenario.answer('/data/rep-count', '');
 
@@ -2899,7 +2912,7 @@ describe('jr:count', () => {
       // Ensure count is updated to reflect /data/a's non-relevance (grows from 3 to 9)
       expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(9);
 
-      // Decreasing jr:count never deletes repeat instances).
+      // Decreasing jr:count never deletes repeat instances.
       scenario.answer('/data/b', 2);
 
       expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(9);
