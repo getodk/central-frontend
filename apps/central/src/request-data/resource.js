@@ -93,7 +93,6 @@ class Resource extends BaseResource {
   get data() { return this[_store].data; }
 
   set data(value) {
-    console.debug('resource', _store, 'setting data:', value);
     this[_store].data = value;
     this[_store].setAt = new Date();
   }
@@ -106,10 +105,7 @@ class Resource extends BaseResource {
   }
 
   transformResponse(response) { return response.data; }
-  setFromResponse(response) { 
-    const transformed = this.data = this.transformResponse(response);
-    console.debug('resource.setFromResponse()', transformed);
-  }
+  setFromResponse(response) { this.data = this.transformResponse(response); }
 
   /*
   request() sends a request and stores the response data. Specify a config

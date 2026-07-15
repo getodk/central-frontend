@@ -18,7 +18,7 @@ import createCentralRouter from './router';
 import createHoverCard from './container/hover-card';
 import createOpenModal from './container/open-modal';
 import createUnsavedChanges from './unsaved-changes';
-import { $nnnnnnnnnn, $tcn } from './util/i18n';
+import { $tcn } from './util/i18n';
 import { createRequestData } from './request-data';
 
 const provide = [
@@ -73,7 +73,6 @@ export default ({
     if (buildMode !== 'test') app.component(Translation.name, Translation);
     // eslint-disable-next-line no-param-reassign
     app.config.globalProperties.$tcn = $tcn;
-    app.config.globalProperties.$nnnnnnnnnn = $nnnnnnnnnn;
 
     app.use(container.requestData);
     if (container.router != null) app.use(container.router);

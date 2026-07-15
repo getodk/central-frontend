@@ -16,10 +16,10 @@ except according to the terms contained in the LICENSE file.
     <template #body>
       <dl class="dl-horizontal">
         <dt>{{ $t('resource.entities') }}</dt>
-        <dd>{{ $nnnnnnnnnn('hoverCard.dataset:entities', dataset.entities, 'default') }}</dd>
+        <dd>{{ $n(dataset.entities, 'default') }}</dd>
 
         <dt>{{ $t('resource.properties') }}</dt>
-        <dd>{{ $nnnnnnnnnn('hoverCard.dataset:properties', dataset.properties.length, 'default') }}</dd>
+        <dd>{{ $n(dataset.properties.length, 'default') }}</dd>
 
         <dt>{{ $t('header.lastEntity') }}</dt>
         <dd><date-time :iso="dataset.lastEntity"/></dd>

@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
       <span>{{ dataset.name }}</span>
     </td>
     <td class="entities">
-      <span>{{ $nnnnnnnnnn('dataset.trashRow:entities', dataset.entities, 'default') }}</span>
+      <span>{{ $n(dataset.entities, 'default') }}</span>
     </td>
     <td>
       <span> <date-time :iso="dataset.lastEntity"/> </span>

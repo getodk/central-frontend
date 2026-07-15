@@ -43,7 +43,7 @@ except according to the terms contained in the LICENSE file.
           <router-link :to="tabPath('entities')">
             {{ $t('resource.entities') }}
             <span v-if="dataset.dataExists" class="badge">
-              {{ $nnnnnnnnnn('dataset.show:entities', dataset.entities, 'default') }}
+              {{ $n(dataset.entities, 'default') }}
             </span>
           </router-link>
         </li>
@@ -51,7 +51,7 @@ except according to the terms contained in the LICENSE file.
           <router-link :to="tabPath('properties')">
             {{ $t('resource.properties') }}
             <span v-if="dataset.dataExists" class="badge">
-              {{ $nnnnnnnnnn('dataset.show:properties', dataset.properties.length, 'default') }}
+              {{ $n(dataset.properties.length, 'default') }}
             </span>
           </router-link>
         </li>

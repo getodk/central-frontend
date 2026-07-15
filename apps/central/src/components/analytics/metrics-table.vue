@@ -25,11 +25,11 @@ except according to the terms contained in the LICENSE file.
           <td colspan="2" class="metric-value"></td>
         </template>
         <template v-else-if="value.recent != null">
-          <td class="metric-value">{{ $nnnnnnnnnn('no-default', value.recent) }}</td>
-          <td class="metric-value">{{ $nnnnnnnnnn('no-default', value.total) }}</td>
+          <td class="metric-value">{{ $n(value.recent) }}</td>
+          <td class="metric-value">{{ $n(value.total) }}</td>
         </template>
         <template v-else>
-          <td colspan="2" class="metric-value">{{ $nnnnnnnnnn('no-default', value) }}</td>
+          <td colspan="2" class="metric-value">{{ $n(value) }}</td>
         </template>
       </tr>
     </tbody>

@@ -36,7 +36,7 @@ except according to the terms contained in the LICENSE file.
       <span v-tooltip.no-aria="$t('common.totalSubmissions')">
         <!-- form.submissions should always exist in production, but it doesn't
         exist in some tests. -->
-        <span>{{ $nnnnnnnnnn('form.trashRow:submissions', form.submissions != null ? form.submissions : 0, 'default') }}</span>
+        <span>{{ $n(form.submissions != null ? form.submissions : 0, 'default') }}</span>
         <span class="icon-asterisk"></span>
       </span>
     </td>

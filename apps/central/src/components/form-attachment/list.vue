@@ -249,8 +249,8 @@ export default {
             return this.$t('problem.noneUploaded', problem);
           return this.$tc('problem.someUploaded', uploaded, {
             message: problem.message,
-            uploaded: this.$nnnnnnnnnn('formAttachment.list:uplaoded', uploaded, 'default'),
-            total: this.$nnnnnnnnnn('formAttachment.list:total', total, 'default')
+            uploaded: this.$n(uploaded, 'default'),
+            total: this.$n(total, 'default')
           });
         }
       })

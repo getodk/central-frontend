@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
             <span class="icon-trash"></span>
             <span>{{ $t('common.trash') }}</span>
           </span>
-          <span class="trash-list-count">{{ $t('trashCount', { count: $nnnnnnnnnn('dataset.trashTable:datasets.len', datasets.length, 'default') }) }}</span>
+          <span class="trash-list-count">{{ $t('trashCount', { count: $n(datasets.length, 'default') }) }}</span>
           <span class="trash-list-note">{{ $t('message') }}</span>
         </div>
       </summary>

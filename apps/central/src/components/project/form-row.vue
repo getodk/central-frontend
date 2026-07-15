@@ -37,12 +37,12 @@ except according to the terms contained in the LICENSE file.
         <span v-tooltip.no-aria="$t(`reviewState.${reviewState}`)">
           <template v-if="canLinkToSubmissions">
             <router-link :to="submissionsPath[reviewState]">
-              <span>{{ $nnnnnnnnnn('project.formRow:reviewStatus:1:' + reviewState, form.reviewStates[reviewState], 'default') }}</span>
+              <span>{{ $n(form.reviewStates[reviewState], 'default') }}</span>
               <span :class="reviewStateIcon(reviewState)"></span>
             </router-link>
           </template>
           <template v-else>
-            <span>{{ $nnnnnnnnnn('project.formRow:reviewState:2:' + reviewState, form.reviewStates[reviewState], 'default') }}</span>
+            <span>{{ $n(form.reviewStates[reviewState], 'default') }}</span>
             <span :class="reviewStateIcon(reviewState)"></span>
           </template>
         </span>
@@ -70,12 +70,12 @@ except according to the terms contained in the LICENSE file.
         <span v-tooltip.no-aria="$t('common.totalSubmissions')">
           <template v-if="canLinkToSubmissions">
             <router-link :to="submissionsPath.all">
-              <span>{{ $nnnnnnnnnn('project.formRow:submissions:1:', form.submissions, 'default') }}</span>
+              <span>{{ $n(form.submissions, 'default') }}</span>
               <span class="icon-asterisk"></span>
             </router-link>
           </template>
           <template v-else>
-            <span>{{ $nnnnnnnnnn('project.formRow:submissions:2', form.submissions, 'default') }}</span>
+            <span>{{ $n(form.submissions, 'default') }}</span>
             <span class="icon-asterisk"></span>
           </template>
         </span>
