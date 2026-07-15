@@ -19,7 +19,7 @@ const login = async (page) => {
 };
 
 const test = testBase.extend({
-  allowedLogs: (_, use) => use([]),
+  allowedLogs: ({}, use) => use([]), // eslint-disable-line no-empty-pattern
 
   // See: https://playwright.dev/docs/test-fixtures#adding-global-beforeeachaftereach-hooks
   browserConsoleToTestStdout: [
