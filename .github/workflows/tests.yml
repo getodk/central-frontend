@@ -18,7 +18,31 @@ jobs:
     - run: ./bin/check-scripts.sh
     - run: ./bin/check-for-large-files.sh
     - run: ./bin/check-images.sh
+  build:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+    - uses: actions/setup-node@v6
+      with:
+        node-version-file: package.json
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run build
+    - run: ./bin/check-bundle-size.js
+    - name: Upload Release Artefact
+      if: github.ref_type == 'tag'
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        tar -cvzf dist-${{ github.ref_name }}.tar.gz dist/
+        echo "Uploading dist bundle..."
+        gh release upload ${{ github.ref_name }} dist-${{ github.ref_name }}.tar.gz
+        echo "Upload complete."
   e2e-tests:
+    needs:
+    - build
+    - static-checks
     timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
