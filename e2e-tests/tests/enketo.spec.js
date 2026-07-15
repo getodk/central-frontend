@@ -63,7 +63,7 @@ test.describe('Enketo', () => {
     ];
 
     oldUrls.forEach(t => {
-      test.only(`shows Form using old URL - ${t.description}`, async ({ allowedLogs, page }) => {
+      test(`shows Form using old URL - ${t.description}`, async ({ allowedLogs, page }) => {
         // See: https://github.com/getodk/central/issues/2070
         allowedLogs.push('SyntaxError: 17');
 
