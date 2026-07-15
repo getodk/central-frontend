@@ -77,7 +77,6 @@ const test = testBase.extend({
           `\n    message: ${normalisedMsg}`;
         console.log(fullMessage);
 
-        // Include fullMessage here, as it may otherwise be lost(??)
         if(isFatalConsoleMessage(allowedLogs, consoleMsg, normalisedMsg)) fatals.push(fullMessage);
       });
 
