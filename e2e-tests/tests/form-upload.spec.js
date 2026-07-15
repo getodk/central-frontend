@@ -20,9 +20,9 @@ test.beforeAll(async ({ playwright }, testInfo) => {
 
 test.describe('Form Upload', () => {
   test('shows error when file is modified before clicking upload anyway', async ({ allowedLogs, page, playwright }, testInfo) => {
-    allowedLogs.push((msg, message) => {
-      return message === 'Failed to load resource: the server responded with a status of 400 (Bad Request)' &&
-             msg.location().url === `http://central-test.localhost/v1/projects/${projectId}/forms`;
+    allowedLogs.push((consoleMsg, normalisedMsg) => {
+      return normalisedMsg === 'Failed to load resource: the server responded with a status of 400 (Bad Request)' &&
+             consoleMsg.location().url === `http://central-test.localhost/v1/projects/${projectId}/forms`;
     });
 
     // Delete the form to put it in trash

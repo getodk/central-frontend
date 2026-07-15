@@ -110,9 +110,9 @@ test.describe('ODK Web Forms', () => {
     ];
     urls.forEach(t => {
       test(t.name, async ({ allowedLogs, page }) => {
-        allowedLogs.push((msg, message) => {
-          if(message !== 'Failed to load resource: the server responded with a status of 401 (Unauthorized)') return;
-          const { url } = msg.location();
+        allowedLogs.push((consoleMsg, normalisedMsg) => {
+          if(normalisedMsg !== 'Failed to load resource: the server responded with a status of 401 (Unauthorized)') return;
+          const { url } = consoleMsg.location();
           return url.startsWith('http://central-test.localhost/v1/form-links/') ||
                  url === `http://central-test.localhost/v1/projects/${projectId}` ||
                  url === `http://central-test.localhost/v1/projects/${projectId}/forms/${publishedForm.xmlFormId}`;
