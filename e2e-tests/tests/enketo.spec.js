@@ -63,10 +63,7 @@ test.describe('Enketo', () => {
     ];
 
     oldUrls.forEach(t => {
-      test(`shows Form using old URL - ${t.description}`, async ({ allowedLogs, page }) => {
-        // See: https://github.com/getodk/central/issues/2070
-        allowedLogs.push('SyntaxError: 17');
-
+      test(`shows Form using old URL - ${t.description}`, async ({ page }) => {
         const { enketoId, enketoOnceId, xmlFormId } = publishedForm;
         const { enketoId: draftEnketoId } = draftForm;
         const { instanceId } = firstSubmission;
