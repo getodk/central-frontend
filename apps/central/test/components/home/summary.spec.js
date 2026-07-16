@@ -4,8 +4,9 @@ import HomeSummaryItem from '../../../src/components/home/summary/item.vue';
 import useProjects from '../../../src/request-data/projects';
 
 import testData from '../../data';
-import { mockHttp } from '../../util/http';
+import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
+import { mockResponse } from '../../util/axios';
 import { mockRouter } from '../../util/router';
 import { testRequestData } from '../../util/request-data';
 
@@ -65,5 +66,20 @@ describe('HomeSummary', () => {
         for (const item of items)
           expect(item.props().to).to.not.equal('/users');
       });
+  });
+
+  it('surfaces error responses', async () => {
+    mockLogin();
+    const app = await load('/', {}, {
+      projects: () => mockResponse.problem(500.1),
+      users: () => mockResponse.problem(500.1)
+    });
+
+    const items = app.findAllComponents(HomeSummaryItem);
+    items.length.should.equal(4);
+    for (let i = 0; i < 2; i += 1)
+      items[i].get('.home-summary-error').text().should.equal('Error');
+
+    app.should.redAlert();
   });
 });
