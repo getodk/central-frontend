@@ -174,10 +174,6 @@ $border-height: 3px;
 <i18n lang="json5">
 {
   "en": {
-    "action": {
-      // Used by screen readers to describe the button used to show or hide the navigation bar on small screens ("hamburger menu").
-      "toggle": "Toggle navigation"
-    },
     "analyticsNotice": "Help improve Central!"
   }
 }

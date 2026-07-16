@@ -4177,12 +4177,6 @@
       }
     },
     "Navbar": {
-      "action": {
-        "toggle": {
-          "string": "Toggle navigation",
-          "developer_comment": "Used by screen readers to describe the button used to show or hide the navigation bar on small screens (\"hamburger menu\")."
-        }
-      },
       "analyticsNotice": {
         "string": "Help improve Central!"
       }
