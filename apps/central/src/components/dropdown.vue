@@ -1,15 +1,17 @@
 <template>
-  <component :is="tag" ref="container" :class="{ open: isOpen }">
+  <component :is="tag" ref="container" class="dropdown" :class="{ open: isOpen }">
     <slot name="toggle" :toggle="toggle" :is-open="isOpen" :attrs="triggerAttrs"></slot>
-    <ul v-show="isOpen" ref="menu" class="dropdown-menu" :style="menuStyle">
+    <ul ref="menu" class="dropdown-menu" :style="menuStyle">
       <slot name="menu"></slot>
     </ul>
   </component>
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, ref } from 'vue';
 import { computePosition } from '@floating-ui/dom';
+
+import useEventListener from '../composables/event-listener';
 
 defineOptions({
   name: 'Dropdown'
@@ -89,21 +91,7 @@ const handleEscape = (event) => {
   }
 };
 
-const handleResize = () => {
-  if (isOpen.value) {
-    hide();
-  }
-};
-
-onMounted(() => {
-  document.addEventListener('click', handleClickOutside, true);
-  document.addEventListener('keydown', handleEscape);
-  window.addEventListener('resize', handleResize);
-});
-
-onBeforeUnmount(() => {
-  document.removeEventListener('click', handleClickOutside, true);
-  document.removeEventListener('keydown', handleEscape);
-  window.removeEventListener('resize', handleResize);
-});
+useEventListener(document, 'click', handleClickOutside, true);
+useEventListener(document, 'keydown', handleEscape);
+useEventListener(window, 'resize', hide);
 </script>
