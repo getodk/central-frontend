@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <ul id="navbar-links" class="nav navbar-nav">
+  <ul id="navbar-links">
     <li :class="{ active: projectsLinkIsActive }">
       <router-link to="/">
         {{ $t('resource.projects') }} <span class="sr-only">{{ $t('current') }}</span>
@@ -56,17 +56,11 @@ export default {
 
 <style lang="scss">
 #navbar-links {
+  > li + li { margin-left: 10px; }
+  #navbar-links-users { margin-left: 40px; }
+
   .sr-only { display: none; }
   .active .sr-only { display: block; }
-}
-
-@media (min-width: 768px) {
-  #navbar-links {
-    margin-left: 30px;
-
-    > li + li { margin-left: 10px; }
-    #navbar-links-users { margin-left: 40px; }
-  }
 }
 </style>
 
