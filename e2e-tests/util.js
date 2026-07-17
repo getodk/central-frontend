@@ -106,7 +106,9 @@ const globalAllowedLogs = [
   `The resource from “http://central-test.localhost/apps/forms/src/init.js” was blocked due to MIME type (“text/html”) mismatch (X-Content-Type-Options: nosniff)`,
   `Loading failed for the <script> with source “http://central-test.localhost/apps/forms/src/init.js”`,
 
-  // See: https://github.com/getodk/central/issues/2070
+  // See:
+  // * https://github.com/getodk/central/issues/1584
+  // * https://github.com/getodk/central/issues/2070
   'SyntaxError: 17',
 ];
 
