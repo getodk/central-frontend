@@ -248,9 +248,7 @@ export interface AxisTestNode extends SyntaxNode<
 > {}
 
 export type NameTestNode =
-  | ExplicitNameNode
-  | PrefixedWildcardNameTestNode
-  | UnprefixedWildcardNameTestNode;
+  ExplicitNameNode | PrefixedWildcardNameTestNode | UnprefixedWildcardNameTestNode;
 
 export type NodeTypeTest = 'comment' | 'node' | 'processing-instruction' | 'text';
 
@@ -293,9 +291,7 @@ export interface RelativeStepSyntaxLiteralNode extends TerminalTextLiteralSyntax
 > {}
 
 type AnyLocationPathExprNode =
-  | AbsoluteLocationPathNode
-  | FilterPathExprNode
-  | RelativeLocationPathNode;
+  AbsoluteLocationPathNode | FilterPathExprNode | RelativeLocationPathNode;
 
 type AnyLocationPathNode =
   | AbbreviatedAbsoluteLocationPathNode

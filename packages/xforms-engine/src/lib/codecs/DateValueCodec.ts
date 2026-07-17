@@ -5,12 +5,7 @@ import { type CodecDecoder, type CodecEncoder, ValueCodec } from './ValueCodec.t
 export type DatetimeRuntimeValue = Temporal.PlainDate | null;
 
 export type DatetimeInputValue =
-  | Date
-  | Temporal.PlainDate
-  | Temporal.PlainDateTime
-  | Temporal.ZonedDateTime
-  | string
-  | null;
+  Date | Temporal.PlainDate | Temporal.PlainDateTime | Temporal.ZonedDateTime | string | null;
 
 /**
  * Parses a string in the format 'YYYY-MM-DD', 'YYYY-MM-DDTHH:MM:SS', or an ISO datetime with a timezone offset

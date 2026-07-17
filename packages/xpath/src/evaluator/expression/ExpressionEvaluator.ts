@@ -9,10 +9,7 @@ import type {
 } from '../../static/grammar/SyntaxNode.ts';
 
 export type ExpressionNode =
-  | AbsoluteLocationPathNode
-  | AnyExprNode
-  | FilterPathExprNode
-  | RelativeLocationPathNode;
+  AbsoluteLocationPathNode | AnyExprNode | FilterPathExprNode | RelativeLocationPathNode;
 
 export interface ExpressionEvaluator {
   readonly syntaxNode: ExpressionNode;

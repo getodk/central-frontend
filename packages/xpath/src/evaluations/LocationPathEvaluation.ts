@@ -451,9 +451,7 @@ interface LocationPathEvaluationOptions {
 }
 
 type ArbitraryNodesTemporaryCallee =
-  | FilterPathExpressionEvaluator
-  | LocationPathEvaluator
-  | NodeSetFunction;
+  FilterPathExpressionEvaluator | LocationPathEvaluator | NodeSetFunction;
 
 type AssertLocationPathEvaluationInstance = <T extends XPathNode>(
   context: EvaluationContext<T>,
