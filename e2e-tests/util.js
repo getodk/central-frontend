@@ -54,6 +54,9 @@ const test = testBase.extend({
 
           if(normalisedMsg.includes('Failed to load resource: the server responded with a status of 401 (Unauthorized)')) {
             if(url.endsWith('/v1/sessions/restore')) return;
+
+            // See: https://github.com/getodk/central/issues/1686
+            if(url.includes('/-/submission/max-size/')) return;
           }
 
           // See: https://github.com/getodk/central/issues/1914
