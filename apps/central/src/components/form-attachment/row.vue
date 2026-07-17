@@ -48,6 +48,11 @@ except according to the terms contained in the LICENSE file.
         </span>
       </template>
     </td>
+    <td class="form-attachment-list-size">
+      <template v-if="attachment.blobExists && attachment.size != null">
+        {{ formatSize(attachment.size) }}
+      </template>
+    </td>
     <td class="form-attachment-list-action">
       <div>
         <template v-if="attachment.datasetExists">
@@ -72,6 +77,13 @@ import DateTime from '../date-time.vue';
 
 import { apiPaths } from '../../util/request';
 import { useRequestData } from '../../request-data';
+
+const formatSize = (bytes) => {
+  if (bytes == null) return null;
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+};
 
 export default {
   name: 'FormAttachmentRow',
@@ -104,7 +116,7 @@ export default {
     // The component assumes that this data will exist when the component is
     // created.
     const { form } = useRequestData();
-    return { form };
+    return { form, formatSize };
   },
   computed: {
     targeted() {

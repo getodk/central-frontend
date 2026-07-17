@@ -27,7 +27,8 @@ export const standardFormAttachments = dataStore({
     hash = undefined,
     datasetExists = false,
     blobExists = hash != null || (inPast && hash !== null && !datasetExists),
-    hasUpdatedAt = inPast
+    hasUpdatedAt = inPast,
+    size = blobExists ? 100 : null
   }) => ({
     type,
     name,
@@ -35,7 +36,8 @@ export const standardFormAttachments = dataStore({
     datasetExists,
     exists: blobExists || datasetExists,
     hash: hash ?? (blobExists ? 'a'.repeat(32) : null),
-    updatedAt: hasUpdatedAt ? fakePastDate([form.createdAt]) : null
+    updatedAt: hasUpdatedAt ? fakePastDate([form.createdAt]) : null,
+    size
   }),
   sort: (attachment1, attachment2) =>
     attachment1.name.localeCompare(attachment2.name)

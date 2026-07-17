@@ -17,6 +17,7 @@ except according to the terms contained in the LICENSE file.
           <th>{{ $t('header.type') }}</th>
           <th>{{ $t('header.name') }}</th>
           <th>{{ $t('header.uploaded') }}</th>
+          <th>{{ $t('header.size') }}</th>
           <th></th>
         </tr>
       </thead>
@@ -76,6 +77,8 @@ const dsHashset = computed(() =>
 
   th:first-child { width: 125px; }
   th:nth-child(2) { width: 250px; }
+  th:nth-child(3) { width: 200px; }
+  th:nth-child(4) { width: 100px; }
   th:last-child { width: #{200px + $padding-left-table-data + $padding-right-table-data}; }
 }
 </style>
@@ -87,7 +90,9 @@ const dsHashset = computed(() =>
     "header": {
       // This is the text of a table column header. The column shows when each
       // Media File was uploaded.
-      "uploaded": "Uploaded"
+      "uploaded": "Uploaded",
+      // This is the text of a table column header. The column shows the file size of each uploaded Media File.
+      "size": "Size"
     }
   }
 }
