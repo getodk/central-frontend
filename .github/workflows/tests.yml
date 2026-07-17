@@ -18,6 +18,22 @@ jobs:
     - run: ./bin/check-scripts.sh
     - run: ./bin/check-for-large-files.sh
     - run: ./bin/check-images.sh
+  unit-tests:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+    - uses: actions/setup-node@v6
+      with:
+        node-version-file: package.json
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run build
+    - run: npm run lint
+    - uses: browser-actions/setup-chrome@v2
+    - run: npm run test -w=@getodk/central-frontend
+    - run: npx playwright install chromium --with-deps
+    - run: npm run test -w=@getodk/forms
   build:
     timeout-minutes: 5
     runs-on: ubuntu-latest
@@ -39,10 +55,39 @@ jobs:
         echo "Uploading dist bundle..."
         gh release upload ${{ github.ref_name }} dist-${{ github.ref_name }}.tar.gz
         echo "Upload complete."
+  build-wf:
+    name: 'Build Web Forms'
+    runs-on: 'ubuntu-latest'
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ['24.16.0']
+    steps:
+      - uses: 'actions/checkout@v6'
+      - uses: 'volta-cli/action@v5'
+        with:
+          node-version: '${{ matrix.node-version }}'
+      - uses: 'actions/cache@v5'
+        id: cache-install
+        with:
+          path: |
+            node_modules
+            **/node_modules
+          key: install-${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
+      - uses: 'actions/cache@v5'
+        id: cache-build
+        with:
+          path: |
+            packages/*/dist
+            packages/web-forms/dist-demo
+          key: build-${{ matrix.node-version }}-${{ github.sha }}
+      - run: 'npm ci'
+      - run: 'npm run build'
   e2e-tests:
     needs:
     - build
     - static-checks
+    - unit-tests
     timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
@@ -96,3 +141,13 @@ jobs:
       name: Docker Container Logs
       working-directory: central
       run: docker compose logs || true
+  wf-tests:
+    name: 'Run Web Forms Tests'
+    needs:
+    - build-wf
+    uses: ./.github/workflows/wf-ci.yml
+  wf-e2e-tests:
+    name: 'Run Web Forms E2E Tests'
+    needs:
+    - wf-tests
+    uses: ./.github/workflows/wf-ci-e2e.yml
