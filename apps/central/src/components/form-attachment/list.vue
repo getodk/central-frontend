@@ -28,15 +28,15 @@ except according to the terms contained in the LICENSE file.
     <form-attachment-popups
       :count-of-files-over-drop-zone="countOfFilesOverDropZone"
       :dragover-attachment="dragoverAttachment"
-      :planned-uploads="plannedUploads" :unmatched-files="unmatchedFiles"
+      :unmatched-files="unmatchedFiles"
       :upload-status="uploadStatus"
-      @cancel="cancelUploads"/>
+      @cancel="clearPendingFiles"/>
 
     <form-attachment-upload-files v-bind="uploadFilesModal"
       @hide="uploadFilesModal.hide()" @select="afterFileInputSelection"/>
     <form-attachment-name-mismatch v-bind="nameMismatch"
       :planned-uploads="plannedUploads" @hide="nameMismatch.hide()"
-      @confirm="uploadFiles" @cancel="cancelUploads"/>
+      @confirm="uploadFiles" @cancel="clearPendingFiles"/>
     <form-attachment-link-dataset v-bind="linkDatasetModal"
       @hide="linkDatasetModal.hide()" @success="afterLinkDataset"/>
   </file-drop-zone>
@@ -87,9 +87,11 @@ export default {
            drop or using the file input) and that are reset once the uploads
            have started or been canceled
            - plannedUploads. An array of file/attachment pairs, indicating which
-             file to upload for which attachment. plannedUploads is used to
-             confirm or cancel the uploads, then to start them, but it is not
-             used during the uploads themselves.
+             file to upload for which attachment. In most flows, plannedUploads
+             is populated and immediately consumed by uploadFiles(). The
+             exception is when a file is dropped onto a mismatched row: in that
+             case plannedUploads holds the pending upload while the name-mismatch
+             modal awaits confirmation.
            - unmatchedFiles. An array of the files whose names did not match any
              attachment's.
         3. Properties set once the uploads have started and reset once they have
@@ -165,7 +167,7 @@ export default {
           ? this.draftAttachments.get(tr.dataset.name)
           : null;
       }
-      this.cancelUploads();
+      this.clearPendingFiles();
       this.updatedAttachments.clear();
     },
     dragleave(_, leftDropZone) {
@@ -208,16 +210,16 @@ export default {
           this.unmatchedFiles.push(file);
       }
 
-      // Automatically upload planned files without confirmation
+      // Automatically upload planned files without confirmation.
+      // If there are no planned files, the popup will show in the next tick for unmatched files.
       if (this.plannedUploads.length > 0)
         this.uploadFiles();
-
-      // With the changes to this.plannedUploads and this.unmatchedFiles, the
-      // popup will show in the next tick if there are no plannedUploads, only unmatched files.
     },
-    // cancelUploads() cancels the uploads before they start, after files have
-    // been selected. (It does not cancel an upload in progress.)
-    cancelUploads() {
+    // clearPendingFiles() clears any pending file selection before an upload
+    // has started. It is called both when the user cancels a name mismatch
+    // (clearing plannedUploads) and when the user dismisses the unmatched-files
+    // popup (clearing unmatchedFiles), so it always clears both.
+    clearPendingFiles() {
       if (this.plannedUploads.length !== 0) this.plannedUploads = [];
       if (this.unmatchedFiles.length !== 0) this.unmatchedFiles = [];
     },
