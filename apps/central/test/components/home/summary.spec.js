@@ -68,7 +68,7 @@ describe('HomeSummary', () => {
       });
   });
 
-  it('surfaces error responses', async () => {
+  it('handles error responses', async () => {
     mockLogin();
     const app = await load('/', {}, {
       projects: () => mockResponse.problem(500.1),
@@ -78,7 +78,7 @@ describe('HomeSummary', () => {
     const items = app.findAllComponents(HomeSummaryItem);
     items.length.should.equal(4);
     for (let i = 0; i < 2; i += 1)
-      items[i].get('.home-summary-error').text().should.equal('Error');
+      items[i].get('.header').text().should.equal('');
 
     app.should.redAlert();
   });

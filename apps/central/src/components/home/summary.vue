@@ -18,7 +18,6 @@ except according to the terms contained in the LICENSE file.
           <template v-else-if="projects.dataExists">
             {{ $n(projects.length, 'default') }}
           </template>
-          <span v-else class="home-summary-error">{{ $t('common.error') }}</span>
         </template>
         <template #subheader>{{ $tc('plural.project', projects.length ?? 0) }}</template>
         <template #body>{{ $t('projects.body') }}</template>
@@ -29,7 +28,6 @@ except according to the terms contained in the LICENSE file.
           <template v-else-if="users.dataExists">
             {{ $n(users.length, 'default') }}
           </template>
-          <span v-else class="home-summary-error">{{ $t('common.error') }}</span>
         </template>
         <template #subheader>{{ $tc('plural.user', users.length ?? 0) }}</template>
         <template #body>{{ $t('users.body') }}</template>
@@ -89,8 +87,6 @@ if (currentUser.can('user.list'))
   margin-right: auto;
   max-width: $max-width-page-body;
 }
-
-.home-summary-error { color: $color-danger; }
 </style>
 
 <i18n lang="json5">
