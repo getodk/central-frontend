@@ -79,10 +79,6 @@ export default {
       required: true
     },
     dragoverAttachment: Object,
-    plannedUploads: {
-      type: Array,
-      required: true
-    },
     unmatchedFiles: {
       type: Array,
       required: true
@@ -100,7 +96,7 @@ export default {
     shownAfterSelection() {
       // This popup only shows when all files are unmatched (no planned uploads).
       // If some files match, they upload automatically without confirmation.
-      return this.unmatchedFiles.length > 0 && this.plannedUploads.length === 0;
+      return this.unmatchedFiles.length > 0;
     },
     shownDuringUpload() {
       return this.uploadStatus.current != null;
