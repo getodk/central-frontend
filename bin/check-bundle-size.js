@@ -64,6 +64,7 @@ function isTooBig({ path, size }) {
     case 'geojson-map.js': return size >   500_000;
     // This is a performance tracking script from Sentry, shared between apps/central and apps/forms.
     case 'browserTracingIntegration.js': return size > 215_000;
+    case 'vue-i18n.runtime.js':          return size > 215_000;
     default: // do nothing
   }
 
