@@ -10,13 +10,15 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="entity-download-button" class="dropdown">
-    <a class="btn btn-primary" :class="{ disabled }" :href="href"
-      :data-toggle="odataFilter || searchTerm ? 'dropdown' : null">
-      <span class="icon-arrow-circle-down"></span>
-      <span>{{ $t('action.download') }}</span>
-    </a>
-    <ul class="dropdown-menu dropdown-menu-right">
+  <Dropdown id="entity-download-button">
+    <template #toggle="{ toggle, attrs }">
+      <a class="btn btn-primary" :class="{ disabled }" :href="href"
+        v-bind="attrs" @click="handleClick($event, toggle)">
+        <span class="icon-arrow-circle-down"></span>
+        <span>{{ $t('action.download') }}</span>
+      </a>
+    </template>
+    <template #menu>
       <li>
         <a class="btn btn-link dropdown-item" :href="filteredHref">
           <span>{{ downloadFiltered }}</span>
@@ -27,17 +29,22 @@ except according to the terms contained in the LICENSE file.
           <span>{{ $tcn('action.download.unfiltered', dataset.entities) }}</span>
         </a>
       </li>
-    </ul>
-</div>
+    </template>
+  </Dropdown>
 </template>
 
 <script setup>
 import { computed, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import Dropdown from '../dropdown.vue';
 import { apiPaths } from '../../util/request';
 import { useI18nUtils } from '../../util/i18n';
 import { useRequestData } from '../../request-data';
+
+defineOptions({
+  name: 'EntityDownloadButton'
+});
 
 const props = defineProps({
   odataFilter: String,
@@ -60,6 +67,15 @@ const { tn } = useI18nUtils();
 const downloadFiltered = computed(() => (odataEntities.dataExists
   ? tn('action.download.filtered.withCount', odataEntities.count)
   : t('action.download.filtered.withoutCount')));
+
+const isFiltered = computed(() => props.odataFilter || props.searchTerm);
+
+const handleClick = (event, toggle) => {
+  if (isFiltered.value) {
+    event.preventDefault();
+    toggle();
+  }
+};
 </script>
 
 <style lang="scss">
