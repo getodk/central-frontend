@@ -19,13 +19,20 @@ const login = async (page) => {
 };
 
 const test = testBase.extend({
+  allowedLogs: ({}, use) => use([]), // eslint-disable-line no-empty-pattern
+
   // See: https://playwright.dev/docs/test-fixtures#adding-global-beforeeachaftereach-hooks
   browserConsoleToTestStdout: [
-    async ({ browserName, page }, use) => {
+    async ({ allowedLogs, browserName, page }, use) => {
+      const fatals = [];
+
       page.on('console', async consoleMsg => {
         const { url, line, column } = consoleMsg.location();
 
         const normalisedMsg = browserName === 'firefox' ? await asText(consoleMsg) : consoleMsg.text();
+
+        // See: https://github.com/getodk/central/issues/1686
+        if(normalisedMsg.startsWith('Error retrieving maximum submission size.')) return;
 
         if(browserName === 'firefox') {
           // See: https://github.com/getodk/central/issues/1986
@@ -51,6 +58,9 @@ const test = testBase.extend({
             // See: https://github.com/getodk/central/issues/1686
             if(url.includes('/-/submission/max-size/')) return;
           }
+
+          // See: https://github.com/getodk/central/issues/1914
+          if(url.endsWith('/csp-report') && normalisedMsg === 'Failed to load resource: the server responded with a status of 429 (Too Many Requests)') return;
         }
 
         if(url.includes('/-/')) {
@@ -62,16 +72,71 @@ const test = testBase.extend({
           if(normalisedMsg === 'Keeping default theme.') return;
         }
 
-        console.log(
+        const fullMessage =
           `[${browserName}|console.${consoleMsg.type()}] ${url}:${line}:${column}` +
-          `\n    message:`, normalisedMsg,
-        );
+          `\n    message: ${normalisedMsg}`;
+        console.log(fullMessage);
+
+        if(isFatalConsoleMessage(allowedLogs, consoleMsg, normalisedMsg)) fatals.push(fullMessage);
       });
+
       await use();
+
+      await expect(
+        fatals,
+        `Unexpected fatal error(s) logged: ${fatals.map((logged, idx) => `\n    ${idx}. ${logged}`).join('')}`,
+      ).toHaveLength(0);
     },
     { auto:true },
   ],
 });
+
+const globalAllowedLogs = [
+  // firefox; not considered bugs, but still informative:
+  '"Layout was forced before the page was fully loaded. If stylesheets are not yet loaded this may cause a flash of unstyled content."',
+  'Failed async deserialisation: Error: jsHandle.evaluate: Execution context was destroyed, most likely because of a navigation; consoleMsg.text(): JSHandle@object',
+
+  // See: https://github.com/getodk/central/issues/1699
+  'Content-Security-Policy: Ignoring ‘x-frame-options’ because of ‘frame-ancestors’ directive.',
+
+  // See: https://github.com/getodk/central/issues/2056
+  // chromium:
+  "Refused to execute script from 'http://central-test.localhost/apps/forms/src/init.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled.",
+  // firefox:
+  `The resource from “http://central-test.localhost/apps/forms/src/init.js” was blocked due to MIME type (“text/html”) mismatch (X-Content-Type-Options: nosniff)`,
+  `Loading failed for the <script> with source “http://central-test.localhost/apps/forms/src/init.js”`,
+
+  // See:
+  // * https://github.com/getodk/central/issues/1584
+  // * https://github.com/getodk/central/issues/2070
+  'SyntaxError: 17',
+];
+
+function isFatalConsoleMessage(allowedLogs, consoleMsg, normalisedMsg) {
+  switch(consoleMsg.type()) {
+    case 'log':
+    case 'debug':
+    case 'info':
+    case 'trace':
+    case 'startGroup':
+    case 'startGroupCollapsed':
+    case 'endGroup':
+    case 'profile':
+    case 'profileEnd':
+    case 'table':
+      return false;
+  }
+
+  return ![
+    ...allowedLogs,
+    ...globalAllowedLogs,
+  ].some(expected => {
+    if(typeof expected === 'string')   return normalisedMsg.includes(expected);
+    if(typeof expected === 'function') return expected(consoleMsg, normalisedMsg);
+    if(expected instanceof RegExp)     return normalisedMsg.match(expected);
+    throw new Error(`Unsupported expectation of type "${typeof expected}":`, expected);
+  });
+}
 
 async function asText(consoleMsg) {
   const basicMessage = consoleMsg.text();
