@@ -1,6 +1,5 @@
 import { expect, test } from '@playwright/test';
 import { FillFormPage } from '../../page-objects/pages/FillFormPage.js';
-import { PreviewPage } from '../../page-objects/pages/PreviewPage.js';
 
 const DEVICE_ID_REGEX = /^wf:[0-9a-zA-Z]{16}$/;
 const INSTANCE_ID_REGEX =
@@ -17,13 +16,8 @@ test.describe('jr:preload', () => {
   };
 
   test.beforeEach(async ({ page }) => {
-    formPage = new FillFormPage(page);
-
     start = Date.now();
-
-    const previewPage = new PreviewPage(page);
-    await previewPage.goToDevPage();
-    await previewPage.openDevDemoForm('test-javarosa', 'preload.xml', 'jr:preload');
+    formPage = await FillFormPage.loadForm(page, 'preload.xml');
   });
 
   test('binds properties', async () => {

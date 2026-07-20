@@ -91,12 +91,6 @@ jobs:
     timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
-
-    # This one weird trick speeds up every build!
-    # see: https://github.com/getodk/central-backend/pull/1642
-    # see: https://github.com/actions/runner/issues/4030
-    - run: sudo apt-get remove --purge man-db
-
     - uses: actions/checkout@v6
       with:
         path: client

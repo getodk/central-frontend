@@ -1,4 +1,4 @@
-import type { JRResourceService } from '@getodk/common/jr-resources/JRResourceService.ts';
+import type { JRResourceService } from '../fixtures/JRResourceService.ts';
 import type {
   FormResource,
   GeolocationProvider,

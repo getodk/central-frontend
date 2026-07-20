@@ -98,6 +98,16 @@ test.describe('Enketo', () => {
   });
 
   test.describe('offline form', () => {
+    test.beforeEach(({ allowedLogs }) => {
+      // https://github.com/getodk/central/issues/2069
+      allowedLogs.push((consoleMsg, normalisedMsg) => {
+        if(normalisedMsg !== 'Failed to load resource: net::ERR_FAILED') return;
+        const { pathname } = new URL(consoleMsg.location().url);
+        return pathname === '/-/connection' ||
+               pathname === '/-/x/images/offline-enabled.png';
+      });
+    });
+
     const offlineUrls = [{
       description: 'Offline Submissions',
       url: ({ enketoId }) => `/-/x/${enketoId}`, requireLogin: true,
