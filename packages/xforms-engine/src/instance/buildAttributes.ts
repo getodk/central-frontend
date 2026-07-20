@@ -1,13 +1,13 @@
-import type { StaticAttribute } from '../../integration/xpath/static-dom/StaticAttribute.ts';
-import type { StaticDocument } from '../../integration/xpath/static-dom/StaticDocument.ts';
-import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
-import type { AttributeDefinition } from '../../parse/model/AttributeDefinition.ts';
-import { Attribute } from '../Attribute';
-import type { AnyNode } from '../hierarchy.ts';
-import type { InputControl } from '../InputControl.ts';
-import type { ModelValue } from '../ModelValue.ts';
-import type { Note } from '../Note.ts';
-import type { RangeControl } from '../RangeControl.ts';
+import type { StaticAttribute } from '../integration/xpath/static-dom/StaticAttribute.ts';
+import type { StaticDocument } from '../integration/xpath/static-dom/StaticDocument.ts';
+import type { StaticElement } from '../integration/xpath/static-dom/StaticElement.ts';
+import type { AttributeDefinition } from '../parse/model/AttributeDefinition.ts';
+import { Attribute } from './Attribute';
+import type { AnyNode } from './hierarchy.ts';
+import type { InputControl } from './InputControl.ts';
+import type { ModelValue } from './ModelValue.ts';
+import type { Note } from './Note.ts';
+import type { RangeControl } from './RangeControl.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AttributeOwner = AnyNode | InputControl<any> | ModelValue<any> | Note<any> | RangeControl<any>;
