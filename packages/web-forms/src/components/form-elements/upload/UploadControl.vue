@@ -333,14 +333,12 @@ onUnmounted(() => {
 
 .upload-control {
 	background: var(--odk-base-background-color);
-	box-shadow: none;
 	border: 1px solid var(--odk-border-color);
 	overflow: hidden;
 	border-radius: var(--odk-radius);
 
-	:deep(.upload-control-header) {
+	.upload-control-header {
 		background: var(--odk-light-background-color);
-		justify-content: flex-start;
 		gap: var(--odk-spacing-xl);
 		border-bottom: 1px solid var(--odk-border-color);
 		padding: 12px var(--odk-spacing-xl);
@@ -349,11 +347,7 @@ onUnmounted(() => {
 		width: 100%;
 	}
 
-	:deep(.upload-control-content) {
-		padding: 0;
-	}
-
-	&.mobile-only-header :deep(.upload-control-header) {
+	&.mobile-only-header .upload-control-header {
 		display: none;
 	}
 }
@@ -421,16 +415,12 @@ onUnmounted(() => {
 }
 
 @include odk.sm-constrained {
-	.upload-control :deep(.upload-control-header) {
+	.upload-control .upload-control-header {
 		flex-direction: column;
 		justify-content: center;
-
-		.upload-control-header-actions {
-			display: none;
-		}
 	}
 
-	.upload-control.mobile-only-header :deep(.upload-control-header) {
+	.upload-control.mobile-only-header .upload-control-header {
 		display: flex;
 	}
 
