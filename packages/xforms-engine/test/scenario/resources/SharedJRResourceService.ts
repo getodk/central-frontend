@@ -1,4 +1,4 @@
-import { JRResourceService } from '@getodk/common/jr-resources/JRResourceService.ts';
+import { JRResourceService } from '../fixtures/JRResourceService';
 import { afterEach, beforeEach } from 'vitest';
 
 let state: SharedJRResourceService | null = null;

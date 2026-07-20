@@ -384,6 +384,7 @@ export default defineConfig(
 			'*/bin/**.js',
 			'*/playwright.config.ts',
 			'*/vite.config.ts',
+			'*/vite.config.e2e.ts',
 			'*/vitest.config.ts',
 			'xforms-engine/vite.*.config.ts',
 			'*/tools/**/*',

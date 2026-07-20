@@ -1,16 +1,11 @@
 import { expect, test } from '@playwright/test';
 import { FillFormPage } from '../../page-objects/pages/FillFormPage.ts';
-import { PreviewPage } from '../../page-objects/pages/PreviewPage.ts';
 
 test.describe('Repeats', () => {
   let formPage: FillFormPage;
 
   test.beforeEach(async ({ page }) => {
-    formPage = new FillFormPage(page);
-
-    const previewPage = new PreviewPage(page);
-    await previewPage.goToDevPage();
-    await previewPage.openDevDemoForm('repeats', '01-basic-repeat.xml', 'Repeat (basic)');
+    formPage = await FillFormPage.loadForm(page, '01-basic-repeat.xml');
   });
 
   test('renders one instance by default', async () => {
