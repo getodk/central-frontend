@@ -69,7 +69,8 @@ export const t: t = (tag, ...args): XFormsElement => {
 // signature length varies, and the optional parameter comes first)
 export const html = (
   ...args:
-    [HeadXFormsElement, BodyXFormsElement] | [NamespaceTuples, HeadXFormsElement, BodyXFormsElement]
+    | [HeadXFormsElement, BodyXFormsElement]
+    | [NamespaceTuples, HeadXFormsElement, BodyXFormsElement]
 ): HtmlXFormsElement => {
   const head = args.length === 3 ? args[1] : args[0];
   const body = args.length === 3 ? args[2] : args[1];

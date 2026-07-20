@@ -212,7 +212,8 @@ export function useMapInteractions(
       const resolution = mapInstance.getView().getResolution() ?? 1;
       const hitFeatures = getVectorFeaturesAtPixel(event.pixel);
       const targetFeature = hitFeatures.find((f) => source.hasFeature(f as Feature)) as
-        Feature | undefined;
+        | Feature
+        | undefined;
 
       if (targetFeature) {
         if (isNearVertex(targetFeature, eventCoords, resolution, ADD_VERTEX_HIT_TOLERANCE)) {

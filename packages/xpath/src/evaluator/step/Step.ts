@@ -115,7 +115,9 @@ export class FilterExprContextNodeStep extends BaseStep implements NonRootStep {
 }
 
 export type PathExprContextStep =
-  EvaluationContextNodeStep | FilterExprContextNodeStep | RootContextStep;
+  | EvaluationContextNodeStep
+  | FilterExprContextNodeStep
+  | RootContextStep;
 
 type UnnamedNodeType = Exclude<NodeType, '__NAMED__'>;
 
@@ -339,10 +341,15 @@ const pathExprStep = (stepNode: StepNode): AnyStep => {
 };
 
 type AnyLocationPathExprNode =
-  AbsoluteLocationPathNode | FilterPathExprNode | RelativeLocationPathNode;
+  | AbsoluteLocationPathNode
+  | FilterPathExprNode
+  | RelativeLocationPathNode;
 
 type PathExprContextNode =
-  AbbreviatedAbsoluteLocationPathNode | AbsoluteRootLocationPathNode | FilterExprNode | StepNode;
+  | AbbreviatedAbsoluteLocationPathNode
+  | AbsoluteRootLocationPathNode
+  | FilterExprNode
+  | StepNode;
 
 const pathExprContextStep = (syntaxNode: PathExprContextNode): PathExprContextStep => {
   switch (syntaxNode.type) {

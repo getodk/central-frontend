@@ -4,7 +4,8 @@ import type { PartiallyKnownString } from '@getodk/common/types/string/Partially
 type SymbolIterator = typeof Symbol.iterator;
 
 type TokenListKey<CanonicalToken extends string> =
-  PartiallyKnownString<CanonicalToken> | SymbolIterator;
+  | PartiallyKnownString<CanonicalToken>
+  | SymbolIterator;
 
 type TokenListIterator<CanonicalToken extends string> = IterableIterator<
   PartiallyKnownString<CanonicalToken>

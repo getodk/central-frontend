@@ -9,7 +9,12 @@ import { type CodecDecoder, type CodecEncoder, ValueCodec } from './ValueCodec.t
 export type TimeRuntimeValue = string | null;
 
 export type TimeInputValue =
-  Date | Temporal.PlainDateTime | Temporal.PlainTime | Temporal.ZonedDateTime | string | null;
+  | Date
+  | Temporal.PlainDateTime
+  | Temporal.PlainTime
+  | Temporal.ZonedDateTime
+  | string
+  | null;
 
 const validateTimeString = (value: string): TimeRuntimeValue => {
   const match = ISO_TIME_WITH_OPTIONAL_OFFSET_PATTERN.exec(value ?? '');

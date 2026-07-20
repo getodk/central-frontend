@@ -1,10 +1,24 @@
 export type Heading = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 
 export type ElementName =
-  Heading | 'a' | 'br' | 'div' | 'em' | 'li' | 'ol' | 'p' | 'span' | 'strong' | 'u' | 'ul';
+  | Heading
+  | 'a'
+  | 'br'
+  | 'div'
+  | 'em'
+  | 'li'
+  | 'ol'
+  | 'p'
+  | 'span'
+  | 'strong'
+  | 'u'
+  | 'ul';
 
 export type MarkdownNode =
-  ChildMarkdownNode | HtmlMarkdownNode | LineBreakMarkdownNode | ParentMarkdownNode;
+  | ChildMarkdownNode
+  | HtmlMarkdownNode
+  | LineBreakMarkdownNode
+  | ParentMarkdownNode;
 
 export interface ParentMarkdownNode {
   readonly id: string;

@@ -50,7 +50,8 @@ const BodyElementDefinitionConstructors = [
 ] as const satisfies readonly BodyElementDefinitionConstructor[];
 
 export type AnyBodyElementDefinition =
-  SupportedBodyElementDefinition | UnsupportedBodyElementDefinition;
+  | SupportedBodyElementDefinition
+  | UnsupportedBodyElementDefinition;
 
 export type BodyElementDefinitionArray = readonly AnyBodyElementDefinition[];
 

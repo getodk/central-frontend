@@ -211,11 +211,9 @@ describe('XPath syntax traversal', () => {
           ],
           rootNode
         )
-      ).not.toEqualTypeOf<
-        // @ts-expect-error - Not a real syntax type!
-        // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents -- (`never | null`)
-        TypedSyntaxNode<'nonexistent_type'> | null
-      >(null);
+      ).not.toEqualTypeOf<// @ts-expect-error - Not a real syntax type!
+      // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents -- (`never | null`)
+      TypedSyntaxNode<'nonexistent_type'> | null>(null);
     });
   });
 });

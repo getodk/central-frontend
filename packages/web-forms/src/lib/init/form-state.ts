@@ -20,7 +20,9 @@ export type FormStateLoadingStatus = 'FORM_STATE_LOADING';
 export type FormStateSuccessStatus = 'FORM_STATE_SUCCESS';
 
 export type FormStateStatus =
-  FormStateFailureStatus | FormStateLoadingStatus | FormStateSuccessStatus;
+  | FormStateFailureStatus
+  | FormStateLoadingStatus
+  | FormStateSuccessStatus;
 
 interface FormStateResult {
   readonly status: FormStateStatus;

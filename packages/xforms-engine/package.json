@@ -89,9 +89,6 @@
     "vite-plugin-no-bundle": "^4.0.0",
     "web-tree-sitter": "0.24.5"
   },
-  "peerDependencies": {
-    "solid-js": "^1.9.7"
-  },
   "peerDependenciesMeta": {
     "solid-js": {
       "optional": true

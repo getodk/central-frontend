@@ -118,7 +118,8 @@ export type ChunkedInstancePayload =
 	| ReadyInstancePayload<'chunked'>;
 
 export type MonolithicInstancePayload =
-  PendingInstancePayload<'monolithic'> | ReadyInstancePayload<'monolithic'>;
+  | PendingInstancePayload<'monolithic'>
+  | ReadyInstancePayload<'monolithic'>;
 
 // prettier-ignore
 export type InstancePayload<PayloadType extends InstancePayloadType> = {

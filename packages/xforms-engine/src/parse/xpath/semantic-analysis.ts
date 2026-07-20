@@ -289,7 +289,9 @@ export const isNodeSetFilterPathExpression = (
 };
 
 export type PathExpressionNode =
-  AbsoluteLocationPathNode | FilterPathNode | RelativeLocationPathNode;
+  | AbsoluteLocationPathNode
+  | FilterPathNode
+  | RelativeLocationPathNode;
 
 const isPathExpression = (syntaxNode: AnySyntaxNode | null): syntaxNode is PathExpressionNode => {
   if (syntaxNode == null) {

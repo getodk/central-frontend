@@ -71,7 +71,8 @@ export interface ConditionViolation<Condition extends ValidationCondition> exten
 }
 
 export type ConditionValidation<Condition extends ValidationCondition> =
-  ConditionSatisfied<Condition> | ConditionViolation<Condition>;
+  | ConditionSatisfied<Condition>
+  | ConditionViolation<Condition>;
 
 export type AnyViolation = ConditionViolation<ValidationCondition>;
 
