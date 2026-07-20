@@ -339,12 +339,14 @@ onUnmounted(() => {
 	border-radius: var(--odk-radius);
 
 	:deep(.upload-control-header) {
-		border-radius: var(--odk-radius) var(--odk-radius) 0 0;
 		background: var(--odk-light-background-color);
 		justify-content: flex-start;
 		gap: var(--odk-spacing-xl);
 		border-bottom: 1px solid var(--odk-border-color);
 		padding: 12px var(--odk-spacing-xl);
+		display: flex;
+		align-items: center;
+		width: 100%;
 	}
 
 	:deep(.upload-control-content) {
