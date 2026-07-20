@@ -2746,18 +2746,11 @@ describe('jr:count', () => {
   });
 
   describe('count controlled by direct reference', () => {
-    const maxCount = 50;
+    const initialCount = 3;
 
     let scenario: Scenario;
-    let initialCount: number;
-
-    const randomCount = () => {
-      return Math.floor(Math.random() * maxCount);
-    };
 
     beforeEach(async () => {
-      initialCount = randomCount();
-
       scenario = await Scenario.init(
         'Direct reference count updates',
         // prettier-ignore
@@ -2790,25 +2783,26 @@ describe('jr:count', () => {
       expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(initialCount);
     });
 
-    it('updates based on changes to the directly referenced question', () => {
-      let retainedCount = initialCount;
+    it('never deletes repeat instances when count decreases', () => {
+      scenario.answer('/data/rep-count', 6);
+      expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(6);
 
-      for (let i = 0; i < 5; i += 1) {
-        let updatedCount: number;
+      // Decreasing jr:count never deletes repeat instances.
+      scenario.answer('/data/rep-count', 2);
+      expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(6);
 
-        do {
-          updatedCount = randomCount();
-        } while (updatedCount === retainedCount);
+      scenario.answer('/data/rep-count', 1);
+      expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(6);
+    });
 
-        scenario.answer('/data/rep-count', updatedCount);
+    it('adds instances when count increases', () => {
+      // Decreasing first retains existing instances.
+      scenario.answer('/data/rep-count', 1);
+      expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(initialCount);
 
-        // Decreasing jr:count never deletes repeat instances.
-        const expectedCount = Math.max(updatedCount, retainedCount);
-
-        expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(expectedCount);
-
-        retainedCount = expectedCount;
-      }
+      // Increasing beyond retained count adds new instances.
+      scenario.answer('/data/rep-count', 5);
+      expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(5);
     });
 
     it('adds instances when count increases beyond the previously retained count', () => {

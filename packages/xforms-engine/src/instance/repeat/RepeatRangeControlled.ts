@@ -78,10 +78,8 @@ export class RepeatRangeControlled
     }
 
     const delta = currentCount - previousCount;
-    this.addChildren(
-      previousCount - 1,
-      this.resolveInstanceNodes(savedNodes, template, previousCount, delta)
-    );
+    const instanceNodes = this.resolveInstanceNodes(savedNodes, template, previousCount, delta);
+    this.addChildren(previousCount - 1, instanceNodes);
     return currentCount;
   }
 
