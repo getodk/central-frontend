@@ -4,7 +4,8 @@ import { intAnswer } from '../../scenario/answer/ExpectedIntAnswer.ts';
 import { stringAnswer } from '../../scenario/answer/ExpectedStringAnswer.ts';
 import { LocalDate } from '../../scenario/java/time/LocalDate.ts';
 import { Scenario } from '../../scenario/jr/Scenario.ts';
-import { r } from '../../scenario/jr/resource/ResourcePathHelper.ts';
+
+import whovaForm from '../../scenario/fixtures/test-javarosa/resources/whova_form.xml?raw';
 
 /**
  * **PORTING NOTES**
@@ -38,7 +39,7 @@ describe('WHO VA fixture(s): smoketests', () => {
   describe('WhoVATest.java', () => {
     describe('regression after [JavaRosa] 2.17.0', () => {
       it('[updates `relevant` state] relevance updates', { timeout: 40 * 1000 }, async () => {
-        const scenario = await Scenario.init(r('whova_form.xml'));
+        const scenario = await Scenario.init(whovaForm);
 
         // region Give consent to unblock the rest of the form
         // (Id10013) [Did the respondent give consent?] ref:/data/respondent_backgr/Id10013
@@ -197,7 +198,7 @@ describe('WHO VA fixture(s): smoketests', () => {
           }
 
           testFn('progresses through the form', async () => {
-            const scenario = await Scenario.init(r('whova_form.xml'));
+            const scenario = await Scenario.init(whovaForm);
 
             // region Give consent to unblock the rest of the form
             // (Id10013) [Did the respondent give consent?] ref:/data/respondent_backgr/Id10013
