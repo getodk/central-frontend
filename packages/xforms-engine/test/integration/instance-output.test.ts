@@ -10,12 +10,14 @@ import {
   title,
 } from '@getodk/common/test-utils/xform-dsl/index.ts';
 import type { LoadFormOptions } from '@getodk/xforms-engine';
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { stringAnswer } from '../scenario/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../scenario/jr/Scenario.ts';
-import { setUpSimpleReferenceManager } from '../scenario/jr/reference/ReferenceManagerTestUtils.ts';
-import { r } from '../scenario/jr/resource/ResourcePathHelper.ts';
 import { nullValue } from '../scenario/value/ExpectedNullValue.ts';
+import { JRResourceService } from '../scenario/fixtures/JRResourceService.ts';
+
+import issue449 from '../scenario/fixtures/test-javarosa/resources/issue_449.xml?raw';
+import issue449LastSaved from '../scenario/fixtures/test-javarosa/resources/issue_449_last_saved.xml?raw';
 
 // Ported as of https://github.com/getodk/javarosa/commit/5ae68946c47419b83e7d28290132d846e457eea6
 describe('Instance output (serialization)', () => {
@@ -79,6 +81,16 @@ describe('Instance output (serialization)', () => {
   });
 
   describe('SameRefDifferentInstancesIssue449Test.java (regression tests)', () => {
+    let resourceService: JRResourceService;
+
+    beforeEach(() => {
+      resourceService = new JRResourceService();
+    });
+
+    afterEach(() => {
+      resourceService.reset();
+    });
+
     describe('form with same ref in different instances', () => {
       /**
        * **PORTING NOTES**
@@ -95,10 +107,14 @@ describe('Instance output (serialization)', () => {
        *   vague here.
        */
       it('is [~~]successfully[~~] deserialized', async () => {
-        const formFile = r('issue_449.xml');
-        setUpSimpleReferenceManager(formFile.getParent(), 'file');
+        const attachmentFileName = 'issue_449_last_saved.xml';
+        const attachmentURL = `jr://file/${attachmentFileName}` as const;
+        resourceService.activateResource(
+          { url: attachmentURL, fileName: attachmentFileName, mimeType: 'application/xml' },
+          issue449LastSaved
+        );
 
-        const scenario = await Scenario.init(formFile);
+        const scenario = await Scenario.init(issue449, { resourceService });
 
         scenario.answer('/data/new-part', 'c');
 
