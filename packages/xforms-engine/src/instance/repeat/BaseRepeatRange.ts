@@ -241,8 +241,8 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatDefinition>
   }
 
   protected addChildren(
-    afterIndex: number,
-    instanceNodes: readonly StaticElement[]
+    instanceNodes: readonly StaticElement[],
+    afterIndex = this.getLastIndex()
   ): readonly RepeatInstance[] {
     return this.scope.runTask(() => {
       const initialIndex = afterIndex + 1;
