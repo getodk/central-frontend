@@ -242,14 +242,15 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatDefinition>
 
   protected addChildren(
     instanceNodes: readonly StaticElement[],
-    afterIndex = this.getLastIndex()
+    afterIndex?: number
   ): readonly RepeatInstance[] {
     return this.scope.runTask(() => {
-      const initialIndex = afterIndex + 1;
-      const newInstances = this.createChildren(afterIndex, instanceNodes);
+      const precedingIndex = afterIndex ?? this.getLastIndex();
+      const insertAt = precedingIndex + 1;
+      const newInstances = this.createChildren(precedingIndex, instanceNodes);
 
       return this.childrenState.setChildren((currentInstances) => {
-        return insertAtIndex(currentInstances, initialIndex, newInstances);
+        return insertAtIndex(currentInstances, insertAt, newInstances);
       });
     });
   }
