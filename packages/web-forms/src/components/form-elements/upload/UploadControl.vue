@@ -9,7 +9,6 @@ import type { Translate } from '@/lib/locale/useLocale.ts';
 import type { UploadNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import Message from 'primevue/message';
-import Panel from 'primevue/panel';
 import { computed, inject, onUnmounted, ref, watchEffect } from 'vue';
 import DeleteConfirmDialog from './DeleteConfirmDialog.vue';
 import UploadAudioHeader from './UploadAudioHeader.vue';
@@ -246,8 +245,8 @@ onUnmounted(() => {
 <template>
 	<ControlText :question="question" />
 
-	<Panel :class="{ 'mobile-only-header': isBlankCanvas }">
-		<template #header>
+	<div class="upload-control" :class="{ 'mobile-only-header': isBlankCanvas }">
+		<div class="upload-control-header">
 			<template v-if="mediaType === 'image'">
 				<UploadImageHeader
 					:question="question"
@@ -267,8 +266,8 @@ onUnmounted(() => {
 			<template v-else>
 				<UploadFileHeader :question="question" :accept="accept" :is-disabled="isDisabled" @change="onChange" />
 			</template>
-		</template>
-		<template #default>
+		</div>
+		<div class="upload-control-content">
 			<div class="drag-and-drop" :class="{ 'disabled': isDisabled, 'canvas-mode': !!canvasMode && showImagePreview }" @drop.prevent.stop="onDrop" @dragover.prevent>
 				<div v-if="canvasEmptyPlaceholder.length && !question.currentState.value" class="canvas-empty-placeholder">
 					{{ canvasEmptyPlaceholder }}
@@ -321,9 +320,8 @@ onUnmounted(() => {
 					{{ t('upload_control.drag_and_drop.placeholder') }}
 				</div>
 			</div>
-		</template>
-	</Panel>
-
+		</div>
+	</div>
 	<DeleteConfirmDialog
 		v-model:visible="confirmDeleteAction"
 		@delete-file="clearValueConfirmed"
@@ -333,26 +331,27 @@ onUnmounted(() => {
 <style scoped lang="scss">
 @use '../../../assets/styles/breakpoints' as odk;
 
-.p-panel {
+.upload-control {
 	background: var(--odk-base-background-color);
 	box-shadow: none;
 	border: 1px solid var(--odk-border-color);
-  overflow: hidden;
+	overflow: hidden;
+	border-radius: var(--odk-radius);
 
-	:deep(.p-panel-header) {
+	:deep(.upload-control-header) {
 		border-radius: var(--odk-radius) var(--odk-radius) 0 0;
 		background: var(--odk-light-background-color);
 		justify-content: flex-start;
 		gap: var(--odk-spacing-xl);
 		border-bottom: 1px solid var(--odk-border-color);
-		padding: var(--p-panel-header-padding);
+		padding: 12px var(--odk-spacing-xl);
 	}
 
-	:deep(.p-panel-content-container .p-panel-content) {
+	:deep(.upload-control-content) {
 		padding: 0;
 	}
 
-	&.mobile-only-header :deep(.p-panel-header) {
+	&.mobile-only-header :deep(.upload-control-header) {
 		display: none;
 	}
 }
@@ -420,16 +419,16 @@ onUnmounted(() => {
 }
 
 @include odk.sm-constrained {
-	.p-panel :deep(.p-panel-header) {
+	.upload-control :deep(.upload-control-header) {
 		flex-direction: column;
 		justify-content: center;
 
-		.p-panel-header-actions {
+		.upload-control-header-actions {
 			display: none;
 		}
 	}
 
-	.p-panel.mobile-only-header :deep(.p-panel-header) {
+	.upload-control.mobile-only-header :deep(.upload-control-header) {
 		display: flex;
 	}
 
