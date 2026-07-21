@@ -145,7 +145,6 @@ const useGlobalUtils = memoizeForContainer(({ i18n }) => {
       : getNumberFormat(key).formatRange(start, end)),
     formatSize: (bytes) => {
       if (bytes == null) return null;
-      if (bytes < 1024) return i18n.n(bytes, 'byte');
       if (bytes < 1024 * 1024) return i18n.n(bytes / 1024, 'kilobyte');
       return i18n.n(bytes / (1024 * 1024), 'megabyte');
     },

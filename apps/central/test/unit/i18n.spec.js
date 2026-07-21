@@ -167,10 +167,10 @@ describe('util/i18n', () => {
     });
 
     describe('formatSize()', () => {
-      it('formats bytes', () => {
+      it('formats small values as kilobytes', () => {
         const { formatSize } = withSetup(useI18nUtils);
-        formatSize(0).should.equal('0 B');
-        formatSize(1023).should.equal('1,023 B');
+        formatSize(0).should.equal('0 kB');
+        formatSize(1023).should.equal('1 kB');
       });
 
       it('formats kilobytes', () => {
@@ -194,14 +194,14 @@ describe('util/i18n', () => {
 
       it('returns null for null', () => {
         const { formatSize } = withSetup(useI18nUtils);
-        should(formatSize(null)).be.null();
+        should.not.exist(formatSize(null));
       });
 
       it('uses the locale', () => {
         const container = createTestContainer();
         const { formatSize } = withSetup(useI18nUtils, { container });
         container.i18n.locale = 'fr';
-        formatSize(1536).should.equal('1,5 ko');
+        formatSize(1536).should.equal('1,5\u202fko'); // narrow no-break space
       });
     });
 

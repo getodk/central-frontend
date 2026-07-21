@@ -77,7 +77,7 @@ describe('FormAttachmentList', () => {
         const component = await load('/projects/1/forms/f/draft', {
           root: false
         });
-        component.get('td.form-attachment-list-size').text().should.equal('2.0 KB');
+        component.get('td.form-attachment-list-size').text().should.equal('2 kB');
       });
 
       it('shows nothing for an attachment without size', async () => {
