@@ -166,6 +166,45 @@ describe('util/i18n', () => {
       });
     });
 
+    describe('formatSize()', () => {
+      it('formats bytes', () => {
+        const { formatSize } = withSetup(useI18nUtils);
+        formatSize(0).should.equal('0 B');
+        formatSize(1023).should.equal('1,023 B');
+      });
+
+      it('formats kilobytes', () => {
+        const { formatSize } = withSetup(useI18nUtils);
+        formatSize(1024).should.equal('1 kB');
+        formatSize(1536).should.equal('1.5 kB');
+        formatSize(1024 * 1024 - 1).should.equal('1,024 kB');
+      });
+
+      it('formats megabytes', () => {
+        const { formatSize } = withSetup(useI18nUtils);
+        formatSize(1024 * 1024).should.equal('1 MB');
+        formatSize(1024 * 1024 * 1.5).should.equal('1.5 MB');
+      });
+
+      it('formats numbers larger than megabytes as megabytes', () => {
+        const { formatSize } = withSetup(useI18nUtils);
+        formatSize(1024 * 1024).should.equal('1 MB');
+        formatSize(1024 * 1024 * 1024).should.equal('1,024 MB');
+      });
+
+      it('returns null for null', () => {
+        const { formatSize } = withSetup(useI18nUtils);
+        should(formatSize(null)).be.null();
+      });
+
+      it('uses the locale', () => {
+        const container = createTestContainer();
+        const { formatSize } = withSetup(useI18nUtils, { container });
+        container.i18n.locale = 'fr';
+        formatSize(1536).should.equal('1,5 ko');
+      });
+    });
+
     describe('formatList()', () => {
       it('returns a formatted list', () => {
         const { formatList } = withSetup(useI18nUtils);

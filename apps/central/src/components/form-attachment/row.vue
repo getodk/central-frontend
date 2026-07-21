@@ -76,14 +76,10 @@ except according to the terms contained in the LICENSE file.
 import DateTime from '../date-time.vue';
 
 import { apiPaths } from '../../util/request';
+import { useI18nUtils } from '../../util/i18n';
 import { useRequestData } from '../../request-data';
 
-const formatSize = (bytes) => {
-  if (bytes == null) return null;
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-};
+
 
 export default {
   name: 'FormAttachmentRow',
@@ -116,6 +112,7 @@ export default {
     // The component assumes that this data will exist when the component is
     // created.
     const { form } = useRequestData();
+    const { formatSize } = useI18nUtils();
     return { form, formatSize };
   },
   computed: {

@@ -77,8 +77,7 @@ const dsHashset = computed(() =>
 
   th:first-child { width: 125px; }
   th:nth-child(2) { width: 250px; }
-  th:nth-child(3) { width: 200px; }
-  th:nth-child(4) { width: 100px; }
+  th:nth-child(3) { width: 250px; }
   th:last-child { width: #{200px + $padding-left-table-data + $padding-right-table-data}; }
 }
 </style>
