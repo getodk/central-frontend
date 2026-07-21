@@ -231,10 +231,6 @@ export abstract class DescendantNode<
    * @see {@link RepeatInstance.remove} and {@link RepeatRange.removeInstances}
    * for additional details about their respective node-specific removal
    * behaviors and ordering.
-   *
-   * @todo Possibly retain removed repeat instances in memory. This came up as a
-   * behavior of Collect/JavaRosa, and we should investigate the details and
-   * ramifications of that, and whether it's the desired behavior.
    */
   remove(this: AnyChildNode): void {
     this.scope.runTask(() => {
