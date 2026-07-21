@@ -10,28 +10,28 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="infonav-button dropdown">
-    <router-link v-if="link != null" class="btn btn-link" :to="link">
+  <div v-if="link != null" class="infonav-button">
+    <router-link class="btn btn-link" :to="link">
       <slot name="title"></slot>
     </router-link>
-    <template v-else>
-      <button :id="toggleId" type="button" class="btn dropdown-toggle" data-toggle="dropdown"
-        aria-haspopup="menu" aria-expanded="false">
+  </div>
+  <dropdown v-else class="infonav-button">
+    <template #toggle="{ toggle, attrs }">
+      <button type="button" class="btn dropdown-toggle" v-bind="attrs"
+        @click="toggle">
           <slot name="title"></slot>
           <span class="icon-angle-down"></span>
       </button>
-      <ul class="dropdown-menu" :aria-labelledby="toggleId">
-        <slot name="dropdown"></slot>
-      </ul>
     </template>
-  </div>
+    <template #menu>
+      <slot name="dropdown"></slot>
+    </template>
+  </dropdown>
 </template>
 
-
-<script>
-let id = 1;
-</script>
 <script setup>
+import Dropdown from './dropdown.vue';
+
 defineOptions({
   name: 'Infonav'
 });
@@ -39,11 +39,6 @@ defineProps({
   // If a link is provided, the button will navigate to that link when clicked instead of dropping down.
   link: String
 });
-
-const idPrefix = `infonav${id}`;
-id += 1;
-const toggleId = `${idPrefix}-toggle`;
-
 </script>
 
 <style lang="scss">
