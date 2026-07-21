@@ -15,17 +15,21 @@ import {
   t,
   title,
 } from '@getodk/common/test-utils/xform-dsl/index.ts';
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { answerText } from '../scenario/answer/ExpectedDisplayTextAnswer.ts';
 import { stringAnswer } from '../scenario/answer/ExpectedStringAnswer.ts';
 import { choice } from '../scenario/choice/ExpectedChoice.ts';
 import type { ExplicitRepeatCreationOptions } from '../scenario/jr/Scenario.ts';
 import { Scenario } from '../scenario/jr/Scenario.ts';
 import type { PositionalEvent } from '../scenario/jr/event/PositionalEvent.ts';
-import { setUpSimpleReferenceManager } from '../scenario/jr/reference/ReferenceManagerTestUtils.ts';
-import { r } from '../scenario/jr/resource/ResourcePathHelper.ts';
 import type { SelectChoice } from '../scenario/jr/select/SelectChoice.ts';
 import { ANSWER_REQUIRED_BUT_EMPTY } from '../scenario/jr/validation/ValidateOutcome.ts';
+
+import externalSelectGeoJSON from '../scenario/fixtures/test-javarosa/resources/external-select-geojson.xml?raw';
+import cascadingSelect from '../scenario/fixtures/test-javarosa/resources/three-level-cascading-select.xml?raw';
+import cascadingMultiSelect from '../scenario/fixtures/test-javarosa/resources/three-level-cascading-multi-select.xml?raw';
+import externalDataGeoJSON from '../scenario/fixtures/test-javarosa/resources/external-data.geojson?raw';
+import { JRResourceService } from '../scenario/fixtures/JRResourceService.ts';
 
 // Ported as of https://github.com/getodk/javarosa/commit/5ae68946c47419b83e7d28290132d846e457eea6
 describe('DynamicSelectUpdateTest.java', () => {
@@ -627,10 +631,25 @@ describe('SelectChoiceTest.java', () => {
    *
    */
   describe('`getChild`', () => {
-    it('returns properties in order when choices are from secondary instance', async () => {
-      setUpSimpleReferenceManager(r('external-select-geojson.xml').getParent(), 'file');
+    let resourceService: JRResourceService;
 
-      const scenario = await Scenario.init('external-select-geojson.xml');
+    beforeEach(() => {
+      resourceService = new JRResourceService();
+    });
+
+    afterEach(() => {
+      resourceService.reset();
+    });
+
+    it('returns properties in order when choices are from secondary instance', async () => {
+      const attachmentFileName = 'external-data.geojson';
+      const attachmentURL = `jr://file/${attachmentFileName}` as const;
+      resourceService.activateResource(
+        { url: attachmentURL, fileName: attachmentFileName, mimeType: 'application/geo+json' },
+        externalDataGeoJSON
+      );
+
+      const scenario = await Scenario.init(externalSelectGeoJSON, { resourceService });
 
       const firstChoiceProperties = scenario.choicesOf('/data/q').get(0)?.getProperties();
       expect(firstChoiceProperties?.length).toEqual(4);
@@ -767,7 +786,7 @@ describe('SelectChoiceTest.java', () => {
 describe('SelectMultipleChoiceFilterTest.java', () => {
   describe('dependent levels in blank instance', () => {
     it(`[has] have no choices`, async () => {
-      const scenario = await Scenario.init('three-level-cascading-multi-select.xml');
+      const scenario = await Scenario.init(cascadingMultiSelect);
 
       expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
       expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
@@ -776,7 +795,7 @@ describe('SelectMultipleChoiceFilterTest.java', () => {
 
   describe('selecting value at level 1', () => {
     it('filters choices at level 2', async () => {
-      const scenario = await Scenario.init('three-level-cascading-multi-select.xml');
+      const scenario = await Scenario.init(cascadingMultiSelect);
 
       expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
 
@@ -795,7 +814,7 @@ describe('SelectMultipleChoiceFilterTest.java', () => {
 
   describe('selecting values at levels 1 and 2', () => {
     it('filters choices at level 3', async () => {
-      const scenario = await Scenario.init('three-level-cascading-multi-select.xml');
+      const scenario = await Scenario.init(cascadingMultiSelect);
 
       expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
       expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
@@ -815,7 +834,7 @@ describe('SelectMultipleChoiceFilterTest.java', () => {
   describe('new choice filter evaluation', () => {
     // JR: removesIrrelevantAnswersAtAllLevels_withoutChangingOrder
     it('removes predicate-filtered answers at all levels, without changing order', async () => {
-      const scenario = await Scenario.init('three-level-cascading-multi-select.xml');
+      const scenario = await Scenario.init(cascadingMultiSelect);
 
       expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
       expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
@@ -844,7 +863,7 @@ describe('SelectMultipleChoiceFilterTest.java', () => {
     });
 
     it('leaves answer unchanged if all selections still in choices', async () => {
-      const scenario = await Scenario.init('three-level-cascading-multi-select.xml');
+      const scenario = await Scenario.init(cascadingMultiSelect);
 
       expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
       expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
@@ -899,7 +918,7 @@ describe('SelectMultipleChoiceFilterTest.java', () => {
 describe('SelectOneChoiceFilterTest.java', () => {
   describe('dependent levels in blank instance', () => {
     it('should have no choices', async () => {
-      const scenario = await Scenario.init('three-level-cascading-select.xml');
+      const scenario = await Scenario.init(cascadingSelect);
 
       expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
       expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
@@ -908,7 +927,7 @@ describe('SelectOneChoiceFilterTest.java', () => {
 
   describe('selecting value at level 1', () => {
     it('should filter choices at level 2', async () => {
-      const scenario = await Scenario.init('three-level-cascading-select.xml');
+      const scenario = await Scenario.init(cascadingSelect);
 
       expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
 
@@ -924,7 +943,7 @@ describe('SelectOneChoiceFilterTest.java', () => {
 
   describe('selecting values at levels 1 and 2', () => {
     it('should filter choices at level 3', async () => {
-      const scenario = await Scenario.init('three-level-cascading-select.xml');
+      const scenario = await Scenario.init(cascadingSelect);
 
       expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
       expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
@@ -941,7 +960,7 @@ describe('SelectOneChoiceFilterTest.java', () => {
 
   describe('clearing value at level 2', () => {
     it('should clear choices at level 3', async () => {
-      const scenario = await Scenario.init('three-level-cascading-select.xml');
+      const scenario = await Scenario.init(cascadingSelect);
 
       expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
       expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
@@ -989,7 +1008,7 @@ describe('SelectOneChoiceFilterTest.java', () => {
      * {@link https://github.com/getodk/web-forms/issues/57 | issue tracking this open question}
      */
     it('should clear choices at levels 2 and 3', async () => {
-      const scenario = await Scenario.init('three-level-cascading-select.xml');
+      const scenario = await Scenario.init(cascadingSelect);
 
       expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
       expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
@@ -1042,7 +1061,7 @@ describe('SelectOneChoiceFilterTest.java', () => {
         }
 
         testFn(description, async () => {
-          const scenario = await Scenario.init('three-level-cascading-select.xml');
+          const scenario = await Scenario.init(cascadingSelect);
 
           expect(scenario.choicesOf('/data/level2').isEmpty()).toBe(true);
           expect(scenario.choicesOf('/data/level3').isEmpty()).toBe(true);
@@ -1091,7 +1110,7 @@ describe('SelectOneChoiceFilterTest.java', () => {
          * whether removal or restoration is expected for the above case).
          */
         it('does not revert values set explicitly between itemset filter state changes (depth: 2)', async () => {
-          const scenario = await Scenario.init('three-level-cascading-select.xml');
+          const scenario = await Scenario.init(cascadingSelect);
 
           scenario.answer('/data/level1_contains', 'b');
           scenario.answer('/data/level2_contains', 'ab');
@@ -1163,7 +1182,7 @@ describe('SelectOneChoiceFilterTest.java', () => {
      * commented out, so they can be restored when the test passes.
      */
     it.fails('should clear [and validate] values at levels 2 and 3', async () => {
-      const scenario = await Scenario.init('three-level-cascading-select.xml');
+      const scenario = await Scenario.init(cascadingSelect);
 
       expect(scenario.answerOf('/data/level2').getValue()).toBe('');
       expect(scenario.answerOf('/data/level3').getValue()).toBe('');
@@ -1199,7 +1218,7 @@ describe('SelectOneChoiceFilterTest.java', () => {
      * Supplemental to the ported test above.
      */
     it('clears values at levels 2 and 3 [currently supplemental, see porting notes on previous teest]', async () => {
-      const scenario = await Scenario.init('three-level-cascading-select.xml');
+      const scenario = await Scenario.init(cascadingSelect);
 
       expect(scenario.answerOf('/data/level2').getValue()).toBe('');
       expect(scenario.answerOf('/data/level3').getValue()).toBe('');
@@ -1221,7 +1240,7 @@ describe('SelectOneChoiceFilterTest.java', () => {
 
   describe('changing value at level 2', () => {
     it('should clear level 3 if choice no longer available', async () => {
-      const scenario = await Scenario.init('three-level-cascading-select.xml');
+      const scenario = await Scenario.init(cascadingSelect);
 
       scenario.answer('/data/level1_contains', 'a');
       scenario.answer('/data/level2_contains', 'aa');
@@ -1256,7 +1275,7 @@ describe('SelectOneChoiceFilterTest.java', () => {
      * preserved (commented out) pending any further discussion on the topic.
      */
     it('should not clear level 3 if choice still available', async () => {
-      const scenario = await Scenario.init('three-level-cascading-select.xml');
+      const scenario = await Scenario.init(cascadingSelect);
 
       scenario.answer('/data/level1_contains', 'a');
       scenario.answer('/data/level2_contains', 'aa');

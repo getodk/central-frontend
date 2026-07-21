@@ -38,7 +38,7 @@ import type { RootDefinition } from '../parse/model/RootDefinition.ts';
 import type { FetchFormAttachment } from '../client/resources.ts';
 import type { SecondaryInstancesDefinition } from '../parse/model/SecondaryInstance/SecondaryInstancesDefinition.ts';
 import { InstanceNode } from './abstract/InstanceNode.ts';
-import { buildAttributes } from './attachments/buildAttributes.ts';
+import { buildAttributes } from './buildAttributes.ts';
 import { InstanceAttachmentsState } from './attachments/InstanceAttachmentsState.ts';
 import type { Attribute } from './Attribute.ts';
 import type { InitialInstanceState } from './input/InitialInstanceState.ts';

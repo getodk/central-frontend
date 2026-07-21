@@ -27,15 +27,13 @@
     "npm": "11"
   },
   "scripts": {
-    "build": "npm-run-all -l build:clean build:translations build:demo build:js",
-    "build:clean": "rimraf dist/ dist-demo/",
-    "build:demo": "vite build --mode demo --outDir dist-demo",
+    "build": "npm-run-all -l build:clean build:translations build:js",
+    "build:clean": "rimraf dist/",
     "build:js": "vite build",
     "build:translations": "node bin/merge-translations.js",
     "translations:pull": "cd ../.. && tx pull -r web_forms.strings -a -f --mode translator",
     "translations:push": "cd ../.. && tx push -r web_forms.strings -s",
-    "dev": "vite",
-    "dist-demo": "npm run build && vite serve dist-demo --port 5174",
+    "dev": "vite --config vite.config.e2e.ts",
     "feature-matrix": "node bin/feature-matrix/render.js",
     "format:fix": "npm-run-all --print-name format:vue format:prettier",
     "format:lint": "prettier -c \"**/*\" --ignore-unknown --cache",
@@ -79,8 +77,7 @@
     "ramda": "^0.32.0",
     "sass": "^1.94.2",
     "typescript": "~5.9.3",
-    "vite-plugin-css-injected-by-js": "^3.5.2",
-    "vite-plugin-static-copy": "^3.2.0"
+    "vite-plugin-css-injected-by-js": "^3.5.2"
   },
   "peerDependencies": {
     "vue": "^3.5.29"

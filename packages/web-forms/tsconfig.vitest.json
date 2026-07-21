@@ -5,12 +5,14 @@
     "../common/types/**/*.ts",
     "env.d.ts",
     "src/components/__tests__",
+    "e2e/app/**/*",
     "tests",
     "tests-examples",
     "src/components/**/*.vue",
     "src/components/**/*.ts",
     "src/lib/**/*.ts",
-    "src/odk-theme-preset.ts"
+    "src/odk-theme-preset.ts",
+    "src/web-forms-plugin.ts"
   ],
   "exclude": ["../common/src/test/**/*.ts"],
   "compilerOptions": {

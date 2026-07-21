@@ -1,4 +1,5 @@
 import { expect, Locator, Page } from '@playwright/test';
+import { expectScreenshot } from '../../screenshot.ts';
 
 export class MapControl {
   private readonly MAP_COMPONENT_SELECTOR = '.map-block-component';
@@ -179,37 +180,19 @@ export class MapControl {
     await expect(error.locator('span')).toHaveText(expectedMessage);
   }
 
-  async expectMapScreenshot(mapComponent: Locator, snapshotName: string, isFullScreen = false) {
+  async expectMapScreenshot(mapComponent: Locator, screenshotName: string, isFullScreen = false) {
     // It cannot disable map's JS animations. So setting timeout.
     await this.page.waitForTimeout(this.ANIMATION_TIME);
-
+    const width = isFullScreen ? 1280 : 802;
+    const height = isFullScreen ? 720 : 507;
     const map = mapComponent.locator(this.MAP_CONTAINER_SELECTOR);
-    const browserName = this.page.context().browser()?.browserType().name();
-    const isChromiumLinux = process.platform === 'linux' && browserName === 'chromium';
-
-    if (isChromiumLinux) {
-      // Chrome for Linux has an issue when taking the snapshot (ref. https://github.com/microsoft/playwright/issues/18827)
-      const width = isFullScreen ? 1280 : 802;
-      const heigth = isFullScreen ? 720 : 507;
-      await this.page.addStyleTag({
-        content: `
-        .map-container {
-          width: ${width}px !important;
-          height: ${heigth}px !important;
-          max-width: ${width}px !important;
-          max-height: ${heigth + 1}px !important;
-        }
-        body, html {
-          overflow: hidden !important;
-        }
-      `,
-      });
-
-      await this.page.waitForTimeout(this.ANIMATION_TIME);
-    }
-
-    await expect(map).toHaveScreenshot(snapshotName, {
-      maxDiffPixelRatio: 0.02,
+    await expectScreenshot({
+      page: this.page,
+      locator: map,
+      screenshotName,
+      width,
+      height,
+      animationTime: this.ANIMATION_TIME,
     });
   }
 }
