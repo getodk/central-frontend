@@ -71,7 +71,7 @@ export function useMapViewControls(mapInstance: Map): UseMapViewControls {
     }
 
     const extent = source.getExtent();
-    if (isExtendEmpty(extent)) {
+    if (!extent || isExtendEmpty(extent)) {
       return;
     }
 

@@ -63,14 +63,14 @@
     "test:types:vitest": "vue-tsc --project ./tsconfig.vitest.json --emitDeclarationOnly false --noEmit"
   },
   "devDependencies": {
-    "@faker-js/faker": "^10.1.0",
+    "@faker-js/faker": "^10.5.0",
     "@fontsource/hanken-grotesk": "^5.2.8",
     "@fontsource/roboto": "^5.2.9",
     "@getodk/xforms-engine": "1.0.0",
     "@primeuix/themes": "1.0.3",
     "@types/image-blob-reduce": "^4",
-    "@types/ramda": "^0.31.1",
-    "@vitejs/plugin-vue-jsx": "^5.1.4",
+    "@types/ramda": "^0.32.0",
+    "@vitejs/plugin-vue-jsx": "^5.1.6",
     "jsdom": "^27.2.0",
     "primeflex": "^4.0.0",
     "primevue": "4.3.3",
@@ -83,13 +83,13 @@
     "vue": "^3.5.29"
   },
   "dependencies": {
-    "@formatjs/intl": "^4.1.4",
+    "@formatjs/intl": "^4.1.14",
     "@mdi/js": "^7.4.47",
-    "dompurify": "^3.3.0",
+    "dompurify": "^3.4.11",
     "image-blob-reduce": "^4.1.0",
-    "konva": "^10.2.5",
-    "ol": "^10.7.0",
-    "primelocale": "^2.3.1",
+    "konva": "^10.3.0",
+    "ol": "^10.9.0",
+    "primelocale": "^2.4.0",
     "vue-draggable-plus": "^0.6.1",
     "vue-konva": "^3.4.0"
   },
