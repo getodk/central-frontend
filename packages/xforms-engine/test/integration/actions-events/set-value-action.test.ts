@@ -639,79 +639,185 @@ describe('setvalue action', () => {
       });
     });
 
-    // ported from: https://github.com/getodk/javarosa/blob/2dd8e15e9f3110a86f8d7d851efc98627ae5692e/src/test/java/org/javarosa/core/model/actions/SetValueActionTest.java#L508
-    it('sets the value of multiple fields', async () => {
-      const scenario = await Scenario.init(
-        'Setvalue multiple destinations',
-        html(
-          head(
-            title('Setvalue multiple destinations'),
-            model(
-              mainInstance(
-                t('data id="setvalue-multiple"', t('source'), t('destination1'), t('destination2'))
-              ),
-              bind('/data/destination1').type('int'),
-              bind('/data/destination2').type('int')
-            )
-          ),
-          body(
-            input(
-              '/data/source',
-              setvalueLiteral('xforms-value-changed', '/data/destination1', '7'),
-              setvalueLiteral('xforms-value-changed', '/data/destination2', '11')
-            )
-          )
-        )
-      );
-
-      scenario.answer('/data/source', 'foo');
-
-      expect(scenario.answerOf('/data/destination1')).toEqualAnswer(intAnswer(7));
-      expect(scenario.answerOf('/data/destination2')).toEqualAnswer(intAnswer(11));
-    });
-
-    it('sets the value of multiple fields in the order defined in the document', async () => {
-      const scenario = await Scenario.init(
-        'Setvalue multiple destinations',
-        html(
-          head(
-            title('Setvalue multiple destinations'),
-            model(
-              mainInstance(
-                t(
-                  'data id="setvalue-multiple"',
-                  t('my-value-1', '1'),
-                  t('my-value-2'),
-                  t('my-value-3'),
-                  t('my-value-4'),
-                  t('my-value-5')
-                )
-              ),
-              bind('/data/my-value-1').type('int'),
-              bind('/data/my-value-2').type('int'),
-              bind('/data/my-value-3').type('int'),
-              bind('/data/my-value-4').type('int'),
-              bind('/data/my-value-5').type('int')
-            )
-          ),
-          body(
-            input(
-              '/data/my-value-1',
-              setvalue('xforms-value-changed', '/data/my-value-2', '/data/my-value-1 + 1'),
-              setvalue('xforms-value-changed', '/data/my-value-3', '/data/my-value-2 + 1'),
-              setvalue('xforms-value-changed', '/data/my-value-4', '/data/my-value-3 + 1'),
-              setvalue('xforms-value-changed', '/data/my-value-5', '/data/my-value-4 + 1')
+    describe('sets the value of multiple fields', () => {
+      // ported from: https://github.com/getodk/javarosa/blob/2dd8e15e9f3110a86f8d7d851efc98627ae5692e/src/test/java/org/javarosa/core/model/actions/SetValueActionTest.java#L508
+      it('one source with two refs', async () => {
+        const scenario = await Scenario.init(
+          'Setvalue multiple destinations',
+          html(
+            head(
+              title('Setvalue multiple destinations'),
+              model(
+                mainInstance(
+                  t(
+                    'data id="setvalue-multiple"',
+                    t('source'),
+                    t('destination1'),
+                    t('destination2')
+                  )
+                ),
+                bind('/data/destination1').type('int'),
+                bind('/data/destination2').type('int')
+              )
+            ),
+            body(
+              input(
+                '/data/source',
+                setvalueLiteral('xforms-value-changed', '/data/destination1', '7'),
+                setvalueLiteral('xforms-value-changed', '/data/destination2', '11')
+              )
             )
           )
-        )
-      );
+        );
 
-      scenario.answer('/data/my-value-1', '2');
-      expect(scenario.answerOf('/data/my-value-1')).toEqualAnswer(intAnswer(2));
-      expect(scenario.answerOf('/data/my-value-2')).toEqualAnswer(intAnswer(3));
-      expect(scenario.answerOf('/data/my-value-3')).toEqualAnswer(intAnswer(4));
-      expect(scenario.answerOf('/data/my-value-4')).toEqualAnswer(intAnswer(5));
-      expect(scenario.answerOf('/data/my-value-5')).toEqualAnswer(intAnswer(6));
+        scenario.answer('/data/source', 'foo');
+
+        expect(scenario.answerOf('/data/destination1')).toEqualAnswer(intAnswer(7));
+        expect(scenario.answerOf('/data/destination2')).toEqualAnswer(intAnswer(11));
+      });
+
+      it('in the order defined in the document', async () => {
+        const scenario = await Scenario.init(
+          'Setvalue multiple destinations',
+          html(
+            head(
+              title('Setvalue multiple destinations'),
+              model(
+                mainInstance(
+                  t(
+                    'data id="setvalue-multiple"',
+                    t('my-value-1', '1'),
+                    t('my-value-2'),
+                    t('my-value-3'),
+                    t('my-value-4'),
+                    t('my-value-5')
+                  )
+                ),
+                bind('/data/my-value-1').type('int'),
+                bind('/data/my-value-2').type('int'),
+                bind('/data/my-value-3').type('int'),
+                bind('/data/my-value-4').type('int'),
+                bind('/data/my-value-5').type('int')
+              )
+            ),
+            body(
+              input(
+                '/data/my-value-1',
+                setvalue('xforms-value-changed', '/data/my-value-2', '/data/my-value-1 + 1'),
+                setvalue('xforms-value-changed', '/data/my-value-3', '/data/my-value-2 + 1'),
+                setvalue('xforms-value-changed', '/data/my-value-4', '/data/my-value-3 + 1'),
+                setvalue('xforms-value-changed', '/data/my-value-5', '/data/my-value-4 + 1')
+              )
+            )
+          )
+        );
+
+        scenario.answer('/data/my-value-1', '2');
+        expect(scenario.answerOf('/data/my-value-1')).toEqualAnswer(intAnswer(2));
+        expect(scenario.answerOf('/data/my-value-2')).toEqualAnswer(intAnswer(3));
+        expect(scenario.answerOf('/data/my-value-3')).toEqualAnswer(intAnswer(4));
+        expect(scenario.answerOf('/data/my-value-4')).toEqualAnswer(intAnswer(5));
+        expect(scenario.answerOf('/data/my-value-5')).toEqualAnswer(intAnswer(6));
+      });
+
+      it('handles removed repeats', async () => {
+        const scenario = await Scenario.init(
+          'Setvalue multiple destinations',
+          html(
+            head(
+              title('Setvalue multiple destinations'),
+              model(
+                mainInstance(
+                  t('data id="setvalue-multiple"', t('val', '1'), t('survivor'), t('rep', t('y')))
+                ),
+                bind('/data/val').type('int'),
+                bind('/data/survivor').type('int'),
+                bind('/data/rep/y').type('int')
+              )
+            ),
+            body(
+              input(
+                '/data/val',
+                setvalue('xforms-value-changed', '/data/rep[1]/y', '/data/val'),
+                setvalue('xforms-value-changed', '/data/survivor', '/data/val')
+              ),
+              input('/data/survivor'),
+              repeat('/data/rep', input('/data/rep/y'))
+            )
+          )
+        );
+
+        scenario.next('/data/val');
+        scenario.next('/data/survivor');
+        scenario.next('/data/rep[1]');
+        scenario.next('/data/rep[1]/y');
+        scenario.next('/data/rep');
+        scenario.createNewRepeat({ assertCurrentReference: '/data/rep' });
+        scenario.next('/data/rep[2]/y');
+        scenario.answer('/data/rep[2]/y', '1');
+
+        // updating value only sets the first repeat
+        scenario.answer('/data/val', '2');
+        expect(scenario.answerOf('/data/val')).toEqualAnswer(intAnswer(2));
+        expect(scenario.answerOf('/data/survivor')).toEqualAnswer(intAnswer(2));
+        expect(scenario.answerOf('/data/rep[1]/y')).toEqualAnswer(intAnswer(2));
+        expect(scenario.answerOf('/data/rep[2]/y')).toEqualAnswer(intAnswer(1));
+
+        scenario.removeRepeat('/data/rep[2]');
+        scenario.removeRepeat('/data/rep[1]');
+
+        // updating value works even when there's no repeat instance left
+        scenario.answer('/data/val', '3');
+        expect(scenario.answerOf('/data/val')).toEqualAnswer(intAnswer(3));
+        expect(scenario.answerOf('/data/survivor')).toEqualAnswer(intAnswer(3));
+
+        scenario.next('/data/survivor');
+        scenario.next('/data/rep');
+
+        scenario.createNewRepeat({ assertCurrentReference: '/data/rep' });
+        scenario.answer('/data/val', '4');
+
+        // when the repeat instance is added back the updates work again
+        expect(scenario.answerOf('/data/val')).toEqualAnswer(intAnswer(4));
+        expect(scenario.answerOf('/data/survivor')).toEqualAnswer(intAnswer(4));
+        expect(scenario.answerOf('/data/rep[1]/y')).toEqualAnswer(intAnswer(4));
+      });
+
+      it('set value events update to a new position in the repeat', async () => {
+        const scenario = await Scenario.init(
+          'Setvalue multiple destinations',
+          html(
+            head(
+              title('Setvalue multiple destinations'),
+              model(
+                mainInstance(t('data id="setvalue-multiple"', t('rep', t('y'), t('z')))),
+                bind('/data/rep/y').type('int'),
+                bind('/data/rep/z').type('int')
+              )
+            ),
+            body(
+              repeat(
+                '/data/rep',
+                input('/data/rep/y', setvalue('xforms-value-changed', '/data/rep/z', '../y')),
+                input('/data/rep/z')
+              )
+            )
+          )
+        );
+
+        scenario.next('/data/rep[1]');
+        scenario.next('/data/rep[1]/y');
+        scenario.next('/data/rep[1]/z');
+        scenario.next('/data/rep');
+        scenario.createNewRepeat({ assertCurrentReference: '/data/rep' });
+        scenario.answer('/data/rep[1]/y', '1');
+        scenario.answer('/data/rep[2]/y', '2');
+        expect(scenario.answerOf('/data/rep[1]/z')).toEqualAnswer(intAnswer(1));
+        expect(scenario.answerOf('/data/rep[2]/z')).toEqualAnswer(intAnswer(2));
+        scenario.removeRepeat('/data/rep[1]'); // remove the first instance
+        scenario.answer('/data/rep[1]/y', '3');
+        expect(scenario.answerOf('/data/rep[1]/z')).toEqualAnswer(intAnswer(3));
+      });
     });
   });
 
@@ -906,6 +1012,23 @@ describe('setvalue action', () => {
       scenario.answer('/data/source', 'bar');
       scenario.answer('/data/trigger', 'yes');
       expect(scenario.answerOf('/data/grp/destination')).toEqualAnswer(stringAnswer('bar'));
+    });
+
+    it('sets the value of a bound attribute', async () => {
+      const scenario = await Scenario.init(
+        'Setvalue attribute',
+        html(
+          head(
+            title('Setvalue attribute'),
+            model(mainInstance(t('data id="setvalue-attribute"', t('element attr=""'))))
+          ),
+          body(input('/data/element', setvalue('xforms-value-changed', '/data/element/@attr', '7')))
+        )
+      );
+      expect(scenario.attributeOf('/data/element', 'attr').getValue()).toBe('');
+      scenario.next('/data/element');
+      scenario.answer('trigger');
+      expect(scenario.attributeOf('/data/element', 'attr').getValue()).toBe('7');
     });
   });
 

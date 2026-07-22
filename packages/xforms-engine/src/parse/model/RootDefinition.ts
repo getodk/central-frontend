@@ -31,7 +31,7 @@ export class RootDefinition extends NodeDefinition<'root'> {
 
   constructor(
     protected readonly form: XFormDefinition,
-    protected readonly model: ModelDefinition,
+    readonly model: ModelDefinition,
     readonly submission: SubmissionDefinition,
     readonly classes: BodyClassList
   ) {

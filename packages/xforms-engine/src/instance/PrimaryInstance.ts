@@ -48,7 +48,6 @@ import type { PrimaryInstanceDocument } from './internal-api/PrimaryInstanceDocu
 import type { ClientReactiveSerializableInstance } from './internal-api/serialization/ClientReactiveSerializableInstance.ts';
 import type { TranslationContext } from './internal-api/TranslationContext.ts';
 import { Root } from './Root.ts';
-import type { ValueChangedEventListener } from './internal-api/ValueChangedEventListener.ts';
 
 /**
  * As specified by {@link | XPath 1.0}:
@@ -130,7 +129,6 @@ export class PrimaryInstance<
   readonly initializationMode: FormInstanceInitializationMode;
   readonly model: ModelDefinition;
   readonly attachments: InstanceAttachmentsState;
-  readonly valueChangedEventListeners: Map<string, ValueChangedEventListener[]>;
 
   // InstanceNode
   protected readonly state: SharedNodeState<PrimaryInstanceStateSpec>;
@@ -187,7 +185,6 @@ export class PrimaryInstance<
 
     this.initializationMode = mode;
     this.model = model;
-    this.valueChangedEventListeners = new Map();
 
     this.attachments = new InstanceAttachmentsState(initialState?.attachments, fetchFormAttachment);
     this.instanceNode = activeInstance;
@@ -254,10 +251,6 @@ export class PrimaryInstance<
     childrenState.setChildren([root]);
     this.attributeState.setAttributes(buildAttributes(this));
     setIsAttached(true);
-  }
-
-  getValueChangedEventListeners(): Map<string, ValueChangedEventListener[]> {
-    return this.valueChangedEventListeners;
   }
 
   override getAttributes(): readonly Attribute[] {

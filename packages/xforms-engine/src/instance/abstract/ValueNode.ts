@@ -32,6 +32,7 @@ import type { ClientReactiveSerializableValueNode } from '../internal-api/serial
 import type { ValidationContext } from '../internal-api/ValidationContext.ts';
 import type { DescendantNodeStateSpec } from './DescendantNode.ts';
 import { DescendantNode } from './DescendantNode.ts';
+import type { Root } from '../Root.ts';
 
 export type ValueNodeDefinition<V extends ValueType> = LeafNodeDefinition<V>;
 
@@ -84,6 +85,7 @@ export abstract class ValueNode<
   }
 
   readonly instanceState: InstanceState;
+  readonly setEncodedValue: (value: string) => void;
 
   constructor(
     parent: GeneralParentNode,
@@ -110,6 +112,10 @@ export abstract class ValueNode<
     this.valueState = valueState;
     this.validation = createValidationState(this, this.instanceConfig);
     this.instanceState = createValueNodeInstanceState(this);
+
+    this.setEncodedValue = (value: string) => {
+      this.setValueState(codec.decodeValue(value));
+    };
   }
 
   // ValidationContext
@@ -124,5 +130,11 @@ export abstract class ValueNode<
   // InstanceNode
   getChildren(): readonly [] {
     return [];
+  }
+
+  setValue(value: RuntimeInputValue): Root {
+    this.setValueState(value);
+
+    return this.root;
   }
 }

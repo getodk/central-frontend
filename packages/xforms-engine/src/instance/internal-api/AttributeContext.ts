@@ -7,13 +7,12 @@ import type { AnyBindPreloadDefinition } from '../../parse/model/BindPreloadDefi
 import type { ModelDefinition } from '../../parse/model/ModelDefinition.ts';
 import type { EvaluationContext } from './EvaluationContext.ts';
 import type { InstanceConfig } from './InstanceConfig.ts';
-import type { ValueChangedEventListener } from './ValueChangedEventListener.ts';
+import type { ActionDefinition } from '../../parse/model/ActionDefinition.ts';
 
 export interface InstanceAttributeContextDocument {
   readonly initializationMode: FormInstanceInitializationMode;
   readonly isAttached: Accessor<boolean>;
   getBackgroundGeopoint: Accessor<Promise<string>>;
-  getValueChangedEventListeners(): Map<string, ValueChangedEventListener[]>;
 }
 
 export type DecodeInstanceValue = (value: string) => string;
@@ -37,6 +36,7 @@ export interface AttributeContext extends EvaluationContext {
   readonly instanceNode: StaticAttribute;
   readonly instanceConfig: InstanceConfig;
   readonly decodeInstanceValue: DecodeInstanceValue;
+  readonly valueChangedActions: ActionDefinition[];
 
   isReadonly(): boolean;
   isRelevant(): boolean;
