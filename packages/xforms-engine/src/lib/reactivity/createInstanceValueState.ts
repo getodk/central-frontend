@@ -283,11 +283,15 @@ const registerValueChangedActions = (context: ValueContext, getValue: Accessor<s
 
             if (sourceValue && sourceValue !== previous) {
               if (referencesCurrentNode(destinationNode, ref)) {
-                const value = destinationNode.evaluator.evaluateString(
-                  action.computation.expression,
-                  destinationNode
-                );
-                destinationNode.setEncodedValue(value);
+                if (action.element.nodeName === SET_GEOPOINT_LOCAL_NAME) {
+                  getGeopointValue(context, (point) => destinationNode.setEncodedValue(point));
+                } else {
+                  const value = destinationNode.evaluator.evaluateString(
+                    action.computation.expression,
+                    destinationNode
+                  );
+                  destinationNode.setEncodedValue(value);
+                }
               }
             }
 
