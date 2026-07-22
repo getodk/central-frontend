@@ -4,6 +4,7 @@ import type {
   InputDefinition,
   InputNode,
   InputNodeAppearances,
+  InputNodeInputValue,
   InputNodeOptions,
 } from '../client/InputNode.ts';
 import type { TextRange } from '../client/TextRange.ts';
@@ -30,6 +31,7 @@ import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { ClientReactiveSerializableValueNode } from './internal-api/serialization/ClientReactiveSerializableValueNode.ts';
 import type { ValidationContext } from './internal-api/ValidationContext.ts';
+import type { Root } from './Root.ts';
 
 export type AnyInputDefinition = {
   [V in ValueType]: InputDefinition<V>;
@@ -148,6 +150,12 @@ export class InputControl<V extends ValueType = ValueType>
     this.state = state;
     this.engineState = state.engineState;
     this.currentState = state.currentState;
+  }
+
+  setValue(value: InputNodeInputValue<V>): Root {
+    this.setValueState(value);
+
+    return this.root;
   }
 
   override getAttributes(): readonly Attribute[] {

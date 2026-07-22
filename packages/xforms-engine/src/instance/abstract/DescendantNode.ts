@@ -258,6 +258,7 @@ export abstract class DescendantNode<
         child.remove();
       });
     });
+
     this.scope.dispose();
   }
 }
