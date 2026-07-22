@@ -10,15 +10,17 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="form-version-def-dropdown btn-group">
-    <button :id="toggleId" type="button" class="btn dropdown-toggle"
-      :class="outlined ? 'btn-outlined' : 'btn-default'"
-      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <span class="icon-code"></span>
-      <span>{{ $t('action.def') }}</span>
-      <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu" :aria-labelledby="toggleId">
+  <dropdown class="form-version-def-dropdown btn-group">
+    <template #toggle="{ toggle, attrs }">
+      <button type="button" class="btn"
+        :class="outlined ? 'btn-outlined' : 'btn-default'"
+        v-bind="attrs" @click="toggle">
+        <span class="icon-code"></span>
+        <span>{{ $t('action.def') }}</span>
+        <span class="caret"></span>
+      </button>
+    </template>
+    <template #menu>
       <li>
         <a href="#" @click.prevent="viewXml">{{ $t('action.viewXml') }}</a>
       </li>
@@ -32,19 +34,19 @@ except according to the terms contained in the LICENSE file.
           {{ $t('action.downloadXlsForm', { extension: excelExtension }) }}
         </a>
       </li>
-    </ul>
-  </div>
+    </template>
+  </dropdown>
 </template>
 
 <script>
+import Dropdown from '../dropdown.vue';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
-let id = 0;
-
 export default {
   name: 'FormVersionDefDropdown',
+  components: { Dropdown },
   props: {
     version: {
       type: Object,
@@ -57,16 +59,7 @@ export default {
     const { formVersionXml } = useRequestData();
     return { formVersionXml };
   },
-  data() {
-    id += 1;
-    return {
-      id
-    };
-  },
   computed: {
-    toggleId() {
-      return `form-version-def-toggle${this.id}`;
-    },
     excelExtension() {
       return this.version.excelContentType === 'application/vnd.ms-excel'
         ? '.xls'
