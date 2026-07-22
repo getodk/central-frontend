@@ -47,6 +47,10 @@ const props = defineProps({
   deleted: Boolean,
   filter: String,
   searchTerm: String,
+  viewAs: {
+    type: Number,
+    default: null
+  },
   awaitingResponses: {
     type: Set,
     required: true
@@ -88,7 +92,8 @@ const fetchChunk = (clear, page = 0) => {
         $count: true,
         $filter: props.deleted ? '__system/deletedAt ne null' : props.filter,
         $search,
-        $orderby: '__system/createdAt desc'
+        $orderby: '__system/createdAt desc',
+        viewAs: props.viewAs ?? undefined
       }
     ),
     clear
@@ -115,7 +120,7 @@ const fetchChunk = (clear, page = 0) => {
 
 fetchChunk(true, pagination.page);
 
-watch([() => props.deleted, () => props.filter, () => props.searchTerm], () => {
+watch([() => props.deleted, () => props.filter, () => props.searchTerm, () => props.viewAs], () => {
   fetchChunk(true);
 });
 const handlePageChange = () => {
