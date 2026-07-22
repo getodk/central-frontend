@@ -65,11 +65,21 @@ describe('InstanceAttachmentsState', () => {
       ).rejects.toThrow('Error fetching form attachment: jr://images/missing.png');
     });
 
-    it('returns null when value is not a jr:// reference and has no source attachment', () => {
+    it('returns null when value is empty', () => {
       const fetchFormAttachment = vi.fn<FetchFormAttachment>();
       const state = new InstanceAttachmentsState(null, fetchFormAttachment);
 
-      expect(state.getInitialFileValue(leafWithValue('plain-value.txt'))).toBeNull();
+      expect(state.getInitialFileValue(leafWithValue(''))).toBeNull();
+      expect(fetchFormAttachment).not.toHaveBeenCalled();
+    });
+
+    it('rejects when value is not a jr:// reference and has no source attachment', async () => {
+      const fetchFormAttachment = vi.fn<FetchFormAttachment>();
+      const state = new InstanceAttachmentsState(null, fetchFormAttachment);
+
+      await expect(state.getInitialFileValue(leafWithValue('plain-value.txt'))).rejects.toThrow(
+        'Attachment not found: plain-value.txt'
+      );
       expect(fetchFormAttachment).not.toHaveBeenCalled();
     });
 

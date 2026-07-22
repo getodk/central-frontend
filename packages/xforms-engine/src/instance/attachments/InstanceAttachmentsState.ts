@@ -30,7 +30,7 @@ export class InstanceAttachmentsState extends Map<InstanceAttachmentContext, Ins
   }
 
   getInitialFileValue(instanceNode: StaticLeafElement | null): Promise<File> | null {
-    if (instanceNode == null) {
+    if (!instanceNode?.value?.length) {
       return null;
     }
 
@@ -42,11 +42,13 @@ export class InstanceAttachmentsState extends Map<InstanceAttachmentContext, Ins
 
     // Resolve jr:// default values (e.g. annotate with a default image) so the attachment state
     // and submission payload are updated and valid.
-    if (this.fetchFormAttachment != null && JRResourceURL.isJRResourceReference(value)) {
-      return this.resolveFormAttachmentFile(this.fetchFormAttachment, value);
+    if (JRResourceURL.isJRResourceReference(value)) {
+      return this.fetchFormAttachment
+        ? this.resolveFormAttachmentFile(this.fetchFormAttachment, value)
+        : null;
     }
 
-    return null;
+    return Promise.reject(new Error(`Attachment not found: ${value}`));
   }
 
   retryFileValue(instanceNode: StaticLeafElement | null) {
