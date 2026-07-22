@@ -34,7 +34,7 @@ export class InstanceAttachmentsState extends Map<InstanceAttachmentContext, Ins
       return null;
     }
 
-    const { value } = instanceNode;
+    const value = instanceNode.value.trim();
     const sourceFile = this.sourceAttachments?.get(value) ?? null;
     if (sourceFile != null) {
       return sourceFile;
@@ -51,7 +51,7 @@ export class InstanceAttachmentsState extends Map<InstanceAttachmentContext, Ins
 
   retryFileValue(instanceNode: StaticLeafElement | null) {
     if (instanceNode !== null) {
-      this.sourceAttachments?.retry(instanceNode.value);
+      this.sourceAttachments?.retry(instanceNode.value.trim());
     }
   }
 }
