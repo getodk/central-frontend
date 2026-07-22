@@ -48,6 +48,10 @@ defineOptions({
 const props = defineProps({
   filter: String,
   searchTerm: String,
+  viewAs: {
+    type: Number,
+    default: null
+  },
   awaitingResponses: {
     type: Set,
     required: true
@@ -61,11 +65,11 @@ const datasetName = inject('datasetName');
 const { odataEntities } = useRequestData();
 
 const geojsonUrl = computed(() => {
-  const query = { $filter: props.filter, $search: props.searchTerm };
+  const query = { $filter: props.filter, $search: props.searchTerm, viewAs: props.viewAs ?? undefined };
   return apiPaths.entities(projectId, datasetName, '.geojson', query);
 });
 const overlapUrl = (query) =>
-  apiPaths.odataEntities(projectId, datasetName, query);
+  apiPaths.odataEntities(projectId, datasetName, { ...query, viewAs: props.viewAs ?? undefined });
 
 const reemitters = reemit(emit, ['update', 'resolve', 'delete']);
 

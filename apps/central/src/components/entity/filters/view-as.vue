@@ -1,0 +1,90 @@
+<template>
+  <label id="entity-filters-view-as" class="form-group" :class="{ disabled }">
+    <span>{{ $t('viewAs') }}</span>
+    <div class="display-value" aria-hidden="true">
+      {{ displayValue }}
+    </div>
+      <select class="form-control" :value="modelValue" :disabled="disabled"
+        :aria-disabled="disabled" v-tooltip.aria-describedby="disabledMessage"
+        @change="$emit('update:modelValue', $event.target.value === '' ? null : Number($event.target.value))">
+        <option value="">{{ $t('noUserSelected') }}</option>
+        <template v-if="fieldKeys.dataExists">
+          <option v-for="fieldKey in fieldKeys" :key="fieldKey.id" :value="fieldKey.id">
+            {{ fieldKey.displayName }}
+          </option>
+        </template>
+      </select>
+    <span class="icon-angle-down"></span>
+  </label>
+</template>
+
+<script setup>
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRequestData } from '../../../request-data';
+
+const { t } = useI18n();
+
+defineOptions({
+  name: 'EntityFiltersViewAs'
+});
+const props = defineProps({
+  modelValue: {
+    type: Number,
+    required: false
+  },
+  disabled: {
+    type: Boolean,
+    default: false
+  },
+  disabledMessage: {
+    type: String,
+    required: false
+  }
+});
+defineEmits(['update:modelValue']);
+
+const { fieldKeys } = useRequestData();
+
+const displayValue = computed(() => {
+  if (props.modelValue == null) return t('noUserSelected');
+  const fieldKey = fieldKeys.data?.find(fk => fk.id === props.modelValue);
+  return fieldKey?.displayName ?? t('noUserSelected');
+});
+</script>
+
+<style lang="scss">
+@import '../../../assets/scss/mixins';
+@import '../../../assets/scss/variables';
+
+#entity-filters-view-as {
+  @include filter-control;
+
+  select {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+
+  }
+  .icon-angle-down {
+    font-size: 16px;
+    color: #555555;
+    font-weight: bold;
+    z-index: 1;
+    pointer-events: none;
+  }
+}
+</style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "noUserSelected": "All",
+    "viewAs": "Viewing As",
+  }
+}
+</i18n>
