@@ -10,28 +10,28 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div ref="dropdown" class="multiselect form-group">
+  <div ref="container" class="multiselect form-group dropdown" :class="{ open: isOpen }">
     <!-- Specifying @mousedown.prevent so that clicking the select element does
     not show a menu with the placeholder option. This approach seems to work
     across browsers. -->
-    <div ref="toggle" class="dropdown-trigger"
+    <div ref="trigger" class="dropdown-trigger"
       :class="{ disabled }"
-      :data-toggle="(options == null || disabled) ? null : 'dropdown'">
+      tabindex="0"
+      role="button"
+      :aria-disabled="options == null || disabled"
+      v-tooltip.aria-describedby="disabledMessage"
+      aria-haspopup="true" :aria-expanded="String(isOpen)" :aria-label="label"
+      @click="handleTriggerClick"
+      @keydown.enter="toggle">
       <slot name="icon"></slot>
       <span class="multiselect-label">{{ label }}</span>
-      <select :id="toggleId" class="display-value"
-        :aria-disabled="options == null || disabled"
-        role="button"
-        v-tooltip.aria-describedby="disabledMessage"
-        aria-haspopup="true" aria-expanded="false" :aria-label="label"
-        @keydown="toggleAfterEnter" @mousedown.prevent @click="verifyAttached">
+      <select :id="toggleId" class="display-value" tabindex="-1"
+        aria-hidden="true" @mousedown.prevent>
         <option value="">{{ selectOption }}</option>
       </select>
       <span class="icon-angle-down"></span>
     </div>
-    <!-- Specifying @click.stop so that clicking the .dropdown-menu does not
-    hide it. -->
-    <ul class="dropdown-menu" :aria-labelledby="toggleId" @click.stop>
+    <ul ref="menu" class="dropdown-menu" :style="menuStyle" :aria-labelledby="toggleId">
       <li v-if="search != null" class="search">
         <div class="form-group">
           <span class="icon-search"></span>
@@ -90,9 +90,10 @@ except according to the terms contained in the LICENSE file.
 let id = 1;
 </script>
 <script setup>
-import { computed, inject, onMounted, onUnmounted, ref, shallowReactive, watch, watchEffect } from 'vue';
+import { computed, inject, ref, shallowReactive, watch, watchEffect } from 'vue';
+import { computePosition } from '@floating-ui/dom';
 
-import { noop } from '../util/util';
+import useEventListener from '../composables/event-listener';
 
 const props = defineProps({
   /*
@@ -360,41 +361,83 @@ watch(searchValue, (value) => {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// BOOTSTRAP DROPDOWN
+// FLOATING UI DROPDOWN
 
-const dropdown = ref(null);
-const $dropdown = computed(() => $(dropdown.value));
-onMounted(() => {
-  $dropdown.value.on('shown.bs.dropdown', syncWithModelValue);
-  $dropdown.value.on('hidden.bs.dropdown', () => {
-    searchValue.value = '';
-    needsSync = changes.size !== 0;
-    changes.clear();
+const container = ref(null);
+const trigger = ref(null);
+const menu = ref(null);
+const isOpen = ref(false);
+const menuStyle = ref({});
+
+const updatePosition = async () => {
+  if (menu.value == null || trigger.value == null) return;
+
+  const { x, y } = await computePosition(trigger.value, menu.value, {
+    placement: 'bottom-start'
   });
-});
-onUnmounted(() => { $dropdown.value.off('.bs.dropdown'); });
 
-//  this should be changed i think
-const toggle = ref(null);
-const $toggle = computed(() => $(toggle.value));
-const toggleAfterEnter = ({ key }) => {
-  // console.log('toggleAfterEnter');
-  if (key === 'Enter') $toggle.value.dropdown('toggle');
+  menuStyle.value = {
+    left: `${x}px`,
+    top: `${y}px`
+  };
 };
+
+const show = () => {
+  if (isOpen.value || props.options == null || props.disabled) return;
+  isOpen.value = true;
+  updatePosition();
+  syncWithModelValue();
+};
+
+const hide = () => {
+  if (!isOpen.value) return;
+  isOpen.value = false;
+  menuStyle.value = {};
+  searchValue.value = '';
+  needsSync = changes.size !== 0;
+  changes.clear();
+};
+
+const toggle = () => {
+  if (isOpen.value) {
+    hide();
+  } else {
+    show();
+  }
+};
+
+const handleClickOutside = (event) => {
+  if (!isOpen.value) return;
+  if (container.value?.contains(event.target)) return;
+  hide();
+};
+
+const handleEscape = (event) => {
+  if (isOpen.value && event.key === 'Escape') {
+    hide();
+  }
+};
+
+useEventListener(document, 'click', handleClickOutside, true);
+useEventListener(document, 'keydown', handleEscape);
+useEventListener(window, 'resize', hide);
 
 const apply = () => {
   searchValue.value = '';
   emitIfChanged();
-  $toggle.value.dropdown('toggle');
+  hide();
 };
 
-const verifyAttached = buildMode === 'test'
+const handleTriggerClick = buildMode === 'test'
   ? ({ target }) => {
-    if (target.closest('body') == null)
+    if (target.closest('body') == null) {
       // eslint-disable-next-line no-console
       console.error('Clicking Multiselect toggle has no effect unless component is attached to body.');
+    } else {
+      toggle();
+    }
   }
-  : noop;
+  : toggle;
 
 
 
