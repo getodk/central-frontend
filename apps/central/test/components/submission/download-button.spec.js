@@ -32,7 +32,7 @@ describe('SubmissionDownloadButton', () => {
         const component = mountComponent({
           props: { filtered: true }
         });
-        component.find('.btn-primary').attributes()['data-toggle'].should.be.eql('dropdown');
+        component.find('.btn-primary').attributes()['aria-haspopup'].should.be.eql('true');
       });
 
       it('shows correct text while first chunk of submissions is loading for the first button', () => {

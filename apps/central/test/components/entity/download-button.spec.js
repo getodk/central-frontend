@@ -28,7 +28,7 @@ describe('EntityDownloadButton', () => {
         const component = mountComponent({
           props: { odataFilter: '__system/conflict ne null' }
         });
-        component.find('.btn-primary').attributes()['data-toggle'].should.be.eql('dropdown');
+        component.find('.btn-primary').attributes()['aria-haspopup'].should.be.eql('true');
       });
 
       it('show the dropdown menu when searchTerm is set', () => {
@@ -36,7 +36,7 @@ describe('EntityDownloadButton', () => {
         const component = mountComponent({
           props: { searchTerm: 'lorem ipsum' }
         });
-        component.find('.btn-primary').attributes()['data-toggle'].should.be.eql('dropdown');
+        component.find('.btn-primary').attributes()['aria-haspopup'].should.be.eql('true');
       });
 
       it('show the dropdown menu when both odataFilter and searchTerm are set', () => {
@@ -44,7 +44,7 @@ describe('EntityDownloadButton', () => {
         const component = mountComponent({
           props: { odataFilter: '__system/conflict ne null', searchTerm: 'lorem ipsum' }
         });
-        component.find('.btn-primary').attributes()['data-toggle'].should.be.eql('dropdown');
+        component.find('.btn-primary').attributes()['aria-haspopup'].should.be.eql('true');
       });
 
       it('shows correct text while first chunk of entities is loading for the first button', () => {

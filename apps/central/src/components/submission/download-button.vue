@@ -10,15 +10,16 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="submission-download-button" class="dropdown">
-    <button type="button" class="btn btn-primary"
-      :data-toggle="filtered ? 'dropdown' : null"
-      v-bind="$attrs"
-      @click="download">
-      <span class="icon-arrow-circle-down"></span>
-      <span>{{ $t('action.download') }}</span>
-    </button>
-    <ul class="dropdown-menu dropdown-menu-right">
+  <Dropdown id="submission-download-button">
+    <template #toggle="{ toggle, attrs }">
+      <button type="button" class="btn btn-primary"
+        v-bind="{ ...$attrs, ...attrs }"
+        @click="handleClick(toggle)">
+        <span class="icon-arrow-circle-down"></span>
+        <span>{{ $t('action.download') }}</span>
+      </button>
+    </template>
+    <template #menu>
       <li>
         <button type="button" class="btn btn-link dropdown-item"
           @click="$emit('downloadFiltered')">
@@ -31,15 +32,17 @@ except according to the terms contained in the LICENSE file.
           <span>{{ $tcn('action.download.unfiltered', formVersion.submissions) }}</span>
         </button>
       </li>
-    </ul>
-</div>
+    </template>
+  </Dropdown>
 </template>
 
 <script>
 import { useRequestData } from '../../request-data';
+import Dropdown from '../dropdown.vue';
 
 export default {
   name: 'SubmissionDownloadButton',
+  components: { Dropdown },
   props: {
     formVersion: Object,
     filtered: Boolean
@@ -57,9 +60,11 @@ export default {
     }
   },
   methods: {
-    download() {
+    handleClick(toggle) {
       if (!this.filtered) {
         this.$emit('download');
+      } else {
+        toggle();
       }
     }
   }
