@@ -35,13 +35,14 @@ const menuStyle = ref({});
 
 const triggerAttrs = computed(() => ({
   'aria-haspopup': 'true',
-  'aria-expanded': String(isOpen.value)
+  'aria-expanded': String(isOpen.value),
+  class: 'dropdown-toggle'
 }));
 
 const updatePosition = async () => {
   if (menu.value == null || container.value == null) return;
 
-  const triggerEl = container.value.firstElementChild;
+  const triggerEl = container.value.querySelector('.dropdown-toggle');
   if (triggerEl == null) return;
 
   const { x, y } = await computePosition(triggerEl, menu.value, {
@@ -78,8 +79,7 @@ const handleClickOutside = (event) => {
   if (!isOpen.value) return;
 
   // If clicked on trigger, the toggle handler will manage the state
-  const clickedOnTrigger = container.value?.contains(event.target) &&
-    !menu.value?.contains(event.target);
+  const clickedOnTrigger = container.value?.querySelector('.dropdown-toggle').contains(event.target);
   if (clickedOnTrigger) return;
 
   hide();

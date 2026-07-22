@@ -3,8 +3,20 @@ import TestDropdownMenu from '../util/components/dropdown-menu.vue';
 import { mount } from '../util/lifecycle';
 
 describe('Dropdown', () => {
+  it('provides attrs with aria attributes and dropdown-toggle class', async () => {
+    const component = mount(TestDropdownMenu);
+    const toggle = component.find('#toggle');
+
+    toggle.classes('dropdown-toggle').should.equal(true);
+    toggle.attributes('aria-haspopup').should.equal('true');
+    toggle.attributes('aria-expanded').should.equal('false');
+
+    await toggle.trigger('click');
+    toggle.attributes('aria-expanded').should.equal('true');
+  });
+
   it('opens when toggle is clicked', async () => {
-    const component = mount(TestDropdownMenu, { attachTo: document.body });
+    const component = mount(TestDropdownMenu);
     component.find('.dropdown').classes('open').should.equal(false);
     await component.find('#toggle').trigger('click');
     component.find('.dropdown').classes('open').should.equal(true);

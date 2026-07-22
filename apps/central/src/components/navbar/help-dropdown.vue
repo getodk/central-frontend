@@ -10,9 +10,9 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <Dropdown id="navbar-help-dropdown" tag="li" class="dropdown">
+  <dropdown id="navbar-help-dropdown" tag="li">
     <template #toggle="{ toggle, attrs }">
-      <a class="dropdown-toggle" href="#" role="button" :aria-label="$t('help')"
+      <a href="#" role="button" :aria-label="$t('help')"
         v-bind="attrs" @click.prevent="toggle">
         <span class="icon-question-circle"></span><span class="caret"></span>
       </a>
@@ -28,7 +28,7 @@ except according to the terms contained in the LICENSE file.
         <a href="/version.txt" target="_blank">{{ $t('common.version') }}</a>
       </li>
     </template>
-  </Dropdown>
+  </dropdown>
 </template>
 
 <script setup>

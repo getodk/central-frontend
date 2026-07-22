@@ -1,8 +1,8 @@
 <template>
   <div>
-    <Dropdown>
+    <dropdown>
       <template #toggle="{ toggle, attrs }">
-        <button id="toggle" type="button" class="dropdown-toggle" v-bind="attrs" @click="toggle">
+        <button id="toggle" type="button" v-bind="attrs" @click="toggle">
           Menu
         </button>
       </template>
@@ -10,7 +10,7 @@
         <li><a id="action1" href="#">Action 1</a></li>
         <li><a id="action2" href="#">Action 2</a></li>
       </template>
-    </Dropdown>
+    </dropdown>
     <button id="outside" type="button">Outside</button>
   </div>
 </template>

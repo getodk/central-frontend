@@ -15,9 +15,9 @@ except according to the terms contained in the LICENSE file.
       <span class="icon-user-circle-o"></span>{{ $t('notLoggedIn') }}
     </a>
   </li>
-  <Dropdown v-else id="navbar-actions" tag="li" class="dropdown">
+  <dropdown v-else id="navbar-actions" tag="li">
     <template #toggle="{ toggle, attrs }">
-      <a href="#" class="dropdown-toggle" role="button" v-bind="attrs"
+      <a href="#" role="button" v-bind="attrs"
         @click.prevent="toggle">
         <span class="icon-user-circle-o"></span>
         <span v-tooltip.text>{{ currentUser.displayName }}</span>
@@ -36,7 +36,7 @@ except according to the terms contained in the LICENSE file.
         </a>
       </li>
     </template>
-  </Dropdown>
+  </dropdown>
 </template>
 
 <script>

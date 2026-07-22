@@ -10,9 +10,9 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <Dropdown id="navbar-locale-dropdown" tag="li" class="dropdown">
+  <dropdown id="navbar-locale-dropdown" tag="li">
     <template #toggle="{ toggle, attrs }">
-      <a class="dropdown-toggle" href="#" role="button"
+      <a href="#" role="button"
         :aria-label="locales.get($i18n.locale).name" v-bind="attrs"
         @click.prevent="toggle">
         {{ languageSubtag }}<span class="caret"></span>
@@ -31,7 +31,7 @@ except according to the terms contained in the LICENSE file.
         </a>
       </li>
     </template>
-  </Dropdown>
+  </dropdown>
 </template>
 
 <script setup>
