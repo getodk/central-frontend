@@ -185,7 +185,6 @@ export class PrimaryInstance<
 
     this.initializationMode = mode;
     this.model = model;
-
     this.attachments = new InstanceAttachmentsState(initialState?.attachments, fetchFormAttachment);
     this.instanceNode = activeInstance;
     this.geolocationProvider = config.geolocationProvider;
