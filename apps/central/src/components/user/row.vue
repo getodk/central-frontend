@@ -35,14 +35,14 @@ except according to the terms contained in the LICENSE file.
       <span v-else class="invitation-pending">{{ $t('invitationPending') }}</span>
     </td>
     <td>
-      <div class="dropdown">
-        <button :id="actionsButtonId" type="button"
-          class="btn btn-default dropdown-toggle" data-toggle="dropdown"
-          aria-haspopup="true" aria-expanded="false">
-          <span class="icon-cog"></span><span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-right"
-          :aria-labelledby="actionsButtonId">
+      <dropdown placement="bottom-end">
+        <template #toggle="{ toggle, attrs }">
+          <button type="button" class="btn btn-default dropdown-toggle"
+            v-bind="attrs" @click="toggle">
+            <span class="icon-cog"></span><span class="caret"></span>
+          </button>
+        </template>
+        <template #menu>
           <li>
             <router-link :to="userPath(user.id)" class="edit-profile">
               {{ $t('action.editProfile') }}
@@ -62,13 +62,14 @@ except according to the terms contained in the LICENSE file.
               {{ $t('action.retire') }}&hellip;
             </a>
           </li>
-        </ul>
-      </div>
+        </template>
+      </dropdown>
     </td>
   </tr>
 </template>
 
 <script>
+import Dropdown from '../dropdown.vue';
 import Spinner from '../spinner.vue';
 import DateTime from '../date-time.vue';
 
@@ -80,7 +81,7 @@ import { useRequestData } from '../../request-data';
 
 export default {
   name: 'UserRow',
-  components: { Spinner, DateTime },
+  components: { Dropdown, Spinner, DateTime },
   inject: ['config'],
   props: {
     user: {
@@ -105,9 +106,6 @@ export default {
   computed: {
     disabled() {
       return this.user.id === this.currentUser.id;
-    },
-    actionsButtonId() {
-      return `user-row-actions-button${this.user.id}`;
     }
   },
   methods: {
