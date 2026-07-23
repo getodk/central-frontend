@@ -7,19 +7,23 @@
     },
     "Submission": {
       "formNotFound": {
-        "string": "Für diese URL wurde kein Formular gefunden, bitte überprüfen Sie dies noch einmal."
-      },
-      "formNotFound.body": {
-        "string": ""
+        "title": {
+          "string": "Für diese URL wurde kein Formular gefunden, bitte überprüfen Sie dies noch einmal."
+        },
+        "body": {
+          "string": ""
+        }
       },
       "errorNotProblem": {
-        "string": "Etwas ging schief"
-      },
-      "errorNotProblem.body": {
-        "string": ""
-      },
-      "errorNotProblem.status": {
-        "string": "Fehlercode {status}"
+        "title": {
+          "string": "Etwas ging schief"
+        },
+        "body": {
+          "string": ""
+        },
+        "status": {
+          "string": "Fehlercode {status}"
+        }
       }
     },
     "WebFormRenderer": {

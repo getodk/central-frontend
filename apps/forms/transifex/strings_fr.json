@@ -7,19 +7,23 @@
     },
     "Submission": {
       "formNotFound": {
-        "string": "Impossible d'ouvrir le formulaire"
-      },
-      "formNotFound.body": {
-        "string": "Veuillez vérifier que le lien est correct. Il est possible que le formulaire ne soit plus disponible ou que votre accès ait expiré. Si le problème persiste, veuillez contacter la personne qui vous a envoyé le lien vers le formulaire."
+        "title": {
+          "string": "Impossible d'ouvrir le formulaire"
+        },
+        "body": {
+          "string": "Veuillez vérifier que le lien est correct. Il est possible que le formulaire ne soit plus disponible ou que votre accès ait expiré. Si le problème persiste, veuillez contacter la personne qui vous a envoyé le lien vers le formulaire."
+        }
       },
       "errorNotProblem": {
-        "string": "Quelque-chose s'est mal passé"
-      },
-      "errorNotProblem.body": {
-        "string": "Veuillez réessayer plus tard. Si le problème persiste, veuillez contacter la personne qui vous a envoyé le lien vers le formulaire."
-      },
-      "errorNotProblem.status": {
-        "string": "Code d'erreur: {status}"
+        "title": {
+          "string": "Quelque-chose s'est mal passé"
+        },
+        "body": {
+          "string": "Veuillez réessayer plus tard. Si le problème persiste, veuillez contacter la personne qui vous a envoyé le lien vers le formulaire."
+        },
+        "status": {
+          "string": "Code d'erreur: {status}"
+        }
       }
     },
     "WebFormRenderer": {

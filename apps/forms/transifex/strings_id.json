@@ -7,19 +7,23 @@
     },
     "Submission": {
       "formNotFound": {
-        "string": "Tidak dapat membuka formulir"
-      },
-      "formNotFound.body": {
-        "string": "Pastikan tautan sudah benar. Formulir mungkin sudah tidak tersedia, atau akses Anda mungkin telah kedaluwarsa. Jika masalah berlanjut, hubungi orang yang mengirimkan tautan formulir tersebut kepada Anda."
+        "title": {
+          "string": "Tidak dapat membuka formulir"
+        },
+        "body": {
+          "string": "Pastikan tautan sudah benar. Formulir mungkin sudah tidak tersedia, atau akses Anda mungkin telah kedaluwarsa. Jika masalah berlanjut, hubungi orang yang mengirimkan tautan formulir tersebut kepada Anda."
+        }
       },
       "errorNotProblem": {
-        "string": "Terjadi kesalahan"
-      },
-      "errorNotProblem.body": {
-        "string": "Coba lagi nanti. Jika masalah berlanjut, hubungi orang yang mengirimkan tautan formulir tersebut kepada Anda."
-      },
-      "errorNotProblem.status": {
-        "string": "Kode error: {status}"
+        "title": {
+          "string": "Terjadi kesalahan"
+        },
+        "body": {
+          "string": "Coba lagi nanti. Jika masalah berlanjut, hubungi orang yang mengirimkan tautan formulir tersebut kepada Anda."
+        },
+        "status": {
+          "string": "Kode error: {status}"
+        }
       }
     },
     "WebFormRenderer": {

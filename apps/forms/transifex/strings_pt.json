@@ -7,19 +7,23 @@
     },
     "Submission": {
       "formNotFound": {
-        "string": "Nenhum Formulário encontrado com esse endereço, por favor verifique."
-      },
-      "formNotFound.body": {
-        "string": ""
+        "title": {
+          "string": "Nenhum Formulário encontrado com esse endereço, por favor verifique."
+        },
+        "body": {
+          "string": ""
+        }
       },
       "errorNotProblem": {
-        "string": "Algo deu errado"
-      },
-      "errorNotProblem.body": {
-        "string": ""
-      },
-      "errorNotProblem.status": {
-        "string": "Código de erro {status}"
+        "title": {
+          "string": "Algo deu errado"
+        },
+        "body": {
+          "string": ""
+        },
+        "status": {
+          "string": "Código de erro {status}"
+        }
       }
     },
     "WebFormRenderer": {

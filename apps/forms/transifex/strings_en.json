@@ -7,19 +7,23 @@
     },
     "Submission": {
       "formNotFound": {
-        "string": "Unable to open form"
-      },
-      "formNotFound.body": {
-        "string": "Please check that the link is correct. The form may no longer be available, or your access may have expired. If the problem continues, contact the person who sent you the form link."
+        "title": {
+          "string": "Unable to open form"
+        },
+        "body": {
+          "string": "Please check that the link is correct. The form may no longer be available, or your access may have expired. If the problem continues, contact the person who sent you the form link."
+        }
       },
       "errorNotProblem": {
-        "string": "Something went wrong"
-      },
-      "errorNotProblem.body": {
-        "string": "Please try again later. If the problem continues, contact the person who sent you the form link."
-      },
-      "errorNotProblem.status": {
-        "string": "Error code: {status}"
+        "title": {
+          "string": "Something went wrong"
+        },
+        "body": {
+          "string": "Please try again later. If the problem continues, contact the person who sent you the form link."
+        },
+        "status": {
+          "string": "Error code: {status}"
+        }
       }
     },
     "WebFormRenderer": {
