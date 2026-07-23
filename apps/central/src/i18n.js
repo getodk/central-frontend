@@ -117,6 +117,9 @@ const numberFormats = {
   percent: { style: 'percent' }
 };
 
+for (const unit of ['kilobyte', 'megabyte'])
+  numberFormats[unit] = { style: 'unit', unit, unitDisplay: 'short', maximumFractionDigits: 1 };
+
 for (let i = 1; i < 15; i += 1)
   numberFormats[`maximumFractionDigits${i}`] = { maximumFractionDigits: i };
 
