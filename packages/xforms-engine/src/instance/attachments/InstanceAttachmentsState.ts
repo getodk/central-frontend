@@ -3,6 +3,7 @@ import {
   type JRResourceURLString,
 } from '@getodk/common/jr-resources/JRResourceURL.ts';
 import type { FetchFormAttachment } from '../../client/resources.ts';
+import { AttachmentNotFoundError } from '../../error/AttachmentNotFoundError.ts';
 import type { StaticLeafElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import type { InstanceAttachmentMap } from '../input/InstanceAttachmentMap.ts';
 import type { InstanceAttachmentContext } from '../internal-api/InstanceAttachmentContext.ts';
@@ -30,7 +31,7 @@ export class InstanceAttachmentsState extends Map<InstanceAttachmentContext, Ins
   }
 
   getInitialFileValue(instanceNode: StaticLeafElement | null): Promise<File> | null {
-    if (instanceNode == null) {
+    if (!instanceNode?.value?.length) {
       return null;
     }
 
@@ -42,11 +43,13 @@ export class InstanceAttachmentsState extends Map<InstanceAttachmentContext, Ins
 
     // Resolve jr:// default values (e.g. annotate with a default image) so the attachment state
     // and submission payload are updated and valid.
-    if (this.fetchFormAttachment != null && JRResourceURL.isJRResourceReference(value)) {
-      return this.resolveFormAttachmentFile(this.fetchFormAttachment, value);
+    if (JRResourceURL.isJRResourceReference(value)) {
+      return this.fetchFormAttachment
+        ? this.resolveFormAttachmentFile(this.fetchFormAttachment, value)
+        : null;
     }
 
-    return null;
+    return Promise.reject(new AttachmentNotFoundError(value));
   }
 
   retryFileValue(instanceNode: StaticLeafElement | null) {
