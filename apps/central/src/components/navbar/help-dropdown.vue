@@ -10,12 +10,14 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <li id="navbar-help-dropdown" class="dropdown">
-    <a class="dropdown-toggle" href="#" data-toggle="dropdown" role="button"
-      :aria-label="$t('help')" aria-haspopup="true" aria-expanded="false">
-      <span class="icon-question-circle"></span><span class="caret"></span>
-    </a>
-    <ul class="dropdown-menu">
+  <dropdown id="navbar-help-dropdown" tag="li">
+    <template #toggle="{ toggle, attrs }">
+      <a href="#" role="button" :aria-label="$t('help')"
+        v-bind="attrs" @click.prevent="toggle">
+        <span class="icon-question-circle"></span><span class="caret"></span>
+      </a>
+    </template>
+    <template #menu>
       <li>
         <doc-link to="central-intro/">{{ $t('common.docs') }}</doc-link>
       </li>
@@ -25,12 +27,13 @@ except according to the terms contained in the LICENSE file.
       <li>
         <a href="/version.txt" target="_blank">{{ $t('common.version') }}</a>
       </li>
-    </ul>
-  </li>
+    </template>
+  </dropdown>
 </template>
 
 <script setup>
 import DocLink from '../doc-link.vue';
+import Dropdown from '../dropdown.vue';
 
 defineOptions({
   name: 'NavbarHelpDropdown'

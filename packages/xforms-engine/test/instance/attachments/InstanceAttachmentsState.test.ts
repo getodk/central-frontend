@@ -43,6 +43,20 @@ describe('InstanceAttachmentsState', () => {
       expect(fetchFormAttachment).not.toHaveBeenCalled();
     });
 
+    it('returns the source attachment when the instance value has surrounding whitespace', () => {
+      const sourceFile = Promise.resolve(new File([''], 'photo.png', { type: 'image/png' }));
+      const sourceAttachments = new Map([
+        ['photo.png', sourceFile],
+      ]) as unknown as InstanceAttachmentMap;
+      const fetchFormAttachment = vi.fn<FetchFormAttachment>();
+      const state = new InstanceAttachmentsState(sourceAttachments, fetchFormAttachment);
+
+      const result = state.getInitialFileValue(leafWithValue(`photo.png\n        `));
+
+      expect(result).toBe(sourceFile);
+      expect(fetchFormAttachment).not.toHaveBeenCalled();
+    });
+
     it('fetches the form attachment when value is a jr:// reference and no source attachment exists', async () => {
       const blob = new Blob(['data'], { type: 'image/png' });
       const fetchFormAttachment = vi.fn<FetchFormAttachment>().mockResolvedValue(okResponse(blob));
