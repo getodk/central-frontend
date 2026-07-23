@@ -7,19 +7,23 @@
     },
     "Submission": {
       "formNotFound": {
-        "string": "未找到与此URL对应的表单，请仔细核对。"
-      },
-      "formNotFound.body": {
-        "string": ""
+        "title": {
+          "string": "未找到与此URL对应的表单，请仔细核对。"
+        },
+        "body": {
+          "string": ""
+        }
       },
       "errorNotProblem": {
-        "string": "出现错误：错误代码"
-      },
-      "errorNotProblem.body": {
-        "string": ""
-      },
-      "errorNotProblem.status": {
-        "string": "{status}"
+        "title": {
+          "string": "出现错误：错误代码"
+        },
+        "body": {
+          "string": ""
+        },
+        "status": {
+          "string": "{status}"
+        }
       }
     },
     "WebFormRenderer": {

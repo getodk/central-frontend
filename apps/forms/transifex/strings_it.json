@@ -7,19 +7,23 @@
     },
     "Submission": {
       "formNotFound": {
-        "string": "Non è stato trovato alcun modulo con questo URL, si prega di ricontrollare."
-      },
-      "formNotFound.body": {
-        "string": ""
+        "title": {
+          "string": "Non è stato trovato alcun modulo con questo URL, si prega di ricontrollare."
+        },
+        "body": {
+          "string": ""
+        }
       },
       "errorNotProblem": {
-        "string": "Qualcosa è andato storto"
-      },
-      "errorNotProblem.body": {
-        "string": ""
-      },
-      "errorNotProblem.status": {
-        "string": "Codice error {status}"
+        "title": {
+          "string": "Qualcosa è andato storto"
+        },
+        "body": {
+          "string": ""
+        },
+        "status": {
+          "string": "Codice error {status}"
+        }
       }
     },
     "WebFormRenderer": {

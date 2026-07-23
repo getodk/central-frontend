@@ -7,19 +7,23 @@
     },
     "Submission": {
       "formNotFound": {
-        "string": "此 URL 未找到表單，請仔細檢查。"
-      },
-      "formNotFound.body": {
-        "string": ""
+        "title": {
+          "string": "此 URL 未找到表單，請仔細檢查。"
+        },
+        "body": {
+          "string": ""
+        }
       },
       "errorNotProblem": {
-        "string": "出了點問題：錯誤代碼"
-      },
-      "errorNotProblem.body": {
-        "string": ""
-      },
-      "errorNotProblem.status": {
-        "string": "{status}"
+        "title": {
+          "string": "出了點問題：錯誤代碼"
+        },
+        "body": {
+          "string": ""
+        },
+        "status": {
+          "string": "{status}"
+        }
       }
     },
     "WebFormRenderer": {
