@@ -421,7 +421,7 @@ describe('SubmissionFilters', () => {
     return loadComponent({ props: { deleted: true } })
       .afterResponses(component => {
         component.getComponent(DateRangePicker).props().disabled.should.be.true;
-        const multiselects = component.findAll('.multiselect select');
+        const multiselects = component.findAll('.multiselect .dropdown-trigger');
         multiselects[0].attributes('aria-disabled').should.equal('true');
         multiselects[1].attributes('aria-disabled').should.equal('true');
       });

@@ -371,7 +371,7 @@ describe('EntityFilters', () => {
       attachTo: document.body
     })
       .afterResponses(component => {
-        const conflictFilter = component.findAll('.multiselect select');
+        const conflictFilter = component.findAll('.multiselect .dropdown-trigger');
         conflictFilter[0].attributes('aria-disabled').should.equal('true');
         conflictFilter[1].attributes('aria-disabled').should.equal('true');
         component.getComponent(DateRangePicker).props().disabled.should.be.true;
