@@ -7,6 +7,7 @@ import type { AnyBindPreloadDefinition } from '../../parse/model/BindPreloadDefi
 import type { ModelDefinition } from '../../parse/model/ModelDefinition.ts';
 import type { EvaluationContext } from './EvaluationContext.ts';
 import type { InstanceConfig } from './InstanceConfig.ts';
+import type { ActionDefinition } from '../../parse/model/ActionDefinition.ts';
 
 export interface InstanceValueContextDocument {
   readonly initializationMode: FormInstanceInitializationMode;
@@ -35,6 +36,7 @@ export interface InstanceValueContext extends EvaluationContext {
   readonly instanceNode: StaticLeafElement | null;
   readonly instanceConfig: InstanceConfig;
   readonly decodeInstanceValue: DecodeInstanceValue;
+  readonly valueChangedActions: ActionDefinition[];
 
   isReadonly(): boolean;
   isRelevant(): boolean;

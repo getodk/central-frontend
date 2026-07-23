@@ -2,6 +2,9 @@ import { isTextNode } from '@getodk/common/lib/dom/predicates.ts';
 import { ActionComputationExpression } from '../expression/ActionComputationExpression.ts';
 import { type XFormEvent, XFORM_EVENT } from './Event.ts';
 import type { ModelDefinition } from './ModelDefinition.ts';
+import { SET_GEOPOINT_LOCAL_NAME } from '../XFormDOM.ts';
+
+export type ActionType = 'geopoint' | 'value';
 
 export class ActionDefinition {
   static getRef(model: ModelDefinition, element: Element): string | null {
@@ -49,12 +52,9 @@ export class ActionDefinition {
   readonly events: XFormEvent[];
   readonly computation: ActionComputationExpression<'string'>;
   readonly source: string | undefined;
+  readonly type: ActionType;
 
-  constructor(
-    model: ModelDefinition,
-    readonly element: Element,
-    source?: string
-  ) {
+  constructor(model: ModelDefinition, element: Element, source?: string) {
     const ref = ActionDefinition.getRef(model, element);
     if (!ref) {
       throw new Error(
@@ -66,5 +66,6 @@ export class ActionDefinition {
     const value = ActionDefinition.getValue(element);
     this.computation = new ActionComputationExpression('string', value);
     this.source = source;
+    this.type = element.nodeName === SET_GEOPOINT_LOCAL_NAME ? 'geopoint' : 'value';
   }
 }
