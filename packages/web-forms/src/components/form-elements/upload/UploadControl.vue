@@ -310,6 +310,9 @@ onUnmounted(() => {
 				<Message v-else-if="fileError" severity="error" :closable="true" @close="fileError = null">
 					{{ fileError }}
 				</Message>
+				<Message v-else-if="loadingError === 'not-found'" severity="error" :closable="false">
+					{{ t('media_block.not_found.error', { file: existingFileName }) }}
+				</Message>
 				<Message v-else-if="loadingError" severity="error" :closable="true" @close="retryFetch()">
 					<template #closeicon>
 						<IconSVG name="mdiRefresh" variant="muted" size="sm" />

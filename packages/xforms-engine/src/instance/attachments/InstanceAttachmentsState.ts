@@ -3,6 +3,7 @@ import {
   type JRResourceURLString,
 } from '@getodk/common/jr-resources/JRResourceURL.ts';
 import type { FetchFormAttachment } from '../../client/resources.ts';
+import { AttachmentNotFoundError } from '../../error/AttachmentNotFoundError.ts';
 import type { StaticLeafElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import type { InstanceAttachmentMap } from '../input/InstanceAttachmentMap.ts';
 import type { InstanceAttachmentContext } from '../internal-api/InstanceAttachmentContext.ts';
@@ -48,7 +49,7 @@ export class InstanceAttachmentsState extends Map<InstanceAttachmentContext, Ins
         : null;
     }
 
-    return Promise.reject(new Error(`Attachment not found: ${value}`));
+    return Promise.reject(new AttachmentNotFoundError(value));
   }
 
   retryFileValue(instanceNode: StaticLeafElement | null) {

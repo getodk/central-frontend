@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { FetchFormAttachment, FetchResourceResponse } from '../../../src/client/resources';
+import { AttachmentNotFoundError } from '../../../src/error/AttachmentNotFoundError';
 import { InstanceAttachmentsState } from '../../../src/instance/attachments/InstanceAttachmentsState';
 import type { InstanceAttachmentMap } from '../../../src/instance/input/InstanceAttachmentMap';
 import type { StaticLeafElement } from '../../../src/integration/xpath/static-dom/StaticElement';
@@ -78,7 +79,7 @@ describe('InstanceAttachmentsState', () => {
       const state = new InstanceAttachmentsState(null, fetchFormAttachment);
 
       await expect(state.getInitialFileValue(leafWithValue('plain-value.txt'))).rejects.toThrow(
-        'Attachment not found: plain-value.txt'
+        AttachmentNotFoundError
       );
       expect(fetchFormAttachment).not.toHaveBeenCalled();
     });
