@@ -1,0 +1,133 @@
+{
+  "component": {
+    "Preview": {
+      "formNotFound": {
+        "string": "Für diese URL wurde kein Formular gefunden, bitte überprüfen Sie dies noch einmal."
+      }
+    },
+    "Submission": {
+      "formNotFound": {
+        "string": "Für diese URL wurde kein Formular gefunden, bitte überprüfen Sie dies noch einmal."
+      },
+      "formNotFound.body": {
+        "string": ""
+      },
+      "errorNotProblem": {
+        "string": "Etwas ging schief"
+      },
+      "errorNotProblem.body": {
+        "string": ""
+      },
+      "errorNotProblem.status": {
+        "string": "Fehlercode {status}"
+      }
+    },
+    "WebFormRenderer": {
+      "action": {
+        "close": {
+          "string": "Schließen"
+        },
+        "tryAgain": {
+          "string": "Nochmals versuchen"
+        }
+      },
+      "previewModal": {
+        "title": {
+          "string": "Daten sind gültig"
+        },
+        "body": {
+          "string": "Die von Ihnen eingegebenen Daten sind gültig, aber sie wurden nicht übermittelt, da es sich um eine Formularvorschau handelt."
+        }
+      },
+      "submissionModal": {
+        "title": {
+          "string": "Formular erfolgreich gesendet!"
+        },
+        "body": {
+          "string": "Sie können dieses Formular erneut ausfüllen oder schliessen, wenn Sie fertig sind."
+        },
+        "action": {
+          "fillOutAgain": {
+            "string": "Nochmals ausfüllen"
+          }
+        }
+      },
+      "thankYouModal": {
+        "title": {
+          "string": "Vielen Dank für Ihre Teilnahme!"
+        },
+        "body": {
+          "string": "Sie können dieses Fenster jetzt schliessen."
+        }
+      },
+      "editSubmissionModal": {
+        "title": {
+          "string": "Übermittlung erfolgreich"
+        },
+        "body": {
+          "string": "Sie werden nun weitergeleitet."
+        }
+      },
+      "errorModal": {
+        "title": {
+          "string": "Übermittlungsfehler"
+        },
+        "body": {
+          "string": "Ihre Daten wurden nicht übermittelt. Fehlermeldung: {errorMessage} Sie können dieses Dialogfeld schließen und es erneut versuchen. Wenn der Fehler weiterhin auftritt, wenden Sie sich bitte an die Person, die Sie gebeten hat, dieses Formular auszufüllen, oder an {supportEmail}."
+        }
+      },
+      "sendingDataModal": {
+        "title": {
+          "string": "Übermittlung senden"
+        },
+        "body": {
+          "string": "Ihre Daten werden jetzt übermittelt. Bitte schliessen Sie dieses Fenster nicht, bevor es fertig ist."
+        }
+      },
+      "sessionTimeoutModal": {
+        "title": {
+          "string": "Sitzung abgelaufen"
+        },
+        "body": {
+          "full": {
+            "string": "Bitte {here} in einem anderen Browser-Tab einloggen und erneut versuchen.",
+            "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
+          },
+          "here": {
+            "string": "hier",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nPlease log in {here} in a different browser tab and try again."
+          }
+        }
+      },
+      "retryModal": {
+        "title": {
+          "string": "Übermittlungsfehler"
+        },
+        "body": {
+          "string": "Ihre Daten wurden nicht vollständig übermittelt. Bitte drücken Sie die Schaltfläche „Erneut versuchen“, um es noch einmal zu versuchen. Wenn der Fehler weiterhin auftritt, wenden Sie sich bitte an die Person, die Sie gebeten hat, dieses Formular auszufüllen, oder an {supportEmail}."
+        }
+      },
+      "util": {
+        "request": {
+          "noResponse": {
+            "string": "Etwas ging schief: Wir haben keine Antwort auf Ihre Anfrage bekommen."
+          },
+          "problem": {
+            "404_1": {
+              "string": "Die gesuchte Ressource kann nicht gefunden werden. Die Ressource wurde möglicherweise gelöscht."
+            }
+          }
+        }
+      },
+      "mixin": {
+        "request": {
+          "alert": {
+            "entityTooLarge": {
+              "string": "Die Daten, die Sie hochzuladen versuchen, sind zu gross."
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -66,8 +66,13 @@ const addLocale = (tag: string, name: string ) => {
 };
 
 addLocale('en', 'English');
+addLocale('de', 'Deutsch');
 addLocale('es', 'Español');
 addLocale('fr', 'Français');
+addLocale('it', 'Italiano');
+addLocale('pt', 'Português');
+addLocale('zh', '汉语');
+addLocale('zh-Hant', '漢語');
 
 export const loadUsersLocale = () => {
   const locale = userLocale();
