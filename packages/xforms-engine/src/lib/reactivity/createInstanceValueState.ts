@@ -7,7 +7,6 @@ import type { BindComputationExpression } from '../../parse/expression/BindCompu
 import { ActionDefinition } from '../../parse/model/ActionDefinition.ts';
 import type { AnyBindPreloadDefinition } from '../../parse/model/BindPreloadDefinition.ts';
 import { XFORM_EVENT } from '../../parse/model/Event.ts';
-import { SET_GEOPOINT_LOCAL_NAME } from '../../parse/XFormDOM.ts';
 import { sharedValueCodecs } from '../codecs/getSharedValueCodec.ts';
 import { createComputedExpression } from './createComputedExpression.ts';
 import type { SimpleAtomicState, SimpleAtomicStateSetter } from './types.ts';
@@ -233,74 +232,76 @@ const performActionComputation = (
   setValue: SimpleAtomicStateSetter<string>,
   action: ActionDefinition
 ) => {
-  if (action.element.nodeName === SET_GEOPOINT_LOCAL_NAME) {
+  if (action.type === 'geopoint') {
     getGeopointValue(context, (point) => setValue(point));
     return;
   }
   createActionCalculation(context, setValue, action.computation);
 };
 
-const dispatchAction = (
+const registerSetValueActions = (
   context: ValueContext,
-  setValue: SimpleAtomicStateSetter<string>,
-  action: ActionDefinition
+  setValue: SimpleAtomicStateSetter<string>
 ) => {
-  if (action.events.includes(XFORM_EVENT.odkInstanceFirstLoad)) {
-    if (isInstanceFirstLoad(context)) {
-      performActionComputation(context, setValue, action);
+  const actions = context.definition.model.actions.get(context.contextReference());
+  actions?.forEach((action) => {
+    if (action.events.includes(XFORM_EVENT.odkInstanceFirstLoad)) {
+      if (isInstanceFirstLoad(context)) {
+        performActionComputation(context, setValue, action);
+      }
     }
-  }
-  if (action.events.includes(XFORM_EVENT.odkInstanceLoad)) {
-    if (!isAddingRepeatChild(context)) {
-      performActionComputation(context, setValue, action);
+    if (action.events.includes(XFORM_EVENT.odkInstanceLoad)) {
+      if (!isAddingRepeatChild(context)) {
+        performActionComputation(context, setValue, action);
+      }
     }
-  }
-  if (action.events.includes(XFORM_EVENT.odkNewRepeat)) {
-    if (isAddingRepeatChild(context)) {
-      performActionComputation(context, setValue, action);
+    if (action.events.includes(XFORM_EVENT.odkNewRepeat)) {
+      if (isAddingRepeatChild(context)) {
+        performActionComputation(context, setValue, action);
+      }
     }
-  }
+  });
 };
 
 const registerValueChangedActions = (context: ValueContext, getValue: Accessor<string>) => {
-  if (context.valueChangedActions?.length) {
-    for (const action of context.valueChangedActions) {
-      let previous = getValue();
+  context.valueChangedActions?.forEach((action) => {
+    let previous = getValue();
+    createComputed(() => {
+      const ref = bindRefToRepeatInstance(context, action.ref);
+      const destinationNodes = context.evaluator.evaluateNodes(ref, {
+        contextNode: context.contextNode,
+      });
+      if (!destinationNodes.length) {
+        return;
+      }
+      const destinationNode = destinationNodes[0];
+      if (
+        (destinationNode instanceof ValueNode || destinationNode instanceof Attribute) &&
+        destinationNode.isAttached() &&
+        context.isAttached()
+      ) {
+        const sourceValue = getValue();
 
-      createComputed(() => {
-        const ref = bindRefToRepeatInstance(context, action.ref);
-        const destinationNodes = context.evaluator.evaluateNodes(ref, {
-          contextNode: context.contextNode,
-        });
-        if (destinationNodes.length) {
-          const destinationNode = destinationNodes[0];
-          if (
-            (destinationNode instanceof ValueNode || destinationNode instanceof Attribute) &&
-            destinationNode.isAttached() &&
-            context.isAttached()
-          ) {
-            const sourceValue = getValue();
-
-            if (sourceValue && sourceValue !== previous) {
-              if (referencesCurrentNode(destinationNode, ref)) {
-                if (action.element.nodeName === SET_GEOPOINT_LOCAL_NAME) {
-                  getGeopointValue(context, (point) => destinationNode.setEncodedValue(point));
-                } else {
-                  const value = destinationNode.evaluator.evaluateString(
-                    action.computation.expression,
-                    destinationNode
-                  );
-                  destinationNode.setEncodedValue(value);
-                }
-              }
-            }
-
-            previous = sourceValue;
+        if (
+          previous !== undefined &&
+          previous !== sourceValue &&
+          referencesCurrentNode(destinationNode, ref)
+        ) {
+          if (action.type === 'geopoint') {
+            getGeopointValue(context, (point) => destinationNode.setEncodedValue(point));
+          } else {
+            const value = destinationNode.evaluator.evaluateString(
+              action.computation.expression,
+              destinationNode
+            );
+            destinationNode.setEncodedValue(value);
           }
         }
-      });
-    }
-  }
+
+        previous = sourceValue;
+      }
+    });
+  });
 };
 
 export type InstanceValueState = SimpleAtomicState<string>;
@@ -332,9 +333,7 @@ export const createInstanceValueState = (context: ValueContext): InstanceValueSt
     }
 
     registerValueChangedActions(context, getValue);
-
-    const actions = context.definition.model.actions.get(context.contextReference());
-    actions?.forEach((action) => dispatchAction(context, setValue, action));
+    registerSetValueActions(context, setValue);
 
     return guardDownstreamReadonlyWrites(context, relevantValueState);
   });

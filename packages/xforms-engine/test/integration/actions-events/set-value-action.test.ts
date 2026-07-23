@@ -43,6 +43,37 @@ describe('setvalue action', () => {
       expect(scenario.answerOf('/data/destination')).toEqualAnswer(intAnswer(16));
     });
 
+    it('is triggered when the input is cleared', async () => {
+      const scenario = await Scenario.init(
+        'xforms-value-changed on clear',
+        html(
+          head(
+            title('Value changed on clear'),
+            model(
+              mainInstance(t('data id="cleared-source"', t('source'), t('counter', '0'))),
+              bind('/data/clone').type('int')
+            )
+          ),
+          body(
+            input(
+              '/data/source',
+              setvalue('xforms-value-changed', '/data/counter', '/data/counter + 1')
+            )
+          )
+        )
+      );
+
+      expect(scenario.answerOf('/data/counter')).toEqualAnswer(intAnswer(0));
+
+      scenario.answer('/data/source', 'abc');
+      expect(scenario.answerOf('/data/counter')).toEqualAnswer(intAnswer(1));
+
+      scenario.answer('/data/source', '');
+      expect(scenario.answerOf('/data/source').getValue()).toBe('');
+
+      expect(scenario.answerOf('/data/counter')).toEqualAnswer(intAnswer(2));
+    });
+
     describe('with the same value', () => {
       // ported from: https://github.com/getodk/javarosa/blob/2dd8e15e9f3110a86f8d7d851efc98627ae5692e/src/test/java/org/javarosa/core/model/actions/SetValueActionTest.java#L105
       it("does not evaluate the target node's `calculate`", async () => {
