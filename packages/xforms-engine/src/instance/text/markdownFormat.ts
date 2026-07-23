@@ -218,7 +218,12 @@ function isSingleOrderedList(odk: MarkdownNode[]) {
   );
 }
 
+function escapeBlockquote(str: string) {
+  return str.replaceAll(/(^|\n)> /g, '$1\\> ');
+}
+
 function toOdkMarkdown(str: string): MarkdownNode[] {
+  str = escapeBlockquote(str);
   const tree = fromMarkdown(str);
   newlineToBreak(tree);
   const odk = mdastToOdkMarkdown(tree.children);
