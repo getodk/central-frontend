@@ -1,0 +1,137 @@
+{
+  "component": {
+    "Preview": {
+      "formNotFound": {
+        "string": "Non è stato trovato alcun modulo con questo URL, si prega di ricontrollare."
+      }
+    },
+    "Submission": {
+      "formNotFound": {
+        "title": {
+          "string": "Non è stato trovato alcun modulo con questo URL, si prega di ricontrollare."
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "errorNotProblem": {
+        "title": {
+          "string": "Qualcosa è andato storto"
+        },
+        "body": {
+          "string": ""
+        },
+        "status": {
+          "string": "Codice error {status}"
+        }
+      }
+    },
+    "WebFormRenderer": {
+      "action": {
+        "close": {
+          "string": "Chiudere"
+        },
+        "tryAgain": {
+          "string": "Ritenta ancora"
+        }
+      },
+      "previewModal": {
+        "title": {
+          "string": "I dati sono validi"
+        },
+        "body": {
+          "string": "I dati inseriti sono validi, ma non sono stati inviati perché si tratta di un'anteprima del formulario."
+        }
+      },
+      "submissionModal": {
+        "title": {
+          "string": "Formulario inviato correttamente!"
+        },
+        "body": {
+          "string": "È possibile compilare nuovamente questo modulo o chiuderlo se si è terminato."
+        },
+        "action": {
+          "fillOutAgain": {
+            "string": "Compilare di nuovo"
+          }
+        }
+      },
+      "thankYouModal": {
+        "title": {
+          "string": "Grazie per aver partecipato!"
+        },
+        "body": {
+          "string": "Ora è possibile chiudere questa finestra."
+        }
+      },
+      "editSubmissionModal": {
+        "title": {
+          "string": "Invio riuscito"
+        },
+        "body": {
+          "string": "Ora sarete reindirizzati."
+        }
+      },
+      "errorModal": {
+        "title": {
+          "string": "Errore invio"
+        },
+        "body": {
+          "string": "I dati non sono stati inviati. Messaggio di errore: {errorMessage} È possibile chiudere questa finestra di dialogo e riprovare. Se l'errore continua a verificarsi, contattate la persona che vi ha chiesto di compilare il formulario oppure {supportEmail}."
+        }
+      },
+      "sendingDataModal": {
+        "title": {
+          "string": "Mandando invio"
+        },
+        "body": {
+          "string": "I dati vengono inviati. Si prega di non chiudere questa finestra fino al termine dell'operazione."
+        }
+      },
+      "sessionTimeoutModal": {
+        "title": {
+          "string": "Sessione scaduta"
+        },
+        "body": {
+          "full": {
+            "string": "Si prega di accedere {here} in un'altra scheda del browser e riprovare.",
+            "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
+          },
+          "here": {
+            "string": "qui",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nPlease log in {here} in a different browser tab and try again."
+          }
+        }
+      },
+      "retryModal": {
+        "title": {
+          "string": "Errore invio"
+        },
+        "body": {
+          "string": "I dati non sono stati inviati completamente. Premere il pulsante “Riprova” per riprovare. Se l'errore continua a verificarsi, contattate la persona che vi ha chiesto di compilare il formulario oppure {supportEmail}."
+        }
+      },
+      "util": {
+        "request": {
+          "noResponse": {
+            "string": "Qualcosa è andato storto: non c'era nessuna risposta alla tua request."
+          },
+          "problem": {
+            "404_1": {
+              "string": "Impossibile trovare la risorsa che stai cercando. La risorsa potrebbe essere stata eliminata."
+            }
+          }
+        }
+      },
+      "mixin": {
+        "request": {
+          "alert": {
+            "entityTooLarge": {
+              "string": "I dati che stai tentando di caricare sono troppo grandi."
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,137 @@
+{
+  "component": {
+    "Preview": {
+      "formNotFound": {
+        "string": "Aucun Formulaire trouvé avec cette URL, merci de vérifier."
+      }
+    },
+    "Submission": {
+      "formNotFound": {
+        "title": {
+          "string": "Impossible d'ouvrir le formulaire"
+        },
+        "body": {
+          "string": "Veuillez vérifier que le lien est correct. Il est possible que le formulaire ne soit plus disponible ou que votre accès ait expiré. Si le problème persiste, veuillez contacter la personne qui vous a envoyé le lien vers le formulaire."
+        }
+      },
+      "errorNotProblem": {
+        "title": {
+          "string": "Quelque-chose s'est mal passé"
+        },
+        "body": {
+          "string": "Veuillez réessayer plus tard. Si le problème persiste, veuillez contacter la personne qui vous a envoyé le lien vers le formulaire."
+        },
+        "status": {
+          "string": "Code d'erreur: {status}"
+        }
+      }
+    },
+    "WebFormRenderer": {
+      "action": {
+        "close": {
+          "string": "Fermer"
+        },
+        "tryAgain": {
+          "string": "Essayer encore"
+        }
+      },
+      "previewModal": {
+        "title": {
+          "string": "Les données sont valides"
+        },
+        "body": {
+          "string": "Les données renseignées sont valides, mais ne peuvent être soumises car il s'agit d'un aperçu du Formulaire."
+        }
+      },
+      "submissionModal": {
+        "title": {
+          "string": "Formulaire envoyé avec succès !"
+        },
+        "body": {
+          "string": "Vous pouvez remplir ce Formulaire à nouveau ou le fermer si vous avez terminé."
+        },
+        "action": {
+          "fillOutAgain": {
+            "string": "Remplir à nouveau"
+          }
+        }
+      },
+      "thankYouModal": {
+        "title": {
+          "string": "Merci de votre participation !"
+        },
+        "body": {
+          "string": "Vous pouvez maintenant fermer cette fenêtre."
+        }
+      },
+      "editSubmissionModal": {
+        "title": {
+          "string": "Soumission réussie"
+        },
+        "body": {
+          "string": "Vous allez être redirigé"
+        }
+      },
+      "errorModal": {
+        "title": {
+          "string": "Erreur de Soumission"
+        },
+        "body": {
+          "string": "Vos données ne sont pas soumises. Message d'erreur : {errorMessage} Vous pouvez fermer cette boite de dialogue et essayer à nouveau. Si l'erreur persiste, merci de contacter la personne qui vous a demandé de remplir ce Formulaire ou {supportEmail}."
+        }
+      },
+      "sendingDataModal": {
+        "title": {
+          "string": "Envoi de la Soumission"
+        },
+        "body": {
+          "string": "Votre donnée est en cours de soumission. Merci de ne pas fermer cette fenêtre avant que ce soit terminé."
+        }
+      },
+      "sessionTimeoutModal": {
+        "title": {
+          "string": "Session expirée"
+        },
+        "body": {
+          "full": {
+            "string": "Merci de vous connecter {here} dans un autre onglet de navigateur et essayez à nouveau.",
+            "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
+          },
+          "here": {
+            "string": "ici",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nPlease log in {here} in a different browser tab and try again."
+          }
+        }
+      },
+      "retryModal": {
+        "title": {
+          "string": "Erreur de soumission"
+        },
+        "body": {
+          "string": "Vos données n'ont pas été soumises. Veuillez cliquer le bouton \"Essayer encore\" pour réessayer. Si l'erreur persiste, merci de contacter la personne qui vous a demandé de remplir ce formulaire ou {supportEmail}."
+        }
+      },
+      "util": {
+        "request": {
+          "noResponse": {
+            "string": "Quelque-chose s'est mal passé : il n'y a pas eu de réponse à votre requête."
+          },
+          "problem": {
+            "404_1": {
+              "string": "La ressource que vous cherchez ne peut être trouvée. Peut-être a-t-elle été supprimée."
+            }
+          }
+        }
+      },
+      "mixin": {
+        "request": {
+          "alert": {
+            "entityTooLarge": {
+              "string": "Les données que vous essayez d'envoyer sont trop volumineuses."
+            }
+          }
+        }
+      }
+    }
+  }
+}

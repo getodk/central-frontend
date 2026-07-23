@@ -1,0 +1,137 @@
+{
+  "component": {
+    "Preview": {
+      "formNotFound": {
+        "string": "未找到与此URL对应的表单，请仔细核对。"
+      }
+    },
+    "Submission": {
+      "formNotFound": {
+        "title": {
+          "string": "未找到与此URL对应的表单，请仔细核对。"
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "errorNotProblem": {
+        "title": {
+          "string": "出现错误：错误代码"
+        },
+        "body": {
+          "string": ""
+        },
+        "status": {
+          "string": "{status}"
+        }
+      }
+    },
+    "WebFormRenderer": {
+      "action": {
+        "close": {
+          "string": "关闭"
+        },
+        "tryAgain": {
+          "string": "重试"
+        }
+      },
+      "previewModal": {
+        "title": {
+          "string": "数据有效"
+        },
+        "body": {
+          "string": "您输入的数据格式正确，但因当前处于表单预览模式，故未执行提交。"
+        }
+      },
+      "submissionModal": {
+        "title": {
+          "string": "表单提交成功！"
+        },
+        "body": {
+          "string": "您可继续填写此表单，或完成后关闭页面。"
+        },
+        "action": {
+          "fillOutAgain": {
+            "string": "再次填写"
+          }
+        }
+      },
+      "thankYouModal": {
+        "title": {
+          "string": "感谢您的参与！"
+        },
+        "body": {
+          "string": "您现在可以关闭此窗口。"
+        }
+      },
+      "editSubmissionModal": {
+        "title": {
+          "string": "提交成功"
+        },
+        "body": {
+          "string": "页面即将跳转"
+        }
+      },
+      "errorModal": {
+        "title": {
+          "string": "提交错误"
+        },
+        "body": {
+          "string": "数据提交失败。错误信息：{errorMessage} 请关闭对话框后重试。若问题持续，请联系表单发放方或{supportEmail}。"
+        }
+      },
+      "sendingDataModal": {
+        "title": {
+          "string": "正在提交"
+        },
+        "body": {
+          "string": "您的数据正在上传。在完成之前，请不要关闭此窗口。"
+        }
+      },
+      "sessionTimeoutModal": {
+        "title": {
+          "string": "会话过期"
+        },
+        "body": {
+          "full": {
+            "string": "请在新浏览器标签页中{here}登录后重试。",
+            "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
+          },
+          "here": {
+            "string": "这里",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nPlease log in {here} in a different browser tab and try again."
+          }
+        }
+      },
+      "retryModal": {
+        "title": {
+          "string": "提交错误"
+        },
+        "body": {
+          "string": "数据未完全提交。请点击“重试”按钮再次提交。若问题持续，请联系表单发放方或{supportEmail}。"
+        }
+      },
+      "util": {
+        "request": {
+          "noResponse": {
+            "string": "请求错误：未收到请求响应。"
+          },
+          "problem": {
+            "404_1": {
+              "string": "无法找到您的资源。此资源可能已经删除。"
+            }
+          }
+        }
+      },
+      "mixin": {
+        "request": {
+          "alert": {
+            "entityTooLarge": {
+              "string": "您上传的数据过大。"
+            }
+          }
+        }
+      }
+    }
+  }
+}
