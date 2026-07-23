@@ -61,8 +61,8 @@ const userLocale = (): string | null => {
   return null;
 };
 
-const addLocale = (tag: string, name: string ) => {
-  locales.set(tag, { name, sentenceSeparator: ' ' });
+const addLocale = (tag: string, name: string, sentenceSeparator=' ') => {
+  locales.set(tag, { name, sentenceSeparator });
 };
 
 addLocale('en', 'English');
@@ -71,8 +71,8 @@ addLocale('es', 'Español');
 addLocale('fr', 'Français');
 addLocale('it', 'Italiano');
 addLocale('pt', 'Português');
-addLocale('zh', '汉语');
-addLocale('zh-Hant', '漢語');
+addLocale('zh', '汉语', '');
+addLocale('zh-Hant', '漢語', '');
 
 export const loadUsersLocale = () => {
   const locale = userLocale();
