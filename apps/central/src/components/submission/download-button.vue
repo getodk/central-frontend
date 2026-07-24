@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <Dropdown id="submission-download-button">
+  <dropdown id="submission-download-button">
     <template #toggle="{ toggle, attrs }">
       <button type="button" class="btn btn-primary"
         v-bind="{ ...$attrs, ...attrs }"
@@ -33,7 +33,7 @@ except according to the terms contained in the LICENSE file.
         </button>
       </li>
     </template>
-  </Dropdown>
+  </dropdown>
 </template>
 
 <script>

@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <Dropdown id="entity-download-button">
+  <dropdown id="entity-download-button">
     <template #toggle="{ toggle, attrs }">
       <a class="btn btn-primary" :class="{ disabled }" :href="href"
         v-bind="attrs" @click="handleClick($event, toggle)">
@@ -30,7 +30,7 @@ except according to the terms contained in the LICENSE file.
         </a>
       </li>
     </template>
-  </Dropdown>
+  </dropdown>
 </template>
 
 <script setup>
