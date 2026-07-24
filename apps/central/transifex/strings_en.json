@@ -3181,6 +3181,10 @@
         "uploaded": {
           "string": "Uploaded",
           "developer_comment": "This is the text of a table column header. The column shows when each Media File was uploaded."
+        },
+        "size": {
+          "string": "Size",
+          "developer_comment": "This is the text of a table column header. The column shows the file size of each uploaded Media File."
         }
       }
     },
