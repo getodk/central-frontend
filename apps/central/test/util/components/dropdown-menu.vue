@@ -2,7 +2,7 @@
   <div>
     <dropdown>
       <template #toggle="{ toggle, attrs }">
-        <button id="toggle" type="button" v-bind="attrs" @click="toggle">
+        <button type="button" v-bind="attrs" @click="toggle">
           Menu
         </button>
       </template>
