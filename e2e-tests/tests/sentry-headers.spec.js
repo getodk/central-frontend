@@ -32,7 +32,7 @@ test.describe('Sentry request headers', () => {
 
     await page.goto(appUrl);
     await expect(page.getByRole('heading', { name: 'Welcome to ODK Central' })).toBeVisible();
-    await page.waitForLoadState('networkidle', { timeout: 5000 });
+    await page.waitForLoadState('networkidle');
 
     expect(v1RequestCount, 'no /v1/ requests observed').toBeGreaterThan(0);
     expect(violations, 'Sentry must not inject trace headers into outgoing requests').toEqual([]);
