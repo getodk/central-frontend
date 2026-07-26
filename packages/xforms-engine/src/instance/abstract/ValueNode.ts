@@ -84,6 +84,7 @@ export abstract class ValueNode<
   }
 
   readonly instanceState: InstanceState;
+  readonly setEncodedValue: (value: string) => void;
 
   constructor(
     parent: GeneralParentNode,
@@ -110,6 +111,10 @@ export abstract class ValueNode<
     this.valueState = valueState;
     this.validation = createValidationState(this, this.instanceConfig);
     this.instanceState = createValueNodeInstanceState(this);
+
+    this.setEncodedValue = (value: string) => {
+      this.setValueState(codec.decodeValue(value));
+    };
   }
 
   // ValidationContext
