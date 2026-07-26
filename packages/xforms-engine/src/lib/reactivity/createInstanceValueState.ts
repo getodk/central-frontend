@@ -1,4 +1,4 @@
-import type { Signal } from 'solid-js';
+import type { Accessor, Signal } from 'solid-js';
 import { createComputed, createMemo, createSignal, onCleanup, untrack } from 'solid-js';
 import type { AttributeContext } from '../../instance/internal-api/AttributeContext.ts';
 import type { InstanceValueContext } from '../../instance/internal-api/InstanceValueContext.ts';
@@ -7,10 +7,11 @@ import type { BindComputationExpression } from '../../parse/expression/BindCompu
 import { ActionDefinition } from '../../parse/model/ActionDefinition.ts';
 import type { AnyBindPreloadDefinition } from '../../parse/model/BindPreloadDefinition.ts';
 import { XFORM_EVENT } from '../../parse/model/Event.ts';
-import { SET_GEOPOINT_LOCAL_NAME } from '../../parse/XFormDOM.ts';
 import { sharedValueCodecs } from '../codecs/getSharedValueCodec.ts';
 import { createComputedExpression } from './createComputedExpression.ts';
 import type { SimpleAtomicState, SimpleAtomicStateSetter } from './types.ts';
+import { ValueNode } from '../../instance/abstract/ValueNode.ts';
+import { Attribute } from '../../instance/Attribute.ts';
 
 const REPEAT_INDEX_REGEX = /([^[]*)(\[[0-9]+\])/g;
 
@@ -155,25 +156,17 @@ const referencesCurrentNode = (context: ValueContext, ref: string): boolean => {
 };
 
 // Replaces the unbound repeat references in source and ref, with references
-// bound to the repeat instace of the context.
-const bindToRepeatInstance = (
-  context: ValueContext,
-  action: ActionDefinition
-): { source: string | undefined; ref: string } => {
-  let source = action.source;
-  let ref = action.ref;
-  if (source) {
-    const contextRef = context.contextReference();
-    for (const part of contextRef.matchAll(REPEAT_INDEX_REGEX)) {
-      const unbound = part[1] + '/';
-      if (source.includes(unbound)) {
-        const bound = part[0] + '/';
-        source = source.replace(unbound, bound);
-        ref = ref.replace(unbound, bound);
-      }
+// bound to the repeat instance of the context.
+const bindRefToRepeatInstance = (context: ValueContext, ref: string): string => {
+  const contextRef = context.contextReference();
+  for (const part of contextRef.matchAll(REPEAT_INDEX_REGEX)) {
+    const unbound = part[1] + '/';
+    const bound = part[0] + '/';
+    if (ref.includes(unbound)) {
+      ref = ref.replace(unbound, bound);
     }
   }
-  return { source, ref };
+  return ref;
 };
 
 /**
@@ -225,51 +218,6 @@ const createActionCalculation = (
   });
 };
 
-const resolveAndSetValueChanged = (
-  context: ValueContext,
-  setRelevantValue: SimpleAtomicStateSetter<string>,
-  expression: string
-): void => {
-  const calc = context.evaluator.evaluateString(expression, context);
-  const value = context.decodeInstanceValue(calc);
-  setRelevantValue(value);
-};
-
-const createValueChangedCalculation = (
-  context: ValueContext,
-  setRelevantValue: SimpleAtomicStateSetter<string>,
-  action: ActionDefinition
-): void => {
-  const { source, ref } = bindToRepeatInstance(context, action);
-  if (!source) {
-    // No element to listen to
-    return;
-  }
-  const sourceElementExpression = new ActionComputationExpression('string', source);
-  const calculateValueSource = createComputedExpression(context, sourceElementExpression); // Registers listener
-  let previous: string;
-  createComputed(() => {
-    if (context.isAttached()) {
-      const valueSource = calculateValueSource();
-      if (
-        previous !== undefined &&
-        previous !== valueSource &&
-        referencesCurrentNode(context, ref)
-      ) {
-        // Only update if value has changed
-        if (action.element.nodeName === SET_GEOPOINT_LOCAL_NAME) {
-          getGeopointValue(context, (point) => {
-            setRelevantValue(point);
-          });
-        } else {
-          resolveAndSetValueChanged(context, setRelevantValue, action.computation.expression);
-        }
-      }
-      previous = valueSource;
-    }
-  });
-};
-
 const getGeopointValue = (context: ValueContext, callback: (value: string) => void) => {
   // eslint-disable-next-line @typescript-eslint/no-floating-promises -- we don't want to block
   context.rootDocument.getBackgroundGeopoint()?.then((point) => {
@@ -284,36 +232,76 @@ const performActionComputation = (
   setValue: SimpleAtomicStateSetter<string>,
   action: ActionDefinition
 ) => {
-  if (action.element.nodeName === SET_GEOPOINT_LOCAL_NAME) {
+  if (action.type === 'geopoint') {
     getGeopointValue(context, (point) => setValue(point));
     return;
   }
   createActionCalculation(context, setValue, action.computation);
 };
 
-const dispatchAction = (
+const registerSetValueActions = (
   context: ValueContext,
-  setValue: SimpleAtomicStateSetter<string>,
-  action: ActionDefinition
+  setValue: SimpleAtomicStateSetter<string>
 ) => {
-  if (action.events.includes(XFORM_EVENT.odkInstanceFirstLoad)) {
-    if (isInstanceFirstLoad(context)) {
-      performActionComputation(context, setValue, action);
+  const actions = context.definition.model.actions.get(context.contextReference());
+  actions?.forEach((action) => {
+    if (action.events.includes(XFORM_EVENT.odkInstanceFirstLoad)) {
+      if (isInstanceFirstLoad(context)) {
+        performActionComputation(context, setValue, action);
+      }
     }
-  }
-  if (action.events.includes(XFORM_EVENT.odkInstanceLoad)) {
-    if (!isAddingRepeatChild(context)) {
-      performActionComputation(context, setValue, action);
+    if (action.events.includes(XFORM_EVENT.odkInstanceLoad)) {
+      if (!isAddingRepeatChild(context)) {
+        performActionComputation(context, setValue, action);
+      }
     }
-  }
-  if (action.events.includes(XFORM_EVENT.odkNewRepeat)) {
-    if (isAddingRepeatChild(context)) {
-      performActionComputation(context, setValue, action);
+    if (action.events.includes(XFORM_EVENT.odkNewRepeat)) {
+      if (isAddingRepeatChild(context)) {
+        performActionComputation(context, setValue, action);
+      }
     }
-  }
-  if (action.events.includes(XFORM_EVENT.xformsValueChanged)) {
-    createValueChangedCalculation(context, setValue, action);
-  }
+  });
+};
+
+const registerValueChangedActions = (context: ValueContext, getValue: Accessor<string>) => {
+  context.valueChangedActions?.forEach((action) => {
+    let previous = getValue();
+    createComputed(() => {
+      const ref = bindRefToRepeatInstance(context, action.ref);
+      const destinationNodes = context.evaluator.evaluateNodes(ref, {
+        contextNode: context.contextNode,
+      });
+      if (!destinationNodes.length) {
+        return;
+      }
+      const destinationNode = destinationNodes[0];
+      if (
+        (destinationNode instanceof ValueNode || destinationNode instanceof Attribute) &&
+        destinationNode.isAttached() &&
+        context.isAttached()
+      ) {
+        const sourceValue = getValue();
+
+        if (
+          previous !== undefined &&
+          previous !== sourceValue &&
+          referencesCurrentNode(destinationNode, ref)
+        ) {
+          if (action.type === 'geopoint') {
+            getGeopointValue(context, (point) => destinationNode.setEncodedValue(point));
+          } else {
+            const value = destinationNode.evaluator.evaluateString(
+              action.computation.expression,
+              destinationNode
+            );
+            destinationNode.setEncodedValue(value);
+          }
+        }
+
+        previous = sourceValue;
+      }
+    });
+  });
 };
 
 export type InstanceValueState = SimpleAtomicState<string>;
@@ -335,7 +323,7 @@ export const createInstanceValueState = (context: ValueContext): InstanceValueSt
     const baseValueState = createSignal(initialValue);
     const relevantValueState = createRelevantValueState(context, baseValueState);
 
-    const [, setValue] = relevantValueState;
+    const [getValue, setValue] = relevantValueState;
 
     preloadValue(context, setValue);
 
@@ -344,8 +332,8 @@ export const createInstanceValueState = (context: ValueContext): InstanceValueSt
       createCalculation(context, setValue, calculate);
     }
 
-    const actions = context.definition.model.actions.get(context.contextReference());
-    actions?.forEach((action) => dispatchAction(context, setValue, action));
+    registerValueChangedActions(context, getValue);
+    registerSetValueActions(context, setValue);
 
     return guardDownstreamReadonlyWrites(context, relevantValueState);
   });
