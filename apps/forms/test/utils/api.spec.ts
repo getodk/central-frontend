@@ -46,7 +46,7 @@ describe('Test api utility', () => {
     });
 
     it('handles central errors', async () => {
-      const expected = { message: 'Not found', code: '404' };
+      const expected = { message: 'Not found', code: 404 };
       vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
         ok: false,
         status: 404,
@@ -87,7 +87,7 @@ describe('Test api utility', () => {
       vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
         ok: false,
         status: 404,
-        json: () => Promise.resolve({ message: 'Not found', code: '404' }),
+        json: () => Promise.resolve({ message: 'Not found', code: 404 }),
       }));
       await expect(getFormXml(5, 'simple', true)).rejects.toThrow('Not found');
     });
@@ -145,7 +145,7 @@ describe('Test api utility', () => {
       });
 
       it('handles central errors', async () => {
-        const expected = { message: 'Not found', code: '404' };
+        const expected = { message: 'Not found', code: 404 };
         vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
           ok: false,
           status: 404,
@@ -173,7 +173,7 @@ describe('Test api utility', () => {
       });
 
       it('handles central errors', async () => {
-        const expected = { message: 'Not found', code: '404' };
+        const expected = { message: 'Not found', code: 404 };
         vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
           ok: false,
           status: 404,
@@ -202,7 +202,7 @@ describe('Test api utility', () => {
     });
 
     it('handles central errors', async () => {
-      const expected = { message: "I'm a teapot", code: '418' };
+      const expected = { message: "I'm a teapot", code: 418 };
       vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
         ok: false,
         status: 404,
