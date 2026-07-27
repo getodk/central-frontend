@@ -49,7 +49,7 @@ const resolveOptions = (options?: LoadFormOptions): ResolvedOptions => {
     fetchFormDefinition: options?.fetchFormDefinition ?? unboundGlobalFetch,
     fetchFormAttachment: options?.fetchFormAttachment ?? unboundGlobalFetch,
     missingResourceBehavior: options?.missingResourceBehavior ?? MISSING_RESOURCE_BEHAVIOR.DEFAULT,
-    prefillParameters: options?.prefillParameters ?? {},
+    instanceDefaults: options?.instanceDefaults ?? {},
   };
 };
 
@@ -63,7 +63,7 @@ const loadFormResult = async (
   formResource: FormResource,
   options: ResolvedOptions
 ): Promise<LoadFormResult> => {
-  const { fetchFormDefinition, fetchFormAttachment, missingResourceBehavior, prefillParameters } =
+  const { fetchFormDefinition, fetchFormAttachment, missingResourceBehavior, instanceDefaults } =
     options;
 
   // TODO: Currently, **all** of the intermediate calls in this `try` block
@@ -87,7 +87,7 @@ const loadFormResult = async (
       model,
       secondaryInstances,
       fetchFormAttachment,
-      prefillParameters: prefillParameters ?? {},
+      instanceDefaults: instanceDefaults ?? {},
     };
 
     return new FormSuccessResult({

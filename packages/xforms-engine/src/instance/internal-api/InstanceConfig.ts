@@ -2,7 +2,7 @@ import type { InstanceAttachmentFileNameFactory } from '../../client/attachments
 import type {
   FormInstanceConfig,
   GeolocationProvider,
-  PrefillParameters,
+  InstanceDefaults,
   PreloadProperties,
 } from '../../client/form/FormInstanceConfig.ts';
 import type { OpaqueReactiveObjectFactory } from '../../client/OpaqueReactiveObjectFactory.ts';
@@ -17,7 +17,7 @@ export interface InstanceConfig {
 
   readonly preloadProperties: PreloadProperties;
 
-  readonly prefillParameters: PrefillParameters;
+  readonly instanceDefaults: InstanceDefaults;
 
   readonly geolocationProvider: GeolocationProvider | undefined;
 }

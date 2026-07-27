@@ -1,7 +1,7 @@
 import { clearCache, XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import { createSignal } from 'solid-js';
-import type { GeolocationProvider, PrefillParameters } from '../client';
+import type { GeolocationProvider, InstanceDefaults } from '../client';
 import type { FormInstanceInitializationMode } from '../client/form/FormInstance.ts';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
 import type { FormNodeID } from '../client/identity.ts';
@@ -102,7 +102,6 @@ export interface BasePrimaryInstanceOptions {
   readonly model: ModelDefinition;
   readonly secondaryInstances: SecondaryInstancesDefinition;
   readonly fetchFormAttachment: FetchFormAttachment;
-  readonly prefillParameters: PrefillParameters;
 }
 
 export interface ModelessPrimaryInstanceOptions extends BasePrimaryInstanceOptions {
@@ -130,7 +129,7 @@ export class PrimaryInstance<
   readonly initializationMode: FormInstanceInitializationMode;
   readonly model: ModelDefinition;
   readonly attachments: InstanceAttachmentsState;
-  readonly prefillParameters: PrefillParameters;
+  readonly instanceDefaults: InstanceDefaults;
 
   // InstanceNode
   protected readonly state: SharedNodeState<PrimaryInstanceStateSpec>;
@@ -174,6 +173,7 @@ export class PrimaryInstance<
   constructor(options: PrimaryInstanceOptions<Mode>) {
     const { mode, initialState, scope, model, secondaryInstances, fetchFormAttachment, config } =
       options;
+    const { instanceDefaults, geolocationProvider } = config;
     const { instance: modelInstance } = model;
     const activeInstance = initialState?.document ?? modelInstance;
     const definition = model.getRootDefinition(activeInstance);
@@ -186,11 +186,12 @@ export class PrimaryInstance<
     });
 
     this.initializationMode = mode;
-    this.prefillParameters = config.prefillParameters;
     this.model = model;
     this.attachments = new InstanceAttachmentsState(initialState?.attachments, fetchFormAttachment);
     this.instanceNode = activeInstance;
-    this.geolocationProvider = config.geolocationProvider;
+
+    this.instanceDefaults = instanceDefaults;
+    this.geolocationProvider = geolocationProvider;
 
     const [isAttached, setIsAttached] = createSignal(false);
 

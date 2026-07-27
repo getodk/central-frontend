@@ -177,7 +177,7 @@ export class Scenario {
         getLocation: () => Promise.resolve(''),
       },
       editInstance: overrideOptions?.editInstance ?? null,
-      prefillParameters: overrideOptions?.prefillParameters ?? {},
+      instanceDefaults: overrideOptions?.instanceDefaults ?? {},
     };
   }
 

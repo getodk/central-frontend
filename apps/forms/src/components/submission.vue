@@ -58,13 +58,16 @@ const enketoId = computed(() => route.params.enketoId ? encodeURIComponent(route
 const st = computed(() => route.query.st ? route.query.st as string : null);
 const useWebForms = computed(() => route.query.webforms === 'true');
 const offline = computed(() => route.params.offline === 'offline');
-const prefillParameters = computed(() => {
-  const PREFILL_PARAMETERS_REGEX = /^d\[(.+)\]$/;
-  const result = {};
+const defaultParameters = computed(() => {
+  // TODO pull this out and unit test it
+  const DEFAULT_PARAMETERS_REGEX = /^d\[(.+)\]$/;
+  const result: Record<string, string> = {};
   Object.entries(route.query).forEach(([key, value]) => {
-    const path = PREFILL_PARAMETERS_REGEX.exec(key)?.[1];
-    if (path) {
-      result[path] = value;
+    if (typeof value === 'string') {
+      const path = DEFAULT_PARAMETERS_REGEX.exec(key)?.[1];
+      if (path) {
+        result[path] = value;
+      }
     }
   });
   return result;
@@ -265,7 +268,7 @@ load();
         :instance-id="instanceId"
         :action-type="props.actionType ?? 'new'"
         :submission-attachments="submissionAttachments"
-        :prefill-parameters="prefillParameters"
+        :default-parameters="defaultParameters"
         :st="st"
       />
     </template>

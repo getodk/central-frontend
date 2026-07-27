@@ -16,7 +16,7 @@ export interface PreloadProperties {
   readonly phoneNumber?: string;
 }
 
-export interface PrefillParameters extends Record<string, string> {}
+export interface InstanceDefaults extends Record<string, string> {}
 
 export interface GeolocationProvider {
   getLocation(): Promise<string>;
@@ -42,7 +42,7 @@ export interface FormInstanceConfig {
 
   readonly preloadProperties?: PreloadProperties;
 
-  readonly geolocationProvider?: GeolocationProvider;
+  readonly instanceDefaults?: InstanceDefaults;
 
-  readonly prefillParameters?: PrefillParameters;
+  readonly geolocationProvider?: GeolocationProvider;
 }

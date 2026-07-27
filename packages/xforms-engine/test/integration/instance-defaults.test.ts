@@ -53,12 +53,12 @@ describe('Sets field values to given defaults', () => {
 
   describe('binds correctly', () => {
     it('to various types', async () => {
-      const prefillParameters = {
+      const instanceDefaults = {
         '/root/name': 'some default',
         '/root/age': '85',
         '/root/location': '38.25146813817506 21.758421137528785 0.0 0.0',
       };
-      const scenario = await Scenario.init('Bind defaults', formDefinition, { prefillParameters });
+      const scenario = await Scenario.init('Bind defaults', formDefinition, { instanceDefaults });
       expect(scenario.answerOf('/root/name')).toEqualAnswer(stringAnswer('some default'));
       expect(scenario.answerOf('/root/age')).toEqualAnswer(intAnswer(85));
       expect(scenario.answerOf('/root/location')).toEqualAnswer(
@@ -67,24 +67,24 @@ describe('Sets field values to given defaults', () => {
     });
 
     it('to groups', async () => {
-      const prefillParameters = { '/root/address/city': 'canberra' };
-      const scenario = await Scenario.init('Bind defaults', formDefinition, { prefillParameters });
+      const instanceDefaults = { '/root/address/city': 'canberra' };
+      const scenario = await Scenario.init('Bind defaults', formDefinition, { instanceDefaults });
       expect(scenario.answerOf('/root/address/city')).toEqualAnswer(stringAnswer('canberra'));
     });
 
     it('supports short form paths', async () => {
-      const prefillParameters = {
+      const instanceDefaults = {
         name: 'some default',
         'address/city': 'canberra',
       };
-      const scenario = await Scenario.init('Bind defaults', formDefinition, { prefillParameters });
+      const scenario = await Scenario.init('Bind defaults', formDefinition, { instanceDefaults });
       expect(scenario.answerOf('/root/name')).toEqualAnswer(stringAnswer('some default'));
       expect(scenario.answerOf('/root/address/city')).toEqualAnswer(stringAnswer('canberra'));
     });
 
     it('to repeats', async () => {
-      const prefillParameters = { '/root/repeat[2]/child': 'gregory' };
-      const scenario = await Scenario.init('Bind defaults', formDefinition, { prefillParameters });
+      const instanceDefaults = { '/root/repeat[2]/child': 'gregory' };
+      const scenario = await Scenario.init('Bind defaults', formDefinition, { instanceDefaults });
       scenario.next('/root/name');
       scenario.next('/root/age');
       scenario.next('/root/location');
@@ -103,25 +103,25 @@ describe('Sets field values to given defaults', () => {
 
     describe('does not bind to protected properties', () => {
       it('does nothing if not value node', async () => {
-        const prefillParameters = { '/root': 'some default' };
+        const instanceDefaults = { '/root': 'some default' };
         const scenario = await Scenario.init('Bind defaults', formDefinition, {
-          prefillParameters,
+          instanceDefaults,
         });
         expect(scenario.answerOf('/root/name')).toEqualAnswer(stringAnswer(''));
       });
 
       it('does not set an attribute', async () => {
-        const prefillParameters = { '/root/name/@id': 'injected' };
+        const instanceDefaults = { '/root/name/@id': 'injected' };
         const scenario = await Scenario.init('Bind defaults', formDefinition, {
-          prefillParameters,
+          instanceDefaults,
         });
         expect(scenario.attributeOf('/root/name', 'id')).toEqualAnswer(stringAnswer(''));
       });
 
       it('does not set protected meta field', async () => {
-        const prefillParameters = { '/root/orx:meta/orx:instanceID': 'injected' };
+        const instanceDefaults = { '/root/orx:meta/orx:instanceID': 'injected' };
         const scenario = await Scenario.init('Bind defaults', formDefinition, {
-          prefillParameters,
+          instanceDefaults,
         });
         expect(scenario.answerOf('/root/orx:meta/orx:instanceID')).toEqualAnswer(
           stringAnswer(IGNORED_INSTANCE_ID)
@@ -149,13 +149,13 @@ describe('Sets field values to given defaults', () => {
           body(input('/root/name'))
         );
 
-        const prefillParameters = { '/secondary/root/item[1]/value': 'C' };
+        const instanceDefaults = { '/secondary/root/item[1]/value': 'C' };
         const scenario = await Scenario.init('Bind defaults', secondaryInstance, {
-          prefillParameters,
+          instanceDefaults,
         });
         expect(scenario.answerOf('/root/name')).toEqualAnswer(stringAnswer('A'));
       });
     });
   });
-  // TODO consider writing e2e happy day test
+  // TODO consider writing e2e happy day test, check URL escaping?
 });

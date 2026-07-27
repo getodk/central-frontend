@@ -42,7 +42,7 @@ export class FormInstance<
       clientStateFactory: instanceConfig.stateFactory ?? identity,
       computeAttachmentName: instanceConfig.instanceAttachments?.fileNameFactory ?? (() => null),
       preloadProperties: instanceConfig.preloadProperties ?? {},
-      prefillParameters: instanceConfig.prefillParameters ?? {},
+      instanceDefaults: instanceConfig.instanceDefaults ?? {},
       geolocationProvider: instanceConfig.geolocationProvider,
     };
     const primaryInstanceOptions: PrimaryInstanceOptions<Mode> = {

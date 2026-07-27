@@ -3,7 +3,7 @@ import type {
   EditFormInstance,
   InstanceAttachmentsConfig,
   InstancePayload,
-  PrefillParameters,
+  InstanceDefaults,
   PreloadProperties,
 } from '@getodk/xforms-engine';
 import { reactive } from 'vue';
@@ -12,7 +12,7 @@ interface GetFormInstanceConfigOptions {
   readonly form: FormOptions;
   readonly deviceID?: string;
   readonly preloadProperties?: PreloadProperties;
-  readonly prefillParameters?: PrefillParameters;
+  readonly instanceDefaults?: InstanceDefaults;
 }
 
 /**
@@ -56,7 +56,7 @@ export const getFormInstanceConfig = (options: GetFormInstanceConfigOptions) => 
     stateFactory: reactive,
     instanceAttachments: INSTANCE_ATTACHMENTS_CONFIG,
     preloadProperties: getPreloadProperties(options),
-    prefillParameters: options.prefillParameters,
+    instanceDefaults: options.instanceDefaults,
     geolocationProvider: options.form.geolocationProvider,
   };
 };

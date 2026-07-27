@@ -64,8 +64,8 @@ const getPrefillParameterValue = (context: ValueContext): string | undefined => 
   if (context.contextNode.nodeType === 'attribute') {
     return;
   }
-  const prefillParameters = context.instanceConfig.prefillParameters;
-  return prefillParameters[ref] ?? (refWithoutRoot && prefillParameters[refWithoutRoot]);
+  const instanceDefaults = context.instanceConfig.instanceDefaults;
+  return instanceDefaults[ref] ?? (refWithoutRoot && instanceDefaults[refWithoutRoot]);
 };
 
 const getInitialValue = (context: ValueContext): string => {

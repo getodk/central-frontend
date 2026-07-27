@@ -2,7 +2,7 @@
 
 import { computed, ref } from 'vue';
 import { OdkWebForm, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
-import { type MonolithicInstancePayload, type PrefillParameters } from '@getodk/xforms-engine';
+import { type MonolithicInstancePayload } from '@getodk/xforms-engine';
 import { queryString, type Form } from '../utils/api';
 import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
@@ -20,7 +20,7 @@ export interface WebFormsRendererProps {
   actionType: string;
   instanceId?: string | null;
   submissionAttachments?: string[] | null;
-  prefillParameters?: PrefillParameters;
+  defaultParameters?: Record<string, string>;
   st?: string | null
 }
 
@@ -299,7 +299,7 @@ const closeWindow = () => {
     :edit-instance="editInstanceOptions"
     :fetch-form-attachment="getAttachment"
     :device-id="deviceID"
-    :prefill-parameters="prefillParameters"
+    :instance-defaults="defaultParameters"
     @loaded="webFormLoaded"
     @submit="handleSubmit"/>
 
