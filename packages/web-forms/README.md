@@ -348,6 +348,7 @@ To use this library in a Vue.js application:
     :submission-max-size="5242880"  <!-- 5MB -->
     :edit-instance="editOptions"
     :preload-properties="preloadProperties"
+    :prefill-parameters="prefillParameters" <!-- TODO I don't love this name -->
     :device-id="abc123"
     @submit="handleSubmit"
     @submit-chunked="handleChunkedSubmit"
@@ -375,6 +376,7 @@ The `<OdkWebForm>` component accepts the following props:
 - `editInstance` (`EditInstanceOptions`, optional): Options to resolve and load instance and attachment resources for editing.
 - `preloadProperties` (`PreloadProperties`, optional): Properties to make available for binding in the form using jr:preload.
 - `deviceId` (`string`, optional): If provided is available for binding into the form using preload attributes. Ignored if `preloadProperties.deviceID` is given.
+- `prefillParameters` (`PrefillParameters`, optional): Properties to fill in the form as a map of property reference to string value.
 
 ### Events (`OdkWebFormEmits`)
 

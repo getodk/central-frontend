@@ -58,6 +58,17 @@ const enketoId = computed(() => route.params.enketoId ? encodeURIComponent(route
 const st = computed(() => route.query.st ? route.query.st as string : null);
 const useWebForms = computed(() => route.query.webforms === 'true');
 const offline = computed(() => route.params.offline === 'offline');
+const prefillParameters = computed(() => {
+  const PREFILL_PARAMETERS_REGEX = /^d\[(.+)\]$/;
+  const result = {};
+  Object.entries(route.query).forEach(([key, value]) => {
+    const path = PREFILL_PARAMETERS_REGEX.exec(key)?.[1];
+    if (path) {
+      result[path] = value;
+    }
+  });
+  return result;
+});
 const webFormsEnabled = ref(true);
 
 const form = ref<Form>();
@@ -254,6 +265,7 @@ load();
         :instance-id="instanceId"
         :action-type="props.actionType ?? 'new'"
         :submission-attachments="submissionAttachments"
+        :prefill-parameters="prefillParameters"
         :st="st"
       />
     </template>

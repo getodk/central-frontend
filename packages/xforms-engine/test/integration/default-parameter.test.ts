@@ -4,13 +4,17 @@ import {
   head,
   html,
   input,
+  instance,
   mainInstance,
   model,
+  repeat,
   t,
   title,
 } from '@getodk/common/test-utils/xform-dsl/index.ts';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { Scenario } from '../scenario/jr/Scenario.js';
+import { intAnswer } from '../scenario/answer/ExpectedIntAnswer.js';
+import { stringAnswer } from '../scenario/answer/ExpectedStringAnswer.js';
 
 const IGNORED_INSTANCE_ID = 'ignored for purposes of functionality under test';
 
@@ -22,25 +26,136 @@ describe('Sets field values to given defaults', () => {
         mainInstance(
           t(
             'root id="bind-defaults" version=""',
-            t('name'),
+            t('name id=""'),
+            t('age'),
+            t('location'),
+            t('address', t('city')),
+            t('repeat', t('child')),
             t('orx:meta', t('orx:instanceID', IGNORED_INSTANCE_ID))
           )
         ),
+        instance('secondary', t('item', t('value', 'A')), t('item', t('value', 'B'))),
         bind('/root/name').type('string'),
+        bind('/root/age').type('int'),
+        bind('/root/location').type('geopoint'),
+        bind('/root/address/city').type('string'),
+        bind('/root/repeat/child').type('string')
       )
     ),
-    body(input('/root/name'))
+    body(
+      input('/root/name'),
+      input('/root/age'),
+      input('/root/location'),
+      input('/root/address/city'),
+      repeat('/root/repeat', input('/root/repeat/child'))
+    )
   );
 
-  let scenario: Scenario;
-
-  beforeEach(async () => {
-    scenario = await Scenario.init('Bind defaults', formDefinition, { defaultValues: { '/root/name': 'some-default' } });
-  });
-
   describe('binds correctly', () => {
-    it('strings', async () => {
-      expect(scenario.answerOf('/root/name').getValue()).toBe('some-default');
+    it('to various types', async () => {
+      const prefillParameters = {
+        '/root/name': 'some default',
+        '/root/age': '85',
+        '/root/location': '38.25146813817506 21.758421137528785 0.0 0.0',
+      };
+      const scenario = await Scenario.init('Bind defaults', formDefinition, { prefillParameters });
+      expect(scenario.answerOf('/root/name')).toEqualAnswer(stringAnswer('some default'));
+      expect(scenario.answerOf('/root/age')).toEqualAnswer(intAnswer(85));
+      expect(scenario.answerOf('/root/location')).toEqualAnswer(
+        stringAnswer('38.25146813817506 21.758421137528785 0.0 0.0')
+      );
+    });
+
+    it('to groups', async () => {
+      const prefillParameters = { '/root/address/city': 'canberra' };
+      const scenario = await Scenario.init('Bind defaults', formDefinition, { prefillParameters });
+      expect(scenario.answerOf('/root/address/city')).toEqualAnswer(stringAnswer('canberra'));
+    });
+
+    it('supports short form paths', async () => {
+      const prefillParameters = {
+        name: 'some default',
+        'address/city': 'canberra',
+      };
+      const scenario = await Scenario.init('Bind defaults', formDefinition, { prefillParameters });
+      expect(scenario.answerOf('/root/name')).toEqualAnswer(stringAnswer('some default'));
+      expect(scenario.answerOf('/root/address/city')).toEqualAnswer(stringAnswer('canberra'));
+    });
+
+    it('to repeats', async () => {
+      const prefillParameters = { '/root/repeat[2]/child': 'gregory' };
+      const scenario = await Scenario.init('Bind defaults', formDefinition, { prefillParameters });
+      scenario.next('/root/name');
+      scenario.next('/root/age');
+      scenario.next('/root/location');
+      scenario.next('/root/address/city');
+      scenario.next('/root/repeat[1]');
+      scenario.next('/root/repeat[1]/child');
+      scenario.next('/root/repeat');
+      scenario.createNewRepeat({ assertCurrentReference: '/root/repeat' });
+      scenario.next('/root/repeat[2]/child');
+      scenario.next('/root/repeat');
+      scenario.createNewRepeat({ assertCurrentReference: '/root/repeat' });
+      expect(scenario.answerOf('/root/repeat[1]/child')).toEqualAnswer(stringAnswer(''));
+      expect(scenario.answerOf('/root/repeat[2]/child')).toEqualAnswer(stringAnswer('gregory'));
+      expect(scenario.answerOf('/root/repeat[3]/child')).toEqualAnswer(stringAnswer(''));
+    });
+
+    describe('does not bind to protected properties', () => {
+      it('does nothing if not value node', async () => {
+        const prefillParameters = { '/root': 'some default' };
+        const scenario = await Scenario.init('Bind defaults', formDefinition, {
+          prefillParameters,
+        });
+        expect(scenario.answerOf('/root/name')).toEqualAnswer(stringAnswer(''));
+      });
+
+      it('does not set an attribute', async () => {
+        const prefillParameters = { '/root/name/@id': 'injected' };
+        const scenario = await Scenario.init('Bind defaults', formDefinition, {
+          prefillParameters,
+        });
+        expect(scenario.attributeOf('/root/name', 'id')).toEqualAnswer(stringAnswer(''));
+      });
+
+      it('does not set protected meta field', async () => {
+        const prefillParameters = { '/root/orx:meta/orx:instanceID': 'injected' };
+        const scenario = await Scenario.init('Bind defaults', formDefinition, {
+          prefillParameters,
+        });
+        expect(scenario.answerOf('/root/orx:meta/orx:instanceID')).toEqualAnswer(
+          stringAnswer(IGNORED_INSTANCE_ID)
+        );
+      });
+
+      it('does not set fields outside of the primary instance', async () => {
+        const secondaryInstance = html(
+          head(
+            title('Bind defaults'),
+            model(
+              mainInstance(
+                t(
+                  'root id="bind-defaults" version=""',
+                  t('name'),
+                  t('orx:meta', t('orx:instanceID', IGNORED_INSTANCE_ID))
+                )
+              ),
+              instance('secondary', t('item', t('value', 'A')), t('item', t('value', 'B'))),
+              bind('/root/name')
+                .type('string')
+                .calculate("instance('secondary')/root/item[value = 'A']/value")
+            )
+          ),
+          body(input('/root/name'))
+        );
+
+        const prefillParameters = { '/secondary/root/item[1]/value': 'C' };
+        const scenario = await Scenario.init('Bind defaults', secondaryInstance, {
+          prefillParameters,
+        });
+        expect(scenario.answerOf('/root/name')).toEqualAnswer(stringAnswer('A'));
+      });
     });
   });
+  // TODO consider writing e2e happy day test
 });

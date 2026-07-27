@@ -12,7 +12,7 @@ import { createComputedExpression } from './createComputedExpression.ts';
 import type { SimpleAtomicState, SimpleAtomicStateSetter } from './types.ts';
 import { ValueNode } from '../../instance/abstract/ValueNode.ts';
 import { Attribute } from '../../instance/Attribute.ts';
-import type { PrimaryInstance } from '../../instance/PrimaryInstance.ts';
+import { OPENROSA_XFORMS_PREFIX } from '@getodk/common/constants/xmlns.ts';
 
 const REPEAT_INDEX_REGEX = /([^[]*)(\[[0-9]+\])/g;
 
@@ -33,16 +33,47 @@ const isEditInitialLoad = (context: ValueContext) => {
   return context.rootDocument.initializationMode === 'edit' && !isAddingRepeatChild(context);
 };
 
-const getInitialValue = (context: ValueContext): string => {
-  const defaultValues = (context.rootDocument as PrimaryInstance).defaultValues;
-  const reference = context.contextReference();
-  console.log({defaultValues, reference});
-  if (defaultValues && defaultValues[reference]) {
-    return context.decodeInstanceValue(defaultValues[reference]);
-  }
+// TODO I think it's time to pull this out as a separate class AND UNIT TEST IT???
+const PROTECTED_META_FIELDS = [
+  'instanceID',
+  'instanceName',
+  'timeStart',
+  'timeEnd',
+  'today',
+  'userID',
+  'deviceID',
+  'deprecatedID',
+  'email',
+  'phoneNumber',
+  'audit',
+];
 
-  const sourceNode = context.instanceNode ?? context.definition.template;
-  return context.decodeInstanceValue(sourceNode.value);
+const isProtectedMetaProperty = (refWithoutRoot: string): boolean => {
+  return !!PROTECTED_META_FIELDS.find((field) => {
+    return refWithoutRoot === `${OPENROSA_XFORMS_PREFIX}:meta/${OPENROSA_XFORMS_PREFIX}:${field}`;
+  });
+};
+
+const getPrefillParameterValue = (context: ValueContext): string | undefined => {
+  const ref = context.contextReference();
+  const positionOfSecondSlash = ref.indexOf('/', 1);
+  const refWithoutRoot = ref.slice(positionOfSecondSlash + 1);
+  if (isProtectedMetaProperty(refWithoutRoot)) {
+    return;
+  }
+  if (context.contextNode.nodeType === 'attribute') {
+    return;
+  }
+  const prefillParameters = context.instanceConfig.prefillParameters;
+  return prefillParameters[ref] ?? (refWithoutRoot && prefillParameters[refWithoutRoot]);
+};
+
+const getInitialValue = (context: ValueContext): string => {
+  const value =
+    getPrefillParameterValue(context) ??
+    context.instanceNode?.value ??
+    context.definition.template?.value;
+  return context.decodeInstanceValue(value);
 };
 
 type BaseValueState = Signal<string>;
@@ -325,7 +356,6 @@ export type InstanceValueState = SimpleAtomicState<string>;
  * - prevents downstream writes to nodes in a readonly state
  */
 export const createInstanceValueState = (context: ValueContext): InstanceValueState => {
-
   return context.scope.runTask(() => {
     const initialValue = getInitialValue(context);
     const baseValueState = createSignal(initialValue);

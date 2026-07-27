@@ -5,6 +5,7 @@ import type {
   FormResource,
   GeolocationProvider,
   MissingResourceBehavior,
+  PrefillParameters,
   PreloadProperties,
   ResolvableFormInstance,
   ResolvableFormInstanceInput,
@@ -72,6 +73,7 @@ interface LoadFormStateOptions {
   readonly editInstance?: EditInstanceOptions | null;
   readonly deviceID?: string;
   readonly preloadProperties?: PreloadProperties;
+  readonly prefillParameters?: PrefillParameters;
 }
 
 const failure = (error: FormInitializationError): FormStateFailureResult => {

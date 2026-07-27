@@ -29,6 +29,7 @@ import type {
 	FetchFormAttachment,
 	MissingResourceBehavior,
 	MonolithicInstancePayload,
+	PrefillParameters,
 	PreloadProperties,
 } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
@@ -55,6 +56,7 @@ export interface OdkWebFormsProps {
 	readonly fetchFormAttachment: FetchFormAttachment;
 	readonly deviceId?: string; // different case to make it easier to bind
 	readonly preloadProperties?: PreloadProperties;
+	readonly prefillParameters?: PrefillParameters;
 	readonly missingResourceBehavior?: MissingResourceBehavior;
 	readonly attachmentMaxSize?: number;
 
@@ -83,6 +85,7 @@ const hostSubmissionResultCallbackFactory = (
 		const options = {
 			form: formOptions,
 			preloadProperties: props.preloadProperties,
+			prefillParameters: props.prefillParameters,
 			deviceID: props.deviceId,
 		};
 		state.value = updateSubmittedFormState(submissionResult, currentState, options);
@@ -238,6 +241,7 @@ const init = async () => {
 		form: formOptions,
 		editInstance: props.editInstance ?? null,
 		preloadProperties: props.preloadProperties,
+		prefillParameters: props.prefillParameters,
 		deviceID: props.deviceId,
 	});
 	emit('loaded');

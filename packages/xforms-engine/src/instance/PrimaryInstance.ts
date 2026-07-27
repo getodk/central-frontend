@@ -1,7 +1,7 @@
 import { clearCache, XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import { createSignal } from 'solid-js';
-import type { GeolocationProvider } from '../client';
+import type { GeolocationProvider, PrefillParameters } from '../client';
 import type { FormInstanceInitializationMode } from '../client/form/FormInstance.ts';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
 import type { FormNodeID } from '../client/identity.ts';
@@ -102,7 +102,7 @@ export interface BasePrimaryInstanceOptions {
   readonly model: ModelDefinition;
   readonly secondaryInstances: SecondaryInstancesDefinition;
   readonly fetchFormAttachment: FetchFormAttachment;
-  readonly defaultValues: Record<string, string> | null; // TODO I'm typing this out so much, it probably deserves a named type
+  readonly prefillParameters: PrefillParameters;
 }
 
 export interface ModelessPrimaryInstanceOptions extends BasePrimaryInstanceOptions {
@@ -130,7 +130,7 @@ export class PrimaryInstance<
   readonly initializationMode: FormInstanceInitializationMode;
   readonly model: ModelDefinition;
   readonly attachments: InstanceAttachmentsState;
-  readonly defaultValues: Record<string, string> | undefined;
+  readonly prefillParameters: PrefillParameters;
 
   // InstanceNode
   protected readonly state: SharedNodeState<PrimaryInstanceStateSpec>;
@@ -186,7 +186,7 @@ export class PrimaryInstance<
     });
 
     this.initializationMode = mode;
-    this.defaultValues = config.defaultValues;
+    this.prefillParameters = config.prefillParameters;
     this.model = model;
     this.attachments = new InstanceAttachmentsState(initialState?.attachments, fetchFormAttachment);
     this.instanceNode = activeInstance;
