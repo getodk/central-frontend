@@ -1,6 +1,5 @@
 ---
-"@getodk/central-frontend": patch
 "@getodk/forms": patch
 ---
 
-Disables Sentry's trace headers in requests
+Stops Sentry from attaching trace headers to attachment requests.

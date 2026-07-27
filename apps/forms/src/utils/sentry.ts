@@ -12,8 +12,8 @@ const initSentry = (app: App, source: string, dsn: string | undefined) => {
     integrations: [browserTracingIntegration()],
     // Captures performance timing for 1 in 5 page loads.
     tracesSampleRate: 0.2,
-    // Disable trace headers: they break CORS on requests that redirect to S3.
-    tracePropagationTargets: [],
+    // Attachment downloads redirect to S3, where Sentry headers cause CORS errors.
+    tracePropagationTargets: [/^\/(?!.*\/attachments\/)/],
   });
 
   setTag('source', source);
