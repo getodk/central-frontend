@@ -1,14 +1,14 @@
 <template>
   <component :is="tag" ref="container" class="dropdown" :class="{ open: isOpen }">
     <slot name="toggle" :toggle="toggle" :is-open="isOpen" :attrs="triggerAttrs"></slot>
-    <ul ref="menu" class="dropdown-menu" :style="menuStyle">
+    <ul ref="menu" class="dropdown-menu" :style="menuStyle" :aria-labelledby="triggerId">
       <slot name="menu"></slot>
     </ul>
   </component>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, useId } from 'vue';
 import { computePosition } from '@floating-ui/dom';
 
 import useEventListener from '../composables/event-listener';
@@ -28,12 +28,15 @@ const props = defineProps({
   }
 });
 
+const triggerId = `dropdown-${useId()}`;
+
 const container = ref(null);
 const menu = ref(null);
 const isOpen = ref(false);
 const menuStyle = ref({});
 
 const triggerAttrs = computed(() => ({
+  id: triggerId,
   'aria-haspopup': 'true',
   'aria-expanded': String(isOpen.value),
   class: 'dropdown-toggle'

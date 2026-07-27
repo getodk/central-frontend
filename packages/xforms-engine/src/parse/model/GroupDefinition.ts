@@ -21,7 +21,7 @@ export class GroupDefinition extends DescendentNodeDefinition<
   readonly attributes: AttributeDefinitionMap;
 
   constructor(
-    model: ModelDefinition,
+    readonly model: ModelDefinition,
     parent: ParentNodeDefinition,
     bind: BindDefinition,
     bodyElement: AnyBodyElementDefinition | null,

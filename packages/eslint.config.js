@@ -314,6 +314,7 @@ export default defineConfig(
 					allowInterfaces: 'with-single-extends',
 				},
 			],
+			'eol-last': 'error',
 			'prefer-const': 'error',
 
 			// Ensure Node built-ins aren't used by default
