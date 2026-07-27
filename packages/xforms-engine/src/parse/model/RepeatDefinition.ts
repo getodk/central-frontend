@@ -340,7 +340,7 @@ export class RepeatDefinition extends DescendentNodeDefinition<'repeat', RepeatE
   readonly attributes: AttributeDefinitionMap;
 
   private constructor(
-    model: ModelDefinition,
+    readonly model: ModelDefinition,
     parent: ParentNodeDefinition,
     bind: BindDefinition,
     bodyElement: RepeatElementDefinition,
