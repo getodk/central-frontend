@@ -13,6 +13,7 @@ export default defineConfig(
 			eslint.configs.recommended,
     ],
     rules: {
+      'eol-last': 'error',
       'no-trailing-spaces': 'error',
     },
   }
