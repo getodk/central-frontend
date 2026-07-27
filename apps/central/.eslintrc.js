@@ -19,6 +19,7 @@ module.exports = {
     'class-methods-use-this': 'off',
     'comma-dangle': ['error', 'only-multiline'],
     curly: 'off',
+    'eol-last': 'error',
     'implicit-arrow-linebreak': 'off',
     'import/first': 'off',
     "import/no-extraneous-dependencies": ['error', {

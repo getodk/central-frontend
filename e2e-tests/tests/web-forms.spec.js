@@ -137,7 +137,7 @@ test.describe('ODK Web Forms', () => {
 
     await page2.getByLabel('First Name').fill('John Doe');
 
-    await page.locator('#navbar-actions a[data-toggle="dropdown"]').click();
+    await page.locator('#navbar-actions .dropdown-toggle').click();
 
     await page.getByRole('link', { name: 'log out' }).click();
 

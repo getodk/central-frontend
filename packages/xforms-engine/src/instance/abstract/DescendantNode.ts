@@ -23,6 +23,9 @@ import type { RepeatInstance } from '../repeat/RepeatInstance.ts';
 import type { Root } from '../Root.ts';
 import type { InstanceNodeStateSpec } from './InstanceNode.ts';
 import { InstanceNode } from './InstanceNode.ts';
+import { ActionDefinition } from '../../parse/model/ActionDefinition.ts';
+import { SET_GEOPOINT_LOCAL_NAME, SET_VALUE_LOCAL_NAME } from '../../parse/XFormDOM.ts';
+import { XFORM_EVENT } from '../../parse/model/Event.ts';
 
 export interface DescendantNodeSharedStateSpec {
   readonly reference: Accessor<string>;
@@ -150,6 +153,7 @@ export abstract class DescendantNode<
   override readonly contextNode: PrimaryInstanceXPathChildNode =
     this as AnyDescendantNode as PrimaryInstanceXPathChildNode;
   readonly getActiveLanguage: Accessor<ActiveLanguage>;
+  readonly valueChangedActions: ActionDefinition[];
 
   constructor(
     override readonly parent: Parent,
@@ -207,6 +211,18 @@ export abstract class DescendantNode<
     this.isRequired = createComputedExpression(this, required, {
       defaultValue: false,
     });
+
+    this.valueChangedActions = Array.from(definition.bodyElement?.element.children ?? [])
+      .map((node) => {
+        if (node.nodeName === SET_VALUE_LOCAL_NAME || node.nodeName === SET_GEOPOINT_LOCAL_NAME) {
+          const action = new ActionDefinition(definition.model, node);
+          if (action.events.includes(XFORM_EVENT.xformsValueChanged)) {
+            return action;
+          }
+        }
+        return null;
+      })
+      .filter((node) => !!node);
   }
 
   /**
