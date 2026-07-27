@@ -71,7 +71,7 @@ describe('Sentry headers', () => {
     fetchSpy.mockRestore();
   });
 
-  it('should omits Sentry headers on attachment requests', async () => {
+  it('should omit Sentry headers on attachment requests', async () => {
     // Loading the form triggers the request to fetch attachments. Sentry should not attach headers.
     mount(WebFormRenderer, {
       global: { plugins: [router, PrimeVue, webFormsPlugin] },
