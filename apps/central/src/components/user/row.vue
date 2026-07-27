@@ -37,7 +37,7 @@ except according to the terms contained in the LICENSE file.
     <td>
       <dropdown placement="bottom-end">
         <template #toggle="{ toggle, attrs }">
-          <button type="button" class="btn btn-default dropdown-toggle"
+          <button type="button" class="btn btn-default dropdown-toggle" :aria-label="$t('header.actions')"
             v-bind="attrs" @click="toggle">
             <span class="icon-cog"></span><span class="caret"></span>
           </button>
