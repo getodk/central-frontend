@@ -157,5 +157,4 @@ describe('Sets field values to given defaults', () => {
       });
     });
   });
-  // TODO consider writing e2e happy day test, check URL escaping?
 });
