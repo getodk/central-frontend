@@ -1,4 +1,4 @@
-import type { LocationQuery } from "vue-router";
+import type { LocationQuery } from 'vue-router';
 
 const DEFAULT_PARAMETERS_REGEX = /^d\[(.+)\]$/;
 
