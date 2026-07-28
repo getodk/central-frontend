@@ -20,9 +20,6 @@ import App from './components/app.vue';
 import createContainer from './container';
 import vTooltip from './directives/tooltip';
 import initSentry from './util/sentry';
-// ./jquery must be imported before any of Bootstrap's JavaScript plugins,
-// because the plugins require jQuery.
-import './jquery';
 
 const app = createApp(App);
 

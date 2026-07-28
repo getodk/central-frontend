@@ -3,7 +3,6 @@ import { enableAutoUnmount } from '@vue/test-utils';
 import { expect, should } from 'chai';
 
 import '../src/styles';
-import '../src/jquery';
 
 import testData from './data';
 import { loadAsyncRouteComponents } from './util/load-async';

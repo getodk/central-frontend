@@ -18,7 +18,6 @@
     "bootstrap": "~3",
     "dompurify": "^3.4.11",
     "flatpickr": "~4.6",
-    "jquery": "~3",
     "luxon": "~1",
     "marked": "~4",
     "ol": "^10.9.0",
