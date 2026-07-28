@@ -95,12 +95,12 @@ describe('Sentry headers', () => {
     await flushPromises();
 
     const calls = fetchSpy.mock.calls as FetchCall[];
-    const attachmentCalls = calls.find(([input]) => {
+    const attachmentCall = calls.find(([input]) => {
       return getFetchUrl(input).includes('/attachments/') && getFetchUrl(input).includes('cities');
     });
-    expect(attachmentCalls, 'expected the attachment fetch triggered by mount').toBeDefined();
+    expect(attachmentCall, 'expected the attachment fetch triggered by mount').toBeDefined();
 
-    const headers = readSentryHeaders(attachmentCalls!);
+    const headers = readSentryHeaders(attachmentCall!);
     expect(headers['sentry-trace']).toBeNull();
     expect(headers.baggage).toBeNull();
   });
@@ -113,19 +113,10 @@ describe('Sentry headers', () => {
       '/v1/projects/1/forms/simple/submissions/uuid:abc/attachments',
       '/v1/projects/1/forms/attachments/submissions/uuid:abc',
     ];
-
-    const urlsWithoutTraceHeaders = [
-      '/v1/projects/1/forms/simple/attachments/photo.jpg',
-      '/v1/projects/1/forms/simple/draft/attachments/photo.jpg',
-      '/v1/projects/1/forms/simple/submissions/uuid:abc/attachments/photo.jpg',
-      '/v1/projects/1/forms/simple/submissions/uuid:abc/attachments/photo.jpg?token=xyz',
-    ];
-
-    await Promise.all([...urlsWithTraceHeaders, ...urlsWithoutTraceHeaders].map((url) => fetch(url)));
-    const calls = fetchSpy.mock.calls as FetchCall[];
+    await Promise.all(urlsWithTraceHeaders.map((url) => fetch(url)));
 
     urlsWithTraceHeaders.forEach((url) => {
-      const call = findCall(calls, url);
+      const call = findCall(fetchSpy.mock.calls as FetchCall[], url);
       expect(call, `expected a fetch call to ${url}`).toBeDefined();
 
       const headers = readSentryHeaders(call!);
@@ -133,8 +124,16 @@ describe('Sentry headers', () => {
       expect(headers.baggage, `Sentry must inject baggage on ${url}`).toBeTruthy();
     });
 
+    const urlsWithoutTraceHeaders = [
+      '/v1/projects/1/forms/simple/attachments/photo.jpg',
+      '/v1/projects/1/forms/simple/draft/attachments/photo.jpg',
+      '/v1/projects/1/forms/simple/submissions/uuid:abc/attachments/photo.jpg',
+      '/v1/projects/1/forms/simple/submissions/uuid:abc/attachments/photo.jpg?token=xyz',
+    ];
+    await Promise.all(urlsWithoutTraceHeaders.map((url) => fetch(url)));
+
     urlsWithoutTraceHeaders.forEach((url) => {
-      const call = findCall(calls, url);
+      const call = findCall(fetchSpy.mock.calls as FetchCall[], url);
       expect(call, `expected a fetch call to ${url}`).toBeDefined();
 
       const headers = readSentryHeaders(call!);
