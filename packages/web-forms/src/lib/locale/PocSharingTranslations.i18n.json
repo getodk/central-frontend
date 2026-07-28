@@ -1,0 +1,14 @@
+{
+  "poc_sharing.error_status": {
+    "string": "Error code: {status}",
+    "developer_comment": "POC-only: plain interpolation mirror of apps/forms errorNotProblem.status."
+  },
+  "poc_sharing.session_timeout": {
+    "string": "Please log in <loginLink>here</loginLink> in a different browser tab and try again.",
+    "developer_comment": "POC-only: sentence with an inline tag placeholder that resolves to an anchor. Mirrors apps/forms sessionTimeoutModal.body."
+  },
+  "poc_sharing.error_modal.body": {
+    "string": "Your data was not submitted. Error message: <errorBox>{errorMessage}</errorBox> You can close this dialog and try again. If the error keeps happening, please contact the person who asked you to fill this Form or <supportEmail>support@getodk.org</supportEmail>.",
+    "developer_comment": "POC-only: sentence with two inline tag placeholders. The <errorBox> tag wraps a primitive {errorMessage} whose value comes from the caller. Mirrors apps/forms errorModal.body — the dynamic error text is inside a rendered element."
+  }
+}

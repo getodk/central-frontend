@@ -2,13 +2,22 @@ import { createIntl, type IntlShape } from '@formatjs/intl';
 import type { FormLanguage, RootNode } from '@getodk/xforms-engine';
 import { all as primeLocales } from 'primelocale';
 import { usePrimeVue } from 'primevue/config';
-import type { Ref } from 'vue';
+import type { Ref, VNode } from 'vue';
 import { computed, onUnmounted, shallowRef, watch } from 'vue';
 // English strings always available as language fallback
 import enRaw from '@locales/strings_en.json';
 
 export type TranslateValues = NonNullable<Parameters<IntlShape['formatMessage']>[1]>;
-export type Translate = (id: string, values?: TranslateValues) => string;
+export type TranslatePrimitiveValues = Record<
+  string,
+  string | number | boolean | Date | null | undefined
+>;
+export type TranslateRichResult = string | Array<string | VNode>;
+export type Translate = {
+  (id: string): string;
+  (id: string, values: TranslatePrimitiveValues): string;
+  (id: string, values: TranslateValues): TranslateRichResult;
+};
 type TransifexTranslation = Record<string, string | { string: string }>;
 type ICUMessage = Record<string, string>;
 
@@ -233,7 +242,8 @@ export const useLocale = (formRef: Ref<RootNode | null>) => {
     document.documentElement.lang = FALLBACK;
   });
 
-  const t: Translate = (id, values) => currentIntl.value.formatMessage({ id }, values) as string;
+  const t = ((id: string, values?: TranslateValues) =>
+    currentIntl.value.formatMessage({ id }, values)) as Translate;
 
   return { setLanguage, t };
 };
