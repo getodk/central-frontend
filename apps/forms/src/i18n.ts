@@ -69,6 +69,7 @@ addLocale('en', 'English');
 addLocale('de', 'Deutsch');
 addLocale('es', 'Español');
 addLocale('fr', 'Français');
+addLocale('id', 'Bahasa Indonesia');
 addLocale('it', 'Italiano');
 addLocale('pt', 'Português');
 addLocale('zh', '汉语', '');

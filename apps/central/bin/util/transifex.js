@@ -1087,11 +1087,9 @@ const writeTranslations = (
   }
 
   translations.delete('component');
-  if (Object.keys(translations) > 0) {
-    fs.writeFileSync(
-      `${localesDir}/${locale}.json`,
-      JSON.stringify(translations, null, 2)
-    );
+  const content = JSON.stringify(translations, null, 2);
+  if (content !== '{}') {
+    fs.writeFileSync(`${localesDir}/${locale}.json`, content);
   }
 };
 
