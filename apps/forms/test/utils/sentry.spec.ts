@@ -50,6 +50,10 @@ describe('Sentry headers', () => {
     return { 'sentry-trace': headers.get('sentry-trace'), baggage: headers.get('baggage') };
   };
 
+  const findCall = (calls: FetchCall[], url: string) => {
+    return calls.find(([input]) => getFetchUrl(input) === url);
+  };
+
   const router = createRouter({
     history: createWebHistory(),
     routes: [{ path: '/', component: { template: '<div>Home</div>' } }],
@@ -71,34 +75,71 @@ describe('Sentry headers', () => {
     fetchSpy.mockRestore();
   });
 
-  it('should omit Sentry headers on attachment requests', async () => {
-    // Loading the form triggers the request to fetch attachments. Sentry should not attach headers.
+  it('should omit Sentry headers on real form attachment fetches', async () => {
     mount(WebFormRenderer, {
       global: { plugins: [router, PrimeVue, webFormsPlugin] },
       props: {
         xform: formWithAttachmentXml,
-        form: { name: 'simple', xmlFormId: 'simple', projectId: 1, enketoId: '', state: 'open', draft: false, webformsEnabled: true },
+        form: {
+          name: 'simple',
+          xmlFormId: 'simple',
+          projectId: 1,
+          enketoId: '',
+          state: 'open',
+          draft: false,
+          webformsEnabled: true
+        },
         actionType: 'new',
       },
     });
-
     await flushPromises();
-    // Positive control: proves Sentry's fetch instrumentation is active.
-    await fetch('/v1/projects/1/forms/simple');
 
     const calls = fetchSpy.mock.calls as FetchCall[];
-    const controlCall = calls.find(([input]) => getFetchUrl(input).endsWith('/v1/projects/1/forms/simple'));
-    expect(controlCall).toBeDefined();
+    const attachmentCalls = calls.find(([input]) => {
+      return getFetchUrl(input).includes('/attachments/') && getFetchUrl(input).includes('cities');
+    });
+    expect(attachmentCalls, 'expected the attachment fetch triggered by mount').toBeDefined();
 
-    const controlHeaders = readSentryHeaders(controlCall!);
-    expect(controlHeaders['sentry-trace'], 'Sentry must inject sentry-trace on non-attachment URLs').toBeTruthy();
-    expect(controlHeaders.baggage, 'Sentry must inject baggage on non-attachment URLs').toBeTruthy();
+    const headers = readSentryHeaders(attachmentCalls!);
+    expect(headers['sentry-trace']).toBeNull();
+    expect(headers.baggage).toBeNull();
+  });
 
-    const attachmentCall = calls.find(([input]) => getFetchUrl(input).includes('/attachments/'));
-    expect(attachmentCall).toBeDefined();
+  it('should propagate or omit Sentry headers based on URL pattern', async () => {
+    const urlsWithTraceHeaders = [
+      '/v1/projects/1/forms/simple',
+      '/v1/projects/1/forms/simple/attachments',
+      '/v1/projects/1/forms/simple/draft/attachments',
+      '/v1/projects/1/forms/simple/submissions/uuid:abc/attachments',
+      '/v1/projects/1/forms/attachments/submissions/uuid:abc',
+    ];
 
-    const attachmentHeaders = readSentryHeaders(attachmentCall!);
-    expect(attachmentHeaders['sentry-trace'], 'Sentry must NOT inject sentry-trace on attachment URLs').toBeNull();
-    expect(attachmentHeaders.baggage, 'Sentry must NOT inject baggage on attachment URLs').toBeNull();
+    const urlsWithoutTraceHeaders = [
+      '/v1/projects/1/forms/simple/attachments/photo.jpg',
+      '/v1/projects/1/forms/simple/draft/attachments/photo.jpg',
+      '/v1/projects/1/forms/simple/submissions/uuid:abc/attachments/photo.jpg',
+      '/v1/projects/1/forms/simple/submissions/uuid:abc/attachments/photo.jpg?token=xyz',
+    ];
+
+    await Promise.all([...urlsWithTraceHeaders, ...urlsWithoutTraceHeaders].map((url) => fetch(url)));
+    const calls = fetchSpy.mock.calls as FetchCall[];
+
+    urlsWithTraceHeaders.forEach((url) => {
+      const call = findCall(calls, url);
+      expect(call, `expected a fetch call to ${url}`).toBeDefined();
+
+      const headers = readSentryHeaders(call!);
+      expect(headers['sentry-trace'], `Sentry must inject sentry-trace on ${url}`).toBeTruthy();
+      expect(headers.baggage, `Sentry must inject baggage on ${url}`).toBeTruthy();
+    });
+
+    urlsWithoutTraceHeaders.forEach((url) => {
+      const call = findCall(calls, url);
+      expect(call, `expected a fetch call to ${url}`).toBeDefined();
+
+      const headers = readSentryHeaders(call!);
+      expect(headers['sentry-trace'], `Sentry must NOT inject sentry-trace on ${url}`).toBeNull();
+      expect(headers.baggage, `Sentry must NOT inject baggage on ${url}`).toBeNull();
+    });
   });
 });
