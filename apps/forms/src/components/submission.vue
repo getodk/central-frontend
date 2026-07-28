@@ -14,6 +14,7 @@ import {
 } from '../utils/api.ts';
 import Dialog from 'primevue/dialog';
 import { hideSpinner } from '../utils/spinner.ts';
+import { getDefaultParameters } from '../utils/default-parameters.ts';
 
 const props = defineProps({
   draft: Boolean,
@@ -58,20 +59,7 @@ const enketoId = computed(() => route.params.enketoId ? encodeURIComponent(route
 const st = computed(() => route.query.st ? route.query.st as string : null);
 const useWebForms = computed(() => route.query.webforms === 'true');
 const offline = computed(() => route.params.offline === 'offline');
-const defaultParameters = computed(() => {
-  // TODO pull this out and unit test it
-  const DEFAULT_PARAMETERS_REGEX = /^d\[(.+)\]$/;
-  const result: Record<string, string> = {};
-  Object.entries(route.query).forEach(([key, value]) => {
-    if (typeof value === 'string') {
-      const path = DEFAULT_PARAMETERS_REGEX.exec(key)?.[1];
-      if (path) {
-        result[path] = value;
-      }
-    }
-  });
-  return result;
-});
+const defaultParameters = computed(() => getDefaultParameters(route.query));
 const webFormsEnabled = ref(true);
 
 const form = ref<Form>();

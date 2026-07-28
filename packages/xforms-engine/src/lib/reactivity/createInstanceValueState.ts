@@ -12,7 +12,7 @@ import { createComputedExpression } from './createComputedExpression.ts';
 import type { SimpleAtomicState, SimpleAtomicStateSetter } from './types.ts';
 import { ValueNode } from '../../instance/abstract/ValueNode.ts';
 import { Attribute } from '../../instance/Attribute.ts';
-import { OPENROSA_XFORMS_PREFIX } from '@getodk/common/constants/xmlns.ts';
+import { getInstanceDefaultValue } from '../instance-defaults.ts';
 
 const REPEAT_INDEX_REGEX = /([^[]*)(\[[0-9]+\])/g;
 
@@ -33,44 +33,9 @@ const isEditInitialLoad = (context: ValueContext) => {
   return context.rootDocument.initializationMode === 'edit' && !isAddingRepeatChild(context);
 };
 
-// TODO I think it's time to pull this out as a separate class AND UNIT TEST IT???
-const PROTECTED_META_FIELDS = [
-  'instanceID',
-  'instanceName',
-  'timeStart',
-  'timeEnd',
-  'today',
-  'userID',
-  'deviceID',
-  'deprecatedID',
-  'email',
-  'phoneNumber',
-  'audit',
-];
-
-const isProtectedMetaProperty = (refWithoutRoot: string): boolean => {
-  return !!PROTECTED_META_FIELDS.find((field) => {
-    return refWithoutRoot === `${OPENROSA_XFORMS_PREFIX}:meta/${OPENROSA_XFORMS_PREFIX}:${field}`;
-  });
-};
-
-const getPrefillParameterValue = (context: ValueContext): string | undefined => {
-  const ref = context.contextReference();
-  const positionOfSecondSlash = ref.indexOf('/', 1);
-  const refWithoutRoot = ref.slice(positionOfSecondSlash + 1);
-  if (isProtectedMetaProperty(refWithoutRoot)) {
-    return;
-  }
-  if (context.contextNode.nodeType === 'attribute') {
-    return;
-  }
-  const instanceDefaults = context.instanceConfig.instanceDefaults;
-  return instanceDefaults[ref] ?? (refWithoutRoot && instanceDefaults[refWithoutRoot]);
-};
-
 const getInitialValue = (context: ValueContext): string => {
   const value =
-    getPrefillParameterValue(context) ??
+    getInstanceDefaultValue(context.instanceConfig.instanceDefaults, context) ??
     context.instanceNode?.value ??
     context.definition.template?.value;
   return context.decodeInstanceValue(value);
