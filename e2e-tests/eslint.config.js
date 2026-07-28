@@ -14,7 +14,7 @@ export default defineConfig(
     ],
     rules: {
       'eol-last': 'error',
-      'indent': [ 'error', 2, { SwitchCase:1, MemberExpression:2 } ],
+      'indent': [ 'error', 2, { SwitchCase:1 } ],
       'no-trailing-spaces': 'error',
     },
   }
