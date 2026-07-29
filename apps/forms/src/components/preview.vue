@@ -3,6 +3,7 @@ import { computed, ref, defineAsyncComponent } from 'vue';
 import { useRoute } from 'vue-router';
 import { getFormByFormId, getFormXml, RequestError, type Form } from '../utils/api.ts';
 import { hideSpinner } from '../utils/spinner.ts';
+import { getDefaultParameters } from '../utils/default-parameters.ts';
 
 const props = defineProps({
   draft: Boolean,
@@ -19,6 +20,7 @@ const formId = computed(() => encodeURIComponent(route.params.xmlFormId as strin
 const useWebForms = route.query.webforms === 'true';
 const loadingState = ref(true);
 const errorState = ref(false);
+const defaultParameters = computed(() => getDefaultParameters(route.query, 'preview'));
 const webFormsEnabled = ref(true);
 const form = ref<Form>();
 const xform = ref<string>();
@@ -59,7 +61,7 @@ fetchForm();
       {{ $t('formNotFound') }}
     </div>
     <template v-else-if="webFormsEnabled">
-      <WebFormRenderer :form="form!" :xform="xform!" action-type="preview"/>
+      <WebFormRenderer :form="form!" :xform="xform!" action-type="preview" :default-parameters="defaultParameters" />
     </template>
     <template v-else>
       <EnketoIframe :form="form!" :enketo-id="form!.enketoId" action-type="preview"/>

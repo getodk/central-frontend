@@ -71,11 +71,14 @@ export abstract class BaseInstantiableFormResult<
 
     this.editInstance = async (
       input: EditFormInstanceInput,
-      instanceConfig: FormInstanceConfig = {}
+      rawInstanceConfig: FormInstanceConfig = {}
     ) => {
       this.assertInstantiable();
 
       const initialState = await InitialInstanceState.resolve(instanceOptions.model, input);
+
+      // clone the object without the instanceDefaults which are ignored when editing
+      const { instanceDefaults, ...instanceConfig } = rawInstanceConfig;
 
       return new FormInstance(this, {
         mode: 'edit',

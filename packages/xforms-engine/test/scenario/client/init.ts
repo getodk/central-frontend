@@ -8,6 +8,7 @@ import type {
   LoadFormWarningResult,
   MissingResourceBehavior,
   OpaqueReactiveObjectFactory,
+  InstanceDefaults,
   PreloadProperties,
   ResolvedFormInstanceInputType,
   RootNode,
@@ -37,6 +38,7 @@ export interface TestFormOptions {
   readonly preloadProperties: PreloadProperties;
   readonly geolocationProvider: GeolocationProvider;
   readonly editInstance: string | null;
+  readonly instanceDefaults: InstanceDefaults;
 }
 
 const defaultConfig = {
@@ -73,6 +75,7 @@ export const initializeTestForm = async (
           stateFactory: options.stateFactory,
           instanceAttachments: options.instanceAttachments,
           preloadProperties: options.preloadProperties,
+          instanceDefaults: options.instanceDefaults,
           geolocationProvider: options.geolocationProvider,
         },
       };
