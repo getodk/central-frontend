@@ -35,30 +35,60 @@ describe('Instance defaults', () => {
   });
 
   describe('returns undefined when called on protected meta fields', () => {
-    [
-      'instanceID',
-      'instanceName',
-      'timeStart',
-      'timeEnd',
-      'today',
-      'userID',
-      'deviceID',
-      'deprecatedID',
-      'email',
-      'phoneNumber',
-      'audit',
-    ].forEach((field) => {
-      it(field, () => {
-        const ref = `/root/orx:meta/orx:${field}`;
-        const defaults: Record<string, string> = {};
-        defaults[ref] = 'something';
-        const context = {
-          contextReference: () => ref,
-          contextNode: { nodeType: 'input' },
-        } as InstanceValueContext;
-        const actual = getInstanceDefaultValue(defaults, context);
-        expect(actual).toBeUndefined();
+    const checkRefReturnsUndefined = (ref: string) => {
+      const defaults: Record<string, string> = {};
+      defaults[ref] = 'something';
+      const context = {
+        contextReference: () => ref,
+        contextNode: { nodeType: 'input' },
+      } as InstanceValueContext;
+      const actual = getInstanceDefaultValue(defaults, context);
+      expect(actual).toBeUndefined();
+    };
+
+    describe('ignores field', () => {
+      [
+        'instanceID',
+        'instanceName',
+        'timeStart',
+        'timeEnd',
+        'today',
+        'userID',
+        'deviceID',
+        'deprecatedID',
+        'email',
+        'phoneNumber',
+        'audit',
+      ].forEach((field) => {
+        it(field, () => {
+          checkRefReturnsUndefined(`/root/meta/${field}`);
+        });
       });
+    });
+
+    describe('ignores namespace combination', () => {
+      [
+        ['', ''],
+        ['orx:', ''],
+        ['', 'orx:'],
+        ['orx:', 'orx:'],
+      ].forEach(([metaPrefix, fieldPrefix]) => {
+        const ref = `/root/${metaPrefix}meta/${fieldPrefix}instanceID`;
+        it(ref, () => {
+          checkRefReturnsUndefined(ref);
+        });
+      });
+    });
+
+    it('ignores short form refs', () => {
+      const defaults: Record<string, string> = {};
+      defaults['meta/instanceID'] = 'something';
+      const context = {
+        contextReference: () => '/root/meta/instanceID',
+        contextNode: { nodeType: 'input' },
+      } as InstanceValueContext;
+      const actual = getInstanceDefaultValue(defaults, context);
+      expect(actual).toBeUndefined();
     });
   });
 

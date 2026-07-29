@@ -1,7 +1,6 @@
 import type { loadForm } from '../../entrypoints/loadForm.ts';
 import type { MissingResourceBehavior } from '../constants.ts';
 import type { FetchFormAttachment, FetchResource } from '../resources.ts';
-import type { InstanceDefaults } from './FormInstanceConfig.ts';
 import type { FormResource } from './FormResource.ts';
 import type { LoadFormFailureResult, LoadFormResult } from './LoadFormResult.ts';
 
@@ -79,16 +78,6 @@ export interface LoadFormOptions {
    * @default MissingResourceBehaviorDefault
    */
   readonly missingResourceBehavior?: MissingResourceBehavior;
-
-  /**
-   * The values to be set on the initialised form. Specifically for use when the
-   * value is based on data not available to this form, for example, providing a
-   * information based on the context only available on the system that invoked
-   * initialization.
-   *
-   * The Record key is the xpath path the set the Record value to.
-   */
-  readonly instanceDefaults?: InstanceDefaults | null;
 }
 
 /**

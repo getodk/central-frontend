@@ -16,6 +16,12 @@ export interface PreloadProperties {
   readonly phoneNumber?: string;
 }
 
+/**
+ * A record with:
+ * - key as either an absolute xpath to the element, OR the reference without the
+ *   primary instance element name, eg: '/root/name' or 'name'.
+ * - value as a string to decode and set in the model
+ */
 export interface InstanceDefaults extends Record<string, string> {}
 
 export interface GeolocationProvider {

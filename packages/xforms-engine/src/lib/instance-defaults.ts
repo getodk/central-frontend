@@ -21,7 +21,8 @@ const PROTECTED_META_FIELDS = [
 
 const isProtectedMetaProperty = (refWithoutRoot: string): boolean => {
   return !!PROTECTED_META_FIELDS.find((field) => {
-    return refWithoutRoot === `${OPENROSA_XFORMS_PREFIX}:meta/${OPENROSA_XFORMS_PREFIX}:${field}`;
+    const withoutNamespace = refWithoutRoot.replaceAll(`${OPENROSA_XFORMS_PREFIX}:`, '');
+    return withoutNamespace === `meta/${field}`;
   });
 };
 
@@ -29,7 +30,7 @@ export const getInstanceDefaultValue = (
   defaults: InstanceDefaults,
   context: ValueContext
 ): string | undefined => {
-  if (!defaults || context.contextNode.nodeType === 'attribute') {
+  if (Object.keys(defaults).length === 0 || context.contextNode.nodeType === 'attribute') {
     return;
   }
   const ref = context.contextReference();

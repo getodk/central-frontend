@@ -101,6 +101,29 @@ describe('Sets field values to given defaults', () => {
       expect(scenario.answerOf('/root/repeat[3]/child')).toEqualAnswer(stringAnswer(''));
     });
 
+    it('ignored instance defaults when editing', async () => {
+      const scenario = await Scenario.init('Bind defaults', formDefinition);
+      scenario.answer('/root/name', 'original');
+      const instanceDefaults = {
+        '/root/name': 'edited',
+        '/root/age': '85',
+        '/root/location': '38.25146813817506 21.758421137528785 0.0 0.0',
+      };
+      const edited = await scenario.editCurrentInstance({ instanceDefaults });
+      expect(edited.answerOf('/root/name')).toEqualAnswer(stringAnswer('original'));
+      expect(edited.answerOf('/root/age')).toEqualAnswer(stringAnswer(''));
+      expect(edited.answerOf('/root/location')).toEqualAnswer(stringAnswer(''));
+    });
+
+    it('instance defaults are restored when resetting', async () => {
+      const instanceDefaults = { '/root/name': 'instancedefault' };
+      const scenario = await Scenario.init('Bind defaults', formDefinition, { instanceDefaults });
+      expect(scenario.answerOf('/root/name')).toEqualAnswer(stringAnswer('instancedefault'));
+      scenario.answer('/root/name', 'edited');
+      const resetted = scenario.resetCurrentInstance({ instanceDefaults });
+      expect(resetted.answerOf('/root/name')).toEqualAnswer(stringAnswer('instancedefault'));
+    });
+
     describe('does not bind to protected properties', () => {
       it('does nothing if not value node', async () => {
         const instanceDefaults = { '/root': 'some default' };

@@ -59,7 +59,7 @@ const enketoId = computed(() => route.params.enketoId ? encodeURIComponent(route
 const st = computed(() => route.query.st ? route.query.st as string : null);
 const useWebForms = computed(() => route.query.webforms === 'true');
 const offline = computed(() => route.params.offline === 'offline');
-const defaultParameters = computed(() => getDefaultParameters(route.query));
+const defaultParameters = computed(() => getDefaultParameters(route.query, props.actionType));
 const webFormsEnabled = ref(true);
 
 const form = ref<Form>();

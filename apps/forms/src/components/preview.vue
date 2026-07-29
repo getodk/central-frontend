@@ -20,7 +20,7 @@ const formId = computed(() => encodeURIComponent(route.params.xmlFormId as strin
 const useWebForms = route.query.webforms === 'true';
 const loadingState = ref(true);
 const errorState = ref(false);
-const defaultParameters = computed(() => getDefaultParameters(route.query));
+const defaultParameters = computed(() => getDefaultParameters(route.query, 'preview'));
 const webFormsEnabled = ref(true);
 const form = ref<Form>();
 const xform = ref<string>();
