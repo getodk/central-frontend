@@ -7,6 +7,7 @@ import { BaseInstantiableFormResult } from './BaseInstantiableFormResult.ts';
 export interface FormSuccessResultOptions {
   readonly warnings: null;
   readonly error: null;
+  readonly lastSaved: boolean;
   readonly scope: ReactiveScope;
   readonly formResource: FormResource;
   readonly instanceOptions: BasePrimaryInstanceOptions;

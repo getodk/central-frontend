@@ -53,6 +53,7 @@ export class JRResourceURL extends URL {
     validateJRResourceURL(this);
   }
 
+  // TODO maybe this would be better in the ExternalSecondaryInstanceResource class
   isLastSavedInstance(): boolean {
     return this.href === LAST_SAVED_INSTANCE_ID;
   }

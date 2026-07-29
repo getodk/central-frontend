@@ -21,12 +21,14 @@ export interface BaseFormResultOptions<Status extends FormResultStatus> {
   readonly status: Status;
   readonly warnings: BaseFormResultProperty<Status, 'warnings'>;
   readonly error: BaseFormResultProperty<Status, 'error'>;
+  readonly lastSaved: boolean;
 }
 
 export abstract class BaseFormResult<Status extends FormResultStatus> {
   readonly status: Status;
   readonly warnings: BaseFormResultProperty<Status, 'warnings'>;
   readonly error: BaseFormResultProperty<Status, 'error'>;
+  readonly lastSaved: boolean;
 
   abstract readonly createInstance: BaseFormResultProperty<Status, 'createInstance'>;
   abstract readonly resetInstance: BaseFormResultProperty<Status, 'resetInstance'>;
@@ -37,5 +39,6 @@ export abstract class BaseFormResult<Status extends FormResultStatus> {
     this.status = options.status;
     this.warnings = options.warnings;
     this.error = options.error;
+    this.lastSaved = options.lastSaved;
   }
 }

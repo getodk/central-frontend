@@ -82,6 +82,7 @@ interface BaseInstancePayload<PayloadType extends InstancePayloadType> {
   readonly payloadType: PayloadType;
   readonly status: InstancePayloadStatus;
   readonly submissionMeta: SubmissionMeta;
+  readonly hasLastSaved: boolean;
 
   get violations(): readonly InstancePayloadViolation[] | null;
 

@@ -90,6 +90,7 @@ const loadFormResult = async (
     return new FormSuccessResult({
       warnings: null,
       error: null,
+      lastSaved: secondaryInstances.hasLastSaved,
       scope,
       formResource,
       instanceOptions,

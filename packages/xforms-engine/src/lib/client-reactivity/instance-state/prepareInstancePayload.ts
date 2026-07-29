@@ -179,11 +179,17 @@ const validateInstance = (
   };
 };
 
+interface MonolithicInstancePayloadOptions {
+  readonly maxSize: number;
+  readonly hasLastSaved: boolean;
+}
+
 const monolithicInstancePayload = (
   validation: InstanceStateValidation,
   submissionMeta: SubmissionMeta,
   instanceFile: InstanceFile,
-  attachments: readonly File[]
+  attachments: readonly File[],
+  options: MonolithicInstancePayloadOptions
 ): MonolithicInstancePayload => {
   const data = InstanceData.from(instanceFile, attachments);
 
@@ -192,11 +198,13 @@ const monolithicInstancePayload = (
     ...validation,
     submissionMeta,
     data: [data],
+    hasLastSaved: options.hasLastSaved
   };
 };
 
 interface ChunkedInstancePayloadOptions {
   readonly maxSize: number;
+  readonly hasLastSaved: boolean;
 }
 
 type PartitionedInstanceData = readonly [ClientInstanceData, ...ClientInstanceData[]];
@@ -250,12 +258,14 @@ const chunkedInstancePayload = (
     ...validation,
     submissionMeta,
     data,
+    hasLastSaved: options.hasLastSaved
   };
 };
 
 export interface PrepareInstancePayloadOptions<PayloadType extends InstancePayloadType> {
   readonly payloadType: PayloadType;
   readonly maxSize: number;
+  readonly hasLastSaved: boolean;
 }
 
 export const prepareInstancePayload = async <PayloadType extends InstancePayloadType>(
@@ -283,7 +293,8 @@ export const prepareInstancePayload = async <PayloadType extends InstancePayload
         validation,
         submissionMeta,
         instanceFile,
-        attachments
+        attachments,
+        options
       ) satisfies MonolithicInstancePayload as InstancePayload<PayloadType>;
 
     default:

@@ -51,6 +51,10 @@ const visibleModal = ref();
 const withToken = (url) => `${url}${queryString({ st: props.st })}`;
 
 const getAttachment = (requestUrl: URL) => {
+  console.log({requestUrl});
+  if (requestUrl.href === 'jr://instance/last-saved') {
+    return new Response('<data id="data"><item>hello</item><meta><instanceID/></meta></data>', { headers: new Headers({ 'Content-Type': 'text/xml' }) });
+  }
   const encodedName = encodeURIComponent(requestUrl.pathname.split('/').pop()!);
   const url = withToken(`/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath.value}/attachments/${encodedName}`);
   return fetch(url);
@@ -246,12 +250,13 @@ const handleSubmit = async (
     visibleModal.value = { type: 'previewModal', hideable: true };
     return;
   }
-  const { data: [data], status } = payload;
+  const { data: [data], status, hasLastSaved } = payload;
   if (status !== 'ready') {
     // Status is not ready when Form is not valid and in that case submit button will be disabled,
     // hence this branch should never execute.
     return;
   }
+  console.log({hasLastSaved});
   initializeSubmissionState(data as unknown as SubmissionData, clearFormCallback);
   await submitData();
 };

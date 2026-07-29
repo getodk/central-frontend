@@ -39,6 +39,9 @@ export class SecondaryInstancesDefinition
   extends Map<string, SecondaryInstanceRootDefinition>
   implements XFormsSecondaryInstanceMap<EngineXPathNode>
 {
+
+  readonly hasLastSaved: boolean;
+
   /**
    * @package Only to be used for testing
    */
@@ -84,7 +87,9 @@ export class SecondaryInstancesDefinition
         const resourceURL = JRResourceURL.from(src);
 
         if (resourceURL.isLastSavedInstance()) {
-          return new BlankSecondaryInstanceSource(instanceId, resourceURL, domElement);
+          // TODO record that last saved exists as a cue to tell the app to store this submission
+          // TODO either set missingResourceBehavior:blank or something? I don't want the client app to have to invent a blank xml doc
+          // return new BlankSecondaryInstanceSource(instanceId, resourceURL, domElement);
         }
 
         const resource = await ExternalSecondaryInstanceResource.load(
@@ -124,5 +129,6 @@ export class SecondaryInstancesDefinition
         return [root.getAttributeValue('id'), root];
       })
     );
+    this.hasLastSaved = sources.some(source => source.resourceURL?.isLastSavedInstance());
   }
 }

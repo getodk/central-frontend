@@ -45,11 +45,11 @@ export abstract class BaseInstantiableFormResult<
 
   constructor(options: BaseInstantiableFormResultOptions<Status>) {
     const { status, warnings, error, instanceOptions } = options;
-
     super({
       status,
       warnings,
       error,
+      lastSaved: instanceOptions.secondaryInstances.hasLastSaved
     });
 
     this.createInstance = (instanceConfig: FormInstanceConfig = {}) => {

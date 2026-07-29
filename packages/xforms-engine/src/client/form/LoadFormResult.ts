@@ -44,6 +44,7 @@ interface BaseLoadFormResult {
   readonly status: FormResultStatus;
   readonly warnings: LoadFormWarnings | null;
   readonly error: LoadFormFailureError | null;
+  readonly lastSaved: boolean;
   readonly createInstance: FallibleLoadFormResultMethod<CreateFormInstance>;
   readonly resetInstance: FallibleLoadFormResultMethod<ResetFormInstance>;
   readonly editInstance: FallibleLoadFormResultMethod<EditFormInstance>;
@@ -54,6 +55,7 @@ export interface LoadFormSuccessResult extends BaseLoadFormResult {
   readonly status: 'success';
   readonly warnings: null;
   readonly error: null;
+  readonly lastSaved: boolean;
   readonly createInstance: CreateFormInstance;
   readonly resetInstance: ResetFormInstance;
   readonly editInstance: EditFormInstance;
@@ -64,6 +66,7 @@ export interface LoadFormWarningResult extends BaseLoadFormResult {
   readonly status: 'warning';
   readonly warnings: LoadFormWarnings;
   readonly error: null;
+  readonly lastSaved: boolean;
   readonly createInstance: CreateFormInstance;
   readonly resetInstance: ResetFormInstance;
   readonly editInstance: EditFormInstance;
@@ -74,6 +77,7 @@ export interface LoadFormFailureResult extends BaseLoadFormResult {
   readonly status: 'failure';
   readonly warnings: LoadFormWarnings | null;
   readonly error: LoadFormFailureError;
+  readonly lastSaved: boolean;
   readonly createInstance: FailedLoadFormResultMethod<CreateFormInstance>;
   readonly resetInstance: FailedLoadFormResultMethod<ResetFormInstance>;
   readonly editInstance: FailedLoadFormResultMethod<EditFormInstance>;
