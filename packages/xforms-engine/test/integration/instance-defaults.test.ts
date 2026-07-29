@@ -65,7 +65,9 @@ describe('Sets field values to given defaults', () => {
       const scenario = await Scenario.init('Bind defaults', formDefinition, { instanceDefaults });
       expect(scenario.answerOf('/root/name')).toEqualAnswer(stringAnswer('some default'));
       expect(scenario.answerOf('/root/age')).toEqualAnswer(intAnswer(85));
-      expect(scenario.answerOf('/root/visit')).toEqualAnswer(stringAnswer('2026-07-29T22:02:05+12:00'));
+      expect(scenario.answerOf('/root/visit')).toEqualAnswer(
+        stringAnswer('2026-07-29T22:02:05+12:00')
+      );
       expect(scenario.answerOf('/root/location')).toEqualAnswer(
         stringAnswer('38.25146813817506 21.758421137528785 0.0 0.0')
       );
@@ -132,7 +134,7 @@ describe('Sets field values to given defaults', () => {
 
     it('does not bind invalid values', async () => {
       const instanceDefaults = {
-        '/root/visit': '2026-99-29T22:02:05+12:00' // there is no 99th month
+        '/root/visit': '2026-99-29T22:02:05+12:00', // there is no 99th month
       };
       const scenario = await Scenario.init('Bind defaults', formDefinition, { instanceDefaults });
       expect(scenario.answerOf('/root/visit')).toEqualAnswer(stringAnswer(''));
