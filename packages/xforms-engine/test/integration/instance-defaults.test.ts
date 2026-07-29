@@ -28,6 +28,7 @@ describe('Sets field values to given defaults', () => {
             'root id="bind-defaults" version=""',
             t('name id=""'),
             t('age'),
+            t('visit'),
             t('location'),
             t('address', t('city')),
             t('repeat', t('child')),
@@ -37,6 +38,7 @@ describe('Sets field values to given defaults', () => {
         instance('secondary', t('item', t('value', 'A')), t('item', t('value', 'B'))),
         bind('/root/name').type('string'),
         bind('/root/age').type('int'),
+        bind('/root/visit').type('dateTime'),
         bind('/root/location').type('geopoint'),
         bind('/root/address/city').type('string'),
         bind('/root/repeat/child').type('string')
@@ -45,6 +47,7 @@ describe('Sets field values to given defaults', () => {
     body(
       input('/root/name'),
       input('/root/age'),
+      input('/root/visit'),
       input('/root/location'),
       input('/root/address/city'),
       repeat('/root/repeat', input('/root/repeat/child'))
@@ -56,11 +59,13 @@ describe('Sets field values to given defaults', () => {
       const instanceDefaults = {
         '/root/name': 'some default',
         '/root/age': '85',
+        '/root/visit': '2026-07-29T22:02:05+12:00',
         '/root/location': '38.25146813817506 21.758421137528785 0.0 0.0',
       };
       const scenario = await Scenario.init('Bind defaults', formDefinition, { instanceDefaults });
       expect(scenario.answerOf('/root/name')).toEqualAnswer(stringAnswer('some default'));
       expect(scenario.answerOf('/root/age')).toEqualAnswer(intAnswer(85));
+      expect(scenario.answerOf('/root/visit')).toEqualAnswer(stringAnswer('2026-07-29T22:02:05+12:00'));
       expect(scenario.answerOf('/root/location')).toEqualAnswer(
         stringAnswer('38.25146813817506 21.758421137528785 0.0 0.0')
       );
@@ -87,6 +92,7 @@ describe('Sets field values to given defaults', () => {
       const scenario = await Scenario.init('Bind defaults', formDefinition, { instanceDefaults });
       scenario.next('/root/name');
       scenario.next('/root/age');
+      scenario.next('/root/visit');
       scenario.next('/root/location');
       scenario.next('/root/address/city');
       scenario.next('/root/repeat[1]');
@@ -122,6 +128,14 @@ describe('Sets field values to given defaults', () => {
       scenario.answer('/root/name', 'edited');
       const resetted = scenario.resetCurrentInstance({ instanceDefaults });
       expect(resetted.answerOf('/root/name')).toEqualAnswer(stringAnswer('instancedefault'));
+    });
+
+    it('does not bind invalid values', async () => {
+      const instanceDefaults = {
+        '/root/visit': '2026-99-29T22:02:05+12:00' // there is no 99th month
+      };
+      const scenario = await Scenario.init('Bind defaults', formDefinition, { instanceDefaults });
+      expect(scenario.answerOf('/root/visit')).toEqualAnswer(stringAnswer(''));
     });
 
     describe('does not bind to protected properties', () => {

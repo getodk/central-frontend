@@ -47,4 +47,13 @@ test.describe('Default Parameters', () => {
     expect(xml).toContain('<first_name>mary? []=</first_name>');
   });
 
+  test('binds value when accessing public link', async ({ page }) => {
+    const { token } = await backendClient.createPublicLink(simpleForm.xmlFormId);
+    await page.goto(`${appUrl}/f/${simpleForm.enketoId}?st=${token}&d[/data/first_name]=will i am`);
+    await page.getByRole('button', { name: 'send' }).click();
+    await expect(page.getByRole('heading', { name: 'Thank you for participating' })).toBeVisible();
+    const xml = await backendClient.getLastSubmission(simpleForm.xmlFormId);
+    expect(xml).toContain('<first_name>will i am</first_name>');
+  });
+
 });
