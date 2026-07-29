@@ -1088,7 +1088,7 @@ const writeTranslations = (
 
   translations.delete('component');
   const content = JSON.stringify(translations, null, 2);
-  if (content !== '{}') {
+  if (content != null && content !== '{}') {
     fs.writeFileSync(`${localesDir}/${locale}.json`, content);
   }
 };
