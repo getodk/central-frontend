@@ -15,7 +15,7 @@ import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedN
 import { createSharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import type { Attribute } from './Attribute.ts';
 import { ValueNode, type ValueNodeStateSpec } from './abstract/ValueNode.ts';
-import { buildAttributes } from './attachments/buildAttributes.ts';
+import { buildAttributes } from './buildAttributes.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { ValidationContext } from './internal-api/ValidationContext.ts';

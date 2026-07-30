@@ -12,7 +12,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-  ##### Question types (basic functionality)<br/>🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜ 91\%
+##### Question types (basic functionality)<br/>🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜ 91\%
 
   </summary>
   <br/>
@@ -60,7 +60,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-  ##### Appearances<br/>🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜ 54\%
+##### Appearances<br/>🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜ 54\%
 
   </summary>
   <br/>
@@ -120,7 +120,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-  ##### Parameters<br/>🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜ 66\%
+##### Parameters<br/>🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜ 66\%
 
   </summary>
   <br/>
@@ -146,7 +146,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-  ##### Form logic<br/>🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩 100\%
+##### Form logic<br/>🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩 100\%
 
   </summary>
   <br/>
@@ -172,7 +172,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-  ##### Descriptions and annotations<br/>🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜ 75\%
+##### Descriptions and annotations<br/>🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜ 75\%
 
   </summary>
   <br/>
@@ -198,7 +198,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-  ##### Theme and layouts<br/>🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜⬜⬜ 40\%
+##### Theme and layouts<br/>🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜⬜⬜ 40\%
 
   </summary>
   <br/>
@@ -222,7 +222,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-  ##### XPath<br/>🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜ 98\%
+##### XPath<br/>🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜ 98\%
 
   </summary>
   <br/>
@@ -311,7 +311,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-  ##### Misc<br/>🟩⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ 11\%
+##### Misc<br/>🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ 22\%
 
   </summary>
   <br/>
@@ -319,7 +319,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
 | Feature <img width=250px/>                                                       | Progress |
 | -------------------------------------------------------------------------------- | :------: |
 | [last saved instance](https://github.com/getodk/web-forms/issues/306)            |          |
-| [defaults from query parameters](https://github.com/getodk/web-forms/issues/464) |          |
+| [defaults from query parameters](https://github.com/getodk/web-forms/issues/464) |    ✅    |
 | multi-form app-like experience                                                   |          |
 | [prevent multiple submissions](https://github.com/getodk/web-forms/issues/461)   |          |
 | configure end of form experience                                                 |          |
@@ -348,6 +348,7 @@ To use this library in a Vue.js application:
     :submission-max-size="5242880"  <!-- 5MB -->
     :edit-instance="editOptions"
     :preload-properties="preloadProperties"
+    :instance-defaults="instanceDefaults"
     :device-id="abc123"
     @submit="handleSubmit"
     @submit-chunked="handleChunkedSubmit"
@@ -375,6 +376,7 @@ The `<OdkWebForm>` component accepts the following props:
 - `editInstance` (`EditInstanceOptions`, optional): Options to resolve and load instance and attachment resources for editing.
 - `preloadProperties` (`PreloadProperties`, optional): Properties to make available for binding in the form using jr:preload.
 - `deviceId` (`string`, optional): If provided is available for binding into the form using preload attributes. Ignored if `preloadProperties.deviceID` is given.
+- `instanceDefaults` (`InstanceDefaults`, optional): Default values to set in the form as a map of xpath reference to string value.
 
 ### Events (`OdkWebFormEmits`)
 

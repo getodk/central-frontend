@@ -14,13 +14,14 @@ import {
 import { describe, expect, it } from 'vitest';
 import { stringAnswer } from '../scenario/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../scenario/jr/Scenario.ts';
-import { r } from '../scenario/jr/resource/ResourcePathHelper.ts';
+
+import jrChoiceName from '../scenario/fixtures/test-javarosa/resources/jr-choice-name.xml?raw';
 
 // Ported as of https://github.com/getodk/javarosa/commit/5ae68946c47419b83e7d28290132d846e457eea6
 describe('JavaRosa ports: ChoiceNameTest.java', () => {
   describe('jr:choice-name call on literal choice value', () => {
     it('gets choice name', async () => {
-      const scenario = await Scenario.init(r('jr-choice-name.xml'));
+      const scenario = await Scenario.init(jrChoiceName);
 
       expect(scenario.answerOf('/jr-choice-name/literal_choice_name')).toEqualAnswer(
         stringAnswer('Choice 2')
@@ -30,7 +31,7 @@ describe('JavaRosa ports: ChoiceNameTest.java', () => {
 
   describe('choice name call outside of repeat with static choices', () => {
     it('gets choice name', async () => {
-      const scenario = await Scenario.init(r('jr-choice-name.xml'));
+      const scenario = await Scenario.init(jrChoiceName);
       scenario.answer('/jr-choice-name/select_one_outside', 'choice3');
 
       expect(scenario.answerOf('/jr-choice-name/select_one_name_outside')).toEqualAnswer(
@@ -41,7 +42,7 @@ describe('JavaRosa ports: ChoiceNameTest.java', () => {
 
   describe('choice name call in repeat with static choices', () => {
     it('gets choice name', async () => {
-      const scenario = await Scenario.init(r('jr-choice-name.xml'));
+      const scenario = await Scenario.init(jrChoiceName);
 
       scenario.answer('/jr-choice-name/my-repeat[1]/select_one', 'choice4');
       scenario.createNewRepeat('/jr-choice-name/my-repeat');
@@ -63,7 +64,7 @@ describe('JavaRosa ports: ChoiceNameTest.java', () => {
 
   describe('choice name call', () => {
     it('respects language', async () => {
-      const scenario = await Scenario.init(r('jr-choice-name.xml'));
+      const scenario = await Scenario.init(jrChoiceName);
 
       scenario.setLanguage('French (fr)');
       scenario.answer('/jr-choice-name/select_one_outside', 'choice3');
@@ -95,7 +96,7 @@ describe('JavaRosa ports: ChoiceNameTest.java', () => {
   // expression in the calculate.
   describe('choice name call with dynamic choices and no predicate', () => {
     it('selects name', async () => {
-      const scenario = await Scenario.init(r('jr-choice-name.xml'));
+      const scenario = await Scenario.init(jrChoiceName);
 
       scenario.answer('/jr-choice-name/cocotero_a', 'a');
       scenario.answer('/jr-choice-name/cocotero_b', 'b');

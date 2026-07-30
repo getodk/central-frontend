@@ -339,6 +339,46 @@ describe('Instance edit semantics', () => {
     });
   });
 
+  describe('root version metadata', () => {
+    const CURRENT_VERSION = '2';
+
+    const versionedForm = html(
+      head(
+        title('Form version on edit'),
+        model(
+          mainInstance(
+            t(
+              `data id="form-version-edit" version="${CURRENT_VERSION}"`,
+              t('a'),
+              t('meta', t('instanceID'))
+            )
+          ),
+          bind('/data/a').type('string'),
+          bind('/data/meta/instanceID').preload('uid')
+        )
+      ),
+      body(input('/data/a'))
+    );
+
+    const sourceSubmissionXML = `<data id="form-version-edit" version="1"><a>value</a><meta><instanceID>123456</instanceID></meta></data>`;
+
+    it('adopts the current version of the form definition when editing an older submission', async () => {
+      const scenario = await Scenario.init('Form version on edit', versionedForm, {
+        editInstance: sourceSubmissionXML,
+      });
+
+      expect(scenario.attributeOf('/data', 'version').getValue()).toBe(CURRENT_VERSION);
+    });
+
+    it('serializes the edited submission with the current version of the form definition', async () => {
+      const scenario = await Scenario.init('Form version on edit', versionedForm, {
+        editInstance: sourceSubmissionXML,
+      });
+
+      expect(scenario.proposed_serializeInstance()).toContain(`version="${CURRENT_VERSION}"`);
+    });
+  });
+
   /**
    * However weird it might be to test "restore" behavior _in the edit-specific
    * suite_... the intent is to document that the behaviors under test are

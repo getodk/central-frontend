@@ -1,7 +1,7 @@
 import { clearCache, XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import { createSignal } from 'solid-js';
-import type { GeolocationProvider } from '../client';
+import type { GeolocationProvider, InstanceDefaults } from '../client';
 import type { FormInstanceInitializationMode } from '../client/form/FormInstance.ts';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
 import type { FormNodeID } from '../client/identity.ts';
@@ -38,7 +38,7 @@ import type { RootDefinition } from '../parse/model/RootDefinition.ts';
 import type { FetchFormAttachment } from '../client/resources.ts';
 import type { SecondaryInstancesDefinition } from '../parse/model/SecondaryInstance/SecondaryInstancesDefinition.ts';
 import { InstanceNode } from './abstract/InstanceNode.ts';
-import { buildAttributes } from './attachments/buildAttributes.ts';
+import { buildAttributes } from './buildAttributes.ts';
 import { InstanceAttachmentsState } from './attachments/InstanceAttachmentsState.ts';
 import type { Attribute } from './Attribute.ts';
 import type { InitialInstanceState } from './input/InitialInstanceState.ts';
@@ -129,6 +129,7 @@ export class PrimaryInstance<
   readonly initializationMode: FormInstanceInitializationMode;
   readonly model: ModelDefinition;
   readonly attachments: InstanceAttachmentsState;
+  readonly instanceDefaults: InstanceDefaults;
 
   // InstanceNode
   protected readonly state: SharedNodeState<PrimaryInstanceStateSpec>;
@@ -172,6 +173,7 @@ export class PrimaryInstance<
   constructor(options: PrimaryInstanceOptions<Mode>) {
     const { mode, initialState, scope, model, secondaryInstances, fetchFormAttachment, config } =
       options;
+    const { instanceDefaults, geolocationProvider } = config;
     const { instance: modelInstance } = model;
     const activeInstance = initialState?.document ?? modelInstance;
     const definition = model.getRootDefinition(activeInstance);
@@ -187,7 +189,9 @@ export class PrimaryInstance<
     this.model = model;
     this.attachments = new InstanceAttachmentsState(initialState?.attachments, fetchFormAttachment);
     this.instanceNode = activeInstance;
-    this.geolocationProvider = config.geolocationProvider;
+
+    this.instanceDefaults = instanceDefaults;
+    this.geolocationProvider = geolocationProvider;
 
     const [isAttached, setIsAttached] = createSignal(false);
 

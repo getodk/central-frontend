@@ -14,6 +14,7 @@ module.exports = {
     expect: 'readonly'
   },
   rules: {
+    'eol-last': 'error',
     'no-await-in-loop': 'off',
     'no-unused-expressions': 'off'
   }

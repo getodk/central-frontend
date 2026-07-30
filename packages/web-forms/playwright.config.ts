@@ -134,15 +134,5 @@ export default defineConfig({
       port: 5173,
       reuseExistingServer: !process.env.CI,
     },
-
-    /**
-     * Serve minimal integration of build product: for testing styles, any other
-     * aspects of build product we wish to validate.
-     */
-    {
-      command: 'npm run dist-demo',
-      port: 5174,
-      reuseExistingServer: false,
-    },
   ],
 });

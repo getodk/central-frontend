@@ -31,7 +31,7 @@ import type { Attribute } from './Attribute.ts';
 import type { Root } from './Root.ts';
 import type { ValueNodeStateSpec } from './abstract/ValueNode.ts';
 import { ValueNode } from './abstract/ValueNode.ts';
-import { buildAttributes } from './attachments/buildAttributes.ts';
+import { buildAttributes } from './buildAttributes.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { ValidationContext } from './internal-api/ValidationContext.ts';

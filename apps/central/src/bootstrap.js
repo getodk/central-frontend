@@ -10,8 +10,4 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 
-// Needed for the collapse plugin.
-import 'bootstrap/js/transition';
-// Needed for a responsive navbar.
-import 'bootstrap/js/collapse';
 import 'bootstrap/js/dropdown';

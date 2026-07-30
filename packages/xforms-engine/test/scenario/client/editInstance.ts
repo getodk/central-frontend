@@ -2,6 +2,7 @@ import { getBlobText } from '@getodk/common/lib/web-compat/blob.ts';
 import { buildFileResponse } from '@getodk/common/lib/web-compat/response.ts';
 import type {
   EditedFormInstance,
+  FormInstanceConfig,
   InstancePayload,
   ResolvableFormInstanceInput,
   RootNode,
@@ -78,11 +79,12 @@ const mockSubmissionIO = async (
  */
 export const editInstance = async (
   form: InitializableForm,
-  instanceRoot: RootNode
+  instanceRoot: RootNode,
+  config?: FormInstanceConfig
 ): Promise<EditedFormInstance> => {
   const payload = await instanceRoot.prepareInstancePayload();
 
   assertSubmittable(payload);
 
-  return form.editInstance(await mockSubmissionIO(payload));
+  return form.editInstance(await mockSubmissionIO(payload), config);
 };

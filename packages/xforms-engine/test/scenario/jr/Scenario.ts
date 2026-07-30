@@ -3,6 +3,7 @@ import { xmlElement } from '@getodk/common/test-utils/xform-dsl/index.ts';
 import type {
   AnyFormInstance,
   AnyNode,
+  FormInstanceConfig,
   FormResource,
   InstancePayload,
   InstancePayloadOptions,
@@ -49,8 +50,6 @@ import {
 import { isQuestionEventOfType, type TypedQuestionEvent } from './event/predicates.ts';
 import { JRFormDef } from './form/JRFormDef.ts';
 import { JRFormIndex } from './form/JRFormIndex.ts';
-import type { FormDefinitionResource } from './resource/FormDefinitionResource.ts';
-import { r } from './resource/ResourcePathHelper.ts';
 import { SelectChoiceList } from './select/SelectChoiceList.ts';
 import { ValidateOutcome } from './validation/ValidateOutcome.ts';
 import { JREvaluationContext } from './xpath/JREvaluationContext.ts';
@@ -83,17 +82,9 @@ export interface ScenarioConfig extends ScenarioFormMeta {
   readonly dispose: VoidFunction;
 }
 
-type FormFileName = `${string}.xml`;
-
-const isFormFileName = (value: FormDefinitionResource | string): value is FormFileName => {
-  return typeof value === 'string' && value.endsWith('.xml');
-};
-
-// prettier-ignore
 type ScenarioStaticInitParameters =
-	| readonly [formFileName: FormFileName]
-	| readonly [formName: string, form: XFormsElement, overrideOptions?: Partial<TestFormOptions>]
-	| readonly [resource: FormDefinitionResource];
+  | readonly [formName: string, form: XFormsElement, overrideOptions?: Partial<TestFormOptions>]
+  | readonly [formXml: string, overrideOptions?: Partial<TestFormOptions>];
 
 interface AssertCurrentReferenceOptions {
   readonly assertCurrentReference: string;
@@ -122,11 +113,10 @@ type AnswerItemCollectionParameters = readonly [
   ...selectionValues: [string, string, ...string[]],
 ];
 
-// prettier-ignore
 type AnswerParameters =
-	| AnswerItemCollectionParameters
-	| readonly [reference: string, value: unknown]
-	| readonly [value: unknown];
+  | AnswerItemCollectionParameters
+  | readonly [reference: string, value: unknown]
+  | readonly [value: unknown];
 
 const isAnswerItemCollectionParams = (args: AnswerParameters) => {
   return args.length > 2 && args.every((arg) => typeof arg === 'string');
@@ -137,6 +127,14 @@ type ScenarioClass = typeof Scenario;
 export interface ScenarioConstructor<T extends Scenario = Scenario> extends ScenarioClass {
   new (meta: ScenarioConfig, form: InitializableForm, instanceRoot: RootNode): T;
 }
+
+const isXFormsElement = (
+  obj: Partial<TestFormOptions> | XFormsElement | undefined
+): obj is XFormsElement => {
+  return (
+    obj !== null && typeof obj === 'object' && typeof (obj as XFormsElement).asXml === 'function'
+  );
+};
 
 /**
  * **PORTING NOTES**
@@ -180,6 +178,7 @@ export class Scenario {
         getLocation: () => Promise.resolve(''),
       },
       editInstance: overrideOptions?.editInstance ?? null,
+      instanceDefaults: overrideOptions?.instanceDefaults ?? {},
     };
   }
 
@@ -187,25 +186,20 @@ export class Scenario {
     this: This,
     ...args: ScenarioStaticInitParameters
   ): Promise<This['prototype']> {
-    if (isFormFileName(args[0])) {
-      return this.init(r(args[0]));
-    }
-
     let formMeta: ScenarioFormMeta;
-    if (args.length === 1) {
-      const [resource] = args;
 
-      formMeta = {
-        formElement: xmlElement(resource.textContents),
-        formName: resource.formName,
-        formOptions: this.getTestFormOptions(),
-      };
-    } else {
+    if (isXFormsElement(args[1])) {
       const [formName, formElement, overrideOptions] = args;
-
       formMeta = {
         formName,
         formElement,
+        formOptions: this.getTestFormOptions(overrideOptions),
+      };
+    } else {
+      const [xform, overrideOptions = {}] = args;
+      formMeta = {
+        formName: 'name',
+        formElement: xmlElement(xform),
         formOptions: this.getTestFormOptions(overrideOptions),
       };
     }
@@ -1218,9 +1212,14 @@ export class Scenario {
   }
 
   /** @see {@link editInstance} */
-  async editCurrentInstance(): Promise<this> {
-    const instance = await editInstance(this.form, this.instanceRoot);
+  async editCurrentInstance(config?: FormInstanceConfig): Promise<this> {
+    const instance = await editInstance(this.form, this.instanceRoot, config);
 
+    return this.fork(instance);
+  }
+
+  resetCurrentInstance(config?: FormInstanceConfig): this {
+    const instance = this.form.resetInstance(config);
     return this.fork(instance);
   }
 }

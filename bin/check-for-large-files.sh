@@ -6,6 +6,7 @@ git ls-files -z -- . \
     ':!:packages/common/src/fixtures/test-javarosa/resources/smoketests/whova_form.xml' \
     ':!:packages/common/src/fixtures/test-javarosa/resources/wards.xml' \
     ':!:packages/xforms-engine/test/integration/repeat.test.ts' \
+    ':!:packages/xforms-engine/test/scenario/fixtures/test-javarosa/resources/whova_form.xml' \
     ':!:package-lock.json' \
 | xargs -0 ls -l -- \
 | awk '

@@ -40,6 +40,20 @@ describe('Markdown', () => {
     await run('\\# nothing \\*to\\* see here', [{ value: '# nothing *to* see here' }]);
   });
 
+  describe('blockquote', () => {
+    it('should allow lines starting with greater than', async () => {
+      await run('> greater than some number', [{ value: '> greater than some number' }]);
+    });
+
+    it('should treat multiple lines as blockquote', async () => {
+      const given = `
+> my quote
+> is here
+      `;
+      await run(given, [{ value: '> my quote' }, { elementName: 'br' }, { value: '> is here' }]);
+    });
+  });
+
   describe('should handle headings', () => {
     it('h1', async () => {
       await run('# big heading', [{ elementName: 'h1', children: [{ value: 'big heading' }] }]);

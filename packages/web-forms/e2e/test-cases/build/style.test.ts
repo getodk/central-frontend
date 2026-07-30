@@ -1,17 +1,16 @@
 import { expect, test } from '@playwright/test';
-import { PreviewPage } from '../../page-objects/pages/PreviewPage.js';
+import { FillFormPage } from '../../page-objects/pages/FillFormPage.js';
 
 test('Build includes component-defined styles', async ({ page }) => {
-  const previewPage = new PreviewPage(page);
-  await previewPage.goToBuildPage();
+  await FillFormPage.loadForm(page, 'select-control.xml');
 
   // This ensures that the application is loaded before proceeding forward.
-  await expect(page.getByText('ODK Web Forms Preview').first()).toBeVisible();
+  await expect(page.getByText('SelectControl').first()).toBeVisible();
 
   // Get the (Sass-defined) large breakpoint size
   // [In theory, if we can get this and it's not a number, we've already validated styles. Below expands on that to leave some breadcrumbs]
   const breakpointLg = await page.locator('html').evaluate((pageRoot) => {
-    // This CSS variable is defined in {@link https://github.com/getodk/web-forms/blob/main/packages/web-forms/src/components/OdkWebForm.vue}
+    // This CSS variable is defined in {@link https://github.com/getodk/central-frontend/blob/master/packages/web-forms/src/components/OdkWebForm.vue}
     return getComputedStyle(pageRoot).getPropertyValue('--odk-test-breakpoint-lg');
   });
   const largeViewportSize = parseInt(breakpointLg, 10);
@@ -40,12 +39,12 @@ test('Build includes component-defined styles', async ({ page }) => {
   const colors = ['rgb(255, 0, 0)', 'rgb(0, 255, 0)', 'rgb(0, 0, 255)'];
 
   for (const color of colors) {
-    await expect(page.locator('.demo-forms')).not.toHaveCSS('background-color', color);
+    await expect(page.locator('.odk-form')).not.toHaveCSS('background-color', color);
 
     await page.locator('html').evaluate((pageRoot, backgroundColor) => {
       pageRoot.style.setProperty('--odk-muted-background-color', backgroundColor);
     }, color);
 
-    await expect(page.locator('.demo-forms')).toHaveCSS('background-color', color);
+    await expect(page.locator('.odk-form')).toHaveCSS('background-color', color);
   }
 });
