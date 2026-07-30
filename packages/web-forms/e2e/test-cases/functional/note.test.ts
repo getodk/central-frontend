@@ -1,16 +1,11 @@
 import { test } from '@playwright/test';
 import { FillFormPage } from '../../page-objects/pages/FillFormPage.ts';
-import { PreviewPage } from '../../page-objects/pages/PreviewPage.ts';
 
 test.describe('Note Question Type', () => {
   let formPage: FillFormPage;
 
   test.beforeEach(async ({ page }) => {
-    formPage = new FillFormPage(page);
-
-    const previewPage = new PreviewPage(page);
-    await previewPage.goToDevPage();
-    await previewPage.openDevDemoForm('notes', '2-all-possible-notes.xml', 'Notes');
+    formPage = await FillFormPage.loadForm(page, '2-all-possible-notes.xml');
   });
 
   test('renders all possible note types', async ({ context }) => {
@@ -47,8 +42,8 @@ test.describe('Note Question Type', () => {
     await formPage.text.expectLabel('A note with geopoint type');
     await formPage.geopoint.expectGeopointFormattedValue([
       'Accuracy: 150 m,',
-      'Latitude: 38.253094215699576,',
-      'Longitude: 21.756382658677467.',
+      'Latitude: 38.25309,',
+      'Longitude: 21.75638.',
     ]);
   });
 });

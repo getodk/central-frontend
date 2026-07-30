@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { FetchFormAttachment, FetchResourceResponse } from '../../../src/client/resources';
+import { AttachmentNotFoundError } from '../../../src/error/AttachmentNotFoundError';
 import { InstanceAttachmentsState } from '../../../src/instance/attachments/InstanceAttachmentsState';
 import type { InstanceAttachmentMap } from '../../../src/instance/input/InstanceAttachmentMap';
 import type { StaticLeafElement } from '../../../src/integration/xpath/static-dom/StaticElement';
@@ -42,6 +43,20 @@ describe('InstanceAttachmentsState', () => {
       expect(fetchFormAttachment).not.toHaveBeenCalled();
     });
 
+    it('returns the source attachment when the instance value has surrounding whitespace', () => {
+      const sourceFile = Promise.resolve(new File([''], 'photo.png', { type: 'image/png' }));
+      const sourceAttachments = new Map([
+        ['photo.png', sourceFile],
+      ]) as unknown as InstanceAttachmentMap;
+      const fetchFormAttachment = vi.fn<FetchFormAttachment>();
+      const state = new InstanceAttachmentsState(sourceAttachments, fetchFormAttachment);
+
+      const result = state.getInitialFileValue(leafWithValue(`photo.png\n        `));
+
+      expect(result).toBe(sourceFile);
+      expect(fetchFormAttachment).not.toHaveBeenCalled();
+    });
+
     it('fetches the form attachment when value is a jr:// reference and no source attachment exists', async () => {
       const blob = new Blob(['data'], { type: 'image/png' });
       const fetchFormAttachment = vi.fn<FetchFormAttachment>().mockResolvedValue(okResponse(blob));
@@ -65,11 +80,21 @@ describe('InstanceAttachmentsState', () => {
       ).rejects.toThrow('Error fetching form attachment: jr://images/missing.png');
     });
 
-    it('returns null when value is not a jr:// reference and has no source attachment', () => {
+    it('returns null when value is empty', () => {
       const fetchFormAttachment = vi.fn<FetchFormAttachment>();
       const state = new InstanceAttachmentsState(null, fetchFormAttachment);
 
-      expect(state.getInitialFileValue(leafWithValue('plain-value.txt'))).toBeNull();
+      expect(state.getInitialFileValue(leafWithValue(''))).toBeNull();
+      expect(fetchFormAttachment).not.toHaveBeenCalled();
+    });
+
+    it('rejects when value is not a jr:// reference and has no source attachment', async () => {
+      const fetchFormAttachment = vi.fn<FetchFormAttachment>();
+      const state = new InstanceAttachmentsState(null, fetchFormAttachment);
+
+      await expect(state.getInitialFileValue(leafWithValue('plain-value.txt'))).rejects.toThrow(
+        AttachmentNotFoundError
+      );
       expect(fetchFormAttachment).not.toHaveBeenCalled();
     });
 

@@ -16,13 +16,15 @@ import { describe, expect, it } from 'vitest';
 import { intAnswer } from '../../scenario/answer/ExpectedIntAnswer.ts';
 import { stringAnswer } from '../../scenario/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../../scenario/jr/Scenario.ts';
-import { r } from '../../scenario/jr/resource/ResourcePathHelper.ts';
+
+import eventOdkNewRepeat from '../../scenario/fixtures/test-javarosa/resources/event-odk-new-repeat.xml?raw';
+import eventOdkNewRepeatModel from '../../scenario/fixtures/test-javarosa/resources/event-odk-new-repeat-model.xml?raw';
 
 describe('OdkNewRepeatEventTest.java', () => {
   describe('setvalue on add repeat ', () => {
     // ported from: https://github.com/getodk/javarosa/blob/2dd8e15e9f3110a86f8d7d851efc98627ae5692e/src/test/java/org/javarosa/core/model/actions/OdkNewRepeatEventTest.java#L32
     it('sets the value in the repeat', async () => {
-      const scenario = await Scenario.init(r('event-odk-new-repeat.xml'));
+      const scenario = await Scenario.init(eventOdkNewRepeat);
       expect(scenario.countRepeatInstancesOf('/data/my-repeat')).toBe(0);
       scenario.createNewRepeat('/data/my-repeat');
       expect(scenario.countRepeatInstancesOf('/data/my-repeat')).toBe(1);
@@ -33,7 +35,7 @@ describe('OdkNewRepeatEventTest.java', () => {
   describe('adding repeat instance', () => {
     // ported from: https://github.com/getodk/javarosa/blob/2dd8e15e9f3110a86f8d7d851efc98627ae5692e/src/test/java/org/javarosa/core/model/actions/OdkNewRepeatEventTest.java#L42
     it('does not change the value set for the previous repeat instance', async () => {
-      const scenario = await Scenario.init(r('event-odk-new-repeat.xml'));
+      const scenario = await Scenario.init(eventOdkNewRepeat);
       scenario.createNewRepeat('/data/my-repeat');
       expect(scenario.answerOf('/data/my-repeat[1]/defaults-to-position').getValue()).toBe('1');
       scenario.createNewRepeat('/data/my-repeat');
@@ -45,7 +47,7 @@ describe('OdkNewRepeatEventTest.java', () => {
   describe('setvalue on repeat in body', () => {
     // ported from: https://github.com/getodk/javarosa/blob/2dd8e15e9f3110a86f8d7d851efc98627ae5692e/src/test/java/org/javarosa/core/model/actions/OdkNewRepeatEventTest.java#L55
     it('uses the current context for relative references', async () => {
-      const scenario = await Scenario.init(r('event-odk-new-repeat.xml'));
+      const scenario = await Scenario.init(eventOdkNewRepeat);
       scenario.answer('/data/my-toplevel-value', '12');
       scenario.createNewRepeat('/data/my-repeat');
       expect(scenario.answerOf('/data/my-repeat[1]/defaults-to-toplevel').getValue()).toBe('14');
@@ -55,7 +57,7 @@ describe('OdkNewRepeatEventTest.java', () => {
   describe('setvalue on repeat with count', () => {
     // ported from: https://github.com/getodk/javarosa/blob/2dd8e15e9f3110a86f8d7d851efc98627ae5692e/src/test/java/org/javarosa/core/model/actions/OdkNewRepeatEventTest.java#L65
     it('sets the value for each repeat instance', async () => {
-      const scenario = await Scenario.init(r('event-odk-new-repeat.xml'));
+      const scenario = await Scenario.init(eventOdkNewRepeat);
 
       const REPEAT_COUNT = 4;
       scenario.answer('/data/repeat-count', REPEAT_COUNT);
@@ -95,25 +97,25 @@ describe('OdkNewRepeatEventTest.java', () => {
   // ported from: https://github.com/getodk/javarosa/blob/2dd8e15e9f3110a86f8d7d851efc98627ae5692e/src/test/java/org/javarosa/core/model/actions/OdkNewRepeatEventTest.java#L94
   describe('setvalue other than integer value, on repeat with count', () => {
     it('casts an integer-as-string value to an integer', async () => {
-      const scenario = await Scenario.init(r('event-odk-new-repeat.xml'));
+      const scenario = await Scenario.init(eventOdkNewRepeat);
       scenario.answer('/data/repeat-count', '1');
       expect(scenario.answerOf('/data/repeat-count')).toEqualAnswer(intAnswer(1));
     });
 
     it('casts a decimal/fractional value to an integer', async () => {
-      const scenario = await Scenario.init(r('event-odk-new-repeat.xml'));
+      const scenario = await Scenario.init(eventOdkNewRepeat);
       scenario.answer('/data/repeat-count', 2.5);
       expect(scenario.answerOf('/data/repeat-count')).toEqualAnswer(intAnswer(2));
     });
 
     it('assigns a non-fractional integer-as-float-number', async () => {
-      const scenario = await Scenario.init(r('event-odk-new-repeat.xml'));
+      const scenario = await Scenario.init(eventOdkNewRepeat);
       scenario.answer('/data/repeat-count', 2);
       expect(scenario.answerOf('/data/repeat-count')).toEqualAnswer(intAnswer(2));
     });
 
     it('casts and/or assigns bigint', async () => {
-      const scenario = await Scenario.init(r('event-odk-new-repeat.xml'));
+      const scenario = await Scenario.init(eventOdkNewRepeat);
       scenario.answer('/data/repeat-count', 3n);
       expect(scenario.answerOf('/data/repeat-count')).toEqualAnswer(intAnswer(3));
     });
@@ -122,7 +124,7 @@ describe('OdkNewRepeatEventTest.java', () => {
   describe('repeat in form def instance', () => {
     // ported from: https://github.com/getodk/javarosa/blob/2dd8e15e9f3110a86f8d7d851efc98627ae5692e/src/test/java/org/javarosa/core/model/actions/OdkNewRepeatEventTest.java#L122
     it('never fires an odk-new-repeat new repeat event', async () => {
-      const scenario = await Scenario.init(r('event-odk-new-repeat.xml'));
+      const scenario = await Scenario.init(eventOdkNewRepeat);
       expect(scenario.answerOf('/data/my-repeat-without-template[1]/my-value').getValue()).toBe('');
       expect(scenario.answerOf('/data/my-repeat-without-template[2]/my-value').getValue()).toBe('');
       scenario.createNewRepeat('/data/my-repeat-without-template');
@@ -273,7 +275,7 @@ describe('OdkNewRepeatEventTest.java', () => {
       let caught: unknown = null;
 
       try {
-        await Scenario.init(r('event-odk-new-repeat-model.xml'));
+        await Scenario.init(eventOdkNewRepeatModel);
       } catch (error) {
         caught = error;
       }

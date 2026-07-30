@@ -3181,6 +3181,10 @@
         "uploaded": {
           "string": "Uploaded",
           "developer_comment": "This is the text of a table column header. The column shows when each Media File was uploaded."
+        },
+        "size": {
+          "string": "Size",
+          "developer_comment": "This is the text of a table column header. The column shows the file size of each uploaded Media File."
         }
       }
     },
@@ -4177,12 +4181,6 @@
       }
     },
     "Navbar": {
-      "action": {
-        "toggle": {
-          "string": "Toggle navigation",
-          "developer_comment": "Used by screen readers to describe the button used to show or hide the navigation bar on small screens (\"hamburger menu\")."
-        }
-      },
       "analyticsNotice": {
         "string": "Help improve Central!"
       }
