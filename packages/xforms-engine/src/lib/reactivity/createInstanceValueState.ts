@@ -324,6 +324,7 @@ export type InstanceValueState = SimpleAtomicState<string>;
  * - prevents downstream writes to nodes in a readonly state
  */
 export const createInstanceValueState = (context: ValueContext): InstanceValueState => {
+  console.log('creating ivs');
   return context.scope.runTask(() => {
     const initialValue = getInitialValue(context);
     const baseValueState = createSignal(initialValue);

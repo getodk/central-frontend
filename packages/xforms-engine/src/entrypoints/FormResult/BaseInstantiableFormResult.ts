@@ -49,7 +49,7 @@ export abstract class BaseInstantiableFormResult<
       status,
       warnings,
       error,
-      lastSaved: instanceOptions.secondaryInstances.hasLastSaved
+      secondaryInstances: instanceOptions.secondaryInstances
     });
 
     this.createInstance = (instanceConfig: FormInstanceConfig = {}) => {
@@ -66,7 +66,11 @@ export abstract class BaseInstantiableFormResult<
     this.resetInstance = (instanceConfig: FormInstanceConfig = {}) => {
       instanceOptions.scope.dispose();
       instanceOptions.scope = createPotentiallyClientOwnedReactiveScope();
-      return this.createInstance(instanceConfig);
+      console.log('creating instance');
+      const instance = this.createInstance(instanceConfig);
+      instance.formResult.secondaryInstances.resetLastSaved();
+      console.log('finished creating instance');
+      return instance;
     };
 
     this.editInstance = async (

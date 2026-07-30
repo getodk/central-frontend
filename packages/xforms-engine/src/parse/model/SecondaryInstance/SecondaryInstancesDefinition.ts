@@ -18,6 +18,7 @@ import { GeoJSONExternalSecondaryInstanceSource } from './sources/GeoJSONExterna
 import { InternalSecondaryInstanceSource } from './sources/InternalSecondaryInstanceSource.ts';
 import type { SecondaryInstanceSource } from './sources/SecondaryInstanceSource.ts';
 import { XMLExternalSecondaryInstanceSource } from './sources/XMLExternalSecondaryInstanceSource.ts';
+import { MISSING_RESOURCE_BEHAVIOR } from '../../../client/constants.ts';
 
 export interface SecondaryInstanceDefinition extends StaticDocument {
   readonly rootDocument: SecondaryInstanceDefinition;
@@ -41,6 +42,20 @@ export class SecondaryInstancesDefinition
 {
 
   readonly hasLastSaved: boolean;
+  readonly lastSaved: SecondaryInstanceSource | undefined;
+
+  resetLastSaved = async () => {
+    console.log('resetting');
+    if (this.lastSaved) {
+      // TODO oh dear... i think we need a fundamental rethink because external secondary instances must be reactive
+      // resource = await ExternalSecondaryInstanceResource.load(
+      //   this.lastSaved.instanceId,
+      //   this.lastSaved.resourceURL,
+      //   this.lastSaved.op
+      //   lastSavedResourceOptions
+      // );
+    }
+  };
 
   /**
    * @package Only to be used for testing
@@ -86,17 +101,22 @@ export class SecondaryInstancesDefinition
 
         const resourceURL = JRResourceURL.from(src);
 
+        let resource;
         if (resourceURL.isLastSavedInstance()) {
-          // TODO record that last saved exists as a cue to tell the app to store this submission
-          // TODO either set missingResourceBehavior:blank or something? I don't want the client app to have to invent a blank xml doc
-          // return new BlankSecondaryInstanceSource(instanceId, resourceURL, domElement);
+          const lastSavedResourceOptions = { ...options, missingResourceBehavior: MISSING_RESOURCE_BEHAVIOR.BLANK };
+          resource = await ExternalSecondaryInstanceResource.load(
+            instanceId,
+            resourceURL,
+            lastSavedResourceOptions
+          );
+        } else {
+          resource = await ExternalSecondaryInstanceResource.load(
+            instanceId,
+            resourceURL,
+            options
+          );
         }
 
-        const resource = await ExternalSecondaryInstanceResource.load(
-          instanceId,
-          resourceURL,
-          options
-        );
 
         if (resource.isBlank) {
           return new BlankSecondaryInstanceSource(instanceId, resourceURL, domElement);
@@ -129,6 +149,7 @@ export class SecondaryInstancesDefinition
         return [root.getAttributeValue('id'), root];
       })
     );
-    this.hasLastSaved = sources.some(source => source.resourceURL?.isLastSavedInstance());
+    this.hasLastSaved = sources.some(source => source.resourceURL?.isLastSavedInstance()); // TODO remove this now that we have the lastSaved
+    this.lastSaved = sources.find(source => source.resourceURL?.isLastSavedInstance());
   }
 }

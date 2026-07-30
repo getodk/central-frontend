@@ -10,6 +10,7 @@ import { Translation } from 'vue-i18n'
 import Location from '../utils/location';
 import { getDeviceId } from '../utils/device-id';
 import { hideSpinner } from '../utils/spinner';
+import { getLastSaved, setLastSaved } from '../utils/last-saved';
 defineOptions({
   name: 'WebFormRenderer'
 });
@@ -50,10 +51,16 @@ const visibleModal = ref();
 
 const withToken = (url) => `${url}${queryString({ st: props.st })}`;
 
-const getAttachment = (requestUrl: URL) => {
+const getAttachment = async (requestUrl: URL) => {
   console.log({requestUrl});
   if (requestUrl.href === 'jr://instance/last-saved') {
-    return new Response('<data id="data"><item>hello</item><meta><instanceID/></meta></data>', { headers: new Headers({ 'Content-Type': 'text/xml' }) });
+    const lastSaved = await getLastSaved(props.form.projectId, props.form.xmlFormId);
+    console.log({lastSaved});
+    if (!lastSaved) {
+      return new Response('Not found', { status: 404, statusText: 'Not Found', headers: { 'Content-Type': 'text/plain' } });
+    }
+    // TODO what if it doesn't exist? Return 404 or empty?
+    return new Response(lastSaved, { headers: new Headers({ 'Content-Type': 'text/xml' }) });
   }
   const encodedName = encodeURIComponent(requestUrl.pathname.split('/').pop()!);
   const url = withToken(`/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath.value}/attachments/${encodedName}`);
@@ -256,9 +263,11 @@ const handleSubmit = async (
     // hence this branch should never execute.
     return;
   }
-  console.log({hasLastSaved});
   initializeSubmissionState(data as unknown as SubmissionData, clearFormCallback);
   await submitData();
+  if (!isEdit.value && hasLastSaved) {
+    setLastSaved(props.form.projectId, props.form.xmlFormId, submissionData.instanceFile);
+  }
 };
 
 const fetchSubmissionXml = async () => {
