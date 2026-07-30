@@ -77,9 +77,18 @@ export function testRequestsInclude(expectedConfigs) {
       }
     })
     .afterResponses(() => {
-      const nicely = cfgs => '[' + cfgs.map((c, idx) => `${idx}. ${c.method} ${c.url} body:${!!c.data && JSON.stringify(c.data)}`).join(', ') + ']'; // eslint-disable-line prefer-template
-      if (matched.length !== expectedConfigs.length)
-        throw new Error(`an expected request was not sent: expected: ${nicely(expectedConfigs)}, but got: ${nicely(actual)}`);
+      if (matched.length !== expectedConfigs.length) {
+        const nicely = cfgs => cfgs
+          .map((c, idx) => `${idx}. ${c.method} ${c.url} body:${c.data && JSON.stringify(c.data)}`)
+          .join('\n');
+
+        throw new Error(`An expected request was not sent.
+          Expected:
+            ${nicely(expectedConfigs)}
+          Actual:
+            ${nicely(actual)}
+        `);
+      }
     });
 }
 
