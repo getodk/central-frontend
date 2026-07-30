@@ -153,6 +153,30 @@ export default class BackendClient {
     expect(response.ok()).toBeTruthy();
   };
 
+  getLastSubmission = async (xmlFormId) => {
+    const request = await this.#getRequest();
+
+    const allSubmissionsUrl = `/v1/projects/${this.#projectId}/forms/${xmlFormId}/submissions`;
+    const allSubmissionsResponse = await request.get(allSubmissionsUrl);
+    if (!allSubmissionsResponse.ok()) {
+      const error = await allSubmissionsResponse.json();
+      throw new Error('Error fetching submissions: ' + JSON.stringify(error));
+    }
+    const submissions = await allSubmissionsResponse.json();
+
+    const lastInstanceId = submissions?.[0]?.instanceId;
+    if (!lastInstanceId) {
+      return;
+    }
+    const lastInstanceUrl = `/v1/projects/${this.#projectId}/forms/${xmlFormId}/submissions/${lastInstanceId}.xml`;
+    const lastInstanceResponse = await request.get(lastInstanceUrl);
+    if (!lastInstanceResponse.ok()) {
+      const error = await lastInstanceResponse.json();
+      throw new Error('Error fetching last submission: ' + JSON.stringify(error));
+    }
+    return await lastInstanceResponse.text();
+  };
+
   downloadCsv = async (xmlFormId, passphrase) => {
     const keyId = process.env.ENCRYPTION_KEY_ID;
     let downloadUrl = `/v1/projects/${this.#projectId}/forms/${xmlFormId}/submissions.csv`;

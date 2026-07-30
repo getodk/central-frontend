@@ -12,6 +12,7 @@ import { createComputedExpression } from './createComputedExpression.ts';
 import type { SimpleAtomicState, SimpleAtomicStateSetter } from './types.ts';
 import { ValueNode } from '../../instance/abstract/ValueNode.ts';
 import { Attribute } from '../../instance/Attribute.ts';
+import { getInstanceDefaultValue } from '../instance-defaults.ts';
 
 const REPEAT_INDEX_REGEX = /([^[]*)(\[[0-9]+\])/g;
 
@@ -33,9 +34,11 @@ const isEditInitialLoad = (context: ValueContext) => {
 };
 
 const getInitialValue = (context: ValueContext): string => {
-  const sourceNode = context.instanceNode ?? context.definition.template;
-
-  return context.decodeInstanceValue(sourceNode.value);
+  const value =
+    getInstanceDefaultValue(context.instanceConfig.instanceDefaults, context) ??
+    context.instanceNode?.value ??
+    context.definition.template?.value;
+  return context.decodeInstanceValue(value);
 };
 
 type BaseValueState = Signal<string>;
