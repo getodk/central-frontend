@@ -267,9 +267,13 @@ const registerSetValueActions = (
 };
 
 const registerValueChangedActions = (context: ValueContext, getValue: Accessor<string>) => {
-  context.valueChangedActions?.forEach((action) => {
-    let previous = getValue();
-    createComputed(() => {
+  if (!context.valueChangedActions?.length) {
+    return;
+  }
+  let previous: string;
+  createComputed(() => {
+    const sourceValue = getValue();
+    context.valueChangedActions.forEach((action) => {
       const ref = bindRefToRepeatInstance(context, action.ref);
       const destinationNodes = context.evaluator.evaluateNodes(ref, {
         contextNode: context.contextNode,
@@ -283,8 +287,6 @@ const registerValueChangedActions = (context: ValueContext, getValue: Accessor<s
         destinationNode.isAttached() &&
         context.isAttached()
       ) {
-        const sourceValue = getValue();
-
         if (
           previous !== undefined &&
           previous !== sourceValue &&
@@ -293,17 +295,18 @@ const registerValueChangedActions = (context: ValueContext, getValue: Accessor<s
           if (action.type === 'geopoint') {
             getGeopointValue(context, (point) => destinationNode.setEncodedValue(point));
           } else {
-            const value = destinationNode.evaluator.evaluateString(
-              action.computation.expression,
-              destinationNode
-            );
+            const value = untrack(() => {
+              return context.evaluator.evaluateString(
+                action.computation.expression,
+                destinationNode
+              );
+            });
             destinationNode.setEncodedValue(value);
           }
         }
-
-        previous = sourceValue;
       }
     });
+    previous = sourceValue;
   });
 };
 
