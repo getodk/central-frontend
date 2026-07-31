@@ -1,5 +1,16 @@
 # @getodk/xforms-engine
 
+## 1.0.1
+
+### Patch Changes
+
+- 5ef4ccd: Show error indicator when submission attachment cannot be loaded
+- f31c1ca: Escapes greater than symbols in markdown
+- c9d45bc: Repeat instances are no longer deleted when `jr:count` decreases
+- ed2b209: Trim whitespace from attachment filename when editing submissions
+- cc33f84: Use current form version when editing a submission.
+- 0d32c73: Fixed issue with setvalue updated in an unexpected order
+
 ## 1.0.0
 
 ### Major Changes
