@@ -10,28 +10,22 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div ref="dropdown" class="multiselect form-group">
-    <!-- Specifying @mousedown.prevent so that clicking the select element does
-    not show a menu with the placeholder option. This approach seems to work
-    across browsers. -->
-    <div ref="toggle" class="dropdown-trigger"
-      :class="{ disabled }"
-      :data-toggle="(options == null || disabled) ? null : 'dropdown'">
-      <slot name="icon"></slot>
-      <span class="multiselect-label">{{ label }}</span>
-      <select :id="toggleId" class="display-value"
+  <dropdown ref="dropdownEl" tag="div" class="multiselect form-group"
+    placement="bottom-start" :close-on-menu-click="false" @show="onShow" @hide="onHide">
+    <template #toggle="{ toggle, attrs }">
+      <button v-bind="attrs" type="button" class="dropdown-trigger"
+        :class="{ disabled }"
         :aria-disabled="options == null || disabled"
-        role="button"
         v-tooltip.aria-describedby="disabledMessage"
-        aria-haspopup="true" aria-expanded="false" :aria-label="label"
-        @keydown="toggleAfterEnter" @mousedown.prevent @click="verifyAttached">
-        <option value="">{{ selectOption }}</option>
-      </select>
-      <span class="icon-angle-down"></span>
-    </div>
-    <!-- Specifying @click.stop so that clicking the .dropdown-menu does not
-    hide it. -->
-    <ul class="dropdown-menu" :aria-labelledby="toggleId" @click.stop>
+        :aria-label="label"
+        @click="handleTriggerClick(toggle, $event)">
+        <slot name="icon"></slot>
+        <span class="multiselect-label">{{ label }}</span>
+        <span class="display-value" aria-hidden="true">{{ selectOption }}</span>
+        <span class="icon-angle-down"></span>
+      </button>
+    </template>
+    <template #menu>
       <li v-if="search != null" class="search">
         <div class="form-group">
           <span class="icon-search"></span>
@@ -82,17 +76,17 @@ except according to the terms contained in the LICENSE file.
          {{ $t('action.apply') }}
         </button>
       </li>
-    </ul>
-  </div>
+    </template>
+  </dropdown>
 </template>
 
 <script>
 let id = 1;
 </script>
 <script setup>
-import { computed, inject, onMounted, onUnmounted, ref, shallowReactive, watch, watchEffect } from 'vue';
+import { computed, inject, ref, shallowReactive, watch, watchEffect } from 'vue';
 
-import { noop } from '../util/util';
+import Dropdown from './dropdown.vue';
 
 const props = defineProps({
   /*
@@ -182,7 +176,6 @@ const { i18n, buildMode } = inject('container');
 
 const idPrefix = `multiselect${id}`;
 id += 1;
-const toggleId = `${idPrefix}-toggle`;
 const descriptionId = (i) => `${idPrefix}-description${i}`;
 
 const optionList = ref(null);
@@ -360,41 +353,31 @@ watch(searchValue, (value) => {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// BOOTSTRAP DROPDOWN
+// DROPDOWN INTEGRATION
 
-const dropdown = ref(null);
-const $dropdown = computed(() => $(dropdown.value));
-onMounted(() => {
-  $dropdown.value.on('shown.bs.dropdown', syncWithModelValue);
-  $dropdown.value.on('hidden.bs.dropdown', () => {
-    searchValue.value = '';
-    needsSync = changes.size !== 0;
-    changes.clear();
-  });
-});
-onUnmounted(() => { $dropdown.value.off('.bs.dropdown'); });
+const dropdownEl = ref(null);
 
-//  this should be changed i think
-const toggle = ref(null);
-const $toggle = computed(() => $(toggle.value));
-const toggleAfterEnter = ({ key }) => {
-  // console.log('toggleAfterEnter');
-  if (key === 'Enter') $toggle.value.dropdown('toggle');
+const onShow = () => {
+  syncWithModelValue();
+};
+
+const onHide = () => {
+  searchValue.value = '';
+  needsSync = changes.size !== 0;
+  changes.clear();
 };
 
 const apply = () => {
   searchValue.value = '';
   emitIfChanged();
-  $toggle.value.dropdown('toggle');
+  dropdownEl.value?.hide();
 };
 
-const verifyAttached = buildMode === 'test'
-  ? ({ target }) => {
-    if (target.closest('body') == null)
-      // eslint-disable-next-line no-console
-      console.error('Clicking Multiselect toggle has no effect unless component is attached to body.');
+const handleTriggerClick = (toggle) => {
+  if (props.options != null && !props.disabled) {
+    toggle();
   }
-  : noop;
+};
 
 
 
@@ -444,10 +427,11 @@ const emptyMessage = computed(() => (searchValue.value === ''
 
   .dropdown-trigger {
     @include filter-control;
-  }
 
-  select {
-    appearance: none;
+    &:focus {
+      outline: none;
+      box-shadow: $btn-focus-box-shadow;
+    }
   }
 
   .icon-angle-down {

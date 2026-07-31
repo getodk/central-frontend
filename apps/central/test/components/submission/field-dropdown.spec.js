@@ -61,7 +61,7 @@ describe('SubmissionFieldDropdown', () => {
       },
       attachTo: document.body
     });
-    await component.get('select').trigger('click');
+    await component.get('.dropdown-trigger').trigger('click');
     const after = component.get('.after-list');
     after.text().should.equal('');
     await component.get('.select-all').trigger('click');
@@ -105,8 +105,8 @@ describe('SubmissionFieldDropdown', () => {
 
     const uncheckFirst = async (component) => {
       const dropdown = component.getComponent(SubmissionFieldDropdown);
-      const select = dropdown.get('select');
-      await select.trigger('click');
+      const toggle = dropdown.get('.dropdown-trigger');
+      await toggle.trigger('click');
       await dropdown.get('input[type="checkbox"]').setValue(false);
       return dropdown.find('.action-bar button').trigger('click');
     };
