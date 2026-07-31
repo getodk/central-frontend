@@ -10,23 +10,20 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <Dropdown ref="dropdown" tag="div" class="multiselect form-group"
+  <dropdown ref="dropdownEl" tag="div" class="multiselect form-group"
     placement="bottom-start" :close-on-menu-click="false" @show="onShow" @hide="onHide">
     <template #toggle="{ toggle, attrs }">
-      <div v-bind="attrs" class="dropdown-trigger"
+      <button v-bind="attrs" type="button" class="dropdown-trigger"
         :class="{ disabled }"
-        tabindex="0"
-        role="button"
         :aria-disabled="options == null || disabled"
         v-tooltip.aria-describedby="disabledMessage"
         :aria-label="label"
-        @click="handleTriggerClick(toggle, $event)"
-        @keydown.enter="handleTriggerClick(toggle, $event)">
+        @click="handleTriggerClick(toggle, $event)">
         <slot name="icon"></slot>
         <span class="multiselect-label">{{ label }}</span>
         <span class="display-value" aria-hidden="true">{{ selectOption }}</span>
         <span class="icon-angle-down"></span>
-      </div>
+      </button>
     </template>
     <template #menu>
       <li v-if="search != null" class="search">
@@ -80,7 +77,7 @@ except according to the terms contained in the LICENSE file.
         </button>
       </li>
     </template>
-  </Dropdown>
+  </dropdown>
 </template>
 
 <script>
@@ -358,7 +355,7 @@ watch(searchValue, (value) => {
 ////////////////////////////////////////////////////////////////////////////////
 // DROPDOWN INTEGRATION
 
-const dropdown = ref(null);
+const dropdownEl = ref(null);
 
 const onShow = () => {
   syncWithModelValue();
@@ -373,23 +370,14 @@ const onHide = () => {
 const apply = () => {
   searchValue.value = '';
   emitIfChanged();
-  dropdown.value?.hide();
+  dropdownEl.value?.hide();
 };
 
-const handleTriggerClick = buildMode === 'test'
-  ? (toggle, { target }) => {
-    if (target.closest('body') == null) {
-      // eslint-disable-next-line no-console
-      console.error('Clicking Multiselect toggle has no effect unless component is attached to body.');
-    } else if (props.options != null && !props.disabled) {
-      toggle();
-    }
+const handleTriggerClick = (toggle) => {
+  if (props.options != null && !props.disabled) {
+    toggle();
   }
-  : (toggle) => {
-    if (props.options != null && !props.disabled) {
-      toggle();
-    }
-  };
+};
 
 
 

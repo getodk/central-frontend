@@ -57,4 +57,26 @@ describe('Dropdown', () => {
       });
     }
   });
+
+  it('does not emit hide event when hide() is called from the parent', async () => {
+    const component = mount(TestDropdownMenu, { attachTo: document.body });
+    await component.find('.dropdown-toggle').trigger('click');
+
+    component.vm.$refs.dropdown.hide();
+
+    const dropdown = component.findComponent({ name: 'Dropdown' });
+    should.not.exist(dropdown.emitted().hide);
+  });
+
+  it('keeps dropdown open when clicking inside menu if closeOnMenuClick is false', async () => {
+    const component = mount(TestDropdownMenu, {
+      attachTo: document.body,
+      props: { closeOnMenuClick: false }
+    });
+    await component.find('.dropdown-toggle').trigger('click');
+    component.find('.dropdown').classes('open').should.equal(true);
+
+    await component.find('#action1').trigger('click');
+    component.find('.dropdown').classes('open').should.equal(true);
+  });
 });

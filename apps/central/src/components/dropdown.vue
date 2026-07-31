@@ -70,11 +70,11 @@ const show = () => {
   emit('show');
 };
 
-const hide = () => {
+const hide = (toEmit = true) => {
   if (!isOpen.value) return;
   isOpen.value = false;
   menuStyle.value = {};
-  emit('hide');
+  if (toEmit) emit('hide');
 };
 
 const toggle = () => {
@@ -108,5 +108,5 @@ useEventListener(document, 'click', handleClickOutside, true);
 useEventListener(document, 'keydown', handleEscape);
 useEventListener(window, 'resize', hide);
 
-defineExpose({ hide });
+defineExpose({ hide: () => hide(false) });
 </script>
