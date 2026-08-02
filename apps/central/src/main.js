@@ -23,7 +23,6 @@ import initSentry from './util/sentry';
 // ./jquery must be imported before any of Bootstrap's JavaScript plugins,
 // because the plugins require jQuery.
 import './jquery';
-import './bootstrap';
 
 const app = createApp(App);
 
