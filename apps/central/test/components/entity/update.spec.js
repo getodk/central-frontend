@@ -1,3 +1,5 @@
+import { nextTick } from 'vue';
+
 import EntityUpdate from '../../../src/components/entity/update.vue';
 import EntityUpdateRow from '../../../src/components/entity/update/row.vue';
 
@@ -66,9 +68,10 @@ describe('EntityUpdate', () => {
     });
   });
 
-  it('focuses the entity label textarea', () => {
+  it('focuses the entity label textarea', async () => {
     testData.extendedEntities.createPast(1);
     const modal = mountComponent({ attachTo: document.body });
+    await nextTick();
     modal.get('textarea').should.be.focused();
   });
 
@@ -83,7 +86,8 @@ describe('EntityUpdate', () => {
     const textareas = modal.findAll('textarea');
     textareas.map(({ element }) => element.style.height).should.eql(['', '']);
     await modal.setProps({ state: true });
-    await modal.vm.$nextTick();
+    await nextTick();
+    await nextTick();
     const heights = textareas.map(({ element }) => element.style.height);
     heights[0].should.not.equal('');
     heights[1].should.not.equal('');

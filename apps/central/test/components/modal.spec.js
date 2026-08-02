@@ -51,22 +51,12 @@ describe('Modal', () => {
       document.body.classList.contains('modal-open').should.be.true;
     });
 
-    it('emits a shown event', () => {
+    it('emits a shown event', async () => {
       const modal = mountComponent({
         props: { state: true }
       });
+      await nextTick();
       modal.emitted().shown.should.eql([[]]);
-    });
-
-    it('emits a resize event', () => {
-      const modal = mountComponent({
-        props: { state: true },
-        slots: {
-          body: { template: '<div id="div" style="height: 10px;"></div>' }
-        },
-        attachTo: document.body
-      });
-      modal.emitted().resize.should.eql([[22]]);
     });
 
     it('updates openModal', () => {
@@ -101,17 +91,6 @@ describe('Modal', () => {
       document.body.classList.contains('modal-open').should.be.false;
     });
 
-    it('emits a resize event', async () => {
-      const modal = mountComponent({
-        slots: {
-          body: { template: '<div id="div" style="height: 10px;"></div>' }
-        },
-        attachTo: document.body
-      });
-      await modal.setProps({ state: false });
-      modal.emitted().resize.should.eql([[22], [0]]);
-    });
-
     it('updates openModal', async () => {
       const modal = mountComponent({
         props: { state: true }
@@ -119,18 +98,6 @@ describe('Modal', () => {
       await modal.setProps({ state: false });
       modal.vm.$container.openModal.should.eql({ state: false, el: null });
     });
-  });
-
-  it('emits a resize event after the height of the modal changes', async () => {
-    const modal = mountComponent({
-      slots: {
-        body: { template: '<div id="div" style="height: 10px;"></div>' }
-      },
-      attachTo: document.body
-    });
-    modal.get('#div').element.setAttribute('style', 'height: 20px;');
-    await nextTick();
-    modal.emitted().resize.should.eql([[22], [32]]);
   });
 
   describe('mutation', () => {

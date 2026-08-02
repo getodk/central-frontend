@@ -1,3 +1,5 @@
+import { nextTick } from 'vue';
+
 import DatasetNew from '../../../src/components/dataset/new.vue';
 
 import testData from '../../data';
@@ -30,8 +32,9 @@ describe('DatasetNew', () => {
       hide: '.btn-link'
     }));
 
-  it('focuses the input', () => {
+  it('focuses the input', async () => {
     const modal = mount(DatasetNew, mountOptions({ attachTo: document.body }));
+    await nextTick();
     modal.get('input').should.be.focused();
   });
 
