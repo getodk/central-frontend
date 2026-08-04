@@ -9,9 +9,10 @@ const user = process.env.ODK_USER;
 const password = process.env.ODK_PASSWORD;
 const credentials = Buffer.from(`${user}:${password}`, 'utf-8').toString('base64');
 const __dirname = import.meta.dirname;
-const FORM_TEMPLATES = {
+export const FORM_TEMPLATES = {
   'simple': path.join(__dirname, './data/form.template.xml'),
   'attachment': path.join(__dirname, './data/form-with-attachment.template.xml'),
+  'lastsaved': path.join(__dirname, './data/form-with-last-saved.template.xml'),
 };
 
 export default class BackendClient {

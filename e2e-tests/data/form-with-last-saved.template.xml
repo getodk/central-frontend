@@ -1,0 +1,33 @@
+<h:html
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns="http://www.w3.org/2002/xforms">
+
+    <h:head>
+        <h:title>{{ formId }}</h:title>
+        <model>
+            <instance>
+                <data id="{{ formId }}">
+                    <item/>
+                    <previous/>
+                    <meta>
+                        <instanceID/>
+                    </meta>
+                </data>
+            </instance>
+            <instance id="last-saved" src="jr://instance/last-saved"/>
+            <bind nodeset="/data/item" type="string"/>
+            <bind nodeset="/data/previous" type="string"/>
+            <setvalue event="odk-instance-first-load" ref="/data/previous" value="instance('last-saved')/data/item"/>
+        </model>
+    </h:head>
+
+    <h:body>
+		  <input ref="/data/item">
+			  <label>item</label>
+		  </input>
+		  <input ref="/data/previous">
+			  <label>previous value</label>
+		  </input>
+    </h:body>
+
+</h:html>
