@@ -25,7 +25,7 @@ for (const basename of fs.readdirSync('transifex')) {
     try {
       destructure(json, locale);
     } catch (err) {
-      fatalError(err, 'Failed!  Have you pulled the latest JSON from Transifex?');
+      fatalError(err, 'Failed!  Have you pulled the latest JSON from Transifex?'); // eslint-disable-line no-use-before-define
     }
   })();
   rekeyTranslations(sourceMessages, translated, transifexPaths);
