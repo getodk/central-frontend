@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { OdkWebForm, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
 import { type MonolithicInstancePayload } from '@getodk/xforms-engine';
 import { queryString, type Form } from '../utils/api';
@@ -41,9 +41,11 @@ let clearForm:Function;
 let submissionData: SubmissionData;
 
 const submissionResult:any = {};
+const inited = ref(false);
 const isEdit = computed(() => props.actionType === 'edit');
 const isPublicLink = computed(() => props.actionType === 'public-link');
 const draftPath = computed(() => props.form.draft ? '/draft' : '');
+const lastSavedXml = ref<string | undefined>();
 
 const deviceID = getDeviceId();
 
@@ -52,16 +54,6 @@ const visibleModal = ref();
 const withToken = (url) => `${url}${queryString({ st: props.st })}`;
 
 const getAttachment = async (requestUrl: URL) => {
-  console.log({requestUrl});
-  if (requestUrl.href === 'jr://instance/last-saved') {
-    const lastSaved = await getLastSaved(props.form.projectId, props.form.xmlFormId);
-    console.log({lastSaved});
-    if (!lastSaved) {
-      return new Response('Not found', { status: 404, statusText: 'Not Found', headers: { 'Content-Type': 'text/plain' } });
-    }
-    // TODO what if it doesn't exist? Return 404 or empty?
-    return new Response(lastSaved, { headers: new Headers({ 'Content-Type': 'text/xml' }) });
-  }
   const encodedName = encodeURIComponent(requestUrl.pathname.split('/').pop()!);
   const url = withToken(`/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath.value}/attachments/${encodedName}`);
   return fetch(url);
@@ -265,8 +257,11 @@ const handleSubmit = async (
   }
   initializeSubmissionState(data as unknown as SubmissionData, clearFormCallback);
   await submitData();
+  // TODO if !hasLastSaved, consider wiping the localstorage
   if (!isEdit.value && hasLastSaved) {
-    setLastSaved(props.form.projectId, props.form.xmlFormId, submissionData.instanceFile);
+    try {
+      setLastSaved(props.form.projectId, props.form.xmlFormId, submissionData.instanceFile);
+    } catch {}
   }
 };
 
@@ -297,6 +292,13 @@ const editInstanceOptions = computed(() => {
 const closeWindow = () => {
   window.close();
 };
+
+onMounted(async () => {
+  try {
+    lastSavedXml.value = await getLastSaved(props.form.projectId, props.form.xmlFormId);
+  } catch {}
+  inited.value = true;
+});
 </script>
 
 <style scoped>
@@ -308,12 +310,13 @@ const closeWindow = () => {
 
 <template>
 
-  <OdkWebForm
+  <OdkWebForm v-if="inited"
     :form-xml="props.xform"
     :edit-instance="editInstanceOptions"
     :fetch-form-attachment="getAttachment"
     :device-id="deviceID"
     :instance-defaults="defaultParameters"
+    :last-saved-xml="lastSavedXml"
     @loaded="webFormLoaded"
     @submit="handleSubmit"/>
 

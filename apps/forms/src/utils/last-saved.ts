@@ -13,16 +13,18 @@ export const setLastSaved = async (projectId: number, xmlFormId: string, file: F
   // TODO need to skip over encrypted submissions
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onload = (e) => {
-      const xml = e.target?.result;
+    reader.onload = (event) => {
+      const xml = event.target?.result;
       if (!xml) {
         resolve();
       } else {
         const key = getIdbKey(projectId, xmlFormId);
-        set(key, xml).then(() => resolve());
+        set(key, xml)
+          .then(() => resolve())
+          .catch(reject);
       }
     };
-    reader.onerror = () => reject(new Error('Failed to read file'));
+    reader.onerror = () => reject(new Error('Failed to read last saved from idb'));
     reader.readAsText(file);
   });
 };

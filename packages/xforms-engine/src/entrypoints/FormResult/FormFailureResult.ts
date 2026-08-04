@@ -37,7 +37,6 @@ export class FormFailureResult extends BaseFormResult<'failure'> implements Load
       status: 'failure',
       warnings,
       error,
-      lastSaved: false
     });
 
     this.createInstance = failedFormResultMethodFactory(error);

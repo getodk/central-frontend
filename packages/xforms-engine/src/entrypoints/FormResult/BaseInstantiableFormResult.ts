@@ -49,7 +49,6 @@ export abstract class BaseInstantiableFormResult<
       status,
       warnings,
       error,
-      secondaryInstances: instanceOptions.secondaryInstances
     });
 
     this.createInstance = (instanceConfig: FormInstanceConfig = {}) => {
@@ -63,13 +62,13 @@ export abstract class BaseInstantiableFormResult<
       });
     };
 
-    this.resetInstance = (instanceConfig: FormInstanceConfig = {}) => {
+    this.resetInstance = (instanceConfig: FormInstanceConfig = {}, lastSavedXml?: string) => {
       instanceOptions.scope.dispose();
       instanceOptions.scope = createPotentiallyClientOwnedReactiveScope();
-      console.log('creating instance');
+      if (lastSavedXml) {
+        instanceOptions.secondaryInstances.resetLastSaved(lastSavedXml);
+      }
       const instance = this.createInstance(instanceConfig);
-      instance.formResult.secondaryInstances.resetLastSaved();
-      console.log('finished creating instance');
       return instance;
     };
 

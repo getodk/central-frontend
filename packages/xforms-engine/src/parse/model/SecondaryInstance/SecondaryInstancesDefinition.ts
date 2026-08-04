@@ -9,7 +9,7 @@ import { ErrorProductionDesignPendingError } from '../../../error/ErrorProductio
 import type { EngineXPathNode } from '../../../integration/xpath/adapter/kind.ts';
 import type { StaticDocument } from '../../../integration/xpath/static-dom/StaticDocument.ts';
 import type { StaticElement } from '../../../integration/xpath/static-dom/StaticElement.ts';
-import type { XFormDOM } from '../../XFormDOM.ts';
+import type { DOMSecondaryInstanceElement, XFormDOM } from '../../XFormDOM.ts';
 import { BlankSecondaryInstanceSource } from './sources/BlankSecondaryInstanceSource.ts';
 import { CSVExternalSecondaryInstanceSource } from './sources/CSVExternalSecondaryInstance.ts';
 import type { ExternalSecondaryInstanceResourceLoadOptions } from './sources/ExternalSecondaryInstanceResource.ts';
@@ -18,7 +18,7 @@ import { GeoJSONExternalSecondaryInstanceSource } from './sources/GeoJSONExterna
 import { InternalSecondaryInstanceSource } from './sources/InternalSecondaryInstanceSource.ts';
 import type { SecondaryInstanceSource } from './sources/SecondaryInstanceSource.ts';
 import { XMLExternalSecondaryInstanceSource } from './sources/XMLExternalSecondaryInstanceSource.ts';
-import { MISSING_RESOURCE_BEHAVIOR } from '../../../client/constants.ts';
+import { LastSavedInstanceSource } from './sources/LastSavedInstanceSource.ts';
 
 export interface SecondaryInstanceDefinition extends StaticDocument {
   readonly rootDocument: SecondaryInstanceDefinition;
@@ -36,24 +36,28 @@ export interface SecondaryInstanceRootDefinition extends StaticElement {
   getAttributeValue(localName: string): string | null;
 }
 
+const createLastSavedInstance = (domElement: DOMSecondaryInstanceElement, instanceId: string, resourceURL: JRResourceURL, xml: string | undefined) => {
+  if (xml) {
+    return new LastSavedInstanceSource(domElement, instanceId, resourceURL, xml);
+  }
+  return new BlankSecondaryInstanceSource(instanceId, resourceURL, domElement);
+}
+
 export class SecondaryInstancesDefinition
   extends Map<string, SecondaryInstanceRootDefinition>
   implements XFormsSecondaryInstanceMap<EngineXPathNode>
 {
 
   readonly hasLastSaved: boolean;
-  readonly lastSaved: SecondaryInstanceSource | undefined;
+  private lastSaved: SecondaryInstanceSource | undefined;
 
-  resetLastSaved = async () => {
-    console.log('resetting');
-    if (this.lastSaved) {
-      // TODO oh dear... i think we need a fundamental rethink because external secondary instances must be reactive
-      // resource = await ExternalSecondaryInstanceResource.load(
-      //   this.lastSaved.instanceId,
-      //   this.lastSaved.resourceURL,
-      //   this.lastSaved.op
-      //   lastSavedResourceOptions
-      // );
+  resetLastSaved = (lastSavedXml: string) => {
+    if (this.lastSaved?.resourceURL) {
+      const { domElement, instanceId, resourceURL } = this.lastSaved;
+      const source = createLastSavedInstance(domElement, instanceId, resourceURL, lastSavedXml);
+      const { root } = source.parseDefinition();
+      this.lastSaved = source;
+      this.set('last-saved', root);
     }
   };
 
@@ -101,22 +105,15 @@ export class SecondaryInstancesDefinition
 
         const resourceURL = JRResourceURL.from(src);
 
-        let resource;
         if (resourceURL.isLastSavedInstance()) {
-          const lastSavedResourceOptions = { ...options, missingResourceBehavior: MISSING_RESOURCE_BEHAVIOR.BLANK };
-          resource = await ExternalSecondaryInstanceResource.load(
-            instanceId,
-            resourceURL,
-            lastSavedResourceOptions
-          );
-        } else {
-          resource = await ExternalSecondaryInstanceResource.load(
-            instanceId,
-            resourceURL,
-            options
-          );
+          return createLastSavedInstance(domElement, instanceId, resourceURL, options.lastSavedXml);
         }
 
+        const resource = await ExternalSecondaryInstanceResource.load(
+          instanceId,
+          resourceURL,
+          options
+        );
 
         if (resource.isBlank) {
           return new BlankSecondaryInstanceSource(instanceId, resourceURL, domElement);
@@ -149,7 +146,7 @@ export class SecondaryInstancesDefinition
         return [root.getAttributeValue('id'), root];
       })
     );
-    this.hasLastSaved = sources.some(source => source.resourceURL?.isLastSavedInstance()); // TODO remove this now that we have the lastSaved
     this.lastSaved = sources.find(source => source.resourceURL?.isLastSavedInstance());
+    this.hasLastSaved = !!this.lastSaved;
   }
 }

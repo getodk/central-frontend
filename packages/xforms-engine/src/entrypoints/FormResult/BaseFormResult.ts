@@ -5,7 +5,6 @@ import type {
   LoadFormSuccessResult,
   LoadFormWarningResult,
 } from '../../client/form/LoadFormResult.ts';
-import type { SecondaryInstancesDefinition } from '../../parse/model/SecondaryInstance/SecondaryInstancesDefinition.ts';
 
 interface LoadFormResultByStatus {
   readonly success: LoadFormSuccessResult;
@@ -22,14 +21,12 @@ export interface BaseFormResultOptions<Status extends FormResultStatus> {
   readonly status: Status;
   readonly warnings: BaseFormResultProperty<Status, 'warnings'>;
   readonly error: BaseFormResultProperty<Status, 'error'>;
-  readonly secondaryInstances: SecondaryInstancesDefinition;
 }
 
 export abstract class BaseFormResult<Status extends FormResultStatus> {
   readonly status: Status;
   readonly warnings: BaseFormResultProperty<Status, 'warnings'>;
   readonly error: BaseFormResultProperty<Status, 'error'>;
-  readonly secondaryInstances: SecondaryInstancesDefinition;
 
   abstract readonly createInstance: BaseFormResultProperty<Status, 'createInstance'>;
   abstract readonly resetInstance: BaseFormResultProperty<Status, 'resetInstance'>;
@@ -40,6 +37,5 @@ export abstract class BaseFormResult<Status extends FormResultStatus> {
     this.status = options.status;
     this.warnings = options.warnings;
     this.error = options.error;
-    this.secondaryInstances = options.secondaryInstances;
   }
 }

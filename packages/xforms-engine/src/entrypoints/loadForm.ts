@@ -49,6 +49,7 @@ const resolveOptions = (options?: LoadFormOptions): ResolvedOptions => {
     fetchFormDefinition: options?.fetchFormDefinition ?? unboundGlobalFetch,
     fetchFormAttachment: options?.fetchFormAttachment ?? unboundGlobalFetch,
     missingResourceBehavior: options?.missingResourceBehavior ?? MISSING_RESOURCE_BEHAVIOR.DEFAULT,
+    lastSavedXml: options?.lastSavedXml ?? undefined,
   };
 };
 
@@ -62,7 +63,7 @@ const loadFormResult = async (
   formResource: FormResource,
   options: ResolvedOptions
 ): Promise<LoadFormResult> => {
-  const { fetchFormDefinition, fetchFormAttachment, missingResourceBehavior } = options;
+  const { fetchFormDefinition, fetchFormAttachment, missingResourceBehavior, lastSavedXml } = options;
 
   // TODO: Currently, **all** of the intermediate calls in this `try` block
   // may throw! Handling that fact at the source would provide a much more
@@ -78,6 +79,7 @@ const loadFormResult = async (
     const { model } = new XFormDefinition(xformDOM);
     const secondaryInstances = await SecondaryInstancesDefinition.load(xformDOM, {
       fetchResource: fetchFormAttachment,
+      lastSavedXml,
       missingResourceBehavior,
     });
     const instanceOptions = {

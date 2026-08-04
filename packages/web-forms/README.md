@@ -355,6 +355,8 @@ To use this library in a Vue.js application:
 />
 ```
 
+<!-- UPDATE DOCS -->
+
 ### Plugin
 
 The plugin is there to initialize PrimeVue, currently it exposes no options. In the future, configuration options may be added to the plugin.

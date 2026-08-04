@@ -10,6 +10,7 @@ interface ResetFormStateOptions {
   readonly deviceID?: string;
   readonly preloadProperties?: PreloadProperties;
   readonly instanceDefaults?: InstanceDefaults;
+  readonly lastSavedXml?: string;
 }
 
 const resetInstanceState = (
@@ -18,7 +19,7 @@ const resetInstanceState = (
 ): FormStateSuccessResult => {
   const { form } = currentState;
   const instanceConfig = getFormInstanceConfig(options);
-  const instance = form.resetInstance(instanceConfig);
+  const instance = form.resetInstance(instanceConfig, options.lastSavedXml);
   return {
     status: 'FORM_STATE_SUCCESS',
     error: null,

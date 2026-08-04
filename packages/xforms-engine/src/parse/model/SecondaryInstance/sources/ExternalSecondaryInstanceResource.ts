@@ -68,6 +68,7 @@ interface MissingResourceResponse extends FetchResourceResponse {
 
 export interface ExternalSecondaryInstanceResourceLoadOptions {
   readonly fetchResource: FetchResource<JRResourceURL>;
+  readonly lastSavedXml: string | undefined;
   readonly missingResourceBehavior: MissingResourceBehavior;
 }
 

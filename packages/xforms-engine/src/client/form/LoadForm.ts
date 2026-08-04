@@ -78,6 +78,9 @@ export interface LoadFormOptions {
    * @default MissingResourceBehaviorDefault
    */
   readonly missingResourceBehavior?: MissingResourceBehavior;
+
+  // TODO docs
+  readonly lastSavedXml: string | undefined;
 }
 
 /**
