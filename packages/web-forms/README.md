@@ -350,12 +350,11 @@ To use this library in a Vue.js application:
     :preload-properties="preloadProperties"
     :instance-defaults="instanceDefaults"
     :device-id="abc123"
+    :last-saved-xml="lastSavedXml"
     @submit="handleSubmit"
     @submit-chunked="handleChunkedSubmit"
 />
 ```
-
-<!-- UPDATE DOCS -->
 
 ### Plugin
 
@@ -379,6 +378,7 @@ The `<OdkWebForm>` component accepts the following props:
 - `preloadProperties` (`PreloadProperties`, optional): Properties to make available for binding in the form using jr:preload.
 - `deviceId` (`string`, optional): If provided is available for binding into the form using preload attributes. Ignored if `preloadProperties.deviceID` is given.
 - `instanceDefaults` (`InstanceDefaults`, optional): Default values to set in the form as a map of xpath reference to string value.
+- `lastSavedXml` (`string`, optional): The XML to parse and bind to the last-saved virtual instance.
 
 ### Events (`OdkWebFormEmits`)
 

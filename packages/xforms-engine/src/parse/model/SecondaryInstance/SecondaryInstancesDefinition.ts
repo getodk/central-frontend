@@ -61,13 +61,14 @@ export class SecondaryInstancesDefinition
       const source = createLastSavedInstance(domElement, instanceId, resourceURL, lastSavedXml);
       const { root } = source.parseDefinition();
       this.lastSaved = source;
-      this.set('last-saved', root);
+      this.set(instanceId, root);
     }
   };
 
   /**
    * @package Only to be used for testing
    */
+  // TODO Investigate replacing this with the async version so tests are actually testing prod code
   static loadSync(xformDOM: XFormDOM): SecondaryInstancesDefinition {
     const { secondaryInstanceElements } = xformDOM;
     const sources = secondaryInstanceElements.map((domElement) => {

@@ -10,7 +10,7 @@ import { Translation } from 'vue-i18n'
 import Location from '../utils/location';
 import { getDeviceId } from '../utils/device-id';
 import { hideSpinner } from '../utils/spinner';
-import { getLastSaved, setLastSaved } from '../utils/last-saved';
+import { deleteLastSaved, getLastSaved, setLastSaved } from '../utils/last-saved';
 defineOptions({
   name: 'WebFormRenderer'
 });
@@ -53,7 +53,7 @@ const visibleModal = ref();
 
 const withToken = (url) => `${url}${queryString({ st: props.st })}`;
 
-const getAttachment = async (requestUrl: URL) => {
+const getAttachment = (requestUrl: URL) => {
   const encodedName = encodeURIComponent(requestUrl.pathname.split('/').pop()!);
   const url = withToken(`/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath.value}/attachments/${encodedName}`);
   return fetch(url);
@@ -257,11 +257,13 @@ const handleSubmit = async (
   }
   initializeSubmissionState(data as unknown as SubmissionData, clearFormCallback);
   await submitData();
-  // TODO if !hasLastSaved, consider wiping the localstorage
-  if (!isEdit.value && hasLastSaved) {
-    try {
+
+  if (!isEdit.value) {
+    if (hasLastSaved) {
       setLastSaved(props.form.projectId, props.form.xmlFormId, submissionData.instanceFile);
-    } catch {}
+    } else {
+      deleteLastSaved(props.form.projectId, props.form.xmlFormId);
+    }
   }
 };
 
@@ -294,9 +296,7 @@ const closeWindow = () => {
 };
 
 onMounted(async () => {
-  try {
-    lastSavedXml.value = await getLastSaved(props.form.projectId, props.form.xmlFormId);
-  } catch {}
+  lastSavedXml.value = await getLastSaved(props.form.projectId, props.form.xmlFormId);
   inited.value = true;
 });
 </script>

@@ -24,13 +24,13 @@ import type {
 	OptionalAwaitableHostSubmissionResult,
 } from '@/lib/submission/host-submission-result-callback.ts';
 import type { JRResourceURLString } from '@getodk/common/jr-resources/JRResourceURL.ts';
-import {
-	type ChunkedInstancePayload,
-	type FetchFormAttachment,
-	type MissingResourceBehavior,
-	type MonolithicInstancePayload,
-	type InstanceDefaults,
-	type PreloadProperties
+import type {
+	ChunkedInstancePayload,
+	FetchFormAttachment,
+	MissingResourceBehavior,
+	MonolithicInstancePayload,
+	InstanceDefaults,
+	PreloadProperties,
 } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import Card from 'primevue/card';

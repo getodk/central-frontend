@@ -22,12 +22,12 @@
     </h:head>
 
     <h:body>
-		  <input ref="/data/item">
-			  <label>item</label>
-		  </input>
-		  <input ref="/data/previous">
-			  <label>previous value</label>
-		  </input>
+		<input ref="/data/item">
+			<label>item</label>
+		</input>
+		<input ref="/data/previous">
+		    <label>previous value</label>
+		</input>
     </h:body>
 
 </h:html>
