@@ -48,7 +48,7 @@ export default class BackendClient {
         'content-type': 'application/xml',
       },
       data: formTemplate
-        .replaceAll('{{ formId }}', `${this.#prefix}_${faker.word.noun()}`)
+        .replaceAll('{{ formId }}', `${this.#prefix}_${faker.word.noun()}_${Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)}`)
     });
     expect(response).toBeOK();
     return response.json();
