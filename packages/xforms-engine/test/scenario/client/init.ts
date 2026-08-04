@@ -43,7 +43,6 @@ export interface TestFormOptions {
 
 const defaultConfig = {
   fetchFormDefinition: fetchFormDefinitionStub,
-  lastSavedXml: undefined,
 } as const satisfies LoadFormOptions;
 
 // prettier-ignore
