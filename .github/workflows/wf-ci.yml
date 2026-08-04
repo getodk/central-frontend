@@ -242,17 +242,5 @@ jobs:
       - if: ${{ matrix.target == 'Web' }}
         run: 'npx playwright install ${{ matrix.browser }} --with-deps'
 
-      # TODO: hopefully temporary! Attempt to mitigate flakiness in webkit by
-      # running twice when first run fails. At least in local testing, this has
-      # been near (if not at) 100% success.
-      - if: ${{ matrix.target == 'Web' && matrix.browser == 'webkit' }}
-        run: 'npm run test-browser:${{ matrix.browser }} -w=packages/web-forms || npm run test-browser:${{ matrix.browser }} -w=packages/web-forms'
-
-      - if: ${{ matrix.target == 'Web' && matrix.browser != 'webkit' }}
+      - if: ${{ matrix.target == 'Web' }}
         run: 'npm run test-browser:${{ matrix.browser }} -w=packages/web-forms'
-
-      - if: ${{ matrix.node-version == '24.16.0' && matrix.target == 'Node' }}
-        uses: actions/upload-artifact@v7
-        with:
-          name: dist-demo
-          path: packages/web-forms/dist-demo

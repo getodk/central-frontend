@@ -29,7 +29,7 @@ packages/web-forms/dist-demo
 /.nginx/*
 !/.nginx/.gitkeep
 
-.eslintcache
+*.eslintcache
 public/index.html
 test-results
 playwright-report

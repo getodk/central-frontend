@@ -1,6 +1,5 @@
 import { test } from '@playwright/test';
 import { FillFormPage } from '../../page-objects/pages/FillFormPage.ts';
-import { PreviewPage } from '../../page-objects/pages/PreviewPage.ts';
 
 test.describe('Geopoint Question Type', () => {
   test.describe('Geolocation permission granted', () => {
@@ -8,12 +7,7 @@ test.describe('Geopoint Question Type', () => {
 
     test.beforeEach(async ({ page, context }) => {
       await context.grantPermissions(['geolocation']);
-
-      formPage = new FillFormPage(page);
-
-      const previewPage = new PreviewPage(page);
-      await previewPage.goToDevPage();
-      await previewPage.openDevDemoForm('geolocation', 'geopoint.xml', 'Geopoint');
+      formPage = await FillFormPage.loadForm(page, 'geopoint.xml');
     });
 
     test('captures good-accuracy location', async ({ context }) => {
@@ -110,11 +104,7 @@ test.describe('Geopoint Question Type', () => {
         permissions: [],
       });
       const page = await context.newPage();
-      formPage = new FillFormPage(page);
-
-      const previewPage = new PreviewPage(page);
-      await previewPage.goToDevPage();
-      await previewPage.openDevDemoForm('geolocation', 'geopoint.xml', 'Geopoint');
+      formPage = await FillFormPage.loadForm(page, 'geopoint.xml');
     });
 
     test('displays troubleshooting message when permission is denied', async () => {

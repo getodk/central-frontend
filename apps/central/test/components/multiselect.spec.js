@@ -17,15 +17,15 @@ const mountComponent = (options) =>
       none: 'None'
     }
   }));
-const toggle = (component) => component.get('select').trigger('click');
+const toggle = (component) => component.get('.dropdown-trigger').trigger('click');
 const apply = (component) => component.get('.action-bar button').trigger('click');
 const assertChecked = (component, checked) => {
   const inputs = component.findAll('input[type="checkbox"]');
   inputs.map(input => input.element.checked).should.eql(checked);
 };
 const assertDisabled = (component) => {
-  component.get('select').attributes('aria-disabled').should.equal('true');
-  component.get('select').attributes('aria-expanded').should.equal('false');
+  component.get('.dropdown-trigger').attributes('aria-disabled').should.equal('true');
+  component.get('.dropdown-trigger').attributes('aria-expanded').should.equal('false');
   component.classes().should.not.contain('open');
 };
 
@@ -632,7 +632,7 @@ describe('Multiselect', () => {
       const component = mountComponent({
         props: { options: null, loading: true }
       });
-      component.get('option').text().should.equal('Loading…');
+      component.get('.display-value').text().should.equal('Loading…');
     });
 
     it('is disabled', async () => {
@@ -650,7 +650,7 @@ describe('Multiselect', () => {
       const component = mountComponent({
         props: { options: null, loading: false }
       });
-      component.get('option').text().should.equal('Error');
+      component.get('.display-value').text().should.equal('Error');
     });
 
     it('is disabled', async () => {
@@ -668,8 +668,8 @@ describe('Multiselect', () => {
       props: { label: 'Review State' }
     });
     component.get('.multiselect-label').text().should.equal('Review State');
-    const select = component.get('select');
-    select.attributes('aria-label').should.equal('Review State');
+    const trigger = component.get('.dropdown-trigger');
+    trigger.attributes('aria-label').should.equal('Review State');
   });
 
   describe('placeholder', () => {
@@ -689,7 +689,7 @@ describe('Multiselect', () => {
       const component = mountComponent({
         props: { options: [{ value: 0 }], placeholder: () => 'No selection' }
       });
-      component.get('option').text().should.equal('No selection');
+      component.get('.display-value').text().should.equal('No selection');
     });
 
     it('does not call the function when a checkbox is checked', async () => {
@@ -733,6 +733,6 @@ describe('Multiselect', () => {
     });
     await toggle(component);
     assertDisabled(component);
-    component.get('select').should.have.ariaDescription('disabled due to some reason.');
+    component.get('.dropdown-trigger').should.have.ariaDescription('disabled due to some reason.');
   });
 });

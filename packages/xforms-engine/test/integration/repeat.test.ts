@@ -21,6 +21,9 @@ import { stringAnswer } from '../scenario/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../scenario/jr/Scenario.ts';
 import type { JRFormDef } from '../scenario/jr/form/JRFormDef.ts';
 
+import countNonEmpty from '../scenario/fixtures/test-javarosa/resources/countNonEmptyForm.xml?raw';
+import countNonEmptyAlt from '../scenario/fixtures/test-javarosa/resources/countNonEmptyForm-alt.xml?raw';
+
 /**
  * This is **not** intended to be a general purpose `range` implementation.
  * Insofar as we're going to reuse that aspect of JavaRosa test logic, it makes
@@ -2595,7 +2598,7 @@ describe('Tests ported from JavaRosa - repeats', () => {
 
         testFn('[calculates the count of non-empty nodes]', async () => {
           const scenario = await Scenario.init(
-            includeCommonNamespaces ? 'countNonEmptyForm-alt.xml' : 'countNonEmptyForm.xml'
+            includeCommonNamespaces ? countNonEmptyAlt : countNonEmpty
           );
 
           expect(scenario.answerOf('/test/count_value')).toEqualAnswer(intAnswer(4));
@@ -2746,18 +2749,11 @@ describe('jr:count', () => {
   });
 
   describe('count controlled by direct reference', () => {
-    const maxCount = 50;
+    const initialCount = 3;
 
     let scenario: Scenario;
-    let initialCount: number;
-
-    const randomCount = () => {
-      return Math.floor(Math.random() * maxCount);
-    };
 
     beforeEach(async () => {
-      initialCount = randomCount();
-
       scenario = await Scenario.init(
         'Direct reference count updates',
         // prettier-ignore
@@ -2790,23 +2786,39 @@ describe('jr:count', () => {
       expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(initialCount);
     });
 
-    it('updates based on changes to the directly referenced question', () => {
-      let previousCount = initialCount;
+    it('never deletes repeat instances when count decreases', () => {
+      scenario.answer('/data/rep-count', 6);
+      expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(6);
 
-      for (let i = 0; i < 5; i += 1) {
-        let updatedCount: number;
+      // Decreasing jr:count never deletes repeat instances.
+      scenario.answer('/data/rep-count', 2);
+      expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(6);
 
-        do {
-          updatedCount = randomCount();
-        } while (updatedCount === previousCount);
+      scenario.answer('/data/rep-count', 1);
+      expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(6);
+    });
 
-        scenario.answer('/data/rep-count', updatedCount);
+    it('adds instances when count increases', () => {
+      // Decreasing first retains existing instances.
+      scenario.answer('/data/rep-count', 1);
+      expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(initialCount);
 
-        expect(scenario.countRepeatInstancesOf('/data/rep')).not.toBe(previousCount);
-        expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(updatedCount);
+      // Increasing beyond retained count adds new instances.
+      scenario.answer('/data/rep-count', 5);
+      expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(5);
+    });
 
-        previousCount = updatedCount;
-      }
+    it('adds instances when count increases beyond the previously retained count', () => {
+      const retainedMax = initialCount + 3;
+
+      scenario.answer('/data/rep-count', retainedMax);
+      expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(retainedMax);
+
+      scenario.answer('/data/rep-count', initialCount);
+      expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(retainedMax);
+
+      scenario.answer('/data/rep-count', retainedMax + 2);
+      expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(retainedMax + 2);
     });
 
     it('delays updating count when expression produces blank value', () => {
@@ -2894,22 +2906,21 @@ describe('jr:count', () => {
       // Gut check: non-relevance
       expect(scenario.getInstanceNode('/data/a')).toBeNonRelevant();
 
-      // Ensure count is updated to reflect /data/a's non-relevance
+      // Ensure count is updated to reflect /data/a's non-relevance (grows from 3 to 9)
       expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(9);
 
-      // Check that subsequent updates to b + c are reflected as well
+      // Decreasing jr:count never deletes repeat instances.
       scenario.answer('/data/b', 2);
 
-      expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(7);
+      expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(9);
 
       scenario.answer('/data/c', 3);
 
-      expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(5);
+      expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(9);
 
-      // Restore /data/a relevance, and its referenced value as count
       scenario.answer('/data/a-relevant', 'yes');
 
-      expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(3);
+      expect(scenario.countRepeatInstancesOf('/data/rep')).toBe(9);
     });
   });
 

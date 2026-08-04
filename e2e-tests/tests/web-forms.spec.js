@@ -109,7 +109,15 @@ test.describe('ODK Web Forms', () => {
       { name: 'restful', url: (form) => `/projects/${projectId}/forms/${form.xmlFormId}/submissions/new` }
     ];
     urls.forEach(t => {
-      test(t.name, async ({ page }) => {
+      test(t.name, async ({ allowedLogs, page }) => {
+        allowedLogs.push((consoleMsg, normalisedMsg) => {
+          if(normalisedMsg !== 'Failed to load resource: the server responded with a status of 401 (Unauthorized)') return;
+          const { url } = consoleMsg.location();
+          return url.startsWith('http://central-test.localhost/v1/form-links/') ||
+                 url === `http://central-test.localhost/v1/projects/${projectId}` ||
+                 url === `http://central-test.localhost/v1/projects/${projectId}/forms/${publishedForm.xmlFormId}`;
+        });
+
         await page.goto(appUrl + t.url(publishedForm));
         await expect(page.getByRole('heading', { name: 'Welcome to ODK Central' })).toBeVisible();
         await submitLogin(page);
@@ -129,7 +137,7 @@ test.describe('ODK Web Forms', () => {
 
     await page2.getByLabel('First Name').fill('John Doe');
 
-    await page.locator('#navbar-actions a[data-toggle="dropdown"]').click();
+    await page.locator('#navbar-actions .dropdown-toggle').click();
 
     await page.getByRole('link', { name: 'log out' }).click();
 

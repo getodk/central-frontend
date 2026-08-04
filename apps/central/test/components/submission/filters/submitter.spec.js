@@ -20,7 +20,7 @@ const mountComponent = (options = undefined) => {
     }
   }));
 };
-const toggle = (multiselect) => multiselect.get('select').trigger('click');
+const toggle = (multiselect) => multiselect.get('.dropdown-trigger').trigger('click');
 const apply = (multiselect) => multiselect.get('.action-bar button').trigger('click');
 
 describe('SubmissionFiltersSubmitter', () => {

@@ -35,7 +35,7 @@ import type {
   InstanceAttachment,
   InstanceAttachmentRuntimeValue,
 } from './attachments/InstanceAttachment.ts';
-import { buildAttributes } from './attachments/buildAttributes.ts';
+import { buildAttributes } from './buildAttributes.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { InstanceAttachmentContext } from './internal-api/InstanceAttachmentContext.ts';

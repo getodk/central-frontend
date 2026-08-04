@@ -1,3 +1,5 @@
+import { nextTick } from 'vue';
+
 import PublicLinkCreate from '../../../src/components/public-link/create.vue';
 
 import testData from '../../data';
@@ -26,10 +28,11 @@ describe('PublicLinkCreate', () => {
       hide: '.btn-link'
     }));
 
-  it('focuses the display name input', () => {
+  it('focuses the display name input', async () => {
     const modal = mount(PublicLinkCreate, mountOptions({
       attachTo: document.body
     }));
+    await nextTick();
     modal.get('input').should.be.focused();
   });
 

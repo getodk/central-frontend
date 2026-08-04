@@ -216,19 +216,21 @@ describe('SubmissionDownload', () => {
   });
 
   describe('input focus', () => {
-    it('focuses the splitSelectMultiples checkbox if it is enabled', () => {
+    it('focuses the splitSelectMultiples checkbox if it is enabled', async () => {
       testData.extendedForms.createPast(1, {
         fields: [testData.fields.selectMultiple('/sm')]
       });
       const modal = mountComponent({ attachTo: document.body });
+      await nextTick();
       modal.get('input').should.be.focused();
     });
 
-    it('focuses groupPaths checkbox if splitSelectMultiples checkbox is disabled', () => {
+    it('focuses groupPaths checkbox if splitSelectMultiples checkbox is disabled', async () => {
       testData.extendedForms.createPast(1, {
         fields: [testData.fields.int('/i')]
       });
       const modal = mountComponent({ attachTo: document.body });
+      await nextTick();
       modal.findAll('input')[1].should.be.focused();
     });
   });

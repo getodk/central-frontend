@@ -22,7 +22,7 @@ import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
 import { createNoteText, type ComputedNoteText } from '../lib/reactivity/text/createNoteText.ts';
 import type { NoteNodeDefinition } from '../parse/model/NoteNodeDefinition.ts';
 import { ValueNode, type ValueNodeStateSpec } from './abstract/ValueNode.ts';
-import { buildAttributes } from './attachments/buildAttributes.ts';
+import { buildAttributes } from './buildAttributes.ts';
 import type { Attribute } from './Attribute.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';

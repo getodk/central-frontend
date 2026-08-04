@@ -4,7 +4,7 @@ import Multiselect from '../../../../src/components/multiselect.vue';
 import { mount } from '../../../util/lifecycle';
 
 const mountComponent = (options) => mount(EntityFiltersConflict, options);
-const toggle = (multiselect) => multiselect.get('select').trigger('click');
+const toggle = (multiselect) => multiselect.get('.dropdown-trigger').trigger('click');
 const apply = (multiselect) => multiselect.get('.action-bar button').trigger('click');
 
 describe('EntityFiltersConflict', () => {

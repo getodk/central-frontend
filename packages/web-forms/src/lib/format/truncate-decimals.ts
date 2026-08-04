@@ -25,3 +25,7 @@ export const truncateDecimals = (num: number, options: TruncateDecimalsOptions):
 
   return String(withDecimals * sign);
 };
+
+export const truncateGeoCoordinates = (num: number): string => {
+  return truncateDecimals(num, { decimals: 5 });
+};

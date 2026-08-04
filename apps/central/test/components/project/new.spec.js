@@ -1,3 +1,5 @@
+import { nextTick } from 'vue';
+
 import ProjectNew from '../../../src/components/project/new.vue';
 
 import testData from '../../data';
@@ -25,12 +27,13 @@ describe('ProjectNew', () => {
     });
   });
 
-  it('focuses the input', () => {
+  it('focuses the input', async () => {
     mockLogin();
     const modal = mount(ProjectNew, {
       props: { state: true },
       attachTo: document.body
     });
+    await nextTick();
     modal.get('input').should.be.focused();
   });
 
