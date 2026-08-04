@@ -63,7 +63,8 @@ const loadFormResult = async (
   formResource: FormResource,
   options: ResolvedOptions
 ): Promise<LoadFormResult> => {
-  const { fetchFormDefinition, fetchFormAttachment, missingResourceBehavior, lastSavedXml } = options;
+  const { fetchFormDefinition, fetchFormAttachment, missingResourceBehavior, lastSavedXml } =
+    options;
 
   // TODO: Currently, **all** of the intermediate calls in this `try` block
   // may throw! Handling that fact at the source would provide a much more

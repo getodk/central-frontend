@@ -58,6 +58,6 @@ export const getFormInstanceConfig = (options: GetFormInstanceConfigOptions) => 
     instanceAttachments: INSTANCE_ATTACHMENTS_CONFIG,
     preloadProperties: getPreloadProperties(options),
     instanceDefaults: options.instanceDefaults,
-    geolocationProvider: options.form.geolocationProvider
+    geolocationProvider: options.form.geolocationProvider,
   };
 };

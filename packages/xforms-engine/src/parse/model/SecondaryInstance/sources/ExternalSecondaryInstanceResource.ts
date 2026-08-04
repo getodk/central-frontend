@@ -1,5 +1,8 @@
 import type { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL.ts';
-import { MISSING_RESOURCE_BEHAVIOR, type MissingResourceBehavior } from '../../../../client/constants.ts';
+import {
+  MISSING_RESOURCE_BEHAVIOR,
+  type MissingResourceBehavior,
+} from '../../../../client/constants.ts';
 import type { FetchResource, FetchResourceResponse } from '../../../../client/resources.ts';
 import { ErrorProductionDesignPendingError } from '../../../../error/ErrorProductionDesignPendingError.ts';
 import { getResponseContentType } from '../../../../lib/resource-helpers.ts';

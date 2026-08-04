@@ -198,7 +198,7 @@ const monolithicInstancePayload = (
     ...validation,
     submissionMeta,
     data: [data],
-    hasLastSaved: options.hasLastSaved
+    hasLastSaved: options.hasLastSaved,
   };
 };
 
@@ -258,7 +258,7 @@ const chunkedInstancePayload = (
     ...validation,
     submissionMeta,
     data,
-    hasLastSaved: options.hasLastSaved
+    hasLastSaved: options.hasLastSaved,
   };
 };
 

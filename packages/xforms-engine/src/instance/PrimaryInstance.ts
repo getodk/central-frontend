@@ -307,7 +307,7 @@ export class PrimaryInstance<
     const result = prepareInstancePayload(this, {
       payloadType: (options?.payloadType ?? 'monolithic') as PayloadType,
       maxSize: options?.maxSize ?? Infinity,
-      hasLastSaved: this.hasLastSaved
+      hasLastSaved: this.hasLastSaved,
     });
 
     return Promise.resolve(result);

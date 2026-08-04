@@ -36,18 +36,22 @@ export interface SecondaryInstanceRootDefinition extends StaticElement {
   getAttributeValue(localName: string): string | null;
 }
 
-const createLastSavedInstance = (domElement: DOMSecondaryInstanceElement, instanceId: string, resourceURL: JRResourceURL, xml: string | undefined) => {
+const createLastSavedInstance = (
+  domElement: DOMSecondaryInstanceElement,
+  instanceId: string,
+  resourceURL: JRResourceURL,
+  xml: string | undefined
+) => {
   if (xml) {
     return new LastSavedInstanceSource(domElement, instanceId, resourceURL, xml);
   }
   return new BlankSecondaryInstanceSource(instanceId, resourceURL, domElement);
-}
+};
 
 export class SecondaryInstancesDefinition
   extends Map<string, SecondaryInstanceRootDefinition>
   implements XFormsSecondaryInstanceMap<EngineXPathNode>
 {
-
   readonly hasLastSaved: boolean;
   private lastSaved: SecondaryInstanceSource | undefined;
 
@@ -146,7 +150,7 @@ export class SecondaryInstancesDefinition
         return [root.getAttributeValue('id'), root];
       })
     );
-    this.lastSaved = sources.find(source => source.resourceURL?.isLastSavedInstance());
+    this.lastSaved = sources.find((source) => source.resourceURL?.isLastSavedInstance());
     this.hasLastSaved = !!this.lastSaved;
   }
 }
