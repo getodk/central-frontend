@@ -13,6 +13,7 @@ type FetchCall = [input: RequestInfo | URL, init?: RequestInit];
 vi.mock('../../src/utils/last-saved.ts', () => ({
   getLastSaved: vi.fn().mockResolvedValue(undefined),
   setLastSaved: vi.fn().mockResolvedValue(undefined),
+  deleteLastSaved: vi.fn().mockResolvedValue(undefined),
 }));
 
 describe('Sentry headers', () => {

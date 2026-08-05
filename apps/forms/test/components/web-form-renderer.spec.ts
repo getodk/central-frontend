@@ -28,6 +28,7 @@ const router = createRouter({
 vi.mock('../../src/utils/last-saved.ts', () => ({
   getLastSaved: vi.fn().mockResolvedValue(undefined),
   setLastSaved: vi.fn().mockResolvedValue(undefined),
+  deleteLastSaved: vi.fn().mockResolvedValue(undefined),
 }));
 
 const i18n = createI18n({
