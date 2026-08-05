@@ -23,20 +23,10 @@ https://github.com/apertureless/vue-password-strength-meter -->
 import { computed } from 'vue';
 
 const props = defineProps({
-  password: {
-    type: String,
+  score: {
+    type: Number,
     required: true
   }
-});
-
-const score = computed(() => {
-  const { length } = props.password;
-  if (length === 0) return 0;
-  if (length < 8) return 1;
-  if (length < 10) return 2;
-  if (length < 12) return 3;
-  if (length < 14) return 4;
-  return 5;
 });
 </script>
 

@@ -24,7 +24,11 @@ except according to the terms contained in the LICENSE file.
           autocomplete="current-password"/>
         <form-group id="user-edit-password-new-password" v-model="newPassword"
           type="password" :placeholder="$t('field.newPassword')" required
-          :has-error="tooShort || mismatch" autocomplete="new-password"/>
+          :has-error="tooShort || mismatch" autocomplete="new-password">
+          <template v-slot:after>
+            <password-strength :score="passwordStrength"/>
+          </template>
+        </form-group>
         <form-group id="user-edit-password-confirm" v-model="confirm"
           type="password" :placeholder="$t('field.passwordConfirm')" required
           :has-error="mismatch" autocomplete="new-password"/>
@@ -40,6 +44,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import FormGroup from '../../form-group.vue';
+import PasswordStrength from '../../password-strength.vue';
 import Spinner from '../../spinner.vue';
 
 import useRequest from '../../../composables/request';
@@ -49,7 +54,7 @@ import { useRequestData } from '../../../request-data';
 
 export default {
   name: 'UserEditPassword',
-  components: { FormGroup, Spinner },
+  components: { FormGroup, PasswordStrength, Spinner },
   inject: ['alert', 'config'],
   setup() {
     const { currentUser, user } = useRequestData();
@@ -62,13 +67,24 @@ export default {
       newPassword: '',
       tooShort: false,
       confirm: '',
-      mismatch: false
+      mismatch: false,
+      passwordStrength: 0,
     };
   },
   methods: {
     validate() {
       this.tooShort = false;
       this.mismatch = false;
+
+      this.passwordStrength = (() => {
+        const { length } = this.newPassword;
+        if (length === 0) return 0;
+        if (length < 8) return 1;
+        if (length < 10) return 2;
+        if (length < 12) return 3;
+        if (length < 14) return 4;
+        return 5;
+      })();
 
       if (this.newPassword.length < 10) {
         this.alert.danger(this.$t('alert.passwordTooShort'));
