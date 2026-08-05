@@ -38,8 +38,7 @@ describe('SubmissionMetadataRow', () => {
   it('shows the row number', () => {
     testData.extendedForms.createPast(1, { submissions: 1000 });
     testData.extendedSubmissions.createPast(1);
-    const td = mountComponent({ rowNumber: 1000 }).get('td');
-    td.classes('row-number').should.be.true;
+    const td = mountComponent({ rowNumber: 1000 }).get('.row-number');
     td.text().should.equal('1000');
   });
 
@@ -48,8 +47,7 @@ describe('SubmissionMetadataRow', () => {
       mockLogin({ displayName: 'Alice Allison' });
       testData.extendedSubmissions.createPast(1);
       const row = mountComponent({ draft: false });
-      const td = row.findAll('td')[1];
-      td.classes('submitter-name').should.be.true;
+      const td = row.get('.submitter-name');
       td.text().should.equal('Alice Allison');
       await td.get('span').should.have.textTooltip();
     });
@@ -234,17 +232,17 @@ describe('SubmissionMetadataRow', () => {
     row.findAll('.btn-group > *').length.should.equal(1);
   });
 
-  it('does not render the "State and actions" column for a form draft', () => {
+  it('does not render the "State" column for a form draft', () => {
     testData.extendedForms.createPast(1, { draft: true, submissions: 1 });
     testData.extendedSubmissions.createPast(1);
     const row = mountComponent({ draft: true });
-    row.find('.state-and-actions').exists().should.be.false;
+    row.find('.state').exists().should.be.false;
   });
 
   describe('deleted', () => {
     it('shows the deleted date', () => {
       const { deletedAt } = testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() }).last();
-      mountComponent({ deleted: true }).get('.state-and-actions').getComponent(DateTime).props().iso.should.equal(deletedAt);
+      mountComponent({ deleted: true }).get('.col-deleted-at').getComponent(DateTime).props().iso.should.equal(deletedAt);
     });
 
     it('does not have delete button', () => {
