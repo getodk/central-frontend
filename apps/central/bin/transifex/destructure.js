@@ -21,7 +21,7 @@ for (const basename of fs.readdirSync('transifex')) {
   console.log(`destructuring ${locale}`);
 
   const json = fs.readFileSync(`transifex/${basename}`).toString();
-  const translated = doDestructure(json, locale);
+  const translated = doDestructure(json, locale); // eslint-disable-line no-use-before-define
   rekeyTranslations(sourceMessages, translated, transifexPaths);
   writeTranslations(
     locale,
@@ -33,7 +33,7 @@ for (const basename of fs.readdirSync('transifex')) {
 }
 console.log('done');
 
-function doDestructure(json, locale) {
+function doDestructure(json, locale) { // eslint-disable-line consistent-return
   try {
     return destructure(json, locale);
   } catch (err) {
