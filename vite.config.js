@@ -118,9 +118,8 @@ export default defineConfig(({ mode }) => ({
   },
   // Not sure why this is needed in addition to build.target above and why it's
   // only an issue in development. `npm run dev` doesn't work without this.
-  optimizeDeps: {
-    include: ['zxcvbn'],
-    ...(mode === 'development' ? { esbuildOptions: { target: buildTarget } } : {}),
-  },
+  optimizeDeps: mode === 'development'
+    ? { esbuildOptions: { target: buildTarget } }
+    : {},
   server: devServer
 }));
