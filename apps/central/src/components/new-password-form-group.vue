@@ -12,7 +12,7 @@ import FormGroup from '../../form-group.vue';
 import PasswordStrength from '../../password-strength.vue';
 
 export default {
-  name: 'NewPaswordFormGroup',
+  name: 'NewPasswordFormGroup',
   components: { FormGroup, PasswordStrength },
   inject: ['alert', 'config'],
   setup() {

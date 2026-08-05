@@ -134,6 +134,7 @@ except according to the terms contained in the LICENSE file.
 import DocLink from '../doc-link.vue';
 import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
+import NewPasswordFormGroup from '../new-password-form-group.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
 
@@ -144,7 +145,7 @@ import { useRequestData } from '../../request-data';
 
 export default {
   name: 'ProjectEnableEncryption',
-  components: { DocLink, FormGroup, Modal, SentenceSeparator, Spinner },
+  components: { DocLink, FormGroup, Modal, NewPasswordFormGroup, SentenceSeparator, Spinner },
   inject: ['redAlert'],
   props: {
     state: {
