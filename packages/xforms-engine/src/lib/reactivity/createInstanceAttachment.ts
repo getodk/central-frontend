@@ -1,4 +1,5 @@
 import { createMemo, createSignal, type Setter } from 'solid-js';
+import { AttachmentNotFoundError } from '../../error/AttachmentNotFoundError.ts';
 import { ErrorProductionDesignPendingError } from '../../error/ErrorProductionDesignPendingError.ts';
 import type { InstanceAttachmentFileName } from '../../instance/attachments/InstanceAttachment.ts';
 import { InstanceAttachment } from '../../instance/attachments/InstanceAttachment.ts';
@@ -60,11 +61,13 @@ export type InstanceAttachmentFormDataEntry = readonly [
   value: NonNullable<InstanceAttachmentRuntimeValue>,
 ];
 
+export type AttachmentLoadingError = 'network-error' | 'not-found';
+
 interface InstanceAttachmentValueOptions {
   readonly writtenAt?: Date;
   readonly file?: InstanceAttachmentRuntimeValue;
   readonly loading?: boolean;
-  readonly error?: boolean;
+  readonly error?: AttachmentLoadingError;
 }
 
 export interface BaseInstanceAttachmentState {
@@ -72,7 +75,7 @@ export interface BaseInstanceAttachmentState {
   readonly intrinsicName: string | null;
   readonly file: InstanceAttachmentRuntimeValue;
   readonly loading: boolean;
-  readonly loadingError: boolean;
+  readonly loadingError: AttachmentLoadingError | false;
   readonly dirty: boolean;
 }
 
@@ -159,9 +162,10 @@ const resolveFile = (
         return prev.dirty ? prev : instanceAttachmentState(context, { file });
       });
     })
-    .catch(() => {
+    .catch((error: unknown) => {
+      const errorType = error instanceof AttachmentNotFoundError ? 'not-found' : 'network-error';
       setState((prev) => {
-        return prev.dirty ? prev : instanceAttachmentState(context, { error: true });
+        return prev.dirty ? prev : instanceAttachmentState(context, { error: errorType });
       });
     });
 };

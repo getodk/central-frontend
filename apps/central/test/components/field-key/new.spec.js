@@ -1,3 +1,5 @@
+import { nextTick } from 'vue';
+
 import FieldKeyNew from '../../../src/components/field-key/new.vue';
 import FieldKeyQrPanel from '../../../src/components/field-key/qr-panel.vue';
 
@@ -29,9 +31,10 @@ describe('FieldKeyNew', () => {
     });
   });
 
-  it('focuses the input', () => {
+  it('focuses the input', async () => {
     testData.extendedProjects.createPast(1);
     const modal = mount(FieldKeyNew, mountOptions({ attachTo: document.body }));
+    await nextTick();
     modal.get('input').should.be.focused();
   });
 

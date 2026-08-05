@@ -96,5 +96,4 @@ export type OpaqueReactiveObjectFactory<Input extends object = object> =
 	// Possibly a TypeScript bug? The order of this intersection matters! Changing
 	// the order causes types in `createClientState.ts` to fail inexplicably.
 	& BaseOpaqueReactiveObjectFactory<Input>
-	& ((object: object) => unknown)
-	;
+	& ((object: object) => unknown);

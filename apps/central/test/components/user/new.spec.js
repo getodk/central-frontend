@@ -1,3 +1,5 @@
+import { nextTick } from 'vue';
+
 import UserNew from '../../../src/components/user/new.vue';
 import UserRow from '../../../src/components/user/row.vue';
 
@@ -39,11 +41,12 @@ describe('UserNew', () => {
     });
   });
 
-  it('focuses the email input', () => {
+  it('focuses the email input', async () => {
     const modal = mount(UserNew, {
       props: { state: true },
       attachTo: document.body
     });
+    await nextTick();
     modal.get('input[type="email"]').should.be.focused();
   });
 

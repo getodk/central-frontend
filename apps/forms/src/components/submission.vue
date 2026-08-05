@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, defineAsyncComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { captureException } from '@sentry/vue';
 import {
   type Form,
   getFormByEnketoId,
@@ -15,6 +14,7 @@ import {
 } from '../utils/api.ts';
 import Dialog from 'primevue/dialog';
 import { hideSpinner } from '../utils/spinner.ts';
+import { getDefaultParameters } from '../utils/default-parameters.ts';
 
 const props = defineProps({
   draft: Boolean,
@@ -59,6 +59,7 @@ const enketoId = computed(() => route.params.enketoId ? encodeURIComponent(route
 const st = computed(() => route.query.st ? route.query.st as string : null);
 const useWebForms = computed(() => route.query.webforms === 'true');
 const offline = computed(() => route.params.offline === 'offline');
+const defaultParameters = computed(() => getDefaultParameters(route.query, props.actionType));
 const webFormsEnabled = ref(true);
 
 const form = ref<Form>();
@@ -212,7 +213,6 @@ const load = async () => {
         errorCode.value = e.statusCode ?? 500;
       }
     } else {
-      captureException(e);
       errorCode.value = 500;
     }
     hideSpinner();
@@ -256,6 +256,7 @@ load();
         :instance-id="instanceId"
         :action-type="props.actionType ?? 'new'"
         :submission-attachments="submissionAttachments"
+        :default-parameters="defaultParameters"
         :st="st"
       />
     </template>

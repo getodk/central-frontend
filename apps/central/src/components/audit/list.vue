@@ -77,7 +77,7 @@ const fetchData = () => audits.request({
   url: apiPaths.audits({
     action: action.value,
     start: dateRange.value[0].toISO(),
-    end: dateRange.value[1].endOf('day').toISO()
+    end: dateRange.value[1].plus({ days: 1 }).startOf('day').toISO(),
   }),
   extended: true
 }).catch(noop);

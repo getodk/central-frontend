@@ -14,11 +14,16 @@ const getRandomId = () => {
 };
 
 export const getDeviceId = () => {
-  const existingDeviceId = localStorage.getItem(DEVICE_ID_KEY);
-  if (existingDeviceId) {
-    return existingDeviceId;
+  try {
+    const existingDeviceId = localStorage.getItem(DEVICE_ID_KEY);
+    if (existingDeviceId) {
+      return existingDeviceId;
+    }
+    const deviceId = `${DEVICE_ID_PREFIX}:${getRandomId()}`;
+    localStorage.setItem(DEVICE_ID_KEY, deviceId);
+    return deviceId;
+  } catch {
+    // localStorage not available
+    return;
   }
-  const deviceId = `${DEVICE_ID_PREFIX}:${getRandomId()}`;
-  localStorage.setItem(DEVICE_ID_KEY, deviceId);
-  return deviceId;
 };

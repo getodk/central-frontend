@@ -10,13 +10,12 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 
-<!-- This component should not use v-bind:class on the .modal element. Bootstrap
-may add the `in` class to the element, and the checkScroll() method may add the
-`has-scroll` class. -->
+<!-- This component should not use v-bind:class on the .modal element. The
+checkScroll() method may add the `has-scroll` class. -->
 <template>
   <teleport-if-exists to="#modals">
-    <div ref="el" v-bind="$attrs" class="modal" tabindex="-1"
-      :data-backdrop="backdrop ? 'static' : 'false'" data-keyboard="false"
+    <div v-show="state" ref="el" v-bind="$attrs" class="modal" tabindex="-1"
+      :style="backdrop ? { backgroundColor: 'rgba(0, 0, 0, 0.5)' } : null"
       role="dialog" :aria-labelledby="titleId" @mousedown="modalMousedown"
       @click="modalClick" @keydown.esc="hideIfCan" @focusout="refocus">
       <div class="modal-dialog" :class="sizeClass" role="document">
@@ -48,25 +47,13 @@ let id = 0;
 </script>
 <script setup>
 import { computed, inject, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-import 'bootstrap/js/modal';
 
 import RedAlert from './red-alert.vue';
 import TeleportIfExists from './teleport-if-exists.vue';
 
-import { noop } from '../util/util';
-
 /*
-We manually toggle the modal:
-
-  - If the `backdrop` prop is `true`, we specify data-backdrop="static" rather
-    than "true". We also add our own event listeners.
-  - We specify data-keyboard="false" and add our own event listener.
-
-We do this for two reasons:
-
-  - It simplifies communication with the parent component: the modal hides only
-    after the parent component sets the `state` prop to `false`.
-  - It is needed to implement the `hideable` prop.
+Previously this component relied on bootstrap/modal.js plugin. Now it only relies
+on bootstrap's css.
 */
 
 defineOptions({
@@ -82,28 +69,33 @@ const props = defineProps({
     type: String,
     default: 'normal'
   },
+  // Shows a dark overlay behind the modal
   backdrop: Boolean
 });
-const emit = defineEmits(['shown', 'hide', 'resize', 'mutate']);
+const emit = defineEmits(['shown', 'hide', 'mutate']);
 
 const { toast, redAlert, openModal } = inject('container');
 
 const el = ref(null);
 const body = ref(null);
 
-// The modal() method of the Boostrap plugin
-let bs;
+let attachedToDocument = false;
+
 onMounted(() => {
-  if (el.value.closest('body') != null) {
-    const wrapper = $(el.value);
-    bs = wrapper.modal.bind(wrapper);
-  } else {
-    // We do not call modal() if the component is not attached to the document,
-    // because modal() can have side effects on the document. Most tests do not
-    // attach the component to the document.
-    bs = noop;
-  }
+  // Check if the component is attached to the document. Most tests do not
+  // attach the component to the document.
+  attachedToDocument = el.value.closest('body') != null;
 });
+
+const addModalOpenClass = () => {
+  if (!attachedToDocument) return;
+  document.body.classList.add('modal-open');
+};
+
+const removeModalOpenClass = () => {
+  if (!attachedToDocument) return;
+  document.body.classList.remove('modal-open');
+};
 
 /*
 Showing a modal hides alerts, both `toast` and `redAlert`. A modal is a new
@@ -149,28 +141,16 @@ const checkScroll = () => {
     el.value.classList.remove('has-scroll');
 };
 
-let bodyHeight = 0;
-const handleHeightChange = () => {
-  // Call checkScroll() before measuring the height, as the has-scroll class can
-  // affect the height.
-  checkScroll();
-  const newHeight = body.value.getBoundingClientRect().height;
-  if (newHeight !== bodyHeight) {
-    bs('handleUpdate');
-    bodyHeight = newHeight;
-    emit('resize', newHeight);
-  }
-};
 const handleWindowResize = () => {
   // Most of the time, a window resize won't affect the height of the modal.
   // However, if props.size === 'full', it could.
-  if (props.state && props.size === 'full') handleHeightChange();
+  if (props.state && props.size === 'full') checkScroll();
 };
 
 let ignoreMutation = false;
 const observer = new MutationObserver(() => {
   if (!props.state) return;
-  handleHeightChange();
+  checkScroll();
   if (!ignoreMutation) {
     emit('mutate');
     // Ignore mutations for a tick, effectively ignoring any mutations that the
@@ -185,9 +165,8 @@ const observer = new MutationObserver(() => {
 });
 
 const show = () => {
-  bs('show');
+  addModalOpenClass();
   checkScroll();
-  bodyHeight = body.value.getBoundingClientRect().height;
   observer.observe(body.value, {
     subtree: true,
     childList: true,
@@ -195,8 +174,8 @@ const show = () => {
     characterData: true
   });
   window.addEventListener('resize', handleWindowResize);
-  emit('shown');
-  emit('resize', bodyHeight);
+  // Emit shown after nextTick to ensure DOM is updated (v-show has made element visible)
+  nextTick(() => { emit('shown'); });
   openModal.shown(el.value);
 };
 const removeSelection = () => {
@@ -207,12 +186,10 @@ const removeSelection = () => {
 };
 const hide = () => {
   observer.disconnect();
-  bs('hide');
+  removeModalOpenClass();
   el.value.classList.remove('has-scroll');
-  bodyHeight = 0;
   window.removeEventListener('resize', handleWindowResize);
   removeSelection();
-  emit('resize', 0);
   openModal.hidden();
 };
 watch(() => props.state, (state) => {
@@ -273,6 +250,11 @@ const titleId = `modal-title${id}`;
 
 <style lang="scss">
 @import '../assets/scss/mixins';
+
+// Override Bootstrap's display:none so v-show can control visibility
+.modal {
+  display: block;
+}
 
 .modal-dialog {
   margin-top: 20vh;

@@ -1,3 +1,5 @@
+import { nextTick } from 'vue';
+
 import FormDraftPublish from '../../../src/components/form-draft/publish.vue';
 import FormVersionRow from '../../../src/components/form-version/row.vue';
 
@@ -138,6 +140,7 @@ describe('FormDraftPublish', () => {
         attachTo: document.body
       }));
       await modal.setProps({ state: true });
+      await nextTick();
       modal.get('input').should.be.focused();
     });
 
@@ -174,6 +177,7 @@ describe('FormDraftPublish', () => {
         attachTo: document.body
       }));
       await modal.setProps({ state: true });
+      await nextTick();
       modal.get('textarea').should.be.focused();
     });
 

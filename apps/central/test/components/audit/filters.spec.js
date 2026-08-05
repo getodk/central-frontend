@@ -134,7 +134,7 @@ describe('AuditFilters', () => {
           DateTime.fromISO(start).zoneName.should.equal(Settings.defaultZoneName);
 
           const end = params.get('end');
-          end.should.startWith('2023-01-31T23:59:59.999');
+          end.should.startWith('2023-02-01T00:00:00.000');
           DateTime.fromISO(end).zoneName.should.equal(Settings.defaultZoneName);
         }));
 
@@ -151,7 +151,7 @@ describe('AuditFilters', () => {
         .beforeEachResponse((_, { url }) => {
           const params = relativeUrl(url).searchParams;
           params.get('start').should.startWith('2023-02-01T00:00:00.000');
-          params.get('end').should.startWith('2023-02-01T23:59:59.999');
+          params.get('end').should.startWith('2023-02-02T00:00:00.000');
         }));
 
     describe('invalid query parameters', () => {
@@ -172,7 +172,7 @@ describe('AuditFilters', () => {
             .beforeEachResponse((_, { url }) => {
               const params = relativeUrl(url).searchParams;
               params.get('start').should.startWith('2023-02-01T00:00:00.000');
-              params.get('end').should.startWith('2023-02-01T23:59:59.999');
+              params.get('end').should.startWith('2023-02-02T00:00:00.000');
             }));
       }
     });
@@ -190,7 +190,7 @@ describe('AuditFilters', () => {
           .beforeEachResponse((_, { url }) => {
             const params = relativeUrl(url).searchParams;
             params.get('start').should.startWith('2023-01-01T00:00:00.000');
-            params.get('end').should.startWith('2023-01-31T23:59:59.999');
+            params.get('end').should.startWith('2023-02-01T00:00:00.000');
           })
           .respondWithData(() => testData.extendedAudits.sorted()));
 
@@ -224,7 +224,7 @@ describe('AuditFilters', () => {
           .beforeEachResponse((_, { url }) => {
             const params = relativeUrl(url).searchParams;
             params.get('start').should.startWith('2023-01-01T00:00:00.000');
-            params.get('end').should.startWith('2023-01-31T23:59:59.999');
+            params.get('end').should.startWith('2023-02-01T00:00:00.000');
           })
           .respondWithData(() => testData.extendedAudits.sorted()));
 
