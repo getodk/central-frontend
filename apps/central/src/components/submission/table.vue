@@ -14,10 +14,11 @@ except according to the terms contained in the LICENSE file.
     :data="chunkyOData" key-prop="__id" :frozen-only="fields == null" divider
     @action="handleActions">
     <template #head-frozen>
+      <th class="col-actions"></th>
       <th><span class="sr-only">{{ $t('common.rowNumber') }}</span></th>
       <th v-if="!draft">{{ $t('header.submitterName') }}</th>
       <th>{{ $t('header.submissionDate') }}</th>
-      <th v-if="!draft && !deleted">{{ $t('header.stateAndActions') }}</th>
+      <th v-if="!draft && !deleted">{{ $t('header.state') }}</th>
       <th v-if="!draft && deleted" class="col-deleted-at">{{ $t('header.deletedAt') }}</th>
     </template>
     <template #head-scrolling>
@@ -117,6 +118,10 @@ defineExpose({ afterReview, afterDelete });
   }
 
   th.col-deleted-at { color: $color-danger; }
+  .col-actions {
+    padding: 0;
+    width: 0;
+  }
 }
 </style>
 
@@ -124,7 +129,7 @@ defineExpose({ afterReview, afterDelete });
 {
   "en": {
     "header": {
-      "stateAndActions": "State and actions",
+      "state": "State",
       // Heading of the column that shows Submission deletion timestamp
       "deletedAt": "Deleted at"
     }

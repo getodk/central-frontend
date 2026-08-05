@@ -14,13 +14,14 @@ except according to the terms contained in the LICENSE file.
     :data="odataEntities.value" key-prop="__id"
     :frozen-only="properties == null" divider @action="afterAction">
     <template #head-frozen>
+      <th class="col-actions"></th>
       <th><span class="sr-only">{{ $t('common.rowNumber') }}</span></th>
       <th v-if="!deleted && project.verbs.has('entity.delete')">
         <input type="checkbox" :aria-label="$t('action.selectRow')" :checked="allSelected" @change="changeAllSelection($event.target.checked)">
       </th>
       <th>{{ $t('header.createdBy') }}</th>
       <th>{{ $t('header.createdAt') }}</th>
-      <th v-if="!deleted">{{ $t('header.updatedAtAndActions') }}</th>
+      <th v-if="!deleted">{{ $t('header.updatedAt') }}</th>
       <th v-else class="col-deleted-at">{{ $t('header.deletedAt') }}</th>
     </template>
     <template #head-scrolling>
@@ -141,7 +142,12 @@ defineExpose({ afterUpdate, afterDelete });
     margin-top: 0;
   }
 
-th.col-deleted-at { color: $color-danger; }
+  th.col-deleted-at { color: $color-danger; }
+
+  .col-actions {
+    width: 0;
+    padding: 0;
+  }
 }
 </style>
 
@@ -150,9 +156,8 @@ th.col-deleted-at { color: $color-danger; }
   "en": {
     "header": {
       // This is the text of a column header of a table of Entities. The column
-      // shows when each Entity was last updated, as well as actions that can be
-      // taken on the Entity.
-      "updatedAtAndActions": "Last Updated / Actions",
+      // shows when each Entity was last updated.
+      "updatedAt": "Last Updated",
       // Heading of the column that shows Entity deletion timestamp
       "deletedAt": "Deleted at"
     }
