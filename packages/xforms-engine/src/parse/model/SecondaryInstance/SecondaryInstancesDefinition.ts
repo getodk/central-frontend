@@ -18,7 +18,6 @@ import { GeoJSONExternalSecondaryInstanceSource } from './sources/GeoJSONExterna
 import { InternalSecondaryInstanceSource } from './sources/InternalSecondaryInstanceSource.ts';
 import type { SecondaryInstanceSource } from './sources/SecondaryInstanceSource.ts';
 import { XMLExternalSecondaryInstanceSource } from './sources/XMLExternalSecondaryInstanceSource.ts';
-import { LastSavedInstanceSource } from './sources/LastSavedInstanceSource.ts';
 
 export interface SecondaryInstanceDefinition extends StaticDocument {
   readonly rootDocument: SecondaryInstanceDefinition;
@@ -43,7 +42,8 @@ const createLastSavedInstance = (
   xml: string | undefined
 ) => {
   if (xml) {
-    return new LastSavedInstanceSource(domElement, instanceId, resourceURL, xml);
+    const resource = ExternalSecondaryInstanceResource.loadXml(instanceId, resourceURL, xml);
+    return new XMLExternalSecondaryInstanceSource(domElement, resource);
   }
   return new BlankSecondaryInstanceSource(instanceId, resourceURL, domElement);
 };
@@ -64,28 +64,6 @@ export class SecondaryInstancesDefinition
       this.set(instanceId, root);
     }
   };
-
-  /**
-   * @package Only to be used for testing
-   */
-  // TODO Investigate replacing this with the async version so tests are actually testing prod code
-  static loadSync(xformDOM: XFormDOM): SecondaryInstancesDefinition {
-    const { secondaryInstanceElements } = xformDOM;
-    const sources = secondaryInstanceElements.map((domElement) => {
-      const instanceId = domElement.getAttribute('id');
-      const src = domElement.getAttribute('src');
-
-      if (src != null) {
-        throw new ErrorProductionDesignPendingError(
-          `Unexpected external secondary instance src attribute: ${src}`
-        );
-      }
-
-      return new InternalSecondaryInstanceSource(instanceId, src, domElement);
-    });
-
-    return new this(sources);
-  }
 
   static async load(
     xformDOM: XFormDOM,

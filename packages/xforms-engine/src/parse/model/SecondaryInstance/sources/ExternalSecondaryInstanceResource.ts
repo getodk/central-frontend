@@ -107,6 +107,16 @@ export class ExternalSecondaryInstanceResource<
     throw new SecondaryInstanceResourceLoadingError(resourceURL, response);
   }
 
+  static loadXml(
+    instanceId: string,
+    resourceURL: JRResourceURL,
+    data: string
+  ): ExternalSecondaryInstanceResource<'xml'> {
+    return new this(null, instanceId, resourceURL, 'xml', data, {
+      isExplicitlyBlank: false,
+    });
+  }
+
   static async load(
     instanceId: string,
     resourceURL: JRResourceURL,
