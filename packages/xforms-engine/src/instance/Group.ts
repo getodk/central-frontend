@@ -37,6 +37,7 @@ interface GroupStateSpec extends DescendantNodeSharedStateSpec {
 	readonly hint: null;
 	readonly children: Accessor<readonly FormNodeID[]>;
 	readonly hasRelevantBodyNodes: Accessor<boolean>;
+	readonly hasBodyNodesOnCurrentPage: Accessor<boolean>;
 	readonly attributes: Accessor<readonly Attribute[]>;
 	readonly valueOptions: null;
 	readonly value: null;
@@ -93,6 +94,7 @@ export class Group
         hint: null,
         children: childrenState.childIds,
         hasRelevantBodyNodes: this.hasRelevantBodyNodes,
+        hasBodyNodesOnCurrentPage: this.hasBodyNodesOnCurrentPage,
         attributes: this.attributeState.getAttributes,
         valueOptions: null,
         value: null,
