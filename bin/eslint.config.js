@@ -9,10 +9,12 @@ export default defineConfig(
         ...globals.node
       },
     },
-		extends: [
-			eslint.configs.recommended,
+    extends: [
+      eslint.configs.recommended,
     ],
     rules: {
+      'eol-last': 'error',
+      'indent': [ 'error', 2, { SwitchCase:1, MemberExpression:2 } ],
       'no-trailing-spaces': 'error',
     },
   }

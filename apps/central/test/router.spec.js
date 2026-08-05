@@ -121,6 +121,13 @@ describe('createCentralRouter()', () => {
   describe('redirects', () => {
     beforeEach(mockLogin);
 
+    it('redirects from a parent route', () =>
+      load('/account')
+        .respondFor('/')
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/');
+        }));
+
     it('redirects to .../submissions from root path of form', async () => {
       testData.extendedForms.createPast(1);
       return load('/projects/1/forms/f/settings')

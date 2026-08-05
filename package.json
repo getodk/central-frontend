@@ -9,7 +9,9 @@
     "build": "turbo run build",
     "build:web": "vite build",
     "changeset": "changeset",
-    "eslint": "eslint bin/ e2e-tests/ *.js -c bin/eslint.config.js --cache --max-warnings 0",
+    "eslint": "npm-run-all -p eslint:bin eslint:e2e-tests",
+    "eslint:bin": "eslint bin/ *.js -c bin/eslint.config.js --cache --cache-location .bin.eslintcache --max-warnings 0",
+    "eslint:e2e-tests": "eslint e2e-tests/ *.js -c e2e-tests/eslint.config.js --cache --cache-location .e2e.eslintcache --max-warnings 0",
     "lint": "npm-run-all -p eslint 'lint --workspaces'",
     "lint:fix": "npm run lint:fix --workspaces",
     "test": "npm run test --workspaces",
@@ -26,7 +28,7 @@
   ],
   "dependencies": {
     "@sentry/vue": "10.55",
-    "vue": "^3.5.29",
+    "vue": "^3.5.39",
     "vue-router": "^4.6.3"
   },
   "devDependencies": {
@@ -44,10 +46,10 @@
     "@typescript-eslint/eslint-plugin": "^8.57.0",
     "@typescript-eslint/parser": "^8.57.0",
     "@vitejs/plugin-vue": "^6.0.6",
-    "@vitest/browser-playwright": "^4.0.18",
+    "@vitest/browser-playwright": "^4.1.9",
     "@vue/eslint-config-prettier": "^10.2.0",
     "@vue/eslint-config-typescript": "^14.7.0",
-    "@vue/test-utils": "^2.4.6",
+    "@vue/test-utils": "^2.4.11",
     "@vue/tsconfig": "^0.8.1",
     "adm-zip": "^0.5.17",
     "eslint": "^10.0.3",
@@ -64,7 +66,7 @@
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.57.0",
     "vite": "^7.3.1",
-    "vitest": "^4.0.18",
+    "vitest": "^4.1.9",
     "vue-tsc": "^3.1.5"
   },
   "engines": {

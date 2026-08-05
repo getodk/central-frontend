@@ -67,7 +67,7 @@
     "babel-plugin-transform-jsbi-to-bigint": "^1.4.2",
     "jsdom": "^27.2.0",
     "typescript": "~5.9.3",
-    "vite-plugin-babel": "^1.5.1",
+    "vite-plugin-babel": "^1.7.3",
     "vite-plugin-dts": "^4.5.4",
     "vite-plugin-no-bundle": "^4.0.0",
     "web-tree-sitter": "0.24.5"

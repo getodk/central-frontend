@@ -2,7 +2,7 @@ export const changeMultiselect = (selector, selectedIndexes) => async (component
   if (component.element.getRootNode() !== document)
     throw new Error('component must be attached to the body');
   const multiselect = component.get(selector);
-  const toggle = multiselect.get('select');
+  const toggle = multiselect.get('.dropdown-trigger');
   await toggle.trigger('click');
   await multiselect.get('.select-none').trigger('click');
   const inputs = multiselect.findAll('input[type="checkbox"]');

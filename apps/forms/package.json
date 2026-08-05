@@ -10,13 +10,13 @@
   },
   "dependencies": {
     "primevue": "4.3.3",
-    "vue": "^3.5.29",
+    "vue": "^3.5.39",
     "vue-i18n": "^10.0.7",
     "vue-router": "^4.6.3"
   },
   "devDependencies": {
-    "@vue/test-utils": "^2.4.6",
+    "@vue/test-utils": "^2.4.11",
     "jsdom": "^27.4.0",
-    "vitest": "^4.0.18"
+    "vitest": "^4.1.9"
   }
 }

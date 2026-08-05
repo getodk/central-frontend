@@ -1,12 +1,13 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { Scenario } from '../scenario/jr/Scenario.ts';
-import { r } from '../scenario/jr/resource/ResourcePathHelper.ts';
+
+import range from '../scenario/fixtures/test-javarosa/resources/range-form.xml?raw';
 
 describe('Range', () => {
   let scenario: Scenario;
 
   beforeEach(async () => {
-    scenario = await Scenario.init(r('range-form.xml'));
+    scenario = await Scenario.init(range);
   });
 
   it('should allow range to be read', () => {

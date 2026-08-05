@@ -1,5 +1,12 @@
 # @getodk/forms
 
+## 2026.2.1
+
+### Patch Changes
+
+- 1f33497: Stops Sentry from attaching trace headers to attachment requests.
+- 238035c: Reduces sentry warnings for requests that don't respond
+
 ## 2026.2.0
 
 ### Minor Changes

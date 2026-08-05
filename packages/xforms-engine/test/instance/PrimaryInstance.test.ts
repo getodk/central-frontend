@@ -92,6 +92,7 @@ describe('PrimaryInstance engine representation of instance state', () => {
           clientStateFactory,
           computeAttachmentName: () => null,
           preloadProperties: {},
+          instanceDefaults: {},
           geolocationProvider: { getLocation: () => Promise.resolve('') },
         },
       });
@@ -272,6 +273,7 @@ describe('PrimaryInstance engine representation of instance state', () => {
                 clientStateFactory: mutable,
                 computeAttachmentName: () => null,
                 preloadProperties: {},
+                instanceDefaults: {},
                 geolocationProvider: { getLocation: () => Promise.resolve('') },
               },
             }).root.languages

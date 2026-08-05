@@ -24,7 +24,7 @@ import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
 import { createAggregatedViolations } from '../lib/reactivity/validation/createAggregatedViolations.ts';
 import type { DescendantNodeSharedStateSpec } from './abstract/DescendantNode.ts';
 import { DescendantNode } from './abstract/DescendantNode.ts';
-import { buildAttributes } from './attachments/buildAttributes.ts';
+import { buildAttributes } from './buildAttributes.ts';
 import { Attribute } from './Attribute.ts';
 import { buildChildren } from './children/buildChildren.ts';
 import type { GeneralChildNode, GeneralParentNode } from './hierarchy.ts';

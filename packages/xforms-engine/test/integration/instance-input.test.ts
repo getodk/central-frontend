@@ -15,15 +15,9 @@ import {
   t,
   title,
 } from '@getodk/common/test-utils/xform-dsl/index.ts';
-import type {
-  InstanceData,
-  InstanceFile,
-  LoadFormWarnings,
-  RestoreFormInstanceInput,
-} from '@getodk/xforms-engine';
+import type { InstanceData, InstanceFile, RestoreFormInstanceInput } from '@getodk/xforms-engine';
 import { constants } from '@getodk/xforms-engine';
-import type { MockInstance } from 'vitest';
-import { afterEach, assert, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, assert, beforeEach, describe, expect, it } from 'vitest';
 import type { ComparableAnswer } from '../scenario/answer/ComparableAnswer.ts';
 import { intAnswer } from '../scenario/answer/ExpectedIntAnswer.ts';
 import { stringAnswer } from '../scenario/answer/ExpectedStringAnswer.ts';
@@ -53,29 +47,6 @@ describe.each<InstanceRoundTripCase>([
   };
 
   let cleanupCallbacks = Array<VoidFunction>();
-
-  class WarningTracker {
-    private readonly mock: MockInstance;
-    private readonly initialCallCount: number;
-
-    constructor() {
-      this.mock = vi.spyOn(console, 'warn');
-      this.initialCallCount = this.mock.mock.calls.length;
-
-      cleanupCallbacks.push(() => {
-        this.mock.mockRestore();
-      });
-    }
-
-    /**
-     * @todo when we actually design a way to convey
-     * {@link LoadFormWarnings | warnings} from the engine, this isn't
-     * even remotely how we'll do it or test for it!
-     */
-    assertExcessRepeatInstanceWarningProduced(): void {
-      expect(this.mock).toHaveBeenCalledTimes(this.initialCallCount + 1);
-    }
-  }
 
   const { INSTANCE_FILE_NAME, INSTANCE_FILE_TYPE } = constants;
 
@@ -716,9 +687,7 @@ describe.each<InstanceRoundTripCase>([
       );
 
       describe('excess count-controlled repeat instances', () => {
-        it('ignores repeat instances in excess of specified count', async () => {
-          const warningTracker = new WarningTracker();
-
+        it('retains repeat instances in excess of specified count', async () => {
           // prettier-ignore
           const serializedInput = t('data id="repeat-serde-count"',
 						t('rep-count', '2'),
@@ -739,10 +708,8 @@ describe.each<InstanceRoundTripCase>([
 
           const restored = await scenario.restoreWebFormsInstanceState(instanceInput);
 
-          warningTracker.assertExcessRepeatInstanceWarningProduced();
-
           expect(restored.answerOf('/data/rep-count')).toEqualAnswer(intAnswer(2));
-          expect(restored.countRepeatInstancesOf('/data/repeat')).toBe(2);
+          expect(restored.countRepeatInstancesOf('/data/repeat')).toBe(3);
 
           expect(restored.answerOf('/data/repeat[1]/inner1')).toEqualAnswer(intAnswer(1));
           expect(restored.answerOf('/data/repeat[1]/inner2')).toEqualAnswer(intAnswer(2));
@@ -750,6 +717,9 @@ describe.each<InstanceRoundTripCase>([
           expect(restored.answerOf('/data/repeat[2]/inner1')).toEqualAnswer(intAnswer(2));
           expect(restored.answerOf('/data/repeat[2]/inner2')).toEqualAnswer(intAnswer(4));
           expect(restored.answerOf('/data/repeat[2]/inner3')).toEqualAnswer(intAnswer(8));
+          expect(restored.answerOf('/data/repeat[3]/inner1')).toEqualAnswer(intAnswer(3));
+          expect(restored.answerOf('/data/repeat[3]/inner2')).toEqualAnswer(intAnswer(6));
+          expect(restored.answerOf('/data/repeat[3]/inner3')).toEqualAnswer(intAnswer(12));
         });
       });
     });
@@ -888,9 +858,7 @@ describe.each<InstanceRoundTripCase>([
       );
 
       describe('excess fixed repeat instances', () => {
-        it('ignores repeat instances in excess of specified count', async () => {
-          const warningTracker = new WarningTracker();
-
+        it('retains repeat instances in excess of specified count', async () => {
           // prettier-ignore
           const serializedInput = t('data id="repeat-serde-no-add-remove"',
 						t('repeat',
@@ -910,9 +878,7 @@ describe.each<InstanceRoundTripCase>([
 
           const restored = await scenario.restoreWebFormsInstanceState(instanceInput);
 
-          warningTracker.assertExcessRepeatInstanceWarningProduced();
-
-          expect(restored.countRepeatInstancesOf('/data/repeat')).toBe(2);
+          expect(restored.countRepeatInstancesOf('/data/repeat')).toBe(3);
 
           expect(restored.answerOf('/data/repeat[1]/inner1')).toEqualAnswer(intAnswer(1));
           expect(restored.answerOf('/data/repeat[1]/inner2')).toEqualAnswer(intAnswer(2));
@@ -920,6 +886,9 @@ describe.each<InstanceRoundTripCase>([
           expect(restored.answerOf('/data/repeat[2]/inner1')).toEqualAnswer(intAnswer(2));
           expect(restored.answerOf('/data/repeat[2]/inner2')).toEqualAnswer(intAnswer(4));
           expect(restored.answerOf('/data/repeat[2]/inner3')).toEqualAnswer(intAnswer(8));
+          expect(restored.answerOf('/data/repeat[3]/inner1')).toEqualAnswer(intAnswer(86));
+          expect(restored.answerOf('/data/repeat[3]/inner2')).toEqualAnswer(intAnswer(172));
+          expect(restored.answerOf('/data/repeat[3]/inner3')).toEqualAnswer(intAnswer(344));
         });
       });
     });

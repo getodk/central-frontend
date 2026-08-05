@@ -314,6 +314,7 @@ export default defineConfig(
 					allowInterfaces: 'with-single-extends',
 				},
 			],
+			'eol-last': 'error',
 			'prefer-const': 'error',
 
 			// Ensure Node built-ins aren't used by default
@@ -384,6 +385,7 @@ export default defineConfig(
 			'*/bin/**.js',
 			'*/playwright.config.ts',
 			'*/vite.config.ts',
+			'*/vite.config.e2e.ts',
 			'*/vitest.config.ts',
 			'xforms-engine/vite.*.config.ts',
 			'*/tools/**/*',
