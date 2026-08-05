@@ -22,16 +22,10 @@ except according to the terms contained in the LICENSE file.
         <form-group id="user-edit-password-old-password" v-model="oldPassword"
           type="password" :placeholder="$t('field.oldPassword')" required
           autocomplete="current-password"/>
-        <form-group id="user-edit-password-new-password" v-model="newPassword"
-          type="password" :placeholder="$t('field.newPassword')" required
-          :has-error="tooShort || mismatch" autocomplete="new-password">
-          <template v-slot:after>
-            <password-strength :score="passwordStrength"/>
-          </template>
-        </form-group>
-        <form-group id="user-edit-password-confirm" v-model="confirm"
-          type="password" :placeholder="$t('field.passwordConfirm')" required
-          :has-error="mismatch" autocomplete="new-password"/>
+        <new-password-form-group id="user-edit-password-new-password" v-model="newPassword"
+          type="password" :placeholder="$t('field.newPassword')" strengthMeter/>
+        <new-password-form-group id="user-edit-password-confirm" v-model="confirm"
+          type="password" :placeholder="$t('field.passwordConfirm')" :has-error="mismatch"/>
         <button type="submit" class="btn btn-primary"
           :aria-disabled="awaitingResponse">
           {{ $t('action.change') }} <spinner :state="awaitingResponse"/>
@@ -73,24 +67,9 @@ export default {
   },
   methods: {
     validate() {
-      this.tooShort = false;
       this.mismatch = false;
 
-      this.passwordStrength = (() => {
-        const { length } = this.newPassword;
-        if (length === 0) return 0;
-        if (length < 8) return 1;
-        if (length < 10) return 2;
-        if (length < 12) return 3;
-        if (length < 14) return 4;
-        return 5;
-      })();
-
-      if (this.newPassword.length < 10) {
-        this.alert.danger(this.$t('alert.passwordTooShort'));
-        this.tooShort = true;
-        return false;
-      }
+      // TODO check newPassword field
 
       if (this.confirm !== this.newPassword) {
         this.alert.danger(this.$t('alert.mismatch'));

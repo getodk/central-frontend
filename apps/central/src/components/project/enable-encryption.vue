@@ -94,9 +94,8 @@ except according to the terms contained in the LICENSE file.
           </i18n-t>
         </div>
         <form @submit.prevent="submit">
-          <form-group ref="passphrase" v-model="passphrase"
-            :placeholder="$t('field.passphrase')" required
-            autocomplete="new-password"/>
+          <new-password-form-group ref="passphrase" v-model="passphrase"
+            :placeholder="$t('field.passphrase')" strengthMeter/>
           <form-group v-model="hint" :placeholder="$t('field.hint')"
             autocomplete="off"/>
           <div class="modal-actions">
@@ -185,11 +184,6 @@ export default {
       });
     },
     submit() {
-      if (this.passphrase.length < 10) {
-        this.redAlert.show(this.$t('alert.passphraseTooShort'));
-        return;
-      }
-
       const data = { passphrase: this.passphrase };
       if (this.hint !== '') data.hint = this.hint;
       this.request({

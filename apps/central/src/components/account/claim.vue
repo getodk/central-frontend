@@ -16,9 +16,8 @@ except according to the terms contained in the LICENSE file.
       <!-- Chrome displays a message in the console indicating that there should
       be a username input (even if it is hidden). However, we do not know the
       user's email address on this page. -->
-      <form-group ref="password" v-model="password" type="password"
-        :placeholder="$t('field.newPassword')" required
-        autocomplete="new-password"/>
+      <new-password-form-group ref="password" v-model="password"
+        :placeholder="$t('field.newPassword')" strengthMeter/>
       <button type="submit" class="btn btn-primary"
         :aria-disabled="awaitingResponse">
         {{ $t('action.set') }} <spinner :state="awaitingResponse"/>
@@ -29,6 +28,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import FormGroup from '../form-group.vue';
+import NewPasswordFormGroup from '../new-password-form-group.vue';
 import Spinner from '../spinner.vue';
 
 import useRequest from '../../composables/request';
@@ -36,7 +36,7 @@ import { noop } from '../../util/util';
 
 export default {
   name: 'AccountClaim',
-  components: { FormGroup, Spinner },
+  components: { FormGroup, NewPasswordFormGroup, Spinner },
   inject: ['alert'],
   setup() {
     const { request, awaitingResponse } = useRequest();
@@ -52,11 +52,6 @@ export default {
   },
   methods: {
     submit() {
-      if (this.password.length < 10) {
-        this.alert.danger(this.$t('alert.passwordTooShort'));
-        return;
-      }
-
       const headers = {};
       const { token } = this.$route.query;
       if (typeof token === 'string') headers.Authorization = `Bearer ${token}`;
