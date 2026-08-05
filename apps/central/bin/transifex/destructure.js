@@ -21,13 +21,7 @@ for (const basename of fs.readdirSync('transifex')) {
   console.log(`destructuring ${locale}`);
 
   const json = fs.readFileSync(`transifex/${basename}`).toString();
-  const translated = (() => {
-    try {
-      return destructure(json, locale);
-    } catch (err) {
-      fatalError(err, 'Failed!  Have you pulled the latest JSON from Transifex?'); // eslint-disable-line no-use-before-define
-    }
-  })();
+  const translated = doDestructure(json, locale);
   rekeyTranslations(sourceMessages, translated, transifexPaths);
   writeTranslations(
     locale,
@@ -39,12 +33,16 @@ for (const basename of fs.readdirSync('transifex')) {
 }
 console.log('done');
 
-function fatalError(err, message) {
-  console.log(err);
-  console.log();
-  console.log('!!!');
-  console.log('!!!', message);
-  console.log('!!!');
-  console.log();
-  process.exit(1);
+function doDestructure(json, locale) {
+  try {
+    return destructure(json, locale);
+  } catch (err) {
+    console.log(err);
+    console.log();
+    console.log('!!!');
+    console.log('!!! Failed!  Have you pulled the latest JSON from Transifex?');
+    console.log('!!!');
+    console.log();
+    process.exit(1);
+  }
 }
