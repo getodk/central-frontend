@@ -124,7 +124,7 @@ export default {
 
 <style lang="scss">
 #user-edit-password input[autocomplete="username"] { display: none; }
-.error { color: red; }
+.error { color:#de2a11; font-size:11px; margin:25px 12px -25px; }
 </style>
 
 <i18n lang="json5">
