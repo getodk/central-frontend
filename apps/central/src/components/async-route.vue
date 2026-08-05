@@ -111,8 +111,9 @@ export default {
             this.component = markRaw(m.default);
           }
         })
-        .catch(() => {
+        .catch(err => {
           if (!canceled) {
+            console.error('async-route', 'loadError:', err);
             // It would be ideal to show a more informative error message.
             // However, the error seems to provide limited information. For
             // example, if there is a 404 because Frontend was rebuilt, the
