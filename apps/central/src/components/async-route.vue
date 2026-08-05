@@ -113,7 +113,7 @@ export default {
         })
         .catch(err => {
           if (!canceled) {
-            console.error('async-route', 'loadError:', err); // eslint-disable-line no-console
+            logger.error('async-route', 'loadError:', err);
 
             // It would be ideal to show a more informative error message.
             // However, the error seems to provide limited information. For
