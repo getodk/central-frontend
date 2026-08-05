@@ -4,6 +4,7 @@ import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
 import type { BaseValueNode, BaseValueNodeState } from './BaseValueNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { NodeAppearances } from './NodeAppearances.ts';
+import type { PageBoundary } from './identity.ts';
 import type { RootNode } from './RootNode.ts';
 import type { TextRange } from './TextRange.ts';
 import type { LeafNodeValidationState } from './validation.ts';
@@ -53,6 +54,7 @@ export interface NoteNodeState<V extends ValueType> extends BaseValueNodeState<N
   // non-blank values (as that has been a primary driver for prioritizing note
   // functionality).
   get value(): NoteValue<V>;
+  get pageBoundary(): PageBoundary;
 }
 
 export interface NoteDefinition<V extends ValueType = ValueType> extends LeafNodeDefinition<V> {

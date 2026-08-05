@@ -3,6 +3,7 @@ import type { InputControlDefinition } from '../parse/body/control/InputControlD
 import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
 import type { BaseValueNode, BaseValueNodeState } from './BaseValueNode.ts';
 import type { NodeAppearances } from './NodeAppearances.ts';
+import type { PageBoundary } from './identity.ts';
 import type { RootNode } from './RootNode.ts';
 import type { ValueType } from './ValueType.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
@@ -23,6 +24,7 @@ export interface InputNodeState<V extends ValueType> extends BaseValueNodeState<
    * the {@link InputNode.setValue} method.
    */
   get value(): InputValue<V>;
+  get pageBoundary(): PageBoundary;
 }
 
 export interface InputDefinition<V extends ValueType = ValueType> extends LeafNodeDefinition<V> {

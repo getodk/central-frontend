@@ -4,6 +4,7 @@ import type { TriggerControlDefinition } from '../parse/body/control/TriggerCont
 import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
 import type { BaseValueNode, BaseValueNodeState } from './BaseValueNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
+import type { PageBoundary } from './identity.ts';
 import type { RootNode } from './RootNode.ts';
 import type { LeafNodeValidationState } from './validation.ts';
 import type { ValueType } from './ValueType.ts';
@@ -14,6 +15,7 @@ export interface TriggerNodeState extends BaseValueNodeState<TriggerValue> {
   get children(): null;
   get valueOptions(): null;
   get value(): TriggerValue;
+  get pageBoundary(): PageBoundary;
 }
 
 export interface TriggerNodeDefinition<

@@ -6,6 +6,7 @@ import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
 import type { BaseValueNode, BaseValueNodeState } from './BaseValueNode.ts';
 import type { BaseItem } from './BaseItem.ts';
 import type { NodeAppearances } from './NodeAppearances.ts';
+import type { PageBoundary } from './identity.ts';
 import type { RootNode } from './RootNode.ts';
 import type { ValueType } from './ValueType.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
@@ -34,6 +35,7 @@ export interface SelectNodeState extends BaseValueNodeState<readonly string[]> {
    * `Select1NodeState` would have `get value(): SelectItem | null`?
    */
   get value(): readonly string[];
+  get pageBoundary(): PageBoundary;
 }
 
 export interface SelectDefinition<V extends ValueType = ValueType> extends LeafNodeDefinition<V> {

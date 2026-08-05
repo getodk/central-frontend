@@ -5,6 +5,7 @@ import type { UploadControlDefinition } from '../parse/body/control/UploadContro
 import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
 import type { BaseValueNode, BaseValueNodeState } from './BaseValueNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
+import type { PageBoundary } from './identity.ts';
 import type { RootNode } from './RootNode.ts';
 import type { InstanceAttachmentFileName } from './serialization/InstanceData.ts';
 import type { LeafNodeValidationState } from './validation.ts';
@@ -17,6 +18,7 @@ export interface UploadNodeState extends BaseValueNodeState<UploadValue> {
   get value(): UploadValue;
   get instanceValue(): InstanceAttachmentFileName;
   get attachmentState(): BaseInstanceAttachmentState;
+  get pageBoundary(): PageBoundary;
 }
 
 export interface UploadDefinition<V extends ValueType = ValueType> extends LeafNodeDefinition<V> {
