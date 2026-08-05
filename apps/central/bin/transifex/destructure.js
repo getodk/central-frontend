@@ -23,7 +23,7 @@ for (const basename of fs.readdirSync('transifex')) {
   const json = fs.readFileSync(`transifex/${basename}`).toString();
   const translated = (() => {
     try {
-      destructure(json, locale);
+      return destructure(json, locale);
     } catch (err) {
       fatalError(err, 'Failed!  Have you pulled the latest JSON from Transifex?'); // eslint-disable-line no-use-before-define
     }
