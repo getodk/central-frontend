@@ -7,6 +7,7 @@ jobs:
   web-forms-e2e-functional:
     name: '@getodk/web-forms (functional e2e)'
     runs-on: 'ubuntu-latest'
+    timeout-minutes: 4
 
     strategy:
       fail-fast: false
@@ -56,6 +57,7 @@ jobs:
   web-forms-e2e-visual:
     name: '@getodk/web-forms (visual e2e)'
     runs-on: 'ubuntu-latest'
+    timeout-minutes: 6
 
     strategy:
       fail-fast: false
