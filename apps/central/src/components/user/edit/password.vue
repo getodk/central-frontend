@@ -102,7 +102,7 @@ export default {
             <p>For more information, see <a href="https://haveibeenpwned.com/Passwords" target="_blank" rel="noopener noreferrer">here</a>.</p>
           `;
         } else {
-					const data = { old: this.oldPassword, new: this.newPassword };
+          const data = { old: this.oldPassword, new: this.newPassword };
           this.request({
             method: 'PUT',
             url: apiPaths.password(this.user.id),

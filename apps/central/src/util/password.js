@@ -3,16 +3,16 @@ const hashCache = [];
 
 async function getSuffixesFor(prefix) {
   const cachedHashes = hashCache.find(cached => cached.prefix === prefix);
-  if(cachedHashes) return cachedHashes.suffixes;
+  if (cachedHashes) return cachedHashes.suffixes;
 
   try {
     const res = await fetch(`https://api.pwnedpasswords.com/range/${prefix}`);
-    if(!res.ok) throw new Error(`Bad response: ${res.status}`);
+    if (!res.ok) throw new Error(`Bad response: ${res.status}`);
 
     const body = await res.text();
     const suffixes = body.split('\n').map(line => line.split(':')[0]);
 
-    if(hashCache.length === maxCacheLength) hashCache.shift();
+    if (hashCache.length === maxCacheLength) hashCache.shift();
 
     hashCache.push({ prefix, suffixes });
 
