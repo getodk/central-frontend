@@ -23,9 +23,9 @@ except according to the terms contained in the LICENSE file.
           type="password" :placeholder="$t('field.oldPassword')" required
           autocomplete="current-password"/>
         <new-password-form-group id="user-edit-password-new-password" v-model="newPassword"
-          type="password" :placeholder="$t('field.newPassword')" strengthMeter/>
+          :placeholder="$t('field.newPassword')" strengthMeter/>
         <new-password-form-group id="user-edit-password-confirm" v-model="confirm"
-          type="password" :placeholder="$t('field.passwordConfirm')" :has-error="mismatch"/>
+          :placeholder="$t('field.passwordConfirm')" :has-error="mismatch"/>
         <button type="submit" class="btn btn-primary"
           :aria-disabled="awaitingResponse">
           {{ $t('action.change') }} <spinner :state="awaitingResponse"/>
