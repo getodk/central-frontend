@@ -25,7 +25,7 @@ except according to the terms contained in the LICENSE file.
         <form-group id="user-edit-password-new-password" v-model="newPassword"
           type="password" :placeholder="$t('field.newPassword')" required
           :has-error="tooShort || mismatch || !!strError" autocomplete="new-password">
-          <template v-slot:after>
+          <template #after>
             <div v-if="strError" class="error"><span v-html="strError"></span></div>
           </template>
         </form-group>
