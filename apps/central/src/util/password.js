@@ -24,7 +24,7 @@ async function getSuffixesFor(prefix) {
   }
 }
 
-export async function checkPasswordPwnage(password) {
+export async function checkPasswordPwnage(password) { // eslint-disable-line import/prefer-default-export
   const hash = await digestMessage(password); // eslint-disable-line no-use-before-define
 
   const hashPrefix = hash.substring(0, 5);
