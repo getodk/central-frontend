@@ -55,7 +55,7 @@ export class SecondaryInstancesDefinition
   readonly hasLastSaved: boolean;
   private lastSaved: SecondaryInstanceSource | undefined;
 
-  resetLastSaved = (lastSavedXml: string) => {
+  resetLastSaved(lastSavedXml: string) {
     if (this.lastSaved?.resourceURL) {
       const { domElement, instanceId, resourceURL } = this.lastSaved;
       const source = createLastSavedInstance(domElement, instanceId, resourceURL, lastSavedXml);
@@ -63,7 +63,7 @@ export class SecondaryInstancesDefinition
       this.lastSaved = source;
       this.set(instanceId, root);
     }
-  };
+  }
 
   static async load(
     xformDOM: XFormDOM,
