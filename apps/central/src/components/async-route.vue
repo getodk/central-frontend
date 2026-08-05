@@ -32,7 +32,7 @@ import { noop } from '../util/util';
 export default {
   name: 'AsyncRoute',
   components: { Loading, PageBody },
-  inject: ['alert', 'location'],
+  inject: ['alert', 'location', 'logger'],
   inheritAttrs: false,
   // See routes.js for more information about these props.
   props: {
@@ -113,7 +113,7 @@ export default {
         })
         .catch(err => {
           if (!canceled) {
-            logger.error('async-route', 'loadError:', err);
+            this.logger.error('async-route', 'loadError:', err);
 
             // It would be ideal to show a more informative error message.
             // However, the error seems to provide limited information. For
