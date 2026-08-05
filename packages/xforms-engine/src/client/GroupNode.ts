@@ -10,6 +10,7 @@ export interface GroupNodeState extends BaseNodeState {
   get hint(): null;
   get children(): readonly GeneralChildNode[];
   get hasRelevantBodyNodes(): boolean;
+  get hasBodyNodesOnCurrentPage(): boolean;
   get valueOptions(): null;
   get value(): null;
 }

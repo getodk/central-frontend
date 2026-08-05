@@ -21,6 +21,7 @@ export interface BaseRepeatRangeNodeState extends BaseNodeState {
    */
   get children(): readonly RepeatInstanceNode[];
   get hasRelevantBodyNodes(): boolean;
+  get hasBodyNodesOnCurrentPage(): boolean;
   get valueOptions(): null;
   get value(): null;
 }
