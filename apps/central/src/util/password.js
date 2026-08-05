@@ -17,7 +17,7 @@ async function getSuffixesFor(prefix) {
     hashCache.push({ prefix, suffixes });
 
     return suffixes;
-  } catch(err) {
+  } catch (err) {
     console.log('pwned check failed:', err); // eslint-disable-line no-console
     // if we can't check, just let them use it
     return [];
@@ -25,14 +25,14 @@ async function getSuffixesFor(prefix) {
 }
 
 export async function checkPasswordPwnage(password) {
-  const hash = await digestMessage(password);
+  const hash = await digestMessage(password); // eslint-disable-line no-use-before-define
 
   const hashPrefix = hash.substring(0, 5);
   const hashSuffix = hash.substring(5);
 
   const suffixes = await getSuffixesFor(hashPrefix);
 
-	return suffixes.includes(hashSuffix);
+  return suffixes.includes(hashSuffix);
 }
 
 // from: https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest#converting_a_digest_to_a_hex_string
