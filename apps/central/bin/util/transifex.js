@@ -126,8 +126,22 @@ class PluralForms {
         begin = end;
       }
 
-      categories.sort();
-      const expectedCategories = locales[locale].pluralCategories;
+      // First check that `categories` are in the correct order (e.g., 'one'
+      // should come before 'many'). If `categories` were in the wrong order in
+      // the Transifex JSON, they would also end up in the wrong order in the
+      // Vue I18n JSON.
+      const allCategories = ['one', 'few', 'many', 'other'];
+      const expectedOrder = allCategories.filter(category =>
+        categories.includes(category));
+      if (!equals(categories, expectedOrder))
+        logThenThrow(string, `.${key} in locale "${locale}": Expected the plural categories to be in the order [${expectedOrder.join(', ')}], but found [${categories.join(', ')}] instead.`);
+
+      // Next, check that `categories` includes all the plural categories we
+      // expect. If it were missing categories (or had extra categories), our
+      // pluralizationRules probably wouldn't work.
+      const expectedCategories = locales[locale].pluralCategories
+        .sort((category1, category2) =>
+          allCategories.indexOf(category1) - allCategories.indexOf(category2));
       if (!equals(categories, expectedCategories))
         logThenThrow(string, `.${key} in locale "${locale}" expected the plural categories [${expectedCategories.join(', ')}], but found [${categories.join(', ')}]. Did you download the translations "to translate"?`);
     }
