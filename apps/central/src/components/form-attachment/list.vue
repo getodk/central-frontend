@@ -15,7 +15,6 @@ except according to the terms contained in the LICENSE file.
     <form-attachment-table
       :file-is-over-drop-zone="countOfFilesOverDropZone !== 0 && !uploading"
       :dragover-attachment="dragoverAttachment"
-      :planned-uploads="plannedUploads"
       :updated-attachments="updatedAttachments"
       @link="linkDatasetModal.show({ attachment: $event })"/>
     <p>

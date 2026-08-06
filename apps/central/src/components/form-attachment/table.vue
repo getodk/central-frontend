@@ -26,7 +26,6 @@ except according to the terms contained in the LICENSE file.
           :key="attachment.name" :attachment="attachment"
           :file-is-over-drop-zone="fileIsOverDropZone"
           :dragover-attachment="dragoverAttachment"
-          :planned-uploads="plannedUploads"
           :updated-attachments="updatedAttachments"
           :linkable="attachment.type === 'file' && dsHashset.has(attachment.name.replace(/\.[^.]+$/i, ''))"
           @link="$emit('link', $event)"/>
@@ -49,10 +48,6 @@ defineOptions({
 defineProps({
   fileIsOverDropZone: Boolean,
   dragoverAttachment: Object,
-  plannedUploads: {
-    type: Array,
-    required: true
-  },
   updatedAttachments: {
     type: Set,
     required: true
