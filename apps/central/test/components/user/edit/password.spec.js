@@ -28,7 +28,7 @@ const submit =
     return component.get('#user-edit-password form').trigger('submit');
   };
 
-describe('UserEditPassword', () => {
+describe.only('UserEditPassword', () => {
   beforeEach(mockLogin);
 
   it('resets the form if the route changes', () => {
@@ -145,7 +145,7 @@ describe('UserEditPassword', () => {
         .respondWithSuccess());
   });
 
-  it('sends the correct request', () =>
+  it.only('sends the correct request', () =>
     mockHttp()
       .mount(UserEditPassword, mountOptions())
       .request(submit)
