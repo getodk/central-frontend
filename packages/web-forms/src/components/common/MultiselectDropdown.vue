@@ -14,15 +14,12 @@ interface MultiselectDropdownProps {
 const t: Translate = inject(TRANSLATE)!;
 const props = defineProps<MultiselectDropdownProps>();
 
+const DEFAULT_PRIMEVUE_ITEM_HEIGHT = 38;
+
 defineEmits(['update:modelValue', 'change']);
 
 const options = computed(() => {
 	return props.question.currentState.valueOptions.map((option) => {
-		const label = props.question.getValueOption(option.value);
-		if (label == null) {
-			throw new Error(`Failed to find option for value: ${option.value}`);
-		}
-
 		return {
 			value: option.value,
 			label: option.label.formatted,
@@ -35,6 +32,16 @@ const selectValues = (values: readonly string[]) => {
 	props.question.selectValues(values);
 };
 
+const virtualScrollerOptions = computed(() => {
+	const isJSDOM = typeof navigator !== 'undefined' && navigator.userAgent.includes('jsdom');
+	if (isJSDOM) {
+		return;
+	}
+	return {
+		itemSize: DEFAULT_PRIMEVUE_ITEM_HEIGHT
+	};
+});
+
 let panelClass = 'multi-select-dropdown-panel';
 if (props.question.appearances['no-buttons']) {
 	panelClass += ' no-buttons';
@@ -42,9 +49,9 @@ if (props.question.appearances['no-buttons']) {
 
 const selectedLabels = computed(() => {
 	const state = props.question.currentState;
-	return state.value.map((val) => {
-		const found = state.valueOptions.find((opt) => opt.value === val);
-		return found?.label.formatted;
+	return state.value.map((value) => {
+		const option = props.question.getValueOption(value);
+		return option?.label.formatted;
 	});
 });
 </script>
@@ -68,6 +75,7 @@ const selectedLabels = computed(() => {
 		option-label="search"
 		:panel-class="panelClass"
 		:model-value="question.currentState.value"
+		:virtual-scroller-options="virtualScrollerOptions"
 		@update:model-value="selectValues"
 		@change="$emit('change')"
 	>

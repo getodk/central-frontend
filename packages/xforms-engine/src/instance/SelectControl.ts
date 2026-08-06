@@ -214,10 +214,7 @@ export class SelectControl
   getValueOption(value: string): SelectItem | null {
     // Note: this method is a client-facing convenience API for reading state,
     // so it **MUST** read from client-reactive state!
-    const valueOption = this.currentState.valueOptions.find((item) => {
-      return item.value === value;
-    });
-
+    const valueOption = this.mapOptionsByValue().get(value);
     return valueOption ?? null;
   }
 

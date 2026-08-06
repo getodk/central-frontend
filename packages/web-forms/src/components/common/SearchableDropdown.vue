@@ -14,15 +14,12 @@ interface SearchableDropdownProps {
 const t: Translate = inject(TRANSLATE)!;
 const props = defineProps<SearchableDropdownProps>();
 
+const DEFAULT_PRIMEVUE_ITEM_HEIGHT = 38;
+
 defineEmits(['update:modelValue', 'change']);
 
 const options = computed(() => {
 	return props.question.currentState.valueOptions.map((option) => {
-		const label = props.question.getValueOption(option.value);
-		if (label == null) {
-			throw new Error(`Failed to find option for value: ${option.value}`);
-		}
-
 		return {
 			value: option.value,
 			label: option.label.formatted,
@@ -31,14 +28,23 @@ const options = computed(() => {
 	});
 });
 
+const virtualScrollerOptions = computed(() => {
+	const isJSDOM = typeof navigator !== 'undefined' && navigator.userAgent.includes('jsdom');
+	if (isJSDOM) {
+		return;
+	}
+	return {
+		itemSize: DEFAULT_PRIMEVUE_ITEM_HEIGHT
+	};
+});
+
 const selectedLabel = computed(() => {
 	const value = props.question.currentState?.value?.[0];
 	if (!value) {
 		return [];
 	}
-	const valueOptions = props.question.currentState.valueOptions;
-	const found = valueOptions.find((opt) => opt.value === value);
-	return found?.label.formatted;
+	const option = props.question.getValueOption(value);
+	return option?.label.formatted;
 });
 
 const selectValue = (value: string) => {
@@ -58,6 +64,7 @@ const selectValue = (value: string) => {
 		:options="options"
 		option-label="search"
 		option-value="value"
+		:virtual-scroller-options="virtualScrollerOptions"
 		@update:model-value="selectValue"
 		@change="$emit('change')"
 	>
