@@ -5,6 +5,7 @@ import { computed, inject } from 'vue';
 import MarkdownBlock from './MarkdownBlock.vue';
 import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
 import type { Translate } from '@/lib/locale/useLocale.ts';
+import type { VirtualScrollerScrollIndexChangeEvent } from 'primevue';
 
 interface SearchableDropdownProps {
 	readonly question: SelectNode;
@@ -14,31 +15,63 @@ interface SearchableDropdownProps {
 const t: Translate = inject(TRANSLATE)!;
 const props = defineProps<SearchableDropdownProps>();
 
+const INITIAL_PAGE_SIZE = 20;
+const DEFAULT_PRIMEVUE_ITEM_HEIGHT = 38;
+
 defineEmits(['update:modelValue', 'change']);
 
 const options = computed(() => {
-	return props.question.currentState.valueOptions.map((option) => {
-		const label = props.question.getValueOption(option.value);
-		if (label == null) {
-			throw new Error(`Failed to find option for value: ${option.value}`);
+	return props.question.currentState.valueOptions.map((option, i) => {
+		if (i < INITIAL_PAGE_SIZE) {
+			return {
+				value: option.value,
+				label: option.label.formatted,
+				search: option.label.asString,
+				loaded: true
+			};
 		}
-
 		return {
 			value: option.value,
-			label: option.label.formatted,
-			search: option.label.asString,
+			loaded: false
 		};
 	});
 });
+
+const handleLazyLoad = (params: VirtualScrollerScrollIndexChangeEvent) => {
+	const { first, last } = params;
+	for (let i = first; i < last; i++) {
+		const placeholder = options.value[i];
+		if (!placeholder?.value || placeholder.loaded) {
+			continue;
+		}
+		const option = props.question.getValueOption(placeholder.value);
+		if (!option) {
+			// should never happen, but handle gracefully if it does
+			continue;
+		}
+		options.value[i] = {
+			value: option.value,
+			label: option.label.formatted,
+			search: option.label.asString,
+			loaded: true
+		};
+	}
+};
+
+const virtualScrollerOptions = {
+	lazy: true,
+	onLazyLoad: handleLazyLoad,
+	itemSize: DEFAULT_PRIMEVUE_ITEM_HEIGHT,
+	showLoader: true
+};
 
 const selectedLabel = computed(() => {
 	const value = props.question.currentState?.value?.[0];
 	if (!value) {
 		return [];
 	}
-	const valueOptions = props.question.currentState.valueOptions;
-	const found = valueOptions.find((opt) => opt.value === value);
-	return found?.label.formatted;
+	const option = props.question.getValueOption(value);
+	return option?.label.formatted;
 });
 
 const selectValue = (value: string) => {
@@ -58,6 +91,7 @@ const selectValue = (value: string) => {
 		:options="options"
 		option-label="search"
 		option-value="value"
+		:virtual-scroller-options="virtualScrollerOptions"
 		@update:model-value="selectValue"
 		@change="$emit('change')"
 	>

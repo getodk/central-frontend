@@ -18,6 +18,7 @@ defineEmits(['update:modelValue', 'change']);
 
 const options = computed(() => {
 	return props.question.currentState.valueOptions.map((option) => {
+		// TODO this is also slow
 		const label = props.question.getValueOption(option.value);
 		if (label == null) {
 			throw new Error(`Failed to find option for value: ${option.value}`);
