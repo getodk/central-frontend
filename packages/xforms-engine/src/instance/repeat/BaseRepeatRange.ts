@@ -1,9 +1,9 @@
 import { insertAtIndex } from '@getodk/common/lib/array/insert.ts';
 import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
-import { untrack } from 'solid-js';
+import { batch, untrack } from 'solid-js';
 import type { RepeatRangeNode } from '../../client/hierarchy.ts';
-import type { FormNodeID } from '../../client/identity.ts';
+import type { FormNodeID, PageBoundary } from '../../client/identity.ts';
 import type { AnyRepeatDefinition } from '../../client/index.ts';
 import type { NodeAppearances } from '../../client/NodeAppearances.ts';
 import type { BaseRepeatRangeNode } from '../../client/repeat/BaseRepeatRangeNode.ts';
@@ -47,6 +47,9 @@ interface RepeatRangeStateSpec extends DescendantNodeSharedStateSpec {
   readonly label: Accessor<TextRange<'label'> | null>;
   readonly children: Accessor<readonly FormNodeID[]>;
   readonly hasRelevantBodyNodes: Accessor<boolean>;
+  readonly hasBodyNodesOnCurrentPage: Accessor<boolean>;
+  readonly pageBoundary: PageBoundary;
+
   readonly attributes: Accessor<readonly Attribute[]>;
   readonly valueOptions: null;
   readonly value: null;
@@ -181,6 +184,8 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatDefinition>
         hint: null,
         children: childrenState.childIds,
         hasRelevantBodyNodes: this.hasRelevantBodyNodes,
+        hasBodyNodesOnCurrentPage: this.hasBodyNodesOnCurrentPage,
+        pageBoundary: this.root.paginationRegistry.attachRange(this, definition.isUncontrolled()),
         attributes: attributeState.getAttributes,
         valueOptions: null,
         value: null,
@@ -257,15 +262,13 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatDefinition>
 
   protected removeChildren(startIndex: number, count: number): readonly RepeatInstance[] {
     return this.scope.runTask(() => {
-      return this.childrenState.setChildren((currentInstances) => {
-        const updatedInstances = currentInstances.slice();
-        const removedInstances = updatedInstances.splice(startIndex, count);
-
-        removedInstances.forEach((instance) => {
-          instance.remove();
+      // Batch the removal, otherwise, Root's page auto-advance perceives a half-removed tree and navigates away.
+      return batch(() => {
+        return this.childrenState.setChildren((currentInstances) => {
+          const updatedInstances = currentInstances.slice();
+          updatedInstances.splice(startIndex, count).forEach((instance) => instance.remove());
+          return updatedInstances;
         });
-
-        return updatedInstances;
       });
     });
   }
