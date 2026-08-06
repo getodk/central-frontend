@@ -1,5 +1,6 @@
 import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
+import type { PageBoundary } from '../client/identity.ts';
 import type {
   RangeInputValue,
   RangeNode,
@@ -41,6 +42,7 @@ interface RangeControlStateSpec<V extends RangeValueType> extends ValueNodeState
   readonly label: Accessor<TextRange<'label'> | null>;
   readonly hint: Accessor<TextRange<'hint'> | null>;
   readonly valueOptions: null;
+  readonly pageBoundary: PageBoundary;
 }
 
 export class RangeControl<V extends RangeValueType = RangeValueType>
@@ -107,6 +109,7 @@ export class RangeControl<V extends RangeValueType = RangeValueType>
         valueOptions: null,
         value: this.valueState,
         instanceValue: this.getInstanceValue,
+        pageBoundary: this.root.paginationRegistry.attachLeaf(this),
       },
       this.instanceConfig
     );

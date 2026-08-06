@@ -1,6 +1,7 @@
 import { XPathNodeKindKey, type XPathChoiceNode } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
+import type { PageBoundary } from '../client/identity.ts';
 import type { RankDefinition, RankItem, RankNode, RankValueOptions } from '../client/RankNode.ts';
 import type { TextRange } from '../client/TextRange.ts';
 import type { ValueType } from '../client/ValueType.ts';
@@ -53,6 +54,7 @@ interface RankControlStateSpec extends ValueNodeStateSpec<readonly string[]> {
   readonly label: Accessor<TextRange<'label'> | null>;
   readonly hint: Accessor<TextRange<'hint'> | null>;
   readonly valueOptions: Accessor<RankValueOptions>;
+  readonly pageBoundary: PageBoundary;
 }
 
 /**
@@ -187,6 +189,7 @@ export class RankControl
         valueOptions,
         value: valueState,
         instanceValue: this.getInstanceValue,
+        pageBoundary: this.root.paginationRegistry.attachLeaf(this),
       },
       this.instanceConfig
     );

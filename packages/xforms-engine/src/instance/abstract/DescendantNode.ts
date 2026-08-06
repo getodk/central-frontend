@@ -126,6 +126,38 @@ export abstract class DescendantNode<
       });
   };
 
+  readonly hasBodyNodesOnCurrentPage: Accessor<boolean> = () => {
+    if (!this.isSelfRelevant()) {
+      return false;
+    }
+
+    const children = this.getChildren();
+    if (!children?.length) {
+      return false;
+    }
+
+    const currentPageId = this.root.getCurrentPage()?.nodeId ?? null;
+    if (currentPageId == null) {
+      return false;
+    }
+
+    return children.some((child) => {
+      if (child.nodeType === 'model-value') {
+        return false;
+      }
+      if (child.nodeType === 'repeat-range:uncontrolled' && !child.getChildren()?.length) {
+        // Keep page for empty repeat ranges to show the "add" button.
+        const rangePageId = this.root.paginationRegistry.getRangePageId(child.nodeId);
+        return child.isSelfRelevant() && rangePageId === currentPageId;
+      }
+      if (child.getChildren()?.length) {
+        return child.hasBodyNodesOnCurrentPage();
+      }
+      const leafPageId = this.root.paginationRegistry.getLeafPageId(child.nodeId);
+      return child.isSelfRelevant() && leafPageId === currentPageId;
+    });
+  };
+
   readonly isRequired: Accessor<boolean>;
 
   // XFormsXPathPrimaryInstanceDescendantNode

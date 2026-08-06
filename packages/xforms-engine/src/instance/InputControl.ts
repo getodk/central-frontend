@@ -13,6 +13,7 @@ import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPat
 import type { StaticLeafElement } from '../integration/xpath/static-dom/StaticElement.ts';
 import type { RuntimeInputValue, RuntimeValue } from '../lib/codecs/getSharedValueCodec.ts';
 import { getSharedValueCodec } from '../lib/codecs/getSharedValueCodec.ts';
+import type { PageBoundary } from '../client/identity.ts';
 import {
   createAttributeState,
   type AttributeState,
@@ -75,6 +76,7 @@ interface InputControlStateSpec<V extends ValueType> extends ValueNodeStateSpec<
   readonly hint: Accessor<TextRange<'hint'> | null>;
   readonly attributes: Accessor<readonly Attribute[]>;
   readonly valueOptions: null;
+  readonly pageBoundary: PageBoundary;
 }
 
 export class InputControl<V extends ValueType = ValueType>
@@ -141,6 +143,7 @@ export class InputControl<V extends ValueType = ValueType>
         valueOptions: null,
         value: this.valueState,
         instanceValue: this.getInstanceValue,
+        pageBoundary: this.root.paginationRegistry.attachLeaf(this),
       },
       this.instanceConfig
     );
