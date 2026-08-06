@@ -23,7 +23,7 @@ const options = computed(() => {
 		return {
 			value: option.value,
 			label: option.label.formatted,
-			search: option.label.asString
+			search: option.label.asString,
 		};
 	});
 });
@@ -49,9 +49,9 @@ if (props.question.appearances['no-buttons']) {
 
 const selectedLabels = computed(() => {
 	const state = props.question.currentState;
-	return state.value.map((val) => {
-		const found = state.valueOptions.find((opt) => opt.value === val);
-		return found?.label.formatted;
+	return state.value.map((value) => {
+		const option = props.question.getValueOption(value);
+		return option?.label.formatted;
 	});
 });
 </script>

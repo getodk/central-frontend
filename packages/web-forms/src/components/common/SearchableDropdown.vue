@@ -23,7 +23,7 @@ const options = computed(() => {
 		return {
 			value: option.value,
 			label: option.label.formatted,
-			search: option.label.asString
+			search: option.label.asString,
 		};
 	});
 });
