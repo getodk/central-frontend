@@ -29,13 +29,13 @@ except according to the terms contained in the LICENSE file.
       :dragover-attachment="dragoverAttachment"
       :unmatched-files="unmatchedFiles"
       :upload-status="uploadStatus"
-      @cancel="clearPendingFiles"/>
+      @cancel="clearUnmatched"/>
 
     <form-attachment-upload-files v-bind="uploadFilesModal"
       @hide="uploadFilesModal.hide()" @select="afterFileInputSelection"/>
     <form-attachment-name-mismatch v-bind="nameMismatch"
       :planned-uploads="plannedUploads" @hide="nameMismatch.hide()"
-      @confirm="uploadFiles" @cancel="clearPendingFiles"/>
+      @confirm="uploadFiles" @cancel="clearPlanned"/>
     <form-attachment-link-dataset v-bind="linkDatasetModal"
       @hide="linkDatasetModal.hide()" @success="afterLinkDataset"/>
   </file-drop-zone>
@@ -166,7 +166,7 @@ export default {
           ? this.draftAttachments.get(tr.dataset.name)
           : null;
       }
-      this.clearPendingFiles();
+      this.clearUnmatched();
       this.updatedAttachments.clear();
     },
     dragleave(_, leftDropZone) {
@@ -214,13 +214,13 @@ export default {
       if (this.plannedUploads.length > 0)
         this.uploadFiles();
     },
-    // clearPendingFiles() clears any pending file selection before an upload
-    // has started. It is called both when the user cancels a name mismatch
-    // (clearing plannedUploads) and when the user dismisses the unmatched-files
-    // popup (clearing unmatchedFiles), so it always clears both.
-    clearPendingFiles() {
-      if (this.plannedUploads.length !== 0) this.plannedUploads = [];
-      if (this.unmatchedFiles.length !== 0) this.unmatchedFiles = [];
+    // Called when the user cancels the name-mismatch modal.
+    clearPlanned() {
+      this.plannedUploads = [];
+    },
+    // Called on dragenter and when the user dismisses the unmatched-files popup.
+    clearUnmatched() {
+      this.unmatchedFiles = [];
     },
     // uploadFile() may mutate `updates`.
     uploadFile({ attachment, file }, updates) {
