@@ -75,16 +75,14 @@ addLocale('pt', 'Português');
 addLocale('zh', '汉语', '');
 addLocale('zh-Hant', '漢語', '');
 
-export const loadUsersLocale = () => {
-  const locale = userLocale();
-  if (locale) {
-    i18n.global.locale = locale;
-    document.documentElement.setAttribute('lang', locale);
-  }
+const loadUsersLocale = () => {
+  const locale = userLocale() ?? fallbackLocale;
+  document.documentElement.setAttribute('lang', locale);
+  return locale;
 };
 
 export const i18n = createI18n({
-  locale: fallbackLocale,
+  locale: loadUsersLocale(),
   fallbackLocale,
   messages: { },
   // No message in the fallback locale should use HTML, because we use component
