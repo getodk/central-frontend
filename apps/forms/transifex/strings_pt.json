@@ -1,0 +1,137 @@
+{
+  "component": {
+    "Preview": {
+      "formNotFound": {
+        "string": "Nenhum Formulário encontrado com esse endereço, por favor verifique."
+      }
+    },
+    "Submission": {
+      "formNotFound": {
+        "title": {
+          "string": "Nenhum Formulário encontrado com esse endereço, por favor verifique."
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "errorNotProblem": {
+        "title": {
+          "string": "Algo deu errado"
+        },
+        "body": {
+          "string": ""
+        },
+        "status": {
+          "string": "Código de erro {status}"
+        }
+      }
+    },
+    "WebFormRenderer": {
+      "action": {
+        "close": {
+          "string": "Fechar"
+        },
+        "tryAgain": {
+          "string": "Tentar novamente"
+        }
+      },
+      "previewModal": {
+        "title": {
+          "string": "Os dados são válidos"
+        },
+        "body": {
+          "string": "Os dados que você digitou são válidos, mas não foram enviados por que essa é apenas uma Visualização do formulário."
+        }
+      },
+      "submissionModal": {
+        "title": {
+          "string": "Formulário enviado com sucesso!"
+        },
+        "body": {
+          "string": "Você pode preencher novamente esse formulário ou fechar a página se já tiver terminado."
+        },
+        "action": {
+          "fillOutAgain": {
+            "string": "Preencher novamente"
+          }
+        }
+      },
+      "thankYouModal": {
+        "title": {
+          "string": "Obrigado pela sua participação!"
+        },
+        "body": {
+          "string": "Você pode fechar essa janela agora."
+        }
+      },
+      "editSubmissionModal": {
+        "title": {
+          "string": "Enviado com sucesso"
+        },
+        "body": {
+          "string": "Você será redirecionado agora."
+        }
+      },
+      "errorModal": {
+        "title": {
+          "string": "Erro no envio"
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "sendingDataModal": {
+        "title": {
+          "string": "Enviando a Resposta"
+        },
+        "body": {
+          "string": "Seus dados estão sendo enviados, por favor não feche essa janela até que o envio tenha terminado."
+        }
+      },
+      "sessionTimeoutModal": {
+        "title": {
+          "string": "Sessão expirada"
+        },
+        "body": {
+          "full": {
+            "string": "Por favor, faça login {here} em uma aba diferente do navegador e tente novamente.",
+            "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
+          },
+          "here": {
+            "string": "aqui",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nPlease log in {here} in a different browser tab and try again."
+          }
+        }
+      },
+      "retryModal": {
+        "title": {
+          "string": "Erro no envio"
+        },
+        "body": {
+          "string": "Seus dados não foram enviados completamente. Por favor, clique no botão “Tentar novamente” para tentar novamente. Se o erro persistir, entre em contato com a pessoa que solicitou o preenchimento deste formulário ou {supportEmail}."
+        }
+      },
+      "util": {
+        "request": {
+          "noResponse": {
+            "string": "Algo deu errado: não houve resposta à sua requisição."
+          },
+          "problem": {
+            "404_1": {
+              "string": "O recurso que você está procurando não foi encontrado. O recurso pode ter sido excluído."
+            }
+          }
+        }
+      },
+      "mixin": {
+        "request": {
+          "alert": {
+            "entityTooLarge": {
+              "string": "Os dados que você está tentando carregar são muito grandes."
+            }
+          }
+        }
+      }
+    }
+  }
+}
