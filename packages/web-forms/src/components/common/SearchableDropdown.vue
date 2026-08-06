@@ -58,12 +58,18 @@ const handleLazyLoad = (params: VirtualScrollerScrollIndexChangeEvent) => {
 	}
 };
 
-const virtualScrollerOptions = {
-	lazy: true,
-	onLazyLoad: handleLazyLoad,
-	itemSize: DEFAULT_PRIMEVUE_ITEM_HEIGHT,
-	showLoader: true
-};
+const virtualScrollerOptions = computed(() => {
+	const isJSDOM = typeof navigator !== 'undefined' && navigator.userAgent.includes('jsdom');
+	if (isJSDOM) {
+		return;
+	}
+	return {
+		lazy: true,
+		onLazyLoad: handleLazyLoad,
+		itemSize: DEFAULT_PRIMEVUE_ITEM_HEIGHT,
+		showLoader: true
+	};
+});
 
 const selectedLabel = computed(() => {
 	const value = props.question.currentState?.value?.[0];
