@@ -5,6 +5,7 @@ import { computed, inject } from 'vue';
 import MarkdownBlock from './MarkdownBlock.vue';
 import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
 import type { Translate } from '@/lib/locale/useLocale.ts';
+import type { VirtualScrollerScrollIndexChangeEvent } from 'primevue';
 
 interface MultiselectDropdownProps {
 	readonly question: SelectNode;
@@ -14,20 +15,24 @@ interface MultiselectDropdownProps {
 const t: Translate = inject(TRANSLATE)!;
 const props = defineProps<MultiselectDropdownProps>();
 
+const INITIAL_PAGE_SIZE = 20;
+const DEFAULT_PRIMEVUE_ITEM_HEIGHT = 38;
+
 defineEmits(['update:modelValue', 'change']);
 
 const options = computed(() => {
-	return props.question.currentState.valueOptions.map((option) => {
-		// TODO this is also slow
-		const label = props.question.getValueOption(option.value);
-		if (label == null) {
-			throw new Error(`Failed to find option for value: ${option.value}`);
+	return props.question.currentState.valueOptions.map((option, i) => {
+		if (i < INITIAL_PAGE_SIZE) {
+			return {
+				value: option.value,
+				label: option.label.formatted,
+				search: option.label.asString,
+				loaded: true
+			};
 		}
-
 		return {
 			value: option.value,
-			label: option.label.formatted,
-			search: option.label.asString,
+			loaded: false
 		};
 	});
 });
@@ -35,6 +40,40 @@ const options = computed(() => {
 const selectValues = (values: readonly string[]) => {
 	props.question.selectValues(values);
 };
+
+const handleLazyLoad = (params: VirtualScrollerScrollIndexChangeEvent) => {
+	const { first, last } = params;
+	for (let i = first; i < last; i++) {
+		const placeholder = options.value[i];
+		if (!placeholder?.value || placeholder.loaded) {
+			continue;
+		}
+		const option = props.question.getValueOption(placeholder.value);
+		if (!option) {
+			// should never happen, but handle gracefully if it does
+			continue;
+		}
+		options.value[i] = {
+			value: option.value,
+			label: option.label.formatted,
+			search: option.label.asString,
+			loaded: true
+		};
+	}
+};
+
+const virtualScrollerOptions = computed(() => {
+	const isJSDOM = typeof navigator !== 'undefined' && navigator.userAgent.includes('jsdom');
+	if (isJSDOM) {
+		return;
+	}
+	return {
+		lazy: true,
+		onLazyLoad: handleLazyLoad,
+		itemSize: DEFAULT_PRIMEVUE_ITEM_HEIGHT,
+		showLoader: true
+	};
+});
 
 let panelClass = 'multi-select-dropdown-panel';
 if (props.question.appearances['no-buttons']) {
@@ -69,6 +108,7 @@ const selectedLabels = computed(() => {
 		option-label="search"
 		:panel-class="panelClass"
 		:model-value="question.currentState.value"
+		:virtual-scroller-options="virtualScrollerOptions"
 		@update:model-value="selectValues"
 		@change="$emit('change')"
 	>
