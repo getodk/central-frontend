@@ -90,9 +90,12 @@ export default {
              is populated and immediately consumed by uploadFiles(). The
              exception is when a file is dropped onto a mismatched row: in that
              case plannedUploads holds the pending upload while the name-mismatch
-             modal awaits confirmation.
+             modal awaits confirmation, and is cleared by clearPlanned() on
+             cancel.
            - unmatchedFiles. An array of the files whose names did not match any
-             attachment's.
+             attachment's. Drives the unmatched-files popup, and is cleared by
+             clearUnmatched() on the next dragenter or when the user dismisses
+             the popup.
         3. Properties set once the uploads have started and reset once they have
            finished or stopped
            - uploadStatus. An object with the following properties:
