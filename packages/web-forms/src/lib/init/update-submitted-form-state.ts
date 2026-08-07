@@ -19,7 +19,7 @@ const resetInstanceState = (
 ): FormStateSuccessResult => {
   const { form } = currentState;
   const instanceConfig = getFormInstanceConfig(options);
-  const instance = form.resetInstance(instanceConfig, options.lastSavedXml);
+  const instance = form.resetInstance(instanceConfig);
   return {
     status: 'FORM_STATE_SUCCESS',
     error: null,

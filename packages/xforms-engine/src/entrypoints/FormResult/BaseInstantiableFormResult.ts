@@ -62,11 +62,11 @@ export abstract class BaseInstantiableFormResult<
       });
     };
 
-    this.resetInstance = (instanceConfig: FormInstanceConfig = {}, lastSavedXml?: string) => {
+    this.resetInstance = (instanceConfig: FormInstanceConfig = {}) => {
       instanceOptions.scope.dispose();
       instanceOptions.scope = createPotentiallyClientOwnedReactiveScope();
-      if (lastSavedXml) {
-        instanceOptions.secondaryInstances.resetLastSaved(lastSavedXml);
+      if (instanceConfig.lastSavedXml) {
+        instanceOptions.secondaryInstances.resetLastSaved(instanceConfig.lastSavedXml);
       }
       const instance = this.createInstance(instanceConfig);
       return instance;

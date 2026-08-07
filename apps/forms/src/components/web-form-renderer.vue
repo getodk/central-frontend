@@ -241,6 +241,16 @@ const webFormLoaded = () => {
   hideSpinner();
 };
 
+const updateLastSaved = (hasLastSaved) => {
+  if (!isEdit.value && submissionResult.primaryInstanceResult.success) {
+    if (hasLastSaved) {
+      setLastSaved(props.form.projectId, props.form.xmlFormId, submissionData.instanceFile);
+    } else {
+      deleteLastSaved(props.form.projectId, props.form.xmlFormId);
+    }
+  }
+};
+
 const handleSubmit = async (
   payload: MonolithicInstancePayload,
   clearFormCallback: Function
@@ -257,14 +267,7 @@ const handleSubmit = async (
   }
   initializeSubmissionState(data as unknown as SubmissionData, clearFormCallback);
   await submitData();
-
-  if (!isEdit.value) {
-    if (hasLastSaved) {
-      setLastSaved(props.form.projectId, props.form.xmlFormId, submissionData.instanceFile);
-    } else {
-      deleteLastSaved(props.form.projectId, props.form.xmlFormId);
-    }
-  }
+  updateLastSaved(hasLastSaved);
 };
 
 const fetchSubmissionXml = async () => {

@@ -13,6 +13,7 @@ interface GetFormInstanceConfigOptions {
   readonly deviceID?: string;
   readonly preloadProperties?: PreloadProperties;
   readonly instanceDefaults?: InstanceDefaults;
+  readonly lastSavedXml?: string;
 }
 
 /**
@@ -58,5 +59,6 @@ export const getFormInstanceConfig = (options: GetFormInstanceConfigOptions) => 
     preloadProperties: getPreloadProperties(options),
     instanceDefaults: options.instanceDefaults,
     geolocationProvider: options.form.geolocationProvider,
+    lastSavedXml: options.lastSavedXml,
   };
 };

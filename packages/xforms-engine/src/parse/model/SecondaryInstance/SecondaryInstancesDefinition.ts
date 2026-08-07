@@ -42,8 +42,12 @@ const createLastSavedInstance = (
   xml: string | undefined
 ) => {
   if (xml) {
-    const resource = ExternalSecondaryInstanceResource.loadXml(instanceId, resourceURL, xml);
-    return new XMLExternalSecondaryInstanceSource(domElement, resource);
+    try {
+      const resource = ExternalSecondaryInstanceResource.loadXml(instanceId, resourceURL, xml);
+      return new XMLExternalSecondaryInstanceSource(domElement, resource);
+    } catch {
+      // error parsing xml - don't block the user from filling in the form
+    }
   }
   return new BlankSecondaryInstanceSource(instanceId, resourceURL, domElement);
 };
