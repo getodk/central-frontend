@@ -45,7 +45,6 @@ export abstract class BaseInstantiableFormResult<
 
   constructor(options: BaseInstantiableFormResultOptions<Status>) {
     const { status, warnings, error, instanceOptions } = options;
-
     super({
       status,
       warnings,
@@ -66,7 +65,11 @@ export abstract class BaseInstantiableFormResult<
     this.resetInstance = (instanceConfig: FormInstanceConfig = {}) => {
       instanceOptions.scope.dispose();
       instanceOptions.scope = createPotentiallyClientOwnedReactiveScope();
-      return this.createInstance(instanceConfig);
+      if (instanceConfig.lastSavedXml) {
+        instanceOptions.secondaryInstances.resetLastSaved(instanceConfig.lastSavedXml);
+      }
+      const instance = this.createInstance(instanceConfig);
+      return instance;
     };
 
     this.editInstance = async (

@@ -179,6 +179,7 @@ export class Scenario {
       },
       editInstance: overrideOptions?.editInstance ?? null,
       instanceDefaults: overrideOptions?.instanceDefaults ?? {},
+      lastSavedXml: overrideOptions?.lastSavedXml,
     };
   }
 

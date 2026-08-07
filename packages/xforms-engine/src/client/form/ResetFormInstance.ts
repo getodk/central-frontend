@@ -14,4 +14,7 @@ import type { LoadFormResult } from './LoadFormResult.ts';
  * such, explicit interface-level documentation of fallibility is deferred here,
  * on {@link RootNode} itself, and into any of its sub-interfaces.
  */
-export type ResetFormInstance = (config?: FormInstanceConfig) => CreatedFormInstance;
+export type ResetFormInstance = (
+  config?: FormInstanceConfig,
+  lastSavedXml?: string
+) => CreatedFormInstance;

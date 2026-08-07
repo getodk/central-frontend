@@ -9,7 +9,7 @@ import { ErrorProductionDesignPendingError } from '../../../error/ErrorProductio
 import type { EngineXPathNode } from '../../../integration/xpath/adapter/kind.ts';
 import type { StaticDocument } from '../../../integration/xpath/static-dom/StaticDocument.ts';
 import type { StaticElement } from '../../../integration/xpath/static-dom/StaticElement.ts';
-import type { XFormDOM } from '../../XFormDOM.ts';
+import type { DOMSecondaryInstanceElement, XFormDOM } from '../../XFormDOM.ts';
 import { BlankSecondaryInstanceSource } from './sources/BlankSecondaryInstanceSource.ts';
 import { CSVExternalSecondaryInstanceSource } from './sources/CSVExternalSecondaryInstance.ts';
 import type { ExternalSecondaryInstanceResourceLoadOptions } from './sources/ExternalSecondaryInstanceResource.ts';
@@ -35,29 +35,38 @@ export interface SecondaryInstanceRootDefinition extends StaticElement {
   getAttributeValue(localName: string): string | null;
 }
 
+const createLastSavedInstance = (
+  domElement: DOMSecondaryInstanceElement,
+  instanceId: string,
+  resourceURL: JRResourceURL,
+  xml: string | undefined
+) => {
+  if (xml) {
+    try {
+      const resource = ExternalSecondaryInstanceResource.loadXml(instanceId, resourceURL, xml);
+      return new XMLExternalSecondaryInstanceSource(domElement, resource);
+    } catch {
+      // error parsing xml - don't block the user from filling in the form
+    }
+  }
+  return new BlankSecondaryInstanceSource(instanceId, resourceURL, domElement);
+};
+
 export class SecondaryInstancesDefinition
   extends Map<string, SecondaryInstanceRootDefinition>
   implements XFormsSecondaryInstanceMap<EngineXPathNode>
 {
-  /**
-   * @package Only to be used for testing
-   */
-  static loadSync(xformDOM: XFormDOM): SecondaryInstancesDefinition {
-    const { secondaryInstanceElements } = xformDOM;
-    const sources = secondaryInstanceElements.map((domElement) => {
-      const instanceId = domElement.getAttribute('id');
-      const src = domElement.getAttribute('src');
+  readonly hasLastSaved: boolean;
+  private lastSaved: SecondaryInstanceSource | undefined;
 
-      if (src != null) {
-        throw new ErrorProductionDesignPendingError(
-          `Unexpected external secondary instance src attribute: ${src}`
-        );
-      }
-
-      return new InternalSecondaryInstanceSource(instanceId, src, domElement);
-    });
-
-    return new this(sources);
+  resetLastSaved(lastSavedXml: string) {
+    if (this.lastSaved?.resourceURL) {
+      const { domElement, instanceId, resourceURL } = this.lastSaved;
+      const source = createLastSavedInstance(domElement, instanceId, resourceURL, lastSavedXml);
+      const { root } = source.parseDefinition();
+      this.lastSaved = source;
+      this.set(instanceId, root);
+    }
   }
 
   static async load(
@@ -84,7 +93,7 @@ export class SecondaryInstancesDefinition
         const resourceURL = JRResourceURL.from(src);
 
         if (resourceURL.isLastSavedInstance()) {
-          return new BlankSecondaryInstanceSource(instanceId, resourceURL, domElement);
+          return createLastSavedInstance(domElement, instanceId, resourceURL, options.lastSavedXml);
         }
 
         const resource = await ExternalSecondaryInstanceResource.load(
@@ -124,5 +133,7 @@ export class SecondaryInstancesDefinition
         return [root.getAttributeValue('id'), root];
       })
     );
+    this.lastSaved = sources.find((source) => source.resourceURL?.isLastSavedInstance());
+    this.hasLastSaved = !!this.lastSaved;
   }
 }

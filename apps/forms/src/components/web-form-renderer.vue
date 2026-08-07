@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { OdkWebForm, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
 import { type MonolithicInstancePayload } from '@getodk/xforms-engine';
 import { queryString, type Form } from '../utils/api';
@@ -10,6 +10,7 @@ import { Translation } from 'vue-i18n'
 import Location from '../utils/location';
 import { getDeviceId } from '../utils/device-id';
 import { hideSpinner } from '../utils/spinner';
+import { deleteLastSaved, getLastSaved, setLastSaved } from '../utils/last-saved';
 defineOptions({
   name: 'WebFormRenderer'
 });
@@ -40,9 +41,11 @@ let clearForm:Function;
 let submissionData: SubmissionData;
 
 const submissionResult:any = {};
+const inited = ref(false);
 const isEdit = computed(() => props.actionType === 'edit');
 const isPublicLink = computed(() => props.actionType === 'public-link');
 const draftPath = computed(() => props.form.draft ? '/draft' : '');
+const lastSavedXml = ref<string | undefined>();
 
 const deviceID = getDeviceId();
 
@@ -238,6 +241,16 @@ const webFormLoaded = () => {
   hideSpinner();
 };
 
+const updateLastSaved = (hasLastSaved) => {
+  if (!isEdit.value && submissionResult.primaryInstanceResult.success) {
+    if (hasLastSaved) {
+      setLastSaved(props.form.projectId, props.form.xmlFormId, submissionData.instanceFile);
+    } else {
+      deleteLastSaved(props.form.projectId, props.form.xmlFormId);
+    }
+  }
+};
+
 const handleSubmit = async (
   payload: MonolithicInstancePayload,
   clearFormCallback: Function
@@ -246,7 +259,7 @@ const handleSubmit = async (
     visibleModal.value = { type: 'previewModal', hideable: true };
     return;
   }
-  const { data: [data], status } = payload;
+  const { data: [data], status, hasLastSaved } = payload;
   if (status !== 'ready') {
     // Status is not ready when Form is not valid and in that case submit button will be disabled,
     // hence this branch should never execute.
@@ -254,6 +267,7 @@ const handleSubmit = async (
   }
   initializeSubmissionState(data as unknown as SubmissionData, clearFormCallback);
   await submitData();
+  updateLastSaved(hasLastSaved);
 };
 
 const fetchSubmissionXml = async () => {
@@ -283,6 +297,11 @@ const editInstanceOptions = computed(() => {
 const closeWindow = () => {
   window.close();
 };
+
+onMounted(async () => {
+  lastSavedXml.value = await getLastSaved(props.form.projectId, props.form.xmlFormId);
+  inited.value = true;
+});
 </script>
 
 <style scoped>
@@ -294,12 +313,13 @@ const closeWindow = () => {
 
 <template>
 
-  <OdkWebForm
+  <OdkWebForm v-if="inited"
     :form-xml="props.xform"
     :edit-instance="editInstanceOptions"
     :fetch-form-attachment="getAttachment"
     :device-id="deviceID"
     :instance-defaults="defaultParameters"
+    :last-saved-xml="lastSavedXml"
     @loaded="webFormLoaded"
     @submit="handleSubmit"/>
 
