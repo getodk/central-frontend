@@ -544,7 +544,7 @@
       "developer_comment": "This is the text of a form field."
     },
     "passphrase": {
-      "string": "Passphrase",
+      "string": "Encryption password",
       "developer_comment": "This is the text of a form field."
     },
     "password": {
