@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { markRaw, nextTick } from 'vue';
+import { markRaw } from 'vue';
 
 import Loading from './loading.vue';
 import PageBody from './page/body.vue';
@@ -31,11 +31,13 @@ import { noop } from '../util/util';
 
 let isUnloading;
 window.addEventListener('beforeunload', () => {
-  console.log('@@@@@@@@@@@@@@@ window event:', 'beforeunload', isUnloading);
-  isUnloading = true;
-  nextTick(() => {
+  clearTimeout(isUnloading);
+
+  // Crude handling for unload event being cancelled.  Apparently there's no
+  // deterministic way to detect unload cancellation.
+  isUnloading = setTimeout(() => {
     isUnloading = false;
-  });
+  }, 100);
 });
 
 export default {
@@ -121,7 +123,7 @@ export default {
           }
         })
         .catch(err => {
-          if (!canceled) console.log('@@@@@@@@@@@@@@@', 'async-route', 'loadError', 'isUnloading:', isUnloading, 'visibilityState:', document.visibilityState);
+          if (!canceled) console.log('@@@@@@@@@@@@@@@', 'async-route', 'loadError', 'isUnloading:', isUnloading);
           if (!canceled && !isUnloading) {
             this.logger.error('async-route', 'loadError:', err);
 
