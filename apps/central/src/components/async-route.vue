@@ -32,7 +32,7 @@ import { noop } from '../util/util';
 export default {
   name: 'AsyncRoute',
   components: { Loading, PageBody },
-  inject: ['alert', 'location', 'logger'],
+  inject: ['alert', 'location'],
   inheritAttrs: false,
   // See routes.js for more information about these props.
   props: {
@@ -111,10 +111,8 @@ export default {
             this.component = markRaw(m.default);
           }
         })
-        .catch(err => {
+        .catch(() => {
           if (!canceled) {
-            this.logger.error('async-route', 'loadError:', err);
-
             // It would be ideal to show a more informative error message.
             // However, the error seems to provide limited information. For
             // example, if there is a 404 because Frontend was rebuilt, the
