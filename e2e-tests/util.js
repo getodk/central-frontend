@@ -27,8 +27,8 @@ const test = testBase.extend({
       const fatals = [];
 
       page.addInitScript(() => {
-        window.addEventListener('beforeunload', () => console.log('@@@@@@@@@@@@@@@ window event:', 'beforeunload');
-        window.addEventListener('pagehide',     () => console.log('@@@@@@@@@@@@@@@ window event:', 'pagehide');
+        window.addEventListener('beforeunload', () => console.log('@@@@@@@@@@@@@@@ window event:', 'beforeunload'));
+        window.addEventListener('pagehide',     () => console.log('@@@@@@@@@@@@@@@ window event:', 'pagehide'));
       });
 
       page.on('console', async consoleMsg => {
