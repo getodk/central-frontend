@@ -42,11 +42,12 @@ describe('EntityTable', () => {
       const component = mountComponent();
       const table = component.get('.table-freeze-frozen');
       headers(table).should.eql([
+        '',
         'Row',
         '',
         'Created by',
         'Created at',
-        'Last Updated / Actions'
+        'Last Updated'
       ]);
     });
   });

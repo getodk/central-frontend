@@ -133,7 +133,10 @@ defineExpose({ getRowPair });
 <style lang="scss">
 @import '../../assets/scss/mixins';
 
-.table-freeze { @include clearfix; }
+.table-freeze {
+  @include clearfix;
+  position: relative;
+}
 
 .table-freeze-frozen {
   float: left;
@@ -154,7 +157,6 @@ defineExpose({ getRowPair });
 
 .table-freeze-frozen.divider {
   box-shadow: 3px 0 0 rgba(0, 0, 0, 0.04);
-  position: relative;
   // Adding z-index so that the background color of the other table's thead does
   // not overlay the box shadow.
   z-index: 1;
@@ -166,22 +168,20 @@ defineExpose({ getRowPair });
 // Styles related to actions (buttons and links). If there are actions, they
 // should be in a .btn-group.
 .table-freeze-frozen {
-  // If the table has a .btn-group, it will probably be in the last column.
-  td:last-child { position: relative; }
-
   .btn-group {
     // Setting the background color in case an action is transparent.
     background-color: $color-page-background;
     left: -2000px;
+    // Relative to .table-freeze so that buttons are shown to the right side of the component.
     position: absolute;
-    top: 4px;
+    margin-top: 4px;
   }
 
   .actions-trigger-hover tr:hover .btn-group,
   .actions-trigger-hover .scrolling-hover .btn-group,
   .actions-trigger-focus .btn-group:focus-within {
     left: auto;
-    right: $padding-right-table-data;
+    right: 0px;
   }
 
   .btn-group { @include icon-btn-group; }
