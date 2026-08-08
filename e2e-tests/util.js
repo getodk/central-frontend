@@ -103,9 +103,6 @@ const globalAllowedLogs = [
   // * https://github.com/getodk/central/issues/1584
   // * https://github.com/getodk/central/issues/2070
   'SyntaxError: 17',
-
-  // Failing on these messages is highly disruptive, as it can randomly happen to non-fatal messages.
-  'Execution context was destroyed, most likely because of a navigation',
 ];
 
 function isFatalConsoleMessage(allowedLogs, consoleMsg, normalisedMsg) {
