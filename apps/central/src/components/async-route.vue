@@ -29,22 +29,17 @@ import PageBody from './page/body.vue';
 import { loadAsync, loadedAsync } from '../util/load-async';
 import { noop } from '../util/util';
 
-let isUnloading;
+let isUnloading = 0;
 
 window.addEventListener('beforeunload', () => {
   console.log('@@@@@@@@@@@@@@@ window event:', 'beforeunload');
   window.___before_unload = true;
-  isUnloading = true;
+  isUnloading += 2;
 });
 window.addEventListener('pagehide', () => {
   console.log('@@@@@@@@@@@@@@@ window event:', 'pagehide');
   window.___page_hidden = true;
-  isUnloading = true;
-});
-window.addEventListener('unhandledrejection', e => {
-  const err = event.reason;
-  console.log('@@@@@@@@@@@@@@@ window event:', 'unhandledrejection', { ___before_unload:window.___before_unload, ___page_hidden:window.___page_hidden, err });
-  isUnloading = true;
+  isUnloading += 3;
 });
 
 export default {
@@ -131,6 +126,7 @@ export default {
         })
         .catch(err => {
           if (!canceled) {
+            console.log('@@@@@@@@@@@@@@@', 'async-route', 'loadError', 'isUnloading:', isUnloading);
             this.logger.error('async-route', 'loadError:', err);
 
             // It would be ideal to show a more informative error message.
