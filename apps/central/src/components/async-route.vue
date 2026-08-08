@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
-import { markRaw } from 'vue';
+import { markRaw, nextTick } from 'vue';
 
 import Loading from './loading.vue';
 import PageBody from './page/body.vue';
@@ -33,27 +33,9 @@ let isUnloading;
 window.addEventListener('beforeunload', () => {
   console.log('@@@@@@@@@@@@@@@ window event:', 'beforeunload', isUnloading);
   isUnloading = true;
-  setTimeout(() => {
-    setTimeout(() => {
-      setTimeout(() => {
-        setTimeout(() => {
-          setTimeout(() => {
-            setTimeout(() => {
-              setTimeout(() => {
-                setTimeout(() => {
-                  setTimeout(() => {
-                    setTimeout(() => {
-                      isUnloading = false;
-                    }, 0);
-                  }, 0);
-                }, 0);
-              }, 0);
-            }, 0);
-          }, 0);
-        }, 0);
-      }, 0);
-    }, 0);
-  }, 0);
+  nextTick(() => {
+    isUnloading = false;
+  });
 });
 
 export default {
