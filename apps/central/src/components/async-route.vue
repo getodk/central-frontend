@@ -133,7 +133,7 @@ export default {
           }
         })
         .catch(err => {
-          if (!canceled && !usUnloading) {
+          if (!canceled && !isUnloading) {
             console.log('@@@@@@@@@@@@@@@', 'async-route', 'loadError', 'isUnloading:', isUnloading);
             this.logger.error('async-route', 'loadError:', err);
 
