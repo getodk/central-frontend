@@ -35,11 +35,19 @@ window.addEventListener('beforeunload', () => {
   console.log('@@@@@@@@@@@@@@@ window event:', 'beforeunload');
   window.___before_unload = true;
   isUnloading += 2;
+  setTimeout(() => {
+    console.log('@@@@@@@@@@@@@@@ timer event:', 'beforeunload');
+    isUnloading -= 5;
+  }, 0);
 });
 window.addEventListener('pagehide', () => {
   console.log('@@@@@@@@@@@@@@@ window event:', 'pagehide');
   window.___page_hidden = true;
   isUnloading += 3;
+  setTimeout(() => {
+    console.log('@@@@@@@@@@@@@@@ timer event:', 'pagehide');
+    isUnloading -= 7;
+  }, 0);
 });
 
 export default {
