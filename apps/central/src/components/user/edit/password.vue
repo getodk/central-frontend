@@ -24,7 +24,14 @@ except according to the terms contained in the LICENSE file.
           autocomplete="current-password"/>
         <form-group id="user-edit-password-new-password" v-model="newPassword"
           type="password" :placeholder="$t('field.newPassword')" required
-          :has-error="tooShort || mismatch" autocomplete="new-password"/>
+          :has-error="tooShort || mismatch || pwned" autocomplete="new-password">
+          <template #after>
+            <div v-if="pwned" class="error">
+              <p>This password has previously been included in a breach.</p>
+              <p>For more information, see <a href="https://haveibeenpwned.com/Passwords" target="_blank" rel="noopener noreferrer">here</a>.</p>
+            </div>
+          </template>
+        </form-group>
         <form-group id="user-edit-password-confirm" v-model="confirm"
           type="password" :placeholder="$t('field.passwordConfirm')" required
           :has-error="mismatch" autocomplete="new-password"/>
@@ -46,6 +53,7 @@ import useRequest from '../../../composables/request';
 import { apiPaths } from '../../../util/request';
 import { noop } from '../../../util/util';
 import { useRequestData } from '../../../request-data';
+import { checkPasswordPwnage } from '../../../util/password';
 
 export default {
   name: 'UserEditPassword',
@@ -62,13 +70,15 @@ export default {
       newPassword: '',
       tooShort: false,
       confirm: '',
-      mismatch: false
+      mismatch: false,
+      pwned: false,
     };
   },
   methods: {
     validate() {
       this.tooShort = false;
       this.mismatch = false;
+      this.pwned = false;
 
       if (this.newPassword.length < 10) {
         this.alert.danger(this.$t('alert.passwordTooShort'));
@@ -86,19 +96,27 @@ export default {
     },
     submit() {
       if (!this.validate()) return;
-      const data = { old: this.oldPassword, new: this.newPassword };
-      this.request({
-        method: 'PUT',
-        url: apiPaths.password(this.user.id),
-        data
-      })
-        .then(() => {
-          this.alert.success(this.$t('alert.success'));
 
-          // The Chrome password manager does not realize that the form was
-          // submitted. Should we navigate to a different page so that it does?
-        })
-        .catch(noop);
+      (async () => {
+        const isPwned = await checkPasswordPwnage(this.newPassword);
+        if (isPwned) {
+          this.pwned = true;
+        } else {
+          const data = { old: this.oldPassword, new: this.newPassword };
+          this.request({
+            method: 'PUT',
+            url: apiPaths.password(this.user.id),
+            data
+          })
+            .then(() => {
+              this.alert.success(this.$t('alert.success'));
+
+              // The Chrome password manager does not realize that the form was
+              // submitted. Should we navigate to a different page so that it does?
+            })
+            .catch(noop);
+        }
+      })();
     }
   }
 };
@@ -106,6 +124,7 @@ export default {
 
 <style lang="scss">
 #user-edit-password input[autocomplete="username"] { display: none; }
+.error { color:#de2a11; font-size:11px; margin:25px 12px -25px; }
 </style>
 
 <i18n lang="json5">

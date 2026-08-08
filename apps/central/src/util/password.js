@@ -1,0 +1,47 @@
+const maxCacheLength = 10;
+const hashCache = [];
+
+async function getSuffixesFor(prefix) {
+  const cachedHashes = hashCache.find(cached => cached.prefix === prefix);
+  if (cachedHashes) return cachedHashes.suffixes;
+
+  try {
+    const res = await fetch(`https://api.pwnedpasswords.com/range/${prefix}`);
+    if (!res.ok) throw new Error(`Bad response: ${res.status}`);
+
+    const body = await res.text();
+    const suffixes = body.split('\n').map(line => line.split(':')[0]);
+
+    if (hashCache.length === maxCacheLength) hashCache.shift();
+
+    hashCache.push({ prefix, suffixes });
+
+    return suffixes;
+  } catch (err) {
+    console.log('pwned check failed:', err); // eslint-disable-line no-console
+    // if we can't check, just let them use it
+    return [];
+  }
+}
+
+export async function checkPasswordPwnage(password) { // eslint-disable-line import/prefer-default-export
+  const hash = await digestMessage(password); // eslint-disable-line no-use-before-define
+
+  const hashPrefix = hash.substring(0, 5);
+  const hashSuffix = hash.substring(5);
+
+  const suffixes = await getSuffixesFor(hashPrefix);
+
+  return suffixes.includes(hashSuffix);
+}
+
+// from: https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest#converting_a_digest_to_a_hex_string
+async function digestMessage(message) {
+  const msgUint8 = new TextEncoder().encode(message);
+  const hashBuffer = await crypto.subtle.digest('SHA-1', msgUint8);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('')
+    .toUpperCase();
+}
