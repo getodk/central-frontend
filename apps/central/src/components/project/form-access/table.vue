@@ -199,6 +199,25 @@ export default {
       background-color: transparent;
     }
   }
+
+  .table-freeze-frozen,
+  .table-freeze-scrolling {
+    thead tr {
+      background-color: transparent;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: transparent;
+    }
+
+    tbody tr:nth-child(odd) {
+      background-color: transparent;
+    }
+
+    .project-form-access-row-draft {
+      background-color: rgba(0, 0, 0, 0.0225);
+    }
+  }
 }
 </style>
 
