@@ -34,26 +34,8 @@ window.addEventListener('beforeunload', () => {
   console.log('@@@@@@@@@@@@@@@ window event:', 'beforeunload', isUnloading);
   isUnloading = true;
   setTimeout(() => {
-    setTimeout(() => {
-      setTimeout(() => {
-        setTimeout(() => {
-          setTimeout(() => {
-            setTimeout(() => {
-              setTimeout(() => {
-                setTimeout(() => {
-                  setTimeout(() => {
-                    setTimeout(() => {
-                      isUnloading = false;
-                    }, 0);
-                  }, 0);
-                }, 0);
-              }, 0);
-            }, 0);
-          }, 0);
-        }, 0);
-      }, 0);
-    }, 0);
-  }, 0);
+    isUnloading = false;
+  }, 100);
 });
 
 export default {
