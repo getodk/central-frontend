@@ -29,12 +29,24 @@ import PageBody from './page/body.vue';
 import { loadAsync, loadedAsync } from '../util/load-async';
 import { noop } from '../util/util';
 
-let isUnloading;
+let isUnloading = 0;
 
 window.addEventListener('beforeunload', () => {
-  isUnloading = true;
+  console.log('@@@@@@@@@@@@@@@ window event:', 'beforeunload', isUnloading);
+  window.___before_unload = true;
+  isUnloading += 2;
   setTimeout(() => {
-    isUnloading = false;
+    console.log('@@@@@@@@@@@@@@@ timer event:', 'beforeunload', isUnloading);
+    isUnloading -= 5;
+  }, 0);
+});
+window.addEventListener('pagehide', () => {
+  console.log('@@@@@@@@@@@@@@@ window event:', 'pagehide', isUnloading);
+  window.___page_hidden = true;
+  isUnloading += 3;
+  setTimeout(() => {
+    console.log('@@@@@@@@@@@@@@@ timer event:', 'pagehide', isUnloading);
+    isUnloading -= 7;
   }, 0);
 });
 
@@ -121,6 +133,7 @@ export default {
           }
         })
         .catch(err => {
+          if (!canceled) console.log('@@@@@@@@@@@@@@@', 'async-route', 'loadError', 'isUnloading:', isUnloading);
           if (!canceled && !isUnloading) {
             this.logger.error('async-route', 'loadError:', err);
 
