@@ -36,7 +36,21 @@ window.addEventListener('beforeunload', () => {
   setTimeout(() => {
     setTimeout(() => {
       setTimeout(() => {
-        isUnloading = false;
+        setTimeout(() => {
+          setTimeout(() => {
+            setTimeout(() => {
+              setTimeout(() => {
+                setTimeout(() => {
+                  setTimeout(() => {
+                    setTimeout(() => {
+                      isUnloading = false;
+                    }, 0);
+                  }, 0);
+                }, 0);
+              }, 0);
+            }, 0);
+          }, 0);
+        }, 0);
       }, 0);
     }, 0);
   }, 0);
