@@ -22,12 +22,10 @@ except according to the terms contained in the LICENSE file.
         <form-group id="user-edit-password-old-password" v-model="oldPassword"
           type="password" :placeholder="$t('field.oldPassword')" required
           autocomplete="current-password"/>
-        <form-group id="user-edit-password-new-password" v-model="newPassword"
-          type="password" :placeholder="$t('field.newPassword')" required
-          :has-error="tooShort || mismatch" autocomplete="new-password"/>
-        <form-group id="user-edit-password-confirm" v-model="confirm"
-          type="password" :placeholder="$t('field.passwordConfirm')" required
-          :has-error="mismatch" autocomplete="new-password"/>
+        <new-password-form-group id="user-edit-password-new-password" v-model="newPassword"
+          :placeholder="$t('field.newPassword')" strengthMeter/>
+        <new-password-form-group id="user-edit-password-confirm" v-model="confirm"
+          :placeholder="$t('field.passwordConfirm')" :has-error="mismatch"/>
         <button type="submit" class="btn btn-primary"
           :aria-disabled="awaitingResponse">
           {{ $t('action.change') }} <spinner :state="awaitingResponse"/>
@@ -40,6 +38,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import FormGroup from '../../form-group.vue';
+import PasswordStrength from '../../password-strength.vue';
 import Spinner from '../../spinner.vue';
 
 import useRequest from '../../../composables/request';
@@ -49,7 +48,7 @@ import { useRequestData } from '../../../request-data';
 
 export default {
   name: 'UserEditPassword',
-  components: { FormGroup, Spinner },
+  components: { FormGroup, PasswordStrength, Spinner },
   inject: ['alert', 'config'],
   setup() {
     const { currentUser, user } = useRequestData();
@@ -62,19 +61,15 @@ export default {
       newPassword: '',
       tooShort: false,
       confirm: '',
-      mismatch: false
+      mismatch: false,
+      passwordStrength: 0,
     };
   },
   methods: {
     validate() {
-      this.tooShort = false;
       this.mismatch = false;
 
-      if (this.newPassword.length < 10) {
-        this.alert.danger(this.$t('alert.passwordTooShort'));
-        this.tooShort = true;
-        return false;
-      }
+      // TODO check newPassword field
 
       if (this.confirm !== this.newPassword) {
         this.alert.danger(this.$t('alert.mismatch'));
