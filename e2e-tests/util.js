@@ -26,6 +26,11 @@ const test = testBase.extend({
     async ({ allowedLogs, browserName, page }, use) => {
       const fatals = [];
 
+      page.addInitScript(() => {
+        window.addEventListener('beforeunload', () => console.log('@@@@@@@@@@@@@@@ window event:', 'beforeunload');
+        window.addEventListener('pagehide',     () => console.log('@@@@@@@@@@@@@@@ window event:', 'pagehide');
+      });
+
       page.on('console', async consoleMsg => {
         const { url, line, column } = consoleMsg.location();
 
