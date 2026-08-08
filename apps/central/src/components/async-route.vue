@@ -121,7 +121,7 @@ export default {
           }
         })
         .catch(err => {
-          if (!canceled) console.log('@@@@@@@@@@@@@@@', 'async-route', 'loadError', 'isUnloading:', isUnloading);
+          if (!canceled) console.log('@@@@@@@@@@@@@@@', 'async-route', 'loadError', 'isUnloading:', isUnloading, 'visibilityState:', document.visibilityState);
           if (!canceled && !isUnloading) {
             this.logger.error('async-route', 'loadError:', err);
 
