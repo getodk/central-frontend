@@ -35,7 +35,9 @@ window.addEventListener('beforeunload', () => {
   isUnloading = true;
   setTimeout(() => {
     setTimeout(() => {
-      isUnloading = false;
+      setTimeout(() => {
+        isUnloading = false;
+      }, 0);
     }, 0);
   }, 0);
 });
