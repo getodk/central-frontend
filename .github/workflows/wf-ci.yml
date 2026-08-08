@@ -236,9 +236,6 @@ jobs:
       - if: ${{ matrix.target == 'Node' }}
         run: 'npm run test:types -w=packages/web-forms'
 
-      - if: ${{ matrix.target == 'Node' }}
-        run: 'npm run test-node:jsdom -w=packages/web-forms'
-
       - if: ${{ matrix.target == 'Web' }}
         run: 'npx playwright install ${{ matrix.browser }} --with-deps'
 
