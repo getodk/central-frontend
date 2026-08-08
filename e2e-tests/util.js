@@ -27,8 +27,18 @@ const test = testBase.extend({
       const fatals = [];
 
       page.addInitScript(() => {
-        window.addEventListener('beforeunload', () => console.log('@@@@@@@@@@@@@@@ window event:', 'beforeunload'));
-        window.addEventListener('pagehide',     () => console.log('@@@@@@@@@@@@@@@ window event:', 'pagehide'));
+        window.addEventListener('beforeunload', () => {
+          console.log('@@@@@@@@@@@@@@@ window event:', 'beforeunload');
+          window.___before_unload = true;
+        });
+        window.addEventListener('pagehide', () => {
+          console.log('@@@@@@@@@@@@@@@ window event:', 'pagehide');
+          window.___page_hidden = true;
+        });
+        window.addEventListener('unhandledrejection', e => {
+          const err = event.reason;
+          console.log('@@@@@@@@@@@@@@@ window event:', 'unhandledrejection', { ___before_unload:window.___before_unload, ___page_hidden:window.___page_hidden, err });
+        });
       });
 
       page.on('console', async consoleMsg => {
