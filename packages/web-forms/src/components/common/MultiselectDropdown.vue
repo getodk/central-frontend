@@ -32,16 +32,6 @@ const selectValues = (values: readonly string[]) => {
 	props.question.selectValues(values);
 };
 
-const virtualScrollerOptions = computed(() => {
-	const isJSDOM = typeof navigator !== 'undefined' && navigator.userAgent.includes('jsdom');
-	if (isJSDOM) {
-		return;
-	}
-	return {
-		itemSize: DEFAULT_PRIMEVUE_ITEM_HEIGHT
-	};
-});
-
 let panelClass = 'multi-select-dropdown-panel';
 if (props.question.appearances['no-buttons']) {
 	panelClass += ' no-buttons';
@@ -75,7 +65,7 @@ const selectedLabels = computed(() => {
 		option-label="search"
 		:panel-class="panelClass"
 		:model-value="question.currentState.value"
-		:virtual-scroller-options="virtualScrollerOptions"
+		:virtual-scroller-options="{ itemSize: DEFAULT_PRIMEVUE_ITEM_HEIGHT }"
 		@update:model-value="selectValues"
 		@change="$emit('change')"
 	>

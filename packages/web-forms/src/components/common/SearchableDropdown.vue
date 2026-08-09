@@ -28,16 +28,6 @@ const options = computed(() => {
 	});
 });
 
-const virtualScrollerOptions = computed(() => {
-	const isJSDOM = typeof navigator !== 'undefined' && navigator.userAgent.includes('jsdom');
-	if (isJSDOM) {
-		return;
-	}
-	return {
-		itemSize: DEFAULT_PRIMEVUE_ITEM_HEIGHT
-	};
-});
-
 const selectedLabel = computed(() => {
 	const value = props.question.currentState?.value?.[0];
 	if (!value) {
@@ -64,7 +54,7 @@ const selectValue = (value: string) => {
 		:options="options"
 		option-label="search"
 		option-value="value"
-		:virtual-scroller-options="virtualScrollerOptions"
+		:virtual-scroller-options="{ itemSize: DEFAULT_PRIMEVUE_ITEM_HEIGHT }"
 		@update:model-value="selectValue"
 		@change="$emit('change')"
 	>
