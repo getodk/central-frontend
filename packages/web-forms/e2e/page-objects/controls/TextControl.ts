@@ -47,6 +47,10 @@ export class TextControl {
     await this.expectText('.control-text label', expectedLabelText);
   }
 
+  async expectLabels(expectedLabelTexts: string[]) {
+    await expect(this.page.locator('.control-text label')).toHaveText(expectedLabelTexts);
+  }
+
   async expectHintAtIndex(expectedHintText: string, index: number, expectVisible?: boolean) {
     await this.expectTextAtIndex('.control-text .hint', expectedHintText, index, expectVisible);
   }
