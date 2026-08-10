@@ -18,7 +18,7 @@ env:
 jobs:
 
   odk-common:
-    name: '@getodk/common'
+    name: 'common'
     runs-on: 'ubuntu-latest'
 
     strategy:
@@ -50,17 +50,20 @@ jobs:
           path: |
             node_modules
             **/node_modules
-          key: install-${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
-          fail-on-cache-miss: true
+          key: install-v${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
 
       - uses: 'actions/cache@v5'
         id: cache-build
         with:
           path: |
+            dist
             packages/*/dist
-            packages/web-forms/dist-demo
-          key: build-${{ matrix.node-version }}-${{ github.sha }}
+          key: build-${{ github.sha }}
           fail-on-cache-miss: true
+
+      - name: 'npm ci'
+        if: steps.cache-install.outputs.cache-hit != 'true'
+        run: npm ci
 
       - if: ${{ matrix.target == 'Node' }}
         run: 'npm run test:types -w packages/common'
@@ -75,7 +78,7 @@ jobs:
         run: 'npm run test-browser:${{ matrix.browser }} -w packages/common'
 
   xforms-engine:
-    name: '@getodk/xforms-engine'
+    name: 'xforms-engine'
     runs-on: 'ubuntu-latest'
 
     strategy:
@@ -107,17 +110,19 @@ jobs:
           path: |
             node_modules
             **/node_modules
-          key: install-${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
-          fail-on-cache-miss: true
-
+          key: install-v${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
       - uses: 'actions/cache@v5'
         id: cache-build
         with:
           path: |
+            dist
             packages/*/dist
-            packages/web-forms/dist-demo
-          key: build-${{ matrix.node-version }}-${{ github.sha }}
+          key: build-${{ github.sha }}
           fail-on-cache-miss: true
+
+      - name: 'npm ci'
+        if: steps.cache-install.outputs.cache-hit != 'true'
+        run: npm ci
 
       - if: ${{ matrix.target == 'Node' }}
         run: |
@@ -132,7 +137,7 @@ jobs:
           npm run integration-test-browser:${{ matrix.browser }} -w=packages/xforms-engine
 
   xpath:
-    name: '@getodk/xpath'
+    name: 'xpath'
     runs-on: 'ubuntu-latest'
 
     strategy:
@@ -164,17 +169,19 @@ jobs:
           path: |
             node_modules
             **/node_modules
-          key: install-${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
-          fail-on-cache-miss: true
-
+          key: install-v${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
       - uses: 'actions/cache@v5'
         id: cache-build
         with:
           path: |
+            dist
             packages/*/dist
-            packages/web-forms/dist-demo
-          key: build-${{ matrix.node-version }}-${{ github.sha }}
+          key: build-${{ github.sha }}
           fail-on-cache-miss: true
+
+      - name: 'npm ci'
+        if: steps.cache-install.outputs.cache-hit != 'true'
+        run: npm ci
 
       - if: ${{ matrix.target == 'Node' }}
         run: 'npm run test:types -w=packages/xpath'
@@ -189,7 +196,7 @@ jobs:
         run: 'npm run test-browser:${{ matrix.browser }} -w=packages/xpath'
 
   web-forms:
-    name: '@getodk/web-forms'
+    name: 'web-forms'
     runs-on: 'ubuntu-latest'
 
     strategy:
@@ -221,17 +228,19 @@ jobs:
           path: |
             node_modules
             **/node_modules
-          key: install-${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
-          fail-on-cache-miss: true
-
+          key: install-v${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
       - uses: 'actions/cache@v5'
         id: cache-build
         with:
           path: |
+            dist
             packages/*/dist
-            packages/web-forms/dist-demo
-          key: build-${{ matrix.node-version }}-${{ github.sha }}
+          key: build-${{ github.sha }}
           fail-on-cache-miss: true
+
+      - name: 'npm ci'
+        if: steps.cache-install.outputs.cache-hit != 'true'
+        run: npm ci
 
       - if: ${{ matrix.target == 'Node' }}
         run: 'npm run test:types -w=packages/web-forms'
