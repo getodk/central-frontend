@@ -493,9 +493,9 @@ Use the npm scripts in this package to sync with Transifex. From the repository 
 
 - Pull translations from Transifex into `locales/`:
   ```sh
-  npm run translations:pull -w @getodk/web-forms
+  npm run transifex:pull -w @getodk/web-forms
   ```
 - Push the English source strings (`locales/strings_en.json`) to Transifex:
   ```sh
-  npm run translations:push -w @getodk/web-forms
+  npm run transifex:push -w @getodk/web-forms
   ```

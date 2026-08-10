@@ -1087,10 +1087,10 @@ const writeTranslations = (
   }
 
   translations.delete('component');
-  fs.writeFileSync(
-    `${localesDir}/${locale}.json`,
-    JSON.stringify(translations, null, 2)
-  );
+  const content = JSON.stringify(translations, null, 2);
+  if (content != null && content !== '{}') {
+    fs.writeFileSync(`${localesDir}/${locale}.json`, content);
+  }
 };
 
 
