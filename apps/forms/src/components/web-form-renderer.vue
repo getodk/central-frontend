@@ -20,6 +20,7 @@ export interface WebFormsRendererProps {
   actionType: string;
   instanceId?: string | null;
   submissionAttachments?: string[] | null;
+  defaultParameters?: Record<string, string>;
   st?: string | null
 }
 
@@ -298,6 +299,7 @@ const closeWindow = () => {
     :edit-instance="editInstanceOptions"
     :fetch-form-attachment="getAttachment"
     :device-id="deviceID"
+    :instance-defaults="defaultParameters"
     @loaded="webFormLoaded"
     @submit="handleSubmit"/>
 

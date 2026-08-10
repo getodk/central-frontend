@@ -25,11 +25,16 @@ const props = defineProps({
   placement: {
     type: String,
     default: 'bottom-end'
+  },
+  closeOnMenuClick: {
+    type: Boolean,
+    default: true
   }
 });
 
-const triggerId = `dropdown-${useId()}`;
+const emit = defineEmits(['show', 'hide']);
 
+const triggerId = `dropdown-${useId()}`;
 const container = ref(null);
 const menu = ref(null);
 const isOpen = ref(false);
@@ -62,12 +67,14 @@ const show = () => {
   if (isOpen.value) return;
   isOpen.value = true;
   updatePosition();
+  emit('show');
 };
 
-const hide = () => {
+const hide = (toEmit = true) => {
   if (!isOpen.value) return;
   isOpen.value = false;
   menuStyle.value = {};
+  if (toEmit) emit('hide');
 };
 
 const toggle = () => {
@@ -82,8 +89,11 @@ const handleClickOutside = (event) => {
   if (!isOpen.value) return;
 
   // If clicked on trigger, the toggle handler will manage the state
-  const clickedOnTrigger = container.value?.querySelector('.dropdown-toggle').contains(event.target);
-  if (clickedOnTrigger) return;
+  const triggerEl = container.value?.querySelector('.dropdown-toggle');
+  if (triggerEl?.contains(event.target)) return;
+
+  // Don't close if clicked inside the menu; For multiselect, we allow interaction inside the menu
+  if (!props.closeOnMenuClick && menu.value?.contains(event.target)) return;
 
   hide();
 };
@@ -97,4 +107,6 @@ const handleEscape = (event) => {
 useEventListener(document, 'click', handleClickOutside, true);
 useEventListener(document, 'keydown', handleEscape);
 useEventListener(window, 'resize', hide);
+
+defineExpose({ hide: () => hide(false) });
 </script>

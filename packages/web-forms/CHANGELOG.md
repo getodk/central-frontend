@@ -1,5 +1,13 @@
 # @getodk/web-forms
 
+## 1.0.1
+
+### Patch Changes
+
+- f31c1ca: Escapes greater than symbols in markdown
+- 0d32c73: Fixed issue with setvalue updated in an unexpected order
+- b0b83c1: Fixed styling for media upload questions in repeats
+
 ## 1.0.0
 
 ### Major Changes

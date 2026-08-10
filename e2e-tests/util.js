@@ -103,6 +103,9 @@ const globalAllowedLogs = [
   // * https://github.com/getodk/central/issues/1584
   // * https://github.com/getodk/central/issues/2070
   'SyntaxError: 17',
+
+  // Failing on these messages is highly disruptive, as it can randomly happen to non-fatal messages.
+  'Execution context was destroyed, most likely because of a navigation',
 ];
 
 function isFatalConsoleMessage(allowedLogs, consoleMsg, normalisedMsg) {
@@ -145,19 +148,19 @@ async function asText(consoleMsg) {
 
       function filteredStack({ stack }) {
         return stack
-            .split('\n')
-            .reduce((acc, line) => {
-              const prev = acc.at(-1);
+          .split('\n')
+          .reduce((acc, line) => {
+            const prev = acc.at(-1);
 
-              if(line.match(/@http:\/\/central-test\.localhost\/assets\/runtime-core\.esm-bundler-\w+\.js:\d+:\d+$/)) {
-                if(prev?.count) ++prev.count;
-                else acc.push({ count:1 });
-              } else acc.push(line);
+            if(line.match(/@http:\/\/central-test\.localhost\/assets\/runtime-core\.esm-bundler-\w+\.js:\d+:\d+$/)) {
+              if(prev?.count) ++prev.count;
+              else acc.push({ count:1 });
+            } else acc.push(line);
 
-              return acc;
-            }, [])
-            .map(it => typeof it === 'string' ? it : `<${it.count} references to runtime-core.esm-bundler omitted>`)
-            .join('\n');
+            return acc;
+          }, [])
+          .map(it => typeof it === 'string' ? it : `<${it.count} references to runtime-core.esm-bundler omitted>`)
+          .join('\n');
       }
     })));
     return args.join(' ');

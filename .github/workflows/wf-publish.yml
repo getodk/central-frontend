@@ -34,4 +34,4 @@ jobs:
         run: npm run changeset publish
 
       - name: Push package version tags
-        run: git push origin HEAD:master --follow-tags
+        run: git push origin --tags

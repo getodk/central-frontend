@@ -3,6 +3,7 @@ import { xmlElement } from '@getodk/common/test-utils/xform-dsl/index.ts';
 import type {
   AnyFormInstance,
   AnyNode,
+  FormInstanceConfig,
   FormResource,
   InstancePayload,
   InstancePayloadOptions,
@@ -177,6 +178,7 @@ export class Scenario {
         getLocation: () => Promise.resolve(''),
       },
       editInstance: overrideOptions?.editInstance ?? null,
+      instanceDefaults: overrideOptions?.instanceDefaults ?? {},
     };
   }
 
@@ -1210,9 +1212,14 @@ export class Scenario {
   }
 
   /** @see {@link editInstance} */
-  async editCurrentInstance(): Promise<this> {
-    const instance = await editInstance(this.form, this.instanceRoot);
+  async editCurrentInstance(config?: FormInstanceConfig): Promise<this> {
+    const instance = await editInstance(this.form, this.instanceRoot, config);
 
+    return this.fork(instance);
+  }
+
+  resetCurrentInstance(config?: FormInstanceConfig): this {
+    const instance = this.form.resetInstance(config);
     return this.fork(instance);
   }
 }
