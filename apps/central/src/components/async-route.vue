@@ -29,6 +29,17 @@ import PageBody from './page/body.vue';
 import { loadAsync, loadedAsync } from '../util/load-async';
 import { noop } from '../util/util';
 
+let isUnloading;
+window.addEventListener('beforeunload', () => {
+  clearTimeout(isUnloading);
+
+  // Crude handling for unload event being cancelled.  Apparently there's no
+  // deterministic way to detect unload cancellation.
+  isUnloading = setTimeout(() => {
+    isUnloading = false;
+  }, 100);
+});
+
 export default {
   name: 'AsyncRoute',
   components: { Loading, PageBody },
@@ -112,7 +123,7 @@ export default {
           }
         })
         .catch(err => {
-          if (!canceled) {
+          if (!canceled && !isUnloading) {
             this.logger.error('async-route', 'loadError:', err);
 
             // It would be ideal to show a more informative error message.
