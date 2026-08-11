@@ -232,12 +232,9 @@ export class Root
       return null;
     }
 
-    return scanForReachable(
-      pages,
-      startIdx + direction,
-      direction,
-      (page) => this.isPageReachable(page)
-    );
+    return scanForReachable(pages, startIdx + direction, direction, (page) => {
+      return this.isPageReachable(page);
+    });
   }
 
   /**
@@ -268,11 +265,9 @@ export class Root
         }
 
         if (!stillListed) {
-          const recovered = nearestReachablePage(
-            this.getChildren(),
-            current,
-            (page) => this.isPageReachable(page)
-          );
+          const recovered = nearestReachablePage(this.getChildren(), current, (page) => {
+            return this.isPageReachable(page);
+          });
           if (recovered != null) {
             this.setPage(recovered);
           }

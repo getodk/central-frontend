@@ -19,7 +19,10 @@ const isFieldListAnchor = (node: AncestorNode): node is FieldListAnchor => {
 /**
  * Each anchor found replaces the previous one, so the last seen is the outermost.
  */
-const resolveOutermostAnchor = (node: AncestorNode, found: FieldListAnchor | null): FieldListAnchor | null => {
+const resolveOutermostAnchor = (
+  node: AncestorNode,
+  found: FieldListAnchor | null
+): FieldListAnchor | null => {
   if (node.nodeType === 'root') {
     return found;
   }
@@ -35,6 +38,8 @@ const resolveOutermostAnchor = (node: AncestorNode, found: FieldListAnchor | nul
  * When field-lists nest, the outermost one wins. A field-list also holds on through any repeat inside it:
  * every control of every instance lands on the field-list's own page.
  */
-export const resolveFieldListPage = (member: { readonly parent: GeneralParentNode; }): FieldListAnchor | null => {
+export const resolveFieldListPage = (member: {
+  readonly parent: GeneralParentNode;
+}): FieldListAnchor | null => {
   return resolveOutermostAnchor(member.parent, null);
 };

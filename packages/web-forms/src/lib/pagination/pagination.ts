@@ -25,7 +25,9 @@ export const hasVisibleBodyNodes = (node: ContainerNode): boolean => {
   return node.currentState.hasRelevantBodyNodes;
 };
 
-export const isAddButtonVisible = (range: RepeatRangeNode): range is RepeatRangeUncontrolledNode => {
+export const isAddButtonVisible = (
+  range: RepeatRangeNode
+): range is RepeatRangeUncontrolledNode => {
   if (range.nodeType !== 'repeat-range:uncontrolled') {
     return false;
   }

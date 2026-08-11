@@ -252,40 +252,38 @@ describe('PaginationRegistry', () => {
     expect(tail.currentState.pageBoundary).toBe(tail.nodeId);
   });
 
-  it(
-    'a repeat outside a field-list is its own pageBoundary while empty, then the page of its last relevant question',
-    async () => {
-      const root = await initForm(
-        buildForm(
-          [t('toggle', 'yes'), t('child jr:template=""', t('q1'), t('q2'))],
-          [
-            input('/data/toggle'),
-            group(
-              '/data/child',
-              repeat('/data/child', input('/data/child/q1'), input('/data/child/q2'))
-            ),
-          ],
-          [
-            bind('/data/toggle').type('string'),
-            bind('/data/child/q2').type('string').relevant("/data/toggle = 'yes'"),
-          ]
-        )
-      );
+  it('a repeat outside a field-list is its own pageBoundary while empty, then the page of its last relevant question', async () => {
+    const root = await initForm(
+      buildForm(
+        [t('toggle', 'yes'), t('child jr:template=""', t('q1'), t('q2'))],
+        [
+          input('/data/toggle'),
+          group(
+            '/data/child',
+            repeat('/data/child', input('/data/child/q1'), input('/data/child/q2'))
+          ),
+        ],
+        [
+          bind('/data/toggle').type('string'),
+          bind('/data/child/q2').type('string').relevant("/data/toggle = 'yes'"),
+        ]
+      )
+    );
 
-      const range = getUncontrolledRange(root);
-      expect(range.currentState.pageBoundary).toBe(range.nodeId);
+    const range = getUncontrolledRange(root);
+    expect(range.currentState.pageBoundary).toBe(range.nodeId);
 
-      range.addInstances();
-      expect(range.currentState.pageBoundary).toBe(getControlNode(root, '/data/child[1]/q2').nodeId);
+    range.addInstances();
+    expect(range.currentState.pageBoundary).toBe(getControlNode(root, '/data/child[1]/q2').nodeId);
 
-      range.addInstances();
-      expect(range.currentState.pageBoundary).toBe(getControlNode(root, '/data/child[2]/q2').nodeId);
+    range.addInstances();
+    expect(range.currentState.pageBoundary).toBe(getControlNode(root, '/data/child[2]/q2').nodeId);
 
-      getInputNode(root, '/data/toggle').setValue('no');
-      expect(range.currentState.pageBoundary).toBe(getControlNode(root, '/data/child[2]/q1').nodeId);
+    getInputNode(root, '/data/toggle').setValue('no');
+    expect(range.currentState.pageBoundary).toBe(getControlNode(root, '/data/child[2]/q1').nodeId);
 
-      getInputNode(root, '/data/toggle').setValue('yes');
-      expect(range.currentState.pageBoundary).toBe(getControlNode(root, '/data/child[2]/q2').nodeId);
+    getInputNode(root, '/data/toggle').setValue('yes');
+    expect(range.currentState.pageBoundary).toBe(getControlNode(root, '/data/child[2]/q2').nodeId);
   });
 
   it('an empty inner repeat is the page where its outer repeat ends', async () => {
