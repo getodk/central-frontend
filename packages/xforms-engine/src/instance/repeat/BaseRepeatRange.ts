@@ -40,6 +40,7 @@ import type { Attribute } from '../Attribute.ts';
 import type { GeneralParentNode, RepeatRange } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { ClientReactiveSerializableParentNode } from '../internal-api/serialization/ClientReactiveSerializableParentNode.ts';
+import { lastReachablePage, type Page } from '../pagination/pageSequence.ts';
 import { RepeatInstance } from './RepeatInstance.ts';
 
 interface RepeatRangeStateSpec extends DescendantNodeSharedStateSpec {
@@ -48,7 +49,7 @@ interface RepeatRangeStateSpec extends DescendantNodeSharedStateSpec {
   readonly children: Accessor<readonly FormNodeID[]>;
   readonly hasRelevantBodyNodes: Accessor<boolean>;
   readonly hasBodyNodesOnCurrentPage: Accessor<boolean>;
-  readonly pageBoundary: PageBoundary;
+  readonly pageBoundary: Accessor<PageBoundary>;
 
   readonly attributes: Accessor<readonly Attribute[]>;
   readonly valueOptions: null;
@@ -185,7 +186,7 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatDefinition>
         children: childrenState.childIds,
         hasRelevantBodyNodes: this.hasRelevantBodyNodes,
         hasBodyNodesOnCurrentPage: this.hasBodyNodesOnCurrentPage,
-        pageBoundary: this.root.paginationRegistry.attachRange(this, definition.isUncontrolled()),
+        pageBoundary: this.resolvePageBoundary(definition.isUncontrolled()),
         attributes: attributeState.getAttributes,
         valueOptions: null,
         value: null,
@@ -201,6 +202,24 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatDefinition>
       childrenState
     );
     this.instanceState = createNodeRangeInstanceState(this);
+  }
+
+  private resolvePageBoundary(isUncontrolled: boolean): Accessor<PageBoundary> {
+    const registry = this.root.paginationRegistry;
+    if (!registry.enabled) {
+      return () => this.nodeId;
+    }
+
+    const attached = registry.attachRange(this, isUncontrolled);
+    if (!isUncontrolled || attached !== this.nodeId) {
+      return () => attached;
+    }
+
+    const isReachable = (page: Page): boolean => this.root.isPageReachable(page);
+    return () => {
+      const endPage = lastReachablePage(this.getChildren(), isReachable);
+      return endPage?.nodeId ?? this.nodeId;
+    };
   }
 
   protected getLastIndex(): number {

@@ -16,6 +16,7 @@ import {
   getControlNode,
   getGroupNode,
   getInputNode,
+  getRepeatInstanceNode,
   getUncontrolledRange,
   pagesBody,
   setupPaginationForms,
@@ -249,5 +250,71 @@ describe('PaginationRegistry', () => {
 
     expect(a.currentState.pageBoundary).toBe(fl.nodeId);
     expect(tail.currentState.pageBoundary).toBe(tail.nodeId);
+  });
+
+  it(
+    'a repeat outside a field-list is its own pageBoundary while empty, then the page of its last relevant question',
+    async () => {
+      const root = await initForm(
+        buildForm(
+          [t('toggle', 'yes'), t('child jr:template=""', t('q1'), t('q2'))],
+          [
+            input('/data/toggle'),
+            group(
+              '/data/child',
+              repeat('/data/child', input('/data/child/q1'), input('/data/child/q2'))
+            ),
+          ],
+          [
+            bind('/data/toggle').type('string'),
+            bind('/data/child/q2').type('string').relevant("/data/toggle = 'yes'"),
+          ]
+        )
+      );
+
+      const range = getUncontrolledRange(root);
+      expect(range.currentState.pageBoundary).toBe(range.nodeId);
+
+      range.addInstances();
+      expect(range.currentState.pageBoundary).toBe(getControlNode(root, '/data/child[1]/q2').nodeId);
+
+      range.addInstances();
+      expect(range.currentState.pageBoundary).toBe(getControlNode(root, '/data/child[2]/q2').nodeId);
+
+      getInputNode(root, '/data/toggle').setValue('no');
+      expect(range.currentState.pageBoundary).toBe(getControlNode(root, '/data/child[2]/q1').nodeId);
+
+      getInputNode(root, '/data/toggle').setValue('yes');
+      expect(range.currentState.pageBoundary).toBe(getControlNode(root, '/data/child[2]/q2').nodeId);
+  });
+
+  it('an empty inner repeat is the page where its outer repeat ends', async () => {
+    const root = await initForm(
+      buildForm(
+        [t('hh jr:template=""', t('hhname'), t('member jr:template=""', t('mname')))],
+        [
+          group(
+            '/data/hh',
+            repeat(
+              '/data/hh',
+              input('/data/hh/hhname'),
+              group('/data/hh/member', repeat('/data/hh/member', input('/data/hh/member/mname')))
+            )
+          ),
+        ]
+      )
+    );
+
+    const outer = getUncontrolledRange(root);
+    outer.addInstances();
+
+    const inner = getUncontrolledRange(getRepeatInstanceNode(root, '/data/hh[1]'));
+    expect(inner.getChildren().length).toBe(0);
+    expect(outer.currentState.pageBoundary).toBe(inner.nodeId);
+
+    inner.addInstances();
+    const member = getControlNode(root, '/data/hh[1]/member[1]/mname');
+    expect(inner.currentState.pageBoundary).toBe(member.nodeId);
+    expect(outer.currentState.pageBoundary).toBe(member.nodeId);
   });
 });

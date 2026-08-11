@@ -190,7 +190,7 @@ describe('Root', () => {
       );
     };
 
-    it("adding an instance navigates to the new instance's page, kept in document order", async () => {
+    it('adding an instance navigates to the page of the new instance, kept in document order', async () => {
       const root = await initForm(midFormRepeatForm(t('r', t('q'))));
       const r1q = getControlNode(root, '/data/r[1]/q');
       const tail = getControlNode(root, '/data/tail');
@@ -227,7 +227,7 @@ describe('Root', () => {
       expect(root.currentState.currentPage).toBe(range.nodeId);
     });
 
-    it("adding the first instance auto-advances to the new instance's page", async () => {
+    it('adding the first instance auto-advances to the page of the new instance', async () => {
       const root = await initForm(midFormRepeatForm(t('r jr:template=""', t('q'))));
 
       root.nextPage();
@@ -237,7 +237,7 @@ describe('Root', () => {
       expect(root.currentState.currentPage).toBe(r1q.nodeId);
     });
 
-    it("removing the only instance falls back to the now-empty range's page", async () => {
+    it('removing the only instance falls back to the page of the now-empty range', async () => {
       const root = await initForm(midFormRepeatForm(t('r jr:template=""', t('q')), t('r', t('q'))));
       const r1q = getControlNode(root, '/data/r[1]/q');
       const range = getUncontrolledRange(root);

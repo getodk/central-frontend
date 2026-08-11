@@ -9,8 +9,8 @@ import type { BaseRepeatRangeNode, BaseRepeatRangeNodeState } from './BaseRepeat
  */
 export interface RepeatRangeUncontrolledState extends BaseRepeatRangeNodeState {
   /**
-   * The page this repeat belongs to: the field-list page containing it, or — outside any
-   * field-list — its own page, which exists only while the repeat has no instances.
+   * The page this repeat ends on: the field-list page containing it; its own page while it has no instances;
+   * otherwise its last reachable page.
    */
   get pageBoundary(): PageBoundary;
 }

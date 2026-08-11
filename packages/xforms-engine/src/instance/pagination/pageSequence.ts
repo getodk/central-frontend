@@ -69,6 +69,14 @@ export const scanForReachable = (
   return ordered.find(isReachable) ?? null;
 };
 
+export const lastReachablePage = (
+  children: ReadonlyArray<GeneralChildNode | RepeatInstance>,
+  isReachable: (page: Page) => boolean
+): Page | null => {
+  const pages = pageMembersOf(children).map((member) => pageOf(member));
+  return scanForReachable(pages, pages.length - 1, MOVE_BACKWARD, isReachable);
+};
+
 /**
  * Finds somewhere to go when the current page no longer exists (its repeat instance was removed).
  *

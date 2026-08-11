@@ -220,14 +220,14 @@ export class Root
     this.turnPage(MOVE_BACKWARD);
   }
 
-  private isPageReachable(page: Page): boolean {
+  isPageReachable(page: Page): boolean {
     return this.paginationRegistry.countPageMembers(page.nodeId) > 0;
   }
 
   private findReachablePage(from: Page | null, direction: NavigationDirection): Page | null {
     const NO_POSITION = -1;
     const pages = this.getOrderedPages();
-    const startIdx = from == null ? NO_POSITION : pages.findIndex((page) => page.nodeId === from.nodeId);
+    const startIdx = from == null ? NO_POSITION : pages.findIndex((p) => p.nodeId === from.nodeId);
     if (from != null && startIdx === NO_POSITION) {
       return null;
     }
