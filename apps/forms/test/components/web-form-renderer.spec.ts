@@ -87,7 +87,7 @@ describe('WebFormRenderer', () => {
   };
 
   const submit = async (component: VueWrapper) => {
-    await component.find('.odk-form .footer button').trigger('click');
+    await component.find('.odk-form .form-footer button').trigger('click');
     await vi.waitFor(() => {
       const el = document.querySelector('.p-dialog-header');
       if (!el) throw new Error('Not ready yet');
