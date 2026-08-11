@@ -70,8 +70,7 @@ export const scanForReachable = (
 };
 
 /**
- * Finds somewhere to go when the current page no longer exists (its repeat instance was removed, or an empty repeat
- * just gained its first instance).
+ * Finds somewhere to go when the current page no longer exists (its repeat instance was removed).
  *
  * Searches forward from the first page of the node's nearest remaining ancestor, so a removed instance lands on one
  * of its repeat's remaining instances rather than jumping back over the whole repeat.

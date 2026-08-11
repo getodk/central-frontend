@@ -1,8 +1,8 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
-import type { NoteNode, NoteNodeAppearances, NoteValue } from '../client/NoteNode.ts';
 import type { PageBoundary } from '../client/identity.ts';
+import type { NoteNode, NoteNodeAppearances, NoteValue } from '../client/NoteNode.ts';
 import type { TextRange } from '../client/TextRange.ts';
 import type { ValueType } from '../client/ValueType.ts';
 import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';

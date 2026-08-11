@@ -1,5 +1,6 @@
 import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
+import type { PageBoundary } from '../client/identity.ts';
 import type {
   InputDefinition,
   InputNode,
@@ -13,7 +14,6 @@ import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPat
 import type { StaticLeafElement } from '../integration/xpath/static-dom/StaticElement.ts';
 import type { RuntimeInputValue, RuntimeValue } from '../lib/codecs/getSharedValueCodec.ts';
 import { getSharedValueCodec } from '../lib/codecs/getSharedValueCodec.ts';
-import type { PageBoundary } from '../client/identity.ts';
 import {
   createAttributeState,
   type AttributeState,

@@ -119,7 +119,7 @@ test.describe('Pagination', () => {
       await formPage.repeat.expectAddButtonVisible(true);
     });
 
-    test('adding an instance from the last page keeps document order for Next/Prev', async () => {
+    test('adding an instance from the last page navigates to it, keeping document order', async () => {
       await formPage.pagination.clickNext();
       await formPage.pagination.clickNext();
       await formPage.pagination.clickNext();
@@ -127,14 +127,15 @@ test.describe('Pagination', () => {
       await formPage.text.expectLabels(['Child 2 age']);
 
       await formPage.repeat.addInstance();
-      await formPage.text.expectLabels(['Child 2 age']);
-
-      await formPage.pagination.clickNext();
       await formPage.text.expectLabels(['Child 3 name']);
+
       await formPage.pagination.clickNext();
       await formPage.text.expectLabels(['Child 3 age']);
       await formPage.pagination.expectNavigation({ previous: true, next: false });
       await formPage.repeat.expectAddButtonVisible(true);
+
+      await formPage.pagination.clickPrevious();
+      await formPage.text.expectLabels(['Child 3 name']);
     });
   });
 
@@ -284,7 +285,6 @@ test.describe('Pagination', () => {
 
       await formPage.repeat.addInstance('Households');
 
-      await formPage.pagination.clickNext();
       await formPage.text.expectLabels(['Household 3 name']);
       await formPage.pagination.expectNavigation({ previous: true, next: false });
       await formPage.repeat.expectAddButtonVisible(true, 'Households');

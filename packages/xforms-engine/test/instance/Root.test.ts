@@ -135,7 +135,7 @@ describe('Root', () => {
       expect(root.currentState.currentPage).toBe(tail.nodeId);
     });
 
-    it('canGoNext re-derives after first read when a new instance adds a page', async () => {
+    it('adding an instance navigates to it and updates the navigation state', async () => {
       const root = await initForm(
         buildForm(
           [t('r', t('x'))],
@@ -144,10 +144,14 @@ describe('Root', () => {
       );
 
       expect(root.currentState.canGoNext).toBe(false);
+      expect(root.currentState.canGoPrevious).toBe(false);
 
       getUncontrolledRange(root).addInstances();
 
-      expect(root.currentState.canGoNext).toBe(true);
+      const repeatInstance = getRepeatInstanceNode(root, '/data/r[2]');
+      expect(root.currentState.currentPage).toBe(repeatInstance.nodeId);
+      expect(root.currentState.canGoPrevious).toBe(true);
+      expect(root.currentState.canGoNext).toBe(false);
     });
 
     it('auto-advances backward when nothing is reachable forward', async () => {
@@ -186,7 +190,7 @@ describe('Root', () => {
       );
     };
 
-    it("inserts a new instance's page between its repeat and the next page", async () => {
+    it("adding an instance navigates to the new instance's page, kept in document order", async () => {
       const root = await initForm(midFormRepeatForm(t('r', t('q'))));
       const r1q = getControlNode(root, '/data/r[1]/q');
       const tail = getControlNode(root, '/data/tail');
@@ -195,8 +199,6 @@ describe('Root', () => {
       getUncontrolledRange(root).addInstances();
 
       const r2q = getControlNode(root, '/data/r[2]/q');
-
-      root.nextPage();
       expect(root.currentState.currentPage).toBe(r2q.nodeId);
 
       root.nextPage();
