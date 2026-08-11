@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import IconSVG from '@/components/common/IconSVG.vue';
 import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
 import type { Translate } from '@/lib/locale/useLocale.ts';
 import type { RootNode } from '@getodk/xforms-engine';
@@ -16,32 +17,34 @@ const t: Translate = inject(TRANSLATE)!;
 			v-if="root.currentState.canGoPrevious"
 			outlined
 			severity="contrast"
-			:label="t('odk_web_forms.back.label')"
 			@click="root.previousPage()"
-		/>
+		>
+			<IconSVG name="mdiArrowLeft" />
+			<span>{{ t('odk_web_forms.back.label') }}</span>
+		</Button>
 		<Button
 			v-if="root.currentState.canGoNext"
 			class="primary-action"
-			:label="t('odk_web_forms.next.label')"
 			@click="root.nextPage()"
-		/>
+		>
+			<span>{{ t('odk_web_forms.next.label') }}</span>
+			<IconSVG name="mdiArrowRight" variant="inverted" />
+		</Button>
 		<!-- canGoNext is false on the last page and always on non-paginated forms; Send takes Next's place in both. -->
 		<Button
 			v-else
 			class="primary-action"
-			:label="t('odk_web_forms.submit.label')"
 			@click="$emit('submit')"
-		/>
+		>
+			<span>{{ t('odk_web_forms.submit.label') }}</span>
+			<IconSVG name="mdiSendVariantOutline" variant="inverted" />
+		</Button>
 	</div>
 </template>
 
 <style scoped lang="scss">
 .form-footer {
-	margin-top: 1.5rem;
-
-	button {
-		min-width: 160px;
-	}
+	margin-top: var(--odk-spacing-xl);
 
 	.primary-action {
 		margin-left: auto;
