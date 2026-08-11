@@ -1,3 +1,5 @@
+import { nextTick } from 'vue';
+
 import SubmissionRestore from '../../../src/components/submission/restore.vue';
 
 import { mergeMountOptions, mount } from '../../util/lifecycle';
@@ -8,8 +10,9 @@ const mountComponent = (options = undefined) =>
   }));
 
 describe('SubmissionRestore', () => {
-  it('focuses the checkbox', () => {
+  it('focuses the checkbox', async () => {
     const modal = mountComponent({ attachTo: document.body });
+    await nextTick();
     modal.get('input').should.be.focused();
   });
 

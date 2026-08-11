@@ -1,6 +1,6 @@
 {
   "name": "@getodk/xforms-engine",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "license": "Apache-2.0",
   "description": "XForms engine for ODK Web Forms",
   "type": "module",
@@ -88,14 +88,6 @@
     "vite-plugin-dts": "^4.5.4",
     "vite-plugin-no-bundle": "^4.0.0",
     "web-tree-sitter": "0.24.5"
-  },
-  "peerDependencies": {
-    "solid-js": "^1.9.7"
-  },
-  "peerDependenciesMeta": {
-    "solid-js": {
-      "optional": true
-    }
   },
   "publishConfig": {
     "access": "public"

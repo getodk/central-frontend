@@ -311,7 +311,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-##### Misc<br/>🟩⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ 11\%
+##### Misc<br/>🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ 22\%
 
   </summary>
   <br/>
@@ -319,7 +319,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
 | Feature <img width=250px/>                                                       | Progress |
 | -------------------------------------------------------------------------------- | :------: |
 | [last saved instance](https://github.com/getodk/web-forms/issues/306)            |          |
-| [defaults from query parameters](https://github.com/getodk/web-forms/issues/464) |          |
+| [defaults from query parameters](https://github.com/getodk/web-forms/issues/464) |    ✅    |
 | multi-form app-like experience                                                   |          |
 | [prevent multiple submissions](https://github.com/getodk/web-forms/issues/461)   |          |
 | configure end of form experience                                                 |          |
@@ -348,6 +348,7 @@ To use this library in a Vue.js application:
     :submission-max-size="5242880"  <!-- 5MB -->
     :edit-instance="editOptions"
     :preload-properties="preloadProperties"
+    :instance-defaults="instanceDefaults"
     :device-id="abc123"
     @submit="handleSubmit"
     @submit-chunked="handleChunkedSubmit"
@@ -375,6 +376,7 @@ The `<OdkWebForm>` component accepts the following props:
 - `editInstance` (`EditInstanceOptions`, optional): Options to resolve and load instance and attachment resources for editing.
 - `preloadProperties` (`PreloadProperties`, optional): Properties to make available for binding in the form using jr:preload.
 - `deviceId` (`string`, optional): If provided is available for binding into the form using preload attributes. Ignored if `preloadProperties.deviceID` is given.
+- `instanceDefaults` (`InstanceDefaults`, optional): Default values to set in the form as a map of xpath reference to string value.
 
 ### Events (`OdkWebFormEmits`)
 
@@ -491,9 +493,9 @@ Use the npm scripts in this package to sync with Transifex. From the repository 
 
 - Pull translations from Transifex into `locales/`:
   ```sh
-  npm run translations:pull -w @getodk/web-forms
+  npm run transifex:pull -w @getodk/web-forms
   ```
 - Push the English source strings (`locales/strings_en.json`) to Transifex:
   ```sh
-  npm run translations:push -w @getodk/web-forms
+  npm run transifex:push -w @getodk/web-forms
   ```

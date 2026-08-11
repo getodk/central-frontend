@@ -26,6 +26,7 @@ module.exports = {
       'devDependencies': ['**/test/**', 'vite.config.js'],
       'packageDir': ['.', '../..'],
     }],
+    'indent': [ 'error', 2, { SwitchCase:1 } ],
     'lines-between-class-members': ['error', 'always', {
       exceptAfterSingleLine: true
     }],

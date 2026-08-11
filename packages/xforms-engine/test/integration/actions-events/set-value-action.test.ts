@@ -717,7 +717,7 @@ describe('setvalue action', () => {
                 mainInstance(
                   t(
                     'data id="setvalue-multiple"',
-                    t('my-value-1', '1'),
+                    t('my-value-1'),
                     t('my-value-2'),
                     t('my-value-3'),
                     t('my-value-4'),
@@ -749,6 +749,13 @@ describe('setvalue action', () => {
         expect(scenario.answerOf('/data/my-value-3')).toEqualAnswer(intAnswer(4));
         expect(scenario.answerOf('/data/my-value-4')).toEqualAnswer(intAnswer(5));
         expect(scenario.answerOf('/data/my-value-5')).toEqualAnswer(intAnswer(6));
+
+        scenario.answer('/data/my-value-1', '3');
+        expect(scenario.answerOf('/data/my-value-1')).toEqualAnswer(intAnswer(3));
+        expect(scenario.answerOf('/data/my-value-2')).toEqualAnswer(intAnswer(4));
+        expect(scenario.answerOf('/data/my-value-3')).toEqualAnswer(intAnswer(5));
+        expect(scenario.answerOf('/data/my-value-4')).toEqualAnswer(intAnswer(6));
+        expect(scenario.answerOf('/data/my-value-5')).toEqualAnswer(intAnswer(7));
       });
 
       it('handles removed repeats', async () => {

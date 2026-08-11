@@ -1,0 +1,137 @@
+{
+  "component": {
+    "Preview": {
+      "formNotFound": {
+        "string": ""
+      }
+    },
+    "Submission": {
+      "formNotFound": {
+        "title": {
+          "string": "Tidak dapat membuka formulir"
+        },
+        "body": {
+          "string": "Pastikan tautan sudah benar. Formulir mungkin sudah tidak tersedia, atau akses Anda mungkin telah kedaluwarsa. Jika masalah berlanjut, hubungi orang yang mengirimkan tautan formulir tersebut kepada Anda."
+        }
+      },
+      "errorNotProblem": {
+        "title": {
+          "string": "Terjadi kesalahan"
+        },
+        "body": {
+          "string": "Coba lagi nanti. Jika masalah berlanjut, hubungi orang yang mengirimkan tautan formulir tersebut kepada Anda."
+        },
+        "status": {
+          "string": "Kode error: {status}"
+        }
+      }
+    },
+    "WebFormRenderer": {
+      "action": {
+        "close": {
+          "string": ""
+        },
+        "tryAgain": {
+          "string": ""
+        }
+      },
+      "previewModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "submissionModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        },
+        "action": {
+          "fillOutAgain": {
+            "string": ""
+          }
+        }
+      },
+      "thankYouModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "editSubmissionModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "errorModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "sendingDataModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "sessionTimeoutModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "full": {
+            "string": "",
+            "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
+          },
+          "here": {
+            "string": "",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nPlease log in {here} in a different browser tab and try again."
+          }
+        }
+      },
+      "retryModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "util": {
+        "request": {
+          "noResponse": {
+            "string": ""
+          },
+          "problem": {
+            "404_1": {
+              "string": ""
+            }
+          }
+        }
+      },
+      "mixin": {
+        "request": {
+          "alert": {
+            "entityTooLarge": {
+              "string": ""
+            }
+          }
+        }
+      }
+    }
+  }
+}

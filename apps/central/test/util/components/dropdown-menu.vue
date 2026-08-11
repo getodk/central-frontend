@@ -1,6 +1,6 @@
 <template>
   <div>
-    <dropdown>
+    <dropdown ref="dropdown" :close-on-menu-click="closeOnMenuClick">
       <template #toggle="{ toggle, attrs }">
         <button type="button" v-bind="attrs" @click="toggle">
           Menu
@@ -20,6 +20,12 @@ import Dropdown from '../../../src/components/dropdown.vue';
 
 export default {
   name: 'TestDropdownMenu',
-  components: { Dropdown }
+  components: { Dropdown },
+  props: {
+    closeOnMenuClick: {
+      type: Boolean,
+      default: true
+    }
+  }
 };
 </script>

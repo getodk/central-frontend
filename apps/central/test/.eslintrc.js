@@ -15,6 +15,7 @@ module.exports = {
   },
   rules: {
     'eol-last': 'error',
+    indent: ['error', 2, { SwitchCase: 1 }],
     'no-await-in-loop': 'off',
     'no-unused-expressions': 'off'
   }
