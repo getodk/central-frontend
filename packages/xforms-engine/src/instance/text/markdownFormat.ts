@@ -226,10 +226,13 @@ function toOdkMarkdown(str: string): MarkdownNode[] {
   str = escapeBlockquote(str);
   const tree = fromMarkdown(str);
   newlineToBreak(tree);
-  const odk = mdastToOdkMarkdown(tree.children);
+  console.log('input', str);
+  let odk = mdastToOdkMarkdown(tree.children);
   if (isSingleOrderedList(odk)) {
     // do not return a numbered list with only a single element - this is almost never what people expect
-    return [new ChildMarkdownNode(str)];
+    odk = odk[0].children[0].children;
+    odk[0].children.unshift(new ChildMarkdownNode('21. '));
+    // return [new ChildMarkdownNode(str)];
   }
   if (odk.length === 1 && odk[0]?.role === 'parent' && odk[0]?.elementName === 'p') {
     // mdast tends to add too many paragraphs which if left in place, puts a block level

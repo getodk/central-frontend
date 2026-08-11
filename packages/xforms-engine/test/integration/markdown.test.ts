@@ -544,6 +544,29 @@ double line break`;
         { value: ' Welcome.' },
       ]);
     });
+
+    it.only('allows for outputs inside ordered lists with a single item', async () => {
+      const scenario = await outputScenario('21. <output value=" /data/name " /> Welcome.');
+      scenario.next('/data/name');
+      scenario.answer('fred');
+      const label = scenario.getQuestionLabel({ assertCurrentReference: '/data/name' }).formatted;
+      console.log(JSON.stringify(label, null, 2));
+      expect(label).toMatchObject([
+        {
+          elementName: 'span',
+          children: [
+            { value: '21. ' },
+            {
+              elementName: 'span',
+              children: [
+                { value: 'fred' },
+              ],
+            }
+          ],
+        },
+        { value: ' Welcome.' },
+      ]);
+    });
   });
 
   it('should work in select options', async () => {
