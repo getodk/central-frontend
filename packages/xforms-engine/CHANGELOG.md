@@ -1,5 +1,11 @@
 # @getodk/xforms-engine
 
+## 1.0.2
+
+### Patch Changes
+
+- 5827edb: Fixed performance issues when rendering a select with options from a large entity list
+
 ## 1.0.1
 
 ### Patch Changes
