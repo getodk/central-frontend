@@ -6,7 +6,7 @@
     </div>
       <select class="form-control" :value="modelValue" :disabled="disabled"
         :aria-disabled="disabled" v-tooltip.aria-describedby="disabledMessage"
-        @change="$emit('update:modelValue', $event.target.value === '' ? null : Number($event.target.value))">
+        @change="onChange($event.target.value)">
         <option value="">{{ $t('noUserSelected') }}</option>
         <template v-if="fieldKeys.dataExists">
           <option v-for="fieldKey in fieldKeys" :key="fieldKey.id" :value="fieldKey.id">
@@ -42,8 +42,6 @@ const props = defineProps({
     required: false
   }
 });
-defineEmits(['update:modelValue']);
-
 const { fieldKeys } = useRequestData();
 
 const displayValue = computed(() => {
@@ -51,6 +49,13 @@ const displayValue = computed(() => {
   const fieldKey = fieldKeys.data?.find(fk => fk.id === props.modelValue);
   return fieldKey?.displayName ?? t('noUserSelected');
 });
+
+const emit = defineEmits(['update:modelValue']);
+const onChange = (value) => {
+  const newValue = value === '' ? null : Number(value);
+  if (newValue === props.modelValue) return;
+  emit('update:modelValue', newValue);
+};
 </script>
 
 <style lang="scss">
@@ -83,7 +88,7 @@ const displayValue = computed(() => {
 <i18n lang="json5">
 {
   "en": {
-    "noUserSelected": "All",
+    "noUserSelected": "Me",
     "viewAs": "Viewing As",
   }
 }
