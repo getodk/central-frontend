@@ -1,7 +1,8 @@
 import { expect, Page } from '@playwright/test';
 
 const NEXT = 'Next';
-const PREVIOUS = 'Previous';
+const BACK = 'Back';
+const SEND = 'Send';
 
 interface NavigationState {
   previous: boolean;
@@ -30,16 +31,12 @@ export class PaginationControl {
   }
 
   async clickPrevious() {
-    await this.clickButton(PREVIOUS);
+    await this.clickButton(BACK);
   }
 
   async expectNavigation({ previous, next }: NavigationState) {
-    const previousButton = this.button(PREVIOUS);
-    const nextButton = this.button(NEXT);
-
-    await expect(previousButton).toBeVisible();
-    await expect(nextButton).toBeVisible();
-    await expect(previousButton).toBeEnabled({ enabled: previous });
-    await expect(nextButton).toBeEnabled({ enabled: next });
+    await expect(this.button(BACK)).toBeVisible({ visible: previous });
+    await expect(this.button(NEXT)).toBeVisible({ visible: next });
+    await expect(this.button(SEND)).toBeVisible({ visible: !next });
   }
 }

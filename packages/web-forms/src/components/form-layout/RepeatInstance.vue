@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
 import type { Translate } from '@/lib/locale/useLocale.ts';
+import { hasVisibleBodyNodes } from '@/lib/pagination/pagination.ts';
 import type { GeneralChildNode, GroupNode, RepeatInstanceNode } from '@getodk/xforms-engine';
 import { type MenuItem } from 'primevue/menuitem';
 import { computed, inject } from 'vue';
@@ -67,7 +68,7 @@ const menuItems = computed((): MenuItem[] | undefined => {
 </script>
 <template>
 	<FormPanel
-		v-if="instance.currentState.hasRelevantBodyNodes"
+		v-if="hasVisibleBodyNodes(instance)"
 		:title="label.literal"
 		:title-formatted="label.formatted"
 		:menu-items="menuItems"

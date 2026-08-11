@@ -3,6 +3,7 @@ import IconSVG from '@/components/common/IconSVG.vue';
 import MarkdownBlock from '@/components/common/MarkdownBlock.vue';
 import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
 import type { Translate } from '@/lib/locale/useLocale.ts';
+import { hasVisibleBodyNodes, isAddButtonVisible } from '@/lib/pagination/pagination.ts';
 import type { RepeatRangeNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import { computed, inject } from 'vue';
@@ -13,7 +14,7 @@ const props = defineProps<{ node: RepeatRangeNode }>();
 const label = computed(() => props.node.currentState.label?.formatted);
 </script>
 <template>
-	<template v-if="node.currentState.hasRelevantBodyNodes">
+	<template v-if="hasVisibleBodyNodes(node)">
 		<RepeatInstance
 			v-for="(instance, index) in node.currentState.children"
 			:key="index"
@@ -22,7 +23,7 @@ const label = computed(() => props.node.currentState.label?.formatted);
 		/>
 	</template>
 	<Button
-		v-if="node.nodeType === 'repeat-range:uncontrolled'"
+		v-if="isAddButtonVisible(node)"
 		outlined
 		severity="contrast"
 		class="button-add-instance"
