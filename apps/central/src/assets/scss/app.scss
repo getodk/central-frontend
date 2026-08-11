@@ -196,7 +196,7 @@ class. */
 
 .btn {
   border: none;
-  border-radius: 2px;
+  border-radius: 6px;
   font-size: $font-size-btn;
   // I think we set this for the Spinner component.
   overflow: hidden;
@@ -225,14 +225,20 @@ class. */
 }
 
 .btn-default {
-  background-color: #ddd;
+  background-color: #fff;
+  color: $color-action-background;
+  border: 1px solid $color-action-background;
 
   &:hover, &:focus, &:active:focus {
-    background-color: #ccc;
-    &[aria-disabled="true"], &.disabled, fieldset[disabled] & { background-color: #ddd; }
+    background-color: $color-action-background;
+    color: #fff;
+    &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
+      background-color: #fff;
+      color: $color-action-background;
+    }
   }
 
-  > [class^="icon-"]:first-child { color: $color-action-background; }
+  > [class^="icon-"]:first-child { color: inherit; }
 }
 
 .btn-danger {
@@ -353,19 +359,9 @@ a {
     }
   }
 
-  > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
-    border-radius: 0;
+  > .btn:not(:first-child) {
+    margin-left: 10px;
   }
-  > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
-    border-bottom-right-radius: 0;
-    border-top-right-radius: 0;
-  }
-  > .btn:last-child:not(:first-child), > .dropdown-toggle:not(:first-child) {
-    border-bottom-left-radius: 0;
-    border-top-left-radius: 0;
-  }
-
-  > .btn-default + .btn-default { border-left: 1px solid #ccc; }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
