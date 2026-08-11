@@ -1,5 +1,11 @@
 # @getodk/forms
 
+## 2026.2.2
+
+### Patch Changes
+
+- fe3347e: Fixed an uncaught promise rejection reading from localStorage
+
 ## 2026.2.1
 
 ### Patch Changes
