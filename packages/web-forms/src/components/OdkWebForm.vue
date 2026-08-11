@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import FormLoadFailureDialog from '@/components/FormLoadFailureDialog.vue';
 import IconSVG from '@/components/common/IconSVG.vue';
+import FormFooter from '@/components/form-layout/FormFooter.vue';
 import FormHeader from '@/components/form-layout/FormHeader.vue';
 import QuestionList from '@/components/form-layout/QuestionList.vue';
 import { waitAllTasksToFinish } from '@/lib/async/event-loop.ts';
@@ -31,7 +32,6 @@ import type {
 	MonolithicInstancePayload,
 	PreloadProperties,
 } from '@getodk/xforms-engine';
-import Button from 'primevue/button';
 import Card from 'primevue/card';
 import Message from 'primevue/message';
 import {
@@ -349,9 +349,7 @@ onUnmounted(() => {
 				</template>
 			</Card>
 
-			<div class="footer flex justify-content-end flex-wrap gap-3">
-				<Button :label="t('odk_web_forms.submit.label')" @click="handleSubmit(state)" />
-			</div>
+			<FormFooter :root="state.root" @submit="handleSubmit(state)" />
 		</div>
 
 		<div class="powered-by-wrapper">
@@ -447,14 +445,6 @@ onUnmounted(() => {
 		min-height: 40px;
 	}
 
-	.footer {
-		margin: 1.5rem 0 0rem 0;
-
-		button {
-			min-width: 160px;
-		}
-	}
-
 	.powered-by-wrapper {
 		display: flex;
 		align-items: center;
@@ -519,11 +509,9 @@ onUnmounted(() => {
 				order: 3;
 			}
 
-			.footer {
+			.form-footer {
 				order: 4;
-				button {
-					margin-right: var(--odk-spacing-xl);
-				}
+				padding: 0 var(--odk-spacing-xl);
 			}
 		}
 
