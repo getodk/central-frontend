@@ -37,7 +37,7 @@ const t: Translate = inject(TRANSLATE)!;
 
 <style scoped lang="scss">
 .form-footer {
-	margin-top: var(--odk-spacing-xl);
+	margin-top: 1.5rem;
 
 	button {
 		min-width: 160px;
