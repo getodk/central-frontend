@@ -84,8 +84,8 @@ packages/web-forms/e2e/test-cases/visual/image-labels.test.ts-snapshots/select-o
 packages/web-forms/e2e/test-cases/visual/image-labels.test.ts-snapshots/select-one-with-packed-columns-chromium.png:a6e06e349da012eaafec34d8a024d9620dd88d316a3ebeee09544ed2501be863
 packages/web-forms/e2e/test-cases/visual/image-labels.test.ts-snapshots/select-one-with-packed-columns-firefox.png:06c78cc24c008f7e6e59affc3fd7ec0a5a214e9f2e4fef93ca3cdf4fd83314f7
 packages/web-forms/e2e/test-cases/visual/image-labels.test.ts-snapshots/select-one-with-packed-columns-webkit.png:d2bb809aecee3441de312329c9d654206df5e45e298d39fcec265b02bf9580df
-packages/web-forms/e2e/test-cases/visual/markdown.test.ts-snapshots/full-page-chromium.png:3f4765a9512e6ba6bc407daf236f1a9f3a95ad2388e78df121e5c95269ec45e6
-packages/web-forms/e2e/test-cases/visual/markdown.test.ts-snapshots/full-page-firefox.png:1eb0b36c8d72d93826de39df82d9755bcfd975b33d539810a2c4cf8adef773d0
+packages/web-forms/e2e/test-cases/visual/markdown.test.ts-snapshots/full-page-chromium.png:66554d7d7839471a7c1083f8158e68c9fd98176a441471d5b050545a7f6bdce6
+packages/web-forms/e2e/test-cases/visual/markdown.test.ts-snapshots/full-page-firefox.png:ab766ee597fb90ba000d3a3e34b5663129d63d094edf09e00ae85ae7bf837077
 packages/web-forms/e2e/test-cases/visual/markdown.test.ts-snapshots/full-page-webkit.png:a605704d4b516c3a2937058c9cbfe30250b26582b4361b1d97c3f1509dcc2c91
 packages/web-forms/tests/fixtures/attachments/neutral.png:032eb2e5db7b1a750b658fd459c311cbcd6aa5fb8b2aa0233fccd42122f87fb5
 packages/web-forms/tests/fixtures/attachments/sad.png:a7a1723cbc7f95a2166333260525b92d7948e9ef8f1820ba5013933306d856be
