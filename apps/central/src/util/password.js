@@ -4,7 +4,7 @@ export async function checkPasswordPwnage(request, password) { // eslint-disable
   const hashPrefix = hash.substring(0, 5);
   const hashSuffix = hash.substring(5);
 
-  const suffixes = await getSuffixesFor(request, hashPrefix);
+  const suffixes = await getSuffixesFor(request, hashPrefix); // eslint-disable-line no-use-before-define
 
   return suffixes.includes(hashSuffix);
 }
