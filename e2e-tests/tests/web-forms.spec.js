@@ -150,41 +150,38 @@ test.describe('ODK Web Forms', () => {
     });
   });
 
-  for (let i = 0; i < 20; i++) {
+  test('allows user to relogin on session expiry during form fill', async ({ page, context }) => {
+    await login(page);
 
-    test('allows user to relogin on session expiry during form fill, run: ' + i, async ({ page, context }) => {
-      await login(page);
+    const page2 = await context.newPage();
 
-      const page2 = await context.newPage();
+    await page2.goto(`${appUrl}/projects/${projectId}/forms/${publishedForm.xmlFormId}/submissions/new`);
 
-      await page2.goto(`${appUrl}/projects/${projectId}/forms/${publishedForm.xmlFormId}/submissions/new`);
+    await expect(page2.getByRole('heading', { name: publishedForm.name })).toBeVisible();
 
-      await expect(page2.getByRole('heading', { name: publishedForm.name })).toBeVisible();
+    await page2.getByLabel('First Name').fill('John Doe');
 
-      await page2.getByLabel('First Name').fill('John Doe');
+    await page.locator('#navbar-actions .dropdown-toggle').click();
 
-      await page.locator('#navbar-actions .dropdown-toggle').click();
+    await page.getByRole('link', { name: 'log out' }).click();
 
-      await page.getByRole('link', { name: 'log out' }).click();
+    await expect(page.getByRole('heading', { name: 'Welcome to ODK Central' })).toBeVisible();
 
-      await expect(page.getByRole('heading', { name: 'Welcome to ODK Central' })).toBeVisible();
+    await page2.getByRole('button', { name: 'send' }).click();
 
-      await page2.getByRole('button', { name: 'send' }).click();
+    await expect(page2.getByRole('heading', { name: 'Session expired' })).toBeVisible();
 
-      await expect(page2.getByRole('heading', { name: 'Session expired' })).toBeVisible();
+    const [page3] = await Promise.all([
+      context.waitForEvent('page'),
+      page2.getByRole('link', { name: 'here' }).click()
+    ]);
 
-      const [page3] = await Promise.all([
-        context.waitForEvent('page'),
-        page2.getByRole('link', { name: 'here' }).click()
-      ]);
+    await login(page3);
 
-      await login(page3);
+    await page2.getByRole('button', { name: 'close' }).first().click();
 
-      await page2.getByRole('button', { name: 'close' }).first().click();
+    await page2.getByRole('button', { name: 'send' }).click();
 
-      await page2.getByRole('button', { name: 'send' }).click();
-
-      await expect(page2.getByRole('heading', { name: 'successful' })).toBeVisible();
-    });
-  }
+    await expect(page2.getByRole('heading', { name: 'successful' })).toBeVisible();
+  });
 });
