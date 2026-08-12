@@ -110,6 +110,7 @@ describe('UserEditPassword', () => {
           formGroups[1].props().hasError.should.be.false;
           formGroups[2].props().hasError.should.be.false;
         })
+        .respondWithData(haveIbeenPwnedResponse('testPasswordY'))
         .respondWithSuccess());
   });
 
@@ -142,6 +143,7 @@ describe('UserEditPassword', () => {
           formGroups.length.should.equal(3);
           formGroups[1].props().hasError.should.be.false;
         })
+        .respondWithData(haveIbeenPwnedResponse('testPasswordY'))
         .respondWithSuccess());
   });
 
