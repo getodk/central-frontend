@@ -1,22 +1,7 @@
-const maxCacheLength = 10;
-const hashCache = [];
-
-async function getSuffixesFor(prefix) {
-  const cachedHashes = hashCache.find(cached => cached.prefix === prefix);
-  if (cachedHashes) return cachedHashes.suffixes;
-
+async function getSuffixesFor(request, prefix) {
   try {
-    const res = await fetch(`https://api.pwnedpasswords.com/range/${prefix}`);
-    if (!res.ok) throw new Error(`Bad response: ${res.status}`);
-
-    const body = await res.text();
-    const suffixes = body.split('\n').map(line => line.split(':')[0]);
-
-    if (hashCache.length === maxCacheLength) hashCache.shift();
-
-    hashCache.push({ prefix, suffixes });
-
-    return suffixes;
+    const res = await request({ url:`https://api.pwnedpasswords.com/range/${prefix}` });
+    return res.data.split('\n').map(line => line.split(':')[0]);
   } catch (err) {
     console.log('pwned check failed:', err); // eslint-disable-line no-console
     // if we can't check, just let them use it
@@ -24,13 +9,13 @@ async function getSuffixesFor(prefix) {
   }
 }
 
-export async function checkPasswordPwnage(password) { // eslint-disable-line import/prefer-default-export
+export async function checkPasswordPwnage(request, password) { // eslint-disable-line import/prefer-default-export
   const hash = await digestMessage(password); // eslint-disable-line no-use-before-define
 
   const hashPrefix = hash.substring(0, 5);
   const hashSuffix = hash.substring(5);
 
-  const suffixes = await getSuffixesFor(hashPrefix);
+  const suffixes = await getSuffixesFor(request, hashPrefix);
 
   return suffixes.includes(hashSuffix);
 }

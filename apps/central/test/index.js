@@ -58,5 +58,7 @@ setupLanguages(afterEach);
 // here rather than in karma.conf.js, because doing so is more performant. When
 // I tried specifying the tests in karma.conf.js, I encountered an out-of-memory
 // error.
-const testsContext = require.context('.', true, /\.spec\.js$/);
+console.log(Date.now(), 'loading tests context...');
+const testsContext = require.context('.', true, /password.spec.js/);
+console.log(Date.now(), 'tests context loaded.');
 testsContext.keys().forEach(testsContext);

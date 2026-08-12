@@ -98,7 +98,15 @@ export default {
       if (!this.validate()) return;
 
       (async () => {
-        const isPwned = await checkPasswordPwnage(this.newPassword);
+        console.log('calling checkPasswordPwnage()', 'calling...');
+        let isPwned;
+        try {
+          isPwned = await checkPasswordPwnage(this.request, this.newPassword);
+        } catch(err) {
+          console.log('caught:', err);
+          throw err;
+        }
+        console.log('calling checkPasswordPwnage()', 'returned:', isPwned);
         if (isPwned) {
           this.pwned = true;
         } else {
@@ -118,7 +126,12 @@ export default {
         }
       })();
     }
-  }
+  },
+  watch: {
+    newPassword() {
+      this.pwned = false;
+    },
+  },
 };
 </script>
 

@@ -74,7 +74,7 @@ module.exports = (config) => {
     browserDisconnectTimeout: 300_000,
     browserDisconnectTolerance: 3,
     reporters: ['spec'],
-    singleRun: true,
+    singleRun: false,
     client: {
       mocha: {
         grep: process.env.TEST_PATTERN || '.',
