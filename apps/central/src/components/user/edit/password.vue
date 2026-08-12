@@ -26,10 +26,14 @@ except according to the terms contained in the LICENSE file.
           type="password" :placeholder="$t('field.newPassword')" required
           :has-error="tooShort || mismatch || pwned" autocomplete="new-password">
           <template #after>
-            <div v-if="pwned" class="error">
-              <p>This password has previously been included in a breach.</p>
-              <p>For more information, see <a href="https://haveibeenpwned.com/Passwords" target="_blank" rel="noopener noreferrer">here</a>.</p>
-            </div>
+            <transition name="collapse">
+              <div v-if="pwned" class="collapsible-error">
+                <div class="collapsible-inner">
+                  <p>This password has previously been included in a breach.</p>
+                  <p>For more information, see <a href="https://haveibeenpwned.com/Passwords" target="_blank" rel="noopener noreferrer">here</a>.</p>
+                </div>
+              </div>
+            </transition>
           </template>
         </form-group>
         <form-group id="user-edit-password-confirm" v-model="confirm"
@@ -137,7 +141,17 @@ export default {
 
 <style lang="scss">
 #user-edit-password input[autocomplete="username"] { display: none; }
-.error { color:#de2a11; font-size:11px; margin:25px 12px -25px; }
+.collapsible-error {
+  display: grid;
+  grid-template-rows: 1fr;
+  color: #de2a11;
+  font-size: 11px;
+  margin: 25px 12px -25px;
+
+  .collapsible-inner { overflow:hidden }
+}
+.collapse-enter-active, .collapse-leave-active { transition:grid-template-rows 0.3s ease, opacity 0.3s ease }
+.collapse-enter-from,   .collapse-leave-to { grid-template-rows:0fr; opacity:0 }
 </style>
 
 <i18n lang="json5">
