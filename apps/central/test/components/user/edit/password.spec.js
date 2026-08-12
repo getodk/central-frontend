@@ -165,6 +165,7 @@ describe('UserEditPassword', () => {
   it('implements some standard button things', () =>
     mockHttp()
       .mount(UserEditPassword, mountOptions())
+      .respondWithData(haveIbeenPwnedResponse('testPasswordY'))
       .testStandardButton({
         button: '.btn-primary',
         request: submit
