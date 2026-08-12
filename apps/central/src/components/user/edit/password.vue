@@ -84,7 +84,7 @@ export default {
       this.mismatch = false;
       this.pwned = false;
 
-      if (this.newPassword.length < 1) {
+      if (this.newPassword.length < 10) {
         this.alert.danger(this.$t('alert.passwordTooShort'));
         this.tooShort = true;
         return false;
@@ -102,15 +102,7 @@ export default {
       if (!this.validate()) return;
 
       (async () => {
-        console.log('calling checkPasswordPwnage()', 'calling...');
-        let isPwned;
-        try {
-          isPwned = await checkPasswordPwnage(this.request, this.newPassword);
-        } catch(err) {
-          console.log('caught:', err);
-          throw err;
-        }
-        console.log('calling checkPasswordPwnage()', 'returned:', isPwned);
+        const isPwned = await checkPasswordPwnage(this.request, this.newPassword);
         if (isPwned) {
           this.pwned = true;
         } else {
