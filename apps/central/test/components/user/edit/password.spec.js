@@ -149,19 +149,10 @@ describe('UserEditPassword', () => {
     mockHttp()
       .mount(UserEditPassword, mountOptions())
       .request(submit)
-      .respondWithData(() => [
-        '005E8325869AFF00C6E09BB59964923BE14:1',
-        '009F3803299EF825B220707AE492B801B8C:9',
-        '00E4600320A4F051A36B6087D2D1D4933E5:502',
-        '01010F6D71D3277A8E9767BB7C695A3904E:3',
-        '0113AE28B46F0D0ABCE49F128E2D218BA23:4',
-      ].join('\r\n'))
+      .respondWithData(haveIbeenPwnedResponse('testPasswordY'))
       .respondWithSuccess()
       .testRequests([
-        {
-          method: 'GET',
-          url: 'https://api.pwnedpasswords.com/range/036EA',
-        },
+        haveIbeenPwnedRequest('testPasswordY'),
         {
           method: 'PUT',
           url: '/v1/users/1/password',
@@ -181,8 +172,41 @@ describe('UserEditPassword', () => {
     mockHttp()
       .mount(UserEditPassword, mountOptions())
       .request(submit)
+      .respondWithData(haveIbeenPwnedResponse('testPasswordY'))
       .respondWithSuccess()
       .afterResponse(component => {
         component.should.alert('success');
       }));
 });
+
+function haveIbeenPwnedRequest(password) {
+  const hashPrefix = (() => {
+    switch(password) {
+      case 'testPasswordY': return '036EA';
+      default: throw new Error(`No haveibeenpwned API request defined for password '${password}'`);
+    }
+  })();
+
+  return {
+    method: 'GET',
+    url: `https://api.pwnedpasswords.com/range/${hashPrefix}`,
+  };
+}
+
+function haveIbeenPwnedResponse(password) {
+  const hashes = (() => {
+    switch(password) {
+      case 'testPasswordY':
+        return [
+          '005E8325869AFF00C6E09BB59964923BE14:1',
+          '009F3803299EF825B220707AE492B801B8C:9',
+          '00E4600320A4F051A36B6087D2D1D4933E5:502',
+          '01010F6D71D3277A8E9767BB7C695A3904E:3',
+          '0113AE28B46F0D0ABCE49F128E2D218BA23:4',
+        ];
+      default: throw new Error(`No haveibeenpwned API response defined for password '${password}'`);
+    }
+  })();
+
+  return () => hashes.join('\r\n');
+}
