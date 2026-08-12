@@ -150,7 +150,9 @@ test.describe('ODK Web Forms', () => {
     });
   });
 
-  test('allows user to relogin on session expiry during form fill', async ({ page, context }) => {
+for (let i = 0; i < 20; i++) {
+
+  test('allows user to relogin on session expiry during form fill, run: ' + i, async ({ page, context }) => {
     await login(page);
 
     const page2 = await context.newPage();
@@ -164,6 +166,8 @@ test.describe('ODK Web Forms', () => {
     await page.locator('#navbar-actions .dropdown-toggle').click();
 
     await page.getByRole('link', { name: 'log out' }).click();
+
+    await expect(page.getByRole('heading', { name: 'Welcome to ODK Central' })).toBeVisible();
 
     await page2.getByRole('button', { name: 'send' }).click();
 
@@ -182,4 +186,5 @@ test.describe('ODK Web Forms', () => {
 
     await expect(page2.getByRole('heading', { name: 'successful' })).toBeVisible();
   });
+}
 });
