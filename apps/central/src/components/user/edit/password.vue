@@ -80,7 +80,7 @@ export default {
       this.mismatch = false;
       this.pwned = false;
 
-      if (this.newPassword.length < 10) {
+      if (this.newPassword.length < 1) {
         this.alert.danger(this.$t('alert.passwordTooShort'));
         this.tooShort = true;
         return false;
