@@ -1,6 +1,7 @@
 async function getSuffixesFor(request, prefix) {
   try {
-    const res = await request({ url:`https://api.pwnedpasswords.com/range/${prefix}` });
+    const url = `https://api.pwnedpasswords.com/range/${prefix}`;
+    const res = await request({ url });
     return res.data.split('\n').map(line => line.split(':')[0]);
   } catch (err) {
     console.log('pwned check failed:', err); // eslint-disable-line no-console
