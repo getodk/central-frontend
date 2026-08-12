@@ -3,7 +3,10 @@ import type {
   EditFormInstance,
   EditFormInstanceInput,
 } from '../../client/form/EditFormInstance.ts';
-import type { FormInstanceConfig } from '../../client/form/FormInstanceConfig.ts';
+import type {
+  FormInstanceConfig,
+  ResetFormInstanceConfig,
+} from '../../client/form/FormInstanceConfig.ts';
 import type { FormResultStatus } from '../../client/form/LoadFormResult.ts';
 import type { ResetFormInstance } from '../../client/form/ResetFormInstance.ts';
 import type {
@@ -62,7 +65,7 @@ export abstract class BaseInstantiableFormResult<
       });
     };
 
-    this.resetInstance = (instanceConfig: FormInstanceConfig = {}) => {
+    this.resetInstance = (instanceConfig: ResetFormInstanceConfig = {}) => {
       instanceOptions.scope.dispose();
       instanceOptions.scope = createPotentiallyClientOwnedReactiveScope();
       if (instanceConfig.lastSavedXml) {

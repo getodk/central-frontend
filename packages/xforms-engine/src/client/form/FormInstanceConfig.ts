@@ -51,6 +51,8 @@ export interface FormInstanceConfig {
   readonly instanceDefaults?: InstanceDefaults;
 
   readonly geolocationProvider?: GeolocationProvider;
+}
 
+export interface ResetFormInstanceConfig extends FormInstanceConfig {
   readonly lastSavedXml?: string | undefined;
 }

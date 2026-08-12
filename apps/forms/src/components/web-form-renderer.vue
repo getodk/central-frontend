@@ -242,10 +242,12 @@ const webFormLoaded = () => {
 };
 
 const updateLastSaved = (hasLastSaved) => {
-  if (!isEdit.value && submissionResult.primaryInstanceResult.success) {
+  if (!isEdit.value && !props.form.draft && submissionResult.primaryInstanceResult.success) {
     if (hasLastSaved) {
       setLastSaved(props.form.projectId, props.form.xmlFormId, submissionData.instanceFile);
     } else {
+      // clean up any stored data in the case where a previous form version
+      // had last-saved data but the current version doesn't
       deleteLastSaved(props.form.projectId, props.form.xmlFormId);
     }
   }
