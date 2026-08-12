@@ -58,7 +58,7 @@ const haveIbeenPwnedResponse = password => {
   return () => hashes.join('\r\n');
 };
 
-describe.only('UserEditPassword', () => {
+describe('UserEditPassword', () => {
   beforeEach(mockLogin);
 
   it('resets the form if the route changes', () => {
