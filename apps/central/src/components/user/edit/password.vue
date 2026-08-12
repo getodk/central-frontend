@@ -78,6 +78,11 @@ export default {
       pwned: false,
     };
   },
+  watch: {
+    newPassword() {
+      this.pwned = false;
+    },
+  },
   methods: {
     validate() {
       this.tooShort = false;
@@ -122,12 +127,7 @@ export default {
         }
       })();
     }
-  },
-  watch: {
-    newPassword() {
-      this.pwned = false;
-    },
-  },
+  }
 };
 </script>
 
