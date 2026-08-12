@@ -130,6 +130,7 @@ export class PrimaryInstance<
   readonly model: ModelDefinition;
   readonly attachments: InstanceAttachmentsState;
   readonly instanceDefaults: InstanceDefaults;
+  readonly hasLastSaved: boolean;
 
   // InstanceNode
   protected readonly state: SharedNodeState<PrimaryInstanceStateSpec>;
@@ -202,6 +203,7 @@ export class PrimaryInstance<
       itextTranslationsByLanguage: model.itextTranslations,
       secondaryInstancesById: secondaryInstances,
     });
+    this.hasLastSaved = secondaryInstances.hasLastSaved;
 
     const { languages, getActiveLanguage, setActiveLanguage } = createTranslationState(
       scope,
@@ -305,6 +307,7 @@ export class PrimaryInstance<
     const result = prepareInstancePayload(this, {
       payloadType: (options?.payloadType ?? 'monolithic') as PayloadType,
       maxSize: options?.maxSize ?? Infinity,
+      hasLastSaved: this.hasLastSaved,
     });
 
     return Promise.resolve(result);
