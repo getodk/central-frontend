@@ -301,7 +301,9 @@ const closeWindow = () => {
 };
 
 onMounted(async () => {
-  lastSavedXml.value = await getLastSaved(props.form.projectId, props.form.xmlFormId);
+  if (!isEdit.value && !props.form.draft) {
+    lastSavedXml.value = await getLastSaved(props.form.projectId, props.form.xmlFormId);
+  }
   inited.value = true;
 });
 </script>
