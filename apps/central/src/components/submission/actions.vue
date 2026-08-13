@@ -16,9 +16,6 @@ except according to the terms contained in the LICENSE file.
       <span class="icon-trash"></span>{{ $t('action.delete') }}<spinner :state="awaitingResponse"/>
     </button>
     <template v-if="project.verbs.has('submission.update')">
-      <button type="button" class="review-button btn btn-default">
-        <span class="icon-check"></span>{{ $t('action.review') }}
-      </button>
       <a v-if="submission.__system.status == null" class="btn btn-default"
         :href="editPath" target="_blank">
         <span class="icon-pencil"></span>{{ $t('action.edit') }}
@@ -27,6 +24,9 @@ except according to the terms contained in the LICENSE file.
         :aria-label="editLabel" aria-disabled="true"
         v-tooltip.aria-describedby="$t('submission.editDisabled')">
         <span class="icon-pencil"></span>{{ $t('action.edit') }}
+      </button>
+      <button type="button" class="review-button btn btn-primary">
+        <span class="icon-check"></span>{{ $t('action.review') }}
       </button>
     </template>
     <router-link v-slot="{ href }" :to="detailPath" custom>
