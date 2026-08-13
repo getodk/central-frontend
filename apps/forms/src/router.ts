@@ -2,7 +2,6 @@ import type { Component } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import Preview from './components/preview.vue';
 import Submission from './components/submission.vue';
-import { loadLocale, userLocale, i18n } from './i18n';
 
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -79,14 +78,6 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
-});
-
-router.beforeEach((_to, _from, next) => {
-  const locale = userLocale();
-  if (locale) {
-    loadLocale(i18n.global, locale);
-  }
-  next();
 });
 
 export default router;

@@ -62,6 +62,7 @@ export class InstanceFile extends File implements ClientInstanceFile {
 export interface Submission {
   readonly instanceFile: InstanceFile;
   readonly attachments: readonly File[];
+  readonly encrypted: boolean;
 }
 
 const createSubmission = async (
@@ -91,7 +92,7 @@ const createSubmission = async (
     );
   }
   const instanceFile = new InstanceFile(instanceXML);
-  return { instanceFile, attachments };
+  return { instanceFile, attachments, encrypted: false };
 };
 
 type AssertFile = (value: FormDataEntryValue) => asserts value is File;
@@ -179,24 +180,31 @@ const validateInstance = (
   };
 };
 
+interface MonolithicInstancePayloadOptions {
+  readonly maxSize: number;
+  readonly hasLastSaved: boolean;
+}
+
 const monolithicInstancePayload = (
   validation: InstanceStateValidation,
   submissionMeta: SubmissionMeta,
-  instanceFile: InstanceFile,
-  attachments: readonly File[]
+  submission: Submission,
+  options: MonolithicInstancePayloadOptions
 ): MonolithicInstancePayload => {
-  const data = InstanceData.from(instanceFile, attachments);
+  const data = InstanceData.from(submission.instanceFile, submission.attachments);
 
   return {
     payloadType: 'monolithic',
     ...validation,
     submissionMeta,
     data: [data],
+    hasLastSaved: options.hasLastSaved && !submission.encrypted,
   };
 };
 
 interface ChunkedInstancePayloadOptions {
   readonly maxSize: number;
+  readonly hasLastSaved: boolean;
 }
 
 type PartitionedInstanceData = readonly [ClientInstanceData, ...ClientInstanceData[]];
@@ -239,23 +247,24 @@ const partitionInstanceData = (
 const chunkedInstancePayload = (
   validation: InstanceStateValidation,
   submissionMeta: SubmissionMeta,
-  instanceFile: InstanceFile,
-  attachments: readonly File[],
+  submission: Submission,
   options: ChunkedInstancePayloadOptions
 ): ChunkedInstancePayload => {
-  const data = partitionInstanceData(instanceFile, attachments, options);
+  const data = partitionInstanceData(submission.instanceFile, submission.attachments, options);
 
   return {
     payloadType: 'chunked',
     ...validation,
     submissionMeta,
     data,
+    hasLastSaved: options.hasLastSaved && !submission.encrypted,
   };
 };
 
 export interface PrepareInstancePayloadOptions<PayloadType extends InstancePayloadType> {
   readonly payloadType: PayloadType;
   readonly maxSize: number;
+  readonly hasLastSaved: boolean;
 }
 
 export const prepareInstancePayload = async <PayloadType extends InstancePayloadType>(
@@ -266,15 +275,14 @@ export const prepareInstancePayload = async <PayloadType extends InstancePayload
   const validation = validateInstance(instanceRoot);
   const submissionMeta = instanceRoot.definition.submission;
 
-  const { instanceFile, attachments } = await createSubmission(instanceRoot, submissionMeta);
+  const submission = await createSubmission(instanceRoot, submissionMeta);
 
   switch (options.payloadType) {
     case 'chunked':
       return chunkedInstancePayload(
         validation,
         submissionMeta,
-        instanceFile,
-        attachments,
+        submission,
         options
       ) satisfies ChunkedInstancePayload as InstancePayload<PayloadType>;
 
@@ -282,8 +290,8 @@ export const prepareInstancePayload = async <PayloadType extends InstancePayload
       return monolithicInstancePayload(
         validation,
         submissionMeta,
-        instanceFile,
-        attachments
+        submission,
+        options
       ) satisfies MonolithicInstancePayload as InstancePayload<PayloadType>;
 
     default:

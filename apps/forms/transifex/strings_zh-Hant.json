@@ -1,0 +1,137 @@
+{
+  "component": {
+    "Preview": {
+      "formNotFound": {
+        "string": "此 URL 未找到表單，請仔細檢查。"
+      }
+    },
+    "Submission": {
+      "formNotFound": {
+        "title": {
+          "string": "此 URL 未找到表單，請仔細檢查。"
+        },
+        "body": {
+          "string": ""
+        }
+      },
+      "errorNotProblem": {
+        "title": {
+          "string": "出了點問題：錯誤代碼"
+        },
+        "body": {
+          "string": ""
+        },
+        "status": {
+          "string": "{status}"
+        }
+      }
+    },
+    "WebFormRenderer": {
+      "action": {
+        "close": {
+          "string": "關閉"
+        },
+        "tryAgain": {
+          "string": "再試一次"
+        }
+      },
+      "previewModal": {
+        "title": {
+          "string": "資料有效"
+        },
+        "body": {
+          "string": "您輸入的資料是有效的，但因為這是表單預覽，所以沒有提交。"
+        }
+      },
+      "submissionModal": {
+        "title": {
+          "string": "表單已成功傳送！"
+        },
+        "body": {
+          "string": "填寫完畢後，您可以再次填寫此表單或關閉。"
+        },
+        "action": {
+          "fillOutAgain": {
+            "string": "再次填寫"
+          }
+        }
+      },
+      "thankYouModal": {
+        "title": {
+          "string": "感謝您的參與！"
+        },
+        "body": {
+          "string": "您現在可以關閉此視窗。"
+        }
+      },
+      "editSubmissionModal": {
+        "title": {
+          "string": "提交成功"
+        },
+        "body": {
+          "string": "現在您將會被重定向。"
+        }
+      },
+      "errorModal": {
+        "title": {
+          "string": "提交錯誤"
+        },
+        "body": {
+          "string": "您的資料未提交。錯誤訊息：{errorMessage} 您可以關閉此對話框再試一次。如果錯誤持續發生，請聯絡要求您填寫本表單的人員或{supportEmail}。"
+        }
+      },
+      "sendingDataModal": {
+        "title": {
+          "string": "發送提交內容"
+        },
+        "body": {
+          "string": "正在提交您的資料。在完成之前，請不要關閉此視窗。"
+        }
+      },
+      "sessionTimeoutModal": {
+        "title": {
+          "string": "會期已過期"
+        },
+        "body": {
+          "full": {
+            "string": "請在不同的瀏覽器標籤中{here}登入，然後再試一次。",
+            "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
+          },
+          "here": {
+            "string": "從這裡",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nPlease log in {here} in a different browser tab and try again."
+          }
+        }
+      },
+      "retryModal": {
+        "title": {
+          "string": "提交錯誤"
+        },
+        "body": {
+          "string": "您的資料未完全提交。請按「再試一次」按鈕重試。如果錯誤持續發生，請聯絡要求您填寫此表格的人或{supportEmail}。"
+        }
+      },
+      "util": {
+        "request": {
+          "noResponse": {
+            "string": "出了點問題：您的請求沒有得到回應。"
+          },
+          "problem": {
+            "404_1": {
+              "string": "找不到您要找的資源。該資源可能已被刪除。"
+            }
+          }
+        }
+      },
+      "mixin": {
+        "request": {
+          "alert": {
+            "entityTooLarge": {
+              "string": "您嘗試上傳的資料太大。"
+            }
+          }
+        }
+      }
+    }
+  }
+}

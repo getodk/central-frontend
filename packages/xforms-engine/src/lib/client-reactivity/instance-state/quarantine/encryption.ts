@@ -46,5 +46,5 @@ export const encryptSubmission = async (
 
   const instanceFile = new InstanceFile(manifest.serialize());
 
-  return { instanceFile, attachments: encryptedAttachments };
+  return { instanceFile, attachments: encryptedAttachments, encrypted: true };
 };
