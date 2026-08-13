@@ -683,10 +683,58 @@ const rekeySource = (structured, transifexPaths) => {
 };
 
 const rekeyTranslations = (source, translated, transifexPaths) => {
-  for (const { sourcePath, transifexPath } of transifexPaths)
-    setPath(sourcePath, getPath(transifexPath, translated), translated);
+  // It's possible for one transifexPath to be a subpath of another,
+  // representing an ancestor message object. We want to rekey those shorter
+  // subpaths only after first rekeying the longer/deeper paths. Here, we
+  // reorder transifexPaths along those lines. Other than that though, we try to
+  // preserve the original order.
+  const ordered = [...transifexPaths];
+  for (let i = 0; i < ordered.length - 1;) {
+    let changed = false;
+    for (let j = i + 1; j < ordered.length; j += 1) {
+      if (startsWith(ordered[i].transifexPath, ordered[j].transifexPath) &&
+        !equals(ordered[i].transifexPath, ordered[j].transifexPath)) {
+        const ancestor = ordered[i]; // Subpath
+        const descendant = ordered[j]; // Longer/deeper path
+        ordered.splice(j, 1);
+        ordered.splice(i, 1, descendant, ancestor);
+        changed = true;
+        break;
+      }
+    }
+    if (changed)
+      i = 0; // Start over
+    else
+      i += 1;
+  }
+
+  // A single `transifexPath` can be copied to multiple `sourcePath`s. Here, we
+  // count how many times each `transifexPath` appears.
+  const pathCounts = new Map();
   for (const { transifexPath } of transifexPaths) {
-    if (!hasPath(transifexPath, source)) deletePath(transifexPath, translated);
+    const key = transifexPath.join('.');
+    pathCounts.set(key, (pathCounts.get(key) ?? 0) + 1);
+  }
+  const decrementCount = (path) => {
+    const key = path.join('.');
+    const newCount = pathCounts.get(key) - 1;
+    pathCounts.set(key, newCount);
+    return newCount;
+  };
+
+  for (const { sourcePath, transifexPath } of ordered) {
+    if (hasPath(sourcePath, translated))
+      throw new Error(`@transifexKey: attempted to copy the value at ${transifexPath.join('.')} to ${sourcePath.join('.')}, but there is already a value at ${sourcePath.join('.')}.`);
+    if (!hasPath(transifexPath, translated))
+      throw new Error(`@transifexKey: attempted to copy the value at ${transifexPath.join('.')} to ${sourcePath.join('.')}, but there is no value at ${transifexPath.join('.')}.`);
+
+    setPath(sourcePath, getPath(transifexPath, translated), translated);
+
+    // Delete the old transifexPath as soon as possible (as soon as the count is
+    // zero) in order to account for subpaths. We don't want to move a
+    // descendant message along with its ancestor message object.
+    if (!hasPath(transifexPath, source) && decrementCount(transifexPath) === 0)
+      deletePath(transifexPath, translated);
   }
 };
 
