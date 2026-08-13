@@ -148,10 +148,10 @@ class PluralForms {
 
       // Next, check that `categories` includes all the plural categories we
       // expect. If it were missing categories (or had extra categories), our
-      // pluralizationRules probably wouldn't work.
+      // Vue I18n pluralizationRules probably wouldn't work.
       const expectedCategories = locales[locale].pluralCategories;
       if (!equals(categories, expectedCategories))
-        logThenThrow(string, `.${key} in locale "${locale}" expected the plural categories [${expectedCategories.join(', ')}], but found [${categories.join(', ')}]. Did you download the translations "to translate"?`);
+        logThenThrow(string, `.${key} in locale "${locale}": Expected the plural categories [${expectedCategories.join(', ')}], but found [${categories.join(', ')}] instead. Did you download the translations "to translate"?`);
     }
 
     for (let i = 0; i < forms.length; i += 1)
