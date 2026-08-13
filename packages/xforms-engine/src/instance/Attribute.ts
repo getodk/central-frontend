@@ -93,10 +93,15 @@ export class Attribute
     this.valueType = 'string';
     this.decodeInstanceValue = codec.decodeInstanceValue;
 
-    const instanceValueState = createInstanceValueState(this);
-    const valueState = codec.createRuntimeValueState(instanceValueState);
-
+    const { valueState: instanceValueState, setValueFromAction } = createInstanceValueState(this);
     const [getInstanceValue] = instanceValueState;
+
+    const valueState = codec.createRuntimeValueState(instanceValueState);
+    const [, setActionValue] = codec.createRuntimeValueState([
+      getInstanceValue,
+      setValueFromAction,
+    ]);
+
     const [, setValueState] = valueState;
 
     this.getInstanceValue = getInstanceValue;
@@ -132,7 +137,7 @@ export class Attribute
       return this.getInstanceValue();
     };
     this.setEncodedValue = (value: string) => {
-      this.setValueState(codec.decodeValue(value));
+      setActionValue(codec.decodeValue(value));
     };
   }
 
