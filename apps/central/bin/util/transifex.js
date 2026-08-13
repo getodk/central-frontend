@@ -27,18 +27,29 @@ const locales = {
 
 const sourceLocale = 'en';
 
+// All plural categories, in the order they appear in Transifex and the Vue I18n
+// JSON
+const pluralCategoryOrder = ['one', 'few', 'many', 'other'];
+
 // Normalize `locales`.
 {
   const defaults = { warnVariableSeparator: true };
   for (const [locale, options] of Object.entries(locales)) {
     const normalized = { ...defaults, ...options };
 
-    if (normalized.pluralCategories != null) {
-      normalized.pluralCategories = [...normalized.pluralCategories].sort();
-    } else {
+    // Normalize pluralCategories.
+    if (normalized.pluralCategories == null) {
       const pluralRules = new Intl.PluralRules([locale]);
+      // Unlike browsers, Node seems to order pluralCategories alphabetically.
       normalized.pluralCategories = pluralRules.resolvedOptions().pluralCategories;
     }
+    for (const category of normalized.pluralCategories) {
+      if (!pluralCategoryOrder.includes(category))
+        throw new Error(`Locale ${locale} has the plural category ${category}, but it does not appear in pluralCategoryOrder. Please add it to pluralCategoryOrder in the correct order.`);
+    }
+    normalized.pluralCategories = normalized.pluralCategories
+      .toSorted((category1, category2) =>
+        pluralCategoryOrder.indexOf(category1) - pluralCategoryOrder.indexOf(category2));
 
     locales[locale] = normalized;
   }
@@ -130,8 +141,7 @@ class PluralForms {
       // should come before 'many'). If `categories` were in the wrong order in
       // the Transifex JSON, they would also end up in the wrong order in the
       // Vue I18n JSON.
-      const allCategories = ['one', 'few', 'many', 'other'];
-      const expectedOrder = allCategories.filter(category =>
+      const expectedOrder = pluralCategoryOrder.filter(category =>
         categories.includes(category));
       if (!equals(categories, expectedOrder))
         logThenThrow(string, `.${key} in locale "${locale}": Expected the plural categories to be in the order [${expectedOrder.join(', ')}], but found [${categories.join(', ')}] instead.`);
@@ -139,9 +149,7 @@ class PluralForms {
       // Next, check that `categories` includes all the plural categories we
       // expect. If it were missing categories (or had extra categories), our
       // pluralizationRules probably wouldn't work.
-      const expectedCategories = locales[locale].pluralCategories
-        .sort((category1, category2) =>
-          allCategories.indexOf(category1) - allCategories.indexOf(category2));
+      const expectedCategories = locales[locale].pluralCategories;
       if (!equals(categories, expectedCategories))
         logThenThrow(string, `.${key} in locale "${locale}" expected the plural categories [${expectedCategories.join(', ')}], but found [${categories.join(', ')}]. Did you download the translations "to translate"?`);
     }
