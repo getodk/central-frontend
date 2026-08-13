@@ -213,12 +213,8 @@ function escapeEditableChunks(chunks: readonly TextChunk[]) {
 
 // mdast tends to add too many paragraphs which if left in place, puts a block level
 // element where it's not needed
-function removeSingleParagraph(nodes: MarkdownNode[]) : MarkdownNode[] {
-  if (
-    nodes.length === 1 &&
-    nodes[0]?.role === 'parent' &&
-    nodes[0]?.elementName === 'p'
-  ) {
+function removeSingleParagraph(nodes: MarkdownNode[]): MarkdownNode[] {
+  if (nodes.length === 1 && nodes[0]?.role === 'parent' && nodes[0]?.elementName === 'p') {
     return nodes[0].children;
   }
   return nodes;
