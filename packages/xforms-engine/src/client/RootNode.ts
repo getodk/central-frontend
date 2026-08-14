@@ -33,8 +33,8 @@ export interface RootNodeState extends BaseNodeState {
    * It's `null` for a form without pages, or when there is nothing to show (empty form, edge case).
    */
   get currentPage(): PageBoundary | null;
-  get canGoNext(): boolean;
-  get canGoPrevious(): boolean;
+  get hasNextPage(): boolean;
+  get hasPreviousPage(): boolean;
 }
 
 export interface RootNode extends BaseNode {
@@ -82,10 +82,10 @@ export interface RootNode extends BaseNode {
    */
   setCurrentPage(page: PageBoundary): PageBoundary | null;
 
-  // Moves to the next page. Does nothing when {@link RootNodeState.canGoNext} is `false`.
+  // Moves to the next page. Does nothing when {@link RootNodeState.hasNextPage} is `false`.
   nextPage(): void;
 
-  // Moves to the previous page. Does nothing when {@link RootNodeState.canGoPrevious} is `false`.
+  // Moves to the previous page. Does nothing when {@link RootNodeState.hasPreviousPage} is `false`.
   previousPage(): void;
 
   /**

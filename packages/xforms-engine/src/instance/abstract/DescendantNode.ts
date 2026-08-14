@@ -147,13 +147,13 @@ export abstract class DescendantNode<
       }
       if (child.nodeType === 'repeat-range:uncontrolled' && !child.getChildren()?.length) {
         // Keep page for empty repeat ranges to show the "add" button.
-        const rangePageId = this.root.paginationRegistry.getRangePageId(child.nodeId);
+        const rangePageId = this.root.pagination.getRangePageId(child.nodeId);
         return child.isSelfRelevant() && rangePageId === currentPageId;
       }
       if (child.getChildren()?.length) {
         return child.hasBodyNodesOnCurrentPage();
       }
-      const leafPageId = this.root.paginationRegistry.getLeafPageId(child.nodeId);
+      const leafPageId = this.root.pagination.getLeafPageId(child.nodeId);
       return child.isSelfRelevant() && leafPageId === currentPageId;
     });
   };

@@ -3,13 +3,13 @@ import type { GeneralParentNode, RepeatRange } from '../hierarchy.ts';
 import type { RepeatInstance } from '../repeat/RepeatInstance.ts';
 
 type AncestorNode = GeneralParentNode | RepeatRange;
-type FieldListAnchor = Group | RepeatInstance;
+type FieldListNode = Group | RepeatInstance;
 
 /**
  * A `field-list` group, or a repeat instance whose `<repeat>` carries `field-list`; that appearance paginates
- * the repeat's instances, so a range is never an anchor itself.
+ * the repeat's instances, so a range is never a field-list node itself.
  */
-const isFieldListAnchor = (node: AncestorNode): node is FieldListAnchor => {
+const isFieldListNode = (node: AncestorNode): node is FieldListNode => {
   return (
     (node.nodeType === 'group' || node.nodeType === 'repeat-instance') &&
     node.appearances?.['field-list'] === true
@@ -17,18 +17,18 @@ const isFieldListAnchor = (node: AncestorNode): node is FieldListAnchor => {
 };
 
 /**
- * Each anchor found replaces the previous one, so the last seen is the outermost.
+ * Each field-list found replaces the previous one, so the last seen is the outermost.
  */
-const resolveOutermostAnchor = (
+const resolveOutermostFieldList = (
   node: AncestorNode,
-  found: FieldListAnchor | null
-): FieldListAnchor | null => {
+  found: FieldListNode | null
+): FieldListNode | null => {
   if (node.nodeType === 'root') {
     return found;
   }
 
-  const outermost = isFieldListAnchor(node) ? node : found;
-  return resolveOutermostAnchor(node.parent, outermost);
+  const outermost = isFieldListNode(node) ? node : found;
+  return resolveOutermostFieldList(node.parent, outermost);
 };
 
 /**
@@ -40,6 +40,6 @@ const resolveOutermostAnchor = (
  */
 export const resolveFieldListPage = (member: {
   readonly parent: GeneralParentNode;
-}): FieldListAnchor | null => {
-  return resolveOutermostAnchor(member.parent, null);
+}): FieldListNode | null => {
+  return resolveOutermostFieldList(member.parent, null);
 };

@@ -3,10 +3,10 @@ import type {
   SelectType,
 } from '../parse/body/control/SelectControlDefinition.ts';
 import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
+import type { BaseControlNodeState } from './BaseNode.ts';
 import type { BaseValueNode, BaseValueNodeState } from './BaseValueNode.ts';
 import type { BaseItem } from './BaseItem.ts';
 import type { NodeAppearances } from './NodeAppearances.ts';
-import type { PageBoundary } from './identity.ts';
 import type { RootNode } from './RootNode.ts';
 import type { ValueType } from './ValueType.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
@@ -15,7 +15,8 @@ import type { LeafNodeValidationState } from './validation.ts';
 export type SelectItem = BaseItem;
 export type SelectValueOptions = readonly SelectItem[];
 
-export interface SelectNodeState extends BaseValueNodeState<readonly string[]> {
+export interface SelectNodeState
+  extends BaseValueNodeState<readonly string[]>, BaseControlNodeState {
   get isSelectWithImages(): boolean;
 
   get children(): null;
@@ -35,7 +36,6 @@ export interface SelectNodeState extends BaseValueNodeState<readonly string[]> {
    * `Select1NodeState` would have `get value(): SelectItem | null`?
    */
   get value(): readonly string[];
-  get pageBoundary(): PageBoundary;
 }
 
 export interface SelectDefinition<V extends ValueType = ValueType> extends LeafNodeDefinition<V> {

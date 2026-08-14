@@ -1,10 +1,10 @@
 import type { NoteRuntimeValue } from '../lib/codecs/NoteCodec.ts';
 import type { InputControlDefinition } from '../parse/body/control/InputControlDefinition.ts';
 import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
+import type { BaseControlNodeState } from './BaseNode.ts';
 import type { BaseValueNode, BaseValueNodeState } from './BaseValueNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { NodeAppearances } from './NodeAppearances.ts';
-import type { PageBoundary } from './identity.ts';
 import type { RootNode } from './RootNode.ts';
 import type { TextRange } from './TextRange.ts';
 import type { LeafNodeValidationState } from './validation.ts';
@@ -12,7 +12,8 @@ import type { ValueType } from './ValueType.ts';
 
 export type NoteValue<V extends ValueType> = NoteRuntimeValue<V>;
 
-export interface NoteNodeState<V extends ValueType> extends BaseValueNodeState<NoteValue<V>> {
+export interface NoteNodeState<V extends ValueType>
+  extends BaseValueNodeState<NoteValue<V>>, BaseControlNodeState {
   /**
    * Note-specific specialization: a note will always have a non-null value in
    * at least one of:
@@ -54,7 +55,6 @@ export interface NoteNodeState<V extends ValueType> extends BaseValueNodeState<N
   // non-blank values (as that has been a primary driver for prioritizing note
   // functionality).
   get value(): NoteValue<V>;
-  get pageBoundary(): PageBoundary;
 }
 
 export interface NoteDefinition<V extends ValueType = ValueType> extends LeafNodeDefinition<V> {

@@ -205,7 +205,7 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatDefinition>
   }
 
   private resolvePageBoundary(isUncontrolled: boolean): Accessor<PageBoundary> {
-    const registry = this.root.paginationRegistry;
+    const registry = this.root.pagination;
     if (!registry.enabled) {
       return () => this.nodeId;
     }

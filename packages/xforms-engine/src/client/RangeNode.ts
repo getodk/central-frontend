@@ -1,8 +1,8 @@
 import type { RuntimeInputValue, RuntimeValue } from '../lib/codecs/getSharedValueCodec.ts';
 import type { RangeNodeDefinition, RangeValueType } from '../parse/model/RangeNodeDefinition.ts';
+import type { BaseControlNodeState } from './BaseNode.ts';
 import type { BaseValueNode, BaseValueNodeState } from './BaseValueNode.ts';
 import type { NodeAppearances } from './NodeAppearances.ts';
-import type { PageBoundary } from './identity.ts';
 import type { RootNode } from './RootNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { LeafNodeValidationState } from './validation.ts';
@@ -13,11 +13,9 @@ export type RangeValue<V extends RangeValueType> = RuntimeValue<V>;
 
 export type RangeInputValue<V extends RangeValueType> = RuntimeInputValue<V>;
 
-export interface RangeNodeState<V extends RangeValueType> extends BaseValueNodeState<
-  RangeValue<V>
-> {
+export interface RangeNodeState<V extends RangeValueType>
+  extends BaseValueNodeState<RangeValue<V>>, BaseControlNodeState {
   get valueOptions(): null;
-  get pageBoundary(): PageBoundary;
 }
 
 export type RangeNodeAppearances = NodeAppearances<RangeNodeDefinition>;

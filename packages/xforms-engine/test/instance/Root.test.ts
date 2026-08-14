@@ -54,18 +54,18 @@ describe('Root', () => {
       const q3 = getControlNode(root, '/data/q3');
 
       expect(root.currentState.currentPage).toBe(q1.nodeId);
-      expect(root.currentState.canGoPrevious).toBe(false);
-      expect(root.currentState.canGoNext).toBe(true);
+      expect(root.currentState.hasPreviousPage).toBe(false);
+      expect(root.currentState.hasNextPage).toBe(true);
 
       root.nextPage();
       expect(root.currentState.currentPage).toBe(q2.nodeId);
-      expect(root.currentState.canGoPrevious).toBe(true);
-      expect(root.currentState.canGoNext).toBe(true);
+      expect(root.currentState.hasPreviousPage).toBe(true);
+      expect(root.currentState.hasNextPage).toBe(true);
 
       root.nextPage();
       expect(root.currentState.currentPage).toBe(q3.nodeId);
-      expect(root.currentState.canGoPrevious).toBe(true);
-      expect(root.currentState.canGoNext).toBe(false);
+      expect(root.currentState.hasPreviousPage).toBe(true);
+      expect(root.currentState.hasNextPage).toBe(false);
 
       root.nextPage();
       expect(root.currentState.currentPage).toBe(q3.nodeId);
@@ -75,7 +75,7 @@ describe('Root', () => {
 
       root.previousPage();
       expect(root.currentState.currentPage).toBe(q1.nodeId);
-      expect(root.currentState.canGoPrevious).toBe(false);
+      expect(root.currentState.hasPreviousPage).toBe(false);
 
       root.previousPage();
       expect(root.currentState.currentPage).toBe(q1.nodeId);
@@ -87,8 +87,8 @@ describe('Root', () => {
 
       root.setCurrentPage(q3.nodeId);
       expect(root.currentState.currentPage).toBe(q3.nodeId);
-      expect(root.currentState.canGoNext).toBe(false);
-      expect(root.currentState.canGoPrevious).toBe(true);
+      expect(root.currentState.hasNextPage).toBe(false);
+      expect(root.currentState.hasPreviousPage).toBe(true);
     });
 
     it('nextPage skips unreachable (empty) pages', async () => {
@@ -143,15 +143,15 @@ describe('Root', () => {
         )
       );
 
-      expect(root.currentState.canGoNext).toBe(false);
-      expect(root.currentState.canGoPrevious).toBe(false);
+      expect(root.currentState.hasNextPage).toBe(false);
+      expect(root.currentState.hasPreviousPage).toBe(false);
 
       getUncontrolledRange(root).addInstances();
 
       const repeatInstance = getRepeatInstanceNode(root, '/data/r[2]');
       expect(root.currentState.currentPage).toBe(repeatInstance.nodeId);
-      expect(root.currentState.canGoPrevious).toBe(true);
-      expect(root.currentState.canGoNext).toBe(false);
+      expect(root.currentState.hasPreviousPage).toBe(true);
+      expect(root.currentState.hasNextPage).toBe(false);
     });
 
     it('auto-advances backward when nothing is reachable forward', async () => {
@@ -175,6 +175,29 @@ describe('Root', () => {
       getInputNode(root, '/data/toggle').setValue('no');
 
       expect(root.currentState.currentPage).toBe(keep.nodeId);
+    });
+
+    // Edge case and not a bug, still worth documenting as a test scenario here.
+    it('clears the current page when the current instance is removed and no page remains reachable', async () => {
+      const root = await initForm(
+        buildForm(
+          [t('grp', t('r jr:template=""', t('q')), t('r', t('q'))), t('n')],
+          [group('/data/grp', repeat('/data/grp/r', input('/data/grp/r/q')))],
+          [
+            bind('/data/n').type('string').calculate('count(/data/grp/r)'),
+            bind('/data/grp').relevant('/data/n > 0'),
+          ]
+        )
+      );
+      const r1q = getControlNode(root, '/data/grp/r[1]/q');
+
+      expect(root.currentState.currentPage).toBe(r1q.nodeId);
+
+      getUncontrolledRange(root).removeInstances(0);
+
+      expect(root.currentState.currentPage).toBe(null);
+      expect(root.currentState.hasNextPage).toBe(false);
+      expect(root.currentState.hasPreviousPage).toBe(false);
     });
   });
 
@@ -203,7 +226,7 @@ describe('Root', () => {
 
       root.nextPage();
       expect(root.currentState.currentPage).toBe(tail.nodeId);
-      expect(root.currentState.canGoNext).toBe(false);
+      expect(root.currentState.hasNextPage).toBe(false);
     });
 
     it('an empty repeat outside any field-list is its own reachable page', async () => {
@@ -213,12 +236,12 @@ describe('Root', () => {
       const range = getUncontrolledRange(root);
 
       expect(root.currentState.currentPage).toBe(intro.nodeId);
-      expect(root.currentState.canGoNext).toBe(true);
+      expect(root.currentState.hasNextPage).toBe(true);
 
       root.nextPage();
       expect(root.currentState.currentPage).toBe(range.nodeId);
-      expect(root.currentState.canGoPrevious).toBe(true);
-      expect(root.currentState.canGoNext).toBe(true);
+      expect(root.currentState.hasPreviousPage).toBe(true);
+      expect(root.currentState.hasNextPage).toBe(true);
 
       root.nextPage();
       expect(root.currentState.currentPage).toBe(tail.nodeId);
@@ -313,12 +336,12 @@ describe('Root', () => {
 
       root.nextPage();
       expect(root.currentState.currentPage).toBe(outer.nodeId);
-      expect(root.currentState.canGoPrevious).toBe(true);
-      expect(root.currentState.canGoNext).toBe(true);
+      expect(root.currentState.hasPreviousPage).toBe(true);
+      expect(root.currentState.hasNextPage).toBe(true);
 
       root.nextPage();
       expect(root.currentState.currentPage).toBe(tail.nodeId);
-      expect(root.currentState.canGoNext).toBe(false);
+      expect(root.currentState.hasNextPage).toBe(false);
     });
 
     it('adding an instance inside a field-list keeps currentPage on that page', async () => {
@@ -383,16 +406,16 @@ describe('Root', () => {
       const hh2 = getRepeatInstanceNode(root, '/data/hh[2]');
 
       expect(root.currentState.currentPage).toBe(hh1.nodeId);
-      expect(root.currentState.canGoNext).toBe(true);
+      expect(root.currentState.hasNextPage).toBe(true);
 
       root.nextPage();
       expect(root.currentState.currentPage).toBe(hh2.nodeId);
-      expect(root.currentState.canGoNext).toBe(false);
+      expect(root.currentState.hasNextPage).toBe(false);
 
       getUncontrolledRange(hh2).addInstances();
       expect(root.currentState.currentPage).toBe(hh2.nodeId);
-      expect(root.currentState.canGoNext).toBe(false);
-      expect(root.currentState.canGoPrevious).toBe(true);
+      expect(root.currentState.hasNextPage).toBe(false);
+      expect(root.currentState.hasPreviousPage).toBe(true);
     });
 
     it('removing the current outer instance recovers to a remaining instance', async () => {

@@ -22,7 +22,7 @@ import {
   setupPaginationForms,
 } from '../../helpers/pagination.ts';
 
-describe('PaginationRegistry', () => {
+describe('Pagination', () => {
   const buildForm = (
     instanceChildren: readonly XFormsElement[],
     bodyChildren: readonly XFormsElement[],
@@ -30,8 +30,8 @@ describe('PaginationRegistry', () => {
   ): XFormsElement => {
     return html(
       head(
-        title('PaginationRegistry'),
-        model(mainInstance(t('data id="pagination-registry"', ...instanceChildren)), ...binds)
+        title('Pagination'),
+        model(mainInstance(t('data id="pagination"', ...instanceChildren)), ...binds)
       ),
       pagesBody(...bodyChildren)
     );
@@ -62,9 +62,9 @@ describe('PaginationRegistry', () => {
     expect(boundaries[0]?.nodeType).toBe('input');
     expect(boundaries[1]?.nodeType).toBe('group');
     expect(boundaries[2]?.nodeType).toBe('input');
-    expect(root.paginationRegistry.countPageMembers(boundaries[0]!.nodeId)).toBe(1);
-    expect(root.paginationRegistry.countPageMembers(boundaries[1]!.nodeId)).toBe(3);
-    expect(root.paginationRegistry.countPageMembers(boundaries[2]!.nodeId)).toBe(1);
+    expect(root.pagination.countPageMembers(boundaries[0]!.nodeId)).toBe(1);
+    expect(root.pagination.countPageMembers(boundaries[1]!.nodeId)).toBe(3);
+    expect(root.pagination.countPageMembers(boundaries[2]!.nodeId)).toBe(1);
   });
 
   it('a field-list wrapping only a repeat counts all interior leaves on one page', async () => {
@@ -86,8 +86,8 @@ describe('PaginationRegistry', () => {
     expect(boundaries.length).toBe(2);
     expect(boundaries[0]?.nodeType).toBe('input');
     expect(boundaries[1]?.nodeType).toBe('group');
-    expect(root.paginationRegistry.countPageMembers(boundaries[0]!.nodeId)).toBe(1);
-    expect(root.paginationRegistry.countPageMembers(boundaries[1]!.nodeId)).toBe(2);
+    expect(root.pagination.countPageMembers(boundaries[0]!.nodeId)).toBe(1);
+    expect(root.pagination.countPageMembers(boundaries[1]!.nodeId)).toBe(2);
   });
 
   it('each instance page counts its subtree leaves when there is a field-list on an outer repeat', async () => {
@@ -127,8 +127,8 @@ describe('PaginationRegistry', () => {
     expect(boundaries.length).toBe(2);
     expect(boundaries[0]?.nodeType).toBe('repeat-instance');
     expect(boundaries[1]?.nodeType).toBe('repeat-instance');
-    expect(root.paginationRegistry.countPageMembers(boundaries[0]!.nodeId)).toBe(5);
-    expect(root.paginationRegistry.countPageMembers(boundaries[1]!.nodeId)).toBe(3);
+    expect(root.pagination.countPageMembers(boundaries[0]!.nodeId)).toBe(5);
+    expect(root.pagination.countPageMembers(boundaries[1]!.nodeId)).toBe(3);
   });
 
   it('an empty repeat counts 1 toward its field-list page until instances take over', async () => {
@@ -159,16 +159,16 @@ describe('PaginationRegistry', () => {
     expect(boundaries[0]?.nodeType).toBe('group');
     const flPageId = boundaries[0]!.nodeId;
 
-    expect(root.paginationRegistry.countPageMembers(flPageId)).toBe(3);
+    expect(root.pagination.countPageMembers(flPageId)).toBe(3);
 
     const range = getUncontrolledRange(root);
 
     range.addInstances();
     expect(root.getOrderedPages().length).toBe(1);
-    expect(root.paginationRegistry.countPageMembers(flPageId)).toBe(4);
+    expect(root.pagination.countPageMembers(flPageId)).toBe(4);
 
     range.removeInstances(0);
-    expect(root.paginationRegistry.countPageMembers(flPageId)).toBe(3);
+    expect(root.pagination.countPageMembers(flPageId)).toBe(3);
   });
 
   it('relevance flips on a leaf empty and restore its boundary count', async () => {
@@ -188,13 +188,13 @@ describe('PaginationRegistry', () => {
       .find((boundary) => boundary.currentState.reference === '/data/gated');
 
     expect(gatedBoundary).toBeDefined();
-    expect(root.paginationRegistry.countPageMembers(gatedBoundary!.nodeId)).toBe(1);
+    expect(root.pagination.countPageMembers(gatedBoundary!.nodeId)).toBe(1);
 
     getInputNode(root, '/data/toggle').setValue('no');
-    expect(root.paginationRegistry.countPageMembers(gatedBoundary!.nodeId)).toBe(0);
+    expect(root.pagination.countPageMembers(gatedBoundary!.nodeId)).toBe(0);
 
     getInputNode(root, '/data/toggle').setValue('yes');
-    expect(root.paginationRegistry.countPageMembers(gatedBoundary!.nodeId)).toBe(1);
+    expect(root.pagination.countPageMembers(gatedBoundary!.nodeId)).toBe(1);
   });
 
   it('relevance flip on one of several leaves sharing a page decrements its count', async () => {
@@ -220,13 +220,13 @@ describe('PaginationRegistry', () => {
     const flBoundary = root.getOrderedPages().find((boundary) => boundary.nodeType === 'group');
 
     expect(flBoundary).toBeDefined();
-    expect(root.paginationRegistry.countPageMembers(flBoundary!.nodeId)).toBe(2);
+    expect(root.pagination.countPageMembers(flBoundary!.nodeId)).toBe(2);
 
     getInputNode(root, '/data/toggle').setValue('no');
-    expect(root.paginationRegistry.countPageMembers(flBoundary!.nodeId)).toBe(1);
+    expect(root.pagination.countPageMembers(flBoundary!.nodeId)).toBe(1);
 
     getInputNode(root, '/data/toggle').setValue('yes');
-    expect(root.paginationRegistry.countPageMembers(flBoundary!.nodeId)).toBe(2);
+    expect(root.pagination.countPageMembers(flBoundary!.nodeId)).toBe(2);
   });
 
   it('exposes each leaf boundary as pageBoundary on the leaf currentState', async () => {

@@ -14,7 +14,7 @@ const t: Translate = inject(TRANSLATE)!;
 <template>
 	<div class="form-footer flex flex-wrap gap-3">
 		<Button
-			v-if="root.currentState.canGoPrevious"
+			v-if="root.currentState.hasPreviousPage"
 			outlined
 			severity="contrast"
 			@click="root.previousPage()"
@@ -23,14 +23,14 @@ const t: Translate = inject(TRANSLATE)!;
 			<span>{{ t('odk_web_forms.back.label') }}</span>
 		</Button>
 		<Button
-			v-if="root.currentState.canGoNext"
+			v-if="root.currentState.hasNextPage"
 			class="primary-action"
 			@click="root.nextPage()"
 		>
 			<span>{{ t('odk_web_forms.next.label') }}</span>
 			<IconSVG name="mdiArrowRight" variant="inverted" />
 		</Button>
-		<!-- canGoNext is false on the last page and always on non-paginated forms; Send takes Next's place in both. -->
+		<!-- hasNextPage is false on the last page and always on non-paginated forms; Send takes Next's place in both. -->
 		<Button
 			v-else
 			class="primary-action"

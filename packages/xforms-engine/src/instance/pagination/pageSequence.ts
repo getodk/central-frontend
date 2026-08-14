@@ -51,8 +51,13 @@ export const collectPages = (
 ): readonly Page[] => {
   const pages = pageMembersOf(children).map(pageOf);
 
-  return pages.filter((page, index) => {
-    return pages.findIndex((candidate) => candidate.nodeId === page.nodeId) === index;
+  const emittedPageIds = new Set<string>();
+  return pages.filter((page) => {
+    if (emittedPageIds.has(page.nodeId)) {
+      return false;
+    }
+    emittedPageIds.add(page.nodeId);
+    return true;
   });
 };
 
@@ -67,6 +72,21 @@ export const scanForReachable = (
   }
   const ordered = step === MOVE_FORWARD ? pages.slice(start) : pages.slice(0, start + 1).reverse();
   return ordered.find(isReachable) ?? null;
+};
+
+export const findReachablePage = (
+  pages: readonly Page[],
+  from: Page | null,
+  direction: NavigationDirection,
+  isReachable: (page: Page) => boolean
+): Page | null => {
+  const NO_POSITION = -1;
+  const startIdx = from == null ? NO_POSITION : pages.findIndex((p) => p.nodeId === from.nodeId);
+  if (from != null && startIdx === NO_POSITION) {
+    return null;
+  }
+
+  return scanForReachable(pages, startIdx + direction, direction, isReachable);
 };
 
 export const lastReachablePage = (
@@ -89,15 +109,58 @@ export const nearestReachablePage = (
   isReachable: (page: Page) => boolean
 ): Page | null => {
   const pages = collectPages(rootChildren);
-  const origin = findNearestRemainingAncestor(rootChildren, node);
-  const originFirstPage = origin == null ? null : (collectPages([origin])[0] ?? null);
-  const originIndex = pages.findIndex((page) => page.nodeId === originFirstPage?.nodeId);
-  const start = Math.max(0, originIndex);
+  const start = getStartIndex(pages, rootChildren, node);
 
   return (
     scanForReachable(pages, start, MOVE_FORWARD, isReachable) ??
     scanForReachable(pages, start - 1, MOVE_BACKWARD, isReachable)
   );
+};
+
+export const resolveCurrentPage = (
+  pages: readonly Page[],
+  current: Page | null,
+  children: readonly GeneralChildNode[],
+  isReachable: (page: Page) => boolean
+): Page | null => {
+  if (current == null) {
+    return pages.find(isReachable) ?? null;
+  }
+
+  const isListed = pages.some((page) => page.nodeId === current.nodeId);
+  if (isListed && isReachable(current)) {
+    return current;
+  }
+
+  if (!isListed) {
+    return nearestReachablePage(children, current, isReachable);
+  }
+
+  const nextReachablePage = findReachablePage(pages, current, MOVE_FORWARD, isReachable);
+  if (nextReachablePage != null) {
+    return nextReachablePage;
+  }
+
+  return findReachablePage(pages, current, MOVE_BACKWARD, isReachable);
+};
+
+const getStartIndex = (
+  pages: readonly Page[],
+  rootChildren: readonly GeneralChildNode[],
+  node: Page
+): number => {
+  const origin = findNearestRemainingAncestor(rootChildren, node);
+  if (origin == null) {
+    return 0;
+  }
+
+  const originFirstPage = collectPages([origin])[0];
+  if (originFirstPage == null) {
+    return 0;
+  }
+
+  const originIndex = pages.findIndex((page) => page.nodeId === originFirstPage.nodeId);
+  return Math.max(0, originIndex);
 };
 
 // Only runs when the current page has been removed. Whether a node is still in the form can't be judged from its links
@@ -108,11 +171,10 @@ const findNearestRemainingAncestor = (
 ): GeneralChildNode | RepeatInstance | null => {
   const chain: AnyChildNode[] = [];
   let current: AnyChildNode = node;
-  while (current.parent.nodeType !== 'root') {
+  while (current.nodeType !== 'root') {
     chain.push(current);
     current = current.parent;
   }
-  chain.push(current);
 
   let deepestRemaining: GeneralChildNode | RepeatInstance | null = null;
   let liveChildren: ReadonlyArray<GeneralChildNode | RepeatInstance> = rootChildren;

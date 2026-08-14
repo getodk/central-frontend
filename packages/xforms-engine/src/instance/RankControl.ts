@@ -189,7 +189,7 @@ export class RankControl
         valueOptions,
         value: valueState,
         instanceValue: this.getInstanceValue,
-        pageBoundary: this.root.paginationRegistry.attachLeaf(this),
+        pageBoundary: this.root.pagination.attachLeaf(this),
       },
       this.instanceConfig
     );

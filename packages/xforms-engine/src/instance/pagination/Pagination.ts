@@ -31,10 +31,10 @@ interface RelevantLeafCount {
  * Counts how many controls on each page are currently relevant, which is how `Root` decides which pages can be
  * navigated to. The order of pages is not kept here; `Root` works that out from the form itself.
  *
- * Each node registers itself and cleans up when it is removed, so the registry never has to be told about removals.
+ * Each node registers itself and cleans up when it is removed, so this class never has to be told about removals.
  * Only ids are stored, never nodes, so removed instances can be garbage collected.
  */
-export class PaginationRegistry {
+export class Pagination {
   private readonly pageLeafCounts = new Map<FormNodeID, RelevantLeafCount>();
   private readonly leafPages = new Map<FormNodeID, FormNodeID>();
   private readonly rangePages = new Map<FormNodeID, FormNodeID>();

@@ -3,9 +3,9 @@ import type { BaseInstanceAttachmentState } from '../lib/reactivity/createInstan
 import type { UploadAppearanceDefinition } from '../parse/body/appearance/uploadAppearanceParser.ts';
 import type { UploadControlDefinition } from '../parse/body/control/UploadControlDefinition.ts';
 import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
+import type { BaseControlNodeState } from './BaseNode.ts';
 import type { BaseValueNode, BaseValueNodeState } from './BaseValueNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
-import type { PageBoundary } from './identity.ts';
 import type { RootNode } from './RootNode.ts';
 import type { InstanceAttachmentFileName } from './serialization/InstanceData.ts';
 import type { LeafNodeValidationState } from './validation.ts';
@@ -13,12 +13,11 @@ import type { ValueType } from './ValueType.ts';
 
 export type UploadValue = File | null;
 
-export interface UploadNodeState extends BaseValueNodeState<UploadValue> {
+export interface UploadNodeState extends BaseValueNodeState<UploadValue>, BaseControlNodeState {
   get valueOptions(): null;
   get value(): UploadValue;
   get instanceValue(): InstanceAttachmentFileName;
   get attachmentState(): BaseInstanceAttachmentState;
-  get pageBoundary(): PageBoundary;
 }
 
 export interface UploadDefinition<V extends ValueType = ValueType> extends LeafNodeDefinition<V> {

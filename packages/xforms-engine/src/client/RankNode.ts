@@ -1,8 +1,8 @@
 import type { RankControlDefinition } from '../parse/body/control/RankControlDefinition.ts';
 import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
+import type { BaseControlNodeState } from './BaseNode.ts';
 import type { BaseValueNode, BaseValueNodeState } from './BaseValueNode.ts';
 import type { BaseItem } from './BaseItem.ts';
-import type { PageBoundary } from './identity.ts';
 import type { RootNode } from './RootNode.ts';
 import type { TextRange } from './TextRange.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
@@ -13,7 +13,7 @@ import type { ValueType } from './ValueType.ts';
 export type RankItem = BaseItem;
 export type RankValueOptions = readonly RankItem[];
 
-export interface RankNodeState extends BaseValueNodeState<readonly string[]> {
+export interface RankNodeState extends BaseValueNodeState<readonly string[]>, BaseControlNodeState {
   get valueOptions(): RankValueOptions;
 
   /**
@@ -21,7 +21,6 @@ export interface RankNodeState extends BaseValueNodeState<readonly string[]> {
    * The order of the items is important and must be preserved during processing.
    */
   get value(): readonly string[];
-  get pageBoundary(): PageBoundary;
 }
 
 export interface RankDefinition<V extends ValueType = ValueType> extends LeafNodeDefinition<V> {

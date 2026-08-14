@@ -1,9 +1,9 @@
 import type { RuntimeInputValue, RuntimeValue } from '../lib/codecs/getSharedValueCodec.ts';
 import type { InputControlDefinition } from '../parse/body/control/InputControlDefinition.ts';
 import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
+import type { BaseControlNodeState } from './BaseNode.ts';
 import type { BaseValueNode, BaseValueNodeState } from './BaseValueNode.ts';
 import type { NodeAppearances } from './NodeAppearances.ts';
-import type { PageBoundary } from './identity.ts';
 import type { RootNode } from './RootNode.ts';
 import type { ValueType } from './ValueType.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
@@ -13,7 +13,8 @@ export type InputValue<V extends ValueType> = RuntimeValue<V>;
 
 export type InputNodeInputValue<V extends ValueType> = RuntimeInputValue<V>;
 
-export interface InputNodeState<V extends ValueType> extends BaseValueNodeState<InputValue<V>> {
+export interface InputNodeState<V extends ValueType>
+  extends BaseValueNodeState<InputValue<V>>, BaseControlNodeState {
   get children(): null;
   get valueOptions(): null;
 
@@ -24,7 +25,6 @@ export interface InputNodeState<V extends ValueType> extends BaseValueNodeState<
    * the {@link InputNode.setValue} method.
    */
   get value(): InputValue<V>;
-  get pageBoundary(): PageBoundary;
 }
 
 export interface InputDefinition<V extends ValueType = ValueType> extends LeafNodeDefinition<V> {

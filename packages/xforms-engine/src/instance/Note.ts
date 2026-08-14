@@ -119,7 +119,7 @@ export class Note<V extends ValueType = ValueType>
         valueOptions: null,
         value: this.valueState,
         instanceValue: this.getInstanceValue,
-        pageBoundary: this.root.paginationRegistry.attachLeaf(this),
+        pageBoundary: this.root.pagination.attachLeaf(this),
       },
       this.instanceConfig
     );

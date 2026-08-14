@@ -2,20 +2,19 @@ import type { TriggerRuntimeValue, TriggerValueType } from '../lib/codecs/Trigge
 import type { UnknownAppearanceDefinition } from '../parse/body/appearance/unknownAppearanceParser.ts';
 import type { TriggerControlDefinition } from '../parse/body/control/TriggerControlDefinition.ts';
 import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
+import type { BaseControlNodeState } from './BaseNode.ts';
 import type { BaseValueNode, BaseValueNodeState } from './BaseValueNode.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
-import type { PageBoundary } from './identity.ts';
 import type { RootNode } from './RootNode.ts';
 import type { LeafNodeValidationState } from './validation.ts';
 import type { ValueType } from './ValueType.ts';
 
 export type TriggerValue = TriggerRuntimeValue;
 
-export interface TriggerNodeState extends BaseValueNodeState<TriggerValue> {
+export interface TriggerNodeState extends BaseValueNodeState<TriggerValue>, BaseControlNodeState {
   get children(): null;
   get valueOptions(): null;
   get value(): TriggerValue;
-  get pageBoundary(): PageBoundary;
 }
 
 export interface TriggerNodeDefinition<

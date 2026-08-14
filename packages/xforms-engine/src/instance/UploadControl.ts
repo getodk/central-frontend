@@ -170,7 +170,7 @@ export class UploadControl
         attributes: this.attributeState.getAttributes,
         instanceValue: instanceAttachment.getInstanceValue,
         attachmentState: instanceAttachment.getState,
-        pageBoundary: this.root.paginationRegistry.attachLeaf(this),
+        pageBoundary: this.root.pagination.attachLeaf(this),
       },
       this.instanceConfig
     );

@@ -1,12 +1,5 @@
 import { XPathNodeKindKey } from '@getodk/xpath';
-import {
-  type Accessor,
-  createComputed,
-  createMemo,
-  createSignal,
-  type Setter,
-  untrack,
-} from 'solid-js';
+import type { Accessor } from 'solid-js';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
 import type { FormNodeID, PageBoundary } from '../client/identity.ts';
 import type { RootNode } from '../client/RootNode.ts';
@@ -45,16 +38,9 @@ import type { GeneralChildNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { ClientReactiveSerializableParentNode } from './internal-api/serialization/ClientReactiveSerializableParentNode.ts';
 import type { TranslationContext } from './internal-api/TranslationContext.ts';
-import {
-  collectPages,
-  MOVE_BACKWARD,
-  MOVE_FORWARD,
-  nearestReachablePage,
-  type NavigationDirection,
-  type Page,
-  scanForReachable,
-} from './pagination/pageSequence.ts';
-import { PaginationRegistry } from './pagination/PaginationRegistry.ts';
+import { createPageNavigation, type PageNavigation } from './pagination/createPageNavigation.ts';
+import type { Page } from './pagination/pageSequence.ts';
+import { Pagination } from './pagination/Pagination.ts';
 import type { PrimaryInstance } from './PrimaryInstance.ts';
 
 interface RootStateSpec {
@@ -75,8 +61,8 @@ interface RootStateSpec {
 
   // Pagination
   readonly currentPage: Accessor<PageBoundary | null>;
-  readonly canGoNext: Accessor<boolean>;
-  readonly canGoPrevious: Accessor<boolean>;
+  readonly hasNextPage: Accessor<boolean>;
+  readonly hasPreviousPage: Accessor<boolean>;
 }
 
 export class Root
@@ -115,10 +101,10 @@ export class Root
   readonly validationState: AncestorNodeValidationState;
   readonly instanceState: InstanceState;
   readonly languages: FormLanguages;
-  readonly paginationRegistry: PaginationRegistry;
+  readonly pagination: Pagination;
+  private readonly navigation: PageNavigation;
 
   readonly getCurrentPage: Accessor<Page | null>;
-  private readonly setPage: Setter<Page | null>;
   readonly getOrderedPages: Accessor<readonly Page[]>;
 
   constructor(parent: PrimaryInstance) {
@@ -132,7 +118,9 @@ export class Root
     });
 
     this.classes = parent.classes;
-    this.paginationRegistry = new PaginationRegistry(parent.classes.pages);
+    // Pagination owns every page decision, including "this form has no pages". That is why it is disabled
+    // rather than null, so nodes always ask it for their pageBoundary, never decide.
+    this.pagination = new Pagination(parent.classes.pages);
 
     const childrenState = createChildrenState<Root, GeneralChildNode>(this);
     this.attributeState = createAttributeState(this.scope);
@@ -140,22 +128,9 @@ export class Root
     this.childrenState = childrenState;
     this.languages = parent.languages;
 
-    const [getCurrentPage, setCurrentPage] = createSignal<Page | null>(null);
-    this.getCurrentPage = getCurrentPage;
-    this.setPage = setCurrentPage;
-    const currentPage: Accessor<PageBoundary | null> = () => getCurrentPage()?.nodeId ?? null;
-
-    this.getOrderedPages = this.scope.runTask(() => {
-      return createMemo(() =>
-        this.paginationRegistry.enabled ? collectPages(this.getChildren()) : []
-      );
-    });
-    const canGoNext = this.scope.runTask(() => {
-      return createMemo(() => this.findReachablePage(getCurrentPage(), MOVE_FORWARD) != null);
-    });
-    const canGoPrevious = this.scope.runTask(() => {
-      return createMemo(() => this.findReachablePage(getCurrentPage(), MOVE_BACKWARD) != null);
-    });
+    this.navigation = createPageNavigation(this);
+    this.getCurrentPage = () => this.navigation.getCurrentPage();
+    this.getOrderedPages = () => this.navigation.getOrderedPages();
 
     const state = createSharedNodeState(
       this.scope,
@@ -172,9 +147,9 @@ export class Root
         children: childrenState.childIds,
         hasRelevantBodyNodes: this.hasRelevantBodyNodes,
         attributes: this.attributeState.getAttributes,
-        currentPage,
-        canGoNext,
-        canGoPrevious,
+        currentPage: this.navigation.currentPage,
+        hasNextPage: this.navigation.hasNextPage,
+        hasPreviousPage: this.navigation.hasPreviousPage,
       },
       this.instanceConfig
     );
@@ -191,97 +166,23 @@ export class Root
     this.attributeState.setAttributes(buildAttributes(this));
     this.validationState = createAggregatedViolations(this, this.instanceConfig);
     this.instanceState = createRootInstanceState(this);
-    this.initPagination();
+    this.navigation.initPagination();
   }
 
   setCurrentPage(page: PageBoundary): PageBoundary | null {
-    const resolved = untrack(() => {
-      return this.getOrderedPages().find((candidate) => candidate.nodeId === page);
-    });
-    if (resolved == null) {
-      return null;
-    }
-    this.setPage(resolved);
-    return resolved.nodeId;
-  }
-
-  private turnPage(direction: NavigationDirection): void {
-    const target = untrack(() => this.findReachablePage(this.getCurrentPage(), direction));
-    if (target != null) {
-      this.setPage(target);
-    }
+    return this.navigation.setCurrentPage(page);
   }
 
   nextPage(): void {
-    this.turnPage(MOVE_FORWARD);
+    this.navigation.nextPage();
   }
 
   previousPage(): void {
-    this.turnPage(MOVE_BACKWARD);
+    this.navigation.previousPage();
   }
 
   isPageReachable(page: Page): boolean {
-    return this.paginationRegistry.countPageMembers(page.nodeId) > 0;
-  }
-
-  private findReachablePage(from: Page | null, direction: NavigationDirection): Page | null {
-    const NO_POSITION = -1;
-    const pages = this.getOrderedPages();
-    const startIdx = from == null ? NO_POSITION : pages.findIndex((p) => p.nodeId === from.nodeId);
-    if (from != null && startIdx === NO_POSITION) {
-      return null;
-    }
-
-    return scanForReachable(pages, startIdx + direction, direction, (page) => {
-      return this.isPageReachable(page);
-    });
-  }
-
-  /**
-   * The currentPage points to a reachable page if available; otherwise, it moves to the nearest reachable page.
-   * Reads are tracked on purpose; untracking any of them would stop the rule being re-checked.
-   */
-  private initPagination(): void {
-    if (!this.paginationRegistry.enabled) {
-      return;
-    }
-
-    this.scope.runTask(() => {
-      createComputed(() => {
-        const current = this.getCurrentPage();
-        const pages = this.getOrderedPages();
-
-        if (current == null) {
-          const initial = pages.find((page) => this.isPageReachable(page));
-          if (initial != null) {
-            this.setPage(initial);
-          }
-          return;
-        }
-
-        const stillListed = pages.some((page) => page.nodeId === current.nodeId);
-        if (stillListed && this.isPageReachable(current)) {
-          return;
-        }
-
-        if (!stillListed) {
-          const recovered = nearestReachablePage(this.getChildren(), current, (page) => {
-            return this.isPageReachable(page);
-          });
-          if (recovered != null) {
-            this.setPage(recovered);
-          }
-          return;
-        }
-
-        const neighbour =
-          this.findReachablePage(current, MOVE_FORWARD) ??
-          this.findReachablePage(current, MOVE_BACKWARD);
-        if (neighbour != null) {
-          this.setPage(neighbour);
-        }
-      });
-    });
+    return this.pagination.countPageMembers(page.nodeId) > 0;
   }
 
   getChildren(): readonly GeneralChildNode[] {

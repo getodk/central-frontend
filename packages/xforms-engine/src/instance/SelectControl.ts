@@ -168,7 +168,7 @@ export class SelectControl
         value: valueState,
         instanceValue: this.getInstanceValue,
         isSelectWithImages,
-        pageBoundary: this.root.paginationRegistry.attachLeaf(this),
+        pageBoundary: this.root.pagination.attachLeaf(this),
       },
       this.instanceConfig
     );
