@@ -24,16 +24,18 @@ const t: Translate = inject(TRANSLATE)!;
 		</Button>
 		<Button
 			v-if="root.currentState.hasNextPage"
-			class="primary-action"
+			class="align-right"
+			outlined
+			severity="contrast"
 			@click="root.nextPage()"
 		>
 			<span>{{ t('odk_web_forms.next.label') }}</span>
-			<IconSVG name="mdiArrowRight" variant="inverted" />
+			<IconSVG name="mdiArrowRight" />
 		</Button>
 		<!-- hasNextPage is false on the last page and always on non-paginated forms; Send takes Next's place in both. -->
 		<Button
 			v-else
-			class="primary-action"
+			class="align-right"
 			@click="$emit('submit')"
 		>
 			<span>{{ t('odk_web_forms.submit.label') }}</span>
@@ -48,8 +50,12 @@ const t: Translate = inject(TRANSLATE)!;
 .form-footer {
 	margin-top: var(--odk-spacing-xl);
 
-	.primary-action {
+	.align-right {
 		margin-left: auto;
+	}
+
+	:deep(.p-button.p-button-contrast.p-button-outlined:not(:hover)) {
+		background: var(--odk-base-background-color);
 	}
 
 	@media screen and (max-width: #{pf.$lg - 1}) {
