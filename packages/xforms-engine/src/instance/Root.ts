@@ -28,7 +28,7 @@ import { createAggregatedViolations } from '../lib/reactivity/validation/createA
 import type { BodyClassList } from '../parse/body/BodyDefinition.ts';
 import type { RootDefinition } from '../parse/model/RootDefinition.ts';
 import { DescendantNode } from './abstract/DescendantNode.ts';
-import { buildAttributes } from './attachments/buildAttributes.ts';
+import { buildAttributes } from './buildAttributes.ts';
 import { Attribute } from './Attribute.ts';
 import { buildChildren } from './children/buildChildren.ts';
 import type { GeneralChildNode } from './hierarchy.ts';

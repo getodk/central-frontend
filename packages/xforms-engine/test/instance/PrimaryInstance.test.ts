@@ -28,7 +28,7 @@ describe('PrimaryInstance engine representation of instance state', () => {
   let xformDefinition: XFormDefinition;
   let secondaryInstances: SecondaryInstancesDefinition;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     scope = createReactiveScope();
 
     // prettier-ignore
@@ -62,7 +62,11 @@ describe('PrimaryInstance engine representation of instance state', () => {
     const xformDOM = XFormDOM.from(xform.asXml());
 
     xformDefinition = new XFormDefinition(xformDOM);
-    secondaryInstances = SecondaryInstancesDefinition.loadSync(xformDOM);
+    secondaryInstances = await SecondaryInstancesDefinition.load(xformDOM, {
+      fetchResource: () => Promise.resolve(new Response()),
+      lastSavedXml: undefined,
+      missingResourceBehavior: 'BLANK',
+    });
   });
 
   afterEach(() => {
@@ -92,6 +96,7 @@ describe('PrimaryInstance engine representation of instance state', () => {
           clientStateFactory,
           computeAttachmentName: () => null,
           preloadProperties: {},
+          instanceDefaults: {},
           geolocationProvider: { getLocation: () => Promise.resolve('') },
         },
       });
@@ -266,12 +271,13 @@ describe('PrimaryInstance engine representation of instance state', () => {
               initialState: null,
               scope,
               model: def.model,
-              secondaryInstances: SecondaryInstancesDefinition.loadSync(xformDOM),
+              secondaryInstances,
               fetchFormAttachment: unusedFetchFormAttachment,
               config: {
                 clientStateFactory: mutable,
                 computeAttachmentName: () => null,
                 preloadProperties: {},
+                instanceDefaults: {},
                 geolocationProvider: { getLocation: () => Promise.resolve('') },
               },
             }).root.languages

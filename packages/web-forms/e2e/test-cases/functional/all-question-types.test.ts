@@ -1,7 +1,6 @@
 import { test } from '@playwright/test';
 import { BrowserContext } from 'playwright-core';
 import { FillFormPage } from '../../page-objects/pages/FillFormPage.ts';
-import { PreviewPage } from '../../page-objects/pages/PreviewPage.ts';
 
 /**
  * Tests the UI functionality of all question types in the "All Question Types" form,
@@ -25,14 +24,7 @@ test.describe('All Question Types', () => {
       permissions: permissions,
     });
     const page = await context.newPage();
-    const previewPage = new PreviewPage(page);
-    await previewPage.goToDevPage();
-
-    const newPage = await previewPage.openPublicDemoForm(
-      'All question types',
-      'All question types'
-    );
-    formPage = new FillFormPage(newPage);
+    formPage = await FillFormPage.loadForm(page, 'all-question-types-v2024091201-3.xml');
   });
 
   test.afterAll(async () => {

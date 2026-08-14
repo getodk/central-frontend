@@ -28,7 +28,7 @@ export class RepeatRangeUncontrolled
     super(parent, definition);
 
     this.appearances = definition.bodyElement.appearances;
-    this.addChildren(-1, definition.omitTemplate(instanceNodes));
+    this.addChildren(definition.omitTemplate(instanceNodes));
     this.validationState = createAggregatedViolations(this, this.instanceConfig);
   }
 
@@ -36,7 +36,7 @@ export class RepeatRangeUncontrolled
   addInstances(afterIndex = this.getLastIndex(), count = 1): Root {
     const definitions = Array(count).fill(this.definition.template);
 
-    this.addChildren(afterIndex, definitions);
+    this.addChildren(definitions, afterIndex);
 
     return this.root;
   }

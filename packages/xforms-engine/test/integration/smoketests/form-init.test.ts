@@ -1,7 +1,27 @@
 import { describe, expect, it } from 'vitest';
 import { stringAnswer } from '../../scenario/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../../scenario/jr/Scenario.ts';
-import { r } from '../../scenario/jr/resource/ResourcePathHelper.ts';
+
+import simple from '../../scenario/fixtures/test-javarosa/resources/simple-form.xml?raw';
+import form2 from '../../scenario/fixtures/test-javarosa/resources/form2.xml?raw';
+import secondaryInstance from '../../scenario/fixtures/test-javarosa/resources/secondary-instance.xml?raw';
+import internalSelect10 from '../../scenario/fixtures/test-javarosa/resources/internal_select_10.xml?raw';
+import lastSavedBlank from '../../scenario/fixtures/test-javarosa/resources/last-saved-blank.xml?raw';
+import simplerCascadingSelect from '../../scenario/fixtures/test-javarosa/resources/Simpler_Cascading_Select_Form.xml?raw';
+import range from '../../scenario/fixtures/test-javarosa/resources/range-form.xml?raw';
+import rank from '../../scenario/fixtures/test-javarosa/resources/rank-form.xml?raw';
+import badRange from '../../scenario/fixtures/test-javarosa/resources/bad-range-form.xml?raw';
+import internalEmptySelect from '../../scenario/fixtures/test-javarosa/resources/internal_empty_select.xml?raw';
+import metaNamespace from '../../scenario/fixtures/test-javarosa/resources/meta-namespace-form.xml?raw';
+import templateRepeat from '../../scenario/fixtures/test-javarosa/resources/template-repeat.xml?raw';
+import templateRepeatAlt from '../../scenario/fixtures/test-javarosa/resources/template-repeat-alt.xml?raw';
+import eIMCI from '../../scenario/fixtures/test-javarosa/resources/eIMCI-by-D-Tree.xml?raw';
+import submissionElement from '../../scenario/fixtures/test-javarosa/resources/submission-element.xml?raw';
+import bodyBeforeModel from '../../scenario/fixtures/test-javarosa/resources/body-before-model.xml?raw';
+import twoModels from '../../scenario/fixtures/test-javarosa/resources/two-models.xml?raw';
+import setvalueAction from '../../scenario/fixtures/test-javarosa/resources/form-with-setvalue-action.xml?raw';
+import groupWithNodeset from '../../scenario/fixtures/test-javarosa/resources/group-with-nodeset-attr.xml?raw';
+import groupWithRef from '../../scenario/fixtures/test-javarosa/resources/group-with-ref-attr.xml?raw';
 
 /**
  * **PORTING NOTES**
@@ -157,13 +177,13 @@ describe('Form initialization smoke tests', () => {
     }
 
     it('parsesSimpleForm', async () => {
-      const scenario = await Scenario.init(r('simple-form.xml'));
+      const scenario = await Scenario.init(simple);
 
       expectNoInitializationErrors(scenario);
     });
 
     it('parsesForm2', async () => {
-      const scenario = await Scenario.init(r('form2.xml'));
+      const scenario = await Scenario.init(form2);
 
       // assertEquals("My Survey", formDef.getTitle());
       // assertEquals(3, formDef.getChildren().size());
@@ -185,63 +205,61 @@ describe('Form initialization smoke tests', () => {
      * referenced by this test, we define it locally for now.
      */
     it('parsesSecondaryInstanceForm', async () => {
-      const SECONDARY_INSTANCE_XML = r('secondary-instance.xml');
-
-      const scenario = await Scenario.init(SECONDARY_INSTANCE_XML);
+      const scenario = await Scenario.init(secondaryInstance);
 
       expectNoInitializationErrors(scenario);
     });
 
     it('parsesSecondaryInstanceForm2', async () => {
-      const scenario = await Scenario.init(r('internal_select_10.xml'));
+      const scenario = await Scenario.init(internalSelect10);
 
       expectNoInitializationErrors(scenario);
     });
 
-    /**
-     * **PORTING NOTES**
-     *
-     * - Unclear if there will be a need for additional setup in the future when
-     *   we add last-saved support.
-     */
     it('parses last saved instance with null src', async () => {
-      const scenario = await Scenario.init(r('last-saved-blank.xml'));
+      const scenario = await Scenario.init(lastSavedBlank);
 
       expectNoInitializationErrors(scenario);
       expect(scenario.answerOf('/data/item')).toEqualAnswer(stringAnswer('')); // nothing to bind from the last-saved instance
     });
 
-    /**
-     * **PORTING NOTES**
-     *
-     * - There is definitely a need for additional setup to test this
-     *   meaningfully. Revisit when we add last-saved support.
-     *
-     * - Observation: in theory, it could be nice to have a more specific
-     *   mechanism for deferring/marking known failure of tests **around pending
-     *   support for specific features**, so they can run to completion or
-     *   failure once we believe the feature is testable. May not be worth the
-     *   effort with a quick enough feature development/bugfix velocity.
-     */
-    it.todo('parsesLastSavedInstanceWithFilledForm', () => {
-      // Path formName = r("last-saved-blank.xml");
-      // Path lastSavedSubmissionDirectory = r("last-saved-filled.xml").toAbsolutePath().getParent();
-      // ReferenceManagerTestUtils.setUpSimpleReferenceManager(lastSavedSubmissionDirectory, "file");
-      // FormDef formDef = parse(formName, "jr://file/last-saved-filled.xml");
-      // assertEquals("Form with last-saved instance (blank)", formDef.getTitle());
-      // DataInstance lastSaved = formDef.getNonMainInstance("last-saved");
-      // AbstractTreeElement root = lastSaved.getRoot();
-      // AbstractTreeElement item = root
-      // 		.getChild("head", 0)
-      // 		.getChild("model", 0)
-      // 		.getChild("instance", 0)
-      // 		.getChild("data", 0)
-      // 		.getChild("item", 0);
-      // assertEquals("Foo", item.getValue().getDisplayText());
+    it('parses last saved instance with filled form', async () => {
+      const lastSavedXml = `
+        <data id="data">
+          <item>Foo</item>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>`;
+
+      const scenario = await Scenario.init(lastSavedBlank, { lastSavedXml });
+      expectNoInitializationErrors(scenario);
+      expect(scenario.answerOf('/data/item')).toEqualAnswer(stringAnswer('Foo'));
+    });
+
+    it('ignores last saved instance when editing form', async () => {
+      const lastSavedXml = `
+        <data id="data">
+          <item>Foo</item>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>`;
+      const editInstance = `
+        <data id="data">
+          <item></item>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>`;
+
+      const scenario = await Scenario.init(lastSavedBlank, { lastSavedXml, editInstance });
+      expectNoInitializationErrors(scenario);
+      expect(scenario.answerOf('/data/item')).toEqualAnswer(stringAnswer(''));
     });
 
     it('multipleInstancesFormSavesAndRestores', async () => {
-      const scenario = await Scenario.init(r('Simpler_Cascading_Select_Form.xml'));
+      const scenario = await Scenario.init(simplerCascadingSelect);
 
       expectNoInitializationErrors(scenario);
 
@@ -258,7 +276,7 @@ describe('Form initialization smoke tests', () => {
      * see https://github.com/getodk/javarosa/issues/245 why this is needed
      */
     it('rangeFormSavesAndRestores', async () => {
-      const scenario = await Scenario.init(r('range-form.xml'));
+      const scenario = await Scenario.init(range);
 
       expectNoInitializationErrors(scenario);
 
@@ -269,7 +287,7 @@ describe('Form initialization smoke tests', () => {
     });
 
     it('parsesRankForm', async () => {
-      const scenario = await Scenario.init(r('rank-form.xml'));
+      const scenario = await Scenario.init(rank);
 
       // assertEquals(formDef.getTitle(), "Rank Form");
       // assertEquals(1, formDef.getChildren().size());
@@ -286,7 +304,7 @@ describe('Form initialization smoke tests', () => {
      * and run separately in case we pursue the serde aspects of that test.
      */
     it('parsesRangeForm', async () => {
-      const scenario = await Scenario.init(r('range-form.xml'));
+      const scenario = await Scenario.init(range);
 
       expectNoInitializationErrors(scenario);
     });
@@ -310,7 +328,7 @@ describe('Form initialization smoke tests', () => {
      */
     it.fails('throwsParseExceptionOnBadRangeForm', async () => {
       const init = async () => {
-        await Scenario.init(r('bad-range-form.xml'));
+        await Scenario.init(badRange);
       };
 
       await expect(init).rejects.toThrowError(/parse/);
@@ -347,7 +365,7 @@ describe('Form initialization smoke tests', () => {
       // FormDef formDef = parse(formName);
 
       const init = async () => {
-        await Scenario.init(r('internal_empty_select.xml'));
+        await Scenario.init(internalEmptySelect);
       };
 
       await expect(init).rejects.toThrowError("Select question 'First' has no choices");
@@ -359,7 +377,7 @@ describe('Form initialization smoke tests', () => {
     it.skip('formWithCountNonEmptyFunc_ShouldNotThrowException');
 
     it('parsesMetaNamespaceForm', async () => {
-      const scenario = await Scenario.init(r('meta-namespace-form.xml'));
+      const scenario = await Scenario.init(metaNamespace);
 
       expectNoInitializationErrors(scenario);
     });
@@ -367,7 +385,7 @@ describe('Form initialization smoke tests', () => {
     it('serializeAndRestoreMetaNamespaceFormInstance', async () => {
       // // Given
       // FormDef formDef = parse(r("meta-namespace-form.xml"));
-      const scenario = await Scenario.init(r('meta-namespace-form.xml'));
+      const scenario = await Scenario.init(metaNamespace);
 
       // assertEquals(formDef.getTitle(), "Namespace for Metadata");
 
@@ -458,7 +476,7 @@ describe('Form initialization smoke tests', () => {
 
       testFn('parseFormWithTemplateRepeat', async () => {
         const scenario = await Scenario.init(
-          r(includeCommonNamespaces ? 'template-repeat-alt.xml' : 'template-repeat.xml')
+          includeCommonNamespaces ? templateRepeatAlt : templateRepeat
         );
 
         expectNoInitializationErrors(scenario);
@@ -507,13 +525,13 @@ describe('Form initialization smoke tests', () => {
      * known to have similar aspects of form design).
      */
     it.fails('parseIMCIbyDTreeForm', async () => {
-      const scenario = await Scenario.init(r('eIMCI-by-D-Tree.xml'));
+      const scenario = await Scenario.init(eIMCI);
 
       expectNoInitializationErrors(scenario);
     });
 
     it('parseFormWithSubmissionElement', async () => {
-      const scenario = await Scenario.init(r('submission-element.xml'));
+      const scenario = await Scenario.init(submissionElement);
 
       // // Given & When
       // FormDef formDef = parse(r("submission-element.xml"));
@@ -563,14 +581,14 @@ describe('Form initialization smoke tests', () => {
       ({ disregardJavaRosaFailureExpectation }) => {
         if (disregardJavaRosaFailureExpectation) {
           it('parseFormWithBodyBeforeModel', async () => {
-            const scenario = await Scenario.init(r('body-before-model.xml'));
+            const scenario = await Scenario.init(bodyBeforeModel);
 
             expectNoInitializationErrors(scenario);
           });
         } else {
           it.fails('parseFormWithBodyBeforeModel', async () => {
             const init = async () => {
-              await Scenario.init(r('body-before-model.xml'));
+              await Scenario.init(bodyBeforeModel);
             };
 
             await expect(init).rejects.toThrowError(/parse/);
@@ -610,7 +628,7 @@ describe('Form initialization smoke tests', () => {
         expect.soft(warnings, 'Warnings not implemented').toContain(expectedWarning);
       };
 
-      const scenario = await Scenario.init(r('two-models.xml'));
+      const scenario = await Scenario.init(twoModels);
 
       expectNoInitializationErrors(scenario);
 
@@ -645,7 +663,7 @@ describe('Form initialization smoke tests', () => {
     });
 
     it('parseFormWithSetValueAction', async () => {
-      const scenario = await Scenario.init(r('form-with-setvalue-action.xml'));
+      const scenario = await Scenario.init(setvalueAction);
       expectNoInitializationErrors(scenario);
       expect(scenario.answerOf('/data/text')).toEqualAnswer(stringAnswer('Test Value'));
     });
@@ -656,7 +674,7 @@ describe('Form initialization smoke tests', () => {
      * Adds basic assertion for inclusion of group in form state.
      */
     it('parseGroupWithNodesetAttrForm', async () => {
-      const scenario = await Scenario.init(r('group-with-nodeset-attr.xml'));
+      const scenario = await Scenario.init(groupWithNodeset);
 
       expectNoInitializationErrors(scenario);
 
@@ -688,7 +706,7 @@ describe('Form initialization smoke tests', () => {
      * Adds basic assertion for inclusion of groups in form state.
      */
     it('parseGroupWithRefAttrForm', async () => {
-      const scenario = await Scenario.init(r('group-with-ref-attr.xml'));
+      const scenario = await Scenario.init(groupWithRef);
 
       expectNoInitializationErrors(scenario);
 

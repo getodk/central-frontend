@@ -215,8 +215,8 @@
     "[intersects(geoshape gs|geotrace gt)](https://github.com/getodk/web-forms/issues/572)": ""
   },
   "Misc": {
-    "[last saved instance](https://github.com/getodk/web-forms/issues/306)": "",
-    "[defaults from query parameters](https://github.com/getodk/web-forms/issues/464)": "",
+    "[last saved instance](https://github.com/getodk/web-forms/issues/306)": "✅",
+    "[defaults from query parameters](https://github.com/getodk/web-forms/issues/464)": "✅",
     "multi-form app-like experience": "",
     "[prevent multiple submissions](https://github.com/getodk/web-forms/issues/461)": "",
     "configure end of form experience": "",

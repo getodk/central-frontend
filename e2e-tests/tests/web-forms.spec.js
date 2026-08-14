@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test';
-import BackendClient from '../backend-client';
+import BackendClient, { FORM_TEMPLATES } from '../backend-client';
 import { login, test, submitLogin } from '../util';
 
 const appUrl = process.env.ODK_URL;
@@ -10,15 +10,19 @@ let draftForm;
 let firstSubmission;
 let publicLink;
 
+let backendClient;
+
 test.beforeAll(async ({ playwright }, testInfo) => {
-  const backendClient = new BackendClient(playwright, `${testInfo.project.name}_wf`);
+  backendClient = new BackendClient(playwright, `${testInfo.project.name}_wf`);
   await backendClient.alwaysHideModal();
   const resources = await backendClient.createFormAndChildren();
   publishedForm = resources.form;
   draftForm = resources.formDraft;
   firstSubmission = resources.submission;
   publicLink = resources.publicLink;
+});
 
+test.afterAll(async () => {
   await backendClient.dispose();
 });
 
@@ -102,6 +106,26 @@ test.describe('ODK Web Forms', () => {
     await expect(page.getByRole('heading', { name: 'Successful' })).toBeVisible();
   });
 
+  test('binds last-saved instance for multiple submissions', async ({ page }) => {
+    const form = await backendClient.createForm(FORM_TEMPLATES.lastsaved);
+    await login(page);
+    await page.goto(`${appUrl}/projects/${projectId}/forms/${form.xmlFormId}/submissions/new`);
+
+    await expect(page.getByRole('heading', { name: form.name })).toBeVisible();
+    await page.getByLabel('item').fill('first fill');
+    await page.getByRole('button', { name: 'send' }).click();
+    await expect(page.getByRole('heading', { name: 'Successful' })).toBeVisible();
+    await page.getByRole('button', { name: 'fill out again' }).click();
+
+    await expect(page.getByLabel('previous value')).toHaveValue('first fill');
+    await page.getByLabel('item').fill('second fill');
+    await page.getByRole('button', { name: 'send' }).click();
+    await expect(page.getByRole('heading', { name: 'Successful' })).toBeVisible();
+    await page.getByRole('button', { name: 'fill out again' }).click();
+
+    await expect(page.getByLabel('previous value')).toHaveValue('second fill');
+  });
+
   test.describe('redirects to login if 401 on load', async () => {
     const urls = [
       { name: 'hyphen prefix', url: (form) => `/-/${form.enketoId}` },
@@ -109,7 +133,15 @@ test.describe('ODK Web Forms', () => {
       { name: 'restful', url: (form) => `/projects/${projectId}/forms/${form.xmlFormId}/submissions/new` }
     ];
     urls.forEach(t => {
-      test(t.name, async ({ page }) => {
+      test(t.name, async ({ allowedLogs, page }) => {
+        allowedLogs.push((consoleMsg, normalisedMsg) => {
+          if(normalisedMsg !== 'Failed to load resource: the server responded with a status of 401 (Unauthorized)') return;
+          const { url } = consoleMsg.location();
+          return url.startsWith('http://central-test.localhost/v1/form-links/') ||
+                 url === `http://central-test.localhost/v1/projects/${projectId}` ||
+                 url === `http://central-test.localhost/v1/projects/${projectId}/forms/${publishedForm.xmlFormId}`;
+        });
+
         await page.goto(appUrl + t.url(publishedForm));
         await expect(page.getByRole('heading', { name: 'Welcome to ODK Central' })).toBeVisible();
         await submitLogin(page);
@@ -129,9 +161,11 @@ test.describe('ODK Web Forms', () => {
 
     await page2.getByLabel('First Name').fill('John Doe');
 
-    await page.locator('#navbar-actions a[data-toggle="dropdown"]').click();
+    await page.locator('#navbar-actions .dropdown-toggle').click();
 
     await page.getByRole('link', { name: 'log out' }).click();
+
+    await expect(page.getByRole('heading', { name: 'Welcome to ODK Central' })).toBeVisible();
 
     await page2.getByRole('button', { name: 'send' }).click();
 

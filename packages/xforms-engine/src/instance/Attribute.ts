@@ -73,6 +73,7 @@ export class Attribute
   };
 
   override readonly getXPathValue: () => string;
+  readonly setEncodedValue: (value: string) => void;
 
   constructor(
     readonly owner: AnyNode,
@@ -129,6 +130,9 @@ export class Attribute
 
     this.getXPathValue = () => {
       return this.getInstanceValue();
+    };
+    this.setEncodedValue = (value: string) => {
+      this.setValueState(codec.decodeValue(value));
     };
   }
 

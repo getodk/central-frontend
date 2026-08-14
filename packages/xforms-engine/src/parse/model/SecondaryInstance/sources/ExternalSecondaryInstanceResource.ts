@@ -1,5 +1,8 @@
 import type { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL.ts';
-import type { MissingResourceBehavior } from '../../../../client/constants.ts';
+import {
+  MISSING_RESOURCE_BEHAVIOR,
+  type MissingResourceBehavior,
+} from '../../../../client/constants.ts';
 import type { FetchResource, FetchResourceResponse } from '../../../../client/resources.ts';
 import { ErrorProductionDesignPendingError } from '../../../../error/ErrorProductionDesignPendingError.ts';
 import { getResponseContentType } from '../../../../lib/resource-helpers.ts';
@@ -68,6 +71,7 @@ interface MissingResourceResponse extends FetchResourceResponse {
 
 export interface ExternalSecondaryInstanceResourceLoadOptions {
   readonly fetchResource: FetchResource<JRResourceURL>;
+  readonly lastSavedXml: string | undefined;
   readonly missingResourceBehavior: MissingResourceBehavior;
 }
 
@@ -94,13 +98,23 @@ export class ExternalSecondaryInstanceResource<
     response: MissingResourceResponse,
     options: ExternalSecondaryInstanceResourceLoadOptions
   ) {
-    if (options.missingResourceBehavior === 'BLANK') {
+    if (options.missingResourceBehavior === MISSING_RESOURCE_BEHAVIOR.BLANK) {
       return new this(response.status, instanceId, resourceURL, 'xml', '', {
         isExplicitlyBlank: true,
       });
     }
 
     throw new SecondaryInstanceResourceLoadingError(resourceURL, response);
+  }
+
+  static loadXml(
+    instanceId: string,
+    resourceURL: JRResourceURL,
+    data: string
+  ): ExternalSecondaryInstanceResource<'xml'> {
+    return new this(null, instanceId, resourceURL, 'xml', data, {
+      isExplicitlyBlank: false,
+    });
   }
 
   static async load(
@@ -140,7 +154,7 @@ export class ExternalSecondaryInstanceResource<
         this.isBlank = true;
       } else {
         throw new ErrorProductionDesignPendingError(
-          `Failed to load blank external secndary instance ${resourceURL.href}`
+          `Failed to load blank external secondary instance ${resourceURL.href}`
         );
       }
     } else {

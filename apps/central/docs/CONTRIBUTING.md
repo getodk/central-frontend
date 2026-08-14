@@ -52,21 +52,11 @@ Once you feel ready to share your progress, please feel free to submit a Pull Re
 
 We use Vue.js along with Vue Router, Vuex, and Vue CLI.
 
-### jQuery
-
-ODK Central Frontend uses jQuery in limited ways.
-
-Wherever possible, we try to use Vue instead of jQuery. Vue will not always know about or respect changes that jQuery makes to the DOM, and using jQuery can add complexity to a component.
-
-That said, we make use of some of Bootstrap's jQuery plugins. We may replace those in the future, after which we may be able to remove jQuery. With that in mind, if you have a choice between using jQuery and vanilla JavaScript, consider using the latter. Remember though that as with jQuery, Vue will not always know about or respect changes to the DOM that you make using vanilla JavaScript.
-
 ### Bootstrap
 
 ODK Central Frontend uses Bootstrap 3.
 
 Frontend's [global styles](/apps/central/src/assets/scss/app.scss) override some of Bootstrap's, as do the styles of Frontend components that correspond to a Bootstrap component (for example, `Modal`). However, we tend to stick pretty closely to Bootstrap, and you should be able to use many of Bootstrap's examples with only small changes. If you are creating a new component that is similar to an existing Frontend component, you may find it useful to base the new component off the existing one.
-
-We use a limited number of Bootstrap's jQuery plugins: see the [section above](https://github.com/getodk/central-frontend/blob/master/apps/central/docs/CONTRIBUTING.md#jquery) on jQuery.
 
 ### Global Utilities
 

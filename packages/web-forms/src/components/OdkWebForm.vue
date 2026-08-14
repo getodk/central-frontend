@@ -29,6 +29,7 @@ import type {
 	FetchFormAttachment,
 	MissingResourceBehavior,
 	MonolithicInstancePayload,
+	InstanceDefaults,
 	PreloadProperties,
 } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
@@ -55,6 +56,7 @@ export interface OdkWebFormsProps {
 	readonly fetchFormAttachment: FetchFormAttachment;
 	readonly deviceId?: string; // different case to make it easier to bind
 	readonly preloadProperties?: PreloadProperties;
+	readonly instanceDefaults?: InstanceDefaults;
 	readonly missingResourceBehavior?: MissingResourceBehavior;
 	readonly attachmentMaxSize?: number;
 
@@ -69,6 +71,8 @@ export interface OdkWebFormsProps {
 	 * resources will be resolved and loaded for editing.
 	 */
 	readonly editInstance?: EditInstanceOptions;
+
+	readonly lastSavedXml?: string;
 }
 
 const props = defineProps<OdkWebFormsProps>();
@@ -80,10 +84,13 @@ const hostSubmissionResultCallbackFactory = (
 		hostResult: OptionalAwaitableHostSubmissionResult
 	): Promise<void> => {
 		const submissionResult = await hostResult;
+		const lastSavedXml = currentState.root.instanceState.instanceXML;
 		const options = {
 			form: formOptions,
 			preloadProperties: props.preloadProperties,
+			instanceDefaults: props.instanceDefaults,
 			deviceID: props.deviceId,
+			lastSavedXml
 		};
 		state.value = updateSubmittedFormState(submissionResult, currentState, options);
 		if (submissionResult?.next === POST_SUBMIT__NEW_INSTANCE) {
@@ -194,6 +201,7 @@ const getLocation = async (): Promise<string> => {
 
 const formOptions = readonly<FormOptions>({
 	fetchFormAttachment: props.fetchFormAttachment,
+	lastSavedXml: props.lastSavedXml,
 	missingResourceBehavior: props.missingResourceBehavior,
 	geolocationProvider: { getLocation: () => getLocation() },
 	attachmentMaxSize: props.attachmentMaxSize,
@@ -238,7 +246,8 @@ const init = async () => {
 		form: formOptions,
 		editInstance: props.editInstance ?? null,
 		preloadProperties: props.preloadProperties,
-		deviceID: props.deviceId,
+		instanceDefaults: props.instanceDefaults,
+		deviceID: props.deviceId
 	});
 	emit('loaded');
 };

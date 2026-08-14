@@ -5,6 +5,7 @@ import type {
   FormResource,
   GeolocationProvider,
   MissingResourceBehavior,
+  InstanceDefaults,
   PreloadProperties,
   ResolvableFormInstance,
   ResolvableFormInstanceInput,
@@ -21,6 +22,7 @@ import type {
 
 export interface FormOptions {
   readonly fetchFormAttachment: FetchFormAttachment;
+  readonly lastSavedXml?: string;
   readonly missingResourceBehavior?: MissingResourceBehavior;
   readonly geolocationProvider?: GeolocationProvider;
   readonly attachmentMaxSize?: number;
@@ -72,6 +74,7 @@ interface LoadFormStateOptions {
   readonly editInstance?: EditInstanceOptions | null;
   readonly deviceID?: string;
   readonly preloadProperties?: PreloadProperties;
+  readonly instanceDefaults?: InstanceDefaults;
 }
 
 const failure = (error: FormInitializationError): FormStateFailureResult => {

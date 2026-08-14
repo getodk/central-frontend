@@ -9,9 +9,10 @@ const user = process.env.ODK_USER;
 const password = process.env.ODK_PASSWORD;
 const credentials = Buffer.from(`${user}:${password}`, 'utf-8').toString('base64');
 const __dirname = import.meta.dirname;
-const FORM_TEMPLATES = {
+export const FORM_TEMPLATES = {
   'simple': path.join(__dirname, './data/form.template.xml'),
   'attachment': path.join(__dirname, './data/form-with-attachment.template.xml'),
+  'lastsaved': path.join(__dirname, './data/form-with-last-saved.template.xml'),
 };
 
 export default class BackendClient {
@@ -48,7 +49,7 @@ export default class BackendClient {
         'content-type': 'application/xml',
       },
       data: formTemplate
-        .replaceAll('{{ formId }}', `${this.#prefix}_${faker.word.noun()}`)
+        .replaceAll('{{ formId }}', `${this.#prefix}_${faker.word.noun()}_${Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)}`)
     });
     expect(response).toBeOK();
     return response.json();
@@ -151,6 +152,30 @@ export default class BackendClient {
       data: { propertyValue: '2100.1' } //  Fairly future-proof - modal will be dismissed if preference is not older than current version.
     });
     expect(response.ok()).toBeTruthy();
+  };
+
+  getLastSubmission = async (xmlFormId) => {
+    const request = await this.#getRequest();
+
+    const allSubmissionsUrl = `/v1/projects/${this.#projectId}/forms/${xmlFormId}/submissions`;
+    const allSubmissionsResponse = await request.get(allSubmissionsUrl);
+    if (!allSubmissionsResponse.ok()) {
+      const error = await allSubmissionsResponse.json();
+      throw new Error('Error fetching submissions: ' + JSON.stringify(error));
+    }
+    const submissions = await allSubmissionsResponse.json();
+
+    const lastInstanceId = submissions?.[0]?.instanceId;
+    if (!lastInstanceId) {
+      return;
+    }
+    const lastInstanceUrl = `/v1/projects/${this.#projectId}/forms/${xmlFormId}/submissions/${lastInstanceId}.xml`;
+    const lastInstanceResponse = await request.get(lastInstanceUrl);
+    if (!lastInstanceResponse.ok()) {
+      const error = await lastInstanceResponse.json();
+      throw new Error('Error fetching last submission: ' + JSON.stringify(error));
+    }
+    return await lastInstanceResponse.text();
   };
 
   downloadCsv = async (xmlFormId, passphrase) => {

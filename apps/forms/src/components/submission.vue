@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, defineAsyncComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { captureException } from '@sentry/vue';
 import {
   type Form,
   getFormByEnketoId,
@@ -15,6 +14,7 @@ import {
 } from '../utils/api.ts';
 import Dialog from 'primevue/dialog';
 import { hideSpinner } from '../utils/spinner.ts';
+import { getDefaultParameters } from '../utils/default-parameters.ts';
 
 const props = defineProps({
   draft: Boolean,
@@ -59,6 +59,7 @@ const enketoId = computed(() => route.params.enketoId ? encodeURIComponent(route
 const st = computed(() => route.query.st ? route.query.st as string : null);
 const useWebForms = computed(() => route.query.webforms === 'true');
 const offline = computed(() => route.params.offline === 'offline');
+const defaultParameters = computed(() => getDefaultParameters(route.query, props.actionType));
 const webFormsEnabled = ref(true);
 
 const form = ref<Form>();
@@ -212,7 +213,6 @@ const load = async () => {
         errorCode.value = e.statusCode ?? 500;
       }
     } else {
-      captureException(e);
       errorCode.value = 500;
     }
     hideSpinner();
@@ -234,7 +234,7 @@ load();
   <template v-if="!loadingState">
     <Dialog modal v-if="errorCode === 404" :draggable="false" :closable="false" :visible="true">
       <template #header>
-        {{ $t('formNotFound') }}
+        {{ $t('formNotFound.title') }}
       </template>
       <template #default>
         {{ $t('formNotFound.body') }}
@@ -242,7 +242,7 @@ load();
     </Dialog>
     <Dialog modal v-else-if="errorCode" :draggable="false" :closable="false" :visible="true">
       <template #header>
-        {{ $t('errorNotProblem') }}
+        {{ $t('errorNotProblem.title') }}
       </template>
       <template #default>
         <p>{{ $t('errorNotProblem.body') }}</p>
@@ -256,6 +256,7 @@ load();
         :instance-id="instanceId"
         :action-type="props.actionType ?? 'new'"
         :submission-attachments="submissionAttachments"
+        :default-parameters="defaultParameters"
         :st="st"
       />
     </template>
@@ -272,11 +273,15 @@ load();
 <i18n lang="json5">
   {
     "en": {
-      "formNotFound": "Unable to open form",
-      "formNotFound.body": "Please check that the link is correct. The form may no longer be available, or your access may have expired. If the problem continues, contact the person who sent you the form link.",
-      "errorNotProblem": "Something went wrong",
-      "errorNotProblem.body": "Please try again later. If the problem continues, contact the person who sent you the form link.",
-      "errorNotProblem.status": "Error code: {status}",
+      "formNotFound": {
+        "title": "Unable to open form",
+        "body": "Please check that the link is correct. The form may no longer be available, or your access may have expired. If the problem continues, contact the person who sent you the form link."
+      },
+      "errorNotProblem": {
+        "title": "Something went wrong",
+        "body": "Please try again later. If the problem continues, contact the person who sent you the form link.",
+        "status": "Error code: {status}"
+      }
     }
   }
 </i18n>
@@ -285,50 +290,82 @@ load();
 <i18n>
 {
   "de": {
-    "formNotFound": "Für diese URL wurde kein Formular gefunden, bitte überprüfen Sie dies noch einmal.",
-    "errorNotProblem": "Etwas ging schief",
-    "errorNotProblem.status": "Fehlercode {status}",
+    "formNotFound": {
+      "title": "Für diese URL wurde kein Formular gefunden, bitte überprüfen Sie dies noch einmal."
+    },
+    "errorNotProblem": {
+      "title": "Etwas ging schief",
+      "status": "Fehlercode {status}"
+    }
   },
   "es": {
-    "formNotFound": "No se puede abrir el formulario",
-    "formNotFound.body": "Por favor, verifique que el enlace es correcto. Es posible que el formulario ya no esté disponible o que su acceso haya expirado. Si el problema persiste, comuníquese con la persona que le envió el enlace del formulario.",
-    "errorNotProblem": "Algo salió mal",
-    "errorNotProblem.body": "Inténtelo de nuevo más tarde. Si el problema persiste, comuníquese con la persona que le envió el enlace del formulario.",
-    "errorNotProblem.status": "Código de error: {status}",
+    "formNotFound": {
+      "title": "No se puede abrir el formulario",
+      "body": "Por favor, verifique que el enlace es correcto. Es posible que el formulario ya no esté disponible o que su acceso haya expirado. Si el problema persiste, comuníquese con la persona que le envió el enlace del formulario."
+    },
+    "errorNotProblem": {
+      "title": "Algo salió mal",
+      "body": "Inténtelo de nuevo más tarde. Si el problema persiste, comuníquese con la persona que le envió el enlace del formulario.",
+      "status": "Código de error: {status}"
+    }
   },
   "fr": {
-    "formNotFound": "Impossible d'ouvrir le formulaire",
-    "formNotFound.body": "Veuillez vérifier que le lien est correct. Il est possible que le formulaire ne soit plus disponible ou que votre accès ait expiré. Si le problème persiste, veuillez contacter la personne qui vous a envoyé le lien vers le formulaire.",
-    "errorNotProblem": "Quelque-chose s'est mal passé",
-    "errorNotProblem.body": "Veuillez réessayer plus tard. Si le problème persiste, veuillez contacter la personne qui vous a envoyé le lien vers le formulaire.",
-    "errorNotProblem.status": "Code d'erreur: {status}",
+    "formNotFound": {
+      "title": "Impossible d'ouvrir le formulaire",
+      "body": "Veuillez vérifier que le lien est correct. Il est possible que le formulaire ne soit plus disponible ou que votre accès ait expiré. Si le problème persiste, veuillez contacter la personne qui vous a envoyé le lien vers le formulaire."
+    },
+    "errorNotProblem": {
+      "title": "Quelque-chose s'est mal passé",
+      "body": "Veuillez réessayer plus tard. Si le problème persiste, veuillez contacter la personne qui vous a envoyé le lien vers le formulaire.",
+      "status": "Code d'erreur: {status}"
+    }
   },
   "id": {
-    "formNotFound": "Tidak dapat membuka formulir",
-    "formNotFound.body": "Pastikan tautan sudah benar. Formulir mungkin sudah tidak tersedia, atau akses Anda mungkin telah kedaluwarsa. Jika masalah berlanjut, hubungi orang yang mengirimkan tautan formulir tersebut kepada Anda.",
-    "errorNotProblem": "Terjadi kesalahan",
-    "errorNotProblem.body": "Coba lagi nanti. Jika masalah berlanjut, hubungi orang yang mengirimkan tautan formulir tersebut kepada Anda.",
-    "errorNotProblem.status": "Kode error: {status}",
+    "formNotFound": {
+      "title": "Tidak dapat membuka formulir",
+      "body": "Pastikan tautan sudah benar. Formulir mungkin sudah tidak tersedia, atau akses Anda mungkin telah kedaluwarsa. Jika masalah berlanjut, hubungi orang yang mengirimkan tautan formulir tersebut kepada Anda."
+    },
+    "errorNotProblem": {
+      "title": "Terjadi kesalahan",
+      "body": "Coba lagi nanti. Jika masalah berlanjut, hubungi orang yang mengirimkan tautan formulir tersebut kepada Anda.",
+      "status": "Kode error: {status}"
+    }
   },
   "it": {
-    "formNotFound": "Non è stato trovato alcun modulo con questo URL, si prega di ricontrollare.",
-    "errorNotProblem": "Qualcosa è andato storto",
-    "errorNotProblem.status": "Codice error {status}",
+    "formNotFound": {
+      "title": "Non è stato trovato alcun modulo con questo URL, si prega di ricontrollare."
+    },
+    "errorNotProblem": {
+      "title": "Qualcosa è andato storto",
+      "status": "Codice error {status}"
+    }
   },
   "pt": {
-    "formNotFound": "Nenhum Formulário encontrado com esse endereço, por favor verifique.",
-    "errorNotProblem": "Algo deu errado",
-    "errorNotProblem.status": "Código de erro {status}",
+    "formNotFound": {
+      "title": "Nenhum Formulário encontrado com esse endereço, por favor verifique."
+    },
+    "errorNotProblem": {
+      "title": "Algo deu errado",
+      "status": "Código de erro {status}"
+    }
   },
   "zh": {
-    "formNotFound": "未找到与此URL对应的表单，请仔细核对。",
-    "errorNotProblem": "出现错误：错误代码",
-    "errorNotProblem.status": "{status}",
+    "formNotFound": {
+      "title": "未找到与此URL对应的表单，请仔细核对。"
+    },
+    "errorNotProblem": {
+      "title": "出现错误：错误代码",
+      "status": "{status}"
+    }
   },
   "zh-Hant": {
-    "formNotFound": "此 URL 未找到表單，請仔細檢查。",
-    "errorNotProblem": "出了點問題：錯誤代碼",
-    "errorNotProblem.status": "{status}",
+    "formNotFound": {
+      "title": "此 URL 未找到表單，請仔細檢查。"
+    },
+    "errorNotProblem": {
+      "title": "出了點問題：錯誤代碼",
+      "status": "{status}"
+    }
   }
 }
 </i18n>

@@ -25,7 +25,7 @@ import { createFieldHint } from '../lib/reactivity/text/createFieldHint.ts';
 import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
 import type { InputControlDefinition } from '../parse/body/control/InputControlDefinition.ts';
 import { ValueNode, type ValueNodeStateSpec } from './abstract/ValueNode.ts';
-import { buildAttributes } from './attachments/buildAttributes.ts';
+import { buildAttributes } from './buildAttributes.ts';
 import type { Attribute } from './Attribute.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
