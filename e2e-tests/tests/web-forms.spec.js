@@ -165,6 +165,8 @@ test.describe('ODK Web Forms', () => {
 
     await page.getByRole('link', { name: 'log out' }).click();
 
+    await expect(page.getByRole('heading', { name: 'Welcome to ODK Central' })).toBeVisible();
+
     await page2.getByRole('button', { name: 'send' }).click();
 
     await expect(page2.getByRole('heading', { name: 'Session expired' })).toBeVisible();
