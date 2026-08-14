@@ -86,7 +86,7 @@ export abstract class ValueNode<
   readonly instanceState: InstanceState;
 
   // Write path for `xforms-value-changed` actions targeting this node; permitted while readonly too.
-  readonly setEncodedValue: (value: string) => void;
+  readonly setEncodedValue: (value: string, bypassReadonly?: boolean) => void;
 
   constructor(
     parent: GeneralParentNode,
@@ -119,8 +119,13 @@ export abstract class ValueNode<
     this.validation = createValidationState(this, this.instanceConfig);
     this.instanceState = createValueNodeInstanceState(this);
 
-    this.setEncodedValue = (value: string) => {
-      setActionValue(codec.decodeValue(value));
+    this.setEncodedValue = (value: string, bypassReadonly = false) => {
+      const decodedValue = codec.decodeValue(value);
+      if (bypassReadonly) {
+        setActionValue(decodedValue);
+        return;
+      }
+      setValueState(decodedValue);
     };
   }
 

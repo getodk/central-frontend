@@ -293,7 +293,7 @@ const registerValueChangedActions = (context: ValueContext, getValue: Accessor<s
           referencesCurrentNode(destinationNode, ref)
         ) {
           if (action.type === 'geopoint') {
-            getGeopointValue(context, (point) => destinationNode.setEncodedValue(point));
+            getGeopointValue(context, (point) => destinationNode.setEncodedValue(point, true));
           } else {
             const value = untrack(() => {
               return context.evaluator.evaluateString(
@@ -301,7 +301,7 @@ const registerValueChangedActions = (context: ValueContext, getValue: Accessor<s
                 destinationNode
               );
             });
-            destinationNode.setEncodedValue(value);
+            destinationNode.setEncodedValue(value, true);
           }
         }
       }
