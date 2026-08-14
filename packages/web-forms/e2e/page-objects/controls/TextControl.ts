@@ -47,7 +47,7 @@ export class TextControl {
     await this.expectText('.control-text label', expectedLabelText);
   }
 
-  async expectLabels(expectedLabelTexts: string[]) {
+  async expectOnlyLabels(expectedLabelTexts: string[]) {
     await expect(this.page.locator('.control-text label')).toHaveText(expectedLabelTexts);
   }
 

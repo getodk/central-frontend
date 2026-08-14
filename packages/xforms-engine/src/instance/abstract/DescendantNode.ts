@@ -158,6 +158,13 @@ export abstract class DescendantNode<
     });
   };
 
+  readonly hasVisibleBodyNodes: Accessor<boolean> = () => {
+    if (this.root.isPaginated) {
+      return this.hasBodyNodesOnCurrentPage();
+    }
+    return this.hasRelevantBodyNodes();
+  };
+
   readonly isRequired: Accessor<boolean>;
 
   // XFormsXPathPrimaryInstanceDescendantNode

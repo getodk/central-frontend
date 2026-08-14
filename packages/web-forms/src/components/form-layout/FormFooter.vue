@@ -43,11 +43,18 @@ const t: Translate = inject(TRANSLATE)!;
 </template>
 
 <style scoped lang="scss">
+@use 'primeflex/core/_variables.scss' as pf;
+
 .form-footer {
 	margin-top: var(--odk-spacing-xl);
 
 	.primary-action {
 		margin-left: auto;
+	}
+
+	@media screen and (max-width: #{pf.$lg - 1}) {
+		order: 4;
+		padding: 0 var(--odk-spacing-xl);
 	}
 }
 </style>

@@ -2,7 +2,7 @@ import { TRANSLATE, SUBMIT_PRESSED } from '@/lib/constants/injection-keys.ts';
 import type { AnyFunction } from '@getodk/common/types/helpers.d.ts';
 import type { RootNode } from '@getodk/xforms-engine';
 import { createInstance } from '@getodk/xforms-engine';
-import type { MountingOptions } from '@vue/test-utils';
+import type { MountingOptions, VueWrapper } from '@vue/test-utils';
 import PrimeVue from 'primevue/config';
 import { vi } from 'vitest';
 import { reactive, ref } from 'vue';
@@ -117,6 +117,15 @@ export const getWebFormsTestFixture = (identifier: string): Promise<string> => {
     throw new Error(`Could not find fixture with identifier: ${identifier}`);
   }
   return Promise.resolve(xml);
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getButtonByText = (component: VueWrapper<any>, text: string) => {
+  const button = component.findAll('button').find((el) => el.text() === text);
+  if (button == null) {
+    throw new Error(`Could not find button with text: ${text}`);
+  }
+  return button;
 };
 
 export const getFormXml = (fileName: string): Promise<string> => {

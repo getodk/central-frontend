@@ -47,8 +47,7 @@ interface RepeatRangeStateSpec extends DescendantNodeSharedStateSpec {
   readonly hint: null;
   readonly label: Accessor<TextRange<'label'> | null>;
   readonly children: Accessor<readonly FormNodeID[]>;
-  readonly hasRelevantBodyNodes: Accessor<boolean>;
-  readonly hasBodyNodesOnCurrentPage: Accessor<boolean>;
+  readonly hasVisibleBodyNodes: Accessor<boolean>;
   readonly pageBoundary: Accessor<PageBoundary>;
 
   readonly attributes: Accessor<readonly Attribute[]>;
@@ -184,8 +183,7 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatDefinition>
         label: createNodeLabel(this, definition),
         hint: null,
         children: childrenState.childIds,
-        hasRelevantBodyNodes: this.hasRelevantBodyNodes,
-        hasBodyNodesOnCurrentPage: this.hasBodyNodesOnCurrentPage,
+        hasVisibleBodyNodes: this.hasVisibleBodyNodes,
         pageBoundary: this.resolvePageBoundary(definition.isUncontrolled()),
         attributes: attributeState.getAttributes,
         valueOptions: null,

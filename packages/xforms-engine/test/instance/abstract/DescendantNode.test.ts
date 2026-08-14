@@ -54,11 +54,11 @@ describe('DescendantNode', () => {
     );
     const fl = getGroupNode(root, '/data/fl');
 
-    expect(fl.currentState.hasBodyNodesOnCurrentPage).toBe(false);
+    expect(fl.currentState.hasVisibleBodyNodes).toBe(false);
 
     root.setCurrentPage(fl.nodeId);
 
-    expect(fl.currentState.hasBodyNodesOnCurrentPage).toBe(true);
+    expect(fl.currentState.hasVisibleBodyNodes).toBe(true);
   });
 
   it('a plain group is on-page only while a descendant leaf is on the current page', async () => {
@@ -72,13 +72,13 @@ describe('DescendantNode', () => {
     const b = getControlNode(root, '/data/g/b');
     const tail = getControlNode(root, '/data/tail');
 
-    expect(g.currentState.hasBodyNodesOnCurrentPage).toBe(true);
+    expect(g.currentState.hasVisibleBodyNodes).toBe(true);
 
     root.setCurrentPage(b.nodeId);
-    expect(g.currentState.hasBodyNodesOnCurrentPage).toBe(true);
+    expect(g.currentState.hasVisibleBodyNodes).toBe(true);
 
     root.setCurrentPage(tail.nodeId);
-    expect(g.currentState.hasBodyNodesOnCurrentPage).toBe(false);
+    expect(g.currentState.hasVisibleBodyNodes).toBe(false);
   });
 
   it('a field-list group wrapping only a repeat is one shared page', async () => {
@@ -96,10 +96,10 @@ describe('DescendantNode', () => {
     );
     const fl = getGroupNode(root, '/data/fl');
 
-    expect(fl.currentState.hasBodyNodesOnCurrentPage).toBe(false);
+    expect(fl.currentState.hasVisibleBodyNodes).toBe(false);
 
     root.setCurrentPage(fl.nodeId);
-    expect(fl.currentState.hasBodyNodesOnCurrentPage).toBe(true);
+    expect(fl.currentState.hasVisibleBodyNodes).toBe(true);
   });
 
   it('a field-list whose only content is an empty repeat renders on its own page', async () => {
@@ -117,10 +117,10 @@ describe('DescendantNode', () => {
     );
     const fl = getGroupNode(root, '/data/fl');
 
-    expect(fl.currentState.hasBodyNodesOnCurrentPage).toBe(false);
+    expect(fl.currentState.hasVisibleBodyNodes).toBe(false);
 
     root.setCurrentPage(fl.nodeId);
-    expect(fl.currentState.hasBodyNodesOnCurrentPage).toBe(true);
+    expect(fl.currentState.hasVisibleBodyNodes).toBe(true);
   });
 
   it('stays on-page while a relevant leaf remains after another goes irrelevant', async () => {
@@ -145,10 +145,10 @@ describe('DescendantNode', () => {
     const fl = getGroupNode(root, '/data/fl');
 
     root.setCurrentPage(fl.nodeId);
-    expect(fl.currentState.hasBodyNodesOnCurrentPage).toBe(true);
+    expect(fl.currentState.hasVisibleBodyNodes).toBe(true);
 
     getInputNode(root, '/data/toggle').setValue('no');
-    expect(fl.currentState.hasBodyNodesOnCurrentPage).toBe(true);
+    expect(fl.currentState.hasVisibleBodyNodes).toBe(true);
   });
 
   it('a repeat range is on-page only while an instance contains an on-page leaf', async () => {
@@ -162,13 +162,13 @@ describe('DescendantNode', () => {
     const r1q = getControlNode(root, '/data/r[1]/q');
     const r2q = getControlNode(root, '/data/r[2]/q');
 
-    expect(range.currentState.hasBodyNodesOnCurrentPage).toBe(false);
+    expect(range.currentState.hasVisibleBodyNodes).toBe(false);
 
     root.setCurrentPage(r1q.nodeId);
-    expect(range.currentState.hasBodyNodesOnCurrentPage).toBe(true);
+    expect(range.currentState.hasVisibleBodyNodes).toBe(true);
 
     root.setCurrentPage(r2q.nodeId);
-    expect(range.currentState.hasBodyNodesOnCurrentPage).toBe(true);
+    expect(range.currentState.hasVisibleBodyNodes).toBe(true);
   });
 
   it("a plain group with an empty repeat renders when the range's page is current", async () => {
@@ -180,9 +180,9 @@ describe('DescendantNode', () => {
     );
     const g = getGroupNode(root, '/data/g');
 
-    expect(g.currentState.hasBodyNodesOnCurrentPage).toBe(false);
+    expect(g.currentState.hasVisibleBodyNodes).toBe(false);
 
     root.nextPage();
-    expect(g.currentState.hasBodyNodesOnCurrentPage).toBe(true);
+    expect(g.currentState.hasVisibleBodyNodes).toBe(true);
   });
 });

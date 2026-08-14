@@ -62,6 +62,9 @@ export interface RootNode extends BaseNode {
    */
   readonly classes: BodyClassList;
 
+  // Whether the form declares `<h:body class="pages">`
+  readonly isPaginated: boolean;
+
   readonly definition: RootDefinition;
   readonly root: RootNode;
   readonly parent: unknown;

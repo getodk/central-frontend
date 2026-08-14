@@ -3,8 +3,8 @@ import IconSVG from '@/components/common/IconSVG.vue';
 import MarkdownBlock from '@/components/common/MarkdownBlock.vue';
 import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
 import type { Translate } from '@/lib/locale/useLocale.ts';
-import { hasVisibleBodyNodes, isAddButtonVisible } from '@/lib/pagination/pagination.ts';
-import type { RepeatRangeNode } from '@getodk/xforms-engine';
+import { isOnCurrentPage } from '@/lib/pagination/pagination.ts';
+import type { RepeatRangeNode, RepeatRangeUncontrolledNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import { computed, inject } from 'vue';
 import RepeatInstance from './RepeatInstance.vue';
@@ -12,9 +12,16 @@ import RepeatInstance from './RepeatInstance.vue';
 const t: Translate = inject(TRANSLATE)!;
 const props = defineProps<{ node: RepeatRangeNode }>();
 const label = computed(() => props.node.currentState.label?.formatted);
+
+const isAddButtonVisible = (range: RepeatRangeNode): range is RepeatRangeUncontrolledNode => {
+	if (range.nodeType !== 'repeat-range:uncontrolled') {
+		return false;
+	}
+	return isOnCurrentPage(range);
+};
 </script>
 <template>
-	<template v-if="hasVisibleBodyNodes(node)">
+	<template v-if="node.currentState.hasVisibleBodyNodes">
 		<RepeatInstance
 			v-for="(instance, index) in node.currentState.children"
 			:key="index"

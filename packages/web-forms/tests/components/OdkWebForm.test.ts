@@ -14,9 +14,12 @@ import type {
 import { flushPromises, mount } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import packageJson from '../../package.json' with { type: 'json' };
-import { getFormXml, getWebFormsTestFixture, globalMountOptions } from '../helpers';
-
-const SEND_BUTTON_SELECTOR = '.form-footer .primary-action';
+import {
+  getButtonByText,
+  getFormXml,
+  getWebFormsTestFixture,
+  globalMountOptions,
+} from '../helpers';
 
 interface MountComponentOptions {
   readonly overrideProps?: Partial<OdkWebFormsProps>;
@@ -103,7 +106,7 @@ describe('OdkWebForm', () => {
     expect(component.get('.question-container').classes().includes('highlight')).toBe(false);
 
     // Click submit
-    await component.get(SEND_BUTTON_SELECTOR).trigger('click');
+    await getButtonByText(component, 'Send').trigger('click');
 
     // Assert validation banner is visible and question container is highlighted
     expect(component.get('.form-error-message').isVisible()).toBe(true);
@@ -126,7 +129,7 @@ describe('OdkWebForm', () => {
     expect(component.get('.question-container').classes().includes('highlight')).toBe(false);
 
     // Click submit
-    await component.get(SEND_BUTTON_SELECTOR).trigger('click');
+    await getButtonByText(component, 'Send').trigger('click');
 
     // Assert validation banner is visible and question container is highlighted
     expect(component.get('.form-error-message').isVisible()).toBe(true);
@@ -456,7 +459,7 @@ describe('OdkWebForm', () => {
       await textInput.setValue(firstSubmissionInputValue);
 
       // Click submit
-      await component.get(SEND_BUTTON_SELECTOR).trigger('click');
+      await getButtonByText(component, 'Send').trigger('click');
       await waitAllTasksToFinish();
 
       // Check either:

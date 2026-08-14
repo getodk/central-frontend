@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { GroupNode } from '@getodk/xforms-engine';
-import { hasVisibleBodyNodes } from '@/lib/pagination/pagination.ts';
 import { computed } from 'vue';
 import FormPanel from './FormPanel.vue';
 import QuestionList from './QuestionList.vue';
@@ -17,7 +16,7 @@ const tableLayout = computed(() => {
 </script>
 
 <template>
-	<FormPanel v-if="hasVisibleBodyNodes(node)" :title-formatted="node.currentState.label?.formatted" :no-ui="!node.currentState.label">
+	<FormPanel v-if="node.currentState.hasVisibleBodyNodes" :title-formatted="node.currentState.label?.formatted" :no-ui="!node.currentState.label">
 		<div :class="{ 'table-layout': tableLayout, 'gap-2': !tableLayout, 'flex': true, 'flex-column': true }">
 			<QuestionList :nodes="node.currentState.children" />
 		</div>

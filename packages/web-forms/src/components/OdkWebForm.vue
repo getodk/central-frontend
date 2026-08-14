@@ -513,10 +513,6 @@ onUnmounted(() => {
 				order: 3;
 			}
 
-			.form-footer {
-				order: 4;
-				padding: 0 var(--odk-spacing-xl);
-			}
 		}
 
 		.powered-by-wrapper {

@@ -97,6 +97,7 @@ export class Root
   readonly appearances = null;
   readonly nodeOptions = null;
   readonly classes: BodyClassList;
+  readonly isPaginated: boolean;
   readonly currentState: MaterializedChildren<CurrentState<RootStateSpec>, GeneralChildNode>;
   readonly validationState: AncestorNodeValidationState;
   readonly instanceState: InstanceState;
@@ -118,9 +119,10 @@ export class Root
     });
 
     this.classes = parent.classes;
+    this.isPaginated = parent.classes.pages;
     // Pagination owns every page decision, including "this form has no pages". That is why it is disabled
     // rather than null, so nodes always ask it for their pageBoundary, never decide.
-    this.pagination = new Pagination(parent.classes.pages);
+    this.pagination = new Pagination(this.isPaginated);
 
     const childrenState = createChildrenState<Root, GeneralChildNode>(this);
     this.attributeState = createAttributeState(this.scope);

@@ -3,7 +3,6 @@ import { expect, Locator, Page } from '@playwright/test';
 export class RepeatControl {
   private readonly SELECTOR_INSTANCE = '.is-repeat';
   private readonly SELECTOR_HEADER = '.p-panel-header';
-  private readonly SELECTOR_ADD_BUTTON = '.button-add-instance';
   private readonly page: Page;
 
   constructor(page: Page) {
@@ -11,9 +10,8 @@ export class RepeatControl {
   }
 
   private addButton(label?: string) {
-    const button = this.page.locator(this.SELECTOR_ADD_BUTTON);
-
-    return label == null ? button : button.filter({ hasText: label });
+    const name = label == null ? 'Add' : `Add ${label}`;
+    return this.page.getByRole('button', { name });
   }
 
   async getInstancesHeader(): Promise<Locator[]> {
