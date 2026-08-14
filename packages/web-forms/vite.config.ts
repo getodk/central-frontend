@@ -67,29 +67,18 @@ if (webkitFlakinessMitigations) {
 }
 
 export default defineConfig(({ mode }) => {
-  const isVueBundled = mode === 'demo';
   const isDev = mode === 'development';
-
-  let lib: LibraryOptions | undefined;
-  let external: string[];
-  let globals: Record<string, string>;
+  const external = ['fs', 'path', 'vue'];
+  const globals = { vue: 'Vue' };
   const extraPlugins: PluginOption[] = [];
+  const lib: LibraryOptions = {
+    formats: ['es'],
+    entry: resolve(__dirname, 'src/index.ts'),
+    name: 'OdkWebForms',
+    fileName: 'index',
+  };
 
-  if (isVueBundled) {
-    external = [];
-    globals = {};
-  } else {
-    external = ['vue'];
-    globals = { vue: 'Vue' };
-    lib = {
-      formats: ['es'],
-      entry: resolve(__dirname, 'src/index.ts'),
-      name: 'OdkWebForms',
-      fileName: 'index',
-    };
-  }
-
-  const versionSuffix = buildNumber && (isVueBundled || isDev) ? ` - ${buildNumber}` : '';
+  const versionSuffix = buildNumber && isDev ? ` - ${buildNumber}` : '';
 
   return {
     define: {
@@ -133,6 +122,10 @@ export default defineConfig(({ mode }) => {
       lib,
       rollupOptions: {
         external,
+        onwarn(warning, warn) {
+          if (warning.code === 'EVAL') return; // ignore eval warning for tree-sitter
+          warn(warning);
+        },
         output: {
           globals,
         },

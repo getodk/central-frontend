@@ -104,6 +104,11 @@ export default defineConfig(({ mode }) => ({
           return 'assets/central/[name]-[hash].js';
         }
       },
+      external: ['fs', 'path'],
+      onwarn(warning, warn) {
+        if (warning.code === 'EVAL') return; // ignore eval warning for tree-sitter
+        warn(warning);
+      },
     },
   },
   test: {

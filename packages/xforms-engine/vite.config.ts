@@ -43,7 +43,7 @@ export default defineConfig(({ mode }) => {
 
   const entries = Object.values(libEntry);
 
-  const external = ['@getodk/common'];
+  const external = ['fs', 'path', '@getodk/common'];
 
   if (IS_SOLID_BUILD_TARGET) {
     external.push('solid-js', 'solid-js/store');
@@ -79,7 +79,13 @@ export default defineConfig(({ mode }) => {
           return entryName.replace(/^\.src\//, '').replace(/\.ts$/, '.js');
         },
       },
-      rollupOptions: { external },
+      rollupOptions: {
+        external,
+        onwarn(warning, warn) {
+          if (warning.code === 'EVAL') return; // ignore eval warning for tree-sitter
+          warn(warning);
+        },
+      },
     },
 
     esbuild: {

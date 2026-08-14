@@ -90,6 +90,10 @@ export default defineConfig(({ mode }) => {
       },
       rollupOptions: {
         external: ['fs', 'path', 'temporal-polyfill'],
+        onwarn(warning, warn) {
+          if (warning.code === 'EVAL') return; // ignore eval warning for tree-sitter
+          warn(warning);
+        },
       },
     },
     define: {
