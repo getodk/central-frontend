@@ -311,14 +311,14 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-##### Misc<br/>🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ 22\%
+##### Misc<br/>🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ 33\%
 
   </summary>
   <br/>
 
 | Feature <img width=250px/>                                                       | Progress |
 | -------------------------------------------------------------------------------- | :------: |
-| [last saved instance](https://github.com/getodk/web-forms/issues/306)            |          |
+| [last saved instance](https://github.com/getodk/web-forms/issues/306)            |    ✅    |
 | [defaults from query parameters](https://github.com/getodk/web-forms/issues/464) |    ✅    |
 | multi-form app-like experience                                                   |          |
 | [prevent multiple submissions](https://github.com/getodk/web-forms/issues/461)   |          |
@@ -350,6 +350,7 @@ To use this library in a Vue.js application:
     :preload-properties="preloadProperties"
     :instance-defaults="instanceDefaults"
     :device-id="abc123"
+    :last-saved-xml="lastSavedXml"
     @submit="handleSubmit"
     @submit-chunked="handleChunkedSubmit"
 />
@@ -377,6 +378,7 @@ The `<OdkWebForm>` component accepts the following props:
 - `preloadProperties` (`PreloadProperties`, optional): Properties to make available for binding in the form using jr:preload.
 - `deviceId` (`string`, optional): If provided is available for binding into the form using preload attributes. Ignored if `preloadProperties.deviceID` is given.
 - `instanceDefaults` (`InstanceDefaults`, optional): Default values to set in the form as a map of xpath reference to string value.
+- `lastSavedXml` (`string`, optional): The XML to parse and bind to the last-saved virtual instance.
 
 ### Events (`OdkWebFormEmits`)
 

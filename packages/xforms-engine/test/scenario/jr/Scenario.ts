@@ -54,6 +54,7 @@ import { SelectChoiceList } from './select/SelectChoiceList.ts';
 import { ValidateOutcome } from './validation/ValidateOutcome.ts';
 import { JREvaluationContext } from './xpath/JREvaluationContext.ts';
 import { JRTreeReference } from './xpath/JRTreeReference.ts';
+import type { ResetFormInstanceConfig } from '../../../src/index.ts';
 
 /**
  * Satisfies the xforms-engine client `stateFactory` option. Currently this is
@@ -179,6 +180,7 @@ export class Scenario {
       },
       editInstance: overrideOptions?.editInstance ?? null,
       instanceDefaults: overrideOptions?.instanceDefaults ?? {},
+      lastSavedXml: overrideOptions?.lastSavedXml,
     };
   }
 
@@ -1218,7 +1220,7 @@ export class Scenario {
     return this.fork(instance);
   }
 
-  resetCurrentInstance(config?: FormInstanceConfig): this {
+  resetCurrentInstance(config?: ResetFormInstanceConfig): this {
     const instance = this.form.resetInstance(config);
     return this.fork(instance);
   }

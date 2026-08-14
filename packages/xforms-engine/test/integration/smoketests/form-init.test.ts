@@ -216,12 +216,6 @@ describe('Form initialization smoke tests', () => {
       expectNoInitializationErrors(scenario);
     });
 
-    /**
-     * **PORTING NOTES**
-     *
-     * - Unclear if there will be a need for additional setup in the future when
-     *   we add last-saved support.
-     */
     it('parses last saved instance with null src', async () => {
       const scenario = await Scenario.init(lastSavedBlank);
 
@@ -229,33 +223,39 @@ describe('Form initialization smoke tests', () => {
       expect(scenario.answerOf('/data/item')).toEqualAnswer(stringAnswer('')); // nothing to bind from the last-saved instance
     });
 
-    /**
-     * **PORTING NOTES**
-     *
-     * - There is definitely a need for additional setup to test this
-     *   meaningfully. Revisit when we add last-saved support.
-     *
-     * - Observation: in theory, it could be nice to have a more specific
-     *   mechanism for deferring/marking known failure of tests **around pending
-     *   support for specific features**, so they can run to completion or
-     *   failure once we believe the feature is testable. May not be worth the
-     *   effort with a quick enough feature development/bugfix velocity.
-     */
-    it.todo('parsesLastSavedInstanceWithFilledForm', () => {
-      // Path formName = r("last-saved-blank.xml");
-      // Path lastSavedSubmissionDirectory = r("last-saved-filled.xml").toAbsolutePath().getParent();
-      // ReferenceManagerTestUtils.setUpSimpleReferenceManager(lastSavedSubmissionDirectory, "file");
-      // FormDef formDef = parse(formName, "jr://file/last-saved-filled.xml");
-      // assertEquals("Form with last-saved instance (blank)", formDef.getTitle());
-      // DataInstance lastSaved = formDef.getNonMainInstance("last-saved");
-      // AbstractTreeElement root = lastSaved.getRoot();
-      // AbstractTreeElement item = root
-      // 		.getChild("head", 0)
-      // 		.getChild("model", 0)
-      // 		.getChild("instance", 0)
-      // 		.getChild("data", 0)
-      // 		.getChild("item", 0);
-      // assertEquals("Foo", item.getValue().getDisplayText());
+    it('parses last saved instance with filled form', async () => {
+      const lastSavedXml = `
+        <data id="data">
+          <item>Foo</item>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>`;
+
+      const scenario = await Scenario.init(lastSavedBlank, { lastSavedXml });
+      expectNoInitializationErrors(scenario);
+      expect(scenario.answerOf('/data/item')).toEqualAnswer(stringAnswer('Foo'));
+    });
+
+    it('ignores last saved instance when editing form', async () => {
+      const lastSavedXml = `
+        <data id="data">
+          <item>Foo</item>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>`;
+      const editInstance = `
+        <data id="data">
+          <item></item>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>`;
+
+      const scenario = await Scenario.init(lastSavedBlank, { lastSavedXml, editInstance });
+      expectNoInitializationErrors(scenario);
+      expect(scenario.answerOf('/data/item')).toEqualAnswer(stringAnswer(''));
     });
 
     it('multipleInstancesFormSavesAndRestores', async () => {

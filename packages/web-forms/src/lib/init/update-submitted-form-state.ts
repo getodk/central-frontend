@@ -10,6 +10,7 @@ interface ResetFormStateOptions {
   readonly deviceID?: string;
   readonly preloadProperties?: PreloadProperties;
   readonly instanceDefaults?: InstanceDefaults;
+  readonly lastSavedXml?: string;
 }
 
 const resetInstanceState = (
