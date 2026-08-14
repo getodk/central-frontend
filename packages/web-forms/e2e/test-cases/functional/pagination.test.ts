@@ -216,11 +216,19 @@ test.describe('Pagination', () => {
     });
 
     test('renders one iteration per page and walks through both', async () => {
-      await formPage.text.expectOnlyLabels(['Visit 1 date', 'Visit 1 temperature', 'Visit 1 notes']);
+      await formPage.text.expectOnlyLabels([
+        'Visit 1 date',
+        'Visit 1 temperature',
+        'Visit 1 notes',
+      ]);
       await formPage.pagination.expectNavigation({ previous: false, next: true });
 
       await formPage.pagination.clickNext();
-      await formPage.text.expectOnlyLabels(['Visit 2 date', 'Visit 2 temperature', 'Visit 2 notes']);
+      await formPage.text.expectOnlyLabels([
+        'Visit 2 date',
+        'Visit 2 temperature',
+        'Visit 2 notes',
+      ]);
       await formPage.pagination.expectNavigation({ previous: true, next: false });
     });
   });
