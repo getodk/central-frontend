@@ -68,7 +68,7 @@ In other words, using mockHttp() involves two phases:
      of request-response cycles is kicked off.
 
 afterResponses() returns a thenable, which usually is ultimately returned to
-Mocha. You can call then(), catch(), or finally() on the thenable:
+Vitest. You can call then(), catch(), or finally() on the thenable:
 
   mockLogin();
   testData.extendedProjects.createPast(3);
@@ -680,17 +680,17 @@ class MockHttp {
     MockHttp uses two promises:
 
       1. The first promise is chained on this._previousPromise and returned by
-         an after responses hook. Usually it is ultimately returned to Mocha.
+         an after responses hook. Usually it is ultimately returned to Vitest.
       2. The second promise, stored here in `promise`, holds the responses,
-         chained in order of request. `promise` is not returned to Mocha, but
+         chained in order of request. `promise` is not returned to Vitest, but
          rather to Frontend from `http` in the container.
 
     The two promises are related: the first promise triggers one or more
     requests; for which responses are returned to Frontend through the second
-    promise; then the first promise is returned to Mocha or whatever else comes
+    promise; then the first promise is returned to Vitest or whatever else comes
     after the hook.
 
-    It is because the second promise is returned to Frontend and not Mocha that
+    It is because the second promise is returned to Frontend and not Vitest that
     this._tryBeforeAnyResponse() and this._tryBeforeEachResponse() catch any
     error even though they are called within a promise chain. Those methods
     catch and store any error so that the after responses hook is able to reject
@@ -878,7 +878,7 @@ class MockHttp {
     return promise.then(({ result }) => result);
   }
 
-  // The inclusion of these methods means that we can return a MockHttp to Mocha
+  // The inclusion of these methods means that we can return a MockHttp to Vitest
   // in lieu of a Promise.
   then(...args) { return this.toPromise().then(...args); }
   catch(onRejected) { return this.toPromise().catch(onRejected); }

@@ -2,7 +2,7 @@ import chaiAsPromised from 'chai-as-promised';
 import { Assertion, AssertionError, use, util } from 'chai';
 import { BaseWrapper, VueWrapper } from '@vue/test-utils';
 
-import { wait } from './util/util';
+import { wait } from '../util/util';
 
 use(chaiAsPromised);
 
