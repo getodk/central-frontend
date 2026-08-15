@@ -8,10 +8,6 @@ module.exports = {
     '@vue/airbnb'
   ],
   globals: {
-    $: 'readonly',
-    alert: 'readonly',
-    document: 'readonly',
-    window: 'readonly',
     defineModel: 'readonly'
   },
   rules: {
