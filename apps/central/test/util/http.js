@@ -278,6 +278,7 @@ import { clone, identity, last, pick } from 'ramda';
 
 import App from '../../src/components/app.vue';
 
+import { loadingAnyAsync } from '../../src/util/load-async';
 import { noop } from '../../src/util/util';
 import { routeProps } from '../../src/util/router';
 
@@ -643,24 +644,24 @@ class MockHttp {
       : noop;
 
     try {
-      const routeBefore = router != null ? router.currentRoute.value : null;
       if (this._location != null) await router.push(this._location);
       if (this._mount != null) {
         this._component = this._mount();
         // Mounting may have triggered the initial navigation.
         if (router != null) await router.isReady();
       }
+      // If there was a navigation, then we need to wait for any async
+      // components associated with the route to load.
+      await waitUntil(() => !loadingAnyAsync());
 
       if (this._request != null) {
-        // If there has been a navigation, then wait for any async components
-        // associated with the route to load.
-        if (router != null && router.currentRoute.value !== routeBefore)
-          await wait();
-
         this._checkStateBeforeRequest();
         await this._request(this._component);
       }
     } finally {
+      // Wait for any router navigation to finish.
+      if (router != null) await wait();
+      await waitUntil(() => !loadingAnyAsync());
       // Wait for any responses to be processed.
       await wait();
       if (pollWork != null) await waitUntil(() => pollWork(this._component));

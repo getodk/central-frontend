@@ -18,13 +18,24 @@ loadAsync() has a couple of benefits:
   - webpack magic comments will not be repeated across files.
 */
 
+let loadingCount = 0;
+
 const loader = (load) => {
   const obj = {
     loaded: false,
     load: async () => {
-      const m = await load();
-      obj.loaded = true;
-      return m;
+      loadingCount += 1;
+      try {
+        const m = await load();
+        obj.loaded = true;
+        return m;
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        if (import.meta.env.NODE_ENV === 'development') console.error(error);
+        throw error;
+      } finally {
+        loadingCount -= 1;
+      }
     }
   };
   return obj;
@@ -212,7 +223,15 @@ const loaders = new Map()
 export const loadAsync = (name) => loaders.get(name).load;
 export const loadedAsync = (name) => loaders.get(name).loaded;
 
-// Exported for use in testing
+
+
+////////////////////////////////////////////////////////////////////////////////
+// TEST UTILS
+
+// These functions are exported for use in testing.
+
+export const loadingAnyAsync = () => loadingCount !== 0;
+
 export const setLoader = (name, load) => {
   loaders.set(name, loader(load));
 };
