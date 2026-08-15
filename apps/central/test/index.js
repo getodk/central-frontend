@@ -9,7 +9,7 @@ import { afterEachTest, beforeEachTest, setupHooks } from './setup/hooks';
 import { loadAsyncRouteComponents } from './util/load-async';
 import { mockLogin } from './util/session';
 import { setupLanguages } from './util/i18n';
-import './assertions';
+import './setup/assertions';
 import './setup/iframe';
 
 window.should = should();
