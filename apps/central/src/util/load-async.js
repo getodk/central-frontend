@@ -220,8 +220,13 @@ const loaders = new Map()
     '../components/user/list.vue'
   )));
 
-export const loadAsync = (name) => loaders.get(name).load;
-export const loadedAsync = (name) => loaders.get(name).loaded;
+const getLoader = (name) => {
+  if (!loaders.has(name)) throw new Error(`loader not found for ${name}`);
+  return loaders.get(name);
+};
+
+export const loadAsync = (name) => getLoader(name).load;
+export const loadedAsync = (name) => getLoader(name).loaded;
 
 
 
