@@ -52,7 +52,7 @@ export const setLuxon = (settings) => {
   }
 };
 
-// Restore Luxon settings to their original values.
+// Restores Luxon settings to their original values after a call to setLuxon().
 export const restoreLuxon = () => {
   for (const [name, value] of originalSettings.entries())
     Settings[name] = value;
