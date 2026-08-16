@@ -68,7 +68,7 @@ if (webkitFlakinessMitigations) {
 
 export default defineConfig(({ mode }) => {
   const isDev = mode === 'development';
-  const external = ['fs', 'path', 'vue'];
+  const external = ['vue'];
   const globals = { vue: 'Vue' };
   const extraPlugins: PluginOption[] = [];
   const lib: LibraryOptions = {
