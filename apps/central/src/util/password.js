@@ -23,7 +23,7 @@ async function sha1hash(message) {
 async function getSuffixesFor(request, prefix) {
   try {
     const url = `https://api.pwnedpasswords.com/range/${prefix}`;
-    const res = await request({ url });
+    const res = await request({ url, alert: false });
     return res.data.split('\n').map(line => line.split(':')[0]);
   } catch (err) {
     console.log('pwned check failed:', err); // eslint-disable-line no-console
