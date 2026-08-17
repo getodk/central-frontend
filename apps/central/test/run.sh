@@ -8,16 +8,17 @@ cp ../../index.html ../../public/
 output=$(mktemp)
 trap 'rm -- ../../public/index.html "$output"' EXIT
 
-NODE_ENV="test" karma start karma.conf.js | tee "$output"
+vitest run "$@" | tee "$output"
 
-# Search for: warnings from console.warn(), including Vue warnings; Sass
-# warnings; and warnings from Karma.
+# Search for:
+#
+#   - Warnings from console.warn(), including Vue warnings
+#   - Sass warnings
 awk '
   BEGIN { warnings = 0 }
-  /WARN LOG:/            { ++warnings; print "WARNING: " $0 }
+  /stderr/               { ++warnings; print "WARNING: " $0 }
   /ERROR LOG:/           { ++warnings; print "WARNING: " $0 }
   /Module Warning/       { ++warnings; print "WARNING: " $0 }
-  /WARN \[web-server\]:/ { ++warnings; print "WARNING: " $0 }
   END {
     if(warnings > 2) {
       print "All tests passed, but there were " warnings " warnings: see above."
