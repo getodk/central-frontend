@@ -14,19 +14,19 @@ except according to the terms contained in the LICENSE file.
 export const localStore = {
   getItem(name) {
     try {
-      return localStorage.getItem(name);
+      return window.localStorage.getItem(name);
     } catch (e) {
       return null;
     }
   },
   setItem(name, value) {
     try {
-      localStorage.setItem(name, value);
+      window.localStorage.setItem(name, value);
     } catch (e) {}
   },
   removeItem(name) {
     try {
-      localStorage.removeItem(name);
+      window.localStorage.removeItem(name);
     } catch (e) {}
   }
 };
