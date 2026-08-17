@@ -1,7 +1,7 @@
 // For a description of our Transifex workflow and how this script fits into it,
 // see CONTRIBUTING.md.
 
-const fs = require('fs');
+const fs = require('node:fs');
 
 const { destructure, readSourceMessages, rekeyTranslations, writeTranslations } = require('../util/transifex');
 const { logThenThrow, mapComponentsToFiles } = require('../util/util');
