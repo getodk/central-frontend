@@ -30,7 +30,11 @@ except according to the terms contained in the LICENSE file.
               <div v-if="pwned" class="collapsible-error">
                 <div class="collapsible-inner">
                   <p>{{ $t('alert.includedInBreach') }}</p>
-                  <p>For more information, see <a href="https://haveibeenpwned.com/Passwords" target="_blank" rel="noopener noreferrer">here</a>.</p>
+                  <i18n-t keypath="moreInfo.clickHere.full">
+                    <template #clickHere>
+                      <a href="https://haveibeenpwned.com/Passwords" target="_blank" rel="noopener noreferrer">{{ $t('moreInfo.clickHere.clickHere') }}</a>
+                    </template>
+                  </i18n-t>
                 </div>
               </div>
             </transition>
