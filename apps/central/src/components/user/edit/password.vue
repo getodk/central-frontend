@@ -89,7 +89,7 @@ export default {
       this.mismatch = false;
       this.pwned = false;
 
-      if (this.newPassword.length < 10) {
+      if (this.newPassword.length < 1) {
         this.alert.danger(this.$t('alert.passwordTooShort'));
         this.tooShort = true;
         return false;
@@ -132,11 +132,13 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../../../assets/scss/variables';
+
 #user-edit-password input[autocomplete="username"] { display: none; }
 .collapsible-error {
   display: grid;
   grid-template-rows: 1fr;
-  color: #de2a11;
+  color: $color-danger;
   font-size: 11px;
   margin: 25px 12px -25px;
 
