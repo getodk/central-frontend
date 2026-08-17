@@ -1229,6 +1229,40 @@
         }
       }
     },
+    "ActorPropertiesNew": {
+      "addProperty": {
+        "string": "+ Add Property"
+      },
+      "newPropertyName": {
+        "string": "New property name"
+      },
+      "problem": {
+        "409_3": {
+          "string": "A property already exists in this project with the name \"{propertyName}\"."
+        }
+      },
+      "action": {
+        "add": {
+          "string": "Add",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "ActorPropertiesUpsert": {
+      "description": {
+        "full": {
+          "string": "Properties help {assignEntities}, control access, and connect users to the data they need.",
+          "developer_comment": "{assignEntities} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nassign the right Entities"
+        },
+        "assignEntities": {
+          "string": "assign the right Entities",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {assignEntities} is in the following text:\n\nProperties help {assignEntities}, control access, and connect users to the data they need."
+        }
+      },
+      "noProperties": {
+        "string": "No properties have been added yet."
+      }
+    },
     "AnalyticsForm": {
       "enabled": {
         "null": {

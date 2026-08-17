@@ -127,41 +127,37 @@ describe('PublicLinkCreate', () => {
       }));
 
   describe('adding a property inline', () => {
-    it('shows the new property row after adding a property', () => {
-      return mockHttp()
-        .mount(PublicLinkCreate, mountOptions())
-        .request(async (modal) => {
-          await modal.get('.add-property-link').trigger('click');
-          await modal.get('.actor-properties-new input').setValue('region');
-          return modal.get('.actor-properties-new form').trigger('submit');
-        })
-        .respondWithSuccess()
-        .afterResponse((modal) => {
-          modal.findAll('textarea').length.should.equal(1);
-          modal.get('.entity-update-row label').text().should.include('region');
-        });
-    });
+    it('shows the new property row after adding a property', () => mockHttp()
+      .mount(PublicLinkCreate, mountOptions())
+      .request(async (modal) => {
+        await modal.get('.add-property-link').trigger('click');
+        await modal.get('.actor-properties-new input').setValue('region');
+        return modal.get('.actor-properties-new form').trigger('submit');
+      })
+      .respondWithSuccess()
+      .afterResponse((modal) => {
+        modal.findAll('textarea').length.should.equal(1);
+        modal.get('.entity-update-row label').text().should.include('region');
+      }));
 
-    it('includes a newly added property value in the create request', () => {
-      return mockHttp()
-        .mount(PublicLinkCreate, mountOptions())
-        .request(async (modal) => {
-          await modal.get('.add-property-link').trigger('click');
-          await modal.get('.actor-properties-new input').setValue('region');
-          return modal.get('.actor-properties-new form').trigger('submit');
-        })
-        .respondWithSuccess()
-        .complete()
-        .request(async (modal) => {
-          await modal.get('input').setValue('My Public Link');
-          await modal.get('textarea').setValue('north');
-          return modal.get('form').trigger('submit');
-        })
-        .beforeEachResponse((_, { data }) => {
-          data.should.eql({ displayName: 'My Public Link', once: false, properties: { region: 'north' } });
-        })
-        .respondWithProblem();
-    });
+    it('includes a newly added property value in the create request', () => mockHttp()
+      .mount(PublicLinkCreate, mountOptions())
+      .request(async (modal) => {
+        await modal.get('.add-property-link').trigger('click');
+        await modal.get('.actor-properties-new input').setValue('region');
+        return modal.get('.actor-properties-new form').trigger('submit');
+      })
+      .respondWithSuccess()
+      .complete()
+      .request(async (modal) => {
+        await modal.get('input').setValue('My Public Link');
+        await modal.get('textarea').setValue('north');
+        return modal.get('form').trigger('submit');
+      })
+      .beforeEachResponse((_, { data }) => {
+        data.should.eql({ displayName: 'My Public Link', once: false, properties: { region: 'north' } });
+      })
+      .respondWithProblem());
   });
 
   describe('after a successful response', () => {

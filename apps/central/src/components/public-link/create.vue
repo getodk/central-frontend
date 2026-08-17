@@ -85,13 +85,13 @@ const { request, awaitingResponse } = useRequest();
 const { form, actorProperties } = useRequestData();
 
 const submit = () => {
-  const data = { displayName: displayName.value, once: once.value };
+  const body = { displayName: displayName.value, once: once.value };
   if (Object.keys(propertyValues.value).length > 0)
-    data.properties = propertyValues.value;
+    body.properties = propertyValues.value;
   request({
     method: 'POST',
     url: apiPaths.publicLinks(form.projectId, form.xmlFormId),
-    data
+    data: body
   })
     .then(({ data }) => {
       emit('success', data);

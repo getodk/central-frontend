@@ -119,13 +119,13 @@ const propertyValues = ref(Object.create(null));
 const focusInput = () => { displayNameRef.value.focus(); };
 
 const submit = () => {
-  const data = { displayName: displayName.value };
+  const body = { displayName: displayName.value };
   if (Object.keys(propertyValues.value).length > 0)
-    data.properties = propertyValues.value;
+    body.properties = propertyValues.value;
   request({
     method: 'POST',
     url: apiPaths.fieldKeys(project.id),
-    data
+    data: body
   })
     .then(({ data }) => {
       // Reset the form.
