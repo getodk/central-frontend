@@ -1,0 +1,42 @@
+name: Restore NodeJS
+description: Restore NodeJS and caches
+inputs:
+  node-version:
+    description: override NodeJS version supplied in package.json
+    required: false
+  registry-url:
+    description: define registry-url in npm-rc; required for publishing
+    required: false
+
+runs:
+  using: 'composite'
+  - uses: actions/setup-node@v6
+    id: setup-node
+    with:
+      node-version-file: package.json
+      node-version: ${{ inputs.node-version }}
+      registry-url: ${{ inputs.registry-url }}
+      cache: 'npm'
+
+  - uses: 'actions/cache/restore@v6'
+    id: cache-build
+    with:
+      path: |
+        dist
+        packages/*/dist
+      key: build-${{ github.sha }}
+      fail-on-cache-miss: true
+
+  - uses: 'actions/cache/restore@v6'
+    id: cache-install
+    with:
+      path: |
+        node_modules
+        **/node_modules
+      key: install-${{ steps.setup-node.outputs.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'package/*/package-lock.json') }}
+      fail-on-cache-miss: ${{ inputs.node-version == '' }}
+
+  - name: 'npm ci'
+    shell: sh
+    if: steps.cache-install.outputs.cache-hit != 'true'
+    run: npm ci
