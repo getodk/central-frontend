@@ -73,7 +73,7 @@ export class Attribute
   };
 
   override readonly getXPathValue: () => string;
-  readonly setEncodedValue: (value: string) => void;
+  readonly setEncodedValue: (value: string, bypassReadonly?: boolean) => void;
 
   constructor(
     readonly owner: AnyNode,
@@ -93,10 +93,15 @@ export class Attribute
     this.valueType = 'string';
     this.decodeInstanceValue = codec.decodeInstanceValue;
 
-    const instanceValueState = createInstanceValueState(this);
-    const valueState = codec.createRuntimeValueState(instanceValueState);
-
+    const { valueState: instanceValueState, setValueFromAction } = createInstanceValueState(this);
     const [getInstanceValue] = instanceValueState;
+
+    const valueState = codec.createRuntimeValueState(instanceValueState);
+    const [, setActionValue] = codec.createRuntimeValueState([
+      getInstanceValue,
+      setValueFromAction,
+    ]);
+
     const [, setValueState] = valueState;
 
     this.getInstanceValue = getInstanceValue;
@@ -131,8 +136,13 @@ export class Attribute
     this.getXPathValue = () => {
       return this.getInstanceValue();
     };
-    this.setEncodedValue = (value: string) => {
-      this.setValueState(codec.decodeValue(value));
+    this.setEncodedValue = (value: string, bypassReadonly = false) => {
+      const decodedValue = codec.decodeValue(value);
+      if (bypassReadonly) {
+        setActionValue(decodedValue);
+        return;
+      }
+      setValueState(decodedValue);
     };
   }
 

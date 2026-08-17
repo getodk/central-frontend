@@ -69,8 +69,8 @@ const createRelevantValueState = (
 };
 
 /**
- * For fields with a `readonly` bind expression, prevent downstream
- * (client/user) writes when the field is in a `readonly` state.
+ * Rejects downstream (client/user) writes while the field is in a `readonly` state.
+ * Engine writes (`calculate` computations, preloads, `setvalue` actions) never pass through this guard.
  */
 const guardDownstreamReadonlyWrites = (
   context: ValueContext,
@@ -290,7 +290,7 @@ const registerValueChangedActions = (context: ValueContext, getValue: Accessor<s
           referencesCurrentNode(destinationNode, ref)
         ) {
           if (action.type === 'geopoint') {
-            getGeopointValue(context, (point) => destinationNode.setEncodedValue(point));
+            getGeopointValue(context, (point) => destinationNode.setEncodedValue(point, true));
           } else {
             const value = untrack(() => {
               return context.evaluator.evaluateString(
@@ -298,7 +298,7 @@ const registerValueChangedActions = (context: ValueContext, getValue: Accessor<s
                 destinationNode
               );
             });
-            destinationNode.setEncodedValue(value);
+            destinationNode.setEncodedValue(value, true);
           }
         }
       }
@@ -307,7 +307,12 @@ const registerValueChangedActions = (context: ValueContext, getValue: Accessor<s
   });
 };
 
-export type InstanceValueState = SimpleAtomicState<string>;
+export interface InstanceValueState {
+  // The node's instance value. The setter rejects client writes while readonly.
+  readonly valueState: SimpleAtomicState<string>;
+  // Unguarded setter for the same value, used by `xforms-value-changed` actions writing to this node.
+  readonly setValueFromAction: SimpleAtomicStateSetter<string>;
+}
 
 /**
  * Provides a consistent interface for value nodes of any type which:
@@ -318,7 +323,8 @@ export type InstanceValueState = SimpleAtomicState<string>;
  * - encodes updated runtime values to store updated instance state
  * - initializes reactive computation of `calculate` bind expressions for those
  *   nodes defined with one
- * - prevents downstream writes to nodes in a readonly state
+ * - prevents downstream (client/user) writes to nodes in a readonly state,
+ *   while still permitting engine-initiated writes to those nodes
  */
 export const createInstanceValueState = (context: ValueContext): InstanceValueState => {
   return context.scope.runTask(() => {
@@ -338,6 +344,9 @@ export const createInstanceValueState = (context: ValueContext): InstanceValueSt
     registerValueChangedActions(context, getValue);
     registerSetValueActions(context, setValue);
 
-    return guardDownstreamReadonlyWrites(context, relevantValueState);
+    return {
+      valueState: guardDownstreamReadonlyWrites(context, relevantValueState),
+      setValueFromAction: setValue,
+    };
   });
 };
