@@ -74,7 +74,7 @@ module.exports = (config) => {
     browserDisconnectTimeout: 300_000,
     browserDisconnectTolerance: 3,
     reporters: ['spec'],
-    singleRun: true,
+    singleRun: !!(process.env.CI || process.env.KARMA_FORCE_SINGLE_RUN),
     client: {
       mocha: {
         grep: process.env.TEST_PATTERN || '.',

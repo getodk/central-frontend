@@ -71,6 +71,8 @@ export interface OdkWebFormsProps {
 	 * resources will be resolved and loaded for editing.
 	 */
 	readonly editInstance?: EditInstanceOptions;
+
+	readonly lastSavedXml?: string;
 }
 
 const props = defineProps<OdkWebFormsProps>();
@@ -82,11 +84,13 @@ const hostSubmissionResultCallbackFactory = (
 		hostResult: OptionalAwaitableHostSubmissionResult
 	): Promise<void> => {
 		const submissionResult = await hostResult;
+		const lastSavedXml = currentState.root.instanceState.instanceXML;
 		const options = {
 			form: formOptions,
 			preloadProperties: props.preloadProperties,
 			instanceDefaults: props.instanceDefaults,
 			deviceID: props.deviceId,
+			lastSavedXml
 		};
 		state.value = updateSubmittedFormState(submissionResult, currentState, options);
 		if (submissionResult?.next === POST_SUBMIT__NEW_INSTANCE) {
@@ -197,6 +201,7 @@ const getLocation = async (): Promise<string> => {
 
 const formOptions = readonly<FormOptions>({
 	fetchFormAttachment: props.fetchFormAttachment,
+	lastSavedXml: props.lastSavedXml,
 	missingResourceBehavior: props.missingResourceBehavior,
 	geolocationProvider: { getLocation: () => getLocation() },
 	attachmentMaxSize: props.attachmentMaxSize,
@@ -242,7 +247,7 @@ const init = async () => {
 		editInstance: props.editInstance ?? null,
 		preloadProperties: props.preloadProperties,
 		instanceDefaults: props.instanceDefaults,
-		deviceID: props.deviceId,
+		deviceID: props.deviceId
 	});
 	emit('loaded');
 };

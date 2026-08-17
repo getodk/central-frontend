@@ -10,6 +10,12 @@ import initSentry from '../../src/utils/sentry';
 
 type FetchCall = [input: RequestInfo | URL, init?: RequestInit];
 
+vi.mock('../../src/utils/last-saved.ts', () => ({
+  getLastSaved: vi.fn().mockResolvedValue(undefined),
+  setLastSaved: vi.fn().mockResolvedValue(undefined),
+  deleteLastSaved: vi.fn().mockResolvedValue(undefined),
+}));
+
 describe('Sentry headers', () => {
   const formWithAttachmentXml = `<?xml version="1.0"?>
 <h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa">
