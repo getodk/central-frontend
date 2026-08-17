@@ -29,7 +29,7 @@ except according to the terms contained in the LICENSE file.
             <transition name="collapse">
               <div v-if="pwned" class="collapsible-error">
                 <div class="collapsible-inner">
-                  <p>This password has previously been included in a breach.</p>
+                  <p>{{ $t('alert.includedInBreach') }}</p>
                   <p>For more information, see <a href="https://haveibeenpwned.com/Passwords" target="_blank" rel="noopener noreferrer">here</a>.</p>
                 </div>
               </div>
@@ -159,6 +159,7 @@ export default {
     },
     "cannotChange": "Only the owner of the account may directly set their own password.",
     "alert": {
+      "includedInBreach": "This password has previously been included in a breach.",
       "mismatch": "Please check that your new passwords match.",
       "success": "Success! Your password has been updated."
     }
