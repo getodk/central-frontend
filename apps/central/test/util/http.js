@@ -854,7 +854,7 @@ class MockHttp {
       throw new Error('request without response: no response specified for request');
     } else if (this._orderedResponsesRequested < this._orderedResponses.length) {
       this._listRequestResponseLog();
-      throw new Error('response without request: not all responses were requested');
+      throw new Error(`response without request: ${this._orderedResponses.length} required response(s) were specified, but only ${this._orderedResponsesRequested} of them were requested`);
     } else if (this._orderedResponsesReturned !== this._orderedResponses.length) {
       this._listRequestResponseLog();
       throw new Error('All responses were requested, but not all were returned in time. By default, all responses are expected to be returned in microtasks, before the next task. You may need to use the pollWork option of afterResponses().');

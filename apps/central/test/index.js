@@ -8,6 +8,7 @@ import testData from './data';
 import { afterEachTest, beforeEachTest, setupHooks } from './setup/hooks';
 import { loadAsyncRouteComponents } from './util/load-async';
 import { mockLogin } from './util/session';
+import { restoreLuxon } from './util/date-time';
 import { setupLanguages } from './util/i18n';
 import './setup/assertions';
 import './setup/iframe';
@@ -67,6 +68,7 @@ afterEachTest(() => {
   window.scrollTo(0, 0);
   document.documentElement.setAttribute('lang', 'en');
   localStorage.clear();
+  restoreLuxon();
   testData.reset();
   mockLogin.reset();
   document.cookie = '';
