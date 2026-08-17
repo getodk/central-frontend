@@ -5,7 +5,6 @@ import { expect, should } from 'chai';
 import '../src/styles';
 
 import testData from './data';
-import { loadAsyncRouteComponents } from './util/load-async';
 import { mockLogin } from './util/session';
 import { setupLanguages } from './util/i18n';
 import './assertions';
@@ -21,10 +20,6 @@ window.expect = expect;
 
 ////////////////////////////////////////////////////////////////////////////////
 // HOOKS
-
-// Even if a route is lazy-loaded, load() will need synchronous access to the
-// async components associated with the route.
-beforeAll(loadAsyncRouteComponents);
 
 enableAutoUnmount(afterEach);
 afterEach(() => {
