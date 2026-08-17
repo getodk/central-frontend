@@ -39,6 +39,7 @@ export interface TestFormOptions {
   readonly geolocationProvider: GeolocationProvider;
   readonly editInstance: string | null;
   readonly instanceDefaults: InstanceDefaults;
+  readonly lastSavedXml: string | undefined;
 }
 
 const defaultConfig = {
@@ -69,6 +70,7 @@ export const initializeTestForm = async (
         form: {
           ...defaultConfig,
           fetchFormAttachment: options.resourceService.handleRequest,
+          lastSavedXml: options.lastSavedXml,
           missingResourceBehavior: options.missingResourceBehavior,
         },
         instance: {

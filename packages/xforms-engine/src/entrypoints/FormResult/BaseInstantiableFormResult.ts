@@ -3,7 +3,10 @@ import type {
   EditFormInstance,
   EditFormInstanceInput,
 } from '../../client/form/EditFormInstance.ts';
-import type { FormInstanceConfig } from '../../client/form/FormInstanceConfig.ts';
+import type {
+  FormInstanceConfig,
+  ResetFormInstanceConfig,
+} from '../../client/form/FormInstanceConfig.ts';
 import type { FormResultStatus } from '../../client/form/LoadFormResult.ts';
 import type { ResetFormInstance } from '../../client/form/ResetFormInstance.ts';
 import type {
@@ -45,7 +48,6 @@ export abstract class BaseInstantiableFormResult<
 
   constructor(options: BaseInstantiableFormResultOptions<Status>) {
     const { status, warnings, error, instanceOptions } = options;
-
     super({
       status,
       warnings,
@@ -63,10 +65,14 @@ export abstract class BaseInstantiableFormResult<
       });
     };
 
-    this.resetInstance = (instanceConfig: FormInstanceConfig = {}) => {
+    this.resetInstance = (instanceConfig: ResetFormInstanceConfig = {}) => {
       instanceOptions.scope.dispose();
       instanceOptions.scope = createPotentiallyClientOwnedReactiveScope();
-      return this.createInstance(instanceConfig);
+      if (instanceConfig.lastSavedXml) {
+        instanceOptions.secondaryInstances.resetLastSaved(instanceConfig.lastSavedXml);
+      }
+      const instance = this.createInstance(instanceConfig);
+      return instance;
     };
 
     this.editInstance = async (

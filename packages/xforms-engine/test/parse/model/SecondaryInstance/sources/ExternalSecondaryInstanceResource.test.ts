@@ -29,6 +29,7 @@ describe('ExternalSecondaryInstanceResource', () => {
     return await ExternalSecondaryInstanceResource.load('secondary', resourceUrl, {
       fetchResource: () => Promise.resolve(response),
       missingResourceBehavior: MISSING_RESOURCE_BEHAVIOR.BLANK,
+      lastSavedXml: undefined,
     });
   };
 

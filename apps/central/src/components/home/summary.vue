@@ -14,11 +14,9 @@ except according to the terms contained in the LICENSE file.
     <div id="home-summary">
       <home-summary-item icon="archive">
         <template #header>
-          <template v-if="!projects.initiallyLoading">
+          <spinner v-if="projects.initiallyLoading" inline/>
+          <template v-else-if="projects.dataExists">
             {{ $n(projects.length, 'default') }}
-          </template>
-          <template v-else>
-            <spinner inline/>
           </template>
         </template>
         <template #subheader>{{ $tc('plural.project', projects.length ?? 0) }}</template>
@@ -26,11 +24,9 @@ except according to the terms contained in the LICENSE file.
       </home-summary-item>
       <home-summary-item v-if="currentUser.can('user.list')" to="/users" icon="user-circle">
         <template #header>
-          <template v-if="!users.initiallyLoading">
+          <spinner v-if="users.initiallyLoading" inline/>
+          <template v-else-if="users.dataExists">
             {{ $n(users.length, 'default') }}
-          </template>
-          <template v-else>
-            <spinner inline/>
           </template>
         </template>
         <template #subheader>{{ $tc('plural.user', users.length ?? 0) }}</template>

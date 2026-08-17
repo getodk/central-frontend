@@ -207,7 +207,7 @@ describe('Markdown', () => {
     describe('ordered lists with a single item', () => {
       it('ignores single child at the top level', async () => {
         const given = '3. third question';
-        const expected = [{ value: '3. third question' }];
+        const expected = [{ value: '3. ' }, { value: 'third question' }];
         await run(given, expected);
       });
 
@@ -540,6 +540,21 @@ double line break`;
             },
             { value: '!' },
           ],
+        },
+        { value: ' Welcome.' },
+      ]);
+    });
+
+    it('allows for outputs inside ordered lists with a single item', async () => {
+      const scenario = await outputScenario('21. <output value=" /data/name " /> Welcome.');
+      scenario.next('/data/name');
+      scenario.answer('fred');
+      const label = scenario.getQuestionLabel({ assertCurrentReference: '/data/name' }).formatted;
+      expect(label).toMatchObject([
+        { value: '21. ' },
+        {
+          elementName: 'span',
+          children: [{ value: 'fred' }],
         },
         { value: ' Welcome.' },
       ]);
