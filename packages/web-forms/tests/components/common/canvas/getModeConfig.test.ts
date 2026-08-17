@@ -2,7 +2,7 @@ import {
   getModeConfig,
   MODES,
   VALID_CANVAS_MODES,
-} from '@/components/common/canvas/getModeConfig.ts';
+} from '@getodk/web-forms/components/common/canvas/getModeConfig.ts';
 import { describe, it, expect } from 'vitest';
 
 describe('getModeConfig', () => {

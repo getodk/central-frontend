@@ -1,15 +1,15 @@
 <script lang="ts" setup>
-import ColumnarAppearance from '@/components/appearances/ColumnarAppearance.vue';
-import FieldListTable from '@/components/appearances/FieldListTable.vue';
-import UnsupportedAppearance from '@/components/appearances/UnsupportedAppearance.vue';
-import LikertWidget from '@/components/common/LikertWidget.vue';
-import AsyncMap from '@/components/common/map/AsyncMap.vue';
-import RadioButton from '@/components/common/RadioButton.vue';
-import SearchableDropdown from '@/components/common/SearchableDropdown.vue';
-import ValidationMessage from '@/components/common/ValidationMessage.vue';
-import ControlText from '@/components/form-elements/ControlText.vue';
+import ColumnarAppearance from '@getodk/web-forms/components/appearances/ColumnarAppearance.vue';
+import FieldListTable from '@getodk/web-forms/components/appearances/FieldListTable.vue';
+import UnsupportedAppearance from '@getodk/web-forms/components/appearances/UnsupportedAppearance.vue';
+import LikertWidget from '@getodk/web-forms/components/common/LikertWidget.vue';
+import AsyncMap from '@getodk/web-forms/components/common/map/AsyncMap.vue';
+import RadioButton from '@getodk/web-forms/components/common/RadioButton.vue';
+import SearchableDropdown from '@getodk/web-forms/components/common/SearchableDropdown.vue';
+import ValidationMessage from '@getodk/web-forms/components/common/ValidationMessage.vue';
+import ControlText from '@getodk/web-forms/components/form-elements/ControlText.vue';
 import type { SelectNode } from '@getodk/xforms-engine';
-import { MODES } from '@/components/common/map/getModeConfig.ts';
+import { MODES } from '@getodk/web-forms/components/common/map/getModeConfig.ts';
 import { computed, ref, watchEffect } from 'vue';
 
 interface Select1ControlProps {

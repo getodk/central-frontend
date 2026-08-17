@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { getStylePropertyMap, getUrl, purify } from '@/lib/format/markdown';
+import { getStylePropertyMap, getUrl, purify } from '@getodk/web-forms/lib/format/markdown';
 import type { MarkdownNode } from '@getodk/xforms-engine';
 
 interface MarkdownProps {

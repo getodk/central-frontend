@@ -1,6 +1,6 @@
 import { webFormsPlugin } from './web-forms-plugin';
 import OdkWebForm from './components/OdkWebForm.vue';
-import { POST_SUBMIT__NEW_INSTANCE } from '@/lib/constants/control-flow.ts';
+import { POST_SUBMIT__NEW_INSTANCE } from './lib/constants/control-flow.ts';
 
 // Applies styles when Web Forms is used as a plugin.
 import '@fontsource/roboto/300.css';

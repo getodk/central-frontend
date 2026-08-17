@@ -83,6 +83,15 @@ export default defineConfig(({ mode }) => ({
       dropMessageCompiler: true
     })
   ],
+  resolve: {
+    alias: {
+      '@getodk/web-forms': resolve(__dirname, './packages/web-forms/src'),
+      '@getodk/xforms-engine': resolve(__dirname, './packages/xforms-engine/src'),
+      '@getodk/xpath': resolve(__dirname, './packages/xpath/src'),
+      '@getodk/common': resolve(__dirname, './packages/common/src'),
+      'primevue/menuitem': 'primevue/menu',
+    }
+  },
   define: {
     __WEB_FORMS_VERSION__: JSON.stringify(webFormsPackage.version)
   },

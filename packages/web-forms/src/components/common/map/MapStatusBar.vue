@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import IconSVG from '@/components/common/IconSVG.vue';
+import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
 import {
 	SINGLE_FEATURE_TYPES,
 	type SingleFeatureType,
-} from '@/components/common/map/getModeConfig.ts';
-import { isCoordsEqual } from '@/components/common/map/vertex-geometry.ts';
-import { truncateGeoCoordinates, truncateDecimals } from '@/lib/format/truncate-decimals.ts';
+} from '@getodk/web-forms/components/common/map/getModeConfig.ts';
+import { isCoordsEqual } from '@getodk/web-forms/components/common/map/vertex-geometry.ts';
+import { truncateGeoCoordinates, truncateDecimals } from '@getodk/web-forms/lib/format/truncate-decimals.ts';
 import type { Feature, LineString, Point, Polygon, Position } from 'geojson';
 import type { Coordinate } from 'ol/coordinate';
 import { toLonLat } from 'ol/proj';
 import Button from 'primevue/button';
 import ProgressSpinner from 'primevue/progressspinner';
-import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
-import type { Translate } from '@/lib/locale/useLocale.ts';
+import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import { computed, inject } from 'vue';
 
 interface StatusDetails {

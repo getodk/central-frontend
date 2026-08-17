@@ -112,6 +112,8 @@ export default defineConfig(({ mode }) => {
         '@getodk/common/test-utils': resolvePath(__dirname, '../common/test-utils'),
         '@getodk/common/types': resolvePath(__dirname, '../common/types'),
         '@getodk/common': resolvePath(__dirname, '../common/src'),
+        '@getodk/xforms-engine': resolvePath(__dirname, '../xforms-engine/src'),
+        '@getodk/xpath': resolvePath(__dirname, '../xpath/src'),
       },
 
       // prettier-ignore

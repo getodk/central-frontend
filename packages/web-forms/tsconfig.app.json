@@ -28,7 +28,8 @@
       "@locales/*": ["./locales/*"],
       "@getodk/common/test-utils/*": ["../common/test-utils/*"],
       "@getodk/common/types/*": ["../common/types/*"],
-      "@getodk/common/*": ["../common/src/*"]
+      "@getodk/common/*": ["../common/src/*"],
+      "@getodk/web-forms/*": ["./src/*"]
     },
     "types": ["node"],
     "skipLibCheck": true,

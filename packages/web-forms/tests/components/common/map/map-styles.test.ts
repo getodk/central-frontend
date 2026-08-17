@@ -4,7 +4,7 @@ import {
   getSavedStyles,
   getSelectedStyles,
   getUnselectedStyles,
-} from '@/components/common/map/map-styles.ts';
+} from '@getodk/web-forms/components/common/map/map-styles.ts';
 import Feature from 'ol/Feature';
 import { LineString, MultiPoint, Point, Polygon } from 'ol/geom';
 import { Style } from 'ol/style';

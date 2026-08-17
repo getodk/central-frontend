@@ -1,18 +1,21 @@
-import { toGeoJsonCoordinateArray } from '@/components/common/map/geojson-parsers.ts';
+import { toGeoJsonCoordinateArray } from '@getodk/web-forms/components/common/map/geojson-parsers.ts';
 import {
   getModeConfig,
   type Mode,
   MODES,
   SINGLE_FEATURE_TYPES,
   type SingleFeatureType,
-} from '@/components/common/map/getModeConfig.ts';
-import { formatODKValue, isWebGLAvailable } from '@/components/common/map/map-helpers.ts';
+} from '@getodk/web-forms/components/common/map/getModeConfig.ts';
+import {
+  formatODKValue,
+  isWebGLAvailable,
+} from '@getodk/web-forms/components/common/map/map-helpers.ts';
 import {
   getDrawStyles,
   getSavedStyles,
   getSelectedStyles,
   getUnselectedStyles,
-} from '@/components/common/map/map-styles.ts';
+} from '@getodk/web-forms/components/common/map/map-styles.ts';
 import {
   FEATURE_ID_PROPERTY,
   IS_SELECTED_PROPERTY,
@@ -21,23 +24,23 @@ import {
   SELECTED_VERTEX_INDEX_PROPERTY,
   useMapFeatures,
   type UseMapFeatures,
-} from '@/components/common/map/useMapFeatures.ts';
+} from '@getodk/web-forms/components/common/map/useMapFeatures.ts';
 import {
   useMapInteractions,
   type UseMapInteractions,
-} from '@/components/common/map/useMapInteractions.ts';
+} from '@getodk/web-forms/components/common/map/useMapInteractions.ts';
 import {
   COORDINATE_LAYOUT_XYZM,
   DEFAULT_VIEW_CENTER,
   MIN_ZOOM,
   useMapViewControls,
   type UseMapViewControls,
-} from '@/components/common/map/useMapViewControls.ts';
+} from '@getodk/web-forms/components/common/map/useMapViewControls.ts';
 import {
   deleteVertexFromFeature,
   getVertexByIndex,
   updateVertexCoordinate,
-} from '@/components/common/map/vertex-geometry.ts';
+} from '@getodk/web-forms/components/common/map/vertex-geometry.ts';
 import type { Feature as GeoJsonFeature, FeatureCollection } from 'geojson';
 import { Map, View } from 'ol';
 import { Attribution, Zoom } from 'ol/control';
@@ -52,8 +55,8 @@ import { fromLonLat, get as getProjection } from 'ol/proj';
 import { OSM } from 'ol/source';
 import VectorSource from 'ol/source/Vector';
 import { shared as iconImageCache } from 'ol/style/IconImageCache';
-import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
-import type { Translate } from '@/lib/locale/useLocale.ts';
+import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import { inject, shallowRef, watch } from 'vue';
 
 export const STATES = {
