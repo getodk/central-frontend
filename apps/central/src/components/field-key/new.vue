@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
         <form @submit.prevent="submit">
           <form-group ref="displayNameRef" v-model.trim="displayName"
             :placeholder="$t('field.displayName')" required autocomplete="off"/>
-          <div v-if="state && actorProperties.dataExists && actorProperties.length > 0"
+          <div v-if="state && actorProperties.dataExists"
             class="field-key-set-properties">
             <actor-properties-upsert v-model:propertyValues="propertyValues" :create="true"
               :property-defs="actorProperties.data"/>
@@ -119,10 +119,13 @@ const propertyValues = ref(Object.create(null));
 const focusInput = () => { displayNameRef.value.focus(); };
 
 const submit = () => {
+  const data = { displayName: displayName.value };
+  if (Object.keys(propertyValues.value).length > 0)
+    data.properties = propertyValues.value;
   request({
     method: 'POST',
     url: apiPaths.fieldKeys(project.id),
-    data: { displayName: displayName.value, properties: propertyValues.value }
+    data
   })
     .then(({ data }) => {
       // Reset the form.
