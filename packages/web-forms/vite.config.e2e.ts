@@ -78,12 +78,13 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         '@getodk/common': resolve(__dirname, '../common/src'),
-        '@': fileURLToPath(new URL('./src', import.meta.url)),
-        '@locales': fileURLToPath(new URL('./locales', import.meta.url)),
+        '@getodk/xforms-engine': resolve(__dirname, '../xforms-engine/src'),
+        '@getodk/xpath': resolve(__dirname, '../xpath/src'),
+        '@getodk/web-forms': resolve(__dirname, './src'),
         'primevue/menuitem': 'primevue/menu',
         // With following lines, fonts byte array are copied into css file
         // Roboto fonts
-        './fonts': resolve('../../node_modules/@fontsource/roboto'),
+        // './fonts': resolve('../../node_modules/@fontsource/roboto'),
       },
     },
     css: {

@@ -83,7 +83,7 @@ export default defineConfig(({ mode }) => {
         'primevue/menuitem': 'primevue/menu',
         // With following lines, fonts byte array are copied into css file
         // Roboto fonts
-        './fonts': resolve('../../node_modules/@fontsource/roboto'),
+        // './fonts': resolve('../../node_modules/@fontsource/roboto'),
       },
     },
     build: {
