@@ -10,28 +10,28 @@ test.describe('Pagination', () => {
     });
 
     test('shows only the first input on load', async () => {
-      await formPage.text.expectOnlyLabels(['What is your name?']);
+      await formPage.text.expectVisibleLabelsToBe(['What is your name?']);
       await formPage.pagination.expectNavigation({ previous: false, next: true });
     });
 
     test('navigates forward and backward through every page', async () => {
       await formPage.pagination.clickNext();
-      await formPage.text.expectOnlyLabels(['What is your age?']);
+      await formPage.text.expectVisibleLabelsToBe(['What is your age?']);
       await formPage.pagination.expectNavigation({ previous: true, next: true });
 
       await formPage.pagination.clickNext();
-      await formPage.text.expectOnlyLabels(['Favorite color?']);
+      await formPage.text.expectVisibleLabelsToBe(['Favorite color?']);
 
       await formPage.pagination.clickNext();
-      await formPage.text.expectOnlyLabels(['Any comment?']);
+      await formPage.text.expectVisibleLabelsToBe(['Any comment?']);
       await formPage.pagination.expectNavigation({ previous: true, next: false });
 
       await formPage.pagination.clickPrevious();
-      await formPage.text.expectOnlyLabels(['Favorite color?']);
+      await formPage.text.expectVisibleLabelsToBe(['Favorite color?']);
 
       await formPage.pagination.clickPrevious();
       await formPage.pagination.clickPrevious();
-      await formPage.text.expectOnlyLabels(['What is your name?']);
+      await formPage.text.expectVisibleLabelsToBe(['What is your name?']);
       await formPage.pagination.expectNavigation({ previous: false, next: true });
     });
   });
@@ -45,7 +45,7 @@ test.describe('Pagination', () => {
       await expect(
         page.getByText('Person details (field-list = one page)', { exact: true })
       ).toBeVisible();
-      await formPage.text.expectOnlyLabels(['Name', 'Age', 'Email']);
+      await formPage.text.expectVisibleLabelsToBe(['Name', 'Age', 'Email']);
     });
 
     test('disables navigation buttons but renders footer because form has "pages" class', async () => {
@@ -61,16 +61,16 @@ test.describe('Pagination', () => {
     test('walks intro → child[1] → child[2]', async ({ page }) => {
       const wrapperLabel = page.getByText('Children (each iteration = one page)', { exact: true });
 
-      await formPage.text.expectOnlyLabels(['Intro question (own page)']);
+      await formPage.text.expectVisibleLabelsToBe(['Intro question (own page)']);
       await expect(wrapperLabel).toBeHidden();
       await formPage.pagination.expectNavigation({ previous: false, next: true });
 
       await formPage.pagination.clickNext();
       await expect(wrapperLabel).toBeVisible();
-      await formPage.text.expectOnlyLabels(['Child 1 name', 'Child 1 age', 'Child 1 sex']);
+      await formPage.text.expectVisibleLabelsToBe(['Child 1 name', 'Child 1 age', 'Child 1 sex']);
 
       await formPage.pagination.clickNext();
-      await formPage.text.expectOnlyLabels(['Child 2 name', 'Child 2 age', 'Child 2 sex']);
+      await formPage.text.expectVisibleLabelsToBe(['Child 2 name', 'Child 2 age', 'Child 2 sex']);
       await formPage.pagination.expectNavigation({ previous: true, next: false });
     });
 
@@ -91,19 +91,19 @@ test.describe('Pagination', () => {
     });
 
     test('walks intro → each repeat question on its own page', async () => {
-      await formPage.text.expectOnlyLabels(['Intro question (own page)']);
+      await formPage.text.expectVisibleLabelsToBe(['Intro question (own page)']);
 
       await formPage.pagination.clickNext();
-      await formPage.text.expectOnlyLabels(['Child 1 name']);
+      await formPage.text.expectVisibleLabelsToBe(['Child 1 name']);
 
       await formPage.pagination.clickNext();
-      await formPage.text.expectOnlyLabels(['Child 1 age']);
+      await formPage.text.expectVisibleLabelsToBe(['Child 1 age']);
 
       await formPage.pagination.clickNext();
-      await formPage.text.expectOnlyLabels(['Child 2 name']);
+      await formPage.text.expectVisibleLabelsToBe(['Child 2 name']);
 
       await formPage.pagination.clickNext();
-      await formPage.text.expectOnlyLabels(['Child 2 age']);
+      await formPage.text.expectVisibleLabelsToBe(['Child 2 age']);
       await formPage.pagination.expectNavigation({ previous: true, next: false });
     });
 
@@ -124,18 +124,18 @@ test.describe('Pagination', () => {
       await formPage.pagination.clickNext();
       await formPage.pagination.clickNext();
       await formPage.pagination.clickNext();
-      await formPage.text.expectOnlyLabels(['Child 2 age']);
+      await formPage.text.expectVisibleLabelsToBe(['Child 2 age']);
 
       await formPage.repeat.addInstance();
-      await formPage.text.expectOnlyLabels(['Child 3 name']);
+      await formPage.text.expectVisibleLabelsToBe(['Child 3 name']);
 
       await formPage.pagination.clickNext();
-      await formPage.text.expectOnlyLabels(['Child 3 age']);
+      await formPage.text.expectVisibleLabelsToBe(['Child 3 age']);
       await formPage.pagination.expectNavigation({ previous: true, next: false });
       await formPage.repeat.expectAddButtonVisible(true);
 
       await formPage.pagination.clickPrevious();
-      await formPage.text.expectOnlyLabels(['Child 3 name']);
+      await formPage.text.expectVisibleLabelsToBe(['Child 3 name']);
     });
   });
 
@@ -145,16 +145,16 @@ test.describe('Pagination', () => {
     });
 
     test('the empty repeat is its own page between intro and tail', async () => {
-      await formPage.text.expectOnlyLabels(['Intro question (own page)']);
+      await formPage.text.expectVisibleLabelsToBe(['Intro question (own page)']);
       await formPage.repeat.expectAddButtonVisible(false);
 
       await formPage.pagination.clickNext();
-      await formPage.text.expectOnlyLabels([]);
+      await formPage.text.expectVisibleLabelsToBe([]);
       await formPage.repeat.expectAddButtonVisible(true);
       await formPage.pagination.expectNavigation({ previous: true, next: true });
 
       await formPage.pagination.clickNext();
-      await formPage.text.expectOnlyLabels(['Tail question (own page)']);
+      await formPage.text.expectVisibleLabelsToBe(['Tail question (own page)']);
       await formPage.repeat.expectAddButtonVisible(false);
       await formPage.pagination.expectNavigation({ previous: true, next: false });
     });
@@ -164,15 +164,15 @@ test.describe('Pagination', () => {
       await formPage.repeat.addInstance();
 
       // Auto-advance: the empty-range page is replaced by the new instance's first question.
-      await formPage.text.expectOnlyLabels(['Child 1 name']);
+      await formPage.text.expectVisibleLabelsToBe(['Child 1 name']);
       await formPage.repeat.expectAddButtonVisible(false);
 
       await formPage.pagination.clickNext();
-      await formPage.text.expectOnlyLabels(['Child 1 age']);
+      await formPage.text.expectVisibleLabelsToBe(['Child 1 age']);
       await formPage.repeat.expectAddButtonVisible(true);
 
       await formPage.pagination.clickNext();
-      await formPage.text.expectOnlyLabels(['Tail question (own page)']);
+      await formPage.text.expectVisibleLabelsToBe(['Tail question (own page)']);
       await formPage.repeat.expectAddButtonVisible(false);
     });
   });
@@ -183,14 +183,17 @@ test.describe('Pagination', () => {
     });
 
     test('renders only the fields without relevance; navigation disabled', async () => {
-      await formPage.text.expectOnlyLabels(['Are you employed?', 'Any comments? (always shown)']);
+      await formPage.text.expectVisibleLabelsToBe([
+        'Are you employed?',
+        'Any comments? (always shown)',
+      ]);
       await formPage.pagination.expectNavigation({ previous: false, next: false });
     });
 
     test('selecting "Yes" reveals employer + job_title; nav stays disabled', async ({ page }) => {
       await page.getByLabel('Yes', { exact: true }).check();
 
-      await formPage.text.expectOnlyLabels([
+      await formPage.text.expectVisibleLabelsToBe([
         'Are you employed?',
         'Employer name (only if employed)',
         'Job title (only if employed)',
@@ -202,7 +205,7 @@ test.describe('Pagination', () => {
     test('selecting "No" reveals looking; employer + job_title hide', async ({ page }) => {
       await page.getByLabel('No', { exact: true }).check();
 
-      await formPage.text.expectOnlyLabels([
+      await formPage.text.expectVisibleLabelsToBe([
         'Are you employed?',
         'Are you looking for work? (only if not employed)',
         'Any comments? (always shown)',
@@ -216,7 +219,7 @@ test.describe('Pagination', () => {
     });
 
     test('renders one iteration per page and walks through both', async () => {
-      await formPage.text.expectOnlyLabels([
+      await formPage.text.expectVisibleLabelsToBe([
         'Visit 1 date',
         'Visit 1 temperature',
         'Visit 1 notes',
@@ -224,7 +227,7 @@ test.describe('Pagination', () => {
       await formPage.pagination.expectNavigation({ previous: false, next: true });
 
       await formPage.pagination.clickNext();
-      await formPage.text.expectOnlyLabels([
+      await formPage.text.expectVisibleLabelsToBe([
         'Visit 2 date',
         'Visit 2 temperature',
         'Visit 2 notes',
@@ -239,7 +242,7 @@ test.describe('Pagination', () => {
     });
 
     test('each household page shows its own questions and all of its members', async () => {
-      await formPage.text.expectOnlyLabels([
+      await formPage.text.expectVisibleLabelsToBe([
         'Household 1 name',
         'Member 1 name',
         'Member 1 age',
@@ -249,7 +252,11 @@ test.describe('Pagination', () => {
       await formPage.pagination.expectNavigation({ previous: false, next: true });
 
       await formPage.pagination.clickNext();
-      await formPage.text.expectOnlyLabels(['Household 2 name', 'Member 1 name', 'Member 1 age']);
+      await formPage.text.expectVisibleLabelsToBe([
+        'Household 2 name',
+        'Member 1 name',
+        'Member 1 age',
+      ]);
       await formPage.pagination.expectNavigation({ previous: true, next: false });
     });
 
@@ -265,7 +272,7 @@ test.describe('Pagination', () => {
     });
 
     test('adding a member stays on the same household page', async () => {
-      await formPage.text.expectOnlyLabels([
+      await formPage.text.expectVisibleLabelsToBe([
         'Household 1 name',
         'Member 1 name',
         'Member 1 age',
@@ -275,7 +282,7 @@ test.describe('Pagination', () => {
 
       await formPage.repeat.addInstance('Members');
 
-      await formPage.text.expectOnlyLabels([
+      await formPage.text.expectVisibleLabelsToBe([
         'Household 1 name',
         'Member 1 name',
         'Member 1 age',
@@ -289,11 +296,15 @@ test.describe('Pagination', () => {
 
     test('adding a household from the last page navigates to the new household page', async () => {
       await formPage.pagination.clickNext();
-      await formPage.text.expectOnlyLabels(['Household 2 name', 'Member 1 name', 'Member 1 age']);
+      await formPage.text.expectVisibleLabelsToBe([
+        'Household 2 name',
+        'Member 1 name',
+        'Member 1 age',
+      ]);
 
       await formPage.repeat.addInstance('Households');
 
-      await formPage.text.expectOnlyLabels(['Household 3 name']);
+      await formPage.text.expectVisibleLabelsToBe(['Household 3 name']);
       await formPage.pagination.expectNavigation({ previous: true, next: false });
       await formPage.repeat.expectAddButtonVisible(true, 'Households');
     });
@@ -305,23 +316,23 @@ test.describe('Pagination', () => {
     });
 
     test('walks one question per page across all N iterations then disables Next', async () => {
-      await formPage.text.expectOnlyLabels(['Member 1 name']);
+      await formPage.text.expectVisibleLabelsToBe(['Member 1 name']);
       await formPage.pagination.expectNavigation({ previous: false, next: true });
 
       await formPage.pagination.clickNext();
-      await formPage.text.expectOnlyLabels(['Member 1 age']);
+      await formPage.text.expectVisibleLabelsToBe(['Member 1 age']);
 
       await formPage.pagination.clickNext();
-      await formPage.text.expectOnlyLabels(['Member 2 name']);
+      await formPage.text.expectVisibleLabelsToBe(['Member 2 name']);
 
       await formPage.pagination.clickNext();
-      await formPage.text.expectOnlyLabels(['Member 2 age']);
+      await formPage.text.expectVisibleLabelsToBe(['Member 2 age']);
 
       await formPage.pagination.clickNext();
-      await formPage.text.expectOnlyLabels(['Member 3 name']);
+      await formPage.text.expectVisibleLabelsToBe(['Member 3 name']);
 
       await formPage.pagination.clickNext();
-      await formPage.text.expectOnlyLabels(['Member 3 age']);
+      await formPage.text.expectVisibleLabelsToBe(['Member 3 age']);
       await formPage.pagination.expectNavigation({ previous: true, next: false });
     });
 
@@ -333,7 +344,7 @@ test.describe('Pagination', () => {
       await formPage.pagination.clickNext();
       await formPage.pagination.clickNext();
       await formPage.pagination.clickNext();
-      await formPage.text.expectOnlyLabels(['Member 3 age']);
+      await formPage.text.expectVisibleLabelsToBe(['Member 3 age']);
       await formPage.repeat.expectAddButtonVisible(false);
     });
   });
