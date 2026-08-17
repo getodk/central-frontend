@@ -198,7 +198,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-##### Theme and layouts<br/>🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜⬜⬜ 40\%
+##### Theme and layouts<br/>🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜⬜ 50\%
 
   </summary>
   <br/>
@@ -206,7 +206,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
 | Feature <img width=250px/>                                                 | Progress |
 | -------------------------------------------------------------------------- | :------: |
 | [grid](https://github.com/getodk/web-forms/issues/16)                      |          |
-| [pages](https://github.com/getodk/web-forms/issues/254)                    |          |
+| [pages](https://github.com/getodk/web-forms/issues/254)                    |    ✅    |
 | [logo](https://github.com/getodk/web-forms/issues/353)                     |          |
 | [application translations](https://github.com/getodk/web-forms/issues/332) |    ✅    |
 | [theme color](https://github.com/getodk/web-forms/issues/43)               |          |
