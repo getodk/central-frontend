@@ -82,7 +82,9 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         external,
         onwarn(warning, warn) {
-          if (warning.code === 'EVAL') return; // ignore eval warning for tree-sitter
+          if (warning.code === 'EVAL' && warning.id?.includes('/xpath/dist/expressionParser')) {
+            return; // ignore eval warning for tree-sitter
+          }
           warn(warning);
         },
       },

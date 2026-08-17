@@ -14,12 +14,7 @@ import type * as ODKXPathMainEntrypoint from './index.ts';
  * - - -
  */
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import xpathLanguage from '@getodk/tree-sitter-xpath/dist/tree-sitter-xpath.wasm?url';
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import webTreeSitter from 'web-tree-sitter/tree-sitter.wasm?url';
 import { ExpressionParser } from './static/grammar/ExpressionParser.ts';
 

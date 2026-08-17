@@ -67,25 +67,14 @@ if (webkitFlakinessMitigations) {
 }
 
 export default defineConfig(({ mode }) => {
-  const isDev = mode === 'development';
-  const external = ['vue'];
-  const globals = { vue: 'Vue' };
-  const extraPlugins: PluginOption[] = [];
-  const lib: LibraryOptions = {
-    formats: ['es'],
-    entry: resolve(__dirname, 'src/index.ts'),
-    name: 'OdkWebForms',
-    fileName: 'index',
-  };
-
-  const versionSuffix = buildNumber && isDev ? ` - ${buildNumber}` : '';
+  const versionSuffix = buildNumber && mode === 'development' ? ` - ${buildNumber}` : '';
 
   return {
     define: {
       __WEB_FORMS_VERSION__: `"v${version}${versionSuffix}"`,
     },
     base: './',
-    plugins: [vue(), vueJsx(), cssInjectedByJsPlugin(), ...extraPlugins],
+    plugins: [vue(), vueJsx(), cssInjectedByJsPlugin()],
     resolve: {
       alias: {
         '@getodk/common': resolve(__dirname, '../common/src'),
@@ -119,15 +108,19 @@ export default defineConfig(({ mode }) => {
 
         // Per Vite docs
       },
-      lib,
+      lib: {
+        formats: ['es'],
+        entry: resolve(__dirname, 'src/index.ts'),
+        name: 'OdkWebForms',
+        fileName: 'index',
+      },
       rollupOptions: {
-        external,
+        external: ['vue'],
         onwarn(warning, warn) {
-          if (warning.code === 'EVAL') return; // ignore eval warning for tree-sitter
+          if (warning.code === 'EVAL' && warning.id?.endsWith('xforms-engine/dist/index.js')) {
+            return; // ignore eval warning for tree-sitter
+          }
           warn(warning);
-        },
-        output: {
-          globals,
         },
       },
     },

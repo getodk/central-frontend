@@ -91,7 +91,9 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         external: ['temporal-polyfill'],
         onwarn(warning, warn) {
-          if (warning.code === 'EVAL') return; // ignore eval warning for tree-sitter
+          if (warning.code === 'EVAL' && warning.id?.endsWith('web-tree-sitter/tree-sitter.js')) {
+            return; // ignore eval warning for tree-sitter
+          }
           warn(warning);
         },
       },

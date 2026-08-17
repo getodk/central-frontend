@@ -105,7 +105,9 @@ export default defineConfig(({ mode }) => ({
         }
       },
       onwarn(warning, warn) {
-        if (warning.code === 'EVAL') return; // ignore eval warning for tree-sitter
+        if (warning.code === 'EVAL' && warning.id?.includes('dist/index')) {
+          return; // ignore eval warning for tree-sitter
+        }
         warn(warning);
       },
     },
