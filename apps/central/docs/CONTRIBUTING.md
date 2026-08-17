@@ -325,6 +325,11 @@ Most Backend resources have a `createdAt` property. To generate an object whose 
 
 To learn more about stores and views, see [`/apps/central/test/data/data-store.js`](/apps/central/test/data/data-store.js).
 
+#### Debugging Tests
+
+Vitest has a [guide](https://vitest.dev/guide/debugging) to debugging tests. Another option in addition to the ones described there is to run `npm run test:debug`. This will open a browser to run tests: the browser will not be headless. If you attach a component to the document body, you will be able to see it in the browser. To do so, specify `attachTo: document.body` to `mount()`.
+
+You can pause `npm run test:debug` before a particular line of code by calling `await breakpoint()` before the line. In the browser console, call `breakpoint.next()` to step past the breakpoint. You can call `await breakpoint()` before multiple lines.
 
 #### E2E Tests
 
