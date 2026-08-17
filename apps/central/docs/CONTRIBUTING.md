@@ -296,7 +296,7 @@ Our tests use a number of external packages:
 - Mocha, a test framework
 - Chai, for assertions
 - Sinon.JS, for spies and stubs
-- Faker, to generate test data
+- [Faker](https://www.npmjs.com/package/@faker-js/faker), to generate test data
 - Vue Test Utils, to test Vue components
 
 `npm run test` runs [`/apps/central/test/index.js`](/apps/central/test/index.js), which mocks global utilities and sets up Mocha hooks.
@@ -317,7 +317,7 @@ it.only('does something', () => {
 
 #### Test Data
 
-We generate and store test data specific to ODK Central using the [`testData`](/apps/central/test/data/index.js) object, which uses Faker. `testData` will persist data until the end of a test and can be thought of as a mock of ODK Central Backend and its database.
+We generate and store test data specific to ODK Central using the [`testData`](/apps/central/test/data/index.js) object, which uses [Faker](https://www.npmjs.com/package/@faker-js/faker). `testData` will persist data until the end of a test and can be thought of as a mock of ODK Central Backend and its database.
 
 `testData` defines a "store" for each Backend resource. For example, `testData.extendedProjects` is a store that generates and stores projects. A store can also be associated with one or more "views," each of which represents a way to format the data and will transform the data in the store. For example, `testData.extendedProjects` is the canonical store of projects, and the objects it generates have extended metadata properties; `testData.standardProjects` is a view onto that store and transforms the objects in the store by removing their extended metadata properties.
 
