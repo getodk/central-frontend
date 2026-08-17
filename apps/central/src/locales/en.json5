@@ -196,6 +196,7 @@
   },
   "action": {
     "add": "Add",
+    "apply": "Apply",
     "cancel": "Cancel",
     "clear": "Clear",
     "close": "Close",
@@ -338,9 +339,9 @@
     "formAttachments": "Form Attachments",
     "project": "Project",
     "projects": "Projects",
-    // This is a data property of an Entity.
+    // This is a data property of an Entity or an Actor.
     "property": "Property",
-    // This refers to the data properties of an Entity.
+    // This refers to the data properties of an Entity or Actor.
     "properties": "Properties",
     "publicLink": "Public Access Link",
     "user": "User",
@@ -423,6 +424,7 @@
     "conflictsCount": "{count} conflict | {count} conflicts"
   },
   "common": {
+    "all": "All",
     // This is a title shown above a section of the page.
     "activity": "Activity",
     // This is shown in a dropdown that allows the user to filter to only show
