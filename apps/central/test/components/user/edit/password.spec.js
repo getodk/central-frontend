@@ -51,6 +51,10 @@ const haveIbeenPwnedResponse = password => {
           '01010F6D71D3277A8E9767BB7C695A3904E:3',
           '0113AE28B46F0D0ABCE49F128E2D218BA23:4',
         ];
+      case 'pwnedPassword':
+        return [
+          '06B58FE7510B4A31E413F9A64A1C1A747C8:999999',
+        ];
       default: throw new Error(`No haveibeenpwned API response defined for password '${password}'`);
     }
   })();
@@ -58,7 +62,7 @@ const haveIbeenPwnedResponse = password => {
   return () => hashes.join('\r\n');
 };
 
-describe('UserEditPassword', () => {
+describe.only('UserEditPassword', () => {
   beforeEach(mockLogin);
 
   it('resets the form if the route changes', () => {
@@ -176,6 +180,59 @@ describe('UserEditPassword', () => {
         .respondWithData(haveIbeenPwnedResponse('testPasswordY'))
         .respondWithSuccess());
   });
+
+  it.only('should display an error if password included in breach', () =>
+    mockHttp()
+      .mount(UserEditPassword, mountOptions())
+      .request(async (component) => {
+        await submit(component, { tooShort: true });
+        await component.get('#user-edit-password-new-password').setValue('pwnedPassword');
+        await component.get('#user-edit-password-confirm').setValue('pwnedPassword');
+        return component.get('form').trigger('submit');
+      })
+      .beforeAnyResponse(component => {
+        const formGroups = component.findAllComponents(FormGroup);
+        formGroups.length.should.equal(3);
+        formGroups[1].props().hasError.should.be.false;
+      })
+      .respondWithData(haveIbeenPwnedResponse('pwnedPassword'))
+      .afterResponses(app => {
+        const formGroups = app.findAllComponents(FormGroup);
+        formGroups.length.should.equal(3);
+        const formGroup = formGroups[1];
+        formGroup.props().hasError.should.be.true;
+        formGroup.find('.collapsible-error').exists().should.be.true;
+      }));
+
+  if('should allow user to continue if password breach check returns 500', () =>
+    mockHttp()
+      .mount(UserEditPassword, mountOptions())
+      .request(submit)
+      .respond(() => ({ status: 500 }))
+      .respondWithSuccess()
+      .testRequests([
+        haveIbeenPwnedRequest('testPasswordY'),
+        {
+          method: 'PUT',
+          url: '/v1/users/1/password',
+          data: { old: 'testPasswordX', new: 'testPasswordY' }
+        },
+      ]));
+
+  if('should allow user to continue if password breach check times out', () =>
+    mockHttp()
+      .mount(UserEditPassword, mountOptions())
+      .request(submit)
+      .respondNever()
+      .respondWithSuccess()
+      .testRequests([
+        haveIbeenPwnedRequest('testPasswordY'),
+        {
+          method: 'PUT',
+          url: '/v1/users/1/password',
+          data: { old: 'testPasswordX', new: 'testPasswordY' }
+        },
+      ]));
 
   it('sends the correct request', () =>
     mockHttp()
