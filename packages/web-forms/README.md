@@ -405,8 +405,6 @@ npm run dev -w=packages/web-forms
 
 Individual test environments, and their corresponding watch modes, also have separate commands which can be found in [`package.json`](./package.json).
 
-Upload XLSForm and XForm functionality in [`demo`](./src/demo/) app and in dev mode depends on [XLSForm-online](https://github.com/getodk/xlsform-online). Run the xlsform-online locally. By default it runs on port 8000, if you are running it on another port then you should update the [`config`](./src/demo/config.json) file.
-
 ### Project Structure
 
 ```
@@ -414,13 +412,12 @@ web-forms/
 ├── public/                   # Static assets (e.g., favicon.ico)
 ├── src/
 │   ├── assets/
-│   │   ├── images/           # Web Forms and Demo page images
-│   │   ├── styles/           # Web Forms and Demo page styles
+│   │   ├── images/           # Web Forms images
+│   │   ├── styles/           # Web Forms styles
 │   ├── components/           # UI components
 │   │   ├── form-elements/    # Form elements or controllers (question types, hints, labels, inputs)
 │   │   ├── form-layout/      # Form layout and rendering (e.g., form panel, groups, repeats, form error classes)
 │   │   ├── common/           # Reusable smaller components (e.g., icon, image, checkbox components)
-│   ├── demo/                 # Demo page
 │   ├── lib/                  # Utilities
 │   ├── index.ts
 │   ├── web-forms-plugin.ts   # Vue plugin

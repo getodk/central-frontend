@@ -63,10 +63,9 @@ if (webkitFlakinessMitigations) {
 }
 
 export default defineConfig(({ mode }) => {
-  const isVueBundled = mode === 'demo';
   const isDev = mode === 'development';
 
-  const versionSuffix = buildNumber && (isVueBundled || isDev) ? ` - ${buildNumber}` : '';
+  const versionSuffix = buildNumber && isDev ? ` - ${buildNumber}` : '';
 
   return {
     define: {
