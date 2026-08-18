@@ -195,6 +195,7 @@
     }
   },
   "action": {
+    "add": "Add",
     "cancel": "Cancel",
     "clear": "Clear",
     "close": "Close",

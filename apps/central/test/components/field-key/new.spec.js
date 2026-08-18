@@ -71,6 +71,97 @@ describe('FieldKeyNew', () => {
       .respondWithProblem();
   });
 
+  it('does not send properties when no property values are filled in', () => {
+    testData.extendedProjects.createPast(1);
+    testData.actorProperties.createPast(1, { name: 'prop1' });
+    return mockHttp()
+      .mount(FieldKeyNew, mountOptions())
+      .request(async (modal) => {
+        await modal.get('input').setValue('My App User');
+        return modal.get('form').trigger('submit');
+      })
+      .beforeEachResponse((_, { data }) => {
+        data.should.not.have.property('properties');
+      })
+      .respondWithProblem();
+  });
+
+  it('resets the form after the modal is hidden', async () => {
+    testData.extendedProjects.createPast(1);
+    const modal = mount(FieldKeyNew, mountOptions());
+    await modal.get('input').setValue('My App User');
+    await modal.setProps({ state: false });
+    await modal.setProps({ state: true });
+    modal.get('input').element.value.should.equal('');
+  });
+
+  it('resets property values after the modal is hidden', async () => {
+    testData.extendedProjects.createPast(1);
+    testData.actorProperties.createPast(1, { name: 'prop1' });
+    const modal = mount(FieldKeyNew, mountOptions());
+    await modal.get('textarea').setValue('some value');
+    await modal.setProps({ state: false });
+    await modal.setProps({ state: true });
+    modal.get('textarea').element.value.should.equal('');
+  });
+
+  it('resets property values after Create another is clicked', () => {
+    testData.extendedProjects.createPast(1);
+    testData.actorProperties.createPast(1, { name: 'prop1' });
+    return mockHttp()
+      .mount(FieldKeyNew, mountOptions())
+      .request(async (modal) => {
+        await modal.get('input').setValue('My App User');
+        await modal.get('textarea').setValue('some value');
+        return modal.get('form').trigger('submit');
+      })
+      .respondWithData(() => testData.standardFieldKeys.createNew({ displayName: 'My App User' }))
+      .afterResponse(async (modal) => {
+        await modal.get('.btn-link').trigger('click');
+        modal.get('textarea').element.value.should.equal('');
+      });
+  });
+
+  describe('adding a property inline', () => {
+    it('shows the new property row after adding a property', () => {
+      testData.extendedProjects.createPast(1);
+      return mockHttp()
+        .mount(FieldKeyNew, mountOptions())
+        .request(async (modal) => {
+          await modal.get('.add-property-link').trigger('click');
+          await modal.get('.actor-properties-new input').setValue('region');
+          return modal.get('.actor-properties-new form').trigger('submit');
+        })
+        .respondWithSuccess()
+        .afterResponse((modal) => {
+          modal.findAll('textarea').length.should.equal(1);
+          modal.get('.entity-update-row label').text().should.include('region');
+        });
+    });
+
+    it('includes a newly added property value in the create request', () => {
+      testData.extendedProjects.createPast(1);
+      return mockHttp()
+        .mount(FieldKeyNew, mountOptions())
+        .request(async (modal) => {
+          await modal.get('.add-property-link').trigger('click');
+          await modal.get('.actor-properties-new input').setValue('region');
+          return modal.get('.actor-properties-new form').trigger('submit');
+        })
+        .respondWithSuccess()
+        .complete()
+        .request(async (modal) => {
+          await modal.get('input').setValue('My App User');
+          await modal.get('textarea').setValue('north');
+          return modal.get('form').trigger('submit');
+        })
+        .beforeEachResponse((_, { data }) => {
+          data.should.eql({ displayName: 'My App User', properties: { region: 'north' } });
+        })
+        .respondWithProblem();
+    });
+  });
+
   describe('after a successful response', () => {
     beforeEach(() => {
       testData.extendedProjects.createPast(1, { appUsers: 1 });
