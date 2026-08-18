@@ -1,5 +1,5 @@
 <template>
-  <dropdown ref="dropdownEl" id="custom-props-filter" tag="div"
+  <dropdown id="custom-props-filter" ref="dropdownEl" tag="div"
     class="custom-props-filter form-group"
     placement="bottom-start" :close-on-menu-click="false"
     @show="onShow">
@@ -15,7 +15,7 @@
       <li class="filter-row">
         <div class="form-group">
           <select v-model="pendingProperty" class="form-control property-select"
-            :aria-label="$t('resource.property')">
+            :aria-label="$t('resource.property')" @change="pendingValue = ''">
             <option value="" disabled>{{ $t('resource.property') }}</option>
             <option v-for="p of actorProperties" :key="p.name" :value="p.name">
               {{ p.name }}
@@ -49,7 +49,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import Dropdown from './dropdown.vue';
@@ -95,8 +95,7 @@ const availableValues = computed(() => {
   return [...values].sort();
 });
 
-// When the property changes, reset the value selection
-watch(pendingProperty, () => { pendingValue.value = ''; });
+
 
 // Badge text shown on the trigger button
 const displayValue = computed(() => {
