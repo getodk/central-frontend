@@ -16,7 +16,7 @@
     </form>
     <a v-else href="#" class="add-property-link"
       @click.prevent="showForm = true; nextTick(() => nameGroup.focus())">
-      {{ $t('addProperty') }}
+      <span class="icon-plus-circle"></span>{{ $t('addProperty') }}
     </a>
   </div>
 </template>
@@ -93,13 +93,13 @@ defineExpose({ reset });
 <i18n lang="json5">
 {
   "en": {
-    "addProperty": "+ Add Property",
+    "addProperty": "Add Property",
+    // @transifexKey component.ProjectCustomPropertiesNew.newPropertyName
     "newPropertyName": "New property name",
+    // @transifexKey component.ProjectCustomPropertiesNew.problem
     "problem": {
-      "409_3": "A property already exists in this project with the name \"{propertyName}\"."
-    },
-    "action": {
-      "add": "Add"
+      "409_3": "A custom property already exists in this project with the name of \"{propertyName}\"."
+
     }
   }
 }

@@ -357,6 +357,10 @@
     }
   },
   "action": {
+    "add": {
+      "string": "Add",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "cancel": {
       "string": "Cancel",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -1231,21 +1235,7 @@
     },
     "ActorPropertiesNew": {
       "addProperty": {
-        "string": "+ Add Property"
-      },
-      "newPropertyName": {
-        "string": "New property name"
-      },
-      "problem": {
-        "409_3": {
-          "string": "A property already exists in this project with the name \"{propertyName}\"."
-        }
-      },
-      "action": {
-        "add": {
-          "string": "Add",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
+        "string": "Add Property"
       }
     },
     "ActorPropertiesUpsert": {
