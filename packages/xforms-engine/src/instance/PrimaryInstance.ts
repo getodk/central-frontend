@@ -157,6 +157,7 @@ export class PrimaryInstance<
   readonly appearances = null;
   readonly nodeOptions = null;
   readonly classes: BodyClassList;
+  readonly isPaginated: boolean;
   readonly root: Root;
   readonly currentState: MaterializedChildren<CurrentState<PrimaryInstanceStateSpec>, Root>;
   readonly validationState: AncestorNodeValidationState;
@@ -216,6 +217,7 @@ export class PrimaryInstance<
 
     this.evaluator = evaluator;
     this.classes = definition.classes;
+    this.isPaginated = definition.classes.pages;
 
     const childrenState = createChildrenState<this, Root>(this);
     this.attributeState = createAttributeState(this.scope);

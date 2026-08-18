@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa">
+  <h:head>
+    <h:title>16 Repeat with fixed count (jr:count + noAddRemove)</h:title>
+    <model>
+      <instance>
+        <data id="pg_16_repeat_fixed_count">
+          <num_members/>
+          <member jr:template="">
+            <mname/>
+            <mage/>
+          </member>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <bind nodeset="/data/num_members" type="int" calculate="3"/>
+      <bind nodeset="/data/member/mname" type="string"/>
+      <bind nodeset="/data/member/mage" type="int"/>
+      <bind nodeset="/data/meta/instanceID" type="string"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <group ref="/data/member">
+      <label>Members list</label>
+      <repeat nodeset="/data/member" jr:count="/data/num_members" jr:noAddRemove="true()">
+        <input ref="/data/member/mname"><label>Member <output value="position(..)"/> name</label></input>
+        <input ref="/data/member/mage"><label>Member <output value="position(..)"/> age</label></input>
+      </repeat>
+    </group>
+  </h:body>
+</h:html>

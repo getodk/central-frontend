@@ -67,7 +67,7 @@ const menuItems = computed((): MenuItem[] | undefined => {
 </script>
 <template>
 	<FormPanel
-		v-if="instance.currentState.hasRelevantBodyNodes"
+		v-if="instance.currentState.hasVisibleBodyNodes"
 		:title="label.literal"
 		:title-formatted="label.formatted"
 		:menu-items="menuItems"

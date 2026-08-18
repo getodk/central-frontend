@@ -9,6 +9,11 @@ export class RepeatControl {
     this.page = page;
   }
 
+  private addButton(label?: string) {
+    const name = label == null ? 'Add' : `Add ${label}`;
+    return this.page.getByRole('button', { name });
+  }
+
   async getInstancesHeader(): Promise<Locator[]> {
     return this.page.locator(`${this.SELECTOR_INSTANCE} ${this.SELECTOR_HEADER}`).all();
   }
@@ -20,11 +25,18 @@ export class RepeatControl {
     await expect(count).toBeVisible();
   }
 
-  async addInstance(buttonLabel: string) {
-    const button = this.page
-      .locator(`${this.SELECTOR_INSTANCE} + button`)
-      .getByText(buttonLabel, { exact: true });
+  async addInstance(label?: string) {
+    const button = this.addButton(label);
     await expect(button).toBeVisible();
     await button.click();
+  }
+
+  async expectAddButtonVisible(visible: boolean, label?: string) {
+    if (visible) {
+      await expect(this.addButton(label)).toBeVisible();
+      return;
+    }
+
+    await expect(this.addButton(label)).toHaveCount(0);
   }
 }

@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml">
+  <h:head>
+    <h:title>03 Field-list group</h:title>
+    <model>
+      <instance>
+        <data id="pg_03_fieldlist_group">
+          <person>
+            <name/>
+            <age/>
+            <email/>
+          </person>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <bind nodeset="/data/person/name" type="string"/>
+      <bind nodeset="/data/person/age" type="int"/>
+      <bind nodeset="/data/person/email" type="string"/>
+      <bind nodeset="/data/meta/instanceID" type="string"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <group ref="/data/person" appearance="field-list">
+      <label>Person details (field-list = one page)</label>
+      <input ref="/data/person/name"><label>Name</label></input>
+      <input ref="/data/person/age"><label>Age</label></input>
+      <input ref="/data/person/email"><label>Email</label></input>
+    </group>
+  </h:body>
+</h:html>
