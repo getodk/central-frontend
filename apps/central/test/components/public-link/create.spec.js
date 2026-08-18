@@ -46,6 +46,15 @@ describe('PublicLinkCreate', () => {
     modal.get('input[type="checkbox"]').element.checked.should.be.false;
   });
 
+  it('resets property values after the modal is hidden', async () => {
+    testData.actorProperties.createPast(1, { name: 'prop1' });
+    const modal = mount(PublicLinkCreate, mountOptions());
+    await modal.get('textarea').setValue('some value');
+    await modal.setProps({ state: false });
+    await modal.setProps({ state: true });
+    modal.get('textarea').element.value.should.equal('');
+  });
+
   describe('request', () => {
     it('sends the correct request', () =>
       mockHttp()
@@ -57,7 +66,7 @@ describe('PublicLinkCreate', () => {
         .beforeEachResponse((_, { method, url, data }) => {
           method.should.equal('POST');
           url.should.equal('/v1/projects/1/forms/f/public-links');
-          data.should.eql({ displayName: 'My Public Link', once: false, properties: Object.create(null) });
+          data.should.eql({ displayName: 'My Public Link', once: false });
         })
         .respondWithProblem());
 
@@ -77,6 +86,18 @@ describe('PublicLinkCreate', () => {
         })
         .respondWithProblem();
     });
+
+    it('does not send properties when no property values are filled in', () =>
+      mockHttp()
+        .mount(PublicLinkCreate, mountOptions())
+        .request(async (modal) => {
+          await modal.get('input').setValue('My Public Link');
+          return modal.get('form').trigger('submit');
+        })
+        .beforeEachResponse((_, { data }) => {
+          data.should.not.have.property('properties');
+        })
+        .respondWithProblem());
 
     it('sends the correct once property if the checkbox is checked', () =>
       mockHttp()
@@ -104,6 +125,40 @@ describe('PublicLinkCreate', () => {
         disabled: ['.btn-link'],
         modal: true
       }));
+
+  describe('adding a property inline', () => {
+    it('shows the new property row after adding a property', () => mockHttp()
+      .mount(PublicLinkCreate, mountOptions())
+      .request(async (modal) => {
+        await modal.get('.add-property-link').trigger('click');
+        await modal.get('.actor-properties-new input').setValue('region');
+        return modal.get('.actor-properties-new form').trigger('submit');
+      })
+      .respondWithSuccess()
+      .afterResponse((modal) => {
+        modal.findAll('textarea').length.should.equal(1);
+        modal.get('.entity-update-row label').text().should.include('region');
+      }));
+
+    it('includes a newly added property value in the create request', () => mockHttp()
+      .mount(PublicLinkCreate, mountOptions())
+      .request(async (modal) => {
+        await modal.get('.add-property-link').trigger('click');
+        await modal.get('.actor-properties-new input').setValue('region');
+        return modal.get('.actor-properties-new form').trigger('submit');
+      })
+      .respondWithSuccess()
+      .complete()
+      .request(async (modal) => {
+        await modal.get('input').setValue('My Public Link');
+        await modal.get('textarea').setValue('north');
+        return modal.get('form').trigger('submit');
+      })
+      .beforeEachResponse((_, { data }) => {
+        data.should.eql({ displayName: 'My Public Link', once: false, properties: { region: 'north' } });
+      })
+      .respondWithProblem());
+  });
 
   describe('after a successful response', () => {
     const submit = () => {
