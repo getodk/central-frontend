@@ -31,7 +31,7 @@
         </tbody>
       </table>
     </div>
-    <actor-properties-new v-if="create"/>
+    <actor-properties-new/>
   </div>
 </template>
 

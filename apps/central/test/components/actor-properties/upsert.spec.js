@@ -69,9 +69,9 @@ describe('ActorPropertiesUpsert', () => {
       component.findComponent(ActorPropertiesNew).exists().should.be.true;
     });
 
-    it('does not show ActorPropertiesNew when create is false', () => {
+    it('shows ActorPropertiesNew in edit mode when create is false', () => {
       const component = mountComponent({ props: { create: false } });
-      component.findComponent(ActorPropertiesNew).exists().should.be.false;
+      component.findComponent(ActorPropertiesNew).exists().should.be.true;
     });
 
     it('shows a new row when a property is added', async () => {

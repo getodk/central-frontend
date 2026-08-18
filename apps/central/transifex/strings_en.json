@@ -1236,6 +1236,9 @@
     "ActorPropertiesNew": {
       "addProperty": {
         "string": "Add Property"
+      },
+      "addPropertyHint": {
+        "string": "Enter a unique property name"
       }
     },
     "ActorPropertiesUpsert": {
