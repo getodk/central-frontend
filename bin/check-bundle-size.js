@@ -57,21 +57,17 @@ function isTooBig({ path, size }) {
   // TODO these have all changed drastically
   switch (simpleName) {
     case 'icomoon.svg':    return size >    60_000;
-    case 'index.js':       return size > 2_300_000;
-    case 'main.js':        return size >   400_000;
-    case 'forms.js':       return size > 2_100_000;
+    case 'forms.js':       return size > 1_400_000;
     case 'forms.css':      return size >   500_000;
-    case 'web-form.js':    return size > 1_000_000; // Matches web-form-renderer.js
-    case 'MapBlock.js':    return size >   600_000; // A Web Forms' feature bundle
-    case 'MapBlock.css':   return size >   500_000;
+    case 'web-form.js':    return size >   600_000; // Matches web-form-renderer.js
+    case 'MapBlock.css':   return size >   500_000; // A Web Forms' feature bundle
     case 'WebGLVector.js': return size >   500_000;
-    case 'geojson-map.js': return size >   500_000;
     // This is a performance tracking script from Sentry, shared between apps/central and apps/forms.
-    case 'browserTracingIntegration.js': return size > 400_000;
+    case 'browserTracingIntegration.js': return size > 350_000;
     default: // do nothing
   }
 
-  const type = extname(path).substr(1);
+  const type = extname(path).substring(1);
   switch (type) {
     case 'css':         return size > 220_000;
     case 'html':        return size >   3_000;
