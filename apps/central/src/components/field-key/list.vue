@@ -152,6 +152,15 @@ export default {
       revokeModal: modalData()
     };
   },
+  computed: {
+    filteredFieldKeys() {
+      if (!this.fieldKeys.dataExists) return [];
+      if (this.filter == null) return this.fieldKeys.data;
+      return this.fieldKeys.data.filter(
+        fk => fk.properties?.[this.filter.property] === this.filter.value
+      );
+    }
+  },
   created() {
     this.$emit('fetch-actor-properties');
     this.fetchData(false);
@@ -161,15 +170,6 @@ export default {
   },
   beforeUnmount() {
     document.removeEventListener('click', this.switchCode);
-  },
-  computed: {
-    filteredFieldKeys() {
-      if (!this.fieldKeys.dataExists) return [];
-      if (this.filter == null) return this.fieldKeys.data;
-      return this.fieldKeys.data.filter(
-        fk => fk.properties?.[this.filter.property] === this.filter.value
-      );
-    }
   },
   methods: {
     fetchData(resend) {
