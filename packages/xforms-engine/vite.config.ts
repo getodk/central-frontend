@@ -82,7 +82,7 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         external,
         onwarn(warning, warn) {
-          if (warning.code === 'EVAL' && warning.id?.includes('/xpath/dist/expressionParser')) {
+          if (warning.code === 'EVAL' && warning.id?.endsWith('web-tree-sitter/tree-sitter.js')) {
             return; // ignore eval warning for tree-sitter
           }
           warn(warning);

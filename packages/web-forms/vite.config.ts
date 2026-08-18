@@ -114,7 +114,7 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         external: ['vue'],
         onwarn(warning, warn) {
-          if (warning.code === 'EVAL' && warning.id?.endsWith('xforms-engine/dist/index.js')) {
+          if (warning.code === 'EVAL' && warning.id?.endsWith('web-tree-sitter/tree-sitter.js')) {
             return; // ignore eval warning for tree-sitter
           }
           warn(warning);
