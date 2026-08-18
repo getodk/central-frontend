@@ -54,7 +54,6 @@ log('File sizes look OK.');
 function isTooBig({ path, size }) {
   // Special cases:
   const simpleName = basename(path).replace(/(-[\w-]{8})+\./, '.');
-  // TODO these have all changed drastically
   switch (simpleName) {
     case 'icomoon.svg':    return size >    60_000;
     case 'forms.js':       return size > 1_400_000;
