@@ -118,10 +118,6 @@ defineExpose({ afterReview, afterDelete });
   }
 
   th.col-deleted-at { color: $color-danger; }
-  .col-actions {
-    padding: 0;
-    width: 0;
-  }
 }
 </style>
 
@@ -129,6 +125,7 @@ defineExpose({ afterReview, afterDelete });
 {
   "en": {
     "header": {
+      // @transifexKey component.ProjectFormAccessTable.header.state
       "state": "State",
       // Heading of the column that shows Submission deletion timestamp
       "deletedAt": "Deleted at"

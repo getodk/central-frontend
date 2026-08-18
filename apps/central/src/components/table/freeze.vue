@@ -157,10 +157,6 @@ defineExpose({ getRowPair });
 
 .table-freeze-frozen.divider {
   box-shadow: 3px 0 0 rgba(0, 0, 0, 0.04);
-  // Adding z-index so that the background color of the other table's thead does
-  // not overlay the box shadow.
-  z-index: 1;
-
   th:last-child { border-right: $border-bottom-table-heading; }
   td:last-child { border-right: $border-top-table-data; }
 }
@@ -185,5 +181,10 @@ defineExpose({ getRowPair });
   }
 
   .btn-group { @include icon-btn-group; }
+
+  .col-actions {
+    width: 0;
+    padding: 0;
+  }
 }
 </style>

@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <td class="col-actions">
       <submission-actions v-if="!draft && !deleted" :submission="submission"
         :awaiting-response="awaitingResponse"/>
-      <div v-if="deleted && verbs.has('submission.restore')" class="btn-group">
+      <div v-else-if="deleted && verbs.has('submission.restore')" class="btn-group">
         <button type="button"
           class="restore-button btn btn-default"
           :aria-disabled="awaitingResponse"
@@ -47,9 +47,7 @@ except according to the terms contained in the LICENSE file.
       </div>
     </td>
     <td v-if="!draft && deleted">
-      <div class="col-content col-deleted-at">
-        <date-time :iso="submission.__system.deletedAt"/>
-      </div>
+      <date-time :iso="submission.__system.deletedAt"/>
     </td>
   </tr>
 </template>

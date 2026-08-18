@@ -219,10 +219,6 @@ export default {
   &.frozen-only .table-freeze-frozen {
     width: 100%;
   }
-  .col-actions {
-    width: 0;
-    padding: 0;
-  }
 }
 </style>
 

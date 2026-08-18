@@ -76,8 +76,6 @@ const { publicLinks, actorProperties } = useRequestData();
     vertical-align: unset;
   }
   .col-actions {
-    padding: 0;
-    width: 0;
     vertical-align: top;
   }
 }

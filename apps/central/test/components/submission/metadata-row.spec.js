@@ -242,7 +242,7 @@ describe('SubmissionMetadataRow', () => {
   describe('deleted', () => {
     it('shows the deleted date', () => {
       const { deletedAt } = testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() }).last();
-      mountComponent({ deleted: true }).get('.col-deleted-at').getComponent(DateTime).props().iso.should.equal(deletedAt);
+      mountComponent({ deleted: true }).findAll('td')[4].getComponent(DateTime).props().iso.should.equal(deletedAt);
     });
 
     it('does not have delete button', () => {

@@ -47,7 +47,7 @@ describe('EntityTable', () => {
         '',
         'Created by',
         'Created at',
-        'Last Updated'
+        'Last update'
       ]);
     });
   });

@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <tr class="entity-metadata-row" :class="{ 'entity-row-selected': entity.__system.selected }">
     <td class="col-actions">
       <entity-actions v-if="!deleted" :entity="entity" :awaiting-response="awaitingResponse"/>
-      <div v-if="deleted && verbs.has('entity.restore')" class="btn-group">
+      <div v-else-if="deleted && verbs.has('entity.restore')" class="btn-group">
         <button type="button"
           class="restore-button btn btn-default"
           :aria-disabled="awaitingResponse"
@@ -47,9 +47,7 @@ except according to the terms contained in the LICENSE file.
       </div>
     </td>
     <td v-else class="last-updated-cell">
-      <div class="col-content col-deleted-at">
-        <date-time :iso="entity.__system.deletedAt"/>
-      </div>
+      <date-time :iso="entity.__system.deletedAt"/>
     </td>
   </tr>
 </template>

@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
       </th>
       <th>{{ $t('header.createdBy') }}</th>
       <th>{{ $t('header.createdAt') }}</th>
-      <th v-if="!deleted">{{ $t('header.updatedAt') }}</th>
+      <th v-if="!deleted">{{ $t('common.lastUpdate') }}</th>
       <th v-else class="col-deleted-at">{{ $t('header.deletedAt') }}</th>
     </template>
     <template #head-scrolling>
@@ -143,11 +143,6 @@ defineExpose({ afterUpdate, afterDelete });
   }
 
   th.col-deleted-at { color: $color-danger; }
-
-  .col-actions {
-    width: 0;
-    padding: 0;
-  }
 }
 </style>
 
@@ -155,9 +150,6 @@ defineExpose({ afterUpdate, afterDelete });
 {
   "en": {
     "header": {
-      // This is the text of a column header of a table of Entities. The column
-      // shows when each Entity was last updated.
-      "updatedAt": "Last Updated",
       // Heading of the column that shows Entity deletion timestamp
       "deletedAt": "Deleted at"
     }

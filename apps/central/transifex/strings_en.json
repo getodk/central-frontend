@@ -2719,10 +2719,6 @@
     },
     "EntityTable": {
       "header": {
-        "updatedAt": {
-          "string": "Last Updated",
-          "developer_comment": "This is the text of a column header of a table of Entities. The column shows when each Entity was last updated."
-        },
         "deletedAt": {
           "string": "Deleted at",
           "developer_comment": "Heading of the column that shows Entity deletion timestamp"
@@ -5513,10 +5509,6 @@
     },
     "SubmissionTable": {
       "header": {
-        "state": {
-          "string": "State",
-          "developer_comment": "This is the text of a table column header."
-        },
         "deletedAt": {
           "string": "Deleted at",
           "developer_comment": "Heading of the column that shows Submission deletion timestamp"
