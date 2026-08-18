@@ -104,6 +104,12 @@ export default defineConfig(({ mode }) => ({
           return 'assets/central/[name]-[hash].js';
         }
       },
+      onwarn(warning, warn) {
+        if (warning.code === 'EVAL' && warning.id?.includes('dist/index')) {
+          return; // ignore eval warning for tree-sitter
+        }
+        warn(warning);
+      },
     },
   },
   test: {

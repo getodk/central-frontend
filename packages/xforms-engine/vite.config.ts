@@ -79,7 +79,15 @@ export default defineConfig(({ mode }) => {
           return entryName.replace(/^\.src\//, '').replace(/\.ts$/, '.js');
         },
       },
-      rollupOptions: { external },
+      rollupOptions: {
+        external,
+        onwarn(warning, warn) {
+          if (warning.code === 'EVAL' && warning.id?.includes('/xpath/dist/expressionParser')) {
+            return; // ignore eval warning for tree-sitter
+          }
+          warn(warning);
+        },
+      },
     },
 
     esbuild: {
