@@ -261,17 +261,14 @@ const rowToEntity = (values, columns) => {
   return obj;
 };
 const { i18n: globalI18n, redAlert } = inject('container');
-const parseEntities = async (file, headerInfo, signal) => {
-  const results = await parseCSV(globalI18n, file, headerInfo.columns, {
-    delimiter: headerInfo.meta.delimiter,
+const parseEntities = async (file, headerResults, signal) => {
+  const results = await parseCSV(globalI18n, file, headerResults.columns, {
+    delimiter: headerResults.meta.delimiter,
     transformRow: rowToEntity,
     signal
   });
   if (results.data.length === 0) throw new Error(t('alert.noData'));
-  csvEntities.value = results.data;
-  fileMetadata.value = { name: file.name, size: file.size };
-  headerWarnings.value = headerInfo.warnings;
-  dataWarnings.value = results.warnings;
+  return results;
 };
 const selectFile = (file) => {
   redAlert.hide();
@@ -295,8 +292,13 @@ const selectFile = (file) => {
         return Promise.resolve();
       }
 
-      const headerInfo = { ...headerResults, warnings: validation.warnings };
-      return parseEntities(file, headerInfo, signal)
+      return parseEntities(file, headerResults, signal)
+        .then(results => {
+          csvEntities.value = results.data;
+          fileMetadata.value = { name: file.name, size: file.size };
+          headerWarnings.value = validation.warnings;
+          dataWarnings.value = results.warnings;
+        })
         .catch(error => {
           if (!signal.aborted) dataError.value = error.message;
           throw error;
