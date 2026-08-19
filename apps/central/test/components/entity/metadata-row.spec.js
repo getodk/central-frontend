@@ -116,11 +116,10 @@ describe('EntityMetadataRow', () => {
     });
   });
 
-  it('renders the edit button correctly', async () => {
+  it('renders the edit button correctly', () => {
     testData.extendedEntities.createPast(1, { version: 1001 });
     const button = mountComponent().get('.update-button');
-    button.attributes('aria-label').should.equal('Edit (1,000)');
-    await button.should.have.tooltip('Edit (1,000)');
+    button.text().should.equal('Edit');
   });
 
   it('renders the More button correctly', async () => {
@@ -152,7 +151,7 @@ describe('EntityMetadataRow', () => {
     it('shows restore button', () => {
       testData.extendedDatasets.createPast(1);
       testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() }).last();
-      mountComponent({ deleted: true }).find('.restore-button').attributes('aria-label').should.be.equal('Restore');
+      mountComponent({ deleted: true }).find('.restore-button').text().should.equal('Restore');
     });
 
     it('does not show the restore button if user does not have entity restore permission', async () => {

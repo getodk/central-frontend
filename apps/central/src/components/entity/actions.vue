@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
       class="update-button btn btn-default">
       <span class="icon-pencil"></span>{{ $t('action.edit') }}
     </button>
-    <button v-if="true || entity.__system.conflict" type="button"
+    <button v-if="entity.__system.conflict" type="button"
       class="resolve-button btn btn-primary">
       <span class="icon-random"></span>{{ $t('action.reviewParallelUpdates') }}
     </button>
