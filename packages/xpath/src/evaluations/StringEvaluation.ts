@@ -37,7 +37,7 @@ export class StringEvaluation<T extends XPathNode> extends ValueEvaluation<T, 'S
           ])
           .toNumber();
       } catch {
-        this.numberValue = NaN;
+        this.numberValue = Number(value);
       }
     }
   }
