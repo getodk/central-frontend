@@ -83,6 +83,15 @@ export default defineConfig(({ mode }) => ({
       dropMessageCompiler: true
     })
   ],
+  resolve: {
+    alias: {
+      '@getodk/common': resolve(__dirname, './packages/common/src'),
+      '@getodk/web-forms': resolve(__dirname, './packages/web-forms/src'),
+      '@getodk/xforms-engine': resolve(__dirname, './packages/xforms-engine/src'),
+      '@getodk/xpath': resolve(__dirname, './packages/xpath/src'),
+      'primevue/menuitem': 'primevue/menu',
+    }
+  },
   define: {
     __WEB_FORMS_VERSION__: JSON.stringify(webFormsPackage.version)
   },
@@ -103,6 +112,12 @@ export default defineConfig(({ mode }) => ({
           }
           return 'assets/central/[name]-[hash].js';
         }
+      },
+      onwarn(warning, warn) {
+        if (warning.code === 'EVAL' && warning.id?.endsWith('web-tree-sitter/tree-sitter.js')) {
+          return; // ignore eval warning for tree-sitter
+        }
+        warn(warning);
       },
     },
   },

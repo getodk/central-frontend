@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import IconSVG from '@/components/common/IconSVG.vue';
-import MarkdownBlock from '@/components/common/MarkdownBlock.vue';
-import ValidationMessage from '@/components/common/ValidationMessage.vue';
-import ControlText from '@/components/form-elements/ControlText.vue';
-import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
-import type { Translate } from '@/lib/locale/useLocale.ts';
+import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
+import MarkdownBlock from '@getodk/web-forms/components/common/MarkdownBlock.vue';
+import ValidationMessage from '@getodk/web-forms/components/common/ValidationMessage.vue';
+import ControlText from '@getodk/web-forms/components/form-elements/ControlText.vue';
+import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import type { TimerID } from '@getodk/common/types/timers.ts';
 import type { RankNode } from '@getodk/xforms-engine';
 import { inject, type Ref } from 'vue';

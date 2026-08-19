@@ -1,4 +1,4 @@
-import ControlLabel from '@/components/form-elements/ControlLabel.vue';
+import ControlLabel from '@getodk/web-forms/components/form-elements/ControlLabel.vue';
 import type { AnyInputNode } from '@getodk/xforms-engine';
 import { mount } from '@vue/test-utils';
 import { assocPath } from 'ramda';

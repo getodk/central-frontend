@@ -1,8 +1,8 @@
-import { TRANSLATE, SUBMIT_PRESSED } from '@/lib/constants/injection-keys.ts';
+import { TRANSLATE, SUBMIT_PRESSED } from '@getodk/web-forms/lib/constants/injection-keys.ts';
 import type { AnyFunction } from '@getodk/common/types/helpers.d.ts';
 import type { RootNode } from '@getodk/xforms-engine';
 import { createInstance } from '@getodk/xforms-engine';
-import type { MountingOptions } from '@vue/test-utils';
+import type { MountingOptions, VueWrapper } from '@vue/test-utils';
 import PrimeVue from 'primevue/config';
 import { vi } from 'vitest';
 import { reactive, ref } from 'vue';
@@ -28,6 +28,16 @@ import preload from './fixtures/preload.xml?raw';
 import allPossibleNotes from './fixtures/2-all-possible-notes.xml?raw';
 import basicRepeat from './fixtures/01-basic-repeat.xml?raw';
 import markdown from './fixtures/3-notes-with-markdown.xml?raw';
+
+import paginationFlat from './fixtures/pagination-01-flat.xml?raw';
+import paginationFieldlistGroup from './fixtures/pagination-03-fieldlist-group.xml?raw';
+import paginationPlainRepeat from './fixtures/pagination-08-plain-repeat.xml?raw';
+import paginationPlainRepeatEmpty from './fixtures/pagination-08b-plain-repeat-empty.xml?raw';
+import paginationRepeatFieldlist from './fixtures/pagination-09-repeat-fieldlist.xml?raw';
+import paginationFieldlistRelevance from './fixtures/pagination-13-fieldlist-relevance.xml?raw';
+import paginationFieldlistOnRepeat from './fixtures/pagination-14-fieldlist-on-repeat.xml?raw';
+import paginationRepeatFixedCount from './fixtures/pagination-16-repeat-fixed-count.xml?raw';
+import paginationNestedRepeatFieldlist from './fixtures/pagination-17-nested-repeat-fieldlist.xml?raw';
 
 import citiesGeoJson from './fixtures/attachments/cities.geojson?url';
 
@@ -62,6 +72,15 @@ const fixtures: Record<string, string> = {
   '2-all-possible-notes.xml': allPossibleNotes,
   '01-basic-repeat.xml': basicRepeat,
   '3-notes-with-markdown.xml': markdown,
+  'pagination-01-flat.xml': paginationFlat,
+  'pagination-03-fieldlist-group.xml': paginationFieldlistGroup,
+  'pagination-08-plain-repeat.xml': paginationPlainRepeat,
+  'pagination-08b-plain-repeat-empty.xml': paginationPlainRepeatEmpty,
+  'pagination-09-repeat-fieldlist.xml': paginationRepeatFieldlist,
+  'pagination-13-fieldlist-relevance.xml': paginationFieldlistRelevance,
+  'pagination-14-fieldlist-on-repeat.xml': paginationFieldlistOnRepeat,
+  'pagination-16-repeat-fixed-count.xml': paginationRepeatFixedCount,
+  'pagination-17-nested-repeat-fieldlist.xml': paginationNestedRepeatFieldlist,
 };
 
 const attachments: Record<string, string> = {
@@ -98,6 +117,15 @@ export const getWebFormsTestFixture = (identifier: string): Promise<string> => {
     throw new Error(`Could not find fixture with identifier: ${identifier}`);
   }
   return Promise.resolve(xml);
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getButtonByText = (component: VueWrapper<any>, text: string) => {
+  const button = component.findAll('button').find((el) => el.text() === text);
+  if (button == null) {
+    throw new Error(`Could not find button with text: ${text}`);
+  }
+  return button;
 };
 
 export const getFormXml = (fileName: string): Promise<string> => {

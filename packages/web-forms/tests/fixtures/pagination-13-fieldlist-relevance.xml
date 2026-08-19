@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml">
+  <h:head>
+    <h:title>13 Field-list with relevance (dynamic count)</h:title>
+    <model>
+      <instance>
+        <data id="pg_13_fieldlist_relevance">
+          <survey>
+            <employed/>
+            <employer/>
+            <job_title/>
+            <looking/>
+            <comment/>
+          </survey>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <bind nodeset="/data/survey/employed" type="string"/>
+      <bind nodeset="/data/survey/employer" type="string" relevant="/data/survey/employed = 'yes'"/>
+      <bind nodeset="/data/survey/job_title" type="string" relevant="/data/survey/employed = 'yes'"/>
+      <bind nodeset="/data/survey/looking" type="string" relevant="/data/survey/employed = 'no'"/>
+      <bind nodeset="/data/survey/comment" type="string"/>
+      <bind nodeset="/data/meta/instanceID" type="string"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <group ref="/data/survey" appearance="field-list">
+      <label>Employment (5 fields, some conditionally shown)</label>
+      <select1 ref="/data/survey/employed">
+        <label>Are you employed?</label>
+        <item><label>Yes</label><value>yes</value></item>
+        <item><label>No</label><value>no</value></item>
+      </select1>
+      <input ref="/data/survey/employer"><label>Employer name (only if employed)</label></input>
+      <input ref="/data/survey/job_title"><label>Job title (only if employed)</label></input>
+      <input ref="/data/survey/looking"><label>Are you looking for work? (only if not employed)</label></input>
+      <input ref="/data/survey/comment"><label>Any comments? (always shown)</label></input>
+    </group>
+  </h:body>
+</h:html>

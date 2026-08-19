@@ -2,12 +2,12 @@ import {
   type ModeCapabilities,
   SINGLE_FEATURE_TYPES,
   type SingleFeatureType,
-} from '@/components/common/map/getModeConfig.ts';
-import { getPhantomPointStyle } from '@/components/common/map/map-styles.ts';
+} from '@getodk/web-forms/components/common/map/getModeConfig.ts';
+import { getPhantomPointStyle } from '@getodk/web-forms/components/common/map/map-styles.ts';
 import {
   IS_SELECTED_PROPERTY,
   SELECTED_VERTEX_INDEX_PROPERTY,
-} from '@/components/common/map/useMapFeatures.ts';
+} from '@getodk/web-forms/components/common/map/useMapFeatures.ts';
 import {
   addShapeVertex,
   addTraceVertex,
@@ -15,7 +15,7 @@ import {
   getVertexIndex,
   isNearVertex,
   isOnFeatureEdge,
-} from '@/components/common/map/vertex-geometry.ts';
+} from '@getodk/web-forms/components/common/map/vertex-geometry.ts';
 import { Collection, Map, MapBrowserEvent } from 'ol';
 import type { Coordinate } from 'ol/coordinate';
 import Feature from 'ol/Feature';

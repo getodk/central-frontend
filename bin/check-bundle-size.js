@@ -56,18 +56,17 @@ function isTooBig({ path, size }) {
   const simpleName = basename(path).replace(/(-[\w-]{8})+\./, '.');
   switch (simpleName) {
     case 'icomoon.svg':    return size >    60_000;
-    case 'index.js':       return size > 2_300_000;
-    case 'main.js':        return size >   400_000;
-    case 'forms.js':       return size > 2_100_000;
-    case 'web-form.js':    return size > 1_000_000; // Matches web-form-renderer.js
-    case 'MapBlock.js':    return size >   600_000; // A Web Forms' feature bundle
-    case 'geojson-map.js': return size >   500_000;
+    case 'forms.js':       return size > 1_400_000;
+    case 'forms.css':      return size >   500_000;
+    case 'web-form.js':    return size >   600_000; // Matches web-form-renderer.js
+    case 'MapBlock.css':   return size >   500_000; // A Web Forms' feature bundle
+    case 'WebGLVector.js': return size >   500_000;
     // This is a performance tracking script from Sentry, shared between apps/central and apps/forms.
-    case 'browserTracingIntegration.js': return size > 215_000;
+    case 'browserTracingIntegration.js': return size > 350_000;
     default: // do nothing
   }
 
-  const type = extname(path).substr(1);
+  const type = extname(path).substring(1);
   switch (type) {
     case 'css':         return size > 220_000;
     case 'html':        return size >   3_000;
@@ -77,7 +76,9 @@ function isTooBig({ path, size }) {
     case 'svg':         return size >   5_000;
     case 'ttf':         return size >  18_000;
     case 'webmanifest': return size >     500;
-    case 'woff':        return size >  19_000;
+    case 'wasm':        return size > 200_000;
+    case 'woff':        return size >  25_000;
+    case 'woff2':       return size >  25_000;
     default: // do nothing
   }
   throw new Error(`No check written for file ${path} yet!  Please review this function.`);

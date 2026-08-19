@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa">
+  <h:head>
+    <h:title>17 Nested repeats - field-list on outer repeat</h:title>
+    <model>
+      <instance>
+        <data id="pg_17_nested_repeat_fieldlist">
+          <hh jr:template="">
+            <hhname/>
+            <member jr:template="">
+              <mname/>
+              <mage/>
+            </member>
+          </hh>
+          <hh>
+            <hhname/>
+            <member>
+              <mname/>
+              <mage/>
+            </member>
+            <member>
+              <mname/>
+              <mage/>
+            </member>
+          </hh>
+          <hh>
+            <hhname/>
+            <member>
+              <mname/>
+              <mage/>
+            </member>
+          </hh>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <bind nodeset="/data/hh/hhname" type="string"/>
+      <bind nodeset="/data/hh/member/mname" type="string"/>
+      <bind nodeset="/data/hh/member/mage" type="int"/>
+      <bind nodeset="/data/meta/instanceID" type="string"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <group ref="/data/hh">
+      <label>Households (outer repeat, field-list: instance = one page)</label>
+      <repeat nodeset="/data/hh" appearance="field-list">
+        <input ref="/data/hh/hhname"><label>Household <output value="position(..)"/> name</label></input>
+        <group ref="/data/hh/member">
+          <label>Members</label>
+          <repeat nodeset="/data/hh/member">
+            <input ref="/data/hh/member/mname"><label>Member <output value="position(..)"/> name</label></input>
+            <input ref="/data/hh/member/mage"><label>Member <output value="position(..)"/> age</label></input>
+          </repeat>
+        </group>
+      </repeat>
+    </group>
+  </h:body>
+</h:html>

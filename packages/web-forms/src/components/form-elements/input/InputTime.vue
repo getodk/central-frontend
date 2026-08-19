@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import IconSVG from '@/components/common/IconSVG.vue';
+import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
 import { ISO_TIME_WITH_OPTIONAL_OFFSET_PATTERN } from '@getodk/common/constants/datetime.ts';
 import type { TimeInputNode } from '@getodk/xforms-engine';
 import DatePicker from 'primevue/datepicker';

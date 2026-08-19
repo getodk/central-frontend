@@ -357,6 +357,10 @@
     }
   },
   "action": {
+    "add": {
+      "string": "Add",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "cancel": {
       "string": "Cancel",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -544,7 +548,7 @@
       "developer_comment": "This is the text of a form field."
     },
     "passphrase": {
-      "string": "Passphrase",
+      "string": "Encryption password",
       "developer_comment": "This is the text of a form field."
     },
     "password": {
@@ -1227,6 +1231,29 @@
         "success": {
           "string": "An email has been sent to {email} with further instructions."
         }
+      }
+    },
+    "ActorPropertiesNew": {
+      "addProperty": {
+        "string": "Add Property"
+      },
+      "addPropertyHint": {
+        "string": "Enter a unique property name"
+      }
+    },
+    "ActorPropertiesUpsert": {
+      "description": {
+        "full": {
+          "string": "Properties help {assignEntities}, control access, and connect users to the data they need.",
+          "developer_comment": "{assignEntities} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nassign the right Entities"
+        },
+        "assignEntities": {
+          "string": "assign the right Entities",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {assignEntities} is in the following text:\n\nProperties help {assignEntities}, control access, and connect users to the data they need."
+        }
+      },
+      "noProperties": {
+        "string": "No properties have been added yet."
       }
     },
     "AnalyticsForm": {

@@ -11,6 +11,14 @@
     "string": "Send",
     "developer_comment": "Label for the primary form submission button."
   },
+  "odk_web_forms.back.label": {
+    "string": "Back",
+    "developer_comment": "Label for the button that moves to the previous page in a paginated form."
+  },
+  "odk_web_forms.next.label": {
+    "string": "Next",
+    "developer_comment": "Label for the button that moves to the next page in a paginated form."
+  },
   "odk_web_forms.validation.error": {
     "string": "{count, plural, one {# question with error} other {# questions with errors}}",
     "developer_comment": "Error banner message. {count} is the number of validation violations."

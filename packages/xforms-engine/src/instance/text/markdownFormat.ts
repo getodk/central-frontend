@@ -1,7 +1,7 @@
 import type { Heading, Literal, RootContent } from 'mdast';
 import { fromMarkdown } from 'mdast-util-from-markdown';
 import { newlineToBreak } from 'mdast-util-newline-to-break';
-import { type MarkdownNode, type StyleProperty } from '../../client';
+import { type MarkdownNode, type ParentMarkdownNode, type StyleProperty } from '../../client';
 import type { TextChunk } from '../../client/TextRange.ts';
 import {
   Anchor,
@@ -27,7 +27,9 @@ import {
 
 const OUTPUT_STRING_REGEX = /`(--ODK-OUTPUT-STRING-[0-9]+--)`/g;
 const LEADING_SPACES_AND_TABS_REGEX = /^[ \t]+/;
+const LEADING_NUMBER_REGEX = /^\s*([0-9]+\.\s*)/;
 const STYLE_PROPERTY_REGEX = /style\s*=\s*(?:'|")(.+)(?:'|")/i;
+
 const HTML_TAG_MAP = {
   span: Span,
   div: Div,
@@ -209,13 +211,41 @@ function escapeEditableChunks(chunks: readonly TextChunk[]) {
     .join('');
 }
 
-function isSingleOrderedList(odk: MarkdownNode[]) {
-  return (
-    odk.length === 1 &&
-    odk[0]?.role === 'parent' &&
-    odk[0]?.elementName === 'ol' &&
-    odk[0].children.length === 1
-  );
+// mdast tends to add too many paragraphs which if left in place, puts a block level
+// element where it's not needed
+function removeSingleParagraph(nodes: MarkdownNode[]): MarkdownNode[] {
+  if (nodes.length === 1 && nodes[0]?.role === 'parent' && nodes[0]?.elementName === 'p') {
+    return nodes[0].children;
+  }
+  return nodes;
+}
+
+function getSingleOrderedList(nodes: MarkdownNode[]): ParentMarkdownNode | undefined {
+  if (
+    nodes.length === 1 &&
+    nodes[0]?.role === 'parent' &&
+    nodes[0]?.elementName === 'ol' &&
+    nodes[0].children.length === 1 &&
+    nodes[0].children[0]?.role === 'parent'
+  ) {
+    return nodes[0].children[0];
+  }
+  return;
+}
+
+// do not return a numbered list with only a single element
+// this is almost never what people expect
+function fixSingleOrderedList(nodes: MarkdownNode[], str: string) {
+  const li = getSingleOrderedList(nodes);
+  if (li) {
+    const liContent = removeSingleParagraph(li.children);
+    const num = LEADING_NUMBER_REGEX.exec(str)?.[1];
+    if (num) {
+      liContent.unshift(new ChildMarkdownNode(num));
+      return liContent;
+    }
+  }
+  return nodes;
 }
 
 function escapeBlockquote(str: string) {
@@ -226,16 +256,9 @@ function toOdkMarkdown(str: string): MarkdownNode[] {
   str = escapeBlockquote(str);
   const tree = fromMarkdown(str);
   newlineToBreak(tree);
-  const odk = mdastToOdkMarkdown(tree.children);
-  if (isSingleOrderedList(odk)) {
-    // do not return a numbered list with only a single element - this is almost never what people expect
-    return [new ChildMarkdownNode(str)];
-  }
-  if (odk.length === 1 && odk[0]?.role === 'parent' && odk[0]?.elementName === 'p') {
-    // mdast tends to add too many paragraphs which if left in place, puts a block level
-    // element where it's not needed
-    return odk[0].children;
-  }
+  let odk = mdastToOdkMarkdown(tree.children);
+  odk = fixSingleOrderedList(odk, str);
+  odk = removeSingleParagraph(odk);
   return odk;
 }
 

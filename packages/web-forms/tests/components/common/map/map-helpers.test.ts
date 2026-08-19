@@ -1,10 +1,10 @@
-import { SINGLE_FEATURE_TYPES } from '@/components/common/map/getModeConfig.ts';
+import { SINGLE_FEATURE_TYPES } from '@getodk/web-forms/components/common/map/getModeConfig.ts';
 import {
   formatODKValue,
   getValidCoordinates,
   toODKCoordinateArray,
-} from '@/components/common/map/map-helpers.ts';
-import { COORDINATE_LAYOUT_XYZM } from '@/components/common/map/useMapViewControls.ts';
+} from '@getodk/web-forms/components/common/map/map-helpers.ts';
+import { COORDINATE_LAYOUT_XYZM } from '@getodk/web-forms/components/common/map/useMapViewControls.ts';
 import Feature from 'ol/Feature';
 import { LineString, Point, Polygon } from 'ol/geom';
 import { fromLonLat } from 'ol/proj';

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import GeolocationFormattedValue from '@/components/common/GeolocationFormattedValue.vue';
-import IconSVG from '@/components/common/IconSVG.vue';
-import { TRANSLATE, QUESTION_HAS_ERROR } from '@/lib/constants/injection-keys.ts';
-import type { Translate } from '@/lib/locale/useLocale.ts';
+import GeolocationFormattedValue from '@getodk/web-forms/components/common/GeolocationFormattedValue.vue';
+import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
+import { TRANSLATE, QUESTION_HAS_ERROR } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import { computed, type ComputedRef, inject, ref } from 'vue';
 import Button from 'primevue/button';
 import type { GeopointInputNode } from '@getodk/xforms-engine';

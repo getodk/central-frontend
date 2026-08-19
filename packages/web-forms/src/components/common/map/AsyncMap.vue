@@ -4,12 +4,12 @@
  * This prevents unnecessary bloat in the main application bundle, reducing initial load times and improving performance.
  * Use dynamic imports instead (e.g., `await import(importPath)`) for lazy-loading these dependencies only when required.
  */
-import { createFeatureCollectionAndProps } from '@/components/common/map/geojson-parsers.ts';
-import type { Mode, SingleFeatureType } from '@/components/common/map/getModeConfig.ts';
-import { loadMapBlock, type MapBlockComponent } from '@/components/common/map/loadMapBlock.ts';
-import AsyncLoader from '@/components/common/AsyncLoader.vue';
-import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
-import type { Translate } from '@/lib/locale/useLocale.ts';
+import { createFeatureCollectionAndProps } from '@getodk/web-forms/components/common/map/geojson-parsers.ts';
+import type { Mode, SingleFeatureType } from '@getodk/web-forms/components/common/map/getModeConfig.ts';
+import { loadMapBlock, type MapBlockComponent } from '@getodk/web-forms/components/common/map/loadMapBlock.ts';
+import AsyncLoader from '@getodk/web-forms/components/common/AsyncLoader.vue';
+import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import type { SelectItem } from '@getodk/xforms-engine';
 import { computed, inject, shallowRef } from 'vue';
 

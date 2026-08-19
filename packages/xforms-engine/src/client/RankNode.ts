@@ -1,5 +1,6 @@
 import type { RankControlDefinition } from '../parse/body/control/RankControlDefinition.ts';
 import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
+import type { BaseControlNodeState } from './BaseNode.ts';
 import type { BaseValueNode, BaseValueNodeState } from './BaseValueNode.ts';
 import type { BaseItem } from './BaseItem.ts';
 import type { RootNode } from './RootNode.ts';
@@ -12,7 +13,7 @@ import type { ValueType } from './ValueType.ts';
 export type RankItem = BaseItem;
 export type RankValueOptions = readonly RankItem[];
 
-export interface RankNodeState extends BaseValueNodeState<readonly string[]> {
+export interface RankNodeState extends BaseValueNodeState<readonly string[]>, BaseControlNodeState {
   get valueOptions(): RankValueOptions;
 
   /**

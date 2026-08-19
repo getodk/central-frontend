@@ -1,4 +1,4 @@
-import type { FormOptions } from '@/lib/init/load-form-state.ts';
+import type { FormOptions } from '@getodk/web-forms/lib/init/load-form-state.ts';
 import type {
   EditFormInstance,
   InstanceAttachmentsConfig,

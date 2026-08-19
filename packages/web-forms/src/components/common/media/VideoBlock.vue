@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import MediaBlockBase from '@/components/common/media/MediaBlockBase.vue';
-import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
-import type { Translate } from '@/lib/locale/useLocale.ts';
+import MediaBlockBase from '@getodk/web-forms/components/common/media/MediaBlockBase.vue';
+import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import type { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL.ts';
 import { inject } from 'vue';
 

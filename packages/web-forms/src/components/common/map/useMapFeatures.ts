@@ -2,12 +2,12 @@ import {
   type ModeCapabilities,
   SINGLE_FEATURE_TYPES,
   type SingleFeatureType,
-} from '@/components/common/map/getModeConfig.ts';
-import { ODK_VALUE_PROPERTY } from '@/components/common/map/useMapBlock.ts';
+} from '@getodk/web-forms/components/common/map/getModeConfig.ts';
+import { ODK_VALUE_PROPERTY } from '@getodk/web-forms/components/common/map/useMapBlock.ts';
 import {
   COORDINATE_LAYOUT_XYZM,
   type UseMapViewControls,
-} from '@/components/common/map/useMapViewControls.ts';
+} from '@getodk/web-forms/components/common/map/useMapViewControls.ts';
 import type { FeatureCollection, Feature as GeoJsonFeature } from 'geojson';
 import { Map } from 'ol';
 import type { Coordinate } from 'ol/coordinate';
