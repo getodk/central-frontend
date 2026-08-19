@@ -1,5 +1,19 @@
 # @getodk/common
 
+## 1.0.0
+
+### Major Changes
+
+- 3045945: First stable release
+
+### Minor Changes
+
+- 9918bea: Added support for submission encryption
+
+### Patch Changes
+
+- b7abdc1: Fixed handling of ranges with negative step values
+
 ## 0.15.0
 
 ### Minor Changes

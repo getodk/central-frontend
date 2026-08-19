@@ -8,16 +8,23 @@ const appUrl = process.env.ODK_URL;
 const user = process.env.ODK_USER;
 const password = process.env.ODK_PASSWORD;
 const credentials = Buffer.from(`${user}:${password}`, 'utf-8').toString('base64');
-const projectId = process.env.PROJECT_ID;
+const __dirname = import.meta.dirname;
+export const FORM_TEMPLATES = {
+  'simple': path.join(__dirname, './data/form.template.xml'),
+  'attachment': path.join(__dirname, './data/form-with-attachment.template.xml'),
+  'lastsaved': path.join(__dirname, './data/form-with-last-saved.template.xml'),
+};
 
 export default class BackendClient {
   #request;
   #playwright;
   #prefix;
+  #projectId;
 
-  constructor(playwright, prefix) {
+  constructor(playwright, prefix, projectId) {
     this.#playwright = playwright;
     this.#prefix = prefix;
+    this.#projectId = projectId || process.env.PROJECT_ID;
   }
 
   async #getRequest() {
@@ -32,25 +39,30 @@ export default class BackendClient {
     return this.#request;
   }
 
-  createForm = async () => {
-    const formTemplate = fs.readFileSync(path.join(__dirname, './data/form.template.xml'), 'utf8');
+  createForm = async (templateFile) => {
+    const template = templateFile || FORM_TEMPLATES.simple;
+    const formTemplate = fs.readFileSync(template, 'utf8');
     const request = await this.#getRequest();
 
-    const response = await request.post(`/v1/projects/${projectId}/forms?publish=true`, {
+    const response = await request.post(`/v1/projects/${this.#projectId}/forms?publish=true`, {
       headers: {
         'content-type': 'application/xml',
       },
       data: formTemplate
-        .replaceAll('{{ formId }}', `${this.#prefix}_${faker.word.noun()}`)
+        .replaceAll('{{ formId }}', `${this.#prefix}_${faker.word.noun()}_${Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)}`)
     });
     expect(response).toBeOK();
     return response.json();
   };
 
+  createAttachmentForm = async () => {
+    return this.createForm(FORM_TEMPLATES.attachment);
+  };
+
   createSubmission = async (xmlFormId) => {
     const submissionTemplate = fs.readFileSync(path.join(__dirname, './data/submission.template.xml'), 'utf8');
     const request = await this.#getRequest();
-    const response = await request.post(`/v1/projects/${projectId}/forms/${xmlFormId}/submissions`, {
+    const response = await request.post(`/v1/projects/${this.#projectId}/forms/${xmlFormId}/submissions`, {
       headers: {
         'content-type': 'application/xml',
       },
@@ -65,14 +77,14 @@ export default class BackendClient {
 
   editSubmission = async (xmlFormId, instanceId) => {
     const request = await this.#getRequest();
-    const response = await request.get(`/v1/projects/${projectId}/forms/${xmlFormId}/submissions/${instanceId}/edit`);
+    const response = await request.get(`/v1/projects/${this.#projectId}/forms/${xmlFormId}/submissions/${instanceId}/edit`);
     expect(response).toBeOK();
   };
 
   createDraftVersion = async (xmlFormId, version = 'v2') => {
     const formTemplate = fs.readFileSync(path.join(__dirname, './data/form.template.xml'), 'utf8');
     const request = await this.#getRequest();
-    const response = await request.post(`/v1/projects/${projectId}/forms/${xmlFormId}/draft`, {
+    const response = await request.post(`/v1/projects/${this.#projectId}/forms/${xmlFormId}/draft`, {
       headers: {
         'content-type': 'application/xml',
       },
@@ -83,14 +95,14 @@ export default class BackendClient {
     });
     expect(response).toBeOK();
 
-    const getResponse = await request.get(`/v1/projects/${projectId}/forms/${xmlFormId}/draft`);
+    const getResponse = await request.get(`/v1/projects/${this.#projectId}/forms/${xmlFormId}/draft`);
     expect(getResponse).toBeOK();
     return getResponse.json();
   };
 
   createPublicLink = async (xmlFormId, once = false) => {
     const request = await this.#getRequest();
-    const response = await request.post(`/v1/projects/${projectId}/forms/${xmlFormId}/public-links`, {
+    const response = await request.post(`/v1/projects/${this.#projectId}/forms/${xmlFormId}/public-links`, {
       data: {
         displayName: faker.word.noun(),
         once
@@ -102,7 +114,7 @@ export default class BackendClient {
 
   setWebForms = async (xmlFormId, enable) => {
     const request = await this.#getRequest();
-    const response = await request.patch(`/v1/projects/${projectId}/forms/${xmlFormId}`, {
+    const response = await request.patch(`/v1/projects/${this.#projectId}/forms/${xmlFormId}`, {
       data: {
         webformsEnabled: enable
       }
@@ -112,12 +124,15 @@ export default class BackendClient {
 
   deleteForm = async (xmlFormId) => {
     const request = await this.#getRequest();
-    const response = await request.delete(`/v1/projects/${projectId}/forms/${xmlFormId}`);
+    const response = await request.delete(`/v1/projects/${this.#projectId}/forms/${xmlFormId}`);
     expect(response).toBeOK();
   };
 
-  createFormAndChildren = async () => {
+  createFormAndChildren = async (disableWebForms) => {
     const form = await this.createForm();
+    if (disableWebForms) {
+      await this.setWebForms(form.xmlFormId, false);
+    }
     const submission = await this.createSubmission(form.xmlFormId);
     await this.editSubmission(form.xmlFormId, submission.instanceId);
     const formDraft = await this.createDraftVersion(form.xmlFormId);
@@ -137,6 +152,52 @@ export default class BackendClient {
       data: { propertyValue: '2100.1' } //  Fairly future-proof - modal will be dismissed if preference is not older than current version.
     });
     expect(response.ok()).toBeTruthy();
+  };
+
+  getLastSubmission = async (xmlFormId) => {
+    const request = await this.#getRequest();
+
+    const allSubmissionsUrl = `/v1/projects/${this.#projectId}/forms/${xmlFormId}/submissions`;
+    const allSubmissionsResponse = await request.get(allSubmissionsUrl);
+    if (!allSubmissionsResponse.ok()) {
+      const error = await allSubmissionsResponse.json();
+      throw new Error('Error fetching submissions: ' + JSON.stringify(error));
+    }
+    const submissions = await allSubmissionsResponse.json();
+
+    const lastInstanceId = submissions?.[0]?.instanceId;
+    if (!lastInstanceId) {
+      return;
+    }
+    const lastInstanceUrl = `/v1/projects/${this.#projectId}/forms/${xmlFormId}/submissions/${lastInstanceId}.xml`;
+    const lastInstanceResponse = await request.get(lastInstanceUrl);
+    if (!lastInstanceResponse.ok()) {
+      const error = await lastInstanceResponse.json();
+      throw new Error('Error fetching last submission: ' + JSON.stringify(error));
+    }
+    return await lastInstanceResponse.text();
+  };
+
+  downloadCsv = async (xmlFormId, passphrase) => {
+    const keyId = process.env.ENCRYPTION_KEY_ID;
+    let downloadUrl = `/v1/projects/${this.#projectId}/forms/${xmlFormId}/submissions.csv`;
+    if (passphrase) {
+      downloadUrl += `?${keyId}=${passphrase}`;
+    }
+    const request = await this.#getRequest();
+    const response = await request.get(downloadUrl);
+    return response;
+  };
+
+  downloadZip = async (xmlFormId, passphrase) => {
+    const keyId = process.env.ENCRYPTION_KEY_ID;
+    let downloadUrl = `/v1/projects/${this.#projectId}/forms/${xmlFormId}/submissions.csv.zip`;
+    if (passphrase) {
+      downloadUrl += `?${keyId}=${passphrase}`;
+    }
+    const request = await this.#getRequest();
+    const response = await request.get(downloadUrl);
+    return response;
   };
 
   async dispose() {

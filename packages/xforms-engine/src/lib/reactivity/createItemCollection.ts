@@ -22,146 +22,146 @@ type ItemCollectionControl = RankControl | SelectControl;
 type DerivedItemLabel = ClientTextRange<'item-label'>;
 
 const derivedItemLabel = (context: TranslationContext, value: string): DerivedItemLabel => {
-	const chunk = new TextChunk(context, 'literal', value);
+  const chunk = new TextChunk(context, 'literal', value);
 
-	return new TextRange('item-label', [chunk]);
+  return new TextRange('item-label', [chunk]);
 };
 
 const createItemLabel = (
-	context: EvaluationContext,
-	definition: ItemDefinition
+  context: EvaluationContext,
+  definition: ItemDefinition
 ): Accessor<ClientTextRange<'item-label'>> => {
-	const { label, value } = definition;
+  const { label, value } = definition;
 
-	if (label == null) {
-		return () => derivedItemLabel(context, value);
-	}
+  if (label == null) {
+    return () => derivedItemLabel(context, value);
+  }
 
-	return createTextRange(context, 'item-label', label);
+  return createTextRange(context, 'item-label', label);
 };
 
 const createTranslatedStaticItems = (
-	control: ItemCollectionControl,
-	items: readonly ItemDefinition[]
+  control: ItemCollectionControl,
+  items: readonly ItemDefinition[]
 ): Accessor<readonly BaseItem[]> => {
-	return control.scope.runTask(() => {
-		const labeledItems = items.map((item) => {
-			const { value } = item;
-			const label = createItemLabel(control, item);
+  return control.scope.runTask(() => {
+    const labeledItems = items.map((item) => {
+      const { value } = item;
+      const label = createItemLabel(control, item);
 
-			return () => ({
-				value,
-				label: label(),
-				properties: [],
-			});
-		});
+      return () => ({
+        value,
+        label: label(),
+        properties: [],
+      });
+    });
 
-		return createMemo(() => {
-			return labeledItems.map((item) => item());
-		});
-	});
+    return createMemo(() => {
+      return labeledItems.map((item) => item());
+    });
+  });
 };
 
 class ItemsetItemEvaluationContext implements EvaluationContext {
-	readonly isAttached: Accessor<boolean>;
-	readonly scope: ReactiveScope;
-	readonly evaluator: EngineXPathEvaluator;
-	readonly contextReference: Accessor<string>;
-	readonly getActiveLanguage: Accessor<ActiveLanguage>;
+  readonly isAttached: Accessor<boolean>;
+  readonly scope: ReactiveScope;
+  readonly evaluator: EngineXPathEvaluator;
+  readonly contextReference: Accessor<string>;
+  readonly getActiveLanguage: Accessor<ActiveLanguage>;
 
-	constructor(
-		control: ItemCollectionControl,
-		readonly contextNode: EngineXPathNode
-	) {
-		this.isAttached = control.isAttached;
-		this.scope = control.scope;
-		this.evaluator = control.evaluator;
-		this.contextReference = control.contextReference;
-		this.getActiveLanguage = control.getActiveLanguage;
-	}
+  constructor(
+    control: ItemCollectionControl,
+    readonly contextNode: EngineXPathNode
+  ) {
+    this.isAttached = control.isAttached;
+    this.scope = control.scope;
+    this.evaluator = control.evaluator;
+    this.contextReference = control.contextReference;
+    this.getActiveLanguage = control.getActiveLanguage;
+  }
 }
 
 const createItemsetItemLabel = (
-	context: EvaluationContext,
-	definition: ItemsetDefinition,
-	itemValue: Accessor<string>
+  context: EvaluationContext,
+  definition: ItemsetDefinition,
+  itemValue: Accessor<string>
 ): Accessor<ClientTextRange<'item-label'>> => {
-	const { label } = definition;
+  const { label } = definition;
 
-	if (label == null) {
-		return createMemo(() => {
-			return derivedItemLabel(context, itemValue());
-		});
-	}
+  if (label == null) {
+    return createMemo(() => {
+      return derivedItemLabel(context, itemValue());
+    });
+  }
 
-	return createTextRange(context, 'item-label', label);
+  return createTextRange(context, 'item-label', label);
 };
 
 interface ItemsetItem {
-	label(): ClientTextRange<'item-label'>;
-	value(): string;
-	properties: Array<[string, () => string]>;
+  label(): ClientTextRange<'item-label'>;
+  value(): string;
+  properties: Array<[string, () => string]>;
 }
 
 const createItemsetItems = (
-	control: ItemCollectionControl,
-	itemset: ItemsetDefinition
+  control: ItemCollectionControl,
+  itemset: ItemsetDefinition
 ): Accessor<readonly ItemsetItem[]> => {
-	return control.scope.runTask(() => {
-		const itemNodes = createComputedExpression(control, itemset.nodes, {
-			defaultValue: [],
-		});
-		const itemsCache = new UpsertableMap<EngineXPathNode, ItemsetItem>();
+  return control.scope.runTask(() => {
+    const itemNodes = createComputedExpression(control, itemset.nodes, {
+      defaultValue: [],
+    });
+    const itemsCache = new UpsertableMap<EngineXPathNode, ItemsetItem>();
 
-		return createMemo(() => {
-			return itemNodes().map((itemNode) => {
-				return itemsCache.upsert(itemNode, () => {
-					const context = new ItemsetItemEvaluationContext(control, itemNode);
-					const value = createComputedExpression(context, itemset.value, {
-						defaultValue: '',
-					});
-					const label = createItemsetItemLabel(context, itemset, value);
+    return createMemo(() => {
+      return itemNodes().map((itemNode) => {
+        return itemsCache.upsert(itemNode, () => {
+          const context = new ItemsetItemEvaluationContext(control, itemNode);
+          const value = createComputedExpression(context, itemset.value, {
+            defaultValue: '',
+          });
+          const label = createItemsetItemLabel(context, itemset, value);
 
-					const nodeElements = itemNode
-						.getXPathChildNodes()
-						.filter((node) => node.nodeType === 'static-element');
-					const properties = itemset.getPropertiesExpressions(nodeElements).map((expression) => {
-						return [expression.toString(), createComputedExpression(context, expression)] as [
-							string,
-							() => string,
-						];
-					});
+          const nodeElements = itemNode
+            .getXPathChildNodes()
+            .filter((node) => node.nodeType === 'static-element');
+          const properties = itemset.getPropertiesExpressions(nodeElements).map((expression) => {
+            return [expression.toString(), createComputedExpression(context, expression)] as [
+              string,
+              () => string,
+            ];
+          });
 
-					return {
-						label,
-						value,
-						properties,
-					};
-				});
-			});
-		});
-	});
+          return {
+            label,
+            value,
+            properties,
+          };
+        });
+      });
+    });
+  });
 };
 
 const createItemset = (
-	control: ItemCollectionControl,
-	itemset: ItemsetDefinition
+  control: ItemCollectionControl,
+  itemset: ItemsetDefinition
 ): Accessor<readonly BaseItem[]> => {
-	return control.scope.runTask(() => {
-		const itemsetItems = createItemsetItems(control, itemset);
+  return control.scope.runTask(() => {
+    const itemsetItems = createItemsetItems(control, itemset);
 
-		return createMemo(() => {
-			return itemsetItems().map((item) => {
-				return {
-					label: item.label(),
-					value: item.value(),
-					properties: item.properties.map(
-						([propLabel, propValue]) => [propLabel, propValue()] as [string, string]
-					),
-				};
-			});
-		});
-	});
+    return createMemo(() => {
+      return itemsetItems().map((item) => {
+        return {
+          label: item.label(),
+          value: item.value(),
+          properties: item.properties.map(
+            ([propLabel, propValue]) => [propLabel, propValue()] as [string, string]
+          ),
+        };
+      });
+    });
+  });
 };
 
 /**
@@ -177,13 +177,13 @@ const createItemset = (
  *   referencing a form's `itext` translations, etc).
  */
 export const createItemCollection = (
-	control: ItemCollectionControl
+  control: ItemCollectionControl
 ): Accessor<readonly BaseItem[]> => {
-	const { items, itemset } = control.definition.bodyElement;
+  const { items, itemset } = control.definition.bodyElement;
 
-	if (itemset != null) {
-		return createItemset(control, itemset);
-	}
+  if (itemset != null) {
+    return createItemset(control, itemset);
+  }
 
-	return createTranslatedStaticItems(control, items);
+  return createTranslatedStaticItems(control, items);
 };

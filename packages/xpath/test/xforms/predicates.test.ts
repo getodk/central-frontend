@@ -5,15 +5,15 @@ import { createXFormsTestContext } from '../helpers.ts';
 
 // Most of the tests originally in this suite are under the native suite with the same module name. Those exercising XForms extension functions have been moved here.
 describe('predicates with function calls', () => {
-	let testContext: XFormsTestContext;
+  let testContext: XFormsTestContext;
 
-	beforeEach(() => {
-		testContext = createXFormsTestContext();
-	});
+  beforeEach(() => {
+    testContext = createXFormsTestContext();
+  });
 
-	it('should handle deep example 1', () => {
-		// given
-		testContext = createXFormsTestContext(`
+  it('should handle deep example 1', () => {
+    // given
+    testContext = createXFormsTestContext(`
       <model>
         <instance>
           <data>
@@ -27,20 +27,20 @@ describe('predicates with function calls', () => {
       </model>
     `);
 
-		// expect
-		testContext.assertBooleanValue(
-			' /model/instance[1]/data/PROCEDURE/PROC_GRID[position() = 1]/PROC = 6 or /model/instance[1]/data/PROCEDURE/PROC_GRID[position() = 2]/PROC = 6',
-			true
-		);
-		testContext.assertStringValue(
-			' /model/instance[1]/data/PROCEDURE/PROC_GRID[position() = 1]/PROC = 6 or /model/instance[1]/data/PROCEDURE/PROC_GRID[position() = 2]/PROC = 6',
-			'true'
-		);
-	});
+    // expect
+    testContext.assertBooleanValue(
+      ' /model/instance[1]/data/PROCEDURE/PROC_GRID[position() = 1]/PROC = 6 or /model/instance[1]/data/PROCEDURE/PROC_GRID[position() = 2]/PROC = 6',
+      true
+    );
+    testContext.assertStringValue(
+      ' /model/instance[1]/data/PROCEDURE/PROC_GRID[position() = 1]/PROC = 6 or /model/instance[1]/data/PROCEDURE/PROC_GRID[position() = 2]/PROC = 6',
+      'true'
+    );
+  });
 
-	it('should handle deep example 2', () => {
-		// given
-		testContext = createXFormsTestContext(`
+  it('should handle deep example 2', () => {
+    // given
+    testContext = createXFormsTestContext(`
       <model>
         <instance>
            <new_cascading_selections_inside_repeats id="cascading_select_inside_repeats">
@@ -76,38 +76,38 @@ describe('predicates with function calls', () => {
       </model>
     `);
 
-		// expect
-		testContext.assertBooleanValue(
-			'/model/instance[@id="cities"]/root/item[country=/model/instance[1]/new_cascading_selections/group4/country4 and name=/model/instance[1]/new_cascading_selections/group4/city4]',
-			false
-		);
-		testContext.assertStringValue(
-			'/model/instance[@id="cities"]/root/item[country=/model/instance[1]/new_cascading_selections/group4/country4 and name=/model/instance[1]/new_cascading_selections/group4/city4]',
-			''
-		);
-	});
+    // expect
+    testContext.assertBooleanValue(
+      '/model/instance[@id="cities"]/root/item[country=/model/instance[1]/new_cascading_selections/group4/country4 and name=/model/instance[1]/new_cascading_selections/group4/city4]',
+      false
+    );
+    testContext.assertStringValue(
+      '/model/instance[@id="cities"]/root/item[country=/model/instance[1]/new_cascading_selections/group4/country4 and name=/model/instance[1]/new_cascading_selections/group4/city4]',
+      ''
+    );
+  });
 
-	describe('fiendishly complicated examples #2', () => {
-		const namespaces: Record<string, string> = {
-			OpenClinica: 'http://openclinica.com/odm',
-			enk: 'http://enketo.org/xforms',
-		};
+  describe('fiendishly complicated examples #2', () => {
+    const namespaces: Record<string, string> = {
+      OpenClinica: 'http://openclinica.com/odm',
+      enk: 'http://enketo.org/xforms',
+    };
 
-		const namespaceResolver = {
-			lookupNamespaceURI: (prefix: string | null) => {
-				return namespaces[prefix ?? ''] ?? null;
-			},
-		};
+    const namespaceResolver = {
+      lookupNamespaceURI: (prefix: string | null) => {
+        return namespaces[prefix ?? ''] ?? null;
+      },
+    };
 
-		[
-			{
-				expression: `concat( selected( /data/item/a[../number[@OpenClinica:this='three']]/name[@enk:that="something"]/last/@Value, 'ccc' ), 'ing', '-', sin( pi() div 2))`,
-				expected: 'trueing-1',
-			},
-		].forEach(({ expression, expected }) => {
-			it(`should evaluate ${expression} as ${expected}`, () => {
-				testContext = createXFormsTestContext(
-					`
+    [
+      {
+        expression: `concat( selected( /data/item/a[../number[@OpenClinica:this='three']]/name[@enk:that="something"]/last/@Value, 'ccc' ), 'ing', '-', sin( pi() div 2))`,
+        expected: 'trueing-1',
+      },
+    ].forEach(({ expression, expected }) => {
+      it(`should evaluate ${expression} as ${expected}`, () => {
+        testContext = createXFormsTestContext(
+          `
           <data xmlns:OpenClinica="http://openclinica.com/odm" xmlns:enk="http://enketo.org/xforms">
             <item>
               <a>
@@ -141,23 +141,23 @@ describe('predicates with function calls', () => {
             </meta>
           </data>
         `,
-					{ namespaceResolver }
-				);
+          { namespaceResolver }
+        );
 
-				testContext.assertStringValue(expression, expected);
-			});
-		});
-	});
+        testContext.assertStringValue(expression, expected);
+      });
+    });
+  });
 
-	describe('nested predicates', () => {
-		[
-			{
-				expression: '/data/item/name[../number[string-length(./@this) < pi()]]/last',
-				expected: 'cc',
-			},
-		].forEach(({ expression, expected }) => {
-			it(`should evaluate ${expression} as ${expected}`, () => {
-				testContext = createXFormsTestContext(`
+  describe('nested predicates', () => {
+    [
+      {
+        expression: '/data/item/name[../number[string-length(./@this) < pi()]]/last',
+        expected: 'cc',
+      },
+    ].forEach(({ expression, expected }) => {
+      it(`should evaluate ${expression} as ${expected}`, () => {
+        testContext = createXFormsTestContext(`
           <data>
             <item>
               <number>entruchón</number>
@@ -185,22 +185,22 @@ describe('predicates with function calls', () => {
           </data>
         `);
 
-				testContext.assertStringValue(expression, expected);
-			});
-		});
-	});
+        testContext.assertStringValue(expression, expected);
+      });
+    });
+  });
 
-	describe('with extended functions', () => {
-		[
-			{ expression: 'pi()', expected: 3.141592653589793 },
-			{ expression: '/data/item[pi() > 3]/number', expected: 4 },
-			{ expression: '/data/item[tan(./number) > 1]/number', expected: 4 },
-			{ expression: '/data/item[tan(./number) <= 1]/number', expected: 6 },
-			{ expression: '/data/item[(./number div pi()) >  1.9]/number', expected: 6 },
-			{ expression: '/data/item[(./number div pi()) <= 1.9]/number', expected: 4 },
-		].forEach(({ expression, expected }) => {
-			it(`should evaluate ${expression} as expected`, () => {
-				testContext = createXFormsTestContext(`
+  describe('with extended functions', () => {
+    [
+      { expression: 'pi()', expected: 3.141592653589793 },
+      { expression: '/data/item[pi() > 3]/number', expected: 4 },
+      { expression: '/data/item[tan(./number) > 1]/number', expected: 4 },
+      { expression: '/data/item[tan(./number) <= 1]/number', expected: 6 },
+      { expression: '/data/item[(./number div pi()) >  1.9]/number', expected: 6 },
+      { expression: '/data/item[(./number div pi()) <= 1.9]/number', expected: 4 },
+    ].forEach(({ expression, expected }) => {
+      it(`should evaluate ${expression} as expected`, () => {
+        testContext = createXFormsTestContext(`
           <data>
             <item>
               <number>4</number>
@@ -211,29 +211,29 @@ describe('predicates with function calls', () => {
           </data>
         `);
 
-				switch (typeof expected) {
-					case 'boolean':
-						testContext.assertBooleanValue(expression, expected);
-						break;
+        switch (typeof expected) {
+          case 'boolean':
+            testContext.assertBooleanValue(expression, expected);
+            break;
 
-					case 'number':
-						testContext.assertNumberValue(expression, expected);
-						break;
+          case 'number':
+            testContext.assertNumberValue(expression, expected);
+            break;
 
-					case 'string':
-						testContext.assertStringValue(expression, expected);
-						break;
+          case 'string':
+            testContext.assertStringValue(expression, expected);
+            break;
 
-					default:
-						throw new UnreachableError(expected);
-				}
-			});
-		});
-	});
+          default:
+            throw new UnreachableError(expected);
+        }
+      });
+    });
+  });
 
-	// I put this one separate as it has a different 'too many args' error, and there may be multiple causes for failure
-	it('with the #selected function', () => {
-		testContext = createXFormsTestContext(`
+  // I put this one separate as it has a different 'too many args' error, and there may be multiple causes for failure
+  it('with the #selected function', () => {
+    testContext = createXFormsTestContext(`
       <data>
         <a>a</a>
         <a>b</a>
@@ -241,7 +241,7 @@ describe('predicates with function calls', () => {
       </data>
     `);
 
-		// assertTrue('selected("a b", "a")');
-		testContext.assertNumberValue('count(/data/a[selected("a b", "a")])', 3);
-	});
+    // assertTrue('selected("a b", "a")');
+    testContext.assertNumberValue('count(/data/a[selected("a b", "a")])', 3);
+  });
 });

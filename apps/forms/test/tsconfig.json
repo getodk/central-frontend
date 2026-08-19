@@ -1,0 +1,10 @@
+{
+  "extends": "../tsconfig.json",
+  "include": [
+
+  ],
+  "compilerOptions": {
+    "composite": true,
+    "types": ["node", "jsdom", "vite/client"]
+  }
+}

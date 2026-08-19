@@ -32,29 +32,29 @@ const FIRST_ORDERED_NODE_TYPE: XPathResult['FIRST_ORDERED_NODE_TYPE'] = 9;
 export type FIRST_ORDERED_NODE_TYPE = typeof FIRST_ORDERED_NODE_TYPE;
 
 export const XPATH_EVALUATION_RESULT = {
-	ANY_TYPE,
-	ANY_UNORDERED_NODE_TYPE,
-	BOOLEAN_TYPE,
-	FIRST_ORDERED_NODE_TYPE,
-	NUMBER_TYPE,
-	ORDERED_NODE_ITERATOR_TYPE,
-	ORDERED_NODE_SNAPSHOT_TYPE,
-	STRING_TYPE,
-	UNORDERED_NODE_ITERATOR_TYPE,
-	UNORDERED_NODE_SNAPSHOT_TYPE,
+  ANY_TYPE,
+  ANY_UNORDERED_NODE_TYPE,
+  BOOLEAN_TYPE,
+  FIRST_ORDERED_NODE_TYPE,
+  NUMBER_TYPE,
+  ORDERED_NODE_ITERATOR_TYPE,
+  ORDERED_NODE_SNAPSHOT_TYPE,
+  STRING_TYPE,
+  UNORDERED_NODE_ITERATOR_TYPE,
+  UNORDERED_NODE_SNAPSHOT_TYPE,
 };
 
 export type XPathEvaluationResultType =
-	| ANY_TYPE
-	| ANY_UNORDERED_NODE_TYPE
-	| BOOLEAN_TYPE
-	| FIRST_ORDERED_NODE_TYPE
-	| NUMBER_TYPE
-	| ORDERED_NODE_ITERATOR_TYPE
-	| ORDERED_NODE_SNAPSHOT_TYPE
-	| STRING_TYPE
-	| UNORDERED_NODE_ITERATOR_TYPE
-	| UNORDERED_NODE_SNAPSHOT_TYPE;
+  | ANY_TYPE
+  | ANY_UNORDERED_NODE_TYPE
+  | BOOLEAN_TYPE
+  | FIRST_ORDERED_NODE_TYPE
+  | NUMBER_TYPE
+  | ORDERED_NODE_ITERATOR_TYPE
+  | ORDERED_NODE_SNAPSHOT_TYPE
+  | STRING_TYPE
+  | UNORDERED_NODE_ITERATOR_TYPE
+  | UNORDERED_NODE_SNAPSHOT_TYPE;
 
 /**
  * Establishes baseline API compatibility with the WHAT Working Group DOM
@@ -62,25 +62,25 @@ export type XPathEvaluationResultType =
  * {@link XPathDOMAdapter}'s arbitrary DOM implementation.
  */
 export interface XPathEvaluationResult<T extends XPathNode> {
-	readonly booleanValue: boolean;
-	readonly invalidIteratorState: boolean;
-	readonly numberValue: number;
-	readonly resultType: XPathEvaluationResultType;
-	readonly singleNodeValue: T | null;
-	readonly snapshotLength: number;
-	readonly stringValue: string;
+  readonly booleanValue: boolean;
+  readonly invalidIteratorState: boolean;
+  readonly numberValue: number;
+  readonly resultType: XPathEvaluationResultType;
+  readonly singleNodeValue: T | null;
+  readonly snapshotLength: number;
+  readonly stringValue: string;
 
-	readonly ANY_TYPE: ANY_TYPE;
-	readonly ANY_UNORDERED_NODE_TYPE: ANY_UNORDERED_NODE_TYPE;
-	readonly BOOLEAN_TYPE: BOOLEAN_TYPE;
-	readonly FIRST_ORDERED_NODE_TYPE: FIRST_ORDERED_NODE_TYPE;
-	readonly NUMBER_TYPE: NUMBER_TYPE;
-	readonly ORDERED_NODE_ITERATOR_TYPE: ORDERED_NODE_ITERATOR_TYPE;
-	readonly ORDERED_NODE_SNAPSHOT_TYPE: ORDERED_NODE_SNAPSHOT_TYPE;
-	readonly STRING_TYPE: STRING_TYPE;
-	readonly UNORDERED_NODE_ITERATOR_TYPE: UNORDERED_NODE_ITERATOR_TYPE;
-	readonly UNORDERED_NODE_SNAPSHOT_TYPE: UNORDERED_NODE_SNAPSHOT_TYPE;
+  readonly ANY_TYPE: ANY_TYPE;
+  readonly ANY_UNORDERED_NODE_TYPE: ANY_UNORDERED_NODE_TYPE;
+  readonly BOOLEAN_TYPE: BOOLEAN_TYPE;
+  readonly FIRST_ORDERED_NODE_TYPE: FIRST_ORDERED_NODE_TYPE;
+  readonly NUMBER_TYPE: NUMBER_TYPE;
+  readonly ORDERED_NODE_ITERATOR_TYPE: ORDERED_NODE_ITERATOR_TYPE;
+  readonly ORDERED_NODE_SNAPSHOT_TYPE: ORDERED_NODE_SNAPSHOT_TYPE;
+  readonly STRING_TYPE: STRING_TYPE;
+  readonly UNORDERED_NODE_ITERATOR_TYPE: UNORDERED_NODE_ITERATOR_TYPE;
+  readonly UNORDERED_NODE_SNAPSHOT_TYPE: UNORDERED_NODE_SNAPSHOT_TYPE;
 
-	iterateNext(): T | null;
-	snapshotItem(index: number): T | null;
+  iterateNext(): T | null;
+  snapshotItem(index: number): T | null;
 }

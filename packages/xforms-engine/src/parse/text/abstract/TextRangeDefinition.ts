@@ -10,52 +10,52 @@ export type TextBindAttributeLocalName = 'constraintMsg' | 'requiredMsg';
 export type TextBodyElementLocalName = 'hint' | 'label';
 
 interface TextSourceNodes {
-	readonly constraintMsg: null;
-	readonly hint: LocalNamedElement<'hint'>;
-	readonly label: LocalNamedElement<'label'>;
-	readonly 'item-label': LocalNamedElement<'label'>;
-	readonly requiredMsg: null;
+  readonly constraintMsg: null;
+  readonly hint: LocalNamedElement<'hint'>;
+  readonly label: LocalNamedElement<'label'>;
+  readonly 'item-label': LocalNamedElement<'label'>;
+  readonly requiredMsg: null;
 }
 
 export type TextSourceNode<Type extends TextRole> = TextSourceNodes[Type];
 
 export abstract class TextRangeDefinition<Role extends TextRole> extends DependencyContext {
-	abstract readonly role: Role;
-	readonly parentReference: string | null;
-	readonly reference: string | null;
+  abstract readonly role: Role;
+  readonly parentReference: string | null;
+  readonly reference: string | null;
 
-	abstract readonly chunks: ReadonlyArray<TextChunkExpression<'nodes' | 'string'>>;
+  abstract readonly chunks: ReadonlyArray<TextChunkExpression<'nodes' | 'string'>>;
 
-	override get isTranslated(): boolean {
-		return (
-			this.ownerContext.isTranslated || this.chunks.some((chunk) => chunk.source === 'translation')
-		);
-	}
+  override get isTranslated(): boolean {
+    return (
+      this.ownerContext.isTranslated || this.chunks.some((chunk) => chunk.source === 'translation')
+    );
+  }
 
-	override set isTranslated(value: true) {
-		if (this.ownerContext != null) {
-			this.ownerContext.isTranslated = value;
-		}
+  override set isTranslated(value: true) {
+    if (this.ownerContext != null) {
+      this.ownerContext.isTranslated = value;
+    }
 
-		super.isTranslated = value;
-	}
+    super.isTranslated = value;
+  }
 
-	protected constructor(
-		readonly form: XFormDefinition,
-		readonly ownerContext: DependencyContext,
-		readonly sourceNode: TextSourceNode<Role>
-	) {
-		super();
+  protected constructor(
+    readonly form: XFormDefinition,
+    readonly ownerContext: DependencyContext,
+    readonly sourceNode: TextSourceNode<Role>
+  ) {
+    super();
 
-		this.reference = ownerContext.reference;
-		this.parentReference = ownerContext.parentReference;
-	}
+    this.reference = ownerContext.reference;
+    this.parentReference = ownerContext.parentReference;
+  }
 
-	toJSON(): object {
-		const { form, ownerContext, ...rest } = this;
+  toJSON(): object {
+    const { form, ownerContext, ...rest } = this;
 
-		return rest;
-	}
+    return rest;
+  }
 }
 
 // prettier-ignore

@@ -1,25 +1,25 @@
 <script lang="ts" setup>
 import type { SelectNode } from '@getodk/xforms-engine';
 import MultiSelect from 'primevue/multiselect';
-import { computed } from 'vue';
+import { computed, inject } from 'vue';
 import MarkdownBlock from './MarkdownBlock.vue';
+import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 
 interface MultiselectDropdownProps {
 	readonly question: SelectNode;
 	readonly style?: string;
 }
 
+const t: Translate = inject(TRANSLATE)!;
 const props = defineProps<MultiselectDropdownProps>();
+
+const DEFAULT_PRIMEVUE_ITEM_HEIGHT = 38;
 
 defineEmits(['update:modelValue', 'change']);
 
 const options = computed(() => {
 	return props.question.currentState.valueOptions.map((option) => {
-		const label = props.question.getValueOption(option.value);
-		if (label == null) {
-			throw new Error(`Failed to find option for value: ${option.value}`);
-		}
-
 		return {
 			value: option.value,
 			label: option.label.formatted,
@@ -39,9 +39,9 @@ if (props.question.appearances['no-buttons']) {
 
 const selectedLabels = computed(() => {
 	const state = props.question.currentState;
-	return state.value.map((val) => {
-		const found = state.valueOptions.find((opt) => opt.value === val);
-		return found?.label.formatted;
+	return state.value.map((value) => {
+		const option = props.question.getValueOption(value);
+		return option?.label.formatted;
 	});
 });
 </script>
@@ -65,6 +65,7 @@ const selectedLabels = computed(() => {
 		option-label="search"
 		:panel-class="panelClass"
 		:model-value="question.currentState.value"
+		:virtual-scroller-options="{ itemSize: DEFAULT_PRIMEVUE_ITEM_HEIGHT }"
 		@update:model-value="selectValues"
 		@change="$emit('change')"
 	>
@@ -72,6 +73,9 @@ const selectedLabels = computed(() => {
 			<MarkdownBlock v-for="elem in slotProps.option.label" :key="elem.id" :elem="elem" />
 		</template>
 		<template #value>
+			<span v-if="!selectedLabels?.length" class="dropdown-placeholder">
+				{{ t('searchable_dropdown.select.placeholder') }}
+			</span>
 			<template v-for="(markdown, index) in selectedLabels" :key="index">
 				<!-- eslint-disable-next-line -->
 				<template v-if="index > 0">, </template>
@@ -83,6 +87,7 @@ const selectedLabels = computed(() => {
 
 <style scoped lang="scss">
 @use 'primeflex/core/_variables.scss' as pf;
+@use '../../assets/styles/select-options';
 
 .multi-select-dropdown {
 	width: 100%;

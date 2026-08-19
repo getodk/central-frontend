@@ -2,12 +2,12 @@ import { XMLNS_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
 import type { UnspecifiedNonXPathNodeKind, XPathNodeKind } from '../interface/XPathNode.ts';
 import { getNodeConstructor } from './platform.ts';
 import type {
-	WHATAttribute,
-	WHATDocument,
-	WHATElement,
-	WHATNamespaceDeclaration,
-	WHATNode,
-	WHATParentNode,
+  WHATAttribute,
+  WHATDocument,
+  WHATElement,
+  WHATNamespaceDeclaration,
+  WHATNode,
+  WHATParentNode,
 } from './WHATNode.ts';
 
 type DOCUMENT_NODE = Node['DOCUMENT_NODE'];
@@ -41,82 +41,82 @@ type WHATNodeKind =
 	| UnspecifiedNonXPathNodeKind;
 
 const isUnknownWHATNode = (value: unknown): value is Node => {
-	return value instanceof getNodeConstructor();
+  return value instanceof getNodeConstructor();
 };
 
 const getOptionalNodeKind = (value: unknown): WHATNodeKind | null => {
-	if (!isUnknownWHATNode(value)) {
-		return null;
-	}
+  if (!isUnknownWHATNode(value)) {
+    return null;
+  }
 
-	const node = value satisfies Node;
+  const node = value satisfies Node;
 
-	switch (node.nodeType) {
-		case DOCUMENT_NODE:
-			return 'document';
+  switch (node.nodeType) {
+    case DOCUMENT_NODE:
+      return 'document';
 
-		case DOCUMENT_TYPE_NODE:
-			return 'UNSPECIFIED_NON_XPATH_NODE';
+    case DOCUMENT_TYPE_NODE:
+      return 'UNSPECIFIED_NON_XPATH_NODE';
 
-		case ELEMENT_NODE:
-			return 'element';
+    case ELEMENT_NODE:
+      return 'element';
 
-		case ATTRIBUTE_NODE:
-			if ((node as Attr).namespaceURI === XMLNS_NAMESPACE_URI) {
-				return 'namespace_declaration';
-			}
+    case ATTRIBUTE_NODE:
+      if ((node as Attr).namespaceURI === XMLNS_NAMESPACE_URI) {
+        return 'namespace_declaration';
+      }
 
-			return 'attribute';
+      return 'attribute';
 
-		case TEXT_NODE:
-		case CDATA_SECTION_NODE:
-			return 'text';
+    case TEXT_NODE:
+    case CDATA_SECTION_NODE:
+      return 'text';
 
-		case COMMENT_NODE:
-			return 'comment';
+    case COMMENT_NODE:
+      return 'comment';
 
-		case PROCESSING_INSTRUCTION_NODE:
-			return 'processing_instruction';
+    case PROCESSING_INSTRUCTION_NODE:
+      return 'processing_instruction';
 
-		default:
-			return null;
-	}
+    default:
+      return null;
+  }
 };
 
 export const getWHATNodeKind = (node: WHATNode): WHATNodeKind => {
-	const nodeKind = getOptionalNodeKind(node);
+  const nodeKind = getOptionalNodeKind(node);
 
-	if (nodeKind == null) {
-		throw new Error(`Unsupported WHAT node type: ${node.nodeType}`);
-	}
+  if (nodeKind == null) {
+    throw new Error(`Unsupported WHAT node type: ${node.nodeType}`);
+  }
 
-	return nodeKind;
+  return nodeKind;
 };
 
 export const isWHATNode = (value: unknown): value is WHATNode => {
-	const nodeKind = getOptionalNodeKind(value);
+  const nodeKind = getOptionalNodeKind(value);
 
-	return nodeKind != null && nodeKind !== 'UNSPECIFIED_NON_XPATH_NODE';
+  return nodeKind != null && nodeKind !== 'UNSPECIFIED_NON_XPATH_NODE';
 };
 
 export const isWHATDocument = (node: WHATNode): node is WHATDocument => {
-	return node.nodeType === DOCUMENT_NODE;
+  return node.nodeType === DOCUMENT_NODE;
 };
 
 export const isWHATElement = (node: WHATNode): node is WHATElement => {
-	return node.nodeType === ELEMENT_NODE;
+  return node.nodeType === ELEMENT_NODE;
 };
 
 export const isWHATNamespaceDeclaration = (
-	node: Attr | WHATNode
+  node: Attr | WHATNode
 ): node is WHATNamespaceDeclaration => {
-	return node.nodeType === ATTRIBUTE_NODE && (node as Attr).namespaceURI === XMLNS_NAMESPACE_URI;
+  return node.nodeType === ATTRIBUTE_NODE && (node as Attr).namespaceURI === XMLNS_NAMESPACE_URI;
 };
 
 export const isWHATAttribute = (node: Attr | WHATNode): node is WHATAttribute => {
-	return node.nodeType === ATTRIBUTE_NODE && (node as Attr).namespaceURI !== XMLNS_NAMESPACE_URI;
+  return node.nodeType === ATTRIBUTE_NODE && (node as Attr).namespaceURI !== XMLNS_NAMESPACE_URI;
 };
 
 export const isWHATParentNode = (node: WHATNode): node is WHATParentNode => {
-	return isWHATDocument(node) || isWHATElement(node);
+  return isWHATDocument(node) || isWHATElement(node);
 };

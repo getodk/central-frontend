@@ -1,5 +1,19 @@
 # @getodk/xpath
 
+## 1.0.0
+
+### Major Changes
+
+- 3045945: First stable release
+
+### Patch Changes
+
+- eccae97: Fixed two memory leaks and improved `position()` performance on large same-name sibling sets.
+- Updated dependencies [9918bea]
+- Updated dependencies [b7abdc1]
+- Updated dependencies [3045945]
+  - @getodk/common@1.0.0
+
 ## 0.11.0
 
 ### Minor Changes

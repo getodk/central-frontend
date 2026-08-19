@@ -5,14 +5,14 @@ import type { LeafNodeDefinition } from '../../../parse/model/LeafNodeDefinition
 import { createTextRange } from './createTextRange.ts';
 
 export const createFieldHint = (
-	context: EvaluationContext,
-	definition: LeafNodeDefinition
+  context: EvaluationContext,
+  definition: LeafNodeDefinition
 ): Accessor<TextRange<'hint'> | null> => {
-	const hintDefinition = definition.bodyElement?.hint ?? null;
+  const hintDefinition = definition.bodyElement?.hint ?? null;
 
-	if (hintDefinition == null) {
-		return () => null;
-	}
+  if (hintDefinition == null) {
+    return () => null;
+  }
 
-	return createTextRange(context, 'hint', hintDefinition);
+  return createTextRange(context, 'hint', hintDefinition);
 };

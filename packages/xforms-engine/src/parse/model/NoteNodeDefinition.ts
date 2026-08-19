@@ -18,11 +18,11 @@ export type NoteReadonlyDefinition =
 	& ConstantTruthyDependentExpression;
 
 export interface NoteBindDefinition<V extends ValueType> extends BindDefinition<V> {
-	readonly readonly: NoteReadonlyDefinition;
+  readonly readonly: NoteReadonlyDefinition;
 }
 
 const isNoteBindDefinition = (bind: BindDefinition): bind is NoteBindDefinition<ValueType> => {
-	return bind.readonly.isConstantTruthyExpression();
+  return bind.readonly.isConstantTruthyExpression();
 };
 
 // prettier-ignore
@@ -41,35 +41,35 @@ export type NoteTextDefinition =
  * distinct {@link NoteNode.currentState} types) to handle note-specific logic.
  */
 export class NoteNodeDefinition<V extends ValueType = ValueType> extends LeafNodeDefinition<V> {
-	static from<V extends ValueType>(
-		model: ModelDefinition,
-		parent: ParentNodeDefinition,
-		bind: BindDefinition<V>,
-		bodyElement: AnyBodyElementDefinition | null,
-		node: StaticLeafElement
-	): NoteNodeDefinition<V> | null {
-		if (!isNoteBindDefinition(bind) || bodyElement?.type !== 'input') {
-			return null;
-		}
+  static from<V extends ValueType>(
+    model: ModelDefinition,
+    parent: ParentNodeDefinition,
+    bind: BindDefinition<V>,
+    bodyElement: AnyBodyElementDefinition | null,
+    node: StaticLeafElement
+  ): NoteNodeDefinition<V> | null {
+    if (!isNoteBindDefinition(bind) || bodyElement?.type !== 'input') {
+      return null;
+    }
 
-		const { label, hint } = bodyElement;
-		const noteTextDefinition = label ?? hint;
+    const { label, hint } = bodyElement;
+    const noteTextDefinition = label ?? hint;
 
-		if (noteTextDefinition == null) {
-			return null;
-		}
+    if (noteTextDefinition == null) {
+      return null;
+    }
 
-		return new this(model, parent, bind, bodyElement, noteTextDefinition, node);
-	}
+    return new this(model, parent, bind, bodyElement, noteTextDefinition, node);
+  }
 
-	constructor(
-		model: ModelDefinition,
-		parent: ParentNodeDefinition,
-		override readonly bind: NoteBindDefinition<V>,
-		override readonly bodyElement: InputControlDefinition,
-		readonly noteTextDefinition: NoteTextDefinition,
-		template: StaticLeafElement
-	) {
-		super(model, parent, bind, bodyElement, template);
-	}
+  constructor(
+    model: ModelDefinition,
+    parent: ParentNodeDefinition,
+    override readonly bind: NoteBindDefinition<V>,
+    override readonly bodyElement: InputControlDefinition,
+    readonly noteTextDefinition: NoteTextDefinition,
+    template: StaticLeafElement
+  ) {
+    super(model, parent, bind, bodyElement, template);
+  }
 }

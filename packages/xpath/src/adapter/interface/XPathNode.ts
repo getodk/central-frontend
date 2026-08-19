@@ -36,7 +36,7 @@ export type XPathNodeKindKey = typeof XPathNodeKindKey;
  * corresponding name changes downstream.
  */
 export interface XPathDocument {
-	readonly [XPathNodeKindKey]: XPathDocumentKind;
+  readonly [XPathNodeKindKey]: XPathDocumentKind;
 }
 
 /**
@@ -45,7 +45,7 @@ export interface XPathDocument {
  * and as implemented/provided by an {@link XPathDOMAdapter}.
  */
 export interface XPathElement {
-	readonly [XPathNodeKindKey]: XPathElementKind;
+  readonly [XPathNodeKindKey]: XPathElementKind;
 }
 
 /**
@@ -76,7 +76,7 @@ export interface XPathElement {
  * declarations from attributes is the node's name and/or prefix.
  */
 export interface XPathNamespaceDeclaration {
-	readonly [XPathNodeKindKey]: XPathNamespaceDeclarationKind;
+  readonly [XPathNodeKindKey]: XPathNamespaceDeclarationKind;
 }
 
 /**
@@ -92,7 +92,7 @@ export interface XPathNamespaceDeclaration {
  * distinction.
  */
 export interface XPathAttribute {
-	readonly [XPathNodeKindKey]: XPathAttributeKind;
+  readonly [XPathNodeKindKey]: XPathAttributeKind;
 }
 
 /**
@@ -102,7 +102,7 @@ export interface XPathAttribute {
  * and as implemented/provided by an {@link XPathDOMAdapter}.
  */
 export interface XPathText {
-	readonly [XPathNodeKindKey]: XPathTextKind;
+  readonly [XPathNodeKindKey]: XPathTextKind;
 }
 
 /**
@@ -112,7 +112,7 @@ export interface XPathText {
  * and as implemented/provided by an {@link XPathDOMAdapter}.
  */
 export interface XPathComment {
-	readonly [XPathNodeKindKey]: XPathCommentKind;
+  readonly [XPathNodeKindKey]: XPathCommentKind;
 }
 
 /**
@@ -122,7 +122,7 @@ export interface XPathComment {
  * and as implemented/provided by an {@link XPathDOMAdapter}.
  */
 export interface XPathProcessingInstruction {
-	readonly [XPathNodeKindKey]: XPathProcessingInstructionKind;
+  readonly [XPathNodeKindKey]: XPathProcessingInstructionKind;
 }
 
 /**

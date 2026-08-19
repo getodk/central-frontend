@@ -6,8 +6,8 @@ import * as number from './number.ts';
 import * as string from './string.ts';
 
 export const fn = new FunctionLibrary(FN_NAMESPACE_URI, [
-	...Object.values(boolean),
-	...Object.values(nodeset),
-	...Object.values(number),
-	...Object.values(string),
+  ...Object.values(boolean),
+  ...Object.values(nodeset),
+  ...Object.values(number),
+  ...Object.values(string),
 ]);

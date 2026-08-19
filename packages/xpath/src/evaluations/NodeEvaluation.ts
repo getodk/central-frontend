@@ -5,82 +5,82 @@ import { StringEvaluation } from './StringEvaluation.ts';
 import { ValueEvaluation } from './ValueEvaluation.ts';
 
 interface NodeEvaluationComputedValues {
-	readonly booleanValue: boolean;
-	readonly isEmpty: boolean;
-	readonly numberValue: number;
-	readonly stringValue: string;
+  readonly booleanValue: boolean;
+  readonly isEmpty: boolean;
+  readonly numberValue: number;
+  readonly stringValue: string;
 }
 
 export class NodeEvaluation<T extends XPathNode> extends ValueEvaluation<T, 'NODE'> {
-	readonly type = 'NODE';
-	readonly nodes: ReadonlySet<T>;
+  readonly type = 'NODE';
+  readonly nodes: ReadonlySet<T>;
 
-	protected computedValues: NodeEvaluationComputedValues | null = null;
+  protected computedValues: NodeEvaluationComputedValues | null = null;
 
-	protected get booleanValue(): boolean {
-		return this.computeValues().booleanValue;
-	}
+  protected get booleanValue(): boolean {
+    return this.computeValues().booleanValue;
+  }
 
-	protected get numberValue(): number {
-		return this.computeValues().numberValue;
-	}
+  protected get numberValue(): number {
+    return this.computeValues().numberValue;
+  }
 
-	protected get stringValue(): string {
-		return this.computeValues().stringValue;
-	}
+  protected get stringValue(): string {
+    return this.computeValues().stringValue;
+  }
 
-	get isEmpty(): boolean {
-		return this.computeValues().isEmpty;
-	}
+  get isEmpty(): boolean {
+    return this.computeValues().isEmpty;
+  }
 
-	constructor(
-		readonly context: LocationPathEvaluation<T>,
-		readonly value: T
-	) {
-		super();
-		this.nodes = new Set([value]);
-	}
+  constructor(
+    readonly context: LocationPathEvaluation<T>,
+    readonly value: T
+  ) {
+    super();
+    this.nodes = new Set([value]);
+  }
 
-	protected computeValues(): NodeEvaluationComputedValues {
-		let { computedValues } = this;
+  protected computeValues(): NodeEvaluationComputedValues {
+    let { computedValues } = this;
 
-		if (computedValues == null) {
-			const { context, value: node } = this;
-			const stringValue = context.domProvider.getNodeValue(node);
-			const isEmpty = trimXMLXPathWhitespace(stringValue) === '';
-			const booleanValue = !isEmpty;
-			const numberFunction = context.functions.getDefaultImplementation('number');
+    if (computedValues == null) {
+      const { context, value: node } = this;
+      const stringValue = context.domProvider.getNodeValue(node);
+      const isEmpty = trimXMLXPathWhitespace(stringValue) === '';
+      const booleanValue = !isEmpty;
+      const numberFunction = context.functions.getDefaultImplementation('number');
 
-			let numberValue: number;
+      let numberValue: number;
 
-			// Note: without this `isEmpty` check, `Number('')` would produce 0.
-			// Which is wrong! Thanks, Netscape!
-			if (isEmpty) {
-				numberValue = NaN;
-			} else if (numberFunction == null) {
-				numberValue = Number(stringValue);
-			} else {
-				const stringEvaluation = new StringEvaluation(context, stringValue);
+      // Note: without this `isEmpty` check, `Number('')` would produce 0.
+      // Which is wrong! Thanks, Netscape!
+      if (isEmpty) {
+        numberValue = NaN;
+      } else if (numberFunction == null) {
+        numberValue = Number(stringValue);
+      } else {
+        const stringEvaluation = new StringEvaluation(context, stringValue);
 
-				numberValue = numberFunction
-					.call(context, [
-						{
-							evaluate: () => stringEvaluation,
-						},
-					])
-					.toNumber();
-			}
+        numberValue = numberFunction
+          .call(context, [
+            {
+              evaluate: () => stringEvaluation,
+            },
+          ])
+          .toNumber();
+      }
 
-			computedValues = {
-				booleanValue,
-				isEmpty,
-				numberValue,
-				stringValue,
-			};
+      computedValues = {
+        booleanValue,
+        isEmpty,
+        numberValue,
+        stringValue,
+      };
 
-			this.computedValues = computedValues;
-		}
+      this.computedValues = computedValues;
+    }
 
-		return computedValues;
-	}
+    return computedValues;
+  }
 }

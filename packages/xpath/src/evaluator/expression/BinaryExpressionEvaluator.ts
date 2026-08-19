@@ -6,17 +6,17 @@ import type { ExpressionEvaluator } from './ExpressionEvaluator.ts';
 import { createExpression } from './factory.ts';
 
 export abstract class BinaryExpressionEvaluator<
-	Node extends AnyBinaryExprNode,
+  Node extends AnyBinaryExprNode,
 > implements ExpressionEvaluator {
-	readonly lhs: ExpressionEvaluator;
-	readonly rhs: ExpressionEvaluator;
+  readonly lhs: ExpressionEvaluator;
+  readonly rhs: ExpressionEvaluator;
 
-	constructor(readonly syntaxNode: Node) {
-		const [lhsNode, rhsNode] = syntaxNode.children;
+  constructor(readonly syntaxNode: Node) {
+    const [lhsNode, rhsNode] = syntaxNode.children;
 
-		this.lhs = createExpression(lhsNode);
-		this.rhs = createExpression(rhsNode);
-	}
+    this.lhs = createExpression(lhsNode);
+    this.rhs = createExpression(rhsNode);
+  }
 
-	abstract evaluate<T extends XPathNode>(context: EvaluationContext<T>): Evaluation<T>;
+  abstract evaluate<T extends XPathNode>(context: EvaluationContext<T>): Evaluation<T>;
 }

@@ -28,9 +28,6 @@ except according to the terms contained in the LICENSE file.
         <div class="panel panel-simple panel-web-forms">
           <div class="panel-heading">
             <h1 class="panel-title">
-              <span class="badge beta">
-                {{ $t('common.beta') }}
-              </span>
               {{ $t('webFormsSetting.webForms') }}
             </h1>
           </div>
@@ -43,16 +40,30 @@ except according to the terms contained in the LICENSE file.
             <form id="web-form-settings-form">
               <div class="radio">
                 <label>
-                  <input v-model="webformsEnabled" name="webformsEnabled" type="radio" :value="false"
-                    @change="confirmationModal.show({ webformsEnabled: false })">
-                  {{ $t('webFormsSetting.enketoDefault') }}
+                  <input v-model="webformsEnabled" name="webformsEnabled" type="radio" :value="true"
+                    @change="confirmationModal.show({ webformsEnabled: true })">
+                  <span class="label-title">
+                    ODK Web Forms
+                  </span>
+                  <span class="badge recommended">
+                    {{ $t('common.recommended') }}
+                  </span>
+                  <i18n-t tag="p" keypath="webFormsSetting.odkWebFormsDescription.full">
+                    <template #preview>
+                      <router-link :to="formPreviewPathWebForms()" target="_blank">{{ $t('webFormsSetting.odkWebFormsDescription.preview') }}</router-link>
+                    </template>
+                  </i18n-t>
                 </label>
               </div>
               <div class="radio">
                 <label>
-                  <input v-model="webformsEnabled" name="webformsEnabled" type="radio" :value="true"
-                    @change="confirmationModal.show({ webformsEnabled: true })">
-                  ODK Web Forms
+                  <input v-model="webformsEnabled" name="webformsEnabled" type="radio" :value="false"
+                    @change="confirmationModal.show({ webformsEnabled: false })">
+                  <span class="label-title">
+                    {{ $t('common.useEnketo') }}
+                  </span>
+                  <br>
+                  {{ $t('webFormsSetting.enketoDescription') }}
                 </label>
               </div>
             </form>
@@ -102,7 +113,7 @@ const toast = inject('toast');
 const { t } = useI18n();
 const router = useRouter();
 const { form } = useRequestData();
-const { projectPath } = useRoutes();
+const { projectPath, formPreviewPathWebForms } = useRoutes();
 
 const deleteModal = modalData();
 const confirmationModal = modalData();
@@ -146,11 +157,18 @@ const hideAndReset = () => {
     .panel-body > p {
       margin-bottom: 20px;
     }
-    .beta {
+
+    #web-form-settings-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .recommended {
       text-transform: uppercase;
-      background: #F1DEE7;
+      background: $color-success-light;
       padding: 5px 10px;
-      color: $color-accent-primary;
+      color: $color-success;
       font-family: Helvetica;
       font-weight: 400;
       vertical-align: baseline;
@@ -158,9 +176,14 @@ const hideAndReset = () => {
     .radio {
       min-height: 48px;
       margin-bottom: 0;
+
       label {
         cursor: pointer;
         padding-left: 30px;
+
+        .label-title {
+          font-weight: bold;
+        }
       }
     }
   }
@@ -185,12 +208,16 @@ const hideAndReset = () => {
       "delete": "The Form “{name}” has been successfully deleted."
     },
     "webFormsSetting": {
-      // Title of a section on Forms settings page, that allows users to opt-in for ODK Web Forms
-      "webForms": "Web Forms",
+      // Title of a section on Forms settings page, that allows users to choose which form experience they want to use
+      "webForms": "Web form experience",
       // Description of a section. {formName} is replaced with the name of the Form
       "description": "Fill out, preview and edit your “{formName}” Form using",
-      // The word "Enketo" should not be translated
-      "enketoDefault": "Enketo (default)",
+      // This text is shown under the option of Enketo for Form settings.
+      "enketoDescription": "No longer actively developed. Use for specialized features not yet supported by ODK Web Forms.",
+      "odkWebFormsDescription": {
+        "full": "A modern experience that will replace Enketo over time. {preview}.",
+        "preview": "See a preview"
+      },
       // Success message when Enketo is selected as web form technology. {formName} is replaced with the name of the Form
       "enketoSelected": "You’re now using Enketo to fill out, preview and edit your “{formName}” form.",
       // Success message when ODK Web Forms is selected as web form technology. {formName} is replaced with the name of the Form
@@ -230,9 +257,7 @@ const hideAndReset = () => {
       "delete": "Das Formular \"{name}\" wurde erfolgreich gelöscht."
     },
     "webFormsSetting": {
-      "webForms": "Web-Formulare",
       "description": "Ausfüllen, anschauen und bearbeiten des Formulars \"{formName}\" mit",
-      "enketoDefault": "Enketo (default)",
       "enketoSelected": "Sie verwenden jetzt Enketo, um Ihr Formular \"{formName}“ auszufüllen, in der Vorschau anzuzeigen und zu bearbeiten.",
       "owfSelected": "Sie verwenden jetzt ODK Web Forms, um Ihr Formular \"{formName}“ auszufüllen, in der Vorschau anzuzeigen und zu bearbeiten."
     }
@@ -252,9 +277,7 @@ const hideAndReset = () => {
       "delete": "El formulario {name} fue eliminado correctamente."
     },
     "webFormsSetting": {
-      "webForms": "Formularios web",
       "description": "Rellene, previsualice y edite su Formulario “{formName}” utilizando",
-      "enketoDefault": "Enketo (default)",
       "enketoSelected": "Ahora estás utilizando Enketo para rellenar, previsualizar y editar tu formulario \"{formName}\".",
       "owfSelected": "Ahora estás utilizando ODK Web Forms para rellenar, previsualizar y editar tu formulario \"{formName}\"."
     }
@@ -274,9 +297,13 @@ const hideAndReset = () => {
       "delete": "Le formulaire \"{name}\" a été supprimé."
     },
     "webFormsSetting": {
-      "webForms": "Web Forms",
+      "webForms": "Expérience de formulaire web",
       "description": "Remplissez, prévisualisez et éditez votre Formulaire \"{formName}\" en utilisant",
-      "enketoDefault": "Enketo (par défaut)",
+      "enketoDescription": "N'est plus activement développé. Utilisez-le pour des fonctionnalités spécialisées qui ne sont pas encore disponibles dans ODK Web Forms.",
+      "odkWebFormsDescription": {
+        "full": "Une expérience moderne qui remplacera Enketo au fil du temps. {preview}.",
+        "preview": "Voir un aperçu"
+      },
       "enketoSelected": "Vous utilisez maintenant Enketo pour remplir, prévisualiser et éditer votre formulaire \"{formName}\".",
       "owfSelected": "Vous utilisez maintenant ODK Web Forms pour remplir, prévisualiser et éditer votre formulaire \"{formName}\"."
     }
@@ -308,9 +335,7 @@ const hideAndReset = () => {
       "delete": "Il formulario “{name}” è stato eliminato con successo."
     },
     "webFormsSetting": {
-      "webForms": "Formulari Web",
       "description": "Compilate, visualizzate in anteprima e modificate il vostro “{formName}” Formulario usando",
-      "enketoDefault": "Enketo (default)",
       "enketoSelected": "Ora stai utilizzando Enketo per compilare, visualizzare in anteprima e modificare il tuo formulario “{formName}\".",
       "owfSelected": "Ora stai utilizzando ODK Web Forms per compilare, visualizzare in anteprima e modificare il tuo formulario “{formName}\"."
     }
@@ -337,10 +362,6 @@ const hideAndReset = () => {
     },
     "action": {
       "delete": "Excluir esse formulário"
-    },
-    "webFormsSetting": {
-      "webForms": "Web Forms",
-      "enketoDefault": "Enketo (padrão)"
     }
   },
   "sw": {
@@ -370,9 +391,7 @@ const hideAndReset = () => {
       "delete": "表单“{name}”已成功删除。"
     },
     "webFormsSetting": {
-      "webForms": "Web表单",
       "description": "填写、预览和编辑您的“{formName}”表单，请使用",
-      "enketoDefault": "Enketo（默认）",
       "enketoSelected": "您当前正在使用Enketo填写、预览和编辑“{formName}”表单。",
       "owfSelected": "您当前正在使用ODK Web表单填写、预览和编辑“{formName}”表单。"
     }
@@ -392,9 +411,7 @@ const hideAndReset = () => {
       "delete": "表單 「{name}」 已成功刪除。"
     },
     "webFormsSetting": {
-      "webForms": "網頁表單",
       "description": "使用以下功能填寫、預覽和編輯您的表單 「{formName}」",
-      "enketoDefault": "Enketo (預設)",
       "enketoSelected": "您目前正在使用 Enketo 填寫、預覽及編輯「{formName}」表單。",
       "owfSelected": "您目前正在使用 ODK 網頁表單填寫、預覽及編輯「{formName}」表單。"
     }

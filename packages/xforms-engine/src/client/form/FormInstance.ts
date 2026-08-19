@@ -104,11 +104,11 @@ export type FormInstanceInitializationMode =
  *   eventually. It would be too easy to forget about, indefinitely!
  */
 export interface FormInstance<Mode extends FormInstanceInitializationMode> {
-	readonly formResult: InstantiableLoadFormResult;
-	readonly mode: Mode;
-	readonly root: RootNode;
+  readonly formResult: InstantiableLoadFormResult;
+  readonly mode: Mode;
+  readonly root: RootNode;
 }
 
 export type AnyFormInstance = {
-	[Mode in FormInstanceInitializationMode]: FormInstance<Mode>;
+  [Mode in FormInstanceInitializationMode]: FormInstance<Mode>;
 }[FormInstanceInitializationMode];

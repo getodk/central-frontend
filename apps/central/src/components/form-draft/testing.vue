@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <form-edit-section icon="eye">
+  <form-edit-section>
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <i18n-t tag="p" keypath="deletionWarning.full">

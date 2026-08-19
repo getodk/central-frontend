@@ -11,21 +11,21 @@ export type NoteTextRole = 'label' | 'hint';
 export type ComputedNoteText<Role extends NoteTextRole = NoteTextRole> = Accessor<TextRange<Role>>;
 
 interface BaseNoteText {
-	readonly role: NoteTextRole;
-	readonly label: ComputedNoteText<'label'> | null;
-	readonly hint: ComputedNoteText<'hint'> | null;
+  readonly role: NoteTextRole;
+  readonly label: ComputedNoteText<'label'> | null;
+  readonly hint: ComputedNoteText<'hint'> | null;
 }
 
 interface LabelNoteText extends BaseNoteText {
-	readonly role: 'label';
-	readonly label: ComputedNoteText<'label'>;
-	readonly hint: null;
+  readonly role: 'label';
+  readonly label: ComputedNoteText<'label'>;
+  readonly hint: null;
 }
 
 interface HintNoteText extends BaseNoteText {
-	readonly role: 'hint';
-	readonly label: null;
-	readonly hint: ComputedNoteText<'hint'>;
+  readonly role: 'hint';
+  readonly label: null;
+  readonly hint: ComputedNoteText<'hint'>;
 }
 
 // prettier-ignore
@@ -35,36 +35,36 @@ export type NoteTextComputation =
 	| HintNoteText;
 
 export const createNoteText = (
-	context: EvaluationContext,
-	noteTextDefinition: NoteTextDefinition
+  context: EvaluationContext,
+  noteTextDefinition: NoteTextDefinition
 ): NoteTextComputation => {
-	const { scope } = context;
-	const { role } = noteTextDefinition;
+  const { scope } = context;
+  const { role } = noteTextDefinition;
 
-	return scope.runTask(() => {
-		switch (role) {
-			case 'label': {
-				const label = createTextRange(context, role, noteTextDefinition);
+  return scope.runTask(() => {
+    switch (role) {
+      case 'label': {
+        const label = createTextRange(context, role, noteTextDefinition);
 
-				return {
-					role,
-					label,
-					hint: null,
-				};
-			}
+        return {
+          role,
+          label,
+          hint: null,
+        };
+      }
 
-			case 'hint': {
-				const hint = createTextRange(context, role, noteTextDefinition);
+      case 'hint': {
+        const hint = createTextRange(context, role, noteTextDefinition);
 
-				return {
-					role,
-					label: null,
-					hint,
-				};
-			}
+        return {
+          role,
+          label: null,
+          hint,
+        };
+      }
 
-			default:
-				throw new UnreachableError(noteTextDefinition);
-		}
-	});
+      default:
+        throw new UnreachableError(noteTextDefinition);
+    }
+  });
 };

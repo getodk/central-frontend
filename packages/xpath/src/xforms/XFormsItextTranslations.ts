@@ -8,42 +8,42 @@ import type { XFormsXPathEvaluator } from './XFormsXPathEvaluator.ts';
 type XFormsItextTextID = string;
 
 export type XFormsItextTranslationValueElement<T extends XPathNode> = XFormsElementRepresentation<
-	T,
-	'value',
-	'form'
+  T,
+  'value',
+  'form'
 >;
 
 type XFormsItextTranslationTextElement<T extends XPathNode> = XFormsElementRepresentation<
-	T,
-	'text'
+  T,
+  'text'
 >;
 
 export type XFormsItextTranslationElement<T extends XPathNode> = XFormsElementRepresentation<
-	T,
-	'translation',
-	'lang'
+  T,
+  'translation',
+  'lang'
 >;
 
 type XFormsItextTextMap<T extends XPathNode> = ReadonlyMap<
-	XFormsItextTextID,
-	XFormsItextTranslationTextElement<T>
+  XFormsItextTextID,
+  XFormsItextTranslationTextElement<T>
 >;
 
 type XFormsItextTranslationsCache<T extends XPathNode> = UpsertableWeakMap<
-	XFormsItextTranslationElement<T>,
-	XFormsItextTextMap<T>
+  XFormsItextTranslationElement<T>,
+  XFormsItextTextMap<T>
 >;
 
 export type XFormsItextTranslationLanguage = string;
 
 export type XFormsItextTranslationMap<T extends XPathNode> = ReadonlyMap<
-	XFormsItextTranslationLanguage,
-	XFormsItextTranslationElement<T>
+  XFormsItextTranslationLanguage,
+  XFormsItextTranslationElement<T>
 >;
 
 interface TranslationMetadata {
-	readonly explicitDefaultLanguage: XFormsItextTranslationLanguage | null;
-	readonly languages: readonly XFormsItextTranslationLanguage[];
+  readonly explicitDefaultLanguage: XFormsItextTranslationLanguage | null;
+  readonly languages: readonly XFormsItextTranslationLanguage[];
 }
 
 /**
@@ -51,16 +51,16 @@ interface TranslationMetadata {
  * {@link https://getodk.github.io/xforms-spec/#languages | active language state}.
  */
 export interface XFormsItextTranslationsState {
-	getLanguages(): readonly XFormsItextTranslationLanguage[];
-	getActiveLanguage(): XFormsItextTranslationLanguage | null;
-	setActiveLanguage(
-		language: XFormsItextTranslationLanguage | null
-	): XFormsItextTranslationLanguage | null;
-	/**
-	 * Returns the language explicitly designated as default by the form designer via
-	 * the `default` attribute on an `<translation>` element, or `null` if no explicit default was specified.
-	 */
-	getExplicitDefaultLanguage(): XFormsItextTranslationLanguage | null;
+  getLanguages(): readonly XFormsItextTranslationLanguage[];
+  getActiveLanguage(): XFormsItextTranslationLanguage | null;
+  setActiveLanguage(
+    language: XFormsItextTranslationLanguage | null
+  ): XFormsItextTranslationLanguage | null;
+  /**
+   * Returns the language explicitly designated as default by the form designer via
+   * the `default` attribute on an `<translation>` element, or `null` if no explicit default was specified.
+   */
+  getExplicitDefaultLanguage(): XFormsItextTranslationLanguage | null;
 }
 
 /**
@@ -77,150 +77,150 @@ export interface XFormsItextTranslationsState {
  * @see {@link XFormsItextTranslationsState} for the corresponding public interface.
  */
 export class XFormsItextTranslations<T extends XPathNode> implements XFormsItextTranslationsState {
-	protected readonly explicitDefaultLanguage: XFormsItextTranslationLanguage | null = null;
-	protected readonly languages: readonly XFormsItextTranslationLanguage[] = [];
+  protected readonly explicitDefaultLanguage: XFormsItextTranslationLanguage | null = null;
+  protected readonly languages: readonly XFormsItextTranslationLanguage[] = [];
 
-	protected activeLanguage: XFormsItextTranslationLanguage | null = null;
+  protected activeLanguage: XFormsItextTranslationLanguage | null = null;
 
-	readonly translationsCache: XFormsItextTranslationsCache<T> = new UpsertableWeakMap();
+  readonly translationsCache: XFormsItextTranslationsCache<T> = new UpsertableWeakMap();
 
-	constructor(
-		readonly domProvider: XPathDOMProvider<T>,
-		readonly translationElementMap: XFormsItextTranslationMap<T>
-	) {
-		this.domProvider = domProvider;
+  constructor(
+    readonly domProvider: XPathDOMProvider<T>,
+    readonly translationElementMap: XFormsItextTranslationMap<T>
+  ) {
+    this.domProvider = domProvider;
 
-		this.translationElementMap = translationElementMap;
+    this.translationElementMap = translationElementMap;
 
-		const { explicitDefaultLanguage, languages } = this.getTranslationMetadata(
-			domProvider,
-			translationElementMap
-		);
+    const { explicitDefaultLanguage, languages } = this.getTranslationMetadata(
+      domProvider,
+      translationElementMap
+    );
 
-		this.explicitDefaultLanguage = explicitDefaultLanguage;
-		this.activeLanguage = explicitDefaultLanguage ?? languages[0] ?? null;
-		this.languages = languages;
-	}
+    this.explicitDefaultLanguage = explicitDefaultLanguage;
+    this.activeLanguage = explicitDefaultLanguage ?? languages[0] ?? null;
+    this.languages = languages;
+  }
 
-	private getTranslationMetadata(
-		domProvider: XPathDOMProvider<T>,
-		translationElementMap: XFormsItextTranslationMap<T>
-	): TranslationMetadata {
-		const languages: XFormsItextTranslationLanguage[] = [];
+  private getTranslationMetadata(
+    domProvider: XPathDOMProvider<T>,
+    translationElementMap: XFormsItextTranslationMap<T>
+  ): TranslationMetadata {
+    const languages: XFormsItextTranslationLanguage[] = [];
 
-		let explicitDefaultLanguage: XFormsItextTranslationLanguage | null = null;
+    let explicitDefaultLanguage: XFormsItextTranslationLanguage | null = null;
 
-		for (const [language, element] of translationElementMap) {
-			if (!explicitDefaultLanguage && domProvider.hasLocalNamedAttribute(element, 'default')) {
-				explicitDefaultLanguage = language;
-				languages.unshift(language);
-			} else {
-				languages.push(language);
-			}
-		}
+    for (const [language, element] of translationElementMap) {
+      if (!explicitDefaultLanguage && domProvider.hasLocalNamedAttribute(element, 'default')) {
+        explicitDefaultLanguage = language;
+        languages.unshift(language);
+      } else {
+        languages.push(language);
+      }
+    }
 
-		return {
-			explicitDefaultLanguage,
-			languages,
-		};
-	}
+    return {
+      explicitDefaultLanguage,
+      languages,
+    };
+  }
 
-	private getTranslationTextElement(itextID: string): XFormsItextTranslationTextElement<T> | null {
-		const activeLanguage = this.getActiveLanguage();
+  private getTranslationTextElement(itextID: string): XFormsItextTranslationTextElement<T> | null {
+    const activeLanguage = this.getActiveLanguage();
 
-		if (activeLanguage == null) {
-			return null;
-		}
+    if (activeLanguage == null) {
+      return null;
+    }
 
-		const { domProvider, translationElementMap, translationsCache } = this;
-		const translationElement = translationElementMap.get(activeLanguage);
+    const { domProvider, translationElementMap, translationsCache } = this;
+    const translationElement = translationElementMap.get(activeLanguage);
 
-		if (translationElement == null) {
-			return null;
-		}
+    if (translationElement == null) {
+      return null;
+    }
 
-		const textMap = translationsCache.upsert(translationElement, () => {
-			const textElements = domProvider.getChildrenByLocalName(
-				translationElement,
-				'text'
-			) as ReadonlyArray<XFormsItextTranslationTextElement<T>>;
+    const textMap = translationsCache.upsert(translationElement, () => {
+      const textElements = domProvider.getChildrenByLocalName(
+        translationElement,
+        'text'
+      ) as ReadonlyArray<XFormsItextTranslationTextElement<T>>;
 
-			return new Map(
-				textElements.flatMap((element) => {
-					const id = domProvider.getLocalNamedAttributeValue(element, 'id');
+      return new Map(
+        textElements.flatMap((element) => {
+          const id = domProvider.getLocalNamedAttributeValue(element, 'id');
 
-					// TODO: what does it mean for itext > translation > <text> without id
-					// attribute? Here we ignore it. But it's definitely unexpected. We should
-					// probably at least produce a warning. Or an error?
-					if (id == null) {
-						return [];
-					}
+          // TODO: what does it mean for itext > translation > <text> without id
+          // attribute? Here we ignore it. But it's definitely unexpected. We should
+          // probably at least produce a warning. Or an error?
+          if (id == null) {
+            return [];
+          }
 
-					return [[id, element]];
-				})
-			);
-		});
+          return [[id, element]];
+        })
+      );
+    });
 
-		return textMap.get(itextID) ?? null;
-	}
+    return textMap.get(itextID) ?? null;
+  }
 
-	/**
-	 * Retrieves all translation value elements for a given Itext in the active language.
-	 *
-	 * @package
-	 *
-	 * This method fetches the `text` element matching `itextID` and returns its child `value` elements,
-	 * which may have an optional `@form` attribute.
-	 *
-	 * The operation is conceptually similar to the following XPath query:
-	 *
-	 * ```xpath
-	 * imaginary:itext-translation(
-	 *   xpath3-fn:environment-variable('activeLanguage')
-	 * )
-	 *   /text[@id = $itextID]
-	 *     /value
-	 * ```
-	 *
-	 * Or alternately:
-	 *
-	 * ```xpath
-	 * imaginary:itext-root()
-	 *   /translation[@lang = xpath3-fn:environment-variable('activeLanguage')]
-	 *     /text[@id = $itextID]
-	 *       /value
-	 * ```
-	 * Returns an array of `XFormsItextTranslationValueElement<T>`
-	 */
-	getTranslationValues(itextID: string): Array<XFormsItextTranslationValueElement<T>> {
-		const textElement = this.getTranslationTextElement(itextID);
+  /**
+   * Retrieves all translation value elements for a given Itext in the active language.
+   *
+   * @package
+   *
+   * This method fetches the `text` element matching `itextID` and returns its child `value` elements,
+   * which may have an optional `@form` attribute.
+   *
+   * The operation is conceptually similar to the following XPath query:
+   *
+   * ```xpath
+   * imaginary:itext-translation(
+   *   xpath3-fn:environment-variable('activeLanguage')
+   * )
+   *   /text[@id = $itextID]
+   *     /value
+   * ```
+   *
+   * Or alternately:
+   *
+   * ```xpath
+   * imaginary:itext-root()
+   *   /translation[@lang = xpath3-fn:environment-variable('activeLanguage')]
+   *     /text[@id = $itextID]
+   *       /value
+   * ```
+   * Returns an array of `XFormsItextTranslationValueElement<T>`
+   */
+  getTranslationValues(itextID: string): Array<XFormsItextTranslationValueElement<T>> {
+    const textElement = this.getTranslationTextElement(itextID);
 
-		if (textElement == null) {
-			return [];
-		}
+    if (textElement == null) {
+      return [];
+    }
 
-		return [...this.domProvider.getChildrenByLocalName(textElement, 'value')] as Array<
-			XFormsItextTranslationValueElement<T>
-		>;
-	}
+    return [...this.domProvider.getChildrenByLocalName(textElement, 'value')] as Array<
+      XFormsItextTranslationValueElement<T>
+    >;
+  }
 
-	getLanguages(): readonly XFormsItextTranslationLanguage[] {
-		return this.languages;
-	}
+  getLanguages(): readonly XFormsItextTranslationLanguage[] {
+    return this.languages;
+  }
 
-	getActiveLanguage(): XFormsItextTranslationLanguage | null {
-		return this.activeLanguage;
-	}
+  getActiveLanguage(): XFormsItextTranslationLanguage | null {
+    return this.activeLanguage;
+  }
 
-	getExplicitDefaultLanguage(): XFormsItextTranslationLanguage | null {
-		return this.explicitDefaultLanguage;
-	}
+  getExplicitDefaultLanguage(): XFormsItextTranslationLanguage | null {
+    return this.explicitDefaultLanguage;
+  }
 
-	setActiveLanguage(
-		language: XFormsItextTranslationLanguage | null
-	): XFormsItextTranslationLanguage | null {
-		this.activeLanguage = language ?? this.languages[0] ?? null;
+  setActiveLanguage(
+    language: XFormsItextTranslationLanguage | null
+  ): XFormsItextTranslationLanguage | null {
+    this.activeLanguage = language ?? this.languages[0] ?? null;
 
-		return this.activeLanguage;
-	}
+    return this.activeLanguage;
+  }
 }

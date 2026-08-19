@@ -6,15 +6,15 @@ import { NumberExpressionEvaluator } from './NumberExpressionEvaluator.ts';
 import { createExpression } from './factory.ts';
 
 export class UnaryExpressionEvaluator extends NumberExpressionEvaluator {
-	readonly operand: ExpressionEvaluator;
+  readonly operand: ExpressionEvaluator;
 
-	constructor(readonly syntaxNode: UnaryExprNode) {
-		super(null);
+  constructor(readonly syntaxNode: UnaryExprNode) {
+    super(null);
 
-		this.operand = createExpression(syntaxNode.children[0]);
-	}
+    this.operand = createExpression(syntaxNode.children[0]);
+  }
 
-	evaluateNumber<T extends XPathNode>(context: EvaluationContext<T>): number {
-		return this.operand.evaluate(context).toNumber() * -1;
-	}
+  evaluateNumber<T extends XPathNode>(context: EvaluationContext<T>): number {
+    return this.operand.evaluate(context).toNumber() * -1;
+  }
 }

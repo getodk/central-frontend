@@ -1,12 +1,13 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import BackendClient from '../backend-client';
-import { login } from '../util';
+import { login, test } from '../util';
 
 const appUrl = process.env.ODK_URL;
 const projectId = process.env.PROJECT_ID;
+const __dirname = import.meta.dirname;
 
 let publishedForm;
 
@@ -18,7 +19,12 @@ test.beforeAll(async ({ playwright }, testInfo) => {
 });
 
 test.describe('Form Upload', () => {
-  test('shows error when file is modified before clicking upload anyway', async ({ page, playwright }, testInfo) => {
+  test('shows error when file is modified before clicking upload anyway', async ({ allowedLogs, page, playwright }, testInfo) => {
+    allowedLogs.push((consoleMsg, normalisedMsg) => {
+      return normalisedMsg === 'Failed to load resource: the server responded with a status of 400 (Bad Request)' &&
+             consoleMsg.location().url === `http://central-test.localhost/v1/projects/${projectId}/forms`;
+    });
+
     // Delete the form to put it in trash
     const backendClient = new BackendClient(playwright, `${testInfo.project.name}_form_upload`);
     await backendClient.deleteForm(publishedForm.xmlFormId);
@@ -43,12 +49,6 @@ test.describe('Form Upload', () => {
       // Upload the temp file
       await page.locator('#form-upload input[type="file"]').setInputFiles(tempFilePath);
 
-      // Verify filename is displayed
-      await expect(page.locator('#form-upload-filename')).toContainText(publishedForm.xmlFormId);
-
-      // Click upload
-      await page.getByRole('button', { name: 'Upload' }).click();
-
       // Expect a warning that form with the same ID exists in the trash
       await expect(page.locator('.form-upload-warnings')).toBeVisible();
       await expect(page.locator('.form-upload-warnings')).toContainText('Trash');
@@ -60,7 +60,7 @@ test.describe('Form Upload', () => {
       await page.getByRole('button', { name: 'Upload anyway' }).click();
 
       // Expect error that file has been modified
-      await expect(page.locator('#alerts .red-alert')).toContainText('could not be read');
+      await expect(page.locator('.form-upload-error')).toContainText('could not be read');
 
       // Verify file input and warnings are cleared
       await expect(page.locator('#form-upload-filename')).not.toBeVisible();

@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <form-edit-section id="form-edit-entities" icon="database">
+  <form-edit-section id="form-edit-entities">
     <template #title>{{ $t('resource.entities') }}</template>
     <template #body>
       <template v-if="formDraft.entityRelated">
@@ -20,10 +20,6 @@ except according to the terms contained in the LICENSE file.
           <p v-if="datasetDiff.counts.updatedDatasets !== 0"
             id="form-edit-entities-diff-counts">
             <span>{{ diffCounts }}</span>
-            <template v-if="datasetDiff.counts.newProperties !== 0">
-              <sentence-separator/>
-              <span>{{ $t('cannotDeleteProperties') }}</span>
-            </template>
           </p>
           <dataset-summary is-draft/>
         </template>
@@ -90,8 +86,6 @@ const diffCounts = computed(() => {
         "properties": "{count} property | {count} properties"
       }
     },
-    // "Properties" refers to Entity properties.
-    "cannotDeleteProperties": "Properties cannot be deleted.",
     // "Definition" refers to a Form Definition.
     "notEntityRelated": "This definition does not update any Entities.",
     "whatAreEntities": "What are Entities?"
@@ -112,7 +106,6 @@ const diffCounts = computed(() => {
         "properties": "{count} Eigenschaft | {count} Eigenschaften"
       }
     },
-    "cannotDeleteProperties": "Eigenschaften können nicht gelöscht werden.",
     "notEntityRelated": "Mit dieser Definition werden keine Objekte aktualisiert.",
     "whatAreEntities": "Was sind Objekte?"
   },
@@ -126,7 +119,6 @@ const diffCounts = computed(() => {
         "properties": "{count} propiedad | {count} propiedades | {count} propiedades"
       }
     },
-    "cannotDeleteProperties": "Las propiedades no pueden borrarse.",
     "notEntityRelated": "Esta definición no actualiza ninguna Entidad.",
     "whatAreEntities": "¿Qué son las entidades?"
   },
@@ -140,7 +132,6 @@ const diffCounts = computed(() => {
         "properties": "{count} propriété | {count} propriétés | {count} propriété(s)"
       }
     },
-    "cannotDeleteProperties": "Les propriétés ne peuvent être supprimées.",
     "notEntityRelated": "Cette définition ne met pas à jour d'Entités.",
     "whatAreEntities": "Que sont les Entités ?"
   },
@@ -154,12 +145,10 @@ const diffCounts = computed(() => {
         "properties": "{count} proprietà | {count} proprietà | {count} proprietà"
       }
     },
-    "cannotDeleteProperties": "Le proprietà non possono essere eliminate.",
     "notEntityRelated": "Questa definizione non aggiorna alcuna entità.",
     "whatAreEntities": "Cosa sono le entità?"
   },
   "pt": {
-    "cannotDeleteProperties": "Propriedades não podem ser excluídas",
     "notEntityRelated": "Essa definição não atualiza nenhuma Entidade.",
     "whatAreEntities": "O que são Entidades?"
   },
@@ -173,7 +162,6 @@ const diffCounts = computed(() => {
         "properties": "{count}种属性"
       }
     },
-    "cannotDeleteProperties": "属性不可删除。",
     "notEntityRelated": "此定义不更新任何实体。",
     "whatAreEntities": "什么是实体？"
   },
@@ -187,7 +175,6 @@ const diffCounts = computed(() => {
         "properties": "{count}種屬性"
       }
     },
-    "cannotDeleteProperties": "屬性無法刪除。",
     "notEntityRelated": "此定義不會更新任何實體。",
     "whatAreEntities": "什麼是實體？"
   }

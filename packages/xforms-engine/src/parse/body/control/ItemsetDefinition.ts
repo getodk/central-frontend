@@ -13,50 +13,50 @@ import { RankControlDefinition } from './RankControlDefinition.ts';
 import type { AnySelectControlDefinition } from './SelectControlDefinition.ts';
 
 export class ItemsetDefinition extends BodyElementDefinition<'itemset'> {
-	override readonly category = 'support';
-	readonly type = 'itemset';
+  override readonly category = 'support';
+  readonly type = 'itemset';
 
-	override readonly reference: string;
-	override readonly label: ItemsetLabelDefinition | null;
+  override readonly reference: string;
+  override readonly label: ItemsetLabelDefinition | null;
 
-	readonly nodes: ItemsetNodesetExpression;
-	readonly value: ItemsetValueExpression;
+  readonly nodes: ItemsetNodesetExpression;
+  readonly value: ItemsetValueExpression;
 
-	constructor(
-		form: XFormDefinition,
-		override readonly parent: AnySelectControlDefinition | RankControlDefinition,
-		element: ItemsetElement
-	) {
-		super(form, parent, element);
+  constructor(
+    form: XFormDefinition,
+    override readonly parent: AnySelectControlDefinition | RankControlDefinition,
+    element: ItemsetElement
+  ) {
+    super(form, parent, element);
 
-		const nodesetExpression = parseNodesetReference(parent, element, 'nodeset');
+    const nodesetExpression = parseNodesetReference(parent, element, 'nodeset');
 
-		this.nodes = new ItemsetNodesetExpression(nodesetExpression);
-		this.reference = nodesetExpression;
+    this.nodes = new ItemsetNodesetExpression(nodesetExpression);
+    this.reference = nodesetExpression;
 
-		const valueElement = getValueElement(element);
+    const valueElement = getValueElement(element);
 
-		if (valueElement == null) {
-			throw new Error('<itemset> has no <value>');
-		}
+    if (valueElement == null) {
+      throw new Error('<itemset> has no <value>');
+    }
 
-		const valueExpression = parseNodesetReference(
-			{
-				reference: null,
-			},
-			valueElement,
-			'ref'
-		);
+    const valueExpression = parseNodesetReference(
+      {
+        reference: null,
+      },
+      valueElement,
+      'ref'
+    );
 
-		if (valueExpression == null) {
-			throw new Error(`<itemset> has no <value>`);
-		}
+    if (valueExpression == null) {
+      throw new Error(`<itemset> has no <value>`);
+    }
 
-		this.value = new ItemsetValueExpression(this, valueExpression);
-		this.label = ItemsetLabelDefinition.from(form, this);
-	}
+    this.value = new ItemsetValueExpression(this, valueExpression);
+    this.label = ItemsetLabelDefinition.from(form, this);
+  }
 
-	getPropertiesExpressions(propertiesNodes: StaticElement[]): Array<DependentExpression<'string'>> {
-		return ItemPropertyExpression.from(propertiesNodes);
-	}
+  getPropertiesExpressions(propertiesNodes: StaticElement[]): Array<DependentExpression<'string'>> {
+    return ItemPropertyExpression.from(propertiesNodes);
+  }
 }

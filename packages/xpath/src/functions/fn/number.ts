@@ -9,43 +9,43 @@ export const ceiling = new FunctionAlias('ceiling', ceil);
 export const floor = mathAlias('floor');
 
 export const number = new NumberFunction(
-	'number',
-	[{ arityType: 'optional' }],
-	(context, [expression]): number => (expression?.evaluate(context) ?? context).toNumber()
+  'number',
+  [{ arityType: 'optional' }],
+  (context, [expression]): number => (expression?.evaluate(context) ?? context).toNumber()
 );
 
 export const round = mathAlias('round');
 
 export const sum = new NumberFunction(
-	'sum',
-	[{ arityType: 'required' }],
-	(context, expressions): number => {
-		if (expressions.length === 0) {
-			return NaN;
-		}
+  'sum',
+  [{ arityType: 'required' }],
+  (context, expressions): number => {
+    if (expressions.length === 0) {
+      return NaN;
+    }
 
-		let result!: number;
+    let result!: number;
 
-		for (const expression of expressions) {
-			const resultSet = expression.evaluate(context);
+    for (const expression of expressions) {
+      const resultSet = expression.evaluate(context);
 
-			for (const item of resultSet) {
-				const numberValue = item.toNumber();
+      for (const item of resultSet) {
+        const numberValue = item.toNumber();
 
-				if (Number.isNaN(numberValue)) {
-					result = NaN;
+        if (Number.isNaN(numberValue)) {
+          result = NaN;
 
-					break;
-				}
+          break;
+        }
 
-				result = result == null ? numberValue : result + numberValue;
+        result = result == null ? numberValue : result + numberValue;
 
-				if (Number.isNaN(result)) {
-					break;
-				}
-			}
-		}
+        if (Number.isNaN(result)) {
+          break;
+        }
+      }
+    }
 
-		return result ?? NaN;
-	}
+    return result ?? NaN;
+  }
 );

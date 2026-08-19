@@ -4,6 +4,8 @@ import {
 	mdiAlertCircleOutline,
 	mdiArrowCollapse,
 	mdiArrowExpand,
+	mdiArrowLeft,
+	mdiArrowRight,
 	mdiArrowULeftTop,
 	mdiCamera,
 	mdiCheck,
@@ -24,15 +26,19 @@ import {
 	mdiFileOutline,
 	mdiFileVideo,
 	mdiFullscreen,
+	mdiHandBackRightOutline,
 	mdiImage,
 	mdiInformationSlabCircleOutline,
 	mdiMapMarkerOutline,
 	mdiMenu,
+	mdiMinus,
+	mdiPalette,
 	mdiPaperclip,
 	mdiPencil,
 	mdiPlus,
 	mdiPrinter,
 	mdiRefresh,
+	mdiSendVariantOutline,
 	mdiStopCircleOutline,
 	mdiTranslate,
 	mdiTrashCanOutline,
@@ -50,6 +56,8 @@ const iconMap: Record<string, string> = {
 	mdiAlertCircleOutline,
 	mdiArrowCollapse,
 	mdiArrowExpand,
+	mdiArrowLeft,
+	mdiArrowRight,
 	mdiArrowULeftTop,
 	mdiCamera,
 	mdiCheck,
@@ -70,15 +78,19 @@ const iconMap: Record<string, string> = {
 	mdiFileOutline,
 	mdiFileVideo,
 	mdiFullscreen,
+	mdiHandBackRightOutline,
 	mdiImage,
 	mdiInformationSlabCircleOutline,
 	mdiMapMarkerOutline,
 	mdiMenu,
+	mdiMinus,
+	mdiPalette,
 	mdiPaperclip,
 	mdiPencil,
 	mdiPlus,
 	mdiPrinter,
 	mdiRefresh,
+	mdiSendVariantOutline,
 	mdiStopCircleOutline,
 	mdiTranslate,
 	mdiTrashCanOutline,
@@ -180,8 +192,8 @@ const iconSize = computed(() => props.size ?? 'md');
 }
 
 .odk-icon.odk-icon-md {
-	height: 20px;
-	width: 20px;
+	height: var(--odk-icon-m);
+	width: var(--odk-icon-m);
 
 	path {
 		transform: translate(-2px, -2px);

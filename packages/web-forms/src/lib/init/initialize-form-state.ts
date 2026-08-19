@@ -27,11 +27,11 @@ import type { FormState, FormStateLoadingResult } from './form-state.ts';
  *   explicit type parameter!)
  */
 export const initializeFormState = (): Ref<FormState> => {
-	return ref({
-		status: 'FORM_STATE_LOADING',
-		error: null,
-		form: null,
-		instance: null,
-		root: null,
-	} satisfies FormStateLoadingResult);
+  return ref({
+    status: 'FORM_STATE_LOADING',
+    error: null,
+    form: null,
+    instance: null,
+    root: null,
+  } satisfies FormStateLoadingResult);
 };

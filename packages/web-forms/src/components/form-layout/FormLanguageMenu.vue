@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import IconSVG from '@/components/common/IconSVG.vue';
+import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
 import type { ActiveLanguage, FormLanguage } from '@getodk/xforms-engine';
 import Select from 'primevue/select';
 
@@ -10,7 +10,7 @@ defineEmits(['update:activeLanguage']);
 
 <template>
 	<Select
-		v-if="languages.length > 0"
+		v-if="languages.length > 1"
 		:model-value="activeLanguage"
 		:options="languages"
 		option-label="language"

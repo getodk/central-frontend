@@ -1,14 +1,14 @@
 import type {
-	WHATAttribute,
-	WHATChildNode,
-	WHATComment,
-	WHATDocument,
-	WHATElement,
-	WHATNamespaceDeclaration,
-	WHATNode,
-	WHATParentNode,
-	WHATProcessingInstruction,
-	WHATText,
+  WHATAttribute,
+  WHATChildNode,
+  WHATComment,
+  WHATDocument,
+  WHATElement,
+  WHATNamespaceDeclaration,
+  WHATNode,
+  WHATParentNode,
+  WHATProcessingInstruction,
+  WHATText,
 } from './WHAT/WHATNode.ts';
 import type { WHATDOMAdapter } from './WHAT/whatDOMAdapter.ts';
 import { whatDOMAdapter } from './WHAT/whatDOMAdapter.ts';

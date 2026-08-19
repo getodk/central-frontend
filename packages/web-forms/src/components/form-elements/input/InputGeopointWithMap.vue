@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import AsyncMap from '@/components/common/map/AsyncMap.vue';
-import { type Mode, MODES, SINGLE_FEATURE_TYPES } from '@/components/common/map/getModeConfig.ts';
-import { IS_FORM_EDIT_MODE } from '@/lib/constants/injection-keys.ts';
+import AsyncMap from '@getodk/web-forms/components/common/map/AsyncMap.vue';
+import { type Mode, MODES, SINGLE_FEATURE_TYPES } from '@getodk/web-forms/components/common/map/getModeConfig.ts';
+import { IS_FORM_EDIT_MODE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
 import type { GeopointInputNode } from '@getodk/xforms-engine';
 import { computed, inject, type ShallowRef } from 'vue';
 

@@ -3,14 +3,14 @@ import type { ClientReactiveSerializableAttributeNode } from '../../../instance/
 import { escapeXMLText, serializeAttributeXML } from '../../xml-serialization.ts';
 
 export const createAttributeNodeInstanceState = (
-	node: ClientReactiveSerializableAttributeNode
+  node: ClientReactiveSerializableAttributeNode
 ): InstanceState => {
-	const { qualifiedName } = node.definition;
+  const { qualifiedName } = node.definition;
 
-	return {
-		get instanceXML() {
-			const xmlValue = escapeXMLText(node.currentState.instanceValue, true);
-			return serializeAttributeXML(qualifiedName, xmlValue);
-		},
-	};
+  return {
+    get instanceXML() {
+      const xmlValue = escapeXMLText(node.currentState.instanceValue, true);
+      return serializeAttributeXML(qualifiedName, xmlValue);
+    },
+  };
 };

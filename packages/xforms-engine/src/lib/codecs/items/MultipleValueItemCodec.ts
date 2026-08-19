@@ -13,16 +13,16 @@ import { BaseItemCodec } from './BaseItemCodec.ts';
  * treated consistently with the same underlying data types for other controls.
  */
 export class MultipleValueItemCodec extends BaseItemCodec<readonly string[]> {
-	constructor(baseCodec: SharedValueCodec<'string'>) {
-		const encodeValue: CodecEncoder<readonly string[]> = (value) => {
-			return value.join(' ');
-		};
-		const decodeValue: CodecDecoder<readonly string[]> = (value) => {
-			return xmlXPathWhitespaceSeparatedList(value, {
-				ignoreEmpty: true,
-			});
-		};
+  constructor(baseCodec: SharedValueCodec<'string'>) {
+    const encodeValue: CodecEncoder<readonly string[]> = (value) => {
+      return value.join(' ');
+    };
+    const decodeValue: CodecDecoder<readonly string[]> = (value) => {
+      return xmlXPathWhitespaceSeparatedList(value, {
+        ignoreEmpty: true,
+      });
+    };
 
-		super(baseCodec, encodeValue, decodeValue);
-	}
+    super(baseCodec, encodeValue, decodeValue);
+  }
 }

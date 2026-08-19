@@ -14,36 +14,36 @@ import { TextRangeDefinition } from './TextRangeDefinition.ts';
 type TextElementOwner = ItemDefinition | LabelOwner;
 
 export abstract class TextElementDefinition<
-	Role extends ElementTextRole,
+  Role extends ElementTextRole,
 > extends TextRangeDefinition<Role> {
-	readonly chunks: ReadonlyArray<TextChunkExpression<'nodes' | 'string'>>;
+  readonly chunks: ReadonlyArray<TextChunkExpression<'nodes' | 'string'>>;
 
-	constructor(form: XFormDefinition, owner: TextElementOwner, sourceNode: TextSourceNode<Role>) {
-		super(form, owner, sourceNode);
+  constructor(form: XFormDefinition, owner: TextElementOwner, sourceNode: TextSourceNode<Role>) {
+    super(form, owner, sourceNode);
 
-		const refExpression = parseNodesetReference(owner, sourceNode, 'ref');
+    const refExpression = parseNodesetReference(owner, sourceNode, 'ref');
 
-		if (refExpression == null) {
-			this.chunks = Array.from(sourceNode.childNodes).flatMap((childNode) => {
-				if (isElementNode(childNode)) {
-					return TextChunkExpression.fromOutput(childNode) ?? [];
-				}
+    if (refExpression == null) {
+      this.chunks = Array.from(sourceNode.childNodes).flatMap((childNode) => {
+        if (isElementNode(childNode)) {
+          return TextChunkExpression.fromOutput(childNode) ?? [];
+        }
 
-				if (isTextNode(childNode)) {
-					return TextChunkExpression.fromLiteral(childNode.data);
-				}
+        if (isTextNode(childNode)) {
+          return TextChunkExpression.fromLiteral(childNode.data);
+        }
 
-				return [];
-			});
-		} else {
-			const translationChunk = TextChunkExpression.fromTranslation(refExpression);
-			if (translationChunk) {
-				this.chunks = [translationChunk];
-			} else {
-				this.chunks = [TextChunkExpression.fromReference(refExpression)];
-			}
-		}
-	}
+        return [];
+      });
+    } else {
+      const translationChunk = TextChunkExpression.fromTranslation(refExpression);
+      if (translationChunk) {
+        this.chunks = [translationChunk];
+      } else {
+        this.chunks = [TextChunkExpression.fromReference(refExpression)];
+      }
+    }
+  }
 }
 
 // prettier-ignore

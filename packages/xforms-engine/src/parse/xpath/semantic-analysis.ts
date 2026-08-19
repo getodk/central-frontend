@@ -2,25 +2,25 @@ import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import type { CollectionValues } from '@getodk/common/types/collections/CollectionValues.ts';
 import { expressionParser } from '@getodk/xpath/expressionParser.js';
 import type {
-	AbsoluteLocationPathNode,
-	AnySyntaxNode,
-	ArgumentNode,
-	FilterExprNode,
-	FilterPathExprNode,
-	FunctionCallNode,
-	FunctionNameNode,
-	LocalPartNode,
-	NumberNode,
-	PrefixNode,
-	RelativeLocationPathNode,
-	StringLiteralNode,
+  AbsoluteLocationPathNode,
+  AnySyntaxNode,
+  ArgumentNode,
+  FilterExprNode,
+  FilterPathExprNode,
+  FunctionCallNode,
+  FunctionNameNode,
+  LocalPartNode,
+  NumberNode,
+  PrefixNode,
+  RelativeLocationPathNode,
+  StringLiteralNode,
 } from '@getodk/xpath/static/grammar/SyntaxNode.js';
 import type { AnySyntaxType } from '@getodk/xpath/static/grammar/type-names.js';
 import {
-	collectTypedNodes,
-	findTypedPrincipalExpressionNode,
-	isCompleteSubExpression,
-	type TypedSyntaxNode,
+  collectTypedNodes,
+  findTypedPrincipalExpressionNode,
+  isCompleteSubExpression,
+  type TypedSyntaxNode,
 } from './syntax-traversal.ts';
 
 // prettier-ignore
@@ -29,7 +29,7 @@ type LocalNameLiteral<LocalName extends string> =
 	| `${string}:${LocalName}`;
 
 interface LocalNamedFunctionNameNode<LocalName extends string> extends FunctionNameNode {
-	readonly text: LocalNameLiteral<LocalName>;
+  readonly text: LocalNameLiteral<LocalName>;
 }
 
 // prettier-ignore
@@ -38,21 +38,21 @@ type LocalNamedFunctionCallLiteral<
 > = `${LocalNameLiteral<LocalName>}(${string})`;
 
 interface LocalNamedFunctionCallNode<LocalName extends string> extends FunctionCallNode {
-	readonly children: readonly [
-		name: LocalNamedFunctionNameNode<LocalName>,
-		...arguments: ArgumentNode[],
-	];
-	readonly text: LocalNamedFunctionCallLiteral<LocalName>;
+  readonly children: readonly [
+    name: LocalNamedFunctionNameNode<LocalName>,
+    ...arguments: ArgumentNode[],
+  ];
+  readonly text: LocalNamedFunctionCallLiteral<LocalName>;
 }
 
 const isCallToLocalNamedFunction = <LocalName extends string>(
-	syntaxNode: FunctionCallNode,
-	localName: LocalName
+  syntaxNode: FunctionCallNode,
+  localName: LocalName
 ): syntaxNode is LocalNamedFunctionCallNode<LocalName> => {
-	const [functionNameNode] = syntaxNode.children;
-	const [localNameNode] = collectTypedNodes(['local_part', 'unprefixed_name'], functionNameNode);
+  const [functionNameNode] = syntaxNode.children;
+  const [localNameNode] = collectTypedNodes(['local_part', 'unprefixed_name'], functionNameNode);
 
-	return localNameNode?.text === localName;
+  return localNameNode?.text === localName;
 };
 
 const ANY_ARGUMENT_TYPE = Symbol('ANY_ARGUMENT_TYPE');
@@ -61,68 +61,68 @@ type AnyArgumentType = typeof ANY_ARGUMENT_TYPE;
 type ArgumentFilter = AnyArgumentType | readonly [AnySyntaxType, ...AnySyntaxType[]];
 
 const hasCallSignature = (
-	syntaxNode: FunctionCallNode,
-	expected: readonly ArgumentFilter[]
+  syntaxNode: FunctionCallNode,
+  expected: readonly ArgumentFilter[]
 ): boolean => {
-	const [, ...argumentNodes] = syntaxNode.children;
+  const [, ...argumentNodes] = syntaxNode.children;
 
-	if (argumentNodes.length === 0 && expected.length === 0) {
-		return true;
-	}
+  if (argumentNodes.length === 0 && expected.length === 0) {
+    return true;
+  }
 
-	if (argumentNodes.length > expected.length) {
-		return false;
-	}
+  if (argumentNodes.length > expected.length) {
+    return false;
+  }
 
-	return expected.every((filter, i) => {
-		const argumentNode = argumentNodes[i];
+  return expected.every((filter, i) => {
+    const argumentNode = argumentNodes[i];
 
-		if (argumentNode == null) {
-			return false;
-		}
+    if (argumentNode == null) {
+      return false;
+    }
 
-		if (filter === ANY_ARGUMENT_TYPE) {
-			return true;
-		}
+    if (filter === ANY_ARGUMENT_TYPE) {
+      return true;
+    }
 
-		const [firstMatch] = collectTypedNodes(filter, argumentNode);
+    const [firstMatch] = collectTypedNodes(filter, argumentNode);
 
-		return firstMatch != null && isCompleteSubExpression(argumentNode, firstMatch);
-	});
+    return firstMatch != null && isCompleteSubExpression(argumentNode, firstMatch);
+  });
 };
 
 const isTranslationFunctionCall = (syntaxNode: FunctionCallNode): boolean => {
-	return (
-		isCallToLocalNamedFunction(syntaxNode, 'itext') &&
-		hasCallSignature(syntaxNode, [
-			// We don't need to check the argument type here, just its presence. We'd
-			// originally checked for arguments we presume could produce a string.
-			// Giving it a little more thought, it was clear that applies to any
-			// conceivable argument, because anything can be cast to a string in XPath
-			// semantics.
-			ANY_ARGUMENT_TYPE,
-		])
-	);
+  return (
+    isCallToLocalNamedFunction(syntaxNode, 'itext') &&
+    hasCallSignature(syntaxNode, [
+      // We don't need to check the argument type here, just its presence. We'd
+      // originally checked for arguments we presume could produce a string.
+      // Giving it a little more thought, it was clear that applies to any
+      // conceivable argument, because anything can be cast to a string in XPath
+      // semantics.
+      ANY_ARGUMENT_TYPE,
+    ])
+  );
 };
 
 export type TranslationExpression = LocalNamedFunctionCallLiteral<'itext'>;
 
 const findFunctionPrincipalExpressionNode = (
-	expression: string
+  expression: string
 ): TypedSyntaxNode<'function_call'> | null => {
-	let result;
-	try {
-		result = expressionParser.parse(expression);
-	} catch {
-		return null;
-	}
+  let result;
+  try {
+    result = expressionParser.parse(expression);
+  } catch {
+    return null;
+  }
 
-	const functionCallNode = findTypedPrincipalExpressionNode(['function_call'], result.rootNode);
-	if (functionCallNode == null) {
-		return null;
-	}
+  const functionCallNode = findTypedPrincipalExpressionNode(['function_call'], result.rootNode);
+  if (functionCallNode == null) {
+    return null;
+  }
 
-	return functionCallNode;
+  return functionCallNode;
 };
 
 /**
@@ -134,35 +134,35 @@ const findFunctionPrincipalExpressionNode = (
  * arbitrary expression may call `jr:itext`.
  */
 export const isTranslationExpression = (
-	expression: string
+  expression: string
 ): expression is TranslationExpression => {
-	const functionCallNode = findFunctionPrincipalExpressionNode(expression);
-	if (!functionCallNode) {
-		return false;
-	}
-	return isTranslationFunctionCall(functionCallNode);
+  const functionCallNode = findFunctionPrincipalExpressionNode(expression);
+  if (!functionCallNode) {
+    return false;
+  }
+  return isTranslationFunctionCall(functionCallNode);
 };
 
 export const getTranslationExpression = (expression: string): string | null => {
-	const functionCallNode = findFunctionPrincipalExpressionNode(expression);
-	if (!functionCallNode) {
-		return null;
-	}
+  const functionCallNode = findFunctionPrincipalExpressionNode(expression);
+  if (!functionCallNode) {
+    return null;
+  }
 
-	if (!isTranslationFunctionCall(functionCallNode)) {
-		return null;
-	}
+  if (!isTranslationFunctionCall(functionCallNode)) {
+    return null;
+  }
 
-	const arg = functionCallNode.children.find((child) => child.type === 'argument');
-	if (!arg) {
-		return null;
-	}
+  const arg = functionCallNode.children.find((child) => child.type === 'argument');
+  if (!arg) {
+    return null;
+  }
 
-	return arg.text;
+  return arg.text;
 };
 
 const isCurrentFunctionCall = (syntaxNode: FunctionCallNode): boolean => {
-	return isCallToLocalNamedFunction(syntaxNode, 'current') && hasCallSignature(syntaxNode, []);
+  return isCallToLocalNamedFunction(syntaxNode, 'current') && hasCallSignature(syntaxNode, []);
 };
 
 /**
@@ -178,21 +178,21 @@ const isCurrentFunctionCall = (syntaxNode: FunctionCallNode): boolean => {
  * `@getodk/xpath` types do not currently acknowledge this possibility.
  */
 export const isCurrentPath = (syntaxNode: FilterPathExprNode): boolean => {
-	const [filterExprNode] = syntaxNode.children;
-	const [anyExprNode] = filterExprNode.children;
+  const [filterExprNode] = syntaxNode.children;
+  const [anyExprNode] = filterExprNode.children;
 
-	return anyExprNode.type === 'function_call' && isCurrentFunctionCall(anyExprNode);
+  return anyExprNode.type === 'function_call' && isCurrentFunctionCall(anyExprNode);
 };
 
 const isInstanceFunctionCall = (syntaxNode: FunctionCallNode): boolean => {
-	return (
-		isCallToLocalNamedFunction(syntaxNode, 'instance') &&
-		hasCallSignature(syntaxNode, [
-			// Specified as `instance("id")`, but do we really care about the argument's
-			// type here?
-			['argument'],
-		])
-	);
+  return (
+    isCallToLocalNamedFunction(syntaxNode, 'instance') &&
+    hasCallSignature(syntaxNode, [
+      // Specified as `instance("id")`, but do we really care about the argument's
+      // type here?
+      ['argument'],
+    ])
+  );
 };
 
 /**
@@ -208,10 +208,10 @@ const isInstanceFunctionCall = (syntaxNode: FunctionCallNode): boolean => {
  * `@getodk/xpath` types do not currently acknowledge this possibility.
  */
 const isInstancePath = (syntaxNode: FilterPathExprNode): boolean => {
-	const [filterExprNode] = syntaxNode.children;
-	const [anyExprNode] = filterExprNode.children;
+  const [filterExprNode] = syntaxNode.children;
+  const [anyExprNode] = filterExprNode.children;
 
-	return anyExprNode.type === 'function_call' && isInstanceFunctionCall(anyExprNode);
+  return anyExprNode.type === 'function_call' && isInstanceFunctionCall(anyExprNode);
 };
 
 /**
@@ -225,28 +225,28 @@ const isInstancePath = (syntaxNode: FilterPathExprNode): boolean => {
  * more explicit checks like {@link isCurrentPath} and {@link isInstancePath}.
  */
 const isArbitraryFilterPath = (syntaxNode: FilterPathExprNode): boolean => {
-	const [filterExprNode, ...steps] = syntaxNode.children;
-	const [anyExprNode, ...predicates] = filterExprNode.children;
+  const [filterExprNode, ...steps] = syntaxNode.children;
+  const [anyExprNode, ...predicates] = filterExprNode.children;
 
-	/**
-	 * @todo This is an oversight in the **types** for {@link FilterExprNode}! The
-	 * `@getodk/tree-sitter-xpath` parser (correctly) parses predicates following
-	 * a FilterExpr. This case was missed when defining the static types in
-	 * `@getodk/xpath`.
-	 *
-	 * Addressing this oversight would also imply addressing the oversight in the
-	 * `xpath` runtime.
-	 *
-	 * To reviewer: I caught this issue in previous iterations on this set of
-	 * changes. I have tests and a fix stashed, and I'd be happy to bring it into
-	 * scope if preferred.
-	 *
-	 * When fixed, this `satisfies` check will fail. In either case, the below
-	 * check will work for our semantic analysis and path resolution purproses.
-	 */
-	predicates satisfies readonly [];
+  /**
+   * @todo This is an oversight in the **types** for {@link FilterExprNode}! The
+   * `@getodk/tree-sitter-xpath` parser (correctly) parses predicates following
+   * a FilterExpr. This case was missed when defining the static types in
+   * `@getodk/xpath`.
+   *
+   * Addressing this oversight would also imply addressing the oversight in the
+   * `xpath` runtime.
+   *
+   * To reviewer: I caught this issue in previous iterations on this set of
+   * changes. I have tests and a fix stashed, and I'd be happy to bring it into
+   * scope if preferred.
+   *
+   * When fixed, this `satisfies` check will fail. In either case, the below
+   * check will work for our semantic analysis and path resolution purproses.
+   */
+  predicates satisfies readonly [];
 
-	return anyExprNode.type === 'function_call' && (steps.length > 0 || predicates.length > 0);
+  return anyExprNode.type === 'function_call' && (steps.length > 0 || predicates.length > 0);
 };
 
 declare const FILTER_PATH_NODE: unique symbol;
@@ -272,7 +272,7 @@ declare const FILTER_PATH_NODE: unique symbol;
  * analysis as such (and any downstream logic such as nodeset resolution).
  */
 export interface FilterPathNode extends FilterPathExprNode {
-	readonly [FILTER_PATH_NODE]: true;
+  readonly [FILTER_PATH_NODE]: true;
 }
 
 /**
@@ -281,38 +281,38 @@ export interface FilterPathNode extends FilterPathExprNode {
  * path resolution.
  */
 export const isNodeSetFilterPathExpression = (
-	syntaxNode: FilterPathExprNode
+  syntaxNode: FilterPathExprNode
 ): syntaxNode is FilterPathNode => {
-	return (
-		isCurrentPath(syntaxNode) || isInstancePath(syntaxNode) || isArbitraryFilterPath(syntaxNode)
-	);
+  return (
+    isCurrentPath(syntaxNode) || isInstancePath(syntaxNode) || isArbitraryFilterPath(syntaxNode)
+  );
 };
 
 export type PathExpressionNode =
-	| AbsoluteLocationPathNode
-	| FilterPathNode
-	| RelativeLocationPathNode;
+  | AbsoluteLocationPathNode
+  | FilterPathNode
+  | RelativeLocationPathNode;
 
 const isPathExpression = (syntaxNode: AnySyntaxNode | null): syntaxNode is PathExpressionNode => {
-	if (syntaxNode == null) {
-		return false;
-	}
+  if (syntaxNode == null) {
+    return false;
+  }
 
-	const { type } = syntaxNode;
+  const { type } = syntaxNode;
 
-	return (
-		type === 'absolute_location_path' ||
-		type === 'relative_location_path' ||
-		(type === 'filter_path_expr' && isNodeSetFilterPathExpression(syntaxNode))
-	);
+  return (
+    type === 'absolute_location_path' ||
+    type === 'relative_location_path' ||
+    (type === 'filter_path_expr' && isNodeSetFilterPathExpression(syntaxNode))
+  );
 };
 
 type PathExpressionType = PathExpressionNode['type'];
 
 const pathExpressionTypes = [
-	'absolute_location_path',
-	'filter_path_expr',
-	'relative_location_path',
+  'absolute_location_path',
+  'filter_path_expr',
+  'relative_location_path',
 ] satisfies [PathExpressionType, PathExpressionType, PathExpressionType];
 
 /**
@@ -320,49 +320,49 @@ const pathExpressionTypes = [
  * expression (or any arbitrary sub-expression thereof).
  */
 export const findLocationPathSubExpressionNodes = (
-	syntaxNode: AnySyntaxNode
+  syntaxNode: AnySyntaxNode
 ): readonly PathExpressionNode[] => {
-	const baseResults = collectTypedNodes(pathExpressionTypes, syntaxNode);
+  const baseResults = collectTypedNodes(pathExpressionTypes, syntaxNode);
 
-	return baseResults.flatMap((node) => {
-		// Note: `collectTypedNodes`, as called, is shallowly recursive. Our intent
-		// is to operate on complete path expressions, relying on downstream logic
-		// to determine if and how deeper recursion is appropriate.
-		//
-		// In this case, we treat paths beginning with a FilterExpr -> FunctionCall
-		// as a special case, where we also manually walk the FunctionCall's
-		// Arguments. The shallow search performed by `collectTypedNodes` is
-		// important here, ensuring we can target further recursion into this syntax
-		// case without applying the same logic to other parts of an identified path
-		// sub-expression (i.e. allowing specialized contextualization and analysis
-		// of Predicates downstream).
-		if (node.type === 'filter_path_expr' && isNodeSetFilterPathExpression(node)) {
-			const [filterExprNode] = node.children;
-			const [functionCallNode] = filterExprNode.children;
+  return baseResults.flatMap((node) => {
+    // Note: `collectTypedNodes`, as called, is shallowly recursive. Our intent
+    // is to operate on complete path expressions, relying on downstream logic
+    // to determine if and how deeper recursion is appropriate.
+    //
+    // In this case, we treat paths beginning with a FilterExpr -> FunctionCall
+    // as a special case, where we also manually walk the FunctionCall's
+    // Arguments. The shallow search performed by `collectTypedNodes` is
+    // important here, ensuring we can target further recursion into this syntax
+    // case without applying the same logic to other parts of an identified path
+    // sub-expression (i.e. allowing specialized contextualization and analysis
+    // of Predicates downstream).
+    if (node.type === 'filter_path_expr' && isNodeSetFilterPathExpression(node)) {
+      const [filterExprNode] = node.children;
+      const [functionCallNode] = filterExprNode.children;
 
-			// This only satisfies the type checker. We could complicate
-			// `FilterPathNode` to eliminate it, but seems reasonable for now.
-			if (functionCallNode.type !== 'function_call') {
-				return node;
-			}
+      // This only satisfies the type checker. We could complicate
+      // `FilterPathNode` to eliminate it, but seems reasonable for now.
+      if (functionCallNode.type !== 'function_call') {
+        return node;
+      }
 
-			const [, ...argumentNodes] = functionCallNode.children;
+      const [, ...argumentNodes] = functionCallNode.children;
 
-			argumentNodes satisfies readonly ArgumentNode[];
+      argumentNodes satisfies readonly ArgumentNode[];
 
-			const argumentResults = argumentNodes.flatMap((argumentNode) => {
-				return findLocationPathSubExpressionNodes(argumentNode);
-			});
+      const argumentResults = argumentNodes.flatMap((argumentNode) => {
+        return findLocationPathSubExpressionNodes(argumentNode);
+      });
 
-			return [node, ...argumentResults];
-		}
+      return [node, ...argumentResults];
+    }
 
-		if (isPathExpression(node)) {
-			return node;
-		}
+    if (isPathExpression(node)) {
+      return node;
+    }
 
-		return node.children.flatMap(findLocationPathSubExpressionNodes);
-	});
+    return node.children.flatMap(findLocationPathSubExpressionNodes);
+  });
 };
 
 /**
@@ -370,14 +370,14 @@ export const findLocationPathSubExpressionNodes = (
  * expression is any {@link PathExpressionNode} syntax type.
  */
 export const getPathExpressionNode = (expression: string): PathExpressionNode | null => {
-	const { rootNode } = expressionParser.parse(expression);
-	const result = findTypedPrincipalExpressionNode(pathExpressionTypes, rootNode);
+  const { rootNode } = expressionParser.parse(expression);
+  const result = findTypedPrincipalExpressionNode(pathExpressionTypes, rootNode);
 
-	if (isPathExpression(result)) {
-		return result;
-	}
+  if (isPathExpression(result)) {
+    return result;
+  }
 
-	return null;
+  return null;
 };
 
 const constantFunctionCallNames = ['false', 'true'] as const;
@@ -387,13 +387,13 @@ type ConstantFunctionCallName = CollectionValues<typeof constantFunctionCallName
 type CosntantFunctionCallNode = LocalNamedFunctionCallNode<ConstantFunctionCallName>;
 
 const isConstantFunctionCall = (
-	syntaxNode: FunctionCallNode
+  syntaxNode: FunctionCallNode
 ): syntaxNode is CosntantFunctionCallNode => {
-	return (
-		constantFunctionCallNames.some((functionName) => {
-			return isCallToLocalNamedFunction(syntaxNode, functionName);
-		}) && hasCallSignature(syntaxNode, [])
-	);
+  return (
+    constantFunctionCallNames.some((functionName) => {
+      return isCallToLocalNamedFunction(syntaxNode, functionName);
+    }) && hasCallSignature(syntaxNode, [])
+  );
 };
 
 // prettier-ignore
@@ -403,31 +403,31 @@ type ConstantExpressionSyntaxNode =
 	| StringLiteralNode;
 
 const findConstantExpressionNode = (expression: string): ConstantExpressionSyntaxNode | null => {
-	const { rootNode } = expressionParser.parse(expression);
-	const syntaxNode = findTypedPrincipalExpressionNode(
-		['function_call', 'number', 'string_literal'],
-		rootNode
-	);
+  const { rootNode } = expressionParser.parse(expression);
+  const syntaxNode = findTypedPrincipalExpressionNode(
+    ['function_call', 'number', 'string_literal'],
+    rootNode
+  );
 
-	if (syntaxNode == null) {
-		return null;
-	}
+  if (syntaxNode == null) {
+    return null;
+  }
 
-	switch (syntaxNode.type) {
-		case 'function_call':
-			if (isConstantFunctionCall(syntaxNode)) {
-				return syntaxNode;
-			}
+  switch (syntaxNode.type) {
+    case 'function_call':
+      if (isConstantFunctionCall(syntaxNode)) {
+        return syntaxNode;
+      }
 
-			return null;
+      return null;
 
-		case 'number':
-		case 'string_literal':
-			return syntaxNode;
+    case 'number':
+    case 'string_literal':
+      return syntaxNode;
 
-		default:
-			throw new UnreachableError(syntaxNode);
-	}
+    default:
+      throw new UnreachableError(syntaxNode);
+  }
 };
 
 // prettier-ignore
@@ -456,7 +456,7 @@ export type ConstantExpression = BrandedExpression<
  * @see {@link ConstantExpression}
  */
 export const isConstantExpression = (expression: string): expression is ConstantExpression => {
-	return findConstantExpressionNode(expression) != null;
+  return findConstantExpressionNode(expression) != null;
 };
 
 const CONSTANT_TRUTHY_EXPRESSION = Symbol('CONSTANT_TRUTHY_EXPRESSION');
@@ -476,55 +476,55 @@ export type ConstantTruthyExpression = BrandedExpression<
  * @see {@link ConstantTruthyExpression}
  */
 export const isConstantTruthyExpression = (
-	expression: string
+  expression: string
 ): expression is ConstantTruthyExpression => {
-	const syntaxNode = findConstantExpressionNode(expression);
+  const syntaxNode = findConstantExpressionNode(expression);
 
-	if (syntaxNode == null) {
-		return false;
-	}
+  if (syntaxNode == null) {
+    return false;
+  }
 
-	switch (syntaxNode.type) {
-		// Expression is a number, number value is truthy
-		case 'number':
-			return Boolean(Number(syntaxNode.text));
+  switch (syntaxNode.type) {
+    // Expression is a number, number value is truthy
+    case 'number':
+      return Boolean(Number(syntaxNode.text));
 
-		// Expression is a string literal, string value is non-empty
-		case 'string_literal':
-			return syntaxNode.text.length > 2;
+    // Expression is a string literal, string value is non-empty
+    case 'string_literal':
+      return syntaxNode.text.length > 2;
 
-		// Expression is a `true()` call
-		case 'function_call':
-			return isCallToLocalNamedFunction(syntaxNode, 'true');
+    // Expression is a `true()` call
+    case 'function_call':
+      return isCallToLocalNamedFunction(syntaxNode, 'true');
 
-		default:
-			throw new UnreachableError(syntaxNode);
-	}
+    default:
+      throw new UnreachableError(syntaxNode);
+  }
 };
 
 interface QualifiedNameExpression {
-	readonly prefix: string;
-	readonly localPart: string;
+  readonly prefix: string;
+  readonly localPart: string;
 }
 
 export const parseQualifiedNameExpression = (
-	expression: string
+  expression: string
 ): QualifiedNameExpression | null => {
-	const { rootNode } = expressionParser.parse(expression);
-	const syntaxNode = findTypedPrincipalExpressionNode(['prefixed_name'], rootNode);
+  const { rootNode } = expressionParser.parse(expression);
+  const syntaxNode = findTypedPrincipalExpressionNode(['prefixed_name'], rootNode);
 
-	if (syntaxNode == null) {
-		return null;
-	}
+  if (syntaxNode == null) {
+    return null;
+  }
 
-	const [prefixNode, localPartNode, ...rest] = syntaxNode.children;
+  const [prefixNode, localPartNode, ...rest] = syntaxNode.children;
 
-	prefixNode satisfies PrefixNode;
-	localPartNode satisfies LocalPartNode;
-	rest satisfies readonly [];
+  prefixNode satisfies PrefixNode;
+  localPartNode satisfies LocalPartNode;
+  rest satisfies readonly [];
 
-	return {
-		prefix: prefixNode.text,
-		localPart: localPartNode.text,
-	};
+  return {
+    prefix: prefixNode.text,
+    localPart: localPartNode.text,
+  };
 };

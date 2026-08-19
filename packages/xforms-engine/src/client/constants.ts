@@ -1,32 +1,32 @@
 import type { LoadForm } from './form/LoadForm.ts';
 
 export const MISSING_RESOURCE_BEHAVIOR = {
-	/**
-	 * When this behavior is configured, {@link LoadForm | loading a form} which
-	 * references any **missing** resources will fail, producing an error to the
-	 * calling client.
-	 *
-	 * @see {@link MissingResourceBehavior}
-	 */
-	ERROR: 'ERROR',
+  /**
+   * When this behavior is configured, {@link LoadForm | loading a form} which
+   * references any **missing** resources will fail, producing an error to the
+   * calling client.
+   *
+   * @see {@link MissingResourceBehavior}
+   */
+  ERROR: 'ERROR',
 
-	/**
-	 * When this behavior is configured, {@link LoadForm | loading a form} which
-	 * references any **missing** resources will succeed (producing a warning).
-	 *
-	 * Such missing resources will be parsed as if they are blank, as appropriate
-	 * for the resource's XForm semantic usage and/or format.
-	 *
-	 * @see {@link MissingResourceBehavior}
-	 */
-	BLANK: 'BLANK',
+  /**
+   * When this behavior is configured, {@link LoadForm | loading a form} which
+   * references any **missing** resources will succeed (producing a warning).
+   *
+   * Such missing resources will be parsed as if they are blank, as appropriate
+   * for the resource's XForm semantic usage and/or format.
+   *
+   * @see {@link MissingResourceBehavior}
+   */
+  BLANK: 'BLANK',
 
-	/**
-	 * @see {@link MISSING_RESOURCE_BEHAVIOR.ERROR}
-	 */
-	get DEFAULT(): 'ERROR' {
-		return MISSING_RESOURCE_BEHAVIOR.ERROR;
-	},
+  /**
+   * @see {@link MISSING_RESOURCE_BEHAVIOR.ERROR}
+   */
+  get DEFAULT(): 'ERROR' {
+    return MISSING_RESOURCE_BEHAVIOR.ERROR;
+  },
 } as const;
 
 export type MissingResourceBehaviorError = typeof MISSING_RESOURCE_BEHAVIOR.ERROR;

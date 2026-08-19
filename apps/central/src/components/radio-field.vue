@@ -56,6 +56,7 @@ const disabledMessageId = computed(() =>
 .radio-field {
   label {
     font-weight: normal;
+    cursor: pointer;
   }
 }
 

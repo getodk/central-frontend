@@ -3,26 +3,26 @@ import type { QualifiedName } from '../../../lib/names/QualifiedName.ts';
 import type { Attribute } from '../../Attribute.ts';
 
 export interface ClientReactiveSerializableChildNode {
-	readonly instanceState: InstanceState;
+  readonly instanceState: InstanceState;
 }
 
 export interface ClientReactiveSerializableParentNodeCurrentState<
-	Child extends ClientReactiveSerializableChildNode,
+  Child extends ClientReactiveSerializableChildNode,
 > {
-	get relevant(): boolean;
-	get children(): readonly Child[];
-	get attributes(): readonly Attribute[];
+  get relevant(): boolean;
+  get children(): readonly Child[];
+  get attributes(): readonly Attribute[];
 }
 
 export interface ClientReactiveSerializableParentNodeDefinition {
-	readonly qualifiedName: QualifiedName;
+  readonly qualifiedName: QualifiedName;
 }
 
 export interface ClientReactiveSerializableParentNode<
-	Child extends ClientReactiveSerializableChildNode,
+  Child extends ClientReactiveSerializableChildNode,
 > {
-	readonly definition: ClientReactiveSerializableParentNodeDefinition;
-	readonly parent: ClientReactiveSerializableParentNode<ClientReactiveSerializableChildNode> | null;
-	readonly currentState: ClientReactiveSerializableParentNodeCurrentState<Child>;
-	readonly instanceState: InstanceState;
+  readonly definition: ClientReactiveSerializableParentNodeDefinition;
+  readonly parent: ClientReactiveSerializableParentNode<ClientReactiveSerializableChildNode> | null;
+  readonly currentState: ClientReactiveSerializableParentNodeCurrentState<Child>;
+  readonly instanceState: InstanceState;
 }

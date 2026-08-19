@@ -5,29 +5,29 @@ import type { EvaluableArgument, FunctionSignature } from './FunctionImplementat
 import { FunctionImplementation } from './FunctionImplementation.ts';
 
 export type TypedFunctionCallable<R> = <
-	T extends XPathNode,
-	Arguments extends readonly EvaluableArgument[],
+  T extends XPathNode,
+  Arguments extends readonly EvaluableArgument[],
 >(
-	context: LocationPathEvaluation<T>,
-	args: Arguments
+  context: LocationPathEvaluation<T>,
+  args: Arguments
 ) => R;
 
 export type TypedFunctionResultFactory<R> = <T extends XPathNode>(
-	context: LocationPathEvaluation<T>,
-	value: R
+  context: LocationPathEvaluation<T>,
+  value: R
 ) => Evaluation<T>;
 
 export abstract class TypedFunctionImplementation<R> extends FunctionImplementation {
-	protected constructor(
-		localName: string,
-		signature: FunctionSignature,
-		call: TypedFunctionCallable<R>,
-		resultFactory: TypedFunctionResultFactory<R>
-	) {
-		super(localName, signature, (context, args) => {
-			const result = call(context, args);
+  protected constructor(
+    localName: string,
+    signature: FunctionSignature,
+    call: TypedFunctionCallable<R>,
+    resultFactory: TypedFunctionResultFactory<R>
+  ) {
+    super(localName, signature, (context, args) => {
+      const result = call(context, args);
 
-			return resultFactory(context, result);
-		});
-	}
+      return resultFactory(context, result);
+    });
+  }
 }

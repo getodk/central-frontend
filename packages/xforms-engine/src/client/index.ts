@@ -14,14 +14,14 @@ export type * from './form/RestoreFormInstance.ts';
 export type * from './FormLanguage.ts';
 export type * from './GroupNode.ts';
 export type {
-	AnyChildNode,
-	AnyControlNode,
-	AnyLeafNode,
-	AnyNode,
-	AnyParentNode,
-	GeneralChildNode,
-	GeneralParentNode,
-	RepeatRangeNode,
+  AnyChildNode,
+  AnyControlNode,
+  AnyLeafNode,
+  AnyNode,
+  AnyParentNode,
+  GeneralChildNode,
+  GeneralParentNode,
+  RepeatRangeNode,
 } from './hierarchy.ts';
 export type * from './identity.ts';
 export type * from './InputNode.ts';

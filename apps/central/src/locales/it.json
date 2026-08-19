@@ -172,14 +172,12 @@
     "yesProceed": "Si, procedere",
     "showPreview": "Anteprima",
     "hidePreview": "Nascondi anteprima",
-    "newPreview": "Nuova anteprima",
     "expand": "Espandere",
     "collapse": "Chiudere",
     "selectRow": "Seleziona riga",
     "reset": "Ripristina",
-    "reviewParallelUpdates": "Rivedi gli aggiornamenti paralleli",
-    "tryAgain": "Ritenta ancora",
     "upload": "Carica",
+    "reviewParallelUpdates": "Rivedi gli aggiornamenti paralleli",
     "restore": "Ripristino"
   },
   "field": {
@@ -242,6 +240,7 @@
     "entityLists": "Liste Entità",
     "form": "Formulario",
     "forms": "Formulari",
+    "newForm": "Nuovo formulario",
     "formAttachments": "Allegati del formulario",
     "project": "Progetto",
     "projects": "Progetti",
@@ -284,6 +283,7 @@
     "odkLogo": "Logo ODK",
     "defaultTitle": "Benvenuto su ODK Central",
     "defaultDescription": "Accedi al tuo account per iniziare",
+    "heroImage": "Immagine di Login",
     "customLogoAlt": "Logo dell'Organizzazione"
   },
   "analytics": {
@@ -350,7 +350,6 @@
     "totalEntities": "Entità totali",
     "versionShort": "v{version}",
     "warning": "Avvertimento",
-    "beta": "Beta",
     "none": "(nessuno)",
     "search": "Cerca",
     "reviewState": "Stato Revisione",

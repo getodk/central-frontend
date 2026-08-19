@@ -1,3 +1,5 @@
+import { nextTick } from 'vue';
+
 import FormDraftPublish from '../../../src/components/form-draft/publish.vue';
 import FormVersionRow from '../../../src/components/form-version/row.vue';
 
@@ -109,7 +111,7 @@ describe('FormDraftPublish', () => {
       modal.findAll('form p').length.should.equal(1);
     });
 
-    it('does not show input if version string of draft is different', async () => {
+    it('does not show version input if version string of draft is different', async () => {
       testData.extendedForms.createPast(1);
       testData.extendedFormVersions.createPast(1, {
         version: 'v2',
@@ -118,15 +120,17 @@ describe('FormDraftPublish', () => {
       const modal = mount(FormDraftPublish, mountOptions());
       await modal.setProps({ state: true });
       modal.find('input').exists().should.be.false;
-      modal.findAll('.modal-introduction p').length.should.equal(3);
+      modal.findAll('.modal-introduction p').length.should.equal(2);
+      modal.findAll('form p').length.should.equal(1);
     });
 
-    it('does not show the input for a form without a published version', async () => {
+    it('does not show the version input for a form without a published version', async () => {
       testData.extendedForms.createPast(1, { draft: true });
       const modal = mount(FormDraftPublish, mountOptions());
       await modal.setProps({ state: true });
       modal.find('input').exists().should.be.false;
-      modal.findAll('.modal-introduction p').length.should.equal(3);
+      modal.findAll('.modal-introduction p').length.should.equal(2);
+      modal.findAll('form p').length.should.equal(1);
     });
 
     it('focuses the input', async () => {
@@ -136,6 +140,7 @@ describe('FormDraftPublish', () => {
         attachTo: document.body
       }));
       await modal.setProps({ state: true });
+      await nextTick();
       modal.get('input').should.be.focused();
     });
 
@@ -164,6 +169,31 @@ describe('FormDraftPublish', () => {
     });
   });
 
+  describe('publish notes', () => {
+    it('focuses the textarea if version input is not shown', async () => {
+      testData.extendedForms.createPast(1);
+      testData.extendedFormVersions.createPast(1, { version: 'v2', draft: true });
+      const modal = mount(FormDraftPublish, mountOptions({
+        attachTo: document.body
+      }));
+      await modal.setProps({ state: true });
+      await nextTick();
+      modal.get('textarea').should.be.focused();
+    });
+
+    it('resets the input if the modal is hidden', async () => {
+      testData.extendedForms.createPast(1);
+      testData.extendedFormVersions.createPast(1, { version: 'v2', draft: true });
+      const modal = mount(FormDraftPublish, mountOptions());
+      await modal.setProps({ state: true });
+      const input = modal.get('textarea');
+      await input.setValue('fixed validation error');
+      await modal.setProps({ state: false });
+      await modal.setProps({ state: true });
+      input.element.value.should.equal('');
+    });
+  });
+
   describe('standard button things', () => {
     it('implements things if the version string input is shown', () => {
       testData.extendedForms.createPast(1);
@@ -178,18 +208,6 @@ describe('FormDraftPublish', () => {
           modal: true
         });
     });
-
-    it('implements things if the version string input is not shown', () => {
-      testData.extendedForms.createPast(1, { draft: true });
-      return mockHttp()
-        .mount(FormDraftPublish, mountOptions())
-        .afterResponses(modal => modal.setProps({ state: true }))
-        .testStandardButton({
-          button: '.btn-primary',
-          disabled: ['.btn-link'],
-          modal: true
-        });
-    });
   });
 
   describe('request', () => {
@@ -199,7 +217,7 @@ describe('FormDraftPublish', () => {
         .mount(FormDraftPublish, mountOptions())
         .request(async (modal) => {
           await modal.setProps({ state: true });
-          return modal.get('.btn-primary').trigger('click');
+          return modal.get('form').trigger('submit');
         })
         .beforeEachResponse((_, { method, url }) => {
           method.should.equal('POST');
@@ -249,7 +267,7 @@ describe('FormDraftPublish', () => {
         .mount(FormDraftPublish, mountOptions())
         .request(async (modal) => {
           await modal.setProps({ state: true });
-          return modal.get('.btn-primary').trigger('click');
+          return modal.get('form').trigger('submit');
         })
         .beforeEachResponse((_, { url }) => {
           url.should.equal('/v1/projects/1/forms/f/draft/publish');
@@ -283,7 +301,7 @@ describe('FormDraftPublish', () => {
       .mount(FormDraftPublish, mountOptions())
       .request(async (modal) => {
         await modal.setProps({ state: true });
-        return modal.get('#form-draft-publish .btn-primary').trigger('click');
+        return modal.get('#form-draft-publish form').trigger('submit');
       })
       .respondWithProblem({
         code: 409.17,
@@ -309,7 +327,7 @@ describe('FormDraftPublish', () => {
       .mount(FormDraftPublish, mountOptions())
       .request(async (modal) => {
         await modal.setProps({ state: true });
-        return modal.get('#form-draft-publish .btn-primary').trigger('click');
+        return modal.get('form').trigger('submit');
       })
       .respondWithProblem(409.6)
       .afterResponse(modal => {
@@ -329,13 +347,14 @@ describe('FormDraftPublish', () => {
       .mount(FormDraftPublish, mountOptions())
       .request(async (modal) => {
         await modal.setProps({ state: true });
-        return modal.get('#form-draft-publish .btn-primary').trigger('click');
+        return modal.get('form').trigger('submit');
       })
       .respondWithProblem(500.1)
       .afterResponse(modal => {
         modal.should.alert('danger');
         modal.find('input').exists().should.be.false;
-        modal.findAll('.modal-introduction p').length.should.equal(3);
+        modal.findAll('.modal-introduction p').length.should.equal(2);
+        modal.findAll('form p').length.should.equal(1);
       });
   });
 
@@ -355,7 +374,7 @@ describe('FormDraftPublish', () => {
         .complete()
         .request(async (app) => {
           await app.get('#form-edit-publish-button').trigger('click');
-          return app.get('#form-draft-publish .btn-primary').trigger('click');
+          return app.get('#form-draft-publish form').trigger('submit');
         })
         .modify(respondToPublish);
     };
@@ -368,6 +387,23 @@ describe('FormDraftPublish', () => {
         { url: '/v1/projects/1/forms/f/attachments' },
         { url: '/v1/projects/1/forms/f/dataset-diff' }
       ]));
+
+    it('sends X-Action-Notes header when notes are provided', () => {
+      testData.extendedForms.createPast(1, { draft: true });
+      return load('/projects/1/forms/f/draft')
+        .complete()
+        .request(async (app) => {
+          await app.get('#form-edit-publish-button').trigger('click');
+          await app.get('#form-draft-publish-note').setValue('Version 1 release notes');
+          return app.get('#form-draft-publish form').trigger('submit');
+        })
+        .beforeEachResponse((_, { url, headers }) => {
+          if (url === '/v1/projects/1/forms/f/draft/publish') {
+            headers['X-Action-Notes'].should.equal(encodeURIComponent('Version 1 release notes'));
+          }
+        })
+        .modify(respondToPublish);
+    });
 
     it('hides the modal', () =>
       publish()
@@ -422,7 +458,7 @@ describe('FormDraftPublish', () => {
         .complete()
         .request(async (app) => {
           await app.get('#form-edit-publish-button').trigger('click');
-          return app.get('#form-draft-publish .btn-primary').trigger('click');
+          return app.get('#form-draft-publish form').trigger('submit');
         })
         .modify(respondToPublish)
         .complete()

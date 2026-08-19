@@ -306,8 +306,8 @@ describe('EntityFilters', () => {
 
           DateTime.fromISO(start).zoneName.should.equal(Settings.defaultZoneName);
 
-          const end = filters[1].split(' le ')[1];
-          end.should.equal('1970-01-02T23:59:59.999Z');
+          const end = filters[1].split(' lt ')[1];
+          end.should.equal('1970-01-03T00:00:00.000Z');
           DateTime.fromISO(end).zoneName.should.equal(Settings.defaultZoneName);
         })
         .respondWithData(testData.entityOData));
@@ -371,7 +371,7 @@ describe('EntityFilters', () => {
       attachTo: document.body
     })
       .afterResponses(component => {
-        const conflictFilter = component.findAll('.multiselect select');
+        const conflictFilter = component.findAll('.multiselect .dropdown-trigger');
         conflictFilter[0].attributes('aria-disabled').should.equal('true');
         conflictFilter[1].attributes('aria-disabled').should.equal('true');
         component.getComponent(DateRangePicker).props().disabled.should.be.true;

@@ -3,12 +3,12 @@ import type { TestContext } from '../helpers.ts';
 import { createTestContext, getNonNamespaceAttributes, namespaceResolver } from '../helpers.ts';
 
 describe('node name for', () => {
-	let testContext: TestContext;
-	let document: XMLDocument;
+  let testContext: TestContext;
+  let document: XMLDocument;
 
-	beforeEach(() => {
-		testContext = createTestContext(
-			`
+  beforeEach(() => {
+    testContext = createTestContext(
+      `
       <!DOCTYPE html>
       <html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://some-namespace.com/nss">
         <head>
@@ -41,100 +41,100 @@ describe('node name for', () => {
           </div>
         </body>
       </html>`,
-			{ namespaceResolver }
-		);
-		document = testContext.document;
-	});
+      { namespaceResolver }
+    );
+    document = testContext.document;
+  });
 
-	it('any attribute', () => {
-		const contextNode = document.getElementById('StepNodeTestCaseNameTestAttribute')!;
+  it('any attribute', () => {
+    const contextNode = document.getElementById('StepNodeTestCaseNameTestAttribute')!;
 
-		testContext.assertNodeSet('attribute::*', getNonNamespaceAttributes(contextNode), {
-			contextNode,
-		});
-	});
+    testContext.assertNodeSet('attribute::*', getNonNamespaceAttributes(contextNode), {
+      contextNode,
+    });
+  });
 
-	it('any child', () => {
-		const contextNode = document.getElementById('StepNodeTestCaseNameTestChild')!;
+  it('any child', () => {
+    const contextNode = document.getElementById('StepNodeTestCaseNameTestChild')!;
 
-		testContext.assertNodeSet('child::*', Array.from(contextNode.children), {
-			contextNode,
-		});
-	});
+    testContext.assertNodeSet('child::*', Array.from(contextNode.children), {
+      contextNode,
+    });
+  });
 
-	it('any ancestor-or-self', () => {
-		const element = document.getElementById('StepNodeTestCaseNameTestAttribute')!;
-		const attributes = getNonNamespaceAttributes(element);
-		const contextNode = attributes[0]!;
+  it('any ancestor-or-self', () => {
+    const element = document.getElementById('StepNodeTestCaseNameTestAttribute')!;
+    const attributes = getNonNamespaceAttributes(element);
+    const contextNode = attributes[0]!;
 
-		testContext.assertNodeSet(
-			'ancestor-or-self::*',
-			[
-				document.documentElement,
-				document.querySelector('body')!,
-				document.getElementById('StepNodeTestCaseNameTest')!,
-				document.getElementById('StepNodeTestCaseNameTestAttribute')!,
-			],
-			{
-				contextNode,
-			}
-		);
-	});
+    testContext.assertNodeSet(
+      'ancestor-or-self::*',
+      [
+        document.documentElement,
+        document.querySelector('body')!,
+        document.getElementById('StepNodeTestCaseNameTest')!,
+        document.getElementById('StepNodeTestCaseNameTestAttribute')!,
+      ],
+      {
+        contextNode,
+      }
+    );
+  });
 
-	it('attribute with a specific name', () => {
-		const contextNode = document.getElementById('StepNodeTestCaseNameTestAttribute')!;
-		const attribute = getNonNamespaceAttributes(contextNode).find(
-			(attr) => attr.localName === 'attrib3'
-		);
+  it('attribute with a specific name', () => {
+    const contextNode = document.getElementById('StepNodeTestCaseNameTestAttribute')!;
+    const attribute = getNonNamespaceAttributes(contextNode).find(
+      (attr) => attr.localName === 'attrib3'
+    );
 
-		expect(attribute).not.toBeNull();
-		testContext.assertNodeSet('attribute::attrib3', [attribute!], {
-			contextNode,
-		});
-	});
+    expect(attribute).not.toBeNull();
+    testContext.assertNodeSet('attribute::attrib3', [attribute!], {
+      contextNode,
+    });
+  });
 
-	[
-		{ expression: 'child::html', expectedSelectors: [] },
-		{ expression: 'child::xhtml:html', expectedSelectors: [':root'] },
-	].forEach(({ expression, expectedSelectors }) => {
-		it(`child with specific (namespaced) name (expression: ${expression}`, () => {
-			const expected = expectedSelectors.flatMap((selector) =>
-				Array.from(document.querySelectorAll(selector))
-			);
+  [
+    { expression: 'child::html', expectedSelectors: [] },
+    { expression: 'child::xhtml:html', expectedSelectors: [':root'] },
+  ].forEach(({ expression, expectedSelectors }) => {
+    it(`child with specific (namespaced) name (expression: ${expression}`, () => {
+      const expected = expectedSelectors.flatMap((selector) =>
+        Array.from(document.querySelectorAll(selector))
+      );
 
-			testContext.assertNodeSet(expression, expected);
-		});
-	});
+      testContext.assertNodeSet(expression, expected);
+    });
+  });
 
-	it('ancestor with specific name and namespace', () => {
-		const contextNode = document.getElementById('StepNodeTestCaseNameTest3')!;
+  it('ancestor with specific name and namespace', () => {
+    const contextNode = document.getElementById('StepNodeTestCaseNameTest3')!;
 
-		testContext.assertNodeSet(
-			'ancestor::xhtml:div',
-			[
-				document.getElementById('StepNodeTestCaseNameTest')!,
-				document.getElementById('StepNodeTestCaseNameTest1')!,
-				document.getElementById('StepNodeTestCaseNameTest2')!,
-			],
-			{
-				contextNode,
-			}
-		);
-	});
+    testContext.assertNodeSet(
+      'ancestor::xhtml:div',
+      [
+        document.getElementById('StepNodeTestCaseNameTest')!,
+        document.getElementById('StepNodeTestCaseNameTest1')!,
+        document.getElementById('StepNodeTestCaseNameTest2')!,
+      ],
+      {
+        contextNode,
+      }
+    );
+  });
 
-	it('ancestor with specific name without a default namespace', () => {
-		const contextNode = document.getElementById('StepNodeTestCaseNameTestNoNamespace')!.firstChild!
-			.firstChild!.firstChild!;
+  it('ancestor with specific name without a default namespace', () => {
+    const contextNode = document.getElementById('StepNodeTestCaseNameTestNoNamespace')!.firstChild!
+      .firstChild!.firstChild!;
 
-		testContext.assertNodeSet(
-			'ancestor::div',
-			[
-				document.getElementById('StepNodeTestCaseNameTestNoNamespace')!.firstChild!,
-				document.getElementById('StepNodeTestCaseNameTestNoNamespace')!.firstChild!.firstChild!,
-			],
-			{
-				contextNode,
-			}
-		);
-	});
+    testContext.assertNodeSet(
+      'ancestor::div',
+      [
+        document.getElementById('StepNodeTestCaseNameTestNoNamespace')!.firstChild!,
+        document.getElementById('StepNodeTestCaseNameTestNoNamespace')!.firstChild!.firstChild!,
+      ],
+      {
+        contextNode,
+      }
+    );
+  });
 });

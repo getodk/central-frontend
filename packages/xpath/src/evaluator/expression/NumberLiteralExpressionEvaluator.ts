@@ -3,18 +3,18 @@ import type { ExpressionEvaluator } from './ExpressionEvaluator.ts';
 import { NumberExpressionEvaluator } from './NumberExpressionEvaluator.ts';
 
 export class NumberLiteralExpressionEvaluator
-	extends NumberExpressionEvaluator<number>
-	implements ExpressionEvaluator
+  extends NumberExpressionEvaluator<number>
+  implements ExpressionEvaluator
 {
-	constructor(readonly syntaxNode: NumberNode) {
-		const { text } = syntaxNode;
+  constructor(readonly syntaxNode: NumberNode) {
+    const { text } = syntaxNode;
 
-		const constValue = Number(text);
+    const constValue = Number(text);
 
-		super(constValue);
-	}
+    super(constValue);
+  }
 
-	evaluateNumber(): number {
-		return this.constValue;
-	}
+  evaluateNumber(): number {
+    return this.constValue;
+  }
 }

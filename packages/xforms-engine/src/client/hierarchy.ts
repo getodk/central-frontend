@@ -38,9 +38,9 @@ export type RepeatRangeNode =
  * child nodes.
  */
 export type GeneralParentNode =
-	| RootNode // eslint-disable-line @typescript-eslint/sort-type-constituents
-	| GroupNode
-	| RepeatInstanceNode;
+  | RootNode // eslint-disable-line @typescript-eslint/sort-type-constituents
+  | GroupNode
+  | RepeatInstanceNode;
 
 /**
  * Any of the concrete node types which may be a parent of any other node.

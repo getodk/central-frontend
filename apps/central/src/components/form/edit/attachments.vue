@@ -10,8 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <form-edit-section id="form-edit-attachments" icon="paperclip" dotted
-    :warning="hasMissing">
+  <form-edit-section id="form-edit-attachments">
     <template #title>{{ $t('resource.attachments') }}</template>
     <template v-if="hasAttachments" #subtitle>
       <template v-if="hasMissing">
@@ -74,13 +73,6 @@ const tag = computed(() => {
     : '';
 });
 </script>
-
-<style lang="scss">
-#form-edit-attachments {
-  .form-edit-section-body { margin-bottom: 51px; }
-  &:has(#form-attachment-list) .form-edit-section-body { margin-bottom: 21px; }
-}
-</style>
 
 <i18n lang="json5">
 {

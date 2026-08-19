@@ -3,82 +3,82 @@ import { EmptyXFormsElement } from './EmptyXFormsElement.ts';
 import type { XFormsElement } from './XFormsElement.ts';
 
 class BindBuilderXFormsElement implements XFormsElement {
-	protected readonly name = 'bind';
-	protected readonly attributes: ReadonlyMap<string, string>;
-	protected readonly bindAttributes: Map<string, string>;
+  protected readonly name = 'bind';
+  protected readonly attributes: ReadonlyMap<string, string>;
+  protected readonly bindAttributes: Map<string, string>;
 
-	constructor(readonly nodeset: string) {
-		const bindAttributes = new Map<string, string>([['nodeset', nodeset]]);
+  constructor(readonly nodeset: string) {
+    const bindAttributes = new Map<string, string>([['nodeset', nodeset]]);
 
-		this.bindAttributes = bindAttributes;
-		this.attributes = bindAttributes;
-	}
+    this.bindAttributes = bindAttributes;
+    this.attributes = bindAttributes;
+  }
 
-	getName(): string {
-		return this.name;
-	}
+  getName(): string {
+    return this.name;
+  }
 
-	asXml(): string {
-		return new EmptyXFormsElement('bind', this.attributes).asXml();
-	}
+  asXml(): string {
+    return new EmptyXFormsElement('bind', this.attributes).asXml();
+  }
 
-	getNodeset(): string {
-		return this.attributes.get('nodeset') ?? '';
-	}
+  getNodeset(): string {
+    return this.attributes.get('nodeset') ?? '';
+  }
 
-	type(type: string): BindBuilderXFormsElement {
-		this.bindAttributes.set('type', type);
+  type(type: string): BindBuilderXFormsElement {
+    this.bindAttributes.set('type', type);
 
-		return this;
-	}
+    return this;
+  }
 
-	constraint(expression: string): BindBuilderXFormsElement {
-		this.bindAttributes.set('constraint', expression);
+  constraint(expression: string): BindBuilderXFormsElement {
+    this.bindAttributes.set('constraint', expression);
 
-		return this;
-	}
+    return this;
+  }
 
-	required(expression = 'true()'): BindBuilderXFormsElement {
-		this.bindAttributes.set('required', expression);
+  required(expression = 'true()'): BindBuilderXFormsElement {
+    this.bindAttributes.set('required', expression);
 
-		return this;
-	}
+    return this;
+  }
 
-	relevant(expression: string): BindBuilderXFormsElement {
-		this.bindAttributes.set('relevant', expression);
+  relevant(expression: string): BindBuilderXFormsElement {
+    this.bindAttributes.set('relevant', expression);
 
-		return this;
-	}
+    return this;
+  }
 
-	calculate(expression: string): BindBuilderXFormsElement {
-		this.bindAttributes.set('calculate', expression);
+  calculate(expression: string): BindBuilderXFormsElement {
+    this.bindAttributes.set('calculate', expression);
 
-		return this;
-	}
+    return this;
+  }
 
-	preload(expression: string): BindBuilderXFormsElement {
-		return this.withAttribute(JAVAROSA_PREFIX, 'preload', expression);
-	}
+  preload(expression: string): BindBuilderXFormsElement {
+    return this.withAttribute(JAVAROSA_PREFIX, 'preload', expression);
+  }
 
-	preloadParams(expression: string): BindBuilderXFormsElement {
-		return this.withAttribute(JAVAROSA_PREFIX, 'preloadParams', expression);
-	}
+  preloadParams(expression: string): BindBuilderXFormsElement {
+    return this.withAttribute(JAVAROSA_PREFIX, 'preloadParams', expression);
+  }
 
-	readonly(expression = 'true()'): BindBuilderXFormsElement {
-		this.bindAttributes.set('readonly', expression);
+  readonly(expression = 'true()'): BindBuilderXFormsElement {
+    this.bindAttributes.set('readonly', expression);
 
-		return this;
-	}
+    return this;
+  }
 
-	withAttribute(namespace: string, name: string, expression: string): BindBuilderXFormsElement {
-		this.bindAttributes.set(`${namespace}:${name}`, expression);
+  withAttribute(namespace: string, name: string, expression: string): BindBuilderXFormsElement {
+    this.bindAttributes.set(`${namespace}:${name}`, expression);
 
-		return this;
-	}
+    return this;
+  }
 }
 
 export type { BindBuilderXFormsElement };
 
 export const bind = (nodeset: string): BindBuilderXFormsElement => {
-	return new BindBuilderXFormsElement(nodeset);
+  return new BindBuilderXFormsElement(nodeset);
 };

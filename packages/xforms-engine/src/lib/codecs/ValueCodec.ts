@@ -10,97 +10,97 @@ export type CodecDecoder<RuntimeValue> = (value: string) => RuntimeValue;
 type RuntimeValueAccessor<RuntimeValue> = Accessor<RuntimeValue>;
 
 export type RuntimeValueSetter<
-	RuntimeValue extends RuntimeInputValue,
-	RuntimeInputValue = RuntimeValue,
+  RuntimeValue extends RuntimeInputValue,
+  RuntimeInputValue = RuntimeValue,
 > = (input: RuntimeInputValue) => RuntimeValue;
 
 export type RuntimeValueState<
-	RuntimeValue extends RuntimeInputValue,
-	RuntimeInputValue = RuntimeValue,
+  RuntimeValue extends RuntimeInputValue,
+  RuntimeInputValue = RuntimeValue,
 > = readonly [
-	get: RuntimeValueAccessor<RuntimeValue>,
-	set: RuntimeValueSetter<RuntimeValue, RuntimeInputValue>,
+  get: RuntimeValueAccessor<RuntimeValue>,
+  set: RuntimeValueSetter<RuntimeValue, RuntimeInputValue>,
 ];
 
 export type CreateRuntimeValueState<
-	RuntimeValue extends RuntimeInputValue,
-	RuntimeInputValue = RuntimeValue,
+  RuntimeValue extends RuntimeInputValue,
+  RuntimeInputValue = RuntimeValue,
 > = (
-	instanceState: SimpleAtomicState<string>
+  instanceState: SimpleAtomicState<string>
 ) => RuntimeValueState<RuntimeValue, RuntimeInputValue>;
 
 type RuntimeValueStateFactory<
-	RuntimeValue extends RuntimeInputValue,
-	RuntimeInputValue = RuntimeValue,
+  RuntimeValue extends RuntimeInputValue,
+  RuntimeInputValue = RuntimeValue,
 > = (
-	encodeValue: CodecEncoder<RuntimeInputValue>,
-	decodeValue: CodecDecoder<RuntimeValue>
+  encodeValue: CodecEncoder<RuntimeInputValue>,
+  decodeValue: CodecDecoder<RuntimeValue>
 ) => CreateRuntimeValueState<RuntimeValue, RuntimeInputValue>;
 
 type DecodeInstanceValueFactory<
-	RuntimeValue extends RuntimeInputValue,
-	RuntimeInputValue = RuntimeValue,
+  RuntimeValue extends RuntimeInputValue,
+  RuntimeInputValue = RuntimeValue,
 > = (
-	encodeValue: CodecEncoder<RuntimeInputValue>,
-	decodeValue: CodecDecoder<RuntimeValue>
+  encodeValue: CodecEncoder<RuntimeInputValue>,
+  decodeValue: CodecDecoder<RuntimeValue>
 ) => DecodeInstanceValue;
 
 interface ValueCodecOptions<RuntimeValue extends RuntimeInputValue, RuntimeInputValue> {
-	readonly decodeInstanceValueFactory?: DecodeInstanceValueFactory<RuntimeValue, RuntimeInputValue>;
-	readonly runtimeValueStateFactory?: RuntimeValueStateFactory<RuntimeValue, RuntimeInputValue>;
+  readonly decodeInstanceValueFactory?: DecodeInstanceValueFactory<RuntimeValue, RuntimeInputValue>;
+  readonly runtimeValueStateFactory?: RuntimeValueStateFactory<RuntimeValue, RuntimeInputValue>;
 }
 
 export abstract class ValueCodec<
-	V extends ValueType,
-	RuntimeValue extends RuntimeInputValue,
-	RuntimeInputValue = RuntimeValue,
+  V extends ValueType,
+  RuntimeValue extends RuntimeInputValue,
+  RuntimeInputValue = RuntimeValue,
 > {
-	protected readonly defaultRuntimeValueStateFactory: RuntimeValueStateFactory<
-		RuntimeValue,
-		RuntimeInputValue
-	> = (encodeValue, decodeValue) => {
-		return (instanceState) => {
-			const [getInstanceValue, setInstanceValue] = instanceState;
+  protected readonly defaultRuntimeValueStateFactory: RuntimeValueStateFactory<
+    RuntimeValue,
+    RuntimeInputValue
+  > = (encodeValue, decodeValue) => {
+    return (instanceState) => {
+      const [getInstanceValue, setInstanceValue] = instanceState;
 
-			const getValue = (): RuntimeValue => {
-				return decodeValue(getInstanceValue());
-			};
+      const getValue = (): RuntimeValue => {
+        return decodeValue(getInstanceValue());
+      };
 
-			const setValue = (runtimeValue: RuntimeInputValue): RuntimeValue => {
-				const encodedValue = encodeValue(runtimeValue);
-				const persistedValue = setInstanceValue(encodedValue);
+      const setValue = (runtimeValue: RuntimeInputValue): RuntimeValue => {
+        const encodedValue = encodeValue(runtimeValue);
+        const persistedValue = setInstanceValue(encodedValue);
 
-				return decodeValue(persistedValue);
-			};
+        return decodeValue(persistedValue);
+      };
 
-			return [getValue, setValue];
-		};
-	};
+      return [getValue, setValue];
+    };
+  };
 
-	protected readonly defaultDecodeInstanceValueFactory: DecodeInstanceValueFactory<
-		RuntimeValue,
-		RuntimeInputValue
-	> = (encodeValue, decodeValue) => {
-		return (instanceValue) => {
-			return encodeValue(decodeValue(instanceValue));
-		};
-	};
+  protected readonly defaultDecodeInstanceValueFactory: DecodeInstanceValueFactory<
+    RuntimeValue,
+    RuntimeInputValue
+  > = (encodeValue, decodeValue) => {
+    return (instanceValue) => {
+      return encodeValue(decodeValue(instanceValue));
+    };
+  };
 
-	readonly decodeInstanceValue: DecodeInstanceValue;
-	readonly createRuntimeValueState: CreateRuntimeValueState<RuntimeValue, RuntimeInputValue>;
+  readonly decodeInstanceValue: DecodeInstanceValue;
+  readonly createRuntimeValueState: CreateRuntimeValueState<RuntimeValue, RuntimeInputValue>;
 
-	constructor(
-		readonly valueType: V,
-		readonly encodeValue: CodecEncoder<RuntimeInputValue>,
-		readonly decodeValue: CodecDecoder<RuntimeValue>,
-		options: ValueCodecOptions<RuntimeValue, RuntimeInputValue> = {}
-	) {
-		const {
-			decodeInstanceValueFactory = this.defaultDecodeInstanceValueFactory,
-			runtimeValueStateFactory = this.defaultRuntimeValueStateFactory,
-		} = options;
+  constructor(
+    readonly valueType: V,
+    readonly encodeValue: CodecEncoder<RuntimeInputValue>,
+    readonly decodeValue: CodecDecoder<RuntimeValue>,
+    options: ValueCodecOptions<RuntimeValue, RuntimeInputValue> = {}
+  ) {
+    const {
+      decodeInstanceValueFactory = this.defaultDecodeInstanceValueFactory,
+      runtimeValueStateFactory = this.defaultRuntimeValueStateFactory,
+    } = options;
 
-		this.decodeInstanceValue = decodeInstanceValueFactory(encodeValue, decodeValue);
-		this.createRuntimeValueState = runtimeValueStateFactory(encodeValue, decodeValue);
-	}
+    this.decodeInstanceValue = decodeInstanceValueFactory(encodeValue, decodeValue);
+    this.createRuntimeValueState = runtimeValueStateFactory(encodeValue, decodeValue);
+  }
 }

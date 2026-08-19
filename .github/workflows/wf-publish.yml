@@ -1,0 +1,39 @@
+name: Publish Web Forms packages
+
+on:
+  push:
+    tags:
+      - 'v[0-9]*.[0-9]*.[0-9]*'
+      - '!v*-*' # Excludes pre-releases
+
+permissions:
+  id-token: write # Required for OIDC
+  contents: write # Required for pushing package version tags
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up npm registry
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24.16.0'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build packages
+        run: npm run build
+
+      - name: Publish packages
+        run: npm run changeset publish
+
+      - name: Push package version tags
+        run: git push origin --tags

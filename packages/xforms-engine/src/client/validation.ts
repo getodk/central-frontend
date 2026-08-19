@@ -6,27 +6,27 @@ import type { TextRange } from './TextRange.ts';
 
 // This interface exists so that extensions can share JSDoc for `valid`.
 interface BaseValidity {
-	/**
-	 * Specifies the unambiguous validity state for each validity condition of a
-	 * given node, or for the derived validity of any parent node whose descendants
-	 * are validated.
-	 *
-	 * For {@link ValidationCondition | form-defined conditions}, validity is
-	 * determined as follows:
-	 *
-	 *
-	 *   expression | state     |  blank  | non-blank
-	 * ------------:|:----------|:-------:|:---------:
-	 * `constraint` | `true`\*  | ✅      | ✅
-	 * `constraint` | `false`   | ✅      | ❌
-	 * `required`   | `false`\* | ✅      | ✅
-	 * `required`   | `true`    | ❌      | ✅
-	 *
-	 * - \* = default (expression not defined)
-	 * - ✅ = `valid: true`
-	 * - ❌ = `valid: false`
-	 */
-	readonly valid: boolean;
+  /**
+   * Specifies the unambiguous validity state for each validity condition of a
+   * given node, or for the derived validity of any parent node whose descendants
+   * are validated.
+   *
+   * For {@link ValidationCondition | form-defined conditions}, validity is
+   * determined as follows:
+   *
+   *
+   *   expression | state     |  blank  | non-blank
+   * ------------:|:----------|:-------:|:---------:
+   * `constraint` | `true`\*  | ✅      | ✅
+   * `constraint` | `false`   | ✅      | ❌
+   * `required`   | `false`\* | ✅      | ✅
+   * `required`   | `true`    | ❌      | ✅
+   *
+   * - \* = default (expression not defined)
+   * - ✅ = `valid: true`
+   * - ❌ = `valid: false`
+   */
+  readonly valid: boolean;
 }
 
 /**
@@ -37,12 +37,12 @@ interface BaseValidity {
 export type ValidationCondition = 'constraint' | 'required';
 
 interface ValidationConditionMessageRoles {
-	readonly constraint: 'constraintMsg';
-	readonly required: 'requiredMsg';
+  readonly constraint: 'constraintMsg';
+  readonly required: 'requiredMsg';
 }
 
 export type ValidationConditionMessageRole<Condition extends ValidationCondition> =
-	ValidationConditionMessageRoles[Condition];
+  ValidationConditionMessageRoles[Condition];
 
 /**
  * A form-defined violation message, present when the form designer specified `jr:constraintMsg`
@@ -53,26 +53,26 @@ export type ValidationConditionMessageRole<Condition extends ValidationCondition
  * their own default messaging (e.g. a translated fallback).
  */
 export interface ViolationMessage<Condition extends ValidationCondition> extends TextRange<
-	ValidationConditionMessageRole<Condition>
+  ValidationConditionMessageRole<Condition>
 > {
-	get asString(): string;
+  get asString(): string;
 }
 
 export interface ConditionSatisfied<Condition extends ValidationCondition> extends BaseValidity {
-	readonly condition: Condition;
-	readonly valid: true;
-	readonly message: null;
+  readonly condition: Condition;
+  readonly valid: true;
+  readonly message: null;
 }
 
 export interface ConditionViolation<Condition extends ValidationCondition> extends BaseValidity {
-	readonly condition: Condition;
-	readonly valid: false;
-	readonly message: ViolationMessage<Condition> | null;
+  readonly condition: Condition;
+  readonly valid: false;
+  readonly message: ViolationMessage<Condition> | null;
 }
 
 export type ConditionValidation<Condition extends ValidationCondition> =
-	| ConditionSatisfied<Condition>
-	| ConditionViolation<Condition>;
+  | ConditionSatisfied<Condition>
+  | ConditionViolation<Condition>;
 
 export type AnyViolation = ConditionViolation<ValidationCondition>;
 
@@ -95,19 +95,19 @@ export type AnyViolation = ConditionViolation<ValidationCondition>;
  * conditions are evaluated (and how they interact with one another).
  */
 export interface LeafNodeValidationState {
-	get constraint(): ConditionValidation<'constraint'>;
-	get required(): ConditionValidation<'required'>;
+  get constraint(): ConditionValidation<'constraint'>;
+  get required(): ConditionValidation<'required'>;
 
-	/**
-	 * Violations are mutually exclusive:
-	 *
-	 * - {@link constraint} can only be violated by a non-blank value
-	 * - {@link required} can only be violated by a blank value
-	 *
-	 * As such, at most one violation can be present. If none is present,
-	 * the node is considered valid.
-	 */
-	get violation(): AnyViolation | null;
+  /**
+   * Violations are mutually exclusive:
+   *
+   * - {@link constraint} can only be violated by a non-blank value
+   * - {@link required} can only be violated by a blank value
+   *
+   * As such, at most one violation can be present. If none is present,
+   * the node is considered valid.
+   */
+  get violation(): AnyViolation | null;
 }
 
 /**
@@ -136,10 +136,10 @@ export interface LeafNodeValidationState {
  * each property will be directly computed from the affected node.
  */
 export interface DescendantNodeViolationReference {
-	readonly nodeId: FormNodeID;
+  readonly nodeId: FormNodeID;
 
-	get reference(): string;
-	get violation(): AnyViolation;
+  get reference(): string;
+  get violation(): AnyViolation;
 }
 
 /**
@@ -150,14 +150,14 @@ export interface DescendantNodeViolationReference {
  * may be referenced when such a violation is present.
  */
 export interface AncestorNodeValidationState {
-	get violations(): readonly DescendantNodeViolationReference[];
+  get violations(): readonly DescendantNodeViolationReference[];
 }
 
 /**
  * Convenience interface for nodes that cannot be invalid.
  */
 export interface NullValidationState {
-	get violations(): readonly [];
+  get violations(): readonly [];
 }
 
 // prettier-ignore

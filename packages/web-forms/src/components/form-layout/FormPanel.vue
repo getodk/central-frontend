@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import IconSVG from '@/components/common/IconSVG.vue';
-import MarkdownBlock from '@/components/common/MarkdownBlock.vue';
+import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
+import MarkdownBlock from '@getodk/web-forms/components/common/MarkdownBlock.vue';
 import type { MarkdownNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import Menu, { type MenuState } from 'primevue/menu';

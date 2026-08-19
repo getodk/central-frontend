@@ -16,29 +16,29 @@ import { DependentExpression } from './abstract/DependentExpression.ts';
  * representation of {@link RepeatRangeControlledNode}.
  */
 export class RepeatCountControlExpression extends DependentExpression<'number'> {
-	static from(
-		bodyElement: RepeatElementDefinition,
-		initialCount: number
-	): RepeatCountControlExpression | null {
-		const { countExpression, noAddRemoveExpression } = bodyElement;
+  static from(
+    bodyElement: RepeatElementDefinition,
+    initialCount: number
+  ): RepeatCountControlExpression | null {
+    const { countExpression, noAddRemoveExpression } = bodyElement;
 
-		if (countExpression != null) {
-			return new this(countExpression);
-		}
+    if (countExpression != null) {
+      return new this(countExpression);
+    }
 
-		if (noAddRemoveExpression != null && isConstantTruthyExpression(noAddRemoveExpression)) {
-			// Assumption: `noAddRemove` with no form-defined repeat instances has no
-			// purpose. Infer intent as a single repeat instance, as defined by the
-			// repeat's template.
-			const fixedCountExpression = String(Math.max(initialCount, 1));
+    if (noAddRemoveExpression != null && isConstantTruthyExpression(noAddRemoveExpression)) {
+      // Assumption: `noAddRemove` with no form-defined repeat instances has no
+      // purpose. Infer intent as a single repeat instance, as defined by the
+      // repeat's template.
+      const fixedCountExpression = String(Math.max(initialCount, 1));
 
-			return new this(fixedCountExpression);
-		}
+      return new this(fixedCountExpression);
+    }
 
-		return null;
-	}
+    return null;
+  }
 
-	private constructor(expression: string) {
-		super('number', expression);
-	}
+  private constructor(expression: string) {
+    super('number', expression);
+  }
 }

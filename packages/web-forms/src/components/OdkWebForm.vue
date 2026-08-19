@@ -1,41 +1,44 @@
 <script setup lang="ts">
-import FormLoadFailureDialog from '@/components/FormLoadFailureDialog.vue';
-import IconSVG from '@/components/common/IconSVG.vue';
-import FormHeader from '@/components/form-layout/FormHeader.vue';
-import QuestionList from '@/components/form-layout/QuestionList.vue';
-import { waitAllTasksToFinish } from '@/lib/async/event-loop.ts';
+import FormLoadFailureDialog from '@getodk/web-forms/components/FormLoadFailureDialog.vue';
+import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
+import FormFooter from '@getodk/web-forms/components/form-layout/FormFooter.vue';
+import FormHeader from '@getodk/web-forms/components/form-layout/FormHeader.vue';
+import QuestionList from '@getodk/web-forms/components/form-layout/QuestionList.vue';
+import { waitAllTasksToFinish } from '@getodk/web-forms/lib/async/event-loop.ts';
+import { POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms/lib/constants/control-flow.ts';
 import {
 	TRANSLATE,
 	FORM_MEDIA_CACHE,
 	FORM_OPTIONS,
 	IS_FORM_EDIT_MODE,
 	SUBMIT_PRESSED,
-} from '@/lib/constants/injection-keys.ts';
-import type { FormStateSuccessResult } from '@/lib/init/form-state.ts';
-import { initializeFormState } from '@/lib/init/initialize-form-state.ts';
-import { loadFormState } from '@/lib/init/load-form-state';
-import type { EditInstanceOptions, FormOptions } from '@/lib/init/load-form-state.ts';
-import { updateSubmittedFormState } from '@/lib/init/update-submitted-form-state.ts';
-import { geolocationService } from '@/lib/services/geolocationService.ts';
-import { useLocale } from '@/lib/locale/useLocale.ts';
+} from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { FormStateSuccessResult } from '@getodk/web-forms/lib/init/form-state.ts';
+import { initializeFormState } from '@getodk/web-forms/lib/init/initialize-form-state.ts';
+import { loadFormState } from '@getodk/web-forms/lib/init/load-form-state';
+import type { EditInstanceOptions, FormOptions } from '@getodk/web-forms/lib/init/load-form-state.ts';
+import { updateSubmittedFormState } from '@getodk/web-forms/lib/init/update-submitted-form-state.ts';
+import { geolocationService } from '@getodk/web-forms/lib/services/geolocationService.ts';
+import { useLocale } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import type {
 	HostSubmissionResultCallback,
 	OptionalAwaitableHostSubmissionResult,
-} from '@/lib/submission/host-submission-result-callback.ts';
+} from '@getodk/web-forms/lib/submission/host-submission-result-callback.ts';
 import type { JRResourceURLString } from '@getodk/common/jr-resources/JRResourceURL.ts';
 import type {
 	ChunkedInstancePayload,
 	FetchFormAttachment,
 	MissingResourceBehavior,
 	MonolithicInstancePayload,
+	InstanceDefaults,
 	PreloadProperties,
 } from '@getodk/xforms-engine';
-import Button from 'primevue/button';
 import Card from 'primevue/card';
 import Message from 'primevue/message';
 import {
 	computed,
 	getCurrentInstance,
+	onErrorCaptured,
 	onUnmounted,
 	provide,
 	readonly,
@@ -43,6 +46,7 @@ import {
 	watch,
 	watchEffect,
 } from 'vue';
+import { FormInitializationError } from '@getodk/web-forms/lib/error/FormInitializationError';
 
 const webFormsVersion = __WEB_FORMS_VERSION__;
 type ObjectURL = `blob:${string}`;
@@ -50,8 +54,9 @@ type ObjectURL = `blob:${string}`;
 export interface OdkWebFormsProps {
 	readonly formXml: string;
 	readonly fetchFormAttachment: FetchFormAttachment;
-	readonly trackDevice?: boolean;
+	readonly deviceId?: string; // different case to make it easier to bind
 	readonly preloadProperties?: PreloadProperties;
+	readonly instanceDefaults?: InstanceDefaults;
 	readonly missingResourceBehavior?: MissingResourceBehavior;
 	readonly attachmentMaxSize?: number;
 
@@ -66,6 +71,8 @@ export interface OdkWebFormsProps {
 	 * resources will be resolved and loaded for editing.
 	 */
 	readonly editInstance?: EditInstanceOptions;
+
+	readonly lastSavedXml?: string;
 }
 
 const props = defineProps<OdkWebFormsProps>();
@@ -77,12 +84,18 @@ const hostSubmissionResultCallbackFactory = (
 		hostResult: OptionalAwaitableHostSubmissionResult
 	): Promise<void> => {
 		const submissionResult = await hostResult;
+		const lastSavedXml = currentState.root.instanceState.instanceXML;
 		const options = {
 			form: formOptions,
 			preloadProperties: props.preloadProperties,
-			trackDevice: props.trackDevice,
+			instanceDefaults: props.instanceDefaults,
+			deviceID: props.deviceId,
+			lastSavedXml
 		};
 		state.value = updateSubmittedFormState(submissionResult, currentState, options);
+		if (submissionResult?.next === POST_SUBMIT__NEW_INSTANCE) {
+			document.scrollingElement?.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+		}
 	};
 
 	return (hostResult) => {
@@ -93,6 +106,7 @@ const hostSubmissionResultCallbackFactory = (
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- evidently a type must be used for this to be assigned to a name (which we use!); as an interface, it won't satisfy the `Record` constraint of `defineEmits`.
 type OdkWebFormEmits = {
+	loaded: [],
 	submit: [submissionPayload: MonolithicInstancePayload, callback: HostSubmissionResultCallback];
 	submitChunked: [
 		submissionPayload: ChunkedInstancePayload,
@@ -187,14 +201,17 @@ const getLocation = async (): Promise<string> => {
 
 const formOptions = readonly<FormOptions>({
 	fetchFormAttachment: props.fetchFormAttachment,
+	lastSavedXml: props.lastSavedXml,
 	missingResourceBehavior: props.missingResourceBehavior,
 	geolocationProvider: { getLocation: () => getLocation() },
 	attachmentMaxSize: props.attachmentMaxSize,
 });
 provide(FORM_OPTIONS, formOptions);
-provide(FORM_MEDIA_CACHE, new Map<JRResourceURLString, ObjectURL>());
+const mediaCache = new Map<JRResourceURLString, ObjectURL>();
+provide(FORM_MEDIA_CACHE, mediaCache);
 
 const state = initializeFormState();
+const runtimeError = ref<FormInitializationError | null>(null);
 const submitPressed = ref(false);
 const floatingErrorActive = ref(false);
 const showValidationError = ref(false);
@@ -203,6 +220,10 @@ const isFormEditMode = ref(false);
 provide(IS_FORM_EDIT_MODE, readonly(isFormEditMode));
 const { setLanguage, t } = useLocale(computed(() => state.value.root));
 provide(TRANSLATE, t);
+
+onErrorCaptured(err => {
+	runtimeError.value = FormInitializationError.from(err);
+});
 
 watch(
 	() => state.value,
@@ -225,8 +246,10 @@ const init = async () => {
 		form: formOptions,
 		editInstance: props.editInstance ?? null,
 		preloadProperties: props.preloadProperties,
-		trackDevice: props.trackDevice,
+		instanceDefaults: props.instanceDefaults,
+		deviceID: props.deviceId
 	});
+	emit('loaded');
 };
 
 void init();
@@ -267,6 +290,8 @@ watchEffect(() => {
 });
 
 onUnmounted(() => {
+	mediaCache.forEach((url) => URL.revokeObjectURL(url));
+	mediaCache.clear();
 	resetComponentState();
 });
 </script>
@@ -288,7 +313,11 @@ onUnmounted(() => {
 	/>
 
 	<template v-if="state.status === 'FORM_STATE_FAILURE'">
-		<FormLoadFailureDialog severity="error" :error="state.error" />
+		<FormLoadFailureDialog :error="state.error" />
+	</template>
+
+	<template v-else-if="runtimeError">
+		<FormLoadFailureDialog :error="runtimeError" />
 	</template>
 
 	<div
@@ -329,9 +358,7 @@ onUnmounted(() => {
 				</template>
 			</Card>
 
-			<div class="footer flex justify-content-end flex-wrap gap-3">
-				<Button :label="t('odk_web_forms.submit.label')" @click="handleSubmit(state)" />
-			</div>
+			<FormFooter :root="state.root" @submit="handleSubmit(state)" />
 		</div>
 
 		<div class="powered-by-wrapper">
@@ -427,14 +454,6 @@ onUnmounted(() => {
 		min-height: 40px;
 	}
 
-	.footer {
-		margin: 1.5rem 0 0rem 0;
-
-		button {
-			min-width: 160px;
-		}
-	}
-
 	.powered-by-wrapper {
 		display: flex;
 		align-items: center;
@@ -499,12 +518,6 @@ onUnmounted(() => {
 				order: 3;
 			}
 
-			.footer {
-				order: 4;
-				button {
-					margin-right: var(--odk-spacing-xl);
-				}
-			}
 		}
 
 		.powered-by-wrapper {

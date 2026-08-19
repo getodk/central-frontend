@@ -1,0 +1,30 @@
+{
+  "name": "@getodk/forms",
+  "version": "2026.2.2",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "eslint": "eslint . --report-unused-disable-directives --cache --max-warnings 0",
+    "eslint:fix": "eslint . --fix --report-unused-disable-directives --cache --max-warnings 0",
+    "lint": "npm-run-all eslint transifex:lint",
+    "lint:fix": "npm-run-all eslint:fix transifex:fix",
+    "test": "vitest run",
+    "transifex:destructure": "node ../central/bin/transifex/destructure.js",
+    "transifex:fix": "node ../central/bin/transifex/restructure.js > transifex/strings_en.json",
+    "transifex:lint": "bash -c 'diff transifex/strings_en.json <(node ../central/bin/transifex/restructure.js)'",
+    "transifex:pull": "cd ../.. && tx pull -r web_forms.app -a -f --mode translator",
+    "transifex:push": "cd ../.. && tx push -r web_forms.app -s"
+  },
+  "dependencies": {
+    "idb-keyval": "^6.3.0",
+    "primevue": "4.3.3",
+    "vue": "^3.5.39",
+    "vue-i18n": "^10.0.7",
+    "vue-router": "^4.6.3"
+  },
+  "devDependencies": {
+    "@vue/test-utils": "^2.4.11",
+    "jsdom": "^27.4.0",
+    "vitest": "^4.1.9"
+  }
+}

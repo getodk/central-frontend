@@ -9,23 +9,23 @@ export type DescendentNodeType = Exclude<NodeDefinitionType, 'root'>;
 type DescendentNodeBodyElement = AnyBodyElementDefinition;
 
 export abstract class DescendentNodeDefinition<
-	Type extends DescendentNodeType,
-	BodyElement extends DescendentNodeBodyElement | null = DescendentNodeBodyElement | null,
+  Type extends DescendentNodeType,
+  BodyElement extends DescendentNodeBodyElement | null = DescendentNodeBodyElement | null,
 > extends NodeDefinition<Type> {
-	readonly root: RootDefinition;
-	readonly isTranslated: boolean = false;
+  readonly root: RootDefinition;
+  readonly isTranslated: boolean = false;
 
-	constructor(
-		readonly parent: ParentNodeDefinition,
-		bind: BindDefinition,
-		readonly bodyElement: BodyElement
-	) {
-		super(bind);
+  constructor(
+    readonly parent: ParentNodeDefinition,
+    bind: BindDefinition,
+    readonly bodyElement: BodyElement
+  ) {
+    super(bind);
 
-		this.root = parent.root;
+    this.root = parent.root;
 
-		if (bind.isTranslated || bodyElement?.isTranslated) {
-			this.isTranslated = true;
-		}
-	}
+    if (bind.isTranslated || bodyElement?.isTranslated) {
+      this.isTranslated = true;
+    }
+  }
 }

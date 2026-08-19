@@ -3,13 +3,13 @@ import type { TextChunk as ClientTextChunk, TextChunkSource } from '../../client
 import type { TranslationContext } from '../internal-api/TranslationContext.ts';
 
 export class TextChunk implements ClientTextChunk {
-	get language(): ActiveLanguage {
-		return this.context.getActiveLanguage();
-	}
+  get language(): ActiveLanguage {
+    return this.context.getActiveLanguage();
+  }
 
-	constructor(
-		readonly context: TranslationContext,
-		readonly source: TextChunkSource,
-		readonly asString: string
-	) {}
+  constructor(
+    readonly context: TranslationContext,
+    readonly source: TextChunkSource,
+    readonly asString: string
+  ) {}
 }

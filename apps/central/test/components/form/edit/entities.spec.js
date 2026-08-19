@@ -51,7 +51,7 @@ describe('FormEditEntities', () => {
       });
       const app = await load('/projects/1/forms/f/draft');
       const text = app.get('#form-edit-entities-diff-counts').text();
-      text.should.equal('Publishing this draft will update 1 Entity List and create 2 properties. Properties cannot be deleted.');
+      text.should.equal('Publishing this draft will update 1 Entity List and create 2 properties.');
     });
 
     it('shows correct text for an existing entity list with new properties', async () => {
@@ -61,7 +61,7 @@ describe('FormEditEntities', () => {
       });
       const app = await load('/projects/1/forms/f/draft');
       const text = app.get('#form-edit-entities-diff-counts').text();
-      text.should.equal('Publishing this draft will update 1 Entity List and create 2 properties. Properties cannot be deleted.');
+      text.should.equal('Publishing this draft will update 1 Entity List and create 2 properties.');
     });
   });
 });

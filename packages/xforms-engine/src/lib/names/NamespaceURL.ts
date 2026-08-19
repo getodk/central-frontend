@@ -26,19 +26,19 @@ import type { NamespaceDeclaration } from './NamespaceDeclaration.ts';
  * semantics).
  */
 export class NamespaceURL extends URL {
-	static from(namespaceURI: NamespaceURL | string | null): NamespaceURL | null {
-		if (namespaceURI == null || namespaceURI === '') {
-			return null;
-		}
+  static from(namespaceURI: NamespaceURL | string | null): NamespaceURL | null {
+    if (namespaceURI == null || namespaceURI === '') {
+      return null;
+    }
 
-		return new this(String(namespaceURI));
-	}
+    return new this(String(namespaceURI));
+  }
 
-	override readonly href: string;
+  override readonly href: string;
 
-	private constructor(href: string) {
-		super(href);
+  private constructor(href: string) {
+    super(href);
 
-		this.href = href;
-	}
+    this.href = href;
+  }
 }

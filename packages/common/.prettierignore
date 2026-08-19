@@ -1,0 +1,9 @@
+**/node_modules
+**/dist
+
+# Fixtures
+src/fixtures/*/**
+!src/fixtures/README.md
+!src/fixtures/xforms.ts
+src/fixtures/test-javarosa/**
+src/fixtures/test-scenario/**

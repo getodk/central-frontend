@@ -3,123 +3,123 @@ import type { XFormsTestContext } from '../helpers.ts';
 import { createXFormsTestContext } from '../helpers.ts';
 
 describe('#number()', () => {
-	let testContext: XFormsTestContext;
+  let testContext: XFormsTestContext;
 
-	beforeEach(() => {
-		testContext = createXFormsTestContext();
-	});
+  beforeEach(() => {
+    testContext = createXFormsTestContext();
+  });
 
-	describe('called on a boolean', () => {
-		[
-			{ expression: 'number(true())', expected: 1 },
-			{ expression: 'number(false())', expected: 0 },
-			{ expression: 'number(1 = 1)', expected: 1 },
-			{ expression: 'number(1 = 2)', expected: 0 },
-		].forEach(({ expression, expected }) => {
-			it(`${expression} should be ${expected}`, () => {
-				testContext.assertNumberValue(expression, expected);
-			});
-		});
-	});
+  describe('called on a boolean', () => {
+    [
+      { expression: 'number(true())', expected: 1 },
+      { expression: 'number(false())', expected: 0 },
+      { expression: 'number(1 = 1)', expected: 1 },
+      { expression: 'number(1 = 2)', expected: 0 },
+    ].forEach(({ expression, expected }) => {
+      it(`${expression} should be ${expected}`, () => {
+        testContext.assertNumberValue(expression, expected);
+      });
+    });
+  });
 
-	describe('called on a number', () => {
-		[
-			{ expression: 'number("0")', expected: 0 },
-			{ expression: 'number("1")', expected: 1 },
-			{ expression: 'number("-1")', expected: -1 },
-			{ expression: 'number(-1.0)', expected: -1 },
-			{ expression: 'number(1)', expected: 1 },
-			{ expression: 'number(0.199999)', expected: 0.199999 },
-			{ expression: 'number(-0.199999)', expected: -0.199999 },
-			{ expression: 'number(- 0.199999)', expected: -0.199999 },
-			{ expression: 'number(0.0)', expected: 0 },
-			{ expression: 'number(.0)', expected: 0 },
-			{ expression: 'number(0.)', expected: 0 },
-		].forEach(({ expression, expected }) => {
-			it(`${expression} should be ${expected}`, () => {
-				testContext.assertNumberValue(expression, expected);
-			});
-		});
-	});
+  describe('called on a number', () => {
+    [
+      { expression: 'number("0")', expected: 0 },
+      { expression: 'number("1")', expected: 1 },
+      { expression: 'number("-1")', expected: -1 },
+      { expression: 'number(-1.0)', expected: -1 },
+      { expression: 'number(1)', expected: 1 },
+      { expression: 'number(0.199999)', expected: 0.199999 },
+      { expression: 'number(-0.199999)', expected: -0.199999 },
+      { expression: 'number(- 0.199999)', expected: -0.199999 },
+      { expression: 'number(0.0)', expected: 0 },
+      { expression: 'number(.0)', expected: 0 },
+      { expression: 'number(0.)', expected: 0 },
+    ].forEach(({ expression, expected }) => {
+      it(`${expression} should be ${expected}`, () => {
+        testContext.assertNumberValue(expression, expected);
+      });
+    });
+  });
 
-	describe('called on a string', () => {
-		[
-			{ expression: 'number("-1.0")', expected: -1 },
-			{ expression: 'number("1")', expected: 1 },
-			{ expression: 'number("0.199999")', expected: 0.199999 },
-			{ expression: 'number("-0.9991")', expected: -0.9991 },
-			{ expression: 'number("0.0")', expected: 0 },
-			{ expression: 'number(".0")', expected: 0 },
-			{ expression: 'number(".112")', expected: 0.112 },
-			{ expression: 'number("0.")', expected: 0 },
-			{ expression: 'number("  1.1")', expected: 1.1 },
-			{ expression: 'number("1.1   ")', expected: 1.1 },
-			{ expression: 'number("1.1   \n ")', expected: 1.1 },
-			{ expression: 'number("  1.1 \n\r\n  ")', expected: 1.1 },
-		].forEach(({ expression, expected }) => {
-			it(`${expression} should be ${expected}`, () => {
-				testContext.assertNumberValue(expression, expected);
-			});
-		});
-	});
+  describe('called on a string', () => {
+    [
+      { expression: 'number("-1.0")', expected: -1 },
+      { expression: 'number("1")', expected: 1 },
+      { expression: 'number("0.199999")', expected: 0.199999 },
+      { expression: 'number("-0.9991")', expected: -0.9991 },
+      { expression: 'number("0.0")', expected: 0 },
+      { expression: 'number(".0")', expected: 0 },
+      { expression: 'number(".112")', expected: 0.112 },
+      { expression: 'number("0.")', expected: 0 },
+      { expression: 'number("  1.1")', expected: 1.1 },
+      { expression: 'number("1.1   ")', expected: 1.1 },
+      { expression: 'number("1.1   \n ")', expected: 1.1 },
+      { expression: 'number("  1.1 \n\r\n  ")', expected: 1.1 },
+    ].forEach(({ expression, expected }) => {
+      it(`${expression} should be ${expected}`, () => {
+        testContext.assertNumberValue(expression, expected);
+      });
+    });
+  });
 
-	describe('called on a date string', () => {
-		[
-			{ expression: 'number("1970-01-01")', expected: 0.29 },
-			{ expression: 'number("1970-01-02")', expected: 1.29 },
-			{ expression: 'number("1969-12-31")', expected: -0.71 },
-			{ expression: 'number("2008-09-05")', expected: 14127.29 },
-			{ expression: 'number("1941-12-07")', expected: -10251.71 },
-		].forEach(({ expression, expected }) => {
-			it(expression + ' should be ' + expected + ' days since the epoch', () => {
-				testContext.assertNumberRounded(expression, expected, 100);
-			});
-		});
-	});
+  describe('called on a date string', () => {
+    [
+      { expression: 'number("1970-01-01")', expected: 0.29 },
+      { expression: 'number("1970-01-02")', expected: 1.29 },
+      { expression: 'number("1969-12-31")', expected: -0.71 },
+      { expression: 'number("2008-09-05")', expected: 14127.29 },
+      { expression: 'number("1941-12-07")', expected: -10251.71 },
+    ].forEach(({ expression, expected }) => {
+      it(expression + ' should be ' + expected + ' days since the epoch', () => {
+        testContext.assertNumberRounded(expression, expected, 100);
+      });
+    });
+  });
 
-	describe('called on a date string', () => {
-		[
-			{ expression: 'number("1970-01-01")', expected: '0' },
-			{ expression: 'number("1970-01-02")', expected: '1' },
-			{ expression: 'number("1969-12-31")', expected: '-1' },
-			{ expression: 'number("2008-09-05")', expected: '14127' },
-			{ expression: 'number("1941-12-07")', expected: '-10252' },
-		].forEach(({ expression, expected }) => {
-			it(`${expression} should be ${expected} days since the epoch`, () => {
-				testContext.assertStringValue(expression, expected);
-			});
-		});
-	});
+  describe('called on a date string', () => {
+    [
+      { expression: 'number("1970-01-01")', expected: '0' },
+      { expression: 'number("1970-01-02")', expected: '1' },
+      { expression: 'number("1969-12-31")', expected: '-1' },
+      { expression: 'number("2008-09-05")', expected: '14127' },
+      { expression: 'number("1941-12-07")', expected: '-10252' },
+    ].forEach(({ expression, expected }) => {
+      it(`${expression} should be ${expected} days since the epoch`, () => {
+        testContext.assertStringValue(expression, expected);
+      });
+    });
+  });
 
-	describe('called on a datetime string', () => {
-		[
-			{ expression: 'number("1970-01-01T00:00:00Z")', expected: '0' },
-			{ expression: 'number("1970-01-02T00:00:00Z")', expected: '1' },
-			{ expression: 'number("1969-12-31T00:00:00Z")', expected: '-1' },
-			{ expression: 'number("2026-08-27T08:27:00.000+07:00")', expected: '20692' },
-			{ expression: 'number("2026-10-28T19:23:00.000+07:00")', expected: '20754' },
-		].forEach(({ expression, expected }) => {
-			it(`${expression} should be ${expected} days since the epoch`, () => {
-				testContext.assertStringValue(expression, expected);
-			});
-		});
-	});
+  describe('called on a datetime string', () => {
+    [
+      { expression: 'number("1970-01-01T00:00:00Z")', expected: '0' },
+      { expression: 'number("1970-01-02T00:00:00Z")', expected: '1' },
+      { expression: 'number("1969-12-31T00:00:00Z")', expected: '-1' },
+      { expression: 'number("2026-08-27T08:27:00.000+07:00")', expected: '20692' },
+      { expression: 'number("2026-10-28T19:23:00.000+07:00")', expected: '20754' },
+    ].forEach(({ expression, expected }) => {
+      it(`${expression} should be ${expected} days since the epoch`, () => {
+        testContext.assertStringValue(expression, expected);
+      });
+    });
+  });
 
-	describe('number() conversions returns NaN if not convertible', () => {
-		it('number() conversions returns NaN if not convertible', () => {
-			[
-				{ expression: 'number("asdf")', expected: NaN },
-				{ expression: 'number("1asdf")', expected: NaN },
-				{ expression: 'number("1.1sd")', expected: NaN },
-				{ expression: 'number(".1sd")', expected: NaN },
-				{ expression: 'number(" . ")', expected: NaN },
-			].forEach(({ expression, expected }) => {
-				testContext.assertNumberValue(expression, expected);
-			});
-		});
+  describe('number() conversions returns NaN if not convertible', () => {
+    it('number() conversions returns NaN if not convertible', () => {
+      [
+        { expression: 'number("asdf")', expected: NaN },
+        { expression: 'number("1asdf")', expected: NaN },
+        { expression: 'number("1.1sd")', expected: NaN },
+        { expression: 'number(".1sd")', expected: NaN },
+        { expression: 'number(" . ")', expected: NaN },
+      ].forEach(({ expression, expected }) => {
+        testContext.assertNumberValue(expression, expected);
+      });
+    });
 
-		it('number() conversion of nodesets', () => {
-			testContext = createXFormsTestContext(`
+    it('number() conversion of nodesets', () => {
+      testContext = createXFormsTestContext(`
         <div id="FunctionNumberCase">
           <div id="FunctionNumberCaseNumber">123</div>
           <div id="FunctionNumberCaseNotNumber">  a a  </div>
@@ -134,32 +134,32 @@ describe('#number()', () => {
             <div>a</div>
           </div>
         </div>`);
-			const { document } = testContext;
+      const { document } = testContext;
 
-			let contextNode = document.getElementById('FunctionNumberCaseNumber');
+      let contextNode = document.getElementById('FunctionNumberCaseNumber');
 
-			testContext.assertNumberValue('number(self::node())', 123, {
-				contextNode,
-			});
-			testContext.assertNumberValue('number()', 123, {
-				contextNode,
-			});
+      testContext.assertNumberValue('number(self::node())', 123, {
+        contextNode,
+      });
+      testContext.assertNumberValue('number()', 123, {
+        contextNode,
+      });
 
-			contextNode = document.getElementById('FunctionNumberCaseNumberMultiple');
+      contextNode = document.getElementById('FunctionNumberCaseNumberMultiple');
 
-			testContext.assertNumberValue('number(*)', -10, {
-				contextNode,
-			});
+      testContext.assertNumberValue('number(*)', -10, {
+        contextNode,
+      });
 
-			contextNode = document.getElementById('FunctionNumberCaseNotNumber');
+      contextNode = document.getElementById('FunctionNumberCaseNotNumber');
 
-			testContext.assertNumberValue('number()', NaN, {
-				contextNode,
-			});
-		});
+      testContext.assertNumberValue('number()', NaN, {
+        contextNode,
+      });
+    });
 
-		it.fails('number() conversion fails when too many arguments are provided', () => {
-			testContext.evaluate('number(1, 2)');
-		});
-	});
+    it.fails('number() conversion fails when too many arguments are provided', () => {
+      testContext.evaluate('number(1, 2)');
+    });
+  });
 });

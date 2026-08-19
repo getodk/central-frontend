@@ -2,33 +2,33 @@ import type { XPathCustomUnwrappableNode } from '../interface/XPathCustomUnwrapp
 import type { XPathNodeKindKey } from '../interface/XPathNode.ts';
 
 export interface WHATDocument extends Document, XPathCustomUnwrappableNode<Document> {
-	readonly [XPathNodeKindKey]: 'document';
+  readonly [XPathNodeKindKey]: 'document';
 }
 
 export interface WHATElement extends Element, XPathCustomUnwrappableNode<Element> {
-	readonly [XPathNodeKindKey]: 'element';
+  readonly [XPathNodeKindKey]: 'element';
 }
 
 export interface WHATNamespaceDeclaration extends Attr, XPathCustomUnwrappableNode<Attr> {
-	readonly [XPathNodeKindKey]: 'namespace_declaration';
+  readonly [XPathNodeKindKey]: 'namespace_declaration';
 }
 
 export interface WHATAttribute extends Attr, XPathCustomUnwrappableNode<Attr> {
-	readonly [XPathNodeKindKey]: 'attribute';
+  readonly [XPathNodeKindKey]: 'attribute';
 }
 
 export interface WHATText
-	extends CDATASection, Text, XPathCustomUnwrappableNode<CDATASection | Text> {
-	readonly [XPathNodeKindKey]: 'text';
+  extends CDATASection, Text, XPathCustomUnwrappableNode<CDATASection | Text> {
+  readonly [XPathNodeKindKey]: 'text';
 
-	readonly nodeType: Node['CDATA_SECTION_NODE'] | Node['TEXT_NODE'];
+  readonly nodeType: Node['CDATA_SECTION_NODE'] | Node['TEXT_NODE'];
 }
 export interface WHATComment extends Comment, XPathCustomUnwrappableNode<Comment> {
-	readonly [XPathNodeKindKey]: 'comment';
+  readonly [XPathNodeKindKey]: 'comment';
 }
 
 export interface WHATProcessingInstruction extends ProcessingInstruction {
-	readonly [XPathNodeKindKey]: 'processing_instruction';
+  readonly [XPathNodeKindKey]: 'processing_instruction';
 }
 
 type UnwrappableWHATNodeUnion<T, U> = T & XPathCustomUnwrappableNode<U>;

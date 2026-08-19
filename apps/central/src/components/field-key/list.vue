@@ -30,35 +30,46 @@ except according to the terms contained in the LICENSE file.
         </template>
       </i18n-t>
     </div>
-    <table id="field-key-list-table" class="table">
-      <thead>
-        <tr>
-          <th>{{ $t('header.displayName') }}</th>
-          <th>{{ $t('header.created') }}</th>
-          <th>{{ $t('header.lastUsed') }}</th>
-          <th>{{ $t('header.configureClient') }}</th>
-          <th class="actions">{{ $t('header.actions') }}</th>
-        </tr>
-      </thead>
-      <tbody v-if="fieldKeys.dataExists">
-        <field-key-row v-for="fieldKey of fieldKeys" :key="fieldKey.id"
-          :field-key="fieldKey" :highlighted="highlighted"
+    <table-freeze v-if="dataExists" id="field-key-list-table" :data="fieldKeys.data" key-prop="id"
+      :frozen-only="actorProperties.length === 0" :divider="actorProperties.length > 0">
+      <template #head-frozen>
+        <th>{{ $t('header.displayName') }}</th>
+        <th>{{ $t('header.configureClient') }}</th>
+        <th>{{ $t('header.createdAt') }}</th>
+        <th>{{ $t('header.createdBy') }}</th>
+        <th>{{ $t('header.lastUsedAndActions', { lastUsed: $t('header.lastUsed'), actions: $t('header.actions') }) }}</th>
+      </template>
+      <template #head-scrolling>
+        <th v-for="property of actorProperties" :key="property.name">
+          <span v-tooltip.text>{{ property.name }}</span>
+        </th>
+      </template>
+      <template #data-frozen="{ data: fieldKey }">
+        <field-key-row :field-key="fieldKey" :highlighted="highlighted"
+          :show-edit="actorProperties.length > 0"
           @toggle-qr="togglePopover"
-          @revoke="revokeModal.show({ fieldKey: $event })"/>
-      </tbody>
-    </table>
-    <loading :state="fieldKeys.initiallyLoading"/>
-    <p v-if="fieldKeys.dataExists && fieldKeys.length === 0"
+          @revoke="revokeModal.show({ fieldKey: $event })"
+          @edit="editModal.show({ fieldKey: $event })"/>
+      </template>
+      <template #data-scrolling="{ data: fieldKey }">
+        <custom-props-data-row :actor="fieldKey" :highlighted="highlighted"
+          :properties="actorProperties"/>
+      </template>
+    </table-freeze>
+    <loading :state="initiallyLoading"/>
+    <p v-if="dataExists && fieldKeys.length === 0"
       class="empty-table-message">
       {{ $t('emptyTable') }}
     </p>
 
-    <popover ref="popover" :target="popover.target" placement="left"
+    <popover ref="popover" :target="popover.target" placement="right"
       @hide="hidePopover">
       <field-key-qr-panel :field-key="popover.fieldKey" :managed="managed"/>
     </popover>
     <field-key-new v-bind="createModal" :managed="managed"
       @hide="createModal.hide()" @success="afterCreate"/>
+    <field-key-edit v-bind="editModal"
+      @hide="editModal.hide()" @success="afterEdit"/>
     <project-submission-options v-bind="submissionOptions"
       @hide="submissionOptions.hide()"/>
     <field-key-revoke v-bind="revokeModal" @hide="revokeModal.hide()"
@@ -70,8 +81,11 @@ except according to the terms contained in the LICENSE file.
 import Popover from '../popover.vue';
 import DocLink from '../doc-link.vue';
 import Loading from '../loading.vue';
+import TableFreeze from '../table/freeze.vue';
 import FieldKeyQrPanel from './qr-panel.vue';
 import FieldKeyRow from './row.vue';
+import CustomPropsDataRow from '../custom-props-data-row.vue';
+import FieldKeyEdit from './edit.vue';
 import FieldKeyNew from './new.vue';
 import FieldKeyRevoke from './revoke.vue';
 import ProjectSubmissionOptions from '../project/submission-options.vue';
@@ -86,8 +100,11 @@ export default {
     Popover,
     DocLink,
     Loading,
+    TableFreeze,
     FieldKeyQrPanel,
     FieldKeyRow,
+    CustomPropsDataRow,
+    FieldKeyEdit,
     FieldKeyNew,
     FieldKeyRevoke,
     ProjectSubmissionOptions
@@ -99,11 +116,15 @@ export default {
       required: true
     }
   },
-  emits: ['fetch-field-keys'],
+  emits: ['fetch-field-keys', 'fetch-actor-properties'],
   setup() {
-    const { fieldKeys } = useRequestData();
+    const { fieldKeys, actorProperties, resourceStates } = useRequestData();
     const { projectPath } = useRoutes();
-    return { fieldKeys, projectPath };
+
+    return {
+      fieldKeys, actorProperties, ...resourceStates([fieldKeys, actorProperties]),
+      projectPath
+    };
   },
   data() {
     return {
@@ -117,11 +138,13 @@ export default {
       },
       // Modals
       createModal: modalData(),
+      editModal: modalData(),
       submissionOptions: modalData(),
       revokeModal: modalData()
     };
   },
   created() {
+    this.$emit('fetch-actor-properties');
     this.fetchData(false);
   },
   mounted() {
@@ -167,6 +190,12 @@ export default {
       this.alert.success(this.$t('alert.create', fieldKey));
       this.highlighted = fieldKey.id;
     },
+    afterEdit(fieldKey) {
+      this.fetchData(true);
+      this.editModal.hide();
+      this.alert.success(this.$t('alert.edit', fieldKey));
+      this.highlighted = fieldKey.id;
+    },
     afterRevoke(fieldKey) {
       this.fetchData(true);
       this.revokeModal.hide();
@@ -177,12 +206,18 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../assets/scss/variables';
+@import '../../assets/scss/mixins';
 
 #field-key-list-table {
-  table-layout: fixed;
-
-  th.actions { width: 125px; }
+  .table-freeze-scrolling {
+    th, td {
+      @include text-overflow-ellipsis;
+      max-width: 250px;
+    }
+  }
+  &.frozen-only .table-freeze-frozen {
+    width: 100%;
+  }
 }
 </style>
 
@@ -205,12 +240,15 @@ export default {
     ],
     "header": {
       "lastUsed": "Last Used",
+      // Header for the table column that shows the last used date and action buttons.
+      "lastUsedAndActions": "{lastUsed} / {actions}",
       // Header for the table column that shows QR codes to configure data collection clients such as ODK Collect.
       "configureClient": "Configure Client"
     },
     "emptyTable": "There are no App Users yet. You will need to create some to download Forms and submit data from your device.",
     "alert": {
       "create": "The App User “{displayName}” was created successfully.",
+      "edit": "The App User “{displayName}” was updated successfully.",
       "revoke": "App User {displayName}’s access successfully revoked."
     }
   }
@@ -307,11 +345,13 @@ export default {
     ],
     "header": {
       "lastUsed": "Dernière utilisation",
+      "lastUsedAndActions": "{lastUsed} / {actions}",
       "configureClient": "Configurer le client"
     },
     "emptyTable": "Il n'y a pas encore d’utilisateur mobile. Vous devez en créer pour télécharger des formulaires et soumettre des données depuis votre appareil.",
     "alert": {
       "create": "L'utilisateur mobile “{displayName}” a été correctement créé.",
+      "edit": "L'utilisateur mobile “{displayName}” a été modifié.",
       "revoke": "L'accès de l'utilisateur mobile “{displayName}” a été retiré ."
     }
   },

@@ -234,9 +234,9 @@ export default {
       }
       if (this.creationDateRange.length !== 0) {
         const start = this.creationDateRange[0].toISO();
-        const end = this.creationDateRange[1].endOf('day').toISO();
+        const end = this.creationDateRange[1].plus({ days: 1 }).startOf('day').toISO();
         conditions.push(`__system/createdAt ge ${start}`);
-        conditions.push(`__system/createdAt le ${end}`);
+        conditions.push(`__system/createdAt lt ${end}`);
       }
       if (this.conflict.length === 1) {
         conditions.push(this.conflict[0] ? '__system/conflict ne null' : '__system/conflict eq null');

@@ -20,7 +20,7 @@ export type XPathFunctionalityErrorCategory = ExpandUnion<
 >;
 
 export abstract class XPathFunctionalityError extends Error {
-	constructor(functionalityMessagePrefix: string, category: XPathFunctionalityErrorCategory) {
-		super(`${functionalityMessagePrefix}${category}`);
-	}
+  constructor(functionalityMessagePrefix: string, category: XPathFunctionalityErrorCategory) {
+    super(`${functionalityMessagePrefix}${category}`);
+  }
 }

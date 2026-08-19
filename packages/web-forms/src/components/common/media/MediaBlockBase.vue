@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { FORM_MEDIA_CACHE, FORM_OPTIONS, TRANSLATE } from '@/lib/constants/injection-keys.ts';
-import type { FormOptions } from '@/lib/init/load-form-state.ts';
-import type { Translate } from '@/lib/locale/useLocale.ts';
+import { FORM_MEDIA_CACHE, FORM_OPTIONS, TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { FormOptions } from '@getodk/web-forms/lib/init/load-form-state.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import type {
 	JRResourceURL,
 	JRResourceURLString,
@@ -63,6 +63,7 @@ const loadMedia = async (src?: JRResourceURL): Promise<void> => {
 const setMedia = (value: string) => {
 	mediaUrl.value = value;
 	loading.value = false;
+	errorMessage.value = '';
 };
 
 const handleError = (error: string) => {

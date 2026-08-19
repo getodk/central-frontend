@@ -68,6 +68,51 @@ describe('FormAttachmentList', () => {
       await a.should.have.textTooltip();
     });
 
+    describe('size', () => {
+      it('shows formatted size for a blob-backed, non-dataset attachment', async () => {
+        testData.standardFormAttachments.createPast(1, {
+          blobExists: true,
+          size: 2048
+        });
+        const component = await load('/projects/1/forms/f/draft', {
+          root: false
+        });
+        component.get('td.form-attachment-list-size').text().should.equal('2 kB');
+      });
+
+      it('shows nothing for an attachment without size', async () => {
+        testData.standardFormAttachments.createPast(1, {
+          blobExists: true,
+          size: null
+        });
+        const component = await load('/projects/1/forms/f/draft', {
+          root: false
+        });
+        component.get('td.form-attachment-list-size').text().should.equal('');
+      });
+
+      it('shows nothing for a non-blob attachment (e.g. a dataset)', async () => {
+        testData.standardFormAttachments.createPast(1, {
+          blobExists: false
+        });
+        const component = await load('/projects/1/forms/f/draft', {
+          root: false
+        });
+        component.get('td.form-attachment-list-size').text().should.equal('');
+      });
+
+      it('shows formatted size for a blob-backed attachment of MB size', async () => {
+        testData.standardFormAttachments.createPast(1, {
+          blobExists: true,
+          size: 1572864
+        });
+        const component = await load('/projects/1/forms/f/draft', {
+          root: false
+        });
+        component.get('td.form-attachment-list-size').text().should.equal('1.5 MB');
+      });
+    });
+
     describe('updatedAt', () => {
       it('formats updatedAt for an existing attachment', async () => {
         const { updatedAt } = testData.standardFormAttachments
@@ -1140,7 +1185,7 @@ describe('FormAttachmentList', () => {
           .complete()
           .request(async (app) => {
             await app.get('#form-edit-publish-button').trigger('click');
-            return app.get('#form-draft-publish .btn-primary').trigger('click');
+            return app.get('#form-draft-publish form').trigger('submit');
           })
           .respondWithData(() => {
             testData.extendedFormDrafts.publish(-1);
@@ -1184,7 +1229,7 @@ describe('FormAttachmentList', () => {
           .complete()
           .request(async (app) => {
             await app.get('#form-edit-publish-button').trigger('click');
-            return app.get('#form-draft-publish .btn-primary').trigger('click');
+            return app.get('#form-draft-publish form').trigger('submit');
           })
           .respondWithData(() => {
             testData.extendedFormDrafts.publish(-1);

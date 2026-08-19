@@ -134,7 +134,7 @@ describe('SubmissionMapView', () => {
             searchParams.get('$filter').split(' and ').should.eql([
               '(__system/submitterId eq 1 or __system/submitterId eq 2)',
               '__system/submissionDate ge 1970-01-01T00:00:00.000Z',
-              '__system/submissionDate le 1970-01-02T23:59:59.999Z',
+              '__system/submissionDate lt 1970-01-03T00:00:00.000Z',
               "(__system/reviewState eq 'approved' or __system/reviewState eq null)"
             ]);
           }

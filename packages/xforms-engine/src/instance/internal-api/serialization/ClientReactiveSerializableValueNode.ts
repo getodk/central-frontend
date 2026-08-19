@@ -3,30 +3,30 @@ import type { QualifiedName } from '../../../lib/names/QualifiedName.ts';
 import type { BindDefinition } from '../../../parse/model/BindDefinition.ts';
 import type { Attribute } from '../../Attribute.ts';
 import type {
-	ClientReactiveSerializableChildNode,
-	ClientReactiveSerializableParentNode,
+  ClientReactiveSerializableChildNode,
+  ClientReactiveSerializableParentNode,
 } from './ClientReactiveSerializableParentNode.ts';
 
 export type SerializedInstanceValue = string;
 
 interface ClientReactiveSerializableValueNodeCurrentState {
-	get relevant(): boolean;
+  get relevant(): boolean;
 
-	/**
-	 * @todo Consider moving into {@link InstanceState}
-	 */
-	get instanceValue(): SerializedInstanceValue;
-	get attributes(): readonly Attribute[];
+  /**
+   * @todo Consider moving into {@link InstanceState}
+   */
+  get instanceValue(): SerializedInstanceValue;
+  get attributes(): readonly Attribute[];
 }
 
 interface ClientReactiveSerializableValueNodeDefinition {
-	readonly qualifiedName: QualifiedName;
-	readonly bind: BindDefinition;
+  readonly qualifiedName: QualifiedName;
+  readonly bind: BindDefinition;
 }
 
 export interface ClientReactiveSerializableValueNode {
-	readonly definition: ClientReactiveSerializableValueNodeDefinition;
-	readonly parent: ClientReactiveSerializableParentNode<ClientReactiveSerializableChildNode>;
-	readonly currentState: ClientReactiveSerializableValueNodeCurrentState;
-	readonly instanceState: InstanceState;
+  readonly definition: ClientReactiveSerializableValueNodeDefinition;
+  readonly parent: ClientReactiveSerializableParentNode<ClientReactiveSerializableChildNode>;
+  readonly currentState: ClientReactiveSerializableValueNodeCurrentState;
+  readonly instanceState: InstanceState;
 }

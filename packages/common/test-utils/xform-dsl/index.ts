@@ -12,175 +12,175 @@ import type { XFormsElement } from './XFormsElement.ts';
 import { emptyMap } from './collections.ts';
 
 interface NameAndAttributes {
-	name: string;
-	attributes: Map<string, string>;
+  name: string;
+  attributes: Map<string, string>;
 }
 type AttributeTuple = readonly [nodeName: string, value: string];
 type AttributeTuples = readonly AttributeTuple[];
 type Int = number;
 
 const parseName = (tag: string): NameAndAttributes => {
-	const words = tag.match(/(?:[^\s"]+|"[^"]*")+/g) ?? [];
-	const attributes = new Map<string, string>();
-	if (!words.length) {
-		return { name: tag, attributes };
-	}
+  const words = tag.match(/(?:[^\s"]+|"[^"]*")+/g) ?? [];
+  const attributes = new Map<string, string>();
+  if (!words.length) {
+    return { name: tag, attributes };
+  }
 
-	const name = words.shift()!;
-	for (const word of words) {
-		const parts = /^(.*)(?<!\\)=(["'].*)/.exec(word);
+  const name = words.shift()!;
+  for (const word of words) {
+    const parts = /^(.*)(?<!\\)=(["'].*)/.exec(word);
 
-		if (parts == null) {
-			continue;
-		}
+    if (parts == null) {
+      continue;
+    }
 
-		const [, attributeName, attributeValueString] = parts;
-		attributes.set(
-			attributeName!,
-			attributeValueString!.substring(1, attributeValueString!.length - 1)
-		);
-	}
-	return { name, attributes };
+    const [, attributeName, attributeValueString] = parts;
+    attributes.set(
+      attributeName!,
+      attributeValueString!.substring(1, attributeValueString!.length - 1)
+    );
+  }
+  return { name, attributes };
 };
 
 interface t {
-	(name: string, ...children: XFormsElement[]): XFormsElement;
-	(name: string, innerHtml: string): XFormsElement;
+  (name: string, ...children: XFormsElement[]): XFormsElement;
+  (name: string, innerHtml: string): XFormsElement;
 }
 
 export const t: t = (tag, ...args): XFormsElement => {
-	const { name, attributes } = parseName(tag);
+  const { name, attributes } = parseName(tag);
 
-	const [innerHtmlOrFirstChild] = args;
+  const [innerHtmlOrFirstChild] = args;
 
-	if (innerHtmlOrFirstChild == null) {
-		return new EmptyXFormsElement(name, attributes);
-	}
+  if (innerHtmlOrFirstChild == null) {
+    return new EmptyXFormsElement(name, attributes);
+  }
 
-	if (typeof innerHtmlOrFirstChild === 'string') {
-		return new StringLiteralXFormsElement(name, attributes, innerHtmlOrFirstChild);
-	}
+  if (typeof innerHtmlOrFirstChild === 'string') {
+    return new StringLiteralXFormsElement(name, attributes, innerHtmlOrFirstChild);
+  }
 
-	return new TagXFormsElement(name, attributes, args as readonly XFormsElement[]);
+  return new TagXFormsElement(name, attributes, args as readonly XFormsElement[]);
 };
 
 // It would have been nice to use the `interface` technique to declare overrides for
 // this, but TypeScript rejects it (presumably because it is non-variadic, the
 // signature length varies, and the optional parameter comes first)
 export const html = (
-	...args:
-		| [HeadXFormsElement, BodyXFormsElement]
-		| [NamespaceTuples, HeadXFormsElement, BodyXFormsElement]
+  ...args:
+    | [HeadXFormsElement, BodyXFormsElement]
+    | [NamespaceTuples, HeadXFormsElement, BodyXFormsElement]
 ): HtmlXFormsElement => {
-	const head = args.length === 3 ? args[1] : args[0];
-	const body = args.length === 3 ? args[2] : args[1];
-	const additionalNamespaces = args.length === 3 ? args[0] : [];
+  const head = args.length === 3 ? args[1] : args[0];
+  const body = args.length === 3 ? args[2] : args[1];
+  const additionalNamespaces = args.length === 3 ? args[0] : [];
 
-	return new HtmlXFormsElement(head, body, additionalNamespaces);
+  return new HtmlXFormsElement(head, body, additionalNamespaces);
 };
 
 export const head = (...children: XFormsElement[]): HeadXFormsElement => {
-	return new HeadXFormsElement(children);
+  return new HeadXFormsElement(children);
 };
 
 export const body = (...children: XFormsElement[]): BodyXFormsElement => {
-	return new BodyXFormsElement(children);
+  return new BodyXFormsElement(children);
 };
 
 export const title = (innerHTML: string): XFormsElement => {
-	return t('h:title', innerHTML);
+  return t('h:title', innerHTML);
 };
 
 interface model {
-	(...children: XFormsElement[]): XFormsElement;
-	(attributes: AttributeTuples, ...children: XFormsElement[]): XFormsElement;
+  (...children: XFormsElement[]): XFormsElement;
+  (attributes: AttributeTuples, ...children: XFormsElement[]): XFormsElement;
 }
 
 export const model: model = (attributesOrFirstChild, ...restChildren) => {
-	const attributes = Array.isArray(attributesOrFirstChild)
-		? (attributesOrFirstChild as AttributeTuples)
-		: [];
-	const children = Array.isArray(attributesOrFirstChild)
-		? restChildren
-		: [attributesOrFirstChild as XFormsElement, ...restChildren];
-	const name = `model ${attributes
-		.map(([nodeName, value]) => `${nodeName}="${value}"`)
-		.join(' ')}`.trim();
+  const attributes = Array.isArray(attributesOrFirstChild)
+    ? (attributesOrFirstChild as AttributeTuples)
+    : [];
+  const children = Array.isArray(attributesOrFirstChild)
+    ? restChildren
+    : [attributesOrFirstChild as XFormsElement, ...restChildren];
+  const name = `model ${attributes
+    .map(([nodeName, value]) => `${nodeName}="${value}"`)
+    .join(' ')}`.trim();
 
-	return t(name, ...children);
+  return t(name, ...children);
 };
 
 export const mainInstance = (...children: XFormsElement[]): XFormsElement => {
-	return t('instance', ...children);
+  return t('instance', ...children);
 };
 
 export const instance = (name: string, ...children: XFormsElement[]): XFormsElement => {
-	return t(`instance id="${name}"`, t('root', ...children));
+  return t(`instance id="${name}"`, t('root', ...children));
 };
 
 export const input = (ref: string, ...children: XFormsElement[]): XFormsElement => {
-	return t(`input ref="${ref}"`, ...children);
+  return t(`input ref="${ref}"`, ...children);
 };
 
 export const select1 = (ref: string, ...children: XFormsElement[]): XFormsElement => {
-	return t(`select1 ref="${ref}"`, ...children);
+  return t(`select1 ref="${ref}"`, ...children);
 };
 
 interface RangeAttributes {
-	start: number;
-	end: number;
-	step: number;
+  start: number;
+  end: number;
+  step: number;
 }
 export const range = (
-	ref: string,
-	attributes: RangeAttributes,
-	...children: XFormsElement[]
+  ref: string,
+  attributes: RangeAttributes,
+  ...children: XFormsElement[]
 ): XFormsElement => {
-	return t(
-		`range ref="${ref}" start="${attributes.start}" end="${attributes.end}" step="${attributes.step}"`,
-		...children
-	);
+  return t(
+    `range ref="${ref}" start="${attributes.start}" end="${attributes.end}" step="${attributes.step}"`,
+    ...children
+  );
 };
 
 type Select1DynamicParameters =
-	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
-	| readonly [ref: string, nodesetRef: string]
-	| readonly [ref: string, nodesetRef: string, valueRef: string, labelRef: string];
+  // eslint-disable-next-line @typescript-eslint/sort-type-constituents
+  | readonly [ref: string, nodesetRef: string]
+  | readonly [ref: string, nodesetRef: string, valueRef: string, labelRef: string];
 
 type select1Dynamic = (...args: Select1DynamicParameters) => XFormsElement;
 
 export const select1Dynamic: select1Dynamic = (
-	...[ref, nodesetRef, valueRef, labelRef]: Select1DynamicParameters
+  ...[ref, nodesetRef, valueRef, labelRef]: Select1DynamicParameters
 ): XFormsElement => {
-	if (valueRef == null && labelRef == null) {
-		const value = t('value ref="value"');
-		const label = t('label ref="label"');
+  if (valueRef == null && labelRef == null) {
+    const value = t('value ref="value"');
+    const label = t('label ref="label"');
 
-		const itemsetAttributes = new Map<string, string>();
+    const itemsetAttributes = new Map<string, string>();
 
-		itemsetAttributes.set('nodeset', nodesetRef);
+    itemsetAttributes.set('nodeset', nodesetRef);
 
-		const itemset = new TagXFormsElement('itemset', itemsetAttributes, [value, label]);
-		const select1Attributes = new Map<string, string>();
+    const itemset = new TagXFormsElement('itemset', itemsetAttributes, [value, label]);
+    const select1Attributes = new Map<string, string>();
 
-		select1Attributes.set('ref', ref);
+    select1Attributes.set('ref', ref);
 
-		return new TagXFormsElement('select1', select1Attributes, [itemset]);
-	}
+    return new TagXFormsElement('select1', select1Attributes, [itemset]);
+  }
 
-	return t(
-		`select1 ref="${ref}"`,
-		t(`itemset nodeset="${nodesetRef}"`, t(`value ref="${valueRef}"`), t(`label ref="${labelRef}"`))
-	);
+  return t(
+    `select1 ref="${ref}"`,
+    t(`itemset nodeset="${nodesetRef}"`, t(`value ref="${valueRef}"`), t(`label ref="${labelRef}"`))
+  );
 };
 
 /**
  * @see {@link proposed_selectDynamic}
  */
 type Proposed_SelectDynamicParameters =
-	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
-	| readonly [ref: string, nodesetRef: string]
-	| readonly [ref: string, nodesetRef: string, valueRef: string, labelRef: string];
+  // eslint-disable-next-line @typescript-eslint/sort-type-constituents
+  | readonly [ref: string, nodesetRef: string]
+  | readonly [ref: string, nodesetRef: string, valueRef: string, labelRef: string];
 
 /**
  * @see {@link proposed_selectDynamic}
@@ -194,44 +194,44 @@ type Proposed_selectDynamic = (...args: Proposed_SelectDynamicParameters) => XFo
  * addition, for parity with {@link select1Dynamic}.
  */
 export const proposed_selectDynamic: Proposed_selectDynamic = (
-	...[ref, nodesetRef, valueRef, labelRef]: Proposed_SelectDynamicParameters
+  ...[ref, nodesetRef, valueRef, labelRef]: Proposed_SelectDynamicParameters
 ): XFormsElement => {
-	if (valueRef == null && labelRef == null) {
-		const value = t('value ref="value"');
-		const label = t('label ref="label"');
+  if (valueRef == null && labelRef == null) {
+    const value = t('value ref="value"');
+    const label = t('label ref="label"');
 
-		const itemsetAttributes = new Map<string, string>();
+    const itemsetAttributes = new Map<string, string>();
 
-		itemsetAttributes.set('nodeset', nodesetRef);
+    itemsetAttributes.set('nodeset', nodesetRef);
 
-		const itemset = new TagXFormsElement('itemset', itemsetAttributes, [value, label]);
-		const selectAttributes = new Map<string, string>();
+    const itemset = new TagXFormsElement('itemset', itemsetAttributes, [value, label]);
+    const selectAttributes = new Map<string, string>();
 
-		selectAttributes.set('ref', ref);
+    selectAttributes.set('ref', ref);
 
-		return new TagXFormsElement('select', selectAttributes, [itemset]);
-	}
+    return new TagXFormsElement('select', selectAttributes, [itemset]);
+  }
 
-	return t(
-		`select ref="${ref}"`,
-		t(`itemset nodeset="${nodesetRef}"`, t(`value ref="${valueRef}"`), t(`label ref="${labelRef}"`))
-	);
+  return t(
+    `select ref="${ref}"`,
+    t(`itemset nodeset="${nodesetRef}"`, t(`value ref="${valueRef}"`), t(`label ref="${labelRef}"`))
+  );
 };
 
 export { proposed_selectDynamic as selectDynamic };
 
 export const proposed_rankDynamic = (ref: string, nodesetRef: string): XFormsElement => {
-	const value = t('value ref="value"');
-	const label = t('label ref="label"');
+  const value = t('value ref="value"');
+  const label = t('label ref="label"');
 
-	const itemsetAttributes = new Map<string, string>();
-	itemsetAttributes.set('nodeset', nodesetRef);
+  const itemsetAttributes = new Map<string, string>();
+  itemsetAttributes.set('nodeset', nodesetRef);
 
-	const itemset = new TagXFormsElement('itemset', itemsetAttributes, [value, label]);
-	const rankAttributes = new Map<string, string>();
-	rankAttributes.set('ref', ref);
+  const itemset = new TagXFormsElement('itemset', itemsetAttributes, [value, label]);
+  const rankAttributes = new Map<string, string>();
+  rankAttributes.set('ref', ref);
 
-	return new TagXFormsElement('odk:rank', rankAttributes, [itemset]) as XFormsElement;
+  return new TagXFormsElement('odk:rank', rankAttributes, [itemset]);
 };
 
 export { proposed_rankDynamic as rankDynamic };
@@ -239,87 +239,87 @@ export { proposed_rankDynamic as rankDynamic };
 type UploadAttributes = ReadonlyMap<string, string>;
 
 type UploadAttributeParameters = readonly [
-	attributes: UploadAttributes,
-	...children: XFormsElement[],
+  attributes: UploadAttributes,
+  ...children: XFormsElement[],
 ];
 
 type UploadRestParameters = UploadAttributeParameters | readonly XFormsElement[];
 
 const isUploadAttributeParameters = (
-	rest: UploadRestParameters
+  rest: UploadRestParameters
 ): rest is UploadAttributeParameters => {
-	return rest[0] instanceof Map;
+  return rest[0] instanceof Map;
 };
 
 interface NormalizedUploadParameters {
-	readonly ref: string;
-	readonly attributes: UploadAttributes;
-	readonly children: readonly XFormsElement[];
+  readonly ref: string;
+  readonly attributes: UploadAttributes;
+  readonly children: readonly XFormsElement[];
 }
 
 const normalizeUploadParameters = (
-	ref: string,
-	...rest: UploadRestParameters
+  ref: string,
+  ...rest: UploadRestParameters
 ): NormalizedUploadParameters => {
-	if (isUploadAttributeParameters(rest)) {
-		const [attributes, ...children] = rest;
+  if (isUploadAttributeParameters(rest)) {
+    const [attributes, ...children] = rest;
 
-		return {
-			ref,
-			attributes,
-			children,
-		};
-	}
+    return {
+      ref,
+      attributes,
+      children,
+    };
+  }
 
-	return {
-		ref,
-		attributes: new Map(),
-		children: rest,
-	};
+  return {
+    ref,
+    attributes: new Map(),
+    children: rest,
+  };
 };
 
 export const proposed_upload = (ref: string, ...rest: UploadRestParameters): XFormsElement => {
-	const { attributes: uploadAttributes, children } = normalizeUploadParameters(ref, ...rest);
+  const { attributes: uploadAttributes, children } = normalizeUploadParameters(ref, ...rest);
 
-	const attributes = new Map([...uploadAttributes, ['ref', ref]]);
+  const attributes = new Map([...uploadAttributes, ['ref', ref]]);
 
-	const childrenXML = children.map((child) => child.asXml()).join('');
+  const childrenXML = children.map((child) => child.asXml()).join('');
 
-	return new StringLiteralXFormsElement('upload', attributes, childrenXML);
+  return new StringLiteralXFormsElement('upload', attributes, childrenXML);
 };
 
 export { proposed_upload as upload };
 
 export const group = (ref: string, ...children: XFormsElement[]): XFormsElement => {
-	return t(`group ref="${ref}"`, ...children);
+  return t(`group ref="${ref}"`, ...children);
 };
 
 interface repeat {
-	(ref: string, ...children: XFormsElement[]): XFormsElement;
-	(ref: string, countRef: string, ...children: XFormsElement[]): XFormsElement;
+  (ref: string, ...children: XFormsElement[]): XFormsElement;
+  (ref: string, countRef: string, ...children: XFormsElement[]): XFormsElement;
 }
 
 export const repeat: repeat = (ref, ...rest): XFormsElement => {
-	const [countRefOrMaybeChild, ...restChildren] = rest;
+  const [countRefOrMaybeChild, ...restChildren] = rest;
 
-	let countAttribute = '';
-	let children: readonly XFormsElement[];
+  let countAttribute = '';
+  let children: readonly XFormsElement[];
 
-	if (typeof countRefOrMaybeChild === 'object') {
-		children = rest as readonly XFormsElement[];
-	} else {
-		children = restChildren;
+  if (typeof countRefOrMaybeChild === 'object') {
+    children = rest as readonly XFormsElement[];
+  } else {
+    children = restChildren;
 
-		if (countRefOrMaybeChild != null) {
-			countAttribute = ` jr:count="${countRefOrMaybeChild}"`;
-		}
-	}
+    if (countRefOrMaybeChild != null) {
+      countAttribute = ` jr:count="${countRefOrMaybeChild}"`;
+    }
+  }
 
-	return t(`repeat nodeset="${ref}"${countAttribute}`, ...children);
+  return t(`repeat nodeset="${ref}"${countAttribute}`, ...children);
 };
 
 export const label = (innerHtml: string): XFormsElement => {
-	return new StringLiteralXFormsElement('label', emptyMap(), innerHtml);
+  return new StringLiteralXFormsElement('label', emptyMap(), innerHtml);
 };
 
 /**
@@ -340,32 +340,32 @@ export const label = (innerHtml: string): XFormsElement => {
  * fully specify the contents of a label's `ref` attribute (it should).
  */
 export const labelRef = (ref: string) => {
-	return new TagXFormsElement('label', new Map([['ref', ref]]), []);
+  return new TagXFormsElement('label', new Map([['ref', ref]]), []);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-shadow
 export const item = (value: Int | string, label: string): XFormsElement => {
-	return t('item', t('label', label), t('value', String(value)));
+  return t('item', t('label', label), t('value', String(value)));
 };
 
 export const setvalue = (event: string, ref: string, value?: string): XFormsElement => {
-	const valueAttribute = value == null ? '' : ` value="${value}"`;
+  const valueAttribute = value == null ? '' : ` value="${value}"`;
 
-	return t(`setvalue event="${event}" ref="${ref}"${valueAttribute}`);
+  return t(`setvalue event="${event}" ref="${ref}"${valueAttribute}`);
 };
 
 export const setgeopoint = (event: string, ref: string): XFormsElement => {
-	return t(`odk:setgeopoint event="${event}" ref="${ref}"`);
+  return t(`odk:setgeopoint event="${event}" ref="${ref}"`);
 };
 
 export const setvalueLiteral = (event: string, ref: string, innerHtml: string): XFormsElement => {
-	return t(`setvalue event="${event}" ref="${ref}"`, innerHtml);
+  return t(`setvalue event="${event}" ref="${ref}"`, innerHtml);
 };
 
 export { bind } from './BindBuilderXFormsElement.ts';
 
 export const proposed_xmlElement = (xmlLiteral: string): XFormsElement => {
-	return new PROPOSED_XMLLiteralXFormsElement(xmlLiteral);
+  return new PROPOSED_XMLLiteralXFormsElement(xmlLiteral);
 };
 
 export { proposed_xmlElement as xmlElement };

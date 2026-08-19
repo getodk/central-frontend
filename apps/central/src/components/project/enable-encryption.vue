@@ -307,9 +307,9 @@ export default {
       },
       {
         "introduction": [
-          "First, you will need to choose a passphrase. This passphrase will be required to decrypt your Submissions. For your privacy, the server will not remember this passphrase: only people with the passphrase will be able to decrypt and read your Submission data.",
+          "First, choose an encryption password. The server does not store this password. Only people who know it can decrypt and read your Submission data.",
           {
-            "full": "If you lose the passphrase, there is {no} way to recover it or your data!",
+            "full": "If you lose this encryption password, there is {no} way to recover it or your data.",
             "no": "no"
           }
         ]
@@ -319,10 +319,10 @@ export default {
       "Encryption has been configured for this Project. Any mobile devices will have to fetch or refetch the latest Forms for encryption to take place."
     ],
     "field": {
-      "hint": "Passphrase hint (optional)"
+      "hint": "Encryption password hint (optional)"
     },
     "alert": {
-      "passphraseTooShort": "Please input a passphrase at least 10 characters long."
+      "passphraseTooShort": "Encryption password must be at least 10 characters long."
     }
   }
 }
@@ -361,25 +361,11 @@ export default {
           }
         ]
       },
-      {
-        "introduction": [
-          "Nejprve si musíte zvolit přístupové heslo. Toto heslo bude vyžadováno k dešifrování vašich příspěvků. Server si toto heslo nebude pamatovat z důvodu vašeho soukromí: pouze lidé s přístupovým slovem budou moci dešifrovat a přečíst vaše údaje o odeslání.",
-          {
-            "full": "Pokud ztratíte přístupovou frázi, neexistuje {no} způsob, jak ji nebo svá data obnovit!",
-            "no": "žádný"
-          }
-        ]
-      }
+      {}
     ],
     "success": [
       "Pro tento projekt bylo nakonfigurováno šifrování. Všechna mobilní zařízení budou muset načíst nebo znovu načíst nejnovější Formuláře, aby mohlo dojít k šifrování."
-    ],
-    "field": {
-      "hint": "Přístupová fráze (volitelné)"
-    },
-    "alert": {
-      "passphraseTooShort": "Zadejte alespoň 10 znaků dlouhou přístupovou frázi."
-    }
+    ]
   },
   "de": {
     "title": "Verschlüsselung aktivieren",
@@ -415,25 +401,11 @@ export default {
           }
         ]
       },
-      {
-        "introduction": [
-          "Zuerst müssen Sie eine Passphrase auswählen. Diese wird dann benötigt, um Ihre Übermittlungen zu entschlüsseln. Zum Schutz Ihrer Daten wird diese Passphrase nicht gespeichert. Nur Benutzer, die diese Passphrase wissen, können Ihre Übermittlungen entschlüsseln.",
-          {
-            "full": "Wenn Sie die Passphrase verlieren, gibt es {no} Möglichkeit, sie oder Ihre Daten wiederherzustellen!",
-            "no": "keine"
-          }
-        ]
-      }
+      {}
     ],
     "success": [
       "Für dieses Projekt wurde Verschlüsselung aktiviert. Alle Mobilgeräte müssen die neuesten Formulare herunterladen damit die Verschlüsselung auch durchgeführt wird."
-    ],
-    "field": {
-      "hint": "Optionale Merkhilfe für die Passphrase"
-    },
-    "alert": {
-      "passphraseTooShort": "Bitte geben Sie eine mindestens 10 Zeichen lange Passphrase ein."
-    }
+    ]
   },
   "es": {
     "title": "Habilitar el cifrado",
@@ -469,25 +441,11 @@ export default {
           }
         ]
       },
-      {
-        "introduction": [
-          "En primer lugar, necesitará seleccionar una frase de contraseña. Esta frase será requerida para descifrar sus envíos. Por su privacidad, el servidor no recordará esta frase: solo las personas con la frase de contraseña podrán descifrar y leer los datos de sus envíos.",
-          {
-            "full": "Si pierde la frase de contraseña, {no} hay una manera de recuperarla o sus datos!",
-            "no": "no"
-          }
-        ]
-      }
+      {}
     ],
     "success": [
       "El cifrado ha sido configurado para este proyecto. Cualquier dispositivo móvil tendrá que buscar o volver a buscar los últimos formularios para que el cifrado se lleve a cabo."
-    ],
-    "field": {
-      "hint": "Sugerencia de frase de contraseña (opcional)"
-    },
-    "alert": {
-      "passphraseTooShort": "Ingrese una frase de contraseña de al menos 10 caracteres."
-    }
+    ]
   },
   "fr": {
     "title": "Activer le chiffrement",
@@ -525,9 +483,9 @@ export default {
       },
       {
         "introduction": [
-          "Tout d'abord vous devrez choisir une phrase de passe. Elle sera requise pour déchiffrer vos données soumises. Pour respecter votre vie privée, le serveur ne retiendra pas cette phrase de passe : seules les personnes disposant de la phrase de passe pourront déchiffrer et lire vos données envoyées.",
+          "Commencez par choisir un mot de passe de chiffrement. Le serveur ne conserve pas ce mot de passe. Seules les personnes qui le connaissent peuvent déchiffrer et lire les données de vos soumissions.",
           {
-            "full": "Si vous perdez la phrase de passe, il n'y a pas {no} de moyen de recouvrer vos données !",
+            "full": "Si vous perdez le mot de passe de chiffrement, il n'y a {no} de moyen de recouvrer vos données !",
             "no": "non"
           }
         ]
@@ -537,10 +495,10 @@ export default {
       "Le chiffrement a été configuré pour ce projet. Tous les appareils mobiles devront récupérer ou rerécupérer les derniers formulaires pour que le chiffrement puisse avoir lieu."
     ],
     "field": {
-      "hint": "Indice de phrase de passe (optionnel)"
+      "hint": "Indice de mot de passe de chiffrement (facultatif)"
     },
     "alert": {
-      "passphraseTooShort": "Merci de renseigner une phrase secrète d'au moins 10 caractères."
+      "passphraseTooShort": "Le mot de passe de chiffrement doit avoir au moins 10 caractères."
     }
   },
   "id": {
@@ -572,16 +530,8 @@ export default {
           }
         ]
       },
-      {
-        "introduction": [
-          "Pertama-tama, Anda harus memilih sebuah frasa sandi. Frasa sandi ini akan dibutuhkan untuk mendekripsi kiriman data Anda. Demi pribasi Anda, server tidak akan bisa mengingat frasa sandi ini: hanya orang yang mengetahui frasa sandi yang dapat mendekripsi dan membaca kiriman data Anda.",
-          {}
-        ]
-      }
-    ],
-    "field": {
-      "hint": "Petunjuk frasa sandi (opsional)"
-    }
+      {}
+    ]
   },
   "it": {
     "title": "Abilita crittografia",
@@ -617,25 +567,11 @@ export default {
           }
         ]
       },
-      {
-        "introduction": [
-          "Innanzitutto, dovrai scegliere una passphrase. Questa passphrase sarà necessaria per decifrare i tuoi Invii. Per la tua privacy, il server non ricorderà questa passphrase: solo le persone con la passphrase saranno in grado di decifrare e leggere i tuoi dati di invio.",
-          {
-            "full": "If you lose the passphrase, there is {no} modo per recuperarlo oi tuoi dati!",
-            "no": "no"
-          }
-        ]
-      }
+      {}
     ],
     "success": [
       "La crittografia è stata configurata per questo progetto. Tutti i dispositivi mobili dovranno prendere o recuperare i formulari più recenti affinché la crittografia possa avvenire."
-    ],
-    "field": {
-      "hint": "Suggerimento per la passphrase (opzionale)"
-    },
-    "alert": {
-      "passphraseTooShort": "Inserisci una passphrase di almeno 10 caratteri."
-    }
+    ]
   },
   "ja": {
     "title": "暗号化を有効にする",
@@ -666,19 +602,8 @@ export default {
           }
         ]
       },
-      {
-        "introduction": [
-          "まず、あなたはパスフレーズを設定する必要があります。このパスフレーズは、あなたの提出済フォームを復号する際に求められます。あなたのプライバシーを保護するため、サーバーはパスフレーズを記録しません。設定されたパスフレーズを知っている者のみがあなたの提出済フォームデータを復号できます。",
-          {}
-        ]
-      }
-    ],
-    "field": {
-      "hint": "パスフレーズのヒント（任意）"
-    },
-    "alert": {
-      "passphraseTooShort": "パスフレーズを10文字以上で入力してください。"
-    }
+      {}
+    ]
   },
   "pt": {
     "title": "Habilitar encriptação",
@@ -714,25 +639,11 @@ export default {
           }
         ]
       },
-      {
-        "introduction": [
-          "Primeiro, você precisará escolher uma senha longa. Esta senha será necessária para descriptografar suas respostas. Para garantir sua privacidade, o servidor não se lembrará desta frase secreta: somente as pessoas com a frase secreta poderão decifrar e ler seus dados de respostas.",
-          {
-            "full": "Se você perder a dica de senha, não há {no} maneira de recuperar ela ou seus dados!",
-            "no": "não"
-          }
-        ]
-      }
+      {}
     ],
     "success": [
       "Encriptação foi configurada para este Projeto. Todos os dispositivos móveis terão que buscar ou buscar novamente os Formulários mais recentes para que a encriptação ocorra."
-    ],
-    "field": {
-      "hint": "Dica de senha (opcional)"
-    },
-    "alert": {
-      "passphraseTooShort": "Insira uma dica de senha com pelo menos 10 caracteres."
-    }
+    ]
   },
   "sw": {
     "title": "Washa Usimbaji",
@@ -764,25 +675,11 @@ export default {
           }
         ]
       },
-      {
-        "introduction": [
-          "Kwanza, utahitaji kuchagua neno la siri. Kaulisiri hii itahitajika ili kusimbua Mawasilisho yako. Kwa faragha yako, seva haitakumbuka kaulisiri hii: watu walio na kaulisiri pekee wataweza kusimbua na kusoma data yako ya Wasilisho.",
-          {
-            "full": "Ukipoteza kaulisiri {no} hakuna njia ya kuirejesha au data yako",
-            "no": "Hapana"
-          }
-        ]
-      }
+      {}
     ],
     "success": [
       "Usimbaji fiche umesanidiwa kwa Mradi huu. Kifaa chochote cha rununu kitalazimika kuleta au kuleta tena Fomu za hivi punde zaidi ili usimbaji fiche ufanyike."
-    ],
-    "field": {
-      "hint": "Kidokezo cha kaulisiri (si lazima)"
-    },
-    "alert": {
-      "passphraseTooShort": "Tafadhali weka kaulisiri yenye urefu wa angalau vibambo 10."
-    }
+    ]
   },
   "zh": {
     "title": "使用加密",
@@ -818,25 +715,11 @@ export default {
           }
         ]
       },
-      {
-        "introduction": [
-          "首先，您需要设置一个安全密钥。该口令将用于解密您所提交的数据。为保护您的隐私，服务器不会保存此口令：只有持有该口令的人员，才能解密并查阅您提交的数据。",
-          {
-            "full": "如果您遗失了该安全密钥，将无法{no}找回它或您的数据！",
-            "no": "否"
-          }
-        ]
-      }
+      {}
     ],
     "success": [
       "加密功能已在此项目中配置完成。所有移动设备必须获取或重新获取最新版本的表单，才可以启用加密。"
-    ],
-    "field": {
-      "hint": "安全密钥提示（可选）"
-    },
-    "alert": {
-      "passphraseTooShort": "请输入至少10个字符长的安全密钥。"
-    }
+    ]
   },
   "zh-Hant": {
     "title": "啟用加密",
@@ -872,25 +755,11 @@ export default {
           }
         ]
       },
-      {
-        "introduction": [
-          "首先，您需要選擇一個密碼。需要此密碼才能解密您提交的內容。為了您的隱私，伺服器不會記住此密碼：只有擁有該密碼的人才能解密和讀取您的提交資料。",
-          {
-            "full": "如果您遺失了密碼，則{no}恢復它或您的資料！",
-            "no": "沒辦法"
-          }
-        ]
-      }
+      {}
     ],
     "success": [
       "已為此專案配置加密。任何行動裝置都必須取得或重新取得最新的表單才能進行加密。"
-    ],
-    "field": {
-      "hint": "密碼提示（可選）"
-    },
-    "alert": {
-      "passphraseTooShort": "請輸入至少 10 個字元長的密碼。"
-    }
+    ]
   }
 }
 </i18n>

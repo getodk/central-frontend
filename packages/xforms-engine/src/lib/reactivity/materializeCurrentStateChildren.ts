@@ -6,38 +6,38 @@ import type { CurrentState } from './node-state/createCurrentState.ts';
 import type { ReactiveScope } from './scope.ts';
 
 interface InconsistentChildrenStateDetails {
-	readonly missingIds: readonly FormNodeID[];
-	readonly unexpectedIds: readonly FormNodeID[];
+  readonly missingIds: readonly FormNodeID[];
+  readonly unexpectedIds: readonly FormNodeID[];
 }
 
 class InconsistentChildrenStateError extends Error {
-	constructor(details: InconsistentChildrenStateDetails) {
-		const { missingIds, unexpectedIds } = details;
+  constructor(details: InconsistentChildrenStateDetails) {
+    const { missingIds, unexpectedIds } = details;
 
-		const messageLines = ['Detected inconsistent engine/client child state.'];
+    const messageLines = ['Detected inconsistent engine/client child state.'];
 
-		if (missingIds.length > 0) {
-			const missingIdLines = missingIds.map((missingId) => {
-				return `- ${missingId}`;
-			});
+    if (missingIds.length > 0) {
+      const missingIdLines = missingIds.map((missingId) => {
+        return `- ${missingId}`;
+      });
 
-			messageLines.push('\nMissing child nodes for ids:\n', ...missingIdLines);
-		}
+      messageLines.push('\nMissing child nodes for ids:\n', ...missingIdLines);
+    }
 
-		if (unexpectedIds.length > 0) {
-			const unexpectedIdLines = unexpectedIds.map((unexpectedId) => {
-				return `- ${unexpectedId}`;
-			});
+    if (unexpectedIds.length > 0) {
+      const unexpectedIdLines = unexpectedIds.map((unexpectedId) => {
+        return `- ${unexpectedId}`;
+      });
 
-			messageLines.push('\nUnexpected child nodes with ids:\n', ...unexpectedIdLines);
-		}
+      messageLines.push('\nUnexpected child nodes with ids:\n', ...unexpectedIdLines);
+    }
 
-		super(messageLines.join('\n'));
-	}
+    super(messageLines.join('\n'));
+  }
 }
 
 export interface EncodedParentState {
-	readonly children: readonly FormNodeID[];
+  readonly children: readonly FormNodeID[];
 }
 
 /**
@@ -58,23 +58,23 @@ export interface EncodedParentState {
  * @todo should we throw rather than warn until we have this confidence?
  */
 const reportInconsistentChildrenState = (
-	expectedClientIds: readonly FormNodeID[],
-	actualNodes: readonly AnyChildNode[]
+  expectedClientIds: readonly FormNodeID[],
+  actualNodes: readonly AnyChildNode[]
 ): void => {
-	const actualIds = actualNodes.map((node) => node.nodeId);
-	const missingIds = expectedClientIds.filter((expectedId) => {
-		return !actualIds.includes(expectedId);
-	});
-	const unexpectedIds = actualIds.filter((actualId) => {
-		return !expectedClientIds.includes(actualId);
-	});
+  const actualIds = actualNodes.map((node) => node.nodeId);
+  const missingIds = expectedClientIds.filter((expectedId) => {
+    return !actualIds.includes(expectedId);
+  });
+  const unexpectedIds = actualIds.filter((actualId) => {
+    return !expectedClientIds.includes(actualId);
+  });
 
-	if (missingIds.length > 0 || unexpectedIds.length > 0) {
-		throw new InconsistentChildrenStateError({
-			missingIds,
-			unexpectedIds,
-		});
-	}
+  if (missingIds.length > 0 || unexpectedIds.length > 0) {
+    throw new InconsistentChildrenStateError({
+      missingIds,
+      unexpectedIds,
+    });
+  }
 };
 
 // prettier-ignore
@@ -94,30 +94,30 @@ export type MaterializedChildren<
  * @see {@link createChildrenState} for further detail.
  */
 export const materializeCurrentStateChildren = <
-	Child extends AnyChildNode,
-	ParentState extends EncodedParentState,
+  Child extends AnyChildNode,
+  ParentState extends EncodedParentState,
 >(
-	scope: ReactiveScope,
-	currentState: ParentState,
-	childrenState: ChildrenState<Child>
+  scope: ReactiveScope,
+  currentState: ParentState,
+  childrenState: ChildrenState<Child>
 ): MaterializedChildren<ParentState, Child> => {
-	const baseState: Omit<ParentState, 'children'> = currentState;
-	const proxyTarget = baseState as MaterializedChildren<ParentState, Child>;
+  const baseState: Omit<ParentState, 'children'> = currentState;
+  const proxyTarget = baseState as MaterializedChildren<ParentState, Child>;
 
-	return new Proxy(proxyTarget, {
-		get(_, key) {
-			if (key === 'children') {
-				const expectedChildIDs = scope.runTask(() => currentState.children);
-				const children = childrenState.getChildren();
+  return new Proxy(proxyTarget, {
+    get(_, key) {
+      if (key === 'children') {
+        const expectedChildIDs = scope.runTask(() => currentState.children);
+        const children = childrenState.getChildren();
 
-				if (import.meta.env.DEV) {
-					reportInconsistentChildrenState(expectedChildIDs, children);
-				}
+        if (import.meta.env.DEV) {
+          reportInconsistentChildrenState(expectedChildIDs, children);
+        }
 
-				return children;
-			}
+        return children;
+      }
 
-			return baseState[key as Exclude<keyof ParentState, 'children'>];
-		},
-	});
+      return baseState[key as Exclude<keyof ParentState, 'children'>];
+    },
+  });
 };

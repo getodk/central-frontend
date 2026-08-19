@@ -4,17 +4,17 @@
  * Keep OpenLayers imports/code here only to bundle separately and
  * load on demand. Avoids main bundle bloat.
  */
-import IconSVG from '@/components/common/IconSVG.vue';
-import { type Mode, type SingleFeatureType } from '@/components/common/map/getModeConfig.ts';
-import MapAdvancedPanel from '@/components/common/map/MapAdvancedPanel.vue';
-import MapConfirmDialog from '@/components/common/map/MapConfirmDialog.vue';
-import MapControls from '@/components/common/map/MapControls.vue';
-import MapProperties from '@/components/common/map/MapProperties.vue';
-import MapStatusBar from '@/components/common/map/MapStatusBar.vue';
-import MapUpdateCoordsDialog from '@/components/common/map/MapUpdateCoordsDialog.vue';
-import { STATES, useMapBlock } from '@/components/common/map/useMapBlock.ts';
-import { TRANSLATE, QUESTION_HAS_ERROR } from '@/lib/constants/injection-keys.ts';
-import type { Translate } from '@/lib/locale/useLocale.ts';
+import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
+import { type Mode, type SingleFeatureType } from '@getodk/web-forms/components/common/map/getModeConfig.ts';
+import MapAdvancedPanel from '@getodk/web-forms/components/common/map/MapAdvancedPanel.vue';
+import MapConfirmDialog from '@getodk/web-forms/components/common/map/MapConfirmDialog.vue';
+import MapControls from '@getodk/web-forms/components/common/map/MapControls.vue';
+import MapProperties from '@getodk/web-forms/components/common/map/MapProperties.vue';
+import MapStatusBar from '@getodk/web-forms/components/common/map/MapStatusBar.vue';
+import MapUpdateCoordsDialog from '@getodk/web-forms/components/common/map/MapUpdateCoordsDialog.vue';
+import { STATES, useMapBlock } from '@getodk/web-forms/components/common/map/useMapBlock.ts';
+import { TRANSLATE, QUESTION_HAS_ERROR } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import type { Feature, FeatureCollection } from 'geojson';
 import type { Coordinate } from 'ol/coordinate';
 import { toLonLat } from 'ol/proj';
@@ -126,7 +126,7 @@ watch(
 watch(
 	() => props.savedFeatureValue,
 	(newValue) => {
-		mapHandler.findAndSaveFeature(newValue);
+		mapHandler.applySavedFeatureValue(newValue);
 	}
 );
 
@@ -340,7 +340,7 @@ const toggleFullScreen = () => {
 
 <style scoped lang="scss">
 @use 'primeflex/core/_variables.scss' as pf;
-@use '../../../assets/styles/map-block' as mb;
+@use '../../../assets/styles/panel-controls' as pc;
 @use '../../../assets/styles/buttons' as btn;
 @use '../../../assets/styles/style' as odk;
 
@@ -363,7 +363,7 @@ const toggleFullScreen = () => {
 	-webkit-touch-callout: none;
 
 	.map-block {
-		container: map-block / size;
+		container: panel-control-container / size;
 		position: relative;
 		background: var(--odk-base-background-color);
 		width: 100%;
@@ -386,8 +386,8 @@ const toggleFullScreen = () => {
 		.close-full-screen {
 			@include btn.clear-button;
 			display: none;
-			top: var(--odk-map-controls-spacing);
-			left: var(--odk-map-controls-spacing);
+			top: var(--odk-spacing-m);
+			left: var(--odk-spacing-m);
 		}
 
 		.p-button.p-button-contrast.p-button-outlined {
@@ -439,7 +439,7 @@ const toggleFullScreen = () => {
 }
 
 .map-block-component :deep(.ol-zoom) {
-	@include mb.map-control-bar-vertical;
+	@include pc.panel-control-bar-vertical;
 	bottom: 35px;
 	height: fit-content;
 
@@ -447,7 +447,7 @@ const toggleFullScreen = () => {
 	button:hover,
 	button:focus,
 	button:active {
-		@include mb.map-control-button;
+		@include pc.panel-control-button;
 	}
 }
 
@@ -497,9 +497,9 @@ const toggleFullScreen = () => {
 		align-items: center;
 		justify-content: space-between;
 		position: fixed;
-		top: var(--odk-map-controls-spacing);
-		left: var(--odk-map-controls-spacing);
-		right: var(--odk-map-controls-spacing);
+		top: var(--odk-spacing-m);
+		left: var(--odk-spacing-m);
+		right: var(--odk-spacing-m);
 		z-index: var(--odk-z-index-topmost);
 		margin-top: 0;
 	}
@@ -511,7 +511,7 @@ const toggleFullScreen = () => {
 
 .map-message {
 	width: max-content;
-	max-width: calc(100% - (var(--odk-map-controls-spacing) * 2));
+	max-width: calc(100% - (var(--odk-spacing-m) * 2));
 	position: absolute;
 	z-index: var(--odk-z-index-form-floating);
 	bottom: -11px;
@@ -562,7 +562,7 @@ const toggleFullScreen = () => {
 
 		.map-bottom-section-placeholder.is-advanced-panel-active {
 			width: 100vw;
-			height: var(--odk-map-bottom-placeholder-height);
+			height: 60px;
 		}
 	}
 }

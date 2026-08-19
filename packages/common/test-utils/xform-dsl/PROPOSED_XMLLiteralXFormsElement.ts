@@ -8,30 +8,30 @@ const xmlLiteralNameCache = new UpsertableMap<string, string>();
  * {@link XFormsElement} interface.
  */
 export class PROPOSED_XMLLiteralXFormsElement implements XFormsElement {
-	private name: string | null;
+  private name: string | null;
 
-	constructor(private readonly xmlLiteral: string) {
-		this.name = xmlLiteralNameCache.get(xmlLiteral) ?? null;
-	}
+  constructor(private readonly xmlLiteral: string) {
+    this.name = xmlLiteralNameCache.get(xmlLiteral) ?? null;
+  }
 
-	getName(): string {
-		const { name, xmlLiteral } = this;
+  getName(): string {
+    const { name, xmlLiteral } = this;
 
-		if (name != null) {
-			return name;
-		}
+    if (name != null) {
+      return name;
+    }
 
-		this.name = xmlLiteralNameCache.upsert(xmlLiteral, () => {
-			const domParser = new DOMParser();
-			const doc = domParser.parseFromString(xmlLiteral, 'text/xml');
+    this.name = xmlLiteralNameCache.upsert(xmlLiteral, () => {
+      const domParser = new DOMParser();
+      const doc = domParser.parseFromString(xmlLiteral, 'text/xml');
 
-			return doc.documentElement.nodeName;
-		});
+      return doc.documentElement.nodeName;
+    });
 
-		return this.name;
-	}
+    return this.name;
+  }
 
-	asXml(): string {
-		return this.xmlLiteral;
-	}
+  asXml(): string {
+    return this.xmlLiteral;
+  }
 }

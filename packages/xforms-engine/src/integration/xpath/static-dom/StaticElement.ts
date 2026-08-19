@@ -18,32 +18,32 @@ export type StaticElementChildOption =
 	| string;
 
 export interface StaticElementOptions {
-	readonly name: QualifiedNameSource | string;
-	readonly attributes?: readonly StaticAttributeOptions[];
-	readonly children?: readonly StaticElementChildOption[];
+  readonly name: QualifiedNameSource | string;
+  readonly attributes?: readonly StaticAttributeOptions[];
+  readonly children?: readonly StaticElementChildOption[];
 }
 
 interface StaticElementChildrenResult {
-	readonly children: readonly StaticChildNode[];
-	readonly childElements: readonly StaticElement[];
-	readonly leafValue: string | null;
+  readonly children: readonly StaticChildNode[];
+  readonly childElements: readonly StaticElement[];
+  readonly leafValue: string | null;
 }
 
 const leafElementChildrenResult = (
-	parent: StaticElement,
-	leafValue: string
+  parent: StaticElement,
+  leafValue: string
 ): StaticElementChildrenResult => {
-	const child = new StaticText(parent, leafValue);
+  const child = new StaticText(parent, leafValue);
 
-	return {
-		children: [child],
-		childElements: [],
-		leafValue: leafValue,
-	};
+  return {
+    children: [child],
+    childElements: [],
+    leafValue: leafValue,
+  };
 };
 
 const blankLeafElementChildrenResult = (parent: StaticElement): StaticElementChildrenResult => {
-	return leafElementChildrenResult(parent, '');
+  return leafElementChildrenResult(parent, '');
 };
 
 /**
@@ -74,192 +74,192 @@ const blankLeafElementChildrenResult = (parent: StaticElement): StaticElementChi
  * such, if we do handle comments, that comment should likely be removed.
  */
 const buildStaticElementChildren = (
-	parent: StaticElement,
-	options: StaticElementOptions
+  parent: StaticElement,
+  options: StaticElementOptions
 ): StaticElementChildrenResult => {
-	const children = Array<StaticChildNode>();
-	const childElements = Array<StaticElement>();
-	const childOptions = options.children ?? [''];
+  const children = Array<StaticChildNode>();
+  const childElements = Array<StaticElement>();
+  const childOptions = options.children ?? [''];
 
-	// No children: blank value
-	if (childOptions.length === 0) {
-		return {
-			children,
-			childElements,
-			leafValue: '',
-		};
-	}
+  // No children: blank value
+  if (childOptions.length === 0) {
+    return {
+      children,
+      childElements,
+      leafValue: '',
+    };
+  }
 
-	const [head, ...tail] = childOptions;
+  const [head, ...tail] = childOptions;
 
-	if (tail.length === 0) {
-		// - If no child options are specified, default to a single empty/blank
-		//   `StaticText` child node, and assign its value
-		if (head == null) {
-			return blankLeafElementChildrenResult(parent);
-		}
+  if (tail.length === 0) {
+    // - If no child options are specified, default to a single empty/blank
+    //   `StaticText` child node, and assign its value
+    if (head == null) {
+      return blankLeafElementChildrenResult(parent);
+    }
 
-		// - If exactly one child option is specified, and it is a string, create
-		//   `StaticText` child and assign its value
-		if (typeof head === 'string') {
-			return leafElementChildrenResult(parent, head);
-		}
-	}
+    // - If exactly one child option is specified, and it is a string, create
+    //   `StaticText` child and assign its value
+    if (typeof head === 'string') {
+      return leafElementChildrenResult(parent, head);
+    }
+  }
 
-	// If 2+ child options, for each:
-	//
-	// - Populate `children` (and `childElements`, as appopriate)
-	// - Do not populate `value`. For cases which need an arbitrary
-	//   `StaticElement`'s text value (i.e. `XPath`, perhaps eventually some
-	//   serialization use cases), it will be computed recursively as needed.
-	//
-	// Note: in theory, we may encounter a homogenous sequence of 2+ strings! In
-	// theory we should normalize those into a single string.
-	if (typeof head === 'string' && tail.length === 0) {
-		const child = new StaticText(parent, head);
+  // If 2+ child options, for each:
+  //
+  // - Populate `children` (and `childElements`, as appopriate)
+  // - Do not populate `value`. For cases which need an arbitrary
+  //   `StaticElement`'s text value (i.e. `XPath`, perhaps eventually some
+  //   serialization use cases), it will be computed recursively as needed.
+  //
+  // Note: in theory, we may encounter a homogenous sequence of 2+ strings! In
+  // theory we should normalize those into a single string.
+  if (typeof head === 'string' && tail.length === 0) {
+    const child = new StaticText(parent, head);
 
-		children.push(child);
+    children.push(child);
 
-		return {
-			children,
-			childElements,
-			leafValue: child.value,
-		};
-	}
+    return {
+      children,
+      childElements,
+      leafValue: child.value,
+    };
+  }
 
-	for (const item of childOptions) {
-		switch (typeof item) {
-			case 'string':
-				children.push(new StaticText(parent, item));
-				break;
+  for (const item of childOptions) {
+    switch (typeof item) {
+      case 'string':
+        children.push(new StaticText(parent, item));
+        break;
 
-			case 'object': {
-				const childElement = new StaticElement(parent, item);
+      case 'object': {
+        const childElement = new StaticElement(parent, item);
 
-				children.push(childElement);
-				childElements.push(childElement);
+        children.push(childElement);
+        childElements.push(childElement);
 
-				break;
-			}
+        break;
+      }
 
-			default:
-				throw new UnreachableError(item);
-		}
-	}
+      default:
+        throw new UnreachableError(item);
+    }
+  }
 
-	return {
-		children,
-		childElements,
-		leafValue: null,
-	};
+  return {
+    children,
+    childElements,
+    leafValue: null,
+  };
 };
 
 export class StaticElement extends StaticParentNode<'element'> implements XFormsXPathElement {
-	private computedValue: string | null;
+  private computedValue: string | null;
 
-	readonly rootDocument: StaticDocument;
-	readonly root: StaticElement;
-	readonly qualifiedName: QualifiedName;
-	readonly nodeset: string;
-	readonly attributes: readonly StaticAttribute[];
-	readonly children: readonly StaticChildNode[];
-	readonly childElements: readonly StaticElement[];
-	readonly value: string | null;
+  readonly rootDocument: StaticDocument;
+  readonly root: StaticElement;
+  readonly qualifiedName: QualifiedName;
+  readonly nodeset: string;
+  readonly attributes: readonly StaticAttribute[];
+  readonly children: readonly StaticChildNode[];
+  readonly childElements: readonly StaticElement[];
+  readonly value: string | null;
 
-	constructor(
-		readonly parent: StaticDocument | StaticElement,
-		options: StaticElementOptions
-	) {
-		super('element');
+  constructor(
+    readonly parent: StaticDocument | StaticElement,
+    options: StaticElementOptions
+  ) {
+    super('element');
 
-		const { rootDocument } = parent;
-		let nodesetPrefix = parent.nodeset;
+    const { rootDocument } = parent;
+    let nodesetPrefix = parent.nodeset;
 
-		this.rootDocument = rootDocument;
+    this.rootDocument = rootDocument;
 
-		// Account for the fact that we may be constructing the document root!
-		if (parent === rootDocument) {
-			this.root = this;
+    // Account for the fact that we may be constructing the document root!
+    if (parent === rootDocument) {
+      this.root = this;
 
-			// Avoid nodeset like `//foo` when `/foo` is expected/intended
-			if (nodesetPrefix === '/') {
-				nodesetPrefix = '';
-			}
-		} else {
-			this.root = parent.root;
-		}
+      // Avoid nodeset like `//foo` when `/foo` is expected/intended
+      if (nodesetPrefix === '/') {
+        nodesetPrefix = '';
+      }
+    } else {
+      this.root = parent.root;
+    }
 
-		const { name, attributes = [] } = options;
+    const { name, attributes = [] } = options;
 
-		this.qualifiedName = staticNodeName(name);
-		this.nodeset = `${nodesetPrefix}/${this.qualifiedName.getPrefixedName()}`;
-		this.attributes = attributes.map((attrOptions) => {
-			return new StaticAttribute(this, attrOptions);
-		});
+    this.qualifiedName = staticNodeName(name);
+    this.nodeset = `${nodesetPrefix}/${this.qualifiedName.getPrefixedName()}`;
+    this.attributes = attributes.map((attrOptions) => {
+      return new StaticAttribute(this, attrOptions);
+    });
 
-		const { children, childElements, leafValue } = buildStaticElementChildren(this, options);
+    const { children, childElements, leafValue } = buildStaticElementChildren(this, options);
 
-		this.children = children;
-		this.childElements = childElements;
-		this.computedValue = leafValue;
-		this.value = leafValue;
-	}
+    this.children = children;
+    this.childElements = childElements;
+    this.computedValue = leafValue;
+    this.value = leafValue;
+  }
 
-	isLeafElement(): this is StaticLeafElement {
-		return this.value != null;
-	}
+  isLeafElement(): this is StaticLeafElement {
+    return this.value != null;
+  }
 
-	assertLeafElement(): asserts this is StaticLeafElement {
-		if (!this.isLeafElement()) {
-			throw new ErrorProductionDesignPendingError();
-		}
-	}
+  assertLeafElement(): asserts this is StaticLeafElement {
+    if (!this.isLeafElement()) {
+      throw new ErrorProductionDesignPendingError();
+    }
+  }
 
-	/**
-	 * @todo Generalize this, incorporate into {@link EngineDOMAdapter}
-	 * @todo Namespaced lookup
-	 * @todo Optimize: lookup from map and/or caching
-	 */
-	protected getAttributeNode(localName: string): StaticAttribute | null {
-		return (
-			this.attributes.find((attribute) => {
-				return attribute.qualifiedName.localName === localName;
-			}) ?? null
-		);
-	}
+  /**
+   * @todo Generalize this, incorporate into {@link EngineDOMAdapter}
+   * @todo Namespaced lookup
+   * @todo Optimize: lookup from map and/or caching
+   */
+  protected getAttributeNode(localName: string): StaticAttribute | null {
+    return (
+      this.attributes.find((attribute) => {
+        return attribute.qualifiedName.localName === localName;
+      }) ?? null
+    );
+  }
 
-	/**
-	 * @todo Generalize this, incorporate into {@link EngineDOMAdapter}
-	 * @todo Namespaced lookup
-	 * @todo Optimize: lookup from map and/or caching (especially asserting known
-	 * attributes!)
-	 * @todo As long as this depends on {@link getAttributeNode}, push assertion
-	 * up. (This was put off because the types are already plenty complex as it
-	 * is.)
-	 */
-	getAttributeValue(localName: string): string | null {
-		const attribute = this.getAttributeNode(localName);
-		const value = attribute?.value ?? null;
+  /**
+   * @todo Generalize this, incorporate into {@link EngineDOMAdapter}
+   * @todo Namespaced lookup
+   * @todo Optimize: lookup from map and/or caching (especially asserting known
+   * attributes!)
+   * @todo As long as this depends on {@link getAttributeNode}, push assertion
+   * up. (This was put off because the types are already plenty complex as it
+   * is.)
+   */
+  getAttributeValue(localName: string): string | null {
+    const attribute = this.getAttributeNode(localName);
+    const value = attribute?.value ?? null;
 
-		return value;
-	}
+    return value;
+  }
 
-	// XFormsXPathElement
-	getXPathValue(): string {
-		const { computedValue } = this;
+  // XFormsXPathElement
+  getXPathValue(): string {
+    const { computedValue } = this;
 
-		if (computedValue != null) {
-			return computedValue;
-		}
+    if (computedValue != null) {
+      return computedValue;
+    }
 
-		const result = this.children.map((child) => child.getXPathValue()).join('');
+    const result = this.children.map((child) => child.getXPathValue()).join('');
 
-		this.computedValue = result;
+    this.computedValue = result;
 
-		return result;
-	}
+    return result;
+  }
 }
 
 export interface StaticLeafElement extends StaticElement {
-	readonly value: string;
+  readonly value: string;
 }

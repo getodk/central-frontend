@@ -7,60 +7,60 @@ import type { ExpressionEvaluator } from './ExpressionEvaluator.ts';
 import { createExpression } from './factory.ts';
 
 interface FunctionCallName {
-	readonly prefix: string | null;
-	readonly localName: string;
+  readonly prefix: string | null;
+  readonly localName: string;
 }
 
 const functionCallName = (syntaxNode: FunctionCallNode): FunctionCallName => {
-	const [nameNode] = syntaxNode.children[0].children;
+  const [nameNode] = syntaxNode.children[0].children;
 
-	switch (nameNode.type) {
-		case 'prefixed_name': {
-			const [prefixNode, localNameNode] = nameNode.children;
+  switch (nameNode.type) {
+    case 'prefixed_name': {
+      const [prefixNode, localNameNode] = nameNode.children;
 
-			return {
-				prefix: prefixNode.text,
-				localName: localNameNode.text,
-			};
-		}
+      return {
+        prefix: prefixNode.text,
+        localName: localNameNode.text,
+      };
+    }
 
-		case 'unprefixed_name':
-			return {
-				prefix: null,
-				localName: nameNode.text,
-			};
+    case 'unprefixed_name':
+      return {
+        prefix: null,
+        localName: nameNode.text,
+      };
 
-		default:
-			throw new UnreachableError(nameNode);
-	}
+    default:
+      throw new UnreachableError(nameNode);
+  }
 };
 
 export class FunctionCallExpressionEvaluator implements ExpressionEvaluator {
-	readonly name: FunctionCallName;
-	readonly argumentExpressions: readonly ExpressionEvaluator[];
+  readonly name: FunctionCallName;
+  readonly argumentExpressions: readonly ExpressionEvaluator[];
 
-	constructor(readonly syntaxNode: FunctionCallNode) {
-		const [, ...argumentNodes] = syntaxNode.children;
+  constructor(readonly syntaxNode: FunctionCallNode) {
+    const [, ...argumentNodes] = syntaxNode.children;
 
-		this.name = functionCallName(syntaxNode);
+    this.name = functionCallName(syntaxNode);
 
-		this.argumentExpressions = argumentNodes.map((argumentNode) => {
-			return createExpression(argumentNode);
-		});
-	}
+    this.argumentExpressions = argumentNodes.map((argumentNode) => {
+      return createExpression(argumentNode);
+    });
+  }
 
-	evaluate<T extends XPathNode>(context: EvaluationContext<T>): Evaluation<T> {
-		const { argumentExpressions, name } = this;
-		const { functions } = context;
-		const functionImplementation = functions.getImplementation(context, name);
+  evaluate<T extends XPathNode>(context: EvaluationContext<T>): Evaluation<T> {
+    const { argumentExpressions, name } = this;
+    const { functions } = context;
+    const functionImplementation = functions.getImplementation(context, name);
 
-		if (functionImplementation == null) {
-			const { prefix, localName } = name;
-			const errorName = prefix == null ? localName : `${prefix}:${localName}`;
+    if (functionImplementation == null) {
+      const { prefix, localName } = name;
+      const errorName = prefix == null ? localName : `${prefix}:${localName}`;
 
-			throw new Error(`Function '${errorName}' is not defined.`);
-		}
+      throw new Error(`Function '${errorName}' is not defined.`);
+    }
 
-		return functionImplementation.call(context.currentContext(), argumentExpressions);
-	}
+    return functionImplementation.call(context.currentContext(), argumentExpressions);
+  }
 }

@@ -13,46 +13,46 @@ import type { BodyDefinition, BodyElementParentContext } from './BodyDefinition.
 type BodyElementCategory = 'control' | 'structure' | 'support' | 'UNSUPPORTED';
 
 export abstract class BodyElementDefinition<Type extends string>
-	extends DependencyContext
-	implements BodyElementParentContext
+  extends DependencyContext
+  implements BodyElementParentContext
 {
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	static isCompatible(localName: string, element: Element): boolean {
-		throw new Error('Must be overridden by BodyElementDefinition subclass');
-	}
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  static isCompatible(localName: string, element: Element): boolean {
+    throw new Error('Must be overridden by BodyElementDefinition subclass');
+  }
 
-	readonly body: BodyDefinition;
+  readonly body: BodyDefinition;
 
-	abstract readonly category: BodyElementCategory;
-	abstract readonly type: Type;
-	readonly hint: HintDefinition | null = null;
-	readonly label: ItemLabelDefinition | LabelDefinition | null = null;
+  abstract readonly category: BodyElementCategory;
+  abstract readonly type: Type;
+  readonly hint: HintDefinition | null = null;
+  readonly label: ItemLabelDefinition | LabelDefinition | null = null;
 
-	readonly reference: string | null = null;
-	readonly parentReference: string | null;
+  readonly reference: string | null = null;
+  readonly parentReference: string | null;
 
-	protected constructor(
-		protected readonly form: XFormDefinition,
-		readonly parent: BodyElementParentContext,
-		readonly element: Element
-	) {
-		super();
-		this.body = parent.body;
-		this.parentReference = parent.reference;
-	}
+  protected constructor(
+    protected readonly form: XFormDefinition,
+    readonly parent: BodyElementParentContext,
+    readonly element: Element
+  ) {
+    super();
+    this.body = parent.body;
+    this.parentReference = parent.reference;
+  }
 
-	toJSON(): object {
-		const { form, parent, ...rest } = this;
+  toJSON(): object {
+    const { form, parent, ...rest } = this;
 
-		return rest;
-	}
+    return rest;
+  }
 }
 
 type BodyElementDefinitionClass = Pick<
-	typeof BodyElementDefinition,
-	keyof typeof BodyElementDefinition
+  typeof BodyElementDefinition,
+  keyof typeof BodyElementDefinition
 >;
 
 // prettier-ignore
@@ -64,6 +64,6 @@ export type BodyElementDefinitionConstructor =
 type BodyElementDefinitionInstance = InstanceType<BodyElementDefinitionConstructor>;
 
 export type TypedBodyElementDefinition<Type extends string> = Extract<
-	BodyElementDefinitionInstance,
-	{ readonly type: Type }
+  BodyElementDefinitionInstance,
+  { readonly type: Type }
 >;

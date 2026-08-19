@@ -1,0 +1,21 @@
+{
+  "extends": "./tsconfig.json",
+  // TODO: probably good if tools includes just go in the root config, otherwise
+  // stuff starts getting conflicty and redundant fast
+  "include": [
+    "eslint.config.js",
+    "prettier.config.js",
+    "turbo.json",
+    "*/playwright.config.ts",
+    "*/vite.config.ts",
+    "*/vitest.config.ts",
+    "xforms-engine/vite.*.config.ts"
+  ],
+  "compilerOptions": {
+    "paths": {
+      "@getodk/common/test-utils/*": ["../common/test-utils/*"],
+      "@getodk/common/types/*": ["../common/types/*"],
+      "@getodk/common/*": ["../common/src/*"]
+    }
+  }
+}

@@ -10,7 +10,7 @@ import type { ModelDefinition } from './ModelDefinition.ts';
  * subclasses, probably as separate collections on `StaticElement`!
  */
 const isNonNamespaceAttribute = (attribute: StaticAttribute) => {
-	return attribute.qualifiedName.namespaceURI?.href !== XMLNS_NAMESPACE_URI;
+  return attribute.qualifiedName.namespaceURI?.href !== XMLNS_NAMESPACE_URI;
 };
 
 /**
@@ -24,20 +24,20 @@ const isNonNamespaceAttribute = (attribute: StaticAttribute) => {
  * @see {@link QualifiedName} for more detail.
  */
 export class AttributeDefinitionMap extends Map<QualifiedName, AttributeDefinition> {
-	static from(model: ModelDefinition, instanceNode: StaticElement) {
-		const nonNamespaceAttributes = instanceNode.attributes.filter(isNonNamespaceAttribute);
-		const definitions = nonNamespaceAttributes.map((attribute) => {
-			const bind = model.binds.getOrCreateBindDefinition(attribute.nodeset);
-			return new AttributeDefinition(model, bind, attribute);
-		});
-		return new this(definitions);
-	}
+  static from(model: ModelDefinition, instanceNode: StaticElement) {
+    const nonNamespaceAttributes = instanceNode.attributes.filter(isNonNamespaceAttribute);
+    const definitions = nonNamespaceAttributes.map((attribute) => {
+      const bind = model.binds.getOrCreateBindDefinition(attribute.nodeset);
+      return new AttributeDefinition(model, bind, attribute);
+    });
+    return new this(definitions);
+  }
 
-	private constructor(definitions: readonly AttributeDefinition[]) {
-		super(
-			definitions.map((attribute) => {
-				return [attribute.qualifiedName, attribute];
-			})
-		);
-	}
+  private constructor(definitions: readonly AttributeDefinition[]) {
+    super(
+      definitions.map((attribute) => {
+        return [attribute.qualifiedName, attribute];
+      })
+    );
+  }
 }

@@ -5,13 +5,13 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { DefaultEvaluator } from '../../src/evaluator/DefaultEvaluator.ts';
 
 describe("Specifying an Evaluator's root node", () => {
-	const DEPTH_3_TEXT = 'text node in element at depth 3, in the first nested root';
-	const DEPTH_2_TEXT = 'text node in an element at depth 2, in the second nested root';
+  const DEPTH_3_TEXT = 'text node in element at depth 3, in the first nested root';
+  const DEPTH_2_TEXT = 'text node in an element at depth 2, in the second nested root';
 
-	let testDocument: XMLDocument;
+  let testDocument: XMLDocument;
 
-	beforeEach(() => {
-		testDocument = xml`<doc-root>
+  beforeEach(() => {
+    testDocument = xml`<doc-root>
 			<depth-1-0>
 				<depth-2>
 					<depth-3>${DEPTH_3_TEXT}</depth-3>
@@ -22,149 +22,149 @@ describe("Specifying an Evaluator's root node", () => {
 				<depth-2>${DEPTH_2_TEXT}</depth-2>
 			</depth-1-1>
 		</doc-root>`;
-	});
+  });
 
-	const contextTypeCases = [
-		{ contextType: 'arbitrary' },
-		{ contextType: 'document' },
-		{ contextType: 'root' },
-	] as const;
+  const contextTypeCases = [
+    { contextType: 'arbitrary' },
+    { contextType: 'document' },
+    { contextType: 'root' },
+  ] as const;
 
-	describe.each(contextTypeCases)('with a $contextType context', ({ contextType }) => {
-		interface AbsoluteCase {
-			readonly rootNodeSelector: string | null;
-			readonly expression: string;
-			readonly expected: string;
-		}
+  describe.each(contextTypeCases)('with a $contextType context', ({ contextType }) => {
+    interface AbsoluteCase {
+      readonly rootNodeSelector: string | null;
+      readonly expression: string;
+      readonly expected: string;
+    }
 
-		const absoluteCases: readonly AbsoluteCase[] = [
-			{
-				rootNodeSelector: null,
-				expression: '/doc-root/depth-1-0/depth-2/depth-3',
-				expected: DEPTH_3_TEXT,
-			},
-			{
-				rootNodeSelector: 'doc-root',
-				expression: '/depth-1-0/depth-2/depth-3',
-				expected: DEPTH_3_TEXT,
-			},
-			{
-				rootNodeSelector: 'depth-2',
-				expression: '/depth-3',
-				expected: DEPTH_3_TEXT,
-			},
-			{
-				rootNodeSelector: 'depth-1-1',
-				expression: '/depth-2',
-				expected: DEPTH_2_TEXT,
-			},
-		];
+    const absoluteCases: readonly AbsoluteCase[] = [
+      {
+        rootNodeSelector: null,
+        expression: '/doc-root/depth-1-0/depth-2/depth-3',
+        expected: DEPTH_3_TEXT,
+      },
+      {
+        rootNodeSelector: 'doc-root',
+        expression: '/depth-1-0/depth-2/depth-3',
+        expected: DEPTH_3_TEXT,
+      },
+      {
+        rootNodeSelector: 'depth-2',
+        expression: '/depth-3',
+        expected: DEPTH_3_TEXT,
+      },
+      {
+        rootNodeSelector: 'depth-1-1',
+        expression: '/depth-2',
+        expected: DEPTH_2_TEXT,
+      },
+    ];
 
-		it.each(absoluteCases)(
-			'evaluates $expression from the root node with selector $selector to $expected',
-			({ expression, rootNodeSelector, expected }) => {
-				const rootNode =
-					rootNodeSelector == null ? null : testDocument.querySelector(rootNodeSelector)!;
+    it.each(absoluteCases)(
+      'evaluates $expression from the root node with selector $selector to $expected',
+      ({ expression, rootNodeSelector, expected }) => {
+        const rootNode =
+          rootNodeSelector == null ? null : testDocument.querySelector(rootNodeSelector)!;
 
-				const evaluator = new DefaultEvaluator({
-					rootNode,
-				});
+        const evaluator = new DefaultEvaluator({
+          rootNode,
+        });
 
-				let contextNode: Node;
+        let contextNode: Node;
 
-				switch (contextType) {
-					case 'document':
-						contextNode = testDocument;
-						break;
+        switch (contextType) {
+          case 'document':
+            contextNode = testDocument;
+            break;
 
-					case 'root':
-						contextNode = rootNode ?? testDocument;
-						break;
+          case 'root':
+            contextNode = rootNode ?? testDocument;
+            break;
 
-					case 'arbitrary':
-						contextNode = testDocument.querySelector('arbitrary-node')!;
-						break;
+          case 'arbitrary':
+            contextNode = testDocument.querySelector('arbitrary-node')!;
+            break;
 
-					default:
-						throw new UnreachableError(contextType);
-				}
+          default:
+            throw new UnreachableError(contextType);
+        }
 
-				const { stringValue } = evaluator.evaluate(
-					expression,
-					contextNode,
-					null,
-					XPathResult.STRING_TYPE
-				);
+        const { stringValue } = evaluator.evaluate(
+          expression,
+          contextNode,
+          null,
+          XPathResult.STRING_TYPE
+        );
 
-				expect(stringValue).toEqual(expected);
-			}
-		);
+        expect(stringValue).toEqual(expected);
+      }
+    );
 
-		interface IsolationCase {
-			readonly rootNodeSelector: string | null;
-			readonly expression: string;
-			readonly expectedNodeSelector: string | null;
-		}
+    interface IsolationCase {
+      readonly rootNodeSelector: string | null;
+      readonly expression: string;
+      readonly expectedNodeSelector: string | null;
+    }
 
-		const isolationCases: readonly IsolationCase[] = [
-			{
-				rootNodeSelector: null,
-				expression: '..',
-				expectedNodeSelector: null,
-			},
-			{
-				rootNodeSelector: 'doc-root',
-				expression: '..',
-				expectedNodeSelector: null,
-			},
-			{
-				rootNodeSelector: 'depth-1-0 depth-2',
-				expression: '/..',
-				expectedNodeSelector: null,
-			},
-			{
-				rootNodeSelector: 'depth-1-0 depth-2',
-				expression: '../..',
-				expectedNodeSelector: null,
-			},
-			{
-				rootNodeSelector: 'depth-1-0 depth-2',
-				expression: '//depth-1/*',
-				expectedNodeSelector: null,
-			},
-			{
-				rootNodeSelector: 'depth-1-0 depth-2',
-				expression: '//depth-1//*',
-				expectedNodeSelector: null,
-			},
-		];
+    const isolationCases: readonly IsolationCase[] = [
+      {
+        rootNodeSelector: null,
+        expression: '..',
+        expectedNodeSelector: null,
+      },
+      {
+        rootNodeSelector: 'doc-root',
+        expression: '..',
+        expectedNodeSelector: null,
+      },
+      {
+        rootNodeSelector: 'depth-1-0 depth-2',
+        expression: '/..',
+        expectedNodeSelector: null,
+      },
+      {
+        rootNodeSelector: 'depth-1-0 depth-2',
+        expression: '../..',
+        expectedNodeSelector: null,
+      },
+      {
+        rootNodeSelector: 'depth-1-0 depth-2',
+        expression: '//depth-1/*',
+        expectedNodeSelector: null,
+      },
+      {
+        rootNodeSelector: 'depth-1-0 depth-2',
+        expression: '//depth-1//*',
+        expectedNodeSelector: null,
+      },
+    ];
 
-		it.each(isolationCases)(
-			'evaluates $expression from the root node with selector $selector to null',
-			({ expression, rootNodeSelector, expectedNodeSelector }) => {
-				const rootNode =
-					rootNodeSelector == null ? null : testDocument.querySelector(rootNodeSelector);
-				const evaluator = new DefaultEvaluator({
-					rootNode,
-				});
-				const { singleNodeValue: actual } = evaluator.evaluate(
-					expression,
-					rootNode ?? testDocument,
-					null,
-					XPathResult.FIRST_ORDERED_NODE_TYPE
-				);
-				const expected =
-					expectedNodeSelector == null ? null : testDocument.querySelector(expectedNodeSelector)!;
+    it.each(isolationCases)(
+      'evaluates $expression from the root node with selector $selector to null',
+      ({ expression, rootNodeSelector, expectedNodeSelector }) => {
+        const rootNode =
+          rootNodeSelector == null ? null : testDocument.querySelector(rootNodeSelector);
+        const evaluator = new DefaultEvaluator({
+          rootNode,
+        });
+        const { singleNodeValue: actual } = evaluator.evaluate(
+          expression,
+          rootNode ?? testDocument,
+          null,
+          XPathResult.FIRST_ORDERED_NODE_TYPE
+        );
+        const expected =
+          expectedNodeSelector == null ? null : testDocument.querySelector(expectedNodeSelector)!;
 
-				expect(actual).toEqual(expected);
-			}
-		);
-	});
+        expect(actual).toEqual(expected);
+      }
+    );
+  });
 
-	describe('XForms root node (example)', () => {
-		const EXAMPLE_NAMESPACE = 'http://example.com';
+  describe('XForms root node (example)', () => {
+    const EXAMPLE_NAMESPACE = 'http://example.com';
 
-		const xformDocument = xml`<?xml version="1.0" encoding="utf-8"?>
+    const xformDocument = xml`<?xml version="1.0" encoding="utf-8"?>
 			<h:html
 				xmlns="http://www.w3.org/2002/xforms"
 				xmlns:ev="http://www.w3.org/2001/xml-events"
@@ -196,56 +196,56 @@ describe("Specifying an Evaluator's root node", () => {
 				<h:body>
 				</h:body>
 			</h:html>`;
-		const binds = Array.from(xformDocument.querySelectorAll('bind'));
+    const binds = Array.from(xformDocument.querySelectorAll('bind'));
 
-		it('tests 3 binds (check setup assumptions)', () => {
-			expect(binds.length).toEqual(3);
-		});
+    it('tests 3 binds (check setup assumptions)', () => {
+      expect(binds.length).toEqual(3);
+    });
 
-		const bindCases = binds.map((bind, index) => ({
-			bind,
-			index,
-		}));
-		const instanceLookup = new ScopedElementLookup(':scope > instance', 'instance');
+    const bindCases = binds.map((bind, index) => ({
+      bind,
+      index,
+    }));
+    const instanceLookup = new ScopedElementLookup(':scope > instance', 'instance');
 
-		it.each(bindCases)(
-			'gets the model node for the nodeset defined on the bind at index $index',
-			({ bind }) => {
-				const modelElement = xformDocument.querySelector(':root > head > model')!;
-				const primaryInstanceElement = instanceLookup.getElement(modelElement)!;
-				const evaluator = new DefaultEvaluator({
-					rootNode: primaryInstanceElement,
-				});
+    it.each(bindCases)(
+      'gets the model node for the nodeset defined on the bind at index $index',
+      ({ bind }) => {
+        const modelElement = xformDocument.querySelector(':root > head > model')!;
+        const primaryInstanceElement = instanceLookup.getElement(modelElement)!;
+        const evaluator = new DefaultEvaluator({
+          rootNode: primaryInstanceElement,
+        });
 
-				const nodeset = bind.getAttribute('nodeset')!;
-				const { singleNodeValue: actual } = evaluator.evaluate(
-					nodeset,
-					xformDocument,
-					null,
-					XPathResult.FIRST_ORDERED_NODE_TYPE
-				);
+        const nodeset = bind.getAttribute('nodeset')!;
+        const { singleNodeValue: actual } = evaluator.evaluate(
+          nodeset,
+          xformDocument,
+          null,
+          XPathResult.FIRST_ORDERED_NODE_TYPE
+        );
 
-				const expectedSelector = bind.getAttributeNS(EXAMPLE_NAMESPACE, 'expect-selector');
-				const expectedAttribute = bind.getAttributeNS(EXAMPLE_NAMESPACE, 'expect-attribute');
+        const expectedSelector = bind.getAttributeNS(EXAMPLE_NAMESPACE, 'expect-selector');
+        const expectedAttribute = bind.getAttributeNS(EXAMPLE_NAMESPACE, 'expect-attribute');
 
-				let expected: Node | null = null;
+        let expected: Node | null = null;
 
-				if (expectedSelector != null) {
-					expected = primaryInstanceElement.querySelector(`:scope ${expectedSelector}`)!;
-				}
+        if (expectedSelector != null) {
+          expected = primaryInstanceElement.querySelector(`:scope ${expectedSelector}`)!;
+        }
 
-				if (expectedAttribute != null) {
-					expected = primaryInstanceElement
-						.querySelector(`:scope [${expectedAttribute}]`)!
-						.getAttributeNode(expectedAttribute)!;
-				}
+        if (expectedAttribute != null) {
+          expected = primaryInstanceElement
+            .querySelector(`:scope [${expectedAttribute}]`)!
+            .getAttributeNode(expectedAttribute)!;
+        }
 
-				if (expected == null) {
-					throw new Error(`Invalid test case for bind ${bind.outerHTML}`);
-				}
+        if (expected == null) {
+          throw new Error(`Invalid test case for bind ${bind.outerHTML}`);
+        }
 
-				expect(actual).toEqual(expected);
-			}
-		);
-	});
+        expect(actual).toEqual(expected);
+      }
+    );
+  });
 });

@@ -2,7 +2,7 @@
  * @see {@link crypto}
  */
 interface Crypto {
-	randomUUID(): `${string}-${string}-${string}-${string}-${string}`;
+  randomUUID(): `${string}-${string}-${string}-${string}-${string}`;
 }
 
 /**

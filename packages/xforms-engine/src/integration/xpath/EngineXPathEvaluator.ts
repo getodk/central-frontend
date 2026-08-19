@@ -7,16 +7,16 @@ import { engineDOMAdapter } from './adapter/engineDOMAdapter.ts';
 import type { EngineXPathNode } from './adapter/kind.ts';
 
 interface EngineXPathEvaluatorOptions {
-	readonly rootNode: PrimaryInstance;
-	readonly itextTranslationsByLanguage: XFormsItextTranslationMap<ItextTranslationRootDefinition>;
-	readonly secondaryInstancesById: XFormsSecondaryInstanceMap<SecondaryInstanceRootDefinition>;
+  readonly rootNode: PrimaryInstance;
+  readonly itextTranslationsByLanguage: XFormsItextTranslationMap<ItextTranslationRootDefinition>;
+  readonly secondaryInstancesById: XFormsSecondaryInstanceMap<SecondaryInstanceRootDefinition>;
 }
 
 export class EngineXPathEvaluator extends XFormsXPathEvaluator<EngineXPathNode> {
-	constructor(options: EngineXPathEvaluatorOptions) {
-		super({
-			domAdapter: engineDOMAdapter,
-			...options,
-		});
-	}
+  constructor(options: EngineXPathEvaluatorOptions) {
+    super({
+      domAdapter: engineDOMAdapter,
+      ...options,
+    });
+  }
 }

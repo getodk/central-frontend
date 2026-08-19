@@ -1,11 +1,13 @@
+import DateTime from '../../../src/components/date-time.vue';
 import PublicLinkRow from '../../../src/components/public-link/row.vue';
 
 import testData from '../../data';
+import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mount } from '../../util/lifecycle';
 
 const mountComponent = () => mount(PublicLinkRow, {
-  props: { publicLink: testData.standardPublicLinks.last() },
+  props: { publicLink: testData.extendedPublicLinks.last() },
   container: {
     requestData: { form: testData.extendedForms.last() }
   }
@@ -15,7 +17,7 @@ describe('PublicLinkRow', () => {
   beforeEach(mockLogin);
 
   it('shows the display name', async () => {
-    testData.standardPublicLinks.createPast(1, {
+    testData.extendedPublicLinks.createPast(1, {
       displayName: 'My Public Link'
     });
     const row = mountComponent();
@@ -26,12 +28,12 @@ describe('PublicLinkRow', () => {
 
   describe('"Single Submission" column', () => {
     it('shows "Yes" if the once property is true', () => {
-      testData.standardPublicLinks.createPast(1, { once: true });
+      testData.extendedPublicLinks.createPast(1, { once: true });
       mountComponent().get('.once').text().should.equal('Yes');
     });
 
     it('shows "No" if the once property is false', () => {
-      testData.standardPublicLinks.createPast(1, { once: false });
+      testData.extendedPublicLinks.createPast(1, { once: false });
       mountComponent().get('.once').text().should.equal('No');
     });
   });
@@ -43,7 +45,7 @@ describe('PublicLinkRow', () => {
           enketoId: 'xyz',
           enketoOnceId: 'zyx'
         });
-        testData.standardPublicLinks.createPast(1, {
+        testData.extendedPublicLinks.createPast(1, {
           once: false,
           token: 'abc'
         });
@@ -56,7 +58,7 @@ describe('PublicLinkRow', () => {
           enketoId: null,
           enketoOnceId: 'zyx'
         });
-        testData.standardPublicLinks.createPast(1, {
+        testData.extendedPublicLinks.createPast(1, {
           once: false,
           token: 'abc'
         });
@@ -72,7 +74,7 @@ describe('PublicLinkRow', () => {
           enketoId: 'xyz',
           enketoOnceId: 'zyx'
         });
-        testData.standardPublicLinks.createPast(1, {
+        testData.extendedPublicLinks.createPast(1, {
           once: true,
           token: 'abc'
         });
@@ -85,7 +87,7 @@ describe('PublicLinkRow', () => {
           enketoId: 'xyz',
           enketoOnceId: null
         });
-        testData.standardPublicLinks.createPast(1, {
+        testData.extendedPublicLinks.createPast(1, {
           once: true,
           token: 'abc'
         });
@@ -100,20 +102,40 @@ describe('PublicLinkRow', () => {
         enketoId: 'xyz',
         enketoOnceId: 'zyx'
       });
-      testData.standardPublicLinks.createPast(1, { token: null });
+      testData.extendedPublicLinks.createPast(1, { token: null });
       mountComponent().get('.access-link').text().should.equal('Revoked');
     });
   });
 
+  it('shows createdAt', () => {
+    testData.extendedProjects.createPast(1, { appUsers: 1 });
+    const { createdAt } = testData.extendedPublicLinks.createPast(1).last();
+    const row = mountComponent();
+    row.getComponent(DateTime).props().iso.should.equal(createdAt);
+  });
+
   describe('revoke button', () => {
     it('shows the button if the public link has a token', () => {
-      testData.standardPublicLinks.createPast(1, { token: 'abc' });
-      mountComponent().get('.btn-danger').should.be.visible();
+      testData.extendedPublicLinks.createPast(1, { token: 'abc' });
+      mountComponent().get('.revoke-button').should.be.visible();
     });
 
     it('does not render button if public link does not have a token', () => {
-      testData.standardPublicLinks.createPast(1, { token: null });
-      mountComponent().find('.btn-danger').exists().should.be.false;
+      testData.extendedPublicLinks.createPast(1, { token: null });
+      mountComponent().find('.revoke-button').exists().should.be.false;
+    });
+  });
+
+  it('shows a column header for each actor property', () => {
+    testData.extendedForms.createPast(1);
+    testData.extendedPublicLinks.createPast(1);
+    testData.actorProperties.createPast(1, { name: 'region' });
+    testData.actorProperties.createPast(1, { name: 'department' });
+    return load('/projects/1/forms/f/public-links').then(app => {
+      const headers = app.findAll('#public-link-table .table-freeze-scrolling th');
+      const headerTexts = headers.map(h => h.text());
+      headerTexts.should.include('region');
+      headerTexts.should.include('department');
     });
   });
 });

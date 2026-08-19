@@ -108,6 +108,11 @@ export default memoizeForContainer(({ router, requestData }) => {
     return formPath(projectIdOrDraft, xmlFormId, suffix);
   };
 
+  const formPreviewPathWebForms = (projectIdOrDraft, xmlFormId, draft) => {
+    const query = '?webforms=true';
+    return formPreviewPath(projectIdOrDraft, xmlFormId, draft) + query;
+  };
+
   const submissionPath = (projectId, xmlFormId, instanceId, suffix) => {
     const encodedFormId = encodeURIComponent(xmlFormId);
     const encodedInstanceId = encodeURIComponent(instanceId);
@@ -143,7 +148,7 @@ export default memoizeForContainer(({ router, requestData }) => {
 
   return {
     projectPath,
-    formPath, publishedFormPath, primaryFormPath, formPreviewPath,
+    formPath, publishedFormPath, primaryFormPath, formPreviewPath, formPreviewPathWebForms,
     submissionPath, newSubmissionPath, offlineSubmissionPath, editSubmissionPath,
     datasetPath,
     entityPath,

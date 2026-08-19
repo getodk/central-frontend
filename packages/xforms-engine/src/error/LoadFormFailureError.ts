@@ -21,50 +21,50 @@ type PartiallyKnownType<T> =
  * now, in case that could cause confusion in client integrations.
  */
 interface MaybeFile extends Blob {
-	readonly lastModified?: PartiallyKnownType<number>;
-	readonly name?: PartiallyKnownType<string>;
-	readonly webkitRelativePath?: PartiallyKnownType<string>;
+  readonly lastModified?: PartiallyKnownType<number>;
+  readonly name?: PartiallyKnownType<string>;
+  readonly webkitRelativePath?: PartiallyKnownType<string>;
 }
 
 const blobDescription = (resource: MaybeFile): string => {
-	const { name } = resource;
+  const { name } = resource;
 
-	if (typeof name === 'string') {
-		return name;
-	}
+  if (typeof name === 'string') {
+    return name;
+  }
 
-	let commonConstructorName: 'Blob' | 'File';
+  let commonConstructorName: 'Blob' | 'File';
 
-	if (resource instanceof File) {
-		commonConstructorName = 'File';
-	} else {
-		commonConstructorName = 'Blob';
-	}
+  if (resource instanceof File) {
+    commonConstructorName = 'File';
+  } else {
+    commonConstructorName = 'Blob';
+  }
 
-	return `Unknown ${commonConstructorName} data`;
+  return `Unknown ${commonConstructorName} data`;
 };
 
 interface FormResourceMetadata {
-	readonly description: string;
-	readonly rawData: string | null;
+  readonly description: string;
+  readonly rawData: string | null;
 }
 
 const formResourceMetadata = (resource: FormResource): FormResourceMetadata | undefined => {
-	if (resource instanceof Blob) {
-		return {
-			description: blobDescription(resource),
-			rawData: null,
-		};
-	}
+  if (resource instanceof Blob) {
+    return {
+      description: blobDescription(resource),
+      rawData: null,
+    };
+  }
 
-	if (resource instanceof URL) {
-		return {
-			description: resource.href,
-			rawData: null,
-		};
-	}
+  if (resource instanceof URL) {
+    return {
+      description: resource.href,
+      rawData: null,
+    };
+  }
 
-	return;
+  return;
 };
 
 /**
@@ -73,16 +73,16 @@ const formResourceMetadata = (resource: FormResource): FormResourceMetadata | un
  * and modeling of form loading errors (specifically).
  */
 export class LoadFormFailureError extends AggregateError {
-	constructor(resource: FormResource, errors: readonly Error[]) {
-		const metadata = formResourceMetadata(resource);
-		const errorMessages = errors.map((error) => error.message || 'Unknown error').join('\n');
-		const message = metadata?.description
-			? `Form source: ${metadata.description}\n${errorMessages}`
-			: errorMessages;
-		super(errors, message);
+  constructor(resource: FormResource, errors: readonly Error[]) {
+    const metadata = formResourceMetadata(resource);
+    const errorMessages = errors.map((error) => error.message || 'Unknown error').join('\n');
+    const message = metadata?.description
+      ? `Form source: ${metadata.description}\n${errorMessages}`
+      : errorMessages;
+    super(errors, message);
 
-		const [head, ...tail] = errors;
-		this.stack =
-			typeof head?.stack === 'string' && !tail.length ? head.stack : 'No error trace available.';
-	}
+    const [head, ...tail] = errors;
+    this.stack =
+      typeof head?.stack === 'string' && !tail.length ? head.stack : 'No error trace available.';
+  }
 }

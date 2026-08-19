@@ -30,6 +30,10 @@
       "formAccess": {
         "string": "フォームへのアクセス",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
+      },
+      "customProperties": {
+        "string": "",
+        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     }
   },
@@ -198,6 +202,10 @@
         "delete": {
           "string": "削除",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
+        },
+        "property_set": {
+          "string": "",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
         }
       },
       "analytics": {
@@ -244,6 +252,12 @@
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
+      "actor_property": {
+        "create": {
+          "string": "",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Actor Property."
+        }
+      },
       "field_key": {
         "assignment_create": {
           "string": "アクセス権の付与",
@@ -260,6 +274,10 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "update_draft_replace": {
+          "string": "",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
+        },
+        "update_draft_update": {
           "string": "",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
@@ -451,6 +469,10 @@
       "string": "",
       "developer_comment": "This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms"
     },
+    "tryAgain": {
+      "string": "",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "undo": {
       "string": "",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -471,10 +493,6 @@
       "string": "プレビューを隠す",
       "developer_comment": "This text is shown on a button that the user clicks to hide a preview of something"
     },
-    "newPreview": {
-      "string": "",
-      "developer_comment": "This text is show on a button that the user clicks to see the Form preview in the new Web Forms component"
-    },
     "expand": {
       "string": "",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -490,6 +508,10 @@
     "reset": {
       "string": "",
       "developer_comment": "This text is shown on a button that resets the data filters"
+    },
+    "change": {
+      "string": "",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
     }
   },
   "field": {
@@ -617,6 +639,10 @@
     "lastEntity": {
       "string": "",
       "developer_comment": "This is the text of a table column header. The column shows the date and time of the newest entity"
+    },
+    "value": {
+      "string": "",
+      "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of a property of an object (App User, Public Link and Data Collector)"
     }
   },
   "plural": {
@@ -700,6 +726,10 @@
     },
     "forms": {
       "string": "フォーム",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "newForm": {
+      "string": "",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "formAttachments": {
@@ -1018,13 +1048,21 @@
       "string": "",
       "developer_comment": "This text is shown on its own before details about a warning."
     },
-    "beta": {
-      "string": ""
+    "recommended": {
+      "string": "",
+      "developer_comment": "Standalone text shown as a badge next to a recommendation. Not part of a longer phrase."
     },
     "none": {
       "string": ""
     },
     "search": {
+      "string": ""
+    },
+    "useEnketo": {
+      "string": "",
+      "developer_comment": "The word \"Enketo\" should not be translated"
+    },
+    "updateInProgress": {
       "string": ""
     }
   },
@@ -1415,6 +1453,15 @@
           "string": ""
         },
         "num_dataset_properties_deleted": {
+          "string": ""
+        },
+        "num_owner_only_datasets_per_project": {
+          "string": ""
+        },
+        "num_custom_user_properties": {
+          "string": ""
+        },
+        "num_user_property_filtered_datasets": {
           "string": ""
         },
         "num_properties": {
@@ -1932,6 +1979,45 @@
           "string": ""
         }
       },
+      "filterByProperty": {
+        "label": {
+          "string": ""
+        },
+        "description": {
+          "string": ""
+        },
+        "entityPropertyLabel": {
+          "string": "",
+          "developer_comment": "This text is shown above the access rule filter dropdown. Translators are free not to translate this literally"
+        },
+        "entityPropertyPlaceholder": {
+          "string": "",
+          "developer_comment": "Placeholder text shown on a access rule filter dropdown."
+        },
+        "userPropertyLabel": {
+          "string": "",
+          "developer_comment": "This text is shown above the access rule filter dropdown. Translators are free not to translate this literally"
+        },
+        "userPropertyPlaceholder": {
+          "string": "",
+          "developer_comment": "Placeholder text shown on a access rule filter dropdown"
+        },
+        "disabled": {
+          "datasetProperties": {
+            "string": ""
+          },
+          "userProperties": {
+            "string": ""
+          },
+          "both": {
+            "string": ""
+          }
+        },
+        "currentRule": {
+          "string": "",
+          "developer_comment": "{entityProperty} is the name of an Entity property. {userProperty} is the name of a User property."
+        }
+      },
       "falseModal": {
         "introduction": {
           "string": ""
@@ -1954,6 +2040,23 @@
         },
         "changeToTrue": {
           "string": ""
+        },
+        "changeToProperty": {
+          "string": ""
+        }
+      },
+      "accessByFilterRule": {
+        "title": {
+          "string": ""
+        },
+        "introduction": {
+          "string": ""
+        },
+        "action": {
+          "save": {
+            "string": "",
+            "developer_comment": "This is the text for an action, for example, the text of a button."
+          }
         }
       }
     },
@@ -2807,6 +2910,16 @@
         "developer_comment": "Text for a hovering feedback button shown anchored to right of screen. If your language doesn't have a single word or short phrase for \"feedback\", consider something like \"comments\" or \"reactions\"."
       }
     },
+    "FieldKeyEdit": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up for editing an App User. {displayName} is the the name of the App User"
+      },
+      "displayNameLabel": {
+        "string": "",
+        "developer_comment": "Shown as label before the display name of the App User in the edit pop-up."
+      }
+    },
     "FieldKeyList": {
       "action": {
         "create": {
@@ -2841,6 +2954,10 @@
           "string": "最終利用日時",
           "developer_comment": "This is the text of a table column header."
         },
+        "lastUsedAndActions": {
+          "string": "",
+          "developer_comment": "Header for the table column that shows the last used date and action buttons."
+        },
         "configureClient": {
           "string": "クライアントの設定",
           "developer_comment": "Header for the table column that shows QR codes to configure data collection clients such as ODK Collect."
@@ -2852,6 +2969,9 @@
       "alert": {
         "create": {
           "string": "アプリユーザー\"{displayName}\"は正常に作成されました。"
+        },
+        "edit": {
+          "string": ""
         },
         "revoke": {
           "string": ""
@@ -2998,6 +3118,10 @@
         "developer_comment": "This text is shown for an App User whose access has been revoked."
       },
       "action": {
+        "editAppUser": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
         "revokeAccess": {
           "string": "アクセス権の取消",
           "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -3033,7 +3157,7 @@
       },
       "orDrag": {
         "string": "",
-        "developer_comment": "This text is shown next to a button with the text \"Choose files\"."
+        "developer_comment": "This text is shown next to a button with the text \"choose files\"."
       },
       "problem": {
         "noneUploaded": {
@@ -3320,6 +3444,17 @@
         "409_6": {
           "string": "バージョン名が以前の下書き、または削除されたフォームと競合しています。以下の入力項目から新しいものに変更するか、もしくは新しい定義フォームをアップロードしてください。"
         }
+      },
+      "field": {
+        "note": {
+          "string": "",
+          "developer_comment": "This is the text of a form field."
+        }
+      },
+      "placeholder": {
+        "note": {
+          "string": ""
+        }
       }
     },
     "FormDraftQrPanel": {
@@ -3442,6 +3577,10 @@
       }
     },
     "FormEditDef": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is shown for the Draft Form. {version} is the version of the Form defined in its definition."
+      },
       "subtitle": {
         "string": "",
         "developer_comment": "This refers to the draft version of a Form."
@@ -3449,20 +3588,6 @@
       "changed": {
         "string": "",
         "developer_comment": "This refers to the draft version of a Form."
-      },
-      "versionName": {
-        "string": "",
-        "developer_comment": "This is shown for a Form version."
-      },
-      "action": {
-        "upload": {
-          "string": "",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
-      "withinDef": {
-        "string": "",
-        "developer_comment": "This text is shown above a list of items that are part of the Form Definition."
       }
     },
     "FormEditDraftControls": {
@@ -3500,10 +3625,6 @@
           }
         }
       },
-      "cannotDeleteProperties": {
-        "string": "",
-        "developer_comment": "\"Properties\" refers to Entity properties."
-      },
       "notEntityRelated": {
         "string": "",
         "developer_comment": "\"Definition\" refers to a Form Definition."
@@ -3515,12 +3636,32 @@
     "FormEditPublishedVersion": {
       "title": {
         "string": "",
-        "developer_comment": "This refers to the current version of a Form."
+        "developer_comment": "This refers to the current version of a Form. {version} is the version of the published Form, defined in its definition."
       },
       "subtitle": {
         "published": {
           "string": "",
           "developer_comment": "This shows the date and time at which the current version of the Form was published, for example: \"Published 2020/01/01 01:23\". {dateTime} may show a formatted date like \"2020/01/01\", or it may use a word like \"today\", \"yesterday\", or \"Sunday\"."
+        }
+      }
+    },
+    "FormEditWebForm": {
+      "title": {
+        "string": ""
+      },
+      "description": {
+        "full": {
+          "string": "",
+          "developer_comment": "{learnMore} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nlearn more"
+        },
+        "learnMore": {
+          "string": "",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {learnMore} is in the following text:\n\nNewly created Forms now use the ODK Web Forms experience by default for previews, web submissions and submission editing. Some advanced form features may not yet be fully supported, {learnMore}."
+        }
+      },
+      "alert": {
+        "settingSaved": {
+          "string": ""
         }
       }
     },
@@ -3589,16 +3730,6 @@
       }
     },
     "FormNew": {
-      "title": {
-        "create": {
-          "string": "フォームの作成",
-          "developer_comment": "This is the title at the top of a pop-up."
-        },
-        "update": {
-          "string": "新規の定義フォームのアップロード",
-          "developer_comment": "This is the title at the top of a pop-up."
-        }
-      },
       "introduction": {
         "0": {
           "create": {
@@ -3645,9 +3776,6 @@
         }
       },
       "alert": {
-        "fileRequired": {
-          "string": "ファイルを選択"
-        },
         "fileNotReadable": {
           "string": ""
         }
@@ -3699,6 +3827,12 @@
           "update": {
             "string": ""
           }
+        }
+      },
+      "title": {
+        "create": {
+          "string": "フォームの作成",
+          "developer_comment": "This is the title at the top of a page."
         }
       }
     },
@@ -3774,15 +3908,25 @@
       "webFormsSetting": {
         "webForms": {
           "string": "",
-          "developer_comment": "Title of a section on Forms settings page, that allows users to opt-in for ODK Web Forms"
+          "developer_comment": "Title of a section on Forms settings page, that allows users to choose which form experience they want to use"
         },
         "description": {
           "string": "",
           "developer_comment": "Description of a section. {formName} is replaced with the name of the Form"
         },
-        "enketoDefault": {
+        "enketoDescription": {
           "string": "",
-          "developer_comment": "The word \"Enketo\" should not be translated"
+          "developer_comment": "This text is shown under the option of Enketo for Form settings."
+        },
+        "odkWebFormsDescription": {
+          "full": {
+            "string": "",
+            "developer_comment": "{preview} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nSee a preview"
+          },
+          "preview": {
+            "string": "",
+            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {preview} is in the following text:\n\nA modern experience that will replace Enketo over time. {preview}."
+          }
         },
         "enketoSelected": {
           "string": "",
@@ -3804,11 +3948,6 @@
           "string": "",
           "developer_comment": "This text is shown as one option in a dropdown menu for choosing how to sort a list of Forms."
         }
-      }
-    },
-    "FormSubmission": {
-      "formNotFound": {
-        "string": ""
       }
     },
     "FormSubmissions": {
@@ -3906,6 +4045,10 @@
       "current": {
         "string": "",
         "developer_comment": "This is a label shown for the current version of a Form."
+      },
+      "notes": {
+        "string": "",
+        "developer_comment": "This is the label shown before the notes entered when a Form version was published. {notes} is the actual notes text."
       }
     },
     "FormVersionString": {
@@ -3934,26 +4077,13 @@
     },
     "FormWebFormsSettingsConfirmation": {
       "webformsConfirmation": {
+        "description": {
+          "string": "",
+          "developer_comment": "The words \"ODK Web Forms\" and \"Enketo\" should not be translated"
+        },
         "useOdkWebForms": {
           "string": "",
           "developer_comment": "The words \"ODK Web Forms\" should not be translated"
-        },
-        "intro": {
-          "string": ""
-        },
-        "description": {
-          "full": {
-            "string": "",
-            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {seeSupportedFeatures} has the text: see supported features\n- {previewYourForm} has the text: preview your form"
-          },
-          "seeSupportedFeatures": {
-            "string": "",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {seeSupportedFeatures} is in the following text:\n\nSome functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in."
-          },
-          "previewYourForm": {
-            "string": "",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {previewYourForm} is in the following text:\n\nSome functionality might be lost; {seeSupportedFeatures} for details and {previewYourForm} before opting in."
-          }
         }
       },
       "enketoConfirmation": {
@@ -4118,38 +4248,10 @@
         "all": {
           "string": "{count, plural, other {}}"
         },
-        "first": {
-          "string": "{count, plural, other {}}",
-          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
-        },
-        "middle": {
-          "string": "{count, plural, other {}}",
-          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
-        },
-        "last": {
-          "multiple": {
-            "string": "{count, plural, other {}}"
-          },
-          "one": {
-            "string": ""
-          }
-        },
         "filtered": {
           "withoutCount": {
             "string": "",
             "developer_comment": "This text is shown when the number of Entities loading is unknown."
-          },
-          "middle": {
-            "string": "{count, plural, other {}}",
-            "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
-          },
-          "last": {
-            "multiple": {
-              "string": "{count, plural, other {}}"
-            },
-            "one": {
-              "string": ""
-            }
           }
         }
       }
@@ -4224,6 +4326,44 @@
             "string": "この操作は取り消しできません。",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {noUndo} is in the following text:\n\n{noUndo}, but the ability to unarchive a Project is planned for a future release."
           }
+        }
+      }
+    },
+    "ProjectCustomPropertiesList": {
+      "heading": {
+        "0": {
+          "string": "",
+          "developer_comment": "A brief introduction to Custom Properties shown for the current project"
+        }
+      },
+      "emptyTable": {
+        "string": ""
+      },
+      "created": {
+        "string": "",
+        "developer_comment": "Shown after a custom property is successfully created."
+      },
+      "action": {
+        "create": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
+    "ProjectCustomPropertiesNew": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up."
+      },
+      "introduction": {
+        "string": ""
+      },
+      "newPropertyName": {
+        "string": ""
+      },
+      "problem": {
+        "409_3": {
+          "string": ""
         }
       }
     },
@@ -4327,7 +4467,7 @@
         "1": {
           "introduction": {
             "0": {
-              "string": "まず、あなたはパスフレーズを設定する必要があります。このパスフレーズは、あなたの提出済フォームを復号する際に求められます。あなたのプライバシーを保護するため、サーバーはパスフレーズを記録しません。設定されたパスフレーズを知っている者のみがあなたの提出済フォームデータを復号できます。"
+              "string": ""
             },
             "1": {
               "full": {
@@ -4336,7 +4476,7 @@
               },
               "no": {
                 "string": "ません",
-                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {no} is in the following text:\n\nIf you lose the passphrase, there is {no} way to recover it or your data!"
+                "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {no} is in the following text:\n\nIf you lose this encryption password, there is {no} way to recover it or your data."
               }
             }
           }
@@ -4349,13 +4489,13 @@
       },
       "field": {
         "hint": {
-          "string": "パスフレーズのヒント（任意）",
+          "string": "",
           "developer_comment": "This is the text of a form field."
         }
       },
       "alert": {
         "passphraseTooShort": {
-          "string": "パスフレーズを10文字以上で入力してください。"
+          "string": ""
         }
       }
     },
@@ -4762,6 +4902,16 @@
         "developer_comment": "This is help text for the \"Single Submission\" checkbox."
       }
     },
+    "PublicLinkEdit": {
+      "title": {
+        "string": "",
+        "developer_comment": "This is the title at the top of a pop-up for editing a Public Access Link. {displayName} is the display name of the Public Link"
+      },
+      "displayNameLabel": {
+        "string": "",
+        "developer_comment": "Shown as label before the display name of the Public Access Link in the edit pop-up."
+      }
+    },
     "PublicLinkList": {
       "action": {
         "create": {
@@ -4798,6 +4948,9 @@
         "create": {
           "string": ""
         },
+        "edit": {
+          "string": ""
+        },
         "revoke": {
           "string": "一般公開リンク\"{displayName}\"の無効化に成功しました。以後、このリンクでのサフォームの提出は受付られません。"
         }
@@ -4816,6 +4969,10 @@
     },
     "PublicLinkRow": {
       "action": {
+        "edit": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
         "revoke": {
           "string": "無効化する",
           "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -4844,6 +5001,10 @@
         "accessLink": {
           "string": "アクセスリンク",
           "developer_comment": "This is the text of a table column header."
+        },
+        "createdAtAndActions": {
+          "string": "",
+          "developer_comment": "This text combines existing translated words. And it is shown on a column on the Public Link table that shows created at and action buttons."
         }
       }
     },
@@ -4977,12 +5138,12 @@
       },
       "introduction": {
         "0": {
-          "string": "このデータをダウンロードするためには、パスフレーズを入力する必要があります。パスフレーズは、データをダウンロードする際の復号時にのみ使用され、その後、サーバーはパスフレーズを保持しません。"
+          "string": ""
         }
       },
       "hint": {
         "string": "ヒント：{hint}",
-        "developer_comment": "This text is shown if there is a passphrase hint. {hint} is the passphrase hint."
+        "developer_comment": "This text is shown if there is an encryption password hint. {hint} is the encryption password hint."
       },
       "noRepeat": {
         "string": "このフォームはリピート項目がありません。",
@@ -5164,7 +5325,10 @@
       },
       "deleted": {
         "string": "",
-        "developer_comment": "Shown in the Submission feed when dataset or entity has been deleted."
+        "developer_comment": "This text is shown next to an Entity when the Entity has been deleted."
+      },
+      "entityErrorInstructions": {
+        "string": ""
       }
     },
     "SubmissionFieldDropdown": {
@@ -5292,38 +5456,10 @@
         "all": {
           "string": "{count, plural, other {{count}の提出済フォームを読み込み中...}}"
         },
-        "first": {
-          "string": "{count, plural, other {{count}件の提出済フォームの内、最初の{top}を読み込み中...}}",
-          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
-        },
-        "middle": {
-          "string": "{count, plural, other {残り{count}件の提出済フォームの内、さらに{top}件を読み込み中...}}",
-          "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
-        },
-        "last": {
-          "multiple": {
-            "string": "{count, plural, other {最後の{count}件の提出済フォームを読み込み中...}}"
-          },
-          "one": {
-            "string": "最後の提出済フォームを読み込み中..."
-          }
-        },
         "filtered": {
           "withoutCount": {
             "string": "照合できる提出済フォームの読み込み中...",
             "developer_comment": "This text is shown when the number of Submissions loading is unknown."
-          },
-          "middle": {
-            "string": "{count, plural, other {一致する残り{count}件の提出済フォームの内、さらに{top}件を読み込み中...}}",
-            "developer_comment": "{top} is a number that is either 250 or 1000. {count} may be any number that is at least 250. The string will be pluralized based on {count}."
-          },
-          "last": {
-            "multiple": {
-              "string": "{count, plural, other {一致する最後の{count}件の提出済フォームを読み込み中...}}"
-            },
-            "one": {
-              "string": "最後の照合できる提出済フォームを読み込み中..."
-            }
           }
         }
       }
@@ -5596,91 +5732,6 @@
       },
       "invitationPending": {
         "string": ""
-      }
-    },
-    "WebFormRenderer": {
-      "previewModal": {
-        "title": {
-          "string": ""
-        },
-        "body": {
-          "string": ""
-        }
-      },
-      "submissionModal": {
-        "title": {
-          "string": ""
-        },
-        "body": {
-          "string": ""
-        },
-        "action": {
-          "fillOutAgain": {
-            "string": "",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          }
-        }
-      },
-      "thankYouModal": {
-        "title": {
-          "string": ""
-        },
-        "body": {
-          "string": ""
-        }
-      },
-      "editSubmissionModal": {
-        "title": {
-          "string": ""
-        },
-        "body": {
-          "string": ""
-        }
-      },
-      "errorModal": {
-        "title": {
-          "string": ""
-        },
-        "body": {
-          "string": ""
-        }
-      },
-      "sendingDataModal": {
-        "title": {
-          "string": ""
-        },
-        "body": {
-          "string": ""
-        }
-      },
-      "sessionTimeoutModal": {
-        "title": {
-          "string": ""
-        },
-        "body": {
-          "full": {
-            "string": "",
-            "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
-          },
-          "here": {
-            "string": "",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nPlease log in {here} in a different browser tab and try again."
-          }
-        }
-      },
-      "retryModal": {
-        "title": {
-          "string": ""
-        },
-        "body": {
-          "string": ""
-        },
-        "action": {
-          "tryAgain": {
-            "string": "",
-            "developer_comment": "This is the text for an action, for example, the text of a button."
-          }
-        }
       }
     },
     "WhatsNew": {

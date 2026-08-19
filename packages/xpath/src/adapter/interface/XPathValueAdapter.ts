@@ -6,5 +6,5 @@ import type { XPathNode } from './XPathNode.ts';
  * the same semantics.
  */
 export interface XPathValueAdapter<T extends XPathNode> {
-	readonly getNodeValue: (node: T) => string;
+  readonly getNodeValue: (node: T) => string;
 }

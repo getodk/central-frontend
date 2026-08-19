@@ -7,35 +7,37 @@ import type { AnyBindPreloadDefinition } from '../../parse/model/BindPreloadDefi
 import type { ModelDefinition } from '../../parse/model/ModelDefinition.ts';
 import type { EvaluationContext } from './EvaluationContext.ts';
 import type { InstanceConfig } from './InstanceConfig.ts';
+import type { ActionDefinition } from '../../parse/model/ActionDefinition.ts';
 
 export interface InstanceValueContextDocument {
-	readonly initializationMode: FormInstanceInitializationMode;
-	readonly isAttached: Accessor<boolean>;
-	getBackgroundGeopoint: Accessor<Promise<string>>;
+  readonly initializationMode: FormInstanceInitializationMode;
+  readonly isAttached: Accessor<boolean>;
+  getBackgroundGeopoint: Accessor<Promise<string>>;
 }
 
 export type DecodeInstanceValue = (value: string) => string;
 
 interface InstanceValueContextDefinitionBind {
-	readonly preload: AnyBindPreloadDefinition | null;
-	readonly calculate: BindComputationExpression<'calculate'> | null;
-	readonly readonly: BindComputationExpression<'readonly'>;
+  readonly preload: AnyBindPreloadDefinition | null;
+  readonly calculate: BindComputationExpression<'calculate'> | null;
+  readonly readonly: BindComputationExpression<'readonly'>;
 }
 
 export interface InstanceValueContextDefinition {
-	readonly bind: InstanceValueContextDefinitionBind;
-	readonly template: StaticLeafElement;
-	readonly model: ModelDefinition;
+  readonly bind: InstanceValueContextDefinitionBind;
+  readonly template: StaticLeafElement;
+  readonly model: ModelDefinition;
 }
 
 export interface InstanceValueContext extends EvaluationContext {
-	readonly scope: ReactiveScope;
-	readonly rootDocument: InstanceValueContextDocument;
-	readonly definition: InstanceValueContextDefinition;
-	readonly instanceNode: StaticLeafElement | null;
-	readonly instanceConfig: InstanceConfig;
-	readonly decodeInstanceValue: DecodeInstanceValue;
+  readonly scope: ReactiveScope;
+  readonly rootDocument: InstanceValueContextDocument;
+  readonly definition: InstanceValueContextDefinition;
+  readonly instanceNode: StaticLeafElement | null;
+  readonly instanceConfig: InstanceConfig;
+  readonly decodeInstanceValue: DecodeInstanceValue;
+  readonly valueChangedActions: ActionDefinition[];
 
-	isReadonly(): boolean;
-	isRelevant(): boolean;
+  isReadonly(): boolean;
+  isRelevant(): boolean;
 }

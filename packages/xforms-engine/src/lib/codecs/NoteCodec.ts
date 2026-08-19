@@ -14,19 +14,19 @@ export type NoteInputValue<V extends ValueType> =
 	| null;
 
 export class NoteCodec<V extends ValueType> extends ValueCodec<
-	V,
-	NoteRuntimeValue<V>,
-	NoteInputValue<V>
+  V,
+  NoteRuntimeValue<V>,
+  NoteInputValue<V>
 > {
-	constructor(baseCodec: SharedValueCodec<V>) {
-		const encodeValue = (value: NoteInputValue<V>): string => {
-			return baseCodec.encodeValue(value ?? '');
-		};
+  constructor(baseCodec: SharedValueCodec<V>) {
+    const encodeValue = (value: NoteInputValue<V>): string => {
+      return baseCodec.encodeValue(value ?? '');
+    };
 
-		const decodeValue = (value: string): NoteRuntimeValue<V> => {
-			return value === '' ? null : baseCodec.decodeValue(value);
-		};
+    const decodeValue = (value: string): NoteRuntimeValue<V> => {
+      return value === '' ? null : baseCodec.decodeValue(value);
+    };
 
-		super(baseCodec.valueType, encodeValue, decodeValue);
-	}
+    super(baseCodec.valueType, encodeValue, decodeValue);
+  }
 }

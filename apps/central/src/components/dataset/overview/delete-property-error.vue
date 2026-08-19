@@ -148,12 +148,18 @@ defineEmits(['hide']);
 {
   "de": {
     "title": "Eigenschaft löschen",
+    "intro": "Bevor Sie die Eigenschaft löschen können “{propertyName}”, Sie müssen:",
+    "clearEntities": "seinen Wert in {count} Objekt löschen | seinen Wert in {count} Objekte löschen",
+    "unlinkForms": "die Verknüpfung zu dem {count} Formular aufheben, das es festgelegt hat | die Verknüpfung zu dem {count} Formulare aufheben, das es festgelegt hat",
     "relatedToEntities": "Eingestellt auf {count} Objekt | Eingestellt auf {count} Objekte",
     "moreEntities": "und {count} weitere Entität | und {count} weitere Entitäten",
     "relatedToForms": "Festgelegt von {count} Formular | Festgelegt von {count} Formulare"
   },
   "es": {
     "title": "Borrar propiedad",
+    "intro": "Antes de poder eliminar la propiedad “{propertyName}”, debes:",
+    "clearEntities": "Borrar su valor en {count} entidad | Borrar su valor en {count} entidades | Borrar su valor en {count} entidades",
+    "unlinkForms": "Desvincular {count} Formulario que lo configuran | Desvincular {count} Formularios que lo configuran | Desvincular {count} Formularios que lo configuran",
     "relatedToEntities": "Establecido en {count} Entidad... | Establecido en {count} Entidades... | Establecido en {count} Entidades...",
     "moreEntities": "y otra {count} entidad | y otras {count} entidades | y otras {count} entidades",
     "relatedToForms": "Establecido por {count} formulario | Establecido por {count} formularios | Establecido por {count} Forms"
@@ -169,6 +175,9 @@ defineEmits(['hide']);
   },
   "it": {
     "title": "Elimina proprietà",
+    "intro": "Prima di eliminare la proprietà “{propertyName}”, devi:",
+    "clearEntities": "Cancellare il suo valore in {count} Entità | Cancellare il suo valore in {count} Entità | Cancellare il suo valore in {count} Entità",
+    "unlinkForms": "Rimuovere il collegamento al {count} che lo definisce | Rimuovere il collegamento ai {count} che lo definiscono | Rimuovere il collegamento al {count} che lo definisce",
     "relatedToEntities": "Impostato in {count} Entità... | Impostato in {count} Entità... | Impostato in {count} Entità...",
     "moreEntities": "e {count} Entità in più | e {count} Entità in più | e {count} Entità in più",
     "relatedToForms": "Impostato da {count} Formulario | Impostato da {count} Formulari | Impostato da {count} Formulari"

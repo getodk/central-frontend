@@ -4,11 +4,11 @@ import type { PartiallyKnownString } from '@getodk/common/types/string/Partially
 type SymbolIterator = typeof Symbol.iterator;
 
 type TokenListKey<CanonicalToken extends string> =
-	| PartiallyKnownString<CanonicalToken>
-	| SymbolIterator;
+  | PartiallyKnownString<CanonicalToken>
+  | SymbolIterator;
 
 type TokenListIterator<CanonicalToken extends string> = IterableIterator<
-	PartiallyKnownString<CanonicalToken>
+  PartiallyKnownString<CanonicalToken>
 >;
 
 type PassthroughTokenList = Readonly<Record<string, boolean>>;
@@ -27,14 +27,14 @@ export type TokenList<CanonicalToken extends string = string> =
 	};
 
 interface TokenListAlias<CanonicalToken extends string> {
-	readonly fromAlias: string;
-	readonly toCanonical: CanonicalToken;
+  readonly fromAlias: string;
+  readonly toCanonical: CanonicalToken;
 }
 
 type TokenAliases<CanonicalToken extends string> = ReadonlyArray<TokenListAlias<CanonicalToken>>;
 
 interface TokenListParserOptions<CanonicalToken extends string> {
-	readonly aliases?: TokenAliases<CanonicalToken>;
+  readonly aliases?: TokenAliases<CanonicalToken>;
 }
 
 type TokenListAttributeName = PartiallyKnownString<'appearance' | 'class'>;
@@ -96,65 +96,65 @@ type TokenListAttributeName = PartiallyKnownString<'appearance' | 'class'>;
  * as part of that mechanism.
  */
 export class TokenListParser<
-	CanonicalToken extends string,
-	// Note: this is a separate type parameter so that specifying an alias does
-	// not cause it to be mistakenly inferred as a `CanonicalToken` which was
-	// not otherwise specified.
-	TokenAlias extends CanonicalToken = CanonicalToken,
+  CanonicalToken extends string,
+  // Note: this is a separate type parameter so that specifying an alias does
+  // not cause it to be mistakenly inferred as a `CanonicalToken` which was
+  // not otherwise specified.
+  TokenAlias extends CanonicalToken = CanonicalToken,
 > {
-	private readonly aliases: ReadonlyMap<string, CanonicalToken>;
+  private readonly aliases: ReadonlyMap<string, CanonicalToken>;
 
-	constructor(
-		readonly canonicalTokens: readonly CanonicalToken[] = [],
-		options?: TokenListParserOptions<TokenAlias>
-	) {
-		this.aliases = new Map(
-			(options?.aliases ?? []).map(({ fromAlias, toCanonical }) => {
-				return [fromAlias, toCanonical];
-			})
-		);
-	}
+  constructor(
+    readonly canonicalTokens: readonly CanonicalToken[] = [],
+    options?: TokenListParserOptions<TokenAlias>
+  ) {
+    this.aliases = new Map(
+      (options?.aliases ?? []).map(({ fromAlias, toCanonical }) => {
+        return [fromAlias, toCanonical];
+      })
+    );
+  }
 
-	parseFrom(element: Element, attributeName: TokenListAttributeName): TokenList<CanonicalToken> {
-		const serialized = element.getAttribute(attributeName) ?? '';
-		const specified = xmlXPathWhitespaceSeparatedList(serialized, {
-			ignoreEmpty: true,
-		});
-		const { aliases } = this;
-		const resolved = specified.flatMap((token) => {
-			const alias = aliases.get(token);
+  parseFrom(element: Element, attributeName: TokenListAttributeName): TokenList<CanonicalToken> {
+    const serialized = element.getAttribute(attributeName) ?? '';
+    const specified = xmlXPathWhitespaceSeparatedList(serialized, {
+      ignoreEmpty: true,
+    });
+    const { aliases } = this;
+    const resolved = specified.flatMap((token) => {
+      const alias = aliases.get(token);
 
-			if (alias == null) {
-				return token;
-			}
+      if (alias == null) {
+        return token;
+      }
 
-			return [alias, token];
-		});
-		const tokens = new Set(resolved);
+      return [alias, token];
+    });
+    const tokens = new Set(resolved);
 
-		return new Proxy(
-			{
-				[Symbol.iterator]() {
-					return resolved.values();
-				},
-			} satisfies TokenList<string> as TokenList<CanonicalToken>,
-			{
-				get(target, property, receiver) {
-					if (typeof property === 'symbol') {
-						return Reflect.get(target, property, receiver);
-					}
+    return new Proxy(
+      {
+        [Symbol.iterator]() {
+          return resolved.values();
+        },
+      } satisfies TokenList<string> as TokenList<CanonicalToken>,
+      {
+        get(target, property, receiver) {
+          if (typeof property === 'symbol') {
+            return Reflect.get(target, property, receiver);
+          }
 
-					return tokens.has(property);
-				},
+          return tokens.has(property);
+        },
 
-				set() {
-					return false;
-				},
-			}
-		);
-	}
+        set() {
+          return false;
+        },
+      }
+    );
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ParsedTokenList<Parser extends TokenListParser<any>> =
-	Parser extends TokenListParser<infer CanonicalToken> ? TokenList<CanonicalToken> : never;
+  Parser extends TokenListParser<infer CanonicalToken> ? TokenList<CanonicalToken> : never;

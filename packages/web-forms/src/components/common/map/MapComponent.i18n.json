@@ -96,10 +96,6 @@
     "string": "Find your location",
     "developer_comment": "Aria-label for the map control button that centers the map on the device's current GPS location."
   },
-  "map_controls.undo.description": {
-    "string": "Undo last action",
-    "developer_comment": "Aria-label for the map control button that undoes the last map edit."
-  },
   "map_controls.delete.description": {
     "string": "Delete one vertex or all vertices",
     "developer_comment": "Aria-label for the map control button that deletes the selected vertex or all vertices."
@@ -108,24 +104,6 @@
     "string": "Advanced manual edits",
     "developer_comment": "Aria-label for the map control button that opens the advanced coordinate editing panel."
   },
-  "map_controls.open_full_screen.description": {
-    "string": "Expand to full screen",
-    "developer_comment": "Aria-label for the map control button that expands the map to full screen."
-  },
-  "map_controls.close_full_screen.description": {
-    "string": "Exit full screen",
-    "developer_comment": "Aria-label for the map control button that exits full-screen mode."
-  },
-  "map_controls.open_info.description": {
-    "string": "Show information of map actions",
-    "developer_comment": "Aria-label for the map control button that opens the info dialog listing available map actions."
-  },
-
-  "map_info_dialog.header.title": {
-    "string": "How to use the map?",
-    "developer_comment": "Title shown in the header of the dialog that explains available map actions."
-  },
-
   "map_properties.remove_selection.label": {
     "string": "Remove selection",
     "developer_comment": "Label for the button that removes the currently saved feature selection."

@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="table-freeze">
+  <div class="table-freeze" :class="{ 'frozen-only': frozenOnly }">
     <table class="table table-freeze-frozen" :class="{ divider }">
       <thead>
         <tr>
@@ -172,7 +172,7 @@ defineExpose({ getRowPair });
   .btn-group {
     // Setting the background color in case an action is transparent.
     background-color: $color-page-background;
-    left: -1000px;
+    left: -2000px;
     position: absolute;
     top: 4px;
   }

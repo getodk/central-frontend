@@ -29,7 +29,7 @@ import type { childrenInitOptions } from './childrenInitOptions.ts';
  * this interface is intended as an intermediate step toward these goals.
  */
 export interface DescendantNodeInitOptions {
-	readonly childNodeset: string;
-	readonly definition: ChildNodeDefinition;
-	readonly instanceNodes: readonly StaticElement[];
+  readonly childNodeset: string;
+  readonly definition: ChildNodeDefinition;
+  readonly instanceNodes: readonly StaticElement[];
 }

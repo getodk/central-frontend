@@ -6,21 +6,21 @@ import type { XFormsXPathAttribute } from '../integration/xpath/adapter/XFormsXP
 import type { StaticAttribute } from '../integration/xpath/static-dom/StaticAttribute.ts';
 import { createAttributeNodeInstanceState } from '../lib/client-reactivity/instance-state/createAttributeNodeInstanceState.ts';
 import {
-	getSharedValueCodec,
-	type RuntimeInputValue,
-	type RuntimeValue,
+  getSharedValueCodec,
+  type RuntimeInputValue,
+  type RuntimeValue,
 } from '../lib/codecs/getSharedValueCodec.ts';
 import type { RuntimeValueSetter, RuntimeValueState } from '../lib/codecs/ValueCodec.ts';
 import {
-	createAttributeState,
-	type AttributeState,
+  createAttributeState,
+  type AttributeState,
 } from '../lib/reactivity/createAttributeState.ts';
 import { createInstanceValueState } from '../lib/reactivity/createInstanceValueState.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
 import {
-	createSharedNodeState,
-	type SharedNodeState,
+  createSharedNodeState,
+  type SharedNodeState,
 } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import type { SimpleAtomicState } from '../lib/reactivity/types.ts';
 import type { AttributeDefinition } from '../parse/model/AttributeDefinition.ts';
@@ -32,117 +32,131 @@ import type { ClientReactiveSerializableAttributeNode } from './internal-api/ser
 import type { Root } from './Root.ts';
 
 export interface AttributeStateSpec extends DescendantNodeStateSpec<string> {
-	readonly children: null;
-	readonly attributes: Accessor<Attribute[]>;
-	readonly value: SimpleAtomicState<string>;
-	readonly instanceValue: Accessor<string>;
-	readonly relevant: Accessor<boolean>;
+  readonly children: null;
+  readonly attributes: Accessor<Attribute[]>;
+  readonly value: SimpleAtomicState<string>;
+  readonly instanceValue: Accessor<string>;
+  readonly relevant: Accessor<boolean>;
 }
 
 export class Attribute
-	extends DescendantNode<AttributeDefinition, AttributeStateSpec, AnyNode, null>
-	implements
-		AttributeNode,
-		ClientReactiveSerializableAttributeNode,
-		AttributeContext,
-		XFormsXPathAttribute
+  extends DescendantNode<AttributeDefinition, AttributeStateSpec, AnyNode, null>
+  implements
+    AttributeNode,
+    ClientReactiveSerializableAttributeNode,
+    AttributeContext,
+    XFormsXPathAttribute
 {
-	override readonly [XPathNodeKindKey] = 'attribute';
+  override readonly [XPathNodeKindKey] = 'attribute';
 
-	protected readonly state: SharedNodeState<AttributeStateSpec>;
-	protected readonly engineState: EngineState<AttributeStateSpec>;
-	readonly validationState: NullValidationState;
+  protected readonly state: SharedNodeState<AttributeStateSpec>;
+  protected readonly engineState: EngineState<AttributeStateSpec>;
+  readonly validationState: NullValidationState;
 
-	readonly nodeType = 'attribute';
-	readonly currentState: CurrentState<AttributeStateSpec>;
-	readonly instanceState: InstanceState;
+  readonly nodeType = 'attribute';
+  readonly currentState: CurrentState<AttributeStateSpec>;
+  readonly instanceState: InstanceState;
 
-	readonly appearances = null;
-	readonly nodeOptions = null;
+  readonly appearances = null;
+  readonly nodeOptions = null;
 
-	readonly valueType: string;
-	readonly decodeInstanceValue: DecodeInstanceValue;
+  readonly valueType: string;
+  readonly decodeInstanceValue: DecodeInstanceValue;
 
-	protected readonly getInstanceValue: Accessor<string>;
-	protected readonly valueState: RuntimeValueState<RuntimeValue<'string'>>;
-	protected readonly setValueState: RuntimeValueSetter<RuntimeInputValue<'string'>>;
-	readonly attributeState: AttributeState;
+  protected readonly getInstanceValue: Accessor<string>;
+  protected readonly valueState: RuntimeValueState<RuntimeValue<'string'>>;
+  protected readonly setValueState: RuntimeValueSetter<RuntimeInputValue<'string'>>;
+  readonly attributeState: AttributeState;
 
-	override readonly isAttached: Accessor<boolean> = () => {
-		return this.owner.isAttached();
-	};
+  override readonly isAttached: Accessor<boolean> = () => {
+    return this.owner.isAttached();
+  };
 
-	override readonly getXPathValue: () => string;
+  override readonly getXPathValue: () => string;
+  readonly setEncodedValue: (value: string, bypassReadonly?: boolean) => void;
 
-	constructor(
-		readonly owner: AnyNode,
-		definition: AttributeDefinition,
-		override readonly instanceNode: StaticAttribute
-	) {
-		const computeReference = () => {
-			return `${this.owner.contextReference()}/@${this.definition.qualifiedName.getPrefixedName()}`;
-		};
+  constructor(
+    readonly owner: AnyNode,
+    definition: AttributeDefinition,
+    override readonly instanceNode: StaticAttribute
+  ) {
+    const computeReference = () => {
+      return `${this.owner.contextReference()}/@${this.definition.qualifiedName.getPrefixedName()}`;
+    };
 
-		super(owner, instanceNode, definition, { computeReference });
+    super(owner, instanceNode, definition, { computeReference });
 
-		const codec = getSharedValueCodec('string');
+    const codec = getSharedValueCodec('string');
 
-		this.validationState = { violations: [] };
+    this.validationState = { violations: [] };
 
-		this.valueType = 'string';
-		this.decodeInstanceValue = codec.decodeInstanceValue;
+    this.valueType = 'string';
+    this.decodeInstanceValue = codec.decodeInstanceValue;
 
-		const instanceValueState = createInstanceValueState(this);
-		const valueState = codec.createRuntimeValueState(instanceValueState);
+    const { valueState: instanceValueState, setValueFromAction } = createInstanceValueState(this);
+    const [getInstanceValue] = instanceValueState;
 
-		const [getInstanceValue] = instanceValueState;
-		const [, setValueState] = valueState;
+    const valueState = codec.createRuntimeValueState(instanceValueState);
+    const [, setActionValue] = codec.createRuntimeValueState([
+      getInstanceValue,
+      setValueFromAction,
+    ]);
 
-		this.getInstanceValue = getInstanceValue;
-		this.setValueState = setValueState;
-		this.valueState = valueState;
+    const [, setValueState] = valueState;
 
-		const state = createSharedNodeState(
-			owner.scope,
-			{
-				value: this.valueState,
-				instanceValue: this.getInstanceValue,
-				relevant: this.owner.isRelevant,
+    this.getInstanceValue = getInstanceValue;
+    this.setValueState = setValueState;
+    this.valueState = valueState;
 
-				readonly: () => true,
-				reference: this.contextReference,
-				required: () => false,
-				children: null,
-				label: () => null,
-				hint: () => null,
-				attributes: () => [],
-				valueOptions: () => [],
-			},
-			this.instanceConfig
-		);
+    const state = createSharedNodeState(
+      owner.scope,
+      {
+        value: this.valueState,
+        instanceValue: this.getInstanceValue,
+        relevant: this.owner.isRelevant,
 
-		this.state = state;
-		this.engineState = state.engineState;
-		this.currentState = state.currentState;
-		this.instanceState = createAttributeNodeInstanceState(this);
-		this.attributeState = createAttributeState(this.scope);
+        readonly: () => true,
+        reference: this.contextReference,
+        required: () => false,
+        children: null,
+        label: () => null,
+        hint: () => null,
+        attributes: () => [],
+        valueOptions: () => [],
+      },
+      this.instanceConfig
+    );
 
-		this.getXPathValue = () => {
-			return this.getInstanceValue();
-		};
-	}
+    this.state = state;
+    this.engineState = state.engineState;
+    this.currentState = state.currentState;
+    this.instanceState = createAttributeNodeInstanceState(this);
+    this.attributeState = createAttributeState(this.scope);
 
-	setValue(value: string): Root {
-		this.setValueState(value);
+    this.getXPathValue = () => {
+      return this.getInstanceValue();
+    };
+    this.setEncodedValue = (value: string, bypassReadonly = false) => {
+      const decodedValue = codec.decodeValue(value);
+      if (bypassReadonly) {
+        setActionValue(decodedValue);
+        return;
+      }
+      setValueState(decodedValue);
+    };
+  }
 
-		return this.root;
-	}
+  setValue(value: string): Root {
+    this.setValueState(value);
 
-	override getAttributes(): readonly Attribute[] {
-		return [];
-	}
+    return this.root;
+  }
 
-	getChildren(): readonly [] {
-		return [];
-	}
+  override getAttributes(): readonly Attribute[] {
+    return [];
+  }
+
+  getChildren(): readonly [] {
+    return [];
+  }
 }

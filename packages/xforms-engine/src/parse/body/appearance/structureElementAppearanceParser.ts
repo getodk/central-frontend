@@ -3,5 +3,5 @@ import { TokenListParser, type ParsedTokenList } from '../../../lib/TokenListPar
 export const structureElementAppearanceParser = new TokenListParser(['field-list', 'table-list']);
 
 export type StructureElementAppearanceDefinition = ParsedTokenList<
-	typeof structureElementAppearanceParser
+  typeof structureElementAppearanceParser
 >;

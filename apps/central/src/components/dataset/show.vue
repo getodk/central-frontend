@@ -107,7 +107,8 @@ export default {
   setup() {
     // The component does not assume that this data will exist when the
     // component is created.
-    const { project, dataset, resourceStates } = useRequestData();
+    const { project, dataset, resourceStates, createResource } = useRequestData();
+    createResource('actorProperties');
 
     const { projectPath, datasetPath, canRoute, publishedFormPath } = useRoutes();
     const { tabPath, tabClass } = useTabs(datasetPath());

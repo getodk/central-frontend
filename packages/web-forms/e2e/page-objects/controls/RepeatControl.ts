@@ -1,30 +1,42 @@
 import { expect, Locator, Page } from '@playwright/test';
 
 export class RepeatControl {
-	private readonly SELECTOR_INSTANCE = '.is-repeat';
-	private readonly SELECTOR_HEADER = '.p-panel-header';
-	private readonly page: Page;
+  private readonly SELECTOR_INSTANCE = '.is-repeat';
+  private readonly SELECTOR_HEADER = '.p-panel-header';
+  private readonly page: Page;
 
-	constructor(page: Page) {
-		this.page = page;
-	}
+  constructor(page: Page) {
+    this.page = page;
+  }
 
-	async getInstancesHeader(): Promise<Locator[]> {
-		return this.page.locator(`${this.SELECTOR_INSTANCE} ${this.SELECTOR_HEADER}`).all();
-	}
+  private addButton(label?: string) {
+    const name = label == null ? 'Add' : `Add ${label}`;
+    return this.page.getByRole('button', { name });
+  }
 
-	async expectInstanceHeader(instance: Locator, expectedTitle: string, expectedCount: string) {
-		const title = instance.getByText(expectedTitle, { exact: true });
-		await expect(title).toBeVisible();
-		const count = instance.getByText(expectedCount, { exact: true });
-		await expect(count).toBeVisible();
-	}
+  async getInstancesHeader(): Promise<Locator[]> {
+    return this.page.locator(`${this.SELECTOR_INSTANCE} ${this.SELECTOR_HEADER}`).all();
+  }
 
-	async addInstance(buttonLabel: string) {
-		const button = this.page
-			.locator(`${this.SELECTOR_INSTANCE} + button`)
-			.getByText(buttonLabel, { exact: true });
-		await expect(button).toBeVisible();
-		await button.click();
-	}
+  async expectInstanceHeader(instance: Locator, expectedTitle: string, expectedCount: string) {
+    const title = instance.getByText(expectedTitle, { exact: true });
+    await expect(title).toBeVisible();
+    const count = instance.getByText(expectedCount, { exact: true });
+    await expect(count).toBeVisible();
+  }
+
+  async addInstance(label?: string) {
+    const button = this.addButton(label);
+    await expect(button).toBeVisible();
+    await button.click();
+  }
+
+  async expectAddButtonVisible(visible: boolean, label?: string) {
+    if (visible) {
+      await expect(this.addButton(label)).toBeVisible();
+      return;
+    }
+
+    await expect(this.addButton(label)).toHaveCount(0);
+  }
 }

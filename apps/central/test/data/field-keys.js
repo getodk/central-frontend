@@ -18,7 +18,8 @@ export const extendedFieldKeys = dataStore({
       : extendedProjects.createPast(1, { appUsers: 1 }).last(),
     displayName = faker.word.noun(),
     token = faker.string.alphanumeric(64),
-    lastUsed = undefined
+    lastUsed = undefined,
+    properties = {}
   }) => {
     if (extendedUsers.size === 0) throw new Error('user not found');
     const createdBy = extendedUsers.first();
@@ -36,7 +37,8 @@ export const extendedFieldKeys = dataStore({
         : (inPast && faker.datatype.boolean() ? fakePastDate([createdAt]) : null),
       createdBy: toActor(createdBy),
       createdAt,
-      updatedAt: null
+      updatedAt: null,
+      properties
     };
   },
   sort: comparator((fieldKey1, fieldKey2) =>
@@ -46,5 +48,5 @@ export const extendedFieldKeys = dataStore({
 
 export const standardFieldKeys = view(
   extendedFieldKeys,
-  omit(['lastUsed', 'createdBy'])
+  omit(['lastUsed', 'createdBy', 'properties'])
 );

@@ -6,16 +6,16 @@ import type { FetchResource, FetchResourceResponse } from '../client/resources.t
 export type { FetchResource, FetchResourceResponse, FormResource };
 
 export interface ResourceOptions {
-	readonly fetchResource: FetchResource;
+  readonly fetchResource: FetchResource;
 }
 
 const fetchTextFromURL = async (resource: URL, options: ResourceOptions): Promise<string> => {
-	// destructuring prevents "Failed to execute 'fetch' on 'Window': Illegal invocation"
-	const { fetchResource } = options;
+  // destructuring prevents "Failed to execute 'fetch' on 'Window': Illegal invocation"
+  const { fetchResource } = options;
 
-	const response = await fetchResource(resource);
+  const response = await fetchResource(resource);
 
-	return response.text();
+  return response.text();
 };
 
 const resourceXMLPrefix = '<';
@@ -25,67 +25,67 @@ type ResourceXMLPrefix = typeof resourceXMLPrefix;
 type ResourceXML = `${ResourceXMLPrefix}${string}`;
 
 class InvalidSourceXMLError extends Error {
-	constructor(readonly resourceText: string) {
-		super('Source text is not XML');
-	}
+  constructor(readonly resourceText: string) {
+    super('Source text is not XML');
+  }
 }
 
 const isXML = (resourceText: string): resourceText is ResourceXML => {
-	return resourceText.startsWith(resourceXMLPrefix);
+  return resourceText.startsWith(resourceXMLPrefix);
 };
 
 type AssertResourceTextIsXML = (resourceText: string) => asserts resourceText is ResourceXML;
 
 const assertResourceTextIsXML: AssertResourceTextIsXML = (resourceText) => {
-	if (!isXML(resourceText)) {
-		throw new InvalidSourceXMLError(resourceText);
-	}
+  if (!isXML(resourceText)) {
+    throw new InvalidSourceXMLError(resourceText);
+  }
 };
 
 class InvalidFormResourceError extends Error {
-	constructor(readonly resource: FormResource) {
-		super('Invalid form resource');
-	}
+  constructor(readonly resource: FormResource) {
+    super('Invalid form resource');
+  }
 }
 
 export const retrieveSourceXMLResource = async (
-	resource: FormResource,
-	options: ResourceOptions
+  resource: FormResource,
+  options: ResourceOptions
 ): Promise<ResourceXML> => {
-	let text: string;
+  let text: string;
 
-	if (resource instanceof URL) {
-		text = await fetchTextFromURL(resource, options);
-	} else if (resource instanceof Blob) {
-		text = await getBlobText(resource);
-	} else if (typeof resource === 'string') {
-		const trimmed = resource.trim();
+  if (resource instanceof URL) {
+    text = await fetchTextFromURL(resource, options);
+  } else if (resource instanceof Blob) {
+    text = await getBlobText(resource);
+  } else if (typeof resource === 'string') {
+    const trimmed = resource.trim();
 
-		if (isXML(trimmed)) {
-			text = trimmed;
-		} else if (URL.canParse(trimmed)) {
-			text = await fetchTextFromURL(new URL(trimmed), options);
-		} else {
-			throw new InvalidFormResourceError(trimmed);
-		}
-	} else {
-		throw new UnreachableError(resource);
-	}
+    if (isXML(trimmed)) {
+      text = trimmed;
+    } else if (URL.canParse(trimmed)) {
+      text = await fetchTextFromURL(new URL(trimmed), options);
+    } else {
+      throw new InvalidFormResourceError(trimmed);
+    }
+  } else {
+    throw new UnreachableError(resource);
+  }
 
-	assertResourceTextIsXML(text);
+  assertResourceTextIsXML(text);
 
-	return text;
+  return text;
 };
 
 interface RetrieveFormDefinitionOptions {
-	readonly fetchFormDefinition: FetchResource;
+  readonly fetchFormDefinition: FetchResource;
 }
 
 export const retrieveFormDefinition = async (
-	resource: FormResource,
-	options: RetrieveFormDefinitionOptions
+  resource: FormResource,
+  options: RetrieveFormDefinitionOptions
 ): Promise<ResourceXML> => {
-	return retrieveSourceXMLResource(resource, {
-		fetchResource: options.fetchFormDefinition,
-	});
+  return retrieveSourceXMLResource(resource, {
+    fetchResource: options.fetchFormDefinition,
+  });
 };

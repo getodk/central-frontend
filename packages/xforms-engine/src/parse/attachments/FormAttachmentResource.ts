@@ -31,9 +31,9 @@ type FormAttachmentData<DataType extends FormAttachmentDataType> =
 		: FormAttachmentSecondaryInstanceData;
 
 export abstract class FormAttachmentResource<DataType extends FormAttachmentDataType> {
-	protected constructor(
-		readonly dataType: DataType,
-		readonly resourceURL: JRResourceURL,
-		readonly data: FormAttachmentData<DataType>
-	) {}
+  protected constructor(
+    readonly dataType: DataType,
+    readonly resourceURL: JRResourceURL,
+    readonly data: FormAttachmentData<DataType>
+  ) {}
 }

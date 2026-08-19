@@ -9,63 +9,63 @@ type NamespaceURI = string | null;
 type LocalName = string;
 
 interface QualifiedName {
-	readonly namespaceURI: NamespaceURI;
-	readonly localName: LocalName;
+  readonly namespaceURI: NamespaceURI;
+  readonly localName: LocalName;
 }
 
 export interface LibraryFunction extends FunctionImplementation {
-	readonly qualifiedName: QualifiedName;
+  readonly qualifiedName: QualifiedName;
 }
 
 export class FunctionLibrary {
-	protected readonly implementations: Map<LocalName, LibraryFunction>;
+  protected readonly implementations: Map<LocalName, LibraryFunction>;
 
-	constructor(
-		readonly namespaceURI: string,
-		entries: readonly FunctionImplementation[]
-	) {
-		const implementations = new Map<LocalName, LibraryFunction>();
+  constructor(
+    readonly namespaceURI: string,
+    entries: readonly FunctionImplementation[]
+  ) {
+    const implementations = new Map<LocalName, LibraryFunction>();
 
-		entries.forEach((implementation) => {
-			const { localName } = implementation;
+    entries.forEach((implementation) => {
+      const { localName } = implementation;
 
-			const qualifiedName: QualifiedName = {
-				namespaceURI,
-				localName,
-			};
+      const qualifiedName: QualifiedName = {
+        namespaceURI,
+        localName,
+      };
 
-			implementations.set(
-				localName,
-				Object.assign(implementation, {
-					qualifiedName,
-				})
-			);
-		});
+      implementations.set(
+        localName,
+        Object.assign(implementation, {
+          qualifiedName,
+        })
+      );
+    });
 
-		this.implementations = implementations;
-	}
+    this.implementations = implementations;
+  }
 
-	has(localName: LocalName): boolean {
-		return this.implementations.has(localName);
-	}
+  has(localName: LocalName): boolean {
+    return this.implementations.has(localName);
+  }
 
-	call<T extends XPathNode>(
-		localName: LocalName,
-		context: LocationPathEvaluation<T>,
-		args: readonly EvaluableArgument[]
-	): Evaluation<T> {
-		const implementation = this.implementations.get(localName);
+  call<T extends XPathNode>(
+    localName: LocalName,
+    context: LocationPathEvaluation<T>,
+    args: readonly EvaluableArgument[]
+  ): Evaluation<T> {
+    const implementation = this.implementations.get(localName);
 
-		if (implementation == null) {
-			throw new UnknownFunctionError(localName);
-		}
+    if (implementation == null) {
+      throw new UnknownFunctionError(localName);
+    }
 
-		return implementation.call(context, args);
-	}
+    return implementation.call(context, args);
+  }
 
-	getImplementation(localName: LocalName): FunctionImplementation | null {
-		const implementation = this.implementations.get(localName);
+  getImplementation(localName: LocalName): FunctionImplementation | null {
+    const implementation = this.implementations.get(localName);
 
-		return implementation ?? null;
-	}
+    return implementation ?? null;
+  }
 }

@@ -22,14 +22,12 @@
     // `vue-tsc` errors without this, regardless of whether it's specified on
     // the CLI. Ugh.
     "noEmit": false,
-    "baseUrl": ".",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "paths": {
-      "@/*": ["./src/*"],
-      "@locales/*": ["./locales/*"],
       "@getodk/common/test-utils/*": ["../common/test-utils/*"],
       "@getodk/common/types/*": ["../common/types/*"],
-      "@getodk/common/*": ["../common/src/*"]
+      "@getodk/common/*": ["../common/src/*"],
+      "@getodk/web-forms/*": ["./src/*"]
     },
     "types": ["node"],
     "skipLibCheck": true,

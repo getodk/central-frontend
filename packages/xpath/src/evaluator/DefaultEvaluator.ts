@@ -5,8 +5,8 @@ import type { EvaluatorOptions } from './Evaluator.ts';
 import { Evaluator } from './Evaluator.ts';
 
 export interface DefaultEvaluatorOptions extends Omit<
-	EvaluatorOptions<DefaultDOMAdapterNode>,
-	'domAdapter'
+  EvaluatorOptions<DefaultDOMAdapterNode>,
+  'domAdapter'
 > {}
 
 /**
@@ -19,10 +19,10 @@ export interface DefaultEvaluatorOptions extends Omit<
  * {@link XPathDOMAdapter} option.
  */
 export class DefaultEvaluator extends Evaluator<DefaultDOMAdapterNode> {
-	constructor(options?: DefaultEvaluatorOptions) {
-		super({
-			...options,
-			domAdapter: DEFAULT_DOM_ADAPTER,
-		});
-	}
+  constructor(options?: DefaultEvaluatorOptions) {
+    super({
+      ...options,
+      domAdapter: DEFAULT_DOM_ADAPTER,
+    });
+  }
 }

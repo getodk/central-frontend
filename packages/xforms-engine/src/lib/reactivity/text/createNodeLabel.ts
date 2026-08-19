@@ -5,14 +5,14 @@ import type { AnyNodeDefinition } from '../../../parse/model/NodeDefinition.ts';
 import { createTextRange } from './createTextRange.ts';
 
 export const createNodeLabel = (
-	context: EvaluationContext,
-	definition: AnyNodeDefinition
+  context: EvaluationContext,
+  definition: AnyNodeDefinition
 ): Accessor<TextRange<'label'> | null> => {
-	const labelDefinition = definition.bodyElement?.label ?? null;
+  const labelDefinition = definition.bodyElement?.label ?? null;
 
-	if (labelDefinition == null) {
-		return () => null;
-	}
+  if (labelDefinition == null) {
+    return () => null;
+  }
 
-	return createTextRange(context, 'label', labelDefinition);
+  return createTextRange(context, 'label', labelDefinition);
 };

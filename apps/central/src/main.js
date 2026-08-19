@@ -19,12 +19,16 @@ import App from './components/app.vue';
 
 import createContainer from './container';
 import vTooltip from './directives/tooltip';
-// ./jquery must be imported before any of Bootstrap's JavaScript plugins,
-// because the plugins require jQuery.
-import './jquery';
-import './bootstrap';
+import initSentry from './util/sentry';
 
-createApp(App)
-  .use(createContainer())
-  .directive('tooltip', vTooltip)
-  .mount('#app');
+const app = createApp(App);
+
+const { sentryDsn } = await fetch('/client-config.json')
+  .then(r => r.json())
+  .catch((error) => {
+    // eslint-disable-next-line no-console
+    console.error('Failed to fetch /client-config.json', error);
+    return {};
+  });
+initSentry(app, 'central-frontend', sentryDsn);
+app.use(createContainer()).directive('tooltip', vTooltip).mount('#app');

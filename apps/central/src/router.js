@@ -59,6 +59,12 @@ router.afterEach(unlessFailure(to => {
   //////////////////////////////////////////////////////////////////////////////
   // REDIRECTS
 
+  // All bottom-level routes in routes.js should have route meta fields. Many of
+  // the navigation guards below assume that `to` has well-defined meta fields.
+  // Here, we check that `to` has meta fields. If it doesn't, that means the
+  // user is trying to navigate to a parent route, which isn't expected.
+  router.beforeEach(to => (Object.keys(to.meta).length === 0 ? '/' : true));
+
   // If a route is nested, its relative path is '', and that path is an alias,
   // then we redirect to the canonical path. That turned out to be easier than
   // using the `redirect` option of Vue Router.
@@ -85,7 +91,13 @@ router.afterEach(unlessFailure(to => {
   // gives percentage encoded value - central#919.
   // Note: to.path is '/#/some/path' when the route has query parameter after '#'
   // e.g. /#/some/path?next=/ - central#939
-  router.beforeEach(to => (to.fullPath.startsWith('/#/') ? to.fullPath.substring(2) : true));
+  router.beforeEach(to => {
+    if (to.fullPath.startsWith('/#/')) {
+      // This must do a full page refresh because the page may end up in a different vue app
+      window.location.replace(to.fullPath.slice(2));
+    }
+    return true;
+  });
 
 
   //////////////////////////////////////////////////////////////////////////////

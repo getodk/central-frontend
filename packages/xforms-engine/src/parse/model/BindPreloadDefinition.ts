@@ -12,18 +12,18 @@ import { XFORM_EVENT, type XFormEvent } from './Event.ts';
 const PRELOAD_UID_EXPRESSION = 'concat("uuid:", uuid())';
 
 type PartiallyKnownPreloadParameter<Known extends string> = PartiallyKnownString<
-	NonNullable<Known>
+  NonNullable<Known>
 >;
 
 interface PreloadParametersByType {
-	readonly uid: string | null;
-	readonly date: PartiallyKnownPreloadParameter<'today'>;
-	readonly timestamp: PartiallyKnownPreloadParameter<'end' | 'start'>;
+  readonly uid: string | null;
+  readonly date: PartiallyKnownPreloadParameter<'today'>;
+  readonly timestamp: PartiallyKnownPreloadParameter<'end' | 'start'>;
 
-	readonly property: PartiallyKnownPreloadParameter<
-		// prettier-ignore
-		'deviceid' | 'email' | 'phonenumber' | 'username'
-	>;
+  readonly property: PartiallyKnownPreloadParameter<
+    // prettier-ignore
+    'deviceid' | 'email' | 'phonenumber' | 'username'
+  >;
 }
 
 type PreloadType = PartiallyKnownString<keyof PreloadParametersByType>;
@@ -35,30 +35,30 @@ type PreloadParameter<Type extends PreloadType> =
 		: string | null;
 
 interface PreloadInput<Type extends PreloadType> {
-	readonly type: Type;
-	readonly parameter: PreloadParameter<Type>;
+  readonly type: Type;
+  readonly parameter: PreloadParameter<Type>;
 }
 
 type AnyPreloadInput = {
-	[Type in PreloadType]: PreloadInput<Type>;
+  [Type in PreloadType]: PreloadInput<Type>;
 }[PreloadType];
 
 const getPreloadInput = (bindElement: BindElement): AnyPreloadInput | null => {
-	const type = bindElement.getAttributeNS(JAVAROSA_NAMESPACE_URI, 'preload');
+  const type = bindElement.getAttributeNS(JAVAROSA_NAMESPACE_URI, 'preload');
 
-	if (type == null) {
-		return null;
-	}
+  if (type == null) {
+    return null;
+  }
 
-	const parameter: PreloadParameter<typeof type> = bindElement.getAttributeNS(
-		JAVAROSA_NAMESPACE_URI,
-		'preloadParams'
-	);
+  const parameter: PreloadParameter<typeof type> = bindElement.getAttributeNS(
+    JAVAROSA_NAMESPACE_URI,
+    'preloadParams'
+  );
 
-	return {
-		type,
-		parameter,
-	};
+  return {
+    type,
+    parameter,
+  };
 };
 
 /**
@@ -72,62 +72,62 @@ const getPreloadInput = (bindElement: BindElement): AnyPreloadInput | null => {
  * - {@link parameter}, an associated `jr:preloadParams` value
  */
 export class BindPreloadDefinition<Type extends PreloadType> implements PreloadInput<Type> {
-	static from(
-		definition: BindDefinition,
-		bindElement: BindElement
-	): AnyBindPreloadDefinition | null {
-		const input = getPreloadInput(bindElement);
+  static from(
+    definition: BindDefinition,
+    bindElement: BindElement
+  ): AnyBindPreloadDefinition | null {
+    const input = getPreloadInput(bindElement);
 
-		if (input == null) {
-			return null;
-		}
+    if (input == null) {
+      return null;
+    }
 
-		const type = input.type;
-		const parameter = input.parameter;
-		let event;
-		if (definition.form.xformDOM.isInstanceID(bindElement.getAttribute('nodeset'))) {
-			event = XFORM_EVENT.odkInstanceLoad;
-		} else if (type === 'timestamp' && parameter === 'end') {
-			event = XFORM_EVENT.xformsRevalidate;
-		} else {
-			event = XFORM_EVENT.odkInstanceFirstLoad;
-		}
-		return new this(type, parameter, event);
-	}
+    const type = input.type;
+    const parameter = input.parameter;
+    let event;
+    if (definition.form.xformDOM.isInstanceID(bindElement.getAttribute('nodeset'))) {
+      event = XFORM_EVENT.odkInstanceLoad;
+    } else if (type === 'timestamp' && parameter === 'end') {
+      event = XFORM_EVENT.xformsRevalidate;
+    } else {
+      event = XFORM_EVENT.odkInstanceFirstLoad;
+    }
+    return new this(type, parameter, event);
+  }
 
-	getValue(context: AttributeContext | InstanceValueContext): string | undefined {
-		if (this.type === 'uid') {
-			return context.evaluator.evaluateString(PRELOAD_UID_EXPRESSION);
-		}
-		if (this.type === 'timestamp') {
-			return context.evaluator.evaluateString('now()');
-		}
-		if (this.type === 'date') {
-			return context.evaluator.evaluateString('today()');
-		}
-		if (this.type === 'property') {
-			const properties = context.instanceConfig.preloadProperties;
-			if (this.parameter === 'deviceid') {
-				return properties.deviceID;
-			}
-			if (this.parameter === 'email') {
-				return properties.email;
-			}
-			if (this.parameter === 'phonenumber') {
-				return properties.phoneNumber;
-			}
-			if (this.parameter === 'username') {
-				return properties.username;
-			}
-		}
-		return;
-	}
+  getValue(context: AttributeContext | InstanceValueContext): string | undefined {
+    if (this.type === 'uid') {
+      return context.evaluator.evaluateString(PRELOAD_UID_EXPRESSION);
+    }
+    if (this.type === 'timestamp') {
+      return context.evaluator.evaluateString('now()');
+    }
+    if (this.type === 'date') {
+      return context.evaluator.evaluateString('today()');
+    }
+    if (this.type === 'property') {
+      const properties = context.instanceConfig.preloadProperties;
+      if (this.parameter === 'deviceid') {
+        return properties.deviceID;
+      }
+      if (this.parameter === 'email') {
+        return properties.email;
+      }
+      if (this.parameter === 'phonenumber') {
+        return properties.phoneNumber;
+      }
+      if (this.parameter === 'username') {
+        return properties.username;
+      }
+    }
+    return;
+  }
 
-	private constructor(
-		readonly type: Type,
-		readonly parameter: PreloadParameter<Type>,
-		readonly event: XFormEvent
-	) {}
+  private constructor(
+    readonly type: Type,
+    readonly parameter: PreloadParameter<Type>,
+    readonly event: XFormEvent
+  ) {}
 }
 
 // prettier-ignore

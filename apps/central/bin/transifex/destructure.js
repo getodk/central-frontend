@@ -1,16 +1,17 @@
 // For a description of our Transifex workflow and how this script fits into it,
 // see CONTRIBUTING.md.
 
-const fs = require('fs');
+const fs = require('node:fs');
 
 const { destructure, readSourceMessages, rekeyTranslations, writeTranslations } = require('../util/transifex');
 const { logThenThrow, mapComponentsToFiles } = require('../util/util');
 
 const filenamesByComponent = mapComponentsToFiles('src/components');
 const { messages: sourceMessages, transifexPaths } = readSourceMessages(
-  'apps/central/src/locales',
+  'src/locales',
   filenamesByComponent
 );
+
 for (const basename of fs.readdirSync('transifex')) {
   // Skip .DS_Store and other dot files.
   if (basename.startsWith('.')) continue; // eslint-disable-line no-continue
@@ -20,7 +21,7 @@ for (const basename of fs.readdirSync('transifex')) {
   console.log(`destructuring ${locale}`);
 
   const json = fs.readFileSync(`transifex/${basename}`).toString();
-  const translated = destructure(json, locale);
+  const translated = doDestructure(json, locale); // eslint-disable-line no-use-before-define
   rekeyTranslations(sourceMessages, translated, transifexPaths);
   writeTranslations(
     locale,
@@ -31,3 +32,17 @@ for (const basename of fs.readdirSync('transifex')) {
   );
 }
 console.log('done');
+
+function doDestructure(json, locale) { // eslint-disable-line consistent-return
+  try {
+    return destructure(json, locale);
+  } catch (err) {
+    console.log(err);
+    console.log();
+    console.log('!!!');
+    console.log('!!! Failed!  Have you pulled the latest JSON from Transifex?');
+    console.log('!!!');
+    console.log();
+    process.exit(1);
+  }
+}

@@ -86,7 +86,7 @@ if [[ "$SKIP_INSTALL" = "true" ]]; then
   log "Skipping playwright install."
 else
   log "Installing playwright deps..."
-  npx playwright install --with-deps
+  npx playwright install --with-deps chromium-headless-shell firefox
   sudo -k
 fi
 

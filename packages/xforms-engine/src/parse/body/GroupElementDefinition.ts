@@ -4,8 +4,8 @@ import { parseNodesetReference } from '../xpath/reference-parsing.ts';
 import type { StructureElementAppearanceDefinition } from './appearance/structureElementAppearanceParser.ts';
 import { structureElementAppearanceParser } from './appearance/structureElementAppearanceParser.ts';
 import {
-	type BodyElementDefinitionArray,
-	type BodyElementParentContext,
+  type BodyElementDefinitionArray,
+  type BodyElementParentContext,
 } from './BodyDefinition.ts';
 import { BodyElementDefinition } from './BodyElementDefinition.ts';
 
@@ -17,31 +17,31 @@ import { BodyElementDefinition } from './BodyElementDefinition.ts';
  * The group can have a ref, and if so is referred to as a "logical group".
  */
 export class GroupElementDefinition extends BodyElementDefinition<'group'> {
-	override readonly category = 'structure';
-	override readonly type = 'group';
+  override readonly category = 'structure';
+  override readonly type = 'group';
 
-	readonly children: BodyElementDefinitionArray;
+  readonly children: BodyElementDefinitionArray;
 
-	override readonly reference: string | null;
-	readonly appearances: StructureElementAppearanceDefinition;
-	override readonly label: LabelDefinition | null;
+  override readonly reference: string | null;
+  readonly appearances: StructureElementAppearanceDefinition;
+  override readonly label: LabelDefinition | null;
 
-	static override isCompatible(localName: string): boolean {
-		return localName === 'group';
-	}
+  static override isCompatible(localName: string): boolean {
+    return localName === 'group';
+  }
 
-	constructor(form: XFormDefinition, parent: BodyElementParentContext, element: Element) {
-		super(form, parent, element);
+  constructor(form: XFormDefinition, parent: BodyElementParentContext, element: Element) {
+    super(form, parent, element);
 
-		const childElements = Array.from(element.children).filter((child) => {
-			const childName = child.localName;
+    const childElements = Array.from(element.children).filter((child) => {
+      const childName = child.localName;
 
-			return childName !== 'label';
-		});
+      return childName !== 'label';
+    });
 
-		this.reference = parseNodesetReference(parent, element, 'ref');
-		this.children = this.body.getChildElementDefinitions(form, this, element, childElements);
-		this.appearances = structureElementAppearanceParser.parseFrom(element, 'appearance');
-		this.label = LabelDefinition.forGroup(form, this);
-	}
+    this.reference = parseNodesetReference(parent, element, 'ref');
+    this.children = this.body.getChildElementDefinitions(form, this, element, childElements);
+    this.appearances = structureElementAppearanceParser.parseFrom(element, 'appearance');
+    this.label = LabelDefinition.forGroup(form, this);
+  }
 }

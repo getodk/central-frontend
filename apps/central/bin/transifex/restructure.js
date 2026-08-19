@@ -5,8 +5,8 @@ const { mapComponentsToFiles } = require('../util/util');
 const { readSourceMessages, rekeySource, restructure } = require('../util/transifex');
 
 const { messages, transifexPaths } = readSourceMessages(
-  'apps/central/src/locales',
-  mapComponentsToFiles('apps/central/src/components')
+  'src/locales',
+  mapComponentsToFiles('src/components')
 );
 const structured = restructure(messages);
 rekeySource(structured, transifexPaths);

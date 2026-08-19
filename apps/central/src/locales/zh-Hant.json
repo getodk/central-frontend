@@ -170,14 +170,12 @@
     "yesProceed": "是的，請繼續",
     "showPreview": "預覽",
     "hidePreview": "隱藏預覽",
-    "newPreview": "新預覽",
     "expand": "開啟",
     "collapse": "閉合",
     "selectRow": "選取列",
     "reset": "重設",
-    "reviewParallelUpdates": "查看並行更新",
-    "tryAgain": "再試一次",
     "upload": "上傳",
+    "reviewParallelUpdates": "查看並行更新",
     "restore": "還原"
   },
   "field": {
@@ -341,7 +339,6 @@
     "totalEntities": "實體總數",
     "versionShort": "v{version}",
     "warning": "警告",
-    "beta": "測試版",
     "none": "(無)",
     "search": "檢索",
     "reviewState": "審核狀態",

@@ -4,19 +4,19 @@ import type { EvaluableArgument, FunctionSignature } from './FunctionImplementat
 import { FunctionImplementation } from './FunctionImplementation.ts';
 
 export type NodeSetFunctionCallable = <
-	T extends XPathNode,
-	Arguments extends readonly EvaluableArgument[],
+  T extends XPathNode,
+  Arguments extends readonly EvaluableArgument[],
 >(
-	context: LocationPathEvaluation<T>,
-	args: Arguments
+  context: LocationPathEvaluation<T>,
+  args: Arguments
 ) => readonly T[];
 
 export class NodeSetFunction extends FunctionImplementation {
-	constructor(localName: string, signature: FunctionSignature, call: NodeSetFunctionCallable) {
-		super(localName, signature, (context, args) => {
-			const nodes = call(context, args);
+  constructor(localName: string, signature: FunctionSignature, call: NodeSetFunctionCallable) {
+    super(localName, signature, (context, args) => {
+      const nodes = call(context, args);
 
-			return LocationPathEvaluation.fromArbitraryNodes(context, nodes, this);
-		});
-	}
+      return LocationPathEvaluation.fromArbitraryNodes(context, nodes, this);
+    });
+  }
 }

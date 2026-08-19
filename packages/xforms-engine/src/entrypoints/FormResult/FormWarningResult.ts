@@ -5,21 +5,21 @@ import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
 import { BaseInstantiableFormResult } from './BaseInstantiableFormResult.ts';
 
 export interface FormWarningResultOptions {
-	readonly warnings: LoadFormWarnings;
-	readonly error: null;
-	readonly scope: ReactiveScope;
-	readonly formResource: FormResource;
-	readonly instanceOptions: BasePrimaryInstanceOptions;
+  readonly warnings: LoadFormWarnings;
+  readonly error: null;
+  readonly scope: ReactiveScope;
+  readonly formResource: FormResource;
+  readonly instanceOptions: BasePrimaryInstanceOptions;
 }
 
 export class FormWarningResult
-	extends BaseInstantiableFormResult<'warning'>
-	implements LoadFormWarningResult
+  extends BaseInstantiableFormResult<'warning'>
+  implements LoadFormWarningResult
 {
-	constructor(options: FormWarningResultOptions) {
-		super({
-			status: 'warning',
-			...options,
-		});
-	}
+  constructor(options: FormWarningResultOptions) {
+    super({
+      status: 'warning',
+      ...options,
+    });
+  }
 }

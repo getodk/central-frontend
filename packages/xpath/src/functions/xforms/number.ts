@@ -16,23 +16,23 @@ export const cos = mathAlias('cos');
 export const exp = mathAlias('exp');
 
 export const exp10 = new NumberFunction(
-	'exp10',
-	[{ arityType: 'required', typeHint: 'number' }],
-	(context, [expression]): number => {
-		const number = expression!.evaluate(context).toNumber();
+  'exp10',
+  [{ arityType: 'required', typeHint: 'number' }],
+  (context, [expression]): number => {
+    const number = expression!.evaluate(context).toNumber();
 
-		return 10 ** number;
-	}
+    return 10 ** number;
+  }
 );
 
 export const int = new NumberFunction(
-	'int',
-	[{ arityType: 'required', typeHint: 'number' }],
-	(context, [expression]): number => {
-		const number = expression!.evaluate(context).toNumber();
+  'int',
+  [{ arityType: 'required', typeHint: 'number' }],
+  (context, [expression]): number => {
+    const number = expression!.evaluate(context).toNumber();
 
-		return number > 0 ? Math.floor(number) : Math.ceil(number);
-	}
+    return number > 0 ? Math.floor(number) : Math.ceil(number);
+  }
 );
 
 export const log = mathAlias('log');
@@ -48,31 +48,31 @@ export const min = mathNAlias('min');
  */
 // TODO: explicit override semantics?
 export const number = new FunctionImplementation(
-	'number',
-	[{ arityType: 'optional' }],
-	(context, [expression]) => {
-		const results = expression?.evaluate(context) ?? context;
-		const numberValue = results.toNumber();
-		const { type } = results;
+  'number',
+  [{ arityType: 'optional' }],
+  (context, [expression]) => {
+    const results = expression?.evaluate(context) ?? context;
+    const numberValue = results.toNumber();
+    const { type } = results;
 
-		if (type === 'NODE' || type === 'STRING') {
-			const stringValue = results.toString();
-			const dateTime = dateTimeFromString(context.timeZone, stringValue);
+    if (type === 'NODE' || type === 'STRING') {
+      const stringValue = results.toString();
+      const dateTime = dateTimeFromString(context.timeZone, stringValue);
 
-			if (dateTime != null) {
-				return new DateTimeLikeEvaluation(context, dateTime, {
-					booleanValue: true,
-					stringValue: String(Math.floor(dateTime.epochMilliseconds / DAY_MILLISECONDS)),
-				});
-			}
-		}
+      if (dateTime != null) {
+        return new DateTimeLikeEvaluation(context, dateTime, {
+          booleanValue: true,
+          stringValue: String(Math.floor(dateTime.epochMilliseconds / DAY_MILLISECONDS)),
+        });
+      }
+    }
 
-		if (type === 'NUMBER') {
-			return results;
-		}
+    if (type === 'NUMBER') {
+      return results;
+    }
 
-		return new NumberEvaluation(context, numberValue);
-	}
+    return new NumberEvaluation(context, numberValue);
+  }
 );
 
 const { PI } = Math;
@@ -84,32 +84,32 @@ export const pow = math2Alias('pow');
 export const random = new NumberFunction('random', [], Math.random);
 
 export const round = new NumberFunction(
-	'round',
-	[
-		{ arityType: 'required', typeHint: 'number' },
-		{ arityType: 'optional', typeHint: 'number' },
-	],
-	(context, [valueExpression, decimalsExpression]) => {
-		const value = valueExpression!.evaluate(context).toNumber();
+  'round',
+  [
+    { arityType: 'required', typeHint: 'number' },
+    { arityType: 'optional', typeHint: 'number' },
+  ],
+  (context, [valueExpression, decimalsExpression]) => {
+    const value = valueExpression!.evaluate(context).toNumber();
 
-		if (Number.isNaN(value)) {
-			return value;
-		}
+    if (Number.isNaN(value)) {
+      return value;
+    }
 
-		const decimals = decimalsExpression?.evaluate(context).toNumber() ?? 0;
+    const decimals = decimalsExpression?.evaluate(context).toNumber() ?? 0;
 
-		if (Number.isNaN(decimals)) {
-			return NaN;
-		}
+    if (Number.isNaN(decimals)) {
+      return NaN;
+    }
 
-		const sign = value < 0 ? -1 : 1;
-		const unsigned = Math.abs(value);
-		const decimalMultiplier = 10 ** decimals;
-		const shifted = unsigned * decimalMultiplier;
-		const rounded = Math.round(shifted);
+    const sign = value < 0 ? -1 : 1;
+    const unsigned = Math.abs(value);
+    const decimalMultiplier = 10 ** decimals;
+    const shifted = unsigned * decimalMultiplier;
+    const rounded = Math.round(shifted);
 
-		return (rounded / decimalMultiplier) * sign;
-	}
+    return (rounded / decimalMultiplier) * sign;
+  }
 );
 
 export const sin = mathAlias('sin');

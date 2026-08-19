@@ -33,7 +33,7 @@ export const extendedDatasets = dataStore({
     name = 'trees',
     properties = [],
     approvalRequired = false,
-    ownerOnly = false,
+    accessFilter = null,
     entities = undefined,
     lastEntity = undefined,
     lastUpdate = undefined,
@@ -51,7 +51,8 @@ export const extendedDatasets = dataStore({
       name,
       properties: properties.map(normalizeProperty),
       approvalRequired,
-      ownerOnly,
+      ownerOnly: accessFilter?.type === 'ownerOnly',
+      accessFilter,
       ...entityStats,
       linkedForms,
       sourceForms

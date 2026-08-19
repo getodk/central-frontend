@@ -1,7 +1,7 @@
 import type {
-	XFORMS_KNOWN_ATTRIBUTE,
-	XFORMS_LOCAL_NAME,
-	XFormsItextTranslationMap,
+  XFORMS_KNOWN_ATTRIBUTE,
+  XFORMS_LOCAL_NAME,
+  XFormsItextTranslationMap,
 } from '@getodk/xpath';
 import { StaticDocument } from '../../integration/xpath/static-dom/StaticDocument.ts';
 import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
@@ -9,34 +9,34 @@ import type { XFormDOM } from '../XFormDOM.ts';
 import { parseStaticDocumentFromDOMSubtree } from '../shared/parseStaticDocumentFromDOMSubtree.ts';
 
 export interface ItextTranslationDefinition extends StaticDocument {
-	readonly rootDocument: ItextTranslationDefinition;
-	readonly root: ItextTranslationRootDefinition;
+  readonly rootDocument: ItextTranslationDefinition;
+  readonly root: ItextTranslationRootDefinition;
 }
 
 export interface ItextTranslationRootDefinition extends StaticElement {
-	readonly [XFORMS_LOCAL_NAME]: 'translation';
-	readonly [XFORMS_KNOWN_ATTRIBUTE]: 'lang';
+  readonly [XFORMS_LOCAL_NAME]: 'translation';
+  readonly [XFORMS_KNOWN_ATTRIBUTE]: 'lang';
 
-	readonly root: ItextTranslationRootDefinition;
-	readonly rootDocument: ItextTranslationDefinition;
+  readonly root: ItextTranslationRootDefinition;
+  readonly rootDocument: ItextTranslationDefinition;
 }
 
 type ItextTranslationsDefinitionEntry = readonly [
-	key: string,
-	value: ItextTranslationRootDefinition,
+  key: string,
+  value: ItextTranslationRootDefinition,
 ];
 
 type AssertItextTranslationsDefinitionEntry = (
-	entry: readonly [key: string | null, value: StaticElement]
+  entry: readonly [key: string | null, value: StaticElement]
 ) => asserts entry is ItextTranslationsDefinitionEntry;
 
 const assertItextTranslationsDefinitionEntry: AssertItextTranslationsDefinitionEntry = ([
-	key,
-	root,
+  key,
+  root,
 ]) => {
-	if (key == null || root.qualifiedName.localName !== 'translation') {
-		throw new Error();
-	}
+  if (key == null || root.qualifiedName.localName !== 'translation') {
+    throw new Error();
+  }
 };
 
 /**
@@ -50,30 +50,30 @@ const assertItextTranslationsDefinitionEntry: AssertItextTranslationsDefinitionE
  * {@link https://github.com/getodk/web-forms/issues/22#issuecomment-2669228571 | Allow output in translation text (#22)}.
  */
 const itextTranslationNodesetPrefix = (lang: string) => {
-	return `wf:translation('${lang}')`;
+  return `wf:translation('${lang}')`;
 };
 
 export class ItextTranslationsDefinition
-	extends Map<string, ItextTranslationRootDefinition>
-	implements XFormsItextTranslationMap<ItextTranslationRootDefinition>
+  extends Map<string, ItextTranslationRootDefinition>
+  implements XFormsItextTranslationMap<ItextTranslationRootDefinition>
 {
-	static from(xformDOM: XFormDOM): ItextTranslationsDefinition {
-		const entries = xformDOM.itextTranslationElements.map((element) => {
-			const lang = element.getAttribute('lang');
-			const { root } = parseStaticDocumentFromDOMSubtree(element, {
-				nodesetPrefix: itextTranslationNodesetPrefix(lang),
-			});
-			const entry = [lang, root] as const;
+  static from(xformDOM: XFormDOM): ItextTranslationsDefinition {
+    const entries = xformDOM.itextTranslationElements.map((element) => {
+      const lang = element.getAttribute('lang');
+      const { root } = parseStaticDocumentFromDOMSubtree(element, {
+        nodesetPrefix: itextTranslationNodesetPrefix(lang),
+      });
+      const entry = [lang, root] as const;
 
-			assertItextTranslationsDefinitionEntry(entry);
+      assertItextTranslationsDefinitionEntry(entry);
 
-			return entry;
-		});
+      return entry;
+    });
 
-		return new this(entries);
-	}
+    return new this(entries);
+  }
 
-	private constructor(entries: readonly ItextTranslationsDefinitionEntry[]) {
-		super(entries);
-	}
+  private constructor(entries: readonly ItextTranslationsDefinitionEntry[]) {
+    super(entries);
+  }
 }

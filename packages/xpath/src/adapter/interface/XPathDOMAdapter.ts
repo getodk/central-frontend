@@ -6,12 +6,12 @@ import type { XPathTraversalAdapter } from './XPathTraversalAdapter.ts';
 import type { XPathValueAdapter } from './XPathValueAdapter.ts';
 
 export interface XPathDOMAdapter<T extends XPathNode>
-	extends
-		XPathNodeKindAdapter<T>,
-		XPathNameAdapter<T>,
-		XPathValueAdapter<T>,
-		XPathTraversalAdapter<T>,
-		Partial<XPathDOMOptimizableOperations<T>> {}
+  extends
+    XPathNodeKindAdapter<T>,
+    XPathNameAdapter<T>,
+    XPathValueAdapter<T>,
+    XPathTraversalAdapter<T>,
+    Partial<XPathDOMOptimizableOperations<T>> {}
 
 export type * from './XPathNode.ts';
 export { XPathNodeKindKey } from './XPathNode.ts';

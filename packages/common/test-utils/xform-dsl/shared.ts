@@ -15,25 +15,25 @@
  * structure we produce from JSX at compile time).
  */
 const escapeAttributeValueXMLCharacters = (attributeValue: string) => {
-	return attributeValue.replaceAll(/[<>]/g, (char) => {
-		switch (char) {
-			case '<':
-				return '&lt;';
+  return attributeValue.replaceAll(/[<>]/g, (char) => {
+    switch (char) {
+      case '<':
+        return '&lt;';
 
-			case '>':
-				return '&gt;';
+      case '>':
+        return '&gt;';
 
-			default:
-				throw new Error(`Unexpected unescaped character: ${char}`);
-		}
-	});
+      default:
+        throw new Error(`Unexpected unescaped character: ${char}`);
+    }
+  });
 };
 
 export function buildAttributesString(attributes: ReadonlyMap<string, string>): string {
-	const entries = Array.from(attributes.entries());
+  const entries = Array.from(attributes.entries());
 
-	return entries
-		.map(([key, value]) => `${key}="${escapeAttributeValueXMLCharacters(value)}"`)
-		.join(' ')
-		.trim();
+  return entries
+    .map(([key, value]) => `${key}="${escapeAttributeValueXMLCharacters(value)}"`)
+    .join(' ')
+    .trim();
 }

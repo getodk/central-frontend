@@ -152,7 +152,8 @@ formVersions = dataStore({
     lastSubmission = undefined,
     reviewStates = undefined,
     publishedBy = undefined,
-    draftToken = draft ? faker.string.alphanumeric(64) : null
+    draftToken = draft ? faker.string.alphanumeric(64) : null,
+    publishNotes = null
   }) => {
     if (form === undefined) throw new Error('form not found');
     const result = {
@@ -182,7 +183,8 @@ formVersions = dataStore({
     } else {
       Object.assign(result, {
         publishedAt: publishedAt != null ? publishedAt : result.createdAt,
-        publishedBy: publishedBy != null ? toActor(publishedBy) : form.createdBy
+        publishedBy: publishedBy != null ? toActor(publishedBy) : form.createdBy,
+        publishNotes
       });
     }
     return result;
@@ -272,7 +274,7 @@ export const extendedFormVersions = view(
   formVersions,
   (version) => ({
     ...pick(basicFormProps, findFormForVersion(version)),
-    ...pick([...basicVersionProps, 'excelContentType', 'publishedBy'], version)
+    ...pick([...basicVersionProps, 'excelContentType', 'publishedBy', 'publishNotes'], version)
   })
 );
 export const standardFormDrafts = view(

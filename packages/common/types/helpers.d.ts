@@ -14,7 +14,7 @@ export type Identity<T> = T;
  * -
  */
 export type Merge<T> = Identity<{
-	[K in keyof T]: T[K];
+  [K in keyof T]: T[K];
 }>;
 
 /**
@@ -32,7 +32,7 @@ export type ExpandUnion<T> = Exclude<T, never>;
  * `readonly T[]` -> `T[]` or `ReadonlyMap<T>` -> `Map<T>`.
  */
 export type ShallowMutable<T extends object> = {
-	-readonly [K in keyof T]: T[K];
+  -readonly [K in keyof T]: T[K];
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

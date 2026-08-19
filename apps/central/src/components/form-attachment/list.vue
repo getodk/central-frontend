@@ -10,7 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="form-attachment-list">
+  <file-drop-zone id="form-attachment-list" :disabled="uploading" :styled="false"
+    @dragenter="dragenter" @dragleave="dragleave" @drop="drop">
     <form-attachment-table
       :file-is-over-drop-zone="countOfFilesOverDropZone !== 0 && !uploading"
       :dragover-attachment="dragoverAttachment"
@@ -20,7 +21,7 @@ except according to the terms contained in the LICENSE file.
     <p>
       <button id="form-attachment-list-upload-button" type="button"
         class="btn btn-primary" @click="uploadFilesModal.show()">
-        <span class="icon-cloud-upload"></span>{{ $t('action.upload') }}
+        <span class="icon-folder-open"></span>{{ $t('action.upload') }}
       </button>
       <span>{{ $t('orDrag') }}</span>
     </p>
@@ -38,10 +39,11 @@ except according to the terms contained in the LICENSE file.
       @confirm="uploadFiles" @cancel="cancelUploads"/>
     <form-attachment-link-dataset v-bind="linkDatasetModal"
       @hide="linkDatasetModal.hide()" @success="afterLinkDataset"/>
-  </div>
+  </file-drop-zone>
 </template>
 
 <script>
+import FileDropZone from '../file-drop-zone.vue';
 import FormAttachmentLinkDataset from './link-dataset.vue';
 import FormAttachmentNameMismatch from './name-mismatch.vue';
 import FormAttachmentPopups from './popups.vue';
@@ -57,13 +59,14 @@ import { useRequestData } from '../../request-data';
 export default {
   name: 'FormAttachmentList',
   components: {
+    FileDropZone,
     FormAttachmentLinkDataset,
     FormAttachmentNameMismatch,
     FormAttachmentPopups,
     FormAttachmentTable,
     FormAttachmentUploadFiles
   },
-  inject: ['toast', 'redAlert', 'projectId', 'dragDisabled', 'dragHandler'],
+  inject: ['toast', 'redAlert', 'projectId'],
   setup() {
     const { project, form, draftAttachments, datasets } = useRequestData();
     const { request } = useRequest();
@@ -130,20 +133,7 @@ export default {
         if (dataExists && this.project.datasets > 0) this.fetchDatasets();
       },
       immediate: true
-    },
-    uploading(uploading) {
-      this.dragDisabled = uploading;
     }
-  },
-  created() {
-    this.dragHandler = (event, ...args) => {
-      // Delegate to one of the drag and drop methods below (e.g.,
-      // this.dragenter()).
-      this[event.type]?.(event, ...args);
-    };
-  },
-  beforeUnmount() {
-    this.dragHandler = noop;
   },
   methods: {
     ////////////////////////////////////////////////////////////////////////////
@@ -166,8 +156,6 @@ export default {
         if (items[i].kind === 'file') count += 1;
       return count;
     },
-    // this.dragenter(), this.dragleave(), and this.drop() are called via
-    // this.dragHandler.
     dragenter(event) {
       const { items } = event.dataTransfer;
       this.countOfFilesOverDropZone = this.fileItemCount(items);
@@ -332,10 +320,10 @@ export default {
 {
   "en": {
     "action": {
-      "upload": "Choose files"
+      "upload": "choose files"
     },
-    // This text is shown next to a button with the text "Choose files".
-    "orDrag": "or drag files onto this page to upload",
+    // This text is shown next to a button with the text "choose files".
+    "orDrag": "or drag files onto this section to upload",
     "problem": {
       // {message} is an error message from the server.
       "noneUploaded": "{message} No files were successfully uploaded.",
@@ -367,10 +355,6 @@ export default {
     }
   },
   "de": {
-    "action": {
-      "upload": "Dateien auswählen"
-    },
-    "orDrag": "oder ziehen Sie Dateien zum Hochladen auf diese Seite",
     "problem": {
       "noneUploaded": "{message} Es wurden keine Dateien erfolgreich hochgeladen.",
       "someUploaded": "{message} Nur {uploaded} von {total} Dateien wurde erfolgreich hochgeladen. | {message} Nur {uploaded} von {total} Dateien wurden erfolgreich hochgeladen."
@@ -381,10 +365,6 @@ export default {
     }
   },
   "es": {
-    "action": {
-      "upload": "Elegir archivos"
-    },
-    "orDrag": "o arrastre archivos a esta página para cargarlos",
     "problem": {
       "noneUploaded": "{message} No se cargaron archivos correctamente",
       "someUploaded": "{message} Solo {uploaded} de {total} archivos se cargó correctamente. | {message} Solo {uploaded} de {total} archivos se cargaron correctamente. | {message} Solo {uploaded} de {total} archivos se cargaron correctamente."
@@ -396,7 +376,7 @@ export default {
   },
   "fr": {
     "action": {
-      "upload": "Choisir les fichiers"
+      "upload": "choisir les fichiers"
     },
     "orDrag": "ou glisser les fichiers dans cette page pour les téléverser",
     "problem": {
@@ -418,10 +398,6 @@ export default {
     }
   },
   "it": {
-    "action": {
-      "upload": "Scegli files"
-    },
-    "orDrag": "o trascinare i file su questa pagina per caricarli",
     "problem": {
       "noneUploaded": "{message} Nessun file è stato caricato correttamente.",
       "someUploaded": "{message} Solamente {uploaded} su {total} files è stato caricato con successo | {message} Solamente {uploaded} su {total} files sono stati caricati con successo | {message} Solamente {uploaded} su {total} files sono stati caricati con successo"
@@ -441,10 +417,6 @@ export default {
     }
   },
   "pt": {
-    "action": {
-      "upload": "Escolher arquivos"
-    },
-    "orDrag": "ou arraste arquivos aqui para carregar",
     "problem": {
       "noneUploaded": "{message} Nenhum arquivo foi carregado.",
       "someUploaded": "{message} Apenas {uploaded} de {total} arquivo foi carregado com sucesso. | {message} Apenas {uploaded} de {total} arquivos foram carregados com sucesso. | {message} Apenas {uploaded} de {total} arquivos foram carregados com sucesso."
@@ -464,10 +436,6 @@ export default {
     }
   },
   "zh": {
-    "action": {
-      "upload": "选择文件"
-    },
-    "orDrag": "或将文件拖拽至此以上传",
     "problem": {
       "noneUploaded": "{message}没有文件上传成功。",
       "someUploaded": "{message} 成功上传 {uploaded}/{total} 个文件。"
@@ -478,10 +446,6 @@ export default {
     }
   },
   "zh-Hant": {
-    "action": {
-      "upload": "選擇檔案"
-    },
-    "orDrag": "或將檔案拖曳至此頁上傳",
     "problem": {
       "noneUploaded": "{message} 沒有文件上傳成功。",
       "someUploaded": "{message} 僅 {uploaded} 個檔案成功上傳，共 {total} 個檔案。"

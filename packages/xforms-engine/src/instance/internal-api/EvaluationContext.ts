@@ -46,42 +46,42 @@ import type { TranslationContext } from './TranslationContext.ts';
  * @see {@link createTranslationState} for additional context.
  */
 export interface EvaluationContext extends TranslationContext {
-	/**
-	 * Used to determine whether {@link contextNode} is attached to its
-	 * {@link EngineXPathNode} document hierarchy.
-	 *
-	 * - If this function returns `true`: expressions are evaluated as defined.
-	 * - If this function returns `false`: expressions are evaluated to either an
-	 *   explicit default value (if provided) or an implicit default value
-	 *   appropriate for the requested result type.
-	 *
-	 * @see {@link createComputedExpression} for further detail on the latter.
-	 */
-	readonly isAttached: Accessor<boolean>;
+  /**
+   * Used to determine whether {@link contextNode} is attached to its
+   * {@link EngineXPathNode} document hierarchy.
+   *
+   * - If this function returns `true`: expressions are evaluated as defined.
+   * - If this function returns `false`: expressions are evaluated to either an
+   *   explicit default value (if provided) or an implicit default value
+   *   appropriate for the requested result type.
+   *
+   * @see {@link createComputedExpression} for further detail on the latter.
+   */
+  readonly isAttached: Accessor<boolean>;
 
-	readonly scope: ReactiveScope;
-	readonly evaluator: EngineXPathEvaluator;
+  readonly scope: ReactiveScope;
+  readonly evaluator: EngineXPathEvaluator;
 
-	/**
-	 * Produces the current absolute reference to the {@link contextNode}, where
-	 * the AbsoluteLocationPath expression `/` resolves to the active
-	 * {@link PrimaryInstance}, and each Step and/or position Predicate from there
-	 * corresponds to the node hierarchy descending from there.
-	 */
-	readonly contextReference: Accessor<string>;
+  /**
+   * Produces the current absolute reference to the {@link contextNode}, where
+   * the AbsoluteLocationPath expression `/` resolves to the active
+   * {@link PrimaryInstance}, and each Step and/or position Predicate from there
+   * corresponds to the node hierarchy descending from there.
+   */
+  readonly contextReference: Accessor<string>;
 
-	/**
-	 * Note: in most cases, implementations of {@link EvaluationContext} will
-	 * **also** be an implementation of {@link EngineXPathNode} (as concrete
-	 * implementations of {@link InstanceNode}). This property is an intentional
-	 * indirection which:
-	 *
-	 * - Expresses only the much more limited set of properties which must be
-	 *   present to initialize computations during those nodes' construction.
-	 *
-	 * - Allows for a handful of cases where an {@link InstanceNode} provides the
-	 *   requisite facilities for evaluating expressions in a {@link StaticNode}'s
-	 *   context (itemsets being a prominent example).
-	 */
-	readonly contextNode: EngineXPathNode;
+  /**
+   * Note: in most cases, implementations of {@link EvaluationContext} will
+   * **also** be an implementation of {@link EngineXPathNode} (as concrete
+   * implementations of {@link InstanceNode}). This property is an intentional
+   * indirection which:
+   *
+   * - Expresses only the much more limited set of properties which must be
+   *   present to initialize computations during those nodes' construction.
+   *
+   * - Allows for a handful of cases where an {@link InstanceNode} provides the
+   *   requisite facilities for evaluating expressions in a {@link StaticNode}'s
+   *   context (itemsets being a prominent example).
+   */
+  readonly contextNode: EngineXPathNode;
 }

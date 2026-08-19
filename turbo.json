@@ -1,0 +1,28 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build", "//#build:web"],
+      "outputs": ["dist/**"],
+      "outputLogs": "new-only"
+    },
+    "@getodk/xpath#build": {
+      "outputLogs": "new-only"
+    },
+    "@getodk/xforms-engine#build": {
+      "dependsOn": ["@getodk/xpath#build"],
+      "outputs": ["dist/**"]
+    },
+    "@getodk/web-forms#build": {
+      "dependsOn": ["@getodk/xforms-engine#build"],
+      "outputs": ["dist/**"]
+    },
+    "//#build:web": {
+      "dependsOn": ["@getodk/web-forms#build"],
+      "outputs": ["dist/**"]
+    },
+    "test": {
+      "outputs": []
+    }
+  }
+}

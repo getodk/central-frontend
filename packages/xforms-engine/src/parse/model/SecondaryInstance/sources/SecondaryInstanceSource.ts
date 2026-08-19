@@ -16,14 +16,14 @@ export type SecondaryInstanceSourceFormat =
 	| 'blank';
 
 export abstract class SecondaryInstanceSource<
-	Format extends SecondaryInstanceSourceFormat = SecondaryInstanceSourceFormat,
+  Format extends SecondaryInstanceSourceFormat = SecondaryInstanceSourceFormat,
 > {
-	constructor(
-		readonly format: Format,
-		readonly instanceId: string,
-		readonly resourceURL: JRResourceURL | null,
-		readonly domElement: DOMSecondaryInstanceElement
-	) {}
+  constructor(
+    readonly format: Format,
+    readonly instanceId: string,
+    readonly resourceURL: JRResourceURL | null,
+    readonly domElement: DOMSecondaryInstanceElement
+  ) {}
 
-	abstract parseDefinition(): SecondaryInstanceDefinition;
+  abstract parseDefinition(): SecondaryInstanceDefinition;
 }

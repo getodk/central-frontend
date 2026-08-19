@@ -1,5 +1,46 @@
 # @getodk/xforms-engine
 
+## 1.0.2
+
+### Patch Changes
+
+- 5827edb: Fixed performance issues when rendering a select with options from a large entity list
+
+## 1.0.1
+
+### Patch Changes
+
+- 5ef4ccd: Show error indicator when submission attachment cannot be loaded
+- f31c1ca: Escapes greater than symbols in markdown
+- c9d45bc: Repeat instances are no longer deleted when `jr:count` decreases
+- ed2b209: Trim whitespace from attachment filename when editing submissions
+- cc33f84: Use current form version when editing a submission.
+- 0d32c73: Fixed issue with setvalue updated in an unexpected order
+
+## 1.0.0
+
+### Major Changes
+
+- 3045945: First stable release
+
+### Minor Changes
+
+- 9918bea: Added support for submission encryption
+- dc8b683: Add support for annotate, draw and signature question types
+- 5f4083a: Fixed attachment removal on edit submission.
+- 4b93aa8: Preserved newlines in mixed-content label text
+
+### Patch Changes
+
+- dcff72c: Improves usability of error message when external resource failed to load
+- eccae97: Fixed two memory leaks and improved `position()` performance on large same-name sibling sets.
+- 2c087b6: Fixes geopoint values to include altitude and accuracy, defaulting to 0 if missing, matching ODK Collect.
+- 06a3ed7: Detect whitespace in external instance csv files to make it easier to debug
+- b6aea65: Fixed setvalue with now() into a date field returning empty string
+- b7abdc1: Fixed handling of ranges with negative step values
+- f1c8db5: Fixed bug where computed image urls blocked form loading
+- d2ba628: Preserve spaces after output elements in dynamic labels
+
 ## 0.22.0
 
 ### Minor Changes

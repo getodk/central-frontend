@@ -11,25 +11,25 @@ let Parser: ParserConstructor;
 // necessitates it.
 
 if (
-	// Node/Vitest (jsdom) requires a namespace import, and access to a `default`
-	// property on the imported namespace object.
-	typeof WebTreeSitterNamespace.default === 'function'
+  // Node/Vitest (jsdom) requires a namespace import, and access to a `default`
+  // property on the imported namespace object.
+  typeof WebTreeSitterNamespace.default === 'function'
 ) {
-	Parser = WebTreeSitterNamespace.default;
+  Parser = WebTreeSitterNamespace.default;
 } else if (
-	// Vite build and Vitest (browser test environments) require a namespace
-	// import, to which the constructor is assigned.
-	typeof WebTreeSitterNamespace === 'function'
+  // Vite build and Vitest (browser test environments) require a namespace
+  // import, to which the constructor is assigned.
+  typeof WebTreeSitterNamespace === 'function'
 ) {
-	Parser = WebTreeSitterNamespace;
+  Parser = WebTreeSitterNamespace;
 } else if (
-	// No known cases, added out of an abundance of caution since the ESM default
-	// is already imported for its type definitions.
-	typeof WebTreeSitter === 'function'
+  // No known cases, added out of an abundance of caution since the ESM default
+  // is already imported for its type definitions.
+  typeof WebTreeSitter === 'function'
 ) {
-	Parser = WebTreeSitter;
+  Parser = WebTreeSitter;
 } else {
-	throw new Error('Failed to import web-tree-sitter (`Parser` constructor)');
+  throw new Error('Failed to import web-tree-sitter (`Parser` constructor)');
 }
 
 /**
@@ -38,11 +38,11 @@ if (
  * to access the file system there.
  */
 const unprefixNodeFileSystemPath = (resourcePath: string) => {
-	if (IS_NODE_RUNTIME && resourcePath.startsWith('/@fs/')) {
-		return resourcePath.replace('/@fs/', '/');
-	}
+  if (IS_NODE_RUNTIME && resourcePath.startsWith('/@fs/')) {
+    return resourcePath.replace('/@fs/', '/');
+  }
 
-	return resourcePath;
+  return resourcePath;
 };
 
 const WEB_ASSEMBLY_DATA_URL_PREFIX = 'data:application/wasm;base64,';
@@ -50,52 +50,52 @@ const WEB_ASSEMBLY_DATA_URL_PREFIX = 'data:application/wasm;base64,';
 type WebAssemblyDataURL = `${typeof WEB_ASSEMBLY_DATA_URL_PREFIX}${string}`;
 
 const isWebAssemblyDataURL = (resource: string): resource is WebAssemblyDataURL => {
-	return resource.startsWith(WEB_ASSEMBLY_DATA_URL_PREFIX);
+  return resource.startsWith(WEB_ASSEMBLY_DATA_URL_PREFIX);
 };
 
 const dataURLToUInt8Array = (resource: WebAssemblyDataURL): Uint8Array => {
-	const base64 = resource.replace(WEB_ASSEMBLY_DATA_URL_PREFIX, '');
-	const binaryChars = atob(base64);
-	const mapBinaryChar = (character: string) => character.charCodeAt(0);
+  const base64 = resource.replace(WEB_ASSEMBLY_DATA_URL_PREFIX, '');
+  const binaryChars = atob(base64);
+  const mapBinaryChar = (character: string) => character.charCodeAt(0);
 
-	return Uint8Array.from(binaryChars, mapBinaryChar);
+  return Uint8Array.from(binaryChars, mapBinaryChar);
 };
 
 const resolveWASMResource = (resource: string): Uint8Array | string => {
-	if (isWebAssemblyDataURL(resource)) {
-		return dataURLToUInt8Array(resource);
-	}
+  if (isWebAssemblyDataURL(resource)) {
+    return dataURLToUInt8Array(resource);
+  }
 
-	return unprefixNodeFileSystemPath(resource);
+  return unprefixNodeFileSystemPath(resource);
 };
 
 export interface WebAssemblyResourceSpecifiers {
-	readonly webTreeSitter: string;
-	readonly xpathLanguage: string;
+  readonly webTreeSitter: string;
+  readonly xpathLanguage: string;
 }
 
 interface WebTreeSitterInitOptions {
-	/**
-	 * Usage: Node, unbundled (`xpath` dev/test). Vite will have resolved the
-	 * import `web-tree-sitter/tree-sitter.wasm?url` to a file system path.
-	 *
-	 * Providing this init option to web-tree-sitter will direct it to the
-	 * WASM resource on disk.
-	 */
-	readonly locateFile?: () => string;
+  /**
+   * Usage: Node, unbundled (`xpath` dev/test). Vite will have resolved the
+   * import `web-tree-sitter/tree-sitter.wasm?url` to a file system path.
+   *
+   * Providing this init option to web-tree-sitter will direct it to the
+   * WASM resource on disk.
+   */
+  readonly locateFile?: () => string;
 
-	/**
-	 * Usage: Any runtime, bundled (`xpath` build -> downstream). Vite will have
-	 * resolved the import `web-tree-sitter/tree-sitter.wasm?url` to its path in
-	 * the file system, and then bundled the file's binary data as a `data:` URL.
-	 * We cannot pass this to web-tree-sitter directly, as we do with
-	 * {@link locateFile}: this must always produce a file system path.
-	 *
-	 * Instead, we "preload" the binary data by converting the bundled `data:`
-	 * URL to a {@link Uint8Array}. Providing that binary representation as
-	 * {@link wasmBinary} bypasses web-tree-sitter's file system access.
-	 */
-	readonly wasmBinary?: Uint8Array;
+  /**
+   * Usage: Any runtime, bundled (`xpath` build -> downstream). Vite will have
+   * resolved the import `web-tree-sitter/tree-sitter.wasm?url` to its path in
+   * the file system, and then bundled the file's binary data as a `data:` URL.
+   * We cannot pass this to web-tree-sitter directly, as we do with
+   * {@link locateFile}: this must always produce a file system path.
+   *
+   * Instead, we "preload" the binary data by converting the bundled `data:`
+   * URL to a {@link Uint8Array}. Providing that binary representation as
+   * {@link wasmBinary} bypasses web-tree-sitter's file system access.
+   */
+  readonly wasmBinary?: Uint8Array;
 }
 
 /**
@@ -122,39 +122,39 @@ interface WebTreeSitterInitOptions {
  *    want to adopt this evaluator there).
  */
 export class TreeSitterXPathParser {
-	static async init(resources: WebAssemblyResourceSpecifiers): Promise<TreeSitterXPathParser> {
-		const { webTreeSitter, xpathLanguage } = resources;
+  static async init(resources: WebAssemblyResourceSpecifiers): Promise<TreeSitterXPathParser> {
+    const { webTreeSitter, xpathLanguage } = resources;
 
-		let webTreeSitterInitOptions: WebTreeSitterInitOptions = {};
+    let webTreeSitterInitOptions: WebTreeSitterInitOptions = {};
 
-		if (webTreeSitter != null) {
-			const webTreeSitterResource = resolveWASMResource(webTreeSitter);
+    if (webTreeSitter != null) {
+      const webTreeSitterResource = resolveWASMResource(webTreeSitter);
 
-			if (typeof webTreeSitterResource === 'string') {
-				webTreeSitterInitOptions = {
-					locateFile: () => webTreeSitterResource,
-				};
-			} else {
-				webTreeSitterInitOptions = { wasmBinary: webTreeSitterResource };
-			}
-		}
+      if (typeof webTreeSitterResource === 'string') {
+        webTreeSitterInitOptions = {
+          locateFile: () => webTreeSitterResource,
+        };
+      } else {
+        webTreeSitterInitOptions = { wasmBinary: webTreeSitterResource };
+      }
+    }
 
-		await Parser.init(webTreeSitterInitOptions);
+    await Parser.init(webTreeSitterInitOptions);
 
-		const xpathLanguageResource = resolveWASMResource(xpathLanguage);
+    const xpathLanguageResource = resolveWASMResource(xpathLanguage);
 
-		const language = await Parser.Language.load(xpathLanguageResource);
+    const language = await Parser.Language.load(xpathLanguageResource);
 
-		const parser = new Parser();
+    const parser = new Parser();
 
-		parser.setLanguage(language);
+    parser.setLanguage(language);
 
-		return new this(parser);
-	}
+    return new this(parser);
+  }
 
-	protected constructor(protected readonly parser: Parser) {}
+  protected constructor(protected readonly parser: Parser) {}
 
-	parse(expression: string): WebTreeSitter.Tree {
-		return this.parser.parse(expression);
-	}
+  parse(expression: string): WebTreeSitter.Tree {
+    return this.parser.parse(expression);
+  }
 }

@@ -5,39 +5,39 @@ import type { TextRange as ClientTextRange, TextChunk, TextRole } from '../../cl
 import { format } from './markdownFormat.ts';
 
 export interface MediaSources {
-	image?: JRResourceURL;
-	video?: JRResourceURL;
-	audio?: JRResourceURL;
+  image?: JRResourceURL;
+  video?: JRResourceURL;
+  audio?: JRResourceURL;
 }
 
 export class TextRange<Role extends TextRole> implements ClientTextRange<Role> {
-	*[Symbol.iterator]() {
-		yield* this.chunks;
-	}
+  *[Symbol.iterator]() {
+    yield* this.chunks;
+  }
 
-	get formatted(): MarkdownNode[] {
-		return format(this.chunks);
-	}
+  get formatted(): MarkdownNode[] {
+    return format(this.chunks);
+  }
 
-	get asString(): string {
-		return this.chunks.map((chunk) => chunk.asString).join('');
-	}
+  get asString(): string {
+    return this.chunks.map((chunk) => chunk.asString).join('');
+  }
 
-	get imageSource(): JRResourceURL | undefined {
-		return this.mediaSources?.image;
-	}
+  get imageSource(): JRResourceURL | undefined {
+    return this.mediaSources?.image;
+  }
 
-	get audioSource(): JRResourceURL | undefined {
-		return this.mediaSources?.audio;
-	}
+  get audioSource(): JRResourceURL | undefined {
+    return this.mediaSources?.audio;
+  }
 
-	get videoSource(): JRResourceURL | undefined {
-		return this.mediaSources?.video;
-	}
+  get videoSource(): JRResourceURL | undefined {
+    return this.mediaSources?.video;
+  }
 
-	constructor(
-		readonly role: Role,
-		protected readonly chunks: readonly TextChunk[],
-		protected readonly mediaSources?: MediaSources
-	) {}
+  constructor(
+    readonly role: Role,
+    protected readonly chunks: readonly TextChunk[],
+    protected readonly mediaSources?: MediaSources
+  ) {}
 }

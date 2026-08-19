@@ -4,7 +4,29 @@ import { DateTime, Settings } from 'luxon';
 export const isBefore = (isoString1, isoString2) =>
   DateTime.fromISO(isoString1) < DateTime.fromISO(isoString2);
 
-// Sets a single Luxon setting.
+// Returns an ISO string for a date in the past that is no earlier than the
+// specified dates.
+export const fakePastDate = (dateStrings) => {
+  const parsed = dateStrings
+    .filter(s => s != null)
+    .map(s => Date.parse(s));
+  if (parsed.length === 0) return faker.date.past().toISOString();
+  const from = Math.max(...parsed);
+  let to;
+  do {
+    to = Date.now() - 1000;
+  } while (from > to);
+  return faker.date.between({ from, to }).toISOString();
+};
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// LUXON SETTINGS
+
+const originalSettings = new Map();
+
+// Sets a single Luxon setting. Used by setLuxon() below.
 const setLuxonSetting = (name, value) => {
   if (name === 'now') {
     if (typeof value === 'number') {
@@ -22,32 +44,17 @@ const setLuxonSetting = (name, value) => {
   }
 };
 
-// setLuxon() sets one or more Luxon settings. It will restore the settings to
-// their original values at the end of the test.
-const originalSettings = new Map();
+// Sets one or more Luxon settings.
 export const setLuxon = (settings) => {
   for (const [name, value] of Object.entries(settings)) {
     if (!originalSettings.has(name)) originalSettings.set(name, Settings[name]);
     setLuxonSetting(name, value);
   }
 };
-afterEach(() => {
+
+// Restores Luxon settings to their original values after a call to setLuxon().
+export const restoreLuxon = () => {
   for (const [name, value] of originalSettings.entries())
     Settings[name] = value;
   originalSettings.clear();
-});
-
-// Returns an ISO string for a date in the past that is no earlier than the
-// specified dates.
-export const fakePastDate = (dateStrings) => {
-  const parsed = dateStrings
-    .filter(s => s != null)
-    .map(s => Date.parse(s));
-  if (parsed.length === 0) return faker.date.past().toISOString();
-  const from = Math.max(...parsed);
-  let to;
-  do {
-    to = Date.now() - 1000;
-  } while (from > to);
-  return faker.date.between({ from, to }).toISOString();
 };

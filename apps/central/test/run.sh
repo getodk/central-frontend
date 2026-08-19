@@ -4,11 +4,11 @@ shopt -s inherit_errexit || true
 
 # Normally, index.html is housed at the root of the repository for Vite, but
 # here we move it to public/, where Vue CLI expects it.
-cp index.html public/
+cp ../../index.html ../../public/
 output=$(mktemp)
-trap 'rm -- public/index.html "$output"' EXIT
+trap 'rm -- ../../public/index.html "$output"' EXIT
 
-NODE_ENV="test" karma start apps/central/karma.conf.js | tee "$output"
+NODE_ENV="test" karma start karma.conf.js | tee "$output"
 
 # Search for: warnings from console.warn(), including Vue warnings; Sass
 # warnings; and warnings from Karma.

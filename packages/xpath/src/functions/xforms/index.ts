@@ -9,11 +9,11 @@ import * as select from './select.ts';
 import * as string from './string.ts';
 
 export const xf = new FunctionLibrary(XFORMS_NAMESPACE_URI, [
-	...Object.values(boolean),
-	...Object.values(datetime),
-	...Object.values(geo),
-	...Object.values(number),
-	...Object.values(nodeset),
-	...Object.values(select),
-	...Object.values(string),
+  ...Object.values(boolean),
+  ...Object.values(datetime),
+  ...Object.values(geo),
+  ...Object.values(number),
+  ...Object.values(nodeset),
+  ...Object.values(select),
+  ...Object.values(string),
 ]);

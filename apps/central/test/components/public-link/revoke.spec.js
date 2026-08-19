@@ -6,22 +6,22 @@ import { load, mockHttp } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
 const mountOptions = () => ({
-  props: { state: true, publicLink: testData.standardPublicLinks.last() }
+  props: { state: true, publicLink: testData.extendedPublicLinks.last() }
 });
 
 describe('PublicLinkRevoke', () => {
   beforeEach(() => {
     mockLogin();
-    testData.standardPublicLinks.createPast(1, {
+    testData.extendedPublicLinks.createPast(1, {
       displayName: 'My Public Link',
       token: 'a'.repeat(64)
     });
   });
 
   it('toggles the modal', () =>
-    load('/projects/1/forms/f/public-links', { root: false }).testModalToggles({
+    load('/projects/1/forms/f/public-links').testModalToggles({
       modal: PublicLinkRevoke,
-      show: '.public-link-row .btn-danger',
+      show: '.public-link-row .revoke-button',
       hide: '.btn-link'
     }));
 
@@ -47,14 +47,14 @@ describe('PublicLinkRevoke', () => {
   describe('after a successful response', () => {
     const revoke = (series) => series
       .request(async (app) => {
-        await app.get('.public-link-row .btn-danger').trigger('click');
+        await app.get('.public-link-row .revoke-button').trigger('click');
         await app.get('#public-link-revoke .btn-danger').trigger('click');
       })
       .respondWithData(() => {
-        testData.standardPublicLinks.update(-1, { token: null });
+        testData.extendedPublicLinks.update(-1, { token: null });
         return { success: true };
       })
-      .respondWithData(() => testData.standardPublicLinks.sorted());
+      .respondWithData(() => testData.extendedPublicLinks.sorted());
 
     it('shows a success alert', () =>
       load('/projects/1/forms/f/public-links')
@@ -94,10 +94,10 @@ describe('PublicLinkRevoke', () => {
           modal.get('input').setValue('Another Value');
           return modal.get('form').trigger('submit');
         })
-        .respondWithData(() => testData.standardPublicLinks.createNew({
+        .respondWithData(() => testData.extendedPublicLinks.createNew({
           displayName: 'Another Link'
         }))
-        .respondWithData(() => testData.standardPublicLinks.sorted())
+        .respondWithData(() => testData.extendedPublicLinks.sorted())
         .complete()
         .modify(revoke)
         .afterResponses(app => {

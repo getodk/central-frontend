@@ -4,27 +4,27 @@ import { XPathFunctionalityPendingError } from '../../../error/XPathFunctionalit
 import type { AnyNode } from '../../../instance/hierarchy.ts';
 import type { AnyStaticNode, StaticNodeParent } from '../static-dom/StaticNode.ts';
 import type {
-	EngineXPathAttribute,
-	EngineXPathDocument,
-	EngineXPathElement,
-	EngineXPathNode,
-	PrimaryInstanceXPathChildNode,
-	XFormsXPathChildNode,
+  EngineXPathAttribute,
+  EngineXPathDocument,
+  EngineXPathElement,
+  EngineXPathNode,
+  PrimaryInstanceXPathChildNode,
+  XFormsXPathChildNode,
 } from './kind.ts';
 import { isEngineXPathElement } from './kind.ts';
 
 export const getContainingEngineXPathDocument = (node: EngineXPathNode): EngineXPathDocument => {
-	return node.rootDocument;
+  return node.rootDocument;
 };
 
 export const getAttributes = (node: EngineXPathNode): readonly EngineXPathAttribute[] => {
-	if (node.nodeType === 'static-element') {
-		return node.attributes;
-	}
-	if (isEngineXPathElement(node)) {
-		return node.getAttributes();
-	}
-	return [];
+  if (node.nodeType === 'static-element') {
+    return node.attributes;
+  }
+  if (isEngineXPathElement(node)) {
+    return node.getAttributes();
+  }
+  return [];
 };
 
 /**
@@ -43,188 +43,188 @@ export const getAttributes = (node: EngineXPathNode): readonly EngineXPathAttrib
 export const getNamespaceDeclarations = (): readonly [] => [];
 
 export const getParentNode = (node: EngineXPathNode): EngineXPathNode | null => {
-	if (node.nodeType === 'repeat-instance') {
-		return node.parent.parent;
-	}
+  if (node.nodeType === 'repeat-instance') {
+    return node.parent.parent;
+  }
 
-	return node.parent;
+  return node.parent;
 };
 
 export const getChildNodes = (node: EngineXPathNode): readonly XFormsXPathChildNode[] => {
-	return node.getXPathChildNodes();
+  return node.getXPathChildNodes();
 };
 
 export const getChildElements = (node: EngineXPathNode): readonly EngineXPathElement[] => {
-	return getChildNodes(node).filter(isEngineXPathElement);
+  return getChildNodes(node).filter(isEngineXPathElement);
 };
 
 export const getPreviousSiblingNode = (node: EngineXPathNode): XFormsXPathChildNode | null => {
-	const parent = getParentNode(node);
+  const parent = getParentNode(node);
 
-	if (parent == null) {
-		return null;
-	}
+  if (parent == null) {
+    return null;
+  }
 
-	let previous: EngineXPathNode | null = null;
+  let previous: EngineXPathNode | null = null;
 
-	for (const child of getChildNodes(parent)) {
-		if (child === node) {
-			return previous;
-		}
+  for (const child of getChildNodes(parent)) {
+    if (child === node) {
+      return previous;
+    }
 
-		previous = child;
-	}
+    previous = child;
+  }
 
-	return null;
+  return null;
 };
 
 export const getPreviousSiblingElement = (node: EngineXPathNode): EngineXPathElement | null => {
-	const parent = getParentNode(node);
+  const parent = getParentNode(node);
 
-	if (parent == null) {
-		return null;
-	}
+  if (parent == null) {
+    return null;
+  }
 
-	let previous: EngineXPathElement | null = null;
+  let previous: EngineXPathElement | null = null;
 
-	for (const child of getChildNodes(parent)) {
-		if (child === node) {
-			return previous;
-		}
+  for (const child of getChildNodes(parent)) {
+    if (child === node) {
+      return previous;
+    }
 
-		if (isEngineXPathElement(child)) {
-			previous = child;
-		}
-	}
+    if (isEngineXPathElement(child)) {
+      previous = child;
+    }
+  }
 
-	return null;
+  return null;
 };
 
 export const getNextSiblingNode = (node: EngineXPathNode): XFormsXPathChildNode | null => {
-	const parent = getParentNode(node);
+  const parent = getParentNode(node);
 
-	if (parent == null) {
-		return null;
-	}
+  if (parent == null) {
+    return null;
+  }
 
-	let visitedCurrent = false;
+  let visitedCurrent = false;
 
-	for (const child of getChildNodes(parent)) {
-		if (child === node) {
-			visitedCurrent = true;
-		} else if (visitedCurrent) {
-			return child;
-		}
-	}
+  for (const child of getChildNodes(parent)) {
+    if (child === node) {
+      visitedCurrent = true;
+    } else if (visitedCurrent) {
+      return child;
+    }
+  }
 
-	return null;
+  return null;
 };
 
 export const getNextSiblingElement = (node: EngineXPathNode): EngineXPathElement | null => {
-	const parent = getParentNode(node);
+  const parent = getParentNode(node);
 
-	if (parent == null) {
-		return null;
-	}
+  if (parent == null) {
+    return null;
+  }
 
-	let visitedCurrent = false;
+  let visitedCurrent = false;
 
-	for (const child of getChildNodes(parent)) {
-		if (child === node) {
-			visitedCurrent = true;
-		} else if (visitedCurrent && isEngineXPathElement(child)) {
-			return child;
-		}
-	}
+  for (const child of getChildNodes(parent)) {
+    if (child === node) {
+      visitedCurrent = true;
+    } else if (visitedCurrent && isEngineXPathElement(child)) {
+      return child;
+    }
+  }
 
-	return null;
+  return null;
 };
 
 const isPrimaryInstanceChildNode = (
-	node: EngineXPathNode
+  node: EngineXPathNode
 ): node is PrimaryInstanceXPathChildNode => {
-	switch (node.nodeType) {
-		case 'primary-instance':
-		case 'static-attribute':
-		case 'static-element':
-		case 'static-text':
-			return false;
+  switch (node.nodeType) {
+    case 'primary-instance':
+    case 'static-attribute':
+    case 'static-element':
+    case 'static-text':
+      return false;
 
-		default:
-			return true;
-	}
+    default:
+      return true;
+  }
 };
 
 const primaryInstanceElementContains = (ancestor: AnyNode, other: AnyNode): boolean => {
-	if (other === ancestor) {
-		return true;
-	}
+  if (other === ancestor) {
+    return true;
+  }
 
-	const { parent, root } = other;
+  const { parent, root } = other;
 
-	if (parent == null || parent === root) {
-		return false;
-	}
+  if (parent == null || parent === root) {
+    return false;
+  }
 
-	return primaryInstanceElementContains(ancestor, parent);
+  return primaryInstanceElementContains(ancestor, parent);
 };
 
 const staticParentNodeContains = (ancestor: StaticNodeParent, other: AnyStaticNode): boolean => {
-	if (ancestor === other) {
-		return false;
-	}
+  if (ancestor === other) {
+    return false;
+  }
 
-	const { parent } = other;
+  const { parent } = other;
 
-	if (parent == null) {
-		return false;
-	}
+  if (parent == null) {
+    return false;
+  }
 
-	return staticParentNodeContains(ancestor, parent);
+  return staticParentNodeContains(ancestor, parent);
 };
 
 export const isDescendantNode = (ancestor: EngineXPathNode, other: EngineXPathNode) => {
-	// TODO: "descendant" semantics != "contains" semantics
-	if (ancestor === other) {
-		return true;
-	}
+  // TODO: "descendant" semantics != "contains" semantics
+  if (ancestor === other) {
+    return true;
+  }
 
-	if (ancestor.nodeType === 'primary-instance') {
-		return isPrimaryInstanceChildNode(other);
-	}
+  if (ancestor.nodeType === 'primary-instance') {
+    return isPrimaryInstanceChildNode(other);
+  }
 
-	if (other.nodeType === 'primary-instance') {
-		// TODO: in the event this does somehow occur, this is not the kind of error
-		// messaging we want to surface to users! It is, however, exactly the kind
-		// of messaging we want to surface to us.
-		throw new ErrorProductionDesignPendingError(
-			'Exhaustive check failed: comparing hierarchy of two primary instance documents. It is unclear how this could ever occur. If it has, something may have gone horribly wrong!'
-		);
-	}
+  if (other.nodeType === 'primary-instance') {
+    // TODO: in the event this does somehow occur, this is not the kind of error
+    // messaging we want to surface to users! It is, however, exactly the kind
+    // of messaging we want to surface to us.
+    throw new ErrorProductionDesignPendingError(
+      'Exhaustive check failed: comparing hierarchy of two primary instance documents. It is unclear how this could ever occur. If it has, something may have gone horribly wrong!'
+    );
+  }
 
-	if (isPrimaryInstanceChildNode(ancestor)) {
-		return isPrimaryInstanceChildNode(other) && primaryInstanceElementContains(ancestor, other);
-	}
+  if (isPrimaryInstanceChildNode(ancestor)) {
+    return isPrimaryInstanceChildNode(other) && primaryInstanceElementContains(ancestor, other);
+  }
 
-	if (isPrimaryInstanceChildNode(other)) {
-		return false;
-	}
+  if (isPrimaryInstanceChildNode(other)) {
+    return false;
+  }
 
-	switch (ancestor.nodeType) {
-		case 'static-attribute':
-		case 'static-text':
-			return false;
+  switch (ancestor.nodeType) {
+    case 'static-attribute':
+    case 'static-text':
+      return false;
 
-		case 'static-document':
-		case 'static-element':
-			break;
+    case 'static-document':
+    case 'static-element':
+      break;
 
-		default:
-			throw new UnreachableError(ancestor);
-	}
+    default:
+      throw new UnreachableError(ancestor);
+  }
 
-	return staticParentNodeContains(ancestor, other);
+  return staticParentNodeContains(ancestor, other);
 };
 
 export const compareDocumentOrder =
-	XPathFunctionalityPendingError.createStubImplementation('compareDocumentOrder');
+  XPathFunctionalityPendingError.createStubImplementation('compareDocumentOrder');

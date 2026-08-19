@@ -10,15 +10,15 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="panel panel-simple">
+  <div id="dataset-owner-only" class="panel panel-simple">
     <div class="panel-heading">
       <h1 class="panel-title">{{ $t('panel.title') }}</h1>
     </div>
     <div class="panel-body">
-      <form @change="confirmationModal.show()" @submit.prevent>
+      <form v-if="actorProperties.dataExists" @change="openModal" @submit.prevent>
         <div class="radio">
           <label>
-            <input v-model="ownerOnly" type="radio" :value="false"
+            <input v-model="accessType" type="radio" value="all"
               aria-describedby="dataset-owner-only-false-help"
               :disabled="awaitingResponse">
             <strong>{{ $t('accessAllDefault') }}</strong>
@@ -29,7 +29,7 @@ except according to the terms contained in the LICENSE file.
         </div>
         <div class="radio">
           <label>
-            <input v-model="ownerOnly" type="radio" :value="true"
+            <input v-model="accessType" type="radio" value="ownerOnly"
               aria-describedby="dataset-owner-only-true-help"
               :disabled="awaitingResponse">
             <strong>{{ $t('ownerOnly') }}</strong>
@@ -38,24 +38,103 @@ except according to the terms contained in the LICENSE file.
             {{ $t('radio.true') }}
           </p>
         </div>
+        <div class="radio" :class="{ disabled: filterByPropertyDisabled }"
+          v-tooltip.no-aria="filterByPropertyDisabled ? disabledReason : null">
+          <label>
+            <input v-model="accessType" type="radio" value="property"
+              aria-describedby="dataset-filter-by-property-help"
+              :disabled="awaitingResponse || filterByPropertyDisabled">
+            <strong>{{ $t('filterByProperty.label') }}</strong>
+          </label>
+          <p id="dataset-filter-by-property-help" class="help-block">
+            {{ $t('filterByProperty.description') }}
+          </p>
+          <p v-if="dataset.accessFilter?.type === 'property'" class="current-filter-rule">
+            <i18n-t keypath="filterByProperty.currentRule">
+              <template #entityProperty>
+                <strong>{{ dataset.accessFilter.rules[0].datasetProperty }}</strong>
+              </template>
+              <template #userProperty>
+                <strong>{{ dataset.accessFilter.rules[0].actorProperty }}</strong>
+              </template>
+            </i18n-t>
+            <button type="button" class="btn btn-link" @click="openModal">
+              {{ $t('action.change') }}
+            </button>
+          </p>
+        </div>
       </form>
+      <loading :state="actorProperties.initiallyLoading"/>
     </div>
   </div>
   <modal v-bind="confirmationModal" :hideable="!awaitingResponse" backdrop
     @hide="cancel">
-    <template #title>{{ ownerOnly ? $t('ownerOnly') : $t('accessAll') }}</template>
+    <template #title>
+      <template v-if="accessType === 'all'">
+        {{ $t('accessAll') }}
+      </template>
+      <template v-else-if="accessType === 'ownerOnly'">
+        {{ $t('ownerOnly') }}
+      </template>
+      <template v-else>
+        {{ $t('accessByFilterRule.title') }}
+      </template>
+    </template>
     <template #body>
       <p class="modal-introduction">
-        {{ ownerOnly ? $t('trueModal.introduction') : $t('falseModal.introduction') }}
+        <template v-if="accessType === 'all'">
+          {{ $t('falseModal.introduction') }}
+        </template>
+        <template v-else-if="accessType === 'ownerOnly'">
+          {{ $t('trueModal.introduction') }}
+        </template>
+        <template v-else>
+          {{ $t('accessByFilterRule.introduction') }}
+        </template>
       </p>
+      <form v-if="accessType === 'property'" id="property-filter-form"
+        class="filter-by-property-selects" @submit.prevent="confirm">
+        <label class="filter-select-label">
+          {{ $t('filterByProperty.entityPropertyLabel') }}
+          <select v-model="selectedEntityProperty"
+            class="form-control" :disabled="awaitingResponse" required>
+            <option value="" disabled>
+              {{ $t('filterByProperty.entityPropertyPlaceholder') }}
+            </option>
+            <option v-for="property of dataset.properties" :key="property.name"
+              :value="property.name">
+              {{ property.name }}
+            </option>
+          </select>
+        </label>
+        <label class="filter-select-label">
+          {{ $t('filterByProperty.userPropertyLabel') }}
+          <select v-model="selectedUserProperty"
+            class="form-control" :disabled="awaitingResponse" required>
+            <option value="" disabled>
+              {{ $t('filterByProperty.userPropertyPlaceholder') }}
+            </option>
+            <option v-for="property of actorProperties" :key="property.name"
+              :value="property.name">
+              {{ property.name }}
+            </option>
+          </select>
+        </label>
+      </form>
       <div class="modal-actions">
         <button type="button" class="btn btn-link"
           :aria-disabled="awaitingResponse" @click="cancel">
           {{ $t('action.cancel') }}
         </button>
-        <button type="button" class="btn btn-primary"
+        <button v-if="accessType === 'property'" type="submit"
+          form="property-filter-form" class="btn btn-primary"
+          :aria-disabled="awaitingResponse">
+          {{ $t('accessByFilterRule.action.save') }}
+          <spinner :state="awaitingResponse"/>
+        </button>
+        <button v-else type="button" class="btn btn-primary"
           :aria-disabled="awaitingResponse" @click="confirm">
-          {{ ownerOnly ? $t('trueModal.action.confirm') : $t('accessAll') }}
+          {{ accessType === 'all' ? $t('accessAll') : $t('trueModal.action.confirm') }}
           <spinner :state="awaitingResponse"/>
         </button>
       </div>
@@ -64,7 +143,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { inject, ref, watch } from 'vue';
+import { computed, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import Modal from '../modal.vue';
@@ -75,6 +154,7 @@ import { apiPaths } from '../../util/request';
 import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
+import Loading from '../loading.vue';
 
 defineOptions({
   name: 'DatasetOwnerOnly'
@@ -85,53 +165,138 @@ const { alert } = inject('container');
 
 // The component assumes that this data will exist when the component is
 // created.
-const { dataset } = useRequestData();
+const { dataset, actorProperties } = useRequestData();
+const { request, awaitingResponse } = useRequest();
 
-const ownerOnly = ref(false);
-watch(
-  () => dataset.dataExists,
-  (dataExists) => { if (dataExists) ownerOnly.value = dataset.ownerOnly; },
-  { immediate: true }
-);
+// Create and fetch actorProperties for this component
+actorProperties.request({
+  url: apiPaths.actorProperties(dataset.projectId),
+  resend: false
+}).catch(noop);
+
+const hasDatasetProperties = computed(() => dataset.properties.length > 0);
+const hasActorProperties = computed(() => actorProperties.length > 0);
+
+const filterByPropertyDisabled = computed(() =>
+  !hasDatasetProperties.value || !hasActorProperties.value);
+
+const disabledReason = computed(() => {
+  if (!hasDatasetProperties.value && !hasActorProperties.value)
+    return t('filterByProperty.disabled.both');
+  if (!hasDatasetProperties.value)
+    return t('filterByProperty.disabled.datasetProperties');
+  if (!hasActorProperties.value)
+    return t('filterByProperty.disabled.userProperties');
+  return null;
+});
+
+const accessType = ref(dataset.accessFilter?.type ?? 'all');
+
+const selectedEntityProperty = ref('');
+const selectedUserProperty = ref('');
 
 const confirmationModal = modalData();
+const populateDropdowns = () => {
+  const [rule] = dataset.accessFilter?.rules ?? [];
+  if (rule != null) {
+    selectedEntityProperty.value = rule.datasetProperty;
+    selectedUserProperty.value = rule.actorProperty;
+  } else {
+    selectedEntityProperty.value = '';
+    selectedUserProperty.value = '';
+  }
+};
+const openModal = () => {
+  populateDropdowns();
+  confirmationModal.show();
+};
 const cancel = () => {
   confirmationModal.hide();
-  ownerOnly.value = !ownerOnly.value;
+  accessType.value = dataset.accessFilter?.type ?? 'all';
 };
 
-const { request, awaitingResponse } = useRequest();
-const update = async (value) => {
+let previousAccessFilter = null;
+
+const update = async (accessFilter) => {
   const { data } = await request({
     method: 'PATCH',
     url: apiPaths.dataset(dataset.projectId, dataset.name),
-    data: { ownerOnly: value }
+    data: { accessFilter }
   });
-  dataset.ownerOnly = data.ownerOnly;
+
+  previousAccessFilter = dataset.accessFilter;
+  dataset.replaceData(data);
 };
-const undo = () => update(!ownerOnly.value)
-  .then(() => {
-    ownerOnly.value = !ownerOnly.value;
-    return true;
-  })
-  .catch(noop);
-const confirm = () => update(ownerOnly.value)
-  .then(() => {
-    confirmationModal.hide();
-    const message = dataset.ownerOnly
-      ? t('alert.changeToTrue')
-      : t('alert.changeToFalse');
-    alert.success(message).cta(t('action.undo'), undo);
-  })
-  .catch(noop);
+
+const undo = () => {
+  const newAccessType = previousAccessFilter?.type ?? 'all';
+  return update(previousAccessFilter)
+    .then(() => {
+      accessType.value = newAccessType;
+      return true;
+    })
+    .catch(noop);
+};
+
+const confirm = () => {
+  const accessFilter = accessType.value === 'all' ? null : { type: accessType.value };
+  if (accessType.value === 'property') {
+    accessFilter.rules = [{
+      datasetProperty: selectedEntityProperty.value,
+      actorProperty: selectedUserProperty.value
+    }];
+  }
+
+  return update(accessFilter)
+    .then(() => {
+      confirmationModal.hide();
+      let message;
+      if (dataset.accessFilter?.type === 'property') {
+        message = t('alert.changeToProperty');
+      } else if (dataset.accessFilter?.type === 'ownerOnly') {
+        message = t('alert.changeToTrue');
+      } else {
+        message = t('alert.changeToFalse');
+      }
+      alert.success(message).cta(t('action.undo'), undo);
+    })
+    .catch(noop);
+};
 </script>
+
+<style lang="scss">
+@import '../../assets/scss/variables';
+
+#dataset-owner-only {
+  .current-filter-rule {
+    margin-top: -10px;
+    margin-left: 20px;
+  }
+}
+
+.filter-by-property-selects {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.filter-select-label {
+  flex-basis: 50%;
+  font-size: 12px;
+
+  .form-control {
+    margin-top: 5px;
+    font-weight: normal;
+  }
+}
+</style>
 
 <i18n lang="json5">
 {
   "en": {
     "panel": {
       // This is a title shown above a section of the page.
-      "title": "App User and Data Collector Entity Access"
+      "title": "Entity List Access"
     },
     "accessAll": "Access all Entities",
     "accessAllDefault": "Access all Entities (default)",
@@ -139,6 +304,25 @@ const confirm = () => update(ownerOnly.value)
     "radio": {
       "false": "App Users and Data Collectors within this Project will have access to all Entities within their assigned Forms.",
       "true": "App Users and Data Collectors within this Project will only have access to the Entities they create, promoting privacy and limiting data transfers."
+    },
+    "filterByProperty": {
+      "label": "Filter by Property",
+      "description": "Define rules for which Entities are visible to App Users and Public Links by comparing their properties.",
+      // This text is shown above the access rule filter dropdown. Translators are free not to translate this literally
+      "entityPropertyLabel": "Only see Entities where",
+      // Placeholder text shown on a access rule filter dropdown.
+      "entityPropertyPlaceholder": "Entity property",
+      // This text is shown above the access rule filter dropdown. Translators are free not to translate this literally
+      "userPropertyLabel": "is equal to the user‘s",
+      // Placeholder text shown on a access rule filter dropdown
+      "userPropertyPlaceholder": "User property",
+      "disabled": {
+        "datasetProperties": "There are no Entity properties defined.",
+        "userProperties": "There are no Custom Properties defined.",
+        "both": "There are no Entity or user properties defined."
+      },
+      // {entityProperty} is the name of an Entity property. {userProperty} is the name of a User property.
+      "currentRule": "Rule: {entityProperty} (Entity property) = {userProperty} (User property)"
     },
     "falseModal": {
       "introduction": "App Users and Data Collectors will have access to all Entities, including ones they did not create."
@@ -151,7 +335,15 @@ const confirm = () => update(ownerOnly.value)
     },
     "alert": {
       "changeToFalse": "App Users and Data Collectors will now have access to all Entities.",
-      "changeToTrue": "App Users and Data Collectors will now only have access to Entities they create."
+      "changeToTrue": "App Users and Data Collectors will now only have access to Entities they create.",
+      "changeToProperty": "App Users and Public Links will now only have access to Entities matching the filter rule."
+    },
+    "accessByFilterRule": {
+      "title": "Filter by Property",
+      "introduction": "App Users and Public Links will only have access to Entities where the selected property matches their user property.",
+      "action": {
+        "save": "Save Filter Rule"
+      }
     }
   }
 }
@@ -161,9 +353,6 @@ const confirm = () => update(ownerOnly.value)
 <i18n>
 {
   "de": {
-    "panel": {
-      "title": "App-Benutzer und Datensammler-Objekt Zugriff"
-    },
     "accessAll": "Zugriff auf alle Objekte",
     "accessAllDefault": "Zugriff auf alle Objekte (Standard)",
     "ownerOnly": "Nur auf eigene Objekte zugreifen",
@@ -186,9 +375,6 @@ const confirm = () => update(ownerOnly.value)
     }
   },
   "es": {
-    "panel": {
-      "title": "Acceso a la entidad del Usuario de la aplicación y recopilador de datos"
-    },
     "accessAll": "Acceder a todas las entidades",
     "accessAllDefault": "Acceder a todas las Entidades (por defecto)",
     "ownerOnly": "Acceder sólo a Entidades propias",
@@ -212,7 +398,7 @@ const confirm = () => update(ownerOnly.value)
   },
   "fr": {
     "panel": {
-      "title": "Accès d'entités pour les utilisateurs mobiles et les collecteurs de données web"
+      "title": "Accès aux listes d'entités"
     },
     "accessAll": "Accès à toutes les entités",
     "accessAllDefault": "Accès à toutes les entités (défaut)",
@@ -220,6 +406,20 @@ const confirm = () => update(ownerOnly.value)
     "radio": {
       "false": "Les utilisateurs mobiles et les collecteurs de données web de ce projet auront accès à toutes les entités à partir des formulaires qu'ils leur sont assignés.",
       "true": "Les utilisateurs mobiles et les collecteurs de données web de ce projet n'auront accès qu'aux entités qu'ils ont créées. Ceci encourage la confidentialité et limite les transferts de données."
+    },
+    "filterByProperty": {
+      "label": "Filtrer par propriété",
+      "description": "Définissez des règles déterminant quelles entités sont visibles pour les utilisateurs mobiles et via les liens publics, en comparant leurs propriétés.",
+      "entityPropertyLabel": "Voir seulement les entités pour lesquelles",
+      "entityPropertyPlaceholder": "Propriété d'entité",
+      "userPropertyLabel": "est égale à cette propriété de l'utilisateur",
+      "userPropertyPlaceholder": "Propriété d'utilisateur",
+      "disabled": {
+        "datasetProperties": "Pas de propriétés d'entités définies.",
+        "userProperties": "Pas de propriétés d'utilisateur définies.",
+        "both": "Il n'y a pas de propriétés d'entités ou de propriétés d'utilisateur définies."
+      },
+      "currentRule": "Règle: {entityProperty} (propriété d'entité) = {userProperty} (propriété d'utilisateur)"
     },
     "falseModal": {
       "introduction": "Les utilisateurs mobiles et le collecteurs de données web auront accès à toutes les entités, incluant celles créées par d'autres utilisateurs."
@@ -232,13 +432,18 @@ const confirm = () => update(ownerOnly.value)
     },
     "alert": {
       "changeToFalse": "Les utilisateurs mobiles et les collecteurs de données web auront maintenant accès à toutes les entités.",
-      "changeToTrue": "Les utilisateurs mobiles et les collecteurs de données web auront maintenant accès seulement aux entités qu'ils ont créées."
+      "changeToTrue": "Les utilisateurs mobiles et les collecteurs de données web auront maintenant accès seulement aux entités qu'ils ont créées.",
+      "changeToProperty": "Les utilisateurs mobiles et les liens publics n'auront maintenant accès qu'aux entités correspondant à la règle de filtrage."
+    },
+    "accessByFilterRule": {
+      "title": "Filtrer par propriété",
+      "introduction": "Les utilisateurs mobiles et les liens publics n'auront maintenant accès qu'aux entités dont la propriété sélectionnée correspond à leur propriété d'utilisateur.",
+      "action": {
+        "save": "Sauvegarder la règle de filtrage."
+      }
     }
   },
   "it": {
-    "panel": {
-      "title": "Accesso dell'utente dell'app e del raccoglitore di dati alla Entità"
-    },
     "accessAll": "Accedi a tutte le entità",
     "accessAllDefault": "Accedi a tutte le entità (predefinito)",
     "ownerOnly": "Accedere solo alle proprie entità",
@@ -261,9 +466,6 @@ const confirm = () => update(ownerOnly.value)
     }
   },
   "pt": {
-    "panel": {
-      "title": "Acesso a Entidades para Usuários de Aplicativo e Coletores de Dados"
-    },
     "accessAll": "Acessa todas as Entidades",
     "accessAllDefault": "Acessa todas as Entidades (padrão)",
     "ownerOnly": "Acessa apenas suas próprias Entidades",
@@ -274,9 +476,6 @@ const confirm = () => update(ownerOnly.value)
     }
   },
   "zh": {
-    "panel": {
-      "title": "App用户与数据收集者实体权限"
-    },
     "accessAll": "访问所有实体",
     "accessAllDefault": "访问所有实体（默认）",
     "ownerOnly": "仅访问自己的实体",
@@ -299,9 +498,6 @@ const confirm = () => update(ownerOnly.value)
     }
   },
   "zh-Hant": {
-    "panel": {
-      "title": "應用程式使用者和資料收集器實體存取"
-    },
     "accessAll": "存取所有實體",
     "accessAllDefault": "存取所有實體 (預設)",
     "ownerOnly": "僅存取自己的實體",

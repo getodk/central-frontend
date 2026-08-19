@@ -1,40 +1,42 @@
-import { POST_SUBMIT__NEW_INSTANCE } from '@/lib/constants/control-flow.ts';
-import type { FormOptions } from '@/lib/init/load-form-state.ts';
-import type { OptionalHostSubmissionResult } from '@/lib/submission/host-submission-result-callback.ts';
-import type { PreloadProperties } from '@getodk/xforms-engine';
+import { POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms/lib/constants/control-flow.ts';
+import type { FormOptions } from '@getodk/web-forms/lib/init/load-form-state.ts';
+import type { OptionalHostSubmissionResult } from '@getodk/web-forms/lib/submission/host-submission-result-callback.ts';
+import type { InstanceDefaults, PreloadProperties } from '@getodk/xforms-engine';
 import { getFormInstanceConfig } from './engine-config.ts';
 import type { FormStateSuccessResult } from './form-state.ts';
 
 interface ResetFormStateOptions {
-	readonly form: FormOptions;
-	readonly trackDevice?: boolean;
-	readonly preloadProperties?: PreloadProperties;
+  readonly form: FormOptions;
+  readonly deviceID?: string;
+  readonly preloadProperties?: PreloadProperties;
+  readonly instanceDefaults?: InstanceDefaults;
+  readonly lastSavedXml?: string;
 }
 
 const resetInstanceState = (
-	currentState: FormStateSuccessResult,
-	options: ResetFormStateOptions
+  currentState: FormStateSuccessResult,
+  options: ResetFormStateOptions
 ): FormStateSuccessResult => {
-	const { form } = currentState;
-	const instanceConfig = getFormInstanceConfig(options);
-	const instance = form.resetInstance(instanceConfig);
-	return {
-		status: 'FORM_STATE_SUCCESS',
-		error: null,
-		form,
-		instance,
-		root: instance.root,
-	};
+  const { form } = currentState;
+  const instanceConfig = getFormInstanceConfig(options);
+  const instance = form.resetInstance(instanceConfig);
+  return {
+    status: 'FORM_STATE_SUCCESS',
+    error: null,
+    form,
+    instance,
+    root: instance.root,
+  };
 };
 
 export const updateSubmittedFormState = (
-	submissionResult: OptionalHostSubmissionResult,
-	currentState: FormStateSuccessResult,
-	options: ResetFormStateOptions
+  submissionResult: OptionalHostSubmissionResult,
+  currentState: FormStateSuccessResult,
+  options: ResetFormStateOptions
 ): FormStateSuccessResult => {
-	if (submissionResult?.next === POST_SUBMIT__NEW_INSTANCE) {
-		return resetInstanceState(currentState, options);
-	}
+  if (submissionResult?.next === POST_SUBMIT__NEW_INSTANCE) {
+    return resetInstanceState(currentState, options);
+  }
 
-	return currentState;
+  return currentState;
 };

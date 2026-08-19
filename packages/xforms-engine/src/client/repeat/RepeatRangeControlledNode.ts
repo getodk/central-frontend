@@ -15,6 +15,6 @@ export interface RepeatRangeControlledState extends BaseRepeatRangeNodeState {}
  * {@link RepeatRangeUncontrolledNode}.
  */
 export interface RepeatRangeControlledNode extends BaseRepeatRangeNode {
-	readonly nodeType: 'repeat-range:controlled';
-	readonly definition: ControlledRepeatDefinition;
+  readonly nodeType: 'repeat-range:controlled';
+  readonly definition: ControlledRepeatDefinition;
 }

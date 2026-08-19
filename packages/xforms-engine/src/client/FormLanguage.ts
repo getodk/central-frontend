@@ -1,37 +1,37 @@
 interface BaseFormLanguage {
-	/**
-	 * @see {@link ActiveLanguage} for details.
-	 */
-	readonly isSyntheticDefault?: true;
+  /**
+   * @see {@link ActiveLanguage} for details.
+   */
+  readonly isSyntheticDefault?: true;
 
-	/**
-	 * As derived directly from the form's
-	 * {@link https://getodk.github.io/xforms-spec/#languages | `itext` translations}.
-	 */
-	readonly language: string;
+  /**
+   * As derived directly from the form's
+   * {@link https://getodk.github.io/xforms-spec/#languages | `itext` translations}.
+   */
+  readonly language: string;
 
-	/**
-	 * Where possible, a form's languages may detect the standardized locale
-	 * corresponding to the language as specified in the form.
-	 */
-	// NOTE: this is proposed, hypothetical future functionality. Enketo has
-	// similar functionality, but we'll want to seriously consider how best to
-	// accomplish this if/as it becomes a priority.
-	readonly locale?: Intl.Locale | undefined;
+  /**
+   * Where possible, a form's languages may detect the standardized locale
+   * corresponding to the language as specified in the form.
+   */
+  // NOTE: this is proposed, hypothetical future functionality. Enketo has
+  // similar functionality, but we'll want to seriously consider how best to
+  // accomplish this if/as it becomes a priority.
+  readonly locale?: Intl.Locale | undefined;
 
-	/**
-	 * Indicates the language explicitly designated as default by the form designer via
-	 * the `default` attribute on an `<translation>` element.
-	 */
-	readonly isDefault: boolean;
+  /**
+   * Indicates the language explicitly designated as default by the form designer via
+   * the `default` attribute on an `<translation>` element.
+   */
+  readonly isDefault: boolean;
 }
 
 /**
  * @see {@link ActiveLanguage} for details.
  */
 export interface SyntheticDefaultLanguage extends BaseFormLanguage {
-	readonly isSyntheticDefault: true;
-	readonly language: '';
+  readonly isSyntheticDefault: true;
+  readonly language: '';
 }
 
 /**
@@ -40,7 +40,7 @@ export interface SyntheticDefaultLanguage extends BaseFormLanguage {
  * @see {@link ActiveLanguage} for additional details.
  */
 export interface FormLanguage extends BaseFormLanguage {
-	readonly isSyntheticDefault?: never;
+  readonly isSyntheticDefault?: never;
 }
 
 /**

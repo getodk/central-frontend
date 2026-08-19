@@ -1,0 +1,30 @@
+{
+  "common_actions.open_full_screen.description": {
+    "string": "Expand to full screen",
+    "developer_comment": "Aria-label/description for the control button that expands the view to full screen. Shared across the canvas and map components."
+  },
+  "common_actions.close_full_screen.description": {
+    "string": "Exit full screen",
+    "developer_comment": "Aria-label/description for the control button that exits full-screen mode. Shared across the canvas and map components."
+  },
+  "common_actions.zoom_in.description": {
+    "string": "Zoom in",
+    "developer_comment": "Aria-label/description for the control button that zooms in. Shared across the canvas and map components."
+  },
+  "common_actions.zoom_out.description": {
+    "string": "Zoom out",
+    "developer_comment": "Aria-label/description for the control button that zooms out. Shared across the canvas and map components."
+  },
+  "common_actions.undo.description": {
+    "string": "Undo last action",
+    "developer_comment": "Aria-label/description for the control button that undoes the last action. Shared across the canvas and map components."
+  },
+  "common_actions.open_info.description": {
+    "string": "Show information of actions",
+    "developer_comment": "Aria-label/description for the control button that opens the info dialog listing available actions. Shared across the canvas and map components."
+  },
+  "common_actions.info_dialog.title": {
+    "string": "How to use this tool",
+    "developer_comment": "Title shown in the header of the dialog that explains the available actions. Shared across the canvas and map components."
+  }
+}

@@ -19,61 +19,61 @@ type MutableKeyOf<Spec extends StateSpec> = {
 }[Extract<keyof Spec, string>];
 
 type SetEnginePropertyState<Spec extends StateSpec> = <K extends MutableKeyOf<Spec>>(
-	key: K,
-	newValue: SpecifiedState<Spec>[K]
+  key: K,
+  newValue: SpecifiedState<Spec>[K]
 ) => SpecifiedState<Spec>[K];
 
 export interface SharedNodeState<Spec extends StateSpec> {
-	readonly spec: Spec;
-	readonly engineState: EngineState<Spec>;
-	readonly clientState: ClientState<Spec>;
-	readonly currentState: CurrentState<Spec>;
-	readonly setProperty: SetEnginePropertyState<Spec>;
+  readonly spec: Spec;
+  readonly engineState: EngineState<Spec>;
+  readonly clientState: ClientState<Spec>;
+  readonly currentState: CurrentState<Spec>;
+  readonly setProperty: SetEnginePropertyState<Spec>;
 }
 
 export interface SharedNodeStateOptions<
-	Factory extends OpaqueReactiveObjectFactory,
-	Spec extends StateSpec,
+  Factory extends OpaqueReactiveObjectFactory,
+  Spec extends StateSpec,
 > {
-	readonly clientStateFactory: SpecifiedClientStateFactory<Factory, Spec>;
+  readonly clientStateFactory: SpecifiedClientStateFactory<Factory, Spec>;
 }
 
 export const createSharedNodeState = <
-	Factory extends OpaqueReactiveObjectFactory,
-	Spec extends StateSpec,
+  Factory extends OpaqueReactiveObjectFactory,
+  Spec extends StateSpec,
 >(
-	scope: ReactiveScope,
-	spec: Spec,
-	options: SharedNodeStateOptions<Factory, Spec>
+  scope: ReactiveScope,
+  spec: Spec,
+  options: SharedNodeStateOptions<Factory, Spec>
 ): SharedNodeState<Spec> => {
-	const engineState = createEngineState(scope, spec);
-	const clientState = createClientState(scope, engineState, options.clientStateFactory);
-	const currentState = createCurrentState(scope, clientState);
+  const engineState = createEngineState(scope, spec);
+  const clientState = createClientState(scope, engineState, options.clientStateFactory);
+  const currentState = createCurrentState(scope, clientState);
 
-	const specKeys = getPropertyKeys(spec);
-	const mutableKeys = specKeys.filter((key) => {
-		return isMutablePropertySpec(spec[key]);
-	});
-	const computedKeys = specKeys.filter((key) => {
-		return isComputedPropertySpec(spec[key]);
-	});
+  const specKeys = getPropertyKeys(spec);
+  const mutableKeys = specKeys.filter((key) => {
+    return isMutablePropertySpec(spec[key]);
+  });
+  const computedKeys = specKeys.filter((key) => {
+    return isComputedPropertySpec(spec[key]);
+  });
 
-	const setProperty: SetEnginePropertyState<Spec> = (key, value) => {
-		if (!mutableKeys.includes(key)) {
-			const specType = computedKeys.includes(key) ? 'computed' : 'static';
-			throw new TypeError(`Cannot write to '${key}': property is ${specType}`);
-		}
+  const setProperty: SetEnginePropertyState<Spec> = (key, value) => {
+    if (!mutableKeys.includes(key)) {
+      const specType = computedKeys.includes(key) ? 'computed' : 'static';
+      throw new TypeError(`Cannot write to '${key}': property is ${specType}`);
+    }
 
-		return scope.runTask(() => {
-			return (engineState[key] = value);
-		});
-	};
+    return scope.runTask(() => {
+      return (engineState[key] = value);
+    });
+  };
 
-	return {
-		spec,
-		engineState,
-		clientState,
-		currentState,
-		setProperty,
-	};
+  return {
+    spec,
+    engineState,
+    clientState,
+    currentState,
+    setProperty,
+  };
 };

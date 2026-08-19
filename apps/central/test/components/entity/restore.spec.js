@@ -1,3 +1,5 @@
+import { nextTick } from 'vue';
+
 import EntityRestore from '../../../src/components/entity/restore.vue';
 
 import { mergeMountOptions, mount } from '../../util/lifecycle';
@@ -8,8 +10,9 @@ const mountComponent = (options = undefined) =>
   }));
 
 describe('EntityRestore', () => {
-  it('focuses the checkbox', () => {
+  it('focuses the checkbox', async () => {
     const modal = mountComponent({ attachTo: document.body });
+    await nextTick();
     modal.get('input').should.be.focused();
   });
 

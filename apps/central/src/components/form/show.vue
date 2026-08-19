@@ -49,9 +49,10 @@ const props = defineProps({
   }
 });
 
-const { project, resourceStates } = useRequestData();
+const { project, resourceStates, createResource } = useRequestData();
 const { form, publishedAttachments, formDatasetDiff, appUserCount } = useForm();
 useDatasets();
+createResource('actorProperties');
 const { initiallyLoading, dataExists } = resourceStates([project, form]);
 
 const fetchProject = (resend) => {

@@ -5,15 +5,15 @@ import type { SecondaryInstanceDefinition } from '../SecondaryInstancesDefinitio
 import { SecondaryInstanceSource } from './SecondaryInstanceSource.ts';
 
 export class BlankSecondaryInstanceSource extends SecondaryInstanceSource<'blank'> {
-	constructor(
-		instanceId: string,
-		resourceURL: JRResourceURL,
-		domElement: DOMSecondaryInstanceElement
-	) {
-		super('blank', instanceId, resourceURL, domElement);
-	}
+  constructor(
+    instanceId: string,
+    resourceURL: JRResourceURL,
+    domElement: DOMSecondaryInstanceElement
+  ) {
+    super('blank', instanceId, resourceURL, domElement);
+  }
 
-	parseDefinition(): SecondaryInstanceDefinition {
-		return defineSecondaryInstance(this.instanceId, '');
-	}
+  parseDefinition(): SecondaryInstanceDefinition {
+    return defineSecondaryInstance(this.instanceId, '');
+  }
 }

@@ -1,13 +1,100 @@
-import { TRANSLATE, SUBMIT_PRESSED } from '@/lib/constants/injection-keys.ts';
-import { xformFixturesByIdentifier } from '@getodk/common/fixtures/xforms.ts';
+import { TRANSLATE, SUBMIT_PRESSED } from '@getodk/web-forms/lib/constants/injection-keys.ts';
 import type { AnyFunction } from '@getodk/common/types/helpers.d.ts';
 import type { RootNode } from '@getodk/xforms-engine';
 import { createInstance } from '@getodk/xforms-engine';
-import type { MountingOptions } from '@vue/test-utils';
+import type { MountingOptions, VueWrapper } from '@vue/test-utils';
 import PrimeVue from 'primevue/config';
 import { vi } from 'vitest';
 import { reactive, ref } from 'vue';
 import { odkThemePreset } from '../src/odk-theme-preset';
+
+import selectControl from './fixtures/select-control.xml?raw';
+import validation from './fixtures/1-validation.xml?raw';
+import repeatWithMultipleChildren from './fixtures/10-repeat-with-multiple-children.xml?raw';
+import repeatWithDynamicLabel from './fixtures/09-repeat-with-dynamic-label.xml?raw';
+import rank from './fixtures/1-rank.xml?raw';
+import staticSelects from './fixtures/1-static-selects.xml?raw';
+import minimalForm from './fixtures/minimal.xform.xml?raw';
+import itextBasic from './fixtures/01-itext-basic.xml?raw';
+import calculateSimple from './fixtures/1-calculate-simple.xform.xml?raw';
+import rankWithChoiceFilter from './fixtures/2-rank-with-choice-filter.xml?raw';
+import simpleRequired from './fixtures/2-simple-required.xml?raw';
+import xpathUnknownFunction from './fixtures/xpath-unknown-function.xml?raw';
+import xpathSyntaxError from './fixtures/xpath-syntax-error.xml?raw';
+import simpleDagCycle from './fixtures/simple-dag-cycle.xml?raw';
+import allQuestionTypes from './fixtures/all-question-types-v2024091201-3.xml?raw';
+import geopoint from './fixtures/geopoint.xml?raw';
+import preload from './fixtures/preload.xml?raw';
+import allPossibleNotes from './fixtures/2-all-possible-notes.xml?raw';
+import basicRepeat from './fixtures/01-basic-repeat.xml?raw';
+import markdown from './fixtures/3-notes-with-markdown.xml?raw';
+
+import paginationFlat from './fixtures/pagination-01-flat.xml?raw';
+import paginationFieldlistGroup from './fixtures/pagination-03-fieldlist-group.xml?raw';
+import paginationPlainRepeat from './fixtures/pagination-08-plain-repeat.xml?raw';
+import paginationPlainRepeatEmpty from './fixtures/pagination-08b-plain-repeat-empty.xml?raw';
+import paginationRepeatFieldlist from './fixtures/pagination-09-repeat-fieldlist.xml?raw';
+import paginationFieldlistRelevance from './fixtures/pagination-13-fieldlist-relevance.xml?raw';
+import paginationFieldlistOnRepeat from './fixtures/pagination-14-fieldlist-on-repeat.xml?raw';
+import paginationRepeatFixedCount from './fixtures/pagination-16-repeat-fixed-count.xml?raw';
+import paginationNestedRepeatFieldlist from './fixtures/pagination-17-nested-repeat-fieldlist.xml?raw';
+
+import citiesGeoJson from './fixtures/attachments/cities.geojson?url';
+
+import angry from './fixtures/attachments/angry.jpg?url';
+import apple from './fixtures/attachments/apple.jpg?url';
+import excited from './fixtures/attachments/excited.svg?url';
+import fastFood from './fixtures/attachments/fast-food.svg?url';
+import happy from './fixtures/attachments/happy.svg?url';
+import neutral from './fixtures/attachments/neutral.png?url';
+import noodles from './fixtures/attachments/noodles.svg?url';
+import sad from './fixtures/attachments/sad.png?url';
+import turkey from './fixtures/attachments/turkey.svg?url';
+
+const fixtures: Record<string, string> = {
+  'select-control.xml': selectControl,
+  '1-validation.xml': validation,
+  '10-repeat-with-multiple-children.xml': repeatWithMultipleChildren,
+  '09-repeat-with-dynamic-label.xml': repeatWithDynamicLabel,
+  '1-rank.xml': rank,
+  '1-static-selects.xml': staticSelects,
+  'minimal.xform.xml': minimalForm,
+  '01-itext-basic.xml': itextBasic,
+  '1-calculate-simple.xform.xml': calculateSimple,
+  '2-rank-with-choice-filter.xml': rankWithChoiceFilter,
+  '2-simple-required.xml': simpleRequired,
+  'xpath-unknown-function.xml': xpathUnknownFunction,
+  'xpath-syntax-error.xml': xpathSyntaxError,
+  'simple-dag-cycle.xml': simpleDagCycle,
+  'all-question-types-v2024091201-3.xml': allQuestionTypes,
+  'geopoint.xml': geopoint,
+  'preload.xml': preload,
+  '2-all-possible-notes.xml': allPossibleNotes,
+  '01-basic-repeat.xml': basicRepeat,
+  '3-notes-with-markdown.xml': markdown,
+  'pagination-01-flat.xml': paginationFlat,
+  'pagination-03-fieldlist-group.xml': paginationFieldlistGroup,
+  'pagination-08-plain-repeat.xml': paginationPlainRepeat,
+  'pagination-08b-plain-repeat-empty.xml': paginationPlainRepeatEmpty,
+  'pagination-09-repeat-fieldlist.xml': paginationRepeatFieldlist,
+  'pagination-13-fieldlist-relevance.xml': paginationFieldlistRelevance,
+  'pagination-14-fieldlist-on-repeat.xml': paginationFieldlistOnRepeat,
+  'pagination-16-repeat-fixed-count.xml': paginationRepeatFixedCount,
+  'pagination-17-nested-repeat-fieldlist.xml': paginationNestedRepeatFieldlist,
+};
+
+const attachments: Record<string, string> = {
+  'jr://file/cities.geojson': citiesGeoJson,
+  'jr://images/angry.jpg': angry,
+  'jr://images/apple.jpg': apple,
+  'jr://images/excited.svg': excited,
+  'jr://images/fast-food.svg': fastFood,
+  'jr://images/happy.svg': happy,
+  'jr://images/neutral.png': neutral,
+  'jr://images/noodles.svg': noodles,
+  'jr://images/sad.png': sad,
+  'jr://images/turkey.svg': turkey,
+};
 
 /**
  * @todo this does roughly the same thing as {@link getFormXml}, except it
@@ -25,57 +112,61 @@ import { odkThemePreset } from '../src/odk-theme-preset';
  * any other real module import.
  */
 export const getWebFormsTestFixture = (identifier: string): Promise<string> => {
-	const fixture = xformFixturesByIdentifier.get(identifier);
+  const xml = fixtures[identifier];
+  if (xml == null) {
+    throw new Error(`Could not find fixture with identifier: ${identifier}`);
+  }
+  return Promise.resolve(xml);
+};
 
-	if (fixture?.category !== 'test-web-forms') {
-		throw new Error(`Could not find web-forms test fixture with identifier: ${identifier}`);
-	}
-
-	return fixture.loadXML().then((xml) => {
-		if (typeof xml !== 'string') {
-			throw new Error('Wrong XML Form type. Expected a string');
-		}
-		return xml;
-	});
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getButtonByText = (component: VueWrapper<any>, text: string) => {
+  const button = component.findAll('button').find((el) => el.text() === text);
+  if (button == null) {
+    throw new Error(`Could not find button with text: ${text}`);
+  }
+  return button;
 };
 
 export const getFormXml = (fileName: string): Promise<string> => {
-	const fixture = xformFixturesByIdentifier.get(fileName);
+  const xml = fixtures[fileName];
+  if (xml == null) {
+    throw new Error(`Could not find fixture with file name: ${fileName}`);
+  }
+  return Promise.resolve(xml);
+};
 
-	if (fixture == null) {
-		throw new Error(`Could not find fixture with file name: ${fileName}`);
-	}
-
-	return fixture.loadXML().then((xml) => {
-		if (typeof xml !== 'string') {
-			throw new Error('Wrong XML Form type. Expected a string');
-		}
-		return xml;
-	});
+export const getAttachment = (url: URL): Promise<Response> => {
+  const path = url.toString();
+  const attachment = attachments[path];
+  if (attachment == null) {
+    throw new Error(`Could not find attachment with url: ${path}`);
+  }
+  return fetch(attachment);
 };
 
 export const getReactiveForm = async (formPath: string): Promise<RootNode> => {
-	const formXml = await getFormXml(formPath);
-	const instance = await createInstance(formXml, {
-		instance: {
-			stateFactory: reactive,
-		},
-	});
+  const formXml = await getFormXml(formPath);
+  const instance = await createInstance(formXml, {
+    instance: {
+      stateFactory: reactive,
+    },
+  });
 
-	return instance.root;
+  return instance.root;
 };
 
 type GlobalMountOptions = Required<MountingOptions<unknown>>['global'];
 
 export const globalMountOptions: GlobalMountOptions = {
-	plugins: [[PrimeVue, { theme: { preset: odkThemePreset } }]],
-	provide: {
-		[SUBMIT_PRESSED]: ref(false),
-		[TRANSLATE]: (id: string) => id,
-	},
-	stubs: {
-		teleport: true,
-	},
+  plugins: [[PrimeVue, { theme: { preset: odkThemePreset } }]],
+  provide: {
+    [SUBMIT_PRESSED]: ref(false),
+    [TRANSLATE]: (id: string) => id,
+  },
+  stubs: {
+    teleport: true,
+  },
 };
 
 // TODO: how the heck is `undefined` a key of anything?!
@@ -92,17 +183,17 @@ export type DocumentPropertyName = {
 }[StringKeyOfDocument];
 
 export const mockDocumentGetter = <PropertyName extends DocumentPropertyName>(
-	propertyName: PropertyName,
-	mockImplementation: () => Document[PropertyName]
+  propertyName: PropertyName,
+  mockImplementation: () => Document[PropertyName]
 ) => {
-	if (propertyName in document) {
-		return vi.spyOn(document, propertyName, 'get').mockImplementation(mockImplementation);
-	}
+  if (propertyName in document) {
+    return vi.spyOn(document, propertyName, 'get').mockImplementation(mockImplementation);
+  }
 
-	const mock = vi.fn(mockImplementation);
-	Object.defineProperty(document, propertyName, {
-		get: mock,
-		configurable: true,
-	});
-	return mock;
+  const mock = vi.fn(mockImplementation);
+  Object.defineProperty(document, propertyName, {
+    get: mock,
+    configurable: true,
+  });
+  return mock;
 };

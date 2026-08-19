@@ -126,7 +126,8 @@ describe('AuditTable', () => {
     const cases = [
       ['project.create', ['Project', 'Create']],
       ['project.update', ['Project', 'Update Details']],
-      ['project.delete', ['Project', 'Delete']]
+      ['project.delete', ['Project', 'Delete']],
+      ['actor_property.create', ['Project', 'Create Custom Property']]
     ];
 
     for (const [action, type] of cases) {
@@ -169,6 +170,7 @@ describe('AuditTable', () => {
       ['form.update', ['Form', 'Update Details']],
       ['form.update.draft.set', ['Form', 'Create or Update Draft']],
       ['form.update.draft.replace', ['Form', 'Replace Draft']],
+      ['form.update.draft.update', ['Form', 'Update Draft Settings']],
       ['form.update.publish', ['Form', 'Publish Draft']],
       ['form.update.draft.delete', ['Form', 'Abandon Draft']],
       ['form.attachment.update', ['Form', 'Update Attachments']],
@@ -246,7 +248,8 @@ describe('AuditTable', () => {
       ['public_link.assignment.create', ['Public Access Link', 'Give Access']],
       ['public_link.assignment.delete', ['Public Access Link', 'Remove Access']],
       ['public_link.session.end', ['Public Access Link', 'Revoke']],
-      ['public_link.delete', ['Public Access Link', 'Delete']]
+      ['public_link.delete', ['Public Access Link', 'Delete']],
+      ['public_link.property.set', ['Public Access Link', 'Set Property']]
     ];
 
     for (const [action, type] of cases) {
@@ -316,7 +319,8 @@ describe('AuditTable', () => {
       ['field_key.assignment.create', ['App User', 'Give Access']],
       ['field_key.assignment.delete', ['App User', 'Remove Access']],
       ['field_key.session.end', ['App User', 'Revoke']],
-      ['field_key.delete', ['App User', 'Delete']]
+      ['field_key.delete', ['App User', 'Delete']],
+      ['field_key.property.set', ['App User', 'Set Property']]
     ];
 
     for (const [action, type] of cases) {

@@ -35,16 +35,19 @@ except according to the terms contained in the LICENSE file.
       </i18n-t>
     </div>
 
-    <public-link-table :highlighted="highlighted"
-      @revoke="revokeModal.show({ publicLink: $event })"/>
-    <loading :state="publicLinks.initiallyLoading"/>
-    <p v-if="publicLinks.dataExists && publicLinks.length === 0"
+    <public-link-table v-if="dataExists" :highlighted="highlighted"
+      @revoke="revokeModal.show({ publicLink: $event })"
+      @edit="editModal.show({ publicLink: $event })"/>
+    <loading :state="initiallyLoading"/>
+    <p v-if="dataExists && publicLinks.length === 0"
       class="empty-table-message">
       {{ $t('emptyTable') }}
     </p>
 
     <public-link-create v-bind="createModal" @hide="createModal.hide()"
       @success="afterCreate"/>
+    <public-link-edit v-bind="editModal" @hide="editModal.hide()"
+      @success="afterEdit"/>
     <project-submission-options v-bind="submissionOptions"
       @hide="submissionOptions.hide()"/>
     <public-link-revoke v-bind="revokeModal" @hide="revokeModal.hide()"
@@ -57,6 +60,7 @@ import DocLink from '../doc-link.vue';
 import Loading from '../loading.vue';
 import ProjectSubmissionOptions from '../project/submission-options.vue';
 import PublicLinkCreate from './create.vue';
+import PublicLinkEdit from './edit.vue';
 import PublicLinkRevoke from './revoke.vue';
 import PublicLinkTable from './table.vue';
 import SentenceSeparator from '../sentence-separator.vue';
@@ -74,6 +78,7 @@ export default {
     Loading,
     ProjectSubmissionOptions,
     PublicLinkCreate,
+    PublicLinkEdit,
     PublicLinkRevoke,
     PublicLinkTable,
     SentenceSeparator
@@ -90,9 +95,13 @@ export default {
     }
   },
   setup() {
-    const { publicLinks } = useRequestData();
+    const { publicLinks, actorProperties, resourceStates } = useRequestData();
+
     const { projectPath } = useRoutes();
-    return { publicLinks, projectPath };
+    return {
+      publicLinks, actorProperties, ...resourceStates([publicLinks, actorProperties]),
+      projectPath
+    };
   },
   data() {
     return {
@@ -100,17 +109,20 @@ export default {
       highlighted: null,
       // Modals
       createModal: modalData(),
+      editModal: modalData(),
       submissionOptions: modalData(),
       revokeModal: modalData()
     };
   },
   created() {
+    this.fetchActorProperties();
     this.fetchData(false);
   },
   methods: {
     fetchData(resend) {
       this.publicLinks.request({
         url: apiPaths.publicLinks(this.projectId, this.xmlFormId),
+        extended: true,
         resend
       }).catch(noop);
       this.highlighted = null;
@@ -121,10 +133,22 @@ export default {
       this.alert.success(this.$t('alert.create'));
       this.highlighted = publicLink.id;
     },
+    afterEdit(publicLink) {
+      this.fetchData(true);
+      this.editModal.hide();
+      this.alert.success(this.$t('alert.edit', publicLink));
+      this.highlighted = publicLink.id;
+    },
     afterRevoke(publicLink) {
       this.fetchData(true);
       this.revokeModal.hide();
       this.alert.success(this.$t('alert.revoke', publicLink));
+    },
+    fetchActorProperties() {
+      this.actorProperties.request({
+        url: apiPaths.actorProperties(this.projectId),
+        resend: false
+      }).catch(noop);
     }
   }
 };
@@ -149,6 +173,7 @@ export default {
     "emptyTable": "There are no Public Access Links for this Form.",
     "alert": {
       "create": "Your Public Access Link has been created and is now live. Copy it below to distribute it.",
+      "edit": "The Public Access Link “{displayName}” was updated successfully.",
       "revoke": "The Public Access Link “{displayName}” was revoked successfully. No further Submissions will be accepted using this Link."
     }
   }
@@ -234,6 +259,7 @@ export default {
     "emptyTable": "Il n'y a aucun lien d'accès public pour ce formulaire.",
     "alert": {
       "create": "Votre lien d'accès public a été créé et est désormais accessible. Copiez le ci-dessous pour le distribuer.",
+      "edit": "Le lien d'accès public «{displayName}» a été modifié.",
       "revoke": "Le lien d'accès public \"{displayName}\" a été révoqué avec succès. Aucune soumission ne sera acceptée depuis ce lien."
     }
   },

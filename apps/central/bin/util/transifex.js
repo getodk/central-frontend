@@ -27,18 +27,29 @@ const locales = {
 
 const sourceLocale = 'en';
 
+// All plural categories, in the order they appear in Transifex and the Vue I18n
+// JSON
+const pluralCategoryOrder = ['one', 'few', 'many', 'other'];
+
 // Normalize `locales`.
 {
   const defaults = { warnVariableSeparator: true };
   for (const [locale, options] of Object.entries(locales)) {
     const normalized = { ...defaults, ...options };
 
-    if (normalized.pluralCategories != null) {
-      normalized.pluralCategories = [...normalized.pluralCategories].sort();
-    } else {
+    // Normalize pluralCategories.
+    if (normalized.pluralCategories == null) {
       const pluralRules = new Intl.PluralRules([locale]);
+      // Unlike browsers, Node seems to order pluralCategories alphabetically.
       normalized.pluralCategories = pluralRules.resolvedOptions().pluralCategories;
     }
+    for (const category of normalized.pluralCategories) {
+      if (!pluralCategoryOrder.includes(category))
+        throw new Error(`Locale ${locale} has the plural category ${category}, but it does not appear in pluralCategoryOrder. Please add it to pluralCategoryOrder in the correct order.`);
+    }
+    normalized.pluralCategories = normalized.pluralCategories
+      .toSorted((category1, category2) =>
+        pluralCategoryOrder.indexOf(category1) - pluralCategoryOrder.indexOf(category2));
 
     locales[locale] = normalized;
   }
@@ -100,7 +111,7 @@ class PluralForms {
   }
 
   // Transifex uses ICU plurals.
-  static fromTransifex(string, locale) {
+  static fromTransifex(key, string, locale) {
     const forms = [];
     const icuMatch = string.match(/^({count, plural,).+}$/s);
     if (icuMatch == null) {
@@ -126,10 +137,21 @@ class PluralForms {
         begin = end;
       }
 
-      categories.sort();
+      // First check that `categories` are in the correct order (e.g., 'one'
+      // should come before 'many'). If `categories` were in the wrong order in
+      // the Transifex JSON, they would also end up in the wrong order in the
+      // Vue I18n JSON.
+      const expectedOrder = pluralCategoryOrder.filter(category =>
+        categories.includes(category));
+      if (!equals(categories, expectedOrder))
+        logThenThrow(string, `.${key} in locale "${locale}": Expected the plural categories to be in the order [${expectedOrder.join(', ')}], but found [${categories.join(', ')}] instead.`);
+
+      // Next, check that `categories` includes all the plural categories we
+      // expect. If it were missing categories (or had extra categories), our
+      // Vue I18n pluralizationRules probably wouldn't work.
       const expectedCategories = locales[locale].pluralCategories;
       if (!equals(categories, expectedCategories))
-        logThenThrow(string, `Expected the plural categories [${expectedCategories.join(', ')}], but found [${categories.join(', ')}]. Did you download the translations "to translate"?`);
+        logThenThrow(string, `.${key} in locale "${locale}": Expected the plural categories [${expectedCategories.join(', ')}], but found [${categories.join(', ')}] instead. Did you download the translations "to translate"?`);
     }
 
     for (let i = 0; i < forms.length; i += 1)
@@ -522,10 +544,10 @@ const restructure = (messages) =>
 // message is a PluralForms object.
 const destructure = (json, locale) => JSON.parse(
   json,
-  (_, value) => {
+  (key, value) => {
     if (value != null && typeof value === 'object' &&
       typeof value.string === 'string')
-      return PluralForms.fromTransifex(value.string, locale);
+      return PluralForms.fromTransifex(key, value.string, locale);
     return value;
   }
 );
@@ -773,7 +795,8 @@ JSON. It stores source messages along with the corresponding translations.
 class Translations {
   // `source` is either a non-array object or an array. `translated` is always
   // a non-array object: Structured JSON does not seem to support arrays.
-  constructor(parent, key, source, translated) {
+  constructor(locale, parent, key, source, translated) {
+    this._locale = locale;
     this.parent = parent;
     this.key = key;
     if (source == null || typeof source !== 'object')
@@ -803,6 +826,7 @@ class Translations {
       return new Translation(this, key.toString());
     if (this._translated[key] == null) this._translated[key] = {};
     return new Translations(
+      this._locale,
       this,
       key.toString(),
       sourceValue,
@@ -886,7 +910,14 @@ class Translations {
 
     const result = {};
     for (const k of Object.keys(this._translated)) {
-      const value = this.get(k).toJSON(k);
+      const rawValue = this.get(k);
+      if (rawValue == null) {
+        let keyPath = k;
+        for (let curr = this; curr.parent != null; curr = curr.parent) keyPath = `${curr.key}.${keyPath}`;
+        throw new Error(`No value found for ${keyPath} in locale "${this._locale}".`);
+      }
+
+      const value = rawValue.toJSON(k);
       if (value != null) result[k] = value;
     }
     return Object.keys(result).length !== 0 || /^\d+$/.test(key)
@@ -989,7 +1020,7 @@ const validateTranslation = (locale) => ({ source, translated, path }) => {
       logThenThrow({ source, translated }, 'unexpected linked locale message');
 
     if (locales[locale].warnVariableSeparator) {
-      const noSeparator = '[^\\] !"\'(),./:;<>?[’“”„–—-]';
+      const noSeparator = '[^\\] !"\'(),./:;<>?[’“”„«»–—-]';
       if (new RegExp(`${noSeparator}\\{|\\}${noSeparator}`, 'u').test(translated[i])) {
         console.warn(`warning: ${path.join('.')}: variable without separator.`);
       }
@@ -1007,7 +1038,7 @@ const writeTranslations = (
 ) => {
   if (locales[locale] == null) throw new Error(`unknown locale ${locale}`);
 
-  const translations = new Translations(null, null, source, translated);
+  const translations = new Translations(locale, null, null, source, translated);
 
   // Instead of overwriting the source messages, here we check that
   // destructuring the restructured source messages results in the original
@@ -1078,10 +1109,10 @@ const writeTranslations = (
   }
 
   translations.delete('component');
-  fs.writeFileSync(
-    `${localesDir}/${locale}.json`,
-    JSON.stringify(translations, null, 2)
-  );
+  const content = JSON.stringify(translations, null, 2);
+  if (content != null && content !== '{}') {
+    fs.writeFileSync(`${localesDir}/${locale}.json`, content);
+  }
 };
 
 

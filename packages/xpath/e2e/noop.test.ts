@@ -4,7 +4,7 @@ const { describe } = test;
 const it = test;
 
 describe('Noop (E2E)', () => {
-	it('passes', () => {
-		expect(true).toEqual(true);
-	});
+  it('passes', () => {
+    expect(true).toEqual(true);
+  });
 });
