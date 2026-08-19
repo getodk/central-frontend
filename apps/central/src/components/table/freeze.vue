@@ -136,6 +136,11 @@ defineExpose({ getRowPair });
 .table-freeze {
   @include clearfix;
   position: relative;
+
+  th, td {
+    height: 56px;
+    vertical-align: middle;
+  }
 }
 
 .table-freeze-frozen {
@@ -161,6 +166,22 @@ defineExpose({ getRowPair });
   td:last-child { border-right: $border-top-table-data; }
 }
 
+// Zebra striping
+.table-freeze-frozen,
+.table-freeze-scrolling {
+  thead tr {
+    background-color: $color-header-row;
+  }
+
+  tbody tr:nth-child(even) {
+    background-color: $color-even-row;
+  }
+
+  tbody tr:nth-child(odd) {
+    background-color: $color-odd-row;
+  }
+}
+
 // Styles related to actions (buttons and links). If there are actions, they
 // should be in a .btn-group.
 .table-freeze-frozen {
@@ -170,7 +191,7 @@ defineExpose({ getRowPair });
     left: -2000px;
     // Relative to .table-freeze so that buttons are shown to the right side of the component.
     position: absolute;
-    margin-top: 4px;
+    margin-top: 12px;
   }
 
   .actions-trigger-hover tr:hover .btn-group,
@@ -185,6 +206,7 @@ defineExpose({ getRowPair });
   .col-actions {
     width: 0;
     padding: 0;
+    vertical-align: top;
   }
 }
 </style>

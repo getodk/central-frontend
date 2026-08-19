@@ -209,12 +209,20 @@ export default {
       border-bottom-left-radius: 5px;
     }
 
-    tr:nth-child(3n + 2 of .project-form-row) {
-      background: #eee;
+    tr:nth-child(even of .project-form-row) {
+      background: $color-even-row;
     }
 
-    tr:nth-child(3n + 2 of .project-dataset-row) {
-      background: #eee;
+    tr:nth-child(odd of .project-form-row) {
+      background: $color-odd-row;
+    }
+
+    tr:nth-child(even of .project-dataset-row) {
+      background: $color-even-row;;
+    }
+
+    tr:nth-child(odd of .project-dataset-row) {
+      background: $color-odd-row;
     }
 
     .col-icon {
