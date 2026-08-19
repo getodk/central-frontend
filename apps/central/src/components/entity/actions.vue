@@ -23,24 +23,14 @@ except according to the terms contained in the LICENSE file.
       class="resolve-button btn btn-primary">
       <span class="icon-random"></span>{{ $t('action.reviewParallelUpdates') }}
     </button>
-    <router-link v-slot="{ href }"
-      :to="entityPath(project.id, datasetName, entity.__id)" custom>
-      <a class="more-button btn btn-default" :href="href" target="_blank">
-        <span>{{ $t('action.more') }}</span>
-        <span class="icon-angle-right"></span>
-      </a>
-    </router-link>
   </div>
 </template>
 
 <script setup>
 // This component is tested via the tests of EntityMetadataRow.
 
-import { inject } from 'vue';
-
 import Spinner from '../spinner.vue';
 
-import useRoutes from '../../composables/routes';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
@@ -54,11 +44,7 @@ defineProps({
   awaitingResponse: Boolean
 });
 
-const datasetName = inject('datasetName');
-
 // The component assumes that this data will exist when the component is
 // created.
 const { project } = useRequestData();
-
-const { entityPath } = useRoutes();
 </script>

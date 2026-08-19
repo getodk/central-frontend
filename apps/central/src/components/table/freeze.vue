@@ -36,10 +36,10 @@ except according to the terms contained in the LICENSE file.
             <slot name="head-scrolling"></slot>
           </tr>
         </thead>
-        <!-- eslint-disable-next-line vuejs-accessibility/mouse-events-have-key-events -->
+        <!-- eslint-disable-next-line vuejs-accessibility/mouse-events-have-key-events,vuejs-accessibility/click-events-have-key-events -->
         <tbody v-if="data != null" ref="scrollingBody"
           @mousemove="setActionsTrigger('hover')" @mouseover="toggleHoverClass"
-          @mouseleave="removeHoverClass">
+          @mouseleave="removeHoverClass" @click="actionClick">
           <transition-group name="table-freeze-row">
             <slot v-for="(element, index) in data" :key="element[keyProp]"
               name="data-scrolling" :data="element" :index="index">
@@ -117,10 +117,11 @@ watch(() => props.data, removeHoverClass);
 
 const actionClick = (event) => {
   const action = event.target.closest('.btn-group .btn');
-  if (action != null) {
-    const index = action.closest('tr').rowIndex - 1;
-    emit('action', { target: action, data: props.data[index], index });
-  }
+  const row = event.target.closest('tr');
+  if (row == null) return;
+  const index = row.rowIndex - 1;
+  const target = action ?? row;
+  emit('action', { target, data: props.data[index], index });
 };
 
 const scrollingBody = ref(null);
