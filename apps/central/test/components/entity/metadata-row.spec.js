@@ -33,8 +33,7 @@ describe('EntityMetadataRow', () => {
   it('shows the row number', () => {
     testData.extendedDatasets.createPast(1);
     testData.extendedEntities.createPast(1);
-    const td = mountComponent({ rowNumber: 1000 }).get('td');
-    td.classes('row-number').should.be.true;
+    const td = mountComponent({ rowNumber: 1000 }).get('.row-number');
     td.text().should.equal('1000');
   });
 
@@ -43,8 +42,7 @@ describe('EntityMetadataRow', () => {
     const creator = testData.extendedUsers.first();
     testData.extendedEntities.createPast(1, { creator }).last();
     const row = mountComponent();
-    const td = row.findAll('td')[2];
-    td.classes('creator-name').should.be.true;
+    const td = row.get('.creator-name');
     td.text().should.equal(creator.displayName);
     await td.get('span').should.have.textTooltip();
   });
@@ -142,7 +140,7 @@ describe('EntityMetadataRow', () => {
     it('shows the deleted date', () => {
       testData.extendedDatasets.createPast(1);
       const { deletedAt } = testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() }).last();
-      mountComponent({ deleted: true }).get('.action-cell').getComponent(DateTime).props().iso.should.equal(deletedAt);
+      mountComponent({ deleted: true }).get('.last-updated-cell').getComponent(DateTime).props().iso.should.equal(deletedAt);
     });
 
     it('does not have delete button', () => {

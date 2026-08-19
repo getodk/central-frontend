@@ -11,27 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr class="field-key-row" :class="{ success: fieldKey.id === highlighted }">
-    <td class="display-name">
-      <span v-tooltip.text>{{ fieldKey.displayName }}</span>
-    </td>
-    <td>
-      <a v-if="fieldKey.token != null" ref="popoverLink" href="#"
-        class="field-key-row-popover-link" role="button"
-        @click.prevent="toggleQr">
-        <span class="icon-qrcode"></span>{{ $t('seeCode') }}
-      </a>
-      <template v-else>
-        {{ $t('accessRevoked') }}
-      </template>
-    </td>
-    <td><date-time :iso="fieldKey.createdAt"/></td>
-    <td class="created-by">
-      <span v-tooltip.text>{{ fieldKey.createdBy.displayName }}</span>
-    </td>
-    <td class="last-used-and-actions">
-      <div class="col-content">
-        <date-time :iso="fieldKey.lastUsed"/>
-      </div>
+    <td class="col-actions">
       <div class="btn-group">
         <button v-if="fieldKey.token != null && showEdit" type="button"
           class="edit-button btn btn-default"
@@ -47,6 +27,22 @@ except according to the terms contained in the LICENSE file.
         </button>
       </div>
     </td>
+    <td class="display-name"><span v-tooltip.text>{{ fieldKey.displayName }}</span></td>
+    <td>
+      <a v-if="fieldKey.token != null" ref="popoverLink" href="#"
+        class="field-key-row-popover-link" role="button"
+        @click.prevent="toggleQr">
+        <span class="icon-qrcode"></span>{{ $t('seeCode') }}
+      </a>
+      <template v-else>
+        {{ $t('accessRevoked') }}
+      </template>
+    </td>
+    <td><date-time :iso="fieldKey.createdAt"/></td>
+    <td class="created-by">
+      <span v-tooltip.text>{{ fieldKey.createdBy.displayName }}</span>
+    </td>
+    <td><date-time :iso="fieldKey.lastUsed"/></td>
   </tr>
 </template>
 
@@ -78,23 +74,9 @@ export default {
 @import '../../assets/scss/variables';
 
 .field-key-row {
-  .table tbody & td { vertical-align: middle; }
-
   .display-name, .created-by {
     @include text-overflow-ellipsis;
     max-width: 250px;
-  }
-
-  .last-used-and-actions {
-    padding-top: 4px;
-    padding-bottom: 4px;
-    min-width: 120px;
-  }
-
-  .col-content {
-    display: flex;
-    align-items: flex-start;
-    margin-top: 3px;
   }
 
   .btn-group {

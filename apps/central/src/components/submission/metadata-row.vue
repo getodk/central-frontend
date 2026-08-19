@@ -11,12 +11,24 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr class="submission-metadata-row">
+    <td class="col-actions">
+      <submission-actions v-if="!draft && !deleted" :submission="submission"
+        :awaiting-response="awaitingResponse"/>
+      <div v-else-if="deleted && verbs.has('submission.restore')" class="btn-group">
+        <button type="button"
+          class="restore-button btn btn-default"
+          :aria-disabled="awaitingResponse"
+          :aria-label="$t('action.restore')" v-tooltip.aria-label>
+          <span class="icon-recycle"></span><spinner :state="awaitingResponse"/>
+        </button>
+      </div>
+    </td>
     <td class="row-number">{{ $n(rowNumber, 'noGrouping') }}</td>
     <td v-if="!draft" class="submitter-name">
       <span v-tooltip.text>{{ submission.__system.submitterName }}</span>
     </td>
     <td><date-time :iso="submission.__system.submissionDate"/></td>
-    <td v-if="!draft && !deleted" class="state-and-actions">
+    <td v-if="!draft && !deleted">
       <div class="col-content">
         <span class="state">
           <template v-if="missingAttachment">
@@ -32,23 +44,10 @@ except according to the terms contained in the LICENSE file.
             <span>{{ $n(submission.__system.edits, 'default') }}</span>
           </template>
         </span>
-        <span class="icon-angle-right"></span>
       </div>
-      <submission-actions :submission="submission"
-        :awaiting-response="awaitingResponse"/>
     </td>
-    <td v-if="!draft && deleted" class="state-and-actions">
-      <div class="col-content col-deleted-at">
-        <date-time :iso="submission.__system.deletedAt"/>
-      </div>
-      <div v-if="verbs.has('submission.restore')" class="btn-group">
-        <button type="button"
-          class="restore-button btn btn-default"
-          :aria-disabled="awaitingResponse"
-          :aria-label="$t('action.restore')" v-tooltip.aria-label>
-          <span class="icon-recycle"></span><spinner :state="awaitingResponse"/>
-        </button>
-      </div>
+    <td v-if="!draft && deleted">
+      <date-time :iso="submission.__system.deletedAt"/>
     </td>
   </tr>
 </template>
@@ -107,12 +106,6 @@ export default {
   .submitter-name {
     @include text-overflow-ellipsis;
     max-width: 250px;
-  }
-
-  .state-and-actions {
-    // Ensure that the column is wide enough that the .btn-group does not wrap.
-    min-width: 205px;
-    &:lang(id) { min-width: 221px; }
   }
   .col-content {
     align-items: flex-start;

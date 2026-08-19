@@ -11,6 +11,17 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr class="entity-metadata-row" :class="{ 'entity-row-selected': entity.__system.selected }">
+    <td class="col-actions">
+      <entity-actions v-if="!deleted" :entity="entity" :awaiting-response="awaitingResponse"/>
+      <div v-else-if="deleted && verbs.has('entity.restore')" class="btn-group">
+        <button type="button"
+          class="restore-button btn btn-default"
+          :aria-disabled="awaitingResponse"
+          :aria-label="$t('action.restore')" v-tooltip.aria-label>
+          <span class="icon-recycle"></span><spinner :state="awaitingResponse"/>
+        </button>
+      </div>
+    </td>
     <td class="row-number">{{ $n(rowNumber, 'noGrouping') }}</td>
     <td v-if="!deleted && verbs.has('entity.delete')">
       <input type="checkbox" :aria-label="$t('action.selectRow')" :checked="entity.__system.selected" @change="$emit('selectionChanged', $event.target.checked)">
@@ -19,7 +30,7 @@ except according to the terms contained in the LICENSE file.
       <span v-tooltip.text>{{ entity.__system.creatorName }}</span>
     </td>
     <td><date-time :iso="entity.__system.createdAt"/></td>
-    <td v-if="!deleted" class="action-cell">
+    <td v-if="!deleted" class="last-updated-cell">
       <div class="col-content">
         <date-time :iso="entity.__system.updatedAt" class="updated-at"/>
         <span class="updates">
@@ -33,22 +44,10 @@ except according to the terms contained in the LICENSE file.
             <span>{{ $n(entity.__system.updates, 'default') }}</span>
           </template>
         </span>
-        <span class="icon-angle-right"></span>
       </div>
-      <entity-actions :entity="entity" :awaiting-response="awaitingResponse"/>
     </td>
-    <td v-else class="action-cell">
-      <div class="col-content col-deleted-at">
-        <date-time :iso="entity.__system.deletedAt"/>
-      </div>
-      <div v-if="verbs.has('entity.restore')" class="btn-group">
-        <button type="button"
-          class="restore-button btn btn-default"
-          :aria-disabled="awaitingResponse"
-          :aria-label="$t('action.restore')" v-tooltip.aria-label>
-          <span class="icon-recycle"></span><spinner :state="awaitingResponse"/>
-        </button>
-      </div>
+    <td v-else class="last-updated-cell">
+      <date-time :iso="entity.__system.deletedAt"/>
     </td>
   </tr>
 </template>
@@ -98,13 +97,9 @@ defineEmits(['selectionChanged']);
     max-width: 250px;
   }
 
-  .action-cell {
+  .last-updated-cell {
     padding-top: 4px;
     padding-bottom: 4px;
-
-    // Ensure that the column is wide enough that EntityActions does not wrap.
-    min-width: 170px;
-    &:lang(id) { min-width: 215px; }
   }
 
   .col-content {

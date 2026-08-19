@@ -52,10 +52,11 @@ describe('SubmissionTable', () => {
       });
       const table = component.get('.table-freeze-frozen');
       headers(table).should.eql([
+        '',
         'Row',
         'Submitted by',
         'Submitted at',
-        'State and actions'
+        'State'
       ]);
     });
 
@@ -66,7 +67,7 @@ describe('SubmissionTable', () => {
         props: { draft: true }
       });
       const table = component.get('.table-freeze-frozen');
-      headers(table).should.eql(['Row', 'Submitted at']);
+      headers(table).should.eql(['', 'Row', 'Submitted at']);
     });
 
     it('renders the correct headers for deleted submissions', () => {
@@ -76,6 +77,7 @@ describe('SubmissionTable', () => {
       });
       const table = component.get('.table-freeze-frozen');
       headers(table).should.eql([
+        '',
         'Row',
         'Submitted by',
         'Submitted at',
