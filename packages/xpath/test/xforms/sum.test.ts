@@ -104,6 +104,19 @@ describe('#sum()', () => {
     testContext.assertNumberValue('sum(/root/item)', NaN, { contextNode });
   });
 
+  it('sum only counts elements that are returned from the expression', () => {
+    testContext = createXFormsTestContext(`
+      <root id="root">
+        <item><weight>-10</weight></item>
+        <item></item>
+        <item><weight>99</weight></item>
+      </root>`);
+
+    const contextNode = testContext.document.getElementById('root');
+
+    testContext.assertNumberValue('sum(/root/item/weight)', 89, { contextNode });
+  });
+
   it.fails('sum() fails when too many arguments are provided', () => {
     testContext.evaluate('sum(1, 2)');
   });
