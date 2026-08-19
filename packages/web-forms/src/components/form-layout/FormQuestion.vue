@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { QUESTION_HAS_ERROR, SUBMIT_PRESSED } from '@/lib/constants/injection-keys.ts';
+import { QUESTION_HAS_ERROR, SUBMIT_PRESSED } from '@getodk/web-forms/lib/constants/injection-keys.ts';
 import type {
 	AnyInputNode,
 	AnyNoteNode,
@@ -8,13 +8,13 @@ import type {
 	SelectNode,
 } from '@getodk/xforms-engine';
 import { computed, inject, provide, type Ref, ref, watch } from 'vue';
-import InputControl from '@/components/form-elements/input/InputControl.vue';
+import InputControl from '@getodk/web-forms/components/form-elements/input/InputControl.vue';
 import NoteControl from '../form-elements/NoteControl.vue';
-import RangeControl from '@/components/form-elements/range/RangeControl.vue';
+import RangeControl from '@getodk/web-forms/components/form-elements/range/RangeControl.vue';
 import RankControl from '../form-elements/RankControl.vue';
-import SelectControl from '@/components/form-elements/select/SelectControl.vue';
+import SelectControl from '@getodk/web-forms/components/form-elements/select/SelectControl.vue';
 import TriggerControl from '../form-elements/TriggerControl.vue';
-import UploadControl from '@/components/form-elements/upload/UploadControl.vue';
+import UploadControl from '@getodk/web-forms/components/form-elements/upload/UploadControl.vue';
 
 const props = defineProps<{ question: ControlNode }>();
 

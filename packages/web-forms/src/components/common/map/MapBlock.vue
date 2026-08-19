@@ -4,17 +4,17 @@
  * Keep OpenLayers imports/code here only to bundle separately and
  * load on demand. Avoids main bundle bloat.
  */
-import IconSVG from '@/components/common/IconSVG.vue';
-import { type Mode, type SingleFeatureType } from '@/components/common/map/getModeConfig.ts';
-import MapAdvancedPanel from '@/components/common/map/MapAdvancedPanel.vue';
-import MapConfirmDialog from '@/components/common/map/MapConfirmDialog.vue';
-import MapControls from '@/components/common/map/MapControls.vue';
-import MapProperties from '@/components/common/map/MapProperties.vue';
-import MapStatusBar from '@/components/common/map/MapStatusBar.vue';
-import MapUpdateCoordsDialog from '@/components/common/map/MapUpdateCoordsDialog.vue';
-import { STATES, useMapBlock } from '@/components/common/map/useMapBlock.ts';
-import { TRANSLATE, QUESTION_HAS_ERROR } from '@/lib/constants/injection-keys.ts';
-import type { Translate } from '@/lib/locale/useLocale.ts';
+import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
+import { type Mode, type SingleFeatureType } from '@getodk/web-forms/components/common/map/getModeConfig.ts';
+import MapAdvancedPanel from '@getodk/web-forms/components/common/map/MapAdvancedPanel.vue';
+import MapConfirmDialog from '@getodk/web-forms/components/common/map/MapConfirmDialog.vue';
+import MapControls from '@getodk/web-forms/components/common/map/MapControls.vue';
+import MapProperties from '@getodk/web-forms/components/common/map/MapProperties.vue';
+import MapStatusBar from '@getodk/web-forms/components/common/map/MapStatusBar.vue';
+import MapUpdateCoordsDialog from '@getodk/web-forms/components/common/map/MapUpdateCoordsDialog.vue';
+import { STATES, useMapBlock } from '@getodk/web-forms/components/common/map/useMapBlock.ts';
+import { TRANSLATE, QUESTION_HAS_ERROR } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import type { Feature, FeatureCollection } from 'geojson';
 import type { Coordinate } from 'ol/coordinate';
 import { toLonLat } from 'ol/proj';

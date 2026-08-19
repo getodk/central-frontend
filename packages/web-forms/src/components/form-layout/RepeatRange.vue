@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import IconSVG from '@/components/common/IconSVG.vue';
-import MarkdownBlock from '@/components/common/MarkdownBlock.vue';
-import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
-import type { Translate } from '@/lib/locale/useLocale.ts';
-import { isOnCurrentPage } from '@/lib/pagination/pagination.ts';
+import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
+import MarkdownBlock from '@getodk/web-forms/components/common/MarkdownBlock.vue';
+import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
+import { isOnCurrentPage } from '@getodk/web-forms/lib/pagination/pagination.ts';
 import type { RepeatRangeNode, RepeatRangeUncontrolledNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import { computed, inject } from 'vue';

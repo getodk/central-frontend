@@ -6,7 +6,10 @@
  * when multiple "import('./MapBlock.vue')" calls are in-flight simultaneously.
  */
 import type { DefineComponent } from 'vue';
-import type { Mode, SingleFeatureType } from '@/components/common/map/getModeConfig.ts';
+import type {
+  Mode,
+  SingleFeatureType,
+} from '@getodk/web-forms/components/common/map/getModeConfig.ts';
 import type { Feature } from 'geojson';
 
 export type MapBlockComponent = DefineComponent<{

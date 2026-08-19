@@ -5,7 +5,7 @@ import type {
 	GroupNode,
 	RepeatRangeNode,
 } from '@getodk/xforms-engine';
-import { isOnCurrentPage } from '@/lib/pagination/pagination.ts';
+import { isOnCurrentPage } from '@getodk/web-forms/lib/pagination/pagination.ts';
 import ExpectModelNode from '../dev-only/ExpectModelNode.vue';
 import FormGroup from './FormGroup.vue';
 import FormQuestion from './FormQuestion.vue';

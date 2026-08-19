@@ -3,8 +3,8 @@ import type { SelectNode } from '@getodk/xforms-engine';
 import MultiSelect from 'primevue/multiselect';
 import { computed, inject } from 'vue';
 import MarkdownBlock from './MarkdownBlock.vue';
-import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
-import type { Translate } from '@/lib/locale/useLocale.ts';
+import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 
 interface MultiselectDropdownProps {
 	readonly question: SelectNode;

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import ActionsInfoDialog, { type ActionInfo } from '@/components/common/ActionsInfoDialog.vue';
-import IconSVG from '@/components/common/IconSVG.vue';
-import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
-import type { Translate } from '@/lib/locale/useLocale.ts';
+import ActionsInfoDialog, { type ActionInfo } from '@getodk/web-forms/components/common/ActionsInfoDialog.vue';
+import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
+import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import ColorPicker, { type ColorPickerChangeEvent } from 'primevue/colorpicker';
 import { computed, inject, onBeforeUnmount, ref, watch } from 'vue';
-import { DEFAULT_STROKE_COLOR } from '@/components/common/canvas/useCanvasDrawing.ts';
-import type { CanvasModeConfig } from '@/components/common/canvas/getModeConfig.ts';
+import { DEFAULT_STROKE_COLOR } from '@getodk/web-forms/components/common/canvas/useCanvasDrawing.ts';
+import type { CanvasModeConfig } from '@getodk/web-forms/components/common/canvas/getModeConfig.ts';
 
 const CONTROL_ICONS = {
 	clearAll: 'mdiTrashCanOutline',

@@ -1,12 +1,12 @@
-import type { OdkWebFormsProps } from '@/components/OdkWebForm.vue';
-import OdkWebForm from '@/components/OdkWebForm.vue';
-import { waitAllTasksToFinish } from '@/lib/async/event-loop.ts';
-import { POST_SUBMIT__NEW_INSTANCE } from '@/lib/constants/control-flow.ts';
+import type { OdkWebFormsProps } from '@getodk/web-forms/components/OdkWebForm.vue';
+import OdkWebForm from '@getodk/web-forms/components/OdkWebForm.vue';
+import { waitAllTasksToFinish } from '@getodk/web-forms/lib/async/event-loop.ts';
+import { POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms/lib/constants/control-flow.ts';
 import type {
   HostSubmissionResult,
   HostSubmissionResultCallback,
   OptionalAwaitableHostSubmissionResult,
-} from '@/lib/submission/host-submission-result-callback.ts';
+} from '@getodk/web-forms/lib/submission/host-submission-result-callback.ts';
 import type {
   MonolithicInstancePayload,
   ResolvableInstanceAttachmentsMap,

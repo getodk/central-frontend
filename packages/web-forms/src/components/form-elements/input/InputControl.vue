@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { SINGLE_FEATURE_TYPES } from '@/components/common/map/getModeConfig.ts';
-import ValidationMessage from '@/components/common/ValidationMessage.vue';
-import ControlText from '@/components/form-elements/ControlText.vue';
-import InputGeopoint from '@/components/form-elements/input/geopoint/InputGeopoint.vue';
-import InputGeopointWithMap from '@/components/form-elements/input/InputGeopointWithMap.vue';
-import InputDate from '@/components/form-elements/input/InputDate.vue';
-import InputDateTime from '@/components/form-elements/input/InputDateTime.vue';
-import InputDecimal from '@/components/form-elements/input/InputDecimal.vue';
-import InputGeoMultiPoint from '@/components/form-elements/input/InputGeoMultiPoint.vue';
-import InputInt from '@/components/form-elements/input/InputInt.vue';
-import InputNumbersAppearance from '@/components/form-elements/input/InputNumbersAppearance.vue';
-import InputText from '@/components/form-elements/input/InputText.vue';
-import InputTime from '@/components/form-elements/input/InputTime.vue';
-import { IS_FORM_EDIT_MODE } from '@/lib/constants/injection-keys.ts';
+import { SINGLE_FEATURE_TYPES } from '@getodk/web-forms/components/common/map/getModeConfig.ts';
+import ValidationMessage from '@getodk/web-forms/components/common/ValidationMessage.vue';
+import ControlText from '@getodk/web-forms/components/form-elements/ControlText.vue';
+import InputGeopoint from '@getodk/web-forms/components/form-elements/input/geopoint/InputGeopoint.vue';
+import InputGeopointWithMap from '@getodk/web-forms/components/form-elements/input/InputGeopointWithMap.vue';
+import InputDate from '@getodk/web-forms/components/form-elements/input/InputDate.vue';
+import InputDateTime from '@getodk/web-forms/components/form-elements/input/InputDateTime.vue';
+import InputDecimal from '@getodk/web-forms/components/form-elements/input/InputDecimal.vue';
+import InputGeoMultiPoint from '@getodk/web-forms/components/form-elements/input/InputGeoMultiPoint.vue';
+import InputInt from '@getodk/web-forms/components/form-elements/input/InputInt.vue';
+import InputNumbersAppearance from '@getodk/web-forms/components/form-elements/input/InputNumbersAppearance.vue';
+import InputText from '@getodk/web-forms/components/form-elements/input/InputText.vue';
+import InputTime from '@getodk/web-forms/components/form-elements/input/InputTime.vue';
+import { IS_FORM_EDIT_MODE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
 import type { AnyInputNode } from '@getodk/xforms-engine';
 import { inject } from 'vue';
 

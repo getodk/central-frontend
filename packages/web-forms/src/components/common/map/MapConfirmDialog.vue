@@ -2,9 +2,9 @@
 import {
 	SINGLE_FEATURE_TYPES,
 	type SingleFeatureType,
-} from '@/components/common/map/getModeConfig.ts';
-import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
-import type { Translate } from '@/lib/locale/useLocale.ts';
+} from '@getodk/web-forms/components/common/map/getModeConfig.ts';
+import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import { inject } from 'vue';
