@@ -99,7 +99,7 @@
 // FORMS
 
 @mixin form-control-background {
-  background-color: #eee;
+  background-color: #fff;
   .panel-body &, .modal-body & { background-color: #f7f7f7; }
 }
 
