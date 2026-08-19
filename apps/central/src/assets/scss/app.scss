@@ -624,6 +624,8 @@ tr.uncommitted-change { background-color: #ffef67; }
       border-bottom: $border-bottom-table-heading;
       font-size: $font-size-table-heading;
       padding: $padding-table-heading;
+      height: 56px;
+      vertical-align: middle;
     }
   }
 
@@ -632,6 +634,8 @@ tr.uncommitted-change { background-color: #ffef67; }
       border-top: $border-top-table-data;
       padding: $padding-top-table-data $padding-right-table-data
                $padding-bottom-table-data $padding-left-table-data;
+      height: 56px;
+      vertical-align: middle;
     }
   }
 

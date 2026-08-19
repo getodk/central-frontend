@@ -75,9 +75,6 @@ const { publicLinks, actorProperties } = useRequestData();
     height: 52px; // Access link cells has scrollbar
     vertical-align: unset;
   }
-  .col-actions {
-    vertical-align: top;
-  }
 }
 </style>
 
