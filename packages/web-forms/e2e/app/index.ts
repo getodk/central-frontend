@@ -11,13 +11,7 @@ import primeflex from 'primeflex/primeflex.css?inline';
 import appStyles from '../../src/assets/styles/style.scss?inline';
 import router from './router.js';
 
-const styles = [
-  roboto300,
-  roboto400,
-  roboto500,
-  primeflex,
-  appStyles,
-].join('\n\n');
+const styles = [roboto300, roboto400, roboto500, primeflex, appStyles].join('\n\n');
 const stylesheet = new CSSStyleSheet();
 
 stylesheet.replaceSync(styles);
