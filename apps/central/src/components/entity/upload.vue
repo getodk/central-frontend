@@ -58,7 +58,7 @@ except according to the terms contained in the LICENSE file.
           <entity-upload-data-error v-if="dataError != null"
             :message="dataError"/>
         </entity-upload-file-select>
-        <entity-upload-header-review v-if="headerWarnings != null && headerErrors == null"
+        <entity-upload-header-review v-if="headerWarnings != null"
           v-bind="headerWarnings"/>
       </div>
       <entity-upload-popup v-if="csvEntities != null"
