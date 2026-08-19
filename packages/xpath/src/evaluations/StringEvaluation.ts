@@ -25,10 +25,10 @@ export class StringEvaluation<T extends XPathNode> extends ValueEvaluation<T, 'S
 
     if (isEmpty) {
       this.numberValue = NaN;
-    } else {
+    } else if (numberFunction === null) {
       this.numberValue = Number(value);
-
-      if (numberFunction != null) {
+    } else {
+      try {
         this.numberValue = numberFunction
           .call(context, [
             {
@@ -36,6 +36,8 @@ export class StringEvaluation<T extends XPathNode> extends ValueEvaluation<T, 'S
             },
           ])
           .toNumber();
+      } catch {
+        this.numberValue = NaN;
       }
     }
   }
