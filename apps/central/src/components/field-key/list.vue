@@ -38,11 +38,12 @@ except according to the terms contained in the LICENSE file.
     <table-freeze v-if="dataExists" id="field-key-list-table" :data="filteredFieldKeys" key-prop="id"
       :frozen-only="actorProperties.length === 0" :divider="actorProperties.length > 0">
       <template #head-frozen>
+        <th class="col-actions"></th>
         <th>{{ $t('header.displayName') }}</th>
         <th>{{ $t('header.configureClient') }}</th>
         <th>{{ $t('header.createdAt') }}</th>
         <th>{{ $t('header.createdBy') }}</th>
-        <th>{{ $t('header.lastUsedAndActions', { lastUsed: $t('header.lastUsed'), actions: $t('header.actions') }) }}</th>
+        <th>{{ $t('header.lastUsed') }}</th>
       </template>
       <template #head-scrolling>
         <th v-for="property of actorProperties" :key="property.name">
@@ -260,8 +261,6 @@ export default {
     ],
     "header": {
       "lastUsed": "Last Used",
-      // Header for the table column that shows the last used date and action buttons.
-      "lastUsedAndActions": "{lastUsed} / {actions}",
       // Header for the table column that shows QR codes to configure data collection clients such as ODK Collect.
       "configureClient": "Configure Client"
     },

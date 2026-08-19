@@ -2762,10 +2762,6 @@
     },
     "EntityTable": {
       "header": {
-        "updatedAtAndActions": {
-          "string": "Last Updated / Actions",
-          "developer_comment": "This is the text of a column header of a table of Entities. The column shows when each Entity was last updated, as well as actions that can be taken on the Entity."
-        },
         "deletedAt": {
           "string": "Deleted at",
           "developer_comment": "Heading of the column that shows Entity deletion timestamp"
@@ -3096,10 +3092,6 @@
         "lastUsed": {
           "string": "Last Used",
           "developer_comment": "This is the text of a table column header."
-        },
-        "lastUsedAndActions": {
-          "string": "{lastUsed} / {actions}",
-          "developer_comment": "Header for the table column that shows the last used date and action buttons."
         },
         "configureClient": {
           "string": "Configure Client",
@@ -5646,10 +5638,6 @@
     },
     "SubmissionTable": {
       "header": {
-        "stateAndActions": {
-          "string": "State and actions",
-          "developer_comment": "This is the text of a table column header."
-        },
         "deletedAt": {
           "string": "Deleted at",
           "developer_comment": "Heading of the column that shows Submission deletion timestamp"
