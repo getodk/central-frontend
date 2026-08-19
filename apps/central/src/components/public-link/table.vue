@@ -13,10 +13,11 @@ except according to the terms contained in the LICENSE file.
   <table-freeze id="public-link-table" :data="publicLinks.data" key-prop="id"
     :frozen-only="actorProperties.length === 0" :divider="actorProperties.length > 0">
     <template #head-frozen>
+      <th class="col-actions"></th>
       <th>{{ $t('header.displayName') }}</th>
       <th>{{ $t('header.once') }}</th>
       <th class="access-link">{{ $t('header.accessLink') }}</th>
-      <th>{{ $t('header.createdAtAndActions', { createdAt: $t('header.createdAt'), actions: $t('header.actions') }) }}</th>
+      <th>{{ $t('header.createdAt') }}</th>
     </template>
     <template #head-scrolling>
       <th v-for="property of actorProperties" :key="property.name">
@@ -73,6 +74,9 @@ const { publicLinks, actorProperties } = useRequestData();
   td {
     height: 52px; // Access link cells has scrollbar
     vertical-align: unset;
+  }
+  .col-actions {
+    vertical-align: top;
   }
 }
 </style>

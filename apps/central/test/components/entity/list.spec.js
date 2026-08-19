@@ -263,10 +263,11 @@ describe('EntityList', () => {
 
       it('updates the EntityMetadataRow', async () => {
         const component = await submit();
-        const td = component.get('.entity-metadata-row:nth-child(2) td:last-child');
-        should.exist(td.getComponent(DateTime).props().iso);
-        td.get('.updates').text().should.equal('1');
-        td.get('.update-button').attributes('aria-label').should.equal('Edit (1)');
+        const row = component.get('.entity-metadata-row:nth-child(2)');
+        const lastUpdatedTd = row.get('.last-updated-cell');
+        should.exist(lastUpdatedTd.getComponent(DateTime).props().iso);
+        lastUpdatedTd.get('.updates').text().should.equal('1');
+        row.get('.update-button').attributes('aria-label').should.equal('Edit (1)');
       });
     });
   });
