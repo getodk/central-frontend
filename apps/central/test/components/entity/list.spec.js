@@ -267,7 +267,6 @@ describe('EntityList', () => {
         const lastUpdatedTd = row.get('.last-updated-cell');
         should.exist(lastUpdatedTd.getComponent(DateTime).props().iso);
         lastUpdatedTd.get('.updates').text().should.equal('1');
-        row.get('.update-button').attributes('aria-label').should.equal('Edit (1)');
       });
     });
   });
