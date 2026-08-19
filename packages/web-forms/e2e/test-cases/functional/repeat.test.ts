@@ -17,7 +17,7 @@ test.describe('Repeats', () => {
   });
 
   test('adds instances', async () => {
-    await formPage.repeat.addInstance('Add');
+    await formPage.repeat.addInstance();
 
     const instances = await formPage.repeat.getInstancesHeader();
     expect(instances?.length).toBe(2);
@@ -25,7 +25,7 @@ test.describe('Repeats', () => {
     await formPage.repeat.expectInstanceHeader(instances[0], 'Repeat Item', '1');
     await formPage.repeat.expectInstanceHeader(instances[1], 'Repeat Item', '2');
 
-    await formPage.repeat.addInstance('Add');
+    await formPage.repeat.addInstance();
     const udpatedInstances = await formPage.repeat.getInstancesHeader();
     expect(udpatedInstances?.length).toBe(3);
 

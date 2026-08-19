@@ -4,11 +4,11 @@
  * This prevents unnecessary bloat in the application bundle, reducing initial load times and improving performance.
  * Use dynamic imports instead (e.g., `await import(importPath)`) for lazy-loading these dependencies when required.
  */
-import { getModeConfig, type CanvasMode } from '@/components/common/canvas/getModeConfig.ts';
-import { loadCanvas, type CanvasBlockComponent } from '@/components/common/canvas/loadCanvas.ts';
-import AsyncLoader from '@/components/common/AsyncLoader.vue';
-import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
-import type { Translate } from '@/lib/locale/useLocale.ts';
+import { getModeConfig, type CanvasMode } from '@getodk/web-forms/components/common/canvas/getModeConfig.ts';
+import { loadCanvas, type CanvasBlockComponent } from '@getodk/web-forms/components/common/canvas/loadCanvas.ts';
+import AsyncLoader from '@getodk/web-forms/components/common/AsyncLoader.vue';
+import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import { getCurrentInstance, inject, shallowRef } from 'vue';
 
 const props = defineProps<{

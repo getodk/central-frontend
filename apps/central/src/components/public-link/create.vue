@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
       <form @submit.prevent="submit">
         <form-group ref="displayNameRef" v-model.trim="displayName"
           :placeholder="$t('field.displayName')" required autocomplete="off"/>
-        <div v-if="state && actorProperties.dataExists && actorProperties.length > 0"
+        <div v-if="state && actorProperties.dataExists"
           class="public-link-set-properties">
           <actor-properties-upsert v-model:propertyValues="propertyValues" :create="true"
             :property-defs="actorProperties.data"/>
@@ -85,10 +85,13 @@ const { request, awaitingResponse } = useRequest();
 const { form, actorProperties } = useRequestData();
 
 const submit = () => {
+  const body = { displayName: displayName.value, once: once.value };
+  if (Object.keys(propertyValues.value).length > 0)
+    body.properties = propertyValues.value;
   request({
     method: 'POST',
     url: apiPaths.publicLinks(form.projectId, form.xmlFormId),
-    data: { displayName: displayName.value, once: once.value, properties: propertyValues.value }
+    data: body
   })
     .then(({ data }) => {
       emit('success', data);
@@ -104,6 +107,14 @@ watch(() => props.state, (state) => {
   }
 });
 </script>
+
+<style lang="scss">
+#public-link-create {
+  .public-link-set-properties + .checkbox {
+    margin-top: 20px;
+  }
+}
+</style>
 
 <i18n lang="json5">
 {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import AsyncCanvas from '@/components/common/canvas/AsyncCanvas.vue';
-import { getModeConfig, type CanvasMode } from '@/components/common/canvas/getModeConfig.ts';
-import ImageBlock from '@/components/common/media/ImageBlock.vue';
+import AsyncCanvas from '@getodk/web-forms/components/common/canvas/AsyncCanvas.vue';
+import { getModeConfig, type CanvasMode } from '@getodk/web-forms/components/common/canvas/getModeConfig.ts';
+import ImageBlock from '@getodk/web-forms/components/common/media/ImageBlock.vue';
 import { computed } from 'vue';
 
 type ObjectURL = `blob:${string}`;

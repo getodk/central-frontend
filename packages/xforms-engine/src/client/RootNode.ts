@@ -3,6 +3,7 @@ import type { RootDefinition } from '../parse/model/RootDefinition.ts';
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from './FormLanguage.ts';
 import type { GeneralChildNode } from './hierarchy.ts';
+import type { PageBoundary } from './identity.ts';
 import type {
   ChunkedInstancePayload,
   InstancePayload,
@@ -26,6 +27,14 @@ export interface RootNodeState extends BaseNodeState {
   get children(): readonly GeneralChildNode[];
   get valueOptions(): null;
   get value(): null;
+
+  /**
+   * The page currently being shown, when the form declares `<h:body class="pages">`.
+   * It's `null` for a form without pages, or when there is nothing to show (empty form, edge case).
+   */
+  get currentPage(): PageBoundary | null;
+  get hasNextPage(): boolean;
+  get hasPreviousPage(): boolean;
 }
 
 export interface RootNode extends BaseNode {
@@ -53,6 +62,9 @@ export interface RootNode extends BaseNode {
    */
   readonly classes: BodyClassList;
 
+  // Whether the form declares `<h:body class="pages">`
+  readonly isPaginated: boolean;
+
   readonly definition: RootDefinition;
   readonly root: RootNode;
   readonly parent: unknown;
@@ -65,6 +77,19 @@ export interface RootNode extends BaseNode {
   readonly languages: FormLanguages;
 
   setLanguage(language: FormLanguage): RootNode;
+
+  /**
+   * Jumps to the page a control belongs to; pass that control's `currentState.pageBoundary`.
+   * Returns the page being shown after the call, or `null` when the requested page no longer
+   * exists; for example, an id left over from a removed repeat.
+   */
+  setCurrentPage(page: PageBoundary): PageBoundary | null;
+
+  // Moves to the next page. Does nothing when {@link RootNodeState.hasNextPage} is `false`.
+  nextPage(): void;
+
+  // Moves to the previous page. Does nothing when {@link RootNodeState.hasPreviousPage} is `false`.
+  previousPage(): void;
 
   /**
    * Prepares the current form instance state as an {@link InstancePayload}.

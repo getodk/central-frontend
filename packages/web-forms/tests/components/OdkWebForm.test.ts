@@ -1,12 +1,12 @@
-import type { OdkWebFormsProps } from '@/components/OdkWebForm.vue';
-import OdkWebForm from '@/components/OdkWebForm.vue';
-import { waitAllTasksToFinish } from '@/lib/async/event-loop.ts';
-import { POST_SUBMIT__NEW_INSTANCE } from '@/lib/constants/control-flow.ts';
+import type { OdkWebFormsProps } from '@getodk/web-forms/components/OdkWebForm.vue';
+import OdkWebForm from '@getodk/web-forms/components/OdkWebForm.vue';
+import { waitAllTasksToFinish } from '@getodk/web-forms/lib/async/event-loop.ts';
+import { POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms/lib/constants/control-flow.ts';
 import type {
   HostSubmissionResult,
   HostSubmissionResultCallback,
   OptionalAwaitableHostSubmissionResult,
-} from '@/lib/submission/host-submission-result-callback.ts';
+} from '@getodk/web-forms/lib/submission/host-submission-result-callback.ts';
 import type {
   MonolithicInstancePayload,
   ResolvableInstanceAttachmentsMap,
@@ -14,7 +14,12 @@ import type {
 import { flushPromises, mount } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import packageJson from '../../package.json' with { type: 'json' };
-import { getFormXml, getWebFormsTestFixture, globalMountOptions } from '../helpers';
+import {
+  getButtonByText,
+  getFormXml,
+  getWebFormsTestFixture,
+  globalMountOptions,
+} from '../helpers';
 
 interface MountComponentOptions {
   readonly overrideProps?: Partial<OdkWebFormsProps>;
@@ -101,7 +106,7 @@ describe('OdkWebForm', () => {
     expect(component.get('.question-container').classes().includes('highlight')).toBe(false);
 
     // Click submit
-    await component.get('button[aria-label="Send"]').trigger('click');
+    await getButtonByText(component, 'Send').trigger('click');
 
     // Assert validation banner is visible and question container is highlighted
     expect(component.get('.form-error-message').isVisible()).toBe(true);
@@ -124,7 +129,7 @@ describe('OdkWebForm', () => {
     expect(component.get('.question-container').classes().includes('highlight')).toBe(false);
 
     // Click submit
-    await component.get('button[aria-label="Send"]').trigger('click');
+    await getButtonByText(component, 'Send').trigger('click');
 
     // Assert validation banner is visible and question container is highlighted
     expect(component.get('.form-error-message').isVisible()).toBe(true);
@@ -454,7 +459,7 @@ describe('OdkWebForm', () => {
       await textInput.setValue(firstSubmissionInputValue);
 
       // Click submit
-      await component.get('button[aria-label="Send"]').trigger('click');
+      await getButtonByText(component, 'Send').trigger('click');
       await waitAllTasksToFinish();
 
       // Check either:

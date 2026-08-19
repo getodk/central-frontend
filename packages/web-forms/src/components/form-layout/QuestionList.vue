@@ -5,6 +5,7 @@ import type {
 	GroupNode,
 	RepeatRangeNode,
 } from '@getodk/xforms-engine';
+import { isOnCurrentPage } from '@getodk/web-forms/lib/pagination/pagination.ts';
 import ExpectModelNode from '../dev-only/ExpectModelNode.vue';
 import FormGroup from './FormGroup.vue';
 import FormQuestion from './FormQuestion.vue';
@@ -50,8 +51,10 @@ const isControlNode = (node: NonStructuralNode): node is ControlNode => {
 			<!-- Render repeat nodes -->
 			<RepeatRange v-else-if="isRepeatRangeNode(node)" :node="node" />
 
-			<!-- Render leaf nodes like string, select, etc -->
-			<FormQuestion v-else-if="isControlNode(node)" :question="node" />
+			<!-- Render leaf nodes. Consumes off-page controls too, keeping them out of the fallback. -->
+			<template v-else-if="isControlNode(node)">
+				<FormQuestion v-if="isOnCurrentPage(node)" :question="node" />
+			</template>
 
 			<ExpectModelNode v-else :node="node" />
 		</template>

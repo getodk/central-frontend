@@ -1,9 +1,9 @@
 import { insertAtIndex } from '@getodk/common/lib/array/insert.ts';
 import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
-import { untrack } from 'solid-js';
+import { batch, untrack } from 'solid-js';
 import type { RepeatRangeNode } from '../../client/hierarchy.ts';
-import type { FormNodeID } from '../../client/identity.ts';
+import type { FormNodeID, PageBoundary } from '../../client/identity.ts';
 import type { AnyRepeatDefinition } from '../../client/index.ts';
 import type { NodeAppearances } from '../../client/NodeAppearances.ts';
 import type { BaseRepeatRangeNode } from '../../client/repeat/BaseRepeatRangeNode.ts';
@@ -40,13 +40,16 @@ import type { Attribute } from '../Attribute.ts';
 import type { GeneralParentNode, RepeatRange } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { ClientReactiveSerializableParentNode } from '../internal-api/serialization/ClientReactiveSerializableParentNode.ts';
+import { lastReachablePage, type Page } from '../pagination/pageSequence.ts';
 import { RepeatInstance } from './RepeatInstance.ts';
 
 interface RepeatRangeStateSpec extends DescendantNodeSharedStateSpec {
   readonly hint: null;
   readonly label: Accessor<TextRange<'label'> | null>;
   readonly children: Accessor<readonly FormNodeID[]>;
-  readonly hasRelevantBodyNodes: Accessor<boolean>;
+  readonly hasVisibleBodyNodes: Accessor<boolean>;
+  readonly pageBoundary: Accessor<PageBoundary>;
+
   readonly attributes: Accessor<readonly Attribute[]>;
   readonly valueOptions: null;
   readonly value: null;
@@ -180,7 +183,8 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatDefinition>
         label: createNodeLabel(this, definition),
         hint: null,
         children: childrenState.childIds,
-        hasRelevantBodyNodes: this.hasRelevantBodyNodes,
+        hasVisibleBodyNodes: this.hasVisibleBodyNodes,
+        pageBoundary: this.resolvePageBoundary(definition.isUncontrolled()),
         attributes: attributeState.getAttributes,
         valueOptions: null,
         value: null,
@@ -196,6 +200,24 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatDefinition>
       childrenState
     );
     this.instanceState = createNodeRangeInstanceState(this);
+  }
+
+  private resolvePageBoundary(isUncontrolled: boolean): Accessor<PageBoundary> {
+    const registry = this.root.pagination;
+    if (!registry.enabled) {
+      return () => this.nodeId;
+    }
+
+    const attached = registry.attachRange(this, isUncontrolled);
+    if (!isUncontrolled || attached !== this.nodeId) {
+      return () => attached;
+    }
+
+    const isReachable = (page: Page): boolean => this.root.isPageReachable(page);
+    return () => {
+      const endPage = lastReachablePage(this.getChildren(), isReachable);
+      return endPage?.nodeId ?? this.nodeId;
+    };
   }
 
   protected getLastIndex(): number {
@@ -257,15 +279,13 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatDefinition>
 
   protected removeChildren(startIndex: number, count: number): readonly RepeatInstance[] {
     return this.scope.runTask(() => {
-      return this.childrenState.setChildren((currentInstances) => {
-        const updatedInstances = currentInstances.slice();
-        const removedInstances = updatedInstances.splice(startIndex, count);
-
-        removedInstances.forEach((instance) => {
-          instance.remove();
+      // Batch the removal, otherwise, Root's page auto-advance perceives a half-removed tree and navigates away.
+      return batch(() => {
+        return this.childrenState.setChildren((currentInstances) => {
+          const updatedInstances = currentInstances.slice();
+          updatedInstances.splice(startIndex, count).forEach((instance) => instance.remove());
+          return updatedInstances;
         });
-
-        return updatedInstances;
       });
     });
   }

@@ -4,7 +4,7 @@ import {
   parseGeoJSONGeometry,
   getGeometryFromJSON,
   toGeoJsonCoordinateArray,
-} from '@/components/common/map/geojson-parsers.ts';
+} from '@getodk/web-forms/components/common/map/geojson-parsers.ts';
 import type { SelectItem } from '@getodk/xforms-engine';
 
 describe('GeoJson Parsers', () => {

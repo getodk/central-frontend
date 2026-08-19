@@ -3,6 +3,7 @@ import type {
   SelectType,
 } from '../parse/body/control/SelectControlDefinition.ts';
 import type { LeafNodeDefinition } from '../parse/model/LeafNodeDefinition.ts';
+import type { BaseControlNodeState } from './BaseNode.ts';
 import type { BaseValueNode, BaseValueNodeState } from './BaseValueNode.ts';
 import type { BaseItem } from './BaseItem.ts';
 import type { NodeAppearances } from './NodeAppearances.ts';
@@ -14,7 +15,8 @@ import type { LeafNodeValidationState } from './validation.ts';
 export type SelectItem = BaseItem;
 export type SelectValueOptions = readonly SelectItem[];
 
-export interface SelectNodeState extends BaseValueNodeState<readonly string[]> {
+export interface SelectNodeState
+  extends BaseValueNodeState<readonly string[]>, BaseControlNodeState {
   get isSelectWithImages(): boolean;
 
   get children(): null;

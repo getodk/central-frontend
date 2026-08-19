@@ -9,9 +9,9 @@ import type {
 	GeotraceNoteValue,
 	GeoshapeNoteValue,
 } from '@getodk/xforms-engine';
-import { truncateGeoCoordinates, truncateDecimals } from '@/lib/format/truncate-decimals.ts';
-import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
-import type { Translate } from '@/lib/locale/useLocale.ts';
+import { truncateGeoCoordinates, truncateDecimals } from '@getodk/web-forms/lib/format/truncate-decimals.ts';
+import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import { computed, inject } from 'vue';
 
 type GeolocationNode = GeopointInputNode | GeopointNoteNode | GeoshapeNoteNode | GeotraceNoteNode;

@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa">
+  <h:head>
+    <h:title>08 Repeat - no appearance</h:title>
+    <model>
+      <instance>
+        <data id="pg_08_plain_repeat">
+          <intro/>
+          <child jr:template="">
+            <cname/>
+            <cage/>
+          </child>
+          <child>
+            <cname/>
+            <cage/>
+          </child>
+          <child>
+            <cname/>
+            <cage/>
+          </child>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <bind nodeset="/data/intro" type="string"/>
+      <bind nodeset="/data/child/cname" type="string"/>
+      <bind nodeset="/data/child/cage" type="int"/>
+      <bind nodeset="/data/meta/instanceID" type="string"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <input ref="/data/intro"><label>Intro question (own page)</label></input>
+    <group ref="/data/child">
+      <label>Children</label>
+      <repeat nodeset="/data/child">
+        <input ref="/data/child/cname"><label>Child <output value="position(..)"/> name</label></input>
+        <input ref="/data/child/cage"><label>Child <output value="position(..)"/> age</label></input>
+      </repeat>
+    </group>
+  </h:body>
+</h:html>

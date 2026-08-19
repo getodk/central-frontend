@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { getModeConfig, MODES, VALID_CANVAS_MODES } from '@/components/common/canvas/getModeConfig.ts';
-import IconSVG from '@/components/common/IconSVG.vue';
-import ControlText from '@/components/form-elements/ControlText.vue';
-import { FORM_OPTIONS, TRANSLATE } from '@/lib/constants/injection-keys.ts';
-import { resize } from '@/lib/services/resizeImage';
-import type { FormOptions } from '@/lib/init/load-form-state';
-import type { Translate } from '@/lib/locale/useLocale.ts';
+import { getModeConfig, MODES, VALID_CANVAS_MODES } from '@getodk/web-forms/components/common/canvas/getModeConfig.ts';
+import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
+import ControlText from '@getodk/web-forms/components/form-elements/ControlText.vue';
+import { FORM_OPTIONS, TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import { resize } from '@getodk/web-forms/lib/services/resizeImage';
+import type { FormOptions } from '@getodk/web-forms/lib/init/load-form-state';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import type { UploadNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import Message from 'primevue/message';

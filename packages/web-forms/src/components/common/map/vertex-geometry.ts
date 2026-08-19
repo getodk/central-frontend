@@ -1,4 +1,4 @@
-import { COORDINATE_LAYOUT_XYZM } from '@/components/common/map/useMapViewControls.ts';
+import { COORDINATE_LAYOUT_XYZM } from '@getodk/web-forms/components/common/map/useMapViewControls.ts';
 import type { Coordinate } from 'ol/coordinate';
 import Feature from 'ol/Feature';
 import { Point, LineString, Polygon } from 'ol/geom';

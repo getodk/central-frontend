@@ -6,7 +6,6 @@ import { execSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath, URL } from 'node:url';
-import type { LibraryOptions, PluginOption } from 'vite';
 import { defineConfig } from 'vite';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 
@@ -67,45 +66,21 @@ if (webkitFlakinessMitigations) {
 }
 
 export default defineConfig(({ mode }) => {
-  const isVueBundled = mode === 'demo';
-  const isDev = mode === 'development';
-
-  let lib: LibraryOptions | undefined;
-  let external: string[];
-  let globals: Record<string, string>;
-  const extraPlugins: PluginOption[] = [];
-
-  if (isVueBundled) {
-    external = [];
-    globals = {};
-  } else {
-    external = ['vue'];
-    globals = { vue: 'Vue' };
-    lib = {
-      formats: ['es'],
-      entry: resolve(__dirname, 'src/index.ts'),
-      name: 'OdkWebForms',
-      fileName: 'index',
-    };
-  }
-
-  const versionSuffix = buildNumber && (isVueBundled || isDev) ? ` - ${buildNumber}` : '';
+  const versionSuffix = buildNumber && mode === 'development' ? ` - ${buildNumber}` : '';
 
   return {
     define: {
       __WEB_FORMS_VERSION__: `"v${version}${versionSuffix}"`,
     },
     base: './',
-    plugins: [vue(), vueJsx(), cssInjectedByJsPlugin(), ...extraPlugins],
+    plugins: [vue(), vueJsx(), cssInjectedByJsPlugin()],
     resolve: {
       alias: {
         '@getodk/common': resolve(__dirname, '../common/src'),
-        '@': fileURLToPath(new URL('./src', import.meta.url)),
-        '@locales': fileURLToPath(new URL('./locales', import.meta.url)),
+        '@getodk/web-forms': resolve(__dirname, './src'),
+        '@getodk/xforms-engine': resolve(__dirname, '../xforms-engine/src'),
+        '@getodk/xpath': resolve(__dirname, '../xpath/src'),
         'primevue/menuitem': 'primevue/menu',
-        // With following lines, fonts byte array are copied into css file
-        // Roboto fonts
-        './fonts': resolve('../../node_modules/@fontsource/roboto'),
       },
     },
     build: {
@@ -130,11 +105,19 @@ export default defineConfig(({ mode }) => {
 
         // Per Vite docs
       },
-      lib,
+      lib: {
+        formats: ['es'],
+        entry: resolve(__dirname, 'src/index.ts'),
+        name: 'OdkWebForms',
+        fileName: 'index',
+      },
       rollupOptions: {
-        external,
-        output: {
-          globals,
+        external: ['vue'],
+        onwarn(warning, warn) {
+          if (warning.code === 'EVAL' && warning.id?.endsWith('web-tree-sitter/tree-sitter.js')) {
+            return; // ignore eval warning for tree-sitter
+          }
+          warn(warning);
         },
       },
     },
