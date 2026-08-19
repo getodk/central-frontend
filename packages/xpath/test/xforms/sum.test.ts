@@ -91,7 +91,7 @@ describe('#sum()', () => {
     testContext.assertNumberValue('sum(/root/item)', NaN, { contextNode });
   });
 
-  it('sum of null value is NaN', () => {
+  it('sum with empty node skipped', () => {
     testContext = createXFormsTestContext(`
       <root id="root">
         <item>-10</item>
@@ -101,7 +101,7 @@ describe('#sum()', () => {
 
     const contextNode = testContext.document.getElementById('root');
 
-    testContext.assertNumberValue('sum(/root/item)', NaN, { contextNode });
+    testContext.assertNumberValue('sum(/root/item)', 89, { contextNode });
   });
 
   it('sum only counts elements that are returned from the expression', () => {
