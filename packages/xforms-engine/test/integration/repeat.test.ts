@@ -2341,12 +2341,9 @@ describe('Tests ported from JavaRosa - repeats', () => {
            *
            * - Fails in direct port due to lack of position predicates in each
            *   reference to `outer_repeat`
-           *
-           * - Fails with parameterized option to make the position explicit, on
-           *   assertion of `0` value: current implementation of XPath `sum`
-           *   produces `NaN` when applied to an empty node-set (which is a bug).
            */
-          it.fails('[is] reevaluated when trigger[dependency?] changes', async () => {
+          const textFn = addExplicitRepeatPositionPredicate ? it : it.fails;
+          textFn('[is] reevaluated when trigger[dependency?] changes', async () => {
             const scenario = await Scenario.init(
               'Predicate trigger',
               html(
@@ -2391,37 +2388,17 @@ describe('Tests ported from JavaRosa - repeats', () => {
 
             if (addExplicitRepeatPositionPredicate) {
               scenario.answer('/data/outer_repeat[1]/cutoff_number', 3);
-            } else {
-              scenario.answer('/data/outer_repeat/cutoff_number', 3);
-            }
-
-            if (addExplicitRepeatPositionPredicate) {
               expect(scenario.answerOf('/data/outer_repeat[1]/sum')).toEqualAnswer(intAnswer(15));
-            } else {
-              expect(scenario.answerOf('/data/outer_repeat/sum')).toEqualAnswer(intAnswer(15));
-            }
-
-            if (addExplicitRepeatPositionPredicate) {
               scenario.answer('/data/outer_repeat[1]/cutoff_number', 7);
-            } else {
-              scenario.answer('/data/outer_repeat/cutoff_number', 7);
-            }
-
-            if (addExplicitRepeatPositionPredicate) {
               expect(scenario.answerOf('/data/outer_repeat[1]/sum')).toEqualAnswer(intAnswer(0));
-            } else {
-              expect(scenario.answerOf('/data/outer_repeat/sum')).toEqualAnswer(intAnswer(0));
-            }
-
-            if (addExplicitRepeatPositionPredicate) {
               scenario.answer('/data/outer_repeat[1]/cutoff_number', -11);
-            } else {
-              scenario.answer('/data/outer_repeat/cutoff_number', -11);
-            }
-
-            if (addExplicitRepeatPositionPredicate) {
               expect(scenario.answerOf('/data/outer_repeat[1]/sum')).toEqualAnswer(intAnswer(21));
             } else {
+              scenario.answer('/data/outer_repeat/cutoff_number', 3);
+              expect(scenario.answerOf('/data/outer_repeat/sum')).toEqualAnswer(intAnswer(15));
+              scenario.answer('/data/outer_repeat/cutoff_number', 7);
+              expect(scenario.answerOf('/data/outer_repeat/sum')).toEqualAnswer(intAnswer(0));
+              scenario.answer('/data/outer_repeat/cutoff_number', -11);
               expect(scenario.answerOf('/data/outer_repeat/sum')).toEqualAnswer(intAnswer(21));
             }
           });

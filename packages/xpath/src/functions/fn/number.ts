@@ -19,33 +19,25 @@ export const round = mathAlias('round');
 export const sum = new NumberFunction(
   'sum',
   [{ arityType: 'required' }],
-  (context, expressions): number => {
-    if (expressions.length === 0) {
-      return NaN;
-    }
+  (context, [expression]): number => {
+    let result = 0;
 
-    let result!: number;
+    const resultSet = expression!.evaluate(context);
 
-    for (const expression of expressions) {
-      const resultSet = expression.evaluate(context);
+    for (const item of resultSet) {
+      const numberValue = item.toNumber();
 
-      for (const item of resultSet) {
-        const numberValue = item.toNumber();
+      if (Number.isNaN(numberValue)) {
+        return NaN;
+      }
 
-        if (Number.isNaN(numberValue)) {
-          result = NaN;
+      result += numberValue;
 
-          break;
-        }
-
-        result = result == null ? numberValue : result + numberValue;
-
-        if (Number.isNaN(result)) {
-          break;
-        }
+      if (Number.isNaN(result)) {
+        return NaN;
       }
     }
 
-    return result ?? NaN;
+    return result;
   }
 );

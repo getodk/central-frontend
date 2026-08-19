@@ -65,6 +65,45 @@ describe('#sum()', () => {
     testContext.assertNumberValue('sum(/root/item)', 100);
   });
 
+  it('sum of nothing is zero', () => {
+    testContext = createXFormsTestContext(`
+      <root id="root">
+        <item>-10</item>
+        <item>11</item>
+        <item>99</item>
+      </root>`);
+
+    const contextNode = testContext.document.getElementById('root');
+
+    testContext.assertNumberValue('sum(/root/no-match)', 0, { contextNode });
+  });
+
+  it('sum of NaN is NaN', () => {
+    testContext = createXFormsTestContext(`
+      <root id="root">
+        <item>-10</item>
+        <item>abc</item>
+        <item>99</item>
+      </root>`);
+
+    const contextNode = testContext.document.getElementById('root');
+
+    testContext.assertNumberValue('sum(/root/item)', NaN, { contextNode });
+  });
+
+  it('sum of null value is NaN', () => {
+    testContext = createXFormsTestContext(`
+      <root id="root">
+        <item>-10</item>
+        <item></item>
+        <item>99</item>
+      </root>`);
+
+    const contextNode = testContext.document.getElementById('root');
+
+    testContext.assertNumberValue('sum(/root/item)', NaN, { contextNode });
+  });
+
   it.fails('sum() fails when too many arguments are provided', () => {
     testContext.evaluate('sum(1, 2)');
   });
