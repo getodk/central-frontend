@@ -36,10 +36,10 @@ except according to the terms contained in the LICENSE file.
             <slot name="head-scrolling"></slot>
           </tr>
         </thead>
-        <!-- eslint-disable-next-line vuejs-accessibility/mouse-events-have-key-events -->
+        <!-- eslint-disable-next-line vuejs-accessibility/mouse-events-have-key-events,vuejs-accessibility/click-events-have-key-events -->
         <tbody v-if="data != null" ref="scrollingBody"
           @mousemove="setActionsTrigger('hover')" @mouseover="toggleHoverClass"
-          @mouseleave="removeHoverClass">
+          @mouseleave="removeHoverClass" @click="actionClick">
           <transition-group name="table-freeze-row">
             <slot v-for="(element, index) in data" :key="element[keyProp]"
               name="data-scrolling" :data="element" :index="index">
@@ -117,10 +117,11 @@ watch(() => props.data, removeHoverClass);
 
 const actionClick = (event) => {
   const action = event.target.closest('.btn-group .btn');
-  if (action != null) {
-    const index = action.closest('tr').rowIndex - 1;
-    emit('action', { target: action, data: props.data[index], index });
-  }
+  const row = event.target.closest('tr');
+  if (row == null) return;
+  const index = row.rowIndex - 1;
+  const target = action ?? row;
+  emit('action', { target, data: props.data[index], index });
 };
 
 const scrollingBody = ref(null);
@@ -136,6 +137,11 @@ defineExpose({ getRowPair });
 .table-freeze {
   @include clearfix;
   position: relative;
+
+  th, td {
+    height: 56px;
+    vertical-align: middle;
+  }
 }
 
 .table-freeze-frozen {
@@ -161,6 +167,22 @@ defineExpose({ getRowPair });
   td:last-child { border-right: $border-top-table-data; }
 }
 
+// Zebra striping
+.table-freeze-frozen,
+.table-freeze-scrolling {
+  thead tr {
+    background-color: $color-header-row;
+  }
+
+  tbody tr:nth-child(even) {
+    background-color: $color-even-row;
+  }
+
+  tbody tr:nth-child(odd) {
+    background-color: $color-odd-row;
+  }
+}
+
 // Styles related to actions (buttons and links). If there are actions, they
 // should be in a .btn-group.
 .table-freeze-frozen {
@@ -170,7 +192,7 @@ defineExpose({ getRowPair });
     left: -2000px;
     // Relative to .table-freeze so that buttons are shown to the right side of the component.
     position: absolute;
-    margin-top: 4px;
+    margin-top: 12px;
   }
 
   .actions-trigger-hover tr:hover .btn-group,
@@ -185,6 +207,7 @@ defineExpose({ getRowPair });
   .col-actions {
     width: 0;
     padding: 0;
+    vertical-align: top;
   }
 }
 </style>

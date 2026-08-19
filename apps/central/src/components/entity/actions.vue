@@ -12,44 +12,31 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div class="btn-group">
     <button v-if="project.verbs.has('entity.delete')" type="button"
-      class="delete-button btn btn-default" :aria-label="$t('action.delete')"
-      v-tooltip.aria-label>
-      <span class="icon-trash"></span><spinner :state="awaitingResponse"/>
+      class="delete-button btn btn-default">
+      <span class="icon-trash"></span>{{ $t('action.delete') }}<spinner :state="awaitingResponse"/>
     </button>
     <button v-if="project.verbs.has('entity.update')" type="button"
-      class="update-button btn btn-default" :aria-label="updateLabel"
-      v-tooltip.aria-label>
-      <span class="icon-pencil"></span>
+      class="update-button btn btn-default">
+      <span class="icon-pencil"></span>{{ $t('action.edit') }}
     </button>
     <button v-if="entity.__system.conflict" type="button"
-      class="resolve-button btn btn-danger"
-      :aria-label="$t('action.reviewParallelUpdates')" v-tooltip.aria-label>
-      <span class="icon-random"></span>
+      class="resolve-button btn btn-primary">
+      <span class="icon-random"></span>{{ $t('action.reviewParallelUpdates') }}
     </button>
-    <router-link v-slot="{ href }"
-      :to="entityPath(project.id, datasetName, entity.__id)" custom>
-      <a class="more-button btn btn-default" :href="href" target="_blank">
-        <span>{{ $t('action.more') }}</span>
-        <span class="icon-angle-right"></span>
-      </a>
-    </router-link>
   </div>
 </template>
 
 <script setup>
 // This component is tested via the tests of EntityMetadataRow.
 
-import { computed, inject } from 'vue';
-
 import Spinner from '../spinner.vue';
 
-import useRoutes from '../../composables/routes';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
   name: 'EntityActions'
 });
-const props = defineProps({
+defineProps({
   entity: {
     type: Object,
     required: true
@@ -57,16 +44,7 @@ const props = defineProps({
   awaitingResponse: Boolean
 });
 
-const datasetName = inject('datasetName');
-
-const { i18n } = inject('container');
 // The component assumes that this data will exist when the component is
 // created.
 const { project } = useRequestData();
-
-const updateLabel = computed(() => i18n.t('submission.action.edit', {
-  count: i18n.n(props.entity.__system.updates, 'default')
-}));
-
-const { entityPath } = useRoutes();
 </script>
