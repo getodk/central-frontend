@@ -2637,7 +2637,7 @@
     },
     "EntityMetadataRow": {
       "reviewParallelUpdates": {
-        "string": "Review parallel updates",
+        "string": "Review",
         "developer_comment": "This is the text for an action, for example, the text of a button."
       }
     },
@@ -3111,11 +3111,11 @@
       },
       "action": {
         "editAppUser": {
-          "string": "Edit App User",
+          "string": "Edit",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
         "revokeAccess": {
-          "string": "Revoke access",
+          "string": "Revoke",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
@@ -4960,7 +4960,7 @@
     "PublicLinkRow": {
       "action": {
         "edit": {
-          "string": "Edit Public Access Link",
+          "string": "Edit",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
         "revoke": {
