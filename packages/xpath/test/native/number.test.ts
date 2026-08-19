@@ -112,6 +112,40 @@ describe('native number functions', () => {
     it.fails('number() conversion fails when too many arguments are provided', () => {
       testContext.evaluate('number(1, 2)');
     });
+
+    it('sum()', () => {
+      let contextNode = document.getElementById('FunctionNumberCaseNumber');
+
+      testContext.assertNumberValue('sum(self::*)', 123, {
+        contextNode,
+      });
+
+      contextNode = document.getElementById('FunctionNumberCaseNumberMultiple');
+
+      testContext.assertNumberValue('sum(*)', 100, {
+        contextNode,
+      });
+
+      contextNode = document.getElementById('FunctionNumberCaseNotNumberMultiple');
+
+      testContext.assertNumberValue('sum(node())', NaN, {
+        contextNode,
+      });
+
+      contextNode = document.getElementById('FunctionSumCaseJavarosa');
+
+      testContext.assertNumberValue('sum(*)', NaN, {
+        contextNode,
+      });
+    });
+  });
+
+  it.fails('sum() fails when too many arguments are provided', () => {
+    testContext.evaluate('sum(1, 2)');
+  });
+
+  it.fails('sum() fails when too few arguments are provided', () => {
+    testContext.evaluate('sum()');
   });
 
   it('ceiling()', () => {
