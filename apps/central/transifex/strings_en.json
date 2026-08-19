@@ -2867,7 +2867,7 @@
     },
     "EntityUploadHeaderReview": {
       "title": {
-        "string": "Review data",
+        "string": "Review warnings",
         "developer_comment": "This text is shown above a section where the user can review warnings about their data."
       },
       "missingProperties": {

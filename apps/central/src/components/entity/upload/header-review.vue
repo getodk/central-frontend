@@ -40,7 +40,7 @@ defineProps({
   "en": {
     // This text is shown above a section where the user can review warnings
     // about their data.
-    "title": "Review data",
+    "title": "Review warnings",
     // This text is followed by a list of Entity property names.
     "missingProperties": "This property is not included in your file and will be left empty: | These properties are not included in your file and will be left empty:"
   }
