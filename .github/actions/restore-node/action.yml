@@ -14,9 +14,9 @@ runs:
   - uses: actions/setup-node@v6
     id: setup-node
     with:
-      node-version-file: package.json
-      node-version: ${{ inputs.node-version }}
-      registry-url: ${{ inputs.registry-url }}
+      node-version:      ${{ inputs.node-version }}
+      node-version-file: ${{ inputs.node-version == '' && 'package.json' || '' }}
+      registry-url:      ${{ inputs.registry-url }}
       cache: 'npm'
 
   - uses: 'actions/cache/restore@v6'
