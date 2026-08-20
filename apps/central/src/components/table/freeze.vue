@@ -170,7 +170,7 @@ defineExpose({ getRowPair });
     left: -2000px;
     // Relative to .table-freeze so that buttons are shown to the right side of the component.
     position: absolute;
-    margin-top: 4px;
+    margin-top: 12px;
   }
 
   .actions-trigger-hover tr:hover .btn-group,
@@ -185,6 +185,7 @@ defineExpose({ getRowPair });
   .col-actions {
     width: 0;
     padding: 0;
+    vertical-align: top;
   }
 }
 </style>
