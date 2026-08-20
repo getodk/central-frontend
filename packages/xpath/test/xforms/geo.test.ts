@@ -33,17 +33,13 @@ describe('geo functions', () => {
     { argument: '', expected: { area: 0.0, distance: NaN } },
     { argument: '90 0', expected: { area: 0.0, distance: NaN } }, // single point, no distance
   ].forEach(({ argument, expected }, i) => {
-    it(`area(${argument}) works (${i + 1})`, () => {
+    it(`area("${argument}") works (${i + 1})`, () => {
       testContext.assertNumberValue(`area("${argument}")`, expected.area);
     });
 
-    it(`distance(${argument}) works (${i + 1})`, () => {
+    it(`distance("${argument}") works (${i + 1})`, () => {
       testContext.assertNumberValue(`distance("${argument}")`, expected.distance);
     });
-  });
-
-  it(`distance(garet) works ()`, () => {
-    testContext.assertNumberValue(`distance("90 0")`, NaN);
   });
 
   // Invalid arguments (for both distance/area functions)
@@ -57,7 +53,28 @@ describe('geo functions', () => {
 
     it(`distance("${invalidArgument}") fails`, () => {
       const evaluate = () => testContext.evaluator.evaluateNumber(`distance("${invalidArgument}")`);
+      expect(evaluate).toThrow();
+    });
+  });
 
+  [
+    { argument: ['0 1', '0 0'], expected: 111318.85 },
+    { argument: ['0 1', '', '0 0'], expected: 111318.85 },
+    { argument: ['0 1', '0 0', '0 2'], expected: 333956.54 },
+    { argument: ['0 0', '0 2'], expected: 222637.69 },
+  ].forEach(({ argument, expected }, i) => {
+    const expr = argument.map(arg => `"${arg}"`).join(',');
+    it(`distance(${expr}) works (${i + 1})`, () => {
+      testContext.assertNumberValue(`distance(${expr})`, expected);
+    });
+  });
+
+  [
+    ['0 1', 'a'],
+  ].forEach((invalidArgument) => {
+    const expr = invalidArgument.map(arg => `"${arg}"`).join(',');
+    it(`distance(${expr}) fails`, () => {
+      const evaluate = () => testContext.evaluator.evaluateNumber(`distance(${invalidArgument})`);
       expect(evaluate).toThrow();
     });
   });
