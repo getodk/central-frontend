@@ -136,11 +136,6 @@ defineExpose({ getRowPair });
 .table-freeze {
   @include clearfix;
   position: relative;
-
-  th, td {
-    height: 56px;
-    vertical-align: middle;
-  }
 }
 
 .table-freeze-frozen {
