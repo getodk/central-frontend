@@ -115,7 +115,14 @@ export const distance = new NumberFunction(
       return NaN;
     }
 
-    const geotrace = Geotrace.fromEncodedValues(values);
+    let geotrace;
+    try {
+      geotrace = Geotrace.fromEncodedValues(values);
+    } catch {
+      throw new Error(
+        "The function 'distance' received a value that does not represent GPS coordinates"
+      );
+    }
     const lines = geotrace?.lines;
 
     if (lines == null) {
