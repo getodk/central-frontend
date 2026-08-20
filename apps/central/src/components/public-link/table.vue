@@ -71,13 +71,6 @@ const { publicLinks, actorProperties } = useRequestData();
   th.access-link, td.access-link {
     max-width: 350px;
   }
-  td {
-    height: 52px; // Access link cells has scrollbar
-    vertical-align: unset;
-  }
-  .col-actions {
-    vertical-align: top;
-  }
 }
 </style>
 
