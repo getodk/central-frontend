@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import IconSVG from '@/components/common/IconSVG.vue';
-import MediaBlockBase from '@/components/common/media/MediaBlockBase.vue';
-import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
-import type { Translate } from '@/lib/locale/useLocale.ts';
+import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
+import MediaBlockBase from '@getodk/web-forms/components/common/media/MediaBlockBase.vue';
+import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import type { JRResourceURL } from '@getodk/common/jr-resources/JRResourceURL.ts';
 import { inject, ref } from 'vue';
 

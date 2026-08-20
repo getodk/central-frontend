@@ -1,5 +1,5 @@
-import FormQuestion from '@/components/form-layout/FormQuestion.vue';
-import { SUBMIT_PRESSED } from '@/lib/constants/injection-keys.ts';
+import FormQuestion from '@getodk/web-forms/components/form-layout/FormQuestion.vue';
+import { SUBMIT_PRESSED } from '@getodk/web-forms/lib/constants/injection-keys.ts';
 import type { AnyNode, RootNode, SelectNode } from '@getodk/xforms-engine';
 import { DOMWrapper, mount } from '@vue/test-utils';
 import { assert, beforeEach, describe, expect, it } from 'vitest';

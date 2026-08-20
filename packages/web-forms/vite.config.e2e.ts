@@ -4,7 +4,6 @@ import vueJsx from '@vitejs/plugin-vue-jsx';
 import { execSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { fileURLToPath, URL } from 'node:url';
 import { defineConfig } from 'vite';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 
@@ -63,10 +62,9 @@ if (webkitFlakinessMitigations) {
 }
 
 export default defineConfig(({ mode }) => {
-  const isVueBundled = mode === 'demo';
   const isDev = mode === 'development';
 
-  const versionSuffix = buildNumber && (isVueBundled || isDev) ? ` - ${buildNumber}` : '';
+  const versionSuffix = buildNumber && isDev ? ` - ${buildNumber}` : '';
 
   return {
     define: {
@@ -79,12 +77,10 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         '@getodk/common': resolve(__dirname, '../common/src'),
-        '@': fileURLToPath(new URL('./src', import.meta.url)),
-        '@locales': fileURLToPath(new URL('./locales', import.meta.url)),
+        '@getodk/web-forms': resolve(__dirname, './src'),
+        '@getodk/xforms-engine': resolve(__dirname, '../xforms-engine/src'),
+        '@getodk/xpath': resolve(__dirname, '../xpath/src'),
         'primevue/menuitem': 'primevue/menu',
-        // With following lines, fonts byte array are copied into css file
-        // Roboto fonts
-        './fonts': resolve('../../node_modules/@fontsource/roboto'),
       },
     },
     css: {

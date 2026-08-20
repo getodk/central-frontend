@@ -54,7 +54,6 @@ export default defineConfig(
 			'**/*.min.js',
 			'**/dist/**/*',
 			'common/fixtures/test-javarosa/**/*',
-			'web-forms/dist-demo/**/*',
 			'web-forms/bin/**/*',
 			'xforms-engine/api-docs/**/*',
 			'**/vendor',

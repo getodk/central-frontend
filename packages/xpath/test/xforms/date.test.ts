@@ -22,6 +22,42 @@ describe('#date()', () => {
         testContext.assertBooleanValue(expression.replace('date(', 'date-time('), false);
       });
     });
+
+    describe('malformed date-like strings', () => {
+      describe('string literals', () => {
+        [
+          { expression: '"2026-13-15"', expected: '2026-13-15' },
+          { expression: '"2026-02-30"', expected: '2026-02-30' },
+          { expression: '"2026-13-15T00:00:00Z"', expected: '2026-13-15T00:00:00Z' },
+        ].forEach(({ expression, expected }) => {
+          it(`evaluates ${expression} as a plain string`, () => {
+            testContext.assertStringValue(expression, expected);
+          });
+        });
+
+        it('converts a malformed date literal to NaN', () => {
+          testContext.assertNumberValue('number("2026-13-15")', NaN);
+        });
+      });
+
+      describe('node values', () => {
+        beforeEach(() => {
+          testContext = createXFormsTestContext('<root><a>2026-13-15</a></root>');
+        });
+
+        it('evaluates a node containing a malformed date as a plain string', () => {
+          testContext.assertStringValue('concat(/root/a, "!")', '2026-13-15!');
+        });
+
+        it('converts a node containing a malformed date to NaN', () => {
+          testContext.assertNumberValue('number(/root/a)', NaN);
+        });
+
+        it('compares a node containing a malformed date without throwing', () => {
+          testContext.assertBooleanValue('/root/a < 1', false);
+        });
+      });
+    });
   });
 
   describe('valid date string', () => {

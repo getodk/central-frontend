@@ -91,3 +91,5 @@ export type AnyValueNode =
 	| SelectControl
 	| TriggerControl
 	| UploadControl;
+
+export type AnyControlInstanceNode = Exclude<AnyValueNode, AnyModelValue>;

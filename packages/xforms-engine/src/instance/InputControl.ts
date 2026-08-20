@@ -1,5 +1,6 @@
 import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
+import type { PageBoundary } from '../client/identity.ts';
 import type {
   InputDefinition,
   InputNode,
@@ -75,6 +76,7 @@ interface InputControlStateSpec<V extends ValueType> extends ValueNodeStateSpec<
   readonly hint: Accessor<TextRange<'hint'> | null>;
   readonly attributes: Accessor<readonly Attribute[]>;
   readonly valueOptions: null;
+  readonly pageBoundary: PageBoundary;
 }
 
 export class InputControl<V extends ValueType = ValueType>
@@ -141,6 +143,7 @@ export class InputControl<V extends ValueType = ValueType>
         valueOptions: null,
         value: this.valueState,
         instanceValue: this.getInstanceValue,
+        pageBoundary: this.root.pagination.attachLeaf(this),
       },
       this.instanceConfig
     );

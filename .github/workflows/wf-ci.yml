@@ -44,7 +44,7 @@ jobs:
         with:
           node-version: '${{ matrix.node-version }}'
 
-      - uses: 'actions/cache@v5'
+      - uses: 'actions/cache@v6'
         id: cache-install
         with:
           path: |
@@ -52,7 +52,7 @@ jobs:
             **/node_modules
           key: install-v${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
 
-      - uses: 'actions/cache@v5'
+      - uses: 'actions/cache@v6'
         id: cache-build
         with:
           path: |
@@ -104,14 +104,14 @@ jobs:
         with:
           node-version: '${{ matrix.node-version }}'
 
-      - uses: 'actions/cache@v5'
+      - uses: 'actions/cache@v6'
         id: cache-install
         with:
           path: |
             node_modules
             **/node_modules
           key: install-v${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
-      - uses: 'actions/cache@v5'
+      - uses: 'actions/cache@v6'
         id: cache-build
         with:
           path: |
@@ -163,14 +163,14 @@ jobs:
         with:
           node-version: '${{ matrix.node-version }}'
 
-      - uses: 'actions/cache@v5'
+      - uses: 'actions/cache@v6'
         id: cache-install
         with:
           path: |
             node_modules
             **/node_modules
           key: install-v${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
-      - uses: 'actions/cache@v5'
+      - uses: 'actions/cache@v6'
         id: cache-build
         with:
           path: |
@@ -222,14 +222,14 @@ jobs:
         with:
           node-version: '${{ matrix.node-version }}'
 
-      - uses: 'actions/cache@v5'
+      - uses: 'actions/cache@v6'
         id: cache-install
         with:
           path: |
             node_modules
             **/node_modules
           key: install-v${{ matrix.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
-      - uses: 'actions/cache@v5'
+      - uses: 'actions/cache@v6'
         id: cache-build
         with:
           path: |
@@ -250,9 +250,3 @@ jobs:
 
       - if: ${{ matrix.target == 'Web' }}
         run: 'npm run test-browser:${{ matrix.browser }} -w=packages/web-forms'
-
-      - if: ${{ matrix.node-version == '24.16.0' && matrix.target == 'Node' }}
-        uses: actions/upload-artifact@v7
-        with:
-          name: dist-demo
-          path: packages/web-forms/dist-demo

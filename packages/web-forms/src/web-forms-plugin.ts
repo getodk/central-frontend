@@ -1,4 +1,4 @@
-import { odkThemePreset } from '@/odk-theme-preset.ts';
+import { odkThemePreset } from './odk-theme-preset.ts';
 import { type App } from 'vue';
 import PrimeVue from 'primevue/config';
 import resetStyles from './assets/styles/reset.scss?raw';

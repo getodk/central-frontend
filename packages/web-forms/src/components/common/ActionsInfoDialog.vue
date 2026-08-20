@@ -7,7 +7,7 @@ export interface ActionInfo {
 </script>
 
 <script setup lang="ts">
-import IconSVG from '@/components/common/IconSVG.vue';
+import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
 import Dialog from 'primevue/dialog';
 
 defineProps<{

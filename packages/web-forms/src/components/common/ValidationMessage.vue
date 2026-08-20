@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import MarkdownBlock from '@/components/common/MarkdownBlock.vue';
-import { QUESTION_HAS_ERROR, TRANSLATE } from '@/lib/constants/injection-keys.ts';
-import type { Translate } from '@/lib/locale/useLocale.ts';
+import MarkdownBlock from '@getodk/web-forms/components/common/MarkdownBlock.vue';
+import { QUESTION_HAS_ERROR, TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import type { AnyViolation } from '@getodk/xforms-engine';
 import { computed, type ComputedRef, inject } from 'vue';
 

@@ -1,5 +1,8 @@
-import FormQuestion from '@/components/form-layout/FormQuestion.vue';
-import { SUBMIT_PRESSED, IS_FORM_EDIT_MODE } from '@/lib/constants/injection-keys.ts';
+import FormQuestion from '@getodk/web-forms/components/form-layout/FormQuestion.vue';
+import {
+  SUBMIT_PRESSED,
+  IS_FORM_EDIT_MODE,
+} from '@getodk/web-forms/lib/constants/injection-keys.ts';
 import { mount } from '@vue/test-utils';
 import { assert, describe, expect, it } from 'vitest';
 import { ref, shallowRef } from 'vue';

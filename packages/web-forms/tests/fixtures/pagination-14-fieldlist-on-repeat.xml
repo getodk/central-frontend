@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa">
+  <h:head>
+    <h:title>14 Field-list on the repeat element</h:title>
+    <model>
+      <instance>
+        <data id="pg_14_fieldlist_on_repeat">
+          <visit jr:template="">
+            <vdate/>
+            <temp/>
+            <notes/>
+          </visit>
+          <visit>
+            <vdate/>
+            <temp/>
+            <notes/>
+          </visit>
+          <visit>
+            <vdate/>
+            <temp/>
+            <notes/>
+          </visit>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <bind nodeset="/data/visit/vdate" type="date"/>
+      <bind nodeset="/data/visit/temp" type="decimal"/>
+      <bind nodeset="/data/visit/notes" type="string"/>
+      <bind nodeset="/data/meta/instanceID" type="string"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <group ref="/data/visit">
+      <label>Visits</label>
+      <repeat nodeset="/data/visit" appearance="field-list">
+        <input ref="/data/visit/vdate"><label>Visit <output value="position(..)"/> date</label></input>
+        <input ref="/data/visit/temp"><label>Visit <output value="position(..)"/> temperature</label></input>
+        <input ref="/data/visit/notes"><label>Visit <output value="position(..)"/> notes</label></input>
+      </repeat>
+    </group>
+  </h:body>
+</h:html>

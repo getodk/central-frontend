@@ -4,10 +4,10 @@ import { LineString, MultiPoint, Point, type Polygon } from 'ol/geom';
 import { Fill, Stroke, Style } from 'ol/style';
 import CircleStyle from 'ol/style/Circle';
 import type { Rule } from 'ol/style/flat';
-import mapLocationIcon from '@/assets/images/map-location.svg';
-import mapSavedLocationIcon from '@/assets/images/map-saved-location.svg';
+import mapLocationIcon from '@getodk/web-forms/assets/images/map-location.svg';
+import mapSavedLocationIcon from '@getodk/web-forms/assets/images/map-saved-location.svg';
 import type { StyleFunction } from 'ol/style/Style';
-import { getFlatCoordinates } from '@/components/common/map/vertex-geometry.ts';
+import { getFlatCoordinates } from '@getodk/web-forms/components/common/map/vertex-geometry.ts';
 import { Map } from 'ol';
 import { getPointResolution } from 'ol/proj';
 

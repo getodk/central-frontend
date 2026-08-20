@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import GeolocationFormattedValue from '@/components/common/GeolocationFormattedValue.vue';
+import GeolocationFormattedValue from '@getodk/web-forms/components/common/GeolocationFormattedValue.vue';
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import type {
 	AnyNoteNode,

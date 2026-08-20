@@ -1,3 +1,4 @@
+import { batch } from 'solid-js';
 import type { RepeatRangeNodeAppearances } from '../../client/repeat/BaseRepeatRangeNode.ts';
 import type { RepeatRangeUncontrolledNode } from '../../client/repeat/RepeatRangeUncontrolledNode.ts';
 import type { AncestorNodeValidationState } from '../../client/validation.ts';
@@ -7,6 +8,7 @@ import { createAggregatedViolations } from '../../lib/reactivity/validation/crea
 import type { UncontrolledRepeatDefinition } from '../../parse/model/RepeatDefinition.ts';
 import type { GeneralParentNode } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
+import { collectPages } from '../pagination/pageSequence.ts';
 import type { Root } from '../Root.ts';
 import { BaseRepeatRange } from './BaseRepeatRange.ts';
 import { RepeatInstance } from './RepeatInstance.ts';
@@ -36,7 +38,15 @@ export class RepeatRangeUncontrolled
   addInstances(afterIndex = this.getLastIndex(), count = 1): Root {
     const definitions = Array(count).fill(this.definition.template);
 
-    this.addChildren(definitions, afterIndex);
+    // Batch the add with the navigation, so the reachability watcher settles once on the final state.
+    batch(() => {
+      const instances = this.addChildren(definitions, afterIndex);
+      const firstNewInstance = instances[afterIndex + 1];
+      const page = firstNewInstance == null ? null : collectPages([firstNewInstance])[0];
+      if (page != null) {
+        this.root.setCurrentPage(page.nodeId);
+      }
+    });
 
     return this.root;
   }

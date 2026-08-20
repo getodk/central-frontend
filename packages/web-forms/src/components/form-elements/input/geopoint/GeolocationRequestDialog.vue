@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import ElapsedTime from '@/components/common/ElapsedTime.vue';
-import IconSVG from '@/components/common/IconSVG.vue';
-import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
-import type { Translate } from '@/lib/locale/useLocale.ts';
-import { truncateDecimals } from '@/lib/format/truncate-decimals.ts';
+import ElapsedTime from '@getodk/web-forms/components/common/ElapsedTime.vue';
+import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
+import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
+import { truncateDecimals } from '@getodk/web-forms/lib/format/truncate-decimals.ts';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import ProgressSpinner from 'primevue/progressspinner';

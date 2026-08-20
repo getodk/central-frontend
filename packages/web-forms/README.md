@@ -198,7 +198,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-##### Theme and layouts<br/>🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜⬜⬜ 40\%
+##### Theme and layouts<br/>🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜⬜ 50\%
 
   </summary>
   <br/>
@@ -206,7 +206,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
 | Feature <img width=250px/>                                                 | Progress |
 | -------------------------------------------------------------------------- | :------: |
 | [grid](https://github.com/getodk/web-forms/issues/16)                      |          |
-| [pages](https://github.com/getodk/web-forms/issues/254)                    |          |
+| [pages](https://github.com/getodk/web-forms/issues/254)                    |    ✅    |
 | [logo](https://github.com/getodk/web-forms/issues/353)                     |          |
 | [application translations](https://github.com/getodk/web-forms/issues/332) |    ✅    |
 | [theme color](https://github.com/getodk/web-forms/issues/43)               |          |
@@ -405,8 +405,6 @@ npm run dev -w=packages/web-forms
 
 Individual test environments, and their corresponding watch modes, also have separate commands which can be found in [`package.json`](./package.json).
 
-Upload XLSForm and XForm functionality in [`demo`](./src/demo/) app and in dev mode depends on [XLSForm-online](https://github.com/getodk/xlsform-online). Run the xlsform-online locally. By default it runs on port 8000, if you are running it on another port then you should update the [`config`](./src/demo/config.json) file.
-
 ### Project Structure
 
 ```
@@ -414,13 +412,12 @@ web-forms/
 ├── public/                   # Static assets (e.g., favicon.ico)
 ├── src/
 │   ├── assets/
-│   │   ├── images/           # Web Forms and Demo page images
-│   │   ├── styles/           # Web Forms and Demo page styles
+│   │   ├── images/           # Web Forms images
+│   │   ├── styles/           # Web Forms styles
 │   ├── components/           # UI components
 │   │   ├── form-elements/    # Form elements or controllers (question types, hints, labels, inputs)
 │   │   ├── form-layout/      # Form layout and rendering (e.g., form panel, groups, repeats, form error classes)
 │   │   ├── common/           # Reusable smaller components (e.g., icon, image, checkbox components)
-│   ├── demo/                 # Demo page
 │   ├── lib/                  # Utilities
 │   ├── index.ts
 │   ├── web-forms-plugin.ts   # Vue plugin
