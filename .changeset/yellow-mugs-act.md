@@ -4,4 +4,4 @@
 "@getodk/web-forms": patch
 ---
 
-Fixed a bug where the xpath sum() function would return null if no nodes matched the expression
+Fixed a bug where the XPath sum() function returned NaN instead of 0 when no nodes matched the expression.

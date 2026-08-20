@@ -65,6 +65,17 @@ describe('#sum()', () => {
     testContext.assertNumberValue('sum(/root/item)', 100);
   });
 
+  it('sum trims string input', () => {
+    testContext = createXFormsTestContext(`
+      <root id="root">
+        <item> -10</item>
+        <item>   </item>
+        <item> 99   </item>
+      </root>`);
+
+    testContext.assertNumberValue('sum(/root/item)', 89);
+  });
+
   it('sum of nothing is zero', () => {
     testContext = createXFormsTestContext(`
       <root id="root">

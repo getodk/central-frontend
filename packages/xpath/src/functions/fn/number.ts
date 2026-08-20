@@ -25,7 +25,7 @@ export const sum = new NumberFunction(
     const resultSet = expression!.evaluate(context);
 
     for (const item of resultSet) {
-      if (item.toString() === '') {
+      if (item.toString().trim() === '') {
         // This deviates from the WHATWG spec which treats '' as NaN
         // but is aligned with Collect
         continue;
