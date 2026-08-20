@@ -99,6 +99,12 @@ export interface RootNode extends BaseNode {
   previousPage(): void;
 
   /**
+   * Navigates to the first outstanding violation, its page becomes current and its node becomes
+   * {@link RootNodeState.navigationTarget}. Does nothing when the form has no violations.
+   */
+  navigateToFirstViolation(): void;
+
+  /**
    * Prepares the current form instance state as an {@link InstancePayload}.
    *
    * A payload will be prepared even if the current form state includes

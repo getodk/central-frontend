@@ -89,8 +89,7 @@ export class RepeatRangeUncontrolled
     const children = this.getChildren();
     const replacement = children[removedIndex] ?? children[removedIndex - 1];
 
-    // Keep this page move; otherwise, initPagination's createComputed relocates the page itself
-    // and overwrites the target below
+    // Move page, otherwise, initPagination's createComputed relocates the page itself and overwrites the target below
     const page = collectPages([replacement ?? this])[0];
     if (page != null) {
       this.root.setCurrentPage(page.nodeId);

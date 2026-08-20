@@ -1,5 +1,6 @@
 import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
+import { batch } from 'solid-js';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
 import type { FormNodeID, PageBoundary } from '../client/identity.ts';
 import type { RootNode } from '../client/RootNode.ts';
@@ -192,6 +193,21 @@ export class Root
 
   setNavigationTarget(target: FormNodeID | null): void {
     this.nodeNavigation.setNavigationTarget(target);
+  }
+
+  navigateToFirstViolation(): void {
+    const violation = this.validationState.violations?.[0];
+    if (violation == null) {
+      return;
+    }
+
+    batch(() => {
+      const page = this.pagination.getLeafPageId(violation.nodeId);
+      if (page != null) {
+        this.setCurrentPage(page);
+      }
+      this.setNavigationTarget(violation.nodeId);
+    });
   }
 
   isPageReachable(page: Page): boolean {

@@ -132,6 +132,7 @@ export const resolveCurrentPage = (
     return current;
   }
 
+  // navigateAfterRemoval normally picks the new page; this covers the rare case where it found no page at all
   if (!isListed) {
     return nearestReachablePage(children, current, isReachable);
   }
