@@ -15,8 +15,6 @@ except according to the terms contained in the LICENSE file.
     <input ref="input" v-model="modelValue" v-bind="$attrs" class="form-control"
       :placeholder="requiredLabel(placeholder, required)" :required="required"
       v-tooltip.aria-describedby="tooltip" :autocomplete="autocomplete">
-    <password-strength v-if="autocomplete === 'new-password'"
-      :password="modelValue"/>
     <span class="form-label">{{ requiredLabel(placeholder, required) }}</span>
     <slot name="after"></slot>
   </label>
@@ -24,8 +22,6 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import { computed, ref } from 'vue';
-
-import PasswordStrength from './password-strength.vue';
 
 import { requiredLabel } from '../util/dom';
 
@@ -48,7 +44,6 @@ const props = defineProps({
 });
 
 const htmlClass = computed(() => ({
-  'new-password': props.autocomplete === 'new-password',
   'has-error': props.hasError
 }));
 
@@ -56,12 +51,3 @@ const input = ref(null);
 const focus = () => { input.value.focus(); };
 defineExpose({ focus });
 </script>
-
-<style lang="scss">
-.form-group {
-  // Hide a password strength meter for password confirmation.
-  &.new-password ~ .form-group.new-password .password-strength {
-    display: none;
-  }
-}
-</style>
