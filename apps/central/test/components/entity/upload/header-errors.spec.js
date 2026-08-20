@@ -59,7 +59,7 @@ describe('EntityUploadHeaderErrors', () => {
           props: {
             header: 'height\tcircumference',
             delimiter: '\t',
-            missingProperty: true
+            missingLabel: true
           }
         });
         const p = component.get('.entity-upload-header-errors-suggestions p:last-child');

@@ -14,6 +14,7 @@ describe('EntityUploadHeaderReview', () => {
 
     const p = component.findAll('p');
     p.length.should.equal(3);
+    p[1].text().should.startWith('These properties are not included in your file');
     p[2].text().should.equal('foo, bar');
   });
 });

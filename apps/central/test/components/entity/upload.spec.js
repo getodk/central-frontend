@@ -281,28 +281,45 @@ describe('EntityUpload', () => {
   });
 
   it('resets after the clear button is clicked', async () => {
-    testData.extendedDatasets.createPast(1);
+    testData.extendedDatasets.createPast(1, {
+      properties: [{ name: 'height' }]
+    });
     const modal = await showModal();
     await selectFile(modal, createCSV('label\nx\n"12345,67890"'));
+
     const popup = modal.getComponent(EntityUploadPopup);
     popup.props().warnings.should.equal(1);
+    modal.findComponent(EntityUploadWarnings).exists().should.be.true;
+    modal.findComponent(EntityUploadHeaderReview).exists().should.be.true;
+
     await popup.get('.btn-link').trigger('click');
+
     modal.findComponent(EntityUploadPopup).exists().should.be.false;
     modal.findComponent(EntityUploadWarnings).exists().should.be.false;
+    modal.findComponent(EntityUploadHeaderReview).exists().should.be.false;
     modal.get('#entity-upload-file-select').should.be.visible();
     const button = modal.get('.modal-actions .btn-primary');
     button.attributes('aria-disabled').should.equal('true');
   });
 
   it('resets after the modal is hidden', async () => {
-    testData.extendedDatasets.createPast(1);
+    testData.extendedDatasets.createPast(1, {
+      properties: [{ name: 'height' }]
+    });
     const modal = await showModal();
     await selectFile(modal, createCSV('label\nx\n"12345,67890"'));
+
+    const popup = modal.getComponent(EntityUploadPopup);
+    popup.props().warnings.should.equal(1);
     modal.findComponent(EntityUploadWarnings).exists().should.be.true;
+    modal.findComponent(EntityUploadHeaderReview).exists().should.be.true;
+
     await modal.setProps({ state: false });
     await modal.setProps({ state: true });
+
     modal.findComponent(EntityUploadPopup).exists().should.be.false;
     modal.findComponent(EntityUploadWarnings).exists().should.be.false;
+    modal.findComponent(EntityUploadHeaderReview).exists().should.be.false;
     modal.get('#entity-upload-file-select').should.be.visible();
     const button = modal.get('.modal-actions .btn-primary');
     button.attributes('aria-disabled').should.equal('true');
