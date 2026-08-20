@@ -8,6 +8,7 @@ import { createAggregatedViolations } from '../../lib/reactivity/validation/crea
 import type { UncontrolledRepeatDefinition } from '../../parse/model/RepeatDefinition.ts';
 import type { GeneralParentNode } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
+import { findFirstVisibleControl } from '../navigation/findFirstVisibleControl.ts';
 import { collectPages } from '../pagination/pageSequence.ts';
 import type { Root } from '../Root.ts';
 import { BaseRepeatRange } from './BaseRepeatRange.ts';
@@ -46,6 +47,13 @@ export class RepeatRangeUncontrolled
       if (page != null) {
         this.root.setCurrentPage(page.nodeId);
       }
+
+      // On non-paginated forms the page move above is a no-op, but the new instance's first
+      // question still becomes the navigation target.
+      const target = firstNewInstance == null ? null : findFirstVisibleControl(firstNewInstance);
+      if (target != null) {
+        this.root.setNavigationTarget(target.nodeId);
+      }
     });
 
     return this.root;
@@ -69,8 +77,34 @@ export class RepeatRangeUncontrolled
    * reactivity is cleaned up.
    */
   removeInstances(startIndex: number, count = 1): Root {
-    this.removeChildren(startIndex, count);
+    batch(() => {
+      this.removeChildren(startIndex, count);
+      this.navigateAfterRemoval(startIndex);
+    });
 
     return this.root;
+  }
+
+  private navigateAfterRemoval(removedIndex: number): void {
+    const children = this.getChildren();
+    const replacement = children[removedIndex] ?? children[removedIndex - 1];
+
+    // Keep this page move; otherwise, initPagination's createComputed relocates the page itself
+    // and overwrites the target below
+    const page = collectPages([replacement ?? this])[0];
+    if (page != null) {
+      this.root.setCurrentPage(page.nodeId);
+    }
+
+    if (replacement == null) {
+      // The Add button renders there
+      this.root.setNavigationTarget(this.nodeId);
+      return;
+    }
+
+    const target = findFirstVisibleControl(replacement);
+    if (target != null) {
+      this.root.setNavigationTarget(target.nodeId);
+    }
   }
 }

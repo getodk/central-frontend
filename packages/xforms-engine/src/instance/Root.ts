@@ -190,6 +190,10 @@ export class Root
     this.pageNavigation.previousPage();
   }
 
+  setNavigationTarget(target: FormNodeID | null): void {
+    this.nodeNavigation.setNavigationTarget(target);
+  }
+
   isPageReachable(page: Page): boolean {
     return this.pagination.countPageMembers(page.nodeId) > 0;
   }
