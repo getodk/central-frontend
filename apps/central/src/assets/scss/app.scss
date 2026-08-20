@@ -620,6 +620,10 @@ tr.uncommitted-change { background-color: #ffef67; }
   > thead {
     background-color: $color-table-heading-background;
 
+    > tr {
+      background-color: $color-header-row;
+    }
+
     > tr > th {
       border-bottom: $border-bottom-table-heading;
       font-size: $font-size-table-heading;
@@ -632,6 +636,15 @@ tr.uncommitted-change { background-color: #ffef67; }
       border-top: $border-top-table-data;
       padding: $padding-top-table-data $padding-right-table-data
                $padding-bottom-table-data $padding-left-table-data;
+    }
+
+    // Zebra striping
+    > tr:nth-child(even) {
+      background-color: $color-even-row;
+    }
+
+    > tr:nth-child(odd) {
+      background-color: $color-odd-row;
     }
   }
 
