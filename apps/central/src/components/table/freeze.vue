@@ -161,22 +161,6 @@ defineExpose({ getRowPair });
   td:last-child { border-right: $border-top-table-data; }
 }
 
-// Zebra striping
-.table-freeze-frozen,
-.table-freeze-scrolling {
-  thead tr {
-    background-color: $color-header-row;
-  }
-
-  tbody tr:nth-child(even) {
-    background-color: $color-even-row;
-  }
-
-  tbody tr:nth-child(odd) {
-    background-color: $color-odd-row;
-  }
-}
-
 // Styles related to actions (buttons and links). If there are actions, they
 // should be in a .btn-group.
 .table-freeze-frozen {

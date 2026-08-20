@@ -218,7 +218,7 @@ export default {
     }
 
     tr:nth-child(even of .project-dataset-row) {
-      background: $color-even-row;;
+      background: $color-even-row;
     }
 
     tr:nth-child(odd of .project-dataset-row) {
