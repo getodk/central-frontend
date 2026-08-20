@@ -24,13 +24,15 @@ defineProps({
 #entity-upload-header-review {
   margin-top: 18px;
 
-  p {
-    &:first-child { font-weight: bold; }
+  > p:first-child {
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
 
-    &:has(.i18n-list) {
-      font-size: 14px;
-      margin-left: 8px;
-    }
+  p:has(.i18n-list) {
+    font-size: 12px;
+    margin-block: 14px;
+    margin-left: 8px;
   }
 }
 </style>
