@@ -1,11 +1,16 @@
 import type { FormLanguage } from '../../client/FormLanguage.ts';
-import type { RootNode, RootNodeState } from '../../client/RootNode.ts';
+import type {
+  RootNode,
+  RootNodeNavigationKey,
+  RootNodeState,
+  RootNodeStateNavigationKey,
+} from '../../client/RootNode.ts';
 
 export interface PrimaryInstanceDocumentState extends Omit<
   RootNodeState,
   // `children` is overridden below with `RootNode`, which is not presently considered a child
   // node in the client API; pagination and navigation state exist only on the Root node.
-  'children' | 'currentPage' | 'hasNextPage' | 'hasPreviousPage' | 'navigationTarget'
+  'children' | RootNodeStateNavigationKey
 > {
   /**
    * @todo while this is an internal interface, this feels like maybe an
@@ -32,9 +37,7 @@ export interface PrimaryInstanceDocument extends Omit<
   | 'nodeType' // Allow for override with 'primary-instance'
   | 'currentState' // Allow for override of `children`
   | 'setLanguage' // Allow for override of return type
-  | 'setCurrentPage'
-  | 'nextPage'
-  | 'previousPage'
+  | RootNodeNavigationKey
 > {
   readonly nodeType: 'primary-instance';
   readonly currentState: PrimaryInstanceDocumentState;
