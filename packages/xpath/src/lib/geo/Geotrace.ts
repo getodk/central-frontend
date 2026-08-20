@@ -1,29 +1,13 @@
 import type { Geopoint } from './Geopoint.ts';
-import { geopointCodec, type GeopointRuntimeValue } from './geopointCodec.ts';
+import { geopointCodec } from './geopointCodec.ts';
 import { GeotraceLine } from './GeotraceLine.ts';
 
-export type GeotracePoints = readonly [Geopoint, Geopoint, ...Geopoint[]];
+export interface GeopointValidationResult {
+  valid: boolean;
+  points?: readonly Geopoint[];
+}
 
-const decodeAndValidate = (value: string) => {
-  const result = geopointCodec.decodeValue(value);
-  if (!result) {
-    throw new Error('Invalid geopoint value');
-  }
-  return result;
-};
-
-const isGeotracePoints = (
-  geopoints: readonly GeopointRuntimeValue[]
-): geopoints is GeotracePoints => {
-  return (
-    geopoints.length >= 2 &&
-    geopoints.every((geopoint) => {
-      return geopoint != null;
-    })
-  );
-};
-
-const collectLines = (geopoints: GeotracePoints): readonly GeotraceLine[] => {
+export const collectLines = (geopoints: readonly Geopoint[]): readonly GeotraceLine[] => {
   return geopoints.reduce((acc, geopoint, i) => {
     if (i === 0) {
       return acc;
@@ -44,46 +28,33 @@ const collectLines = (geopoints: GeotracePoints): readonly GeotraceLine[] => {
   }, Array<GeotraceLine>());
 };
 
-export class Geotrace {
-  static fromEncodedGeotrace(encoded: string): Geotrace | null {
-    const geopoints = encoded
+const normalizeInput = (encoded: string): string[] => {
+  return (
+    encoded
       .trim()
       // Consistency with JavaRosa: any number of trailing semicolons are
       // ignored, with any amount of whitespace between them.
       .replace(/(\s*;)+$/, '')
       .split(/\s*;\s*/)
-      .map((value) => decodeAndValidate(value));
+  );
+};
 
-    return this.fromGeopoints(geopoints);
+export const validate = (values: readonly string[]): GeopointValidationResult => {
+  const [head, ...tail] = values;
+
+  if (head == null) {
+    return { valid: false };
   }
 
-  static fromEncodedValues(values: readonly string[]): Geotrace | null {
-    const [head, ...tail] = values;
-
-    if (head == null) {
-      return null;
-    }
-
-    if (tail.length === 0) {
-      return this.fromEncodedGeotrace(head);
-    }
-
-    const geopoints = values.map((value) => decodeAndValidate(value));
-
-    return this.fromGeopoints(geopoints);
+  if (tail.length === 0) {
+    values = normalizeInput(head);
   }
 
-  static fromGeopoints(geopoints: readonly GeopointRuntimeValue[]): Geotrace | null {
-    if (!isGeotracePoints(geopoints)) {
-      return null;
-    }
+  const geopoints = values.map((value) => geopointCodec.decodeValue(value));
 
-    return new this(geopoints);
+  if (geopoints.some((point) => point == null)) {
+    return { valid: false };
   }
 
-  readonly lines: readonly GeotraceLine[];
-
-  private constructor(readonly geopoints: GeotracePoints) {
-    this.lines = collectLines(geopoints);
-  }
-}
+  return { valid: true, points: geopoints as Geopoint[] };
+};

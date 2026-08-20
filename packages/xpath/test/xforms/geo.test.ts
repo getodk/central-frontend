@@ -63,18 +63,16 @@ describe('geo functions', () => {
     { argument: ['0 1', '0 0', '0 2'], expected: 333956.54 },
     { argument: ['0 0', '0 2'], expected: 222637.69 },
   ].forEach(({ argument, expected }, i) => {
-    const expr = argument.map(arg => `"${arg}"`).join(',');
+    const expr = argument.map((arg) => `"${arg}"`).join(',');
     it(`distance(${expr}) works (${i + 1})`, () => {
       testContext.assertNumberValue(`distance(${expr})`, expected);
     });
   });
 
-  [
-    ['0 1', 'a'],
-  ].forEach((invalidArgument) => {
-    const expr = invalidArgument.map(arg => `"${arg}"`).join(',');
+  [['0 1', 'a']].forEach((invalidArgument) => {
+    const expr = invalidArgument.map((arg) => `"${arg}"`).join(',');
     it(`distance(${expr}) fails`, () => {
-      const evaluate = () => testContext.evaluator.evaluateNumber(`distance(${invalidArgument})`);
+      const evaluate = () => testContext.evaluator.evaluateNumber(`distance(${expr})`);
       expect(evaluate).toThrow();
     });
   });
@@ -178,8 +176,12 @@ describe('geo functions', () => {
       testContext.assertBooleanValue('geofence(/root/point, /root/area)', false);
     });
 
-    it('returns false when second parameter is not valid trace', () => {
+    it('returns false when second parameter is empty', () => {
       testContext.assertBooleanValue('geofence("0 0 0 0", "")', false);
+    });
+
+    it('returns false when second parameter is not valid trace', () => {
+      testContext.assertBooleanValue('geofence("0 0 0 0", "abc")', false);
     });
 
     it('returns false when second parameter is not a closed shape', () => {
