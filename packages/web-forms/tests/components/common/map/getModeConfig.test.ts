@@ -1,4 +1,4 @@
-import { getModeConfig, MODES } from '@/components/common/map/getModeConfig.ts';
+import { getModeConfig, MODES } from '@getodk/web-forms/components/common/map/getModeConfig.ts';
 import { describe, it, expect } from 'vitest';
 
 describe('getModeConfig', () => {

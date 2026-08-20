@@ -77,12 +77,10 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         '@getodk/common': resolve(__dirname, '../common/src'),
-        '@': fileURLToPath(new URL('./src', import.meta.url)),
-        '@locales': fileURLToPath(new URL('./locales', import.meta.url)),
+        '@getodk/web-forms': resolve(__dirname, './src'),
+        '@getodk/xforms-engine': resolve(__dirname, '../xforms-engine/src'),
+        '@getodk/xpath': resolve(__dirname, '../xpath/src'),
         'primevue/menuitem': 'primevue/menu',
-        // With following lines, fonts byte array are copied into css file
-        // Roboto fonts
-        './fonts': resolve('../../node_modules/@fontsource/roboto'),
       },
     },
     build: {
@@ -116,7 +114,7 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         external: ['vue'],
         onwarn(warning, warn) {
-          if (warning.code === 'EVAL' && warning.id?.endsWith('xforms-engine/dist/index.js')) {
+          if (warning.code === 'EVAL' && warning.id?.endsWith('web-tree-sitter/tree-sitter.js')) {
             return; // ignore eval warning for tree-sitter
           }
           warn(warning);

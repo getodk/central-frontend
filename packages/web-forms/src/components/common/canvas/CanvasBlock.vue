@@ -3,15 +3,15 @@
  * IMPORTANT: Lazy-loaded for Konva isolation. Keep Konva imports/code here only to bundle separately and
  * load on demand. Avoids main bundle bloat.
  */
-import CanvasControls from '@/components/common/canvas/CanvasControls.vue';
-import { type CanvasMode, getModeConfig, MODES } from '@/components/common/canvas/getModeConfig.ts';
+import CanvasControls from '@getodk/web-forms/components/common/canvas/CanvasControls.vue';
+import { type CanvasMode, getModeConfig, MODES } from '@getodk/web-forms/components/common/canvas/getModeConfig.ts';
 import {
 	DEFAULT_STROKE_COLOR,
 	STROKE_WIDTH,
 	useCanvasDrawing,
-} from '@/components/common/canvas/useCanvasDrawing.ts';
-import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
-import type { Translate } from '@/lib/locale/useLocale.ts';
+} from '@getodk/web-forms/components/common/canvas/useCanvasDrawing.ts';
+import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import type Konva from 'konva';
 import Message from 'primevue/message';
 import { computed, inject, onMounted, onUnmounted, ref, watch } from 'vue';

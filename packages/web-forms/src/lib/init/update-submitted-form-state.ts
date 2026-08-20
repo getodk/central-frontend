@@ -1,6 +1,6 @@
-import { POST_SUBMIT__NEW_INSTANCE } from '@/lib/constants/control-flow.ts';
-import type { FormOptions } from '@/lib/init/load-form-state.ts';
-import type { OptionalHostSubmissionResult } from '@/lib/submission/host-submission-result-callback.ts';
+import { POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms/lib/constants/control-flow.ts';
+import type { FormOptions } from '@getodk/web-forms/lib/init/load-form-state.ts';
+import type { OptionalHostSubmissionResult } from '@getodk/web-forms/lib/submission/host-submission-result-callback.ts';
 import type { InstanceDefaults, PreloadProperties } from '@getodk/xforms-engine';
 import { getFormInstanceConfig } from './engine-config.ts';
 import type { FormStateSuccessResult } from './form-state.ts';

@@ -1,8 +1,8 @@
-import InputControl from '@/components/form-elements/input/InputControl.vue';
-import RankControl from '@/components/form-elements/RankControl.vue';
-import SelectControl from '@/components/form-elements/select/SelectControl.vue';
-import FormQuestion from '@/components/form-layout/FormQuestion.vue';
-import { IS_FORM_EDIT_MODE } from '@/lib/constants/injection-keys.ts';
+import InputControl from '@getodk/web-forms/components/form-elements/input/InputControl.vue';
+import RankControl from '@getodk/web-forms/components/form-elements/RankControl.vue';
+import SelectControl from '@getodk/web-forms/components/form-elements/select/SelectControl.vue';
+import FormQuestion from '@getodk/web-forms/components/form-layout/FormQuestion.vue';
+import { IS_FORM_EDIT_MODE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
 import type { SelectNode } from '@getodk/xforms-engine';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';

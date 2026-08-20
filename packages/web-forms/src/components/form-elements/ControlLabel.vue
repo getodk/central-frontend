@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import AudioBlock from '@/components/common/media/AudioBlock.vue';
-import ImageBlock from '@/components/common/media/ImageBlock.vue';
-import MarkdownBlock from '@/components/common/MarkdownBlock.vue';
-import VideoBlock from '@/components/common/media/VideoBlock.vue';
+import AudioBlock from '@getodk/web-forms/components/common/media/AudioBlock.vue';
+import ImageBlock from '@getodk/web-forms/components/common/media/ImageBlock.vue';
+import MarkdownBlock from '@getodk/web-forms/components/common/MarkdownBlock.vue';
+import VideoBlock from '@getodk/web-forms/components/common/media/VideoBlock.vue';
 import type { AnyControlNode as QuestionNode } from '@getodk/xforms-engine';
 import { computed } from 'vue';
 

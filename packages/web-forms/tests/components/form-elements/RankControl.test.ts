@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { DOMWrapper, mount, VueWrapper } from '@vue/test-utils';
 import { getReactiveForm, globalMountOptions } from '../../helpers.ts';
-import QuestionList from '@/components/form-layout/QuestionList.vue';
-import FormQuestion from '@/components/form-layout/FormQuestion.vue';
-import SelectControl from '@/components/form-elements/select/SelectControl.vue';
-import RankControl from '@/components/form-elements/RankControl.vue';
+import QuestionList from '@getodk/web-forms/components/form-layout/QuestionList.vue';
+import FormQuestion from '@getodk/web-forms/components/form-layout/FormQuestion.vue';
+import SelectControl from '@getodk/web-forms/components/form-elements/select/SelectControl.vue';
+import RankControl from '@getodk/web-forms/components/form-elements/RankControl.vue';
 import type { RankNode } from '@getodk/xforms-engine';
 
 describe('RankControl', () => {

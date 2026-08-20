@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
-import type { Translate } from '@/lib/locale/useLocale.ts';
+import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import type { TriggerNode } from '@getodk/xforms-engine';
 import Checkbox from 'primevue/checkbox';
 import { inject } from 'vue';

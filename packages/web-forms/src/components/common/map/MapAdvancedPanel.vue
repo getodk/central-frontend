@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import IconSVG from '@/components/common/IconSVG.vue';
+import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
 import {
 	isNullLocation,
 	isValidLatitude,
 	isValidLongitude,
 	toGeoJsonCoordinateArray,
-} from '@/components/common/map/geojson-parsers.ts';
+} from '@getodk/web-forms/components/common/map/geojson-parsers.ts';
 import { fromLonLat } from 'ol/proj';
-import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
-import type { Translate } from '@/lib/locale/useLocale.ts';
+import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import { computed, inject, ref, watch } from 'vue';
 import type { Coordinate } from 'ol/coordinate';
 
