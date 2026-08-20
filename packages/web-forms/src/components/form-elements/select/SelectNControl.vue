@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import ColumnarAppearance from '@/components/appearances/ColumnarAppearance.vue';
-import FieldListTable from '@/components/appearances/FieldListTable.vue';
-import UnsupportedAppearance from '@/components/appearances/UnsupportedAppearance.vue';
-import CheckboxWidget from '@/components/common/CheckboxWidget.vue';
-import MultiselectDropdown from '@/components/common/MultiselectDropdown.vue';
-import ValidationMessage from '@/components/common/ValidationMessage.vue';
-import ControlText from '@/components/form-elements/ControlText.vue';
+import ColumnarAppearance from '@getodk/web-forms/components/appearances/ColumnarAppearance.vue';
+import FieldListTable from '@getodk/web-forms/components/appearances/FieldListTable.vue';
+import UnsupportedAppearance from '@getodk/web-forms/components/appearances/UnsupportedAppearance.vue';
+import CheckboxWidget from '@getodk/web-forms/components/common/CheckboxWidget.vue';
+import MultiselectDropdown from '@getodk/web-forms/components/common/MultiselectDropdown.vue';
+import ValidationMessage from '@getodk/web-forms/components/common/ValidationMessage.vue';
+import ControlText from '@getodk/web-forms/components/form-elements/ControlText.vue';
 import type { SelectNode } from '@getodk/xforms-engine';
 import { computed, ref, watchEffect } from 'vue';
 

@@ -7,6 +7,7 @@ import '../src/styles';
 import testData from './data';
 import { loadAsyncRouteComponents } from './util/load-async';
 import { mockLogin } from './util/session';
+import { restoreLuxon } from './util/date-time';
 import { setupLanguages } from './util/i18n';
 import './assertions';
 
@@ -43,6 +44,7 @@ afterEach(() => {
   window.scrollTo(0, 0);
   document.documentElement.setAttribute('lang', 'en');
   localStorage.clear();
+  restoreLuxon();
   testData.reset();
   mockLogin.reset();
   document.cookie = '';

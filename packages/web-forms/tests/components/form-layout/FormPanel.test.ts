@@ -1,4 +1,4 @@
-import FormPanel, { type PanelProps } from '@/components/form-layout/FormPanel.vue';
+import FormPanel, { type PanelProps } from '@getodk/web-forms/components/form-layout/FormPanel.vue';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import { globalMountOptions } from '../../helpers.ts';

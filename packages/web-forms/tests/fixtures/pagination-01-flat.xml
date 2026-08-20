@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml">
+  <h:head>
+    <h:title>01 Flat - no groups</h:title>
+    <model>
+      <instance>
+        <data id="pg_01_flat">
+          <name/>
+          <age/>
+          <color/>
+          <comment/>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <bind nodeset="/data/name" type="string"/>
+      <bind nodeset="/data/age" type="int"/>
+      <bind nodeset="/data/color" type="string"/>
+      <bind nodeset="/data/comment" type="string"/>
+      <bind nodeset="/data/meta/instanceID" type="string"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <input ref="/data/name"><label>What is your name?</label></input>
+    <input ref="/data/age"><label>What is your age?</label></input>
+    <select1 ref="/data/color">
+      <label>Favorite color?</label>
+      <item><label>Red</label><value>red</value></item>
+      <item><label>Blue</label><value>blue</value></item>
+    </select1>
+    <input ref="/data/comment"><label>Any comment?</label></input>
+  </h:body>
+</h:html>

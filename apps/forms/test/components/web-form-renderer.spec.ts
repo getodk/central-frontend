@@ -23,7 +23,13 @@ import imageUploaderSubmission from '../../../central/test/data/xml/image-upload
 const router = createRouter({
   history: createWebHistory(),
   routes: [{ path: '/', component: { template: '<div>Home</div>' } }],
-})
+});
+
+vi.mock('../../src/utils/last-saved.ts', () => ({
+  getLastSaved: vi.fn().mockResolvedValue(undefined),
+  setLastSaved: vi.fn().mockResolvedValue(undefined),
+  deleteLastSaved: vi.fn().mockResolvedValue(undefined),
+}));
 
 const i18n = createI18n({
   legacy: false,
@@ -87,7 +93,7 @@ describe('WebFormRenderer', () => {
   };
 
   const submit = async (component: VueWrapper) => {
-    await component.find('.odk-form .footer button').trigger('click');
+    await component.find('.odk-form .form-footer button').trigger('click');
     await vi.waitFor(() => {
       const el = document.querySelector('.p-dialog-header');
       if (!el) throw new Error('Not ready yet');

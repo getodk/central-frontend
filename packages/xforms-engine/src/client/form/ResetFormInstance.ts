@@ -1,6 +1,6 @@
 import type { RootNode } from '../RootNode.ts';
 import type { CreatedFormInstance } from './CreateFormInstance.ts';
-import type { FormInstanceConfig } from './FormInstanceConfig.ts';
+import type { ResetFormInstanceConfig } from './FormInstanceConfig.ts';
 import type { LoadForm } from './LoadForm.ts';
 import type { LoadFormResult } from './LoadFormResult.ts';
 
@@ -14,4 +14,4 @@ import type { LoadFormResult } from './LoadFormResult.ts';
  * such, explicit interface-level documentation of fallibility is deferred here,
  * on {@link RootNode} itself, and into any of its sub-interfaces.
  */
-export type ResetFormInstance = (config?: FormInstanceConfig) => CreatedFormInstance;
+export type ResetFormInstance = (config?: ResetFormInstanceConfig) => CreatedFormInstance;

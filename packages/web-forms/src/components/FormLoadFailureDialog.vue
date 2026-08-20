@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
-import type { Translate } from '@/lib/locale/useLocale.ts';
+import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import Dialog from 'primevue/dialog';
 import Message from 'primevue/message';
 import { computed, inject } from 'vue';
-import type { FormInitializationError } from '@/lib/error/FormInitializationError.ts';
+import type { FormInitializationError } from '@getodk/web-forms/lib/error/FormInitializationError.ts';
 
 interface FormLoadErrorProps {
 	readonly error: FormInitializationError;

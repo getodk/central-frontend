@@ -22,6 +22,7 @@ import type {
 
 export interface FormOptions {
   readonly fetchFormAttachment: FetchFormAttachment;
+  readonly lastSavedXml?: string;
   readonly missingResourceBehavior?: MissingResourceBehavior;
   readonly geolocationProvider?: GeolocationProvider;
   readonly attachmentMaxSize?: number;

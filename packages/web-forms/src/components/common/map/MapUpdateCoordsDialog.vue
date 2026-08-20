@@ -2,16 +2,16 @@
 import {
 	parseGeoJSONGeometry,
 	getGeometryFromJSON,
-} from '@/components/common/map/geojson-parsers.ts';
-import type { SingleFeatureType } from '@/components/common/map/getModeConfig.ts';
-import { getValidCoordinates } from '@/components/common/map/map-helpers.ts';
+} from '@getodk/web-forms/components/common/map/geojson-parsers.ts';
+import type { SingleFeatureType } from '@getodk/web-forms/components/common/map/getModeConfig.ts';
+import { getValidCoordinates } from '@getodk/web-forms/components/common/map/map-helpers.ts';
 import type { Geometry, LineString, Point, Polygon } from 'geojson';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import Textarea from 'primevue/textarea';
-import IconSVG from '@/components/common/IconSVG.vue';
-import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
-import type { Translate } from '@/lib/locale/useLocale.ts';
+import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
+import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import { inject, ref, watch } from 'vue';
 
 const props = defineProps<{

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import AsyncMap from '@/components/common/map/AsyncMap.vue';
-import { MODES, type SingleFeatureType } from '@/components/common/map/getModeConfig.ts';
+import AsyncMap from '@getodk/web-forms/components/common/map/AsyncMap.vue';
+import { MODES, type SingleFeatureType } from '@getodk/web-forms/components/common/map/getModeConfig.ts';
 import type { GeoshapeInputNode, GeotraceInputNode } from '@getodk/xforms-engine';
 
 interface InputGeoMultiPointProps {

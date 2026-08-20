@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import IconSVG from '@/components/common/IconSVG.vue';
-import { ODK_VALUE_PROPERTY } from '@/components/common/map/useMapBlock.ts';
+import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
+import { ODK_VALUE_PROPERTY } from '@getodk/web-forms/components/common/map/useMapBlock.ts';
 import Button from 'primevue/button';
-import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
-import type { Translate } from '@/lib/locale/useLocale.ts';
+import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import { computed, inject } from 'vue';
 
 const props = defineProps<{

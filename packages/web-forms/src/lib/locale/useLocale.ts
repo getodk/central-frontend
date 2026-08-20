@@ -5,7 +5,7 @@ import { usePrimeVue } from 'primevue/config';
 import type { Ref } from 'vue';
 import { computed, onUnmounted, shallowRef, watch } from 'vue';
 // English strings always available as language fallback
-import enRaw from '@locales/strings_en.json';
+import enRaw from '../../../locales/strings_en.json';
 
 export type TranslateValues = NonNullable<Parameters<IntlShape['formatMessage']>[1]>;
 export type Translate = (id: string, values?: TranslateValues) => string;
@@ -16,7 +16,7 @@ const FALLBACK = 'en';
 export const STORAGE_KEY = 'odk-web-forms-locale';
 
 const availableTranslations = import.meta.glob<{ default: TransifexTranslation }>(
-  '@locales/strings_*.json'
+  '../../../locales/strings_*.json'
 );
 
 /**

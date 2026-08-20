@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import IconSVG from '@/components/common/IconSVG.vue';
-import MarkdownBlock from '@/components/common/MarkdownBlock.vue';
-import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
-import type { Translate } from '@/lib/locale/useLocale.ts';
-import type { RepeatRangeNode } from '@getodk/xforms-engine';
+import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
+import MarkdownBlock from '@getodk/web-forms/components/common/MarkdownBlock.vue';
+import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
+import { isOnCurrentPage } from '@getodk/web-forms/lib/pagination/pagination.ts';
+import type { RepeatRangeNode, RepeatRangeUncontrolledNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import { computed, inject } from 'vue';
 import RepeatInstance from './RepeatInstance.vue';
@@ -11,9 +12,16 @@ import RepeatInstance from './RepeatInstance.vue';
 const t: Translate = inject(TRANSLATE)!;
 const props = defineProps<{ node: RepeatRangeNode }>();
 const label = computed(() => props.node.currentState.label?.formatted);
+
+const isAddButtonVisible = (range: RepeatRangeNode): range is RepeatRangeUncontrolledNode => {
+	if (range.nodeType !== 'repeat-range:uncontrolled') {
+		return false;
+	}
+	return isOnCurrentPage(range);
+};
 </script>
 <template>
-	<template v-if="node.currentState.hasRelevantBodyNodes">
+	<template v-if="node.currentState.hasVisibleBodyNodes">
 		<RepeatInstance
 			v-for="(instance, index) in node.currentState.children"
 			:key="index"
@@ -22,7 +30,7 @@ const label = computed(() => props.node.currentState.label?.formatted);
 		/>
 	</template>
 	<Button
-		v-if="node.nodeType === 'repeat-range:uncontrolled'"
+		v-if="isAddButtonVisible(node)"
 		outlined
 		severity="contrast"
 		class="button-add-instance"

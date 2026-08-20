@@ -1,8 +1,8 @@
-import FormQuestion from '@/components/form-layout/FormQuestion.vue';
-import { SUBMIT_PRESSED } from '@/lib/constants/injection-keys.ts';
+import FormQuestion from '@getodk/web-forms/components/form-layout/FormQuestion.vue';
+import { SUBMIT_PRESSED } from '@getodk/web-forms/lib/constants/injection-keys.ts';
 import type { AnyNode, RootNode, SelectNode } from '@getodk/xforms-engine';
 import { DOMWrapper, mount } from '@vue/test-utils';
-import { afterAll, assert, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { assert, beforeEach, describe, expect, it } from 'vitest';
 import { ref } from 'vue';
 import { getReactiveForm, globalMountOptions } from '../../../helpers.ts';
 
@@ -126,34 +126,6 @@ const getMenuItem = async (
 
 describe('SelectControl', () => {
   describe('select1', () => {
-    let isMatchMediaMocked = false;
-
-    beforeAll(() => {
-      // PrimeVue's Select needs matchMedia, which isn't available
-      // when running in test-node:jsdom mode
-      if (window.matchMedia == null) {
-        isMatchMediaMocked = true;
-
-        Object.defineProperty(window, 'matchMedia', {
-          writable: true,
-          value: () => ({
-            matches: false,
-            media: null,
-            onchange: null,
-            addEventListener: () => false,
-            removeEventListener: () => false,
-            dispatchEvent: () => false,
-          }),
-        });
-      }
-    });
-
-    afterAll(() => {
-      if (isMatchMediaMocked) {
-        Object.defineProperty(window, 'matchMedia', { writable: true, value: undefined });
-      }
-    });
-
     describe('no appearance (radio controls)', () => {
       let root: RootNode;
       let selectNode: SelectNode;

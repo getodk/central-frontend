@@ -1,25 +1,45 @@
 <template>
   <div class="actor-properties-upsert">
-    <table class="table">
-      <thead>
-        <tr>
-          <th class="label-cell">{{ $t('resource.property') }}</th>
-          <th class="new-value">{{ $t('header.value') }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <entity-update-row v-for="{ name } of propertyDefs"
-          :key="name" ref="propertyRows" v-model="propertyValues[name]"
-          :old-value="originalValues?.[name]" :label="name"
-          :mark-value-changed="!create"/>
-      </tbody>
-    </table>
+    <div class="actor-properties-header">
+      <strong>{{ $t('resource.property') }}</strong>
+      <p>
+        <i18n-t keypath="description.full">
+          <template #assignEntities>
+            <doc-link to="central-api-accounts-and-users/#actor-properties">
+              {{ $t('description.assignEntities') }}
+            </doc-link>
+          </template>
+        </i18n-t>
+      </p>
+    </div>
+    <p v-if="propertyDefs.length === 0" class="actor-properties-empty">
+      {{ $t('noProperties') }}
+    </p>
+    <div v-else class="actor-properties-table-scroll">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="label-cell">{{ $t('resource.property') }}</th>
+            <th class="new-value">{{ $t('header.value') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <entity-update-row v-for="{ name } of propertyDefs"
+            :key="name" ref="propertyRows" v-model="propertyValues[name]"
+            :old-value="originalValues?.[name]" :label="name"
+            :mark-value-changed="!create"/>
+        </tbody>
+      </table>
+    </div>
+    <actor-properties-new/>
   </div>
 </template>
 
 <script setup>
 import { nextTick, ref } from 'vue';
 
+import ActorPropertiesNew from './new.vue';
+import DocLink from '../doc-link.vue';
 import EntityUpdateRow from '../entity/update/row.vue';
 
 defineOptions({
@@ -50,6 +70,12 @@ nextTick(() => {
 
 <style lang="scss">
 .actor-properties-upsert {
+  .actor-properties-table-scroll {
+    // Leave room for modal header, intro, inputs, and actions above/below
+    max-height: max(150px, calc(70vh - 400px));
+    overflow-y: auto;
+  }
+
   .table {
     table-layout: fixed;
 
@@ -66,5 +92,29 @@ nextTick(() => {
   .entity-update-row .new-value {
     padding-left: 0;
   }
+
+  .actor-properties-empty {
+    color: #555;
+    font-style: italic;
+    margin: 10px 0;
+  }
+
+  .actor-properties-header {
+    margin-bottom: 15px;
+
+    p { margin-top: 5px; }
+  }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "description": {
+      "full": "Properties help {assignEntities}, control access, and connect users to the data they need.",
+      "assignEntities": "assign the right Entities"
+    },
+    "noProperties": "No properties have been added yet."
+  }
+}
+</i18n>

@@ -198,7 +198,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-##### Theme and layouts<br/>🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜⬜⬜ 40\%
+##### Theme and layouts<br/>🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜⬜ 50\%
 
   </summary>
   <br/>
@@ -206,7 +206,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
 | Feature <img width=250px/>                                                 | Progress |
 | -------------------------------------------------------------------------- | :------: |
 | [grid](https://github.com/getodk/web-forms/issues/16)                      |          |
-| [pages](https://github.com/getodk/web-forms/issues/254)                    |          |
+| [pages](https://github.com/getodk/web-forms/issues/254)                    |    ✅    |
 | [logo](https://github.com/getodk/web-forms/issues/353)                     |          |
 | [application translations](https://github.com/getodk/web-forms/issues/332) |    ✅    |
 | [theme color](https://github.com/getodk/web-forms/issues/43)               |          |
@@ -311,14 +311,14 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-##### Misc<br/>🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ 22\%
+##### Misc<br/>🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ 33\%
 
   </summary>
   <br/>
 
 | Feature <img width=250px/>                                                       | Progress |
 | -------------------------------------------------------------------------------- | :------: |
-| [last saved instance](https://github.com/getodk/web-forms/issues/306)            |          |
+| [last saved instance](https://github.com/getodk/web-forms/issues/306)            |    ✅    |
 | [defaults from query parameters](https://github.com/getodk/web-forms/issues/464) |    ✅    |
 | multi-form app-like experience                                                   |          |
 | [prevent multiple submissions](https://github.com/getodk/web-forms/issues/461)   |          |
@@ -350,6 +350,7 @@ To use this library in a Vue.js application:
     :preload-properties="preloadProperties"
     :instance-defaults="instanceDefaults"
     :device-id="abc123"
+    :last-saved-xml="lastSavedXml"
     @submit="handleSubmit"
     @submit-chunked="handleChunkedSubmit"
 />
@@ -377,6 +378,7 @@ The `<OdkWebForm>` component accepts the following props:
 - `preloadProperties` (`PreloadProperties`, optional): Properties to make available for binding in the form using jr:preload.
 - `deviceId` (`string`, optional): If provided is available for binding into the form using preload attributes. Ignored if `preloadProperties.deviceID` is given.
 - `instanceDefaults` (`InstanceDefaults`, optional): Default values to set in the form as a map of xpath reference to string value.
+- `lastSavedXml` (`string`, optional): The XML to parse and bind to the last-saved virtual instance.
 
 ### Events (`OdkWebFormEmits`)
 
@@ -403,8 +405,6 @@ npm run dev -w=packages/web-forms
 
 Individual test environments, and their corresponding watch modes, also have separate commands which can be found in [`package.json`](./package.json).
 
-Upload XLSForm and XForm functionality in [`demo`](./src/demo/) app and in dev mode depends on [XLSForm-online](https://github.com/getodk/xlsform-online). Run the xlsform-online locally. By default it runs on port 8000, if you are running it on another port then you should update the [`config`](./src/demo/config.json) file.
-
 ### Project Structure
 
 ```
@@ -412,13 +412,12 @@ web-forms/
 ├── public/                   # Static assets (e.g., favicon.ico)
 ├── src/
 │   ├── assets/
-│   │   ├── images/           # Web Forms and Demo page images
-│   │   ├── styles/           # Web Forms and Demo page styles
+│   │   ├── images/           # Web Forms images
+│   │   ├── styles/           # Web Forms styles
 │   ├── components/           # UI components
 │   │   ├── form-elements/    # Form elements or controllers (question types, hints, labels, inputs)
 │   │   ├── form-layout/      # Form layout and rendering (e.g., form panel, groups, repeats, form error classes)
 │   │   ├── common/           # Reusable smaller components (e.g., icon, image, checkbox components)
-│   ├── demo/                 # Demo page
 │   ├── lib/                  # Utilities
 │   ├── index.ts
 │   ├── web-forms-plugin.ts   # Vue plugin
@@ -493,9 +492,9 @@ Use the npm scripts in this package to sync with Transifex. From the repository 
 
 - Pull translations from Transifex into `locales/`:
   ```sh
-  npm run translations:pull -w @getodk/web-forms
+  npm run transifex:pull -w @getodk/web-forms
   ```
 - Push the English source strings (`locales/strings_en.json`) to Transifex:
   ```sh
-  npm run translations:push -w @getodk/web-forms
+  npm run transifex:push -w @getodk/web-forms
   ```

@@ -78,6 +78,15 @@ export interface LoadFormOptions {
    * @default MissingResourceBehaviorDefault
    */
   readonly missingResourceBehavior?: MissingResourceBehavior;
+
+  /**
+   * The XML of the most recent submission for this form on this device. Used for
+   * binding into the form as a special secondary instance which can be used in
+   * xpath expressions.
+   *
+   * {@link https://getodk.github.io/xforms-spec/#virtual-endpoints | Specification}.
+   */
+  readonly lastSavedXml?: string | undefined;
 }
 
 /**

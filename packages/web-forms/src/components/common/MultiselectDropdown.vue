@@ -3,8 +3,8 @@ import type { SelectNode } from '@getodk/xforms-engine';
 import MultiSelect from 'primevue/multiselect';
 import { computed, inject } from 'vue';
 import MarkdownBlock from './MarkdownBlock.vue';
-import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
-import type { Translate } from '@/lib/locale/useLocale.ts';
+import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 
 interface MultiselectDropdownProps {
 	readonly question: SelectNode;
@@ -14,15 +14,12 @@ interface MultiselectDropdownProps {
 const t: Translate = inject(TRANSLATE)!;
 const props = defineProps<MultiselectDropdownProps>();
 
+const DEFAULT_PRIMEVUE_ITEM_HEIGHT = 38;
+
 defineEmits(['update:modelValue', 'change']);
 
 const options = computed(() => {
 	return props.question.currentState.valueOptions.map((option) => {
-		const label = props.question.getValueOption(option.value);
-		if (label == null) {
-			throw new Error(`Failed to find option for value: ${option.value}`);
-		}
-
 		return {
 			value: option.value,
 			label: option.label.formatted,
@@ -42,9 +39,9 @@ if (props.question.appearances['no-buttons']) {
 
 const selectedLabels = computed(() => {
 	const state = props.question.currentState;
-	return state.value.map((val) => {
-		const found = state.valueOptions.find((opt) => opt.value === val);
-		return found?.label.formatted;
+	return state.value.map((value) => {
+		const option = props.question.getValueOption(value);
+		return option?.label.formatted;
 	});
 });
 </script>
@@ -68,6 +65,7 @@ const selectedLabels = computed(() => {
 		option-label="search"
 		:panel-class="panelClass"
 		:model-value="question.currentState.value"
+		:virtual-scroller-options="{ itemSize: DEFAULT_PRIMEVUE_ITEM_HEIGHT }"
 		@update:model-value="selectValues"
 		@change="$emit('change')"
 	>

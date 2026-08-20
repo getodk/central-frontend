@@ -1,7 +1,7 @@
-import FormLanguageMenu from '@/components/form-layout/FormLanguageMenu.vue';
+import FormLanguageMenu from '@getodk/web-forms/components/form-layout/FormLanguageMenu.vue';
 import type { FormLanguage, SyntheticDefaultLanguage } from '@getodk/xforms-engine';
 import { mount } from '@vue/test-utils';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { getReactiveForm, globalMountOptions } from '../../helpers.ts';
 
 const isFormLanguage = (lang: FormLanguage | SyntheticDefaultLanguage): lang is FormLanguage => {
@@ -24,34 +24,6 @@ const mountComponent = async (formPath: string) => {
 };
 
 describe('LanguageChanger', () => {
-  let isMatchMediaMocked = false;
-
-  beforeAll(() => {
-    // PrimeVue's Select needs matchMedia, which isn't available
-    // when running in test-node:jsdom mode
-    if (window.matchMedia == null) {
-      isMatchMediaMocked = true;
-
-      Object.defineProperty(window, 'matchMedia', {
-        writable: true,
-        value: () => ({
-          matches: false,
-          media: null,
-          onchange: null,
-          addEventListener: () => false,
-          removeEventListener: () => false,
-          dispatchEvent: () => false,
-        }),
-      });
-    }
-  });
-
-  afterAll(() => {
-    if (isMatchMediaMocked) {
-      Object.defineProperty(window, 'matchMedia', { writable: true, value: undefined });
-    }
-  });
-
   it('does not show the dropdown when there is no user defined lang in the form', async () => {
     const { xform, component } = await mountComponent('1-calculate-simple.xform.xml');
 

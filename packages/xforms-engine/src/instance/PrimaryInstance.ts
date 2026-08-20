@@ -130,6 +130,7 @@ export class PrimaryInstance<
   readonly model: ModelDefinition;
   readonly attachments: InstanceAttachmentsState;
   readonly instanceDefaults: InstanceDefaults;
+  readonly hasLastSaved: boolean;
 
   // InstanceNode
   protected readonly state: SharedNodeState<PrimaryInstanceStateSpec>;
@@ -156,6 +157,7 @@ export class PrimaryInstance<
   readonly appearances = null;
   readonly nodeOptions = null;
   readonly classes: BodyClassList;
+  readonly isPaginated: boolean;
   readonly root: Root;
   readonly currentState: MaterializedChildren<CurrentState<PrimaryInstanceStateSpec>, Root>;
   readonly validationState: AncestorNodeValidationState;
@@ -202,6 +204,7 @@ export class PrimaryInstance<
       itextTranslationsByLanguage: model.itextTranslations,
       secondaryInstancesById: secondaryInstances,
     });
+    this.hasLastSaved = secondaryInstances.hasLastSaved;
 
     const { languages, getActiveLanguage, setActiveLanguage } = createTranslationState(
       scope,
@@ -214,6 +217,7 @@ export class PrimaryInstance<
 
     this.evaluator = evaluator;
     this.classes = definition.classes;
+    this.isPaginated = definition.classes.pages;
 
     const childrenState = createChildrenState<this, Root>(this);
     this.attributeState = createAttributeState(this.scope);
@@ -305,6 +309,7 @@ export class PrimaryInstance<
     const result = prepareInstancePayload(this, {
       payloadType: (options?.payloadType ?? 'monolithic') as PayloadType,
       maxSize: options?.maxSize ?? Infinity,
+      hasLastSaved: this.hasLastSaved,
     });
 
     return Promise.resolve(result);

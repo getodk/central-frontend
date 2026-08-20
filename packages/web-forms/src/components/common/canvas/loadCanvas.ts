@@ -6,7 +6,7 @@
  * when multiple "import('./CanvasBlock.vue')" calls are in-flight simultaneously.
  */
 import type { App, DefineComponent } from 'vue';
-import type { CanvasMode } from '@/components/common/canvas/getModeConfig.ts';
+import type { CanvasMode } from '@getodk/web-forms/components/common/canvas/getModeConfig.ts';
 
 export type CanvasBlockComponent = DefineComponent<{
   mode: CanvasMode;
