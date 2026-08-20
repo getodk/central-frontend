@@ -135,7 +135,9 @@ test.describe('ODK Web Forms', () => {
     urls.forEach(t => {
       test(t.name, async ({ allowedLogs, page }) => {
         allowedLogs.push((consoleMsg, normalisedMsg) => {
-          if(normalisedMsg !== 'Failed to load resource: the server responded with a status of 401 (Unauthorized)') return;
+          // the redirect causes the browser to cancel outstanding requests which should not fail the test
+          if(normalisedMsg.includes('downloadable font: download failed')) return true;
+          if(normalisedMsg !== 'Failed to load resource: the server responded with a status of 401 (Unauthorized)') return false;
           const { url } = consoleMsg.location();
           return url.startsWith('http://central-test.localhost/v1/form-links/') ||
                  url === `http://central-test.localhost/v1/projects/${projectId}` ||
