@@ -3,8 +3,9 @@ import type { RootNode, RootNodeState } from '../../client/RootNode.ts';
 
 export interface PrimaryInstanceDocumentState extends Omit<
   RootNodeState,
-  // Allow for override with `RootNode`, which is not presently considered a child node in the client API
-  'children' | 'currentPage' | 'hasNextPage' | 'hasPreviousPage'
+  // `children` is overridden below with `RootNode`, which is not presently considered a child
+  // node in the client API; pagination and navigation state exist only on the Root node.
+  'children' | 'currentPage' | 'hasNextPage' | 'hasPreviousPage' | 'navigationTarget'
 > {
   /**
    * @todo while this is an internal interface, this feels like maybe an

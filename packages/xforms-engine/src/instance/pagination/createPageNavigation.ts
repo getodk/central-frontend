@@ -1,8 +1,10 @@
 import type { Accessor } from 'solid-js';
-import { createComputed, createMemo, createSignal, untrack } from 'solid-js';
+import { batch, createComputed, createMemo, createSignal, untrack } from 'solid-js';
 import type { PageBoundary } from '../../client/identity.ts';
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
 import type { GeneralChildNode } from '../hierarchy.ts';
+import type { NodeNavigation } from '../navigation/createNodeNavigation.ts';
+import { findFirstVisibleControl } from '../navigation/findFirstVisibleControl.ts';
 import type { Pagination } from './Pagination.ts';
 import {
   collectPages,
@@ -45,13 +47,30 @@ const DISABLED_PAGE_NAVIGATION: PageNavigation = {
   initPagination: () => undefined,
 };
 
-export const createPageNavigation = (host: PageNavigationHost): PageNavigation => {
+export const createPageNavigation = (
+  host: PageNavigationHost,
+  nodeNavigation: NodeNavigation
+): PageNavigation => {
   if (!host.pagination.enabled) {
     return DISABLED_PAGE_NAVIGATION;
   }
 
-  const [getCurrentPage, setPage] = createSignal<Page | null>(null);
+  const [getCurrentPage, writePage] = createSignal<Page | null>(null);
   const currentPage: Accessor<PageBoundary | null> = () => getCurrentPage()?.nodeId ?? null;
+
+  const setPage = (page: Page | null): void => {
+    // Same-page writes happen on every relevance change; exit if same page.
+    const current = untrack(() => getCurrentPage());
+    if (page === current) {
+      return;
+    }
+
+    const target = page == null ? null : (findFirstVisibleControl(page)?.nodeId ?? null);
+    batch(() => {
+      writePage(page);
+      nodeNavigation.setNavigationTarget(target);
+    });
+  };
 
   const isReachable = (page: Page): boolean => host.isPageReachable(page);
 
