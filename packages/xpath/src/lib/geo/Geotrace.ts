@@ -4,6 +4,14 @@ import { GeotraceLine } from './GeotraceLine.ts';
 
 export type GeotracePoints = readonly [Geopoint, Geopoint, ...Geopoint[]];
 
+const decodeAndValidate = (value: string) => {
+  const result = geopointCodec.decodeValue(value);
+  if (!result) {
+    throw new Error('Invalid geopoint value');
+  }
+  return result;
+};
+
 const isGeotracePoints = (
   geopoints: readonly GeopointRuntimeValue[]
 ): geopoints is GeotracePoints => {
@@ -44,9 +52,7 @@ export class Geotrace {
       // ignored, with any amount of whitespace between them.
       .replace(/(\s*;)+$/, '')
       .split(/\s*;\s*/)
-      .map((value) => {
-        return geopointCodec.decodeValue(value);
-      });
+      .map((value) => decodeAndValidate(value));
 
     return this.fromGeopoints(geopoints);
   }
@@ -62,9 +68,7 @@ export class Geotrace {
       return this.fromEncodedGeotrace(head);
     }
 
-    const geopoints = values.map((value) => {
-      return geopointCodec.decodeValue(value);
-    });
+    const geopoints = values.map((value) => decodeAndValidate(value));
 
     return this.fromGeopoints(geopoints);
   }

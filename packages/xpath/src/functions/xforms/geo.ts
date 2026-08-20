@@ -1,6 +1,5 @@
 import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import { EvaluationContext } from '../../context/EvaluationContext.ts';
-import { JRCompatibleGeoValueError } from '../../error/JRCompatibleGeoValueError.ts';
 import { BooleanFunction } from '../../evaluator/functions/BooleanFunction.ts';
 import type { EvaluableArgument } from '../../evaluator/functions/FunctionImplementation.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
@@ -71,7 +70,12 @@ const evaluateArgumentValues = <T extends XPathNode>(
 
 export const area = new NumberFunction('area', [{ arityType: 'required' }], (context, args) => {
   const values = evaluateArgumentValues(context, args);
-  const geotrace = Geotrace.fromEncodedValues(values);
+  let geotrace;
+  try {
+    geotrace = Geotrace.fromEncodedValues(values);
+  } catch {
+    return 0;
+  }
   const areaResult = geodesicArea(geotrace?.lines ?? []);
 
   return toAbsolutePrecision(areaResult, PRECISION);
@@ -104,15 +108,27 @@ export const distance = new NumberFunction(
   'distance',
   [{ arityType: 'required' }, { arityType: 'variadic' }],
   (context, args) => {
-    const values = evaluateArgumentValues(context, args);
-    const lines = Geotrace.fromEncodedValues(values)?.lines;
+    const argValues = evaluateArgumentValues(context, args);
+    const values = argValues.filter((value) => value.trim() !== '');
+    if (values.length === 0) {
+      // no geo values given
+      return NaN;
+    }
+
+    const geotrace = Geotrace.fromEncodedValues(values);
+    const lines = geotrace?.lines;
 
     if (lines == null) {
-      throw new JRCompatibleGeoValueError('distance');
+      if (values.length === 1 && values[0]) {
+        // a single valid geopoint given
+        return NaN;
+      }
+      throw new Error(
+        "The function 'distance' received a value that does not represent GPS coordinates"
+      );
     }
 
     const distances = lines.map(geodesicDistance);
-
     return toAbsolutePrecision(sum(distances), PRECISION);
   }
 );
