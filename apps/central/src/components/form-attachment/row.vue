@@ -94,10 +94,6 @@ export default {
       default: false
     },
     dragoverAttachment: Object,
-    plannedUploads: {
-      type: Array,
-      required: true
-    },
     updatedAttachments: {
       type: Set,
       required: true
@@ -117,11 +113,8 @@ export default {
   },
   computed: {
     targeted() {
-      const targetedByDragover = this.dragoverAttachment != null &&
+      return this.dragoverAttachment != null &&
         this.attachment.name === this.dragoverAttachment.name;
-      const targetedByDrop = this.plannedUploads
-        .some(({ attachment }) => attachment.name === this.attachment.name);
-      return targetedByDragover || targetedByDrop;
     },
     htmlClass() {
       const dragoverTargetsADifferentRow = this.dragoverAttachment != null &&
