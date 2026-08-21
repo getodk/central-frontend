@@ -2807,27 +2807,19 @@
         "string": "Data error"
       }
     },
-    "EntityUploadDataTemplate": {
-      "text": {
-        "full": {
-          "string": "If you aren’t sure, you can {downloadTemplate}",
-          "developer_comment": "{downloadTemplate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDownload a data template (.csv)"
-        },
-        "downloadTemplate": {
-          "string": "Download a data template (.csv)",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {downloadTemplate} is in the following text:\n\nIf you aren’t sure, you can {downloadTemplate}"
-        }
-      }
-    },
     "EntityUploadFileSelect": {
       "text": {
         "full": {
-          "string": "Drag a .csv file here, or {chooseOne} to import.",
-          "developer_comment": "{chooseOne} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose one"
+          "string": "Drop a file here or {chooseOne} to import, or {downloadTemplate} if you aren’t sure",
+          "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {chooseOne} has the text: choose one\n- {downloadTemplate} has the text: download a data template (.csv)"
         },
         "chooseOne": {
           "string": "choose one",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseOne} is in the following text:\n\nDrag a .csv file here, or {chooseOne} to import."
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseOne} is in the following text:\n\nDrop a file here or {chooseOne} to import, or {downloadTemplate} if you aren’t sure"
+        },
+        "downloadTemplate": {
+          "string": "download a data template (.csv)",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {downloadTemplate} is in the following text:\n\nDrop a file here or {chooseOne} to import, or {downloadTemplate} if you aren’t sure"
         }
       },
       "parsing": {

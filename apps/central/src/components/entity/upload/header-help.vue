@@ -12,11 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="entity-upload-header-help"
     :class="{ panel: hasError, 'panel-danger': hasError }">
-    <div :class="{ 'panel-heading': hasError }">
-      <span>{{ $t('headersNote') }}</span>
-      <sentence-separator/>
-      <entity-upload-data-template :error="hasError"/>
-    </div>
+    <div :class="{ 'panel-heading': hasError }">{{ $t('headersNote') }}</div>
     <div v-if="hasError" class="panel-body">
       <entity-upload-header-errors v-bind="errors"/>
     </div>
@@ -26,9 +22,7 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 import { computed } from 'vue';
 
-import EntityUploadDataTemplate from './data-template.vue';
 import EntityUploadHeaderErrors from './header-errors.vue';
-import SentenceSeparator from '../../sentence-separator.vue';
 
 defineOptions({
   name: 'EntityUploadHeaderHelp'

@@ -23,6 +23,11 @@ except according to the terms contained in the LICENSE file.
             <span class="icon-folder-open"></span>{{ $t('text.chooseOne') }}
           </button>
         </template>
+        <template #downloadTemplate>
+          <entity-upload-data-template>
+            {{ $t('text.downloadTemplate') }}
+          </entity-upload-data-template>
+        </template>
       </i18n-t>
       <div v-show="parsing"><spinner inline/>{{ $t('parsing') }}</div>
     </div>
@@ -33,6 +38,7 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 import { ref } from 'vue';
 
+import EntityUploadDataTemplate from './data-template.vue';
 import FileDropZone from '../../file-drop-zone.vue';
 import Spinner from '../../spinner.vue';
 
@@ -87,8 +93,9 @@ const changeInput = (event) => {
 {
   "en": {
     "text": {
-      "full": "Drag a .csv file here, or {chooseOne} to import.",
-      "chooseOne": "choose one"
+      "full": "Drop a file here or {chooseOne} to import, or {downloadTemplate} if you aren’t sure",
+      "chooseOne": "choose one",
+      "downloadTemplate": "download a data template (.csv)"
     },
     "parsing": "Reading data…"
   }
