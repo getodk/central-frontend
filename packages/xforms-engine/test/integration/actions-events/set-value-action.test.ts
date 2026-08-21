@@ -5,9 +5,12 @@ import {
   head,
   html,
   input,
+  instance,
   mainInstance,
   model,
   repeat,
+  select1,
+  select1Dynamic,
   setvalue,
   setvalueLiteral,
   t,
@@ -607,6 +610,25 @@ describe('setvalue action', () => {
       expect(scenario.answerOf('/data/output')).toEqualAnswer(stringAnswer(''));
     });
 
+    it('binds invalid date to string field', async () => {
+      const scenario = await Scenario.init(
+        'Setvalue invalid date',
+        html(
+          head(
+            title('Setvalue invalid date'),
+            model(
+              mainInstance(t('data id="setvalue-invalid-date"', t('input'))),
+              bind('/data/input').type('string'),
+              setvalue('odk-instance-first-load', '/data/input', "'2026-13-15'")
+            )
+          ),
+          body(input('/data/input'))
+        )
+      );
+
+      expect(scenario.answerOf('/data/input')).toEqualAnswer(stringAnswer('2026-13-15'));
+    });
+
     it('odk-instance-first-load does not update on repeat add', async () => {
       const scenario = await Scenario.init(
         'Setvalue repeat',
@@ -1139,5 +1161,140 @@ describe('setvalue action', () => {
     scenario.createNewRepeat('/data/repeat');
     expect(scenario.answerOf('/data/repeat[1]/source').getValue()).toBe('first');
     expect(scenario.answerOf('/data/repeat[2]/source').getValue()).toBe('second');
+  });
+
+  describe('`xforms-value-changed` targeting a field with a dynamic `readonly` expression', () => {
+    it('sets the value of a field when its `readonly` expression is true', async () => {
+      const scenario = await Scenario.init(
+        'Setvalue dynamic readonly',
+        html(
+          head(
+            title('Setvalue dynamic readonly'),
+            model(
+              mainInstance(t('data id="setvalue-dynamic-readonly"', t('scope'), t('item'))),
+              instance(
+                'scope',
+                t('item', t('name', '2026_Apple'), t('label', '2026 Apple'), t('item', 'Apple')),
+                t('item', t('name', '2026_Banana'), t('label', '2026 Banana'), t('item', 'Banana')),
+                t('item', t('name', 'Other'), t('label', 'Other'))
+              ),
+              instance(
+                'item',
+                t('item', t('name', 'Apple'), t('label', 'Apple')),
+                t('item', t('name', 'Banana'), t('label', 'Banana')),
+                t('item', t('name', 'Cherry'), t('label', 'Cherry'))
+              ),
+              bind('/data/scope').type('string'),
+              bind('/data/item')
+                .type('string')
+                .relevant("/data/scope != ''")
+                .readonly("/data/scope != 'Other'")
+            )
+          ),
+          body(
+            select1(
+              '/data/scope',
+              t(
+                `itemset nodeset="instance('scope')/root/item"`,
+                t('value ref="name"'),
+                t('label ref="label"')
+              ),
+              setvalue(
+                'xforms-value-changed',
+                '/data/item',
+                "if(/data/scope != 'Other', instance('scope')/root/item[name = /data/scope]/item, '')"
+              )
+            ),
+            select1Dynamic('/data/item', "instance('item')/root/item", 'name', 'label')
+          )
+        )
+      );
+
+      // Selecting a scoped item prefills the followup question and locks it
+      scenario.answer('/data/scope', '2026_Apple');
+
+      expect(scenario.answerOf('/data/item').getValue()).toBe('Apple');
+      expect(scenario.getInstanceNode('/data/item')).toBeReadonly();
+
+      // Selecting 'Other' clears the followup question and unlocks it
+      scenario.answer('/data/scope', 'Other');
+
+      expect(scenario.answerOf('/data/item').getValue()).toBe('');
+      expect(scenario.getInstanceNode('/data/item')).toBeEnabled();
+    });
+
+    it('sets the value of a field when `readonly` expression evaluates to a non-empty string', async () => {
+      const scenario = await Scenario.init(
+        'Setvalue readonly string expression',
+        html(
+          head(
+            title('Setvalue readonly string expression'),
+            model(
+              mainInstance(t('data id="setvalue-readonly-string"', t('source'), t('destination'))),
+              bind('/data/destination')
+                .type('string')
+                .readonly("if(/data/source != 'other', 'yes', 'no')")
+            )
+          ),
+          body(
+            input(
+              '/data/source',
+              setvalue('xforms-value-changed', '/data/destination', "concat('set-', /data/source)")
+            ),
+            input('/data/destination')
+          )
+        )
+      );
+
+      scenario.answer('/data/source', 'other');
+
+      expect(scenario.answerOf('/data/destination').getValue()).toBe('set-other');
+      expect(scenario.getInstanceNode('/data/destination')).toBeReadonly();
+    });
+
+    it('rejects client writes while the field is `readonly` but allows setValue action', async () => {
+      const scenario = await Scenario.init(
+        'Setvalue readonly write permissions',
+        html(
+          head(
+            title('Setvalue readonly write permissions'),
+            model(
+              mainInstance(
+                t('data id="setvalue-readonly-writes"', t('lock'), t('source'), t('destination'))
+              ),
+              bind('/data/destination').type('int').readonly("/data/lock = 'yes'")
+            )
+          ),
+          body(
+            input('/data/lock'),
+            input(
+              '/data/source',
+              setvalue(
+                'xforms-value-changed',
+                '/data/destination',
+                'string-length(/data/source) * 2'
+              )
+            ),
+            input('/data/destination')
+          )
+        )
+      );
+
+      scenario.answer('/data/lock', 'yes');
+      expect(scenario.getInstanceNode('/data/destination')).toBeReadonly();
+
+      scenario.answer('/data/source', 'abc');
+      expect(scenario.answerOf('/data/destination')).toEqualAnswer(intAnswer(6));
+
+      expect(() => scenario.answer('/data/destination', 12)).toThrowError(
+        'Cannot write to readonly field: /data/destination'
+      );
+      expect(scenario.answerOf('/data/destination')).toEqualAnswer(intAnswer(6));
+
+      scenario.answer('/data/lock', 'no');
+      expect(scenario.getInstanceNode('/data/destination')).toBeEnabled();
+      scenario.answer('/data/destination', 12);
+      expect(scenario.answerOf('/data/destination')).toEqualAnswer(intAnswer(12));
+    });
   });
 });
