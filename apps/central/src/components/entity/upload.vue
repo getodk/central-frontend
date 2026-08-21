@@ -42,8 +42,6 @@ except according to the terms contained in the LICENSE file.
             <h1 class="panel-title">{{ $t('table.file') }}</h1>
           </div>
           <div class="panel-body">
-            <entity-upload-warnings v-if="dataWarnings != null && dataWarnings.count !== 0"
-              v-bind="dataWarnings.details" @rows="showWarningRows"/>
             <entity-upload-table :ref="setTable(1)" :entities="csvSlice"
               :row-index="csvRow" :page-size="csvPage.size"
               :highlighted="warningRows"/>
@@ -52,18 +50,18 @@ except according to the terms contained in the LICENSE file.
               :size-options="pageSizeOptions"/>
           </div>
         </div>
+        <entity-upload-warnings v-if="warnings != null" v-bind="warnings"
+          @rows="showWarningRows"/>
         <entity-upload-file-select v-show="csvEntities == null"
           :parsing="parsing" @change="selectFile">
           <entity-upload-header-help :errors="headerErrors"/>
           <entity-upload-data-error v-if="dataError != null"
             :message="dataError"/>
         </entity-upload-file-select>
-        <entity-upload-header-review v-if="headerWarnings != null"
-          v-bind="headerWarnings"/>
       </div>
       <entity-upload-popup v-if="csvEntities != null"
         :filename="fileMetadata.name" :count="csvEntities.length"
-        :warnings="dataWarnings.count" :awaiting-response="uploading"
+        :awaiting-response="uploading"
         :progress="uploadProgress" @clear="clearFile"
         @animationstart="animatePopup(true)"
         @animationend="animatePopup(false)"/>
@@ -88,7 +86,6 @@ import { useI18n } from 'vue-i18n';
 import EntityUploadDataError from './upload/data-error.vue';
 import EntityUploadFileSelect from './upload/file-select.vue';
 import EntityUploadHeaderHelp from './upload/header-help.vue';
-import EntityUploadHeaderReview from './upload/header-review.vue';
 import EntityUploadPopup from './upload/popup.vue';
 import EntityUploadTable from './upload/table.vue';
 import EntityUploadWarnings from './upload/warnings.vue';
@@ -181,9 +178,8 @@ const csvEntities = shallowRef(null);
 // Metadata about the CSV file
 const fileMetadata = shallowRef(null);
 const headerErrors = shallowRef(null);
-const headerWarnings = shallowRef(null);
+const warnings = shallowRef(null);
 const dataError = ref(null);
-const dataWarnings = shallowRef(null);
 const parsing = ref(false);
 // Function to abort parsing in progress
 let abortParse = noop;
@@ -191,7 +187,7 @@ let abortParse = noop;
 // warnings.
 const validateHeader = ({ columns, errors, meta }, file) => {
   const errorDetails = {};
-  const warnings = {};
+  const warningDetails = {};
 
   // If there are errors from Papa Parse, just surface those and don't check for
   // other errors. If there are errors from Papa, then there is something pretty
@@ -217,7 +213,7 @@ const validateHeader = ({ columns, errors, meta }, file) => {
       if (!columnSet.has(name)) missingProperties.push(name);
     }
     if (missingProperties.length !== 0)
-      warnings.missingProperties = missingProperties;
+      warningDetails.missingProperties = missingProperties;
 
     // Count of columns that are properties
     const columnProperties = dataset.properties.length - missingProperties.length;
@@ -234,7 +230,7 @@ const validateHeader = ({ columns, errors, meta }, file) => {
       ...errorDetails
     };
   }
-  if (Object.keys(warnings).length !== 0) result.warnings = warnings;
+  if (Object.keys(warningDetails).length !== 0) result.warnings = warningDetails;
   return result;
 };
 const { t } = useI18n();
@@ -296,8 +292,8 @@ const selectFile = (file) => {
         .then(results => {
           csvEntities.value = results.data;
           fileMetadata.value = { name: file.name, size: file.size };
-          headerWarnings.value = validation.warnings;
-          dataWarnings.value = results.warnings;
+          if (validation.warnings != null || results.warnings.count !== 0)
+            warnings.value = { ...validation.warnings, ...results.warnings.details };
         })
         .catch(error => {
           if (!signal.aborted) dataError.value = error.message;
@@ -313,8 +309,7 @@ const selectFile = (file) => {
 const clearFile = () => {
   csvEntities.value = null;
   fileMetadata.value = null;
-  headerWarnings.value = null;
-  dataWarnings.value = null;
+  warnings.value = null;
 };
 watch(() => props.state, (state) => {
   if (state) return;
@@ -322,9 +317,8 @@ watch(() => props.state, (state) => {
   csvEntities.value = null;
   fileMetadata.value = null;
   headerErrors.value = null;
-  headerWarnings.value = null;
+  warnings.value = null;
   dataError.value = null;
-  dataWarnings.value = null;
 });
 onBeforeUnmount(() => { abortParse(); });
 
@@ -455,6 +449,11 @@ watch(() => props.state, (state) => {
       border-bottom-right-radius: $panel-danger-border-radius;
     }
   }
+}
+
+.entity-upload-section-title {
+  font-size: 16px;
+  font-weight: bold;
 }
 </style>
 

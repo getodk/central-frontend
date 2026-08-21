@@ -5,7 +5,6 @@ import EntityFilters from '../../../src/components/entity/filters.vue';
 import EntityUpload from '../../../src/components/entity/upload.vue';
 import EntityUploadDataError from '../../../src/components/entity/upload/data-error.vue';
 import EntityUploadHeaderErrors from '../../../src/components/entity/upload/header-errors.vue';
-import EntityUploadHeaderReview from '../../../src/components/entity/upload/header-review.vue';
 import EntityUploadPopup from '../../../src/components/entity/upload/popup.vue';
 import EntityUploadTable from '../../../src/components/entity/upload/table.vue';
 import EntityUploadWarnings from '../../../src/components/entity/upload/warnings.vue';
@@ -221,11 +220,9 @@ describe('EntityUpload', () => {
       const modal = await showModal();
       const csv = createCSV('label,height\nx\ny\n"12345,67890",""');
       await selectFile(modal, csv);
-      modal.getComponent(EntityUploadWarnings).props().should.eql({
-        raggedRows: [[1, 2]],
-        largeCell: 3
-      });
-      modal.getComponent(EntityUploadPopup).props().warnings.should.equal(2);
+      const warnings = modal.getComponent(EntityUploadWarnings).props();
+      warnings.raggedRows.should.eql([[1, 2]]);
+      warnings.largeCell.should.equal(3);
     });
 
     it('does not show warnings if there is a data error', async () => {
@@ -287,16 +284,14 @@ describe('EntityUpload', () => {
     const modal = await showModal();
     await selectFile(modal, createCSV('label\nx\n"12345,67890"'));
 
-    const popup = modal.getComponent(EntityUploadPopup);
-    popup.props().warnings.should.equal(1);
+    const popup = modal.findComponent(EntityUploadPopup);
+    popup.exists().should.be.true;
     modal.findComponent(EntityUploadWarnings).exists().should.be.true;
-    modal.findComponent(EntityUploadHeaderReview).exists().should.be.true;
 
     await popup.get('.btn-link').trigger('click');
 
     modal.findComponent(EntityUploadPopup).exists().should.be.false;
     modal.findComponent(EntityUploadWarnings).exists().should.be.false;
-    modal.findComponent(EntityUploadHeaderReview).exists().should.be.false;
     modal.get('#entity-upload-file-select').should.be.visible();
     const button = modal.get('.modal-actions .btn-primary');
     button.attributes('aria-disabled').should.equal('true');
@@ -309,17 +304,14 @@ describe('EntityUpload', () => {
     const modal = await showModal();
     await selectFile(modal, createCSV('label\nx\n"12345,67890"'));
 
-    const popup = modal.getComponent(EntityUploadPopup);
-    popup.props().warnings.should.equal(1);
+    modal.findComponent(EntityUploadPopup).exists().should.be.true;
     modal.findComponent(EntityUploadWarnings).exists().should.be.true;
-    modal.findComponent(EntityUploadHeaderReview).exists().should.be.true;
 
     await modal.setProps({ state: false });
     await modal.setProps({ state: true });
 
     modal.findComponent(EntityUploadPopup).exists().should.be.false;
     modal.findComponent(EntityUploadWarnings).exists().should.be.false;
-    modal.findComponent(EntityUploadHeaderReview).exists().should.be.false;
     modal.get('#entity-upload-file-select').should.be.visible();
     const button = modal.get('.modal-actions .btn-primary');
     button.attributes('aria-disabled').should.equal('true');
@@ -472,8 +464,8 @@ describe('EntityUpload', () => {
         await selectFile(modal, createCSV('label,height\ndogwood,1'));
 
         // A warning is shown.
-        const review = modal.getComponent(EntityUploadHeaderReview);
-        review.props().missingProperties.should.eql(['circumference']);
+        const warnings = modal.getComponent(EntityUploadWarnings).props();
+        warnings.missingProperties.should.eql(['circumference']);
 
         return modal.get('.modal-actions .btn-primary').trigger('click');
       })

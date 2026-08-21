@@ -1,3 +1,5 @@
+import { nextTick } from 'vue';
+
 import EntityUploadWarning from '../../../../src/components/entity/upload/warning.vue';
 import EntityUploadWarnings from '../../../../src/components/entity/upload/warnings.vue';
 
@@ -6,6 +8,19 @@ import { mount } from '../../../util/lifecycle';
 const mountComponent = (options) => mount(EntityUploadWarnings, options);
 
 describe('EntityUploadWarnings', () => {
+  it('shows missing properties', async () => {
+    const component = mountComponent({
+      props: { missingProperties: ['foo', 'bar'] }
+    });
+    // Wait for I18nList to render.
+    await nextTick();
+
+    const p = component.getComponent(EntityUploadWarning).findAll('p');
+    p.length.should.equal(2);
+    p[0].text().should.startWith('These properties are not included in your file');
+    p[1].text().should.equal('foo, bar');
+  });
+
   it('shows a warning for ragged rows', () => {
     const component = mountComponent({
       props: { raggedRows: [[1, 2]] }
@@ -30,9 +45,9 @@ describe('EntityUploadWarnings', () => {
     });
     const warnings = component.findAllComponents(EntityUploadWarning);
     warnings.length.should.equal(2);
-    const text = warnings.map(warning => warning.text());
-    text[0].should.include('Fewer columns were found than expected');
-    text[1].should.include('Some cells are abnormally large');
+    const titles = warnings.map(warning => warning.get('p').text());
+    titles[0].should.startWith('Fewer columns were found than expected');
+    titles[1].should.startWith('Some cells are abnormally large');
   });
 
   it('emits a rows event after a row range is clicked', async () => {

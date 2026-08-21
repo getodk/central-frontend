@@ -4,7 +4,7 @@ import { mergeMountOptions, mount } from '../../../util/lifecycle';
 
 const mountComponent = (options = undefined) =>
   mount(EntityUploadPopup, mergeMountOptions(options, {
-    props: { filename: 'my_data.csv', count: 1, warnings: 0, progress: 0 }
+    props: { filename: 'my_data.csv', count: 1, progress: 0 }
   }));
 
 describe('EntityUploadPopup', () => {
@@ -28,27 +28,11 @@ describe('EntityUploadPopup', () => {
     text.should.equal('1,000 data rows found');
   });
 
-  describe('warnings', () => {
-    it('shows the count of warnings', () => {
-      const component = mountComponent({
-        props: { warnings: 5 }
-      });
-      const warnings = component.get('#entity-upload-popup-warnings');
-      warnings.should.be.visible();
-      warnings.text().should.equal('5 warnings');
-    });
-
-    it('does not show the count if it is 0', () => {
-      mountComponent().get('#entity-upload-popup-warnings').should.be.hidden();
-    });
-  });
-
   it('hides elements during a request', () => {
     const component = mountComponent({
-      props: { warnings: 1, awaitingResponse: true }
+      props: { awaitingResponse: true }
     });
     component.get('.btn-link').should.be.hidden();
-    component.get('#entity-upload-popup-warnings').should.be.hidden();
   });
 
   describe('request status', () => {
