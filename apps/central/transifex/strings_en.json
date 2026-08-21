@@ -2582,6 +2582,14 @@
         "string": "There are no Entities yet."
       }
     },
+    "EntityFiltersViewAs": {
+      "noUserSelected": {
+        "string": "Me"
+      },
+      "viewAs": {
+        "string": "Viewing As"
+      }
+    },
     "EntityList": {
       "noEntities": {
         "string": "There are no Entities to show.",
