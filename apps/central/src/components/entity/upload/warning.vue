@@ -11,18 +11,20 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div class="entity-upload-warning">
-    <span class="label label-warning">
-      <span class="icon-warning"></span>{{ $t('common.warning') }}
-    </span>
-    <slot></slot>
-    <template v-if="ranges != null">
-      <span>&nbsp;</span>
-      <i18n-list v-slot="{ value: [start, end] }" :list="ranges">
-        <a href="#" @click.prevent="$emit('rows', [start - 1, end - 1])">
-          {{ formatRange(start, end) }}
-        </a>
-      </i18n-list>
-    </template>
+    <p>
+      <span class="icon-warning"></span>
+      <slot name="title"></slot>
+      <template v-if="ranges != null">
+        <span>&nbsp;</span>
+        <i18n-list v-slot="{ value: [start, end] }" :list="ranges"
+          class="entity-upload-warning-ranges">
+          <a href="#" @click.prevent="$emit('rows', [start - 1, end - 1])">
+            {{ formatRange(start, end) }}
+          </a>
+        </i18n-list>
+      </template>
+    </p>
+    <slot name="body"></slot>
   </div>
 </template>
 
@@ -46,32 +48,24 @@ const { formatRange } = useI18nUtils();
 @import '../../../assets/scss/mixins';
 
 .entity-upload-warning {
-  @include text-overflow-ellipsis;
-  background-color: #fff;
-  font-weight: bold;
-  padding: 9px 3px;
+  background-color: $color-warning-light;
+  border-radius: 12px;
+  padding: 10px 15px;
 
-  .label {
-    font-size: inherit;
-    margin-right: 10px;
-    padding: 7px 5px;
+  // Title
+  > :first-child {
+    @include line-clamp(2);
+    color: $color-warning-dark;
+    margin-bottom: 10px;
+
+    // Icon
+    > :first-child { margin-right: $margin-right-icon; }
   }
 
-  .i18n-list {
-    font-weight: normal;
-    margin-left: 3px;
-  }
+  + .entity-upload-warning { margin-top: 5px; }
+}
 
-  + .entity-upload-warning { margin-top: 2px; }
-
-  $border-radius: 5px;
-  &:first-child {
-    border-top-left-radius: $border-radius;
-    border-top-right-radius: $border-radius;
-  }
-  &:last-child {
-    border-bottom-left-radius: $border-radius;
-    border-bottom-right-radius: $border-radius;
-  }
+.entity-upload-warning-ranges {
+  margin-left: 3px;
 }
 </style>
