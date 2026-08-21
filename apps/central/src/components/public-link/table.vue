@@ -10,8 +10,14 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <table-freeze id="public-link-table" :data="publicLinks.data" key-prop="id"
-    :frozen-only="actorProperties.length === 0" :divider="actorProperties.length > 0">
+  <div>
+    <div v-if="actorProperties.length > 0" id="public-link-filter-bar">
+      <custom-props-filter v-model="filter"
+        :actor-properties="actorProperties.data"
+        :actors="publicLinks.data"/>
+    </div>
+    <table-freeze id="public-link-table" :data="filteredPublicLinks" key-prop="id"
+      :frozen-only="actorProperties.length === 0" :divider="actorProperties.length > 0">
     <template #head-frozen>
       <th>{{ $t('header.displayName') }}</th>
       <th>{{ $t('header.once') }}</th>
@@ -34,10 +40,18 @@ except according to the terms contained in the LICENSE file.
         :properties="actorProperties"/>
     </template>
   </table-freeze>
+  <p v-if="filter != null && filteredPublicLinks.length === 0"
+    class="empty-table-message">
+    {{ $t('noFilterResults') }}
+  </p>
+  </div>
 </template>
 
 <script setup>
+import { computed, ref } from 'vue';
+
 import TableFreeze from '../table/freeze.vue';
+import CustomPropsFilter from '../custom-props-filter.vue';
 import PublicLinkRow from './row.vue';
 import CustomPropsDataRow from '../custom-props-data-row.vue';
 
@@ -52,10 +66,24 @@ defineProps({
 defineEmits(['revoke', 'edit']);
 
 const { publicLinks, actorProperties } = useRequestData();
+
+const filter = ref(null);
+
+const filteredPublicLinks = computed(() => {
+  if (!publicLinks.dataExists) return [];
+  if (filter.value == null) return publicLinks.data;
+  return publicLinks.data.filter(
+    pl => pl.properties?.[filter.value.property] === filter.value.value
+  );
+});
 </script>
 
 <style lang="scss">
 @import '../../assets/scss/mixins';
+
+#public-link-filter-bar {
+  margin-left: 10px;
+}
 
 #public-link-table {
   .table-freeze-scrolling {
@@ -80,6 +108,7 @@ const { publicLinks, actorProperties } = useRequestData();
 <i18n lang="json5">
 {
   "en": {
+    "noFilterResults": "No Public Access Links match the current filter.",
     "header": {
       "once": "Single Submission",
       "accessLink": "Access Link",

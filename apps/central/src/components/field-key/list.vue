@@ -30,7 +30,12 @@ except according to the terms contained in the LICENSE file.
         </template>
       </i18n-t>
     </div>
-    <table-freeze v-if="dataExists" id="field-key-list-table" :data="fieldKeys.data" key-prop="id"
+    <div v-if="dataExists && actorProperties.length > 0" id="field-key-filter-bar">
+      <custom-props-filter v-model="filter"
+        :actor-properties="actorProperties.data"
+        :actors="fieldKeys.data"/>
+    </div>
+    <table-freeze v-if="dataExists" id="field-key-list-table" :data="filteredFieldKeys" key-prop="id"
       :frozen-only="actorProperties.length === 0" :divider="actorProperties.length > 0">
       <template #head-frozen>
         <th>{{ $t('header.displayName') }}</th>
@@ -57,9 +62,9 @@ except according to the terms contained in the LICENSE file.
       </template>
     </table-freeze>
     <loading :state="initiallyLoading"/>
-    <p v-if="dataExists && fieldKeys.length === 0"
+    <p v-if="dataExists && filteredFieldKeys.length === 0"
       class="empty-table-message">
-      {{ $t('emptyTable') }}
+      {{ filter != null ? $t('noFilterResults') : $t('emptyTable') }}
     </p>
 
     <popover ref="popover" :target="popover.target" placement="right"
@@ -85,6 +90,7 @@ import TableFreeze from '../table/freeze.vue';
 import FieldKeyQrPanel from './qr-panel.vue';
 import FieldKeyRow from './row.vue';
 import CustomPropsDataRow from '../custom-props-data-row.vue';
+import CustomPropsFilter from '../custom-props-filter.vue';
 import FieldKeyEdit from './edit.vue';
 import FieldKeyNew from './new.vue';
 import FieldKeyRevoke from './revoke.vue';
@@ -104,6 +110,7 @@ export default {
     FieldKeyQrPanel,
     FieldKeyRow,
     CustomPropsDataRow,
+    CustomPropsFilter,
     FieldKeyEdit,
     FieldKeyNew,
     FieldKeyRevoke,
@@ -130,6 +137,8 @@ export default {
     return {
       // The id of the highlighted app user
       highlighted: null,
+      // Active property filter: null | { property: string, value: string }
+      filter: null,
       // `true` to show a managed QR code; `false` to show a legacy QR code.
       managed: true,
       popover: {
@@ -142,6 +151,15 @@ export default {
       submissionOptions: modalData(),
       revokeModal: modalData()
     };
+  },
+  computed: {
+    filteredFieldKeys() {
+      if (!this.fieldKeys.dataExists) return [];
+      if (this.filter == null) return this.fieldKeys.data;
+      return this.fieldKeys.data.filter(
+        fk => fk.properties?.[this.filter.property] === this.filter.value
+      );
+    }
   },
   created() {
     this.$emit('fetch-actor-properties');
@@ -208,6 +226,10 @@ export default {
 <style lang="scss">
 @import '../../assets/scss/mixins';
 
+#field-key-filter-bar {
+  margin-left: 10px;
+}
+
 #field-key-list-table {
   .table-freeze-scrolling {
     th, td {
@@ -246,6 +268,7 @@ export default {
       "configureClient": "Configure Client"
     },
     "emptyTable": "There are no App Users yet. You will need to create some to download Forms and submit data from your device.",
+    "noFilterResults": "No App Users match the current filter.",
     "alert": {
       "create": "The App User “{displayName}” was created successfully.",
       "edit": "The App User “{displayName}” was updated successfully.",
