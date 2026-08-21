@@ -51,10 +51,10 @@ export type RootNodeStateNavigationKey =
   | 'navigationTarget';
 
 export type RootNodeNavigationKey =
-  | 'setCurrentPage'
+  | 'navigateToFirstViolation'
   | 'nextPage'
   | 'previousPage'
-  | 'navigateToFirstViolation';
+  | 'setCurrentPage';
 
 export interface RootNode extends BaseNode {
   readonly nodeType: 'root';

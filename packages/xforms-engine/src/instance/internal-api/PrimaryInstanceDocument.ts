@@ -10,7 +10,7 @@ export interface PrimaryInstanceDocumentState extends Omit<
   RootNodeState,
   // `children` is overridden below with `RootNode`, which is not presently considered a child
   // node in the client API; pagination and navigation state exist only on the Root node.
-  'children' | RootNodeStateNavigationKey
+  RootNodeStateNavigationKey | 'children'
 > {
   /**
    * @todo while this is an internal interface, this feels like maybe an

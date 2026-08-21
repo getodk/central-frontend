@@ -34,7 +34,10 @@ describe('findFirstVisibleControl', () => {
     return html(
       head(
         title('findFirstVisibleControl'),
-        model(mainInstance(t('data id="find-first-visible-control"', ...instanceChildren)), ...binds)
+        model(
+          mainInstance(t('data id="find-first-visible-control"', ...instanceChildren)),
+          ...binds
+        )
       ),
       body(...bodyChildren)
     );
@@ -52,10 +55,7 @@ describe('findFirstVisibleControl', () => {
     const root = await initForm(
       buildForm(
         [t('toggle', 'no'), t('g', t('q1'), t('q2'))],
-        [
-          input('/data/toggle'),
-          group('/data/g', input('/data/g/q1'), input('/data/g/q2')),
-        ],
+        [input('/data/toggle'), group('/data/g', input('/data/g/q1'), input('/data/g/q2'))],
         [
           bind('/data/toggle').type('string'),
           bind('/data/g/q1').type('string').relevant("/data/toggle = 'yes'"),
@@ -80,10 +80,7 @@ describe('findFirstVisibleControl', () => {
           input('/data/q3'),
           input('/data/toggle'),
         ],
-        [
-          bind('/data/toggle').type('string'),
-          bind('/data/g').relevant("/data/toggle = 'yes'"),
-        ]
+        [bind('/data/toggle').type('string'), bind('/data/g').relevant("/data/toggle = 'yes'")]
       )
     );
 
@@ -140,10 +137,7 @@ describe('findFirstVisibleControl', () => {
       buildForm(
         [t('toggle', 'no'), t('g', t('q1'))],
         [input('/data/toggle'), group('/data/g', input('/data/g/q1'))],
-        [
-          bind('/data/toggle').type('string'),
-          bind('/data/g').relevant("/data/toggle = 'yes'"),
-        ]
+        [bind('/data/toggle').type('string'), bind('/data/g').relevant("/data/toggle = 'yes'")]
       )
     );
 

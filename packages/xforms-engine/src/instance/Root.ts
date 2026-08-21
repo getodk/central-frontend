@@ -40,6 +40,7 @@ import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { ClientReactiveSerializableParentNode } from './internal-api/serialization/ClientReactiveSerializableParentNode.ts';
 import type { TranslationContext } from './internal-api/TranslationContext.ts';
 import { createNodeNavigation, type NodeNavigation } from './navigation/createNodeNavigation.ts';
+import { findFirstVisibleControl } from './navigation/findFirstVisibleControl.ts';
 import { createPageNavigation, type PageNavigation } from './pagination/createPageNavigation.ts';
 import type { Page } from './pagination/pageSequence.ts';
 import { Pagination } from './pagination/Pagination.ts';
@@ -177,6 +178,18 @@ export class Root
     this.validationState = createAggregatedViolations(this, this.instanceConfig);
     this.instanceState = createRootInstanceState(this);
     this.pageNavigation.initPagination();
+
+    // Paginated forms get their opening target from the first-page landing above.
+    if (!this.isPaginated) {
+      this.navigateToFirstControl();
+    }
+  }
+
+  private navigateToFirstControl() {
+    const target = findFirstVisibleControl(this);
+    if (target != null) {
+      this.setNavigationTarget(target.nodeId);
+    }
   }
 
   setCurrentPage(page: PageBoundary): PageBoundary | null {
