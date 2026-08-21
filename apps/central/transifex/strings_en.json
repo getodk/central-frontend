@@ -5611,6 +5611,9 @@
         "string": "Only the owner of the account may directly set their own password."
       },
       "alert": {
+        "includedInBreach": {
+          "string": "This password has previously been included in a breach."
+        },
         "mismatch": {
           "string": "Please check that your new passwords match."
         },

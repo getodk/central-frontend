@@ -24,7 +24,22 @@ except according to the terms contained in the LICENSE file.
           autocomplete="current-password"/>
         <form-group id="user-edit-password-new-password" v-model="newPassword"
           type="password" :placeholder="$t('field.newPassword')" required
-          :has-error="tooShort || mismatch" autocomplete="new-password"/>
+          :has-error="tooShort || mismatch || pwned" autocomplete="new-password">
+          <template #after>
+            <transition name="collapse">
+              <div v-if="pwned" class="collapsible-error">
+                <div class="collapsible-inner">
+                  <p>{{ $t('alert.includedInBreach') }}</p>
+                  <i18n-t keypath="moreInfo.clickHere.full">
+                    <template #clickHere>
+                      <a href="https://haveibeenpwned.com/Passwords" target="_blank" rel="noopener noreferrer">{{ $t('moreInfo.clickHere.clickHere') }}</a>
+                    </template>
+                  </i18n-t>
+                </div>
+              </div>
+            </transition>
+          </template>
+        </form-group>
         <form-group id="user-edit-password-confirm" v-model="confirm"
           type="password" :placeholder="$t('field.passwordConfirm')" required
           :has-error="mismatch" autocomplete="new-password"/>
@@ -46,6 +61,7 @@ import useRequest from '../../../composables/request';
 import { apiPaths } from '../../../util/request';
 import { noop } from '../../../util/util';
 import { useRequestData } from '../../../request-data';
+import { checkPasswordPwnage } from '../../../util/password';
 
 export default {
   name: 'UserEditPassword',
@@ -62,15 +78,22 @@ export default {
       newPassword: '',
       tooShort: false,
       confirm: '',
-      mismatch: false
+      mismatch: false,
+      pwned: false,
     };
+  },
+  watch: {
+    newPassword() {
+      this.pwned = false;
+    },
   },
   methods: {
     validate() {
       this.tooShort = false;
       this.mismatch = false;
+      this.pwned = false;
 
-      if (this.newPassword.length < 10) {
+      if (this.newPassword.length < 1) {
         this.alert.danger(this.$t('alert.passwordTooShort'));
         this.tooShort = true;
         return false;
@@ -86,26 +109,47 @@ export default {
     },
     submit() {
       if (!this.validate()) return;
-      const data = { old: this.oldPassword, new: this.newPassword };
-      this.request({
-        method: 'PUT',
-        url: apiPaths.password(this.user.id),
-        data
-      })
-        .then(() => {
-          this.alert.success(this.$t('alert.success'));
 
-          // The Chrome password manager does not realize that the form was
-          // submitted. Should we navigate to a different page so that it does?
-        })
-        .catch(noop);
+      (async () => {
+        const isPwned = await checkPasswordPwnage(this.request, this.newPassword);
+        if (isPwned) {
+          this.pwned = true;
+        } else {
+          const data = { old: this.oldPassword, new: this.newPassword };
+          this.request({
+            method: 'PUT',
+            url: apiPaths.password(this.user.id),
+            data
+          })
+            .then(() => {
+              this.alert.success(this.$t('alert.success'));
+
+              // The Chrome password manager does not realize that the form was
+              // submitted. Should we navigate to a different page so that it does?
+            })
+            .catch(noop);
+        }
+      })();
     }
   }
 };
 </script>
 
 <style lang="scss">
+@import '../../../assets/scss/variables';
+
 #user-edit-password input[autocomplete="username"] { display: none; }
+.collapsible-error {
+  display: grid;
+  grid-template-rows: 1fr;
+  color: $color-danger;
+  font-size: 11px;
+  margin: 25px 12px -25px;
+
+  .collapsible-inner { overflow:hidden }
+}
+.collapse-enter-active, .collapse-leave-active { transition:grid-template-rows 0.3s ease, opacity 0.3s ease }
+.collapse-enter-from,   .collapse-leave-to { grid-template-rows:0fr; opacity:0 }
 </style>
 
 <i18n lang="json5">
@@ -119,6 +163,7 @@ export default {
     },
     "cannotChange": "Only the owner of the account may directly set their own password.",
     "alert": {
+      "includedInBreach": "This password has previously been included in a breach.",
       "mismatch": "Please check that your new passwords match.",
       "success": "Success! Your password has been updated."
     }
