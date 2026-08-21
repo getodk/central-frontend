@@ -13,22 +13,21 @@ except according to the terms contained in the LICENSE file.
   <file-drop-zone id="entity-upload-file-select" :disabled="parsing"
     @drop="$emit('change', $event.dataTransfer.files[0])">
     <div id="entity-upload-file-select-heading">
-      <i18n-t tag="div" keypath="text.full">
-        <template #chooseOne>
-          <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
-          <input v-show="false" ref="input" type="file" accept=".csv,.tsv"
-            @change="changeInput">
-          <button type="button" class="btn btn-primary" :aria-disabled="parsing"
-            @click="input.click()">
-            <span class="icon-folder-open"></span>{{ $t('text.chooseOne') }}
-          </button>
-        </template>
-        <template #downloadTemplate>
-          <entity-upload-data-template>
-            {{ $t('text.downloadTemplate') }}
-          </entity-upload-data-template>
-        </template>
-      </i18n-t>
+      <div>
+        <i18n-t keypath="text.full">
+          <template #chooseFile>
+            <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
+            <input v-show="false" ref="input" type="file" accept=".csv,.tsv"
+              @change="changeInput">
+            <button type="button" class="btn btn-primary" :aria-disabled="parsing"
+              @click="input.click()">
+              {{ $t('text.chooseFile') }}
+            </button>
+          </template>
+        </i18n-t>
+        <sentence-separator/>
+        <entity-upload-data-template/>
+      </div>
       <div v-show="parsing"><spinner inline/>{{ $t('parsing') }}</div>
     </div>
     <slot></slot>
@@ -40,6 +39,7 @@ import { ref } from 'vue';
 
 import EntityUploadDataTemplate from './data-template.vue';
 import FileDropZone from '../../file-drop-zone.vue';
+import SentenceSeparator from '../../sentence-separator.vue';
 import Spinner from '../../spinner.vue';
 
 defineOptions({
@@ -93,9 +93,8 @@ const changeInput = (event) => {
 {
   "en": {
     "text": {
-      "full": "Drop a file here or {chooseOne} to import, or {downloadTemplate} if you aren’t sure",
-      "chooseOne": "choose one",
-      "downloadTemplate": "download a data template (.csv)"
+      "full": "Drag and drop a .csv file here, or {chooseFile}",
+      "chooseFile": "choose a file"
     },
     "parsing": "Reading data…"
   }
