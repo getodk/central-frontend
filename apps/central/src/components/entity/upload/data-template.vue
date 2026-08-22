@@ -12,10 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <i18n-t tag="span" keypath="text.full">
     <template #downloadTemplate>
-      <a class="btn" :class="error ? 'btn-danger' : 'btn-default'" :href="href"
-        @click="setFilename">
-        <span class="icon-download"></span>{{ $t('text.downloadTemplate') }}
-      </a>
+      <a :href="href" @click="setFilename">{{ $t('text.downloadTemplate') }}</a>
     </template>
   </i18n-t>
 </template>
@@ -29,15 +26,13 @@ import { useRequestData } from '../../../request-data';
 defineOptions({
   name: 'EntityUploadDataTemplate'
 });
-defineProps({
-  error: Boolean
-});
 
-// The component assumes that this data will exist when the component is
+// The component does not assume that this data will exist when the component is
 // created.
 const { dataset } = useRequestData();
 
 const href = computed(() => {
+  if (!dataset.dataExists) return '#';
   const headers = dataset.properties.map(({ name }) => name);
   headers.unshift('label');
   const csv = headers.join(',');
@@ -54,8 +49,8 @@ const setFilename = (event) => {
 {
   "en": {
     "text": {
-      "full": "If you aren’t sure, you can {downloadTemplate}",
-      "downloadTemplate": "Download a data template (.csv)"
+      "full": "Need a starting point? {downloadTemplate}.",
+      "downloadTemplate": "Download a CSV template"
     }
   }
 }

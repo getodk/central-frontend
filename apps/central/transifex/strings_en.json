@@ -2810,24 +2810,24 @@
     "EntityUploadDataTemplate": {
       "text": {
         "full": {
-          "string": "If you aren’t sure, you can {downloadTemplate}",
-          "developer_comment": "{downloadTemplate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDownload a data template (.csv)"
+          "string": "Need a starting point? {downloadTemplate}.",
+          "developer_comment": "{downloadTemplate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDownload a CSV template"
         },
         "downloadTemplate": {
-          "string": "Download a data template (.csv)",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {downloadTemplate} is in the following text:\n\nIf you aren’t sure, you can {downloadTemplate}"
+          "string": "Download a CSV template",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {downloadTemplate} is in the following text:\n\nNeed a starting point? {downloadTemplate}."
         }
       }
     },
     "EntityUploadFileSelect": {
       "text": {
         "full": {
-          "string": "Drag a .csv file here, or {chooseOne} to import.",
-          "developer_comment": "{chooseOne} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose one"
+          "string": "Drag and drop a .csv file here, or {chooseFile}",
+          "developer_comment": "{chooseFile} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose a file"
         },
-        "chooseOne": {
-          "string": "choose one",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseOne} is in the following text:\n\nDrag a .csv file here, or {chooseOne} to import."
+        "chooseFile": {
+          "string": "choose a file",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseFile} is in the following text:\n\nDrag and drop a .csv file here, or {chooseFile}"
         }
       },
       "parsing": {
