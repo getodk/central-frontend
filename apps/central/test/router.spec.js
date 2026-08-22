@@ -26,6 +26,20 @@ describe('createCentralRouter()', () => {
           app.findComponent(NotFound).exists().should.be.true;
         });
     });
+
+    it('does not match on a trailing slash', () => {
+      mockLogin();
+      return load('/account/edit')
+        .afterResponses(app => {
+          app.findComponent(NotFound).exists().should.be.false;
+        })
+        .load('/')
+        .complete()
+        .load('/account/edit/')
+        .afterResponses(app => {
+          app.findComponent(NotFound).exists().should.be.true;
+        });
+    });
   });
 
   describe('i18n', () => {
@@ -152,6 +166,18 @@ describe('createCentralRouter()', () => {
         .respondForComponent('FormSubmissions')
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/projects/1/forms/f/submissions');
+        });
+    });
+
+    // getodk/central#1697
+    it('does not redirect to .../submissions if there is a trailing slash', () => {
+      testData.extendedForms.createPast(1);
+      return load('/projects/1/forms/f/settings')
+        .complete()
+        .route('/projects/1/forms/f/')
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/projects/1/forms/f/');
+          app.findComponent(NotFound).exists().should.be.true;
         });
     });
 
