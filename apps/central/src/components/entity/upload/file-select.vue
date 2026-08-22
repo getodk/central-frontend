@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
             <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
             <input v-show="false" ref="input" type="file" accept=".csv,.tsv"
               @change="changeInput">
-            <button type="button" class="btn btn-primary" :aria-disabled="parsing"
+            <button type="button" class="btn btn-outlined" :aria-disabled="parsing"
               @click="input.click()">
               {{ $t('text.chooseFile') }}
             </button>
