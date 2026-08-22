@@ -26,20 +26,6 @@ describe('createCentralRouter()', () => {
           app.findComponent(NotFound).exists().should.be.true;
         });
     });
-
-    it('does not match on a trailing slash', () => {
-      mockLogin();
-      return load('/account/edit')
-        .afterResponses(app => {
-          app.findComponent(NotFound).exists().should.be.false;
-        })
-        .load('/')
-        .complete()
-        .load('/account/edit/')
-        .afterResponses(app => {
-          app.findComponent(NotFound).exists().should.be.true;
-        });
-    });
   });
 
   describe('i18n', () => {

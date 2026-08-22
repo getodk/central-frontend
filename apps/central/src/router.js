@@ -32,8 +32,7 @@ export default (container, {
     history,
     routes,
     scrollBehavior,
-    sensitive: true,
-    strict: true
+    sensitive: true
   });
   const { requestData, toast, redAlert, unsavedChanges, config } = container;
   const { session } = requestData;
