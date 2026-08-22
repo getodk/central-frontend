@@ -139,12 +139,10 @@ describe('createCentralRouter()', () => {
         app.vm.$route.path.should.equal('/audits');
       });
 
-      it('redirects to / if there are multiple trailing slashes', () =>
-        load('/account/edit//')
-          .respondFor('/')
-          .afterResponses(app => {
-            app.vm.$route.path.should.equal('/');
-          }));
+      it('renders NotFound if there are multiple trailing slashes', async () => {
+        const app = await load('/account/edit//');
+        app.findComponent(NotFound).exists().should.be.true;
+      });
     });
 
     it('redirects to .../submissions from root path of form', async () => {

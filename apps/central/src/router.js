@@ -67,10 +67,13 @@ router.afterEach(unlessFailure(to => {
 
   // Remove any trailing slash from the path.
   router.beforeEach(to => {
-    if (to.path.endsWith('//')) // Not a valid Frontend URL
-      return '/';
+    // Two trailing slashes won't match any route, so return `true` to proceed
+    // to NotFound.
+    if (to.path.endsWith('//')) return true;
+
     if (to.path.endsWith('/') && to.path !== '/')
       return { path: to.path.slice(0, -1), query: to.query, hash: to.hash };
+
     return true;
   });
 
