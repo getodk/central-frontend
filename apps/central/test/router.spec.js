@@ -128,6 +128,25 @@ describe('createCentralRouter()', () => {
           app.vm.$route.path.should.equal('/');
         }));
 
+    describe('trailing slash', () => {
+      it('removes a trailing slash', async () => {
+        const app = await load('/account/edit/');
+        app.vm.$route.path.should.equal('/account/edit');
+      });
+
+      it('removes the slash when there is a querystring', async () => {
+        const app = await load('/audits?action=project.create');
+        app.vm.$route.path.should.equal('/audits');
+      });
+
+      it('redirects to / if there are multiple trailing slashes', () =>
+        load('/account/edit//')
+          .respondFor('/')
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/');
+          }));
+    });
+
     it('redirects to .../submissions from root path of form', async () => {
       testData.extendedForms.createPast(1);
       return load('/projects/1/forms/f/settings')
@@ -136,6 +155,19 @@ describe('createCentralRouter()', () => {
         .respondForComponent('FormSubmissions')
         .afterResponses(app => {
           app.vm.$route.path.should.equal('/projects/1/forms/f/submissions');
+        });
+    });
+
+    // getodk/central#1697
+    it('redirects to .../submissions despite a trailing slash', () => {
+      testData.extendedForms.createPast(1);
+      return load('/projects/1/forms/f/settings')
+        .complete()
+        .route('/projects/1/forms/f/')
+        .respondForComponent('FormSubmissions')
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/projects/1/forms/f/submissions');
+          app.findComponent(NotFound).exists().should.be.false;
         });
     });
 
