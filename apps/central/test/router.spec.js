@@ -135,8 +135,8 @@ describe('createCentralRouter()', () => {
       });
 
       it('removes the slash when there is a querystring', async () => {
-        const app = await load('/audits/?action=project.create');
-        app.vm.$route.path.should.equal('/audits');
+        const app = await load('/audits/?action=project.create#foo');
+        app.vm.$route.fullPath.should.equal('/audits?action=project.create#foo');
       });
 
       it('renders NotFound if there are multiple trailing slashes', async () => {
