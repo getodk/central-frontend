@@ -135,7 +135,7 @@ describe('createCentralRouter()', () => {
       });
 
       it('removes the slash when there is a querystring', async () => {
-        const app = await load('/audits?action=project.create');
+        const app = await load('/audits/?action=project.create');
         app.vm.$route.path.should.equal('/audits');
       });
 
