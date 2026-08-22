@@ -65,7 +65,7 @@ router.afterEach(unlessFailure(to => {
   // user is trying to navigate to a parent route, which isn't expected.
   router.beforeEach(to => (Object.keys(to.meta).length === 0 ? '/' : true));
 
-  // Trim trailing slashes from the path.
+  // Remove any trailing slash from the path.
   router.beforeEach(to => {
     if (to.path.endsWith('//')) // Not a valid Frontend URL
       return '/';
