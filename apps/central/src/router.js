@@ -70,7 +70,7 @@ router.afterEach(unlessFailure(to => {
     if (to.path.endsWith('//')) // Not a valid Frontend URL
       return '/';
     if (to.path.endsWith('/') && to.path !== '/')
-      return { path: to.path.slice(0, -1), query: to.query };
+      return { path: to.path.slice(0, -1), query: to.query, hash: to.hash };
     return true;
   });
 
