@@ -2,4 +2,4 @@
 "@getodk/central-frontend": minor
 ---
 
-Trim trailing slash from route (getodk/central#1697)
+Remove trailing slash from routes (getodk/central#1697)
