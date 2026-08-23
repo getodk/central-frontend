@@ -154,8 +154,6 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    // This is shown at the top of the page.
-    "back": "Back to Project Entities",
     "infoNav": {
       // This dropdown title refers to Entity Lists that are updated by a Form.
       "connectedForms": "Updated by {count} Form | Updated by {count} Forms",
