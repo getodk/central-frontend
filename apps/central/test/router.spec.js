@@ -153,28 +153,20 @@ describe('createCentralRouter()', () => {
       });
     });
 
-    it('redirects to .../submissions from root path of form', async () => {
-      testData.extendedForms.createPast(1);
-      return load('/projects/1/forms/f/settings')
-        .complete()
-        .route('/projects/1/forms/f')
-        .respondForComponent('FormSubmissions')
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/projects/1/forms/f/submissions');
-        });
-    });
-
-    // getodk/central#1697
-    it('redirects to .../submissions despite a trailing slash', () => {
-      testData.extendedForms.createPast(1);
-      return load('/projects/1/forms/f/settings')
-        .complete()
-        .route('/projects/1/forms/f/')
-        .respondForComponent('FormSubmissions')
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/projects/1/forms/f/submissions');
-          app.findComponent(NotFound).exists().should.be.false;
-        });
+    [
+      '/projects/1/forms/f',
+      '/projects/1/forms/f/' // getodk/central#1697
+    ].forEach(rootPath => {
+      it(`redirects to .../submissions from ${rootPath}`, async () => {
+        testData.extendedForms.createPast(1);
+        return load('/projects/1/forms/f/settings')
+          .complete()
+          .route(rootPath)
+          .respondForComponent('FormSubmissions')
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/projects/1/forms/f/submissions');
+          });
+      });
     });
 
     it('redirects to .../entities from root path of entity list', async () => {
