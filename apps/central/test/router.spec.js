@@ -128,7 +128,7 @@ describe('createCentralRouter()', () => {
           app.vm.$route.path.should.equal('/');
         }));
 
-    describe('trailing slash', () => {
+    describe('trailing slashes', () => {
       it('removes a trailing slash', async () => {
         const app = await load('/account/edit/');
         app.vm.$route.path.should.equal('/account/edit');
