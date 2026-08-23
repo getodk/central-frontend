@@ -15,6 +15,10 @@
     "string": "{count, plural, one {# question with error} other {# questions with errors}}",
     "developer_comment": "Error banner message. {count} is the number of validation violations."
   },
+  "odk_web_forms.validation.view.label": {
+    "string": "View",
+    "developer_comment": "Label for the error banner button that navigates to the first question with a validation error."
+  },
   "odk_web_forms.geolocation.error": {
     "string": "Location unavailable. Enable GPS and browser permissions, then restart the form to try again.",
     "developer_comment": "Error message shown when background geolocation fails."

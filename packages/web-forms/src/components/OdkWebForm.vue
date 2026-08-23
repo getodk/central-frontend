@@ -33,6 +33,7 @@ import type {
 	InstanceDefaults,
 	PreloadProperties,
 } from '@getodk/xforms-engine';
+import Button from 'primevue/button';
 import Card from 'primevue/card';
 import Message from 'primevue/message';
 import {
@@ -217,7 +218,7 @@ const isFormEditMode = ref(false);
 provide(IS_FORM_EDIT_MODE, readonly(isFormEditMode));
 const { setLanguage, t } = useLocale(computed(() => state.value.root));
 provide(TRANSLATE, t);
-useNavigationTarget(() => state.value.root?.currentState.navigationTarget ?? null);
+const { navigateToFirstViolation } = useNavigationTarget(() => state.value.root ?? null);
 
 onErrorCaptured(err => {
 	runtimeError.value = FormInitializationError.from(err);
@@ -264,7 +265,7 @@ const handleSubmit = (currentState: FormStateSuccessResult) => {
 	} else {
 		floatingErrorActive.value = true;
 		submitPressed.value = true;
-		root.navigateToFirstViolation();
+		navigateToFirstViolation();
 	}
 };
 
@@ -342,6 +343,13 @@ onUnmounted(() => {
 						{{ geolocationErrorMessage }}
 					</li>
 				</ul>
+				<Button
+					v-if="validationErrorMessage?.length"
+					link
+					@click="navigateToFirstViolation"
+				>
+					{{ t('odk_web_forms.validation.view.label') }}
+				</Button>
 			</Message>
 
 			<FormHeader :form="state.root" @change-language="setLanguage" />

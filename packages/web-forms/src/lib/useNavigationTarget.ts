@@ -1,4 +1,5 @@
-import { watch } from 'vue';
+import type { RootNode } from '@getodk/xforms-engine';
+import { nextTick, watch } from 'vue';
 import { containerId } from '@/lib/format/ids.ts';
 
 const findContainer = (nodeId: string): HTMLElement | null => {
@@ -22,14 +23,33 @@ const navigateTo = (nodeId: string) => {
   container.focus({ preventScroll: true });
 };
 
-export const useNavigationTarget = (target: () => string | null) => {
+const applyCurrentTarget = (root: RootNode) => {
+  const target = root.currentState.navigationTarget;
+  if (target) {
+    navigateTo(target);
+  }
+};
+
+const navigateToFirstViolation = (root: RootNode | null) => {
+  if (!root) {
+    return;
+  }
+  root.navigateToFirstViolation();
+  void nextTick(() => applyCurrentTarget(root));
+};
+
+export const useNavigationTarget = (getRoot: () => RootNode | null) => {
   watch(
-    target,
+    () => getRoot()?.currentState.navigationTarget,
     (nodeId) => {
-      if (nodeId != null) {
+      if (nodeId) {
         navigateTo(nodeId);
       }
     },
     { flush: 'post' }
   );
+
+  return {
+    navigateToFirstViolation: () => navigateToFirstViolation(getRoot())
+  };
 };
