@@ -50,7 +50,6 @@ describe('createCentralRouter()', () => {
     describe('restoreSession is false for the first route', () => {
       const paths = [
         `/account/claim?token=${'a'.repeat(64)}`,
-        '/not-found'
       ];
       for (const path of paths) {
         it(`does not restore session for a user navigating to ${path}`, () =>
@@ -230,10 +229,12 @@ describe('createCentralRouter()', () => {
   });
 
   describe('requireLogin is false and requireAnonymity is false', () => {
-    it('does not redirect an anonymous user', async () => {
-      const app = await load('/not-found');
-      app.vm.$route.path.should.equal('/not-found');
-    });
+    it('does not redirect an anonymous user', () =>
+      load('/not-found')
+        .restoreSession(false)
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/not-found');
+        }));
 
     it('does not redirect a user who is logged in', () => {
       mockLogin();

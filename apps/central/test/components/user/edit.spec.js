@@ -6,6 +6,7 @@ import { mockLogin } from '../../util/session';
 
 describe('UserEdit', () => {
   it('requires the id route param to be integer', async () => {
+    mockLogin();
     const app = await load('/users/x/edit');
     app.findComponent(NotFound).exists().should.be.true;
   });
