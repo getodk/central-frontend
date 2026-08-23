@@ -5,7 +5,6 @@ import FormFooter from '@/components/form-layout/FormFooter.vue';
 import FormHeader from '@/components/form-layout/FormHeader.vue';
 import QuestionList from '@/components/form-layout/QuestionList.vue';
 import { waitAllTasksToFinish } from '@/lib/async/event-loop.ts';
-import { POST_SUBMIT__NEW_INSTANCE } from '@/lib/constants/control-flow.ts';
 import {
 	TRANSLATE,
 	FORM_MEDIA_CACHE,
@@ -20,6 +19,7 @@ import type { EditInstanceOptions, FormOptions } from '@/lib/init/load-form-stat
 import { updateSubmittedFormState } from '@/lib/init/update-submitted-form-state.ts';
 import { geolocationService } from '@/lib/services/geolocationService.ts';
 import { useLocale } from '@/lib/locale/useLocale.ts';
+import { useNavigationTarget } from '@/lib/useNavigationTarget.ts';
 import type {
 	HostSubmissionResultCallback,
 	OptionalAwaitableHostSubmissionResult,
@@ -93,9 +93,6 @@ const hostSubmissionResultCallbackFactory = (
 			lastSavedXml
 		};
 		state.value = updateSubmittedFormState(submissionResult, currentState, options);
-		if (submissionResult?.next === POST_SUBMIT__NEW_INSTANCE) {
-			document.scrollingElement?.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-		}
 	};
 
 	return (hostResult) => {
@@ -220,6 +217,7 @@ const isFormEditMode = ref(false);
 provide(IS_FORM_EDIT_MODE, readonly(isFormEditMode));
 const { setLanguage, t } = useLocale(computed(() => state.value.root));
 provide(TRANSLATE, t);
+useNavigationTarget(() => state.value.root?.currentState.navigationTarget ?? null);
 
 onErrorCaptured(err => {
 	runtimeError.value = FormInitializationError.from(err);
@@ -266,7 +264,7 @@ const handleSubmit = (currentState: FormStateSuccessResult) => {
 	} else {
 		floatingErrorActive.value = true;
 		submitPressed.value = true;
-		document.scrollingElement?.scrollTo(0, 0);
+		root.navigateToFirstViolation();
 	}
 };
 

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { QUESTION_HAS_ERROR, SUBMIT_PRESSED } from '@/lib/constants/injection-keys.ts';
+import { containerId } from '@/lib/format/ids.ts';
 import type {
 	AnyInputNode,
 	AnyNoteNode,
@@ -48,7 +49,8 @@ provide(QUESTION_HAS_ERROR, questionHasError);
 
 <template>
 	<div
-		:id="question.nodeId + '_container'"
+		:id="containerId(question.nodeId)"
+		tabindex="-1"
 		:class="{
 			'question-container': true,
 			'highlight': questionHasError,

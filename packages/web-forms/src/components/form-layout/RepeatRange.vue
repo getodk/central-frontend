@@ -2,6 +2,7 @@
 import IconSVG from '@/components/common/IconSVG.vue';
 import MarkdownBlock from '@/components/common/MarkdownBlock.vue';
 import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
+import { containerId } from '@/lib/format/ids.ts';
 import type { Translate } from '@/lib/locale/useLocale.ts';
 import { isOnCurrentPage } from '@/lib/pagination/pagination.ts';
 import type { RepeatRangeNode, RepeatRangeUncontrolledNode } from '@getodk/xforms-engine';
@@ -31,6 +32,7 @@ const isAddButtonVisible = (range: RepeatRangeNode): range is RepeatRangeUncontr
 	</template>
 	<Button
 		v-if="isAddButtonVisible(node)"
+		:id="containerId(node.nodeId)"
 		outlined
 		severity="contrast"
 		class="button-add-instance"

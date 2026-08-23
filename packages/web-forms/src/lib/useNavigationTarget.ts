@@ -1,7 +1,8 @@
 import { watch } from 'vue';
+import { containerId } from '@/lib/format/ids.ts';
 
 const findContainer = (nodeId: string): HTMLElement | null => {
-  return document.getElementById(`${nodeId}_container`);
+  return document.getElementById(containerId(nodeId));
 };
 
 const scrollToContainer = (container: HTMLElement) => {
