@@ -525,10 +525,7 @@ describe('Root', () => {
 
     it('removing the last instance in the list targets the previous instance', async () => {
       const root = await initForm(
-        buildForm(
-          [t('r', t('q')), t('r', t('q'))],
-          [repeat('/data/r', input('/data/r/q'))]
-        )
+        buildForm([t('r', t('q')), t('r', t('q'))], [repeat('/data/r', input('/data/r/q'))])
       );
 
       root.setCurrentPage(getControlNode(root, '/data/r[2]/q').nodeId);

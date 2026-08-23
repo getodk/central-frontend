@@ -7,7 +7,8 @@ const findContainer = (nodeId: string): HTMLElement | null => {
 };
 
 const scrollToContainer = (container: HTMLElement) => {
-  if (container.offsetTop < window.innerHeight) {
+  const documentTop = container.getBoundingClientRect().top + window.scrollY;
+  if (documentTop < window.innerHeight) {
     document.scrollingElement?.scrollTo({ top: 0, behavior: 'smooth' });
     return;
   }
@@ -34,8 +35,12 @@ const navigateToFirstViolation = (root: RootNode | null) => {
   if (!root) {
     return;
   }
+  const targetBeforeNavigation = root.currentState.navigationTarget;
   root.navigateToFirstViolation();
-  void nextTick(() => applyCurrentTarget(root));
+  // The engine updates navigationTarget; if the value didn't change, the watcher won't fire, so trigger the scroll and focus here
+  if (root.currentState.navigationTarget === targetBeforeNavigation) {
+    void nextTick(() => applyCurrentTarget(root));
+  }
 };
 
 export const useNavigationTarget = (getRoot: () => RootNode | null) => {
@@ -50,6 +55,6 @@ export const useNavigationTarget = (getRoot: () => RootNode | null) => {
   );
 
   return {
-    navigateToFirstViolation: () => navigateToFirstViolation(getRoot())
+    navigateToFirstViolation: () => navigateToFirstViolation(getRoot()),
   };
 };
