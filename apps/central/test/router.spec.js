@@ -139,9 +139,17 @@ describe('createCentralRouter()', () => {
         app.vm.$route.fullPath.should.equal('/audits?action=project.create#foo');
       });
 
-      it('renders NotFound if there are multiple trailing slashes', async () => {
-        const app = await load('/account/edit//');
+      it('removes multiple trailing slashes', () =>
+        load('/account/edit//')
+          .respondFor('/account/edit')
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/account/edit');
+          }));
+
+      it('does not remove multiple internal slashes', async () => {
+        const app = await load('/account//edit');
         app.findComponent(NotFound).exists().should.be.true;
+        app.vm.$route.path.should.equal('/account//edit');
       });
     });
 

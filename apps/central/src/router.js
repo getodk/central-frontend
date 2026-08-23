@@ -65,16 +65,11 @@ router.afterEach(unlessFailure(to => {
   // user is trying to navigate to a parent route, which isn't expected.
   router.beforeEach(to => (Object.keys(to.meta).length === 0 ? '/' : true));
 
-  // Remove any trailing slash from the path.
+  // Remove trailing slashes from the path.
   router.beforeEach(to => {
-    // Two trailing slashes won't match any route, so return `true` to proceed
-    // to NotFound.
-    if (to.path.endsWith('//')) return true;
-
-    if (to.path.endsWith('/') && to.path !== '/')
-      return { path: to.path.slice(0, -1), query: to.query, hash: to.hash };
-
-    return true;
+    let { path } = to;
+    while (path.endsWith('/') && path !== '/') path = path.slice(0, -1);
+    return path === to.path ? true : { path, query: to.query, hash: to.hash };
   });
 
   // If a route is nested, its relative path is '', and that path is an alias,
