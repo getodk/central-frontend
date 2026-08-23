@@ -44,18 +44,6 @@ export interface RootNodeState extends BaseNodeState {
   get navigationTarget(): FormNodeID | null;
 }
 
-export type RootNodeStateNavigationKey =
-  | 'currentPage'
-  | 'hasNextPage'
-  | 'hasPreviousPage'
-  | 'navigationTarget';
-
-export type RootNodeNavigationKey =
-  | 'navigateToFirstViolation'
-  | 'nextPage'
-  | 'previousPage'
-  | 'setCurrentPage';
-
 export interface RootNode extends BaseNode {
   readonly nodeType: 'root';
 
