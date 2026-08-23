@@ -523,6 +523,40 @@ describe('Root', () => {
       expect(root.currentState.navigationTarget).toBe(range.nodeId);
     });
 
+    it('removing the last instance in the list targets the previous instance', async () => {
+      const root = await initForm(
+        buildForm(
+          [t('r', t('q')), t('r', t('q'))],
+          [repeat('/data/r', input('/data/r/q'))]
+        )
+      );
+
+      root.setCurrentPage(getControlNode(root, '/data/r[2]/q').nodeId);
+      getUncontrolledRange(root).removeInstances(1);
+
+      const previousQuestion = getControlNode(root, '/data/r[1]/q');
+      expect(root.currentState.currentPage).toBe(previousQuestion.nodeId);
+      expect(root.currentState.navigationTarget).toBe(previousQuestion.nodeId);
+    });
+
+    it('removing an instance on a non-paginated form does not navigate', async () => {
+      const root = await initForm(
+        html(
+          head(
+            title('Pageless form'),
+            model(mainInstance(t('data id="root"', t('r', t('q')), t('r', t('q')))))
+          ),
+          body(repeat('/data/r', input('/data/r/q')))
+        )
+      );
+      const firstQuestion = getControlNode(root, '/data/r[1]/q');
+      expect(root.currentState.navigationTarget).toBe(firstQuestion.nodeId);
+
+      getUncontrolledRange(root).removeInstances(1);
+
+      expect(root.currentState.navigationTarget).toBe(firstQuestion.nodeId);
+    });
+
     it('a non-paginated form targets its first control on load', async () => {
       const root = await initForm(
         html(

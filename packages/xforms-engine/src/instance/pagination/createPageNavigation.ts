@@ -65,7 +65,7 @@ export const createPageNavigation = (
       return;
     }
 
-    const target = page == null ? null : (findFirstVisibleControl(page)?.nodeId ?? null);
+    const target = page == null ? null : (findFirstVisibleControl(page)?.nodeId ?? page.nodeId);
     batch(() => {
       writePage(page);
       nodeNavigation.setNavigationTarget(target);

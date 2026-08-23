@@ -86,14 +86,20 @@ export class RepeatRangeUncontrolled
   }
 
   private navigateAfterRemoval(removedIndex: number): void {
+    if (!this.root.isPaginated) {
+      return;
+    }
+
     const children = this.getChildren();
     const replacement = children[removedIndex] ?? children[removedIndex - 1];
 
-    // Move page, otherwise, initPagination's createComputed relocates the page itself and overwrites the target below
     const page = collectPages([replacement ?? this])[0];
-    if (page != null) {
-      this.root.setCurrentPage(page.nodeId);
+    if (page == null || page === this.root.getCurrentPage()) {
+      return;
     }
+
+    // Move page, otherwise initPagination's createComputed relocates the page itself and overwrites the target below
+    this.root.setCurrentPage(page.nodeId);
 
     if (replacement == null) {
       // The Add button renders there
