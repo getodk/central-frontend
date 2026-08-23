@@ -85,22 +85,20 @@ export class RepeatRangeUncontrolled
     return this.root;
   }
 
-  private navigateAfterRemoval(removedIndex: number): void {
-    if (!this.root.isPaginated) {
+  private navigateAfterRemoval(removedIndex: number) {
+    if (!this.isCurrentPageRemoved()) {
       return;
     }
 
     const children = this.getChildren();
     const replacement = children[removedIndex] ?? children[removedIndex - 1];
-
     const page = collectPages([replacement ?? this])[0];
-    if (page == null || page === this.root.getCurrentPage()) {
+    if (page == null) {
       return;
     }
 
     // Move page, otherwise initPagination's createComputed relocates the page itself and overwrites the target below
     this.root.setCurrentPage(page.nodeId);
-
     if (replacement == null) {
       // The Add button renders there
       this.root.setNavigationTarget(this.nodeId);
@@ -111,5 +109,14 @@ export class RepeatRangeUncontrolled
     if (target != null) {
       this.root.setNavigationTarget(target.nodeId);
     }
+  }
+
+  private isCurrentPageRemoved() {
+    if (!this.root.isPaginated) {
+      return false;
+    }
+
+    const currentPage = this.root.getCurrentPage();
+    return currentPage == null || !this.root.isPageReachable(currentPage);
   }
 }

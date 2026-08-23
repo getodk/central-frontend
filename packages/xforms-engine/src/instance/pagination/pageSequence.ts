@@ -132,7 +132,7 @@ export const resolveCurrentPage = (
     return current;
   }
 
-  // navigateAfterRemoval normally picks the new page; this covers the rare case where it found no page at all
+  // Current page was removed. Controlled (jr:count) ranges always land here; uncontrolled only when navigateAfterRemoval found no page
   if (!isListed) {
     return nearestReachablePage(children, current, isReachable);
   }
