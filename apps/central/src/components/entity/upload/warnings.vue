@@ -11,24 +11,43 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="entity-upload-warnings">
+    <p class="entity-upload-section-title">{{ $t('title') }}</p>
+    <p>{{ $t('introduction') }}</p>
+
+    <!-- Column header warnings -->
+    <entity-upload-warning v-if="missingProperties != null">
+      <template #title>
+        {{ $tc('missingProperties', missingProperties.length) }}
+      </template>
+      <template #body>
+        <p><i18n-list :list="missingProperties"/></p>
+      </template>
+    </entity-upload-warning>
+
+    <!-- Data warnings -->
     <entity-upload-warning v-if="raggedRows != null" :ranges="raggedRows"
       @rows="$emit('rows', $event)">
-      {{ $t('row.raggedRows') }}
+      <template #title>{{ $t('row.raggedRows') }}</template>
     </entity-upload-warning>
     <entity-upload-warning v-if="largeCell != null" :ranges="[[largeCell, largeCell]]"
       @rows="$emit('rows', $event)">
-      {{ $t('row.largeCell') }}
+      <template #title>{{ $t('row.largeCell') }}</template>
     </entity-upload-warning>
   </div>
 </template>
 
 <script setup>
 import EntityUploadWarning from './warning.vue';
+import I18nList from '../../i18n/list.vue';
 
 defineOptions({
   name: 'EntityUploadWarnings'
 });
 defineProps({
+  // Column header warnings
+  missingProperties: Array,
+
+  // Data warnings (below the column header)
   raggedRows: Array,
   largeCell: Number
 });
@@ -37,14 +56,23 @@ defineEmits(['rows']);
 
 <style lang="scss">
 #entity-upload-warnings {
-  background-color: #deedf3;
-  padding: 9px 6px;
+  margin-top: 20px;
 }
 </style>
 
 <i18n lang="json5">
 {
   "en": {
+    // @transifexKey component.EntityUploadHeaderReview.title
+    // This text is shown above a section where the user can review warnings
+    // about their data.
+    "title": "Review warnings",
+    "introduction": "Some rows contain warnings that may affect upload results.",
+
+    // @transifexKey component.EntityUploadHeaderReview.missingProperties
+    // This text is followed by a list of Entity property names.
+    "missingProperties": "This property is not included in your file and will be left empty: | These properties are not included in your file and will be left empty:",
+
     // This is a warning that is followed by a list of rows.
     "row": {
       "raggedRows": "Fewer columns were found than expected in some rows:",
