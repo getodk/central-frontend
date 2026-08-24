@@ -17,8 +17,8 @@ const scrollToContainer = (container: HTMLElement, align: ScrollAlignment) => {
 };
 
 const navigateTo = (nodeId: string, align: ScrollAlignment = 'start') => {
-  const id = containerId(nodeId);
-  const container = document.getElementById(id);
+  // Controls without a container are their own scroll target
+  const container = document.getElementById(containerId(nodeId)) ?? document.getElementById(nodeId);
 
   if (!container) {
     return;
