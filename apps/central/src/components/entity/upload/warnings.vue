@@ -46,7 +46,7 @@ defineProps({
   // Column header warnings
   missingProperties: Array,
 
-  // Data warnings
+  // Data warnings (below the column header)
   raggedRows: Array,
   largeCell: Number
 });

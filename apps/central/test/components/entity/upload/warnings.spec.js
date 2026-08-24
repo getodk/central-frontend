@@ -26,7 +26,7 @@ describe('EntityUploadWarnings', () => {
       props: { raggedRows: [[1, 2]] }
     });
     const warning = component.getComponent(EntityUploadWarning);
-    warning.text().should.include('Fewer columns were found than expected');
+    warning.text().should.startWith('Fewer columns were found than expected');
     expect(warning.props().ranges).to.eql([[1, 2]]);
   });
 
@@ -35,7 +35,7 @@ describe('EntityUploadWarnings', () => {
       props: { largeCell: 1 }
     });
     const warning = component.getComponent(EntityUploadWarning);
-    warning.text().should.include('Some cells are abnormally large');
+    warning.text().should.startWith('Some cells are abnormally large');
     expect(warning.props().ranges).to.eql([[1, 1]]);
   });
 

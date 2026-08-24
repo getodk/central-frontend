@@ -58,6 +58,8 @@ const { formatRange } = useI18nUtils();
     color: $color-warning-dark;
     margin-bottom: 10px;
 
+    &:last-child { margin-bottom: 0; }
+
     // Icon
     > :first-child { margin-right: $margin-right-icon; }
   }
