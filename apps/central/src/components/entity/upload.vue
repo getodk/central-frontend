@@ -50,13 +50,14 @@ except according to the terms contained in the LICENSE file.
               :size-options="pageSizeOptions"/>
           </div>
         </div>
+
+        <entity-upload-errors v-if="dataError != null" :data-error="dataError"/>
         <entity-upload-warnings v-if="warnings != null" v-bind="warnings"
           @rows="showWarningRows"/>
+
         <entity-upload-file-select v-show="csvEntities == null"
           :parsing="parsing" @change="selectFile">
           <entity-upload-header-help :errors="headerErrors"/>
-          <entity-upload-data-error v-if="dataError != null"
-            :message="dataError"/>
         </entity-upload-file-select>
       </div>
       <entity-upload-popup v-if="csvEntities != null"
@@ -81,7 +82,7 @@ except according to the terms contained in the LICENSE file.
 import { computed, inject, nextTick, onBeforeUnmount, reactive, ref, shallowRef, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import EntityUploadDataError from './upload/data-error.vue';
+import EntityUploadErrors from './upload/errors.vue';
 import EntityUploadFileSelect from './upload/file-select.vue';
 import EntityUploadHeaderHelp from './upload/header-help.vue';
 import EntityUploadPopup from './upload/popup.vue';

@@ -3,7 +3,7 @@ import { T } from 'ramda';
 
 import EntityFilters from '../../../src/components/entity/filters.vue';
 import EntityUpload from '../../../src/components/entity/upload.vue';
-import EntityUploadDataError from '../../../src/components/entity/upload/data-error.vue';
+import EntityUploadErrors from '../../../src/components/entity/upload/errors.vue';
 import EntityUploadHeaderErrors from '../../../src/components/entity/upload/header-errors.vue';
 import EntityUploadPopup from '../../../src/components/entity/upload/popup.vue';
 import EntityUploadTable from '../../../src/components/entity/upload/table.vue';
@@ -177,6 +177,16 @@ describe('EntityUpload', () => {
     });
   });
 
+  it('shows an error with the data below the header', async () => {
+    testData.extendedDatasets.createPast(1, {
+      properties: [{ name: 'height' }]
+    });
+    const modal = await showModal();
+    await selectFile(modal, createCSV('label,height\n,1'));
+    const { dataError } = modal.getComponent(EntityUploadErrors).props();
+    dataError.should.equal('There is a problem on row 2 of the file: Missing label.');
+  });
+
   describe('binary file', () => {
     beforeEach(() => {
       testData.extendedDatasets.createPast(1);
@@ -200,11 +210,11 @@ describe('EntityUpload', () => {
     // This is not necessarily the ideal behavior. Showing an alert would be
     // more consistent with what happens for a null character in the header.
     // This test documents the current expected behavior.
-    it('renders EntityUploadDataError for a null character after header', async () => {
+    it('renders EntityUploadErrors for a null character after header', async () => {
       const modal = await showModal();
       await selectFile(modal, createCSV('label\nf\0o'));
-      const { message } = modal.getComponent(EntityUploadDataError).props();
-      message.should.equal('The file “my_data.csv” is not a valid .csv file. It cannot be read.');
+      const { dataError } = modal.getComponent(EntityUploadErrors).props();
+      dataError.should.equal('The file “my_data.csv” is not a valid .csv file. It cannot be read.');
       modal.should.not.alert();
     });
   });
@@ -228,8 +238,8 @@ describe('EntityUpload', () => {
     it('does not show warnings if there is a data error', async () => {
       const modal = await showModal();
       await selectFile(modal, createCSV('label,height\nx\ny,""\n"",1'));
-      const error = modal.getComponent(EntityUploadDataError).props().message;
-      error.should.startWith('There is a problem on row 4');
+      const { dataError } = modal.getComponent(EntityUploadErrors).props();
+      dataError.should.startWith('There is a problem on row 4');
       modal.findComponent(EntityUploadWarnings).exists().should.be.false;
     });
 
