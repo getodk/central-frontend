@@ -610,6 +610,25 @@ describe('setvalue action', () => {
       expect(scenario.answerOf('/data/output')).toEqualAnswer(stringAnswer(''));
     });
 
+    it('binds invalid date to string field', async () => {
+      const scenario = await Scenario.init(
+        'Setvalue invalid date',
+        html(
+          head(
+            title('Setvalue invalid date'),
+            model(
+              mainInstance(t('data id="setvalue-invalid-date"', t('input'))),
+              bind('/data/input').type('string'),
+              setvalue('odk-instance-first-load', '/data/input', "'2026-13-15'")
+            )
+          ),
+          body(input('/data/input'))
+        )
+      );
+
+      expect(scenario.answerOf('/data/input')).toEqualAnswer(stringAnswer('2026-13-15'));
+    });
+
     it('odk-instance-first-load does not update on repeat add', async () => {
       const scenario = await Scenario.init(
         'Setvalue repeat',

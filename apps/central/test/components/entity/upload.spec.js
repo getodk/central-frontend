@@ -163,7 +163,6 @@ describe('EntityUpload', () => {
         delimiter: ',',
         invalidQuotes: false,
         missingLabel: true,
-        missingProperty: true,
         unknownProperty: true,
         duplicateColumn: true,
         emptyColumn: true
@@ -221,11 +220,9 @@ describe('EntityUpload', () => {
       const modal = await showModal();
       const csv = createCSV('label,height\nx\ny\n"12345,67890",""');
       await selectFile(modal, csv);
-      modal.getComponent(EntityUploadWarnings).props().should.eql({
-        raggedRows: [[1, 2]],
-        largeCell: 3
-      });
-      modal.getComponent(EntityUploadPopup).props().warnings.should.equal(2);
+      const warnings = modal.getComponent(EntityUploadWarnings).props();
+      warnings.raggedRows.should.eql([[1, 2]]);
+      warnings.largeCell.should.equal(3);
     });
 
     it('does not show warnings if there is a data error', async () => {
@@ -281,12 +278,18 @@ describe('EntityUpload', () => {
   });
 
   it('resets after the clear button is clicked', async () => {
-    testData.extendedDatasets.createPast(1);
+    testData.extendedDatasets.createPast(1, {
+      properties: [{ name: 'height' }]
+    });
     const modal = await showModal();
     await selectFile(modal, createCSV('label\nx\n"12345,67890"'));
-    const popup = modal.getComponent(EntityUploadPopup);
-    popup.props().warnings.should.equal(1);
+
+    const popup = modal.findComponent(EntityUploadPopup);
+    popup.exists().should.be.true;
+    modal.findComponent(EntityUploadWarnings).exists().should.be.true;
+
     await popup.get('.btn-link').trigger('click');
+
     modal.findComponent(EntityUploadPopup).exists().should.be.false;
     modal.findComponent(EntityUploadWarnings).exists().should.be.false;
     modal.get('#entity-upload-file-select').should.be.visible();
@@ -295,12 +298,18 @@ describe('EntityUpload', () => {
   });
 
   it('resets after the modal is hidden', async () => {
-    testData.extendedDatasets.createPast(1);
+    testData.extendedDatasets.createPast(1, {
+      properties: [{ name: 'height' }]
+    });
     const modal = await showModal();
     await selectFile(modal, createCSV('label\nx\n"12345,67890"'));
+
+    modal.findComponent(EntityUploadPopup).exists().should.be.true;
     modal.findComponent(EntityUploadWarnings).exists().should.be.true;
+
     await modal.setProps({ state: false });
     await modal.setProps({ state: true });
+
     modal.findComponent(EntityUploadPopup).exists().should.be.false;
     modal.findComponent(EntityUploadWarnings).exists().should.be.false;
     modal.get('#entity-upload-file-select').should.be.visible();
@@ -443,5 +452,31 @@ describe('EntityUpload', () => {
 
         app.getComponent(OdataLoadingMessage).props().filter.should.be.false;
       }));
+  });
+
+  it('allows upload despite missing properties', () => {
+    testData.extendedDatasets.createPast(1, {
+      properties: [{ name: 'height' }, { name: 'circumference' }]
+    });
+    return showModal()
+      .complete()
+      .request(async (modal) => {
+        await selectFile(modal, createCSV('label,height\ndogwood,1'));
+
+        // A warning is shown.
+        const warnings = modal.getComponent(EntityUploadWarnings).props();
+        warnings.missingProperties.should.eql(['circumference']);
+
+        return modal.get('.modal-actions .btn-primary').trigger('click');
+      })
+      .respondWithProblem()
+      .testRequests([{
+        method: 'POST',
+        url: '/v1/projects/1/datasets/trees/entities',
+        data: {
+          source: { name: 'my_data.csv', size: 22 },
+          entities: [{ label: 'dogwood', data: { height: '1' } }]
+        }
+      }]);
   });
 });

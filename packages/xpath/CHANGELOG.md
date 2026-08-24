@@ -1,5 +1,12 @@
 # @getodk/xpath
 
+## 1.0.1
+
+### Patch Changes
+
+- 3a50d3c: Fixed a bug where setting invalid dates to string values throws an error.
+- 092e357: Fixed a bug where the XPath sum() function returned NaN instead of 0 when no nodes matched the expression.
+
 ## 1.0.0
 
 ### Major Changes

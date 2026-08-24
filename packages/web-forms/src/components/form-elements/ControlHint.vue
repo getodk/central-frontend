@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import MarkdownBlock from '@/components/common/MarkdownBlock.vue';
+import MarkdownBlock from '@getodk/web-forms/components/common/MarkdownBlock.vue';
 import type { AnyControlNode as QuestionNode } from '@getodk/xforms-engine';
 import { computed } from 'vue';
 const props = defineProps<{ question: QuestionNode }>();

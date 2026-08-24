@@ -61,14 +61,7 @@ export class NodeEvaluation<T extends XPathNode> extends ValueEvaluation<T, 'NOD
         numberValue = Number(stringValue);
       } else {
         const stringEvaluation = new StringEvaluation(context, stringValue);
-
-        numberValue = numberFunction
-          .call(context, [
-            {
-              evaluate: () => stringEvaluation,
-            },
-          ])
-          .toNumber();
+        numberValue = stringEvaluation.toNumber();
       }
 
       computedValues = {

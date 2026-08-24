@@ -42,8 +42,6 @@ except according to the terms contained in the LICENSE file.
             <h1 class="panel-title">{{ $t('table.file') }}</h1>
           </div>
           <div class="panel-body">
-            <entity-upload-warnings v-if="warnings != null && warnings.count !== 0"
-              v-bind="warnings.details" @rows="showWarningRows"/>
             <entity-upload-table :ref="setTable(1)" :entities="csvSlice"
               :row-index="csvRow" :page-size="csvPage.size"
               :highlighted="warningRows"/>
@@ -52,6 +50,8 @@ except according to the terms contained in the LICENSE file.
               :size-options="pageSizeOptions"/>
           </div>
         </div>
+        <entity-upload-warnings v-if="warnings != null" v-bind="warnings"
+          @rows="showWarningRows"/>
         <entity-upload-file-select v-show="csvEntities == null"
           :parsing="parsing" @change="selectFile">
           <entity-upload-header-help :errors="headerErrors"/>
@@ -61,7 +61,7 @@ except according to the terms contained in the LICENSE file.
       </div>
       <entity-upload-popup v-if="csvEntities != null"
         :filename="fileMetadata.name" :count="csvEntities.length"
-        :warnings="warnings.count" :awaiting-response="uploading"
+        :awaiting-response="uploading"
         :progress="uploadProgress" @clear="clearFile"
         @animationstart="animatePopup(true)"
         @animationend="animatePopup(false)"/>
@@ -178,48 +178,60 @@ const csvEntities = shallowRef(null);
 // Metadata about the CSV file
 const fileMetadata = shallowRef(null);
 const headerErrors = shallowRef(null);
-const dataError = ref(null);
 const warnings = shallowRef(null);
+const dataError = ref(null);
 const parsing = ref(false);
 // Function to abort parsing in progress
 let abortParse = noop;
-// Validates the column header of the CSV file, setting headerErrors if the
-// header is invalid. Returns `true` if the header is valid and `false` if not.
+// Validates the column header of the CSV file, returning any errors or
+// warnings.
 const validateHeader = ({ columns, errors, meta }, file) => {
-  const details = {};
+  const errorDetails = {};
+  const warningDetails = {};
+
   // If there are errors from Papa Parse, just surface those and don't check for
   // other errors. If there are errors from Papa, then there is something pretty
   // wrong that may need to be addressed first.
   if (errors.length !== 0) {
-    details.invalidQuotes = errors.some(({ type }) => type === 'Quotes');
+    errorDetails.invalidQuotes = errors.some(({ type }) => type === 'Quotes');
   } else {
     const columnSet = new Set();
     for (const column of columns) {
       if (/^\s*$/.test(column))
-        details.emptyColumn = true;
+        errorDetails.emptyColumn = true;
       else if (columnSet.has(column))
-        details.duplicateColumn = true;
+        errorDetails.duplicateColumn = true;
       else
         columnSet.add(column);
     }
+
     const hasLabel = columnSet.has('label');
-    details.missingLabel = !hasLabel;
-    const columnProperties = dataset.properties.reduce(
-      (count, { name }) => (columnSet.has(name) ? count + 1 : count),
-      0
-    );
-    details.missingProperty = columnProperties !== dataset.properties.length;
-    details.unknownProperty = columnSet.size !== columnProperties +
+    errorDetails.missingLabel = !hasLabel;
+
+    const missingProperties = [];
+    for (const { name } of dataset.properties) {
+      if (!columnSet.has(name)) missingProperties.push(name);
+    }
+    if (missingProperties.length !== 0)
+      warningDetails.missingProperties = missingProperties;
+
+    // Count of columns that are properties
+    const columnProperties = dataset.properties.length - missingProperties.length;
+    errorDetails.unknownProperty = columnSet.size !== columnProperties +
       (hasLabel ? 1 : 0);
   }
-  if (!Object.values(details).includes(true)) return true;
-  headerErrors.value = {
-    filename: file.name,
-    header: formatCSVRow(columns, { delimiter: meta.delimiter }),
-    delimiter: meta.delimiter,
-    ...details
-  };
-  return false;
+
+  const result = {};
+  if (Object.values(errorDetails).includes(true)) {
+    result.errors = {
+      filename: file.name,
+      header: formatCSVRow(columns, { delimiter: meta.delimiter }),
+      delimiter: meta.delimiter,
+      ...errorDetails
+    };
+  }
+  if (Object.keys(warningDetails).length !== 0) result.warnings = warningDetails;
+  return result;
 };
 const { t } = useI18n();
 // noPropertyData is used to minimize the JSON sent to Backend: the JSON won't
@@ -252,9 +264,7 @@ const parseEntities = async (file, headerResults, signal) => {
     signal
   });
   if (results.data.length === 0) throw new Error(t('alert.noData'));
-  csvEntities.value = results.data;
-  fileMetadata.value = { name: file.name, size: file.size };
-  warnings.value = results.warnings;
+  return results;
 };
 const selectFile = (file) => {
   redAlert.hide();
@@ -271,13 +281,25 @@ const selectFile = (file) => {
       if (!signal.aborted) redAlert.show(error.message);
       throw error;
     })
-    .then(headerResults => (validateHeader(headerResults, file)
-      ? parseEntities(file, headerResults, signal)
+    .then(headerResults => {
+      const validation = validateHeader(headerResults, file);
+      if (validation.errors != null) {
+        headerErrors.value = validation.errors;
+        return Promise.resolve();
+      }
+
+      return parseEntities(file, headerResults, signal)
+        .then(results => {
+          csvEntities.value = results.data;
+          fileMetadata.value = { name: file.name, size: file.size };
+          if (validation.warnings != null || results.warnings.count !== 0)
+            warnings.value = { ...validation.warnings, ...results.warnings.details };
+        })
         .catch(error => {
           if (!signal.aborted) dataError.value = error.message;
           throw error;
-        })
-      : Promise.resolve()))
+        });
+    })
     .finally(() => {
       parsing.value = false;
       abortParse = noop;
@@ -295,8 +317,8 @@ watch(() => props.state, (state) => {
   csvEntities.value = null;
   fileMetadata.value = null;
   headerErrors.value = null;
-  dataError.value = null;
   warnings.value = null;
+  dataError.value = null;
 });
 onBeforeUnmount(() => { abortParse(); });
 
@@ -426,6 +448,17 @@ watch(() => props.state, (state) => {
       border-bottom-left-radius: $panel-danger-border-radius;
       border-bottom-right-radius: $panel-danger-border-radius;
     }
+  }
+}
+
+.entity-upload-section-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 4px;
+
+  ~ p {
+    margin-bottom: 10px;
+    &:last-of-type { margin-bottom: 20px; }
   }
 }
 </style>

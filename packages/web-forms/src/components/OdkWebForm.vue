@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import FormLoadFailureDialog from '@/components/FormLoadFailureDialog.vue';
-import IconSVG from '@/components/common/IconSVG.vue';
-import FormFooter from '@/components/form-layout/FormFooter.vue';
-import FormHeader from '@/components/form-layout/FormHeader.vue';
-import QuestionList from '@/components/form-layout/QuestionList.vue';
+import FormLoadFailureDialog from '@getodk/web-forms/components/FormLoadFailureDialog.vue';
+import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
+import FormFooter from '@getodk/web-forms/components/form-layout/FormFooter.vue';
+import FormHeader from '@getodk/web-forms/components/form-layout/FormHeader.vue';
+import QuestionList from '@getodk/web-forms/components/form-layout/QuestionList.vue';
 import { waitAllTasksToFinish } from '@/lib/async/event-loop.ts';
 import {
 	TRANSLATE,
@@ -11,19 +11,18 @@ import {
 	FORM_OPTIONS,
 	IS_FORM_EDIT_MODE,
 	SUBMIT_PRESSED,
-} from '@/lib/constants/injection-keys.ts';
-import type { FormStateSuccessResult } from '@/lib/init/form-state.ts';
-import { initializeFormState } from '@/lib/init/initialize-form-state.ts';
-import { loadFormState } from '@/lib/init/load-form-state';
+} from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { FormStateSuccessResult } from '@getodk/web-forms/lib/init/form-state.ts';
+import { initializeFormState } from '@getodk/web-forms/lib/init/initialize-form-state.ts';
+import { loadFormState } from '@getodk/web-forms/lib/init/load-form-state';
 import type { EditInstanceOptions, FormOptions } from '@/lib/init/load-form-state.ts';
-import { updateSubmittedFormState } from '@/lib/init/update-submitted-form-state.ts';
-import { geolocationService } from '@/lib/services/geolocationService.ts';
-import { useLocale } from '@/lib/locale/useLocale.ts';
-import { useNavigationTarget } from '@/lib/useNavigationTarget.ts';
+import { updateSubmittedFormState } from '@getodk/web-forms/lib/init/update-submitted-form-state.ts';
+import { geolocationService } from '@getodk/web-forms/lib/services/geolocationService.ts';
+import { useLocale } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import type {
 	HostSubmissionResultCallback,
 	OptionalAwaitableHostSubmissionResult,
-} from '@/lib/submission/host-submission-result-callback.ts';
+} from '@getodk/web-forms/lib/submission/host-submission-result-callback.ts';
 import type { JRResourceURLString } from '@getodk/common/jr-resources/JRResourceURL.ts';
 import type {
 	ChunkedInstancePayload,
@@ -47,7 +46,7 @@ import {
 	watch,
 	watchEffect,
 } from 'vue';
-import { FormInitializationError } from '@/lib/error/FormInitializationError';
+import { FormInitializationError } from '@getodk/web-forms/lib/error/FormInitializationError';
 
 const webFormsVersion = __WEB_FORMS_VERSION__;
 type ObjectURL = `blob:${string}`;

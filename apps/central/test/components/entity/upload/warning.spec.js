@@ -6,7 +6,7 @@ import { mergeMountOptions, mount } from '../../../util/lifecycle';
 
 const mountComponent = (options = undefined) =>
   mount(EntityUploadWarning, mergeMountOptions(options, {
-    slots: { default: 'Some warning:' }
+    slots: { title: 'Some warning:' }
   }));
 
 describe('EntityUploadWarning', () => {

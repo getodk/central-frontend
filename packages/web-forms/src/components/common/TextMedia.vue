@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import AudioBlock from '@/components/common/media/AudioBlock.vue';
-import ImageBlock from '@/components/common/media/ImageBlock.vue';
-import VideoBlock from '@/components/common/media/VideoBlock.vue';
+import AudioBlock from '@getodk/web-forms/components/common/media/AudioBlock.vue';
+import ImageBlock from '@getodk/web-forms/components/common/media/ImageBlock.vue';
+import VideoBlock from '@getodk/web-forms/components/common/media/VideoBlock.vue';
 import type { TextRange } from '@getodk/xforms-engine';
 import { computed } from 'vue';
 import MarkdownBlock from './MarkdownBlock.vue';

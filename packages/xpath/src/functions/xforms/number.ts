@@ -55,20 +55,24 @@ export const number = new FunctionImplementation(
     const numberValue = results.toNumber();
     const { type } = results;
 
+    if (type === 'NUMBER') {
+      return results;
+    }
+
     if (type === 'NODE' || type === 'STRING') {
       const stringValue = results.toString();
-      const dateTime = dateTimeFromString(context.timeZone, stringValue);
-
+      let dateTime;
+      try {
+        dateTime = dateTimeFromString(context.timeZone, stringValue);
+      } catch {
+        // not a valid date - fall through
+      }
       if (dateTime != null) {
         return new DateTimeLikeEvaluation(context, dateTime, {
           booleanValue: true,
           stringValue: String(Math.floor(dateTime.epochMilliseconds / DAY_MILLISECONDS)),
         });
       }
-    }
-
-    if (type === 'NUMBER') {
-      return results;
     }
 
     return new NumberEvaluation(context, numberValue);

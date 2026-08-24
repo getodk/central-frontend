@@ -3,8 +3,8 @@ import type { SelectNode } from '@getodk/xforms-engine';
 import Select from 'primevue/select';
 import { computed, inject } from 'vue';
 import MarkdownBlock from './MarkdownBlock.vue';
-import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
-import type { Translate } from '@/lib/locale/useLocale.ts';
+import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 
 interface SearchableDropdownProps {
 	readonly question: SelectNode;
@@ -26,6 +26,15 @@ const options = computed(() => {
 			search: option.label.asString,
 		};
 	});
+});
+
+const virtualScrollerOptions = computed(() => {
+	if (props.question.currentState.valueOptions.length > 20) {
+		return { itemSize: DEFAULT_PRIMEVUE_ITEM_HEIGHT };
+	}
+	// remove virtual scroller for small selects so primevue knows
+	// what height to make the list container
+	return undefined;
 });
 
 const selectedLabel = computed(() => {
@@ -54,7 +63,7 @@ const selectValue = (value: string) => {
 		:options="options"
 		option-label="search"
 		option-value="value"
-		:virtual-scroller-options="{ itemSize: DEFAULT_PRIMEVUE_ITEM_HEIGHT }"
+		:virtual-scroller-options="virtualScrollerOptions"
 		@update:model-value="selectValue"
 		@change="$emit('change')"
 	>

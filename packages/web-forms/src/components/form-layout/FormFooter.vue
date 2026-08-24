@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import IconSVG from '@/components/common/IconSVG.vue';
-import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
-import type { Translate } from '@/lib/locale/useLocale.ts';
+import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
+import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import type { RootNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import { inject } from 'vue';

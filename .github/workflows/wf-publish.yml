@@ -20,14 +20,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up npm registry
-        uses: actions/setup-node@v6
+      - uses: ./.github/actions/restore-node
         with:
           node-version: '24.16.0'
           registry-url: 'https://registry.npmjs.org'
-
-      - name: Install dependencies
-        run: npm ci
 
       - name: Build packages
         run: npm run build

@@ -3,8 +3,8 @@ import type { SelectNode } from '@getodk/xforms-engine';
 import MultiSelect from 'primevue/multiselect';
 import { computed, inject } from 'vue';
 import MarkdownBlock from './MarkdownBlock.vue';
-import { TRANSLATE } from '@/lib/constants/injection-keys.ts';
-import type { Translate } from '@/lib/locale/useLocale.ts';
+import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 
 interface MultiselectDropdownProps {
 	readonly question: SelectNode;
@@ -26,6 +26,15 @@ const options = computed(() => {
 			search: option.label.asString,
 		};
 	});
+});
+
+const virtualScrollerOptions = computed(() => {
+	if (props.question.currentState.valueOptions.length > 20) {
+		return { itemSize: DEFAULT_PRIMEVUE_ITEM_HEIGHT };
+	}
+	// remove virtual scroller for small selects so primevue knows
+	// what height to make the list container
+	return undefined;
 });
 
 const selectValues = (values: readonly string[]) => {
@@ -65,7 +74,7 @@ const selectedLabels = computed(() => {
 		option-label="search"
 		:panel-class="panelClass"
 		:model-value="question.currentState.value"
-		:virtual-scroller-options="{ itemSize: DEFAULT_PRIMEVUE_ITEM_HEIGHT }"
+		:virtual-scroller-options="virtualScrollerOptions"
 		@update:model-value="selectValues"
 		@change="$emit('change')"
 	>

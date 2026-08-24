@@ -1,4 +1,4 @@
-import { TRANSLATE, SUBMIT_PRESSED } from '@/lib/constants/injection-keys.ts';
+import { TRANSLATE, SUBMIT_PRESSED } from '@getodk/web-forms/lib/constants/injection-keys.ts';
 import type { AnyFunction } from '@getodk/common/types/helpers.d.ts';
 import type { RootNode } from '@getodk/xforms-engine';
 import { createInstance } from '@getodk/xforms-engine';

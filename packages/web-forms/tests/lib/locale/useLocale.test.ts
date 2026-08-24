@@ -1,4 +1,8 @@
-import { normalizeMessages, STORAGE_KEY, useLocale } from '@/lib/locale/useLocale.ts';
+import {
+  normalizeMessages,
+  STORAGE_KEY,
+  useLocale,
+} from '@getodk/web-forms/lib/locale/useLocale.ts';
 import type { FormLanguage, RootNode } from '@getodk/xforms-engine';
 import { flushPromises, mount } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';

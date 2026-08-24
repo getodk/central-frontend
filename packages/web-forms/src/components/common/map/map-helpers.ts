@@ -1,8 +1,11 @@
 import {
   SINGLE_FEATURE_TYPES,
   type SingleFeatureType,
-} from '@/components/common/map/getModeConfig.ts';
-import { getFlatCoordinates, isCoordsEqual } from '@/components/common/map/vertex-geometry.ts';
+} from '@getodk/web-forms/components/common/map/getModeConfig.ts';
+import {
+  getFlatCoordinates,
+  isCoordsEqual,
+} from '@getodk/web-forms/components/common/map/vertex-geometry.ts';
 import type { Coordinate } from 'ol/coordinate';
 import type Feature from 'ol/Feature';
 import type { LineString, Point, Polygon } from 'ol/geom';

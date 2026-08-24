@@ -1,3 +1,4 @@
+import ActorPropertiesNew from '../../../src/components/actor-properties/new.vue';
 import ActorPropertiesUpsert from '../../../src/components/actor-properties/upsert.vue';
 import EntityUpdateRow from '../../../src/components/entity/update/row.vue';
 
@@ -46,5 +47,37 @@ describe('ActorPropertiesUpsert', () => {
     });
     const rows = component.findAllComponents(EntityUpdateRow);
     rows.length.should.equal(0);
+  });
+
+  it('shows an empty state message when propertyDefs is empty', () => {
+    const component = mountComponent({
+      props: { propertyDefs: [], propertyValues: {} }
+    });
+    component.find('.actor-properties-empty').exists().should.be.true;
+    component.find('.table').exists().should.be.false;
+  });
+
+  it('does not show the empty state message when there are properties', () => {
+    const component = mountComponent();
+    component.find('.actor-properties-empty').exists().should.be.false;
+    component.find('.table').exists().should.be.true;
+  });
+
+  describe('+ Add Property', () => {
+    it('shows ActorPropertiesNew when create is true', () => {
+      const component = mountComponent({ props: { create: true } });
+      component.findComponent(ActorPropertiesNew).exists().should.be.true;
+    });
+
+    it('shows ActorPropertiesNew in edit mode when create is false', () => {
+      const component = mountComponent({ props: { create: false } });
+      component.findComponent(ActorPropertiesNew).exists().should.be.true;
+    });
+
+    it('shows a new row when a property is added', async () => {
+      const component = mountComponent({ props: { create: true } });
+      await component.setProps({ propertyDefs: [...component.props('propertyDefs'), { name: 'newprop' }] });
+      component.findAllComponents(EntityUpdateRow).length.should.equal(3);
+    });
   });
 });
