@@ -104,6 +104,6 @@ summary {
 }
 
 :focus-visible {
-  outline: 1px solid #3e9fcc;
-  outline-offset: 1px;
+  outline: none;
+  outline-offset: unset;
 }

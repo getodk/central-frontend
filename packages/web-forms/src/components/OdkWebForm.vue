@@ -253,8 +253,16 @@ const init = async () => {
 
 void init();
 
+const releaseFocus = () => {
+	const active = document.activeElement;
+	if (active instanceof HTMLElement) {
+		active.blur();
+	}
+};
+
 const handleSubmit = (currentState: FormStateSuccessResult) => {
 	const { root } = currentState;
+	releaseFocus(); // so follow-up dialogs don't restore focus here and scroll back to it
 
 	if (root.validationState.violations.length === 0) {
 		floatingErrorActive.value = false;
