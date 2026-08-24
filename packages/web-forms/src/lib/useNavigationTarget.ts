@@ -1,6 +1,6 @@
 import type { RootNode } from '@getodk/xforms-engine';
 import { nextTick, watch } from 'vue';
-import { containerId } from '@/lib/format/ids.ts';
+import { containerId } from '@getodk/web-forms/lib/format/ids.ts';
 
 type ScrollAlignment = 'center' | 'start';
 

@@ -4,7 +4,7 @@ import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
 import FormFooter from '@getodk/web-forms/components/form-layout/FormFooter.vue';
 import FormHeader from '@getodk/web-forms/components/form-layout/FormHeader.vue';
 import QuestionList from '@getodk/web-forms/components/form-layout/QuestionList.vue';
-import { waitAllTasksToFinish } from '@/lib/async/event-loop.ts';
+import { waitAllTasksToFinish } from '@getodk/web-forms/lib/async/event-loop.ts';
 import {
 	TRANSLATE,
 	FORM_MEDIA_CACHE,
@@ -15,7 +15,8 @@ import {
 import type { FormStateSuccessResult } from '@getodk/web-forms/lib/init/form-state.ts';
 import { initializeFormState } from '@getodk/web-forms/lib/init/initialize-form-state.ts';
 import { loadFormState } from '@getodk/web-forms/lib/init/load-form-state';
-import type { EditInstanceOptions, FormOptions } from '@/lib/init/load-form-state.ts';
+import type { EditInstanceOptions, FormOptions } from '@getodk/web-forms/lib/init/load-form-state.ts';
+import { useNavigationTarget } from '@getodk/web-forms/lib/useNavigationTarget.ts';
 import { updateSubmittedFormState } from '@getodk/web-forms/lib/init/update-submitted-form-state.ts';
 import { geolocationService } from '@getodk/web-forms/lib/services/geolocationService.ts';
 import { useLocale } from '@getodk/web-forms/lib/locale/useLocale.ts';
@@ -353,9 +354,10 @@ onUnmounted(() => {
 				<Button
 					v-if="validationErrorMessage?.length"
 					link
+					class="view-error-button"
 					@click="navigateToFirstViolation"
 				>
-					{{ t('odk_web_forms.validation.view.label') }}
+					<strong>{{ t('odk_web_forms.validation.view.label') }}</strong>
 				</Button>
 			</Message>
 
@@ -445,6 +447,7 @@ onUnmounted(() => {
 				display: flex;
 				align-items: center;
 				font-weight: 400;
+				flex: 1;
 			}
 
 			.odk-icon {
@@ -459,6 +462,13 @@ onUnmounted(() => {
 				li:not(:last-child) {
 					margin-bottom: var(--odk-spacing-m);
 				}
+			}
+
+			.view-error-button {
+				margin-left: auto;
+				min-width: 0;
+				color: inherit;
+				text-align: right;
 			}
 		}
 	}

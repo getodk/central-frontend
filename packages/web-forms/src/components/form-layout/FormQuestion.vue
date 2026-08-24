@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { QUESTION_HAS_ERROR, SUBMIT_PRESSED } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import { containerId } from '@getodk/web-forms/lib/format/ids.ts';
 import type {
 	AnyInputNode,
 	AnyNoteNode,
