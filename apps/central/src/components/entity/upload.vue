@@ -454,6 +454,12 @@ watch(() => props.state, (state) => {
 .entity-upload-section-title {
   font-size: 16px;
   font-weight: bold;
+  margin-bottom: 4px;
+
+  ~ p {
+    margin-bottom: 10px;
+    &:last-of-type { margin-bottom: 20px; }
+  }
 }
 </style>
 

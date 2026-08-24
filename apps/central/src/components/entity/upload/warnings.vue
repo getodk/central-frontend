@@ -12,6 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="entity-upload-warnings">
     <p class="entity-upload-section-title">{{ $t('title') }}</p>
+    <p>{{ $t('introduction') }}</p>
 
     <!-- Column header warnings -->
     <entity-upload-warning v-if="missingProperties != null">
@@ -66,6 +67,7 @@ defineEmits(['rows']);
     // This text is shown above a section where the user can review warnings
     // about their data.
     "title": "Review warnings",
+    "introduction": "Some rows contain warnings that may affect upload results.",
 
     // @transifexKey component.EntityUploadHeaderReview.missingProperties
     // This text is followed by a list of Entity property names.
