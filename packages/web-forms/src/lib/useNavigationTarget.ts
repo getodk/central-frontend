@@ -2,45 +2,46 @@ import type { RootNode } from '@getodk/xforms-engine';
 import { nextTick, watch } from 'vue';
 import { containerId } from '@/lib/format/ids.ts';
 
-const findContainer = (nodeId: string): HTMLElement | null => {
-  return document.getElementById(containerId(nodeId));
-};
+type ScrollAlignment = 'center' | 'start';
 
-const scrollToContainer = (container: HTMLElement) => {
-  const documentTop = container.getBoundingClientRect().top + window.scrollY;
-  if (documentTop < window.innerHeight) {
-    document.scrollingElement?.scrollTo({ top: 0, behavior: 'smooth' });
+const scrollToContainer = (container: HTMLElement, align: ScrollAlignment) => {
+  const rect = container.getBoundingClientRect();
+  const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+  const isMostlyVisible = visibleHeight >= rect.height * 0.5;
+
+  if (align === 'start' && isMostlyVisible) {
     return;
   }
-  container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  container.scrollIntoView({ behavior: 'smooth', block: align });
 };
 
-const navigateTo = (nodeId: string) => {
-  const container = findContainer(nodeId);
-  if (container == null) {
+const navigateTo = (nodeId: string, align: ScrollAlignment = 'start') => {
+  const id = containerId(nodeId);
+  const container = document.getElementById(id);
+
+  if (!container) {
     return;
   }
-  scrollToContainer(container);
-  container.focus({ preventScroll: true });
-};
 
-const applyCurrentTarget = (root: RootNode) => {
-  const target = root.currentState.navigationTarget;
-  if (target) {
-    navigateTo(target);
-  }
+  scrollToContainer(container, align);
+  const focusTarget = document.getElementById(nodeId) ?? container;
+  focusTarget.focus({ preventScroll: true });
 };
 
 const navigateToFirstViolation = (root: RootNode | null) => {
   if (!root) {
     return;
   }
-  const targetBeforeNavigation = root.currentState.navigationTarget;
+
   root.navigateToFirstViolation();
-  // The engine updates navigationTarget; if the value didn't change, the watcher won't fire, so trigger the scroll and focus here
-  if (root.currentState.navigationTarget === targetBeforeNavigation) {
-    void nextTick(() => applyCurrentTarget(root));
-  }
+  // Skips visible targets and stays silent when the target didn't change.
+  void nextTick(() => {
+    const target = root.currentState.navigationTarget;
+    if (target) {
+      navigateTo(target, 'center');
+    }
+  });
 };
 
 export const useNavigationTarget = (getRoot: () => RootNode | null) => {
