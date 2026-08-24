@@ -7,11 +7,13 @@ import { withSetup } from '../util/lifecycle';
 
 describe('useVersionMonitor()', () => {
   it('reloads the page after a vite:preloadError event', () => {
+    const clock = sinon.useFakeTimers();
     const reload = sinon.fake();
     const container = createTestContainer({
       location: { reload }
     });
     withSetup(useVersionMonitor, { container });
+    clock.tick(30000);
     window.dispatchEvent(new Event('vite:preloadError'));
     reload.called.should.be.true;
   });
