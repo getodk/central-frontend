@@ -184,11 +184,12 @@ describe('SelectControl', () => {
         root = await getReactiveForm('select-control.xml');
         selectNode = getSelectNodeByReference(root, reference);
         component = mountComponent(selectNode);
-        controlElement = component.find(`[id="${selectNode.nodeId}"]`);
+        controlElement = component.find(`.${SELECT_CLASS}`);
       });
 
-      it('renders as a dropdown', () => {
-        expect(controlElement.classes()).toContain(SELECT_CLASS);
+      it('renders as a dropdown with the focusable element carrying the node id', () => {
+        expect(controlElement.exists()).toBe(true);
+        expect(controlElement.find(`[id="${selectNode.nodeId}"]`).exists()).toBe(true);
       });
 
       const expectedOptionLabels = ['Karachi', 'Toronto', 'Lahore', 'Islamabad', 'Vancouver'];

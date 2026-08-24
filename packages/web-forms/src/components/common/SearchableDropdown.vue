@@ -44,7 +44,7 @@ const selectValue = (value: string) => {
 
 <template>
 	<Select
-		:id="question.nodeId"
+		:input-id="question.nodeId"
 		class="dropdown"
 		:filter="question.appearances.autocomplete"
 		filter-match-mode="contains"
