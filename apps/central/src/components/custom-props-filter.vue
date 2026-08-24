@@ -21,7 +21,7 @@
               {{ p.name }}
             </option>
           </select>
-          <span class="equals-operator">=</span>
+          <span>=</span>
           <select v-model="pendingValue" class="form-control value-select"
             :disabled="pendingProperty === ''" :aria-label="$t('header.value')">
             <option value="" disabled>{{ $t('header.value') }}</option>
@@ -99,7 +99,7 @@ const availableValues = computed(() => {
 
 // Badge text shown on the trigger button
 const displayValue = computed(() => {
-  if (props.modelValue == null) return t('common.all');
+  if (props.modelValue == null) return t('action.all');
   return `${props.modelValue.property} = ${props.modelValue.value}`;
 });
 
@@ -149,7 +149,6 @@ const onShow = () => {
     padding: 4px 8px;
     border-radius: 100px;
     background: $color-action-light;
-    border: none;
     color: $color-text;
     line-height: 16px;
   }
@@ -173,12 +172,6 @@ const onShow = () => {
 
     .property-select {
       flex: 1;
-    }
-
-    .equals-operator {
-      font-weight: bold;
-      color: $color-text;
-      flex-shrink: 0;
     }
 
     .value-select {
@@ -214,3 +207,20 @@ const onShow = () => {
   }
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "action": {
+      /*
+      This is the text of the button in dropdown menu of an actor (app user or public link)
+      "Properties" filter, that allows the user to select all app users
+      with all properties (no filter applied).
+      */
+      "all": "All",
+      // @transifexKey component.Multiselect.action.apply
+      "apply": "Apply"
+    }
+  }
+}
+</i18n>

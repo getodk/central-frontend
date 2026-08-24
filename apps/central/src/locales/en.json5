@@ -196,7 +196,6 @@
   },
   "action": {
     "add": "Add",
-    "apply": "Apply",
     "cancel": "Cancel",
     "clear": "Clear",
     "close": "Close",
@@ -424,7 +423,6 @@
     "conflictsCount": "{count} conflict | {count} conflicts"
   },
   "common": {
-    "all": "All",
     // This is a title shown above a section of the page.
     "activity": "Activity",
     // This is shown in a dropdown that allows the user to filter to only show

@@ -361,10 +361,6 @@
       "string": "Add",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
-    "apply": {
-      "string": "Apply",
-      "developer_comment": "This is the text for an action, for example, the text of a button."
-    },
     "cancel": {
       "string": "Cancel",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -938,9 +934,6 @@
     }
   },
   "common": {
-    "all": {
-      "string": "All"
-    },
     "activity": {
       "string": "Activity",
       "developer_comment": "This is a title shown above a section of the page."
@@ -1822,6 +1815,14 @@
     "ConfigLoginPreview": {
       "introduction": {
         "string": "Your login page now looks like this:"
+      }
+    },
+    "CustomPropsFilter": {
+      "action": {
+        "all": {
+          "string": "All",
+          "developer_comment": "This is the text of the button in dropdown menu of an actor (app user or public link) \"Properties\" filter, that allows the user to select all app users with all properties (no filter applied)."
+        }
       }
     },
     "DatasetDelete": {
