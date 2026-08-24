@@ -90,6 +90,11 @@ export class LocationPathEvaluator
 
         const filteredNodes: T[] = [];
 
+        // IF currentContext.contextSize() is big AND currentContext is immutable
+        // THEN evaluate the absolute location path expressions (either LHS or RHS)
+        // AND use that as a cache key written to a cache on this obj(?)
+        console.log({ predicateExpression, size: currentContext.contextSize() });
+
         for (const self of currentContext) {
           if (positionPredicate != null) {
             if (self.contextPosition() === positionPredicate) {
