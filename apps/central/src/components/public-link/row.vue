@@ -15,15 +15,13 @@ except according to the terms contained in the LICENSE file.
       <div class="btn-group">
         <button v-if="publicLink.token != null && showEdit" type="button"
           class="edit-button btn btn-default"
-          :aria-label="$t('action.edit')" v-tooltip.aria-label
           @click="$emit('edit', publicLink)">
-          <span class="icon-pencil"></span>
+          <span class="icon-pencil"></span>{{ $t('action.edit') }}
         </button>
         <button v-if="publicLink.token != null" type="button"
           class="revoke-button btn btn-default"
-          :aria-label="$t('action.revoke')" v-tooltip.aria-label
           @click="$emit('revoke', publicLink)">
-          <span class="icon-times-circle"></span>
+          <span class="icon-times-circle"></span>{{ $t('action.revoke') }}
         </button>
       </div>
     </td>
@@ -112,7 +110,6 @@ export default {
 
   .btn-group {
     @include icon-btn-group;
-    .icon-times-circle { color: $color-danger; }
   }
 }
 </style>
@@ -120,10 +117,6 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    "action": {
-      "edit": "Edit Public Access Link",
-      "revoke": "Revoke"
-    },
     // This text is shown for a Public Access Link that has been revoked. The
     // text appears on its own and is not part of a longer sentence.
     "revoked": "Revoked",

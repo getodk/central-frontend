@@ -4,7 +4,7 @@
   padding: min(0.5em, 10px);
   border-radius: 6px;
   color: $color-accent-primary;
-  background-color: rgba($color-accent-primary, 0.1);  
+  background-color: rgba($color-accent-primary, 0.1);
 }
 
 
@@ -73,11 +73,11 @@
 // a tooltip).
 @mixin icon-btn-group {
   .btn {
-    [class^="icon-"] { margin-right: 0; }
-    .icon-check { margin-right: -1px; }
-    .icon-pencil { margin-left: 1px; }
+    // [class^="icon-"] { margin-right: 0; }
+    // .icon-check { margin-right: -1px; }
+    // .icon-pencil { margin-left: 1px; }
 
-    .icon-trash { color: $color-danger; }
+    // .icon-trash { color: $color-danger; }
   }
 
   .more-button {

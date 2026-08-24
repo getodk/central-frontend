@@ -16,9 +16,8 @@ except according to the terms contained in the LICENSE file.
       <div v-else-if="deleted && verbs.has('entity.restore')" class="btn-group">
         <button type="button"
           class="restore-button btn btn-default"
-          :aria-disabled="awaitingResponse"
-          :aria-label="$t('action.restore')" v-tooltip.aria-label>
-          <span class="icon-recycle"></span><spinner :state="awaitingResponse"/>
+          :aria-disabled="awaitingResponse">
+          <span class="icon-recycle"></span>{{ $t('action.restore') }}<spinner :state="awaitingResponse"/>
         </button>
       </div>
     </td>

@@ -15,15 +15,13 @@ except according to the terms contained in the LICENSE file.
       <div class="btn-group">
         <button v-if="fieldKey.token != null && showEdit" type="button"
           class="edit-button btn btn-default"
-          :aria-label="$t('action.editAppUser')" v-tooltip.aria-label
           @click="$emit('edit', fieldKey)">
-          <span class="icon-pencil"></span>
+          <span class="icon-pencil"></span>{{ $t('action.edit') }}
         </button>
         <button v-if="fieldKey.token != null" type="button"
           class="revoke-button btn btn-default"
-          :aria-label="$t('action.revokeAccess')" v-tooltip.aria-label
           @click="$emit('revoke', fieldKey)">
-          <span class="icon-ban"></span>
+          <span class="icon-ban"></span>{{ $t('action.revoke') }}
         </button>
       </div>
     </td>
@@ -81,7 +79,6 @@ export default {
 
   .btn-group {
     @include icon-btn-group;
-    .icon-ban { color: $color-danger; }
   }
 }
 </style>
@@ -93,10 +90,6 @@ export default {
     "seeCode": "See code",
     // This text is shown for an App User whose access has been revoked.
     "accessRevoked": "Access revoked",
-    "action": {
-      "editAppUser": "Edit App User",
-      "revokeAccess": "Revoke access"
-    }
   }
 }
 </i18n>
