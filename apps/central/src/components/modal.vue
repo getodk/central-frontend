@@ -310,9 +310,9 @@ const titleId = `modal-title${id}`;
         margin-bottom: $padding-modal-content-spacing;
       }
 
-      p {
+      :where(&) p {
         max-width: 100%;
-        margin: 0 0 $padding-modal-content-spacing;
+        margin-bottom: $padding-modal-content-spacing;
 
         // If p is the last element or right before modal-actions, remove bottom spacing
         &:last-child,
