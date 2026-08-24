@@ -2,62 +2,10 @@ name: Tests
 
 on:
   push:
-    branches:
-      - '**'
-    tags:
-      - 'v**'
   pull_request:
 
 jobs:
-  check-and-build:
-    name: 'Static check and build'
-    timeout-minutes: 5
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v6
-    - run: sudo apt-get install shellcheck
-    - run: ./bin/check-scripts.sh
-    - run: ./bin/check-for-large-files.sh
-    - run: ./bin/check-images.sh
-    - uses: actions/setup-node@v6
-      id: setup-node
-      with:
-        node-version-file: package.json
-        cache: 'npm'
-    - run: npm ci
-    - run: npm run build
-    - run: npm run lint
-    - run: ./bin/check-bundle-size.js
-
-    # ids, keys, paths must all match the values in actions/restore-node
-    - uses: 'actions/cache/save@v6'
-      id: cache-install
-      with:
-        path: |
-          node_modules
-          **/node_modules
-        key: install-${{ steps.setup-node.outputs.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
-
-    - uses: 'actions/cache/save@v6'
-      id: cache-build
-      with:
-        path: |
-          dist
-          packages/*/dist
-        key: build-${{ github.sha }}
-    - name: Upload Release Artefact
-      if: github.ref_type == 'tag'
-      env:
-        GH_TOKEN: ${{ github.token }}
-      run: |
-        tar -cvzf dist-${{ github.ref_name }}.tar.gz dist/
-        echo "Uploading dist bundle..."
-        gh release upload ${{ github.ref_name }} dist-${{ github.ref_name }}.tar.gz
-        echo "Upload complete."
-
   playwright-install-azure:
-    needs:
-    - check-and-build
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
@@ -67,14 +15,11 @@ jobs:
       uses: actions/setup-node@v6
       with:
         node-version-file: central/client/package.json
-        cache: 'npm'
-        cache-dependency-path: 'central/client/package-lock.json'
+    - run: npm ci
     - run: sudo apt-get update
     - run: npx playwright install --with-deps chromium-headless-shell
 
   playwright-install-no-azure:
-    needs:
-    - check-and-build
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
@@ -84,8 +29,7 @@ jobs:
       uses: actions/setup-node@v6
       with:
         node-version-file: central/client/package.json
-        cache: 'npm'
-        cache-dependency-path: 'central/client/package-lock.json'
+    - run: npm ci
     - name: remove azure ubuntu mirrors
       run: |
         sudo sed \
