@@ -140,7 +140,7 @@ test.describe('ODK Web Forms', () => {
           if(normalisedMsg !== 'Failed to load resource: the server responded with a status of 401 (Unauthorized)') return false;
           const { url } = consoleMsg.location();
           return url.startsWith('http://central-test.localhost/v1/form-links/') ||
-                 url === `http://central-test.localhost/v1/projects/${projectId}` ||
+                 url === `http://central-test.localhost/v1/projects/${projectId}?verbs=true` ||
                  url === `http://central-test.localhost/v1/projects/${projectId}/forms/${publishedForm.xmlFormId}`;
         });
 
