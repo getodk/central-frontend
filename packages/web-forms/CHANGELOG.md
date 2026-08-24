@@ -1,5 +1,13 @@
 # @getodk/web-forms
 
+## 1.0.3
+
+### Patch Changes
+
+- 4088ca0: Fixed `setvalue` actions failing to set a value on `readonly` fields.
+- 3a50d3c: Fixed a bug where setting invalid dates to string values throws an error.
+- 092e357: Fixed a bug where the XPath sum() function returned NaN instead of 0 when no nodes matched the expression.
+
 ## 1.0.2
 
 ### Patch Changes

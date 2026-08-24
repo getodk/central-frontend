@@ -65,6 +65,13 @@ router.afterEach(unlessFailure(to => {
   // user is trying to navigate to a parent route, which isn't expected.
   router.beforeEach(to => (Object.keys(to.meta).length === 0 ? '/' : true));
 
+  // Remove trailing slashes from the path.
+  router.beforeEach(to => {
+    let { path } = to;
+    while (path.endsWith('/') && path !== '/') path = path.slice(0, -1);
+    return path === to.path ? true : { path, query: to.query, hash: to.hash };
+  });
+
   // If a route is nested, its relative path is '', and that path is an alias,
   // then we redirect to the canonical path. That turned out to be easier than
   // using the `redirect` option of Vue Router.
