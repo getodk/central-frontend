@@ -1,6 +1,6 @@
 import { nextTick } from 'vue';
 
-import EntityUploadWarning from '../../../../src/components/entity/upload/warning.vue';
+import EntityUploadAlert from '../../../../src/components/entity/upload/alert.vue';
 import EntityUploadWarnings from '../../../../src/components/entity/upload/warnings.vue';
 
 import { mount } from '../../../util/lifecycle';
@@ -15,7 +15,7 @@ describe('EntityUploadWarnings', () => {
     // Wait for I18nList to render.
     await nextTick();
 
-    const p = component.getComponent(EntityUploadWarning).findAll('p');
+    const p = component.getComponent(EntityUploadAlert).findAll('p');
     p.length.should.equal(2);
     p[0].text().should.startWith('These properties are not included in your file');
     p[1].text().should.equal('foo, bar');
@@ -25,7 +25,7 @@ describe('EntityUploadWarnings', () => {
     const component = mountComponent({
       props: { raggedRows: [[1, 2]] }
     });
-    const warning = component.getComponent(EntityUploadWarning);
+    const warning = component.getComponent(EntityUploadAlert);
     warning.text().should.startWith('Fewer columns were found than expected');
     expect(warning.props().ranges).to.eql([[1, 2]]);
   });
@@ -34,7 +34,7 @@ describe('EntityUploadWarnings', () => {
     const component = mountComponent({
       props: { largeCell: 1 }
     });
-    const warning = component.getComponent(EntityUploadWarning);
+    const warning = component.getComponent(EntityUploadAlert);
     warning.text().should.startWith('Some cells are abnormally large');
     expect(warning.props().ranges).to.eql([[1, 1]]);
   });
@@ -43,7 +43,7 @@ describe('EntityUploadWarnings', () => {
     const component = mountComponent({
       props: { raggedRows: [[1, 2]], largeCell: 3 }
     });
-    const warnings = component.findAllComponents(EntityUploadWarning);
+    const warnings = component.findAllComponents(EntityUploadAlert);
     warnings.length.should.equal(2);
     const titles = warnings.map(warning => warning.get('p').text());
     titles[0].should.startWith('Fewer columns were found than expected');
@@ -54,7 +54,7 @@ describe('EntityUploadWarnings', () => {
     const component = mountComponent({
       props: { raggedRows: [[1, 2]], largeCell: 3 }
     });
-    const warnings = component.findAllComponents(EntityUploadWarning);
+    const warnings = component.findAllComponents(EntityUploadAlert);
     warnings.length.should.equal(2);
     await warnings[0].get('a').trigger('click');
     await warnings[1].get('a').trigger('click');

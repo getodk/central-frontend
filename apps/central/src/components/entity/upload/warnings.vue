@@ -15,29 +15,29 @@ except according to the terms contained in the LICENSE file.
     <p>{{ $t('introduction') }}</p>
 
     <!-- Column header warnings -->
-    <entity-upload-warning v-if="missingProperties != null">
+    <entity-upload-alert v-if="missingProperties != null" type="warning">
       <template #title>
         {{ $tc('missingProperties', missingProperties.length) }}
       </template>
       <template #body>
         <p><i18n-list :list="missingProperties"/></p>
       </template>
-    </entity-upload-warning>
+    </entity-upload-alert>
 
     <!-- Data warnings -->
-    <entity-upload-warning v-if="raggedRows != null" :ranges="raggedRows"
-      @rows="$emit('rows', $event)">
+    <entity-upload-alert v-if="raggedRows != null" type="warning"
+      :ranges="raggedRows" @rows="$emit('rows', $event)">
       <template #title>{{ $t('row.raggedRows') }}</template>
-    </entity-upload-warning>
-    <entity-upload-warning v-if="largeCell != null" :ranges="[[largeCell, largeCell]]"
-      @rows="$emit('rows', $event)">
+    </entity-upload-alert>
+    <entity-upload-alert v-if="largeCell != null" type="warning"
+      :ranges="[[largeCell, largeCell]]" @rows="$emit('rows', $event)">
       <template #title>{{ $t('row.largeCell') }}</template>
-    </entity-upload-warning>
+    </entity-upload-alert>
   </div>
 </template>
 
 <script setup>
-import EntityUploadWarning from './warning.vue';
+import EntityUploadAlert from './alert.vue';
 import I18nList from '../../i18n/list.vue';
 
 defineOptions({
