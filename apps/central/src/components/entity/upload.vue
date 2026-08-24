@@ -328,7 +328,11 @@ const selectFile = (file) => {
             warnings.value = { ...validation.warnings, ...results.warnings.details };
         })
         .catch(error => {
-          if (!signal.aborted) dataError.value = error.message;
+          if (!signal.aborted) {
+            dataError.value = error.message;
+            warnings.value = validation.warnings;
+          }
+
           throw error;
         });
     })
