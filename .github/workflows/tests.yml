@@ -6,7 +6,7 @@ on:
 
 jobs:
   playwright-install-azure:
-    timeout-minutes: 5
+    timeout-minutes: 2
     runs-on: ubuntu-latest
     steps:
     - run: sudo apt-get remove --purge man-db
@@ -20,7 +20,7 @@ jobs:
     - run: npx playwright install --with-deps chromium-headless-shell
 
   playwright-install-no-azure:
-    timeout-minutes: 5
+    timeout-minutes: 2
     runs-on: ubuntu-latest
     steps:
     - run: sudo apt-get remove --purge man-db
