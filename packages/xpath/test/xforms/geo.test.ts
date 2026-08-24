@@ -22,6 +22,7 @@ describe('geo functions', () => {
 
   [
     { argument: SHAPE1, expected: { area: 2333220.77, distance: 5724.36 } },
+    { argument: `  ${SHAPE1}  `, expected: { area: 2333220.77, distance: 5724.36 } }, // whitespace should be trimmed
     { argument: TRACE1, expected: { area: 151451.76, distance: 1800.69 } },
     { argument: TRACE2, expected: { area: 122754.94, distance: 1684.62 } },
     { argument: TRACE3, expected: { area: 93911.49, distance: 2076.24 } },
@@ -62,6 +63,7 @@ describe('geo functions', () => {
     { argument: ['0 1', '', '0 0'], expected: 111318.85 },
     { argument: ['0 1', '0 0', '0 2'], expected: 333956.54 },
     { argument: ['0 0', '0 2'], expected: 222637.69 },
+    { argument: ['0 0 ', '  0 2'], expected: 222637.69 },
   ].forEach(({ argument, expected }, i) => {
     const expr = argument.map((arg) => `"${arg}"`).join(',');
     it(`distance(${expr}) works (${i + 1})`, () => {
@@ -106,7 +108,6 @@ describe('geo functions', () => {
             <div>38.25062091543717 21.76294870700076</div>
             <div>38.25183417221606 21.75692982997134</div>
           </div>
-
           <div id="FunctionArea4">7.9377 -11.5845 0 0;7.9324 -11.5902 0 0;7.927 -11.5857 0 0;7.925 -11.578 0 0;7.9267 -11.5722 0 0;7.9325 -11.5708 0 0;7.9372 -11.5737 0 0;7.9393 -11.579 0 0;7.9377 -11.5845 0 0</div>
         </root>`);
     });

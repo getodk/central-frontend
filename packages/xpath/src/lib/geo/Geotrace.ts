@@ -28,7 +28,7 @@ export const collectLines = (geopoints: readonly Geopoint[]): readonly GeotraceL
   }, Array<GeotraceLine>());
 };
 
-const normalizeInput = (encoded: string): string[] => {
+const splitGeoTrace = (encoded: string): string[] => {
   return (
     encoded
       .trim()
@@ -47,7 +47,7 @@ export const validate = (values: readonly string[]): GeopointValidationResult =>
   }
 
   if (tail.length === 0) {
-    values = normalizeInput(head);
+    values = splitGeoTrace(head);
   }
 
   const geopoints = values.map((value) => geopointCodec.decodeValue(value));

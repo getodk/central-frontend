@@ -109,8 +109,10 @@ export const distance = new NumberFunction(
   'distance',
   [{ arityType: 'required' }, { arityType: 'variadic' }],
   (context, args) => {
-    const argValues = evaluateArgumentValues(context, args);
-    const values = argValues.filter((value) => value.trim() !== '');
+    const values = evaluateArgumentValues(context, args)
+      .map(value => value.trim())
+      .filter(value => value !== '');
+
     if (values.length === 0) {
       // no geo values given
       return NaN;
