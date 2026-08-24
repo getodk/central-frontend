@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
     </button>
     <button v-if="entity.__system.conflict" type="button"
       class="resolve-button btn btn-primary">
-      <span class="icon-random"></span>{{ $t('action.reviewParallelUpdates') }}
+      <span class="icon-random"></span>{{ $t('action.review') }}
     </button>
     <router-link v-slot="{ href }"
       :to="entityPath(project.id, datasetName, entity.__id)" custom>

@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
         <button v-if="fieldKey.token != null" type="button"
           class="revoke-button btn btn-default"
           @click="$emit('revoke', fieldKey)">
-          <span class="icon-ban"></span>{{ $t('action.revokeAccess') }}
+          <span class="icon-ban"></span>{{ $t('action.revoke') }}
         </button>
       </div>
     </td>
@@ -90,10 +90,6 @@ export default {
     "seeCode": "See code",
     // This text is shown for an App User whose access has been revoked.
     "accessRevoked": "Access revoked",
-    "action": {
-      "editAppUser": "Edit",
-      "revokeAccess": "Revoke"
-    }
   }
 }
 </i18n>

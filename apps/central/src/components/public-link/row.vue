@@ -117,10 +117,6 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    "action": {
-      "edit": "Edit",
-      "revoke": "Revoke"
-    },
     // This text is shown for a Public Access Link that has been revoked. The
     // text appears on its own and is not part of a longer sentence.
     "revoked": "Revoked",

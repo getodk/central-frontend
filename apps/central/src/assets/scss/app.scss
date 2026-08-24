@@ -210,6 +210,7 @@ class. */
 
 .btn-primary {
   background-color: $color-action-background;
+  border: 1px solid $color-action-background;
 
   &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
     background-color: $color-action-background-disabled;
