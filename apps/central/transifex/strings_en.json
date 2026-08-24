@@ -461,6 +461,10 @@
       "string": "Review",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
+    "revoke": {
+      "string": "Revoke",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "save": {
       "string": "Save",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -2678,12 +2682,6 @@
         "string": "{count, plural, one {{count} Entity in this area} other {{count} Entities in this area}}"
       }
     },
-    "EntityMetadataRow": {
-      "reviewParallelUpdates": {
-        "string": "Review parallel updates",
-        "developer_comment": "This is the text for an action, for example, the text of a button."
-      }
-    },
     "EntityResolve": {
       "title": {
         "string": "Parallel updates to “{label}”",
@@ -3254,16 +3252,6 @@
       "accessRevoked": {
         "string": "Access revoked",
         "developer_comment": "This text is shown for an App User whose access has been revoked."
-      },
-      "action": {
-        "editAppUser": {
-          "string": "Edit App User",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
-        "revokeAccess": {
-          "string": "Revoke access",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
       }
     },
     "FormAttachmentLinkDataset": {
@@ -5084,16 +5072,6 @@
       }
     },
     "PublicLinkRow": {
-      "action": {
-        "edit": {
-          "string": "Edit Public Access Link",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
-        "revoke": {
-          "string": "Revoke",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
       "revoked": {
         "string": "Revoked",
         "developer_comment": "This text is shown for a Public Access Link that has been revoked. The text appears on its own and is not part of a longer sentence."
