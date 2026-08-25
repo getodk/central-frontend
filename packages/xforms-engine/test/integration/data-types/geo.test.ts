@@ -23,10 +23,6 @@ import { EARTH_EQUATORIAL_CIRCUMFERENCE_METERS } from '../../scenario/jr/core/ut
 
 const NINETY_DEGREES_ON_EQUATOR_KM = EARTH_EQUATORIAL_CIRCUMFERENCE_METERS / 4;
 
-interface RelaxedPrecisionOptions {
-  readonly relaxAssertionPrecision: boolean;
-}
-
 /**
  * **PORTING NOTES**
  *
@@ -147,67 +143,35 @@ describe('Geopoint', () => {
 
   describe('GeoDistanceTest.java', () => {
     describe('distance', () => {
-      /**
-       * **PORTING NOTES**
-       *
-       * Test fails with direct port, passes with relaxed precision in
-       * {@link ExpectStatic.toHaveAnswerCloseTo} assertion. This could be a
-       * difference in precision of one or more of:
-       *
-       * - the XPath `distance` implementation
-       * - the constant referenced in the assertion, and any of its underlying
-       *   computations
-       * - the actual {@link ExpectStatic.toHaveAnswerCloseTo} comparison logic
-       *   (but probably not, notes added there)
-       *
-       * Note that the difference between the directly ported tolerance, and the
-       * ported tolerance, is exceedingly small.
-       */
-      describe.each<RelaxedPrecisionOptions>([
-        { relaxAssertionPrecision: false },
-        { relaxAssertionPrecision: true },
-      ])('relax assertion precision: $relaxAssertionPrecision', ({ relaxAssertionPrecision }) => {
-        let testFn: typeof it | typeof it.fails;
+      it('is computed for a `geopoint` nodeset', async () => {
+        const scenario = await Scenario.init(
+          'geopoint nodeset distance',
+          html(
+            head(
+              title('Geopoint nodeset distance'),
+              model(
+                mainInstance(
+                  t(
+                    'data id="geopoint-distance"',
+                    t('location', t('point', '0 1 0.0 0.0')),
+                    t('location', t('point', '0 91 0.0 0.0')),
+                    t('distance')
+                  )
+                ),
+                bind('/data/location/point').type('geopoint'),
+                bind('/data/distance').type('decimal').calculate('distance(/data/location/point)')
+              )
+            ),
+            body(repeat('/data/location', input('/data/location/point')))
+          )
+        );
 
-        if (relaxAssertionPrecision) {
-          testFn = it;
-        } else {
-          testFn = it.fails;
-        }
-
-        testFn('is computed for [a] `geopoint` nodeset', async () => {
-          const scenario = await Scenario.init(
-            'geopoint nodeset distance',
-            html(
-              head(
-                title('Geopoint nodeset distance'),
-                model(
-                  mainInstance(
-                    t(
-                      'data id="geopoint-distance"',
-                      t('location', t('point', '0 1 0.0 0.0')),
-                      t('location', t('point', '0 91 0.0 0.0')),
-                      t('distance')
-                    )
-                  ),
-                  bind('/data/location/point').type('geopoint'),
-                  bind('/data/distance').type('decimal').calculate('distance(/data/location/point)')
-                )
-              ),
-              body(repeat('/data/location', input('/data/location/point')))
-            )
-          );
-
-          // assertThat(Double.parseDouble(scenario.answerOf("/data/distance").getDisplayText()),
-          // 		closeTo(NINETY_DEGREES_ON_EQUATOR_KM, 1e-7));
-          // })
-          expect(scenario.answerOf('/data/distance')).toHaveAnswerCloseTo(
-            expectedDistance(
-              NINETY_DEGREES_ON_EQUATOR_KM,
-              relaxAssertionPrecision ? 0.0999999 : 1e-7
-            )
-          );
-        });
+        // assertThat(Double.parseDouble(scenario.answerOf("/data/distance").getDisplayText()),
+        // 		closeTo(NINETY_DEGREES_ON_EQUATOR_KM, 1e-7));
+        // })
+        expect(scenario.answerOf('/data/distance')).toHaveAnswerCloseTo(
+          expectedDistance(NINETY_DEGREES_ON_EQUATOR_KM, 1e-7)
+        );
       });
 
       it('is computed for [a calculated] string', async () => {
@@ -347,57 +311,34 @@ describe('Geoshape', () => {
 
   describe('GeoDistanceTest.java', () => {
     describe('distance', () => {
-      /**
-       * **PORTING NOTES**
-       *
-       * Fails on directly ported precision. Same notes as previous test in
-       * first geopoint distance test. Parameterized to demonstrate passage when
-       * accommodated.
-       */
-      describe.each<RelaxedPrecisionOptions>([
-        { relaxAssertionPrecision: false },
-        { relaxAssertionPrecision: true },
-      ])('relax assertion precision: $relaxAssertionPrecision', ({ relaxAssertionPrecision }) => {
-        let testFn: typeof it | typeof it.fails;
+      it('is computed for geoshape', async () => {
+        const scenario = await Scenario.init(
+          'geoshape distance',
+          html(
+            head(
+              title('Geoshape distance'),
+              model(
+                mainInstance(
+                  t(
+                    'data id="geoshape-distance"',
+                    t('polygon', '0 1 0.0 0.0; 0 91 0.0 0.0; 0 1 0.0 0.0;'),
+                    t('distance')
+                  )
+                ),
+                bind('/data/polygon').type('geoshape'),
+                bind('/data/distance').type('decimal').calculate('distance(/data/polygon)')
+              )
+            ),
+            body(input('/data/polygon'))
+          )
+        );
 
-        if (relaxAssertionPrecision) {
-          testFn = it;
-        } else {
-          testFn = it.fails;
-        }
-
-        testFn('is computed for geoshape', async () => {
-          const scenario = await Scenario.init(
-            'geoshape distance',
-            html(
-              head(
-                title('Geoshape distance'),
-                model(
-                  mainInstance(
-                    t(
-                      'data id="geoshape-distance"',
-                      t('polygon', '0 1 0.0 0.0; 0 91 0.0 0.0; 0 1 0.0 0.0;'),
-                      t('distance')
-                    )
-                  ),
-                  bind('/data/polygon').type('geoshape'),
-                  bind('/data/distance').type('decimal').calculate('distance(/data/polygon)')
-                )
-              ),
-              body(input('/data/polygon'))
-            )
-          );
-
-          // assertThat(Double.parseDouble(scenario.answerOf("/data/distance").getDisplayText()),
-          // 		closeTo(NINETY_DEGREES_ON_EQUATOR_KM * 2, 1e-7));
-          // })
-          expect(scenario.answerOf('/data/distance')).toHaveAnswerCloseTo(
-            expectedDistance(
-              NINETY_DEGREES_ON_EQUATOR_KM * 2,
-              relaxAssertionPrecision ? 0.0999999 : 1e-7
-            )
-          );
-        });
+        // assertThat(Double.parseDouble(scenario.answerOf("/data/distance").getDisplayText()),
+        // 		closeTo(NINETY_DEGREES_ON_EQUATOR_KM * 2, 1e-7));
+        // })
+        expect(scenario.answerOf('/data/distance')).toHaveAnswerCloseTo(
+          expectedDistance(NINETY_DEGREES_ON_EQUATOR_KM * 2, 1e-7)
+        );
       });
     });
   });
@@ -406,56 +347,33 @@ describe('Geoshape', () => {
 describe('Geotrace', () => {
   describe('GeoDistanceTest.java', () => {
     describe('distance', () => {
-      /**
-       * **PORTING NOTES**
-       *
-       * Fails on directly ported precision. Same notes as previous test in
-       * first geopoint distance test. Parameterized to demonstrate passage with
-       * relaxed precision.
-       */
-      describe.each<RelaxedPrecisionOptions>([
-        { relaxAssertionPrecision: false },
-        { relaxAssertionPrecision: true },
-      ])('relax assertion precision: $relaxAssertionPrecision', ({ relaxAssertionPrecision }) => {
-        let testFn: typeof it | typeof it.fails;
+      it('is computed for geotrace', async () => {
+        const scenario = await Scenario.init(
+          'geotrace distance',
+          html(
+            head(
+              title('Geotrace distance'),
+              model(
+                mainInstance(
+                  t(
+                    'data id="geotrace-distance"',
+                    t('line', '0 1 0.0 0.0; 0 91 0.0 0.0;'),
+                    t('distance')
+                  )
+                ),
+                bind('/data/line').type('geotrace'),
+                bind('/data/distance').type('decimal').calculate('distance(/data/line)')
+              )
+            ),
+            body(input('/data/line'))
+          )
+        );
 
-        if (relaxAssertionPrecision) {
-          testFn = it;
-        } else {
-          testFn = it.fails;
-        }
-
-        testFn('is computed for geotrace', async () => {
-          const scenario = await Scenario.init(
-            'geotrace distance',
-            html(
-              head(
-                title('Geotrace distance'),
-                model(
-                  mainInstance(
-                    t(
-                      'data id="geotrace-distance"',
-                      t('line', '0 1 0.0 0.0; 0 91 0.0 0.0;'),
-                      t('distance')
-                    )
-                  ),
-                  bind('/data/line').type('geotrace'),
-                  bind('/data/distance').type('decimal').calculate('distance(/data/line)')
-                )
-              ),
-              body(input('/data/line'))
-            )
-          );
-
-          // assertThat(Double.parseDouble(scenario.answerOf("/data/distance").getDisplayText()),
-          // 		closeTo(NINETY_DEGREES_ON_EQUATOR_KM, 1e-7));
-          expect(scenario.answerOf('/data/distance')).toHaveAnswerCloseTo(
-            expectedDistance(
-              NINETY_DEGREES_ON_EQUATOR_KM,
-              relaxAssertionPrecision ? 0.0999999 : 1e-7
-            )
-          );
-        });
+        // assertThat(Double.parseDouble(scenario.answerOf("/data/distance").getDisplayText()),
+        // 		closeTo(NINETY_DEGREES_ON_EQUATOR_KM, 1e-7));
+        expect(scenario.answerOf('/data/distance')).toHaveAnswerCloseTo(
+          expectedDistance(NINETY_DEGREES_ON_EQUATOR_KM, 1e-7)
+        );
       });
 
       describe('when [`geotrace`] trace has fewer than two points', () => {
