@@ -2,8 +2,12 @@ import type { RootNode } from '@getodk/xforms-engine';
 import { nextTick, watch } from 'vue';
 import { containerId } from '@getodk/web-forms/lib/format/ids.ts';
 
-const findFocusTarget = (node: HTMLElement | null, container: HTMLElement | null): HTMLElement | null => {
-  const FOCUSABLE = 'button, input:not(.p-datepicker-input), textarea, [tabindex]:not([tabindex="-1"])';
+const findFocusTarget = (
+  node: HTMLElement | null,
+  container: HTMLElement | null
+): HTMLElement | null => {
+  const FOCUSABLE =
+    'button, input:not(.p-datepicker-input), textarea, [tabindex]:not([tabindex="-1"])';
   if (node?.matches(FOCUSABLE)) {
     return node;
   }

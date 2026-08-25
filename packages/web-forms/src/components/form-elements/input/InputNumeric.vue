@@ -109,10 +109,10 @@ const onInput = (event: InputNumberInputEvent) => {
 
 <template>
 	<InputNumber
-		:input-id="node.nodeId"
 		:key="renderKey"
 		ref="inputRef"
 		v-model="modelValue"
+		:input-id="node.nodeId"
 		:required="node.currentState.required"
 		:disabled="node.currentState.readonly"
 		:show-buttons="true"
