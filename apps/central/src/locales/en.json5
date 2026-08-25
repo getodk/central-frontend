@@ -338,9 +338,9 @@
     "formAttachments": "Form Attachments",
     "project": "Project",
     "projects": "Projects",
-    // This is a data property of an Entity.
+    // This is a data property of an Entity or an Actor.
     "property": "Property",
-    // This refers to the data properties of an Entity.
+    // This refers to the data properties of an Entity or Actor.
     "properties": "Properties",
     "publicLink": "Public Access Link",
     "user": "User",

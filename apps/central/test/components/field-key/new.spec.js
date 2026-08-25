@@ -384,4 +384,32 @@ describe('FieldKeyNew', () => {
         })
         .respondFor('/projects/1/form-access', { project: false }));
   });
+
+  describe('property filters', () => {
+    it('resets the property filter after creating a new app user', () => {
+      testData.extendedProjects.createPast(1, { appUsers: 2 });
+      testData.extendedFieldKeys
+        .createPast(1, { displayName: 'App User 1', properties: { region: 'North' } })
+        .createPast(1, { displayName: 'App User 2', properties: { region: 'South' } });
+      testData.actorProperties.createPast(1, { name: 'region' });
+      return load('/projects/1/app-users')
+        .complete()
+        .request(async (app) => {
+          await app.get('.custom-props-filter .dropdown-trigger').trigger('click');
+          await app.get('.property-select').setValue('region');
+          await app.get('.value-select').setValue('North');
+          await app.get('.apply-btn').trigger('click');
+          await app.get('#field-key-list-create-button').trigger('click');
+          await app.get('#field-key-new input').setValue('App User 3');
+          return app.get('#field-key-new form').trigger('submit');
+        })
+        .respondWithData(() => testData.standardFieldKeys.createNew({ displayName: 'App User 3' }))
+        .complete()
+        .request(app => app.get('#field-key-new .btn-primary').trigger('click'))
+        .respondWithData(() => testData.extendedFieldKeys.sorted())
+        .afterResponse(app => {
+          app.findAll('.field-key-row').length.should.equal(3);
+        });
+    });
+  });
 });
