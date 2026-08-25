@@ -20,7 +20,7 @@ describe('#format-date()', () => {
       id: 'FunctionDateCase2',
       expected: '2012/8 | 12/08 | Aug',
     },
-    // TODO: this should fail according to spec!
+    // TODO: this should fail according to spec because we're passing 'time' identifiers into format-date
     {
       expression: 'format-date(., "%M | %S | %3")',
       id: 'FunctionDateCase2',
@@ -86,9 +86,17 @@ describe('#format-date()', () => {
     });
   });
 
-  it('format-date() - invalid input', () => {
-    [{ expression: "''" }, { expression: "number('invalid')" }].forEach(({ expression }) => {
-      testContext.assertStringValue(`format-date(${expression}, '%Y-%m-%d')`, '');
+  describe('invalid dates', () => {
+    [
+      "format-date('invalid', '%e | %a' )", // not a month
+      "format-date('2026-12-01T25:00:00.000Z', '%e | %a' )", // 25 hours
+      "format-date('2026-12-01T25:00:00.000+10:00', '%e | %a' )", // 25 hours
+      "format-date('2026-13-01', '%e | %a' )", // 13 months
+      "format-date(number('invalid'), '%Y-%m-%d')", // not a number
+    ].forEach((expr) => {
+      it(`handles ${expr}`, () => {
+        testContext.assertStringValue(expr, '');
+      });
     });
   });
 });

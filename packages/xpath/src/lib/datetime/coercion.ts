@@ -6,7 +6,7 @@ import {
 import { Temporal } from 'temporal-polyfill';
 import { isISODateOrDateTimeLike } from './predicates.ts';
 
-export const tryParseDateString = (value: string): Date | null => {
+const tryParseDateString = (value: string): string | null => {
   try {
     const date = new Date(value);
 
@@ -14,13 +14,15 @@ export const tryParseDateString = (value: string): Date | null => {
       return null;
     }
 
-    return date;
+    return `${date.toISOString()}[UTC]`;
   } catch {
     // Intentionally ignored, returns `null` on failure
   }
 
   return null;
 };
+
+const hasTimeZone = (value: string) => TIMEZONE_OFFSET_PATTERN.test(value) || !/^\d{4}/.test(value);
 
 export const dateTimeFromString = (
   timeZone: Temporal.TimeZoneLike,
@@ -31,7 +33,7 @@ export const dateTimeFromString = (
   }
 
   if (value.endsWith('Z')) {
-    return Temporal.ZonedDateTime.from(value.replace(/Z$/, '[UTC]')).withTimeZone(timeZone);
+    value = value.replace(/Z$/, '[UTC]');
   }
 
   const offsetMatch = TIMEZONE_OFFSET_PATTERN.exec(value);
@@ -39,19 +41,24 @@ export const dateTimeFromString = (
     return null;
   }
 
-  if (TIMEZONE_OFFSET_PATTERN.test(value) || !/^\d{4}/.test(value)) {
-    const date = tryParseDateString(value);
-
-    if (date == null) {
+  const zoned = hasTimeZone(value);
+  if (zoned) {
+    const parsed = tryParseDateString(value);
+    if (!parsed) {
       return null;
     }
-
-    const dateTimeString = `${date.toISOString()}[UTC]`;
-
-    return Temporal.ZonedDateTime.from(dateTimeString).withTimeZone(timeZone);
+    try {
+      return Temporal.ZonedDateTime.from(parsed).withTimeZone(timeZone);
+    } catch {
+      return null;
+    }
   }
 
-  return Temporal.PlainDateTime.from(value).toZonedDateTime(timeZone);
+  try {
+    return Temporal.PlainDateTime.from(value).toZonedDateTime(timeZone);
+  } catch {
+    return null;
+  }
 };
 
 const toNanoseconds = (milliseconds: number): bigint => {
