@@ -22,6 +22,7 @@ describe('geo functions', () => {
 
   [
     { argument: SHAPE1, expected: { area: 2333220.77, distance: 5724.36 } },
+    { argument: `  ${SHAPE1}  `, expected: { area: 2333220.77, distance: 5724.36 } }, // whitespace should be trimmed
     { argument: TRACE1, expected: { area: 151451.76, distance: 1800.69 } },
     { argument: TRACE2, expected: { area: 122754.94, distance: 1684.62 } },
     { argument: TRACE3, expected: { area: 93911.49, distance: 2076.24 } },
@@ -30,39 +31,51 @@ describe('geo functions', () => {
     { argument: '0 0;0 1', expected: { area: 0.0, distance: 111318.85 } },
     { argument: '0 0;0 90', expected: { area: 0.0, distance: 10018696.05 } },
     { argument: '90 0;90 1', expected: { area: 0.0, distance: 0.0 } },
+    { argument: '', expected: { area: 0.0, distance: NaN } },
+    { argument: '90 0', expected: { area: 0.0, distance: NaN } }, // single point, no distance
   ].forEach(({ argument, expected }, i) => {
-    it(`area(${argument}) works (${i + 1})`, () => {
+    it(`area("${argument}") works (${i + 1})`, () => {
       testContext.assertNumberValue(`area("${argument}")`, expected.area);
     });
 
-    it(`distance(${argument}) works (${i + 1})`, () => {
+    it(`distance("${argument}") works (${i + 1})`, () => {
       testContext.assertNumberValue(`distance("${argument}")`, expected.distance);
     });
   });
 
   // Invalid arguments (for both distance/area functions)
   [
-    // Invalid because points exceed supported degrees
-    '5000 5000; 5000 5000',
-    // Arbitrary string is not a valid point
-    'a',
-    // Empty/blank string is not a valid point
-    '',
+    '5000 5000; 5000 5000', // Invalid because points exceed supported degrees
+    'a', // Arbitrary string is not a valid point
   ].forEach((invalidArgument) => {
-    // Note: previous iterations of this test, inherited from
-    // Enketo/openrosa-xpath-evaluator, expected `NaN`. Updated test reflects
-    // consistency with JavaRosa.
     it(`area("${invalidArgument}") returns 0`, () => {
       testContext.assertNumberValue(`area("${invalidArgument}")`, 0);
     });
 
-    // Note: previous iterations of this test, inherited from
-    // Enketo/openrosa-xpath-evaluator, expected `NaN`. Updated test reflects
-    // consistency with JavaRosa.
     it(`distance("${invalidArgument}") fails`, () => {
       const evaluate = () => testContext.evaluator.evaluateNumber(`distance("${invalidArgument}")`);
+      expect(evaluate).toThrow();
+    });
+  });
 
-      expect(evaluate).toThrowError();
+  [
+    { argument: ['0 1', '0 0'], expected: 111318.85 },
+    { argument: ['0 1', '', '0 0'], expected: 111318.85 },
+    { argument: ['0 1', '0 0', '0 2'], expected: 333956.54 },
+    { argument: ['0 0', '0 2'], expected: 222637.69 },
+    { argument: ['0 0 ', '  0 2'], expected: 222637.69 },
+  ].forEach(({ argument, expected }, i) => {
+    const expr = argument.map((arg) => `"${arg}"`).join(',');
+    it(`distance(${expr}) works (${i + 1})`, () => {
+      testContext.assertNumberValue(`distance(${expr})`, expected);
+    });
+  });
+
+  [['0 1', 'a']].forEach((invalidArgument) => {
+    const expr = invalidArgument.map((arg) => `"${arg}"`).join(',');
+    it(`distance(${expr}) fails`, () => {
+      const evaluate = () => testContext.evaluator.evaluateNumber(`distance(${expr})`);
+      expect(evaluate).toThrow();
     });
   });
 
@@ -95,7 +108,6 @@ describe('geo functions', () => {
             <div>38.25062091543717 21.76294870700076</div>
             <div>38.25183417221606 21.75692982997134</div>
           </div>
-
           <div id="FunctionArea4">7.9377 -11.5845 0 0;7.9324 -11.5902 0 0;7.927 -11.5857 0 0;7.925 -11.578 0 0;7.9267 -11.5722 0 0;7.9325 -11.5708 0 0;7.9372 -11.5737 0 0;7.9393 -11.579 0 0;7.9377 -11.5845 0 0</div>
         </root>`);
     });
@@ -165,8 +177,12 @@ describe('geo functions', () => {
       testContext.assertBooleanValue('geofence(/root/point, /root/area)', false);
     });
 
-    it('returns false when second parameter is not valid trace', () => {
+    it('returns false when second parameter is empty', () => {
       testContext.assertBooleanValue('geofence("0 0 0 0", "")', false);
+    });
+
+    it('returns false when second parameter is not valid trace', () => {
+      testContext.assertBooleanValue('geofence("0 0 0 0", "abc")', false);
     });
 
     it('returns false when second parameter is not a closed shape', () => {

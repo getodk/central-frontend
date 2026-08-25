@@ -1,11 +1,10 @@
 import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import { EvaluationContext } from '../../context/EvaluationContext.ts';
-import { JRCompatibleGeoValueError } from '../../error/JRCompatibleGeoValueError.ts';
 import { BooleanFunction } from '../../evaluator/functions/BooleanFunction.ts';
 import type { EvaluableArgument } from '../../evaluator/functions/FunctionImplementation.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
 import { Geopoint } from '../../lib/geo/Geopoint.ts';
-import { Geotrace } from '../../lib/geo/Geotrace.ts';
+import { collectLines, validate } from '../../lib/geo/Geotrace.ts';
 import type { GeotraceLine } from '../../lib/geo/GeotraceLine.ts';
 
 const EARTH_EQUATORIAL_RADIUS_METERS = 6_378_100;
@@ -29,28 +28,30 @@ const toAbsolutePrecision = (value: number, precision: number) => {
   return Math.abs(toPrecision(value, precision));
 };
 
-const geodesicArea = (lines: readonly GeotraceLine[]): number => {
+const closeShape = (lines: readonly GeotraceLine[]): readonly GeotraceLine[] => {
   const [firstLine, ...rest] = lines;
   const lastLine = rest[rest.length - 1];
 
   if (firstLine == null || lastLine == null) {
-    return 0;
+    return [];
   }
 
   const { start } = firstLine;
   const { end } = lastLine;
 
-  let shape: readonly GeotraceLine[];
-
   if (start.latitude === end.latitude && start.longitude === end.longitude) {
-    shape = lines;
-  } else {
-    shape = [...lines, { start: end, end: start }];
+    // already closed
+    return lines;
   }
+
+  return [...lines, { start: end, end: start }];
+};
+
+const geodesicArea = (lines: readonly GeotraceLine[]): number => {
+  const shape = closeShape(lines);
 
   let total = 0;
 
-  // eslint-disable-next-line @typescript-eslint/no-shadow
   for (const { start, end } of shape) {
     total +=
       toRadians(end.longitude - start.longitude) *
@@ -71,8 +72,12 @@ const evaluateArgumentValues = <T extends XPathNode>(
 
 export const area = new NumberFunction('area', [{ arityType: 'required' }], (context, args) => {
   const values = evaluateArgumentValues(context, args);
-  const geotrace = Geotrace.fromEncodedValues(values);
-  const areaResult = geodesicArea(geotrace?.lines ?? []);
+  const { valid, points } = validate(values);
+
+  if (!valid || !points || points.length < 2) {
+    return 0;
+  }
+  const areaResult = geodesicArea(collectLines(points));
 
   return toAbsolutePrecision(areaResult, PRECISION);
 });
@@ -104,15 +109,27 @@ export const distance = new NumberFunction(
   'distance',
   [{ arityType: 'required' }, { arityType: 'variadic' }],
   (context, args) => {
-    const values = evaluateArgumentValues(context, args);
-    const lines = Geotrace.fromEncodedValues(values)?.lines;
+    const values = evaluateArgumentValues(context, args)
+      .map((value) => value.trim())
+      .filter((value) => value !== '');
 
-    if (lines == null) {
-      throw new JRCompatibleGeoValueError('distance');
+    if (values.length === 0) {
+      // no geo values given
+      return NaN;
     }
 
-    const distances = lines.map(geodesicDistance);
+    const { valid, points } = validate(values);
+    if (!valid || !points) {
+      throw new Error(
+        "The function 'distance' received a value that does not represent GPS coordinates"
+      );
+    }
 
+    if (points.length < 2) {
+      return NaN;
+    }
+
+    const distances = collectLines(points).map(geodesicDistance);
     return toAbsolutePrecision(sum(distances), PRECISION);
   }
 );
@@ -135,14 +152,14 @@ export const distance = new NumberFunction(
  *     return c;
  * }
  */
-const calculateIsPointInGPSPolygon = (point: Geopoint, polygon: Geotrace) => {
+const calculateIsPointInGPSPolygon = (point: Geopoint, points: readonly Geopoint[]) => {
   const testx = point.longitude; // x maps to longitude
   const testy = point.latitude; // y maps to latitude
   let result = false;
-  for (let i = 1; i < polygon.geopoints.length; i++) {
+  for (let i = 1; i < points.length; i++) {
     // geoshapes already duplicate the first point to last, so unlike the original algorithm there is no need to wrap j
-    const p1 = polygon.geopoints[i - 1]; // this is effectively j in the original algorithm
-    const p2 = polygon.geopoints[i]; // this is effectively i in the original algorithm
+    const p1 = points[i - 1]; // this is effectively j in the original algorithm
+    const p2 = points[i]; // this is effectively i in the original algorithm
     if (!p1 || !p2) {
       return false;
     }
@@ -158,12 +175,12 @@ const calculateIsPointInGPSPolygon = (point: Geopoint, polygon: Geotrace) => {
   return result;
 };
 
-const validateGeoshape = (shape: Geotrace) => {
-  if (shape.geopoints.length < 2) {
+const validateGeoshape = (points: readonly Geopoint[]) => {
+  if (points.length < 2) {
     return false;
   }
-  const first = shape.geopoints[0];
-  const last = shape.geopoints[shape.geopoints.length - 1]!;
+  const first = points[0]!;
+  const last = points[points.length - 1]!;
   return first.latitude === last.latitude && first.longitude === last.longitude;
 };
 
@@ -176,10 +193,12 @@ export const geofence = new BooleanFunction(
       return false;
     }
     const geopoint = Geopoint.fromNodeValue(point);
-    const geoshape = Geotrace.fromEncodedGeotrace(shape);
-    if (!geopoint || !geoshape || !validateGeoshape(geoshape)) {
+
+    const { valid, points } = validate([shape]);
+
+    if (!valid || !geopoint || !points || !validateGeoshape(points)) {
       return false;
     }
-    return calculateIsPointInGPSPolygon(geopoint, geoshape);
+    return calculateIsPointInGPSPolygon(geopoint, points);
   }
 );
