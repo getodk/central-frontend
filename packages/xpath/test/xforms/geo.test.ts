@@ -22,7 +22,7 @@ describe('geo functions', () => {
 
   [
     { argument: SHAPE1, expected: { area: 2333220.7737, distance: 5724.3578 } },
-    { argument: `  ${SHAPE1}  `, expected: { area: 2333220.77, distance: 5724.36 } }, // whitespace should be trimmed
+    { argument: `  ${SHAPE1}  `, expected: { area: 2333220.7737, distance: 5724.3578 } }, // whitespace should be trimmed
     { argument: TRACE1, expected: { area: 151451.7569, distance: 1800.6887 } },
     { argument: TRACE2, expected: { area: 122754.9414, distance: 1684.6153 } },
     { argument: TRACE3, expected: { area: 93911.4893, distance: 2076.2361 } },
@@ -59,15 +59,15 @@ describe('geo functions', () => {
   });
 
   [
-    { argument: ['0 1', '0 0'], expected: 111318.85 },
-    { argument: ['0 1', '', '0 0'], expected: 111318.85 },
-    { argument: ['0 1', '0 0', '0 2'], expected: 333956.54 },
+    { argument: ['0 1', '0 0'], expected: 111318.845 },
+    { argument: ['0 1', '', '0 0'], expected: 111318.845 },
+    { argument: ['0 1', '0 0', '0 2'], expected: 333956.5351 },
     { argument: ['0 0', '0 2'], expected: 222637.69 },
     { argument: ['0 0 ', '  0 2'], expected: 222637.69 },
   ].forEach(({ argument, expected }, i) => {
     const expr = argument.map((arg) => `"${arg}"`).join(',');
     it(`distance(${expr}) works (${i + 1})`, () => {
-      testContext.assertNumberValue(`distance(${expr})`, expected);
+      testContext.assertNumberRounded(`distance(${expr})`, expected, 10 ** 4);
     });
   });
 
