@@ -8,25 +8,8 @@ import { collectLines, validate } from '../../lib/geo/Geotrace.ts';
 import type { GeotraceLine } from '../../lib/geo/GeotraceLine.ts';
 
 const EARTH_EQUATORIAL_RADIUS_METERS = 6_378_100;
-const PRECISION = 100;
 
 const toRadians = (degrees: number) => (degrees * Math.PI) / 180;
-
-const toPrecision = (value: number, precision: number) => {
-  if (value === 0) {
-    return 0;
-  }
-
-  return Math.round(value * precision) / precision;
-};
-
-const toAbsolutePrecision = (value: number, precision: number) => {
-  if (value === 0) {
-    return 0;
-  }
-
-  return Math.abs(toPrecision(value, precision));
-};
 
 const closeShape = (lines: readonly GeotraceLine[]): readonly GeotraceLine[] => {
   const [firstLine, ...rest] = lines;
@@ -58,7 +41,7 @@ const geodesicArea = (lines: readonly GeotraceLine[]): number => {
       (2 + Math.sin(toRadians(end.latitude)) + Math.sin(toRadians(start.latitude)));
   }
 
-  return (total * EARTH_EQUATORIAL_RADIUS_METERS * EARTH_EQUATORIAL_RADIUS_METERS) / 2;
+  return (Math.abs(total) * EARTH_EQUATORIAL_RADIUS_METERS * EARTH_EQUATORIAL_RADIUS_METERS) / 2;
 };
 
 const evaluateArgumentValues = <T extends XPathNode>(
@@ -77,9 +60,7 @@ export const area = new NumberFunction('area', [{ arityType: 'required' }], (con
   if (!valid || !points || points.length < 2) {
     return 0;
   }
-  const areaResult = geodesicArea(collectLines(points));
-
-  return toAbsolutePrecision(areaResult, PRECISION);
+  return geodesicArea(collectLines(points));
 });
 
 const geodesicDistance = (line: GeotraceLine): number => {
@@ -130,7 +111,7 @@ export const distance = new NumberFunction(
     }
 
     const distances = collectLines(points).map(geodesicDistance);
-    return toAbsolutePrecision(sum(distances), PRECISION);
+    return sum(distances);
   }
 );
 
