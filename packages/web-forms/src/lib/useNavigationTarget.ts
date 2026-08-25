@@ -2,31 +2,20 @@ import type { RootNode } from '@getodk/xforms-engine';
 import { nextTick, watch } from 'vue';
 import { containerId } from '@getodk/web-forms/lib/format/ids.ts';
 
-type ScrollAlignment = 'center' | 'start';
+type ScrollAlignment = 'center' | 'nearest';
 
-const scrollToContainer = (container: HTMLElement, align: ScrollAlignment) => {
-  const rect = container.getBoundingClientRect();
-  const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
-  const isMostlyVisible = visibleHeight >= rect.height * 0.5;
-
-  if (align === 'start' && isMostlyVisible) {
-    return;
-  }
-
-  container.scrollIntoView({ behavior: 'smooth', block: align });
-};
-
-const navigateTo = (nodeId: string, align: ScrollAlignment = 'start') => {
+const navigateTo = (nodeId: string, align: ScrollAlignment = 'nearest') => {
+  const node = document.getElementById(nodeId);
+  const container = document.getElementById(containerId(nodeId));
   // Controls without a container are their own scroll target
-  const container = document.getElementById(containerId(nodeId)) ?? document.getElementById(nodeId);
-
-  if (!container) {
+  const scrollTarget = container ?? node;
+  if (!scrollTarget) {
     return;
   }
 
-  scrollToContainer(container, align);
-  const focusTarget = document.getElementById(nodeId) ?? container;
-  focusTarget.focus({ preventScroll: true });
+  scrollTarget.scrollIntoView({ behavior: 'smooth', block: align });
+  const focusTarget = node ?? container;
+  focusTarget?.focus({ preventScroll: true });
 };
 
 const navigateToFirstViolation = (root: RootNode | null) => {
