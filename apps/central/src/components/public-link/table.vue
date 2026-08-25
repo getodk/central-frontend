@@ -69,6 +69,9 @@ const { publicLinks, actorProperties } = useRequestData();
 
 const filter = ref(null);
 
+const resetFilter = () => { filter.value = null; };
+defineExpose({ resetFilter });
+
 const filteredPublicLinks = computed(() => {
   if (!publicLinks.dataExists) return [];
   if (filter.value == null) return publicLinks.data;

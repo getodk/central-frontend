@@ -207,12 +207,14 @@ export default {
       this.createModal.hide();
       this.alert.success(this.$t('alert.create', fieldKey));
       this.highlighted = fieldKey.id;
+      this.filter = null;
     },
     afterEdit(fieldKey) {
       this.fetchData(true);
       this.editModal.hide();
       this.alert.success(this.$t('alert.edit', fieldKey));
       this.highlighted = fieldKey.id;
+      this.filter = null;
     },
     afterRevoke(fieldKey) {
       this.fetchData(true);
@@ -225,10 +227,6 @@ export default {
 
 <style lang="scss">
 @import '../../assets/scss/mixins';
-
-#field-key-filter-bar {
-  margin-left: 10px;
-}
 
 #field-key-list-table {
   .table-freeze-scrolling {

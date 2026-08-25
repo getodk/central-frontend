@@ -61,5 +61,28 @@ describe('PublicLinkList', () => {
       app.findAll('.public-link-row').length.should.equal(1);
       app.get('.public-link-row .display-name').text().should.equal('Link 1');
     });
+
+    it('resets the property filter after creating a new public link', () => {
+      testData.extendedPublicLinks
+        .createPast(1, { displayName: 'Link 1', properties: { region: 'North' } })
+        .createPast(1, { displayName: 'Link 2', properties: { region: 'South' } });
+      testData.actorProperties.createPast(1, { name: 'region' });
+      return load('/projects/1/forms/f/public-links')
+        .complete()
+        .request(async (app) => {
+          await app.get('.custom-props-filter .dropdown-trigger').trigger('click');
+          await app.get('.property-select').setValue('region');
+          await app.get('.value-select').setValue('North');
+          await app.get('.apply-btn').trigger('click');
+          await app.get('.heading-with-button .btn-primary').trigger('click');
+          await app.get('#public-link-create input').setValue('Link 3');
+          return app.get('#public-link-create form').trigger('submit');
+        })
+        .respondWithData(() => testData.extendedPublicLinks.createNew({ displayName: 'Link 3' }))
+        .respondWithData(() => testData.extendedPublicLinks.sorted())
+        .afterResponse(app => {
+          app.findAll('.public-link-row').length.should.equal(3);
+        });
+    });
   });
 });
