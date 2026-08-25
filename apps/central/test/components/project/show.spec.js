@@ -13,6 +13,7 @@ import { mockLogin } from '../../util/session';
 
 describe('ProjectShow', () => {
   it('requires the projectId route param to be integer', async () => {
+    mockLogin();
     const app = await load('/projects/p');
     app.findComponent(NotFound).exists().should.be.true;
   });

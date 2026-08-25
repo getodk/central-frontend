@@ -750,11 +750,11 @@
     },
     "property": {
       "string": "Property",
-      "developer_comment": "This is a data property of an Entity."
+      "developer_comment": "This is a data property of an Entity or an Actor."
     },
     "properties": {
       "string": "Properties",
-      "developer_comment": "This refers to the data properties of an Entity."
+      "developer_comment": "This refers to the data properties of an Entity or Actor."
     },
     "publicLink": {
       "string": "Public Access Link",
@@ -1815,6 +1815,14 @@
     "ConfigLoginPreview": {
       "introduction": {
         "string": "Your login page now looks like this:"
+      }
+    },
+    "CustomPropsFilter": {
+      "action": {
+        "all": {
+          "string": "All",
+          "developer_comment": "This is the text of the button in dropdown menu of an actor (app user or public link) \"Properties\" filter, that allows the user to select all app users with all properties (no filter applied)."
+        }
       }
     },
     "DatasetDelete": {
@@ -3005,6 +3013,9 @@
       },
       "emptyTable": {
         "string": "There are no App Users yet. You will need to create some to download Forms and submit data from your device."
+      },
+      "noFilterResults": {
+        "string": "No App Users match the current filter."
       },
       "alert": {
         "create": {
@@ -5011,6 +5022,9 @@
       }
     },
     "PublicLinkTable": {
+      "noFilterResults": {
+        "string": "No Public Access Links match the current filter."
+      },
       "header": {
         "once": {
           "string": "Single Submission",
