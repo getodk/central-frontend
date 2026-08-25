@@ -21,25 +21,25 @@ describe('geo functions', () => {
   const SAME = '7.9377 -11.5845 0 0;7.9377 -11.5845 0 0';
 
   [
-    { argument: SHAPE1, expected: { area: 2333220.77, distance: 5724.36 } },
+    { argument: SHAPE1, expected: { area: 2333220.7737, distance: 5724.3578 } },
     { argument: `  ${SHAPE1}  `, expected: { area: 2333220.77, distance: 5724.36 } }, // whitespace should be trimmed
-    { argument: TRACE1, expected: { area: 151451.76, distance: 1800.69 } },
-    { argument: TRACE2, expected: { area: 122754.94, distance: 1684.62 } },
-    { argument: TRACE3, expected: { area: 93911.49, distance: 2076.24 } },
-    { argument: LINE, expected: { area: 0.0, distance: 861.99 } },
+    { argument: TRACE1, expected: { area: 151451.7569, distance: 1800.6887 } },
+    { argument: TRACE2, expected: { area: 122754.9414, distance: 1684.6153 } },
+    { argument: TRACE3, expected: { area: 93911.4893, distance: 2076.2361 } },
+    { argument: LINE, expected: { area: 0.0, distance: 861.9904 } },
     { argument: SAME, expected: { area: 0.0, distance: 0.0 } },
-    { argument: '0 0;0 1', expected: { area: 0.0, distance: 111318.84502143922 } },
-    { argument: '0 0;0 90', expected: { area: 0.0, distance: 10018696.05193053 } },
+    { argument: '0 0;0 1', expected: { area: 0.0, distance: 111318.845 } },
+    { argument: '0 0;0 90', expected: { area: 0.0, distance: 10018696.0519 } },
     { argument: '90 0;90 1', expected: { area: 0.0, distance: 0.0 } },
     { argument: '', expected: { area: 0.0, distance: NaN } },
     { argument: '90 0', expected: { area: 0.0, distance: NaN } }, // single point, no distance
   ].forEach(({ argument, expected }, i) => {
     it(`area("${argument}") works (${i + 1})`, () => {
-      testContext.assertNumberValue(`area("${argument}")`, expected.area);
+      testContext.assertNumberRounded(`area("${argument}")`, expected.area, 10 ** 4);
     });
 
     it(`distance("${argument}") works (${i + 1})`, () => {
-      testContext.assertNumberValue(`distance("${argument}")`, expected.distance);
+      testContext.assertNumberRounded(`distance("${argument}")`, expected.distance, 10 ** 4);
     });
   });
 

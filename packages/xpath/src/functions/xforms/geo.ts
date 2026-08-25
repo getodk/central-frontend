@@ -41,7 +41,7 @@ const geodesicArea = (lines: readonly GeotraceLine[]): number => {
       (2 + Math.sin(toRadians(end.latitude)) + Math.sin(toRadians(start.latitude)));
   }
 
-  return (Math.abs(total) * EARTH_EQUATORIAL_RADIUS_METERS * EARTH_EQUATORIAL_RADIUS_METERS) / 2;
+  return Math.abs((total * EARTH_EQUATORIAL_RADIUS_METERS * EARTH_EQUATORIAL_RADIUS_METERS) / 2);
 };
 
 const evaluateArgumentValues = <T extends XPathNode>(
