@@ -691,7 +691,6 @@ const routes = [
     component: 'NotFound',
     loading: 'page',
     meta: {
-      restoreSession: false,
       requireLogin: false,
       title: () => [i18n.t('title.pageNotFound')]
     }
