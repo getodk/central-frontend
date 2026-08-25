@@ -8,7 +8,20 @@ import { mount } from '../../../util/lifecycle';
 const mountComponent = (options) => mount(EntityUploadWarnings, options);
 
 describe('EntityUploadWarnings', () => {
-  it('shows missing properties', async () => {
+  it('shows a warning for system properties', async () => {
+    const component = mountComponent({
+      props: { systemProperties: ['__id', '__foo'] }
+    });
+    // Wait for I18nList to render.
+    await nextTick();
+
+    const p = component.getComponent(EntityUploadAlert).findAll('p');
+    p.length.should.equal(3);
+    p[0].text().should.startWith('System properties can’t be set');
+    p[2].text().should.equal('__id, __foo');
+  });
+
+  it('shows a warning for missing properties', async () => {
     const component = mountComponent({
       props: { missingProperties: ['foo', 'bar'] }
     });

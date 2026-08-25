@@ -2902,6 +2902,12 @@
       "introduction": {
         "string": "Some rows contain warnings that may affect upload results."
       },
+      "systemProperties": {
+        "string": "System properties can’t be set by .csv upload"
+      },
+      "propertiesIgnored": {
+        "string": "{count, plural, one {This property will be ignored.} other {These properties will be ignored.}}"
+      },
       "row": {
         "raggedRows": {
           "string": "Fewer columns were found than expected in some rows:",
