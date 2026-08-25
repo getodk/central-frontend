@@ -29,7 +29,9 @@ const navigateTo = (nodeId: string) => {
   scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
   const focusTarget = findFocusTarget(node, container);
-  focusTarget?.focus({ preventScroll: true });
+  // focusVisible is supported in modern Chrome, Firefox and Safari
+  // @ts-expect-error -- focusVisible is missing from FocusOptions
+  focusTarget?.focus({ preventScroll: true, focusVisible: true });
 };
 
 const navigateToFirstViolation = (root: RootNode | null) => {
