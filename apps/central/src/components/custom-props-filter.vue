@@ -146,11 +146,15 @@ const onShow = () => {
   .display-value {
     height: 24px;
     min-width: 22px;
+    max-width: 200px;
     padding: 4px 8px;
     border-radius: 100px;
     background: $color-action-light;
     color: $color-text;
     line-height: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .dropdown-menu {
@@ -158,6 +162,7 @@ const onShow = () => {
     margin-top: 0;
     padding: 10px;
     min-width: 380px;
+    max-width: 500px;
   }
 
   .filter-row {
@@ -170,12 +175,10 @@ const onShow = () => {
       margin-bottom: 0;
     }
 
-    .property-select {
-      flex: 1;
-    }
-
+    .property-select,
     .value-select {
       flex: 1;
+      min-width: 0;
     }
 
     .btn-trash {
