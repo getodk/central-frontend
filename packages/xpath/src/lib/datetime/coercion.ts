@@ -22,7 +22,9 @@ const tryParseDateString = (value: string): string | null => {
   return null;
 };
 
-const hasTimeZone = (value: string) => TIMEZONE_OFFSET_PATTERN.test(value) || !/^\d{4}/.test(value);
+const hasTimeZone = (value: string) => {
+  return value.endsWith('Z') || TIMEZONE_OFFSET_PATTERN.test(value) || !/^\d{4}/.test(value);
+};
 
 export const dateTimeFromString = (
   timeZone: Temporal.TimeZoneLike,
@@ -30,10 +32,6 @@ export const dateTimeFromString = (
 ): Temporal.ZonedDateTime | null => {
   if (!isISODateOrDateTimeLike(value)) {
     return null;
-  }
-
-  if (value.endsWith('Z')) {
-    value = value.replace(/Z$/, '[UTC]');
   }
 
   const offsetMatch = TIMEZONE_OFFSET_PATTERN.exec(value);
