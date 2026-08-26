@@ -51,7 +51,7 @@ except according to the terms contained in the LICENSE file.
           </div>
         </div>
         <entity-upload-warnings v-if="warnings != null" v-bind="warnings"
-          @rows="showWarningRows"/>
+          :filename="fileMetadata.name" @rows="showWarningRows"/>
         <entity-upload-file-select v-show="csvEntities == null"
           :parsing="parsing" @change="selectFile">
           <entity-upload-header-help :errors="headerErrors"/>
@@ -208,18 +208,26 @@ const validateHeader = ({ columns, errors, meta }, file) => {
     errorDetails.missingLabel = !hasLabel;
 
     warningDetails.missingProperties = [];
+    const lowercaseProperties = new Map();
     for (const { name } of dataset.properties) {
       if (!columnSet.has(name)) warningDetails.missingProperties.push(name);
+
+      lowercaseProperties.set(name.toLowerCase(), name);
     }
 
     warningDetails.systemProperties = [];
     warningDetails.invalidProperties = [];
+    warningDetails.caseMismatch = [];
     for (const column of columnSet) {
       if (column === 'label') continue; // eslint-disable-line no-continue
       if (column.startsWith('__')) {
         warningDetails.systemProperties.push(column);
       } else if (!validatePropertyName(column)) {
         warningDetails.invalidProperties.push(column);
+      } else {
+        const property = lowercaseProperties.get(column.toLowerCase());
+        if (property != null)
+          warningDetails.caseMismatch.push({ column, property });
       }
     }
 

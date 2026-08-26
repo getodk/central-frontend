@@ -548,4 +548,39 @@ describe('EntityUpload', () => {
         }
       }]);
   });
+
+  it('ignores columns that only differ from properties on letter case', () => {
+    testData.extendedDatasets.createPast(1, {
+      properties: [{ name: 'height' }, { name: 'circumference' }, { name: 'species' }]
+    });
+    return showModal()
+      .complete()
+      .request(async (modal) => {
+        await selectFile(
+          modal,
+          createCSV('label,height,CIRCUMFERENCE,Species\ndogwood,1,2,dogwood\nelm,,3,elm')
+        );
+
+        // A warning is shown.
+        const warnings = modal.getComponent(EntityUploadWarnings).props();
+        warnings.caseMismatch.should.eql([
+          { column: 'CIRCUMFERENCE', property: 'circumference' },
+          { column: 'Species', property: 'species' }
+        ]);
+
+        return modal.get('.modal-actions .btn-primary').trigger('click');
+      })
+      .respondWithProblem()
+      .testRequests([{
+        method: 'POST',
+        url: '/v1/projects/1/datasets/trees/entities',
+        data: {
+          source: { name: 'my_data.csv', size: 66 },
+          entities: [
+            { label: 'dogwood', data: { height: '1' } },
+            { label: 'elm' }
+          ]
+        }
+      }]);
+  });
 });
