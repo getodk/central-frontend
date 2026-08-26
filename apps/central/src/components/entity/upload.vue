@@ -206,17 +206,30 @@ const validateHeader = ({ columns, errors, meta }, file) => {
     const hasLabel = columnSet.has('label');
     errorDetails.missingLabel = !hasLabel;
 
-    const missingProperties = [];
+    warningDetails.missingProperties = [];
     for (const { name } of dataset.properties) {
-      if (!columnSet.has(name)) missingProperties.push(name);
+      if (!columnSet.has(name)) warningDetails.missingProperties.push(name);
     }
-    if (missingProperties.length !== 0)
-      warningDetails.missingProperties = missingProperties;
 
-    // Count of columns that are properties
-    const columnProperties = dataset.properties.length - missingProperties.length;
-    errorDetails.unknownProperty = columnSet.size !== columnProperties +
+    warningDetails.systemProperties = [];
+    for (const column of columnSet) {
+      if (column.startsWith('__')) {
+        warningDetails.systemProperties.push(column);
+      }
+    }
+
+    errorDetails.unknownProperty = columnSet.size !==
+      dataset.properties.length -
+      warningDetails.missingProperties.length +
+      warningDetails.systemProperties.length +
       (hasLabel ? 1 : 0);
+
+    // Remove empty arrays from warningDetails. EntityUploadWarnings expects
+    // nonapplicable warnings to be nullish. Removing these arrays also helps us
+    // count the number of warnings.
+    for (const [name, value] of Object.entries(warningDetails)) {
+      if (value.length === 0) delete warningDetails[name];
+    }
   }
 
   const result = {};
@@ -240,9 +253,14 @@ const rowToEntity = (values, columns) => {
   let hasProperty = false;
   for (const [i, value] of values.entries()) {
     if (value === '') continue; // eslint-disable-line no-continue
+
     const column = columns[i];
-    obj[column] = value;
-    if (column !== 'label') hasProperty = true;
+    if (column === 'label') {
+      obj.label = value;
+    } else if (dataset.propertyMap.has(column)) {
+      obj[column] = value;
+      hasProperty = true;
+    }
   }
   const { label } = obj;
   if (label == null || /^\s+$/.test(label))

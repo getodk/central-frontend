@@ -15,6 +15,13 @@ except according to the terms contained in the LICENSE file.
     <p>{{ $t('introduction') }}</p>
 
     <!-- Column header warnings -->
+    <entity-upload-alert v-if="systemProperties != null" type="warning">
+      <template #title>{{ $t('systemProperties') }}</template>
+      <template #body>
+        <p>{{ $tc('propertiesIgnored', systemProperties.length) }}</p>
+        <p><i18n-list :list="systemProperties"/></p>
+      </template>
+    </entity-upload-alert>
     <entity-upload-alert v-if="missingProperties != null" type="warning">
       <template #title>
         {{ $tc('missingProperties', missingProperties.length) }}
@@ -45,6 +52,7 @@ defineOptions({
 });
 defineProps({
   // Column header warnings
+  systemProperties: Array,
   missingProperties: Array,
 
   // Data warnings (below the column header)
@@ -69,9 +77,11 @@ defineEmits(['rows']);
     "title": "Review warnings",
     "introduction": "Some rows contain warnings that may affect upload results.",
 
+    "systemProperties": "System properties can’t be set by .csv upload",
     // @transifexKey component.EntityUploadHeaderReview.missingProperties
     // This text is followed by a list of Entity property names.
     "missingProperties": "This property is not included in your file and will be left empty: | These properties are not included in your file and will be left empty:",
+    "propertiesIgnored": "This property will be ignored. | These properties will be ignored.",
 
     // This is a warning that is followed by a list of rows.
     "row": {
