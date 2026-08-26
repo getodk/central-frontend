@@ -117,7 +117,7 @@ describe('createResources()', () => {
       expect(dataset.accessFilter).to.be.null;
     });
 
-    it('keys properties by name', () => {
+    it('adds propertyMap', () => {
       testData.extendedDatasets.createPast(1, {
         properties: [{ name: 'height' }, { name: 'circumference' }]
       });

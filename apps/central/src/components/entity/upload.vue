@@ -253,10 +253,13 @@ const rowToEntity = (values, columns) => {
   let hasProperty = false;
   for (const [i, value] of values.entries()) {
     if (value === '') continue; // eslint-disable-line no-continue
+
     const column = columns[i];
-    if (column === 'label' || dataset.propertyMap.has(column)) {
+    if (column === 'label') {
+      obj.label = value;
+    } else if (dataset.propertyMap.has(column)) {
       obj[column] = value;
-      if (column !== 'label') hasProperty = true;
+      hasProperty = true;
     }
   }
   const { label } = obj;
