@@ -305,7 +305,7 @@ const closeWindow = () => {
       return;
     }
     if (visibleModal.value?.type === 'submissionModal') {
-      visibleModal.value = { ...visibleModal.value, closeFailed: true };
+      visibleModal.value = { type: 'thankYouModal', hideable: false };
     }
   }, 500);
 };
@@ -361,16 +361,13 @@ onMounted(async () => {
           <a href="/login" target="_blank">{{ $t('sessionTimeoutModal.body.here') }}</a>
         </template>
       </Translation>
-      <span v-else-if="visibleModal.type === 'submissionModal' && visibleModal.closeFailed">
-        {{ $t('thankYouModal.body') }}
-      </span>
       <span v-else>
         {{ $t(visibleModal.type + '.body') }}
       </span>
     </template>
     <template #footer>
       <template v-if="visibleModal.type === 'submissionModal'">
-        <Button v-if="!visibleModal.closeFailed" type="button" @click="closeWindow()" variant="text">{{ $t('action.close') }}</Button>
+        <Button type="button" @click="closeWindow()" variant="text">{{ $t('action.close') }}</Button>
         <Button type="button" @click="visibleModal = null">{{ $t('submissionModal.action.fillOutAgain') }}</Button>
       </template>
       <!-- Any type of error while sending attachments -->

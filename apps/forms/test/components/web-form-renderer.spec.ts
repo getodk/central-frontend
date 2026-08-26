@@ -263,9 +263,9 @@ describe('WebFormRenderer', () => {
       const intro = document.querySelector('.p-dialog-content span')!;
       expect(intro.textContent).to.equal('You can close this window now.');
     });
-    const buttons = findDialogButtons();
-    expect(buttons.length).to.equal(1);
-    expect(buttons[0]!.textContent).to.equal('fill out again');
+    const title = document.querySelector('.p-dialog-header span')!;
+    expect(title.textContent).to.equal('cheers!');
+    expect(findDialogButtons().length).to.equal(0);
   });
 
   it('should show error modal in case of submission failure', async () => {
