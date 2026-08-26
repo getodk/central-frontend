@@ -14,15 +14,6 @@ const t: Translate = inject(TRANSLATE)!;
 <template>
 	<div class="form-footer flex flex-wrap gap-3">
 		<Button
-			v-if="root.currentState.hasPreviousPage"
-			outlined
-			severity="contrast"
-			@click="root.previousPage()"
-		>
-			<IconSVG name="mdiArrowLeft" />
-			<span>{{ t('odk_web_forms.back.label') }}</span>
-		</Button>
-		<Button
 			v-if="root.currentState.hasNextPage"
 			class="align-right"
 			outlined
@@ -41,6 +32,16 @@ const t: Translate = inject(TRANSLATE)!;
 			<span>{{ t('odk_web_forms.submit.label') }}</span>
 			<IconSVG name="mdiSendVariantOutline" variant="inverted" />
 		</Button>
+		<Button
+			v-if="root.currentState.hasPreviousPage"
+			class="back-button"
+			outlined
+			severity="contrast"
+			@click="root.previousPage()"
+		>
+			<IconSVG name="mdiArrowLeft" />
+			<span>{{ t('odk_web_forms.back.label') }}</span>
+		</Button>
 	</div>
 </template>
 
@@ -52,6 +53,10 @@ const t: Translate = inject(TRANSLATE)!;
 
 	.align-right {
 		margin-left: auto;
+	}
+
+	.back-button {
+		order: -1;
 	}
 
 	:deep(.p-button.p-button-contrast.p-button-outlined:not(:hover)) {
