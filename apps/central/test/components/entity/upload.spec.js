@@ -506,6 +506,8 @@ describe('EntityUpload', () => {
           source: { name: 'my_data.csv', size: 48 },
           entities: [
             { label: 'dogwood', data: { height: '1' } },
+            // If there were only system properties, no proper entity
+            // properties, don't bother sending an empty `data` object.
             { label: 'elm' }
           ]
         }
