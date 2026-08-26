@@ -513,4 +513,39 @@ describe('EntityUpload', () => {
         }
       }]);
   });
+
+  it('ignores columns that are not valid property names', () => {
+    testData.extendedDatasets.createPast(1, {
+      name: 'people',
+      properties: [{ name: 'height' }]
+    });
+    return showModal()
+      .complete()
+      .request(async (modal) => {
+        await selectFile(
+          modal,
+          createCSV('label,height,LABEL,"First name",phone#\nAlice,123,Alice,Alice,456\nChelsea,,Chelsea,Chelsea,789')
+        );
+
+        // A warning is shown.
+        const warnings = modal.getComponent(EntityUploadWarnings).props();
+        warnings.invalidProperties.should.eql(['LABEL', 'First name', 'phone#']);
+
+        return modal.get('.modal-actions .btn-primary').trigger('click');
+      })
+      .respondWithProblem()
+      .testRequests([{
+        method: 'POST',
+        url: '/v1/projects/1/datasets/people/entities',
+        data: {
+          source: { name: 'my_data.csv', size: 93 },
+          entities: [
+            { label: 'Alice', data: { height: '123' } },
+            // There were no valid entity properties, so don't bother sending an
+            // empty `data` object.
+            { label: 'Chelsea' }
+          ]
+        }
+      }]);
+  });
 });

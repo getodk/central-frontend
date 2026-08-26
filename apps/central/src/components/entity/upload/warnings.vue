@@ -22,6 +22,13 @@ except according to the terms contained in the LICENSE file.
         <p><i18n-list :list="systemProperties"/></p>
       </template>
     </entity-upload-alert>
+    <entity-upload-alert v-if="invalidProperties != null" type="warning">
+      <template #title>{{ $tc('invalidProperties', invalidProperties.length) }}</template>
+      <template #body>
+        <p>{{ $tc('propertiesIgnored', invalidProperties.length) }}</p>
+        <p><i18n-list :list="invalidProperties"/></p>
+      </template>
+    </entity-upload-alert>
     <entity-upload-alert v-if="missingProperties != null" type="warning">
       <template #title>
         {{ $tc('missingProperties', missingProperties.length) }}
@@ -53,6 +60,7 @@ defineOptions({
 defineProps({
   // Column header warnings
   systemProperties: Array,
+  invalidProperties: Array,
   missingProperties: Array,
 
   // Data warnings (below the column header)
@@ -78,6 +86,7 @@ defineEmits(['rows']);
     "introduction": "Some rows contain warnings that may affect upload results.",
 
     "systemProperties": "System properties can’t be set by .csv upload",
+    "invalidProperties": "This column is not a valid property name | These columns are not valid property names",
     // @transifexKey component.EntityUploadHeaderReview.missingProperties
     // This text is followed by a list of Entity property names.
     "missingProperties": "This property is not included in your file and will be left empty: | These properties are not included in your file and will be left empty:",

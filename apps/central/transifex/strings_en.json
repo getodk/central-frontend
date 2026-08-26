@@ -2905,6 +2905,9 @@
       "systemProperties": {
         "string": "System properties can’t be set by .csv upload"
       },
+      "invalidProperties": {
+        "string": "{count, plural, one {This column is not a valid property name} other {These columns are not valid property names}}"
+      },
       "propertiesIgnored": {
         "string": "{count, plural, one {This property will be ignored.} other {These properties will be ignored.}}"
       },

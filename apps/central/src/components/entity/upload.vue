@@ -98,6 +98,7 @@ import { formatCSVRow, parseCSV, parseCSVHeader } from '../../util/csv';
 import { noop } from '../../util/util';
 import { odataEntityToRest } from '../../util/odata';
 import { useRequestData } from '../../request-data';
+import { validatePropertyName } from '../../util/entity';
 
 defineOptions({
   name: 'EntityUpload'
@@ -212,9 +213,13 @@ const validateHeader = ({ columns, errors, meta }, file) => {
     }
 
     warningDetails.systemProperties = [];
+    warningDetails.invalidProperties = [];
     for (const column of columnSet) {
+      if (column === 'label') continue; // eslint-disable-line no-continue
       if (column.startsWith('__')) {
         warningDetails.systemProperties.push(column);
+      } else if (!validatePropertyName(column)) {
+        warningDetails.invalidProperties.push(column);
       }
     }
 
@@ -222,6 +227,7 @@ const validateHeader = ({ columns, errors, meta }, file) => {
       dataset.properties.length -
       warningDetails.missingProperties.length +
       warningDetails.systemProperties.length +
+      warningDetails.invalidProperties.length +
       (hasLabel ? 1 : 0);
 
     // Remove empty arrays from warningDetails. EntityUploadWarnings expects
