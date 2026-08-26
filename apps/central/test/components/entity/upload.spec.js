@@ -256,7 +256,7 @@ describe('EntityUpload', () => {
       const table = getTables(modal)[1];
       table.props().rowIndex.should.equal(0);
       should.not.exist(table.props().highlighted);
-      const a = modal.get('.entity-upload-warning a');
+      const a = modal.get('.entity-upload-alert a');
       a.text().should.equal('9–11');
       await a.trigger('click');
       table.props().rowIndex.should.equal(5);
@@ -267,7 +267,7 @@ describe('EntityUpload', () => {
       const modal = await showModal();
       const csvString = 'label,height\nx\ny\nz,""';
       await selectFile(modal, createCSV(csvString));
-      const a = modal.get('.entity-upload-warning a');
+      const a = modal.get('.entity-upload-alert a');
       a.text().should.equal('1–2');
       await a.trigger('click');
       getTables(modal)[1].props().highlighted.should.eql([0, 1]);
