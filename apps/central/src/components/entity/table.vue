@@ -49,12 +49,11 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import { inject, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 import EntityDataRow from './data-row.vue';
 import EntityMetadataRow from './metadata-row.vue';
 import TableFreeze from '../table/freeze.vue';
-
-import { useRouter } from 'vue-router';
 
 import useRoutes from '../../composables/routes';
 import { markRowsChanged, markRowsDeleted } from '../../util/dom';

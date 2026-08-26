@@ -44,12 +44,11 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 import SubmissionDataRow from './data-row.vue';
 import SubmissionMetadataRow from './metadata-row.vue';
 import TableFreeze from '../table/freeze.vue';
-
-import { useRouter } from 'vue-router';
 
 import useChunkyArray from '../../composables/chunky-array';
 import useRoutes from '../../composables/routes';

@@ -156,8 +156,6 @@ const handleActions = (event) => {
 @import '../../assets/scss/variables';
 
 #submission-map-popup {
-  @include icon-btn-group;
-
   .submission-review-state {
     position: relative;
     top: -1px;

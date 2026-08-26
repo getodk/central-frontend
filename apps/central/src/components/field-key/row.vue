@@ -77,9 +77,6 @@ export default {
     max-width: 250px;
   }
 
-  .btn-group {
-    @include icon-btn-group;
-  }
 }
 </style>
 
