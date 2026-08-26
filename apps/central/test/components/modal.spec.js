@@ -193,4 +193,24 @@ describe('Modal', () => {
       });
     });
   });
+
+  describe('persistent prop', () => {
+    it('does not emit hide on ESC key when persistent is true', async () => {
+      const modal = mountComponent({
+        props: { persistent: true }
+      });
+      await modal.get('.modal').trigger('keydown.esc');
+      should.not.exist(modal.emitted().hide);
+    });
+
+    it('does not emit hide on click outside when persistent is true', async () => {
+      const modal = mountComponent({
+        props: { persistent: true }
+      });
+      const modalEl = modal.get('.modal');
+      await modalEl.trigger('mousedown');
+      await modalEl.trigger('click');
+      should.not.exist(modal.emitted().hide);
+    });
+  });
 });

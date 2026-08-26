@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal id="entity-upload" :state="state" :hideable="!uploading" size="full"
+  <modal id="entity-upload" :state="state" :hideable="!uploading" :persistent="true" size="full"
     backdrop @hide="$emit('hide')" @mutate="resizeColumnIfShown">
     <template #title>{{ $t('title') }}</template>
     <template #body>
