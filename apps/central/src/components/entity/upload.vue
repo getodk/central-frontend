@@ -226,7 +226,7 @@ const validateHeader = ({ columns, errors, meta }, file) => {
         warningDetails.invalidProperties.push(column);
       } else {
         const property = lowercaseProperties.get(column.toLowerCase());
-        if (property != null)
+        if (property != null && column !== property)
           warningDetails.caseMismatch.push({ column, property });
       }
     }
@@ -236,6 +236,7 @@ const validateHeader = ({ columns, errors, meta }, file) => {
       warningDetails.missingProperties.length +
       warningDetails.systemProperties.length +
       warningDetails.invalidProperties.length +
+      warningDetails.caseMismatch.length +
       (hasLabel ? 1 : 0);
 
     // Remove empty arrays from warningDetails. EntityUploadWarnings expects

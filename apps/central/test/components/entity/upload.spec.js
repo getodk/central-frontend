@@ -575,7 +575,7 @@ describe('EntityUpload', () => {
         method: 'POST',
         url: '/v1/projects/1/datasets/trees/entities',
         data: {
-          source: { name: 'my_data.csv', size: 66 },
+          source: { name: 'my_data.csv', size: 65 },
           entities: [
             { label: 'dogwood', data: { height: '1' } },
             { label: 'elm' }
