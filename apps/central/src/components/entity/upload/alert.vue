@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
       <template v-if="ranges != null">
         <span>&nbsp;</span>
         <i18n-list v-slot="{ value: [start, end] }" :list="ranges"
-          class="entity-upload-warning-ranges">
+          class="entity-upload-alert-ranges">
           <a href="#" @click.prevent="$emit('rows', [start - 1, end - 1])">
             {{ formatRange(start, end) }}
           </a>
@@ -71,7 +71,7 @@ const { formatRange } = useI18nUtils();
     > :first-child { margin-right: $margin-right-icon; }
   }
 
-  + .entity-upload-warning { margin-top: 5px; }
+  + .entity-upload-alert { margin-top: 5px; }
 
   &.warning {
     background-color: $color-warning-light;
@@ -83,7 +83,7 @@ const { formatRange } = useI18nUtils();
   }
 }
 
-.entity-upload-warning-ranges {
+.entity-upload-alert-ranges {
   margin-left: 3px;
 }
 </style>
