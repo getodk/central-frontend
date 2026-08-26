@@ -7,7 +7,7 @@ const findFocusTarget = (
   container: HTMLElement | null
 ): HTMLElement | null => {
   const FOCUSABLE =
-    'button, input:not(.p-datepicker-input), textarea, [tabindex]:not([tabindex="-1"])';
+    ':is(button, input:not(.p-datepicker-input), textarea, [tabindex]:not([tabindex="-1"])):not(:disabled)';
   if (node?.matches(FOCUSABLE)) {
     return node;
   }
