@@ -136,7 +136,7 @@ const handleResult = () => {
   if (submissionResult.primaryInstanceResult.success && attachmentResultArr.every(r => r.success)) {
 
     clearForm();
-    
+
     if (isPublicLink.value) {
       visibleModal.value = { type: 'thankYouModal', hideable: false };
     } else if (isEdit.value) {
@@ -298,6 +298,16 @@ const editInstanceOptions = computed(() => {
 
 const closeWindow = () => {
   window.close();
+  // Browsers ignore window.close() when the tab wasn't opened by a script or a link,
+  // so fall back to asking the user to close it.
+  setTimeout(() => {
+    if (window.closed) {
+      return;
+    }
+    if (visibleModal.value?.type === 'submissionModal') {
+      visibleModal.value = { ...visibleModal.value, closeFailed: true };
+    }
+  }, 500);
 };
 
 onMounted(async () => {
@@ -351,13 +361,16 @@ onMounted(async () => {
           <a href="/login" target="_blank">{{ $t('sessionTimeoutModal.body.here') }}</a>
         </template>
       </Translation>
+      <span v-else-if="visibleModal.type === 'submissionModal' && visibleModal.closeFailed">
+        {{ $t('thankYouModal.body') }}
+      </span>
       <span v-else>
         {{ $t(visibleModal.type + '.body') }}
       </span>
     </template>
     <template #footer>
       <template v-if="visibleModal.type === 'submissionModal'">
-        <Button type="button" @click="closeWindow()" variant="text">{{ $t('action.close') }}</Button>
+        <Button v-if="!visibleModal.closeFailed" type="button" @click="closeWindow()" variant="text">{{ $t('action.close') }}</Button>
         <Button type="button" @click="visibleModal = null">{{ $t('submissionModal.action.fillOutAgain') }}</Button>
       </template>
       <!-- Any type of error while sending attachments -->
