@@ -235,7 +235,7 @@ describe('EntityUpload', () => {
       warnings.largeCell.should.equal(3);
     });
 
-    it('only shows header warnings if there is a data error', async () => {
+    it('does not show data warnings if there is a data error', async () => {
       testData.extendedDatasets.createPast(1, {
         properties: [{ name: 'height' }, { name: 'circumference' }]
       });
