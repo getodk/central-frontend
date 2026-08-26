@@ -224,6 +224,9 @@ const validateHeader = ({ columns, errors, meta }, file) => {
       warningDetails.systemProperties.length +
       (hasLabel ? 1 : 0);
 
+    // Remove empty arrays from warningDetails. EntityUploadWarnings expects
+    // nonapplicable warnings to be nullish. Removing these arrays also helps us
+    // count the number of warnings.
     for (const [name, value] of Object.entries(warningDetails)) {
       if (value.length === 0) delete warningDetails[name];
     }
