@@ -139,16 +139,17 @@ h2 {
 	}
 
 	.p-panel.p-panel-toggleable {
-		// Nested groups
+		// Nested groups and repeats
 		border: none;
 		margin-bottom: 0;
 
-		:deep(.p-panel-header) {
-			background: none;
+		:deep(.p-panel-header) h2 {
+      font-size: var(--odk-sub-group-font-size);
+    }
 
-			h2 {
-				font-size: var(--odk-sub-group-font-size);
-			}
+		// Nested groups lose the header background and repeats keep it at any depth.
+		&:not(.is-repeat) :deep(.p-panel-header) {
+			background: none;
 		}
 
 		:deep(.p-panel-content) {
@@ -184,18 +185,15 @@ h2 {
 	gap: 0.5rem;
 }
 
-.p-panel.is-repeat {
-	.p-panel.p-panel-toggleable.is-repeat :deep(.p-panel-header) {
-		// Nested repeats
-		border-radius: var(--odk-radius);
-		width: calc(100% - 30px);
-		margin: 0 auto;
-	}
+.p-panel.is-repeat > :deep(.p-panel-header) {
+	background: var(--p-surface-200);
+}
 
-	:deep(.p-panel-header),
-	.p-panel.p-panel-toggleable.is-repeat :deep(.p-panel-header) {
-		background: var(--p-surface-200);
-	}
+.p-panel.p-panel-toggleable .p-panel.p-panel-toggleable.is-repeat :deep(.p-panel-header) {
+	// Repeats nested in any panel (repeat or group)
+	border-radius: var(--odk-radius);
+	width: calc(100% - 30px);
+	margin: 0 auto;
 }
 
 @media screen and (max-width: #{pf.$sm}) {
