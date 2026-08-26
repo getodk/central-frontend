@@ -44,19 +44,21 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 import SubmissionDataRow from './data-row.vue';
 import SubmissionMetadataRow from './metadata-row.vue';
 import TableFreeze from '../table/freeze.vue';
 
 import useChunkyArray from '../../composables/chunky-array';
+import useRoutes from '../../composables/routes';
 import { markRowsChanged, markRowsDeleted } from '../../util/dom';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
   name: 'SubmissionTable'
 });
-defineProps({
+const props = defineProps({
   projectId: {
     type: String,
     required: true
@@ -82,12 +84,19 @@ const emit = defineEmits(['review', 'delete', 'restore']);
 // created.
 const { project, form, odata } = useRequestData();
 
+const router = useRouter();
+const { submissionPath } = useRoutes();
+
 const chunkyOData = useChunkyArray(computed(() => odata.value));
 
 const handleActions = ({ target, data }) => {
   if (target.classList.contains('review-button')) emit('review', data);
-  if (target.classList.contains('delete-button')) emit('delete', data);
-  if (target.classList.contains('restore-button')) emit('restore', data);
+  else if (target.classList.contains('delete-button')) emit('delete', data);
+  else if (target.classList.contains('restore-button')) emit('restore', data);
+  else if (target.tagName === 'TR') {
+    const path = submissionPath(props.projectId, props.xmlFormId, data.__id);
+    window.open(router.resolve(path).href, '_blank', 'noopener');
+  }
 };
 const table = ref(null);
 const findIndex = (instanceId) =>
@@ -108,6 +117,10 @@ defineExpose({ afterReview, afterDelete });
 
 #submission-table {
   table:has(tbody:empty) { display: none; }
+
+  tbody tr {
+    cursor: pointer;
+  }
 
   .table-freeze-scrolling {
     th, td {

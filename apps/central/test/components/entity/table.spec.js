@@ -1,3 +1,5 @@
+import sinon from 'sinon';
+
 import EntityDataRow from '../../../src/components/entity/data-row.vue';
 import EntityMetadataRow from '../../../src/components/entity/metadata-row.vue';
 import EntityTable from '../../../src/components/entity/table.vue';
@@ -80,5 +82,21 @@ describe('EntityTable', () => {
     const component = mountComponent();
     const rows = component.findAllComponents(EntityMetadataRow);
     rows.map(row => row.props().rowNumber).should.eql([3, 2, 1]);
+  });
+
+  describe('row click', () => {
+    it('opens the correct entity when clicking a specific row', async () => {
+      testData.extendedDatasets.createPast(1);
+      testData.extendedEntities.createPast(2);
+      const entities = testData.extendedEntities.sorted();
+      sinon.stub(window, 'open');
+      const component = mountComponent();
+      const rows = component.findAll('.table-freeze-frozen tbody tr');
+      await rows[1].trigger('click');
+      window.open.calledOnce.should.be.true;
+      const [url, target] = window.open.firstCall.args;
+      url.should.equal(`/projects/1/entity-lists/trees/entities/${entities[1].uuid}`);
+      target.should.equal('_blank');
+    });
   });
 });

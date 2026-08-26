@@ -119,6 +119,5 @@ const handleActions = (event) => {
 @import '../../assets/scss/mixins';
 
 #entity-map-popup {
-  @include icon-btn-group;
 }
 </style>

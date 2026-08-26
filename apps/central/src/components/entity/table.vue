@@ -48,12 +48,14 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { inject, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 import EntityDataRow from './data-row.vue';
 import EntityMetadataRow from './metadata-row.vue';
 import TableFreeze from '../table/freeze.vue';
 
+import useRoutes from '../../composables/routes';
 import { markRowsChanged, markRowsDeleted } from '../../util/dom';
 import { useRequestData } from '../../request-data';
 
@@ -79,6 +81,10 @@ const emit = defineEmits(['update', 'resolve', 'delete', 'restore', 'selectionCh
 // created.
 const { project, odataEntities } = useRequestData();
 
+const router = useRouter();
+const { entityPath } = useRoutes();
+const datasetName = inject('datasetName');
+
 const afterAction = ({ target, data }) => {
   const { classList } = target;
   if (classList.contains('delete-button'))
@@ -87,8 +93,12 @@ const afterAction = ({ target, data }) => {
     emit('update', data);
   else if (classList.contains('resolve-button'))
     emit('resolve', data);
-  else if (target.classList.contains('restore-button'))
+  else if (classList.contains('restore-button'))
     emit('restore', data);
+  else if (target.tagName === 'TR') {
+    const path = entityPath(project.id, datasetName, data.__id);
+    window.open(router.resolve(path).href, '_blank', 'noopener');
+  }
 };
 const table = ref(null);
 const findIndex = (uuid) =>
@@ -129,6 +139,10 @@ defineExpose({ afterUpdate, afterDelete });
 
 #entity-table {
   table:has(tbody:empty) { display: none; }
+
+  tbody tr {
+    cursor: pointer;
+  }
 
   .table-freeze-scrolling {
     th, td {

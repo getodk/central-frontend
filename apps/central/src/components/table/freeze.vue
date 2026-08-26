@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
       <tbody v-if="data != null" ref="frozenBody"
         :class="`actions-trigger-${actionsTrigger}`"
         @mousemove="setActionsTrigger('hover')"
-        @focusin="setActionsTrigger('focus')" @click="actionClick">
+        @focusin="setActionsTrigger('focus')" @click="rowClick">
         <transition-group name="table-freeze-row">
           <slot v-for="(element, index) in data" :key="element[keyProp]"
             name="data-frozen" :data="element" :index="index">
@@ -36,10 +36,10 @@ except according to the terms contained in the LICENSE file.
             <slot name="head-scrolling"></slot>
           </tr>
         </thead>
-        <!-- eslint-disable-next-line vuejs-accessibility/mouse-events-have-key-events -->
+        <!-- eslint-disable-next-line vuejs-accessibility/mouse-events-have-key-events,vuejs-accessibility/click-events-have-key-events -->
         <tbody v-if="data != null" ref="scrollingBody"
           @mousemove="setActionsTrigger('hover')" @mouseover="toggleHoverClass"
-          @mouseleave="removeHoverClass">
+          @mouseleave="removeHoverClass" @click="rowClick">
           <transition-group name="table-freeze-row">
             <slot v-for="(element, index) in data" :key="element[keyProp]"
               name="data-scrolling" :data="element" :index="index">
@@ -115,12 +115,13 @@ following cases in mind:
 */
 watch(() => props.data, removeHoverClass);
 
-const actionClick = (event) => {
+const rowClick = (event) => {
   const action = event.target.closest('.btn-group .btn');
-  if (action != null) {
-    const index = action.closest('tr').rowIndex - 1;
-    emit('action', { target: action, data: props.data[index], index });
-  }
+  const row = event.target.closest('tr');
+  if (row == null) return;
+  const index = row.rowIndex - 1;
+  const target = action ?? row;
+  emit('action', { target, data: props.data[index], index });
 };
 
 const scrollingBody = ref(null);
@@ -179,8 +180,6 @@ defineExpose({ getRowPair });
     left: auto;
     right: 0px;
   }
-
-  .btn-group { @include icon-btn-group; }
 
   .col-actions {
     width: 0;

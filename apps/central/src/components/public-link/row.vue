@@ -108,9 +108,6 @@ export default {
 
   .icon-question-circle { margin-left: 5px; }
 
-  .btn-group {
-    @include icon-btn-group;
-  }
 }
 </style>
 

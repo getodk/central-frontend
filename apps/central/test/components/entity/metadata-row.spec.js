@@ -3,7 +3,6 @@ import EntityMetadataRow from '../../../src/components/entity/metadata-row.vue';
 import DateTime from '../../../src/components/date-time.vue';
 
 import testData from '../../data';
-import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
@@ -101,7 +100,7 @@ describe('EntityMetadataRow', () => {
       mockLogin();
       testData.extendedEntities.createPast(1);
       testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
-      mountComponent().findAll('.btn').length.should.equal(4);
+      mountComponent().findAll('.btn').length.should.equal(3);
     });
 
     it('renders the correct buttons for a project viewer', () => {
@@ -110,9 +109,8 @@ describe('EntityMetadataRow', () => {
       testData.extendedEntities.createPast(1);
       testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
       const btn = mountComponent().findAll('.btn');
-      btn.length.should.equal(2);
+      btn.length.should.equal(1);
       btn[0].classes('resolve-button').should.be.true;
-      btn[1].classes('more-button').should.be.true;
     });
   });
 
@@ -120,19 +118,6 @@ describe('EntityMetadataRow', () => {
     testData.extendedEntities.createPast(1, { version: 1001 });
     const button = mountComponent().get('.update-button');
     button.text().should.equal('Edit');
-  });
-
-  it('renders the More button correctly', async () => {
-    mockLogin();
-    testData.extendedDatasets.createPast(1, { name: 'á', entities: 1 });
-    testData.extendedEntities.createPast(1, { uuid: 'e' });
-    // Using load() rather than mountComponent() because RouterLinkStub doesn't
-    // use the <router-link> slot.
-    const app = await load('/projects/1/entity-lists/%C3%A1/entities');
-    const btn = app.get('.entity-metadata-row .more-button');
-    btn.element.tagName.should.equal('A');
-    btn.attributes('target').should.equal('_blank');
-    btn.attributes('href').should.equal('/projects/1/entity-lists/%C3%A1/entities/e');
   });
 
   describe('showing deleted entity', () => {

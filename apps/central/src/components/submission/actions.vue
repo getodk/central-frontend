@@ -29,12 +29,6 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-check"></span>{{ $t('action.review') }}
       </button>
     </template>
-    <router-link v-slot="{ href }" :to="detailPath" custom>
-      <a class="more-button btn btn-default" :href="href" target="_blank">
-        <span>{{ $t('action.more') }}</span>
-        <span class="icon-angle-right"></span>
-      </a>
-    </router-link>
   </div>
 </template>
 
@@ -61,9 +55,7 @@ const props = defineProps({
 
 const { project, form } = useRequestData();
 
-const { submissionPath, editSubmissionPath } = useRoutes();
-const detailPath = computed(() =>
-  submissionPath(form.projectId, form.xmlFormId, props.submission.__id));
+const { editSubmissionPath } = useRoutes();
 
 const editPath = computed(() => editSubmissionPath(
   form.projectId,
