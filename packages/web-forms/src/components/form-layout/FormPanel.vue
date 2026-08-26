@@ -144,8 +144,8 @@ h2 {
 		margin-bottom: 0;
 
 		:deep(.p-panel-header) h2 {
-      font-size: var(--odk-sub-group-font-size);
-    }
+			font-size: var(--odk-sub-group-font-size);
+		}
 
 		// Nested groups lose the header background and repeats keep it at any depth.
 		&:not(.is-repeat) :deep(.p-panel-header) {
