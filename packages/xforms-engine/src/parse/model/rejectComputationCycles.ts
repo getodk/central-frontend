@@ -42,20 +42,14 @@ const computationsOfBind = (bind: BindDefinition): readonly Computation[] => {
 
 // Only nodes that exist in the model count as "inside", as in JavaRosa.
 // A reference to a nonexistent child (e.g. relevant="abc" on a leaf) is not considered here.
-const dependsOn = (
-  reader: Computation,
-  writer: Computation,
-  modelNodesets: NodeDefinitionMap
-) => {
+const dependsOn = (reader: Computation, writer: Computation, modelNodesets: NodeDefinitionMap) => {
   return reader.reads.some((read) => {
     if (read === writer.nodeset) {
       return true;
     }
 
     return (
-      writer.affectsNodesInside &&
-      read.startsWith(`${writer.nodeset}/`) &&
-      modelNodesets.has(read)
+      writer.affectsNodesInside && read.startsWith(`${writer.nodeset}/`) && modelNodesets.has(read)
     );
   });
 };
@@ -70,17 +64,16 @@ const dropResolvable = (
     return unresolved.some((writer) => dependsOn(reader, writer, modelNodesets));
   });
 
-  return remaining.length === unresolved.length ? remaining : dropResolvable(remaining, modelNodesets);
+  if (remaining.length === unresolved.length) {
+    return remaining;
+  }
+
+  return dropResolvable(remaining, modelNodesets);
 };
 
 // Rejects forms whose `<bind>` computations depend on each other in a cycle.
-export const rejectComputationCycles = (
-  binds: ModelBindMap,
-  modelNodesets: NodeDefinitionMap
-) => {
-  const computations = Array
-    .from(binds.values())
-    .flatMap((bind) => computationsOfBind(bind));
+export const rejectComputationCycles = (binds: ModelBindMap, modelNodesets: NodeDefinitionMap) => {
+  const computations = Array.from(binds.values()).flatMap((bind) => computationsOfBind(bind));
 
   const cycleMembers = dropResolvable(computations, modelNodesets);
   if (cycleMembers.length > 0) {
