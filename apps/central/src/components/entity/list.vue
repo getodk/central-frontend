@@ -25,7 +25,7 @@ except according to the terms contained in the LICENSE file.
           :disabled-message="$t('mapDisabled')" button-appearance/>
         <teleport-if-exists v-if="odataEntities.dataExists" to=".dataset-entities-heading-row-right-side">
           <entity-download-button :odata-filter="deleted ? null : odataFilter"
-          :search-term="deleted ? null : searchTerm"
+          :search-term="deleted ? null : searchTerm" :view-as="deleted ? null : viewAs"
           :disabled="deleted"
           v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"/>
         </teleport-if-exists>
