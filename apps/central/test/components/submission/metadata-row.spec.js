@@ -1,5 +1,3 @@
-import { RouterLinkStub } from '@vue/test-utils';
-
 import DateTime from '../../../src/components/date-time.vue';
 import SubmissionMetadataRow from '../../../src/components/submission/metadata-row.vue';
 import SubmissionUpdateReviewState from '../../../src/components/submission/update-review-state.vue';
@@ -215,20 +213,12 @@ describe('SubmissionMetadataRow', () => {
     });
   });
 
-  it('specifies the correct to prop for the More button', () => {
-    testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 1 });
-    testData.extendedSubmissions.createPast(1, { instanceId: 'c d' });
-    const { to } = mountComponent().getComponent(RouterLinkStub).props();
-    to.should.equal('/projects/1/forms/a%20b/submissions/c%20d');
-  });
-
-  it('renders only the More button if user does not have update and delete permission', () => {
+  it('renders no buttons if user does not have update and delete permission', () => {
     mockLogin({ role: 'none' });
     testData.extendedProjects.createPast(1, { forms: 1, role: 'viewer' });
     testData.extendedSubmissions.createPast(1);
     const row = mountComponent({ canUpdate: false });
-    // Selecting this way because RouterLinkStub doesn't use the scoped slot.
-    row.findAll('.btn-group > *').length.should.equal(1);
+    row.findAll('.btn-group > *').length.should.equal(0);
   });
 
   it('does not render the "State" column for a form draft', () => {
