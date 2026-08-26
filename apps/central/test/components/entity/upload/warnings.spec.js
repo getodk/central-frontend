@@ -44,11 +44,11 @@ describe('EntityUploadWarnings', () => {
     th.text().should.equal('my_entity_data.csv');
     await th.should.be.textTooltip();
 
-    const tdText = table.findAll('tr').map(tr =>
+    const tdText = table.findAll('tbody tr').map(tr =>
       tr.findAll('td').map(td => td.text()));
     tdText.should.eql([
-      ['CIRCUMFERENCE', 'circumference'],
-      ['Species', 'species']
+      ['circumference', 'CIRCUMFERENCE'],
+      ['species', 'Species']
     ]);
     await table.get('td').should.be.textTooltip();
   });

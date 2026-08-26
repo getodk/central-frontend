@@ -40,8 +40,8 @@ except according to the terms contained in the LICENSE file.
           </thead>
           <tbody>
             <tr v-for="{ column, property } of caseMismatch" :key="column">
-              <td v-tooltip.text>{{ column }}</td>
               <td v-tooltip.text>{{ property }}</td>
+              <td v-tooltip.text>{{ column }}</td>
             </tr>
           </tbody>
         </table>
