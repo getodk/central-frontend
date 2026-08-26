@@ -42,7 +42,7 @@ const i18n = createI18n({
       'action.close': () => 'close',
       'submissionModal.title': () => 'Form successfully sent!',
       'submissionModal.body': () => 'You can fill this Form out again or close if you’re done.',
-      'submissionModal.action.fillOutAgain': () => '',
+      'submissionModal.action.fillOutAgain': () => 'fill out again',
       'sessionTimeoutModal.title': () => 'Session expired',
       // 'sessionTimeoutModal.body.full': () => '',
       'sessionTimeoutModal.body.here': () => 'here',
@@ -57,7 +57,7 @@ const i18n = createI18n({
       'editSubmissionModal.title': () => 'edit successful',
       'editSubmissionModal.body': () => 'redirecting now...',
       'thankYouModal.title': () => 'cheers!',
-      'thankYouModal.body': () => 'successfully submitted through this public link',
+      'thankYouModal.body': () => 'You can close this window now.',
     },
   },
 });
@@ -197,7 +197,7 @@ describe('WebFormRenderer', () => {
     const title = document.querySelector('.p-dialog-header span')!;
     const intro = document.querySelector('.p-dialog-content span')!;
     expect(title.textContent).to.equal('cheers!');
-    expect(intro.textContent).to.equal('successfully submitted through this public link');
+    expect(intro.textContent).to.equal('You can close this window now.');
   });
 
   it('should attach st query param for public links', async () => {
@@ -236,6 +236,36 @@ describe('WebFormRenderer', () => {
     (button as HTMLButtonElement).click();
 
     expect(component.find('input').element.value).to.equal('');
+  });
+
+  const findDialogButtons = () => {
+    return [ ...document.querySelectorAll('.p-dialog [type=button]') ] as HTMLButtonElement[];
+  };
+
+  const clickCloseButton = () => {
+    const closeButton = findDialogButtons().find(button => button.textContent === 'close')!;
+    closeButton.click();
+  };
+
+  it('should ask the user to close the tab if the window cannot be closed', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve({ instanceId: 1 }),
+    } as Response);
+    vi.spyOn(window, 'close').mockImplementation(() => undefined);
+    const component = await mountComponent({ xform: simpleForm });
+    await submit(component);
+
+    clickCloseButton();
+
+    await vi.waitFor(() => {
+      const intro = document.querySelector('.p-dialog-content span')!;
+      expect(intro.textContent).to.equal('You can close this window now.');
+    });
+    const buttons = findDialogButtons();
+    expect(buttons.length).to.equal(1);
+    expect(buttons[0]!.textContent).to.equal('fill out again');
   });
 
   it('should show error modal in case of submission failure', async () => {
