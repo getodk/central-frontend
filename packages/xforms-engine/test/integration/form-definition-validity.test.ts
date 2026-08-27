@@ -172,27 +172,6 @@ describe('Computation cycle detection', () => {
 
       expect(scenario.answerOf('/data/count')).toEqualAnswer(intAnswer(20));
     });
-
-    it.fails(
-      "supports self references in constraints [and subsequent value assignments, where permitted by the field's `constraint` expression]",
-      async () => {
-        const scenario = await initScenario(selfReferencingConstraintForm);
-
-        scenario.next('/data/count');
-        scenario.answer(5);
-
-        expect(scenario.answerOf('/data/count').getValue()).toBe('');
-        expect(scenario.answerOf('/data/count')).toEqualAnswer(intAnswer(5));
-
-        scenario.answer(20);
-
-        expect(scenario.answerOf('/data/count')).toEqualAnswer(intAnswer(20));
-
-        scenario.answer(5);
-
-        expect(scenario.answerOf('/data/count')).toEqualAnswer(intAnswer(20));
-      }
-    );
   });
 
   /**
