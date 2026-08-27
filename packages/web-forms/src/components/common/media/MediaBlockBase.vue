@@ -6,7 +6,7 @@ import type {
 	JRResourceURL,
 	JRResourceURLString,
 } from '@getodk/common/jr-resources/JRResourceURL.ts';
-import { computed, inject, ref, watchEffect } from 'vue';
+import { computed, inject, onWatcherCleanup, ref, watchEffect } from 'vue';
 
 type ObjectURL = `blob:${string}`;
 
@@ -32,31 +32,34 @@ const brokenFileSrc = computed(() => {
 	return new URL(`../../../assets/images/${props.brokenFileImage}`, import.meta.url).href;
 });
 
-const loadMedia = async (src?: JRResourceURL): Promise<void> => {
+const loadMedia = async (src?: JRResourceURL): Promise<ObjectURL | null> => {
 	if (src?.href == null || formOptions?.fetchFormAttachment == null) {
 		handleError(t('media_block.fetch.error'));
-		return;
+		return null;
 	}
 
 	try {
 		const cache = mediaCache.get(src.href);
+		console.log('loading media', src, 'cache hit', !!cache);
+
 		if (cache != null) {
-			setMedia(cache);
-			return;
+			return cache;
 		}
 
 		const response = await formOptions.fetchFormAttachment(src);
 		if (!response.ok || response.status !== 200) {
 			handleError(t('media_block.not_found.error', { file: src.href }));
-			return;
+			return null;
 		}
 
 		const data = await response.blob();
 		const url = URL.createObjectURL(data) satisfies string as ObjectURL;
 		mediaCache.set(src.href, url);
-		setMedia(url);
+		return url;
+		
 	} catch {
 		handleError(t('media_block.unknown.error', { file: src.href }));
+		return null;
 	}
 };
 
@@ -72,15 +75,22 @@ const handleError = (error: string) => {
 	errorMessage.value = error;
 };
 
-watchEffect(() => {
+watchEffect(async () => {
 	errorMessage.value = '';
-
+	
 	if (props.blobUrl != null) {
 		setMedia(props.blobUrl);
 		return;
 	}
-
-	void loadMedia(props.resourceUrl);
+	
+	let current = true;
+	onWatcherCleanup(() => {
+		current = false;
+	});
+	const blob = await loadMedia(props.resourceUrl);
+	if (blob && current) {
+		setMedia(blob);
+	}
 });
 </script>
 

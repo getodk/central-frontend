@@ -55,6 +55,11 @@ const withToken = (url) => `${url}${queryString({ st: props.st })}`;
 
 const getAttachment = (requestUrl: URL) => {
   const encodedName = encodeURIComponent(requestUrl.pathname.split('/').pop()!);
+  // TODO for testing purposes, put a random delay here to exacerbate the race condition
+  if (encodedName !== 'a.jpg') {
+
+    return new Response("Not Found", { status: 404 });
+  }
   const url = withToken(`/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath.value}/attachments/${encodedName}`);
   return fetch(url);
 };
