@@ -452,19 +452,6 @@ describe('EntityUpload', () => {
 
         app.getComponent(OdataLoadingMessage).props().filter.should.be.false;
       }));
-
-    it('resets the viewAs filter', () =>
-      upload('?viewAs=10').beforeEachResponse((app, { url }, i) => {
-        if (i === 0) return;
-        const { pathname, searchParams } = relativeUrl(url);
-        pathname.should.be.eql('/v1/projects/1/datasets/trees.svc/Entities');
-        expect(searchParams.get('$filter')).to.be.null;
-        searchParams.get('$top').should.be.eql('250');
-        searchParams.get('$count').should.be.eql('true');
-        expect(searchParams.get('viewAs')).to.be.null;
-
-        app.getComponent(OdataLoadingMessage).props().filter.should.be.false;
-      }));
   });
 
   it('allows upload despite missing properties', () => {

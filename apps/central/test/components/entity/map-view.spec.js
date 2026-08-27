@@ -86,7 +86,8 @@ describe('EntityMapView', () => {
       testData.extendedDatasets.createPast(1, {
         properties: [{ name: 'geometry' }]
       });
-      return load('/projects/1/entity-lists/trees/entities?map=true&creatorId=1&creatorId=2&start=1970-01-01&end=1970-01-02&conflict=true&search=foo&viewAs=10')
+      const { id } = testData.extendedFieldKeys.createPast(1).last();
+      return load(`/projects/1/entity-lists/trees/entities?map=true&creatorId=1&creatorId=2&start=1970-01-01&end=1970-01-02&conflict=true&search=foo&viewAs=${id}`)
         .testRequestsInclude([{
           url: ({ pathname, searchParams }) => {
             pathname.should.equal('/v1/projects/1/datasets/trees/entities.geojson');
@@ -97,7 +98,7 @@ describe('EntityMapView', () => {
               '__system/conflict ne null'
             ]);
             searchParams.get('$search').should.equal('foo');
-            searchParams.get('viewAs').should.equal('10');
+            searchParams.get('viewAs').should.equal(String(id));
           }
         }]);
     });
