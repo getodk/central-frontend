@@ -7,7 +7,7 @@ import { mergeMountOptions, mount } from '../../../util/lifecycle';
 
 const mountComponent = (options) =>
   mount(EntityUploadWarnings, mergeMountOptions(options, {
-    props: { filename: 'test.csv' }
+    props: { filename: 'my_data.csv' }
   }));
 
 describe('EntityUploadWarnings', () => {
@@ -24,10 +24,9 @@ describe('EntityUploadWarnings', () => {
     p[2].text().should.equal('__id, __foo');
   });
 
-  it('shows a warning for columns that only differ from properties on letter case', async () => {
+  it('shows a warning for columns that differ from properties on letter case', async () => {
     const component = mountComponent({
       props: {
-        filename: 'my_entity_data.csv',
         caseMismatch: [
           { column: 'CIRCUMFERENCE', property: 'circumference' },
           { column: 'Species', property: 'species' }
@@ -41,8 +40,8 @@ describe('EntityUploadWarnings', () => {
 
     const table = warning.get('table');
     const th = table.get('th:last-child');
-    th.text().should.equal('my_entity_data.csv');
-    await th.should.be.textTooltip();
+    th.text().should.equal('my_data.csv');
+    await th.should.have.textTooltip();
 
     const tdText = table.findAll('tbody tr').map(tr =>
       tr.findAll('td').map(td => td.text()));
@@ -50,7 +49,7 @@ describe('EntityUploadWarnings', () => {
       ['circumference', 'CIRCUMFERENCE'],
       ['species', 'Species']
     ]);
-    await table.get('td').should.be.textTooltip();
+    await table.get('td').should.have.textTooltip();
   });
 
   it('shows a warning for columns that are invalid property names', async () => {
