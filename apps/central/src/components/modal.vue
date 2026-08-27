@@ -17,7 +17,7 @@ checkScroll() method may add the `has-scroll` class. -->
     <div v-show="state" ref="el" v-bind="$attrs" class="modal" tabindex="-1"
       :style="backdrop ? { backgroundColor: 'rgba(0, 0, 0, 0.5)' } : null"
       role="dialog" :aria-labelledby="titleId" @mousedown="modalMousedown"
-      @click="modalClick" @keydown.esc="hideIfCan" @focusout="refocus">
+      @click="modalClick" @keydown.esc="hideOnEsc" @focusout="refocus">
       <div class="modal-dialog" :class="sizeClass" role="document">
         <div class="modal-content">
           <div class="modal-top-actions">
@@ -70,7 +70,9 @@ const props = defineProps({
     default: 'normal'
   },
   // Shows a dark overlay behind the modal
-  backdrop: Boolean
+  backdrop: Boolean,
+  // If true, the modal will not close on ESC key or click outside
+  persistent: Boolean
 });
 const emit = defineEmits(['shown', 'hide', 'mutate']);
 
@@ -204,6 +206,7 @@ onMounted(() => { if (props.state) show(); });
 onBeforeUnmount(() => { if (props.state) hide(); });
 
 const hideIfCan = () => { if (props.hideable) emit('hide'); };
+const hideOnEsc = () => { if (!props.persistent) hideIfCan(); };
 
 const sizeClass = computed(() => {
   switch (props.size) {
@@ -218,6 +221,7 @@ const modalMousedown = (event) => {
   mousedownOutsideDialog = event.target === event.currentTarget;
 };
 const modalClick = (event) => {
+  if (props.persistent) return;
   const mouseupOutsideDialog = event.target === event.currentTarget;
   if (mousedownOutsideDialog && mouseupOutsideDialog) hideIfCan();
 };
