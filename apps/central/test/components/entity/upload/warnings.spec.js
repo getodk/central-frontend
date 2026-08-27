@@ -21,6 +21,19 @@ describe('EntityUploadWarnings', () => {
     p[2].text().should.equal('__id, __foo');
   });
 
+  it('shows a warning for columns that are invalid property names', async () => {
+    const component = mountComponent({
+      props: { invalidProperties: ['First name', 'phone#'] }
+    });
+    // Wait for I18nList to render.
+    await nextTick();
+
+    const p = component.getComponent(EntityUploadAlert).findAll('p');
+    p.length.should.equal(3);
+    p[0].text().should.equal('These columns are not valid property names');
+    p[2].text().should.equal('First name, phone#');
+  });
+
   it('shows a warning for missing properties', async () => {
     const component = mountComponent({
       props: { missingProperties: ['foo', 'bar'] }
