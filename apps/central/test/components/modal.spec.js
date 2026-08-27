@@ -194,7 +194,21 @@ describe('Modal', () => {
     });
   });
 
-  describe('persistent prop', () => {
+  describe('hiding the modal', () => {
+    it('emits hide on ESC key by default', async () => {
+      const modal = mountComponent();
+      await modal.get('.modal').trigger('keydown.esc');
+      should.exist(modal.emitted().hide);
+    });
+
+    it('emits hide on click outside by default', async () => {
+      const modal = mountComponent();
+      const modalEl = modal.get('.modal');
+      await modalEl.trigger('mousedown');
+      await modalEl.trigger('click');
+      should.exist(modal.emitted().hide);
+    });
+
     it('does not emit hide on ESC key when persistent is true', async () => {
       const modal = mountComponent({
         props: { persistent: true }
