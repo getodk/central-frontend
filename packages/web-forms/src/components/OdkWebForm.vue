@@ -422,7 +422,6 @@ onUnmounted(() => {
 		}
 
 		.form-error-message.p-message.p-message-error {
-			display: inline-block;
 			position: sticky;
 			z-index: var(--odk-z-index-error-banner);
 			border-radius: var(--odk-radius);
