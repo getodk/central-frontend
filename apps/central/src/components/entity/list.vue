@@ -180,11 +180,19 @@ export default {
         creatorIds.value = [...entityCreators.ids];
     });
 
+    // viewAs will reset to null if it can't find a matching actorId
+    // but it will use it in the first request for entities.
     const viewAs = useQueryRef({
-      fromQuery: (query) => (/^[1-9]\d*$/.test(query.viewAs)
-        ? Number.parseInt(query.viewAs, 10)
-        : null),
+      fromQuery: (query) => {
+        if (!/^[1-9]\d*$/.test(query.viewAs)) return null;
+        const id = Number.parseInt(query.viewAs, 10);
+        return !fieldKeys.dataExists || fieldKeys.data.some(fieldKey => fieldKey.id === id) ? id : null;
+      },
       toQuery: (value) => ({ viewAs: value != null ? value.toString() : null })
+    });
+    watch(() => fieldKeys.dataExists, () => {
+      if (viewAs.value != null && !fieldKeys.data.some(fieldKey => fieldKey.id === viewAs.value))
+        viewAs.value = null;
     });
 
     const creationDateRange = useDateRangeQueryRef();
