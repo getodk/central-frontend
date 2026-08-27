@@ -489,4 +489,108 @@ describe('EntityUpload', () => {
         }
       }]);
   });
+
+  it('ignores system properties', () => {
+    testData.extendedDatasets.createPast(1, {
+      properties: [{ name: 'height' }]
+    });
+    return showModal()
+      .complete()
+      .request(async (modal) => {
+        await selectFile(
+          modal,
+          createCSV('label,height,__id,__foo\ndogwood,1,e1,x\nelm,,e2,y')
+        );
+
+        // A warning is shown.
+        const warnings = modal.getComponent(EntityUploadWarnings).props();
+        warnings.systemProperties.should.eql(['__id', '__foo']);
+
+        return modal.get('.modal-actions .btn-primary').trigger('click');
+      })
+      .respondWithProblem()
+      .testRequests([{
+        method: 'POST',
+        url: '/v1/projects/1/datasets/trees/entities',
+        data: {
+          source: { name: 'my_data.csv', size: 48 },
+          entities: [
+            { label: 'dogwood', data: { height: '1' } },
+            // If there were only system properties, no proper entity
+            // properties, don't bother sending an empty `data` object.
+            { label: 'elm' }
+          ]
+        }
+      }]);
+  });
+
+  it('ignores columns that are not valid property names', () => {
+    testData.extendedDatasets.createPast(1, {
+      name: 'people',
+      properties: [{ name: 'height' }]
+    });
+    return showModal()
+      .complete()
+      .request(async (modal) => {
+        await selectFile(
+          modal,
+          createCSV('label,height,LABEL,First name,phone#\nAlice,123,Alice,Alice,456\nChelsea,,Chelsea,Chelsea,789')
+        );
+
+        // A warning is shown.
+        const warnings = modal.getComponent(EntityUploadWarnings).props();
+        warnings.invalidProperties.should.eql(['LABEL', 'First name', 'phone#']);
+
+        return modal.get('.modal-actions .btn-primary').trigger('click');
+      })
+      .respondWithProblem()
+      .testRequests([{
+        method: 'POST',
+        url: '/v1/projects/1/datasets/people/entities',
+        data: {
+          source: { name: 'my_data.csv', size: 91 },
+          entities: [
+            { label: 'Alice', data: { height: '123' } },
+            // There were no valid entity properties, so don't bother sending an
+            // empty `data` object.
+            { label: 'Chelsea' }
+          ]
+        }
+      }]);
+  });
+
+  it('ignores columns that only differ from properties on letter case', () => {
+    testData.extendedDatasets.createPast(1, {
+      properties: [{ name: 'height' }, { name: 'circumference' }, { name: 'species' }]
+    });
+    return showModal()
+      .complete()
+      .request(async (modal) => {
+        await selectFile(
+          modal,
+          createCSV('label,height,CIRCUMFERENCE,Species\ndogwood,1,2,dogwood\nelm,,3,elm')
+        );
+
+        // A warning is shown.
+        const warnings = modal.getComponent(EntityUploadWarnings).props();
+        warnings.caseMismatch.should.eql([
+          { column: 'CIRCUMFERENCE', property: 'circumference' },
+          { column: 'Species', property: 'species' }
+        ]);
+
+        return modal.get('.modal-actions .btn-primary').trigger('click');
+      })
+      .respondWithProblem()
+      .testRequests([{
+        method: 'POST',
+        url: '/v1/projects/1/datasets/trees/entities',
+        data: {
+          source: { name: 'my_data.csv', size: 65 },
+          entities: [
+            { label: 'dogwood', data: { height: '1' } },
+            { label: 'elm' }
+          ]
+        }
+      }]);
+  });
 });

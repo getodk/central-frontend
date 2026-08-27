@@ -91,20 +91,30 @@ export default (container, createResource) => {
     transformResponse: ({ data }) => shallowReactive(transformForm(data))
   }));
   createResource('dataset', (dataset) => {
-    // Add projectId to forms. FormLink expects this property to exist on form
-    // objects.
+    /* eslint-disable no-param-reassign */
     const transformData = (data) => {
+      // Add projectId to forms. FormLink expects this property to exist on form
+      // objects.
       const { projectId } = data;
       for (const form of data.sourceForms) form.projectId = projectId;
       for (const form of data.linkedForms) form.projectId = projectId;
       for (const property of data.properties) {
         for (const form of property.forms) form.projectId = projectId;
       }
+
       // The backend doesn't return accessFilter key if it is null (access to all), so we normalize
       // it here.
       if (!('accessFilter' in data)) Object.assign(data, { accessFilter: null });
+
+      if (data.properties != null) {
+        data.propertyMap = new Map();
+        for (const property of data.properties)
+          data.propertyMap.set(property.name, property);
+      }
+
       return data;
     };
+    /* eslint-enable no-param-reassign */
 
     return {
       transformResponse: ({ data }) =>
