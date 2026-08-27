@@ -31,20 +31,22 @@ except according to the terms contained in the LICENSE file.
           <sentence-separator/>
           <span>{{ $tc('columnsIgnored', caseMismatch.length) }}</span>
         </p>
-        <table>
-          <thead>
-            <tr>
-              <th>{{ $t('header.existingProperty') }}</th>
-              <th v-tooltip.text>{{ filename }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="{ column, property } of caseMismatch" :key="column">
-              <td v-tooltip.text>{{ property }}</td>
-              <td v-tooltip.text>{{ column }}</td>
-            </tr>
-          </tbody>
-        </table>
+        <div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>{{ $t('header.existingProperty') }}</th>
+                <th v-tooltip.text>{{ filename }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="{ column, property } of caseMismatch" :key="column">
+                <td v-tooltip.text>{{ property }}</td>
+                <td v-tooltip.text>{{ column }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </template>
     </entity-upload-alert>
     <entity-upload-alert v-if="invalidProperties != null" type="warning">
@@ -110,7 +112,18 @@ defineEmits(['rows']);
 }
 
 #entity-upload-warnings-case-mismatch {
-  table { table-layout: fixed; }
+  div:has(> table) {
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    padding: 6px;
+  }
+
+  table {
+    margin-bottom: 0;
+    table-layout: fixed;
+  }
+
+  thead { background-color: transparent; }
   th, td { @include text-overflow-ellipsis; }
 }
 </style>

@@ -60,12 +60,14 @@ const { formatRange } = useI18nUtils();
   border-radius: 12px;
   padding: 10px 15px;
 
+  p {
+    margin-bottom: 10px;
+    &:last-child { margin-bottom: 0; }
+  }
+
   // Title
   > :first-child {
     @include line-clamp(2);
-    margin-bottom: 10px;
-
-    &:last-child { margin-bottom: 0; }
 
     // Icon
     > :first-child { margin-right: $margin-right-icon; }
