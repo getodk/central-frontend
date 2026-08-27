@@ -524,7 +524,7 @@ describe('EntityUpload', () => {
       .request(async (modal) => {
         await selectFile(
           modal,
-          createCSV('label,height,LABEL,"First name",phone#\nAlice,123,Alice,Alice,456\nChelsea,,Chelsea,Chelsea,789')
+          createCSV('label,height,LABEL,First name,phone#\nAlice,123,Alice,Alice,456\nChelsea,,Chelsea,Chelsea,789')
         );
 
         // A warning is shown.
@@ -538,7 +538,7 @@ describe('EntityUpload', () => {
         method: 'POST',
         url: '/v1/projects/1/datasets/people/entities',
         data: {
-          source: { name: 'my_data.csv', size: 93 },
+          source: { name: 'my_data.csv', size: 91 },
           entities: [
             { label: 'Alice', data: { height: '123' } },
             // There were no valid entity properties, so don't bother sending an
