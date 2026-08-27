@@ -53,7 +53,7 @@ const haveIbeenPwnedResponse = password => {
         ];
       case 'pwnedPassword':
         return [
-          '06B58FE7510B4A31E413F9A64A1C1A747C8:999999',
+          '1C31795B5ECF960907E0E9CA1B3863B0762:999999',
         ];
       default: throw new Error(`No haveibeenpwned API response defined for password '${password}'`);
     }
