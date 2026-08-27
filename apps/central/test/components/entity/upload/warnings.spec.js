@@ -73,9 +73,9 @@ describe('EntityUploadWarnings', () => {
     await nextTick();
 
     const p = component.getComponent(EntityUploadAlert).findAll('p');
-    p.length.should.equal(2);
-    p[0].text().should.startWith('These properties are not included in your file');
-    p[1].text().should.equal('foo, bar');
+    p.length.should.equal(3);
+    p[0].text().should.startWith('Properties not found in file');
+    p[2].text().should.equal('foo, bar');
   });
 
   it('shows a warning for ragged rows', () => {
