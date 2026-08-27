@@ -6,8 +6,9 @@ const findFocusTarget = (
   node: HTMLElement | null,
   container: HTMLElement | null
 ): HTMLElement | null => {
+  // Focusing a datepicker input opens its calendar inline instead of a popup.
   const FOCUSABLE =
-    ':is(button, input:not(.p-datepicker-input), textarea, [tabindex]:not([tabindex="-1"])):not(:disabled)';
+    ':is(button, input, textarea, [tabindex]:not([tabindex="-1"])):not(:disabled):not(.p-datepicker-input)';
   if (node?.matches(FOCUSABLE)) {
     return node;
   }
