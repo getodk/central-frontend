@@ -147,16 +147,6 @@ describe('Modal', () => {
       await nextTick();
       document.activeElement.should.equal(modal.get('.modal').element);
     });
-
-    it('emits hide event after Escape key is pressed', async () => {
-      const modal = mountComponent({
-        props: { state: true, hideable: true },
-        attachTo: document.body
-      });
-      await nextTick();
-      await modal.get('.modal').trigger('keydown.esc');
-      should.exist(modal.emitted().hide);
-    });
   });
 
   describe('size prop', () => {

@@ -191,7 +191,7 @@ const show = () => {
   // Emit shown after nextTick to ensure DOM is updated (v-show has made element visible)
   nextTick(() => {
     // Focus the modal so that pressing Escape will hide it.
-    if (document.activeElement != null && document.activeElement.closest('.modal') !== el.value) {
+    if (document.activeElement == null || document.activeElement.closest('.modal') !== el.value) {
       el.value.focus();
     }
     emit('shown');
