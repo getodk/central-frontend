@@ -192,7 +192,7 @@ h2 {
 .p-panel.p-panel-toggleable .p-panel.p-panel-toggleable.is-repeat :deep(.p-panel-header) {
 	// Repeats nested in any panel (repeat or group)
 	border-radius: var(--odk-radius);
-	width: calc(100% - 30px);
+	width: calc(100% - var(--odk-spacing-xxl));
 	margin: 0 auto;
 }
 
