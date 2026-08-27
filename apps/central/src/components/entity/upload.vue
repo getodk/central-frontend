@@ -79,7 +79,7 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import { computed, inject, nextTick, onBeforeUnmount, reactive, ref, shallowRef, watch } from 'vue';
-import { pick } from 'ramda';
+import { omit, pick } from 'ramda';
 import { useI18n } from 'vue-i18n';
 
 import EntityUploadErrors from './upload/errors.vue';
@@ -194,14 +194,16 @@ const validateHeader = ({ columns, errors: papaErrors }) => {
     errorDetails.invalidQuotes = papaErrors.some(({ type }) => type === 'Quotes');
   } else {
     const columnSet = new Set();
+    const duplicateColumns = new Set();
     for (const column of columns) {
       if (/^\s*$/.test(column))
         errorDetails.emptyColumn = true;
       else if (columnSet.has(column))
-        errorDetails.duplicateColumn = true;
+        duplicateColumns.add(column);
       else
         columnSet.add(column);
     }
+    errorDetails.duplicateColumns = [...duplicateColumns];
 
     const hasLabel = columnSet.has('label');
     errorDetails.missingLabel = !hasLabel;
@@ -237,18 +239,32 @@ const validateHeader = ({ columns, errors: papaErrors }) => {
       warningDetails.invalidProperties.length +
       warningDetails.caseMismatch.length +
       (hasLabel ? 1 : 0);
+  }
 
-    // Remove empty arrays from warningDetails. EntityUploadWarnings expects
-    // nonapplicable warnings to be nullish. Removing these arrays also helps us
-    // count the number of warnings.
-    for (const [name, value] of Object.entries(warningDetails)) {
-      if (value.length === 0) delete warningDetails[name];
+  // Normalize detail objects, adding a `count` property.
+  for (const details of [errorDetails, warningDetails]) {
+    let count = 0;
+    for (const [name, value] of Object.entries(details)) {
+      if (value === true || value === false) { // Boolean value
+        if (value) count += 1;
+      } else if (Array.isArray(value)) {
+        if (value.length !== 0)
+          count += 1;
+        else
+          // Remove empty arrays. EntityUploadErrors and EntityUploadWarnings
+          // expect nullish values rather than empty arrays for nonapplicable
+          // errors/warnings.
+          delete details[name];
+      } else {
+        throw new Error('unexpected detail value');
+      }
     }
+    details.count = count;
   }
 
   const result = {};
-  if (Object.values(errorDetails).includes(true)) result.errors = errorDetails;
-  if (Object.keys(warningDetails).length !== 0) result.warnings = warningDetails;
+  if (errorDetails.count !== 0) result.errors = omit(['count'], errorDetails);
+  if (warningDetails.count !== 0) result.warnings = omit(['count'], warningDetails);
   return result;
 };
 const { t } = useI18n();

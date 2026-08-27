@@ -156,14 +156,15 @@ describe('EntityUpload', () => {
     it('shows errors', async () => {
       const modal = await showModal();
       await selectFile(modal, createCSV('foo,,foo\n1,2,3'));
-      modal.getComponent(EntityUploadErrors).props().should.include({
+      const errors = modal.getComponent(EntityUploadErrors).props();
+      errors.should.include({
         delimiter: ',',
         invalidQuotes: false,
         missingLabel: true,
         unknownProperty: true,
-        duplicateColumn: true,
         emptyColumn: true
       });
+      errors.duplicateColumns.should.eql(['foo']);
     });
 
     it('uses the delimiter from the file', async () => {
