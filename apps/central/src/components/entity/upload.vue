@@ -54,6 +54,7 @@ except according to the terms contained in the LICENSE file.
         <entity-upload-errors v-if="dataError != null" :data-error="dataError"/>
         <entity-upload-warnings v-if="warnings != null" v-bind="warnings"
           :filename="fileMetadata.name" @rows="showWarningRows"/>
+
         <entity-upload-file-select v-show="csvEntities == null"
           :parsing="parsing" @change="selectFile">
           <entity-upload-header-help :errors="headerErrors"/>
