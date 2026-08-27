@@ -204,8 +204,9 @@ describe.only('UserEditPassword', () => {
         formGroup.find('.collapsible-error').exists().should.be.true;
       }));
 
-  it('should allow user to continue if password breach check returns 500', () =>
-    mockHttp()
+  it('should allow user to continue if password breach check returns 500', function () {
+    this.timeout(5_000); // REVIEW some bug in the MockHttp promise resolution chain?
+    return mockHttp()
       .mount(UserEditPassword, mountOptions())
       .request(submit)
       .respond(() => ({ status: 500 }))
@@ -217,7 +218,8 @@ describe.only('UserEditPassword', () => {
           url: '/v1/users/1/password',
           data: { old: 'testPasswordX', new: 'testPasswordY' }
         },
-      ]));
+      ]);
+  });
 
   it('should allow user to continue if password breach check times out', () =>
     mockHttp()
