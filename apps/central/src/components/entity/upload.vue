@@ -302,6 +302,7 @@ const selectFile = (file) => {
   redAlert.hide();
   fileMetadata.value = null;
   headerErrors.value = null;
+  warnings.value = null;
   dataError.value = null;
 
   const abortController = new AbortController();
