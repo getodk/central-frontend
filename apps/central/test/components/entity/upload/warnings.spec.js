@@ -1,21 +1,78 @@
 import { nextTick } from 'vue';
 
-import EntityUploadWarning from '../../../../src/components/entity/upload/warning.vue';
+import EntityUploadAlert from '../../../../src/components/entity/upload/alert.vue';
 import EntityUploadWarnings from '../../../../src/components/entity/upload/warnings.vue';
 
-import { mount } from '../../../util/lifecycle';
+import { mergeMountOptions, mount } from '../../../util/lifecycle';
 
-const mountComponent = (options) => mount(EntityUploadWarnings, options);
+const mountComponent = (options) =>
+  mount(EntityUploadWarnings, mergeMountOptions(options, {
+    props: { filename: 'my_data.csv' }
+  }));
 
 describe('EntityUploadWarnings', () => {
-  it('shows missing properties', async () => {
+  it('shows a warning for system properties', async () => {
+    const component = mountComponent({
+      props: { systemProperties: ['__id', '__foo'] }
+    });
+    // Wait for I18nList to render.
+    await nextTick();
+
+    const p = component.getComponent(EntityUploadAlert).findAll('p');
+    p.length.should.equal(3);
+    p[0].text().should.startWith('System properties can’t be set');
+    p[2].text().should.equal('__id, __foo');
+  });
+
+  it('shows a warning for columns that differ from properties on letter case', async () => {
+    const component = mountComponent({
+      props: {
+        caseMismatch: [
+          { column: 'CIRCUMFERENCE', property: 'circumference' },
+          { column: 'Species', property: 'species' }
+        ]
+      }
+    });
+
+    const warning = component.getComponent(EntityUploadAlert);
+    const title = warning.get('p').text();
+    title.should.startWith('Column is similar to an existing property');
+
+    const table = warning.get('table');
+    const th = table.get('th:last-child');
+    th.text().should.equal('my_data.csv');
+    await th.should.have.textTooltip();
+
+    const tdText = table.findAll('tbody tr').map(tr =>
+      tr.findAll('td').map(td => td.text()));
+    tdText.should.eql([
+      ['circumference', 'CIRCUMFERENCE'],
+      ['species', 'Species']
+    ]);
+    await table.get('td').should.have.textTooltip();
+  });
+
+  it('shows a warning for columns that are invalid property names', async () => {
+    const component = mountComponent({
+      props: { invalidProperties: ['First name', 'phone#'] }
+    });
+    // Wait for I18nList to render.
+    await nextTick();
+
+    const p = component.getComponent(EntityUploadAlert).findAll('p');
+    p.length.should.equal(3);
+    p[0].text().should.equal('These columns are not valid property names');
+    p[2].text().should.equal('First name, phone#');
+  });
+
+  it('shows a warning for missing properties', async () => {
     const component = mountComponent({
       props: { missingProperties: ['foo', 'bar'] }
     });
     // Wait for I18nList to render.
     await nextTick();
 
-    const p = component.getComponent(EntityUploadWarning).findAll('p');
+    const p = component.getComponent(EntityUploadAlert).findAll('p');
     p.length.should.equal(2);
     p[0].text().should.startWith('These properties are not included in your file');
     p[1].text().should.equal('foo, bar');
@@ -25,7 +82,7 @@ describe('EntityUploadWarnings', () => {
     const component = mountComponent({
       props: { raggedRows: [[1, 2]] }
     });
-    const warning = component.getComponent(EntityUploadWarning);
+    const warning = component.getComponent(EntityUploadAlert);
     warning.text().should.startWith('Fewer columns were found than expected');
     expect(warning.props().ranges).to.eql([[1, 2]]);
   });
@@ -34,7 +91,7 @@ describe('EntityUploadWarnings', () => {
     const component = mountComponent({
       props: { largeCell: 1 }
     });
-    const warning = component.getComponent(EntityUploadWarning);
+    const warning = component.getComponent(EntityUploadAlert);
     warning.text().should.startWith('Some cells are abnormally large');
     expect(warning.props().ranges).to.eql([[1, 1]]);
   });
@@ -43,7 +100,7 @@ describe('EntityUploadWarnings', () => {
     const component = mountComponent({
       props: { raggedRows: [[1, 2]], largeCell: 3 }
     });
-    const warnings = component.findAllComponents(EntityUploadWarning);
+    const warnings = component.findAllComponents(EntityUploadAlert);
     warnings.length.should.equal(2);
     const titles = warnings.map(warning => warning.get('p').text());
     titles[0].should.startWith('Fewer columns were found than expected');
@@ -54,7 +111,7 @@ describe('EntityUploadWarnings', () => {
     const component = mountComponent({
       props: { raggedRows: [[1, 2]], largeCell: 3 }
     });
-    const warnings = component.findAllComponents(EntityUploadWarning);
+    const warnings = component.findAllComponents(EntityUploadAlert);
     warnings.length.should.equal(2);
     await warnings[0].get('a').trigger('click');
     await warnings[1].get('a').trigger('click');
