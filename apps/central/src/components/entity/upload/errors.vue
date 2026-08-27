@@ -1,6 +1,6 @@
 <template>
   <div id="entity-upload-errors">
-    <p class="entity-upload-section-title">{{ $t('title') }}</p>
+    <p class="entity-upload-section-title">{{ $tcn('title', count) }}</p>
     <p>{{ $t('introduction') }}</p>
     <i18n-t v-if="delimiter !== ','" tag="p" keypath="delimiterNotComma">
       <template #delimiter>
@@ -76,6 +76,10 @@ const props = defineProps({
     type: String,
     required: true
   },
+  count: {
+    type: Number,
+    required: true
+  },
 
   // Errors about the column header
   invalidQuotes: Boolean,
@@ -105,7 +109,7 @@ const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
 {
   "en": {
     // This text is shown above a section that lists errors in the user's data.
-    "title": "Review errors",
+    "title": "Review {count} error | Review {count} errors",
     "introduction": "Errors must be fixed before you can upload Entities.",
     "delimiterNotComma": "These errors may be because we got the cell delimiter wrong. We used {delimiter}.",
 

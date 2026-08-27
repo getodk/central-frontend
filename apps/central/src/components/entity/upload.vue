@@ -79,7 +79,7 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import { computed, inject, nextTick, onBeforeUnmount, reactive, ref, shallowRef, watch } from 'vue';
-import { omit, pick } from 'ramda';
+import { pick } from 'ramda';
 import { useI18n } from 'vue-i18n';
 
 import EntityUploadErrors from './upload/errors.vue';
@@ -263,8 +263,8 @@ const validateHeader = ({ columns, errors: papaErrors }) => {
   }
 
   const result = {};
-  if (errorDetails.count !== 0) result.errors = omit(['count'], errorDetails);
-  if (warningDetails.count !== 0) result.warnings = omit(['count'], warningDetails);
+  if (errorDetails.count !== 0) result.errors = errorDetails;
+  if (warningDetails.count !== 0) result.warnings = warningDetails;
   return result;
 };
 const { t } = useI18n();
@@ -337,12 +337,18 @@ const selectFile = (file) => {
       return parseEntities(file, headerResults, signal)
         .then(results => {
           csvEntities.value = results.data;
-          if (validation.warnings != null || results.warnings.count !== 0)
-            warnings.value = { ...validation.warnings, ...results.warnings.details };
+
+          if (validation.warnings != null || results.warnings.count !== 0) {
+            warnings.value = {
+              ...validation.warnings,
+              ...results.warnings.details,
+              count: (validation.warnings?.count ?? 0) + results.warnings.count
+            };
+          }
         })
         .catch(error => {
           if (!signal.aborted) {
-            errors.value = { dataError: error.message };
+            errors.value = { dataError: error.message, count: 1 };
             warnings.value = validation.warnings;
           }
 

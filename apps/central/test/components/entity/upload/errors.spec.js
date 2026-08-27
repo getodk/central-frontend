@@ -6,7 +6,7 @@ import { mergeMountOptions, mount } from '../../../util/lifecycle';
 
 const mountComponent = (options) =>
   mount(EntityUploadErrors, mergeMountOptions(options, {
-    props: { delimiter: ',' }
+    props: { delimiter: ',', count: 1 }
   }));
 
 describe('EntityUploadErrors', () => {

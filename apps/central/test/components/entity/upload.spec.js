@@ -159,6 +159,7 @@ describe('EntityUpload', () => {
       const errors = modal.getComponent(EntityUploadErrors).props();
       errors.should.include({
         delimiter: ',',
+        count: 4,
         invalidQuotes: false,
         missingLabel: true,
         unknownProperty: true,
@@ -229,6 +230,7 @@ describe('EntityUpload', () => {
       const csv = createCSV('label,height\nx\ny\n"12345,67890",""');
       await selectFile(modal, csv);
       const warnings = modal.getComponent(EntityUploadWarnings).props();
+      warnings.count.should.equal(2);
       warnings.raggedRows.should.eql([[1, 2]]);
       warnings.largeCell.should.equal(3);
     });
@@ -245,6 +247,7 @@ describe('EntityUpload', () => {
       await selectFile(modal, createCSV(warningsCSV));
       modal.findComponent(EntityUploadErrors).exists().should.be.false;
       const initialWarnings = modal.getComponent(EntityUploadWarnings).props();
+      initialWarnings.count.should.equal(2);
       initialWarnings.missingProperties.should.eql(['circumference']);
       initialWarnings.raggedRows.should.eql([[1, 1]]);
 
@@ -259,10 +262,10 @@ describe('EntityUpload', () => {
 
       // There's a warning about the column header, but no warning about the
       // data.
-      const warnings = modal.getComponent(EntityUploadWarnings);
-      warnings.props().missingProperties.should.eql(['circumference']);
-      should.not.exist(warnings.props().raggedRows);
-      warnings.findAll('.entity-upload-alert').length.should.equal(1);
+      const warnings = modal.getComponent(EntityUploadWarnings).props();
+      warnings.count.should.equal(1);
+      warnings.missingProperties.should.eql(['circumference']);
+      should.not.exist(warnings.raggedRows);
     });
 
     it('shows rows to which a warning applies after they are selected', async () => {

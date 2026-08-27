@@ -2826,7 +2826,7 @@
     },
     "EntityUploadErrors": {
       "title": {
-        "string": "Review errors",
+        "string": "{count, plural, one {Review {count} error} other {Review {count} errors}}",
         "developer_comment": "This text is shown above a section that lists errors in the user's data."
       },
       "introduction": {
@@ -2897,7 +2897,7 @@
     },
     "EntityUploadHeaderReview": {
       "title": {
-        "string": "Review warnings",
+        "string": "{count, plural, one {Review {count} warning} other {Review {count} warnings}}",
         "developer_comment": "This text is shown above a section where the user can review warnings about their data."
       },
       "missingProperties": {
