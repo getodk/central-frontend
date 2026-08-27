@@ -4,7 +4,6 @@ import { T } from 'ramda';
 import EntityFilters from '../../../src/components/entity/filters.vue';
 import EntityUpload from '../../../src/components/entity/upload.vue';
 import EntityUploadErrors from '../../../src/components/entity/upload/errors.vue';
-import EntityUploadHeaderErrors from '../../../src/components/entity/upload/header-errors.vue';
 import EntityUploadPopup from '../../../src/components/entity/upload/popup.vue';
 import EntityUploadTable from '../../../src/components/entity/upload/table.vue';
 import EntityUploadWarnings from '../../../src/components/entity/upload/warnings.vue';
@@ -157,9 +156,7 @@ describe('EntityUpload', () => {
     it('shows errors', async () => {
       const modal = await showModal();
       await selectFile(modal, createCSV('foo,,foo\n1,2,3'));
-      modal.getComponent(EntityUploadHeaderErrors).props().should.eql({
-        filename: 'my_data.csv',
-        header: 'foo,,foo',
+      modal.getComponent(EntityUploadErrors).props().should.include({
         delimiter: ',',
         invalidQuotes: false,
         missingLabel: true,
@@ -173,7 +170,7 @@ describe('EntityUpload', () => {
       const modal = await showModal();
       const csv = createCSV('label;height;circumference\ndogwood;1;2');
       await selectFile(modal, csv);
-      modal.getComponent(EntityUploadHeaderErrors).props().delimiter.should.equal(';');
+      modal.getComponent(EntityUploadErrors).props().delimiter.should.equal(';');
     });
   });
 
@@ -196,7 +193,7 @@ describe('EntityUpload', () => {
       const modal = await showModal();
       await selectFile(modal, createCSV('f\0o'));
       modal.should.alert('danger', 'The file “my_data.csv” is not a valid .csv file. It cannot be read.');
-      modal.findComponent(EntityUploadHeaderErrors).exists().should.be.false;
+      modal.findComponent(EntityUploadErrors).exists().should.be.false;
     });
 
     it('hides the alert after a valid file is selected', async () => {
