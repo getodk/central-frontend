@@ -330,7 +330,7 @@ export default {
     },
     // This method is called directly by DatasetEntities.
     reset() {
-      if (this.odataFilter == null && !this.searchTerm) {
+      if (this.odataFilter == null && !this.searchTerm && this.viewAs == null) {
         this.$refs.view.fetchData();
       } else {
         this.resetFilters();
