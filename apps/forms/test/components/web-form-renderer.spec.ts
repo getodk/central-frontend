@@ -42,7 +42,7 @@ const i18n = createI18n({
       'action.close': () => 'close',
       'submissionModal.title': () => 'Form successfully sent!',
       'submissionModal.body': () => 'You can fill this Form out again or close if you’re done.',
-      'submissionModal.action.fillOutAgain': () => 'fill out again',
+      'submissionModal.action.fillOutAgain': () => '',
       'sessionTimeoutModal.title': () => 'Session expired',
       // 'sessionTimeoutModal.body.full': () => '',
       'sessionTimeoutModal.body.here': () => 'here',
@@ -57,7 +57,7 @@ const i18n = createI18n({
       'editSubmissionModal.title': () => 'edit successful',
       'editSubmissionModal.body': () => 'redirecting now...',
       'thankYouModal.title': () => 'cheers!',
-      'thankYouModal.body': () => 'You can close this window now.',
+      'thankYouModal.body': () => 'successfully submitted through this public link',
     },
   },
 });
@@ -197,7 +197,7 @@ describe('WebFormRenderer', () => {
     const title = document.querySelector('.p-dialog-header span')!;
     const intro = document.querySelector('.p-dialog-content span')!;
     expect(title.textContent).to.equal('cheers!');
-    expect(intro.textContent).to.equal('You can close this window now.');
+    expect(intro.textContent).to.equal('successfully submitted through this public link');
   });
 
   it('should attach st query param for public links', async () => {
