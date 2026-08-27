@@ -204,7 +204,7 @@ describe.only('UserEditPassword', () => {
         formGroup.find('.collapsible-error').exists().should.be.true;
       }));
 
-  it('should allow user to continue if password breach check returns 500', function () {
+  it('should allow user to continue if password breach check returns 500', function() { // eslint-disable-line func-names
     this.timeout(5_000); // REVIEW some bug in the MockHttp promise resolution chain?
     return mockHttp()
       .mount(UserEditPassword, mountOptions())

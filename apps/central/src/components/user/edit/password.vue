@@ -128,7 +128,7 @@ export default {
 
               // The Chrome password manager does not realize that the form was
               // submitted. Should we navigate to a different page so that it does?
-            })
+            });
         })
         .catch(noop);
     }
