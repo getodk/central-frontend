@@ -35,7 +35,7 @@ except according to the terms contained in the LICENSE file.
           <table class="table">
             <thead>
               <tr>
-                <th>{{ $t('header.existingProperty') }}</th>
+                <th>{{ $t('caseMismatch.existingProperty') }}</th>
                 <th v-tooltip.text>{{ filename }}</th>
               </tr>
             </thead>
@@ -137,15 +137,21 @@ defineEmits(['rows']);
     "title": "Review warnings",
     "introduction": "Some rows contain warnings that may affect upload results.",
 
+    // "Properties" refers to Entity properties.
     "systemProperties": "System properties can’t be set by .csv upload",
     "caseMismatch": {
+      // "Property" refers to an Entity property.
       "title": "Column is similar to an existing property but does not match",
-      "description": "Column names are case-sensitive. Check the spelling and capitalization."
+      "description": "Column names are case-sensitive. Check the spelling and capitalization.",
+      // "Property" refers to an Entity property.
+      "existingProperty": "Existing property"
     },
+    // "Property" refers to an Entity property.
     "invalidProperties": "This column is not a valid property name | These columns are not valid property names",
     // @transifexKey component.EntityUploadHeaderReview.missingProperties
     // This text is followed by a list of Entity property names.
     "missingProperties": "This property is not included in your file and will be left empty: | These properties are not included in your file and will be left empty:",
+    // "Property" refers to an Entity property.
     "propertiesIgnored": "This property will be ignored. | These properties will be ignored.",
     "columnsIgnored": "This column will be ignored. | These columns will be ignored.",
 
@@ -153,10 +159,6 @@ defineEmits(['rows']);
     "row": {
       "raggedRows": "Fewer columns were found than expected in some rows:",
       "largeCell": "Some cells are abnormally large, which can indicate difficulties reading your file:"
-    },
-
-    "header": {
-      "existingProperty": "Existing property"
     }
   }
 }
