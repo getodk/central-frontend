@@ -750,11 +750,11 @@
     },
     "property": {
       "string": "Property",
-      "developer_comment": "This is a data property of an Entity."
+      "developer_comment": "This is a data property of an Entity or an Actor."
     },
     "properties": {
       "string": "Properties",
-      "developer_comment": "This refers to the data properties of an Entity."
+      "developer_comment": "This refers to the data properties of an Entity or Actor."
     },
     "publicLink": {
       "string": "Public Access Link",
@@ -1815,6 +1815,14 @@
     "ConfigLoginPreview": {
       "introduction": {
         "string": "Your login page now looks like this:"
+      }
+    },
+    "CustomPropsFilter": {
+      "action": {
+        "all": {
+          "string": "All",
+          "developer_comment": "This is the text of the button in dropdown menu of an actor (app user or public link) \"Properties\" filter, that allows the user to select all app users with all properties (no filter applied)."
+        }
       }
     },
     "DatasetDelete": {
@@ -2894,6 +2902,34 @@
       "introduction": {
         "string": "Some rows contain warnings that may affect upload results."
       },
+      "systemProperties": {
+        "string": "System properties can’t be set by .csv upload",
+        "developer_comment": "\"Properties\" refers to Entity properties."
+      },
+      "caseMismatch": {
+        "title": {
+          "string": "Column is similar to an existing property but does not match",
+          "developer_comment": "\"Property\" refers to an Entity property."
+        },
+        "description": {
+          "string": "Column names are case-sensitive. Check the spelling and capitalization."
+        },
+        "existingProperty": {
+          "string": "Existing property",
+          "developer_comment": "\"Property\" refers to an Entity property."
+        }
+      },
+      "invalidProperties": {
+        "string": "{count, plural, one {This column is not a valid property name} other {These columns are not valid property names}}",
+        "developer_comment": "\"Property\" refers to an Entity property."
+      },
+      "propertiesIgnored": {
+        "string": "{count, plural, one {This property will be ignored.} other {These properties will be ignored.}}",
+        "developer_comment": "\"Property\" refers to an Entity property."
+      },
+      "columnsIgnored": {
+        "string": "{count, plural, one {This column will be ignored.} other {These columns will be ignored.}}"
+      },
       "row": {
         "raggedRows": {
           "string": "Fewer columns were found than expected in some rows:",
@@ -3005,6 +3041,9 @@
       },
       "emptyTable": {
         "string": "There are no App Users yet. You will need to create some to download Forms and submit data from your device."
+      },
+      "noFilterResults": {
+        "string": "No App Users match the current filter."
       },
       "alert": {
         "create": {
@@ -5011,6 +5050,9 @@
       }
     },
     "PublicLinkTable": {
+      "noFilterResults": {
+        "string": "No Public Access Links match the current filter."
+      },
       "header": {
         "once": {
           "string": "Single Submission",

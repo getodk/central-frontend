@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="entity-upload" :state="state" :hideable="!uploading" size="full"
-    backdrop @hide="$emit('hide')" @mutate="resizeColumnUnlessAnimating">
+    backdrop @hide="$emit('hide')" @mutate="resizeColumnIfShown">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div :class="{ backdrop: uploading }">
@@ -51,7 +51,7 @@ except according to the terms contained in the LICENSE file.
           </div>
         </div>
         <entity-upload-warnings v-if="warnings != null" v-bind="warnings"
-          @rows="showWarningRows"/>
+          :filename="fileMetadata.name" @rows="showWarningRows"/>
         <entity-upload-file-select v-show="csvEntities == null"
           :parsing="parsing" @change="selectFile">
           <entity-upload-header-help :errors="headerErrors"/>
@@ -62,9 +62,7 @@ except according to the terms contained in the LICENSE file.
       <entity-upload-popup v-if="csvEntities != null"
         :filename="fileMetadata.name" :count="csvEntities.length"
         :awaiting-response="uploading"
-        :progress="uploadProgress" @clear="clearFile"
-        @animationstart="animatePopup(true)"
-        @animationend="animatePopup(false)"/>
+        :progress="uploadProgress" @clear="clearFile"/>
       <div ref="actions" class="modal-actions">
         <button type="button" class="btn btn-link" :aria-disabled="uploading"
           @click="$emit('hide')">
@@ -100,6 +98,7 @@ import { formatCSVRow, parseCSV, parseCSVHeader } from '../../util/csv';
 import { noop } from '../../util/util';
 import { odataEntityToRest } from '../../util/odata';
 import { useRequestData } from '../../request-data';
+import { validatePropertyName } from '../../util/entity';
 
 defineOptions({
   name: 'EntityUpload'
@@ -208,17 +207,44 @@ const validateHeader = ({ columns, errors, meta }, file) => {
     const hasLabel = columnSet.has('label');
     errorDetails.missingLabel = !hasLabel;
 
-    const missingProperties = [];
+    warningDetails.missingProperties = [];
+    const lowercaseProperties = new Map();
     for (const { name } of dataset.properties) {
-      if (!columnSet.has(name)) missingProperties.push(name);
-    }
-    if (missingProperties.length !== 0)
-      warningDetails.missingProperties = missingProperties;
+      if (!columnSet.has(name)) warningDetails.missingProperties.push(name);
 
-    // Count of columns that are properties
-    const columnProperties = dataset.properties.length - missingProperties.length;
-    errorDetails.unknownProperty = columnSet.size !== columnProperties +
+      lowercaseProperties.set(name.toLowerCase(), name);
+    }
+
+    warningDetails.systemProperties = [];
+    warningDetails.invalidProperties = [];
+    warningDetails.caseMismatch = [];
+    for (const column of columnSet) {
+      if (column === 'label') continue; // eslint-disable-line no-continue
+      if (column.startsWith('__')) {
+        warningDetails.systemProperties.push(column);
+      } else if (!validatePropertyName(column)) {
+        warningDetails.invalidProperties.push(column);
+      } else {
+        const property = lowercaseProperties.get(column.toLowerCase());
+        if (property != null && column !== property)
+          warningDetails.caseMismatch.push({ column, property });
+      }
+    }
+
+    errorDetails.unknownProperty = columnSet.size !==
+      dataset.properties.length -
+      warningDetails.missingProperties.length +
+      warningDetails.systemProperties.length +
+      warningDetails.invalidProperties.length +
+      warningDetails.caseMismatch.length +
       (hasLabel ? 1 : 0);
+
+    // Remove empty arrays from warningDetails. EntityUploadWarnings expects
+    // nonapplicable warnings to be nullish. Removing these arrays also helps us
+    // count the number of warnings.
+    for (const [name, value] of Object.entries(warningDetails)) {
+      if (value.length === 0) delete warningDetails[name];
+    }
   }
 
   const result = {};
@@ -242,9 +268,14 @@ const rowToEntity = (values, columns) => {
   let hasProperty = false;
   for (const [i, value] of values.entries()) {
     if (value === '') continue; // eslint-disable-line no-continue
+
     const column = columns[i];
-    obj[column] = value;
-    if (column !== 'label') hasProperty = true;
+    if (column === 'label') {
+      obj.label = value;
+    } else if (dataset.propertyMap.has(column)) {
+      obj[column] = value;
+      hasProperty = true;
+    }
   }
   const { label } = obj;
   if (label == null || /^\s+$/.test(label))
@@ -354,24 +385,15 @@ const upload = () => {
     .catch(noop);
 };
 
-const popupAnimating = ref(false);
-const animatePopup = (animating) => { popupAnimating.value = animating; };
-watch(csvEntities, (value) => {
-  if (value == null) popupAnimating.value = false;
-});
-
 // Resize the last column of the tables.
 const tables = [null, null];
 const setTable = (i) => (el) => { tables[i] = el; };
 const resizeLastColumn = () => {
   for (const table of tables) table.resizeLastColumn();
 };
-watch(popupAnimating, (animating) => { if (!animating) resizeLastColumn(); });
 watch(() => props.state, (state) => { if (!state) nextTick(resizeLastColumn); });
-const resizeColumnUnlessAnimating = () => {
-  if (props.state && !popupAnimating.value) resizeLastColumn();
-};
-useEventListener(window, 'resize', resizeColumnUnlessAnimating);
+const resizeColumnIfShown = () => { if (props.state) resizeLastColumn(); };
+useEventListener(window, 'resize', resizeColumnIfShown);
 
 const actions = ref(null);
 watch(csvEntities, (value) => {

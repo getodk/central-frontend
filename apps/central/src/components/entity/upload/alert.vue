@@ -10,14 +10,14 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div class="entity-upload-warning">
+  <div class="entity-upload-alert" :class="type">
     <p>
-      <span class="icon-warning"></span>
+      <span :class="iconClass"></span>
       <slot name="title"></slot>
       <template v-if="ranges != null">
         <span>&nbsp;</span>
         <i18n-list v-slot="{ value: [start, end] }" :list="ranges"
-          class="entity-upload-warning-ranges">
+          class="entity-upload-alert-ranges">
           <a href="#" @click.prevent="$emit('rows', [start - 1, end - 1])">
             {{ formatRange(start, end) }}
           </a>
@@ -29,17 +29,26 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
+import { computed } from 'vue';
+
 import I18nList from '../../i18n/list.vue';
 
 import { useI18nUtils } from '../../../util/i18n';
 
 defineOptions({
-  name: 'EntityUploadWarning'
+  name: 'EntityUploadAlert'
 });
-defineProps({
+const props = defineProps({
+  type: {
+    type: String,
+    required: true
+  },
   ranges: Array
 });
 defineEmits(['rows']);
+
+const iconClass = computed(() =>
+  (props.type === 'warning' ? 'icon-warning' : 'icon-exclamation-circle'));
 
 const { formatRange } = useI18nUtils();
 </script>
@@ -47,27 +56,36 @@ const { formatRange } = useI18nUtils();
 <style lang="scss">
 @import '../../../assets/scss/mixins';
 
-.entity-upload-warning {
-  background-color: $color-warning-light;
+.entity-upload-alert {
   border-radius: 12px;
   padding: 10px 15px;
+
+  p {
+    margin-bottom: 10px;
+    &:last-child { margin-bottom: 0; }
+  }
 
   // Title
   > :first-child {
     @include line-clamp(2);
-    color: $color-warning-dark;
-    margin-bottom: 10px;
-
-    &:last-child { margin-bottom: 0; }
 
     // Icon
     > :first-child { margin-right: $margin-right-icon; }
   }
 
-  + .entity-upload-warning { margin-top: 5px; }
+  + .entity-upload-alert { margin-top: 5px; }
+
+  &.warning {
+    background-color: $color-warning-light;
+    > :first-child { color: $color-warning-dark; }
+  }
+  &.danger {
+    background-color: $color-danger-light;
+    > :first-child { color: $color-danger; }
+  }
 }
 
-.entity-upload-warning-ranges {
+.entity-upload-alert-ranges {
   margin-left: 3px;
 }
 </style>

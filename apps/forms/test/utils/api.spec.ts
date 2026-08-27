@@ -195,10 +195,7 @@ describe('Test api utility', () => {
       const actual = await getProject(5);
       expect(actual).toEqual(expected);
       expect(fetch).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenCalledWith('/v1/projects/5', { headers: new Headers({
-        'Content-Type': 'application/json',
-        'X-Extended-Metadata': 'true'
-      })});
+      expect(fetch).toHaveBeenCalledWith('/v1/projects/5?verbs=true');
     });
 
     it('handles central errors', async () => {
