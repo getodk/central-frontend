@@ -15,29 +15,24 @@ except according to the terms contained in the LICENSE file.
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div :class="{ backdrop: uploading }">
-        <div class="panel panel-simple">
-          <div class="panel-heading">
-            <h1 class="panel-title" v-tooltip.text>
-              {{ $t('table.server', dataset) }}
-            </h1>
-          </div>
-          <div class="panel-body">
-            <entity-upload-table :ref="setTable(0)"
-              :entities="serverEntities.value" :row-index="serverRow"
-              :page-size="serverPage.size"
-              :awaiting-response="serverEntities.awaitingResponse"/>
-            <loading :state="serverEntities.initiallyLoading"/>
-            <p v-if="serverEntities.dataExists && serverEntities.value.length === 0"
-              class="empty-table-message">
-              {{ $t('noEntities') }}
-            </p>
-            <pagination v-if="serverPage.count !== 0"
-              v-model:page="serverPage.page" v-model:size="serverPage.size"
-              :count="serverPage.count" :size-options="pageSizeOptions"
-              :spinner="serverEntities.awaitingResponse"/>
-          </div>
+        <p class="entity-upload-section-title">{{ $t('currentEntities') }}</p>
+        <div class="entity-upload-table-container">
+          <entity-upload-table :ref="setTable(0)"
+            :entities="serverEntities.value" :row-index="serverRow"
+            :page-size="serverPage.size"
+            :awaiting-response="serverEntities.awaitingResponse"/>
+          <loading :state="serverEntities.initiallyLoading"/>
+          <p v-if="serverEntities.dataExists && serverEntities.value.length === 0"
+            class="empty-table-message">
+            {{ $t('noEntities') }}
+          </p>
+          <pagination v-if="serverPage.count !== 0"
+            v-model:page="serverPage.page" v-model:size="serverPage.size"
+            :count="serverPage.count" :size-options="pageSizeOptions"
+            :spinner="serverEntities.awaitingResponse"/>
         </div>
-        <div class="panel panel-simple">
+        <p class="entity-upload-section-title">{{ $t('newEntities') }}</p>
+        <div class="entity-upload-table-container panel panel-simple">
           <div class="panel-heading">
             <h1 class="panel-title">{{ $t('table.file') }}</h1>
           </div>
@@ -421,27 +416,21 @@ watch(() => props.state, (state) => {
   }
 
   .panel-simple {
-    margin-bottom: 0;
-
     .panel-heading {
       @include text-overflow-ellipsis;
-      background-color: #ccc;
+      background-color: $color-action-background;
       border-bottom: none;
+      color: #fff;
     }
 
     .panel-body { padding: 0; }
-  }
-  .panel-simple + .panel-simple {
-    .panel-heading {
-      background-color: $color-action-background;
-      color: #fff;
-    }
 
     thead { background-color: #c5dfe7; }
   }
 
   .pagination { margin-left: $padding-left-table-data; }
 
+  .entity-upload-table-container { margin-block: 10px 20px; }
   // margin-bottom of the tables
   .entity-upload-table {
     // The margin before text, either the Loading component or the
@@ -452,13 +441,6 @@ watch(() => props.state, (state) => {
     // The margin if there is no text or Pagination
     &:last-child { margin-bottom: 0; }
   }
-  // margin-bottom of the first .panel-simple
-  .panel-simple:first-child {
-    // The margin if the last element of the .panel-body is text
-    margin-bottom: 10px;
-    // The margin if the last element is Pagination
-    &:has(tbody) { margin-bottom: 12px; }
-  }
 }
 
 .entity-upload-section-title {
@@ -466,7 +448,7 @@ watch(() => props.state, (state) => {
   font-weight: bold;
   margin-bottom: 4px;
 
-  ~ p {
+  + p, + p + p {
     margin-bottom: 10px;
     &:last-of-type { margin-bottom: 20px; }
   }
@@ -478,10 +460,9 @@ watch(() => props.state, (state) => {
   "en": {
     // This is the title at the top of a pop-up.
     "title": "Import Data from File",
+    "currentEntities": "Your current Entities",
+    "newEntities": "New Entities",
     "table": {
-      // This is shown above a list of Entities on the server. {name} is the
-      // name of the Entity List.
-      "server": "{name} server data",
       "file": "Data to import"
     },
     // @transifexKey component.EntityList.noEntities

@@ -107,10 +107,6 @@ defineEmits(['rows']);
 <style lang="scss">
 @import '../../../assets/scss/mixins';
 
-#entity-upload-warnings {
-  margin-top: 20px;
-}
-
 #entity-upload-warnings-case-mismatch {
   div:has(> table) {
     background-color: rgba(255, 255, 255, 0.5);

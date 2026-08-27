@@ -2783,11 +2783,13 @@
         "string": "Import Data from File",
         "developer_comment": "This is the title at the top of a pop-up."
       },
+      "currentEntities": {
+        "string": "Your current Entities"
+      },
+      "newEntities": {
+        "string": "New Entities"
+      },
       "table": {
-        "server": {
-          "string": "{name} server data",
-          "developer_comment": "This is shown above a list of Entities on the server. {name} is the name of the Entity List."
-        },
         "file": {
           "string": "Data to import"
         }
