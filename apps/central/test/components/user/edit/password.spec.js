@@ -181,7 +181,7 @@ describe.only('UserEditPassword', () => {
         .respondWithSuccess());
   });
 
-  it.only('should display an error if password included in breach', () =>
+  it('should display an error if password included in breach', () =>
     mockHttp()
       .mount(UserEditPassword, mountOptions())
       .request(async (component) => {
