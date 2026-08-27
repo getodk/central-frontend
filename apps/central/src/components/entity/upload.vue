@@ -221,7 +221,7 @@ const validateHeader = ({ columns, errors, meta }, file) => {
     warningDetails.caseMismatch = [];
     for (const column of columnSet) {
       if (column === 'label') continue; // eslint-disable-line no-continue
-      if (column.startsWith('__')) {
+      if (column.startsWith('__') || column === 'name') {
         warningDetails.systemProperties.push(column);
       } else if (!validatePropertyName(column)) {
         warningDetails.invalidProperties.push(column);

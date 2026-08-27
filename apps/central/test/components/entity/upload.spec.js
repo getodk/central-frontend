@@ -523,12 +523,12 @@ describe('EntityUpload', () => {
       .request(async (modal) => {
         await selectFile(
           modal,
-          createCSV('label,height,__id,__foo\ndogwood,1,e1,x\nelm,,e2,y')
+          createCSV('label,height,__id,__foo,name\ndogwood,1,e1,x,dogwood\nelm,,e2,y,elm')
         );
 
         // A warning is shown.
         const warnings = modal.getComponent(EntityUploadWarnings).props();
-        warnings.systemProperties.should.eql(['__id', '__foo']);
+        warnings.systemProperties.should.eql(['__id', '__foo', 'name']);
 
         return modal.get('.modal-actions .btn-primary').trigger('click');
       })
@@ -537,7 +537,7 @@ describe('EntityUpload', () => {
         method: 'POST',
         url: '/v1/projects/1/datasets/trees/entities',
         data: {
-          source: { name: 'my_data.csv', size: 48 },
+          source: { name: 'my_data.csv', size: 65 },
           entities: [
             { label: 'dogwood', data: { height: '1' } },
             // If there were only system properties, no proper entity
