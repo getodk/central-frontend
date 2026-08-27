@@ -2920,7 +2920,7 @@
         "string": "{count, plural, one {This property will be ignored.} other {These properties will be ignored.}}"
       },
       "columnsIgnored": {
-        "string": "{count, plural, one {This column will be ignored.} other {These properties will be ignored.}}"
+        "string": "{count, plural, one {This column will be ignored.} other {These columns will be ignored.}}"
       },
       "row": {
         "raggedRows": {

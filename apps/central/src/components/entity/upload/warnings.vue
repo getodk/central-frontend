@@ -134,7 +134,7 @@ defineEmits(['rows']);
     // This text is followed by a list of Entity property names.
     "missingProperties": "This property is not included in your file and will be left empty: | These properties are not included in your file and will be left empty:",
     "propertiesIgnored": "This property will be ignored. | These properties will be ignored.",
-    "columnsIgnored": "This column will be ignored. | These properties will be ignored.",
+    "columnsIgnored": "This column will be ignored. | These columns will be ignored.",
 
     // This is a warning that is followed by a list of rows.
     "row": {
