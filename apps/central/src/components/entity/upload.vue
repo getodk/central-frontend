@@ -300,6 +300,7 @@ const parseEntities = async (file, headerResults, signal) => {
 };
 const selectFile = (file) => {
   redAlert.hide();
+  fileMetadata.value = null;
   headerErrors.value = null;
   dataError.value = null;
 
@@ -320,15 +321,17 @@ const selectFile = (file) => {
         return Promise.resolve();
       }
 
+      const metadata = { name: file.name, size: file.size };
       return parseEntities(file, headerResults, signal)
         .then(results => {
           csvEntities.value = results.data;
-          fileMetadata.value = { name: file.name, size: file.size };
+          fileMetadata.value = metadata;
           if (validation.warnings != null || results.warnings.count !== 0)
             warnings.value = { ...validation.warnings, ...results.warnings.details };
         })
         .catch(error => {
           if (!signal.aborted) {
+            fileMetadata.value = metadata;
             dataError.value = error.message;
             warnings.value = validation.warnings;
           }
