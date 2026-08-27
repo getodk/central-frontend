@@ -204,7 +204,7 @@ describe.only('UserEditPassword', () => {
         formGroup.find('.collapsible-error').exists().should.be.true;
       }));
 
-  if('should allow user to continue if password breach check returns 500', () =>
+  it('should allow user to continue if password breach check returns 500', () =>
     mockHttp()
       .mount(UserEditPassword, mountOptions())
       .request(submit)
@@ -219,7 +219,7 @@ describe.only('UserEditPassword', () => {
         },
       ]));
 
-  if('should allow user to continue if password breach check times out', () =>
+  it('should allow user to continue if password breach check times out', () =>
     mockHttp()
       .mount(UserEditPassword, mountOptions())
       .request(submit)
