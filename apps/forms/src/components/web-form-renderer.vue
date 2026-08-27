@@ -296,20 +296,6 @@ const editInstanceOptions = computed(() => {
   return null;
 });
 
-const closeWindow = () => {
-  window.close();
-  // Browsers ignore window.close() when the tab wasn't opened by a script or a link,
-  // so fall back to asking the user to close it.
-  setTimeout(() => {
-    if (window.closed) {
-      return;
-    }
-    if (visibleModal.value?.type === 'submissionModal') {
-      visibleModal.value = { type: 'thankYouModal', hideable: false };
-    }
-  }, 500);
-};
-
 onMounted(async () => {
   if (!isEdit.value && !props.form.draft) {
     lastSavedXml.value = await getLastSaved(props.form.projectId, props.form.xmlFormId);
@@ -367,7 +353,6 @@ onMounted(async () => {
     </template>
     <template #footer>
       <template v-if="visibleModal.type === 'submissionModal'">
-        <Button type="button" @click="closeWindow()" variant="text">{{ $t('action.close') }}</Button>
         <Button type="button" @click="visibleModal = null">{{ $t('submissionModal.action.fillOutAgain') }}</Button>
       </template>
       <!-- Any type of error while sending attachments -->

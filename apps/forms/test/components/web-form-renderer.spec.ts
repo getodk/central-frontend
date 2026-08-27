@@ -238,36 +238,6 @@ describe('WebFormRenderer', () => {
     expect(component.find('input').element.value).to.equal('');
   });
 
-  const findDialogButtons = () => {
-    return [ ...document.querySelectorAll('.p-dialog [type=button]') ] as HTMLButtonElement[];
-  };
-
-  const clickCloseButton = () => {
-    const closeButton = findDialogButtons().find(button => button.textContent === 'close')!;
-    closeButton.click();
-  };
-
-  it('should ask the user to close the tab if the window cannot be closed', async () => {
-    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve({ instanceId: 1 }),
-    } as Response);
-    vi.spyOn(window, 'close').mockImplementation(() => undefined);
-    const component = await mountComponent({ xform: simpleForm });
-    await submit(component);
-
-    clickCloseButton();
-
-    await vi.waitFor(() => {
-      const intro = document.querySelector('.p-dialog-content span')!;
-      expect(intro.textContent).to.equal('You can close this window now.');
-    });
-    const title = document.querySelector('.p-dialog-header span')!;
-    expect(title.textContent).to.equal('cheers!');
-    expect(findDialogButtons().length).to.equal(0);
-  });
-
   it('should show error modal in case of submission failure', async () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
       ok: false,
