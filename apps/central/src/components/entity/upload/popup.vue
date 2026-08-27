@@ -11,15 +11,9 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="entity-upload-popup">
-    <div id="entity-upload-popup-heading">
-      <div v-tooltip.text>{{ filename }}</div>
-      <button v-show="!awaitingResponse" type="button" class="btn btn-link"
-        :aria-label="$t('action.clear')" @click="$emit('clear')">
-        <span class="icon-trash"></span>
-      </button>
-    </div>
+    <div id="entity-upload-popup-heading" v-tooltip.text>{{ filename }}</div>
     <div id="entity-upload-popup-count">{{ $tcn('rowCount', count) }}</div>
-    <div v-show="awaitingResponse" id="entity-upload-popup-status">
+    <div id="entity-upload-popup-status">
       <spinner inline/><span>{{ status }}</span>
     </div>
   </div>
@@ -43,7 +37,6 @@ const props = defineProps({
     type: Number,
     required: true
   },
-  awaitingResponse: Boolean,
   progress: {
     type: Number,
     required: true
@@ -74,24 +67,9 @@ const status = computed(() => (props.progress < 1
 }
 
 #entity-upload-popup-heading {
-  align-items: center;
-  display: flex;
-
-  > div {
-    @include text-overflow-ellipsis;
-    font-size: 18px;
-    font-weight: bold;
-  }
-
-  .btn-link {
-    flex-shrink: 0;
-    margin-left: 9px;
-    padding: 0;
-  }
-  .icon-trash {
-    color: $color-danger;
-    margin-right: 0;
-  }
+  @include text-overflow-ellipsis;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 #entity-upload-popup-status {

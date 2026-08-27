@@ -56,13 +56,11 @@ except according to the terms contained in the LICENSE file.
         <entity-upload-warnings v-if="warnings != null" v-bind="warnings"
           :filename="fileMetadata.name" @rows="showWarningRows"/>
 
-        <entity-upload-file-select v-show="csvEntities == null"
+        <entity-upload-file-select :disabled="parsing || uploading"
           :parsing="parsing" @change="selectFile"/>
       </div>
-      <entity-upload-popup v-if="csvEntities != null"
-        :filename="fileMetadata.name" :count="csvEntities.length"
-        :awaiting-response="uploading"
-        :progress="uploadProgress" @clear="clearFile"/>
+      <entity-upload-popup v-if="uploading" :filename="fileMetadata.name"
+        :count="csvEntities.length" :progress="uploadProgress"/>
       <div ref="actions" class="modal-actions">
         <button type="button" class="btn btn-link" :aria-disabled="uploading"
           @click="$emit('hide')">
@@ -291,6 +289,7 @@ const parseEntities = async (file, headerResults, signal) => {
 };
 const selectFile = (file) => {
   redAlert.hide();
+  csvEntities.value = null;
   fileMetadata.value = null;
   errors.value = null;
   warnings.value = null;
@@ -339,11 +338,6 @@ const selectFile = (file) => {
       abortParse = noop;
     })
     .catch(noop);
-};
-const clearFile = () => {
-  csvEntities.value = null;
-  fileMetadata.value = null;
-  warnings.value = null;
 };
 watch(() => props.state, (state) => {
   if (state) return;

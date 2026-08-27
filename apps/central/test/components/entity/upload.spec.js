@@ -4,6 +4,7 @@ import { T } from 'ramda';
 import EntityFilters from '../../../src/components/entity/filters.vue';
 import EntityUpload from '../../../src/components/entity/upload.vue';
 import EntityUploadErrors from '../../../src/components/entity/upload/errors.vue';
+import EntityUploadFileSelect from '../../../src/components/entity/upload/file-select.vue';
 import EntityUploadPopup from '../../../src/components/entity/upload/popup.vue';
 import EntityUploadTable from '../../../src/components/entity/upload/table.vue';
 import EntityUploadWarnings from '../../../src/components/entity/upload/warnings.vue';
@@ -121,22 +122,6 @@ describe('EntityUpload', () => {
       testData.extendedDatasets.createPast(1);
     });
 
-    it('shows the pop-up', async () => {
-      const modal = await showModal();
-      await selectFile(modal);
-      const popup = modal.getComponent(EntityUploadPopup);
-      popup.props().filename.should.equal('my_data.csv');
-      popup.props().count.should.equal(1);
-    });
-
-    it('hides the drop zone', async () => {
-      const modal = await showModal();
-      const dropZone = modal.get('#entity-upload-file-select');
-      dropZone.should.be.visible();
-      await selectFile(modal);
-      dropZone.should.be.hidden();
-    });
-
     it('enables the append button', async () => {
       const modal = await showModal();
       const button = modal.get('.modal-actions .btn-primary');
@@ -201,7 +186,8 @@ describe('EntityUpload', () => {
       await selectFile(modal, createCSV('f\0o'));
       await selectFile(modal);
       modal.should.not.alert();
-      modal.findComponent(EntityUploadPopup).exists().should.be.true;
+      const button = modal.get('.modal-actions .btn-primary');
+      button.attributes('aria-disabled').should.equal('false');
     });
 
     // This is not necessarily the ideal behavior. Showing an alert would be
@@ -258,7 +244,6 @@ describe('EntityUpload', () => {
 
       // Next, select a similar CSV that also has an error in the data (a
       // missing label).
-      await modal.get('#entity-upload-popup .btn-link').trigger('click');
       await selectFile(modal, createCSV(`${warningsCSV}\n"",1`));
 
       // This time, we see an error.
@@ -311,29 +296,29 @@ describe('EntityUpload', () => {
       a.text().should.equal('1–2');
       await a.trigger('click');
       getTables(modal)[1].props().highlighted.should.eql([0, 1]);
-      await modal.get('#entity-upload-popup .btn-link').trigger('click');
       await selectFile(modal, createCSV(csvString));
       should.not.exist(getTables(modal)[1].props().highlighted);
     });
   });
 
-  it('resets after the clear button is clicked', async () => {
+  it('resets errors and warnings after a new file is selected', async () => {
     testData.extendedDatasets.createPast(1, {
       properties: [{ name: 'height' }]
     });
     const modal = await showModal();
-    await selectFile(modal, createCSV('label\nx\n"12345,67890"'));
-
-    const popup = modal.findComponent(EntityUploadPopup);
-    popup.exists().should.be.true;
-    modal.findComponent(EntityUploadWarnings).exists().should.be.true;
-
-    await popup.get('.btn-link').trigger('click');
-
-    modal.findComponent(EntityUploadPopup).exists().should.be.false;
-    modal.findComponent(EntityUploadWarnings).exists().should.be.false;
-    modal.get('#entity-upload-file-select').should.be.visible();
     const button = modal.get('.modal-actions .btn-primary');
+
+    await selectFile(modal, createCSV('label,label\ndogwood,dogwood'));
+    modal.findComponent(EntityUploadErrors).exists().should.be.true;
+    modal.findComponent(EntityUploadWarnings).exists().should.be.true;
+    button.attributes('aria-disabled').should.equal('true');
+
+    await selectFile(modal, createCSV('label,height\ndogwood,1'));
+    modal.findComponent(EntityUploadErrors).exists().should.be.false;
+    modal.findComponent(EntityUploadWarnings).exists().should.be.false;
+    button.attributes('aria-disabled').should.equal('false');
+
+    await selectFile(modal, createCSV('label,label\ndogwood,dogwood'));
     button.attributes('aria-disabled').should.equal('true');
   });
 
@@ -344,16 +329,14 @@ describe('EntityUpload', () => {
     const modal = await showModal();
     await selectFile(modal, createCSV('label\nx\n"12345,67890"'));
 
-    modal.findComponent(EntityUploadPopup).exists().should.be.true;
     modal.findComponent(EntityUploadWarnings).exists().should.be.true;
+    const button = modal.get('.modal-actions .btn-primary');
+    button.attributes('aria-disabled').should.equal('false');
 
     await modal.setProps({ state: false });
     await modal.setProps({ state: true });
 
-    modal.findComponent(EntityUploadPopup).exists().should.be.false;
     modal.findComponent(EntityUploadWarnings).exists().should.be.false;
-    modal.get('#entity-upload-file-select').should.be.visible();
-    const button = modal.get('.modal-actions .btn-primary');
     button.attributes('aria-disabled').should.equal('true');
   });
 
@@ -388,22 +371,31 @@ describe('EntityUpload', () => {
       });
   });
 
-  it('shows a backdrop during the request', () => {
+  it('renders correctly during the request', () => {
     testData.extendedDatasets.createPast(1);
     return showModal()
       .afterResponses(modal => {
+        modal.getComponent(EntityUploadFileSelect).props().disabled.should.be.false;
         modal.find('.backdrop').exists().should.be.false;
+        modal.findComponent(EntityUploadPopup).exists().should.be.false;
       })
       .request(async (modal) => {
         await selectFile(modal);
         return modal.get('.modal-actions .btn-primary').trigger('click');
       })
       .beforeAnyResponse(modal => {
+        modal.getComponent(EntityUploadFileSelect).props().disabled.should.be.true;
         modal.find('.backdrop').exists().should.be.true;
+
+        const popup = modal.getComponent(EntityUploadPopup);
+        popup.props().filename.should.equal('my_data.csv');
+        popup.props().count.should.equal(1);
       })
       .respondWithProblem()
       .afterResponse(modal => {
+        modal.getComponent(EntityUploadFileSelect).props().disabled.should.be.false;
         modal.find('.backdrop').exists().should.be.false;
+        modal.findComponent(EntityUploadPopup).exists().should.be.false;
       });
   });
 
