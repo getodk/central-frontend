@@ -10,8 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="entity-upload-popup" @animationstart="$emit('animationstart')"
-    @animationend="$emit('animationend')">
+  <div id="entity-upload-popup">
     <div id="entity-upload-popup-heading">
       <div v-tooltip.text>{{ filename }}</div>
       <button v-show="!awaitingResponse" type="button" class="btn btn-link"
@@ -20,10 +19,6 @@ except according to the terms contained in the LICENSE file.
       </button>
     </div>
     <div id="entity-upload-popup-count">{{ $tcn('rowCount', count) }}</div>
-    <div v-show="warnings !== 0 && !awaitingResponse"
-      id="entity-upload-popup-warnings">
-      <span class="icon-warning"></span>{{ $tcn('count.warning', warnings) }}
-    </div>
     <div v-show="awaitingResponse" id="entity-upload-popup-status">
       <spinner inline/><span>{{ status }}</span>
     </div>
@@ -48,17 +43,13 @@ const props = defineProps({
     type: Number,
     required: true
   },
-  warnings: {
-    type: Number,
-    required: true
-  },
   awaitingResponse: Boolean,
   progress: {
     type: Number,
     required: true
   }
 });
-defineEmits(['clear', 'animationstart', 'animationend']);
+defineEmits(['clear']);
 
 const { t, n } = useI18n();
 const status = computed(() => (props.progress < 1
@@ -70,15 +61,7 @@ const status = computed(() => (props.progress < 1
 @use 'sass:color';
 @import '../../../assets/scss/mixins';
 
-@keyframes tocorner {
-  0% { transform: translate(-70px, -70px); }
-  100% { transform: translate(0, 0); }
-}
-
 #entity-upload-popup {
-  animation-duration: 2s;
-  animation-name: tocorner;
-  animation-timing-function: cubic-bezier(0.05, 0.9, 0, 1);
   background-color: $color-subpanel-background;
   border: 2px solid $color-action-foreground;
   border-radius: 6px;
@@ -88,8 +71,6 @@ const status = computed(() => (props.progress < 1
   position: absolute;
   right: 15px;
   width: 305px;
-
-  .icon-warning { margin-right: $margin-right-icon; }
 }
 
 #entity-upload-popup-heading {
@@ -111,11 +92,6 @@ const status = computed(() => (props.progress < 1
     color: $color-danger;
     margin-right: 0;
   }
-}
-
-#entity-upload-popup-warnings {
-  margin-bottom: 3px;
-  margin-top: 5px;
 }
 
 #entity-upload-popup-status {

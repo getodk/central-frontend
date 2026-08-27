@@ -141,9 +141,9 @@ export default {
   },
   emits: ['hide'],
   setup() {
-    const { session, keys, fields } = useRequestData();
+    const { keys, fields } = useRequestData();
     const { callWait, cancelCall } = useCallWait();
-    return { session, keys, fields, callWait, cancelCall };
+    return { keys, fields, callWait, cancelCall };
   },
   data() {
     return {

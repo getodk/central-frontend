@@ -28,6 +28,15 @@ const options = computed(() => {
 	});
 });
 
+const virtualScrollerOptions = computed(() => {
+	if (props.question.currentState.valueOptions.length > 20) {
+		return { itemSize: DEFAULT_PRIMEVUE_ITEM_HEIGHT };
+	}
+	// remove virtual scroller for small selects so primevue knows
+	// what height to make the list container
+	return undefined;
+});
+
 const selectValues = (values: readonly string[]) => {
 	props.question.selectValues(values);
 };
@@ -65,7 +74,7 @@ const selectedLabels = computed(() => {
 		option-label="search"
 		:panel-class="panelClass"
 		:model-value="question.currentState.value"
-		:virtual-scroller-options="{ itemSize: DEFAULT_PRIMEVUE_ITEM_HEIGHT }"
+		:virtual-scroller-options="virtualScrollerOptions"
 		@update:model-value="selectValues"
 		@change="$emit('change')"
 	>

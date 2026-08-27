@@ -125,12 +125,9 @@ export const getFormByFormId = async (projectId: number, formId: string, draft: 
 };
 
 export const getProject = async (projectId: number): Promise<Project> => {
-  const url = `/v1/projects/${projectId}`;
-  const headers = new Headers({
-    'Content-Type': 'application/json',
-    'X-Extended-Metadata': 'true'
-  });
-  const response = await fetch(url, { headers });
+  const qs = queryString({ verbs: true });
+  const url = `/v1/projects/${projectId}${qs}`;
+  const response = await fetch(url);
   if (!response.ok) {
     const result = await response.json() as BackendStatusResponseBody;
     throw new RequestError(result.message, result.code);

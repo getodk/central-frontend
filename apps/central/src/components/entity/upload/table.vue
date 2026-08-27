@@ -10,8 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div ref="container" class="entity-upload-table"
-    :class="{ 'overlaps-popup': overlapsPopup }" :style="{ minHeight }">
+  <div ref="container" class="entity-upload-table" :style="{ minHeight }">
     <table class="table">
       <thead>
         <tr>
@@ -98,37 +97,17 @@ watch(
 const isHighlighted = (index) => props.highlighted != null &&
   index >= props.highlighted[0] && index <= props.highlighted[1];
 
-const overlapsPopup = ref(false);
 const resizeLastColumn = () => {
   // Undo previous resizing.
   const th = container.value.querySelector('th:last-child');
   th.style.width = '';
 
-  if (container.value.clientWidth === 0) {
-    overlapsPopup.value = false;
-    return;
-  }
-
-  // Check whether the column is obscured by the pop-up.
-  const popup = container.value.closest('.modal-body')
-    .querySelector('#entity-upload-popup');
-  if (popup != null) {
-    const popupRect = popup.getBoundingClientRect();
-    const containerRect = container.value.getBoundingClientRect();
-    overlapsPopup.value = popupRect.top < containerRect.bottom;
-    if (overlapsPopup.value) {
-      const overlap = containerRect.right - popupRect.left;
-      // Adding 10px for some extra space between the column and the pop-up.
-      th.style.width = px(th.clientWidth + overlap + 10);
-    }
-  }
-
   // If the container fits the table without scrolling horizontally, then the
   // columns probably have room to grow. In that case, we allocate the extra
   // width to the last column rather than distributing it evenly among the
   // columns.
-  if (container.value.scrollWidth === container.value.clientWidth)
-    th.style.width = 'auto';
+  const { clientWidth, scrollWidth } = container.value;
+  if (clientWidth !== 0 && scrollWidth === clientWidth) th.style.width = 'auto';
 };
 
 const resetScroll = () => { container.value.scroll(0, 0); };
@@ -147,20 +126,12 @@ defineExpose({ resizeLastColumn, resetScroll });
     table-layout: fixed;
   }
 
-  $col-width: 160px;
   th, td {
     div { @include text-overflow-ellipsis; }
   }
-  &.overlaps-popup {
-    th, td {
-      &:last-child div {
-        width: #{$col-width - $padding-left-table-data - $padding-right-table-data};
-      }
-    }
-  }
 
   th {
-    width: $col-width;
+    width: 160px;
     // Wide enough to fit a 6-digit number.
     &:first-child { width: 54px; }
   }

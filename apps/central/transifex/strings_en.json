@@ -750,11 +750,11 @@
     },
     "property": {
       "string": "Property",
-      "developer_comment": "This is a data property of an Entity."
+      "developer_comment": "This is a data property of an Entity or an Actor."
     },
     "properties": {
       "string": "Properties",
-      "developer_comment": "This refers to the data properties of an Entity."
+      "developer_comment": "This refers to the data properties of an Entity or Actor."
     },
     "publicLink": {
       "string": "Public Access Link",
@@ -1817,6 +1817,14 @@
         "string": "Your login page now looks like this:"
       }
     },
+    "CustomPropsFilter": {
+      "action": {
+        "all": {
+          "string": "All",
+          "developer_comment": "This is the text of the button in dropdown menu of an actor (app user or public link) \"Properties\" filter, that allows the user to select all app users with all properties (no filter applied)."
+        }
+      }
+    },
     "DatasetDelete": {
       "title": {
         "string": "Delete Entity List",
@@ -2810,24 +2818,24 @@
     "EntityUploadDataTemplate": {
       "text": {
         "full": {
-          "string": "If you aren’t sure, you can {downloadTemplate}",
-          "developer_comment": "{downloadTemplate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDownload a data template (.csv)"
+          "string": "Need a starting point? {downloadTemplate}.",
+          "developer_comment": "{downloadTemplate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDownload a CSV template"
         },
         "downloadTemplate": {
-          "string": "Download a data template (.csv)",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {downloadTemplate} is in the following text:\n\nIf you aren’t sure, you can {downloadTemplate}"
+          "string": "Download a CSV template",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {downloadTemplate} is in the following text:\n\nNeed a starting point? {downloadTemplate}."
         }
       }
     },
     "EntityUploadFileSelect": {
       "text": {
         "full": {
-          "string": "Drag a .csv file here, or {chooseOne} to import.",
-          "developer_comment": "{chooseOne} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose one"
+          "string": "Drag and drop a .csv file here, or {chooseFile}",
+          "developer_comment": "{chooseFile} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose a file"
         },
-        "chooseOne": {
-          "string": "choose one",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseOne} is in the following text:\n\nDrag a .csv file here, or {chooseOne} to import."
+        "chooseFile": {
+          "string": "choose a file",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseFile} is in the following text:\n\nDrag and drop a .csv file here, or {chooseFile}"
         }
       },
       "parsing": {
@@ -2891,6 +2899,37 @@
       }
     },
     "EntityUploadWarnings": {
+      "introduction": {
+        "string": "Some rows contain warnings that may affect upload results."
+      },
+      "systemProperties": {
+        "string": "System properties can’t be set by .csv upload",
+        "developer_comment": "\"Properties\" refers to Entity properties."
+      },
+      "caseMismatch": {
+        "title": {
+          "string": "Column is similar to an existing property but does not match",
+          "developer_comment": "\"Property\" refers to an Entity property."
+        },
+        "description": {
+          "string": "Column names are case-sensitive. Check the spelling and capitalization."
+        },
+        "existingProperty": {
+          "string": "Existing property",
+          "developer_comment": "\"Property\" refers to an Entity property."
+        }
+      },
+      "invalidProperties": {
+        "string": "{count, plural, one {This column is not a valid property name} other {These columns are not valid property names}}",
+        "developer_comment": "\"Property\" refers to an Entity property."
+      },
+      "propertiesIgnored": {
+        "string": "{count, plural, one {This property will be ignored.} other {These properties will be ignored.}}",
+        "developer_comment": "\"Property\" refers to an Entity property."
+      },
+      "columnsIgnored": {
+        "string": "{count, plural, one {This column will be ignored.} other {These columns will be ignored.}}"
+      },
       "row": {
         "raggedRows": {
           "string": "Fewer columns were found than expected in some rows:",
@@ -3002,6 +3041,9 @@
       },
       "emptyTable": {
         "string": "There are no App Users yet. You will need to create some to download Forms and submit data from your device."
+      },
+      "noFilterResults": {
+        "string": "No App Users match the current filter."
       },
       "alert": {
         "create": {
@@ -3271,26 +3313,6 @@
         }
       },
       "afterSelection": {
-        "matched": {
-          "full": {
-            "string": "{count, plural, one {{countOfFiles} ready for upload.} other {{countOfFiles} ready for upload.}}",
-            "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
-          },
-          "countOfFiles": {
-            "string": "{count, plural, one {{count} file} other {{count} files}}",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text. (The plural form of the text is shown.)\n\n{countOfFiles} ready for upload."
-          }
-        },
-        "someUnmatched": {
-          "full": {
-            "string": "{count, plural, one {{countOfFiles} has a name we don’t recognize and will be ignored. To upload it, rename it or drag it onto its target.} other {{countOfFiles} have a name we don’t recognize and will be ignored. To upload them, rename them or drag them individually onto their targets.}}",
-            "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
-          },
-          "countOfFiles": {
-            "string": "{count, plural, one {{count} file} other {{count} files}}",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text. (The plural form of the text is shown.)\n\n{countOfFiles} have a name we don’t recognize and will be ignored. To upload them, rename them or drag them individually onto their targets."
-          }
-        },
         "noneMatched": {
           "string": "{count, plural, one {We don’t recognize the file you are trying to upload. Please rename it to match the names listed above, or drag it individually onto its target.} other {We don’t recognize any of the files you are trying to upload. Please rename them to match the names listed above, or drag them individually onto their targets.}}"
         }
@@ -5028,6 +5050,9 @@
       }
     },
     "PublicLinkTable": {
+      "noFilterResults": {
+        "string": "No Public Access Links match the current filter."
+      },
       "header": {
         "once": {
           "string": "Single Submission",

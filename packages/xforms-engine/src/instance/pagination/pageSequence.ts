@@ -132,6 +132,7 @@ export const resolveCurrentPage = (
     return current;
   }
 
+  // Current page was removed. Controlled (jr:count) ranges always land here; uncontrolled only when navigateAfterRemoval found no page
   if (!isListed) {
     return nearestReachablePage(children, current, isReachable);
   }

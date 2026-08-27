@@ -28,6 +28,15 @@ const options = computed(() => {
 	});
 });
 
+const virtualScrollerOptions = computed(() => {
+	if (props.question.currentState.valueOptions.length > 20) {
+		return { itemSize: DEFAULT_PRIMEVUE_ITEM_HEIGHT };
+	}
+	// remove virtual scroller for small selects so primevue knows
+	// what height to make the list container
+	return undefined;
+});
+
 const selectedLabel = computed(() => {
 	const value = props.question.currentState?.value?.[0];
 	if (!value) {
@@ -44,7 +53,7 @@ const selectValue = (value: string) => {
 
 <template>
 	<Select
-		:id="question.nodeId"
+		:input-id="question.nodeId"
 		class="dropdown"
 		:filter="question.appearances.autocomplete"
 		filter-match-mode="contains"
@@ -54,7 +63,7 @@ const selectValue = (value: string) => {
 		:options="options"
 		option-label="search"
 		option-value="value"
-		:virtual-scroller-options="{ itemSize: DEFAULT_PRIMEVUE_ITEM_HEIGHT }"
+		:virtual-scroller-options="virtualScrollerOptions"
 		@update:model-value="selectValue"
 		@change="$emit('change')"
 	>

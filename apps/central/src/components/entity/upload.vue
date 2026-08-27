@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="entity-upload" :state="state" :hideable="!uploading" size="full"
-    backdrop @hide="$emit('hide')" @mutate="resizeColumnUnlessAnimating">
+    backdrop @hide="$emit('hide')" @mutate="resizeColumnIfShown">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div :class="{ backdrop: uploading }">
@@ -42,8 +42,6 @@ except according to the terms contained in the LICENSE file.
             <h1 class="panel-title">{{ $t('table.file') }}</h1>
           </div>
           <div class="panel-body">
-            <entity-upload-warnings v-if="dataWarnings != null && dataWarnings.count !== 0"
-              v-bind="dataWarnings.details" @rows="showWarningRows"/>
             <entity-upload-table :ref="setTable(1)" :entities="csvSlice"
               :row-index="csvRow" :page-size="csvPage.size"
               :highlighted="warningRows"/>
@@ -52,21 +50,19 @@ except according to the terms contained in the LICENSE file.
               :size-options="pageSizeOptions"/>
           </div>
         </div>
+        <entity-upload-warnings v-if="warnings != null" v-bind="warnings"
+          :filename="fileMetadata.name" @rows="showWarningRows"/>
         <entity-upload-file-select v-show="csvEntities == null"
           :parsing="parsing" @change="selectFile">
           <entity-upload-header-help :errors="headerErrors"/>
           <entity-upload-data-error v-if="dataError != null"
             :message="dataError"/>
         </entity-upload-file-select>
-        <entity-upload-header-review v-if="headerWarnings != null"
-          v-bind="headerWarnings"/>
       </div>
       <entity-upload-popup v-if="csvEntities != null"
         :filename="fileMetadata.name" :count="csvEntities.length"
-        :warnings="dataWarnings.count" :awaiting-response="uploading"
-        :progress="uploadProgress" @clear="clearFile"
-        @animationstart="animatePopup(true)"
-        @animationend="animatePopup(false)"/>
+        :awaiting-response="uploading"
+        :progress="uploadProgress" @clear="clearFile"/>
       <div ref="actions" class="modal-actions">
         <button type="button" class="btn btn-link" :aria-disabled="uploading"
           @click="$emit('hide')">
@@ -88,7 +84,6 @@ import { useI18n } from 'vue-i18n';
 import EntityUploadDataError from './upload/data-error.vue';
 import EntityUploadFileSelect from './upload/file-select.vue';
 import EntityUploadHeaderHelp from './upload/header-help.vue';
-import EntityUploadHeaderReview from './upload/header-review.vue';
 import EntityUploadPopup from './upload/popup.vue';
 import EntityUploadTable from './upload/table.vue';
 import EntityUploadWarnings from './upload/warnings.vue';
@@ -103,6 +98,7 @@ import { formatCSVRow, parseCSV, parseCSVHeader } from '../../util/csv';
 import { noop } from '../../util/util';
 import { odataEntityToRest } from '../../util/odata';
 import { useRequestData } from '../../request-data';
+import { validatePropertyName } from '../../util/entity';
 
 defineOptions({
   name: 'EntityUpload'
@@ -181,9 +177,8 @@ const csvEntities = shallowRef(null);
 // Metadata about the CSV file
 const fileMetadata = shallowRef(null);
 const headerErrors = shallowRef(null);
-const headerWarnings = shallowRef(null);
+const warnings = shallowRef(null);
 const dataError = ref(null);
-const dataWarnings = shallowRef(null);
 const parsing = ref(false);
 // Function to abort parsing in progress
 let abortParse = noop;
@@ -191,7 +186,7 @@ let abortParse = noop;
 // warnings.
 const validateHeader = ({ columns, errors, meta }, file) => {
   const errorDetails = {};
-  const warnings = {};
+  const warningDetails = {};
 
   // If there are errors from Papa Parse, just surface those and don't check for
   // other errors. If there are errors from Papa, then there is something pretty
@@ -212,17 +207,44 @@ const validateHeader = ({ columns, errors, meta }, file) => {
     const hasLabel = columnSet.has('label');
     errorDetails.missingLabel = !hasLabel;
 
-    const missingProperties = [];
+    warningDetails.missingProperties = [];
+    const lowercaseProperties = new Map();
     for (const { name } of dataset.properties) {
-      if (!columnSet.has(name)) missingProperties.push(name);
-    }
-    if (missingProperties.length !== 0)
-      warnings.missingProperties = missingProperties;
+      if (!columnSet.has(name)) warningDetails.missingProperties.push(name);
 
-    // Count of columns that are properties
-    const columnProperties = dataset.properties.length - missingProperties.length;
-    errorDetails.unknownProperty = columnSet.size !== columnProperties +
+      lowercaseProperties.set(name.toLowerCase(), name);
+    }
+
+    warningDetails.systemProperties = [];
+    warningDetails.invalidProperties = [];
+    warningDetails.caseMismatch = [];
+    for (const column of columnSet) {
+      if (column === 'label') continue; // eslint-disable-line no-continue
+      if (column.startsWith('__')) {
+        warningDetails.systemProperties.push(column);
+      } else if (!validatePropertyName(column)) {
+        warningDetails.invalidProperties.push(column);
+      } else {
+        const property = lowercaseProperties.get(column.toLowerCase());
+        if (property != null && column !== property)
+          warningDetails.caseMismatch.push({ column, property });
+      }
+    }
+
+    errorDetails.unknownProperty = columnSet.size !==
+      dataset.properties.length -
+      warningDetails.missingProperties.length +
+      warningDetails.systemProperties.length +
+      warningDetails.invalidProperties.length +
+      warningDetails.caseMismatch.length +
       (hasLabel ? 1 : 0);
+
+    // Remove empty arrays from warningDetails. EntityUploadWarnings expects
+    // nonapplicable warnings to be nullish. Removing these arrays also helps us
+    // count the number of warnings.
+    for (const [name, value] of Object.entries(warningDetails)) {
+      if (value.length === 0) delete warningDetails[name];
+    }
   }
 
   const result = {};
@@ -234,7 +256,7 @@ const validateHeader = ({ columns, errors, meta }, file) => {
       ...errorDetails
     };
   }
-  if (Object.keys(warnings).length !== 0) result.warnings = warnings;
+  if (Object.keys(warningDetails).length !== 0) result.warnings = warningDetails;
   return result;
 };
 const { t } = useI18n();
@@ -246,9 +268,14 @@ const rowToEntity = (values, columns) => {
   let hasProperty = false;
   for (const [i, value] of values.entries()) {
     if (value === '') continue; // eslint-disable-line no-continue
+
     const column = columns[i];
-    obj[column] = value;
-    if (column !== 'label') hasProperty = true;
+    if (column === 'label') {
+      obj.label = value;
+    } else if (dataset.propertyMap.has(column)) {
+      obj[column] = value;
+      hasProperty = true;
+    }
   }
   const { label } = obj;
   if (label == null || /^\s+$/.test(label))
@@ -296,8 +323,8 @@ const selectFile = (file) => {
         .then(results => {
           csvEntities.value = results.data;
           fileMetadata.value = { name: file.name, size: file.size };
-          headerWarnings.value = validation.warnings;
-          dataWarnings.value = results.warnings;
+          if (validation.warnings != null || results.warnings.count !== 0)
+            warnings.value = { ...validation.warnings, ...results.warnings.details };
         })
         .catch(error => {
           if (!signal.aborted) dataError.value = error.message;
@@ -313,8 +340,7 @@ const selectFile = (file) => {
 const clearFile = () => {
   csvEntities.value = null;
   fileMetadata.value = null;
-  headerWarnings.value = null;
-  dataWarnings.value = null;
+  warnings.value = null;
 };
 watch(() => props.state, (state) => {
   if (state) return;
@@ -322,9 +348,8 @@ watch(() => props.state, (state) => {
   csvEntities.value = null;
   fileMetadata.value = null;
   headerErrors.value = null;
-  headerWarnings.value = null;
+  warnings.value = null;
   dataError.value = null;
-  dataWarnings.value = null;
 });
 onBeforeUnmount(() => { abortParse(); });
 
@@ -360,24 +385,15 @@ const upload = () => {
     .catch(noop);
 };
 
-const popupAnimating = ref(false);
-const animatePopup = (animating) => { popupAnimating.value = animating; };
-watch(csvEntities, (value) => {
-  if (value == null) popupAnimating.value = false;
-});
-
 // Resize the last column of the tables.
 const tables = [null, null];
 const setTable = (i) => (el) => { tables[i] = el; };
 const resizeLastColumn = () => {
   for (const table of tables) table.resizeLastColumn();
 };
-watch(popupAnimating, (animating) => { if (!animating) resizeLastColumn(); });
 watch(() => props.state, (state) => { if (!state) nextTick(resizeLastColumn); });
-const resizeColumnUnlessAnimating = () => {
-  if (props.state && !popupAnimating.value) resizeLastColumn();
-};
-useEventListener(window, 'resize', resizeColumnUnlessAnimating);
+const resizeColumnIfShown = () => { if (props.state) resizeLastColumn(); };
+useEventListener(window, 'resize', resizeColumnIfShown);
 
 const actions = ref(null);
 watch(csvEntities, (value) => {
@@ -454,6 +470,17 @@ watch(() => props.state, (state) => {
       border-bottom-left-radius: $panel-danger-border-radius;
       border-bottom-right-radius: $panel-danger-border-radius;
     }
+  }
+}
+
+.entity-upload-section-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 4px;
+
+  ~ p {
+    margin-bottom: 10px;
+    &:last-of-type { margin-bottom: 20px; }
   }
 }
 </style>

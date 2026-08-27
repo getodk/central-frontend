@@ -134,7 +134,7 @@ describe('native number functions', () => {
 
       contextNode = document.getElementById('FunctionSumCaseJavarosa');
 
-      testContext.assertNumberValue('sum(*)', NaN, {
+      testContext.assertNumberValue('sum(*)', 5, {
         contextNode,
       });
     });

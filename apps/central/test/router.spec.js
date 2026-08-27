@@ -50,7 +50,6 @@ describe('createCentralRouter()', () => {
     describe('restoreSession is false for the first route', () => {
       const paths = [
         `/account/claim?token=${'a'.repeat(64)}`,
-        '/not-found'
       ];
       for (const path of paths) {
         it(`does not restore session for a user navigating to ${path}`, () =>
@@ -128,15 +127,45 @@ describe('createCentralRouter()', () => {
           app.vm.$route.path.should.equal('/');
         }));
 
-    it('redirects to .../submissions from root path of form', async () => {
-      testData.extendedForms.createPast(1);
-      return load('/projects/1/forms/f/settings')
-        .complete()
-        .route('/projects/1/forms/f')
-        .respondForComponent('FormSubmissions')
-        .afterResponses(app => {
-          app.vm.$route.path.should.equal('/projects/1/forms/f/submissions');
-        });
+    describe('trailing slashes', () => {
+      it('removes a trailing slash', async () => {
+        const app = await load('/account/edit/');
+        app.vm.$route.path.should.equal('/account/edit');
+      });
+
+      it('removes the slash when there is a querystring', async () => {
+        const app = await load('/audits/?action=project.create#foo');
+        app.vm.$route.fullPath.should.equal('/audits?action=project.create#foo');
+      });
+
+      it('removes multiple trailing slashes', () =>
+        load('/account/edit//')
+          .respondFor('/account/edit')
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/account/edit');
+          }));
+
+      it('does not remove multiple internal slashes', async () => {
+        const app = await load('/account//edit');
+        app.findComponent(NotFound).exists().should.be.true;
+        app.vm.$route.path.should.equal('/account//edit');
+      });
+    });
+
+    [
+      '/projects/1/forms/f',
+      '/projects/1/forms/f/' // getodk/central#1697
+    ].forEach(rootPath => {
+      it(`redirects to .../submissions from ${rootPath}`, async () => {
+        testData.extendedForms.createPast(1);
+        return load('/projects/1/forms/f/settings')
+          .complete()
+          .route(rootPath)
+          .respondForComponent('FormSubmissions')
+          .afterResponses(app => {
+            app.vm.$route.path.should.equal('/projects/1/forms/f/submissions');
+          });
+      });
     });
 
     it('redirects to .../entities from root path of entity list', async () => {
@@ -230,10 +259,12 @@ describe('createCentralRouter()', () => {
   });
 
   describe('requireLogin is false and requireAnonymity is false', () => {
-    it('does not redirect an anonymous user', async () => {
-      const app = await load('/not-found');
-      app.vm.$route.path.should.equal('/not-found');
-    });
+    it('does not redirect an anonymous user', () =>
+      load('/not-found')
+        .restoreSession(false)
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/not-found');
+        }));
 
     it('does not redirect a user who is logged in', () => {
       mockLogin();
