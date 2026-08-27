@@ -110,11 +110,13 @@ export default {
     submit() {
       if (!this.validate()) return;
 
-      (async () => {
-        const isPwned = await checkPasswordPwnage(this.request, this.newPassword);
-        if (isPwned) {
-          this.pwned = true;
-        } else {
+      checkPasswordPwnage(this.request, this.newPassword)
+        .then(isPwned => {
+          if (isPwned) {
+            this.pwned = true;
+            return;
+          }
+
           const data = { old: this.oldPassword, new: this.newPassword };
           this.request({
             method: 'PUT',
@@ -127,9 +129,8 @@ export default {
               // The Chrome password manager does not realize that the form was
               // submitted. Should we navigate to a different page so that it does?
             })
-            .catch(noop);
-        }
-      })();
+        })
+        .catch(noop);
     }
   }
 };
