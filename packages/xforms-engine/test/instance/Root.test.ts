@@ -1,5 +1,6 @@
 import {
   bind,
+  body,
   group,
   head,
   html,
@@ -427,6 +428,160 @@ describe('Root', () => {
       getUncontrolledRange(root).removeInstances(1);
 
       expect(root.currentState.currentPage).toBe(hh1.nodeId);
+    });
+  });
+
+  describe('navigation target', () => {
+    const initForm = setupPaginationForms();
+
+    it('targets the first control of the page on load and on page change', async () => {
+      const root = await initForm(threeQuestionForm());
+      const q1 = getControlNode(root, '/data/q1');
+      const q2 = getControlNode(root, '/data/q2');
+
+      expect(root.currentState.navigationTarget).toBe(q1.nodeId);
+
+      root.nextPage();
+      expect(root.currentState.navigationTarget).toBe(q2.nodeId);
+    });
+
+    it('keeps the target when relevance changes within the current page', async () => {
+      const root = await initForm(
+        buildForm(
+          [t('toggle', 'no'), t('g', t('q1'), t('q2'))],
+          [
+            input('/data/toggle'),
+            t(
+              'group ref="/data/g" appearance="field-list"',
+              input('/data/g/q1'),
+              input('/data/g/q2')
+            ),
+          ],
+          [
+            bind('/data/toggle').type('string'),
+            bind('/data/g/q1').type('string').relevant("/data/toggle = 'yes'"),
+          ]
+        )
+      );
+      const q2 = getControlNode(root, '/data/g/q2');
+
+      root.nextPage();
+      expect(root.currentState.navigationTarget).toBe(q2.nodeId);
+
+      getInputNode(root, '/data/toggle').setValue('yes');
+      expect(root.currentState.navigationTarget).toBe(q2.nodeId);
+    });
+
+    it('adding an instance to a repeat in a field-list targets the first control of the new instance, not its page.', async () => {
+      const root = await initForm(
+        buildForm(
+          [t('fl', t('intro'), t('r', t('q')))],
+          [
+            t(
+              'group ref="/data/fl" appearance="field-list"',
+              input('/data/fl/intro'),
+              repeat('/data/fl/r', input('/data/fl/r/q'))
+            ),
+          ]
+        )
+      );
+
+      getUncontrolledRange(root).addInstances();
+
+      const newInstanceQuestion = getControlNode(root, '/data/fl/r[2]/q');
+      expect(root.currentState.navigationTarget).toBe(newInstanceQuestion.nodeId);
+    });
+
+    it('removing an instance targets the instance that takes its position', async () => {
+      const root = await initForm(
+        buildForm(
+          [t('r', t('q')), t('r', t('q')), t('r', t('q'))],
+          [repeat('/data/r', input('/data/r/q'))]
+        )
+      );
+
+      root.setCurrentPage(getControlNode(root, '/data/r[2]/q').nodeId);
+      getUncontrolledRange(root).removeInstances(1);
+
+      const replacementQuestion = getControlNode(root, '/data/r[2]/q');
+      expect(root.currentState.currentPage).toBe(replacementQuestion.nodeId);
+      expect(root.currentState.navigationTarget).toBe(replacementQuestion.nodeId);
+    });
+
+    it('removing the last instance targets the range, where Add renders', async () => {
+      const root = await initForm(
+        buildForm(
+          [t('intro'), t('r', t('q')), t('tail')],
+          [input('/data/intro'), repeat('/data/r', input('/data/r/q')), input('/data/tail')]
+        )
+      );
+      const range = getUncontrolledRange(root);
+
+      root.setCurrentPage(getControlNode(root, '/data/r[1]/q').nodeId);
+      range.removeInstances(0);
+
+      expect(root.currentState.navigationTarget).toBe(range.nodeId);
+    });
+
+    it('removing the last instance in the list targets the previous instance', async () => {
+      const root = await initForm(
+        buildForm([t('r', t('q')), t('r', t('q'))], [repeat('/data/r', input('/data/r/q'))])
+      );
+
+      root.setCurrentPage(getControlNode(root, '/data/r[2]/q').nodeId);
+      getUncontrolledRange(root).removeInstances(1);
+
+      const previousQuestion = getControlNode(root, '/data/r[1]/q');
+      expect(root.currentState.currentPage).toBe(previousQuestion.nodeId);
+      expect(root.currentState.navigationTarget).toBe(previousQuestion.nodeId);
+    });
+
+    it('removing an instance on a non-paginated form does not navigate', async () => {
+      const root = await initForm(
+        html(
+          head(
+            title('Pageless form'),
+            model(mainInstance(t('data id="root"', t('r', t('q')), t('r', t('q')))))
+          ),
+          body(repeat('/data/r', input('/data/r/q')))
+        )
+      );
+      const firstQuestion = getControlNode(root, '/data/r[1]/q');
+      expect(root.currentState.navigationTarget).toBe(firstQuestion.nodeId);
+
+      getUncontrolledRange(root).removeInstances(1);
+
+      expect(root.currentState.navigationTarget).toBe(firstQuestion.nodeId);
+    });
+
+    it('a non-paginated form targets its first control on load', async () => {
+      const root = await initForm(
+        html(
+          head(
+            title('Root pagination'),
+            model(mainInstance(t('data id="root-pagination"', t('q1'), t('q2'))))
+          ),
+          body(input('/data/q1'), input('/data/q2'))
+        )
+      );
+
+      expect(root.currentState.navigationTarget).toBe(getControlNode(root, '/data/q1').nodeId);
+    });
+
+    it('navigateToFirstViolation moves to the first violating control', async () => {
+      const root = await initForm(
+        buildForm(
+          [t('q1'), t('q2')],
+          [input('/data/q1'), input('/data/q2')],
+          [bind('/data/q2').type('string').required()]
+        )
+      );
+      const q2 = getControlNode(root, '/data/q2');
+
+      root.navigateToFirstViolation();
+
+      expect(root.currentState.currentPage).toBe(q2.nodeId);
+      expect(root.currentState.navigationTarget).toBe(q2.nodeId);
     });
   });
 });

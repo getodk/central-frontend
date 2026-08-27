@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import TextMedia from '@getodk/web-forms/components/common/TextMedia.vue';
-import { selectOptionId } from '@getodk/web-forms/lib/format/select-option-id.ts';
+import { selectOptionId } from '@getodk/web-forms/lib/format/ids.ts';
 import type { SelectNode } from '@getodk/xforms-engine';
 import RadioButton from 'primevue/radiobutton';
 

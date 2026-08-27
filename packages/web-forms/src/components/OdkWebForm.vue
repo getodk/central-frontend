@@ -5,7 +5,6 @@ import FormFooter from '@getodk/web-forms/components/form-layout/FormFooter.vue'
 import FormHeader from '@getodk/web-forms/components/form-layout/FormHeader.vue';
 import QuestionList from '@getodk/web-forms/components/form-layout/QuestionList.vue';
 import { waitAllTasksToFinish } from '@getodk/web-forms/lib/async/event-loop.ts';
-import { POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms/lib/constants/control-flow.ts';
 import {
 	TRANSLATE,
 	FORM_MEDIA_CACHE,
@@ -17,6 +16,7 @@ import type { FormStateSuccessResult } from '@getodk/web-forms/lib/init/form-sta
 import { initializeFormState } from '@getodk/web-forms/lib/init/initialize-form-state.ts';
 import { loadFormState } from '@getodk/web-forms/lib/init/load-form-state';
 import type { EditInstanceOptions, FormOptions } from '@getodk/web-forms/lib/init/load-form-state.ts';
+import { useNavigationTarget } from '@getodk/web-forms/lib/useNavigationTarget.ts';
 import { updateSubmittedFormState } from '@getodk/web-forms/lib/init/update-submitted-form-state.ts';
 import { geolocationService } from '@getodk/web-forms/lib/services/geolocationService.ts';
 import { useLocale } from '@getodk/web-forms/lib/locale/useLocale.ts';
@@ -33,6 +33,7 @@ import type {
 	InstanceDefaults,
 	PreloadProperties,
 } from '@getodk/xforms-engine';
+import Button from 'primevue/button';
 import Card from 'primevue/card';
 import Message from 'primevue/message';
 import {
@@ -93,9 +94,6 @@ const hostSubmissionResultCallbackFactory = (
 			lastSavedXml
 		};
 		state.value = updateSubmittedFormState(submissionResult, currentState, options);
-		if (submissionResult?.next === POST_SUBMIT__NEW_INSTANCE) {
-			document.scrollingElement?.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-		}
 	};
 
 	return (hostResult) => {
@@ -220,6 +218,7 @@ const isFormEditMode = ref(false);
 provide(IS_FORM_EDIT_MODE, readonly(isFormEditMode));
 const { setLanguage, t } = useLocale(computed(() => state.value.root));
 provide(TRANSLATE, t);
+const { navigateToFirstViolation } = useNavigationTarget(() => state.value.root ?? null);
 
 onErrorCaptured(err => {
 	runtimeError.value = FormInitializationError.from(err);
@@ -254,8 +253,16 @@ const init = async () => {
 
 void init();
 
+const releaseFocus = () => {
+	const active = document.activeElement;
+	if (active instanceof HTMLElement) {
+		active.blur();
+	}
+};
+
 const handleSubmit = (currentState: FormStateSuccessResult) => {
 	const { root } = currentState;
+	releaseFocus(); // so follow-up dialogs don't restore focus here and scroll back to it
 
 	if (root.validationState.violations.length === 0) {
 		floatingErrorActive.value = false;
@@ -266,7 +273,7 @@ const handleSubmit = (currentState: FormStateSuccessResult) => {
 	} else {
 		floatingErrorActive.value = true;
 		submitPressed.value = true;
-		document.scrollingElement?.scrollTo(0, 0);
+		navigateToFirstViolation();
 	}
 };
 
@@ -344,6 +351,14 @@ onUnmounted(() => {
 						{{ geolocationErrorMessage }}
 					</li>
 				</ul>
+				<Button
+					v-if="validationErrorMessage?.length"
+					link
+					class="view-error-button"
+					@click="navigateToFirstViolation"
+				>
+					<strong>{{ t('odk_web_forms.validation.view.label') }}</strong>
+				</Button>
 			</Message>
 
 			<FormHeader :form="state.root" @change-language="setLanguage" />
@@ -432,6 +447,7 @@ onUnmounted(() => {
 				display: flex;
 				align-items: center;
 				font-weight: 400;
+				flex: 1;
 			}
 
 			.odk-icon {
@@ -446,6 +462,13 @@ onUnmounted(() => {
 				li:not(:last-child) {
 					margin-bottom: var(--odk-spacing-m);
 				}
+			}
+
+			.view-error-button {
+				margin-left: auto;
+				min-width: 0;
+				color: inherit;
+				text-align: right;
 			}
 		}
 	}
