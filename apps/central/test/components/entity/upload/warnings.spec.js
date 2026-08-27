@@ -3,9 +3,12 @@ import { nextTick } from 'vue';
 import EntityUploadAlert from '../../../../src/components/entity/upload/alert.vue';
 import EntityUploadWarnings from '../../../../src/components/entity/upload/warnings.vue';
 
-import { mount } from '../../../util/lifecycle';
+import { mergeMountOptions, mount } from '../../../util/lifecycle';
 
-const mountComponent = (options) => mount(EntityUploadWarnings, options);
+const mountComponent = (options) =>
+  mount(EntityUploadWarnings, mergeMountOptions(options, {
+    props: { filename: 'my_data.csv' }
+  }));
 
 describe('EntityUploadWarnings', () => {
   it('shows a warning for system properties', async () => {
@@ -19,6 +22,34 @@ describe('EntityUploadWarnings', () => {
     p.length.should.equal(3);
     p[0].text().should.startWith('System properties can’t be set');
     p[2].text().should.equal('__id, __foo');
+  });
+
+  it('shows a warning for columns that differ from properties on letter case', async () => {
+    const component = mountComponent({
+      props: {
+        caseMismatch: [
+          { column: 'CIRCUMFERENCE', property: 'circumference' },
+          { column: 'Species', property: 'species' }
+        ]
+      }
+    });
+
+    const warning = component.getComponent(EntityUploadAlert);
+    const title = warning.get('p').text();
+    title.should.startWith('Column is similar to an existing property');
+
+    const table = warning.get('table');
+    const th = table.get('th:last-child');
+    th.text().should.equal('my_data.csv');
+    await th.should.have.textTooltip();
+
+    const tdText = table.findAll('tbody tr').map(tr =>
+      tr.findAll('td').map(td => td.text()));
+    tdText.should.eql([
+      ['circumference', 'CIRCUMFERENCE'],
+      ['species', 'Species']
+    ]);
+    await table.get('td').should.have.textTooltip();
   });
 
   it('shows a warning for columns that are invalid property names', async () => {

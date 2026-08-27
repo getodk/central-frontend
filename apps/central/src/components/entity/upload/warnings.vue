@@ -22,6 +22,33 @@ except according to the terms contained in the LICENSE file.
         <p><i18n-list :list="systemProperties"/></p>
       </template>
     </entity-upload-alert>
+    <entity-upload-alert v-if="caseMismatch != null"
+      id="entity-upload-warnings-case-mismatch" type="warning">
+      <template #title>{{ $t('caseMismatch.title') }}</template>
+      <template #body>
+        <p>
+          <span>{{ $t('caseMismatch.description') }}</span>
+          <sentence-separator/>
+          <span>{{ $tc('columnsIgnored', caseMismatch.length) }}</span>
+        </p>
+        <div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>{{ $t('caseMismatch.existingProperty') }}</th>
+                <th v-tooltip.text>{{ filename }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="{ column, property } of caseMismatch" :key="column">
+                <td v-tooltip.text>{{ property }}</td>
+                <td v-tooltip.text>{{ column }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </template>
+    </entity-upload-alert>
     <entity-upload-alert v-if="invalidProperties != null" type="warning">
       <template #title>{{ $tc('invalidProperties', invalidProperties.length) }}</template>
       <template #body>
@@ -53,13 +80,20 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 import EntityUploadAlert from './alert.vue';
 import I18nList from '../../i18n/list.vue';
+import SentenceSeparator from '../../sentence-separator.vue';
 
 defineOptions({
   name: 'EntityUploadWarnings'
 });
 defineProps({
+  filename: {
+    type: String,
+    required: true
+  },
+
   // Column header warnings
   systemProperties: Array,
+  caseMismatch: Array,
   invalidProperties: Array,
   missingProperties: Array,
 
@@ -71,8 +105,26 @@ defineEmits(['rows']);
 </script>
 
 <style lang="scss">
+@import '../../../assets/scss/mixins';
+
 #entity-upload-warnings {
   margin-top: 20px;
+}
+
+#entity-upload-warnings-case-mismatch {
+  div:has(> table) {
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    padding: 6px;
+  }
+
+  table {
+    margin-bottom: 0;
+    table-layout: fixed;
+  }
+
+  thead { background-color: transparent; }
+  th, td { @include text-overflow-ellipsis; }
 }
 </style>
 
@@ -85,12 +137,23 @@ defineEmits(['rows']);
     "title": "Review warnings",
     "introduction": "Some rows contain warnings that may affect upload results.",
 
+    // "Properties" refers to Entity properties.
     "systemProperties": "System properties can’t be set by .csv upload",
+    "caseMismatch": {
+      // "Property" refers to an Entity property.
+      "title": "Column is similar to an existing property but does not match",
+      "description": "Column names are case-sensitive. Check the spelling and capitalization.",
+      // "Property" refers to an Entity property.
+      "existingProperty": "Existing property"
+    },
+    // "Property" refers to an Entity property.
     "invalidProperties": "This column is not a valid property name | These columns are not valid property names",
     // @transifexKey component.EntityUploadHeaderReview.missingProperties
     // This text is followed by a list of Entity property names.
     "missingProperties": "This property is not included in your file and will be left empty: | These properties are not included in your file and will be left empty:",
+    // "Property" refers to an Entity property.
     "propertiesIgnored": "This property will be ignored. | These properties will be ignored.",
+    "columnsIgnored": "This column will be ignored. | These columns will be ignored.",
 
     // This is a warning that is followed by a list of rows.
     "row": {

@@ -2903,13 +2903,32 @@
         "string": "Some rows contain warnings that may affect upload results."
       },
       "systemProperties": {
-        "string": "System properties can’t be set by .csv upload"
+        "string": "System properties can’t be set by .csv upload",
+        "developer_comment": "\"Properties\" refers to Entity properties."
+      },
+      "caseMismatch": {
+        "title": {
+          "string": "Column is similar to an existing property but does not match",
+          "developer_comment": "\"Property\" refers to an Entity property."
+        },
+        "description": {
+          "string": "Column names are case-sensitive. Check the spelling and capitalization."
+        },
+        "existingProperty": {
+          "string": "Existing property",
+          "developer_comment": "\"Property\" refers to an Entity property."
+        }
       },
       "invalidProperties": {
-        "string": "{count, plural, one {This column is not a valid property name} other {These columns are not valid property names}}"
+        "string": "{count, plural, one {This column is not a valid property name} other {These columns are not valid property names}}",
+        "developer_comment": "\"Property\" refers to an Entity property."
       },
       "propertiesIgnored": {
-        "string": "{count, plural, one {This property will be ignored.} other {These properties will be ignored.}}"
+        "string": "{count, plural, one {This property will be ignored.} other {These properties will be ignored.}}",
+        "developer_comment": "\"Property\" refers to an Entity property."
+      },
+      "columnsIgnored": {
+        "string": "{count, plural, one {This column will be ignored.} other {These columns will be ignored.}}"
       },
       "row": {
         "raggedRows": {
