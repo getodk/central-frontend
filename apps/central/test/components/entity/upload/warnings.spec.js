@@ -74,7 +74,7 @@ describe('EntityUploadWarnings', () => {
 
     const p = component.getComponent(EntityUploadAlert).findAll('p');
     p.length.should.equal(3);
-    p[0].text().should.startWith('Properties not found in file');
+    p[0].text().should.equal('Properties not found in file');
     p[2].text().should.equal('foo, bar');
   });
 
