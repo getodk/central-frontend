@@ -138,6 +138,17 @@ describe('Modal', () => {
     });
   });
 
+  describe('focus', () => {
+    it('focuses the modal after it is shown', async () => {
+      const modal = mountComponent({
+        props: { state: true },
+        attachTo: document.body
+      });
+      await nextTick();
+      document.activeElement.should.equal(modal.get('.modal').element);
+    });
+  });
+
   describe('size prop', () => {
     it("adds the correct class if the prop is 'large'", () => {
       const modal = mountComponent({
