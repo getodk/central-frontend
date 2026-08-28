@@ -10,6 +10,18 @@ import { computed, inject, onWatcherCleanup, ref, watchEffect } from 'vue';
 
 type ObjectURL = `blob:${string}`;
 
+type MediaResponse = MediaResponseError | MediaResponseSuccess;
+
+interface MediaResponseSuccess {
+	ok: true;
+	image: ObjectURL;
+}
+
+interface MediaResponseError {
+	ok: false;
+	error: string;
+}
+
 const props = defineProps<{
 	readonly resourceUrl?: JRResourceURL;
 	readonly blobUrl?: ObjectURL;
@@ -32,38 +44,46 @@ const brokenFileSrc = computed(() => {
 	return new URL(`../../../assets/images/${props.brokenFileImage}`, import.meta.url).href;
 });
 
-const loadMedia = async (src?: JRResourceURL): Promise<ObjectURL | null> => {
+const fetchMedia = async (src?: JRResourceURL): Promise<MediaResponse> => {
 	if (src?.href == null || formOptions?.fetchFormAttachment == null) {
-		handleError(t('media_block.fetch.error'));
-		return null;
+		return { ok: false, error: t('media_block.fetch.error') };
 	}
 
 	try {
 		const cache = mediaCache.get(src.href);
-		console.log('loading media', src, 'cache hit', !!cache);
 
 		if (cache != null) {
-			return cache;
+			return { ok: true, image: cache };
 		}
 
 		const response = await formOptions.fetchFormAttachment(src);
 		if (!response.ok || response.status !== 200) {
-			handleError(t('media_block.not_found.error', { file: src.href }));
-			return null;
+			return { ok: false, error: t('media_block.not_found.error', { file: src.href }) };
 		}
 
 		const data = await response.blob();
-		const url = URL.createObjectURL(data) satisfies string as ObjectURL;
-		mediaCache.set(src.href, url);
-		return url;
-		
+		const image = URL.createObjectURL(data) satisfies string as ObjectURL;
+		mediaCache.set(src.href, image);
+		return { ok: true, image };
 	} catch {
-		handleError(t('media_block.unknown.error', { file: src.href }));
-		return null;
+		return { ok: false, error: t('media_block.unknown.error', { file: src.href }) };
 	}
 };
 
-const setMedia = (value: string) => {
+const loadMedia = async (url: JRResourceURL, signal: AbortSignal) => {
+	const response = await fetchMedia(url);
+	if (signal.aborted) {
+		// url has been modified since sending request
+		return;
+	}
+	if (response.ok) {
+		setMedia(response.image);
+	} else {
+		handleError(response.error);
+	}
+};
+
+const setMedia = (value: ObjectURL) => {
 	mediaUrl.value = value;
 	loading.value = false;
 	errorMessage.value = '';
@@ -75,21 +95,22 @@ const handleError = (error: string) => {
 	errorMessage.value = error;
 };
 
-watchEffect(async () => {
+watchEffect(() => {
+	loading.value = true;
 	errorMessage.value = '';
-	
+
 	if (props.blobUrl != null) {
 		setMedia(props.blobUrl);
 		return;
 	}
-	
-	let current = true;
-	onWatcherCleanup(() => {
-		current = false;
-	});
-	const blob = await loadMedia(props.resourceUrl);
-	if (blob && current) {
-		setMedia(blob);
+
+	if (props.resourceUrl != null) {
+		const controller = new AbortController();
+		onWatcherCleanup(() => {
+			controller.abort();
+		});
+
+		void loadMedia(props.resourceUrl, controller.signal);
 	}
 });
 </script>
