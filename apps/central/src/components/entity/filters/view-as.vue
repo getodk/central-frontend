@@ -9,7 +9,7 @@
         @change="onChange($event.target.value)">
         <option value="">{{ $t('noUserSelected') }}</option>
         <template v-if="fieldKeys.dataExists">
-          <option v-for="fieldKey in fieldKeys" :key="fieldKey.id" :value="fieldKey.id">
+          <option v-for="fieldKey in fieldKeys.data" :key="fieldKey.id" :value="fieldKey.id">
             {{ fieldKey.displayName }}
           </option>
         </template>
@@ -73,8 +73,8 @@ const onChange = (value) => {
     top: 0;
     left: 0;
     cursor: pointer;
-
   }
+
   .icon-angle-down {
     font-size: 16px;
     color: #555555;

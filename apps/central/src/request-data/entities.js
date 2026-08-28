@@ -47,6 +47,5 @@ export default () => {
     ids: computeIfExists(() =>
       entityCreators.reduce((set, { id }) => set.add(id), new Set()))
   }));
-  const fieldKeys = createResource('fieldKeys');
-  return { odataEntities: entityOData, deletedEntityCount, entityCreators, fieldKeys };
+  return { odataEntities: entityOData, deletedEntityCount, entityCreators };
 };

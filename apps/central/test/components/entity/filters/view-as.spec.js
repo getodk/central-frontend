@@ -1,6 +1,6 @@
 import EntityFiltersViewAs from '../../../../src/components/entity/filters/view-as.vue';
 
-import useEntities from '../../../../src/request-data/entities';
+import useProject from '../../../../src/request-data/project';
 
 import testData from '../../../data';
 import { mount } from '../../../util/lifecycle';
@@ -12,7 +12,7 @@ const createFieldKeys = (count) => new Array(count).fill(undefined)
     .last());
 
 const mountComponent = (fieldKeys, options) => mount(EntityFiltersViewAs, {
-  container: { requestData: testRequestData([useEntities], { fieldKeys }) },
+  container: { requestData: testRequestData([useProject], { fieldKeys }) },
   ...options
 });
 

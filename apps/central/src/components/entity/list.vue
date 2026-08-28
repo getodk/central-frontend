@@ -94,6 +94,7 @@ import useDataView from '../../composables/data-view';
 import useQueryRef from '../../composables/query-ref';
 import useDateRangeQueryRef from '../../composables/date-range-query-ref';
 import useRequest from '../../composables/request';
+import useProject from '../../request-data/project';
 import { apiPaths, requestAlertMessage } from '../../util/request';
 import { odataEntityToRest } from '../../util/odata';
 import { joinSentences } from '../../util/i18n';
@@ -140,7 +141,8 @@ export default {
   setup() {
     // The dataset request object is how we get access to the
     // dataset properties for the columns.
-    const { dataset, deletedEntityCount, odataEntities, entityCreators, fieldKeys } = useRequestData();
+    const { dataset, deletedEntityCount, odataEntities, entityCreators } = useRequestData();
+    const { fieldKeys } = useProject();
 
     // Array of conflict statuses, where a conflict status is represented as a
     // boolean
