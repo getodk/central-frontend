@@ -6,9 +6,7 @@ const findFocusTarget = (
   node: HTMLElement | null,
   container: HTMLElement | null
 ): HTMLElement | null => {
-  // Focusing a datepicker input opens its calendar inline instead of a popup.
-  const FOCUSABLE =
-    ':is(button, input, textarea, [tabindex]:not([tabindex="-1"])):not(:disabled):not(.p-datepicker-input)';
+  const FOCUSABLE = ':is(button, input, textarea, [tabindex]:not([tabindex="-1"])):not(:disabled)';
   if (node?.matches(FOCUSABLE)) {
     return node;
   }
@@ -56,7 +54,9 @@ export const useNavigationTarget = (getRoot: () => RootNode | null) => {
     () => getRoot()?.currentState.navigationTarget,
     (nodeId) => {
       if (nodeId) {
-        navigateTo(nodeId);
+        // Wait for the render cycle to settle
+        // focusing a still mounting question breaks popups like the datepicker.
+        void nextTick(() => navigateTo(nodeId));
       }
     },
     { flush: 'post' }
