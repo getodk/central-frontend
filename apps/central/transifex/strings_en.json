@@ -2860,6 +2860,10 @@
         },
         "description": {
           "string": "Each column must have a unique header."
+        },
+        "headersReused": {
+          "string": "{count, plural, one {This header is used more than once:} other {These headers are used more than once:}}",
+          "developer_comment": "This text is followed by a list of column headers."
         }
       },
       "emptyColumn": {

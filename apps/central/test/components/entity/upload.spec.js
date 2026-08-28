@@ -153,17 +153,26 @@ describe('EntityUpload', () => {
       });
     });
 
-    it('shows errors', async () => {
+    it('shows an error if there are duplicate column headers', async () => {
+      const modal = await showModal();
+      const csv = createCSV('label,label,height,height,height\ndogwood,dogwood,1,1,1');
+      await selectFile(modal, csv);
+      const errors = modal.getComponent(EntityUploadErrors).props();
+      errors.duplicateColumns.should.eql(['label', 'height']);
+    });
+
+    it('shows multiple errors', async () => {
       const modal = await showModal();
       await selectFile(modal, createCSV('foo,,foo\n1,2,3'));
-      modal.getComponent(EntityUploadErrors).props().should.include({
+      const errors = modal.getComponent(EntityUploadErrors).props();
+      errors.should.include({
         delimiter: ',',
         invalidQuotes: false,
         missingLabel: true,
         unknownProperty: true,
-        duplicateColumn: true,
         emptyColumn: true
       });
+      errors.duplicateColumns.should.eql(['foo']);
     });
 
     it('uses the delimiter from the file', async () => {
