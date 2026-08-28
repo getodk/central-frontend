@@ -5,6 +5,7 @@ import { expect, should } from 'chai';
 import '../src/styles';
 
 import testData from './data';
+import { breakpoint } from './setup/debug';
 import { loadAsyncRouteComponents } from './util/load-async';
 import { mockLogin } from './util/session';
 import { restoreLuxon } from './util/date-time';
@@ -17,6 +18,11 @@ window.test = it;
 
 window.should = should();
 window.expect = expect;
+
+// Chrome devtools allows you to select the window in the console. We set
+// `breakpoint` on both windows so that it is always available.
+window.breakpoint = breakpoint;
+window.parent.breakpoint = breakpoint;
 
 
 

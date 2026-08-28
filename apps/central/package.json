@@ -8,6 +8,7 @@
     "lint": "npm run eslint && npm run transifex:lint",
     "lint:fix": "npm run eslint:fix && npm run transifex:fix",
     "test": "./test/run.sh",
+    "test:debug": "vitest --browser.headless=false --testTimeout=3600000",
     "transifex:destructure": "node bin/transifex/destructure.js",
     "transifex:fix": "node bin/transifex/restructure.js > transifex/strings_en.json",
     "transifex:lint": "./bin/transifex/lint.sh"
