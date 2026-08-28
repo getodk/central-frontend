@@ -10,34 +10,29 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal id="entity-upload" :state="state" :hideable="!uploading" size="full"
+  <modal id="entity-upload" :state="state" :hideable="!uploading" :persistent="true" size="full"
     backdrop @hide="$emit('hide')" @mutate="resizeColumnIfShown">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div :class="{ backdrop: uploading }">
-        <div class="panel panel-simple">
-          <div class="panel-heading">
-            <h1 class="panel-title" v-tooltip.text>
-              {{ $t('table.server', dataset) }}
-            </h1>
-          </div>
-          <div class="panel-body">
-            <entity-upload-table :ref="setTable(0)"
-              :entities="serverEntities.value" :row-index="serverRow"
-              :page-size="serverPage.size"
-              :awaiting-response="serverEntities.awaitingResponse"/>
-            <loading :state="serverEntities.initiallyLoading"/>
-            <p v-if="serverEntities.dataExists && serverEntities.value.length === 0"
-              class="empty-table-message">
-              {{ $t('noEntities') }}
-            </p>
-            <pagination v-if="serverPage.count !== 0"
-              v-model:page="serverPage.page" v-model:size="serverPage.size"
-              :count="serverPage.count" :size-options="pageSizeOptions"
-              :spinner="serverEntities.awaitingResponse"/>
-          </div>
+        <p class="entity-upload-section-title">{{ $t('currentEntities') }}</p>
+        <div class="entity-upload-table-container">
+          <entity-upload-table :ref="setTable(0)"
+            :entities="serverEntities.value" :row-index="serverRow"
+            :page-size="serverPage.size"
+            :awaiting-response="serverEntities.awaitingResponse"/>
+          <loading :state="serverEntities.initiallyLoading"/>
+          <p v-if="serverEntities.dataExists && serverEntities.value.length === 0"
+            class="empty-table-message">
+            {{ $t('noEntities') }}
+          </p>
+          <pagination v-if="serverPage.count !== 0"
+            v-model:page="serverPage.page" v-model:size="serverPage.size"
+            :count="serverPage.count" :size-options="pageSizeOptions"
+            :spinner="serverEntities.awaitingResponse"/>
         </div>
-        <div class="panel panel-simple">
+        <p class="entity-upload-section-title">{{ $t('newEntities') }}</p>
+        <div class="entity-upload-table-container panel panel-simple">
           <div class="panel-heading">
             <h1 class="panel-title">{{ $t('table.file') }}</h1>
           </div>
@@ -192,14 +187,16 @@ const validateHeader = ({ columns, errors: papaErrors }) => {
     errorDetails.invalidQuotes = papaErrors.some(({ type }) => type === 'Quotes');
   } else {
     const columnSet = new Set();
+    const duplicateColumns = new Set();
     for (const column of columns) {
       if (/^\s*$/.test(column))
         errorDetails.emptyColumn = true;
       else if (columnSet.has(column))
-        errorDetails.duplicateColumn = true;
+        duplicateColumns.add(column);
       else
         columnSet.add(column);
     }
+    errorDetails.duplicateColumns = [...duplicateColumns];
 
     const hasLabel = columnSet.has('label');
     errorDetails.missingLabel = !hasLabel;
@@ -217,7 +214,7 @@ const validateHeader = ({ columns, errors: papaErrors }) => {
     warningDetails.caseMismatch = [];
     for (const column of columnSet) {
       if (column === 'label') continue; // eslint-disable-line no-continue
-      if (column.startsWith('__')) {
+      if (column.startsWith('__') || column === 'name') {
         warningDetails.systemProperties.push(column);
       } else if (!validatePropertyName(column)) {
         warningDetails.invalidProperties.push(column);
@@ -235,18 +232,32 @@ const validateHeader = ({ columns, errors: papaErrors }) => {
       warningDetails.invalidProperties.length +
       warningDetails.caseMismatch.length +
       (hasLabel ? 1 : 0);
+  }
 
-    // Remove empty arrays from warningDetails. EntityUploadWarnings expects
-    // nonapplicable warnings to be nullish. Removing these arrays also helps us
-    // count the number of warnings.
-    for (const [name, value] of Object.entries(warningDetails)) {
-      if (value.length === 0) delete warningDetails[name];
+  // Normalize detail objects, adding a `count` property.
+  for (const details of [errorDetails, warningDetails]) {
+    let count = 0;
+    for (const [name, value] of Object.entries(details)) {
+      if (value === true || value === false) { // Boolean value
+        if (value) count += 1;
+      } else if (Array.isArray(value)) {
+        if (value.length !== 0)
+          count += 1;
+        else
+          // Remove empty arrays from the object. EntityUploadErrors and
+          // EntityUploadWarnings expect nullish values rather than empty arrays
+          // for nonapplicable errors/warnings.
+          delete details[name];
+      } else {
+        throw new Error('unexpected detail value');
+      }
     }
+    details.count = count;
   }
 
   const result = {};
-  if (Object.values(errorDetails).includes(true)) result.errors = errorDetails;
-  if (Object.keys(warningDetails).length !== 0) result.warnings = warningDetails;
+  if (errorDetails.count !== 0) result.errors = errorDetails;
+  if (warningDetails.count !== 0) result.warnings = warningDetails;
   return result;
 };
 const { t } = useI18n();
@@ -321,12 +332,18 @@ const selectFile = (file) => {
       return parseEntities(file, headerResults, signal)
         .then(results => {
           csvEntities.value = results.data;
-          if (validation.warnings != null || results.warnings.count !== 0)
-            warnings.value = { ...validation.warnings, ...results.warnings.details };
+
+          if (validation.warnings != null || results.warnings.count !== 0) {
+            warnings.value = {
+              ...validation.warnings,
+              ...results.warnings.details,
+              count: (validation.warnings?.count ?? 0) + results.warnings.count
+            };
+          }
         })
         .catch(error => {
           if (!signal.aborted) {
-            errors.value = { dataError: error.message };
+            errors.value = { dataError: error.message, count: 1 };
             warnings.value = validation.warnings;
           }
 
@@ -395,8 +412,9 @@ const resizeColumnIfShown = () => { if (props.state) resizeLastColumn(); };
 useEventListener(window, 'resize', resizeColumnIfShown);
 
 const actions = ref(null);
-watch(csvEntities, (value) => {
-  if (value != null) nextTick(() => { actions.value.scrollIntoView(); });
+watch([errors, warnings, csvEntities], () => {
+  if (errors.value == null && warnings.value == null && csvEntities.value != null)
+    nextTick(() => { actions.value.scrollIntoView(); });
 });
 
 watch(() => props.state, (state) => {
@@ -416,27 +434,19 @@ watch(() => props.state, (state) => {
   }
 
   .panel-simple {
-    margin-bottom: 0;
-
-    .panel-heading {
-      @include text-overflow-ellipsis;
-      background-color: #ccc;
-      border-bottom: none;
-    }
-
-    .panel-body { padding: 0; }
-  }
-  .panel-simple + .panel-simple {
     .panel-heading {
       background-color: $color-action-background;
+      border-bottom: none;
       color: #fff;
     }
 
+    .panel-body { padding: 0; }
     thead { background-color: #c5dfe7; }
   }
 
   .pagination { margin-left: $padding-left-table-data; }
 
+  .entity-upload-table-container { margin-block: 10px 20px; }
   // margin-bottom of the tables
   .entity-upload-table {
     // The margin before text, either the Loading component or the
@@ -447,13 +457,6 @@ watch(() => props.state, (state) => {
     // The margin if there is no text or Pagination
     &:last-child { margin-bottom: 0; }
   }
-  // margin-bottom of the first .panel-simple
-  .panel-simple:first-child {
-    // The margin if the last element of the .panel-body is text
-    margin-bottom: 10px;
-    // The margin if the last element is Pagination
-    &:has(tbody) { margin-bottom: 12px; }
-  }
 }
 
 .entity-upload-section-title {
@@ -461,7 +464,8 @@ watch(() => props.state, (state) => {
   font-weight: bold;
   margin-bottom: 4px;
 
-  ~ p {
+  // Explanatory/descriptive text that immediately follows the title
+  + p, + p + p {
     margin-bottom: 10px;
     &:last-of-type { margin-bottom: 20px; }
   }
@@ -473,10 +477,9 @@ watch(() => props.state, (state) => {
   "en": {
     // This is the title at the top of a pop-up.
     "title": "Import Data from File",
+    "currentEntities": "Your current Entities",
+    "newEntities": "New Entities",
     "table": {
-      // This is shown above a list of Entities on the server. {name} is the
-      // name of the Entity List.
-      "server": "{name} server data",
       "file": "Data to import"
     },
     // @transifexKey component.EntityList.noEntities

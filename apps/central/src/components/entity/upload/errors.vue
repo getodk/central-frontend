@@ -1,6 +1,6 @@
 <template>
   <div id="entity-upload-errors">
-    <p class="entity-upload-section-title">{{ $t('title') }}</p>
+    <p class="entity-upload-section-title">{{ $tcn('title', count) }}</p>
     <p>{{ $t('introduction') }}</p>
     <i18n-t v-if="delimiter !== ','" tag="p" keypath="delimiterNotComma">
       <template #delimiter>
@@ -32,10 +32,15 @@
         <p>{{ $t('unknownProperty') }}</p>
       </template>
     </entity-upload-alert>
-    <entity-upload-alert v-if="duplicateColumn" type="danger">
+    <entity-upload-alert v-if="duplicateColumns != null" type="danger">
       <template #title>{{ $t('duplicateColumn.title') }}</template>
       <template #body>
-        <p>{{ $t('duplicateColumn.description') }}</p>
+        <p>
+          <span>{{ $t('duplicateColumn.description') }}</span>
+          <sentence-separator/>
+          <span>{{ $tc('duplicateColumn.headersReused', duplicateColumns.length) }}</span>
+        </p>
+        <p><i18n-list :list="duplicateColumns"/></p>
       </template>
     </entity-upload-alert>
     <entity-upload-alert v-if="emptyColumn" type="danger">
@@ -58,6 +63,8 @@
 import { computed } from 'vue';
 
 import EntityUploadAlert from './alert.vue';
+import I18nList from '../../i18n/list.vue';
+import SentenceSeparator from '../../sentence-separator.vue';
 
 import { formatCSVDelimiter } from '../../../util/csv';
 
@@ -69,12 +76,16 @@ const props = defineProps({
     type: String,
     required: true
   },
+  count: {
+    type: Number,
+    required: true
+  },
 
   // Errors about the column header
   invalidQuotes: Boolean,
   missingLabel: Boolean,
   unknownProperty: Boolean,
-  duplicateColumn: Boolean,
+  duplicateColumns: Array,
   emptyColumn: Boolean,
 
   // Error in the data below the column header
@@ -88,9 +99,9 @@ const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
 @import '../../../assets/scss/variables';
 
 #entity-upload-errors {
-  margin-top: 20px;
+  margin-bottom: 20px;
 
-  code { border: 1px solid $color-danger; }
+  code { border: 1px solid $color-text; }
 }
 </style>
 
@@ -98,7 +109,7 @@ const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
 {
   "en": {
     // This text is shown above a section that lists errors in the user's data.
-    "title": "Review errors",
+    "title": "Review {count} error | Review {count} errors",
     "introduction": "Errors must be fixed before you can upload Entities.",
     "delimiterNotComma": "These errors may be because we got the cell delimiter wrong. We used {delimiter}.",
 
@@ -116,7 +127,9 @@ const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
     "unknownProperty": "If you want to add properties to this Entity List, you can do so in the Entity Properties section on the Overview page of this Entity List, or you can upload and publish a Form that references the property.",
     "duplicateColumn": {
       "title": "Duplicate column headers",
-      "description": "Each column must have a unique header."
+      "description": "Each column must have a unique header.",
+      // This text is followed by a list of column headers.
+      "headersReused": "This header is used more than once: | These headers are used more than once:"
     },
     "emptyColumn": {
       "title": "Empty cell in header row",

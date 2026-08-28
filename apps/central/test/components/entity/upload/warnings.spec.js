@@ -7,7 +7,7 @@ import { mergeMountOptions, mount } from '../../../util/lifecycle';
 
 const mountComponent = (options) =>
   mount(EntityUploadWarnings, mergeMountOptions(options, {
-    props: { filename: 'my_data.csv' }
+    props: { filename: 'my_data.csv', count: 1 }
   }));
 
 describe('EntityUploadWarnings', () => {
@@ -73,9 +73,9 @@ describe('EntityUploadWarnings', () => {
     await nextTick();
 
     const p = component.getComponent(EntityUploadAlert).findAll('p');
-    p.length.should.equal(2);
-    p[0].text().should.startWith('These properties are not included in your file');
-    p[1].text().should.equal('foo, bar');
+    p.length.should.equal(3);
+    p[0].text().should.equal('Properties not found in file');
+    p[2].text().should.equal('foo, bar');
   });
 
   it('shows a warning for ragged rows', () => {
@@ -98,7 +98,7 @@ describe('EntityUploadWarnings', () => {
 
   it('shows multiple warnings', () => {
     const component = mountComponent({
-      props: { raggedRows: [[1, 2]], largeCell: 3 }
+      props: { count: 2, raggedRows: [[1, 2]], largeCell: 3 }
     });
     const warnings = component.findAllComponents(EntityUploadAlert);
     warnings.length.should.equal(2);
@@ -109,7 +109,7 @@ describe('EntityUploadWarnings', () => {
 
   it('emits a rows event after a row range is clicked', async () => {
     const component = mountComponent({
-      props: { raggedRows: [[1, 2]], largeCell: 3 }
+      props: { count: 2, raggedRows: [[1, 2]], largeCell: 3 }
     });
     const warnings = component.findAllComponents(EntityUploadAlert);
     warnings.length.should.equal(2);

@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="entity-upload-warnings">
-    <p class="entity-upload-section-title">{{ $t('title') }}</p>
+    <p class="entity-upload-section-title">{{ $tcn('title', count) }}</p>
     <p>{{ $t('introduction') }}</p>
 
     <!-- Column header warnings -->
@@ -58,9 +58,10 @@ except according to the terms contained in the LICENSE file.
     </entity-upload-alert>
     <entity-upload-alert v-if="missingProperties != null" type="warning">
       <template #title>
-        {{ $tc('missingProperties', missingProperties.length) }}
+        {{ $tc('missingProperties.title', missingProperties.length) }}
       </template>
       <template #body>
+        <p>{{ $tc('missingProperties.description', missingProperties.length) }}</p>
         <p><i18n-list :list="missingProperties"/></p>
       </template>
     </entity-upload-alert>
@@ -90,6 +91,10 @@ defineProps({
     type: String,
     required: true
   },
+  count: {
+    type: Number,
+    required: true
+  },
 
   // Column header warnings
   systemProperties: Array,
@@ -106,10 +111,6 @@ defineEmits(['rows']);
 
 <style lang="scss">
 @import '../../../assets/scss/mixins';
-
-#entity-upload-warnings {
-  margin-top: 20px;
-}
 
 #entity-upload-warnings-case-mismatch {
   div:has(> table) {
@@ -134,7 +135,7 @@ defineEmits(['rows']);
     // @transifexKey component.EntityUploadHeaderReview.title
     // This text is shown above a section where the user can review warnings
     // about their data.
-    "title": "Review warnings",
+    "title": "Review {count} warning | Review {count} warnings",
     "introduction": "Some rows contain warnings that may affect upload results.",
 
     // "Properties" refers to Entity properties.
@@ -148,9 +149,12 @@ defineEmits(['rows']);
     },
     // "Property" refers to an Entity property.
     "invalidProperties": "This column is not a valid property name | These columns are not valid property names",
-    // @transifexKey component.EntityUploadHeaderReview.missingProperties
-    // This text is followed by a list of Entity property names.
-    "missingProperties": "This property is not included in your file and will be left empty: | These properties are not included in your file and will be left empty:",
+    "missingProperties": {
+      // "Property" refers to an Entity property.
+      "title": "Property not found in file | Properties not found in file",
+      // "Property" refers to an Entity property.
+      "description": "This property will be left empty. | These properties will be left empty."
+    },
     // "Property" refers to an Entity property.
     "propertiesIgnored": "This property will be ignored. | These properties will be ignored.",
     "columnsIgnored": "This column will be ignored. | These columns will be ignored.",
