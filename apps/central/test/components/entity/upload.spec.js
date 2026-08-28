@@ -190,8 +190,9 @@ describe('EntityUpload', () => {
     });
     const modal = await showModal();
     await selectFile(modal, createCSV('label,height\n,1'));
-    const { dataError } = modal.getComponent(EntityUploadErrors).props();
-    dataError.should.equal('There is a problem on row 2 of the file: Missing label.');
+    const errors = modal.getComponent(EntityUploadErrors).props();
+    errors.dataError.should.equal('There is a problem on row 2 of the file: Missing label.');
+    errors.count.should.equal(1);
   });
 
   describe('binary file', () => {
@@ -233,7 +234,7 @@ describe('EntityUpload', () => {
       });
     });
 
-    it('shows warnings about the data below the column header', async () => {
+    it('shows warnings about the data below the header', async () => {
       const modal = await showModal();
       const csv = createCSV('label,height\nx\ny\n"12345,67890",""');
       await selectFile(modal, csv);
