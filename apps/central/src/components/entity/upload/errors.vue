@@ -90,7 +90,7 @@ const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
 #entity-upload-errors {
   margin-top: 20px;
 
-  code { border: 1px solid $color-danger; }
+  code { border: 1px solid $color-text; }
 }
 </style>
 

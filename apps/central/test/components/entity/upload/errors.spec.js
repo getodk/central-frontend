@@ -11,25 +11,20 @@ describe('EntityUploadErrors', () => {
   describe('delimiter is not a comma', () => {
     it('shows a note', () => {
       const component = mountComponent({
-        props: {
-          delimiter: ';',
-          missingLabel: true
-        }
+        props: { delimiter: ';', missingLabel: true }
       });
       component.get('p:nth-child(3)').text().should.endWith('We used ;.');
     });
 
     it('shows ⇥ for tab', () => {
       const component = mountComponent({
-        props: {
-          delimiter: '\t',
-          missingLabel: true
-        }
+        props: { delimiter: '\t', missingLabel: true }
       });
       component.get('p:nth-child(3) code').text().should.equal('⇥');
     });
   });
 
+  // Boolean error props
   [
     ['invalidQuotes', 'A quoted field is invalid in the header row'],
     ['missingLabel', 'A label property is required'],
