@@ -315,6 +315,7 @@ const selectFile = (file) => {
       const validation = validateHeader(headerResults);
       if (validation.errors != null) {
         errors.value = validation.errors;
+        warnings.value = validation.warnings;
         return Promise.resolve();
       }
 

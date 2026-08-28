@@ -232,6 +232,15 @@ describe('EntityUpload', () => {
       warnings.largeCell.should.equal(3);
     });
 
+    it('shows both errors and warnings about the header', async () => {
+      const modal = await showModal();
+      await selectFile(modal, createCSV('height,__id\n1,e'));
+      const errors = modal.getComponent(EntityUploadErrors).props();
+      errors.missingLabel.should.be.true;
+      const warnings = modal.getComponent(EntityUploadWarnings).props();
+      warnings.systemProperties.should.eql(['__id']);
+    });
+
     it('does not show data warnings if there is a data error', async () => {
       testData.extendedDatasets.createPast(1, {
         properties: [{ name: 'height' }, { name: 'circumference' }]
