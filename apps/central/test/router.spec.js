@@ -12,6 +12,30 @@ import { mockResponse } from './util/axios';
 import { setLanguages } from './util/i18n';
 
 describe('createCentralRouter()', () => {
+  describe('route matching', () => {
+    it('matches case-sensitively', () => {
+      mockLogin();
+      const initialRoute = '/account/edit';
+      // First navigate to a known path that is lowercase. It should match a
+      // route.
+      return load(initialRoute)
+        .afterResponses(app => {
+          app.findComponent(NotFound).exists().should.be.false;
+        })
+        // Leave the route before attempting to navigate to it again with an
+        // uppercase path. Taking that approach because Vue Router will cancel a
+        // navigation if it is going to the same route.
+        .load('/')
+        .complete()
+        // Attempt to navigate to the uppercase path. It should not match a
+        // route.
+        .load(initialRoute.toUpperCase())
+        .afterResponses(app => {
+          app.findComponent(NotFound).exists().should.be.true;
+        });
+    });
+  });
+
   describe('i18n', () => {
     it("loads the user's preferred language", () => {
       setLanguages(['es']);
