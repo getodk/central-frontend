@@ -51,14 +51,13 @@ except according to the terms contained in the LICENSE file.
           </div>
         </div>
 
-        <entity-upload-errors v-if="dataError != null" :data-error="dataError"/>
+        <entity-upload-errors v-if="errors != null" v-bind="errors"
+          :delimiter="fileMetadata.delimiter"/>
         <entity-upload-warnings v-if="warnings != null" v-bind="warnings"
           :filename="fileMetadata.name" @rows="showWarningRows"/>
 
         <entity-upload-file-select v-show="csvEntities == null"
-          :parsing="parsing" @change="selectFile">
-          <entity-upload-header-help :errors="headerErrors"/>
-        </entity-upload-file-select>
+          :parsing="parsing" @change="selectFile"/>
       </div>
       <entity-upload-popup v-if="csvEntities != null"
         :filename="fileMetadata.name" :count="csvEntities.length"
@@ -80,11 +79,11 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import { computed, inject, nextTick, onBeforeUnmount, reactive, ref, shallowRef, watch } from 'vue';
+import { pick } from 'ramda';
 import { useI18n } from 'vue-i18n';
 
 import EntityUploadErrors from './upload/errors.vue';
 import EntityUploadFileSelect from './upload/file-select.vue';
-import EntityUploadHeaderHelp from './upload/header-help.vue';
 import EntityUploadPopup from './upload/popup.vue';
 import EntityUploadTable from './upload/table.vue';
 import EntityUploadWarnings from './upload/warnings.vue';
@@ -95,9 +94,9 @@ import Pagination from '../pagination.vue';
 import useEventListener from '../../composables/event-listener';
 import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
-import { formatCSVRow, parseCSV, parseCSVHeader } from '../../util/csv';
 import { noop } from '../../util/util';
 import { odataEntityToRest } from '../../util/odata';
+import { parseCSV, parseCSVHeader } from '../../util/csv';
 import { useRequestData } from '../../request-data';
 import { validatePropertyName } from '../../util/entity';
 
@@ -177,23 +176,22 @@ watch([() => serverPage.page, () => serverPage.size], () => {
 const csvEntities = shallowRef(null);
 // Metadata about the CSV file
 const fileMetadata = shallowRef(null);
-const headerErrors = shallowRef(null);
+const errors = shallowRef(null);
 const warnings = shallowRef(null);
-const dataError = ref(null);
 const parsing = ref(false);
 // Function to abort parsing in progress
 let abortParse = noop;
 // Validates the column header of the CSV file, returning any errors or
 // warnings.
-const validateHeader = ({ columns, errors, meta }, file) => {
+const validateHeader = ({ columns, errors: papaErrors }) => {
   const errorDetails = {};
   const warningDetails = {};
 
   // If there are errors from Papa Parse, just surface those and don't check for
   // other errors. If there are errors from Papa, then there is something pretty
   // wrong that may need to be addressed first.
-  if (errors.length !== 0) {
-    errorDetails.invalidQuotes = errors.some(({ type }) => type === 'Quotes');
+  if (papaErrors.length !== 0) {
+    errorDetails.invalidQuotes = papaErrors.some(({ type }) => type === 'Quotes');
   } else {
     const columnSet = new Set();
     for (const column of columns) {
@@ -249,14 +247,7 @@ const validateHeader = ({ columns, errors, meta }, file) => {
   }
 
   const result = {};
-  if (Object.values(errorDetails).includes(true)) {
-    result.errors = {
-      filename: file.name,
-      header: formatCSVRow(columns, { delimiter: meta.delimiter }),
-      delimiter: meta.delimiter,
-      ...errorDetails
-    };
-  }
+  if (Object.values(errorDetails).includes(true)) result.errors = errorDetails;
   if (Object.keys(warningDetails).length !== 0) result.warnings = warningDetails;
   return result;
 };
@@ -301,9 +292,8 @@ const parseEntities = async (file, headerResults, signal) => {
 const selectFile = (file) => {
   redAlert.hide();
   fileMetadata.value = null;
-  headerErrors.value = null;
+  errors.value = null;
   warnings.value = null;
-  dataError.value = null;
 
   const abortController = new AbortController();
   abortParse = () => { abortController.abort(); };
@@ -316,24 +306,27 @@ const selectFile = (file) => {
       throw error;
     })
     .then(headerResults => {
-      const validation = validateHeader(headerResults, file);
+      fileMetadata.value = {
+        name: file.name,
+        size: file.size,
+        delimiter: headerResults.meta.delimiter
+      };
+
+      const validation = validateHeader(headerResults);
       if (validation.errors != null) {
-        headerErrors.value = validation.errors;
+        errors.value = validation.errors;
         return Promise.resolve();
       }
 
-      const metadata = { name: file.name, size: file.size };
       return parseEntities(file, headerResults, signal)
         .then(results => {
           csvEntities.value = results.data;
-          fileMetadata.value = metadata;
           if (validation.warnings != null || results.warnings.count !== 0)
             warnings.value = { ...validation.warnings, ...results.warnings.details };
         })
         .catch(error => {
           if (!signal.aborted) {
-            fileMetadata.value = metadata;
-            dataError.value = error.message;
+            errors.value = { dataError: error.message };
             warnings.value = validation.warnings;
           }
 
@@ -356,9 +349,8 @@ watch(() => props.state, (state) => {
   abortParse();
   csvEntities.value = null;
   fileMetadata.value = null;
-  headerErrors.value = null;
+  errors.value = null;
   warnings.value = null;
-  dataError.value = null;
 });
 onBeforeUnmount(() => { abortParse(); });
 
@@ -386,7 +378,10 @@ const upload = () => {
   request({
     method: 'POST',
     url: apiPaths.entities(dataset.projectId, dataset.name),
-    data: { source: fileMetadata.value, entities: csvEntities.value },
+    data: {
+      source: pick(['name', 'size'], fileMetadata.value),
+      entities: csvEntities.value
+    },
     onUploadProgress: (event) => { uploadProgress.value = event.progress ?? 0; }
   })
     .then(() => { emit('success', csvEntities.value.length); })
@@ -463,22 +458,6 @@ watch(() => props.state, (state) => {
     margin-bottom: 10px;
     // The margin if the last element is Pagination
     &:has(tbody) { margin-bottom: 12px; }
-  }
-
-  .panel-danger {
-    box-shadow: none;
-    margin-bottom: 0;
-
-    $panel-danger-border-radius: 3px;
-    .panel-heading {
-      border-top-left-radius: $panel-danger-border-radius;
-      border-top-right-radius: $panel-danger-border-radius;
-    }
-    .panel-body {
-      border: none;
-      border-bottom-left-radius: $panel-danger-border-radius;
-      border-bottom-right-radius: $panel-danger-border-radius;
-    }
   }
 }
 

@@ -2805,9 +2805,6 @@
         "noData": {
           "string": "Your file does not contain any data."
         }
-      },
-      "headersNote": {
-        "string": "The first row in your data file must exactly match the table header you see above."
       }
     },
     "EntityUploadDataError": {
@@ -2834,6 +2831,42 @@
       },
       "introduction": {
         "string": "Errors must be fixed before you can upload Entities."
+      },
+      "delimiterNotComma": {
+        "string": "These errors may be because we got the cell delimiter wrong. We used {delimiter}."
+      },
+      "invalidQuotes": {
+        "title": {
+          "string": "A quoted field is invalid in the header row"
+        },
+        "description": {
+          "string": "Check the header row of your file to see if there are any unusual values."
+        }
+      },
+      "missingLabel": {
+        "title": {
+          "string": "A {label} property is required",
+          "developer_comment": "{label} will have the text \"label\" and refers to the \"label\" property. The name of the property is not translated."
+        },
+        "description": {
+          "string": "The label indicates the name to use for each Entity throughout Central and elsewhere."
+        }
+      },
+      "duplicateColumn": {
+        "title": {
+          "string": "Duplicate column headers"
+        },
+        "description": {
+          "string": "Each column must have a unique header."
+        }
+      },
+      "emptyColumn": {
+        "title": {
+          "string": "Empty cell in header row"
+        },
+        "description": {
+          "string": "Please remove any empty columns in your file."
+        }
       }
     },
     "EntityUploadFileSelect": {
@@ -2852,33 +2885,9 @@
       }
     },
     "EntityUploadHeaderErrors": {
-      "expectedHeader": {
-        "string": "Expected header",
-        "developer_comment": "This refers to the header row of a spreadsheet."
-      },
       "suggestions": {
-        "title": {
-          "string": "Suggestions",
-          "developer_comment": "Suggestions to fix an error"
-        },
-        "invalidQuotes": {
-          "string": "A quoted field is invalid. Check the header row of your file to see if there are any unusual values."
-        },
-        "missingLabel": {
-          "string": "A {label} property is required. The label indicates the name to use for each Entity throughout Central and elsewhere.",
-          "developer_comment": "{label} will have the text \"label\" and refers to the \"label\" property. The name of the property is not translated."
-        },
         "unknownProperty": {
           "string": "If you want to add properties to this Entity List, you can do so in the Entity Properties section on the Overview page of this Entity List, or you can upload and publish a Form that references the property."
-        },
-        "duplicateColumn": {
-          "string": "It looks like two or more columns have the same header. Please make sure column headers are unique."
-        },
-        "emptyColumn": {
-          "string": "It looks like you have an empty cell in the header. Please remove any empty columns in your file."
-        },
-        "delimiterNotComma": {
-          "string": "This might be because we got the cell delimiter wrong. We used {delimiter}."
         }
       }
     },

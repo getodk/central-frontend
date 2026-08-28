@@ -30,7 +30,6 @@ except according to the terms contained in the LICENSE file.
       </div>
       <div v-show="parsing"><spinner inline/>{{ $t('parsing') }}</div>
     </div>
-    <slot></slot>
   </file-drop-zone>
 </template>
 
