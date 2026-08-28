@@ -292,28 +292,19 @@ If you add code outside a `.vue` file (for example, a utility function), and it 
 
 Our tests use a number of external packages:
 
-- Karma, a test runner that we have configured to run tests in Headless Chrome
-- Mocha, a test framework
+- Vitest, a testing framework for Vite
 - Chai, for assertions
 - Sinon.JS, for spies and stubs
 - [Faker](https://www.npmjs.com/package/@faker-js/faker), to generate test data
 - Vue Test Utils, to test Vue components
 
-`npm run test` runs [`/apps/central/test/index.js`](/apps/central/test/index.js), which mocks global utilities and sets up Mocha hooks.
+Vitest is configured to run tests in Chrome, so you must have Chrome installed in order to run tests.
 
-[`/apps/central/test/assertions.js`](/apps/central/test/assertions.js) adds Chai helpers.
+[`test/setup/index.js`](/apps/central/test/setup/index.js) sets up tests, including adding Vitest hooks. [`test/setup/assertions.js`](/apps/central/test/setup/assertions.js) adds Chai helpers.
 
 [Vue Test Utils](https://test-utils.vuejs.org/) renders Vue components for testing, allowing you to test that a component renders and behaves as expected. We have built some functionality on top of Vue Test Utils, in particular [`mount()`](/apps/central/test/util/lifecycle.js). We define components used only for testing in [`/apps/central/test/util/components/`](/apps/central/test/util/components/).
 
 Many tests involve sending a request. You can mock a series of request-response cycles by using `load()` or `mockHttp()`, defined in [`/apps/central/test/util/http.js`](/apps/central/test/util/http.js). You can use these to implement common tests, for example, testing some standard button things: see [`/apps/central/test/util/http/common.js`](/apps/central/test/util/http/common.js).
-
-As provided by default by Mocha, add `.only` after any `describe()` or `it()` call in the tests to run only the marked tests. For example:
-
-```js
-it.only('does something', () => {
-  // ...
-});
-```
 
 #### Test Data
 
@@ -325,6 +316,18 @@ Most Backend resources have a `createdAt` property. To generate an object whose 
 
 To learn more about stores and views, see [`/apps/central/test/data/data-store.js`](/apps/central/test/data/data-store.js).
 
+
+#### Filtering Tests
+
+You can limit which test files are run by specifying a filter to `npm run test`. See the [Vitest docs](https://vitest.dev/guide/cli.html) for more information. To limit which tests are run within a particular file, add `.only` after any `describe()` or `it()` call in the file. For example:
+
+```js
+it.only('does something', () => {
+  // ...
+});
+```
+
+Adding `.only` to one file does not prevent other files from being run. It only limits which tests are run within the one file.
 
 #### E2E Tests
 
