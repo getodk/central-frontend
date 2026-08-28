@@ -42,6 +42,7 @@ describe('EntityList', () => {
         }
       },
       { url: '/v1/projects/1/datasets/trees/entities/creators' },
+      { url: '/v1/projects/1/app-users' },
       {
         url: ({ pathname, searchParams }) => {
           // Request to get all the Entities created before now and ( not deleted or deleted after now)

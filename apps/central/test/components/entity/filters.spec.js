@@ -1,5 +1,6 @@
 import { DateTime, Settings } from 'luxon';
 import EntityFiltersConflict from '../../../src/components/entity/filters/conflict.vue';
+import EntityFiltersViewAs from '../../../src/components/entity/filters/view-as.vue';
 import EntityMetadataRow from '../../../src/components/entity/metadata-row.vue';
 import DateRangePicker from '../../../src/components/date-range-picker.vue';
 
@@ -364,6 +365,30 @@ describe('EntityFilters', () => {
       });
   });
 
+  it('does not update dataset.entities after filtering with view-as', () => {
+    testData.extendedDatasets.createPast(1, { entities: 2 });
+    testData.extendedEntities.createPast(2);
+    testData.extendedFieldKeys.createPast(1);
+    return load('/projects/1/entity-lists/trees/entities', {
+      attachTo: document.body
+    })
+      .afterResponses(app => {
+        app.vm.$container.requestData.dataset.entities.should.equal(2);
+      })
+      .request(component => {
+        const { id } = testData.extendedFieldKeys.last();
+        component.get('#entity-filters-view-as select').setValue(String(id));
+      })
+      .respondWithData(() => ({
+        ...testData.entityOData(1),
+        '@odata.count': 1,
+        '@odata.nextLink': undefined
+      }))
+      .afterResponse(app => {
+        app.vm.$container.requestData.dataset.entities.should.equal(2);
+      });
+  });
+
   it('disables the filter', () => {
     testData.extendedDatasets.createPast(1);
     testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() });
@@ -376,6 +401,140 @@ describe('EntityFilters', () => {
         conflictFilter[1].attributes('aria-disabled').should.equal('true');
         component.getComponent(DateRangePicker).props().disabled.should.be.true;
       });
+  });
+
+  describe('view-as filter', () => {
+    beforeEach(() => {
+      testData.extendedDatasets.createPast(1);
+      testData.extendedFieldKeys.createPast(1);
+    });
+
+    describe('initial request', () => {
+      it('does not filter by view-as by default', () =>
+        load('/projects/1/entity-lists/trees/entities', { root: false })
+          .testRequestsInclude([{
+            url: ({ searchParams }) => {
+              searchParams.get('$top').should.equal('250');
+              expect(searchParams.get('viewAs')).to.be.null;
+            }
+          }]));
+
+      it('sends the correct request for ?viewAs=<id>', () => {
+        const { id } = testData.extendedFieldKeys.last();
+        return load(`/projects/1/entity-lists/trees/entities?viewAs=${id}`, { root: false })
+          .testRequestsInclude([{
+            url: ({ searchParams }) => {
+              searchParams.get('$top').should.equal('250');
+              searchParams.get('viewAs').should.equal(String(id));
+            }
+          }]);
+      });
+    });
+
+    describe('initial filter selection', () => {
+      it('has no user selected by default', async () => {
+        const component = await load('/projects/1/entity-lists/trees/entities', {
+          root: false
+        });
+        const { modelValue } = component.getComponent(EntityFiltersViewAs).props();
+        expect(modelValue).to.be.null;
+      });
+
+      it('selects the correct field key for ?viewAs=<id>', async () => {
+        const { id } = testData.extendedFieldKeys.last();
+        const component = await load(`/projects/1/entity-lists/trees/entities?viewAs=${id}`, {
+          root: false
+        });
+        const { modelValue } = component.getComponent(EntityFiltersViewAs).props();
+        modelValue.should.equal(id);
+      });
+    });
+
+    describe('invalid query parameters', () => {
+      const cases = ['viewAs=foo', 'viewAs=0', 'viewAs=-1'];
+      for (const query of cases) {
+        it(`falls back to the default for ?${query}`, () =>
+          load(`/projects/1/entity-lists/trees/entities?${query}`, { root: false })
+            .testRequestsInclude([{
+              url: ({ searchParams }) => {
+                searchParams.get('$top').should.equal('250');
+                expect(searchParams.get('viewAs')).to.be.null;
+              }
+            }]));
+      }
+    });
+
+    describe('after the filter selection is changed', () => {
+      it('sends a request', () =>
+        load('/projects/1/entity-lists/trees/entities', {
+          attachTo: document.body
+        })
+          .complete()
+          .request(component => {
+            const { id } = testData.extendedFieldKeys.last();
+            component.get('#entity-filters-view-as select').setValue(String(id));
+          })
+          .beforeEachResponse((_, { url }) => {
+            const { id } = testData.extendedFieldKeys.last();
+            relativeUrl(url).searchParams.get('viewAs').should.equal(String(id));
+          })
+          .respondWithData(testData.entityOData));
+
+      it('updates the query parameter', () =>
+        load('/projects/1/entity-lists/trees/entities', {
+          attachTo: document.body
+        })
+          .complete()
+          .request(component => {
+            const { id } = testData.extendedFieldKeys.last();
+            component.get('#entity-filters-view-as select').setValue(String(id));
+          })
+          .respondWithData(testData.entityOData)
+          .afterResponse(app => {
+            const { id } = testData.extendedFieldKeys.last();
+            app.vm.$route.query.viewAs.should.equal(String(id));
+          }));
+
+      it('removes the query parameter if no user is selected', () => {
+        const { id } = testData.extendedFieldKeys.last();
+        return load(`/projects/1/entity-lists/trees/entities?viewAs=${id}`, {
+          attachTo: document.body
+        })
+          .complete()
+          .request(component => {
+            component.get('#entity-filters-view-as select').setValue('');
+          })
+          .respondWithData(testData.entityOData)
+          .afterResponse(app => {
+            should.not.exist(app.vm.$route.query.viewAs);
+          });
+      });
+    });
+
+    describe('after the query parameter is changed', () => {
+      it('sends a request', () => {
+        const { id } = testData.extendedFieldKeys.last();
+        return load('/projects/1/entity-lists/trees/entities')
+          .complete()
+          .route(`/projects/1/entity-lists/trees/entities?viewAs=${id}`)
+          .beforeEachResponse((_, { url }) => {
+            relativeUrl(url).searchParams.get('viewAs').should.equal(String(id));
+          })
+          .respondWithData(testData.entityOData);
+      });
+
+      it('updates the filter component', () => {
+        const { id } = testData.extendedFieldKeys.last();
+        return load('/projects/1/entity-lists/trees/entities')
+          .complete()
+          .route(`/projects/1/entity-lists/trees/entities?viewAs=${id}`)
+          .respondWithData(testData.entityOData)
+          .afterResponse(app => {
+            const { modelValue } = app.getComponent(EntityFiltersViewAs).props();
+            modelValue.should.equal(id);
+          });
+      });
+    });
   });
 
   describe('reset button', () => {

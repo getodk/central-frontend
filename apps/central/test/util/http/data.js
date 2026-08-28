@@ -235,6 +235,7 @@ const responsesByComponent = {
       .sort((fieldKey1, fieldKey2) =>
         fieldKey1.displayName.localeCompare(fieldKey2.displayName))
       .map(testData.toActor),
+    fieldKeys: () => testData.extendedFieldKeys.sorted(),
     deletedEntityCount: [
       ({ url }) => matchesApiPath(apiPaths.odataEntities, url) && url.includes('top=0'),
       () => testData.entityDeletedOData(0)
