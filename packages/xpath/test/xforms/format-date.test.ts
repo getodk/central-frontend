@@ -66,33 +66,40 @@ describe('#format-date()', () => {
   });
 
   // Config is setting timezone to America/Phoenix
-  [
-    { expression: 'format-date("2017-05-26T00:00:01-07:00", "%a %b")', expected: 'Fri May' },
-    { expression: 'format-date("2017-05-26T23:59:59-07:00", "%a %b")', expected: 'Fri May' },
-    {
-      expression: 'format-date("2017-05-26T01:00:00-07:00", "%a %b")',
-      expected: 'Fri May',
-      language: 'en',
-    },
-    // ['format-date('2017-05-26T01:00:00-07:00', '%a %b')", 'ven. mai', 'fr'],
-    // ['format-date('2017-05-26T01:00:00-07:00', '%a %b')", 'vr mei', 'nl'],
-  ].forEach(({ expression, expected /*, language*/ }) => {
-    it(`evaluates ${expression} (locale dependent) to ${expected}`, () => {
-      testContext.assertStringValue(expression, expected);
-      // TODO vimago test the language
-      // do the same tests for the alias format-date-time()
-      expression = expression.replace('format-date', 'format-date-time');
-      testContext.assertStringValue(expression, expected);
+  describe('valid dates', () => {
+    ['format-date', 'format-date-time'].forEach((fn) => {
+      describe(fn, () => {
+        [
+          { value: '2017-05-26T00:00:01-07:00', format: '%a %b', expected: 'Fri May' },
+          { value: '2017-05-26T23:59:59-07:00', format: '%a %b', expected: 'Fri May' },
+          { value: '2017-05-26T01:00:00-07:00', format: '%a %b', expected: 'Fri May' },
+          { value: '2012-08-20T00:00:00.00+00:00', format: '%Y-%m-%d', expected: '2012-08-19' },
+          { value: '2026-12-12', format: '%Y-%m-%d', expected: '2026-12-12' },
+          { value: '2026-12-01T10:30Z', format: '%Y-%m-%d', expected: '2026-12-01' },
+          // TODO vimago test the language
+          // { value: '2017-05-26T01:00:00-07:00', format: '%a %b', expected: 'ven. mai', language: 'fr' },
+          // { value: '2017-05-26T01:00:00-07:00', format: '%a %b', expected: 'vr mei', language: 'nl' },
+        ].forEach(({ value, format, expected }) => {
+          const expression = `${fn}("${value}", "${format}")`;
+          it(`evaluates ${expression} to ${expected}`, () => {
+            testContext.assertStringValue(expression, expected);
+          });
+        });
+      });
     });
   });
 
   describe('invalid dates', () => {
     [
-      "format-date('invalid', '%e | %a' )", // not a month
+      "format-date('invalid', '%e | %a' )",
       "format-date('2026-12-01T25:00:00.000Z', '%e | %a' )", // 25 hours
       "format-date('2026-12-01T25:00:00.000+10:00', '%e | %a' )", // 25 hours
       "format-date('2026-13-01', '%e | %a' )", // 13 months
       "format-date(number('invalid'), '%Y-%m-%d')", // not a number
+      "format-date('2026-04-31T23:00:00+12:00', '%Y-%m-%d')", // there aren't 31 days in April
+      "format-date-time('2026-02-29T10:00:00Z', '%Y-%m-%d %H:%M')", // there aren't 29 days in February non leap year
+      "format-date('2026-12-01T24:00:00Z', '%Y-%m-%d')", // there aren't 24 hours in a day
+      "format-date('26-12-12', '%Y-%m-%d')", // ambiguous year
     ].forEach((expr) => {
       it(`handles ${expr}`, () => {
         testContext.assertStringValue(expr, '');

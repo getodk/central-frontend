@@ -6,26 +6,6 @@ import {
 import { Temporal } from 'temporal-polyfill';
 import { isISODateOrDateTimeLike } from './predicates.ts';
 
-const tryParseDateString = (value: string): string | null => {
-  try {
-    const date = new Date(value);
-
-    if (Number.isNaN(date.getTime())) {
-      return null;
-    }
-
-    return `${date.toISOString()}[UTC]`;
-  } catch {
-    // Intentionally ignored, returns `null` on failure
-  }
-
-  return null;
-};
-
-const hasTimeZone = (value: string) => {
-  return value.endsWith('Z') || TIMEZONE_OFFSET_PATTERN.test(value) || !/^\d{4}/.test(value);
-};
-
 export const dateTimeFromString = (
   timeZone: Temporal.TimeZoneLike,
   value: string
@@ -39,20 +19,10 @@ export const dateTimeFromString = (
     return null;
   }
 
-  const zoned = hasTimeZone(value);
-  if (zoned) {
-    const parsed = tryParseDateString(value);
-    if (!parsed) {
-      return null;
-    }
-    try {
-      return Temporal.ZonedDateTime.from(parsed).withTimeZone(timeZone);
-    } catch {
-      return null;
-    }
-  }
-
   try {
+    if (value.endsWith('Z') || TIMEZONE_OFFSET_PATTERN.test(value)) {
+      return Temporal.Instant.from(value).toZonedDateTimeISO(timeZone);
+    }
     return Temporal.PlainDateTime.from(value).toZonedDateTime(timeZone);
   } catch {
     return null;
