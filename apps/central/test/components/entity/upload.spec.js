@@ -235,12 +235,36 @@ describe('EntityUpload', () => {
       warnings.largeCell.should.equal(3);
     });
 
-    it('does not show warnings if there is a data error', async () => {
+    it('does not show data warnings if there is a data error', async () => {
+      testData.extendedDatasets.createPast(1, {
+        properties: [{ name: 'height' }, { name: 'circumference' }]
+      });
       const modal = await showModal();
-      await selectFile(modal, createCSV('label,height\nx\ny,""\n"",1'));
+
+      // First, select a CSV that triggers warnings about both the column header
+      // and the data, but does not trigger errors.
+      const warningsCSV = 'label,height\nx\ny,""';
+      await selectFile(modal, createCSV(warningsCSV));
+      modal.findComponent(EntityUploadErrors).exists().should.be.false;
+      const initialWarnings = modal.getComponent(EntityUploadWarnings).props();
+      initialWarnings.missingProperties.should.eql(['circumference']);
+      initialWarnings.raggedRows.should.eql([[1, 1]]);
+
+      // Next, select a similar CSV that also has an error in the data (a
+      // missing label).
+      await modal.get('#entity-upload-popup .btn-link').trigger('click');
+      await selectFile(modal, createCSV(`${warningsCSV}\n"",1`));
+
+      // This time, we see an error.
       const { dataError } = modal.getComponent(EntityUploadErrors).props();
       dataError.should.startWith('There is a problem on row 4');
-      modal.findComponent(EntityUploadWarnings).exists().should.be.false;
+
+      // There's a warning about the column header, but no warning about the
+      // data.
+      const warnings = modal.getComponent(EntityUploadWarnings);
+      warnings.props().missingProperties.should.eql(['circumference']);
+      should.not.exist(warnings.props().raggedRows);
+      warnings.findAll('.entity-upload-alert').length.should.equal(1);
     });
 
     it('shows rows to which a warning applies after they are selected', async () => {
