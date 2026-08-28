@@ -94,9 +94,8 @@ except according to the terms contained in the LICENSE file.
           </i18n-t>
         </div>
         <form @submit.prevent="submit">
-          <form-group ref="passphrase" v-model="passphrase"
-            :placeholder="$t('field.passphrase')" required
-            autocomplete="new-password"/>
+          <new-password-form-group ref="passphrase" v-model="passphrase"
+            :placeholder="$t('field.passphrase')" strengthMeter/>
           <form-group v-model="hint" :placeholder="$t('field.hint')"
             autocomplete="off"/>
           <div class="modal-actions">
@@ -135,6 +134,7 @@ except according to the terms contained in the LICENSE file.
 import DocLink from '../doc-link.vue';
 import FormGroup from '../form-group.vue';
 import Modal from '../modal.vue';
+import NewPasswordFormGroup from '../new-password-form-group.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 import Spinner from '../spinner.vue';
 
@@ -145,7 +145,7 @@ import { useRequestData } from '../../request-data';
 
 export default {
   name: 'ProjectEnableEncryption',
-  components: { DocLink, FormGroup, Modal, SentenceSeparator, Spinner },
+  components: { DocLink, FormGroup, Modal, NewPasswordFormGroup, SentenceSeparator, Spinner },
   inject: ['redAlert'],
   props: {
     state: {
@@ -185,11 +185,6 @@ export default {
       });
     },
     submit() {
-      if (this.passphrase.length < 10) {
-        this.redAlert.show(this.$t('alert.passphraseTooShort'));
-        return;
-      }
-
       const data = { passphrase: this.passphrase };
       if (this.hint !== '') data.hint = this.hint;
       this.request({
