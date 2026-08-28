@@ -99,9 +99,9 @@ const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
 @import '../../../assets/scss/variables';
 
 #entity-upload-errors {
-  margin-top: 20px;
+  margin-bottom: 20px;
 
-  code { border: 1px solid $color-danger; }
+  code { border: 1px solid $color-text; }
 }
 </style>
 

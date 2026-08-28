@@ -10,34 +10,29 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal id="entity-upload" :state="state" :hideable="!uploading" size="full"
+  <modal id="entity-upload" :state="state" :hideable="!uploading" :persistent="true" size="full"
     backdrop @hide="$emit('hide')" @mutate="resizeColumnIfShown">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div :class="{ backdrop: uploading }">
-        <div class="panel panel-simple">
-          <div class="panel-heading">
-            <h1 class="panel-title" v-tooltip.text>
-              {{ $t('table.server', dataset) }}
-            </h1>
-          </div>
-          <div class="panel-body">
-            <entity-upload-table :ref="setTable(0)"
-              :entities="serverEntities.value" :row-index="serverRow"
-              :page-size="serverPage.size"
-              :awaiting-response="serverEntities.awaitingResponse"/>
-            <loading :state="serverEntities.initiallyLoading"/>
-            <p v-if="serverEntities.dataExists && serverEntities.value.length === 0"
-              class="empty-table-message">
-              {{ $t('noEntities') }}
-            </p>
-            <pagination v-if="serverPage.count !== 0"
-              v-model:page="serverPage.page" v-model:size="serverPage.size"
-              :count="serverPage.count" :size-options="pageSizeOptions"
-              :spinner="serverEntities.awaitingResponse"/>
-          </div>
+        <p class="entity-upload-section-title">{{ $t('currentEntities') }}</p>
+        <div class="entity-upload-table-container">
+          <entity-upload-table :ref="setTable(0)"
+            :entities="serverEntities.value" :row-index="serverRow"
+            :page-size="serverPage.size"
+            :awaiting-response="serverEntities.awaitingResponse"/>
+          <loading :state="serverEntities.initiallyLoading"/>
+          <p v-if="serverEntities.dataExists && serverEntities.value.length === 0"
+            class="empty-table-message">
+            {{ $t('noEntities') }}
+          </p>
+          <pagination v-if="serverPage.count !== 0"
+            v-model:page="serverPage.page" v-model:size="serverPage.size"
+            :count="serverPage.count" :size-options="pageSizeOptions"
+            :spinner="serverEntities.awaitingResponse"/>
         </div>
-        <div class="panel panel-simple">
+        <p class="entity-upload-section-title">{{ $t('newEntities') }}</p>
+        <div class="entity-upload-table-container panel panel-simple">
           <div class="panel-heading">
             <h1 class="panel-title">{{ $t('table.file') }}</h1>
           </div>
@@ -221,7 +216,7 @@ const validateHeader = ({ columns, errors: papaErrors }) => {
     warningDetails.caseMismatch = [];
     for (const column of columnSet) {
       if (column === 'label') continue; // eslint-disable-line no-continue
-      if (column.startsWith('__')) {
+      if (column.startsWith('__') || column === 'name') {
         warningDetails.systemProperties.push(column);
       } else if (!validatePropertyName(column)) {
         warningDetails.invalidProperties.push(column);
@@ -251,9 +246,9 @@ const validateHeader = ({ columns, errors: papaErrors }) => {
         if (value.length !== 0)
           count += 1;
         else
-          // Remove empty arrays. EntityUploadErrors and EntityUploadWarnings
-          // expect nullish values rather than empty arrays for nonapplicable
-          // errors/warnings.
+          // Remove empty arrays from the object. EntityUploadErrors and
+          // EntityUploadWarnings expect nullish values rather than empty arrays
+          // for nonapplicable errors/warnings.
           delete details[name];
       } else {
         throw new Error('unexpected detail value');
@@ -331,6 +326,7 @@ const selectFile = (file) => {
       const validation = validateHeader(headerResults);
       if (validation.errors != null) {
         errors.value = validation.errors;
+        warnings.value = validation.warnings;
         return Promise.resolve();
       }
 
@@ -422,8 +418,9 @@ const resizeColumnIfShown = () => { if (props.state) resizeLastColumn(); };
 useEventListener(window, 'resize', resizeColumnIfShown);
 
 const actions = ref(null);
-watch(csvEntities, (value) => {
-  if (value != null) nextTick(() => { actions.value.scrollIntoView(); });
+watch([errors, warnings, csvEntities], () => {
+  if (errors.value == null && warnings.value == null && csvEntities.value != null)
+    nextTick(() => { actions.value.scrollIntoView(); });
 });
 
 watch(() => props.state, (state) => {
@@ -443,27 +440,19 @@ watch(() => props.state, (state) => {
   }
 
   .panel-simple {
-    margin-bottom: 0;
-
-    .panel-heading {
-      @include text-overflow-ellipsis;
-      background-color: #ccc;
-      border-bottom: none;
-    }
-
-    .panel-body { padding: 0; }
-  }
-  .panel-simple + .panel-simple {
     .panel-heading {
       background-color: $color-action-background;
+      border-bottom: none;
       color: #fff;
     }
 
+    .panel-body { padding: 0; }
     thead { background-color: #c5dfe7; }
   }
 
   .pagination { margin-left: $padding-left-table-data; }
 
+  .entity-upload-table-container { margin-block: 10px 20px; }
   // margin-bottom of the tables
   .entity-upload-table {
     // The margin before text, either the Loading component or the
@@ -474,13 +463,6 @@ watch(() => props.state, (state) => {
     // The margin if there is no text or Pagination
     &:last-child { margin-bottom: 0; }
   }
-  // margin-bottom of the first .panel-simple
-  .panel-simple:first-child {
-    // The margin if the last element of the .panel-body is text
-    margin-bottom: 10px;
-    // The margin if the last element is Pagination
-    &:has(tbody) { margin-bottom: 12px; }
-  }
 }
 
 .entity-upload-section-title {
@@ -488,7 +470,8 @@ watch(() => props.state, (state) => {
   font-weight: bold;
   margin-bottom: 4px;
 
-  ~ p {
+  // Explanatory/descriptive text that immediately follows the title
+  + p, + p + p {
     margin-bottom: 10px;
     &:last-of-type { margin-bottom: 20px; }
   }
@@ -500,10 +483,9 @@ watch(() => props.state, (state) => {
   "en": {
     // This is the title at the top of a pop-up.
     "title": "Import Data from File",
+    "currentEntities": "Your current Entities",
+    "newEntities": "New Entities",
     "table": {
-      // This is shown above a list of Entities on the server. {name} is the
-      // name of the Entity List.
-      "server": "{name} server data",
       "file": "Data to import"
     },
     // @transifexKey component.EntityList.noEntities

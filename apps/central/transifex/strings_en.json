@@ -2783,11 +2783,13 @@
         "string": "Import Data from File",
         "developer_comment": "This is the title at the top of a pop-up."
       },
+      "currentEntities": {
+        "string": "Your current Entities"
+      },
+      "newEntities": {
+        "string": "New Entities"
+      },
       "table": {
-        "server": {
-          "string": "{name} server data",
-          "developer_comment": "This is shown above a list of Entities on the server. {name} is the name of the Entity List."
-        },
         "file": {
           "string": "Data to import"
         }
@@ -2899,10 +2901,6 @@
       "title": {
         "string": "{count, plural, one {Review {count} warning} other {Review {count} warnings}}",
         "developer_comment": "This text is shown above a section where the user can review warnings about their data."
-      },
-      "missingProperties": {
-        "string": "{count, plural, one {This property is not included in your file and will be left empty:} other {These properties are not included in your file and will be left empty:}}",
-        "developer_comment": "This text is followed by a list of Entity property names."
       }
     },
     "EntityUploadPopup": {
@@ -2944,6 +2942,16 @@
       "invalidProperties": {
         "string": "{count, plural, one {This column is not a valid property name} other {These columns are not valid property names}}",
         "developer_comment": "\"Property\" refers to an Entity property."
+      },
+      "missingProperties": {
+        "title": {
+          "string": "{count, plural, one {Property not found in file} other {Properties not found in file}}",
+          "developer_comment": "\"Property\" refers to an Entity property."
+        },
+        "description": {
+          "string": "{count, plural, one {This property will be left empty.} other {These properties will be left empty.}}",
+          "developer_comment": "\"Property\" refers to an Entity property."
+        }
       },
       "propertiesIgnored": {
         "string": "{count, plural, one {This property will be ignored.} other {These properties will be ignored.}}",
