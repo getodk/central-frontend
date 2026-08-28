@@ -14,13 +14,24 @@ except according to the terms contained in the LICENSE file.
 // loadAsync() has the benefit that it is possible to check whether the import
 // has been completed. Use loadedAsync() to check the status of an import.
 
+let loadingCount = 0;
+
 const loader = (load) => {
   const obj = {
     loaded: false,
     load: async () => {
-      const m = await load();
-      obj.loaded = true;
-      return m;
+      loadingCount += 1;
+      try {
+        const m = await load();
+        obj.loaded = true;
+        return m;
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        if (import.meta.env.NODE_ENV === 'development') console.error(error);
+        throw error;
+      } finally {
+        loadingCount -= 1;
+      }
     }
   };
   return obj;
@@ -163,10 +174,23 @@ const loaders = new Map()
     '../components/user/list.vue'
   )));
 
-export const loadAsync = (name) => loaders.get(name).load;
-export const loadedAsync = (name) => loaders.get(name).loaded;
+const getLoader = (name) => {
+  if (!loaders.has(name)) throw new Error(`loader not found for ${name}`);
+  return loaders.get(name);
+};
 
-// Exported for use in testing
+export const loadAsync = (name) => getLoader(name).load;
+export const loadedAsync = (name) => getLoader(name).loaded;
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// TEST UTILS
+
+// These functions are exported for use in testing.
+
+export const loadingAnyAsync = () => loadingCount !== 0;
+
 export const setLoader = (name, load) => {
   loaders.set(name, loader(load));
 };
