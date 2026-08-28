@@ -20,6 +20,15 @@ except according to the terms contained in the LICENSE file.
       <div v-show="dataExists" class="row">
         <div class="col-xs-4">
           <submission-basic-details/>
+          <page-section id="submission-data-section">
+            <template #heading>
+              <span>{{ $t('common.data') }}</span>
+            </template>
+            <template #body>
+              <submission-data :project-id="projectId" :xml-form-id="xmlFormId"
+                :instance-id="instanceId"/>
+            </template>
+          </page-section>
         </div>
         <div class="col-xs-8">
           <submission-activity :project-id="projectId" :xml-form-id="xmlFormId"
@@ -44,8 +53,10 @@ import Breadcrumbs from '../breadcrumbs.vue';
 import Loading from '../loading.vue';
 import PageBody from '../page/body.vue';
 import PageHead from '../page/head.vue';
+import PageSection from '../page/section.vue';
 import SubmissionActivity from './activity.vue';
 import SubmissionBasicDetails from './basic-details.vue';
+import SubmissionData from './data.vue';
 import SubmissionUpdateReviewState from './update-review-state.vue';
 import SubmissionDelete from './delete.vue';
 
@@ -65,8 +76,10 @@ export default {
     Loading,
     PageBody,
     PageHead,
+    PageSection,
     SubmissionActivity,
     SubmissionBasicDetails,
+    SubmissionData,
     SubmissionDelete,
     SubmissionUpdateReviewState
   },
@@ -163,7 +176,7 @@ export default {
             this.projectId,
             this.xmlFormId,
             this.instanceId,
-            { $select: '__id,__system,meta' }
+            { $wkt: true }
           )
         }),
         this.submissionVersion.request({

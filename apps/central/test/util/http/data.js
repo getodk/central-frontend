@@ -1,5 +1,3 @@
-import { pick } from 'ramda';
-
 import useForm from '../../../src/request-data/form';
 import useProject from '../../../src/request-data/project';
 import useDatasets from '../../../src/request-data/datasets';
@@ -215,7 +213,7 @@ const responsesByComponent = {
     form: () => testData.extendedForms.last(),
     submission: () => {
       const odata = testData.submissionOData();
-      const selected = odata.value.map(pick(['__id', '__system', 'meta']));
+      const selected = odata.value;
       return { ...odata, value: selected };
     },
     submissionVersion: () => ({}),
