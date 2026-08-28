@@ -400,7 +400,7 @@ const resizeColumnIfShown = () => { if (props.state) resizeLastColumn(); };
 useEventListener(window, 'resize', resizeColumnIfShown);
 
 const actions = ref(null);
-watch([errors, warnings, csvEntities], async () => {
+watch([errors, warnings, csvEntities], () => {
   if (errors.value == null && warnings.value == null && csvEntities.value != null)
     nextTick(() => { actions.value.scrollIntoView(); });
 });
