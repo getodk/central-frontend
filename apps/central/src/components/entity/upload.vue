@@ -251,9 +251,9 @@ const validateHeader = ({ columns, errors: papaErrors }) => {
         if (value.length !== 0)
           count += 1;
         else
-          // Remove empty arrays. EntityUploadErrors and EntityUploadWarnings
-          // expect nullish values rather than empty arrays for nonapplicable
-          // errors/warnings.
+          // Remove empty arrays from the object. EntityUploadErrors and
+          // EntityUploadWarnings expect nullish values rather than empty arrays
+          // for nonapplicable errors/warnings.
           delete details[name];
       } else {
         throw new Error('unexpected detail value');

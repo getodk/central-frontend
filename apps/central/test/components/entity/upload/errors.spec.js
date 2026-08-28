@@ -47,7 +47,7 @@ describe('EntityUploadErrors', () => {
     });
   });
 
-  it('shows an error if there are duplicate columns', async () => {
+  it('shows an error if there are duplicate column headers', async () => {
     const component = mountComponent({
       props: { duplicateColumns: ['height', 'species'] }
     });
