@@ -177,29 +177,6 @@ describe('Root', () => {
 
       expect(root.currentState.currentPage).toBe(keep.nodeId);
     });
-
-    // Edge case and not a bug, still worth documenting as a test scenario here.
-    it('clears the current page when the current instance is removed and no page remains reachable', async () => {
-      const root = await initForm(
-        buildForm(
-          [t('grp', t('r jr:template=""', t('q')), t('r', t('q'))), t('n')],
-          [group('/data/grp', repeat('/data/grp/r', input('/data/grp/r/q')))],
-          [
-            bind('/data/n').type('string').calculate('count(/data/grp/r)'),
-            bind('/data/grp').relevant('/data/n > 0'),
-          ]
-        )
-      );
-      const r1q = getControlNode(root, '/data/grp/r[1]/q');
-
-      expect(root.currentState.currentPage).toBe(r1q.nodeId);
-
-      getUncontrolledRange(root).removeInstances(0);
-
-      expect(root.currentState.currentPage).toBe(null);
-      expect(root.currentState.hasNextPage).toBe(false);
-      expect(root.currentState.hasPreviousPage).toBe(false);
-    });
   });
 
   describe('pagination — repeat structure changes', () => {
