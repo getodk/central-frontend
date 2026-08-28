@@ -26,12 +26,6 @@
         <p>{{ $t('missingLabel.description') }}</p>
       </template>
     </entity-upload-alert>
-    <entity-upload-alert v-if="unknownProperty" type="danger">
-      <template #title>Unknown property found in header row</template>
-      <template #body>
-        <p>{{ $t('unknownProperty') }}</p>
-      </template>
-    </entity-upload-alert>
     <entity-upload-alert v-if="duplicateColumns != null" type="danger">
       <template #title>{{ $t('duplicateColumn.title') }}</template>
       <template #body>
@@ -84,7 +78,6 @@ const props = defineProps({
   // Errors about the column header
   invalidQuotes: Boolean,
   missingLabel: Boolean,
-  unknownProperty: Boolean,
   duplicateColumns: Array,
   emptyColumn: Boolean,
 
@@ -123,8 +116,6 @@ const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
       "title": "A {label} property is required",
       "description": "The label indicates the name to use for each Entity throughout Central and elsewhere."
     },
-    // @transifexKey component.EntityUploadHeaderErrors.suggestions.unknownProperty
-    "unknownProperty": "If you want to add properties to this Entity List, you can do so in the Entity Properties section on the Overview page of this Entity List, or you can upload and publish a Form that references the property.",
     "duplicateColumn": {
       "title": "Duplicate column headers",
       "description": "Each column must have a unique header.",

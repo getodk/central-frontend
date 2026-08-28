@@ -2883,6 +2883,14 @@
         }
       }
     },
+    "EntityUploadExtraProperties": {
+      "action": {
+        "selectAll": {
+          "string": "Select all",
+          "developer_comment": "This is the text of a button that allows the user to select all columns."
+        }
+      }
+    },
     "EntityUploadFileSelect": {
       "text": {
         "full": {
@@ -2896,13 +2904,6 @@
       },
       "parsing": {
         "string": "Reading data…"
-      }
-    },
-    "EntityUploadHeaderErrors": {
-      "suggestions": {
-        "unknownProperty": {
-          "string": "If you want to add properties to this Entity List, you can do so in the Entity Properties section on the Overview page of this Entity List, or you can upload and publish a Form that references the property."
-        }
       }
     },
     "EntityUploadHeaderReview": {
@@ -2959,6 +2960,25 @@
         "description": {
           "string": "{count, plural, one {This property will be left empty.} other {These properties will be left empty.}}",
           "developer_comment": "\"Property\" refers to an Entity property."
+        }
+      },
+      "extraProperties": {
+        "title": {
+          "one": {
+            "string": "Column doesn’t match existing properties"
+          },
+          "multiple": {
+            "string": "These columns don’t match existing properties"
+          }
+        },
+        "description": {
+          "one": {
+            "string": "Select the column to create a new property, otherwise it will be ignored."
+          },
+          "multiple": {
+            "string": "Select which ones to create, otherwise they will be ignored.",
+            "developer_comment": "\"Ones\" refers to \"columns\"."
+          }
         }
       },
       "propertiesIgnored": {

@@ -19,6 +19,11 @@ except according to the terms contained in the LICENSE file.
           <th v-for="{ name } of dataset.properties" :key="name">
             <div v-tooltip.text>{{ name }}</div>
           </th>
+          <template v-if="extraProperties != null">
+            <th v-for="name of extraProperties" :key="name">
+              <div v-tooltip.text>{{ name }}</div>
+            </th>
+          </template>
         </tr>
       </thead>
       <tbody v-if="entities != null && entities.length !== 0"
@@ -32,6 +37,11 @@ except according to the terms contained in the LICENSE file.
           <td v-for="{ name } of dataset.properties" :key="name">
             <div v-tooltip.text>{{ entity.data[name] }}</div>
           </td>
+          <template v-if="extraProperties != null">
+            <td v-for="name of extraProperties" :key="name">
+              <div v-tooltip.text>{{ entity.extra[name] }}</div>
+            </td>
+          </template>
         </tr>
       </tbody>
     </table>
@@ -49,6 +59,7 @@ defineOptions({
 });
 const props = defineProps({
   entities: Array,
+  extraProperties: Array,
   // The 0-indexed row number of the first row of the table
   rowIndex: Number,
   pageSize: {

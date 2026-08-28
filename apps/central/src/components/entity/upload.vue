@@ -38,8 +38,8 @@ except according to the terms contained in the LICENSE file.
           </div>
           <div class="panel-body">
             <entity-upload-table :ref="setTable(1)" :entities="csvSlice"
-              :row-index="csvRow" :page-size="csvPage.size"
-              :highlighted="warningRows"/>
+              :extra-properties="propertiesToCreate" :row-index="csvRow"
+              :page-size="csvPage.size" :highlighted="warningRows"/>
             <pagination v-if="csvEntities != null" v-model:page="csvPage.page"
               v-model:size="csvPage.size" :count="csvEntities.length"
               :size-options="pageSizeOptions"/>
@@ -49,7 +49,8 @@ except according to the terms contained in the LICENSE file.
         <entity-upload-errors v-if="errors != null" v-bind="errors"
           :delimiter="fileMetadata.delimiter"/>
         <entity-upload-warnings v-if="warnings != null" v-bind="warnings"
-          :filename="fileMetadata.name" @rows="showWarningRows"/>
+          :filename="fileMetadata.name" @rows="showWarningRows"
+          @toggle-extra="toggleExtraProperty"/>
 
         <entity-upload-file-select :disabled="parsing || uploading"
           :parsing="parsing" @change="selectFile"/>
@@ -171,6 +172,7 @@ const csvEntities = shallowRef(null);
 const fileMetadata = shallowRef(null);
 const errors = shallowRef(null);
 const warnings = shallowRef(null);
+const selectedProperties = reactive(new Set());
 const parsing = ref(false);
 // Function to abort parsing in progress
 let abortParse = noop;
@@ -212,6 +214,7 @@ const validateHeader = ({ columns, errors: papaErrors }) => {
     warningDetails.systemProperties = [];
     warningDetails.invalidProperties = [];
     warningDetails.caseMismatch = [];
+    warningDetails.extraProperties = [];
     for (const column of columnSet) {
       if (column === 'label') continue; // eslint-disable-line no-continue
       if (column.startsWith('__') || column === 'name') {
@@ -220,18 +223,12 @@ const validateHeader = ({ columns, errors: papaErrors }) => {
         warningDetails.invalidProperties.push(column);
       } else {
         const property = lowercaseProperties.get(column.toLowerCase());
-        if (property != null && column !== property)
+        if (property == null)
+          warningDetails.extraProperties.push(column);
+        else if (column !== property)
           warningDetails.caseMismatch.push({ column, property });
       }
     }
-
-    errorDetails.unknownProperty = columnSet.size !==
-      dataset.properties.length -
-      warningDetails.missingProperties.length +
-      warningDetails.systemProperties.length +
-      warningDetails.invalidProperties.length +
-      warningDetails.caseMismatch.length +
-      (hasLabel ? 1 : 0);
   }
 
   // Normalize detail objects, adding a `count` property.
@@ -261,38 +258,32 @@ const validateHeader = ({ columns, errors: papaErrors }) => {
   return result;
 };
 const { t } = useI18n();
-// noPropertyData is used to minimize the JSON sent to Backend: the JSON won't
-// specify a `data` property for an entity without property data.
-const noPropertyData = { toJSON: () => undefined };
-const rowToEntity = (values, columns) => {
-  const obj = Object.create(null);
-  let hasProperty = false;
+const rowToEntity = (extraProperties) => (values, columns) => {
+  let label;
+  const data = Object.create(null);
+  const extraData = extraProperties.size !== 0 ? Object.create(null) : undefined;
   for (const [i, value] of values.entries()) {
     if (value === '') continue; // eslint-disable-line no-continue
 
     const column = columns[i];
-    if (column === 'label') {
-      obj.label = value;
-    } else if (dataset.propertyMap.has(column)) {
-      obj[column] = value;
-      hasProperty = true;
-    }
+    if (column === 'label')
+      label = value;
+    else if (dataset.propertyMap.has(column))
+      data[column] = value;
+    else if (extraProperties.has(column))
+      extraData[column] = value;
   }
-  const { label } = obj;
+
   if (label == null || /^\s+$/.test(label))
     throw new Error(t('alert.blankLabel'));
-  if (hasProperty) {
-    delete obj.label;
-    return { label, data: obj };
-  }
-  obj.data = noPropertyData;
-  return obj;
+
+  return { label, data, extra: extraData };
 };
 const { i18n: globalI18n, redAlert } = inject('container');
-const parseEntities = async (file, headerResults, signal) => {
+const parseEntities = async (file, headerResults, extraProperties, signal) => {
   const results = await parseCSV(globalI18n, file, headerResults.columns, {
     delimiter: headerResults.meta.delimiter,
-    transformRow: rowToEntity,
+    transformRow: rowToEntity(new Set(extraProperties)),
     signal
   });
   if (results.data.length === 0) throw new Error(t('alert.noData'));
@@ -304,6 +295,7 @@ const selectFile = (file) => {
   fileMetadata.value = null;
   errors.value = null;
   warnings.value = null;
+  selectedProperties.clear();
 
   const abortController = new AbortController();
   abortParse = () => { abortController.abort(); };
@@ -329,7 +321,8 @@ const selectFile = (file) => {
         return Promise.resolve();
       }
 
-      return parseEntities(file, headerResults, signal)
+      const extraProperties = validation.warnings?.extraProperties;
+      return parseEntities(file, headerResults, extraProperties, signal)
         .then(results => {
           csvEntities.value = results.data;
 
@@ -356,6 +349,8 @@ const selectFile = (file) => {
     })
     .catch(noop);
 };
+onBeforeUnmount(() => { abortParse(); });
+
 watch(() => props.state, (state) => {
   if (state) return;
   abortParse();
@@ -363,8 +358,8 @@ watch(() => props.state, (state) => {
   fileMetadata.value = null;
   errors.value = null;
   warnings.value = null;
+  selectedProperties.clear();
 });
-onBeforeUnmount(() => { abortParse(); });
 
 const csvPage = reactive({ page: 0, size: defaultPageSize });
 const csvRow = computed(() =>
@@ -384,15 +379,27 @@ const showWarningRows = (range) => {
 };
 watch(csvEntities, (value) => { if (value == null) warningRows.value = null; });
 
+// Creating new properties
+const toggleExtraProperty = (name, selected) => {
+  if (selected)
+    selectedProperties.add(name);
+  else
+    selectedProperties.delete(name);
+};
+const propertiesToCreate = computed(() =>
+  warnings.value?.extraProperties?.filter(name => selectedProperties.has(name)));
+
 const { request, awaitingResponse: uploading } = useRequest();
 const uploadProgress = ref(0);
 const upload = () => {
+  const entitiesToSend = csvEntities.value.map(entity =>
+    (Object.keys(entity.data).length !== 0 ? entity : { label: entity.label }));
   request({
     method: 'POST',
     url: apiPaths.entities(dataset.projectId, dataset.name),
     data: {
       source: pick(['name', 'size'], fileMetadata.value),
-      entities: csvEntities.value
+      entities: entitiesToSend
     },
     onUploadProgress: (event) => { uploadProgress.value = event.progress ?? 0; }
   })
