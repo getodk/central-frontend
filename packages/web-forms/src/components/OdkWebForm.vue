@@ -333,7 +333,6 @@ onUnmounted(() => {
 		:class="{ 'submit-pressed': submitPressed }"
 	>
 		<div class="form-wrapper">
-			<div v-if="showValidationError" class="error-banner-placeholder" />
 			<!-- Closable error message to clear the view and avoid overlap with other elements -->
 			<Message
 				v-if="showValidationError"
@@ -422,12 +421,8 @@ onUnmounted(() => {
 			padding: 2rem;
 		}
 
-		.error-banner-placeholder {
-			height: 4rem;
-		}
-
 		.form-error-message.p-message.p-message-error {
-			position: fixed;
+			position: sticky;
 			z-index: var(--odk-z-index-error-banner);
 			border-radius: var(--odk-radius);
 			background-color: var(--odk-error-background-color);
@@ -435,7 +430,7 @@ onUnmounted(() => {
 			outline: none;
 			max-width: var(--odk-max-form-width);
 			width: 100%;
-			margin: 0rem auto 1rem auto;
+			margin: 0 auto;
 			top: 1rem;
 
 			:deep(.p-message-wrapper) {
@@ -523,15 +518,11 @@ onUnmounted(() => {
 				order: 1;
 			}
 
-			.error-banner-placeholder {
-				order: 2;
-			}
-
 			.form-error-message.p-message.p-message-error {
-				margin: 4rem 1rem 0 1rem;
+				margin: 1rem 1rem 0 1rem;
 				max-width: unset;
 				width: calc(100% - 2rem);
-				top: 22px;
+				order: 2;
 			}
 
 			.questions-card {

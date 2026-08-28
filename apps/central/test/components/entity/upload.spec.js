@@ -3,7 +3,7 @@ import { T } from 'ramda';
 
 import EntityFilters from '../../../src/components/entity/filters.vue';
 import EntityUpload from '../../../src/components/entity/upload.vue';
-import EntityUploadDataError from '../../../src/components/entity/upload/data-error.vue';
+import EntityUploadErrors from '../../../src/components/entity/upload/errors.vue';
 import EntityUploadHeaderErrors from '../../../src/components/entity/upload/header-errors.vue';
 import EntityUploadPopup from '../../../src/components/entity/upload/popup.vue';
 import EntityUploadTable from '../../../src/components/entity/upload/table.vue';
@@ -177,6 +177,16 @@ describe('EntityUpload', () => {
     });
   });
 
+  it('shows an error with the data below the header', async () => {
+    testData.extendedDatasets.createPast(1, {
+      properties: [{ name: 'height' }]
+    });
+    const modal = await showModal();
+    await selectFile(modal, createCSV('label,height\n,1'));
+    const { dataError } = modal.getComponent(EntityUploadErrors).props();
+    dataError.should.equal('There is a problem on row 2 of the file: Missing label.');
+  });
+
   describe('binary file', () => {
     beforeEach(() => {
       testData.extendedDatasets.createPast(1);
@@ -200,11 +210,11 @@ describe('EntityUpload', () => {
     // This is not necessarily the ideal behavior. Showing an alert would be
     // more consistent with what happens for a null character in the header.
     // This test documents the current expected behavior.
-    it('renders EntityUploadDataError for a null character after header', async () => {
+    it('renders EntityUploadErrors for a null character after header', async () => {
       const modal = await showModal();
       await selectFile(modal, createCSV('label\nf\0o'));
-      const { message } = modal.getComponent(EntityUploadDataError).props();
-      message.should.equal('The file “my_data.csv” is not a valid .csv file. It cannot be read.');
+      const { dataError } = modal.getComponent(EntityUploadErrors).props();
+      dataError.should.equal('The file “my_data.csv” is not a valid .csv file. It cannot be read.');
       modal.should.not.alert();
     });
   });
@@ -225,12 +235,36 @@ describe('EntityUpload', () => {
       warnings.largeCell.should.equal(3);
     });
 
-    it('does not show warnings if there is a data error', async () => {
+    it('does not show data warnings if there is a data error', async () => {
+      testData.extendedDatasets.createPast(1, {
+        properties: [{ name: 'height' }, { name: 'circumference' }]
+      });
       const modal = await showModal();
-      await selectFile(modal, createCSV('label,height\nx\ny,""\n"",1'));
-      const error = modal.getComponent(EntityUploadDataError).props().message;
-      error.should.startWith('There is a problem on row 4');
-      modal.findComponent(EntityUploadWarnings).exists().should.be.false;
+
+      // First, select a CSV that triggers warnings about both the column header
+      // and the data, but does not trigger errors.
+      const warningsCSV = 'label,height\nx\ny,""';
+      await selectFile(modal, createCSV(warningsCSV));
+      modal.findComponent(EntityUploadErrors).exists().should.be.false;
+      const initialWarnings = modal.getComponent(EntityUploadWarnings).props();
+      initialWarnings.missingProperties.should.eql(['circumference']);
+      initialWarnings.raggedRows.should.eql([[1, 1]]);
+
+      // Next, select a similar CSV that also has an error in the data (a
+      // missing label).
+      await modal.get('#entity-upload-popup .btn-link').trigger('click');
+      await selectFile(modal, createCSV(`${warningsCSV}\n"",1`));
+
+      // This time, we see an error.
+      const { dataError } = modal.getComponent(EntityUploadErrors).props();
+      dataError.should.startWith('There is a problem on row 4');
+
+      // There's a warning about the column header, but no warning about the
+      // data.
+      const warnings = modal.getComponent(EntityUploadWarnings);
+      warnings.props().missingProperties.should.eql(['circumference']);
+      should.not.exist(warnings.props().raggedRows);
+      warnings.findAll('.entity-upload-alert').length.should.equal(1);
     });
 
     it('shows rows to which a warning applies after they are selected', async () => {
@@ -256,7 +290,7 @@ describe('EntityUpload', () => {
       const table = getTables(modal)[1];
       table.props().rowIndex.should.equal(0);
       should.not.exist(table.props().highlighted);
-      const a = modal.get('.entity-upload-warning a');
+      const a = modal.get('.entity-upload-alert a');
       a.text().should.equal('9–11');
       await a.trigger('click');
       table.props().rowIndex.should.equal(5);
@@ -267,7 +301,7 @@ describe('EntityUpload', () => {
       const modal = await showModal();
       const csvString = 'label,height\nx\ny\nz,""';
       await selectFile(modal, createCSV(csvString));
-      const a = modal.get('.entity-upload-warning a');
+      const a = modal.get('.entity-upload-alert a');
       a.text().should.equal('1–2');
       await a.trigger('click');
       getTables(modal)[1].props().highlighted.should.eql([0, 1]);
@@ -476,6 +510,110 @@ describe('EntityUpload', () => {
         data: {
           source: { name: 'my_data.csv', size: 22 },
           entities: [{ label: 'dogwood', data: { height: '1' } }]
+        }
+      }]);
+  });
+
+  it('ignores system properties', () => {
+    testData.extendedDatasets.createPast(1, {
+      properties: [{ name: 'height' }]
+    });
+    return showModal()
+      .complete()
+      .request(async (modal) => {
+        await selectFile(
+          modal,
+          createCSV('label,height,__id,__foo\ndogwood,1,e1,x\nelm,,e2,y')
+        );
+
+        // A warning is shown.
+        const warnings = modal.getComponent(EntityUploadWarnings).props();
+        warnings.systemProperties.should.eql(['__id', '__foo']);
+
+        return modal.get('.modal-actions .btn-primary').trigger('click');
+      })
+      .respondWithProblem()
+      .testRequests([{
+        method: 'POST',
+        url: '/v1/projects/1/datasets/trees/entities',
+        data: {
+          source: { name: 'my_data.csv', size: 48 },
+          entities: [
+            { label: 'dogwood', data: { height: '1' } },
+            // If there were only system properties, no proper entity
+            // properties, don't bother sending an empty `data` object.
+            { label: 'elm' }
+          ]
+        }
+      }]);
+  });
+
+  it('ignores columns that are not valid property names', () => {
+    testData.extendedDatasets.createPast(1, {
+      name: 'people',
+      properties: [{ name: 'height' }]
+    });
+    return showModal()
+      .complete()
+      .request(async (modal) => {
+        await selectFile(
+          modal,
+          createCSV('label,height,LABEL,First name,phone#\nAlice,123,Alice,Alice,456\nChelsea,,Chelsea,Chelsea,789')
+        );
+
+        // A warning is shown.
+        const warnings = modal.getComponent(EntityUploadWarnings).props();
+        warnings.invalidProperties.should.eql(['LABEL', 'First name', 'phone#']);
+
+        return modal.get('.modal-actions .btn-primary').trigger('click');
+      })
+      .respondWithProblem()
+      .testRequests([{
+        method: 'POST',
+        url: '/v1/projects/1/datasets/people/entities',
+        data: {
+          source: { name: 'my_data.csv', size: 91 },
+          entities: [
+            { label: 'Alice', data: { height: '123' } },
+            // There were no valid entity properties, so don't bother sending an
+            // empty `data` object.
+            { label: 'Chelsea' }
+          ]
+        }
+      }]);
+  });
+
+  it('ignores columns that only differ from properties on letter case', () => {
+    testData.extendedDatasets.createPast(1, {
+      properties: [{ name: 'height' }, { name: 'circumference' }, { name: 'species' }]
+    });
+    return showModal()
+      .complete()
+      .request(async (modal) => {
+        await selectFile(
+          modal,
+          createCSV('label,height,CIRCUMFERENCE,Species\ndogwood,1,2,dogwood\nelm,,3,elm')
+        );
+
+        // A warning is shown.
+        const warnings = modal.getComponent(EntityUploadWarnings).props();
+        warnings.caseMismatch.should.eql([
+          { column: 'CIRCUMFERENCE', property: 'circumference' },
+          { column: 'Species', property: 'species' }
+        ]);
+
+        return modal.get('.modal-actions .btn-primary').trigger('click');
+      })
+      .respondWithProblem()
+      .testRequests([{
+        method: 'POST',
+        url: '/v1/projects/1/datasets/trees/entities',
+        data: {
+          source: { name: 'my_data.csv', size: 65 },
+          entities: [
+            { label: 'dogwood', data: { height: '1' } },
+            { label: 'elm' }
+          ]
         }
       }]);
   });

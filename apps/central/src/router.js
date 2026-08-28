@@ -118,7 +118,7 @@ router.afterEach(unlessFailure(to => {
     // navigation.
     const needsLogin = to.meta.restoreSession && !session.dataExists;
     const sessionPromise = needsLogin
-      ? restoreSession(session)
+      ? restoreSession(session).catch(noop)
       : Promise.resolve();
 
     // A test can skip this request by setting `config` before the initial
@@ -139,12 +139,12 @@ router.afterEach(unlessFailure(to => {
 
     const locale = userLocale();
     const localePromise = locale != null
-      ? loadLocale(container, locale)
+      ? loadLocale(container, locale).catch(noop)
       : Promise.resolve();
 
     // Once the session and the config have been received, we can complete
     // login.
-    await Promise.allSettled([sessionPromise, configPromise]);
+    await Promise.all([sessionPromise, configPromise]);
     if (needsLogin && session.dataExists) {
       // If this is the first time that the session has been restored since the
       // most recent OIDC login, set sessionExpires in local storage. If
@@ -155,7 +155,7 @@ router.afterEach(unlessFailure(to => {
       await logIn(container, newSession).catch(noop);
     }
 
-    await localePromise.catch(noop);
+    await localePromise;
     return config.loadError != null ? '/load-error' : true;
   });
 
