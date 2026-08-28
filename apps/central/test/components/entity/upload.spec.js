@@ -225,7 +225,7 @@ describe('EntityUpload', () => {
       });
     });
 
-    it('shows warnings', async () => {
+    it('shows warnings about the data below the column header', async () => {
       const modal = await showModal();
       const csv = createCSV('label,height\nx\ny\n"12345,67890",""');
       await selectFile(modal, csv);
@@ -233,6 +233,16 @@ describe('EntityUpload', () => {
       warnings.count.should.equal(2);
       warnings.raggedRows.should.eql([[1, 2]]);
       warnings.largeCell.should.equal(3);
+    });
+
+    it('shows warnings about both the header and the data', async () => {
+      const modal = await showModal();
+      const csv = createCSV('label,__id,height\ndogwood,e1\nelm,e2,""');
+      await selectFile(modal, csv);
+      const warnings = modal.getComponent(EntityUploadWarnings).props();
+      warnings.count.should.equal(2);
+      warnings.systemProperties.should.eql(['__id']);
+      warnings.raggedRows.should.eql([[1, 1]]);
     });
 
     it('does not show data warnings if there is a data error', async () => {
