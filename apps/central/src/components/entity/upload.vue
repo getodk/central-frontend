@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal id="entity-upload" :state="state" :hideable="!uploading" size="full"
+  <modal id="entity-upload" :state="state" :hideable="!uploading" :persistent="true" size="full"
     backdrop @hide="$emit('hide')" @mutate="resizeColumnIfShown">
     <template #title>{{ $t('title') }}</template>
     <template #body>
@@ -300,7 +300,9 @@ const parseEntities = async (file, headerResults, signal) => {
 };
 const selectFile = (file) => {
   redAlert.hide();
+  fileMetadata.value = null;
   headerErrors.value = null;
+  warnings.value = null;
   dataError.value = null;
 
   const abortController = new AbortController();
@@ -320,15 +322,21 @@ const selectFile = (file) => {
         return Promise.resolve();
       }
 
+      const metadata = { name: file.name, size: file.size };
       return parseEntities(file, headerResults, signal)
         .then(results => {
           csvEntities.value = results.data;
-          fileMetadata.value = { name: file.name, size: file.size };
+          fileMetadata.value = metadata;
           if (validation.warnings != null || results.warnings.count !== 0)
             warnings.value = { ...validation.warnings, ...results.warnings.details };
         })
         .catch(error => {
-          if (!signal.aborted) dataError.value = error.message;
+          if (!signal.aborted) {
+            fileMetadata.value = metadata;
+            dataError.value = error.message;
+            warnings.value = validation.warnings;
+          }
+
           throw error;
         });
     })
