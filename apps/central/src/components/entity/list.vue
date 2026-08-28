@@ -293,7 +293,7 @@ export default {
       handler() {
         if (this.dataset.dataExists && this.odataEntities.dataExists &&
           this.dataView === 'table' && !this.odataFilter && !this.deleted &&
-          !this.searchTerm)
+          !this.searchTerm && this.viewAs == null)
           this.dataset.entities = this.odataEntities.count;
       }
     },

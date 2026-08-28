@@ -365,6 +365,30 @@ describe('EntityFilters', () => {
       });
   });
 
+  it('does not update dataset.entities after filtering with view-as', () => {
+    testData.extendedDatasets.createPast(1, { entities: 2 });
+    testData.extendedEntities.createPast(2);
+    testData.extendedFieldKeys.createPast(1);
+    return load('/projects/1/entity-lists/trees/entities', {
+      attachTo: document.body
+    })
+      .afterResponses(app => {
+        app.vm.$container.requestData.dataset.entities.should.equal(2);
+      })
+      .request(component => {
+        const { id } = testData.extendedFieldKeys.last();
+        component.get('#entity-filters-view-as select').setValue(String(id));
+      })
+      .respondWithData(() => ({
+        ...testData.entityOData(1),
+        '@odata.count': 1,
+        '@odata.nextLink': undefined
+      }))
+      .afterResponse(app => {
+        app.vm.$container.requestData.dataset.entities.should.equal(2);
+      });
+  });
+
   it('disables the filter', () => {
     testData.extendedDatasets.createPast(1);
     testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() });
