@@ -401,8 +401,9 @@ const resizeColumnIfShown = () => { if (props.state) resizeLastColumn(); };
 useEventListener(window, 'resize', resizeColumnIfShown);
 
 const actions = ref(null);
-watch(csvEntities, (value) => {
-  if (value != null) nextTick(() => { actions.value.scrollIntoView(); });
+watch([errors, warnings, csvEntities], () => {
+  if (errors.value == null && warnings.value == null && csvEntities.value != null)
+    nextTick(() => { actions.value.scrollIntoView(); });
 });
 
 watch(() => props.state, (state) => {
