@@ -417,14 +417,12 @@ watch(() => props.state, (state) => {
 
   .panel-simple {
     .panel-heading {
-      @include text-overflow-ellipsis;
       background-color: $color-action-background;
       border-bottom: none;
       color: #fff;
     }
 
     .panel-body { padding: 0; }
-
     thead { background-color: #c5dfe7; }
   }
 
