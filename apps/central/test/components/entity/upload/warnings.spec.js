@@ -7,7 +7,7 @@ import { mergeMountOptions, mount } from '../../../util/lifecycle';
 
 const mountComponent = (options) =>
   mount(EntityUploadWarnings, mergeMountOptions(options, {
-    props: { filename: 'my_data.csv' }
+    props: { filename: 'my_data.csv', count: 1 }
   }));
 
 describe('EntityUploadWarnings', () => {
@@ -98,7 +98,7 @@ describe('EntityUploadWarnings', () => {
 
   it('shows multiple warnings', () => {
     const component = mountComponent({
-      props: { raggedRows: [[1, 2]], largeCell: 3 }
+      props: { count: 2, raggedRows: [[1, 2]], largeCell: 3 }
     });
     const warnings = component.findAllComponents(EntityUploadAlert);
     warnings.length.should.equal(2);
@@ -109,7 +109,7 @@ describe('EntityUploadWarnings', () => {
 
   it('emits a rows event after a row range is clicked', async () => {
     const component = mountComponent({
-      props: { raggedRows: [[1, 2]], largeCell: 3 }
+      props: { count: 2, raggedRows: [[1, 2]], largeCell: 3 }
     });
     const warnings = component.findAllComponents(EntityUploadAlert);
     warnings.length.should.equal(2);
