@@ -446,6 +446,7 @@ watch(() => props.state, (state) => {
   font-weight: bold;
   margin-bottom: 4px;
 
+  // Explanatory/descriptive text that immediately follows the title
   + p, + p + p {
     margin-bottom: 10px;
     &:last-of-type { margin-bottom: 20px; }
