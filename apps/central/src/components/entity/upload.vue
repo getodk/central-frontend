@@ -392,8 +392,11 @@ const propertiesToCreate = computed(() =>
 const { request, awaitingResponse: uploading } = useRequest();
 const uploadProgress = ref(0);
 const upload = () => {
-  const entitiesToSend = csvEntities.value.map(entity =>
-    (Object.keys(entity.data).length !== 0 ? entity : { label: entity.label }));
+  const entitiesToSend = csvEntities.value.map(entity => {
+    const result = { label: entity.label };
+    if (Object.keys(entity.data).length !== 0) result.data = entity.data;
+    return result;
+  });
   request({
     method: 'POST',
     url: apiPaths.entities(dataset.projectId, dataset.name),
