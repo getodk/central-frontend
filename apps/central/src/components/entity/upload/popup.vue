@@ -42,7 +42,6 @@ const props = defineProps({
     required: true
   }
 });
-defineEmits(['clear']);
 
 const { t, n } = useI18n();
 const status = computed(() => (props.progress < 1

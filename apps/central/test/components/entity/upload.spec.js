@@ -331,7 +331,8 @@ describe('EntityUpload', () => {
     const modal = await showModal();
     const button = modal.get('.modal-actions .btn-primary');
 
-    await selectFile(modal, createCSV('label,label\ndogwood,dogwood'));
+    const problemCSV = createCSV('label,label\ndogwood,dogwood');
+    await selectFile(modal, problemCSV);
     modal.findComponent(EntityUploadErrors).exists().should.be.true;
     modal.findComponent(EntityUploadWarnings).exists().should.be.true;
     button.attributes('aria-disabled').should.equal('true');
@@ -341,7 +342,7 @@ describe('EntityUpload', () => {
     modal.findComponent(EntityUploadWarnings).exists().should.be.false;
     button.attributes('aria-disabled').should.equal('false');
 
-    await selectFile(modal, createCSV('label,label\ndogwood,dogwood'));
+    await selectFile(modal, problemCSV);
     button.attributes('aria-disabled').should.equal('true');
   });
 
@@ -351,9 +352,9 @@ describe('EntityUpload', () => {
     });
     const modal = await showModal();
     await selectFile(modal, createCSV('label\nx\n"12345,67890"'));
+    const button = modal.get('.modal-actions .btn-primary');
 
     modal.findComponent(EntityUploadWarnings).exists().should.be.true;
-    const button = modal.get('.modal-actions .btn-primary');
     button.attributes('aria-disabled').should.equal('false');
 
     await modal.setProps({ state: false });
