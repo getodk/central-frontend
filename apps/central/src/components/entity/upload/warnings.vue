@@ -77,10 +77,10 @@ except according to the terms contained in the LICENSE file.
       <template #body>
         <p>
           <template v-if="extraProperties.length === 1">
-            {{ $t('extraProperties.title.one') }}
+            {{ $t('extraProperties.description.one') }}
           </template>
           <template v-else>
-            {{ $t('extraProperties.title.multiple') }}
+            {{ $t('extraProperties.description.multiple') }}
           </template>
         </p>
         <entity-upload-extra-properties :properties="extraProperties"
