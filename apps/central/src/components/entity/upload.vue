@@ -283,7 +283,7 @@ const { i18n: globalI18n, redAlert } = inject('container');
 const parseEntities = async (file, headerResults, extraProperties, signal) => {
   const results = await parseCSV(globalI18n, file, headerResults.columns, {
     delimiter: headerResults.meta.delimiter,
-    transformRow: rowToEntity(new Set(extraProperties)),
+    transformRow: rowToEntity(new Set(extraProperties ?? [])),
     signal
   });
   if (results.data.length === 0) throw new Error(t('alert.noData'));
