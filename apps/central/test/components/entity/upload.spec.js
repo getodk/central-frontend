@@ -638,4 +638,51 @@ describe('EntityUpload', () => {
         }
       }]);
   });
+
+  describe('extra properties', () => {
+    beforeEach(() => {
+      testData.extendedDatasets.createPast(1, {
+        properties: [{ name: 'height' }]
+      });
+    });
+
+    const extraCSV = createCSV('label,height,circumference,species\ndogwood,1,2,dogwood\nelm');
+
+    it('shows a warning if there are extra properties', async () => {
+      const modal = await showModal();
+      await selectFile(modal, extraCSV);
+      const warnings = modal.getComponent(EntityUploadWarnings).props();
+      warnings.extraProperties.should.eql(['circumference', 'species']);
+    });
+
+    it('shows selected properties in the table', async () => {
+      const modal = await showModal();
+      await selectFile(modal, extraCSV);
+      const input = modal.get('#entity-upload-extra-properties .checkbox:nth-child(2) input');
+      await input.setChecked();
+      const tables = modal.findAllComponents(EntityUploadTable);
+      tables[1].props().extraProperties.should.eql(['circumference']);
+    });
+
+    it('does not send properties that were not selected', () =>
+      showModal()
+        .complete()
+        .request(async (modal) => {
+          await selectFile(modal, extraCSV);
+          return modal.get('.modal-actions .btn-primary').trigger('click');
+        })
+        .respondWithProblem()
+        .testRequests([{
+          method: 'POST',
+          url: '/v1/projects/1/datasets/trees/entities',
+          data: {
+            source: { name: 'my_data.csv', size: 58 },
+            entities: [
+              { label: 'dogwood', data: { height: '1' } },
+              // Don't bother sending an empty `data` object.
+              { label: 'elm' }
+            ]
+          }
+        }]));
+  });
 });
