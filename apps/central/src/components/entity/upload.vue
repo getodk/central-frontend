@@ -379,7 +379,7 @@ const showWarningRows = (range) => {
 };
 watch(csvEntities, (value) => { if (value == null) warningRows.value = null; });
 
-// Creating new properties
+// CREATING NEW PROPERTIES
 const toggleExtraProperty = (name, selected) => {
   if (selected)
     selectedProperties.add(name);
