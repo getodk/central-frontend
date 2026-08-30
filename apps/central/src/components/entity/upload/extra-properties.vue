@@ -44,6 +44,16 @@ const toggle = (event) => {
 @import '../../../assets/scss/mixins';
 
 #entity-upload-extra-properties {
+  padding-inline: 8px;
+
+  .checkbox {
+    margin-block: 0;
+    padding-block: 3px;
+    padding-left: 10px;
+
+    &:first-child { padding-left: 0; }
+  }
+
   label { @include text-overflow-ellipsis; }
 }
 </style>
