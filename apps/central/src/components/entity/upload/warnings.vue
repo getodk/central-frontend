@@ -65,6 +65,18 @@ except according to the terms contained in the LICENSE file.
         <p><i18n-list :list="missingProperties"/></p>
       </template>
     </entity-upload-alert>
+
+    <!-- Data warnings -->
+    <entity-upload-alert v-if="raggedRows != null" type="warning"
+      :ranges="raggedRows" @rows="$emit('rows', $event)">
+      <template #title>{{ $t('row.raggedRows') }}</template>
+    </entity-upload-alert>
+    <entity-upload-alert v-if="largeCell != null" type="warning"
+      :ranges="[[largeCell, largeCell]]" @rows="$emit('rows', $event)">
+      <template #title>{{ $t('row.largeCell') }}</template>
+    </entity-upload-alert>
+
+    <!-- Extra properties -->
     <entity-upload-alert v-if="extraProperties != null" type="warning">
       <template #title>
         <template v-if="extraProperties.length === 1">
@@ -86,16 +98,6 @@ except according to the terms contained in the LICENSE file.
         <entity-upload-extra-properties :properties="extraProperties"
           @toggle="toggleExtraProperty"/>
       </template>
-    </entity-upload-alert>
-
-    <!-- Data warnings -->
-    <entity-upload-alert v-if="raggedRows != null" type="warning"
-      :ranges="raggedRows" @rows="$emit('rows', $event)">
-      <template #title>{{ $t('row.raggedRows') }}</template>
-    </entity-upload-alert>
-    <entity-upload-alert v-if="largeCell != null" type="warning"
-      :ranges="[[largeCell, largeCell]]" @rows="$emit('rows', $event)">
-      <template #title>{{ $t('row.largeCell') }}</template>
     </entity-upload-alert>
   </div>
 </template>
