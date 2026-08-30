@@ -6,7 +6,10 @@
       </label>
     </div>
     <div v-for="name of properties" :key="name" class="checkbox">
-      <label><input type="checkbox" :value="name">{{ name }}</label>
+      <label>
+        <input type="checkbox" :value="name">
+        <span v-tooltip.text>{{ name }}</span>
+      </label>
     </div>
   </div>
 </template>
@@ -38,7 +41,10 @@ const toggle = (event) => {
 </script>
 
 <style lang="scss">
+@import '../../../assets/scss/mixins';
+
 #entity-upload-extra-properties {
+  label { @include text-overflow-ellipsis; }
 }
 </style>
 

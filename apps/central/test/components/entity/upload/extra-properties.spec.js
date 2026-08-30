@@ -5,12 +5,14 @@ import { mount } from '../../../util/lifecycle';
 const mountComponent = (options) => mount(EntityUploadExtraProperties, options);
 
 describe('EntityUploadExtraProperties', () => {
-  it('shows a checkbox for each property', () => {
+  it('shows a checkbox for each property', async () => {
     const component = mountComponent({
-      props: { properties: ['foo', 'bar'] }
+      props: { properties: ['circumference', 'species'] }
     });
-    const text = component.findAll('.checkbox').map(div => div.text());
-    text.should.eql(['Select all', 'foo', 'bar']);
+    const checkboxes = component.findAll('.checkbox');
+    const text = checkboxes.map(div => div.text());
+    text.should.eql(['Select all', 'circumference', 'species']);
+    await checkboxes[1].get('span').should.have.textTooltip();
   });
 
   it('emits a toggle event when a property is checked or unchecked', async () => {
