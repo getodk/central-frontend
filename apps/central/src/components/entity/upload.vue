@@ -386,6 +386,10 @@ const toggleExtraProperty = (name, selected) => {
   else
     selectedProperties.delete(name);
 };
+// Because selectedProperties persists from one file selection to the next, it
+// is not necessarily a subset of warnings.value.extraProperties. Either list
+// may include properties that the other does not. propertiesToCreate represents
+// the intersection of the two lists.
 const propertiesToCreate = computed(() =>
   warnings.value?.extraProperties?.filter(name => selectedProperties.has(name)));
 
