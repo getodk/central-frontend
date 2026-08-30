@@ -44,6 +44,8 @@ const toggle = (event) => {
 @import '../../../assets/scss/mixins';
 
 #entity-upload-extra-properties {
+  max-height: 350px;
+  overflow-y: auto;
   padding-inline: 8px;
 
   .checkbox {
