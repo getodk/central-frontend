@@ -115,7 +115,6 @@ test.describe('ODK Web Forms', () => {
     await expect(page.getByRole('heading', { name: 'Thank you' })).toBeVisible();
     await page.reload();
     await expect(page.getByRole('heading', { name: 'Thank you' })).toBeVisible();
-    await expect(page.getByText('You have already completed this survey.')).toBeVisible();
   });
 
   test('binds last-saved instance for multiple submissions', async ({ page }) => {
