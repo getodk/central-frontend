@@ -49,8 +49,12 @@ except according to the terms contained in the LICENSE file.
         <entity-upload-errors v-if="errors != null" v-bind="errors"
           :delimiter="fileMetadata.delimiter"/>
         <entity-upload-warnings v-if="warnings != null" v-bind="warnings"
-          :filename="fileMetadata.name" @rows="showWarningRows"
-          @toggle-extra="toggleExtraProperty"/>
+          :filename="fileMetadata.name" @rows="showWarningRows">
+          <template #extra-properties>
+            <entity-upload-extra-properties :properties="warnings.extraProperties"
+              :selected="selectedProperties" @toggle="toggleExtraProperty"/>
+          </template>
+        </entity-upload-warnings>
 
         <entity-upload-file-select :disabled="parsing || uploading"
           :parsing="parsing" @change="selectFile"/>
@@ -77,6 +81,7 @@ import { pick } from 'ramda';
 import { useI18n } from 'vue-i18n';
 
 import EntityUploadErrors from './upload/errors.vue';
+import EntityUploadExtraProperties from './upload/extra-properties.vue';
 import EntityUploadFileSelect from './upload/file-select.vue';
 import EntityUploadPopup from './upload/popup.vue';
 import EntityUploadTable from './upload/table.vue';
@@ -303,7 +308,6 @@ const selectFile = (file) => {
   fileMetadata.value = null;
   errors.value = null;
   warnings.value = null;
-  selectedProperties.clear();
 
   const abortController = new AbortController();
   abortParse = () => { abortController.abort(); };

@@ -4,6 +4,7 @@ import { T } from 'ramda';
 import EntityFilters from '../../../src/components/entity/filters.vue';
 import EntityUpload from '../../../src/components/entity/upload.vue';
 import EntityUploadErrors from '../../../src/components/entity/upload/errors.vue';
+import EntityUploadExtraProperties from '../../../src/components/entity/upload/extra-properties.vue';
 import EntityUploadFileSelect from '../../../src/components/entity/upload/file-select.vue';
 import EntityUploadPopup from '../../../src/components/entity/upload/popup.vue';
 import EntityUploadTable from '../../../src/components/entity/upload/table.vue';
@@ -39,7 +40,7 @@ const parseFilterTime = (filter) => {
 };
 const createCSV = (text = 'label\ndogwood') => new File([text], 'my_data.csv');
 const selectFile = async (modal, file = createCSV()) => {
-  await setFiles(modal.get('input'), [file]);
+  await setFiles(modal.get('input[type="file"]'), [file]);
   return waitUntil(() => !modal.vm.parsing);
 };
 const getTables = (modal) => {
@@ -653,6 +654,8 @@ describe('EntityUpload', () => {
       await selectFile(modal, extraCSV);
       const warnings = modal.getComponent(EntityUploadWarnings).props();
       warnings.extraProperties.should.eql(['circumference', 'species']);
+      const extraComponent = modal.getComponent(EntityUploadExtraProperties);
+      expect(extraComponent.props().properties).to.eql(['circumference', 'species']);
     });
 
     it('shows selected properties in the table', async () => {
@@ -670,6 +673,64 @@ describe('EntityUpload', () => {
 
       await input.setChecked(false);
       table.props().extraProperties.should.eql([]);
+    });
+
+    it('remembers the property selection until the modal is hidden', async () => {
+      const modal = await showModal();
+      // Checks or unchecks the first property.
+      const toggleFirst = (checked = true) => {
+        const input = modal.get('#entity-upload-extra-properties .checkbox:nth-child(2) input');
+        input.element.checked.should.equal(!checked);
+        return input.setChecked(checked);
+      };
+      const getSelected = () => {
+        const { selected } = modal.getComponent(EntityUploadExtraProperties).props();
+        return [...selected];
+      };
+      const getChecked = () => {
+        const checked = modal.findAll('#entity-upload-extra-properties .checkbox:has(input:checked)');
+        return checked.map(div => div.text());
+      };
+      const getTableExtra = () => {
+        const tables = modal.findAllComponents(EntityUploadTable);
+        tables.length.should.equal(2);
+        return tables[1].props().extraProperties ?? [];
+      };
+
+      await selectFile(modal, extraCSV);
+      await toggleFirst();
+
+      const secondCSV = createCSV('label,height,foo,bar\ndogwood,1,x,y');
+      await selectFile(modal, secondCSV);
+      getSelected().should.eql(['circumference']);
+      getChecked().should.eql([]);
+      getTableExtra().should.eql([]);
+      await toggleFirst();
+
+      await selectFile(modal, extraCSV);
+      getSelected().should.eql(['circumference', 'foo']);
+      getChecked().should.eql(['circumference']);
+      getTableExtra().should.eql(['circumference']);
+
+      await selectFile(modal, secondCSV);
+      getSelected().should.eql(['circumference', 'foo']);
+      getChecked().should.eql(['foo']);
+      getTableExtra().should.eql(['foo']);
+      await toggleFirst(false);
+
+      await selectFile(modal, extraCSV);
+      await selectFile(modal, secondCSV);
+      getSelected().should.eql(['circumference']);
+      getChecked().should.eql([]);
+      getTableExtra().should.eql([]);
+
+      await modal.setProps({ state: false });
+      await modal.setProps({ state: true });
+
+      await selectFile(modal, extraCSV);
+      getSelected().should.eql([]);
+      getChecked().should.eql([]);
+      getTableExtra().should.eql([]);
     });
 
     it('does not send properties that were not selected', () =>
@@ -692,5 +753,7 @@ describe('EntityUpload', () => {
             ]
           }
         }]));
+
+    it('does not create properties that were selected, but are not in current CSV');
   });
 });

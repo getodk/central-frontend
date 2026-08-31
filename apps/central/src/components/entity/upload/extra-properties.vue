@@ -2,12 +2,13 @@
   <div id="entity-upload-extra-properties" @change="toggle">
     <div v-if="properties.length !== 1" class="checkbox">
       <label>
-        <input type="checkbox" data-select-all="true">{{ $t('action.selectAll') }}
+        <input type="checkbox" :checked="selectedAll" data-select-all="true">
+        <span>{{ $t('action.selectAll') }}</span>
       </label>
     </div>
     <div v-for="name of properties" :key="name" class="checkbox">
       <label>
-        <input type="checkbox" :value="name">
+        <input type="checkbox" :value="name" :checked="selected.has(name)">
         <span v-tooltip.text>{{ name }}</span>
       </label>
     </div>
@@ -15,29 +16,35 @@
 </template>
 
 <script setup>
+import { computed } from 'vue';
+
 defineOptions({
   name: 'EntityUploadExtraProperties'
 });
-defineProps({
+const props = defineProps({
   properties: {
     type: Array,
+    required: true
+  },
+  selected: {
+    type: Set,
     required: true
   }
 });
 const emit = defineEmits(['toggle']);
 
+const selectedAll = computed(() =>
+  props.properties.every(name => props.selected.has(name)));
+
 const toggle = (event) => {
-  const { target } = event;
-  const { checked } = target;
-  if (target.dataset.selectAll === 'true') {
-    for (const input of event.currentTarget.querySelectorAll('input[value]')) {
-      if (input.checked !== checked) {
-        input.checked = checked;
-        emit('toggle', input.value, checked);
-      }
+  const input = event.target;
+  const { checked } = input;
+  if (input.dataset.selectAll === 'true') {
+    for (const name of props.properties) {
+      if (props.selected.has(name) !== checked) emit('toggle', name, checked);
     }
   } else {
-    emit('toggle', target.value, checked);
+    emit('toggle', input.value, checked);
   }
 };
 </script>

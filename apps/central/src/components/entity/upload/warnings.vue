@@ -95,8 +95,7 @@ except according to the terms contained in the LICENSE file.
             {{ $t('extraProperties.description.multiple') }}
           </template>
         </p>
-        <entity-upload-extra-properties :properties="extraProperties"
-          @toggle="toggleExtraProperty"/>
+        <slot name="extra-properties"></slot>
       </template>
     </entity-upload-alert>
   </div>
@@ -104,7 +103,6 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import EntityUploadAlert from './alert.vue';
-import EntityUploadExtraProperties from './extra-properties.vue';
 import I18nList from '../../i18n/list.vue';
 import SentenceSeparator from '../../sentence-separator.vue';
 
@@ -132,11 +130,7 @@ defineProps({
   raggedRows: Array,
   largeCell: Number
 });
-const emit = defineEmits(['rows', 'toggle-extra']);
-
-const toggleExtraProperty = (property, checked) => {
-  emit('toggle-extra', property, checked);
-};
+defineEmits(['rows']);
 </script>
 
 <style lang="scss">
