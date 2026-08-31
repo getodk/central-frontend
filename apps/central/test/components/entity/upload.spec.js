@@ -4,7 +4,7 @@ import { T } from 'ramda';
 import EntityFilters from '../../../src/components/entity/filters.vue';
 import EntityUpload from '../../../src/components/entity/upload.vue';
 import EntityUploadErrors from '../../../src/components/entity/upload/errors.vue';
-import EntityUploadHeaderErrors from '../../../src/components/entity/upload/header-errors.vue';
+import EntityUploadFileSelect from '../../../src/components/entity/upload/file-select.vue';
 import EntityUploadPopup from '../../../src/components/entity/upload/popup.vue';
 import EntityUploadTable from '../../../src/components/entity/upload/table.vue';
 import EntityUploadWarnings from '../../../src/components/entity/upload/warnings.vue';
@@ -122,22 +122,6 @@ describe('EntityUpload', () => {
       testData.extendedDatasets.createPast(1);
     });
 
-    it('shows the pop-up', async () => {
-      const modal = await showModal();
-      await selectFile(modal);
-      const popup = modal.getComponent(EntityUploadPopup);
-      popup.props().filename.should.equal('my_data.csv');
-      popup.props().count.should.equal(1);
-    });
-
-    it('hides the drop zone', async () => {
-      const modal = await showModal();
-      const dropZone = modal.get('#entity-upload-file-select');
-      dropZone.should.be.visible();
-      await selectFile(modal);
-      dropZone.should.be.hidden();
-    });
-
     it('enables the append button', async () => {
       const modal = await showModal();
       const button = modal.get('.modal-actions .btn-primary');
@@ -154,26 +138,33 @@ describe('EntityUpload', () => {
       });
     });
 
-    it('shows errors', async () => {
+    it('shows an error if there are duplicate column headers', async () => {
+      const modal = await showModal();
+      const csv = createCSV('label,label,height,height,height\ndogwood,dogwood,1,1,1');
+      await selectFile(modal, csv);
+      const errors = modal.getComponent(EntityUploadErrors).props();
+      errors.duplicateColumns.should.eql(['label', 'height']);
+    });
+
+    it('shows multiple errors', async () => {
       const modal = await showModal();
       await selectFile(modal, createCSV('foo,,foo\n1,2,3'));
-      modal.getComponent(EntityUploadHeaderErrors).props().should.eql({
-        filename: 'my_data.csv',
-        header: 'foo,,foo',
+      const errors = modal.getComponent(EntityUploadErrors).props();
+      errors.should.include({
         delimiter: ',',
+        count: 3,
         invalidQuotes: false,
         missingLabel: true,
-        unknownProperty: true,
-        duplicateColumn: true,
         emptyColumn: true
       });
+      errors.duplicateColumns.should.eql(['foo']);
     });
 
     it('uses the delimiter from the file', async () => {
       const modal = await showModal();
-      const csv = createCSV('label;height;circumference\ndogwood;1;2');
+      const csv = createCSV('height;circumference\n1;2');
       await selectFile(modal, csv);
-      modal.getComponent(EntityUploadHeaderErrors).props().delimiter.should.equal(';');
+      modal.getComponent(EntityUploadErrors).props().delimiter.should.equal(';');
     });
   });
 
@@ -183,8 +174,9 @@ describe('EntityUpload', () => {
     });
     const modal = await showModal();
     await selectFile(modal, createCSV('label,height\n,1'));
-    const { dataError } = modal.getComponent(EntityUploadErrors).props();
-    dataError.should.equal('There is a problem on row 2 of the file: Missing label.');
+    const errors = modal.getComponent(EntityUploadErrors).props();
+    errors.dataError.should.equal('There is a problem on row 2 of the file: Missing label.');
+    errors.count.should.equal(1);
   });
 
   describe('binary file', () => {
@@ -196,7 +188,7 @@ describe('EntityUpload', () => {
       const modal = await showModal();
       await selectFile(modal, createCSV('f\0o'));
       modal.should.alert('danger', 'The file “my_data.csv” is not a valid .csv file. It cannot be read.');
-      modal.findComponent(EntityUploadHeaderErrors).exists().should.be.false;
+      modal.findComponent(EntityUploadErrors).exists().should.be.false;
     });
 
     it('hides the alert after a valid file is selected', async () => {
@@ -204,7 +196,8 @@ describe('EntityUpload', () => {
       await selectFile(modal, createCSV('f\0o'));
       await selectFile(modal);
       modal.should.not.alert();
-      modal.findComponent(EntityUploadPopup).exists().should.be.true;
+      const button = modal.get('.modal-actions .btn-primary');
+      button.attributes('aria-disabled').should.equal('false');
     });
 
     // This is not necessarily the ideal behavior. Showing an alert would be
@@ -226,21 +219,65 @@ describe('EntityUpload', () => {
       });
     });
 
-    it('shows warnings', async () => {
+    it('shows warnings about the data below the header', async () => {
       const modal = await showModal();
       const csv = createCSV('label,height\nx\ny\n"12345,67890",""');
       await selectFile(modal, csv);
       const warnings = modal.getComponent(EntityUploadWarnings).props();
+      warnings.count.should.equal(2);
       warnings.raggedRows.should.eql([[1, 2]]);
       warnings.largeCell.should.equal(3);
     });
 
-    it('does not show warnings if there is a data error', async () => {
+    it('shows warnings about both the header and the data', async () => {
       const modal = await showModal();
-      await selectFile(modal, createCSV('label,height\nx\ny,""\n"",1'));
+      const csv = createCSV('label,__id,height\ndogwood,e1\nelm,e2,""');
+      await selectFile(modal, csv);
+      const warnings = modal.getComponent(EntityUploadWarnings).props();
+      warnings.count.should.equal(2);
+      warnings.systemProperties.should.eql(['__id']);
+      warnings.raggedRows.should.eql([[1, 1]]);
+    });
+
+    it('shows both errors and warnings about the header', async () => {
+      const modal = await showModal();
+      await selectFile(modal, createCSV('height,__id\n1,e'));
+      const errors = modal.getComponent(EntityUploadErrors).props();
+      errors.missingLabel.should.be.true;
+      const warnings = modal.getComponent(EntityUploadWarnings).props();
+      warnings.systemProperties.should.eql(['__id']);
+    });
+
+    it('does not show data warnings if there is a data error', async () => {
+      testData.extendedDatasets.createPast(1, {
+        properties: [{ name: 'height' }, { name: 'circumference' }]
+      });
+      const modal = await showModal();
+
+      // First, select a CSV that triggers warnings about both the column header
+      // and the data, but does not trigger errors.
+      const warningsCSV = 'label,height\nx\ny,""';
+      await selectFile(modal, createCSV(warningsCSV));
+      modal.findComponent(EntityUploadErrors).exists().should.be.false;
+      const initialWarnings = modal.getComponent(EntityUploadWarnings).props();
+      initialWarnings.count.should.equal(2);
+      initialWarnings.missingProperties.should.eql(['circumference']);
+      initialWarnings.raggedRows.should.eql([[1, 1]]);
+
+      // Next, select a similar CSV that also has an error in the data (a
+      // missing label).
+      await selectFile(modal, createCSV(`${warningsCSV}\n"",1`));
+
+      // This time, we see an error.
       const { dataError } = modal.getComponent(EntityUploadErrors).props();
       dataError.should.startWith('There is a problem on row 4');
-      modal.findComponent(EntityUploadWarnings).exists().should.be.false;
+
+      // There's a warning about the column header, but no warning about the
+      // data.
+      const warnings = modal.getComponent(EntityUploadWarnings).props();
+      warnings.count.should.equal(1);
+      warnings.missingProperties.should.eql(['circumference']);
+      should.not.exist(warnings.raggedRows);
     });
 
     it('shows rows to which a warning applies after they are selected', async () => {
@@ -281,29 +318,30 @@ describe('EntityUpload', () => {
       a.text().should.equal('1–2');
       await a.trigger('click');
       getTables(modal)[1].props().highlighted.should.eql([0, 1]);
-      await modal.get('#entity-upload-popup .btn-link').trigger('click');
       await selectFile(modal, createCSV(csvString));
       should.not.exist(getTables(modal)[1].props().highlighted);
     });
   });
 
-  it('resets after the clear button is clicked', async () => {
+  it('resets errors and warnings after a new file is selected', async () => {
     testData.extendedDatasets.createPast(1, {
       properties: [{ name: 'height' }]
     });
     const modal = await showModal();
-    await selectFile(modal, createCSV('label\nx\n"12345,67890"'));
-
-    const popup = modal.findComponent(EntityUploadPopup);
-    popup.exists().should.be.true;
-    modal.findComponent(EntityUploadWarnings).exists().should.be.true;
-
-    await popup.get('.btn-link').trigger('click');
-
-    modal.findComponent(EntityUploadPopup).exists().should.be.false;
-    modal.findComponent(EntityUploadWarnings).exists().should.be.false;
-    modal.get('#entity-upload-file-select').should.be.visible();
     const button = modal.get('.modal-actions .btn-primary');
+
+    const problemCSV = createCSV('label,label\ndogwood,dogwood');
+    await selectFile(modal, problemCSV);
+    modal.findComponent(EntityUploadErrors).exists().should.be.true;
+    modal.findComponent(EntityUploadWarnings).exists().should.be.true;
+    button.attributes('aria-disabled').should.equal('true');
+
+    await selectFile(modal, createCSV('label,height\ndogwood,1'));
+    modal.findComponent(EntityUploadErrors).exists().should.be.false;
+    modal.findComponent(EntityUploadWarnings).exists().should.be.false;
+    button.attributes('aria-disabled').should.equal('false');
+
+    await selectFile(modal, problemCSV);
     button.attributes('aria-disabled').should.equal('true');
   });
 
@@ -313,17 +351,15 @@ describe('EntityUpload', () => {
     });
     const modal = await showModal();
     await selectFile(modal, createCSV('label\nx\n"12345,67890"'));
+    const button = modal.get('.modal-actions .btn-primary');
 
-    modal.findComponent(EntityUploadPopup).exists().should.be.true;
     modal.findComponent(EntityUploadWarnings).exists().should.be.true;
+    button.attributes('aria-disabled').should.equal('false');
 
     await modal.setProps({ state: false });
     await modal.setProps({ state: true });
 
-    modal.findComponent(EntityUploadPopup).exists().should.be.false;
     modal.findComponent(EntityUploadWarnings).exists().should.be.false;
-    modal.get('#entity-upload-file-select').should.be.visible();
-    const button = modal.get('.modal-actions .btn-primary');
     button.attributes('aria-disabled').should.equal('true');
   });
 
@@ -358,22 +394,31 @@ describe('EntityUpload', () => {
       });
   });
 
-  it('shows a backdrop during the request', () => {
+  it('renders correctly during the request', () => {
     testData.extendedDatasets.createPast(1);
     return showModal()
       .afterResponses(modal => {
+        modal.getComponent(EntityUploadFileSelect).props().disabled.should.be.false;
         modal.find('.backdrop').exists().should.be.false;
+        modal.findComponent(EntityUploadPopup).exists().should.be.false;
       })
       .request(async (modal) => {
         await selectFile(modal);
         return modal.get('.modal-actions .btn-primary').trigger('click');
       })
       .beforeAnyResponse(modal => {
+        modal.getComponent(EntityUploadFileSelect).props().disabled.should.be.true;
         modal.find('.backdrop').exists().should.be.true;
+
+        const popup = modal.getComponent(EntityUploadPopup);
+        popup.props().filename.should.equal('my_data.csv');
+        popup.props().count.should.equal(1);
       })
       .respondWithProblem()
       .afterResponse(modal => {
+        modal.getComponent(EntityUploadFileSelect).props().disabled.should.be.false;
         modal.find('.backdrop').exists().should.be.false;
+        modal.findComponent(EntityUploadPopup).exists().should.be.false;
       });
   });
 
@@ -499,12 +544,12 @@ describe('EntityUpload', () => {
       .request(async (modal) => {
         await selectFile(
           modal,
-          createCSV('label,height,__id,__foo\ndogwood,1,e1,x\nelm,,e2,y')
+          createCSV('label,height,__id,__foo,name\ndogwood,1,e1,x,dogwood\nelm,,e2,y,elm')
         );
 
         // A warning is shown.
         const warnings = modal.getComponent(EntityUploadWarnings).props();
-        warnings.systemProperties.should.eql(['__id', '__foo']);
+        warnings.systemProperties.should.eql(['__id', '__foo', 'name']);
 
         return modal.get('.modal-actions .btn-primary').trigger('click');
       })
@@ -513,7 +558,7 @@ describe('EntityUpload', () => {
         method: 'POST',
         url: '/v1/projects/1/datasets/trees/entities',
         data: {
-          source: { name: 'my_data.csv', size: 48 },
+          source: { name: 'my_data.csv', size: 65 },
           entities: [
             { label: 'dogwood', data: { height: '1' } },
             // If there were only system properties, no proper entity
@@ -592,5 +637,60 @@ describe('EntityUpload', () => {
           ]
         }
       }]);
+  });
+
+  describe('extra properties', () => {
+    beforeEach(() => {
+      testData.extendedDatasets.createPast(1, {
+        properties: [{ name: 'height' }]
+      });
+    });
+
+    const extraCSV = createCSV('label,height,circumference,species\ndogwood,1,2,dogwood\nelm');
+
+    it('shows a warning if there are extra properties', async () => {
+      const modal = await showModal();
+      await selectFile(modal, extraCSV);
+      const warnings = modal.getComponent(EntityUploadWarnings).props();
+      warnings.extraProperties.should.eql(['circumference', 'species']);
+    });
+
+    it('shows selected properties in the table', async () => {
+      const modal = await showModal();
+      await selectFile(modal, extraCSV);
+
+      const tables = modal.findAllComponents(EntityUploadTable);
+      tables.length.should.equal(2);
+      const table = tables[1];
+      table.props().extraProperties.should.eql([]);
+
+      const input = modal.get('#entity-upload-extra-properties .checkbox:nth-child(2) input');
+      await input.setChecked();
+      table.props().extraProperties.should.eql(['circumference']);
+
+      await input.setChecked(false);
+      table.props().extraProperties.should.eql([]);
+    });
+
+    it('does not send properties that were not selected', () =>
+      showModal()
+        .complete()
+        .request(async (modal) => {
+          await selectFile(modal, extraCSV);
+          return modal.get('.modal-actions .btn-primary').trigger('click');
+        })
+        .respondWithProblem()
+        .testRequests([{
+          method: 'POST',
+          url: '/v1/projects/1/datasets/trees/entities',
+          data: {
+            source: { name: 'my_data.csv', size: 58 },
+            entities: [
+              { label: 'dogwood', data: { height: '1' } },
+              // Don't bother sending an empty `data` object.
+              { label: 'elm' }
+            ]
+          }
+        }]));
   });
 });
