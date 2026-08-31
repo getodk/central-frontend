@@ -258,26 +258,32 @@ const validateHeader = ({ columns, errors: papaErrors }) => {
   return result;
 };
 const { t } = useI18n();
+// noPropertyData is used to minimize the JSON sent to Backend: the JSON won't
+// specify a `data` property for an entity without property data.
+const noPropertyData = { toJSON: () => undefined };
 const rowToEntity = (extraProperties) => (values, columns) => {
   let label;
   const data = Object.create(null);
+  let hasProperty = false;
   const extraData = extraProperties.size !== 0 ? Object.create(null) : undefined;
   for (const [i, value] of values.entries()) {
     if (value === '') continue; // eslint-disable-line no-continue
 
     const column = columns[i];
-    if (column === 'label')
+    if (column === 'label') {
       label = value;
-    else if (dataset.propertyMap.has(column))
+    } else if (dataset.propertyMap.has(column)) {
       data[column] = value;
-    else if (extraProperties.has(column))
+      hasProperty = true;
+    } else if (extraProperties.has(column)) {
       extraData[column] = value;
+    }
   }
 
   if (label == null || /^\s+$/.test(label))
     throw new Error(t('alert.blankLabel'));
 
-  return { label, data, extra: extraData };
+  return { label, data: hasProperty ? data : noPropertyData, extra: extraData };
 };
 const { i18n: globalI18n, redAlert } = inject('container');
 const parseEntities = async (file, headerResults, extraProperties, signal) => {
@@ -396,11 +402,9 @@ const propertiesToCreate = computed(() =>
 const { request, awaitingResponse: uploading } = useRequest();
 const uploadProgress = ref(0);
 const upload = () => {
-  const entitiesToSend = csvEntities.value.map(entity => {
-    const result = { label: entity.label };
-    if (Object.keys(entity.data).length !== 0) result.data = entity.data;
-    return result;
-  });
+  const entitiesToSend = csvEntities.value.map(entity => (entity.extra == null
+    ? entity
+    : { label: entity.label, data: entity.data }));
   request({
     method: 'POST',
     url: apiPaths.entities(dataset.projectId, dataset.name),
