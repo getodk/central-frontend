@@ -1,5 +1,4 @@
 ---
-"@getodk/web-forms": minor
 "@getodk/forms": minor
 ---
 
