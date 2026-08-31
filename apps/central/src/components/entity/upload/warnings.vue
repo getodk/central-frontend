@@ -188,7 +188,7 @@ const toggleExtraProperty = (property, checked) => {
     "extraProperties": {
       "title": {
         "one": "Column doesn’t match existing properties",
-        "multiple": "These columns don’t match existing properties",
+        "multiple": "These columns don’t match existing properties"
       },
       "description": {
         "one": "Select the column to create a new property, otherwise it will be ignored.",
