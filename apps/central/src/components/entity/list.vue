@@ -17,6 +17,7 @@ except according to the terms contained in the LICENSE file.
         <form class="form-inline" @submit.prevent>
           <search-textbox v-model="searchTerm" :label="$t('common.search')" :hide-label="true" :disabled="deleted" :disabled-message="deleted ? $t('searchDisabledMessage') : null"/>
           <entity-filters v-model:conflict="conflict" v-model:creatorId="creatorIds" v-model:creationDate="creationDateRange"
+          v-model:view-as="viewAs"
           :disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null" @reset-click="resetFilters"/>
         </form>
         <radio-field v-if="dataset.dataExists && dataset.hasGeometry"
@@ -24,7 +25,7 @@ except according to the terms contained in the LICENSE file.
           :disabled-message="$t('mapDisabled')" button-appearance/>
         <teleport-if-exists v-if="odataEntities.dataExists" to=".dataset-entities-heading-row-right-side">
           <entity-download-button :odata-filter="deleted ? null : odataFilter"
-          :search-term="deleted ? null : searchTerm"
+          :search-term="deleted ? null : searchTerm" :view-as="deleted ? null : viewAs"
           :disabled="deleted"
           v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"/>
         </teleport-if-exists>
@@ -37,14 +38,14 @@ except according to the terms contained in the LICENSE file.
 
       <entity-table-view v-if="dataView === 'table'" ref="view"
         v-model:all-selected="allSelected" :deleted="deleted"
-        :filter="odataFilter" :search-term="searchTerm"
+        :filter="odataFilter" :search-term="searchTerm" :view-as="viewAs"
         :awaiting-responses="awaitingResponses"
         @selection-changed="handleSelectionChange"
         @clear-selection="clearSelectedEntities"
         @update="showUpdate" @resolve="showResolve" @delete="showDelete"
         @restore="showRestore"/>
       <entity-map-view v-else ref="view" :filter="odataFilter"
-        :search-term="searchTerm" :awaiting-responses="awaitingResponses"
+        :search-term="searchTerm" :view-as="viewAs" :awaiting-responses="awaitingResponses"
         @update="showUpdate" @resolve="showResolve" @delete="showDelete"/>
     </disable-container>
 
@@ -93,6 +94,7 @@ import useDataView from '../../composables/data-view';
 import useQueryRef from '../../composables/query-ref';
 import useDateRangeQueryRef from '../../composables/date-range-query-ref';
 import useRequest from '../../composables/request';
+import useProject from '../../request-data/project';
 import { apiPaths, requestAlertMessage } from '../../util/request';
 import { odataEntityToRest } from '../../util/odata';
 import { joinSentences } from '../../util/i18n';
@@ -140,6 +142,7 @@ export default {
     // The dataset request object is how we get access to the
     // dataset properties for the columns.
     const { dataset, deletedEntityCount, odataEntities, entityCreators } = useRequestData();
+    const { fieldKeys } = useProject();
 
     // Array of conflict statuses, where a conflict status is represented as a
     // boolean
@@ -179,14 +182,29 @@ export default {
         creatorIds.value = [...entityCreators.ids];
     });
 
+    // viewAs will reset to null if it can't find a matching actorId
+    // but it will use it in the first request for entities.
+    const viewAs = useQueryRef({
+      fromQuery: (query) => {
+        if (!/^[1-9]\d*$/.test(query.viewAs)) return null;
+        const id = Number.parseInt(query.viewAs, 10);
+        return !fieldKeys.dataExists || fieldKeys.data.some(fieldKey => fieldKey.id === id) ? id : null;
+      },
+      toQuery: (value) => ({ viewAs: value != null ? value.toString() : null })
+    });
+    watch(() => fieldKeys.dataExists, () => {
+      if (viewAs.value != null && !fieldKeys.data.some(fieldKey => fieldKey.id === viewAs.value))
+        viewAs.value = null;
+    });
+
     const creationDateRange = useDateRangeQueryRef();
     const { dataView, options: viewOptions } = useDataView();
 
     const { request } = useRequest();
 
     return {
-      dataset, deletedEntityCount, odataEntities, entityCreators,
-      searchTerm, creatorIds, creationDateRange, conflict,
+      dataset, deletedEntityCount, odataEntities, entityCreators, fieldKeys,
+      searchTerm, creatorIds, creationDateRange, conflict, viewAs,
       dataView, viewOptions,
       request
     };
@@ -275,7 +293,7 @@ export default {
       handler() {
         if (this.dataset.dataExists && this.odataEntities.dataExists &&
           this.dataView === 'table' && !this.odataFilter && !this.deleted &&
-          !this.searchTerm)
+          !this.searchTerm && this.viewAs == null)
           this.dataset.entities = this.odataEntities.count;
       }
     },
@@ -306,6 +324,7 @@ export default {
   },
   created() {
     this.fetchCreators();
+    this.fetchFieldKeys();
   },
   methods: {
     resetFilters() {
@@ -321,7 +340,7 @@ export default {
     },
     // This method is called directly by DatasetEntities.
     reset() {
-      if (this.odataFilter == null && !this.searchTerm) {
+      if (this.odataFilter == null && !this.searchTerm && this.viewAs == null) {
         this.$refs.view.fetchData();
       } else {
         this.resetFilters();
@@ -330,6 +349,11 @@ export default {
     fetchCreators() {
       this.entityCreators.request({
         url: apiPaths.entityCreators(this.projectId, this.datasetName)
+      }).catch(noop);
+    },
+    fetchFieldKeys() {
+      this.fieldKeys.request({
+        url: apiPaths.fieldKeys(this.projectId)
       }).catch(noop);
     },
     showUpdate(entity) {
