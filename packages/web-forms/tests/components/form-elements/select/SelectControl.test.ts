@@ -411,5 +411,17 @@ describe('SelectControl', () => {
       expect(ratingNode.currentState.value[0]).toBe('1');
       expect(root.currentState.currentPage).toBe(ratingNode.currentState.pageBoundary);
     });
+
+    it('does not advance when the answer violates a constraint', async () => {
+      const spiceNode = getSelectNodeByReference(root, '/data/spice');
+      root.setCurrentPage(spiceNode.currentState.pageBoundary);
+      const component = mountComponent(spiceNode);
+      const violatingOption = component.find(`input[id="${spiceNode.nodeId}_ghost"]`);
+
+      await violatingOption.trigger('click');
+
+      expect(spiceNode.validationState.violation).not.toBeNull();
+      expect(root.currentState.currentPage).toBe(spiceNode.currentState.pageBoundary);
+    });
   });
 });

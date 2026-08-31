@@ -7,6 +7,7 @@
         <data id="pg_18_quick">
           <fruit/>
           <rating/>
+          <spice/>
           <comment/>
           <meta>
             <instanceID/>
@@ -15,6 +16,7 @@
       </instance>
       <bind nodeset="/data/fruit" type="string"/>
       <bind nodeset="/data/rating" type="string"/>
+      <bind nodeset="/data/spice" type="string" constraint=". != 'ghost'"/>
       <bind nodeset="/data/comment" type="string"/>
       <bind nodeset="/data/meta/instanceID" type="string"/>
     </model>
@@ -29,6 +31,11 @@
       <label>Rating?</label>
       <item><label>1</label><value>1</value></item>
       <item><label>2</label><value>2</value></item>
+    </select1>
+    <select1 ref="/data/spice" appearance="quick">
+      <label>Spice level?</label>
+      <item><label>Mild</label><value>mild</value></item>
+      <item><label>Ghost pepper</label><value>ghost</value></item>
     </select1>
     <input ref="/data/comment"><label>Any comment?</label></input>
   </h:body>

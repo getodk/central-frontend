@@ -16,8 +16,9 @@ export const advanceIfQuick = (question: SelectNode) => {
   const { appearances } = question;
   const isQuick = appearances.quick || appearances.quickcompact;
   const supportsAutoAdvance = !appearances.label && !appearances.likert;
+  const isValid = question.validationState.violation == null;
 
-  if (isQuick && supportsAutoAdvance) {
+  if (isQuick && supportsAutoAdvance && isValid) {
     question.root.nextPage();
   }
 };
