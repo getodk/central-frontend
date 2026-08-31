@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <file-drop-zone id="entity-upload-file-select" :disabled="parsing"
+  <file-drop-zone id="entity-upload-file-select" :disabled="disabled"
     @drop="$emit('change', $event.dataTransfer.files[0])">
     <div id="entity-upload-file-select-heading">
       <div>
@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
             <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
             <input v-show="false" ref="input" type="file" accept=".csv,.tsv"
               @change="changeInput">
-            <button type="button" class="btn btn-outlined" :aria-disabled="parsing"
+            <button type="button" class="btn btn-outlined" :aria-disabled="disabled"
               @click="input.click()">
               {{ $t('text.chooseFile') }}
             </button>
@@ -30,7 +30,6 @@ except according to the terms contained in the LICENSE file.
       </div>
       <div v-show="parsing"><spinner inline/>{{ $t('parsing') }}</div>
     </div>
-    <slot></slot>
   </file-drop-zone>
 </template>
 
@@ -46,6 +45,7 @@ defineOptions({
   name: 'EntityUploadFileSelect'
 });
 defineProps({
+  disabled: Boolean,
   parsing: Boolean
 });
 const emit = defineEmits(['change']);

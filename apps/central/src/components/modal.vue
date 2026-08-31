@@ -17,7 +17,7 @@ checkScroll() method may add the `has-scroll` class. -->
     <div v-show="state" ref="el" v-bind="$attrs" class="modal" tabindex="-1"
       :style="backdrop ? { backgroundColor: 'rgba(0, 0, 0, 0.5)' } : null"
       role="dialog" :aria-labelledby="titleId" @mousedown="modalMousedown"
-      @click="modalClick" @keydown.esc="hideIfCan" @focusout="refocus">
+      @click="modalClick" @keydown.esc="hideOnEsc">
       <div class="modal-dialog" :class="sizeClass" role="document">
         <div class="modal-content">
           <div class="modal-top-actions">
@@ -70,7 +70,9 @@ const props = defineProps({
     default: 'normal'
   },
   // Shows a dark overlay behind the modal
-  backdrop: Boolean
+  backdrop: Boolean,
+  // If true, the modal will not close on ESC key or click outside
+  persistent: Boolean
 });
 const emit = defineEmits(['shown', 'hide', 'mutate']);
 
@@ -164,6 +166,16 @@ const observer = new MutationObserver(() => {
   }
 });
 
+// Redirects focus back to the modal if it moves outside. Similar to bootstrap's internal
+// implementation
+const enforceFocus = (event) => {
+  if (!props.state || el.value == null) return;
+  // Do not focus the .modal element if it is already focused or if it
+  // contains the focused element.
+  if (event.target === el.value || event.target.closest('.modal') === el.value) return;
+  el.value.focus();
+};
+
 const show = () => {
   addModalOpenClass();
   checkScroll();
@@ -174,8 +186,16 @@ const show = () => {
     characterData: true
   });
   window.addEventListener('resize', handleWindowResize);
+  document.addEventListener('focusin', enforceFocus);
+
   // Emit shown after nextTick to ensure DOM is updated (v-show has made element visible)
-  nextTick(() => { emit('shown'); });
+  nextTick(() => {
+    // Focus the modal so that pressing Escape will hide it.
+    if (document.activeElement == null || document.activeElement.closest('.modal') !== el.value) {
+      el.value.focus();
+    }
+    emit('shown');
+  });
   openModal.shown(el.value);
 };
 const removeSelection = () => {
@@ -189,6 +209,7 @@ const hide = () => {
   removeModalOpenClass();
   el.value.classList.remove('has-scroll');
   window.removeEventListener('resize', handleWindowResize);
+  document.removeEventListener('focusin', enforceFocus);
   removeSelection();
   openModal.hidden();
 };
@@ -204,6 +225,7 @@ onMounted(() => { if (props.state) show(); });
 onBeforeUnmount(() => { if (props.state) hide(); });
 
 const hideIfCan = () => { if (props.hideable) emit('hide'); };
+const hideOnEsc = () => { if (!props.persistent) hideIfCan(); };
 
 const sizeClass = computed(() => {
   switch (props.size) {
@@ -218,31 +240,12 @@ const modalMousedown = (event) => {
   mousedownOutsideDialog = event.target === event.currentTarget;
 };
 const modalClick = (event) => {
+  if (props.persistent) return;
   const mouseupOutsideDialog = event.target === event.currentTarget;
   if (mousedownOutsideDialog && mouseupOutsideDialog) hideIfCan();
 };
 
-// Refocuses the modal if it has lost focus. This is needed so that the escape
-// key still hides the modal.
-const refocus = () => {
-  /* As the user moves from one element in the modal to another, there may be
-  the briefest moment when neither element is focused. We should not refocus the
-  modal in that moment, because the second element will soon receive focus, and
-  focusing the .modal element would prevent that. Thus, we use setTimeout() to
-  give the second element time to receive focus. (Using nextTick() instead of
-  setTimeout() didn't work.) */
-  setTimeout(() => {
-    // Do not focus the modal if it has lost focus after being hidden or
-    // unmounted.
-    if (!props.state || el.value == null) return;
-    // Do not focus the .modal element if it is already focused or if it
-    // contains the active element.
-    if (document.activeElement != null &&
-      document.activeElement.closest('.modal') === el.value)
-      return;
-    el.value.focus();
-  });
-};
+
 
 id += 1;
 const titleId = `modal-title${id}`;

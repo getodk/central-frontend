@@ -136,7 +136,7 @@ const handleResult = () => {
   if (submissionResult.primaryInstanceResult.success && attachmentResultArr.every(r => r.success)) {
 
     clearForm();
-    
+
     if (isPublicLink.value) {
       visibleModal.value = { type: 'thankYouModal', hideable: false };
     } else if (isEdit.value) {
@@ -296,10 +296,6 @@ const editInstanceOptions = computed(() => {
   return null;
 });
 
-const closeWindow = () => {
-  window.close();
-};
-
 onMounted(async () => {
   if (!isEdit.value && !props.form.draft) {
     lastSavedXml.value = await getLastSaved(props.form.projectId, props.form.xmlFormId);
@@ -357,7 +353,6 @@ onMounted(async () => {
     </template>
     <template #footer>
       <template v-if="visibleModal.type === 'submissionModal'">
-        <Button type="button" @click="closeWindow()" variant="text">{{ $t('action.close') }}</Button>
         <Button type="button" @click="visibleModal = null">{{ $t('submissionModal.action.fillOutAgain') }}</Button>
       </template>
       <!-- Any type of error while sending attachments -->

@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="entity-upload-warnings">
-    <p class="entity-upload-section-title">{{ $t('title') }}</p>
+    <p class="entity-upload-section-title">{{ $tcn('title', count) }}</p>
     <p>{{ $t('introduction') }}</p>
 
     <!-- Column header warnings -->
@@ -58,9 +58,10 @@ except according to the terms contained in the LICENSE file.
     </entity-upload-alert>
     <entity-upload-alert v-if="missingProperties != null" type="warning">
       <template #title>
-        {{ $tc('missingProperties', missingProperties.length) }}
+        {{ $tc('missingProperties.title', missingProperties.length) }}
       </template>
       <template #body>
+        <p>{{ $tc('missingProperties.description', missingProperties.length) }}</p>
         <p><i18n-list :list="missingProperties"/></p>
       </template>
     </entity-upload-alert>
@@ -74,11 +75,36 @@ except according to the terms contained in the LICENSE file.
       :ranges="[[largeCell, largeCell]]" @rows="$emit('rows', $event)">
       <template #title>{{ $t('row.largeCell') }}</template>
     </entity-upload-alert>
+
+    <!-- Extra properties -->
+    <entity-upload-alert v-if="extraProperties != null" type="warning">
+      <template #title>
+        <template v-if="extraProperties.length === 1">
+          {{ $t('extraProperties.title.one') }}
+        </template>
+        <template v-else>
+          {{ $t('extraProperties.title.multiple') }}
+        </template>
+      </template>
+      <template #body>
+        <p>
+          <template v-if="extraProperties.length === 1">
+            {{ $t('extraProperties.description.one') }}
+          </template>
+          <template v-else>
+            {{ $t('extraProperties.description.multiple') }}
+          </template>
+        </p>
+        <entity-upload-extra-properties :properties="extraProperties"
+          @toggle="toggleExtraProperty"/>
+      </template>
+    </entity-upload-alert>
   </div>
 </template>
 
 <script setup>
 import EntityUploadAlert from './alert.vue';
+import EntityUploadExtraProperties from './extra-properties.vue';
 import I18nList from '../../i18n/list.vue';
 import SentenceSeparator from '../../sentence-separator.vue';
 
@@ -90,26 +116,31 @@ defineProps({
     type: String,
     required: true
   },
+  count: {
+    type: Number,
+    required: true
+  },
 
   // Column header warnings
   systemProperties: Array,
   caseMismatch: Array,
   invalidProperties: Array,
   missingProperties: Array,
+  extraProperties: Array,
 
   // Data warnings (below the column header)
   raggedRows: Array,
   largeCell: Number
 });
-defineEmits(['rows']);
+const emit = defineEmits(['rows', 'toggle-extra']);
+
+const toggleExtraProperty = (property, checked) => {
+  emit('toggle-extra', property, checked);
+};
 </script>
 
 <style lang="scss">
 @import '../../../assets/scss/mixins';
-
-#entity-upload-warnings {
-  margin-top: 20px;
-}
 
 #entity-upload-warnings-case-mismatch {
   div:has(> table) {
@@ -134,7 +165,7 @@ defineEmits(['rows']);
     // @transifexKey component.EntityUploadHeaderReview.title
     // This text is shown above a section where the user can review warnings
     // about their data.
-    "title": "Review warnings",
+    "title": "Review {count} warning | Review {count} warnings",
     "introduction": "Some rows contain warnings that may affect upload results.",
 
     // "Properties" refers to Entity properties.
@@ -148,9 +179,23 @@ defineEmits(['rows']);
     },
     // "Property" refers to an Entity property.
     "invalidProperties": "This column is not a valid property name | These columns are not valid property names",
-    // @transifexKey component.EntityUploadHeaderReview.missingProperties
-    // This text is followed by a list of Entity property names.
-    "missingProperties": "This property is not included in your file and will be left empty: | These properties are not included in your file and will be left empty:",
+    "missingProperties": {
+      // "Property" refers to an Entity property.
+      "title": "Property not found in file | Properties not found in file",
+      // "Property" refers to an Entity property.
+      "description": "This property will be left empty. | These properties will be left empty."
+    },
+    "extraProperties": {
+      "title": {
+        "one": "Column doesn’t match existing properties",
+        "multiple": "These columns don’t match existing properties"
+      },
+      "description": {
+        "one": "Select the column to create a new property, otherwise it will be ignored.",
+        // "Ones" refers to "columns".
+        "multiple": "Select which ones to create, otherwise they will be ignored."
+      }
+    },
     // "Property" refers to an Entity property.
     "propertiesIgnored": "This property will be ignored. | These properties will be ignored.",
     "columnsIgnored": "This column will be ignored. | These columns will be ignored.",

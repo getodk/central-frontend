@@ -9,15 +9,9 @@ const mountComponent = (options = undefined) =>
 
 describe('EntityUploadPopup', () => {
   it('shows the filename', async () => {
-    const div = mountComponent().get('#entity-upload-popup-heading div');
+    const div = mountComponent().get('#entity-upload-popup-heading');
     div.text().should.equal('my_data.csv');
     await div.should.have.textTooltip();
-  });
-
-  it('emits a clear event if the clear button is clicked', async () => {
-    const component = mountComponent();
-    await component.get('.btn-link').trigger('click');
-    component.emitted().clear.should.eql([[]]);
   });
 
   it('shows the count', () => {
@@ -28,31 +22,10 @@ describe('EntityUploadPopup', () => {
     text.should.equal('1,000 data rows found');
   });
 
-  it('hides elements during a request', () => {
-    const component = mountComponent({
-      props: { awaitingResponse: true }
-    });
-    component.get('.btn-link').should.be.hidden();
-  });
-
   describe('request status', () => {
-    it('does not show a status if there is no request', () => {
-      const component = mountComponent({
-        props: { awaitingResponse: false }
-      });
-      component.get('#entity-upload-popup-status').should.be.hidden();
-    });
-
-    it('shows the status during a request', () => {
-      const component = mountComponent({
-        props: { awaitingResponse: true }
-      });
-      component.get('#entity-upload-popup-status').should.be.visible();
-    });
-
     it('shows the upload progress', () => {
       const component = mountComponent({
-        props: { awaitingResponse: true, progress: 0.5 }
+        props: { progress: 0.5 }
       });
       const text = component.get('#entity-upload-popup-status').text();
       text.should.equal('Sending file… (50%)');
@@ -60,7 +33,7 @@ describe('EntityUploadPopup', () => {
 
     it('changes the status once all data has been sent', () => {
       const component = mountComponent({
-        props: { awaitingResponse: true, progress: 1 }
+        props: { progress: 1 }
       });
       const text = component.get('#entity-upload-popup-status').text();
       text.should.equal('Processing file…');

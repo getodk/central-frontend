@@ -1,13 +1,14 @@
 import { nextTick } from 'vue';
 
 import EntityUploadAlert from '../../../../src/components/entity/upload/alert.vue';
+import EntityUploadExtraProperties from '../../../../src/components/entity/upload/extra-properties.vue';
 import EntityUploadWarnings from '../../../../src/components/entity/upload/warnings.vue';
 
 import { mergeMountOptions, mount } from '../../../util/lifecycle';
 
 const mountComponent = (options) =>
   mount(EntityUploadWarnings, mergeMountOptions(options, {
-    props: { filename: 'my_data.csv' }
+    props: { filename: 'my_data.csv', count: 1 }
   }));
 
 describe('EntityUploadWarnings', () => {
@@ -73,9 +74,22 @@ describe('EntityUploadWarnings', () => {
     await nextTick();
 
     const p = component.getComponent(EntityUploadAlert).findAll('p');
+    p.length.should.equal(3);
+    p[0].text().should.equal('Properties not found in file');
+    p[2].text().should.equal('foo, bar');
+  });
+
+  it('shows a warning for unknown properties', () => {
+    const component = mountComponent({
+      props: { extraProperties: ['foo', 'bar'] }
+    });
+
+    const p = component.getComponent(EntityUploadAlert).findAll('p');
     p.length.should.equal(2);
-    p[0].text().should.startWith('These properties are not included in your file');
-    p[1].text().should.equal('foo, bar');
+    p[0].text().should.equal('These columns don’t match existing properties');
+
+    const extraComponent = component.getComponent(EntityUploadExtraProperties);
+    expect(extraComponent.props().properties).to.eql(['foo', 'bar']);
   });
 
   it('shows a warning for ragged rows', () => {
@@ -98,7 +112,7 @@ describe('EntityUploadWarnings', () => {
 
   it('shows multiple warnings', () => {
     const component = mountComponent({
-      props: { raggedRows: [[1, 2]], largeCell: 3 }
+      props: { count: 2, raggedRows: [[1, 2]], largeCell: 3 }
     });
     const warnings = component.findAllComponents(EntityUploadAlert);
     warnings.length.should.equal(2);
@@ -109,7 +123,7 @@ describe('EntityUploadWarnings', () => {
 
   it('emits a rows event after a row range is clicked', async () => {
     const component = mountComponent({
-      props: { raggedRows: [[1, 2]], largeCell: 3 }
+      props: { count: 2, raggedRows: [[1, 2]], largeCell: 3 }
     });
     const warnings = component.findAllComponents(EntityUploadAlert);
     warnings.length.should.equal(2);
