@@ -2,7 +2,10 @@ import type { RootNode } from '@getodk/xforms-engine';
 import { nextTick, watch } from 'vue';
 import { containerId } from '@getodk/web-forms/lib/format/ids.ts';
 
-const findFocusTarget = (
+const isDatepickerInput = (el: HTMLElement | null) => !!el?.matches('.p-datepicker-input');
+const hasErrorHighlight = (el: HTMLElement | null) => el?.closest('.highlight') != null;
+
+const findControl = (
   node: HTMLElement | null,
   container: HTMLElement | null
 ): HTMLElement | null => {
@@ -12,7 +15,18 @@ const findFocusTarget = (
   }
 
   // Some controls (radios, upload) don't carry the question id on their focusable element, so search for it.
-  const control = (container ?? node)?.querySelector<HTMLElement>(FOCUSABLE);
+  return (container ?? node)?.querySelector<HTMLElement>(FOCUSABLE) ?? null;
+};
+
+const findFocusTarget = (
+  node: HTMLElement | null,
+  container: HTMLElement | null
+): HTMLElement | null => {
+  const control = findControl(node, container);
+  // Focusing a datepicker opens the calendar; when the question has no validation error, focus the container instead.
+  if (isDatepickerInput(control) && !hasErrorHighlight(control)) {
+    return container;
+  }
   return control ?? container ?? node;
 };
 
