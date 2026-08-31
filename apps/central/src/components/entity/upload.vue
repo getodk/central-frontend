@@ -263,9 +263,9 @@ const { t } = useI18n();
 const noPropertyData = { toJSON: () => undefined };
 const rowToEntity = (extraProperties) => (values, columns) => {
   let label;
-  const data = Object.create(null);
+  const data = dataset.properties.length !== 0 ? Object.create(null) : null;
   let hasProperty = false;
-  const extraData = extraProperties.size !== 0 ? Object.create(null) : undefined;
+  const extraData = extraProperties.size !== 0 ? Object.create(null) : null;
   for (const [i, value] of values.entries()) {
     if (value === '') continue; // eslint-disable-line no-continue
 
@@ -283,7 +283,9 @@ const rowToEntity = (extraProperties) => (values, columns) => {
   if (label == null || /^\s+$/.test(label))
     throw new Error(t('alert.blankLabel'));
 
-  return { label, data: hasProperty ? data : noPropertyData, extra: extraData };
+  const result = { label, data: hasProperty ? data : noPropertyData };
+  if (extraData != null) result.extra = extraData;
+  return result;
 };
 const { i18n: globalI18n, redAlert } = inject('container');
 const parseEntities = async (file, headerResults, extraProperties, signal) => {
