@@ -68,6 +68,7 @@ const { formatRange } = useI18nUtils();
   // Title
   > :first-child {
     @include line-clamp(2);
+    margin-bottom: 5px;
 
     // Icon
     > :first-child { margin-right: $margin-right-icon; }

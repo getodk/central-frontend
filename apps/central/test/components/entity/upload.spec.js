@@ -152,10 +152,9 @@ describe('EntityUpload', () => {
       const errors = modal.getComponent(EntityUploadErrors).props();
       errors.should.include({
         delimiter: ',',
-        count: 4,
+        count: 3,
         invalidQuotes: false,
         missingLabel: true,
-        unknownProperty: true,
         emptyColumn: true
       });
       errors.duplicateColumns.should.eql(['foo']);
@@ -163,7 +162,7 @@ describe('EntityUpload', () => {
 
     it('uses the delimiter from the file', async () => {
       const modal = await showModal();
-      const csv = createCSV('label;height;circumference\ndogwood;1;2');
+      const csv = createCSV('height;circumference\n1;2');
       await selectFile(modal, csv);
       modal.getComponent(EntityUploadErrors).props().delimiter.should.equal(';');
     });
@@ -638,5 +637,60 @@ describe('EntityUpload', () => {
           ]
         }
       }]);
+  });
+
+  describe('extra properties', () => {
+    beforeEach(() => {
+      testData.extendedDatasets.createPast(1, {
+        properties: [{ name: 'height' }]
+      });
+    });
+
+    const extraCSV = createCSV('label,height,circumference,species\ndogwood,1,2,dogwood\nelm');
+
+    it('shows a warning if there are extra properties', async () => {
+      const modal = await showModal();
+      await selectFile(modal, extraCSV);
+      const warnings = modal.getComponent(EntityUploadWarnings).props();
+      warnings.extraProperties.should.eql(['circumference', 'species']);
+    });
+
+    it('shows selected properties in the table', async () => {
+      const modal = await showModal();
+      await selectFile(modal, extraCSV);
+
+      const tables = modal.findAllComponents(EntityUploadTable);
+      tables.length.should.equal(2);
+      const table = tables[1];
+      table.props().extraProperties.should.eql([]);
+
+      const input = modal.get('#entity-upload-extra-properties .checkbox:nth-child(2) input');
+      await input.setChecked();
+      table.props().extraProperties.should.eql(['circumference']);
+
+      await input.setChecked(false);
+      table.props().extraProperties.should.eql([]);
+    });
+
+    it('does not send properties that were not selected', () =>
+      showModal()
+        .complete()
+        .request(async (modal) => {
+          await selectFile(modal, extraCSV);
+          return modal.get('.modal-actions .btn-primary').trigger('click');
+        })
+        .respondWithProblem()
+        .testRequests([{
+          method: 'POST',
+          url: '/v1/projects/1/datasets/trees/entities',
+          data: {
+            source: { name: 'my_data.csv', size: 58 },
+            entities: [
+              { label: 'dogwood', data: { height: '1' } },
+              // Don't bother sending an empty `data` object.
+              { label: 'elm' }
+            ]
+          }
+        }]));
   });
 });
