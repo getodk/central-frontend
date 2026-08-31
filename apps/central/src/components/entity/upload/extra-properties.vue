@@ -31,8 +31,10 @@ const toggle = (event) => {
   const { checked } = target;
   if (target.dataset.selectAll === 'true') {
     for (const input of event.currentTarget.querySelectorAll('input[value]')) {
-      input.checked = checked;
-      emit('toggle', input.value, checked);
+      if (input.checked !== checked) {
+        input.checked = checked;
+        emit('toggle', input.value, checked);
+      }
     }
   } else {
     emit('toggle', target.value, checked);
