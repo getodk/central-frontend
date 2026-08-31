@@ -78,13 +78,25 @@ describe('EntityUploadWarnings', () => {
     p[2].text().should.equal('foo, bar');
   });
 
-  it('shows a warning for unknown properties', () => {
-    const component = mountComponent({
-      props: { extraProperties: ['foo', 'bar'] }
+  describe('unknown properties', () => {
+    it('shows a warning for unknown properties', () => {
+      const component = mountComponent({
+        props: { extraProperties: ['foo', 'bar'] }
+      });
+      const p = component.getComponent(EntityUploadAlert).findAll('p');
+      p.length.should.equal(2);
+      p[0].text().should.equal('These columns don’t match existing properties');
+      p[1].text().should.startWith('Select which ones to create');
     });
-    const p = component.getComponent(EntityUploadAlert).findAll('p');
-    p.length.should.equal(2);
-    p[0].text().should.equal('These columns don’t match existing properties');
+
+    it('shows different text if there are errors', () => {
+      const component = mountComponent({
+        props: { extraProperties: ['foo', 'bar'], errors: 2 }
+      });
+      const warning = component.getComponent(EntityUploadAlert);
+      const text = warning.get('p:nth-child(2)').text();
+      text.should.startWith('Once you’ve fixed the errors, you’ll be able to select');
+    });
   });
 
   it('shows a warning for ragged rows', () => {

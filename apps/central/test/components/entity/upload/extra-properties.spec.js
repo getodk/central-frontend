@@ -36,6 +36,17 @@ describe('EntityUploadExtraProperties', () => {
     });
   });
 
+  it('disables checkboxes if the disabled prop is true', () => {
+    const component = mountComponent({
+      props: { properties: ['foo', 'bar'], disabled: true }
+    });
+    const checkboxes = component.findAll('.checkbox');
+    for (const checkbox of checkboxes) {
+      checkbox.classes('disabled').should.be.true;
+      checkbox.get('input').element.disabled.should.be.true;
+    }
+  });
+
   it('emits a toggle event when a property is checked', async () => {
     const component = mountComponent({
       props: { properties: ['foo', 'bar'] }

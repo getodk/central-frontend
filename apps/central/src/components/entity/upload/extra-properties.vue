@@ -1,14 +1,16 @@
 <template>
   <div id="entity-upload-extra-properties" @change="toggle">
-    <div v-if="properties.length !== 1" class="checkbox">
+    <div v-if="properties.length !== 1" class="checkbox" :class="{ disabled }">
       <label>
-        <input type="checkbox" :checked="selectedAll" data-select-all="true">
+        <input type="checkbox" :checked="selectedAll" :disabled="disabled"
+          data-select-all="true">
         <span>{{ $t('action.selectAll') }}</span>
       </label>
     </div>
-    <div v-for="name of properties" :key="name" class="checkbox">
+    <div v-for="name of properties" :key="name" class="checkbox" :class="{ disabled }">
       <label>
-        <input type="checkbox" :value="name" :checked="selected.has(name)">
+        <input type="checkbox" :value="name" :checked="selected.has(name)"
+          :disabled="disabled">
         <span v-tooltip.text>{{ name }}</span>
       </label>
     </div>
@@ -29,7 +31,8 @@ const props = defineProps({
   selected: {
     type: Set,
     required: true
-  }
+  },
+  disabled: Boolean
 });
 const emit = defineEmits(['toggle']);
 

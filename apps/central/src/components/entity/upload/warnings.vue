@@ -88,11 +88,21 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template #body>
         <p>
-          <template v-if="extraProperties.length === 1">
-            {{ $t('extraProperties.description.one') }}
+          <template v-if="errors === 0">
+            <template v-if="extraProperties.length === 1">
+              {{ $t('extraProperties.description.one') }}
+            </template>
+            <template v-else>
+              {{ $t('extraProperties.description.multiple') }}
+            </template>
           </template>
           <template v-else>
-            {{ $t('extraProperties.description.multiple') }}
+            <template v-if="extraProperties.length === 1">
+              {{ $tc('extraProperties.error.one', errors) }}
+            </template>
+            <template v-else>
+              {{ $tc('extraProperties.error.multiple', errors) }}
+            </template>
           </template>
         </p>
         <slot name="extra-properties"></slot>
@@ -114,9 +124,15 @@ defineProps({
     type: String,
     required: true
   },
+  // Number of warnings
   count: {
     type: Number,
     required: true
+  },
+  // Number of errors
+  errors: {
+    type: Number,
+    default: 0
   },
 
   // Column header warnings
@@ -188,6 +204,11 @@ defineEmits(['rows']);
         "one": "Select the column to create a new property, otherwise it will be ignored.",
         // "Ones" refers to "columns".
         "multiple": "Select which ones to create, otherwise they will be ignored."
+      },
+      "error": {
+        "one": "Once you’ve fixed the error, you’ll be able to choose whether to create a new property. | Once you’ve fixed the errors, you’ll be able to choose whether to create a new property.",
+        // "Ones" refers to "columns".
+        "multiple": "Once you’ve fixed the error, you’ll be able to select which ones to create. | Once you’ve fixed the errors, you’ll be able to select which ones to create."
       }
     },
     // "Property" refers to an Entity property.

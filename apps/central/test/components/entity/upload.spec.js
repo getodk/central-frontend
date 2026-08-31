@@ -733,6 +733,15 @@ describe('EntityUpload', () => {
       getTableExtra().should.eql([]);
     });
 
+    it('disables selection if there is an error', async () => {
+      const modal = await showModal();
+      await selectFile(modal, createCSV('height,circumference\n1,2'));
+      modal.findComponent(EntityUploadErrors).exists().should.be.true;
+      const extraComponent = modal.getComponent(EntityUploadExtraProperties);
+      expect(extraComponent.props().properties).to.eql(['circumference']);
+      extraComponent.props().disabled.should.be.true;
+    });
+
     it('does not send properties that were not selected', () =>
       showModal()
         .complete()
