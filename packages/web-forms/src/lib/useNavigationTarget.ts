@@ -18,7 +18,8 @@ const findControl = (
   return (container ?? node)?.querySelector<HTMLElement>(FOCUSABLE) ?? null;
 };
 
-const findFocusTarget = (
+// Exported for tests
+export const findFocusTarget = (
   node: HTMLElement | null,
   container: HTMLElement | null
 ): HTMLElement | null => {

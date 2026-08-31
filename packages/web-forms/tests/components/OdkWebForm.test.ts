@@ -2,6 +2,7 @@ import type { OdkWebFormsProps } from '@getodk/web-forms/components/OdkWebForm.v
 import OdkWebForm from '@getodk/web-forms/components/OdkWebForm.vue';
 import { waitAllTasksToFinish } from '@getodk/web-forms/lib/async/event-loop.ts';
 import { POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms/lib/constants/control-flow.ts';
+import { findFocusTarget } from '@getodk/web-forms/lib/useNavigationTarget.ts';
 import type {
   HostSubmissionResult,
   HostSubmissionResultCallback,
@@ -477,6 +478,45 @@ describe('OdkWebForm', () => {
       // Check that Web Forms has performed the expected post-submit side effect
       // (if one is expected)
       expect(textInput.element.value).toBe(expectedPostSubmissionValue);
+    });
+  });
+
+  describe('datepicker focus', () => {
+    const requiredDateForm = /* xml */ `<?xml version="1.0"?>
+		<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml">
+			<h:head>
+				<h:title>Required date</h:title>
+				<model>
+					<instance>
+						<data id="required-date"><birthday /></data>
+					</instance>
+					<bind nodeset="/data/birthday" type="date" required="true()" />
+				</model>
+			</h:head>
+			<h:body>
+				<input ref="/data/birthday">
+					<label>Birthday</label>
+				</input>
+			</h:body>
+		</h:html>`;
+
+    it('focuses the datepicker input when navigating to its validation error', async () => {
+      const component = mountComponent(requiredDateForm);
+      await flushPromises();
+
+      await getButtonByText(component, 'Send').trigger('click');
+      await waitAllTasksToFinish();
+
+      expect(component.get('.question-container').text()).toContain('This field is required.');
+      expect(document.activeElement).toBe(component.get('.question-container input').element);
+    });
+
+    it('targets the question container instead of the datepicker input when there is no validation error', async () => {
+      const component = mountComponent(requiredDateForm);
+      await flushPromises();
+
+      const container = component.get<HTMLElement>('.question-container').element;
+      expect(findFocusTarget(null, container)).toBe(container);
     });
   });
 });
