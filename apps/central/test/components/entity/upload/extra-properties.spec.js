@@ -27,7 +27,7 @@ describe('EntityUploadExtraProperties', () => {
   });
 
   describe('select all', () => {
-    it('does not show the checkbox for a single property', () => {
+    it('does not show the checkbox if there is only a single property', () => {
       const component = mountComponent({
         props: { properties: ['foo'] }
       });
