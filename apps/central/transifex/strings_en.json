@@ -2207,10 +2207,6 @@
       }
     },
     "DatasetShow": {
-      "back": {
-        "string": "Back to Project Entities",
-        "developer_comment": "This is shown at the top of the page."
-      },
       "infoNav": {
         "connectedForms": {
           "string": "{count, plural, one {Updated by {count} Form} other {Updated by {count} Forms}}",
