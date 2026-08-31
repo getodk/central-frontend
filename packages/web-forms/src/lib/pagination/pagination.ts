@@ -1,4 +1,8 @@
-import type { AnyControlNode, RepeatRangeUncontrolledNode, SelectNode } from '@getodk/xforms-engine';
+import type {
+  AnyControlNode,
+  RepeatRangeUncontrolledNode,
+  SelectNode,
+} from '@getodk/xforms-engine';
 
 export const isOnCurrentPage = (node: AnyControlNode | RepeatRangeUncontrolledNode): boolean => {
   if (!node.root.isPaginated) {
@@ -10,7 +14,10 @@ export const isOnCurrentPage = (node: AnyControlNode | RepeatRangeUncontrolledNo
 
 export const advanceIfQuick = (question: SelectNode) => {
   const { appearances } = question;
-  if ((appearances.quick || appearances.quickcompact) && !appearances.label && !appearances.likert) {
+  const isQuick = appearances.quick || appearances.quickcompact;
+  const supportsAutoAdvance = !appearances.label && !appearances.likert;
+
+  if (isQuick && supportsAutoAdvance) {
     question.root.nextPage();
   }
 };
