@@ -12,6 +12,7 @@ export interface Form {
   draft: boolean;
   webformsEnabled: boolean;
   attachments: Attachment[];
+  once: boolean;
 }
 
 export interface Project {
@@ -129,14 +130,17 @@ const getForm = async (url: string, draft: boolean, st?: string | null): Promise
     draft: !result.publishedAt,
     enketoOnceId: result.enketoOnceId,
     webformsEnabled: !!result.webformsEnabled,
-    attachments
+    attachments,
+    once: false,
   };
 };
 
 export const getFormByEnketoId = async (enketoId: string, st?: string | null): Promise<Form> => {
   const qs = queryString({ st });
   const url = `/v1/form-links/${enketoId}/form${qs}`;
-  return getForm(url, false, st);
+  const form = await getForm(url, false, st);
+  form.once = enketoId === form.enketoOnceId;
+  return form;
 };
 
 export const getFormByFormId = async (projectId: number, formId: string, draft: boolean, st?: string | null): Promise<Form> => {

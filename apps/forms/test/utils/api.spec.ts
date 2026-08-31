@@ -101,11 +101,13 @@ describe('Test api utility', () => {
       name: 'Simple',
       xmlFormId: 'simple',
       enketoId: 'abcdef',
+      enketoOnceId: 'singlesubmissiononly',
       projectId: 5,
       state: 'open',
       draft: false,
       webformsEnabled: false,
-      attachments: [ { name: 'myfile.png' } ]
+      attachments: [ { name: 'myfile.png' } ],
+      once: false,
     };
     
     const stubFormFetch = () => {
@@ -115,6 +117,7 @@ describe('Test api utility', () => {
         name: 'Simple',
         version: '2.1',
         enketoId: 'abcdef',
+        enketoOnceId: 'singlesubmissiononly',
         hash: '51a93eab3a1974dbffc4c7913fa5a16a',
         keyId: 3,
         state: 'open',
@@ -208,6 +211,14 @@ describe('Test api utility', () => {
         expect(actual).toEqual(expectedForm);
         expect(fetch).toHaveBeenCalledTimes(2);
         expect(fetch).toHaveBeenCalledWith('/v1/form-links/abc/form?st=zyx');
+      });
+
+      it('single submission', async () => {
+        stubFormFetch();
+        const actual = await getFormByEnketoId('singlesubmissiononly', 'zyx');
+        expect(actual).toEqual({ ...expectedForm, once: true });
+        expect(fetch).toHaveBeenCalledTimes(1);
+        expect(fetch).toHaveBeenCalledWith('/v1/form-links/singlesubmissiononly/form?st=zyx');
       });
 
       it('handles central errors', async () => {
