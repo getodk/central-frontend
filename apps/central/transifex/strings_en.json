@@ -5261,6 +5261,14 @@
         }
       }
     },
+    "SubmissionDefDropdown": {
+      "action": {
+        "downloadXml": {
+          "string": "Download XML",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
     "SubmissionDelete": {
       "title": {
         "string": "Delete Submission",
