@@ -2887,7 +2887,7 @@
       "action": {
         "selectAll": {
           "string": "Select all",
-          "developer_comment": "This is the text of a button that allows the user to select all columns."
+          "developer_comment": "This is the text of a button that allows the user to select all the columns of a table."
         }
       }
     },

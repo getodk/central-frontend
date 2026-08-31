@@ -66,8 +66,8 @@ const toggle = (event) => {
 {
   "en": {
     "action": {
-      // This is the text of a button that allows the user to select all
-      // columns.
+      // This is the text of a button that allows the user to select all the
+      // columns of a table.
       "selectAll": "Select all"
     }
   }
