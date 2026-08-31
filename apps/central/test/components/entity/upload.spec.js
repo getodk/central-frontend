@@ -658,10 +658,18 @@ describe('EntityUpload', () => {
     it('shows selected properties in the table', async () => {
       const modal = await showModal();
       await selectFile(modal, extraCSV);
+
+      const tables = modal.findAllComponents(EntityUploadTable);
+      tables.length.should.equal(2);
+      const table = tables[1];
+      table.props().extraProperties.should.eql([]);
+
       const input = modal.get('#entity-upload-extra-properties .checkbox:nth-child(2) input');
       await input.setChecked();
-      const tables = modal.findAllComponents(EntityUploadTable);
-      tables[1].props().extraProperties.should.eql(['circumference']);
+      table.props().extraProperties.should.eql(['circumference']);
+
+      await input.setChecked(false);
+      table.props().extraProperties.should.eql([]);
     });
 
     it('does not send properties that were not selected', () =>
