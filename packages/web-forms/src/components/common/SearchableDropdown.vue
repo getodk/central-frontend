@@ -5,6 +5,7 @@ import { computed, inject } from 'vue';
 import MarkdownBlock from './MarkdownBlock.vue';
 import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
 import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
+import { advanceIfQuick } from '@getodk/web-forms/lib/pagination/pagination.ts';
 
 interface SearchableDropdownProps {
 	readonly question: SelectNode;
@@ -48,6 +49,7 @@ const selectedLabel = computed(() => {
 
 const selectValue = (value: string) => {
 	props.question.selectValue(value);
+	advanceIfQuick(props.question);
 };
 </script>
 

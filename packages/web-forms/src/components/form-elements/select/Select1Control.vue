@@ -8,6 +8,7 @@ import RadioButton from '@getodk/web-forms/components/common/RadioButton.vue';
 import SearchableDropdown from '@getodk/web-forms/components/common/SearchableDropdown.vue';
 import ValidationMessage from '@getodk/web-forms/components/common/ValidationMessage.vue';
 import ControlText from '@getodk/web-forms/components/form-elements/ControlText.vue';
+import { advanceIfQuick } from '@getodk/web-forms/lib/pagination/pagination.ts';
 import type { SelectNode } from '@getodk/xforms-engine';
 import { MODES } from '@getodk/web-forms/components/common/map/getModeConfig.ts';
 import { computed, ref, watchEffect } from 'vue';
@@ -28,6 +29,11 @@ const savedFeatureValue = computed(() => {
 	const value = props.question.currentState.value?.[0];
 	return props.question.currentState.valueOptions.find((option) => option.value === value);
 });
+
+const saveMapSelection = (value: string | undefined) => {
+	props.question.selectValue(value ?? '');
+	advanceIfQuick(props.question);
+};
 
 watchEffect(() => {
 	const appearances = [...props.question.appearances];
@@ -63,7 +69,7 @@ watchEffect(() => {
 		:mode="MODES.SELECT"
 		:saved-feature-value="savedFeatureValue"
 		:disabled="question.currentState.readonly"
-		@save="(value) => question.selectValue(value ?? '')"
+		@save="saveMapSelection"
 	/>
 
 	<FieldListTable

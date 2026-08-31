@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import TextMedia from '@getodk/web-forms/components/common/TextMedia.vue';
 import { selectOptionId } from '@getodk/web-forms/lib/format/ids.ts';
+import { advanceIfQuick } from '@getodk/web-forms/lib/pagination/pagination.ts';
 import type { SelectNode } from '@getodk/xforms-engine';
 import RadioButton from 'primevue/radiobutton';
 
@@ -16,6 +17,7 @@ const selectValue = (value: string) => {
 		return;
 	}
 	props.question.selectValue(value);
+	advanceIfQuick(props.question);
 };
 </script>
 

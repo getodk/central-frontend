@@ -382,4 +382,34 @@ describe('SelectControl', () => {
       expect(component.get('.validation-message').text()).toBe('validation_message.required.error');
     });
   });
+
+  describe('quick appearance (auto-advance)', () => {
+    let root: RootNode;
+    let fruitNode: SelectNode;
+    let ratingNode: SelectNode;
+
+    beforeEach(async () => {
+      root = await getReactiveForm('pagination-18-quick.xml');
+      fruitNode = getSelectNodeByReference(root, '/data/fruit');
+      ratingNode = getSelectNodeByReference(root, '/data/rating');
+    });
+
+    it('advances to the next page when a quick select1 is answered', async () => {
+      const component = mountComponent(fruitNode);
+      const mango = component.find(`input[id="${fruitNode.nodeId}_mango"]`);
+      await mango.trigger('click');
+
+      expect(root.currentState.currentPage).toBe(ratingNode.currentState.pageBoundary);
+    });
+
+    it('does not advance when a quick likert select1 is answered', async () => {
+      root.setCurrentPage(ratingNode.currentState.pageBoundary);
+      const component = mountComponent(ratingNode);
+      const firstRatingOption = component.find(`input[id="${ratingNode.nodeId}_1"]`);
+      await firstRatingOption.trigger('click');
+
+      expect(ratingNode.currentState.value[0]).toBe('1');
+      expect(root.currentState.currentPage).toBe(ratingNode.currentState.pageBoundary);
+    });
+  });
 });

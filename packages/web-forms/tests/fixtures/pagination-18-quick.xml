@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml">
+  <h:head>
+    <h:title>18 Quick - auto-advance</h:title>
+    <model>
+      <instance>
+        <data id="pg_18_quick">
+          <fruit/>
+          <rating/>
+          <comment/>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <bind nodeset="/data/fruit" type="string"/>
+      <bind nodeset="/data/rating" type="string"/>
+      <bind nodeset="/data/comment" type="string"/>
+      <bind nodeset="/data/meta/instanceID" type="string"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <select1 ref="/data/fruit" appearance="quick">
+      <label>Favorite fruit?</label>
+      <item><label>Cherry</label><value>cherry</value></item>
+      <item><label>Mango</label><value>mango</value></item>
+    </select1>
+    <select1 ref="/data/rating" appearance="quick likert">
+      <label>Rating?</label>
+      <item><label>1</label><value>1</value></item>
+      <item><label>2</label><value>2</value></item>
+    </select1>
+    <input ref="/data/comment"><label>Any comment?</label></input>
+  </h:body>
+</h:html>
