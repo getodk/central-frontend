@@ -5,7 +5,6 @@ import { computed, inject } from 'vue';
 import MarkdownBlock from './MarkdownBlock.vue';
 import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
 import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
-import { advanceIfQuick } from '@getodk/web-forms/lib/pagination/pagination.ts';
 
 interface SearchableDropdownProps {
 	readonly question: SelectNode;
@@ -17,7 +16,7 @@ const props = defineProps<SearchableDropdownProps>();
 
 const DEFAULT_PRIMEVUE_ITEM_HEIGHT = 38;
 
-defineEmits(['update:modelValue', 'change']);
+defineEmits(['change']);
 
 const options = computed(() => {
 	return props.question.currentState.valueOptions.map((option) => {
@@ -46,11 +45,6 @@ const selectedLabel = computed(() => {
 	const option = props.question.getValueOption(value);
 	return option?.label.formatted;
 });
-
-const selectValue = (value: string) => {
-	props.question.selectValue(value);
-	advanceIfQuick(props.question);
-};
 </script>
 
 <template>
@@ -66,8 +60,7 @@ const selectValue = (value: string) => {
 		option-label="search"
 		option-value="value"
 		:virtual-scroller-options="virtualScrollerOptions"
-		@update:model-value="selectValue"
-		@change="$emit('change')"
+		@change="$emit('change', $event.value)"
 	>
 		<template #option="slotProps">
 			<MarkdownBlock v-for="elem in slotProps.option.label" :key="elem.id" :elem="elem" />

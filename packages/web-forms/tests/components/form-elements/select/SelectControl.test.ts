@@ -124,6 +124,16 @@ const getMenuItem = async (
   return menuItems.find((menuItem) => menuItem.text() === label) ?? null;
 };
 
+const selectOption = async (component: MountedComponent, node: SelectNode, option: string) => {
+  const radio = component.find(`input[id="${node.nodeId}_${option}"]`);
+  if (radio.exists()) {
+    return radio.trigger('click');
+  }
+  const menuItem = await getMenuItem(component, component.find(`.${SELECT_CLASS}`), option);
+  assert(menuItem != null);
+  return menuItem.trigger('mousedown');
+};
+
 describe('SelectControl', () => {
   describe('select1', () => {
     describe('no appearance (radio controls)', () => {
@@ -385,43 +395,80 @@ describe('SelectControl', () => {
 
   describe('quick appearance (auto-advance)', () => {
     let root: RootNode;
-    let fruitNode: SelectNode;
-    let ratingNode: SelectNode;
 
     beforeEach(async () => {
       root = await getReactiveForm('pagination-18-quick.xml');
-      fruitNode = getSelectNodeByReference(root, '/data/fruit');
-      ratingNode = getSelectNodeByReference(root, '/data/rating');
     });
 
-    it('advances to the next page when a quick select1 is answered', async () => {
-      const component = mountComponent(fruitNode);
-      const mango = component.find(`input[id="${fruitNode.nodeId}_mango"]`);
-      await mango.trigger('click');
+    it.each([
+      {
+        scenario: 'quick',
+        question: '/data/fruit',
+        tappedOption: 'mango',
+        questionOnNextPage: '/data/rating',
+      },
+      {
+        scenario: 'quickcompact',
+        question: '/data/color',
+        tappedOption: 'red',
+        questionOnNextPage: '/data/shape',
+      },
+      {
+        scenario: 'quick minimal (dropdown)',
+        question: '/data/veg',
+        tappedOption: 'carrot',
+        questionOnNextPage: '/data/color',
+      },
+    ])(
+      'advances to the next page when a $scenario select1 is tapped',
+      async ({ question, tappedOption, questionOnNextPage }) => {
+        const node = getSelectNodeByReference(root, question);
+        const nextNode = getSelectNodeByReference(root, questionOnNextPage);
+        root.setCurrentPage(node.currentState.pageBoundary);
+        const component = mountComponent(node);
 
-      expect(root.currentState.currentPage).toBe(ratingNode.currentState.pageBoundary);
-    });
+        await selectOption(component, node, tappedOption);
 
-    it('does not advance when a quick likert select1 is answered', async () => {
-      root.setCurrentPage(ratingNode.currentState.pageBoundary);
-      const component = mountComponent(ratingNode);
-      const firstRatingOption = component.find(`input[id="${ratingNode.nodeId}_1"]`);
-      await firstRatingOption.trigger('click');
+        expectSelectedValueState(node, tappedOption);
+        expect(root.currentState.currentPage).toBe(nextNode.currentState.pageBoundary);
+      }
+    );
 
-      expect(ratingNode.currentState.value[0]).toBe('1');
-      expect(root.currentState.currentPage).toBe(ratingNode.currentState.pageBoundary);
-    });
+    it.each([
+      {
+        scenario: 'likert',
+        question: '/data/rating',
+        tappedOption: '1',
+        expectedValue: '1',
+        expectsViolation: false,
+      },
+      {
+        scenario: 'label',
+        question: '/data/shape',
+        tappedOption: 'circle',
+        expectedValue: null,
+        expectsViolation: false,
+      },
+      {
+        scenario: 'constraint-violating',
+        question: '/data/spice',
+        tappedOption: 'ghost',
+        expectedValue: 'ghost',
+        expectsViolation: true,
+      },
+    ])(
+      'does not advance when a quick $scenario select1 is tapped',
+      async ({ question, tappedOption, expectedValue, expectsViolation }) => {
+        const node = getSelectNodeByReference(root, question);
+        root.setCurrentPage(node.currentState.pageBoundary);
+        const component = mountComponent(node);
 
-    it('does not advance when the answer violates a constraint', async () => {
-      const spiceNode = getSelectNodeByReference(root, '/data/spice');
-      root.setCurrentPage(spiceNode.currentState.pageBoundary);
-      const component = mountComponent(spiceNode);
-      const violatingOption = component.find(`input[id="${spiceNode.nodeId}_ghost"]`);
+        await selectOption(component, node, tappedOption);
 
-      await violatingOption.trigger('click');
-
-      expect(spiceNode.validationState.violation).not.toBeNull();
-      expect(root.currentState.currentPage).toBe(spiceNode.currentState.pageBoundary);
-    });
+        expectSelectedValueState(node, expectedValue);
+        expect(node.validationState.violation != null).toBe(expectsViolation);
+        expect(root.currentState.currentPage).toBe(node.currentState.pageBoundary);
+      }
+    );
   });
 });

@@ -8,7 +8,6 @@ import RadioButton from '@getodk/web-forms/components/common/RadioButton.vue';
 import SearchableDropdown from '@getodk/web-forms/components/common/SearchableDropdown.vue';
 import ValidationMessage from '@getodk/web-forms/components/common/ValidationMessage.vue';
 import ControlText from '@getodk/web-forms/components/form-elements/ControlText.vue';
-import { advanceIfQuick } from '@getodk/web-forms/lib/pagination/pagination.ts';
 import type { SelectNode } from '@getodk/xforms-engine';
 import { MODES } from '@getodk/web-forms/components/common/map/getModeConfig.ts';
 import { computed, ref, watchEffect } from 'vue';
@@ -30,7 +29,20 @@ const savedFeatureValue = computed(() => {
 	return props.question.currentState.valueOptions.find((option) => option.value === value);
 });
 
-const saveMapSelection = (value: string | undefined) => {
+const advanceIfQuick = (question: SelectNode) => {
+	const { appearances } = question;
+	const isQuick = appearances.quick || appearances.quickcompact;
+	const isValid = question.validationState.violation == null;
+
+	if (isQuick && !appearances.likert && isValid) {
+		question.root.nextPage();
+	}
+};
+
+const saveSelection = (value: string | undefined) => {
+	if (props.question.appearances.label) {
+		return;
+	}
 	props.question.selectValue(value ?? '');
 	advanceIfQuick(props.question);
 };
@@ -55,12 +67,14 @@ watchEffect(() => {
 	<SearchableDropdown
 		v-if="question.appearances.autocomplete || question.appearances.minimal"
 		:question="question"
+		@change="saveSelection"
 	/>
 
 	<LikertWidget
 		v-else-if="question.appearances.likert"
 		:class="{ 'select-with-images': isSelectWithImages }"
 		:question="question"
+		@change="saveSelection"
 	/>
 
 	<AsyncMap
@@ -69,7 +83,7 @@ watchEffect(() => {
 		:mode="MODES.SELECT"
 		:saved-feature-value="savedFeatureValue"
 		:disabled="question.currentState.readonly"
-		@save="saveMapSelection"
+		@save="saveSelection"
 	/>
 
 	<FieldListTable
@@ -81,7 +95,7 @@ watchEffect(() => {
 			<ControlText :question="question" />
 		</template>
 		<template #default>
-			<RadioButton :question="question" />
+			<RadioButton :question="question" @change="saveSelection" />
 		</template>
 	</FieldListTable>
 
@@ -90,7 +104,7 @@ watchEffect(() => {
 		:class="{ 'select-with-images': isSelectWithImages }"
 		:appearances="question.appearances"
 	>
-		<RadioButton :question="question" />
+		<RadioButton :question="question" @change="saveSelection" />
 	</ColumnarAppearance>
 
 	<template v-else>
@@ -101,7 +115,7 @@ watchEffect(() => {
 			/>
 		</template>
 		<div class="default-appearance">
-			<RadioButton :question="question" />
+			<RadioButton :question="question" @change="saveSelection" />
 		</div>
 	</template>
 
