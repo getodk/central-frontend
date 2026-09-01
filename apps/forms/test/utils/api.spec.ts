@@ -161,17 +161,24 @@ describe('Test api utility', () => {
     describe('by form id', () => {
 
       [
-        { draft: false, st: undefined, url: '/v1/projects/5/forms/simple' },
-        { draft: true,  st: undefined, url: '/v1/projects/5/forms/simple/draft' },
-        { draft: false, st: 'xyz',     url: '/v1/projects/5/forms/simple?st=xyz' },
-        { draft: true,  st: 'xyz',     url: '/v1/projects/5/forms/simple/draft?st=xyz' },
-      ].forEach(({ draft, st, url }) => {
+        { draft: false, st: undefined },
+        { draft: true,  st: undefined },
+        { draft: false, st: 'xyz',    },
+        { draft: true,  st: 'xyz',    },
+      ].forEach(({ draft, st }) => {
         it(`with draft=${draft}, st=${st}`, async () => {
           stubFormFetch();
           const actual = await getFormByFormId(5, 'simple', draft, st);
           expect(actual).toEqual(expectedForm);
           expect(fetch).toHaveBeenCalledTimes(2);
-          expect(fetch).toHaveBeenCalledWith(url);
+
+          const urlStart = `/v1/projects/5/forms/simple`;
+          const draftPath = draft ? '/draft' : '';
+          const urlEnd = st ? `?st=${st}` : '';
+          const formUrl = urlStart + draftPath + urlEnd;
+          const attachmentUrl = urlStart + draftPath + '/attachments' + urlEnd;
+          expect(fetch).toHaveBeenCalledWith(formUrl);
+          expect(fetch).toHaveBeenCalledWith(attachmentUrl);
         });
       });
 

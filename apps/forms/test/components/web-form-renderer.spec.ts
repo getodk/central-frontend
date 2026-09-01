@@ -10,6 +10,7 @@ import { webFormsPlugin } from '@getodk/web-forms';
 
 import simpleForm from '../../../central/test/data/xml/simple/form.xml?raw';
 import formWithAttachmentXml from '../../../central/test/data/xml/with-attachment/form.xml?raw';
+import formWithImageAttachmentXml from '../../../central/test/data/xml/image-attachment/form.xml?raw';
 import imageUploaderXml from '../../../central/test/data/xml/image-uploader/form.xml?raw';
 import simpleSubmission from '../../../central/test/data/xml/simple/submission.xml?raw';
 import imageUploaderSubmission from '../../../central/test/data/xml/image-uploader/submission.xml?raw';
@@ -155,6 +156,25 @@ describe('WebFormRenderer', () => {
     const form = component.find('.odk-form');
     expect(form.exists()).to.equal(true);
     expect(form.text()).to.match(/Toronto/);
+    fetchSpy.mockReset();
+  });
+
+  it('should not send request for attachments that are not expected', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch');
+    const given = {
+      name: 'simple',
+      xmlFormId: 'simple',
+      projectId: 1,
+      enketoId: '',
+      state: 'open',
+      draft: false,
+      webformsEnabled: true,
+      attachments: [ { name: 'not-right-image.jpg' } ] // attachment name doesn't match
+    };
+    const component = await mountComponent({ form: given, xform: formWithImageAttachmentXml });
+    expect(fetchSpy).toHaveBeenCalledTimes(0);
+    const form = component.find('.odk-form');
+    expect(form.exists()).to.equal(true);
     fetchSpy.mockReset();
   });
 
