@@ -78,8 +78,8 @@ describe('EntityUploadWarnings', () => {
     p[2].text().should.equal('foo, bar');
   });
 
-  describe('unknown properties', () => {
-    it('shows a warning for unknown properties', () => {
+  describe('unknown (extra) properties', () => {
+    it('shows a warning', () => {
       const component = mountComponent({
         props: { extraProperties: ['foo', 'bar'] }
       });
@@ -89,7 +89,7 @@ describe('EntityUploadWarnings', () => {
       p[1].text().should.startWith('Select which ones to create');
     });
 
-    it('shows different text if there are errors', () => {
+    it('shows different text if there is an error', () => {
       const component = mountComponent({
         props: { extraProperties: ['foo', 'bar'], hasError: true }
       });
