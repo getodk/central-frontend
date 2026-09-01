@@ -88,15 +88,24 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template #body>
         <p>
-          <template v-if="extraProperties.length === 1">
-            {{ $t('extraProperties.description.one') }}
+          <template v-if="!hasError">
+            <template v-if="extraProperties.length === 1">
+              {{ $t('extraProperties.description.one') }}
+            </template>
+            <template v-else>
+              {{ $t('extraProperties.description.multiple') }}
+            </template>
           </template>
           <template v-else>
-            {{ $t('extraProperties.description.multiple') }}
+            <template v-if="extraProperties.length === 1">
+              {{ $t('extraProperties.error.one') }}
+            </template>
+            <template v-else>
+              {{ $t('extraProperties.error.multiple') }}
+            </template>
           </template>
         </p>
-        <entity-upload-extra-properties :properties="extraProperties"
-          @toggle="toggleExtraProperty"/>
+        <slot name="extra-properties"></slot>
       </template>
     </entity-upload-alert>
   </div>
@@ -104,7 +113,6 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import EntityUploadAlert from './alert.vue';
-import EntityUploadExtraProperties from './extra-properties.vue';
 import I18nList from '../../i18n/list.vue';
 import SentenceSeparator from '../../sentence-separator.vue';
 
@@ -116,10 +124,12 @@ defineProps({
     type: String,
     required: true
   },
+  // Number of warnings
   count: {
     type: Number,
     required: true
   },
+  hasError: Boolean,
 
   // Column header warnings
   systemProperties: Array,
@@ -132,11 +142,7 @@ defineProps({
   raggedRows: Array,
   largeCell: Number
 });
-const emit = defineEmits(['rows', 'toggle-extra']);
-
-const toggleExtraProperty = (property, checked) => {
-  emit('toggle-extra', property, checked);
-};
+defineEmits(['rows']);
 </script>
 
 <style lang="scss">
@@ -194,6 +200,11 @@ const toggleExtraProperty = (property, checked) => {
         "one": "Select the column to create a new property, otherwise it will be ignored.",
         // "Ones" refers to "columns".
         "multiple": "Select which ones to create, otherwise they will be ignored."
+      },
+      "error": {
+        "one": "Once you’ve fixed all errors, you’ll be able to select the column.",
+        // "Ones" refers to "columns".
+        "multiple": "Once you’ve fixed all errors, you’ll be able to select which ones to create."
       }
     },
     // "Property" refers to an Entity property.
