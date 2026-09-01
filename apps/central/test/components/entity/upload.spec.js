@@ -648,6 +648,11 @@ describe('EntityUpload', () => {
     });
 
     const extraCSV = createCSV('label,height,circumference,species\ndogwood,1,2,dogwood\nelm');
+    const toggleExtra = (modal, name, checked = true) => {
+      const input = modal.get(`#entity-upload-extra-properties input[value="${name}"]`);
+      input.element.checked.should.equal(!checked);
+      return input.setChecked(checked);
+    };
 
     it('shows a warning if there are extra properties', async () => {
       const modal = await showModal();
@@ -677,12 +682,6 @@ describe('EntityUpload', () => {
 
     it('remembers the property selection until the modal is hidden', async () => {
       const modal = await showModal();
-      // Checks or unchecks the first property.
-      const toggleFirst = (checked = true) => {
-        const input = modal.get('#entity-upload-extra-properties .checkbox:nth-child(2) input');
-        input.element.checked.should.equal(!checked);
-        return input.setChecked(checked);
-      };
       const getSelected = () => {
         const { selected } = modal.getComponent(EntityUploadExtraProperties).props();
         return [...selected];
@@ -698,36 +697,60 @@ describe('EntityUpload', () => {
       };
 
       await selectFile(modal, extraCSV);
-      await toggleFirst();
+      await toggleExtra(modal, 'circumference');
 
-      const secondCSV = createCSV('label,height,foo,bar\ndogwood,1,x,y');
-      await selectFile(modal, secondCSV);
+      // Select a .csv file with a `circumference` property like extraCSV, but
+      // without `species`.
+      await selectFile(modal, createCSV('label,circumference\ndogwood,1'));
+      // The selection of `circumference` should be remembered.
       getSelected().should.eql(['circumference']);
+      getChecked().should.eql(['circumference']);
+      getTableExtra().should.eql(['circumference']);
+
+      // A .csv file without `circumference` or `species`, but instead two other
+      // extra properties: `foo` and `bar`.
+      const foobarCSV = createCSV('label,height,foo,bar\ndogwood,1,x,y');
+      await selectFile(modal, foobarCSV);
+      // Under the hood, the selection of `circumference` should still be
+      // remembered.
+      getSelected().should.eql(['circumference']);
+      // However, the selection is not visible in the UI.
       getChecked().should.eql([]);
       getTableExtra().should.eql([]);
-      await toggleFirst();
+      await toggleExtra(modal, 'foo');
 
+      // Select extraCSV again. We should see that the selection of
+      // `circumference` has been remembered. The selection of `foo` should be
+      // remembered under the hood.
       await selectFile(modal, extraCSV);
       getSelected().should.eql(['circumference', 'foo']);
       getChecked().should.eql(['circumference']);
       getTableExtra().should.eql(['circumference']);
 
-      await selectFile(modal, secondCSV);
+      // Select foobarCSV again. We should see that the selection of `foo` has
+      // been remembered.
+      await selectFile(modal, foobarCSV);
       getSelected().should.eql(['circumference', 'foo']);
       getChecked().should.eql(['foo']);
       getTableExtra().should.eql(['foo']);
-      await toggleFirst(false);
+      await toggleExtra(modal, 'foo', false);
 
+      // Select foobarCSV again (after temporarily swapping it out). We should
+      // see that the deselection of `foo` has been remembered.
       await selectFile(modal, extraCSV);
-      await selectFile(modal, secondCSV);
+      await selectFile(modal, foobarCSV);
+      // Under the hood, the selection of `circumference` should still be
+      // remembered.
       getSelected().should.eql(['circumference']);
       getChecked().should.eql([]);
       getTableExtra().should.eql([]);
 
+      // Hide the modal.
       await modal.setProps({ state: false });
       await modal.setProps({ state: true });
 
       await selectFile(modal, extraCSV);
+      // The selection of `circumference` should no longer be remembered.
       getSelected().should.eql([]);
       getChecked().should.eql([]);
       getTableExtra().should.eql([]);
