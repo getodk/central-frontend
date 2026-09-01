@@ -47,7 +47,7 @@ const abandonText = computed(() => (!form.dataExists
 <style lang="scss">
 #form-edit-draft-controls {
   text-align: center;
-  margin: 20px 0;
+  margin: 20px 0 100px 0;
 
   .title {
     font-size: 16px;
