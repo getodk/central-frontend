@@ -2,18 +2,32 @@ import type { RootNode } from '@getodk/xforms-engine';
 import { nextTick, watch } from 'vue';
 import { containerId } from '@getodk/web-forms/lib/format/ids.ts';
 
-const findFocusTarget = (
+const isDatepickerInput = (el: HTMLElement | null) => !!el?.matches('.p-datepicker-input');
+const hasErrorHighlight = (el: HTMLElement | null) => el?.closest('.highlight') != null;
+
+const findControl = (
   node: HTMLElement | null,
   container: HTMLElement | null
 ): HTMLElement | null => {
-  const FOCUSABLE =
-    ':is(button, input:not(.p-datepicker-input), textarea, [tabindex]:not([tabindex="-1"])):not(:disabled)';
+  const FOCUSABLE = ':is(button, input, textarea, [tabindex]:not([tabindex="-1"])):not(:disabled)';
   if (node?.matches(FOCUSABLE)) {
     return node;
   }
 
   // Some controls (radios, upload) don't carry the question id on their focusable element, so search for it.
-  const control = (container ?? node)?.querySelector<HTMLElement>(FOCUSABLE);
+  return (container ?? node)?.querySelector<HTMLElement>(FOCUSABLE) ?? null;
+};
+
+// Exported for tests
+export const findFocusTarget = (
+  node: HTMLElement | null,
+  container: HTMLElement | null
+): HTMLElement | null => {
+  const control = findControl(node, container);
+  // Focusing a datepicker opens the calendar; when the question has no validation error, focus the container instead.
+  if (isDatepickerInput(control) && !hasErrorHighlight(control)) {
+    return container;
+  }
   return control ?? container ?? node;
 };
 
@@ -55,7 +69,9 @@ export const useNavigationTarget = (getRoot: () => RootNode | null) => {
     () => getRoot()?.currentState.navigationTarget,
     (nodeId) => {
       if (nodeId) {
-        navigateTo(nodeId);
+        // Wait for the render cycle to settle
+        // focusing a still mounting question breaks popups like the datepicker.
+        void nextTick(() => navigateTo(nodeId));
       }
     },
     { flush: 'post' }
