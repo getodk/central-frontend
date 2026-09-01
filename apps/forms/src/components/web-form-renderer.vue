@@ -22,7 +22,7 @@ export interface WebFormsRendererProps {
   instanceId?: string | null;
   submissionAttachments?: string[] | null;
   defaultParameters?: Record<string, string>;
-  st?: string | null
+  st?: string | null;
 }
 
 const props = defineProps<WebFormsRendererProps>();
@@ -54,8 +54,12 @@ const visibleModal = ref();
 const withToken = (url) => `${url}${queryString({ st: props.st })}`;
 
 const getAttachment = (requestUrl: URL) => {
-  const encodedName = encodeURIComponent(requestUrl.pathname.split('/').pop()!);
-  const url = withToken(`/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath.value}/attachments/${encodedName}`);
+  const fileName = requestUrl.pathname.split('/').pop()!;
+  const decoded = decodeURIComponent(fileName);
+  if (!props.form.attachments.some(a => a.name === decoded)) {
+    return new Response('Not Found', { status: 404 });
+  }
+  const url = withToken(`/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath.value}/attachments/${fileName}`);
   return fetch(url);
 };
 

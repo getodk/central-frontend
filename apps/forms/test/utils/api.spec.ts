@@ -5,6 +5,7 @@ describe('Test api utility', () => {
 
   afterEach(() => {
     vi.clearAllMocks();
+    vi.unstubAllGlobals();
   });
 
   describe('getSubmissionAttachmentNames', () => {
@@ -103,7 +104,8 @@ describe('Test api utility', () => {
       projectId: 5,
       state: 'open',
       draft: false,
-      webformsEnabled: false
+      webformsEnabled: false,
+      attachments: [ { name: 'myfile.png' } ]
     };
     
     const stubFormFetch = () => {
@@ -120,27 +122,63 @@ describe('Test api utility', () => {
         createdAt: '2018-01-19T23:58:03.395Z',
         updatedAt: '2018-03-21T12:45:02.312Z'
       };
-      vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
-        ok: true,
-        status: 200,
-        json: () => Promise.resolve(form),
+      const attachments = [
+        {
+          name: 'myfile.png',
+          type: 'image',
+          exists: true,
+          blobExists: true,
+          datasetExists: false,
+          hash: 'd41d8cd98f00b204e9800998ecf8427e',
+          updatedAt: '2018-03-21T12:45:02.312Z'
+        },
+        {
+          name: 'not-uploaded.jpg',
+          type: 'image',
+          exists: false,
+          blobExists: true,
+          datasetExists: false,
+          hash: 'd41d8cd98f00b204e9800998ecf8427e',
+          updatedAt: '2018-03-21T12:45:02.312Z'
+        },
+      ];
+
+      vi.stubGlobal('fetch', vi.fn().mockImplementation((url: string) => {
+        let result: object;
+        if (url.includes('/attachments')) {
+          result = attachments;
+        } else {
+          result = form;
+        }
+        return {
+          ok: true,
+          status: 200,
+          json: () => Promise.resolve(result),
+        };
       }));
     };
 
     describe('by form id', () => {
 
       [
-        { draft: false, st: undefined, url: '/v1/projects/5/forms/simple' },
-        { draft: true,  st: undefined, url: '/v1/projects/5/forms/simple/draft' },
-        { draft: false, st: 'xyz',     url: '/v1/projects/5/forms/simple?st=xyz' },
-        { draft: true,  st: 'xyz',     url: '/v1/projects/5/forms/simple/draft?st=xyz' },
-      ].forEach(({ draft, st, url }) => {
+        { draft: false, st: undefined },
+        { draft: true,  st: undefined },
+        { draft: false, st: 'xyz',    },
+        { draft: true,  st: 'xyz',    },
+      ].forEach(({ draft, st }) => {
         it(`with draft=${draft}, st=${st}`, async () => {
           stubFormFetch();
           const actual = await getFormByFormId(5, 'simple', draft, st);
           expect(actual).toEqual(expectedForm);
-          expect(fetch).toHaveBeenCalledTimes(1);
-          expect(fetch).toHaveBeenCalledWith(url);
+          expect(fetch).toHaveBeenCalledTimes(2);
+
+          const urlStart = `/v1/projects/5/forms/simple`;
+          const draftPath = draft ? '/draft' : '';
+          const urlEnd = st ? `?st=${st}` : '';
+          const formUrl = urlStart + draftPath + urlEnd;
+          const attachmentUrl = urlStart + draftPath + '/attachments' + urlEnd;
+          expect(fetch).toHaveBeenCalledWith(formUrl);
+          expect(fetch).toHaveBeenCalledWith(attachmentUrl);
         });
       });
 
@@ -160,7 +198,7 @@ describe('Test api utility', () => {
         stubFormFetch();
         const actual = await getFormByEnketoId('abc');
         expect(actual).toEqual(expectedForm);
-        expect(fetch).toHaveBeenCalledTimes(1);
+        expect(fetch).toHaveBeenCalledTimes(2);
         expect(fetch).toHaveBeenCalledWith('/v1/form-links/abc/form');
       });
 
@@ -168,7 +206,7 @@ describe('Test api utility', () => {
         stubFormFetch();
         const actual = await getFormByEnketoId('abc', 'zyx');
         expect(actual).toEqual(expectedForm);
-        expect(fetch).toHaveBeenCalledTimes(1);
+        expect(fetch).toHaveBeenCalledTimes(2);
         expect(fetch).toHaveBeenCalledWith('/v1/form-links/abc/form?st=zyx');
       });
 
