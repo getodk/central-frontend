@@ -41,6 +41,7 @@ describe('EntityUploadExtraProperties', () => {
       props: { properties: ['foo', 'bar'], disabled: true }
     });
     const checkboxes = component.findAll('.checkbox');
+    checkboxes.length.should.equal(3);
     for (const checkbox of checkboxes) {
       checkbox.classes('disabled').should.be.true;
       checkbox.get('input').element.disabled.should.be.true;
