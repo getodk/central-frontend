@@ -88,11 +88,21 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template #body>
         <p>
-          <template v-if="extraProperties.length === 1">
-            {{ $t('extraProperties.description.one') }}
+          <template v-if="!hasError">
+            <template v-if="extraProperties.length === 1">
+              {{ $t('extraProperties.description.one') }}
+            </template>
+            <template v-else>
+              {{ $t('extraProperties.description.multiple') }}
+            </template>
           </template>
           <template v-else>
-            {{ $t('extraProperties.description.multiple') }}
+            <template v-if="extraProperties.length === 1">
+              {{ $t('extraProperties.error.one') }}
+            </template>
+            <template v-else>
+              {{ $t('extraProperties.error.multiple') }}
+            </template>
           </template>
         </p>
         <slot name="extra-properties"></slot>
@@ -114,10 +124,12 @@ defineProps({
     type: String,
     required: true
   },
+  // Number of warnings
   count: {
     type: Number,
     required: true
   },
+  hasError: Boolean,
 
   // Column header warnings
   systemProperties: Array,
@@ -188,6 +200,11 @@ defineEmits(['rows']);
         "one": "Select the column to create a new property, otherwise it will be ignored.",
         // "Ones" refers to "columns".
         "multiple": "Select which ones to create, otherwise they will be ignored."
+      },
+      "error": {
+        "one": "Once you’ve fixed all errors, you’ll be able to select the column.",
+        // "Ones" refers to "columns".
+        "multiple": "Once you’ve fixed all errors, you’ll be able to select which ones to create."
       }
     },
     // "Property" refers to an Entity property.
