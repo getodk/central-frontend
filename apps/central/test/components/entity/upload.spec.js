@@ -4,6 +4,7 @@ import { T } from 'ramda';
 import EntityFilters from '../../../src/components/entity/filters.vue';
 import EntityUpload from '../../../src/components/entity/upload.vue';
 import EntityUploadErrors from '../../../src/components/entity/upload/errors.vue';
+import EntityUploadExtraProperties from '../../../src/components/entity/upload/extra-properties.vue';
 import EntityUploadFileSelect from '../../../src/components/entity/upload/file-select.vue';
 import EntityUploadPopup from '../../../src/components/entity/upload/popup.vue';
 import EntityUploadTable from '../../../src/components/entity/upload/table.vue';
@@ -39,7 +40,7 @@ const parseFilterTime = (filter) => {
 };
 const createCSV = (text = 'label\ndogwood') => new File([text], 'my_data.csv');
 const selectFile = async (modal, file = createCSV()) => {
-  await setFiles(modal.get('input'), [file]);
+  await setFiles(modal.get('input[type="file"]'), [file]);
   return waitUntil(() => !modal.vm.parsing);
 };
 const getTables = (modal) => {
@@ -647,12 +648,19 @@ describe('EntityUpload', () => {
     });
 
     const extraCSV = createCSV('label,height,circumference,species\ndogwood,1,2,dogwood\nelm');
+    const toggleExtra = (modal, name, checked = true) => {
+      const input = modal.get(`#entity-upload-extra-properties input[value="${name}"]`);
+      input.element.checked.should.equal(!checked);
+      return input.setChecked(checked);
+    };
 
     it('shows a warning if there are extra properties', async () => {
       const modal = await showModal();
       await selectFile(modal, extraCSV);
       const warnings = modal.getComponent(EntityUploadWarnings).props();
       warnings.extraProperties.should.eql(['circumference', 'species']);
+      const extraComponent = modal.getComponent(EntityUploadExtraProperties);
+      expect(extraComponent.props().properties).to.eql(['circumference', 'species']);
     });
 
     it('shows selected properties in the table', async () => {
@@ -670,6 +678,82 @@ describe('EntityUpload', () => {
 
       await input.setChecked(false);
       table.props().extraProperties.should.eql([]);
+    });
+
+    it('remembers the property selection until the modal is hidden', async () => {
+      const modal = await showModal();
+      const getSelected = () => {
+        const { selected } = modal.getComponent(EntityUploadExtraProperties).props();
+        return [...selected];
+      };
+      const getChecked = () => {
+        const checked = modal.findAll('#entity-upload-extra-properties .checkbox:has(input:checked)');
+        return checked.map(div => div.text());
+      };
+      const getTableExtra = () => {
+        const tables = modal.findAllComponents(EntityUploadTable);
+        tables.length.should.equal(2);
+        return tables[1].props().extraProperties ?? [];
+      };
+
+      await selectFile(modal, extraCSV);
+      await toggleExtra(modal, 'circumference');
+
+      // Select a .csv file with a `circumference` property like extraCSV, but
+      // without `species`.
+      await selectFile(modal, createCSV('label,circumference\ndogwood,1'));
+      // The selection of `circumference` should be remembered.
+      getSelected().should.eql(['circumference']);
+      getChecked().should.eql(['circumference']);
+      getTableExtra().should.eql(['circumference']);
+
+      // A .csv file without `circumference` or `species`, but instead two other
+      // extra properties: `foo` and `bar`.
+      const foobarCSV = createCSV('label,height,foo,bar\ndogwood,1,x,y');
+      await selectFile(modal, foobarCSV);
+      // Under the hood, the selection of `circumference` should still be
+      // remembered.
+      getSelected().should.eql(['circumference']);
+      // However, the selection is not visible in the UI.
+      getChecked().should.eql([]);
+      getTableExtra().should.eql([]);
+      await toggleExtra(modal, 'foo');
+
+      // Select extraCSV again. We should see that the selection of
+      // `circumference` has been remembered. The selection of `foo` should be
+      // remembered under the hood.
+      await selectFile(modal, extraCSV);
+      getSelected().should.eql(['circumference', 'foo']);
+      getChecked().should.eql(['circumference']);
+      getTableExtra().should.eql(['circumference']);
+
+      // Select foobarCSV again. We should see that the selection of `foo` has
+      // been remembered.
+      await selectFile(modal, foobarCSV);
+      getSelected().should.eql(['circumference', 'foo']);
+      getChecked().should.eql(['foo']);
+      getTableExtra().should.eql(['foo']);
+      await toggleExtra(modal, 'foo', false);
+
+      // Select foobarCSV again (after temporarily swapping it out). We should
+      // see that the deselection of `foo` has been remembered.
+      await selectFile(modal, extraCSV);
+      await selectFile(modal, foobarCSV);
+      // Under the hood, the selection of `circumference` should still be
+      // remembered.
+      getSelected().should.eql(['circumference']);
+      getChecked().should.eql([]);
+      getTableExtra().should.eql([]);
+
+      // Hide the modal.
+      await modal.setProps({ state: false });
+      await modal.setProps({ state: true });
+
+      await selectFile(modal, extraCSV);
+      // The selection of `circumference` should no longer be remembered.
+      getSelected().should.eql([]);
+      getChecked().should.eql([]);
+      getTableExtra().should.eql([]);
     });
 
     it('does not send properties that were not selected', () =>
@@ -692,5 +776,7 @@ describe('EntityUpload', () => {
             ]
           }
         }]));
+
+    it('does not create properties that were selected, but are not in current CSV');
   });
 });
