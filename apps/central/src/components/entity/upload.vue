@@ -81,7 +81,7 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import { computed, inject, nextTick, onBeforeUnmount, reactive, ref, shallowRef, watch } from 'vue';
-import { pick } from 'ramda';
+import { equals, pick } from 'ramda';
 import { useI18n } from 'vue-i18n';
 
 import EntityUploadErrors from './upload/errors.vue';
@@ -412,7 +412,11 @@ const createProperties = async () => {
     await request({ // eslint-disable-line no-await-in-loop
       method: 'POST',
       url: apiPaths.datasetProperties(dataset.projectId, dataset.name),
-      data: { name }
+      data: { name },
+      // If the property has already been created somehow, that's not an issue.
+      // We can just ignore the Problem response.
+      fulfillProblem: ({ code, details }) => code === 409.3 &&
+        equals(details.fields, ['name', 'datasetId'])
     });
     createdProperties.add(name);
   }

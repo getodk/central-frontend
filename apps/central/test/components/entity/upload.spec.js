@@ -1054,6 +1054,29 @@ describe('EntityUpload', () => {
           })
           .testNoRequest(app =>
             app.get('#entity-upload .modal-actions .btn-link').trigger('click')));
+
+      it('treats a 409.3 Problem like a success', () =>
+        upload(['circumference'])
+          .beforeEachResponse((_, { method, url }, i) => {
+            method.should.equal('POST');
+            url.should.equal(i === 0
+              ? '/v1/projects/1/datasets/trees/properties'
+              : '/v1/projects/1/datasets/trees/entities');
+          })
+          .respondWithProblem({
+            code: 409.3,
+            message: 'A resource already exists with name,datasetId value(s) of my_new_property,1.',
+            details: {
+              fields: ['name', 'datasetId'],
+              values: ['my_new_property', 1]
+            }
+          })
+          // Despite the fact that the fact that the previous response was a
+          // Problem, it should proceed to the upload request.
+          .respondWithProblem()
+          .afterResponses(app => {
+            getCreated(app).should.eql(['circumference']);
+          }));
     });
   });
 });
