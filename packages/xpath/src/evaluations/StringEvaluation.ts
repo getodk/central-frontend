@@ -2,8 +2,6 @@ import type { XPathNode } from '../adapter/interface/XPathNode.ts';
 import type { LocationPathEvaluation } from './LocationPathEvaluation.ts';
 import { ValueEvaluation } from './ValueEvaluation.ts';
 
-const parseNumber = (value: string) => Number(value.replace(',', '.'));
-
 export class StringEvaluation<T extends XPathNode> extends ValueEvaluation<T, 'STRING'> {
   readonly type = 'STRING';
   readonly nodes = null;
@@ -20,7 +18,7 @@ export class StringEvaluation<T extends XPathNode> extends ValueEvaluation<T, 'S
     super();
 
     this.booleanValue = !isEmpty;
-    this.numberValue = isEmpty ? NaN : parseNumber(value);
+    this.numberValue = isEmpty ? NaN : Number(value);
     this.stringValue = value;
 
     const numberFunction = context.functions.getDefaultImplementation('number');
@@ -28,7 +26,7 @@ export class StringEvaluation<T extends XPathNode> extends ValueEvaluation<T, 'S
     if (isEmpty) {
       this.numberValue = NaN;
     } else if (numberFunction === null) {
-      this.numberValue = parseNumber(value);
+      this.numberValue = Number(value);
     } else {
       try {
         this.numberValue = numberFunction
@@ -39,7 +37,7 @@ export class StringEvaluation<T extends XPathNode> extends ValueEvaluation<T, 'S
           ])
           .toNumber();
       } catch {
-        this.numberValue = parseNumber(value);
+        this.numberValue = Number(value);
       }
     }
   }
