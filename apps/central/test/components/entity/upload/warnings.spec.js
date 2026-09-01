@@ -1,7 +1,6 @@
 import { nextTick } from 'vue';
 
 import EntityUploadAlert from '../../../../src/components/entity/upload/alert.vue';
-import EntityUploadExtraProperties from '../../../../src/components/entity/upload/extra-properties.vue';
 import EntityUploadWarnings from '../../../../src/components/entity/upload/warnings.vue';
 
 import { mergeMountOptions, mount } from '../../../util/lifecycle';
@@ -79,17 +78,25 @@ describe('EntityUploadWarnings', () => {
     p[2].text().should.equal('foo, bar');
   });
 
-  it('shows a warning for unknown properties', () => {
-    const component = mountComponent({
-      props: { extraProperties: ['foo', 'bar'] }
+  describe('unknown (extra) properties', () => {
+    it('shows a warning', () => {
+      const component = mountComponent({
+        props: { extraProperties: ['foo', 'bar'] }
+      });
+      const p = component.getComponent(EntityUploadAlert).findAll('p');
+      p.length.should.equal(2);
+      p[0].text().should.equal('These columns don’t match existing properties');
+      p[1].text().should.startWith('Select which ones to create');
     });
 
-    const p = component.getComponent(EntityUploadAlert).findAll('p');
-    p.length.should.equal(2);
-    p[0].text().should.equal('These columns don’t match existing properties');
-
-    const extraComponent = component.getComponent(EntityUploadExtraProperties);
-    expect(extraComponent.props().properties).to.eql(['foo', 'bar']);
+    it('shows different text if there is an error', () => {
+      const component = mountComponent({
+        props: { extraProperties: ['foo', 'bar'], hasError: true }
+      });
+      const warning = component.getComponent(EntityUploadAlert);
+      const text = warning.get('p:nth-child(2)').text();
+      text.should.startWith('Once you’ve fixed all errors, you’ll be able to select');
+    });
   });
 
   it('shows a warning for ragged rows', () => {

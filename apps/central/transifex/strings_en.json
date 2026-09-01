@@ -2979,6 +2979,15 @@
             "string": "Select which ones to create, otherwise they will be ignored.",
             "developer_comment": "\"Ones\" refers to \"columns\"."
           }
+        },
+        "error": {
+          "one": {
+            "string": "Once you’ve fixed all errors, you’ll be able to select the column."
+          },
+          "multiple": {
+            "string": "Once you’ve fixed all errors, you’ll be able to select which ones to create.",
+            "developer_comment": "\"Ones\" refers to \"columns\"."
+          }
         }
       },
       "propertiesIgnored": {

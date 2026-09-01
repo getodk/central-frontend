@@ -70,6 +70,7 @@ const props = defineProps({
     type: String,
     required: true
   },
+  // Number of errors
   count: {
     type: Number,
     required: true
