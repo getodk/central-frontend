@@ -88,6 +88,9 @@ const postPrimaryInstance = async (file:File) => {
   try {
     const response = await fetch(url, { body: file, headers, method });
     if (response.ok) {
+      if (props.form.once && props.form.enketoOnceId) {
+        setSubmitted(props.form.enketoOnceId);
+      }
       const data = await response.json();
       return { success: true, data };
     }
@@ -139,10 +142,6 @@ const handleResult = () => {
 
   // Success handler
   if (submissionResult.primaryInstanceResult.success && attachmentResultArr.every(r => r.success)) {
-
-    if (props.form.once && props.form.enketoOnceId) {
-      setSubmitted(props.form.enketoOnceId);
-    }
 
     clearForm();
 
