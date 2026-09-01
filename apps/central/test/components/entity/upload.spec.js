@@ -642,14 +642,30 @@ describe('EntityUpload', () => {
 
   describe('extra properties', () => {
     beforeEach(() => {
+      mockLogin();
       testData.extendedDatasets.createPast(1, {
         properties: [{ name: 'height' }]
       });
     });
 
-    const extraCSV = createCSV('label,height,circumference,species\ndogwood,1,2,dogwood\nelm');
-    const toggleExtra = (modal, name, checked = true) => {
-      const input = modal.get(`#entity-upload-extra-properties input[value="${name}"]`);
+    const extraCSV = createCSV([
+      // Two extra properties
+      ['label', 'height', 'circumference', 'species'],
+      // No properties missing
+      ['dogwood', '1', '2', 'dogwood'],
+      // All properties missing (both existing and extra)
+      ['elm'],
+      // Existing data properties missing
+      ['pine', '', '3', 'pine'],
+      // All extra properties missing
+      ['oak', '4'],
+      // One extra property missing
+      ['maple', '5', '6'],
+      // The other extra property missing
+      ['spruce', '7', '', 'spruce']
+    ].map(row => row.join(',')).join('\n'));
+    const toggleExtra = (component, name, checked = true) => {
+      const input = component.get(`#entity-upload-extra-properties input[value="${name}"]`);
       input.element.checked.should.equal(!checked);
       return input.setChecked(checked);
     };
@@ -667,17 +683,15 @@ describe('EntityUpload', () => {
       const modal = await showModal();
       await selectFile(modal, extraCSV);
 
-      const tables = modal.findAllComponents(EntityUploadTable);
-      tables.length.should.equal(2);
-      const table = tables[1];
-      table.props().extraProperties.should.eql([]);
+      const table = getTables(modal)[1];
+      should.not.exist(table.props().extraProperties);
 
       const input = modal.get('#entity-upload-extra-properties .checkbox:nth-child(2) input');
       await input.setChecked();
       table.props().extraProperties.should.eql(['circumference']);
 
       await input.setChecked(false);
-      table.props().extraProperties.should.eql([]);
+      should.not.exist(table.props().extraProperties);
     });
 
     it('remembers the property selection until the modal is hidden', async () => {
@@ -690,11 +704,8 @@ describe('EntityUpload', () => {
         const checked = modal.findAll('#entity-upload-extra-properties .checkbox:has(input:checked)');
         return checked.map(div => div.text());
       };
-      const getTableExtra = () => {
-        const tables = modal.findAllComponents(EntityUploadTable);
-        tables.length.should.equal(2);
-        return tables[1].props().extraProperties ?? [];
-      };
+      const getTableExtra = () =>
+        getTables(modal)[1].props().extraProperties ?? [];
 
       await selectFile(modal, extraCSV);
       await toggleExtra(modal, 'circumference');
@@ -767,7 +778,80 @@ describe('EntityUpload', () => {
       extraComponent.props().disabled.should.be.true;
     });
 
-    it('does not send properties that were not selected', () =>
+    it('sends all extra properties if all were selected', () =>
+      showModal()
+        .complete()
+        .request(async (modal) => {
+          await selectFile(modal, extraCSV);
+          await toggleExtra(modal, 'circumference');
+          await toggleExtra(modal, 'species');
+          return modal.get('.modal-actions .btn-primary').trigger('click');
+        })
+        .respondWithSuccess()
+        .respondWithSuccess()
+        .respondWithProblem()
+        .testRequests([
+          {
+            method: 'POST',
+            url: '/v1/projects/1/datasets/trees/properties',
+            data: { name: 'circumference' }
+          },
+          {
+            method: 'POST',
+            url: '/v1/projects/1/datasets/trees/properties',
+            data: { name: 'species' }
+          },
+          {
+            method: 'POST',
+            url: '/v1/projects/1/datasets/trees/entities',
+            data: {
+              source: { name: 'my_data.csv', size: extraCSV.size },
+              entities: [
+                { label: 'dogwood', data: { circumference: '2', species: 'dogwood', height: '1' } },
+                { label: 'elm' },
+                { label: 'pine', data: { circumference: '3', species: 'pine' } },
+                { label: 'oak', data: { height: '4' } },
+                { label: 'maple', data: { circumference: '6', height: '5' } },
+                { label: 'spruce', data: { species: 'spruce', height: '7' } }
+              ]
+            }
+          }
+        ]));
+
+    it('does not send all extra properties if only some were selected', () =>
+      showModal()
+        .complete()
+        .request(async (modal) => {
+          await selectFile(modal, extraCSV);
+          await toggleExtra(modal, 'circumference');
+          return modal.get('.modal-actions .btn-primary').trigger('click');
+        })
+        .respondWithSuccess()
+        .respondWithProblem()
+        .testRequests([
+          {
+            method: 'POST',
+            url: '/v1/projects/1/datasets/trees/properties',
+            data: { name: 'circumference' }
+          },
+          {
+            method: 'POST',
+            url: '/v1/projects/1/datasets/trees/entities',
+            data: {
+              source: { name: 'my_data.csv', size: extraCSV.size },
+              entities: [
+                { label: 'dogwood', data: { circumference: '2', height: '1' } },
+                { label: 'elm' },
+                { label: 'pine', data: { circumference: '3' } },
+                { label: 'oak', data: { height: '4' } },
+                { label: 'maple', data: { circumference: '6', height: '5' } },
+                { label: 'spruce', data: { height: '7' } }
+              ]
+            }
+          }
+        ]));
+
+    it('does not send extra properties if none were selected', () =>
       showModal()
         .complete()
         .request(async (modal) => {
@@ -779,15 +863,182 @@ describe('EntityUpload', () => {
           method: 'POST',
           url: '/v1/projects/1/datasets/trees/entities',
           data: {
-            source: { name: 'my_data.csv', size: 58 },
+            source: { name: 'my_data.csv', size: extraCSV.size },
             entities: [
               { label: 'dogwood', data: { height: '1' } },
-              // Don't bother sending an empty `data` object.
-              { label: 'elm' }
+              { label: 'elm' },
+              { label: 'pine' },
+              { label: 'oak', data: { height: '4' } },
+              { label: 'maple', data: { height: '5' } },
+              { label: 'spruce', data: { height: '7' } }
             ]
           }
         }]));
 
-    it('does not create properties that were selected, but are not in current CSV');
+    it('does not create properties that were selected, but are not in current CSV', () =>
+      showModal()
+        .complete()
+        .request(async (modal) => {
+          await selectFile(modal, createCSV('label,foo\ndogwood,x'));
+          await toggleExtra(modal, 'foo');
+          await selectFile(modal, extraCSV);
+          return modal.get('.modal-actions .btn-primary').trigger('click');
+        })
+        .respondWithProblem()
+        .testRequests([{
+          method: 'POST',
+          url: '/v1/projects/1/datasets/trees/entities',
+          data: {
+            source: { name: 'my_data.csv', size: extraCSV.size },
+            entities: [
+              { label: 'dogwood', data: { height: '1' } },
+              { label: 'elm' },
+              { label: 'pine' },
+              { label: 'oak', data: { height: '4' } },
+              { label: 'maple', data: { height: '5' } },
+              { label: 'spruce', data: { height: '7' } }
+            ]
+          }
+        }]));
+
+    it('shows a popup during the request', () =>
+      showModal()
+        .complete()
+        .request(async (modal) => {
+          await selectFile(modal, extraCSV);
+          await toggleExtra(modal, 'circumference');
+          await toggleExtra(modal, 'species');
+          return modal.get('.modal-actions .btn-primary').trigger('click');
+        })
+        .beforeEachResponse((modal, config, i) => {
+          const popup = modal.getComponent(EntityUploadPopup);
+          popup.props().extraProperties.should.be.true;
+          if (i < 2)
+            should.not.exist(popup.props().progress);
+          else
+            popup.props().progress.should.equal(0);
+        })
+        .respondWithSuccess()
+        .respondWithSuccess()
+        .respondWithProblem());
+
+    describe('refreshing the list of properties', () => {
+      const upload = (names) => load('/projects/1/entity-lists/trees/entities')
+        .complete()
+        .request(async (component) => {
+          await component.get('#dataset-entities-upload-button').trigger('click');
+          const modal = component.getComponent(EntityUpload);
+          await selectFile(modal, extraCSV);
+          for (const name of names) await toggleExtra(modal, name);
+          return modal.get('.modal-actions .btn-primary').trigger('click');
+        });
+      const getCreated = (app) => {
+        const { created } = app.getComponent(EntityUploadExtraProperties).props();
+        return [...created];
+      };
+      const respondWithExtra = (names) => (series) => series.respondWithData(() => {
+        for (const name of names)
+          testData.extendedDatasets.addProperty(-1, name);
+        return testData.extendedDatasets.last();
+      });
+
+      it('updates the list of properties on success', () =>
+        upload(['circumference'])
+          .respondWithSuccess() // Property creation
+          .respondWithSuccess() // Upload
+          .modify(respondWithExtra(['circumference']))
+          .respondWithData(testData.entityOData)
+          .testRequests([
+            null,
+            null,
+            {
+              url: '/v1/projects/1/datasets/trees',
+              extended: true
+            },
+            {
+              url: ({ pathname }) => {
+                pathname.should.equal('/v1/projects/1/datasets/trees.svc/Entities');
+              }
+            }
+          ]));
+
+      it('handles an upload error after property creation', () =>
+        upload(['circumference'])
+          .respondWithSuccess() // Property creation
+          .respondWithProblem() // Upload
+          .afterResponses(app => {
+            getCreated(app).should.eql(['circumference']);
+
+            // Even though the entity list has a new property, that shouldn't be
+            // fully reflected in the modal yet. We want the modal to stay as
+            // similar/stable as possible over the course of this error case.
+            const th = getTables(app)[0].findAll('th').map(wrapper => wrapper.text());
+            th.should.eql(['Row', 'label', 'height']);
+          })
+          // Try to upload again. This time, it should only send the upload
+          // request.
+          .request(app =>
+            app.get('#entity-upload .modal-actions .btn-primary').trigger('click'))
+          .beforeEachResponse((_, { method, url }) => {
+            method.should.equal('POST');
+            url.should.equal('/v1/projects/1/datasets/trees/entities');
+          })
+          .respondWithProblem()
+          .complete()
+          // Select an additional property, then upload. It should send a
+          // request to create the additional property.
+          .request(async (app) => {
+            await toggleExtra(app, 'species');
+            return app.get('#entity-upload .modal-actions .btn-primary').trigger('click');
+          })
+          .beforeEachResponse((_, { method, url, data }, i) => {
+            method.should.equal('POST');
+            if (i === 0) {
+              url.should.equal('/v1/projects/1/datasets/trees/properties');
+              data.should.eql({ name: 'species' });
+            } else {
+              url.should.equal('/v1/projects/1/datasets/trees/entities');
+            }
+          })
+          .respondWithSuccess() // Property creation
+          .respondWithProblem() // Upload
+          .afterResponses(app => {
+            getCreated(app).should.eql(['circumference', 'species']);
+          })
+          // Try to upload once last time. This time, it will be successful.
+          .request(app =>
+            app.get('#entity-upload .modal-actions .btn-primary').trigger('click'))
+          .respondWithSuccess()
+          .modify(respondWithExtra(['circumference', 'species']))
+          .respondWithData(testData.entityOData)
+          .testRequests([
+            null,
+            {
+              url: '/v1/projects/1/datasets/trees',
+              extended: true
+            },
+            {
+              url: ({ pathname }) => {
+                pathname.should.equal('/v1/projects/1/datasets/trees.svc/Entities');
+              }
+            }
+          ]));
+
+      it('updates the list of properties if the modal is closed', () =>
+        upload(['circumference'])
+          .respondWithSuccess() // Property creation
+          .respondWithProblem() // Upload
+          .complete()
+          // Abandon the upload; just close the modal.
+          .request(app =>
+            app.get('#entity-upload .modal-actions .btn-link').trigger('click'))
+          .modify(respondWithExtra(['circumference']))
+          .testRequests([
+            {
+              url: '/v1/projects/1/datasets/trees',
+              extended: true
+            }
+          ]));
+    });
   });
 });

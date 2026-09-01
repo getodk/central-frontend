@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="entity-upload" :state="state" :hideable="!uploading" :persistent="true" size="full"
-    backdrop @hide="$emit('hide')" @mutate="resizeColumnIfShown">
+    backdrop @hide="hide" @mutate="resizeColumnIfShown">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div :class="{ backdrop: uploading }">
@@ -53,8 +53,8 @@ except according to the terms contained in the LICENSE file.
           @rows="showWarningRows">
           <template #extra-properties>
             <entity-upload-extra-properties :properties="warnings.extraProperties"
-              :selected="selectedProperties" :disabled="errors != null"
-              @toggle="toggleExtraProperty"/>
+              :selected="selectedProperties" :created="createdProperties"
+              :disabled="errors != null" @toggle="toggleExtraProperty"/>
           </template>
         </entity-upload-warnings>
 
@@ -62,10 +62,12 @@ except according to the terms contained in the LICENSE file.
           :parsing="parsing" @change="selectFile"/>
       </div>
       <entity-upload-popup v-if="uploading" :filename="fileMetadata.name"
-        :count="csvEntities.length" :progress="uploadProgress"/>
+        :count="csvEntities.length"
+        :extra-properties="propertiesToCreate != null"
+        :progress="uploadProgress"/>
       <div ref="actions" class="modal-actions">
         <button type="button" class="btn btn-link" :aria-disabled="uploading"
-          @click="$emit('hide')">
+          @click="hide">
           {{ $t('action.cancel') }}
         </button>
         <button type="button" class="btn btn-primary"
@@ -110,6 +112,7 @@ const props = defineProps({
 const emit = defineEmits(['hide', 'success']);
 
 const { dataset, createResource } = useRequestData();
+const { request, awaitingResponse: uploading } = useRequest();
 
 const pageSizeOptions = [5, 10, 20, 50];
 const defaultPageSize = pageSizeOptions[0];
@@ -179,7 +182,6 @@ const csvEntities = shallowRef(null);
 const fileMetadata = shallowRef(null);
 const errors = shallowRef(null);
 const warnings = shallowRef(null);
-const selectedProperties = reactive(new Set());
 const parsing = ref(false);
 // Function to abort parsing in progress
 let abortParse = noop;
@@ -273,6 +275,7 @@ const rowToEntity = (extraProperties) => (values, columns) => {
   const data = dataset.properties.length !== 0 ? Object.create(null) : null;
   let hasProperty = false;
   const extraData = extraProperties.size !== 0 ? Object.create(null) : null;
+  let hasExtra = false;
   for (const [i, value] of values.entries()) {
     if (value === '') continue; // eslint-disable-line no-continue
 
@@ -284,6 +287,7 @@ const rowToEntity = (extraProperties) => (values, columns) => {
       hasProperty = true;
     } else if (extraProperties.has(column)) {
       extraData[column] = value;
+      hasExtra = true;
     }
   }
 
@@ -291,7 +295,7 @@ const rowToEntity = (extraProperties) => (values, columns) => {
     throw new Error(t('alert.blankLabel'));
 
   const result = { label, data: hasProperty ? data : noPropertyData };
-  if (extraData != null) result.extra = extraData;
+  if (hasExtra) result.extra = extraData;
   return result;
 };
 const { i18n: globalI18n, redAlert } = inject('container');
@@ -365,16 +369,6 @@ const selectFile = (file) => {
 };
 onBeforeUnmount(() => { abortParse(); });
 
-watch(() => props.state, (state) => {
-  if (state) return;
-  abortParse();
-  csvEntities.value = null;
-  fileMetadata.value = null;
-  errors.value = null;
-  warnings.value = null;
-  selectedProperties.clear();
-});
-
 const csvPage = reactive({ page: 0, size: defaultPageSize });
 const csvRow = computed(() =>
   (csvEntities.value != null ? csvPage.page * csvPage.size : -1));
@@ -394,6 +388,7 @@ const showWarningRows = (range) => {
 watch(csvEntities, (value) => { if (value == null) warningRows.value = null; });
 
 // CREATING NEW PROPERTIES
+const selectedProperties = reactive(new Set());
 const toggleExtraProperty = (name, selected) => {
   if (selected)
     selectedProperties.add(name);
@@ -404,26 +399,71 @@ const toggleExtraProperty = (name, selected) => {
 // is not necessarily a subset of warnings.value.extraProperties. Either list
 // may include properties that the other does not. propertiesToCreate represents
 // the intersection of the two lists.
-const propertiesToCreate = computed(() =>
-  warnings.value?.extraProperties?.filter(name => selectedProperties.has(name)));
+const propertiesToCreate = computed(() => {
+  const result = warnings.value?.extraProperties?.filter(name =>
+    selectedProperties.has(name));
+  return result != null && result.length !== 0 ? result : null;
+});
+const createdProperties = reactive(new Set());
+const createProperties = async () => {
+  if (propertiesToCreate.value == null) return;
+  for (const name of propertiesToCreate.value) {
+    if (createdProperties.has(name)) continue; // eslint-disable-line no-continue
+    await request({ // eslint-disable-line no-await-in-loop
+      method: 'POST',
+      url: apiPaths.datasetProperties(dataset.projectId, dataset.name),
+      data: { name }
+    });
+    createdProperties.add(name);
+  }
+};
+const mergeDataWithExtra = (entity) => {
+  if (entity.extra == null) return entity;
 
-const { request, awaitingResponse: uploading } = useRequest();
-const uploadProgress = ref(0);
+  if (propertiesToCreate.value == null)
+    return { label: entity.label, data: entity.data };
+
+  if (propertiesToCreate.value.length === warnings.value.extraProperties.length &&
+    entity.data === noPropertyData)
+    return { label: entity.label, data: entity.extra };
+
+  const merged = Object.create(null);
+  let hasExtra = false;
+  const extraData = entity.extra;
+  for (const name of propertiesToCreate.value) {
+    const value = extraData[name];
+    if (value != null) {
+      merged[name] = value;
+      hasExtra = true;
+    }
+  }
+  if (!hasExtra) return { label: entity.label, data: entity.data };
+  if (entity.data !== noPropertyData) Object.assign(merged, entity.data);
+  return { label: entity.label, data: merged };
+};
+
+// UPLOAD REQUEST
+const uploadProgress = ref(null);
 const upload = () => {
-  const entitiesToSend = csvEntities.value.map(entity => (entity.extra == null
-    ? entity
-    : { label: entity.label, data: entity.data }));
-  request({
-    method: 'POST',
-    url: apiPaths.entities(dataset.projectId, dataset.name),
-    data: {
-      source: pick(['name', 'size'], fileMetadata.value),
-      entities: entitiesToSend
-    },
-    onUploadProgress: (event) => { uploadProgress.value = event.progress ?? 0; }
-  })
-    .then(() => { emit('success', csvEntities.value.length); })
-    .finally(() => { uploadProgress.value = 0; })
+  createProperties()
+    .then(() => {
+      const entitiesToSend = warnings.value?.extraProperties == null
+        ? csvEntities.value
+        : csvEntities.value.map(mergeDataWithExtra);
+      uploadProgress.value = 0;
+      return request({
+        method: 'POST',
+        url: apiPaths.entities(dataset.projectId, dataset.name),
+        data: {
+          source: pick(['name', 'size'], fileMetadata.value),
+          entities: entitiesToSend
+        },
+        onUploadProgress: (event) => { uploadProgress.value = event.progress ?? 0; }
+      }).finally(() => { uploadProgress.value = null; });
+    })
+    .then(() => {
+      emit('success', csvEntities.value.length, createdProperties.size !== 0);
+    })
     .catch(noop);
 };
 
@@ -443,10 +483,18 @@ watch([errors, warnings, csvEntities], () => {
     nextTick(() => { actions.value.scrollIntoView(); });
 });
 
+const hide = () => { emit('hide', createdProperties.size !== 0); };
+
 watch(() => props.state, (state) => {
-  if (!state) {
-    for (const table of tables) table.resetScroll();
-  }
+  if (state) return;
+  abortParse();
+  csvEntities.value = null;
+  fileMetadata.value = null;
+  errors.value = null;
+  warnings.value = null;
+  selectedProperties.clear();
+  createdProperties.clear();
+  for (const table of tables) table.resetScroll();
 });
 </script>
 

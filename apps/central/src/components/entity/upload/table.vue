@@ -39,7 +39,7 @@ except according to the terms contained in the LICENSE file.
           </td>
           <template v-if="extraProperties != null">
             <td v-for="name of extraProperties" :key="name">
-              <div v-tooltip.text>{{ entity.extra[name] }}</div>
+              <div v-tooltip.text>{{ entity.extra?.[name] }}</div>
             </td>
           </template>
         </tr>

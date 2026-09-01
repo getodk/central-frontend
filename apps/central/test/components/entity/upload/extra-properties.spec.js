@@ -4,7 +4,7 @@ import { mergeMountOptions, mount } from '../../../util/lifecycle';
 
 const mountComponent = (options) =>
   mount(EntityUploadExtraProperties, mergeMountOptions(options, {
-    props: { selected: new Set() }
+    props: { selected: new Set(), created: new Set() }
   }));
 
 describe('EntityUploadExtraProperties', () => {
@@ -46,6 +46,43 @@ describe('EntityUploadExtraProperties', () => {
       checkbox.classes('disabled').should.be.true;
       checkbox.get('input').element.disabled.should.be.true;
     }
+  });
+
+  describe('created prop', () => {
+    it('disables a property that has been created already', async () => {
+      const component = mountComponent({
+        props: {
+          properties: ['foo', 'bar'],
+          selected: new Set(['foo']),
+          created: new Set(['foo'])
+        }
+      });
+      const checkboxes = component.findAll('.checkbox');
+      const hasClass = checkboxes.map(checkbox => checkbox.classes('disabled'));
+      hasClass.should.eql([false, true, false]);
+      const disabled = checkboxes.map(checkbox => checkbox.get('input').element.disabled);
+      disabled.should.eql([false, true, false]);
+      checkboxes[1].get('input').should.have.ariaDescription(/^This property was created/);
+      await checkboxes[1].get('label').should.have.tooltip(/^This property was created/);
+    });
+
+    it('disables "Select all" if all properties have been created already', async () => {
+      const component = mountComponent({
+        props: {
+          properties: ['foo', 'bar'],
+          selected: new Set(['foo', 'bar']),
+          created: new Set(['foo', 'bar'])
+        }
+      });
+      const checkboxes = component.findAll('.checkbox');
+      checkboxes.length.should.equal(3);
+      for (const checkbox of checkboxes) {
+        checkbox.classes('disabled').should.be.true;
+        checkbox.get('input').element.disabled.should.be.true;
+      }
+      checkboxes[0].get('input').should.have.ariaDescription(/^This property was created/);
+      await checkboxes[0].get('label').should.have.tooltip(/^This property was created/);
+    });
   });
 
   it('emits a toggle event when a property is checked', async () => {

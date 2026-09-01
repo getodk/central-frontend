@@ -2889,6 +2889,9 @@
           "string": "Select all",
           "developer_comment": "This is the text of a button that allows the user to select all the columns of a table."
         }
+      },
+      "created": {
+        "string": "This property was created in a previous upload attempt."
       }
     },
     "EntityUploadFileSelect": {
@@ -2917,6 +2920,9 @@
         "string": "{count, plural, one {{count} data row found} other {{count} data rows found}}"
       },
       "status": {
+        "creatingProperties": {
+          "string": "Creating new properties…"
+        },
         "sending": {
           "string": "Sending file… ({percentUploaded})",
           "developer_comment": "This text is shown while a file is being uploaded to the server."

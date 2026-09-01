@@ -1,18 +1,29 @@
 <template>
   <div id="entity-upload-extra-properties" @change="toggle">
-    <div v-if="properties.length !== 1" class="checkbox" :class="{ disabled }">
-      <label>
-        <input type="checkbox" :checked="selectedAll" :disabled="disabled"
+    <div v-if="properties.length !== 1" class="checkbox"
+      :class="{ disabled: disabled || createdAll }">
+      <label v-tooltip.sr-only>
+        <input type="checkbox" :checked="selectedAll"
+          :disabled="disabled || createdAll"
+          :aria-describedby="createdAll ? disabledMessageId('all') : null"
           data-select-all="true">
         <span>{{ $t('action.selectAll') }}</span>
       </label>
+      <p v-if="createdAll" :id="disabledMessageId('all')" class="sr-only">
+        {{ $t('created') }}
+      </p>
     </div>
-    <div v-for="name of properties" :key="name" class="checkbox" :class="{ disabled }">
-      <label>
+    <div v-for="(name, i) in properties" :key="name" class="checkbox"
+      :class="{ disabled: disabled || created.has(name) }">
+      <label v-tooltip.sr-only>
         <input type="checkbox" :value="name" :checked="selected.has(name)"
-          :disabled="disabled">
+          :disabled="disabled || created.has(name)"
+          :aria-describedby="created.has(name) ? disabledMessageId(i) : null">
         <span v-tooltip.text>{{ name }}</span>
       </label>
+      <p v-if="created.has(name)" :id="disabledMessageId(i)" class="sr-only">
+        {{ $t('created') }}
+      </p>
     </div>
   </div>
 </template>
@@ -32,12 +43,20 @@ const props = defineProps({
     type: Set,
     required: true
   },
+  created: {
+    type: Set,
+    required: true
+  },
   disabled: Boolean
 });
 const emit = defineEmits(['toggle']);
 
 const selectedAll = computed(() =>
   props.properties.every(name => props.selected.has(name)));
+const createdAll = computed(() =>
+  props.properties.every(name => props.created.has(name)));
+
+const disabledMessageId = (suffix) => `entity-upload-extra-properties-disabled-${suffix}`;
 
 const toggle = (event) => {
   const input = event.target;
@@ -79,7 +98,8 @@ const toggle = (event) => {
       // This is the text of a button that allows the user to select all the
       // columns of a table.
       "selectAll": "Select all"
-    }
+    },
+    "created": "This property was created in a previous upload attempt."
   }
 }
 </i18n>
