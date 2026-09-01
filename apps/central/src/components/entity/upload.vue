@@ -49,7 +49,7 @@ except according to the terms contained in the LICENSE file.
         <entity-upload-errors v-if="errors != null" v-bind="errors"
           :delimiter="fileMetadata.delimiter"/>
         <entity-upload-warnings v-if="warnings != null" v-bind="warnings"
-          :filename="fileMetadata.name" :errors="errors?.count"
+          :filename="fileMetadata.name" :has-error="errors != null"
           @rows="showWarningRows">
           <template #extra-properties>
             <entity-upload-extra-properties :properties="warnings.extraProperties"

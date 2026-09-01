@@ -91,11 +91,11 @@ describe('EntityUploadWarnings', () => {
 
     it('shows different text if there are errors', () => {
       const component = mountComponent({
-        props: { extraProperties: ['foo', 'bar'], errors: 2 }
+        props: { extraProperties: ['foo', 'bar'], hasError: true }
       });
       const warning = component.getComponent(EntityUploadAlert);
       const text = warning.get('p:nth-child(2)').text();
-      text.should.startWith('Once you’ve fixed the errors, you’ll be able to select');
+      text.should.startWith('Once you’ve fixed all errors, you’ll be able to select');
     });
   });
 

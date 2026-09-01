@@ -737,6 +737,8 @@ describe('EntityUpload', () => {
       const modal = await showModal();
       await selectFile(modal, createCSV('height,circumference\n1,2'));
       modal.findComponent(EntityUploadErrors).exists().should.be.true;
+      modal.getComponent(EntityUploadWarnings).props().hasError.should.be.true;
+
       const extraComponent = modal.getComponent(EntityUploadExtraProperties);
       expect(extraComponent.props().properties).to.eql(['circumference']);
       extraComponent.props().disabled.should.be.true;

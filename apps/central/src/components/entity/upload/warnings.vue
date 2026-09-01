@@ -88,7 +88,7 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template #body>
         <p>
-          <template v-if="errors === 0">
+          <template v-if="!hasError">
             <template v-if="extraProperties.length === 1">
               {{ $t('extraProperties.description.one') }}
             </template>
@@ -98,10 +98,10 @@ except according to the terms contained in the LICENSE file.
           </template>
           <template v-else>
             <template v-if="extraProperties.length === 1">
-              {{ $tc('extraProperties.error.one', errors) }}
+              {{ $t('extraProperties.error.one') }}
             </template>
             <template v-else>
-              {{ $tc('extraProperties.error.multiple', errors) }}
+              {{ $t('extraProperties.error.multiple') }}
             </template>
           </template>
         </p>
@@ -129,11 +129,7 @@ defineProps({
     type: Number,
     required: true
   },
-  // Number of errors
-  errors: {
-    type: Number,
-    default: 0
-  },
+  hasError: Boolean,
 
   // Column header warnings
   systemProperties: Array,
@@ -206,9 +202,9 @@ defineEmits(['rows']);
         "multiple": "Select which ones to create, otherwise they will be ignored."
       },
       "error": {
-        "one": "Once you’ve fixed the error, you’ll be able to choose whether to create a new property. | Once you’ve fixed the errors, you’ll be able to choose whether to create a new property.",
+        "one": "Once you’ve fixed all errors, you’ll be able to choose whether to create a new property.",
         // "Ones" refers to "columns".
-        "multiple": "Once you’ve fixed the error, you’ll be able to select which ones to create. | Once you’ve fixed the errors, you’ll be able to select which ones to create."
+        "multiple": "Once you’ve fixed all errors, you’ll be able to select which ones to create."
       }
     },
     // "Property" refers to an Entity property.
