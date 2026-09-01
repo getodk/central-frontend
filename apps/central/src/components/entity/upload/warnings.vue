@@ -202,7 +202,7 @@ defineEmits(['rows']);
         "multiple": "Select which ones to create, otherwise they will be ignored."
       },
       "error": {
-        "one": "Once you’ve fixed all errors, you’ll be able to choose whether to create a new property.",
+        "one": "Once you’ve fixed all errors, you’ll be able to select the column.",
         // "Ones" refers to "columns".
         "multiple": "Once you’ve fixed all errors, you’ll be able to select which ones to create."
       }
