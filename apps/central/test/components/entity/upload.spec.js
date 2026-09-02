@@ -1038,7 +1038,22 @@ describe('EntityUpload', () => {
               url: '/v1/projects/1/datasets/trees',
               extended: true
             }
-          ]));
+          ])
+          // Open the modal again now that the list of properties has been
+          // updated. The modal should no longer remember that `circumference`
+          // was created. If the modal is closed, it should not update the list
+          // of properties again.
+          .afterResponse(async (app) => {
+            await app.get('#dataset-entities-upload-button').trigger('click');
+            const modal = app.getComponent(EntityUpload);
+            await selectFile(modal, extraCSV);
+            const warnings = modal.getComponent(EntityUploadWarnings);
+            // `circumference` is no longer in the list of extraProperties.
+            warnings.props().extraProperties.should.eql(['species']);
+            getCreated(modal).should.eql([]);
+          })
+          .testNoRequest(app =>
+            app.get('#entity-upload .modal-actions .btn-link').trigger('click')));
     });
   });
 });
