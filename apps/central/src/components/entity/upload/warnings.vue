@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
       <template #title>{{ $t('systemProperties') }}</template>
       <template #body>
         <p>{{ $tc('propertiesIgnored', systemProperties.length) }}</p>
-        <p><i18n-list :list="systemProperties"/></p>
+        <entity-upload-property-list :names="systemProperties"/>
       </template>
     </entity-upload-alert>
     <entity-upload-alert v-if="caseMismatch != null"
@@ -53,7 +53,7 @@ except according to the terms contained in the LICENSE file.
       <template #title>{{ $tc('invalidProperties', invalidProperties.length) }}</template>
       <template #body>
         <p>{{ $tc('propertiesIgnored', invalidProperties.length) }}</p>
-        <p><i18n-list :list="invalidProperties"/></p>
+        <entity-upload-property-list :names="invalidProperties"/>
       </template>
     </entity-upload-alert>
     <entity-upload-alert v-if="missingProperties != null" type="warning">
@@ -62,7 +62,7 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template #body>
         <p>{{ $tc('missingProperties.description', missingProperties.length) }}</p>
-        <p><i18n-list :list="missingProperties"/></p>
+        <entity-upload-property-list :names="missingProperties"/>
       </template>
     </entity-upload-alert>
 
@@ -113,7 +113,7 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import EntityUploadAlert from './alert.vue';
-import I18nList from '../../i18n/list.vue';
+import EntityUploadPropertyList from './property-list.vue';
 import SentenceSeparator from '../../sentence-separator.vue';
 
 defineOptions({
