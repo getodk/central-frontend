@@ -84,6 +84,8 @@ export default {
 @import '../../../assets/scss/variables';
 
 #project-form-access-table {
+  width: max-content;
+
   // Space above the tables
   .table-freeze-frozen {
     margin-top: 70px;
