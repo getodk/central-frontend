@@ -2787,10 +2787,6 @@
       }
     },
     "EntityUpload": {
-      "title": {
-        "string": "Import Data from File",
-        "developer_comment": "This is the title at the top of a pop-up."
-      },
       "currentEntities": {
         "string": "Your current Entities"
       },
@@ -2804,7 +2800,7 @@
       },
       "action": {
         "append": {
-          "string": "Append data",
+          "string": "Append Entities",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
