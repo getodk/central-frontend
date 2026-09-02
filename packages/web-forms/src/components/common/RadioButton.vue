@@ -8,15 +8,8 @@ interface RadioButtonProps {
 	readonly question: SelectNode;
 }
 
-defineEmits(['update:modelValue', 'change']);
-const props = defineProps<RadioButtonProps>();
-
-const selectValue = (value: string) => {
-	if (props.question.appearances.label) {
-		return;
-	}
-	props.question.selectValue(value);
-};
+defineEmits(['change']);
+defineProps<RadioButtonProps>();
 </script>
 
 <template>
@@ -37,8 +30,7 @@ const selectValue = (value: string) => {
 			:name="question.nodeId"
 			:disabled="question.currentState.readonly"
 			:model-value="question.currentState.value[0]"
-			@update:model-value="selectValue"
-			@change="$emit('change')"
+			@change="$emit('change', option.value)"
 		/>
 		<TextMedia :label="option.label" :audio-icons-only="question.currentState.isSelectWithImages" />
 	</label>

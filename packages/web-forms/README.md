@@ -60,7 +60,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-##### Appearances<br/>🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜ 54\%
+##### Appearances<br/>🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜ 56\%
 
   </summary>
   <br/>
@@ -96,7 +96,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
 | hide-input                                                      |          |
 | minimal                                                         |    ✅    |
 | search / autocomplete                                           |    ✅    |
-| [quick](https://github.com/getodk/web-forms/issues/515)         |          |
+| [quick](https://github.com/getodk/web-forms/issues/515)         |    ✅    |
 | columns-pack                                                    |    ✅    |
 | columns                                                         |    ✅    |
 | columns-n                                                       |    ✅    |

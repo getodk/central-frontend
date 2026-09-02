@@ -12,7 +12,7 @@ defineEmits(['change']);
 
 <template>
 	<div class="likert">
-		<RadioButton :question="question" @change="$emit('change')" />
+		<RadioButton :question="question" @change="$emit('change', $event)" />
 	</div>
 </template>
 
