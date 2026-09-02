@@ -484,7 +484,6 @@ watch([errors, warnings, csvEntities], () => {
 });
 
 const hide = () => { emit('hide', createdProperties.size !== 0); };
-
 watch(() => props.state, (state) => {
   if (state) return;
   abortParse();
