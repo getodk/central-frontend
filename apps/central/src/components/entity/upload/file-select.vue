@@ -13,6 +13,9 @@ except according to the terms contained in the LICENSE file.
   <file-drop-zone id="entity-upload-file-select" :disabled="disabled"
     @drop="$emit('change', $event.dataTransfer.files[0])">
     <div id="entity-upload-file-select-heading">
+      <p v-if="errors !== 0">{{ $tcn('errors', errors) }}</p>
+      <p v-else-if="dataTemplate">{{ $t('upload') }}</p>
+
       <div>
         <i18n-t keypath="text.full">
           <template #chooseFile>
@@ -25,8 +28,10 @@ except according to the terms contained in the LICENSE file.
             </button>
           </template>
         </i18n-t>
-        <sentence-separator/>
-        <entity-upload-data-template/>
+        <template v-if="dataTemplate">
+          <sentence-separator/>
+          <entity-upload-data-template/>
+        </template>
       </div>
       <div v-show="parsing"><spinner inline/>{{ $t('parsing') }}</div>
     </div>
@@ -45,6 +50,13 @@ defineOptions({
   name: 'EntityUploadFileSelect'
 });
 defineProps({
+  // `true` to render EntityUploadDataTemplate; `false` not to.
+  dataTemplate: Boolean,
+  // Number of errors
+  errors: {
+    type: Number,
+    default: 0
+  },
   disabled: Boolean,
   parsing: Boolean
 });
@@ -61,7 +73,6 @@ const changeInput = (event) => {
 #entity-upload-file-select {
   border-radius: 5px;
   margin-top: 27px;
-  text-align: left;
 
   &.disabled { opacity: 1; }
 
@@ -70,16 +81,24 @@ const changeInput = (event) => {
 }
 
 #entity-upload-file-select-heading {
-  font-size: 16px;
   margin-bottom: 1px;
   position: relative;
 
-  .disabled > & > :first-child { opacity: 0.09; }
+  .disabled > & > :not(:last-child) { opacity: 0.09; }
 
-  > :nth-child(2) {
-    left: 0;
+  > p:first-child {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  // Spinner container
+  > :last-child {
     position: absolute;
-    top: 1px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    font-size: 16px;
   }
 
   .spinner {
@@ -92,6 +111,8 @@ const changeInput = (event) => {
 <i18n lang="json5">
 {
   "en": {
+    "upload": "Upload a .csv file",
+    "errors": "{count} error must be fixed before appending Entities | {count} errors must be fixed before appending Entities",
     "text": {
       "full": "Drag and drop a .csv file here, or {chooseFile}",
       "chooseFile": "choose a file"

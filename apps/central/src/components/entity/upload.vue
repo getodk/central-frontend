@@ -58,7 +58,8 @@ except according to the terms contained in the LICENSE file.
           </template>
         </entity-upload-warnings>
 
-        <entity-upload-file-select :disabled="parsing || uploading"
+        <entity-upload-file-select :data-template="csvEntities == null"
+          :errors="errors?.count" :disabled="parsing || uploading"
           :parsing="parsing" @change="selectFile"/>
       </div>
       <entity-upload-popup v-if="uploading" :filename="fileMetadata.name"

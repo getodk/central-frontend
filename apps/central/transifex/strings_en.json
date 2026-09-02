@@ -2898,6 +2898,12 @@
       }
     },
     "EntityUploadFileSelect": {
+      "upload": {
+        "string": "Upload a .csv file"
+      },
+      "errors": {
+        "string": "{count, plural, one {{count} error must be fixed before appending Entities} other {{count} errors must be fixed before appending Entities}}"
+      },
       "text": {
         "full": {
           "string": "Drag and drop a .csv file here, or {chooseFile}",
