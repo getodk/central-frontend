@@ -2892,6 +2892,9 @@
       },
       "created": {
         "string": "This property was created in a previous upload attempt."
+      },
+      "createdAll": {
+        "string": "All properties were created in a previous upload attempt."
       }
     },
     "EntityUploadFileSelect": {

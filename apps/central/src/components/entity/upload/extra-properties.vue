@@ -10,7 +10,7 @@
         <span>{{ $t('action.selectAll') }}</span>
       </label>
       <p v-if="createdAll" :id="disabledMessageId('all')" class="sr-only">
-        {{ $t('created') }}
+        {{ $t('createdAll') }}
       </p>
     </div>
     <div v-for="(name, i) in properties" :key="name" class="checkbox"
@@ -99,7 +99,8 @@ const toggle = (event) => {
       // columns of a table.
       "selectAll": "Select all"
     },
-    "created": "This property was created in a previous upload attempt."
+    "created": "This property was created in a previous upload attempt.",
+    "createdAll": "All properties were created in a previous upload attempt."
   }
 }
 </i18n>

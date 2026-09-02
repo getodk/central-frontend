@@ -80,8 +80,8 @@ describe('EntityUploadExtraProperties', () => {
         checkbox.classes('disabled').should.be.true;
         checkbox.get('input').element.disabled.should.be.true;
       }
-      checkboxes[0].get('input').should.have.ariaDescription(/^This property was created/);
-      await checkboxes[0].get('label').should.have.tooltip(/^This property was created/);
+      checkboxes[0].get('input').should.have.ariaDescription(/^All properties were created/);
+      await checkboxes[0].get('label').should.have.tooltip(/^All properties were created/);
     });
   });
 
