@@ -613,6 +613,10 @@ tr.uncommitted-change { background-color: #ffef67; }
 
 .table {
   margin-bottom: $margin-bottom-table;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  border-collapse: separate;
+  border-spacing: 0;
 
   > thead {
     background-color: $color-table-heading-background;

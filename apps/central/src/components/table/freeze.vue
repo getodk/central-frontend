@@ -137,6 +137,15 @@ defineExpose({ getRowPair });
 .table-freeze {
   @include clearfix;
   position: relative;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  overflow: hidden;
+
+  .table {
+    border: none;
+    border-radius: 0;
+    margin-bottom: 0;
+  }
 }
 
 .table-freeze-frozen {
@@ -147,11 +156,10 @@ defineExpose({ getRowPair });
 .table-freeze-scrolling-container {
   // Placing the margin here rather than on the table so that the horizontal
   // scrollbar appears immediately below the table, above the margin.
-  margin-bottom: $margin-bottom-table;
+  margin-bottom: 0;
   overflow-x: auto;
 
   .table {
-    margin-bottom: 0;
     width: 100%;
   }
 }
