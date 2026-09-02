@@ -40,6 +40,10 @@ export const log10 = mathAlias('log10');
 export const max = mathNAlias('max');
 export const min = mathNAlias('min');
 
+const parseCommaDecimal = (value: string): number => {
+  return Number(value.replace(',', '.'));
+};
+
 /**
  * Overrides the standard XPath 1.0 (fn namespaced) `number` in an
  * {@link XFormsXPathEvaluator}. This supports various date/datetime
@@ -72,6 +76,9 @@ export const number = new FunctionImplementation(
           booleanValue: true,
           stringValue: String(Math.floor(dateTime.epochMilliseconds / DAY_MILLISECONDS)),
         });
+      }
+      if (stringValue.includes(',')) {
+        return new NumberEvaluation(context, parseCommaDecimal(stringValue));
       }
     }
 

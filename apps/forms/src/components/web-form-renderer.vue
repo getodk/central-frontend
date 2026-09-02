@@ -11,6 +11,7 @@ import Location from '../utils/location';
 import { getDeviceId } from '../utils/device-id';
 import { hideSpinner } from '../utils/spinner';
 import { deleteLastSaved, getLastSaved, setLastSaved } from '../utils/last-saved';
+import { hasSubmitted, setSubmitted } from '../utils/once-store';
 defineOptions({
   name: 'WebFormRenderer'
 });
@@ -22,7 +23,7 @@ export interface WebFormsRendererProps {
   instanceId?: string | null;
   submissionAttachments?: string[] | null;
   defaultParameters?: Record<string, string>;
-  st?: string | null
+  st?: string | null;
 }
 
 const props = defineProps<WebFormsRendererProps>();
@@ -37,7 +38,7 @@ interface PostPrimaryInstanceParams {
   deviceID?: string | undefined;
 }
 
-let clearForm:Function;
+let clearForm: Function;
 let submissionData: SubmissionData;
 
 const submissionResult:any = {};
@@ -54,8 +55,12 @@ const visibleModal = ref();
 const withToken = (url) => `${url}${queryString({ st: props.st })}`;
 
 const getAttachment = (requestUrl: URL) => {
-  const encodedName = encodeURIComponent(requestUrl.pathname.split('/').pop()!);
-  const url = withToken(`/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath.value}/attachments/${encodedName}`);
+  const fileName = requestUrl.pathname.split('/').pop()!;
+  const decoded = decodeURIComponent(fileName);
+  if (!props.form.attachments.some(a => a.name === decoded)) {
+    return new Response('Not Found', { status: 404 });
+  }
+  const url = withToken(`/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath.value}/attachments/${fileName}`);
   return fetch(url);
 };
 
@@ -83,6 +88,9 @@ const postPrimaryInstance = async (file:File) => {
   try {
     const response = await fetch(url, { body: file, headers, method });
     if (response.ok) {
+      if (props.form.once && props.form.enketoOnceId) {
+        setSubmitted(props.form.enketoOnceId);
+      }
       const data = await response.json();
       return { success: true, data };
     }
@@ -93,7 +101,7 @@ const postPrimaryInstance = async (file:File) => {
   }
 };
 
-const isProblem = (data:any) => {
+const isProblem = (data: any) => {
   return data != null &&
     typeof data === 'object' &&
     typeof data.code === 'number' &&
@@ -242,7 +250,11 @@ const webFormLoaded = () => {
 };
 
 const updateLastSaved = (hasLastSaved) => {
-  if (!isEdit.value && !props.form.draft && submissionResult.primaryInstanceResult.success) {
+  if (!isEdit.value
+    && !props.form.draft
+    && submissionResult.primaryInstanceResult.success
+    && !props.form.once
+  ) {
     if (hasLastSaved) {
       setLastSaved(props.form.projectId, props.form.xmlFormId, submissionData.instanceFile);
     } else {
@@ -297,6 +309,11 @@ const editInstanceOptions = computed(() => {
 });
 
 onMounted(async () => {
+  if (props.form.once && props.form.enketoOnceId && hasSubmitted(props.form.enketoOnceId)) {
+    visibleModal.value = { type: 'thankYouModal', hideable: false };
+    webFormLoaded(); // hide the spinner
+    return;
+  }
   if (!isEdit.value && !props.form.draft) {
     lastSavedXml.value = await getLastSaved(props.form.projectId, props.form.xmlFormId);
   }
