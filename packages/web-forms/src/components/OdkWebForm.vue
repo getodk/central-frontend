@@ -85,6 +85,10 @@ const hostSubmissionResultCallbackFactory = (
 		hostResult: OptionalAwaitableHostSubmissionResult
 	): Promise<void> => {
 		const submissionResult = await hostResult;
+
+		// Use the current instance XML as the last-saved for the next submission. Using the copy in memory
+		// means we don't need to fetch it from the vue app, and also means it works for draft forms where
+		// the last-saved is never persisted.
 		const lastSavedXml = currentState.root.instanceState.instanceXML;
 		const options = {
 			form: formOptions,
