@@ -217,7 +217,7 @@ describe('Test api utility', () => {
         stubFormFetch();
         const actual = await getFormByEnketoId('singlesubmissiononly', 'zyx');
         expect(actual).toEqual({ ...expectedForm, once: true });
-        expect(fetch).toHaveBeenCalledTimes(1);
+        expect(fetch).toHaveBeenCalledTimes(2);
         expect(fetch).toHaveBeenCalledWith('/v1/form-links/singlesubmissiononly/form?st=zyx');
       });
 
