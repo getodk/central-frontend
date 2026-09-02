@@ -49,7 +49,7 @@ except according to the terms contained in the LICENSE file.
     </page-section>
 
     <entity-upload v-if="dataset.dataExists" v-bind="upload"
-      @hide="upload.hide()" @success="afterUpload"/>
+      @hide="hideUpload" @success="afterUpload"/>
     <entity-create v-if="dataset.dataExists" v-bind="create"
       @hide="create.hide()" @success="afterCreate"/>
     <odata-analyze v-bind="analyze" :odata-url="odataUrl" @hide="analyze.hide()"/>
@@ -98,6 +98,7 @@ export default {
       required: true
     }
   },
+  emits: ['fetch-dataset'],
   setup() {
     const { project, dataset } = useRequestData();
     const { deletedEntityCount } = useEntities();
@@ -140,13 +141,23 @@ export default {
     if (!this.deleted) this.fetchDeletedCount();
   },
   methods: {
-    afterUpload(count) {
+    hideUpload(createdProperty) {
+      this.upload.hide();
+      if (createdProperty) this.$emit('fetch-dataset', true);
+    },
+    afterUpload(entityCount, createdProperty) {
       this.upload.hide();
       this.alert.success(this.$t('alert.upload'));
+
+      if (createdProperty) {
+        this.$emit('fetch-dataset', true);
+      } else {
+        // Update dataset.entities so that the count in the OData loading
+        // message reflects the new entities.
+        this.dataset.entities += entityCount;
+      }
+
       this.$refs.list.reset();
-      // Update dataset.entities so that the count in the OData loading message
-      // reflects the new entities.
-      this.dataset.entities += count;
     },
     afterCreate() {
       this.create.hide();

@@ -37,16 +37,19 @@ const props = defineProps({
     type: Number,
     required: true
   },
-  progress: {
-    type: Number,
-    required: true
-  }
+  extraProperties: Boolean,
+  progress: Number
 });
 
 const { t, n } = useI18n();
-const status = computed(() => (props.progress < 1
-  ? t('status.sending', { percentUploaded: n(props.progress, 'percent') })
-  : t('status.processing')));
+const status = computed(() => {
+  if (props.extraProperties && props.progress == null)
+    return t('status.creatingProperties');
+  const progress = props.progress ?? 0;
+  return progress < 1
+    ? t('status.sending', { percentUploaded: n(props.progress, 'percent') })
+    : t('status.processing');
+});
 </script>
 
 <style lang="scss">
@@ -87,6 +90,7 @@ const status = computed(() => (props.progress < 1
   "en": {
     "rowCount": "{count} data row found | {count} data rows found",
     "status": {
+      "creatingProperties": "Creating new properties…",
       // This text is shown while a file is being uploaded to the server.
       "sending": "Sending file… ({percentUploaded})",
       // This text is shown after a file has been uploaded to the server, but
