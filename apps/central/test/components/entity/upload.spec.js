@@ -1065,10 +1065,10 @@ describe('EntityUpload', () => {
           })
           .respondWithProblem({
             code: 409.3,
-            message: 'A resource already exists with name,datasetId value(s) of my_new_property,1.',
+            message: 'A resource already exists with name,datasetId value(s) of circumference,1.',
             details: {
               fields: ['name', 'datasetId'],
-              values: ['my_new_property', 1]
+              values: ['circumference', 1]
             }
           })
           // Despite the fact that the fact that the previous response was a
