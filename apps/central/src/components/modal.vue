@@ -313,6 +313,8 @@ const titleId = `modal-title${id}`;
         margin-bottom: $padding-modal-content-spacing;
       }
 
+      // Using :where() to make it easy to override the margin in individual
+      // modals.
       :where(&) p {
         max-width: 100%;
         margin-bottom: $padding-modal-content-spacing;
