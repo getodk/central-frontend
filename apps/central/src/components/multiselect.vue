@@ -465,6 +465,13 @@ const emptyMessage = computed(() => (searchValue.value === ''
     }
   }
 
+  .display-value {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   .icon-angle-down {
     font-size: 16px;
     color: #555555;
@@ -539,8 +546,7 @@ const emptyMessage = computed(() => (searchValue.value === ''
     font-size: 14px;
     list-style: none;
     max-height: 250px;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: visible auto;
     padding-bottom: 3px;
     padding-left: 0;
     padding-top: $vpadding;
@@ -577,10 +583,6 @@ const emptyMessage = computed(() => (searchValue.value === ''
       &:hover { background-color: darken($color-action-light, 7%); }
     }
 
-    input:focus-visible + span {
-      box-shadow: $btn-focus-box-shadow;
-    }
-
     input[type="checkbox"] {
       margin-top: 0;
       margin-right: 5px;
@@ -603,6 +605,8 @@ const emptyMessage = computed(() => (searchValue.value === ''
 
   &.single .option-list {
     font-size: 12px;
+    overflow-x: hidden;
+    overflow-y: auto;
 
     li {
       box-sizing: border-box;
@@ -626,6 +630,10 @@ const emptyMessage = computed(() => (searchValue.value === ''
     }
 
     label { line-height: 16px; }
+
+    input:focus-visible + span {
+      box-shadow: $btn-focus-box-shadow;
+    }
   }
 
   &.single {
