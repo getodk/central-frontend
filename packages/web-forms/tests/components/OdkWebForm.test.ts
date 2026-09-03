@@ -138,7 +138,7 @@ describe('OdkWebForm', () => {
 
     await getButtonByText(component, 'Send').trigger('click');
 
-    expectErrorBanner(component,'1 question with error');
+    expectErrorBanner(component, '1 question with error');
     expectQuestionHighlight(component, true);
 
     // Enter text to make question valid
@@ -157,7 +157,7 @@ describe('OdkWebForm', () => {
 
     await getButtonByText(component, 'Send').trigger('click');
 
-    expectErrorBanner(component,'1 question with error');
+    expectErrorBanner(component, '1 question with error');
     expectQuestionHighlight(component, true);
 
     // Enter text to make question valid
@@ -169,7 +169,7 @@ describe('OdkWebForm', () => {
     // Empty the textbox to make it invalid again
     await answerCurrentQuestion(component, '');
 
-    expectErrorBanner(component,'1 question with error');
+    expectErrorBanner(component, '1 question with error');
     expectQuestionHighlight(component, true);
   });
 
@@ -202,7 +202,7 @@ describe('OdkWebForm', () => {
       expectOnPage(component, 'What is your name?');
       expect(component.text()).not.toContain('What is your age?');
       // Only the blocked question is counted, not untouched blank ones on later pages
-      expectErrorBanner(component,'1 question with error');
+      expectErrorBanner(component, '1 question with error');
       expectQuestionHighlight(component, true);
     });
 
@@ -210,7 +210,7 @@ describe('OdkWebForm', () => {
       const component = await mountPagedForm();
 
       await clickNext(component);
-      expectErrorBanner(component,'1 question with error');
+      expectErrorBanner(component, '1 question with error');
 
       await answerCurrentQuestion(component, 'Ada');
       expectErrorBanner(component, null);
@@ -221,7 +221,7 @@ describe('OdkWebForm', () => {
       expectQuestionHighlight(component, false);
 
       await clickNext(component);
-      expectErrorBanner(component,'1 question with error');
+      expectErrorBanner(component, '1 question with error');
     });
 
     it('never blocks the Back button, and going back keeps the banner up', async () => {
@@ -232,12 +232,12 @@ describe('OdkWebForm', () => {
       expectOnPage(component, 'What is your age?');
 
       await clickNext(component);
-      expectErrorBanner(component,'1 question with error');
+      expectErrorBanner(component, '1 question with error');
 
       await clickBack(component);
 
       expectOnPage(component, 'What is your name?');
-      expectErrorBanner(component,'1 question with error');
+      expectErrorBanner(component, '1 question with error');
     });
 
     it('keeps the error highlight when navigating away and back', async () => {

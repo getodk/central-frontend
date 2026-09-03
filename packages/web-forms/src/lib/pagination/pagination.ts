@@ -13,13 +13,15 @@ export const isOnCurrentPage = (node: AnyControlNode | RepeatRangeUncontrolledNo
   return currentPage != null && node.currentState.pageBoundary === currentPage;
 };
 
-export const getCurrentPageViolations = (root: RootNode): readonly DescendantNodeViolationReference[] => {
+export const getCurrentPageViolations = (
+  root: RootNode
+): readonly DescendantNodeViolationReference[] => {
   if (!root.isPaginated) {
     return [];
   }
 
   return root.validationState.violations.filter(({ node }) => {
     // Model-only nodes have no page; they can never block navigation.
-    return node.nodeType !== 'model-value' && isOnCurrentPage(node)
+    return node.nodeType !== 'model-value' && isOnCurrentPage(node);
   });
 };

@@ -309,8 +309,8 @@ const revealedViolations = computed(() => {
 
 const validationErrorMessage = computed(() => {
 	if (!revealedViolations.value.length) {
-    return '';
-  }
+		return '';
+	}
 	return t('odk_web_forms.validation.error', { count: revealedViolations.value.length });
 });
 
