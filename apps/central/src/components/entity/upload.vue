@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="entity-upload" :state="state" :hideable="!uploading" :persistent="true" size="full"
     backdrop @hide="hide" @mutate="resizeColumnIfShown">
-    <template #title>{{ $t('title') }}</template>
+    <template #title>{{ $t('action.append') }}</template>
     <template #body>
       <div :class="{ backdrop: uploading }">
         <p class="entity-upload-section-title">{{ $t('currentEntities') }}</p>
@@ -552,8 +552,6 @@ watch(() => props.state, (state) => {
 <i18n lang="json5">
 {
   "en": {
-    // This is the title at the top of a pop-up.
-    "title": "Import Data from File",
     "currentEntities": "Your current Entities",
     "newEntities": "New Entities",
     "table": {
@@ -562,7 +560,7 @@ watch(() => props.state, (state) => {
     // @transifexKey component.EntityList.noEntities
     "noEntities": "There are no Entities to show.",
     "action": {
-      "append": "Append data"
+      "append": "Append Entities"
     },
     "alert": {
       "blankLabel": "Missing label.",
