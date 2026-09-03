@@ -324,6 +324,35 @@ describe('EntityUpload', () => {
     });
   });
 
+  it('shows the data template link until there is CSV data', async () => {
+    testData.extendedDatasets.createPast(1);
+    const modal = await showModal();
+    const fileSelect = modal.getComponent(EntityUploadFileSelect);
+    const hasAlerts = () => ({
+      errors: modal.findComponent(EntityUploadErrors).exists(),
+      warnings: modal.findComponent(EntityUploadWarnings).exists()
+    });
+
+    // The link is shown initially.
+    hasAlerts().should.eql({ errors: false, warnings: false });
+    fileSelect.props().should.include({ dataTemplate: true, errors: 0 });
+
+    // The link is shown if there is an error.
+    await selectFile(modal, createCSV('label,label\ndogwood,dogwood'));
+    hasAlerts().should.eql({ errors: true, warnings: false });
+    fileSelect.props().should.include({ dataTemplate: true, errors: 1 });
+
+    // The link is not shown if there is only a warning.
+    await selectFile(modal, createCSV('label,__id\ndogwood,e'));
+    hasAlerts().should.eql({ errors: false, warnings: true });
+    fileSelect.props().should.include({ dataTemplate: false, errors: 0 });
+
+    // The link is not shown if there are no errors or warnings.
+    await selectFile(modal, createCSV('label\ndogwood'));
+    hasAlerts().should.eql({ errors: false, warnings: false });
+    fileSelect.props().should.include({ dataTemplate: false, errors: 0 });
+  });
+
   it('resets errors and warnings after a new file is selected', async () => {
     testData.extendedDatasets.createPast(1, {
       properties: [{ name: 'height' }]
