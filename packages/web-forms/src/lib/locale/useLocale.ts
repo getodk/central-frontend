@@ -20,8 +20,9 @@ const availableTranslations = import.meta.glob<{ default: TransifexTranslation }
 );
 
 const getAvailableTranslationsKey = (locale: string) => {
-  // must match the import path above
-  return `../../../locales/strings_${locale}.json`;
+  return Object.keys(availableTranslations).find((path) => {
+    return path.endsWith(`/strings_${locale}.json`);
+  });
 };
 
 /**
@@ -49,8 +50,13 @@ const loadMessages = async (locale: string): Promise<ICUMessage> => {
     return enMessages;
   }
 
+  const key = getAvailableTranslationsKey(locale);
+  if (!key) {
+    return enMessages;
+  }
+
   try {
-    const raw = await availableTranslations[getAvailableTranslationsKey(locale)]!();
+    const raw = await availableTranslations[key]!();
     return { ...enMessages, ...normalizeMessages(raw.default) };
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -200,7 +206,7 @@ export const useLocale = (formRef: Ref<RootNode | null>) => {
     }
 
     const messagesLocale = findBestLocale(candidates, (locale) => {
-      return Object.hasOwn(availableTranslations, getAvailableTranslationsKey(locale));
+      return !!getAvailableTranslationsKey(locale);
     });
     void loadMessages(messagesLocale).then((messages) => {
       if (latestRequestedLocale.locale === newContentLocale) {
