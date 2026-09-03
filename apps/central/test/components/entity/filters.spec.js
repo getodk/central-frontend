@@ -366,7 +366,10 @@ describe('EntityFilters', () => {
   });
 
   it('does not update dataset.entities after filtering with view-as', () => {
-    testData.extendedDatasets.createPast(1, { entities: 2 });
+    testData.extendedDatasets.createPast(1, {
+      entities: 2,
+      accessFilter: { type: 'ownerOnly' }
+    });
     testData.extendedEntities.createPast(2);
     testData.extendedFieldKeys.createPast(1);
     return load('/projects/1/entity-lists/trees/entities', {
