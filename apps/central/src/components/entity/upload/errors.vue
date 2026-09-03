@@ -34,7 +34,7 @@
           <sentence-separator/>
           <span>{{ $tc('duplicateColumn.headersReused', duplicateColumns.length) }}</span>
         </p>
-        <p><i18n-list :list="duplicateColumns"/></p>
+        <entity-upload-property-list :names="duplicateColumns"/>
       </template>
     </entity-upload-alert>
     <entity-upload-alert v-if="emptyColumn" type="danger">
@@ -57,7 +57,7 @@
 import { computed } from 'vue';
 
 import EntityUploadAlert from './alert.vue';
-import I18nList from '../../i18n/list.vue';
+import EntityUploadPropertyList from './property-list.vue';
 import SentenceSeparator from '../../sentence-separator.vue';
 
 import { formatCSVDelimiter } from '../../../util/csv';
