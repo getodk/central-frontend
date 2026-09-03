@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="entity-upload" :state="state" :hideable="!uploading" :persistent="true" size="full"
     backdrop @hide="hide" @mutate="resizeColumnIfShown">
-    <template #title>{{ $t('action.entities') }}</template>
+    <template #title>{{ $t('action.append') }}</template>
     <template #body>
       <div :class="{ backdrop: uploading }">
         <p class="entity-upload-section-title">{{ $t('currentEntities') }}</p>
