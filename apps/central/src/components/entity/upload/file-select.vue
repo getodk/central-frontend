@@ -71,13 +71,12 @@ const changeInput = (event) => {
 
 <style lang="scss">
 #entity-upload-file-select {
-  border-radius: 5px;
-  margin-top: 27px;
+  background-color: transparent;
+  border-radius: 12px;
+  margin-top: 20px;
+  padding: 30px 20px;
 
   &.disabled { opacity: 1; }
-
-  > :first-child { margin-top: -4px; }
-  > :last-child { margin-bottom: -4px; }
 }
 
 #entity-upload-file-select-heading {

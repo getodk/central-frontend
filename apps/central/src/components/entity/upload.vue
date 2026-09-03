@@ -535,6 +535,8 @@ watch(() => props.state, (state) => {
     // The margin if there is no text or Pagination
     &:last-child { margin-bottom: 0; }
   }
+
+  .modal-actions { border-top: 1px solid $central-grey-2; }
 }
 
 .entity-upload-section-title {
