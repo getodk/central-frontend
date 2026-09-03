@@ -512,17 +512,22 @@ describe('SubmissionDownload', () => {
     });
 
     describe('error response that is not a Problem', () => {
-      it('shows a danger alert', async () => {
-        const clock = sinon.useFakeTimers(Date.now());
-        const modal = await setup(event => {
-          event.preventDefault();
-          const { body } = event.target.getRootNode();
-          body.textContent = '500 Internal Server Error';
+      [
+        '500 Internal Server Error',
+        '{"unexpected":"json"}'
+      ].forEach(responseText => {
+        it(`shows a danger alert for a response of '${responseText}'`, async () => {
+          const clock = sinon.useFakeTimers(Date.now());
+          const modal = await setup(event => {
+            event.preventDefault();
+            const { body } = event.target.getRootNode();
+            body.textContent = responseText;
+          });
+          modal.get('a').trigger('click');
+          await modal.setProps({ state: false });
+          clock.tick(1000);
+          modal.should.alert('danger', 'Something went wrong while requesting your data.');
         });
-        modal.get('a').trigger('click');
-        await modal.setProps({ state: false });
-        clock.tick(1000);
-        modal.should.alert('danger', 'Something went wrong while requesting your data.');
       });
 
       it('logs the response', async () => {
@@ -553,6 +558,19 @@ describe('SubmissionDownload', () => {
       await clock.tickAsync(1000);
       checkForProblem.callCount.should.equal(2);
     });
+  });
+
+  // getodk/central#2080
+  it.skip('shows a red alert if iframe cannot be accessed after form submission', async () => {
+    const clock = sinon.useFakeTimers(Date.now());
+    const modal = await setup(event => {
+      event.preventDefault();
+      // TODO. Mock the iframe document so that it throws.
+    });
+    modal.get('a').trigger('click');
+    await modal.setProps({ state: false });
+    clock.tick(1000);
+    modal.should.redAlert('Something went wrong while requesting your data.');
   });
 
   it('does not remove filter from link after modal is hidden', async () => {
