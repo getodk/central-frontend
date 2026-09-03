@@ -55,7 +55,7 @@ describe('EntityFiltersViewAs', () => {
     component.emitted('update:modelValue').should.eql([[fieldKey2.id]]);
   });
 
-  it('emits null after Reset to Me is applied', async () => {
+  it('emits null after Reset to Me is clicked', async () => {
     const [fieldKey] = createFieldKeys(1);
     const component = mountComponent([fieldKey], {
       props: { modelValue: fieldKey.id },
@@ -63,7 +63,6 @@ describe('EntityFiltersViewAs', () => {
     });
     await toggle(component);
     await component.get('.change-all.single button').trigger('click');
-    await apply(component);
     component.emitted('update:modelValue').should.eql([[null]]);
   });
 

@@ -49,7 +49,7 @@ except according to the terms contained in the LICENSE file.
       </li>
       <li v-else class="change-all single">
         <button type="button" class="btn btn-outlined" @click.prevent="clearSelection">
-          {{ clear }}
+          {{ none }}
         </button>
       </li>
       <li>
@@ -160,11 +160,7 @@ const props = defineProps({
   },
   none: {
     type: String,
-      required: false
-  },
-  clear: {
-    type: String,
-    required: false
+    required: true
   },
   search: {
     type: String,
