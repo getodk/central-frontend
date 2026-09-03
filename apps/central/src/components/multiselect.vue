@@ -60,7 +60,7 @@ except according to the terms contained in the LICENSE file.
             <li v-for="({ value, key = value, text = value, description }, i) in options"
               :key="key" :class="{
                 'search-match': searchMatches.has(value),
-                selected: single && selected.has(value)
+                selected: single && selected.has(value),
               }">
               <div :class="single ? 'single-select-option' : 'checkbox'">
                 <label>

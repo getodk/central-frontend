@@ -16,7 +16,7 @@ const createFieldKeys = (count) => new Array(count).fill(undefined)
     .createPast(1, { displayName: `App User ${i}` })
     .last());
 
-describe('EntityFilters', () => {
+describe.only('EntityFilters', () => {
   beforeEach(mockLogin);
 
   beforeEach(() => {

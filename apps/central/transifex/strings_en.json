@@ -2595,7 +2595,13 @@
         "string": "Me"
       },
       "viewAs": {
-        "string": "Viewing As"
+        "string": "View As"
+      },
+      "resetToMe": {
+        "string": "Reset to Me"
+      },
+      "search": {
+        "string": "Search App Users…"
       }
     },
     "EntityList": {

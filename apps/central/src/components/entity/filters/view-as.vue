@@ -2,8 +2,7 @@
   <multiselect id="entity-filters-view-as" single :model-value="selectValue"
     :options="options" :loading="fieldKeys.initiallyLoading" :label="$t('viewAs')"
     :placeholder="placeholder" :none="$t('resetToMe')" :search="$t('search')"
-    :disabled="disabled" :disabled-message="disabledMessage" @update:model-value="update">
-  </multiselect>
+    :disabled="disabled" :disabled-message="disabledMessage" @update:model-value="update"/>
 </template>
 
 <script setup>
