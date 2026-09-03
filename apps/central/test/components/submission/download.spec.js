@@ -560,7 +560,7 @@ describe('SubmissionDownload', () => {
     });
   });
 
-  // getodk/central#2080
+  // getodk/central#2188
   it.skip('shows a red alert if iframe cannot be accessed after form submission', async () => {
     const clock = sinon.useFakeTimers(Date.now());
     const modal = await setup(event => {
