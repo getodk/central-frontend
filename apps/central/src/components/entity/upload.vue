@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     backdrop @hide="hide" @mutate="resizeColumnIfShown">
     <template #title>{{ $t('action.append') }}</template>
     <template #body>
-      <div :class="{ backdrop: uploading }">
+      <div :class="{ backdrop: uploading }" :inert="uploading">
         <p class="entity-upload-section-title">{{ $t('currentEntities') }}</p>
         <div class="entity-upload-table-container">
           <entity-upload-table :ref="setTable(0)"

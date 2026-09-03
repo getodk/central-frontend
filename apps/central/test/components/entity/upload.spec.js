@@ -409,7 +409,7 @@ describe('EntityUpload', () => {
       })
       .beforeAnyResponse(modal => {
         modal.getComponent(EntityUploadFileSelect).props().disabled.should.be.true;
-        modal.find('.backdrop').exists().should.be.true;
+        should.exist(modal.get('.backdrop').attributes().inert);
 
         const popup = modal.getComponent(EntityUploadPopup);
         popup.props().filename.should.equal('my_data.csv');
