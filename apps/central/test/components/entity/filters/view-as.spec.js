@@ -15,61 +15,66 @@ const mountComponent = (fieldKeys, options) => mount(EntityFiltersViewAs, {
   container: { requestData: testRequestData([useProject], { fieldKeys }) },
   ...options
 });
+const toggle = (component) => component.get('.dropdown-trigger').trigger('click');
+const apply = (component) => component.get('.action-bar button').trigger('click');
+const assertDisabled = (component) => {
+  component.get('.dropdown-trigger').attributes('aria-disabled').should.equal('true');
+  component.get('.dropdown-trigger').attributes('aria-expanded').should.equal('false');
+  component.get('.multiselect').classes().should.not.contain('open');
+};
 
 describe('EntityFiltersViewAs', () => {
-  it('passes the modelValue prop to the select', () => {
-    const [fieldKey] = createFieldKeys(1);
-    const component = mountComponent([fieldKey], {
-      props: { modelValue: fieldKey.id }
-    });
-    component.get('select').element.value.should.equal(String(fieldKey.id));
+  it('renders a single-select input for each app user', async () => {
+    const fieldKeys = createFieldKeys(2);
+    const component = mountComponent(fieldKeys, { attachTo: document.body });
+    await toggle(component);
+    component.findAll('input[type="radio"]').length.should.equal(2);
   });
 
-  it('passes a new value for modelValue prop to the select', async () => {
+  it('shows and checks the app user specified by modelValue', async () => {
     const [fieldKey1, fieldKey2] = createFieldKeys(2);
     const component = mountComponent([fieldKey1, fieldKey2], {
-      props: { modelValue: fieldKey1.id }
+      props: { modelValue: fieldKey2.id },
+      attachTo: document.body
     });
-    await component.setProps({ modelValue: fieldKey2.id });
-    component.get('select').element.value.should.equal(String(fieldKey2.id));
+    component.get('.display-value').text().should.equal(fieldKey2.displayName);
+    await toggle(component);
+    component.findAll('input[type="radio"]')
+      .map(input => input.element.checked).should.eql([false, true]);
   });
 
-  it('emits an update:modelValue event if a field key is selected', async () => {
+  it('emits an app user ID after selection is applied', async () => {
     const [fieldKey1, fieldKey2] = createFieldKeys(2);
     const component = mountComponent([fieldKey1, fieldKey2], {
-      props: { modelValue: fieldKey1.id }
+      props: { modelValue: fieldKey1.id },
+      attachTo: document.body
     });
-    await component.get('select').setValue(String(fieldKey2.id));
+    await toggle(component);
+    await component.findAll('input[type="radio"]')[1].setValue(true);
+    await apply(component);
     component.emitted('update:modelValue').should.eql([[fieldKey2.id]]);
   });
 
-  it('does not emit an event if the same field key is selected', async () => {
+  it('emits null after Reset to Me is clicked', async () => {
     const [fieldKey] = createFieldKeys(1);
     const component = mountComponent([fieldKey], {
-      props: { modelValue: fieldKey.id }
+      props: { modelValue: fieldKey.id },
+      attachTo: document.body
     });
-    await component.get('select').setValue(String(fieldKey.id));
-    should.not.exist(component.emitted('update:modelValue'));
+    await toggle(component);
+    await component.get('.change-all.single button').trigger('click');
+    component.emitted('update:modelValue').should.eql([[null]]);
   });
 
-  describe('no user is selected', () => {
-    it('emits null if the empty option is selected', async () => {
-      const [fieldKey] = createFieldKeys(1);
-      const component = mountComponent([fieldKey], {
-        props: { modelValue: fieldKey.id }
-      });
-      await component.get('select').setValue('');
-      component.emitted('update:modelValue').should.eql([[null]]);
+  it('does not emit an event when Apply is clicked without a change', async () => {
+    const [fieldKey] = createFieldKeys(1);
+    const component = mountComponent([fieldKey], {
+      props: { modelValue: fieldKey.id },
+      attachTo: document.body
     });
-
-    it('does not emit an event if no user was already selected', async () => {
-      const [fieldKey] = createFieldKeys(1);
-      const component = mountComponent([fieldKey], {
-        props: { modelValue: null }
-      });
-      await component.get('select').setValue('');
-      should.not.exist(component.emitted('update:modelValue'));
-    });
+    await toggle(component);
+    await apply(component);
+    should.not.exist(component.emitted('update:modelValue'));
   });
 
   describe('display value', () => {
@@ -96,5 +101,23 @@ describe('EntityFiltersViewAs', () => {
       });
       component.get('.display-value').text().should.equal('Me');
     });
+  });
+
+  it('filters app users by search text', async () => {
+    const [fieldKey1, fieldKey2] = createFieldKeys(2);
+    const component = mountComponent([fieldKey1, fieldKey2], { attachTo: document.body });
+    await toggle(component);
+    await component.get('.search input').setValue('0');
+    component.findAll('.search-match label').map(label => label.text())
+      .should.eql([fieldKey1.displayName]);
+  });
+
+  it('does not open when disabled', async () => {
+    const component = mountComponent(createFieldKeys(1), {
+      props: { disabled: true },
+      attachTo: document.body
+    });
+    await toggle(component);
+    assertDisabled(component);
   });
 });

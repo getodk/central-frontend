@@ -1,26 +1,16 @@
 <template>
-  <label id="entity-filters-view-as" class="form-group" :class="{ disabled }">
-    <span>{{ $t('viewAs') }}</span>
-    <div class="display-value" aria-hidden="true">
-      {{ displayValue }}
-    </div>
-      <select class="form-control" :value="modelValue" :disabled="disabled"
-        :aria-disabled="disabled" v-tooltip.aria-describedby="disabledMessage"
-        @change="onChange($event.target.value)">
-        <option value="">{{ $t('noUserSelected') }}</option>
-        <template v-if="fieldKeys.dataExists">
-          <option v-for="fieldKey in fieldKeys.data" :key="fieldKey.id" :value="fieldKey.id">
-            {{ fieldKey.displayName }}
-          </option>
-        </template>
-      </select>
-    <span class="icon-angle-down"></span>
-  </label>
+  <multiselect id="entity-filters-view-as" single :model-value="selectValue"
+    :options="options" :loading="fieldKeys.initiallyLoading" :label="$t('viewAs')"
+    :placeholder="placeholder" :none="$t('resetToMe')" :search="$t('search')"
+    :disabled="disabled" :disabled-message="disabledMessage" @update:model-value="update"/>
 </template>
 
 <script setup>
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+
+import Multiselect from '../../multiselect.vue';
+
 import { useRequestData } from '../../../request-data';
 
 const { t } = useI18n();
@@ -44,52 +34,28 @@ const props = defineProps({
 });
 const { fieldKeys } = useRequestData();
 
-const displayValue = computed(() => {
-  if (props.modelValue == null) return t('noUserSelected');
-  const fieldKey = fieldKeys.data?.find(fk => fk.id === props.modelValue);
-  return fieldKey?.displayName ?? t('noUserSelected');
+const options = computed(() => (fieldKeys.dataExists
+  ? fieldKeys.data.map(({ id, displayName }) => ({ value: id, text: displayName }))
+  : null));
+const selectValue = computed(() => {
+  if (!fieldKeys.dataExists || props.modelValue == null) return [];
+  return fieldKeys.data.some(fieldKey => fieldKey.id === props.modelValue)
+    ? [props.modelValue]
+    : [];
 });
 
 const emit = defineEmits(['update:modelValue']);
-const onChange = (value) => {
-  const newValue = value === '' ? null : Number(value);
-  if (newValue === props.modelValue) return;
-  emit('update:modelValue', newValue);
-};
+const update = (value) => { emit('update:modelValue', value[0] ?? null); };
+const placeholder = ({ selectedText }) => selectedText ?? t('noUserSelected');
 </script>
-
-<style lang="scss">
-@import '../../../assets/scss/mixins';
-@import '../../../assets/scss/variables';
-
-#entity-filters-view-as {
-  @include filter-control;
-
-  select {
-    position: absolute;
-    opacity: 0;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    cursor: pointer;
-  }
-
-  .icon-angle-down {
-    font-size: 16px;
-    color: #555555;
-    font-weight: bold;
-    z-index: 1;
-    pointer-events: none;
-  }
-}
-</style>
 
 <i18n lang="json5">
 {
   "en": {
     "noUserSelected": "Me",
-    "viewAs": "Viewing As",
+    "viewAs": "View As",
+    "resetToMe": "Reset to Me",
+    "search": "Search App Users…"
   }
 }
 </i18n>
