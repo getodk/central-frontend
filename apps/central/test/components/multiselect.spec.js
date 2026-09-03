@@ -23,7 +23,7 @@ const assertChecked = (component, checked) => {
   const inputs = component.findAll('input[type="checkbox"]');
   inputs.map(input => input.element.checked).should.eql(checked);
 };
-const assertRadioChecked = (component, checked) => {
+const assertSingleChecked = (component, checked) => {
   const inputs = component.findAll('input[type="radio"]');
   inputs.map(input => input.element.checked).should.eql(checked);
 };
@@ -222,14 +222,14 @@ describe('Multiselect', () => {
     const options = [{ value: 0, text: 'Alice' }, { value: 1, text: 'Bob' }];
     const placeholder = ({ selectedText }) => selectedText ?? 'Me';
 
-    it('renders radios instead of checkboxes', () => {
+    it('renders single-select inputs instead of checkboxes', () => {
       const component = mountComponent({ props: { options, single: true } });
       component.findAll('input[type="radio"]').length.should.equal(2);
       component.findAll('input[type="checkbox"]').length.should.equal(0);
       const names = component.findAll('input[type="radio"]')
         .map(input => input.attributes('name'));
       new Set(names).size.should.equal(1);
-      names[0].should.match(/^multiselect\d+-radio$/);
+      names[0].should.match(/^multiselect\d+-single$/);
     });
 
     it('shows the selected option before the dropdown is opened', () => {
@@ -239,14 +239,14 @@ describe('Multiselect', () => {
       component.get('.display-value').text().should.equal('Bob');
     });
 
-    it('selects one radio and emits an array when Apply is clicked', async () => {
+    it('selects one option and emits an array when Apply is clicked', async () => {
       const component = mountComponent({
         props: { options, modelValue: [0], single: true, placeholder },
         attachTo: document.body
       });
       await toggle(component);
       await component.findAll('input[type="radio"]')[1].setValue(true);
-      assertRadioChecked(component, [false, true]);
+      assertSingleChecked(component, [false, true]);
       await apply(component);
       component.emitted('update:modelValue').should.eql([[[1]]]);
     });
@@ -277,7 +277,7 @@ describe('Multiselect', () => {
       });
       await toggle(component);
       await component.get('.change-all.single button').trigger('click');
-      assertRadioChecked(component, [false, false]);
+      assertSingleChecked(component, [false, false]);
       component.emitted('update:modelValue').should.eql([[[]]]);
     });
 

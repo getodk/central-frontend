@@ -24,7 +24,7 @@ const assertDisabled = (component) => {
 };
 
 describe('EntityFiltersViewAs', () => {
-  it('renders a radio for each app user', async () => {
+  it('renders a single-select input for each app user', async () => {
     const fieldKeys = createFieldKeys(2);
     const component = mountComponent(fieldKeys, { attachTo: document.body });
     await toggle(component);

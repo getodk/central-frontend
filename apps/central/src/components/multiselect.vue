@@ -62,9 +62,9 @@ except according to the terms contained in the LICENSE file.
                 'search-match': searchMatches.has(value),
                 selected: single && selected.has(value)
               }">
-              <div :class="single ? 'radio' : 'checkbox'">
+              <div :class="single ? 'single-select-option' : 'checkbox'">
                 <label>
-                  <input :type="single ? 'radio' : 'checkbox'" :name="single ? radioName : null"
+                  <input :type="single ? 'radio' : 'checkbox'" :name="single ? singleSelectName : null"
                     :class="{ 'sr-only': single }" :data-index="i"
                     :aria-describedby="description != null ? descriptionId(i) : null">
                   <span v-if="description == null" v-tooltip.text>{{ text }}</span>
@@ -188,7 +188,7 @@ const { i18n, buildMode } = inject('container');
 const idPrefix = `multiselect${id}`;
 id += 1;
 const descriptionId = (i) => `${idPrefix}-description${i}`;
-const radioName = `${idPrefix}-radio`;
+const singleSelectName = `${idPrefix}-single`;
 
 const optionList = ref(null);
 
@@ -564,11 +564,13 @@ const emptyMessage = computed(() => (searchValue.value === ''
       label { @include text-overflow-ellipsis; }
     }
 
-    .radio {
+    .single-select-option {
       display: block;
 
       label {
         @include text-overflow-ellipsis;
+        font-weight: normal;
+        margin-bottom: 0;
         width: 100%;
       }
     }
