@@ -16,7 +16,7 @@ const createFieldKeys = (count) => new Array(count).fill(undefined)
     .createPast(1, { displayName: `App User ${i}` })
     .last());
 
-describe.only('EntityFilters', () => {
+describe('EntityFilters', () => {
   beforeEach(mockLogin);
 
   beforeEach(() => {
@@ -375,9 +375,11 @@ describe.only('EntityFilters', () => {
       .afterResponses(app => {
         app.vm.$container.requestData.dataset.entities.should.equal(2);
       })
-      .request(component => {
-        const { id } = testData.extendedFieldKeys.last();
-        component.get('#entity-filters-view-as select').setValue(String(id));
+      .request(async component => {
+        const filter = component.get('#entity-filters-view-as');
+        await filter.get('.dropdown-trigger').trigger('click');
+        await filter.find('input[type="radio"]').setValue(true);
+        await filter.get('.action-bar button').trigger('click');
       })
       .respondWithData(() => ({
         ...testData.entityOData(1),
@@ -470,9 +472,11 @@ describe.only('EntityFilters', () => {
           attachTo: document.body
         })
           .complete()
-          .request(component => {
-            const { id } = testData.extendedFieldKeys.last();
-            component.get('#entity-filters-view-as select').setValue(String(id));
+          .request(async component => {
+            const filter = component.get('#entity-filters-view-as');
+            await filter.get('.dropdown-trigger').trigger('click');
+            await filter.find('input[type="radio"]').setValue(true);
+            await filter.get('.action-bar button').trigger('click');
           })
           .beforeEachResponse((_, { url }) => {
             const { id } = testData.extendedFieldKeys.last();
@@ -485,9 +489,11 @@ describe.only('EntityFilters', () => {
           attachTo: document.body
         })
           .complete()
-          .request(component => {
-            const { id } = testData.extendedFieldKeys.last();
-            component.get('#entity-filters-view-as select').setValue(String(id));
+          .request(async component => {
+            const filter = component.get('#entity-filters-view-as');
+            await filter.get('.dropdown-trigger').trigger('click');
+            await filter.find('input[type="radio"]').setValue(true);
+            await filter.get('.action-bar button').trigger('click');
           })
           .respondWithData(testData.entityOData)
           .afterResponse(app => {
@@ -501,8 +507,11 @@ describe.only('EntityFilters', () => {
           attachTo: document.body
         })
           .complete()
-          .request(component => {
-            component.get('#entity-filters-view-as select').setValue('');
+          .request(async component => {
+            const filter = component.get('#entity-filters-view-as');
+            await filter.get('.dropdown-trigger').trigger('click');
+            await filter.get('.change-all.single button').trigger('click');
+            await filter.get('.action-bar button').trigger('click');
           })
           .respondWithData(testData.entityOData)
           .afterResponse(app => {
