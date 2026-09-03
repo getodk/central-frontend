@@ -7,7 +7,7 @@ import { mergeMountOptions, mount } from '../../util/lifecycle';
 const mountComponent = (options = undefined) =>
   mount(ActorPropertiesUpsert, mergeMountOptions(options, {
     props: {
-      propertyDefs: [{ name: 'prop1' }, { name: 'prop2' }],
+      propertyNames: ['prop1', 'prop2'],
       propertyValues: { prop1: 'value1', prop2: 'value2' }
     }
   }));
@@ -41,17 +41,17 @@ describe('ActorPropertiesUpsert', () => {
     emitted[0][0].prop1.should.equal('newValue');
   });
 
-  it('renders no rows when propertyDefs is empty', () => {
+  it('renders no rows when propertyNames is empty', () => {
     const component = mountComponent({
-      props: { propertyDefs: [], propertyValues: {} }
+      props: { propertyNames: [], propertyValues: {} }
     });
     const rows = component.findAllComponents(EntityUpdateRow);
     rows.length.should.equal(0);
   });
 
-  it('shows an empty state message when propertyDefs is empty', () => {
+  it('shows an empty state message when propertyNames is empty', () => {
     const component = mountComponent({
-      props: { propertyDefs: [], propertyValues: {} }
+      props: { propertyNames: [], propertyValues: {} }
     });
     component.find('.actor-properties-empty').exists().should.be.true;
     component.find('.table').exists().should.be.false;
@@ -76,7 +76,7 @@ describe('ActorPropertiesUpsert', () => {
 
     it('shows a new row when a property is added', async () => {
       const component = mountComponent({ props: { create: true } });
-      await component.setProps({ propertyDefs: [...component.props('propertyDefs'), { name: 'newprop' }] });
+      await component.setProps({ propertyNames: [...component.props('propertyNames'), 'newprop'] });
       component.findAllComponents(EntityUpdateRow).length.should.equal(3);
     });
   });

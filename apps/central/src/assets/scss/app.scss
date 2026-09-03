@@ -142,7 +142,7 @@ em { @include italic; }
 
 [class^="icon-"] { vertical-align: -1px; }
 
-.btn, a, .label {
+.btn, a, .label, .help-block {
   .caret { margin-left: 6px; }
 
   > [class^="icon-"]:first-child {

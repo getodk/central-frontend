@@ -22,7 +22,8 @@ except according to the terms contained in the LICENSE file.
           <div v-if="state && actorProperties.dataExists"
             class="field-key-set-properties">
             <actor-properties-upsert v-model:propertyValues="propertyValues" :create="true"
-              :property-defs="actorProperties.data"/>
+              :property-names="propertyNames" :disabled="awaitingResponse"
+              @new-property="addProperty"/>
           </div>
           <div class="modal-actions">
             <button type="button" class="btn btn-link"
@@ -81,6 +82,7 @@ import Modal from '../modal.vue';
 import FieldKeyQrPanel from './qr-panel.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
+import usePropertyCreator from '../../composables/property-creator';
 import useRequest from '../../composables/request';
 import useRoutes from '../../composables/routes';
 import { afterNextNavigation } from '../../util/router';
@@ -110,31 +112,64 @@ const { projectPath } = useRoutes();
 // There are two steps/screens in the app user creation process. `step`
 // indicates the current step.
 const step = ref(0);
+
+// Form fields
 const displayName = ref('');
-const created = ref(null);
-const displayNameRef = ref(null);
 const propertyValues = ref(Object.create(null));
 
+// Creating new actor properties
+const newProperties = reactive([]);
+const addProperty = (name) => { newProperties.push(name); };
+const propertyNames = computed(() =>
+  [...actorProperties.map(({ name }) => name), ...newProperties]);
+const propertyCreator = usePropertyCreator(request);
 
+const resetForm = () => {
+  // Form fields
+  displayName.value = '';
+  propertyValues.value = Object.create(null);
+
+  // New actor properties
+  newProperties.splice(0);
+  if (propertyCreator.created.size !== 0) {
+    const newData = [...actorProperties.data];
+    for (const name of propertyCreator.created) newData.push(name);
+    // TODO. Add a comment about why we don't update actorProperties.data
+    // sooner/immediately.
+    actorProperties.data = newData;
+    propertyCreator.clear();
+  }
+}
+
+const displayNameRef = ref(null);
 const focusInput = () => { displayNameRef.value.focus(); };
 
-const submit = () => {
+// Creating the app user
+const created = ref(null);
+const createFieldKey = async () => {
   const body = { displayName: displayName.value };
   if (Object.keys(propertyValues.value).length > 0)
     body.properties = propertyValues.value;
-  request({
+  await { data } = request({
     method: 'POST',
     url: apiPaths.fieldKeys(project.id),
     data: body
-  })
-    .then(({ data }) => {
-      // Reset the form.
-      redAlert.hide();
-      displayName.value = '';
-      propertyValues.value = Object.create(null);
+  });
+  created.value = data;
+};
 
+const submit = () => {
+  propertyCreator.request(
+    apiPaths.actorProperties(project.id),
+    newProperties,
+    ['projectId', 'name']
+  )
+    .then(createFieldKey)
+    .then(({ data }) => {
+      // Reset the alert along with the form.
+      redAlert.hide();
+      resetForm();
       step.value = 1;
-      created.value = data;
     })
     .catch(noop);
 };
@@ -165,9 +200,8 @@ const createAnother = () => {
 watch(() => props.state, (state) => {
   if (!state) {
     step.value = 0;
-    displayName.value = '';
+    resetForm();
     created.value = null;
-    propertyValues.value = Object.create(null);
   }
 });
 </script>

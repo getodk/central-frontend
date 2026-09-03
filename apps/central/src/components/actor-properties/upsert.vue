@@ -12,7 +12,7 @@
         </i18n-t>
       </p>
     </div>
-    <p v-if="propertyDefs.length === 0" class="actor-properties-empty">
+    <p v-if="propertyNames.length === 0" class="actor-properties-empty">
       {{ $t('noProperties') }}
     </p>
     <div v-else class="actor-properties-table-scroll">
@@ -24,14 +24,15 @@
           </tr>
         </thead>
         <tbody>
-          <entity-update-row v-for="{ name } of propertyDefs"
+          <entity-update-row v-for="name of propertyNames"
             :key="name" ref="propertyRows" v-model="propertyValues[name]"
             :old-value="originalValues?.[name]" :label="name"
             :mark-value-changed="!create"/>
         </tbody>
       </table>
     </div>
-    <actor-properties-new/>
+    <actor-properties-new :property-names="propertyNames" :disabled="disabled"
+      @success="$emit('new-property', $event)"/>
   </div>
 </template>
 
@@ -45,13 +46,13 @@ import EntityUpdateRow from '../entity/update/row.vue';
 defineOptions({
   name: 'ActorPropertiesUpsert'
 });
-
-const propertyValues = defineModel('propertyValues');
-
 defineProps({
   create: Boolean,
-  propertyDefs: Array
+  propertyNames: Array,
+  disabled: Boolean
 });
+const propertyValues = defineModel('propertyValues');
+defineEmits(['new-property']);
 
 const originalValues = ref(null);
 const propertyRows = ref([]);

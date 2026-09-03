@@ -7,14 +7,21 @@
       </div>
       <form class="actor-properties-new-form" @submit.prevent="submit">
         <form-group ref="nameGroup" v-model.trim="name"
-          :placeholder="$t('newPropertyName')" required autocomplete="off"/>
+          :placeholder="$t('newPropertyName')" required
+          :has-error="error != null" autocomplete="off">
+          <template v-if="error != null" #after>
+            <p class="help-block">
+              <span class="icon-exclamation-circle"></span>{{ error }}
+            </p>
+          </template>
+        </form-group>
         <div class="form-actions">
           <button type="submit" class="btn btn-primary"
-            :aria-disabled="awaitingResponse">
-            {{ $t('action.add') }} <spinner :state="awaitingResponse"/>
+            :aria-disabled="disabled">
+            {{ $t('action.add') }}
           </button>
           <button type="button" class="btn btn-link"
-            :aria-disabled="awaitingResponse" @click="reset()">
+            :aria-disabled="disabled" @click="reset()">
             {{ $t('action.cancel') }}
           </button>
         </div>
@@ -28,11 +35,10 @@
 </template>
 
 <script setup>
-import { nextTick, ref } from 'vue';
+import { computed, nextTick, ref, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import FormGroup from '../form-group.vue';
-import Spinner from '../spinner.vue';
 
 import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
@@ -42,7 +48,10 @@ import { noop } from '../../util/util';
 defineOptions({
   name: 'ActorPropertiesNew'
 });
-
+const props = defineProps({
+  propertyNames: Array,
+  disabled: Boolean
+});
 const emit = defineEmits(['success']);
 
 const { request, awaitingResponse } = useRequest();
@@ -52,6 +61,27 @@ const { t } = useI18n();
 const nameGroup = ref(null);
 const name = ref('');
 const showForm = ref(false);
+
+const lowercaseProperties = computed(() => (props.propertyNames ?? []).reduce(
+  (map, name) => map.set(name.toLowerCase(), name),
+  new Map()
+));
+const error = () => computed(() => {
+  if (name.value === '') return null;
+
+  if (!validatePropertyName(name.value) || name.value === 'displayName')
+    return t('error.invalid');
+
+  const existingProperty = lowercaseProperties.get(name.value.toLowerCase());
+  if (existingProperty != null) {
+    return name.value === existingProperty
+      ? t('error.exactDuplicate')
+      : t('error.caseInsensitiveDuplicate');
+  }
+
+  return null;
+});
+watchEffect(() => { nameGroup.value.setCustomValidity(error.value ?? ''); });
 
 const show = () => {
   showForm.value = true;
@@ -63,23 +93,7 @@ const reset = () => {
   showForm.value = false;
 };
 
-const submit = () => {
-  request({
-    method: 'POST',
-    url: apiPaths.actorProperties(project.id),
-    data: { name: name.value },
-    problemToAlert: ({ code, details }) =>
-      (code === 409.3 && details.fields[0] === 'projectId' && details.fields[1] === 'name'
-        ? t('problem.409_3', { propertyName: details.values[1] })
-        : null)
-  })
-    .then(() => {
-      actorProperties.data = [...actorProperties.data, { name: name.value }];
-      emit('success');
-      reset();
-    })
-    .catch(noop);
-};
+const submit = () => { if (!props.disabled) emit('success', name.value); };
 
 defineExpose({ reset });
 </script>
@@ -111,9 +125,10 @@ defineExpose({ reset });
     "addPropertyHint": "Enter a unique property name",
     // @transifexKey component.ProjectCustomPropertiesNew.newPropertyName
     "newPropertyName": "New property name",
-    // @transifexKey component.ProjectCustomPropertiesNew.problem
-    "problem": {
-      "409_3": "A custom property already exists in this project with the name of \"{propertyName}\"."
+    "error": {
+      "invalid": "[PLACEHOLDER] Invald property",
+      "exactDuplicate": "[PLACEHOLDER] Exact duplicate",
+      "caseInsensitiveDuplicate": "[PLACEHOLDER] Case-insensitive duplicate"
     }
   }
 }
