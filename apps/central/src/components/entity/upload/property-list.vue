@@ -1,8 +1,6 @@
 <template>
   <ul class="entity-upload-property-list">
-    <li v-for="name of names" :key="name">
-      <span v-tooltip.text>{{ name }}</span>
-    </li>
+    <li v-for="name of names" :key="name" v-tooltip.text>{{ name }}</li>
   </ul>
 </template>
 
@@ -32,13 +30,7 @@ defineProps({
   padding-left: 0;
 
   li {
-    // Needed for text-overflow-ellipsis.
-    overflow: hidden;
-  }
-
-  span {
     @include text-overflow-ellipsis;
-    display: inline-block;
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: 20px;
     max-width: 275px;

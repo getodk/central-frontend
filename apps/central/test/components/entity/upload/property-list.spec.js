@@ -12,6 +12,6 @@ describe('EntityUploadPropertyList', () => {
     const li = component.findAll('li');
     const text = li.map(wrapper => wrapper.text());
     text.should.eql(['my_property', 'another_property']);
-    await li[0].get('span').should.have.textTooltip();
+    await li[0].should.have.textTooltip();
   });
 });
