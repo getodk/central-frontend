@@ -405,7 +405,9 @@ describe('EntityFilters', () => {
 
   describe('view-as filter', () => {
     beforeEach(() => {
-      testData.extendedDatasets.createPast(1);
+      testData.extendedDatasets.createPast(1, {
+        accessFilter: { type: 'ownerOnly' }
+      });
       testData.extendedFieldKeys.createPast(1);
     });
 
