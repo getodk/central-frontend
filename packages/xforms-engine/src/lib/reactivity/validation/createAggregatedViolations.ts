@@ -4,11 +4,10 @@ import type {
   AncestorNodeValidationState,
   DescendantNodeViolationReference,
 } from '../../../client/validation.ts';
-import type { AnyParentNode } from '../../../instance/hierarchy.ts';
-import type { ValidationContext } from '../../../instance/internal-api/ValidationContext.ts';
+import type { AnyParentNode, AnyValueNode } from '../../../instance/hierarchy.ts';
 import { createSharedNodeState } from '../node-state/createSharedNodeState.ts';
 
-const violationReference = (node: ValidationContext): DescendantNodeViolationReference | null => {
+const violationReference = (node: AnyValueNode): DescendantNodeViolationReference | null => {
   const violation = node.getViolation();
 
   if (violation == null) {
@@ -19,6 +18,9 @@ const violationReference = (node: ValidationContext): DescendantNodeViolationRef
 
   return {
     nodeId,
+    get node() {
+      return node;
+    },
     get reference() {
       return node.currentState.reference;
     },

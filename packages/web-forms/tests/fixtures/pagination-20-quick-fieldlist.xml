@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml">
+  <h:head>
+    <h:title>20 Quick select beside a required question</h:title>
+    <model>
+      <instance>
+        <data id="pg_20_quick_fieldlist">
+          <fl>
+            <fruit/>
+            <reason/>
+          </fl>
+          <tail/>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <bind nodeset="/data/fl/fruit" type="string"/>
+      <bind nodeset="/data/fl/reason" type="string" required="true()"/>
+      <bind nodeset="/data/tail" type="string"/>
+      <bind nodeset="/data/meta/instanceID" type="string"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <group ref="/data/fl" appearance="field-list">
+      <label>Fruit page</label>
+      <select1 ref="/data/fl/fruit" appearance="quick">
+        <label>Favorite fruit?</label>
+        <item><label>Cherry</label><value>cherry</value></item>
+        <item><label>Mango</label><value>mango</value></item>
+      </select1>
+      <input ref="/data/fl/reason"><label>Why?</label></input>
+    </group>
+    <input ref="/data/tail"><label>Any comment?</label></input>
+  </h:body>
+</h:html>
