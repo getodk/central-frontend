@@ -1,5 +1,5 @@
 <template>
-  <div class="actor-properties-upsert">
+  <fieldset class="actor-properties-upsert" :disabled="disabled">
     <div class="actor-properties-header">
       <strong>{{ $t('resource.property') }}</strong>
       <p>
@@ -12,7 +12,7 @@
         </i18n-t>
       </p>
     </div>
-    <p v-if="propertyNames.length === 0" class="actor-properties-empty">
+    <p v-if="propertyCreator.allProperties.length === 0" class="actor-properties-empty">
       {{ $t('noProperties') }}
     </p>
     <div v-else class="actor-properties-table-scroll">
@@ -24,16 +24,15 @@
           </tr>
         </thead>
         <tbody>
-          <entity-update-row v-for="name of propertyNames"
+          <entity-update-row v-for="name of propertyCreator.allProperties"
             :key="name" ref="propertyRows" v-model="propertyValues[name]"
             :old-value="originalValues?.[name]" :label="name"
             :mark-value-changed="!create"/>
         </tbody>
       </table>
     </div>
-    <actor-properties-new :property-names="propertyNames" :disabled="disabled"
-      @success="$emit('new-property', $event)"/>
-  </div>
+    <actor-properties-new/>
+  </fieldset>
 </template>
 
 <script setup>
@@ -43,22 +42,24 @@ import ActorPropertiesNew from './new.vue';
 import DocLink from '../doc-link.vue';
 import EntityUpdateRow from '../entity/update/row.vue';
 
+import { useActorPropertyCreator } from '../../composables/actor-property-creator';
+
 defineOptions({
   name: 'ActorPropertiesUpsert'
 });
 defineProps({
   create: Boolean,
-  propertyNames: Array,
   disabled: Boolean
 });
 const propertyValues = defineModel('propertyValues');
-defineEmits(['new-property']);
+
+const propertyCreator = useActorPropertyCreator();
 
 const originalValues = ref(null);
 const propertyRows = ref([]);
 
 // This component is mounted when parent modal is shown
-originalValues.value = { ...propertyValues.value };
+originalValues.value = Object.assign(Object.create(null), propertyValues.value);
 
 // This now tracks only properties that are changed.
 propertyValues.value = Object.create(null);
@@ -66,7 +67,6 @@ propertyValues.value = Object.create(null);
 nextTick(() => {
   for (const row of propertyRows.value) row.textarea.resize();
 });
-
 </script>
 
 <style lang="scss">

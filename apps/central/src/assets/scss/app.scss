@@ -142,7 +142,7 @@ em { @include italic; }
 
 [class^="icon-"] { vertical-align: -1px; }
 
-.btn, a, .label, .help-block {
+.btn, a, .label {
   .caret { margin-left: 6px; }
 
   > [class^="icon-"]:first-child {
@@ -419,7 +419,7 @@ $form-group-padding-bottom: 15px;
 .form-group {
   display: block;
   font-weight: normal;
-  margin-bottom: 15px;
+  margin-bottom: $margin-bottom-form-group;
   position: relative;
 
   $form-control-z-index: 1;

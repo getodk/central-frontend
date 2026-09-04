@@ -1965,6 +1965,9 @@
       }
     },
     "DatasetOverviewNewProperty": {
+      "newPropertyName": {
+        "string": "New property name"
+      },
       "title": {
         "string": "Add Entity Property",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -1975,14 +1978,6 @@
         },
         "1": {
           "string": "You can also add new properties by uploading a Form that references them, in which case the properties are created when the Form is published."
-        }
-      },
-      "newPropertyName": {
-        "string": "New property name"
-      },
-      "problem": {
-        "409_3": {
-          "string": "A property already exists in this Entity List with the name of “{propertyName}”."
         }
       }
     },
@@ -4460,16 +4455,6 @@
         }
       }
     },
-    "ProjectCustomPropertiesNew": {
-      "newPropertyName": {
-        "string": "New property name"
-      },
-      "problem": {
-        "409_3": {
-          "string": "A custom property already exists in this project with the name of \"{propertyName}\"."
-        }
-      }
-    },
     "ProjectEdit": {
       "title": {
         "string": "Basic Details",
@@ -4982,6 +4967,23 @@
           "string": "Project Role",
           "developer_comment": "This is the text of a form field."
         }
+      }
+    },
+    "PropertyInput": {
+      "invalidName": {
+        "string": "Property name is invalid"
+      },
+      "duplicate": {
+        "title": {
+          "string": "A property with this name already exists"
+        },
+        "description": {
+          "string": "Property names must be unique, regardless of capitalization."
+        }
+      },
+      "tryDifferent": {
+        "string": "Try a different name.",
+        "developer_comment": "\"Name\" refers to the name of an Entity property."
       }
     },
     "PublicLinkCreate": {

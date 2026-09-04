@@ -85,7 +85,7 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import { computed, inject, nextTick, onBeforeUnmount, reactive, ref, shallowRef, watch } from 'vue';
-import { equals, pick } from 'ramda';
+import { pick } from 'ramda';
 import { useI18n } from 'vue-i18n';
 
 import EntityUploadErrors from './upload/errors.vue';
@@ -409,7 +409,7 @@ const propertiesToCreate = computed(() => {
     selectedProperties.has(name));
   return result != null && result.length !== 0 ? result : null;
 });
-const propertyCreator = usePropertyCreator();
+const propertyCreator = usePropertyCreator(request);
 const mergeDataWithExtra = (entity) => {
   if (entity.extra == null) return entity;
 

@@ -11,15 +11,15 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="dataset-property-new" :state="state" :hideable="!awaitingResponse" backdrop
-    @hide="$emit('hide')" @shown="nameGroup.focus()">
+    @hide="$emit('hide')" @shown="input.focus()">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div class="modal-introduction">
         <p>{{ $t('introduction[0]') }}</p>
       </div>
       <form @submit.prevent="submit">
-        <form-group ref="nameGroup" v-model.trim="name"
-          :placeholder="$t('newPropertyName')" required autocomplete="off"/>
+        <property-input ref="input" v-model="name"
+          :properties="dataset.properties"/>
         <p>{{ $t('introduction[1]') }}</p>
         <div class="modal-actions">
           <button type="button" class="btn btn-link"
@@ -42,7 +42,7 @@ import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import Modal from '../../modal.vue';
-import FormGroup from '../../form-group.vue';
+import PropertyInput from '../../property-input.vue';
 import Spinner from '../../spinner.vue';
 
 import useRequest from '../../../composables/request';
@@ -62,10 +62,10 @@ const props = defineProps({
     default: false
   }
 });
-const nameGroup = ref(null);
-const name = ref('');
-
 const emit = defineEmits(['hide', 'success']);
+
+const input = ref(null);
+const name = ref('');
 
 watch(() => props.state, (state) => {
   if (!state) name.value = '';
@@ -79,7 +79,7 @@ const submit = () => {
     data: { name: name.value },
     problemToAlert: ({ code, details }) =>
       (code === 409.3 && equals(details.fields, ['name', 'datasetId'])
-        ? t('problem.409_3', { propertyName: details.values[0] })
+        ? t('problem.409_3')
         : null)
   })
     .then(() => {
@@ -91,18 +91,19 @@ const submit = () => {
 
 <i18n lang="json5">
 {
-  // @transifexKey component.DatasetOverviewNewProperty
   "en": {
+    // @transifexKey component.DatasetOverviewNewProperty.title
     // This is the title at the top of a pop-up.
     "title": "Add Entity Property",
+    // @transifexKey component.DatasetOverviewNewProperty.introduction
     "introduction": [
       "To add an Entity property, choose a unique property name below.",
       "You can also add new properties by uploading a Form that references them, in which case the properties are created when the Form is published."
     ],
-    "newPropertyName": "New property name",
     "problem": {
-      "409_3": "A property already exists in this Entity List with the name of “{propertyName}”."
-    },
+      // @transifexKey component.PropertyInput.duplicate.title
+      "409_3": "A property with this name already exists"
+    }
   }
 }
 </i18n>

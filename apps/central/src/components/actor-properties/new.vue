@@ -6,22 +6,13 @@
         <p>{{ $t('addPropertyHint') }}</p>
       </div>
       <form class="actor-properties-new-form" @submit.prevent="submit">
-        <form-group ref="nameGroup" v-model.trim="name"
-          :placeholder="$t('newPropertyName')" required
-          :has-error="error != null" autocomplete="off">
-          <template v-if="error != null" #after>
-            <p class="help-block">
-              <span class="icon-exclamation-circle"></span>{{ error }}
-            </p>
-          </template>
-        </form-group>
+        <property-input ref="input" v-model="name" type="actor"
+          :properties="propertyCreator.allProperties"/>
         <div class="form-actions">
-          <button type="submit" class="btn btn-primary"
-            :aria-disabled="disabled">
+          <button type="submit" class="btn btn-primary">
             {{ $t('action.add') }}
           </button>
-          <button type="button" class="btn btn-link"
-            :aria-disabled="disabled" @click="reset()">
+          <button type="button" class="btn btn-link" @click="reset">
             {{ $t('action.cancel') }}
           </button>
         </div>
@@ -35,57 +26,25 @@
 </template>
 
 <script setup>
-import { computed, nextTick, ref, watchEffect } from 'vue';
-import { useI18n } from 'vue-i18n';
+import { nextTick, ref } from 'vue';
 
-import FormGroup from '../form-group.vue';
+import PropertyInput from '../property-input.vue';
 
-import useRequest from '../../composables/request';
-import { apiPaths } from '../../util/request';
-import { useRequestData } from '../../request-data';
-import { noop } from '../../util/util';
+import { useActorPropertyCreator } from '../../composables/actor-property-creator';
 
 defineOptions({
   name: 'ActorPropertiesNew'
 });
-const props = defineProps({
-  propertyNames: Array,
-  disabled: Boolean
-});
-const emit = defineEmits(['success']);
 
-const { request, awaitingResponse } = useRequest();
-const { project, actorProperties } = useRequestData();
-const { t } = useI18n();
+const propertyCreator = useActorPropertyCreator();
 
-const nameGroup = ref(null);
 const name = ref('');
 const showForm = ref(false);
 
-const lowercaseProperties = computed(() => (props.propertyNames ?? []).reduce(
-  (map, name) => map.set(name.toLowerCase(), name),
-  new Map()
-));
-const error = () => computed(() => {
-  if (name.value === '') return null;
-
-  if (!validatePropertyName(name.value) || name.value === 'displayName')
-    return t('error.invalid');
-
-  const existingProperty = lowercaseProperties.get(name.value.toLowerCase());
-  if (existingProperty != null) {
-    return name.value === existingProperty
-      ? t('error.exactDuplicate')
-      : t('error.caseInsensitiveDuplicate');
-  }
-
-  return null;
-});
-watchEffect(() => { nameGroup.value.setCustomValidity(error.value ?? ''); });
-
+const input = ref(null);
 const show = () => {
   showForm.value = true;
-  nextTick(() => nameGroup.value.focus());
+  nextTick(() => input.value.focus());
 };
 
 const reset = () => {
@@ -93,22 +52,31 @@ const reset = () => {
   showForm.value = false;
 };
 
-const submit = () => { if (!props.disabled) emit('success', name.value); };
-
-defineExpose({ reset });
+const submit = () => {
+  propertyCreator.add(name.value);
+  reset();
+};
 </script>
 
 <style lang="scss">
 .actor-properties-new {
   padding-top: 8px;
 }
+
 .actor-properties-new-form {
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-start;
-  gap: 8px;
+  column-gap: 8px;
 
   .form-group {
     flex: 1;
+    margin-bottom: 0;
+  }
+
+  .property-input-error {
+    order: 3;
+    width: 100%;
     margin-bottom: 0;
   }
 
@@ -122,14 +90,7 @@ defineExpose({ reset });
 {
   "en": {
     "addProperty": "Add Property",
-    "addPropertyHint": "Enter a unique property name",
-    // @transifexKey component.ProjectCustomPropertiesNew.newPropertyName
-    "newPropertyName": "New property name",
-    "error": {
-      "invalid": "[PLACEHOLDER] Invald property",
-      "exactDuplicate": "[PLACEHOLDER] Exact duplicate",
-      "caseInsensitiveDuplicate": "[PLACEHOLDER] Case-insensitive duplicate"
-    }
+    "addPropertyHint": "Enter a unique property name"
   }
 }
 </i18n>

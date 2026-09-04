@@ -2,22 +2,28 @@ import ActorPropertiesUpsert from '../../../src/components/actor-properties/upse
 import PublicLinkEdit from '../../../src/components/public-link/edit.vue';
 
 import testData from '../../data';
-import { load } from '../../util/http';
+import { addActorProperty } from '../../util/trigger';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
+import { mockHttp, load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { testRequestData } from '../../util/request-data';
 
-const mountOptions = (options = undefined) => {
-  const publicLink = testData.extendedPublicLinks.last();
-  return mergeMountOptions(options, {
-    props: { state: true, publicLink },
-    container: {
-      requestData: testRequestData(['actorProperties'], {
-        form: testData.extendedForms.last(),
-        actorProperties: [{ name: 'prop1' }, { name: 'prop2' }]
-      })
-    }
-  });
+const mountOptions = (options = undefined) => mergeMountOptions(options, {
+  container: {
+    requestData: testRequestData(['actorProperties'], {
+      form: testData.extendedForms.last(),
+      actorProperties: [{ name: 'prop1' }, { name: 'prop2' }]
+    })
+  }
+});
+const showModal = async (modal) => modal.setProps({
+  state: true,
+  publicLink: testData.extendedPublicLinks.last()
+});
+const mountComponent = async (options = undefined) => {
+  const modal = mount(PublicLinkEdit, mountOptions(options));
+  await showModal(modal);
+  return modal;
 };
 
 describe('PublicLinkEdit', () => {
@@ -29,21 +35,19 @@ describe('PublicLinkEdit', () => {
     });
   });
 
-  it('shows the display name in the title', () => {
-    const modal = mount(PublicLinkEdit, mountOptions());
+  it('hides the edit button if there are no actor properties', async () => {
+    const app = await load('/projects/1/forms/f/public-links');
+    app.find('.public-link-row .edit-button').exists().should.be.false;
+  });
+
+  it('shows the display name in the title', async () => {
+    const modal = await mountComponent();
     const title = modal.get('.modal-title');
     title.text().should.include('My Public Link');
   });
 
-  it('renders ActorPropertiesUpsert with property definitions', () => {
-    const modal = mount(PublicLinkEdit, mountOptions());
-    const upsert = modal.getComponent(ActorPropertiesUpsert);
-    upsert.props().propertyDefs.should.eql([{ name: 'prop1' }, { name: 'prop2' }]);
-  });
-
   it('initializes property values from the field key', async () => {
-    const modal = mount(PublicLinkEdit, mountOptions({ props: { state: false } }));
-    await modal.setProps({ state: true });
+    const modal = await mountComponent();
     const textareas = modal.findAll('textarea');
     textareas[0].element.value.should.equal('value1');
     textareas[1].element.value.should.equal('value2');
@@ -51,43 +55,66 @@ describe('PublicLinkEdit', () => {
 
   it('sends the correct request', () => {
     testData.actorProperties.createPast(1, { name: 'prop1' });
-    return load('/projects/1/forms/f/public-links')
-      .complete()
-      .request(async (app) => {
-        await app.get('.public-link-row .edit-button').trigger('click');
-        const modal = app.get('#public-link-edit');
+    return mockHttp()
+      .mount(PublicLinkEdit, mountOptions())
+      .request(async (modal) => {
+        await showModal(modal);
         const textareas = modal.findAll('textarea');
         await textareas[0].setValue('newValue1');
         return modal.get('.btn-primary').trigger('click');
       })
-      .beforeEachResponse((_, { method, url, data }, i) => {
-        if (i === 0) {
-          method.should.equal('PATCH');
-          url.should.equal('/v1/projects/1/forms/f/public-links/1');
-          data.should.deep.equal({ properties: { prop1: 'newValue1' } });
-        }
-      })
-      .respondWithData(() => testData.extendedPublicLinks.last())
-      .respondWithData(() => testData.extendedPublicLinks.sorted());
+      .respondWithProblem()
+      .testRequests([{
+        method: 'PATCH',
+        url: '/v1/projects/1/forms/f/public-links/1',
+        data: { properties: { prop1: 'newValue1' } }
+      }]);
   });
 
-  it('hides the edit button if there are no actor properties', async () => {
-    const app = await load('/projects/1/forms/f/public-links');
-    app.find('.public-link-row .edit-button').exists().should.be.false;
-  });
+  it('implements some standard button things', () =>
+    mockHttp()
+      .mount(PublicLinkEdit, mountOptions())
+      .afterResponses(showModal)
+      .testStandardButton({
+        button: '.btn-primary',
+        disabled: [ActorPropertiesUpsert, '.btn-link'],
+        modal: true
+      }));
 
-  it('shows a success message', () => {
-    testData.actorProperties.createPast(1, { name: 'prop1' });
-    return load('/projects/1/forms/f/public-links')
-      .complete()
-      .request(async (app) => {
-        await app.get('.public-link-row .edit-button').trigger('click');
-        return app.get('#public-link-edit .btn-primary').trigger('click');
-      })
-      .respondWithData(() => testData.extendedPublicLinks.last())
-      .respondWithData(() => testData.extendedPublicLinks.sorted())
-      .afterResponses(app => {
-        app.should.alert('success', 'The Public Access Link “My Public Link” was updated successfully.');
-      });
+  describe('after a successful response', () => {
+    beforeEach(() => {
+      testData.actorProperties.createPast(1, { name: 'prop1' });
+    });
+
+    it('shows a success message', () =>
+      load('/projects/1/forms/f/public-links')
+        .complete()
+        .request(async (app) => {
+          await app.get('.public-link-row .edit-button').trigger('click');
+          return app.get('#public-link-edit .btn-primary').trigger('click');
+        })
+        .respondWithData(() => testData.extendedPublicLinks.last())
+        .respondWithData(() => testData.extendedPublicLinks.sorted())
+        .afterResponses(app => {
+          app.should.alert('success', 'The Public Access Link “My Public Link” was updated successfully.');
+        }));
+
+    it('updates the list of actor properties', () =>
+      load('/projects/1/forms/f/public-links')
+        .complete()
+        .request(async (app) => {
+          await app.get('.public-link-row .edit-button').trigger('click');
+          const modal = app.getComponent(PublicLinkEdit);
+          await addActorProperty(modal, 'region', 'north');
+          return modal.get('.btn-primary').trigger('click');
+        })
+        .respondWithSuccess() // Property creation
+        .respondWithData(() => testData.extendedPublicLinks.last())
+        .respondWithData(() => testData.extendedPublicLinks.sorted())
+        .afterResponses(app => {
+          const text = app.findAll('.table-freeze-scrolling th')
+            .map(th => th.text());
+          text.should.eql(['prop1', 'region']);
+        }));
   });
 });
