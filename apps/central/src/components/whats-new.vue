@@ -19,11 +19,9 @@ except according to the terms contained in the LICENSE file.
     </template>
     <template #title>{{ $t('title') }}</template>
     <template #body>
-      <i18n-t tag="p" class="modal-introduction" keypath="body">
-        <template #bold>
-          <strong>{{ $t('bodyBold') }}</strong>
-        </template>
-      </i18n-t>
+      <p class="modal-introduction">
+        {{ $t('body[0]') }}<sentence-separator/><strong>{{ $t('body[1]') }}</strong>
+      </p>
       <div class="modal-actions">
         <div v-if="!initialOptIn" class="checkbox">
           <label><input v-model="mailingListOptIn" type="checkbox">{{ $t('analytics.mailingListOptIn') }}</label>
@@ -41,6 +39,7 @@ except according to the terms contained in the LICENSE file.
 import { inject, ref, watch } from 'vue';
 
 import Modal from './modal.vue';
+import SentenceSeparator from './sentence-separator.vue';
 
 import { useRequestData } from '../request-data';
 
@@ -132,8 +131,10 @@ function hideModal() {
     "en": {
       // This is the title at the top of a pop-up.
       "title": "Easier Entity Uploads 📤",
-      "body": "Bring your Entities into ODK faster with a smoother CSV upload experience. Get clearer errors and warnings, fix issues, and try again, all in one place. {bold}",
-      "bodyBold": "You can now also create new properties directly from your CSV."
+      "body": [
+        "Bring your Entities into ODK faster with a smoother CSV upload experience. Get clearer errors and warnings, fix issues, and try again, all in one place.",
+        "You can now also create new properties directly from your CSV."
+      ]
     }
   }
 </i18n>

@@ -5886,10 +5886,12 @@
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "Bring your Entities into ODK faster with a smoother CSV upload experience. Get clearer errors and warnings, fix issues, and try again, all in one place. {bold}"
-      },
-      "bodyBold": {
-        "string": "You can now also create new properties directly from your CSV."
+        "0": {
+          "string": "Bring your Entities into ODK faster with a smoother CSV upload experience. Get clearer errors and warnings, fix issues, and try again, all in one place."
+        },
+        "1": {
+          "string": "You can now also create new properties directly from your CSV."
+        }
       }
     }
   },
