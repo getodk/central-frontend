@@ -31,18 +31,21 @@ except according to the terms contained in the LICENSE file.
             :count="serverPage.count" :size-options="pageSizeOptions"
             :spinner="serverEntities.awaitingResponse"/>
         </div>
-        <p class="entity-upload-section-title">{{ $t('newEntities') }}</p>
-        <div class="entity-upload-table-container panel panel-simple">
-          <div class="panel-heading">
-            <h1 class="panel-title">{{ $t('table.file') }}</h1>
-          </div>
-          <div class="panel-body">
-            <entity-upload-table :ref="setTable(1)" :entities="csvSlice"
-              :extra-properties="propertiesToCreate" :row-index="csvRow"
-              :page-size="csvPage.size" :highlighted="warningRows"/>
-            <pagination v-if="csvEntities != null" v-model:page="csvPage.page"
-              v-model:size="csvPage.size" :count="csvEntities.length"
-              :size-options="pageSizeOptions"/>
+
+        <div v-show="csvEntities != null">
+          <p class="entity-upload-section-title">{{ $t('newEntities') }}</p>
+          <div class="entity-upload-table-container panel panel-simple">
+            <div class="panel-heading">
+              <h1 class="panel-title">{{ $t('table.file') }}</h1>
+            </div>
+            <div class="panel-body">
+              <entity-upload-table :ref="setTable(1)" :entities="csvSlice"
+                :extra-properties="propertiesToCreate" :row-index="csvRow"
+                :page-size="csvPage.size" :highlighted="warningRows"/>
+              <pagination v-if="csvEntities != null" v-model:page="csvPage.page"
+                v-model:size="csvPage.size" :count="csvEntities.length"
+                :size-options="pageSizeOptions"/>
+            </div>
           </div>
         </div>
 
