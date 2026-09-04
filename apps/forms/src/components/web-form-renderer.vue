@@ -143,7 +143,7 @@ const handleResult = () => {
   // Success handler
   if (submissionResult.primaryInstanceResult.success && attachmentResultArr.every(r => r.success)) {
 
-    clearForm();
+    clearForm(props.form.once ? {} : { next: POST_SUBMIT__NEW_INSTANCE });
 
     if (isPublicLink.value) {
       visibleModal.value = { type: 'thankYouModal', hideable: false };
@@ -226,7 +226,7 @@ const submitData = async () => {
   handleResult();
 };
 
-const initializeSubmissionState = (data:SubmissionData, clearFormCallback:Function) => {
+const initializeSubmissionState = (data: SubmissionData) => {
   submissionData = data;
 
   submissionResult.primaryInstanceResult = {
@@ -239,17 +239,13 @@ const initializeSubmissionState = (data:SubmissionData, clearFormCallback:Functi
       success: false
     });
   });
-
-  clearForm = () => {
-    clearFormCallback({ next: POST_SUBMIT__NEW_INSTANCE });
-  };
 };
 
 const webFormLoaded = () => {
   hideSpinner();
 };
 
-const updateLastSaved = (hasLastSaved) => {
+const updateLastSaved = (hasLastSaved: boolean) => {
   if (!isEdit.value
     && !props.form.draft
     && submissionResult.primaryInstanceResult.success
@@ -279,7 +275,13 @@ const handleSubmit = async (
     // hence this branch should never execute.
     return;
   }
-  initializeSubmissionState(data as unknown as SubmissionData, clearFormCallback);
+  if (alreadySubmittedOnce()) {
+    // The user has already submitted a single submission form - should not get here.
+    return;
+  }
+  initializeSubmissionState(data as unknown as SubmissionData);
+  clearForm = clearFormCallback;
+
   await submitData();
   updateLastSaved(hasLastSaved);
 };
@@ -308,8 +310,12 @@ const editInstanceOptions = computed(() => {
   return null;
 });
 
+const alreadySubmittedOnce = () => {
+  return props.form.once && props.form.enketoOnceId && hasSubmitted(props.form.enketoOnceId);
+};
+
 onMounted(async () => {
-  if (props.form.once && props.form.enketoOnceId && hasSubmitted(props.form.enketoOnceId)) {
+  if (alreadySubmittedOnce()) {
     visibleModal.value = { type: 'thankYouModal', hideable: false };
     webFormLoaded(); // hide the spinner
     return;

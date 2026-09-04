@@ -3,7 +3,7 @@ import EnketoPreview from '../../../src/components/enketo/preview.vue';
 import FormVersionDefDropdown from '../../../src/components/form-version/def-dropdown.vue';
 import FormVersionRow from '../../../src/components/form-version/row.vue';
 import FormVersionString from '../../../src/components/form-version/string.vue';
-import FormVersionViewXml from '../../../src/components/form-version/view-xml.vue';
+import XmlViewer from '../../../src/components/xml-viewer.vue';
 import TimeAndUser from '../../../src/components/time-and-user.vue';
 
 import testData from '../../data';
@@ -89,7 +89,7 @@ describe('FormVersionRow', () => {
   it('toggles the "View XML" modal', () => {
     testData.extendedForms.createPast(1);
     return load('/projects/1/forms/f/versions', { root: false }).testModalToggles({
-      modal: FormVersionViewXml,
+      modal: XmlViewer,
       show: '.form-version-row .form-version-def-dropdown a',
       hide: '.btn-primary',
       respond: (series) => series.respondWithData(() => '<x/>')

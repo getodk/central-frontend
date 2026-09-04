@@ -11,9 +11,21 @@
     "string": "Envoyer",
     "developer_comment": "Label for the primary form submission button."
   },
+  "odk_web_forms.back.label": {
+    "string": "Précédent",
+    "developer_comment": "Label for the button that moves to the previous page in a paginated form."
+  },
+  "odk_web_forms.next.label": {
+    "string": "Suivant",
+    "developer_comment": "Label for the button that moves to the next page in a paginated form."
+  },
   "odk_web_forms.validation.error": {
     "string": "{count, plural, one {# question avec erreur} many {# questions avec erreurs} other {# questions avec erreurs}}",
     "developer_comment": "Error banner message. {count} is the number of validation violations."
+  },
+  "odk_web_forms.validation.view.label": {
+    "string": "Voir",
+    "developer_comment": "Label for the error banner button that navigates to the first question with a validation error."
   },
   "odk_web_forms.geolocation.error": {
     "string": "La position n'est pas disponible. Activez le GPS et les autorisations du navigateur, puis rechargez le formulaire pour réessayer.",
