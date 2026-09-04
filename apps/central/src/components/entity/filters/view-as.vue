@@ -1,5 +1,6 @@
 <template>
-  <label id="entity-filters-view-as" class="form-group" :class="{ disabled }">
+  <label v-if="showViewAs" id="entity-filters-view-as" class="form-group"
+    :class="{ disabled }">
     <span>{{ $t('viewAs') }}</span>
     <div class="display-value" aria-hidden="true">
       {{ displayValue }}
@@ -42,7 +43,10 @@ const props = defineProps({
     required: false
   }
 });
-const { fieldKeys } = useRequestData();
+const { dataset, fieldKeys } = useRequestData();
+
+const showViewAs = computed(() =>
+  dataset.dataExists && dataset.accessFilter != null);
 
 const displayValue = computed(() => {
   if (props.modelValue == null) return t('noUserSelected');
@@ -89,7 +93,7 @@ const onChange = (value) => {
 {
   "en": {
     "noUserSelected": "Me",
-    "viewAs": "Viewing As",
+    "viewAs": "View As",
   }
 }
 </i18n>
