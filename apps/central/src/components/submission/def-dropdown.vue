@@ -1,5 +1,5 @@
 <template>
-  <dropdown class="submission-def-dropdown btn-group">
+  <dropdown class="submission-def-dropdown">
     <template #toggle="{ toggle, attrs }">
       <button type="button" class="btn btn-default"
         v-bind="attrs" @click="toggle">
@@ -21,35 +21,34 @@
   </dropdown>
 </template>
 
-<script>
+<script setup>
+import { computed } from 'vue';
+
 import Dropdown from '../dropdown.vue';
 
 import { apiPaths } from '../../util/request';
 
-export default {
-  name: 'SubmissionDefDropdown',
-  components: { Dropdown },
-  props: {
-    projectId: {
-      type: String,
-      required: true
-    },
-    xmlFormId: {
-      type: String,
-      required: true
-    },
-    instanceId: {
-      type: String,
-      required: true
-    }
+defineOptions({ name: 'SubmissionDefDropdown' });
+
+const props = defineProps({
+  projectId: {
+    type: String,
+    required: true
   },
-  emits: ['view-xml'],
-  computed: {
-    xmlPath() {
-      return apiPaths.submissionXml(this.projectId, this.xmlFormId, this.instanceId);
-    }
+  xmlFormId: {
+    type: String,
+    required: true
+  },
+  instanceId: {
+    type: String,
+    required: true
   }
-};
+});
+
+defineEmits(['view-xml']);
+
+const xmlPath = computed(() =>
+  apiPaths.submissionXml(props.projectId, props.xmlFormId, props.instanceId));
 </script>
 
 <i18n lang="json5">

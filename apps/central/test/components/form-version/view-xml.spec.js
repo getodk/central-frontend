@@ -9,4 +9,11 @@ describe('FormVersionViewXml', () => {
     });
     modal.get('code').text().should.equal('<x>\r\n    <y/>\r\n</x>');
   });
+
+  it('shows a spinner when loading', () => {
+    const modal = mount(XmlViewer, {
+      props: { state: true, loading: true }
+    });
+    modal.get('.spinner').should.be.visible();
+  });
 });

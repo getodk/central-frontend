@@ -181,4 +181,23 @@ describe('SubmissionShow', () => {
         });
     });
   });
+
+  describe('view xml', () => {
+    it('sends the correct request after clicking view xml', () => {
+      testData.extendedSubmissions.createPast(1, { instanceId: 's' });
+      return load('/projects/1/forms/f/submissions/s', { root: false })
+        .complete()
+        .request(async (component) => {
+          await component.get('.submission-def-dropdown button').trigger('click');
+          return component.get('.submission-def-dropdown a').trigger('click');
+        })
+        .respondWithData(() => '<submission/>')
+        .testRequests([{
+          url: '/v1/projects/1/forms/f/submissions/s.xml'
+        }])
+        .afterResponse(component => {
+          component.get('#xml-viewer code').text().should.equal('<submission/>');
+        });
+    });
+  });
 });

@@ -52,6 +52,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import Breadcrumbs from '../breadcrumbs.vue';
@@ -65,13 +66,13 @@ import SubmissionData from './data.vue';
 import SubmissionDefDropdown from './def-dropdown.vue';
 import SubmissionUpdateReviewState from './update-review-state.vue';
 import SubmissionDelete from './delete.vue';
-import XmlViewer from '../xml-viewer.vue';
 
 import useFields from '../../request-data/fields';
 import useRoutes from '../../composables/routes';
 import useRequest from '../../composables/request';
 import useSubmission from '../../request-data/submission';
 import { apiPaths } from '../../util/request';
+import { loadAsync } from '../../util/load-async';
 import { modalData, setDocumentTitle } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
 import { noop } from '../../util/util';
@@ -90,7 +91,7 @@ export default {
     SubmissionDefDropdown,
     SubmissionDelete,
     SubmissionUpdateReviewState,
-    XmlViewer
+    XmlViewer: defineAsyncComponent(loadAsync('XmlViewer')),
   },
   inject: ['alert'],
   props: {
@@ -232,8 +233,15 @@ export default {
 </script>
 
 <style lang="scss">
-  #submission-show .page-section-heading {
-    font-size: 24px;
+  #submission-show {
+    .page-section-heading {
+      font-size: 24px;
+    }
+
+    .submission-data {
+      max-height: 510px;
+      overflow-y: auto;
+    }
   }
 
   #submission-data-section .page-section-heading {
