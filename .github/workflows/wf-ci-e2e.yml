@@ -8,6 +8,10 @@ jobs:
     name: 'Functional e2e'
     runs-on: 'ubuntu-latest'
     timeout-minutes: 4
+    container:
+      # The image version must match the @playwright/test version in the root package-lock.json.
+      image: mcr.microsoft.com/playwright:v1.60.0-noble
+      options: --user 1001
 
     strategy:
       fail-fast: false
@@ -21,8 +25,6 @@ jobs:
       - uses: ./.github/actions/restore-node
         with:
           node-version: '${{ matrix.node-version }}'
-
-      - run: 'npx playwright install ${{ matrix.browser }} --with-deps'
 
       - name: 'Run functional e2e tests'
         run: 'npm run test:e2e:functional:${{ matrix.browser }} -w=packages/web-forms'
@@ -40,6 +42,10 @@ jobs:
     name: 'Visual e2e'
     runs-on: 'ubuntu-latest'
     timeout-minutes: 6
+    container:
+      # The image version must match the @playwright/test version in the root package-lock.json.
+      image: mcr.microsoft.com/playwright:v1.60.0-noble
+      options: --user 1001
 
     strategy:
       fail-fast: false
@@ -53,8 +59,6 @@ jobs:
       - uses: ./.github/actions/restore-node
         with:
           node-version: '${{ matrix.node-version }}'
-
-      - run: 'npx playwright install ${{ matrix.browser }} --with-deps'
 
       # xvfb-run is used for visual tests to compare snapshots more accurately.
       - name: 'Run visual e2e tests'
