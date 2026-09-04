@@ -48,7 +48,7 @@ const navigateTo = (nodeId: string) => {
   focusTarget?.focus({ preventScroll: true, focusVisible: true });
 };
 
-const navigateToFirstViolation = (root: RootNode | null) => {
+const navigateToFirstViolation = (root?: RootNode | null) => {
   if (!root) {
     return;
   }
@@ -64,20 +64,24 @@ const navigateToFirstViolation = (root: RootNode | null) => {
   });
 };
 
-export const useNavigationTarget = (getRoot: () => RootNode | null) => {
+const navigateToNode = (nodeId?: string | null) => {
+  if (!nodeId) {
+    return;
+  }
+  // Wait for the render cycle to settle
+  // focusing a still mounting question breaks popups like the datepicker.
+  void nextTick(() => navigateTo(nodeId));
+};
+
+export const useNavigationTarget = (getRoot: () => RootNode | null | undefined) => {
   watch(
     () => getRoot()?.currentState.navigationTarget,
-    (nodeId) => {
-      if (nodeId) {
-        // Wait for the render cycle to settle
-        // focusing a still mounting question breaks popups like the datepicker.
-        void nextTick(() => navigateTo(nodeId));
-      }
-    },
+    (nodeId) => navigateToNode(nodeId),
     { flush: 'post' }
   );
 
   return {
     navigateToFirstViolation: () => navigateToFirstViolation(getRoot()),
+    navigateToNode: (nodeId?: string | null) => navigateToNode(nodeId),
   };
 };
