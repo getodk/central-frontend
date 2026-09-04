@@ -30,10 +30,6 @@
       "formAccess": {
         "string": "フォームへのアクセス",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-      },
-      "customProperties": {
-        "string": "",
-        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     }
   },
@@ -357,6 +353,10 @@
     }
   },
   "action": {
+    "add": {
+      "string": "",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "cancel": {
       "string": "キャンセル",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -544,7 +544,7 @@
       "developer_comment": "This is the text of a form field."
     },
     "passphrase": {
-      "string": "パスフレーズ",
+      "string": "",
       "developer_comment": "This is the text of a form field."
     },
     "password": {
@@ -746,11 +746,11 @@
     },
     "property": {
       "string": "",
-      "developer_comment": "This is a data property of an Entity."
+      "developer_comment": "This is a data property of an Entity or an Actor."
     },
     "properties": {
       "string": "",
-      "developer_comment": "This refers to the data properties of an Entity."
+      "developer_comment": "This refers to the data properties of an Entity or Actor."
     },
     "publicLink": {
       "string": "一般公開リンク",
@@ -1227,6 +1227,29 @@
         "success": {
           "string": "{email}に詳細の対応についての情報が記されたメールが送信されました。"
         }
+      }
+    },
+    "ActorPropertiesNew": {
+      "addProperty": {
+        "string": ""
+      },
+      "addPropertyHint": {
+        "string": ""
+      }
+    },
+    "ActorPropertiesUpsert": {
+      "description": {
+        "full": {
+          "string": "",
+          "developer_comment": "{assignEntities} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nassign the right Entities"
+        },
+        "assignEntities": {
+          "string": "",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {assignEntities} is in the following text:\n\nProperties help {assignEntities}, control access, and connect users to the data they need."
+        }
+      },
+      "noProperties": {
+        "string": ""
       }
     },
     "AnalyticsForm": {
@@ -1788,6 +1811,14 @@
     "ConfigLoginPreview": {
       "introduction": {
         "string": ""
+      }
+    },
+    "CustomPropsFilter": {
+      "action": {
+        "all": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of an actor (app user or public link) \"Properties\" filter, that allows the user to select all app users with all properties (no filter applied)."
+        }
       }
     },
     "DatasetDelete": {
@@ -2555,6 +2586,14 @@
         "string": ""
       }
     },
+    "EntityFiltersViewAs": {
+      "noUserSelected": {
+        "string": ""
+      },
+      "viewAs": {
+        "string": ""
+      }
+    },
     "EntityList": {
       "noEntities": {
         "string": "",
@@ -2744,15 +2783,13 @@
       }
     },
     "EntityUpload": {
-      "title": {
-        "string": "",
-        "developer_comment": "This is the title at the top of a pop-up."
+      "currentEntities": {
+        "string": ""
+      },
+      "newEntities": {
+        "string": ""
       },
       "table": {
-        "server": {
-          "string": "",
-          "developer_comment": "This is shown above a list of Entities on the server. {name} is the name of the Entity List."
-        },
         "file": {
           "string": ""
         }
@@ -2770,9 +2807,6 @@
         "noData": {
           "string": ""
         }
-      },
-      "headersNote": {
-        "string": ""
       }
     },
     "EntityUploadDataError": {
@@ -2784,58 +2818,102 @@
       "text": {
         "full": {
           "string": "",
-          "developer_comment": "{downloadTemplate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDownload a data template (.csv)"
+          "developer_comment": "{downloadTemplate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDownload a CSV template"
         },
         "downloadTemplate": {
           "string": "",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {downloadTemplate} is in the following text:\n\nIf you aren’t sure, you can {downloadTemplate}"
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {downloadTemplate} is in the following text:\n\nNeed a starting point? {downloadTemplate}."
         }
       }
     },
+    "EntityUploadErrors": {
+      "title": {
+        "string": "{count, plural, other {}}",
+        "developer_comment": "This text is shown above a section that lists errors in the user's data."
+      },
+      "introduction": {
+        "string": ""
+      },
+      "delimiterNotComma": {
+        "string": ""
+      },
+      "invalidQuotes": {
+        "title": {
+          "string": ""
+        },
+        "description": {
+          "string": ""
+        }
+      },
+      "missingLabel": {
+        "title": {
+          "string": "",
+          "developer_comment": "{label} will have the text \"label\" and refers to the \"label\" property. The name of the property is not translated."
+        },
+        "description": {
+          "string": ""
+        }
+      },
+      "duplicateColumn": {
+        "title": {
+          "string": ""
+        },
+        "description": {
+          "string": ""
+        },
+        "headersReused": {
+          "string": "{count, plural, other {}}",
+          "developer_comment": "This text is followed by a list of column headers."
+        }
+      },
+      "emptyColumn": {
+        "title": {
+          "string": ""
+        },
+        "description": {
+          "string": ""
+        }
+      }
+    },
+    "EntityUploadExtraProperties": {
+      "action": {
+        "selectAll": {
+          "string": "",
+          "developer_comment": "This is the text of a button that allows the user to select all the columns of a table."
+        }
+      },
+      "created": {
+        "string": ""
+      },
+      "createdAll": {
+        "string": ""
+      }
+    },
     "EntityUploadFileSelect": {
+      "upload": {
+        "string": ""
+      },
+      "errors": {
+        "string": "{count, plural, other {}}"
+      },
       "text": {
         "full": {
           "string": "",
-          "developer_comment": "{chooseOne} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose one"
+          "developer_comment": "{chooseFile} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose a file"
         },
-        "chooseOne": {
+        "chooseFile": {
           "string": "",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseOne} is in the following text:\n\nDrag a .csv file here, or {chooseOne} to import."
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseFile} is in the following text:\n\nDrag and drop a .csv file here, or {chooseFile}"
         }
       },
       "parsing": {
         "string": ""
       }
     },
-    "EntityUploadHeaderErrors": {
-      "expectedHeader": {
-        "string": "",
-        "developer_comment": "This refers to the header row of a spreadsheet."
-      },
-      "suggestions": {
-        "title": {
-          "string": "",
-          "developer_comment": "Suggestions to fix an error"
-        },
-        "invalidQuotes": {
-          "string": ""
-        },
-        "missingLabel": {
-          "string": "",
-          "developer_comment": "{label} will have the text \"label\" and refers to the \"label\" property. The name of the property is not translated."
-        },
-        "unknownProperty": {
-          "string": ""
-        },
-        "duplicateColumn": {
-          "string": ""
-        },
-        "emptyColumn": {
-          "string": ""
-        },
-        "delimiterNotComma": {
-          "string": ""
-        }
+    "EntityUploadHeaderReview": {
+      "title": {
+        "string": "{count, plural, other {}}",
+        "developer_comment": "This text is shown above a section where the user can review warnings about their data."
       }
     },
     "EntityUploadPopup": {
@@ -2843,6 +2921,9 @@
         "string": "{count, plural, other {}}"
       },
       "status": {
+        "creatingProperties": {
+          "string": ""
+        },
         "sending": {
           "string": "",
           "developer_comment": "This text is shown while a file is being uploaded to the server."
@@ -2854,6 +2935,75 @@
       }
     },
     "EntityUploadWarnings": {
+      "introduction": {
+        "string": ""
+      },
+      "systemProperties": {
+        "string": "",
+        "developer_comment": "\"Properties\" refers to Entity properties."
+      },
+      "caseMismatch": {
+        "title": {
+          "string": "",
+          "developer_comment": "\"Property\" refers to an Entity property."
+        },
+        "description": {
+          "string": ""
+        },
+        "existingProperty": {
+          "string": "",
+          "developer_comment": "\"Property\" refers to an Entity property."
+        }
+      },
+      "invalidProperties": {
+        "string": "{count, plural, other {}}",
+        "developer_comment": "\"Property\" refers to an Entity property."
+      },
+      "missingProperties": {
+        "title": {
+          "string": "{count, plural, other {}}",
+          "developer_comment": "\"Property\" refers to an Entity property."
+        },
+        "description": {
+          "string": "{count, plural, other {}}",
+          "developer_comment": "\"Property\" refers to an Entity property."
+        }
+      },
+      "extraProperties": {
+        "title": {
+          "one": {
+            "string": ""
+          },
+          "multiple": {
+            "string": ""
+          }
+        },
+        "description": {
+          "one": {
+            "string": ""
+          },
+          "multiple": {
+            "string": "",
+            "developer_comment": "\"Ones\" refers to \"columns\"."
+          }
+        },
+        "error": {
+          "one": {
+            "string": ""
+          },
+          "multiple": {
+            "string": "",
+            "developer_comment": "\"Ones\" refers to \"columns\"."
+          }
+        }
+      },
+      "propertiesIgnored": {
+        "string": "{count, plural, other {}}",
+        "developer_comment": "\"Property\" refers to an Entity property."
+      },
+      "columnsIgnored": {
+        "string": "{count, plural, other {}}"
+      },
       "row": {
         "raggedRows": {
           "string": "",
@@ -2965,6 +3115,9 @@
       },
       "emptyTable": {
         "string": "アプリユーザーが登録されていません。デバイスからフォームのダウンロードと提出を行うには、アプリユーザーを作成する必要があります。"
+      },
+      "noFilterResults": {
+        "string": ""
       },
       "alert": {
         "create": {
@@ -3181,6 +3334,10 @@
         "uploaded": {
           "string": "アップロード済",
           "developer_comment": "This is the text of a table column header. The column shows when each Media File was uploaded."
+        },
+        "size": {
+          "string": "",
+          "developer_comment": "This is the text of a table column header. The column shows the file size of each uploaded Media File."
         }
       }
     },
@@ -3230,26 +3387,6 @@
         }
       },
       "afterSelection": {
-        "matched": {
-          "full": {
-            "string": "{count, plural, other {{countOfFiles}はアップロードできます。}}",
-            "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
-          },
-          "countOfFiles": {
-            "string": "{count, plural, other {{count}件のファイル}}",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text. (The plural form of the text is shown.)\n\n{countOfFiles} ready for upload."
-          }
-        },
-        "someUnmatched": {
-          "full": {
-            "string": "{count, plural, other {{countOfFiles}は認識できない名前のため無視されます。これらのアップロードには、名前を変更するか、それぞれ個別にアップロード対象にドラッグ＆ドロップしてください。}}",
-            "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
-          },
-          "countOfFiles": {
-            "string": "{count, plural, other {{count}件のファイル}}",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text. (The plural form of the text is shown.)\n\n{countOfFiles} have a name we don’t recognize and will be ignored. To upload them, rename them or drag them individually onto their targets."
-          }
-        },
         "noneMatched": {
           "string": "{count, plural, other {アップロードを試みているファイルが何れも認識できません。上記の名前に合わせてファイル名を変更するか、それぞれ個別に対象にドラッグしてください。}}"
         }
@@ -4177,12 +4314,6 @@
       }
     },
     "Navbar": {
-      "action": {
-        "toggle": {
-          "string": "ナビゲーションを有効化",
-          "developer_comment": "Used by screen readers to describe the button used to show or hide the navigation bar on small screens (\"hamburger menu\")."
-        }
-      },
       "analyticsNotice": {
         "string": "Centralの改善を支援！"
       }
@@ -4329,35 +4460,7 @@
         }
       }
     },
-    "ProjectCustomPropertiesList": {
-      "heading": {
-        "0": {
-          "string": "",
-          "developer_comment": "A brief introduction to Custom Properties shown for the current project"
-        }
-      },
-      "emptyTable": {
-        "string": ""
-      },
-      "created": {
-        "string": "",
-        "developer_comment": "Shown after a custom property is successfully created."
-      },
-      "action": {
-        "create": {
-          "string": "",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      }
-    },
     "ProjectCustomPropertiesNew": {
-      "title": {
-        "string": "",
-        "developer_comment": "This is the title at the top of a pop-up."
-      },
-      "introduction": {
-        "string": ""
-      },
       "newPropertyName": {
         "string": ""
       },
@@ -4993,6 +5096,9 @@
       }
     },
     "PublicLinkTable": {
+      "noFilterResults": {
+        "string": ""
+      },
       "header": {
         "once": {
           "string": "一回限りのデータ提出機能",
@@ -5174,6 +5280,14 @@
         },
         "parseError": {
           "string": ""
+        }
+      }
+    },
+    "SubmissionDefDropdown": {
+      "action": {
+        "downloadXml": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },

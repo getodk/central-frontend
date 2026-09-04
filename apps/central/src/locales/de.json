@@ -167,6 +167,7 @@
     "save": "Speichern",
     "saveSettings": "Einstellungen speichern",
     "sort": "Sortieren",
+    "tryAgain": "Nochmals versuchen",
     "undo": "Rückgängig machen",
     "update": "Aktualisieren",
     "yesProceed": "Ja, fortfahren",
@@ -188,7 +189,6 @@
     "name": "Name",
     "newPassword": "Neues Passwort",
     "oldPassword": "Altes Passwort",
-    "passphrase": "Passphrase",
     "password": "Passwort",
     "passwordConfirm": "Neues Passwort (bestätigen)",
     "title": "Titel",
@@ -212,7 +212,8 @@
     "time": "Zeit",
     "type": "Typ",
     "entities": "Objekte insgesamt",
-    "lastEntity": "Neuestes Objekt"
+    "lastEntity": "Neuestes Objekt",
+    "value": "Wert"
   },
   "plural": {
     "appUser": "App-Benutzer | App-Benutzer",
@@ -350,6 +351,7 @@
     "totalEntities": "Objekte insgesamt",
     "versionShort": "v{version}",
     "warning": "Warnung",
+    "recommended": "empfohlen",
     "none": "(keine)",
     "search": "Suchen",
     "reviewState": "Überprüfungsstatus",

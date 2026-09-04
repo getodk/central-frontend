@@ -182,6 +182,9 @@ defineEmits(['hide']);
     "moreEntities": "e {count} Entità in più | e {count} Entità in più | e {count} Entità in più",
     "relatedToForms": "Impostato da {count} Formulario | Impostato da {count} Formulari | Impostato da {count} Formulari"
   },
+  "pt": {
+    "title": "Excluir Propriedade"
+  },
   "zh": {
     "title": "删除属性",
     "moreEntities": "以及其他 {count} 个实体"

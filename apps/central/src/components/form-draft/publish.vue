@@ -254,6 +254,9 @@ export default {
     "newProperties": "Veröffentlichen dieses Entwurfs erstellt {count} Eigenschaft. | Veröffentlichen dieses Entwurfs erstellt {count} Eigenschaften .",
     "problem": {
       "409_6": "Der Versionsname dieses Entwurfs steht in Konflikt mit einer früheren Version dieses Formulars oder einem gelöschten Formular. Bitte verwenden Sie das Feld unten, um dies zu ändern oder eine neue Formulardefinition hochzuladen"
+    },
+    "field": {
+      "note": "Versionshinweise"
     }
   },
   "es": {

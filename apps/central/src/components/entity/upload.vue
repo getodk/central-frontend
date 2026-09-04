@@ -583,13 +583,8 @@ watch(() => props.state, (state) => {
     "noEntities": "Nejsou zde žádné subjekty, které by bylo možné zobrazit."
   },
   "de": {
-    "title": "Daten aus Datei importieren",
     "table": {
-      "server": "{name} Serverdaten",
       "file": "Zu importierende Daten"
-    },
-    "action": {
-      "append": "Daten hinzufügen"
     },
     "alert": {
       "blankLabel": "Fehlende Etikett.",
@@ -598,13 +593,8 @@ watch(() => props.state, (state) => {
     "noEntities": "Es gibt keine Objekte zum Anzeigen."
   },
   "es": {
-    "title": "Importar datos de un archivo",
     "table": {
-      "server": "{name} datos del servidor",
       "file": "Datos a importar"
-    },
-    "action": {
-      "append": "Añadir datos"
     },
     "alert": {
       "blankLabel": "Falta la etiqueta.",
@@ -613,13 +603,13 @@ watch(() => props.state, (state) => {
     "noEntities": "No hay Entidades para mostrar."
   },
   "fr": {
-    "title": "Importer des données depuis un fichier",
+    "currentEntities": "Vos entités actuelles",
+    "newEntities": "Nouvelles entités",
     "table": {
-      "server": "{name} : données du serveur",
       "file": "Données à importer"
     },
     "action": {
-      "append": "Ajouter les données"
+      "append": "Ajouter entités"
     },
     "alert": {
       "blankLabel": "Étiquette manquante.",
@@ -628,13 +618,8 @@ watch(() => props.state, (state) => {
     "noEntities": "Pas d'entités à montrer."
   },
   "it": {
-    "title": "Importa Dati da File",
     "table": {
-      "server": "{name} dati del server",
       "file": "Dati da importare"
-    },
-    "action": {
-      "append": "Aggiungi dati"
     },
     "alert": {
       "blankLabel": "Etichetta mancante",
@@ -643,13 +628,8 @@ watch(() => props.state, (state) => {
     "noEntities": "Non ci sono entità da mostrare."
   },
   "pt": {
-    "title": "Importar dados de arquivo",
     "table": {
-      "server": "Dados do servidor {name}",
       "file": "Dados para importar"
-    },
-    "action": {
-      "append": "Anexar dados"
     },
     "alert": {
       "blankLabel": "Rótulo faltando.",
@@ -661,13 +641,8 @@ watch(() => props.state, (state) => {
     "noEntities": "Hakuna Fomu za kuonyesha."
   },
   "zh": {
-    "title": "从文件导入数据",
     "table": {
-      "server": "{name}服务器数据",
       "file": "要导入的数据"
-    },
-    "action": {
-      "append": "添加数据"
     },
     "alert": {
       "blankLabel": "无标签",
@@ -676,13 +651,8 @@ watch(() => props.state, (state) => {
     "noEntities": "暂无实体可显示。"
   },
   "zh-Hant": {
-    "title": "從文件匯入數據",
     "table": {
-      "server": "{name} 伺服器數據",
       "file": "要導入的資料"
-    },
-    "action": {
-      "append": "追加資料"
     },
     "alert": {
       "blankLabel": "標籤遺失。",

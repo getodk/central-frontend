@@ -64,11 +64,13 @@ const { form } = useRequestData();
 <i18n>
 {
   "de": {
+    "title": "Aktuelle Version: {version}",
     "subtitle": {
       "published": "Veröffentlicht {dateTime}"
     }
   },
   "es": {
+    "title": "Versión actual :{version}",
     "subtitle": {
       "published": "Publicado en {dateTime}"
     }
@@ -80,6 +82,7 @@ const { form } = useRequestData();
     }
   },
   "it": {
+    "title": "Versione corrente: {version}",
     "subtitle": {
       "published": "Pubblicato {dateTime}"
     }

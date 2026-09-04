@@ -318,6 +318,7 @@ export default {
     ],
     "header": {
       "lastUsed": "Zuletzt benutzt",
+      "lastUsedAndActions": "{lastUsed}/ {actions}",
       "configureClient": "Client konfigurieren"
     },
     "emptyTable": "Ès gibt noch keine Benutzer der App. Sie müssen zumindest einen erstellen, um Formulare herunterladen zu können und um Daten aus Ihrem Gerät hochzuladen.",
@@ -342,6 +343,7 @@ export default {
     ],
     "header": {
       "lastUsed": "Última utilizada",
+      "lastUsedAndActions": "{lastUsed}/{actions}",
       "configureClient": "Configurar cliente"
     },
     "emptyTable": "Todavía no hay usuarios móviles. Deberá crear algunos para descargar formularios y enviar datos desde su dispositivo.",
@@ -370,6 +372,7 @@ export default {
       "configureClient": "Configurer le client"
     },
     "emptyTable": "Il n'y a pas encore d’utilisateur mobile. Vous devez en créer pour télécharger des formulaires et soumettre des données depuis votre appareil.",
+    "noFilterResults": "Aucun utilisateur mobile correspond au filtre actuel.",
     "alert": {
       "create": "L'utilisateur mobile “{displayName}” a été correctement créé.",
       "edit": "L'utilisateur mobile “{displayName}” a été modifié.",
@@ -415,6 +418,7 @@ export default {
     ],
     "header": {
       "lastUsed": "Utilzzato ultima volta",
+      "lastUsedAndActions": "{lastUsed}/{actions}",
       "configureClient": "Configurare il Client"
     },
     "emptyTable": "Non ci sono ancora utenti dell'app. Dovrai crearne alcuni per scaricare i formulari e inviare i dati dal tuo dispositivo.",

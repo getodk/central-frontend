@@ -187,6 +187,11 @@ const del = () => {
       "del": "L'immagine è stata rimossa correttamente."
     }
   },
+  "pt": {
+    "alert": {
+      "invalidType": "Tipo de arquivo não permitido."
+    }
+  },
   "zh": {
     "select": {
       "full": "将图片拖拽至此或 {upload}",

@@ -236,10 +236,39 @@ defineEmits(['rows']);
     }
   },
   "fr": {
+    "introduction": "Certaines lignes contiennent des avertissements qui pourraient affecter les résultats du chargement.",
+    "systemProperties": "Les propriétés système ne peuvent pas être définies par un import de fichier CSV",
+    "caseMismatch": {
+      "title": "La colonne est similaire à une propriété existante mais ne correspond pas",
+      "description": "Les noms de colonnes sont sensibles à la casse. Vérifiez l'orthographe et les majuscules.",
+      "existingProperty": "Propriété existante"
+    },
+    "invalidProperties": "Cette colonne ne constitue pas un nom de propriété valide | Ces colonnes ne constituent pas des noms de propriété valides | Ces colonnes ne constituent pas des noms de propriété valides",
+    "missingProperties": {
+      "title": "Propriété pas trouvée dans le fichier | Propriétés pas trouvées dans le fichier | Propriétés pas trouvées dans le fichier",
+      "description": "Cette propriété restera vide | Ces propriétés resterons vides | Ces propriétés resterons vides"
+    },
+    "extraProperties": {
+      "title": {
+        "one": "La colonne ne correspond pas aux propriétés existantes",
+        "multiple": "Ces colonnes ne correspondent pas aux propriétés existantes"
+      },
+      "description": {
+        "one": "Choisir la colonne pour créer une nouvelle propriété. Autrement, elle sera ignorée.",
+        "multiple": "Choisir laquelle créer, autrement elle sera ignorée."
+      },
+      "error": {
+        "one": "Une fois que vous aurez corrigé toutes les erreurs, vous pourrez sélectionner la colonne.",
+        "multiple": "Une fois que vous aurez corrigé toutes les erreurs, vous pourrez sélectionner lesquelles créer."
+      }
+    },
+    "propertiesIgnored": "Ces propriétés sera ignorée. | Ces propriétés seront ignorées. | Ces propriétés seront ignorées.",
+    "columnsIgnored": "Cette colonne sera ignorée. | Ces colonnes seront ignorées. | Ces colonnes seront ignorées.",
     "row": {
       "raggedRows": "Dans certaines lignes, il y a eu moins de colonnes détectées que prévu:",
       "largeCell": "Certaines cellules sont anormalement larges, ce qui peut indiquer des difficultés à lire votre fichier:"
-    }
+    },
+    "title": "Vérifiez {count} message d'avertissement | Vérifiez {count} messages d'avertissement | Vérifiez {count} messages d'avertissement"
   },
   "it": {
     "row": {

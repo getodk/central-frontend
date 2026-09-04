@@ -178,7 +178,6 @@
     "name": "Jméno",
     "newPassword": "Nové heslo",
     "oldPassword": "Staré heslo",
-    "passphrase": "Přístupová fráze",
     "password": "Heslo",
     "passwordConfirm": "Nové heslo (potvrzení)",
     "type": "Typ"

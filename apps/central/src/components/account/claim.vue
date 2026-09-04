@@ -173,6 +173,7 @@ export default {
     }
   },
   "pt": {
+    "title": "Definir sua nova senha",
     "action": {
       "set": "Definir senha"
     },
