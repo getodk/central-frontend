@@ -83,6 +83,23 @@ describe('FieldKeyEdit', () => {
       testData.actorProperties.createPast(1, { name: 'prop1' });
     });
 
+    it('refreshes the list of app users', () =>
+      load('/projects/1/app-users')
+        .complete()
+        .request(async (app) => {
+          await app.get('.field-key-row .edit-button').trigger('click');
+          return app.get('#field-key-edit .btn-primary').trigger('click');
+        })
+        .respondWithData(() => testData.standardFieldKeys.last())
+        .respondWithData(() => testData.extendedFieldKeys.sorted())
+        .testRequests([
+          null,
+          {
+            url: '/v1/projects/1/app-users',
+            extended: true
+          }
+        ]));
+
     it('shows a success message', () =>
       load('/projects/1/app-users')
         .complete()
@@ -90,7 +107,7 @@ describe('FieldKeyEdit', () => {
           await app.get('.field-key-row .edit-button').trigger('click');
           return app.get('#field-key-edit .btn-primary').trigger('click');
         })
-        .respondWithData(() => testData.extendedFieldKeys.last())
+        .respondWithData(() => testData.standardFieldKeys.last())
         .respondWithData(() => testData.extendedFieldKeys.sorted())
         .afterResponses(app => {
           app.should.alert('success', 'The App User “My App User” was updated successfully.');
@@ -106,8 +123,26 @@ describe('FieldKeyEdit', () => {
           return modal.get('.btn-primary').trigger('click');
         })
         .respondWithSuccess() // Property creation
-        .respondWithData(() => testData.extendedFieldKeys.last())
+        .respondWithData(() => testData.standardFieldKeys.last())
         .respondWithData(() => testData.extendedFieldKeys.sorted())
+        .testRequests([
+          {
+            method: 'POST',
+            url: '/v1/projects/1/actor-properties',
+            data: { name: 'region' }
+          },
+          {
+            method: 'PATCH',
+            url: '/v1/projects/1/app-users/1',
+            data: {
+              properties: { region: 'north' }
+            }
+          },
+          {
+            url: '/v1/projects/1/app-users',
+            extended: true
+          }
+        ])
         .afterResponses(app => {
           const text = app.findAll('.table-freeze-scrolling th')
             .map(th => th.text());

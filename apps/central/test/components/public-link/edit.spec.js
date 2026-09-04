@@ -86,6 +86,23 @@ describe('PublicLinkEdit', () => {
       testData.actorProperties.createPast(1, { name: 'prop1' });
     });
 
+    it('refreshes the list of public links', () =>
+      load('/projects/1/forms/f/public-links')
+        .complete()
+        .request(async (app) => {
+          await app.get('.public-link-row .edit-button').trigger('click');
+          return app.get('#public-link-edit .btn-primary').trigger('click');
+        })
+        .respondWithData(() => testData.extendedPublicLinks.last())
+        .respondWithData(() => testData.extendedPublicLinks.sorted())
+        .testRequests([
+          null,
+          {
+            url: '/v1/projects/1/forms/f/public-links',
+            extended: true
+          }
+        ]));
+
     it('shows a success message', () =>
       load('/projects/1/forms/f/public-links')
         .complete()
@@ -111,6 +128,24 @@ describe('PublicLinkEdit', () => {
         .respondWithSuccess() // Property creation
         .respondWithData(() => testData.extendedPublicLinks.last())
         .respondWithData(() => testData.extendedPublicLinks.sorted())
+        .testRequests([
+          {
+            method: 'POST',
+            url: '/v1/projects/1/actor-properties',
+            data: { name: 'region' }
+          },
+          {
+            method: 'PATCH',
+            url: '/v1/projects/1/forms/f/public-links/1',
+            data: {
+              properties: { region: 'north' }
+            }
+          },
+          {
+            url: '/v1/projects/1/forms/f/public-links',
+            extended: true
+          }
+        ])
         .afterResponses(app => {
           const text = app.findAll('.table-freeze-scrolling th')
             .map(th => th.text());
