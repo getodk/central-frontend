@@ -5882,11 +5882,14 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "Entity Filtering 🎯 and ODK Web Forms by Default 🌐",
+        "string": "Easier Entity Uploads 📤",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "Control which Entities each App User or Public Link receives with filtering rules based on custom properties. Plus, Web Forms is now the default web form experience, bringing a faster, more intuitive experience for form previews, data editing, and web-based form filling."
+        "string": "Bring your Entities into ODK faster with a smoother CSV upload experience. Get clearer errors and warnings, fix issues, and try again, all in one place. {bold}"
+      },
+      "bodyBold": {
+        "string": "You can now also create new properties directly from your CSV."
       }
     }
   },
