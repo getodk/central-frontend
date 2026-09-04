@@ -6,15 +6,13 @@
         <p>{{ $t('addPropertyHint') }}</p>
       </div>
       <form class="actor-properties-new-form" @submit.prevent="submit">
-        <form-group ref="nameGroup" v-model.trim="name"
-          :placeholder="$t('newPropertyName')" required autocomplete="off"/>
+        <property-input ref="input" v-model="name" type="actor"
+          :properties="propertyCreator.allProperties"/>
         <div class="form-actions">
-          <button type="submit" class="btn btn-primary"
-            :aria-disabled="awaitingResponse">
-            {{ $t('action.add') }} <spinner :state="awaitingResponse"/>
+          <button type="submit" class="btn btn-primary">
+            {{ $t('action.add') }}
           </button>
-          <button type="button" class="btn btn-link"
-            :aria-disabled="awaitingResponse" @click="reset()">
+          <button type="button" class="btn btn-link" @click="reset">
             {{ $t('action.cancel') }}
           </button>
         </div>
@@ -29,33 +27,24 @@
 
 <script setup>
 import { nextTick, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
 
-import FormGroup from '../form-group.vue';
-import Spinner from '../spinner.vue';
+import PropertyInput from '../property-input.vue';
 
-import useRequest from '../../composables/request';
-import { apiPaths } from '../../util/request';
-import { useRequestData } from '../../request-data';
-import { noop } from '../../util/util';
+import { useActorPropertyCreator } from '../../composables/actor-property-creator';
 
 defineOptions({
   name: 'ActorPropertiesNew'
 });
 
-const emit = defineEmits(['success']);
+const propertyCreator = useActorPropertyCreator();
 
-const { request, awaitingResponse } = useRequest();
-const { project, actorProperties } = useRequestData();
-const { t } = useI18n();
-
-const nameGroup = ref(null);
 const name = ref('');
 const showForm = ref(false);
 
+const input = ref(null);
 const show = () => {
   showForm.value = true;
-  nextTick(() => nameGroup.value.focus());
+  nextTick(() => input.value.focus());
 };
 
 const reset = () => {
@@ -64,37 +53,30 @@ const reset = () => {
 };
 
 const submit = () => {
-  request({
-    method: 'POST',
-    url: apiPaths.actorProperties(project.id),
-    data: { name: name.value },
-    problemToAlert: ({ code, details }) =>
-      (code === 409.3 && details.fields[0] === 'projectId' && details.fields[1] === 'name'
-        ? t('problem.409_3', { propertyName: details.values[1] })
-        : null)
-  })
-    .then(() => {
-      actorProperties.data = [...actorProperties.data, { name: name.value }];
-      emit('success');
-      reset();
-    })
-    .catch(noop);
+  propertyCreator.add(name.value);
+  reset();
 };
-
-defineExpose({ reset });
 </script>
 
 <style lang="scss">
 .actor-properties-new {
   padding-top: 8px;
 }
+
 .actor-properties-new-form {
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-start;
-  gap: 8px;
+  column-gap: 8px;
 
   .form-group {
     flex: 1;
+    margin-bottom: 0;
+  }
+
+  .property-input-error {
+    order: 3;
+    width: 100%;
     margin-bottom: 0;
   }
 
@@ -108,13 +90,7 @@ defineExpose({ reset });
 {
   "en": {
     "addProperty": "Add Property",
-    "addPropertyHint": "Enter a unique property name",
-    // @transifexKey component.ProjectCustomPropertiesNew.newPropertyName
-    "newPropertyName": "New property name",
-    // @transifexKey component.ProjectCustomPropertiesNew.problem
-    "problem": {
-      "409_3": "A custom property already exists in this project with the name of \"{propertyName}\"."
-    }
+    "addPropertyHint": "Enter a unique property name"
   }
 }
 </i18n>

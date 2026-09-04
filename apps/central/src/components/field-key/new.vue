@@ -17,13 +17,15 @@ except according to the terms contained in the LICENSE file.
       <template v-if="step === 0">
         <p class="modal-introduction">{{ $t('introduction[0]') }}</p>
         <form @submit.prevent="submit">
-          <form-group ref="displayNameRef" v-model.trim="displayName"
-            :placeholder="$t('field.displayName')" required autocomplete="off"/>
-          <div v-if="state && actorProperties.dataExists"
-            class="field-key-set-properties">
-            <actor-properties-upsert v-model:propertyValues="propertyValues" :create="true"
-              :property-defs="actorProperties.data"/>
-          </div>
+          <fieldset :disabled="awaitingResponse">
+            <form-group ref="displayNameFormGroup" v-model.trim="displayName"
+              :placeholder="$t('field.displayName')" required autocomplete="off"/>
+            <div v-if="state && actorProperties.dataExists"
+              class="field-key-set-properties">
+              <actor-properties-upsert v-model:propertyValues="propertyValues"
+                :create="true"/>
+            </div>
+          </fieldset>
           <div class="modal-actions">
             <button type="button" class="btn btn-link"
               :aria-disabled="awaitingResponse" @click="hideOrComplete">
@@ -85,56 +87,62 @@ import useRequest from '../../composables/request';
 import useRoutes from '../../composables/routes';
 import { afterNextNavigation } from '../../util/router';
 import { apiPaths } from '../../util/request';
+import { createActorPropertyCreator } from '../../composables/actor-property-creator';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
   name: 'FieldKeyNew'
 });
-
 const props = defineProps({
   state: Boolean,
   managed: Boolean
 });
-
 const emit = defineEmits(['hide', 'success']);
 
-const redAlert = inject('redAlert');
 const router = useRouter();
-
-// The modal assumes that this data will exist when the modal is shown.
+const { projectPath } = useRoutes();
 const { project, fieldKeys, actorProperties } = useRequestData();
 const { request, awaitingResponse } = useRequest();
-const { projectPath } = useRoutes();
+const propertyCreator = createActorPropertyCreator(request);
+const redAlert = inject('redAlert');
 
 // There are two steps/screens in the app user creation process. `step`
 // indicates the current step.
 const step = ref(0);
+
+// Form fields
 const displayName = ref('');
-const created = ref(null);
-const displayNameRef = ref(null);
 const propertyValues = ref(Object.create(null));
+const resetForm = () => {
+  displayName.value = '';
+  propertyValues.value = Object.create(null);
+};
+const displayNameFormGroup = ref(null);
+const focusInput = () => { displayNameFormGroup.value.focus(); };
 
-
-const focusInput = () => { displayNameRef.value.focus(); };
-
-const submit = () => {
+// Creating the app user
+const created = ref(null);
+const createFieldKey = async () => {
   const body = { displayName: displayName.value };
   if (Object.keys(propertyValues.value).length > 0)
     body.properties = propertyValues.value;
-  request({
+  const { data } = await request({
     method: 'POST',
     url: apiPaths.fieldKeys(project.id),
     data: body
-  })
-    .then(({ data }) => {
-      // Reset the form.
-      redAlert.hide();
-      displayName.value = '';
-      propertyValues.value = Object.create(null);
+  });
+  created.value = data;
+};
 
+const submit = () => {
+  propertyCreator.request()
+    .then(createFieldKey)
+    .then(() => {
+      // Reset the alert along with the form.
+      redAlert.hide();
+      resetForm();
       step.value = 1;
-      created.value = data;
     })
     .catch(noop);
 };
@@ -165,9 +173,12 @@ const createAnother = () => {
 watch(() => props.state, (state) => {
   if (!state) {
     step.value = 0;
-    displayName.value = '';
+    resetForm();
+    // This will update actorProperties.data to reflect any newly created
+    // properties. We wait to update actorProperties until the modal is hidden
+    // so that the table behind the modal doesn't change before then.
+    propertyCreator.clear();
     created.value = null;
-    propertyValues.value = Object.create(null);
   }
 });
 </script>
@@ -195,7 +206,6 @@ watch(() => props.state, (state) => {
     box-shadow: $box-shadow-popover;
   }
 }
-
 </style>
 
 <i18n lang="json5">

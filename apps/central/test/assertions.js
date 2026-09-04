@@ -2,6 +2,7 @@ import chaiAsPromised from 'chai-as-promised';
 import { Assertion, AssertionError, use, util } from 'chai';
 import { BaseWrapper, VueWrapper } from '@vue/test-utils';
 
+import { isDisabled } from './util/dom';
 import { wait } from './util/util';
 
 use(chaiAsPromised);
@@ -101,6 +102,14 @@ const verifyAttached = (elementOrWrapper) => {
   if (!document.body.contains(unwrapElement(elementOrWrapper)))
     throw new Error('component must be attached to the body');
 };
+
+Assertion.addMethod('disabled', function disabled() {
+  this.assert(
+    isDisabled(unwrapElement(this._obj)),
+    'expected the element to be disabled',
+    'expected the element not to be disabled'
+  );
+});
 
 // Asserts that an element is not individually hidden and that all its ancestors
 // are also not hidden. To test style-based visibility, attach the component to

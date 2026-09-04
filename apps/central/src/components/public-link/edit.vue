@@ -6,7 +6,7 @@
       <div class="public-link-edit-properties">
         <actor-properties-upsert v-if="state && actorProperties.dataExists"
           v-model:propertyValues="propertyValues"
-          :create="false" :property-defs="actorProperties.data"/>
+          :create="false" :disabled="awaitingResponse"/>
       </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-link"
@@ -31,22 +31,22 @@ import Spinner from '../spinner.vue';
 
 import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
+import { createActorPropertyCreator } from '../../composables/actor-property-creator';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
   name: 'PublicLinkEdit'
 });
-
 const props = defineProps({
   state: Boolean,
   publicLink: Object
 });
-
 const emit = defineEmits(['hide', 'success']);
 
 const { form, actorProperties } = useRequestData();
 const { request, awaitingResponse } = useRequest();
+const propertyCreator = createActorPropertyCreator(request);
 
 const propertyValues = ref(Object.create(null));
 
@@ -56,11 +56,12 @@ const focusFirstProperty = () => {
 };
 
 const submit = () => {
-  request({
-    method: 'PATCH',
-    url: apiPaths.publicLink(form.projectId, form.xmlFormId, props.publicLink.id),
-    data: { properties: propertyValues.value }
-  })
+  propertyCreator.request()
+    .then(() => request({
+      method: 'PATCH',
+      url: apiPaths.publicLink(form.projectId, form.xmlFormId, props.publicLink.id),
+      data: { properties: propertyValues.value }
+    }))
     .then(({ data }) => {
       emit('success', data);
     })
@@ -70,6 +71,7 @@ const submit = () => {
 watch(() => props.state, (state) => {
   if (!state) {
     propertyValues.value = Object.create(null);
+    propertyCreator.clear();
   } else {
     propertyValues.value = Object.assign(Object.create(null), props.publicLink.properties);
   }

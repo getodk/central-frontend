@@ -125,7 +125,7 @@ describe('DatasetPropertyNew', () => {
       })
       .afterResponse(modal => {
         modal.should.alert('danger', (message) => {
-          message.should.startWith('A property already exists in this Entity List with the name of “my_new_property”.');
+          message.should.startWith('A property with this name already exists');
         });
       }));
 });
