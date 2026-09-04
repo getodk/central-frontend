@@ -105,8 +105,8 @@ const loaders = new Map()
   .set('FormVersionList', loader(() => import(
     '../components/form-version/list.vue'
   )))
-  .set('FormVersionViewXml', loader(() => import(
-    '../components/form-version/view-xml.vue'
+  .set('XmlViewer', loader(() => import(
+    '../components/xml-viewer.vue'
   )))
   .set('GeojsonMapDevTools', loader(() => import(
     '../components/geojson-map/dev-tools.vue'
@@ -140,9 +140,6 @@ const loaders = new Map()
   )))
   .set('ProjectUserList', loader(() => import(
     '../components/project/user/list.vue'
-  )))
-  .set('CustomPropertyList', loader(() => import(
-    '../components/project/custom-properties/list.vue'
   )))
   .set('PublicLinkList', loader(() => import(
     '../components/public-link/list.vue'

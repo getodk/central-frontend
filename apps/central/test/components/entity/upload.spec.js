@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { T } from 'ramda';
+import { T, pick } from 'ramda';
 
 import EntityFilters from '../../../src/components/entity/filters.vue';
 import EntityUpload from '../../../src/components/entity/upload.vue';
@@ -324,33 +324,61 @@ describe('EntityUpload', () => {
     });
   });
 
-  it('shows the data template link until there is CSV data', async () => {
+  it('renders correctly as the user moves through the flow', async () => {
     testData.extendedDatasets.createPast(1);
     const modal = await showModal();
+    const table = getTables(modal)[1];
     const fileSelect = modal.getComponent(EntityUploadFileSelect);
-    const hasAlerts = () => ({
-      errors: modal.findComponent(EntityUploadErrors).exists(),
-      warnings: modal.findComponent(EntityUploadWarnings).exists()
+    const getState = () => {
+      let tableVisible = true;
+      try {
+        table.should.be.visible();
+      } catch (_) {
+        tableVisible = false;
+      }
+
+      return {
+        errors: modal.findComponent(EntityUploadErrors).exists(),
+        warnings: modal.findComponent(EntityUploadWarnings).exists(),
+        table: tableVisible,
+        fileSelect: pick(['dataTemplate', 'errors'], fileSelect.props())
+      };
+    };
+
+    // Initial state
+    getState().should.eql({
+      errors: false,
+      warnings: false,
+      table: false,
+      fileSelect: { dataTemplate: true, errors: 0 }
     });
 
-    // The link is shown initially.
-    hasAlerts().should.eql({ errors: false, warnings: false });
-    fileSelect.props().should.include({ dataTemplate: true, errors: 0 });
-
-    // The link is shown if there is an error.
+    // Error case
     await selectFile(modal, createCSV('label,label\ndogwood,dogwood'));
-    hasAlerts().should.eql({ errors: true, warnings: false });
-    fileSelect.props().should.include({ dataTemplate: true, errors: 1 });
+    getState().should.eql({
+      errors: true,
+      warnings: false,
+      table: false,
+      fileSelect: { dataTemplate: true, errors: 1 }
+    });
 
-    // The link is not shown if there is only a warning.
+    // Warning only, no error
     await selectFile(modal, createCSV('label,__id\ndogwood,e'));
-    hasAlerts().should.eql({ errors: false, warnings: true });
-    fileSelect.props().should.include({ dataTemplate: false, errors: 0 });
+    getState().should.eql({
+      errors: false,
+      warnings: true,
+      table: true,
+      fileSelect: { dataTemplate: false, errors: 0 }
+    });
 
-    // The link is not shown if there are no errors or warnings.
+    // No errors or warnings
     await selectFile(modal, createCSV('label\ndogwood'));
-    hasAlerts().should.eql({ errors: false, warnings: false });
-    fileSelect.props().should.include({ dataTemplate: false, errors: 0 });
+    getState().should.eql({
+      errors: false,
+      warnings: false,
+      table: true,
+      fileSelect: { dataTemplate: false, errors: 0 }
+    });
   });
 
   it('resets errors and warnings after a new file is selected', async () => {

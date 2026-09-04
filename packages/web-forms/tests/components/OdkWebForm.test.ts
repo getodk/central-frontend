@@ -30,26 +30,57 @@ interface MountComponentOptions {
   ) => void;
 }
 
-const mountComponent = (formXML: string, options?: MountComponentOptions) => {
-  const component = mount(OdkWebForm, {
-    props: {
-      formXml: formXML,
-      fetchFormAttachment: () => {
-        throw new Error('Not exercised here');
-      },
-      onSubmit: options?.onSubmit,
-
-      ...options?.overrideProps,
-    },
-    global: globalMountOptions,
-    attachTo: document.body,
-  });
-
-  return component;
-};
-
 describe('OdkWebForm', () => {
   let formXML: string;
+  const TOP_ERROR_BANNER = '.form-error-message';
+
+  const mountComponent = (xml: string, options?: MountComponentOptions) => {
+    const component = mount(OdkWebForm, {
+      props: {
+        formXml: xml,
+        fetchFormAttachment: () => {
+          throw new Error('Not exercised here');
+        },
+        onSubmit: options?.onSubmit,
+
+        ...options?.overrideProps,
+      },
+      global: globalMountOptions,
+      attachTo: document.body,
+    });
+
+    return component;
+  };
+
+  type FormWrapper = ReturnType<typeof mountComponent>;
+
+  const answerCurrentQuestion = (component: FormWrapper, value: string) => {
+    return component.get('input.p-inputtext').setValue(value);
+  };
+
+  const expectQuestionHighlight = (component: FormWrapper, highlighted: boolean) => {
+    expect(component.get('.question-container').classes().includes('highlight')).toBe(highlighted);
+  };
+
+  const expectErrorBanner = (component: FormWrapper, message: string | null) => {
+    if (message === null) {
+      expect(component.find(TOP_ERROR_BANNER).exists()).toBe(false);
+      return;
+    }
+    expect(component.get(TOP_ERROR_BANNER).text()).toContain(message);
+  };
+
+  const clickNext = (component: FormWrapper) => {
+    return getButtonByText(component, 'Next').trigger('click');
+  };
+
+  const clickBack = (component: FormWrapper) => {
+    return getButtonByText(component, 'Back').trigger('click');
+  };
+
+  const expectOnPage = (component: FormWrapper, label: string) => {
+    expect(component.text()).toContain(label);
+  };
 
   beforeEach(async () => {
     formXML = await getFormXml('2-simple-required.xml');
@@ -102,53 +133,44 @@ describe('OdkWebForm', () => {
     const component = mountComponent(formXML);
     await flushPromises();
 
-    // Assert no validation banner and no highlighted question
-    expect(component.find('.form-error-message').exists()).toBe(false);
-    expect(component.get('.question-container').classes().includes('highlight')).toBe(false);
+    expectErrorBanner(component, null);
+    expectQuestionHighlight(component, false);
 
-    // Click submit
     await getButtonByText(component, 'Send').trigger('click');
 
-    // Assert validation banner is visible and question container is highlighted
-    expect(component.get('.form-error-message').isVisible()).toBe(true);
-    expect(component.get('.question-container').classes().includes('highlight')).toBe(true);
+    expectErrorBanner(component, '1 question with error');
+    expectQuestionHighlight(component, true);
 
     // Enter text to make question valid
-    await component.get('input.p-inputtext').setValue('ok');
+    await answerCurrentQuestion(component, 'ok');
 
-    // Assert no validation banner and no highlighted question
-    expect(component.find('.form-error-message').exists()).toBe(false);
-    expect(component.get('.question-container').classes().includes('highlight')).toBe(false);
+    expectErrorBanner(component, null);
+    expectQuestionHighlight(component, false);
   });
 
   it('shows validation banner and highlights again if any question becomes invalid again', async () => {
     const component = mountComponent(formXML);
     await flushPromises();
 
-    // Assert no validation banner and no highlighted question
-    expect(component.find('.form-error-message').exists()).toBe(false);
-    expect(component.get('.question-container').classes().includes('highlight')).toBe(false);
+    expectErrorBanner(component, null);
+    expectQuestionHighlight(component, false);
 
-    // Click submit
     await getButtonByText(component, 'Send').trigger('click');
 
-    // Assert validation banner is visible and question container is highlighted
-    expect(component.get('.form-error-message').isVisible()).toBe(true);
-    expect(component.get('.question-container').classes().includes('highlight')).toBe(true);
+    expectErrorBanner(component, '1 question with error');
+    expectQuestionHighlight(component, true);
 
     // Enter text to make question valid
-    await component.get('input.p-inputtext').setValue('ok');
+    await answerCurrentQuestion(component, 'ok');
 
-    // Assert no validation banner and no highlighted question
-    expect(component.find('.form-error-message').exists()).toBe(false);
-    expect(component.get('.question-container').classes().includes('highlight')).toBe(false);
+    expectErrorBanner(component, null);
+    expectQuestionHighlight(component, false);
 
     // Empty the textbox to make it invalid again
-    await component.get('input.p-inputtext').setValue('');
+    await answerCurrentQuestion(component, '');
 
-    // Assert validation banner is visible and question container is highlighted again
-    expect(component.get('.form-error-message').isVisible()).toBe(true);
-    expect(component.get('.question-container').classes().includes('highlight')).toBe(true);
+    expectErrorBanner(component, '1 question with error');
+    expectQuestionHighlight(component, true);
   });
 
   it('shows Web Forms version number in "Powered by" section', async () => {
@@ -159,6 +181,82 @@ describe('OdkWebForm', () => {
 
     expect(/^v\d+\.\d+\.\d+$/.test(displayedVersion.text())).toBeTruthy();
     expect(displayedVersion.text()).toEqual(`v${packageJson.version}`);
+  });
+
+  describe('invalid questions block navigation to the next page', () => {
+    const mountPagedForm = async () => {
+      const component = mountComponent(await getFormXml('pagination-19-required.xml'));
+      await flushPromises();
+      return component;
+    };
+
+    it('stays on the page and shows the error when Next is pressed on a blank required question', async () => {
+      const component = await mountPagedForm();
+
+      expectOnPage(component, 'What is your name?');
+      expectErrorBanner(component, null);
+      expectQuestionHighlight(component, false);
+
+      await clickNext(component);
+
+      expectOnPage(component, 'What is your name?');
+      expect(component.text()).not.toContain('What is your age?');
+      // Only the blocked question is counted, not untouched blank ones on later pages
+      expectErrorBanner(component, '1 question with error');
+      expectQuestionHighlight(component, true);
+    });
+
+    it('advances once the required question is answered, hiding the banner when its error is fixed', async () => {
+      const component = await mountPagedForm();
+
+      await clickNext(component);
+      expectErrorBanner(component, '1 question with error');
+
+      await answerCurrentQuestion(component, 'Ada');
+      expectErrorBanner(component, null);
+
+      await clickNext(component);
+
+      expectOnPage(component, 'What is your age?');
+      expectQuestionHighlight(component, false);
+
+      await clickNext(component);
+      expectErrorBanner(component, '1 question with error');
+    });
+
+    it('never blocks the Back button, and going back keeps the banner up', async () => {
+      const component = await mountPagedForm();
+
+      await answerCurrentQuestion(component, 'Ada');
+      await clickNext(component);
+      expectOnPage(component, 'What is your age?');
+
+      await clickNext(component);
+      expectErrorBanner(component, '1 question with error');
+
+      await clickBack(component);
+
+      expectOnPage(component, 'What is your name?');
+      expectErrorBanner(component, '1 question with error');
+    });
+
+    it('keeps the error highlight when navigating away and back', async () => {
+      const component = await mountPagedForm();
+
+      await answerCurrentQuestion(component, 'Ada');
+      await clickNext(component);
+
+      // Answer then clear, so the age question is touched and invalid
+      await answerCurrentQuestion(component, '52');
+      await answerCurrentQuestion(component, '');
+      expectQuestionHighlight(component, true);
+
+      await clickBack(component);
+      await clickNext(component);
+
+      expectOnPage(component, 'What is your age?');
+      expectQuestionHighlight(component, true);
+    });
   });
 
   describe('form load failure', () => {

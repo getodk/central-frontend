@@ -1,4 +1,5 @@
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
+import type { AnyLeafNode } from './hierarchy.ts';
 import type { FormNodeID } from './identity.ts';
 import type { OpaqueReactiveObjectFactory } from './OpaqueReactiveObjectFactory.ts';
 import type { RootNode } from './RootNode.ts';
@@ -130,14 +131,13 @@ export interface LeafNodeValidationState {
  * will be recomputed and updated in tandem with the affected node's own
  * computed `currentState.reference` as well.
  *
- * @todo this type currently exposes multiple ways to reference the affected
- * node. This is intended to maximize flexibility: it's not yet clear how
- * clients will be best served by which reference mechanism. It is expected that
- * each property will be directly computed from the affected node.
+ * This type intentionally exposes multiple ways to reference the affected node;
+ * clients pick whichever mechanism serves them best.
  */
 export interface DescendantNodeViolationReference {
   readonly nodeId: FormNodeID;
 
+  get node(): AnyLeafNode;
   get reference(): string;
   get violation(): AnyViolation;
 }
