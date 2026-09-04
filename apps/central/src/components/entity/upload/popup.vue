@@ -121,6 +121,7 @@ const status = computed(() => {
   "fr": {
     "rowCount": "{count} ligne de données trouvée | {count} lignes de données trouvées | {count} lignes de données trouvées",
     "status": {
+      "creatingProperties": "Création des nouvelles propriétés...",
       "sending": "Envoi du fichier...({percentUploaded})",
       "processing": "Traitement du fichier..."
     }

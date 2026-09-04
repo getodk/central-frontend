@@ -382,6 +382,9 @@ const confirm = () => {
       "false": "Los usuarios de la aplicación y los recopiladores de datos de este proyecto tendrán acceso a todas las entidades de sus formularios asignados.",
       "true": "Los usuarios de la aplicación y los recopiladores de datos dentro de este proyecto sólo tendrán acceso a las entidades que creen, promoviendo la privacidad y limitando las transferencias de datos."
     },
+    "filterByProperty": {
+      "userPropertyPlaceholder": "Propiedad de usuario"
+    },
     "falseModal": {
       "introduction": "Los usuarios de la aplicación y los recopiladores de datos tendrán acceso a todas las entidades, incluidas las que no hayan creado."
     },
@@ -450,6 +453,10 @@ const confirm = () => {
     "radio": {
       "false": "Gli utenti delle app e i raccoglitori di dati nell'ambito di questo progetto avranno accesso a tutte le entità all'interno dei moduli loro assegnati.",
       "true": "Gli utenti dell'app e i raccoglitori di dati nell'ambito di questo progetto avranno accesso solo alle entità da loro create, promuovendo la privacy e limitando i trasferimenti di dati."
+    },
+    "filterByProperty": {
+      "entityPropertyPlaceholder": "Proprietà della Entità",
+      "userPropertyPlaceholder": "Proprietà utente"
     },
     "falseModal": {
       "introduction": "Gli utenti dell'app e i raccoglitori di dati avranno accesso a tutte le entità, comprese quelle che non hanno creato."

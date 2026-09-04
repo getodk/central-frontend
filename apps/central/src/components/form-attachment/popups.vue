@@ -249,14 +249,6 @@ $popup-width: 300px;
       }
     },
     "afterSelection": {
-      "matched": {
-        "full": "{countOfFiles} připraven k nahrání | {countOfFiles} připraveny k nahrání | {countOfFiles} připraveno k nahrání | {countOfFiles} připraveno k nahrání",
-        "countOfFiles": "{count} soubor | {count} soubory | {count} souborů | {count} souborů"
-      },
-      "someUnmatched": {
-        "full": "{countOfFiles} má název, který neznáme a bude ignorováno. Chcete-li jej nahrát, přejmenujte jej, nebo přetáhněte na svůj cíl. | {countOfFiles} mají název, který neznáme a budou ignorovány. Chcete-li je nahrát, přejmenujte je, nebo přetáhněte na svůj cíl. | {countOfFiles} mají název, který neznáme a budou ignorovány. Chcete-li je nahrát, přejmenujte je, nebo přetáhněte na svůj cíl. | {countOfFiles} mají název, který neznáme a budou ignorovány. Chcete-li je nahrát, přejmenujte je, nebo přetáhněte na svůj cíl.",
-        "countOfFiles": "{count} soubor | {count} soubory | {count} soubory | {count} souborů"
-      },
       "noneMatched": "Nerozpoznáváme soubor, který se pokoušíte nahrát. Přejmenujte ho tak, aby odpovídal výše uvedeným názvům, nebo ho přetáhněte jednotlivě na jeho cíl. | Nerozpoznáváme soubor, který se pokoušíte nahrát. Přejmenujte ho tak, aby odpovídal výše uvedeným názvům, nebo ho přetáhněte jednotlivě na jeho cíl. | Nerozpoznáváme soubor, který se pokoušíte nahrát. Přejmenujte ho tak, aby odpovídal výše uvedeným názvům, nebo ho přetáhněte jednotlivě na jeho cíl. | Nerozpoznáváme žádný ze souborů, které se pokoušíte nahrát. Přejmenujte je podle výše uvedených názvů nebo je přetáhněte jednotlivě na jejich cíle."
     },
     "duringUpload": {
@@ -279,14 +271,6 @@ $popup-width: 300px;
       }
     },
     "afterSelection": {
-      "matched": {
-        "full": "{countOfFiles} bereit zum Hochladen | {countOfFiles} bereit zum Hochladen",
-        "countOfFiles": "{count} Datei | {count} Dateien"
-      },
-      "someUnmatched": {
-        "full": "{countOfFiles} Datei hat einen Namen, den wir nicht erkennen, sie wird ignoriert. Um sie hochzuladen, bitte umbenennen oder einzeln auf ihr Ziel ziehen. | {countOfFiles} Dateien haben Namen, die wir nicht erkennen, diese werden ignoriert. Um sie hochzuladen, bitte umbenennen oder einzeln auf ihr Ziel ziehen.",
-        "countOfFiles": "{count} Datei | {count} Dateien"
-      },
       "noneMatched": "Wir erkennen keine der Dateien, die Sie hochzuladen versuchen. Bitte benennen Sie Dateien um, damit sie mit den oben gelisteten Namen übereinstimmen, oder ziehen Sie sie einzeln auf ihre Ziele. | Wir erkennen keine der Dateien, die Sie hochzuladen versuchen. Bitte benennen Sie Dateien um, damit sie mit den oben gelisteten Namen übereinstimmen, oder ziehen Sie sie einzeln auf ihre Ziele."
     },
     "duringUpload": {
@@ -309,14 +293,6 @@ $popup-width: 300px;
       }
     },
     "afterSelection": {
-      "matched": {
-        "full": "{countOfFiles} listo para subir. | {countOfFiles} listos para subir. | {countOfFiles} listos para subir.",
-        "countOfFiles": "{count} | {count} archivos | {count} archivos"
-      },
-      "someUnmatched": {
-        "full": "{countOfFiles} tiene un nombre que no reconocemos y será ignorado. Para cargarlo, cámbiele el nombre o arrástrelo a su destino. | {countOfFiles} tiene un nombre que no reconocemos y será ignorado. Para cargarlo, cámbiele el nombre o arrástrelo a su destino. | {countOfFiles} tiene un nombre que no reconocemos y será ignorado. Para cargarlo, cámbiele el nombre o arrástrelo a su destino.",
-        "countOfFiles": "{count} archivos | {count} archivos | {count} archivos"
-      },
       "noneMatched": "No reconocemos ninguno de los archivos que está intentando cargar. Cambie el nombre de ellos para que coincidan con los nombres enumerados anteriormente, o arrástrelos individualmente a sus objetivos. | No reconocemos ninguno de los archivos que está intentando cargar. Cambie el nombre de ellos para que coincidan con los nombres enumerados anteriormente, o arrástrelos individualmente a sus objetivos. | No reconocemos ninguno de los archivos que está intentando cargar. Cambie el nombre de ellos para que coincidan con los nombres enumerados anteriormente, o arrástrelos individualmente a sus objetivos."
     },
     "duringUpload": {
@@ -339,14 +315,6 @@ $popup-width: 300px;
       }
     },
     "afterSelection": {
-      "matched": {
-        "full": "{countOfFiles} prêts à être téléversés for upload. | {countOfFiles} prêts à être téléversés. | {countOfFiles} prêts à être téléversés.",
-        "countOfFiles": "{count} fichier | {count} fichiers | {count} fichiers"
-      },
-      "someUnmatched": {
-        "full": "{countOfFiles} a un nom que nous ne reconnaissons pas et qui sera ignoré. Pour le téléverser, renommez le ou déposez le sur sa cible. | {countOfFiles} ont un nom que nous ne reconnaissons pas et qui sera ignoré. Pour les téléverser, renommez les ou déposez les un à un sur leurs cibles. | {countOfFiles} ont un nom que nous ne reconnaissons pas et qui sera ignoré. Pour les téléverser, renommez les ou déposez les un à un sur leurs cibles.",
-        "countOfFiles": "{count} fichier | {count} fichiers | {count} fichiers"
-      },
       "noneMatched": "Nous ne reconnaissons pas le fichier que vous tentez de téléverser. Renommez le pour qu'il corresponde aux noms listez ci-dessous, ou déposez le individuellement sur sa cible. | Nous ne reconnaissons aucun des fichiers que vous tentez de téléverser. Renommez les pour qu'ils correspondent aux noms listez ci-dessous, ou déposez les un à un sur leurs cibles. | Nous ne reconnaissons aucun des fichiers que vous tentez de téléverser. Renommez les pour qu'ils correspondent aux noms listez ci-dessous, ou déposez les un à un sur leurs cibles."
     },
     "duringUpload": {
@@ -368,14 +336,6 @@ $popup-width: 300px;
       }
     },
     "afterSelection": {
-      "matched": {
-        "full": "{countOfFiles} siap untuk diunggah.",
-        "countOfFiles": "{count} berkas"
-      },
-      "someUnmatched": {
-        "full": "Nama {countOfFiles} tidak dikenali dan ditolak. Untuk mengunggah dokumen, ubah nama dokumen atau seret dokumen satu per satu ke target masing-masing.",
-        "countOfFiles": "{count} berkas"
-      },
       "noneMatched": "Kami tidak mengenali dokumen yang ingin Anda unggah. Mohon ubah nama dokumen sesuai dengan nama-nama yang terdaftar di atas, atau seret dokumen satu per satu ke targetnya masing-masing."
     },
     "duringUpload": {
@@ -398,14 +358,6 @@ $popup-width: 300px;
       }
     },
     "afterSelection": {
-      "matched": {
-        "full": "{countOfFiles} prontio per essere caricato. | {countOfFiles} pronti per essere caricati. | {countOfFiles} pronti per essere caricati.",
-        "countOfFiles": "{count} file | {count} files | {count} files"
-      },
-      "someUnmatched": {
-        "full": "{countOfFiles} ha un nome che non riconosciamo e che verra ignorato. Per caricarlo, rinominalo o trascinalo individualmente sul suo obiettivo. | {countOfFiles} hanno un nome che non riconosciamo e che verranno ignorati. Per caricarli, rinominali o trascinali individualmente sui loro obiettivi. | {countOfFiles} hanno un nome che non riconosciamo e che verranno ignorati. Per caricarli, rinominali o trascinali individualmente sui loro obiettivi.",
-        "countOfFiles": "{count} file | {count} files | {count} files"
-      },
       "noneMatched": "Non riconosciamo il file che stai tentando di caricare. Rinominalo in modo che corrisponda al nome elencao sopra o trascinalp individualmente sul suo obiettivo. | Non riconosciamo nessuno dei file che stai tentando di caricare. Rinominali in modo che corrispondano ai nomi elencati sopra o trascinali individualmente sui loro obiettivi. | Non riconosciamo nessuno dei file che stai tentando di caricare. Rinominali in modo che corrispondano ai nomi elencati sopra o trascinali individualmente sui loro obiettivi."
     },
     "duringUpload": {
@@ -427,14 +379,6 @@ $popup-width: 300px;
       }
     },
     "afterSelection": {
-      "matched": {
-        "full": "{countOfFiles}はアップロードできます。",
-        "countOfFiles": "{count}件のファイル"
-      },
-      "someUnmatched": {
-        "full": "{countOfFiles}は認識できない名前のため無視されます。これらのアップロードには、名前を変更するか、それぞれ個別にアップロード対象にドラッグ＆ドロップしてください。",
-        "countOfFiles": "{count}件のファイル"
-      },
       "noneMatched": "アップロードを試みているファイルが何れも認識できません。上記の名前に合わせてファイル名を変更するか、それぞれ個別に対象にドラッグしてください。"
     },
     "duringUpload": {
@@ -457,14 +401,6 @@ $popup-width: 300px;
       }
     },
     "afterSelection": {
-      "matched": {
-        "full": "{countOfFiles} pronto para carregar. | {countOfFiles} prontos para carregar. | {countOfFiles} prontos para carregar.",
-        "countOfFiles": "{count} arquivo | {count} arquivos | {count} arquivos"
-      },
-      "someUnmatched": {
-        "full": "{countOfFiles} tem nome que não foi reconhecido e será ignorado. Para carregá-lo, troque o nomes dele ou arraste individualmente sobre o destino. | {countOfFiles} tem nomes que não foram reconhecidos e serão ignorados. Para carregá-los, troque os nomes deles ou arraste individualmente sobre cada destino. | {countOfFiles} tem nomes que não foram reconhecidos e serão ignorados. Para carregá-los, troque os nomes deles ou arraste individualmente sobre cada destino.",
-        "countOfFiles": "{count} arquivo | {count} arquivos | {count} arquivos"
-      },
       "noneMatched": "Nós não reconhecemos o nome do arquivo que você está tentando carregar. Por favor, troque o nome dele para corresponder ao nome da lista acima, ou solte-o individualmente sobre o destino correto. | Nós não reconhecemos nenhum dos arquivos que você está tentando carregar. Por favor, troque os nomes deles para corresponderem aos nomes da lista acima, ou solte-os individualmente sobre cada destino. | Nós não reconhecemos nenhum dos arquivos que você está tentando carregar. Por favor, troque os nomes deles para corresponderem aos nomes da lista acima, ou solte-os individualmente sobre cada destino."
     },
     "duringUpload": {
@@ -487,14 +423,6 @@ $popup-width: 300px;
       }
     },
     "afterSelection": {
-      "matched": {
-        "full": "{countOfFiles} tayari kupakiwa. | {countOfFiles} tayari kupakiwa.",
-        "countOfFiles": "faili {count} | faili {count}"
-      },
-      "someUnmatched": {
-        "full": "{countOfFiles} wana jina ambalo hatulitambui na tutapuuzwa. Ili kuzipakia, zipe jina jipya au ziburute kibinafsi hadi kwenye malengo yao | {countOfFiles} wana jina ambalo hatulitambui na tutapuuzwa. Ili kuzipakia, zipe jina jipya au ziburute kibinafsi hadi kwenye malengo yao.",
-        "countOfFiles": "faili {count} | faili {count}"
-      },
       "noneMatched": "Hatutambui faili zozote unazojaribu kupakia. Tafadhali zipe jina jipya ili zilingane na majina yaliyoorodheshwa hapo juu, au ziburute moja moja hadi kwenye malengo yao | Hatutambui faili zozote unazojaribu kupakia. Tafadhali zipe jina jipya ili zilingane na majina yaliyoorodheshwa hapo juu, au ziburute moja moja hadi kwenye malengo yao"
     },
     "duringUpload": {
@@ -517,14 +445,6 @@ $popup-width: 300px;
       }
     },
     "afterSelection": {
-      "matched": {
-        "full": "{countOfFiles}准备上传",
-        "countOfFiles": "{count}个文件"
-      },
-      "someUnmatched": {
-        "full": "有 {countOfFiles} 个文件因文件名无法识别将被忽略。如需上传，请重命名文件或将其单独拖拽至指定位置。",
-        "countOfFiles": "{count}个文件"
-      },
       "noneMatched": "无法识别您尝试上传的任何文件。请将文件重命名为与上方列表匹配的名称，或将其逐一拖拽到对应目标区域。"
     },
     "duringUpload": {
@@ -547,14 +467,6 @@ $popup-width: 300px;
       }
     },
     "afterSelection": {
-      "matched": {
-        "full": "{countOfFiles} 個檔案準備上傳",
-        "countOfFiles": "{count} 個檔案"
-      },
-      "someUnmatched": {
-        "full": "{countOfFiles} 個檔案，有我們不認識的名字並且會被忽略。要上傳它們，請重新命名它們或將它們單獨拖曳到目標上。",
-        "countOfFiles": "{count} 個檔案"
-      },
       "noneMatched": "我們無法識別您嘗試上傳的任何文件。請重新命名它們以符合上面列出的名稱，或將它們單獨拖曳到目標上。"
     },
     "duringUpload": {

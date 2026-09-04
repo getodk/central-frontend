@@ -90,10 +90,12 @@ const afterUpload = () => {
 <i18n>
 {
   "de": {
+    "title": "Entwurfsversion: {version}",
     "subtitle": "Hochgeladen",
     "changed": "Geändert gegenüber der veröffentlichten Version"
   },
   "es": {
+    "title": "Versión borrador: {version}",
     "subtitle": "Subido",
     "changed": "Cambiado respecto a la versión publicada"
   },
@@ -103,6 +105,7 @@ const afterUpload = () => {
     "changed": "Différente de la version publiée"
   },
   "it": {
+    "title": "Versione bozza:{version}",
     "subtitle": "Caricati",
     "changed": "Modificato rispetto alla versione pubblicata"
   },

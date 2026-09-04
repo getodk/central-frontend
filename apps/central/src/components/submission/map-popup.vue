@@ -181,22 +181,18 @@ const handleActions = (event) => {
 {
   "de": {
     "missingField": "Diese Übermittlung wurde mit {field} zugeordnet, das nicht in der veröffentlichten Formularversion enthalten ist.",
-    "mappedField": "Karte verweist auf dieses Feld.",
     "submissionDetails": "Übermittlungsdetails"
   },
   "es": {
     "missingField": "Este Envío se ha mapeado utilizando {field}, que no se encuentra en la versión publicada del Formulario.",
-    "mappedField": "El mapa hace referencia a este campo.",
     "submissionDetails": "Detalles de envío"
   },
   "fr": {
     "missingField": "Cette soumission a été cartographiée selon le champ {field} qui n'est pas dans la version publiée du formulaire.",
-    "mappedField": "Carte utilise ce champ",
     "submissionDetails": "Détail de la soumission"
   },
   "it": {
     "missingField": "Questo invio è stato mappato utilizzando {field}, che non è presente nella versione pubblicata del formulario.",
-    "mappedField": "La mappa fa riferimento a questo campo.",
     "submissionDetails": "Dettagli invio"
   },
   "pt": {
@@ -204,12 +200,10 @@ const handleActions = (event) => {
   },
   "zh": {
     "missingField": "此提交数据在映射时使用了已发布表单版本中不存在的字段 {field}。",
-    "mappedField": "地图引用此字段",
     "submissionDetails": "提交详情"
   },
   "zh-Hant": {
     "missingField": "此提交是使用{field}進行地圖標記的，而該功能並未包含在已發布的表單版本中。",
-    "mappedField": "地圖參照此欄位",
     "submissionDetails": "提交詳情"
   }
 }
