@@ -21,11 +21,17 @@ the response or response data. For example:
 */
 export const setRequestData = (requestData, responsesOrData) => {
   for (const [name, responseOrData] of Object.entries(responsesOrData)) {
+    // Adding this to make it easy for an individual test to prevent setting
+    // requestData resources that are set by default.
+    if (responseOrData === undefined) continue; // eslint-disable-line no-continue
+
     const resource = requestData.localResources[name] ?? requestData[name];
     if (resource == null) throw new Error(`unknown resource ${name}`);
+
     const response = mockResponse.of(responseOrData);
     if (typeof response.data === 'object' && response.data != null)
       response.data = clone(response.data);
+
     resource.setFromResponse(response);
   }
   return requestData;
