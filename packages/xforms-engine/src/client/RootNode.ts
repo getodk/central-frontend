@@ -3,7 +3,7 @@ import type { RootDefinition } from '../parse/model/RootDefinition.ts';
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from './FormLanguage.ts';
 import type { GeneralChildNode } from './hierarchy.ts';
-import type { PageBoundary } from './identity.ts';
+import type { FormNodeID, PageBoundary } from './identity.ts';
 import type {
   ChunkedInstancePayload,
   InstancePayload,
@@ -35,6 +35,13 @@ export interface RootNodeState extends BaseNodeState {
   get currentPage(): PageBoundary | null;
   get hasNextPage(): boolean;
   get hasPreviousPage(): boolean;
+
+  /**
+   * The node the client should bring into view, set on each navigation (page changes,
+   * repeat add/remove, validation jumps). It's `null` until the first navigation;
+   * a removed node's id matches nothing in the view and is a no-op.
+   */
+  get navigationTarget(): FormNodeID | null;
 }
 
 export interface RootNode extends BaseNode {
@@ -90,6 +97,12 @@ export interface RootNode extends BaseNode {
 
   // Moves to the previous page. Does nothing when {@link RootNodeState.hasPreviousPage} is `false`.
   previousPage(): void;
+
+  /**
+   * Navigates to the first outstanding violation, its page becomes current and its node becomes
+   * {@link RootNodeState.navigationTarget}. Does nothing when the form has no violations.
+   */
+  navigateToFirstViolation(): void;
 
   /**
    * Prepares the current form instance state as an {@link InstancePayload}.

@@ -11,6 +11,7 @@ import Location from '../utils/location';
 import { getDeviceId } from '../utils/device-id';
 import { hideSpinner } from '../utils/spinner';
 import { deleteLastSaved, getLastSaved, setLastSaved } from '../utils/last-saved';
+import { hasSubmitted, setSubmitted } from '../utils/once-store';
 defineOptions({
   name: 'WebFormRenderer'
 });
@@ -22,7 +23,7 @@ export interface WebFormsRendererProps {
   instanceId?: string | null;
   submissionAttachments?: string[] | null;
   defaultParameters?: Record<string, string>;
-  st?: string | null
+  st?: string | null;
 }
 
 const props = defineProps<WebFormsRendererProps>();
@@ -37,7 +38,7 @@ interface PostPrimaryInstanceParams {
   deviceID?: string | undefined;
 }
 
-let clearForm:Function;
+let clearForm: Function;
 let submissionData: SubmissionData;
 
 const submissionResult:any = {};
@@ -54,8 +55,12 @@ const visibleModal = ref();
 const withToken = (url) => `${url}${queryString({ st: props.st })}`;
 
 const getAttachment = (requestUrl: URL) => {
-  const encodedName = encodeURIComponent(requestUrl.pathname.split('/').pop()!);
-  const url = withToken(`/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath.value}/attachments/${encodedName}`);
+  const fileName = requestUrl.pathname.split('/').pop()!;
+  const decoded = decodeURIComponent(fileName);
+  if (!props.form.attachments.some(a => a.name === decoded)) {
+    return new Response('Not Found', { status: 404 });
+  }
+  const url = withToken(`/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath.value}/attachments/${fileName}`);
   return fetch(url);
 };
 
@@ -83,6 +88,9 @@ const postPrimaryInstance = async (file:File) => {
   try {
     const response = await fetch(url, { body: file, headers, method });
     if (response.ok) {
+      if (props.form.once && props.form.enketoOnceId) {
+        setSubmitted(props.form.enketoOnceId);
+      }
       const data = await response.json();
       return { success: true, data };
     }
@@ -93,7 +101,7 @@ const postPrimaryInstance = async (file:File) => {
   }
 };
 
-const isProblem = (data:any) => {
+const isProblem = (data: any) => {
   return data != null &&
     typeof data === 'object' &&
     typeof data.code === 'number' &&
@@ -135,8 +143,8 @@ const handleResult = () => {
   // Success handler
   if (submissionResult.primaryInstanceResult.success && attachmentResultArr.every(r => r.success)) {
 
-    clearForm();
-    
+    clearForm(props.form.once ? {} : { next: POST_SUBMIT__NEW_INSTANCE });
+
     if (isPublicLink.value) {
       visibleModal.value = { type: 'thankYouModal', hideable: false };
     } else if (isEdit.value) {
@@ -218,7 +226,7 @@ const submitData = async () => {
   handleResult();
 };
 
-const initializeSubmissionState = (data:SubmissionData, clearFormCallback:Function) => {
+const initializeSubmissionState = (data: SubmissionData) => {
   submissionData = data;
 
   submissionResult.primaryInstanceResult = {
@@ -231,18 +239,18 @@ const initializeSubmissionState = (data:SubmissionData, clearFormCallback:Functi
       success: false
     });
   });
-
-  clearForm = () => {
-    clearFormCallback({ next: POST_SUBMIT__NEW_INSTANCE });
-  };
 };
 
 const webFormLoaded = () => {
   hideSpinner();
 };
 
-const updateLastSaved = (hasLastSaved) => {
-  if (!isEdit.value && !props.form.draft && submissionResult.primaryInstanceResult.success) {
+const updateLastSaved = (hasLastSaved: boolean) => {
+  if (!isEdit.value
+    && !props.form.draft
+    && submissionResult.primaryInstanceResult.success
+    && !props.form.once
+  ) {
     if (hasLastSaved) {
       setLastSaved(props.form.projectId, props.form.xmlFormId, submissionData.instanceFile);
     } else {
@@ -267,7 +275,13 @@ const handleSubmit = async (
     // hence this branch should never execute.
     return;
   }
-  initializeSubmissionState(data as unknown as SubmissionData, clearFormCallback);
+  if (alreadySubmittedOnce()) {
+    // The user has already submitted a single submission form - should not get here.
+    return;
+  }
+  initializeSubmissionState(data as unknown as SubmissionData);
+  clearForm = clearFormCallback;
+
   await submitData();
   updateLastSaved(hasLastSaved);
 };
@@ -296,11 +310,16 @@ const editInstanceOptions = computed(() => {
   return null;
 });
 
-const closeWindow = () => {
-  window.close();
+const alreadySubmittedOnce = () => {
+  return props.form.once && props.form.enketoOnceId && hasSubmitted(props.form.enketoOnceId);
 };
 
 onMounted(async () => {
+  if (alreadySubmittedOnce()) {
+    visibleModal.value = { type: 'thankYouModal', hideable: false };
+    webFormLoaded(); // hide the spinner
+    return;
+  }
   if (!isEdit.value && !props.form.draft) {
     lastSavedXml.value = await getLastSaved(props.form.projectId, props.form.xmlFormId);
   }
@@ -357,7 +376,6 @@ onMounted(async () => {
     </template>
     <template #footer>
       <template v-if="visibleModal.type === 'submissionModal'">
-        <Button type="button" @click="closeWindow()" variant="text">{{ $t('action.close') }}</Button>
         <Button type="button" @click="visibleModal = null">{{ $t('submissionModal.action.fillOutAgain') }}</Button>
       </template>
       <!-- Any type of error while sending attachments -->

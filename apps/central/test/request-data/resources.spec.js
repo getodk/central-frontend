@@ -117,6 +117,16 @@ describe('createResources()', () => {
       expect(dataset.accessFilter).to.be.null;
     });
 
+    it('adds propertyMap', () => {
+      testData.extendedDatasets.createPast(1, {
+        properties: [{ name: 'height' }, { name: 'circumference' }]
+      });
+      const { propertyMap } = createResource();
+      [...propertyMap.keys()].should.eql(['height', 'circumference']);
+      propertyMap.get('height').name.should.equal('height');
+      propertyMap.get('circumference').name.should.equal('circumference');
+    });
+
     describe('replaceData', () => {
       it('adds projectId to forms in replaced data and accessFilter is set to null', () => {
         testData.extendedDatasets.createPast(1, {

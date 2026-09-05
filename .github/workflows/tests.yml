@@ -24,7 +24,7 @@ jobs:
       with:
         node-version-file: package.json
         cache: 'npm'
-    - run: npm ci
+    - run: npm ci --no-audit
     - run: npm run build
     - run: npm run lint
     - run: ./bin/check-bundle-size.js

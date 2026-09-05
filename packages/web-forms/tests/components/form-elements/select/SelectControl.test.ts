@@ -124,6 +124,16 @@ const getMenuItem = async (
   return menuItems.find((menuItem) => menuItem.text() === label) ?? null;
 };
 
+const selectOption = async (component: MountedComponent, node: SelectNode, option: string) => {
+  const radio = component.find(`input[id="${node.nodeId}_${option}"]`);
+  if (radio.exists()) {
+    return radio.trigger('click');
+  }
+  const menuItem = await getMenuItem(component, component.find(`.${SELECT_CLASS}`), option);
+  assert(menuItem != null);
+  return menuItem.trigger('mousedown');
+};
+
 describe('SelectControl', () => {
   describe('select1', () => {
     describe('no appearance (radio controls)', () => {
@@ -184,11 +194,12 @@ describe('SelectControl', () => {
         root = await getReactiveForm('select-control.xml');
         selectNode = getSelectNodeByReference(root, reference);
         component = mountComponent(selectNode);
-        controlElement = component.find(`[id="${selectNode.nodeId}"]`);
+        controlElement = component.find(`.${SELECT_CLASS}`);
       });
 
-      it('renders as a dropdown', () => {
-        expect(controlElement.classes()).toContain(SELECT_CLASS);
+      it('renders as a dropdown with the focusable element carrying the node id', () => {
+        expect(controlElement.exists()).toBe(true);
+        expect(controlElement.find(`[id="${selectNode.nodeId}"]`).exists()).toBe(true);
       });
 
       const expectedOptionLabels = ['Karachi', 'Toronto', 'Lahore', 'Islamabad', 'Vancouver'];
@@ -379,6 +390,101 @@ describe('SelectControl', () => {
 
       expect(component.get('.validation-message').isVisible()).toBe(true);
       expect(component.get('.validation-message').text()).toBe('validation_message.required.error');
+    });
+  });
+
+  describe('quick appearance (auto-advance)', () => {
+    let root: RootNode;
+
+    beforeEach(async () => {
+      root = await getReactiveForm('pagination-18-quick.xml');
+    });
+
+    it.each([
+      {
+        scenario: 'quick',
+        question: '/data/fruit',
+        tappedOption: 'mango',
+        questionOnNextPage: '/data/rating',
+      },
+      {
+        scenario: 'quickcompact',
+        question: '/data/color',
+        tappedOption: 'red',
+        questionOnNextPage: '/data/shape',
+      },
+      {
+        scenario: 'quick minimal (dropdown)',
+        question: '/data/veg',
+        tappedOption: 'carrot',
+        questionOnNextPage: '/data/color',
+      },
+    ])(
+      'advances to the next page when a $scenario select1 is tapped',
+      async ({ question, tappedOption, questionOnNextPage }) => {
+        const node = getSelectNodeByReference(root, question);
+        const nextNode = getSelectNodeByReference(root, questionOnNextPage);
+        root.setCurrentPage(node.currentState.pageBoundary);
+        const component = mountComponent(node);
+
+        await selectOption(component, node, tappedOption);
+
+        expectSelectedValueState(node, tappedOption);
+        expect(root.currentState.currentPage).toBe(nextNode.currentState.pageBoundary);
+      }
+    );
+
+    it.each([
+      {
+        scenario: 'likert',
+        question: '/data/rating',
+        tappedOption: '1',
+        expectedValue: '1',
+        expectsViolation: false,
+      },
+      {
+        scenario: 'label',
+        question: '/data/shape',
+        tappedOption: 'circle',
+        expectedValue: null,
+        expectsViolation: false,
+      },
+      {
+        scenario: 'constraint-violating',
+        question: '/data/spice',
+        tappedOption: 'ghost',
+        expectedValue: 'ghost',
+        expectsViolation: true,
+      },
+    ])(
+      'does not advance when a quick $scenario select1 is tapped',
+      async ({ question, tappedOption, expectedValue, expectsViolation }) => {
+        const node = getSelectNodeByReference(root, question);
+        root.setCurrentPage(node.currentState.pageBoundary);
+        const component = mountComponent(node);
+
+        await selectOption(component, node, tappedOption);
+
+        expectSelectedValueState(node, expectedValue);
+        expect(node.validationState.violation != null).toBe(expectsViolation);
+        expect(root.currentState.currentPage).toBe(node.currentState.pageBoundary);
+      }
+    );
+
+    it('does not advance when another question on the same field-list page is invalid', async () => {
+      const fieldListRoot = await getReactiveForm('pagination-20-quick-fieldlist.xml');
+      const node = getSelectNodeByReference(fieldListRoot, '/data/fl/fruit');
+      fieldListRoot.setCurrentPage(node.currentState.pageBoundary);
+      const component = mountComponent(node);
+
+      const violationReferences = fieldListRoot.validationState.violations.map(
+        ({ reference }) => reference
+      );
+      expect(violationReferences).toContain('/data/fl/reason');
+
+      await selectOption(component, node, 'mango');
+      expectSelectedValueState(node, 'mango');
+      expect(fieldListRoot.currentState.currentPage).toBe(node.currentState.pageBoundary);
     });
   });
 });

@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml">
+  <h:head>
+    <h:title>18 Quick - auto-advance</h:title>
+    <model>
+      <instance>
+        <data id="pg_18_quick">
+          <fruit/>
+          <rating/>
+          <spice/>
+          <veg/>
+          <color/>
+          <shape/>
+          <comment/>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <bind nodeset="/data/fruit" type="string"/>
+      <bind nodeset="/data/rating" type="string"/>
+      <bind nodeset="/data/spice" type="string" constraint=". != 'ghost'"/>
+      <bind nodeset="/data/veg" type="string"/>
+      <bind nodeset="/data/color" type="string"/>
+      <bind nodeset="/data/shape" type="string"/>
+      <bind nodeset="/data/comment" type="string"/>
+      <bind nodeset="/data/meta/instanceID" type="string"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <select1 ref="/data/fruit" appearance="quick">
+      <label>Favorite fruit?</label>
+      <item><label>Cherry</label><value>cherry</value></item>
+      <item><label>Mango</label><value>mango</value></item>
+    </select1>
+    <select1 ref="/data/rating" appearance="quick likert">
+      <label>Rating?</label>
+      <item><label>1</label><value>1</value></item>
+      <item><label>2</label><value>2</value></item>
+    </select1>
+    <select1 ref="/data/spice" appearance="quick">
+      <label>Spice level?</label>
+      <item><label>Mild</label><value>mild</value></item>
+      <item><label>Ghost pepper</label><value>ghost</value></item>
+    </select1>
+    <select1 ref="/data/veg" appearance="quick minimal">
+      <label>Favorite vegetable?</label>
+      <item><label>carrot</label><value>carrot</value></item>
+      <item><label>potato</label><value>potato</value></item>
+    </select1>
+    <select1 ref="/data/color" appearance="quickcompact">
+      <label>Favorite color?</label>
+      <item><label>Red</label><value>red</value></item>
+      <item><label>Blue</label><value>blue</value></item>
+    </select1>
+    <select1 ref="/data/shape" appearance="quick label">
+      <label>Shape?</label>
+      <item><label>Circle</label><value>circle</value></item>
+      <item><label>Square</label><value>square</value></item>
+    </select1>
+    <input ref="/data/comment"><label>Any comment?</label></input>
+  </h:body>
+</h:html>

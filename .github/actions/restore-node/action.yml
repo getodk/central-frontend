@@ -40,4 +40,4 @@ runs:
   - name: 'npm ci'
     shell: sh
     if: steps.cache-install.outputs.cache-hit != 'true'
-    run: npm ci
+    run: npm ci --no-audit

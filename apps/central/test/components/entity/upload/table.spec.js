@@ -6,8 +6,6 @@ import testData from '../../../data';
 import { mergeMountOptions, mount } from '../../../util/lifecycle';
 
 const mountComponent = (options = {}) => {
-  if (options.props?.entities != null)
-    throw new Error('entities prop not allowed. Use the rowIndex prop instead.');
   const mergedOptions = mergeMountOptions(options, {
     props: { pageSize: 5 },
     container: {
@@ -15,15 +13,14 @@ const mountComponent = (options = {}) => {
     }
   });
   const { props } = mergedOptions;
-  if (testData.extendedEntities.size !== 0) {
+  if (props.entities == null && testData.extendedEntities.size !== 0) {
     if (props.rowIndex == null) props.rowIndex = 0;
     props.entities = testData.extendedEntities.sorted()
       .reverse()
       .slice(props.rowIndex, props.rowIndex + props.pageSize)
       .map(entity => pick(['label', 'data'], entity.currentVersion));
-  } else {
-    props.rowIndex = -1;
   }
+  if (props.rowIndex == null) props.rowIndex = props.entities != null ? 0 : -1;
   return mount(EntityUploadTable, mergedOptions);
 };
 
@@ -81,6 +78,34 @@ describe('EntityUploadTable', () => {
     const divs = td.slice(2).map(wrapper => wrapper.get('div'));
     divs[0].text().should.equal('123456');
     divs[1].text().should.equal('999');
+    await divs[0].should.have.textTooltip();
+  });
+
+  it('shows extra properties in the CSV data', async () => {
+    testData.extendedDatasets.createPast(1, {
+      properties: [{ name: 'height' }]
+    });
+    const component = mountComponent({
+      props: {
+        entities: [{
+          label: 'dogwood',
+          data: { height: '1' },
+          extra: { circumference: '123456', species: 'dogwood' }
+        }],
+        extraProperties: ['circumference', 'species']
+      }
+    });
+
+    const th = component.findAll('th');
+    const thText = th.map(wrapper => wrapper.text());
+    thText.should.eql(['Row', 'label', 'height', 'circumference', 'species']);
+    await th[3].get('div').should.have.textTooltip();
+
+    const td = component.findAll('td');
+    td.length.should.equal(5);
+    const divs = td.slice(3).map(wrapper => wrapper.get('div'));
+    divs[0].text().should.equal('123456');
+    divs[1].text().should.equal('dogwood');
     await divs[0].should.have.textTooltip();
   });
 

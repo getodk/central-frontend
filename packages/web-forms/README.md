@@ -60,7 +60,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-##### Appearances<br/>🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜ 54\%
+##### Appearances<br/>🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜ 56\%
 
   </summary>
   <br/>
@@ -96,7 +96,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
 | hide-input                                                      |          |
 | minimal                                                         |    ✅    |
 | search / autocomplete                                           |    ✅    |
-| [quick](https://github.com/getodk/web-forms/issues/515)         |          |
+| [quick](https://github.com/getodk/web-forms/issues/515)         |    ✅    |
 | columns-pack                                                    |    ✅    |
 | columns                                                         |    ✅    |
 | columns-n                                                       |    ✅    |
@@ -311,7 +311,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-##### Misc<br/>🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ 33\%
+##### Misc<br/>🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜⬜⬜ 44\%
 
   </summary>
   <br/>
@@ -321,7 +321,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
 | [last saved instance](https://github.com/getodk/web-forms/issues/306)            |    ✅    |
 | [defaults from query parameters](https://github.com/getodk/web-forms/issues/464) |    ✅    |
 | multi-form app-like experience                                                   |          |
-| [prevent multiple submissions](https://github.com/getodk/web-forms/issues/461)   |          |
+| [prevent multiple submissions](https://github.com/getodk/web-forms/issues/461)   |    ✅    |
 | configure end of form experience                                                 |          |
 | save as draft                                                                    |          |
 | offline entities                                                                 |          |

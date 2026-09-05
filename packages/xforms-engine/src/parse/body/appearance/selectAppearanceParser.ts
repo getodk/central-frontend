@@ -23,12 +23,11 @@ export const selectAppearanceParser = new TokenListParser(
     'columns-pack',
     'autocomplete',
 
-    // TODO: these are `<select1>` only
+    // This parser is shared with <select>, but these tokens only make sense for <select1>.
     'likert',
     'quick',
     'quickcompact',
     'map',
-    // "quick map"
   ],
   {
     aliases: [{ fromAlias: 'search', toCanonical: 'autocomplete' }],

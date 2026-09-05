@@ -11,30 +11,32 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="public-link-create" :state="state" :hideable="!awaitingResponse"
-    backdrop @hide="$emit('hide')" @shown="displayNameRef.focus()">
+    backdrop @hide="$emit('hide')" @shown="displayNameFormGroup.focus()">
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <p class="modal-introduction">{{ $t('introduction[0]') }}</p>
       <form @submit.prevent="submit">
-        <form-group ref="displayNameRef" v-model.trim="displayName"
-          :placeholder="$t('field.displayName')" required autocomplete="off"/>
-        <div v-if="state && actorProperties.dataExists"
-          class="public-link-set-properties">
-          <actor-properties-upsert v-model:propertyValues="propertyValues" :create="true"
-            :property-defs="actorProperties.data"/>
-        </div>
-        <div class="checkbox">
-          <label>
-            <input v-model="once" type="checkbox"
-              aria-describedby="public-link-create-once-help">
-            {{ $t('field.once') }}
-          </label>
-          <p id="public-link-create-once-help" class="help-block">
-            <span>{{ $t('onceHelp') }}</span>
-            <sentence-separator/>
-            <doc-link to="central-submissions/#public-access-links">{{ $t('moreInfo.learnMore') }}</doc-link>
-          </p>
-        </div>
+        <fieldset :disabled="awaitingResponse">
+          <form-group ref="displayNameFormGroup" v-model.trim="displayName"
+            :placeholder="$t('field.displayName')" required autocomplete="off"/>
+          <div v-if="state && actorProperties.dataExists"
+            class="public-link-set-properties">
+            <actor-properties-upsert v-model:propertyValues="propertyValues"
+              :create="true"/>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input v-model="once" type="checkbox"
+                aria-describedby="public-link-create-once-help">
+              {{ $t('field.once') }}
+            </label>
+            <p id="public-link-create-once-help" class="help-block">
+              <span>{{ $t('onceHelp') }}</span>
+              <sentence-separator/>
+              <doc-link to="central-submissions/#public-access-links">{{ $t('moreInfo.learnMore') }}</doc-link>
+            </p>
+          </div>
+        </fieldset>
         <div class="modal-actions">
           <button type="button" class="btn btn-link"
             :aria-disabled="awaitingResponse" @click="$emit('hide')">
@@ -62,37 +64,40 @@ import Spinner from '../spinner.vue';
 
 import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
+import { createActorPropertyCreator } from '../../composables/actor-property-creator';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
   name: 'PublicLinkCreate'
 });
-
 const props = defineProps({
   state: Boolean
 });
-
 const emit = defineEmits(['hide', 'success']);
 
-const displayNameRef = ref(null);
+const { form, actorProperties } = useRequestData();
+const { request, awaitingResponse } = useRequest();
+const propertyCreator = createActorPropertyCreator(request);
+
 const displayName = ref('');
+const displayNameFormGroup = ref(null);
 const once = ref(false);
 const propertyValues = ref(Object.create(null));
 
-// The modal assumes that this data will exist when the modal is shown.
-const { request, awaitingResponse } = useRequest();
-const { form, actorProperties } = useRequestData();
-
-const submit = () => {
+const createPublicLink = () => {
   const body = { displayName: displayName.value, once: once.value };
   if (Object.keys(propertyValues.value).length > 0)
     body.properties = propertyValues.value;
-  request({
+  return request({
     method: 'POST',
     url: apiPaths.publicLinks(form.projectId, form.xmlFormId),
     data: body
-  })
+  });
+};
+const submit = () => {
+  propertyCreator.request()
+    .then(createPublicLink)
     .then(({ data }) => {
       emit('success', data);
     })
@@ -104,6 +109,7 @@ watch(() => props.state, (state) => {
     displayName.value = '';
     once.value = false;
     propertyValues.value = Object.create(null);
+    propertyCreator.clear();
   }
 });
 </script>

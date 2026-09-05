@@ -10,21 +10,10 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div id="entity-upload-popup" @animationstart="$emit('animationstart')"
-    @animationend="$emit('animationend')">
-    <div id="entity-upload-popup-heading">
-      <div v-tooltip.text>{{ filename }}</div>
-      <button v-show="!awaitingResponse" type="button" class="btn btn-link"
-        :aria-label="$t('action.clear')" @click="$emit('clear')">
-        <span class="icon-trash"></span>
-      </button>
-    </div>
+  <div id="entity-upload-popup">
+    <div id="entity-upload-popup-heading" v-tooltip.text>{{ filename }}</div>
     <div id="entity-upload-popup-count">{{ $tcn('rowCount', count) }}</div>
-    <div v-show="warnings !== 0 && !awaitingResponse"
-      id="entity-upload-popup-warnings">
-      <span class="icon-warning"></span>{{ $tcn('count.warning', warnings) }}
-    </div>
-    <div v-show="awaitingResponse" id="entity-upload-popup-status">
+    <div id="entity-upload-popup-status">
       <spinner inline/><span>{{ status }}</span>
     </div>
   </div>
@@ -48,37 +37,26 @@ const props = defineProps({
     type: Number,
     required: true
   },
-  warnings: {
-    type: Number,
-    required: true
-  },
-  awaitingResponse: Boolean,
-  progress: {
-    type: Number,
-    required: true
-  }
+  extraProperties: Boolean,
+  progress: Number
 });
-defineEmits(['clear', 'animationstart', 'animationend']);
 
 const { t, n } = useI18n();
-const status = computed(() => (props.progress < 1
-  ? t('status.sending', { percentUploaded: n(props.progress, 'percent') })
-  : t('status.processing')));
+const status = computed(() => {
+  if (props.extraProperties && props.progress == null)
+    return t('status.creatingProperties');
+  const progress = props.progress ?? 0;
+  return progress < 1
+    ? t('status.sending', { percentUploaded: n(props.progress, 'percent') })
+    : t('status.processing');
+});
 </script>
 
 <style lang="scss">
 @use 'sass:color';
 @import '../../../assets/scss/mixins';
 
-@keyframes tocorner {
-  0% { transform: translate(-70px, -70px); }
-  100% { transform: translate(0, 0); }
-}
-
 #entity-upload-popup {
-  animation-duration: 2s;
-  animation-name: tocorner;
-  animation-timing-function: cubic-bezier(0.05, 0.9, 0, 1);
   background-color: $color-subpanel-background;
   border: 2px solid $color-action-foreground;
   border-radius: 6px;
@@ -88,34 +66,12 @@ const status = computed(() => (props.progress < 1
   position: absolute;
   right: 15px;
   width: 305px;
-
-  .icon-warning { margin-right: $margin-right-icon; }
 }
 
 #entity-upload-popup-heading {
-  align-items: center;
-  display: flex;
-
-  > div {
-    @include text-overflow-ellipsis;
-    font-size: 18px;
-    font-weight: bold;
-  }
-
-  .btn-link {
-    flex-shrink: 0;
-    margin-left: 9px;
-    padding: 0;
-  }
-  .icon-trash {
-    color: $color-danger;
-    margin-right: 0;
-  }
-}
-
-#entity-upload-popup-warnings {
-  margin-bottom: 3px;
-  margin-top: 5px;
+  @include text-overflow-ellipsis;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 #entity-upload-popup-status {
@@ -134,6 +90,7 @@ const status = computed(() => (props.progress < 1
   "en": {
     "rowCount": "{count} data row found | {count} data rows found",
     "status": {
+      "creatingProperties": "Creating new properties…",
       // This text is shown while a file is being uploaded to the server.
       "sending": "Sending file… ({percentUploaded})",
       // This text is shown after a file has been uploaded to the server, but
@@ -164,6 +121,7 @@ const status = computed(() => (props.progress < 1
   "fr": {
     "rowCount": "{count} ligne de données trouvée | {count} lignes de données trouvées | {count} lignes de données trouvées",
     "status": {
+      "creatingProperties": "Création des nouvelles propriétés...",
       "sending": "Envoi du fichier...({percentUploaded})",
       "processing": "Traitement du fichier..."
     }

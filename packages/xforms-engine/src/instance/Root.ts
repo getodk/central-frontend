@@ -1,5 +1,6 @@
 import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
+import { batch } from 'solid-js';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
 import type { FormNodeID, PageBoundary } from '../client/identity.ts';
 import type { RootNode } from '../client/RootNode.ts';
@@ -38,6 +39,8 @@ import type { GeneralChildNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { ClientReactiveSerializableParentNode } from './internal-api/serialization/ClientReactiveSerializableParentNode.ts';
 import type { TranslationContext } from './internal-api/TranslationContext.ts';
+import { createNodeNavigation, type NodeNavigation } from './navigation/createNodeNavigation.ts';
+import { findFirstVisibleControl } from './navigation/findFirstVisibleControl.ts';
 import { createPageNavigation, type PageNavigation } from './pagination/createPageNavigation.ts';
 import type { Page } from './pagination/pageSequence.ts';
 import { Pagination } from './pagination/Pagination.ts';
@@ -63,6 +66,9 @@ interface RootStateSpec {
   readonly currentPage: Accessor<PageBoundary | null>;
   readonly hasNextPage: Accessor<boolean>;
   readonly hasPreviousPage: Accessor<boolean>;
+
+  // Navigation
+  readonly navigationTarget: Accessor<FormNodeID | null>;
 }
 
 export class Root
@@ -103,7 +109,8 @@ export class Root
   readonly instanceState: InstanceState;
   readonly languages: FormLanguages;
   readonly pagination: Pagination;
-  private readonly navigation: PageNavigation;
+  private readonly pageNavigation: PageNavigation;
+  private readonly nodeNavigation: NodeNavigation;
 
   readonly getCurrentPage: Accessor<Page | null>;
   readonly getOrderedPages: Accessor<readonly Page[]>;
@@ -130,9 +137,10 @@ export class Root
     this.childrenState = childrenState;
     this.languages = parent.languages;
 
-    this.navigation = createPageNavigation(this);
-    this.getCurrentPage = () => this.navigation.getCurrentPage();
-    this.getOrderedPages = () => this.navigation.getOrderedPages();
+    this.nodeNavigation = createNodeNavigation();
+    this.pageNavigation = createPageNavigation(this, this.nodeNavigation);
+    this.getCurrentPage = () => this.pageNavigation.getCurrentPage();
+    this.getOrderedPages = () => this.pageNavigation.getOrderedPages();
 
     const state = createSharedNodeState(
       this.scope,
@@ -149,9 +157,10 @@ export class Root
         children: childrenState.childIds,
         hasRelevantBodyNodes: this.hasRelevantBodyNodes,
         attributes: this.attributeState.getAttributes,
-        currentPage: this.navigation.currentPage,
-        hasNextPage: this.navigation.hasNextPage,
-        hasPreviousPage: this.navigation.hasPreviousPage,
+        currentPage: this.pageNavigation.currentPage,
+        hasNextPage: this.pageNavigation.hasNextPage,
+        hasPreviousPage: this.pageNavigation.hasPreviousPage,
+        navigationTarget: () => this.nodeNavigation.navigationTarget(),
       },
       this.instanceConfig
     );
@@ -168,19 +177,50 @@ export class Root
     this.attributeState.setAttributes(buildAttributes(this));
     this.validationState = createAggregatedViolations(this, this.instanceConfig);
     this.instanceState = createRootInstanceState(this);
-    this.navigation.initPagination();
+    this.pageNavigation.initPagination();
+
+    // Paginated forms get their opening target from the first-page landing above.
+    if (!this.isPaginated) {
+      this.navigateToFirstControl();
+    }
+  }
+
+  private navigateToFirstControl() {
+    const target = findFirstVisibleControl(this);
+    if (target != null) {
+      this.setNavigationTarget(target.nodeId);
+    }
   }
 
   setCurrentPage(page: PageBoundary): PageBoundary | null {
-    return this.navigation.setCurrentPage(page);
+    return this.pageNavigation.setCurrentPage(page);
   }
 
   nextPage(): void {
-    this.navigation.nextPage();
+    this.pageNavigation.nextPage();
   }
 
   previousPage(): void {
-    this.navigation.previousPage();
+    this.pageNavigation.previousPage();
+  }
+
+  setNavigationTarget(target: FormNodeID | null): void {
+    this.nodeNavigation.setNavigationTarget(target);
+  }
+
+  navigateToFirstViolation(): void {
+    const violation = this.validationState.violations?.[0];
+    if (violation == null) {
+      return;
+    }
+
+    batch(() => {
+      const page = this.pagination.getLeafPageId(violation.nodeId);
+      if (page != null) {
+        this.setCurrentPage(page);
+      }
+      this.setNavigationTarget(violation.nodeId);
+    });
   }
 
   isPageReachable(page: Page): boolean {
