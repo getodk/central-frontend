@@ -30,10 +30,6 @@
       "formAccess": {
         "string": "Accesso al form",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-      },
-      "customProperties": {
-        "string": "",
-        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     }
   },
@@ -204,7 +200,7 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
         },
         "property_set": {
-          "string": "",
+          "string": "Imposta proprietà",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
         }
       },
@@ -254,7 +250,7 @@
       },
       "actor_property": {
         "create": {
-          "string": "",
+          "string": "Crea una proprietà personalizzata",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Actor Property."
         }
       },
@@ -278,7 +274,7 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "update_draft_update": {
-          "string": "",
+          "string": "Aggiorna le impostazioni della bozza",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "update_publish": {
@@ -357,6 +353,10 @@
     }
   },
   "action": {
+    "add": {
+      "string": "",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "cancel": {
       "string": "Annulla",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -470,7 +470,7 @@
       "developer_comment": "This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms"
     },
     "tryAgain": {
-      "string": "",
+      "string": "Ritenta ancora",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "undo": {
@@ -510,7 +510,7 @@
       "developer_comment": "This text is shown on a button that resets the data filters"
     },
     "change": {
-      "string": "",
+      "string": "Modifica",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     }
   },
@@ -544,7 +544,7 @@
       "developer_comment": "This is the text of a form field."
     },
     "passphrase": {
-      "string": "Passphrase",
+      "string": "",
       "developer_comment": "This is the text of a form field."
     },
     "password": {
@@ -641,7 +641,7 @@
       "developer_comment": "This is the text of a table column header. The column shows the date and time of the newest entity"
     },
     "value": {
-      "string": "",
+      "string": "Valore",
       "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of a property of an object (App User, Public Link and Data Collector)"
     }
   },
@@ -746,11 +746,11 @@
     },
     "property": {
       "string": "Proprietà",
-      "developer_comment": "This is a data property of an Entity."
+      "developer_comment": "This is a data property of an Entity or an Actor."
     },
     "properties": {
       "string": "Proprietà",
-      "developer_comment": "This refers to the data properties of an Entity."
+      "developer_comment": "This refers to the data properties of an Entity or Actor."
     },
     "publicLink": {
       "string": "Link con accesso pubblico",
@@ -1049,7 +1049,7 @@
       "developer_comment": "This text is shown on its own before details about a warning."
     },
     "recommended": {
-      "string": "",
+      "string": "raccomandato",
       "developer_comment": "Standalone text shown as a badge next to a recommendation. Not part of a longer phrase."
     },
     "none": {
@@ -1059,7 +1059,7 @@
       "string": "Cerca"
     },
     "useEnketo": {
-      "string": "",
+      "string": "Modalità di compatibilità con Enketo",
       "developer_comment": "The word \"Enketo\" should not be translated"
     },
     "updateInProgress": {
@@ -1227,6 +1227,29 @@
         "success": {
           "string": "È stata inviata un'email a {email} con ulteriori istruzioni."
         }
+      }
+    },
+    "ActorPropertiesNew": {
+      "addProperty": {
+        "string": ""
+      },
+      "addPropertyHint": {
+        "string": ""
+      }
+    },
+    "ActorPropertiesUpsert": {
+      "description": {
+        "full": {
+          "string": "",
+          "developer_comment": "{assignEntities} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nassign the right Entities"
+        },
+        "assignEntities": {
+          "string": "",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {assignEntities} is in the following text:\n\nProperties help {assignEntities}, control access, and connect users to the data they need."
+        }
+      },
+      "noProperties": {
+        "string": ""
       }
     },
     "AnalyticsForm": {
@@ -1790,6 +1813,14 @@
         "string": "La tua pagina di accesso ora ha questo aspetto:"
       }
     },
+    "CustomPropsFilter": {
+      "action": {
+        "all": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of an actor (app user or public link) \"Properties\" filter, that allows the user to select all app users with all properties (no filter applied)."
+        }
+      }
+    },
     "DatasetDelete": {
       "title": {
         "string": "Elimina l'elenco di entità",
@@ -1991,7 +2022,7 @@
           "developer_comment": "This text is shown above the access rule filter dropdown. Translators are free not to translate this literally"
         },
         "entityPropertyPlaceholder": {
-          "string": "",
+          "string": "Proprietà della Entità",
           "developer_comment": "Placeholder text shown on a access rule filter dropdown."
         },
         "userPropertyLabel": {
@@ -1999,7 +2030,7 @@
           "developer_comment": "This text is shown above the access rule filter dropdown. Translators are free not to translate this literally"
         },
         "userPropertyPlaceholder": {
-          "string": "",
+          "string": "Proprietà utente",
           "developer_comment": "Placeholder text shown on a access rule filter dropdown"
         },
         "disabled": {
@@ -2555,6 +2586,14 @@
         "string": "Non ci sono ancora entità"
       }
     },
+    "EntityFiltersViewAs": {
+      "noUserSelected": {
+        "string": ""
+      },
+      "viewAs": {
+        "string": ""
+      }
+    },
     "EntityList": {
       "noEntities": {
         "string": "Non ci sono entità da mostrare.",
@@ -2744,22 +2783,20 @@
       }
     },
     "EntityUpload": {
-      "title": {
-        "string": "Importa Dati da File",
-        "developer_comment": "This is the title at the top of a pop-up."
+      "currentEntities": {
+        "string": ""
+      },
+      "newEntities": {
+        "string": ""
       },
       "table": {
-        "server": {
-          "string": "{name} dati del server",
-          "developer_comment": "This is shown above a list of Entities on the server. {name} is the name of the Entity List."
-        },
         "file": {
           "string": "Dati da importare"
         }
       },
       "action": {
         "append": {
-          "string": "Aggiungi dati",
+          "string": "",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
@@ -2770,9 +2807,6 @@
         "noData": {
           "string": "Il tuo file non contiene alcun dato."
         }
-      },
-      "headersNote": {
-        "string": "The first row in your data file must exactly match the table header you see above."
       }
     },
     "EntityUploadDataError": {
@@ -2783,59 +2817,103 @@
     "EntityUploadDataTemplate": {
       "text": {
         "full": {
-          "string": "Se non sei sicuro, puoi {downloadTemplate}",
-          "developer_comment": "{downloadTemplate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDownload a data template (.csv)"
+          "string": "",
+          "developer_comment": "{downloadTemplate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDownload a CSV template"
         },
         "downloadTemplate": {
-          "string": "Scarica un modello di dati (.csv)",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {downloadTemplate} is in the following text:\n\nIf you aren’t sure, you can {downloadTemplate}"
+          "string": "",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {downloadTemplate} is in the following text:\n\nNeed a starting point? {downloadTemplate}."
         }
       }
     },
+    "EntityUploadErrors": {
+      "title": {
+        "string": "{count, plural, one {} many {} other {}}",
+        "developer_comment": "This text is shown above a section that lists errors in the user's data."
+      },
+      "introduction": {
+        "string": ""
+      },
+      "delimiterNotComma": {
+        "string": ""
+      },
+      "invalidQuotes": {
+        "title": {
+          "string": ""
+        },
+        "description": {
+          "string": ""
+        }
+      },
+      "missingLabel": {
+        "title": {
+          "string": "",
+          "developer_comment": "{label} will have the text \"label\" and refers to the \"label\" property. The name of the property is not translated."
+        },
+        "description": {
+          "string": ""
+        }
+      },
+      "duplicateColumn": {
+        "title": {
+          "string": ""
+        },
+        "description": {
+          "string": ""
+        },
+        "headersReused": {
+          "string": "{count, plural, one {} many {} other {}}",
+          "developer_comment": "This text is followed by a list of column headers."
+        }
+      },
+      "emptyColumn": {
+        "title": {
+          "string": ""
+        },
+        "description": {
+          "string": ""
+        }
+      }
+    },
+    "EntityUploadExtraProperties": {
+      "action": {
+        "selectAll": {
+          "string": "",
+          "developer_comment": "This is the text of a button that allows the user to select all the columns of a table."
+        }
+      },
+      "created": {
+        "string": ""
+      },
+      "createdAll": {
+        "string": ""
+      }
+    },
     "EntityUploadFileSelect": {
+      "upload": {
+        "string": ""
+      },
+      "errors": {
+        "string": "{count, plural, one {} many {} other {}}"
+      },
       "text": {
         "full": {
-          "string": "Trascina un file  .csv qui, o {chooseOne} per caricarlo. ",
-          "developer_comment": "{chooseOne} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose one"
+          "string": "",
+          "developer_comment": "{chooseFile} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose a file"
         },
-        "chooseOne": {
-          "string": "scegli uno",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseOne} is in the following text:\n\nDrag a .csv file here, or {chooseOne} to import."
+        "chooseFile": {
+          "string": "",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseFile} is in the following text:\n\nDrag and drop a .csv file here, or {chooseFile}"
         }
       },
       "parsing": {
         "string": "Lettura dei dati…"
       }
     },
-    "EntityUploadHeaderErrors": {
-      "expectedHeader": {
-        "string": "Intestazione prevista",
-        "developer_comment": "This refers to the header row of a spreadsheet."
-      },
-      "suggestions": {
-        "title": {
-          "string": "Suggerimenti",
-          "developer_comment": "Suggestions to fix an error"
-        },
-        "invalidQuotes": {
-          "string": "Un campo tra virgolette non è valido. Controlla la riga di intestazione del tuo file per vedere se sono presenti valori insoliti."
-        },
-        "missingLabel": {
-          "string": "Una {label} proprietà è richiesta. L'etichetta indica il nome da utilizzare per ciascuna Entità in tutto Central e altrove.",
-          "developer_comment": "{label} will have the text \"label\" and refers to the \"label\" property. The name of the property is not translated."
-        },
-        "unknownProperty": {
-          "string": "Se si desidera aggiungere proprietà a questo Elenco di entità, è possibile farlo nella sezione Proprietà dell'entità nella pagina Panoramica di questo Elenco di entità, oppure si può caricare e pubblicare un formulario che faccia riferimento alla proprietà."
-        },
-        "duplicateColumn": {
-          "string": "Sembra che due o più colonne abbiano la stessa intestazione. Assicurarsi che le intestazioni delle colonne siano uniche."
-        },
-        "emptyColumn": {
-          "string": "Sembra che ci sia una cella vuota nell'intestazione. Eliminare le colonne vuote nel file."
-        },
-        "delimiterNotComma": {
-          "string": "Ciò potrebbe essere dovuto al fatto che abbiamo sbagliato il delimitatore di cella. Abbiamo usato {delimiter}."
-        }
+    "EntityUploadHeaderReview": {
+      "title": {
+        "string": "{count, plural, one {} many {} other {}}",
+        "developer_comment": "This text is shown above a section where the user can review warnings about their data."
       }
     },
     "EntityUploadPopup": {
@@ -2843,6 +2921,9 @@
         "string": "{count, plural, one {{count}  riga di dati trovata} many {{count}  righe di dati trovate} other {{count} righe di dati trovate}}"
       },
       "status": {
+        "creatingProperties": {
+          "string": ""
+        },
         "sending": {
           "string": "Inviando il file...({percentUploaded})",
           "developer_comment": "This text is shown while a file is being uploaded to the server."
@@ -2854,6 +2935,75 @@
       }
     },
     "EntityUploadWarnings": {
+      "introduction": {
+        "string": ""
+      },
+      "systemProperties": {
+        "string": "",
+        "developer_comment": "\"Properties\" refers to Entity properties."
+      },
+      "caseMismatch": {
+        "title": {
+          "string": "",
+          "developer_comment": "\"Property\" refers to an Entity property."
+        },
+        "description": {
+          "string": ""
+        },
+        "existingProperty": {
+          "string": "",
+          "developer_comment": "\"Property\" refers to an Entity property."
+        }
+      },
+      "invalidProperties": {
+        "string": "{count, plural, one {} many {} other {}}",
+        "developer_comment": "\"Property\" refers to an Entity property."
+      },
+      "missingProperties": {
+        "title": {
+          "string": "{count, plural, one {} many {} other {}}",
+          "developer_comment": "\"Property\" refers to an Entity property."
+        },
+        "description": {
+          "string": "{count, plural, one {} many {} other {}}",
+          "developer_comment": "\"Property\" refers to an Entity property."
+        }
+      },
+      "extraProperties": {
+        "title": {
+          "one": {
+            "string": ""
+          },
+          "multiple": {
+            "string": ""
+          }
+        },
+        "description": {
+          "one": {
+            "string": ""
+          },
+          "multiple": {
+            "string": "",
+            "developer_comment": "\"Ones\" refers to \"columns\"."
+          }
+        },
+        "error": {
+          "one": {
+            "string": ""
+          },
+          "multiple": {
+            "string": "",
+            "developer_comment": "\"Ones\" refers to \"columns\"."
+          }
+        }
+      },
+      "propertiesIgnored": {
+        "string": "{count, plural, one {} many {} other {}}",
+        "developer_comment": "\"Property\" refers to an Entity property."
+      },
+      "columnsIgnored": {
+        "string": "{count, plural, one {} many {} other {}}"
+      },
       "row": {
         "raggedRows": {
           "string": "In alcune righe sono state trovate meno colonne del previsto:",
@@ -2916,7 +3066,7 @@
         "developer_comment": "This is the title at the top of a pop-up for editing an App User. {displayName} is the the name of the App User"
       },
       "displayNameLabel": {
-        "string": "",
+        "string": "Utente dell'applicazione",
         "developer_comment": "Shown as label before the display name of the App User in the edit pop-up."
       }
     },
@@ -2955,7 +3105,7 @@
           "developer_comment": "This is the text of a table column header."
         },
         "lastUsedAndActions": {
-          "string": "",
+          "string": "{lastUsed}/{actions}",
           "developer_comment": "Header for the table column that shows the last used date and action buttons."
         },
         "configureClient": {
@@ -2965,6 +3115,9 @@
       },
       "emptyTable": {
         "string": "Non ci sono ancora utenti dell'app. Dovrai crearne alcuni per scaricare i formulari e inviare i dati dal tuo dispositivo."
+      },
+      "noFilterResults": {
+        "string": ""
       },
       "alert": {
         "create": {
@@ -3119,7 +3272,7 @@
       },
       "action": {
         "editAppUser": {
-          "string": "",
+          "string": "Modifica Utente App",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
         "revokeAccess": {
@@ -3151,7 +3304,7 @@
     "FormAttachmentList": {
       "action": {
         "upload": {
-          "string": "",
+          "string": "scegli files",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
@@ -3181,6 +3334,10 @@
         "uploaded": {
           "string": "Caricati",
           "developer_comment": "This is the text of a table column header. The column shows when each Media File was uploaded."
+        },
+        "size": {
+          "string": "",
+          "developer_comment": "This is the text of a table column header. The column shows the file size of each uploaded Media File."
         }
       }
     },
@@ -3230,26 +3387,6 @@
         }
       },
       "afterSelection": {
-        "matched": {
-          "full": {
-            "string": "{count, plural, one {{countOfFiles} prontio per essere caricato.} many {{countOfFiles} pronti per essere caricati.} other {{countOfFiles} pronti per essere caricati.}}",
-            "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
-          },
-          "countOfFiles": {
-            "string": "{count, plural, one {{count} file} many {{count} files} other {{count} files}}",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text. (The plural form of the text is shown.)\n\n{countOfFiles} ready for upload."
-          }
-        },
-        "someUnmatched": {
-          "full": {
-            "string": "{count, plural, one {{countOfFiles} ha un nome che non riconosciamo e che verra ignorato. Per caricarlo, rinominalo o trascinalo individualmente sul suo obiettivo.} many {{countOfFiles} hanno un nome che non riconosciamo e che verranno ignorati. Per caricarli, rinominali o trascinali individualmente sui loro obiettivi.} other {{countOfFiles} hanno un nome che non riconosciamo e che verranno ignorati. Per caricarli, rinominali o trascinali individualmente sui loro obiettivi.}}",
-            "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
-          },
-          "countOfFiles": {
-            "string": "{count, plural, one {{count} file} many {{count} files} other {{count} files}}",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text. (The plural form of the text is shown.)\n\n{countOfFiles} have a name we don’t recognize and will be ignored. To upload them, rename them or drag them individually onto their targets."
-          }
-        },
         "noneMatched": {
           "string": "{count, plural, one {Non riconosciamo il file che stai tentando di caricare. Rinominalo in modo che corrisponda al nome elencao sopra o trascinalp individualmente sul suo obiettivo.} many {Non riconosciamo nessuno dei file che stai tentando di caricare. Rinominali in modo che corrispondano ai nomi elencati sopra o trascinali individualmente sui loro obiettivi.} other {Non riconosciamo nessuno dei file che stai tentando di caricare. Rinominali in modo che corrispondano ai nomi elencati sopra o trascinali individualmente sui loro obiettivi.}}"
         }
@@ -3578,7 +3715,7 @@
     },
     "FormEditDef": {
       "title": {
-        "string": "",
+        "string": "Versione bozza:{version}",
         "developer_comment": "This is shown for the Draft Form. {version} is the version of the Form defined in its definition."
       },
       "subtitle": {
@@ -3598,7 +3735,7 @@
         }
       },
       "subtitle": {
-        "string": "",
+        "string": "Pronto per essere pubblicato?",
         "developer_comment": "This refers to the draft version of a Form."
       }
     },
@@ -3635,7 +3772,7 @@
     },
     "FormEditPublishedVersion": {
       "title": {
-        "string": "",
+        "string": "Versione corrente: {version}",
         "developer_comment": "This refers to the current version of a Form. {version} is the version of the published Form, defined in its definition."
       },
       "subtitle": {
@@ -3655,7 +3792,7 @@
           "developer_comment": "{learnMore} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nlearn more"
         },
         "learnMore": {
-          "string": "",
+          "string": "per saperne di più",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {learnMore} is in the following text:\n\nNewly created Forms now use the ODK Web Forms experience by default for previews, web submissions and submission editing. Some advanced form features may not yet be fully supported, {learnMore}."
         }
       },
@@ -4047,7 +4184,7 @@
         "developer_comment": "This is a label shown for the current version of a Form."
       },
       "notes": {
-        "string": "",
+        "string": "Note: {notes}",
         "developer_comment": "This is the label shown before the notes entered when a Form version was published. {notes} is the actual notes text."
       }
     },
@@ -4177,12 +4314,6 @@
       }
     },
     "Navbar": {
-      "action": {
-        "toggle": {
-          "string": "Attiva/disattiva navigazione",
-          "developer_comment": "Used by screen readers to describe the button used to show or hide the navigation bar on small screens (\"hamburger menu\")."
-        }
-      },
       "analyticsNotice": {
         "string": "Aiuta a migliorare Central"
       }
@@ -4329,35 +4460,7 @@
         }
       }
     },
-    "ProjectCustomPropertiesList": {
-      "heading": {
-        "0": {
-          "string": "",
-          "developer_comment": "A brief introduction to Custom Properties shown for the current project"
-        }
-      },
-      "emptyTable": {
-        "string": ""
-      },
-      "created": {
-        "string": "",
-        "developer_comment": "Shown after a custom property is successfully created."
-      },
-      "action": {
-        "create": {
-          "string": "",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      }
-    },
     "ProjectCustomPropertiesNew": {
-      "title": {
-        "string": "",
-        "developer_comment": "This is the title at the top of a pop-up."
-      },
-      "introduction": {
-        "string": ""
-      },
       "newPropertyName": {
         "string": ""
       },
@@ -4908,7 +5011,7 @@
         "developer_comment": "This is the title at the top of a pop-up for editing a Public Access Link. {displayName} is the display name of the Public Link"
       },
       "displayNameLabel": {
-        "string": "",
+        "string": "Link con accesso pubblico",
         "developer_comment": "Shown as label before the display name of the Public Access Link in the edit pop-up."
       }
     },
@@ -4993,6 +5096,9 @@
       }
     },
     "PublicLinkTable": {
+      "noFilterResults": {
+        "string": ""
+      },
       "header": {
         "once": {
           "string": "Invio singolo",
@@ -5003,7 +5109,7 @@
           "developer_comment": "This is the text of a table column header."
         },
         "createdAtAndActions": {
-          "string": "",
+          "string": "{createdAt}/{actions}",
           "developer_comment": "This text combines existing translated words. And it is shown on a column on the Public Link table that shows created at and action buttons."
         }
       }
@@ -5174,6 +5280,14 @@
         },
         "parseError": {
           "string": "Qualcosa è andato storto durante la richiesta dei tuoi dati"
+        }
+      }
+    },
+    "SubmissionDefDropdown": {
+      "action": {
+        "downloadXml": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },

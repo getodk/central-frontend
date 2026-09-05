@@ -155,6 +155,7 @@ export default {
   },
   "de": {
     "action": {
+      "edit": "Öffentlichen Zugangslink bearbeiten",
       "revoke": "Widerrufen"
     },
     "revoked": "Widerrufen",

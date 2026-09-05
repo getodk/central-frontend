@@ -125,52 +125,30 @@ const changeInput = (event) => {
 <i18n>
 {
   "de": {
-    "text": {
-      "full": "Fügen Sie hier eine Datei mit Drag-and-Drop ein, oder {chooseOne} zum Hochladen.",
-      "chooseOne": "eine auswählen"
-    },
     "parsing": "Daten lesen..."
   },
   "es": {
-    "text": {
-      "full": "Arrastre un archivo .csv aquí, o {chooseOne} para subir.",
-      "chooseOne": "elige uno"
-    },
     "parsing": "Leyendo datos..."
   },
   "fr": {
+    "upload": "Téléverser un fichier .csv",
+    "errors": "{count} erreur doit être résolue avant d'ajouter les entités | {count} erreurs doivent être résolues avant d'ajouter les entités | {count} erreurs doivent être résolues avant d'ajouter les entités",
     "text": {
-      "full": "Glissez un fichier .csv ici, ou {chooseOne} pour l'importer.",
-      "chooseOne": "Choisissez en un"
+      "full": "Glissez un fichier .csv ici, ou {chooseFile}",
+      "chooseFile": "choisissez un fichier"
     },
     "parsing": "Lecture des données..."
   },
   "it": {
-    "text": {
-      "full": "Trascina un file .csv qui, o {chooseOne} per caricarlo.",
-      "chooseOne": "scegli uno"
-    },
     "parsing": "Lettura dei dati…"
   },
   "pt": {
-    "text": {
-      "full": "Arraste um arquivo .csv aqui ou {chooseOne} para importar.",
-      "chooseOne": "escolha um"
-    },
     "parsing": "Lendo dados…"
   },
   "zh": {
-    "text": {
-      "full": "请将.csv文件拖拽至此，或者{chooseOne}进行导入",
-      "chooseOne": "请选择一个"
-    },
     "parsing": "读取数据..."
   },
   "zh-Hant": {
-    "text": {
-      "full": "拖曳一個 .csv 檔案到這，或者 {chooseOne}進行匯入。",
-      "chooseOne": "選擇一個檔案"
-    },
     "parsing": "讀取資料..."
   }
 }
