@@ -136,7 +136,7 @@ describe('DatasetProperties', () => {
           requestData: { project: undefined }
         }
       });
-      component.find('.col-actions').should.be.true;
+      component.find('.col-actions').exists().should.be.true;
       component.find('.delete-button').exists().should.be.false;
       setRequestData(component.vm.$container.requestData, {
         project: testData.extendedProjects.last()
