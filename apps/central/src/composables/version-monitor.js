@@ -10,8 +10,11 @@ export default () => {
 
   // getodk/central#2073
   const start = Date.now();
-  useEventListener(window, 'vite:preloadError', () => {
+  useEventListener(window, 'vite:preloadError', (event) => {
     // Don't reload right after app startup, as that can break e2e tests.
-    if (Date.now() - start >= 30000) location.reload();
+    if (Date.now() - start >= 30000) {
+      event.preventDefault();
+      location.reload();
+    }
   });
 };
