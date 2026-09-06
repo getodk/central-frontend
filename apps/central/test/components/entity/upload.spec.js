@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { T } from 'ramda';
+import { T, pick } from 'ramda';
 
 import EntityFilters from '../../../src/components/entity/filters.vue';
 import EntityUpload from '../../../src/components/entity/upload.vue';
@@ -324,6 +324,63 @@ describe('EntityUpload', () => {
     });
   });
 
+  it('renders correctly as the user moves through the flow', async () => {
+    testData.extendedDatasets.createPast(1);
+    const modal = await showModal();
+    const table = getTables(modal)[1];
+    const fileSelect = modal.getComponent(EntityUploadFileSelect);
+    const getState = () => {
+      let tableVisible = true;
+      try {
+        table.should.be.visible();
+      } catch (_) {
+        tableVisible = false;
+      }
+
+      return {
+        errors: modal.findComponent(EntityUploadErrors).exists(),
+        warnings: modal.findComponent(EntityUploadWarnings).exists(),
+        table: tableVisible,
+        fileSelect: pick(['dataTemplate', 'errors'], fileSelect.props())
+      };
+    };
+
+    // Initial state
+    getState().should.eql({
+      errors: false,
+      warnings: false,
+      table: false,
+      fileSelect: { dataTemplate: true, errors: 0 }
+    });
+
+    // Error case
+    await selectFile(modal, createCSV('label,label\ndogwood,dogwood'));
+    getState().should.eql({
+      errors: true,
+      warnings: false,
+      table: false,
+      fileSelect: { dataTemplate: true, errors: 1 }
+    });
+
+    // Warning only, no error
+    await selectFile(modal, createCSV('label,__id\ndogwood,e'));
+    getState().should.eql({
+      errors: false,
+      warnings: true,
+      table: true,
+      fileSelect: { dataTemplate: false, errors: 0 }
+    });
+
+    // No errors or warnings
+    await selectFile(modal, createCSV('label\ndogwood'));
+    getState().should.eql({
+      errors: false,
+      warnings: false,
+      table: true,
+      fileSelect: { dataTemplate: false, errors: 0 }
+    });
+  });
+
   it('resets errors and warnings after a new file is selected', async () => {
     testData.extendedDatasets.createPast(1, {
       properties: [{ name: 'height' }]
@@ -409,7 +466,7 @@ describe('EntityUpload', () => {
       })
       .beforeAnyResponse(modal => {
         modal.getComponent(EntityUploadFileSelect).props().disabled.should.be.true;
-        modal.find('.backdrop').exists().should.be.true;
+        should.exist(modal.get('.backdrop').attributes().inert);
 
         const popup = modal.getComponent(EntityUploadPopup);
         popup.props().filename.should.equal('my_data.csv');

@@ -1,6 +1,5 @@
-import { nextTick } from 'vue';
-
 import EntityUploadAlert from '../../../../src/components/entity/upload/alert.vue';
+import EntityUploadPropertyList from '../../../../src/components/entity/upload/property-list.vue';
 import EntityUploadWarnings from '../../../../src/components/entity/upload/warnings.vue';
 
 import { mergeMountOptions, mount } from '../../../util/lifecycle';
@@ -11,17 +10,14 @@ const mountComponent = (options) =>
   }));
 
 describe('EntityUploadWarnings', () => {
-  it('shows a warning for system properties', async () => {
+  it('shows a warning for system properties', () => {
     const component = mountComponent({
       props: { systemProperties: ['__id', '__foo'] }
     });
-    // Wait for I18nList to render.
-    await nextTick();
-
-    const p = component.getComponent(EntityUploadAlert).findAll('p');
-    p.length.should.equal(3);
-    p[0].text().should.startWith('System properties can’t be set');
-    p[2].text().should.equal('__id, __foo');
+    const warning = component.getComponent(EntityUploadAlert);
+    warning.get('p').text().should.startWith('System properties can’t be set');
+    const list = component.getComponent(EntityUploadPropertyList);
+    expect(list.props().names).to.eql(['__id', '__foo']);
   });
 
   it('shows a warning for columns that differ from properties on letter case', async () => {
@@ -52,30 +48,25 @@ describe('EntityUploadWarnings', () => {
     await table.get('td').should.have.textTooltip();
   });
 
-  it('shows a warning for columns that are invalid property names', async () => {
+  it('shows a warning for columns that are invalid property names', () => {
     const component = mountComponent({
       props: { invalidProperties: ['First name', 'phone#'] }
     });
-    // Wait for I18nList to render.
-    await nextTick();
-
-    const p = component.getComponent(EntityUploadAlert).findAll('p');
-    p.length.should.equal(3);
-    p[0].text().should.equal('These columns are not valid property names');
-    p[2].text().should.equal('First name, phone#');
+    const warning = component.getComponent(EntityUploadAlert);
+    const title = warning.get('p').text();
+    title.should.startWith('These columns are not valid property names');
+    const list = component.getComponent(EntityUploadPropertyList);
+    expect(list.props().names).to.eql(['First name', 'phone#']);
   });
 
-  it('shows a warning for missing properties', async () => {
+  it('shows a warning for missing properties', () => {
     const component = mountComponent({
       props: { missingProperties: ['foo', 'bar'] }
     });
-    // Wait for I18nList to render.
-    await nextTick();
-
-    const p = component.getComponent(EntityUploadAlert).findAll('p');
-    p.length.should.equal(3);
-    p[0].text().should.equal('Properties not found in file');
-    p[2].text().should.equal('foo, bar');
+    const warning = component.getComponent(EntityUploadAlert);
+    warning.get('p').text().should.equal('Properties not found in file');
+    const list = component.getComponent(EntityUploadPropertyList);
+    expect(list.props().names).to.eql(['foo', 'bar']);
   });
 
   describe('unknown (extra) properties', () => {

@@ -4,6 +4,7 @@ import FieldKeyNew from '../../../src/components/field-key/new.vue';
 import FieldKeyQrPanel from '../../../src/components/field-key/qr-panel.vue';
 
 import testData from '../../data';
+import { addActorProperty } from '../../util/trigger';
 import { load, mockHttp } from '../../util/http';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
@@ -13,7 +14,10 @@ import { testRequestData } from '../../util/request-data';
 const mountOptions = (options = undefined) => mergeMountOptions(options, {
   props: { state: true, managed: true },
   container: {
-    requestData: testRequestData(['actorProperties'], { project: testData.extendedProjects.last(), actorProperties: testData.actorProperties.sorted() }),
+    requestData: testRequestData(['actorProperties'], {
+      project: testData.extendedProjects.last(),
+      actorProperties: testData.actorProperties.sorted()
+    }),
     router: mockRouter('/')
   }
 });
@@ -48,7 +52,7 @@ describe('FieldKeyNew', () => {
           await modal.get('input').setValue('My Field Key');
           return modal.get('form').trigger('submit');
         },
-        disabled: ['.btn-link'],
+        disabled: ['fieldset', '.btn-link'],
         modal: true
       });
   });
@@ -123,42 +127,29 @@ describe('FieldKeyNew', () => {
   });
 
   describe('adding a property inline', () => {
-    it('shows the new property row after adding a property', () => {
+    it('sends the correct requests', () => {
       testData.extendedProjects.createPast(1);
       return mockHttp()
         .mount(FieldKeyNew, mountOptions())
-        .request(async (modal) => {
-          await modal.get('.add-property-link').trigger('click');
-          await modal.get('.actor-properties-new input').setValue('region');
-          return modal.get('.actor-properties-new form').trigger('submit');
-        })
-        .respondWithSuccess()
-        .afterResponse((modal) => {
-          modal.findAll('textarea').length.should.equal(1);
-          modal.get('.entity-update-row label').text().should.include('region');
-        });
-    });
-
-    it('includes a newly added property value in the create request', () => {
-      testData.extendedProjects.createPast(1);
-      return mockHttp()
-        .mount(FieldKeyNew, mountOptions())
-        .request(async (modal) => {
-          await modal.get('.add-property-link').trigger('click');
-          await modal.get('.actor-properties-new input').setValue('region');
-          return modal.get('.actor-properties-new form').trigger('submit');
-        })
-        .respondWithSuccess()
-        .complete()
         .request(async (modal) => {
           await modal.get('input').setValue('My App User');
-          await modal.get('textarea').setValue('north');
+          await addActorProperty(modal, 'region', 'north');
           return modal.get('form').trigger('submit');
         })
-        .beforeEachResponse((_, { data }) => {
-          data.should.eql({ displayName: 'My App User', properties: { region: 'north' } });
-        })
-        .respondWithProblem();
+        .respondWithSuccess()
+        .respondWithProblem()
+        .testRequests([
+          {
+            method: 'POST',
+            url: '/v1/projects/1/actor-properties',
+            data: { name: 'region' }
+          },
+          {
+            method: 'POST',
+            url: '/v1/projects/1/app-users',
+            data: { displayName: 'My App User', properties: { region: 'north' } }
+          }
+        ]);
     });
   });
 
@@ -411,5 +402,126 @@ describe('FieldKeyNew', () => {
           app.findAll('.field-key-row').length.should.equal(3);
         });
     });
+  });
+
+  describe('list of actor properties', () => {
+    const create = () => {
+      testData.extendedProjects.createPast(1);
+      return load('/projects/1/app-users')
+        .complete()
+        .request(async (app) => {
+          await app.get('.heading-with-button button').trigger('click');
+          const modal = app.get('#field-key-new');
+          await modal.get('input').setValue('input', 'My App User');
+          await addActorProperty(modal, 'region', 'north');
+          return modal.get('form').trigger('submit');
+        })
+        // Property creation
+        .respondWithSuccess();
+    };
+
+    it('updates the list after the app user is created', () =>
+      create()
+        .respondWithData(() => testData.standardFieldKeys.createNew({
+          displayName: 'My App User',
+          properties: { region: 'north' }
+        }))
+        .afterResponses(app => {
+          // The table behind the modal should not change until the modal is
+          // hidden.
+          app.find('.table-freeze-scrolling').exists().should.be.false;
+        })
+        .request(app => app.get('#field-key-new .btn-primary').trigger('click'))
+        .respondWithData(() => testData.extendedFieldKeys.sorted())
+        .afterResponse(app => {
+          app.get('.table-freeze-scrolling th').text().should.equal('region');
+        }));
+
+    it('updates the list if only the property request succeeds', () =>
+      create()
+        .respondWithProblem() // App user creation
+        .afterResponses(async (app) => {
+          // The table behind the modal should not change until the modal is
+          // hidden.
+          app.find('.table-freeze-scrolling').exists().should.be.false;
+          await app.get('#field-key-new .btn-link').trigger('click');
+          app.get('.table-freeze-scrolling th').text().should.equal('region');
+        }));
+
+    it('updates the list after multiple app users are created', () =>
+      create()
+        .respondWithData(() => testData.standardFieldKeys.createNew({
+          displayName: 'My App User',
+          properties: { region: 'north' }
+        }))
+        .complete()
+        // Create a second actor property and a second app user. There should
+        // only be a request for the new property, not the previous one.
+        .request(async (app) => {
+          const modal = app.get('#field-key-new');
+          await modal.get('.btn-link').trigger('click');
+          await modal.get('input').setValue('Another App User');
+          await modal.get('textarea').setValue('south');
+          await addActorProperty(modal, 'prop2', 'value2');
+          return modal.get('form').trigger('submit');
+        })
+        .respondWithSuccess()
+        .respondWithData(() => testData.standardFieldKeys.createNew({
+          displayName: 'Another App User',
+          properties: { region: 'south', prop2: 'value2' }
+        }))
+        .testRequests([
+          {
+            method: 'POST',
+            url: '/v1/projects/1/actor-properties',
+            data: { name: 'prop2' }
+          },
+          {
+            method: 'POST',
+            url: '/v1/projects/1/app-users',
+            data: {
+              displayName: 'Another App User',
+              properties: { region: 'south', prop2: 'value2' }
+            }
+          }
+        ])
+        .complete()
+        // Create a third app user, but don't create another actor property.
+        // There should only be a single request.
+        .request(async (app) => {
+          const modal = app.get('#field-key-new');
+          await modal.get('.btn-link').trigger('click');
+          await modal.get('input').setValue('One More App User');
+          const textareas = modal.findAll('textarea');
+          await textareas[0].setValue('east');
+          await textareas[1].setValue('value3');
+          return modal.get('form').trigger('submit');
+        })
+        .respondWithData(() => testData.standardFieldKeys.createNew({
+          displayName: 'One More App User',
+          properties: { region: 'east', prop2: 'value3' }
+        }))
+        .testRequests([
+          {
+            method: 'POST',
+            url: '/v1/projects/1/app-users',
+            data: {
+              displayName: 'One More App User',
+              properties: { region: 'east', prop2: 'value3' }
+            }
+          }
+        ])
+        .afterResponses(app => {
+          // The table behind the modal should not change until the modal is
+          // hidden.
+          app.find('.table-freeze-scrolling').exists().should.be.false;
+        })
+        .request(app => app.get('#field-key-new .btn-primary').trigger('click'))
+        .respondWithData(() => testData.extendedFieldKeys.sorted())
+        .afterResponse(app => {
+          const text = app.findAll('.table-freeze-scrolling th')
+            .map(th => th.text());
+          text.should.eql(['region', 'prop2']);
+        }));
   });
 });

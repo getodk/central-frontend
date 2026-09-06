@@ -9,12 +9,12 @@
     <h:title>Itext (basic)</h:title>
     <model>
       <itext>
-        <translation lang="English">
+        <translation lang="English (en)">
           <text id="q1:label">
             <value>1. Question one</value>
           </text>
         </translation>
-        <translation lang="Español">
+        <translation lang="Español (es)">
           <text id="q1:label">
             <value>1. Pregunta uno</value>
           </text>

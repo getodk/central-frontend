@@ -304,8 +304,10 @@ export default {
   },
   "pt": {
     "upload": "Carregar Entidades",
+    "newEntity": "Nova Entidade",
     "alert": {
-      "upload": "Suas Entidades foram carregadas com sucesso."
+      "upload": "Suas Entidades foram carregadas com sucesso.",
+      "create": "A Entidade foi criada com sucesso."
     },
     "purgeDescription": "Entidades são excluídas após 30 dias na Lixeira",
     "action": {

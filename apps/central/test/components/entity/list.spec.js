@@ -1045,6 +1045,24 @@ describe('EntityList', () => {
     });
   });
 
+  describe('"view as" filter', () => {
+    it('shows the filter if the dataset has an access filter', () => {
+      testData.extendedDatasets.createPast(1, {
+        accessFilter: { type: 'ownerOnly' }
+      });
+      return loadEntityList().afterResponses(component => {
+        component.find('#entity-filters-view-as').exists().should.be.true;
+      });
+    });
+
+    it('does not show the filter if the dataset has no access filter', () => {
+      testData.extendedDatasets.createPast(1, { accessFilter: null });
+      return loadEntityList().afterResponses(component => {
+        component.find('#entity-filters-view-as').exists().should.be.false;
+      });
+    });
+  });
+
   describe('search', () => {
     beforeEach(() => {
       testData.extendedDatasets.createPast(1, { entities: 2 });

@@ -470,5 +470,21 @@ describe('SelectControl', () => {
         expect(root.currentState.currentPage).toBe(node.currentState.pageBoundary);
       }
     );
+
+    it('does not advance when another question on the same field-list page is invalid', async () => {
+      const fieldListRoot = await getReactiveForm('pagination-20-quick-fieldlist.xml');
+      const node = getSelectNodeByReference(fieldListRoot, '/data/fl/fruit');
+      fieldListRoot.setCurrentPage(node.currentState.pageBoundary);
+      const component = mountComponent(node);
+
+      const violationReferences = fieldListRoot.validationState.violations.map(
+        ({ reference }) => reference
+      );
+      expect(violationReferences).toContain('/data/fl/reason');
+
+      await selectOption(component, node, 'mango');
+      expectSelectedValueState(node, 'mango');
+      expect(fieldListRoot.currentState.currentPage).toBe(node.currentState.pageBoundary);
+    });
   });
 });

@@ -1,5 +1,5 @@
-import { nextTick } from 'vue';
-
+import EntityUploadAlert from '../../../../src/components/entity/upload/alert.vue';
+import EntityUploadPropertyList from '../../../../src/components/entity/upload/property-list.vue';
 import EntityUploadErrors from '../../../../src/components/entity/upload/errors.vue';
 
 import { mergeMountOptions, mount } from '../../../util/lifecycle';
@@ -42,17 +42,14 @@ describe('EntityUploadErrors', () => {
     });
   });
 
-  it('shows an error if there are duplicate column headers', async () => {
+  it('shows an error if there are duplicate column headers', () => {
     const component = mountComponent({
       props: { duplicateColumns: ['height', 'species'] }
     });
-    // Wait for I18nList to render.
-    await nextTick();
-
-    const p = component.get('.entity-upload-alert').findAll('p');
-    p.length.should.equal(3);
-    p[0].text().should.equal('Duplicate column headers');
-    p[2].text().should.equal('height, species');
+    const alert = component.getComponent(EntityUploadAlert);
+    alert.get('p').text().should.equal('Duplicate column headers');
+    const list = component.getComponent(EntityUploadPropertyList);
+    expect(list.props().names).to.eql(['height', 'species']);
   });
 
   it('shows a data error', () => {

@@ -19,6 +19,12 @@ const availableTranslations = import.meta.glob<{ default: TransifexTranslation }
   '../../../locales/strings_*.json'
 );
 
+const getAvailableTranslationsKey = (locale: string) => {
+  return Object.keys(availableTranslations).find((path) => {
+    return path.endsWith(`/strings_${locale}.json`);
+  });
+};
+
 /**
  * Transifex exports messages wrapped in an object (e.g., `{ string: "..." }`).
  * This flattens them into a consistent key-value pair.
@@ -44,8 +50,13 @@ const loadMessages = async (locale: string): Promise<ICUMessage> => {
     return enMessages;
   }
 
+  const key = getAvailableTranslationsKey(locale);
+  if (!key) {
+    return enMessages;
+  }
+
   try {
-    const raw = await availableTranslations[`/locales/strings_${locale}.json`]!();
+    const raw = await availableTranslations[key]!();
     return { ...enMessages, ...normalizeMessages(raw.default) };
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -194,8 +205,8 @@ export const useLocale = (formRef: Ref<RootNode | null>) => {
       primevue.config.locale = { ...primevue.config.locale, ...primeLocale };
     }
 
-    const messagesLocale = findBestLocale(candidates, (lang) => {
-      return Object.hasOwn(availableTranslations, `/locales/strings_${lang}.json`);
+    const messagesLocale = findBestLocale(candidates, (locale) => {
+      return !!getAvailableTranslationsKey(locale);
     });
     void loadMessages(messagesLocale).then((messages) => {
       if (latestRequestedLocale.locale === newContentLocale) {

@@ -12,9 +12,9 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="entity-upload" :state="state" :hideable="!uploading" :persistent="true" size="full"
     backdrop @hide="hide" @mutate="resizeColumnIfShown">
-    <template #title>{{ $t('title') }}</template>
+    <template #title>{{ $t('action.append') }}</template>
     <template #body>
-      <div :class="{ backdrop: uploading }">
+      <div :class="{ backdrop: uploading }" :inert="uploading">
         <p class="entity-upload-section-title">{{ $t('currentEntities') }}</p>
         <div class="entity-upload-table-container">
           <entity-upload-table :ref="setTable(0)"
@@ -31,18 +31,21 @@ except according to the terms contained in the LICENSE file.
             :count="serverPage.count" :size-options="pageSizeOptions"
             :spinner="serverEntities.awaitingResponse"/>
         </div>
-        <p class="entity-upload-section-title">{{ $t('newEntities') }}</p>
-        <div class="entity-upload-table-container panel panel-simple">
-          <div class="panel-heading">
-            <h1 class="panel-title">{{ $t('table.file') }}</h1>
-          </div>
-          <div class="panel-body">
-            <entity-upload-table :ref="setTable(1)" :entities="csvSlice"
-              :extra-properties="propertiesToCreate" :row-index="csvRow"
-              :page-size="csvPage.size" :highlighted="warningRows"/>
-            <pagination v-if="csvEntities != null" v-model:page="csvPage.page"
-              v-model:size="csvPage.size" :count="csvEntities.length"
-              :size-options="pageSizeOptions"/>
+
+        <div v-show="csvEntities != null">
+          <p class="entity-upload-section-title">{{ $t('newEntities') }}</p>
+          <div class="entity-upload-table-container panel panel-simple">
+            <div class="panel-heading">
+              <h1 class="panel-title">{{ $t('table.file') }}</h1>
+            </div>
+            <div class="panel-body">
+              <entity-upload-table :ref="setTable(1)" :entities="csvSlice"
+                :extra-properties="propertiesToCreate" :row-index="csvRow"
+                :page-size="csvPage.size" :highlighted="warningRows"/>
+              <pagination v-if="csvEntities != null" v-model:page="csvPage.page"
+                v-model:size="csvPage.size" :count="csvEntities.length"
+                :size-options="pageSizeOptions"/>
+            </div>
           </div>
         </div>
 
@@ -53,12 +56,13 @@ except according to the terms contained in the LICENSE file.
           @rows="showWarningRows">
           <template #extra-properties>
             <entity-upload-extra-properties :properties="warnings.extraProperties"
-              :selected="selectedProperties" :created="createdProperties"
+              :selected="selectedProperties" :created="propertyCreator.created"
               :disabled="errors != null" @toggle="toggleExtraProperty"/>
           </template>
         </entity-upload-warnings>
 
-        <entity-upload-file-select :disabled="parsing || uploading"
+        <entity-upload-file-select :data-template="csvEntities == null"
+          :errors="errors?.count" :disabled="parsing || uploading"
           :parsing="parsing" @change="selectFile"/>
       </div>
       <entity-upload-popup v-if="uploading" :filename="fileMetadata.name"
@@ -81,7 +85,7 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import { computed, inject, nextTick, onBeforeUnmount, reactive, ref, shallowRef, watch } from 'vue';
-import { equals, pick } from 'ramda';
+import { pick } from 'ramda';
 import { useI18n } from 'vue-i18n';
 
 import EntityUploadErrors from './upload/errors.vue';
@@ -95,6 +99,7 @@ import Modal from '../modal.vue';
 import Pagination from '../pagination.vue';
 
 import useEventListener from '../../composables/event-listener';
+import usePropertyCreator from '../../composables/property-creator';
 import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
@@ -407,23 +412,7 @@ const propertiesToCreate = computed(() => {
     selectedProperties.has(name));
   return result != null && result.length !== 0 ? result : null;
 });
-const createdProperties = reactive(new Set());
-const createProperties = async () => {
-  if (propertiesToCreate.value == null) return;
-  for (const name of propertiesToCreate.value) {
-    if (createdProperties.has(name)) continue; // eslint-disable-line no-continue
-    await request({ // eslint-disable-line no-await-in-loop
-      method: 'POST',
-      url: apiPaths.datasetProperties(dataset.projectId, dataset.name),
-      data: { name },
-      // If the property has already been created somehow, that's not an issue.
-      // We can just ignore the Problem response.
-      fulfillProblem: ({ code, details }) => code === 409.3 &&
-        equals(details.fields, ['name', 'datasetId'])
-    });
-    createdProperties.add(name);
-  }
-};
+const propertyCreator = usePropertyCreator(request);
 const mergeDataWithExtra = (entity) => {
   if (entity.extra == null) return entity;
 
@@ -452,7 +441,11 @@ const mergeDataWithExtra = (entity) => {
 // UPLOAD REQUEST
 const uploadProgress = ref(null);
 const upload = () => {
-  createProperties()
+  propertyCreator.request(
+    apiPaths.datasetProperties(dataset.projectId, dataset.name),
+    propertiesToCreate.value,
+    ['name', 'datasetId']
+  )
     .then(() => {
       const entitiesToSend = warnings.value?.extraProperties == null
         ? csvEntities.value
@@ -469,7 +462,7 @@ const upload = () => {
       }).finally(() => { uploadProgress.value = null; });
     })
     .then(() => {
-      emit('success', csvEntities.value.length, createdProperties.size !== 0);
+      emit('success', csvEntities.value.length, propertyCreator.created.size !== 0);
     })
     .catch(noop);
 };
@@ -490,7 +483,7 @@ watch([errors, warnings, csvEntities], () => {
     nextTick(() => { actions.value.scrollIntoView(); });
 });
 
-const hide = () => { emit('hide', createdProperties.size !== 0); };
+const hide = () => { emit('hide', propertyCreator.created.size !== 0); };
 watch(() => props.state, (state) => {
   if (state) return;
   abortParse();
@@ -499,7 +492,7 @@ watch(() => props.state, (state) => {
   errors.value = null;
   warnings.value = null;
   selectedProperties.clear();
-  createdProperties.clear();
+  propertyCreator.clear();
   for (const table of tables) table.resetScroll();
 });
 </script>
@@ -537,6 +530,8 @@ watch(() => props.state, (state) => {
     // The margin if there is no text or Pagination
     &:last-child { margin-bottom: 0; }
   }
+
+  .modal-actions { border-top: 1px solid $central-grey-2; }
 }
 
 .entity-upload-section-title {
@@ -555,8 +550,6 @@ watch(() => props.state, (state) => {
 <i18n lang="json5">
 {
   "en": {
-    // This is the title at the top of a pop-up.
-    "title": "Import Data from File",
     "currentEntities": "Your current Entities",
     "newEntities": "New Entities",
     "table": {
@@ -565,7 +558,7 @@ watch(() => props.state, (state) => {
     // @transifexKey component.EntityList.noEntities
     "noEntities": "There are no Entities to show.",
     "action": {
-      "append": "Append data"
+      "append": "Append Entities"
     },
     "alert": {
       "blankLabel": "Missing label.",
@@ -582,13 +575,8 @@ watch(() => props.state, (state) => {
     "noEntities": "Nejsou zde žádné subjekty, které by bylo možné zobrazit."
   },
   "de": {
-    "title": "Daten aus Datei importieren",
     "table": {
-      "server": "{name} Serverdaten",
       "file": "Zu importierende Daten"
-    },
-    "action": {
-      "append": "Daten hinzufügen"
     },
     "alert": {
       "blankLabel": "Fehlende Etikett.",
@@ -597,13 +585,8 @@ watch(() => props.state, (state) => {
     "noEntities": "Es gibt keine Objekte zum Anzeigen."
   },
   "es": {
-    "title": "Importar datos de un archivo",
     "table": {
-      "server": "{name} datos del servidor",
       "file": "Datos a importar"
-    },
-    "action": {
-      "append": "Añadir datos"
     },
     "alert": {
       "blankLabel": "Falta la etiqueta.",
@@ -612,13 +595,13 @@ watch(() => props.state, (state) => {
     "noEntities": "No hay Entidades para mostrar."
   },
   "fr": {
-    "title": "Importer des données depuis un fichier",
+    "currentEntities": "Vos entités actuelles",
+    "newEntities": "Nouvelles entités",
     "table": {
-      "server": "{name} : données du serveur",
       "file": "Données à importer"
     },
     "action": {
-      "append": "Ajouter les données"
+      "append": "Ajouter entités"
     },
     "alert": {
       "blankLabel": "Étiquette manquante.",
@@ -627,13 +610,8 @@ watch(() => props.state, (state) => {
     "noEntities": "Pas d'entités à montrer."
   },
   "it": {
-    "title": "Importa Dati da File",
     "table": {
-      "server": "{name} dati del server",
       "file": "Dati da importare"
-    },
-    "action": {
-      "append": "Aggiungi dati"
     },
     "alert": {
       "blankLabel": "Etichetta mancante",
@@ -642,13 +620,8 @@ watch(() => props.state, (state) => {
     "noEntities": "Non ci sono entità da mostrare."
   },
   "pt": {
-    "title": "Importar dados de arquivo",
     "table": {
-      "server": "Dados do servidor {name}",
       "file": "Dados para importar"
-    },
-    "action": {
-      "append": "Anexar dados"
     },
     "alert": {
       "blankLabel": "Rótulo faltando.",
@@ -660,13 +633,8 @@ watch(() => props.state, (state) => {
     "noEntities": "Hakuna Fomu za kuonyesha."
   },
   "zh": {
-    "title": "从文件导入数据",
     "table": {
-      "server": "{name}服务器数据",
       "file": "要导入的数据"
-    },
-    "action": {
-      "append": "添加数据"
     },
     "alert": {
       "blankLabel": "无标签",
@@ -675,13 +643,8 @@ watch(() => props.state, (state) => {
     "noEntities": "暂无实体可显示。"
   },
   "zh-Hant": {
-    "title": "從文件匯入數據",
     "table": {
-      "server": "{name} 伺服器數據",
       "file": "要導入的資料"
-    },
-    "action": {
-      "append": "追加資料"
     },
     "alert": {
       "blankLabel": "標籤遺失。",

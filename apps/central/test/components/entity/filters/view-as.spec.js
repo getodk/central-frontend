@@ -11,12 +11,35 @@ const createFieldKeys = (count) => new Array(count).fill(undefined)
     .createPast(1, { displayName: `App User ${i}` })
     .last());
 
-const mountComponent = (fieldKeys, options) => mount(EntityFiltersViewAs, {
-  container: { requestData: testRequestData([useProject], { fieldKeys }) },
-  ...options
-});
+const mountComponent = (fieldKeys, options) => {
+  if (testData.extendedDatasets.size === 0)
+    testData.extendedDatasets.createPast(1, { accessFilter: { type: 'ownerOnly' } });
+  const dataset = testData.extendedDatasets.last();
+  return mount(EntityFiltersViewAs, {
+    container: {
+      requestData: testRequestData([useProject], { fieldKeys, dataset })
+    },
+    ...options
+  });
+};
 
 describe('EntityFiltersViewAs', () => {
+  describe('dataset access filter', () => {
+    it('renders the select if the dataset has an access filter', () => {
+      testData.extendedDatasets.createPast(1, {
+        accessFilter: { type: 'ownerOnly' }
+      });
+      const component = mountComponent(createFieldKeys(1));
+      component.find('select').exists().should.be.true;
+    });
+
+    it('does not render the select if the dataset has no access filter', () => {
+      testData.extendedDatasets.createPast(1, { accessFilter: null });
+      const component = mountComponent(createFieldKeys(1));
+      component.find('select').exists().should.be.false;
+    });
+  });
+
   it('passes the modelValue prop to the select', () => {
     const [fieldKey] = createFieldKeys(1);
     const component = mountComponent([fieldKey], {

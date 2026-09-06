@@ -10,18 +10,18 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 
-<!-- We show the XForm XML in a modal rather than showing it in a new tab and
+<!-- We show the XML in a modal rather than showing it in a new tab and
 trying to leverage browsers' ability to render XML as a tree. That's because
 rather than rendering an XForm as an XML tree, the browser will render it as
 XHTML, because XForms include the XHTML namespace. There doesn't seem to be a
 way to force browsers to render the XML as a tree, so we format it ourselves.
 Somewhat related: https://support.google.com/chrome/thread/10921150?hl=en -->
 <template>
-  <modal id="form-version-view-xml" :state="state" hideable backdrop
+  <modal id="xml-viewer" :state="state" hideable backdrop
     @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
-      <pre><spinner :state="formVersionXml.initiallyLoading"/><code>{{ formattedXml }}</code></pre>
+      <pre><spinner :state="loading"/><code>{{ formattedXml }}</code></pre>
       <div class="modal-actions">
         <button type="button" class="btn btn-primary" @click="$emit('hide')">
           {{ $t('action.close') }}
@@ -31,51 +31,46 @@ Somewhat related: https://support.google.com/chrome/thread/10921150?hl=en -->
   </modal>
 </template>
 
-<script>
+<script setup>
+import { computed } from 'vue';
 // xml-formatter suggests using dist/browser/xml-formatter.js in the browser,
 // but I wasn't able to get that to work -- maybe because we use webpack?
 // Importing this way seems to work and also results in a small bundle.
 import formatXml from 'xml-formatter';
 
-import Modal from '../modal.vue';
-import Spinner from '../spinner.vue';
+import Modal from './modal.vue';
+import Spinner from './spinner.vue';
 
-import { useRequestData } from '../../request-data';
+defineOptions({
+  name: 'XmlViewer'
+});
 
-export default {
-  name: 'FormVersionViewXml',
-  components: { Modal, Spinner },
-  props: {
-    state: {
-      type: Boolean,
-      default: false
-    }
+const props = defineProps({
+  state: {
+    type: Boolean,
+    default: false
   },
-  emits: ['hide'],
-  setup() {
-    const { formVersionXml } = useRequestData();
-    return { formVersionXml };
+  xml: {
+    type: String,
+    default: null
   },
-  computed: {
-    // XSLT might be a way to implement this without a dependency, but Firefox
-    // doesn't seem to support the `indent` attribute of <xsl:output>:
-    // https://stackoverflow.com/questions/376373/pretty-printing-xml-with-javascript
-    formattedXml() {
-      return this.formVersionXml.dataExists
-        ? formatXml(this.formVersionXml.data, { collapseContent: true })
-        : '';
-    }
-  },
-  watch: {
-    state(state) {
-      if (!state) this.formVersionXml.reset();
-    }
+  loading: {
+    type: Boolean,
+    default: false
   }
-};
+});
+
+defineEmits(['hide']);
+
+// XSLT might be a way to implement this without a dependency, but Firefox
+// doesn't seem to support the `indent` attribute of <xsl:output>:
+// https://stackoverflow.com/questions/376373/pretty-printing-xml-with-javascript
+const formattedXml = computed(() =>
+  (props.xml != null ? formatXml(props.xml, { collapseContent: true }) : ''));
 </script>
 
 <style lang="scss">
-#form-version-view-xml {
+#xml-viewer {
   pre {
     min-height: 120px;
     // 129px is the height of the modal, not including the <pre> element. The
@@ -91,6 +86,7 @@ export default {
 <i18n lang="json5">
 {
   "en": {
+    // @transifexKey component.FormVersionViewXml.title
     // This is the title at the top of a pop-up.
     "title": "View XML"
   }

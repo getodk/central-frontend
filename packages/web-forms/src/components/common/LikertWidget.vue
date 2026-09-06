@@ -35,30 +35,31 @@ defineEmits(['change']);
 		margin-left: var(--odk-spacing-m);
 		margin-right: var(--odk-spacing-m);
 		background: transparent;
-
-		&:last-of-type::before {
-			width: calc(50% + 20px);
-			right: max(20px, calc(50% - 20px));
-		}
-
-		&:first-of-type::before {
-			width: calc(50% + 20px);
-			left: max(20px, calc(50% - 20px));
-		}
+		position: relative;
 
 		&::before {
 			content: '';
-			display: block;
-			position: relative;
+			position: absolute;
 			background-color: var(--odk-border-color);
 			height: 3px;
-			width: calc(100% + 20px);
-			top: 11px;
+			top: calc(var(--odk-spacing-m) + (var(--p-radiobutton-height) / 2));
+			transform: translateY(-50%);
+			inset-inline-start: calc(-1 * var(--odk-spacing-m));
+			inset-inline-end: calc(-1 * var(--odk-spacing-m));
+		}
+
+		&:first-of-type::before {
+			inset-inline-start: 50%;
+		}
+
+		&:last-of-type::before {
+			inset-inline-end: 50%;
 		}
 
 		&:hover,
 		&.active,
-		&.active:hover {
+		&.active:hover,
+		&:has(.p-radiobutton-input:focus-visible) {
 			background-color: transparent;
 			outline: none;
 		}
@@ -72,10 +73,10 @@ defineEmits(['change']);
 
 		.text-content {
 			text-align: center;
-			margin: -11.5px 0 var(--odk-spacing-m) 0;
+			margin: 0 0 var(--odk-spacing-m) 0;
 			width: fit-content;
 			position: relative;
-			padding-top: var(--odk-spacing-xl);
+			padding-top: var(--odk-spacing-m);
 			word-break: break-word;
 			max-width: unset;
 		}

@@ -364,18 +364,6 @@ const routes = [
         }
       }),
       asyncRoute({
-        path: 'custom-properties',
-        component: 'CustomPropertyList',
-        props: true,
-        loading: 'tab',
-        meta: {
-          validateData: {
-            project: () => project.permits('project.update')
-          },
-          title: () => [i18n.t('projectShow.tab.customProperties'), project.name]
-        }
-      }),
-      asyncRoute({
         path: 'settings',
         component: 'ProjectSettings',
         loading: 'tab',
@@ -766,7 +754,6 @@ const routesByName = new Map();
     'ProjectOverview',
     'ProjectUserList',
     'FieldKeyList',
-    'CustomPropertyList',
     'ProjectFormAccess',
     'DatasetList',
     'ProjectSettings',

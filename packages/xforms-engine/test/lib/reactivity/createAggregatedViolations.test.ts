@@ -582,4 +582,16 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
       ]);
     });
   });
+
+  describe('violation node reference', () => {
+    it('references the violating node itself', async () => {
+      const { root } = await createInstance(definition.asXml());
+      const violations = root.validationState.violations;
+
+      expect(violations.length).toBeGreaterThan(0);
+      expect(violations.map(({ node }) => node.nodeId)).toEqual(
+        violations.map(({ nodeId }) => nodeId)
+      );
+    });
+  });
 });

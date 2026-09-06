@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { QUESTION_HAS_ERROR, SUBMIT_PRESSED } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import { QUESTION_HAS_ERROR, SUBMIT_PRESSED, TOUCHED_QUESTIONS } from '@getodk/web-forms/lib/constants/injection-keys.ts';
 import { containerId } from '@getodk/web-forms/lib/format/ids.ts';
 import type {
 	AnyInputNode,
@@ -8,7 +8,7 @@ import type {
 	RankNode,
 	SelectNode,
 } from '@getodk/xforms-engine';
-import { computed, inject, provide, type Ref, ref, watch } from 'vue';
+import { computed, inject, provide, reactive, type Ref, ref, watch } from 'vue';
 import InputControl from '@getodk/web-forms/components/form-elements/input/InputControl.vue';
 import NoteControl from '../form-elements/NoteControl.vue';
 import RangeControl from '@getodk/web-forms/components/form-elements/range/RangeControl.vue';
@@ -29,18 +29,16 @@ const isUploadNode = (node: ControlNode) => node.nodeType === 'upload';
 
 const submitPressed = inject<Ref<boolean>>(SUBMIT_PRESSED, ref(false));
 
-const touched = ref(false);
-const stopWatch = watch(
+// Shared across the form so the touched state survives page changes that unmount this component.
+const touchedQuestions = inject<Set<string>>(TOUCHED_QUESTIONS, () => reactive(new Set<string>()), true);
+watch(
 	() => props.question.currentState.instanceValue,
-	() => {
-		touched.value = true;
-		stopWatch();
-	}
+	() => touchedQuestions.add(props.question.nodeId)
 );
 
 const questionHasError = computed(() => {
 	return (
-		(touched.value || submitPressed.value) &&
+		(touchedQuestions.has(props.question.nodeId) || submitPressed.value) &&
 		props.question.validationState.violation?.valid === false
 	);
 });
