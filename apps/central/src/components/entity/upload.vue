@@ -264,7 +264,7 @@ const validateHeader = ({ columns, errors: papaErrors }) => {
   return result;
 };
 
-// FILE PARSING
+// PARSING CSV DATA BELOW COLUMN HEADER
 // noPropertyData is used to minimize the JSON sent to Backend: the JSON won't
 // specify a `data` property for an entity without property data.
 const noPropertyData = { toJSON: () => undefined };
