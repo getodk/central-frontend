@@ -83,9 +83,7 @@ watch(() => props.state, (state) => {
   "en": {
     // This is the title at the top of a pop-up for editing an App User. {displayName} is the
     // the name of the App User
-    "title": "Edit App User “{displayName}”",
-    // Shown as label before the display name of the App User in the edit pop-up.
-    "displayNameLabel": "App User"
+    "title": "Edit App User “{displayName}”"
   }
 }
 </i18n>
