@@ -101,7 +101,7 @@ const setEnketoSrc = () => {
 
   // we no longer render Enketo for Edit Submission from central-frontend.
   const enketoId = props.enketoId ?? props.form.enketoId;
-  if (enketoId === props.form.enketoOnceId) {
+  if (props.form.once) {
     lastSubmitted(enketoId)
       .then(result => {
         if (result) {

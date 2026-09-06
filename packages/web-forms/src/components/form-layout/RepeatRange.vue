@@ -31,6 +31,7 @@ const isAddButtonVisible = (range: RepeatRangeNode): range is RepeatRangeUncontr
 	</template>
 	<Button
 		v-if="isAddButtonVisible(node)"
+		:id="node.nodeId"
 		outlined
 		severity="contrast"
 		class="button-add-instance"

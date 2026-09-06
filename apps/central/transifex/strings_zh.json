@@ -30,10 +30,6 @@
       "formAccess": {
         "string": "表单权限",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-      },
-      "customProperties": {
-        "string": "",
-        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     }
   },
@@ -357,6 +353,10 @@
     }
   },
   "action": {
+    "add": {
+      "string": "",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "cancel": {
       "string": "取消",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -544,7 +544,7 @@
       "developer_comment": "This is the text of a form field."
     },
     "passphrase": {
-      "string": "密码短语",
+      "string": "",
       "developer_comment": "This is the text of a form field."
     },
     "password": {
@@ -746,11 +746,11 @@
     },
     "property": {
       "string": "属性",
-      "developer_comment": "This is a data property of an Entity."
+      "developer_comment": "This is a data property of an Entity or an Actor."
     },
     "properties": {
       "string": "属性",
-      "developer_comment": "This refers to the data properties of an Entity."
+      "developer_comment": "This refers to the data properties of an Entity or Actor."
     },
     "publicLink": {
       "string": "公开访问链接",
@@ -1227,6 +1227,29 @@
         "success": {
           "string": "已向{email}发送邮件，内含后续操作说明。"
         }
+      }
+    },
+    "ActorPropertiesNew": {
+      "addProperty": {
+        "string": ""
+      },
+      "addPropertyHint": {
+        "string": ""
+      }
+    },
+    "ActorPropertiesUpsert": {
+      "description": {
+        "full": {
+          "string": "",
+          "developer_comment": "{assignEntities} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nassign the right Entities"
+        },
+        "assignEntities": {
+          "string": "",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {assignEntities} is in the following text:\n\nProperties help {assignEntities}, control access, and connect users to the data they need."
+        }
+      },
+      "noProperties": {
+        "string": ""
       }
     },
     "AnalyticsForm": {
@@ -1788,6 +1811,14 @@
     "ConfigLoginPreview": {
       "introduction": {
         "string": ""
+      }
+    },
+    "CustomPropsFilter": {
+      "action": {
+        "all": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of an actor (app user or public link) \"Properties\" filter, that allows the user to select all app users with all properties (no filter applied)."
+        }
       }
     },
     "DatasetDelete": {
@@ -2555,6 +2586,14 @@
         "string": "目前尚无实体。"
       }
     },
+    "EntityFiltersViewAs": {
+      "noUserSelected": {
+        "string": ""
+      },
+      "viewAs": {
+        "string": ""
+      }
+    },
     "EntityList": {
       "noEntities": {
         "string": "暂无实体可显示。",
@@ -2744,22 +2783,20 @@
       }
     },
     "EntityUpload": {
-      "title": {
-        "string": "从文件导入数据",
-        "developer_comment": "This is the title at the top of a pop-up."
+      "currentEntities": {
+        "string": ""
+      },
+      "newEntities": {
+        "string": ""
       },
       "table": {
-        "server": {
-          "string": "{name}服务器数据",
-          "developer_comment": "This is shown above a list of Entities on the server. {name} is the name of the Entity List."
-        },
         "file": {
           "string": "要导入的数据"
         }
       },
       "action": {
         "append": {
-          "string": "添加数据",
+          "string": "",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
@@ -2770,9 +2807,6 @@
         "noData": {
           "string": "您的文件不包含任何数据。"
         }
-      },
-      "headersNote": {
-        "string": "您数据文件的首行必须和以上表头完全一致。"
       }
     },
     "EntityUploadDataError": {
@@ -2783,59 +2817,103 @@
     "EntityUploadDataTemplate": {
       "text": {
         "full": {
-          "string": "如果您不确定，您可以{downloadTemplate}",
-          "developer_comment": "{downloadTemplate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDownload a data template (.csv)"
+          "string": "",
+          "developer_comment": "{downloadTemplate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDownload a CSV template"
         },
         "downloadTemplate": {
-          "string": "下载数据模板（.csv）",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {downloadTemplate} is in the following text:\n\nIf you aren’t sure, you can {downloadTemplate}"
+          "string": "",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {downloadTemplate} is in the following text:\n\nNeed a starting point? {downloadTemplate}."
         }
       }
     },
+    "EntityUploadErrors": {
+      "title": {
+        "string": "{count, plural, other {}}",
+        "developer_comment": "This text is shown above a section that lists errors in the user's data."
+      },
+      "introduction": {
+        "string": ""
+      },
+      "delimiterNotComma": {
+        "string": ""
+      },
+      "invalidQuotes": {
+        "title": {
+          "string": ""
+        },
+        "description": {
+          "string": ""
+        }
+      },
+      "missingLabel": {
+        "title": {
+          "string": "",
+          "developer_comment": "{label} will have the text \"label\" and refers to the \"label\" property. The name of the property is not translated."
+        },
+        "description": {
+          "string": ""
+        }
+      },
+      "duplicateColumn": {
+        "title": {
+          "string": ""
+        },
+        "description": {
+          "string": ""
+        },
+        "headersReused": {
+          "string": "{count, plural, other {}}",
+          "developer_comment": "This text is followed by a list of column headers."
+        }
+      },
+      "emptyColumn": {
+        "title": {
+          "string": ""
+        },
+        "description": {
+          "string": ""
+        }
+      }
+    },
+    "EntityUploadExtraProperties": {
+      "action": {
+        "selectAll": {
+          "string": "",
+          "developer_comment": "This is the text of a button that allows the user to select all the columns of a table."
+        }
+      },
+      "created": {
+        "string": ""
+      },
+      "createdAll": {
+        "string": ""
+      }
+    },
     "EntityUploadFileSelect": {
+      "upload": {
+        "string": ""
+      },
+      "errors": {
+        "string": "{count, plural, other {}}"
+      },
       "text": {
         "full": {
-          "string": "请将.csv文件拖拽至此，或者{chooseOne}进行导入",
-          "developer_comment": "{chooseOne} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose one"
+          "string": "",
+          "developer_comment": "{chooseFile} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose a file"
         },
-        "chooseOne": {
-          "string": "请选择一个",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseOne} is in the following text:\n\nDrag a .csv file here, or {chooseOne} to import."
+        "chooseFile": {
+          "string": "",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseFile} is in the following text:\n\nDrag and drop a .csv file here, or {chooseFile}"
         }
       },
       "parsing": {
         "string": "读取数据..."
       }
     },
-    "EntityUploadHeaderErrors": {
-      "expectedHeader": {
-        "string": "规范表头",
-        "developer_comment": "This refers to the header row of a spreadsheet."
-      },
-      "suggestions": {
-        "title": {
-          "string": "建议",
-          "developer_comment": "Suggestions to fix an error"
-        },
-        "invalidQuotes": {
-          "string": "引用的字段无效。请检查您的文件表头，是否有异常值。"
-        },
-        "missingLabel": {
-          "string": "您必须提供{label}属性。该属性将用于在Central及其他各处标识每个实体的名称。",
-          "developer_comment": "{label} will have the text \"label\" and refers to the \"label\" property. The name of the property is not translated."
-        },
-        "unknownProperty": {
-          "string": "如需为此实体列表添加属性，您可通过实体列表概览页的“实体属性”版块进行操作，或上传并发布引用了该属性的表单。"
-        },
-        "duplicateColumn": {
-          "string": "两个或以上纵列的表头名称可能重复。请确保所有列表标题是唯一的。"
-        },
-        "emptyColumn": {
-          "string": "您的标题中可能有空白单元格。请移除文件中所有的空白列。"
-        },
-        "delimiterNotComma": {
-          "string": "可能使用了错误的表格分隔值。这里使用的是{delimiter}。."
-        }
+    "EntityUploadHeaderReview": {
+      "title": {
+        "string": "{count, plural, other {}}",
+        "developer_comment": "This text is shown above a section where the user can review warnings about their data."
       }
     },
     "EntityUploadPopup": {
@@ -2843,6 +2921,9 @@
         "string": "{count, plural, other {找到{count}行数据}}"
       },
       "status": {
+        "creatingProperties": {
+          "string": ""
+        },
         "sending": {
           "string": "传送文件...({percentUploaded})",
           "developer_comment": "This text is shown while a file is being uploaded to the server."
@@ -2854,6 +2935,75 @@
       }
     },
     "EntityUploadWarnings": {
+      "introduction": {
+        "string": ""
+      },
+      "systemProperties": {
+        "string": "",
+        "developer_comment": "\"Properties\" refers to Entity properties."
+      },
+      "caseMismatch": {
+        "title": {
+          "string": "",
+          "developer_comment": "\"Property\" refers to an Entity property."
+        },
+        "description": {
+          "string": ""
+        },
+        "existingProperty": {
+          "string": "",
+          "developer_comment": "\"Property\" refers to an Entity property."
+        }
+      },
+      "invalidProperties": {
+        "string": "{count, plural, other {}}",
+        "developer_comment": "\"Property\" refers to an Entity property."
+      },
+      "missingProperties": {
+        "title": {
+          "string": "{count, plural, other {}}",
+          "developer_comment": "\"Property\" refers to an Entity property."
+        },
+        "description": {
+          "string": "{count, plural, other {}}",
+          "developer_comment": "\"Property\" refers to an Entity property."
+        }
+      },
+      "extraProperties": {
+        "title": {
+          "one": {
+            "string": ""
+          },
+          "multiple": {
+            "string": ""
+          }
+        },
+        "description": {
+          "one": {
+            "string": ""
+          },
+          "multiple": {
+            "string": "",
+            "developer_comment": "\"Ones\" refers to \"columns\"."
+          }
+        },
+        "error": {
+          "one": {
+            "string": ""
+          },
+          "multiple": {
+            "string": "",
+            "developer_comment": "\"Ones\" refers to \"columns\"."
+          }
+        }
+      },
+      "propertiesIgnored": {
+        "string": "{count, plural, other {}}",
+        "developer_comment": "\"Property\" refers to an Entity property."
+      },
+      "columnsIgnored": {
+        "string": "{count, plural, other {}}"
+      },
       "row": {
         "raggedRows": {
           "string": "部分行包含的纵列数少于预期：",
@@ -2965,6 +3115,9 @@
       },
       "emptyTable": {
         "string": "目前没有App用户。您需要新建表格并从您的设备上传数据。"
+      },
+      "noFilterResults": {
+        "string": ""
       },
       "alert": {
         "create": {
@@ -3181,6 +3334,10 @@
         "uploaded": {
           "string": "已上传",
           "developer_comment": "This is the text of a table column header. The column shows when each Media File was uploaded."
+        },
+        "size": {
+          "string": "",
+          "developer_comment": "This is the text of a table column header. The column shows the file size of each uploaded Media File."
         }
       }
     },
@@ -3230,26 +3387,6 @@
         }
       },
       "afterSelection": {
-        "matched": {
-          "full": {
-            "string": "{count, plural, other {{countOfFiles}准备上传}}",
-            "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
-          },
-          "countOfFiles": {
-            "string": "{count, plural, other {{count}个文件}}",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text. (The plural form of the text is shown.)\n\n{countOfFiles} ready for upload."
-          }
-        },
-        "someUnmatched": {
-          "full": {
-            "string": "{count, plural, other {有 {countOfFiles} 个文件因文件名无法识别将被忽略。如需上传，请重命名文件或将其单独拖拽至指定位置。}}",
-            "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
-          },
-          "countOfFiles": {
-            "string": "{count, plural, other {{count}个文件}}",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text. (The plural form of the text is shown.)\n\n{countOfFiles} have a name we don’t recognize and will be ignored. To upload them, rename them or drag them individually onto their targets."
-          }
-        },
         "noneMatched": {
           "string": "{count, plural, other {无法识别您尝试上传的任何文件。请将文件重命名为与上方列表匹配的名称，或将其逐一拖拽到对应目标区域。}}"
         }
@@ -4177,12 +4314,6 @@
       }
     },
     "Navbar": {
-      "action": {
-        "toggle": {
-          "string": "切换导航",
-          "developer_comment": "Used by screen readers to describe the button used to show or hide the navigation bar on small screens (\"hamburger menu\")."
-        }
-      },
       "analyticsNotice": {
         "string": "助力完善Central！"
       }
@@ -4329,35 +4460,7 @@
         }
       }
     },
-    "ProjectCustomPropertiesList": {
-      "heading": {
-        "0": {
-          "string": "",
-          "developer_comment": "A brief introduction to Custom Properties shown for the current project"
-        }
-      },
-      "emptyTable": {
-        "string": ""
-      },
-      "created": {
-        "string": "",
-        "developer_comment": "Shown after a custom property is successfully created."
-      },
-      "action": {
-        "create": {
-          "string": "",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      }
-    },
     "ProjectCustomPropertiesNew": {
-      "title": {
-        "string": "",
-        "developer_comment": "This is the title at the top of a pop-up."
-      },
-      "introduction": {
-        "string": ""
-      },
       "newPropertyName": {
         "string": ""
       },
@@ -4993,6 +5096,9 @@
       }
     },
     "PublicLinkTable": {
+      "noFilterResults": {
+        "string": ""
+      },
       "header": {
         "once": {
           "string": "单次提交",
@@ -5174,6 +5280,14 @@
         },
         "parseError": {
           "string": "数据请求过程中出现错误。"
+        }
+      }
+    },
+    "SubmissionDefDropdown": {
+      "action": {
+        "downloadXml": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },

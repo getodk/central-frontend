@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml">
+  <h:head>
+    <h:title>19 Required questions on pages</h:title>
+    <model>
+      <instance>
+        <data id="pg_19_required">
+          <name/>
+          <age/>
+          <comment/>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <bind nodeset="/data/name" type="string" required="true()"/>
+      <bind nodeset="/data/age" type="string" required="true()"/>
+      <bind nodeset="/data/comment" type="string"/>
+      <bind nodeset="/data/meta/instanceID" type="string"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <input ref="/data/name"><label>What is your name?</label></input>
+    <input ref="/data/age"><label>What is your age?</label></input>
+    <input ref="/data/comment"><label>Any comment?</label></input>
+  </h:body>
+</h:html>

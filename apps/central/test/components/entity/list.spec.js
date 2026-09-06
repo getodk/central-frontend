@@ -42,6 +42,7 @@ describe('EntityList', () => {
         }
       },
       { url: '/v1/projects/1/datasets/trees/entities/creators' },
+      { url: '/v1/projects/1/app-users' },
       {
         url: ({ pathname, searchParams }) => {
           // Request to get all the Entities created before now and ( not deleted or deleted after now)
@@ -1041,6 +1042,24 @@ describe('EntityList', () => {
       const button = app.getComponent('#entity-download-button');
       button.get('.btn-primary').classes().should.include('disabled');
       await button.should.have.tooltip('Download is unavailable for deleted Entities');
+    });
+  });
+
+  describe('"view as" filter', () => {
+    it('shows the filter if the dataset has an access filter', () => {
+      testData.extendedDatasets.createPast(1, {
+        accessFilter: { type: 'ownerOnly' }
+      });
+      return loadEntityList().afterResponses(component => {
+        component.find('#entity-filters-view-as').exists().should.be.true;
+      });
+    });
+
+    it('does not show the filter if the dataset has no access filter', () => {
+      testData.extendedDatasets.createPast(1, { accessFilter: null });
+      return loadEntityList().afterResponses(component => {
+        component.find('#entity-filters-view-as').exists().should.be.false;
+      });
     });
   });
 

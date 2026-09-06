@@ -126,8 +126,9 @@ em { @include italic; }
   left: -1000px;
 }
 .tooltip-inner {
+  @include line-clamp(32);
   border-radius: 2px;
-  max-height: 100vh;
+  max-height: 95vh;
   overflow-wrap: break-word;
   padding-bottom: 2px;
   // Allow the text to have line breaks.
@@ -418,7 +419,7 @@ $form-group-padding-bottom: 15px;
 .form-group {
   display: block;
   font-weight: normal;
-  margin-bottom: 15px;
+  margin-bottom: $margin-bottom-form-group;
   position: relative;
 
   $form-control-z-index: 1;

@@ -12,6 +12,30 @@ import { mockResponse } from './util/axios';
 import { setLanguages } from './util/i18n';
 
 describe('createCentralRouter()', () => {
+  describe('route matching', () => {
+    it('matches case-sensitively', () => {
+      mockLogin();
+      const initialRoute = '/account/edit';
+      // First navigate to a known path that is lowercase. It should match a
+      // route.
+      return load(initialRoute)
+        .afterResponses(app => {
+          app.findComponent(NotFound).exists().should.be.false;
+        })
+        // Leave the route before attempting to navigate to it again with an
+        // uppercase path. Taking that approach because Vue Router will cancel a
+        // navigation if it is going to the same route.
+        .load('/')
+        .complete()
+        // Attempt to navigate to the uppercase path. It should not match a
+        // route.
+        .load(initialRoute.toUpperCase())
+        .afterResponses(app => {
+          app.findComponent(NotFound).exists().should.be.true;
+        });
+    });
+  });
+
   describe('i18n', () => {
     it("loads the user's preferred language", () => {
       setLanguages(['es']);
@@ -50,7 +74,6 @@ describe('createCentralRouter()', () => {
     describe('restoreSession is false for the first route', () => {
       const paths = [
         `/account/claim?token=${'a'.repeat(64)}`,
-        '/not-found'
       ];
       for (const path of paths) {
         it(`does not restore session for a user navigating to ${path}`, () =>
@@ -260,10 +283,12 @@ describe('createCentralRouter()', () => {
   });
 
   describe('requireLogin is false and requireAnonymity is false', () => {
-    it('does not redirect an anonymous user', async () => {
-      const app = await load('/not-found');
-      app.vm.$route.path.should.equal('/not-found');
-    });
+    it('does not redirect an anonymous user', () =>
+      load('/not-found')
+        .restoreSession(false)
+        .afterResponses(app => {
+          app.vm.$route.path.should.equal('/not-found');
+        }));
 
     it('does not redirect a user who is logged in', () => {
       mockLogin();

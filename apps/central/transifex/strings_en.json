@@ -30,10 +30,6 @@
       "formAccess": {
         "string": "Form Access",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-      },
-      "customProperties": {
-        "string": "Custom Properties",
-        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     }
   },
@@ -750,11 +746,11 @@
     },
     "property": {
       "string": "Property",
-      "developer_comment": "This is a data property of an Entity."
+      "developer_comment": "This is a data property of an Entity or an Actor."
     },
     "properties": {
       "string": "Properties",
-      "developer_comment": "This refers to the data properties of an Entity."
+      "developer_comment": "This refers to the data properties of an Entity or Actor."
     },
     "publicLink": {
       "string": "Public Access Link",
@@ -1817,6 +1813,14 @@
         "string": "Your login page now looks like this:"
       }
     },
+    "CustomPropsFilter": {
+      "action": {
+        "all": {
+          "string": "All",
+          "developer_comment": "This is the text of the button in dropdown menu of an actor (app user or public link) \"Properties\" filter, that allows the user to select all app users with all properties (no filter applied)."
+        }
+      }
+    },
     "DatasetDelete": {
       "title": {
         "string": "Delete Entity List",
@@ -1961,6 +1965,9 @@
       }
     },
     "DatasetOverviewNewProperty": {
+      "newPropertyName": {
+        "string": "New property name"
+      },
       "title": {
         "string": "Add Entity Property",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -1971,14 +1978,6 @@
         },
         "1": {
           "string": "You can also add new properties by uploading a Form that references them, in which case the properties are created when the Form is published."
-        }
-      },
-      "newPropertyName": {
-        "string": "New property name"
-      },
-      "problem": {
-        "409_3": {
-          "string": "A property already exists in this Entity List with the name of “{propertyName}”."
         }
       }
     },
@@ -2199,10 +2198,6 @@
       }
     },
     "DatasetShow": {
-      "back": {
-        "string": "Back to Project Entities",
-        "developer_comment": "This is shown at the top of the page."
-      },
       "infoNav": {
         "connectedForms": {
           "string": "{count, plural, one {Updated by {count} Form} other {Updated by {count} Forms}}",
@@ -2582,6 +2577,14 @@
         "string": "There are no Entities yet."
       }
     },
+    "EntityFiltersViewAs": {
+      "noUserSelected": {
+        "string": "Me"
+      },
+      "viewAs": {
+        "string": "View As"
+      }
+    },
     "EntityList": {
       "noEntities": {
         "string": "There are no Entities to show.",
@@ -2771,22 +2774,20 @@
       }
     },
     "EntityUpload": {
-      "title": {
-        "string": "Import Data from File",
-        "developer_comment": "This is the title at the top of a pop-up."
+      "currentEntities": {
+        "string": "Your current Entities"
+      },
+      "newEntities": {
+        "string": "New Entities"
       },
       "table": {
-        "server": {
-          "string": "{name} server data",
-          "developer_comment": "This is shown above a list of Entities on the server. {name} is the name of the Entity List."
-        },
         "file": {
           "string": "Data to import"
         }
       },
       "action": {
         "append": {
-          "string": "Append data",
+          "string": "Append Entities",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
@@ -2797,9 +2798,6 @@
         "noData": {
           "string": "Your file does not contain any data."
         }
-      },
-      "headersNote": {
-        "string": "The first row in your data file must exactly match the table header you see above."
       }
     },
     "EntityUploadDataError": {
@@ -2819,7 +2817,76 @@
         }
       }
     },
+    "EntityUploadErrors": {
+      "title": {
+        "string": "{count, plural, one {Review {count} error} other {Review {count} errors}}",
+        "developer_comment": "This text is shown above a section that lists errors in the user's data."
+      },
+      "introduction": {
+        "string": "Errors must be fixed before you can upload Entities."
+      },
+      "delimiterNotComma": {
+        "string": "These errors may be because we got the cell delimiter wrong. We used {delimiter}."
+      },
+      "invalidQuotes": {
+        "title": {
+          "string": "A quoted field is invalid in the header row"
+        },
+        "description": {
+          "string": "Check the header row of your file to see if there are any unusual values."
+        }
+      },
+      "missingLabel": {
+        "title": {
+          "string": "A {label} property is required",
+          "developer_comment": "{label} will have the text \"label\" and refers to the \"label\" property. The name of the property is not translated."
+        },
+        "description": {
+          "string": "The label indicates the name to use for each Entity throughout Central and elsewhere."
+        }
+      },
+      "duplicateColumn": {
+        "title": {
+          "string": "Duplicate column headers"
+        },
+        "description": {
+          "string": "Each column must have a unique header."
+        },
+        "headersReused": {
+          "string": "{count, plural, one {This header is used more than once:} other {These headers are used more than once:}}",
+          "developer_comment": "This text is followed by a list of column headers."
+        }
+      },
+      "emptyColumn": {
+        "title": {
+          "string": "Empty cell in header row"
+        },
+        "description": {
+          "string": "Please remove any empty columns in your file."
+        }
+      }
+    },
+    "EntityUploadExtraProperties": {
+      "action": {
+        "selectAll": {
+          "string": "Select all",
+          "developer_comment": "This is the text of a button that allows the user to select all the columns of a table."
+        }
+      },
+      "created": {
+        "string": "This property was created in a previous upload attempt."
+      },
+      "createdAll": {
+        "string": "All properties were created in a previous upload attempt."
+      }
+    },
     "EntityUploadFileSelect": {
+      "upload": {
+        "string": "Upload a .csv file"
+      },
+      "errors": {
+        "string": "{count, plural, one {{count} error must be fixed before appending Entities} other {{count} errors must be fixed before appending Entities}}"
+      },
       "text": {
         "full": {
           "string": "Drag and drop a .csv file here, or {chooseFile}",
@@ -2834,45 +2901,10 @@
         "string": "Reading data…"
       }
     },
-    "EntityUploadHeaderErrors": {
-      "expectedHeader": {
-        "string": "Expected header",
-        "developer_comment": "This refers to the header row of a spreadsheet."
-      },
-      "suggestions": {
-        "title": {
-          "string": "Suggestions",
-          "developer_comment": "Suggestions to fix an error"
-        },
-        "invalidQuotes": {
-          "string": "A quoted field is invalid. Check the header row of your file to see if there are any unusual values."
-        },
-        "missingLabel": {
-          "string": "A {label} property is required. The label indicates the name to use for each Entity throughout Central and elsewhere.",
-          "developer_comment": "{label} will have the text \"label\" and refers to the \"label\" property. The name of the property is not translated."
-        },
-        "unknownProperty": {
-          "string": "If you want to add properties to this Entity List, you can do so in the Entity Properties section on the Overview page of this Entity List, or you can upload and publish a Form that references the property."
-        },
-        "duplicateColumn": {
-          "string": "It looks like two or more columns have the same header. Please make sure column headers are unique."
-        },
-        "emptyColumn": {
-          "string": "It looks like you have an empty cell in the header. Please remove any empty columns in your file."
-        },
-        "delimiterNotComma": {
-          "string": "This might be because we got the cell delimiter wrong. We used {delimiter}."
-        }
-      }
-    },
     "EntityUploadHeaderReview": {
       "title": {
-        "string": "Review warnings",
+        "string": "{count, plural, one {Review {count} warning} other {Review {count} warnings}}",
         "developer_comment": "This text is shown above a section where the user can review warnings about their data."
-      },
-      "missingProperties": {
-        "string": "{count, plural, one {This property is not included in your file and will be left empty:} other {These properties are not included in your file and will be left empty:}}",
-        "developer_comment": "This text is followed by a list of Entity property names."
       }
     },
     "EntityUploadPopup": {
@@ -2880,6 +2912,9 @@
         "string": "{count, plural, one {{count} data row found} other {{count} data rows found}}"
       },
       "status": {
+        "creatingProperties": {
+          "string": "Creating new properties…"
+        },
         "sending": {
           "string": "Sending file… ({percentUploaded})",
           "developer_comment": "This text is shown while a file is being uploaded to the server."
@@ -2891,6 +2926,75 @@
       }
     },
     "EntityUploadWarnings": {
+      "introduction": {
+        "string": "Some rows contain warnings that may affect upload results."
+      },
+      "systemProperties": {
+        "string": "System properties can’t be set by .csv upload",
+        "developer_comment": "\"Properties\" refers to Entity properties."
+      },
+      "caseMismatch": {
+        "title": {
+          "string": "Column is similar to an existing property but does not match",
+          "developer_comment": "\"Property\" refers to an Entity property."
+        },
+        "description": {
+          "string": "Column names are case-sensitive. Check the spelling and capitalization."
+        },
+        "existingProperty": {
+          "string": "Existing property",
+          "developer_comment": "\"Property\" refers to an Entity property."
+        }
+      },
+      "invalidProperties": {
+        "string": "{count, plural, one {This column is not a valid property name} other {These columns are not valid property names}}",
+        "developer_comment": "\"Property\" refers to an Entity property."
+      },
+      "missingProperties": {
+        "title": {
+          "string": "{count, plural, one {Property not found in file} other {Properties not found in file}}",
+          "developer_comment": "\"Property\" refers to an Entity property."
+        },
+        "description": {
+          "string": "{count, plural, one {This property will be left empty.} other {These properties will be left empty.}}",
+          "developer_comment": "\"Property\" refers to an Entity property."
+        }
+      },
+      "extraProperties": {
+        "title": {
+          "one": {
+            "string": "Column doesn’t match existing properties"
+          },
+          "multiple": {
+            "string": "These columns don’t match existing properties"
+          }
+        },
+        "description": {
+          "one": {
+            "string": "Select the column to create a new property, otherwise it will be ignored."
+          },
+          "multiple": {
+            "string": "Select which ones to create, otherwise they will be ignored.",
+            "developer_comment": "\"Ones\" refers to \"columns\"."
+          }
+        },
+        "error": {
+          "one": {
+            "string": "Once you’ve fixed all errors, you’ll be able to select the column."
+          },
+          "multiple": {
+            "string": "Once you’ve fixed all errors, you’ll be able to select which ones to create.",
+            "developer_comment": "\"Ones\" refers to \"columns\"."
+          }
+        }
+      },
+      "propertiesIgnored": {
+        "string": "{count, plural, one {This property will be ignored.} other {These properties will be ignored.}}",
+        "developer_comment": "\"Property\" refers to an Entity property."
+      },
+      "columnsIgnored": {
+        "string": "{count, plural, one {This column will be ignored.} other {These columns will be ignored.}}"
+      },
       "row": {
         "raggedRows": {
           "string": "Fewer columns were found than expected in some rows:",
@@ -3002,6 +3106,9 @@
       },
       "emptyTable": {
         "string": "There are no App Users yet. You will need to create some to download Forms and submit data from your device."
+      },
+      "noFilterResults": {
+        "string": "No App Users match the current filter."
       },
       "alert": {
         "create": {
@@ -4344,44 +4451,6 @@
         }
       }
     },
-    "ProjectCustomPropertiesList": {
-      "heading": {
-        "0": {
-          "string": "Control which Entities each App User or Public Link can access. Define Custom Properties here, assign values to App Users or Public Links, and use Entity List filters to show relevant Entities.",
-          "developer_comment": "A brief introduction to Custom Properties shown for the current project"
-        }
-      },
-      "emptyTable": {
-        "string": "No custom properties have been defined for this project."
-      },
-      "created": {
-        "string": "Custom property created successfully.",
-        "developer_comment": "Shown after a custom property is successfully created."
-      },
-      "action": {
-        "create": {
-          "string": "New",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      }
-    },
-    "ProjectCustomPropertiesNew": {
-      "title": {
-        "string": "Add Custom Property",
-        "developer_comment": "This is the title at the top of a pop-up."
-      },
-      "introduction": {
-        "string": "To add a custom property for this project, choose a unique property name below."
-      },
-      "newPropertyName": {
-        "string": "New property name"
-      },
-      "problem": {
-        "409_3": {
-          "string": "A custom property already exists in this project with the name of \"{propertyName}\"."
-        }
-      }
-    },
     "ProjectEdit": {
       "title": {
         "string": "Basic Details",
@@ -4896,6 +4965,23 @@
         }
       }
     },
+    "PropertyInput": {
+      "invalidName": {
+        "string": "Property name is invalid"
+      },
+      "duplicate": {
+        "title": {
+          "string": "A property with this name already exists"
+        },
+        "description": {
+          "string": "Property names must be unique, regardless of capitalization."
+        }
+      },
+      "tryDifferent": {
+        "string": "Try a different name.",
+        "developer_comment": "\"Name\" refers to the name of an Entity property."
+      }
+    },
     "PublicLinkCreate": {
       "title": {
         "string": "Create Public Access Link",
@@ -5008,6 +5094,9 @@
       }
     },
     "PublicLinkTable": {
+      "noFilterResults": {
+        "string": "No Public Access Links match the current filter."
+      },
       "header": {
         "once": {
           "string": "Single Submission",
@@ -5189,6 +5278,14 @@
         },
         "parseError": {
           "string": "Something went wrong while requesting your data."
+        }
+      }
+    },
+    "SubmissionDefDropdown": {
+      "action": {
+        "downloadXml": {
+          "string": "Download XML",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },

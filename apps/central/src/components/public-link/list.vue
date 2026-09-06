@@ -35,7 +35,7 @@ except according to the terms contained in the LICENSE file.
       </i18n-t>
     </div>
 
-    <public-link-table v-if="dataExists" :highlighted="highlighted"
+    <public-link-table v-if="dataExists" ref="table" :highlighted="highlighted"
       @revoke="revokeModal.show({ publicLink: $event })"
       @edit="editModal.show({ publicLink: $event })"/>
     <loading :state="initiallyLoading"/>
@@ -132,12 +132,14 @@ export default {
       this.createModal.hide();
       this.alert.success(this.$t('alert.create'));
       this.highlighted = publicLink.id;
+      this.$refs.table?.resetFilter();
     },
     afterEdit(publicLink) {
       this.fetchData(true);
       this.editModal.hide();
       this.alert.success(this.$t('alert.edit', publicLink));
       this.highlighted = publicLink.id;
+      this.$refs.table?.resetFilter();
     },
     afterRevoke(publicLink) {
       this.fetchData(true);

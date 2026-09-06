@@ -254,6 +254,7 @@ const deleteProperty = () => {
     "emptyTable": "As Entidades nesta Lista de Entidades não têm nenhuma propriedade definida pelo usuário.",
     "none": "(Nenhum)",
     "confirmation": {
+      "title": "Excluir Propriedade",
       "confirm": "@:action.delete"
     }
   },

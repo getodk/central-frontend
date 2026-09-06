@@ -38,6 +38,9 @@ import paginationFieldlistRelevance from './fixtures/pagination-13-fieldlist-rel
 import paginationFieldlistOnRepeat from './fixtures/pagination-14-fieldlist-on-repeat.xml?raw';
 import paginationRepeatFixedCount from './fixtures/pagination-16-repeat-fixed-count.xml?raw';
 import paginationNestedRepeatFieldlist from './fixtures/pagination-17-nested-repeat-fieldlist.xml?raw';
+import paginationQuick from './fixtures/pagination-18-quick.xml?raw';
+import paginationRequired from './fixtures/pagination-19-required.xml?raw';
+import paginationQuickFieldList from './fixtures/pagination-20-quick-fieldlist.xml?raw';
 
 import citiesGeoJson from './fixtures/attachments/cities.geojson?url';
 
@@ -81,6 +84,9 @@ const fixtures: Record<string, string> = {
   'pagination-14-fieldlist-on-repeat.xml': paginationFieldlistOnRepeat,
   'pagination-16-repeat-fixed-count.xml': paginationRepeatFixedCount,
   'pagination-17-nested-repeat-fieldlist.xml': paginationNestedRepeatFieldlist,
+  'pagination-18-quick.xml': paginationQuick,
+  'pagination-19-required.xml': paginationRequired,
+  'pagination-20-quick-fieldlist.xml': paginationQuickFieldList,
 };
 
 const attachments: Record<string, string> = {

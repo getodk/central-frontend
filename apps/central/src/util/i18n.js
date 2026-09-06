@@ -68,10 +68,7 @@ export const loadLocale = ({ i18n, logger }, locale) => {
     return Promise.resolve();
   }
 
-  return import(
-    /* webpackChunkName: "i18n-[request]" */
-    `../locales/${locale}.json`
-  )
+  return import(`../locales/${locale}.json`)
     .then(m => {
       i18n.setLocaleMessage(locale, m.default);
       setLocale(i18n, locale);

@@ -56,6 +56,9 @@ describe('#number()', () => {
       { expression: 'number("1.1   ")', expected: 1.1 },
       { expression: 'number("1.1   \n ")', expected: 1.1 },
       { expression: 'number("  1.1 \n\r\n  ")', expected: 1.1 },
+      { expression: 'number(",112")', expected: 0.112 },
+      { expression: 'number("11,12")', expected: 11.12 },
+      { expression: 'number("0x12")', expected: 18 }, // not supported by JavaRosa
     ].forEach(({ expression, expected }) => {
       it(`${expression} should be ${expected}`, () => {
         testContext.assertNumberValue(expression, expected);

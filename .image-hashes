@@ -72,9 +72,9 @@ packages/web-forms/e2e/test-cases/visual/all-question-types.test.ts-snapshots/se
 packages/web-forms/e2e/test-cases/visual/all-question-types.test.ts-snapshots/select-map-zoom-to-fit-all-features-chromium.png:fd48991f3a5341d1208cbef9215a90dc1b61e1942ad01596e7709edc4165d89e
 packages/web-forms/e2e/test-cases/visual/all-question-types.test.ts-snapshots/select-map-zoom-to-fit-all-features-firefox.png:8f96b2b5584a90b8ec7e067170fee3e3e36df9b6a6aa3476a711b0ccac267a9f
 packages/web-forms/e2e/test-cases/visual/all-question-types.test.ts-snapshots/select-map-zoom-to-fit-all-features-webkit.png:a63757c67fabe573f528d2b20950faef554a71d98e72a04605ce0a0666c33bb9
-packages/web-forms/e2e/test-cases/visual/image-labels.test.ts-snapshots/likert-chromium.png:839c0a8cd2743b4218222bd6839610b00a9be748c517ee0e91f02c1efdf08e9e
-packages/web-forms/e2e/test-cases/visual/image-labels.test.ts-snapshots/likert-firefox.png:2bc969ec292e5d616f64d155df673904279da10480abd405c8f07f6f6daede93
-packages/web-forms/e2e/test-cases/visual/image-labels.test.ts-snapshots/likert-webkit.png:e359eec6c1a0cc96913df101ba6c032ff2c90d797066e627267e300e3a6acb7c
+packages/web-forms/e2e/test-cases/visual/image-labels.test.ts-snapshots/likert-chromium.png:b686a13d567e95b6d925585b4843dadd7c475f4ad6c711c61f5b73dced02003a
+packages/web-forms/e2e/test-cases/visual/image-labels.test.ts-snapshots/likert-firefox.png:2cf3730ce99217eed0e5dc569b8032d19e810754fb98bfda8128c9ab4e8dc307
+packages/web-forms/e2e/test-cases/visual/image-labels.test.ts-snapshots/likert-webkit.png:d5189e3dda121710b81042c9cd5a6655022a1545d3fb511bccd2c9f76d84b0e5
 packages/web-forms/e2e/test-cases/visual/image-labels.test.ts-snapshots/select-one-with-fixed-column-count-chromium.png:f6f424158c3003b4817b488e4c8f123580c4c990392e487c97f77735c8ef0e76
 packages/web-forms/e2e/test-cases/visual/image-labels.test.ts-snapshots/select-one-with-fixed-column-count-firefox.png:0425173e7385f0216d37b69951af75446b032398119c8d76505c5625ce9c6780
 packages/web-forms/e2e/test-cases/visual/image-labels.test.ts-snapshots/select-one-with-fixed-column-count-webkit.png:3f4078c1921bc838c64842b3937d568ed0c9a711253cd65bbeb6e62b412b5547

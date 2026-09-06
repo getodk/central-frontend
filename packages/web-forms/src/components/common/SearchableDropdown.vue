@@ -16,7 +16,7 @@ const props = defineProps<SearchableDropdownProps>();
 
 const DEFAULT_PRIMEVUE_ITEM_HEIGHT = 38;
 
-defineEmits(['update:modelValue', 'change']);
+defineEmits(['change']);
 
 const options = computed(() => {
 	return props.question.currentState.valueOptions.map((option) => {
@@ -28,6 +28,15 @@ const options = computed(() => {
 	});
 });
 
+const virtualScrollerOptions = computed(() => {
+	if (props.question.currentState.valueOptions.length > 20) {
+		return { itemSize: DEFAULT_PRIMEVUE_ITEM_HEIGHT };
+	}
+	// remove virtual scroller for small selects so primevue knows
+	// what height to make the list container
+	return undefined;
+});
+
 const selectedLabel = computed(() => {
 	const value = props.question.currentState?.value?.[0];
 	if (!value) {
@@ -36,15 +45,11 @@ const selectedLabel = computed(() => {
 	const option = props.question.getValueOption(value);
 	return option?.label.formatted;
 });
-
-const selectValue = (value: string) => {
-	props.question.selectValue(value);
-};
 </script>
 
 <template>
 	<Select
-		:id="question.nodeId"
+		:input-id="question.nodeId"
 		class="dropdown"
 		:filter="question.appearances.autocomplete"
 		filter-match-mode="contains"
@@ -54,9 +59,8 @@ const selectValue = (value: string) => {
 		:options="options"
 		option-label="search"
 		option-value="value"
-		:virtual-scroller-options="{ itemSize: DEFAULT_PRIMEVUE_ITEM_HEIGHT }"
-		@update:model-value="selectValue"
-		@change="$emit('change')"
+		:virtual-scroller-options="virtualScrollerOptions"
+		@change="$emit('change', $event.value)"
 	>
 		<template #option="slotProps">
 			<MarkdownBlock v-for="elem in slotProps.option.label" :key="elem.id" :elem="elem" />

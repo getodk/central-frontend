@@ -1,5 +1,6 @@
 import NotFound from '../../../src/components/not-found.vue';
 import Breadcrumbs from '../../../src/components/breadcrumbs.vue';
+import SubmissionData from '../../../src/components/submission/data.vue';
 import SubmissionDelete from '../../../src/components/submission/delete.vue';
 
 import testData from '../../data';
@@ -65,6 +66,25 @@ describe('SubmissionShow', () => {
       root: false
     });
     component.get('#page-head-title').text().should.equal('s');
+  });
+
+  it('renders the SubmissionData component', async () => {
+    testData.extendedForms.createPast(1, {
+      xmlFormId: 'a',
+      fields: [
+        testData.fields.string('/name'),
+        testData.fields.string('/age'),
+      ],
+      submissions: 1
+    });
+    testData.extendedSubmissions.createPast(1, {
+      instanceId: 's',
+      name: 'Alice',
+      age: '30'
+    });
+    const component = await load('/projects/1/forms/a/submissions/s', { root: false });
+    component.findComponent(SubmissionData).exists().should.be.true;
+    component.findAll('.dl-data-dd').map(dd => dd.text()).should.eql(['Alice', '30']);
   });
 
   describe('delete', () => {
@@ -158,6 +178,25 @@ describe('SubmissionShow', () => {
         })
         .afterResponses((app) => {
           app.should.alert('success', 'Submission has been successfully deleted.');
+        });
+    });
+  });
+
+  describe('view xml', () => {
+    it('sends the correct request after clicking view xml', () => {
+      testData.extendedSubmissions.createPast(1, { instanceId: 's' });
+      return load('/projects/1/forms/f/submissions/s', { root: false })
+        .complete()
+        .request(async (component) => {
+          await component.get('.submission-def-dropdown button').trigger('click');
+          return component.get('.submission-def-dropdown a').trigger('click');
+        })
+        .respondWithData(() => '<submission/>')
+        .testRequests([{
+          url: '/v1/projects/1/forms/f/submissions/s.xml'
+        }])
+        .afterResponse(component => {
+          component.get('#xml-viewer code').text().should.equal('<submission/>');
         });
     });
   });

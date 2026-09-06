@@ -102,7 +102,8 @@ const dsHashset = computed(() =>
   },
   "de": {
     "header": {
-      "uploaded": "Hochgeladen"
+      "uploaded": "Hochgeladen",
+      "size": "Grösse"
     }
   },
   "es": {
@@ -112,7 +113,8 @@ const dsHashset = computed(() =>
   },
   "fr": {
     "header": {
-      "uploaded": "Téléversés"
+      "uploaded": "Téléversés",
+      "size": "Taille"
     }
   },
   "id": {

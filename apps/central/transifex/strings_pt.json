@@ -30,10 +30,6 @@
       "formAccess": {
         "string": "Acesso a formulário",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-      },
-      "customProperties": {
-        "string": "",
-        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     }
   },
@@ -357,6 +353,10 @@
     }
   },
   "action": {
+    "add": {
+      "string": "",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "cancel": {
       "string": "Cancelar",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -470,7 +470,7 @@
       "developer_comment": "This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms"
     },
     "tryAgain": {
-      "string": "",
+      "string": "Tentar novamente",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "undo": {
@@ -510,7 +510,7 @@
       "developer_comment": "This text is shown on a button that resets the data filters"
     },
     "change": {
-      "string": "",
+      "string": "Mudar",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     }
   },
@@ -544,7 +544,7 @@
       "developer_comment": "This is the text of a form field."
     },
     "passphrase": {
-      "string": "Dica de senha",
+      "string": "",
       "developer_comment": "This is the text of a form field."
     },
     "password": {
@@ -556,7 +556,7 @@
       "developer_comment": "This is the text of a form field."
     },
     "title": {
-      "string": "",
+      "string": "Título",
       "developer_comment": "This is the text of a form field."
     },
     "type": {
@@ -641,7 +641,7 @@
       "developer_comment": "This is the text of a table column header. The column shows the date and time of the newest entity"
     },
     "value": {
-      "string": "",
+      "string": "Valor",
       "developer_comment": "This is the text of a table column header. \"Value\" refers to the value of a property of an object (App User, Public Link and Data Collector)"
     }
   },
@@ -729,7 +729,7 @@
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "newForm": {
-      "string": "",
+      "string": "Novo Formulário",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "formAttachments": {
@@ -746,11 +746,11 @@
     },
     "property": {
       "string": "Propriedade",
-      "developer_comment": "This is a data property of an Entity."
+      "developer_comment": "This is a data property of an Entity or an Actor."
     },
     "properties": {
       "string": "Propriedades",
-      "developer_comment": "This refers to the data properties of an Entity."
+      "developer_comment": "This refers to the data properties of an Entity or Actor."
     },
     "publicLink": {
       "string": "Link de acesso público",
@@ -844,16 +844,16 @@
   },
   "login": {
     "odkLogo": {
-      "string": ""
+      "string": "Logotipo do ODK"
     },
     "defaultTitle": {
-      "string": ""
+      "string": "Benvindo ao ODK Central"
     },
     "defaultDescription": {
-      "string": ""
+      "string": "Faça login na sua conta para começar"
     },
     "heroImage": {
-      "string": "",
+      "string": "Imagem de login",
       "developer_comment": "An image shown on the login page"
     }
   },
@@ -1049,7 +1049,7 @@
       "developer_comment": "This text is shown on its own before details about a warning."
     },
     "recommended": {
-      "string": "",
+      "string": "recomendado",
       "developer_comment": "Standalone text shown as a badge next to a recommendation. Not part of a longer phrase."
     },
     "none": {
@@ -1059,11 +1059,11 @@
       "string": "Busca"
     },
     "useEnketo": {
-      "string": "",
+      "string": "Modo de compatibilidade do Enketo",
       "developer_comment": "The word \"Enketo\" should not be translated"
     },
     "updateInProgress": {
-      "string": ""
+      "string": "Solicitação de atualização em andamento"
     }
   },
   "mixin": {
@@ -1157,7 +1157,7 @@
   "component": {
     "AccountClaim": {
       "title": {
-        "string": ""
+        "string": "Definir sua nova senha"
       },
       "action": {
         "set": {
@@ -1213,20 +1213,43 @@
     },
     "AccountPageContainer": {
       "customLogoAlt": {
-        "string": ""
+        "string": "Logotipo da organização"
       }
     },
     "AccountResetPassword": {
       "title": {
-        "string": ""
+        "string": "Redefinir sua senha"
       },
       "subtitle": {
-        "string": ""
+        "string": "Digite o seu email para redefinir a sua senha"
       },
       "alert": {
         "success": {
           "string": "Um email foi enviado para {email} com mais instruções."
         }
+      }
+    },
+    "ActorPropertiesNew": {
+      "addProperty": {
+        "string": ""
+      },
+      "addPropertyHint": {
+        "string": ""
+      }
+    },
+    "ActorPropertiesUpsert": {
+      "description": {
+        "full": {
+          "string": "",
+          "developer_comment": "{assignEntities} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nassign the right Entities"
+        },
+        "assignEntities": {
+          "string": "",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {assignEntities} is in the following text:\n\nProperties help {assignEntities}, control access, and connect users to the data they need."
+        }
+      },
+      "noProperties": {
+        "string": ""
       }
     },
     "AnalyticsForm": {
@@ -1731,7 +1754,7 @@
     "ConfigLoginEdit": {
       "logo": {
         "label": {
-          "string": ""
+          "string": "Logotipo"
         },
         "help": {
           "string": ""
@@ -1744,7 +1767,7 @@
       },
       "description": {
         "label": {
-          "string": ""
+          "string": "Subtítulo"
         },
         "help": {
           "string": ""
@@ -1775,7 +1798,7 @@
       },
       "alert": {
         "invalidType": {
-          "string": ""
+          "string": "Tipo de arquivo não permitido."
         },
         "post": {
           "string": ""
@@ -1790,9 +1813,17 @@
         "string": ""
       }
     },
+    "CustomPropsFilter": {
+      "action": {
+        "all": {
+          "string": "",
+          "developer_comment": "This is the text of the button in dropdown menu of an actor (app user or public link) \"Properties\" filter, that allows the user to select all app users with all properties (no filter applied)."
+        }
+      }
+    },
     "DatasetDelete": {
       "title": {
-        "string": "",
+        "string": "Excluir a lista de entidades",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "introduction": {
@@ -1806,7 +1837,7 @@
         "string": "Carregar Entidades"
       },
       "newEntity": {
-        "string": "",
+        "string": "Nova Entidade",
         "developer_comment": "This is shown on a button for creating new Entities"
       },
       "alert": {
@@ -1814,7 +1845,7 @@
           "string": "Suas Entidades foram carregadas com sucesso."
         },
         "create": {
-          "string": ""
+          "string": "A Entidade foi criada com sucesso."
         }
       },
       "purgeDescription": {
@@ -1892,7 +1923,7 @@
       },
       "confirmation": {
         "title": {
-          "string": ""
+          "string": "Excluir Propriedade"
         },
         "body": {
           "string": "",
@@ -1906,7 +1937,7 @@
     },
     "DatasetOverviewDeletePropertyError": {
       "title": {
-        "string": ""
+        "string": "Excluir Propriedade"
       },
       "intro": {
         "string": "",
@@ -2555,6 +2586,14 @@
         "string": "Não há Entidades ainda."
       }
     },
+    "EntityFiltersViewAs": {
+      "noUserSelected": {
+        "string": ""
+      },
+      "viewAs": {
+        "string": ""
+      }
+    },
     "EntityList": {
       "noEntities": {
         "string": "Não há Entidades para mostrar.",
@@ -2744,22 +2783,20 @@
       }
     },
     "EntityUpload": {
-      "title": {
-        "string": "Importar dados de arquivo",
-        "developer_comment": "This is the title at the top of a pop-up."
+      "currentEntities": {
+        "string": ""
+      },
+      "newEntities": {
+        "string": ""
       },
       "table": {
-        "server": {
-          "string": "Dados do servidor {name}",
-          "developer_comment": "This is shown above a list of Entities on the server. {name} is the name of the Entity List."
-        },
         "file": {
           "string": "Dados para importar"
         }
       },
       "action": {
         "append": {
-          "string": "Anexar dados",
+          "string": "",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
@@ -2770,9 +2807,6 @@
         "noData": {
           "string": "Seu arquivo não contém dados."
         }
-      },
-      "headersNote": {
-        "string": "A primeira linha do seu arquivo de dados deve corresponder exatamente ao cabeçalho da tabela que você vê acima."
       }
     },
     "EntityUploadDataError": {
@@ -2783,59 +2817,103 @@
     "EntityUploadDataTemplate": {
       "text": {
         "full": {
-          "string": "Se não tiver certeza, você pode {downloadTemplate}",
-          "developer_comment": "{downloadTemplate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDownload a data template (.csv)"
+          "string": "",
+          "developer_comment": "{downloadTemplate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDownload a CSV template"
         },
         "downloadTemplate": {
-          "string": "Baixar um modelo de dados (.csv)",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {downloadTemplate} is in the following text:\n\nIf you aren’t sure, you can {downloadTemplate}"
+          "string": "",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {downloadTemplate} is in the following text:\n\nNeed a starting point? {downloadTemplate}."
         }
       }
     },
+    "EntityUploadErrors": {
+      "title": {
+        "string": "{count, plural, one {} many {} other {}}",
+        "developer_comment": "This text is shown above a section that lists errors in the user's data."
+      },
+      "introduction": {
+        "string": ""
+      },
+      "delimiterNotComma": {
+        "string": ""
+      },
+      "invalidQuotes": {
+        "title": {
+          "string": ""
+        },
+        "description": {
+          "string": ""
+        }
+      },
+      "missingLabel": {
+        "title": {
+          "string": "",
+          "developer_comment": "{label} will have the text \"label\" and refers to the \"label\" property. The name of the property is not translated."
+        },
+        "description": {
+          "string": ""
+        }
+      },
+      "duplicateColumn": {
+        "title": {
+          "string": ""
+        },
+        "description": {
+          "string": ""
+        },
+        "headersReused": {
+          "string": "{count, plural, one {} many {} other {}}",
+          "developer_comment": "This text is followed by a list of column headers."
+        }
+      },
+      "emptyColumn": {
+        "title": {
+          "string": ""
+        },
+        "description": {
+          "string": ""
+        }
+      }
+    },
+    "EntityUploadExtraProperties": {
+      "action": {
+        "selectAll": {
+          "string": "",
+          "developer_comment": "This is the text of a button that allows the user to select all the columns of a table."
+        }
+      },
+      "created": {
+        "string": ""
+      },
+      "createdAll": {
+        "string": ""
+      }
+    },
     "EntityUploadFileSelect": {
+      "upload": {
+        "string": ""
+      },
+      "errors": {
+        "string": "{count, plural, one {} many {} other {}}"
+      },
       "text": {
         "full": {
-          "string": "Arraste um arquivo .csv aqui ou {chooseOne} para importar.",
-          "developer_comment": "{chooseOne} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose one"
+          "string": "",
+          "developer_comment": "{chooseFile} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose a file"
         },
-        "chooseOne": {
-          "string": "escolha um",
-          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseOne} is in the following text:\n\nDrag a .csv file here, or {chooseOne} to import."
+        "chooseFile": {
+          "string": "",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseFile} is in the following text:\n\nDrag and drop a .csv file here, or {chooseFile}"
         }
       },
       "parsing": {
         "string": "Lendo dados…"
       }
     },
-    "EntityUploadHeaderErrors": {
-      "expectedHeader": {
-        "string": "Cabeçalho esperado",
-        "developer_comment": "This refers to the header row of a spreadsheet."
-      },
-      "suggestions": {
-        "title": {
-          "string": "Sugestões",
-          "developer_comment": "Suggestions to fix an error"
-        },
-        "invalidQuotes": {
-          "string": "Um campo entre aspas é inválido. Verifique a linha de cabeçalho do seu arquivo para ver se há valores incomuns."
-        },
-        "missingLabel": {
-          "string": "Uma propriedade de {label} é obrigatória. O rótulo indica o nome a ser usado para cada Entidade no Central e em outros lugares.",
-          "developer_comment": "{label} will have the text \"label\" and refers to the \"label\" property. The name of the property is not translated."
-        },
-        "unknownProperty": {
-          "string": "Se quiser adicionar propriedades a esta Lista de Entidades, você pode fazê-lo na seção Propriedades da Entidade na página Visão Geral desta Lista de Entidades, ou pode carregar e publicar um Formulário que faça referência à propriedade."
-        },
-        "duplicateColumn": {
-          "string": "Parece que duas ou mais colunas têm o mesmo cabeçalho. Certifique-se de que os cabeçalhos das colunas sejam exclusivos."
-        },
-        "emptyColumn": {
-          "string": "Parece que você tem uma célula vazia no cabeçalho. Remova todas as colunas vazias do seu arquivo."
-        },
-        "delimiterNotComma": {
-          "string": "Isso pode ter ocorrido porque definimos o delimitador de célula errado. Usamos {delimiter}."
-        }
+    "EntityUploadHeaderReview": {
+      "title": {
+        "string": "{count, plural, one {} many {} other {}}",
+        "developer_comment": "This text is shown above a section where the user can review warnings about their data."
       }
     },
     "EntityUploadPopup": {
@@ -2843,6 +2921,9 @@
         "string": "{count, plural, one {{count} linha de dados encontrada} many {{count} linhas de dados encontradas} other {{count} linhas de dados encontradas}}"
       },
       "status": {
+        "creatingProperties": {
+          "string": ""
+        },
         "sending": {
           "string": "Enviando arquivo… ({percentUploaded})",
           "developer_comment": "This text is shown while a file is being uploaded to the server."
@@ -2854,6 +2935,75 @@
       }
     },
     "EntityUploadWarnings": {
+      "introduction": {
+        "string": ""
+      },
+      "systemProperties": {
+        "string": "",
+        "developer_comment": "\"Properties\" refers to Entity properties."
+      },
+      "caseMismatch": {
+        "title": {
+          "string": "",
+          "developer_comment": "\"Property\" refers to an Entity property."
+        },
+        "description": {
+          "string": ""
+        },
+        "existingProperty": {
+          "string": "",
+          "developer_comment": "\"Property\" refers to an Entity property."
+        }
+      },
+      "invalidProperties": {
+        "string": "{count, plural, one {} many {} other {}}",
+        "developer_comment": "\"Property\" refers to an Entity property."
+      },
+      "missingProperties": {
+        "title": {
+          "string": "{count, plural, one {} many {} other {}}",
+          "developer_comment": "\"Property\" refers to an Entity property."
+        },
+        "description": {
+          "string": "{count, plural, one {} many {} other {}}",
+          "developer_comment": "\"Property\" refers to an Entity property."
+        }
+      },
+      "extraProperties": {
+        "title": {
+          "one": {
+            "string": ""
+          },
+          "multiple": {
+            "string": ""
+          }
+        },
+        "description": {
+          "one": {
+            "string": ""
+          },
+          "multiple": {
+            "string": "",
+            "developer_comment": "\"Ones\" refers to \"columns\"."
+          }
+        },
+        "error": {
+          "one": {
+            "string": ""
+          },
+          "multiple": {
+            "string": "",
+            "developer_comment": "\"Ones\" refers to \"columns\"."
+          }
+        }
+      },
+      "propertiesIgnored": {
+        "string": "{count, plural, one {} many {} other {}}",
+        "developer_comment": "\"Property\" refers to an Entity property."
+      },
+      "columnsIgnored": {
+        "string": "{count, plural, one {} many {} other {}}"
+      },
       "row": {
         "raggedRows": {
           "string": "Menos colunas foram encontradas do que o esperado em algumas linhas:",
@@ -2965,6 +3115,9 @@
       },
       "emptyTable": {
         "string": "Não existe nenhum usuário de aplicativo ainda. Você terá que criar um para baixar formulários e enviar dados a partir do seu dispositivo."
+      },
+      "noFilterResults": {
+        "string": ""
       },
       "alert": {
         "create": {
@@ -3181,6 +3334,10 @@
         "uploaded": {
           "string": "Carregado",
           "developer_comment": "This is the text of a table column header. The column shows when each Media File was uploaded."
+        },
+        "size": {
+          "string": "",
+          "developer_comment": "This is the text of a table column header. The column shows the file size of each uploaded Media File."
         }
       }
     },
@@ -3230,26 +3387,6 @@
         }
       },
       "afterSelection": {
-        "matched": {
-          "full": {
-            "string": "{count, plural, one {{countOfFiles} pronto para carregar.} many {{countOfFiles} prontos para carregar.} other {{countOfFiles} prontos para carregar.}}",
-            "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
-          },
-          "countOfFiles": {
-            "string": "{count, plural, one {{count} arquivo} many {{count} arquivos} other {{count} arquivos}}",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text. (The plural form of the text is shown.)\n\n{countOfFiles} ready for upload."
-          }
-        },
-        "someUnmatched": {
-          "full": {
-            "string": "{count, plural, one {{countOfFiles} tem nome que não foi reconhecido e será ignorado. Para carregá-lo, troque o nomes dele ou arraste individualmente sobre o destino.} many {{countOfFiles} tem nomes que não foram reconhecidos e serão ignorados. Para carregá-los, troque os nomes deles ou arraste individualmente sobre cada destino.} other {{countOfFiles} tem nomes que não foram reconhecidos e serão ignorados. Para carregá-los, troque os nomes deles ou arraste individualmente sobre cada destino.}}",
-            "developer_comment": "{countOfFiles} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} files"
-          },
-          "countOfFiles": {
-            "string": "{count, plural, one {{count} arquivo} many {{count} arquivos} other {{count} arquivos}}",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {countOfFiles} is in the following text. (The plural form of the text is shown.)\n\n{countOfFiles} have a name we don’t recognize and will be ignored. To upload them, rename them or drag them individually onto their targets."
-          }
-        },
         "noneMatched": {
           "string": "{count, plural, one {Nós não reconhecemos o nome do arquivo que você está tentando carregar. Por favor, troque o nome dele para corresponder ao nome da lista acima, ou solte-o individualmente sobre o destino correto.} many {Nós não reconhecemos nenhum dos arquivos que você está tentando carregar. Por favor, troque os nomes deles para corresponderem aos nomes da lista acima, ou solte-os individualmente sobre cada destino.} other {Nós não reconhecemos nenhum dos arquivos que você está tentando carregar. Por favor, troque os nomes deles para corresponderem aos nomes da lista acima, ou solte-os individualmente sobre cada destino.}}"
         }
@@ -4177,12 +4314,6 @@
       }
     },
     "Navbar": {
-      "action": {
-        "toggle": {
-          "string": "Ocultar ou exibir a barra de navegação",
-          "developer_comment": "Used by screen readers to describe the button used to show or hide the navigation bar on small screens (\"hamburger menu\")."
-        }
-      },
       "analyticsNotice": {
         "string": "Ajude a melhorar o Central!"
       }
@@ -4329,35 +4460,7 @@
         }
       }
     },
-    "ProjectCustomPropertiesList": {
-      "heading": {
-        "0": {
-          "string": "",
-          "developer_comment": "A brief introduction to Custom Properties shown for the current project"
-        }
-      },
-      "emptyTable": {
-        "string": ""
-      },
-      "created": {
-        "string": "",
-        "developer_comment": "Shown after a custom property is successfully created."
-      },
-      "action": {
-        "create": {
-          "string": "",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      }
-    },
     "ProjectCustomPropertiesNew": {
-      "title": {
-        "string": "",
-        "developer_comment": "This is the title at the top of a pop-up."
-      },
-      "introduction": {
-        "string": ""
-      },
       "newPropertyName": {
         "string": ""
       },
@@ -4993,6 +5096,9 @@
       }
     },
     "PublicLinkTable": {
+      "noFilterResults": {
+        "string": ""
+      },
       "header": {
         "once": {
           "string": "Resposta única",
@@ -5174,6 +5280,14 @@
         },
         "parseError": {
           "string": "Algo deu errado ao solicitar seus dados."
+        }
+      }
+    },
+    "SubmissionDefDropdown": {
+      "action": {
+        "downloadXml": {
+          "string": "",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },

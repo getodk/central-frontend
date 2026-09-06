@@ -49,6 +49,10 @@ defineOptions({
 const props = defineProps({
   odataFilter: String,
   searchTerm: String,
+  viewAs: {
+    type: Number,
+    default: null
+  },
   disabled: Boolean
 });
 
@@ -59,7 +63,7 @@ const href = computed(() =>
   apiPaths.entities(projectId, datasetName, '.csv'));
 
 const filteredHref = computed(() =>
-  apiPaths.entities(projectId, datasetName, '.csv', { $filter: props.odataFilter, $search: props.searchTerm }));
+  apiPaths.entities(projectId, datasetName, '.csv', { $filter: props.odataFilter, $search: props.searchTerm, viewAs: props.viewAs }));
 
 const { dataset, odataEntities } = useRequestData();
 const { t } = useI18n();
@@ -68,7 +72,7 @@ const downloadFiltered = computed(() => (odataEntities.dataExists
   ? tn('action.download.filtered.withCount', odataEntities.count)
   : t('action.download.filtered.withoutCount')));
 
-const isFiltered = computed(() => props.odataFilter || props.searchTerm);
+const isFiltered = computed(() => props.odataFilter || props.searchTerm || props.viewAs);
 
 const handleClick = (event, toggle) => {
   if (isFiltered.value) {
