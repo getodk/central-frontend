@@ -18,8 +18,7 @@ except according to the terms contained in the LICENSE file.
         <p>{{ $t('introduction[0]') }}</p>
       </div>
       <form @submit.prevent="submit">
-        <property-input ref="input" v-model="name"
-          :properties="dataset.properties"/>
+        <property-input ref="input" v-model="name" :properties="propertyNames"/>
         <p>{{ $t('introduction[1]') }}</p>
         <div class="modal-actions">
           <button type="button" class="btn btn-link"
@@ -37,16 +36,15 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
+import { computed, reactive, ref, watch } from 'vue';
 import { equals } from 'ramda';
-import { ref, watch } from 'vue';
-import { useI18n } from 'vue-i18n';
 
 import Modal from '../../modal.vue';
 import PropertyInput from '../../property-input.vue';
 import Spinner from '../../spinner.vue';
 
 import useRequest from '../../../composables/request';
-import { apiPaths } from '../../../util/request';
+import { apiPaths, isProblem } from '../../../util/request';
 import { useRequestData } from '../../../request-data';
 import { noop } from '../../../util/util';
 
@@ -66,24 +64,30 @@ const emit = defineEmits(['hide', 'success']);
 
 const input = ref(null);
 const name = ref('');
+const duplicateNames = reactive([]);
+
+const propertyNames = computed(() =>
+  [...dataset.propertyMap.keys(), ...duplicateNames]);
 
 watch(() => props.state, (state) => {
   if (!state) name.value = '';
 });
 
-const { t } = useI18n();
 const submit = () => {
+  const data = { name: name.value };
   request({
     method: 'POST',
     url: apiPaths.datasetProperties(project.id, dataset.name),
-    data: { name: name.value },
-    problemToAlert: ({ code, details }) =>
-      (code === 409.3 && equals(details.fields, ['name', 'datasetId'])
-        ? t('problem.409_3')
-        : null)
+    data,
+    fulfillProblem: ({ code, details }) =>
+      (code === 409.3 && equals(details.fields, ['name', 'datasetId'])) ||
+      code === 409.24
   })
-    .then(() => {
-      emit('success');
+    .then(response => {
+      if (isProblem(response.data))
+        duplicateNames.push(data.name);
+      else
+        emit('success');
     })
     .catch(noop);
 };
@@ -99,11 +103,7 @@ const submit = () => {
     "introduction": [
       "To add an Entity property, choose a unique property name below.",
       "You can also add new properties by uploading a Form that references them, in which case the properties are created when the Form is published."
-    ],
-    "problem": {
-      // @transifexKey component.PropertyInput.duplicate.title
-      "409_3": "A property with this name already exists"
-    }
+    ]
   }
 }
 </i18n>

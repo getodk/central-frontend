@@ -2,6 +2,7 @@ import { nextTick } from 'vue';
 
 import DatasetPropertyNew from '../../../../src/components/dataset/property/new.vue';
 import DatasetProperties from '../../../../src/components/dataset/overview/dataset-properties.vue';
+import PropertyInput from '../../../../src/components/property-input.vue';
 
 import testData from '../../../data';
 import { load, mockHttp } from '../../../util/http';
@@ -108,24 +109,39 @@ describe('DatasetPropertyNew', () => {
     });
   });
 
-  it('shows a custom message for a duplicate property name', () =>
-    mockHttp()
-      .mount(DatasetPropertyNew, mountOptions())
-      .request(async (modal) => {
-        await modal.get('input').setValue('my_new_property');
-        return modal.get('form').trigger('submit');
-      })
-      .respondWithProblem({
+  describe('duplicate name Problem', () => {
+    [
+      {
         code: 409.3,
         message: 'A resource already exists with name,datasetId value(s) of my_new_property,1.',
         details: {
           fields: ['name', 'datasetId'],
           values: ['my_new_property', 1]
         }
-      })
-      .afterResponse(modal => {
-        modal.should.alert('danger', (message) => {
-          message.should.startWith('A property with this name already exists');
-        });
-      }));
+      },
+      {
+        code: 409.24,
+        message: "A resource already exists with name 'MY_NEW_PROPERTY' and you provided 'my_new_property' with different capitalization."
+      }
+    ].forEach(problem => {
+      it(`shows an inline error for a ${problem.code} Problem`, () =>
+        mockHttp()
+          .mount(DatasetPropertyNew, mountOptions())
+          .request(async (modal) => {
+            const input = modal.getComponent(PropertyInput);
+            input.props().properties.should.eql(['height']);
+            await input.get('input').setValue('my_new_property');
+            return modal.get('form').trigger('submit');
+          })
+          .respondWithProblem(problem)
+          .afterResponse(modal => {
+            const input = modal.getComponent(PropertyInput);
+            input.props().properties.should.eql(['height', 'my_new_property']);
+            const text = input.get('.property-input-error p').text();
+            text.should.equal('A property with this name already exists');
+
+            modal.should.not.redAlert();
+          }));
+    });
+  });
 });
