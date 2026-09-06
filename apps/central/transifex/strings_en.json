@@ -3055,10 +3055,6 @@
       "title": {
         "string": "Edit App User “{displayName}”",
         "developer_comment": "This is the title at the top of a pop-up for editing an App User. {displayName} is the the name of the App User"
-      },
-      "displayNameLabel": {
-        "string": "App User",
-        "developer_comment": "Shown as label before the display name of the App User in the edit pop-up."
       }
     },
     "FieldKeyList": {
@@ -5007,10 +5003,6 @@
       "title": {
         "string": "Edit Public Access Link “{displayName}”",
         "developer_comment": "This is the title at the top of a pop-up for editing a Public Access Link. {displayName} is the display name of the Public Link"
-      },
-      "displayNameLabel": {
-        "string": "Public Link",
-        "developer_comment": "Shown as label before the display name of the Public Access Link in the edit pop-up."
       }
     },
     "PublicLinkList": {
