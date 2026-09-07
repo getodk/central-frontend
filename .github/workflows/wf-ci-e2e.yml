@@ -4,8 +4,40 @@ on:
   workflow_call:
 
 jobs:
+  web-forms-e2e-build:
+    name: 'Build for e2e'
+    runs-on: 'ubuntu-latest'
+    timeout-minutes: 10
+    container:
+      # The image version must match the @playwright/test version in the root package-lock.json.
+      image: mcr.microsoft.com/playwright:v1.60.0-noble
+      options: --user 1001
+
+    strategy:
+      matrix:
+        node-version: ['24.16.0']
+
+    steps:
+      - uses: 'actions/checkout@v6'
+
+      - uses: 'actions/setup-node@v6'
+        id: setup-node
+        with:
+          node-version: '${{ matrix.node-version }}'
+          cache: 'npm'
+
+      - run: 'npm ci --no-audit'
+
+      # Builds only what the e2e tests need.
+      - run: 'npx turbo run build --filter=@getodk/web-forms'
+
+      - uses: ./.github/actions/save-caches
+        with:
+          node-version: '${{ steps.setup-node.outputs.node-version }}'
+
   web-forms-e2e-functional:
     name: 'Functional e2e'
+    needs: web-forms-e2e-build
     runs-on: 'ubuntu-latest'
     timeout-minutes: 4
     container:
@@ -40,6 +72,7 @@ jobs:
 
   web-forms-e2e-visual:
     name: 'Visual e2e'
+    needs: web-forms-e2e-build
     runs-on: 'ubuntu-latest'
     timeout-minutes: 6
     container:

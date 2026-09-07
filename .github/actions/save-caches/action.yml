@@ -1,0 +1,28 @@
+name: Save caches
+description: >
+  Save two caches: one with the installed npm packages, one with the build output.
+  Later jobs get these files back through actions/restore-node.
+inputs:
+  node-version:
+    description: the Node version that setup-node installed; it is part of the cache name
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+  # The keys and paths here must be the same as in actions/restore-node.
+  - uses: 'actions/cache/save@v6'
+    id: cache-install
+    with:
+      path: |
+        node_modules
+        **/node_modules
+      key: install-${{ inputs.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', '.github/workflows/*.yml', 'packages/*/package.json', 'packages/*/package-lock.json') }}
+
+  - uses: 'actions/cache/save@v6'
+    id: cache-build
+    with:
+      path: |
+        dist
+        packages/*/dist
+      key: build-${{ github.sha }}
