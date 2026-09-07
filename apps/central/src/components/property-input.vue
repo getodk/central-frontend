@@ -29,7 +29,7 @@ const props = defineProps({
     type: String,
     default: 'entity'
   },
-  // Array of property names or property names
+  // Array of existing properties, either property objects or just names/strings
   properties: {
     type: Array,
     required: true
