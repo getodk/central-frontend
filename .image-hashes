@@ -1,8 +1,8 @@
 apps/central/docs/img/icomoon-choose-new-icons.png:9032b25097eb798c8a6f566b27d5f04cd9a3c9a95f8d6f5f6b3514fc080d3cc9
 apps/central/docs/img/icomoon-font-awesome.png:06e794774dc14a47b2fbd4cf61e5abdd150b2e44ecb628ead81dea2da6da5e32
 apps/central/src/assets/images/odk-logo.png:864211b092fce4c72c37e089b8bb96a2d0d84f140129935286f071605237fc3c
-apps/central/src/assets/images/whats-new/banner@1x.png:c1cc12d82edd88ae53d294dffd7e90ac67c8261adb923f4629303a6d6cc9584c
-apps/central/src/assets/images/whats-new/banner@2x.png:688d417af529e290026e7976d86fdd82bcb0edecc420b65b4de6579c0c561d9a
+apps/central/src/assets/images/whats-new/banner@1x.png:915dfb8f90a5bac95b3484ac87366ebf12363b01f6ff5304d30ac2a45486ed0b
+apps/central/src/assets/images/whats-new/banner@2x.png:a27f7be6b7ff6152405df95fdd988ecbe52a617b74f763aa92731713add54d69
 packages/web-forms/e2e/test-cases/visual/all-question-types.test.ts-snapshots/geopoint-maps-current-location-chromium.png:11a334607600cd39135a6ff0780751c2f17267e0264fe985b08266a9adaad188
 packages/web-forms/e2e/test-cases/visual/all-question-types.test.ts-snapshots/geopoint-maps-current-location-firefox.png:fdf865ea142ce5657f054861e248aff62a729bc10761d9c8533a0e5b765f4d91
 packages/web-forms/e2e/test-cases/visual/all-question-types.test.ts-snapshots/geopoint-maps-current-location-webkit.png:de9ef3e445beef87565c6ee6054362a33f0c5c6dbd50a5994fd8847f1a2c9ed0
