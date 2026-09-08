@@ -13,6 +13,8 @@ import type { ExpressionEvaluator } from './ExpressionEvaluator.ts';
 import { LocationPathExpressionEvaluator } from './LocationPathExpressionEvaluator.ts';
 import { NumberExpressionEvaluator } from './NumberExpressionEvaluator.ts';
 import { createExpression } from './factory.ts';
+import { BinaryExpressionEvaluator } from './BinaryExpressionEvaluator.ts';
+import { FunctionCallExpressionEvaluator } from './FunctionCallExpressionEvaluator.ts';
 
 type LocationPathNode = AbsoluteLocationPathNode | FilterPathExprNode | RelativeLocationPathNode;
 
@@ -22,6 +24,8 @@ interface LocationPathExpressionOptions {
   readonly isRoot: boolean;
   readonly isSelf: boolean;
 }
+
+const filterCache = new Map<string, XPathNode[]>();
 
 export class LocationPathEvaluator
   extends LocationPathExpressionEvaluator
@@ -90,10 +94,51 @@ export class LocationPathEvaluator
 
         const filteredNodes: T[] = [];
 
-        // IF currentContext.contextSize() is big AND currentContext is immutable
-        // THEN evaluate the absolute location path expressions (either LHS or RHS)
-        // AND use that as a cache key written to a cache on this obj(?)
-        console.log({ predicateExpression, size: currentContext.contextSize() });
+        // TODO pull out function that returns filteredNodes
+        // TODO consider indexing instead of caching to make future lookups immediate
+        // TODO only run if the instance is immutable
+
+        // IF currentContext.contextSize() is big AND currentContext is immutable/secondary
+        // AND IF one side is relative and one side is constant (isConstantExpression) or absolute or function
+        // THEN evaluate the constant
+        // AND use that as a cache key written to a cache on the secondary instance somehow
+        // AND use the constant in the filter below(?)
+        let cacheKey;
+        if (currentContext.contextSize() > 10) { // TODO pick a number
+          if (predicateExpression instanceof BinaryExpressionEvaluator) {
+            let variableSide: ExpressionEvaluator | null;
+
+            if (
+              (predicateExpression.rhs instanceof LocationPathEvaluator && predicateExpression.rhs.isAbsolute && predicateExpression.rhs) ||
+              (predicateExpression.rhs instanceof FunctionCallExpressionEvaluator && predicateExpression.rhs.argumentExpressions.every(expr => expr instanceof LocationPathEvaluator && expr.isAbsolute))
+            ) {
+              variableSide = predicateExpression.rhs;
+            } else if (
+              (predicateExpression.lhs instanceof LocationPathEvaluator && predicateExpression.lhs.isAbsolute && predicateExpression.lhs) ||
+              (predicateExpression.lhs instanceof FunctionCallExpressionEvaluator && predicateExpression.lhs.argumentExpressions.every(expr => expr instanceof LocationPathEvaluator && expr.isAbsolute))
+            ) {
+              variableSide = predicateExpression.lhs;
+            } else {
+              variableSide = null;
+            }
+
+            if (variableSide) {
+              const predicateResult = variableSide.evaluate(currentContext).toString();
+              const fullpath = this.syntaxNode.text;
+              const justTheFilter = fullpath.split(']')[0] + ']';
+              cacheKey = justTheFilter.replace(variableSide.syntaxNode.text, predicateResult);
+              if (filterCache.has(cacheKey)) {
+                filteredNodes.push(...filterCache.get(cacheKey)! as T[]);
+                currentContext = LocationPathEvaluation.fromArbitraryNodes(
+                  currentContext,
+                  filteredNodes,
+                  this
+                );
+                continue;
+              }
+            }
+          }
+        }
 
         for (const self of currentContext) {
           if (positionPredicate != null) {
@@ -119,6 +164,10 @@ export class LocationPathEvaluator
           } else if (predicateResult.toBoolean()) {
             filteredNodes.push(...self.contextNodes);
           }
+        }
+
+        if (cacheKey) {
+          filterCache.set(cacheKey, filteredNodes);
         }
 
         currentContext = LocationPathEvaluation.fromArbitraryNodes(

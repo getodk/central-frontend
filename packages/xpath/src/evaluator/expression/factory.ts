@@ -69,10 +69,8 @@ export const createExpression = (syntaxNode: EvaluableExprNode): ExpressionEvalu
       return new AbsoluteLocationPathExpressionEvaluator(syntaxNode);
 
     case 'filter_path_expr':
-      // need to figure out if this is it
       if (syntaxNode.children.length === 1) {
         const [exprNode] = syntaxNode.children[0].children;
-        console.log('expressionnode', exprNode.text);
         return createExpression(exprNode);
       }
 

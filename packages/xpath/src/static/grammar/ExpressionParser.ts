@@ -89,13 +89,6 @@ export class ExpressionParser {
   protected readonly cache = new UpsertableMap<string, SyntaxTree>();
 
   parse(expression: string, options: ParseOptions = {}): SyntaxTree {
-    // TODO trim whitespace to get more hits - actually there's a lot of whitespace within the expression that can be removed, eg: a =b, a= b, a=b
-    // TODO exclude null?
-
-
-    if (this.cache.has(expression)) {
-      console.log('cache hit: ' + expression);
-    }
     return this.cache.upsert(expression, () => {
       const parsed = this.xpathParser.parse(expression);
 

@@ -123,8 +123,6 @@ export class Evaluator<T extends XPathNode> {
     namespaceResolver: XPathNSResolver | null,
     resultType: XPathEvaluationResultType | null
   ): XPathEvaluationResult<T> {
-
-    // TODO ideally we'd have a cache here, from expression -> value
     const tree = this.parser.parse(expression, this.parseOptions);
     const expr = createExpression(tree.rootNode);
     const evaluationContext = this.getEvaluationContext(contextNode, namespaceResolver);
