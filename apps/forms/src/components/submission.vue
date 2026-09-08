@@ -135,7 +135,7 @@ const fetchFormConfig = async (): Promise<Form> => {
   throw new RequestError('Form not found', 404);
 };
 
-const fetchForm = async (): Promise<Form | undefined> => {
+const fetchForm = async (): Promise<Form> => {
   const formConfig = await fetchFormConfig();
 
   redirectEnketoUrls(formConfig);
@@ -158,11 +158,7 @@ const fetchForm = async (): Promise<Form | undefined> => {
       // editing in Enketo isn't supported
       throw new RequestError('Form not found', 404);
     }
-    if (offline.value) {
-      // TODO: Update once Web Forms has support for offline
-      window.location.replace(`/-/x/${formConfig.enketoId}${queryString(route.query)}`);
-      return;
-    }
+
     webFormsEnabled.value = false;
   }
   return formConfig;
@@ -197,7 +193,13 @@ const load = async () => {
   loadingState.value = true;
   errorCode.value = null;
   try {
-    form.value = await fetchForm();
+    const formConfig = await fetchForm();
+    if (offline.value) {
+      // TODO: Update once Web Forms has support for offline
+      window.location.replace(`/-/x/${formConfig.enketoId}${queryString(route.query)}`);
+      return;
+    }
+    form.value = formConfig;
     loadingState.value = false;
   } catch (e) {
     if (e instanceof RequestError) {
@@ -205,7 +207,9 @@ const load = async () => {
         // not logged in
         const relativeUrl = window.location.href.substring(window.location.origin.length);
         window.location.href = '/login?next=/wf' + relativeUrl;
-      } else if (e.statusCode >= 404 && e.statusCode < 405) {
+        return;
+      }
+      if (e.statusCode >= 404 && e.statusCode < 405) {
         // form not found
         errorCode.value = 404;
       } else {
