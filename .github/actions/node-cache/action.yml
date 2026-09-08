@@ -1,0 +1,82 @@
+name: Node cache
+description: >
+  Save or restore two caches, one with the installed npm packages, one with the build output
+  Falls back to npm ci if the install cache is missing.
+inputs:
+  mode:
+    description: either 'save' or 'restore'
+    required: true
+  registry-url:
+    description: define registry-url in npm-rc; required for publishing
+    required: false
+
+runs:
+  using: 'composite'
+  steps:
+  - name: 'Validate inputs'
+    shell: sh
+    env:
+      MODE: ${{ inputs.mode }}
+    run: |
+      if [ "$MODE" != 'save' ] && [ "$MODE" != 'restore' ]; then
+        echo "mode must be 'save' or 'restore', got '$MODE'" >&2
+        exit 1
+      fi
+
+  # Resolves the Node version (from the volta pin in package.json) used in the install cache key
+  - uses: actions/setup-node@v6
+    id: setup-node
+    with:
+      node-version-file: package.json
+      registry-url: ${{ inputs.registry-url }}
+
+  # Computing the keys in one place keeps the save and restore steps below in sync
+  - id: keys
+    shell: sh
+    env:
+      INSTALL_KEY: install-${{ steps.setup-node.outputs.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', 'packages/*/package-lock.json') }}
+      BUILD_KEY: build-${{ github.sha }}
+    run: |
+      echo "install=$INSTALL_KEY" >> "$GITHUB_OUTPUT"
+      echo "build=$BUILD_KEY" >> "$GITHUB_OUTPUT"
+
+  - if: ${{ inputs.mode == 'save' }}
+    uses: 'actions/cache/save@v6'
+    with:
+      path: |
+        node_modules
+        apps/*/node_modules
+        packages/*/node_modules
+      key: ${{ steps.keys.outputs.install }}
+
+  - if: ${{ inputs.mode == 'save' }}
+    uses: 'actions/cache/save@v6'
+    with:
+      path: |
+        dist
+        packages/*/dist
+      key: ${{ steps.keys.outputs.build }}
+
+  - if: ${{ inputs.mode == 'restore' }}
+    uses: 'actions/cache/restore@v6'
+    with:
+      path: |
+        dist
+        packages/*/dist
+      key: ${{ steps.keys.outputs.build }}
+      fail-on-cache-miss: true
+
+  - if: ${{ inputs.mode == 'restore' }}
+    uses: 'actions/cache/restore@v6'
+    id: cache-install
+    with:
+      path: |
+        node_modules
+        apps/*/node_modules
+        packages/*/node_modules
+      key: ${{ steps.keys.outputs.install }}
+
+  - name: 'Install packages (when cache missed)'
+    shell: sh
+    if: ${{ inputs.mode == 'restore' && steps.cache-install.outputs.cache-hit != 'true' }}
+    run: npm ci --no-audit

@@ -13,17 +13,12 @@ jobs:
       image: mcr.microsoft.com/playwright:v1.60.0-noble
       options: --user 1001
 
-    strategy:
-      matrix:
-        node-version: ['24.16.0']
-
     steps:
       - uses: 'actions/checkout@v6'
 
       - uses: 'actions/setup-node@v6'
-        id: setup-node
         with:
-          node-version: '${{ matrix.node-version }}'
+          node-version-file: package.json
           cache: 'npm'
 
       - run: 'npm ci --no-audit'
@@ -31,9 +26,9 @@ jobs:
       # Builds only what the e2e tests need.
       - run: 'npx turbo run build --filter=@getodk/web-forms'
 
-      - uses: ./.github/actions/save-caches
+      - uses: ./.github/actions/node-cache
         with:
-          node-version: '${{ steps.setup-node.outputs.node-version }}'
+          mode: save
 
   web-forms-e2e-functional:
     name: 'Functional e2e'
@@ -48,15 +43,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: ['24.16.0']
         browser: [chromium, firefox, webkit]
 
     steps:
       - uses: 'actions/checkout@v6'
 
-      - uses: ./.github/actions/restore-node
+      - uses: ./.github/actions/node-cache
         with:
-          node-version: '${{ matrix.node-version }}'
+          mode: restore
 
       - name: 'Run functional e2e tests'
         run: 'npm run test:e2e:functional:${{ matrix.browser }} -w=packages/web-forms'
@@ -83,15 +77,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: ['24.16.0']
         browser: [chromium, firefox, webkit]
 
     steps:
       - uses: 'actions/checkout@v6'
 
-      - uses: ./.github/actions/restore-node
+      - uses: ./.github/actions/node-cache
         with:
-          node-version: '${{ matrix.node-version }}'
+          mode: restore
 
       # xvfb-run is used for visual tests to compare snapshots more accurately.
       - name: 'Run visual e2e tests'

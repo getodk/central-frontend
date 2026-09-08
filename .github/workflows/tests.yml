@@ -20,7 +20,6 @@ jobs:
     - run: ./bin/check-for-large-files.sh
     - run: ./bin/check-images.sh
     - uses: actions/setup-node@v6
-      id: setup-node
       with:
         node-version-file: package.json
         cache: 'npm'
@@ -29,9 +28,9 @@ jobs:
     - run: npm run lint
     - run: ./bin/check-bundle-size.js
 
-    - uses: ./.github/actions/save-caches
+    - uses: ./.github/actions/node-cache
       with:
-        node-version: ${{ steps.setup-node.outputs.node-version }}
+        mode: save
     - name: Upload Release Artefact
       if: github.ref_type == 'tag'
       env:
@@ -50,7 +49,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
-    - uses: ./.github/actions/restore-node
+    - uses: ./.github/actions/node-cache
+      with:
+        mode: restore
     - run: npm run test -w=@getodk/central-frontend
 
   test-forms-app:
@@ -61,7 +62,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
-    - uses: ./.github/actions/restore-node
+    - uses: ./.github/actions/node-cache
+      with:
+        mode: restore
     - run: npx playwright install chromium --with-deps
     - run: npm run test -w=@getodk/forms
 
