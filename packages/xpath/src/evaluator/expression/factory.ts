@@ -71,6 +71,7 @@ export const createExpression = (syntaxNode: EvaluableExprNode): ExpressionEvalu
     case 'filter_path_expr':
       if (syntaxNode.children.length === 1) {
         const [exprNode] = syntaxNode.children[0].children;
+
         return createExpression(exprNode);
       }
 

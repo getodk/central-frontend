@@ -104,18 +104,29 @@ export class LocationPathEvaluator
         // AND use that as a cache key written to a cache on the secondary instance somehow
         // AND use the constant in the filter below(?)
         let cacheKey;
-        if (currentContext.contextSize() > 10) { // TODO pick a number
+        if (currentContext.contextSize() > 10) {
+          // TODO pick a number
           if (predicateExpression instanceof BinaryExpressionEvaluator) {
             let variableSide: ExpressionEvaluator | null;
 
             if (
-              (predicateExpression.rhs instanceof LocationPathEvaluator && predicateExpression.rhs.isAbsolute && predicateExpression.rhs) ||
-              (predicateExpression.rhs instanceof FunctionCallExpressionEvaluator && predicateExpression.rhs.argumentExpressions.every(expr => expr instanceof LocationPathEvaluator && expr.isAbsolute))
+              (predicateExpression.rhs instanceof LocationPathEvaluator &&
+                predicateExpression.rhs.isAbsolute &&
+                predicateExpression.rhs) ||
+              (predicateExpression.rhs instanceof FunctionCallExpressionEvaluator &&
+                predicateExpression.rhs.argumentExpressions.every(
+                  (expr) => expr instanceof LocationPathEvaluator && expr.isAbsolute
+                ))
             ) {
               variableSide = predicateExpression.rhs;
             } else if (
-              (predicateExpression.lhs instanceof LocationPathEvaluator && predicateExpression.lhs.isAbsolute && predicateExpression.lhs) ||
-              (predicateExpression.lhs instanceof FunctionCallExpressionEvaluator && predicateExpression.lhs.argumentExpressions.every(expr => expr instanceof LocationPathEvaluator && expr.isAbsolute))
+              (predicateExpression.lhs instanceof LocationPathEvaluator &&
+                predicateExpression.lhs.isAbsolute &&
+                predicateExpression.lhs) ||
+              (predicateExpression.lhs instanceof FunctionCallExpressionEvaluator &&
+                predicateExpression.lhs.argumentExpressions.every(
+                  (expr) => expr instanceof LocationPathEvaluator && expr.isAbsolute
+                ))
             ) {
               variableSide = predicateExpression.lhs;
             } else {
@@ -128,7 +139,7 @@ export class LocationPathEvaluator
               const justTheFilter = fullpath.split(']')[0] + ']';
               cacheKey = justTheFilter.replace(variableSide.syntaxNode.text, predicateResult);
               if (filterCache.has(cacheKey)) {
-                filteredNodes.push(...filterCache.get(cacheKey)! as T[]);
+                filteredNodes.push(...(filterCache.get(cacheKey)! as T[]));
                 currentContext = LocationPathEvaluation.fromArbitraryNodes(
                   currentContext,
                   filteredNodes,
