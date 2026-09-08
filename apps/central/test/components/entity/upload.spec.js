@@ -1136,4 +1136,42 @@ describe('EntityUpload', () => {
           }));
     });
   });
+
+  it('does not upload data for a deleted property', () => {
+    mockLogin();
+    testData.extendedDatasets.createPast(1, {
+      properties: [{ name: 'height' }, { name: 'circumference' }]
+    });
+    return load('/projects/1/entity-lists/trees/properties')
+      .complete()
+      .request(async (app) => {
+        const tr = app.get('#dataset-properties tbody tr:nth-child(2)');
+        tr.get('td').text().should.equal('circumference');
+        await tr.get('.delete-button').trigger('click');
+        return app.get('.confirmation .btn-primary').trigger('click');
+      })
+      .respondWithSuccess()
+      .complete()
+      .route('/projects/1/entity-lists/trees')
+      .respondForComponent('DatasetEntities')
+      .complete()
+      .request(async (app) => {
+        await app.get('#dataset-entities-upload-button').trigger('click');
+        const modal = app.getComponent(EntityUpload);
+        const csv = createCSV('label,height,circumference\ndogwood,1,2');
+        await selectFile(modal, csv);
+        const warnings = modal.getComponent(EntityUploadWarnings).props();
+        warnings.extraProperties.should.eql(['circumference']);
+        return modal.get('.modal-actions .btn-primary').trigger('click');
+      })
+      .respondWithProblem()
+      .testRequests([{
+        method: 'POST',
+        url: '/v1/projects/1/datasets/trees/entities',
+        data: {
+          source: { name: 'my_data.csv', size: 38 },
+          entities: [{ label: 'dogwood', data: { height: '1' } }]
+        }
+      }]);
+  });
 });
