@@ -1636,6 +1636,18 @@
         },
         "num_multi_entity_errors": {
           "string": "Number of errors from repeat Entities"
+        },
+        "num_wf_submissions": {
+          "string": "Number of Submissions with Web Forms"
+        },
+        "num_enketo_submissions": {
+          "string": "Number of Submissions with Enketo"
+        },
+        "num_wf_submission_edits": {
+          "string": "Number of Submission edits with Web Forms"
+        },
+        "num_enketo_submission_edits": {
+          "string": "Number of Submission edits with Enketo"
         }
       }
     },
