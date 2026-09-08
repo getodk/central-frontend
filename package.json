@@ -16,6 +16,10 @@
     "lint:fix": "npm run lint:fix --workspaces",
     "test": "npm run test --workspaces",
     "test:e2e": "e2e-tests/run-tests.sh",
+    "transifex:destructure": "npm run transifex:destructure --workspaces --if-present",
+    "transifex:fix": "npm run transifex:fix --workspaces --if-present",
+    "transifex:lint": "npm run transifex:lint --workspaces --if-present",
+    "transifex:pull": "npm run transifex:pull --workspaces --if-present",
     "version": "changeset version"
   },
   "volta": {

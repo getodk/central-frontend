@@ -91,14 +91,16 @@ const abandonText = computed(() => (!form.dataExists
       "delete": "Formulare löschen",
       "abandon": "Entwurf verwerfen",
       "publish": "Entwurf veröffentlichen"
-    }
+    },
+    "title": "Bereit zur Veröffentlichung?"
   },
   "es": {
     "action": {
       "delete": "Borrar formulario",
       "abandon": "Abandonar borrador",
       "publish": "Publicar borrador"
-    }
+    },
+    "title": "Listo para publicar?"
   },
   "fr": {
     "action": {
@@ -119,7 +121,8 @@ const abandonText = computed(() => (!form.dataExists
       "delete": "Cancellare il formulario",
       "abandon": "Abbandonare la bozza",
       "publish": "Pubblicare la bozza"
-    }
+    },
+    "title": "Pronto per essere pubblicato?"
   },
   "ja": {
     "action": {

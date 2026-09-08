@@ -96,7 +96,6 @@ const responsesByComponent = {
     deletedDatasets: () => []
   }),
   ProjectSettings: [],
-  CustomPropertyList: componentResponses({ actorProperties: true }),
   FormNewPage: [],
   FormShow: componentResponses({
     project: true,

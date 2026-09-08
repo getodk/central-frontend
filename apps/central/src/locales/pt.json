@@ -165,6 +165,7 @@
     "save": "Salvar",
     "saveSettings": "Salvar configuração",
     "sort": "Ordenar",
+    "tryAgain": "Tentar novamente",
     "undo": "Desfazer",
     "update": "Atualizar",
     "yesProceed": "Sim, prossiga",
@@ -174,6 +175,7 @@
     "collapse": "Condensar",
     "selectRow": "Selecionar linha",
     "reset": "Reiniciar",
+    "change": "Mudar",
     "upload": "Carregar",
     "reviewParallelUpdates": "Revisar atualizações paralelas",
     "restore": "Recuperar"
@@ -186,9 +188,9 @@
     "name": "Nome",
     "newPassword": "Nova senha",
     "oldPassword": "Senha antiga",
-    "passphrase": "Dica de senha",
     "password": "Senha",
     "passwordConfirm": "Nova senha (confirmar)",
+    "title": "Título",
     "type": "Tipo"
   },
   "header": {
@@ -209,7 +211,8 @@
     "time": "Hora",
     "type": "Tipo",
     "entities": "Total de Entidades",
-    "lastEntity": "Entidade mais recente"
+    "lastEntity": "Entidade mais recente",
+    "value": "Valor"
   },
   "plural": {
     "appUser": "Usuário de aplicativo | Usuários de aplicativo | Usuários de aplicativo",
@@ -237,6 +240,7 @@
     "entityLists": "Listas de Entidades",
     "form": "Formulário",
     "forms": "Formulários",
+    "newForm": "Novo Formulário",
     "formAttachments": "Anexos do formulário",
     "project": "Projeto",
     "projects": "Projetos",
@@ -274,6 +278,13 @@
       "helpArticle": "este artigo da ajuda"
     },
     "learnMore": "Saiba mais."
+  },
+  "login": {
+    "odkLogo": "Logotipo do ODK",
+    "defaultTitle": "Benvindo ao ODK Central",
+    "defaultDescription": "Faça login na sua conta para começar",
+    "heroImage": "Imagem de login",
+    "customLogoAlt": "Logotipo da organização"
   },
   "analytics": {
     "alwaysImprove": "Nós estamos sempre tentando melhorar o ODK Central.",
@@ -339,8 +350,11 @@
     "totalEntities": "Total de Entidades",
     "versionShort": "v{version}",
     "warning": "Aviso",
+    "recommended": "recomendado",
     "none": "(nenhum)",
     "search": "Busca",
+    "useEnketo": "Modo de compatibilidade do Enketo",
+    "updateInProgress": "Solicitação de atualização em andamento",
     "reviewState": "Status da revisão",
     "status": "Situação",
     "version": "Versão",

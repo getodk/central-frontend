@@ -141,9 +141,6 @@ const loaders = new Map()
   .set('ProjectUserList', loader(() => import(
     '../components/project/user/list.vue'
   )))
-  .set('CustomPropertyList', loader(() => import(
-    '../components/project/custom-properties/list.vue'
-  )))
   .set('PublicLinkList', loader(() => import(
     '../components/public-link/list.vue'
   )))

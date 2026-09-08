@@ -56,7 +56,7 @@ except according to the terms contained in the LICENSE file.
           @rows="showWarningRows">
           <template #extra-properties>
             <entity-upload-extra-properties :properties="warnings.extraProperties"
-              :selected="selectedProperties" :created="createdProperties"
+              :selected="selectedProperties" :created="propertyCreator.created"
               :disabled="errors != null" @toggle="toggleExtraProperty"/>
           </template>
         </entity-upload-warnings>
@@ -85,7 +85,7 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import { computed, inject, nextTick, onBeforeUnmount, reactive, ref, shallowRef, watch } from 'vue';
-import { equals, pick } from 'ramda';
+import { pick } from 'ramda';
 import { useI18n } from 'vue-i18n';
 
 import EntityUploadErrors from './upload/errors.vue';
@@ -99,6 +99,7 @@ import Modal from '../modal.vue';
 import Pagination from '../pagination.vue';
 
 import useEventListener from '../../composables/event-listener';
+import usePropertyCreator from '../../composables/property-creator';
 import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
@@ -115,6 +116,8 @@ const props = defineProps({
 });
 const emit = defineEmits(['hide', 'success']);
 
+const { t } = useI18n();
+const { i18n: globalI18n, redAlert } = inject('container');
 const { dataset, createResource } = useRequestData();
 const { request, awaitingResponse: uploading } = useRequest();
 
@@ -179,16 +182,6 @@ watch([() => serverPage.page, () => serverPage.size], () => {
     .catch(noop);
 });
 
-// FILE SELECTION AND PARSING
-// Entities from the CSV file
-const csvEntities = shallowRef(null);
-// Metadata about the CSV file
-const fileMetadata = shallowRef(null);
-const errors = shallowRef(null);
-const warnings = shallowRef(null);
-const parsing = ref(false);
-// Function to abort parsing in progress
-let abortParse = noop;
 // Validates the column header of the CSV file, returning any errors or
 // warnings.
 const validateHeader = ({ columns, errors: papaErrors }) => {
@@ -270,7 +263,8 @@ const validateHeader = ({ columns, errors: papaErrors }) => {
   if (warningDetails.count !== 0) result.warnings = warningDetails;
   return result;
 };
-const { t } = useI18n();
+
+// PARSING CSV DATA BELOW COLUMN HEADER
 // noPropertyData is used to minimize the JSON sent to Backend: the JSON won't
 // specify a `data` property for an entity without property data.
 const noPropertyData = { toJSON: () => undefined };
@@ -302,7 +296,6 @@ const rowToEntity = (extraProperties) => (values, columns) => {
   if (hasExtra) result.extra = extraData;
   return result;
 };
-const { i18n: globalI18n, redAlert } = inject('container');
 const parseEntities = async (file, headerResults, extraProperties, signal) => {
   const results = await parseCSV(globalI18n, file, headerResults.columns, {
     delimiter: headerResults.meta.delimiter,
@@ -312,6 +305,17 @@ const parseEntities = async (file, headerResults, extraProperties, signal) => {
   if (results.data.length === 0) throw new Error(t('alert.noData'));
   return results;
 };
+
+// FILE SELECTION
+// Entities from the CSV file
+const csvEntities = shallowRef(null);
+// Metadata about the CSV file
+const fileMetadata = shallowRef(null);
+const errors = shallowRef(null);
+const warnings = shallowRef(null);
+const parsing = ref(false);
+// Function to abort parsing in progress
+let abortParse = noop;
 const selectFile = (file) => {
   redAlert.hide();
   csvEntities.value = null;
@@ -408,23 +412,7 @@ const propertiesToCreate = computed(() => {
     selectedProperties.has(name));
   return result != null && result.length !== 0 ? result : null;
 });
-const createdProperties = reactive(new Set());
-const createProperties = async () => {
-  if (propertiesToCreate.value == null) return;
-  for (const name of propertiesToCreate.value) {
-    if (createdProperties.has(name)) continue; // eslint-disable-line no-continue
-    await request({ // eslint-disable-line no-await-in-loop
-      method: 'POST',
-      url: apiPaths.datasetProperties(dataset.projectId, dataset.name),
-      data: { name },
-      // If the property has already been created somehow, that's not an issue.
-      // We can just ignore the Problem response.
-      fulfillProblem: ({ code, details }) => code === 409.3 &&
-        equals(details.fields, ['name', 'datasetId'])
-    });
-    createdProperties.add(name);
-  }
-};
+const propertyCreator = usePropertyCreator(request);
 const mergeDataWithExtra = (entity) => {
   if (entity.extra == null) return entity;
 
@@ -453,7 +441,11 @@ const mergeDataWithExtra = (entity) => {
 // UPLOAD REQUEST
 const uploadProgress = ref(null);
 const upload = () => {
-  createProperties()
+  propertyCreator.request(
+    apiPaths.datasetProperties(dataset.projectId, dataset.name),
+    propertiesToCreate.value,
+    ['name', 'datasetId']
+  )
     .then(() => {
       const entitiesToSend = warnings.value?.extraProperties == null
         ? csvEntities.value
@@ -470,7 +462,7 @@ const upload = () => {
       }).finally(() => { uploadProgress.value = null; });
     })
     .then(() => {
-      emit('success', csvEntities.value.length, createdProperties.size !== 0);
+      emit('success', csvEntities.value.length, propertyCreator.created.size !== 0);
     })
     .catch(noop);
 };
@@ -491,7 +483,7 @@ watch([errors, warnings, csvEntities], () => {
     nextTick(() => { actions.value.scrollIntoView(); });
 });
 
-const hide = () => { emit('hide', createdProperties.size !== 0); };
+const hide = () => { emit('hide', propertyCreator.created.size !== 0); };
 watch(() => props.state, (state) => {
   if (state) return;
   abortParse();
@@ -500,7 +492,7 @@ watch(() => props.state, (state) => {
   errors.value = null;
   warnings.value = null;
   selectedProperties.clear();
-  createdProperties.clear();
+  propertyCreator.clear();
   for (const table of tables) table.resetScroll();
 });
 </script>
@@ -583,13 +575,8 @@ watch(() => props.state, (state) => {
     "noEntities": "Nejsou zde žádné subjekty, které by bylo možné zobrazit."
   },
   "de": {
-    "title": "Daten aus Datei importieren",
     "table": {
-      "server": "{name} Serverdaten",
       "file": "Zu importierende Daten"
-    },
-    "action": {
-      "append": "Daten hinzufügen"
     },
     "alert": {
       "blankLabel": "Fehlende Etikett.",
@@ -598,13 +585,8 @@ watch(() => props.state, (state) => {
     "noEntities": "Es gibt keine Objekte zum Anzeigen."
   },
   "es": {
-    "title": "Importar datos de un archivo",
     "table": {
-      "server": "{name} datos del servidor",
       "file": "Datos a importar"
-    },
-    "action": {
-      "append": "Añadir datos"
     },
     "alert": {
       "blankLabel": "Falta la etiqueta.",
@@ -613,13 +595,13 @@ watch(() => props.state, (state) => {
     "noEntities": "No hay Entidades para mostrar."
   },
   "fr": {
-    "title": "Importer des données depuis un fichier",
+    "currentEntities": "Vos entités actuelles",
+    "newEntities": "Nouvelles entités",
     "table": {
-      "server": "{name} : données du serveur",
       "file": "Données à importer"
     },
     "action": {
-      "append": "Ajouter les données"
+      "append": "Ajouter entités"
     },
     "alert": {
       "blankLabel": "Étiquette manquante.",
@@ -628,13 +610,8 @@ watch(() => props.state, (state) => {
     "noEntities": "Pas d'entités à montrer."
   },
   "it": {
-    "title": "Importa Dati da File",
     "table": {
-      "server": "{name} dati del server",
       "file": "Dati da importare"
-    },
-    "action": {
-      "append": "Aggiungi dati"
     },
     "alert": {
       "blankLabel": "Etichetta mancante",
@@ -643,13 +620,8 @@ watch(() => props.state, (state) => {
     "noEntities": "Non ci sono entità da mostrare."
   },
   "pt": {
-    "title": "Importar dados de arquivo",
     "table": {
-      "server": "Dados do servidor {name}",
       "file": "Dados para importar"
-    },
-    "action": {
-      "append": "Anexar dados"
     },
     "alert": {
       "blankLabel": "Rótulo faltando.",
@@ -661,13 +633,8 @@ watch(() => props.state, (state) => {
     "noEntities": "Hakuna Fomu za kuonyesha."
   },
   "zh": {
-    "title": "从文件导入数据",
     "table": {
-      "server": "{name}服务器数据",
       "file": "要导入的数据"
-    },
-    "action": {
-      "append": "添加数据"
     },
     "alert": {
       "blankLabel": "无标签",
@@ -676,13 +643,8 @@ watch(() => props.state, (state) => {
     "noEntities": "暂无实体可显示。"
   },
   "zh-Hant": {
-    "title": "從文件匯入數據",
     "table": {
-      "server": "{name} 伺服器數據",
       "file": "要導入的資料"
-    },
-    "action": {
-      "append": "追加資料"
     },
     "alert": {
       "blankLabel": "標籤遺失。",

@@ -66,7 +66,8 @@
         "create": "Crear",
         "update": "Actualizar detalles",
         "session_end": "Revocar",
-        "delete": "Borrar"
+        "delete": "Borrar",
+        "property_set": "Establecer propiedad"
       },
       "analytics": "Informe de uso",
       "blobs": {
@@ -87,16 +88,21 @@
         "bulk_delete": "Eliminación masiva",
         "bulk_restore": "Restauración masiva"
       },
+      "actor_property": {
+        "create": "Crear una propiedad personalizada"
+      },
       "field_key": {
         "assignment_create": "Dar acceso",
         "assignment_delete": "Remover el acceso",
         "create": "@:audit.action.default.create",
         "session_end": "@:audit.action.default.session_end",
-        "delete": "@:audit.action.default.delete"
+        "delete": "@:audit.action.default.delete",
+        "property_set": "@:audit.action.default.property_set"
       },
       "form": {
         "update_draft_set": "Crear o actualizar borrador",
         "update_draft_replace": "Sustituir borrador",
+        "update_draft_update": "Actualizar Prueba de borrador",
         "update_publish": "Publicar borrador",
         "update_draft_delete": "Descartar borrador",
         "attachment_update": "Actualizar adjuntos",
@@ -112,7 +118,8 @@
         "assignment_delete": "Remover el acceso",
         "create": "@:audit.action.default.create",
         "session_end": "@:audit.action.default.session_end",
-        "delete": "@:audit.action.default.delete"
+        "delete": "@:audit.action.default.delete",
+        "property_set": "@:audit.action.default.property_set"
       },
       "submission": {
         "purge": "Eliminar envíos"
@@ -167,6 +174,7 @@
     "save": "Guardar",
     "saveSettings": "Guardar las configuraciónes",
     "sort": "Ordenar",
+    "tryAgain": "Inténtalo de nuevo",
     "undo": "Deshacer",
     "update": "Actualizar",
     "yesProceed": "Sí, continuar",
@@ -176,6 +184,7 @@
     "collapse": "Contraer",
     "selectRow": "Seleccionar fila",
     "reset": "Restablecer",
+    "change": "Cambiar",
     "upload": "Subir",
     "reviewParallelUpdates": "Revisar actualizaciones paralelas",
     "restore": "Restablecer"
@@ -188,7 +197,6 @@
     "name": "Nombre",
     "newPassword": "Contraseña nueva",
     "oldPassword": "Contraseña antigua",
-    "passphrase": "Frase de contraseña",
     "password": "Contraseña",
     "passwordConfirm": "Contraseña nueva (confirmar)",
     "title": "Título",
@@ -212,7 +220,8 @@
     "time": "Tiempo",
     "type": "Tipo",
     "entities": "Entidades totales",
-    "lastEntity": "Última entidad"
+    "lastEntity": "Última entidad",
+    "value": "Valor"
   },
   "plural": {
     "appUser": "Usuario móvil | Usuarios móviles | Usuarios móviles",
@@ -350,8 +359,11 @@
     "totalEntities": "Entidades totales",
     "versionShort": "v{version}",
     "warning": "Advertencia",
+    "recommended": "recomendado",
     "none": "(ninguno)",
     "search": "Buscar",
+    "useEnketo": "Modo de compatibilidad de Enketo",
+    "updateInProgress": "Solicitud de actualización en curso",
     "reviewState": "Estado de revisión",
     "status": "Estado",
     "version": "Versión",
