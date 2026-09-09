@@ -194,7 +194,7 @@ const load = async () => {
   errorCode.value = null;
   try {
     const formConfig = await fetchForm();
-    if (offline.value) {
+    if (!webFormsEnabled.value && offline.value) {
       // TODO: Update once Web Forms has support for offline
       window.location.replace(`/-/x/${formConfig.enketoId}${queryString(route.query)}`);
       return;
