@@ -31,7 +31,7 @@ export class LocationPathEvaluator
   extends LocationPathExpressionEvaluator
   implements ExpressionEvaluator
 {
-  isAbsolute: boolean;
+  readonly isAbsolute: boolean;
   protected isFilterExprContext: boolean;
   protected isRoot: boolean;
   protected isSelf: boolean;
@@ -79,10 +79,49 @@ export class LocationPathEvaluator
     }
 
     for (const step of rest) {
+
+      if (step.nodeName === 'instance') {
+        // const pos = context.rootContext().evaluator.evaluateString('/root/instance');
+        const [n] = currentContext.nodes;
+        if (n) {
+          console.log({abc: currentContext.domProvider.getPreviousSiblingElement(n)});
+          const parent = currentContext.domProvider.getParentNode(n);
+          if (parent) {
+            const first = currentContext.domProvider.getFirstChildNode(parent);
+            console.log({xyz: currentContext.domProvider.compareDocumentOrder(first!, n)});
+
+          }
+
+        }
+
+
+        // detect if first child somehow
+      }
+
       currentContext = currentContext.step(step);
+
+
+      const cacheKey = SecondaryInstanceLookupCache.generateKey(
+        currentContext,
+        step.predicates,
+        this.syntaxNode
+      );
+
+      if (cacheKey) {
+        const nodes = SecondaryInstanceLookupCache.get(cacheKey);
+        if (nodes) {
+          currentContext = LocationPathEvaluation.fromArbitraryNodes(
+            currentContext,
+            nodes as T[],
+            this
+          );
+          continue;
+        }
+      }
 
       // TODO: predicate *logic* feels like it nicely belongs here (so long as it continues to pertain directly to syntax nodes), but application of predicates is definitely a concern that feels it better belongs in `LocationPathEvaluation`
       for (const predicateNode of step.predicates) {
+
         const [predicateExpressionNode] = predicateNode.children;
         const predicateExpression = createExpression(predicateExpressionNode);
 
@@ -90,24 +129,6 @@ export class LocationPathEvaluator
 
         if (predicateExpression instanceof NumberExpressionEvaluator) {
           positionPredicate = predicateExpression.evaluate(currentContext).toNumber();
-        }
-
-        const cacheKey = SecondaryInstanceLookupCache.generateKey(
-          currentContext,
-          predicateExpression,
-          this.syntaxNode
-        );
-
-        if (cacheKey) {
-          const nodes = SecondaryInstanceLookupCache.get(cacheKey);
-          if (nodes) {
-            currentContext = LocationPathEvaluation.fromArbitraryNodes(
-              currentContext,
-              nodes as T[],
-              this
-            );
-            continue;
-          }
         }
 
         const filteredNodes: T[] = [];
@@ -138,15 +159,15 @@ export class LocationPathEvaluator
           }
         }
 
-        if (cacheKey) {
-          SecondaryInstanceLookupCache.set(cacheKey, filteredNodes);
-        }
-
+        
         currentContext = LocationPathEvaluation.fromArbitraryNodes(
           currentContext,
           filteredNodes,
           this
         );
+      }
+      if (cacheKey) {
+        SecondaryInstanceLookupCache.set(cacheKey, Array.from(currentContext.contextNodes)); // TODO maybe keep the set?
       }
     }
 
