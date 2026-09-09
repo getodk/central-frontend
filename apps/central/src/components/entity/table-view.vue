@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <entity-table v-show="odataEntities.dataExists" ref="table"
-    v-model:all-selected="allSelected" :properties="dataset.properties"
+    v-model:all-selected="allSelected" class="paginated-table" :properties="dataset.properties"
     :deleted="deleted" :awaiting-deleted-responses="awaitingResponses"
     v-on="reemitters"/>
   <odata-loading-message :state="odataEntities.initiallyLoading"
@@ -20,12 +20,14 @@ except according to the terms contained in the LICENSE file.
     :filter="filter != null || !!searchTerm"
     :total-count="dataset.dataExists ? dataset.entities : 0"/>
   <!-- @update:page is emitted on size change as well -->
-  <Pagination v-if="pagination.count > 0"
-    v-model:page="pagination.page" v-model:size="pagination.size"
-    :count="pagination.count" :size-options="pageSizeOptions"
-    :removed="pagination.removed"
-    :spinner="odataEntities.awaitingResponse"
-    @update:page="handlePageChange"/>
+  <div v-if="pagination.count > 0" class="fixed-pagination-container">
+    <Pagination
+      v-model:page="pagination.page" v-model:size="pagination.size"
+      :count="pagination.count" :size-options="pageSizeOptions"
+      :removed="pagination.removed"
+      :spinner="odataEntities.awaitingResponse"
+      @update:page="handlePageChange"/>
+  </div>
 </template>
 
 <script setup>
