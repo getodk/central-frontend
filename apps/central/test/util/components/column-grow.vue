@@ -50,6 +50,7 @@ defineExpose({ resize });
 
 <style lang="scss">
 #column-grow {
+  border: none;
   table-layout: fixed;
   width: 100px;
 
