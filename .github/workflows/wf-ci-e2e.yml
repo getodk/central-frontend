@@ -4,25 +4,53 @@ on:
   workflow_call:
 
 jobs:
+  web-forms-e2e-build:
+    name: 'Build for e2e'
+    runs-on: 'ubuntu-latest'
+    timeout-minutes: 10
+    container:
+      # The image version must match the @playwright/test version in the root package-lock.json.
+      image: mcr.microsoft.com/playwright:v1.60.0-noble
+      options: --user 1001
+
+    steps:
+      - uses: 'actions/checkout@v6'
+
+      - uses: 'actions/setup-node@v6'
+        with:
+          node-version-file: package.json
+          cache: 'npm'
+
+      - run: 'npm ci --no-audit'
+
+      # Builds only what the e2e tests need.
+      - run: 'npx turbo run build --filter=@getodk/web-forms'
+
+      - uses: ./.github/actions/node-cache
+        with:
+          mode: save
+
   web-forms-e2e-functional:
     name: 'Functional e2e'
+    needs: web-forms-e2e-build
     runs-on: 'ubuntu-latest'
     timeout-minutes: 4
+    container:
+      # The image version must match the @playwright/test version in the root package-lock.json.
+      image: mcr.microsoft.com/playwright:v1.60.0-noble
+      options: --user 1001
 
     strategy:
       fail-fast: false
       matrix:
-        node-version: ['24.16.0']
         browser: [chromium, firefox, webkit]
 
     steps:
       - uses: 'actions/checkout@v6'
 
-      - uses: ./.github/actions/restore-node
+      - uses: ./.github/actions/node-cache
         with:
-          node-version: '${{ matrix.node-version }}'
-
-      - run: 'npx playwright install ${{ matrix.browser }} --with-deps'
+          mode: restore
 
       - name: 'Run functional e2e tests'
         run: 'npm run test:e2e:functional:${{ matrix.browser }} -w=packages/web-forms'
@@ -38,23 +66,25 @@ jobs:
 
   web-forms-e2e-visual:
     name: 'Visual e2e'
+    needs: web-forms-e2e-build
     runs-on: 'ubuntu-latest'
     timeout-minutes: 6
+    container:
+      # The image version must match the @playwright/test version in the root package-lock.json.
+      image: mcr.microsoft.com/playwright:v1.60.0-noble
+      options: --user 1001
 
     strategy:
       fail-fast: false
       matrix:
-        node-version: ['24.16.0']
         browser: [chromium, firefox, webkit]
 
     steps:
       - uses: 'actions/checkout@v6'
 
-      - uses: ./.github/actions/restore-node
+      - uses: ./.github/actions/node-cache
         with:
-          node-version: '${{ matrix.node-version }}'
-
-      - run: 'npx playwright install ${{ matrix.browser }} --with-deps'
+          mode: restore
 
       # xvfb-run is used for visual tests to compare snapshots more accurately.
       - name: 'Run visual e2e tests'

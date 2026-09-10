@@ -20,9 +20,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: ./.github/actions/restore-node
+      - uses: ./.github/actions/node-cache
         with:
-          node-version: '24.16.0'
+          mode: restore
           registry-url: 'https://registry.npmjs.org'
 
       - name: Build packages

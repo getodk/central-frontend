@@ -76,7 +76,7 @@ if [[ "$SKIP_INSTALL" = "true" ]]; then
   log "Skipping npm install."
 else
   log "Installing npm packages..."
-  npm ci
+  npm ci --no-audit
 fi
 
 cd e2e-tests
