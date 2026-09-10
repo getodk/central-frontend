@@ -83,9 +83,7 @@ watch(() => props.state, (state) => {
   "en": {
     // This is the title at the top of a pop-up for editing a Public Access Link. {displayName} is
     // the display name of the Public Link
-    "title": "Edit Public Access Link “{displayName}”",
-    // Shown as label before the display name of the Public Access Link in the edit pop-up.
-    "displayNameLabel": "Public Link"
+    "title": "Edit Public Access Link “{displayName}”"
   }
 }
 </i18n>

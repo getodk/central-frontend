@@ -116,6 +116,8 @@ const props = defineProps({
 });
 const emit = defineEmits(['hide', 'success']);
 
+const { t } = useI18n();
+const { i18n: globalI18n, redAlert } = inject('container');
 const { dataset, createResource } = useRequestData();
 const { request, awaitingResponse: uploading } = useRequest();
 
@@ -180,16 +182,6 @@ watch([() => serverPage.page, () => serverPage.size], () => {
     .catch(noop);
 });
 
-// FILE SELECTION AND PARSING
-// Entities from the CSV file
-const csvEntities = shallowRef(null);
-// Metadata about the CSV file
-const fileMetadata = shallowRef(null);
-const errors = shallowRef(null);
-const warnings = shallowRef(null);
-const parsing = ref(false);
-// Function to abort parsing in progress
-let abortParse = noop;
 // Validates the column header of the CSV file, returning any errors or
 // warnings.
 const validateHeader = ({ columns, errors: papaErrors }) => {
@@ -271,7 +263,8 @@ const validateHeader = ({ columns, errors: papaErrors }) => {
   if (warningDetails.count !== 0) result.warnings = warningDetails;
   return result;
 };
-const { t } = useI18n();
+
+// PARSING CSV DATA BELOW COLUMN HEADER
 // noPropertyData is used to minimize the JSON sent to Backend: the JSON won't
 // specify a `data` property for an entity without property data.
 const noPropertyData = { toJSON: () => undefined };
@@ -303,7 +296,6 @@ const rowToEntity = (extraProperties) => (values, columns) => {
   if (hasExtra) result.extra = extraData;
   return result;
 };
-const { i18n: globalI18n, redAlert } = inject('container');
 const parseEntities = async (file, headerResults, extraProperties, signal) => {
   const results = await parseCSV(globalI18n, file, headerResults.columns, {
     delimiter: headerResults.meta.delimiter,
@@ -313,6 +305,17 @@ const parseEntities = async (file, headerResults, extraProperties, signal) => {
   if (results.data.length === 0) throw new Error(t('alert.noData'));
   return results;
 };
+
+// FILE SELECTION
+// Entities from the CSV file
+const csvEntities = shallowRef(null);
+// Metadata about the CSV file
+const fileMetadata = shallowRef(null);
+const errors = shallowRef(null);
+const warnings = shallowRef(null);
+const parsing = ref(false);
+// Function to abort parsing in progress
+let abortParse = noop;
 const selectFile = (file) => {
   redAlert.hide();
   csvEntities.value = null;
