@@ -21,10 +21,6 @@ the response or response data. For example:
 */
 export const setRequestData = (requestData, responsesOrData) => {
   for (const [name, responseOrData] of Object.entries(responsesOrData)) {
-    // Adding this to make it easy for an individual test to prevent setting
-    // requestData resources that are set by default.
-    if (responseOrData === undefined) continue; // eslint-disable-line no-continue
-
     const resource = requestData.localResources[name] ?? requestData[name];
     if (resource == null) throw new Error(`unknown resource ${name}`);
 
@@ -84,7 +80,13 @@ export const testRequestData = (localResources, seedData = undefined) => (contai
     }
 
     mockLogin.setRequestData(requestData);
-    setRequestData(requestData, allSeedData);
+    // Using withoutUndefined to make it easier for an individual test to
+    // prevent setting requestData resources that are set by default. As long as
+    // a test can override the default (e.g., via mergeMountOptions()), it can
+    // specify `undefined` to skip setting a resource.
+    const withoutUndefined = Object.fromEntries(Object.entries(allSeedData)
+      .filter(([, value]) => value !== undefined));
+    setRequestData(requestData, withoutUndefined);
   };
 
   return requestData;
