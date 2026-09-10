@@ -1,3 +1,5 @@
+import { nextTick } from 'vue';
+
 import Confirmation from '../../../../src/components/confirmation.vue';
 import DatasetProperties from '../../../../src/components/dataset/overview/dataset-properties.vue';
 import DeletePropertyError from '../../../../src/components/dataset/overview/delete-property-error.vue';
@@ -5,19 +7,21 @@ import FormLink from '../../../../src/components/form/link.vue';
 
 import testData from '../../../data';
 import { load } from '../../../util/http';
+import { mergeMountOptions, mount } from '../../../util/lifecycle';
 import { mockLogin } from '../../../util/session';
 import { mockRouter } from '../../../util/router';
-import { mount } from '../../../util/lifecycle';
+import { setRequestData } from '../../../util/request-data';
 
-const mountComponent = () => mount(DatasetProperties, {
-  container: {
-    router: mockRouter('/'),
-    requestData: {
-      project: testData.extendedProjects.last(),
-      dataset: testData.extendedDatasets.last()
+const mountComponent = (options = undefined) =>
+  mount(DatasetProperties, mergeMountOptions(options, {
+    container: {
+      router: mockRouter('/'),
+      requestData: {
+        project: testData.extendedProjects.last(),
+        dataset: testData.extendedDatasets.last()
+      }
     }
-  }
-});
+  }));
 
 describe('DatasetProperties', () => {
   beforeEach(mockLogin);
@@ -111,6 +115,34 @@ describe('DatasetProperties', () => {
       const component = mountComponent();
       component.find('.delete-button').exists().should.be.true;
       component.findAll('.delete-button').length.should.be.eql(2);
+    });
+
+    it('does not show a button for a project viewer', () => {
+      mockLogin.reset();
+      mockLogin({ role: 'viewer' });
+      testData.extendedDatasets.createPast(1, {
+        properties: [{ name: 'height' }]
+      });
+      const component = mountComponent();
+      component.find('.delete-button').exists().should.be.false;
+    });
+
+    it('shows the button once project response has been received', async () => {
+      testData.extendedDatasets.createPast(1, {
+        properties: [{ name: 'height' }]
+      });
+      const component = mountComponent({
+        container: {
+          requestData: { project: undefined }
+        }
+      });
+      component.find('.col-actions').exists().should.be.true;
+      component.find('.delete-button').exists().should.be.false;
+      setRequestData(component.vm.$container.requestData, {
+        project: testData.extendedProjects.last()
+      });
+      await nextTick();
+      component.find('.delete-button').exists().should.be.true;
     });
 
     it('shows confirmation modal for the correct property when delete button is clicked', async () => {
