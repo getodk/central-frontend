@@ -1,6 +1,6 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import type { Accessor } from 'solid-js';
-import { createMemo } from 'solid-js';
+import { createEffect, createMemo, on } from 'solid-js';
 import type { EvaluationContext } from '../../instance/internal-api/EvaluationContext.ts';
 import type { EngineXPathNode } from '../../integration/xpath/adapter/kind.ts';
 import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
@@ -9,6 +9,8 @@ import type {
   DependentExpressionResultType,
 } from '../../parse/expression/abstract/DependentExpression.ts';
 import { isConstantExpression } from '../../parse/xpath/semantic-analysis.ts';
+
+const MAX_RESULT_CHANGES_PER_UPDATE = 100;
 
 interface ComputedExpressionResults {
   readonly boolean: boolean;
@@ -105,6 +107,71 @@ interface CreateComputedExpressionOptions<Type extends DependentExpressionResult
   readonly defaultValue?: EvaluatedExpression<Type>;
 }
 
+const createEvaluate = <Type extends DependentExpressionResultType>(
+  context: EvaluationContext,
+  dependentExpression: DependentExpression<Type>,
+  evaluateExpression: ExpressionEvaluator<Type>,
+  options: CreateComputedExpressionOptions<Type>
+): (() => EvaluatedExpression<Type>) => {
+  const { isTranslated, resultType } = dependentExpression;
+
+  return () => {
+    if (isTranslated) {
+      context.getActiveLanguage();
+    }
+
+    if (context.isAttached()) {
+      return evaluateExpression();
+    }
+
+    const defaultValue = options.defaultValue ?? defaultEvaluationsByType[resultType];
+    try {
+      return evaluateExpression(defaultValue);
+    } catch {
+      // likely because it's not yet attached - try again later
+      return defaultValue;
+    }
+  };
+};
+
+const resultsEqual = (a: unknown, b: unknown) => {
+  if (a === b) {
+    return true;
+  }
+  if (Array.isArray(a) && Array.isArray(b)) {
+    return a.length === b.length && a.every((value, index) => value === b[index]);
+  }
+  return false;
+};
+
+/**
+ * A dependency cycle (e.g. a choice filter reading its own question's value) has no stable result
+ * and would recompute forever. Past {@link MAX_RESULT_CHANGES_PER_UPDATE} result changes in one update,
+ * the computation keeps its previous result, which ends the update. The counter resets when an update completes.
+ */
+const createCycleGuardedMemo = <Type extends DependentExpressionResultType>(
+  evaluate: () => EvaluatedExpression<Type>
+): ComputedExpression<Type> => {
+  let changeCount = 0;
+  const memo = createMemo((previous?: EvaluatedExpression<Type>) => {
+    const result = evaluate();
+    if (previous === undefined) {
+      return result;
+    }
+
+    if (resultsEqual(result, previous)) {
+      return previous;
+    }
+
+    changeCount += 1;
+    return changeCount > MAX_RESULT_CHANGES_PER_UPDATE ? previous : result;
+  });
+
+  createEffect(on(memo, () => (changeCount = 0), { defer: true }));
+
+  return memo;
+};
+
 export const createComputedExpression = <Type extends DependentExpressionResultType>(
   context: EvaluationContext,
   dependentExpression: DependentExpression<Type>,
@@ -112,7 +179,7 @@ export const createComputedExpression = <Type extends DependentExpressionResultT
 ): ComputedExpression<Type> => {
   return context.scope.runTask(() => {
     const { contextNode, evaluator } = context;
-    const { expression, isTranslated, resultType } = dependentExpression;
+    const { expression, resultType } = dependentExpression;
     const evaluateExpression = expressionEvaluator(evaluator, resultType, expression, {
       contextNode,
     });
@@ -121,20 +188,7 @@ export const createComputedExpression = <Type extends DependentExpressionResultT
       return createMemo(() => evaluateExpression());
     }
 
-    return createMemo(() => {
-      if (isTranslated) {
-        context.getActiveLanguage();
-      }
-      if (context.isAttached()) {
-        return evaluateExpression();
-      }
-      const defaultValue = options?.defaultValue ?? defaultEvaluationsByType[resultType];
-      try {
-        return evaluateExpression(defaultValue);
-      } catch {
-        // likely because it's not yet attached - try again later
-        return defaultValue;
-      }
-    });
+    const evaluate = createEvaluate(context, dependentExpression, evaluateExpression, options);
+    return createCycleGuardedMemo(evaluate);
   });
 };
