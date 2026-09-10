@@ -1636,6 +1636,18 @@
         },
         "num_multi_entity_errors": {
           "string": ""
+        },
+        "num_wf_submissions": {
+          "string": ""
+        },
+        "num_enketo_submissions": {
+          "string": ""
+        },
+        "num_wf_submission_edits": {
+          "string": ""
+        },
+        "num_enketo_submission_edits": {
+          "string": ""
         }
       }
     },
@@ -1965,6 +1977,9 @@
       }
     },
     "DatasetOverviewNewProperty": {
+      "newPropertyName": {
+        "string": ""
+      },
       "title": {
         "string": "",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -1974,14 +1989,6 @@
           "string": ""
         },
         "1": {
-          "string": ""
-        }
-      },
-      "newPropertyName": {
-        "string": ""
-      },
-      "problem": {
-        "409_3": {
           "string": ""
         }
       }
@@ -2203,10 +2210,6 @@
       }
     },
     "DatasetShow": {
-      "back": {
-        "string": "",
-        "developer_comment": "This is shown at the top of the page."
-      },
       "infoNav": {
         "connectedForms": {
           "string": "{count, plural, other {}}",
@@ -3064,10 +3067,6 @@
       "title": {
         "string": "",
         "developer_comment": "This is the title at the top of a pop-up for editing an App User. {displayName} is the the name of the App User"
-      },
-      "displayNameLabel": {
-        "string": "",
-        "developer_comment": "Shown as label before the display name of the App User in the edit pop-up."
       }
     },
     "FieldKeyList": {
@@ -4460,16 +4459,6 @@
         }
       }
     },
-    "ProjectCustomPropertiesNew": {
-      "newPropertyName": {
-        "string": ""
-      },
-      "problem": {
-        "409_3": {
-          "string": ""
-        }
-      }
-    },
     "ProjectEdit": {
       "title": {
         "string": "Rincian Dasar",
@@ -4984,6 +4973,23 @@
         }
       }
     },
+    "PropertyInput": {
+      "invalidName": {
+        "string": ""
+      },
+      "duplicate": {
+        "title": {
+          "string": ""
+        },
+        "description": {
+          "string": ""
+        }
+      },
+      "tryDifferent": {
+        "string": "",
+        "developer_comment": "\"Name\" refers to the name of an Entity property."
+      }
+    },
     "PublicLinkCreate": {
       "title": {
         "string": "Buat Tautan Akses Publik",
@@ -5009,10 +5015,6 @@
       "title": {
         "string": "",
         "developer_comment": "This is the title at the top of a pop-up for editing a Public Access Link. {displayName} is the display name of the Public Link"
-      },
-      "displayNameLabel": {
-        "string": "",
-        "developer_comment": "Shown as label before the display name of the Public Access Link in the edit pop-up."
       }
     },
     "PublicLinkList": {
@@ -5854,7 +5856,12 @@
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": ""
+        "0": {
+          "string": ""
+        },
+        "1": {
+          "string": ""
+        }
       }
     }
   },

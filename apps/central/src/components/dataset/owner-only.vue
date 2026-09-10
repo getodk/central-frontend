@@ -375,6 +375,9 @@ const confirm = () => {
     }
   },
   "es": {
+    "panel": {
+      "title": "Acceso a la lista de entidades"
+    },
     "accessAll": "Acceder a todas las entidades",
     "accessAllDefault": "Acceder a todas las Entidades (por defecto)",
     "ownerOnly": "Acceder sólo a Entidades propias",
@@ -383,6 +386,10 @@ const confirm = () => {
       "true": "Los usuarios de la aplicación y los recopiladores de datos dentro de este proyecto sólo tendrán acceso a las entidades que creen, promoviendo la privacidad y limitando las transferencias de datos."
     },
     "filterByProperty": {
+      "label": "Filtrar por propiedad",
+      "description": "Define las reglas que determinan qué entidades son visibles para los usuarios de la aplicación y en los enlaces públicos, comparando sus propiedades.",
+      "entityPropertyLabel": "Mostrar solo las entidades en las que",
+      "entityPropertyPlaceholder": "Propiedad de la entidad",
       "userPropertyPlaceholder": "Propiedad de usuario"
     },
     "falseModal": {

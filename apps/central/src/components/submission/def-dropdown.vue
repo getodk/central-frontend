@@ -101,6 +101,7 @@ const xmlPath = computed(() =>
   },
   "it": {
     "action": {
+      "downloadXml": "Scarica XML",
       "def": "Definizione",
       "viewXml": "Vedi l'XML nel browser"
     }
