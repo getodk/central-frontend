@@ -162,7 +162,11 @@ export default {
       "num_repeat_entity_update_forms": "Number of Forms that update Entities in repeats",
       "num_entity_create_update_forms": "Number of Forms that both create and update Entities",
       "num_entities_with_geometry": "Number of Entities with geometry data",
-      "num_multi_entity_errors": "Number of errors from repeat Entities"
+      "num_multi_entity_errors": "Number of errors from repeat Entities",
+      "num_wf_submissions": "Number of Submissions with Web Forms",
+      "num_enketo_submissions": "Number of Submissions with Enketo",
+      "num_wf_submission_edits": "Number of Submission edits with Web Forms",
+      "num_enketo_submission_edits": "Number of Submission edits with Enketo",
     }
   }
 }
