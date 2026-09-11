@@ -75,6 +75,11 @@ addLocale('pt', 'Português');
 addLocale('zh', '汉语', '');
 addLocale('zh-Hant', '漢語', '');
 
+export const setLocale = (locale: string) => {
+  i18n.global.locale = locale;
+  document.documentElement.setAttribute('lang', locale);
+};
+
 const loadUsersLocale = () => {
   const locale = userLocale() ?? fallbackLocale;
   document.documentElement.setAttribute('lang', locale);

@@ -10,9 +10,7 @@ import { defineComponent, ref, type Ref } from 'vue';
 import { globalMountOptions } from '../../helpers.ts';
 
 describe('useLocale', () => {
-  // Track wrappers to explicitly unmount them and prevent
-  // onUnmounted state pollution (document.documentElement.lang) across tests
-  let wrappers: Array<ReturnType<typeof mount>> = [];
+  const setLanguage = vi.fn();
 
   const makeLanguage = (language: string, localeCode: string, isDefault = false): FormLanguage => ({
     isDefault,
@@ -21,7 +19,7 @@ describe('useLocale', () => {
   });
 
   const makeFormRef = (languages: FormLanguage[]): Ref<RootNode | null> =>
-    ref({ languages, setLanguage: vi.fn() }) as unknown as Ref<RootNode | null>;
+    ref({ languages, setLanguage }) as unknown as Ref<RootNode | null>;
 
   const mountLocale = (formRef: Ref<RootNode | null>) => {
     let locale: ReturnType<typeof useLocale> | undefined;
@@ -35,22 +33,17 @@ describe('useLocale', () => {
     });
 
     const wrapper = mount(TestComponent, { global: globalMountOptions });
-    wrappers.push(wrapper);
 
     return { wrapper, getLocale: () => locale! };
   };
 
   beforeEach(() => {
     localStorage.removeItem(STORAGE_KEY);
-    document.documentElement.removeAttribute('lang');
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
-    localStorage.removeItem(STORAGE_KEY);
-
-    wrappers.forEach((w) => w.unmount());
-    wrappers = [];
+    vi.resetAllMocks();
   });
 
   describe('language priority order (saved > designer default > browser > first)', () => {
@@ -58,40 +51,46 @@ describe('useLocale', () => {
       localStorage.setItem(STORAGE_KEY, 'fr');
       vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['en']);
 
-      const formRef = makeFormRef([makeLanguage('English', 'en'), makeLanguage('French', 'fr')]);
+      const french = makeLanguage('French', 'fr');
+      const formRef = makeFormRef([makeLanguage('English', 'en'), french]);
       mountLocale(formRef);
-
-      expect(document.documentElement.lang).toBe('fr');
+      expect(setLanguage).toHaveBeenCalledTimes(1);
+      expect(setLanguage).toHaveBeenCalledWith(french);
+      expect(localStorage.getItem(STORAGE_KEY)).toBe('fr');
     });
 
     it('prefers designer default over browser language when no saved locale', () => {
       vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['en']);
 
-      const formRef = makeFormRef([
-        makeLanguage('English', 'en'),
-        makeLanguage('French', 'fr', true),
-      ]);
+      const english = makeLanguage('English', 'en');
+      const french = makeLanguage('French', 'fr', true);
+      const formRef = makeFormRef([english, french]);
       mountLocale(formRef);
-
-      expect(document.documentElement.lang).toBe('fr');
+      expect(setLanguage).toHaveBeenCalledTimes(1);
+      expect(setLanguage).toHaveBeenCalledWith(french);
+      expect(localStorage.getItem(STORAGE_KEY)).toBe('fr');
     });
 
     it('uses browser language when no saved locale and no designer default', () => {
       vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['jp']);
 
-      const formRef = makeFormRef([makeLanguage('English', 'en'), makeLanguage('Japanese', 'jp')]);
+      const japanese = makeLanguage('Japanese', 'jp');
+      const formRef = makeFormRef([makeLanguage('English', 'en'), japanese]);
       mountLocale(formRef);
-
-      expect(document.documentElement.lang).toBe('jp');
+      expect(setLanguage).toHaveBeenCalledTimes(1);
+      expect(setLanguage).toHaveBeenCalledWith(japanese);
+      expect(localStorage.getItem(STORAGE_KEY)).toBe('jp');
     });
 
     it('falls back to first available language when no saved locale, no designer default, and no browser match', () => {
       vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['de']);
 
-      const formRef = makeFormRef([makeLanguage('English', 'en'), makeLanguage('French', 'fr')]);
+      const english = makeLanguage('English', 'en');
+      const formRef = makeFormRef([english, makeLanguage('French', 'fr')]);
       mountLocale(formRef);
-
-      expect(document.documentElement.lang).toBe('en');
+      expect(setLanguage).toHaveBeenCalledTimes(1);
+      expect(setLanguage).toHaveBeenCalledWith(english);
+      expect(localStorage.getItem(STORAGE_KEY)).toBe('en');
     });
   });
 
@@ -99,35 +98,40 @@ describe('useLocale', () => {
     it('matches form language by base language when exact locale is not available', () => {
       vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['fr-CA']);
 
-      const formRef = makeFormRef([makeLanguage('English', 'en'), makeLanguage('French', 'fr')]);
+      const french = makeLanguage('French', 'fr');
+      const formRef = makeFormRef([makeLanguage('English', 'en'), french]);
       mountLocale(formRef);
-
-      expect(document.documentElement.lang).toBe('fr');
+      expect(setLanguage).toHaveBeenCalledTimes(1);
+      expect(setLanguage).toHaveBeenCalledWith(french);
+      expect(localStorage.getItem(STORAGE_KEY)).toBe('fr');
     });
 
     it('prefers exact locale match over base language match', () => {
       vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['fr-CA']);
 
-      const formRef = makeFormRef([
-        makeLanguage('French', 'fr'),
-        makeLanguage('French (Canada)', 'fr-CA'),
-      ]);
+      const canadian = makeLanguage('French (Canada)', 'fr-CA');
+      const formRef = makeFormRef([makeLanguage('French', 'fr'), canadian]);
       mountLocale(formRef);
-
-      expect(document.documentElement.lang).toBe('fr-CA');
+      expect(setLanguage).toHaveBeenCalledTimes(1);
+      expect(setLanguage).toHaveBeenCalledWith(canadian);
+      expect(localStorage.getItem(STORAGE_KEY)).toBe('fr-CA');
     });
   });
 
   describe('resolveLocale translation fallback', () => {
     it('loads base locale translations when exact locale has no translation file', async () => {
       document.documentElement.lang = 'fr';
-      const formRef = makeFormRef([makeLanguage('English (Fictional Region)', 'en-ZZ')]);
+      const fictional = makeLanguage('English (Fictional Region)', 'en-ZZ');
+      const formRef = makeFormRef([fictional]);
       const { getLocale } = mountLocale(formRef);
 
       await flushPromises();
 
       expect(getLocale().t('odk_web_forms.submit.label')).toBe('Send');
-      expect(document.documentElement.lang).toBe('en-ZZ');
+
+      expect(setLanguage).toHaveBeenCalledTimes(1);
+      expect(setLanguage).toHaveBeenCalledWith(fictional);
+      expect(localStorage.getItem(STORAGE_KEY)).toBe('en-ZZ');
     });
 
     it('falls back to English when no translation file exists for locale', async () => {

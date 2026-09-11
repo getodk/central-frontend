@@ -12,6 +12,8 @@ import { getDeviceId } from '../utils/device-id';
 import { hideSpinner } from '../utils/spinner';
 import { deleteLastSaved, getLastSaved, setLastSaved } from '../utils/last-saved';
 import { hasSubmitted, setSubmitted } from '../utils/once-store';
+import { setLocale } from '../i18n';
+
 defineOptions({
   name: 'WebFormRenderer'
 });
@@ -344,6 +346,7 @@ onMounted(async () => {
     :instance-defaults="defaultParameters"
     :last-saved-xml="lastSavedXml"
     @loaded="webFormLoaded"
+    @languageSelected="setLocale"
     @submit="handleSubmit"/>
 
   <Dialog modal :visible="!!visibleModal" :draggable="false" :closable="visibleModal?.hideable" @update:visible="visibleModal = null">
