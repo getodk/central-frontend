@@ -5,7 +5,7 @@
       <p>
         <i18n-t keypath="description.full">
           <template #assignEntities>
-            <doc-link to="central-api-accounts-and-users/#actor-properties">
+            <doc-link to="central-entities/#filter-by-property">
               {{ $t('description.assignEntities') }}
             </doc-link>
           </template>
