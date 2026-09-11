@@ -28,13 +28,13 @@
 
 **Other improvements + bug fixes**
 
-- 194cc9e: Features: Submission data and view xml on the Submission detail page [Central#1707](https://github.com/getodk/central/issues/1707)
+- 194cc9e: Features: Submission data and view xml on the Submission detail page (getodk/central#1707)
 - faa52cd: Truncate overflowing tooltips (getodk/central#2183)
 - 28bd0d0: Fixes: added extra bottom margin for draft control so snackbar doesn't overlap it. getodk/central#1962
 - 5a87c0e: Reload page if asset fails to load after server upgrade (getodk/central#2073)
 - 8dac83f: Prevent error if response for Entity List is received before Project (getodk/central#2189)
 - 47ea79f: Handle error responses on homepage (getodk/central#1584, getodk/central#2070)
-- 4b148b1: Restore session when user initially navigates to "Not Found" page
+- 4b148b1: Restore session when user initially navigates to "Not Found" page (getodk/central#1698)
 - f1e85b0: Make routes case-sensitive
 - 8d57d76: Remove trailing slashes from routes (getodk/central#1697)
 
