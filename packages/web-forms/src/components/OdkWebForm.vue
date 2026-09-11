@@ -111,6 +111,7 @@ const hostSubmissionResultCallbackFactory = (
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- evidently a type must be used for this to be assigned to a name (which we use!); as an interface, it won't satisfy the `Record` constraint of `defineEmits`.
 type OdkWebFormEmits = {
 	loaded: [],
+	languageSelected: [language: string],
 	submit: [submissionPayload: MonolithicInstancePayload, callback: HostSubmissionResultCallback];
 	submitChunked: [
 		submissionPayload: ChunkedInstancePayload,
@@ -223,9 +224,20 @@ const errorBannerDismissed = ref(false);
 const geolocationErrorMessage = ref<string | null>(null);
 const isFormEditMode = ref(false);
 provide(IS_FORM_EDIT_MODE, readonly(isFormEditMode));
-const { setLanguage, t } = useLocale(computed(() => state.value.root));
+const { setLanguage, getLanguage, t } = useLocale(computed(() => state.value.root));
 provide(TRANSLATE, t);
 const { navigateToFirstViolation, navigateToNode } = useNavigationTarget(() => state.value.root);
+
+if (isEmitSubscribed('onLanguageSelected')) {
+	const language = computed(() => getLanguage());
+	watch(
+		() => language.value,
+		(selected) => {
+			emit('languageSelected', selected);
+		},
+		{ immediate: true }
+	);
+}
 
 onErrorCaptured(err => {
 	runtimeError.value = FormInitializationError.from(err);
