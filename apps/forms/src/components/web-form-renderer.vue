@@ -12,7 +12,7 @@ import { getDeviceId } from '../utils/device-id';
 import { hideSpinner } from '../utils/spinner';
 import { deleteLastSaved, getLastSaved, setLastSaved } from '../utils/last-saved';
 import { hasSubmitted, setSubmitted } from '../utils/once-store';
-import { i18n, setLocale } from '../i18n';
+import { setLocale } from '../i18n';
 
 defineOptions({
   name: 'WebFormRenderer'
