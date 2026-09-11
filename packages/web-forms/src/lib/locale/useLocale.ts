@@ -244,7 +244,6 @@ export const useLocale = (formRef: Ref<RootNode | null>) => {
 
   onUnmounted(() => {
     latestRequestedLocale.locale = FALLBACK;
-    document.documentElement.lang = FALLBACK;
   });
 
   const t: Translate = (id, values) => currentIntl.value.formatMessage({ id }, values) as string;
