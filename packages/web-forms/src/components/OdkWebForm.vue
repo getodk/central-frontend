@@ -50,6 +50,7 @@ import {
 	watch,
 } from 'vue';
 import { FormInitializationError } from '@getodk/web-forms/lib/error/FormInitializationError';
+import { FormDesignError } from '@getodk/xpath';
 
 const webFormsVersion = __WEB_FORMS_VERSION__;
 type ObjectURL = `blob:${string}`;
@@ -229,6 +230,10 @@ const { navigateToFirstViolation, navigateToNode } = useNavigationTarget(() => s
 
 onErrorCaptured(err => {
 	runtimeError.value = FormInitializationError.from(err);
+	if (err instanceof FormDesignError) {
+		// don't let this error bubble to the console or sentry
+		return false;
+	}
 });
 
 watch(
