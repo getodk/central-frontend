@@ -143,8 +143,11 @@ function hideModal() {
 <i18n>
 {
   "fr": {
-    "title": "Filtrez vos entités 🎯 et ODK Web Forms par défaut 🌐",
-    "body": "Contrôlez les entités reçues par chaque utilisateur mobile ou chaque lien public grâce à des règles de filtrage basées sur des propriétés. De plus, ODK Web Forms est maintenant l'expérience par défaut pour les formulaires web, offrant une expérience rapide et intuitive pour la prévisualisation de formulaire, la modification des données et la saisie en ligne."
+    "title": "Importation d'entités simplifiée 📤",
+    "body": [
+      "Intégrez plus rapidement vos entités dans ODK grâce à un processus de téléchargement CSV plus fluide. Bénéficiez de messages d'erreur et d'avertissements plus clairs, corrigez les problèmes et réessayez, le tout au même endroit.",
+      "Vous pouvez également créer de nouvelles propriétés directement à partir de votre fichier CSV."
+    ]
   }
 }
 </i18n>

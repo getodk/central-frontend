@@ -1636,6 +1636,18 @@
         },
         "num_multi_entity_errors": {
           "string": "重複實體的錯誤次數"
+        },
+        "num_wf_submissions": {
+          "string": ""
+        },
+        "num_enketo_submissions": {
+          "string": ""
+        },
+        "num_wf_submission_edits": {
+          "string": ""
+        },
+        "num_enketo_submission_edits": {
+          "string": ""
         }
       }
     },
@@ -1965,6 +1977,9 @@
       }
     },
     "DatasetOverviewNewProperty": {
+      "newPropertyName": {
+        "string": "新屬性名稱"
+      },
       "title": {
         "string": "新增實體屬性",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -1975,14 +1990,6 @@
         },
         "1": {
           "string": "您也可以透過上傳引用新屬性的表單來新增屬性，在這種情況下，屬性會在發布表單時建立。"
-        }
-      },
-      "newPropertyName": {
-        "string": "新屬性名稱"
-      },
-      "problem": {
-        "409_3": {
-          "string": "此實體清單中已存在名稱為「{propertyName}」的屬性。"
         }
       }
     },
@@ -2203,10 +2210,6 @@
       }
     },
     "DatasetShow": {
-      "back": {
-        "string": "返回專案實體",
-        "developer_comment": "This is shown at the top of the page."
-      },
       "infoNav": {
         "connectedForms": {
           "string": "{count, plural, other {由{count}個表格更新}}",
@@ -3064,10 +3067,6 @@
       "title": {
         "string": "",
         "developer_comment": "This is the title at the top of a pop-up for editing an App User. {displayName} is the the name of the App User"
-      },
-      "displayNameLabel": {
-        "string": "",
-        "developer_comment": "Shown as label before the display name of the App User in the edit pop-up."
       }
     },
     "FieldKeyList": {
@@ -4460,16 +4459,6 @@
         }
       }
     },
-    "ProjectCustomPropertiesNew": {
-      "newPropertyName": {
-        "string": ""
-      },
-      "problem": {
-        "409_3": {
-          "string": ""
-        }
-      }
-    },
     "ProjectEdit": {
       "title": {
         "string": "基本訊息",
@@ -4984,6 +4973,23 @@
         }
       }
     },
+    "PropertyInput": {
+      "invalidName": {
+        "string": ""
+      },
+      "duplicate": {
+        "title": {
+          "string": ""
+        },
+        "description": {
+          "string": ""
+        }
+      },
+      "tryDifferent": {
+        "string": "",
+        "developer_comment": "\"Name\" refers to the name of an Entity property."
+      }
+    },
     "PublicLinkCreate": {
       "title": {
         "string": "建立公共訪問連結",
@@ -5009,10 +5015,6 @@
       "title": {
         "string": "",
         "developer_comment": "This is the title at the top of a pop-up for editing a Public Access Link. {displayName} is the display name of the Public Link"
-      },
-      "displayNameLabel": {
-        "string": "",
-        "developer_comment": "Shown as label before the display name of the Public Access Link in the edit pop-up."
       }
     },
     "PublicLinkList": {
@@ -5854,7 +5856,12 @@
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": ""
+        "0": {
+          "string": ""
+        },
+        "1": {
+          "string": ""
+        }
       }
     }
   },
