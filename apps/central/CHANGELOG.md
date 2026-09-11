@@ -4,22 +4,15 @@
 
 ### Minor Changes
 
-- e66343c: Update translations (getodk/central#2137)
-- 47ea79f: Handle error responses on homepage (getodk/central#1584, getodk/central#2070)
-- 8d57d76: Remove trailing slashes from routes (getodk/central#1697)
-- 4b148b1: Restore session when user initially navigates to "Not Found" page
-- 81cb08b: Allow user to import Entity CSV with missing properties in header (getodk/central#1787)
-- f1e85b0: Make routes case-sensitive
-- faa6675: When importing Entities from CSV, ignore columns that start with `__` (getodk/central#1785)
+**Entity upload from CSV**
+
 - 96db2da: Prompt user to create Entity properties when CSV upload has unknown columns (getodk/central#1786)
-- 5a87c0e: Reload page if asset fails to load after server upgrade (getodk/central#2073)
-- 2a93ff7: Do not report session restore errors to Sentry (getodk/central#2072)
-- 8dac83f: Prevent error if response for Entity List is received before Project (getodk/central#2189)
-- 7f40e6f: Update What's New modal for release
+- 81cb08b: Allow user to import Entity CSV with missing properties in header (getodk/central#1787)
+- faa6675: When importing Entities from CSV, ignore columns that start with `__` (getodk/central#1785)
 - 272a95e: List duplicate column headers in Entity CSV file
-- 398f558: Removed dependency on bootstrap plugins and jquery.
-- faa52cd: Truncate overflowing tooltips (getodk/central#2183)
-- 28bd0d0: Fixes: added extra bottom margin for draft control so snackbar doesn't overlap it. getodk/central#1962
+
+**Entity filtering**
+
 - 87800e2: feat getodk/central#1875: Inline property creation for app user and PAL create modals
 - ab7272b: Remove Custom Properties tab from project page (getodk/central#2075)
   - The functionality is still there but properties are now managed through app users and public links.
@@ -27,9 +20,30 @@
 - 5acc384: feat getodk/central#1792: Add ViewAs &lt;app user&gt; filter to Entities
 - b960928: feat getodk/central#1871 and getodk/central#1874
   - Allow App Users and Public Links to be filtered by actor properties and specific values of those properties. Single relations and equality only for now (e.g. show me app users where region = north).
-- 194cc9e: Features: Submission data and view xml on the Submission detail page [Central#1707](https://github.com/getodk/central/issues/1707)
-- d8c66cd: Show file size in form attachment table (issue getodk/central#1895)
+
+**Form Attachment upload**
+
 - f6ac6db: Remove attachment confirmation modal and automatically uploading all matching files
+- d8c66cd: Show file size in form attachment table (issue getodk/central#1895)
+
+**Other improvements + bug fixes**
+
+- 194cc9e: Features: Submission data and view xml on the Submission detail page [Central#1707](https://github.com/getodk/central/issues/1707)
+- faa52cd: Truncate overflowing tooltips (getodk/central#2183)
+- 28bd0d0: Fixes: added extra bottom margin for draft control so snackbar doesn't overlap it. getodk/central#1962
+- 5a87c0e: Reload page if asset fails to load after server upgrade (getodk/central#2073)
+- 8dac83f: Prevent error if response for Entity List is received before Project (getodk/central#2189)
+- 47ea79f: Handle error responses on homepage (getodk/central#1584, getodk/central#2070)
+- 4b148b1: Restore session when user initially navigates to "Not Found" page
+- f1e85b0: Make routes case-sensitive
+- 8d57d76: Remove trailing slashes from routes (getodk/central#1697)
+
+**Maintenance**
+
+- 7f40e6f: Update What's New modal for release
+- e66343c: Update translations (getodk/central#2137)
+- 398f558: Removed dependency on bootstrap plugins and jquery.
+- 2a93ff7: Do not report session restore errors to Sentry (getodk/central#2072)
 
 ## 2026.2.0
 
