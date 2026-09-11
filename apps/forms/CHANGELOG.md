@@ -1,5 +1,23 @@
 # @getodk/forms
 
+## 2026.3.0
+
+### Minor Changes
+
+- b4c54d2: Added the ability to enforce single submissions to public access links.
+- 49e5961: Improved form loading times by fetching the project verbs from a more efficient server endpoint.
+- 7bf7823: Added feature to prefill form fields using URL parameters
+- 654afd3: Implemented last-saved virtual secondary instance feature
+
+### Patch Changes
+
+- 8b1caf2: Fixed a bug where a web form could be rendered without the necessary form data
+- df4659c: Fixed a bug where a single submission form could be resubmitted by keyboard navigation.
+- 0dd2ba1: Added hooks to import and export translations with transifex
+- e8f02a0: Remove the Close button from the success dialog.
+- 92133fb: Reduced bundle size for faster loading
+- c0ff040: Improved loading of form attachments to better handle dynamic updates to the filename.
+
 ## 2026.2.2
 
 ### Patch Changes

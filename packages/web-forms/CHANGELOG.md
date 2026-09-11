@@ -1,5 +1,35 @@
 # @getodk/web-forms
 
+## 1.1.0
+
+### Minor Changes
+
+- 25e142c: Add pagination to Web Forms
+- 7bf7823: Added feature to prefill form fields using URL parameters
+- 654afd3: Implemented last-saved virtual secondary instance feature
+- a291d38: Added support for `quick` appearance.
+- 76e0239: Block Next on pages with invalid questions
+- 8777bca: Scrolls to the right question on load, page changes, repeat changes, and validation errors.
+
+### Patch Changes
+
+- 3b4ef36: Fix missing header background on repeats nested inside groups
+- 1220b05: Fixed a bug where translation of form buttons wasn't working.
+- 689fa4e: Fixed a bug where using commas for decimal places returned an invalid number.
+- bacd037: Fixed picker overlays and focus outlines when navigating to a question.
+- f3e5673: Display lat/lon truncated to 5 decimals
+- f560dab: Made the style of active select options more subtle than the selected style.
+- d47006f: Fixed a bug where small dropdowns were rendered white additional whitespace at the bottom
+- ced497b: Remove point, trace or shape from the map when its value is cleared by form logic.
+- 5c10f08: Improved messages about form definition errors to make them easier to fix
+- 92133fb: Reduced bundle size for faster loading
+- d231758: Fixed display bugs with top level form error message.
+- 22757ca: Removed rounding from area() and distance() xpath functions.
+- c01c3a9: Fixed a bug where the distance xpath function would error when passed empty input
+- 8d80c1a: Fixes the likert connector line alignment and unintended focus highlight.
+- c0ff040: Improved loading of form attachments to better handle dynamic updates to the filename.
+- 24edc1d: Prevent horizontal layout shift when scrollbar appears in Forms
+
 ## 1.0.3
 
 ### Patch Changes
