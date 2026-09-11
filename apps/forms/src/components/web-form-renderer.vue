@@ -95,7 +95,7 @@ const postPrimaryInstance = async (file:File) => {
       return { success: true, data };
     }
     const data = await response.json();
-    return { success: false, data: { response: { data } } };
+    return { success: false, data };
   } catch (error) {
     return { success: false, data: error };
   }
@@ -115,9 +115,7 @@ const submissionPath = () => {
 };
 
 const isSessionTimeout = (error) => {
-  return error?.response &&
-    isProblem(error.response.data) &&
-    error.response.data.code === 401.2;
+  return isProblem(error) && error.code === 401.2;
 }
 
 const getErrorMessage = (data) => {
@@ -195,9 +193,9 @@ const uploadAttachment = async (attachment: File, instanceId: string) => {
     };
     const response = await fetch(url, { body: attachment, headers, method: 'POST' });
     const data = await response.json();
-    result = { success: response.ok, data: { response: { data } } };
+    result = { success: response.ok, data };
   } catch (error) {
-    result = { success: false, data: { response: error } };
+    result = { success: false, data: error };
   }
 
   return { name: attachment.name, result };

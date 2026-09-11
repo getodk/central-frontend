@@ -90,6 +90,7 @@ describe('WebFormRenderer', () => {
           state: 'open',
           draft: false,
           webformsEnabled: true,
+          once: false,
           attachments: testProps.form?.attachments ?? []
         },
         actionType: testProps.actionType ?? 'new',
@@ -148,6 +149,7 @@ describe('WebFormRenderer', () => {
       enketoId: '',
       state: 'open',
       draft: false,
+      once: false,
       webformsEnabled: true,
       attachments: [ { name: 'cities.csv' } ]
     };
@@ -168,6 +170,7 @@ describe('WebFormRenderer', () => {
       enketoId: '',
       state: 'open',
       draft: false,
+      once: false,
       webformsEnabled: true,
       attachments: [ { name: 'not-right-image.jpg' } ] // attachment name doesn't match
     };
