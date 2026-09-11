@@ -19,21 +19,16 @@
 - 272a95e: List duplicate column headers in Entity CSV file
 - 398f558: Removed dependency on bootstrap plugins and jquery.
 - faa52cd: Truncate overflowing tooltips (getodk/central#2183)
-
-### Patch Changes
-
 - 28bd0d0: Fixes: added extra bottom margin for draft control so snackbar doesn't overlap it. getodk/central#1962
 - 87800e2: feat getodk/central#1875: Inline property creation for app user and PAL create modals
 - ab7272b: Remove Custom Properties tab from project page (getodk/central#2075)
-  The functionality is still there but properties are now managed through app users and public links.
-  They can be created through the "Create New App User" and "Create New Public Link" modals, and viewed on the app user and link lists.
-- 5acc384: feat getodk/central#1792: Add ViewAs <app user> filter to Entities
+  - The functionality is still there but properties are now managed through app users and public links.
+  - They can be created through the "Create New App User" and "Create New Public Link" modals, and viewed on the app user and link lists.
+- 5acc384: feat getodk/central#1792: Add ViewAs &lt;app user&gt; filter to Entities
 - b960928: feat getodk/central#1871 and getodk/central#1874
-
-  Allow App Users and Public Links to be filtered by actor properties and specific values of those properties. Single relations and equality only for now (e.g. show me app users where region = north).
-
+  - Allow App Users and Public Links to be filtered by actor properties and specific values of those properties. Single relations and equality only for now (e.g. show me app users where region = north).
 - 194cc9e: Features: Submission data and view xml on the Submission detail page [Central#1707](https://github.com/getodk/central/issues/1707)
-- d8c66cd: Show file size in form attachment table (issue central#1895)
+- d8c66cd: Show file size in form attachment table (issue getodk/central#1895)
 - f6ac6db: Remove attachment confirmation modal and automatically uploading all matching files
 
 ## 2026.2.0
