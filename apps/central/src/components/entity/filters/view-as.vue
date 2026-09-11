@@ -104,6 +104,9 @@ const onChange = (value) => {
   "fr": {
     "noUserSelected": "Moi",
     "viewAs": "Voir comme"
+  },
+  "it": {
+    "viewAs": "Vedi come"
   }
 }
 </i18n>

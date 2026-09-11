@@ -124,7 +124,8 @@ const dsHashset = computed(() =>
   },
   "it": {
     "header": {
-      "uploaded": "Caricati"
+      "uploaded": "Caricati",
+      "size": "Dimensione"
     }
   },
   "ja": {

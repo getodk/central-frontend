@@ -354,7 +354,7 @@
   },
   "action": {
     "add": {
-      "string": "",
+      "string": "Aggiungi",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "cancel": {
@@ -544,7 +544,7 @@
       "developer_comment": "This is the text of a form field."
     },
     "passphrase": {
-      "string": "",
+      "string": "Crittografa la password",
       "developer_comment": "This is the text of a form field."
     },
     "password": {
@@ -1063,7 +1063,7 @@
       "developer_comment": "The word \"Enketo\" should not be translated"
     },
     "updateInProgress": {
-      "string": ""
+      "string": "Richiesta di aggiornamento in corso"
     }
   },
   "mixin": {
@@ -1231,10 +1231,10 @@
     },
     "ActorPropertiesNew": {
       "addProperty": {
-        "string": ""
+        "string": "Aggiungi proprietà"
       },
       "addPropertyHint": {
-        "string": ""
+        "string": "Inserisci un nome univoco per la proprietà"
       }
     },
     "ActorPropertiesUpsert": {
@@ -1244,7 +1244,7 @@
           "developer_comment": "{assignEntities} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nassign the right Entities"
         },
         "assignEntities": {
-          "string": "",
+          "string": "assegnare le entità corrette",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {assignEntities} is in the following text:\n\nProperties help {assignEntities}, control access, and connect users to the data they need."
         }
       },
@@ -1636,6 +1636,18 @@
         },
         "num_multi_entity_errors": {
           "string": "Numero di errori da Entità ripetute"
+        },
+        "num_wf_submissions": {
+          "string": "Numero di invii con Web Forms"
+        },
+        "num_enketo_submissions": {
+          "string": "Numero di invii con Enketo"
+        },
+        "num_wf_submission_edits": {
+          "string": ""
+        },
+        "num_enketo_submission_edits": {
+          "string": ""
         }
       }
     },
@@ -1816,7 +1828,7 @@
     "CustomPropsFilter": {
       "action": {
         "all": {
-          "string": "",
+          "string": "Tutto",
           "developer_comment": "This is the text of the button in dropdown menu of an actor (app user or public link) \"Properties\" filter, that allows the user to select all app users with all properties (no filter applied)."
         }
       }
@@ -1965,6 +1977,9 @@
       }
     },
     "DatasetOverviewNewProperty": {
+      "newPropertyName": {
+        "string": "Nuovo nome della proprietà"
+      },
       "title": {
         "string": "Aggiungi proprietà della Entità",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -1975,14 +1990,6 @@
         },
         "1": {
           "string": "È possibile aggiungere nuove proprietà anche caricando un formulario che vi fa riferimento; in questo caso, le proprietà vengono create quando il formulario viene pubblicato."
-        }
-      },
-      "newPropertyName": {
-        "string": "Nuovo nome della proprietà"
-      },
-      "problem": {
-        "409_3": {
-          "string": "Esiste già una proprietà in questo elenco di entità con il nome \"{propertyName}”."
         }
       }
     },
@@ -2203,10 +2210,6 @@
       }
     },
     "DatasetShow": {
-      "back": {
-        "string": "Torna alle Entità del progetto",
-        "developer_comment": "This is shown at the top of the page."
-      },
       "infoNav": {
         "connectedForms": {
           "string": "{count, plural, one {Aggiornato da {count} Formulario} many {Aggiornato da {count} Formulari} other {Aggiornato da {count} Formulari}}",
@@ -2591,7 +2594,7 @@
         "string": ""
       },
       "viewAs": {
-        "string": ""
+        "string": "Vedi come"
       }
     },
     "EntityList": {
@@ -2787,7 +2790,7 @@
         "string": ""
       },
       "newEntities": {
-        "string": ""
+        "string": "Nuove Entità"
       },
       "table": {
         "file": {
@@ -2878,7 +2881,7 @@
     "EntityUploadExtraProperties": {
       "action": {
         "selectAll": {
-          "string": "",
+          "string": "Seleziona tutto",
           "developer_comment": "This is the text of a button that allows the user to select all the columns of a table."
         }
       },
@@ -2902,7 +2905,7 @@
           "developer_comment": "{chooseFile} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose a file"
         },
         "chooseFile": {
-          "string": "",
+          "string": "scegli un file",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseFile} is in the following text:\n\nDrag and drop a .csv file here, or {chooseFile}"
         }
       },
@@ -3064,10 +3067,6 @@
       "title": {
         "string": "",
         "developer_comment": "This is the title at the top of a pop-up for editing an App User. {displayName} is the the name of the App User"
-      },
-      "displayNameLabel": {
-        "string": "Utente dell'applicazione",
-        "developer_comment": "Shown as label before the display name of the App User in the edit pop-up."
       }
     },
     "FieldKeyList": {
@@ -3336,7 +3335,7 @@
           "developer_comment": "This is the text of a table column header. The column shows when each Media File was uploaded."
         },
         "size": {
-          "string": "",
+          "string": "Dimensione",
           "developer_comment": "This is the text of a table column header. The column shows the file size of each uploaded Media File."
         }
       }
@@ -3584,7 +3583,7 @@
       },
       "field": {
         "note": {
-          "string": "",
+          "string": "Note della versione",
           "developer_comment": "This is the text of a form field."
         }
       },
@@ -4061,7 +4060,7 @@
             "developer_comment": "{preview} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nSee a preview"
           },
           "preview": {
-            "string": "",
+            "string": "Vedi un'anteprima",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {preview} is in the following text:\n\nA modern experience that will replace Enketo over time. {preview}."
           }
         },
@@ -4457,16 +4456,6 @@
             "string": "Quest'azione non può essere annullata",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {noUndo} is in the following text:\n\n{noUndo}, but the ability to unarchive a Project is planned for a future release."
           }
-        }
-      }
-    },
-    "ProjectCustomPropertiesNew": {
-      "newPropertyName": {
-        "string": ""
-      },
-      "problem": {
-        "409_3": {
-          "string": ""
         }
       }
     },
@@ -4984,6 +4973,23 @@
         }
       }
     },
+    "PropertyInput": {
+      "invalidName": {
+        "string": ""
+      },
+      "duplicate": {
+        "title": {
+          "string": ""
+        },
+        "description": {
+          "string": ""
+        }
+      },
+      "tryDifferent": {
+        "string": "Prova un nome diverso",
+        "developer_comment": "\"Name\" refers to the name of an Entity property."
+      }
+    },
     "PublicLinkCreate": {
       "title": {
         "string": "Crea Link con accesso pubblico",
@@ -5009,10 +5015,6 @@
       "title": {
         "string": "",
         "developer_comment": "This is the title at the top of a pop-up for editing a Public Access Link. {displayName} is the display name of the Public Link"
-      },
-      "displayNameLabel": {
-        "string": "Link con accesso pubblico",
-        "developer_comment": "Shown as label before the display name of the Public Access Link in the edit pop-up."
       }
     },
     "PublicLinkList": {
@@ -5073,7 +5075,7 @@
     "PublicLinkRow": {
       "action": {
         "edit": {
-          "string": "",
+          "string": "Modifica il Link con accesso pubblico",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
         "revoke": {
@@ -5286,7 +5288,7 @@
     "SubmissionDefDropdown": {
       "action": {
         "downloadXml": {
-          "string": "",
+          "string": "Scarica XML",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
@@ -5854,7 +5856,12 @@
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": ""
+        "0": {
+          "string": ""
+        },
+        "1": {
+          "string": ""
+        }
       }
     }
   },

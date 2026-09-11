@@ -146,6 +146,7 @@
     }
   },
   "action": {
+    "add": "Añadir",
     "cancel": "Cancelar",
     "clear": "Limpiar",
     "close": "Cerrar",
@@ -197,6 +198,7 @@
     "name": "Nombre",
     "newPassword": "Contraseña nueva",
     "oldPassword": "Contraseña antigua",
+    "passphrase": "Contraseña de cifrado",
     "password": "Contraseña",
     "passwordConfirm": "Contraseña nueva (confirmar)",
     "title": "Título",
