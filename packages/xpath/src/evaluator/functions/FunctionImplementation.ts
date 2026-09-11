@@ -13,31 +13,8 @@ import type { EvaluationContext } from '../../context/EvaluationContext.ts';
 import type { Evaluation } from '../../evaluations/Evaluation.ts';
 import type { EvaluationType, PrimitiveEvaluationType } from '../../evaluations/EvaluationType.ts';
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
-
-export class UnknownFunctionError extends Error {
-  constructor(functionName: string) {
-    super(`Unknown function ${functionName}`);
-  }
-}
-
-export class InvalidArgumentError extends Error {
-  constructor(argumentIndex: number, parameter: Parameter | null) {
-    if (parameter == null) {
-      super(`Argument ${argumentIndex} not allowed`);
-    } else {
-      const { typeHint } = parameter;
-
-      const causeMessage =
-        typeHint == null
-          ? `Expected argument at index ${argumentIndex}`
-          : `Expected argument compatible with type ${typeHint} at index ${argumentIndex}`;
-
-      super(`Invalid argument at index: ${argumentIndex}`, {
-        cause: new Error(causeMessage),
-      });
-    }
-  }
-}
+import { TooFewArgumentsError } from '../../error/TooFewArgumentsError.ts';
+import { TooManyArgumentsError } from '../../error/TooManyArgumentsError.ts';
 
 export type ParameterArityType = 'optional' | 'required' | 'variadic';
 
@@ -46,11 +23,7 @@ export type ParameterTypeHint =
   // as lazy? This would allow call-site optimizations that would
   // be more challenging or fussy to implement in the individual
   // `FunctionImplementation`.
-  | 'any' // TODO: naming? Could be 'unknown' or 'result' or...?
-  | 'boolean'
-  | 'node'
-  | 'number'
-  | 'string';
+  'any' | 'boolean' | 'node' | 'number' | 'string';
 
 export interface Parameter {
   readonly arityType: ParameterArityType;
@@ -58,8 +31,6 @@ export interface Parameter {
 }
 
 // TODO: this is the parameter signature, what about return? (partly addressed by `TypedFunction`)
-// TODO: is it possible to enforce order? I.e.:
-// [...RequiredParameter, ...OptionalParameter, ...([] | [VariadicParameter])]
 export type FunctionSignature = readonly Parameter[];
 
 // prettier-ignore
@@ -101,7 +72,6 @@ export class FunctionImplementation {
     readonly signature: FunctionSignature,
     runtimeImplementation: FunctionCallable | FunctionImplementation
   ) {
-    // TODO: *validate signature order!*
     const arity = [...signature].reduce(
       (acc, parameter) => {
         const { arityType } = parameter;
@@ -154,27 +124,15 @@ export class FunctionImplementation {
   protected validateArguments<Arguments extends readonly EvaluableArgument[]>(
     args: Arguments
   ): asserts args is ValidArguments<Arguments, true> {
-    const { arity, signature } = this;
-    const { min, max } = arity;
+    const { min, max } = this.arity;
     const { length: argumentCount } = args;
 
     if (argumentCount < min) {
-      throw new InvalidArgumentError(min, null);
+      throw new TooFewArgumentsError(this.localName, argumentCount, min);
     }
 
     if (argumentCount > max) {
-      throw new InvalidArgumentError(max, null);
-    }
-
-    for (const [index, parameter] of signature.entries()) {
-      // TODO: `typeHint` checking...
-      if (parameter.arityType !== 'required') {
-        break;
-      }
-
-      if (args[index] == null) {
-        throw new InvalidArgumentError(index, parameter);
-      }
+      throw new TooManyArgumentsError(this.localName, argumentCount, max);
     }
   }
 }
