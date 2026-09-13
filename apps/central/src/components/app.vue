@@ -35,12 +35,10 @@ import { START_LOCATION } from 'vue-router';
 import Alerts from './alerts.vue';
 import Navbar from './navbar.vue';
 
-import useCallWait from '../composables/call-wait';
 import useDisabled from '../composables/disabled';
 import useVersionMonitor from '../composables/version-monitor';
 import { loadAsync } from '../util/load-async';
 import { useAlert } from '../alert';
-import { useRequestData } from '../request-data';
 import { useSessions } from '../util/session';
 
 export default {
@@ -52,7 +50,7 @@ export default {
     FeedbackButton: defineAsyncComponent(loadAsync('FeedbackButton')),
     OutdatedVersion: defineAsyncComponent(loadAsync('OutdatedVersion'))
   },
-  inject: ['alert', 'config', 'location'],
+  inject: ['config'],
   setup() {
     const { toast } = inject('container');
 
@@ -64,9 +62,7 @@ export default {
 
     useVersionMonitor();
 
-    const { centralVersion } = useRequestData();
-    const { callWait } = useCallWait();
-    return { visiblyLoggedIn, centralVersion, callWait };
+    return { visiblyLoggedIn };
   },
   computed: {
     routerReady() {
@@ -76,41 +72,6 @@ export default {
       return this.config.loaded && this.config.showsFeedbackButton &&
         this.visiblyLoggedIn;
     },
-  },
-  created() {
-    this.callWait('checkVersion', this.checkVersion, (tries) =>
-      (tries === 0 ? 15000 : 60000));
-  },
-  methods: {
-    checkVersion() {
-      const previousVersion = this.centralVersion.versionText;
-      return this.centralVersion.request({
-        url: '/version.txt',
-        clear: false,
-        alert: false
-      })
-        .then(() => {
-          if (previousVersion == null || this.centralVersion.versionText === previousVersion)
-            return false;
-
-          // Alert the user about the version change, then keep alerting them.
-          // One benefit of this approach is that the user should see the toast
-          // even if there is another toast (say, about session expiration).
-          this.callWait(
-            'versionChange',
-            () => {
-              this.alert.info(this.$t('alert.versionChange'))
-                .cta(this.$t('action.refreshPage'), () => { this.location.reload(); });
-            },
-            (count) => (count === 0 ? 0 : 60000)
-          );
-          return true;
-        })
-        // This error could be the result of logout, which will cancel all
-        // requests.
-        .catch(error =>
-          (error.response != null && error.response.status === 404));
-    }
   }
 };
 </script>
