@@ -64,8 +64,12 @@ const emit = defineEmits(['hide', 'success']);
 
 const input = ref(null);
 const name = ref('');
-const duplicateNames = reactive([]);
 
+// List of property names that the user has attempted, but that Backend has
+// rejected as a duplicate of an existing property.
+const duplicateNames = reactive([]);
+// List of all known property names: both those returned on `dataset` and those
+// that Backend has identified as duplicates.
 const propertyNames = computed(() =>
   [...dataset.propertyMap.keys(), ...duplicateNames]);
 
