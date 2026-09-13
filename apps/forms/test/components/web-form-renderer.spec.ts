@@ -331,7 +331,7 @@ describe('WebFormRenderer', () => {
     expect(fetchSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('should send submission attachment request - relies on OWF', async () => {
+  it('should send submission attachment request', async () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch')
       .mockResolvedValueOnce({
         ok: true,
@@ -353,7 +353,7 @@ describe('WebFormRenderer', () => {
     expect(fetchSpy).toHaveBeenCalledTimes(2);
   });
 
-  it('should show retry modal if attachment upload fails - relies on OWF', async () => {
+  it('should show retry modal if attachment upload fails', async () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch')
       .mockResolvedValueOnce({
         ok: true,
@@ -368,8 +368,8 @@ describe('WebFormRenderer', () => {
     await submit(component);
     const title = document.querySelector('.p-dialog-header span')!;
     expect(title.textContent).to.equal('Submission error');
-    // const intro = document.querySelector('.p-dialog-content span')!;
-    // expect(intro.textContent).to.match(/Your data was not fully submitted.*Please press the “Try again” button to retry/);
+    const intro = document.querySelector('.p-dialog-content p')!;
+    expect(intro.textContent).to.match(/Your data was not fully submitted.*Please press the “Try again” button to retry/);
     expect(fetchSpy).toHaveBeenCalledTimes(2);
   });
 
@@ -405,7 +405,7 @@ describe('WebFormRenderer', () => {
     expect(fetchSpy).toHaveBeenCalledTimes(3);
   });
 
-  it('should show non-hideable sessionTimeout modal if attachment upload fails during session expiry - relies on OWF', async () => {
+  it('should show non-hideable sessionTimeout modal if attachment upload fails during session expiry', async () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch')
       .mockResolvedValueOnce({
         ok: true,
@@ -483,7 +483,7 @@ describe('WebFormRenderer', () => {
       expect(submissionUrl.toString()).to.equal(expectedUrl);
     });
 
-    it('should make requests for attachment data - relies on OWF', async () => {
+    it('should make requests for attachment data', async () => {
       const response = await fetch(gifBinary);
       const blob = await response.blob();
       const fetchSpy = vi.spyOn(globalThis, 'fetch')
