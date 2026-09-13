@@ -74,20 +74,22 @@ watch(() => props.state, (state) => {
 });
 
 const submit = () => {
-  const data = { name: name.value };
   request({
     method: 'POST',
     url: apiPaths.datasetProperties(project.id, dataset.name),
-    data,
+    data: { name: name.value },
     fulfillProblem: ({ code, details }) =>
       (code === 409.3 && equals(details.fields, ['name', 'datasetId'])) ||
       code === 409.24
   })
-    .then(response => {
-      if (isProblem(response.data))
-        duplicateNames.push(data.name);
-      else
+    .then(({ data }) => {
+      if (isProblem(data)) {
+        duplicateNames.push(data.code === 409.3
+          ? data.details.values[0]
+          : data.details.current);
+      } else {
         emit('success');
+      }
     })
     .catch(noop);
 };

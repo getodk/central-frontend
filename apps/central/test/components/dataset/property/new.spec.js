@@ -110,38 +110,45 @@ describe('DatasetPropertyNew', () => {
   });
 
   describe('duplicate name Problem', () => {
-    [
-      {
-        code: 409.3,
-        message: 'A resource already exists with name,datasetId value(s) of my_new_property,1.',
-        details: {
-          fields: ['name', 'datasetId'],
-          values: ['my_new_property', 1]
-        }
-      },
-      {
-        code: 409.24,
-        message: "A resource already exists with name 'MY_NEW_PROPERTY' and you provided 'my_new_property' with different capitalization."
-      }
-    ].forEach(problem => {
-      it(`shows an inline error for a ${problem.code} Problem`, () =>
-        mockHttp()
-          .mount(DatasetPropertyNew, mountOptions())
-          .request(async (modal) => {
-            const input = modal.getComponent(PropertyInput);
-            input.props().properties.should.eql(['height']);
-            await input.get('input').setValue('my_new_property');
-            return modal.get('form').trigger('submit');
-          })
-          .respondWithProblem(problem)
-          .afterResponse(modal => {
-            const input = modal.getComponent(PropertyInput);
-            input.props().properties.should.eql(['height', 'my_new_property']);
-            const text = input.get('.property-input-error p').text();
-            text.should.equal('A property with this name already exists');
+    it('shows an inline error for a 409.3 Problem', () =>
+      mockHttp()
+        .mount(DatasetPropertyNew, mountOptions())
+        .request(async (modal) => {
+          const input = modal.getComponent(PropertyInput);
+          input.props().properties.should.eql(['height']);
+          return addProperty(modal, 'my_new_property');
+        })
+        .respondWithProblem({
+          code: 409.3,
+          message: 'A resource already exists with name,datasetId value(s) of my_new_property,1.',
+          details: {
+            fields: ['name', 'datasetId'],
+            values: ['my_new_property', 1]
+          }
+        })
+        .afterResponse(modal => {
+          const input = modal.getComponent(PropertyInput);
+          input.props().properties.should.eql(['height', 'my_new_property']);
+          const text = input.get('.property-input-error p').text();
+          text.should.equal('A property with this name already exists');
 
-            modal.should.not.redAlert();
-          }));
-    });
+          modal.should.not.redAlert();
+        }));
+
+    it('shows an inline error for a 409.24 Problem', () =>
+      mockHttp()
+        .mount(DatasetPropertyNew, mountOptions())
+        .request(modal => addProperty(modal, 'my_new_property'))
+        .respondWithProblem({
+          code: 409.24,
+          message: "A resource already exists with name 'MY_NEW_PROPERTY' and you provided 'my_new_property' with different capitalization.",
+          details: { current: 'MY_NEW_PROPERTY', provided: 'my_new_property' }
+        })
+        .afterResponse(modal => {
+          const input = modal.getComponent(PropertyInput);
+          input.props().properties.should.eql(['height', 'MY_NEW_PROPERTY']);
+          const text = input.get('.property-input-error p').text();
+          text.should.equal('A property with this name already exists');
+        }));
   });
 });
