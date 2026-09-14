@@ -183,14 +183,20 @@ const bindRefToRepeatInstance = (context: ValueContext, ref: string): string => 
 const createCalculation = (
   context: ValueContext,
   setRelevantValue: SimpleAtomicStateSetter<string>,
+  setError: SimpleAtomicStateSetter<Error | null>,
   computation: ActionComputationExpression<'string'> | BindComputationExpression<'calculate'>
 ): void => {
   const calculate = createComputedExpression(context, computation);
   createComputed(() => {
     if (context.isAttached() && context.isRelevant()) {
       const calculated = calculate();
-      const value = context.decodeInstanceValue(calculated);
-      setRelevantValue(value);
+      if (calculated.success) {
+        const value = context.decodeInstanceValue(calculated.value);
+        setRelevantValue(value);
+      } else {
+        // set error state
+        setError(calculated.error);
+      }
     }
   });
 };
@@ -315,6 +321,8 @@ export interface InstanceValueState {
   readonly valueState: SimpleAtomicState<string>;
   // Unguarded setter for the same value, used by `xforms-value-changed` actions writing to this node.
   readonly setValueFromAction: SimpleAtomicStateSetter<string>;
+  // Accessor for errors that occur in calculating the value state
+  readonly getError: Accessor<Error | null>;
 }
 
 /**
@@ -333,6 +341,7 @@ export const createInstanceValueState = (context: ValueContext): InstanceValueSt
   return context.scope.runTask(() => {
     const initialValue = getInitialValue(context);
     const baseValueState = createSignal(initialValue);
+    const [getError, setError] = createSignal<Error | null>(null);
     const relevantValueState = createRelevantValueState(context, baseValueState);
 
     const [getValue, setValue] = relevantValueState;
@@ -341,7 +350,7 @@ export const createInstanceValueState = (context: ValueContext): InstanceValueSt
 
     const { calculate } = context.definition.bind;
     if (calculate != null) {
-      createCalculation(context, setValue, calculate);
+      createCalculation(context, setValue, setError, calculate);
     }
 
     registerValueChangedActions(context, getValue);
@@ -350,6 +359,7 @@ export const createInstanceValueState = (context: ValueContext): InstanceValueSt
     return {
       valueState: guardDownstreamReadonlyWrites(context, relevantValueState),
       setValueFromAction: setValue,
+      getError,
     };
   });
 };

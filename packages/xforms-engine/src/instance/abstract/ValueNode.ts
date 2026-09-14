@@ -61,6 +61,7 @@ export abstract class ValueNode<
   protected readonly getInstanceValue: Accessor<string>;
   protected readonly valueState: RuntimeValueState<RuntimeValue>;
   protected readonly setValueState: RuntimeValueSetter<RuntimeInputValue>;
+  protected readonly getError: Accessor<Error | null>;
 
   // XFormsXPathElement
   override readonly [XPathNodeKindKey] = 'element';
@@ -99,8 +100,9 @@ export abstract class ValueNode<
     this.valueType = definition.valueType;
     this.decodeInstanceValue = codec.decodeInstanceValue;
 
-    const { valueState: instanceValueState, setValueFromAction } = createInstanceValueState(this);
+    const { valueState: instanceValueState, setValueFromAction, getError } = createInstanceValueState(this);
     const [getInstanceValue] = instanceValueState;
+    this.getError = getError;
 
     const valueState = codec.createRuntimeValueState(instanceValueState);
     const [, setActionValue] = codec.createRuntimeValueState([
@@ -141,5 +143,9 @@ export abstract class ValueNode<
   // InstanceNode
   getChildren(): readonly [] {
     return [];
+  }
+
+  hasError(): boolean {
+    return this.getError() !== null;
   }
 }
