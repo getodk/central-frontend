@@ -13,7 +13,7 @@ import { XFORMS_XPATH_NODE_RANGE_KIND } from '../../integration/xpath/adapter/XF
 import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
 import type { StaticAttribute } from '../../integration/xpath/static-dom/StaticAttribute.ts';
 import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
-import { createComputedExpression } from '../../lib/reactivity/createComputedExpression.ts';
+import { createComputedExpression, type Result } from '../../lib/reactivity/createComputedExpression.ts';
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
 import type { AnyNodeDefinition } from '../../parse/model/NodeDefinition.ts';
 import type { DescendantNodeInitOptions } from '../children/DescendantNodeInitOptions.ts';
@@ -77,15 +77,15 @@ export abstract class DescendantNode<
    */
   protected readonly isAttachedDescendant: Accessor<boolean>;
 
-  readonly hasReadonlyAncestor: Accessor<boolean> = () => {
+  readonly hasReadonlyAncestor: Accessor<Result<'boolean'>> = () => {
     const { parent } = this;
 
     return parent.hasReadonlyAncestor() || parent.isReadonly();
   };
 
-  readonly isSelfReadonly: Accessor<boolean>;
+  readonly isSelfReadonly: Accessor<Result<'boolean'>>;
 
-  readonly isReadonly: Accessor<boolean> = () => {
+  readonly isReadonly: Accessor<Result<'boolean'>> = () => {
     if (this.hasReadonlyAncestor()) {
       return true;
     }

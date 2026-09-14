@@ -102,6 +102,28 @@ const createRequiredValidation = (
   });
 };
 
+const createErrorValidation = (
+  context: ValidationContext
+): ComputedConditionValidation<'error'> => {
+  return createMemo(() => {
+    if (context.hasError()) {
+      console.log('HAS ERROR');
+      return {
+        condition: 'error',
+        valid: false,
+        message: null,
+      } as const;
+    } else {
+      console.log('HAS NO ERROR');
+      return {
+        condition: 'error',
+        valid: true,
+        message: null,
+      } as const;
+    }
+  });
+};
+
 type OptionalViolation<Condition extends ValidationCondition> =
   Accessor<ConditionViolation<Condition> | null>;
 
@@ -147,6 +169,7 @@ export const createValidationState = <Factory extends OpaqueReactiveObjectFactor
     const constraintViolation = createComputedViolation(scope, constraint);
     const required = createRequiredValidation(context);
     const requiredViolation = createComputedViolation(scope, required);
+    const error = createErrorValidation(context);
 
     const violation = createMemo(() => {
       return constraintViolation() ?? requiredViolation();
