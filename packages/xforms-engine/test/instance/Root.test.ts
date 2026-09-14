@@ -187,10 +187,7 @@ describe('Root', () => {
         buildForm(
           [t('q1'), t('q2'), t('q3')],
           [input('/data/q1'), input('/data/q2'), input('/data/q3')],
-          [
-            bind('/data/q2').type('string').required(),
-            bind('/data/q3').type('string').required(),
-          ]
+          [bind('/data/q2').type('string').required(), bind('/data/q3').type('string').required()]
         )
       );
       const q2 = getControlNode(root, '/data/q2');
@@ -240,7 +237,6 @@ describe('Root', () => {
       expect(root.currentState.currentPage).toBe(outer.nodeId);
       expect(root.currentState.navigationTarget).toBe(targetBeforeBlock);
     });
-
   });
 
   describe('pagination — invalid pages block addInstances', () => {

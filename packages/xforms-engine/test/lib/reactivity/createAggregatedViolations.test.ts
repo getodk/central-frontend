@@ -582,5 +582,4 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
       ]);
     });
   });
-
 });
