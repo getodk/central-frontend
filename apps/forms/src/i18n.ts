@@ -76,6 +76,9 @@ addLocale('zh', '汉语', '');
 addLocale('zh-Hant', '漢語', '');
 
 export const setLocale = (locale: string) => {
+  if (!locales.has(locale)) {
+    return;
+  }
   i18n.global.locale = locale;
   document.documentElement.setAttribute('lang', locale);
 };

@@ -120,7 +120,6 @@ describe('useLocale', () => {
 
   describe('resolveLocale translation fallback', () => {
     it('loads base locale translations when exact locale has no translation file', async () => {
-      document.documentElement.lang = 'fr';
       const fictional = makeLanguage('English (Fictional Region)', 'en-ZZ');
       const formRef = makeFormRef([fictional]);
       const { getLocale } = mountLocale(formRef);

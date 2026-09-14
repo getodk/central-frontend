@@ -384,9 +384,9 @@ The `<OdkWebForm>` component accepts the following props:
 
 The component emits the following events:
 
-- `loaded`: Emitted when the form is loaded and displayed to the user
-- `languageSelected`: Emitted when the form language is set, either when the form is loaded, or when the user selects an option from the language selector.
+- `languageSelected`: Emitted when the component changes the language that buttons and messages are displayed in. It is emitted when the form is loaded (defaulting to 'en'), and any time the user selects an option from the language selector.
   - Payload: ([language: string])
+- `loaded`: Emitted when the form is loaded and displayed to the user
 - `submit`: Emitted when the user presses the "Send" button on a valid form
   - Payload: ([submissionPayload: MonolithicInstancePayload, callback: HostSubmissionResultCallback])
 - `submitChunked`: Emitted for chunked submissions when the form is valid

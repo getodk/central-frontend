@@ -229,9 +229,8 @@ provide(TRANSLATE, t);
 const { navigateToFirstViolation, navigateToNode } = useNavigationTarget(() => state.value.root);
 
 if (isEmitSubscribed('onLanguageSelected')) {
-	const language = computed(() => getLanguage());
 	watch(
-		() => language.value,
+		() => getLanguage(),
 		(selected) => {
 			emit('languageSelected', selected);
 		},
