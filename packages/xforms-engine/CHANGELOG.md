@@ -1,5 +1,26 @@
 # @getodk/xforms-engine
 
+## 1.1.0
+
+### Minor Changes
+
+- 25e142c: Add pagination to Web Forms
+- 7bf7823: Added feature to prefill form fields using URL parameters
+- 654afd3: Implemented last-saved virtual secondary instance feature
+- 76e0239: Block Next on pages with invalid questions
+- 8777bca: Scrolls to the right question on load, page changes, repeat changes, and validation errors.
+
+### Patch Changes
+
+- 5329340: Fixed a bug rendering outputs in single ordered list items
+- 689fa4e: Fixed a bug where using commas for decimal places returned an invalid number.
+- d4a5f92: Reject forms with computation cycles at load
+- 5c10f08: Improved messages about form definition errors to make them easier to fix
+- 92133fb: Reduced bundle size for faster loading
+- 22757ca: Removed rounding from area() and distance() xpath functions.
+- c01c3a9: Fixed a bug where the distance xpath function would error when passed empty input
+- c366ad9: Stop recomputing form logic that cycles once it hits a change limit
+
 ## 1.0.3
 
 ### Patch Changes

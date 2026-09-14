@@ -22,7 +22,7 @@ jobs:
 
       - uses: ./.github/actions/restore-node
         with:
-          node-version: '24.16.0'
+          node-version: '24.20.0'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Build packages
