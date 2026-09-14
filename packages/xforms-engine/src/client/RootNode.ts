@@ -13,7 +13,7 @@ import type {
   InstancePayloadOptions,
   InstancePayloadType,
 } from './serialization/InstancePayloadOptions.ts';
-import type { AncestorNodeValidationState } from './validation.ts';
+import type { AncestorNodeValidationState, BlockingViolations } from './validation.ts';
 
 export interface RootNodeState extends BaseNodeState {
   /**
@@ -92,8 +92,8 @@ export interface RootNode extends BaseNode {
    */
   setCurrentPage(page: PageBoundary): PageBoundary | null;
 
-  // Moves to the next page. Does nothing when {@link RootNodeState.hasNextPage} is `false`.
-  nextPage(): void;
+  // Moves to the next page, unless the current page has violations, then it stays and returns them.
+  nextPage(): BlockingViolations;
 
   // Moves to the previous page. Does nothing when {@link RootNodeState.hasPreviousPage} is `false`.
   previousPage(): void;

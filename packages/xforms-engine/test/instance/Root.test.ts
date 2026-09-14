@@ -179,6 +179,142 @@ describe('Root', () => {
     });
   });
 
+  describe('pagination — invalid pages block nextPage', () => {
+    const initForm = setupPaginationForms();
+
+    it('blocks only on current-page violations', async () => {
+      const root = await initForm(
+        buildForm(
+          [t('q1'), t('q2'), t('q3')],
+          [input('/data/q1'), input('/data/q2'), input('/data/q3')],
+          [
+            bind('/data/q2').type('string').required(),
+            bind('/data/q3').type('string').required(),
+          ]
+        )
+      );
+      const q2 = getControlNode(root, '/data/q2');
+      const q3 = getControlNode(root, '/data/q3');
+
+      // q2's violation is on another page, so it doesn't block
+      expect(root.nextPage()).toEqual([]);
+      expect(root.currentState.currentPage).toBe(q2.nodeId);
+
+      const targetBeforeBlock = root.currentState.navigationTarget;
+      const blocked = root.nextPage();
+      expect(blocked.map(({ nodeId }) => nodeId)).toEqual([q2.nodeId]);
+      expect(root.currentState.currentPage).toBe(q2.nodeId);
+      expect(root.currentState.navigationTarget).toBe(targetBeforeBlock);
+
+      getInputNode(root, '/data/q2').setValue('filled');
+
+      expect(root.nextPage()).toEqual([]);
+      expect(root.currentState.currentPage).toBe(q3.nodeId);
+    });
+
+    it('a violation anywhere inside a field-list blocks while that page is current', async () => {
+      const root = await initForm(
+        buildForm(
+          [t('intro'), t('outer', t('a'), t('b')), t('tail')],
+          [
+            input('/data/intro'),
+            t(
+              'group ref="/data/outer" appearance="field-list"',
+              input('/data/outer/a'),
+              input('/data/outer/b')
+            ),
+            input('/data/tail'),
+          ],
+          [bind('/data/outer/b').type('string').required()]
+        )
+      );
+      const outer = getGroupNode(root, '/data/outer');
+      const b = getControlNode(root, '/data/outer/b');
+
+      root.nextPage();
+      expect(root.currentState.currentPage).toBe(outer.nodeId);
+
+      const targetBeforeBlock = root.currentState.navigationTarget;
+      const blocked = root.nextPage();
+      expect(blocked.map(({ nodeId }) => nodeId)).toEqual([b.nodeId]);
+      expect(root.currentState.currentPage).toBe(outer.nodeId);
+      expect(root.currentState.navigationTarget).toBe(targetBeforeBlock);
+    });
+
+  });
+
+  describe('pagination — invalid pages block addInstances', () => {
+    const initForm = setupPaginationForms();
+
+    it('refuses to add from a page with a violation, then adds once resolved', async () => {
+      const root = await initForm(
+        buildForm(
+          [t('r', t('q'))],
+          [repeat('/data/r', input('/data/r/q'))],
+          [bind('/data/r/q').type('string').required()]
+        )
+      );
+      const r1q = getControlNode(root, '/data/r[1]/q');
+      const range = getUncontrolledRange(root);
+
+      const targetBeforeBlock = root.currentState.navigationTarget;
+      const blocked = range.addInstances();
+      expect(blocked.map(({ nodeId }) => nodeId)).toEqual([r1q.nodeId]);
+      expect(range.currentState.children.length).toBe(1);
+      expect(root.currentState.currentPage).toBe(r1q.nodeId);
+      expect(root.currentState.navigationTarget).toBe(targetBeforeBlock);
+
+      getInputNode(root, '/data/r[1]/q').setValue('filled');
+
+      expect(range.addInstances()).toEqual([]);
+      expect(range.currentState.children.length).toBe(2);
+      expect(root.currentState.currentPage).toBe(getControlNode(root, '/data/r[2]/q').nodeId);
+    });
+
+    it('a repeat inside a field-list adds despite violations on that page', async () => {
+      const root = await initForm(
+        buildForm(
+          [t('outer', t('a'), t('child', t('q')))],
+          [
+            t(
+              'group ref="/data/outer" appearance="field-list"',
+              input('/data/outer/a'),
+              group('/data/outer/child', repeat('/data/outer/child', input('/data/outer/child/q')))
+            ),
+          ],
+          [bind('/data/outer/a').type('string').required()]
+        )
+      );
+      const outer = getGroupNode(root, '/data/outer');
+      const range = getUncontrolledRange(root);
+
+      expect(root.currentState.currentPage).toBe(outer.nodeId);
+
+      expect(range.addInstances()).toEqual([]);
+      expect(range.currentState.children.length).toBe(2);
+      expect(root.currentState.currentPage).toBe(outer.nodeId);
+    });
+
+    it('a non-paginated form adds despite violations', async () => {
+      const root = await initForm(
+        html(
+          head(
+            title('Pageless form'),
+            model(
+              mainInstance(t('data id="root"', t('r', t('q')))),
+              bind('/data/r/q').type('string').required()
+            )
+          ),
+          body(repeat('/data/r', input('/data/r/q')))
+        )
+      );
+      const range = getUncontrolledRange(root);
+
+      expect(range.addInstances()).toEqual([]);
+      expect(range.currentState.children.length).toBe(2);
+    });
+  });
+
   describe('pagination — repeat structure changes', () => {
     const initForm = setupPaginationForms();
 
