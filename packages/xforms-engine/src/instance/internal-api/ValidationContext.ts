@@ -27,5 +27,6 @@ export interface ValidationContext extends EvaluationContext {
   getViolation(): AnyViolation | null;
   isRelevant(): boolean;
   isRequired(): boolean;
+  hasError(): boolean;
   isBlank(): boolean;
 }

@@ -33,11 +33,12 @@ interface BaseValidity {
  *
  * @see {@link https://getodk.github.io/xforms-spec/#bind-attributes | `constraint` and `required` bind attributes}
  */
-export type ValidationCondition = 'constraint' | 'required';
+export type ValidationCondition = 'constraint' | 'required' | 'error';
 
 interface ValidationConditionMessageRoles {
   readonly constraint: 'constraintMsg';
   readonly required: 'requiredMsg';
+  readonly error: 'errorMsg';
 }
 
 export type ValidationConditionMessageRole<Condition extends ValidationCondition> =

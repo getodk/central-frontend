@@ -17,15 +17,21 @@ interface ComputedExpressionResults {
   readonly string: string;
 }
 
-// prettier-ignore
-type EvaluatedExpression<
-	Type extends DependentExpressionResultType
-> = ComputedExpressionResults[Type];
+export type Success<T extends DependentExpressionResultType> = {
+  success: true;
+  value: ComputedExpressionResults[T];
+};
 
-// prettier-ignore
-type ExpressionEvaluator<
-	Type extends DependentExpressionResultType
-> = (defaultValue?: EvaluatedExpression<Type>) => EvaluatedExpression<Type>;
+export type Failure = {
+  success: false;
+  error: Error;
+};
+
+export type Result<T extends DependentExpressionResultType> = Success<T> | Failure;
+
+type EvaluatedExpression<Type extends DependentExpressionResultType> = ComputedExpressionResults[Type];
+
+type ExpressionEvaluator<Type extends DependentExpressionResultType> = (defaultValue?: EvaluatedExpression<Type>) => EvaluatedExpression<Type>;
 
 interface ExpressionEvaluatorOptions {
   get contextNode(): EngineXPathNode;
@@ -83,11 +89,6 @@ const defaultEvaluationsByType: DefaultEvaluationsByType = {
   string: DEFAULT_STRING_EVALUATION,
 };
 
-// prettier-ignore
-type ComputedExpression<Type extends DependentExpressionResultType> = Accessor<
-	EvaluatedExpression<Type>
->;
-
 interface CreateComputedExpressionOptions<Type extends DependentExpressionResultType> {
   /**
    * If a default value is provided, {@link createComputedExpression} will
@@ -105,11 +106,25 @@ interface CreateComputedExpressionOptions<Type extends DependentExpressionResult
   readonly defaultValue?: EvaluatedExpression<Type>;
 }
 
+const computeResult = <Type extends DependentExpressionResultType>(evaluateExpression: ExpressionEvaluator<Type>) => {
+  try {
+    return {
+      success: true,
+      value: evaluateExpression()
+    } as Success<Type>;
+  } catch(error) {
+    return {
+      success: false,
+      error
+    } as Failure;
+  }
+};
+
 export const createComputedExpression = <Type extends DependentExpressionResultType>(
   context: EvaluationContext,
   dependentExpression: DependentExpression<Type>,
   options: CreateComputedExpressionOptions<Type> = {}
-): ComputedExpression<Type> => {
+): Accessor<Result<Type>> => {
   return context.scope.runTask(() => {
     const { contextNode, evaluator } = context;
     const { expression, isTranslated, resultType } = dependentExpression;
@@ -118,7 +133,7 @@ export const createComputedExpression = <Type extends DependentExpressionResultT
     });
 
     if (isConstantExpression(expression)) {
-      return createMemo(() => evaluateExpression());
+      return createMemo(() => computeResult(evaluateExpression));
     }
 
     return createMemo(() => {
@@ -126,14 +141,14 @@ export const createComputedExpression = <Type extends DependentExpressionResultT
         context.getActiveLanguage();
       }
       if (context.isAttached()) {
-        return evaluateExpression();
+        return computeResult(evaluateExpression);
       }
       const defaultValue = options?.defaultValue ?? defaultEvaluationsByType[resultType];
       try {
-        return evaluateExpression(defaultValue);
+        return computeResult(() => evaluateExpression(defaultValue));
       } catch {
         // likely because it's not yet attached - try again later
-        return defaultValue;
+        return { success: true, value: defaultValue } as Success<Type>;
       }
     });
   });
