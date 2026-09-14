@@ -2,7 +2,8 @@ import type { BodyClassList } from '../parse/body/BodyDefinition.ts';
 import type { RootDefinition } from '../parse/model/RootDefinition.ts';
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from './FormLanguage.ts';
-import type { GeneralChildNode } from './hierarchy.ts';
+import type { AnyControlNode, GeneralChildNode } from './hierarchy.ts';
+import type { RepeatRangeUncontrolledNode } from './repeat/RepeatRangeUncontrolledNode.ts';
 import type { FormNodeID, PageBoundary } from './identity.ts';
 import type {
   ChunkedInstancePayload,
@@ -91,6 +92,9 @@ export interface RootNode extends BaseNode {
    * exists; for example, an id left over from a removed repeat.
    */
   setCurrentPage(page: PageBoundary): PageBoundary | null;
+
+  // Whether the node's page is the current page. Always `true` on a non-paginated form.
+  isNodeInPage(node: AnyControlNode | RepeatRangeUncontrolledNode): boolean;
 
   // Moves to the next page, unless the current page has violations, then it stays and returns them.
   nextPage(): BlockingViolations;

@@ -2,7 +2,9 @@ import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import { batch } from 'solid-js';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
+import type { AnyControlNode } from '../client/hierarchy.ts';
 import type { FormNodeID, PageBoundary } from '../client/identity.ts';
+import type { RepeatRangeUncontrolledNode } from '../client/repeat/RepeatRangeUncontrolledNode.ts';
 import type { RootNode } from '../client/RootNode.ts';
 import type { InstancePayload } from '../client/serialization/InstancePayload.ts';
 import type {
@@ -194,6 +196,15 @@ export class Root
 
   setCurrentPage(page: PageBoundary): PageBoundary | null {
     return this.pageNavigation.setCurrentPage(page);
+  }
+
+  isNodeInPage(node: AnyControlNode | RepeatRangeUncontrolledNode): boolean {
+    if (!this.isPaginated) {
+      return true;
+    }
+
+    const currentPage = this.currentState.currentPage;
+    return currentPage != null && node.currentState.pageBoundary === currentPage;
   }
 
   nextPage(): BlockingViolations {
