@@ -273,6 +273,24 @@ describe('WebFormRenderer', () => {
     expect(intro.textContent).to.match(/Your data was not submitted.*duplication instance ID/);
   });
 
+  it('should show error modal if the primary instance too large', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: false,
+      status: 413,
+      text: () => Promise.resolve('Content Too Large'),
+    } as Response);
+    const component = await mountComponent(simpleForm);
+    const input = component.find('input');
+    await input.setValue('test');
+    expect(component.find('input').element.value).to.equal('test');
+    await submit(component);
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    const title = document.querySelector('.p-dialog-header span')!;
+    expect(title.textContent).to.equal('Submission error');
+    const intro = document.querySelector('.p-dialog-content')!;
+    expect(intro.textContent).to.match(/Your data was not submitted.*The data that you are trying to upload is too large/);
+  });
+
   it('should show sessionTimeout modal in case of session expiry', async () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
       ok: false,
@@ -362,6 +380,27 @@ describe('WebFormRenderer', () => {
       } as Response)
       .mockResolvedValueOnce({
         ok: false
+      } as Response);
+    const component = await mountComponent(imageUploaderXml);
+    await uploadOnePixelGif(component);
+    await submit(component);
+    const title = document.querySelector('.p-dialog-header span')!;
+    expect(title.textContent).to.equal('Submission error');
+    const intro = document.querySelector('.p-dialog-content p')!;
+    expect(intro.textContent).to.match(/Your data was not fully submitted.*Please press the “Try again” button to retry/);
+    expect(fetchSpy).toHaveBeenCalledTimes(2);
+  });
+
+  it('should show a useful error when attachment is too large', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch')
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve({ instanceId: 1 }),
+      } as Response)
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 413
       } as Response);
     const component = await mountComponent(imageUploaderXml);
     await uploadOnePixelGif(component);

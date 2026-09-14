@@ -64,7 +64,24 @@ const getAttachment = (requestUrl: URL) => {
   return fetch(url);
 };
 
-const postPrimaryInstance = async (file:File) => {
+const handleSubmissionRequest = async (request: Promise<Response>) => {
+  try {
+    const response = await request;
+    if (response.status === 413) {
+      // payload too large, response from nginx not central, so do not try to json parse the body
+      return { success: false, data: { code: 413 } };
+    }
+    const data = await response.json();
+    if (response.ok && props.form.once && props.form.enketoOnceId) {
+      setSubmitted(props.form.enketoOnceId);
+    }
+    return { success: response.ok, data };
+  } catch (error) {
+    return { success: false, data: error };
+  }
+};
+
+const postPrimaryInstance = async (file: File) => {
   let url: string;
   let method: string;
   let params: PostPrimaryInstanceParams = {
@@ -85,20 +102,8 @@ const postPrimaryInstance = async (file:File) => {
     'Accept': 'application/json, text/plain, */*',
     'X-Requested-With': 'XMLHttpRequest'
   };
-  try {
-    const response = await fetch(url, { body: file, headers, method });
-    if (response.ok) {
-      if (props.form.once && props.form.enketoOnceId) {
-        setSubmitted(props.form.enketoOnceId);
-      }
-      const data = await response.json();
-      return { success: true, data };
-    }
-    const data = await response.json();
-    return { success: false, data };
-  } catch (error) {
-    return { success: false, data: error };
-  }
+  const request = fetch(url, { body: file, headers, method });
+  return handleSubmissionRequest(request);
 };
 
 const isProblem = (data: any) => {
@@ -182,22 +187,13 @@ const handleResult = () => {
 const uploadAttachment = async (attachment: File, instanceId: string) => {
   const encodedInstanceId = encodeURIComponent(instanceId);
   const encodedName = encodeURIComponent(attachment.name);
-
   const url = withToken(`/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath.value}/submissions/${encodedInstanceId}/attachments/${encodedName}`);
-
-  let result;
-  try {
-    const headers = {
-      'Content-Type': attachment.type,
-      'X-Requested-With': 'XMLHttpRequest'
-    };
-    const response = await fetch(url, { body: attachment, headers, method: 'POST' });
-    const data = await response.json();
-    result = { success: response.ok, data };
-  } catch (error) {
-    result = { success: false, data: error };
-  }
-
+  const headers = {
+    'Content-Type': attachment.type,
+    'X-Requested-With': 'XMLHttpRequest'
+  };
+  const request = fetch(url, { body: attachment, headers, method: 'POST' });
+  const result = await handleSubmissionRequest(request);
   return { name: attachment.name, result };
 };
 
