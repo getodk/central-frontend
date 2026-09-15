@@ -2,7 +2,9 @@ import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import { batch } from 'solid-js';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
+import type { AnyControlNode } from '../client/hierarchy.ts';
 import type { FormNodeID, PageBoundary } from '../client/identity.ts';
+import type { RepeatRangeUncontrolledNode } from '../client/repeat/RepeatRangeUncontrolledNode.ts';
 import type { RootNode } from '../client/RootNode.ts';
 import type { InstancePayload } from '../client/serialization/InstancePayload.ts';
 import type {
@@ -10,7 +12,7 @@ import type {
   InstancePayloadType,
 } from '../client/serialization/InstancePayloadOptions.ts';
 import type { InstanceState } from '../client/serialization/InstanceState.ts';
-import type { AncestorNodeValidationState } from '../client/validation.ts';
+import type { AncestorNodeValidationState, BlockingViolations } from '../client/validation.ts';
 import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
 import { createRootInstanceState } from '../lib/client-reactivity/instance-state/createRootInstanceState.ts';
 import {
@@ -196,8 +198,39 @@ export class Root
     return this.pageNavigation.setCurrentPage(page);
   }
 
-  nextPage(): void {
+  isNodeInPage(node: AnyControlNode | RepeatRangeUncontrolledNode): boolean {
+    if (!this.isPaginated) {
+      return true;
+    }
+
+    const currentPage = this.currentState.currentPage;
+    return currentPage != null && node.currentState.pageBoundary === currentPage;
+  }
+
+  nextPage(): BlockingViolations {
+    if (!this.pageNavigation.hasNextPage()) {
+      return [];
+    }
+
+    const violations = this.getBlockingViolations();
+    if (violations.length > 0) {
+      return violations;
+    }
+
     this.pageNavigation.nextPage();
+    return [];
+  }
+
+  // Nodes without a page (model-only values) have no leaf page id, so they never block.
+  getBlockingViolations(): BlockingViolations {
+    const currentPage = this.pageNavigation.currentPage();
+    if (currentPage == null) {
+      return [];
+    }
+
+    return this.validationState.violations.filter(({ nodeId }) => {
+      return this.pagination.getLeafPageId(nodeId) === currentPage;
+    });
   }
 
   previousPage(): void {

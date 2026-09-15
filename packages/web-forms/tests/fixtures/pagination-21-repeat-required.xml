@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa">
+  <h:head>
+    <h:title>21 Repeat with a required question</h:title>
+    <model>
+      <instance>
+        <data id="pg_21_repeat_required">
+          <child jr:template="">
+            <cname/>
+          </child>
+          <child>
+            <cname/>
+          </child>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <bind nodeset="/data/child/cname" type="string" required="true()"/>
+      <bind nodeset="/data/meta/instanceID" type="string"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <group ref="/data/child">
+      <label>Children</label>
+      <repeat nodeset="/data/child">
+        <input ref="/data/child/cname"><label>Child name</label></input>
+      </repeat>
+    </group>
+  </h:body>
+</h:html>

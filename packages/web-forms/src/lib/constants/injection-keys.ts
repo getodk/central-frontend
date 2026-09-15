@@ -1,4 +1,5 @@
 export const QUESTION_HAS_ERROR = Symbol('formQuestionHasError');
+export const REVEAL_VIOLATIONS = Symbol('formRevealViolations');
 export const SUBMIT_PRESSED = Symbol('formSubmitPressed');
 export const TOUCHED_QUESTIONS = Symbol('formTouchedQuestions');
 export const IS_FORM_EDIT_MODE = Symbol('isFormEditMode');
