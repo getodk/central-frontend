@@ -43,10 +43,10 @@ const fetchForm = async () => {
       // not logged in
       const relativeUrl = window.location.href.substring(window.location.origin.length);
       window.location.href = '/login?next=/wf' + relativeUrl;
-    } else {
-      // unknown error
-      errorState.value = true;
+      return;
     }
+    // unknown error
+    errorState.value = true;
     hideSpinner();
     loadingState.value = false;
   }

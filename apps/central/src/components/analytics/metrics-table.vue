@@ -371,6 +371,8 @@ export default {
       "num_datasets_deleted": "Número de eventos de eliminación de la Lista de entidades",
       "num_dataset_properties_deleted": "Número de eventos de eliminación de la propiedad del entidad",
       "num_owner_only_datasets_per_project": "Número de listas de entidades restringidas sólo al propietario",
+      "num_custom_user_properties": "Número de propiedades de usuario personalizadas",
+      "num_user_property_filtered_datasets": "Número de listas de entidades restringidas por las propiedades del usuario",
       "num_properties": "Número de Propiedades",
       "num_creation_forms": "Número de formularios que actualizan la lista de entidades",
       "num_followup_forms": "Número de formularios que utilizan la lista de entidades",
@@ -420,7 +422,11 @@ export default {
       "num_repeat_entity_update_forms": "Número de formularios que actualizan entidades en repeticiones",
       "num_entity_create_update_forms": "Número de formularios que crean y actualizan entidades",
       "num_entities_with_geometry": "Número de entidades con datos geométricos",
-      "num_multi_entity_errors": "Número de errores de entidades repetidas"
+      "num_multi_entity_errors": "Número de errores de entidades repetidas",
+      "num_wf_submissions": "Número de envíos realizados mediante formularios web",
+      "num_enketo_submissions": "Número de envíos con Enketo",
+      "num_wf_submission_edits": "Número de modificaciones en los envíos realizadas mediante formularios web",
+      "num_enketo_submission_edits": "Número de modificaciones en las respuestas con Enketo"
     }
   },
   "fr": {
@@ -517,7 +523,11 @@ export default {
       "num_repeat_entity_update_forms": "Nombre de formulaires qui mettent à jour des entités avec répétition",
       "num_entity_create_update_forms": "Nombre de formulaires qui créent et mettent à jour des entités",
       "num_entities_with_geometry": "Nombre d'entités avec données géographiques",
-      "num_multi_entity_errors": "Nombre d'erreurs d'entités créées par répétition"
+      "num_multi_entity_errors": "Nombre d'erreurs d'entités créées par répétition",
+      "num_wf_submissions": "Nombre de soumissions de Web Forms",
+      "num_enketo_submissions": "Nombre de soumissions de Enketo",
+      "num_wf_submission_edits": "Nombre de soumissions éditées avec Web Forms",
+      "num_enketo_submission_edits": "Nombre de soumissions éditées avec Enketo"
     }
   },
   "id": {
@@ -635,7 +645,9 @@ export default {
       "num_repeat_entity_update_forms": "Numero di formulari che aggiornano Entità dentro repeats",
       "num_entity_create_update_forms": "Numero di formulari che contemporaneamente creano e aggiornano Entità",
       "num_entities_with_geometry": "Numero di entità con proprietà geometrica",
-      "num_multi_entity_errors": "Numero di errori da Entità ripetute"
+      "num_multi_entity_errors": "Numero di errori da Entità ripetute",
+      "num_wf_submissions": "Numero di invii con Web Forms",
+      "num_enketo_submissions": "Numero di invii con Enketo"
     }
   },
   "ja": {

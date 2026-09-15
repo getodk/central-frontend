@@ -1636,6 +1636,18 @@
         },
         "num_multi_entity_errors": {
           "string": "Nombre d'erreurs d'entités créées par répétition"
+        },
+        "num_wf_submissions": {
+          "string": "Nombre de soumissions de Web Forms"
+        },
+        "num_enketo_submissions": {
+          "string": "Nombre de soumissions de Enketo"
+        },
+        "num_wf_submission_edits": {
+          "string": "Nombre de soumissions éditées avec Web Forms"
+        },
+        "num_enketo_submission_edits": {
+          "string": "Nombre de soumissions éditées avec Enketo"
         }
       }
     },
@@ -1965,6 +1977,9 @@
       }
     },
     "DatasetOverviewNewProperty": {
+      "newPropertyName": {
+        "string": "Nom de la nouvelle propriété"
+      },
       "title": {
         "string": "Ajouter une Propriété d'Entité",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -1975,14 +1990,6 @@
         },
         "1": {
           "string": "Vous pouvez ajoutez de nouvelles propriétés en téléchargeant un Formulaire qui y fait référence, dans lequel les propriétés sont créées lors de la publication du Formulaire."
-        }
-      },
-      "newPropertyName": {
-        "string": "Nom de la nouvelle propriété"
-      },
-      "problem": {
-        "409_3": {
-          "string": "Une propriété nommée \"{propertyName}\" existe déjà pour cette liste d'Entités."
         }
       }
     },
@@ -2203,10 +2210,6 @@
       }
     },
     "DatasetShow": {
-      "back": {
-        "string": "Retour aux entités du projet",
-        "developer_comment": "This is shown at the top of the page."
-      },
       "infoNav": {
         "connectedForms": {
           "string": "{count, plural, one {Mise à jour par {count} Formulaire} many {Mise à jour par {count} Formulaires} other {Mise à jour par {count} Formulaire(s)}}",
@@ -3064,10 +3067,6 @@
       "title": {
         "string": "Modifier l'utilisateur mobile «{displayName}»",
         "developer_comment": "This is the title at the top of a pop-up for editing an App User. {displayName} is the the name of the App User"
-      },
-      "displayNameLabel": {
-        "string": "Utilisateur mobile",
-        "developer_comment": "Shown as label before the display name of the App User in the edit pop-up."
       }
     },
     "FieldKeyList": {
@@ -4460,16 +4459,6 @@
         }
       }
     },
-    "ProjectCustomPropertiesNew": {
-      "newPropertyName": {
-        "string": "Nom de la nouvelle propriété"
-      },
-      "problem": {
-        "409_3": {
-          "string": "Une propriété nommée \"{propertyName}\" existe déjà pour ce projet."
-        }
-      }
-    },
     "ProjectEdit": {
       "title": {
         "string": "Détails basiques",
@@ -4984,6 +4973,23 @@
         }
       }
     },
+    "PropertyInput": {
+      "invalidName": {
+        "string": "Le nom de la propriété est invalide"
+      },
+      "duplicate": {
+        "title": {
+          "string": "Une propriété avec ce nom existe déjà"
+        },
+        "description": {
+          "string": "Les noms de propriétés doivent être uniques, quelle que soit la casse."
+        }
+      },
+      "tryDifferent": {
+        "string": "Essayez un autre nom.",
+        "developer_comment": "\"Name\" refers to the name of an Entity property."
+      }
+    },
     "PublicLinkCreate": {
       "title": {
         "string": "Créer lien d'accès public",
@@ -5009,10 +5015,6 @@
       "title": {
         "string": "Modifier le lien d'accès public «{displayName}»",
         "developer_comment": "This is the title at the top of a pop-up for editing a Public Access Link. {displayName} is the display name of the Public Link"
-      },
-      "displayNameLabel": {
-        "string": "Lien public",
-        "developer_comment": "Shown as label before the display name of the Public Access Link in the edit pop-up."
       }
     },
     "PublicLinkList": {
@@ -5850,11 +5852,16 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "Filtrez vos entités 🎯 et ODK Web Forms par défaut 🌐",
+        "string": "Importation d'entités simplifiée 📤",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "Contrôlez les entités reçues par chaque utilisateur mobile ou chaque lien public grâce à des règles de filtrage basées sur des propriétés. De plus, ODK Web Forms est maintenant l'expérience par défaut pour les formulaires web, offrant une expérience rapide et intuitive pour la prévisualisation de formulaire, la modification des données et la saisie en ligne."
+        "0": {
+          "string": "Intégrez plus rapidement vos entités dans ODK grâce à un processus de téléchargement CSV plus fluide. Bénéficiez de messages d'erreur et d'avertissements plus clairs, corrigez les problèmes et réessayez, le tout au même endroit."
+        },
+        "1": {
+          "string": "Vous pouvez également créer de nouvelles propriétés directement à partir de votre fichier CSV."
+        }
       }
     }
   },

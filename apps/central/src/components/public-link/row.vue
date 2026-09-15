@@ -197,6 +197,7 @@ export default {
   },
   "it": {
     "action": {
+      "edit": "Modifica il Link con accesso pubblico",
       "revoke": "Revocare"
     },
     "revoked": "Revocato",

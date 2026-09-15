@@ -238,6 +238,7 @@ const onShow = () => {
   },
   "es": {
     "action": {
+      "all": "Todas",
       "apply": "Aplicar"
     }
   },
@@ -249,6 +250,7 @@ const onShow = () => {
   },
   "it": {
     "action": {
+      "all": "Tutto",
       "apply": "Applica"
     }
   },

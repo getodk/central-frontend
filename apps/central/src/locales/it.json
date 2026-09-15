@@ -146,6 +146,7 @@
     }
   },
   "action": {
+    "add": "Aggiungi",
     "cancel": "Annulla",
     "clear": "Cancella",
     "close": "Chiudere",
@@ -197,6 +198,7 @@
     "name": "Nome",
     "newPassword": "Nuova password",
     "oldPassword": "Vecchia password",
+    "passphrase": "Crittografa la password",
     "password": "Password",
     "passwordConfirm": "Nuova password (conferma)",
     "title": "Titolo",
@@ -363,6 +365,7 @@
     "none": "(nessuno)",
     "search": "Cerca",
     "useEnketo": "Modalità di compatibilità con Enketo",
+    "updateInProgress": "Richiesta di aggiornamento in corso",
     "reviewState": "Stato Revisione",
     "status": "Stato",
     "version": "Versione",

@@ -79,10 +79,6 @@ The following meta fields are supported for bottom-level routes:
     However, NotFound requires neither: a user can navigate to NotFound whether
     they are logged in or anonymous.
 
-  - skipAutoLogout (default: false): If `true`, no alert will be displayed when
-    session is about to expire. Also user will be not be redirected to login
-    page when session has expired.
-
   requestData
   -----------
 
@@ -699,7 +695,6 @@ const routesByName = new Map();
     requireAnonymity: false,
     preserveData: [],
     fullWidth: false,
-    skipAutoLogout: false,
     ...meta,
     validateData: meta == null || meta.validateData == null
       ? []

@@ -114,6 +114,11 @@ const toggle = (event) => {
     },
     "created": "Cette propriété a été créée lors d'une tentative de téléchargement précédente.",
     "createdAll": "Toutes les propriétés ont été créées lots d'une tentative de téléchargement précédente."
+  },
+  "it": {
+    "action": {
+      "selectAll": "Seleziona tutto"
+    }
   }
 }
 </i18n>

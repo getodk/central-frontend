@@ -354,7 +354,7 @@
   },
   "action": {
     "add": {
-      "string": "",
+      "string": "Añadir",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "cancel": {
@@ -544,7 +544,7 @@
       "developer_comment": "This is the text of a form field."
     },
     "passphrase": {
-      "string": "",
+      "string": "Contraseña de cifrado",
       "developer_comment": "This is the text of a form field."
     },
     "password": {
@@ -1231,10 +1231,10 @@
     },
     "ActorPropertiesNew": {
       "addProperty": {
-        "string": ""
+        "string": "Añadir propiedad"
       },
       "addPropertyHint": {
-        "string": ""
+        "string": "Introduce un nombre único para la propiedad"
       }
     },
     "ActorPropertiesUpsert": {
@@ -1244,12 +1244,12 @@
           "developer_comment": "{assignEntities} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nassign the right Entities"
         },
         "assignEntities": {
-          "string": "",
+          "string": "asignar las entidades adecuadas",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {assignEntities} is in the following text:\n\nProperties help {assignEntities}, control access, and connect users to the data they need."
         }
       },
       "noProperties": {
-        "string": ""
+        "string": "Aún no se ha añadido ninguna propiedad."
       }
     },
     "AnalyticsForm": {
@@ -1482,10 +1482,10 @@
           "string": "Número de listas de entidades restringidas sólo al propietario"
         },
         "num_custom_user_properties": {
-          "string": ""
+          "string": "Número de propiedades de usuario personalizadas"
         },
         "num_user_property_filtered_datasets": {
-          "string": ""
+          "string": "Número de listas de entidades restringidas por las propiedades del usuario"
         },
         "num_properties": {
           "string": "Número de Propiedades"
@@ -1636,6 +1636,18 @@
         },
         "num_multi_entity_errors": {
           "string": "Número de errores de entidades repetidas"
+        },
+        "num_wf_submissions": {
+          "string": "Número de envíos realizados mediante formularios web"
+        },
+        "num_enketo_submissions": {
+          "string": "Número de envíos con Enketo"
+        },
+        "num_wf_submission_edits": {
+          "string": "Número de modificaciones en los envíos realizadas mediante formularios web"
+        },
+        "num_enketo_submission_edits": {
+          "string": "Número de modificaciones en las respuestas con Enketo"
         }
       }
     },
@@ -1816,7 +1828,7 @@
     "CustomPropsFilter": {
       "action": {
         "all": {
-          "string": "",
+          "string": "Todas",
           "developer_comment": "This is the text of the button in dropdown menu of an actor (app user or public link) \"Properties\" filter, that allows the user to select all app users with all properties (no filter applied)."
         }
       }
@@ -1965,6 +1977,9 @@
       }
     },
     "DatasetOverviewNewProperty": {
+      "newPropertyName": {
+        "string": "Nuevo nombre de propiedad"
+      },
       "title": {
         "string": "Añadir propiedad de entidad",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -1976,20 +1991,12 @@
         "1": {
           "string": "También puede añadir nuevas propiedades cargando un Formulario que haga referencia a ellas, en cuyo caso las propiedades se crean cuando se publica el Formulario."
         }
-      },
-      "newPropertyName": {
-        "string": "Nuevo nombre de propiedad"
-      },
-      "problem": {
-        "409_3": {
-          "string": "Ya existe una propiedad en esta lista de entidades con el nombre “{propertyName}”."
-        }
       }
     },
     "DatasetOwnerOnly": {
       "panel": {
         "title": {
-          "string": "",
+          "string": "Acceso a la lista de entidades",
           "developer_comment": "This is a title shown above a section of the page."
         }
       },
@@ -2012,17 +2019,17 @@
       },
       "filterByProperty": {
         "label": {
-          "string": ""
+          "string": "Filtrar por propiedad"
         },
         "description": {
-          "string": ""
+          "string": "Define las reglas que determinan qué entidades son visibles para los usuarios de la aplicación y en los enlaces públicos, comparando sus propiedades."
         },
         "entityPropertyLabel": {
-          "string": "",
+          "string": "Mostrar solo las entidades en las que",
           "developer_comment": "This text is shown above the access rule filter dropdown. Translators are free not to translate this literally"
         },
         "entityPropertyPlaceholder": {
-          "string": "",
+          "string": "Propiedad de la entidad",
           "developer_comment": "Placeholder text shown on a access rule filter dropdown."
         },
         "userPropertyLabel": {
@@ -2203,10 +2210,6 @@
       }
     },
     "DatasetShow": {
-      "back": {
-        "string": "Back to Project Entities",
-        "developer_comment": "This is shown at the top of the page."
-      },
       "infoNav": {
         "connectedForms": {
           "string": "{count, plural, one {Actualizar por {count} formulario} many {Actualizar por {count} formularios} other {Actualizar por {count} formularios}}",
@@ -3064,10 +3067,6 @@
       "title": {
         "string": "",
         "developer_comment": "This is the title at the top of a pop-up for editing an App User. {displayName} is the the name of the App User"
-      },
-      "displayNameLabel": {
-        "string": "Usuario móvil",
-        "developer_comment": "Shown as label before the display name of the App User in the edit pop-up."
       }
     },
     "FieldKeyList": {
@@ -4460,16 +4459,6 @@
         }
       }
     },
-    "ProjectCustomPropertiesNew": {
-      "newPropertyName": {
-        "string": "Nuevo nombre de propiedad"
-      },
-      "problem": {
-        "409_3": {
-          "string": ""
-        }
-      }
-    },
     "ProjectEdit": {
       "title": {
         "string": "Detalles básicos",
@@ -4984,6 +4973,23 @@
         }
       }
     },
+    "PropertyInput": {
+      "invalidName": {
+        "string": ""
+      },
+      "duplicate": {
+        "title": {
+          "string": ""
+        },
+        "description": {
+          "string": ""
+        }
+      },
+      "tryDifferent": {
+        "string": "",
+        "developer_comment": "\"Name\" refers to the name of an Entity property."
+      }
+    },
     "PublicLinkCreate": {
       "title": {
         "string": "Crear enlace de acceso público",
@@ -5009,10 +5015,6 @@
       "title": {
         "string": "",
         "developer_comment": "This is the title at the top of a pop-up for editing a Public Access Link. {displayName} is the display name of the Public Link"
-      },
-      "displayNameLabel": {
-        "string": "Enlace público",
-        "developer_comment": "Shown as label before the display name of the Public Access Link in the edit pop-up."
       }
     },
     "PublicLinkList": {
@@ -5854,7 +5856,12 @@
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": ""
+        "0": {
+          "string": ""
+        },
+        "1": {
+          "string": ""
+        }
       }
     }
   },

@@ -1,5 +1,17 @@
 # @getodk/xpath
 
+## 1.0.2
+
+### Patch Changes
+
+- 689fa4e: Fixed a bug where using commas for decimal places returned an invalid number.
+- 5c10f08: Improved messages about form definition errors to make them easier to fix
+- 22757ca: Removed rounding from area() and distance() xpath functions.
+- c01c3a9: Fixed a bug where the distance xpath function would error when passed empty input
+- 49bfcb4: Made date formatting error handling consistent.
+- Updated dependencies [654afd3]
+  - @getodk/common@1.1.0
+
 ## 1.0.1
 
 ### Patch Changes

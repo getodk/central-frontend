@@ -610,6 +610,7 @@ watch(() => props.state, (state) => {
     "noEntities": "Pas d'entités à montrer."
   },
   "it": {
+    "newEntities": "Nuove Entità",
     "table": {
       "file": "Dati da importare"
     },

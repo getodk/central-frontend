@@ -27,7 +27,7 @@ except according to the terms contained in the LICENSE file.
             {{ property.name }}
           </td>
           <td :rowspan="property.forms.length || 1" class="col-actions">
-            <button v-if="project.verbs.has('dataset.update')" type="button"
+            <button v-if="project.dataExists && project.verbs.has('dataset.update')" type="button"
               class="delete-button btn btn-default" :aria-label="$t('action.delete')"
               v-tooltip.aria-label @click="showDeleteConfirmation(property.name)">
               <span class="icon-trash"></span>
