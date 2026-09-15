@@ -17,6 +17,9 @@ import type {
 import { createSharedNodeState } from '../node-state/createSharedNodeState.ts';
 import type { ReactiveScope } from '../scope.ts';
 import { createTextRange } from '../text/createTextRange.ts';
+import { TextRange } from '../../../instance/text/TextRange.ts';
+import { TextChunk } from '../../../instance/text/TextChunk.ts';
+import { TextChunkExpression } from '../../../parse/expression/TextChunkExpression.ts';
 
 // prettier-ignore
 type ComputedConditionValidation<
@@ -104,22 +107,19 @@ const createRequiredValidation = (
 
 const createErrorValidation = (
   context: ValidationContext
-): ComputedConditionValidation<'error'> => {
+): OptionalViolation<'error'> => {
   return createMemo(() => {
-    if (context.hasError()) {
+    const error = context.getError();
+    if (error) {
       console.log('HAS ERROR');
       return {
         condition: 'error',
         valid: false,
-        message: null,
+        message: error
       } as const;
     } else {
       console.log('HAS NO ERROR');
-      return {
-        condition: 'error',
-        valid: true,
-        message: null,
-      } as const;
+      return null;
     }
   });
 };
@@ -169,10 +169,10 @@ export const createValidationState = <Factory extends OpaqueReactiveObjectFactor
     const constraintViolation = createComputedViolation(scope, constraint);
     const required = createRequiredValidation(context);
     const requiredViolation = createComputedViolation(scope, required);
-    const error = createErrorValidation(context);
+    const errorViolation = createErrorValidation(context);
 
     const violation = createMemo(() => {
-      return constraintViolation() ?? requiredViolation();
+      return errorViolation() ?? constraintViolation() ?? requiredViolation();
     });
 
     const spec: ValidationStateSpec = {

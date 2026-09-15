@@ -325,12 +325,20 @@ const revealedViolations = computed(() => {
 	if (submitPressed.value) {
 		return violations;
 	}
-	return violations.filter(({ nodeId }) => touchedQuestions.has(nodeId));
+	return violations.filter((violation) => violation.violation.condition === 'error' || touchedQuestions.has(violation.nodeId));
 });
 
 const validationErrorMessage = computed(() => {
 	if (!revealedViolations.value.length) {
 		return '';
+	}
+	const errors = revealedViolations.value
+		.filter(v => v.violation.condition === 'error')
+		.map(v => v.reference + ': ' + v.violation.message)
+		.join(', ');
+	if (errors.length) {
+
+		return `ERRORS: ${errors}`
 	}
 	return t('odk_web_forms.validation.error', { count: revealedViolations.value.length });
 });
