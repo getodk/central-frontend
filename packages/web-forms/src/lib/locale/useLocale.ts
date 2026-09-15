@@ -195,7 +195,6 @@ export const useLocale = (formRef: Ref<RootNode | null>) => {
 
   const applyLocale = (candidates: string[], formBaseLocale?: string) => {
     const newContentLocale = formBaseLocale ?? FALLBACK;
-    document.documentElement.lang = newContentLocale;
     latestRequestedLocale.locale = newContentLocale;
     const primeLocaleKey = findBestLocale(candidates, (lang) => {
       return Object.hasOwn(primeLocales, lang);
@@ -217,6 +216,10 @@ export const useLocale = (formRef: Ref<RootNode | null>) => {
         });
       }
     });
+  };
+
+  const getLanguage = () => {
+    return currentIntl.value.locale;
   };
 
   watch(
@@ -241,10 +244,9 @@ export const useLocale = (formRef: Ref<RootNode | null>) => {
 
   onUnmounted(() => {
     latestRequestedLocale.locale = FALLBACK;
-    document.documentElement.lang = FALLBACK;
   });
 
   const t: Translate = (id, values) => currentIntl.value.formatMessage({ id }, values) as string;
 
-  return { setLanguage, t };
+  return { setLanguage, getLanguage, t };
 };
