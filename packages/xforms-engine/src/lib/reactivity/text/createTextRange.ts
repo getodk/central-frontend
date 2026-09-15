@@ -114,7 +114,7 @@ const createTextChunks = <Role extends TextRole>(
     }
 
     const computed = createComputedExpression(context, chunkExpression)();
-    chunks.push(new TextChunk(context, chunkExpression.source, computed));
+    chunks.push(new TextChunk(context, chunkExpression.source, computed.value));
   });
   return { chunks, mediaSources };
 };

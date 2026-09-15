@@ -140,12 +140,13 @@ export abstract class ValueNode<
     return this.getInstanceValue() === '';
   }
 
+  hasError(): boolean {
+    return this.getError() !== null;
+  }
+
   // InstanceNode
   getChildren(): readonly [] {
     return [];
   }
 
-  hasError(): boolean {
-    return this.getError() !== null;
-  }
 }
