@@ -27,6 +27,7 @@ export type Failure = {
   error: Error;
 };
 
+// TODO this probably deserves to be in its own file
 export type Result<T extends DependentExpressionResultType> = Success<T> | Failure;
 
 type EvaluatedExpression<Type extends DependentExpressionResultType> = ComputedExpressionResults[Type];

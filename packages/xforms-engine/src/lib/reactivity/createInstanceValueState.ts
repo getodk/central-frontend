@@ -91,7 +91,7 @@ const guardDownstreamReadonlyWrites = (
     if (context.isReadonly()) {
       const reference = untrack(() => context.contextReference());
 
-      throw new Error(`Cannot write to readonly field: ${reference}`);
+      throw new Error(`Cannot write to readonly field: ${reference}`); // TODO use setError here?
     }
 
     return baseSetValue(value);
@@ -192,9 +192,11 @@ const createCalculation = (
       const calculated = calculate();
       if (calculated.success) {
         const value = context.decodeInstanceValue(calculated.value);
+        setError(null);
         setRelevantValue(value);
       } else {
         // set error state
+        console.log('caught error', calculated.error);
         setError(calculated.error);
       }
     }

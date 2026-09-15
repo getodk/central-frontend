@@ -69,7 +69,7 @@ export interface ConditionSatisfied<Condition extends ValidationCondition> exten
 export interface ConditionViolation<Condition extends ValidationCondition> extends BaseValidity {
   readonly condition: Condition;
   readonly valid: false;
-  readonly message: ViolationMessage<Condition> | null;
+  readonly message: ViolationMessage<Condition> | string | null;
 }
 
 export type ConditionValidation<Condition extends ValidationCondition> =

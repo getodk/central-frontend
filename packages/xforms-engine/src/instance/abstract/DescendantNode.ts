@@ -77,15 +77,15 @@ export abstract class DescendantNode<
    */
   protected readonly isAttachedDescendant: Accessor<boolean>;
 
-  readonly hasReadonlyAncestor: Accessor<Result<'boolean'>> = () => {
+  readonly hasReadonlyAncestor: Accessor<boolean> = () => {
     const { parent } = this;
 
     return parent.hasReadonlyAncestor() || parent.isReadonly();
   };
 
-  readonly isSelfReadonly: Accessor<Result<'boolean'>>;
+  readonly isSelfReadonly: Accessor<boolean>;
 
-  readonly isReadonly: Accessor<Result<'boolean'>> = () => {
+  readonly isReadonly: Accessor<boolean> = () => {
     if (this.hasReadonlyAncestor()) {
       return true;
     }
@@ -241,15 +241,33 @@ export abstract class DescendantNode<
 
     const { readonly, relevant, required } = definition.bind;
 
-    this.isSelfReadonly = createComputedExpression(this, readonly, {
-      defaultValue: true,
-    });
-    this.isSelfRelevant = createComputedExpression(this, relevant, {
-      defaultValue: false,
-    });
-    this.isRequired = createComputedExpression(this, required, {
-      defaultValue: false,
-    });
+    this.isSelfReadonly = () => {
+      const r: Result<'boolean'> = createComputedExpression(this, readonly, { defaultValue: true })();
+      if (r.success) {
+        return r.value;
+      } else {
+        console.log('ERROR EVALUATING readonly', r.error);
+        return true;
+      }
+    };
+    this.isSelfRelevant = () => {
+      const r: Result<'boolean'> = createComputedExpression(this, relevant, { defaultValue: false })();
+      if (r.success) {
+        return r.value;
+      } else {
+        console.log('ERROR EVALUATING relevant', r.error);
+        return false;
+      }
+    };
+    this.isRequired = () => {
+      const r: Result<'boolean'> = createComputedExpression(this, required, { defaultValue: false })();
+      if (r.success) {
+        return r.value;
+      } else {
+        console.log('ERROR EVALUATING required', r.error);
+        return false;
+      }
+    };
 
     this.valueChangedActions = Array.from(definition.bodyElement?.element.children ?? [])
       .map((node) => {
