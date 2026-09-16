@@ -1,7 +1,7 @@
 import { batch } from 'solid-js';
 import type { RepeatRangeNodeAppearances } from '../../client/repeat/BaseRepeatRangeNode.ts';
 import type { RepeatRangeUncontrolledNode } from '../../client/repeat/RepeatRangeUncontrolledNode.ts';
-import type { AncestorNodeValidationState } from '../../client/validation.ts';
+import type { AncestorNodeValidationState, BlockingViolations } from '../../client/validation.ts';
 import type { XFormsXPathNodeRange } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
 import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import { createAggregatedViolations } from '../../lib/reactivity/validation/createAggregatedViolations.ts';
@@ -36,7 +36,12 @@ export class RepeatRangeUncontrolled
   }
 
   // RepeatRangeUncontrolledNode
-  addInstances(afterIndex = this.getLastIndex(), count = 1): Root {
+  addInstances(afterIndex = this.getLastIndex(), count = 1): BlockingViolations {
+    const violations = this.getViolationsBlockingAdd();
+    if (violations.length > 0) {
+      return violations;
+    }
+
     const definitions = Array(count).fill(this.definition.template);
 
     // Batch the add with the navigation, so the reachability watcher settles once on the final state.
@@ -56,7 +61,25 @@ export class RepeatRangeUncontrolled
       }
     });
 
-    return this.root;
+    return [];
+  }
+
+  private getViolationsBlockingAdd(): BlockingViolations {
+    if (this.isOnCurrentFieldListPage()) {
+      return [];
+    }
+
+    return this.root.getBlockingViolations();
+  }
+
+  private isOnCurrentFieldListPage(): boolean {
+    const { pagination } = this.root;
+    const rangePageId = pagination.getRangePageId(this.nodeId);
+    if (rangePageId == null || pagination.startsOwnPage(this.nodeId)) {
+      return false;
+    }
+
+    return rangePageId === this.root.getCurrentPage()?.nodeId;
   }
 
   /**
