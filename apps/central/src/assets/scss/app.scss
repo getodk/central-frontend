@@ -702,6 +702,39 @@ tr.uncommitted-change { background-color: #ffef67; }
 .label-primary { background-color: $color-action-background; }
 .label-warning { background-color: $color-warning; }
 
+////////////////////////////////////////////////////////////////////////////////
+// TAGS
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 14px;
+  border-radius: 9999px;
+  font-size: 13px;
+  color: #212529;
+
+  &.tag-default {
+    background-color: #DCDCDC;
+  }
+
+  &.tag-warning {
+    background-color: #F9E599;
+  }
+
+  &.tag-success {
+    background-color: #DBFCE0;
+  }
+
+  &.tag-info {
+    background-color: #E3EFF3;
+  }
+
+  &.tag-danger {
+    background-color: #F7B3B3;
+  }
+}
+
 
 
 ////////////////////////////////////////////////////////////////////////////////
