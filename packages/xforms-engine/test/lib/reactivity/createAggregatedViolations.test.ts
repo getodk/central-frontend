@@ -80,7 +80,7 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
   interface SimplifiedViolation {
     readonly condition: ValidationCondition;
     readonly valid: false;
-    readonly message: ViolationMessage<ValidationCondition> | null;
+    readonly message: ViolationMessage<ValidationCondition> | string | null;
   }
 
   interface SimplifiedViolationReference {

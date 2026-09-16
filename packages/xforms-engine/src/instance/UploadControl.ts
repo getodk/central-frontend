@@ -106,7 +106,7 @@ export class UploadControl
     return new this(parent, instanceNode, definition);
   }
 
-  readonly getError: Accessor<string | null>;
+  readonly getError: Accessor<string | null> = () => null; // Uploads aren't computed, so cannot error
   private readonly validation: SharedValidationState;
   private readonly instanceAttachment: InstanceAttachment;
 
@@ -182,7 +182,6 @@ export class UploadControl
     this.validation = createValidationState(this, this.instanceConfig);
     this.attributeState.setAttributes(buildAttributes(this));
     this.instanceState = createValueNodeInstanceState(this);
-    this.getError = () => null; // Uploads aren't computed, so cannot error
   }
 
   // ValidationContext
