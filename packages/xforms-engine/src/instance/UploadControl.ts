@@ -10,6 +10,7 @@ import { UploadValueTypeError } from '../error/UploadValueTypeError.ts';
 import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
 import type { StaticLeafElement } from '../integration/xpath/static-dom/StaticElement.ts';
 import { createValueNodeInstanceState } from '../lib/client-reactivity/instance-state/createValueNodeInstanceState.ts';
+import { createInstanceValueState } from '../lib/reactivity/createInstanceValueState.ts';
 import {
   createAttributeState,
   type AttributeState,
@@ -135,6 +136,9 @@ export class UploadControl
 
   readonly instanceState: InstanceState;
 
+  // Allows a setvalue action from another node to write here, even when this node is readonly.
+  readonly setEncodedValue: (value: string, bypassReadonly?: boolean) => void;
+
   private constructor(
     parent: GeneralParentNode,
     override readonly instanceNode: StaticLeafElement | null,
@@ -146,13 +150,22 @@ export class UploadControl
     this.nodeOptions = definition.bodyElement.options;
     this.maxPixels = definition.bind.maxPixels;
 
-    const instanceAttachment = createInstanceAttachment(this);
+    this.decodeInstanceValue = (value) => value;
+
+    const { valueState: instanceValueState, setValueFromAction } = createInstanceValueState(this);
+    const [getInstanceValue, setInstanceValue] = instanceValueState;
+    const instanceAttachment = createInstanceAttachment(this, instanceValueState);
 
     this.instanceAttachment = instanceAttachment;
-
     this.attributeState = createAttributeState(this.scope);
-    this.decodeInstanceValue = instanceAttachment.decodeInstanceValue;
-    this.getXPathValue = instanceAttachment.getInstanceValue;
+    this.getXPathValue = () => getInstanceValue();
+    this.setEncodedValue = (value: string, bypassReadonly = false) => {
+      if (bypassReadonly) {
+        setValueFromAction(value);
+        return;
+      }
+      setInstanceValue(value);
+    };
 
     const state = createSharedNodeState(
       this.scope,
@@ -168,7 +181,7 @@ export class UploadControl
         valueOptions: null,
         value: instanceAttachment.valueState,
         attributes: this.attributeState.getAttributes,
-        instanceValue: instanceAttachment.getInstanceValue,
+        instanceValue: getInstanceValue,
         attachmentState: instanceAttachment.getState,
         pageBoundary: this.root.pagination.attachLeaf(this),
       },
