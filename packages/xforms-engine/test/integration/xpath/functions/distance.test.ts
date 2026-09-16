@@ -12,7 +12,7 @@ import {
 import { describe, expect, it } from 'vitest';
 import { expectedDistance } from '../../../scenario/answer/ExpectedApproximateUOMAnswer.ts';
 import { Scenario } from '../../../scenario/jr/Scenario.ts';
-import { ANSWER_CALCULATION_ERROR, ANSWER_CONSTRAINT_VIOLATED } from '../../../scenario/jr/validation/ValidateOutcome.ts';
+import { ANSWER_CALCULATION_ERROR } from '../../../scenario/jr/validation/ValidateOutcome.ts';
 
 /**
  * **PORTING NOTES**
@@ -88,20 +88,19 @@ describe('XPath function support: `distance`', () => {
      */
     // JR: distance_throwsForNonPoint
     it('produces an error when the string value is not a valid point', async () => {
-      const scenario = await Scenario.init('string distance', html(
-        head(
-          title('String distance'),
-          model(
-            mainInstance(t('data id="string-distance"',
-              t('distance')
-            )),
-            bind('/data/distance').type('decimal').calculate("distance('foo')")
-          )
-        ),
-        body(
-          input('distance')
+      const scenario = await Scenario.init(
+        'string distance',
+        html(
+          head(
+            title('String distance'),
+            model(
+              mainInstance(t('data id="string-distance"', t('distance'))),
+              bind('/data/distance').type('decimal').calculate("distance('foo')")
+            )
+          ),
+          body(input('distance'))
         )
-      ));
+      );
 
       const validate = scenario.getValidationOutcome();
       expect(validate.failedPrompt).toBe(scenario.indexOf('/data/distance'));
