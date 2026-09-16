@@ -17,22 +17,25 @@ interface ComputedExpressionResults {
   readonly string: string;
 }
 
-export type Success<T extends DependentExpressionResultType> = {
-  success: true;
-  value: ComputedExpressionResults[T];
-};
+export interface Success<T extends DependentExpressionResultType> {
+  readonly success: true;
+  readonly value: ComputedExpressionResults[T];
+}
 
-export type Failure = {
-  success: false;
-  error: Error;
-};
+export interface Failure {
+  readonly success: false;
+  readonly error: Error;
+}
 
 // TODO this probably deserves to be in its own file
-export type Result<T extends DependentExpressionResultType> = Success<T> | Failure;
+export type Result<T extends DependentExpressionResultType> = Failure | Success<T>;
 
-type EvaluatedExpression<Type extends DependentExpressionResultType> = ComputedExpressionResults[Type];
+type EvaluatedExpression<Type extends DependentExpressionResultType> =
+  ComputedExpressionResults[Type];
 
-type ExpressionEvaluator<Type extends DependentExpressionResultType> = (defaultValue?: EvaluatedExpression<Type>) => EvaluatedExpression<Type>;
+type ExpressionEvaluator<Type extends DependentExpressionResultType> = (
+  defaultValue?: EvaluatedExpression<Type>
+) => EvaluatedExpression<Type>;
 
 interface ExpressionEvaluatorOptions {
   get contextNode(): EngineXPathNode;
@@ -107,16 +110,18 @@ interface CreateComputedExpressionOptions<Type extends DependentExpressionResult
   readonly defaultValue?: EvaluatedExpression<Type>;
 }
 
-const computeResult = <Type extends DependentExpressionResultType>(evaluateExpression: ExpressionEvaluator<Type>) => {
+const computeResult = <Type extends DependentExpressionResultType>(
+  evaluateExpression: ExpressionEvaluator<Type>
+) => {
   try {
     return {
       success: true,
-      value: evaluateExpression()
+      value: evaluateExpression(),
     } as Success<Type>;
-  } catch(error) {
+  } catch (error) {
     return {
       success: false,
-      error
+      error,
     } as Failure;
   }
 };
@@ -149,6 +154,7 @@ export const createComputedExpression = <Type extends DependentExpressionResultT
         return computeResult(() => evaluateExpression(defaultValue));
       } catch {
         // likely because it's not yet attached - try again later
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
         return { success: true, value: defaultValue } as Success<Type>;
       }
     });

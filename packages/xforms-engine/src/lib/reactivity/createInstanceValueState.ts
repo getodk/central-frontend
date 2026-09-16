@@ -196,8 +196,6 @@ const createCalculation = (
         setError(null);
         setRelevantValue(value);
       } else {
-        // set error state
-        console.log('caught error', calculated.error);
         setError(calculated.error);
       }
     }

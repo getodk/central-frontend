@@ -5,7 +5,7 @@ import type {
   AnyViolation,
   ConditionSatisfied,
   ConditionValidation,
-  ConditionViolation,
+  ErrorViolation,
   ValidationCondition,
 } from '../../../client/validation.ts';
 import type { ValidationContext } from '../../../instance/internal-api/ValidationContext.ts';
@@ -17,9 +17,6 @@ import type {
 import { createSharedNodeState } from '../node-state/createSharedNodeState.ts';
 import type { ReactiveScope } from '../scope.ts';
 import { createTextRange } from '../text/createTextRange.ts';
-import { TextRange } from '../../../instance/text/TextRange.ts';
-import { TextChunk } from '../../../instance/text/TextChunk.ts';
-import { TextChunkExpression } from '../../../parse/expression/TextChunkExpression.ts';
 
 // prettier-ignore
 type ComputedConditionValidation<
@@ -105,32 +102,25 @@ const createRequiredValidation = (
   });
 };
 
-const createErrorValidation = (
-  context: ValidationContext
-): OptionalViolation<'error'> => {
+const createErrorValidation = (context: ValidationContext): Accessor<ErrorViolation | null> => {
   return createMemo(() => {
     const error = context.getError();
     if (error) {
-      console.log('HAS ERROR');
       return {
         condition: 'error',
         valid: false,
-        message: error
+        message: error,
       } as const;
     } else {
-      console.log('HAS NO ERROR');
       return null;
     }
   });
 };
 
-type OptionalViolation<Condition extends ValidationCondition> =
-  Accessor<ConditionViolation<Condition> | null>;
-
 const createComputedViolation = <Condition extends ValidationCondition>(
   scope: ReactiveScope,
   validateCondition: ComputedConditionValidation<Condition>
-): OptionalViolation<Condition> => {
+): Accessor<AnyViolation | null> => {
   return scope.runTask(() => {
     return createMemo(() => {
       const validation = validateCondition();

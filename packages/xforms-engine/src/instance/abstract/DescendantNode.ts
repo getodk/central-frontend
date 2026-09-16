@@ -13,7 +13,10 @@ import { XFORMS_XPATH_NODE_RANGE_KIND } from '../../integration/xpath/adapter/XF
 import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
 import type { StaticAttribute } from '../../integration/xpath/static-dom/StaticAttribute.ts';
 import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
-import { createComputedExpression, type Result } from '../../lib/reactivity/createComputedExpression.ts';
+import {
+  createComputedExpression,
+  type Result,
+} from '../../lib/reactivity/createComputedExpression.ts';
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
 import type { AnyNodeDefinition } from '../../parse/model/NodeDefinition.ts';
 import type { DescendantNodeInitOptions } from '../children/DescendantNodeInitOptions.ts';
@@ -242,29 +245,32 @@ export abstract class DescendantNode<
     const { readonly, relevant, required } = definition.bind;
 
     this.isSelfReadonly = () => {
-      const r: Result<'boolean'> = createComputedExpression(this, readonly, { defaultValue: true })();
+      const r: Result<'boolean'> = createComputedExpression(this, readonly, {
+        defaultValue: true,
+      })();
       if (r.success) {
         return r.value;
       } else {
-        console.log('ERROR EVALUATING readonly', r.error);
         return true;
       }
     };
     this.isSelfRelevant = () => {
-      const r: Result<'boolean'> = createComputedExpression(this, relevant, { defaultValue: false })();
+      const r: Result<'boolean'> = createComputedExpression(this, relevant, {
+        defaultValue: false,
+      })();
       if (r.success) {
         return r.value;
       } else {
-        console.log('ERROR EVALUATING relevant', r.error);
         return false;
       }
     };
     this.isRequired = () => {
-      const r: Result<'boolean'> = createComputedExpression(this, required, { defaultValue: false })();
+      const r: Result<'boolean'> = createComputedExpression(this, required, {
+        defaultValue: false,
+      })();
       if (r.success) {
         return r.value;
       } else {
-        console.log('ERROR EVALUATING required', r.error);
         return false;
       }
     };

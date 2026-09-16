@@ -163,5 +163,4 @@ export class UploadControl
   retryFetch() {
     this.instanceAttachment.retry();
   }
-
 }
