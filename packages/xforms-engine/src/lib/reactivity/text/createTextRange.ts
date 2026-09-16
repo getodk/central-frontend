@@ -26,7 +26,10 @@ const generateResourceChunk = (context: EvaluationContext, child: Element, type:
     if (isElementNode(grandchild)) {
       const expression = TextChunkExpression.fromOutput(grandchild);
       if (expression) {
-        parts.push(createComputedExpression(context, expression)());
+        const result = createComputedExpression(context, expression)();
+        // TODO set error
+        const part = result.success ? result.value : '';
+        parts.push(part);
       }
     } else if (isTextNode(grandchild)) {
       parts.push(grandchild.data);
@@ -114,7 +117,8 @@ const createTextChunks = <Role extends TextRole>(
     }
 
     const computed = createComputedExpression(context, chunkExpression)();
-    chunks.push(new TextChunk(context, chunkExpression.source, computed.value));
+    const value = computed.success ? computed.value : ''; // TOOD set error
+    chunks.push(new TextChunk(context, chunkExpression.source, value));
   });
   return { chunks, mediaSources };
 };

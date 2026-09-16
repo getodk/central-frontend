@@ -1,6 +1,10 @@
 import { UnreachableError } from '@getodk/common/lib/error/UnreachableError.ts';
 import { getBlobText } from '@getodk/common/lib/web-compat/blob.ts';
-import { type ValidationCondition } from '@getodk/xforms-engine';
+import {
+  type ConstraintViolation,
+  type RequiredViolation,
+  type ValidationCondition,
+} from '@getodk/xforms-engine';
 import { assert, expect } from 'vitest';
 import { ComparableAnswer } from '../../answer/ComparableAnswer.ts';
 import { ExpectedApproximateUOMAnswer } from '../../answer/ExpectedApproximateUOMAnswer.ts';
@@ -139,7 +143,8 @@ export const answerExtensions = extendExpect(expect, {
     assertValueNodeAnswer,
     assertNullableString,
     (actual, expected) => {
-      const { asString = null } = actual.node.validationState.constraint?.message ?? {};
+      const { asString = null } =
+        (actual.node.validationState.constraint as ConstraintViolation)?.message ?? {};
       const pass = asString === expected;
 
       return pass || new InspectableComparisonError(asString, expected, 'to be message');
@@ -150,7 +155,8 @@ export const answerExtensions = extendExpect(expect, {
     assertValueNodeAnswer,
     assertNullableString,
     (actual, expected) => {
-      const { asString = null } = actual.node.validationState.required?.message ?? {};
+      const { asString = null } =
+        (actual.node.validationState.required as RequiredViolation)?.message ?? {};
       const pass = asString === expected;
 
       return pass || new InspectableComparisonError(asString, expected, 'to be message');
@@ -161,7 +167,15 @@ export const answerExtensions = extendExpect(expect, {
     assertValueNodeAnswer,
     assertNullableString,
     (actual, expected) => {
-      const { asString = null } = actual.node.validationState.violation?.message ?? {};
+      const violation = actual.node.validationState.violation;
+      let asString;
+      if (!violation) {
+        asString = null;
+      } else if (violation.condition === 'error') {
+        asString = violation.message;
+      } else {
+        asString = violation.message?.asString;
+      }
       const pass = asString === expected;
 
       return pass || new InspectableComparisonError(asString, expected, 'to be message');
