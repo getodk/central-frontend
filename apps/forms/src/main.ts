@@ -7,7 +7,7 @@ import { webFormsPlugin } from '@getodk/web-forms';
 import Forms from './Forms.vue';
 
 import router from './router';
-import { i18n } from './i18n'
+import { i18n } from './i18n';
 import initSentry from './utils/sentry';
 
 import './assets/style.scss';

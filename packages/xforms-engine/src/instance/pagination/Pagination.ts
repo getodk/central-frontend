@@ -51,6 +51,12 @@ export class Pagination {
     return this.rangePages.get(rangeId) ?? null;
   }
 
+  // A range either starts its own page (it maps to itself) or renders on its field-list host's page.
+  startsOwnPage(repeatRangeId: FormNodeID): boolean {
+    const rendersOnPageId = this.getRangePageId(repeatRangeId);
+    return rendersOnPageId === repeatRangeId;
+  }
+
   /**
    * Count the things that keep this page reachable: its relevant controls, plus any empty repeat whose
    * "add" button sits on it. Zero means the page has nothing to show.
