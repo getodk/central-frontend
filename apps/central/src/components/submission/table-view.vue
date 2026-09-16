@@ -20,14 +20,14 @@ except according to the terms contained in the LICENSE file.
     :filter="!!filter"
     :total-count="pagination.page ? 0 : totalCount"/>
   <!-- @update:page is emitted on size change as well -->
-  <div v-if="pagination.count > 0" class="fixed-pagination-container">
+  <teleport v-if="pagination.count > 0" to="#submission-list-pagination-target">
     <Pagination
       v-model:page="pagination.page" v-model:size="pagination.size"
       :count="pagination.count" :size-options="pageSizeOptions"
       :spinner="odata.awaitingResponse"
       :removed="pagination.removed"
       @update:page="handlePageChange"/>
-  </div>
+  </teleport>
 </template>
 
 <script setup>
