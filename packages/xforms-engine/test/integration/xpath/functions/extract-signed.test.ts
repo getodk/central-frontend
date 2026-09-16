@@ -327,9 +327,7 @@ describe('`extract-signed`', () => {
             head(
               title('extract signed form'),
               model(
-                mainInstance(
-                  t('data id="extract-signed"', t('contents', 'blah'), t('extracted'))
-                ),
+                mainInstance(t('data id="extract-signed"', t('contents', 'blah'), t('extracted'))),
                 bind('/data/extracted').type('string').calculate('extract-signed()')
               )
             ),
