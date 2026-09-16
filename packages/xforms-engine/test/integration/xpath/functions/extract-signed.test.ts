@@ -12,6 +12,7 @@ import {
 import { describe, expect, it } from 'vitest';
 import { stringAnswer } from '../../../scenario/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../../../scenario/jr/Scenario.ts';
+import { ANSWER_CALCULATION_ERROR } from '../../../scenario/jr/validation/ValidateOutcome.ts';
 
 /**
  * **PORTING NOTES**
@@ -320,25 +321,25 @@ describe('`extract-signed`', () => {
        * Result type) and less specific error assertion.
        */
       it('[produces an error] throws exception', async () => {
-        const init = async () => {
-          return Scenario.init(
-            'extract signed form',
-            html(
-              head(
-                title('extract signed form'),
-                model(
-                  mainInstance(
-                    t('data id="extract-signed"', t('contents', 'blah'), t('extracted'))
-                  ),
-                  bind('/data/extracted').type('string').calculate('extract-signed()')
-                )
-              ),
-              body(input('/data/contents'))
-            )
-          );
-        };
+        const scenario = await Scenario.init(
+          'extract signed form',
+          html(
+            head(
+              title('extract signed form'),
+              model(
+                mainInstance(
+                  t('data id="extract-signed"', t('contents', 'blah'), t('extracted'))
+                ),
+                bind('/data/extracted').type('string').calculate('extract-signed()')
+              )
+            ),
+            body(input('/data/contents'))
+          )
+        );
 
-        await expect(init).rejects.toThrowError();
+        const validate = scenario.getValidationOutcome();
+        expect(validate.failedPrompt).toBe(scenario.indexOf('/data/extracted'));
+        expect(validate.outcome).toBe(ANSWER_CALCULATION_ERROR);
       });
     });
 
