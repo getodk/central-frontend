@@ -15,8 +15,6 @@ export const createNoteReadonlyThunk = (
     throw new Error('Expected a static readonly expression');
   }
 
-  let result = true;
-
   if (import.meta.env.DEV) {
     const { expression } = readonly;
     const dependencyReferences = resolveDependencyNodesets(reference, expression);
@@ -33,5 +31,5 @@ export const createNoteReadonlyThunk = (
     }
   }
 
-  return () => result;
+  return () => true;
 };

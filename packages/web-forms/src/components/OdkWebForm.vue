@@ -34,6 +34,7 @@ import type {
 	MonolithicInstancePayload,
 	InstanceDefaults,
 	PreloadProperties,
+	ErrorViolation,
 } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
@@ -306,23 +307,35 @@ provide(TOUCHED_QUESTIONS, touchedQuestions);
 // It returns violations for questions the user has seen.
 const revealedViolations = computed(() => {
 	const violations = state.value.root?.validationState.violations ?? [];
+	const nonErrorViolations = violations.filter((violation) => violation.violation.condition !== 'error');
 	if (submitPressed.value) {
-		return violations;
+		return nonErrorViolations;
 	}
-	return violations.filter((violation) => violation.violation.condition === 'error' || touchedQuestions.has(violation.nodeId));
+	return nonErrorViolations.filter((violation) => touchedQuestions.has(violation.nodeId));
+});
+
+const errorViolations = computed(() => {
+	const violations = state.value.root?.validationState.violations ?? [];
+	const errors = violations.filter((violation) => violation.violation.condition === 'error');
+	const grouped = new Map<string, string>();
+	errors.forEach(error => {
+		const key = (error.violation as ErrorViolation).message;
+		if (!key) {
+			return;
+		}
+		let refs = grouped.get(key) ?? '';
+		if (refs.length) {
+			refs += ', ';
+		}
+		refs += error.reference;
+		grouped.set(key, refs);
+	});
+	return grouped;
 });
 
 const validationErrorMessage = computed(() => {
 	if (!revealedViolations.value.length) {
 		return '';
-	}
-	const errors = revealedViolations.value
-		.filter(v => v.violation.condition === 'error')
-		.map(v => v.reference + ': ' + v.violation.message)
-		.join(', ');
-	if (errors.length) {
-
-		return `ERRORS: ${errors}`
 	}
 	return t('odk_web_forms.validation.error', { count: revealedViolations.value.length });
 });
@@ -331,7 +344,11 @@ const showValidationError = computed(() => {
 	if (errorBannerDismissed.value) {
 		return false;
 	}
-	return !!(validationErrorMessage.value.length || geolocationErrorMessage.value?.length);
+	return !!(
+		validationErrorMessage.value.length ??
+		geolocationErrorMessage.value?.length ??
+		errorViolations.value.size
+	);
 });
 
 onUnmounted(() => {
@@ -381,6 +398,14 @@ onUnmounted(() => {
 			>
 				<IconSVG name="mdiAlertCircleOutline" variant="error" />
 				<ul class="form-error-text-wrap">
+					<li v-if="errorViolations.size">
+						<span>TRANSLATE ME: Errors in the form</span>
+						<ul>
+							<li v-for="[message, error] in errorViolations" :key="message">
+								{{ message }}: {{ error }}
+							</li>
+						</ul>
+					</li>
 					<li v-if="validationErrorMessage?.length">
 						{{ validationErrorMessage }}
 					</li>
