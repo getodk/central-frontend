@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="form-submissions">
     <loading :state="keys.initiallyLoading"/>
-    <page-heading
+    <page-heading v-if="form.dataExists"
       :title="deleted ? $t('deletedTitle', { formName: form.nameOrId }) : form.nameOrId"
       :help-text="deleted ? $t('purgeDescription') : null">
       <template v-if="deletedSubmissionCount.dataExists">
@@ -27,11 +27,9 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-plus-circle"></span>{{ $t('action.createSubmission') }}
       </enketo-fill>
     </page-heading>
-    <template v-if="keys.dataExists">
-      <submission-list ref="submissionList" :project-id="projectId"
-        :xml-form-id="xmlFormId" :deleted="deleted" :encrypted="hasEncryption"
-        @fetch-keys="fetchKeys" @fetch-deleted-count="fetchDeletedCount"/>
-    </template>
+    <submission-list v-show="keys.dataExists" ref="submissionList" :project-id="projectId"
+      :xml-form-id="xmlFormId" :deleted="deleted" :encrypted="hasEncryption"
+      @fetch-keys="fetchKeys" @fetch-deleted-count="fetchDeletedCount"/>
   </div>
 </template>
 

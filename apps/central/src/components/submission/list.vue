@@ -72,7 +72,7 @@ except according to the terms contained in the LICENSE file.
         </template>
       </page-section>
 
-      <div v-if="odata.dataExists && odata.count > 0"
+      <div v-show="odata.dataExists"
         :class="draft ? 'pagination-container' : 'fixed-pagination-container'">
         <div id="submission-list-pagination-target"></div>
         <div class="pagination-container-right-side">

@@ -11,48 +11,38 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="dataset-entities">
-    <page-section>
-      <template #heading>
-        <div class="dataset-entities-heading-row">
-          <button v-if="project.dataExists && project.permits('entity.create')"
-            id="dataset-entities-upload-button" type="button"
-            class="btn btn-primary" @click="upload.show()">
-            <span class="icon-upload"></span>{{ $t('upload') }}
-          </button>
-          <button v-if="project.dataExists && project.permits('entity.create')"
-            id="dataset-entities-create-button" type="button"
-            class="btn btn-primary" @click="create.show()">
-            <span class="icon-plus-circle"></span>{{ $t('newEntity') }}
-          </button>
-          <template v-if="deletedEntityCount.dataExists">
-            <button v-if="canDelete && (deletedEntityCount.value > 0 || deleted)" type="button"
-              class="btn toggle-deleted-entities" :class="{ 'btn-danger': deleted, 'btn-link': !deleted }"
-              @click="toggleDeleted">
-              <span class="icon-trash"></span>{{ $tcn('action.toggleDeletedEntities', deletedEntityCount.value) }}
-              <span v-show="deleted" class="icon-close"></span>
-            </button>
-          </template>
-          <p v-show="deleted" class="purge-description">{{ $t('purgeDescription') }}</p>
-          <div class="dataset-entities-heading-row-right-side">
-            <odata-data-access :analyze-disabled="deleted"
-              :analyze-disabled-message="$t('analyzeDisabledDeletedData')"
-              @analyze="analyze.show()"/>
-            <!-- download button is teleported here -->
-          </div>
-        </div>
+    <page-heading
+      :title="deleted ? $t('deletedTitle', { datasetName }) : datasetName"
+      :help-text="deleted ? $t('purgeDescription') : null">
+      <template v-if="deletedEntityCount.dataExists">
+        <button v-if="canDelete && (deletedEntityCount.value > 0 || deleted)" type="button"
+          class="btn toggle-deleted-entities" :class="{ 'btn-danger': deleted, 'btn-link': !deleted }"
+          @click="toggleDeleted">
+          <span class="icon-trash"></span>{{ $tcn('action.toggleDeletedEntities', deletedEntityCount.value) }}
+          <span v-show="deleted" class="icon-close"></span>
+        </button>
       </template>
-      <template #body>
-        <entity-list ref="list" :project-id="projectId"
+      <button v-if="project.dataExists && project.permits('entity.create')"
+        id="dataset-entities-upload-button" type="button"
+        class="btn btn-primary" @click="upload.show()">
+        <span class="icon-upload"></span>{{ $t('upload') }}
+      </button>
+      <button v-if="project.dataExists && project.permits('entity.create')"
+        id="dataset-entities-create-button" type="button"
+        class="btn btn-primary" @click="create.show()">
+        <span class="icon-plus-circle"></span>{{ $t('newEntity') }}
+      </button>
+    </page-heading>
+    <template v-if="dataset.dataExists">
+      <entity-list ref="list" :project-id="projectId"
         :dataset-name="datasetName" :deleted="deleted"
         @fetch-deleted-count="fetchDeletedCount"/>
-      </template>
-    </page-section>
+    </template>
 
     <entity-upload v-if="dataset.dataExists" v-bind="upload"
       @hide="upload.hide()" @success="afterUpload"/>
     <entity-create v-if="dataset.dataExists" v-bind="create"
       @hide="create.hide()" @success="afterCreate"/>
-    <odata-analyze v-bind="analyze" :odata-url="odataUrl" @hide="analyze.hide()"/>
   </div>
 </template>
 
@@ -62,9 +52,7 @@ import { useRouter } from 'vue-router';
 
 import EntityCreate from '../entity/create.vue';
 import EntityList from '../entity/list.vue';
-import OdataAnalyze from '../odata/analyze.vue';
-import OdataDataAccess from '../odata/data-access.vue';
-import PageSection from '../page/section.vue';
+import PageHeading from '../page/heading.vue';
 import useEntities from '../../request-data/entities';
 import useQueryRef from '../../composables/query-ref';
 
@@ -78,11 +66,9 @@ export default {
   name: 'DatasetEntities',
   components: {
     EntityCreate,
-    OdataAnalyze,
-    OdataDataAccess,
     EntityList,
     EntityUpload: defineAsyncComponent(loadAsync('EntityUpload')),
-    PageSection
+    PageHeading
   },
   inject: ['alert'],
   provide() {
@@ -126,15 +112,8 @@ export default {
   data() {
     return {
       upload: modalData('EntityUpload'),
-      create: modalData(),
-      analyze: modalData()
+      create: modalData()
     };
-  },
-  computed: {
-    odataUrl() {
-      const path = apiPaths.odataEntitiesSvc(this.projectId, this.datasetName);
-      return `${window.location.origin}${path}`;
-    }
   },
   created() {
     if (!this.deleted) this.fetchDeletedCount();
@@ -190,30 +169,6 @@ export default {
 
     .icon-close { margin-left: 3px; }
   }
-
-  .purge-description {
-    display: inline;
-    position: relative;
-    left: 12px;
-    font-size: 14px;
-    margin-bottom: 0;
-  }
-
-  .dataset-entities-heading-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    .dataset-entities-heading-row-right-side {
-      display: flex;
-      margin-left: auto;
-      gap: 10px;
-    }
-  }
-
-  #odata-data-access {
-    font-size: initial;
-  }
 }
 </style>
 
@@ -228,10 +183,10 @@ export default {
       "create": "Entity has been successfully created."
     },
     "purgeDescription": "Entities are deleted after 30 days in the Trash",
+    "deletedTitle": "{datasetName} (Deleted entities)",
     "action": {
       "toggleDeletedEntities": "{count} deleted Entity | {count} deleted Entities"
-    },
-    "analyzeDisabledDeletedData": "OData access is unavailable for deleted Entities",
+    }
   }
 }
 </i18n>
