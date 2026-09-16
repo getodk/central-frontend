@@ -344,10 +344,10 @@ const showValidationError = computed(() => {
 	if (errorBannerDismissed.value) {
 		return false;
 	}
-	return !!(
-		validationErrorMessage.value.length ??
-		geolocationErrorMessage.value?.length ??
-		errorViolations.value.size
+	return (
+		!!validationErrorMessage.value.length ||
+		!!geolocationErrorMessage.value?.length ||
+		!!errorViolations.value.size
 	);
 });
 

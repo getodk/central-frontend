@@ -106,7 +106,6 @@ export class UploadControl
     return new this(parent, instanceNode, definition);
   }
 
-  readonly getError: Accessor<string | null> = () => null; // Uploads aren't computed, so cannot error
   private readonly validation: SharedValidationState;
   private readonly instanceAttachment: InstanceAttachment;
 
@@ -191,6 +190,10 @@ export class UploadControl
 
   isBlank(): boolean {
     return this.getXPathValue() === '';
+  }
+
+  getError(): string | null {
+    return null;
   }
 
   // InstanceNode
