@@ -244,36 +244,46 @@ export abstract class DescendantNode<
 
     const { readonly, relevant, required } = definition.bind;
 
-    this.isSelfReadonly = () => {
-      const r: Result<'boolean'> = createComputedExpression(this, readonly, {
-        defaultValue: true,
-      })();
-      if (r.success) {
-        return r.value;
-      } else {
-        return true;
-      }
-    };
-    this.isSelfRelevant = () => {
-      const r: Result<'boolean'> = createComputedExpression(this, relevant, {
-        defaultValue: false,
-      })();
-      if (r.success) {
-        return r.value;
-      } else {
-        return false;
-      }
-    };
-    this.isRequired = () => {
-      const r: Result<'boolean'> = createComputedExpression(this, required, {
-        defaultValue: false,
-      })();
-      if (r.success) {
-        return r.value;
-      } else {
-        return false;
-      }
-    };
+    // TODO this pattern is ugly... instead maybe pass `setError` in to createComputedExpression?
+    this.isSelfReadonly = this.scope.runTask(() => {
+      return createMemo(() => {
+        const r: Result<'boolean'> = createComputedExpression(this, readonly, {
+          defaultValue: true,
+        })();
+        if (r.success) {
+          return r.value;
+        } else {
+          // TODO record error
+          return true;
+        }
+      });
+    });
+    this.isSelfRelevant = this.scope.runTask(() => {
+      return createMemo(() => {
+        const r: Result<'boolean'> = createComputedExpression(this, relevant, {
+          defaultValue: false,
+        })();
+        if (r.success) {
+          return r.value;
+        } else {
+          // TODO record error
+          return false;
+        }
+      });
+    });
+    this.isRequired = this.scope.runTask(() => {
+      return createMemo(() => {
+        const r: Result<'boolean'> = createComputedExpression(this, required, {
+          defaultValue: false,
+        })();
+        if (r.success) {
+          return r.value;
+        } else {
+          // TODO record error
+          return false;
+        }
+      });
+    });
 
     this.valueChangedActions = Array.from(definition.bodyElement?.element.children ?? [])
       .map((node) => {
