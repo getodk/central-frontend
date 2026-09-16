@@ -26,6 +26,7 @@ describe('DatasetEntities', () => {
   describe('OData modal', () => {
     beforeEach(() => {
       testData.extendedDatasets.createPast(1, { name: 'trees' });
+      testData.extendedEntities.createPast(1);
     });
 
     it('toggles the modal', () =>

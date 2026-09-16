@@ -20,14 +20,14 @@ except according to the terms contained in the LICENSE file.
     :filter="!!filter"
     :total-count="pagination.page ? 0 : totalCount"/>
   <!-- @update:page is emitted on size change as well -->
-  <teleport v-if="pagination.count > 0" to="#submission-list-pagination-target">
+  <teleport-if-exists v-if="pagination.count > 0" to="#submission-list-pagination-target">
     <Pagination
       v-model:page="pagination.page" v-model:size="pagination.size"
       :count="pagination.count" :size-options="pageSizeOptions"
       :spinner="odata.awaitingResponse"
       :removed="pagination.removed"
       @update:page="handlePageChange"/>
-  </teleport>
+  </teleport-if-exists>
 </template>
 
 <script setup>
@@ -36,6 +36,7 @@ import { computed, reactive, useTemplateRef, watch } from 'vue';
 import OdataLoadingMessage from '../odata-loading-message.vue';
 import Pagination from '../pagination.vue';
 import SubmissionTable from './table.vue';
+import TeleportIfExists from '../teleport-if-exists.vue';
 import usePaginationQueryRef from '../../composables/pagination-query-ref';
 
 import { apiPaths } from '../../util/request';
