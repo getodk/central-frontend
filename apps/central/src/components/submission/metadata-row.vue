@@ -31,10 +31,10 @@ except according to the terms contained in the LICENSE file.
     <td v-if="!draft && !deleted">
       <div class="col-content">
         <span class="state">
-          <template v-if="missingAttachment">
+          <span v-if="missingAttachment" class="tag tag-danger">
             <span class="icon-circle-o"></span>
             <span>{{ $t('submission.missingAttachment') }}</span>
-          </template>
+          </span>
           <submission-review-state v-else
             :value="submission.__system.reviewState" align/>
         </span>
