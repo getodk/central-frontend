@@ -31,18 +31,12 @@ except according to the terms contained in the LICENSE file.
     <td v-if="!draft && !deleted">
       <div class="col-content">
         <span class="state">
-          <template v-if="missingAttachment">
+          <span v-if="missingAttachment" class="tag tag-danger">
             <span class="icon-circle-o"></span>
             <span>{{ $t('submission.missingAttachment') }}</span>
-          </template>
+          </span>
           <submission-review-state v-else
             :value="submission.__system.reviewState" align/>
-        </span>
-        <span class="edits">
-          <template v-if="submission.__system.edits !== 0">
-            <span class="icon-pencil"></span>
-            <span>{{ $n(submission.__system.edits, 'default') }}</span>
-          </template>
         </span>
       </div>
     </td>
@@ -115,19 +109,11 @@ export default {
     margin-right: 15px;
 
     .icon-circle-o {
-      color: $color-warning;
       margin-left: 1px;
       margin-right: #{$margin-right-icon + 1px};
     }
 
     .icon-pencil { color: #777; }
-  }
-  .edits {
-    color: #777;
-    margin-left: auto;
-    width: 41px;
-
-    .icon-pencil { margin-right: 5px; }
   }
   .col-deleted-at { color: $color-danger; }
 }
