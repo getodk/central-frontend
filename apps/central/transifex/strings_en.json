@@ -1859,6 +1859,9 @@
       "purgeDescription": {
         "string": "Entities are deleted after 30 days in the Trash"
       },
+      "deletedTitle": {
+        "string": "{datasetName} (Deleted entities)"
+      },
       "action": {
         "toggleDeletedEntities": {
           "string": "{count, plural, one {{count} deleted Entity} other {{count} deleted Entities}}",

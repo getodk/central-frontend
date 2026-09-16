@@ -23,30 +23,42 @@ except according to the terms contained in the LICENSE file.
         <radio-field v-if="dataset.dataExists && dataset.hasGeometry"
           v-model="dataView" :options="viewOptions" :disabled="deleted"
           :disabled-message="$t('mapDisabled')" button-appearance/>
-        <teleport-if-exists v-if="odataEntities.dataExists" to=".dataset-entities-heading-row-right-side">
-          <entity-download-button :odata-filter="deleted ? null : odataFilter"
-          :search-term="deleted ? null : searchTerm" :view-as="deleted ? null : viewAs"
-          :disabled="deleted"
-          v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"/>
-        </teleport-if-exists>
       </div>
-      <table-refresh-bar :odata="odataEntities"
-        :refreshing="refreshing" @refresh-click="refresh"/>
+
       <p v-show="emptyMessage" class="empty-table-message">
         {{ emptyMessage }}
       </p>
 
-      <entity-table-view v-if="dataView === 'table'" ref="view"
-        v-model:all-selected="allSelected" :deleted="deleted"
-        :filter="odataFilter" :search-term="searchTerm" :view-as="viewAs"
-        :awaiting-responses="awaitingResponses"
-        @selection-changed="handleSelectionChange"
-        @clear-selection="clearSelectedEntities"
-        @update="showUpdate" @resolve="showResolve" @delete="showDelete"
-        @restore="showRestore"/>
-      <entity-map-view v-else ref="view" :filter="odataFilter"
-        :search-term="searchTerm" :view-as="viewAs" :awaiting-responses="awaitingResponses"
-        @update="showUpdate" @resolve="showResolve" @delete="showDelete"/>
+      <page-section>
+        <template #body>
+          <entity-table-view v-if="dataView === 'table'" ref="view"
+            v-model:all-selected="allSelected" :deleted="deleted"
+            :filter="odataFilter" :search-term="searchTerm" :view-as="viewAs"
+            :awaiting-responses="awaitingResponses"
+            @selection-changed="handleSelectionChange"
+            @clear-selection="clearSelectedEntities"
+            @update="showUpdate" @resolve="showResolve" @delete="showDelete"
+            @restore="showRestore"/>
+          <entity-map-view v-else ref="view" :filter="odataFilter"
+            :search-term="searchTerm" :view-as="viewAs" :awaiting-responses="awaitingResponses"
+            @update="showUpdate" @resolve="showResolve" @delete="showDelete"/>
+        </template>
+      </page-section>
+
+      <div v-if="odataEntities.dataExists && odataEntities.count > 0"
+        class="fixed-pagination-container">
+        <div id="entity-list-pagination-target"></div>
+        <div class="pagination-container-right-side">
+          <data-refresh-info :refreshing="refreshing" :odata="odataEntities" @refresh-click="refresh"/>
+          <odata-data-access :analyze-disabled="deleted"
+            :analyze-disabled-message="analyzeDisabledMessage"
+            @analyze="analyzeModal.show()"/>
+          <entity-download-button :odata-filter="deleted ? null : odataFilter"
+            :search-term="deleted ? null : searchTerm" :view-as="deleted ? null : viewAs"
+            :disabled="deleted"
+            v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"/>
+        </div>
+      </div>
     </disable-container>
 
     <entity-update v-bind="update" :geometry-disabled="dataView === 'map'"
@@ -68,13 +80,17 @@ except according to the terms contained in the LICENSE file.
           <spinner :state="bulkOperationInProgress"/>
         </button>
     </action-bar>
+    <odata-analyze v-bind="analyzeModal" :odata-url="odataUrl"
+      @hide="analyzeModal.hide()"/>
   </div>
 </template>
 
 <script>
-import { watch } from 'vue';
+import { computed, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import ActionBar from '../action-bar.vue';
+import DataRefreshInfo from '../data-refresh-info.vue';
 import DisableContainer from '../disable-container.vue';
 import EntityDownloadButton from './download-button.vue';
 import EntityDelete from './delete.vue';
@@ -84,9 +100,10 @@ import EntityFilters from './filters.vue';
 import EntityTableView from './table-view.vue';
 import EntityUpdate from './update.vue';
 import EntityResolve from './resolve.vue';
+import OdataAnalyze from '../odata/analyze.vue';
+import OdataDataAccess from '../odata/data-access.vue';
+import PageSection from '../page/section.vue';
 import RadioField from '../radio-field.vue';
-import TableRefreshBar from '../table-refresh-bar.vue';
-import TeleportIfExists from '../teleport-if-exists.vue';
 import SearchTextbox from '../search-textbox.vue';
 import Spinner from '../spinner.vue';
 
@@ -107,6 +124,7 @@ export default {
   name: 'EntityList',
   components: {
     ActionBar,
+    DataRefreshInfo,
     DisableContainer,
     EntityDelete,
     EntityDownloadButton,
@@ -116,11 +134,12 @@ export default {
     EntityRestore,
     EntityTableView,
     EntityUpdate,
+    OdataAnalyze,
+    OdataDataAccess,
+    PageSection,
     RadioField,
     SearchTextbox,
-    Spinner,
-    TableRefreshBar,
-    TeleportIfExists
+    Spinner
   },
   inject: ['alert', 'container'],
   props: {
@@ -138,11 +157,16 @@ export default {
     }
   },
   emits: ['fetch-deleted-count'],
-  setup() {
+  setup(props) {
     // The dataset request object is how we get access to the
     // dataset properties for the columns.
     const { dataset, deletedEntityCount, odataEntities, entityCreators } = useRequestData();
     const { fieldKeys } = useProject();
+
+    const { t } = useI18n();
+
+    const analyzeDisabledMessage = computed(() =>
+      (props.deleted ? t('analyzeDisabledDeletedData') : null));
 
     // Array of conflict statuses, where a conflict status is represented as a
     // boolean
@@ -206,7 +230,8 @@ export default {
       dataset, deletedEntityCount, odataEntities, entityCreators, fieldKeys,
       searchTerm, creatorIds, creationDateRange, conflict, viewAs,
       dataView, viewOptions,
-      request
+      request,
+      analyzeDisabledMessage
     };
   },
   data() {
@@ -231,7 +256,8 @@ export default {
       selectedEntities: new Set(),
       bulkOperationInProgress: false,
 
-      allSelected: false
+      allSelected: false,
+      analyzeModal: modalData()
     };
   },
   computed: {
@@ -281,6 +307,10 @@ export default {
     },
     actionBarState() {
       return this.selectedEntities.size > 0 && !this.alert.state && !this.container.openModal.state;
+    },
+    odataUrl() {
+      const path = apiPaths.odataEntitiesSvc(this.projectId, this.datasetName);
+      return `${window.location.origin}${path}`;
     }
   },
   watch: {
@@ -589,6 +619,10 @@ export default {
   // Make sure that there is enough space for the DateRangePicker when it is
   // open.
   min-height: 375px;
+
+  .page-section {
+    margin-bottom: 60px;
+  }
 }
 
 #entity-list-actions {
@@ -634,7 +668,9 @@ export default {
     "actionBar": {
       "message": "{count} Entity selected | {count} Entities selected"
     },
-    "bulkOpInProgress": "Bulk operation in progress"
+    "bulkOpInProgress": "Bulk operation in progress",
+    // @transifexKey component.DatasetEntities.analyzeDisabledDeletedData
+    "analyzeDisabledDeletedData": "OData access is unavailable for deleted Entities"
   }
 }
 </i18n>
