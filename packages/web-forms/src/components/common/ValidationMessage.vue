@@ -38,8 +38,13 @@ const defaultMessage = computed(() => {
 <template>
 	<div :class="{ 'validation-placeholder': addPlaceholder }">
 		<span v-show="showMessage" class="validation-message">
-			<template v-if="violation?.message && violation?.condition !== 'error'">
-				<MarkdownBlock v-for="elem in violation.message.formatted" :key="elem.id" :elem="elem" />
+			<template v-if="violation?.message">
+				<template v-if="violation?.condition === 'error'">
+					<span>{{ violation.message }}</span>
+				</template>
+				<template v-else>
+					<MarkdownBlock v-for="elem in violation.message.formatted" :key="elem.id" :elem="elem" />
+				</template>
 			</template>
 			<template v-else-if="defaultMessage">{{ defaultMessage }}</template>
 		</span>

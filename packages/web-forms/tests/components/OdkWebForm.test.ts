@@ -343,13 +343,15 @@ describe('OdkWebForm', () => {
 
       await flushPromises();
 
-      const formLoadFailureDialog = component.get('.form-load-failure-dialog');
+      const formLoadErrorMessage = component.get('.form-error-message');
 
-      expect(formLoadFailureDialog.isVisible()).toBe(true);
+      expect(formLoadErrorMessage.isVisible()).toBe(true);
 
-      const message = formLoadFailureDialog.get('.message');
+      const message = formLoadErrorMessage.get('.form-error-text-wrap > li > ul > li');
 
-      expect(message.text()).toMatch(/\bnope\b/);
+      expect(message.text()).toEqual(
+        'Unknown function in form definition: "nope": /root/first-question'
+      );
     });
   });
 
