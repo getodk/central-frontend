@@ -584,7 +584,12 @@ export class Scenario {
       throw new Error('Cannot remove repeat instance: repeat range is engine controlled');
     }
 
-    repeatRange.addInstances();
+    const violations = repeatRange.addInstances();
+    if (violations.length > 0) {
+      throw new Error(
+        `Cannot create new repeat: blocked by violations on the current page: ${reference}`
+      );
+    }
 
     const instances = repeatRange.currentState.children;
     const instance = instances[instances.length - 1]!;

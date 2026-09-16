@@ -8,7 +8,7 @@ import RadioButton from '@getodk/web-forms/components/common/RadioButton.vue';
 import SearchableDropdown from '@getodk/web-forms/components/common/SearchableDropdown.vue';
 import ValidationMessage from '@getodk/web-forms/components/common/ValidationMessage.vue';
 import ControlText from '@getodk/web-forms/components/form-elements/ControlText.vue';
-import { getCurrentPageViolations } from '@getodk/web-forms/lib/pagination/pagination.ts';
+import { useRevealViolations } from '@getodk/web-forms/lib/useRevealViolations.ts';
 import type { SelectNode } from '@getodk/xforms-engine';
 import { MODES } from '@getodk/web-forms/components/common/map/getModeConfig.ts';
 import { computed, ref, watchEffect } from 'vue';
@@ -30,13 +30,15 @@ const savedFeatureValue = computed(() => {
 	return props.question.currentState.valueOptions.find((option) => option.value === value);
 });
 
+const revealViolations = useRevealViolations();
+
 const advanceIfQuick = (question: SelectNode) => {
 	const { appearances } = question;
 	const isQuick = appearances.quick || appearances.quickcompact;
-	const pageViolations = getCurrentPageViolations(question.root);
 
-	if (isQuick && !appearances.likert && pageViolations.length === 0) {
-		question.root.nextPage();
+	if (isQuick && !appearances.likert) {
+		const violations = question.root.nextPage();
+		revealViolations(violations);
 	}
 };
 

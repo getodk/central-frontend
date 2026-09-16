@@ -183,7 +183,7 @@ describe('OdkWebForm', () => {
     expect(displayedVersion.text()).toEqual(`v${packageJson.version}`);
   });
 
-  describe('invalid questions block navigation to the next page', () => {
+  describe('invalid questions block leaving the page', () => {
     const mountPagedForm = async () => {
       const component = mountComponent(await getFormXml('pagination-19-required.xml'));
       await flushPromises();
@@ -256,6 +256,51 @@ describe('OdkWebForm', () => {
 
       expectOnPage(component, 'What is your age?');
       expectQuestionHighlight(component, true);
+    });
+
+    it('refuses to add a repeat instance and shows the error, then adds once resolved', async () => {
+      const component = mountComponent(await getFormXml('pagination-21-repeat-required.xml'));
+      await flushPromises();
+
+      expectErrorBanner(component, null);
+      expect(component.findAll('.question-container').length).toBe(1);
+
+      await component.get('.button-add-instance').trigger('click');
+
+      expect(component.findAll('.question-container').length).toBe(1);
+      expectErrorBanner(component, '1 question with error');
+      expectQuestionHighlight(component, true);
+
+      await answerCurrentQuestion(component, 'Ada');
+      expectErrorBanner(component, null);
+
+      await component.get('.button-add-instance').trigger('click');
+
+      // The new instance's page shows a blank name; the filled one is a page behind
+      expectErrorBanner(component, null);
+      expect(component.get<HTMLInputElement>('input.p-inputtext').element.value).toBe('');
+
+      await clickBack(component);
+      expect(component.get<HTMLInputElement>('input.p-inputtext').element.value).toBe('Ada');
+    });
+
+    it('saves the quick select answer but stays on the page and shows the error', async () => {
+      const component = mountComponent(await getFormXml('pagination-20-quick-fieldlist.xml'));
+      await flushPromises();
+
+      expectErrorBanner(component, null);
+
+      await component.get('input[id$="_mango"]').trigger('click');
+
+      expectOnPage(component, 'Favorite fruit?');
+      expectErrorBanner(component, '1 question with error');
+
+      await answerCurrentQuestion(component, 'It is sweet');
+      expectErrorBanner(component, null);
+
+      await component.get('input[id$="_cherry"]').trigger('click');
+
+      expectOnPage(component, 'Any comment?');
     });
   });
 

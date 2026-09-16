@@ -10,6 +10,7 @@ import {
 	FORM_MEDIA_CACHE,
 	FORM_OPTIONS,
 	IS_FORM_EDIT_MODE,
+	REVEAL_VIOLATIONS,
 	SUBMIT_PRESSED,
 	TOUCHED_QUESTIONS,
 } from '@getodk/web-forms/lib/constants/injection-keys.ts';
@@ -17,8 +18,8 @@ import type { FormStateSuccessResult } from '@getodk/web-forms/lib/init/form-sta
 import { initializeFormState } from '@getodk/web-forms/lib/init/initialize-form-state.ts';
 import { loadFormState } from '@getodk/web-forms/lib/init/load-form-state';
 import type { EditInstanceOptions, FormOptions } from '@getodk/web-forms/lib/init/load-form-state.ts';
-import { getCurrentPageViolations } from '@getodk/web-forms/lib/pagination/pagination.ts';
 import { useNavigationTarget } from '@getodk/web-forms/lib/useNavigationTarget.ts';
+import type { RevealViolations } from '@getodk/web-forms/lib/useRevealViolations.ts';
 import { updateSubmittedFormState } from '@getodk/web-forms/lib/init/update-submitted-form-state.ts';
 import { geolocationService } from '@getodk/web-forms/lib/services/geolocationService.ts';
 import { useLocale } from '@getodk/web-forms/lib/locale/useLocale.ts';
@@ -299,10 +300,8 @@ const handleSubmit = (currentState: FormStateSuccessResult) => {
 	}
 };
 
-const handleNext = (currentState: FormStateSuccessResult) => {
-	const violations = getCurrentPageViolations(currentState.root);
+const revealViolations: RevealViolations = (violations) => {
 	if (!violations.length) {
-		currentState.root.nextPage();
 		return;
 	}
 
@@ -311,8 +310,14 @@ const handleNext = (currentState: FormStateSuccessResult) => {
 	navigateToNode(violations[0]?.nodeId);
 };
 
+const handleNext = (currentState: FormStateSuccessResult) => {
+	const violations = currentState.root.nextPage();
+	revealViolations(violations);
+};
+
 provide(SUBMIT_PRESSED, submitPressed);
 provide(TOUCHED_QUESTIONS, touchedQuestions);
+provide(REVEAL_VIOLATIONS, revealViolations);
 
 // It returns violations for questions the user has seen.
 const revealedViolations = computed(() => {

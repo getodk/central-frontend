@@ -18,9 +18,6 @@ const violationReference = (node: AnyValueNode): DescendantNodeViolationReferenc
 
   return {
     nodeId,
-    get node() {
-      return node;
-    },
     get reference() {
       return node.currentState.reference;
     },
