@@ -1861,7 +1861,7 @@
       },
       "action": {
         "toggleDeletedEntities": {
-          "string": "{count, plural, one {{count} deleted Entity} other {{count} deleted Entities}}",
+          "string": "Show deleted",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
@@ -4072,7 +4072,7 @@
       },
       "action": {
         "toggleDeletedSubmissions": {
-          "string": "{count, plural, one {{count} deleted Submission} other {{count} deleted Submissions}}",
+          "string": "Show deleted",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }

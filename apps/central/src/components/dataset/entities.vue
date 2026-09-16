@@ -24,14 +24,11 @@ except according to the terms contained in the LICENSE file.
             class="btn btn-primary" @click="create.show()">
             <span class="icon-plus-circle"></span>{{ $t('newEntity') }}
           </button>
-          <template v-if="deletedEntityCount.dataExists">
-            <button v-if="canDelete && (deletedEntityCount.value > 0 || deleted)" type="button"
-              class="btn toggle-deleted-entities" :class="{ 'btn-danger': deleted, 'btn-link': !deleted }"
-              @click="toggleDeleted">
-              <span class="icon-trash"></span>{{ $tcn('action.toggleDeletedEntities', deletedEntityCount.value) }}
-              <span v-show="deleted" class="icon-close"></span>
-            </button>
-          </template>
+          <toggle-switch v-if="deletedEntityCount.dataExists && canDelete && (deletedEntityCount.value > 0 || deleted)"
+            v-model="deleted" class="toggle-deleted-entities">
+            {{ $t('action.toggleDeletedEntities') }}
+            <span class="badge">{{ deletedEntityCount.value }}</span>
+          </toggle-switch>
           <p v-show="deleted" class="purge-description">{{ $t('purgeDescription') }}</p>
           <div class="dataset-entities-heading-row-right-side">
             <odata-data-access :analyze-disabled="deleted"
@@ -65,6 +62,7 @@ import EntityList from '../entity/list.vue';
 import OdataAnalyze from '../odata/analyze.vue';
 import OdataDataAccess from '../odata/data-access.vue';
 import PageSection from '../page/section.vue';
+import ToggleSwitch from '../toggle-switch.vue';
 import useEntities from '../../request-data/entities';
 import useQueryRef from '../../composables/query-ref';
 
@@ -82,7 +80,8 @@ export default {
     OdataDataAccess,
     EntityList,
     EntityUpload: defineAsyncComponent(loadAsync('EntityUpload')),
-    PageSection
+    PageSection,
+    ToggleSwitch
   },
   inject: ['alert'],
   provide() {
@@ -168,10 +167,6 @@ export default {
         ),
         clear: false,
       }).catch(noop);
-    },
-    toggleDeleted() {
-      const { path } = this.$route;
-      this.$router.push(this.deleted ? path : `${path}?deleted=true`);
     }
   }
 };
@@ -183,12 +178,13 @@ export default {
 #dataset-entities {
   .toggle-deleted-entities {
     margin-left: 8px;
+    margin-bottom: 0;
 
-    &.btn-link {
-      color: $color-danger;
+    .badge {
+      background-color: $color-action-light;
+      color: $color-text;
+      font-weight: normal;
     }
-
-    .icon-close { margin-left: 3px; }
   }
 
   .purge-description {
@@ -229,7 +225,7 @@ export default {
     },
     "purgeDescription": "Entities are deleted after 30 days in the Trash",
     "action": {
-      "toggleDeletedEntities": "{count} deleted Entity | {count} deleted Entities"
+      "toggleDeletedEntities": "Show deleted"
     },
     "analyzeDisabledDeletedData": "OData access is unavailable for deleted Entities",
   }
