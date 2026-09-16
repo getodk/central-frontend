@@ -15,7 +15,10 @@ import {
   upload,
 } from '@getodk/common/test-utils/xform-dsl/index.ts';
 import type { XFormsElement } from '@getodk/common/test-utils/xform-dsl/XFormsElement.ts';
-import { JRResourceURL, type JRResourceURLString, } from '@getodk/common/jr-resources/JRResourceURL.ts';
+import {
+  JRResourceURL,
+  type JRResourceURLString,
+} from '@getodk/common/jr-resources/JRResourceURL.ts';
 import type { UploadNode } from '@getodk/xforms-engine';
 import { constants as ENGINE_CONSTANTS } from '@getodk/xforms-engine';
 import { afterEach, assert, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -121,7 +124,7 @@ describe('Instance attachments with calculate and setvalue', () => {
       photo = getUploadNode(scenario, '/data/photo');
     });
 
-    it('resolves a jr:// reference to the form attachment and serializes it without an upload', async () => {
+    it('resolves a jr:// reference and serializes it without an upload', async () => {
       expect(photo.currentState.instanceValue).toBe('');
       expect(photo.currentState.value).toBeNull();
       expect(photo.currentState.attachmentState.loading).toBe(false);
@@ -222,7 +225,7 @@ describe('Instance attachments with calculate and setvalue', () => {
       expect((await getPayloadAttachments(edited)).size).toBe(0);
     });
 
-    it('reports a loading error for a missing form attachment and recovers on retry', async () => {
+    it('reports a loading error for missing media and recovers on retry', async () => {
       resourceService.reset();
 
       scenario.answer('/data/animal', 'koala');
