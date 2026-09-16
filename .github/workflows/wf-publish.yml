@@ -20,10 +20,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: ./.github/actions/node-cache
+      - uses: actions/setup-node@v6
         with:
-          mode: restore
+          node-version-file: package.json
+          cache: 'npm'
           registry-url: 'https://registry.npmjs.org'
+
+      - run: 'npm ci --no-audit'
 
       - name: Build packages
         run: npm run build

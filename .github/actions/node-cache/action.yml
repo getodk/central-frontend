@@ -1,14 +1,9 @@
 name: Node cache
-description: >
-  Save or restore two caches, one with the installed npm packages, one with the build output
-  Falls back to npm ci if the install cache is missing.
+description: Save or restore two caches, one with the installed npm packages, one with the build output
 inputs:
   mode:
     description: either 'save' or 'restore'
     required: true
-  registry-url:
-    description: define registry-url in npm-rc; required for publishing
-    required: false
 
 runs:
   using: 'composite'
@@ -28,7 +23,6 @@ runs:
     id: setup-node
     with:
       node-version-file: package.json
-      registry-url: ${{ inputs.registry-url }}
 
   # Computing the keys in one place keeps the save and restore steps below in sync
   - id: keys
@@ -68,15 +62,10 @@ runs:
 
   - if: ${{ inputs.mode == 'restore' }}
     uses: 'actions/cache/restore@v6'
-    id: cache-install
     with:
       path: |
         node_modules
         apps/*/node_modules
         packages/*/node_modules
       key: ${{ steps.keys.outputs.install }}
-
-  - name: 'Install packages (when cache missed)'
-    shell: sh
-    if: ${{ inputs.mode == 'restore' && steps.cache-install.outputs.cache-hit != 'true' }}
-    run: npm ci --no-audit
+      fail-on-cache-miss: true
