@@ -2,7 +2,8 @@ import type { BodyClassList } from '../parse/body/BodyDefinition.ts';
 import type { RootDefinition } from '../parse/model/RootDefinition.ts';
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from './FormLanguage.ts';
-import type { GeneralChildNode } from './hierarchy.ts';
+import type { AnyControlNode, GeneralChildNode } from './hierarchy.ts';
+import type { RepeatRangeUncontrolledNode } from './repeat/RepeatRangeUncontrolledNode.ts';
 import type { FormNodeID, PageBoundary } from './identity.ts';
 import type {
   ChunkedInstancePayload,
@@ -13,7 +14,7 @@ import type {
   InstancePayloadOptions,
   InstancePayloadType,
 } from './serialization/InstancePayloadOptions.ts';
-import type { AncestorNodeValidationState } from './validation.ts';
+import type { AncestorNodeValidationState, BlockingViolations } from './validation.ts';
 
 export interface RootNodeState extends BaseNodeState {
   /**
@@ -92,8 +93,11 @@ export interface RootNode extends BaseNode {
    */
   setCurrentPage(page: PageBoundary): PageBoundary | null;
 
-  // Moves to the next page. Does nothing when {@link RootNodeState.hasNextPage} is `false`.
-  nextPage(): void;
+  // Whether the node's page is the current page. Always `true` on a non-paginated form.
+  isNodeInPage(node: AnyControlNode | RepeatRangeUncontrolledNode): boolean;
+
+  // Moves to the next page, unless the current page has violations, then it stays and returns them.
+  nextPage(): BlockingViolations;
 
   // Moves to the previous page. Does nothing when {@link RootNodeState.hasPreviousPage} is `false`.
   previousPage(): void;

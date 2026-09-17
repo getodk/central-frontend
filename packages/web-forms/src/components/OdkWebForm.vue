@@ -10,6 +10,7 @@ import {
 	FORM_MEDIA_CACHE,
 	FORM_OPTIONS,
 	IS_FORM_EDIT_MODE,
+	REVEAL_VIOLATIONS,
 	SUBMIT_PRESSED,
 	TOUCHED_QUESTIONS,
 } from '@getodk/web-forms/lib/constants/injection-keys.ts';
@@ -17,8 +18,8 @@ import type { FormStateSuccessResult } from '@getodk/web-forms/lib/init/form-sta
 import { initializeFormState } from '@getodk/web-forms/lib/init/initialize-form-state.ts';
 import { loadFormState } from '@getodk/web-forms/lib/init/load-form-state';
 import type { EditInstanceOptions, FormOptions } from '@getodk/web-forms/lib/init/load-form-state.ts';
-import { getCurrentPageViolations } from '@getodk/web-forms/lib/pagination/pagination.ts';
 import { useNavigationTarget } from '@getodk/web-forms/lib/useNavigationTarget.ts';
+import type { RevealViolations } from '@getodk/web-forms/lib/useRevealViolations.ts';
 import { updateSubmittedFormState } from '@getodk/web-forms/lib/init/update-submitted-form-state.ts';
 import { geolocationService } from '@getodk/web-forms/lib/services/geolocationService.ts';
 import { useLocale } from '@getodk/web-forms/lib/locale/useLocale.ts';
@@ -112,6 +113,7 @@ const hostSubmissionResultCallbackFactory = (
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- evidently a type must be used for this to be assigned to a name (which we use!); as an interface, it won't satisfy the `Record` constraint of `defineEmits`.
 type OdkWebFormEmits = {
 	loaded: [],
+	languageSelected: [language: string],
 	submit: [submissionPayload: MonolithicInstancePayload, callback: HostSubmissionResultCallback];
 	submitChunked: [
 		submissionPayload: ChunkedInstancePayload,
@@ -224,9 +226,19 @@ const errorBannerDismissed = ref(false);
 const geolocationErrorMessage = ref<string | null>(null);
 const isFormEditMode = ref(false);
 provide(IS_FORM_EDIT_MODE, readonly(isFormEditMode));
-const { setLanguage, t } = useLocale(computed(() => state.value.root));
+const { setLanguage, getLanguage, t } = useLocale(computed(() => state.value.root));
 provide(TRANSLATE, t);
 const { navigateToFirstViolation, navigateToNode } = useNavigationTarget(() => state.value.root);
+
+if (isEmitSubscribed('onLanguageSelected')) {
+	watch(
+		() => getLanguage(),
+		(selected) => {
+			emit('languageSelected', selected);
+		},
+		{ immediate: true }
+	);
+}
 
 onErrorCaptured(err => {
 	runtimeError.value = FormInitializationError.from(err);
@@ -288,10 +300,8 @@ const handleSubmit = (currentState: FormStateSuccessResult) => {
 	}
 };
 
-const handleNext = (currentState: FormStateSuccessResult) => {
-	const violations = getCurrentPageViolations(currentState.root);
+const revealViolations: RevealViolations = (violations) => {
 	if (!violations.length) {
-		currentState.root.nextPage();
 		return;
 	}
 
@@ -300,8 +310,14 @@ const handleNext = (currentState: FormStateSuccessResult) => {
 	navigateToNode(violations[0]?.nodeId);
 };
 
+const handleNext = (currentState: FormStateSuccessResult) => {
+	const violations = currentState.root.nextPage();
+	revealViolations(violations);
+};
+
 provide(SUBMIT_PRESSED, submitPressed);
 provide(TOUCHED_QUESTIONS, touchedQuestions);
+provide(REVEAL_VIOLATIONS, revealViolations);
 
 // It returns violations for questions the user has seen.
 const revealedViolations = computed(() => {
