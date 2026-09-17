@@ -35,7 +35,6 @@ import type {
 	MonolithicInstancePayload,
 	InstanceDefaults,
 	PreloadProperties,
-	ErrorViolation,
 } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
@@ -332,19 +331,19 @@ const revealedViolations = computed(() => {
 
 const errorViolations = computed(() => {
 	const violations = state.value.root?.validationState.violations ?? [];
-	const errors = violations.filter((violation) => violation.violation.condition === 'error');
-	const grouped = new Map<string, string>();
-	errors.forEach(error => {
-		const key = (error.violation as ErrorViolation).message;
+	const grouped = new Map<string, string[]>();
+	violations.forEach(error => {
+		const key = error.violation.condition === 'error' && error.violation.message;
 		if (!key) {
 			return;
 		}
-		let refs = grouped.get(key) ?? '';
-		if (refs.length) {
-			refs += ', ';
+		let fieldReference = error.reference;
+		if (fieldReference.startsWith('/data/')) {
+			fieldReference = fieldReference.replace('/data/', '');
 		}
-		refs += error.reference;
-		grouped.set(key, refs);
+		const fieldReferences = grouped.get(key) ?? [];
+		fieldReferences.push(fieldReference);
+		grouped.set(key, fieldReferences);
 	});
 	return grouped;
 });
@@ -414,13 +413,12 @@ onUnmounted(() => {
 			>
 				<IconSVG name="mdiAlertCircleOutline" variant="error" />
 				<ul class="form-error-text-wrap">
-					<li v-if="errorViolations.size">
-						<span>TRANSLATE ME: Errors in the form</span>
-						<ul>
-							<li v-for="[message, error] in errorViolations" :key="message">
-								{{ message }}: {{ error }}
-							</li>
-						</ul>
+					<li v-for="[message, references] in errorViolations" :key="message">
+						{{ t('odk_web_forms.evaluation.error', {
+							message,
+							fields: references.join(', '),
+							count: references.length
+						}) }}
 					</li>
 					<li v-if="validationErrorMessage?.length">
 						{{ validationErrorMessage }}
