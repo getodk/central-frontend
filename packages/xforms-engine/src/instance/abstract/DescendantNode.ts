@@ -10,13 +10,10 @@ import type {
   XFormsXPathPrimaryInstanceDescendantNodeKind,
 } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
 import { XFORMS_XPATH_NODE_RANGE_KIND } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
-import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
+import type { EngineXPathEvaluator, Result } from '../../integration/xpath/EngineXPathEvaluator.ts';
 import type { StaticAttribute } from '../../integration/xpath/static-dom/StaticAttribute.ts';
 import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
-import {
-  createComputedExpression,
-  type Result,
-} from '../../lib/reactivity/createComputedExpression.ts';
+import { createComputedExpression } from '../../lib/reactivity/createComputedExpression.ts';
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
 import type { AnyNodeDefinition } from '../../parse/model/NodeDefinition.ts';
 import type { DescendantNodeInitOptions } from '../children/DescendantNodeInitOptions.ts';

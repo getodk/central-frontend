@@ -11,12 +11,14 @@ import type { SelectControl } from '../../instance/SelectControl.ts';
 import { TextChunk } from '../../instance/text/TextChunk.ts';
 import { TextRange } from '../../instance/text/TextRange.ts';
 import type { EngineXPathNode } from '../../integration/xpath/adapter/kind.ts';
-import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
+import type { EngineXPathEvaluator, Result } from '../../integration/xpath/EngineXPathEvaluator.ts';
 import type { ItemDefinition } from '../../parse/body/control/ItemDefinition.ts';
 import type { ItemsetDefinition } from '../../parse/body/control/ItemsetDefinition.ts';
-import { createComputedExpression, type Result } from './createComputedExpression.ts';
+import { createComputedExpression } from './createComputedExpression.ts';
 import type { ReactiveScope } from './scope.ts';
 import { createTextRange } from './text/createTextRange.ts';
+import { createInstanceErrorState } from './createInstanceErrorState.ts';
+import type { SimpleAtomicStateSetter } from './types.ts';
 
 type ItemCollectionControl = RankControl | SelectControl;
 type DerivedItemLabel = ClientTextRange<'item-label'>;
@@ -68,6 +70,8 @@ class ItemsetItemEvaluationContext implements EvaluationContext {
   readonly evaluator: EngineXPathEvaluator;
   readonly contextReference: Accessor<string>;
   readonly getActiveLanguage: Accessor<ActiveLanguage>;
+  readonly errorState: Accessor<Error | null>;
+  readonly setErrorState: SimpleAtomicStateSetter<Error | null>;
 
   constructor(
     control: ItemCollectionControl,
@@ -78,6 +82,17 @@ class ItemsetItemEvaluationContext implements EvaluationContext {
     this.evaluator = control.evaluator;
     this.contextReference = control.contextReference;
     this.getActiveLanguage = control.getActiveLanguage;
+    const [getError, setError] = createInstanceErrorState(this);
+    this.errorState = getError;
+    this.setErrorState = setError;
+  }
+
+  getError(): string | null {
+    return this.errorState()?.message ?? null;
+  }
+
+  setError(error: Error | null) {
+    this.setErrorState(error);
   }
 }
 
