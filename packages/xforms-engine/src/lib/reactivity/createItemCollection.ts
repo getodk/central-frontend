@@ -107,9 +107,10 @@ const createItemsetItemLabel = (
     return createMemo(() => {
       const result = itemValue();
       if (result.success) {
+        context.setError(null);
         return derivedItemLabel(context, result.value);
       }
-      // TODO set error
+      context.setError(result.error);
       return derivedItemLabel(context, '');
     });
   }
@@ -143,9 +144,10 @@ const createCycleGuardedItemNodes = (
   const itemNodes = createMemo((previous?: EngineXPathNode[]) => {
     const result = evaluateNodes();
     if (!result.success) {
-      // TODO set error
+      control.setError(result.error);
       return previous ?? [];
     }
+    control.setError(null);
     const { value } = result;
     if (previous === undefined) {
       return value;
@@ -212,16 +214,24 @@ const createItemset = (
 
     return createMemo(() => {
       return itemsetItems().map((item) => {
-        const result = item.value();
-        const value = result.success ? result.value : ''; // TODO set error
+        const valueResult = item.value();
+        control.setError(null);
+        if (!valueResult.success) {
+          control.setError(valueResult.error);
+        }
+        const value = valueResult.success ? valueResult.value : '';
+        const properties = item.properties.map(([propLabel, propValue]) => {
+          const propResult = propValue();
+          if (!propResult.success) {
+            control.setError(propResult.error);
+          }
+          const pv = propResult.success ? propResult.value : '';
+          return [propLabel, pv] as [string, string];
+        });
         return {
           label: item.label(),
           value,
-          properties: item.properties.map(([propLabel, propValue]) => {
-            const propResult = propValue();
-            const pv = propResult.success ? propResult.value : ''; // TODO set error
-            return [propLabel, pv] as [string, string];
-          }),
+          properties,
         };
       });
     });

@@ -92,8 +92,8 @@ const guardDownstreamReadonlyWrites = (
   const setValue: SimpleAtomicStateSetter<string> = (value) => {
     if (context.isReadonly()) {
       const reference = untrack(() => context.contextReference());
-
-      throw new Error(`Cannot write to readonly field: ${reference}`); // TODO use setError here?
+      context.setError(new Error(`Cannot write to readonly field: ${reference}`));
+      return value;
     }
 
     return baseSetValue(value);
@@ -156,13 +156,15 @@ const referencesCurrentNode = (context: ValueContext, ref: string): boolean => {
     context.setError(nodes.error);
     return false;
   }
-  context.setError(null);
   if (nodes.value.length > 1) {
-    // TODO setError instead of throwing
-    throw new Error(
-      'You are trying to target a repeated field. Currently you may only target a field in a specific repeat instance. XPath nodeset has more than one node.'
+    context.setError(
+      new Error(
+        'You are trying to target a repeated field. Currently you may only target a field in a specific repeat instance. XPath nodeset has more than one node.'
+      )
     );
+    return false;
   }
+  context.setError(null);
   return nodes.value.includes(context.contextNode);
 };
 
