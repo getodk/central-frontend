@@ -192,10 +192,6 @@ export class UploadControl
     return this.getXPathValue() === '';
   }
 
-  getError(): string | null {
-    return null;
-  }
-
   // InstanceNode
   getChildren(): readonly [] {
     return [];

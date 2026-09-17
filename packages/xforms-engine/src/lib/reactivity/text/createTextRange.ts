@@ -78,12 +78,17 @@ const getChunkExpressions = <Role extends TextRole>(
     // only translations have 'nodes' chunks
     return definition.chunks as Array<TextChunkExpression<'string'>>;
   }
-  const itextId = context.evaluator.evaluateString(definition.chunks[0].toString()!, {
+  const result = context.evaluator.evaluateString(definition.chunks[0].toString()!, {
     contextNode: context.contextNode,
   });
-  const lang = context.getActiveLanguage();
-  const elem = definition.form.model.getItextElement(lang, itextId);
-  return elem ? generateChunksForTranslation(context, elem) : [];
+  if (result.success) {
+    context.setError(null);
+    const lang = context.getActiveLanguage();
+    const elem = definition.form.model.getItextElement(lang, result.value);
+    return elem ? generateChunksForTranslation(context, elem) : [];
+  }
+  context.setError(result.error);
+  return [];
 };
 
 /**
