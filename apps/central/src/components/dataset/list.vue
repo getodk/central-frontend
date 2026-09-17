@@ -11,28 +11,25 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="dataset-list">
-    <page-section>
-      <template #heading>
-        <span>{{ $t('resource.entityLists') }}</span>
-        <button v-if="project.dataExists && project.permits('dataset.create')"
-          id="dataset-list-new-button" type="button" class="btn btn-primary"
-          @click="newDatasetModal.show()">
-          <span class="icon-plus-circle"></span>{{ $t('new') }}
-        </button>
+    <page-heading :title="$t('resource.entityLists')">
+      <template #help>
+        <p>{{ $t('heading[0]') }}</p>
+        <p>
+          <span>{{ $t('heading[1]') }}</span>
+          <sentence-separator/>
+          <i18n-t keypath="moreInfo.clickHere.full">
+            <template #clickHere>
+              <doc-link to="central-entities">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
+            </template>
+          </i18n-t>
+        </p>
       </template>
-    </page-section>
-    <div class="page-body-heading">
-      <p>{{ $t('heading[0]') }}</p>
-      <p>
-        <span>{{ $t('heading[1]') }}</span>
-        <sentence-separator/>
-        <i18n-t keypath="moreInfo.clickHere.full">
-          <template #clickHere>
-            <doc-link to="central-entities">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
-          </template>
-        </i18n-t>
-      </p>
-    </div>
+      <button v-if="project.dataExists && project.permits('dataset.create')"
+        id="dataset-list-new-button" type="button" class="btn btn-primary"
+        @click="newDatasetModal.show()">
+        <span class="icon-plus-circle"></span>{{ $t('new') }}
+      </button>
+    </page-heading>
     <dataset-table/>
     <dataset-trash-table/>
     <loading :state="datasets.initiallyLoading"/>
@@ -47,7 +44,7 @@ import DatasetTable from './table.vue';
 import DatasetTrashTable from './trash-table.vue';
 import DocLink from '../doc-link.vue';
 import Loading from '../loading.vue';
-import PageSection from '../page/section.vue';
+import PageHeading from '../page/heading.vue';
 import SentenceSeparator from '../sentence-separator.vue';
 
 import useRoutes from '../../composables/routes';

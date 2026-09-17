@@ -11,7 +11,18 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <div class="heading-with-button">
+    <page-heading :title="$t('projectShow.tab.formAccess')">
+      <template #help>
+        <p>
+          <span>{{ $t('heading[0]') }}</span>
+          <sentence-separator/>
+          <i18n-t keypath="moreInfo.clickHere.full">
+            <template #clickHere>
+              <doc-link to="central-projects/#managing-form-access">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
+            </template>
+          </i18n-t>
+        </p>
+      </template>
       <button id="project-form-access-save-button" type="button"
         class="btn btn-primary"
         :class="{ 'uncommitted-change': changeCount !== 0 }"
@@ -19,16 +30,7 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-floppy-o"></span>{{ $t('action.save') }}
         <spinner :state="awaitingResponse"/>
       </button>
-      <p>
-        <span>{{ $t('heading[0]') }}</span>
-        <sentence-separator/>
-        <i18n-t keypath="moreInfo.clickHere.full">
-          <template #clickHere>
-            <doc-link to="central-projects/#managing-form-access">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
-          </template>
-        </i18n-t>
-      </p>
-    </div>
+    </page-heading>
 
     <loading :state="initiallyLoading"/>
     <template v-if="dataExists">
@@ -49,6 +51,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import DocLink from '../doc-link.vue';
 import Loading from '../loading.vue';
+import PageHeading from '../page/heading.vue';
 import ProjectFormAccessStates from './form-access/states.vue';
 import ProjectFormAccessTable from './form-access/table.vue';
 import SentenceSeparator from '../sentence-separator.vue';
@@ -65,6 +68,7 @@ export default {
   components: {
     DocLink,
     Loading,
+    PageHeading,
     ProjectFormAccessStates,
     ProjectFormAccessTable,
     SentenceSeparator,

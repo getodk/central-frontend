@@ -2,12 +2,15 @@
   <div class="page-heading">
     <div class="page-heading-left">
       <h1 class="page-heading-title">{{ title }}</h1>
-      <button v-if="helpText" type="button" class="page-heading-help"
+      <button v-if="helpText || slots.help" type="button" class="page-heading-help"
         @click="toggleHelp">
         <span class="icon-question-circle-o"></span>
       </button>
       <popover :target="popoverTarget" @hide="hideHelp">
-        <div class="page-heading-help-content">{{ helpText }}</div>
+        <div class="page-heading-help-content">
+          <template v-if="helpText">{{ helpText }}</template>
+          <slot v-else name="help" :hide="hideHelp"></slot>
+        </div>
       </popover>
     </div>
     <div class="page-heading-right">
@@ -17,7 +20,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, useSlots } from 'vue';
 import Popover from '../popover.vue';
 
 defineOptions({
@@ -35,6 +38,7 @@ defineProps({
   }
 });
 
+const slots = useSlots();
 const popoverTarget = ref(null);
 
 const toggleHelp = (event) => {

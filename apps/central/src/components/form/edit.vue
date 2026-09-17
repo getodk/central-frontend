@@ -11,6 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="form-edit">
+    <page-heading v-if="form.dataExists" :title="$t('formHead.tab.editForm')"/>
     <loading :state="formDraft.initiallyLoading"/>
     <template v-if="formDraft.dataExists">
       <form-edit-web-form v-if="formDraft.isDefined() && form.publishedAt == null"/>
@@ -50,6 +51,7 @@ import FormEditDraftControls from './edit/draft-controls.vue';
 import FormEditPublishedVersion from './edit/published-version.vue';
 import FormEditWebForm from './edit/web-form.vue';
 import Loading from '../loading.vue';
+import PageHeading from '../page/heading.vue';
 
 import useRoutes from '../../composables/routes';
 import { apiPaths } from '../../util/request';

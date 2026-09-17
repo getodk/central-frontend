@@ -1756,7 +1756,7 @@
     },
     "ConfigLogin": {
       "title": {
-        "string": "Login page"
+        "string": "Login page customization"
       }
     },
     "ConfigLoginEdit": {
@@ -3823,16 +3823,6 @@
       }
     },
     "FormList": {
-      "title": {
-        "string": "Forms",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
-      "action": {
-        "create": {
-          "string": "New",
-          "developer_comment": "This is the text of a button that is used to create a new Form."
-        }
-      },
       "emptyTable": {
         "string": "There are no Forms to show."
       },
@@ -4767,6 +4757,14 @@
       "introduction": {
         "0": {
           "string": "Projects group Forms and App Users together to make them easier to organize and manage, both on this website and on your data collection device."
+        }
+      }
+    },
+    "ProjectOverview": {
+      "action": {
+        "create": {
+          "string": "New",
+          "developer_comment": "This is the text of a button that is used to create a new Form."
         }
       }
     },

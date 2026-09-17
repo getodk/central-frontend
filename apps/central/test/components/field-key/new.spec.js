@@ -170,7 +170,7 @@ describe('FieldKeyNew', () => {
 
     const create = (series) => series
       .request(async (app) => {
-        await app.get('.heading-with-button button').trigger('click');
+        await app.get('#field-key-list-create-button').trigger('click');
         const modal = app.get('#field-key-new');
         await modal.get('input').setValue('input', 'My App User');
         return modal.get('form').trigger('submit');

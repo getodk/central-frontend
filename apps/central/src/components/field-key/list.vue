@@ -11,25 +11,28 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <div class="heading-with-button">
+    <page-heading :title="$t('resource.appUsers')">
+      <template #help>
+        <i18n-t tag="p" keypath="heading[0].full">
+          <template #collect>
+            <doc-link to="collect-intro/">ODK Collect</doc-link>
+          </template>
+          <template #formAccess>
+            <router-link :to="projectPath('form-access')">{{ $t('heading[0].formAccess') }}</router-link>
+          </template>
+        </i18n-t>
+        <i18n-t tag="p" keypath="heading[1].full">
+          <template #clickHere>
+            <a href="#" @click.prevent="submissionOptions.show()">{{ $t('heading[1].clickHere') }}</a>
+          </template>
+        </i18n-t>
+      </template>
       <button id="field-key-list-create-button" type="button"
         class="btn btn-primary" @click="createModal.show()">
         <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
       </button>
-      <i18n-t tag="p" keypath="heading[0].full">
-        <template #collect>
-          <doc-link to="collect-intro/">ODK Collect</doc-link>
-        </template>
-        <template #formAccess>
-          <router-link :to="projectPath('form-access')">{{ $t('heading[0].formAccess') }}</router-link>
-        </template>
-      </i18n-t>
-      <i18n-t tag="p" keypath="heading[1].full">
-        <template #clickHere>
-          <a href="#" @click.prevent="submissionOptions.show()">{{ $t('heading[1].clickHere') }}</a>
-        </template>
-      </i18n-t>
-    </div>
+    </page-heading>
+
     <div v-if="dataExists && actorProperties.length > 0" id="field-key-filter-bar">
       <custom-props-filter v-model="filter"
         :actor-properties="actorProperties.data"
@@ -87,6 +90,7 @@ except according to the terms contained in the LICENSE file.
 import Popover from '../popover.vue';
 import DocLink from '../doc-link.vue';
 import Loading from '../loading.vue';
+import PageHeading from '../page/heading.vue';
 import TableFreeze from '../table/freeze.vue';
 import FieldKeyQrPanel from './qr-panel.vue';
 import FieldKeyRow from './row.vue';
@@ -107,6 +111,7 @@ export default {
     Popover,
     DocLink,
     Loading,
+    PageHeading,
     TableFreeze,
     FieldKeyQrPanel,
     FieldKeyRow,
