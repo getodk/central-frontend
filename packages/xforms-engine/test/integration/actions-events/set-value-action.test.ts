@@ -20,6 +20,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { intAnswer } from '../../scenario/answer/ExpectedIntAnswer.ts';
 import { stringAnswer } from '../../scenario/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../../scenario/jr/Scenario.ts';
+import { ANSWER_CALCULATION_ERROR } from '../../scenario/jr/validation/ValidateOutcome.ts';
 
 describe('setvalue action', () => {
   describe('when trigger node is updated', () => {
@@ -434,7 +435,7 @@ describe('setvalue action', () => {
       });
 
       // ported from: https://github.com/getodk/javarosa/blob/2dd8e15e9f3110a86f8d7d851efc98627ae5692e/src/test/java/org/javarosa/core/model/actions/SetValueActionTest.java#L348
-      it('throws error when target is an unbound reference', async () => {
+      it('sets error when target is an unbound reference', async () => {
         const scenario = await Scenario.init(
           'Setvalue into repeat',
           html(
@@ -459,12 +460,9 @@ describe('setvalue action', () => {
         scenario.createNewRepeat('/data/repeat');
         scenario.createNewRepeat('/data/repeat');
         scenario.createNewRepeat('/data/repeat');
-        const answer = () => {
-          scenario.answer('/data/source', 'foo');
-          expect.fail('Expected multiple node target to fail');
-        };
-
-        expect(answer).toThrowError('has more than one node');
+        scenario.answer('/data/source', 'foo');
+        const validate = scenario.getValidationOutcome();
+        expect(validate.outcome).toBe(ANSWER_CALCULATION_ERROR);
       });
     });
 
@@ -1286,9 +1284,11 @@ describe('setvalue action', () => {
       scenario.answer('/data/source', 'abc');
       expect(scenario.answerOf('/data/destination')).toEqualAnswer(intAnswer(6));
 
-      expect(() => scenario.answer('/data/destination', 12)).toThrowError(
-        'Cannot write to readonly field: /data/destination'
-      );
+      scenario.answer('/data/destination', 12);
+      const validate = scenario.getValidationOutcome();
+      expect(validate.failedPrompt).toBe(scenario.indexOf('/data/destination'));
+      expect(validate.outcome).toBe(ANSWER_CALCULATION_ERROR);
+
       expect(scenario.answerOf('/data/destination')).toEqualAnswer(intAnswer(6));
 
       scenario.answer('/data/lock', 'no');
