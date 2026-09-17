@@ -3,44 +3,30 @@ import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
 import type { EvaluationContext } from '../../instance/internal-api/EvaluationContext.ts';
 import type { EngineXPathNode } from '../../integration/xpath/adapter/kind.ts';
-import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
+import type {
+  ComputedExpressionResults,
+  EngineXPathEvaluator,
+  Result,
+  Success,
+} from '../../integration/xpath/EngineXPathEvaluator.ts';
 import type {
   DependentExpression,
   DependentExpressionResultType,
 } from '../../parse/expression/abstract/DependentExpression.ts';
 import { isConstantExpression } from '../../parse/xpath/semantic-analysis.ts';
 
-interface ComputedExpressionResults {
-  readonly boolean: boolean;
-  readonly nodes: EngineXPathNode[];
-  readonly number: number;
-  readonly string: string;
-}
-
-export interface Success<T extends DependentExpressionResultType> {
-  readonly success: true;
-  readonly value: ComputedExpressionResults[T];
-}
-
-export interface Failure {
-  readonly success: false;
-  readonly error: Error;
-}
-
-// TODO this probably deserves to be in its own file
-export type Result<T extends DependentExpressionResultType> = Failure | Success<T>;
-
 type EvaluatedExpression<Type extends DependentExpressionResultType> =
   ComputedExpressionResults[Type];
 
 type ExpressionEvaluator<Type extends DependentExpressionResultType> = (
   defaultValue?: EvaluatedExpression<Type>
-) => EvaluatedExpression<Type>;
+) => Result<Type>;
 
 interface ExpressionEvaluatorOptions {
   get contextNode(): EngineXPathNode;
 }
 
+// TODO does this whole function belong in the enginexpathevaluator?
 const expressionEvaluator = <Type extends DependentExpressionResultType>(
   evaluator: EngineXPathEvaluator,
   type: Type,
@@ -110,21 +96,22 @@ interface CreateComputedExpressionOptions<Type extends DependentExpressionResult
   readonly defaultValue?: EvaluatedExpression<Type>;
 }
 
-const computeResult = <Type extends DependentExpressionResultType>(
-  evaluateExpression: ExpressionEvaluator<Type>
-) => {
-  try {
-    return {
-      success: true,
-      value: evaluateExpression(),
-    } as Success<Type>;
-  } catch (error) {
-    return {
-      success: false,
-      error,
-    } as Failure;
-  }
-};
+// TODO consider wrapping the xpath evaluator in a xforms-engine evaluator so all "evaluate*" functions return a Result
+// const computeResult = <Type extends DependentExpressionResultType>(
+//   evaluateExpression: ExpressionEvaluator<Type>
+// ) => {
+//   try {
+//     return {
+//       success: true,
+//       value: evaluateExpression(),
+//     } as Success<Type>;
+//   } catch (error) {
+//     return {
+//       success: false,
+//       error,
+//     } as Failure;
+//   }
+// };
 
 export const createComputedExpression = <Type extends DependentExpressionResultType>(
   context: EvaluationContext,
@@ -139,7 +126,7 @@ export const createComputedExpression = <Type extends DependentExpressionResultT
     });
 
     if (isConstantExpression(expression)) {
-      return createMemo(() => computeResult(evaluateExpression));
+      return createMemo(() => evaluateExpression());
     }
 
     return createMemo(() => {
@@ -147,11 +134,11 @@ export const createComputedExpression = <Type extends DependentExpressionResultT
         context.getActiveLanguage();
       }
       if (context.isAttached()) {
-        return computeResult(evaluateExpression);
+        return evaluateExpression();
       }
       const defaultValue = options?.defaultValue ?? defaultEvaluationsByType[resultType];
       try {
-        return computeResult(() => evaluateExpression(defaultValue));
+        return evaluateExpression(defaultValue);
       } catch {
         // likely because it's not yet attached - try again later
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion

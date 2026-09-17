@@ -97,13 +97,28 @@ export class BindPreloadDefinition<Type extends PreloadType> implements PreloadI
 
   getValue(context: AttributeContext | InstanceValueContext): string | undefined {
     if (this.type === 'uid') {
-      return context.evaluator.evaluateString(PRELOAD_UID_EXPRESSION);
+      const result = context.evaluator.evaluateString(PRELOAD_UID_EXPRESSION);
+      if (result.success) {
+        return result.value;
+      } else {
+        throw result.error;
+      }
     }
     if (this.type === 'timestamp') {
-      return context.evaluator.evaluateString('now()');
+      const result = context.evaluator.evaluateString('now()');
+      if (result.success) {
+        return result.value;
+      } else {
+        throw result.error;
+      }
     }
     if (this.type === 'date') {
-      return context.evaluator.evaluateString('today()');
+      const result = context.evaluator.evaluateString('today()');
+      if (result.success) {
+        return result.value;
+      } else {
+        throw result.error;
+      }
     }
     if (this.type === 'property') {
       const properties = context.instanceConfig.preloadProperties;
