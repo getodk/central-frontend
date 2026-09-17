@@ -17,7 +17,6 @@ import { createInstance } from '../../src/entrypoints/createInstance.ts';
 import type { AnyInputNode, AnyNode, RootNode } from '../../src/index.ts';
 import { Root } from '../../src/instance/Root.ts';
 import { InstanceNode } from '../../src/instance/abstract/InstanceNode.ts';
-import type { AnyNode as AnyPrimaryInstanceNode } from '../../src/instance/hierarchy.ts';
 
 interface IntializedTestForm {
   readonly dispose: VoidFunction;
@@ -62,9 +61,11 @@ describe('Form instance state', () => {
   let testForm: IntializedTestForm;
 
   const getNodeByReference = (reference: string): AnyNode | null => {
-    return testForm.internalRoot.evaluator.evaluateNode<Extract<AnyPrimaryInstanceNode, AnyNode>>(
-      reference
-    );
+    const result = testForm.internalRoot.evaluator.evaluateNodes(reference);
+    if (!result.success) {
+      throw result.error;
+    }
+    return (result.value?.[0] as AnyNode) ?? null;
   };
 
   const getInputNode = (reference: string): AnyInputNode => {
