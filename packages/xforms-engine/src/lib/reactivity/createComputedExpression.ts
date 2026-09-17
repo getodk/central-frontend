@@ -26,7 +26,6 @@ interface ExpressionEvaluatorOptions {
   get contextNode(): EngineXPathNode;
 }
 
-// TODO does this whole function belong in the enginexpathevaluator?
 const expressionEvaluator = <Type extends DependentExpressionResultType>(
   evaluator: EngineXPathEvaluator,
   type: Type,
@@ -95,23 +94,6 @@ interface CreateComputedExpressionOptions<Type extends DependentExpressionResult
    */
   readonly defaultValue?: EvaluatedExpression<Type>;
 }
-
-// TODO consider wrapping the xpath evaluator in a xforms-engine evaluator so all "evaluate*" functions return a Result
-// const computeResult = <Type extends DependentExpressionResultType>(
-//   evaluateExpression: ExpressionEvaluator<Type>
-// ) => {
-//   try {
-//     return {
-//       success: true,
-//       value: evaluateExpression(),
-//     } as Success<Type>;
-//   } catch (error) {
-//     return {
-//       success: false,
-//       error,
-//     } as Failure;
-//   }
-// };
 
 export const createComputedExpression = <Type extends DependentExpressionResultType>(
   context: EvaluationContext,

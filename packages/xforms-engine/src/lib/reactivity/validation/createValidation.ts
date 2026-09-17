@@ -47,6 +47,7 @@ const createConstraintValidation = (
     const message = constraintMsg ? createTextRange(context, 'constraintMsg', constraintMsg) : null;
 
     return createMemo(() => {
+      context.setError(null);
       if (!context.isRelevant() || context.isBlank()) {
         return constraintValid();
       }
@@ -61,7 +62,7 @@ const createConstraintValidation = (
           message: message?.() ?? null,
         } as const;
       }
-      // TODO SET ERROR
+      context.setError(result.error);
       return constraintValid();
     });
   });
@@ -118,9 +119,8 @@ const createErrorValidation = (context: ValidationContext): Accessor<ErrorViolat
         valid: false,
         message: error,
       } as const;
-    } else {
-      return null;
     }
+    return null;
   });
 };
 

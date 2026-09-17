@@ -27,7 +27,9 @@ const generateResourceChunk = (context: EvaluationContext, child: Element, type:
       const expression = TextChunkExpression.fromOutput(grandchild);
       if (expression) {
         const result = createComputedExpression(context, expression)();
-        // TODO set error
+        if (!result.success) {
+          context.setError(result.error);
+        }
         const part = result.success ? result.value : '';
         parts.push(part);
       }
@@ -82,7 +84,6 @@ const getChunkExpressions = <Role extends TextRole>(
     contextNode: context.contextNode,
   });
   if (result.success) {
-    context.setError(null);
     const lang = context.getActiveLanguage();
     const elem = definition.form.model.getItextElement(lang, result.value);
     return elem ? generateChunksForTranslation(context, elem) : [];
@@ -107,6 +108,7 @@ const createTextChunks = <Role extends TextRole>(
   const chunks: TextChunk[] = [];
   const mediaSources: MediaSources = {};
   const chunkExpressions = getChunkExpressions(context, definition);
+  context.setError(null);
   chunkExpressions.forEach((chunkExpression) => {
     if (chunkExpression.resourceType) {
       const url = chunkExpression.stringValue?.trim();
@@ -122,8 +124,11 @@ const createTextChunks = <Role extends TextRole>(
     }
 
     const computed = createComputedExpression(context, chunkExpression)();
-    const value = computed.success ? computed.value : ''; // TOOD set error
-    chunks.push(new TextChunk(context, chunkExpression.source, value));
+    if (!computed.success) {
+      context.setError(computed.error);
+      return;
+    }
+    chunks.push(new TextChunk(context, chunkExpression.source, computed.value));
   });
   return { chunks, mediaSources };
 };
