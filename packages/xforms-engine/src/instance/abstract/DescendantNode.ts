@@ -241,15 +241,16 @@ export abstract class DescendantNode<
 
     const { readonly, relevant, required } = definition.bind;
 
-    // TODO this pattern is ugly... instead maybe pass `setError` in to createComputedExpression?
     this.isSelfReadonly = this.scope.runTask(() => {
       return createMemo(() => {
         const r: Result<'boolean'> = createComputedExpression(this, readonly, {
           defaultValue: true,
         })();
         if (r.success) {
+          this.setError(null);
           return r.value;
         } else {
+          this.setError(r.error);
           // TODO record error
           return true;
         }
@@ -261,9 +262,10 @@ export abstract class DescendantNode<
           defaultValue: false,
         })();
         if (r.success) {
+          this.setError(null);
           return r.value;
         } else {
-          // TODO record error
+          this.setError(r.error);
           return false;
         }
       });
@@ -274,9 +276,10 @@ export abstract class DescendantNode<
           defaultValue: false,
         })();
         if (r.success) {
+          this.setError(null);
           return r.value;
         } else {
-          // TODO record error
+          this.setError(r.error);
           return false;
         }
       });

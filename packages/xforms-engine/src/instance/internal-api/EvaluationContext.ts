@@ -85,5 +85,5 @@ export interface EvaluationContext extends TranslationContext {
    */
   readonly contextNode: EngineXPathNode;
 
-  setError(error: Error | null): void; // TODO consider undefined instead of null
+  setError(error: Error | null): void;
 }

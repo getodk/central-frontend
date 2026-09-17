@@ -73,14 +73,6 @@ const getNodeByReference = (root: Root, reference: string): AnyNode => {
   return value;
 };
 
-// const getNodeByReference = (root: Root, reference: string): AnyNode => {
-//   const node = root.evaluator.evaluateNode<AnyNode>(reference);
-//   if (node == null) {
-//     throw new Error(`No node for reference: ${reference}`);
-//   }
-//   return node;
-// };
-
 const CONTROL_NODE_TYPES: ReadonlySet<AnyNode['nodeType']> = new Set([
   'input',
   'note',

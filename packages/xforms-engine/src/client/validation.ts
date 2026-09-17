@@ -7,7 +7,6 @@ import type { TextRange } from './TextRange.ts';
 interface BaseValidity<Condition> {
   readonly condition: Condition;
 
-  // TODO document error conditions
   /**
    * Specifies the unambiguous validity state for each validity condition of a
    * given node, or for the derived validity of any parent node whose descendants
@@ -27,6 +26,9 @@ interface BaseValidity<Condition> {
    * - \* = default (expression not defined)
    * - ✅ = `valid: true`
    * - ❌ = `valid: false`
+   *
+   * `error` condition represents an invalid state, for example, if an xpath expression
+   * cannot be parsed.
    */
   readonly valid: boolean;
 }
@@ -110,8 +112,6 @@ export type AnyViolation = ConstraintViolation | ErrorViolation | RequiredViolat
 export interface LeafNodeValidationState {
   get constraint(): ConditionValidation<'constraint'>;
   get required(): ConditionValidation<'required'>;
-
-  // TODO put error here too?
 
   /**
    * Violations are mutually exclusive:
