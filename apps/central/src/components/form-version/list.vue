@@ -10,7 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <div>
+  <div id="form-version-list">
+    <page-heading :title="$t('formHead.tab.versions')"/>
     <form-version-table @view-xml="viewXml.show()"/>
     <loading :state="formVersions.initiallyLoading"/>
 
@@ -23,6 +24,7 @@ import { defineAsyncComponent } from 'vue';
 
 import FormVersionTable from './table.vue';
 import Loading from '../loading.vue';
+import PageHeading from '../page/heading.vue';
 
 import { apiPaths } from '../../util/request';
 import { loadAsync } from '../../util/load-async';
@@ -35,7 +37,8 @@ export default {
   components: {
     FormVersionTable,
     XmlViewer: defineAsyncComponent(loadAsync('XmlViewer')),
-    Loading
+    Loading,
+    PageHeading
   },
   props: {
     projectId: {

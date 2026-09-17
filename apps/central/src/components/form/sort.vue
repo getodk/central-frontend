@@ -42,6 +42,12 @@ defineEmits(['update:modelValue']);
 #form-sort {
   float: right;
 
+  .form-inline {
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+    margin-right: 15px;
+  }
+
   #form-sort-label {
     font-size: 14px;
     padding-right: 8px;

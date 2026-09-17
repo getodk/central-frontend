@@ -11,6 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="project-settings">
+    <page-heading :title="$t('common.tab.settings')"/>
     <div v-if="project.dataExists" class="row">
       <div class="col-xs-8">
         <project-edit/>
@@ -80,6 +81,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import DocLink from '../doc-link.vue';
+import PageHeading from '../page/heading.vue';
 import ProjectArchive from './archive.vue';
 import ProjectEdit from './edit.vue';
 import ProjectEnableEncryption from './enable-encryption.vue';
@@ -93,6 +95,7 @@ export default {
   name: 'ProjectSettings',
   components: {
     DocLink,
+    PageHeading,
     ProjectArchive,
     ProjectEdit,
     ProjectEnableEncryption,

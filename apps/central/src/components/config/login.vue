@@ -1,6 +1,6 @@
 <template>
   <div id="config-login">
-    <p id="config-login-title">{{ $t('title') }}</p>
+    <page-heading :title="$t('title')"/>
     <loading :state="serverConfig.awaitingResponse"/>
     <div v-if="serverConfig.dataExists" class="row">
       <div class="col-xs-5">
@@ -17,6 +17,7 @@
 import ConfigLoginEdit from './login/edit.vue';
 import ConfigLoginPreview from './login/preview.vue';
 import Loading from '../loading.vue';
+import PageHeading from '../page/heading.vue';
 
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
@@ -30,18 +31,11 @@ const { serverConfig } = useRequestData();
 serverConfig.request({ url: '/v1/config/public' }).catch(noop);
 </script>
 
-<style lang="scss">
-#config-login-title {
-  font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 40px;
-}
-</style>
 
 <i18n lang="json5">
 {
   "en": {
-    "title": "Login page"
+    "title": "Login page customization"
   }
 }
 </i18n>

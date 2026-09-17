@@ -15,31 +15,34 @@ component that each user is assigned at most one role and that the only roles
 are Project Manager, Project Viewer, and Data Collector. -->
 <template>
   <div id="project-user-list">
-    <div class="page-body-heading">
-      <p>{{ $t('heading[0]') }}</p>
-      <ul>
-        <i18n-t tag="li" keypath="heading[1].full">
-          <template #projectManagers>
-            <strong>{{ $t('heading[1].projectManagers') }}</strong>
+    <page-heading :title="$t('resource.projectRoles')">
+      <template #help>
+        <p>{{ $t('heading[0]') }}</p>
+        <ul>
+          <i18n-t tag="li" keypath="heading[1].full">
+            <template #projectManagers>
+              <strong>{{ $t('heading[1].projectManagers') }}</strong>
+            </template>
+          </i18n-t>
+          <i18n-t tag="li" keypath="heading[2].full">
+            <template #projectViewers>
+              <strong>{{ $t('heading[2].projectViewers') }}</strong>
+            </template>
+          </i18n-t>
+          <i18n-t tag="li" keypath="heading[3].full">
+            <template #dataCollectors>
+              <strong>{{ $t('heading[3].dataCollectors') }}</strong>
+            </template>
+          </i18n-t>
+        </ul>
+        <i18n-t tag="p" keypath="moreInfo.clickHere.full">
+          <template #clickHere>
+            <doc-link to="central-projects/#managing-project-roles">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
           </template>
         </i18n-t>
-        <i18n-t tag="li" keypath="heading[2].full">
-          <template #projectViewers>
-            <strong>{{ $t('heading[2].projectViewers') }}</strong>
-          </template>
-        </i18n-t>
-        <i18n-t tag="li" keypath="heading[3].full">
-          <template #dataCollectors>
-            <strong>{{ $t('heading[3].dataCollectors') }}</strong>
-          </template>
-        </i18n-t>
-      </ul>
-      <i18n-t tag="p" keypath="moreInfo.clickHere.full">
-        <template #clickHere>
-          <doc-link to="central-projects/#managing-project-roles">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
-        </template>
-      </i18n-t>
-    </div>
+      </template>
+    </page-heading>
+
     <form id="project-user-list-search-form" class="form-inline"
       @submit.prevent>
       <search-textbox v-model="searchTerm" :label="searchLabel" :disabled="searchDisabled"/>
@@ -69,6 +72,7 @@ are Project Manager, Project Viewer, and Data Collector. -->
 <script>
 import DocLink from '../../doc-link.vue';
 import Loading from '../../loading.vue';
+import PageHeading from '../../page/heading.vue';
 import ProjectUserRow from './row.vue';
 import SearchTextbox from '../../search-textbox.vue';
 
@@ -78,7 +82,7 @@ import { useRequestData } from '../../../request-data';
 
 export default {
   name: 'ProjectUserList',
-  components: { DocLink, Loading, ProjectUserRow, SearchTextbox },
+  components: { DocLink, Loading, PageHeading, ProjectUserRow, SearchTextbox },
   inject: ['alert'],
   props: {
     projectId: {

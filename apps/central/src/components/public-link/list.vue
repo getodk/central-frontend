@@ -11,29 +11,31 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="public-link-list">
-    <div class="heading-with-button">
+    <page-heading :title="$t('resource.publicLink')">
+      <template #help="{ hide }">
+         <p>
+          <i18n-t keypath="heading[0].full">
+            <template #state>
+              <router-link :to="projectPath('form-access')">{{ $t('heading[0].state') }}</router-link>
+            </template>
+          </i18n-t>
+          <sentence-separator/>
+          <i18n-t keypath="moreInfo.clickHere.full">
+            <template #clickHere>
+              <doc-link to="central-submissions/#public-access-links">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
+            </template>
+          </i18n-t>
+        </p>
+        <i18n-t tag="p" keypath="heading[1].full">
+          <template #clickHere>
+            <a href="#" @click.prevent="hide(); submissionOptions.show()">{{ $t('heading[1].clickHere') }}</a>
+          </template>
+        </i18n-t>
+      </template>
       <button type="button" class="btn btn-primary" @click="createModal.show()">
         <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
       </button>
-      <p>
-        <i18n-t keypath="heading[0].full">
-          <template #state>
-            <router-link :to="projectPath('form-access')">{{ $t('heading[0].state') }}</router-link>
-          </template>
-        </i18n-t>
-        <sentence-separator/>
-        <i18n-t keypath="moreInfo.clickHere.full">
-          <template #clickHere>
-            <doc-link to="central-submissions/#public-access-links">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
-          </template>
-        </i18n-t>
-      </p>
-      <i18n-t tag="p" keypath="heading[1].full">
-        <template #clickHere>
-          <a href="#" @click.prevent="submissionOptions.show()">{{ $t('heading[1].clickHere') }}</a>
-        </template>
-      </i18n-t>
-    </div>
+    </page-heading>
 
     <public-link-table v-if="dataExists" ref="table" :highlighted="highlighted"
       @revoke="revokeModal.show({ publicLink: $event })"
@@ -58,6 +60,7 @@ except according to the terms contained in the LICENSE file.
 <script>
 import DocLink from '../doc-link.vue';
 import Loading from '../loading.vue';
+import PageHeading from '../page/heading.vue';
 import ProjectSubmissionOptions from '../project/submission-options.vue';
 import PublicLinkCreate from './create.vue';
 import PublicLinkEdit from './edit.vue';
@@ -76,6 +79,7 @@ export default {
   components: {
     DocLink,
     Loading,
+    PageHeading,
     ProjectSubmissionOptions,
     PublicLinkCreate,
     PublicLinkEdit,
