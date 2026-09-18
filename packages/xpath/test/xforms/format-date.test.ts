@@ -1,4 +1,4 @@
-import { beforeEach, describe, it } from 'vitest';
+import { beforeEach, describe, it, expect } from 'vitest';
 import type { XFormsTestContext } from '../helpers.ts';
 import { createXFormsTestContext } from '../helpers.ts';
 
@@ -91,14 +91,23 @@ describe('#format-date()', () => {
 
   describe('invalid dates', () => {
     [
-      "format-date('invalid', '%e | %a' )",
       "format-date('2026-12-01T25:00:00.000Z', '%e | %a' )", // 25 hours
       "format-date('2026-12-01T25:00:00.000+10:00', '%e | %a' )", // 25 hours
       "format-date('2026-13-01', '%e | %a' )", // 13 months
-      "format-date(number('invalid'), '%Y-%m-%d')", // not a number
       "format-date('2026-04-31T23:00:00+12:00', '%Y-%m-%d')", // there aren't 31 days in April
       "format-date-time('2026-02-29T10:00:00Z', '%Y-%m-%d %H:%M')", // there aren't 29 days in February non leap year
       "format-date('2026-12-01T24:00:00Z', '%Y-%m-%d')", // there aren't 24 hours in a day
+    ].forEach((expr) => {
+      it(`"${expr}" throws`, () => {
+        expect(() => {
+          testContext.evaluate(expr);
+        }).toThrow();
+      });
+    });
+
+    [
+      "format-date('invalid', '%e | %a' )",
+      "format-date(number('invalid'), '%Y-%m-%d')", // not a number
       "format-date('26-12-12', '%Y-%m-%d')", // ambiguous year
     ].forEach((expr) => {
       it(`handles ${expr}`, () => {

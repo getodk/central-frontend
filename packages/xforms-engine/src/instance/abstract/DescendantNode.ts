@@ -10,7 +10,7 @@ import type {
   XFormsXPathPrimaryInstanceDescendantNodeKind,
 } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
 import { XFORMS_XPATH_NODE_RANGE_KIND } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
-import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
+import type { EngineXPathEvaluator, Result } from '../../integration/xpath/EngineXPathEvaluator.ts';
 import type { StaticAttribute } from '../../integration/xpath/static-dom/StaticAttribute.ts';
 import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import { createComputedExpression } from '../../lib/reactivity/createComputedExpression.ts';
@@ -26,6 +26,7 @@ import { InstanceNode } from './InstanceNode.ts';
 import { ActionDefinition } from '../../parse/model/ActionDefinition.ts';
 import { SET_GEOPOINT_LOCAL_NAME, SET_VALUE_LOCAL_NAME } from '../../parse/XFormDOM.ts';
 import { XFORM_EVENT } from '../../parse/model/Event.ts';
+import type { DependentExpression } from '../../parse/expression/abstract/DependentExpression.ts';
 
 export interface DescendantNodeSharedStateSpec {
   readonly reference: Accessor<string>;
@@ -241,14 +242,14 @@ export abstract class DescendantNode<
 
     const { readonly, relevant, required } = definition.bind;
 
-    this.isSelfReadonly = createComputedExpression(this, readonly, {
-      defaultValue: true,
+    this.isSelfReadonly = this.scope.runTask(() => {
+      return this.compute(readonly, true);
     });
-    this.isSelfRelevant = createComputedExpression(this, relevant, {
-      defaultValue: false,
+    this.isSelfRelevant = this.scope.runTask(() => {
+      return this.compute(relevant, false);
     });
-    this.isRequired = createComputedExpression(this, required, {
-      defaultValue: false,
+    this.isRequired = this.scope.runTask(() => {
+      return this.compute(required, false);
     });
 
     this.valueChangedActions = Array.from(definition.bodyElement?.element.children ?? [])
@@ -295,5 +296,20 @@ export abstract class DescendantNode<
     });
 
     this.scope.dispose();
+  }
+
+  private compute(expression: DependentExpression<'boolean'>, defaultValue: boolean) {
+    return createMemo(() => {
+      const r: Result<'boolean'> = createComputedExpression(this, expression, {
+        defaultValue,
+      })();
+      if (r.success) {
+        this.setError(null);
+        return r.value;
+      } else {
+        this.setError(r.error);
+        return defaultValue;
+      }
+    });
   }
 }

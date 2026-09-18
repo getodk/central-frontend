@@ -1,10 +1,16 @@
-import type { XFormsItextTranslationMap, XFormsSecondaryInstanceMap } from '@getodk/xpath';
+import type {
+  EvaluatorConvenienceMethodOptions,
+  XFormsItextTranslationLanguage,
+  XFormsItextTranslationMap,
+  XFormsSecondaryInstanceMap,
+} from '@getodk/xpath';
 import { XFormsXPathEvaluator } from '@getodk/xpath';
 import type { PrimaryInstance } from '../../instance/PrimaryInstance.ts';
 import type { ItextTranslationRootDefinition } from '../../parse/model/ItextTranslationsDefinition.ts';
 import type { SecondaryInstanceRootDefinition } from '../../parse/model/SecondaryInstance/SecondaryInstancesDefinition.ts';
 import { engineDOMAdapter } from './adapter/engineDOMAdapter.ts';
 import type { EngineXPathNode } from './adapter/kind.ts';
+import type { DependentExpressionResultType } from '../../parse/expression/abstract/DependentExpression.ts';
 
 interface EngineXPathEvaluatorOptions {
   readonly rootNode: PrimaryInstance;
@@ -12,11 +18,121 @@ interface EngineXPathEvaluatorOptions {
   readonly secondaryInstancesById: XFormsSecondaryInstanceMap<SecondaryInstanceRootDefinition>;
 }
 
-export class EngineXPathEvaluator extends XFormsXPathEvaluator<EngineXPathNode> {
+export interface ComputedExpressionResults {
+  readonly boolean: boolean;
+  readonly nodes: EngineXPathNode[];
+  readonly number: number;
+  readonly string: string;
+}
+
+export interface Success<T extends DependentExpressionResultType> {
+  readonly success: true;
+  readonly value: ComputedExpressionResults[T];
+}
+
+export interface Failure {
+  readonly success: false;
+  readonly error: Error;
+}
+
+export type Result<T extends DependentExpressionResultType> = Failure | Success<T>;
+
+/**
+ * A wrapper around the xpath Evaluator that returns Result objects instead of values and errors.
+ */
+export class EngineXPathEvaluator {
+  readonly xpathEvaluator: XFormsXPathEvaluator<EngineXPathNode>;
+
   constructor(options: EngineXPathEvaluatorOptions) {
-    super({
+    this.xpathEvaluator = new XFormsXPathEvaluator({
       domAdapter: engineDOMAdapter,
       ...options,
     });
+  }
+
+  evaluateString(
+    expression: string,
+    options?: EvaluatorConvenienceMethodOptions<EngineXPathNode>
+  ): Result<'string'> {
+    try {
+      return {
+        success: true,
+        value: this.xpathEvaluator.evaluateString(expression, options),
+      };
+    } catch (e) {
+      return {
+        success: false,
+        error: e as Error,
+      };
+    }
+  }
+
+  evaluateNumber(
+    expression: string,
+    options?: EvaluatorConvenienceMethodOptions<EngineXPathNode>
+  ): Result<'number'> {
+    try {
+      return {
+        success: true,
+        value: this.xpathEvaluator.evaluateNumber(expression, options),
+      };
+    } catch (e) {
+      return {
+        success: false,
+        error: e as Error,
+      };
+    }
+  }
+
+  evaluateNodes(
+    expression: string,
+    options?: EvaluatorConvenienceMethodOptions<EngineXPathNode>
+  ): Result<'nodes'> {
+    try {
+      return {
+        success: true,
+        value: this.xpathEvaluator.evaluateNodes(expression, options),
+      };
+    } catch (e) {
+      return {
+        success: false,
+        error: e as Error,
+      };
+    }
+  }
+
+  evaluateBoolean(
+    expression: string,
+    options?: EvaluatorConvenienceMethodOptions<EngineXPathNode>
+  ): Result<'boolean'> {
+    try {
+      return {
+        success: true,
+        value: this.xpathEvaluator.evaluateBoolean(expression, options),
+      };
+    } catch (e) {
+      return {
+        success: false,
+        error: e as Error,
+      };
+    }
+  }
+
+  setActiveLanguage(
+    language: XFormsItextTranslationLanguage | null
+  ): XFormsItextTranslationLanguage | null {
+    return this.xpathEvaluator.setActiveLanguage(language);
+  }
+
+  getActiveLanguage(): XFormsItextTranslationLanguage | null {
+    return this.xpathEvaluator.getActiveLanguage();
+  }
+
+  getExplicitDefaultLanguage(): XFormsItextTranslationLanguage | null {
+    return this.xpathEvaluator.getExplicitDefaultLanguage();
+  }
+
+  getLanguages(): readonly XFormsItextTranslationLanguage[] {
+    return this.xpathEvaluator.getLanguages();
   }
 }

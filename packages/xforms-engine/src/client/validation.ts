@@ -4,7 +4,9 @@ import type { OpaqueReactiveObjectFactory } from './OpaqueReactiveObjectFactory.
 import type { TextRange } from './TextRange.ts';
 
 // This interface exists so that extensions can share JSDoc for `valid`.
-interface BaseValidity {
+interface BaseValidity<Condition> {
+  readonly condition: Condition;
+
   /**
    * Specifies the unambiguous validity state for each validity condition of a
    * given node, or for the derived validity of any parent node whose descendants
@@ -24,6 +26,9 @@ interface BaseValidity {
    * - \* = default (expression not defined)
    * - ✅ = `valid: true`
    * - ❌ = `valid: false`
+   *
+   * `error` condition represents an invalid state, for example, if an xpath expression
+   * cannot be parsed.
    */
   readonly valid: boolean;
 }
@@ -33,11 +38,12 @@ interface BaseValidity {
  *
  * @see {@link https://getodk.github.io/xforms-spec/#bind-attributes | `constraint` and `required` bind attributes}
  */
-export type ValidationCondition = 'constraint' | 'required';
+export type ValidationCondition = 'constraint' | 'error' | 'required';
 
 interface ValidationConditionMessageRoles {
   readonly constraint: 'constraintMsg';
   readonly required: 'requiredMsg';
+  readonly error: 'errorMsg';
 }
 
 export type ValidationConditionMessageRole<Condition extends ValidationCondition> =
@@ -57,23 +63,33 @@ export interface ViolationMessage<Condition extends ValidationCondition> extends
   get asString(): string;
 }
 
-export interface ConditionSatisfied<Condition extends ValidationCondition> extends BaseValidity {
-  readonly condition: Condition;
+export interface ConditionSatisfied<
+  Condition extends ValidationCondition,
+> extends BaseValidity<Condition> {
   readonly valid: true;
   readonly message: null;
 }
 
-export interface ConditionViolation<Condition extends ValidationCondition> extends BaseValidity {
-  readonly condition: Condition;
+export interface ConstraintViolation extends BaseValidity<'constraint'> {
   readonly valid: false;
-  readonly message: ViolationMessage<Condition> | null;
+  readonly message: ViolationMessage<'constraint'> | null;
+}
+
+export interface RequiredViolation extends BaseValidity<'required'> {
+  readonly valid: false;
+  readonly message: ViolationMessage<'required'> | null;
+}
+
+export interface ErrorViolation extends BaseValidity<'error'> {
+  readonly valid: false;
+  readonly message: string | null;
 }
 
 export type ConditionValidation<Condition extends ValidationCondition> =
-  | ConditionSatisfied<Condition>
-  | ConditionViolation<Condition>;
+  | AnyViolation
+  | ConditionSatisfied<Condition>;
 
-export type AnyViolation = ConditionViolation<ValidationCondition>;
+export type AnyViolation = ConstraintViolation | ErrorViolation | RequiredViolation;
 
 /**
  * Represents the validation state of a leaf (or value) node.

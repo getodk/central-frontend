@@ -5,7 +5,7 @@ import type {
   AnyViolation,
   ConditionSatisfied,
   ConditionValidation,
-  ConditionViolation,
+  ErrorViolation,
   ValidationCondition,
 } from '../../../client/validation.ts';
 import type { ValidationContext } from '../../../instance/internal-api/ValidationContext.ts';
@@ -47,10 +47,18 @@ const createConstraintValidation = (
     const message = constraintMsg ? createTextRange(context, 'constraintMsg', constraintMsg) : null;
 
     return createMemo(() => {
-      if (!context.isRelevant() || context.isBlank() || isValid()) {
+      context.setError(null);
+      if (!context.isRelevant() || context.isBlank()) {
         return constraintValid();
       }
-
+      const result = isValid();
+      if (!result.success) {
+        context.setError(result.error);
+        return constraintValid();
+      }
+      if (result.value) {
+        return constraintValid();
+      }
       return {
         condition: 'constraint',
         valid: false,
@@ -102,13 +110,24 @@ const createRequiredValidation = (
   });
 };
 
-type OptionalViolation<Condition extends ValidationCondition> =
-  Accessor<ConditionViolation<Condition> | null>;
+const createErrorValidation = (context: ValidationContext): Accessor<ErrorViolation | null> => {
+  return createMemo(() => {
+    const error = context.getError();
+    if (error) {
+      return {
+        condition: 'error',
+        valid: false,
+        message: error,
+      } as const;
+    }
+    return null;
+  });
+};
 
 const createComputedViolation = <Condition extends ValidationCondition>(
   scope: ReactiveScope,
   validateCondition: ComputedConditionValidation<Condition>
-): OptionalViolation<Condition> => {
+): Accessor<AnyViolation | null> => {
   return scope.runTask(() => {
     return createMemo(() => {
       const validation = validateCondition();
@@ -147,9 +166,10 @@ export const createValidationState = <Factory extends OpaqueReactiveObjectFactor
     const constraintViolation = createComputedViolation(scope, constraint);
     const required = createRequiredValidation(context);
     const requiredViolation = createComputedViolation(scope, required);
+    const errorViolation = createErrorValidation(context);
 
     const violation = createMemo(() => {
-      return constraintViolation() ?? requiredViolation();
+      return errorViolation() ?? constraintViolation() ?? requiredViolation();
     });
 
     const spec: ValidationStateSpec = {

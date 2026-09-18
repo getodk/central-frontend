@@ -322,10 +322,30 @@ provide(REVEAL_VIOLATIONS, revealViolations);
 // It returns violations for questions the user has seen.
 const revealedViolations = computed(() => {
 	const violations = state.value.root?.validationState.violations ?? [];
+	const nonErrorViolations = violations.filter((violation) => violation.violation.condition !== 'error');
 	if (submitPressed.value) {
-		return violations;
+		return nonErrorViolations;
 	}
-	return violations.filter(({ nodeId }) => touchedQuestions.has(nodeId));
+	return nonErrorViolations.filter((violation) => touchedQuestions.has(violation.nodeId));
+});
+
+const errorViolations = computed(() => {
+	const violations = state.value.root?.validationState.violations ?? [];
+	const grouped = new Map<string, string[]>();
+	violations.forEach(error => {
+		const key = error.violation.condition === 'error' && error.violation.message;
+		if (!key) {
+			return;
+		}
+		let fieldReference = error.reference;
+		if (fieldReference.startsWith('/data/')) {
+			fieldReference = fieldReference.replace('/data/', '');
+		}
+		const fieldReferences = grouped.get(key) ?? [];
+		fieldReferences.push(fieldReference);
+		grouped.set(key, fieldReferences);
+	});
+	return grouped;
 });
 
 const validationErrorMessage = computed(() => {
@@ -339,7 +359,11 @@ const showValidationError = computed(() => {
 	if (errorBannerDismissed.value) {
 		return false;
 	}
-	return !!(validationErrorMessage.value.length || geolocationErrorMessage.value?.length);
+	return (
+		!!validationErrorMessage.value.length ||
+		!!geolocationErrorMessage.value?.length ||
+		!!errorViolations.value.size
+	);
 });
 
 onUnmounted(() => {
@@ -389,6 +413,13 @@ onUnmounted(() => {
 			>
 				<IconSVG name="mdiAlertCircleOutline" variant="error" />
 				<ul class="form-error-text-wrap">
+					<li v-for="[message, references] in errorViolations" :key="message">
+						{{ t('odk_web_forms.evaluation.error', {
+							message,
+							fields: references.join(', '),
+							count: references.length
+						}) }}
+					</li>
 					<li v-if="validationErrorMessage?.length">
 						{{ validationErrorMessage }}
 					</li>

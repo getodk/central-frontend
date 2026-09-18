@@ -15,6 +15,7 @@ interface TextSourceNodes {
   readonly label: LocalNamedElement<'label'>;
   readonly 'item-label': LocalNamedElement<'label'>;
   readonly requiredMsg: null;
+  readonly errorMsg: null;
 }
 
 export type TextSourceNode<Type extends TextRole> = TextSourceNodes[Type];

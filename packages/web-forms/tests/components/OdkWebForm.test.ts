@@ -332,24 +332,16 @@ describe('OdkWebForm', () => {
       expect(component.get('.form-load-failure-dialog').isVisible()).toBe(true);
     });
 
-    // TODO: tests failure which is currently produced by throwing a string.
-    // Checking the text content here is intended to ensure we are actually
-    // presenting the message to a user.
     it('presents an error message when failing to load a form with a computation referencing an unknown XPath function', async () => {
       const xpathUnknownFunctionFormXML = await getWebFormsTestFixture(
         'xpath-unknown-function.xml'
       );
       const component = mountComponent(xpathUnknownFunctionFormXML);
-
       await flushPromises();
-
-      const formLoadFailureDialog = component.get('.form-load-failure-dialog');
-
-      expect(formLoadFailureDialog.isVisible()).toBe(true);
-
-      const message = formLoadFailureDialog.get('.message');
-
-      expect(message.text()).toMatch(/\bnope\b/);
+      expectErrorBanner(
+        component,
+        'Error found while evaluating this form. Error message: "Unknown function in form definition: \'nope\'". Reported by field: /root/first-question. Please contact the person who sent you the form link.'
+      );
     });
   });
 
