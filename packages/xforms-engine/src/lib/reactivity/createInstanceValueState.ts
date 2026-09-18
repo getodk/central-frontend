@@ -198,13 +198,13 @@ const createCalculation = (
   createComputed(() => {
     if (context.isAttached() && context.isRelevant()) {
       const calculated = calculate();
-      if (calculated.success) {
-        const value = context.decodeInstanceValue(calculated.value);
-        context.setError(null);
-        setRelevantValue(value);
-      } else {
+      if (!calculated.success) {
         context.setError(calculated.error);
+        return;
       }
+      const value = context.decodeInstanceValue(calculated.value);
+      context.setError(null);
+      setRelevantValue(value);
     }
   });
 };
@@ -229,13 +229,13 @@ const createActionCalculation = (
       const calculated = untrack(() => {
         return context.evaluator.evaluateString(computation.expression, context);
       });
-      if (calculated.success) {
-        const value = context.decodeInstanceValue(calculated.value);
-        context.setError(null);
-        setRelevantValue(value);
-      } else {
+      if (!calculated.success) {
         context.setError(calculated.error);
+        return;
       }
+      const value = context.decodeInstanceValue(calculated.value);
+      context.setError(null);
+      setRelevantValue(value);
     }
   });
 };
