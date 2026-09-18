@@ -37,6 +37,9 @@ export interface Failure {
 
 export type Result<T extends DependentExpressionResultType> = Failure | Success<T>;
 
+/**
+ * A wrapper around the xpath Evaluator that returns Result objects instead of values and errors.
+ */
 export class EngineXPathEvaluator {
   readonly xpathEvaluator: XFormsXPathEvaluator<EngineXPathNode>;
 
@@ -47,7 +50,6 @@ export class EngineXPathEvaluator {
     });
   }
 
-  // TODO pull out this repeating pattern
   evaluateString(
     expression: string,
     options?: EvaluatorConvenienceMethodOptions<EngineXPathNode>
