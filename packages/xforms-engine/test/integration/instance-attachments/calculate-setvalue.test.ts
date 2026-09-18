@@ -21,10 +21,10 @@ import {
 } from '@getodk/common/jr-resources/JRResourceURL.ts';
 import type { UploadNode } from '@getodk/xforms-engine';
 import { constants as ENGINE_CONSTANTS } from '@getodk/xforms-engine';
-import { afterEach, assert, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, assert, beforeEach, describe, expect, it } from 'vitest';
 import { JRResource } from '../../scenario/fixtures/JRResource.ts';
 import { JRResourceService } from '../../scenario/fixtures/JRResourceService.ts';
-import { Scenario } from '../../scenario/jr/Scenario.ts';
+import { ReactiveScenario } from '../../scenario/reactive/ReactiveScenario.ts';
 
 describe('Instance attachments with calculate and setvalue', () => {
   const KOALA_URL = 'jr://images/koala.jpg';
@@ -60,17 +60,23 @@ describe('Instance attachments with calculate and setvalue', () => {
     service.resources.set(url, resource);
   };
 
-  const getUploadNode = (scenario: Scenario, reference: string): UploadNode => {
+  const getUploadNode = (scenario: ReactiveScenario, reference: string): UploadNode => {
     const node = scenario.getInstanceNode(reference);
     assert(node.nodeType === 'upload');
     return node;
   };
 
-  const settle = async (node: UploadNode): Promise<void> => {
-    await vi.waitFor(() => expect(node.currentState.attachmentState.loading).toBe(false));
+  const settle = (scenario: ReactiveScenario, node: UploadNode): Promise<void> => {
+    return new Promise((resolve) => {
+      scenario.createEffect(() => {
+        if (!node.currentState.attachmentState.loading) {
+          resolve();
+        }
+      });
+    });
   };
 
-  const getPayloadAttachments = async (scenario: Scenario): Promise<Map<string, File>> => {
+  const getPayloadAttachments = async (scenario: ReactiveScenario): Promise<Map<string, File>> => {
     const { data } = await scenario.prepareWebFormsInstancePayload();
     const [payloadFiles] = data;
     return new Map(
@@ -112,11 +118,11 @@ describe('Instance attachments with calculate and setvalue', () => {
   });
 
   describe('calculate', () => {
-    let scenario: Scenario;
+    let scenario: ReactiveScenario;
     let photo: UploadNode;
 
     beforeEach(async () => {
-      scenario = await Scenario.init(
+      scenario = await ReactiveScenario.init(
         'Calculated photo',
         animalPhotoForm(bind('/data/photo').type('binary').calculate(CALCULATED_PHOTO)),
         { resourceService }
@@ -132,7 +138,7 @@ describe('Instance attachments with calculate and setvalue', () => {
       scenario.answer('/data/animal', 'koala');
 
       expect(photo.currentState.instanceValue).toBe(KOALA_URL);
-      await settle(photo);
+      await settle(scenario, photo);
 
       const file = photo.currentState.value;
       assert(file != null);
@@ -154,9 +160,9 @@ describe('Instance attachments with calculate and setvalue', () => {
 
     it('replaces the file when the calculation changes and clears it when blank', async () => {
       scenario.answer('/data/animal', 'koala');
-      await settle(photo);
+      await settle(scenario, photo);
       scenario.answer('/data/animal', 'bear');
-      await settle(photo);
+      await settle(scenario, photo);
 
       expect(photo.currentState.instanceValue).toBe(BEAR_URL);
       expect(await getBlobText(photo.currentState.value!)).toBe('bear');
@@ -178,7 +184,7 @@ describe('Instance attachments with calculate and setvalue', () => {
       expect(photo.currentState.attachmentState.loading).toBe(true);
 
       scenario.answer('/data/animal', 'bear');
-      await settle(photo);
+      await settle(scenario, photo);
       koala.resolve('koala');
       await koala.promise;
 
@@ -188,7 +194,7 @@ describe('Instance attachments with calculate and setvalue', () => {
 
     it('keeps a client upload over the calculated file until the calculation changes', async () => {
       scenario.answer('/data/animal', 'koala');
-      await settle(photo);
+      await settle(scenario, photo);
 
       const uploaded = new File(['mine'], 'mine.jpg', { type: 'image/jpeg' });
       scenario.answer('/data/photo', uploaded);
@@ -198,7 +204,7 @@ describe('Instance attachments with calculate and setvalue', () => {
       expect((await getPayloadAttachments(scenario)).get('mine.jpg')).not.toBeNull();
 
       scenario.answer('/data/animal', 'bear');
-      await settle(photo);
+      await settle(scenario, photo);
 
       expect(photo.currentState.instanceValue).toBe(BEAR_URL);
       expect(photo.currentState.attachmentState.dirty).toBe(false);
@@ -213,12 +219,12 @@ describe('Instance attachments with calculate and setvalue', () => {
 
     it('re-runs the calculation over a client upload when editing', async () => {
       scenario.answer('/data/animal', 'koala');
-      await settle(photo);
+      await settle(scenario, photo);
       scenario.answer('/data/photo', new File(['mine'], 'mine.jpg', { type: 'image/jpeg' }));
 
       const edited = await scenario.editCurrentInstance();
       const editedPhoto = getUploadNode(edited, '/data/photo');
-      await settle(editedPhoto);
+      await settle(edited, editedPhoto);
 
       expect(editedPhoto.currentState.instanceValue).toBe(KOALA_URL);
       expect(await getBlobText(editedPhoto.currentState.value!)).toBe('koala');
@@ -229,7 +235,7 @@ describe('Instance attachments with calculate and setvalue', () => {
       resourceService.reset();
 
       scenario.answer('/data/animal', 'koala');
-      await settle(photo);
+      await settle(scenario, photo);
 
       expect(photo.currentState.instanceValue).toBe(KOALA_URL);
       expect(photo.currentState.value).toBeNull();
@@ -237,20 +243,20 @@ describe('Instance attachments with calculate and setvalue', () => {
 
       activateImage(resourceService, KOALA_URL, 'koala');
       photo.retryFetch();
-      await settle(photo);
+      await settle(scenario, photo);
 
       expect(photo.currentState.attachmentState.loadingError).toBe(false);
       expect(await getBlobText(photo.currentState.value!)).toBe('koala');
     });
 
     it('reports not-found for a reference which is not a form attachment', async () => {
-      const plainScenario = await Scenario.init(
+      const plainScenario = await ReactiveScenario.init(
         'Plain reference',
         animalPhotoForm(bind('/data/photo').type('binary').calculate(`'photo.jpg'`)),
         { resourceService }
       );
       const plainPhoto = getUploadNode(plainScenario, '/data/photo');
-      await settle(plainPhoto);
+      await settle(plainScenario, plainPhoto);
 
       expect(plainPhoto.currentState.instanceValue).toBe('photo.jpg');
       expect(plainPhoto.currentState.attachmentState.loadingError).toBe('not-found');
@@ -258,11 +264,11 @@ describe('Instance attachments with calculate and setvalue', () => {
   });
 
   describe('relevance', () => {
-    let scenario: Scenario;
+    let scenario: ReactiveScenario;
     let photo: UploadNode;
 
     beforeEach(async () => {
-      scenario = await Scenario.init(
+      scenario = await ReactiveScenario.init(
         'Relevant photo',
         animalPhotoForm(
           bind('/data/photo')
@@ -273,7 +279,7 @@ describe('Instance attachments with calculate and setvalue', () => {
         { resourceService }
       );
       photo = getUploadNode(scenario, '/data/photo');
-      await settle(photo);
+      await settle(scenario, photo);
     });
 
     it('blanks a client upload while non-relevant and recalculates when restored', async () => {
@@ -285,7 +291,7 @@ describe('Instance attachments with calculate and setvalue', () => {
       expect((await getPayloadAttachments(scenario)).size).toBe(0);
 
       scenario.answer('/data/animal', 'koala');
-      await settle(photo);
+      await settle(scenario, photo);
 
       expect(photo.currentState.instanceValue).toBe(KOALA_URL);
       expect(photo.currentState.attachmentState.dirty).toBe(false);
@@ -293,7 +299,7 @@ describe('Instance attachments with calculate and setvalue', () => {
     });
 
     it('restores a client upload when relevance is restored', async () => {
-      const uploadScenario = await Scenario.init(
+      const uploadScenario = await ReactiveScenario.init(
         'Relevant upload',
         animalPhotoForm(bind('/data/photo').type('binary').relevant(`/data/animal != 'none'`)),
         { resourceService }
@@ -316,7 +322,7 @@ describe('Instance attachments with calculate and setvalue', () => {
 
   describe('readonly', () => {
     it('accepts the calculation and rejects client writes', async () => {
-      const scenario = await Scenario.init(
+      const scenario = await ReactiveScenario.init(
         'Readonly photo',
         animalPhotoForm(
           bind('/data/photo').type('binary').calculate(`'${KOALA_URL}'`).readonly('true()')
@@ -324,7 +330,7 @@ describe('Instance attachments with calculate and setvalue', () => {
         { resourceService }
       );
       const photo = getUploadNode(scenario, '/data/photo');
-      await settle(photo);
+      await settle(scenario, photo);
 
       expect(photo.currentState.instanceValue).toBe(KOALA_URL);
       expect(() => {
@@ -336,7 +342,7 @@ describe('Instance attachments with calculate and setvalue', () => {
 
   describe('setvalue', () => {
     it('sets a jr:// reference on odk-instance-first-load, once', async () => {
-      const scenario = await Scenario.init(
+      const scenario = await ReactiveScenario.init(
         'First load photo',
         animalPhotoForm(
           bind('/data/photo').type('binary'),
@@ -345,7 +351,7 @@ describe('Instance attachments with calculate and setvalue', () => {
         { resourceService }
       );
       const photo = getUploadNode(scenario, '/data/photo');
-      await settle(photo);
+      await settle(scenario, photo);
 
       expect(photo.currentState.instanceValue).toBe(KOALA_URL);
       expect(await getBlobText(photo.currentState.value!)).toBe('koala');
@@ -353,14 +359,14 @@ describe('Instance attachments with calculate and setvalue', () => {
       scenario.answer('/data/photo', new File(['mine'], 'mine.jpg', { type: 'image/jpeg' }));
       const edited = await scenario.editCurrentInstance();
       const editedPhoto = getUploadNode(edited, '/data/photo');
-      await settle(editedPhoto);
+      await settle(edited, editedPhoto);
 
       expect(editedPhoto.currentState.instanceValue).toBe('mine.jpg');
       expect(await getBlobText(editedPhoto.currentState.value!)).toBe('mine');
     });
 
     it('sets a jr:// reference on odk-instance-load, on every load', async () => {
-      const scenario = await Scenario.init(
+      const scenario = await ReactiveScenario.init(
         'Load photo',
         animalPhotoForm(
           bind('/data/photo').type('binary'),
@@ -372,13 +378,13 @@ describe('Instance attachments with calculate and setvalue', () => {
 
       const edited = await scenario.editCurrentInstance();
       const editedPhoto = getUploadNode(edited, '/data/photo');
-      await settle(editedPhoto);
+      await settle(edited, editedPhoto);
 
       expect(editedPhoto.currentState.instanceValue).toBe(KOALA_URL);
     });
 
     it('targets an upload node from xforms-value-changed', async () => {
-      const scenario = await Scenario.init(
+      const scenario = await ReactiveScenario.init(
         'Value changed photo',
         // prettier-ignore
         html(
@@ -402,14 +408,14 @@ describe('Instance attachments with calculate and setvalue', () => {
       expect(photo.currentState.instanceValue).toBe('');
 
       scenario.answer('/data/animal', 'bear');
-      await settle(photo);
+      await settle(scenario, photo);
 
       expect(photo.currentState.instanceValue).toBe(BEAR_URL);
       expect(await getBlobText(photo.currentState.value!)).toBe('bear');
     });
 
     it('triggers xforms-value-changed from an upload node', async () => {
-      const scenario = await Scenario.init(
+      const scenario = await ReactiveScenario.init(
         'Photo name',
         // prettier-ignore
         html(
