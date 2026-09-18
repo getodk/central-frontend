@@ -27,11 +27,11 @@ const generateResourceChunk = (context: EvaluationContext, child: Element, type:
       const expression = TextChunkExpression.fromOutput(grandchild);
       if (expression) {
         const result = createComputedExpression(context, expression)();
-        if (!result.success) {
+        if (result.success) {
+          parts.push(result.value);
+        } else {
           context.setError(result.error);
         }
-        const part = result.success ? result.value : '';
-        parts.push(part);
       }
     } else if (isTextNode(grandchild)) {
       parts.push(grandchild.data);
@@ -83,13 +83,13 @@ const getChunkExpressions = <Role extends TextRole>(
   const result = context.evaluator.evaluateString(definition.chunks[0].toString()!, {
     contextNode: context.contextNode,
   });
-  if (result.success) {
-    const lang = context.getActiveLanguage();
-    const elem = definition.form.model.getItextElement(lang, result.value);
-    return elem ? generateChunksForTranslation(context, elem) : [];
+  if (!result.success) {
+    context.setError(result.error);
+    return [];
   }
-  context.setError(result.error);
-  return [];
+  const lang = context.getActiveLanguage();
+  const elem = definition.form.model.getItextElement(lang, result.value);
+  return elem ? generateChunksForTranslation(context, elem) : [];
 };
 
 /**

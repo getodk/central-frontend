@@ -52,18 +52,18 @@ const createConstraintValidation = (
         return constraintValid();
       }
       const result = isValid();
-      if (result.success) {
-        if (result.value) {
-          return constraintValid();
-        }
-        return {
-          condition: 'constraint',
-          valid: false,
-          message: message?.() ?? null,
-        } as const;
+      if (!result.success) {
+        context.setError(result.error);
+        return constraintValid();
       }
-      context.setError(result.error);
-      return constraintValid();
+      if (result.value) {
+        return constraintValid();
+      }
+      return {
+        condition: 'constraint',
+        valid: false,
+        message: message?.() ?? null,
+      } as const;
     });
   });
 };

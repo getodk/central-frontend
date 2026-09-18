@@ -215,11 +215,14 @@ const createItemset = (
     return createMemo(() => {
       return itemsetItems().map((item) => {
         const valueResult = item.value();
-        control.setError(null);
-        if (!valueResult.success) {
+        let value: string;
+        if (valueResult.success) {
+          control.setError(null);
+          value = valueResult.value;
+        } else {
           control.setError(valueResult.error);
+          value = '';
         }
-        const value = valueResult.success ? valueResult.value : '';
         const properties = item.properties.map(([propLabel, propValue]) => {
           const propResult = propValue();
           if (!propResult.success) {

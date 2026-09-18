@@ -26,6 +26,7 @@ import { InstanceNode } from './InstanceNode.ts';
 import { ActionDefinition } from '../../parse/model/ActionDefinition.ts';
 import { SET_GEOPOINT_LOCAL_NAME, SET_VALUE_LOCAL_NAME } from '../../parse/XFormDOM.ts';
 import { XFORM_EVENT } from '../../parse/model/Event.ts';
+import type { DependentExpression } from '../../parse/expression/abstract/DependentExpression.ts';
 
 export interface DescendantNodeSharedStateSpec {
   readonly reference: Accessor<string>;
@@ -242,47 +243,13 @@ export abstract class DescendantNode<
     const { readonly, relevant, required } = definition.bind;
 
     this.isSelfReadonly = this.scope.runTask(() => {
-      return createMemo(() => {
-        const r: Result<'boolean'> = createComputedExpression(this, readonly, {
-          defaultValue: true,
-        })();
-        if (r.success) {
-          this.setError(null);
-          return r.value;
-        } else {
-          this.setError(r.error);
-          // TODO record error
-          return true;
-        }
-      });
+      return this.compute(readonly, true);
     });
     this.isSelfRelevant = this.scope.runTask(() => {
-      return createMemo(() => {
-        const r: Result<'boolean'> = createComputedExpression(this, relevant, {
-          defaultValue: false,
-        })();
-        if (r.success) {
-          this.setError(null);
-          return r.value;
-        } else {
-          this.setError(r.error);
-          return false;
-        }
-      });
+      return this.compute(relevant, false);
     });
     this.isRequired = this.scope.runTask(() => {
-      return createMemo(() => {
-        const r: Result<'boolean'> = createComputedExpression(this, required, {
-          defaultValue: false,
-        })();
-        if (r.success) {
-          this.setError(null);
-          return r.value;
-        } else {
-          this.setError(r.error);
-          return false;
-        }
-      });
+      return this.compute(required, false);
     });
 
     this.valueChangedActions = Array.from(definition.bodyElement?.element.children ?? [])
@@ -329,5 +296,20 @@ export abstract class DescendantNode<
     });
 
     this.scope.dispose();
+  }
+
+  private compute(expression: DependentExpression<'boolean'>, defaultValue: boolean) {
+    return createMemo(() => {
+      const r: Result<'boolean'> = createComputedExpression(this, expression, {
+        defaultValue,
+      })();
+      if (r.success) {
+        this.setError(null);
+        return r.value;
+      } else {
+        this.setError(r.error);
+        return defaultValue;
+      }
+    });
   }
 }
