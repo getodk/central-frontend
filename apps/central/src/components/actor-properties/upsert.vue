@@ -25,7 +25,7 @@
         </thead>
         <tbody>
           <entity-update-row v-for="name of propertyCreator.allProperties"
-            :key="name" ref="propertyRows" v-model="propertyValues[name]"
+            :key="name" v-model="propertyValues[name]"
             :old-value="originalValues?.[name]" :label="name"
             :mark-value-changed="!create"/>
         </tbody>
@@ -36,7 +36,7 @@
 </template>
 
 <script setup>
-import { nextTick, ref } from 'vue';
+import { ref } from 'vue';
 
 import ActorPropertiesNew from './new.vue';
 import DocLink from '../doc-link.vue';
@@ -56,17 +56,12 @@ const propertyValues = defineModel('propertyValues');
 const propertyCreator = useActorPropertyCreator();
 
 const originalValues = ref(null);
-const propertyRows = ref([]);
 
 // This component is mounted when parent modal is shown
 originalValues.value = Object.assign(Object.create(null), propertyValues.value);
 
 // This now tracks only properties that are changed.
 propertyValues.value = Object.create(null);
-
-nextTick(() => {
-  for (const row of propertyRows.value) row.textarea.resize();
-});
 </script>
 
 <style lang="scss">
