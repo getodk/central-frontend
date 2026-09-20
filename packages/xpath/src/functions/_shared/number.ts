@@ -75,6 +75,11 @@ const toNumberArguments = <T extends XPathNode>(
     const results = expression.evaluate(context);
 
     for (const result of results) {
+      if (result.toString().trim() === '') {
+        // This deviates from the WHATWG spec which treats '' as NaN
+        // but is aligned with Collect
+        continue;
+      }
       const number = result.toNumber();
 
       numbers.push(number);
