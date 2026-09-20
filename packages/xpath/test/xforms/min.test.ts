@@ -145,7 +145,7 @@ describe('#min()', () => {
 
     contextNode = testContext.document.getElementById('FunctionMaxMinWithEmpty');
 
-    testContext.assertNumberValue('min(*)', NaN, {
+    testContext.assertNumberValue('min(*)', -15, {
       contextNode,
     });
 
