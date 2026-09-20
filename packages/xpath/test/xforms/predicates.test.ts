@@ -247,4 +247,23 @@ describe('predicates with function calls', () => {
     const expectedNodes = testContext.document.querySelectorAll('#expected');
     testContext.assertNodeSet('/data/item[number = /data/ref]', Array.from(expectedNodes));
   });
+
+  it('can compare nodes containing equal dates in different timezones', () => {
+    testContext = createXFormsTestContext(`
+      <data>
+        <ref>2026-02-15T04:00:00+00:00</ref>
+        <item>
+          <number>2026-02-14T05:00:00+01:00</number>
+        </item>
+        <item id="expected">
+          <number>2026-02-15T05:00:00+01:00</number>
+        </item>
+        <item>
+          <number>2026-02-16T05:00:00+01:00</number>
+        </item>
+      </data>
+    `);
+    const expectedNodes = testContext.document.querySelectorAll('#expected');
+    testContext.assertNodeSet('/data/item[number = /data/ref]', Array.from(expectedNodes));
+  });
 });
