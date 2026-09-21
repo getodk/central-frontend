@@ -8,7 +8,10 @@ import { UploadValueTypeError } from '../error/UploadValueTypeError.ts';
 import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
 import type { StaticLeafElement } from '../integration/xpath/static-dom/StaticElement.ts';
 import { UploadCodec } from '../lib/codecs/UploadCodec.ts';
-import { type AttributeState, createAttributeState, } from '../lib/reactivity/createAttributeState.ts';
+import {
+  type AttributeState,
+  createAttributeState,
+} from '../lib/reactivity/createAttributeState.ts';
 import type { BaseInstanceAttachmentState } from '../lib/reactivity/createInstanceAttachment.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
@@ -20,15 +23,16 @@ import type { UploadAppearanceDefinition } from '../parse/body/appearance/upload
 import type { Attribute } from './Attribute.ts';
 import type { Root } from './Root.ts';
 import { ValueNode, type ValueNodeStateSpec } from './abstract/ValueNode.ts';
-import type { InstanceAttachment, InstanceAttachmentRuntimeValue, } from './attachments/InstanceAttachment.ts';
+import type {
+  InstanceAttachment,
+  InstanceAttachmentRuntimeValue,
+} from './attachments/InstanceAttachment.ts';
 import { buildAttributes } from './buildAttributes.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { InstanceAttachmentContext } from './internal-api/InstanceAttachmentContext.ts';
 import type { ValidationContext } from './internal-api/ValidationContext.ts';
-import type {
-  ClientReactiveSerializableValueNode
-} from './internal-api/serialization/ClientReactiveSerializableValueNode.ts';
+import type { ClientReactiveSerializableValueNode } from './internal-api/serialization/ClientReactiveSerializableValueNode.ts';
 
 export type AnyUploadDefinition = {
   [V in ValueType]: UploadDefinition<V>;
