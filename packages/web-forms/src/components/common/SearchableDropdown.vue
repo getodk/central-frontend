@@ -63,7 +63,9 @@ const selectedLabel = computed(() => {
 		@change="$emit('change', $event.value)"
 	>
 		<template #option="slotProps">
-			<MarkdownBlock v-for="elem in slotProps.option.label" :key="elem.id" :elem="elem" />
+			<span>
+				<MarkdownBlock v-for="elem in slotProps.option.label" :key="elem.id" :elem="elem" />
+			</span>
 		</template>
 		<template #value>
 			<span v-if="!selectedLabel?.length" class="dropdown-placeholder">
