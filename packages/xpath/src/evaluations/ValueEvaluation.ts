@@ -63,7 +63,7 @@ export abstract class ValueEvaluation<
 
         case 'NODE':
         case 'STRING':
-          return this.toString() === operand.toString();
+          return this.toString() === operand.toString() || this.toNumber() === operand.toNumber();
 
         default:
           throw new UnreachableError(operand.type);
