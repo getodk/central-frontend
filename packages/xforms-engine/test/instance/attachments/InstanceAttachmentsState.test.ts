@@ -39,22 +39,27 @@ describe('InstanceAttachmentsState', () => {
       expect(fetchFormAttachment).not.toHaveBeenCalled();
     });
 
-    it('fetches each jr:// URL once and builds a File from the response', async () => {
+    it('fetches a jr:// URL and builds a File from the response', async () => {
       const blob = new Blob(['data'], { type: 'image/png' });
       const fetchFormAttachment = vi.fn<FetchFormAttachment>().mockResolvedValue(okResponse(blob));
       const state = new InstanceAttachmentsState(null, fetchFormAttachment);
 
-      const first = state.resolveFile('jr://images/default.png');
-      const second = state.resolveFile('jr://images/default.png');
-      await state.resolveFile('jr://images/other.png');
-      const result = await first;
+      const result = await state.resolveFile('jr://images/default.png');
 
-      expect(second).toBe(first);
       expect(result).toBeInstanceOf(File);
       expect(result?.name).toBe('jr://images/default.png');
       expect(result?.type).toBe('image/png');
-      expect(fetchFormAttachment).toHaveBeenCalledTimes(2);
+      expect(fetchFormAttachment).toHaveBeenCalledTimes(1);
       expect(fetchFormAttachment.mock.calls[0]?.[0].href).toBe('jr://images/default.png');
+    });
+
+    it('rejects when fetchFormAttachment returns a non-ok response', async () => {
+      const fetchFormAttachment = vi.fn<FetchFormAttachment>().mockResolvedValue(errorResponse());
+      const state = new InstanceAttachmentsState(null, fetchFormAttachment);
+
+      await expect(state.resolveFile('jr://images/missing.png')).rejects.toThrow(
+        'Error fetching form attachment: jr://images/missing.png'
+      );
     });
 
     it('rejects when the reference is not a jr:// URL and has no source attachment', async () => {
@@ -73,24 +78,6 @@ describe('InstanceAttachmentsState', () => {
   });
 
   describe('retryFile', () => {
-    it('fetches the jr:// URL again after a non-ok response and a retry', async () => {
-      const fetchFormAttachment = vi
-        .fn<FetchFormAttachment>()
-        .mockResolvedValueOnce(errorResponse())
-        .mockResolvedValue(okResponse(new Blob(['data'], { type: 'image/png' })));
-      const state = new InstanceAttachmentsState(null, fetchFormAttachment);
-
-      await expect(state.resolveFile('jr://images/default.png')).rejects.toThrow(
-        'Error fetching form attachment: jr://images/default.png'
-      );
-
-      state.retryFile('jr://images/default.png');
-      const result = await state.resolveFile('jr://images/default.png');
-
-      expect(result?.name).toBe('jr://images/default.png');
-      expect(fetchFormAttachment).toHaveBeenCalledTimes(2);
-    });
-
     it('retries the source attachment', () => {
       const retry = vi.fn();
       // @ts-expect-error - stub with just the properties this test calls

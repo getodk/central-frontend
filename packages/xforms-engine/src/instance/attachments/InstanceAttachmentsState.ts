@@ -10,8 +10,6 @@ import type { InstanceAttachmentContext } from '../internal-api/InstanceAttachme
 import type { InstanceAttachment } from './InstanceAttachment.ts';
 
 export class InstanceAttachmentsState extends Map<InstanceAttachmentContext, InstanceAttachment> {
-  private readonly formAttachmentFiles = new Map<JRResourceURLString, Promise<File>>();
-
   constructor(
     private readonly sourceAttachments: InstanceAttachmentMap | null = null,
     private readonly fetchFormAttachment: FetchFormAttachment | null = null
@@ -19,7 +17,7 @@ export class InstanceAttachmentsState extends Map<InstanceAttachmentContext, Ins
     super();
   }
 
-  private async fetchFormAttachmentFile(
+  private async resolveFormAttachmentFile(
     fetchFormAttachment: FetchFormAttachment,
     value: JRResourceURLString
   ): Promise<File> {
@@ -31,21 +29,6 @@ export class InstanceAttachmentsState extends Map<InstanceAttachmentContext, Ins
     const blob = await response.blob();
     const blobData = await getBlobData(blob);
     return new File([blobData], value, { type: blob.type });
-  }
-
-  private resolveFormAttachmentFile(value: JRResourceURLString): Promise<File> | null {
-    if (this.fetchFormAttachment == null) {
-      return null;
-    }
-
-    const cached = this.formAttachmentFiles.get(value);
-    if (cached != null) {
-      return cached;
-    }
-
-    const file = this.fetchFormAttachmentFile(this.fetchFormAttachment, value);
-    this.formAttachmentFiles.set(value, file);
-    return file;
   }
 
   // Resolves a binary node's value to an attachment of the edited instance or a
@@ -62,17 +45,15 @@ export class InstanceAttachmentsState extends Map<InstanceAttachmentContext, Ins
     }
 
     if (JRResourceURL.isJRResourceReference(value)) {
-      return this.resolveFormAttachmentFile(value);
+      return this.fetchFormAttachment
+        ? this.resolveFormAttachmentFile(this.fetchFormAttachment, value)
+        : null;
     }
 
     return Promise.reject(new AttachmentNotFoundError(value));
   }
 
   retryFile(reference: string) {
-    const value = reference.trim();
-    if (JRResourceURL.isJRResourceReference(value)) {
-      this.formAttachmentFiles.delete(value);
-    }
-    this.sourceAttachments?.retry(value);
+    this.sourceAttachments?.retry(reference.trim());
   }
 }
