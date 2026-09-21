@@ -143,6 +143,7 @@ interface ReferenceResolver {
   readonly context: InstanceAttachmentContext;
   readonly getInstanceValue: Accessor<InstanceAttachmentFileName>;
   readonly getClientWrite: Accessor<ClientWrite | null>;
+  readonly getState: Accessor<BaseInstanceAttachmentState>;
   readonly setState: Setter<BaseInstanceAttachmentState>;
 }
 
@@ -171,9 +172,15 @@ const applyResolvedFile = (
     .then((file) => resolvedState(file))
     .catch((error: unknown) => loadingErrorState(reference, toLoadingError(error)))
     .then((state) => {
-      if (isCurrentReference(resolver, reference)) {
-        resolver.setState(state);
+      if (!isCurrentReference(resolver, reference)) {
+        return;
       }
+
+      if (state.loadingError !== false && resolver.getState().file != null) {
+        return;
+      }
+
+      resolver.setState(state);
     });
 };
 
@@ -208,7 +215,13 @@ export const createInstanceAttachment = (
     const [getInstanceValue, setInstanceValue] = instanceValueState;
     const [getState, setState] = createSignal<BaseInstanceAttachmentState>(BLANK_STATE);
     const [getClientWrite, setClientWrite] = createSignal<ClientWrite | null>(null);
-    const resolver: ReferenceResolver = { context, getInstanceValue, getClientWrite, setState };
+    const resolver: ReferenceResolver = {
+      context,
+      getInstanceValue,
+      getClientWrite,
+      getState,
+      setState,
+    };
 
     createComputed(() => {
       const reference = getInstanceValue();

@@ -13,7 +13,6 @@ import type { SimpleAtomicState, SimpleAtomicStateSetter } from './types.ts';
 import { ValueNode } from '../../instance/abstract/ValueNode.ts';
 import { Attribute } from '../../instance/Attribute.ts';
 import type { AnyValueNode } from '../../instance/hierarchy.ts';
-import { UploadControl } from '../../instance/UploadControl.ts';
 import { getInstanceDefaultValue } from '../instance-defaults.ts';
 
 const REPEAT_INDEX_REGEX = /([^[]*)(\[[0-9]+\])/g;
@@ -269,7 +268,7 @@ const registerSetValueActions = (
 };
 
 const isValueChangedActionTarget = (node: unknown): node is AnyValueNode | Attribute => {
-  return node instanceof ValueNode || node instanceof Attribute || node instanceof UploadControl;
+  return node instanceof ValueNode || node instanceof Attribute;
 };
 
 const registerValueChangedActions = (context: ValueContext, getValue: Accessor<string>) => {
