@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <dropdown ref="dropdownEl" tag="div" class="multiselect form-group"
+  <dropdown ref="dropdownEl" tag="div" class="multiselect form-group" :class="{ single }"
     placement="bottom-start" :close-on-menu-click="false" @show="onShow" @hide="onHide">
     <template #toggle="{ toggle, attrs }">
       <button v-bind="attrs" type="button" class="dropdown-trigger"
@@ -37,7 +37,7 @@ except according to the terms contained in the LICENSE file.
           </button>
         </div>
       </li>
-      <li class="change-all">
+      <li v-if="!single" class="change-all">
         <button type="button"
           class="btn btn-outlined select-all" @click.prevent="changeAll(true)">
           {{ all }}
@@ -47,16 +47,25 @@ except according to the terms contained in the LICENSE file.
          {{ none }}
         </button>
       </li>
+      <li v-else class="change-all single">
+        <button type="button" class="btn btn-outlined" @click.prevent="clearSelection">
+          {{ none }}
+        </button>
+      </li>
       <li>
         <ul ref="optionList" class="option-list"
           :class="{ 'shows-all': searchValue === '' }" @change="changeCheckbox">
           <template v-if="options != null">
             <!-- eslint-disable-next-line vue/object-curly-newline -->
             <li v-for="({ value, key = value, text = value, description }, i) in options"
-              :key="key" :class="{ 'search-match': searchMatches.has(value) }">
-              <div class="checkbox">
+              :key="key" :class="{
+                'search-match': searchMatches.has(value),
+                selected: single && selected.has(value),
+              }">
+              <div :class="single ? 'single-select-option' : 'checkbox'">
                 <label>
-                  <input type="checkbox" :data-index="i"
+                  <input :type="single ? 'radio' : 'checkbox'" :name="single ? singleSelectName : null"
+                    :class="{ 'sr-only': single }" :data-index="i"
                     :aria-describedby="description != null ? descriptionId(i) : null">
                   <span v-if="description == null" v-tooltip.text>{{ text }}</span>
                   <span v-else v-tooltip.no-aria="description">{{ text }}</span>
@@ -84,7 +93,7 @@ except according to the terms contained in the LICENSE file.
 let id = 1;
 </script>
 <script setup>
-import { computed, inject, ref, shallowReactive, watch, watchEffect } from 'vue';
+import { computed, inject, nextTick, ref, shallowReactive, watch, watchEffect } from 'vue';
 
 import Dropdown from './dropdown.vue';
 
@@ -125,6 +134,8 @@ const props = defineProps({
     type: Array,
     required: true
   },
+  // `true` if the component selects at most one option.
+  single: Boolean,
   // By default, the user can uncheck all options. However, if defaultToAll is
   // `true`, then at least one option must be selected. If all options are
   // unchecked, then the selection falls back to all options. That can be useful
@@ -145,7 +156,7 @@ const props = defineProps({
   },
   all: {
     type: String,
-    required: true
+    required: false
   },
   none: {
     type: String,
@@ -177,6 +188,7 @@ const { i18n, buildMode } = inject('container');
 const idPrefix = `multiselect${id}`;
 id += 1;
 const descriptionId = (i) => `${idPrefix}-description${i}`;
+const singleSelectName = `${idPrefix}-single`;
 
 const optionList = ref(null);
 
@@ -237,6 +249,9 @@ const syncWithModelValue = () => {
 };
 
 const changeCheckbox = ({ target }) => {
+  if (props.single) {
+    for (const value of [...selected]) change(value);
+  }
   change(props.options[target.dataset.index].value);
 };
 
@@ -359,6 +374,8 @@ const dropdownEl = ref(null);
 
 const onShow = () => {
   syncWithModelValue();
+  if (props.single && props.search != null)
+    nextTick(() => { searchInput.value?.focus(); });
 };
 
 const onHide = () => {
@@ -395,6 +412,13 @@ const changeAll = (selectAll) => {
   }
 };
 
+const clearSelection = () => {
+  for (const input of optionList.value.querySelectorAll('input'))
+    input.checked = false;
+  for (const value of [...selected]) change(value);
+  apply();
+};
+
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -405,10 +429,17 @@ const selectOption = computed(() => {
   if (props.loading) return i18n.t('common.loading');
   if (props.options == null) return i18n.t('common.error');
   const { placeholder } = props;
-  return placeholder({
+  const payload = {
     selected: i18n.n(props.modelValue.length, 'default'),
     total: i18n.n(props.options.length, 'default')
-  });
+  };
+  if (props.single) {
+    const selectedOption = props.modelValue.length !== 0
+      ? props.options.find(option => option.value === props.modelValue[0])
+      : null;
+    payload.selectedText = selectedOption?.text ?? selectedOption?.value ?? null;
+  }
+  return placeholder(payload);
 });
 
 // Implements props.empty.
@@ -432,6 +463,13 @@ const emptyMessage = computed(() => (searchValue.value === ''
       outline: none;
       box-shadow: $btn-focus-box-shadow;
     }
+  }
+
+  .display-value {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .icon-angle-down {
@@ -499,6 +537,8 @@ const emptyMessage = computed(() => (searchValue.value === ''
       flex: 1 1 50%;
       line-height: 15px;
     }
+
+    &.single button { width: 100%; }
   }
 
   .option-list {
@@ -524,6 +564,27 @@ const emptyMessage = computed(() => (searchValue.value === ''
       label { @include text-overflow-ellipsis; }
     }
 
+    .single-select-option {
+      display: block;
+
+      label {
+        @include text-overflow-ellipsis;
+        font-weight: normal;
+        margin-bottom: 0;
+        width: 100%;
+      }
+    }
+
+    li.selected {
+      background-color: $color-action-light;
+      margin-left: -$hpadding;
+      margin-right: -$hpadding;
+      padding-left: 2 * $hpadding;
+      padding-right: 2 * $hpadding;
+
+      &:hover { background-color: darken($color-action-light, 7%); }
+    }
+
     input[type="checkbox"] {
       margin-top: 0;
       margin-right: 5px;
@@ -541,6 +602,68 @@ const emptyMessage = computed(() => (searchValue.value === ''
       width: max-content;
 
       &:empty { display: none; }
+    }
+  }
+
+  &.single .option-list {
+    font-size: 12px;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    li {
+      box-sizing: border-box;
+      // Override the max-width set above: in single-select mode, rows (and
+      // especially the selected row's highlight) should track the menu's
+      // actual width rather than being capped, or the highlight can fall
+      // short of the row's edge when the menu's width changes.
+      max-width: none;
+      height: 30px;
+      padding: 7px 8px;
+
+      &:not(.empty-message):hover { background-color: #e6e6e6; }
+    }
+
+    li.selected {
+      margin-left: -8px;
+      margin-right: -8px;
+      padding-left: 16px;
+      padding-right: 16px;
+      &:hover { background-color: $color-action-light; }
+    }
+
+    label { line-height: 16px; }
+
+    input:focus-visible + span {
+      box-shadow: $btn-focus-box-shadow;
+    }
+  }
+
+  &.single {
+    .search {
+      margin-bottom: 6px;
+      padding: 0;
+
+      .form-group {
+        height: 36px;
+        padding: 0 10px;
+      }
+
+      .form-control {
+        font-size: 12px;
+        line-height: 16px;
+      }
+    }
+
+    .change-all {
+      margin-bottom: 6px;
+      padding: 0;
+
+      button {
+        font-size: 12px;
+        height: 30px;
+        line-height: 16px;
+        padding: 0 10px;
+      }
     }
   }
 
