@@ -71,6 +71,8 @@ provide(QUESTION_HAS_ERROR, questionHasError);
 </template>
 
 <style scoped lang="scss">
+@use 'primeflex/core/_variables.scss' as pf;
+
 .question-container {
 	display: flex;
 	flex-direction: column;
@@ -80,6 +82,11 @@ provide(QUESTION_HAS_ERROR, questionHasError);
 
 	&.highlight {
 		background-color: var(--odk-error-background-color);
+	}
+}
+@media screen and (min-width: #{pf.$sm}) {
+	.p-panel .question-container {
+		border-radius: 0;
 	}
 }
 </style>
