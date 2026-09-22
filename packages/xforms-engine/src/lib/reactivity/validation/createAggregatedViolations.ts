@@ -4,31 +4,42 @@ import type {
   AncestorNodeValidationState,
   DescendantNodeViolationReference,
 } from '../../../client/validation.ts';
-import type { AnyParentNode, AnyValueNode } from '../../../instance/hierarchy.ts';
+import type { AnyNode, AnyParentNode } from '../../../instance/hierarchy.ts';
 import { createSharedNodeState } from '../node-state/createSharedNodeState.ts';
 
-const violationReference = (node: AnyValueNode): DescendantNodeViolationReference | null => {
+const violationReference = (node: AnyNode): DescendantNodeViolationReference[] => {
+  if (node.nodeType === 'primary-instance') {
+    return [];
+  }
   const violation = node.getViolation();
-
   if (violation == null) {
-    return null;
+    return [];
   }
 
   const { nodeId } = node;
 
-  return {
-    nodeId,
-    get reference() {
-      return node.currentState.reference;
+  return [
+    {
+      nodeId,
+      get node() {
+        return node;
+      },
+      get reference() {
+        return node.currentState.reference;
+      },
+      violation,
     },
-    violation,
-  };
+  ];
 };
 
 const collectViolationReferences = (
   context: AnyParentNode
 ): readonly DescendantNodeViolationReference[] => {
-  return context.getChildren().flatMap((child) => {
+  const violations = violationReference(context);
+  const attributeViolations = context.getAttributes().flatMap((a) => {
+    return violationReference(a);
+  });
+  const childViolations = context.getChildren().flatMap((child) => {
     switch (child.nodeType) {
       case 'model-value':
       case 'input':
@@ -37,20 +48,14 @@ const collectViolationReferences = (
       case 'range':
       case 'rank':
       case 'trigger':
-      case 'upload': {
-        const reference = violationReference(child);
-
-        if (reference == null) {
-          return [];
-        }
-
-        return [reference];
-      }
-
+      case 'upload':
+        // leaf node
+        return violationReference(child);
       default:
         return collectViolationReferences(child);
     }
   });
+  return [...violations, ...attributeViolations, ...childViolations];
 };
 
 interface AggregatedViolationsOptions {

@@ -1,7 +1,7 @@
 import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import type { AttributeNode } from '../client/AttributeNode.ts';
-import type { InstanceState, NullValidationState } from '../client/index.ts';
+import type { InstanceState, LeafNodeValidationState } from '../client/index.ts';
 import type { XFormsXPathAttribute } from '../integration/xpath/adapter/XFormsXPathNode.ts';
 import type { StaticAttribute } from '../integration/xpath/static-dom/StaticAttribute.ts';
 import { createAttributeNodeInstanceState } from '../lib/client-reactivity/instance-state/createAttributeNodeInstanceState.ts';
@@ -30,6 +30,10 @@ import type { AttributeContext } from './internal-api/AttributeContext.ts';
 import type { DecodeInstanceValue } from './internal-api/InstanceValueContext.ts';
 import type { ClientReactiveSerializableAttributeNode } from './internal-api/serialization/ClientReactiveSerializableAttributeNode.ts';
 import type { Root } from './Root.ts';
+import {
+  createValidationState,
+  type SharedValidationState,
+} from '../lib/reactivity/validation/createValidation.ts';
 
 export interface AttributeStateSpec extends DescendantNodeStateSpec<string> {
   readonly children: null;
@@ -51,7 +55,7 @@ export class Attribute
 
   protected readonly state: SharedNodeState<AttributeStateSpec>;
   protected readonly engineState: EngineState<AttributeStateSpec>;
-  readonly validationState: NullValidationState;
+  protected readonly validation: SharedValidationState;
 
   readonly nodeType = 'attribute';
   readonly currentState: CurrentState<AttributeStateSpec>;
@@ -75,6 +79,10 @@ export class Attribute
   override readonly getXPathValue: () => string;
   readonly setEncodedValue: (value: string, bypassReadonly?: boolean) => void;
 
+  get validationState(): LeafNodeValidationState {
+    return this.validation.currentState;
+  }
+
   constructor(
     readonly owner: AnyNode,
     definition: AttributeDefinition,
@@ -88,7 +96,7 @@ export class Attribute
 
     const codec = getSharedValueCodec('string');
 
-    this.validationState = { violations: [] };
+    this.validation = createValidationState(this, this.instanceConfig); // TODO attributes can throw errors now too - make sure this works
 
     this.valueType = 'string';
     this.decodeInstanceValue = codec.decodeInstanceValue;

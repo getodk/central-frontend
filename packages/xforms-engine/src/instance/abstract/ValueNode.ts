@@ -3,7 +3,7 @@ import type { Accessor } from 'solid-js';
 import type { BaseValueNode } from '../../client/BaseValueNode.ts';
 import type { LeafNodeType as ValueNodeType } from '../../client/node-types.ts';
 import type { InstanceState } from '../../client/serialization/InstanceState.ts';
-import type { AnyViolation, LeafNodeValidationState } from '../../client/validation.ts';
+import type { LeafNodeValidationState } from '../../client/validation.ts';
 import type { ValueType } from '../../client/ValueType.ts';
 import type { XFormsXPathElement } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
 import type { StaticLeafElement } from '../../integration/xpath/static-dom/StaticElement.ts';
@@ -18,8 +18,6 @@ import type { CurrentState } from '../../lib/reactivity/node-state/createCurrent
 import type { EngineState } from '../../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../../lib/reactivity/node-state/createSharedNodeState.ts';
 import type { SimpleAtomicState } from '../../lib/reactivity/types.ts';
-import type { SharedValidationState } from '../../lib/reactivity/validation/createValidation.ts';
-import { createValidationState } from '../../lib/reactivity/validation/createValidation.ts';
 import { LeafNodeDefinition } from '../../parse/model/LeafNodeDefinition.ts';
 import type { Attribute } from '../Attribute.ts';
 import type { GeneralParentNode } from '../hierarchy.ts';
@@ -32,6 +30,10 @@ import type { ClientReactiveSerializableValueNode } from '../internal-api/serial
 import type { ValidationContext } from '../internal-api/ValidationContext.ts';
 import type { DescendantNodeStateSpec } from './DescendantNode.ts';
 import { DescendantNode } from './DescendantNode.ts';
+import {
+  createValidationState,
+  type SharedValidationState,
+} from '../../lib/reactivity/validation/createValidation.ts';
 
 export type ValueNodeDefinition<V extends ValueType> = LeafNodeDefinition<V>;
 
@@ -129,17 +131,13 @@ export abstract class ValueNode<
     };
   }
 
-  // ValidationContext
-  getViolation(): AnyViolation | null {
-    return this.validation.engineState.violation;
-  }
-
-  isBlank(): boolean {
-    return this.getInstanceValue() === '';
-  }
-
   // InstanceNode
   getChildren(): readonly [] {
     return [];
+  }
+
+  // ValidationContext
+  override isBlank(): boolean {
+    return this.getInstanceValue() === '';
   }
 }

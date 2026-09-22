@@ -10,7 +10,7 @@ import type {
   XFormsXPathPrimaryInstanceDescendantNodeKind,
 } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
 import { XFORMS_XPATH_NODE_RANGE_KIND } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
-import type { EngineXPathEvaluator, Result } from '../../integration/xpath/EngineXPathEvaluator.ts';
+import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
 import type { StaticAttribute } from '../../integration/xpath/static-dom/StaticAttribute.ts';
 import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import { createComputedExpression } from '../../lib/reactivity/createComputedExpression.ts';
@@ -27,6 +27,9 @@ import { ActionDefinition } from '../../parse/model/ActionDefinition.ts';
 import { SET_GEOPOINT_LOCAL_NAME, SET_VALUE_LOCAL_NAME } from '../../parse/XFormDOM.ts';
 import { XFORM_EVENT } from '../../parse/model/Event.ts';
 import type { DependentExpression } from '../../parse/expression/abstract/DependentExpression.ts';
+import type { ValidationContext } from '../internal-api/ValidationContext.ts';
+import type { AnyViolation } from '../../client/validation.ts';
+import type { SharedValidationState } from '../../lib/reactivity/validation/createValidation.ts';
 
 export interface DescendantNodeSharedStateSpec {
   readonly reference: Accessor<string>;
@@ -70,7 +73,11 @@ export abstract class DescendantNode<
   Child extends AnyChildNode | null = null,
 >
   extends InstanceNode<Definition, Spec, Parent, Child>
-  implements BaseNode, XFormsXPathPrimaryInstanceDescendantNode, EvaluationContext
+  implements
+    BaseNode,
+    XFormsXPathPrimaryInstanceDescendantNode,
+    EvaluationContext,
+    ValidationContext
 {
   /**
    * Partial implementation of {@link isAttached}, used to check whether `this`
@@ -194,6 +201,7 @@ export abstract class DescendantNode<
     this as AnyDescendantNode as PrimaryInstanceXPathChildNode;
   readonly getActiveLanguage: Accessor<ActiveLanguage>;
   readonly valueChangedActions: ActionDefinition[];
+  protected abstract readonly validation: SharedValidationState;
 
   constructor(
     override readonly parent: Parent,
@@ -299,17 +307,25 @@ export abstract class DescendantNode<
   }
 
   private compute(expression: DependentExpression<'boolean'>, defaultValue: boolean) {
+    const computed = createComputedExpression(this, expression, { defaultValue });
     return createMemo(() => {
-      const r: Result<'boolean'> = createComputedExpression(this, expression, {
-        defaultValue,
-      })();
-      if (r.success) {
+      const result = computed();
+      if (result.success) {
         this.setError(null);
-        return r.value;
+        return result.value;
       } else {
-        this.setError(r.error);
+        this.setError(result.error);
         return defaultValue;
       }
     });
+  }
+
+  // ValidationContext
+  getViolation(): AnyViolation | null {
+    return this.validation.engineState.violation;
+  }
+
+  isBlank(): boolean {
+    return false; // TODO should this evaluate all children?
   }
 }
