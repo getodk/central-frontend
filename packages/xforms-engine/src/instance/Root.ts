@@ -234,7 +234,10 @@ export class Root
       return [];
     }
 
-    return this.validationState.violations.filter(({ nodeId }) => {
+    return this.validationState.violations.filter(({ node, nodeId }) => {
+      if (node.nodeType === 'attribute') {
+        nodeId = node.owner.nodeId;
+      }
       return this.pagination.getLeafPageId(nodeId) === currentPage;
     });
   }
