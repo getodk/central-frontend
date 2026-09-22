@@ -30,6 +30,7 @@ import type { DependentExpression } from '../../parse/expression/abstract/Depend
 import type { ValidationContext } from '../internal-api/ValidationContext.ts';
 import type { AnyViolation } from '../../client/validation.ts';
 import type { SharedValidationState } from '../../lib/reactivity/validation/createValidation.ts';
+import type { ComputedProperty } from '../../lib/reactivity/createInstanceErrorState.ts';
 
 export interface DescendantNodeSharedStateSpec {
   readonly reference: Accessor<string>;
@@ -251,13 +252,13 @@ export abstract class DescendantNode<
     const { readonly, relevant, required } = definition.bind;
 
     this.isSelfReadonly = this.scope.runTask(() => {
-      return this.compute(readonly, true);
+      return this.compute('readonly', readonly, true);
     });
     this.isSelfRelevant = this.scope.runTask(() => {
-      return this.compute(relevant, false);
+      return this.compute('relevant', relevant, false);
     });
     this.isRequired = this.scope.runTask(() => {
-      return this.compute(required, false);
+      return this.compute('required', required, false);
     });
 
     this.valueChangedActions = Array.from(definition.bodyElement?.element.children ?? [])
@@ -306,15 +307,19 @@ export abstract class DescendantNode<
     this.scope.dispose();
   }
 
-  private compute(expression: DependentExpression<'boolean'>, defaultValue: boolean) {
+  private compute(
+    property: ComputedProperty,
+    expression: DependentExpression<'boolean'>,
+    defaultValue: boolean
+  ) {
     const computed = createComputedExpression(this, expression, { defaultValue });
     return createMemo(() => {
       const result = computed();
       if (result.success) {
-        this.setError(null);
+        this.setError(property, null);
         return result.value;
       } else {
-        this.setError(result.error);
+        this.setError(property, result.error);
         return defaultValue;
       }
     });

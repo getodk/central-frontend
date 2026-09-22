@@ -92,7 +92,7 @@ const guardDownstreamReadonlyWrites = (
   const setValue: SimpleAtomicStateSetter<string> = (value) => {
     if (context.isReadonly()) {
       const reference = untrack(() => context.contextReference());
-      context.setError(new Error(`Cannot write to readonly field: ${reference}`));
+      context.setError('value', new Error(`Cannot write to readonly field: ${reference}`));
       return value;
     }
 
@@ -153,18 +153,19 @@ const referencesCurrentNode = (context: ValueContext, ref: string): boolean => {
     contextNode: context.contextNode,
   });
   if (!nodes.success) {
-    context.setError(nodes.error);
+    context.setError('value', nodes.error);
     return false;
   }
   if (nodes.value.length > 1) {
     context.setError(
+      'value',
       new Error(
         'You are trying to target a repeated field. Currently you may only target a field in a specific repeat instance. XPath nodeset has more than one node.'
       )
     );
     return false;
   }
-  context.setError(null);
+  context.setError('value', null);
   return nodes.value.includes(context.contextNode);
 };
 
@@ -200,11 +201,11 @@ const createCalculation = (
     if (context.isAttached() && context.isRelevant()) {
       const calculated = calculate();
       if (!calculated.success) {
-        context.setError(calculated.error);
+        context.setError('value', calculated.error);
         return;
       }
       const value = context.decodeInstanceValue(calculated.value);
-      context.setError(null);
+      context.setError('value', null);
       setRelevantValue(value);
     }
   });
@@ -231,11 +232,11 @@ const createActionCalculation = (
         return context.evaluator.evaluateString(computation.expression, context);
       });
       if (!calculated.success) {
-        context.setError(calculated.error);
+        context.setError('value', calculated.error);
         return;
       }
       const value = context.decodeInstanceValue(calculated.value);
-      context.setError(null);
+      context.setError('value', null);
       setRelevantValue(value);
     }
   });
@@ -303,10 +304,10 @@ const registerValueChangedActions = (context: ValueContext, getValue: Accessor<s
         contextNode: context.contextNode,
       });
       if (!nodesResult.success) {
-        context.setError(nodesResult.error);
+        context.setError('value', nodesResult.error);
         return;
       }
-      context.setError(null);
+      context.setError('value', null);
 
       if (!nodesResult.value.length) {
         return;
@@ -332,10 +333,10 @@ const registerValueChangedActions = (context: ValueContext, getValue: Accessor<s
               );
             });
             if (valueResult.success) {
-              destinationNode.setError(null);
+              destinationNode.setError('value', null);
               destinationNode.setEncodedValue(valueResult.value, true);
             } else {
-              destinationNode.setError(valueResult.error);
+              destinationNode.setError('value', valueResult.error);
             }
           }
         }

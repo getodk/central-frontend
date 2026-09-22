@@ -1,5 +1,5 @@
 import type { XPathNodeKindKey } from '@getodk/xpath';
-import type { Accessor, Signal } from 'solid-js';
+import { type Accessor, type Setter, type Signal } from 'solid-js';
 import type { BaseNode } from '../../client/BaseNode.ts';
 import type { NodeAppearances } from '../../client/NodeAppearances.ts';
 import type { FormNodeID } from '../../client/identity.ts';
@@ -22,7 +22,7 @@ import type { EngineState } from '../../lib/reactivity/node-state/createEngineSt
 import type { SharedNodeState } from '../../lib/reactivity/node-state/createSharedNodeState.ts';
 import type { ReactiveScope } from '../../lib/reactivity/scope.ts';
 import { createReactiveScope } from '../../lib/reactivity/scope.ts';
-import type { SimpleAtomicState, SimpleAtomicStateSetter } from '../../lib/reactivity/types.ts';
+import type { SimpleAtomicState } from '../../lib/reactivity/types.ts';
 import { createUniqueId } from '../../lib/unique-id.ts';
 import type { AnyNodeDefinition } from '../../parse/model/NodeDefinition.ts';
 import type { Attribute } from '../Attribute.ts';
@@ -32,7 +32,11 @@ import type { AnyChildNode, AnyNode } from '../hierarchy.ts';
 import { nodeID } from '../identity.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { InstanceConfig } from '../internal-api/InstanceConfig.ts';
-import { createInstanceErrorState } from '../../lib/reactivity/createInstanceErrorState.ts';
+import {
+  createInstanceErrorState,
+  type ErrorState,
+  type ComputedProperty,
+} from '../../lib/reactivity/createInstanceErrorState.ts';
 
 export type EngineInstanceNodeType = ClientInstanceNodeType | 'primary-instance';
 
@@ -173,8 +177,8 @@ export abstract class InstanceNode<
   abstract readonly isAttached: Accessor<boolean>;
   readonly scope: ReactiveScope;
   readonly computeReference: ComputeInstanceNodeReference;
-  protected readonly errorState: Accessor<Error | null>;
-  protected readonly setErrorState: SimpleAtomicStateSetter<Error | null>;
+  protected readonly errorState: Accessor<ErrorState>;
+  protected readonly setErrorState: Setter<ErrorState>;
 
   protected readonly computeChildStepReference: ComputeInstanceNodeReference = (
     parent,
@@ -291,10 +295,13 @@ export abstract class InstanceNode<
   abstract getAttributes(): readonly Attribute[];
 
   getError(): string | null {
-    return this.errorState()?.message ?? null;
+    return (Object.values(this.errorState()).find((value) => !!value) as string) ?? null;
   }
 
-  setError(error: Error | null) {
-    this.setErrorState(error);
+  setError(property: ComputedProperty, error: Error | null) {
+    this.setErrorState((prev: ErrorState) => {
+      prev[property] = error?.message ?? null;
+      return { ...prev };
+    });
   }
 }
