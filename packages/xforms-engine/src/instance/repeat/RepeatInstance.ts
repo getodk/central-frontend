@@ -34,6 +34,10 @@ import { buildChildren } from '../children/buildChildren.ts';
 import type { GeneralChildNode, RepeatRange } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { ClientReactiveSerializableTemplatedNode } from '../internal-api/serialization/ClientReactiveSerializableTemplatedNode.ts';
+import {
+  createValidationState,
+  type SharedValidationState,
+} from '../../lib/reactivity/validation/createValidation.ts';
 
 interface RepeatInstanceStateSpec extends DescendantNodeSharedStateSpec {
   readonly label: Accessor<TextRange<'label'> | null>;
@@ -66,6 +70,7 @@ export class RepeatInstance
   private readonly childrenState: ChildrenState<GeneralChildNode>;
   private readonly attributeState: AttributeState;
   private readonly currentIndex: Accessor<number>;
+  protected readonly validation: SharedValidationState;
 
   override readonly [XPathNodeKindKey] = 'element';
 
@@ -189,6 +194,8 @@ export class RepeatInstance
 
       createComputed(on<number, number>(computeCurrentIndex, setCurrentIndex, { defer: true }));
     });
+
+    this.validation = createValidationState(this, this.instanceConfig);
 
     childrenState.setChildren(buildChildren(this));
     this.validationState = createAggregatedViolations(this, this.instanceConfig);

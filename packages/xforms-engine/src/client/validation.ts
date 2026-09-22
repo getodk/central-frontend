@@ -1,4 +1,6 @@
+import type { Attribute } from '../instance/Attribute.ts';
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
+import type { AnyNode } from './hierarchy.ts';
 import type { FormNodeID } from './identity.ts';
 import type { OpaqueReactiveObjectFactory } from './OpaqueReactiveObjectFactory.ts';
 import type { TextRange } from './TextRange.ts';
@@ -145,6 +147,7 @@ export interface LeafNodeValidationState {
 export interface DescendantNodeViolationReference {
   readonly nodeId: FormNodeID;
 
+  get node(): AnyNode | Attribute;
   get reference(): string;
   get violation(): AnyViolation;
 }
@@ -166,15 +169,7 @@ export interface AncestorNodeValidationState {
   get violations(): readonly DescendantNodeViolationReference[];
 }
 
-/**
- * Convenience interface for nodes that cannot be invalid.
- */
-export interface NullValidationState {
-  get violations(): readonly [];
-}
-
 // prettier-ignore
 export type NodeValidationState =
 	| AncestorNodeValidationState
-	| LeafNodeValidationState
-	| NullValidationState;
+	| LeafNodeValidationState;
