@@ -1,5 +1,5 @@
 import { UpsertableMap } from '@getodk/common/lib/collections/UpsertableMap.ts';
-import type { Accessor } from 'solid-js';
+import type { Accessor, Setter } from 'solid-js';
 import { createEffect, createMemo, on } from 'solid-js';
 import type { ActiveLanguage } from '../../client/FormLanguage.ts';
 import type { BaseItem } from '../../client/BaseItem.ts';
@@ -17,8 +17,11 @@ import type { ItemsetDefinition } from '../../parse/body/control/ItemsetDefiniti
 import { createComputedExpression } from './createComputedExpression.ts';
 import type { ReactiveScope } from './scope.ts';
 import { createTextRange } from './text/createTextRange.ts';
-import { createInstanceErrorState } from './createInstanceErrorState.ts';
-import type { SimpleAtomicStateSetter } from './types.ts';
+import {
+  createInstanceErrorState,
+  type ComputedProperty,
+  type ErrorState,
+} from './createInstanceErrorState.ts';
 
 type ItemCollectionControl = RankControl | SelectControl;
 type DerivedItemLabel = ClientTextRange<'item-label'>;
@@ -70,8 +73,8 @@ class ItemsetItemEvaluationContext implements EvaluationContext {
   readonly evaluator: EngineXPathEvaluator;
   readonly contextReference: Accessor<string>;
   readonly getActiveLanguage: Accessor<ActiveLanguage>;
-  readonly errorState: Accessor<Error | null>;
-  readonly setErrorState: SimpleAtomicStateSetter<Error | null>;
+  readonly errorState: Accessor<ErrorState>;
+  readonly setErrorState: Setter<ErrorState>;
 
   constructor(
     control: ItemCollectionControl,
@@ -88,11 +91,14 @@ class ItemsetItemEvaluationContext implements EvaluationContext {
   }
 
   getError(): string | null {
-    return this.errorState()?.message ?? null;
+    return (Object.values(this.errorState()).find((value) => !!value) as string) ?? null;
   }
 
-  setError(error: Error | null) {
-    this.setErrorState(error);
+  setError(property: ComputedProperty, error: Error | null) {
+    this.setErrorState((prev: ErrorState) => {
+      prev[property] = error?.message ?? null;
+      return { ...prev };
+    });
   }
 }
 
@@ -107,10 +113,10 @@ const createItemsetItemLabel = (
     return createMemo(() => {
       const result = itemValue();
       if (result.success) {
-        context.setError(null);
+        context.setError('label', null);
         return derivedItemLabel(context, result.value);
       }
-      context.setError(result.error);
+      context.setError('label', result.error);
       return derivedItemLabel(context, '');
     });
   }
@@ -144,10 +150,10 @@ const createCycleGuardedItemNodes = (
   const itemNodes = createMemo((previous?: EngineXPathNode[]) => {
     const result = evaluateNodes();
     if (!result.success) {
-      control.setError(result.error);
+      control.setError('itemset', result.error);
       return previous ?? [];
     }
-    control.setError(null);
+    control.setError('itemset', null);
     const { value } = result;
     if (previous === undefined) {
       return value;
@@ -217,16 +223,16 @@ const createItemset = (
         const valueResult = item.value();
         let value: string;
         if (valueResult.success) {
-          control.setError(null);
+          control.setError('itemset', null);
           value = valueResult.value;
         } else {
-          control.setError(valueResult.error);
+          control.setError('itemset', valueResult.error);
           value = '';
         }
         const properties = item.properties.map(([propLabel, propValue]) => {
           const propResult = propValue();
           if (!propResult.success) {
-            control.setError(propResult.error);
+            control.setError('itemset', propResult.error);
           }
           const pv = propResult.success ? propResult.value : '';
           return [propLabel, pv] as [string, string];

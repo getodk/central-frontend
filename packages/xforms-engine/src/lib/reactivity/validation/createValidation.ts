@@ -47,13 +47,13 @@ const createConstraintValidation = (
     const message = constraintMsg ? createTextRange(context, 'constraintMsg', constraintMsg) : null;
 
     return createMemo(() => {
-      context.setError(null);
+      context.setError('constraint', null);
       if (!context.isRelevant() || context.isBlank()) {
         return constraintValid();
       }
       const result = isValid();
       if (!result.success) {
-        context.setError(result.error);
+        context.setError('constraint', result.error);
         return constraintValid();
       }
       if (result.value) {

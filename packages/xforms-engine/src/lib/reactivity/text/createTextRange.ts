@@ -30,7 +30,7 @@ const generateResourceChunk = (context: EvaluationContext, child: Element, type:
         if (result.success) {
           parts.push(result.value);
         } else {
-          context.setError(result.error);
+          context.setError('label', result.error);
         }
       }
     } else if (isTextNode(grandchild)) {
@@ -84,7 +84,7 @@ const getChunkExpressions = <Role extends TextRole>(
     contextNode: context.contextNode,
   });
   if (!result.success) {
-    context.setError(result.error);
+    context.setError('label', result.error);
     return [];
   }
   const lang = context.getActiveLanguage();
@@ -108,7 +108,7 @@ const createTextChunks = <Role extends TextRole>(
   const chunks: TextChunk[] = [];
   const mediaSources: MediaSources = {};
   const chunkExpressions = getChunkExpressions(context, definition);
-  context.setError(null);
+  context.setError('label', null);
   chunkExpressions.forEach((chunkExpression) => {
     if (chunkExpression.resourceType) {
       const url = chunkExpression.stringValue?.trim();
@@ -125,7 +125,7 @@ const createTextChunks = <Role extends TextRole>(
 
     const computed = createComputedExpression(context, chunkExpression)();
     if (!computed.success) {
-      context.setError(computed.error);
+      context.setError('label', computed.error);
       return;
     }
     chunks.push(new TextChunk(context, chunkExpression.source, computed.value));

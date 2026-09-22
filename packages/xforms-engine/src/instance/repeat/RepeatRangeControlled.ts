@@ -57,10 +57,10 @@ export class RepeatRangeControlled
       createComputed((previousCount: number) => {
         const result = computeCount();
         if (!result.success) {
-          this.setError(result.error);
+          this.setError('count', result.error);
           return previousCount;
         }
-        this.setError(null);
+        this.setError('count', null);
         return this.applyCountChange(previousCount, result.value, savedNodes, template);
       }, seededCount);
     });
