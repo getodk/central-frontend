@@ -1,7 +1,6 @@
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
 import type { FormNodeID } from './identity.ts';
 import type { OpaqueReactiveObjectFactory } from './OpaqueReactiveObjectFactory.ts';
-import type { RootNode } from './RootNode.ts';
 import type { TextRange } from './TextRange.ts';
 
 // This interface exists so that extensions can share JSDoc for `valid`.
@@ -119,9 +118,6 @@ export interface LeafNodeValidationState {
  * - {@link nodeId} will be a stable reference to a node with the same
  *   {@link BaseNode.nodeId | `nodeId`}.
  *
- * - {@link node} will have reference equality to the same node object, within
- *   the active form instance's {@link RootNode} tree
- *
  * - {@link reference} will be a **current** reference to the same node object's
  *   **computed** {@link BaseNodeState.reference | `currentState.reference`}
  *
@@ -129,11 +125,6 @@ export interface LeafNodeValidationState {
  * {@link OpaqueReactiveObjectFactory}) can safely assume that {@link reference}
  * will be recomputed and updated in tandem with the affected node's own
  * computed `currentState.reference` as well.
- *
- * @todo this type currently exposes multiple ways to reference the affected
- * node. This is intended to maximize flexibility: it's not yet clear how
- * clients will be best served by which reference mechanism. It is expected that
- * each property will be directly computed from the affected node.
  */
 export interface DescendantNodeViolationReference {
   readonly nodeId: FormNodeID;
@@ -141,6 +132,12 @@ export interface DescendantNodeViolationReference {
   get reference(): string;
   get violation(): AnyViolation;
 }
+
+/**
+ * Violations on the current page that blocked an action (page turn, repeat add).
+ * Empty when the action went through and always empty on non-paginated forms.
+ */
+export type BlockingViolations = readonly DescendantNodeViolationReference[];
 
 /**
  * Provides access from any ancestor/parent node, to identify any validity

@@ -38,5 +38,13 @@ describe('EntityUploadPopup', () => {
       const text = component.get('#entity-upload-popup-status').text();
       text.should.equal('Processing file…');
     });
+
+    it('shows if new properties are being created', () => {
+      const component = mountComponent({
+        props: { extraProperties: true, progress: null }
+      });
+      const text = component.get('#entity-upload-popup-status').text();
+      text.should.equal('Creating new properties…');
+    });
   });
 });

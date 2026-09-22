@@ -1,3 +1,4 @@
+import EntityUploadDataTemplate from '../../../../src/components/entity/upload/data-template.vue';
 import EntityUploadFileSelect from '../../../../src/components/entity/upload/file-select.vue';
 import FileDropZone from '../../../../src/components/file-drop-zone.vue';
 
@@ -8,6 +9,31 @@ const mountComponent = (options = {}) => mount(EntityUploadFileSelect, options);
 const csv = new File([''], 'my_data.csv');
 
 describe('EntityUploadFileSelect', () => {
+  describe('dataTemplate prop', () => {
+    it('renders correctly if the prop is true', () => {
+      const component = mountComponent({
+        props: { dataTemplate: true }
+      });
+      component.findComponent(EntityUploadDataTemplate).exists().should.be.true;
+      component.get('p').text().should.equal('Upload a .csv file');
+    });
+
+    it('renders correctly if the prop is false', () => {
+      const component = mountComponent({
+        props: { dataTemplate: false }
+      });
+      component.findComponent(EntityUploadDataTemplate).exists().should.be.false;
+      component.find('p').exists().should.be.false;
+    });
+  });
+
+  it('shows the number of errors', () => {
+    const component = mountComponent({
+      props: { errors: 2, dataTemplate: true }
+    });
+    component.get('p').text().should.startWith('2 errors must be fixed');
+  });
+
   it('disables elements if the disabled prop is true', () => {
     const component = mountComponent({
       props: { disabled: true }

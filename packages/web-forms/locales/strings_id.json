@@ -11,9 +11,21 @@
     "string": "Kirim",
     "developer_comment": "Label for the primary form submission button."
   },
+  "odk_web_forms.back.label": {
+    "string": "Kembali",
+    "developer_comment": "Label for the button that moves to the previous page in a paginated form."
+  },
+  "odk_web_forms.next.label": {
+    "string": "Lanjut",
+    "developer_comment": "Label for the button that moves to the next page in a paginated form."
+  },
   "odk_web_forms.validation.error": {
     "string": "{count, plural, other {# pertanyaan dojawab dengan tidak tepat}}",
     "developer_comment": "Error banner message. {count} is the number of validation violations."
+  },
+  "odk_web_forms.validation.view.label": {
+    "string": "Lihat",
+    "developer_comment": "Label for the error banner button that navigates to the first question with a validation error."
   },
   "odk_web_forms.geolocation.error": {
     "string": "Lokasi tidak tersedia. Aktifkan GPS dan izin browser, lalu muat ulang formulir untuk mencoba lagi.",

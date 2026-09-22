@@ -117,6 +117,9 @@ const del = () => {
       "Sei sicuro di voler eliminare la Lista Entità? “{name}”? Questo è irreversibile."
     ]
   },
+  "pt": {
+    "title": "Excluir a lista de entidades"
+  },
   "zh": {
     "title": "删除实体列表",
     "introduction": [

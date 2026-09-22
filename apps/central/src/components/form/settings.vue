@@ -257,6 +257,7 @@ const hideAndReset = () => {
       "delete": "Das Formular \"{name}\" wurde erfolgreich gelöscht."
     },
     "webFormsSetting": {
+      "webForms": "Erfahrungen mit Webformularen",
       "description": "Ausfüllen, anschauen und bearbeiten des Formulars \"{formName}\" mit",
       "enketoSelected": "Sie verwenden jetzt Enketo, um Ihr Formular \"{formName}“ auszufüllen, in der Vorschau anzuzeigen und zu bearbeiten.",
       "owfSelected": "Sie verwenden jetzt ODK Web Forms, um Ihr Formular \"{formName}“ auszufüllen, in der Vorschau anzuzeigen und zu bearbeiten."

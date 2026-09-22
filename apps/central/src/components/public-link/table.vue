@@ -134,16 +134,19 @@ const filteredPublicLinks = computed(() => {
   "de": {
     "header": {
       "once": "Einzelübermittlung",
-      "accessLink": "Zugangslink"
+      "accessLink": "Zugangslink",
+      "createdAtAndActions": "{createdAt}/ {actions}"
     }
   },
   "es": {
     "header": {
       "once": "Envío único",
-      "accessLink": "Enlace de acceso"
+      "accessLink": "Enlace de acceso",
+      "createdAtAndActions": "{createdAt}/{actions}"
     }
   },
   "fr": {
+    "noFilterResults": "Aucun lien d'accès public ne correspond au filtre actuel.",
     "header": {
       "once": "Soumission unique",
       "accessLink": "Lien d'accès",
@@ -159,7 +162,8 @@ const filteredPublicLinks = computed(() => {
   "it": {
     "header": {
       "once": "Invio singolo",
-      "accessLink": "Link di accesso"
+      "accessLink": "Link di accesso",
+      "createdAtAndActions": "{createdAt}/{actions}"
     }
   },
   "ja": {

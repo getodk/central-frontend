@@ -79,10 +79,6 @@ The following meta fields are supported for bottom-level routes:
     However, NotFound requires neither: a user can navigate to NotFound whether
     they are logged in or anonymous.
 
-  - skipAutoLogout (default: false): If `true`, no alert will be displayed when
-    session is about to expire. Also user will be not be redirected to login
-    page when session has expired.
-
   requestData
   -----------
 
@@ -361,18 +357,6 @@ const routes = [
             project: () => project.permits(['dataset.list', 'entity.list'])
           },
           title: () => [i18n.t('resource.entities'), project.name]
-        }
-      }),
-      asyncRoute({
-        path: 'custom-properties',
-        component: 'CustomPropertyList',
-        props: true,
-        loading: 'tab',
-        meta: {
-          validateData: {
-            project: () => project.permits('project.update')
-          },
-          title: () => [i18n.t('projectShow.tab.customProperties'), project.name]
         }
       }),
       asyncRoute({
@@ -711,7 +695,6 @@ const routesByName = new Map();
     requireAnonymity: false,
     preserveData: [],
     fullWidth: false,
-    skipAutoLogout: false,
     ...meta,
     validateData: meta == null || meta.validateData == null
       ? []
@@ -766,7 +749,6 @@ const routesByName = new Map();
     'ProjectOverview',
     'ProjectUserList',
     'FieldKeyList',
-    'CustomPropertyList',
     'ProjectFormAccess',
     'DatasetList',
     'ProjectSettings',

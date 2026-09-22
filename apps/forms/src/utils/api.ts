@@ -1,3 +1,7 @@
+export interface Attachment {
+  name: string
+}
+
 export interface Form {
   name: string;
   xmlFormId: string;
@@ -7,6 +11,8 @@ export interface Form {
   enketoOnceId?: string;
   draft: boolean;
   webformsEnabled: boolean;
+  attachments: Attachment[];
+  once: boolean;
 }
 
 export interface Project {
@@ -92,13 +98,29 @@ export const getFormXml = async (projectId: number, formId: string, draft: boole
   return await response.text();
 };
 
-const getForm = async (url: string): Promise<Form> => {
+const getAttachments = async (projectId: number, xmlFormId: string, draft: boolean, st?: string | null): Promise<Attachment[]> => {
+  const draftPath = draft ? '/draft' : '';
+  const qs = queryString({ st });
+  const url = `/v1/projects/${projectId}/forms/${xmlFormId}${draftPath}/attachments${qs}`;
+  const response = await fetch(url);
+  if (!response.ok) {
+    const result = await response.json() as BackendStatusResponseBody;
+    throw new RequestError(result.message, result.code);
+  }
+  const attachments = await response.json() as BackendAttachmentResponseBody[];
+  return attachments
+    .filter(attachment => attachment.exists)
+    .map(attachment => ({ name: attachment.name }))
+};
+
+const getForm = async (url: string, draft: boolean, st?: string | null): Promise<Form> => {
   const response = await fetch(url);
   if (!response.ok) {
     const result = await response.json() as BackendStatusResponseBody;
     throw new RequestError(result.message, result.code);
   }
   const result = await response.json() as BackendFormResponseBody;
+  const attachments = await getAttachments(result.projectId, result.xmlFormId, draft, st);
   return {
     name: result.name,
     xmlFormId: result.xmlFormId,
@@ -107,21 +129,25 @@ const getForm = async (url: string): Promise<Form> => {
     state: result.state,
     draft: !result.publishedAt,
     enketoOnceId: result.enketoOnceId,
-    webformsEnabled: !!result.webformsEnabled
+    webformsEnabled: !!result.webformsEnabled,
+    attachments,
+    once: false,
   };
 };
 
 export const getFormByEnketoId = async (enketoId: string, st?: string | null): Promise<Form> => {
   const qs = queryString({ st });
   const url = `/v1/form-links/${enketoId}/form${qs}`;
-  return getForm(url);
+  const form = await getForm(url, false, st);
+  form.once = enketoId === form.enketoOnceId;
+  return form;
 };
 
 export const getFormByFormId = async (projectId: number, formId: string, draft: boolean, st?: string | null): Promise<Form> => {
   const draftPath = draft ? '/draft' : '';
   const qs = queryString({ st });
   const url = `/v1/projects/${projectId}/forms/${formId}${draftPath}${qs}`;
-  return getForm(url);
+  return getForm(url, draft, st);
 };
 
 export const getProject = async (projectId: number): Promise<Project> => {

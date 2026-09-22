@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
       <template #title>{{ $t('systemProperties') }}</template>
       <template #body>
         <p>{{ $tc('propertiesIgnored', systemProperties.length) }}</p>
-        <p><i18n-list :list="systemProperties"/></p>
+        <entity-upload-property-list :names="systemProperties"/>
       </template>
     </entity-upload-alert>
     <entity-upload-alert v-if="caseMismatch != null"
@@ -53,7 +53,7 @@ except according to the terms contained in the LICENSE file.
       <template #title>{{ $tc('invalidProperties', invalidProperties.length) }}</template>
       <template #body>
         <p>{{ $tc('propertiesIgnored', invalidProperties.length) }}</p>
-        <p><i18n-list :list="invalidProperties"/></p>
+        <entity-upload-property-list :names="invalidProperties"/>
       </template>
     </entity-upload-alert>
     <entity-upload-alert v-if="missingProperties != null" type="warning">
@@ -62,7 +62,7 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template #body>
         <p>{{ $tc('missingProperties.description', missingProperties.length) }}</p>
-        <p><i18n-list :list="missingProperties"/></p>
+        <entity-upload-property-list :names="missingProperties"/>
       </template>
     </entity-upload-alert>
 
@@ -88,15 +88,24 @@ except according to the terms contained in the LICENSE file.
       </template>
       <template #body>
         <p>
-          <template v-if="extraProperties.length === 1">
-            {{ $t('extraProperties.description.one') }}
+          <template v-if="!hasError">
+            <template v-if="extraProperties.length === 1">
+              {{ $t('extraProperties.description.one') }}
+            </template>
+            <template v-else>
+              {{ $t('extraProperties.description.multiple') }}
+            </template>
           </template>
           <template v-else>
-            {{ $t('extraProperties.description.multiple') }}
+            <template v-if="extraProperties.length === 1">
+              {{ $t('extraProperties.error.one') }}
+            </template>
+            <template v-else>
+              {{ $t('extraProperties.error.multiple') }}
+            </template>
           </template>
         </p>
-        <entity-upload-extra-properties :properties="extraProperties"
-          @toggle="toggleExtraProperty"/>
+        <slot name="extra-properties"></slot>
       </template>
     </entity-upload-alert>
   </div>
@@ -104,8 +113,7 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import EntityUploadAlert from './alert.vue';
-import EntityUploadExtraProperties from './extra-properties.vue';
-import I18nList from '../../i18n/list.vue';
+import EntityUploadPropertyList from './property-list.vue';
 import SentenceSeparator from '../../sentence-separator.vue';
 
 defineOptions({
@@ -116,10 +124,12 @@ defineProps({
     type: String,
     required: true
   },
+  // Number of warnings
   count: {
     type: Number,
     required: true
   },
+  hasError: Boolean,
 
   // Column header warnings
   systemProperties: Array,
@@ -132,11 +142,7 @@ defineProps({
   raggedRows: Array,
   largeCell: Number
 });
-const emit = defineEmits(['rows', 'toggle-extra']);
-
-const toggleExtraProperty = (property, checked) => {
-  emit('toggle-extra', property, checked);
-};
+defineEmits(['rows']);
 </script>
 
 <style lang="scss">
@@ -194,6 +200,11 @@ const toggleExtraProperty = (property, checked) => {
         "one": "Select the column to create a new property, otherwise it will be ignored.",
         // "Ones" refers to "columns".
         "multiple": "Select which ones to create, otherwise they will be ignored."
+      },
+      "error": {
+        "one": "Once you’ve fixed all errors, you’ll be able to select the column.",
+        // "Ones" refers to "columns".
+        "multiple": "Once you’ve fixed all errors, you’ll be able to select which ones to create."
       }
     },
     // "Property" refers to an Entity property.
@@ -225,10 +236,39 @@ const toggleExtraProperty = (property, checked) => {
     }
   },
   "fr": {
+    "introduction": "Certaines lignes contiennent des avertissements qui pourraient affecter les résultats du chargement.",
+    "systemProperties": "Les propriétés système ne peuvent pas être définies par un import de fichier CSV",
+    "caseMismatch": {
+      "title": "La colonne est similaire à une propriété existante mais ne correspond pas",
+      "description": "Les noms de colonnes sont sensibles à la casse. Vérifiez l'orthographe et les majuscules.",
+      "existingProperty": "Propriété existante"
+    },
+    "invalidProperties": "Cette colonne ne constitue pas un nom de propriété valide | Ces colonnes ne constituent pas des noms de propriété valides | Ces colonnes ne constituent pas des noms de propriété valides",
+    "missingProperties": {
+      "title": "Propriété pas trouvée dans le fichier | Propriétés pas trouvées dans le fichier | Propriétés pas trouvées dans le fichier",
+      "description": "Cette propriété restera vide | Ces propriétés resterons vides | Ces propriétés resterons vides"
+    },
+    "extraProperties": {
+      "title": {
+        "one": "La colonne ne correspond pas aux propriétés existantes",
+        "multiple": "Ces colonnes ne correspondent pas aux propriétés existantes"
+      },
+      "description": {
+        "one": "Choisir la colonne pour créer une nouvelle propriété. Autrement, elle sera ignorée.",
+        "multiple": "Choisir laquelle créer, autrement elle sera ignorée."
+      },
+      "error": {
+        "one": "Une fois que vous aurez corrigé toutes les erreurs, vous pourrez sélectionner la colonne.",
+        "multiple": "Une fois que vous aurez corrigé toutes les erreurs, vous pourrez sélectionner lesquelles créer."
+      }
+    },
+    "propertiesIgnored": "Ces propriétés sera ignorée. | Ces propriétés seront ignorées. | Ces propriétés seront ignorées.",
+    "columnsIgnored": "Cette colonne sera ignorée. | Ces colonnes seront ignorées. | Ces colonnes seront ignorées.",
     "row": {
       "raggedRows": "Dans certaines lignes, il y a eu moins de colonnes détectées que prévu:",
       "largeCell": "Certaines cellules sont anormalement larges, ce qui peut indiquer des difficultés à lire votre fichier:"
-    }
+    },
+    "title": "Vérifiez {count} message d'avertissement | Vérifiez {count} messages d'avertissement | Vérifiez {count} messages d'avertissement"
   },
   "it": {
     "row": {

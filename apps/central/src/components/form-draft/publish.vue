@@ -254,6 +254,9 @@ export default {
     "newProperties": "Veröffentlichen dieses Entwurfs erstellt {count} Eigenschaft. | Veröffentlichen dieses Entwurfs erstellt {count} Eigenschaften .",
     "problem": {
       "409_6": "Der Versionsname dieses Entwurfs steht in Konflikt mit einer früheren Version dieses Formulars oder einem gelöschten Formular. Bitte verwenden Sie das Feld unten, um dies zu ändern oder eine neue Formulardefinition hochzuladen"
+    },
+    "field": {
+      "note": "Versionshinweise"
     }
   },
   "es": {
@@ -332,6 +335,9 @@ export default {
     "newProperties": "La pubblicazione di questa bozza creerà {count} proprietà. | La pubblicazione di questa bozza creerà {count} proprietà. | La pubblicazione di questa bozza creerà {count} proprietà.",
     "problem": {
       "409_6": "Il nome della versione di questa bozza è in conflitto con una versione precedente di questo formulario o con un formulario eliminato. Utilizza il campo sottostante per cambiarlo in qualcosa di nuovo o caricare una nuova definizione del formulario."
+    },
+    "field": {
+      "note": "Note della versione"
     }
   },
   "ja": {

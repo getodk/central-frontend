@@ -186,7 +186,6 @@
     "name": "名稱",
     "newPassword": "新密碼",
     "oldPassword": "舊密碼",
-    "passphrase": "密碼片語",
     "password": "密碼",
     "passwordConfirm": "新密碼(確認)",
     "type": "類型"

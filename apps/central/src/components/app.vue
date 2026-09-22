@@ -37,6 +37,7 @@ import Navbar from './navbar.vue';
 
 import useCallWait from '../composables/call-wait';
 import useDisabled from '../composables/disabled';
+import useVersionMonitor from '../composables/version-monitor';
 import { loadAsync } from '../util/load-async';
 import { useAlert } from '../alert';
 import { useRequestData } from '../request-data';
@@ -60,6 +61,8 @@ export default {
 
     const containerEl = useTemplateRef('containerEl');
     useAlert(toast, containerEl);
+
+    useVersionMonitor();
 
     const { centralVersion } = useRequestData();
     const { callWait } = useCallWait();

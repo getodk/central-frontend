@@ -53,8 +53,10 @@ const htmlClass = computed(() => ({
 }));
 
 const input = ref(null);
-const focus = () => { input.value.focus(); };
-defineExpose({ focus });
+const exposedMethods = {};
+for (const name of ['focus', 'setCustomValidity'])
+  exposedMethods[name] = (...args) => input.value[name](...args);
+defineExpose(exposedMethods);
 </script>
 
 <style lang="scss">

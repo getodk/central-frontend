@@ -148,6 +148,13 @@
   }
 
   @include toggle-visibility();
+
+  /**
+   * Containers (question, group, repeat) and non-actionable elements (notes) must not display the focus outline.
+   */
+  [tabindex='-1']:focus-visible {
+    outline: none;
+  }
 }
 
 .odk-form-list {

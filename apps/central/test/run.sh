@@ -19,10 +19,10 @@ awk '
   /Module Warning/       { ++warnings; print "WARNING: " $0 }
   /WARN \[web-server\]:/ { ++warnings; print "WARNING: " $0 }
   END {
-    if(warnings > 2) {
+    if(warnings > 1) {
       print "All tests passed, but there were " warnings " warnings: see above."
       exit 1
     }
-    print "There were " warnings " warnings, which is within the accepted threshold."
+    print "There were " warnings " warning(s), which is within the accepted threshold."
   }
 ' "$output"

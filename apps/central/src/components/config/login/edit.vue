@@ -186,6 +186,14 @@ const update = (prop) => {
       "help": "Carica un'immagine verticale; ti consigliamo un formato 4:5. Scegli un'immagine accattivante che rappresenti il tuo brand o il tuo messaggio. L'immagine verrà ritagliata in base alle diverse dimensioni dello schermo, quindi mantieni i contenuti importanti al centro."
     }
   },
+  "pt": {
+    "logo": {
+      "label": "Logotipo"
+    },
+    "description": {
+      "label": "Subtítulo"
+    }
+  },
   "zh": {
     "logo": {
       "label": "标志"

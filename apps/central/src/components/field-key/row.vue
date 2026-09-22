@@ -162,6 +162,7 @@ export default {
     "seeCode": "Mostra il codice",
     "accessRevoked": "Accesso revocato",
     "action": {
+      "editAppUser": "Modifica Utente App",
       "revokeAccess": "Revoca l'accesso utente"
     }
   },

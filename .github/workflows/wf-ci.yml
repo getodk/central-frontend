@@ -25,24 +25,20 @@ jobs:
       fail-fast: false
       matrix:
         target: ['Node']
-        node-version: ['24.16.0']
         include:
           - target: 'Web'
-            node-version: '24.16.0'
             browser: chromium
           - target: 'Web'
-            node-version: '24.16.0'
             browser: firefox
           - target: 'Web'
-            node-version: '24.16.0'
             browser: webkit
 
     steps:
       - uses: 'actions/checkout@v6'
 
-      - uses: ./.github/actions/restore-node
+      - uses: ./.github/actions/node-cache
         with:
-          node-version: '${{ matrix.node-version }}'
+          mode: restore
 
       - if: ${{ matrix.target == 'Node' }}
         run: 'npm run test:types -w packages/common'
@@ -64,24 +60,20 @@ jobs:
       fail-fast: false
       matrix:
         target: ['Node']
-        node-version: ['24.16.0']
         include:
           - target: 'Web'
-            node-version: '24.16.0'
             browser: chromium
           - target: 'Web'
-            node-version: '24.16.0'
             browser: firefox
           - target: 'Web'
-            node-version: '24.16.0'
             browser: webkit
 
     steps:
       - uses: 'actions/checkout@v6'
 
-      - uses: ./.github/actions/restore-node
+      - uses: ./.github/actions/node-cache
         with:
-          node-version: '${{ matrix.node-version }}'
+          mode: restore
 
       - if: ${{ matrix.target == 'Node' }}
         run: |
@@ -103,24 +95,20 @@ jobs:
       fail-fast: false
       matrix:
         target: ['Node']
-        node-version: ['24.16.0']
         include:
           - target: 'Web'
-            node-version: '24.16.0'
             browser: chromium
           - target: 'Web'
-            node-version: '24.16.0'
             browser: firefox
           - target: 'Web'
-            node-version: '24.16.0'
             browser: webkit
 
     steps:
       - uses: 'actions/checkout@v6'
 
-      - uses: ./.github/actions/restore-node
+      - uses: ./.github/actions/node-cache
         with:
-          node-version: '${{ matrix.node-version }}'
+          mode: restore
 
       - if: ${{ matrix.target == 'Node' }}
         run: 'npm run test:types -w=packages/xpath'
@@ -142,24 +130,20 @@ jobs:
       fail-fast: false
       matrix:
         target: ['Node']
-        node-version: ['24.16.0']
         include:
           - target: 'Web'
-            node-version: '24.16.0'
             browser: chromium
           - target: 'Web'
-            node-version: '24.16.0'
             browser: firefox
           - target: 'Web'
-            node-version: '24.16.0'
             browser: webkit
 
     steps:
       - uses: 'actions/checkout@v6'
 
-      - uses: ./.github/actions/restore-node
+      - uses: ./.github/actions/node-cache
         with:
-          node-version: '${{ matrix.node-version }}'
+          mode: restore
 
       - if: ${{ matrix.target == 'Node' }}
         run: 'npm run test:types -w=packages/web-forms'

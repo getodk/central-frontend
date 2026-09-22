@@ -177,11 +177,7 @@ Also note about comments:
 - `restructure.js` will automatically generate comments for any message whose path ends with `.full`, because such messages are used for component interpolation.
 - Use JSON with comments, but do not use other features of JSON5, which our workflow might not support.
 
-Before each release, we download all translations from Transifex and save them in [`/apps/central/transifex/`](/apps/central/transifex/). Transifex allows translations to be downloaded "for use" or "to translate." We use "to translate," because untranslated strings are included as empty strings; "for use" fills in untranslated strings with the source strings, which we would then have to discard. On the website, Transifex allows the translations to be downloaded "to translate" for an individual locale, but not all locales at once. To download all locales at once, run the Transifex CLI in the root directory of the repository:
-
-```bash
-tx pull --mode translator --force
-```
+Before each release, we download all translations from Transifex and save them in [`/apps/central/transifex/`](/apps/central/transifex/). Transifex allows translations to be downloaded "for use" or "to translate." We use "to translate," because untranslated strings are included as empty strings; "for use" fills in untranslated strings with the source strings, which we would then have to discard. To download all locales "to translate", run `npm run transifex:pull`. Note that you will first need to install the Transifex CLI.
 
 Once they are downloaded, we convert the Structured JSON files to Vue I18n JSON by running `npm run transifex:destructure`.  This generates all locale files in `/apps/central/src/locales/` other than `en.json5`.
 

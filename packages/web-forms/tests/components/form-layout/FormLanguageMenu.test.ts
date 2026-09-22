@@ -36,8 +36,8 @@ describe('LanguageChanger', () => {
   it('changes the language', async () => {
     const { xform, component } = await mountComponent('01-itext-basic.xml');
 
-    expect(component.find('.p-select-label').text()).toEqual('English');
-    expect(xform.currentState.activeLanguage.language).toEqual('English');
+    expect(component.find('.p-select-label').text()).toEqual('English (en)');
+    expect(xform.currentState.activeLanguage.language).toEqual('English (en)');
 
     await component.trigger('click');
 
@@ -45,9 +45,9 @@ describe('LanguageChanger', () => {
 
     // @ts-expect-error - not undefined
     xform.setLanguage(component.emitted<FormLanguage[]>('update:activeLanguage')[0][0]);
-    expect(xform.currentState.activeLanguage.language).toEqual('Español');
+    expect(xform.currentState.activeLanguage.language).toEqual('Español (es)');
 
     await component.setProps({ activeLanguage: xform.currentState.activeLanguage });
-    expect(component.find('.p-select-label').text()).toEqual('Español');
+    expect(component.find('.p-select-label').text()).toEqual('Español (es)');
   });
 });

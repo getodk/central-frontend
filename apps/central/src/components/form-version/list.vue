@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <form-version-table @view-xml="viewXml.show()"/>
     <loading :state="formVersions.initiallyLoading"/>
 
-    <form-version-view-xml v-bind="viewXml" @hide="viewXml.hide()"/>
+    <xml-viewer v-bind="viewXml" :xml="formVersionXml.data" :loading="formVersionXml.awaitingResponse" @hide="viewXml.hide()"/>
   </div>
 </template>
 
@@ -34,7 +34,7 @@ export default {
   name: 'FormVersionList',
   components: {
     FormVersionTable,
-    FormVersionViewXml: defineAsyncComponent(loadAsync('FormVersionViewXml')),
+    XmlViewer: defineAsyncComponent(loadAsync('XmlViewer')),
     Loading
   },
   props: {
@@ -48,12 +48,12 @@ export default {
     }
   },
   setup() {
-    const { formVersions } = useRequestData();
-    return { formVersions };
+    const { formVersions, formVersionXml } = useRequestData();
+    return { formVersions, formVersionXml };
   },
   data() {
     return {
-      viewXml: modalData('FormVersionViewXml')
+      viewXml: modalData('XmlViewer')
     };
   },
   created() {

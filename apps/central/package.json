@@ -1,6 +1,6 @@
 {
   "name": "@getodk/central-frontend",
-  "version": "2026.2.0",
+  "version": "2026.3.0",
   "private": true,
   "scripts": {
     "eslint": "eslint --max-warnings 0 --cache --ext .js,.vue src/ test/ bin/ *.js",
@@ -10,7 +10,8 @@
     "test": "./test/run.sh",
     "transifex:destructure": "node bin/transifex/destructure.js",
     "transifex:fix": "node bin/transifex/restructure.js > transifex/strings_en.json",
-    "transifex:lint": "./bin/transifex/lint.sh"
+    "transifex:lint": "./bin/transifex/lint.sh",
+    "transifex:pull": "cd ../.. && tx pull -r central.strings -f --mode translator"
   },
   "dependencies": {
     "@floating-ui/dom": "^1.1.0",

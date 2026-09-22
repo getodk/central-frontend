@@ -93,7 +93,8 @@ describe('Sentry headers', () => {
           enketoId: '',
           state: 'open',
           draft: false,
-          webformsEnabled: true
+          webformsEnabled: true,
+          attachments: [ { name: 'cities.csv' } ]
         },
         actionType: 'new',
       },

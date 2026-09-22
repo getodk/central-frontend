@@ -1,6 +1,6 @@
 {
   "name": "@getodk/forms",
-  "version": "2026.2.2",
+  "version": "2026.3.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -24,7 +24,6 @@
   },
   "devDependencies": {
     "@vue/test-utils": "^2.4.11",
-    "jsdom": "^27.4.0",
-    "vitest": "^4.1.9"
+    "jsdom": "^27.4.0"
   }
 }

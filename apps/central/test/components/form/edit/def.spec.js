@@ -1,6 +1,6 @@
 import FormEditDef from '../../../../src/components/form/edit/def.vue';
 import FormVersionString from '../../../../src/components/form-version/string.vue';
-import FormVersionViewXml from '../../../../src/components/form-version/view-xml.vue';
+import XmlViewer from '../../../../src/components/xml-viewer.vue';
 
 import testData from '../../../data';
 import { load } from '../../../util/http';
@@ -48,7 +48,7 @@ describe('FormEditDef', () => {
   it('toggles the "View XML" modal', () => {
     testData.extendedForms.createPast(1, { draft: true });
     return load('/projects/1/forms/f/draft', { root: false }).testModalToggles({
-      modal: FormVersionViewXml,
+      modal: XmlViewer,
       show: '.form-version-def-dropdown a',
       hide: '.btn-primary',
       respond: (series) => series.respondWithData(() => '<x/>')

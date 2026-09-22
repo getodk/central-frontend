@@ -183,69 +183,36 @@ $border-height: 3px;
 <i18n>
 {
   "cs": {
-    "action": {
-      "toggle": "Přepnout navigaci"
-    },
     "analyticsNotice": "Pomozte zlepšit Central!"
   },
   "de": {
-    "action": {
-      "toggle": "Navigation umschalten"
-    },
     "analyticsNotice": "Hilf Central zu verbessern!"
   },
   "es": {
-    "action": {
-      "toggle": "Alternar la navegación"
-    },
     "analyticsNotice": "Ayuda a mejorar Central"
   },
   "fr": {
-    "action": {
-      "toggle": "Basculer la navigation"
-    },
     "analyticsNotice": "Aidez à améliorer Central !"
   },
   "id": {
-    "action": {
-      "toggle": "Navigasi Toggle"
-    },
     "analyticsNotice": "Bantu Memperbaiki Central!"
   },
   "it": {
-    "action": {
-      "toggle": "Attiva/disattiva navigazione"
-    },
     "analyticsNotice": "Aiuta a migliorare Central"
   },
   "ja": {
-    "action": {
-      "toggle": "ナビゲーションを有効化"
-    },
     "analyticsNotice": "Centralの改善を支援！"
   },
   "pt": {
-    "action": {
-      "toggle": "Ocultar ou exibir a barra de navegação"
-    },
     "analyticsNotice": "Ajude a melhorar o Central!"
   },
   "sw": {
-    "action": {
-      "toggle": "Geuza urambazaji"
-    },
     "analyticsNotice": "Saidia kuboresha Central"
   },
   "zh": {
-    "action": {
-      "toggle": "切换导航"
-    },
     "analyticsNotice": "助力完善Central！"
   },
   "zh-Hant": {
-    "action": {
-      "toggle": "切換導航鈕"
-    },
     "analyticsNotice": "幫忙改善 Central!"
   }
 }

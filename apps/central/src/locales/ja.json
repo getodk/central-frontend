@@ -151,7 +151,6 @@
     "name": "名前",
     "newPassword": "新しいパスワード",
     "oldPassword": "現在のパスワード",
-    "passphrase": "パスフレーズ",
     "password": "パスワード",
     "passwordConfirm": "新しいパスワード（確認用）",
     "type": "タイプ"

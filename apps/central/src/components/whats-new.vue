@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <p class="modal-introduction">
-        {{ $t('body') }}
+        {{ $t('body[0]') }}<sentence-separator/><strong>{{ $t('body[1]') }}</strong>
       </p>
       <div class="modal-actions">
         <div v-if="!initialOptIn" class="checkbox">
@@ -39,6 +39,7 @@ except according to the terms contained in the LICENSE file.
 import { inject, ref, watch } from 'vue';
 
 import Modal from './modal.vue';
+import SentenceSeparator from './sentence-separator.vue';
 
 import { useRequestData } from '../request-data';
 
@@ -53,7 +54,7 @@ const isVisible = ref(false);
 const initialOptIn = currentUser.preferences.site.mailingListOptIn;
 const mailingListOptIn = ref(currentUser.preferences.site.mailingListOptIn !== false);
 
-const currentVersion = '2026.2';
+const currentVersion = '2026.3';
 // You can use requiredVerb to limit who sees the What's New modal under the
 // current version. Specify project.read to show the modal to everyone.
 const requiredVerb = 'project.read';
@@ -129,8 +130,11 @@ function hideModal() {
   {
     "en": {
       // This is the title at the top of a pop-up.
-      "title": "Entity Filtering 🎯 and ODK Web Forms by Default 🌐",
-      "body": "Control which Entities each App User or Public Link receives with filtering rules based on custom properties. Plus, Web Forms is now the default web form experience, bringing a faster, more intuitive experience for form previews, data editing, and web-based form filling."
+      "title": "Easier Entity Uploads 📤",
+      "body": [
+        "Bring your Entities into ODK faster with a smoother CSV upload experience. Get clearer errors and warnings, fix issues, and try again, all in one place.",
+        "You can now also create new properties directly from your CSV."
+      ]
     }
   }
 </i18n>
@@ -139,8 +143,11 @@ function hideModal() {
 <i18n>
 {
   "fr": {
-    "title": "Filtrez vos entités 🎯 et ODK Web Forms par défaut 🌐",
-    "body": "Contrôlez les entités reçues par chaque utilisateur mobile ou chaque lien public grâce à des règles de filtrage basées sur des propriétés. De plus, ODK Web Forms est maintenant l'expérience par défaut pour les formulaires web, offrant une expérience rapide et intuitive pour la prévisualisation de formulaire, la modification des données et la saisie en ligne."
+    "title": "Importation d'entités simplifiée 📤",
+    "body": [
+      "Intégrez plus rapidement vos entités dans ODK grâce à un processus de téléchargement CSV plus fluide. Bénéficiez de messages d'erreur et d'avertissements plus clairs, corrigez les problèmes et réessayez, le tout au même endroit.",
+      "Vous pouvez également créer de nouvelles propriétés directement à partir de votre fichier CSV."
+    ]
   }
 }
 </i18n>

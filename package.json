@@ -16,10 +16,14 @@
     "lint:fix": "npm run lint:fix --workspaces",
     "test": "npm run test --workspaces",
     "test:e2e": "e2e-tests/run-tests.sh",
+    "transifex:destructure": "npm run transifex:destructure --workspaces --if-present",
+    "transifex:fix": "npm run transifex:fix --workspaces --if-present",
+    "transifex:lint": "npm run transifex:lint --workspaces --if-present",
+    "transifex:pull": "npm run transifex:pull --workspaces --if-present",
     "version": "changeset version"
   },
   "volta": {
-    "node": "24.16.0"
+    "node": "24.20.0"
   },
   "packageManager": "npm@11.6.1",
   "workspaces": [
@@ -46,12 +50,12 @@
     "@typescript-eslint/eslint-plugin": "^8.57.0",
     "@typescript-eslint/parser": "^8.57.0",
     "@vitejs/plugin-vue": "^6.0.6",
-    "@vitest/browser-playwright": "^4.1.9",
+    "@vitest/browser-playwright": "^4.1.10",
     "@vue/eslint-config-prettier": "^10.2.0",
     "@vue/eslint-config-typescript": "^14.7.0",
     "@vue/test-utils": "^2.4.11",
     "@vue/tsconfig": "^0.8.1",
-    "adm-zip": "^0.5.17",
+    "adm-zip": "^0.6.0",
     "eslint": "^10.0.3",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsdoc": "^62.8.0",
@@ -65,12 +69,12 @@
     "turbo": "^2.8.16",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.57.0",
-    "vite": "^7.3.1",
-    "vitest": "^4.1.9",
+    "vite": "^7.3.6",
+    "vitest": "^4.1.10",
     "vue-tsc": "^3.1.5"
   },
   "engines": {
-    "node": "^24.16.0",
+    "node": "^24.20.0",
     "npm": "11"
   }
 }

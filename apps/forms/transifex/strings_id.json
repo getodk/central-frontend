@@ -2,7 +2,7 @@
   "component": {
     "Preview": {
       "formNotFound": {
-        "string": ""
+        "string": "Tidak ada formulir yang ditemukan pada URL ini, mohon periksa kembali."
       }
     },
     "Submission": {
@@ -29,96 +29,96 @@
     "WebFormRenderer": {
       "action": {
         "close": {
-          "string": ""
+          "string": "Tutup"
         },
         "tryAgain": {
-          "string": ""
+          "string": "Coba lagi"
         }
       },
       "previewModal": {
         "title": {
-          "string": ""
+          "string": "Data valid"
         },
         "body": {
-          "string": ""
+          "string": "Data yang Anda masukkan valid, tetapi tidak dikirim karena ini adalah pratinjau Formulir."
         }
       },
       "submissionModal": {
         "title": {
-          "string": ""
+          "string": "Formulir berhasil dikirim!"
         },
         "body": {
-          "string": ""
+          "string": "Anda dapat mengisi Formulir ini lagi atau tutup jika sudah selesai."
         },
         "action": {
           "fillOutAgain": {
-            "string": ""
+            "string": "Isi lagi"
           }
         }
       },
       "thankYouModal": {
         "title": {
-          "string": ""
+          "string": "Terima kasih atas partisipasi Anda!"
         },
         "body": {
-          "string": ""
+          "string": "Anda dapat menutup jendela ini sekarang."
         }
       },
       "editSubmissionModal": {
         "title": {
-          "string": ""
+          "string": "Pengiriman berhasil"
         },
         "body": {
-          "string": ""
+          "string": "Anda akan segera dialihkan."
         }
       },
       "errorModal": {
         "title": {
-          "string": ""
+          "string": "Kesalahan pengiriman"
         },
         "body": {
-          "string": ""
+          "string": "Data Anda tidak terkirim. Pesan kesalahan: {errorMessage} Anda dapat menutup dialog ini dan mencoba lagi. Jika kesalahan terus terjadi, silakan hubungi orang yang meminta Anda mengisi Formulir ini atau {supportEmail}."
         }
       },
       "sendingDataModal": {
         "title": {
-          "string": ""
+          "string": "Sedang mengirim"
         },
         "body": {
-          "string": ""
+          "string": "Data Anda sedang dikirim. Mohon jangan menutup jendela ini hingga proses selesai."
         }
       },
       "sessionTimeoutModal": {
         "title": {
-          "string": ""
+          "string": "Sesi kedaluwarsa"
         },
         "body": {
           "full": {
-            "string": "",
+            "string": "Silakan masuk {here} di tab browser yang berbeda dan coba lagi.",
             "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
           },
           "here": {
-            "string": "",
+            "string": "di sini",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {here} is in the following text:\n\nPlease log in {here} in a different browser tab and try again."
           }
         }
       },
       "retryModal": {
         "title": {
-          "string": ""
+          "string": "Kesalahan pengiriman"
         },
         "body": {
-          "string": ""
+          "string": "Data Anda tidak sepenuhnya terkirim. Silakan tekan tombol “Coba lagi” untuk mengulang. Jika kesalahan terus terjadi, silakan hubungi orang yang meminta Anda mengisi Formulir ini atau {supportEmail}."
         }
       },
       "util": {
         "request": {
           "noResponse": {
-            "string": ""
+            "string": "Terjadi kesalahan: tidak ada respons terhadap permintaan Anda."
           },
           "problem": {
             "404_1": {
-              "string": ""
+              "string": "Sumber daya yang Anda cari tidak dapat ditemukan. Sumber daya tersebut mungkin telah dihapus."
             }
           }
         }
@@ -127,7 +127,7 @@
         "request": {
           "alert": {
             "entityTooLarge": {
-              "string": ""
+              "string": "Data yang Anda coba unggah terlalu besar."
             }
           }
         }

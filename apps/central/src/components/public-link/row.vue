@@ -155,6 +155,7 @@ export default {
   },
   "de": {
     "action": {
+      "edit": "Öffentlichen Zugangslink bearbeiten",
       "revoke": "Widerrufen"
     },
     "revoked": "Widerrufen",
@@ -196,6 +197,7 @@ export default {
   },
   "it": {
     "action": {
+      "edit": "Modifica il Link con accesso pubblico",
       "revoke": "Revocare"
     },
     "revoked": "Revocato",

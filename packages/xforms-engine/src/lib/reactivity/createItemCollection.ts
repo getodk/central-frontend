@@ -1,6 +1,6 @@
 import { UpsertableMap } from '@getodk/common/lib/collections/UpsertableMap.ts';
 import type { Accessor } from 'solid-js';
-import { createMemo } from 'solid-js';
+import { createEffect, createMemo, on } from 'solid-js';
 import type { ActiveLanguage } from '../../client/FormLanguage.ts';
 import type { BaseItem } from '../../client/BaseItem.ts';
 import type { TextRange as ClientTextRange } from '../../client/TextRange.ts';
@@ -103,14 +103,49 @@ interface ItemsetItem {
   properties: Array<[string, () => string]>;
 }
 
+const MAX_CHANGES_PER_UPDATE = 100;
+
+const nodeListsEqual = (a: readonly EngineXPathNode[], b: readonly EngineXPathNode[]) => {
+  return a.length === b.length && a.every((node, index) => node === b[index]);
+};
+
+/**
+ * A self-referencing choice filter recomputes forever. Reaching the limit in one
+ * update the memo keeps its previous result, ending the cycle.
+ */
+const createCycleGuardedItemNodes = (
+  control: ItemCollectionControl,
+  itemset: ItemsetDefinition
+): Accessor<EngineXPathNode[]> => {
+  const evaluateNodes = createComputedExpression(control, itemset.nodes, { defaultValue: [] });
+
+  let changeCount = 0;
+  const itemNodes = createMemo((previous?: EngineXPathNode[]) => {
+    const result = evaluateNodes();
+    if (previous === undefined) {
+      return result;
+    }
+    if (nodeListsEqual(result, previous)) {
+      return previous;
+    }
+    changeCount += 1;
+    if (changeCount <= MAX_CHANGES_PER_UPDATE) {
+      return result;
+    }
+    // Settle on the phase showing more options, so a filtered-out answer stays visible.
+    return result.length > previous.length ? result : previous;
+  });
+  createEffect(on(itemNodes, () => (changeCount = 0)));
+
+  return itemNodes;
+};
+
 const createItemsetItems = (
   control: ItemCollectionControl,
   itemset: ItemsetDefinition
 ): Accessor<readonly ItemsetItem[]> => {
   return control.scope.runTask(() => {
-    const itemNodes = createComputedExpression(control, itemset.nodes, {
-      defaultValue: [],
-    });
+    const itemNodes = createCycleGuardedItemNodes(control, itemset);
     const itemsCache = new UpsertableMap<EngineXPathNode, ItemsetItem>();
 
     return createMemo(() => {

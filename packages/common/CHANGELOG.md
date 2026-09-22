@@ -1,5 +1,11 @@
 # @getodk/common
 
+## 1.1.0
+
+### Minor Changes
+
+- 654afd3: Implemented last-saved virtual secondary instance feature
+
 ## 1.0.0
 
 ### Major Changes

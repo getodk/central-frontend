@@ -10,13 +10,16 @@ import {
 	FORM_MEDIA_CACHE,
 	FORM_OPTIONS,
 	IS_FORM_EDIT_MODE,
+	REVEAL_VIOLATIONS,
 	SUBMIT_PRESSED,
+	TOUCHED_QUESTIONS,
 } from '@getodk/web-forms/lib/constants/injection-keys.ts';
 import type { FormStateSuccessResult } from '@getodk/web-forms/lib/init/form-state.ts';
 import { initializeFormState } from '@getodk/web-forms/lib/init/initialize-form-state.ts';
 import { loadFormState } from '@getodk/web-forms/lib/init/load-form-state';
 import type { EditInstanceOptions, FormOptions } from '@getodk/web-forms/lib/init/load-form-state.ts';
 import { useNavigationTarget } from '@getodk/web-forms/lib/useNavigationTarget.ts';
+import type { RevealViolations } from '@getodk/web-forms/lib/useRevealViolations.ts';
 import { updateSubmittedFormState } from '@getodk/web-forms/lib/init/update-submitted-form-state.ts';
 import { geolocationService } from '@getodk/web-forms/lib/services/geolocationService.ts';
 import { useLocale } from '@getodk/web-forms/lib/locale/useLocale.ts';
@@ -42,12 +45,13 @@ import {
 	onErrorCaptured,
 	onUnmounted,
 	provide,
+	reactive,
 	readonly,
 	ref,
 	watch,
-	watchEffect,
 } from 'vue';
 import { FormInitializationError } from '@getodk/web-forms/lib/error/FormInitializationError';
+import { FormDesignError } from '@getodk/xpath';
 
 const webFormsVersion = __WEB_FORMS_VERSION__;
 type ObjectURL = `blob:${string}`;
@@ -85,6 +89,10 @@ const hostSubmissionResultCallbackFactory = (
 		hostResult: OptionalAwaitableHostSubmissionResult
 	): Promise<void> => {
 		const submissionResult = await hostResult;
+
+		// Use the current instance XML as the last-saved for the next submission. Using the copy in memory
+		// means we don't need to fetch it from the vue app, and also means it works for draft forms where
+		// the last-saved is never persisted.
 		const lastSavedXml = currentState.root.instanceState.instanceXML;
 		const options = {
 			form: formOptions,
@@ -105,6 +113,7 @@ const hostSubmissionResultCallbackFactory = (
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- evidently a type must be used for this to be assigned to a name (which we use!); as an interface, it won't satisfy the `Record` constraint of `defineEmits`.
 type OdkWebFormEmits = {
 	loaded: [],
+	languageSelected: [language: string],
 	submit: [submissionPayload: MonolithicInstancePayload, callback: HostSubmissionResultCallback];
 	submitChunked: [
 		submissionPayload: ChunkedInstancePayload,
@@ -191,9 +200,9 @@ const getLocation = async (): Promise<string> => {
 		// eslint-disable-next-line no-console -- Skip silently to match Collect behaviour.
 		console.warn('Error occurred while retrieving background location.', error);
 		geolocationErrorMessage.value = t('odk_web_forms.geolocation.error');
+		errorBannerDismissed.value = false;
 	}
 
-	floatingErrorActive.value = !!geolocationErrorMessage.value.length;
 	return point;
 };
 
@@ -211,17 +220,32 @@ provide(FORM_MEDIA_CACHE, mediaCache);
 const state = initializeFormState();
 const runtimeError = ref<FormInitializationError | null>(null);
 const submitPressed = ref(false);
-const floatingErrorActive = ref(false);
-const showValidationError = ref(false);
+const touchedQuestions = reactive(new Set<string>());
+// Close hides the banner until the next failed submit, blocked Next or geolocation error.
+const errorBannerDismissed = ref(false);
 const geolocationErrorMessage = ref<string | null>(null);
 const isFormEditMode = ref(false);
 provide(IS_FORM_EDIT_MODE, readonly(isFormEditMode));
-const { setLanguage, t } = useLocale(computed(() => state.value.root));
+const { setLanguage, getLanguage, t } = useLocale(computed(() => state.value.root));
 provide(TRANSLATE, t);
-const { navigateToFirstViolation } = useNavigationTarget(() => state.value.root ?? null);
+const { navigateToFirstViolation, navigateToNode } = useNavigationTarget(() => state.value.root);
+
+if (isEmitSubscribed('onLanguageSelected')) {
+	watch(
+		() => getLanguage(),
+		(selected) => {
+			emit('languageSelected', selected);
+		},
+		{ immediate: true }
+	);
+}
 
 onErrorCaptured(err => {
 	runtimeError.value = FormInitializationError.from(err);
+	if (err instanceof FormDesignError) {
+		// don't let this error bubble to the console or sentry
+		return false;
+	}
 });
 
 watch(
@@ -234,8 +258,8 @@ watch(
 
 const resetComponentState = () => {
 	submitPressed.value = false;
-	floatingErrorActive.value = false;
-	showValidationError.value = false;
+	touchedQuestions.clear();
+	errorBannerDismissed.value = false;
 	geolocationErrorMessage.value = null;
 	geolocationService.teardown();
 };
@@ -265,35 +289,57 @@ const handleSubmit = (currentState: FormStateSuccessResult) => {
 	releaseFocus(); // so follow-up dialogs don't restore focus here and scroll back to it
 
 	if (root.validationState.violations.length === 0) {
-		floatingErrorActive.value = false;
 		// eslint-disable-next-line @typescript-eslint/no-floating-promises
 		emitSubmit(currentState);
 		// eslint-disable-next-line @typescript-eslint/no-floating-promises
 		emitSubmitChunked(currentState);
 	} else {
-		floatingErrorActive.value = true;
+		errorBannerDismissed.value = false;
 		submitPressed.value = true;
 		navigateToFirstViolation();
 	}
 };
 
-provide(SUBMIT_PRESSED, submitPressed);
+const revealViolations: RevealViolations = (violations) => {
+	if (!violations.length) {
+		return;
+	}
 
-const validationErrorMessage = computed(() => {
-	const violationLength = state.value.root?.validationState.violations.length ?? 0;
-	if (violationLength === 0) return '';
-	return t('odk_web_forms.validation.error', { count: violationLength });
+	violations.forEach((violation) => touchedQuestions.add(violation.nodeId));
+	errorBannerDismissed.value = false;
+	navigateToNode(violations[0]?.nodeId);
+};
+
+const handleNext = (currentState: FormStateSuccessResult) => {
+	const violations = currentState.root.nextPage();
+	revealViolations(violations);
+};
+
+provide(SUBMIT_PRESSED, submitPressed);
+provide(TOUCHED_QUESTIONS, touchedQuestions);
+provide(REVEAL_VIOLATIONS, revealViolations);
+
+// It returns violations for questions the user has seen.
+const revealedViolations = computed(() => {
+	const violations = state.value.root?.validationState.violations ?? [];
+	if (submitPressed.value) {
+		return violations;
+	}
+	return violations.filter(({ nodeId }) => touchedQuestions.has(nodeId));
 });
 
-watchEffect(() => {
-	if (
-		floatingErrorActive.value &&
-		(validationErrorMessage.value?.length || geolocationErrorMessage.value?.length)
-	) {
-		showValidationError.value = true;
-	} else {
-		showValidationError.value = false;
+const validationErrorMessage = computed(() => {
+	if (!revealedViolations.value.length) {
+		return '';
 	}
+	return t('odk_web_forms.validation.error', { count: revealedViolations.value.length });
+});
+
+const showValidationError = computed(() => {
+	if (errorBannerDismissed.value) {
+		return false;
+	}
+	return !!(validationErrorMessage.value.length || geolocationErrorMessage.value?.length);
 });
 
 onUnmounted(() => {
@@ -339,7 +385,7 @@ onUnmounted(() => {
 				severity="error"
 				class="form-error-message"
 				:closable="true"
-				@close="floatingErrorActive = false"
+				@close="errorBannerDismissed = true"
 			>
 				<IconSVG name="mdiAlertCircleOutline" variant="error" />
 				<ul class="form-error-text-wrap">
@@ -372,7 +418,7 @@ onUnmounted(() => {
 				</template>
 			</Card>
 
-			<FormFooter :root="state.root" @submit="handleSubmit(state)" />
+			<FormFooter :root="state.root" @submit="handleSubmit(state)" @next="handleNext(state)" />
 		</div>
 
 		<div class="powered-by-wrapper">

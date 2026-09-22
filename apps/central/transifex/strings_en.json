@@ -30,10 +30,6 @@
       "formAccess": {
         "string": "Form Access",
         "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
-      },
-      "customProperties": {
-        "string": "Custom Properties",
-        "developer_comment": "This is the text of a navigation tab, which may also be shown as the page title (browser tab)."
       }
     }
   },
@@ -1640,6 +1636,18 @@
         },
         "num_multi_entity_errors": {
           "string": "Number of errors from repeat Entities"
+        },
+        "num_wf_submissions": {
+          "string": "Number of Submissions with Web Forms"
+        },
+        "num_enketo_submissions": {
+          "string": "Number of Submissions with Enketo"
+        },
+        "num_wf_submission_edits": {
+          "string": "Number of Submission edits with Web Forms"
+        },
+        "num_enketo_submission_edits": {
+          "string": "Number of Submission edits with Enketo"
         }
       }
     },
@@ -1969,6 +1977,9 @@
       }
     },
     "DatasetOverviewNewProperty": {
+      "newPropertyName": {
+        "string": "New property name"
+      },
       "title": {
         "string": "Add Entity Property",
         "developer_comment": "This is the title at the top of a pop-up."
@@ -1979,14 +1990,6 @@
         },
         "1": {
           "string": "You can also add new properties by uploading a Form that references them, in which case the properties are created when the Form is published."
-        }
-      },
-      "newPropertyName": {
-        "string": "New property name"
-      },
-      "problem": {
-        "409_3": {
-          "string": "A property already exists in this Entity List with the name of “{propertyName}”."
         }
       }
     },
@@ -2207,10 +2210,6 @@
       }
     },
     "DatasetShow": {
-      "back": {
-        "string": "Back to Project Entities",
-        "developer_comment": "This is shown at the top of the page."
-      },
       "infoNav": {
         "connectedForms": {
           "string": "{count, plural, one {Updated by {count} Form} other {Updated by {count} Forms}}",
@@ -2595,7 +2594,7 @@
         "string": "Me"
       },
       "viewAs": {
-        "string": "Viewing As"
+        "string": "View As"
       }
     },
     "EntityList": {
@@ -2787,10 +2786,6 @@
       }
     },
     "EntityUpload": {
-      "title": {
-        "string": "Import Data from File",
-        "developer_comment": "This is the title at the top of a pop-up."
-      },
       "currentEntities": {
         "string": "Your current Entities"
       },
@@ -2804,7 +2799,7 @@
       },
       "action": {
         "append": {
-          "string": "Append data",
+          "string": "Append Entities",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
@@ -2889,9 +2884,21 @@
           "string": "Select all",
           "developer_comment": "This is the text of a button that allows the user to select all the columns of a table."
         }
+      },
+      "created": {
+        "string": "This property was created in a previous upload attempt."
+      },
+      "createdAll": {
+        "string": "All properties were created in a previous upload attempt."
       }
     },
     "EntityUploadFileSelect": {
+      "upload": {
+        "string": "Upload a .csv file"
+      },
+      "errors": {
+        "string": "{count, plural, one {{count} error must be fixed before appending Entities} other {{count} errors must be fixed before appending Entities}}"
+      },
       "text": {
         "full": {
           "string": "Drag and drop a .csv file here, or {chooseFile}",
@@ -2917,6 +2924,9 @@
         "string": "{count, plural, one {{count} data row found} other {{count} data rows found}}"
       },
       "status": {
+        "creatingProperties": {
+          "string": "Creating new properties…"
+        },
         "sending": {
           "string": "Sending file… ({percentUploaded})",
           "developer_comment": "This text is shown while a file is being uploaded to the server."
@@ -2977,6 +2987,15 @@
           },
           "multiple": {
             "string": "Select which ones to create, otherwise they will be ignored.",
+            "developer_comment": "\"Ones\" refers to \"columns\"."
+          }
+        },
+        "error": {
+          "one": {
+            "string": "Once you’ve fixed all errors, you’ll be able to select the column."
+          },
+          "multiple": {
+            "string": "Once you’ve fixed all errors, you’ll be able to select which ones to create.",
             "developer_comment": "\"Ones\" refers to \"columns\"."
           }
         }
@@ -3048,10 +3067,6 @@
       "title": {
         "string": "Edit App User “{displayName}”",
         "developer_comment": "This is the title at the top of a pop-up for editing an App User. {displayName} is the the name of the App User"
-      },
-      "displayNameLabel": {
-        "string": "App User",
-        "developer_comment": "Shown as label before the display name of the App User in the edit pop-up."
       }
     },
     "FieldKeyList": {
@@ -4444,44 +4459,6 @@
         }
       }
     },
-    "ProjectCustomPropertiesList": {
-      "heading": {
-        "0": {
-          "string": "Control which Entities each App User or Public Link can access. Define Custom Properties here, assign values to App Users or Public Links, and use Entity List filters to show relevant Entities.",
-          "developer_comment": "A brief introduction to Custom Properties shown for the current project"
-        }
-      },
-      "emptyTable": {
-        "string": "No custom properties have been defined for this project."
-      },
-      "created": {
-        "string": "Custom property created successfully.",
-        "developer_comment": "Shown after a custom property is successfully created."
-      },
-      "action": {
-        "create": {
-          "string": "New",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      }
-    },
-    "ProjectCustomPropertiesNew": {
-      "title": {
-        "string": "Add Custom Property",
-        "developer_comment": "This is the title at the top of a pop-up."
-      },
-      "introduction": {
-        "string": "To add a custom property for this project, choose a unique property name below."
-      },
-      "newPropertyName": {
-        "string": "New property name"
-      },
-      "problem": {
-        "409_3": {
-          "string": "A custom property already exists in this project with the name of \"{propertyName}\"."
-        }
-      }
-    },
     "ProjectEdit": {
       "title": {
         "string": "Basic Details",
@@ -4996,6 +4973,23 @@
         }
       }
     },
+    "PropertyInput": {
+      "invalidName": {
+        "string": "Property name is invalid"
+      },
+      "duplicate": {
+        "title": {
+          "string": "A property with this name already exists"
+        },
+        "description": {
+          "string": "Property names must be unique, regardless of capitalization."
+        }
+      },
+      "tryDifferent": {
+        "string": "Try a different name.",
+        "developer_comment": "\"Name\" refers to the name of an Entity property."
+      }
+    },
     "PublicLinkCreate": {
       "title": {
         "string": "Create Public Access Link",
@@ -5021,10 +5015,6 @@
       "title": {
         "string": "Edit Public Access Link “{displayName}”",
         "developer_comment": "This is the title at the top of a pop-up for editing a Public Access Link. {displayName} is the display name of the Public Link"
-      },
-      "displayNameLabel": {
-        "string": "Public Link",
-        "developer_comment": "Shown as label before the display name of the Public Access Link in the edit pop-up."
       }
     },
     "PublicLinkList": {
@@ -5292,6 +5282,14 @@
         },
         "parseError": {
           "string": "Something went wrong while requesting your data."
+        }
+      }
+    },
+    "SubmissionDefDropdown": {
+      "action": {
+        "downloadXml": {
+          "string": "Download XML",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
     },
@@ -5857,11 +5855,16 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "Entity Filtering 🎯 and ODK Web Forms by Default 🌐",
+        "string": "Easier Entity Uploads 📤",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
-        "string": "Control which Entities each App User or Public Link receives with filtering rules based on custom properties. Plus, Web Forms is now the default web form experience, bringing a faster, more intuitive experience for form previews, data editing, and web-based form filling."
+        "0": {
+          "string": "Bring your Entities into ODK faster with a smoother CSV upload experience. Get clearer errors and warnings, fix issues, and try again, all in one place."
+        },
+        "1": {
+          "string": "You can now also create new properties directly from your CSV."
+        }
       }
     }
   },

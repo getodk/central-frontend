@@ -389,7 +389,7 @@ export const randomize = new NodeSetFunction(
     if (seedExpression === undefined) return seededRandomize(nodes);
 
     const seed = seedExpression.evaluate(context);
-    const asNumber = seed.toNumber(); // TODO: There are some peculiarities to address: https://github.com/getodk/web-forms/issues/240
+    const asNumber = seed.toNumber();
     let finalSeed: bigint | number | undefined;
     if (Number.isNaN(asNumber)) {
       // Specific behaviors for when a seed value is not interpretable as numeric.

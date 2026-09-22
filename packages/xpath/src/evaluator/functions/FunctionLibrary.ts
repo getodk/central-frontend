@@ -1,8 +1,8 @@
 import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
+import { UnknownFunctionError } from '../../error/UnknownFunctionError.ts';
 import type { Evaluation } from '../../evaluations/Evaluation.ts';
 import { LocationPathEvaluation } from '../../evaluations/LocationPathEvaluation.ts';
 import type { EvaluableArgument, FunctionImplementation } from './FunctionImplementation.ts';
-import { UnknownFunctionError } from './FunctionImplementation.ts';
 
 // TODO: memoized boxed name types?
 type NamespaceURI = string | null;
