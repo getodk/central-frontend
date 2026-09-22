@@ -18,35 +18,36 @@ except according to the terms contained in the LICENSE file.
       <p v-if="config.oidcEnabled">{{ $t('oidcBody') }}</p>
       <form v-else-if="user.dataExists && user.id === currentUser.id"
         @submit.prevent="submit">
-        <input :value="currentUser.email" autocomplete="username">
-        <form-group id="user-edit-password-old-password" v-model="oldPassword"
-          type="password" :placeholder="$t('field.oldPassword')" required
-          autocomplete="current-password"/>
-        <form-group id="user-edit-password-new-password" v-model="newPassword"
-          type="password" :placeholder="$t('field.newPassword')" required
-          :has-error="tooShort || mismatch || pwned" autocomplete="new-password">
-          <template #after>
-            <transition name="collapse">
-              <div v-if="pwned" class="collapsible-error">
-                <div class="collapsible-inner">
-                  <p>{{ $t('alert.includedInBreach') }}</p>
-                  <i18n-t keypath="moreInfo.clickHere.full">
-                    <template #clickHere>
-                      <a href="https://haveibeenpwned.com/Passwords" target="_blank" rel="noopener noreferrer">{{ $t('moreInfo.clickHere.clickHere') }}</a>
-                    </template>
-                  </i18n-t>
+        <fieldset :disabled="submitInProgress">
+          <input :value="currentUser.email" autocomplete="username">
+          <form-group id="user-edit-password-old-password" v-model="oldPassword"
+            type="password" :placeholder="$t('field.oldPassword')" required
+            autocomplete="current-password"/>
+          <form-group id="user-edit-password-new-password" v-model="newPassword"
+            type="password" :placeholder="$t('field.newPassword')" required
+            :has-error="tooShort || mismatch || pwned" autocomplete="new-password">
+            <template #after>
+              <transition name="collapse">
+                <div v-if="pwned" class="collapsible-error">
+                  <div class="collapsible-inner">
+                    <p>{{ $t('alert.includedInBreach') }}</p>
+                    <i18n-t keypath="moreInfo.clickHere.full">
+                      <template #clickHere>
+                        <a href="https://haveibeenpwned.com/Passwords" target="_blank" rel="noopener noreferrer">{{ $t('moreInfo.clickHere.clickHere') }}</a>
+                      </template>
+                    </i18n-t>
+                  </div>
                 </div>
-              </div>
-            </transition>
-          </template>
-        </form-group>
-        <form-group id="user-edit-password-confirm" v-model="confirm"
-          type="password" :placeholder="$t('field.passwordConfirm')" required
-          :has-error="mismatch" autocomplete="new-password"/>
-        <button type="submit" class="btn btn-primary"
-          :aria-disabled="awaitingResponse">
-          {{ $t('action.change') }} <spinner :state="awaitingResponse"/>
-        </button>
+              </transition>
+            </template>
+          </form-group>
+          <form-group id="user-edit-password-confirm" v-model="confirm"
+            type="password" :placeholder="$t('field.passwordConfirm')" required
+            :has-error="mismatch" autocomplete="new-password"/>
+          <button type="submit" class="btn btn-primary">
+            {{ $t('action.change') }} <spinner :state="submitInProgress"/>
+          </button>
+        </fieldset>
       </form>
       <p v-else>{{ $t('cannotChange') }}</p>
     </div>
@@ -69,8 +70,8 @@ export default {
   inject: ['alert', 'config'],
   setup() {
     const { currentUser, user } = useRequestData();
-    const { request, awaitingResponse } = useRequest();
-    return { currentUser, user, request, awaitingResponse };
+    const { request } = useRequest();
+    return { currentUser, user, request };
   },
   data() {
     return {
@@ -80,6 +81,7 @@ export default {
       confirm: '',
       mismatch: false,
       pwned: false,
+      submitInProgress: false,
     };
   },
   watch: {
@@ -110,6 +112,8 @@ export default {
     submit() {
       if (!this.validate()) return;
 
+      this.submitInProgress = true;
+
       checkPasswordPwnage(this.request, this.newPassword)
         .then(isPwned => {
           if (isPwned) {
@@ -130,7 +134,10 @@ export default {
               // submitted. Should we navigate to a different page so that it does?
             });
         })
-        .catch(noop);
+        .catch(noop)
+        .finally(() => {
+          this.submitInProgress = false;
+        });
     }
   }
 };
