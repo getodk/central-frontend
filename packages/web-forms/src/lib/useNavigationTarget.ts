@@ -31,6 +31,12 @@ export const findFocusTarget = (
   return control ?? container ?? node;
 };
 
+const getScrollPosition = (target: HTMLElement): ScrollLogicalPosition => {
+  const isTallerThanViewport =
+    target.getBoundingClientRect().height > document.documentElement.clientHeight;
+  return isTallerThanViewport ? 'start' : 'nearest';
+};
+
 const navigateTo = (nodeId: string) => {
   const node = document.getElementById(nodeId);
   const container = document.getElementById(containerId(nodeId));
@@ -40,7 +46,10 @@ const navigateTo = (nodeId: string) => {
   if (!scrollTarget) {
     return;
   }
-  scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  scrollTarget.scrollIntoView({
+    behavior: 'smooth',
+    block: getScrollPosition(scrollTarget),
+  });
 
   const focusTarget = findFocusTarget(node, container);
   // focusVisible is supported in modern Chrome, Firefox and Safari
