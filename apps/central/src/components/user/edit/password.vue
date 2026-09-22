@@ -44,7 +44,8 @@ except according to the terms contained in the LICENSE file.
           <form-group id="user-edit-password-confirm" v-model="confirm"
             type="password" :placeholder="$t('field.passwordConfirm')" required
             :has-error="mismatch" autocomplete="new-password"/>
-          <button type="submit" class="btn btn-primary">
+          <button type="submit" class="btn btn-primary"
+            :aria-disabled="awaitingResponse">
             {{ $t('action.change') }} <spinner :state="submitInProgress"/>
           </button>
         </fieldset>
@@ -70,8 +71,8 @@ export default {
   inject: ['alert', 'config'],
   setup() {
     const { currentUser, user } = useRequestData();
-    const { request } = useRequest();
-    return { currentUser, user, request };
+    const { request, awaitingResponse } = useRequest();
+    return { currentUser, user, request, awaitingResponse };
   },
   data() {
     return {
