@@ -692,7 +692,7 @@ describe('EntityList', () => {
       it('updates the entity count', async () => {
         const component = await restore();
         const text = component.get('.toggle-deleted-entities').text();
-        text.should.equal('0 deleted Entities');
+        text.should.equal('Show deleted 0');
       });
     });
 
@@ -1004,10 +1004,10 @@ describe('EntityList', () => {
       return load('/projects/1/entity-lists/tree/entities', { root: false, container: { router: testRouter() } })
         .complete()
         .request(component =>
-          component.get('.toggle-deleted-entities').trigger('click'))
+          component.get('.toggle-deleted-entities input').setValue(true))
         .respondWithData(testData.entityDeletedOData)
         .afterResponses((component) => {
-          component.find('.toggle-deleted-entities').text().should.equal('1 deleted Entity');
+          component.find('.toggle-deleted-entities').text().should.equal('Show deleted 1');
           component.findAll('.table-freeze-scrolling tbody tr').length.should.be.equal(1);
         })
         .request(component =>
@@ -1017,7 +1017,7 @@ describe('EntityList', () => {
         })
         .respondWithData(testData.entityDeletedOData)
         .afterResponses((component) => {
-          component.find('.toggle-deleted-entities').text().should.equal('2 deleted Entities');
+          component.find('.toggle-deleted-entities').text().should.equal('Show deleted 2');
           component.findAll('.table-freeze-scrolling tbody tr').length.should.be.equal(2);
         });
     });
@@ -1263,7 +1263,7 @@ describe('EntityList', () => {
         remainingRows.length.should.equal(1);
 
         const deletedEntitiesButton = component.find('.toggle-deleted-entities');
-        deletedEntitiesButton.text().should.equal('2 deleted Entities');
+        deletedEntitiesButton.text().should.equal('Show deleted 2');
       }));
 
     it('shows alert on failure of bulk delete request', () => loadEntityList()
