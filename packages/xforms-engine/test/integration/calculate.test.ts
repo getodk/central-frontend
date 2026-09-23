@@ -1,6 +1,7 @@
 import {
   bind,
   body,
+  group,
   head,
   html,
   input,
@@ -237,5 +238,38 @@ describe('jr:itext function in calculate expressions', () => {
 
     scenario.answer('/data/country', 'canada');
     expect(scenario.answerOf('/data/city_name')).toEqualAnswer(stringAnswer('Montréal'));
+  });
+});
+
+describe('calculate depending on a group node', () => {
+  // ref: https://github.com/getodk/web-forms/issues/178
+  it('recomputes when any child of the referenced group changes', async () => {
+    const scenario = await Scenario.init(
+      'Group dependency',
+      html(
+        head(
+          title('Group dependency'),
+          model(
+            mainInstance(
+              t('data id="group-dependency"', t('g1', t('t1'), t('t2')), t('group_text'))
+            ),
+            bind('/data/g1/t1').type('string'),
+            bind('/data/g1/t2').type('string'),
+            // string(/data/g1) is the text of all its descendants joined
+            bind('/data/group_text').type('string').calculate('/data/g1')
+          )
+        ),
+        body(group('/data/g1', input('/data/g1/t1'), input('/data/g1/t2')))
+      )
+    );
+
+    scenario.answer('/data/g1/t1', 'first');
+    expect(scenario.answerOf('/data/group_text')).toEqualAnswer(stringAnswer('first'));
+
+    scenario.answer('/data/g1/t2', 'second');
+    expect(scenario.answerOf('/data/group_text')).toEqualAnswer(stringAnswer('firstsecond'));
+
+    scenario.answer('/data/g1/t1', 'changed');
+    expect(scenario.answerOf('/data/group_text')).toEqualAnswer(stringAnswer('changedsecond'));
   });
 });
