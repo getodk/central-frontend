@@ -25,6 +25,7 @@ import { afterEach, assert, beforeEach, describe, expect, it } from 'vitest';
 import { JRResource } from '../../scenario/fixtures/JRResource.ts';
 import { JRResourceService } from '../../scenario/fixtures/JRResourceService.ts';
 import { ReactiveScenario } from '../../scenario/reactive/ReactiveScenario.ts';
+import { ANSWER_CALCULATION_ERROR } from '../../scenario/jr/validation/ValidateOutcome.ts';
 
 describe('Instance attachments with calculate and setvalue', () => {
   const KOALA_URL = 'jr://images/koala.jpg';
@@ -333,9 +334,10 @@ describe('Instance attachments with calculate and setvalue', () => {
       await settle(scenario, photo);
 
       expect(photo.currentState.instanceValue).toBe(KOALA_URL);
-      expect(() => {
-        scenario.answer('/data/photo', new File(['mine'], 'mine.jpg', { type: 'image/jpeg' }));
-      }).toThrow('Cannot write to readonly field');
+      scenario.answer('/data/photo', new File(['mine'], 'mine.jpg', { type: 'image/jpeg' }));
+      const validate = scenario.getValidationOutcome();
+      expect(validate.failedPrompt).toBe(scenario.indexOf('/data/photo'));
+      expect(validate.outcome).toBe(ANSWER_CALCULATION_ERROR);
       expect(photo.currentState.instanceValue).toBe(KOALA_URL);
     });
   });
