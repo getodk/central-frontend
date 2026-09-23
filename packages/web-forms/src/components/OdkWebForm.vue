@@ -337,11 +337,9 @@ const errorViolations = computed(() => {
 		if (!key) {
 			return;
 		}
-		let fieldReference = error.reference;
-		if (fieldReference.startsWith('/data/')) {
-			fieldReference = fieldReference.replace('/data/', '');
-		}
 		const fieldReferences = grouped.get(key) ?? [];
+		const rootNodeName = state.value.root?.definition.nodeset;
+		const fieldReference = error.reference.replace(rootNodeName + '/', '');
 		fieldReferences.push(fieldReference);
 		grouped.set(key, fieldReferences);
 	});
