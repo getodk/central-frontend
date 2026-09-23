@@ -12,6 +12,7 @@ import { createComputedExpression } from './createComputedExpression.ts';
 import type { SimpleAtomicState, SimpleAtomicStateSetter } from './types.ts';
 import { ValueNode } from '../../instance/abstract/ValueNode.ts';
 import { Attribute } from '../../instance/Attribute.ts';
+import type { AnyValueNode } from '../../instance/hierarchy.ts';
 import { getInstanceDefaultValue } from '../instance-defaults.ts';
 
 const REPEAT_INDEX_REGEX = /([^[]*)(\[[0-9]+\])/g;
@@ -266,6 +267,10 @@ const registerSetValueActions = (
   });
 };
 
+const isValueChangedActionTarget = (node: unknown): node is AnyValueNode | Attribute => {
+  return node instanceof ValueNode || node instanceof Attribute;
+};
+
 const registerValueChangedActions = (context: ValueContext, getValue: Accessor<string>) => {
   if (!context.valueChangedActions?.length) {
     return;
@@ -283,7 +288,7 @@ const registerValueChangedActions = (context: ValueContext, getValue: Accessor<s
       }
       const destinationNode = destinationNodes[0];
       if (
-        (destinationNode instanceof ValueNode || destinationNode instanceof Attribute) &&
+        isValueChangedActionTarget(destinationNode) &&
         destinationNode.isAttached() &&
         context.isAttached()
       ) {
