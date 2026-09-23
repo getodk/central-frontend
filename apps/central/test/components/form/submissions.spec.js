@@ -56,8 +56,8 @@ describe('FormSubmissions', () => {
         })
         .complete()
         .request(app => {
-          app.find('.toggle-deleted-submissions').text().should.equal('2 deleted Submissions');
-          return app.find('.toggle-deleted-submissions').trigger('click');
+          app.find('.toggle-deleted-submissions').text().should.equal('Show deleted 2');
+          return app.find('.toggle-deleted-submissions input').setValue(true);
         })
         .respondWithData(() => testData.submissionDeletedOData())
         .afterResponses(app => {
@@ -73,7 +73,7 @@ describe('FormSubmissions', () => {
       return load('/projects/1/forms/f/submissions')
         .afterResponses(app => {
           findTab(app, 'Submissions').get('.badge').text().should.equal('5');
-          app.find('.toggle-deleted-submissions').text().should.equal('2 deleted Submissions');
+          app.find('.toggle-deleted-submissions').text().should.equal('Show deleted 2');
         })
         .complete()
         .request(async app => {
@@ -83,7 +83,7 @@ describe('FormSubmissions', () => {
         .respondWithSuccess()
         .afterResponse(app => {
           findTab(app, 'Submissions').get('.badge').text().should.equal('4');
-          app.find('.toggle-deleted-submissions').text().should.equal('3 deleted Submissions');
+          app.find('.toggle-deleted-submissions').text().should.equal('Show deleted 3');
         })
         .request(async app => {
           await app.get('.submission-metadata-row .delete-button').trigger('click');
@@ -93,7 +93,7 @@ describe('FormSubmissions', () => {
         .afterResponse(app => {
           findTab(app, 'Submissions').get('.badge').text().should.equal('3');
         })
-        .request(app => app.get('.toggle-deleted-submissions').trigger('click'))
+        .request(app => app.get('.toggle-deleted-submissions input').setValue(true))
         .respondWithData(() => testData.submissionDeletedOData())
         .afterResponse(app => {
           findTab(app, 'Submissions').get('.badge').text().should.equal('3');
@@ -130,7 +130,7 @@ describe('FormSubmissions', () => {
       });
       const showDeletedButton = component.find('.toggle-deleted-submissions');
       showDeletedButton.exists().should.be.true;
-      showDeletedButton.text().should.equal('1 deleted Submission');
+      showDeletedButton.text().should.equal('Show deleted 1');
     });
 
     it('updates the deleted count on refresh', async () => {
@@ -142,7 +142,7 @@ describe('FormSubmissions', () => {
       })
         .afterResponses((component) => {
           const showDeletedButton = component.find('.toggle-deleted-submissions');
-          showDeletedButton.text().should.equal('1 deleted Submission');
+          showDeletedButton.text().should.equal('Show deleted 1');
         })
         .request((component) => {
           component.find('#refresh-button').trigger('click');
@@ -154,7 +154,7 @@ describe('FormSubmissions', () => {
         .respondWithData(() => testData.submissionDeletedOData())
         .afterResponses((component) => {
           const showDeletedButton = component.find('.toggle-deleted-submissions');
-          showDeletedButton.text().should.equal('2 deleted Submissions');
+          showDeletedButton.text().should.equal('Show deleted 2');
         });
     });
 
@@ -165,8 +165,8 @@ describe('FormSubmissions', () => {
       return load('/projects/1/forms/f/submissions')
         .complete()
         .request((component) => {
-          const showDeletedButton = component.find('.toggle-deleted-submissions');
-          showDeletedButton.trigger('click');
+          const toggleInput = component.find('.toggle-deleted-submissions input');
+          toggleInput.setValue(true);
         })
         .respondWithData(() => testData.submissionDeletedOData())
         .afterResponses((component) => {
@@ -182,7 +182,7 @@ describe('FormSubmissions', () => {
       return load('/projects/1/forms/f/submissions')
         .complete()
         .request((component) =>
-          component.find('.toggle-deleted-submissions').trigger('click'))
+          component.find('.toggle-deleted-submissions input').setValue(true))
         .respondWithData(() => testData.submissionDeletedOData())
         .afterResponses((component) => {
           component.getComponent('#odata-data-access').props().analyzeDisabled.should.be.true;
