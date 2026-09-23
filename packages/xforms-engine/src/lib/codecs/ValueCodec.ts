@@ -1,6 +1,10 @@
 import type { Accessor } from 'solid-js';
 import type { ValueType } from '../../client/ValueType.ts';
-import type { DecodeInstanceValue } from '../../instance/internal-api/InstanceValueContext.ts';
+import type { AttributeContext } from '../../instance/internal-api/AttributeContext.ts';
+import type {
+  DecodeInstanceValue,
+  InstanceValueContext,
+} from '../../instance/internal-api/InstanceValueContext.ts';
 import type { SimpleAtomicState } from '../reactivity/types.ts';
 
 export type CodecEncoder<RuntimeInputValue> = (input: RuntimeInputValue) => string;
@@ -22,20 +26,25 @@ export type RuntimeValueState<
   set: RuntimeValueSetter<RuntimeValue, RuntimeInputValue>,
 ];
 
+export type ValueCodecContext = AttributeContext | InstanceValueContext;
+
 export type CreateRuntimeValueState<
   RuntimeValue extends RuntimeInputValue,
   RuntimeInputValue = RuntimeValue,
+  Context extends ValueCodecContext = ValueCodecContext,
 > = (
-  instanceState: SimpleAtomicState<string>
+  instanceState: SimpleAtomicState<string>,
+  context: Context
 ) => RuntimeValueState<RuntimeValue, RuntimeInputValue>;
 
 type RuntimeValueStateFactory<
   RuntimeValue extends RuntimeInputValue,
   RuntimeInputValue = RuntimeValue,
+  Context extends ValueCodecContext = ValueCodecContext,
 > = (
   encodeValue: CodecEncoder<RuntimeInputValue>,
   decodeValue: CodecDecoder<RuntimeValue>
-) => CreateRuntimeValueState<RuntimeValue, RuntimeInputValue>;
+) => CreateRuntimeValueState<RuntimeValue, RuntimeInputValue, Context>;
 
 type DecodeInstanceValueFactory<
   RuntimeValue extends RuntimeInputValue,
@@ -45,19 +54,29 @@ type DecodeInstanceValueFactory<
   decodeValue: CodecDecoder<RuntimeValue>
 ) => DecodeInstanceValue;
 
-interface ValueCodecOptions<RuntimeValue extends RuntimeInputValue, RuntimeInputValue> {
+interface ValueCodecOptions<
+  RuntimeValue extends RuntimeInputValue,
+  RuntimeInputValue,
+  Context extends ValueCodecContext,
+> {
   readonly decodeInstanceValueFactory?: DecodeInstanceValueFactory<RuntimeValue, RuntimeInputValue>;
-  readonly runtimeValueStateFactory?: RuntimeValueStateFactory<RuntimeValue, RuntimeInputValue>;
+  readonly runtimeValueStateFactory?: RuntimeValueStateFactory<
+    RuntimeValue,
+    RuntimeInputValue,
+    Context
+  >;
 }
 
 export abstract class ValueCodec<
   V extends ValueType,
   RuntimeValue extends RuntimeInputValue,
   RuntimeInputValue = RuntimeValue,
+  Context extends ValueCodecContext = ValueCodecContext,
 > {
   protected readonly defaultRuntimeValueStateFactory: RuntimeValueStateFactory<
     RuntimeValue,
-    RuntimeInputValue
+    RuntimeInputValue,
+    Context
   > = (encodeValue, decodeValue) => {
     return (instanceState) => {
       const [getInstanceValue, setInstanceValue] = instanceState;
@@ -87,13 +106,17 @@ export abstract class ValueCodec<
   };
 
   readonly decodeInstanceValue: DecodeInstanceValue;
-  readonly createRuntimeValueState: CreateRuntimeValueState<RuntimeValue, RuntimeInputValue>;
+  readonly createRuntimeValueState: CreateRuntimeValueState<
+    RuntimeValue,
+    RuntimeInputValue,
+    Context
+  >;
 
   constructor(
     readonly valueType: V,
     readonly encodeValue: CodecEncoder<RuntimeInputValue>,
     readonly decodeValue: CodecDecoder<RuntimeValue>,
-    options: ValueCodecOptions<RuntimeValue, RuntimeInputValue> = {}
+    options: ValueCodecOptions<RuntimeValue, RuntimeInputValue, Context> = {}
   ) {
     const {
       decodeInstanceValueFactory = this.defaultDecodeInstanceValueFactory,

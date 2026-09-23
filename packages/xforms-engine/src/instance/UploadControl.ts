@@ -4,34 +4,25 @@ import type { PageBoundary } from '../client/identity.ts';
 import type { TextRange } from '../client/TextRange.ts';
 import type { UploadDefinition, UploadNode, UploadNodeOptions } from '../client/UploadNode.ts';
 import type { ValueType } from '../client/ValueType.ts';
-import type { InstanceAttachmentFileName, InstanceState } from '../client/index.ts';
-import type { AnyViolation, LeafNodeValidationState } from '../client/validation.ts';
 import { UploadValueTypeError } from '../error/UploadValueTypeError.ts';
 import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
 import type { StaticLeafElement } from '../integration/xpath/static-dom/StaticElement.ts';
-import { createValueNodeInstanceState } from '../lib/client-reactivity/instance-state/createValueNodeInstanceState.ts';
+import { UploadCodec } from '../lib/codecs/UploadCodec.ts';
 import {
-  createAttributeState,
   type AttributeState,
+  createAttributeState,
 } from '../lib/reactivity/createAttributeState.ts';
-import {
-  createInstanceAttachment,
-  type BaseInstanceAttachmentState,
-} from '../lib/reactivity/createInstanceAttachment.ts';
+import type { BaseInstanceAttachmentState } from '../lib/reactivity/createInstanceAttachment.ts';
 import type { CurrentState } from '../lib/reactivity/node-state/createCurrentState.ts';
 import type { EngineState } from '../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createSharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createFieldHint } from '../lib/reactivity/text/createFieldHint.ts';
 import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
-import type { SimpleAtomicState } from '../lib/reactivity/types.ts';
-import type { SharedValidationState } from '../lib/reactivity/validation/createValidation.ts';
-import { createValidationState } from '../lib/reactivity/validation/createValidation.ts';
 import type { UploadAppearanceDefinition } from '../parse/body/appearance/uploadAppearanceParser.ts';
 import type { Attribute } from './Attribute.ts';
 import type { Root } from './Root.ts';
-import type { DescendantNodeStateSpec } from './abstract/DescendantNode.ts';
-import { DescendantNode } from './abstract/DescendantNode.ts';
+import { ValueNode, type ValueNodeStateSpec } from './abstract/ValueNode.ts';
 import type {
   InstanceAttachment,
   InstanceAttachmentRuntimeValue,
@@ -40,10 +31,6 @@ import { buildAttributes } from './buildAttributes.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { InstanceAttachmentContext } from './internal-api/InstanceAttachmentContext.ts';
-import type {
-  DecodeInstanceValue,
-  InstanceValueContext,
-} from './internal-api/InstanceValueContext.ts';
 import type { ValidationContext } from './internal-api/ValidationContext.ts';
 import type { ClientReactiveSerializableValueNode } from './internal-api/serialization/ClientReactiveSerializableValueNode.ts';
 
@@ -55,6 +42,8 @@ type AssertUploadDefinition = (
   definition: AnyUploadDefinition
 ) => asserts definition is UploadDefinition<'binary'>;
 
+const codec = new UploadCodec();
+
 const assertUploadDefinition: AssertUploadDefinition = (definition) => {
   const { valueType } = definition;
 
@@ -63,31 +52,26 @@ const assertUploadDefinition: AssertUploadDefinition = (definition) => {
   }
 };
 
-interface UploadControlStateSpec extends DescendantNodeStateSpec<InstanceAttachmentRuntimeValue> {
+interface UploadControlStateSpec extends ValueNodeStateSpec<InstanceAttachmentRuntimeValue> {
   readonly label: Accessor<TextRange<'label'> | null>;
   readonly hint: Accessor<TextRange<'hint'> | null>;
-  readonly children: null;
-  readonly attributes: Accessor<readonly Attribute[]>;
   readonly valueOptions: null;
-  readonly value: SimpleAtomicState<InstanceAttachmentRuntimeValue>;
-  readonly instanceValue: Accessor<InstanceAttachmentFileName>;
   readonly attachmentState: Accessor<BaseInstanceAttachmentState>;
   readonly pageBoundary: PageBoundary;
 }
 
 export class UploadControl
-  extends DescendantNode<
+  extends ValueNode<
+    'binary',
     UploadDefinition<'binary'>,
-    UploadControlStateSpec,
-    GeneralParentNode,
-    null
+    InstanceAttachmentRuntimeValue,
+    InstanceAttachmentRuntimeValue
   >
   implements
     UploadNode,
     XFormsXPathElement,
     EvaluationContext,
     InstanceAttachmentContext,
-    InstanceValueContext,
     ValidationContext,
     ClientReactiveSerializableValueNode
 {
@@ -106,53 +90,36 @@ export class UploadControl
     return new this(parent, instanceNode, definition);
   }
 
-  private readonly validation: SharedValidationState;
   private readonly instanceAttachment: InstanceAttachment;
 
   // XFormsXPathElement
   override readonly [XPathNodeKindKey] = 'element';
-  override readonly getXPathValue: () => InstanceAttachmentFileName;
 
   // InstanceNode
   protected readonly state: SharedNodeState<UploadControlStateSpec>;
   protected readonly engineState: EngineState<UploadControlStateSpec>;
   readonly attributeState: AttributeState;
 
-  // InstanceValueContext
-  readonly decodeInstanceValue: DecodeInstanceValue;
-
   // UploadNode
   readonly nodeType = 'upload';
-  readonly valueType = 'binary';
   readonly maxPixels: number | null;
   readonly appearances: UploadAppearanceDefinition;
   readonly nodeOptions: UploadNodeOptions;
   readonly currentState: CurrentState<UploadControlStateSpec>;
 
-  get validationState(): LeafNodeValidationState {
-    return this.validation.currentState;
-  }
-
-  readonly instanceState: InstanceState;
-
   private constructor(
     parent: GeneralParentNode,
-    override readonly instanceNode: StaticLeafElement | null,
+    instanceNode: StaticLeafElement | null,
     definition: UploadDefinition<'binary'>
   ) {
-    super(parent, instanceNode, definition);
+    super(parent, instanceNode, definition, codec);
 
+    // Set by the codec's runtime state factory during `super()`
+    this.instanceAttachment = this.rootDocument.attachments.get(this)!;
     this.appearances = definition.bodyElement.appearances;
     this.nodeOptions = definition.bodyElement.options;
     this.maxPixels = definition.bind.maxPixels;
-
-    const instanceAttachment = createInstanceAttachment(this);
-
-    this.instanceAttachment = instanceAttachment;
-
     this.attributeState = createAttributeState(this.scope);
-    this.decodeInstanceValue = instanceAttachment.decodeInstanceValue;
-    this.getXPathValue = instanceAttachment.getInstanceValue;
 
     const state = createSharedNodeState(
       this.scope,
@@ -166,35 +133,20 @@ export class UploadControl
         hint: createFieldHint(this, definition),
         children: null,
         valueOptions: null,
-        value: instanceAttachment.valueState,
+        value: this.valueState,
         attributes: this.attributeState.getAttributes,
-        instanceValue: instanceAttachment.getInstanceValue,
-        attachmentState: instanceAttachment.getState,
+        instanceValue: this.getInstanceValue,
+        attachmentState: this.instanceAttachment.getState,
         pageBoundary: this.root.pagination.attachLeaf(this),
       },
       this.instanceConfig
     );
 
+    this.attributeState.setAttributes(buildAttributes(this));
+
     this.state = state;
     this.engineState = state.engineState;
     this.currentState = state.currentState;
-    this.validation = createValidationState(this, this.instanceConfig);
-    this.attributeState.setAttributes(buildAttributes(this));
-    this.instanceState = createValueNodeInstanceState(this);
-  }
-
-  // ValidationContext
-  getViolation(): AnyViolation | null {
-    return this.validation.engineState.violation;
-  }
-
-  isBlank(): boolean {
-    return this.getXPathValue() === '';
-  }
-
-  // InstanceNode
-  getChildren(): readonly [] {
-    return [];
   }
 
   override getAttributes(): readonly Attribute[] {
@@ -203,7 +155,7 @@ export class UploadControl
 
   // UploadNode
   setValue(value: InstanceAttachmentRuntimeValue): Root {
-    this.instanceAttachment.setValue(value);
+    this.setValueState(value);
 
     return this.root;
   }

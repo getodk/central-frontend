@@ -3,17 +3,12 @@ import type { InstancePayload } from '../../client/index.ts';
 import type { BaseInstanceAttachmentState } from '../../lib/reactivity/createInstanceAttachment.ts';
 import type { SimpleAtomicState, SimpleAtomicStateSetter } from '../../lib/reactivity/types.ts';
 import type { InstanceAttachmentContext } from '../internal-api/InstanceAttachmentContext.ts';
-import type { DecodeInstanceValue } from '../internal-api/InstanceValueContext.ts';
 import type { InstanceAttachmentsState } from './InstanceAttachmentsState.ts';
 
 export type InstanceAttachmentFileName = string;
 export type InstanceAttachmentRuntimeValue = File | null;
 
 export interface InstanceAttachmentOptions {
-  readonly getFileName: Accessor<InstanceAttachmentFileName | null>;
-  readonly getInstanceValue: Accessor<InstanceAttachmentFileName>;
-  readonly decodeInstanceValue: DecodeInstanceValue;
-
   readonly getValue: Accessor<InstanceAttachmentRuntimeValue>;
   readonly setValue: SimpleAtomicStateSetter<InstanceAttachmentRuntimeValue>;
   readonly valueState: SimpleAtomicState<InstanceAttachmentRuntimeValue>;
@@ -55,10 +50,6 @@ export class InstanceAttachment {
    */
   protected readonly _ = null;
 
-  readonly getFileName: Accessor<InstanceAttachmentFileName | null>;
-  readonly getInstanceValue: Accessor<InstanceAttachmentFileName>;
-  readonly decodeInstanceValue: DecodeInstanceValue;
-
   readonly getValue: Accessor<InstanceAttachmentRuntimeValue>;
   readonly setValue: SimpleAtomicStateSetter<InstanceAttachmentRuntimeValue>;
   readonly valueState: SimpleAtomicState<InstanceAttachmentRuntimeValue>;
@@ -68,9 +59,6 @@ export class InstanceAttachment {
   readonly retry: () => void;
 
   private constructor(options: InstanceAttachmentOptions) {
-    this.getFileName = options.getFileName;
-    this.getInstanceValue = options.getInstanceValue;
-    this.decodeInstanceValue = options.decodeInstanceValue;
     this.getValue = options.getValue;
     this.setValue = options.setValue;
     this.valueState = options.valueState;

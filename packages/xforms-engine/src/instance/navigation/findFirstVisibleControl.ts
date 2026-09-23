@@ -3,7 +3,6 @@ import { ValueNode } from '../abstract/ValueNode.ts';
 import type { AnyControlInstanceNode, GeneralChildNode } from '../hierarchy.ts';
 import type { RepeatInstance } from '../repeat/RepeatInstance.ts';
 import type { Root } from '../Root.ts';
-import { UploadControl } from '../UploadControl.ts';
 
 export type NavigationScope = GeneralChildNode | RepeatInstance | Root;
 
@@ -12,8 +11,7 @@ const searchSubtree = (node: NavigationScope): AnyControlInstanceNode | null => 
     return null;
   }
 
-  // UploadControl is the one control whose value (an attachment) keeps it off the ValueNode base.
-  if (node instanceof ValueNode || node instanceof UploadControl) {
+  if (node instanceof ValueNode) {
     return node;
   }
 

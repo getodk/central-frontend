@@ -96,11 +96,11 @@ export class Attribute
     const { valueState: instanceValueState, setValueFromAction } = createInstanceValueState(this);
     const [getInstanceValue] = instanceValueState;
 
-    const valueState = codec.createRuntimeValueState(instanceValueState);
-    const [, setActionValue] = codec.createRuntimeValueState([
-      getInstanceValue,
-      setValueFromAction,
-    ]);
+    const valueState = codec.createRuntimeValueState(instanceValueState, this);
+    const [, setActionValue] = codec.createRuntimeValueState(
+      [getInstanceValue, setValueFromAction],
+      this
+    );
 
     const [, setValueState] = valueState;
 

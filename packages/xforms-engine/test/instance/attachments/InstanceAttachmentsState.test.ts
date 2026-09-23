@@ -3,13 +3,8 @@ import type { FetchFormAttachment, FetchResourceResponse } from '../../../src/cl
 import { AttachmentNotFoundError } from '../../../src/error/AttachmentNotFoundError';
 import { InstanceAttachmentsState } from '../../../src/instance/attachments/InstanceAttachmentsState';
 import type { InstanceAttachmentMap } from '../../../src/instance/input/InstanceAttachmentMap';
-import type { StaticLeafElement } from '../../../src/integration/xpath/static-dom/StaticElement';
 
 describe('InstanceAttachmentsState', () => {
-  const leafWithValue = (value: string): StaticLeafElement => {
-    return { value } as unknown as StaticLeafElement;
-  };
-
   const okResponse = (blob: Blob): FetchResourceResponse => ({
     ok: true,
     blob: () => Promise.resolve(blob),
@@ -22,47 +17,34 @@ describe('InstanceAttachmentsState', () => {
     text: () => Promise.resolve(''),
   });
 
-  describe('getInitialFileValue', () => {
-    it('returns null when the instance node is null', () => {
-      const state = new InstanceAttachmentsState();
-
-      expect(state.getInitialFileValue(null)).toBeNull();
-    });
-
-    it('returns the source attachment when present and skips fetching', () => {
-      const sourceFile = Promise.resolve(new File(['hello'], 'source.txt'));
-      const sourceAttachments = new Map([
-        ['source.txt', sourceFile],
-      ]) as unknown as InstanceAttachmentMap;
+  describe('resolveFile', () => {
+    it('returns null when the reference is empty', () => {
       const fetchFormAttachment = vi.fn<FetchFormAttachment>();
-      const state = new InstanceAttachmentsState(sourceAttachments, fetchFormAttachment);
+      const state = new InstanceAttachmentsState(null, fetchFormAttachment);
 
-      const result = state.getInitialFileValue(leafWithValue('source.txt'));
-
-      expect(result).toBe(sourceFile);
+      expect(state.resolveFile('')).toBeNull();
       expect(fetchFormAttachment).not.toHaveBeenCalled();
     });
 
-    it('returns the source attachment when the instance value has surrounding whitespace', () => {
+    it('returns the source attachment for a trimmed reference and skips fetching', () => {
       const sourceFile = Promise.resolve(new File([''], 'photo.png', { type: 'image/png' }));
-      const sourceAttachments = new Map([
-        ['photo.png', sourceFile],
-      ]) as unknown as InstanceAttachmentMap;
+      // @ts-expect-error - a plain Map is enough for the lookup this test needs
+      const sourceAttachments: InstanceAttachmentMap = new Map([['photo.png', sourceFile]]);
       const fetchFormAttachment = vi.fn<FetchFormAttachment>();
       const state = new InstanceAttachmentsState(sourceAttachments, fetchFormAttachment);
 
-      const result = state.getInitialFileValue(leafWithValue(`photo.png\n        `));
+      const result = state.resolveFile(`photo.png\n        `);
 
       expect(result).toBe(sourceFile);
       expect(fetchFormAttachment).not.toHaveBeenCalled();
     });
 
-    it('fetches the form attachment when value is a jr:// reference and no source attachment exists', async () => {
+    it('fetches a jr:// URL and builds a File from the response', async () => {
       const blob = new Blob(['data'], { type: 'image/png' });
       const fetchFormAttachment = vi.fn<FetchFormAttachment>().mockResolvedValue(okResponse(blob));
       const state = new InstanceAttachmentsState(null, fetchFormAttachment);
 
-      const result = await state.getInitialFileValue(leafWithValue('jr://images/default.png'));
+      const result = await state.resolveFile('jr://images/default.png');
 
       expect(result).toBeInstanceOf(File);
       expect(result?.name).toBe('jr://images/default.png');
@@ -75,33 +57,36 @@ describe('InstanceAttachmentsState', () => {
       const fetchFormAttachment = vi.fn<FetchFormAttachment>().mockResolvedValue(errorResponse());
       const state = new InstanceAttachmentsState(null, fetchFormAttachment);
 
-      await expect(
-        state.getInitialFileValue(leafWithValue('jr://images/missing.png'))
-      ).rejects.toThrow('Error fetching form attachment: jr://images/missing.png');
-    });
-
-    it('returns null when value is empty', () => {
-      const fetchFormAttachment = vi.fn<FetchFormAttachment>();
-      const state = new InstanceAttachmentsState(null, fetchFormAttachment);
-
-      expect(state.getInitialFileValue(leafWithValue(''))).toBeNull();
-      expect(fetchFormAttachment).not.toHaveBeenCalled();
-    });
-
-    it('rejects when value is not a jr:// reference and has no source attachment', async () => {
-      const fetchFormAttachment = vi.fn<FetchFormAttachment>();
-      const state = new InstanceAttachmentsState(null, fetchFormAttachment);
-
-      await expect(state.getInitialFileValue(leafWithValue('plain-value.txt'))).rejects.toThrow(
-        AttachmentNotFoundError
+      await expect(state.resolveFile('jr://images/missing.png')).rejects.toThrow(
+        'Error fetching form attachment: jr://images/missing.png'
       );
+    });
+
+    it('rejects when the reference is not a jr:// URL and has no source attachment', async () => {
+      const fetchFormAttachment = vi.fn<FetchFormAttachment>();
+      const state = new InstanceAttachmentsState(null, fetchFormAttachment);
+
+      await expect(state.resolveFile('plain-value.txt')).rejects.toThrow(AttachmentNotFoundError);
       expect(fetchFormAttachment).not.toHaveBeenCalled();
     });
 
-    it('returns null when value is a jr:// reference but no fetchFormAttachment was provided', () => {
+    it('returns null when the reference is a jr:// URL but no fetchFormAttachment was provided', () => {
       const state = new InstanceAttachmentsState();
 
-      expect(state.getInitialFileValue(leafWithValue('jr://images/default.png'))).toBeNull();
+      expect(state.resolveFile('jr://images/default.png')).toBeNull();
+    });
+  });
+
+  describe('retryFile', () => {
+    it('retries the source attachment', () => {
+      const retry = vi.fn();
+      // @ts-expect-error - stub with just the properties this test calls
+      const sourceAttachments: InstanceAttachmentMap = { get: () => null, retry };
+      const state = new InstanceAttachmentsState(sourceAttachments);
+
+      state.retryFile(' photo.png ');
+
+      expect(retry).toHaveBeenCalledWith('photo.png');
     });
   });
 });
