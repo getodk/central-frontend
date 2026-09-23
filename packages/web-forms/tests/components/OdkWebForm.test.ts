@@ -340,7 +340,7 @@ describe('OdkWebForm', () => {
       await flushPromises();
       expectErrorBanner(
         component,
-        'Error found while evaluating this form. Error message: "Unknown function in form definition: \'nope\'". Reported by field: /root/first-question. Please contact the person who sent you the form link.'
+        'Error found while evaluating this form. Error message: "Unknown function in form definition: \'nope\'". Reported by field: first-question. Please contact the person who sent you the form link.'
       );
     });
   });
