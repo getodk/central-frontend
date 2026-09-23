@@ -9,7 +9,7 @@ import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import type { UploadNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import Message from 'primevue/message';
-import { computed, inject, onUnmounted, ref, watchEffect } from 'vue';
+import { computed, inject, onUnmounted, ref, watch } from 'vue';
 import DeleteConfirmDialog from './DeleteConfirmDialog.vue';
 import UploadAudioHeader from './UploadAudioHeader.vue';
 import UploadAudioPreview from './UploadAudioPreview.vue';
@@ -145,14 +145,6 @@ const setCanvasBaseImage = (file: File) => {
 	canvasBaseImage.value = URL.createObjectURL(file) as ObjectURL;
 };
 
-watchEffect(() => {
-	// Initialize for edit submissions, default images cases.
-	const file = props.question.currentState.value;
-	if (file && canvasMode.value && !canvasBaseImage.value) {
-		setCanvasBaseImage(file);
-	}
-});
-
 const resizeImage = async (file: File): Promise<File> => {
 	const max = props.question.maxPixels;
 	return mediaType.value === 'image' && max ? resize(file, max) : file;
@@ -192,6 +184,33 @@ const revokeOriginalImage = () => {
 		canvasBaseImage.value = null;
 	}
 };
+
+// Loads the canvas from the node value on mount and whenever the engine changes it
+// (edit submission, default, calculate, setvalue). A user write already set the base image.
+watch(
+	[
+		() => props.question.currentState.value,
+		() => props.question.currentState.attachmentState.dirty,
+	],
+	([file, dirty]) => {
+		if (!canvasMode.value) {
+			return;
+		}
+
+		if (file == null) {
+			revokeOriginalImage();
+			return;
+		}
+
+		if (dirty && canvasBaseImage.value != null) {
+			return;
+		}
+
+		setCanvasBaseImage(file);
+		sourceImageKey.value++;
+	},
+	{ immediate: true }
+);
 
 const clearValueConfirmed = () => {
 	confirmDeleteAction.value = false;

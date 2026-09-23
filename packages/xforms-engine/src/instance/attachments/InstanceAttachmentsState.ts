@@ -2,9 +2,9 @@ import {
   JRResourceURL,
   type JRResourceURLString,
 } from '@getodk/common/jr-resources/JRResourceURL.ts';
+import { getBlobData } from '@getodk/common/lib/web-compat/blob.ts';
 import type { FetchFormAttachment } from '../../client/resources.ts';
 import { AttachmentNotFoundError } from '../../error/AttachmentNotFoundError.ts';
-import type { StaticLeafElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import type { InstanceAttachmentMap } from '../input/InstanceAttachmentMap.ts';
 import type { InstanceAttachmentContext } from '../internal-api/InstanceAttachmentContext.ts';
 import type { InstanceAttachment } from './InstanceAttachment.ts';
@@ -27,22 +27,23 @@ export class InstanceAttachmentsState extends Map<InstanceAttachmentContext, Ins
     }
 
     const blob = await response.blob();
-    return new File([blob], value, { type: blob.type });
+    const blobData = await getBlobData(blob);
+    return new File([blobData], value, { type: blob.type });
   }
 
-  getInitialFileValue(instanceNode: StaticLeafElement | null): Promise<File> | null {
-    if (!instanceNode?.value?.length) {
+  // Resolves a binary node's value to an attachment of the edited instance or a
+  // `jr://` form attachment; `null` when nothing can be resolved without error.
+  resolveFile(reference: string): Promise<File> | null {
+    const value = reference.trim();
+    if (!value.length) {
       return null;
     }
 
-    const value = instanceNode.value.trim();
     const sourceFile = this.sourceAttachments?.get(value) ?? null;
     if (sourceFile != null) {
       return sourceFile;
     }
 
-    // Resolve jr:// default values (e.g. annotate with a default image) so the attachment state
-    // and submission payload are updated and valid.
     if (JRResourceURL.isJRResourceReference(value)) {
       return this.fetchFormAttachment
         ? this.resolveFormAttachmentFile(this.fetchFormAttachment, value)
@@ -52,9 +53,7 @@ export class InstanceAttachmentsState extends Map<InstanceAttachmentContext, Ins
     return Promise.reject(new AttachmentNotFoundError(value));
   }
 
-  retryFileValue(instanceNode: StaticLeafElement | null) {
-    if (instanceNode !== null) {
-      this.sourceAttachments?.retry(instanceNode.value.trim());
-    }
+  retryFile(reference: string) {
+    this.sourceAttachments?.retry(reference.trim());
   }
 }
