@@ -7,19 +7,17 @@ import type {
 import type { AnyNode, AnyParentNode } from '../../../instance/hierarchy.ts';
 import { createSharedNodeState } from '../node-state/createSharedNodeState.ts';
 
-const violationReference = (node: AnyNode): DescendantNodeViolationReference[] => {
+const nodeViolations = (node: AnyNode): DescendantNodeViolationReference[] => {
   if (node.nodeType === 'primary-instance') {
     return [];
   }
-  const violation = node.getViolation();
-  if (violation == null) {
-    return [];
-  }
+  const voilations = node.getViolation() ?? null;
+  const attributeViolations = node.getAttributes().map((a) => a.getViolation());
 
   const { nodeId } = node;
-
-  return [
-    {
+  return [voilations, ...attributeViolations]
+    .filter((violation) => !!violation)
+    .map((violation) => ({
       nodeId,
       get node() {
         return node;
@@ -28,17 +26,13 @@ const violationReference = (node: AnyNode): DescendantNodeViolationReference[] =
         return node.currentState.reference;
       },
       violation,
-    },
-  ];
+    }));
 };
 
 const collectViolationReferences = (
   context: AnyParentNode
 ): readonly DescendantNodeViolationReference[] => {
-  const violations = violationReference(context);
-  const attributeViolations = context.getAttributes().flatMap((a) => {
-    return violationReference(a);
-  });
+  const violations = nodeViolations(context);
   const childViolations = context.getChildren().flatMap((child) => {
     switch (child.nodeType) {
       case 'model-value':
@@ -50,12 +44,12 @@ const collectViolationReferences = (
       case 'trigger':
       case 'upload':
         // leaf node
-        return violationReference(child);
+        return nodeViolations(child);
       default:
         return collectViolationReferences(child);
     }
   });
-  return [...violations, ...attributeViolations, ...childViolations];
+  return [...violations, ...childViolations];
 };
 
 interface AggregatedViolationsOptions {
