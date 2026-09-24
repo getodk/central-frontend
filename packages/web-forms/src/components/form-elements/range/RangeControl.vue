@@ -59,7 +59,7 @@ const orientation = props.node.appearances.vertical ? 'vertical' : 'horizontal';
 	<template v-else>
 		<div :class="['range-control-container', orientation, { 'range-unset': isUnset }]">
 			<div class="range-value">
-				<span>{{ isUnset ? '—' : numberValue }}</span>
+				<span v-if="!isUnset">{{ numberValue }}</span>
 			</div>
 			<RangeSlider
 				:id="node.nodeId"
