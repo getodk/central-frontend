@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
         @click="handleTriggerClick(toggle, $event)">
         <slot name="icon"></slot>
         <span class="multiselect-label">{{ label }}</span>
-        <span class="display-value" aria-hidden="true">{{ selectOption }}</span>
+        <span class="display-value" aria-hidden="true" v-tooltip.text>{{ selectOption }}</span>
         <span class="icon-angle-down"></span>
       </button>
     </template>
@@ -53,11 +53,11 @@ except according to the terms contained in the LICENSE file.
           <template v-if="options != null">
             <!-- eslint-disable-next-line vue/object-curly-newline -->
             <li v-for="({ value, key = value, text = value, description }, i) in options"
-              :key="key" :class="searchSelectionClasses(value)">
+              :key="key" :class="{ 'search-match': searchMatches.has(value)}">
               <div :class="single ? 'single-select-option' : 'checkbox'">
                 <label>
                   <input :type="single ? 'radio' : 'checkbox'"
-                    :name="single ? `${idPrefix}-single` : null" :data-index="i"
+                    :name="single ? `${idPrefix}-single` : null" :class="{ 'sr-only': single }" :data-index="i"
                     :aria-describedby="description != null ? descriptionId(i) : null">
                   <span v-if="description == null" v-tooltip.text>{{ text }}</span>
                   <span v-else v-tooltip.no-aria="description">{{ text }}</span>
@@ -142,6 +142,7 @@ const props = defineProps({
   // Text, including for form controls and actions
   label: {
     type: String,
+    required: true
   },
   placeholder: {
     type: Function,
@@ -242,6 +243,7 @@ const syncWithModelValue = () => {
 
 const changeCheckbox = ({ target }) => {
   if (props.single) {
+    // In the case of the single-selection, de-select the one (or zero) previously-selected values before selecting the new one.
     for (const value of [...selected]) change(value);
   }
   change(props.options[target.dataset.index].value);
@@ -319,10 +321,6 @@ if (buildMode === 'development') {
 
 const searchValue = ref('');
 const searchMatches = shallowReactive(new Set());
-const searchSelectionClasses = (value) => ({
-  'search-match': searchMatches.has(value),
-  selected: props.single && selected.has(value)
-});
 const textToSearch = computed(() => props.options.map(option => {
   const text = option.text != null ? option.text : option.value.toString();
   const result = [text.toLocaleLowerCase(i18n.locale)];
@@ -416,8 +414,8 @@ const selectOption = computed(() => {
   if (props.loading) return i18n.t('common.loading');
   if (props.options == null) return i18n.t('common.error');
   const { placeholder } = props;
-  const singleSelectText = props.single
-    ? props.options.find(({ value }) => value === props.modelValue[0])?.text ?? null
+  const singleSelectText = props.single && props.modelValue.length > 0
+    ? props.options.find(({ value }) => value === props.modelValue[0]).text
     : null;
   return placeholder({
     selected: i18n.n(props.modelValue.length, 'default'),
@@ -519,8 +517,6 @@ const emptyMessage = computed(() => (searchValue.value === ''
       flex: 1 1 50%;
       line-height: 15px;
     }
-
-    &.single button { width: 100%; }
   }
 
   .option-list {
@@ -541,14 +537,9 @@ const emptyMessage = computed(() => (searchValue.value === ''
     }
     &.shows-all li, li.search-match { display: list-item; }
 
-    .checkbox, .single-select-option {
+    .checkbox {
       display: block;
-
-      label {
-        @include text-overflow-ellipsis;
-        font-weight: normal;
-        margin-bottom: 0;
-      }
+      label { @include text-overflow-ellipsis; }
     }
 
     input[type="checkbox"] {
@@ -575,26 +566,17 @@ const emptyMessage = computed(() => (searchValue.value === ''
     overflow-x: hidden;
     overflow-y: auto;
 
-    // Keep the radio in the DOM so it remains focusable for keyboard users,
-    // while hiding it visually.
     .single-select-option {
       label {
+        @include text-overflow-ellipsis;
+        // .checkbox already has font-weight normal styling but we need to add it for the radio option
+        font-weight: normal;
+        margin-bottom: 0;
         box-sizing: border-box;
         display: block;
         line-height: normal;
         padding: 8px $hpadding;
         width: 100%;
-      }
-
-      input[type="radio"] {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        border: 0;
       }
     }
 
