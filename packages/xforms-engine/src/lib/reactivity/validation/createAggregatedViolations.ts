@@ -7,26 +7,32 @@ import type {
 import type { AnyNode, AnyParentNode } from '../../../instance/hierarchy.ts';
 import { createSharedNodeState } from '../node-state/createSharedNodeState.ts';
 
-const nodeViolations = (node: AnyNode): DescendantNodeViolationReference[] => {
+const nodeViolation = (node: AnyNode): DescendantNodeViolationReference | null => {
   if (node.nodeType === 'primary-instance') {
-    return [];
+    return null;
   }
-  const voilations = node.getViolation() ?? null;
-  const attributeViolations = node.getAttributes().map((a) => a.getViolation());
+  const violation = node.getViolation();
+  if (!violation) {
+    return null;
+  }
 
   const { nodeId } = node;
-  return [voilations, ...attributeViolations]
-    .filter((violation) => !!violation)
-    .map((violation) => ({
-      nodeId,
-      get node() {
-        return node;
-      },
-      get reference() {
-        return node.currentState.reference;
-      },
-      violation,
-    }));
+  return {
+    nodeId,
+    get node() {
+      return node;
+    },
+    get reference() {
+      return node.currentState.reference;
+    },
+    violation,
+  };
+};
+
+const nodeViolations = (node: AnyNode): DescendantNodeViolationReference[] => {
+  const violation = nodeViolation(node);
+  const attributeViolations = node.getAttributes().map((attribute) => nodeViolation(attribute));
+  return [violation, ...attributeViolations].filter((v) => !!v);
 };
 
 const collectViolationReferences = (
