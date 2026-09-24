@@ -422,7 +422,7 @@ const selectOption = computed(() => {
   return placeholder({
     selected: i18n.n(props.modelValue.length, 'default'),
     total: i18n.n(props.options.length, 'default'),
-    ...(props.single && {selectedText: singleSelectText})
+    ...(props.single && { selectedText: singleSelectText })
   });
 });
 
