@@ -278,13 +278,13 @@ describe('Multiselect', () => {
       await toggle(component);
       await component.get('.change-all.single button').trigger('click');
       assertSingleChecked(component, [false, false]);
+      await apply(component);
       component.emitted('update:modelValue').should.eql([[[]]]);
     });
 
     it('does not show multi-select bulk actions', () => {
       const component = mountComponent({ props: { options, single: true } });
       component.find('.select-all').exists().should.be.false;
-      component.find('.select-none').exists().should.be.false;
     });
   });
 
