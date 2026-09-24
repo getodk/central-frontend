@@ -259,7 +259,7 @@ const orientation = props.node.appearances.vertical ? 'vertical' : 'horizontal';
 
 	:deep(.p-slider-handle) {
 		opacity: 0;
-    // Hidden handle must not block clicks on the range's line.
+		// Hidden handle must not block clicks on the range's line.
 		pointer-events: none;
 	}
 
