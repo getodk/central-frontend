@@ -138,7 +138,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
 | audio quality                                                                                                                      |          |
 | Audit: location-priority,<br/>location-min-interval, location-max-age,<br/>track-changes, track-changes-reasons,<br/>identify-user |          |
 | [geotrace/shape incremental=true](https://github.com/getodk/web-forms/issues/562)                                                  |          |
-| [geo reference-geometry](https://github.com/getodk/web-forms/issues/924)                                                |          |
+| [geo reference-geometry](https://github.com/getodk/web-forms/issues/924)                                                           |          |
 | range labels, placeholder                                                                                                          |          |
 
 </details>
