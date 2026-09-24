@@ -1,5 +1,5 @@
 import { UpsertableMap } from '@getodk/common/lib/collections/UpsertableMap.ts';
-import type { Accessor } from 'solid-js';
+import type { Accessor, Setter } from 'solid-js';
 import { createEffect, createMemo, on } from 'solid-js';
 import type { ActiveLanguage } from '../../client/FormLanguage.ts';
 import type { BaseItem } from '../../client/BaseItem.ts';
@@ -11,12 +11,17 @@ import type { SelectControl } from '../../instance/SelectControl.ts';
 import { TextChunk } from '../../instance/text/TextChunk.ts';
 import { TextRange } from '../../instance/text/TextRange.ts';
 import type { EngineXPathNode } from '../../integration/xpath/adapter/kind.ts';
-import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
+import type { EngineXPathEvaluator, Result } from '../../integration/xpath/EngineXPathEvaluator.ts';
 import type { ItemDefinition } from '../../parse/body/control/ItemDefinition.ts';
 import type { ItemsetDefinition } from '../../parse/body/control/ItemsetDefinition.ts';
 import { createComputedExpression } from './createComputedExpression.ts';
 import type { ReactiveScope } from './scope.ts';
 import { createTextRange } from './text/createTextRange.ts';
+import {
+  createInstanceErrorState,
+  type ComputedProperty,
+  type ErrorState,
+} from './createInstanceErrorState.ts';
 
 type ItemCollectionControl = RankControl | SelectControl;
 type DerivedItemLabel = ClientTextRange<'item-label'>;
@@ -68,6 +73,8 @@ class ItemsetItemEvaluationContext implements EvaluationContext {
   readonly evaluator: EngineXPathEvaluator;
   readonly contextReference: Accessor<string>;
   readonly getActiveLanguage: Accessor<ActiveLanguage>;
+  readonly errorState: Accessor<ErrorState>;
+  readonly setErrorState: Setter<ErrorState>;
 
   constructor(
     control: ItemCollectionControl,
@@ -78,19 +85,39 @@ class ItemsetItemEvaluationContext implements EvaluationContext {
     this.evaluator = control.evaluator;
     this.contextReference = control.contextReference;
     this.getActiveLanguage = control.getActiveLanguage;
+    const [getError, setError] = createInstanceErrorState(this);
+    this.errorState = getError;
+    this.setErrorState = setError;
+  }
+
+  getError(): string | null {
+    return (Object.values(this.errorState()).find((value) => !!value) as string) ?? null;
+  }
+
+  setError(property: ComputedProperty, error: Error | null) {
+    this.setErrorState((prev: ErrorState) => {
+      prev[property] = error?.message ?? null;
+      return { ...prev };
+    });
   }
 }
 
 const createItemsetItemLabel = (
   context: EvaluationContext,
   definition: ItemsetDefinition,
-  itemValue: Accessor<string>
+  itemValue: Accessor<Result<'string'>>
 ): Accessor<ClientTextRange<'item-label'>> => {
   const { label } = definition;
 
   if (label == null) {
     return createMemo(() => {
-      return derivedItemLabel(context, itemValue());
+      const result = itemValue();
+      if (result.success) {
+        context.setError('label', null);
+        return derivedItemLabel(context, result.value);
+      }
+      context.setError('label', result.error);
+      return derivedItemLabel(context, '');
     });
   }
 
@@ -99,8 +126,8 @@ const createItemsetItemLabel = (
 
 interface ItemsetItem {
   label(): ClientTextRange<'item-label'>;
-  value(): string;
-  properties: Array<[string, () => string]>;
+  value(): Result<'string'>;
+  properties: Array<[string, () => Result<'string'>]>;
 }
 
 const MAX_CHANGES_PER_UPDATE = 100;
@@ -122,18 +149,24 @@ const createCycleGuardedItemNodes = (
   let changeCount = 0;
   const itemNodes = createMemo((previous?: EngineXPathNode[]) => {
     const result = evaluateNodes();
-    if (previous === undefined) {
-      return result;
+    if (!result.success) {
+      control.setError('itemset', result.error);
+      return previous ?? [];
     }
-    if (nodeListsEqual(result, previous)) {
+    control.setError('itemset', null);
+    const { value } = result;
+    if (previous === undefined) {
+      return value;
+    }
+    if (nodeListsEqual(value, previous)) {
       return previous;
     }
     changeCount += 1;
     if (changeCount <= MAX_CHANGES_PER_UPDATE) {
-      return result;
+      return value;
     }
     // Settle on the phase showing more options, so a filtered-out answer stays visible.
-    return result.length > previous.length ? result : previous;
+    return value.length > previous.length ? value : previous;
   });
   createEffect(on(itemNodes, () => (changeCount = 0)));
 
@@ -163,7 +196,7 @@ const createItemsetItems = (
           const properties = itemset.getPropertiesExpressions(nodeElements).map((expression) => {
             return [expression.toString(), createComputedExpression(context, expression)] as [
               string,
-              () => string,
+              () => Result<'string'>,
             ];
           });
 
@@ -187,12 +220,27 @@ const createItemset = (
 
     return createMemo(() => {
       return itemsetItems().map((item) => {
+        const valueResult = item.value();
+        let value: string;
+        if (valueResult.success) {
+          control.setError('itemset', null);
+          value = valueResult.value;
+        } else {
+          control.setError('itemset', valueResult.error);
+          value = '';
+        }
+        const properties = item.properties.map(([propLabel, propValue]) => {
+          const propResult = propValue();
+          if (!propResult.success) {
+            control.setError('itemset', propResult.error);
+          }
+          const pv = propResult.success ? propResult.value : '';
+          return [propLabel, pv] as [string, string];
+        });
         return {
           label: item.label(),
-          value: item.value(),
-          properties: item.properties.map(
-            ([propLabel, propValue]) => [propLabel, propValue()] as [string, string]
-          ),
+          value,
+          properties,
         };
       });
     });

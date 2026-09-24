@@ -26,6 +26,11 @@ import { InstanceNode } from './InstanceNode.ts';
 import { ActionDefinition } from '../../parse/model/ActionDefinition.ts';
 import { SET_GEOPOINT_LOCAL_NAME, SET_VALUE_LOCAL_NAME } from '../../parse/XFormDOM.ts';
 import { XFORM_EVENT } from '../../parse/model/Event.ts';
+import type { DependentExpression } from '../../parse/expression/abstract/DependentExpression.ts';
+import type { ValidationContext } from '../internal-api/ValidationContext.ts';
+import type { AnyViolation } from '../../client/validation.ts';
+import type { SharedValidationState } from '../../lib/reactivity/validation/createValidation.ts';
+import type { ComputedProperty } from '../../lib/reactivity/createInstanceErrorState.ts';
 
 export interface DescendantNodeSharedStateSpec {
   readonly reference: Accessor<string>;
@@ -69,7 +74,11 @@ export abstract class DescendantNode<
   Child extends AnyChildNode | null = null,
 >
   extends InstanceNode<Definition, Spec, Parent, Child>
-  implements BaseNode, XFormsXPathPrimaryInstanceDescendantNode, EvaluationContext
+  implements
+    BaseNode,
+    XFormsXPathPrimaryInstanceDescendantNode,
+    EvaluationContext,
+    ValidationContext
 {
   /**
    * Partial implementation of {@link isAttached}, used to check whether `this`
@@ -193,6 +202,7 @@ export abstract class DescendantNode<
     this as AnyDescendantNode as PrimaryInstanceXPathChildNode;
   readonly getActiveLanguage: Accessor<ActiveLanguage>;
   readonly valueChangedActions: ActionDefinition[];
+  protected abstract readonly validation: SharedValidationState;
 
   constructor(
     override readonly parent: Parent,
@@ -241,14 +251,14 @@ export abstract class DescendantNode<
 
     const { readonly, relevant, required } = definition.bind;
 
-    this.isSelfReadonly = createComputedExpression(this, readonly, {
-      defaultValue: true,
+    this.isSelfReadonly = this.scope.runTask(() => {
+      return this.compute('readonly', readonly, true);
     });
-    this.isSelfRelevant = createComputedExpression(this, relevant, {
-      defaultValue: false,
+    this.isSelfRelevant = this.scope.runTask(() => {
+      return this.compute('relevant', relevant, false);
     });
-    this.isRequired = createComputedExpression(this, required, {
-      defaultValue: false,
+    this.isRequired = this.scope.runTask(() => {
+      return this.compute('required', required, false);
     });
 
     this.valueChangedActions = Array.from(definition.bodyElement?.element.children ?? [])
@@ -295,5 +305,32 @@ export abstract class DescendantNode<
     });
 
     this.scope.dispose();
+  }
+
+  private compute(
+    property: ComputedProperty,
+    expression: DependentExpression<'boolean'>,
+    defaultValue: boolean
+  ) {
+    const computed = createComputedExpression(this, expression, { defaultValue });
+    return createMemo(() => {
+      const result = computed();
+      if (result.success) {
+        this.setError(property, null);
+        return result.value;
+      } else {
+        this.setError(property, result.error);
+        return defaultValue;
+      }
+    });
+  }
+
+  // ValidationContext
+  getViolation(): AnyViolation | null {
+    return this.validation.engineState.violation;
+  }
+
+  isBlank(): boolean {
+    return false; // TODO should this evaluate all children?
   }
 }

@@ -3,29 +3,24 @@ import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
 import type { EvaluationContext } from '../../instance/internal-api/EvaluationContext.ts';
 import type { EngineXPathNode } from '../../integration/xpath/adapter/kind.ts';
-import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
+import type {
+  ComputedExpressionResults,
+  EngineXPathEvaluator,
+  Result,
+  Success,
+} from '../../integration/xpath/EngineXPathEvaluator.ts';
 import type {
   DependentExpression,
   DependentExpressionResultType,
 } from '../../parse/expression/abstract/DependentExpression.ts';
 import { isConstantExpression } from '../../parse/xpath/semantic-analysis.ts';
 
-interface ComputedExpressionResults {
-  readonly boolean: boolean;
-  readonly nodes: EngineXPathNode[];
-  readonly number: number;
-  readonly string: string;
-}
+type EvaluatedExpression<Type extends DependentExpressionResultType> =
+  ComputedExpressionResults[Type];
 
-// prettier-ignore
-type EvaluatedExpression<
-	Type extends DependentExpressionResultType
-> = ComputedExpressionResults[Type];
-
-// prettier-ignore
-type ExpressionEvaluator<
-	Type extends DependentExpressionResultType
-> = (defaultValue?: EvaluatedExpression<Type>) => EvaluatedExpression<Type>;
+type ExpressionEvaluator<Type extends DependentExpressionResultType> = (
+  defaultValue?: EvaluatedExpression<Type>
+) => Result<Type>;
 
 interface ExpressionEvaluatorOptions {
   get contextNode(): EngineXPathNode;
@@ -83,11 +78,6 @@ const defaultEvaluationsByType: DefaultEvaluationsByType = {
   string: DEFAULT_STRING_EVALUATION,
 };
 
-// prettier-ignore
-type ComputedExpression<Type extends DependentExpressionResultType> = Accessor<
-	EvaluatedExpression<Type>
->;
-
 interface CreateComputedExpressionOptions<Type extends DependentExpressionResultType> {
   /**
    * If a default value is provided, {@link createComputedExpression} will
@@ -109,7 +99,7 @@ export const createComputedExpression = <Type extends DependentExpressionResultT
   context: EvaluationContext,
   dependentExpression: DependentExpression<Type>,
   options: CreateComputedExpressionOptions<Type> = {}
-): ComputedExpression<Type> => {
+): Accessor<Result<Type>> => {
   return context.scope.runTask(() => {
     const { contextNode, evaluator } = context;
     const { expression, isTranslated, resultType } = dependentExpression;
@@ -133,7 +123,8 @@ export const createComputedExpression = <Type extends DependentExpressionResultT
         return evaluateExpression(defaultValue);
       } catch {
         // likely because it's not yet attached - try again later
-        return defaultValue;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+        return { success: true, value: defaultValue } as Success<Type>;
       }
     });
   });

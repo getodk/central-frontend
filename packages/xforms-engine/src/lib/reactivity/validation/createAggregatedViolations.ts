@@ -4,20 +4,24 @@ import type {
   AncestorNodeValidationState,
   DescendantNodeViolationReference,
 } from '../../../client/validation.ts';
-import type { AnyParentNode, AnyValueNode } from '../../../instance/hierarchy.ts';
+import type { AnyNode, AnyParentNode } from '../../../instance/hierarchy.ts';
 import { createSharedNodeState } from '../node-state/createSharedNodeState.ts';
 
-const violationReference = (node: AnyValueNode): DescendantNodeViolationReference | null => {
+const nodeViolation = (node: AnyNode): DescendantNodeViolationReference | null => {
+  if (node.nodeType === 'primary-instance') {
+    return null;
+  }
   const violation = node.getViolation();
-
-  if (violation == null) {
+  if (!violation) {
     return null;
   }
 
   const { nodeId } = node;
-
   return {
     nodeId,
+    get node() {
+      return node;
+    },
     get reference() {
       return node.currentState.reference;
     },
@@ -25,10 +29,17 @@ const violationReference = (node: AnyValueNode): DescendantNodeViolationReferenc
   };
 };
 
+const nodeViolations = (node: AnyNode): DescendantNodeViolationReference[] => {
+  const violation = nodeViolation(node);
+  const attributeViolations = node.getAttributes().map((attribute) => nodeViolation(attribute));
+  return [violation, ...attributeViolations].filter((v) => !!v);
+};
+
 const collectViolationReferences = (
   context: AnyParentNode
 ): readonly DescendantNodeViolationReference[] => {
-  return context.getChildren().flatMap((child) => {
+  const violations = nodeViolations(context);
+  const childViolations = context.getChildren().flatMap((child) => {
     switch (child.nodeType) {
       case 'model-value':
       case 'input':
@@ -37,20 +48,14 @@ const collectViolationReferences = (
       case 'range':
       case 'rank':
       case 'trigger':
-      case 'upload': {
-        const reference = violationReference(child);
-
-        if (reference == null) {
-          return [];
-        }
-
-        return [reference];
-      }
-
+      case 'upload':
+        // leaf node
+        return nodeViolations(child);
       default:
         return collectViolationReferences(child);
     }
   });
+  return [...violations, ...childViolations];
 };
 
 interface AggregatedViolationsOptions {

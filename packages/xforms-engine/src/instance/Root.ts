@@ -47,6 +47,10 @@ import { createPageNavigation, type PageNavigation } from './pagination/createPa
 import type { Page } from './pagination/pageSequence.ts';
 import { Pagination } from './pagination/Pagination.ts';
 import type { PrimaryInstance } from './PrimaryInstance.ts';
+import {
+  createValidationState,
+  type SharedValidationState,
+} from '../lib/reactivity/validation/createValidation.ts';
 
 interface RootStateSpec {
   readonly reference: Accessor<string>;
@@ -83,6 +87,7 @@ export class Root
     ClientReactiveSerializableParentNode<GeneralChildNode>
 {
   private readonly childrenState: ChildrenState<GeneralChildNode>;
+  protected readonly validation: SharedValidationState;
 
   // XFormsXPathElement
   override readonly [XPathNodeKindKey] = 'element';
@@ -175,6 +180,7 @@ export class Root
       childrenState
     );
 
+    this.validation = createValidationState(this, this.instanceConfig);
     childrenState.setChildren(buildChildren(this));
     this.attributeState.setAttributes(buildAttributes(this));
     this.validationState = createAggregatedViolations(this, this.instanceConfig);
@@ -228,7 +234,10 @@ export class Root
       return [];
     }
 
-    return this.validationState.violations.filter(({ nodeId }) => {
+    return this.validationState.violations.filter(({ node, nodeId }) => {
+      if (node.nodeType === 'attribute') {
+        nodeId = node.owner.nodeId;
+      }
       return this.pagination.getLeafPageId(nodeId) === currentPage;
     });
   }

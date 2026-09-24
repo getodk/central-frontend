@@ -14,6 +14,7 @@ import { ValueNode } from '../../instance/abstract/ValueNode.ts';
 import { Attribute } from '../../instance/Attribute.ts';
 import type { AnyValueNode } from '../../instance/hierarchy.ts';
 import { getInstanceDefaultValue } from '../instance-defaults.ts';
+import type { Result } from '../../integration/xpath/EngineXPathEvaluator.ts';
 
 const REPEAT_INDEX_REGEX = /([^[]*)(\[[0-9]+\])/g;
 
@@ -91,8 +92,8 @@ const guardDownstreamReadonlyWrites = (
   const setValue: SimpleAtomicStateSetter<string> = (value) => {
     if (context.isReadonly()) {
       const reference = untrack(() => context.contextReference());
-
-      throw new Error(`Cannot write to readonly field: ${reference}`);
+      context.setError('value', new Error(`Cannot write to readonly field: ${reference}`));
+      return value;
     }
 
     return baseSetValue(value);
@@ -151,12 +152,21 @@ const referencesCurrentNode = (context: ValueContext, ref: string): boolean => {
   const nodes = context.evaluator.evaluateNodes(ref, {
     contextNode: context.contextNode,
   });
-  if (nodes.length > 1) {
-    throw new Error(
-      'You are trying to target a repeated field. Currently you may only target a field in a specific repeat instance. XPath nodeset has more than one node.'
-    );
+  if (!nodes.success) {
+    context.setError('value', nodes.error);
+    return false;
   }
-  return nodes.includes(context.contextNode);
+  if (nodes.value.length > 1) {
+    context.setError(
+      'value',
+      new Error(
+        'You are trying to target a repeated field. Currently you may only target a field in a specific repeat instance. XPath nodeset has more than one node.'
+      )
+    );
+    return false;
+  }
+  context.setError('value', null);
+  return nodes.value.includes(context.contextNode);
 };
 
 // Replaces the unbound repeat references in source and ref, with references
@@ -190,7 +200,12 @@ const createCalculation = (
   createComputed(() => {
     if (context.isAttached() && context.isRelevant()) {
       const calculated = calculate();
-      const value = context.decodeInstanceValue(calculated);
+      if (!calculated.success) {
+        context.setError('value', calculated.error);
+        return;
+      }
+      const value = context.decodeInstanceValue(calculated.value);
+      context.setError('value', null);
       setRelevantValue(value);
     }
   });
@@ -216,7 +231,12 @@ const createActionCalculation = (
       const calculated = untrack(() => {
         return context.evaluator.evaluateString(computation.expression, context);
       });
-      const value = context.decodeInstanceValue(calculated);
+      if (!calculated.success) {
+        context.setError('value', calculated.error);
+        return;
+      }
+      const value = context.decodeInstanceValue(calculated.value);
+      context.setError('value', null);
       setRelevantValue(value);
     }
   });
@@ -280,13 +300,19 @@ const registerValueChangedActions = (context: ValueContext, getValue: Accessor<s
     const sourceValue = getValue();
     context.valueChangedActions.forEach((action) => {
       const ref = bindRefToRepeatInstance(context, action.ref);
-      const destinationNodes = context.evaluator.evaluateNodes(ref, {
+      const nodesResult = context.evaluator.evaluateNodes(ref, {
         contextNode: context.contextNode,
       });
-      if (!destinationNodes.length) {
+      if (!nodesResult.success) {
+        context.setError('value', nodesResult.error);
         return;
       }
-      const destinationNode = destinationNodes[0];
+      context.setError('value', null);
+
+      if (!nodesResult.value.length) {
+        return;
+      }
+      const destinationNode = nodesResult.value[0];
       if (
         isValueChangedActionTarget(destinationNode) &&
         destinationNode.isAttached() &&
@@ -300,13 +326,18 @@ const registerValueChangedActions = (context: ValueContext, getValue: Accessor<s
           if (action.type === 'geopoint') {
             getGeopointValue(context, (point) => destinationNode.setEncodedValue(point, true));
           } else {
-            const value = untrack(() => {
+            const valueResult: Result<'string'> = untrack(() => {
               return context.evaluator.evaluateString(
                 action.computation.expression,
                 destinationNode
               );
             });
-            destinationNode.setEncodedValue(value, true);
+            if (valueResult.success) {
+              destinationNode.setError('value', null);
+              destinationNode.setEncodedValue(valueResult.value, true);
+            } else {
+              destinationNode.setError('value', valueResult.error);
+            }
           }
         }
       }

@@ -26,7 +26,12 @@ const generateResourceChunk = (context: EvaluationContext, child: Element, type:
     if (isElementNode(grandchild)) {
       const expression = TextChunkExpression.fromOutput(grandchild);
       if (expression) {
-        parts.push(createComputedExpression(context, expression)());
+        const result = createComputedExpression(context, expression)();
+        if (result.success) {
+          parts.push(result.value);
+        } else {
+          context.setError('label', result.error);
+        }
       }
     } else if (isTextNode(grandchild)) {
       parts.push(grandchild.data);
@@ -75,11 +80,15 @@ const getChunkExpressions = <Role extends TextRole>(
     // only translations have 'nodes' chunks
     return definition.chunks as Array<TextChunkExpression<'string'>>;
   }
-  const itextId = context.evaluator.evaluateString(definition.chunks[0].toString()!, {
+  const result = context.evaluator.evaluateString(definition.chunks[0].toString()!, {
     contextNode: context.contextNode,
   });
+  if (!result.success) {
+    context.setError('label', result.error);
+    return [];
+  }
   const lang = context.getActiveLanguage();
-  const elem = definition.form.model.getItextElement(lang, itextId);
+  const elem = definition.form.model.getItextElement(lang, result.value);
   return elem ? generateChunksForTranslation(context, elem) : [];
 };
 
@@ -99,6 +108,7 @@ const createTextChunks = <Role extends TextRole>(
   const chunks: TextChunk[] = [];
   const mediaSources: MediaSources = {};
   const chunkExpressions = getChunkExpressions(context, definition);
+  context.setError('label', null);
   chunkExpressions.forEach((chunkExpression) => {
     if (chunkExpression.resourceType) {
       const url = chunkExpression.stringValue?.trim();
@@ -114,7 +124,11 @@ const createTextChunks = <Role extends TextRole>(
     }
 
     const computed = createComputedExpression(context, chunkExpression)();
-    chunks.push(new TextChunk(context, chunkExpression.source, computed));
+    if (!computed.success) {
+      context.setError('label', computed.error);
+      return;
+    }
+    chunks.push(new TextChunk(context, chunkExpression.source, computed.value));
   });
   return { chunks, mediaSources };
 };

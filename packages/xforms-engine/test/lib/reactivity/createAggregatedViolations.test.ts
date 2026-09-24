@@ -10,6 +10,7 @@ import {
   label,
   mainInstance,
   model,
+  repeat,
   select1,
   t,
   title,
@@ -51,10 +52,10 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
 					'/data/contactdetails',
 					label('Household'),
 
-					input("/data/contactdetails/residentialAddress",
+					input('/data/contactdetails/residentialAddress',
 						label('Residential address')),
 
-					group("/data/contactdetails/phone",
+					group('/data/contactdetails/phone',
 						label('Phone numbers'),
 
 						input('/data/contactdetails/phone/home',
@@ -80,7 +81,7 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
   interface SimplifiedViolation {
     readonly condition: ValidationCondition;
     readonly valid: false;
-    readonly message: ViolationMessage<ValidationCondition> | null;
+    readonly message: ViolationMessage<ValidationCondition> | string | null;
   }
 
   interface SimplifiedViolationReference {
@@ -580,6 +581,110 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
           },
         ],
       ]);
+    });
+  });
+
+  describe('error violations', () => {
+    it('violations on groups', async () => {
+      definition = html(
+        head(
+          title('Validation Form'),
+          model(
+            mainInstance(
+              t(
+                'data id="validation"',
+                t('contactdetails', t('residentialAddress'), t('phone', t('home'))),
+                t('meta', t('instanceID'))
+              )
+            ),
+            bind('/data/contactdetails').relevant('unknownfunction()'),
+            bind('/data/contactdetails/residentialAddress'),
+            bind('/data/contactdetails/phone/home')
+          )
+        ),
+        body(
+          group(
+            '/data/contactdetails',
+            label('Household'),
+
+            input('/data/contactdetails/residentialAddress', label('Residential address')),
+
+            group(
+              '/data/contactdetails/phone',
+              label('Phone numbers'),
+
+              input('/data/contactdetails/phone/home', label('Home phone no.'))
+            )
+          )
+        )
+      );
+      const { root } = await createInstance(definition.asXml());
+      const violations = root.validationState.violations;
+      expect(violations.length).toEqual(1);
+      expect(violations[0]?.reference).toEqual('/data/contactdetails');
+      expect(violations[0]?.violation.message).toEqual(
+        "Unknown function in form definition: 'unknownfunction'"
+      );
+    });
+
+    it('violations on repeats', async () => {
+      definition = html(
+        head(
+          title('invalid jr:count'),
+          model(
+            mainInstance(
+              t(
+                'data id="cast-fractional-value-to-int"',
+                t('repeat-count jr:template=""', t('anything'))
+              )
+            )
+          )
+        ),
+        body(repeat('/data/repeat-count', 'somerandomnumber()'))
+      );
+      const { root } = await createInstance(definition.asXml());
+      const violations = root.validationState.violations;
+      expect(violations.length).toEqual(1);
+      expect(violations[0]?.reference).toEqual('/data/repeat-count');
+      expect(violations[0]?.violation.message).toEqual(
+        "Unknown function in form definition: 'somerandomnumber'"
+      );
+    });
+
+    it('violations on attributes', async () => {
+      definition = html(
+        head(
+          title('Bind attributes'),
+          model(
+            mainInstance(t('root id="bind-attributes" version=""', t('version'))),
+            bind('/root/version').type('string'),
+            bind('/root/@version')
+              .type('string')
+              .calculate('invalidrandomfunction()')
+              .readonly('true()')
+          )
+        ),
+        body(input('/root/version'))
+      );
+      const { root } = await createInstance(definition.asXml());
+      const violations = root.validationState.violations;
+      expect(violations.length).toEqual(1);
+      expect(violations[0]?.reference).toEqual('/root/@version');
+      expect(violations[0]?.violation.message).toEqual(
+        "Unknown function in form definition: 'invalidrandomfunction'"
+      );
+    });
+  });
+
+  describe('violation node reference', () => {
+    it('references the violating node itself', async () => {
+      const { root } = await createInstance(definition.asXml());
+      const violations = root.validationState.violations;
+
+      expect(violations.length).toBeGreaterThan(0);
+      expect(violations.map(({ node }) => node.nodeId)).toEqual(
+        violations.map(({ nodeId }) => nodeId)
+      );
     });
   });
 });
