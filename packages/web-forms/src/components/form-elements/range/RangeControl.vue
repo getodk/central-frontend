@@ -34,6 +34,8 @@ const numberValue = computed((): number | undefined => {
 	return value;
 });
 
+const isUnset = computed(() => numberValue.value == undefined);
+
 const setValue = (value: number) => {
 	props.node.setValue(value);
 };
@@ -55,9 +57,9 @@ const orientation = props.node.appearances.vertical ? 'vertical' : 'horizontal';
 	</template>
 
 	<template v-else>
-		<div :class="['range-control-container', orientation]">
+		<div :class="['range-control-container', orientation, { 'range-unset': isUnset }]">
 			<div class="range-value">
-				<span>{{ numberValue }}</span>
+				<span v-if="!isUnset">{{ numberValue }}</span>
 			</div>
 			<RangeSlider
 				:id="node.nodeId"
@@ -196,10 +198,7 @@ const orientation = props.node.appearances.vertical ? 'vertical' : 'horizontal';
 	&::before { // Increasing range hit target.
 		content: "";
 		position: absolute;
-		top: -10px;
-		bottom: -10px;
-		left: -10px;
-		right: -10px;
+		inset: calc(var(--thumb-size) * -1);
 	}
 
 	// = emphasized range between `min` and current value
@@ -249,6 +248,24 @@ const orientation = props.node.appearances.vertical ? 'vertical' : 'horizontal';
 		transform: none;
 
 		z-index: var(--odk-z-index-form-content);
+	}
+}
+
+// When range is unset, hide handle and fill (PrimeVue draws them at `min`), keep handle focusable.
+.range-unset .p-slider {
+	:deep(.p-slider-range) {
+		display: none;
+	}
+
+	:deep(.p-slider-handle) {
+		opacity: 0;
+		// Hidden handle must not block clicks on the range's line.
+		pointer-events: none;
+	}
+
+	&:focus-within {
+		outline: 1px solid var(--odk-primary-border-color);
+		outline-offset: 2px;
 	}
 }
 
