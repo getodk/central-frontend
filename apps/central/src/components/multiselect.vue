@@ -53,7 +53,7 @@ except according to the terms contained in the LICENSE file.
           <template v-if="options != null">
             <!-- eslint-disable-next-line vue/object-curly-newline -->
             <li v-for="({ value, key = value, text = value, description }, i) in options"
-              :key="key" :class="{ 'search-match': searchMatches.has(value)}">
+              :key="key" :class="{ 'search-match': searchMatches.has(value) }">
               <div :class="single ? 'single-select-option' : 'checkbox'">
                 <label>
                   <input :type="single ? 'radio' : 'checkbox'"
