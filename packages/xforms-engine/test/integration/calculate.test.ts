@@ -76,6 +76,37 @@ describe('TriggerableDagTest.java', () => {
     expect(scenario.answerOf('/data/c2')).toEqualAnswer(intAnswer(14));
   });
 
+  it('division result is blank when an operand is blank', async () => {
+    const scenario = await Scenario.init(
+      'Calculate with blank operand',
+      html(
+        head(
+          title('Calculate with blank operand'),
+          model(
+            mainInstance(t('data id="calculate-blank"', t('q1'), t('c1'), t('c2'))),
+            bind('/data/q1').type('int'),
+            bind('/data/c1').calculate('8 div /data/q1'),
+            bind('/data/c2').calculate('/data/c1')
+          )
+        ),
+        body(input('/data/q1'), input('/data/c2'))
+      )
+    );
+
+    expect(scenario.answerOf('/data/c1').getValue()).toBe('');
+    expect(scenario.answerOf('/data/c2').getValue()).toBe('');
+
+    scenario.answer('/data/q1', 0);
+
+    expect(scenario.answerOf('/data/c1').getValue()).toBe('Infinity');
+    expect(scenario.answerOf('/data/c2').getValue()).toBe('Infinity');
+
+    scenario.answer('/data/q1', 4);
+
+    expect(scenario.answerOf('/data/c1')).toEqualAnswer(intAnswer(2));
+    expect(scenario.answerOf('/data/c2')).toEqualAnswer(intAnswer(2));
+  });
+
   it('addition result is blank when one operand is blank', async () => {
     const scenario = await Scenario.init(
       'Calculate with blank operand',
