@@ -49,6 +49,95 @@ describe('TriggerableDagTest.java', () => {
     // Verify that c gets computed using the updated value of b.
     expect(scenario.answerOf('/data/c')).toEqualAnswer(intAnswer(60));
   });
+
+  it('multiplication result is blank when an operand is blank', async () => {
+    const scenario = await Scenario.init(
+      'Calculate with blank operand',
+      html(
+        head(
+          title('Calculate with blank operand'),
+          model(
+            mainInstance(t('data id="calculate-blank"', t('q1'), t('c1'), t('c2'))),
+            bind('/data/q1').type('int'),
+            bind('/data/c1').calculate('2 * /data/q1'),
+            bind('/data/c2').calculate('/data/c1')
+          )
+        ),
+        body(input('/data/q1'), input('/data/c2'))
+      )
+    );
+
+    expect(scenario.answerOf('/data/c1').getValue()).toBe('');
+    expect(scenario.answerOf('/data/c2').getValue()).toBe('');
+
+    scenario.answer('/data/q1', 7);
+
+    expect(scenario.answerOf('/data/c1')).toEqualAnswer(intAnswer(14));
+    expect(scenario.answerOf('/data/c2')).toEqualAnswer(intAnswer(14));
+  });
+
+  it('division result is blank when an operand is blank', async () => {
+    const scenario = await Scenario.init(
+      'Calculate with blank operand',
+      html(
+        head(
+          title('Calculate with blank operand'),
+          model(
+            mainInstance(t('data id="calculate-blank"', t('q1'), t('c1'), t('c2'))),
+            bind('/data/q1').type('int'),
+            bind('/data/c1').calculate('8 div /data/q1'),
+            bind('/data/c2').calculate('/data/c1')
+          )
+        ),
+        body(input('/data/q1'), input('/data/c2'))
+      )
+    );
+
+    expect(scenario.answerOf('/data/c1').getValue()).toBe('');
+    expect(scenario.answerOf('/data/c2').getValue()).toBe('');
+
+    scenario.answer('/data/q1', 0);
+
+    expect(scenario.answerOf('/data/c1').getValue()).toBe('Infinity');
+    expect(scenario.answerOf('/data/c2').getValue()).toBe('Infinity');
+
+    scenario.answer('/data/q1', 4);
+
+    expect(scenario.answerOf('/data/c1')).toEqualAnswer(intAnswer(2));
+    expect(scenario.answerOf('/data/c2')).toEqualAnswer(intAnswer(2));
+  });
+
+  it('addition result is blank when one operand is blank', async () => {
+    const scenario = await Scenario.init(
+      'Calculate with blank operand',
+      html(
+        head(
+          title('Calculate with blank operand'),
+          model(
+            mainInstance(t('data id="calculate-blank"', t('a'), t('b'), t('a_plus_b'), t('disp'))),
+            bind('/data/a').type('int'),
+            bind('/data/b').type('int'),
+            bind('/data/a_plus_b').calculate('/data/a + /data/b'),
+            bind('/data/disp').calculate('/data/a_plus_b')
+          )
+        ),
+        body(input('/data/a'), input('/data/b'), input('/data/disp'))
+      )
+    );
+
+    expect(scenario.answerOf('/data/a_plus_b').getValue()).toBe('');
+    expect(scenario.answerOf('/data/disp').getValue()).toBe('');
+
+    scenario.answer('/data/a', 7);
+
+    expect(scenario.answerOf('/data/a_plus_b').getValue()).toBe('');
+    expect(scenario.answerOf('/data/disp').getValue()).toBe('');
+
+    scenario.answer('/data/b', 3);
+
+    expect(scenario.answerOf('/data/a_plus_b')).toEqualAnswer(intAnswer(10));
+    expect(scenario.answerOf('/data/disp')).toEqualAnswer(intAnswer(10));
+  });
 });
 
 describe('MultiplePredicateTest.java', () => {

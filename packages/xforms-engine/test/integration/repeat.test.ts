@@ -1464,6 +1464,57 @@ describe('Tests ported from JavaRosa - repeats', () => {
         });
       });
 
+      describe('adding repeat instance, with inner calculate dependent on outer sum', () => {
+        it('updates inner sum for all instances', async () => {
+          const scenario = await Scenario.init(
+            'Count outside repeat used inside',
+            html(
+              head(
+                title('Count outside repeat used inside'),
+                model(
+                  mainInstance(
+                    t(
+                      'data id="outside-used-inside"',
+                      t('sum'),
+                      t('repeat jr:template=""', t('question', '5'), t('inner-sum'))
+                    )
+                  ),
+                  bind('/data/sum').type('int').calculate('sum(/data/repeat/question)'),
+                  bind('/data/repeat/inner-sum').type('int').calculate('/data/sum')
+                )
+              ),
+
+              body(repeat('/data/repeat', input('/data/repeat/question')))
+            )
+          );
+
+          range(1, 6).forEach((n) => {
+            scenario.next('/data/repeat');
+            scenario.createNewRepeat({
+              assertCurrentReference: '/data/repeat',
+            });
+
+            expect(scenario.answerOf('/data/sum')).toEqualAnswer(intAnswer(n * 5));
+
+            scenario.next('/data/repeat[' + n + ']/question');
+          });
+
+          range(1, 6).forEach((n) => {
+            expect(scenario.answerOf('/data/repeat[' + n + ']/inner-sum')).toEqualAnswer(
+              intAnswer(25)
+            );
+          });
+
+          scenario.removeRepeat('/data/repeat[4]');
+
+          range(1, 5).forEach((n) => {
+            expect(scenario.answerOf('/data/repeat[' + n + ']/inner-sum')).toEqualAnswer(
+              intAnswer(20)
+            );
+          });
+        });
+      });
+
       describe('changing value in repeat, with reference to next instance', () => {
         /**
          * **PORTING NOTES**

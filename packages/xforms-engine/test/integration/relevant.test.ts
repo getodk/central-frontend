@@ -636,6 +636,30 @@ describe('Relevance - TriggerableDagTest.java', () => {
       expect(scenario.answerOf('/data/result')).toEqualAnswer(intAnswer(33));
       expect(scenario.answerOf('/data/some-field')).toEqualAnswer(intAnswer(42));
     });
+
+    it('are blank when read by a dependent calculate, even without a control', async () => {
+      const scenario = await Scenario.init(
+        'Relevance on calculate',
+        html(
+          head(
+            title('Relevance on calculate'),
+            model(
+              mainInstance(t('data id="relevance-calculate"', t('q1'), t('c1'), t('c2'))),
+              bind('/data/q1').type('string'),
+              bind('/data/c1').calculate("concat('q1: ', /data/q1)").relevant("/data/q1 = 'yes'"),
+              bind('/data/c2').calculate('/data/c1')
+            )
+          ),
+          body(input('/data/q1'))
+        )
+      );
+
+      expect(scenario.answerOf('/data/c2').getValue()).toBe('');
+
+      scenario.answer('/data/q1', 'yes');
+
+      expect(scenario.answerOf('/data/c2')).toEqualAnswer(stringAnswer('q1: yes'));
+    });
   });
 
   interface SkipSurprisingAssertionOptions {
