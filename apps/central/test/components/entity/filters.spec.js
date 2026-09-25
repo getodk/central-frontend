@@ -477,12 +477,7 @@ describe('EntityFilters', () => {
           attachTo: document.body
         })
           .complete()
-          .request(async component => {
-            const filter = component.get('#entity-filters-view-as');
-            await filter.get('.dropdown-trigger').trigger('click');
-            await filter.find('input[type="radio"]').setValue(true);
-            await filter.get('.action-bar button').trigger('click');
-          })
+          .request(changeMultiselect('#entity-filters-view-as', [0]))
           .beforeEachResponse((_, { url }) => {
             const { id } = testData.extendedFieldKeys.last();
             relativeUrl(url).searchParams.get('viewAs').should.equal(String(id));
@@ -494,12 +489,7 @@ describe('EntityFilters', () => {
           attachTo: document.body
         })
           .complete()
-          .request(async component => {
-            const filter = component.get('#entity-filters-view-as');
-            await filter.get('.dropdown-trigger').trigger('click');
-            await filter.find('input[type="radio"]').setValue(true);
-            await filter.get('.action-bar button').trigger('click');
-          })
+          .request(changeMultiselect('#entity-filters-view-as', [0]))
           .respondWithData(testData.entityOData)
           .afterResponse(app => {
             const { id } = testData.extendedFieldKeys.last();
@@ -515,7 +505,7 @@ describe('EntityFilters', () => {
           .request(async component => {
             const filter = component.get('#entity-filters-view-as');
             await filter.get('.dropdown-trigger').trigger('click');
-            await filter.get('.change-all.single button').trigger('click');
+            await filter.get('.change-all.single button').trigger('click'); // reset to nothing selected
             await filter.get('.action-bar button').trigger('click');
           })
           .respondWithData(testData.entityOData)
