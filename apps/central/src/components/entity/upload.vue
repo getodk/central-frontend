@@ -68,7 +68,7 @@ except according to the terms contained in the LICENSE file.
       <entity-upload-popup v-if="uploading" :filename="fileMetadata.name"
         :count="csvEntities.length"
         :extra-properties="propertiesToCreate != null"
-        :progress="uploadProgress"/>
+        :progress="uploadProgress" :processing-progress="processingProgress"/>
       <div ref="actions" class="modal-actions">
         <button type="button" class="btn btn-link" :aria-disabled="uploading"
           @click="hide">
@@ -440,6 +440,25 @@ const mergeDataWithExtra = (entity) => {
 
 // UPLOAD REQUEST
 const uploadProgress = ref(null);
+const processingProgress = ref(null);
+const createProgressHandler = () => {
+  let responseLength = 0;
+  let buffer = '';
+  return ({ event }) => {
+    const responseText = event.target.responseText;
+    buffer += responseText.slice(responseLength);
+    responseLength = responseText.length;
+    const events = buffer.split(/\r?\n\r?\n/);
+    buffer = events.pop();
+    for (const eventText of events) {
+      const eventName = eventText.match(/^event: (.+)$/m)?.[1];
+      const data = eventText.match(/^data: (.+)$/m)?.[1];
+      if (eventName !== 'progress' || data == null) continue;
+      const { completed, total } = JSON.parse(data);
+      processingProgress.value = total === 0 ? 1 : completed / total;
+    }
+  };
+};
 const upload = () => {
   propertyCreator.request(
     apiPaths.datasetProperties(dataset.projectId, dataset.name),
@@ -451,6 +470,7 @@ const upload = () => {
         ? csvEntities.value
         : csvEntities.value.map(mergeDataWithExtra);
       uploadProgress.value = 0;
+      processingProgress.value = null;
       return request({
         method: 'POST',
         url: apiPaths.entities(dataset.projectId, dataset.name),
@@ -461,12 +481,11 @@ const upload = () => {
         headers: { Accept: 'text/event-stream' },
         responseType: 'text',
         onUploadProgress: (event) => { uploadProgress.value = event.progress ?? 0; },
-        onDownloadProgress: ({ event }) => {
-          // eslint-disable-next-line no-console
-          console.log(event.target.responseText);
-          console.log("-----")
-        }
-      }).finally(() => { uploadProgress.value = null; });
+        onDownloadProgress: createProgressHandler()
+      }).finally(() => {
+        uploadProgress.value = null;
+        processingProgress.value = null;
+      });
     })
     .then(() => {
       emit('success', csvEntities.value.length, propertyCreator.created.size !== 0);
