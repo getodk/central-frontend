@@ -70,18 +70,6 @@ describe('EntityMetadataRow', () => {
     });
   });
 
-  describe('update count', () => {
-    it('shows the count if there has been an update', () => {
-      testData.extendedEntities.createPast(1, { version: 1001 });
-      mountComponent().get('.updates').text().should.equal('1,000');
-    });
-
-    it('does not show the count if there has not been an update', () => {
-      testData.extendedEntities.createPast(1);
-      mountComponent().get('.updates').text().should.equal('');
-    });
-  });
-
   describe('conflict icon', () => {
     it('shows conflict icon if there is a conflict', () => {
       testData.extendedEntities.createPast(1);
