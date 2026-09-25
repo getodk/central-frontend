@@ -20,11 +20,7 @@ const mountComponent = (options) =>
 const toggle = (component) => component.get('.dropdown-trigger').trigger('click');
 const apply = (component) => component.get('.action-bar button').trigger('click');
 const assertChecked = (component, checked) => {
-  const inputs = component.findAll('input[type="checkbox"]');
-  inputs.map(input => input.element.checked).should.eql(checked);
-};
-const assertSingleChecked = (component, checked) => {
-  const inputs = component.findAll('input[type="radio"]');
+  const inputs = component.findAll('input[type="checkbox"],input[type="radio"]');
   inputs.map(input => input.element.checked).should.eql(checked);
 };
 const assertDisabled = (component) => {
@@ -246,7 +242,7 @@ describe('Multiselect', () => {
       });
       await toggle(component);
       await component.findAll('input[type="radio"]')[1].setValue(true);
-      assertSingleChecked(component, [false, true]);
+      assertChecked(component, [false, true]);
       await apply(component);
       component.emitted('update:modelValue').should.eql([[[1]]]);
     });
@@ -277,7 +273,7 @@ describe('Multiselect', () => {
       });
       await toggle(component);
       await component.get('.change-all.single button').trigger('click');
-      assertSingleChecked(component, [false, false]);
+      assertChecked(component, [false, false]);
       await apply(component);
       component.emitted('update:modelValue').should.eql([[[]]]);
     });
