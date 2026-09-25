@@ -23,7 +23,7 @@ interface SplitFileNameResult {
 
 const EXTENSION_PATTERN = /\.[^.]+?$/;
 
-interface SearchPatternResult extends Array<string> {
+interface SearchPatternResult extends Array<string | undefined> {
   readonly 0?: string;
   readonly index?: number;
 }
