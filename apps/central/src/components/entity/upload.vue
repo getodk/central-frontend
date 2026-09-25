@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <modal id="entity-upload" :state="state" :hideable="!uploading" :persistent="true" size="full"
-    backdrop @hide="hide" @mutate="resizeColumnIfShown">
+    backdrop @hide="cancel" @mutate="resizeColumnIfShown">
     <template #title>{{ $t('action.append') }}</template>
     <template #body>
       <div :class="{ backdrop: uploading }" :inert="uploading">
@@ -65,13 +65,13 @@ except according to the terms contained in the LICENSE file.
           :errors="errors?.count" :disabled="parsing || uploading"
           :parsing="parsing" @change="selectFile"/>
       </div>
-      <entity-upload-popup v-if="uploading" :filename="fileMetadata.name"
+      <entity-upload-popup v-if="uploading && fileMetadata != null" :filename="fileMetadata.name"
         :count="csvEntities.length"
         :extra-properties="propertiesToCreate != null"
-        :progress="uploadProgress"/>
+        :progress="uploadProgress" :processing-progress="processingProgress"/>
       <div ref="actions" class="modal-actions">
-        <button type="button" class="btn btn-link" :aria-disabled="uploading"
-          @click="hide">
+        <button type="button" class="btn btn-link"
+          :aria-disabled="uploading && !cancelable" @click="cancel">
           {{ $t('action.cancel') }}
         </button>
         <button type="button" class="btn btn-primary"
@@ -440,6 +440,28 @@ const mergeDataWithExtra = (entity) => {
 
 // UPLOAD REQUEST
 const uploadProgress = ref(null);
+const processingProgress = ref(null);
+const cancelable = ref(false);
+let abortUpload = noop;
+const createProgressHandler = () => {
+  let responseLength = 0;
+  let buffer = '';
+  return ({ event }) => {
+    const { responseText } = event.target;
+    buffer += responseText.slice(responseLength);
+    responseLength = responseText.length;
+    const events = buffer.split(/\r?\n\r?\n/);
+    buffer = events.pop();
+    for (const eventText of events) {
+      const eventName = eventText.match(/^event: (.+)$/m)?.[1];
+      const data = eventText.match(/^data: (.+)$/m)?.[1];
+      if (eventName === 'progress' && data != null) {
+        const { completed, total } = JSON.parse(data);
+        processingProgress.value = total === 0 ? 1 : completed / total;
+      }
+    }
+  };
+};
 const upload = () => {
   propertyCreator.request(
     apiPaths.datasetProperties(dataset.projectId, dataset.name),
@@ -451,6 +473,10 @@ const upload = () => {
         ? csvEntities.value
         : csvEntities.value.map(mergeDataWithExtra);
       uploadProgress.value = 0;
+      processingProgress.value = null;
+      const abortController = new AbortController();
+      abortUpload = () => { abortController.abort(); };
+      cancelable.value = true;
       return request({
         method: 'POST',
         url: apiPaths.entities(dataset.projectId, dataset.name),
@@ -458,8 +484,18 @@ const upload = () => {
           source: pick(['name', 'size'], fileMetadata.value),
           entities: entitiesToSend
         },
-        onUploadProgress: (event) => { uploadProgress.value = event.progress ?? 0; }
-      }).finally(() => { uploadProgress.value = null; });
+        headers: { Accept: 'text/event-stream' },
+        responseType: 'text',
+        alertOnAbort: false,
+        signal: abortController.signal,
+        onUploadProgress: (event) => { uploadProgress.value = event.progress ?? 0; },
+        onDownloadProgress: createProgressHandler()
+      }).finally(() => {
+        uploadProgress.value = null;
+        processingProgress.value = null;
+        abortUpload = noop;
+        cancelable.value = false;
+      });
     })
     .then(() => {
       emit('success', csvEntities.value.length, propertyCreator.created.size !== 0);
@@ -483,10 +519,18 @@ watch([errors, warnings, csvEntities], () => {
     nextTick(() => { actions.value.scrollIntoView(); });
 });
 
-const hide = () => { emit('hide', propertyCreator.created.size !== 0); };
+const cancel = () => {
+  if (uploading.value && !cancelable.value) return;
+  if (uploading.value) {
+    abortUpload();
+  } else {
+    emit('hide', propertyCreator.created.size !== 0);
+  }
+};
 watch(() => props.state, (state) => {
   if (state) return;
   abortParse();
+  abortUpload();
   csvEntities.value = null;
   fileMetadata.value = null;
   errors.value = null;
