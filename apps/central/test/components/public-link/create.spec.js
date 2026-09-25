@@ -24,7 +24,7 @@ describe('PublicLinkCreate', () => {
   it('toggles the modal', () =>
     load('/projects/1/forms/f/public-links').testModalToggles({
       modal: PublicLinkCreate,
-      show: '.heading-with-button .btn-primary',
+      show: '.page-heading .btn-primary',
       hide: '.btn-link'
     }));
 
@@ -166,7 +166,7 @@ describe('PublicLinkCreate', () => {
       return load('/projects/1/forms/f/public-links')
         .complete()
         .request(async (app) => {
-          await app.get('.heading-with-button .btn-primary').trigger('click');
+          await app.get('.page-heading .btn-primary').trigger('click');
           const modal = app.getComponent(PublicLinkCreate);
           await modal.get('input').setValue('My Public Link');
           return modal.get('form').trigger('submit');

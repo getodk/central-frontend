@@ -1756,7 +1756,7 @@
     },
     "ConfigLogin": {
       "title": {
-        "string": "Login page"
+        "string": "Login page customization"
       }
     },
     "ConfigLoginEdit": {
@@ -1858,6 +1858,9 @@
       },
       "purgeDescription": {
         "string": "Entities are deleted after 30 days in the Trash"
+      },
+      "deletedTitle": {
+        "string": "{datasetName} (Deleted entities)"
       },
       "action": {
         "toggleDeletedEntities": {
@@ -3820,16 +3823,6 @@
       }
     },
     "FormList": {
-      "title": {
-        "string": "Forms",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
-      "action": {
-        "create": {
-          "string": "New",
-          "developer_comment": "This is the text of a button that is used to create a new Form."
-        }
-      },
       "emptyTable": {
         "string": "There are no Forms to show."
       },
@@ -4061,20 +4054,24 @@
       }
     },
     "FormSubmissions": {
-      "analyzeDisabled": {
-        "string": "OData access is unavailable due to Form encryption"
-      },
-      "analyzeDisabledDeletedData": {
-        "string": "OData access is unavailable for deleted Submissions"
-      },
       "purgeDescription": {
         "string": "Submissions and Submission-related data are deleted after 30 days in the Trash"
+      },
+      "deletedTitle": {
+        "string": "{formName} (Deleted submissions)",
+        "developer_comment": "`formName` is the title/xmlFormId of the Form."
       },
       "action": {
         "toggleDeletedSubmissions": {
           "string": "{count, plural, one {{count} deleted Submission} other {{count} deleted Submissions}}",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
+      },
+      "analyzeDisabled": {
+        "string": "OData access is unavailable due to Form encryption"
+      },
+      "analyzeDisabledDeletedData": {
+        "string": "OData access is unavailable for deleted Submissions"
       }
     },
     "FormTable": {
@@ -4760,6 +4757,14 @@
       "introduction": {
         "0": {
           "string": "Projects group Forms and App Users together to make them easier to organize and manage, both on this website and on your data collection device."
+        }
+      }
+    },
+    "ProjectOverview": {
+      "action": {
+        "create": {
+          "string": "New",
+          "developer_comment": "This is the text of a button that is used to create a new Form."
         }
       }
     },

@@ -11,6 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div v-if="form.dataExists" id="form-settings">
+    <page-heading :title="$t('common.tab.settings')"/>
     <div class="row">
       <div class="col-xs-6">
         <div class="panel panel-simple">
@@ -98,6 +99,7 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import FormDelete from './delete.vue';
 import FormWebFormsSettingsConfirmation from './web-forms-settings-confirmation.vue';
+import PageHeading from '../page/heading.vue';
 
 import useRoutes from '../../composables/routes';
 import { modalData } from '../../util/reactivity';

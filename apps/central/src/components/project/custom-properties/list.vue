@@ -1,26 +1,24 @@
 <template>
   <div id="custom-properties-list">
-    <page-section>
-      <template #heading>
-        <span>{{ $t('projectShow.tab.customProperties') }}</span>
-        <button v-if="project.dataExists && project.permits('project.update')"
-          id="custom-properties-list-new-button" type="button" class="btn btn-primary"
-          @click="createModal.show()">
-          <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
-        </button>
+    <page-heading :title="$t('projectShow.tab.customProperties')">
+      <template #help>
+        <p>
+          <span>{{ $t('heading[0]') }}</span>
+          <sentence-separator/>
+          <i18n-t keypath="moreInfo.clickHere.full">
+            <template #clickHere>
+              <doc-link to="central-projects#managing-custom-properties">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
+            </template>
+          </i18n-t>
+        </p>
       </template>
-    </page-section>
-    <div class="page-body-heading">
-      <p>
-        <span>{{ $t('heading[0]') }}</span>
-        <sentence-separator/>
-        <i18n-t keypath="moreInfo.clickHere.full">
-          <template #clickHere>
-            <doc-link to="central-projects#managing-custom-properties">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
-          </template>
-        </i18n-t>
-      </p>
-    </div>
+      <button v-if="project.dataExists && project.permits('project.update')"
+        id="custom-properties-list-new-button" type="button" class="btn btn-primary"
+        @click="createModal.show()">
+        <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
+      </button>
+    </page-heading>
+
     <table id="custom-properties-table" class="table">
       <thead>
         <tr>
@@ -50,7 +48,7 @@ import { useI18n } from 'vue-i18n';
 import CustomPropertiesNew from './new.vue';
 import DocLink from '../../doc-link.vue';
 import Loading from '../../loading.vue';
-import PageSection from '../../page/section.vue';
+import PageHeading from '../../page/heading.vue';
 import SentenceSeparator from '../../sentence-separator.vue';
 
 import { modalData } from '../../../util/reactivity';

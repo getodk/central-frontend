@@ -89,7 +89,7 @@ describe('PublicLinkRevoke', () => {
       load('/projects/1/forms/f/public-links')
         .complete()
         .request(async (app) => {
-          await app.get('.heading-with-button .btn-primary').trigger('click');
+          await app.get('.page-heading .btn-primary').trigger('click');
           const modal = app.getComponent(PublicLinkCreate);
           modal.get('input').setValue('Another Value');
           return modal.get('form').trigger('submit');
