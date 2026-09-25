@@ -3,7 +3,9 @@
   "compilerOptions": {
     "paths": {
       "@getodk/web-forms": ["../../packages/web-forms/src"],
-      "@getodk/xforms-engine": ["../../packages/xforms-engine/src"]
+      "@getodk/xforms-engine": ["../../packages/xforms-engine/src"],
+      "@getodk/xpath": ["../../packages/xpath/src"],
+      "@getodk/xpath/*": ["../../packages/xpath/src/*"]
     },
     // JavaScript without inline types, a necessary evil for some tools
     "allowJs": true,
