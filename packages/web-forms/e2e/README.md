@@ -30,14 +30,7 @@ e2e/
 
 ## Getting started
 
-1. **Build the project**
-   In the root folder run:
-
-   ```bash
-   npm run build
-   ```
-
-2. **Run tests**
+1. **Run tests**
    Execute all functional E2E tests:
 
    ```bash

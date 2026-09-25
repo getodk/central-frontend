@@ -26,8 +26,7 @@ jobs:
 
       - run: 'npm ci --no-audit'
 
-      # Builds only what the e2e tests need.
-      - run: 'npx turbo run build --filter=@getodk/web-forms'
+      - run: 'npm run build:packages'
 
       - uses: ./.github/actions/node-cache
         with:
