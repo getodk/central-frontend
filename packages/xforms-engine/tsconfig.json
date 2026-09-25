@@ -2,7 +2,6 @@
   "extends": "../tsconfig.json",
   "include": ["src", "test", "vite-env.d.ts"],
   "compilerOptions": {
-    "customConditions": ["source"],
     "allowSyntheticDefaultImports": true,
     "declarationDir": "./dist",
     "jsx": "preserve",
@@ -14,7 +13,10 @@
     "paths": {
       "@getodk/common/test-utils/*": ["../common/test-utils/*"],
       "@getodk/common/types/*": ["../common/types/*"],
-      "@getodk/common/*": ["../common/src/*"]
+      "@getodk/common/*": ["../common/src/*"],
+      "@getodk/xforms-engine": ["./src"],
+      "@getodk/xpath": ["../xpath/src"],
+      "@getodk/xpath/*": ["../xpath/src/*"]
     },
     "types": ["vite/client"]
   }
