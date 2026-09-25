@@ -80,7 +80,7 @@ describe('SubmissionList', () => {
       return load('/projects/1/forms/f/submissions', { root: false })
         .afterResponses((component) => {
           assertRowCount(1)(component);
-          initialTime = component.get('.table-refresh-bar span').text();
+          initialTime = component.get('.data-refresh-info span').text();
         })
         .request((component) => {
           clock.tick(1000);
@@ -95,7 +95,7 @@ describe('SubmissionList', () => {
         .afterResponse((component) => {
           assertRowCount(2)(component);
 
-          const newTime = component.get('.table-refresh-bar span').text();
+          const newTime = component.get('.data-refresh-info span').text();
           newTime.should.not.equal(initialTime);
         });
     });

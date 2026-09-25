@@ -98,7 +98,7 @@ describe('EntityList', () => {
       return load('/projects/1/entity-lists/trees/entities', { root: false })
         .afterResponses(component => {
           assertRowCount(1)(component);
-          initialTime = component.get('.table-refresh-bar span').text();
+          initialTime = component.get('.data-refresh-info span').text();
         })
         .request(component => {
           clock.tick(1000);
@@ -112,7 +112,7 @@ describe('EntityList', () => {
         .respondWithData(testData.entityDeletedOData)
         .afterResponse(component => {
           assertRowCount(2)(component);
-          const newTime = component.get('.table-refresh-bar span').text();
+          const newTime = component.get('.data-refresh-info span').text();
           newTime.should.not.equal(initialTime);
         });
     });

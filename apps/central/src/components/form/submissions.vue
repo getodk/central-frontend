@@ -12,37 +12,24 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="form-submissions">
     <loading :state="keys.initiallyLoading"/>
-    <page-section v-show="keys.dataExists">
-      <template #heading>
-        <div class="form-submissions-heading-row">
-          <enketo-fill v-if="rendersEnketoFill" :form-version="form">
-            <span class="icon-plus-circle"></span>{{ $t('action.createSubmission') }}
-          </enketo-fill>
-          <template v-if="deletedSubmissionCount.dataExists">
-            <button v-if="canDelete && (deletedSubmissionCount.value > 0 || deleted)" type="button"
-              class="btn toggle-deleted-submissions" :class="{ 'btn-danger': deleted, 'btn-link': !deleted }"
-              @click="toggleDeleted">
-              <span class="icon-trash"></span>{{ $tcn('action.toggleDeletedSubmissions', deletedSubmissionCount.value) }}
-              <span v-show="deleted" class="icon-close"></span>
-            </button>
-          </template>
-          <p v-show="deleted" class="purge-description">{{ $t('purgeDescription') }}</p>
-          <div class="form-submissions-heading-row-right-side">
-            <odata-data-access :analyze-disabled="hasEncryption || deleted"
-              :analyze-disabled-message="analyzeDisabledMessage"
-              @analyze="analyzeModal.show()"/>
-            <!-- download button is teleported here -->
-          </div>
-        </div>
-        </template>
-      <template #body>
-        <submission-list ref="submissionList" :project-id="projectId"
-          :xml-form-id="xmlFormId" :deleted="deleted" :encrypted="hasEncryption"
-          @fetch-keys="fetchKeys" @fetch-deleted-count="fetchDeletedCount"/>
+    <page-heading v-if="form.dataExists"
+      :title="deleted ? $t('deletedTitle', { formName: form.nameOrId }) : form.nameOrId"
+      :help-text="deleted ? $t('purgeDescription') : null">
+      <template v-if="deletedSubmissionCount.dataExists">
+        <button v-if="canDelete && (deletedSubmissionCount.value > 0 || deleted)" type="button"
+          class="btn toggle-deleted-submissions" :class="{ 'btn-danger': deleted, 'btn-link': !deleted }"
+          @click="toggleDeleted">
+          <span class="icon-trash"></span>{{ $tcn('action.toggleDeletedSubmissions', deletedSubmissionCount.value) }}
+          <span v-show="deleted" class="icon-close"></span>
+        </button>
       </template>
-    </page-section>
-    <odata-analyze v-bind="analyzeModal" :odata-url="odataUrl"
-      @hide="analyzeModal.hide()"/>
+      <enketo-fill v-if="rendersEnketoFill" :form-version="form">
+        <span class="icon-plus-circle"></span>{{ $t('action.createSubmission') }}
+      </enketo-fill>
+    </page-heading>
+    <submission-list v-show="keys.dataExists" ref="submissionList" :project-id="projectId"
+      :xml-form-id="xmlFormId" :deleted="deleted" :encrypted="hasEncryption"
+      @fetch-keys="fetchKeys" @fetch-deleted-count="fetchDeletedCount"/>
   </div>
 </template>
 
@@ -50,28 +37,23 @@ except according to the terms contained in the LICENSE file.
 import { watchEffect, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
+import PageHeading from '../page/heading.vue';
 import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
-import PageSection from '../page/section.vue';
-import OdataAnalyze from '../odata/analyze.vue';
-import OdataDataAccess from '../odata/data-access.vue';
 import SubmissionList from '../submission/list.vue';
 import useQueryRef from '../../composables/query-ref';
 import useSubmissions from '../../request-data/submissions';
 
 import { apiPaths } from '../../util/request';
-import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormSubmissions',
   components: {
+    PageHeading,
     EnketoFill,
     Loading,
-    OdataAnalyze,
-    OdataDataAccess,
-    PageSection,
     SubmissionList,
   },
   props: {
@@ -109,7 +91,7 @@ export default {
     });
 
     return {
-      project, form, keys, analyzeModal: modalData(),
+      project, form, keys,
       deletedSubmissionCount, canDelete, deleted
     };
   },
@@ -132,14 +114,6 @@ export default {
         this.form.submissions === 0)
         return true;
       return false;
-    },
-    analyzeDisabledMessage() {
-      return this.deleted ? this.$t('analyzeDisabledDeletedData') : this.$t('analyzeDisabled');
-    },
-    odataUrl() {
-      if (!this.form.dataExists) return '';
-      const path = apiPaths.odataSvc(this.projectId, this.xmlFormId);
-      return `${window.location.origin}${path}`;
     }
   },
   created() {
@@ -189,39 +163,15 @@ export default {
 
     .icon-close { margin-left: 3px; }
   }
-
-  .purge-description {
-    display: inline;
-    position: relative;
-    top: 5px;
-    left: 12px;
-    font-size: 14px;
-  }
-
-  .form-submissions-heading-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    .form-submissions-heading-row-right-side{
-      display: flex;
-      gap: 10px;
-      margin-left: auto;
-    }
-  }
-
-  #odata-data-access {
-    font-size: initial;
-  }
 }
 </style>
 
 <i18n lang="json5">
   {
     "en": {
-      "analyzeDisabled": "OData access is unavailable due to Form encryption",
-      "analyzeDisabledDeletedData": "OData access is unavailable for deleted Submissions",
       "purgeDescription": "Submissions and Submission-related data are deleted after 30 days in the Trash",
+      // `formName` is the title/xmlFormId of the Form.
+      "deletedTitle": "{formName} (Deleted submissions)",
       "action": {
         "toggleDeletedSubmissions": "{count} deleted Submission | {count} deleted Submissions"
       }

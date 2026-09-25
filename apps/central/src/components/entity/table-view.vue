@@ -20,14 +20,14 @@ except according to the terms contained in the LICENSE file.
     :filter="filter != null || !!searchTerm"
     :total-count="dataset.dataExists ? dataset.entities : 0"/>
   <!-- @update:page is emitted on size change as well -->
-  <div v-if="pagination.count > 0" class="fixed-pagination-container">
+  <teleport-if-exists v-if="pagination.count > 0" to="#entity-list-pagination-target">
     <Pagination
       v-model:page="pagination.page" v-model:size="pagination.size"
       :count="pagination.count" :size-options="pageSizeOptions"
       :removed="pagination.removed"
       :spinner="odataEntities.awaitingResponse"
       @update:page="handlePageChange"/>
-  </div>
+  </teleport-if-exists>
 </template>
 
 <script setup>
@@ -36,6 +36,7 @@ import { computed, inject, reactive, useTemplateRef, watch } from 'vue';
 import EntityTable from './table.vue';
 import OdataLoadingMessage from '../odata-loading-message.vue';
 import Pagination from '../pagination.vue';
+import TeleportIfExists from '../teleport-if-exists.vue';
 import usePaginationQueryRef from '../../composables/pagination-query-ref';
 
 import { apiPaths } from '../../util/request';
