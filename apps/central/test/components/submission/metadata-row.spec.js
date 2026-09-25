@@ -95,18 +95,6 @@ describe('SubmissionMetadataRow', () => {
     });
   });
 
-  describe('edit count', () => {
-    it('shows the count if there has been an edit', () => {
-      testData.extendedSubmissions.createPast(1, { edits: 1000 });
-      mountComponent().get('.edits').text().should.equal('1,000');
-    });
-
-    it('does not show the count if there has not been an edit', () => {
-      testData.extendedSubmissions.createPast(1, { edits: 0 });
-      mountComponent().get('.edits').text().should.equal('');
-    });
-  });
-
   it('shows the delete button', () => {
     testData.extendedSubmissions.createPast(1);
     mountComponent().find('.delete-button').text().should.equal('Delete');

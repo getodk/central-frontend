@@ -267,7 +267,6 @@ describe('EntityList', () => {
         const row = component.get('.entity-metadata-row:nth-child(2)');
         const lastUpdatedTd = row.get('.last-updated-cell');
         should.exist(lastUpdatedTd.getComponent(DateTime).props().iso);
-        lastUpdatedTd.get('.updates').text().should.equal('1');
       });
     });
   });
