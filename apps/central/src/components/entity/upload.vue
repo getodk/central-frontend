@@ -458,7 +458,14 @@ const upload = () => {
           source: pick(['name', 'size'], fileMetadata.value),
           entities: entitiesToSend
         },
-        onUploadProgress: (event) => { uploadProgress.value = event.progress ?? 0; }
+        headers: { Accept: 'text/event-stream' },
+        responseType: 'text',
+        onUploadProgress: (event) => { uploadProgress.value = event.progress ?? 0; },
+        onDownloadProgress: ({ event }) => {
+          // eslint-disable-next-line no-console
+          console.log(event.target.responseText);
+          console.log("-----")
+        }
       }).finally(() => { uploadProgress.value = null; });
     })
     .then(() => {
