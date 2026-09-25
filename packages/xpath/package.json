@@ -14,14 +14,17 @@
   "homepage": "https://getodk.org/",
   "exports": {
     ".": {
+      "source": "./src/index.ts",
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
     "./expressionParser.js": {
+      "source": "./src/expressionParser.ts",
       "types": "./dist/expressionParser.d.ts",
       "default": "./dist/expressionParser.js"
     },
     "./static/grammar/*.js": {
+      "source": "./src/static/grammar/*.ts",
       "types": "./dist/static/grammar/*.d.ts",
       "default": "./dist/static/grammar/*.js"
     }

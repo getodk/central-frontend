@@ -1,6 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
+    "customConditions": ["source"],
     // JavaScript without inline types, a necessary evil for some tools
     "allowJs": true,
     "checkJs": true,

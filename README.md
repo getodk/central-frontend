@@ -56,14 +56,6 @@ ODK Central Frontend communicates with ODK Central Backend in part using a sessi
 
 If you run `npm run dev`, open ODK Central Frontend in a browser, then update the source code, the page will refresh automatically to reflect the new code. This is called hot module replacement (HMR). To develop without HMR, run `npm run dev:build`. Instead of running a Vite dev server, this builds ODK Central Frontend for development. It outputs files to `dist/`, which NGINX will serve on port 8686. (There will be nothing on port 8989.) If you update the source, the files will be rebuilt automatically, but the page will not be refreshed: you can choose when to refresh the page. Note that `npm run dev:build` is much slower than `npm run dev`.
 
-### Building the packages
-
-`npm run build` does not build the packages in `packages/`, since `apps/forms` bundles them straight from source. If you need to build them, for example before running `test:types`, run:
-
-```bash
-npm run build:packages
-```
-
 ## Deploying to production
 
 To build ODK Central Frontend files for production with minification, run `npm run build`. The files will be outputted to `dist/`.

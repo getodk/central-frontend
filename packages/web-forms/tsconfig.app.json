@@ -15,6 +15,7 @@
     "src/**/__tests__/*"
   ],
   "compilerOptions": {
+    "customConditions": ["source"],
     "composite": true,
     "allowImportingTsExtensions": true,
     "allowSyntheticDefaultImports": true,

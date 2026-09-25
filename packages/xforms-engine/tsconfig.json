@@ -2,6 +2,7 @@
   "extends": "../tsconfig.json",
   "include": ["src", "test", "vite-env.d.ts"],
   "compilerOptions": {
+    "customConditions": ["source"],
     "allowSyntheticDefaultImports": true,
     "declarationDir": "./dist",
     "jsx": "preserve",
