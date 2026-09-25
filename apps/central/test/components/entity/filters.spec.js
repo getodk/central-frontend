@@ -378,9 +378,11 @@ describe('EntityFilters', () => {
       .afterResponses(app => {
         app.vm.$container.requestData.dataset.entities.should.equal(2);
       })
-      .request(component => {
-        const { id } = testData.extendedFieldKeys.last();
-        component.get('#entity-filters-view-as select').setValue(String(id));
+      .request(async component => {
+        const filter = component.get('#entity-filters-view-as');
+        await filter.get('.dropdown-trigger').trigger('click');
+        await filter.find('input[type="radio"]').setValue(true);
+        await filter.get('.action-bar button').trigger('click');
       })
       .respondWithData(() => ({
         ...testData.entityOData(1),
@@ -475,10 +477,7 @@ describe('EntityFilters', () => {
           attachTo: document.body
         })
           .complete()
-          .request(component => {
-            const { id } = testData.extendedFieldKeys.last();
-            component.get('#entity-filters-view-as select').setValue(String(id));
-          })
+          .request(changeMultiselect('#entity-filters-view-as', [0]))
           .beforeEachResponse((_, { url }) => {
             const { id } = testData.extendedFieldKeys.last();
             relativeUrl(url).searchParams.get('viewAs').should.equal(String(id));
@@ -490,10 +489,7 @@ describe('EntityFilters', () => {
           attachTo: document.body
         })
           .complete()
-          .request(component => {
-            const { id } = testData.extendedFieldKeys.last();
-            component.get('#entity-filters-view-as select').setValue(String(id));
-          })
+          .request(changeMultiselect('#entity-filters-view-as', [0]))
           .respondWithData(testData.entityOData)
           .afterResponse(app => {
             const { id } = testData.extendedFieldKeys.last();
@@ -506,8 +502,11 @@ describe('EntityFilters', () => {
           attachTo: document.body
         })
           .complete()
-          .request(component => {
-            component.get('#entity-filters-view-as select').setValue('');
+          .request(async component => {
+            const filter = component.get('#entity-filters-view-as');
+            await filter.get('.dropdown-trigger').trigger('click');
+            await filter.get('.change-all.single button').trigger('click'); // reset to nothing selected
+            await filter.get('.action-bar button').trigger('click');
           })
           .respondWithData(testData.entityOData)
           .afterResponse(app => {

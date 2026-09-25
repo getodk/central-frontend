@@ -20,7 +20,7 @@ const mountComponent = (options) =>
 const toggle = (component) => component.get('.dropdown-trigger').trigger('click');
 const apply = (component) => component.get('.action-bar button').trigger('click');
 const assertChecked = (component, checked) => {
-  const inputs = component.findAll('input[type="checkbox"]');
+  const inputs = component.findAll('input[type="checkbox"],input[type="radio"]');
   inputs.map(input => input.element.checked).should.eql(checked);
 };
 const assertDisabled = (component) => {
@@ -211,6 +211,76 @@ describe('Multiselect', () => {
         await apply(component);
         component.emitted('update:modelValue').length.should.equal(1);
       });
+    });
+  });
+
+  describe('single mode', () => {
+    const options = [{ value: 0, text: 'Alice' }, { value: 1, text: 'Bob' }];
+    const placeholder = ({ selectedText }) => selectedText ?? 'Me';
+
+    it('renders single-select inputs instead of checkboxes', () => {
+      const component = mountComponent({ props: { options, single: true } });
+      component.findAll('input[type="radio"]').length.should.equal(2);
+      component.findAll('input[type="checkbox"]').length.should.equal(0);
+      const names = component.findAll('input[type="radio"]')
+        .map(input => input.attributes('name'));
+      new Set(names).size.should.equal(1);
+      names[0].should.match(/^multiselect\d+-single$/);
+    });
+
+    it('shows the selected option before the dropdown is opened', () => {
+      const component = mountComponent({
+        props: { options, modelValue: [1], single: true, placeholder }
+      });
+      component.get('.display-value').text().should.equal('Bob');
+    });
+
+    it('selects one option and emits an array when Apply is clicked', async () => {
+      const component = mountComponent({
+        props: { options, modelValue: [0], single: true, placeholder },
+        attachTo: document.body
+      });
+      await toggle(component);
+      await component.findAll('input[type="radio"]')[1].setValue(true);
+      assertChecked(component, [false, true]);
+      await apply(component);
+      component.emitted('update:modelValue').should.eql([[[1]]]);
+    });
+
+    it('does not emit an event if the original selection is restored', async () => {
+      const component = mountComponent({
+        props: { options, modelValue: [0], single: true, placeholder },
+        attachTo: document.body
+      });
+      await toggle(component);
+      const inputs = component.findAll('input[type="radio"]');
+      await inputs[1].setValue(true);
+      await inputs[0].setValue(true);
+      await apply(component);
+      should.not.exist(component.emitted('update:modelValue'));
+    });
+
+    it('clears the selection when the reset action is clicked', async () => {
+      const component = mountComponent({
+        props: {
+          options,
+          modelValue: [0],
+          single: true,
+          none: 'Reset to Me',
+          placeholder
+        },
+        attachTo: document.body
+      });
+      await toggle(component);
+      await component.get('.change-all.single button').trigger('click');
+      assertChecked(component, [false, false]);
+      await apply(component);
+      component.emitted('update:modelValue').should.eql([[[]]]);
+    });
+
+    it('does not show multi-select bulk actions', () => {
+      const component = mountComponent({ props: { options, single: true } });
+      component.find('.select-all').exists().should.be.false;
     });
   });
 

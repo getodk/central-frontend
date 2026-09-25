@@ -5,7 +5,7 @@ export const changeMultiselect = (selector, selectedIndexes) => async (component
   const toggle = multiselect.get('.dropdown-trigger');
   await toggle.trigger('click');
   await multiselect.get('.select-none').trigger('click');
-  const inputs = multiselect.findAll('input[type="checkbox"]');
+  const inputs = multiselect.findAll('input[type="checkbox"],input[type="radio"]');
   for (const i of selectedIndexes)
     await inputs[i].setValue(true);
   return multiselect.find('.action-bar button').trigger('click');
