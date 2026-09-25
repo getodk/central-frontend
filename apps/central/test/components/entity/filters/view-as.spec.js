@@ -24,75 +24,52 @@ const mountComponent = (fieldKeys, options) => {
 };
 
 describe('EntityFiltersViewAs', () => {
-  describe('dataset access filter', () => {
-    it('renders the select if the dataset has an access filter', () => {
-      testData.extendedDatasets.createPast(1, {
-        accessFilter: { type: 'ownerOnly' }
-      });
-      const component = mountComponent(createFieldKeys(1));
-      component.find('select').exists().should.be.true;
-    });
-
-    it('does not render the select if the dataset has no access filter', () => {
-      testData.extendedDatasets.createPast(1, { accessFilter: null });
-      const component = mountComponent(createFieldKeys(1));
-      component.find('select').exists().should.be.false;
-    });
+  it('does not render the select if the dataset has no access filter', () => {
+    testData.extendedDatasets.createPast(1, { accessFilter: null });
+    const component = mountComponent(createFieldKeys(1));
+    component.find('select').exists().should.be.false;
   });
 
-  it('passes the modelValue prop to the select', () => {
-    const [fieldKey] = createFieldKeys(1);
-    const component = mountComponent([fieldKey], {
-      props: { modelValue: fieldKey.id }
-    });
-    component.get('select').element.value.should.equal(String(fieldKey.id));
+  it('renders a single-select input for each app user', async () => {
+    const fieldKeys = createFieldKeys(2);
+    const component = mountComponent(fieldKeys, { attachTo: document.body });
+    await component.get('.dropdown-trigger').trigger('click');
+    component.findAll('input[type="radio"]').length.should.equal(2);
   });
 
-  it('passes a new value for modelValue prop to the select', async () => {
+  it('emits an app user ID after selection is applied', async () => {
     const [fieldKey1, fieldKey2] = createFieldKeys(2);
     const component = mountComponent([fieldKey1, fieldKey2], {
-      props: { modelValue: fieldKey1.id }
+      props: { modelValue: fieldKey1.id },
+      attachTo: document.body
     });
-    await component.setProps({ modelValue: fieldKey2.id });
-    component.get('select').element.value.should.equal(String(fieldKey2.id));
-  });
-
-  it('emits an update:modelValue event if a field key is selected', async () => {
-    const [fieldKey1, fieldKey2] = createFieldKeys(2);
-    const component = mountComponent([fieldKey1, fieldKey2], {
-      props: { modelValue: fieldKey1.id }
-    });
-    await component.get('select').setValue(String(fieldKey2.id));
+    await component.get('.dropdown-trigger').trigger('click');
+    await component.findAll('input[type="radio"]')[1].setValue(true);
+    await component.get('.action-bar button').trigger('click');
     component.emitted('update:modelValue').should.eql([[fieldKey2.id]]);
   });
 
-  it('does not emit an event if the same field key is selected', async () => {
+  it('emits null after Reset to Me is clicked', async () => {
     const [fieldKey] = createFieldKeys(1);
     const component = mountComponent([fieldKey], {
-      props: { modelValue: fieldKey.id }
+      props: { modelValue: fieldKey.id },
+      attachTo: document.body
     });
-    await component.get('select').setValue(String(fieldKey.id));
-    should.not.exist(component.emitted('update:modelValue'));
+    await component.get('.dropdown-trigger').trigger('click');
+    await component.get('.change-all.single button').trigger('click');
+    await component.get('.action-bar button').trigger('click');
+    component.emitted('update:modelValue').should.eql([[null]]);
   });
 
-  describe('no user is selected', () => {
-    it('emits null if the empty option is selected', async () => {
-      const [fieldKey] = createFieldKeys(1);
-      const component = mountComponent([fieldKey], {
-        props: { modelValue: fieldKey.id }
-      });
-      await component.get('select').setValue('');
-      component.emitted('update:modelValue').should.eql([[null]]);
+  it('does not emit an event when Apply is clicked without a change', async () => {
+    const [fieldKey] = createFieldKeys(1);
+    const component = mountComponent([fieldKey], {
+      props: { modelValue: fieldKey.id },
+      attachTo: document.body
     });
-
-    it('does not emit an event if no user was already selected', async () => {
-      const [fieldKey] = createFieldKeys(1);
-      const component = mountComponent([fieldKey], {
-        props: { modelValue: null }
-      });
-      await component.get('select').setValue('');
-      should.not.exist(component.emitted('update:modelValue'));
-    });
+    await component.get('.dropdown-trigger').trigger('click');
+    await component.get('.action-bar button').trigger('click');
+    should.not.exist(component.emitted('update:modelValue'));
   });
 
   describe('display value', () => {

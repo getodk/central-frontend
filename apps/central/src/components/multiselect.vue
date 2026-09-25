@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <dropdown ref="dropdownEl" tag="div" class="multiselect form-group"
+  <dropdown ref="dropdownEl" tag="div" class="multiselect form-group" :class="{ single }"
     placement="bottom-start" :close-on-menu-click="false" @show="onShow" @hide="onHide">
     <template #toggle="{ toggle, attrs }">
       <button v-bind="attrs" type="button" class="dropdown-trigger"
@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
         @click="handleTriggerClick(toggle, $event)">
         <slot name="icon"></slot>
         <span class="multiselect-label">{{ label }}</span>
-        <span class="display-value" aria-hidden="true">{{ selectOption }}</span>
+        <span class="display-value" aria-hidden="true" v-tooltip.text>{{ selectOption }}</span>
         <span class="icon-angle-down"></span>
       </button>
     </template>
@@ -37,14 +37,14 @@ except according to the terms contained in the LICENSE file.
           </button>
         </div>
       </li>
-      <li class="change-all">
-        <button type="button"
+      <li class="change-all" :class="{ single }">
+        <button v-if="!single" type="button"
           class="btn btn-outlined select-all" @click.prevent="changeAll(true)">
           {{ all }}
         </button>
         <button type="button"
           class="btn btn-outlined select-none" @click.prevent="changeAll(false)">
-         {{ none }}
+          {{ none }}
         </button>
       </li>
       <li>
@@ -54,9 +54,10 @@ except according to the terms contained in the LICENSE file.
             <!-- eslint-disable-next-line vue/object-curly-newline -->
             <li v-for="({ value, key = value, text = value, description }, i) in options"
               :key="key" :class="{ 'search-match': searchMatches.has(value) }">
-              <div class="checkbox">
+              <div :class="single ? 'single-select-option' : 'checkbox'">
                 <label>
-                  <input type="checkbox" :data-index="i"
+                  <input :type="single ? 'radio' : 'checkbox'"
+                    :name="single ? `${idPrefix}-single` : null" :class="{ 'sr-only': single }" :data-index="i"
                     :aria-describedby="description != null ? descriptionId(i) : null">
                   <span v-if="description == null" v-tooltip.text>{{ text }}</span>
                   <span v-else v-tooltip.no-aria="description">{{ text }}</span>
@@ -73,7 +74,7 @@ except according to the terms contained in the LICENSE file.
       </li>
       <li class="action-bar">
         <button type="button" class="btn btn-primary" :aria-disabled="changes.size === 0" @click="apply()">
-         {{ $t('action.apply') }}
+          {{ $t('action.apply') }}
         </button>
       </li>
     </template>
@@ -125,6 +126,10 @@ const props = defineProps({
     type: Array,
     required: true
   },
+
+  // `true` if the component selects at most one option.
+  single: Boolean,
+
   // By default, the user can uncheck all options. However, if defaultToAll is
   // `true`, then at least one option must be selected. If all options are
   // unchecked, then the selection falls back to all options. That can be useful
@@ -145,7 +150,7 @@ const props = defineProps({
   },
   all: {
     type: String,
-    required: true
+    required: false // Not needed when in single-select mode
   },
   none: {
     type: String,
@@ -237,6 +242,10 @@ const syncWithModelValue = () => {
 };
 
 const changeCheckbox = ({ target }) => {
+  if (props.single) {
+    // In the case of the single-selection, de-select the one (or zero) previously-selected values before selecting the new one.
+    for (const value of [...selected]) change(value);
+  }
   change(props.options[target.dataset.index].value);
 };
 
@@ -405,9 +414,13 @@ const selectOption = computed(() => {
   if (props.loading) return i18n.t('common.loading');
   if (props.options == null) return i18n.t('common.error');
   const { placeholder } = props;
+  const singleSelectText = props.single && props.modelValue.length > 0
+    ? props.options.find(({ value }) => value === props.modelValue[0]).text
+    : null;
   return placeholder({
     selected: i18n.n(props.modelValue.length, 'default'),
-    total: i18n.n(props.options.length, 'default')
+    total: i18n.n(props.options.length, 'default'),
+    ...(props.single && { selectedText: singleSelectText })
   });
 });
 
@@ -432,6 +445,11 @@ const emptyMessage = computed(() => (searchValue.value === ''
       outline: none;
       box-shadow: $btn-focus-box-shadow;
     }
+  }
+
+  .display-value {
+    max-width: 200px;
+    @include text-overflow-ellipsis;
   }
 
   .icon-angle-down {
@@ -541,6 +559,40 @@ const emptyMessage = computed(() => (searchValue.value === ''
       width: max-content;
 
       &:empty { display: none; }
+    }
+  }
+
+  &.single .option-list {
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    .single-select-option {
+      label {
+        @include text-overflow-ellipsis;
+        // .checkbox already has font-weight normal styling but we need to add it for the radio option
+        font-weight: normal;
+        margin-bottom: 0;
+        box-sizing: border-box;
+        display: block;
+        line-height: normal;
+        padding: 8px $hpadding;
+        width: 100%;
+      }
+    }
+
+    li {
+      box-sizing: border-box;
+      margin-left: -$hpadding;
+      margin-right: -$hpadding;
+      padding: 0 $hpadding;
+
+      &:not(.empty-message):not(:has(input:checked)):hover {
+        background-color: #e6e6e6;
+      }
+    }
+
+    li:has(input:checked) {
+      background-color: $color-action-light;
     }
   }
 
