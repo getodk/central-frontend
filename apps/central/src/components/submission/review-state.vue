@@ -37,13 +37,27 @@ const props = defineProps({
   // on each row. In that case, specifying `true` for `align` will align the
   // review state icons with one another. This is needed because different icons
   // have different widths.
-  align: Boolean
+  align: Boolean,
+  // If `true` then review state will be displayed as plain text and icon not as a tag.
+  noTag: Boolean
 });
+
+const tagVariants = {
+  hasIssues: 'tag-warning',
+  approved: 'tag-success',
+  edited: 'tag-default',
+  rejected: 'tag-danger'
+};
 
 const htmlClass = computed(() => {
   const result = ['submission-review-state'];
-  if (props.value != null) result.push(props.value);
-  if (props.colorText) result.push('color-text');
+  if (!props.noTag) {
+    result.push('tag');
+    result.push(tagVariants[props.value] ?? 'tag-info');
+  } else {
+    if (props.value != null) result.push(props.value);
+    if (props.colorText) result.push('color-text');
+  }
   if (props.align) result.push('align');
   return result;
 });
