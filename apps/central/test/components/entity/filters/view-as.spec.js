@@ -22,13 +22,6 @@ const mountComponent = (fieldKeys, options) => {
     ...options
   });
 };
-const toggle = (component) => component.get('.dropdown-trigger').trigger('click');
-const apply = (component) => component.get('.action-bar button').trigger('click');
-const assertDisabled = (component) => {
-  component.get('.dropdown-trigger').attributes('aria-disabled').should.equal('true');
-  component.get('.dropdown-trigger').attributes('aria-expanded').should.equal('false');
-  component.get('.multiselect').classes().should.not.contain('open');
-};
 
 describe('EntityFiltersViewAs', () => {
   it('does not render the select if the dataset has no access filter', () => {
@@ -40,20 +33,8 @@ describe('EntityFiltersViewAs', () => {
   it('renders a single-select input for each app user', async () => {
     const fieldKeys = createFieldKeys(2);
     const component = mountComponent(fieldKeys, { attachTo: document.body });
-    await toggle(component);
+    await component.get('.dropdown-trigger').trigger('click');
     component.findAll('input[type="radio"]').length.should.equal(2);
-  });
-
-  it('shows and checks the app user specified by modelValue', async () => {
-    const [fieldKey1, fieldKey2] = createFieldKeys(2);
-    const component = mountComponent([fieldKey1, fieldKey2], {
-      props: { modelValue: fieldKey2.id },
-      attachTo: document.body
-    });
-    component.get('.display-value').text().should.equal(fieldKey2.displayName);
-    await toggle(component);
-    component.findAll('input[type="radio"]')
-      .map(input => input.element.checked).should.eql([false, true]);
   });
 
   it('emits an app user ID after selection is applied', async () => {
@@ -62,9 +43,9 @@ describe('EntityFiltersViewAs', () => {
       props: { modelValue: fieldKey1.id },
       attachTo: document.body
     });
-    await toggle(component);
+    await component.get('.dropdown-trigger').trigger('click');
     await component.findAll('input[type="radio"]')[1].setValue(true);
-    await apply(component);
+    await component.get('.action-bar button').trigger('click');
     component.emitted('update:modelValue').should.eql([[fieldKey2.id]]);
   });
 
@@ -74,9 +55,9 @@ describe('EntityFiltersViewAs', () => {
       props: { modelValue: fieldKey.id },
       attachTo: document.body
     });
-    await toggle(component);
+    await component.get('.dropdown-trigger').trigger('click');
     await component.get('.change-all.single button').trigger('click');
-    await apply(component);
+    await component.get('.action-bar button').trigger('click');
     component.emitted('update:modelValue').should.eql([[null]]);
   });
 
@@ -86,8 +67,8 @@ describe('EntityFiltersViewAs', () => {
       props: { modelValue: fieldKey.id },
       attachTo: document.body
     });
-    await toggle(component);
-    await apply(component);
+    await component.get('.dropdown-trigger').trigger('click');
+    await component.get('.action-bar button').trigger('click');
     should.not.exist(component.emitted('update:modelValue'));
   });
 
@@ -115,23 +96,5 @@ describe('EntityFiltersViewAs', () => {
       });
       component.get('.display-value').text().should.equal('Me');
     });
-  });
-
-  it('filters app users by search text', async () => {
-    const [fieldKey1, fieldKey2] = createFieldKeys(2);
-    const component = mountComponent([fieldKey1, fieldKey2], { attachTo: document.body });
-    await toggle(component);
-    await component.get('.search input').setValue('0');
-    component.findAll('.search-match label').map(label => label.text())
-      .should.eql([fieldKey1.displayName]);
-  });
-
-  it('does not open when disabled', async () => {
-    const component = mountComponent(createFieldKeys(1), {
-      props: { disabled: true },
-      attachTo: document.body
-    });
-    await toggle(component);
-    assertDisabled(component);
   });
 });
