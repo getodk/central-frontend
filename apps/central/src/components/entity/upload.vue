@@ -486,7 +486,7 @@ const upload = () => {
         },
         headers: { Accept: 'text/event-stream' },
         responseType: 'text',
-        alert: false,
+        alertOnAbort: false,
         signal: abortController.signal,
         onUploadProgress: (event) => { uploadProgress.value = event.progress ?? 0; },
         onDownloadProgress: createProgressHandler()
