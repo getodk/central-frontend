@@ -110,13 +110,15 @@ export abstract class ValueNode<
     const { valueState: instanceValueState, setValueFromAction } = createInstanceValueState(this);
     const [getInstanceValueResult, setInstanceValue] = instanceValueState;
 
-    this.getInstanceValue = () => {
-      const result = getInstanceValueResult();
-      if (result instanceof Success) {
-        return (result as Success<'string'>).value;
-      }
-      return '';
-    };
+    this.getInstanceValue = this.scope.runTask(() => {
+      return createMemo(() => {
+        const result = getInstanceValueResult();
+        if (result instanceof Success) {
+          return (result as Success<'string'>).value;
+        }
+        return '';
+      });
+    });
     const valueState = codec.createRuntimeValueState(
       [
         this.getInstanceValue,
