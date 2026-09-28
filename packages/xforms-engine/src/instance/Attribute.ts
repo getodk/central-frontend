@@ -1,5 +1,5 @@
 import { XPathNodeKindKey } from '@getodk/xpath';
-import type { Accessor } from 'solid-js';
+import { createMemo, type Accessor } from 'solid-js';
 import type { AttributeNode } from '../client/AttributeNode.ts';
 import type { ErrorViolation, InstanceState, LeafNodeValidationState } from '../client/index.ts';
 import type { XFormsXPathAttribute } from '../integration/xpath/adapter/XFormsXPathNode.ts';
@@ -34,7 +34,7 @@ import {
   createValidationState,
   type SharedValidationState,
 } from '../lib/reactivity/validation/createValidation.ts';
-import { Success, type Result } from '../integration/xpath/EngineXPathEvaluator.ts';
+import { Failure, Success, type Result } from '../integration/xpath/EngineXPathEvaluator.ts';
 
 export interface AttributeStateSpec extends DescendantNodeStateSpec<string> {
   readonly children: null;
@@ -172,8 +172,19 @@ export class Attribute
         }
         setInstanceValue(decodedValue);
       }
-      // TODO handle failure
+      setInstanceValue(result);
     };
+
+    this.getViolation = this.scope.runTask(() => {
+      return createMemo(() => {
+        // TODO what order?
+        const res = getInstanceValueResult();
+        if (res instanceof Failure) {
+          return { message: res.error.message, condition: 'error' } as ErrorViolation;
+        }
+        return this.getBaseViolation() ?? this.validation.engineState.violation;
+      });
+    });
   }
 
   setValue(value: string): Root {

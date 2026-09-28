@@ -1,7 +1,7 @@
-import { createComputed } from 'solid-js';
+import { createComputed, createMemo, type Accessor } from 'solid-js';
 import type { RepeatRangeNodeAppearances } from '../../client/repeat/BaseRepeatRangeNode.ts';
 import type { RepeatRangeControlledNode } from '../../client/repeat/RepeatRangeControlledNode.ts';
-import type { AncestorNodeValidationState } from '../../client/validation.ts';
+import type { AncestorNodeValidationState, ErrorViolation } from '../../client/validation.ts';
 import type { XFormsXPathNodeRange } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
 import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import { createComputedExpression } from '../../lib/reactivity/createComputedExpression.ts';
@@ -10,7 +10,11 @@ import type { ControlledRepeatDefinition } from '../../parse/model/RepeatDefinit
 import type { GeneralParentNode } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import { BaseRepeatRange } from './BaseRepeatRange.ts';
-import type { Success } from '../../integration/xpath/EngineXPathEvaluator.ts';
+import {
+  Failure,
+  type Result,
+  type Success,
+} from '../../integration/xpath/EngineXPathEvaluator.ts';
 
 export class RepeatRangeControlled
   extends BaseRepeatRange<ControlledRepeatDefinition>
@@ -22,6 +26,7 @@ export class RepeatRangeControlled
   readonly nodeType = 'repeat-range:controlled';
   readonly appearances: RepeatRangeNodeAppearances;
   readonly validationState: AncestorNodeValidationState;
+  readonly countResult: Accessor<Result<'number'>>;
 
   constructor(
     parent: GeneralParentNode,
@@ -33,20 +38,31 @@ export class RepeatRangeControlled
     this.isInstanceCreation = parent.rootDocument.initializationMode === 'create';
     this.appearances = definition.bodyElement.appearances;
 
-    this.initChildrenState(definition, instanceNodes);
+    this.countResult = this.initChildrenState(definition, instanceNodes);
 
     this.validationState = createAggregatedViolations(this, this.instanceConfig);
+
+    this.getViolation = this.scope.runTask(() => {
+      return createMemo(() => {
+        // TODO what order?
+        const res = this.countResult();
+        if (res instanceof Failure) {
+          return { message: res.error.message, condition: 'error' } as ErrorViolation;
+        }
+        return this.getBaseViolation() ?? this.validation.engineState.violation;
+      });
+    });
   }
 
   private initChildrenState(
     definition: ControlledRepeatDefinition,
     instanceNodes: readonly StaticElement[]
-  ): void {
+  ): Accessor<Result<'number'>> {
     const { count, template } = definition;
     const savedNodes = definition.omitTemplate(instanceNodes);
     const initialCount = this.isInstanceCreation ? 0 : savedNodes.length;
 
-    this.scope.runTask(() => {
+    return this.scope.runTask(() => {
       const seededCount = this.applyCountChange(
         this.getChildren().length,
         initialCount,
@@ -54,11 +70,10 @@ export class RepeatRangeControlled
         template
       );
 
-      const computeCount = createComputedExpression(this, count, { defaultValue: 0 });
+      const countResult = createComputedExpression(this, count, { defaultValue: 0 });
       createComputed((previousCount: number) => {
-        const result = computeCount();
+        const result = countResult();
         if (!result.success) {
-          // TODO handle error
           return previousCount;
         }
         return this.applyCountChange(
@@ -68,6 +83,7 @@ export class RepeatRangeControlled
           template
         );
       }, seededCount);
+      return countResult;
     });
   }
 
