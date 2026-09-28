@@ -1,4 +1,4 @@
-import { createComputed, createMemo, type Accessor } from 'solid-js';
+import { createComputed, type Accessor } from 'solid-js';
 import type { RepeatRangeNodeAppearances } from '../../client/repeat/BaseRepeatRangeNode.ts';
 import type { RepeatRangeControlledNode } from '../../client/repeat/RepeatRangeControlledNode.ts';
 import type { AncestorNodeValidationState, ErrorViolation } from '../../client/validation.ts';
@@ -42,16 +42,14 @@ export class RepeatRangeControlled
 
     this.validationState = createAggregatedViolations(this, this.instanceConfig);
 
-    this.getViolation = this.scope.runTask(() => {
-      return createMemo(() => {
-        // TODO what order?
-        const res = this.countResult();
-        if (res instanceof Failure) {
-          return { message: res.error.message, condition: 'error' } as ErrorViolation;
-        }
-        return this.getBaseViolation() ?? this.validation.engineState.violation;
-      });
-    });
+    this.getViolation = () => {
+      // TODO what order?
+      const res = this.countResult();
+      if (res instanceof Failure) {
+        return { message: res.error.message, condition: 'error' } as ErrorViolation;
+      }
+      return this.getBaseViolation() ?? this.validation.engineState.violation;
+    };
   }
 
   private initChildrenState(
@@ -70,20 +68,16 @@ export class RepeatRangeControlled
         template
       );
 
-      const countResult = createComputedExpression(this, count, { defaultValue: 0 });
+      const computeCount = createComputedExpression(this, count, { defaultValue: 0 });
       createComputed((previousCount: number) => {
-        const result = countResult();
+        const result = computeCount();
         if (!result.success) {
           return previousCount;
         }
-        return this.applyCountChange(
-          previousCount,
-          (result as Success<'number'>).value,
-          savedNodes,
-          template
-        );
+        const value = (result as Success<'number'>).value;
+        return this.applyCountChange(previousCount, value, savedNodes, template);
       }, seededCount);
-      return countResult;
+      return computeCount;
     });
   }
 

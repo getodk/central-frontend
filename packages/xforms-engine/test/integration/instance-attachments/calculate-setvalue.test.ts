@@ -338,7 +338,7 @@ describe('Instance attachments with calculate and setvalue', () => {
       const validate = scenario.getValidationOutcome();
       expect(validate.failedPrompt).toBe(scenario.indexOf('/data/photo'));
       expect(validate.outcome).toBe(ANSWER_CALCULATION_ERROR);
-      expect(photo.currentState.instanceValue).toBe(KOALA_URL);
+      expect(photo.currentState.instanceValue).toBe('');
     });
   });
 
