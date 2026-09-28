@@ -10,6 +10,7 @@ import type { ControlledRepeatDefinition } from '../../parse/model/RepeatDefinit
 import type { GeneralParentNode } from '../hierarchy.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import { BaseRepeatRange } from './BaseRepeatRange.ts';
+import type { Success } from '../../integration/xpath/EngineXPathEvaluator.ts';
 
 export class RepeatRangeControlled
   extends BaseRepeatRange<ControlledRepeatDefinition>
@@ -57,11 +58,15 @@ export class RepeatRangeControlled
       createComputed((previousCount: number) => {
         const result = computeCount();
         if (!result.success) {
-          this.setError('count', result.error);
+          // TODO handle error
           return previousCount;
         }
-        this.setError('count', null);
-        return this.applyCountChange(previousCount, result.value, savedNodes, template);
+        return this.applyCountChange(
+          previousCount,
+          (result as Success<'number'>).value,
+          savedNodes,
+          template
+        );
       }, seededCount);
     });
   }

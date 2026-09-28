@@ -14,7 +14,8 @@ import { ValueNode } from '../../instance/abstract/ValueNode.ts';
 import { Attribute } from '../../instance/Attribute.ts';
 import type { AnyValueNode } from '../../instance/hierarchy.ts';
 import { getInstanceDefaultValue } from '../instance-defaults.ts';
-import type { Result } from '../../integration/xpath/EngineXPathEvaluator.ts';
+import { Failure, Success, type Result } from '../../integration/xpath/EngineXPathEvaluator.ts';
+import type { EngineXPathNode } from '../../integration/xpath/adapter/kind.ts';
 
 const REPEAT_INDEX_REGEX = /([^[]*)(\[[0-9]+\])/g;
 
@@ -43,9 +44,9 @@ const getInitialValue = (context: ValueContext): string => {
   return context.decodeInstanceValue(value);
 };
 
-type BaseValueState = Signal<string>;
+type BaseValueState = Signal<Result<'string'>>;
 
-type RelevantValueState = SimpleAtomicState<string>;
+type RelevantValueState = SimpleAtomicState<Result<'string'>>;
 
 /**
  * Wraps {@link baseValueState} in a signal-like interface which:
@@ -65,8 +66,7 @@ const createRelevantValueState = (
       if (context.isRelevant()) {
         return getRelevantValue();
       }
-
-      return '';
+      return new Success<'string'>('');
     });
 
     return [getValue, setValue];
@@ -79,8 +79,8 @@ const createRelevantValueState = (
  */
 const guardDownstreamReadonlyWrites = (
   context: ValueContext,
-  baseState: SimpleAtomicState<string>
-): SimpleAtomicState<string> => {
+  baseState: SimpleAtomicState<Result<'string'>>
+): SimpleAtomicState<Result<'string'>> => {
   const { readonly } = context.definition.bind;
 
   if (readonly.isDefaultExpression) {
@@ -89,11 +89,12 @@ const guardDownstreamReadonlyWrites = (
 
   const [getValue, baseSetValue] = baseState;
 
-  const setValue: SimpleAtomicStateSetter<string> = (value) => {
+  const setValue: SimpleAtomicStateSetter<Result<'string'>> = (value) => {
     if (context.isReadonly()) {
       const reference = untrack(() => context.contextReference());
-      context.setError('value', new Error(`Cannot write to readonly field: ${reference}`));
-      return value;
+      return baseSetValue(
+        new Failure<'string'>(new Error(`Cannot write to readonly field: ${reference}`))
+      );
     }
 
     return baseSetValue(value);
@@ -104,18 +105,18 @@ const guardDownstreamReadonlyWrites = (
 
 const setValueIfPreloadDefined = (
   context: ValueContext,
-  setValue: SimpleAtomicStateSetter<string>,
+  setValue: SimpleAtomicStateSetter<Result<'string'>>,
   preload: AnyBindPreloadDefinition
 ) => {
   const value = preload.getValue(context);
   if (value) {
-    setValue(value);
+    setValue(new Success<'string'>(value));
   }
 };
 
 const postloadValue = (
   context: ValueContext,
-  setValue: SimpleAtomicStateSetter<string>,
+  setValue: SimpleAtomicStateSetter<Result<'string'>>,
   preload: AnyBindPreloadDefinition
 ) => {
   const { model } = context.definition;
@@ -129,7 +130,10 @@ const postloadValue = (
   });
 };
 
-const preloadValue = (context: ValueContext, setValue: SimpleAtomicStateSetter<string>): void => {
+const preloadValue = (
+  context: ValueContext,
+  setValue: SimpleAtomicStateSetter<Result<'string'>>
+): void => {
   const { preload } = context.definition.bind;
   if (!preload) {
     return;
@@ -152,21 +156,20 @@ const referencesCurrentNode = (context: ValueContext, ref: string): boolean => {
   const nodes = context.evaluator.evaluateNodes(ref, {
     contextNode: context.contextNode,
   });
-  if (!nodes.success) {
-    context.setError('value', nodes.error);
+  if (nodes instanceof Failure) {
+    context.setEncodedValue(nodes);
     return false;
   }
-  if (nodes.value.length > 1) {
-    context.setError(
-      'value',
+  const value = (nodes as Success<'nodes'>).value;
+  if (value.length > 1) {
+    const failure = new Failure<'string'>(
       new Error(
         'You are trying to target a repeated field. Currently you may only target a field in a specific repeat instance. XPath nodeset has more than one node.'
       )
     );
-    return false;
+    context.setEncodedValue(failure);
   }
-  context.setError('value', null);
-  return nodes.value.includes(context.contextNode);
+  return value.includes(context.contextNode);
 };
 
 // Replaces the unbound repeat references in source and ref, with references
@@ -193,20 +196,19 @@ const bindRefToRepeatInstance = (context: ValueContext, ref: string): string => 
  */
 const createCalculation = (
   context: ValueContext,
-  setRelevantValue: SimpleAtomicStateSetter<string>,
+  setRelevantValue: SimpleAtomicStateSetter<Result<'string'>>,
   computation: ActionComputationExpression<'string'> | BindComputationExpression<'calculate'>
 ): void => {
   const calculate = createComputedExpression(context, computation);
   createComputed(() => {
     if (context.isAttached() && context.isRelevant()) {
       const calculated = calculate();
-      if (!calculated.success) {
-        context.setError('value', calculated.error);
-        return;
+      if (calculated instanceof Failure) {
+        setRelevantValue(calculated);
+      } else {
+        const value = context.decodeInstanceValue((calculated as Success<'string'>).value);
+        setRelevantValue(new Success<'string'>(value));
       }
-      const value = context.decodeInstanceValue(calculated.value);
-      context.setError('value', null);
-      setRelevantValue(value);
     }
   });
 };
@@ -218,7 +220,7 @@ const createCalculation = (
  */
 const createActionCalculation = (
   context: ValueContext,
-  setRelevantValue: SimpleAtomicStateSetter<string>,
+  setRelevantValue: SimpleAtomicStateSetter<Result<'string'>>,
   computation: ActionComputationExpression<'string'>
 ): void => {
   createComputed(() => {
@@ -231,13 +233,12 @@ const createActionCalculation = (
       const calculated = untrack(() => {
         return context.evaluator.evaluateString(computation.expression, context);
       });
-      if (!calculated.success) {
-        context.setError('value', calculated.error);
-        return;
+      if (calculated instanceof Failure) {
+        setRelevantValue(calculated);
+      } else {
+        const value = context.decodeInstanceValue((calculated as Success<'string'>).value);
+        setRelevantValue(new Success<'string'>(value));
       }
-      const value = context.decodeInstanceValue(calculated.value);
-      context.setError('value', null);
-      setRelevantValue(value);
     }
   });
 };
@@ -253,11 +254,11 @@ const getGeopointValue = (context: ValueContext, callback: (value: string) => vo
 
 const performActionComputation = (
   context: ValueContext,
-  setValue: SimpleAtomicStateSetter<string>,
+  setValue: SimpleAtomicStateSetter<Result<'string'>>,
   action: ActionDefinition
 ) => {
   if (action.type === 'geopoint') {
-    getGeopointValue(context, (point) => setValue(point));
+    getGeopointValue(context, (point) => setValue(new Success<'string'>(point)));
     return;
   }
   createActionCalculation(context, setValue, action.computation);
@@ -265,7 +266,7 @@ const performActionComputation = (
 
 const registerSetValueActions = (
   context: ValueContext,
-  setValue: SimpleAtomicStateSetter<string>
+  setValue: SimpleAtomicStateSetter<Result<'string'>>
 ) => {
   const actions = context.definition.model.actions.get(context.contextReference());
   actions?.forEach((action) => {
@@ -291,28 +292,29 @@ const isValueChangedActionTarget = (node: unknown): node is AnyValueNode | Attri
   return node instanceof ValueNode || node instanceof Attribute;
 };
 
-const registerValueChangedActions = (context: ValueContext, getValue: Accessor<string>) => {
+const getDestinationNode = (context: ValueContext, ref: string): EngineXPathNode | undefined => {
+  const nodesResult = context.evaluator.evaluateNodes(ref, {
+    contextNode: context.contextNode,
+  });
+  if (!(nodesResult instanceof Success)) {
+    throw nodesResult.error!;
+  }
+  return (nodesResult as Success<'nodes'>).value[0];
+};
+
+const registerValueChangedActions = (
+  context: ValueContext,
+  getValue: Accessor<Result<'string'>>
+) => {
   if (!context.valueChangedActions?.length) {
     return;
   }
-  let previous: string;
+  let previous: Result<'string'>;
   createComputed(() => {
     const sourceValue = getValue();
     context.valueChangedActions.forEach((action) => {
       const ref = bindRefToRepeatInstance(context, action.ref);
-      const nodesResult = context.evaluator.evaluateNodes(ref, {
-        contextNode: context.contextNode,
-      });
-      if (!nodesResult.success) {
-        context.setError('value', nodesResult.error);
-        return;
-      }
-      context.setError('value', null);
-
-      if (!nodesResult.value.length) {
-        return;
-      }
-      const destinationNode = nodesResult.value[0];
+      const destinationNode = getDestinationNode(context, ref);
       if (
         isValueChangedActionTarget(destinationNode) &&
         destinationNode.isAttached() &&
@@ -320,11 +322,14 @@ const registerValueChangedActions = (context: ValueContext, getValue: Accessor<s
       ) {
         if (
           previous !== undefined &&
-          previous !== sourceValue &&
+          (previous.error?.message !== sourceValue.error?.message ||
+            previous.value !== sourceValue.value) &&
           referencesCurrentNode(destinationNode, ref)
         ) {
           if (action.type === 'geopoint') {
-            getGeopointValue(context, (point) => destinationNode.setEncodedValue(point, true));
+            getGeopointValue(context, (point) =>
+              destinationNode.setEncodedValue(new Success<'string'>(point), true)
+            );
           } else {
             const valueResult: Result<'string'> = untrack(() => {
               return context.evaluator.evaluateString(
@@ -332,12 +337,7 @@ const registerValueChangedActions = (context: ValueContext, getValue: Accessor<s
                 destinationNode
               );
             });
-            if (valueResult.success) {
-              destinationNode.setError('value', null);
-              destinationNode.setEncodedValue(valueResult.value, true);
-            } else {
-              destinationNode.setError('value', valueResult.error);
-            }
+            destinationNode.setEncodedValue(valueResult, true);
           }
         }
       }
@@ -348,9 +348,9 @@ const registerValueChangedActions = (context: ValueContext, getValue: Accessor<s
 
 export interface InstanceValueState {
   // The node's instance value. The setter rejects client writes while readonly.
-  readonly valueState: SimpleAtomicState<string>;
+  readonly valueState: SimpleAtomicState<Result<'string'>>;
   // Unguarded setter for the same value, used by `xforms-value-changed` actions writing to this node.
-  readonly setValueFromAction: SimpleAtomicStateSetter<string>;
+  readonly setValueFromAction: SimpleAtomicStateSetter<Result<'string'>>;
 }
 
 /**
@@ -368,7 +368,7 @@ export interface InstanceValueState {
 export const createInstanceValueState = (context: ValueContext): InstanceValueState => {
   return context.scope.runTask(() => {
     const initialValue = getInitialValue(context);
-    const baseValueState = createSignal(initialValue);
+    const baseValueState = createSignal<Result<'string'>>(new Success<'string'>(initialValue));
     const relevantValueState = createRelevantValueState(context, baseValueState);
 
     const [getValue, setValue] = relevantValueState;

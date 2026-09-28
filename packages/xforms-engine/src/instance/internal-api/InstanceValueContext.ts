@@ -8,6 +8,7 @@ import type { ModelDefinition } from '../../parse/model/ModelDefinition.ts';
 import type { EvaluationContext } from './EvaluationContext.ts';
 import type { InstanceConfig } from './InstanceConfig.ts';
 import type { ActionDefinition } from '../../parse/model/ActionDefinition.ts';
+import type { Result } from '../../integration/xpath/EngineXPathEvaluator.ts';
 
 export interface InstanceValueContextDocument {
   readonly initializationMode: FormInstanceInitializationMode;
@@ -40,4 +41,5 @@ export interface InstanceValueContext extends EvaluationContext {
 
   isReadonly(): boolean;
   isRelevant(): boolean;
+  setEncodedValue(result: Result<'string'>, bypassReadonly?: boolean): void;
 }

@@ -1,5 +1,5 @@
 import { UpsertableMap } from '@getodk/common/lib/collections/UpsertableMap.ts';
-import type { Accessor, Setter } from 'solid-js';
+import type { Accessor } from 'solid-js';
 import { createEffect, createMemo, on } from 'solid-js';
 import type { ActiveLanguage } from '../../client/FormLanguage.ts';
 import type { BaseItem } from '../../client/BaseItem.ts';
@@ -11,17 +11,16 @@ import type { SelectControl } from '../../instance/SelectControl.ts';
 import { TextChunk } from '../../instance/text/TextChunk.ts';
 import { TextRange } from '../../instance/text/TextRange.ts';
 import type { EngineXPathNode } from '../../integration/xpath/adapter/kind.ts';
-import type { EngineXPathEvaluator, Result } from '../../integration/xpath/EngineXPathEvaluator.ts';
+import {
+  Success,
+  type EngineXPathEvaluator,
+  type Result,
+} from '../../integration/xpath/EngineXPathEvaluator.ts';
 import type { ItemDefinition } from '../../parse/body/control/ItemDefinition.ts';
 import type { ItemsetDefinition } from '../../parse/body/control/ItemsetDefinition.ts';
 import { createComputedExpression } from './createComputedExpression.ts';
 import type { ReactiveScope } from './scope.ts';
 import { createTextRange } from './text/createTextRange.ts';
-import {
-  createInstanceErrorState,
-  type ComputedProperty,
-  type ErrorState,
-} from './createInstanceErrorState.ts';
 
 type ItemCollectionControl = RankControl | SelectControl;
 type DerivedItemLabel = ClientTextRange<'item-label'>;
@@ -73,8 +72,6 @@ class ItemsetItemEvaluationContext implements EvaluationContext {
   readonly evaluator: EngineXPathEvaluator;
   readonly contextReference: Accessor<string>;
   readonly getActiveLanguage: Accessor<ActiveLanguage>;
-  readonly errorState: Accessor<ErrorState>;
-  readonly setErrorState: Setter<ErrorState>;
 
   constructor(
     control: ItemCollectionControl,
@@ -85,20 +82,6 @@ class ItemsetItemEvaluationContext implements EvaluationContext {
     this.evaluator = control.evaluator;
     this.contextReference = control.contextReference;
     this.getActiveLanguage = control.getActiveLanguage;
-    const [getError, setError] = createInstanceErrorState(this);
-    this.errorState = getError;
-    this.setErrorState = setError;
-  }
-
-  getError(): string | null {
-    return (Object.values(this.errorState()).find((value) => !!value) as string) ?? null;
-  }
-
-  setError(property: ComputedProperty, error: Error | null) {
-    this.setErrorState((prev: ErrorState) => {
-      prev[property] = error?.message ?? null;
-      return { ...prev };
-    });
   }
 }
 
@@ -112,11 +95,10 @@ const createItemsetItemLabel = (
   if (label == null) {
     return createMemo(() => {
       const result = itemValue();
-      if (result.success) {
-        context.setError('label', null);
-        return derivedItemLabel(context, result.value);
+      if (result instanceof Success) {
+        return derivedItemLabel(context, (result as Success<'string'>).value);
       }
-      context.setError('label', result.error);
+      // TODO handle error
       return derivedItemLabel(context, '');
     });
   }
@@ -149,12 +131,11 @@ const createCycleGuardedItemNodes = (
   let changeCount = 0;
   const itemNodes = createMemo((previous?: EngineXPathNode[]) => {
     const result = evaluateNodes();
-    if (!result.success) {
-      control.setError('itemset', result.error);
+    if (!(result instanceof Success)) {
+      // control.setError('itemset', result.error!); TODO handle
       return previous ?? [];
     }
-    control.setError('itemset', null);
-    const { value } = result;
+    const { value } = result as Success<'nodes'>;
     if (previous === undefined) {
       return value;
     }
@@ -221,21 +202,20 @@ const createItemset = (
     return createMemo(() => {
       return itemsetItems().map((item) => {
         const valueResult = item.value();
-        let value: string;
-        if (valueResult.success) {
-          control.setError('itemset', null);
-          value = valueResult.value;
+        let value;
+        if (valueResult instanceof Success) {
+          value = (valueResult as Success<'string'>).value;
         } else {
-          control.setError('itemset', valueResult.error);
+          // control.setError('itemset', valueResult.error!); TODO handle
           value = '';
         }
         const properties = item.properties.map(([propLabel, propValue]) => {
           const propResult = propValue();
-          if (!propResult.success) {
-            control.setError('itemset', propResult.error);
+          if (propResult instanceof Success) {
+            return [propLabel, propResult.value] as [string, string];
           }
-          const pv = propResult.success ? propResult.value : '';
-          return [propLabel, pv] as [string, string];
+          // control.setError('itemset', propResult.error!); TODO handle
+          return [propLabel, ''] as [string, string];
         });
         return {
           label: item.label(),

@@ -82,9 +82,6 @@ describe('XPath function support: `distance`', () => {
      *
      * Adapts JavaRosa's use of `try`/`catch` to typical Web Forms error
      * condition assertion style.
-     *
-     * @todo The shape of this test may change (like many others) when we
-     * address error production broadly.
      */
     // JR: distance_throwsForNonPoint
     it('produces an error when the string value is not a valid point', async () => {

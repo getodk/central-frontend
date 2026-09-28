@@ -1,7 +1,7 @@
 import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import type { AttributeNode } from '../client/AttributeNode.ts';
-import type { InstanceState, LeafNodeValidationState } from '../client/index.ts';
+import type { ErrorViolation, InstanceState, LeafNodeValidationState } from '../client/index.ts';
 import type { XFormsXPathAttribute } from '../integration/xpath/adapter/XFormsXPathNode.ts';
 import type { StaticAttribute } from '../integration/xpath/static-dom/StaticAttribute.ts';
 import { createAttributeNodeInstanceState } from '../lib/client-reactivity/instance-state/createAttributeNodeInstanceState.ts';
@@ -34,6 +34,7 @@ import {
   createValidationState,
   type SharedValidationState,
 } from '../lib/reactivity/validation/createValidation.ts';
+import { Success, type Result } from '../integration/xpath/EngineXPathEvaluator.ts';
 
 export interface AttributeStateSpec extends DescendantNodeStateSpec<string> {
   readonly children: null;
@@ -77,7 +78,8 @@ export class Attribute
   };
 
   override readonly getXPathValue: () => string;
-  readonly setEncodedValue: (value: string, bypassReadonly?: boolean) => void;
+  readonly setEncodedValue: (value: Result<'string'>, bypassReadonly?: boolean) => void;
+  protected valueErrorViolation: ErrorViolation | undefined;
 
   get validationState(): LeafNodeValidationState {
     return this.validation.currentState;
@@ -102,17 +104,31 @@ export class Attribute
     this.decodeInstanceValue = codec.decodeInstanceValue;
 
     const { valueState: instanceValueState, setValueFromAction } = createInstanceValueState(this);
-    const [getInstanceValue] = instanceValueState;
+    const [getInstanceValueResult, setInstanceValue] = instanceValueState;
 
-    const valueState = codec.createRuntimeValueState(instanceValueState, this);
-    const [, setActionValue] = codec.createRuntimeValueState(
-      [getInstanceValue, setValueFromAction],
+    this.getInstanceValue = () => {
+      const res = getInstanceValueResult();
+      if (res instanceof Success) {
+        // TODO convert this to the new way
+        this.valueErrorViolation = undefined;
+        return (res as Success<'string'>).value;
+      }
+      this.valueErrorViolation = { valid: false, message: res.error!.message } as ErrorViolation;
+      return '';
+    };
+    const valueState = codec.createRuntimeValueState(
+      [
+        this.getInstanceValue,
+        (value: string) => {
+          setValueFromAction(new Success<'string'>(value));
+          return value;
+        },
+      ],
       this
     );
 
     const [, setValueState] = valueState;
 
-    this.getInstanceValue = getInstanceValue;
     this.setValueState = setValueState;
     this.valueState = valueState;
 
@@ -142,15 +158,21 @@ export class Attribute
     this.attributeState = createAttributeState(this.scope);
 
     this.getXPathValue = () => {
-      return this.getInstanceValue();
+      return this.getInstanceValue() ?? '';
     };
-    this.setEncodedValue = (value: string, bypassReadonly = false) => {
-      const decodedValue = codec.decodeValue(value);
-      if (bypassReadonly) {
-        setActionValue(decodedValue);
-        return;
+
+    this.setEncodedValue = (result: Result<'string'>, bypassReadonly = false) => {
+      if (result instanceof Success) {
+        const decodedValue = new Success<'string'>(
+          codec.decodeValue((result as Success<'string'>).value)
+        );
+        if (bypassReadonly) {
+          setValueFromAction(decodedValue);
+          return;
+        }
+        setInstanceValue(decodedValue);
       }
-      setValueState(decodedValue);
+      // TODO handle failure
     };
   }
 

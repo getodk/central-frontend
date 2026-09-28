@@ -1,5 +1,5 @@
 import type { XPathNodeKindKey } from '@getodk/xpath';
-import { type Accessor, type Setter, type Signal } from 'solid-js';
+import { type Accessor, type Signal } from 'solid-js';
 import type { BaseNode } from '../../client/BaseNode.ts';
 import type { NodeAppearances } from '../../client/NodeAppearances.ts';
 import type { FormNodeID } from '../../client/identity.ts';
@@ -32,11 +32,6 @@ import type { AnyChildNode, AnyNode } from '../hierarchy.ts';
 import { nodeID } from '../identity.ts';
 import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { InstanceConfig } from '../internal-api/InstanceConfig.ts';
-import {
-  createInstanceErrorState,
-  type ErrorState,
-  type ComputedProperty,
-} from '../../lib/reactivity/createInstanceErrorState.ts';
 
 export type EngineInstanceNodeType = ClientInstanceNodeType | 'primary-instance';
 
@@ -177,8 +172,6 @@ export abstract class InstanceNode<
   abstract readonly isAttached: Accessor<boolean>;
   readonly scope: ReactiveScope;
   readonly computeReference: ComputeInstanceNodeReference;
-  protected readonly errorState: Accessor<ErrorState>;
-  protected readonly setErrorState: Setter<ErrorState>;
 
   protected readonly computeChildStepReference: ComputeInstanceNodeReference = (
     parent,
@@ -233,10 +226,6 @@ export abstract class InstanceNode<
     this.instanceConfig = instanceConfig;
     this.nodeId = nodeID(createUniqueId());
     this.definition = definition;
-
-    const [getError, setError] = createInstanceErrorState(this);
-    this.errorState = getError;
-    this.setErrorState = setError;
   }
 
   /** @package */
@@ -293,15 +282,4 @@ export abstract class InstanceNode<
   }
 
   abstract getAttributes(): readonly Attribute[];
-
-  getError(): string | null {
-    return (Object.values(this.errorState()).find((value) => !!value) as string) ?? null;
-  }
-
-  setError(property: ComputedProperty, error: Error | null) {
-    this.setErrorState((prev: ErrorState) => {
-      prev[property] = error?.message ?? null;
-      return { ...prev };
-    });
-  }
 }

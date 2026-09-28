@@ -10,7 +10,10 @@ import type {
   XFormsXPathPrimaryInstanceDescendantNodeKind,
 } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
 import { XFORMS_XPATH_NODE_RANGE_KIND } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
-import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
+import {
+  Failure,
+  type EngineXPathEvaluator,
+} from '../../integration/xpath/EngineXPathEvaluator.ts';
 import type { StaticAttribute } from '../../integration/xpath/static-dom/StaticAttribute.ts';
 import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import { createComputedExpression } from '../../lib/reactivity/createComputedExpression.ts';
@@ -28,9 +31,8 @@ import { SET_GEOPOINT_LOCAL_NAME, SET_VALUE_LOCAL_NAME } from '../../parse/XForm
 import { XFORM_EVENT } from '../../parse/model/Event.ts';
 import type { DependentExpression } from '../../parse/expression/abstract/DependentExpression.ts';
 import type { ValidationContext } from '../internal-api/ValidationContext.ts';
-import type { AnyViolation } from '../../client/validation.ts';
+import type { AnyViolation, ErrorViolation } from '../../client/validation.ts';
 import type { SharedValidationState } from '../../lib/reactivity/validation/createValidation.ts';
-import type { ComputedProperty } from '../../lib/reactivity/createInstanceErrorState.ts';
 
 export interface DescendantNodeSharedStateSpec {
   readonly reference: Accessor<string>;
@@ -203,6 +205,7 @@ export abstract class DescendantNode<
   readonly getActiveLanguage: Accessor<ActiveLanguage>;
   readonly valueChangedActions: ActionDefinition[];
   protected abstract readonly validation: SharedValidationState;
+  readonly getBaseViolation: Accessor<AnyViolation | null>;
 
   constructor(
     override readonly parent: Parent,
@@ -251,14 +254,38 @@ export abstract class DescendantNode<
 
     const { readonly, relevant, required } = definition.bind;
 
-    this.isSelfReadonly = this.scope.runTask(() => {
-      return this.compute('readonly', readonly, true);
+    const readonlyResult = this.scope.runTask(() => {
+      return this.compute(readonly, true);
     });
-    this.isSelfRelevant = this.scope.runTask(() => {
-      return this.compute('relevant', relevant, false);
+    const relevantResult = this.scope.runTask(() => {
+      return this.compute(relevant, false);
     });
-    this.isRequired = this.scope.runTask(() => {
-      return this.compute('required', required, false);
+    const requiredResult = this.scope.runTask(() => {
+      return this.compute(required, false);
+    });
+
+    this.isSelfReadonly = () => readonlyResult().value ?? true;
+    this.isSelfRelevant = () => relevantResult().value ?? false;
+    this.isRequired = () => requiredResult().value ?? false;
+
+    this.getBaseViolation = this.scope.runTask(() => {
+      return createMemo(() => {
+        // TODO what order?
+        // TODO ugly
+        const readonlyR = readonlyResult();
+        if (readonlyR instanceof Failure) {
+          return { message: readonlyR.error.message, condition: 'error' } as ErrorViolation;
+        }
+        const relevantR = relevantResult();
+        if (relevantR instanceof Failure) {
+          return { message: relevantR.error.message, condition: 'error' } as ErrorViolation;
+        }
+        const requiredR = requiredResult();
+        if (requiredR instanceof Failure) {
+          return { message: requiredR.error.message, condition: 'error' } as ErrorViolation;
+        }
+        return this.validation?.engineState.violation;
+      });
     });
 
     this.valueChangedActions = Array.from(definition.bodyElement?.element.children ?? [])
@@ -307,27 +334,16 @@ export abstract class DescendantNode<
     this.scope.dispose();
   }
 
-  private compute(
-    property: ComputedProperty,
-    expression: DependentExpression<'boolean'>,
-    defaultValue: boolean
-  ) {
+  private compute(expression: DependentExpression<'boolean'>, defaultValue: boolean) {
     const computed = createComputedExpression(this, expression, { defaultValue });
     return createMemo(() => {
-      const result = computed();
-      if (result.success) {
-        this.setError(property, null);
-        return result.value;
-      } else {
-        this.setError(property, result.error);
-        return defaultValue;
-      }
+      return computed();
     });
   }
 
   // ValidationContext
   getViolation(): AnyViolation | null {
-    return this.validation.engineState.violation;
+    return this.getBaseViolation();
   }
 
   isBlank(): boolean {

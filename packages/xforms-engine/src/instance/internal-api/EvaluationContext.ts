@@ -10,7 +10,6 @@ import type { DependentExpression } from '../../parse/expression/abstract/Depend
 import type { InstanceNode } from '../abstract/InstanceNode.ts';
 import type { PrimaryInstance } from '../PrimaryInstance.ts';
 import type { TranslationContext } from './TranslationContext.ts';
-import type { ComputedProperty } from '../../lib/reactivity/createInstanceErrorState.ts';
 
 /**
  * Provides a common interface to establish context for XPath-based
@@ -85,6 +84,4 @@ export interface EvaluationContext extends TranslationContext {
    *   context (itemsets being a prominent example).
    */
   readonly contextNode: EngineXPathNode;
-
-  setError(property: ComputedProperty, error: Error | null): void;
 }

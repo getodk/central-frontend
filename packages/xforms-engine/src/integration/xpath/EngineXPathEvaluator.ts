@@ -25,17 +25,32 @@ export interface ComputedExpressionResults {
   readonly string: string;
 }
 
-export interface Success<T extends DependentExpressionResultType> {
-  readonly success: true;
-  readonly value: ComputedExpressionResults[T];
+// TODO still think this deserves its own file
+export interface Result<Type extends DependentExpressionResultType> {
+  readonly success: boolean;
+  readonly value: ComputedExpressionResults[Type] | undefined;
+  readonly error: Error | undefined;
 }
 
-export interface Failure {
-  readonly success: false;
+export class Success<Type extends DependentExpressionResultType> implements Result<Type> {
+  readonly success = true;
+  readonly value: ComputedExpressionResults[Type];
+  readonly error = undefined;
+
+  constructor(value: ComputedExpressionResults[Type]) {
+    this.value = value;
+  }
+}
+
+export class Failure<Type extends DependentExpressionResultType> implements Result<Type> {
+  readonly success = false;
+  readonly value = undefined;
   readonly error: Error;
-}
 
-export type Result<T extends DependentExpressionResultType> = Failure | Success<T>;
+  constructor(error: Error) {
+    this.error = error;
+  }
+}
 
 /**
  * A wrapper around the xpath Evaluator that returns Result objects instead of values and errors.
@@ -55,15 +70,9 @@ export class EngineXPathEvaluator {
     options?: EvaluatorConvenienceMethodOptions<EngineXPathNode>
   ): Result<'string'> {
     try {
-      return {
-        success: true,
-        value: this.xpathEvaluator.evaluateString(expression, options),
-      };
+      return new Success<'string'>(this.xpathEvaluator.evaluateString(expression, options));
     } catch (e) {
-      return {
-        success: false,
-        error: e as Error,
-      };
+      return new Failure(e as Error);
     }
   }
 
@@ -72,15 +81,9 @@ export class EngineXPathEvaluator {
     options?: EvaluatorConvenienceMethodOptions<EngineXPathNode>
   ): Result<'number'> {
     try {
-      return {
-        success: true,
-        value: this.xpathEvaluator.evaluateNumber(expression, options),
-      };
+      return new Success<'number'>(this.xpathEvaluator.evaluateNumber(expression, options));
     } catch (e) {
-      return {
-        success: false,
-        error: e as Error,
-      };
+      return new Failure(e as Error);
     }
   }
 
@@ -89,15 +92,9 @@ export class EngineXPathEvaluator {
     options?: EvaluatorConvenienceMethodOptions<EngineXPathNode>
   ): Result<'nodes'> {
     try {
-      return {
-        success: true,
-        value: this.xpathEvaluator.evaluateNodes(expression, options),
-      };
+      return new Success<'nodes'>(this.xpathEvaluator.evaluateNodes(expression, options));
     } catch (e) {
-      return {
-        success: false,
-        error: e as Error,
-      };
+      return new Failure(e as Error);
     }
   }
 
@@ -106,15 +103,9 @@ export class EngineXPathEvaluator {
     options?: EvaluatorConvenienceMethodOptions<EngineXPathNode>
   ): Result<'boolean'> {
     try {
-      return {
-        success: true,
-        value: this.xpathEvaluator.evaluateBoolean(expression, options),
-      };
+      return new Success<'boolean'>(this.xpathEvaluator.evaluateBoolean(expression, options));
     } catch (e) {
-      return {
-        success: false,
-        error: e as Error,
-      };
+      return new Failure(e as Error);
     }
   }
 

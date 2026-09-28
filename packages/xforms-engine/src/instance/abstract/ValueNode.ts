@@ -1,9 +1,9 @@
 import { XPathNodeKindKey } from '@getodk/xpath';
-import type { Accessor } from 'solid-js';
+import { createMemo, type Accessor } from 'solid-js';
 import type { BaseValueNode } from '../../client/BaseValueNode.ts';
 import type { LeafNodeType as ValueNodeType } from '../../client/node-types.ts';
 import type { InstanceState } from '../../client/serialization/InstanceState.ts';
-import type { LeafNodeValidationState } from '../../client/validation.ts';
+import type { ErrorViolation, LeafNodeValidationState } from '../../client/validation.ts';
 import type { ValueType } from '../../client/ValueType.ts';
 import type { XFormsXPathElement } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
 import type { StaticLeafElement } from '../../integration/xpath/static-dom/StaticElement.ts';
@@ -34,6 +34,7 @@ import {
   createValidationState,
   type SharedValidationState,
 } from '../../lib/reactivity/validation/createValidation.ts';
+import { Failure, Success, type Result } from '../../integration/xpath/EngineXPathEvaluator.ts';
 
 export type ValueNodeDefinition<V extends ValueType> = LeafNodeDefinition<V>;
 
@@ -88,7 +89,7 @@ export abstract class ValueNode<
   readonly instanceState: InstanceState;
 
   // Write path for `xforms-value-changed` actions targeting this node; permitted while readonly too.
-  readonly setEncodedValue: (value: string, bypassReadonly?: boolean) => void;
+  readonly setEncodedValue: (value: Result<'string'>, bypassReadonly?: boolean) => void;
 
   constructor(
     parent: GeneralParentNode,
@@ -107,12 +108,26 @@ export abstract class ValueNode<
     this.decodeInstanceValue = codec.decodeInstanceValue;
 
     const { valueState: instanceValueState, setValueFromAction } = createInstanceValueState(this);
-    const [getInstanceValue, setInstanceValue] = instanceValueState;
+    const [getInstanceValueResult, setInstanceValue] = instanceValueState;
 
-    const valueState = codec.createRuntimeValueState(instanceValueState, this);
+    this.getInstanceValue = () => {
+      const result = getInstanceValueResult();
+      if (result instanceof Success) {
+        return (result as Success<'string'>).value;
+      }
+      return '';
+    };
+    const valueState = codec.createRuntimeValueState(
+      [
+        this.getInstanceValue,
+        (value: string) => {
+          setInstanceValue(new Success<'string'>(value));
+          return value;
+        },
+      ],
+      this
+    );
     const [, setValueState] = valueState;
-
-    this.getInstanceValue = getInstanceValue;
     this.setValueState = setValueState;
     this.getXPathValue = () => {
       return this.getInstanceValue();
@@ -121,14 +136,30 @@ export abstract class ValueNode<
     this.validation = createValidationState(this, this.instanceConfig);
     this.instanceState = createValueNodeInstanceState(this);
 
-    this.setEncodedValue = (value: string, bypassReadonly = false) => {
-      const instanceValue = this.decodeInstanceValue(value);
-      if (bypassReadonly) {
-        setValueFromAction(instanceValue);
-        return;
+    this.setEncodedValue = (result: Result<'string'>, bypassReadonly = false) => {
+      if (result instanceof Success) {
+        const decoded = new Success<'string'>(
+          this.decodeInstanceValue((result as Success<'string'>).value)
+        );
+        if (bypassReadonly) {
+          setValueFromAction(decoded);
+          return;
+        }
+        setInstanceValue(decoded);
       }
-      setInstanceValue(instanceValue);
+      setInstanceValue(result);
     };
+
+    this.getViolation = this.scope.runTask(() => {
+      return createMemo(() => {
+        // TODO what order?
+        const res = getInstanceValueResult();
+        if (res instanceof Failure) {
+          return { message: res.error.message, condition: 'error' } as ErrorViolation;
+        }
+        return this.getBaseViolation();
+      });
+    });
   }
 
   // InstanceNode
