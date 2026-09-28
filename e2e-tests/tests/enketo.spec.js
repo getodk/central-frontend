@@ -206,7 +206,6 @@ test.describe('Enketo', () => {
     await expect(frame.getByText('You have already completed this survey.')).toBeVisible();
   });
 
-  /*
   test('redirect to custom thank you page', async ({ page }) => {
     const returnUrl = 'http://www.example.com/';
 
@@ -230,7 +229,6 @@ test.describe('Enketo', () => {
     await expect(page).toHaveURL(returnUrl);
     await expect(page.getByRole('heading', { name: 'Custom thank you page' })).toBeVisible();
   });
-  */
 
   test('allows multiple submission', async ({ page }) => {
     await login(page);
