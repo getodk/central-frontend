@@ -162,12 +162,9 @@ const referencesCurrentNode = (context: ValueContext, ref: string): boolean => {
   }
   const value = (nodes as Success<'nodes'>).value;
   if (value.length > 1) {
-    const failure = new Failure<'string'>(
-      new Error(
-        'You are trying to target a repeated field. Currently you may only target a field in a specific repeat instance. XPath nodeset has more than one node.'
-      )
+    throw new Error(
+      'You are trying to target a repeated field. Currently you may only target a field in a specific repeat instance. XPath nodeset has more than one node.'
     );
-    context.setEncodedValue(failure);
   }
   return value.includes(context.contextNode);
 };

@@ -435,7 +435,7 @@ describe('setvalue action', () => {
       });
 
       // ported from: https://github.com/getodk/javarosa/blob/2dd8e15e9f3110a86f8d7d851efc98627ae5692e/src/test/java/org/javarosa/core/model/actions/SetValueActionTest.java#L348
-      it('sets error when target is an unbound reference', async () => {
+      it('throws error when target is an unbound reference', async () => {
         const scenario = await Scenario.init(
           'Setvalue into repeat',
           html(
@@ -460,9 +460,12 @@ describe('setvalue action', () => {
         scenario.createNewRepeat('/data/repeat');
         scenario.createNewRepeat('/data/repeat');
         scenario.createNewRepeat('/data/repeat');
-        scenario.answer('/data/source', 'foo');
-        const validate = scenario.getValidationOutcome();
-        expect(validate.outcome).toBe(ANSWER_CALCULATION_ERROR);
+        const answer = () => {
+          scenario.answer('/data/source', 'foo');
+          expect.fail('Expected multiple node target to fail');
+        };
+
+        expect(answer).toThrow('has more than one node');
       });
     });
 
@@ -1289,7 +1292,7 @@ describe('setvalue action', () => {
       expect(validate.failedPrompt).toBe(scenario.indexOf('/data/destination'));
       expect(validate.outcome).toBe(ANSWER_CALCULATION_ERROR);
 
-      expect(scenario.answerOf('/data/destination')).toEqualAnswer(intAnswer(6));
+      expect(scenario.answerOf('/data/destination')).toEqualAnswer(stringAnswer(''));
 
       scenario.answer('/data/lock', 'no');
       expect(scenario.getInstanceNode('/data/destination')).toBeEnabled();
