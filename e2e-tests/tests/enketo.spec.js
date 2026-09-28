@@ -207,7 +207,16 @@ test.describe('Enketo', () => {
   });
 
   test('redirect to custom thank you page', async ({ page }) => {
-    await page.goto(`${appUrl}/-/single/${publishedForm.enketoId}?st=${publicLink.token}&returnUrl=http://www.example.com`);
+    const returnUrl = 'http://www.example.com/';
+
+    // Serve the thank you page ourselves so the test does not depend on the
+    // real example.com, which has changed its content in the past.
+    await page.route(returnUrl, (route) => route.fulfill({
+      contentType: 'text/html',
+      body: '<h1>Custom thank you page</h1>'
+    }));
+
+    await page.goto(`${appUrl}/-/single/${publishedForm.enketoId}?st=${publicLink.token}&returnUrl=${returnUrl}`);
 
     const frame = await page.frameLocator('iframe');
 
@@ -217,7 +226,8 @@ test.describe('Enketo', () => {
 
     await frame.getByRole('button', { name: 'submit' }).click();
 
-    await expect(page.getByRole('heading', { name: 'Example' })).toBeVisible();
+    await expect(page).toHaveURL(returnUrl);
+    await expect(page.getByRole('heading', { name: 'Custom thank you page' })).toBeVisible();
   });
 
   test('allows multiple submission', async ({ page }) => {
