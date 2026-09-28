@@ -63,7 +63,7 @@ describe('Form instance state', () => {
   const getNodeByReference = (reference: string): AnyNode | null => {
     const result = testForm.internalRoot.evaluator.evaluateNodes(reference);
     if (!result.success) {
-      throw result.error;
+      throw result.error!;
     }
     return (result.value?.[0] as AnyNode) ?? null;
   };

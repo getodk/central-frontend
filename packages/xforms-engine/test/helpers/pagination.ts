@@ -11,6 +11,7 @@ import { Root } from '../../src/instance/Root.ts';
 import type { AnyControlInstanceNode, AnyNode } from '../../src/instance/hierarchy.ts';
 import type { RepeatInstance } from '../../src/instance/repeat/RepeatInstance.ts';
 import type { RepeatRangeUncontrolled } from '../../src/instance/repeat/RepeatRangeUncontrolled.ts';
+import { Failure } from '../../src/integration/xpath/EngineXPathEvaluator.ts';
 
 class PagesBodyXFormsElement extends TagXFormsElement implements BodyXFormsElement {
   override readonly name = 'h:body';
@@ -63,7 +64,7 @@ export const setupPaginationForms = (): ((form: XFormsElement) => Promise<Root>)
 
 const getNodeByReference = (root: Root, reference: string): AnyNode => {
   const result = root.evaluator.evaluateNodes(reference);
-  if (!result.success) {
+  if (result instanceof Failure) {
     throw result.error;
   }
   const value = (result.value?.[0] as AnyNode) ?? null;

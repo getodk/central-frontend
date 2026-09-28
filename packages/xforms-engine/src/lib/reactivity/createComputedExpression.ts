@@ -123,7 +123,6 @@ export const createComputedExpression = <Type extends DependentExpressionResultT
         return evaluateExpression(defaultValue);
       } catch {
         // likely because it's not yet attached - try again later
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
         return { success: true, value: defaultValue } as Success<Type>;
       }
     });
