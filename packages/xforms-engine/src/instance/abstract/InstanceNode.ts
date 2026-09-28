@@ -1,5 +1,5 @@
 import type { XPathNodeKindKey } from '@getodk/xpath';
-import { type Accessor, type Signal } from 'solid-js';
+import type { Accessor, Signal } from 'solid-js';
 import type { BaseNode } from '../../client/BaseNode.ts';
 import type { NodeAppearances } from '../../client/NodeAppearances.ts';
 import type { FormNodeID } from '../../client/identity.ts';

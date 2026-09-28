@@ -139,22 +139,22 @@ export abstract class ValueNode<
     this.instanceState = createValueNodeInstanceState(this);
 
     this.setEncodedValue = (result: Result<'string'>, bypassReadonly = false) => {
-      if (result instanceof Success) {
-        const decoded = new Success<'string'>(
-          this.decodeInstanceValue((result as Success<'string'>).value)
-        );
-        if (bypassReadonly) {
-          setValueFromAction(decoded);
-          return;
-        }
-        setInstanceValue(decoded);
+      if (!(result instanceof Success)) {
+        setInstanceValue(result);
+        return;
       }
-      setInstanceValue(result);
+      const decoded = new Success<'string'>(
+        this.decodeInstanceValue((result as Success<'string'>).value)
+      );
+      if (bypassReadonly) {
+        setValueFromAction(decoded);
+        return;
+      }
+      setInstanceValue(decoded);
     };
 
     this.getViolation = this.scope.runTask(() => {
       return createMemo(() => {
-        // TODO what order?
         const res = getInstanceValueResult();
         if (res instanceof Failure) {
           return { message: res.error.message, condition: 'error' } as ErrorViolation;

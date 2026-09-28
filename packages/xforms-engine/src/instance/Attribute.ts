@@ -79,7 +79,6 @@ export class Attribute
 
   override readonly getXPathValue: () => string;
   readonly setEncodedValue: (value: Result<'string'>, bypassReadonly?: boolean) => void;
-  protected valueErrorViolation: ErrorViolation | undefined;
 
   get validationState(): LeafNodeValidationState {
     return this.validation.currentState;
@@ -98,7 +97,7 @@ export class Attribute
 
     const codec = getSharedValueCodec('string');
 
-    this.validation = createValidationState(this, this.instanceConfig); // TODO attributes can throw errors now too - make sure this works
+    this.validation = createValidationState(this, this.instanceConfig);
 
     this.valueType = 'string';
     this.decodeInstanceValue = codec.decodeInstanceValue;
@@ -107,15 +106,13 @@ export class Attribute
     const [getInstanceValueResult, setInstanceValue] = instanceValueState;
 
     this.getInstanceValue = () => {
-      const res = getInstanceValueResult();
-      if (res instanceof Success) {
-        // TODO convert this to the new way
-        this.valueErrorViolation = undefined;
-        return (res as Success<'string'>).value;
+      const result = getInstanceValueResult();
+      if (result instanceof Success) {
+        return (result as Success<'string'>).value;
       }
-      this.valueErrorViolation = { valid: false, message: res.error!.message } as ErrorViolation;
       return '';
     };
+
     const valueState = codec.createRuntimeValueState(
       [
         this.getInstanceValue,
@@ -162,22 +159,22 @@ export class Attribute
     };
 
     this.setEncodedValue = (result: Result<'string'>, bypassReadonly = false) => {
-      if (result instanceof Success) {
-        const decodedValue = new Success<'string'>(
-          codec.decodeValue((result as Success<'string'>).value)
-        );
-        if (bypassReadonly) {
-          setValueFromAction(decodedValue);
-          return;
-        }
-        setInstanceValue(decodedValue);
+      if (!(result instanceof Success)) {
+        setInstanceValue(result);
+        return;
       }
-      setInstanceValue(result);
+      const decoded = new Success<'string'>(
+        this.decodeInstanceValue((result as Success<'string'>).value)
+      );
+      if (bypassReadonly) {
+        setValueFromAction(decoded);
+        return;
+      }
+      setInstanceValue(decoded);
     };
 
     this.getViolation = this.scope.runTask(() => {
       return createMemo(() => {
-        // TODO what order?
         const res = getInstanceValueResult();
         if (res instanceof Failure) {
           return { message: res.error.message, condition: 'error' } as ErrorViolation;

@@ -263,25 +263,23 @@ export abstract class DescendantNode<
       defaultValue: false,
     });
 
-    this.isSelfReadonly = () => readonlyResult().value ?? true;
-    this.isSelfRelevant = () => relevantResult().value ?? false;
-    this.isRequired = () => requiredResult().value ?? false;
+    this.isSelfReadonly = this.scope.runTask(() => {
+      return createMemo(() => readonlyResult().value ?? true);
+    });
+    this.isSelfRelevant = this.scope.runTask(() => {
+      return createMemo(() => relevantResult().value ?? false);
+    });
+    this.isRequired = this.scope.runTask(() => {
+      return createMemo(() => requiredResult().value ?? false);
+    });
 
     this.getBaseViolation = this.scope.runTask(() => {
       return createMemo(() => {
-        // TODO what order?
-        // TODO ugly
-        const readonlyR = readonlyResult();
-        if (readonlyR instanceof Failure) {
-          return { message: readonlyR.error.message, condition: 'error' } as ErrorViolation;
-        }
-        const relevantR = relevantResult();
-        if (relevantR instanceof Failure) {
-          return { message: relevantR.error.message, condition: 'error' } as ErrorViolation;
-        }
-        const requiredR = requiredResult();
-        if (requiredR instanceof Failure) {
-          return { message: requiredR.error.message, condition: 'error' } as ErrorViolation;
+        const firstFail = [readonlyResult, relevantResult, requiredResult]
+          .map((fn) => fn())
+          .find((result) => result instanceof Failure);
+        if (firstFail) {
+          return { message: firstFail.error.message, condition: 'error' } as ErrorViolation;
         }
         return null;
       });
@@ -339,6 +337,6 @@ export abstract class DescendantNode<
   }
 
   isBlank(): boolean {
-    return false; // TODO should this evaluate all children?
+    return false;
   }
 }

@@ -25,7 +25,6 @@ export interface ComputedExpressionResults {
   readonly string: string;
 }
 
-// TODO still think this deserves its own file
 export interface Result<Type extends DependentExpressionResultType> {
   readonly success: boolean;
   readonly value: ComputedExpressionResults[Type] | undefined;

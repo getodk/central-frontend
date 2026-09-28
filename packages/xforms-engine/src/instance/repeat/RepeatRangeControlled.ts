@@ -43,7 +43,6 @@ export class RepeatRangeControlled
     this.validationState = createAggregatedViolations(this, this.instanceConfig);
 
     this.getViolation = () => {
-      // TODO what order?
       const res = this.countResult();
       if (res instanceof Failure) {
         return { message: res.error.message, condition: 'error' } as ErrorViolation;
