@@ -29,7 +29,7 @@ jobs:
       - run: 'npm ci --no-audit'
 
       - name: Build packages
-        run: npm run build
+        run: npm run build:packages
 
       - name: Publish packages
         run: npm run changeset publish

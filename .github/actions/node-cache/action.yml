@@ -1,5 +1,5 @@
 name: Node cache
-description: Save or restore two caches, one with the installed npm packages, one with the build output
+description: Save or restore the cache of installed npm packages
 inputs:
   mode:
     description: either 'save' or 'restore'
@@ -24,15 +24,13 @@ runs:
     with:
       node-version-file: package.json
 
-  # Computing the keys in one place keeps the save and restore steps below in sync
+  # Computing the key in one place keeps the save and restore steps below in sync
   - id: keys
     shell: sh
     env:
-      INSTALL_KEY: install-${{ steps.setup-node.outputs.node-version }}-${{ hashFiles('package-lock.json', '.npmrc', 'packages/*/package-lock.json') }}
-      BUILD_KEY: build-${{ github.sha }}
+      INSTALL_KEY: install-${{ steps.setup-node.outputs.node-version }}-${{ hashFiles('package-lock.json', '.npmrc') }}
     run: |
       echo "install=$INSTALL_KEY" >> "$GITHUB_OUTPUT"
-      echo "build=$BUILD_KEY" >> "$GITHUB_OUTPUT"
 
   - if: ${{ inputs.mode == 'save' }}
     uses: 'actions/cache/save@v6'
@@ -42,23 +40,6 @@ runs:
         apps/*/node_modules
         packages/*/node_modules
       key: ${{ steps.keys.outputs.install }}
-
-  - if: ${{ inputs.mode == 'save' }}
-    uses: 'actions/cache/save@v6'
-    with:
-      path: |
-        dist
-        packages/*/dist
-      key: ${{ steps.keys.outputs.build }}
-
-  - if: ${{ inputs.mode == 'restore' }}
-    uses: 'actions/cache/restore@v6'
-    with:
-      path: |
-        dist
-        packages/*/dist
-      key: ${{ steps.keys.outputs.build }}
-      fail-on-cache-miss: true
 
   - if: ${{ inputs.mode == 'restore' }}
     uses: 'actions/cache/restore@v6'

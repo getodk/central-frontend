@@ -3,6 +3,9 @@
   "include": [
     "../common/src/**/*.ts",
     "../common/types/**/*.ts",
+    "../xforms-engine/src/**/*.ts",
+    "../xforms-engine/test/helpers/reactive/internal.ts",
+    "../xpath/src/**/*.ts",
     "env.d.ts",
     "src/**/*",
     "src/**/*.vue",
@@ -10,6 +13,7 @@
   ],
   "exclude": [
     "../common/src/test/**/*.ts",
+    "../xpath/src/**/*.d.ts",
     "node_modules",
     "../../node_modules",
     "src/**/__tests__/*"
@@ -27,7 +31,10 @@
       "@getodk/common/test-utils/*": ["../common/test-utils/*"],
       "@getodk/common/types/*": ["../common/types/*"],
       "@getodk/common/*": ["../common/src/*"],
-      "@getodk/web-forms/*": ["./src/*"]
+      "@getodk/web-forms/*": ["./src/*"],
+      "@getodk/xforms-engine": ["../xforms-engine/src"],
+      "@getodk/xpath": ["../xpath/src"],
+      "@getodk/xpath/*": ["../xpath/src/*"]
     },
     "types": ["node"],
     "skipLibCheck": true,

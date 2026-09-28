@@ -3,6 +3,9 @@
   "include": [
     "../common/src/**/*.ts",
     "../common/types/**/*.ts",
+    "../xforms-engine/src/**/*.ts",
+    "../xforms-engine/test/helpers/reactive/internal.ts",
+    "../xpath/src/**/*.ts",
     "env.d.ts",
     "src/components/__tests__",
     "e2e/app/**/*",
@@ -14,7 +17,7 @@
     "src/odk-theme-preset.ts",
     "src/web-forms-plugin.ts"
   ],
-  "exclude": ["../common/src/test/**/*.ts"],
+  "exclude": ["../common/src/test/**/*.ts", "../xpath/src/**/*.d.ts"],
   "compilerOptions": {
     "composite": true,
     "types": ["node", "vite/client"]

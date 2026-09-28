@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "      nf start vite,nginx",
     "dev:build": "nf start build,nginx",
-    "build": "turbo run build",
-    "build:web": "vite build",
+    "build": "vite build",
+    "build:packages": "npm run build -w packages/xpath -w packages/xforms-engine -w packages/web-forms",
     "changeset": "changeset",
     "eslint": "npm-run-all -p eslint:bin eslint:e2e-tests",
     "eslint:bin": "eslint bin/ *.js -c bin/eslint.config.js --cache --cache-location .bin.eslintcache --max-warnings 0",
@@ -66,7 +66,6 @@
     "npm-run-all2": "^8.0.4",
     "prettier": "^3.8.1",
     "rimraf": "^6.1.3",
-    "turbo": "^2.8.16",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.57.0",
     "vite": "^7.3.6",

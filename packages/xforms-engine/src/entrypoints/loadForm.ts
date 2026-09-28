@@ -31,7 +31,9 @@ if (typeof globalThis.fetch === 'function') {
   };
 }
 
-interface ResolvedOptions extends Required<LoadFormOptions> {}
+interface ResolvedOptions extends Required<Omit<LoadFormOptions, 'lastSavedXml'>> {
+  readonly lastSavedXml: string | undefined;
+}
 
 /**
  * Resolves {@link FormResultLoadOptions} from options directly passed by a
