@@ -29,7 +29,6 @@ import { InstanceNode } from './InstanceNode.ts';
 import { ActionDefinition } from '../../parse/model/ActionDefinition.ts';
 import { SET_GEOPOINT_LOCAL_NAME, SET_VALUE_LOCAL_NAME } from '../../parse/XFormDOM.ts';
 import { XFORM_EVENT } from '../../parse/model/Event.ts';
-import type { DependentExpression } from '../../parse/expression/abstract/DependentExpression.ts';
 import type { ValidationContext } from '../internal-api/ValidationContext.ts';
 import type { AnyViolation, ErrorViolation } from '../../client/validation.ts';
 import type { SharedValidationState } from '../../lib/reactivity/validation/createValidation.ts';
@@ -254,14 +253,14 @@ export abstract class DescendantNode<
 
     const { readonly, relevant, required } = definition.bind;
 
-    const readonlyResult = this.scope.runTask(() => {
-      return this.compute(readonly, true);
+    const readonlyResult = createComputedExpression(this, readonly, {
+      defaultValue: true,
     });
-    const relevantResult = this.scope.runTask(() => {
-      return this.compute(relevant, false);
+    const relevantResult = createComputedExpression(this, relevant, {
+      defaultValue: false,
     });
-    const requiredResult = this.scope.runTask(() => {
-      return this.compute(required, false);
+    const requiredResult = createComputedExpression(this, required, {
+      defaultValue: false,
     });
 
     this.isSelfReadonly = () => readonlyResult().value ?? true;
@@ -284,7 +283,7 @@ export abstract class DescendantNode<
         if (requiredR instanceof Failure) {
           return { message: requiredR.error.message, condition: 'error' } as ErrorViolation;
         }
-        return this.validation?.engineState.violation;
+        return null;
       });
     });
 
@@ -334,16 +333,9 @@ export abstract class DescendantNode<
     this.scope.dispose();
   }
 
-  private compute(expression: DependentExpression<'boolean'>, defaultValue: boolean) {
-    const computed = createComputedExpression(this, expression, { defaultValue });
-    return createMemo(() => {
-      return computed();
-    });
-  }
-
   // ValidationContext
   getViolation(): AnyViolation | null {
-    return this.getBaseViolation();
+    return this.getBaseViolation() ?? this.validation.engineState.violation;
   }
 
   isBlank(): boolean {

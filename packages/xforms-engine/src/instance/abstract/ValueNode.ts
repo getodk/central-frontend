@@ -157,7 +157,7 @@ export abstract class ValueNode<
         if (res instanceof Failure) {
           return { message: res.error.message, condition: 'error' } as ErrorViolation;
         }
-        return this.getBaseViolation();
+        return this.getBaseViolation() ?? this.validation.engineState.violation;
       });
     });
   }

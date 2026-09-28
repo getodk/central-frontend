@@ -30,14 +30,6 @@ const constraintValid = (): ConditionSatisfied<'constraint'> => {
   };
 };
 
-const requiredValid = (): ConditionSatisfied<'required'> => {
-  return {
-    condition: 'required',
-    valid: true,
-    message: null,
-  };
-};
-
 const createConstraintValidation = (
   context: ValidationContext
 ): ComputedConditionValidation<'constraint'> => {
@@ -71,6 +63,14 @@ const createConstraintValidation = (
       } as const;
     });
   });
+};
+
+const requiredValid = (): ConditionSatisfied<'required'> => {
+  return {
+    condition: 'required',
+    valid: true,
+    message: null,
+  };
 };
 
 const createRequiredValidation = (
