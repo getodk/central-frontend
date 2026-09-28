@@ -213,7 +213,7 @@ test.describe('Enketo', () => {
     // real example.com, which has changed its content in the past.
     await page.route(returnUrl, (route) => route.fulfill({
       contentType: 'text/html',
-      body: '<h1>Custom thank you page</h1>'
+      body: '<!DOCTYPE html><html><head><title>Thank you</title></head><body><h1>Custom thank you page</h1></body></html>'
     }));
 
     await page.goto(`${appUrl}/-/single/${publishedForm.enketoId}?st=${publicLink.token}&returnUrl=${returnUrl}`);
