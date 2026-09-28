@@ -12,7 +12,7 @@ import {
 import { assert, beforeEach, describe, expect, it } from 'vitest';
 import { InputNodeAnswer } from '../scenario/answer/InputNodeAnswer.ts';
 import { ModelValueNodeAnswer } from '../scenario/answer/ModelValueNodeAnswer.ts';
-import { Scenario } from '../scenario/jr/Scenario.ts';
+import { AnswerResult, Scenario } from '../scenario/jr/Scenario.ts';
 
 describe('Datetime bind type', () => {
   const formTitle = 'Datetime bind types';
@@ -132,6 +132,88 @@ describe('Datetime bind type', () => {
 
       expect(answer.value).toBeNull();
       expect(answer.stringValue).toBe('');
+    });
+  });
+
+  describe('comparisons keep the time component', () => {
+    const initDateTimeConstraintScenario = async (constraint: string) => {
+      const constraintScenario = await Scenario.init(
+        'DateTime constraint',
+        html(
+          head(
+            title('DateTime constraint'),
+            model(
+              mainInstance(
+                t('data id="datetime"', t('date_time'), t('reference', '2021-06-15T12:00:00.000Z'))
+              ),
+              bind('/data/date_time').type('dateTime').constraint(constraint),
+              bind('/data/reference').type('dateTime')
+            )
+          ),
+          body(input('/data/date_time'))
+        )
+      );
+
+      constraintScenario.next('/data/date_time');
+
+      return constraintScenario;
+    };
+
+    it('satisfies a dateTime constraint with an earlier time', async () => {
+      const constraintScenario = await initDateTimeConstraintScenario('. <= /data/reference');
+
+      expect(constraintScenario.answer('2021-06-15T11:00:00Z')).toHaveValidityStatus(
+        AnswerResult.OK
+      );
+    });
+
+    it('satisfies a dateTime constraint with the same time', async () => {
+      const constraintScenario = await initDateTimeConstraintScenario('. <= /data/reference');
+
+      expect(constraintScenario.answer('2021-06-15T12:00:00Z')).toHaveValidityStatus(
+        AnswerResult.OK
+      );
+    });
+
+    it('violates a dateTime constraint with a later time', async () => {
+      const constraintScenario = await initDateTimeConstraintScenario('. <= /data/reference');
+
+      expect(constraintScenario.answer('2021-06-15T13:00:00Z')).toHaveValidityStatus(
+        AnswerResult.CONSTRAINT_VIOLATED
+      );
+    });
+
+    it('violates a dateTime constraint with a later date', async () => {
+      const constraintScenario = await initDateTimeConstraintScenario('. <= /data/reference');
+
+      expect(constraintScenario.answer('2021-06-16T11:00:00Z')).toHaveValidityStatus(
+        AnswerResult.CONSTRAINT_VIOLATED
+      );
+    });
+
+    it('satisfies a greater-than-or-equal dateTime constraint with the same time', async () => {
+      const constraintScenario = await initDateTimeConstraintScenario('. >= /data/reference');
+
+      expect(constraintScenario.answer('2021-06-15T12:00:00Z')).toHaveValidityStatus(
+        AnswerResult.OK
+      );
+    });
+
+    it('violates a greater-than-or-equal dateTime constraint with an earlier time', async () => {
+      const constraintScenario = await initDateTimeConstraintScenario('. >= /data/reference');
+
+      expect(constraintScenario.answer('2021-06-15T11:00:00Z')).toHaveValidityStatus(
+        AnswerResult.CONSTRAINT_VIOLATED
+      );
+    });
+
+    it('violates a dateTime constraint compared to now() with a future time', async () => {
+      const constraintScenario = await initDateTimeConstraintScenario('. <= now()');
+      const oneHourFromNow = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+
+      expect(constraintScenario.answer(oneHourFromNow)).toHaveValidityStatus(
+        AnswerResult.CONSTRAINT_VIOLATED
+      );
     });
   });
 });
