@@ -25,7 +25,8 @@ except according to the terms contained in the LICENSE file.
             <span class="icon-plus-circle"></span>{{ $t('newEntity') }}
           </button>
           <toggle-switch v-if="deletedEntityCount.dataExists && canDelete && (deletedEntityCount.value > 0 || deleted)"
-            v-model="deleted" class="toggle-deleted-entities">
+            :model-value="deleted" class="toggle-deleted-entities"
+            @update:model-value="toggleDeleted">
             {{ $t('action.toggleDeletedEntities') }}
             <span class="badge">{{ deletedEntityCount.value }}</span>
           </toggle-switch>
@@ -178,6 +179,16 @@ export default {
         ),
         clear: false,
       }).catch(noop);
+    },
+    // Using $router.push to retain other query parameters when toggling the deleted filter
+    toggleDeleted(value) {
+      const query = { ...this.$route.query };
+      if (value) {
+        query.deleted = 'true';
+      } else {
+        delete query.deleted;
+      }
+      this.$router.push({ path: this.$route.path, query });
     }
   }
 };
@@ -236,6 +247,7 @@ export default {
     },
     "purgeDescription": "Entities are deleted after 30 days in the Trash",
     "action": {
+      // "deleted" refers to deleted Entities
       "toggleDeletedEntities": "Show deleted"
     },
     "analyzeDisabledDeletedData": "OData access is unavailable for deleted Entities",

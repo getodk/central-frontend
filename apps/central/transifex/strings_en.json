@@ -1870,7 +1870,7 @@
       "action": {
         "toggleDeletedEntities": {
           "string": "Show deleted",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "developer_comment": "\"deleted\" refers to deleted Entities"
         }
       },
       "analyzeDisabledDeletedData": {
@@ -4085,7 +4085,7 @@
       "action": {
         "toggleDeletedSubmissions": {
           "string": "Show deleted",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "developer_comment": "\"deleted\" refers to deleted Submissions"
         }
       }
     },

@@ -108,6 +108,24 @@ describe('DatasetEntities', () => {
         });
     });
 
+    it('retains other query parameters when toggling deleted', async () => {
+      testData.extendedDatasets.createPast(1, { name: 'trees' });
+      testData.extendedEntities.createPast(1);
+      testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() });
+      return load('/projects/1/entity-lists/trees/entities?conflict=true')
+        .complete()
+        .request((component) => {
+          const toggleInput = component.find('.toggle-deleted-entities input');
+          toggleInput.setValue(true);
+        })
+        .respondWithData(() => testData.entityDeletedOData())
+        .afterResponses((component) => {
+          const { deleted, conflict } = component.vm.$route.query;
+          deleted.should.be.equal('true');
+          conflict.should.be.equal('true');
+        });
+    });
+
     it('disables the odata access button when deleted entities are shown', async () => {
       testData.extendedDatasets.createPast(1, { name: 'trees' });
       testData.extendedEntities.createPast(1);

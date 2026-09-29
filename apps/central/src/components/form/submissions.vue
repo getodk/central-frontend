@@ -19,7 +19,8 @@ except according to the terms contained in the LICENSE file.
             <span class="icon-plus-circle"></span>{{ $t('action.createSubmission') }}
           </enketo-fill>
           <toggle-switch v-if="deletedSubmissionCount.dataExists && canDelete && (deletedSubmissionCount.value > 0 || deleted)"
-            v-model="deleted" class="toggle-deleted-submissions">
+            :model-value="deleted" class="toggle-deleted-submissions"
+            @update:model-value="toggleDeleted">
             {{ $t('action.toggleDeletedSubmissions') }}
             <span class="badge">{{ deletedSubmissionCount.value }}</span>
           </toggle-switch>
@@ -166,6 +167,16 @@ export default {
         ),
         clear: false,
       }).catch(noop);
+    },
+    // Using $router.push to retain other query parameters when toggling the deleted filter
+    toggleDeleted(value) {
+      const query = { ...this.$route.query };
+      if (value) {
+        query.deleted = 'true';
+      } else {
+        delete query.deleted;
+      }
+      this.$router.push({ path: this.$route.path, query });
     }
   }
 };
@@ -219,6 +230,7 @@ export default {
       "analyzeDisabledDeletedData": "OData access is unavailable for deleted Submissions",
       "purgeDescription": "Submissions and Submission-related data are deleted after 30 days in the Trash",
       "action": {
+        // "deleted" refers to deleted Submissions
         "toggleDeletedSubmissions": "Show deleted"
       }
     }

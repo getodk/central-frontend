@@ -175,6 +175,24 @@ describe('FormSubmissions', () => {
         });
     });
 
+    it('retains other query parameters when toggling deleted', async () => {
+      testData.extendedForms.createPast(1);
+      testData.extendedSubmissions.createPast(1);
+      testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() });
+      return load('/projects/1/forms/f/submissions?reviewState=approved')
+        .complete()
+        .request((component) => {
+          const toggleInput = component.find('.toggle-deleted-submissions input');
+          toggleInput.setValue(true);
+        })
+        .respondWithData(() => testData.submissionDeletedOData())
+        .afterResponses((component) => {
+          const { deleted, reviewState } = component.vm.$route.query;
+          deleted.should.be.equal('true');
+          reviewState.should.be.equal('approved');
+        });
+    });
+
     it('disables the odata access button when deleted submissions are shown', async () => {
       testData.extendedForms.createPast(1);
       testData.extendedSubmissions.createPast(1);

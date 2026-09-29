@@ -1,6 +1,6 @@
 <template>
   <label class="toggle-switch">
-    <input v-model="model" type="checkbox" role="switch" :aria-checked="model">
+    <input v-model="model" type="checkbox">
     <span class="toggle-track">
       <span class="toggle-thumb"></span>
     </span>
