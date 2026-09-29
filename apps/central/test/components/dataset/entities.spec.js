@@ -63,7 +63,7 @@ describe('DatasetEntities', () => {
       });
       const showDeletedButton = component.find('.toggle-deleted-entities');
       showDeletedButton.exists().should.be.true;
-      showDeletedButton.text().should.equal('1 deleted Entity');
+      showDeletedButton.text().should.equal('Show deleted 1');
     });
 
     it('updates the deleted count on refresh', async () => {
@@ -75,7 +75,7 @@ describe('DatasetEntities', () => {
       })
         .afterResponses((component) => {
           const showDeletedButton = component.find('.toggle-deleted-entities');
-          showDeletedButton.text().should.equal('1 deleted Entity');
+          showDeletedButton.text().should.equal('Show deleted 1');
         })
         .request((component) => {
           component.find('#refresh-button').trigger('click');
@@ -87,7 +87,7 @@ describe('DatasetEntities', () => {
         .respondWithData(() => testData.entityDeletedOData())
         .afterResponses((component) => {
           const showDeletedButton = component.find('.toggle-deleted-entities');
-          showDeletedButton.text().should.equal('2 deleted Entities');
+          showDeletedButton.text().should.equal('Show deleted 2');
         });
     });
 
@@ -98,13 +98,31 @@ describe('DatasetEntities', () => {
       return load('/projects/1/entity-lists/trees/entities')
         .complete()
         .request((component) => {
-          const showDeletedButton = component.find('.toggle-deleted-entities');
-          showDeletedButton.trigger('click');
+          const toggleInput = component.find('.toggle-deleted-entities input');
+          toggleInput.setValue(true);
         })
         .respondWithData(() => testData.entityDeletedOData())
         .afterResponses((component) => {
           const { deleted } = component.vm.$route.query;
           deleted.should.be.equal('true');
+        });
+    });
+
+    it('retains other query parameters when toggling deleted', async () => {
+      testData.extendedDatasets.createPast(1, { name: 'trees' });
+      testData.extendedEntities.createPast(1);
+      testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() });
+      return load('/projects/1/entity-lists/trees/entities?conflict=true')
+        .complete()
+        .request((component) => {
+          const toggleInput = component.find('.toggle-deleted-entities input');
+          toggleInput.setValue(true);
+        })
+        .respondWithData(() => testData.entityDeletedOData())
+        .afterResponses((component) => {
+          const { deleted, conflict } = component.vm.$route.query;
+          deleted.should.be.equal('true');
+          conflict.should.be.equal('true');
         });
     });
 
@@ -115,7 +133,7 @@ describe('DatasetEntities', () => {
       return load('/projects/1/entity-lists/trees/entities')
         .complete()
         .request((component) =>
-          component.find('.toggle-deleted-entities').trigger('click'))
+          component.find('.toggle-deleted-entities input').setValue(true))
         .respondWithData(() => testData.entityDeletedOData())
         .afterResponses((component) => {
           component.getComponent('#odata-data-access').props().analyzeDisabled.should.be.true;
@@ -129,7 +147,7 @@ describe('DatasetEntities', () => {
       return load('/projects/1/entity-lists/trees/entities')
         .complete()
         .request((component) =>
-          component.find('.toggle-deleted-entities').trigger('click'))
+          component.find('.toggle-deleted-entities input').setValue(true))
         .respondWithData(() => testData.entityDeletedOData())
         .afterResponses((component) => {
           component.find('#entity-download-button .btn-primary').classes().should.contain('disabled');

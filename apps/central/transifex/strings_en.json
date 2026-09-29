@@ -1869,8 +1869,8 @@
       },
       "action": {
         "toggleDeletedEntities": {
-          "string": "{count, plural, one {{count} deleted Entity} other {{count} deleted Entities}}",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "string": "Show deleted",
+          "developer_comment": "\"deleted\" refers to deleted Entities"
         }
       },
       "analyzeDisabledDeletedData": {
@@ -4084,8 +4084,8 @@
       },
       "action": {
         "toggleDeletedSubmissions": {
-          "string": "{count, plural, one {{count} deleted Submission} other {{count} deleted Submissions}}",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "string": "Show deleted",
+          "developer_comment": "\"deleted\" refers to deleted Submissions"
         }
       }
     },

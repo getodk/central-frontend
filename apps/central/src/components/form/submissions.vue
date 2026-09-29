@@ -18,14 +18,12 @@ except according to the terms contained in the LICENSE file.
           <enketo-fill v-if="rendersEnketoFill" :form-version="form">
             <span class="icon-plus-circle"></span>{{ $t('action.createSubmission') }}
           </enketo-fill>
-          <template v-if="deletedSubmissionCount.dataExists">
-            <button v-if="canDelete && (deletedSubmissionCount.value > 0 || deleted)" type="button"
-              class="btn toggle-deleted-submissions" :class="{ 'btn-danger': deleted, 'btn-link': !deleted }"
-              @click="toggleDeleted">
-              <span class="icon-trash"></span>{{ $tcn('action.toggleDeletedSubmissions', deletedSubmissionCount.value) }}
-              <span v-show="deleted" class="icon-close"></span>
-            </button>
-          </template>
+          <toggle-switch v-if="deletedSubmissionCount.dataExists && canDelete && (deletedSubmissionCount.value > 0 || deleted)"
+            :model-value="deleted" class="toggle-deleted-submissions"
+            @update:model-value="toggleDeleted">
+            {{ $t('action.toggleDeletedSubmissions') }}
+            <span class="badge">{{ deletedSubmissionCount.value }}</span>
+          </toggle-switch>
           <p v-show="deleted" class="purge-description">{{ $t('purgeDescription') }}</p>
           <div class="form-submissions-heading-row-right-side">
             <odata-data-access :analyze-disabled="hasEncryption || deleted"
@@ -56,6 +54,7 @@ import PageSection from '../page/section.vue';
 import OdataAnalyze from '../odata/analyze.vue';
 import OdataDataAccess from '../odata/data-access.vue';
 import SubmissionList from '../submission/list.vue';
+import ToggleSwitch from '../toggle-switch.vue';
 import useQueryRef from '../../composables/query-ref';
 import useSubmissions from '../../request-data/submissions';
 
@@ -73,6 +72,7 @@ export default {
     OdataDataAccess,
     PageSection,
     SubmissionList,
+    ToggleSwitch,
   },
   props: {
     projectId: {
@@ -168,9 +168,15 @@ export default {
         clear: false,
       }).catch(noop);
     },
-    toggleDeleted() {
-      const { path } = this.$route;
-      this.$router.push(this.deleted ? path : `${path}?deleted=true`);
+    // Using $router.push to retain other query parameters when toggling the deleted filter
+    toggleDeleted(value) {
+      const query = { ...this.$route.query };
+      if (value) {
+        query.deleted = 'true';
+      } else {
+        delete query.deleted;
+      }
+      this.$router.push({ path: this.$route.path, query });
     }
   }
 };
@@ -182,12 +188,13 @@ export default {
 #form-submissions {
   .toggle-deleted-submissions {
     margin-left: 8px;
+    margin-bottom: 0;
 
-    &.btn-link {
-      color: $color-danger;
+    .badge {
+      background-color: $color-action-light;
+      color: $color-text;
+      font-weight: normal;
     }
-
-    .icon-close { margin-left: 3px; }
   }
 
   .purge-description {
@@ -223,7 +230,8 @@ export default {
       "analyzeDisabledDeletedData": "OData access is unavailable for deleted Submissions",
       "purgeDescription": "Submissions and Submission-related data are deleted after 30 days in the Trash",
       "action": {
-        "toggleDeletedSubmissions": "{count} deleted Submission | {count} deleted Submissions"
+        // "deleted" refers to deleted Submissions
+        "toggleDeletedSubmissions": "Show deleted"
       }
     }
   }

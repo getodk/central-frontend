@@ -351,10 +351,10 @@ describe('SubmissionList', () => {
       return load('/projects/1/forms/f/submissions', { root: false, container: { router: testRouter() } })
         .complete()
         .request(component =>
-          component.get('.toggle-deleted-submissions').trigger('click'))
+          component.get('.toggle-deleted-submissions input').setValue(true))
         .respondWithData(testData.submissionDeletedOData)
         .afterResponses((component) => {
-          component.find('.toggle-deleted-submissions').text().should.equal('1 deleted Submission');
+          component.find('.toggle-deleted-submissions').text().should.equal('Show deleted 1');
           component.findAll('.table-freeze-scrolling tbody tr').length.should.be.equal(1);
         })
         .request(component =>
@@ -364,7 +364,7 @@ describe('SubmissionList', () => {
         })
         .respondWithData(testData.submissionDeletedOData)
         .afterResponses((component) => {
-          component.find('.toggle-deleted-submissions').text().should.equal('2 deleted Submissions');
+          component.find('.toggle-deleted-submissions').text().should.equal('Show deleted 2');
           component.findAll('.table-freeze-scrolling tbody tr').length.should.be.equal(2);
         });
     });
@@ -384,7 +384,7 @@ describe('SubmissionList', () => {
       return load('/projects/1/forms/f/submissions', { root: false, container: { router: testRouter() } })
         .complete()
         .request(component =>
-          component.get('.toggle-deleted-submissions').trigger('click'))
+          component.get('.toggle-deleted-submissions input').setValue(true))
         .respondWithData(testData.submissionDeletedOData)
         .afterResponses((component) => {
           component.find('#submission-download-button').attributes('aria-disabled').should.equal('true');
@@ -400,7 +400,7 @@ describe('SubmissionList', () => {
       return load('/projects/1/forms/f/submissions', { root: false, container: { router: testRouter() } })
         .complete()
         .request(component =>
-          component.get('.toggle-deleted-submissions').trigger('click'))
+          component.get('.toggle-deleted-submissions input').setValue(true))
         .respondWithData(testData.submissionDeletedOData)
         .afterResponses((component) => {
           component.getComponent('.radio-field').props().disabled.should.be.true;
@@ -698,7 +698,7 @@ describe('SubmissionList', () => {
       it('updates the submission count', async () => {
         const component = await restore();
         const text = component.get('.toggle-deleted-submissions').text();
-        text.should.equal('0 deleted Submissions');
+        text.should.equal('Show deleted 0');
       });
     });
 
