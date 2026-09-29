@@ -4,21 +4,23 @@ import type {
   AncestorNodeValidationState,
   DescendantNodeViolationReference,
 } from '../../../client/validation.ts';
-import type { AnyNode, AnyParentNode } from '../../../instance/hierarchy.ts';
+import type { Attribute } from '../../../instance/Attribute.ts';
+import type { PrimaryInstance } from '../../../instance/PrimaryInstance.ts';
+import type { AnyChildNode, AnyParentNode } from '../../../instance/hierarchy.ts';
 import { createSharedNodeState } from '../node-state/createSharedNodeState.ts';
 
-const nodeViolation = (node: AnyNode): DescendantNodeViolationReference | null => {
-  if (node.nodeType === 'primary-instance') {
-    return null;
-  }
+type ViolationReferences = DescendantNodeViolationReference[];
+
+type ReportingNode = Exclude<AnyChildNode | AnyParentNode, PrimaryInstance>;
+
+const addViolation = (node: Attribute | ReportingNode, references: ViolationReferences): void => {
   const violation = node.getViolation();
   if (!violation) {
-    return null;
+    return;
   }
 
-  const { nodeId } = node;
-  return {
-    nodeId,
+  references.push({
+    nodeId: node.nodeId,
     get node() {
       return node;
     },
@@ -26,36 +28,23 @@ const nodeViolation = (node: AnyNode): DescendantNodeViolationReference | null =
       return node.currentState.reference;
     },
     violation,
-  };
-};
-
-const nodeViolations = (node: AnyNode): DescendantNodeViolationReference[] => {
-  const violation = nodeViolation(node);
-  const attributeViolations = node.getAttributes().map((attribute) => nodeViolation(attribute));
-  return [violation, ...attributeViolations].filter((v) => !!v);
-};
-
-const collectViolationReferences = (
-  context: AnyParentNode
-): readonly DescendantNodeViolationReference[] => {
-  const violations = nodeViolations(context);
-  const childViolations = context.getChildren().flatMap((child) => {
-    switch (child.nodeType) {
-      case 'model-value':
-      case 'input':
-      case 'note':
-      case 'select':
-      case 'range':
-      case 'rank':
-      case 'trigger':
-      case 'upload':
-        // leaf node
-        return nodeViolations(child);
-      default:
-        return collectViolationReferences(child);
-    }
   });
-  return [...violations, ...childViolations];
+};
+
+const addViolations = (node: ReportingNode, references: ViolationReferences): void => {
+  addViolation(node, references);
+  node.getStaticAttributes().forEach((attribute) => addViolation(attribute, references));
+  node.getChildren().forEach((child) => addViolations(child, references));
+};
+
+const collectViolationReferences = (context: AnyParentNode): ViolationReferences => {
+  const references: ViolationReferences = [];
+  if (context.nodeType === 'primary-instance') {
+    context.getChildren().forEach((child) => addViolations(child, references));
+  } else {
+    addViolations(context, references);
+  }
+  return references;
 };
 
 interface AggregatedViolationsOptions {

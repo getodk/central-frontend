@@ -1,7 +1,7 @@
 import { XPathNodeKindKey } from '@getodk/xpath';
-import { createMemo, type Accessor } from 'solid-js';
+import type { Accessor } from 'solid-js';
 import type { AttributeNode } from '../client/AttributeNode.ts';
-import type { ErrorViolation, InstanceState, LeafNodeValidationState } from '../client/index.ts';
+import type { AncestorNodeValidationState, InstanceState } from '../client/index.ts';
 import type { XFormsXPathAttribute } from '../integration/xpath/adapter/XFormsXPathNode.ts';
 import type { StaticAttribute } from '../integration/xpath/static-dom/StaticAttribute.ts';
 import { createAttributeNodeInstanceState } from '../lib/client-reactivity/instance-state/createAttributeNodeInstanceState.ts';
@@ -30,11 +30,6 @@ import type { AttributeContext } from './internal-api/AttributeContext.ts';
 import type { DecodeInstanceValue } from './internal-api/InstanceValueContext.ts';
 import type { ClientReactiveSerializableAttributeNode } from './internal-api/serialization/ClientReactiveSerializableAttributeNode.ts';
 import type { Root } from './Root.ts';
-import {
-  createValidationState,
-  type SharedValidationState,
-} from '../lib/reactivity/validation/createValidation.ts';
-import { Failure, Success, type Result } from '../integration/xpath/EngineXPathEvaluator.ts';
 
 export interface AttributeStateSpec extends DescendantNodeStateSpec<string> {
   readonly children: null;
@@ -56,7 +51,7 @@ export class Attribute
 
   protected readonly state: SharedNodeState<AttributeStateSpec>;
   protected readonly engineState: EngineState<AttributeStateSpec>;
-  protected readonly validation: SharedValidationState;
+  readonly validationState: AncestorNodeValidationState;
 
   readonly nodeType = 'attribute';
   readonly currentState: CurrentState<AttributeStateSpec>;
@@ -78,11 +73,7 @@ export class Attribute
   };
 
   override readonly getXPathValue: () => string;
-  readonly setEncodedValue: (value: Result<'string'>, bypassReadonly?: boolean) => void;
-
-  get validationState(): LeafNodeValidationState {
-    return this.validation.currentState;
-  }
+  readonly setEncodedValue: (value: string, bypassReadonly?: boolean) => void;
 
   constructor(
     readonly owner: AnyNode,
@@ -97,35 +88,23 @@ export class Attribute
 
     const codec = getSharedValueCodec('string');
 
-    this.validation = createValidationState(this, this.instanceConfig);
+    this.validationState = { violations: [] };
 
     this.valueType = 'string';
     this.decodeInstanceValue = codec.decodeInstanceValue;
 
     const { valueState: instanceValueState, setValueFromAction } = createInstanceValueState(this);
-    const [getInstanceValueResult, setInstanceValue] = instanceValueState;
+    const [getInstanceValue] = instanceValueState;
 
-    this.getInstanceValue = () => {
-      const result = getInstanceValueResult();
-      if (result instanceof Success) {
-        return (result as Success<'string'>).value;
-      }
-      return '';
-    };
-
-    const valueState = codec.createRuntimeValueState(
-      [
-        this.getInstanceValue,
-        (value: string) => {
-          setValueFromAction(new Success<'string'>(value));
-          return value;
-        },
-      ],
+    const valueState = codec.createRuntimeValueState(instanceValueState, this);
+    const [, setActionValue] = codec.createRuntimeValueState(
+      [getInstanceValue, setValueFromAction],
       this
     );
 
     const [, setValueState] = valueState;
 
+    this.getInstanceValue = getInstanceValue;
     this.setValueState = setValueState;
     this.valueState = valueState;
 
@@ -155,33 +134,20 @@ export class Attribute
     this.attributeState = createAttributeState(this.scope);
 
     this.getXPathValue = () => {
-      return this.getInstanceValue() ?? '';
+      return this.getInstanceValue();
     };
-
-    this.setEncodedValue = (result: Result<'string'>, bypassReadonly = false) => {
-      if (!(result instanceof Success)) {
-        setInstanceValue(result);
-        return;
-      }
-      const decoded = new Success<'string'>(
-        this.decodeInstanceValue((result as Success<'string'>).value)
-      );
+    this.setEncodedValue = (value: string, bypassReadonly = false) => {
+      const decodedValue = codec.decodeValue(value);
       if (bypassReadonly) {
-        setValueFromAction(decoded);
+        setActionValue(decodedValue);
         return;
       }
-      setInstanceValue(decoded);
+      setValueState(decodedValue);
     };
+  }
 
-    this.getViolation = this.scope.runTask(() => {
-      return createMemo(() => {
-        const res = getInstanceValueResult();
-        if (res instanceof Failure) {
-          return { message: res.error.message, condition: 'error' } as ErrorViolation;
-        }
-        return this.getBaseViolation() ?? this.validation.engineState.violation;
-      });
-    });
+  protected override canReportViolation(): boolean {
+    return true;
   }
 
   setValue(value: string): Root {

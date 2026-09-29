@@ -42,10 +42,6 @@ import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { ClientReactiveSerializableParentNode } from '../internal-api/serialization/ClientReactiveSerializableParentNode.ts';
 import { lastReachablePage, type Page } from '../pagination/pageSequence.ts';
 import { RepeatInstance } from './RepeatInstance.ts';
-import {
-  createValidationState,
-  type SharedValidationState,
-} from '../../lib/reactivity/validation/createValidation.ts';
 
 interface RepeatRangeStateSpec extends DescendantNodeSharedStateSpec {
   readonly hint: null;
@@ -75,7 +71,6 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatDefinition>
 {
   protected readonly childrenState: ChildrenState<RepeatInstance>;
   protected readonly attributeState: AttributeState;
-  protected readonly validation: SharedValidationState;
 
   /**
    * A repeat range doesn't have a corresponding primary instance element of its
@@ -205,7 +200,6 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatDefinition>
       childrenState
     );
     this.instanceState = createNodeRangeInstanceState(this);
-    this.validation = createValidationState(this, this.instanceConfig);
   }
 
   private resolvePageBoundary(isUncontrolled: boolean): Accessor<PageBoundary> {
@@ -294,6 +288,15 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatDefinition>
         });
       });
     });
+  }
+
+  private getInstanceLabelError(): Error | null {
+    const errors = this.getChildren().map((instance) => instance.getLabelError());
+    return errors.find((error) => error != null) ?? null;
+  }
+
+  protected override getTextError(): Error | null {
+    return super.getTextError() ?? this.getInstanceLabelError();
   }
 
   getChildren(): readonly RepeatInstance[] {

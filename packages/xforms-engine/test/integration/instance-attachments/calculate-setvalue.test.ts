@@ -24,8 +24,8 @@ import { constants as ENGINE_CONSTANTS } from '@getodk/xforms-engine';
 import { afterEach, assert, beforeEach, describe, expect, it } from 'vitest';
 import { JRResource } from '../../scenario/fixtures/JRResource.ts';
 import { JRResourceService } from '../../scenario/fixtures/JRResourceService.ts';
+import { ANSWER_OK } from '../../scenario/jr/validation/ValidateOutcome.ts';
 import { ReactiveScenario } from '../../scenario/reactive/ReactiveScenario.ts';
-import { ANSWER_CALCULATION_ERROR } from '../../scenario/jr/validation/ValidateOutcome.ts';
 
 describe('Instance attachments with calculate and setvalue', () => {
   const KOALA_URL = 'jr://images/koala.jpg';
@@ -322,7 +322,7 @@ describe('Instance attachments with calculate and setvalue', () => {
   });
 
   describe('readonly', () => {
-    it('accepts the calculation and rejects client writes', async () => {
+    it('accepts the calculation and ignores client writes', async () => {
       const scenario = await ReactiveScenario.init(
         'Readonly photo',
         animalPhotoForm(
@@ -335,10 +335,8 @@ describe('Instance attachments with calculate and setvalue', () => {
 
       expect(photo.currentState.instanceValue).toBe(KOALA_URL);
       scenario.answer('/data/photo', new File(['mine'], 'mine.jpg', { type: 'image/jpeg' }));
-      const validate = scenario.getValidationOutcome();
-      expect(validate.failedPrompt).toBe(scenario.indexOf('/data/photo'));
-      expect(validate.outcome).toBe(ANSWER_CALCULATION_ERROR);
-      expect(photo.currentState.instanceValue).toBe('');
+      expect(photo.currentState.instanceValue).toBe(KOALA_URL);
+      expect(scenario.getValidationOutcome().outcome).toBe(ANSWER_OK);
     });
   });
 

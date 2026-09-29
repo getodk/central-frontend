@@ -1,9 +1,9 @@
 import { XPathNodeKindKey } from '@getodk/xpath';
-import { createMemo, type Accessor } from 'solid-js';
+import type { Accessor } from 'solid-js';
 import type { BaseValueNode } from '../../client/BaseValueNode.ts';
 import type { LeafNodeType as ValueNodeType } from '../../client/node-types.ts';
 import type { InstanceState } from '../../client/serialization/InstanceState.ts';
-import type { ErrorViolation, LeafNodeValidationState } from '../../client/validation.ts';
+import type { AnyViolation, LeafNodeValidationState } from '../../client/validation.ts';
 import type { ValueType } from '../../client/ValueType.ts';
 import type { XFormsXPathElement } from '../../integration/xpath/adapter/XFormsXPathNode.ts';
 import type { StaticLeafElement } from '../../integration/xpath/static-dom/StaticElement.ts';
@@ -18,6 +18,8 @@ import type { CurrentState } from '../../lib/reactivity/node-state/createCurrent
 import type { EngineState } from '../../lib/reactivity/node-state/createEngineState.ts';
 import type { SharedNodeState } from '../../lib/reactivity/node-state/createSharedNodeState.ts';
 import type { SimpleAtomicState } from '../../lib/reactivity/types.ts';
+import type { SharedValidationState } from '../../lib/reactivity/validation/createValidation.ts';
+import { createValidationState } from '../../lib/reactivity/validation/createValidation.ts';
 import { LeafNodeDefinition } from '../../parse/model/LeafNodeDefinition.ts';
 import type { Attribute } from '../Attribute.ts';
 import type { GeneralParentNode } from '../hierarchy.ts';
@@ -30,11 +32,6 @@ import type { ClientReactiveSerializableValueNode } from '../internal-api/serial
 import type { ValidationContext } from '../internal-api/ValidationContext.ts';
 import type { DescendantNodeStateSpec } from './DescendantNode.ts';
 import { DescendantNode } from './DescendantNode.ts';
-import {
-  createValidationState,
-  type SharedValidationState,
-} from '../../lib/reactivity/validation/createValidation.ts';
-import { Failure, Success, type Result } from '../../integration/xpath/EngineXPathEvaluator.ts';
 
 export type ValueNodeDefinition<V extends ValueType> = LeafNodeDefinition<V>;
 
@@ -89,7 +86,7 @@ export abstract class ValueNode<
   readonly instanceState: InstanceState;
 
   // Write path for `xforms-value-changed` actions targeting this node; permitted while readonly too.
-  readonly setEncodedValue: (value: Result<'string'>, bypassReadonly?: boolean) => void;
+  readonly setEncodedValue: (value: string, bypassReadonly?: boolean) => void;
 
   constructor(
     parent: GeneralParentNode,
@@ -108,28 +105,12 @@ export abstract class ValueNode<
     this.decodeInstanceValue = codec.decodeInstanceValue;
 
     const { valueState: instanceValueState, setValueFromAction } = createInstanceValueState(this);
-    const [getInstanceValueResult, setInstanceValue] = instanceValueState;
+    const [getInstanceValue, setInstanceValue] = instanceValueState;
 
-    this.getInstanceValue = this.scope.runTask(() => {
-      return createMemo(() => {
-        const result = getInstanceValueResult();
-        if (result instanceof Success) {
-          return (result as Success<'string'>).value;
-        }
-        return '';
-      });
-    });
-    const valueState = codec.createRuntimeValueState(
-      [
-        this.getInstanceValue,
-        (value: string) => {
-          setInstanceValue(new Success<'string'>(value));
-          return value;
-        },
-      ],
-      this
-    );
+    const valueState = codec.createRuntimeValueState(instanceValueState, this);
     const [, setValueState] = valueState;
+
+    this.getInstanceValue = getInstanceValue;
     this.setValueState = setValueState;
     this.getXPathValue = () => {
       return this.getInstanceValue();
@@ -138,39 +119,31 @@ export abstract class ValueNode<
     this.validation = createValidationState(this, this.instanceConfig);
     this.instanceState = createValueNodeInstanceState(this);
 
-    this.setEncodedValue = (result: Result<'string'>, bypassReadonly = false) => {
-      if (!(result instanceof Success)) {
-        setInstanceValue(result);
-        return;
-      }
-      const decoded = new Success<'string'>(
-        this.decodeInstanceValue((result as Success<'string'>).value)
-      );
+    this.setEncodedValue = (value: string, bypassReadonly = false) => {
+      const instanceValue = this.decodeInstanceValue(value);
       if (bypassReadonly) {
-        setValueFromAction(decoded);
+        setValueFromAction(instanceValue);
         return;
       }
-      setInstanceValue(decoded);
+      setInstanceValue(instanceValue);
     };
+  }
 
-    this.getViolation = this.scope.runTask(() => {
-      return createMemo(() => {
-        const res = getInstanceValueResult();
-        if (res instanceof Failure) {
-          return { message: res.error.message, condition: 'error' } as ErrorViolation;
-        }
-        return this.getBaseViolation() ?? this.validation.engineState.violation;
-      });
-    });
+  protected override canReportViolation(): boolean {
+    return true;
+  }
+
+  protected override getValidationViolation(): AnyViolation | null {
+    return this.validation.engineState.violation;
+  }
+
+  // ValidationContext
+  isBlank(): boolean {
+    return this.getInstanceValue() === '';
   }
 
   // InstanceNode
   getChildren(): readonly [] {
     return [];
-  }
-
-  // ValidationContext
-  override isBlank(): boolean {
-    return this.getInstanceValue() === '';
   }
 }

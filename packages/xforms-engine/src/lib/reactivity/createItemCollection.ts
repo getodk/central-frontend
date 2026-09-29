@@ -11,18 +11,36 @@ import type { SelectControl } from '../../instance/SelectControl.ts';
 import { TextChunk } from '../../instance/text/TextChunk.ts';
 import { TextRange } from '../../instance/text/TextRange.ts';
 import type { EngineXPathNode } from '../../integration/xpath/adapter/kind.ts';
-import {
-  Success,
-  type EngineXPathEvaluator,
-  type Result,
-} from '../../integration/xpath/EngineXPathEvaluator.ts';
+import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
 import type { ItemDefinition } from '../../parse/body/control/ItemDefinition.ts';
 import type { ItemsetDefinition } from '../../parse/body/control/ItemsetDefinition.ts';
-import { createComputedExpression } from './createComputedExpression.ts';
+import { createComputedExpression, type ComputedExpression } from './createComputedExpression.ts';
 import type { ReactiveScope } from './scope.ts';
 import { createTextRange } from './text/createTextRange.ts';
 
 type ItemCollectionControl = RankControl | SelectControl;
+
+const labelError = (label: ClientTextRange<'item-label'>): Error | null => {
+  return label instanceof TextRange ? label.error : null;
+};
+
+type ItemProperty = [string, ComputedExpression<'string'>];
+
+const itemError = (
+  value: ComputedExpression<'string'>,
+  properties: readonly ItemProperty[],
+  label: Accessor<ClientTextRange<'item-label'>>
+): Error | null => {
+  const propertyError = properties.map(([, property]) => property.error()).find(Boolean);
+  return value.error() ?? propertyError ?? labelError(label());
+};
+
+const registerItemsError = (
+  control: ItemCollectionControl,
+  errors: Accessor<Array<Error | null>>
+) => {
+  control.registerExpressionError(createMemo(() => errors().find(Boolean) ?? null));
+};
 type DerivedItemLabel = ClientTextRange<'item-label'>;
 
 const derivedItemLabel = (context: TranslationContext, value: string): DerivedItemLabel => {
@@ -60,9 +78,12 @@ const createTranslatedStaticItems = (
       });
     });
 
-    return createMemo(() => {
+    const computedItems = createMemo(() => {
       return labeledItems.map((item) => item());
     });
+    registerItemsError(control, () => computedItems().map((item) => labelError(item.label)));
+
+    return computedItems;
   });
 };
 
@@ -88,18 +109,13 @@ class ItemsetItemEvaluationContext implements EvaluationContext {
 const createItemsetItemLabel = (
   context: EvaluationContext,
   definition: ItemsetDefinition,
-  itemValue: Accessor<Result<'string'>>
+  itemValue: Accessor<string>
 ): Accessor<ClientTextRange<'item-label'>> => {
   const { label } = definition;
 
   if (label == null) {
     return createMemo(() => {
-      const result = itemValue();
-      if (result instanceof Success) {
-        return derivedItemLabel(context, (result as Success<'string'>).value);
-      }
-      // TODO handle error
-      return derivedItemLabel(context, '');
+      return derivedItemLabel(context, itemValue());
     });
   }
 
@@ -107,9 +123,10 @@ const createItemsetItemLabel = (
 };
 
 interface ItemsetItem {
+  error(): Error | null;
   label(): ClientTextRange<'item-label'>;
-  value(): Result<'string'>;
-  properties: Array<[string, () => Result<'string'>]>;
+  value(): string;
+  properties: Array<[string, () => string]>;
 }
 
 const MAX_CHANGES_PER_UPDATE = 100;
@@ -131,23 +148,21 @@ const createCycleGuardedItemNodes = (
   let changeCount = 0;
   const itemNodes = createMemo((previous?: EngineXPathNode[]) => {
     const result = evaluateNodes();
-    if (!(result instanceof Success)) {
-      // control.setError('itemset', result.error!); TODO handle
-      return previous ?? [];
+    if (evaluateNodes.error() && previous) {
+      return previous;
     }
-    const { value } = result as Success<'nodes'>;
     if (previous === undefined) {
-      return value;
+      return result;
     }
-    if (nodeListsEqual(value, previous)) {
+    if (nodeListsEqual(result, previous)) {
       return previous;
     }
     changeCount += 1;
     if (changeCount <= MAX_CHANGES_PER_UPDATE) {
-      return value;
+      return result;
     }
     // Settle on the phase showing more options, so a filtered-out answer stays visible.
-    return value.length > previous.length ? value : previous;
+    return result.length > previous.length ? result : previous;
   });
   createEffect(on(itemNodes, () => (changeCount = 0)));
 
@@ -175,13 +190,13 @@ const createItemsetItems = (
             .getXPathChildNodes()
             .filter((node) => node.nodeType === 'static-element');
           const properties = itemset.getPropertiesExpressions(nodeElements).map((expression) => {
-            return [expression.toString(), createComputedExpression(context, expression)] as [
-              string,
-              () => Result<'string'>,
-            ];
+            return [
+              expression.toString(),
+              createComputedExpression(context, expression),
+            ] as ItemProperty;
           });
-
           return {
+            error: () => itemError(value, properties, label),
             label,
             value,
             properties,
@@ -198,29 +213,16 @@ const createItemset = (
 ): Accessor<readonly BaseItem[]> => {
   return control.scope.runTask(() => {
     const itemsetItems = createItemsetItems(control, itemset);
+    registerItemsError(control, () => itemsetItems().map((item) => item.error()));
 
     return createMemo(() => {
       return itemsetItems().map((item) => {
-        const valueResult = item.value();
-        let value;
-        if (valueResult instanceof Success) {
-          value = (valueResult as Success<'string'>).value;
-        } else {
-          // control.setError('itemset', valueResult.error!); TODO handle
-          value = '';
-        }
-        const properties = item.properties.map(([propLabel, propValue]) => {
-          const propResult = propValue();
-          if (propResult instanceof Success) {
-            return [propLabel, propResult.value] as [string, string];
-          }
-          // control.setError('itemset', propResult.error!); TODO handle
-          return [propLabel, ''] as [string, string];
-        });
         return {
           label: item.label(),
-          value,
-          properties,
+          value: item.value(),
+          properties: item.properties.map(
+            ([propLabel, propValue]) => [propLabel, propValue()] as [string, string]
+          ),
         };
       });
     });

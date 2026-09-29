@@ -3,24 +3,29 @@ import type { Accessor } from 'solid-js';
 import { createMemo } from 'solid-js';
 import type { EvaluationContext } from '../../instance/internal-api/EvaluationContext.ts';
 import type { EngineXPathNode } from '../../integration/xpath/adapter/kind.ts';
-import type {
-  ComputedExpressionResults,
-  EngineXPathEvaluator,
-  Result,
-  Success,
-} from '../../integration/xpath/EngineXPathEvaluator.ts';
+import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
 import type {
   DependentExpression,
   DependentExpressionResultType,
 } from '../../parse/expression/abstract/DependentExpression.ts';
 import { isConstantExpression } from '../../parse/xpath/semantic-analysis.ts';
 
-type EvaluatedExpression<Type extends DependentExpressionResultType> =
-  ComputedExpressionResults[Type];
+interface ComputedExpressionResults {
+  readonly boolean: boolean;
+  readonly nodes: EngineXPathNode[];
+  readonly number: number;
+  readonly string: string;
+}
 
-type ExpressionEvaluator<Type extends DependentExpressionResultType> = (
-  defaultValue?: EvaluatedExpression<Type>
-) => Result<Type>;
+// prettier-ignore
+type EvaluatedExpression<
+	Type extends DependentExpressionResultType
+> = ComputedExpressionResults[Type];
+
+// prettier-ignore
+type ExpressionEvaluator<
+	Type extends DependentExpressionResultType
+> = (defaultValue?: EvaluatedExpression<Type>) => EvaluatedExpression<Type>;
 
 interface ExpressionEvaluatorOptions {
   get contextNode(): EngineXPathNode;
@@ -78,6 +83,37 @@ const defaultEvaluationsByType: DefaultEvaluationsByType = {
   string: DEFAULT_STRING_EVALUATION,
 };
 
+export interface ComputedExpression<Type extends DependentExpressionResultType> extends Accessor<
+  EvaluatedExpression<Type>
+> {
+  readonly error: Accessor<Error | null>;
+}
+
+export interface Evaluation<Type extends DependentExpressionResultType> {
+  readonly value: EvaluatedExpression<Type>;
+  readonly error: Error | null;
+}
+
+const isSameEvaluation = <Type extends DependentExpressionResultType>(
+  previous: Evaluation<Type>,
+  current: Evaluation<Type>
+): boolean => {
+  return previous.value === current.value && previous.error?.message === current.error?.message;
+};
+
+const evaluateOrFallback = <Type extends DependentExpressionResultType>(
+  evaluate: ExpressionEvaluator<Type>,
+  fallback: EvaluatedExpression<Type>,
+  isAttached: boolean
+): Evaluation<Type> => {
+  try {
+    return { value: isAttached ? evaluate() : evaluate(fallback), error: null };
+  } catch (error) {
+    // Unattached nodes are expected to fail, they are evaluated again once attached.
+    return { value: fallback, error: isAttached ? (error as Error) : null };
+  }
+};
+
 interface CreateComputedExpressionOptions<Type extends DependentExpressionResultType> {
   /**
    * If a default value is provided, {@link createComputedExpression} will
@@ -95,36 +131,71 @@ interface CreateComputedExpressionOptions<Type extends DependentExpressionResult
   readonly defaultValue?: EvaluatedExpression<Type>;
 }
 
+const createConstantExpression = <Type extends DependentExpressionResultType>(
+  context: EvaluationContext,
+  evaluation: Evaluation<Type>
+): ComputedExpression<Type> => {
+  const error = () => evaluation.error;
+  if (evaluation.error) {
+    context.registerExpressionError?.(error);
+  }
+  return Object.assign(() => evaluation.value, { error });
+};
+
+const evaluateInContext = <Type extends DependentExpressionResultType>(
+  context: EvaluationContext,
+  dependentExpression: DependentExpression<Type>,
+  options: CreateComputedExpressionOptions<Type>
+): Evaluation<Type> => {
+  const { contextNode, evaluator } = context;
+  const { expression, isTranslated, resultType } = dependentExpression;
+  const evaluate = expressionEvaluator(evaluator, resultType, expression, { contextNode });
+  const fallback = options.defaultValue ?? defaultEvaluationsByType[resultType];
+
+  if (isConstantExpression(expression)) {
+    return evaluateOrFallback(evaluate, fallback, true);
+  }
+  if (isTranslated) {
+    context.getActiveLanguage();
+  }
+  return evaluateOrFallback(evaluate, fallback, context.isAttached());
+};
+
+// Evaluates in the computation of the caller, which tracks the dependencies and reads the error.
+export const evaluateExpression = <Type extends DependentExpressionResultType>(
+  context: EvaluationContext,
+  dependentExpression: DependentExpression<Type>
+): Evaluation<Type> => {
+  return evaluateInContext(context, dependentExpression, {});
+};
+
+const createReactiveExpression = <Type extends DependentExpressionResultType>(
+  context: EvaluationContext,
+  dependentExpression: DependentExpression<Type>,
+  options: CreateComputedExpressionOptions<Type>
+): ComputedExpression<Type> => {
+  const evaluation = createMemo(
+    () => evaluateInContext(context, dependentExpression, options),
+    undefined,
+    { equals: isSameEvaluation }
+  );
+  const error = () => evaluation().error;
+  context.registerExpressionError?.(error);
+
+  return Object.assign(() => evaluation().value, { error });
+};
+
 export const createComputedExpression = <Type extends DependentExpressionResultType>(
   context: EvaluationContext,
   dependentExpression: DependentExpression<Type>,
   options: CreateComputedExpressionOptions<Type> = {}
-): Accessor<Result<Type>> => {
+): ComputedExpression<Type> => {
+  if (isConstantExpression(dependentExpression.expression)) {
+    const evaluation = evaluateInContext(context, dependentExpression, options);
+    return createConstantExpression(context, evaluation);
+  }
+
   return context.scope.runTask(() => {
-    const { contextNode, evaluator } = context;
-    const { expression, isTranslated, resultType } = dependentExpression;
-    const evaluateExpression = expressionEvaluator(evaluator, resultType, expression, {
-      contextNode,
-    });
-
-    if (isConstantExpression(expression)) {
-      return createMemo(() => evaluateExpression());
-    }
-
-    return createMemo(() => {
-      if (isTranslated) {
-        context.getActiveLanguage();
-      }
-      if (context.isAttached()) {
-        return evaluateExpression();
-      }
-      const defaultValue = options?.defaultValue ?? defaultEvaluationsByType[resultType];
-      try {
-        return evaluateExpression(defaultValue);
-      } catch {
-        // likely because it's not yet attached - try again later
-        return { success: true, value: defaultValue } as Success<Type>;
-      }
-    });
+    return createReactiveExpression(context, dependentExpression, options);
   });
 };

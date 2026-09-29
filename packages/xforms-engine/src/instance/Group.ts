@@ -30,10 +30,6 @@ import { buildChildren } from './children/buildChildren.ts';
 import type { GeneralChildNode, GeneralParentNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { ClientReactiveSerializableParentNode } from './internal-api/serialization/ClientReactiveSerializableParentNode.ts';
-import {
-  createValidationState,
-  type SharedValidationState,
-} from '../lib/reactivity/validation/createValidation.ts';
 
 // prettier-ignore
 interface GroupStateSpec extends DescendantNodeSharedStateSpec {
@@ -55,7 +51,6 @@ export class Group
     ClientReactiveSerializableParentNode<GeneralChildNode>
 {
   private readonly childrenState: ChildrenState<GeneralChildNode>;
-  protected readonly validation: SharedValidationState;
 
   override readonly [XPathNodeKindKey] = 'element';
 
@@ -112,7 +107,6 @@ export class Group
       state.currentState,
       childrenState
     );
-    this.validation = createValidationState(this, this.instanceConfig);
 
     childrenState.setChildren(buildChildren(this));
     this.attributeState.setAttributes(buildAttributes(this));
