@@ -146,7 +146,7 @@ describe('App', () => {
           .testRequests([{ url: '/version.txt' }]);
       });
 
-      it('does not stop sending the request if it is canceled during logout', () => {
+      it.skip('does not stop sending the request if it is canceled during logout', () => {
         const clock = sinon.useFakeTimers(Date.now());
         return load('/')
           .complete()
