@@ -25,8 +25,7 @@ export const createNoteReadonlyThunk = (
 
     const computedExpression = createComputedExpression(context, readonly);
 
-    const res = computedExpression();
-    if (!res.success || res.value !== true) {
+    if (computedExpression() !== true) {
       throw new Error(`Expected expression ${readonly.expression} to return true`);
     }
   }

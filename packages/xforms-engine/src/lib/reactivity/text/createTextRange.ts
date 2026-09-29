@@ -13,26 +13,47 @@ import { TextChunk } from '../../../instance/text/TextChunk.ts';
 import { TextRange, type MediaSources } from '../../../instance/text/TextRange.ts';
 import { TextChunkExpression } from '../../../parse/expression/TextChunkExpression.ts';
 import type { TextRangeDefinition } from '../../../parse/text/abstract/TextRangeDefinition.ts';
-import { createComputedExpression } from '../createComputedExpression.ts';
-import { Success } from '../../../integration/xpath/EngineXPathEvaluator.ts';
+import { evaluateExpression } from '../createComputedExpression.ts';
 
 interface ChunksAndMedia {
   chunks: readonly TextChunk[];
   mediaSources: MediaSources;
+  error: Error | null;
 }
 
-const generateResourceChunk = (context: EvaluationContext, child: Element, type: ResourceType) => {
+const computeChunk = (
+  context: EvaluationContext,
+  expression: TextChunkExpression<'string'>,
+  errors: Error[]
+): string => {
+  const { value, error } = evaluateExpression(context, expression);
+  if (error) {
+    errors.push(error);
+  }
+  return value;
+};
+
+const computeItextId = (context: EvaluationContext, expression: string, errors: Error[]) => {
+  try {
+    return context.evaluator.evaluateString(expression, { contextNode: context.contextNode });
+  } catch (error) {
+    errors.push(error as Error);
+    return null;
+  }
+};
+
+const generateResourceChunk = (
+  context: EvaluationContext,
+  child: Element,
+  type: ResourceType,
+  errors: Error[]
+) => {
   const parts = [];
   for (const grandchild of child.childNodes) {
     if (isElementNode(grandchild)) {
       const expression = TextChunkExpression.fromOutput(grandchild);
       if (expression) {
-        const result = createComputedExpression(context, expression)();
-        if (result.success) {
-          parts.push(result.value);
-        } else {
-          // context.setError('label', result.error!); TODO handle
-        }
+        parts.push(computeChunk(context, expression, errors));
       }
     } else if (isTextNode(grandchild)) {
       parts.push(grandchild.data);
@@ -54,13 +75,14 @@ const generateChunk = (node: Node): TextChunkExpression<'string'> | null => {
 
 const generateChunksForTranslation = (
   context: EvaluationContext,
-  textElement: Element
+  textElement: Element,
+  errors: Error[]
 ): Array<TextChunkExpression<'string'>> => {
   const chunks = [];
   for (const child of textElement.children) {
     const formAttribute = child.getAttribute('form') as ResourceType;
     if (isResourceType(formAttribute)) {
-      chunks.push(generateResourceChunk(context, child, formAttribute));
+      chunks.push(generateResourceChunk(context, child, formAttribute, errors));
     } else {
       for (const grandchild of child.childNodes) {
         const chunk = generateChunk(grandchild);
@@ -75,22 +97,20 @@ const generateChunksForTranslation = (
 
 const getChunkExpressions = <Role extends TextRole>(
   context: EvaluationContext,
-  definition: TextRangeDefinition<Role>
+  definition: TextRangeDefinition<Role>,
+  errors: Error[]
 ): ReadonlyArray<TextChunkExpression<'string'>> => {
   if (definition.chunks[0]?.source !== 'translation') {
     // only translations have 'nodes' chunks
     return definition.chunks as Array<TextChunkExpression<'string'>>;
   }
-  const result = context.evaluator.evaluateString(definition.chunks[0].toString()!, {
-    contextNode: context.contextNode,
-  });
-  if (!(result instanceof Success)) {
-    // context.setError('label', result.error!); TODO handle
+  const itextId = computeItextId(context, definition.chunks[0].toString()!, errors);
+  if (itextId == null) {
     return [];
   }
   const lang = context.getActiveLanguage();
-  const elem = definition.form.model.getItextElement(lang, (result as Success<'string'>).value);
-  return elem ? generateChunksForTranslation(context, elem) : [];
+  const elem = definition.form.model.getItextElement(lang, itextId);
+  return elem ? generateChunksForTranslation(context, elem, errors) : [];
 };
 
 /**
@@ -108,7 +128,8 @@ const createTextChunks = <Role extends TextRole>(
 ): ChunksAndMedia => {
   const chunks: TextChunk[] = [];
   const mediaSources: MediaSources = {};
-  const chunkExpressions = getChunkExpressions(context, definition);
+  const errors: Error[] = [];
+  const chunkExpressions = getChunkExpressions(context, definition, errors);
   chunkExpressions.forEach((chunkExpression) => {
     if (chunkExpression.resourceType) {
       const url = chunkExpression.stringValue?.trim();
@@ -123,16 +144,10 @@ const createTextChunks = <Role extends TextRole>(
       return;
     }
 
-    const computed = createComputedExpression(context, chunkExpression)();
-    if (!(computed instanceof Success)) {
-      // context.setError('label', computed.error!); TODO handle
-      return;
-    }
-    chunks.push(
-      new TextChunk(context, chunkExpression.source, (computed as Success<'string'>).value)
-    );
+    const computed = computeChunk(context, chunkExpression, errors);
+    chunks.push(new TextChunk(context, chunkExpression.source, computed));
   });
-  return { chunks, mediaSources };
+  return { chunks, mediaSources, error: errors[0] ?? null };
 };
 
 type ComputedFormTextRange<Role extends TextRole> = Accessor<TextRange<Role>>;
@@ -151,7 +166,7 @@ export const createTextRange = <Role extends TextRole>(
   return context.scope.runTask(() => {
     return createMemo(() => {
       const chunks = createTextChunks(context, definition);
-      return new TextRange(role, chunks.chunks, chunks.mediaSources);
+      return new TextRange(role, chunks.chunks, chunks.mediaSources, chunks.error);
     });
   });
 };
