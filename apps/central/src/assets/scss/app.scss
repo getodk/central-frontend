@@ -999,31 +999,3 @@ becomes more complicated.
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// TABLE PAGINATION
-
-.pagination-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.fixed-pagination-container {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: $color-page-background;
-  padding: 10px $padding-inline-container;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.pagination-container-right-side {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-left: auto;
-}

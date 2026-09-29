@@ -29,35 +29,30 @@ except according to the terms contained in the LICENSE file.
         {{ emptyMessage }}
       </p>
 
-      <page-section>
-        <template #body>
-          <entity-table-view v-if="dataView === 'table'" ref="view"
-            v-model:all-selected="allSelected" :deleted="deleted"
-            :filter="odataFilter" :search-term="searchTerm" :view-as="viewAs"
-            :awaiting-responses="awaitingResponses"
-            @selection-changed="handleSelectionChange"
-            @clear-selection="clearSelectedEntities"
-            @update="showUpdate" @resolve="showResolve" @delete="showDelete"
-            @restore="showRestore"/>
-          <entity-map-view v-else ref="view" :filter="odataFilter"
-            :search-term="searchTerm" :view-as="viewAs" :awaiting-responses="awaitingResponses"
-            @update="showUpdate" @resolve="showResolve" @delete="showDelete"/>
-        </template>
-      </page-section>
-
-      <div v-show="odataEntities.dataExists" class="fixed-pagination-container">
-        <div id="entity-list-pagination-target"></div>
-        <div class="pagination-container-right-side">
-          <data-refresh-info :refreshing="refreshing" :odata="odataEntities" @refresh-click="refresh"/>
-          <odata-data-access :analyze-disabled="deleted"
-            :analyze-disabled-message="analyzeDisabledMessage"
-            @analyze="analyzeModal.show()"/>
-          <entity-download-button :odata-filter="deleted ? null : odataFilter"
-            :search-term="deleted ? null : searchTerm" :view-as="deleted ? null : viewAs"
-            :disabled="deleted"
-            v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"/>
-        </div>
+     <div class="data-views">
+      <entity-table-view v-if="dataView === 'table'" ref="view"
+        v-model:all-selected="allSelected" :deleted="deleted"
+        :filter="odataFilter" :search-term="searchTerm" :view-as="viewAs"
+        :awaiting-responses="awaitingResponses"
+        @selection-changed="handleSelectionChange"
+        @clear-selection="clearSelectedEntities"
+        @update="showUpdate" @resolve="showResolve" @delete="showDelete"
+        @restore="showRestore"/>
+      <entity-map-view v-else ref="view" :filter="odataFilter"
+        :search-term="searchTerm" :view-as="viewAs" :awaiting-responses="awaitingResponses"
+        @update="showUpdate" @resolve="showResolve" @delete="showDelete"/>
       </div>
+
+      <table-pagination-footer v-show="odataEntities.dataExists">
+        <data-refresh-info :refreshing="refreshing" :odata="odataEntities" @refresh-click="refresh"/>
+        <odata-data-access :analyze-disabled="deleted"
+          :analyze-disabled-message="analyzeDisabledMessage"
+          @analyze="analyzeModal.show()"/>
+        <entity-download-button :odata-filter="deleted ? null : odataFilter"
+          :search-term="deleted ? null : searchTerm" :view-as="deleted ? null : viewAs"
+          :disabled="deleted"
+          v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"/>
+      </table-pagination-footer>
     </disable-container>
 
     <entity-update v-bind="update" :geometry-disabled="dataView === 'map'"
@@ -101,7 +96,7 @@ import EntityUpdate from './update.vue';
 import EntityResolve from './resolve.vue';
 import OdataAnalyze from '../odata/analyze.vue';
 import OdataDataAccess from '../odata/data-access.vue';
-import PageSection from '../page/section.vue';
+import TablePaginationFooter from '../table/pagination-footer.vue';
 import RadioField from '../radio-field.vue';
 import SearchTextbox from '../search-textbox.vue';
 import Spinner from '../spinner.vue';
@@ -135,10 +130,10 @@ export default {
     EntityUpdate,
     OdataAnalyze,
     OdataDataAccess,
-    PageSection,
     RadioField,
     SearchTextbox,
-    Spinner
+    Spinner,
+    TablePaginationFooter
   },
   inject: ['alert', 'container'],
   props: {
@@ -619,7 +614,7 @@ export default {
   // open.
   min-height: 375px;
 
-  .page-section {
+  .data-views {
     margin-bottom: 60px;
   }
 }

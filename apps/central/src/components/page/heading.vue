@@ -3,7 +3,7 @@
     <div class="page-heading-left">
       <h1 class="page-heading-title">{{ title }}</h1>
       <button v-if="helpText" type="button" class="page-heading-help"
-        @click="toggleHelp">
+        :aria-label="$t('helpButtonLabel')" @click="toggleHelp">
         <span class="icon-question-circle-o"></span>
       </button>
       <popover :target="popoverTarget" @hide="hideHelp">
@@ -29,10 +29,7 @@ defineProps({
     type: String,
     required: true
   },
-  helpText: {
-    type: String,
-    default: null
-  }
+  helpText: String
 });
 
 const popoverTarget = ref(null);
@@ -104,3 +101,11 @@ const hideHelp = () => {
   flex-shrink: 0;
 }
 </style>
+
+<i18n lang="json5">
+{
+  "en": {
+    "helpButtonLabel": "Click to view help text"
+  }
+}
+</i18n>

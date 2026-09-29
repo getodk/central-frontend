@@ -47,7 +47,7 @@ const dataRefreshedAt = computed(() => DateTime.fromJSDate(props.odata.setAt));
 <style lang="scss">
 .data-refresh-info {
   display: flex;
-  align-items: center;
+  align-items: baseline;
 
   span {
     font-size: 12px;

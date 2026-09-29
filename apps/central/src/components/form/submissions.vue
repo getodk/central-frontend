@@ -177,7 +177,7 @@ export default {
   {
     "en": {
       "purgeDescription": "Submissions and Submission-related data are deleted after 30 days in the Trash",
-      // `formName` is the title/xmlFormId of the Form.
+      // {formName} is the title/xmlFormId of the Form.
       "deletedTitle": "{formName} (Deleted submissions)",
       "action": {
         // "deleted" refers to deleted Submissions

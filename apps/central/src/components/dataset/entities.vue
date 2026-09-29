@@ -31,11 +31,9 @@ except according to the terms contained in the LICENSE file.
         <span class="icon-plus-circle"></span>{{ $t('newEntity') }}
       </button>
     </page-heading>
-    <template v-if="dataset.dataExists">
-      <entity-list ref="list" :project-id="projectId"
-        :dataset-name="datasetName" :deleted="deleted"
-        @fetch-deleted-count="fetchDeletedCount"/>
-    </template>
+    <entity-list v-show="dataset.dataExists" ref="list" :project-id="projectId"
+      :dataset-name="datasetName" :deleted="deleted"
+      @fetch-deleted-count="fetchDeletedCount"/>
 
     <entity-upload v-if="dataset.dataExists" v-bind="upload"
       @hide="hideUpload" @success="afterUpload"/>

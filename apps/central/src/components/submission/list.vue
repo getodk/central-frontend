@@ -56,8 +56,7 @@ except according to the terms contained in the LICENSE file.
         </template>
       </p>
 
-      <page-section>
-        <template #body>
+      <div class="data-views">
         <submission-table-view v-if="dataView === 'table'" ref="view"
           :project-id="projectId" :xml-form-id="xmlFormId" :draft="draft" :deleted="deleted"
           :filter="odataFilter" :fields="selectedFields"
@@ -69,26 +68,21 @@ except according to the terms contained in the LICENSE file.
           :filter="odataFilter"
           :awaiting-responses="awaitingResponses"
           @review="showReview" @delete="showDelete"/>
-        </template>
-      </page-section>
-
-      <div v-show="odata.dataExists"
-        :class="draft ? 'pagination-container' : 'fixed-pagination-container'">
-        <div id="submission-list-pagination-target"></div>
-        <div class="pagination-container-right-side">
-          <data-refresh-info :refreshing="refreshing" :odata="odata" @refresh-click="refresh"/>
-          <odata-data-access v-if="!draft" :analyze-disabled="encrypted || deleted"
-            :analyze-disabled-message="analyzeDisabledMessage"
-            @analyze="analyzeModal.show()"/>
-          <submission-download-button v-if="formVersion.dataExists"
-            :form-version="formVersion"
-            :aria-disabled="deleted"
-            :filtered="odataFilter != null && !deleted"
-            v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"
-            @download="showDownloadModal()"
-            @download-filtered="showDownloadModal(true)"/>
-        </div>
       </div>
+
+      <table-pagination-footer v-show="odata.dataExists" :fixed="!draft">
+        <data-refresh-info :refreshing="refreshing" :odata="odata" @refresh-click="refresh"/>
+        <odata-data-access v-if="!draft" :analyze-disabled="encrypted || deleted"
+          :analyze-disabled-message="analyzeDisabledMessage"
+          @analyze="analyzeModal.show()"/>
+        <submission-download-button v-if="formVersion.dataExists"
+          :form-version="formVersion"
+          :aria-disabled="deleted"
+          :filtered="odataFilter != null && !deleted"
+          v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"
+          @download="showDownloadModal()"
+          @download-filtered="showDownloadModal(true)"/>
+      </table-pagination-footer>
     </div>
 
     <submission-download v-bind="downloadModal" :form-version="formVersion"
@@ -102,7 +96,7 @@ except according to the terms contained in the LICENSE file.
     <submission-restore v-bind="restoreModal" checkbox
       :awaiting-response="restoreModal.state && awaitingResponses.has(restoreModal.submission.__id)"
       @hide="restoreModal.hide()" @restore="requestRestore"/>
-    <odata-analyze v-bind="analyzeModal" :odata-url="odataUrl"
+    <odata-analyze v-if="!draft" v-bind="analyzeModal" :odata-url="odataUrl"
       @hide="analyzeModal.hide()"/>
   </div>
 </template>
@@ -118,7 +112,7 @@ import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
 import OdataAnalyze from '../odata/analyze.vue';
 import OdataDataAccess from '../odata/data-access.vue';
-import PageSection from '../page/section.vue';
+import TablePaginationFooter from '../table/pagination-footer.vue';
 import RadioField from '../radio-field.vue';
 import SubmissionDelete from './delete.vue';
 import SubmissionDownload from './download.vue';
@@ -153,7 +147,6 @@ export default {
     Loading,
     OdataAnalyze,
     OdataDataAccess,
-    PageSection,
     RadioField,
     SubmissionDelete,
     SubmissionDownload,
@@ -164,6 +157,7 @@ export default {
     SubmissionRestore,
     SubmissionTableView,
     SubmissionUpdateReviewState,
+    TablePaginationFooter,
   },
   inject: ['alert'],
   props: {
@@ -484,7 +478,7 @@ export default {
   // open.
   &:has(.date-range-picker) { min-height: 375px; }
 
-  .page-section {
+  .data-views {
     margin-bottom: 60px;
   }
 }
@@ -498,23 +492,6 @@ export default {
   // the download button can wrap above the other actions if the viewport is not
   // wide enough.
   gap: 10px;
-}
-
-// Adjust the spacing between actions on the draft testing page.
-#submission-list-test-in-browser {
-  ~ .form-inline {
-    // It is possible for .form-inline to be :empty, but we still render it so
-    // that the buttons that follow it are shown on the righthand side of the
-    // page.
-    margin-left: auto;
-
-    #submission-field-dropdown {
-      // There are no filters, so no need for margin-left.
-      margin-left: 0;
-    }
-  }
-
-  ~ #submission-download-button { margin-left: 0; }
 }
 
 #submission-list .radio-field { margin-left: auto; }
