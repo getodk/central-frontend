@@ -178,7 +178,7 @@ test.describe('ODK Web Forms', () => {
 
     await page.getByRole('link', { name: 'log out' }).click();
 
-    await expect(page.getByRole('alert', { name: 'You have logged out successfully.' })).toBeVisible();
+    await expect(page.getByRole('alert').filter({ hasText: 'you have logged out successfully' })).toBeVisible();
 
     await page2.getByRole('button', { name: 'send' }).click();
 
