@@ -22,7 +22,7 @@ describe('NavbarActions', () => {
     await a.get('span:nth-child(2)').should.have.textTooltip();
   });
 
-  describe.skip('after the user clicks "Log out"', () => {
+  describe('after the user clicks "Log out"', () => {
     beforeEach(() => {
       mockLogin({ role: 'none' });
     });

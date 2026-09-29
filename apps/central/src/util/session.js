@@ -83,8 +83,7 @@ const removeSessionFromStorage = () => {
   localStore.removeItem('sessionExpires');
 };
 
-const requestLogout = ({ i18n, alert, http, location }) => new Promise((resolve) => { setTimeout(resolve, 1000); })
-  .then(() => http.delete(apiPaths.currentSession()))
+const requestLogout = ({ i18n, alert, http, location }) => http.delete(apiPaths.currentSession())
   .catch(error => {
     // logOutBeforeSessionExpires() and logOutAfterStorageChange() may try to
     // log out a session that has already been logged out. That will result in
