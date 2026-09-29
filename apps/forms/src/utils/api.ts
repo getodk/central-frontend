@@ -160,3 +160,99 @@ export const getProject = async (projectId: number): Promise<Project> => {
   }
   return await response.json() as Project;
 };
+
+interface PostPrimaryInstanceParams {
+  form: Form;
+  file: File;
+  instanceId?: string | null;
+  st?: string | null;
+  deviceID?: string | null;
+};
+
+interface CentralSubmissionResult {
+  success: boolean;
+  code: number;
+  instanceId?: string;
+};
+
+interface SubmissionResult {
+  success: boolean;
+  data: CentralSubmissionResult | Error;
+};
+
+export const postPrimaryInstance = async (params: PostPrimaryInstanceParams): Promise<SubmissionResult> => {
+  const { form, file, instanceId, st, deviceID } = params;
+  const draftPath = form.draft ? '/draft' : '';
+  let url: string;
+  let method: string;
+  if (instanceId) {
+    url = `/v1/projects/${form.projectId}/forms/${form.xmlFormId}/submissions/${instanceId}`;
+    method = 'PUT';
+    url += queryString({ st });
+  } else {
+    url = `/v1/projects/${form.projectId}/forms/${form.xmlFormId}${draftPath}/submissions`;
+    method = 'POST';
+    url += queryString({ st, deviceID });
+  }
+  const headers = {
+    'Content-Type': 'text/xml',
+    'odk-client': `odk-web-forms/${__WEB_FORMS_VERSION__}`,
+    'Accept': 'application/json, text/plain, */*',
+    'X-Requested-With': 'XMLHttpRequest'
+  };
+  try {
+    const response = await fetch(url, { body: file, headers, method });
+    if (response.status === 413) {
+      // payload too large, response from nginx not central, so do not try to json parse the body
+      return { success: false, data: { success: false, code: 413 } };
+    }
+    const data = await response.json() as CentralSubmissionResult;
+    return { success: response.ok, data };
+  } catch (error) {
+    return { success: false, data: error as Error };
+  }
+};
+
+interface PostAttachmentParams {
+  form: Form;
+  file: File;
+  instanceId: string;
+  st?: string | null;
+}
+
+interface CentralAttachmentSubmissionResult {
+  success: boolean;
+  code: number;
+};
+
+interface AttachmentSubmissionResult {
+  name: string;
+  result: {
+    success: boolean;
+    data: CentralAttachmentSubmissionResult | Error;
+  }
+};
+
+export const uploadAttachment = async (params: PostAttachmentParams): Promise<AttachmentSubmissionResult> => {
+  const { form, file, instanceId, st } = params;
+  const draftPath = form.draft ? '/draft' : '';
+  const encodedInstanceId = encodeURIComponent(instanceId);
+  const encodedName = encodeURIComponent(file.name);
+  let url = `/v1/projects/${form.projectId}/forms/${form.xmlFormId}${draftPath}/submissions/${encodedInstanceId}/attachments/${encodedName}`;
+  url += queryString({ st });
+  const headers = {
+    'Content-Type': file.type,
+    'X-Requested-With': 'XMLHttpRequest'
+  };
+  try {
+    const response = await fetch(url, { body: file, headers, method: 'POST' });
+    if (response.status === 413) {
+      // payload too large, response from nginx not central, so do not try to json parse the body
+      return { name: file.name, result: { success: false, data: { success: false, code: 413 } } };
+    }
+    const data = await response.json() as CentralAttachmentSubmissionResult;
+    return { name: file.name, result: { success: response.ok, data } };
+  } catch (error) {
+    return { name: file.name, result: { success: false, data: error as Error } };
+  }
+};
