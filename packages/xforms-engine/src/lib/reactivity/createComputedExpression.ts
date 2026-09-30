@@ -98,16 +98,18 @@ const evaluateOrFallback = <Type extends DependentExpressionResultType>(
   fallback: EvaluatedExpression<Type>,
   isAttached: boolean
 ): Result<Type> => {
-  try {
-    return {
-      success: true,
-      value: isAttached ? evaluate().value : evaluate(fallback).value,
-      error: null,
-    };
-  } catch (error) {
-    // Unattached nodes are expected to fail, they are evaluated again once attached.
-    return { success: false, value: fallback, error: isAttached ? (error as Error) : null };
+  if (isAttached) {
+    const result = evaluate();
+    if (result.success) {
+      return { success: true, value: result.value, error: null };
+    }
+    return { success: false, value: fallback, error: result.error };
   }
+  const fallbackResult = evaluate(fallback);
+  if (fallbackResult.success) {
+    return { success: true, value: fallbackResult.value, error: null };
+  }
+  return { success: true, value: fallback, error: null };
 };
 
 interface CreateComputedExpressionOptions<Type extends DependentExpressionResultType> {
