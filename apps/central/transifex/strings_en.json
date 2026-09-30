@@ -1867,6 +1867,9 @@
       "purgeDescription": {
         "string": "Entities are deleted after 30 days in the Trash"
       },
+      "deletedTitle": {
+        "string": "{datasetName} (Deleted entities)"
+      },
       "action": {
         "toggleDeletedEntities": {
           "string": "Show deleted",
@@ -4073,20 +4076,24 @@
       }
     },
     "FormSubmissions": {
-      "analyzeDisabled": {
-        "string": "OData access is unavailable due to Form encryption"
-      },
-      "analyzeDisabledDeletedData": {
-        "string": "OData access is unavailable for deleted Submissions"
-      },
       "purgeDescription": {
         "string": "Submissions and Submission-related data are deleted after 30 days in the Trash"
+      },
+      "deletedTitle": {
+        "string": "{formName} (Deleted submissions)",
+        "developer_comment": "{formName} is the title/xmlFormId of the Form."
       },
       "action": {
         "toggleDeletedSubmissions": {
           "string": "Show deleted",
           "developer_comment": "\"deleted\" refers to deleted Submissions"
         }
+      },
+      "analyzeDisabled": {
+        "string": "OData access is unavailable due to Form encryption"
+      },
+      "analyzeDisabledDeletedData": {
+        "string": "OData access is unavailable for deleted Submissions"
       }
     },
     "FormTable": {
@@ -4388,6 +4395,11 @@
       },
       "dismissTooltip": {
         "string": "Click here to dismiss this warning for 30 days."
+      }
+    },
+    "PageHeading": {
+      "helpButtonLabel": {
+        "string": "Click to view help text"
       }
     },
     "Pagination": {

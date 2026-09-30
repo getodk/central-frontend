@@ -26,6 +26,7 @@ describe('DatasetEntities', () => {
   describe('OData modal', () => {
     beforeEach(() => {
       testData.extendedDatasets.createPast(1, { name: 'trees' });
+      testData.extendedEntities.createPast(1);
     });
 
     it('toggles the modal', () =>
@@ -45,9 +46,12 @@ describe('DatasetEntities', () => {
   });
 
   describe('deleted entities', () => {
-    it('does not show deleted entitiy button', async () => {
+    beforeEach(() => {
       testData.extendedDatasets.createPast(1, { name: 'trees' });
       testData.extendedEntities.createPast(1);
+    });
+
+    it('does not show deleted entitiy button', async () => {
       const component = await load('/projects/1/entity-lists/trees/entities', {
         root: false
       });
@@ -55,8 +59,6 @@ describe('DatasetEntities', () => {
     });
 
     it('shows deleted entities button', async () => {
-      testData.extendedDatasets.createPast(1, { name: 'trees' });
-      testData.extendedEntities.createPast(1);
       testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() });
       const component = await load('/projects/1/entity-lists/trees/entities', {
         root: false
@@ -67,8 +69,6 @@ describe('DatasetEntities', () => {
     });
 
     it('updates the deleted count on refresh', async () => {
-      testData.extendedDatasets.createPast(1, { name: 'trees' });
-      testData.extendedEntities.createPast(1);
       testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() });
       return load('/projects/1/entity-lists/trees/entities', {
         root: false
@@ -92,8 +92,6 @@ describe('DatasetEntities', () => {
     });
 
     it('updates the url when deleted entities are shown', async () => {
-      testData.extendedDatasets.createPast(1, { name: 'trees' });
-      testData.extendedEntities.createPast(1);
       testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() });
       return load('/projects/1/entity-lists/trees/entities')
         .complete()
@@ -109,8 +107,6 @@ describe('DatasetEntities', () => {
     });
 
     it('retains other query parameters when toggling deleted', async () => {
-      testData.extendedDatasets.createPast(1, { name: 'trees' });
-      testData.extendedEntities.createPast(1);
       testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() });
       return load('/projects/1/entity-lists/trees/entities?conflict=true')
         .complete()
@@ -127,8 +123,6 @@ describe('DatasetEntities', () => {
     });
 
     it('disables the odata access button when deleted entities are shown', async () => {
-      testData.extendedDatasets.createPast(1, { name: 'trees' });
-      testData.extendedEntities.createPast(1);
       testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() });
       return load('/projects/1/entity-lists/trees/entities')
         .complete()
@@ -141,8 +135,6 @@ describe('DatasetEntities', () => {
     });
 
     it('disables the download button when deleted entities are shown', async () => {
-      testData.extendedDatasets.createPast(1, { name: 'trees' });
-      testData.extendedEntities.createPast(1);
       testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() });
       return load('/projects/1/entity-lists/trees/entities')
         .complete()

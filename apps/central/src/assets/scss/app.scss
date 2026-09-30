@@ -999,18 +999,3 @@ becomes more complicated.
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// BOTTOM FIXED PAGINATION
-
-.fixed-pagination-container {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: $color-page-background;
-  padding: 10px $padding-inline-container;
-}
-
-:has(.fixed-pagination-container) .paginated-table {
-  margin-bottom: 60px;
-}
