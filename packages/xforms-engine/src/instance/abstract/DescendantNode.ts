@@ -205,7 +205,6 @@ export abstract class DescendantNode<
   readonly getActiveLanguage: Accessor<ActiveLanguage>;
   readonly valueChangedActions: ActionDefinition[];
   private readonly expressionErrors: Array<Accessor<Error | null>> = [];
-  private readonly relevanceError: Accessor<Error | null>;
   private violation: Accessor<AnyViolation | null> | null = null;
   private staticAttributes: readonly Attribute[] | null = null;
   private readonly actionError = createSignal<Error | null>(null);
@@ -264,7 +263,6 @@ export abstract class DescendantNode<
       defaultValue: false,
     });
     this.isSelfRelevant = isSelfRelevant;
-    this.relevanceError = isSelfRelevant.error;
     this.isRequired = createComputedExpression(this, required, {
       defaultValue: false,
     });
@@ -308,10 +306,6 @@ export abstract class DescendantNode<
   private getReportedError(): Error | null {
     if (this.hasNonRelevantAncestor()) {
       return null;
-    }
-    const relevanceError = this.relevanceError();
-    if (relevanceError || !this.isSelfRelevant()) {
-      return relevanceError;
     }
     const [getActionError] = this.actionError;
     return this.getExpressionError() ?? getActionError() ?? this.getTextError();

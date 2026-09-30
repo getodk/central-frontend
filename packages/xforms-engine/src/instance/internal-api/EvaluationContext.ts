@@ -85,5 +85,5 @@ export interface EvaluationContext extends TranslationContext {
    */
   readonly contextNode: EngineXPathNode;
 
-  registerExpressionError?(error: Accessor<Error | null>): void;
+  registerExpressionError(error: Accessor<Error | null>): void;
 }

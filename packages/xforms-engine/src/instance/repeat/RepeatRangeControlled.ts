@@ -55,9 +55,6 @@ export class RepeatRangeControlled
 
       const computeCount = createComputedExpression(this, count, { defaultValue: 0 });
       createComputed((previousCount: number) => {
-        if (computeCount.error()) {
-          return previousCount;
-        }
         return this.applyCountChange(previousCount, computeCount(), savedNodes, template);
       }, seededCount);
     });

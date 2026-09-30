@@ -80,11 +80,9 @@ const defaultEvaluationsByType: DefaultEvaluationsByType = {
   string: DEFAULT_STRING_EVALUATION,
 };
 
-export interface ComputedExpression<Type extends DependentExpressionResultType> extends Accessor<
+export type ComputedExpression<Type extends DependentExpressionResultType> = Accessor<
   EvaluatedExpression<Type>
-> {
-  readonly error: Accessor<Error | null>;
-}
+>;
 
 const isSameEvaluation = <Type extends DependentExpressionResultType>(
   previous: Result<Type>,
@@ -135,7 +133,7 @@ const createConstantExpression = <Type extends DependentExpressionResultType>(
 ): ComputedExpression<Type> => {
   const error = () => evaluation.error;
   if (evaluation.error) {
-    context.registerExpressionError?.(error);
+    context.registerExpressionError(error);
   }
   return Object.assign(() => evaluation.value, { error }) as ComputedExpression<Type>;
 };
@@ -178,7 +176,7 @@ const createReactiveExpression = <Type extends DependentExpressionResultType>(
     { equals: isSameEvaluation }
   );
   const error = () => evaluation().error;
-  context.registerExpressionError?.(error);
+  context.registerExpressionError(error);
 
   return Object.assign(() => evaluation().value, { error }) as ComputedExpression<Type>;
 };

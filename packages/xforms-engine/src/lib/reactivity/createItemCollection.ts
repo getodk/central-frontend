@@ -26,15 +26,6 @@ const labelError = (label: ClientTextRange<'item-label'>): Error | null => {
 
 type ItemProperty = [string, ComputedExpression<'string'>];
 
-const itemError = (
-  value: ComputedExpression<'string'>,
-  properties: readonly ItemProperty[],
-  label: Accessor<ClientTextRange<'item-label'>>
-): Error | null => {
-  const propertyError = properties.map(([, property]) => property.error()).find(Boolean);
-  return value.error() ?? propertyError ?? labelError(label());
-};
-
 const registerItemsError = (
   control: ItemCollectionControl,
   errors: Accessor<Array<Error | null>>
@@ -95,7 +86,7 @@ class ItemsetItemEvaluationContext implements EvaluationContext {
   readonly getActiveLanguage: Accessor<ActiveLanguage>;
 
   constructor(
-    control: ItemCollectionControl,
+    readonly control: ItemCollectionControl,
     readonly contextNode: EngineXPathNode
   ) {
     this.isAttached = control.isAttached;
@@ -103,6 +94,10 @@ class ItemsetItemEvaluationContext implements EvaluationContext {
     this.evaluator = control.evaluator;
     this.contextReference = control.contextReference;
     this.getActiveLanguage = control.getActiveLanguage;
+  }
+
+  registerExpressionError(error: Accessor<Error | null>) {
+    this.control.registerExpressionError(error);
   }
 }
 
@@ -123,7 +118,6 @@ const createItemsetItemLabel = (
 };
 
 interface ItemsetItem {
-  error(): Error | null;
   label(): ClientTextRange<'item-label'>;
   value(): string;
   properties: Array<[string, () => string]>;
@@ -148,9 +142,6 @@ const createCycleGuardedItemNodes = (
   let changeCount = 0;
   const itemNodes = createMemo((previous?: EngineXPathNode[]) => {
     const result = evaluateNodes();
-    if (evaluateNodes.error() && previous) {
-      return previous;
-    }
     if (previous === undefined) {
       return result;
     }
@@ -196,7 +187,6 @@ const createItemsetItems = (
             ] as ItemProperty;
           });
           return {
-            error: () => itemError(value, properties, label),
             label,
             value,
             properties,
@@ -213,8 +203,6 @@ const createItemset = (
 ): Accessor<readonly BaseItem[]> => {
   return control.scope.runTask(() => {
     const itemsetItems = createItemsetItems(control, itemset);
-    registerItemsError(control, () => itemsetItems().map((item) => item.error()));
-
     return createMemo(() => {
       return itemsetItems().map((item) => {
         return {
