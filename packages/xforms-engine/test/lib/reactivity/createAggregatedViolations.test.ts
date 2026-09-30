@@ -6,6 +6,7 @@ import {
   head,
   html,
   input,
+  instance,
   item,
   label,
   mainInstance,
@@ -672,6 +673,62 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
       expect(violations[0]?.reference).toEqual('/root/@version');
       expect(violations[0]?.violation.message).toEqual(
         "Unknown function in form definition: 'invalidrandomfunction'"
+      );
+    });
+
+    it('violations on itemsets', async () => {
+      definition = html(
+        head(
+          title('itemsets'),
+          model(
+            mainInstance(t('root id="itemsets" version=""', t('sel'))),
+            bind('/root/sel').type('string')
+          )
+        ),
+        body(
+          select1(
+            '/root/sel',
+            t('itemset nodeset="isnt()"', t('value ref="name"'), t('value ref="value"'))
+          )
+        )
+      );
+      const { root } = await createInstance(definition.asXml());
+      const violations = root.validationState.violations;
+      expect(violations.length).toEqual(1);
+      expect(violations[0]?.reference).toEqual('/root/sel');
+      expect(violations[0]?.violation.message).toEqual(
+        "Unknown function in form definition: 'isnt'"
+      );
+    });
+
+    it('violations on itemset value', async () => {
+      definition = html(
+        head(
+          title('itemset value'),
+          model(
+            mainInstance(t('root id="itemsets" version=""', t('sel'))),
+            instance(
+              'sec',
+              t('item', t('itextId', 'choices-0'), t('name', 'a')),
+              t('item', t('itextId', 'choices-1'), t('name', 'b')),
+              t('item', t('itextId', 'choices-2'), t('name', 'c'))
+            ),
+            bind('/root/sel').type('string')
+          )
+        ),
+        body(
+          select1(
+            '/root/sel',
+            t('itemset nodeset="instance(\'sec\')"', t('value ref="rndom()"'), t('value ref="val"'))
+          )
+        )
+      );
+      const { root } = await createInstance(definition.asXml());
+      const violations = root.validationState.violations;
+      expect(violations.length).toEqual(1);
+      expect(violations[0]?.reference).toEqual('/root/sel');
+      expect(violations[0]?.violation.message).toEqual(
+        "Unknown function in form definition: 'rndom'"
       );
     });
   });
