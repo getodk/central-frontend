@@ -30,16 +30,16 @@ const computeChunk = (
   if (error) {
     errors.push(error);
   }
-  return value;
+  return value!;
 };
 
 const computeItextId = (context: EvaluationContext, expression: string, errors: Error[]) => {
-  try {
-    return context.evaluator.evaluateString(expression, { contextNode: context.contextNode });
-  } catch (error) {
-    errors.push(error as Error);
+  const result = context.evaluator.evaluateString(expression, { contextNode: context.contextNode });
+  if (result.error) {
+    errors.push(result.error);
     return null;
   }
+  return result.value;
 };
 
 const generateResourceChunk = (

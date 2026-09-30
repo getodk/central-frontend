@@ -161,9 +161,13 @@ const preloadValue = (context: ValueContext, setValue: SimpleAtomicStateSetter<s
 };
 
 const referencesCurrentNode = (context: ValueContext, ref: string): boolean => {
-  const nodes = context.evaluator.evaluateNodes(ref, {
+  const result = context.evaluator.evaluateNodes(ref, {
     contextNode: context.contextNode,
   });
+  if (result.error) {
+    throw result.error;
+  }
+  const nodes = result.value!;
   if (nodes.length > 1) {
     throw new Error(
       'You are trying to target a repeated field. Currently you may only target a field in a specific repeat instance. XPath nodeset has more than one node.'
@@ -214,14 +218,9 @@ const computeActionValue = (
   expression: string,
   evaluationContext: EvaluationContext
 ): string => {
-  try {
-    const value = untrack(() => target.evaluator.evaluateString(expression, evaluationContext));
-    target.setActionError(null);
-    return value;
-  } catch (error) {
-    target.setActionError(error as Error);
-    return '';
-  }
+  const result = untrack(() => target.evaluator.evaluateString(expression, evaluationContext));
+  target.setActionError(result.error);
+  return result.value ?? '';
 };
 
 /**
@@ -306,9 +305,14 @@ const registerValueChangedActions = (context: ValueContext, getValue: Accessor<s
     const sourceValue = getValue();
     context.valueChangedActions.forEach((action) => {
       const ref = bindRefToRepeatInstance(context, action.ref);
-      const destinationNodes = context.evaluator.evaluateNodes(ref, {
+      const result = context.evaluator.evaluateNodes(ref, {
         contextNode: context.contextNode,
       });
+      if (result.error) {
+        context.setActionError(result.error);
+        return;
+      }
+      const destinationNodes = result.value!;
       if (!destinationNodes.length) {
         return;
       }
