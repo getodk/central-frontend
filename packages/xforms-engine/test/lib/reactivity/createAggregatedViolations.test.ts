@@ -13,6 +13,7 @@ import {
   model,
   repeat,
   select1,
+  setvalue,
   t,
   title,
 } from '@getodk/common/test-utils/xform-dsl/index.ts';
@@ -729,6 +730,57 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
       expect(violations[0]?.reference).toEqual('/root/sel');
       expect(violations[0]?.violation.message).toEqual(
         "Unknown function in form definition: 'rndom'"
+      );
+    });
+
+    it('violations on setvalue actions', async () => {
+      definition = html(
+        head(
+          title('setvalue'),
+          model(
+            mainInstance(t('root id="setvalue" version=""', t('sel'))),
+            bind('/root/sel').type('string'),
+            setvalue('odk-instance-load', '/root/sel', 'rnd()')
+          )
+        ),
+        body(input('/root/sel'))
+      );
+      const { root } = await createInstance(definition.asXml());
+      const violations = root.validationState.violations;
+      expect(violations.length).toEqual(1);
+      expect(violations[0]?.reference).toEqual('/root/sel');
+      expect(violations[0]?.violation.message).toEqual(
+        "Unknown function in form definition: 'rnd'"
+      );
+    });
+
+    it('violations on value changed actions', async () => {
+      definition = html(
+        head(
+          title('value changed'),
+          model(
+            mainInstance(t('root id="valuechanged" version=""', t('src'), t('dest'))),
+            bind('/root/src').type('string'),
+            bind('/root/dest').type('string')
+          )
+        ),
+        body(input('/root/src', setvalue('xforms-value-changed', '/root/dest', 'bah()')))
+      );
+      const { root } = await createInstance(definition.asXml());
+      let violations = root.validationState.violations;
+      expect(violations.length).toEqual(0);
+
+      const src = root.currentState.children[0];
+      if (src?.nodeType !== 'input' || src.currentState.reference !== '/root/src') {
+        throw new Error('Expected input /root/src');
+      }
+      src.setValue('abc');
+
+      violations = root.validationState.violations;
+      expect(violations.length).toEqual(1);
+      expect(violations[0]?.reference).toEqual('/root/dest');
+      expect(violations[0]?.violation.message).toEqual(
+        "Unknown function in form definition: 'bah'"
       );
     });
   });
