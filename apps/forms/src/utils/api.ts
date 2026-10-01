@@ -50,7 +50,7 @@ export class RequestError extends Error {
   }
 }
 
-const queryString = (query:object) => {
+export const queryString = (query:object) => {
   if (query == null) {
     return '';
   }
