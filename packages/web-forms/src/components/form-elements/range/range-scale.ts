@@ -15,17 +15,14 @@ interface RangeScale {
   readonly lastStepIndex: number;
 }
 
-// How many digits after the decimal point the number has.
-// Tries 0, 1, 2... decimal places and stops at the first one that leaves the number unchanged.
 const getDecimalPlaces = (value: number): number => {
-  const places = Array.from({ length: MAX_DECIMAL_PLACES }, (_, index) => index);
-  const exactPlaces = places.find((count) => Number(value.toFixed(count)) === value);
-  return exactPlaces ?? MAX_DECIMAL_PLACES;
+  const places = value.toString().split('.')[1]?.length ?? 0;
+  return Math.min(places, MAX_DECIMAL_PLACES);
 };
 
 const toWholeNumber = (value: number, factor: number): number => Math.round(value * factor);
 
-const getScale = (bounds: RangeBounds): RangeScale => {
+export const getRangeScale = (bounds: RangeBounds): RangeScale => {
   const decimalPlaces = Math.max(
     getDecimalPlaces(bounds.start),
     getDecimalPlaces(bounds.end),
@@ -71,10 +68,9 @@ export const getRangeRatio = (bounds: RangeBounds, value: number): number => {
   return (value - bounds.start) / span;
 };
 
-export const getRangeValueAtRatio = (bounds: RangeBounds, ratio: number): number => {
-  const scale = getScale(bounds);
+export const getRangeValueAtRatio = (scale: RangeScale, ratio: number): number => {
   if (scale.step === 0) {
-    return bounds.start;
+    return getValueAtStepIndex(scale, 0);
   }
 
   const distance = ratio * scale.span;
@@ -83,10 +79,9 @@ export const getRangeValueAtRatio = (bounds: RangeBounds, ratio: number): number
 
 // A positive `stepCount` moves towards `end`, a negative one towards `start`.
 export const getRangeValueAfterSteps = (
-  bounds: RangeBounds,
+  scale: RangeScale,
   value: number,
   stepCount: number
 ): number => {
-  const scale = getScale(bounds);
   return getValueAtStepIndex(scale, getNearestStepIndex(scale, value) + stepCount);
 };

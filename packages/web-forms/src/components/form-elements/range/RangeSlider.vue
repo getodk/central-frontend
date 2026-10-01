@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import {
 	getRangeRatio,
+	getRangeScale,
 	getRangeValueAfterSteps,
 	getRangeValueAtRatio,
 } from '@getodk/web-forms/components/form-elements/range/range-scale.ts';
 import { computed, useTemplateRef } from 'vue';
-
-const FORWARD_KEYS = ['ArrowUp', 'ArrowRight'];
-const BACKWARD_KEYS = ['ArrowDown', 'ArrowLeft'];
 
 const props = defineProps<{
 	readonly id: string;
@@ -24,6 +22,7 @@ const emit = defineEmits<{ 'update:modelValue': [value: number] }>();
 const trackElement = useTemplateRef<HTMLElement>('track');
 
 const bounds = computed(() => ({ start: props.start, end: props.end, step: props.step }));
+const scale = computed(() => getRangeScale(bounds.value));
 const hasValue = computed(() => props.modelValue != null);
 const ratio = computed(() => props.modelValue == null ? 0 : getRangeRatio(bounds.value, props.modelValue));
 
@@ -44,13 +43,13 @@ const changeValueAtPointer = (event: MouseEvent) => {
 		? (bottom - event.clientY) / height
 		: (event.clientX - left) / width;
 
-	const value = getRangeValueAtRatio(bounds.value, pointerRatio);
+	const value = getRangeValueAtRatio(scale.value, pointerRatio);
 	changeValue(value);
 };
 
 const onThumbPointerDown = (event: PointerEvent) => {
 	const MAIN_MOUSE_BUTTON = 0;
-	if (event.button !== MAIN_MOUSE_BUTTON) {
+	if (props.disabled || event.button !== MAIN_MOUSE_BUTTON) {
 		return;
 	}
 
@@ -69,19 +68,19 @@ const onThumbPointerMove = (event: PointerEvent) => {
 	changeValueAtPointer(event);
 };
 
-const onKeyDown = (event: KeyboardEvent) => {
+const moveByStep = (direction: -1 | 1) => {
 	if (props.disabled) {
 		return;
 	}
 
-	const isForward = FORWARD_KEYS.includes(event.key);
-	if (isForward || BACKWARD_KEYS.includes(event.key)) {
-		event.preventDefault();
-		const currentValue = props.modelValue ?? props.start;
-		const nextValue = getRangeValueAfterSteps(bounds.value, currentValue, isForward ? 1 : -1);
-		changeValue(nextValue);
-	}
+	const currentValue = props.modelValue ?? props.start;
+	const nextValue = getRangeValueAfterSteps(scale.value, currentValue, direction);
+	changeValue(nextValue);
 };
+
+const moveForward = () => moveByStep(1);
+
+const moveBackward = () => moveByStep(-1);
 </script>
 
 <template>
@@ -93,7 +92,10 @@ const onKeyDown = (event: KeyboardEvent) => {
 		role="slider"
 		:tabindex="disabled ? -1 : 0"
 		@click="changeValueAtPointer"
-		@keydown="onKeyDown"
+		@keydown.up.prevent="moveForward"
+		@keydown.right.prevent="moveForward"
+		@keydown.down.prevent="moveBackward"
+		@keydown.left.prevent="moveBackward"
 	>
 		<template v-if="hasValue">
 			<div class="range-fill" />
@@ -156,7 +158,7 @@ const onKeyDown = (event: KeyboardEvent) => {
 		}
 	}
 
-	&.range-unset:focus,
+	&.range-unset:focus-visible,
 	&:focus-visible .range-thumb {
 		outline: 1px solid var(--odk-primary-border-color);
 		outline-offset: 2px;
