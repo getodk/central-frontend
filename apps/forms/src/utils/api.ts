@@ -50,7 +50,7 @@ export class RequestError extends Error {
   }
 }
 
-export const queryString = (query:object) => {
+const queryString = (query:object) => {
   if (query == null) {
     return '';
   }
@@ -255,4 +255,11 @@ export const uploadAttachment = async (params: PostAttachmentParams): Promise<At
   } catch (error) {
     return { name: file.name, result: { success: false, data: error as Error } };
   }
+};
+
+export const getFormAttachment = (form: Form, fileName: string, st?: string | null) => {
+  const draftPath = form.draft ? '/draft' : '';
+  let url = `/v1/projects/${form.projectId}/forms/${form.xmlFormId}${draftPath}/attachments/${fileName}`;
+  url += queryString({ st });
+  return fetch(url);
 };

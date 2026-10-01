@@ -3,7 +3,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { OdkWebForm, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
 import { type MonolithicInstancePayload } from '@getodk/xforms-engine';
-import { postPrimaryInstance, queryString, uploadAttachment, type Form } from '../utils/api';
+import { postPrimaryInstance, uploadAttachment, getFormAttachment, type Form } from '../utils/api';
 import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
 import { Translation } from 'vue-i18n'
@@ -42,14 +42,11 @@ const submissionResult:any = {};
 const inited = ref(false);
 const isEdit = computed(() => props.actionType === 'edit');
 const isPublicLink = computed(() => props.actionType === 'public-link');
-const draftPath = computed(() => props.form.draft ? '/draft' : '');
 const lastSavedXml = ref<string | undefined>();
 
 const deviceID = getDeviceId();
 
 const visibleModal = ref();
-
-const withToken = (url) => `${url}${queryString({ st: props.st })}`;
 
 const getAttachment = (requestUrl: URL) => {
   const fileName = requestUrl.pathname.split('/').pop()!;
@@ -57,8 +54,7 @@ const getAttachment = (requestUrl: URL) => {
   if (!props.form.attachments.some(a => a.name === decoded)) {
     return new Response('Not Found', { status: 404 });
   }
-  const url = withToken(`/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath.value}/attachments/${fileName}`);
-  return fetch(url);
+  return getFormAttachment(props.form, fileName, props.st);
 };
 
 const isProblem = (data: any) => {
