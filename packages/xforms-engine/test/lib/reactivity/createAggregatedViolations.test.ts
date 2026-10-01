@@ -689,7 +689,7 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
         body(
           select1(
             '/root/sel',
-            t('itemset nodeset="isnt()"', t('value ref="name"'), t('value ref="value"'))
+            t('itemset nodeset="isnt()"', t('label ref="itextId"'), t('value ref="value"'))
           )
         )
       );
@@ -720,7 +720,11 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
         body(
           select1(
             '/root/sel',
-            t('itemset nodeset="instance(\'sec\')"', t('value ref="rndom()"'), t('value ref="val"'))
+            t(
+              'itemset nodeset="instance(\'sec\')"',
+              t('value ref="rndom()"'),
+              t('label ref="itextId"')
+            )
           )
         )
       );
@@ -730,6 +734,41 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
       expect(violations[0]?.reference).toEqual('/root/sel');
       expect(violations[0]?.violation.message).toEqual(
         "Unknown function in form definition: 'rndom'"
+      );
+    });
+
+    it('violations on itemset label', async () => {
+      definition = html(
+        head(
+          title('itemset label'),
+          model(
+            mainInstance(t('root id="itemsets" version=""', t('sel'))),
+            instance(
+              'sec',
+              t('item', t('itextId', 'choices-0'), t('name', 'a')),
+              t('item', t('itextId', 'choices-1'), t('name', 'b')),
+              t('item', t('itextId', 'choices-2'), t('name', 'c'))
+            ),
+            bind('/root/sel').type('string')
+          )
+        ),
+        body(
+          select1(
+            '/root/sel',
+            t(
+              'itemset nodeset="instance(\'sec\')"',
+              t('label ref="concat(label, nofun())"'),
+              t('value ref="name"')
+            )
+          )
+        )
+      );
+      const { root } = await createInstance(definition.asXml());
+      const violations = root.validationState.violations;
+      expect(violations.length).toEqual(1);
+      expect(violations[0]?.reference).toEqual('/root/sel');
+      expect(violations[0]?.violation.message).toEqual(
+        "Unknown function in form definition: 'nofun'"
       );
     });
 

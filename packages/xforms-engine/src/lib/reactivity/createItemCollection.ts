@@ -199,11 +199,11 @@ const createItemsetItems = (
 
 const createItemset = (
   control: ItemCollectionControl,
-  itemset: ItemsetDefinition
+  definition: ItemsetDefinition
 ): Accessor<readonly BaseItem[]> => {
   return control.scope.runTask(() => {
-    const itemsetItems = createItemsetItems(control, itemset);
-    return createMemo(() => {
+    const itemsetItems = createItemsetItems(control, definition);
+    const itemset = createMemo(() => {
       return itemsetItems().map((item) => {
         return {
           label: item.label(),
@@ -214,6 +214,8 @@ const createItemset = (
         };
       });
     });
+    registerItemsError(control, () => itemset().map((item) => labelError(item.label)));
+    return itemset;
   });
 };
 

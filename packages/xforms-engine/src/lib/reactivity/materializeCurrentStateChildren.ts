@@ -107,10 +107,10 @@ export const materializeCurrentStateChildren = <
   return new Proxy(proxyTarget, {
     get(_, key) {
       if (key === 'children') {
+        const expectedChildIDs = scope.runTask(() => currentState.children); // side effect: registers reactive updates
         const children = childrenState.getChildren();
 
         if (import.meta.env.DEV) {
-          const expectedChildIDs = scope.runTask(() => currentState.children);
           reportInconsistentChildrenState(expectedChildIDs, children);
         }
 
