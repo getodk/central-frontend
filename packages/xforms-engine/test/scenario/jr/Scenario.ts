@@ -231,7 +231,7 @@ export class Scenario {
   protected readonly getEventPosition: Accessor<number>;
   private readonly setEventPosition: Setter<number>;
 
-  protected readonly getSelectedPositionalEvent: Accessor<AnyPositionalEvent>;
+  readonly getSelectedPositionalEvent: Accessor<AnyPositionalEvent>;
 
   protected constructor(
     private readonly config: ScenarioConfig,
