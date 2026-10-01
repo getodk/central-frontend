@@ -119,6 +119,11 @@ const moveBackward = () => moveByStep(-1);
 	border-radius: calc(var(--track-size) / 2);
 	background-color: var(--odk-primary-light-background-color);
 	outline: none;
+	// Stops a long press from selecting text or opening the iOS menu.
+	-webkit-touch-callout: none;
+	// WebKit on iPhone only supports the prefixed property.
+	-webkit-user-select: none;
+	user-select: none;
 
 	// Increases the hit target.
 	&::before {
@@ -188,9 +193,6 @@ const moveBackward = () => moveByStep(-1);
 	cursor: grab;
 	// Stops a touch drag on the thumb from scrolling the page.
 	touch-action: none;
-	// WebKit on iPhone only supports the prefixed property.
-	-webkit-user-select: none;
-	user-select: none;
 	transition: background-color 0.2s;
 
 	// Only show the hover colour with a mouse. On a phone it would stay on after a tap.
