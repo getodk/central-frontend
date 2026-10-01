@@ -6,12 +6,8 @@ import type { ValueNodeAnswer } from '../../scenario/answer/ValueNodeAnswer.ts';
 import { LocalDate } from '../../scenario/java/time/LocalDate.ts';
 import { Consumer } from '../../scenario/java/util/function/Consumer.ts';
 import { Scenario as BaseScenario } from '../../scenario/jr/Scenario.ts';
-import type { EndOfFormEvent } from '../../scenario/jr/event/EndOfFormEvent.ts';
 import type { PositionalEvent } from '../../scenario/jr/event/PositionalEvent.ts';
-import type {
-  AnyPositionalEvent,
-  NonTerminalPositionalEvent,
-} from '../../scenario/jr/event/getPositionalEvents.ts';
+import type { AnyPositionalEvent } from '../../scenario/jr/event/getPositionalEvents.ts';
 import { JRTreeReference as BaseJRTreeReference } from '../../scenario/jr/xpath/JRTreeReference.ts';
 
 /**
@@ -81,23 +77,6 @@ class MissingExpectedReferenceAssertionError extends Error {
  * it which we might encounter in this final push of the first porting pass).
  */
 class Scenario extends BaseScenario {
-  /**
-   * @deprecated
-   *
-   * We already have good reason to consider how we might want to control
-   * logging (verbosity, output target, inspectability), and this should serve
-   * as a prompt to consider how we might do so in a way that's at least
-   * plausibly portable, and consider migrating current uses of this method to
-   * that solution.
-   */
-  trace(msg: string): void {
-    /* eslint-disable no-console */
-    console.info('='.repeat(79));
-    console.info('       ' + msg);
-    console.info('='.repeat(79));
-    /* eslint-enable no-console */
-  }
-
   private getNextEventPosition(): AnyPositionalEvent {
     const currentPosition = this.getSelectedPositionalEvent();
 
@@ -155,26 +134,6 @@ class Scenario extends BaseScenario {
     const base = super.refAtIndex();
 
     return new JRTreeReference(base.xpathReference);
-  }
-
-  /**
-   * @deprecated
-   *
-   * This is intended to be a temporary relaxation of the
-   * {@link BaseScenario.next} signature, allowing incomplete steps in the test
-   * to be resolved in future iterations on the underlying functionality
-   * currently blocking the test from proceeding. Once the test is complete,
-   * it's expected that this method will no longer be called without an
-   * {@link expectReference} argument, at which point it should be removed.
-   */
-  override next(expectReference?: string): EndOfFormEvent | NonTerminalPositionalEvent {
-    if (expectReference == null) {
-      const currentPositionalEvent = this.getSelectedPositionalEvent();
-
-      throw new MissingExpectedReferenceAssertionError(currentPositionalEvent);
-    }
-
-    return super.next(expectReference);
   }
 
   private matchNextReference(possibleReferences: readonly string[]): string | null {
@@ -386,7 +345,6 @@ const answerChild_ageInMonths = (
 
     const childRepeatPath = getChildRepeatPath(scenario, i);
 
-    scenario.trace(name);
     scenario.next(childRepeatPath);
     scenario.next(`${childRepeatPath}/childName`);
     scenario.answer(name);
@@ -517,7 +475,6 @@ const answerChild_dob = (
 
     const childRepeatPath = getChildRepeatPath(scenario, i);
 
-    scenario.trace(name);
     scenario.next(childRepeatPath);
     scenario.next(`${childRepeatPath}/childName`);
     scenario.answer(name);
@@ -528,7 +485,8 @@ const answerChild_dob = (
     answerDateOfBirth(scenario, childRepeatPath, dob);
 
     if (scenario.nextRef().genericize().equals(NOT_ELIG_NOTE_REF)) {
-      scenario.next();
+      const currentPositionalEvent = scenario.getSelectedPositionalEvent();
+      throw new MissingExpectedReferenceAssertionError(currentPositionalEvent);
     } else if (scenario.nextRef().genericize().equals(VACCINATION_PENTA1_REF)) {
       vaccines.visit(scenario, childRepeatPath);
     }
@@ -614,7 +572,6 @@ const answerHousehold = (
   const householdRepeatPosition = number + 1;
   const householdRepeatPath = `/data/household[${householdRepeatPosition}]`;
 
-  scenario.trace('HOUSEHOLD ' + number);
   scenario.next(householdRepeatPath);
   scenario.next(`${householdRepeatPath}/flatNumber`);
   scenario.answer(number);
@@ -646,8 +603,6 @@ const answerHousehold = (
   children.forEach((child, i) => {
     child.accept(i);
   });
-
-  scenario.trace('END CHILDREN');
 };
 
 class KnownFailureError extends Error {
@@ -842,8 +797,6 @@ describe('ChildVaccinationTest.java', () => {
           scenario.answer('yes');
         }
       });
-
-      scenario.trace('END HOUSEHOLDS');
 
       // endregion
 
