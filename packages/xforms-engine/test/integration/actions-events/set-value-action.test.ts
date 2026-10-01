@@ -20,6 +20,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { intAnswer } from '../../scenario/answer/ExpectedIntAnswer.ts';
 import { stringAnswer } from '../../scenario/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../../scenario/jr/Scenario.ts';
+import { ANSWER_OK } from '../../scenario/jr/validation/ValidateOutcome.ts';
 
 describe('setvalue action', () => {
   describe('when trigger node is updated', () => {
@@ -464,7 +465,7 @@ describe('setvalue action', () => {
           expect.fail('Expected multiple node target to fail');
         };
 
-        expect(answer).toThrowError('has more than one node');
+        expect(answer).toThrow('has more than one node');
       });
     });
 
@@ -1252,7 +1253,7 @@ describe('setvalue action', () => {
       expect(scenario.getInstanceNode('/data/destination')).toBeReadonly();
     });
 
-    it('rejects client writes while the field is `readonly` but allows setValue action', async () => {
+    it('ignores client writes while the field is `readonly` but allows setValue action', async () => {
       const scenario = await Scenario.init(
         'Setvalue readonly write permissions',
         html(
@@ -1286,10 +1287,9 @@ describe('setvalue action', () => {
       scenario.answer('/data/source', 'abc');
       expect(scenario.answerOf('/data/destination')).toEqualAnswer(intAnswer(6));
 
-      expect(() => scenario.answer('/data/destination', 12)).toThrowError(
-        'Cannot write to readonly field: /data/destination'
-      );
+      scenario.answer('/data/destination', 12);
       expect(scenario.answerOf('/data/destination')).toEqualAnswer(intAnswer(6));
+      expect(scenario.getValidationOutcome().outcome).toBe(ANSWER_OK);
 
       scenario.answer('/data/lock', 'no');
       expect(scenario.getInstanceNode('/data/destination')).toBeEnabled();

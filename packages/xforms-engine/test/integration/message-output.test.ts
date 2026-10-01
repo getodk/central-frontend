@@ -10,7 +10,7 @@ import {
   t,
   title,
 } from '@getodk/common/test-utils/xform-dsl/index.ts';
-import type { LeafNodeValidationState } from '@getodk/xforms-engine';
+import type { LeafNodeValidationState, RequiredViolation } from '@getodk/xforms-engine';
 import { describe, expect, it } from 'vitest';
 import { AnswerResult, Scenario } from '../scenario/jr/Scenario.ts';
 import { ANSWER_REQUIRED_BUT_EMPTY } from '../scenario/jr/validation/ValidateOutcome.ts';
@@ -77,6 +77,8 @@ describe('Translation text can contain `<output>`', () => {
 
     let result;
     let validate;
+    let node;
+    let validationState;
 
     scenario.next('/data/name');
     scenario.answer('Alice');
@@ -89,11 +91,13 @@ describe('Translation text can contain `<output>`', () => {
     expect(result).toHaveValidityStatus(AnswerResult.OK);
 
     validate = scenario.getValidationOutcome();
-    expect(validate.failedPrompt?.node?.currentState.reference).toBe('/data/date');
-    expect(
-      (validate.failedPrompt?.node?.validationState as LeafNodeValidationState).required.message
-        ?.asString
-    ).toBe('Dear Alice, please fill me in');
+
+    node = validate.failedPrompt?.node;
+    expect(node?.currentState.reference).toBe('/data/date');
+    validationState = node?.validationState as LeafNodeValidationState;
+    expect((validationState.required as RequiredViolation).message?.asString).toBe(
+      'Dear Alice, please fill me in'
+    );
     expect(validate.outcome).toBe(ANSWER_REQUIRED_BUT_EMPTY);
 
     scenario.setLanguage('fr');
@@ -105,11 +109,12 @@ describe('Translation text can contain `<output>`', () => {
     expect(result).toHaveValidityStatus(AnswerResult.OK);
 
     validate = scenario.getValidationOutcome();
-    expect(validate.failedPrompt?.node?.currentState.reference).toBe('/data/date');
-    expect(
-      (validate.failedPrompt?.node?.validationState as LeafNodeValidationState).required.message
-        ?.asString
-    ).toBe(`Cher Alice, s'il te plaît, renseigne-moi`);
+    node = validate.failedPrompt?.node;
+    expect(node?.currentState.reference).toBe('/data/date');
+    validationState = node?.validationState as LeafNodeValidationState;
+    expect((validationState.required as RequiredViolation).message?.asString).toBe(
+      `Cher Alice, s'il te plaît, renseigne-moi`
+    );
     expect(validate.outcome).toBe(ANSWER_REQUIRED_BUT_EMPTY);
   });
 });

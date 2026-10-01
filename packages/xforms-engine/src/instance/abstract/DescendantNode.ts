@@ -1,6 +1,6 @@
 import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
-import { createMemo } from 'solid-js';
+import { createMemo, createSignal, untrack } from 'solid-js';
 import type { BaseNode } from '../../client/BaseNode.ts';
 import type { ActiveLanguage } from '../../client/FormLanguage.ts';
 import type { InstanceNodeType } from '../../client/node-types.ts';
@@ -22,10 +22,21 @@ import type { EvaluationContext } from '../internal-api/EvaluationContext.ts';
 import type { RepeatInstance } from '../repeat/RepeatInstance.ts';
 import type { Root } from '../Root.ts';
 import type { InstanceNodeStateSpec } from './InstanceNode.ts';
+import type { AnyViolation } from '../../client/validation.ts';
+import type { Attribute } from '../Attribute.ts';
 import { InstanceNode } from './InstanceNode.ts';
 import { ActionDefinition } from '../../parse/model/ActionDefinition.ts';
 import { SET_GEOPOINT_LOCAL_NAME, SET_VALUE_LOCAL_NAME } from '../../parse/XFormDOM.ts';
 import { XFORM_EVENT } from '../../parse/model/Event.ts';
+
+interface TextErrorState {
+  readonly label?: { readonly error: Error | null } | null;
+  readonly hint?: { readonly error: Error | null } | null;
+}
+
+const isSameViolation = (previous: AnyViolation | null, current: AnyViolation | null) => {
+  return previous?.condition === current?.condition && previous?.message === current?.message;
+};
 
 export interface DescendantNodeSharedStateSpec {
   readonly reference: Accessor<string>;
@@ -193,6 +204,10 @@ export abstract class DescendantNode<
     this as AnyDescendantNode as PrimaryInstanceXPathChildNode;
   readonly getActiveLanguage: Accessor<ActiveLanguage>;
   readonly valueChangedActions: ActionDefinition[];
+  private readonly expressionErrors: Array<Accessor<Error | null>> = [];
+  private violation: Accessor<AnyViolation | null> | null = null;
+  private staticAttributes: readonly Attribute[] | null = null;
+  private readonly actionError = createSignal<Error | null>(null);
 
   constructor(
     override readonly parent: Parent,
@@ -244,9 +259,10 @@ export abstract class DescendantNode<
     this.isSelfReadonly = createComputedExpression(this, readonly, {
       defaultValue: true,
     });
-    this.isSelfRelevant = createComputedExpression(this, relevant, {
+    const isSelfRelevant = createComputedExpression(this, relevant, {
       defaultValue: false,
     });
+    this.isSelfRelevant = isSelfRelevant;
     this.isRequired = createComputedExpression(this, required, {
       defaultValue: false,
     });
@@ -262,6 +278,71 @@ export abstract class DescendantNode<
         return null;
       })
       .filter((node) => !!node);
+  }
+
+  setActionError(error: Error | null): void {
+    const [, setError] = this.actionError;
+    setError(() => error);
+  }
+
+  registerExpressionError(error: Accessor<Error | null>): void {
+    this.expressionErrors.push(error);
+  }
+
+  protected getTextError(): Error | null {
+    const { label, hint } = this.engineState as TextErrorState;
+    return label?.error ?? hint?.error ?? null;
+  }
+
+  protected getValidationViolation(): AnyViolation | null {
+    return null;
+  }
+
+  private getExpressionError(): Error | null {
+    const errors = this.expressionErrors.map((expressionError) => expressionError());
+    return errors.find((error) => error != null) ?? null;
+  }
+
+  private getReportedError(): Error | null {
+    if (this.hasNonRelevantAncestor()) {
+      return null;
+    }
+    const [getActionError] = this.actionError;
+    return this.getExpressionError() ?? getActionError() ?? this.getTextError();
+  }
+
+  private computeViolation(): AnyViolation | null {
+    const error = this.getReportedError();
+    if (error) {
+      return { condition: 'error', valid: false, message: error.message };
+    }
+    return this.getValidationViolation();
+  }
+
+  // Attributes never change once the node is built, so they are read without tracking.
+  getStaticAttributes(): readonly Attribute[] {
+    this.staticAttributes ??= untrack(() => this.getAttributes());
+    return this.staticAttributes;
+  }
+
+  private hasText(): boolean {
+    const { label, hint } = this.engineState as TextErrorState;
+    return label != null || hint != null;
+  }
+
+  // Whether a node has text never changes, so it is read without tracking the text itself.
+  protected canReportViolation(): boolean {
+    return this.expressionErrors.length > 0 || untrack(() => this.hasText());
+  }
+
+  getViolation(): AnyViolation | null {
+    if (!this.canReportViolation()) {
+      return null;
+    }
+    this.violation ??= this.scope.runTask(() => {
+      return createMemo(() => this.computeViolation(), undefined, { equals: isSameViolation });
+    });
+    return this.violation();
   }
 
   /**

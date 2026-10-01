@@ -15,8 +15,6 @@ export const createNoteReadonlyThunk = (
     throw new Error('Expected a static readonly expression');
   }
 
-  let result = true;
-
   if (import.meta.env.DEV) {
     const { expression } = readonly;
     const dependencyReferences = resolveDependencyNodesets(reference, expression);
@@ -27,12 +25,10 @@ export const createNoteReadonlyThunk = (
 
     const computedExpression = createComputedExpression(context, readonly);
 
-    result = computedExpression();
-
-    if (result !== true) {
+    if (computedExpression() !== true) {
       throw new Error(`Expected expression ${readonly.expression} to return true`);
     }
   }
 
-  return () => result;
+  return () => true;
 };

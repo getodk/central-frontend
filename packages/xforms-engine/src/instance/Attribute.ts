@@ -1,7 +1,7 @@
 import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import type { AttributeNode } from '../client/AttributeNode.ts';
-import type { InstanceState, NullValidationState } from '../client/index.ts';
+import type { AncestorNodeValidationState, InstanceState } from '../client/index.ts';
 import type { XFormsXPathAttribute } from '../integration/xpath/adapter/XFormsXPathNode.ts';
 import type { StaticAttribute } from '../integration/xpath/static-dom/StaticAttribute.ts';
 import { createAttributeNodeInstanceState } from '../lib/client-reactivity/instance-state/createAttributeNodeInstanceState.ts';
@@ -51,7 +51,7 @@ export class Attribute
 
   protected readonly state: SharedNodeState<AttributeStateSpec>;
   protected readonly engineState: EngineState<AttributeStateSpec>;
-  readonly validationState: NullValidationState;
+  readonly validationState: AncestorNodeValidationState;
 
   readonly nodeType = 'attribute';
   readonly currentState: CurrentState<AttributeStateSpec>;
@@ -144,6 +144,10 @@ export class Attribute
       }
       setValueState(decodedValue);
     };
+  }
+
+  protected override canReportViolation(): boolean {
+    return true;
   }
 
   setValue(value: string): Root {

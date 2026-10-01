@@ -129,11 +129,15 @@ export abstract class ValueNode<
     };
   }
 
-  // ValidationContext
-  getViolation(): AnyViolation | null {
+  protected override canReportViolation(): boolean {
+    return true;
+  }
+
+  protected override getValidationViolation(): AnyViolation | null {
     return this.validation.engineState.violation;
   }
 
+  // ValidationContext
   isBlank(): boolean {
     return this.getInstanceValue() === '';
   }
