@@ -28,6 +28,7 @@ import preload from './fixtures/preload.xml?raw';
 import allPossibleNotes from './fixtures/2-all-possible-notes.xml?raw';
 import basicRepeat from './fixtures/01-basic-repeat.xml?raw';
 import markdown from './fixtures/3-notes-with-markdown.xml?raw';
+import inputNumeric from './fixtures/input-numeric.xml?raw';
 
 import paginationFlat from './fixtures/pagination-01-flat.xml?raw';
 import paginationFieldlistGroup from './fixtures/pagination-03-fieldlist-group.xml?raw';
@@ -89,6 +90,7 @@ const fixtures: Record<string, string> = {
   'pagination-19-required.xml': paginationRequired,
   'pagination-20-quick-fieldlist.xml': paginationQuickFieldList,
   'pagination-21-repeat-required.xml': paginationRepeatRequired,
+  'input-numeric.xml': inputNumeric,
 };
 
 const attachments: Record<string, string> = {
