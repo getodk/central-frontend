@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="form-edit">
-    <page-heading v-if="form.dataExists" :title="$t('formHead.tab.editForm')"/>
+    <page-heading :title="$t('formHead.tab.editForm')"/>
     <loading :state="formDraft.initiallyLoading"/>
     <template v-if="formDraft.dataExists">
       <form-edit-web-form v-if="formDraft.isDefined() && form.publishedAt == null"/>

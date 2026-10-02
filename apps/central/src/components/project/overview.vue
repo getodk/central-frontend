@@ -66,6 +66,7 @@ const rendersTrashList = computed(() =>
 {
   "en": {
     "action": {
+      // @transifexKey component.FormList.action.create
       // This is the text of a button that is used to create a new Form.
       "create": "New"
     }

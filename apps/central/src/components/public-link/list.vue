@@ -28,7 +28,7 @@ except according to the terms contained in the LICENSE file.
         </p>
         <i18n-t tag="p" keypath="heading[1].full">
           <template #clickHere>
-            <a href="#" @click.prevent="hide(); submissionOptions.show()">{{ $t('heading[1].clickHere') }}</a>
+            <a href="#" @click.prevent="showSubmissionOptions(hide)">{{ $t('heading[1].clickHere') }}</a>
           </template>
         </i18n-t>
       </template>
@@ -155,6 +155,10 @@ export default {
         url: apiPaths.actorProperties(this.projectId),
         resend: false
       }).catch(noop);
+    },
+    showSubmissionOptions(hidePoper) {
+      hidePoper();
+      this.submissionOptions.show();
     }
   }
 };

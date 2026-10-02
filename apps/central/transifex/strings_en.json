@@ -3838,6 +3838,12 @@
       "emptyTable": {
         "string": "There are no Forms to show."
       },
+      "action": {
+        "create": {
+          "string": "New",
+          "developer_comment": "This is the text of a button that is used to create a new Form."
+        }
+      },
       "alert": {
         "create": {
           "string": "“{name}” has been created as a Form Draft."
@@ -4736,14 +4742,6 @@
       "introduction": {
         "0": {
           "string": "Projects group Forms and App Users together to make them easier to organize and manage, both on this website and on your data collection device."
-        }
-      }
-    },
-    "ProjectOverview": {
-      "action": {
-        "create": {
-          "string": "New",
-          "developer_comment": "This is the text of a button that is used to create a new Form."
         }
       }
     },

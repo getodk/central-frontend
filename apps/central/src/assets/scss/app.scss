@@ -704,34 +704,6 @@ tr.uncommitted-change { background-color: #ffef67; }
 .label-warning { background-color: $color-warning; }
 
 
-
-////////////////////////////////////////////////////////////////////////////////
-// PAGE STRUCTURE
-
-/*
-Most pages render a PageHead and a PageBody. The PageBody will often contain one
-or more PageSection components. Some pages use .panel-simple, but this is an
-older pattern: try to use PageSection instead.
-
-The PageBody component may show a heading at the top. Right now we implement
-this using the page-body-heading class, but we may create a component if it
-becomes more complicated.
-*/
-
-// .heading-with-button is deprecated: use .page-body-heading instead.
-.page-body-heading, .heading-with-button {
-  margin-bottom: 25px;
-
-  > .btn {
-    float: right;
-    margin-left: 20px;
-  }
-
-  ul { @include text-list; }
-}
-
-
-
 ////////////////////////////////////////////////////////////////////////////////
 // PANELS
 

@@ -205,7 +205,7 @@ describe('PublicLinkCreate', () => {
         app.find('.table-freeze-scrolling').exists().should.be.false;
       })
       .request(async (app) => {
-        await app.get('.heading-with-button .btn-primary').trigger('click');
+        await app.get('.page-heading .btn-primary').trigger('click');
         const modal = app.getComponent(PublicLinkCreate);
         await modal.get('input').setValue('My Public Link');
         await addActorProperty(modal, 'region', 'north');
