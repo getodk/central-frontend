@@ -1,77 +1,206 @@
-<script lang="ts">
-import type {
-	SliderProps as PrimeSliderProps,
-	SliderSlots as PrimeSliderSlots,
-} from 'primevue/slider';
-import PrimeSlider from 'primevue/slider';
-import type {
-	ComputedOptions,
-	DefineComponent,
-	ObjectEmitsOptions,
-	ComponentOptionsMixin,
-	MethodOptions,
-} from 'vue';
+<script setup lang="ts">
+import {
+	getRangeRatio,
+	getRangeScale,
+	getRangeValueAfterSteps,
+	getRangeValueAtRatio,
+} from '@getodk/web-forms/components/form-elements/range/range-scale.ts';
+import { computed, useTemplateRef } from 'vue';
 
-interface SliderSingleValueProps extends PrimeSliderProps {
-	modelValue?: number | undefined;
-	range?: false | undefined;
-}
+const props = defineProps<{
+	readonly id: string;
+	readonly start: number;
+	readonly end: number;
+	readonly step: number;
+	readonly orientation: 'horizontal' | 'vertical';
+	readonly disabled: boolean;
+	readonly modelValue: number | undefined;
+}>();
 
-interface SliderDualValueProps extends PrimeSliderProps {
-	modelValue?: number[] | undefined;
-	range: true;
-}
+const emit = defineEmits<{ 'update:modelValue': [value: number] }>();
 
-interface SliderSingleValueEmits extends ObjectEmitsOptions {
-	'update:modelValue'(value: number): void;
-}
+const trackElement = useTemplateRef<HTMLElement>('track');
 
-interface SliderDualValueEmits extends ObjectEmitsOptions {
-	'update:modelValue'(value: number[]): void;
-}
+const bounds = computed(() => ({ start: props.start, end: props.end, step: props.step }));
+const scale = computed(() => getRangeScale(bounds.value));
+const hasValue = computed(() => props.modelValue != null);
+const ratio = computed(() => props.modelValue == null ? 0 : getRangeRatio(bounds.value, props.modelValue));
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-declare const SingleValueSlider: DefineComponent<
-	SliderSingleValueProps,
-	Record<string, never>,
-	Record<string, never>,
-	ComputedOptions,
-	MethodOptions,
-	ComponentOptionsMixin,
-	PrimeSliderSlots,
-	SliderSingleValueEmits
->;
+const changeValue = (value: number) => {
+	if (value !== props.modelValue) {
+		emit('update:modelValue', value);
+	}
+};
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-declare const DualValueSlider: DefineComponent<
-	SliderDualValueProps,
-	Record<string, never>,
-	Record<string, never>,
-	ComputedOptions,
-	MethodOptions,
-	ComponentOptionsMixin,
-	PrimeSliderSlots,
-	SliderDualValueEmits
->;
+const changeValueAtPointer = (event: MouseEvent) => {
+	const track = trackElement.value;
+	if (props.disabled || track == null) {
+		return;
+	}
 
-/**
- * This type addresses confusion in PrimeVue's base type which is polymorphic
- * over the number of values it accepts. We (probably?) won't support the
- * N-value case, so it's not worth refining further here (although it really
- * should be represented as a 2-value type, with its values represented as a
- * 2-member tuple).
- *
- * This refinement of the base types ensures:
- *
- * - we can use plain `number` values (as is expected for our 1-value usage)
- * - any _other_ changes to the base types will be propagated out to our usage
- *   in any future PrimeVue updates
- */
-// prettier-ignore
-export type RangeSlider =
-	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
-	| typeof SingleValueSlider
-	| typeof DualValueSlider;
+	const { left, bottom, width, height } = track.getBoundingClientRect();
+	const pointerRatio = props.orientation === 'vertical'
+		? (bottom - event.clientY) / height
+		: (event.clientX - left) / width;
 
-export default PrimeSlider as RangeSlider;
+	const value = getRangeValueAtRatio(scale.value, pointerRatio);
+	changeValue(value);
+};
+
+const onThumbPointerDown = (event: PointerEvent) => {
+	const MAIN_MOUSE_BUTTON = 0;
+	if (props.disabled || event.button !== MAIN_MOUSE_BUTTON) {
+		return;
+	}
+
+	const target = event.currentTarget as HTMLElement;
+	target.setPointerCapture(event.pointerId);
+	trackElement.value?.focus();
+};
+
+const onThumbPointerMove = (event: PointerEvent) => {
+	const target = event.currentTarget as HTMLElement;
+	const isDragging = target.hasPointerCapture(event.pointerId);
+	if (!isDragging) {
+		return;
+	}
+
+	changeValueAtPointer(event);
+};
+
+const moveByStep = (direction: -1 | 1) => {
+	if (props.disabled) {
+		return;
+	}
+
+	const currentValue = props.modelValue ?? props.start;
+	const nextValue = getRangeValueAfterSteps(scale.value, currentValue, direction);
+	changeValue(nextValue);
+};
+
+const moveForward = () => moveByStep(1);
+
+const moveBackward = () => moveByStep(-1);
 </script>
+
+<template>
+	<div
+		:id="id"
+		ref="track"
+		:class="['range-slider', `range-${orientation}`, { 'range-disabled': disabled, 'range-unset': !hasValue }]"
+		:style="{ '--range-ratio': ratio }"
+		role="slider"
+		:tabindex="disabled ? -1 : 0"
+		@click="changeValueAtPointer"
+		@keydown.up.prevent="moveForward"
+		@keydown.right.prevent="moveForward"
+		@keydown.down.prevent="moveBackward"
+		@keydown.left.prevent="moveBackward"
+	>
+		<template v-if="hasValue">
+			<div class="range-fill" />
+			<div
+				class="range-thumb"
+				@click.stop
+				@pointerdown="onThumbPointerDown"
+				@pointermove="onThumbPointerMove"
+			/>
+		</template>
+	</div>
+</template>
+
+<style scoped lang="scss">
+.range-slider {
+	--track-size: 4px;
+	--thumb-size: 20px;
+	--range-position: calc(var(--range-ratio) * 100%);
+
+	position: relative;
+	border-radius: calc(var(--track-size) / 2);
+	background-color: var(--odk-primary-light-background-color);
+	outline: none;
+	cursor: pointer;
+	// Stops a long press from selecting text or opening the iOS menu.
+	-webkit-touch-callout: none;
+	// WebKit on iPhone only supports the prefixed property.
+	-webkit-user-select: none;
+	user-select: none;
+
+	// Increases the hit target.
+	&::before {
+		content: '';
+		position: absolute;
+		inset: calc(var(--thumb-size) * -1);
+	}
+
+	&.range-horizontal {
+		height: var(--track-size);
+
+		.range-fill {
+			width: var(--range-position);
+			height: 100%;
+		}
+
+		.range-thumb {
+			top: 50%;
+			left: var(--range-position);
+			transform: translate(-50%, -50%);
+		}
+	}
+
+	&.range-vertical {
+		height: 200px;
+		width: var(--track-size);
+
+		.range-fill {
+			width: 100%;
+			height: var(--range-position);
+		}
+
+		.range-thumb {
+			bottom: var(--range-position);
+			left: 50%;
+			transform: translate(-50%, 50%);
+		}
+	}
+
+	&.range-unset:focus-visible,
+	&:focus-visible .range-thumb {
+		outline: 1px solid var(--odk-primary-border-color);
+		outline-offset: 2px;
+	}
+
+	&.range-disabled {
+		opacity: 0.6;
+		pointer-events: none;
+	}
+}
+
+.range-fill {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	border-radius: inherit;
+	background-color: var(--odk-primary-background-color);
+}
+
+.range-thumb {
+	position: absolute;
+	width: var(--thumb-size);
+	height: var(--thumb-size);
+	border-radius: 50%;
+	background-color: var(--odk-primary-background-color);
+	box-shadow: 1px 2px 3px 0 rgba(0, 0, 0, 0.2);
+	cursor: grab;
+	// Stops a touch drag on the thumb from scrolling the page.
+	touch-action: none;
+	transition: background-color 0.2s;
+
+	// Only show the hover colour with a mouse. On a phone it would stay on after a tap.
+	@media (hover: hover) {
+		&:hover {
+			background-color: var(--odk-primary-hover-background-color);
+		}
+	}
+}
+</style>
