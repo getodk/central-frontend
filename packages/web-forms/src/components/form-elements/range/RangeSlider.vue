@@ -119,6 +119,7 @@ const moveBackward = () => moveByStep(-1);
 	border-radius: calc(var(--track-size) / 2);
 	background-color: var(--odk-primary-light-background-color);
 	outline: none;
+	cursor: pointer;
 	// Stops a long press from selecting text or opening the iOS menu.
 	-webkit-touch-callout: none;
 	// WebKit on iPhone only supports the prefixed property.
