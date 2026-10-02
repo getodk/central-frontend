@@ -22,6 +22,7 @@ import type { ComparableAnswer } from '../scenario/answer/ComparableAnswer.ts';
 import { intAnswer } from '../scenario/answer/ExpectedIntAnswer.ts';
 import { stringAnswer } from '../scenario/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../scenario/jr/Scenario.ts';
+import { getBlobText } from '@getodk/common/lib/web-compat/blob.ts';
 
 type InstanceRoundTripInitializationMode = 'edit' | 'restore';
 
@@ -447,7 +448,7 @@ describe.each<InstanceRoundTripCase>([
 
       const payload = await scenario.prepareWebFormsInstancePayload();
       const instanceFile = payload.data[0].get(constants.INSTANCE_FILE_NAME);
-      const instanceXML = await instanceFile.text();
+      const instanceXML = await getBlobText(instanceFile);
 
       expect(instanceXML).toBe(
         t(
