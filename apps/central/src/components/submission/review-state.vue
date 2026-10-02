@@ -39,6 +39,7 @@ const props = defineProps({
   // have different widths.
   align: Boolean,
   // If `true` then review state will be displayed as plain text and icon not as a tag.
+  // It is mutually exclusive with color-text
   noTag: Boolean
 });
 
