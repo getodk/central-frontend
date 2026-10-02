@@ -32,16 +32,8 @@ except according to the terms contained in the LICENSE file.
     <td v-if="!deleted" class="last-updated-cell">
       <div class="col-content">
         <date-time :iso="entity.__system.updatedAt" class="updated-at"/>
-        <span class="updates">
-          <template v-if="entity.__system.conflict">
-            <span class="wrap-circle">
-              <span class="icon-warning"></span>
-            </span>
-          </template>
-          <template v-else-if="entity.__system.updates !== 0">
-            <span class="icon-pencil"></span>
-            <span>{{ $n(entity.__system.updates, 'default') }}</span>
-          </template>
+        <span v-if="entity.__system.conflict" class="wrap-circle">
+          <span class="icon-warning"></span>
         </span>
       </div>
     </td>
@@ -111,13 +103,6 @@ defineEmits(['selectionChanged']);
 
     &:empty { width: 75px; }
   }
-  .updates {
-    color: #777;
-    margin-left: auto;
-    width: 41px;
-
-    .icon-pencil { margin-right: 5px; }
-  }
   .wrap-circle {
     width: 22px;
     display: inline-block;
@@ -127,7 +112,7 @@ defineEmits(['selectionChanged']);
     text-align: center;
     color: white;
 
-    margin-left: 8px;
+    margin-left: auto;
   }
   .icon-warning { font-size: 12px; }
   .col-deleted-at { color: $color-danger; }

@@ -35,7 +35,7 @@ except according to the terms contained in the LICENSE file.
       <template v-else-if="entry.action === 'submission.update'">
         <i18n-t keypath="title.submission.approval.full">
           <template #reviewState>
-            <submission-review-state value="approved" color-text>
+            <submission-review-state value="approved" color-text no-tag>
               {{ $t('title.submission.approval.reviewState') }}
             </submission-review-state>
           </template>
