@@ -1764,7 +1764,7 @@
     },
     "ConfigLogin": {
       "title": {
-        "string": "Login page"
+        "string": "Login page customization"
       }
     },
     "ConfigLoginEdit": {
@@ -3835,18 +3835,14 @@
       }
     },
     "FormList": {
-      "title": {
-        "string": "Forms",
-        "developer_comment": "This is a title shown above a section of the page."
+      "emptyTable": {
+        "string": "There are no Forms to show."
       },
       "action": {
         "create": {
           "string": "New",
           "developer_comment": "This is the text of a button that is used to create a new Form."
         }
-      },
-      "emptyTable": {
-        "string": "There are no Forms to show."
       },
       "alert": {
         "create": {

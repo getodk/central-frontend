@@ -161,7 +161,7 @@ describe('FieldKeyNew', () => {
 
     const create = (series) => series
       .request(async (app) => {
-        await app.get('.heading-with-button button').trigger('click');
+        await app.get('#field-key-list-create-button').trigger('click');
         const modal = app.get('#field-key-new');
         await modal.get('input').setValue('input', 'My App User');
         return modal.get('form').trigger('submit');
@@ -410,7 +410,7 @@ describe('FieldKeyNew', () => {
       return load('/projects/1/app-users')
         .complete()
         .request(async (app) => {
-          await app.get('.heading-with-button button').trigger('click');
+          await app.get('.page-heading .btn-primary').trigger('click');
           const modal = app.get('#field-key-new');
           await modal.get('input').setValue('input', 'My App User');
           await addActorProperty(modal, 'region', 'north');
