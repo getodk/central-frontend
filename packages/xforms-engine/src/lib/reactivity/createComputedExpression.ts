@@ -135,7 +135,7 @@ const createConstantExpression = <Type extends DependentExpressionResultType>(
   if (evaluation.error) {
     context.registerExpressionError(error);
   }
-  return Object.assign(() => evaluation.value, { error }) as ComputedExpression<Type>;
+  return () => evaluation.value!;
 };
 
 const evaluateInContext = <Type extends DependentExpressionResultType>(
@@ -178,7 +178,7 @@ const createReactiveExpression = <Type extends DependentExpressionResultType>(
   const error = () => evaluation().error;
   context.registerExpressionError(error);
 
-  return Object.assign(() => evaluation().value, { error }) as ComputedExpression<Type>;
+  return () => evaluation().value!;
 };
 
 export const createComputedExpression = <Type extends DependentExpressionResultType>(
