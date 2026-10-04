@@ -28,6 +28,7 @@ import { InstanceNode } from './InstanceNode.ts';
 import { ActionDefinition } from '../../parse/model/ActionDefinition.ts';
 import { SET_GEOPOINT_LOCAL_NAME, SET_VALUE_LOCAL_NAME } from '../../parse/XFormDOM.ts';
 import { XFORM_EVENT } from '../../parse/model/Event.ts';
+import { ValueNode } from './ValueNode.ts';
 
 interface TextErrorState {
   readonly label?: { readonly error: Error | null } | null;
@@ -304,7 +305,8 @@ export abstract class DescendantNode<
   }
 
   private getReportedError(): Error | null {
-    if (this.hasNonRelevantAncestor()) {
+    const relevant = this instanceof ValueNode ? this.isRelevant() : !this.hasNonRelevantAncestor();
+    if (!relevant) {
       return null;
     }
     const [getActionError] = this.actionError;

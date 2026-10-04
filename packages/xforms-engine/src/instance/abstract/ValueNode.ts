@@ -32,6 +32,7 @@ import type { ClientReactiveSerializableValueNode } from '../internal-api/serial
 import type { ValidationContext } from '../internal-api/ValidationContext.ts';
 import type { DescendantNodeStateSpec } from './DescendantNode.ts';
 import { DescendantNode } from './DescendantNode.ts';
+import { TextRange } from '../text/TextRange.ts';
 
 export type ValueNodeDefinition<V extends ValueType> = LeafNodeDefinition<V>;
 
@@ -135,6 +136,12 @@ export abstract class ValueNode<
 
   protected override getValidationViolation(): AnyViolation | null {
     return this.validation.engineState.violation;
+  }
+
+  override getTextError() {
+    const message = this.validation.engineState.violation?.message;
+    const messageError = message instanceof TextRange ? message.error : null;
+    return super.getTextError() ?? messageError;
   }
 
   // ValidationContext
