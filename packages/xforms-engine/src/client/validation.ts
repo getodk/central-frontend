@@ -56,8 +56,8 @@ export type ValidationConditionMessageRole<Condition extends ValidationCondition
  * or `jr:requiredMsg`. The text may be translated ({@link https://getodk.github.io/xforms-spec/#fn:jr:itext | `jr:itext`})
  * and dynamic (via {@link https://getodk.github.io/xforms-spec/#body-elements | `<output>`}).
  *
- * When absent, {@link ConditionViolation.message} is `null` and clients are expected to provide
- * their own default messaging (e.g. a translated fallback).
+ * When absent, the `message` of {@link ConstraintViolation} or {@link RequiredViolation} is `null`
+ * and clients are expected to provide their own default messaging (e.g. a translated fallback).
  */
 export interface ViolationMessage<Condition extends ValidationCondition> extends TextRange<
   ValidationConditionMessageRole<Condition>
