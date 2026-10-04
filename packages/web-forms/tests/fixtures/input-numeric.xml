@@ -4,7 +4,7 @@
   xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms"
   xmlns:odk="http://www.opendatakit.org/xforms">
   <h:head>
-    <h:title>InputNumeroc Form</h:title>
+    <h:title>InputNumeric Form</h:title>
     <model odk:xforms-version="1.0.0">
       <instance>
         <data id="validation" version="20240708154514">
