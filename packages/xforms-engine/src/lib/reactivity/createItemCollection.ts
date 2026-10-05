@@ -218,14 +218,11 @@ const createItemset = (
           properties: item.properties.map(
             ([propLabel, propValue]) => [propLabel, propValue()] as [string, string]
           ),
-          context: item.context,
         };
       });
     });
     registerItemsError(control, () => {
-      return itemset().map((item) => {
-        return labelError(item.label) ?? contextError(item.context) ?? null;
-      });
+      return itemsetItems().map((item) => labelError(item.label()) ?? contextError(item.context));
     });
     return itemset;
   });
