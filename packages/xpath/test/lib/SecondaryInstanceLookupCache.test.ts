@@ -10,7 +10,7 @@ import { FunctionLibrary } from '../../src/evaluator/functions/FunctionLibrary.t
 
 describe('Secondary instance lookup cache', () => {
   beforeEach(() => {
-    SecondaryInstanceLookupCache.getCache().clear();
+    SecondaryInstanceLookupCache.clear();
   });
 
   describe('generateKey', () => {
@@ -57,7 +57,7 @@ describe('Secondary instance lookup cache', () => {
       const expected = testDocument.querySelector('a')!;
       const actual = evaluator.evaluateNode('/root/instance[@id="primary"]/a');
       expect(actual).toBe(expected);
-      expect(SecondaryInstanceLookupCache.getCache().size).toEqual(0);
+      expect(SecondaryInstanceLookupCache.size()).toEqual(0);
     });
 
     it('caches node query', () => {
@@ -65,7 +65,7 @@ describe('Secondary instance lookup cache', () => {
       evaluator.evaluateNode(
         '/root/instance[@id="second"]/item[@id=/root/instance[@id="primary"]/a]'
       );
-      expect(SecondaryInstanceLookupCache.getCache().size).toEqual(1);
+      expect(SecondaryInstanceLookupCache.size()).toEqual(1);
       expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id=3]')).toEqual(
         expected
       );
@@ -81,7 +81,7 @@ describe('Secondary instance lookup cache', () => {
         '/root/instance[@id="second"]/item[@id=/root/instance[@id="primary"]/a]/@size'
       );
       expect(size).toEqual('large');
-      expect(SecondaryInstanceLookupCache.getCache().size).toEqual(1);
+      expect(SecondaryInstanceLookupCache.size()).toEqual(1);
       expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id=3]')).toEqual(
         expected
       );
@@ -97,7 +97,7 @@ describe('Secondary instance lookup cache', () => {
         '/root/instance[@id="second"]/item[@color=/root/instance[@id="colors"]/a][@size=/root/instance[@id="sizes"]/a]/@size'
       );
       expect(size).toEqual('large');
-      expect(SecondaryInstanceLookupCache.getCache().size).toEqual(1);
+      expect(SecondaryInstanceLookupCache.size()).toEqual(1);
       expect(
         SecondaryInstanceLookupCache.get(
           '/root/instance[@id="second"]/item[@color=blue][@size=large]'
@@ -110,7 +110,7 @@ describe('Secondary instance lookup cache', () => {
       evaluator.evaluateNode(
         '/root/instance[@id="second"]/item[@id=coalesce(/root/instance[@id="primary"]/c, 3)]'
       );
-      expect(SecondaryInstanceLookupCache.getCache().size).toEqual(1);
+      expect(SecondaryInstanceLookupCache.size()).toEqual(1);
       expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id=3]')).toEqual(
         expected
       );
@@ -127,7 +127,7 @@ describe('Secondary instance lookup cache', () => {
         '/root/instance[@id="second"]/item[@id=/root/instance[@id="primary"]/b]/@size'
       );
       expect(size).toEqual('small');
-      expect(SecondaryInstanceLookupCache.getCache().size).toEqual(2);
+      expect(SecondaryInstanceLookupCache.size()).toEqual(2);
       expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id=3]')).toEqual(
         expected3
       );
@@ -141,7 +141,7 @@ describe('Secondary instance lookup cache', () => {
       const actual = evaluator.evaluateNode('../item[@id=/root/instance[@id="primary"]/a]', {
         contextNode: expected,
       });
-      expect(SecondaryInstanceLookupCache.getCache().size).toEqual(0);
+      expect(SecondaryInstanceLookupCache.size()).toEqual(0);
       expect(actual).toEqual(expected);
     });
   });
@@ -174,6 +174,6 @@ describe('Secondary instance lookup cache', () => {
       '/root/instance[1]/item[@id=/root/instance[@id="second"]/a]/@color'
     );
     expect(color).toEqual('blue');
-    expect(SecondaryInstanceLookupCache.getCache().size).toEqual(0);
+    expect(SecondaryInstanceLookupCache.size()).toEqual(0);
   });
 });

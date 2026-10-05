@@ -81,8 +81,11 @@ export class SecondaryInstanceLookupCache {
     return cache.get(key) as ReadonlySet<T> | undefined;
   }
 
-  // exposed for testing
-  static getCache = (): Map<string, ReadonlySet<XPathNode>> => {
-    return cache;
-  };
+  static size(): number {
+    return cache.size;
+  }
+
+  static clear(): void {
+    cache.clear();
+  }
 }
