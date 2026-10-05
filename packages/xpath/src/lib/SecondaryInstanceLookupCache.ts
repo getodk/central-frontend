@@ -8,7 +8,7 @@ import {
   LocationPathEvaluator,
   type LocationPathNode,
 } from '../evaluator/expression/LocationPathEvaluator';
-import type { AnyBinaryExprNode, PredicateNode } from '../static/grammar/SyntaxNode';
+import type { AnyBinaryExprNode, EqExprNode, PredicateNode } from '../static/grammar/SyntaxNode';
 
 const MINIMUM_NODES_WORTH_CACHING = 10; // TODO consider changing number
 
@@ -28,14 +28,17 @@ const isAbsoluteOrConstant = (expr: ExpressionEvaluator) => {
   return false;
 };
 
-const getVariableOperand = (expr: ExpressionEvaluator) => {
-  if (!(expr instanceof BinaryExpressionEvaluator)) {
-    return;
-  }
-  if ((expr as BinaryExpressionEvaluator<AnyBinaryExprNode>).syntaxNode.type !== 'eq_expr') {
-    return;
-  }
-  return [expr.lhs, expr.rhs].find(isAbsoluteOrConstant);
+const isEqualsExpression = (
+  expr: ExpressionEvaluator
+): expr is BinaryExpressionEvaluator<EqExprNode> => {
+  return (
+    expr instanceof BinaryExpressionEvaluator &&
+    (expr as BinaryExpressionEvaluator<AnyBinaryExprNode>).syntaxNode.type === 'eq_expr'
+  );
+};
+
+const getConstantOperand = (expr: ExpressionEvaluator) => {
+  return isEqualsExpression(expr) && [expr.lhs, expr.rhs].find(isAbsoluteOrConstant);
 };
 
 export class SecondaryInstanceLookupCache {
@@ -55,14 +58,14 @@ export class SecondaryInstanceLookupCache {
       const [predicateExpressionNode] = node.children;
       const predicateExpression = createExpression(predicateExpressionNode);
 
-      const variableSide = getVariableOperand(predicateExpression);
-      if (!variableSide) {
+      const constantOperand = getConstantOperand(predicateExpression);
+      if (!constantOperand) {
         continue;
       }
 
-      const predicateResult = variableSide.evaluate(currentContext).toString();
-      lastFoundIndex = result.indexOf(variableSide.syntaxNode.text) + predicateResult.length + 1;
-      result = result.replace(variableSide.syntaxNode.text, predicateResult);
+      const predicateResult = constantOperand.evaluate(currentContext).toString();
+      lastFoundIndex = result.indexOf(constantOperand.syntaxNode.text) + predicateResult.length + 1;
+      result = result.replace(constantOperand.syntaxNode.text, predicateResult);
     }
 
     if (lastFoundIndex === 0) {
