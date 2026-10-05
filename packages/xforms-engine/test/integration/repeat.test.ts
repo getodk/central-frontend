@@ -1690,20 +1690,7 @@ describe('Tests ported from JavaRosa - repeats', () => {
 
     describe('//region Repeat misc', () => {
       describe('(issue 135) verify that counts in inner repeats work as expected', () => {
-        /**
-         * **PORTING NOTES**
-         *
-         * - Fails on second `next` call's node-set reference assertion
-         *   (resolving to the outer repeat's "prompt" event, i.e. the repeat
-         *   range itself). This is currently to be expected, as we don't yet
-         *   support `jr:count`.
-         *
-         * @todo The asserted node-set references are best guess (cross
-         * referencing `getPositionalEvents` and `collectFlatNodeList`) in hopes
-         * it will match the intent of the original test once we do support
-         * `jr:count`. We can verify when we work on that feature.
-         */
-        it.fails('[updates the count]', async () => {
+        it('[updates the count]', async () => {
           const scenario = await Scenario.init(
             'Some form',
             html(
@@ -1768,8 +1755,8 @@ describe('Tests ported from JavaRosa - repeats', () => {
           scenario.next('/data/outer[2]/inner[1]');
           scenario.next('/data/outer[2]/inner[1]/some-field');
           scenario.answer('Some field 1-0');
-          scenario.next('/data/outer[2]/inner[1]');
-          scenario.next('/data/outer[2]/inner[1]/some-field');
+          scenario.next('/data/outer[2]/inner[2]');
+          scenario.next('/data/outer[2]/inner[2]/some-field');
           scenario.answer('Some field 1-1');
           scenario.next('END_OF_FORM');
 
