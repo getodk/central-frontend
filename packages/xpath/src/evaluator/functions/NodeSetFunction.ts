@@ -16,7 +16,7 @@ export class NodeSetFunction extends FunctionImplementation {
     super(localName, signature, (context, args) => {
       const nodes = call(context, args);
 
-      return LocationPathEvaluation.fromArbitraryNodes(context, nodes, this);
+      return LocationPathEvaluation.fromNodes(context, new Set(nodes));
     });
   }
 }

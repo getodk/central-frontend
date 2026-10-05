@@ -12,7 +12,7 @@ import type { AnyBinaryExprNode, PredicateNode } from '../static/grammar/SyntaxN
 
 const MINIMUM_NODES_WORTH_CACHING = 10; // TODO consider changing number
 
-const cache = new Map<string, XPathNode[]>(); // TODO cache invalidation - probably not necessary until we refresh secondary instances
+const cache = new Map<string, ReadonlySet<XPathNode>>();
 
 const isAbsoluteOrConstant = (expr: ExpressionEvaluator) => {
   if (expr instanceof LocationPathEvaluator && expr.isAbsolute) {
@@ -37,8 +37,6 @@ const getVariableOperand = (expr: ExpressionEvaluator) => {
   }
   return [expr.lhs, expr.rhs].find(isAbsoluteOrConstant);
 };
-
-// TODO consider indexing instead of caching to make future lookups immediate
 
 export class SecondaryInstanceLookupCache {
   static generateKey = <T extends XPathNode>(
@@ -75,16 +73,16 @@ export class SecondaryInstanceLookupCache {
     return result.substring(0, lastFoundIndex);
   };
 
-  static set = (key: string, filteredNodes: XPathNode[]) => {
+  static set<T extends XPathNode>(key: string, filteredNodes: ReadonlySet<T>) {
     cache.set(key, filteredNodes);
   };
 
-  static get = (key: string): XPathNode[] | undefined => {
-    return cache.get(key);
+  static get<T extends XPathNode>(key: string): ReadonlySet<T> | undefined {
+    return cache.get(key) as ReadonlySet<T> | undefined;
   };
 
   // exposed for testing
-  static getCache = (): Map<string, XPathNode[]> => {
+  static getCache = (): Map<string, ReadonlySet<XPathNode>> => {
     return cache;
   };
 }

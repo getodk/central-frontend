@@ -91,13 +91,9 @@ export class LocationPathEvaluator
         SecondaryInstanceLookupCache.generateKey(currentContext, step.predicates, this.syntaxNode);
 
       if (cacheKey) {
-        const nodes = SecondaryInstanceLookupCache.get(cacheKey);
+        const nodes = SecondaryInstanceLookupCache.get<T>(cacheKey);
         if (nodes) {
-          currentContext = LocationPathEvaluation.fromArbitraryNodes(
-            currentContext,
-            nodes as T[],
-            this
-          );
+          currentContext = LocationPathEvaluation.fromNodes(currentContext, nodes);
           continue;
         }
       }
@@ -140,14 +136,13 @@ export class LocationPathEvaluator
             filteredNodes.push(...self.contextNodes);
           }
         }
-        currentContext = LocationPathEvaluation.fromArbitraryNodes(
+        currentContext = LocationPathEvaluation.fromNodes(
           currentContext,
-          filteredNodes,
-          this
+          new Set(filteredNodes)
         );
       }
       if (cacheKey) {
-        SecondaryInstanceLookupCache.set(cacheKey, Array.from(currentContext.contextNodes)); // TODO maybe keep the set?
+        SecondaryInstanceLookupCache.set(cacheKey, currentContext.contextNodes);
       }
       if (primaryInstance) {
         // only cache if a secondary instance is found

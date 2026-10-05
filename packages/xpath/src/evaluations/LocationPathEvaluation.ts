@@ -450,11 +450,6 @@ interface LocationPathEvaluationOptions {
   readonly contextSize?: number;
 }
 
-type ArbitraryNodesTemporaryCallee =
-  | FilterPathExpressionEvaluator
-  | LocationPathEvaluator
-  | NodeSetFunction;
-
 type AssertLocationPathEvaluationInstance = <T extends XPathNode>(
   context: EvaluationContext<T>,
   value: unknown,
@@ -550,22 +545,11 @@ export class LocationPathEvaluation<T extends XPathNode>
 
   readonly timeZone: Temporal.TimeZoneLike;
 
-  /**
-   * TODO: this is a temporary accommodation for these cases which are presently
-   * not especially well designed:
-   *
-   * - Functions returning node-sets (i.e. {@link NodeSetFunction} instances).
-   *   It may make sense to invert control, invoking them from here?
-   *
-   * - Nodes filtered by predicate in {@link LocationPathExpression}. Such
-   *   filtering almost certainly should be performed here, in {@link step}.
-   */
-  static fromArbitraryNodes<T extends XPathNode>(
+  static fromNodes<T extends XPathNode>(
     currentContext: LocationPathParentContext<T>,
-    nodes: readonly T[],
-    _temporaryCallee: ArbitraryNodesTemporaryCallee
-  ): LocationPathEvaluation<T> {
-    return new this(currentContext, new Set(nodes));
+    nodes: ReadonlySet<T>
+  ) {
+    return new this(currentContext, nodes);
   }
 
   static fromCurrentContext<T extends XPathNode>(
