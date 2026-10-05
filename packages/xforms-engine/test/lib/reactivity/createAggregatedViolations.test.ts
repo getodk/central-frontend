@@ -21,6 +21,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import type { ValidationCondition, ViolationMessage } from '../../../src/client/validation.ts';
 import { createInstance } from '../../../src/entrypoints/createInstance.ts';
 import { reactiveTestScope } from '../../helpers/reactive/internal.ts';
+import type { RootNode } from '@getodk/xforms-engine';
 
 describe('createAggregatedViolations - reactive aggregated `constraint` and `required` validation violations on ancestor nodes', () => {
   let definition: HtmlXFormsElement;
@@ -587,6 +588,73 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
   });
 
   describe('error violations', () => {
+    interface ViolationExpectation {
+      reference: string;
+      message: string;
+    }
+
+    const expectViolations = (root: RootNode, expected: ViolationExpectation[]) => {
+      const actual = root.validationState.violations;
+      expect(actual.length).toEqual(expected.length);
+      actual.forEach((actualItem, i) => {
+        const expectedItem = expected[i]!;
+        expect(actualItem.reference).toEqual(expectedItem.reference);
+        expect(actualItem.violation.message).toEqual(expectedItem.message);
+      });
+    };
+
+    const setInput = (root: RootNode, reference: string, value: string) => {
+      const inputNode = root.currentState.children[0];
+      if (inputNode?.nodeType !== 'input' || inputNode.currentState.reference !== reference) {
+        throw new Error(`Expected input ${reference}`);
+      }
+      inputNode.setValue(value);
+    };
+
+    it('violations are not shown when not relevant', async () => {
+      definition = html(
+        head(
+          title('Validation Form'),
+          model(
+            mainInstance(t('data id="validation"', t('show'), t('phone'))),
+            bind('/data/show'),
+            bind('/data/phone').relevant("/data/show != ''").constraint('unknown()')
+          )
+        ),
+        body(input('/data/show'), input('/data/phone'))
+      );
+      const { root } = await createInstance(definition.asXml());
+
+      expectViolations(root, []);
+      setInput(root, '/data/show', 'abc');
+      expectViolations(root, [
+        {
+          reference: '/data/phone',
+          message: "Unknown function in form definition: 'unknown'",
+        },
+      ]);
+    });
+
+    it('violations are shown when error on the relevant expression', async () => {
+      definition = html(
+        head(
+          title('Validation Form'),
+          model(
+            mainInstance(t('data id="validation"', t('phone'))),
+            bind('/data/phone').relevant('unknown()')
+          )
+        ),
+        body(input('/data/phone'))
+      );
+      const { root } = await createInstance(definition.asXml());
+      expectViolations(root, [
+        {
+          reference: '/data/phone',
+          message: "Unknown function in form definition: 'unknown'",
+        },
+      ]);
+    });
+
     it('violations on groups', async () => {
       definition = html(
         head(
@@ -621,12 +689,12 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
         )
       );
       const { root } = await createInstance(definition.asXml());
-      const violations = root.validationState.violations;
-      expect(violations.length).toEqual(1);
-      expect(violations[0]?.reference).toEqual('/data/contactdetails');
-      expect(violations[0]?.violation.message).toEqual(
-        "Unknown function in form definition: 'unknownfunction'"
-      );
+      expectViolations(root, [
+        {
+          reference: '/data/contactdetails',
+          message: "Unknown function in form definition: 'unknownfunction'",
+        },
+      ]);
     });
 
     it('violations on repeats', async () => {
@@ -645,12 +713,12 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
         body(repeat('/data/repeat-count', 'somerandomnumber()'))
       );
       const { root } = await createInstance(definition.asXml());
-      const violations = root.validationState.violations;
-      expect(violations.length).toEqual(1);
-      expect(violations[0]?.reference).toEqual('/data/repeat-count');
-      expect(violations[0]?.violation.message).toEqual(
-        "Unknown function in form definition: 'somerandomnumber'"
-      );
+      expectViolations(root, [
+        {
+          reference: '/data/repeat-count',
+          message: "Unknown function in form definition: 'somerandomnumber'",
+        },
+      ]);
     });
 
     it('violations on attributes', async () => {
@@ -669,12 +737,12 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
         body(input('/root/version'))
       );
       const { root } = await createInstance(definition.asXml());
-      const violations = root.validationState.violations;
-      expect(violations.length).toEqual(1);
-      expect(violations[0]?.reference).toEqual('/root/@version');
-      expect(violations[0]?.violation.message).toEqual(
-        "Unknown function in form definition: 'invalidrandomfunction'"
-      );
+      expectViolations(root, [
+        {
+          reference: '/root/@version',
+          message: "Unknown function in form definition: 'invalidrandomfunction'",
+        },
+      ]);
     });
 
     it('violations on itemsets', async () => {
@@ -694,12 +762,12 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
         )
       );
       const { root } = await createInstance(definition.asXml());
-      const violations = root.validationState.violations;
-      expect(violations.length).toEqual(1);
-      expect(violations[0]?.reference).toEqual('/root/sel');
-      expect(violations[0]?.violation.message).toEqual(
-        "Unknown function in form definition: 'isnt'"
-      );
+      expectViolations(root, [
+        {
+          reference: '/root/sel',
+          message: "Unknown function in form definition: 'isnt'",
+        },
+      ]);
     });
 
     it('violations on itemset value', async () => {
@@ -729,12 +797,12 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
         )
       );
       const { root } = await createInstance(definition.asXml());
-      const violations = root.validationState.violations;
-      expect(violations.length).toEqual(1);
-      expect(violations[0]?.reference).toEqual('/root/sel');
-      expect(violations[0]?.violation.message).toEqual(
-        "Unknown function in form definition: 'rndom'"
-      );
+      expectViolations(root, [
+        {
+          reference: '/root/sel',
+          message: "Unknown function in form definition: 'rndom'",
+        },
+      ]);
     });
 
     it('violations on itemset value are cleared when itemset items are filtered out', async () => {
@@ -767,24 +835,16 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
       );
       const { root } = await createInstance(definition.asXml());
 
-      let violations = root.validationState.violations;
-      expect(violations.length).toEqual(0);
-
-      const show = root.currentState.children[0];
-      if (show?.nodeType !== 'input' || show.currentState.reference !== '/root/show') {
-        throw new Error('Expected input /root/show');
-      }
-      show.setValue('abc');
-      violations = root.validationState.violations;
-      expect(violations.length).toEqual(1);
-      expect(violations[0]?.reference).toEqual('/root/sel');
-      expect(violations[0]?.violation.message).toEqual(
-        "Unknown function in form definition: 'rndom'"
-      );
-
-      show.setValue('');
-      violations = root.validationState.violations;
-      expect(violations.length).toEqual(0);
+      expectViolations(root, []);
+      setInput(root, '/root/show', 'abc');
+      expectViolations(root, [
+        {
+          reference: '/root/sel',
+          message: "Unknown function in form definition: 'rndom'",
+        },
+      ]);
+      setInput(root, '/root/show', '');
+      expectViolations(root, []);
     });
 
     it('violations on itemset value are cleared when not relevant', async () => {
@@ -816,24 +876,17 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
         )
       );
       const { root } = await createInstance(definition.asXml());
-      let violations = root.validationState.violations;
-      expect(violations.length).toEqual(0);
 
-      const show = root.currentState.children[0];
-      if (show?.nodeType !== 'input' || show.currentState.reference !== '/root/show') {
-        throw new Error('Expected input /root/show');
-      }
-      show.setValue('abc');
-      violations = root.validationState.violations;
-      expect(violations.length).toEqual(1);
-      expect(violations[0]?.reference).toEqual('/root/sel');
-      expect(violations[0]?.violation.message).toEqual(
-        "Unknown function in form definition: 'rndom'"
-      );
-
-      show.setValue('');
-      violations = root.validationState.violations;
-      expect(violations.length).toEqual(0);
+      expectViolations(root, []);
+      setInput(root, '/root/show', 'abc');
+      expectViolations(root, [
+        {
+          reference: '/root/sel',
+          message: "Unknown function in form definition: 'rndom'",
+        },
+      ]);
+      setInput(root, '/root/show', '');
+      expectViolations(root, []);
     });
 
     it('violations on itemset label', async () => {
@@ -863,12 +916,12 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
         )
       );
       const { root } = await createInstance(definition.asXml());
-      const violations = root.validationState.violations;
-      expect(violations.length).toEqual(1);
-      expect(violations[0]?.reference).toEqual('/root/sel');
-      expect(violations[0]?.violation.message).toEqual(
-        "Unknown function in form definition: 'nofun'"
-      );
+      expectViolations(root, [
+        {
+          reference: '/root/sel',
+          message: "Unknown function in form definition: 'nofun'",
+        },
+      ]);
     });
 
     it('violations on setvalue actions', async () => {
@@ -884,12 +937,12 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
         body(input('/root/sel'))
       );
       const { root } = await createInstance(definition.asXml());
-      const violations = root.validationState.violations;
-      expect(violations.length).toEqual(1);
-      expect(violations[0]?.reference).toEqual('/root/sel');
-      expect(violations[0]?.violation.message).toEqual(
-        "Unknown function in form definition: 'rnd'"
-      );
+      expectViolations(root, [
+        {
+          reference: '/root/sel',
+          message: "Unknown function in form definition: 'rnd'",
+        },
+      ]);
     });
 
     it('violations on value changed actions', async () => {
@@ -905,21 +958,14 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
         body(input('/root/src', setvalue('xforms-value-changed', '/root/dest', 'bah()')))
       );
       const { root } = await createInstance(definition.asXml());
-      let violations = root.validationState.violations;
-      expect(violations.length).toEqual(0);
-
-      const src = root.currentState.children[0];
-      if (src?.nodeType !== 'input' || src.currentState.reference !== '/root/src') {
-        throw new Error('Expected input /root/src');
-      }
-      src.setValue('abc');
-
-      violations = root.validationState.violations;
-      expect(violations.length).toEqual(1);
-      expect(violations[0]?.reference).toEqual('/root/dest');
-      expect(violations[0]?.violation.message).toEqual(
-        "Unknown function in form definition: 'bah'"
-      );
+      expectViolations(root, []);
+      setInput(root, '/root/src', 'abc');
+      expectViolations(root, [
+        {
+          reference: '/root/dest',
+          message: "Unknown function in form definition: 'bah'",
+        },
+      ]);
     });
 
     it('violations errors thrown in required constraint messages', async () => {
@@ -944,12 +990,12 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
         body(input('/root/src'))
       );
       const { root } = await createInstance(definition.asXml());
-      const violations = root.validationState.violations;
-      expect(violations.length).toEqual(1);
-      expect(violations[0]?.reference).toEqual('/root/src');
-      expect(violations[0]?.violation.message).toEqual(
-        "Unknown function in form definition: 'nofun'"
-      );
+      expectViolations(root, [
+        {
+          reference: '/root/src',
+          message: "Unknown function in form definition: 'nofun'",
+        },
+      ]);
     });
   });
 

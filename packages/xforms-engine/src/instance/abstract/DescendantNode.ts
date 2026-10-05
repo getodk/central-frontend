@@ -28,7 +28,6 @@ import { InstanceNode } from './InstanceNode.ts';
 import { ActionDefinition } from '../../parse/model/ActionDefinition.ts';
 import { SET_GEOPOINT_LOCAL_NAME, SET_VALUE_LOCAL_NAME } from '../../parse/XFormDOM.ts';
 import { XFORM_EVENT } from '../../parse/model/Event.ts';
-import { ValueNode } from './ValueNode.ts';
 
 interface TextErrorState {
   readonly label?: { readonly error: Error | null } | null;
@@ -261,7 +260,7 @@ export abstract class DescendantNode<
       defaultValue: true,
     });
     const isSelfRelevant = createComputedExpression(this, relevant, {
-      defaultValue: false,
+      defaultValue: true,
     });
     this.isSelfRelevant = isSelfRelevant;
     this.isRequired = createComputedExpression(this, required, {
@@ -305,8 +304,7 @@ export abstract class DescendantNode<
   }
 
   private getReportedError(): Error | null {
-    const relevant = this instanceof ValueNode ? this.isRelevant() : !this.hasNonRelevantAncestor();
-    if (!relevant) {
+    if (!this.isRelevant()) {
       return null;
     }
     const [getActionError] = this.actionError;
