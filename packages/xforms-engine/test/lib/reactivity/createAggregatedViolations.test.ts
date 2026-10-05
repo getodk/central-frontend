@@ -737,6 +737,56 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
       );
     });
 
+    it('violations on itemset value are cleared when itemset items are filtered out', async () => {
+      definition = html(
+        head(
+          title('itemset filter'),
+          model(
+            mainInstance(t('root id="itemsets" version=""', t('show'), t('sel'))),
+            instance(
+              'sec',
+              t('item', t('itextId', 'choices-0'), t('name', 'a')),
+              t('item', t('itextId', 'choices-1'), t('name', 'b')),
+              t('item', t('itextId', 'choices-2'), t('name', 'c'))
+            ),
+            bind('/root/show').type('string'),
+            bind('/root/sel').type('string')
+          )
+        ),
+        body(
+          input('/root/show'),
+          select1(
+            '/root/sel',
+            t(
+              `itemset nodeset="instance('sec')/root/item[/root/show != '']"`,
+              t('value ref="rndom()"'),
+              t('label ref="itextId"')
+            )
+          )
+        )
+      );
+      const { root } = await createInstance(definition.asXml());
+
+      let violations = root.validationState.violations;
+      expect(violations.length).toEqual(0);
+
+      const show = root.currentState.children[0];
+      if (show?.nodeType !== 'input' || show.currentState.reference !== '/root/show') {
+        throw new Error('Expected input /root/show');
+      }
+      show.setValue('abc');
+      violations = root.validationState.violations;
+      expect(violations.length).toEqual(1);
+      expect(violations[0]?.reference).toEqual('/root/sel');
+      expect(violations[0]?.violation.message).toEqual(
+        "Unknown function in form definition: 'rndom'"
+      );
+
+      show.setValue('');
+      violations = root.validationState.violations;
+      expect(violations.length).toEqual(0);
+    });
+
     it('violations on itemset value are cleared when not relevant', async () => {
       definition = html(
         head(

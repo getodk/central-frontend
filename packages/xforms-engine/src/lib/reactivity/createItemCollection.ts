@@ -20,6 +20,10 @@ import { createTextRange } from './text/createTextRange.ts';
 
 type ItemCollectionControl = RankControl | SelectControl;
 
+const contextError = (context: ItemsetItemEvaluationContext): Error | null => {
+  return context.expressionErrors.find(Boolean)?.() ?? null;
+};
+
 const labelError = (label: ClientTextRange<'item-label'>): Error | null => {
   return label instanceof TextRange ? label.error : null;
 };
@@ -84,6 +88,7 @@ class ItemsetItemEvaluationContext implements EvaluationContext {
   readonly evaluator: EngineXPathEvaluator;
   readonly contextReference: Accessor<string>;
   readonly getActiveLanguage: Accessor<ActiveLanguage>;
+  readonly expressionErrors: Array<Accessor<Error | null>> = [];
 
   constructor(
     readonly control: ItemCollectionControl,
@@ -97,7 +102,7 @@ class ItemsetItemEvaluationContext implements EvaluationContext {
   }
 
   registerExpressionError(error: Accessor<Error | null>) {
-    this.control.registerExpressionError(error);
+    this.expressionErrors.push(error);
   }
 }
 
@@ -121,6 +126,7 @@ interface ItemsetItem {
   label(): ClientTextRange<'item-label'>;
   value(): string;
   properties: Array<[string, () => string]>;
+  context: ItemsetItemEvaluationContext;
 }
 
 const MAX_CHANGES_PER_UPDATE = 100;
@@ -190,6 +196,7 @@ const createItemsetItems = (
             label,
             value,
             properties,
+            context,
           };
         });
       });
@@ -211,10 +218,15 @@ const createItemset = (
           properties: item.properties.map(
             ([propLabel, propValue]) => [propLabel, propValue()] as [string, string]
           ),
+          context: item.context,
         };
       });
     });
-    registerItemsError(control, () => itemset().map((item) => labelError(item.label)));
+    registerItemsError(control, () => {
+      return itemset().map((item) => {
+        return labelError(item.label) ?? contextError(item.context) ?? null;
+      });
+    });
     return itemset;
   });
 };
