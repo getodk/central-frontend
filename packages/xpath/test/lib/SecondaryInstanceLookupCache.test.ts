@@ -61,18 +61,18 @@ describe('Secondary instance lookup cache', () => {
     });
 
     it('caches node query', () => {
-      const expected = testDocument.getElementById('3')!;
+      const expected = new Set([testDocument.getElementById('3')]);
       evaluator.evaluateNode(
         '/root/instance[@id="second"]/item[@id=/root/instance[@id="primary"]/a]'
       );
       expect(SecondaryInstanceLookupCache.getCache().size).toEqual(1);
-      expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id=3]')).toEqual([
-        expected,
-      ]);
+      expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id=3]')).toEqual(
+        expected
+      );
     });
 
     it('caches node query for reuse for future queries', () => {
-      const expected = testDocument.getElementById('3')!;
+      const expected = new Set([testDocument.getElementById('3')]);
       const color = evaluator.evaluateString(
         '/root/instance[@id="second"]/item[@id=/root/instance[@id="primary"]/a]/@color'
       );
@@ -82,13 +82,13 @@ describe('Secondary instance lookup cache', () => {
       );
       expect(size).toEqual('large');
       expect(SecondaryInstanceLookupCache.getCache().size).toEqual(1);
-      expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id=3]')).toEqual([
-        expected,
-      ]);
+      expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id=3]')).toEqual(
+        expected
+      );
     });
 
     it('caches node query with multiple predicates', () => {
-      const expected = testDocument.getElementById('3')!;
+      const expected = new Set([testDocument.getElementById('3')]);
       const color = evaluator.evaluateString(
         '/root/instance[@id="second"]/item[@color=/root/instance[@id="colors"]/a][@size=/root/instance[@id="sizes"]/a]/@color'
       );
@@ -102,23 +102,23 @@ describe('Secondary instance lookup cache', () => {
         SecondaryInstanceLookupCache.get(
           '/root/instance[@id="second"]/item[@color=blue][@size=large]'
         )
-      ).toEqual([expected]);
+      ).toEqual(expected);
     });
 
     it('caches queries with functions', () => {
-      const expected = testDocument.getElementById('3')!;
+      const expected = new Set([testDocument.getElementById('3')]);
       evaluator.evaluateNode(
         '/root/instance[@id="second"]/item[@id=coalesce(/root/instance[@id="primary"]/c, 3)]'
       );
       expect(SecondaryInstanceLookupCache.getCache().size).toEqual(1);
-      expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id=3]')).toEqual([
-        expected,
-      ]);
+      expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id=3]')).toEqual(
+        expected
+      );
     });
 
     it('does not reuse the cache item when the query does not match', () => {
-      const expected3 = testDocument.getElementById('3')!;
-      const expected4 = testDocument.getElementById('4')!;
+      const expected3 = new Set([testDocument.getElementById('3')]);
+      const expected4 = new Set([testDocument.getElementById('4')]);
       const color = evaluator.evaluateString(
         '/root/instance[@id="second"]/item[@id=/root/instance[@id="primary"]/a]/@color'
       );
@@ -128,12 +128,12 @@ describe('Secondary instance lookup cache', () => {
       );
       expect(size).toEqual('small');
       expect(SecondaryInstanceLookupCache.getCache().size).toEqual(2);
-      expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id=3]')).toEqual([
-        expected3,
-      ]);
-      expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id=4]')).toEqual([
-        expected4,
-      ]);
+      expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id=3]')).toEqual(
+        expected3
+      );
+      expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id=4]')).toEqual(
+        expected4
+      );
     });
 
     it('does not cache relative queries', () => {
