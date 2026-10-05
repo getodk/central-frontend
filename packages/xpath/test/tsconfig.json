@@ -3,7 +3,6 @@
   "include": ["./**/*.ts", "../vite-env.d.ts"],
   "exclude": ["../src/global-types/internal"],
   "compilerOptions": {
-    "rootDir": "../../",
     "lib": ["DOM", "DOM.Iterable", "ES2022"]
   }
 }
