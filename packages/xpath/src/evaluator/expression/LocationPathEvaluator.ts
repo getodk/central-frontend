@@ -136,10 +136,7 @@ export class LocationPathEvaluator
             filteredNodes.push(...self.contextNodes);
           }
         }
-        currentContext = LocationPathEvaluation.fromNodes(
-          currentContext,
-          new Set(filteredNodes)
-        );
+        currentContext = LocationPathEvaluation.fromNodes(currentContext, new Set(filteredNodes));
       }
       if (cacheKey) {
         SecondaryInstanceLookupCache.set(cacheKey, currentContext.contextNodes);

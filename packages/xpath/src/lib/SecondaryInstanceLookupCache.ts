@@ -75,11 +75,11 @@ export class SecondaryInstanceLookupCache {
 
   static set<T extends XPathNode>(key: string, filteredNodes: ReadonlySet<T>) {
     cache.set(key, filteredNodes);
-  };
+  }
 
   static get<T extends XPathNode>(key: string): ReadonlySet<T> | undefined {
     return cache.get(key) as ReadonlySet<T> | undefined;
-  };
+  }
 
   // exposed for testing
   static getCache = (): Map<string, ReadonlySet<XPathNode>> => {
