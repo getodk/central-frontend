@@ -2219,11 +2219,11 @@
     "DatasetShow": {
       "infoNav": {
         "connectedForms": {
-          "string": "{count, plural, one {Updated by {count} Form} other {Updated by {count} Forms}}",
+          "string": "{count, plural, one {Updating Form} other {Updating Forms}}",
           "developer_comment": "This dropdown title refers to Entity Lists that are updated by a Form."
         },
         "linkedForms": {
-          "string": "{count, plural, one {Used in {count} Form} other {Used in {count} Forms}}",
+          "string": "{count, plural, one {Referencing Form} other {Referencing Forms}}",
           "developer_comment": "This dropdown title refers to Entity Lists that are linked to a Form."
         }
       }
@@ -3807,7 +3807,7 @@
       },
       "infoNav": {
         "entityLists": {
-          "string": "{count, plural, one {{count} Linked Entity List} other {{count} Linked Entity Lists}}"
+          "string": "{count, plural, one {Linked Entity List} other {Linked Entity Lists}}"
         },
         "updatedDatasets": {
           "string": "Updates",
@@ -3818,7 +3818,7 @@
           "developer_comment": "This text is shown as a header in a dropdown about related entity lists that are used as attachments by this form."
         },
         "appUsers": {
-          "string": "{count, plural, one {{count} App User assigned} other {{count} App Users assigned}}"
+          "string": "{count, plural, one {App User assigned} other {App Users assigned}}"
         }
       },
       "draftNav": {

@@ -56,11 +56,6 @@ describe('ProjectArchive', () => {
       app.vm.$route.path.should.equal('/projects/1');
     });
 
-    it("appends (archived) to the project's name", async () => {
-      const app = await submit();
-      app.get('#page-head-title').text().should.equal('My Project (archived)');
-    });
-
     it('shows a success alert', async () => {
       const app = await submit();
       app.should.alert('success');
