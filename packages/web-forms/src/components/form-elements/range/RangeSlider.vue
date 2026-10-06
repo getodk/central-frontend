@@ -6,11 +6,7 @@ import {
 	getRangeValueAfterSteps,
 	getRangeValueAtRatio,
 } from '@getodk/web-forms/components/form-elements/range/range-scale.ts';
-import { useElementSize } from '@getodk/web-forms/lib/useElementSize.ts';
 import { computed, useTemplateRef } from 'vue';
-
-const TICK_SIZE = 3;
-const MIN_TICK_SPACING = TICK_SIZE * 2;
 
 const props = defineProps<{
 	readonly id: string;
@@ -27,7 +23,6 @@ const props = defineProps<{
 const emit = defineEmits<{ 'update:modelValue': [value: number] }>();
 
 const trackElement = useTemplateRef<HTMLElement>('track');
-const trackSize = useElementSize(trackElement);
 
 const bounds = computed(() => ({
 	start: props.start,
@@ -38,12 +33,7 @@ const bounds = computed(() => ({
 const scale = computed(() => getRangeScale(bounds.value));
 const hasValue = computed(() => props.modelValue != null);
 const ratio = computed(() => props.modelValue == null ? 0 : getRangeRatio(bounds.value, props.modelValue));
-const trackLength = computed(() => {
-	return props.orientation === 'vertical' ? trackSize.value.height : trackSize.value.width;
-});
-const maxTickCount = computed(() => Math.floor(trackLength.value / MIN_TICK_SPACING));
 const tickCount = computed(() => props.ticks ? getRangeTickCount(scale.value) : 0);
-const ticksFit = computed(() => tickCount.value > 0 && tickCount.value <= maxTickCount.value);
 
 const changeValue = (value: number) => {
 	if (value !== props.modelValue) {
@@ -107,7 +97,7 @@ const moveBackward = () => moveByStep(-1);
 		:id="id"
 		ref="track"
 		:class="['range-slider', `range-${orientation}`, { 'range-disabled': disabled, 'range-unset': !hasValue }]"
-		:style="{ '--range-ratio': ratio, '--tick-size': `${TICK_SIZE}px` }"
+		:style="{ '--range-ratio': ratio }"
 		role="slider"
 		:tabindex="disabled ? -1 : 0"
 		@click="changeValueAtPointer"
@@ -117,7 +107,7 @@ const moveBackward = () => moveByStep(-1);
 		@keydown.left.prevent="moveBackward"
 	>
 		<div v-if="hasValue" class="range-fill" />
-		<div v-if="ticksFit" class="range-ticks">
+		<div v-if="tickCount > 0" class="range-ticks">
 			<span v-for="tickIndex in tickCount" :key="tickIndex" class="range-tick" />
 		</div>
 		<div
@@ -133,6 +123,7 @@ const moveBackward = () => moveByStep(-1);
 <style scoped lang="scss">
 .range-slider {
 	--track-size: 4px;
+	--tick-size: 3px;
 	--thumb-size: 20px;
 	--range-position: calc(var(--range-ratio) * 100%);
 
@@ -215,9 +206,11 @@ const moveBackward = () => moveByStep(-1);
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	overflow: hidden;
 }
 
 .range-tick {
+	flex-shrink: 0;
 	width: var(--tick-size);
 	height: var(--tick-size);
 	border-radius: 50%;
