@@ -15,7 +15,6 @@ import { stringAnswer } from '../scenario/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../scenario/jr/Scenario.ts';
 
 describe('Secondary instance cache', () => {
-
   let resourceService: JRResourceService;
 
   beforeEach(() => {
@@ -26,8 +25,7 @@ describe('Secondary instance cache', () => {
     resourceService.reset();
   });
 
-  describe('filtering of secondary instance items', { timeout: 60 * 1000 }, async () => {
-
+  describe('filtering of secondary instance items', { timeout: 60 * 1000 }, () => {
     const csvAttachmentFileName = 'csv-attachment.csv';
     const csvAttachmentURL = `jr://file/${csvAttachmentFileName}` as const;
     const formDefinition = html(
@@ -35,22 +33,35 @@ describe('Secondary instance cache', () => {
         title('External secondary instance'),
         model(
           mainInstance(
-            t('data id="external-secondary-instance-xml-csv"',
+            t(
+              'data id="external-secondary-instance-xml-csv"',
               t('search'),
               t('name'),
               t('address'),
               t('phone'),
-              t('age'),
+              t('age')
             )
           ),
 
           t(`instance id="external-csv" src="${csvAttachmentURL}"`),
 
           bind('/data/search').type('string'),
-          bind('/data/name').type('string').readonly('true()').calculate("instance('external-csv')/root/item[id= /data/search ]/name"),
-          bind('/data/address').type('string').readonly('true()').calculate("instance('external-csv')/root/item[id= /data/search ]/address"),
-          bind('/data/phone').type('string').readonly('true()').calculate("instance('external-csv')/root/item[id= /data/search ]/phone"),
-          bind('/data/age').type('string').readonly('true()').calculate("instance('external-csv')/root/item[id= /data/search ]/age"),
+          bind('/data/name')
+            .type('string')
+            .readonly('true()')
+            .calculate("instance('external-csv')/root/item[id= /data/search ]/name"),
+          bind('/data/address')
+            .type('string')
+            .readonly('true()')
+            .calculate("instance('external-csv')/root/item[id= /data/search ]/address"),
+          bind('/data/phone')
+            .type('string')
+            .readonly('true()')
+            .calculate("instance('external-csv')/root/item[id= /data/search ]/phone"),
+          bind('/data/age')
+            .type('string')
+            .readonly('true()')
+            .calculate("instance('external-csv')/root/item[id= /data/search ]/age")
         )
       ),
       body(
@@ -58,7 +69,7 @@ describe('Secondary instance cache', () => {
         input('/data/name'),
         input('/data/address'),
         input('/data/phone'),
-        input('/data/age'),
+        input('/data/age')
       )
     );
 
@@ -67,15 +78,27 @@ describe('Secondary instance cache', () => {
     beforeEach(async () => {
       const data = Array(100_000)
         .fill(null)
-        .map((_, i) => ([`"someid${i}"`, `"abcname${i}"`, `"abcaddress${i}"`, `"abcphone${i}"`, `"abcage${i}"`]));
+        .map((_, i) => [
+          `"someid${i}"`,
+          `"abcname${i}"`,
+          `"abcaddress${i}"`,
+          `"abcphone${i}"`,
+          `"abcage${i}"`,
+        ]);
       data.push();
       const header = ['"id"', '"name"', '"address"', '"phone"', '"age"'];
-      const target = ['"targetid"', '"targetname"', '"targetaddress"', '"targetphone"', '"targetage"']
+      const target = [
+        '"targetid"',
+        '"targetname"',
+        '"targetaddress"',
+        '"targetphone"',
+        '"targetage"',
+      ];
       data.splice(Math.ceil(data.length / 2), 0, target);
       data.unshift(header);
-      
-      const csvAttachment = data.map(row => row.join(',')).join('\n');
-  
+
+      const csvAttachment = data.map((row) => row.join(',')).join('\n');
+
       resourceService.activateResource(
         { url: csvAttachmentURL, fileName: csvAttachmentFileName, mimeType: 'text/csv' },
         csvAttachment
@@ -85,8 +108,7 @@ describe('Secondary instance cache', () => {
       });
     }, 60 * 1000);
 
-    it('searches for items in external instances', async () => {
-  
+    it('searches for items in external instances', () => {
       scenario.answer('/data/search', 'targetid');
 
       expect(scenario.answerOf('/data/search')).toEqualAnswer(stringAnswer('targetid'));
