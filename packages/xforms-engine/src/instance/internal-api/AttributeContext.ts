@@ -40,4 +40,5 @@ export interface AttributeContext extends EvaluationContext {
 
   isReadonly(): boolean;
   isRelevant(): boolean;
+  setActionError(error: Error | null): void;
 }

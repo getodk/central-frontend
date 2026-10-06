@@ -290,6 +290,15 @@ export abstract class BaseRepeatRange<Definition extends AnyRepeatDefinition>
     });
   }
 
+  private getInstanceLabelError(): Error | null {
+    const errors = this.getChildren().map((instance) => instance.getLabelError());
+    return errors.find((error) => error != null) ?? null;
+  }
+
+  protected override getTextError(): Error | null {
+    return super.getTextError() ?? this.getInstanceLabelError();
+  }
+
   getChildren(): readonly RepeatInstance[] {
     return this.childrenState.getChildren();
   }

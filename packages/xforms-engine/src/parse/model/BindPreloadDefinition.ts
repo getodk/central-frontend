@@ -5,6 +5,7 @@ import type { InstanceValueContext } from '../../instance/internal-api/InstanceV
 import type { BindDefinition } from './BindDefinition.ts';
 import type { BindElement } from './BindElement.ts';
 import { XFORM_EVENT, type XFormEvent } from './Event.ts';
+import { Success } from '../../integration/xpath/EngineXPathEvaluator.ts';
 
 /**
  * Per {@link https://getodk.github.io/xforms-spec/#preload-attributes:~:text=concatenation%20of%20%E2%80%98uuid%3A%E2%80%99%20and%20uuid()}
@@ -61,6 +62,17 @@ const getPreloadInput = (bindElement: BindElement): AnyPreloadInput | null => {
   };
 };
 
+const safeStringEvaluation = (
+  context: AttributeContext | InstanceValueContext,
+  expression: string
+): string => {
+  const result = context.evaluator.evaluateString(expression);
+  if (result instanceof Success) {
+    return result.value as string;
+  }
+  throw result.error!;
+};
+
 /**
  * Parsed representation of
  * {@link https://getodk.github.io/xforms-spec/#preload-attributes | Preload Attributes}.
@@ -97,13 +109,13 @@ export class BindPreloadDefinition<Type extends PreloadType> implements PreloadI
 
   getValue(context: AttributeContext | InstanceValueContext): string | undefined {
     if (this.type === 'uid') {
-      return context.evaluator.evaluateString(PRELOAD_UID_EXPRESSION);
+      return safeStringEvaluation(context, PRELOAD_UID_EXPRESSION);
     }
     if (this.type === 'timestamp') {
-      return context.evaluator.evaluateString('now()');
+      return safeStringEvaluation(context, 'now()');
     }
     if (this.type === 'date') {
-      return context.evaluator.evaluateString('today()');
+      return safeStringEvaluation(context, 'today()');
     }
     if (this.type === 'property') {
       const properties = context.instanceConfig.preloadProperties;
