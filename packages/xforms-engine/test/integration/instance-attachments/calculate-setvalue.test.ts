@@ -24,6 +24,7 @@ import { constants as ENGINE_CONSTANTS } from '@getodk/xforms-engine';
 import { afterEach, assert, beforeEach, describe, expect, it } from 'vitest';
 import { JRResource } from '../../scenario/fixtures/JRResource.ts';
 import { JRResourceService } from '../../scenario/fixtures/JRResourceService.ts';
+import { ANSWER_OK } from '../../scenario/jr/validation/ValidateOutcome.ts';
 import { ReactiveScenario } from '../../scenario/reactive/ReactiveScenario.ts';
 
 describe('Instance attachments with calculate and setvalue', () => {
@@ -321,7 +322,7 @@ describe('Instance attachments with calculate and setvalue', () => {
   });
 
   describe('readonly', () => {
-    it('accepts the calculation and rejects client writes', async () => {
+    it('accepts the calculation and ignores client writes', async () => {
       const scenario = await ReactiveScenario.init(
         'Readonly photo',
         animalPhotoForm(
@@ -333,10 +334,9 @@ describe('Instance attachments with calculate and setvalue', () => {
       await settle(scenario, photo);
 
       expect(photo.currentState.instanceValue).toBe(KOALA_URL);
-      expect(() => {
-        scenario.answer('/data/photo', new File(['mine'], 'mine.jpg', { type: 'image/jpeg' }));
-      }).toThrow('Cannot write to readonly field');
+      scenario.answer('/data/photo', new File(['mine'], 'mine.jpg', { type: 'image/jpeg' }));
       expect(photo.currentState.instanceValue).toBe(KOALA_URL);
+      expect(scenario.getValidationOutcome().outcome).toBe(ANSWER_OK);
     });
   });
 

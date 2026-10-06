@@ -6,11 +6,14 @@ import {
   head,
   html,
   input,
+  instance,
   item,
   label,
   mainInstance,
   model,
+  repeat,
   select1,
+  setvalue,
   t,
   title,
 } from '@getodk/common/test-utils/xform-dsl/index.ts';
@@ -18,6 +21,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import type { ValidationCondition, ViolationMessage } from '../../../src/client/validation.ts';
 import { createInstance } from '../../../src/entrypoints/createInstance.ts';
 import { reactiveTestScope } from '../../helpers/reactive/internal.ts';
+import type { RootNode } from '@getodk/xforms-engine';
 
 describe('createAggregatedViolations - reactive aggregated `constraint` and `required` validation violations on ancestor nodes', () => {
   let definition: HtmlXFormsElement;
@@ -51,10 +55,10 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
 					'/data/contactdetails',
 					label('Household'),
 
-					input("/data/contactdetails/residentialAddress",
+					input('/data/contactdetails/residentialAddress',
 						label('Residential address')),
 
-					group("/data/contactdetails/phone",
+					group('/data/contactdetails/phone',
 						label('Phone numbers'),
 
 						input('/data/contactdetails/phone/home',
@@ -80,7 +84,7 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
   interface SimplifiedViolation {
     readonly condition: ValidationCondition;
     readonly valid: false;
-    readonly message: ViolationMessage<ValidationCondition> | null;
+    readonly message: ViolationMessage<ValidationCondition> | string | null;
   }
 
   interface SimplifiedViolationReference {
@@ -580,6 +584,430 @@ describe('createAggregatedViolations - reactive aggregated `constraint` and `req
           },
         ],
       ]);
+    });
+  });
+
+  describe('error violations', () => {
+    interface ViolationExpectation {
+      reference: string;
+      message: string;
+    }
+
+    const expectViolations = (root: RootNode, expected: ViolationExpectation[]) => {
+      const actual = root.validationState.violations;
+      expect(actual.length).toEqual(expected.length);
+      actual.forEach((actualItem, i) => {
+        const expectedItem = expected[i]!;
+        expect(actualItem.reference).toEqual(expectedItem.reference);
+        expect(actualItem.violation.message).toEqual(expectedItem.message);
+      });
+    };
+
+    const setInput = (root: RootNode, reference: string, value: string) => {
+      const inputNode = root.currentState.children[0];
+      if (inputNode?.nodeType !== 'input' || inputNode.currentState.reference !== reference) {
+        throw new Error(`Expected input ${reference}`);
+      }
+      inputNode.setValue(value);
+    };
+
+    it('violations are not shown when not relevant', async () => {
+      definition = html(
+        head(
+          title('Validation Form'),
+          model(
+            mainInstance(t('data id="validation"', t('show'), t('phone'))),
+            bind('/data/show'),
+            bind('/data/phone').relevant("/data/show != ''").constraint('unknown()')
+          )
+        ),
+        body(input('/data/show'), input('/data/phone'))
+      );
+      const { root } = await createInstance(definition.asXml());
+
+      expectViolations(root, []);
+      setInput(root, '/data/show', 'abc');
+      expectViolations(root, [
+        {
+          reference: '/data/phone',
+          message: "Unknown function in form definition: 'unknown'",
+        },
+      ]);
+    });
+
+    it('violations are shown when error on the relevant expression', async () => {
+      definition = html(
+        head(
+          title('Validation Form'),
+          model(
+            mainInstance(t('data id="validation"', t('phone'))),
+            bind('/data/phone').relevant('unknown()')
+          )
+        ),
+        body(input('/data/phone'))
+      );
+      const { root } = await createInstance(definition.asXml());
+      expectViolations(root, [
+        {
+          reference: '/data/phone',
+          message: "Unknown function in form definition: 'unknown'",
+        },
+      ]);
+    });
+
+    it('violations on groups', async () => {
+      definition = html(
+        head(
+          title('Validation Form'),
+          model(
+            mainInstance(
+              t(
+                'data id="validation"',
+                t('contactdetails', t('residentialAddress'), t('phone', t('home'))),
+                t('meta', t('instanceID'))
+              )
+            ),
+            bind('/data/contactdetails').relevant('unknownfunction()'),
+            bind('/data/contactdetails/residentialAddress'),
+            bind('/data/contactdetails/phone/home')
+          )
+        ),
+        body(
+          group(
+            '/data/contactdetails',
+            label('Household'),
+
+            input('/data/contactdetails/residentialAddress', label('Residential address')),
+
+            group(
+              '/data/contactdetails/phone',
+              label('Phone numbers'),
+
+              input('/data/contactdetails/phone/home', label('Home phone no.'))
+            )
+          )
+        )
+      );
+      const { root } = await createInstance(definition.asXml());
+      expectViolations(root, [
+        {
+          reference: '/data/contactdetails',
+          message: "Unknown function in form definition: 'unknownfunction'",
+        },
+      ]);
+    });
+
+    it('violations on repeats', async () => {
+      definition = html(
+        head(
+          title('invalid jr:count'),
+          model(
+            mainInstance(
+              t(
+                'data id="cast-fractional-value-to-int"',
+                t('repeat-count jr:template=""', t('anything'))
+              )
+            )
+          )
+        ),
+        body(repeat('/data/repeat-count', 'somerandomnumber()'))
+      );
+      const { root } = await createInstance(definition.asXml());
+      expectViolations(root, [
+        {
+          reference: '/data/repeat-count',
+          message: "Unknown function in form definition: 'somerandomnumber'",
+        },
+      ]);
+    });
+
+    it('violations on attributes', async () => {
+      definition = html(
+        head(
+          title('Bind attributes'),
+          model(
+            mainInstance(t('root id="bind-attributes" version=""', t('version'))),
+            bind('/root/version').type('string'),
+            bind('/root/@version')
+              .type('string')
+              .calculate('invalidrandomfunction()')
+              .readonly('true()')
+          )
+        ),
+        body(input('/root/version'))
+      );
+      const { root } = await createInstance(definition.asXml());
+      expectViolations(root, [
+        {
+          reference: '/root/@version',
+          message: "Unknown function in form definition: 'invalidrandomfunction'",
+        },
+      ]);
+    });
+
+    it('violations on itemsets', async () => {
+      definition = html(
+        head(
+          title('itemsets'),
+          model(
+            mainInstance(t('root id="itemsets" version=""', t('sel'))),
+            bind('/root/sel').type('string')
+          )
+        ),
+        body(
+          select1(
+            '/root/sel',
+            t('itemset nodeset="isnt()"', t('label ref="itextId"'), t('value ref="value"'))
+          )
+        )
+      );
+      const { root } = await createInstance(definition.asXml());
+      expectViolations(root, [
+        {
+          reference: '/root/sel',
+          message: "Unknown function in form definition: 'isnt'",
+        },
+      ]);
+    });
+
+    it('violations on itemset value', async () => {
+      definition = html(
+        head(
+          title('itemset value'),
+          model(
+            mainInstance(t('root id="itemsets" version=""', t('sel'))),
+            instance(
+              'sec',
+              t('item', t('itextId', 'choices-0'), t('name', 'a')),
+              t('item', t('itextId', 'choices-1'), t('name', 'b')),
+              t('item', t('itextId', 'choices-2'), t('name', 'c'))
+            ),
+            bind('/root/sel').type('string')
+          )
+        ),
+        body(
+          select1(
+            '/root/sel',
+            t(
+              'itemset nodeset="instance(\'sec\')"',
+              t('value ref="rndom()"'),
+              t('label ref="itextId"')
+            )
+          )
+        )
+      );
+      const { root } = await createInstance(definition.asXml());
+      expectViolations(root, [
+        {
+          reference: '/root/sel',
+          message: "Unknown function in form definition: 'rndom'",
+        },
+      ]);
+    });
+
+    it('violations on itemset value are cleared when itemset items are filtered out', async () => {
+      definition = html(
+        head(
+          title('itemset filter'),
+          model(
+            mainInstance(t('root id="itemsets" version=""', t('show'), t('sel'))),
+            instance(
+              'sec',
+              t('item', t('itextId', 'choices-0'), t('name', 'a')),
+              t('item', t('itextId', 'choices-1'), t('name', 'b')),
+              t('item', t('itextId', 'choices-2'), t('name', 'c'))
+            ),
+            bind('/root/show').type('string'),
+            bind('/root/sel').type('string')
+          )
+        ),
+        body(
+          input('/root/show'),
+          select1(
+            '/root/sel',
+            t(
+              `itemset nodeset="instance('sec')/root/item[/root/show != '']"`,
+              t('value ref="rndom()"'),
+              t('label ref="itextId"')
+            )
+          )
+        )
+      );
+      const { root } = await createInstance(definition.asXml());
+
+      expectViolations(root, []);
+      setInput(root, '/root/show', 'abc');
+      expectViolations(root, [
+        {
+          reference: '/root/sel',
+          message: "Unknown function in form definition: 'rndom'",
+        },
+      ]);
+      setInput(root, '/root/show', '');
+      expectViolations(root, []);
+    });
+
+    it('violations on itemset value are cleared when not relevant', async () => {
+      definition = html(
+        head(
+          title('itemset value'),
+          model(
+            mainInstance(t('root id="itemsets" version=""', t('show'), t('sel'))),
+            instance(
+              'sec',
+              t('item', t('itextId', 'choices-0'), t('name', 'a')),
+              t('item', t('itextId', 'choices-1'), t('name', 'b')),
+              t('item', t('itextId', 'choices-2'), t('name', 'c'))
+            ),
+            bind('/root/show').type('string'),
+            bind('/root/sel').type('string').relevant("/root/show != ''")
+          )
+        ),
+        body(
+          input('/root/show'),
+          select1(
+            '/root/sel',
+            t(
+              'itemset nodeset="instance(\'sec\')"',
+              t('value ref="rndom()"'),
+              t('label ref="itextId"')
+            )
+          )
+        )
+      );
+      const { root } = await createInstance(definition.asXml());
+
+      expectViolations(root, []);
+      setInput(root, '/root/show', 'abc');
+      expectViolations(root, [
+        {
+          reference: '/root/sel',
+          message: "Unknown function in form definition: 'rndom'",
+        },
+      ]);
+      setInput(root, '/root/show', '');
+      expectViolations(root, []);
+    });
+
+    it('violations on itemset label', async () => {
+      definition = html(
+        head(
+          title('itemset label'),
+          model(
+            mainInstance(t('root id="itemsets" version=""', t('sel'))),
+            instance(
+              'sec',
+              t('item', t('itextId', 'choices-0'), t('name', 'a')),
+              t('item', t('itextId', 'choices-1'), t('name', 'b')),
+              t('item', t('itextId', 'choices-2'), t('name', 'c'))
+            ),
+            bind('/root/sel').type('string')
+          )
+        ),
+        body(
+          select1(
+            '/root/sel',
+            t(
+              'itemset nodeset="instance(\'sec\')"',
+              t('label ref="concat(label, nofun())"'),
+              t('value ref="name"')
+            )
+          )
+        )
+      );
+      const { root } = await createInstance(definition.asXml());
+      expectViolations(root, [
+        {
+          reference: '/root/sel',
+          message: "Unknown function in form definition: 'nofun'",
+        },
+      ]);
+    });
+
+    it('violations on setvalue actions', async () => {
+      definition = html(
+        head(
+          title('setvalue'),
+          model(
+            mainInstance(t('root id="setvalue" version=""', t('sel'))),
+            bind('/root/sel').type('string'),
+            setvalue('odk-instance-load', '/root/sel', 'rnd()')
+          )
+        ),
+        body(input('/root/sel'))
+      );
+      const { root } = await createInstance(definition.asXml());
+      expectViolations(root, [
+        {
+          reference: '/root/sel',
+          message: "Unknown function in form definition: 'rnd'",
+        },
+      ]);
+    });
+
+    it('violations on value changed actions', async () => {
+      definition = html(
+        head(
+          title('value changed'),
+          model(
+            mainInstance(t('root id="valuechanged" version=""', t('src'), t('dest'))),
+            bind('/root/src').type('string'),
+            bind('/root/dest').type('string')
+          )
+        ),
+        body(input('/root/src', setvalue('xforms-value-changed', '/root/dest', 'bah()')))
+      );
+      const { root } = await createInstance(definition.asXml());
+      expectViolations(root, []);
+      setInput(root, '/root/src', 'abc');
+      expectViolations(root, [
+        {
+          reference: '/root/dest',
+          message: "Unknown function in form definition: 'bah'",
+        },
+      ]);
+    });
+
+    it('violations errors thrown in required constraint messages', async () => {
+      definition = html(
+        head(
+          title('value changed'),
+          model(
+            t(
+              'itext',
+              t(
+                'translation lang="default"',
+                t('text id="/data/src:jr:requiredMsg"', t('value', '<output value="nofun()" />'))
+              )
+            ),
+            mainInstance(t('root id="required-message" version=""', t('src'))),
+            bind('/root/src')
+              .type('string')
+              .required()
+              .withAttribute('jr', 'requiredMsg', "jr:itext('/data/src:jr:requiredMsg')")
+          )
+        ),
+        body(input('/root/src'))
+      );
+      const { root } = await createInstance(definition.asXml());
+      expectViolations(root, [
+        {
+          reference: '/root/src',
+          message: "Unknown function in form definition: 'nofun'",
+        },
+      ]);
+    });
+  });
+
+  describe('violation node reference', () => {
+    it('references the violating node itself', async () => {
+      const { root } = await createInstance(definition.asXml());
+      const violations = root.validationState.violations;
+
+      expect(violations.length).toBeGreaterThan(0);
+      expect(violations.map(({ node }) => node.nodeId)).toEqual(
+        violations.map(({ nodeId }) => nodeId)
+      );
     });
   });
 });

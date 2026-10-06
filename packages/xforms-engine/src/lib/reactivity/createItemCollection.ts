@@ -14,11 +14,28 @@ import type { EngineXPathNode } from '../../integration/xpath/adapter/kind.ts';
 import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
 import type { ItemDefinition } from '../../parse/body/control/ItemDefinition.ts';
 import type { ItemsetDefinition } from '../../parse/body/control/ItemsetDefinition.ts';
-import { createComputedExpression } from './createComputedExpression.ts';
+import { createComputedExpression, type ComputedExpression } from './createComputedExpression.ts';
 import type { ReactiveScope } from './scope.ts';
 import { createTextRange } from './text/createTextRange.ts';
 
 type ItemCollectionControl = RankControl | SelectControl;
+
+const contextError = (context: ItemsetItemEvaluationContext): Error | null => {
+  return context.expressionErrors.map((error) => error()).find(Boolean) ?? null;
+};
+
+const labelError = (label: ClientTextRange<'item-label'>): Error | null => {
+  return label instanceof TextRange ? label.error : null;
+};
+
+type ItemProperty = [string, ComputedExpression<'string'>];
+
+const registerItemsError = (
+  control: ItemCollectionControl,
+  errors: Accessor<Array<Error | null>>
+) => {
+  control.registerExpressionError(createMemo(() => errors().find(Boolean) ?? null));
+};
 type DerivedItemLabel = ClientTextRange<'item-label'>;
 
 const derivedItemLabel = (context: TranslationContext, value: string): DerivedItemLabel => {
@@ -56,9 +73,12 @@ const createTranslatedStaticItems = (
       });
     });
 
-    return createMemo(() => {
+    const computedItems = createMemo(() => {
       return labeledItems.map((item) => item());
     });
+    registerItemsError(control, () => computedItems().map((item) => labelError(item.label)));
+
+    return computedItems;
   });
 };
 
@@ -68,9 +88,10 @@ class ItemsetItemEvaluationContext implements EvaluationContext {
   readonly evaluator: EngineXPathEvaluator;
   readonly contextReference: Accessor<string>;
   readonly getActiveLanguage: Accessor<ActiveLanguage>;
+  readonly expressionErrors: Array<Accessor<Error | null>> = [];
 
   constructor(
-    control: ItemCollectionControl,
+    readonly control: ItemCollectionControl,
     readonly contextNode: EngineXPathNode
   ) {
     this.isAttached = control.isAttached;
@@ -78,6 +99,10 @@ class ItemsetItemEvaluationContext implements EvaluationContext {
     this.evaluator = control.evaluator;
     this.contextReference = control.contextReference;
     this.getActiveLanguage = control.getActiveLanguage;
+  }
+
+  registerExpressionError(error: Accessor<Error | null>) {
+    this.expressionErrors.push(error);
   }
 }
 
@@ -101,6 +126,7 @@ interface ItemsetItem {
   label(): ClientTextRange<'item-label'>;
   value(): string;
   properties: Array<[string, () => string]>;
+  context: ItemsetItemEvaluationContext;
 }
 
 const MAX_CHANGES_PER_UPDATE = 100;
@@ -161,16 +187,16 @@ const createItemsetItems = (
             .getXPathChildNodes()
             .filter((node) => node.nodeType === 'static-element');
           const properties = itemset.getPropertiesExpressions(nodeElements).map((expression) => {
-            return [expression.toString(), createComputedExpression(context, expression)] as [
-              string,
-              () => string,
-            ];
+            return [
+              expression.toString(),
+              createComputedExpression(context, expression),
+            ] as ItemProperty;
           });
-
           return {
             label,
             value,
             properties,
+            context,
           };
         });
       });
@@ -180,12 +206,11 @@ const createItemsetItems = (
 
 const createItemset = (
   control: ItemCollectionControl,
-  itemset: ItemsetDefinition
+  definition: ItemsetDefinition
 ): Accessor<readonly BaseItem[]> => {
   return control.scope.runTask(() => {
-    const itemsetItems = createItemsetItems(control, itemset);
-
-    return createMemo(() => {
+    const itemsetItems = createItemsetItems(control, definition);
+    const itemset = createMemo(() => {
       return itemsetItems().map((item) => {
         return {
           label: item.label(),
@@ -196,6 +221,10 @@ const createItemset = (
         };
       });
     });
+    registerItemsError(control, () => {
+      return itemsetItems().map((item) => labelError(item.label()) ?? contextError(item.context));
+    });
+    return itemset;
   });
 };
 

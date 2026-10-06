@@ -19,14 +19,10 @@ export const dateTimeFromString = (
     return null;
   }
 
-  try {
-    if (value.endsWith('Z') || TIMEZONE_OFFSET_PATTERN.test(value)) {
-      return Temporal.Instant.from(value).toZonedDateTimeISO(timeZone);
-    }
-    return Temporal.PlainDateTime.from(value).toZonedDateTime(timeZone);
-  } catch {
-    return null;
+  if (value.endsWith('Z') || TIMEZONE_OFFSET_PATTERN.test(value)) {
+    return Temporal.Instant.from(value).toZonedDateTimeISO(timeZone);
   }
+  return Temporal.PlainDateTime.from(value).toZonedDateTime(timeZone);
 };
 
 const toNanoseconds = (milliseconds: number): bigint => {

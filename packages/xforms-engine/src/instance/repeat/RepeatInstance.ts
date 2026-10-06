@@ -195,6 +195,15 @@ export class RepeatInstance
     this.instanceState = createTemplatedNodeInstanceState(this);
   }
 
+  getLabelError(): Error | null {
+    return super.getTextError();
+  }
+
+  // The label error is reported once, by the repeat range.
+  protected override getTextError(): Error | null {
+    return null;
+  }
+
   getChildren(): readonly GeneralChildNode[] {
     return this.childrenState.getChildren();
   }

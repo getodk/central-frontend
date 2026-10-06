@@ -323,4 +323,8 @@ export class PrimaryInstance<
     const location = await this.geolocationProvider.getLocation();
     return location ?? '';
   }
+
+  override registerExpressionError(): void {
+    // should not happen
+  }
 }
