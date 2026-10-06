@@ -78,8 +78,7 @@ export class LocationPathEvaluator
         throw new UnreachableError(contextStep);
     }
 
-    let cacheable = false;
-
+    let cacheable = currentContext.immutable;
     for (const step of rest) {
       currentContext = currentContext.step(step);
 
@@ -141,7 +140,7 @@ export class LocationPathEvaluator
       if (cacheKey) {
         SecondaryInstanceLookupCache.set(cacheKey, currentContext.contextNodes);
       }
-      if (primaryInstance) {
+      if (!cacheable && primaryInstance) {
         // only cache if a secondary instance is found
         cacheable = currentContext.nodes.values().next().value !== primaryInstance;
       }

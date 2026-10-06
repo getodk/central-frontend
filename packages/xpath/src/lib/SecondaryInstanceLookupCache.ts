@@ -64,7 +64,11 @@ export class SecondaryInstanceLookupCache {
       }
 
       const predicateResult = constantOperand.evaluate(currentContext).toString();
-      lastFoundIndex = result.indexOf(constantOperand.syntaxNode.text) + predicateResult.length + 1;
+
+      // this needs unit testing
+
+      const endOfOperand = result.indexOf(constantOperand.syntaxNode.text) + constantOperand.syntaxNode.text.length;
+      lastFoundIndex = result.indexOf(']', endOfOperand) + 1 - constantOperand.syntaxNode.text.length +  predicateResult.length;
       result = result.replace(constantOperand.syntaxNode.text, predicateResult);
     }
 

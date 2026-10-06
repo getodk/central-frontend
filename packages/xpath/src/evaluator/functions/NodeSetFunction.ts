@@ -12,11 +12,11 @@ export type NodeSetFunctionCallable = <
 ) => readonly T[];
 
 export class NodeSetFunction extends FunctionImplementation {
-  constructor(localName: string, signature: FunctionSignature, call: NodeSetFunctionCallable) {
+  constructor(localName: string, signature: FunctionSignature, call: NodeSetFunctionCallable, immutable?: boolean) {
     super(localName, signature, (context, args) => {
       const nodes = call(context, args);
 
-      return LocationPathEvaluation.fromNodes(context, new Set(nodes));
+      return LocationPathEvaluation.fromNodes(context, new Set(nodes), immutable);
     });
   }
 }

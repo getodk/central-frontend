@@ -445,6 +445,7 @@ const axisEvaluators = {
 interface LocationPathEvaluationOptions {
   readonly contextPosition?: number;
   readonly contextSize?: number;
+  readonly immutable?: boolean;
 }
 
 type AssertLocationPathEvaluationInstance = <T extends XPathNode>(
@@ -542,11 +543,14 @@ export class LocationPathEvaluation<T extends XPathNode>
 
   readonly timeZone: Temporal.TimeZoneLike;
 
+  readonly immutable: boolean;
+
   static fromNodes<T extends XPathNode>(
     currentContext: LocationPathParentContext<T>,
-    nodes: ReadonlySet<T>
+    nodes: ReadonlySet<T>,
+    immutable?: boolean
   ) {
-    return new this(currentContext, nodes);
+    return new this(currentContext, nodes, { immutable: !!immutable });
   }
 
   static fromCurrentContext<T extends XPathNode>(
@@ -597,6 +601,7 @@ export class LocationPathEvaluation<T extends XPathNode>
     });
     this.computedContextSize = options.contextSize ?? contextNodes.size;
     this.initializedContextPosition = options.contextPosition ?? 1;
+    this.immutable = !!options.immutable;
   }
 
   [Symbol.iterator]() {
