@@ -11,13 +11,12 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="dataset-show">
-    <breadcrumbs v-if="dataExists" :links="breadcrumbLinks"/>
     <page-head v-show="dataExists">
-      <template #title>
-        {{ datasetName }}
+      <template v-if="dataExists" #breadcrumbs>
+        <breadcrumbs :links="breadcrumbLinks"/>
       </template>
       <template #infonav>
-        <infonav v-if="dataset.dataExists && dataset.sourceForms.length > 0">
+        <infonav v-if="dataset.dataExists && dataset.sourceForms.length > 0" :count="dataset.sourceForms.length">
           <template #title>
             <span class="icon-magic"></span>{{ $tc('infoNav.connectedForms', dataset.sourceForms.length) }}
           </template>
@@ -27,7 +26,7 @@ except according to the terms contained in the LICENSE file.
             </li>
           </template>
         </infonav>
-        <infonav v-if="dataset.dataExists && dataset.linkedForms.length > 0">
+        <infonav v-if="dataset.dataExists && dataset.linkedForms.length > 0" :count="dataset.linkedForms.length">
           <template #title>
             <span class="icon-chain"></span>{{ $tc('infoNav.linkedForms', dataset.linkedForms.length) }}
           </template>
@@ -156,9 +155,9 @@ export default {
   "en": {
     "infoNav": {
       // This dropdown title refers to Entity Lists that are updated by a Form.
-      "connectedForms": "Updated by {count} Form | Updated by {count} Forms",
+      "connectedForms": "Updating Form | Updating Forms",
       // This dropdown title refers to Entity Lists that are linked to a Form.
-      "linkedForms": "Used in {count} Form | Used in {count} Forms"
+      "linkedForms": "Referencing Form | Referencing Forms"
     }
   },
 }

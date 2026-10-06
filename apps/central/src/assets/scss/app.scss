@@ -887,7 +887,7 @@ tr.uncommitted-change { background-color: #ffef67; }
 // NAVS
 
 .nav-tabs {
-  border-bottom: none;
+  border-bottom: 1px solid $color-input;
 
   > li {
     margin-bottom: -1px;
@@ -899,7 +899,7 @@ tr.uncommitted-change { background-color: #ffef67; }
         border-bottom: 2px solid transparent;
         border-radius: 0;
         color: $color-text;
-        padding: 7px $hpadding-nav-tab 6px;
+        padding: 7px $hpadding-nav-tab;
       }
 
       &:focus {
@@ -923,8 +923,8 @@ tr.uncommitted-change { background-color: #ffef67; }
 
     &.active > a {
       &, &:hover, &:focus {
-        background-color: $color-subpanel-background;
-        border-bottom-color: $color-accent-primary;
+        border-bottom: 2px solid $color-accent-primary;
+        color: $color-accent-primary;
       }
     }
 
@@ -946,7 +946,11 @@ tr.uncommitted-change { background-color: #ffef67; }
   }
 
   .badge {
-    background-color: $color-accent-primary;
+    margin-left: 2px;
+    background-color: rgba($color-accent-primary, 0.2);
+    color: $color-text;
+    font-size: 14px;
+    font-weight: normal;
     vertical-align: baseline;
   }
 }

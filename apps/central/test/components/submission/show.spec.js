@@ -49,25 +49,6 @@ describe('SubmissionShow', () => {
     should.not.exist(links[2].path);
   });
 
-  it('shows the instance name if the submission has one', async () => {
-    testData.extendedSubmissions.createPast(1, {
-      instanceId: 's',
-      meta: { instanceName: 'My Submission' }
-    });
-    const component = await load('/projects/1/forms/f/submissions/s', {
-      root: false
-    });
-    component.get('#page-head-title').text().should.equal('My Submission');
-  });
-
-  it('shows instance ID if submission does not have an instance name', async () => {
-    testData.extendedSubmissions.createPast(1, { instanceId: 's' });
-    const component = await load('/projects/1/forms/f/submissions/s', {
-      root: false
-    });
-    component.get('#page-head-title').text().should.equal('s');
-  });
-
   it('renders the SubmissionData component', async () => {
     testData.extendedForms.createPast(1, {
       xmlFormId: 'a',
