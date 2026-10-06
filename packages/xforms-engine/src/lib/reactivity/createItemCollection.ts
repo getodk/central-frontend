@@ -21,7 +21,7 @@ import { createTextRange } from './text/createTextRange.ts';
 type ItemCollectionControl = RankControl | SelectControl;
 
 const contextError = (context: ItemsetItemEvaluationContext): Error | null => {
-  return context.expressionErrors.find(Boolean)?.() ?? null;
+  return context.expressionErrors.map((error) => error()).find(Boolean) ?? null;
 };
 
 const labelError = (label: ClientTextRange<'item-label'>): Error | null => {
