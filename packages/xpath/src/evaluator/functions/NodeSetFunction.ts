@@ -11,17 +11,21 @@ export type NodeSetFunctionCallable = <
   args: Arguments
 ) => readonly T[];
 
+interface NodeSetFunctionOptions {
+  readonly immutable?: boolean;
+}
+
 export class NodeSetFunction extends FunctionImplementation {
   constructor(
     localName: string,
     signature: FunctionSignature,
     call: NodeSetFunctionCallable,
-    immutable?: boolean
+    options?: NodeSetFunctionOptions
   ) {
     super(localName, signature, (context, args) => {
       const nodes = call(context, args);
 
-      return LocationPathEvaluation.fromNodes(context, new Set(nodes), immutable);
+      return LocationPathEvaluation.fromNodes(context, new Set(nodes), options);
     });
   }
 }

@@ -243,7 +243,7 @@ export const instance = new NodeSetFunction(
 
     return [instanceElement];
   },
-  true // TODO maybe pass in options instead?
+  { immutable: true }
 );
 
 // TODO: Only kinda sorta a node-set fn. Not a boolean fn either though! Returns

@@ -548,9 +548,9 @@ export class LocationPathEvaluation<T extends XPathNode>
   static fromNodes<T extends XPathNode>(
     currentContext: LocationPathParentContext<T>,
     nodes: ReadonlySet<T>,
-    immutable?: boolean
+    options: LocationPathEvaluationOptions = {}
   ) {
-    return new this(currentContext, nodes, { immutable: !!immutable });
+    return new this(currentContext, nodes, options);
   }
 
   static fromCurrentContext<T extends XPathNode>(

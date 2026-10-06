@@ -85,9 +85,17 @@ export class LocationPathEvaluator
       const primaryInstance =
         step.nodeName === 'instance' ? currentContext.nodes.values().next().value : null;
 
+      const predicateExpressions = step.predicates.map((predicateNode) =>
+        createExpression(predicateNode.children[0])
+      );
+
       const cacheKey =
         cacheable &&
-        SecondaryInstanceLookupCache.generateKey(currentContext, step.predicates, this.syntaxNode);
+        SecondaryInstanceLookupCache.generateKey(
+          currentContext,
+          predicateExpressions,
+          this.syntaxNode
+        );
 
       if (cacheKey) {
         const nodes = SecondaryInstanceLookupCache.get<T>(cacheKey);
@@ -98,10 +106,7 @@ export class LocationPathEvaluator
       }
 
       // TODO: predicate *logic* feels like it nicely belongs here (so long as it continues to pertain directly to syntax nodes), but application of predicates is definitely a concern that feels it better belongs in `LocationPathEvaluation`
-      for (const predicateNode of step.predicates) {
-        const [predicateExpressionNode] = predicateNode.children;
-        const predicateExpression = createExpression(predicateExpressionNode);
-
+      for (const predicateExpression of predicateExpressions) {
         let positionPredicate: number | null = null;
 
         if (predicateExpression instanceof NumberExpressionEvaluator) {
@@ -137,12 +142,13 @@ export class LocationPathEvaluator
         }
         currentContext = LocationPathEvaluation.fromNodes(currentContext, new Set(filteredNodes));
       }
-      if (cacheKey) {
-        SecondaryInstanceLookupCache.set(cacheKey, currentContext.contextNodes);
-      }
-      if (!cacheable && primaryInstance) {
-        // only cache if a secondary instance is found
+      if (!cacheable && step.nodeName === 'instance') {
+        // check if the first instance node has been filtered out
         cacheable = currentContext.nodes.values().next().value !== primaryInstance;
+      }
+      if (cacheKey) {
+        cacheable = false; // don't cache any subsequent predicates
+        SecondaryInstanceLookupCache.set(cacheKey, currentContext.contextNodes);
       }
     }
 

@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import {
   bind,
   body,
@@ -15,16 +15,6 @@ import { stringAnswer } from '../scenario/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../scenario/jr/Scenario.ts';
 
 describe('Secondary instance cache', () => {
-  let resourceService: JRResourceService;
-
-  beforeEach(() => {
-    resourceService = new JRResourceService();
-  });
-
-  afterEach(() => {
-    resourceService.reset();
-  });
-
   describe('filtering of secondary instance items', { timeout: 60 * 1000 }, () => {
     const csvAttachmentFileName = 'csv-attachment.csv';
     const csvAttachmentURL = `jr://file/${csvAttachmentFileName}` as const;
@@ -75,7 +65,7 @@ describe('Secondary instance cache', () => {
 
     let scenario: Scenario;
 
-    beforeEach(async () => {
+    beforeAll(async () => {
       const data = Array(100_000)
         .fill(null)
         .map((_, i) => [
@@ -99,6 +89,7 @@ describe('Secondary instance cache', () => {
 
       const csvAttachment = data.map((row) => row.join(',')).join('\n');
 
+      const resourceService = new JRResourceService();
       resourceService.activateResource(
         { url: csvAttachmentURL, fileName: csvAttachmentFileName, mimeType: 'text/csv' },
         csvAttachment
@@ -111,6 +102,22 @@ describe('Secondary instance cache', () => {
     it('searches for items in external instances', () => {
       scenario.answer('/data/search', 'targetid');
 
+      expect(scenario.answerOf('/data/search')).toEqualAnswer(stringAnswer('targetid'));
+      expect(scenario.answerOf('/data/name')).toEqualAnswer(stringAnswer('targetname'));
+      expect(scenario.answerOf('/data/address')).toEqualAnswer(stringAnswer('targetaddress'));
+      expect(scenario.answerOf('/data/phone')).toEqualAnswer(stringAnswer('targetphone'));
+      expect(scenario.answerOf('/data/age')).toEqualAnswer(stringAnswer('targetage'));
+    });
+
+    it('subsequent searches should be very fast', () => {
+      scenario.answer('/data/search', '');
+      expect(scenario.answerOf('/data/search')).toEqualAnswer(stringAnswer(''));
+      expect(scenario.answerOf('/data/name')).toEqualAnswer(stringAnswer(''));
+      expect(scenario.answerOf('/data/address')).toEqualAnswer(stringAnswer(''));
+      expect(scenario.answerOf('/data/phone')).toEqualAnswer(stringAnswer(''));
+      expect(scenario.answerOf('/data/age')).toEqualAnswer(stringAnswer(''));
+
+      scenario.answer('/data/search', 'targetid');
       expect(scenario.answerOf('/data/search')).toEqualAnswer(stringAnswer('targetid'));
       expect(scenario.answerOf('/data/name')).toEqualAnswer(stringAnswer('targetname'));
       expect(scenario.answerOf('/data/address')).toEqualAnswer(stringAnswer('targetaddress'));

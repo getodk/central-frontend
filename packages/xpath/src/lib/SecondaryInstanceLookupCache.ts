@@ -2,15 +2,14 @@ import type { XPathNode } from '../adapter/interface/XPathNode';
 import type { LocationPathEvaluation } from '../evaluations/LocationPathEvaluation';
 import { BinaryExpressionEvaluator } from '../evaluator/expression/BinaryExpressionEvaluator';
 import type { ExpressionEvaluator } from '../evaluator/expression/ExpressionEvaluator';
-import { createExpression } from '../evaluator/expression/factory';
 import { FunctionCallExpressionEvaluator } from '../evaluator/expression/FunctionCallExpressionEvaluator';
 import {
   LocationPathEvaluator,
   type LocationPathNode,
 } from '../evaluator/expression/LocationPathEvaluator';
-import type { AnyBinaryExprNode, EqExprNode, PredicateNode } from '../static/grammar/SyntaxNode';
+import type { AnyBinaryExprNode, EqExprNode } from '../static/grammar/SyntaxNode';
 
-const MINIMUM_NODES_WORTH_CACHING = 10; // TODO consider changing number
+const MINIMUM_NODES_WORTH_CACHING = 10;
 
 const cache = new Map<string, ReadonlySet<XPathNode>>();
 
@@ -37,52 +36,47 @@ const isEqualsExpression = (
   );
 };
 
-const getConstantOperand = (expr: ExpressionEvaluator) => {
+const getIndexKey = (expr: ExpressionEvaluator) => {
   return isEqualsExpression(expr) && [expr.lhs, expr.rhs].find(isAbsoluteOrConstant);
 };
 
 export class SecondaryInstanceLookupCache {
   static generateKey = <T extends XPathNode>(
     currentContext: LocationPathEvaluation<T>,
-    nodes: readonly PredicateNode[],
+    predicateExpressions: readonly ExpressionEvaluator[],
     syntaxNode: LocationPathNode
   ): string | undefined => {
     if (currentContext.contextSize() < MINIMUM_NODES_WORTH_CACHING) {
       return;
     }
 
-    let result = syntaxNode.text;
-    let lastFoundIndex = 0;
+    const replacements = [];
 
-    for (const node of nodes) {
-      const [predicateExpressionNode] = node.children;
-      const predicateExpression = createExpression(predicateExpressionNode);
-
-      const constantOperand = getConstantOperand(predicateExpression);
-      if (!constantOperand) {
-        continue;
+    for (const predicateExpression of predicateExpressions) {
+      const indexKey = getIndexKey(predicateExpression);
+      if (!indexKey) {
+        // can't cache when any of the predicates can't be reliably cached
+        return;
       }
 
-      const predicateResult = constantOperand.evaluate(currentContext).toString();
-
-      // this needs unit testing
-
-      const endOfOperand =
-        result.indexOf(constantOperand.syntaxNode.text) + constantOperand.syntaxNode.text.length;
-      lastFoundIndex =
-        result.indexOf(']', endOfOperand) +
-        1 -
-        constantOperand.syntaxNode.text.length +
-        predicateResult.length;
-      result = result.replace(constantOperand.syntaxNode.text, predicateResult);
+      const result = indexKey.evaluate(currentContext).toString();
+      const expr = indexKey.syntaxNode.text;
+      replacements.push({ expr, result });
     }
 
-    if (lastFoundIndex === 0) {
+    if (replacements.length === 0) {
       // no predicates found
       return;
     }
 
-    return result.substring(0, lastFoundIndex);
+    const lastExpression = replacements[replacements.length - 1]!.expr;
+    const endOfLastReplacement = syntaxNode.text.indexOf(lastExpression) + lastExpression.length;
+    const endOfPredicate = syntaxNode.text.indexOf(']', endOfLastReplacement) + 1;
+    let key = syntaxNode.text.substring(0, endOfPredicate);
+    for (const { expr, result } of replacements) {
+      key = key.replace(expr, result);
+    }
+    return key;
   };
 
   static set<T extends XPathNode>(key: string, filteredNodes: ReadonlySet<T>) {

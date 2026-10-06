@@ -71,6 +71,18 @@ describe('Secondary instance lookup cache', () => {
       );
     });
 
+    it('handles whitespace in query', () => {
+      const expected = new Set([testDocument.getElementById('3')]);
+      evaluator.evaluateNode(
+        '/root/instance[@id=  "second"]/item[@id=  /root/instance[@id= "primary"  ]/a  ]'
+      );
+
+      expect(SecondaryInstanceLookupCache.size()).toEqual(1);
+      expect(
+        SecondaryInstanceLookupCache.get('/root/instance[@id=  "second"]/item[@id=  3  ]')
+      ).toEqual(expected);
+    });
+
     it('caches node query for reuse for future queries', () => {
       const expected = new Set([testDocument.getElementById('3')]);
       const color = evaluator.evaluateString(
@@ -103,6 +115,13 @@ describe('Secondary instance lookup cache', () => {
           '/root/instance[@id="second"]/item[@color=blue][@size=large]'
         )
       ).toEqual(expected);
+    });
+
+    it('does not cache node query with multiple predicates when one is not cacheable', () => {
+      evaluator.evaluateString(
+        '/root/instance[@id="second"]/item[@color=/root/instance[@id="colors"]/a][@size>/root/instance[@id!="sizes"]/a]/@color'
+      );
+      expect(SecondaryInstanceLookupCache.size()).toEqual(0);
     });
 
     it('caches queries with functions', () => {
@@ -144,6 +163,61 @@ describe('Secondary instance lookup cache', () => {
       expect(SecondaryInstanceLookupCache.size()).toEqual(0);
       expect(actual).toEqual(expected);
     });
+  });
+
+  it('does not cache predicates that are nested within other predicates', () => {
+    const testDocument = xml`<root>
+      <instance id="primary">
+        <a>3</a>
+        <b>4</b>
+      </instance>
+      <instance id="second">
+        <item id="1">a</item>
+        <item id="2">b</item>
+        <item id="3">
+          <nested id="4" innerid="4">x</nested>
+          <nested innerid="5">y</nested>
+          <nested innerid="6">z</nested>
+          <nested></nested>
+          <nested></nested>
+          <nested></nested>
+          <nested></nested>
+          <nested></nested>
+          <nested></nested>
+          <nested></nested>
+          <nested></nested>
+          <nested></nested>
+        </item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+      </instance>
+      <instance id="sizes">
+        <a>large</a>
+      </instance>
+      <instance id="colors">
+        <a>blue</a>
+      </instance>
+    </root>`;
+    const evaluator = new Evaluator({
+      domAdapter: DEFAULT_DOM_ADAPTER,
+      rootNode: testDocument,
+    });
+    const expected = new Set([testDocument.getElementById('3')]);
+    evaluator.evaluateNode(
+      '/root/instance[@id="second"]/item[@id=/root/instance[@id="primary"]/a]/nested[@innerid=/root/instance[@id="primary"]/b]'
+    );
+    expect(SecondaryInstanceLookupCache.size()).toEqual(1);
+    expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id=3]')).toEqual(
+      expected
+    );
   });
 
   it('does not cache primary instance', () => {
