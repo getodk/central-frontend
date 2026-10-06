@@ -20,11 +20,20 @@ const icons = new Map()
 const reviewStates = [...icons.keys()];
 icons.set('received', icons.get(null));
 
+const reviewStateTag = {
+  received: 'tag-info',
+  hasIssues: 'tag-warning',
+  approved: 'tag-success',
+  edited: 'tag-default',
+  rejected: 'tag-danger'
+};
+
 export default always({
   reviewStates,
   // Most components should use the SubmissionReviewState component instead of
   // this function. This function returns the icon class for the review state,
   // but it doesn't style the icon. For example, it doesn't specify a color for
   // the icon.
-  reviewStateIcon: (reviewState) => icons.get(reviewState)
+  reviewStateIcon: (reviewState) => icons.get(reviewState),
+  reviewStateTag: (reviewState) => reviewStateTag[reviewState],
 });

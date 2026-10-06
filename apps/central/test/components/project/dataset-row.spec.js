@@ -101,7 +101,7 @@ describe('ProjectDatasetRow', () => {
   it('shows the correct conflict count', () => {
     testData.extendedDatasets.createPast(1, { name: 'people', conflicts: 3 });
     const cell = mountComponent().get('.conflicts-count');
-    cell.text().should.equal('3 conflicts');
+    cell.text().should.equal('3');
     cell.find('.btn-danger').exists().should.be.true;
 
     const link = cell.getComponent('a');

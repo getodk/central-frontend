@@ -19,9 +19,10 @@ except according to the terms contained in the LICENSE file.
         v-tooltip.text/>
     </td>
     <td colspan="2" class="conflicts-count">
-      <span v-tooltip.no-aria="dataset.conflicts > 0 ? null : $t('common.conflicts')">
-        <router-link :class="{ 'btn btn-danger': dataset.conflicts > 0 }" :to="datasetPath(project.id, dataset.name, 'entities?conflict=true')">
-          {{ dataset.conflicts > 0 ? $tcn('entity.conflictsCount', dataset.conflicts) : $n(0) }}<span class="icon-warning"></span>
+      <span v-tooltip.no-aria="$t('common.conflicts')">
+        <router-link :to="datasetPath(project.id, dataset.name, 'entities?conflict=true')">
+          <span class="tag tag-danger">{{ $n(dataset.conflicts) }}<span class="icon-warning"></span>
+          </span>
         </router-link>
       </span>
     </td>

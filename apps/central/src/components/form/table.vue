@@ -89,11 +89,6 @@ export default {
   .review-state, .last-submission, .total-submissions, .not-published {
     text-align: right;
   }
-
-  th.review-state {
-    background-color: #ccc;
-    box-shadow: inset 0em -2px #aaa;
-  }
 }
 
 </style>

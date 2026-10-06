@@ -37,13 +37,17 @@ except according to the terms contained in the LICENSE file.
         <span v-tooltip.no-aria="$t(`reviewState.${reviewState}`)">
           <template v-if="canLinkToSubmissions">
             <router-link :to="submissionsPath[reviewState]">
-              <span>{{ $n(form.reviewStates[reviewState], 'default') }}</span>
-              <span :class="reviewStateIcon(reviewState)"></span>
+              <span class="tag" :class="reviewStateTag(reviewState)">
+                {{ $n(form.reviewStates[reviewState], 'default') }}
+                <span :class="reviewStateIcon(reviewState)"></span>
+              </span>
             </router-link>
           </template>
           <template v-else>
-            <span>{{ $n(form.reviewStates[reviewState], 'default') }}</span>
-            <span :class="reviewStateIcon(reviewState)"></span>
+            <span class="tag" :class="reviewStateTag(reviewState)">
+              {{ $n(form.reviewStates[reviewState], 'default') }}
+              <span :class="reviewStateIcon(reviewState)"></span>
+            </span>
           </template>
         </span>
       </td>
@@ -124,12 +128,12 @@ export default {
     const { projects } = useRequestData();
     const { duplicateFormNamesPerProject } = projects.toRefs();
     const { formPath, newSubmissionPath } = useRoutes();
-    const { reviewStateIcon } = useReviewState();
+    const { reviewStateIcon, reviewStateTag } = useReviewState();
     return {
       duplicateFormNamesPerProject,
       formPath,
       newSubmissionPath,
-      reviewStateIcon
+      reviewStateIcon, reviewStateTag
     };
   },
   computed: {

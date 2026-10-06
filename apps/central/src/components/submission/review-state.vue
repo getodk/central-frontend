@@ -43,18 +43,13 @@ const props = defineProps({
   noTag: Boolean
 });
 
-const tagVariants = {
-  hasIssues: 'tag-warning',
-  approved: 'tag-success',
-  edited: 'tag-default',
-  rejected: 'tag-danger'
-};
+const { reviewStateIcon, reviewStateTag } = useReviewState();
 
 const htmlClass = computed(() => {
   const result = ['submission-review-state'];
   if (!props.noTag) {
     result.push('tag');
-    result.push(tagVariants[props.value] ?? 'tag-info');
+    result.push(reviewStateTag(props.value) ?? 'tag-info');
   } else {
     if (props.value != null) result.push(props.value);
     if (props.colorText) result.push('color-text');
@@ -63,7 +58,6 @@ const htmlClass = computed(() => {
   return result;
 });
 
-const { reviewStateIcon } = useReviewState();
 </script>
 
 <style lang="scss">
