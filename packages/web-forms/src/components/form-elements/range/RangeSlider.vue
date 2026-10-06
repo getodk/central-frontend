@@ -2,10 +2,15 @@
 import {
 	getRangeRatio,
 	getRangeScale,
+	getRangeTickCount,
 	getRangeValueAfterSteps,
 	getRangeValueAtRatio,
 } from '@getodk/web-forms/components/form-elements/range/range-scale.ts';
+import { useElementSize } from '@getodk/web-forms/lib/useElementSize.ts';
 import { computed, useTemplateRef } from 'vue';
+
+const TICK_SIZE = 3;
+const MIN_TICK_SPACING = TICK_SIZE * 2;
 
 const props = defineProps<{
 	readonly id: string;
@@ -13,6 +18,8 @@ const props = defineProps<{
 	readonly end: number;
 	readonly step: number;
 	readonly orientation: 'horizontal' | 'vertical';
+	readonly ticks: boolean;
+	readonly tickInterval: number | undefined;
 	readonly disabled: boolean;
 	readonly modelValue: number | undefined;
 }>();
@@ -20,11 +27,23 @@ const props = defineProps<{
 const emit = defineEmits<{ 'update:modelValue': [value: number] }>();
 
 const trackElement = useTemplateRef<HTMLElement>('track');
+const trackSize = useElementSize(trackElement);
 
-const bounds = computed(() => ({ start: props.start, end: props.end, step: props.step }));
+const bounds = computed(() => ({
+	start: props.start,
+	end: props.end,
+	step: props.step,
+	tickInterval: props.tickInterval,
+}));
 const scale = computed(() => getRangeScale(bounds.value));
 const hasValue = computed(() => props.modelValue != null);
 const ratio = computed(() => props.modelValue == null ? 0 : getRangeRatio(bounds.value, props.modelValue));
+const trackLength = computed(() => {
+	return props.orientation === 'vertical' ? trackSize.value.height : trackSize.value.width;
+});
+const maxTickCount = computed(() => Math.floor(trackLength.value / MIN_TICK_SPACING));
+const tickCount = computed(() => props.ticks ? getRangeTickCount(scale.value) : 0);
+const ticksFit = computed(() => tickCount.value > 0 && tickCount.value <= maxTickCount.value);
 
 const changeValue = (value: number) => {
 	if (value !== props.modelValue) {
@@ -88,7 +107,7 @@ const moveBackward = () => moveByStep(-1);
 		:id="id"
 		ref="track"
 		:class="['range-slider', `range-${orientation}`, { 'range-disabled': disabled, 'range-unset': !hasValue }]"
-		:style="{ '--range-ratio': ratio }"
+		:style="{ '--range-ratio': ratio, '--tick-size': `${TICK_SIZE}px` }"
 		role="slider"
 		:tabindex="disabled ? -1 : 0"
 		@click="changeValueAtPointer"
@@ -97,15 +116,17 @@ const moveBackward = () => moveByStep(-1);
 		@keydown.down.prevent="moveBackward"
 		@keydown.left.prevent="moveBackward"
 	>
-		<template v-if="hasValue">
-			<div class="range-fill" />
-			<div
-				class="range-thumb"
-				@click.stop
-				@pointerdown="onThumbPointerDown"
-				@pointermove="onThumbPointerMove"
-			/>
-		</template>
+		<div v-if="hasValue" class="range-fill" />
+		<div v-if="ticksFit" class="range-ticks">
+			<span v-for="tickIndex in tickCount" :key="tickIndex" class="range-tick" />
+		</div>
+		<div
+			v-if="hasValue"
+			class="range-thumb"
+			@click.stop
+			@pointerdown="onThumbPointerDown"
+			@pointermove="onThumbPointerMove"
+		/>
 	</div>
 </template>
 
@@ -152,6 +173,10 @@ const moveBackward = () => moveByStep(-1);
 		height: 200px;
 		width: var(--track-size);
 
+		.range-ticks {
+			flex-direction: column;
+		}
+
 		.range-fill {
 			width: 100%;
 			height: var(--range-position);
@@ -182,6 +207,27 @@ const moveBackward = () => moveByStep(-1);
 	left: 0;
 	border-radius: inherit;
 	background-color: var(--odk-primary-background-color);
+}
+
+.range-ticks {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.range-tick {
+	width: var(--tick-size);
+	height: var(--tick-size);
+	border-radius: 50%;
+	background-color: var(--odk-primary-dark-background-color);
+
+	// Collect shows no tick at the start and the end of the track.
+	&:first-child,
+	&:last-child {
+		visibility: hidden;
+	}
 }
 
 .range-thumb {

@@ -1,6 +1,7 @@
 import {
   getRangeRatio,
   getRangeScale,
+  getRangeTickCount,
   getRangeValueAfterSteps,
   getRangeValueAtRatio,
 } from '@getodk/web-forms/components/form-elements/range/range-scale.ts';
@@ -50,6 +51,49 @@ describe('Range scale', () => {
 
     it('returns start when the step is zero', () => {
       expect(getRangeValueAtRatio(getRangeScale({ start: 2, end: 10, step: 0 }), 0.5)).toBe(2);
+    });
+  });
+
+  describe('getRangeTickCount', () => {
+    const getTickCount = (tickInterval: number, tickBounds = bounds) => {
+      return getRangeTickCount(getRangeScale({ ...tickBounds, tickInterval }));
+    };
+
+    it('returns a tick for every step, including start and end', () => {
+      expect(getRangeTickCount(scale)).toBe(11);
+      expect(getRangeTickCount(decimalScale)).toBe(11);
+      expect(getRangeTickCount(reversedScale)).toBe(6);
+    });
+
+    it('returns a tick for every tick interval, including start and end', () => {
+      expect(getTickCount(2)).toBe(6);
+      expect(getTickCount(10)).toBe(2);
+      expect(getTickCount(0.5, { start: 0, end: 1, step: 0.1 })).toBe(3);
+    });
+
+    it('ignores a tick interval that is not a multiple of the step', () => {
+      expect(getTickCount(2.5)).toBe(11);
+      expect(getTickCount(5, { start: 0, end: 10, step: 2 })).toBe(6);
+    });
+
+    it('ignores a tick interval that does not divide the range evenly', () => {
+      expect(getTickCount(3)).toBe(11);
+    });
+
+    it('ignores a tick interval larger than the range', () => {
+      expect(getTickCount(20)).toBe(11);
+    });
+
+    it('ignores a tick interval that is zero or negative', () => {
+      expect(getTickCount(0)).toBe(11);
+      expect(getTickCount(-2)).toBe(11);
+    });
+
+    it('returns zero when the range is not valid', () => {
+      expect(getRangeTickCount(getRangeScale({ start: 2, end: 10, step: 0 }))).toBe(0);
+      expect(getRangeTickCount(getRangeScale({ start: 5, end: 5, step: 1 }))).toBe(0);
+      expect(getRangeTickCount(getRangeScale({ start: 0, end: 10, step: 15 }))).toBe(0);
+      expect(getRangeTickCount(unevenScale)).toBe(0);
     });
   });
 

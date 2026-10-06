@@ -1,3 +1,4 @@
+import { ODK_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
 import { ErrorProductionDesignPendingError } from '../../../error/ErrorProductionDesignPendingError.ts';
 import type { XFormDefinition } from '../../XFormDefinition.ts';
 import type { RangeAppearanceDefinition } from '../appearance/rangeAppearanceParser.ts';
@@ -64,6 +65,17 @@ const parseNumericStringAttributeAbs = (element: Element, localName: string): Nu
   return value;
 };
 
+const parseTickInterval = (element: Element): NumericString | null => {
+  const localName = 'tick-interval';
+  const value = element.getAttributeNS(ODK_NAMESPACE_URI, localName);
+  if (value == null) {
+    return null;
+  }
+
+  assertNumericStringAttribute(localName, value);
+  return value;
+};
+
 /**
  * Per
  * {@link https://getodk.github.io/xforms-spec/#body-elements | ODK XForms spec},
@@ -105,12 +117,14 @@ export class RangeControlDefinition extends ControlDefinition<'range'> {
   readonly type = 'range';
   readonly appearances: RangeAppearanceDefinition;
   readonly bounds: RangeControlBoundsDefinition;
+  readonly tickInterval: NumericString | null;
 
   constructor(form: XFormDefinition, parent: BodyElementParentContext, element: Element) {
     super(form, parent, element);
 
     this.appearances = rangeAppearanceParser.parseFrom(element, 'appearance');
     this.bounds = RangeControlBoundsDefinition.from(element);
+    this.tickInterval = parseTickInterval(element);
   }
 
   override toJSON(): object {
