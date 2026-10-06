@@ -41,29 +41,27 @@ defineProps({
 @import '../assets/scss/mixins';
 .breadcrumbs {
   display: flex;
-  background-color: $color-subpanel-background;
-  padding-top: 20px;
-  padding-left: 15px;
-  margin-inline: -15px;
+  align-items: center;
 }
 
 .breadcrumb-item {
   @include text-overflow-ellipsis;
-  font-size: 14px;
+  font-size: 16px;
   max-width: 275px;
+  color: $color-input;
 
-  a [class^="icon-"] {
-    margin-left: 0;
-    margin-right: 3px;
+  a {
+    padding: 5px;
+
+    [class^="icon-"] {
+      margin-left: 0;
+      margin-right: 3px;
+    }
   }
-}
-
-.breadcrumb-item a{
-  color: $color-accent-primary;
 }
 
 .separator {
   padding: 0px 10px;
-  color: #bbb;
+  color: $color-input;
 }
 </style>

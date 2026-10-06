@@ -11,12 +11,13 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="form-head">
-    <breadcrumbs v-if="project.dataExists" :links="breadcrumbLinks"/>
     <page-head>
-      <template #title>{{ form.dataExists ? form.nameOrId : '' }}</template>
+      <template v-if="project.dataExists" #breadcrumbs>
+        <breadcrumbs :links="breadcrumbLinks"/>
+      </template>
       <template #infonav>
         <infonav v-if="project.dataExists && formDatasetDiff.dataExists && publishedAttachments.dataExists
-          && uniqueDatasetCount > 0">
+          && uniqueDatasetCount > 0" :count="uniqueDatasetCount">
           <template #title>
             <span class="icon-magic"></span>{{ $tc('infoNav.entityLists', uniqueDatasetCount) }}
           </template>
@@ -36,8 +37,8 @@ except according to the terms contained in the LICENSE file.
             </li>
           </template>
         </infonav>
-        <infonav v-if="appUserCount.dataExists" :link="projectPath('form-access')">
-          <template #title><span class="icon-user"></span>{{ $tc('infoNav.appUsers', appUserCount.data) }}</template>
+        <infonav v-if="project.dataExists && appUserCount.dataExists" :link="projectPath('form-access')" :count="appUserCount.data">
+          <template #title>{{ $tc('infoNav.appUsers', appUserCount.data) }}</template>
         </infonav>
       </template>
       <template #tabs>
@@ -181,12 +182,12 @@ export default {
       "tabTitle": "Publish this Draft Form to enable these functions"
     },
     "infoNav": {
-      "entityLists": "{count} Linked Entity List | {count} Linked Entity Lists",
+      "entityLists": "Linked Entity List | Linked Entity Lists",
       // This text is shown as a header in a dropdown about related entity lists updated by this form.
       "updatedDatasets": "Updates",
       // This text is shown as a header in a dropdown about related entity lists that are used as attachments by this form.
       "attachedDatasets": "Uses",
-      "appUsers": "{count} App User assigned | {count} App Users assigned"
+      "appUsers": "App User assigned | App Users assigned"
     }
   }
 }

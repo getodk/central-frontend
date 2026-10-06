@@ -52,18 +52,6 @@ describe('FormHead', () => {
       links[1].text.should.equal('My Form');
       links[1].path.should.equal('');
     });
-
-    it("shows the form's name", async () => {
-      testData.extendedForms.createPast(1, { name: 'My Form' });
-      const app = await load('/projects/1/forms/f/settings');
-      app.get('#page-head-title').text().should.equal('My Form');
-    });
-
-    it("shows the form's xmlFormId if the form does not have a name", async () => {
-      testData.extendedForms.createPast(1, { xmlFormId: 'my_form', name: null });
-      const app = await load('/projects/1/forms/my_form/settings');
-      app.get('#page-head-title').text().should.equal('my_form');
-    });
   });
 
   describe('infonav buttons', () => {
@@ -74,7 +62,8 @@ describe('FormHead', () => {
         testData.extendedForms.createPast(1);
         const app = await load('/projects/1/forms/f/settings');
         const infonav = app.getComponent(Infonav);
-        infonav.text().should.equal('0 App Users assigned');
+        textWithout(infonav, '.infonav-badge').should.equal('App Users assigned');
+        infonav.get('.infonav-badge').text().should.equal('0');
         const { link } = infonav.props();
         link.should.equal('/projects/1/form-access');
       });
@@ -83,7 +72,8 @@ describe('FormHead', () => {
         testData.extendedFieldKeys.createPast(2);
         const app = await load('/projects/1/forms/f/settings');
         const button = app.find('.infonav-button > a');
-        button.text().should.equal('2 App Users assigned');
+        textWithout(button, '.infonav-badge').should.equal('App Users assigned');
+        button.get('.infonav-badge').text().should.equal('2');
       });
     });
 
@@ -93,7 +83,7 @@ describe('FormHead', () => {
         const app = await load('/projects/1/forms/f/settings');
         const buttons = app.findAllComponents(Infonav);
         buttons.length.should.equal(1);
-        buttons[0].text().should.equal('0 App Users assigned');
+        textWithout(buttons[0], '.infonav-badge').should.equal('App Users assigned');
       });
 
       it('shows only entity lists updated by the form', async () => {
@@ -102,7 +92,7 @@ describe('FormHead', () => {
         const app = await load('/projects/1/forms/f/settings');
         const buttons = app.findAllComponents(Infonav);
         buttons.length.should.equal(2);
-        buttons[0].get('button').text().should.equal('1 Linked Entity List');
+        textWithout(buttons[0].get('button'), '.infonav-badge').should.equal('Linked Entity List');
         buttons[0].findAll('.dropdown-menu > li').map(li => li.text()).should.eql(['Updates', 'trees']);
       });
 
@@ -112,7 +102,7 @@ describe('FormHead', () => {
         const app = await load('/projects/1/forms/f/settings');
         const buttons = app.findAllComponents(Infonav);
         buttons.length.should.equal(2);
-        buttons[0].get('button').text().should.equal('1 Linked Entity List');
+        textWithout(buttons[0].get('button'), '.infonav-badge').should.equal('Linked Entity List');
         buttons[0].findAll('.dropdown-menu > li').map(li => li.text()).should.eql(['Uses', 'shovels']);
       });
 
@@ -123,7 +113,7 @@ describe('FormHead', () => {
         const app = await load('/projects/1/forms/f/settings');
         const buttons = app.findAllComponents(Infonav);
         buttons.length.should.equal(2);
-        buttons[0].get('button').text().should.equal('2 Linked Entity Lists');
+        textWithout(buttons[0].get('button'), '.infonav-badge').should.equal('Linked Entity Lists');
         buttons[0].findAll('.dropdown-menu > li').map(li => li.text()).should.eql(['Updates', 'trees', '', 'Uses', 'shovels']);
       });
 
@@ -134,7 +124,7 @@ describe('FormHead', () => {
         const app = await load('/projects/1/forms/f/settings');
         const buttons = app.findAllComponents(Infonav);
         buttons.length.should.equal(2);
-        buttons[0].get('button').text().should.equal('1 Linked Entity List');
+        textWithout(buttons[0].get('button'), '.infonav-badge').should.equal('Linked Entity List');
         buttons[0].findAll('.dropdown-menu > li').map(li => li.text()).should.eql(['Updates', 'trees', '', 'Uses', 'trees']);
       });
     });

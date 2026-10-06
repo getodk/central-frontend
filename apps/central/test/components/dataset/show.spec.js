@@ -18,14 +18,6 @@ describe('DatasetShow', () => {
     ]);
   });
 
-  it('shows the correct title', () => {
-    testData.extendedDatasets.createPast(1);
-    return load('/projects/1/entity-lists/trees/properties').then(app => {
-      const title = app.get('#page-head-title');
-      title.text().should.be.equal('trees');
-    });
-  });
-
   it('re-renders the router view after a route change', () => {
     testData.extendedDatasets
       .createPast(1, { name: 'trees' })
@@ -94,7 +86,7 @@ describe('DatasetShow', () => {
       const app = await load('/projects/1/entity-lists/trees/properties');
       const buttons = app.findAllComponents(Infonav);
       buttons.length.should.equal(1);
-      buttons[0].get('button').text().should.equal('Used in 2 Forms');
+      textWithout(buttons[0].get('button'), '.infonav-badge').should.equal('Referencing Forms');
       buttons[0].findAll('.dropdown-menu > li').map(li => li.text()).should.eql(['Diagnosis', 'National Parks Survey']);
     });
 
@@ -109,7 +101,7 @@ describe('DatasetShow', () => {
       const app = await load('/projects/1/entity-lists/trees/properties');
       const buttons = app.findAllComponents(Infonav);
       buttons.length.should.equal(1);
-      buttons[0].get('button').text().should.equal('Updated by 2 Forms');
+      textWithout(buttons[0].get('button'), '.infonav-badge').should.equal('Updating Forms');
       buttons[0].findAll('.dropdown-menu > li').map(li => li.text()).should.eql(['Tree Registration', 'Tree Monitoring']);
     });
 
@@ -126,8 +118,8 @@ describe('DatasetShow', () => {
       const app = await load('/projects/1/entity-lists/trees/properties');
       const buttons = app.findAllComponents(Infonav);
       buttons.length.should.equal(2);
-      buttons[0].get('button').text().should.equal('Updated by 1 Form');
-      buttons[1].get('button').text().should.equal('Used in 1 Form');
+      textWithout(buttons[0].get('button'), '.infonav-badge').should.equal('Updating Form');
+      textWithout(buttons[1].get('button'), '.infonav-badge').should.equal('Referencing Form');
     });
   });
 

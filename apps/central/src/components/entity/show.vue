@@ -11,9 +11,10 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="entity-show">
-    <breadcrumbs v-if="dataExists" :links="breadcrumbLinks"/>
-    <page-head v-show="dataExists">
-      <template #title>{{ entity.dataExists ? entity.currentVersion.label : '' }}</template>
+    <page-head>
+      <template #breadcrumbs>
+        <breadcrumbs v-if="dataExists" :links="breadcrumbLinks"/>
+      </template>
     </page-head>
     <page-body>
       <loading :state="initiallyLoading"/>

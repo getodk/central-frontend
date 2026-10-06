@@ -12,9 +12,12 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="page-head" class="row">
     <div class="col-xs-12">
-      <div id="page-head-title-infonav">
-        <div id="page-head-title" class="h1" v-tooltip.text><slot name="title"></slot></div>
+      <div v-if="$slots.breadcrumbs" id="page-head-breadcrumb-row">
+        <slot name="breadcrumbs"></slot>
         <slot name="infonav"></slot>
+      </div>
+      <div v-if="$slots.title" id="page-head-title" class="h1" v-tooltip.text>
+        <slot name="title"></slot>
       </div>
       <div id="page-description"><slot name="description"></slot></div>
       <ul id="page-head-tabs" class="nav nav-tabs">
@@ -33,36 +36,17 @@ defineOptions({
 <style lang="scss">
 @import '../../assets/scss/variables';
 
-#page-head {
-  background-color: $color-subpanel-background;
-  border-bottom: 1px solid $color-subpanel-border-strong;
-}
-
-.breadcrumbs + #page-head .h1 {
-  margin-top: 0;
-  line-height: 1.15;
-}
-
-#page-head-title-infonav {
-  padding-top: 5px;
-  padding-bottom: 20px;
-  display: flex;
-  align-items: center;
-}
-
-#page-head-title {
+#page-head-title.h1 {
+  font-size: 16px;
+  margin: 20px 0;
   overflow-wrap: break-word;
   overflow: hidden;
 }
 
-#page-head-body {
-  color: #555;
-  font-size: 15px;
-  letter-spacing: -0.01em;
-  // If #page-head-body is empty, this margin will collapse with the bottom
-  // margin of #page-head-title. As a result, there will always be exactly 15px
-  // between #page-head-tabs and the previous visible element.
-  margin-bottom: 15px;
+#page-head-breadcrumb-row {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
 }
 
 #page-head-tabs {
@@ -70,14 +54,6 @@ defineOptions({
     &:only-child {
       display: none;
     }
-
-    &.active > a {
-      &, &:hover, &:focus {
-        background-color: $color-subpanel-active;
-      }
-    }
   }
-
-  .badge { margin-left: 2px; }
 }
 </style>

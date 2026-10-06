@@ -238,11 +238,6 @@ describe('FormUpload', () => {
         app.vm.$route.path.should.equal('/projects/1/forms/f2/draft');
       }));
 
-    it('shows the form name', () =>
-      createForm().then(app => {
-        app.get('#page-head-title').text().should.equal('Form 2');
-      }));
-
     it('shows a success alert', () =>
       createForm().then(app => {
         app.should.alert('success', '“Form 2” has been created as a Form Draft.');
