@@ -27,8 +27,42 @@ const submit =
       : (!tooShort ? 'testPasswordZ' : 'z'));
     return component.get('#user-edit-password form').trigger('submit');
   };
+const haveIbeenPwnedRequest = password => {
+  const hashPrefix = (() => {
+    switch (password) {
+      case 'testPasswordY': return '036EA';
+      default: throw new Error(`No haveibeenpwned API request defined for password '${password}'`);
+    }
+  })();
 
-describe('UserEditPassword', () => {
+  return {
+    method: 'GET',
+    url: `https://api.pwnedpasswords.com/range/${hashPrefix}`,
+  };
+};
+const haveIbeenPwnedResponse = password => {
+  const hashes = (() => {
+    switch (password) {
+      case 'testPasswordY':
+        return [
+          '005E8325869AFF00C6E09BB59964923BE14:1',
+          '009F3803299EF825B220707AE492B801B8C:9',
+          '00E4600320A4F051A36B6087D2D1D4933E5:502',
+          '01010F6D71D3277A8E9767BB7C695A3904E:3',
+          '0113AE28B46F0D0ABCE49F128E2D218BA23:4',
+        ];
+      case 'pwnedPassword':
+        return [
+          '1C31795B5ECF960907E0E9CA1B3863B0762:999999',
+        ];
+      default: throw new Error(`No haveibeenpwned API response defined for password '${password}'`);
+    }
+  })();
+
+  return () => hashes.join('\r\n');
+};
+
+describe.only('UserEditPassword', () => {
   beforeEach(mockLogin);
 
   it('resets the form if the route changes', () => {
@@ -110,6 +144,7 @@ describe('UserEditPassword', () => {
           formGroups[1].props().hasError.should.be.false;
           formGroups[2].props().hasError.should.be.false;
         })
+        .respondWithData(haveIbeenPwnedResponse('testPasswordY'))
         .respondWithSuccess());
   });
 
@@ -142,23 +177,84 @@ describe('UserEditPassword', () => {
           formGroups.length.should.equal(3);
           formGroups[1].props().hasError.should.be.false;
         })
+        .respondWithData(haveIbeenPwnedResponse('testPasswordY'))
         .respondWithSuccess());
   });
+
+  it('should display an error if password included in breach', () =>
+    mockHttp()
+      .mount(UserEditPassword, mountOptions())
+      .request(async (component) => {
+        await submit(component, { tooShort: true });
+        await component.get('#user-edit-password-new-password').setValue('pwnedPassword');
+        await component.get('#user-edit-password-confirm').setValue('pwnedPassword');
+        return component.get('form').trigger('submit');
+      })
+      .beforeAnyResponse(component => {
+        const formGroups = component.findAllComponents(FormGroup);
+        formGroups.length.should.equal(3);
+        formGroups[1].props().hasError.should.be.false;
+      })
+      .respondWithData(haveIbeenPwnedResponse('pwnedPassword'))
+      .afterResponses(app => {
+        const formGroups = app.findAllComponents(FormGroup);
+        formGroups.length.should.equal(3);
+        const formGroup = formGroups[1];
+        formGroup.props().hasError.should.be.true;
+        formGroup.find('.collapsible-error').exists().should.be.true;
+      }));
+
+  it('should allow user to continue if password breach check returns 500', function() { // eslint-disable-line func-names
+    this.timeout(5_000); // REVIEW some bug in the MockHttp promise resolution chain?
+    return mockHttp()
+      .mount(UserEditPassword, mountOptions())
+      .request(submit)
+      .respond(() => ({ status: 500 }))
+      .respondWithSuccess()
+      .testRequests([
+        haveIbeenPwnedRequest('testPasswordY'),
+        {
+          method: 'PUT',
+          url: '/v1/users/1/password',
+          data: { old: 'testPasswordX', new: 'testPasswordY' }
+        },
+      ]);
+  });
+
+  it('should allow user to continue if password breach check times out', () =>
+    mockHttp()
+      .mount(UserEditPassword, mountOptions())
+      .request(submit)
+      .respondNever()
+      .respondWithSuccess()
+      .testRequests([
+        haveIbeenPwnedRequest('testPasswordY'),
+        {
+          method: 'PUT',
+          url: '/v1/users/1/password',
+          data: { old: 'testPasswordX', new: 'testPasswordY' }
+        },
+      ]));
 
   it('sends the correct request', () =>
     mockHttp()
       .mount(UserEditPassword, mountOptions())
       .request(submit)
+      .respondWithData(haveIbeenPwnedResponse('testPasswordY'))
       .respondWithSuccess()
-      .testRequests([{
-        method: 'PUT',
-        url: '/v1/users/1/password',
-        data: { old: 'testPasswordX', new: 'testPasswordY' }
-      }]));
+      .testRequests([
+        haveIbeenPwnedRequest('testPasswordY'),
+        {
+          method: 'PUT',
+          url: '/v1/users/1/password',
+          data: { old: 'testPasswordX', new: 'testPasswordY' }
+        },
+      ]));
 
   it('implements some standard button things', () =>
     mockHttp()
       .mount(UserEditPassword, mountOptions())
+      .respondWithData(haveIbeenPwnedResponse('testPasswordY'))
       .testStandardButton({
         button: '.btn-primary',
         request: submit
@@ -168,6 +264,7 @@ describe('UserEditPassword', () => {
     mockHttp()
       .mount(UserEditPassword, mountOptions())
       .request(submit)
+      .respondWithData(haveIbeenPwnedResponse('testPasswordY'))
       .respondWithSuccess()
       .afterResponse(component => {
         component.should.alert('success');
