@@ -24,7 +24,12 @@ except according to the terms contained in the LICENSE file.
           autocomplete="current-password"/>
         <form-group id="user-edit-password-new-password" v-model="newPassword"
           type="password" :placeholder="$t('field.newPassword')" required
-          :has-error="tooShort || mismatch" autocomplete="new-password"/>
+          :has-error="tooShort || mismatch || !!strError" autocomplete="new-password">
+          <template v-slot:after>
+            <password-strength :score="passwordStrength"/>
+            <div v-if="strError" class="error"><span v-html="strError"></span></div>
+          </template>
+        </form-group>
         <form-group id="user-edit-password-confirm" v-model="confirm"
           type="password" :placeholder="$t('field.passwordConfirm')" required
           :has-error="mismatch" autocomplete="new-password"/>
@@ -40,16 +45,18 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import FormGroup from '../../form-group.vue';
+import PasswordStrength from '../../password-strength.vue';
 import Spinner from '../../spinner.vue';
 
 import useRequest from '../../../composables/request';
 import { apiPaths } from '../../../util/request';
 import { noop } from '../../../util/util';
 import { useRequestData } from '../../../request-data';
+import { checkPasswordStrength } from '../../../util/password';
 
 export default {
   name: 'UserEditPassword',
-  components: { FormGroup, Spinner },
+  components: { FormGroup, PasswordStrength, Spinner },
   inject: ['alert', 'config'],
   setup() {
     const { currentUser, user } = useRequestData();
@@ -62,43 +69,79 @@ export default {
       newPassword: '',
       tooShort: false,
       confirm: '',
-      mismatch: false
+      mismatch: false,
+      passwordStrength: 0,
+      strError: '',
     };
   },
   methods: {
-    validate() {
+    async validate() {
       this.tooShort = false;
       this.mismatch = false;
+      this.passwordStrength = 0;
+      this.strError = '';
 
-      if (this.newPassword.length < 10) {
-        this.alert.danger(this.$t('alert.passwordTooShort'));
-        this.tooShort = true;
-        return false;
+      let timer;
+      const timeout = new Promise((_, reject) => {
+        timer = setTimeout(() => reject(new Error('timeout')), 500);
+      });
+      try {
+        const { score, suggestions } = await Promise.race([
+          timeout,
+          checkPasswordStrength(this.newPassword),
+        ]);
+
+        this.passwordStrength = score;
+        if (suggestions.length) this.strError = `
+          <ul>${suggestions.map(s => `<li>${s}</li>`).join('')}</ul>
+        `;
+        return strength > 2;
+      } catch(err) {
+        this.passwordStrength = (() => {
+          const { length } = props.password;
+          if (length === 0) return 0;
+          if (length < 8) return 1;
+          if (length < 10) return 2;
+          if (length < 12) return 3;
+          if (length < 14) return 4;
+          return 5;
+        })();
+
+        if (this.newPassword.length < 10) {
+          this.alert.danger(this.$t('alert.passwordTooShort'));
+          this.tooShort = true;
+          return false;
+        }
+
+        if (this.confirm !== this.newPassword) {
+          this.alert.danger(this.$t('alert.mismatch'));
+          this.mismatch = true;
+          return false;
+        }
+
+        return true;
+      } finally {
+        clearTimeout(timer);
       }
-
-      if (this.confirm !== this.newPassword) {
-        this.alert.danger(this.$t('alert.mismatch'));
-        this.mismatch = true;
-        return false;
-      }
-
-      return true;
     },
     submit() {
-      if (!this.validate()) return;
-      const data = { old: this.oldPassword, new: this.newPassword };
-      this.request({
-        method: 'PUT',
-        url: apiPaths.password(this.user.id),
-        data
-      })
-        .then(() => {
-          this.alert.success(this.$t('alert.success'));
-
-          // The Chrome password manager does not realize that the form was
-          // submitted. Should we navigate to a different page so that it does?
+      (async () => {
+        const valid = await this.validate();
+        if (!valid) return;
+        const data = { old: this.oldPassword, new: this.newPassword };
+        this.request({
+          method: 'PUT',
+          url: apiPaths.password(this.user.id),
+          data
         })
-        .catch(noop);
+          .then(() => {
+            this.alert.success(this.$t('alert.success'));
+
+            // The Chrome password manager does not realize that the form was
+            // submitted. Should we navigate to a different page so that it does?
+          })
+          .catch(noop);
+      })();
     }
   }
 };
