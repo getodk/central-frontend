@@ -7,13 +7,12 @@ import { computed } from 'vue';
 
 const props = defineProps<{ readonly node: AnyRangeNode }>();
 
-const { bounds, bodyElement } = props.node.definition;
+const { bounds } = props.node.definition;
 const start = Number(bounds.start);
 const end = Number(bounds.end);
 const step = Number(bounds.step);
 const orientation = props.node.appearances.vertical ? 'vertical' : 'horizontal';
 const hasTicks = !props.node.appearances['no-ticks'];
-const tickInterval = bodyElement.tickInterval == null ? undefined : Number(bodyElement.tickInterval);
 
 const numberValue = computed((): number | undefined => {
 	const { value } = props.node.currentState;
@@ -53,7 +52,7 @@ const setValue = (value: number) => props.node.setValue(value);
 				:step="step"
 				:orientation="orientation"
 				:ticks="hasTicks"
-				:tick-interval="tickInterval"
+				:tick-interval="node.nodeOptions.tickInterval"
 				:model-value="numberValue"
 				@update:model-value="setValue"
 			/>

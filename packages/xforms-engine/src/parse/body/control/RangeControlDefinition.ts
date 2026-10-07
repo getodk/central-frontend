@@ -1,4 +1,5 @@
 import { ODK_NAMESPACE_URI } from '@getodk/common/constants/xmlns.ts';
+import type { RangeNodeOptions } from '../../../client/RangeNode.ts';
 import { ErrorProductionDesignPendingError } from '../../../error/ErrorProductionDesignPendingError.ts';
 import type { XFormDefinition } from '../../XFormDefinition.ts';
 import type { RangeAppearanceDefinition } from '../appearance/rangeAppearanceParser.ts';
@@ -65,7 +66,7 @@ const parseNumericStringAttributeAbs = (element: Element, localName: string): Nu
   return value;
 };
 
-const parseTickInterval = (element: Element): NumericString | null => {
+const parseTickInterval = (element: Element): number | null => {
   const localName = 'tick-interval';
   const value = element.getAttributeNS(ODK_NAMESPACE_URI, localName);
   if (value == null) {
@@ -73,7 +74,11 @@ const parseTickInterval = (element: Element): NumericString | null => {
   }
 
   assertNumericStringAttribute(localName, value);
-  return value;
+  return Number(value);
+};
+
+const parseRangeNodeOptions = (element: Element): RangeNodeOptions => {
+  return { tickInterval: parseTickInterval(element) };
 };
 
 /**
@@ -117,14 +122,14 @@ export class RangeControlDefinition extends ControlDefinition<'range'> {
   readonly type = 'range';
   readonly appearances: RangeAppearanceDefinition;
   readonly bounds: RangeControlBoundsDefinition;
-  readonly tickInterval: NumericString | null;
+  readonly options: RangeNodeOptions;
 
   constructor(form: XFormDefinition, parent: BodyElementParentContext, element: Element) {
     super(form, parent, element);
 
     this.appearances = rangeAppearanceParser.parseFrom(element, 'appearance');
     this.bounds = RangeControlBoundsDefinition.from(element);
-    this.tickInterval = parseTickInterval(element);
+    this.options = parseRangeNodeOptions(element);
   }
 
   override toJSON(): object {

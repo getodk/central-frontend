@@ -3,6 +3,7 @@ import {
 	getRangeRatio,
 	getRangeScale,
 	getRangeTickCount,
+	countTicksCoveredByValue,
 	getRangeValueAfterSteps,
 	getRangeValueAtRatio,
 } from '@getodk/web-forms/components/form-elements/range/range-scale.ts';
@@ -15,7 +16,7 @@ const props = defineProps<{
 	readonly step: number;
 	readonly orientation: 'horizontal' | 'vertical';
 	readonly ticks: boolean;
-	readonly tickInterval: number | undefined;
+	readonly tickInterval: number | null;
 	readonly disabled: boolean;
 	readonly modelValue: number | undefined;
 }>();
@@ -34,6 +35,9 @@ const scale = computed(() => getRangeScale(bounds.value));
 const hasValue = computed(() => props.modelValue != null);
 const ratio = computed(() => props.modelValue == null ? 0 : getRangeRatio(bounds.value, props.modelValue));
 const tickCount = computed(() => props.ticks ? getRangeTickCount(scale.value) : 0);
+const filledTickCount = computed(() => {
+	return props.modelValue == null ? 0 : countTicksCoveredByValue(scale.value, props.modelValue);
+});
 
 const changeValue = (value: number) => {
 	if (value !== props.modelValue) {
@@ -108,7 +112,11 @@ const moveBackward = () => moveByStep(-1);
 	>
 		<div v-if="hasValue" class="range-fill" />
 		<div v-if="tickCount > 0" class="range-ticks">
-			<span v-for="tickIndex in tickCount" :key="tickIndex" class="range-tick" />
+			<span
+				v-for="tickIndex in tickCount"
+				:key="tickIndex"
+				:class="['range-tick', { 'range-tick-on-fill': tickIndex <= filledTickCount }]"
+			/>
 		</div>
 		<div
 			v-if="hasValue"
@@ -122,7 +130,7 @@ const moveBackward = () => moveByStep(-1);
 
 <style scoped lang="scss">
 .range-slider {
-	--track-size: 4px;
+	--track-size: 5px;
 	--tick-size: 3px;
 	--thumb-size: 20px;
 	--range-position: calc(var(--range-ratio) * 100%);
@@ -165,7 +173,7 @@ const moveBackward = () => moveByStep(-1);
 		width: var(--track-size);
 
 		.range-ticks {
-			flex-direction: column;
+			flex-direction: column-reverse;
 		}
 
 		.range-fill {
@@ -214,7 +222,11 @@ const moveBackward = () => moveByStep(-1);
 	width: var(--tick-size);
 	height: var(--tick-size);
 	border-radius: 50%;
-	background-color: var(--odk-primary-dark-background-color);
+	background-color: var(--odk-primary-background-color);
+
+	&.range-tick-on-fill {
+		background-color: var(--odk-primary-light-background-color);
+	}
 
 	// Collect shows no tick at the start and the end of the track.
 	&:first-child,

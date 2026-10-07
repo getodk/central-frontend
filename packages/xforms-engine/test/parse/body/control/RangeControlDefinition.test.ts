@@ -82,11 +82,11 @@ describe('RangeControlDefinition', () => {
 
   describe('tick interval', () => {
     it('is null when the attribute is not defined', () => {
-      expect(create('int', 0, 10, 1).tickInterval).to.equal(null);
+      expect(create('int', 0, 10, 1).options.tickInterval).to.equal(null);
     });
 
     it('parses the odk:tick-interval attribute', () => {
-      expect(createWithTickInterval('5').tickInterval).to.equal('5');
+      expect(createWithTickInterval('5').options.tickInterval).to.equal(5);
     });
 
     it('fails to parse a tick interval which is not a number', () => {

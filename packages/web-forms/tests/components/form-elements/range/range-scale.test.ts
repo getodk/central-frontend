@@ -2,6 +2,7 @@ import {
   getRangeRatio,
   getRangeScale,
   getRangeTickCount,
+  countTicksCoveredByValue,
   getRangeValueAfterSteps,
   getRangeValueAtRatio,
 } from '@getodk/web-forms/components/form-elements/range/range-scale.ts';
@@ -94,6 +95,26 @@ describe('Range scale', () => {
       expect(getRangeTickCount(getRangeScale({ start: 5, end: 5, step: 1 }))).toBe(0);
       expect(getRangeTickCount(getRangeScale({ start: 0, end: 10, step: 15 }))).toBe(0);
       expect(getRangeTickCount(unevenScale)).toBe(0);
+    });
+  });
+
+  describe('countTicksCoveredByValue', () => {
+    it('counts the ticks from start up to the value', () => {
+      expect(countTicksCoveredByValue(scale, 0)).toBe(1);
+      expect(countTicksCoveredByValue(scale, 3)).toBe(4);
+      expect(countTicksCoveredByValue(scale, 10)).toBe(11);
+      expect(countTicksCoveredByValue(decimalScale, 0.3)).toBe(4);
+      expect(countTicksCoveredByValue(reversedScale, 6)).toBe(3);
+    });
+
+    it('counts by tick interval when one is set', () => {
+      const tickScale = getRangeScale({ ...bounds, tickInterval: 2 });
+      expect(countTicksCoveredByValue(tickScale, 3)).toBe(2);
+      expect(countTicksCoveredByValue(tickScale, 4)).toBe(3);
+    });
+
+    it('returns zero when the range is not valid', () => {
+      expect(countTicksCoveredByValue(unevenScale, 3)).toBe(0);
     });
   });
 

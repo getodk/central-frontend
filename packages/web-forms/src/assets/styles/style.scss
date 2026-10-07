@@ -25,12 +25,11 @@
   --odk-hint-font-size: #{map.get(pf.$font-size-props, 'text-sm')};
 
   --odk-primary-text-color: var(--p-primary-500);
-  --odk-primary-border-color: var(--p-primary-500);
-  --odk-primary-hover-background-color: var(--p-primary-300);
-  --odk-primary-dark-background-color: var(--p-primary-700);
   --odk-primary-background-color: var(--p-primary-500);
+  --odk-primary-hover-background-color: var(--p-primary-300);
   --odk-primary-light-background-color: var(--p-primary-100);
   --odk-primary-lighter-background-color: var(--p-primary-50);
+  --odk-primary-border-color: var(--p-primary-500);
 
   --odk-error-text-color: var(--p-red-600);
   --odk-error-background-color: var(--p-red-50);
