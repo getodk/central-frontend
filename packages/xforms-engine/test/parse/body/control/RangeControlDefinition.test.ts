@@ -9,13 +9,14 @@ import {
   t,
   title,
 } from '@getodk/common/test-utils/xform-dsl/index.ts';
+import type { XFormsElement } from '@getodk/common/test-utils/xform-dsl/XFormsElement.ts';
 import { describe, expect, it } from 'vitest';
 import { RangeControlDefinition } from '../../../../src/parse/body/control/RangeControlDefinition.ts';
 import { XFormDefinition } from '../../../../src/parse/XFormDefinition.ts';
 import { XFormDOM } from '../../../../src/parse/XFormDOM.ts';
 
 describe('RangeControlDefinition', () => {
-  const create = (type: string, start: number, end: number, step: number) => {
+  const createFromBody = (type: string, rangeElement: XFormsElement) => {
     const xform = html(
       head(
         title('Range definition'),
@@ -24,14 +25,25 @@ describe('RangeControlDefinition', () => {
           bind('/root/range').type(type)
         )
       ),
-      body(range('/root/range', { start, end, step }))
+      body(rangeElement)
     );
 
     const xformDOM = XFormDOM.from(xform.asXml());
     const xformDefinition = new XFormDefinition(xformDOM);
-    const rangeElement = xformDefinition.body.element.children[0];
+    const element = xformDefinition.body.element.children[0];
 
-    return new RangeControlDefinition(xformDefinition, xformDefinition.body, rangeElement!);
+    return new RangeControlDefinition(xformDefinition, xformDefinition.body, element!);
+  };
+
+  const create = (type: string, start: number, end: number, step: number) => {
+    return createFromBody(type, range('/root/range', { start, end, step }));
+  };
+
+  const createWithTickInterval = (tickInterval: string) => {
+    return createFromBody(
+      'int',
+      t(`range ref="/root/range" start="0" end="10" step="1" odk:tick-interval="${tickInterval}"`)
+    );
   };
 
   describe('bounds', () => {
@@ -65,6 +77,20 @@ describe('RangeControlDefinition', () => {
         expect(definition.bounds.step).to.equal('2.5');
         expect(definition.bounds.end).to.equal('10');
       });
+    });
+  });
+
+  describe('tick interval', () => {
+    it('is null when the attribute is not defined', () => {
+      expect(create('int', 0, 10, 1).options.tickInterval).to.equal(null);
+    });
+
+    it('parses the odk:tick-interval attribute', () => {
+      expect(createWithTickInterval('5').options.tickInterval).to.equal(5);
+    });
+
+    it('fails to parse a tick interval which is not a number', () => {
+      expect(() => createWithTickInterval('five')).to.throw();
     });
   });
 });

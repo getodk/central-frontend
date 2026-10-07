@@ -2,6 +2,8 @@
 import {
 	getRangeRatio,
 	getRangeScale,
+	getRangeTickCount,
+	countTicksCoveredByValue,
 	getRangeValueAfterSteps,
 	getRangeValueAtRatio,
 } from '@getodk/web-forms/components/form-elements/range/range-scale.ts';
@@ -13,6 +15,8 @@ const props = defineProps<{
 	readonly end: number;
 	readonly step: number;
 	readonly orientation: 'horizontal' | 'vertical';
+	readonly ticks: boolean;
+	readonly tickInterval: number | null;
 	readonly disabled: boolean;
 	readonly modelValue: number | undefined;
 }>();
@@ -21,10 +25,19 @@ const emit = defineEmits<{ 'update:modelValue': [value: number] }>();
 
 const trackElement = useTemplateRef<HTMLElement>('track');
 
-const bounds = computed(() => ({ start: props.start, end: props.end, step: props.step }));
+const bounds = computed(() => ({
+	start: props.start,
+	end: props.end,
+	step: props.step,
+	tickInterval: props.tickInterval,
+}));
 const scale = computed(() => getRangeScale(bounds.value));
 const hasValue = computed(() => props.modelValue != null);
 const ratio = computed(() => props.modelValue == null ? 0 : getRangeRatio(bounds.value, props.modelValue));
+const tickCount = computed(() => props.ticks ? getRangeTickCount(scale.value) : 0);
+const filledTickCount = computed(() => {
+	return props.modelValue == null ? 0 : countTicksCoveredByValue(scale.value, props.modelValue);
+});
 
 const changeValue = (value: number) => {
 	if (value !== props.modelValue) {
@@ -97,21 +110,28 @@ const moveBackward = () => moveByStep(-1);
 		@keydown.down.prevent="moveBackward"
 		@keydown.left.prevent="moveBackward"
 	>
-		<template v-if="hasValue">
-			<div class="range-fill" />
-			<div
-				class="range-thumb"
-				@click.stop
-				@pointerdown="onThumbPointerDown"
-				@pointermove="onThumbPointerMove"
+		<div v-if="hasValue" class="range-fill" />
+		<div v-if="tickCount > 0" class="range-ticks">
+			<span
+				v-for="tickIndex in tickCount"
+				:key="tickIndex"
+				:class="['range-tick', { 'range-tick-on-fill': tickIndex <= filledTickCount }]"
 			/>
-		</template>
+		</div>
+		<div
+			v-if="hasValue"
+			class="range-thumb"
+			@click.stop
+			@pointerdown="onThumbPointerDown"
+			@pointermove="onThumbPointerMove"
+		/>
 	</div>
 </template>
 
 <style scoped lang="scss">
 .range-slider {
-	--track-size: 4px;
+	--track-size: 5px;
+	--tick-size: 3px;
 	--thumb-size: 20px;
 	--range-position: calc(var(--range-ratio) * 100%);
 
@@ -152,6 +172,10 @@ const moveBackward = () => moveByStep(-1);
 		height: 200px;
 		width: var(--track-size);
 
+		.range-ticks {
+			flex-direction: column-reverse;
+		}
+
 		.range-fill {
 			width: 100%;
 			height: var(--range-position);
@@ -182,6 +206,33 @@ const moveBackward = () => moveByStep(-1);
 	left: 0;
 	border-radius: inherit;
 	background-color: var(--odk-primary-background-color);
+}
+
+.range-ticks {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	overflow: hidden;
+}
+
+.range-tick {
+	flex-shrink: 0;
+	width: var(--tick-size);
+	height: var(--tick-size);
+	border-radius: 50%;
+	background-color: var(--odk-primary-background-color);
+
+	&.range-tick-on-fill {
+		background-color: var(--odk-primary-light-background-color);
+	}
+
+	// Collect shows no tick at the start and the end of the track.
+	&:first-child,
+	&:last-child {
+		visibility: hidden;
+	}
 }
 
 .range-thumb {
