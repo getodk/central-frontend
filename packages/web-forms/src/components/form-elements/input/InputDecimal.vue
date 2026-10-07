@@ -4,6 +4,7 @@ import InputText from 'primevue/inputtext';
 import { type ComponentPublicInstance, computed, nextTick, ref, watch } from 'vue';
 
 const MAX_CHARACTERS = 15;
+const INCOMPLETE_NUMBERS = [',', '.', '-'];
 
 interface InputDecimalProps {
 	readonly node: DecimalInputNode;
@@ -49,13 +50,17 @@ const modelValue = computed<string>({
 			errors = 'setting value: ' + assignedValue + ' => null';
 			return;
 		}
-		const stringValue = standardizeSeparators(assignedValue);
+		const stringValue = standardizeSeparators(assignedValue).trim();
 		if (stringValue.length > MAX_CHARACTERS) {
 			errors = 'too long: ' + stringValue;
 			renderKey.value++;
 			return;
 		}
-		try {
+		if (stringValue.length === 1 && INCOMPLETE_NUMBERS.includes(stringValue)) {
+			// it's too soon to tell if this is a valid number or not
+			return;
+		}
+		try { // TODO can anything actually throw?
 			const num = Number(stringValue);
 			if (Number.isNaN(num)) {
 				errors = 'could not parse: ' + stringValue;
