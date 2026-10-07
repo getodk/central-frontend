@@ -4,11 +4,13 @@ import type { AnyPositionalEvent } from '../event/getPositionalEvents.ts';
 export const ANSWER_OK = 'ANSWER_OK';
 export const ANSWER_REQUIRED_BUT_EMPTY = 'ANSWER_REQUIRED_BUT_EMPTY';
 export const ANSWER_CONSTRAINT_VIOLATED = 'ANSWER_CONSTRAINT_VIOLATED';
+export const ANSWER_CALCULATION_ERROR = 'ANSWER_CALCULATION_ERROR';
 
 const ValidationOutcomeStatus = {
   ANSWER_OK,
   ANSWER_REQUIRED_BUT_EMPTY,
   ANSWER_CONSTRAINT_VIOLATED,
+  ANSWER_CALCULATION_ERROR,
 } as const;
 
 type ValidationOutcomeStatuses = typeof ValidationOutcomeStatus;
@@ -32,6 +34,10 @@ export class ValidateOutcome {
 
       case 'required':
         this.outcome = 'ANSWER_REQUIRED_BUT_EMPTY';
+        break;
+
+      case 'error':
+        this.outcome = 'ANSWER_CALCULATION_ERROR';
         break;
 
       default:
