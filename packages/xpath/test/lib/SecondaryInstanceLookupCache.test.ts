@@ -257,4 +257,57 @@ describe('Secondary instance lookup cache', () => {
     expect(color).toEqual('blue');
     expect(SecondaryInstanceLookupCache.size()).toEqual(0);
   });
+
+  it('caches lookups in repeats', () => {
+    const testDocument = xml`<root>
+      <instance id="primary">
+        <entities>
+          <entity>1</entity>
+          <name id="gctx">gareth</name>
+        </entities>
+        <entities>
+          <entity>2</entity>
+          <name id="jctx">jenny</name>
+        </entities>
+      </instance>
+      <instance id="second">
+        <item id="1"><name>gareth</name></item>
+        <item id="2"><name>jenny</name></item>
+        <item id="3"><name>jack</name></item>
+        <item id="4"><name>sally</name></item>
+        <item id="5"><name>jill</name></item>
+        <item id="6"><name>dopey</name></item>
+        <item id="7"><name>skeepy</name></item>
+        <item id="8"><name>grumpy</name></item>
+        <item id="9"><name>doc</name></item>
+        <item id="10"><name>silly</name></item>
+        <item id="11"><name>bouncy</name></item>
+        <item id="12"><name>jouncy</name></item>
+      </instance>
+    </root>`;
+    const evaluator = new Evaluator({
+      domAdapter: DEFAULT_DOM_ADAPTER,
+      rootNode: testDocument,
+    });
+
+    const query = '/root/instance[@id="second"]/item[@id= current( )/../entity ]/name';
+
+    let expected = new Set([testDocument.getElementById('1')]);
+    let context = testDocument.getElementById('gctx')!;
+    let name = evaluator.evaluateString(query, { contextNode: context });
+    expect(name).toEqual('gareth');
+    expect(SecondaryInstanceLookupCache.size()).toEqual(1);
+    expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id= 1 ]')).toEqual(
+      expected
+    );
+
+    expected = new Set([testDocument.getElementById('2')]);
+    context = testDocument.getElementById('jctx')!;
+    name = evaluator.evaluateString(query, { contextNode: context });
+    expect(name).toEqual('jenny');
+    expect(SecondaryInstanceLookupCache.size()).toEqual(2);
+    expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id= 2 ]')).toEqual(
+      expected
+    );
+  });
 });

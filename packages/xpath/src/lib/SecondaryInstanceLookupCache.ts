@@ -13,16 +13,24 @@ const MINIMUM_NODES_WORTH_CACHING = 10;
 
 const cache = new Map<string, ReadonlySet<XPathNode>>();
 
-const isAbsoluteOrConstant = (expr: ExpressionEvaluator) => {
+const isConstantOrReferencesPrimaryInstance = (expr: ExpressionEvaluator) => {
   if (expr instanceof LocationPathEvaluator && expr.isAbsolute) {
     return true;
+  }
+  if (expr instanceof LocationPathEvaluator && expr.isFilterExprContext) {
+    const firstStep = expr.syntaxNode.child(0);
+    const functionCall = firstStep?.child(0);
+    const functionName = functionCall?.child(0)?.text;
+    if (functionName === 'current') {
+      return true;
+    }
   }
   const nodeType = expr.syntaxNode?.type;
   if (nodeType === 'number' || nodeType === 'string_literal') {
     return true;
   }
   if (expr instanceof FunctionCallExpressionEvaluator) {
-    return expr.argumentExpressions.every(isAbsoluteOrConstant);
+    return expr.argumentExpressions.every(isConstantOrReferencesPrimaryInstance);
   }
   return false;
 };
@@ -37,7 +45,9 @@ const isEqualsExpression = (
 };
 
 const getIndexKey = (expr: ExpressionEvaluator) => {
-  return isEqualsExpression(expr) && [expr.lhs, expr.rhs].find(isAbsoluteOrConstant);
+  return (
+    isEqualsExpression(expr) && [expr.lhs, expr.rhs].find(isConstantOrReferencesPrimaryInstance)
+  );
 };
 
 export class SecondaryInstanceLookupCache {

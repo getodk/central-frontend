@@ -32,7 +32,7 @@ export class LocationPathEvaluator
   implements ExpressionEvaluator
 {
   readonly isAbsolute: boolean;
-  protected isFilterExprContext: boolean;
+  readonly isFilterExprContext: boolean;
   protected isRoot: boolean;
   protected isSelf: boolean;
 
