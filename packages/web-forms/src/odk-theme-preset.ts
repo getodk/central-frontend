@@ -11,6 +11,7 @@ export const odkThemePreset = definePreset(Aura, {
       400: '#60b1d6',
       500: '#3e9fcc',
       600: '#3488af',
+      650: '#007DB8',
       700: '#297193',
       800: '#1f5976',
       900: '#14425a',
@@ -147,6 +148,9 @@ export const odkThemePreset = definePreset(Aura, {
       colorScheme: {
         light: {
           root: {
+            primary: {
+              background: '{primary.650}',
+            },
             secondary: {
               color: '{surface.950}',
               background: '{surface.0}',
