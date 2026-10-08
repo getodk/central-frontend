@@ -75,7 +75,6 @@ describe('Secondary instance cache', () => {
           `"abcphone${i}"`,
           `"abcage${i}"`,
         ]);
-      data.push();
       const header = ['"id"', '"name"', '"address"', '"phone"', '"age"'];
       const target = [
         '"targetid"',
