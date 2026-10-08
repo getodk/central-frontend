@@ -98,6 +98,7 @@ export class LocationPathEvaluator
         );
 
       if (cacheKey) {
+        cacheable = false; // don't cache any subsequent predicates
         const nodes = SecondaryInstanceLookupCache.get<T>(cacheKey);
         if (nodes) {
           currentContext = LocationPathEvaluation.fromNodes(currentContext, nodes);
@@ -143,7 +144,7 @@ export class LocationPathEvaluator
         currentContext = LocationPathEvaluation.fromNodes(currentContext, new Set(filteredNodes));
       }
       if (!cacheable && step.nodeName === 'instance') {
-        // check if the first instance node has been filtered out
+        // check if the primary instance node has been filtered out
         cacheable = currentContext.nodes.values().next().value !== primaryInstance;
       }
       if (cacheKey) {

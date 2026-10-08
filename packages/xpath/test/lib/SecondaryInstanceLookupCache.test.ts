@@ -218,6 +218,13 @@ describe('Secondary instance lookup cache', () => {
     expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id=3]')).toEqual(
       expected
     );
+    evaluator.evaluateNode(
+      '/root/instance[@id="second"]/item[@id=/root/instance[@id="primary"]/a]/nested[@innerid=/root/instance[@id="primary"]/b]'
+    );
+    expect(SecondaryInstanceLookupCache.size()).toEqual(1);
+    expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id=3]')).toEqual(
+      expected
+    );
   });
 
   it('does not cache primary instance', () => {
