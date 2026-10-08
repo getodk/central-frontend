@@ -13,8 +13,12 @@ import type { ExpressionEvaluator } from './ExpressionEvaluator.ts';
 import { LocationPathExpressionEvaluator } from './LocationPathExpressionEvaluator.ts';
 import { NumberExpressionEvaluator } from './NumberExpressionEvaluator.ts';
 import { createExpression } from './factory.ts';
+import { SecondaryInstanceLookupCache } from '../../lib/SecondaryInstanceLookupCache.ts';
 
-type LocationPathNode = AbsoluteLocationPathNode | FilterPathExprNode | RelativeLocationPathNode;
+export type LocationPathNode =
+  | AbsoluteLocationPathNode
+  | FilterPathExprNode
+  | RelativeLocationPathNode;
 
 interface LocationPathExpressionOptions {
   readonly isAbsolute: boolean;
@@ -27,8 +31,8 @@ export class LocationPathEvaluator
   extends LocationPathExpressionEvaluator
   implements ExpressionEvaluator
 {
-  protected isAbsolute: boolean;
-  protected isFilterExprContext: boolean;
+  readonly isAbsolute: boolean;
+  readonly isFilterExprContext: boolean;
   protected isRoot: boolean;
   protected isSelf: boolean;
 
@@ -74,14 +78,36 @@ export class LocationPathEvaluator
         throw new UnreachableError(contextStep);
     }
 
+    let cacheable = currentContext.immutable;
     for (const step of rest) {
       currentContext = currentContext.step(step);
 
-      // TODO: predicate *logic* feels like it nicely belongs here (so long as it continues to pertain directly to syntax nodes), but application of predicates is definitely a concern that feels it better belongs in `LocationPathEvaluation`
-      for (const predicateNode of step.predicates) {
-        const [predicateExpressionNode] = predicateNode.children;
-        const predicateExpression = createExpression(predicateExpressionNode);
+      const primaryInstance =
+        step.nodeName === 'instance' ? currentContext.nodes.values().next().value : null;
 
+      const predicateExpressions = step.predicates.map((predicateNode) =>
+        createExpression(predicateNode.children[0])
+      );
+
+      const cacheKey =
+        cacheable &&
+        SecondaryInstanceLookupCache.generateKey(
+          currentContext,
+          predicateExpressions,
+          this.syntaxNode
+        );
+
+      if (cacheKey) {
+        cacheable = false; // don't cache any subsequent predicates
+        const nodes = SecondaryInstanceLookupCache.get<T>(cacheKey);
+        if (nodes) {
+          currentContext = LocationPathEvaluation.fromNodes(currentContext, nodes);
+          continue;
+        }
+      }
+
+      // TODO: predicate *logic* feels like it nicely belongs here (so long as it continues to pertain directly to syntax nodes), but application of predicates is definitely a concern that feels it better belongs in `LocationPathEvaluation`
+      for (const predicateExpression of predicateExpressions) {
         let positionPredicate: number | null = null;
 
         if (predicateExpression instanceof NumberExpressionEvaluator) {
@@ -115,12 +141,15 @@ export class LocationPathEvaluator
             filteredNodes.push(...self.contextNodes);
           }
         }
-
-        currentContext = LocationPathEvaluation.fromArbitraryNodes(
-          currentContext,
-          filteredNodes,
-          this
-        );
+        currentContext = LocationPathEvaluation.fromNodes(currentContext, new Set(filteredNodes));
+      }
+      if (!cacheable && step.nodeName === 'instance') {
+        // check if the primary instance node has been filtered out
+        cacheable = currentContext.nodes.values().next().value !== primaryInstance;
+      }
+      if (cacheKey) {
+        cacheable = false; // don't cache any subsequent predicates
+        SecondaryInstanceLookupCache.set(cacheKey, currentContext.contextNodes);
       }
     }
 
