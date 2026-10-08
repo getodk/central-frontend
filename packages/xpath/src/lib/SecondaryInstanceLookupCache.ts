@@ -1,5 +1,5 @@
 import type { XPathNode } from '../adapter/interface/XPathNode';
-import type { LocationPathEvaluation } from '../evaluations/LocationPathEvaluation';
+import { LocationPathEvaluation } from '../evaluations/LocationPathEvaluation';
 import { BinaryExpressionEvaluator } from '../evaluator/expression/BinaryExpressionEvaluator';
 import type { ExpressionEvaluator } from '../evaluator/expression/ExpressionEvaluator';
 import { FunctionCallExpressionEvaluator } from '../evaluator/expression/FunctionCallExpressionEvaluator';
@@ -59,7 +59,13 @@ export class SecondaryInstanceLookupCache {
         return;
       }
 
-      const result = indexKey.evaluate(currentContext).toString();
+      const evaluation = indexKey.evaluate(currentContext);
+      if (evaluation.nodes && evaluation.nodes.size > 1) {
+        // don't cache when referencing more than one node
+        return;
+      }
+
+      const result = evaluation.toString();
       const expr = indexKey.syntaxNode.text;
       replacements.push({ expr, result });
     }
