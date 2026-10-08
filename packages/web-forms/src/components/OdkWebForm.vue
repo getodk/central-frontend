@@ -526,9 +526,9 @@ onUnmounted(() => {
 		background: var(--odk-muted-background-color);
 
 		.anchor {
-			color: var(--odk-muted-text-color);
+			color: var(--odk-text-color);
 			font-size: 18px;
-			font-weight: 400;
+			font-weight: 300;
 			text-decoration: none;
 
 			span.caption {
@@ -546,7 +546,6 @@ onUnmounted(() => {
 		.version {
 			font-size: 14px;
 			font-weight: 300;
-			color: var(--odk-muted-text-color);
 			margin-top: var(--odk-spacing-s);
 		}
 	}
