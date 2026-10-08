@@ -2,7 +2,6 @@
   "extends": "../tsconfig.json",
   "include": ["src", "vite-env.d.ts"],
   "compilerOptions": {
-    "rootDir": "../",
     "declarationDir": "./dist",
     "lib": ["ES2022"],
     "skipLibCheck": true,
