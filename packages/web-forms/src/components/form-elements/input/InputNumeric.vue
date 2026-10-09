@@ -28,6 +28,8 @@ interface InputNumericProps {
 	readonly maxCharacters: number;
 }
 
+type NumericInputMode = 'decimal' | 'numeric';
+
 const INCOMPLETE_INTEGER_NUMBER_PREFIX = ['-'];
 const INCOMPLETE_DECIMAL_NUMBER_PREFIX = [',', '.', '-'];
 
@@ -40,6 +42,7 @@ const formatter = new Intl.NumberFormat(undefined, {
 	maximumFractionDigits: props.isDecimal ? props.maxCharacters - 2 : 0,
 	useGrouping: props.node.appearances['thousands-sep']
 });
+const inputmode: NumericInputMode = props.isDecimal ? 'decimal' : 'numeric';
 
 type NumberParser = (input: string) => string;
 
@@ -153,8 +156,10 @@ watch(renderKey, () => nextTick(() => (inputRef.value?.$el as HTMLElement)?.focu
 			:key="renderKey"
 			ref="inputRef"
 			v-model="modelValue"
-			inputmode="decimal"
 			:disabled="node.currentState.readonly"
+			:pt="{
+					root: { inputmode }
+			}"
 		/>
 		<span class="button-group">
 			<button
