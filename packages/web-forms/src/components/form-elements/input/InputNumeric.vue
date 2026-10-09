@@ -157,9 +157,7 @@ watch(renderKey, () => nextTick(() => (inputRef.value?.$el as HTMLElement)?.focu
 			ref="inputRef"
 			v-model="modelValue"
 			:disabled="node.currentState.readonly"
-			:pt="{
-					root: { inputmode }
-			}"
+			:pt="{ root: { inputmode } }"
 		/>
 		<span class="button-group">
 			<button
