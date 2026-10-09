@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { InputNumberInputEvent } from 'primevue/inputnumber';
-import InputNumber from 'primevue/inputnumber';
+import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
+import InputText from 'primevue/inputtext';
 import { type ComponentPublicInstance, computed, nextTick, ref, watch } from 'vue';
 
 interface NumericNodeState {
@@ -28,138 +28,217 @@ interface InputNumericProps {
 	readonly maxCharacters: number;
 }
 
+const INCOMPLETE_INTEGER_NUMBER_PREFIX = ['-'];
+const INCOMPLETE_DECIMAL_NUMBER_PREFIX = [',', '.', '-'];
+
 const props = defineProps<InputNumericProps>();
-const inputRef = ref<ComponentPublicInstance | null>(null);
+
 const renderKey = ref(1);
+const inputRef = ref<ComponentPublicInstance | null>(null);
+const incompleteNumberPrefix = props.isDecimal ? INCOMPLETE_DECIMAL_NUMBER_PREFIX : INCOMPLETE_INTEGER_NUMBER_PREFIX;
+const formatter = new Intl.NumberFormat(undefined, {
+	maximumFractionDigits: props.isDecimal ? props.maxCharacters - 2 : 0,
+	useGrouping: props.node.appearances['thousands-sep']
+});
 
-interface FractionalDigitOptions {
-	readonly min?: number;
-	readonly max?: number;
-}
+type NumberParser = (input: string) => string;
 
-let fractionalDigits: FractionalDigitOptions;
-
-/**
- * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inputmode}
- */
-type NumericInputMode = 'decimal' | 'numeric';
-
-let inputmode: NumericInputMode;
-
-if (props.isDecimal) {
-	fractionalDigits = { min: 0, max: 13 };
-	inputmode = 'decimal';
-} else {
-	fractionalDigits = { min: 0, max: 0 };
-	inputmode = 'numeric';
-}
-
-/**
- * Tracks local model state while syncing with the node’s state.
- *
- * - Enforces `min`/`max` constraints if provided.
- * - Rolls back to the previous value if assignment fails.
- * - If the assigned value differs from the effective value (due to clamping or rollback),
- *   triggers a re-render via `renderKey` to update the displayed value.
- */
-const modelValue = computed<number | null>({
-	get: () => props.numericValue,
-	set: (assignedValue) => {
-		const currentValue = props.numericValue;
-		const stringValue = assignedValue != null ? assignedValue.toString() : '';
-		let newValue = stringValue.length <= props.maxCharacters ? assignedValue : currentValue;
-
-		if (newValue != null) {
-			const { min = newValue, max = newValue } = props;
-
-			if (min !== newValue || max !== newValue) {
-				newValue = Math.max(min, Math.min(newValue, max));
-			}
+const standardizeSeparators: NumberParser = (() => {
+	const parts = formatter.formatToParts(1.1);
+	const decimalSeparator = parts.find(part => part.type === 'decimal')?.value ?? '.';
+	const groupSeparator = decimalSeparator === '.' ? ',' : '.';
+	return (value:string) => {
+		value.replaceAll(groupSeparator, '');
+		if (props.isDecimal) {
+			value.replace(decimalSeparator, '.');
+		} else {
+			value.replace(decimalSeparator, '');
 		}
+		return value;
+	};
+})();
 
-		try {
-			props.setNumericValue(newValue);
-			if (newValue !== assignedValue) {
-				// Re-render if value is clamped
-				renderKey.value++;
-			}
-		} catch {
-			// Re-render to restore previous value if something fails
+const modelValue = computed<string>({
+	get: () => {
+		const val = props.numericValue;
+		if (val != undefined) {
+			return formatter.format(val);
+		}
+		return '';
+	},
+	set: (assignedValue:string) => {
+		if (!assignedValue.length) {
+			props.setNumericValue(null);
+			return;
+		}
+		const stringValue = standardizeSeparators(assignedValue).trim();
+		if (stringValue.length > props.maxCharacters) {
 			renderKey.value++;
+			return;
+		}
+		if (stringValue.length === 1 && incompleteNumberPrefix.includes(stringValue)) {
+			// it's too soon to tell if this is a valid number or not
+			return;
+		}
+		let num = Number(stringValue);
+		if (Number.isNaN(num)) {
+			renderKey.value++;
+		} else {
+			if (props.max && num > props.max) {
+				num = props.max;
+			} else if (props.min && num < props.min) {
+				num = props.min;
+			}
+
+			props.setNumericValue(num);
 		}
 	}
 });
 
-// After re-render, refocus input so user can continue typing seamlessly
-watch(renderKey, () => nextTick(() => (inputRef.value?.$el as HTMLElement)?.focus()));
+let timer: ReturnType<typeof setTimeout>;
 
-const onInput = (event: InputNumberInputEvent) => {
-	const { value = null } = event;
-	if (value == null || value === '') {
-		modelValue.value = null;
-		return;
+const spin = (amount: number) => {
+	// TODO check readonly
+	if (inputRef.value?.$el) {
+		const num = props.numericValue ?? 0;
+		if (props.isDecimal) {
+			const str = num.toString();
+			const parts = str.split('.');
+			const int = Number(parts[0]) + amount;
+			if (parts.length === 2) {
+				modelValue.value = int + '.' + parts[1]!;
+			} else {
+				modelValue.value = int.toString();
+			}
+		} else {
+			const int = num + amount;
+			modelValue.value = int.toString();
+		}
 	}
+}
 
-	if (typeof value === 'number') {
-		modelValue.value = value;
-		return;
+const repeat = (interval: number, amount: number) => {
+	clearTimer();
+	timer = setTimeout(() => {
+		repeat(40, amount);
+	}, interval);
+	spin(amount);
+};
+
+const add = (event: MouseEvent, amount: number) => {
+	repeat(500, amount);
+	event.preventDefault();
+};
+
+const increment = (event: MouseEvent) => {
+	add(event, 1);
+};
+
+const decrement = (event: MouseEvent) => {
+	add(event, -1);
+};
+
+const clearTimer = () => {
+	if (timer) {
+		clearTimeout(timer);
 	}
 };
+
+watch(renderKey, () => nextTick(() => (inputRef.value?.$el as HTMLElement)?.focus()));
 </script>
 
 <template>
-	<InputNumber
-		:key="renderKey"
-		ref="inputRef"
-		v-model="modelValue"
-		:input-id="node.nodeId"
-		:required="node.currentState.required"
-		:disabled="node.currentState.readonly"
-		:show-buttons="true"
-		:min-fraction-digits="fractionalDigits.min"
-		:max-fraction-digits="fractionalDigits.max"
-		:use-grouping="node.appearances['thousands-sep']"
-		:pt="{
-			pcInputText: {
-				root: { inputmode }
-			}
-		}"
-		@input="onInput"
-	/>
+	<span class="number-group">
+		<InputText
+			:key="renderKey"
+			ref="inputRef"
+			v-model="modelValue"
+			inputmode="decimal"
+			:disabled="node.currentState.readonly"
+		/>
+		<span class="button-group">
+			<button
+				aria-hidden="true"
+				class="increment"
+				:disabled="node.currentState.readonly"
+				:tabindex="-1"
+				type="button"
+				@mousedown="increment"
+				@mouseup="clearTimer"
+				@mouseleave="clearTimer"
+			>
+				<IconSVG
+					name="mdiChevronUp"
+					size="sm"
+					variant="muted"
+				/>
+			</button>
+			<button
+				aria-hidden="true"
+				class="decrement"
+				:disabled="node.currentState.readonly"
+				:tabindex="-1"
+				type="button"
+				@mousedown="decrement"
+				@mouseup="clearTimer"
+				@mouseleave="clearTimer"
+			>
+				<IconSVG
+					name="mdiChevronDown"
+					size="sm"
+					variant="muted"
+				/>
+			</button>
+		</span>
+	</span>
 </template>
 
 <style scoped lang="scss">
-// Overrides PrimeVue styles to adhere to Web Forms design.
-
-.p-inputnumber {
+.number-group {
 	position: relative;
-
+	display: inline-flex;
 	:deep(.p-inputtext) {
 		border-radius: var(--odk-radius);
 	}
 }
-
-:deep(.p-inputnumber-button-group) {
+.button-group {
+	display: flex;
+	flex-direction: column;
 	position: absolute;
-	top: 2px;
-	right: 2px;
-	height: calc(100% - 4px);
-}
+	inset-block-start: 1px;
+	inset-inline-end: 1px;
+	height: calc(100% - 2px);
+	z-index: 1;
+	top: 1px;
+	right: 1px;
+	button {
+		--numeric-control-bgcolor: var(--input-bgcolor-default);
+		--numeric-control-width: 2.5rem;
 
-:deep(.p-inputnumber-button-group .p-button) {
-	--numeric-control-color: var(--input-color);
-	--numeric-control-bgcolor: var(--input-bgcolor-default);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex: 0 0 auto;
+		cursor: pointer;
+		background: var(--numeric-control-bgcolor);
+		color: var(--odk-light-muted-text-color);
+		width: var(--numeric-control-width);
+		transition: background var(--p-inputnumber-transition-duration), color var(--p-inputnumber-transition-duration);
+		flex: 1 1 auto;
+		border: 0 none;
 
-	&,
-	&:hover,
-	&:focus {
-		color: var(--numeric-control-color);
-		background-color: var(--numeric-control-bgcolor);
+		&:hover,
+		&:focus {
+			--numeric-control-bgcolor: var(--odk-active-background-color);
+		}
 	}
-
-	&:hover,
-	&:focus {
-		--numeric-control-bgcolor: var(--input-bgcolor-emphasized);
+	.increment {
+		padding: 0;
+		border-start-end-radius: calc(var(--odk-radius) - 1px);
+	}
+	.decrement {
+		padding: 0;
+		border-end-end-radius: calc(var(--odk-radius) - 1px);
 	}
 }
 </style>
