@@ -50,20 +50,16 @@ except according to the terms contained in the LICENSE file.
   </modal>
 </template>
 
-<script>
+<script setup>
 import Modal from '../../modal.vue';
 
-export default {
-  name: 'ProjectFormAccessStates',
-  components: { Modal },
-  props: {
-    state: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: ['hide']
-};
+defineOptions({
+  name: 'ProjectFormAccessStates'
+});
+defineProps({
+  state: Boolean
+});
+defineEmits(['hide']);
 </script>
 
 <style lang="scss">
