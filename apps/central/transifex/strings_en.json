@@ -3978,19 +3978,6 @@
         }
       }
     },
-    "FormOverviewRightNow": {
-      "stateCaption": {
-        "open": {
-          "string": "This Form is downloadable and is accepting Submissions."
-        },
-        "closing": {
-          "string": "This Form is not downloadable but still accepts Submissions."
-        },
-        "closed": {
-          "string": "This Form is not downloadable and does not accept Submissions."
-        }
-      }
-    },
     "FormRestore": {
       "title": {
         "string": "Restore Form",
