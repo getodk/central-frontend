@@ -121,15 +121,15 @@ const setValue = (value: number) => props.node.setValue(value);
 		padding: 0 var(--odk-spacing-m);
 
 		.range-value {
-			min-height: 1lh;
-			margin-bottom: 1lh;
+			min-height: 2lh;
 			text-align: center;
 		}
 
 		.range-bounds {
 			display: flex;
 			justify-content: space-between;
-			margin-top: var(--track-gap);
+			align-items: flex-end;
+			min-height: 2lh;
 		}
 
 		// Every label shares the one grid cell, so the row is as tall as the tallest label.
