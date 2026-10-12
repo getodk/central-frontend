@@ -41,11 +41,10 @@ export default {
   },
   computed: {
     disabledDescription() {
-      if (this.formVersion.webformsEnabled) return null;
       if (this.formVersion.publishedAt != null &&
         this.formVersion.state !== 'open')
         return this.$t('disabled.notOpen');
-      if (this.formVersion.enketoId == null)
+      if (!this.formVersion.webformsEnabled && this.formVersion.enketoId == null)
         return this.$t('disabled.processing');
       return null;
     },
