@@ -98,8 +98,8 @@ const setValue = (value: number) => props.node.setValue(value);
 <style scoped lang="scss">
 .range-control-container {
 	--track-gap: var(--odk-spacing-xl);
-  --label-size: 20%;
-  --gutter-width: 3rem;
+	--label-size: 20%;
+	--gutter-width: 3rem;
 
 	position: relative;
 
@@ -111,10 +111,6 @@ const setValue = (value: number) => props.node.setValue(value);
 	.range-tick-labels {
 		font-size: var(--odk-hint-font-size);
 		line-height: 1.2;
-	}
-
-	.range-bound {
-		color: var(--odk-muted-text-color);
 	}
 
 	.range-tick-labels {
