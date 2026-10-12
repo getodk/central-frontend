@@ -51,11 +51,12 @@ const standardizeSeparators: NumberParser = (() => {
 	const decimalSeparator = parts.find(part => part.type === 'decimal')?.value ?? '.';
 	const groupSeparator = decimalSeparator === '.' ? ',' : '.';
 	return (value:string) => {
-		value.replaceAll(groupSeparator, '');
-		if (props.isDecimal) {
-			value.replace(decimalSeparator, '.');
-		} else {
-			value.replace(decimalSeparator, '');
+		value = value.replaceAll(groupSeparator, '');
+		if (!props.isDecimal) {
+			return value.replace(decimalSeparator, '');
+		}
+		if (decimalSeparator !== '.') {
+			return value.replace(decimalSeparator, '.');
 		}
 		return value;
 	};
@@ -70,6 +71,9 @@ const modelValue = computed<string>({
 		return '';
 	},
 	set: (assignedValue:string) => {
+		if (props.node.currentState.readonly) {
+			return;
+		}
 		if (!assignedValue.length) {
 			props.setNumericValue(null);
 			return;
@@ -101,8 +105,7 @@ const modelValue = computed<string>({
 let timer: ReturnType<typeof setTimeout>;
 
 const spin = (amount: number) => {
-	// TODO check readonly
-	if (inputRef.value?.$el) {
+	if (inputRef.value?.$el && !props.node.currentState.readonly) {
 		const num = props.numericValue ?? 0;
 		if (props.isDecimal) {
 			const str = num.toString();
@@ -153,10 +156,12 @@ watch(renderKey, () => nextTick(() => (inputRef.value?.$el as HTMLElement)?.focu
 <template>
 	<span class="number-group">
 		<InputText
+			:id="node.nodeId"
 			:key="renderKey"
 			ref="inputRef"
 			v-model="modelValue"
 			:disabled="node.currentState.readonly"
+			:required="node.currentState.required"
 			:pt="{ root: { inputmode } }"
 		/>
 		<span class="button-group">
@@ -166,14 +171,14 @@ watch(renderKey, () => nextTick(() => (inputRef.value?.$el as HTMLElement)?.focu
 				:disabled="node.currentState.readonly"
 				:tabindex="-1"
 				type="button"
-				@mousedown="increment"
-				@mouseup="clearTimer"
-				@mouseleave="clearTimer"
+				@pointerdown="increment"
+				@pointerup="clearTimer"
+				@pointerleave="clearTimer"
 			>
 				<IconSVG
 					name="mdiChevronUp"
 					size="sm"
-					variant="muted"
+					variant="light-muted"
 				/>
 			</button>
 			<button
@@ -182,14 +187,14 @@ watch(renderKey, () => nextTick(() => (inputRef.value?.$el as HTMLElement)?.focu
 				:disabled="node.currentState.readonly"
 				:tabindex="-1"
 				type="button"
-				@mousedown="decrement"
-				@mouseup="clearTimer"
-				@mouseleave="clearTimer"
+				@pointerdown="decrement"
+				@pointerup="clearTimer"
+				@pointerleave="clearTimer"
 			>
 				<IconSVG
 					name="mdiChevronDown"
 					size="sm"
-					variant="muted"
+					variant="light-muted"
 				/>
 			</button>
 		</span>
@@ -211,36 +216,41 @@ watch(renderKey, () => nextTick(() => (inputRef.value?.$el as HTMLElement)?.focu
 	inset-block-start: 1px;
 	inset-inline-end: 1px;
 	height: calc(100% - 2px);
-	z-index: 1;
+	z-index: var(--odk-z-index-form-content);
 	top: 1px;
 	right: 1px;
-	button {
-		--numeric-control-bgcolor: var(--input-bgcolor-default);
-		--numeric-control-width: 2.5rem;
 
+	button {
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		flex: 0 0 auto;
 		cursor: pointer;
-		background: var(--numeric-control-bgcolor);
-		color: var(--odk-light-muted-text-color);
-		width: var(--numeric-control-width);
-		transition: background var(--p-inputnumber-transition-duration), color var(--p-inputnumber-transition-duration);
+		width: 2.5rem;
+		transition: background var(--odk-transition-duration);
 		flex: 1 1 auto;
 		border: 0 none;
+		touch-action: none;
+		padding: 0;
 
-		&:hover,
-		&:focus {
-			--numeric-control-bgcolor: var(--odk-active-background-color);
+		@media (hover: hover) {
+			&:hover {
+				background: var(--odk-muted-background-color);
+			}
+		}
+
+		&:disabled {
+			cursor: auto;
+			&:hover,
+			&:active {
+				background: none;
+			}
 		}
 	}
 	.increment {
-		padding: 0;
 		border-start-end-radius: calc(var(--odk-radius) - 1px);
 	}
 	.decrement {
-		padding: 0;
 		border-end-end-radius: calc(var(--odk-radius) - 1px);
 	}
 }
