@@ -162,7 +162,7 @@ export default {
     showIdForDuplicateName() {
       const formNames = this.duplicateFormNamesPerProject[this.project.id];
       if (formNames) {
-        return formNames.has(this.form.nameOrId.toLocaleLowerCase());
+        return formNames.has(this.form.nameOrId.toLocaleLowerCase(this.$i18n.locale));
       }
       return false;
     },
