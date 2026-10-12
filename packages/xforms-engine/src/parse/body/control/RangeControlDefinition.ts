@@ -30,7 +30,7 @@ type NumericString = `${number}`;
  */
 const NUMERIC_STRING_PATTERN = /^-?\d+(\.\d+)?$/;
 
-const isNumericString = (value: string): value is NumericString => {
+export const isNumericString = (value: string): value is NumericString => {
   return NUMERIC_STRING_PATTERN.test(value);
 };
 
