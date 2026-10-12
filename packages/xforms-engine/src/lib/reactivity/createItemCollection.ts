@@ -6,19 +6,22 @@ import type { BaseItem } from '../../client/BaseItem.ts';
 import type { TextRange as ClientTextRange } from '../../client/TextRange.ts';
 import type { EvaluationContext } from '../../instance/internal-api/EvaluationContext.ts';
 import type { TranslationContext } from '../../instance/internal-api/TranslationContext.ts';
-import type { RankControl } from '../../instance/RankControl.ts';
-import type { SelectControl } from '../../instance/SelectControl.ts';
 import { TextChunk } from '../../instance/text/TextChunk.ts';
 import { TextRange } from '../../instance/text/TextRange.ts';
 import type { EngineXPathNode } from '../../integration/xpath/adapter/kind.ts';
 import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
 import type { ItemDefinition } from '../../parse/body/control/ItemDefinition.ts';
 import type { ItemsetDefinition } from '../../parse/body/control/ItemsetDefinition.ts';
+import type { ItemCollectionDefinition } from '../../parse/body/control/parseItemCollection.ts';
 import { createComputedExpression, type ComputedExpression } from './createComputedExpression.ts';
 import type { ReactiveScope } from './scope.ts';
 import { createTextRange } from './text/createTextRange.ts';
 
-type ItemCollectionControl = RankControl | SelectControl;
+interface ItemCollectionControl extends EvaluationContext {
+  readonly definition: {
+    readonly bodyElement: ItemCollectionDefinition;
+  };
+}
 
 const contextError = (context: ItemsetItemEvaluationContext): Error | null => {
   return context.expressionErrors.map((error) => error()).find(Boolean) ?? null;
@@ -230,7 +233,7 @@ const createItemset = (
 
 /**
  * Creates a reactive computation of a {@link ItemCollectionControl}'s
- * {@link BaseItem}s, in support of the field's `valueOptions`.
+ * {@link BaseItem}s, in support of the field's `valueOptions` (select, rank) or `tickLabels` (range).
  *
  * - The control defined with static `<item>`s will compute to an corresponding
  *   static list of items.
