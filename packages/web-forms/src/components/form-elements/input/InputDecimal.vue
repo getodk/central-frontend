@@ -8,11 +8,11 @@ interface InputDecimalProps {
 	readonly node: DecimalInputNode;
 }
 
+const props = defineProps<InputDecimalProps>();
+
 const setNumberValue = (value: number | null): void => {
 	props.node.setValue(value);
 };
-
-const props = defineProps<InputDecimalProps>();
 </script>
 
 <template>
