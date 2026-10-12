@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import type {
+	RangeScale,
+	RangeTick,
+} from '@getodk/web-forms/components/form-elements/range/range-scale.ts';
 import {
+	getNearestStepDistance,
 	getRangeRatio,
-	getRangeScale,
-	getRangeTickCount,
-	countTicksCoveredByValue,
+	getRangeStart,
 	getRangeValueAfterSteps,
 	getRangeValueAtRatio,
 } from '@getodk/web-forms/components/form-elements/range/range-scale.ts';
@@ -11,12 +14,9 @@ import { computed, useTemplateRef } from 'vue';
 
 const props = defineProps<{
 	readonly id: string;
-	readonly start: number;
-	readonly end: number;
-	readonly step: number;
+	readonly scale: RangeScale;
 	readonly orientation: 'horizontal' | 'vertical';
-	readonly ticks: boolean;
-	readonly tickInterval: number | null;
+	readonly ticks: readonly RangeTick[];
 	readonly disabled: boolean;
 	readonly modelValue: number | undefined;
 }>();
@@ -25,19 +25,13 @@ const emit = defineEmits<{ 'update:modelValue': [value: number] }>();
 
 const trackElement = useTemplateRef<HTMLElement>('track');
 
-const bounds = computed(() => ({
-	start: props.start,
-	end: props.end,
-	step: props.step,
-	tickInterval: props.tickInterval,
-}));
-const scale = computed(() => getRangeScale(bounds.value));
 const hasValue = computed(() => props.modelValue != null);
-const ratio = computed(() => props.modelValue == null ? 0 : getRangeRatio(bounds.value, props.modelValue));
-const tickCount = computed(() => props.ticks ? getRangeTickCount(scale.value) : 0);
-const filledTickCount = computed(() => {
-	return props.modelValue == null ? 0 : countTicksCoveredByValue(scale.value, props.modelValue);
+const ratio = computed(() => props.modelValue == null ? 0 : getRangeRatio(props.scale, props.modelValue));
+const valueDistance = computed(() => {
+	return props.modelValue == null ? 0 : getNearestStepDistance(props.scale, props.modelValue);
 });
+
+const isTickWithinValueDistance = (tick: RangeTick) => hasValue.value && tick.distance <= valueDistance.value;
 
 const changeValue = (value: number) => {
 	if (value !== props.modelValue) {
@@ -56,7 +50,7 @@ const changeValueAtPointer = (event: MouseEvent) => {
 		? (bottom - event.clientY) / height
 		: (event.clientX - left) / width;
 
-	const value = getRangeValueAtRatio(scale.value, pointerRatio);
+	const value = getRangeValueAtRatio(props.scale, pointerRatio);
 	changeValue(value);
 };
 
@@ -86,8 +80,8 @@ const moveByStep = (direction: -1 | 1) => {
 		return;
 	}
 
-	const currentValue = props.modelValue ?? props.start;
-	const nextValue = getRangeValueAfterSteps(scale.value, currentValue, direction);
+	const currentValue = props.modelValue ?? getRangeStart(props.scale);
+	const nextValue = getRangeValueAfterSteps(props.scale, currentValue, direction);
 	changeValue(nextValue);
 };
 
@@ -111,11 +105,12 @@ const moveBackward = () => moveByStep(-1);
 		@keydown.left.prevent="moveBackward"
 	>
 		<div v-if="hasValue" class="range-fill" />
-		<div v-if="tickCount > 0" class="range-ticks">
+		<div v-if="ticks.length > 0" class="range-ticks">
 			<span
-				v-for="tickIndex in tickCount"
-				:key="tickIndex"
-				:class="['range-tick', { 'range-tick-on-fill': tickIndex <= filledTickCount }]"
+				v-for="tick in ticks"
+				:key="tick.distance"
+				:class="['range-tick', { 'range-tick-on-fill': isTickWithinValueDistance(tick) }]"
+				:style="{ '--tick-ratio': tick.ratio }"
 			/>
 		</div>
 		<div
@@ -161,7 +156,8 @@ const moveBackward = () => moveByStep(-1);
 			height: 100%;
 		}
 
-		.range-thumb {
+		.range-thumb,
+		.range-tick {
 			top: 50%;
 			left: var(--range-position);
 			transform: translate(-50%, -50%);
@@ -172,16 +168,13 @@ const moveBackward = () => moveByStep(-1);
 		height: 200px;
 		width: var(--track-size);
 
-		.range-ticks {
-			flex-direction: column-reverse;
-		}
-
 		.range-fill {
 			width: 100%;
 			height: var(--range-position);
 		}
 
-		.range-thumb {
+		.range-thumb,
+		.range-tick {
 			bottom: var(--range-position);
 			left: 50%;
 			transform: translate(-50%, 50%);
@@ -211,14 +204,12 @@ const moveBackward = () => moveByStep(-1);
 .range-ticks {
 	position: absolute;
 	inset: 0;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	overflow: hidden;
 }
 
 .range-tick {
-	flex-shrink: 0;
+	--range-position: calc(var(--tick-ratio) * 100%);
+
+	position: absolute;
 	width: var(--tick-size);
 	height: var(--tick-size);
 	border-radius: 50%;

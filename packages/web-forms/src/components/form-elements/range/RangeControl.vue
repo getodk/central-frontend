@@ -1,6 +1,12 @@
 <script lang="ts" setup>
+import MarkdownBlock from '@getodk/web-forms/components/common/MarkdownBlock.vue';
 import ControlText from '@getodk/web-forms/components/form-elements/ControlText.vue';
 import RangeSlider from '@getodk/web-forms/components/form-elements/range/RangeSlider.vue';
+import {
+	getRangeScale,
+	getRangeTicks,
+	placeLabelsOnTicks,
+} from '@getodk/web-forms/components/form-elements/range/range-scale.ts';
 import type { AnyRangeNode } from '@getodk/xforms-engine';
 import Rating from 'primevue/rating';
 import { computed } from 'vue';
@@ -10,11 +16,20 @@ const props = defineProps<{ readonly node: AnyRangeNode }>();
 const { bounds } = props.node.definition;
 const start = Number(bounds.start);
 const end = Number(bounds.end);
-const step = Number(bounds.step);
 const orientation = props.node.appearances.vertical ? 'vertical' : 'horizontal';
 const hasTicks = !props.node.appearances['no-ticks'];
 
-const numberValue = computed((): number | undefined => {
+const scale = getRangeScale({
+	start,
+	end,
+	step: Number(bounds.step),
+	tickInterval: props.node.nodeOptions.tickInterval,
+});
+
+const ticks = getRangeTicks(scale);
+const tickLabels = computed(() => placeLabelsOnTicks(ticks, props.node.currentState.tickLabels, !hasTicks));
+
+const numberValue = computed(() => {
 	const { value } = props.node.currentState;
 	if (value == null) {
 		return;
@@ -28,7 +43,7 @@ const setValue = (value: number) => props.node.setValue(value);
 <template>
 	<ControlText :question="node" />
 
-	<template v-if="props.node.appearances.rating">
+	<template v-if="node.appearances.rating">
 		<Rating
 			:id="node.nodeId"
 			:disabled="node.currentState.readonly"
@@ -44,25 +59,37 @@ const setValue = (value: number) => props.node.setValue(value);
 				<span v-if="numberValue != null">{{ numberValue }}</span>
 			</div>
 
-			<RangeSlider
-				:id="node.nodeId"
-				:disabled="node.currentState.readonly"
-				:start="start"
-				:end="end"
-				:step="step"
-				:orientation="orientation"
-				:ticks="hasTicks"
-				:tick-interval="node.nodeOptions.tickInterval"
-				:model-value="numberValue"
-				@update:model-value="setValue"
-			/>
+			<div class="range-track-frame">
+				<RangeSlider
+					:id="node.nodeId"
+					:disabled="node.currentState.readonly"
+					:scale="scale"
+					:orientation="orientation"
+					:ticks="hasTicks ? ticks : []"
+					:model-value="numberValue"
+					@update:model-value="setValue"
+				/>
 
-			<div class="range-bound range-min">
-				{{ start }}
-			</div>
+				<div class="range-bounds">
+					<div class="range-bound range-min">
+						{{ start }}
+					</div>
 
-			<div class="range-bound range-max">
-				{{ end }}
+					<div class="range-bound range-max">
+						{{ end }}
+					</div>
+				</div>
+
+				<div v-if="tickLabels.length > 0" class="range-tick-labels">
+					<div
+						v-for="{ ratio, label } in tickLabels"
+						:key="ratio"
+						:class="['range-tick-label', { 'at-start': ratio === 0, 'at-end': ratio === 1 }]"
+						:style="{ '--tick-ratio': ratio }"
+					>
+						<MarkdownBlock v-for="elem in label.formatted" :key="elem.id" :elem="elem" />
+					</div>
+				</div>
 			</div>
 		</div>
 	</template>
@@ -70,80 +97,125 @@ const setValue = (value: number) => props.node.setValue(value);
 
 <style scoped lang="scss">
 .range-control-container {
-	--gutter-width: 2lh;
+	--track-gap: var(--odk-spacing-xl);
+  --label-size: 20%;
+  --gutter-width: 3rem;
 
 	position: relative;
-
-	.range-bound {
-		position: absolute;
-		line-height: 1;
-		font-size: var(--odk-hint-font-size);
-		color: var(--odk-muted-text-color);
-	}
 
 	.range-value {
 		font-weight: bold;
 	}
 
+	.range-bound,
+	.range-tick-labels {
+		font-size: var(--odk-hint-font-size);
+		line-height: 1.2;
+	}
+
+	.range-bound {
+		color: var(--odk-muted-text-color);
+	}
+
+	.range-tick-labels {
+		overflow-wrap: anywhere;
+	}
+
 	&.horizontal {
-		padding: var(--gutter-width) var(--odk-spacing-m);
-
-		.range-bound {
-			bottom: 0;
-		}
-
-		.range-min {
-			left: 0;
-		}
-
-		.range-max {
-			right: 0;
-		}
+		padding: 0 var(--odk-spacing-m);
 
 		.range-value {
+			min-height: 1.5em;
+			margin-bottom: var(--track-gap);
 			text-align: center;
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
+		}
+
+		.range-bounds {
+			display: flex;
+			justify-content: space-between;
+			margin-top: var(--track-gap);
+		}
+
+		// Every label shares the one grid cell, so the row is as tall as the tallest label.
+		.range-tick-labels {
+			display: grid;
+			margin-top: var(--odk-spacing-s);
+		}
+
+		.range-tick-label {
+			grid-area: 1 / 1;
+			width: var(--label-size);
+			margin-inline-start: clamp(
+				0%,
+				calc(var(--tick-ratio) * 100% - var(--label-size) / 2),
+				calc(100% - var(--label-size))
+			);
+			text-align: center;
+
+			&.at-start {
+				text-align: start;
+			}
+
+			&.at-end {
+				text-align: end;
+			}
 		}
 	}
 
 	&.vertical {
 		width: fit-content;
-		padding: var(--odk-spacing-m) var(--gutter-width);
-
-		// Vertical appearance is centered. Consistent with
-		// https://docs.getodk.org/form-question-types/#vertical-range-widget
+		padding: var(--odk-spacing-m) 0 var(--odk-spacing-m) var(--gutter-width);
 		margin: 0 auto;
-
-		.range-bound {
-			right: 0;
-			width: 16px;
-		}
-
-		.range-min {
-			bottom: 0;
-		}
-
-		.range-max {
-			top: 0;
-		}
 
 		.range-value {
 			display: flex;
+			align-items: center;
 			position: absolute;
 			top: 0;
 			bottom: 0;
-			align-items: center;
-			right: var(--gutter-width);
-			padding-right: var(--odk-spacing-l);
+			right: calc(100% - var(--gutter-width) + var(--track-gap));
 
 			span {
 				display: inline-block;
 				width: var(--gutter-width);
 				text-align: right;
 			}
+		}
+
+		// The frame is as tall as the track, so bounds and labels are placed against the track ends.
+		.range-track-frame {
+			display: flex;
+			gap: var(--track-gap);
+		}
+
+		.range-bounds,
+		.range-tick-labels {
+			position: relative;
+		}
+
+		.range-bound,
+		.range-tick-label {
+			position: absolute;
+			left: 0;
+			width: 100%;
+			bottom: calc(var(--tick-ratio) * 100%);
+			transform: translateY(50%);
+		}
+
+		.range-bounds {
+			width: 16px;
+		}
+
+		.range-min {
+			--tick-ratio: 0;
+		}
+
+		.range-max {
+			--tick-ratio: 1;
+		}
+
+		.range-tick-labels {
+			width: calc(8rem - var(--track-gap));
 		}
 	}
 }
