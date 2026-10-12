@@ -163,6 +163,14 @@ describe('Secondary instance lookup cache', () => {
       expect(SecondaryInstanceLookupCache.size()).toEqual(0);
       expect(actual).toEqual(expected);
     });
+
+    it('cache does not grow above 100 entries', () => {
+      for (let i = 1; i < 105; i++) {
+        evaluator.evaluateNode(`/root/instance[@id="second"]/item[@id=${i}]`);
+        const expected = i < 102 ? i : i - 101;
+        expect(SecondaryInstanceLookupCache.size()).toEqual(expected);
+      }
+    });
   });
 
   it('does not cache predicates that are nested within other predicates', () => {

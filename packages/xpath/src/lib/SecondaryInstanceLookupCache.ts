@@ -10,6 +10,7 @@ import {
 import type { AnyBinaryExprNode, EqExprNode } from '../static/grammar/SyntaxNode';
 
 const MINIMUM_NODES_WORTH_CACHING = 10;
+const MAXIMUM_CACHE_SIZE = 100;
 
 const cache = new Map<string, ReadonlySet<XPathNode>>();
 
@@ -96,6 +97,9 @@ export class SecondaryInstanceLookupCache {
   };
 
   static set<T extends XPathNode>(key: string, filteredNodes: ReadonlySet<T>) {
+    if (cache.size > MAXIMUM_CACHE_SIZE) {
+      cache.clear();
+    }
     cache.set(key, filteredNodes);
   }
 
