@@ -113,7 +113,7 @@ const modelValue = computed<string>({
 		}
 
 		props.setNumericValue(num);
-		if (formatter.value.format(num) !== assignedValue) {
+		if (!props.isDecimal && formatter.value.format(num) !== assignedValue) {
 			renderKey.value++;
 		}
 	}
