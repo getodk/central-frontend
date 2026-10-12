@@ -30,74 +30,91 @@ interface InputNumericProps {
 
 type NumericInputMode = 'decimal' | 'numeric';
 
-const INCOMPLETE_INTEGER_NUMBER_PREFIX = ['-'];
-const INCOMPLETE_DECIMAL_NUMBER_PREFIX = [',', '.', '-'];
-
 const props = defineProps<InputNumericProps>();
 
 const renderKey = ref(1);
 const inputRef = ref<ComponentPublicInstance | null>(null);
-const incompleteNumberPrefix = props.isDecimal ? INCOMPLETE_DECIMAL_NUMBER_PREFIX : INCOMPLETE_INTEGER_NUMBER_PREFIX;
-const formatter = new Intl.NumberFormat(undefined, {
+const inputmode = computed<NumericInputMode>(() => props.isDecimal ? 'decimal' : 'numeric');
+const formatter = computed(() => new Intl.NumberFormat(undefined, {
 	maximumFractionDigits: props.isDecimal ? props.maxCharacters - 2 : 0,
 	useGrouping: props.node.appearances['thousands-sep']
+}));
+
+const decimalSeparator = computed(() => {
+	const parts = new Intl.NumberFormat(undefined).formatToParts(1.1);
+	return parts.find(part => part.type === 'decimal')?.value ?? '.';
 });
-const inputmode: NumericInputMode = props.isDecimal ? 'decimal' : 'numeric';
+const keyFilterPattern = computed(() => {
+	return new RegExp(`[\\d\\-\\${decimalSeparator.value}]`);
+});
 
-type NumberParser = (input: string) => string;
+const groupSeparator = computed(() => {
+	return decimalSeparator.value === '.' ? ',' : '.';
+});
 
-const standardizeSeparators: NumberParser = (() => {
-	const parts = formatter.formatToParts(1.1);
-	const decimalSeparator = parts.find(part => part.type === 'decimal')?.value ?? '.';
-	const groupSeparator = decimalSeparator === '.' ? ',' : '.';
-	return (value:string) => {
-		value = value.replaceAll(groupSeparator, '');
-		if (!props.isDecimal) {
-			return value.replace(decimalSeparator, '');
-		}
-		if (decimalSeparator !== '.') {
-			return value.replace(decimalSeparator, '.');
-		}
-		return value;
-	};
-})();
+const standardizeSeparators = (value: string) => {
+	value = value.replaceAll(groupSeparator.value, '');
+	if (decimalSeparator.value !== '.') {
+		value = value.replace(decimalSeparator.value, '.');
+	}
+	if (!props.isDecimal && value.endsWith(decimalSeparator.value)) {
+		value = value.substring(0, value.length - 1);
+	}
+	return value;
+};
+
+const validityIsUncertain = (value: string) => {
+	if (value === '-') {
+		return true;
+	}
+	return props.isDecimal && value.indexOf(decimalSeparator.value) === value.length - 1;
+};
 
 const modelValue = computed<string>({
 	get: () => {
 		const val = props.numericValue;
 		if (val != undefined) {
-			return formatter.format(val);
+			return formatter.value.format(val);
 		}
 		return '';
 	},
-	set: (assignedValue:string) => {
+	set: (assignedValue: string) => {
 		if (props.node.currentState.readonly) {
 			return;
 		}
+		assignedValue = assignedValue.trim();
 		if (!assignedValue.length) {
 			props.setNumericValue(null);
 			return;
 		}
-		const stringValue = standardizeSeparators(assignedValue).trim();
+		if (validityIsUncertain(assignedValue)) {
+			// it's too soon to tell if this is a valid number or not
+			return;
+		}
+		const stringValue = standardizeSeparators(assignedValue);
 		if (stringValue.length > props.maxCharacters) {
 			renderKey.value++;
 			return;
 		}
-		if (stringValue.length === 1 && incompleteNumberPrefix.includes(stringValue)) {
-			// it's too soon to tell if this is a valid number or not
-			return;
-		}
+
 		let num = Number(stringValue);
 		if (Number.isNaN(num)) {
 			renderKey.value++;
-		} else {
-			if (props.max && num > props.max) {
-				num = props.max;
-			} else if (props.min && num < props.min) {
-				num = props.min;
-			}
+			return;
+		}
 
-			props.setNumericValue(num);
+		if (props.max && num > props.max) {
+			num = props.max;
+		} else if (props.min && num < props.min) {
+			num = props.min;
+		}
+		if (!props.isDecimal) {
+			num = Math.round(num);
+		}
+
+		props.setNumericValue(num);
+		if (formatter.value.format(num) !== assignedValue) {
+			renderKey.value++;
 		}
 	}
 });
@@ -112,7 +129,7 @@ const spin = (amount: number) => {
 			const parts = str.split('.');
 			const int = Number(parts[0]) + amount;
 			if (parts.length === 2) {
-				modelValue.value = int + '.' + parts[1]!;
+				modelValue.value = int + decimalSeparator.value + parts[1]!;
 			} else {
 				modelValue.value = int.toString();
 			}
@@ -160,6 +177,7 @@ watch(renderKey, () => nextTick(() => (inputRef.value?.$el as HTMLElement)?.focu
 			:key="renderKey"
 			ref="inputRef"
 			v-model="modelValue"
+			v-keyfilter="keyFilterPattern"
 			:disabled="node.currentState.readonly"
 			:required="node.currentState.required"
 			:pt="{ root: { inputmode } }"
