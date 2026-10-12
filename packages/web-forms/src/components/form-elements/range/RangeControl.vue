@@ -121,8 +121,8 @@ const setValue = (value: number) => props.node.setValue(value);
 		padding: 0 var(--odk-spacing-m);
 
 		.range-value {
-			min-height: 1.5em;
-			margin-bottom: var(--track-gap);
+			min-height: 1lh;
+			margin-bottom: 1lh;
 			text-align: center;
 		}
 
