@@ -31,7 +31,7 @@ const isConstantOrReferencesPrimaryInstance = (expr: ExpressionEvaluator) => {
     return true;
   }
   if (expr instanceof FunctionCallExpressionEvaluator) {
-    return expr.argumentExpressions.every(isConstantOrReferencesPrimaryInstance);
+    return expr.argumentExpressions.some(isConstantOrReferencesPrimaryInstance);
   }
   return false;
 };
@@ -46,9 +46,16 @@ const isEqualsExpression = (
 };
 
 const getIndexKey = (expr: ExpressionEvaluator) => {
-  return (
-    isEqualsExpression(expr) && [expr.lhs, expr.rhs].find(isConstantOrReferencesPrimaryInstance)
-  );
+  if (!isEqualsExpression(expr)) {
+    return;
+  }
+  const isLhsKey = isConstantOrReferencesPrimaryInstance(expr.lhs);
+  const isRhsKey = isConstantOrReferencesPrimaryInstance(expr.rhs);
+  if (isLhsKey === isRhsKey) {
+    // either neither side is keyable, or both sides are, either way we don't know how to cache it
+    return;
+  }
+  return isLhsKey ? expr.lhs : expr.rhs;
 };
 
 export class SecondaryInstanceLookupCache {

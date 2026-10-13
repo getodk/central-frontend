@@ -142,6 +142,13 @@ describe('Secondary instance lookup cache', () => {
       expect(SecondaryInstanceLookupCache.size()).toEqual(0);
     });
 
+    it('does not cache when both sides of the predicate are based on primary data', () => {
+      evaluator.evaluateString(
+        '/root/instance[@id="second"]/item[coalesce(@color, /root/instance[@id="primary"]/b) = /root/instance[@id="primary"]/a]'
+      );
+      expect(SecondaryInstanceLookupCache.size()).toEqual(0);
+    });
+
     it('caches queries with functions', () => {
       const expected = new Set([testDocument.getElementById('3')]);
       evaluator.evaluateNode(
