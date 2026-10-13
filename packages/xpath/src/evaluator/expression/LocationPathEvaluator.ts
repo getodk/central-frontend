@@ -79,11 +79,15 @@ export class LocationPathEvaluator
     }
 
     let cacheable = currentContext.immutable;
+    let foundPrimaryInstance = false;
     for (const step of rest) {
       currentContext = currentContext.step(step);
 
-      const primaryInstance =
-        step.nodeName === 'instance' ? currentContext.nodes.values().next().value : null;
+      const checkForPrimaryInstance: boolean =
+        !foundPrimaryInstance && step.nodeName === 'instance';
+      const primaryInstance: T | null | undefined = checkForPrimaryInstance
+        ? currentContext.nodes.values().next().value
+        : null;
 
       const predicateExpressions = step.predicates.map((predicateNode) =>
         createExpression(predicateNode.children[0])
@@ -96,7 +100,6 @@ export class LocationPathEvaluator
           predicateExpressions,
           this.syntaxNode
         );
-
       if (cacheKey) {
         cacheable = false; // don't cache any subsequent predicates
         const nodes = SecondaryInstanceLookupCache.get<T>(cacheKey);
@@ -146,9 +149,10 @@ export class LocationPathEvaluator
         }
         currentContext = LocationPathEvaluation.fromNodes(currentContext, new Set(filteredNodes));
       }
-      if (!cacheable && step.nodeName === 'instance') {
+      if (checkForPrimaryInstance) {
         // check if the primary instance node has been filtered out
-        cacheable = currentContext.nodes.values().next().value !== primaryInstance;
+        foundPrimaryInstance = currentContext.nodes.values().next().value === primaryInstance;
+        cacheable = !foundPrimaryInstance; // if one of the steps is to visit the primary instance, we can't cache any more
       }
       if (cacheKey) {
         cacheable = false; // don't cache any subsequent predicates

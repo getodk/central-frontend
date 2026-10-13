@@ -354,6 +354,43 @@ describe('Secondary instance lookup cache', () => {
     expect(SecondaryInstanceLookupCache.size()).toEqual(0);
   });
 
+  it('does not cache groups named instance', () => {
+    const testDocument = xml`<root>
+      <instance>
+        <instance>
+          <item>red herring</item>
+        </instance>
+        <instance>
+          <item id="1" color="pink">a</item>
+          <item id="2">b</item>
+          <item id="3" color="blue" size="large"></item>
+          <item id="4" color="green" size="small">d</item>
+          <item id="5" color="blue" size="small">e</item>
+          <item id="6" color="green" size="large">f</item>
+          <item id="7">g</item>
+          <item id="8">h</item>
+          <item id="9">i</item>
+          <item id="10">j</item>
+          <item id="11">k</item>
+          <item id="12">l</item>
+        </instance>
+      </instance>
+
+      <instance id="second">
+        <a>1</a>
+      </instance>
+    </root>`;
+    const evaluator = new Evaluator({
+      domAdapter: DEFAULT_DOM_ADAPTER,
+      rootNode: testDocument,
+    });
+    const color = evaluator.evaluateString(
+      '/root/instance[1]/instance[2]/item[@id=/root/instance[1]/instance[2]/item[3]/@id]/@color'
+    );
+    expect(color).toEqual('blue');
+    expect(SecondaryInstanceLookupCache.size()).toEqual(0);
+  });
+
   it('caches lookups in repeats', () => {
     const testDocument = xml`<root>
       <instance id="primary">
