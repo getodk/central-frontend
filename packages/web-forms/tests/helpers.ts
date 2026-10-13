@@ -7,6 +7,7 @@ import PrimeVue from 'primevue/config';
 import { vi } from 'vitest';
 import { reactive, ref } from 'vue';
 import { odkThemePreset } from '../src/odk-theme-preset';
+import KeyFilter from 'primevue/keyfilter';
 
 import selectControl from './fixtures/select-control.xml?raw';
 import validation from './fixtures/1-validation.xml?raw';
@@ -170,6 +171,7 @@ type GlobalMountOptions = Required<MountingOptions<unknown>>['global'];
 
 export const globalMountOptions: GlobalMountOptions = {
   plugins: [[PrimeVue, { theme: { preset: odkThemePreset } }]],
+  directives: { keyfilter: KeyFilter },
   provide: {
     [SUBMIT_PRESSED]: ref(false),
     [TRANSLATE]: (id: string) => id,
