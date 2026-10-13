@@ -1,5 +1,5 @@
 import type { XPathNode } from '../adapter/interface/XPathNode';
-import { LocationPathEvaluation } from '../evaluations/LocationPathEvaluation';
+import { type LocationPathEvaluation } from '../evaluations/LocationPathEvaluation';
 import { BinaryExpressionEvaluator } from '../evaluator/expression/BinaryExpressionEvaluator';
 import type { ExpressionEvaluator } from '../evaluator/expression/ExpressionEvaluator';
 import { FunctionCallExpressionEvaluator } from '../evaluator/expression/FunctionCallExpressionEvaluator';
