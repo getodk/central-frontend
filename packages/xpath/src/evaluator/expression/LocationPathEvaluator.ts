@@ -104,6 +104,9 @@ export class LocationPathEvaluator
           currentContext = LocationPathEvaluation.fromNodes(currentContext, nodes);
           continue;
         }
+      } else if (predicateExpressions.length > 0) {
+        // there were predicates but not cacheable ones, so don't cache any subsequent predicates
+        cacheable = false;
       }
 
       // TODO: predicate *logic* feels like it nicely belongs here (so long as it continues to pertain directly to syntax nodes), but application of predicates is definitely a concern that feels it better belongs in `LocationPathEvaluation`
