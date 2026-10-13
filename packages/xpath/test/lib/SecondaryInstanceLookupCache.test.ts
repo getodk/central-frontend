@@ -7,6 +7,7 @@ import { SecondaryInstanceLookupCache } from '../../src/lib/SecondaryInstanceLoo
 import { FunctionLibraryCollection } from '../../src/evaluator/functions/FunctionLibraryCollection.ts';
 import { coalesce } from '../../src/functions/xforms/string.ts';
 import { FunctionLibrary } from '../../src/evaluator/functions/FunctionLibrary.ts';
+import { position } from '../../src/functions/xforms/node-set.ts';
 
 describe('Secondary instance lookup cache', () => {
   beforeEach(() => {
@@ -52,7 +53,7 @@ describe('Secondary instance lookup cache', () => {
         domAdapter: DEFAULT_DOM_ADAPTER,
         rootNode: testDocument,
         functions: new FunctionLibraryCollection([
-          new FunctionLibrary('http://www.w3.org/2005/xpath-functions', [coalesce]),
+          new FunctionLibrary('http://www.w3.org/2005/xpath-functions', [coalesce, position]),
         ]),
       });
     });
@@ -147,6 +148,17 @@ describe('Secondary instance lookup cache', () => {
         '/root/instance[@id="second"]/item[coalesce(@color, /root/instance[@id="primary"]/b) = /root/instance[@id="primary"]/a]'
       );
       expect(SecondaryInstanceLookupCache.size()).toEqual(0);
+    });
+
+    it('caches functions with zero parameters', () => {
+      const expected = new Set([testDocument.getElementById('3')]);
+      evaluator.evaluateNode(
+        '/root/instance[@id="second"]/item[position() = /root/instance[@id="primary"]/a]'
+      );
+      expect(SecondaryInstanceLookupCache.size()).toEqual(1);
+      expect(
+        SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[position() = 3]')
+      ).toEqual(expected);
     });
 
     it('caches queries with functions', () => {
