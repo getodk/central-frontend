@@ -43,6 +43,10 @@ describe('Secondary instance lookup cache', () => {
         <instance id="colors">
           <a>blue</a>
         </instance>
+        <instance id="refs">
+          <size>large</size>
+          <size_color>blue</size_color>
+        </instance>
       </root>`;
       evaluator = new Evaluator({
         domAdapter: DEFAULT_DOM_ADAPTER,
@@ -109,6 +113,20 @@ describe('Secondary instance lookup cache', () => {
         '/root/instance[@id="second"]/item[@color=/root/instance[@id="colors"]/a][@size=/root/instance[@id="sizes"]/a]/@size'
       );
       expect(size).toEqual('large');
+      expect(SecondaryInstanceLookupCache.size()).toEqual(1);
+      expect(
+        SecondaryInstanceLookupCache.get(
+          '/root/instance[@id="second"]/item[@color=blue][@size=large]'
+        )
+      ).toEqual(expected);
+    });
+
+    it('caches query with multiple predicates where one is the prefix of the other', () => {
+      const expected = new Set([testDocument.getElementById('3')]);
+      const color = evaluator.evaluateString(
+        '/root/instance[@id="second"]/item[@color=/root/instance[@id="refs"]/size_color][@size=/root/instance[@id="refs"]/size]/@color'
+      );
+      expect(color).toEqual('blue');
       expect(SecondaryInstanceLookupCache.size()).toEqual(1);
       expect(
         SecondaryInstanceLookupCache.get(

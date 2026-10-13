@@ -87,7 +87,8 @@ export class SecondaryInstanceLookupCache {
     }
 
     const lastExpression = replacements[replacements.length - 1]!.expr;
-    const endOfLastReplacement = syntaxNode.text.indexOf(lastExpression) + lastExpression.length;
+    const endOfLastReplacement =
+      syntaxNode.text.lastIndexOf(lastExpression) + lastExpression.length;
     const endOfPredicate = syntaxNode.text.indexOf(']', endOfLastReplacement) + 1;
     let key = syntaxNode.text.substring(0, endOfPredicate);
     for (const { expr, result } of replacements) {
