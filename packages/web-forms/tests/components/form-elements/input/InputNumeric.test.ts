@@ -3,15 +3,22 @@ import {
   SUBMIT_PRESSED,
   IS_FORM_EDIT_MODE,
 } from '@getodk/web-forms/lib/constants/injection-keys.ts';
-import { mount } from '@vue/test-utils';
-import { assert, describe, expect, it } from 'vitest';
+import { mount, VueWrapper } from '@vue/test-utils';
+import { assert, describe, expect, it, beforeEach } from 'vitest';
 import { ref, shallowRef } from 'vue';
 import { getReactiveForm, globalMountOptions } from '../../../helpers';
+import type { GeneralChildNode } from '@getodk/xforms-engine';
 
 describe('InputNumeric', () => {
-  const mountComponent = async (questionNumber: number, submitPressed = false) => {
+  let question: GeneralChildNode;
+  let component: VueWrapper;
+
+  const mountComponent = async (
+    questionNumber: number,
+    submitPressed = false
+  ): Promise<VueWrapper> => {
     const xform = await getReactiveForm('input-numeric.xml');
-    const question = xform.currentState.children[questionNumber];
+    question = xform.currentState.children[questionNumber]!;
 
     assert(question?.nodeType === 'input');
 
@@ -29,13 +36,38 @@ describe('InputNumeric', () => {
     });
   };
 
-  it('sets the correct inputmode for integers', async () => {
-    const component = await mountComponent(0);
-    expect(component.get('input').attributes().inputmode).toBe('numeric');
+  describe('integer', () => {
+    beforeEach(async () => {
+      component = await mountComponent(0);
+    });
+
+    it('sets the correct inputmode', () => {
+      expect(component.get('input').attributes().inputmode).toBe('numeric');
+    });
+
+    it('trims the value', async () => {
+      await component.get('input').setValue('   1   ');
+      expect(question.currentState.value).toBe(1n);
+    });
+
+    it('empty = null', async () => {
+      await component.get('input').setValue('    ');
+      expect(question.currentState.value).toBeNull();
+    });
+
+    it('rounds integers', async () => {
+      await component.get('input').setValue('1.59');
+      expect(question.currentState.value).toBe(2n);
+    });
   });
 
-  it('sets the correct inputmode for decimals', async () => {
-    const component = await mountComponent(1);
-    expect(component.get('input').attributes().inputmode).toBe('decimal');
+  describe('decimal', () => {
+    beforeEach(async () => {
+      component = await mountComponent(1);
+    });
+
+    it('sets the correct inputmode', () => {
+      expect(component.get('input').attributes().inputmode).toBe('decimal');
+    });
   });
 });
