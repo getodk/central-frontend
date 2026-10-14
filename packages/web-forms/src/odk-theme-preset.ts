@@ -11,7 +11,7 @@ export const odkThemePreset = definePreset(Aura, {
       400: '#60b1d6',
       500: '#3e9fcc',
       600: '#3488af',
-      650: '#007DB8',
+      650: '#2e7ba1',
       700: '#297193',
       800: '#1f5976',
       900: '#14425a',
