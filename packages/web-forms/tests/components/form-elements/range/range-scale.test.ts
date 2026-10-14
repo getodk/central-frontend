@@ -148,8 +148,8 @@ describe('Range scale', () => {
     ) => {
       const ticks = getRangeTicks(labelScale);
       const labels = values.map((value) => tickLabel(value));
-      const positioned = placeLabelsOnTicks(ticks, labels, endLabelsOnly);
-      return positioned.map(({ ratio, label }) => [ratio, label.asString]);
+      const layout = placeLabelsOnTicks(ticks, labels, endLabelsOnly, 'horizontal');
+      return layout.labels.map(({ ratio, label }) => [ratio, label.asString]);
     };
 
     it('places a label on every step, sorted from start', () => {
@@ -198,9 +198,9 @@ describe('Range scale', () => {
       const ticks = getRangeTicks(scale);
       const labels = [tickLabel(0, ''), tickLabel(5, ' '), tickLabel(10, 'High')];
 
-      const positioned = placeLabelsOnTicks(ticks, labels, false);
+      const layout = placeLabelsOnTicks(ticks, labels, false, 'horizontal');
 
-      expect(positioned.map(({ ratio }) => ratio)).toEqual([1]);
+      expect(layout.labels.map(({ ratio }) => ratio)).toEqual([1]);
     });
   });
 

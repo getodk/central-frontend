@@ -165,7 +165,7 @@ const moveBackward = () => moveByStep(-1);
 	}
 
 	&.range-vertical {
-		height: 200px;
+		min-height: 200px;
 		width: var(--track-size);
 
 		.range-fill {

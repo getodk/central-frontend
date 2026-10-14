@@ -25,10 +25,28 @@ export interface RangeTick {
   readonly ratio: number;
 }
 
-export interface PositionedTickLabel {
+interface TickLabel {
   readonly ratio: number;
   readonly label: TextRange<'item-label'>;
 }
+
+export interface PositionedTickLabel extends TickLabel {
+  readonly start: number;
+  readonly end: number;
+}
+
+export interface TickLabelLayout {
+  readonly trackSizes: readonly number[];
+  readonly labels: readonly PositionedTickLabel[];
+}
+
+export const TRACK_START = 0;
+export const TRACK_END = 1;
+const HORIZONTAL_MAX_LABEL_SIZE = 0.2;
+// The vertical track grows to fit the labels.
+const VERTICAL_MAX_LABEL_SIZE = TRACK_END;
+// Grid lines are whole parts of the track, so every track is at least 1fr and keeps its share when the grid grows.
+const GRID_UNITS = 1000;
 
 const getDecimalPlaces = (value: number): number => {
   const places = value.toString().split('.')[1]?.length ?? 0;
@@ -84,7 +102,7 @@ const getNearestStepIndex = (scale: RangeScale, value: number): number => {
 
 export const getRangeRatio = (scale: RangeScale, value: number): number => {
   if (scale.span === 0) {
-    return 0;
+    return TRACK_START;
   }
 
   const start = scale.start / scale.factor;
@@ -139,13 +157,39 @@ export const getRangeTicks = (scale: RangeScale): readonly RangeTick[] => {
   });
 };
 
-const isEndTick = ({ ratio }: RangeTick) => ratio === 0 || ratio === 1;
+const isEndTick = ({ ratio }: RangeTick) => ratio === TRACK_START || ratio === TRACK_END;
 
-export const placeLabelsOnTicks = (
+// Start and end labels grow inwards, others stay centered on their tick.
+const fitLabelBetweenNeighbours = (
+  maxSize: number,
+  ratio: number,
+  prevRatio: number | undefined,
+  nextRatio: number | undefined
+) => {
+  const startRoom = prevRatio == null ? ratio - TRACK_START : (ratio - prevRatio) / 2;
+  const endRoom = nextRatio == null ? TRACK_END - ratio : (nextRatio - ratio) / 2;
+
+  if (ratio === TRACK_START) {
+    return { start: TRACK_START, end: Math.min(maxSize, endRoom) };
+  }
+
+  if (ratio === TRACK_END) {
+    return { start: TRACK_END - Math.min(maxSize, startRoom), end: TRACK_END };
+  }
+
+  const halfSize = Math.min(maxSize / 2, startRoom, endRoom);
+  return { start: ratio - halfSize, end: ratio + halfSize };
+};
+
+const roundToGridUnits = (ratio: number) => Math.round(ratio * GRID_UNITS);
+
+const getLineNumber = (lines: readonly number[], edge: number) => lines.indexOf(edge) + 1;
+
+const getLabelsToShow = (
   ticks: readonly RangeTick[],
   tickLabels: readonly RangeTickLabel[],
   endLabelsOnly: boolean
-): readonly PositionedTickLabel[] => {
+) => {
   const labelsByValue = new Map(
     tickLabels
       .filter((tickLabel) => tickLabel.label.asString.trim().length > 0)
@@ -153,7 +197,7 @@ export const placeLabelsOnTicks = (
   );
   const ticksToLabel = endLabelsOnly ? ticks.filter((t) => isEndTick(t)) : ticks;
 
-  const labelsToShow: PositionedTickLabel[] = [];
+  const labelsToShow: TickLabel[] = [];
   ticksToLabel.forEach(({ value, ratio }) => {
     const label = labelsByValue.get(value);
     if (label != null) {
@@ -161,6 +205,49 @@ export const placeLabelsOnTicks = (
     }
   });
   return labelsToShow;
+};
+
+const buildGridLayout = (labelSpaces: readonly PositionedTickLabel[]): TickLabelLayout => {
+  const lines = Array.from(
+    new Set([0, ...labelSpaces.flatMap(({ start, end }) => [start, end]), GRID_UNITS])
+  );
+  const trackStarts = lines.slice(0, -1);
+  const trackEnds = lines.slice(1);
+  const trackSizes = trackEnds.map((trackEnd, index) => trackEnd - (trackStarts[index] ?? 0));
+
+  const labels = labelSpaces.map(({ ratio, label, start, end }) => {
+    return {
+      ratio,
+      label,
+      start: getLineNumber(lines, start),
+      end: getLineNumber(lines, end),
+    };
+  });
+
+  return { trackSizes, labels };
+};
+
+export const placeLabelsOnTicks = (
+  ticks: readonly RangeTick[],
+  tickLabels: readonly RangeTickLabel[],
+  endLabelsOnly: boolean,
+  orientation: 'horizontal' | 'vertical'
+): TickLabelLayout => {
+  const labelsToShow = getLabelsToShow(ticks, tickLabels, endLabelsOnly);
+  const maxSize =
+    orientation === 'horizontal' ? HORIZONTAL_MAX_LABEL_SIZE : VERTICAL_MAX_LABEL_SIZE;
+
+  const labelSpaces = labelsToShow.map(({ ratio, label }, index) => {
+    const { start, end } = fitLabelBetweenNeighbours(
+      maxSize,
+      ratio,
+      labelsToShow[index - 1]?.ratio,
+      labelsToShow[index + 1]?.ratio
+    );
+    return { ratio, label, start: roundToGridUnits(start), end: roundToGridUnits(end) };
+  });
+
+  return buildGridLayout(labelSpaces);
 };
 
 // A positive `stepCount` moves towards `end`, a negative one towards `start`.
