@@ -9,6 +9,7 @@ import {
 	getRangeStart,
 	getRangeValueAfterSteps,
 	getRangeValueAtRatio,
+	TRACK_START,
 } from '@getodk/web-forms/components/form-elements/range/range-scale.ts';
 import { computed, useTemplateRef } from 'vue';
 
@@ -26,7 +27,7 @@ const emit = defineEmits<{ 'update:modelValue': [value: number] }>();
 const trackElement = useTemplateRef<HTMLElement>('track');
 
 const hasValue = computed(() => props.modelValue != null);
-const ratio = computed(() => props.modelValue == null ? 0 : getRangeRatio(props.scale, props.modelValue));
+const ratio = computed(() => props.modelValue == null ? TRACK_START : getRangeRatio(props.scale, props.modelValue));
 const valueDistance = computed(() => {
 	return props.modelValue == null ? 0 : getNearestStepDistance(props.scale, props.modelValue);
 });
