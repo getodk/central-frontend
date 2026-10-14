@@ -4,7 +4,7 @@ import {
   IS_FORM_EDIT_MODE,
 } from '@getodk/web-forms/lib/constants/injection-keys.ts';
 import { mount, VueWrapper } from '@vue/test-utils';
-import { assert, describe, expect, it, beforeEach } from 'vitest';
+import { assert, describe, expect, it, beforeEach, vi } from 'vitest';
 import { ref, shallowRef } from 'vue';
 import { getReactiveForm, globalMountOptions } from '../../../helpers';
 import type { GeneralChildNode } from '@getodk/xforms-engine';
@@ -36,38 +36,95 @@ describe('InputNumeric', () => {
     });
   };
 
-  describe('integer', () => {
-    beforeEach(async () => {
-      component = await mountComponent(0);
-    });
+  beforeEach(() => {
+    vi.restoreAllMocks();
+  });
 
-    it('sets the correct inputmode', () => {
+  describe('integer', () => {
+    it('sets the correct inputmode', async () => {
+      component = await mountComponent(0);
       expect(component.get('input').attributes().inputmode).toBe('numeric');
     });
 
-    it('trims the value', async () => {
-      await component.get('input').setValue('   1   ');
-      expect(question.currentState.value).toBe(1n);
+    it('handles dots for thousands separators', async () => {
+      vi.spyOn(Intl.NumberFormat.prototype, 'formatToParts').mockReturnValue([
+        { type: 'decimal', value: ',' },
+      ]);
+      component = await mountComponent(0);
+      await component.get('input').setValue('1.2345');
+      expect(question.currentState.value).toBe(12345n);
     });
 
-    it('empty = null', async () => {
-      await component.get('input').setValue('    ');
-      expect(question.currentState.value).toBeNull();
-    });
+    describe('values', () => {
+      beforeEach(async () => {
+        component = await mountComponent(0);
+      });
 
-    it('rounds integers', async () => {
-      await component.get('input').setValue('1.59');
-      expect(question.currentState.value).toBe(2n);
+      [
+        { given: '   1   ', expected: 1n },
+        { given: '    ', expected: null },
+        { given: '1.59', expected: 2n },
+        { given: '1,234', expected: 1234n },
+        { given: '1234.', expected: 1234n },
+      ].forEach(({ given, expected }) => {
+        it(`handles ${given}`, async () => {
+          await component.get('input').setValue(given);
+          expect(question.currentState.value).toBe(expected);
+        });
+      });
     });
   });
 
   describe('decimal', () => {
-    beforeEach(async () => {
+    it('sets the correct inputmode', async () => {
       component = await mountComponent(1);
+      expect(component.get('input').attributes().inputmode).toBe('decimal');
     });
 
-    it('sets the correct inputmode', () => {
-      expect(component.get('input').attributes().inputmode).toBe('decimal');
+    describe('comma separators', () => {
+      beforeEach(async () => {
+        vi.spyOn(Intl.NumberFormat.prototype, 'formatToParts').mockReturnValue([
+          { type: 'decimal', value: ',' },
+        ]);
+        component = await mountComponent(1);
+      });
+
+      [
+        { given: '56,123', expected: 56.123 },
+        { given: '56.123', expected: 56123 },
+        { given: ',123', expected: 0.123 },
+        { given: '56.123.456', expected: 56123456 },
+        { given: '0,1234567890123456789', expected: null },
+        { given: '1234567890123456789', expected: null },
+      ].forEach(({ given, expected }) => {
+        it(`handles ${given}`, async () => {
+          await component.get('input').setValue(given);
+          expect(question.currentState.value).toBe(expected);
+        });
+      });
+    });
+
+    describe('fullstop separators', () => {
+      beforeEach(async () => {
+        vi.spyOn(Intl.NumberFormat.prototype, 'formatToParts').mockReturnValue([
+          { type: 'decimal', value: '.' },
+        ]);
+        component = await mountComponent(1);
+      });
+
+      [
+        { given: '56.123', expected: 56.123 },
+        { given: '56,123', expected: 56123 },
+        { given: '.123', expected: 0.123 },
+        { given: '56,123,456', expected: 56123456 },
+        { given: '0.1234567890123456789', expected: null },
+        { given: '1234567890123456789', expected: null },
+      ].forEach(({ given, expected }) => {
+        it(`handles ${given}`, async () => {
+          await component.get('input').setValue(given);
+          expect(question.currentState.value).toBe(expected);
+        });
+      });
     });
   });
 });

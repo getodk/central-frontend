@@ -40,24 +40,19 @@ const formatter = computed(() => new Intl.NumberFormat(undefined, {
 	useGrouping: props.node.appearances['thousands-sep']
 }));
 
-const decimalSeparator = computed(() => {
+const decimalSeparator = (() => {
 	const parts = new Intl.NumberFormat(undefined).formatToParts(1.1);
 	return parts.find(part => part.type === 'decimal')?.value ?? '.';
-});
-const keyFilterPattern = computed(() => {
-	return new RegExp(`[\\d\\-\\${decimalSeparator.value}]`);
-});
-
-const groupSeparator = computed(() => {
-	return decimalSeparator.value === '.' ? ',' : '.';
-});
+})();
+const groupSeparator = decimalSeparator === '.' ? ',' : '.';
+const keyFilterPattern = new RegExp(`[\\d\\-\\${decimalSeparator}]`);
 
 const standardizeSeparators = (value: string) => {
-	value = value.replaceAll(groupSeparator.value, '');
-	if (decimalSeparator.value !== '.') {
-		value = value.replace(decimalSeparator.value, '.');
+	value = value.replaceAll(groupSeparator, '');
+	if (decimalSeparator !== '.') {
+		value = value.replace(decimalSeparator, '.');
 	}
-	if (!props.isDecimal && value.endsWith(decimalSeparator.value)) {
+	if (!props.isDecimal && value.endsWith(decimalSeparator)) {
 		value = value.substring(0, value.length - 1);
 	}
 	return value;
@@ -67,7 +62,7 @@ const validityIsUncertain = (value: string) => {
 	if (value === '-') {
 		return true;
 	}
-	return props.isDecimal && value.indexOf(decimalSeparator.value) === value.length - 1;
+	return props.isDecimal && value.indexOf(decimalSeparator) === value.length - 1;
 };
 
 const modelValue = computed<string>({
@@ -129,7 +124,7 @@ const spin = (amount: number) => {
 			const parts = str.split('.');
 			const int = Number(parts[0]) + amount;
 			if (parts.length === 2) {
-				modelValue.value = int + decimalSeparator.value + parts[1]!;
+				modelValue.value = int + decimalSeparator + parts[1]!;
 			} else {
 				modelValue.value = int.toString();
 			}
