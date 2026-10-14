@@ -110,6 +110,11 @@ export class SecondaryInstanceLookupCache {
       }
 
       const evaluation = key.indexKey.evaluate(currentContext);
+      if (evaluation.nodes && evaluation.nodes.size > 1) {
+        // don't cache when referencing more than one node
+        return;
+      }
+
       const result = evaluation.toString();
       const expr = key.indexKey.syntaxNode.text;
       replacements.push({ expr, result, lhs: key.lhs });

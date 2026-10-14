@@ -155,7 +155,7 @@ describe('Secondary instance lookup cache', () => {
       ).toEqual(expected);
     });
 
-    it('caches predicates with functions on one side and constnat values on the other', () => {
+    it('caches predicates with functions on one side and constant values on the other', () => {
       const expected = new Set([testDocument.getElementById('3')]);
       evaluator.evaluateNode(
         '/root/instance[@id="second"]/item[@id=coalesce(/root/instance[@id="primary"]/c, 3)]'
@@ -477,6 +477,29 @@ describe('Secondary instance lookup cache', () => {
     expect(SecondaryInstanceLookupCache.size()).toEqual(0);
     testDocument.getElementById('choice')!.textContent = 'cherry';
     expect(evaluator.evaluateString(query)).toEqual('cherry');
+    expect(SecondaryInstanceLookupCache.size()).toEqual(0);
+  });
+
+  it('does not cache when the key references multiple nodes', () => {
+    const testDocument = xml`<root>
+      <instance id="primary">
+        <visit><clinic>apple</clinic></visit>
+        <visit><clinic id="second-visit">banana</clinic></visit>
+      </instance>
+      <instance id="second">
+        <item id="apple"/><item id="banana"/><item id="cherry"/>
+        <item/><item/><item/><item/><item/><item/><item/>
+      </instance>
+    </root>`;
+    const evaluator = new Evaluator({
+      domAdapter: DEFAULT_DOM_ADAPTER,
+      rootNode: testDocument,
+    });
+    const query =
+      'count(/root/instance[@id="second"]/item[@id = /root/instance[@id="primary"]/visit/clinic])';
+    expect(evaluator.evaluateNumber(query)).toEqual(2);
+    testDocument.getElementById('second-visit')!.textContent = 'apple';
+    expect(evaluator.evaluateNumber(query)).toEqual(1);
     expect(SecondaryInstanceLookupCache.size()).toEqual(0);
   });
 });
