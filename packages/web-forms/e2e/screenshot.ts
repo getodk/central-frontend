@@ -9,6 +9,7 @@ interface ScreenshotParams {
 }
 
 const MAX_DIFF_PIXEL_RATIO = 0.001;
+const PIXEL_COLOR_THRESHOLD = 0.1;
 
 const getBox = async (locator: Locator, screenshotName: string) => {
   const box = await locator.boundingBox();
@@ -60,6 +61,7 @@ export const expectFullScreenScreenshot = async (
   await prepareCapture(page);
   await expect(locator).toHaveScreenshot(screenshotName, {
     maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO,
+    threshold: PIXEL_COLOR_THRESHOLD,
   });
 };
 
@@ -68,6 +70,7 @@ export const expectFullPageScreenshot = async (page: Page, screenshotName: strin
   await expect(page).toHaveScreenshot(screenshotName, {
     fullPage: true,
     maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO,
+    threshold: PIXEL_COLOR_THRESHOLD,
   });
 };
 
@@ -105,5 +108,6 @@ export const expectScreenshot = async (params: ScreenshotParams) => {
       height,
     },
     maxDiffPixelRatio: MAX_DIFF_PIXEL_RATIO,
+    threshold: PIXEL_COLOR_THRESHOLD,
   });
 };
