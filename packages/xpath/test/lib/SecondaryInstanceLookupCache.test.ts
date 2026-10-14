@@ -31,7 +31,7 @@ describe('Secondary instance lookup cache', () => {
           <item id="4" color="green" size="small">d</item>
           <item id="5" color="blue" size="small">e</item>
           <item id="6" color="green" size="large">f</item>
-          <item id="7">g</item>
+          <item id="7" secondarycolor="green">g</item>
           <item id="8">h</item>
           <item id="9">i</item>
           <item id="10">j</item>
@@ -43,6 +43,7 @@ describe('Secondary instance lookup cache', () => {
         </instance>
         <instance id="colors">
           <a>blue</a>
+          <b>green</b>
         </instance>
         <instance id="refs">
           <size>large</size>
@@ -143,13 +144,6 @@ describe('Secondary instance lookup cache', () => {
       expect(SecondaryInstanceLookupCache.size()).toEqual(0);
     });
 
-    it('does not cache when both sides of the predicate are based on primary data', () => {
-      evaluator.evaluateString(
-        '/root/instance[@id="second"]/item[coalesce(@color, /root/instance[@id="primary"]/b) = /root/instance[@id="primary"]/a]'
-      );
-      expect(SecondaryInstanceLookupCache.size()).toEqual(0);
-    });
-
     it('caches functions with zero parameters', () => {
       const expected = new Set([testDocument.getElementById('3')]);
       evaluator.evaluateNode(
@@ -161,7 +155,7 @@ describe('Secondary instance lookup cache', () => {
       ).toEqual(expected);
     });
 
-    it('caches queries with functions', () => {
+    it('caches predicates with functions on one side and constnat values on the other', () => {
       const expected = new Set([testDocument.getElementById('3')]);
       evaluator.evaluateNode(
         '/root/instance[@id="second"]/item[@id=coalesce(/root/instance[@id="primary"]/c, 3)]'
@@ -170,6 +164,19 @@ describe('Secondary instance lookup cache', () => {
       expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id=3]')).toEqual(
         expected
       );
+    });
+
+    it('caches predicates with functions on one side and absolute references on the other', () => {
+      const expected = new Set([testDocument.getElementById('7')]);
+      evaluator.evaluateString(
+        '/root/instance[@id="second"]/item[coalesce(@secondarycolor, /root/instance[@id="colors"]/a) = /root/instance[@id="colors"]/b]'
+      );
+      expect(SecondaryInstanceLookupCache.size()).toEqual(1);
+      expect(
+        SecondaryInstanceLookupCache.get(
+          '/root/instance[@id="second"]/item[coalesce(@secondarycolor, /root/instance[@id="colors"]/a) = green]'
+        )
+      ).toEqual(expected);
     });
 
     it('does not reuse the cache item when the query does not match', () => {
@@ -442,5 +449,34 @@ describe('Secondary instance lookup cache', () => {
     expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id= 2 ]')).toEqual(
       expected
     );
+  });
+
+  it('does not reuse the cache when a function mixes primary data with item data', () => {
+    const testDocument = xml`<root>
+      <instance id="primary">
+        <choice id="choice"/>
+      </instance>
+      <instance id="second">
+        <item id="apple" fallback="cherry"/>
+        <item id="banana" fallback="banana"/>
+        <item id="cherry"/>
+        <item/><item/><item/><item/><item/><item/><item/>
+      </instance>
+    </root>`;
+    const evaluator = new Evaluator({
+      domAdapter: DEFAULT_DOM_ADAPTER,
+      rootNode: testDocument,
+      functions: new FunctionLibraryCollection([
+        new FunctionLibrary('http://www.w3.org/2005/xpath-functions', [coalesce]),
+      ]),
+    });
+    const query =
+      '/root/instance[@id="second"]/item[@id = coalesce(/root/instance[@id="primary"]/choice, @fallback)]/@id';
+
+    expect(evaluator.evaluateString(query)).toEqual('banana');
+    expect(SecondaryInstanceLookupCache.size()).toEqual(0);
+    testDocument.getElementById('choice')!.textContent = 'cherry';
+    expect(evaluator.evaluateString(query)).toEqual('cherry');
+    expect(SecondaryInstanceLookupCache.size()).toEqual(0);
   });
 });

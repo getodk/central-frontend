@@ -14,7 +14,7 @@ const MAXIMUM_CACHE_SIZE = 100;
 
 const cache = new Map<string, ReadonlySet<XPathNode>>();
 
-const isConstantOrReferencesPrimaryInstance = (expr: ExpressionEvaluator) => {
+const isConstantOrReferencesPrimaryInstance = (expr: ExpressionEvaluator): boolean => {
   if (expr instanceof LocationPathEvaluator && expr.isAbsolute) {
     return true;
   }
@@ -31,7 +31,10 @@ const isConstantOrReferencesPrimaryInstance = (expr: ExpressionEvaluator) => {
     return true;
   }
   if (expr instanceof FunctionCallExpressionEvaluator) {
-    return expr.argumentExpressions.some(isConstantOrReferencesPrimaryInstance);
+    if (expr.argumentExpressions.length === 0) {
+      return false;
+    }
+    return expr.argumentExpressions.every(isConstantOrReferencesPrimaryInstance);
   }
   return false;
 };
@@ -55,7 +58,36 @@ const getIndexKey = (expr: ExpressionEvaluator) => {
     // either neither side is keyable, or both sides are, either way we don't know how to cache it
     return;
   }
-  return isLhsKey ? expr.lhs : expr.rhs;
+  const indexKey = isLhsKey ? expr.lhs : expr.rhs;
+  return { lhs: isLhsKey, indexKey };
+};
+
+interface ExpressionReplacement {
+  expr: string;
+  result: string;
+  lhs: boolean;
+}
+
+const getCacheablePrefix = (expression: string, replacements: ExpressionReplacement[]) => {
+  const lastExpression = replacements[replacements.length - 1]!.expr;
+  const endOfLastReplacement = expression.lastIndexOf(lastExpression) + lastExpression.length;
+  const endOfPredicate = expression.indexOf(']', endOfLastReplacement) + 1;
+  return expression.substring(0, endOfPredicate);
+};
+
+const makeReplacements = (expression: string, replacements: ExpressionReplacement[]) => {
+  let key = getCacheablePrefix(expression, replacements);
+  for (const { expr, result, lhs } of replacements) {
+    if (lhs) {
+      // replace first occurence
+      key = key.replace(expr, result);
+    } else {
+      // replace last occurence
+      const index = key.lastIndexOf(expr);
+      key = key.slice(0, index) + result + key.slice(index + expr.length);
+    }
+  }
+  return key;
 };
 
 export class SecondaryInstanceLookupCache {
@@ -71,21 +103,16 @@ export class SecondaryInstanceLookupCache {
     const replacements = [];
 
     for (const predicateExpression of predicateExpressions) {
-      const indexKey = getIndexKey(predicateExpression);
-      if (!indexKey) {
+      const key = getIndexKey(predicateExpression);
+      if (!key) {
         // can't cache when any of the predicates can't be reliably cached
         return;
       }
 
-      const evaluation = indexKey.evaluate(currentContext);
-      if (evaluation.nodes && evaluation.nodes.size > 1) {
-        // don't cache when referencing more than one node
-        return;
-      }
-
+      const evaluation = key.indexKey.evaluate(currentContext);
       const result = evaluation.toString();
-      const expr = indexKey.syntaxNode.text;
-      replacements.push({ expr, result });
+      const expr = key.indexKey.syntaxNode.text;
+      replacements.push({ expr, result, lhs: key.lhs });
     }
 
     if (replacements.length === 0) {
@@ -93,15 +120,7 @@ export class SecondaryInstanceLookupCache {
       return;
     }
 
-    const lastExpression = replacements[replacements.length - 1]!.expr;
-    const endOfLastReplacement =
-      syntaxNode.text.lastIndexOf(lastExpression) + lastExpression.length;
-    const endOfPredicate = syntaxNode.text.indexOf(']', endOfLastReplacement) + 1;
-    let key = syntaxNode.text.substring(0, endOfPredicate);
-    for (const { expr, result } of replacements) {
-      key = key.replace(expr, result);
-    }
-    return key;
+    return makeReplacements(syntaxNode.text, replacements);
   };
 
   static set<T extends XPathNode>(key: string, filteredNodes: ReadonlySet<T>) {
