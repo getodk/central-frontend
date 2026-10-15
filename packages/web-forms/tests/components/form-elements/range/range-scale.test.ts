@@ -148,7 +148,7 @@ describe('Range scale', () => {
     ) => {
       const ticks = getRangeTicks(labelScale);
       const labels = values.map((value) => tickLabel(value));
-      const layout = placeLabelsOnTicks(ticks, labels, endLabelsOnly, 'horizontal');
+      const layout = placeLabelsOnTicks(ticks, labels, endLabelsOnly);
       return layout.labels.map(({ ratio, label }) => [ratio, label.asString]);
     };
 
@@ -198,7 +198,7 @@ describe('Range scale', () => {
       const ticks = getRangeTicks(scale);
       const labels = [tickLabel(0, ''), tickLabel(5, ' '), tickLabel(10, 'High')];
 
-      const layout = placeLabelsOnTicks(ticks, labels, false, 'horizontal');
+      const layout = placeLabelsOnTicks(ticks, labels, false);
 
       expect(layout.labels.map(({ ratio }) => ratio)).toEqual([1]);
     });

@@ -42,9 +42,6 @@ export interface TickLabelLayout {
 
 export const TRACK_START = 0;
 export const TRACK_END = 1;
-const HORIZONTAL_MAX_LABEL_SIZE = 0.2;
-// The vertical track grows to fit the labels.
-const VERTICAL_MAX_LABEL_SIZE = TRACK_END;
 // Grid lines are whole parts of the track, so every track is at least 1fr and keeps its share when the grid grows.
 const GRID_UNITS = 1000;
 
@@ -161,7 +158,6 @@ const isEndTick = ({ ratio }: RangeTick) => ratio === TRACK_START || ratio === T
 
 // Start and end labels grow inwards, others stay centered on their tick.
 const fitLabelBetweenNeighbours = (
-  maxSize: number,
   ratio: number,
   prevRatio: number | undefined,
   nextRatio: number | undefined
@@ -170,14 +166,14 @@ const fitLabelBetweenNeighbours = (
   const endRoom = nextRatio == null ? TRACK_END - ratio : (nextRatio - ratio) / 2;
 
   if (ratio === TRACK_START) {
-    return { start: TRACK_START, end: Math.min(maxSize, endRoom) };
+    return { start: TRACK_START, end: endRoom };
   }
 
   if (ratio === TRACK_END) {
-    return { start: TRACK_END - Math.min(maxSize, startRoom), end: TRACK_END };
+    return { start: TRACK_END - startRoom, end: TRACK_END };
   }
 
-  const halfSize = Math.min(maxSize / 2, startRoom, endRoom);
+  const halfSize = Math.min(startRoom, endRoom);
   return { start: ratio - halfSize, end: ratio + halfSize };
 };
 
@@ -230,16 +226,12 @@ const buildGridLayout = (labelSpaces: readonly PositionedTickLabel[]): TickLabel
 export const placeLabelsOnTicks = (
   ticks: readonly RangeTick[],
   tickLabels: readonly RangeTickLabel[],
-  endLabelsOnly: boolean,
-  orientation: 'horizontal' | 'vertical'
+  endLabelsOnly: boolean
 ): TickLabelLayout => {
   const labelsToShow = getLabelsToShow(ticks, tickLabels, endLabelsOnly);
-  const maxSize =
-    orientation === 'horizontal' ? HORIZONTAL_MAX_LABEL_SIZE : VERTICAL_MAX_LABEL_SIZE;
 
   const labelSpaces = labelsToShow.map(({ ratio, label }, index) => {
     const { start, end } = fitLabelBetweenNeighbours(
-      maxSize,
       ratio,
       labelsToShow[index - 1]?.ratio,
       labelsToShow[index + 1]?.ratio

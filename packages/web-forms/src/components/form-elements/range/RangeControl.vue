@@ -31,7 +31,7 @@ const scale = getRangeScale({
 
 const ticks = getRangeTicks(scale);
 const labelLayout = computed(() => {
-	return placeLabelsOnTicks(ticks, props.node.currentState.tickLabels, !hasTicks, orientation);
+	return placeLabelsOnTicks(ticks, props.node.currentState.tickLabels, !hasTicks);
 });
 
 const labelTracks = computed(() => {
