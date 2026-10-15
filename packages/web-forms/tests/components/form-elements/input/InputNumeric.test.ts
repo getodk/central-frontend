@@ -4,7 +4,7 @@ import {
   IS_FORM_EDIT_MODE,
 } from '@getodk/web-forms/lib/constants/injection-keys.ts';
 import { mount, VueWrapper } from '@vue/test-utils';
-import { assert, describe, expect, it, beforeEach, vi } from 'vitest';
+import { assert, describe, expect, it, beforeEach, afterEach, vi } from 'vitest';
 import { ref, shallowRef } from 'vue';
 import { getReactiveForm, globalMountOptions } from '../../../helpers';
 import type { GeneralChildNode } from '@getodk/xforms-engine';
@@ -12,6 +12,16 @@ import type { GeneralChildNode } from '@getodk/xforms-engine';
 describe('InputNumeric', () => {
   let question: GeneralChildNode;
   let component: VueWrapper;
+
+  const POLISH_NAVIGATOR = {
+    languages: ['pl', 'en'],
+    language: 'en',
+  };
+
+  const ENGLISH_NAVIGATOR = {
+    languages: ['en', 'pl'],
+    language: 'en',
+  };
 
   const mountComponent = async (
     questionNumber: number,
@@ -37,7 +47,11 @@ describe('InputNumeric', () => {
   };
 
   beforeEach(() => {
-    vi.restoreAllMocks();
+    vi.stubGlobal('navigator', ENGLISH_NAVIGATOR);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
   describe('integer', () => {
@@ -47,15 +61,13 @@ describe('InputNumeric', () => {
     });
 
     it('handles dots for thousands separators', async () => {
-      vi.spyOn(Intl.NumberFormat.prototype, 'formatToParts').mockReturnValue([
-        { type: 'decimal', value: ',' },
-      ]);
+      vi.stubGlobal('navigator', POLISH_NAVIGATOR);
       component = await mountComponent(0);
       await component.get('input').setValue('1.2345');
       expect(question.currentState.value).toBe(12345n);
     });
 
-    describe('values', () => {
+    describe('handles input', () => {
       beforeEach(async () => {
         component = await mountComponent(0);
       });
@@ -67,7 +79,7 @@ describe('InputNumeric', () => {
         { given: '1,234', expected: 1234n },
         { given: '1234.', expected: 1234n },
       ].forEach(({ given, expected }) => {
-        it(`handles ${given}`, async () => {
+        it(`${given}`, async () => {
           await component.get('input').setValue(given);
           expect(question.currentState.value).toBe(expected);
         });
@@ -83,9 +95,7 @@ describe('InputNumeric', () => {
 
     describe('comma separators', () => {
       beforeEach(async () => {
-        vi.spyOn(Intl.NumberFormat.prototype, 'formatToParts').mockReturnValue([
-          { type: 'decimal', value: ',' },
-        ]);
+        vi.stubGlobal('navigator', POLISH_NAVIGATOR);
         component = await mountComponent(1);
       });
 
@@ -106,9 +116,6 @@ describe('InputNumeric', () => {
 
     describe('fullstop separators', () => {
       beforeEach(async () => {
-        vi.spyOn(Intl.NumberFormat.prototype, 'formatToParts').mockReturnValue([
-          { type: 'decimal', value: '.' },
-        ]);
         component = await mountComponent(1);
       });
 
