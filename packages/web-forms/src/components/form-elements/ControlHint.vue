@@ -5,11 +5,15 @@ import { computed } from 'vue';
 const props = defineProps<{ question: QuestionNode }>();
 
 const label = computed(() => props.question.currentState.hint?.formatted);
+const guidanceHint = computed(() => props.question.currentState.hint?.guidanceHint);
 </script>
 
 <template>
 	<div v-if="question.currentState.hint" class="hint">
 		<MarkdownBlock v-for="elem in label" :key="elem.id" :elem="elem" />
+		<div id="guidance">
+			<MarkdownBlock v-for="elem in guidanceHint" :key="elem.id" :elem="elem" />
+		</div>
 	</div>
 </template>
 

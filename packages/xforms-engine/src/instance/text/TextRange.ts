@@ -23,6 +23,10 @@ export class TextRange<Role extends TextRole> implements ClientTextRange<Role> {
     return this.chunks.map((chunk) => chunk.asString).join('');
   }
 
+  get guidanceHint(): MarkdownNode[] {
+    return format(this.guidanceHintChunks);
+  }
+
   get imageSource(): JRResourceURL | undefined {
     return this.mediaSources?.image;
   }
@@ -38,6 +42,7 @@ export class TextRange<Role extends TextRole> implements ClientTextRange<Role> {
   constructor(
     readonly role: Role,
     protected readonly chunks: readonly TextChunk[],
+    protected readonly guidanceHintChunks: readonly TextChunk[],
     protected readonly mediaSources?: MediaSources,
     readonly error: Error | null = null
   ) {}
