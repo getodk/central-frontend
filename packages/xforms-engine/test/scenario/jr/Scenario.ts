@@ -1075,8 +1075,8 @@ export class Scenario {
     });
   }
 
-  proposed_getTitle(): string {
-    throw new ImplementationPendingError('form title');
+  getTitle(): string {
+    return this.instanceRoot.definition.bind.form.title;
   }
 
   proposed_serializeInstance(): string {

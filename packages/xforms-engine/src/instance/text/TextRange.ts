@@ -38,6 +38,7 @@ export class TextRange<Role extends TextRole> implements ClientTextRange<Role> {
   constructor(
     readonly role: Role,
     protected readonly chunks: readonly TextChunk[],
-    protected readonly mediaSources?: MediaSources
+    protected readonly mediaSources?: MediaSources,
+    readonly error: Error | null = null
   ) {}
 }

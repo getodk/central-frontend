@@ -40,4 +40,5 @@ export interface InstanceValueContext extends EvaluationContext {
 
   isReadonly(): boolean;
   isRelevant(): boolean;
+  setActionError(error: Error | null): void;
 }

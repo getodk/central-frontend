@@ -62,11 +62,14 @@ export const setupPaginationForms = (): ((form: XFormsElement) => Promise<Root>)
 };
 
 const getNodeByReference = (root: Root, reference: string): AnyNode => {
-  const node = root.evaluator.evaluateNode<AnyNode>(reference);
-  if (node == null) {
+  const result = root.evaluator.evaluateNodes(reference);
+  if (result.error) {
+    throw result.error;
+  }
+  if (result.value!.length == null) {
     throw new Error(`No node for reference: ${reference}`);
   }
-  return node;
+  return result.value![0] as AnyNode;
 };
 
 const CONTROL_NODE_TYPES: ReadonlySet<AnyNode['nodeType']> = new Set([

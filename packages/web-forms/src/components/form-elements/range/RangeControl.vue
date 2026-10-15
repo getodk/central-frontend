@@ -12,6 +12,7 @@ const start = Number(bounds.start);
 const end = Number(bounds.end);
 const step = Number(bounds.step);
 const orientation = props.node.appearances.vertical ? 'vertical' : 'horizontal';
+const hasTicks = !props.node.appearances['no-ticks'];
 
 const numberValue = computed((): number | undefined => {
 	const { value } = props.node.currentState;
@@ -50,6 +51,8 @@ const setValue = (value: number) => props.node.setValue(value);
 				:end="end"
 				:step="step"
 				:orientation="orientation"
+				:ticks="hasTicks"
+				:tick-interval="node.nodeOptions.tickInterval"
 				:model-value="numberValue"
 				@update:model-value="setValue"
 			/>

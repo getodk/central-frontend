@@ -13,6 +13,7 @@ import {
 } from '@getodk/common/test-utils/xform-dsl/index.ts';
 import { describe, expect, it } from 'vitest';
 import { Scenario } from '../scenario/jr/Scenario.ts';
+import { type RequiredViolation } from '@getodk/xforms-engine';
 
 describe('Markdown', () => {
   const run = async (given: string, expected: object[]) => {
@@ -642,7 +643,8 @@ double line break`;
       )
     );
     const result = scenario.answerOf('/data/required-input');
-    const formatted = result.node.validationState.required.message?.formatted ?? [];
+    const formatted =
+      (result.node.validationState.required as RequiredViolation).message?.formatted ?? [];
     expect(formatted).toMatchObject([
       { value: 'Field is ' },
       {

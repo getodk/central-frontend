@@ -16,6 +16,7 @@ import { stringAnswer } from '../scenario/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../scenario/jr/Scenario.ts';
 
 import jrChoiceName from '../scenario/fixtures/test-javarosa/resources/jr-choice-name.xml?raw';
+import { ANSWER_CALCULATION_ERROR } from '../scenario/jr/validation/ValidateOutcome.ts';
 
 // Ported as of https://github.com/getodk/javarosa/commit/5ae68946c47419b83e7d28290132d846e457eea6
 describe('JavaRosa ports: ChoiceNameTest.java', () => {
@@ -186,51 +187,51 @@ describe('JavaRosa ports: ChoiceNameTest.java', () => {
 
   describe('error conditions', () => {
     it('throws on unknown element', async () => {
-      await expect(async () => {
-        await Scenario.init(
-          'Simplest',
-          html(
-            head(
-              title('Simplest'),
-              model(
-                mainInstance(t('data id="simplest"', t('a'), t('select_one'))),
-                bind('/data/a')
-                  .type('string')
-                  .calculate("jr:choice-name('choice2', ' /data/NOT_FOUND ')")
-              )
-            ),
-            body(
-              select1(
-                '/data/select_one',
-                item('choice1', 'Choice 1 label'),
-                item('choice2', 'Choice 2 label')
-              )
+      const scenario = await Scenario.init(
+        'Simplest',
+        html(
+          head(
+            title('Simplest'),
+            model(
+              mainInstance(t('data id="simplest"', t('a'), t('select_one'))),
+              bind('/data/a')
+                .type('string')
+                .calculate("jr:choice-name('choice2', ' /data/NOT_FOUND ')")
+            )
+          ),
+          body(
+            select1(
+              '/data/select_one',
+              item('choice1', 'Choice 1 label'),
+              item('choice2', 'Choice 2 label')
             )
           )
-        );
-      }).rejects.toThrow("No element found by evaluating ' /data/NOT_FOUND '");
+        )
+      );
+      const validate = scenario.getValidationOutcome();
+      expect(validate.failedPrompt).toBe(scenario.indexOf('/data/a'));
+      expect(validate.outcome).toBe(ANSWER_CALCULATION_ERROR);
     });
 
     it('throws when value is invalid element type', async () => {
-      await expect(async () => {
-        await Scenario.init(
-          'Simplest',
-          html(
-            head(
-              title('Simplest'),
-              model(
-                mainInstance(t('data id="simplest"', t('a'), t('select_one'))),
-                bind('/data/a')
-                  .type('string')
-                  .calculate("jr:choice-name('choice2', ' /data/select_one ')")
-              )
-            ),
-            body(input('/data/select_one'))
-          )
-        );
-      }).rejects.toThrow(
-        "Evaluating 'jr:choice-name' on element ' /data/select_one ' which has no possible choices."
+      const scenario = await Scenario.init(
+        'Simplest',
+        html(
+          head(
+            title('Simplest'),
+            model(
+              mainInstance(t('data id="simplest"', t('a'), t('select_one'))),
+              bind('/data/a')
+                .type('string')
+                .calculate("jr:choice-name('choice2', ' /data/select_one ')")
+            )
+          ),
+          body(input('/data/select_one'))
+        )
       );
+      const validate = scenario.getValidationOutcome();
+      expect(validate.failedPrompt).toBe(scenario.indexOf('/data/a'));
+      expect(validate.outcome).toBe(ANSWER_CALCULATION_ERROR);
     });
   });
 });

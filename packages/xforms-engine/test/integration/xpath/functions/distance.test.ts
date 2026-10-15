@@ -12,6 +12,7 @@ import {
 import { describe, expect, it } from 'vitest';
 import { expectedDistance } from '../../../scenario/answer/ExpectedApproximateUOMAnswer.ts';
 import { Scenario } from '../../../scenario/jr/Scenario.ts';
+import { ANSWER_CALCULATION_ERROR } from '../../../scenario/jr/validation/ValidateOutcome.ts';
 
 /**
  * **PORTING NOTES**
@@ -81,35 +82,26 @@ describe('XPath function support: `distance`', () => {
      *
      * Adapts JavaRosa's use of `try`/`catch` to typical Web Forms error
      * condition assertion style.
-     *
-     * @todo The shape of this test may change (like many others) when we
-     * address error production broadly.
      */
     // JR: distance_throwsForNonPoint
     it('produces an error when the string value is not a valid point', async () => {
-      const init = async () => {
-        // prettier-ignore
-        await Scenario.init('string distance', html(
-						head(
-							title('String distance'),
-							model(
-								mainInstance(t('data id="string-distance"',
-									t('distance')
-								)),
-								bind('/data/distance').type('decimal').calculate("distance('foo')")
-							)),
-						body(
-							input('distance')
-						)
-				));
-      };
-
-      // **PORTING NOTES**
-      //
-      // We've currently copied this error message verbatim.
-      await expect(init).rejects.toThrowError(
-        "The function 'distance' received a value that does not represent GPS coordinates"
+      const scenario = await Scenario.init(
+        'string distance',
+        html(
+          head(
+            title('String distance'),
+            model(
+              mainInstance(t('data id="string-distance"', t('distance'))),
+              bind('/data/distance').type('decimal').calculate("distance('foo')")
+            )
+          ),
+          body(input('distance'))
+        )
       );
+
+      const validate = scenario.getValidationOutcome();
+      expect(validate.failedPrompt).toBe(scenario.indexOf('/data/distance'));
+      expect(validate.outcome).toBe(ANSWER_CALCULATION_ERROR);
     });
 
     /**
@@ -191,36 +183,34 @@ describe('XPath function support: `distance`', () => {
 
   describe('multiple arguments, mixed value types', () => {
     it('produces an error for a non-geopoint value in a multiple argument call', async () => {
-      const init = async () => {
-        await Scenario.init(
-          'geoshape distance',
-          html(
-            head(
-              title('Geoshape distance'),
-              model(
-                mainInstance(
-                  t(
-                    'data id="geoshape-distance"',
-                    t('polygon-start-trace', '0 1 0 0; 0 91 0 0;'),
-                    t('polygon-close-point', '0 1 0 0'),
-                    t('distance')
-                  )
-                ),
-                bind('/data/polygon-start-trace').type('geotrace'),
-                bind('/data/polygon-close-point').type('geopoint'),
-                bind('/data/distance')
-                  .type('decimal')
-                  .calculate('distance(/data/polygon-start-trace, /data/polygon-close-point)')
-              )
-            ),
-            body(input('/data/polygon-start-trace'), input('/data/polygon-close-point'))
-          )
-        );
-      };
-
-      await expect(init).rejects.toThrowError(
-        "The function 'distance' received a value that does not represent GPS coordinates"
+      const scenario = await Scenario.init(
+        'geoshape distance',
+        html(
+          head(
+            title('Geoshape distance'),
+            model(
+              mainInstance(
+                t(
+                  'data id="geoshape-distance"',
+                  t('polygon-start-trace', '0 1 0 0; 0 91 0 0;'),
+                  t('polygon-close-point', '0 1 0 0'),
+                  t('distance')
+                )
+              ),
+              bind('/data/polygon-start-trace').type('geotrace'),
+              bind('/data/polygon-close-point').type('geopoint'),
+              bind('/data/distance')
+                .type('decimal')
+                .calculate('distance(/data/polygon-start-trace, /data/polygon-close-point)')
+            )
+          ),
+          body(input('/data/polygon-start-trace'), input('/data/polygon-close-point'))
+        )
       );
+
+      const validate = scenario.getValidationOutcome();
+      expect(validate.failedPrompt).toBe(scenario.indexOf('/data/distance'));
+      expect(validate.outcome).toBe(ANSWER_CALCULATION_ERROR);
     });
   });
 });

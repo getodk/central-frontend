@@ -79,7 +79,7 @@ export interface TextChunk {
 // eslint-disable-next-line @typescript-eslint/sort-type-constituents
 export type ElementTextRole = 'hint' | 'label' | 'item-label';
 export type ValidationTextRole = 'constraintMsg' | 'requiredMsg';
-export type TextRole = ElementTextRole | ValidationTextRole;
+export type TextRole = ElementTextRole | ValidationTextRole | 'errorMsg';
 
 /**
  * Represents aspects of a form which produce text, which _might_ be:
