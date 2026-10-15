@@ -117,22 +117,43 @@ const modelValue = computed<string>({
 
 let timer: ReturnType<typeof setTimeout>;
 
+const setInteger = (num: number, amount: number) => {
+	const int = num + amount;
+	modelValue.value = int.toString();
+};
+
+const setDecimal = (num: number, amount: number) => {
+	// need to manually increment the decimal to avoid floating point errors
+	const str = num.toString();
+	const parts = str.split('.');
+	const int = Number(parts[0]);
+	if (parts.length === 1) {
+		// no decimal component found
+		setInteger(int, amount);
+		return;
+	}
+	let updated;
+	if (num < 0 && num > -1 && amount === 1) {
+		// the '-' sign has been parsed off, so we've already incremented
+		updated = int;
+	} else if (num > 0 && num < 1 && amount === -1) {
+		// going negative - add the prefix
+		updated = '-' + int.toString();
+	} else {
+		updated = int + amount;
+	}
+	modelValue.value = updated + decimalSeparator + parts[1]!;
+};
+
 const spin = (amount: number) => {
-	if (inputRef.value?.$el && !props.node.currentState.readonly) {
-		const num = props.numericValue ?? 0;
-		if (props.isDecimal) {
-			const str = num.toString();
-			const parts = str.split('.');
-			const int = Number(parts[0]) + amount;
-			if (parts.length === 2) {
-				modelValue.value = int + decimalSeparator + parts[1]!;
-			} else {
-				modelValue.value = int.toString();
-			}
-		} else {
-			const int = num + amount;
-			modelValue.value = int.toString();
-		}
+	if (!inputRef.value?.$el || props.node.currentState.readonly) {
+		return;
+	}
+	const num = props.numericValue ?? 0;
+	if (props.isDecimal) {
+		setDecimal(num, amount);
+	} else {
+		setInteger(num, amount);
 	}
 }
 
@@ -144,17 +165,14 @@ const repeat = (interval: number, amount: number) => {
 	spin(amount);
 };
 
-const add = (event: MouseEvent, amount: number) => {
-	repeat(500, amount);
-	event.preventDefault();
-};
-
 const increment = (event: MouseEvent) => {
-	add(event, 1);
+	event.preventDefault();
+	repeat(500, 1);
 };
 
 const decrement = (event: MouseEvent) => {
-	add(event, -1);
+	event.preventDefault();
+	repeat(500, -1);
 };
 
 const clearTimer = () => {

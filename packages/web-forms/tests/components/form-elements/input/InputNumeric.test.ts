@@ -23,6 +23,9 @@ describe('InputNumeric', () => {
     language: 'en',
   };
 
+  const increment = async () => await component.get('.increment').trigger('pointerdown');
+  const decrement = async () => await component.get('.decrement').trigger('pointerdown');
+
   const mountComponent = async (
     questionNumber: number,
     submitPressed = false
@@ -85,6 +88,19 @@ describe('InputNumeric', () => {
         });
       });
     });
+
+    it('buttons increment and decrement value', async () => {
+      component = await mountComponent(0);
+      await component.get('input').setValue('3');
+      await increment();
+      expect(question.currentState.value).toBe(4n);
+      await decrement();
+      await decrement();
+      await decrement();
+      await decrement();
+      await decrement();
+      expect(question.currentState.value).toBe(-1n);
+    });
   });
 
   describe('decimal', () => {
@@ -132,6 +148,21 @@ describe('InputNumeric', () => {
           expect(question.currentState.value).toBe(expected);
         });
       });
+    });
+
+    it('buttons increment and decrement value', async () => {
+      component = await mountComponent(1);
+      await component.get('input').setValue('3.5');
+      await increment();
+      expect(question.currentState.value).toBe(4.5);
+      await decrement();
+      await decrement();
+      await decrement();
+      await decrement();
+      await decrement();
+      expect(question.currentState.value).toBe(-0.5);
+      await increment();
+      expect(question.currentState.value).toBe(0.5);
     });
   });
 });
