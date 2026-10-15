@@ -32,17 +32,18 @@ type NumericInputMode = 'decimal' | 'numeric';
 
 const props = defineProps<InputNumericProps>();
 
+const preferredLanguages = [...(navigator.languages || []), navigator.language];
 const renderKey = ref(1);
 const inputRef = ref<ComponentPublicInstance | null>(null);
 const inputmode = computed<NumericInputMode>(() => props.isDecimal ? 'decimal' : 'numeric');
-const formatter = computed(() => new Intl.NumberFormat(undefined, {
+const formatter = computed(() => new Intl.NumberFormat(preferredLanguages, {
 	maximumFractionDigits: props.isDecimal ? props.maxCharacters - 2 : 0,
 	useGrouping: props.node.appearances['thousands-sep']
 }));
 
 const decimalSeparator = (() => {
-	const parts = new Intl.NumberFormat(undefined).formatToParts(1.1);
-	return parts.find(part => part.type === 'decimal')?.value ?? '.';
+	const parts = new Intl.NumberFormat(preferredLanguages).formatToParts(1.1);
+	return parts.find(part => part.type === 'decimal')?.value ?? ',';
 })();
 const groupSeparator = decimalSeparator === '.' ? ',' : '.';
 const keyFilterPattern = new RegExp(`[\\d\\-\\${decimalSeparator}]`);
