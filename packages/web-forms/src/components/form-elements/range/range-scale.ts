@@ -12,17 +12,17 @@ export interface RangeBounds {
 export interface RangeScale {
   readonly factor: number;
   readonly start: number;
-  readonly span: number;
+  readonly span: number; // The distance from start to end.
   readonly step: number;
   readonly tickInterval: number;
-  readonly direction: -1 | 1;
+  readonly direction: -1 | 1; // -1 when end is smaller than start.
   readonly lastStepIndex: number;
 }
 
 export interface RangeTick {
   readonly value: number;
-  readonly distance: number;
-  readonly ratio: number;
+  readonly distance: number; // Distance from start.
+  readonly ratio: number; // 0 at start, 1 at end.
 }
 
 interface TickLabel {
@@ -30,9 +30,16 @@ interface TickLabel {
   readonly label: TextRange<'item-label'>;
 }
 
+// The space a label can use in grid units.
+interface TickLabelSpace extends TickLabel {
+  readonly startUnit: number;
+  readonly endUnit: number;
+}
+
+// The grid lines a label takes, counted from 1 (like CSS grid lines).
 export interface PositionedTickLabel extends TickLabel {
-  readonly start: number;
-  readonly end: number;
+  readonly startLine: number;
+  readonly endLine: number;
 }
 
 export interface TickLabelLayout {
@@ -42,10 +49,11 @@ export interface TickLabelLayout {
 
 export const TRACK_START = 0;
 export const TRACK_END = 1;
-// Grid lines are whole parts of the track, so every track is at least 1fr and keeps its share when the grid grows.
+// Ratios (0 to 1) become whole numbers (0 to 1000) for the grid, because `fr` sizes smaller than 1
+// don't fill the grid. Rounding also lets neighbouring labels share a grid line.
 const GRID_UNITS = 1000;
 
-const getDecimalPlaces = (value: number): number => {
+export const getDecimalPlaces = (value: number): number => {
   const places = value.toString().split('.')[1]?.length ?? 0;
   return Math.min(places, MAX_DECIMAL_PLACES);
 };
@@ -203,20 +211,24 @@ const getLabelsToShow = (
   return labelsToShow;
 };
 
-const buildGridLayout = (labelSpaces: readonly PositionedTickLabel[]): TickLabelLayout => {
+const buildGridLayout = (labelSpaces: readonly TickLabelSpace[]): TickLabelLayout => {
   const lines = Array.from(
-    new Set([0, ...labelSpaces.flatMap(({ start, end }) => [start, end]), GRID_UNITS])
+    new Set([
+      0,
+      ...labelSpaces.flatMap(({ startUnit, endUnit }) => [startUnit, endUnit]),
+      GRID_UNITS,
+    ])
   );
   const trackStarts = lines.slice(0, -1);
   const trackEnds = lines.slice(1);
   const trackSizes = trackEnds.map((trackEnd, index) => trackEnd - (trackStarts[index] ?? 0));
 
-  const labels = labelSpaces.map(({ ratio, label, start, end }) => {
+  const labels = labelSpaces.map(({ ratio, label, startUnit, endUnit }) => {
     return {
       ratio,
       label,
-      start: getLineNumber(lines, start),
-      end: getLineNumber(lines, end),
+      startLine: getLineNumber(lines, startUnit),
+      endLine: getLineNumber(lines, endUnit),
     };
   });
 
@@ -236,7 +248,7 @@ export const placeLabelsOnTicks = (
       labelsToShow[index - 1]?.ratio,
       labelsToShow[index + 1]?.ratio
     );
-    return { ratio, label, start: roundToGridUnits(start), end: roundToGridUnits(end) };
+    return { ratio, label, startUnit: roundToGridUnits(start), endUnit: roundToGridUnits(end) };
   });
 
   return buildGridLayout(labelSpaces);

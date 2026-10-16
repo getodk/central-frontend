@@ -3,6 +3,7 @@ import MarkdownBlock from '@getodk/web-forms/components/common/MarkdownBlock.vue
 import ControlText from '@getodk/web-forms/components/form-elements/ControlText.vue';
 import RangeSlider from '@getodk/web-forms/components/form-elements/range/RangeSlider.vue';
 import {
+	getDecimalPlaces,
 	getRangeScale,
 	getRangeTicks,
 	placeLabelsOnTicks,
@@ -13,11 +14,14 @@ import type { AnyRangeNode } from '@getodk/xforms-engine';
 import Rating from 'primevue/rating';
 import { computed } from 'vue';
 
+const DECIMAL_POINT_LENGTH = 1;
+
 const props = defineProps<{ readonly node: AnyRangeNode }>();
 
 const { bounds } = props.node.definition;
 const start = Number(bounds.start);
 const end = Number(bounds.end);
+const step = Number(bounds.step);
 const orientation = props.node.appearances.vertical ? 'vertical' : 'horizontal';
 const isVertical = orientation === 'vertical';
 const hasTicks = !props.node.appearances['no-ticks'];
@@ -25,9 +29,13 @@ const hasTicks = !props.node.appearances['no-ticks'];
 const scale = getRangeScale({
 	start,
 	end,
-	step: Number(bounds.step),
+	step,
 	tickInterval: props.node.nodeOptions.tickInterval,
 });
+
+// Room for the longest value, so the track doesn't move.
+const valueLength =
+	Math.max(String(start).length, String(end).length) + getDecimalPlaces(step) + DECIMAL_POINT_LENGTH;
 
 const ticks = getRangeTicks(scale);
 const labelLayout = computed(() => {
@@ -35,6 +43,8 @@ const labelLayout = computed(() => {
 });
 
 const labelTracks = computed(() => {
+	// Vertical rows go from end (top) to start (bottom), so the tracks are reversed and the template
+	// counts label lines from the bottom with negative line numbers.
 	const tracks = labelLayout.value.trackSizes.map((size) => `minmax(0, ${size}fr)`);
 	if (isVertical) {
 		tracks.reverse();
@@ -67,7 +77,7 @@ const setValue = (value: number) => props.node.setValue(value);
 	</template>
 
 	<template v-else>
-		<div :class="['range-control-container', orientation]" :style="{ '--label-tracks': labelTracks }">
+		<div :class="['range-control-container', orientation]" :style="{ '--label-tracks': labelTracks, '--value-length': valueLength }">
 			<div class="range-value">
 				<span v-if="numberValue != null">{{ numberValue }}</span>
 			</div>
@@ -103,8 +113,8 @@ const setValue = (value: number) => props.node.setValue(value);
 						]"
 						:style="
 							isVertical
-								? { gridRow: `-${tickLabel.end} / -${tickLabel.start}` }
-								: { gridColumn: `${tickLabel.start} / ${tickLabel.end}` }
+								? { gridRow: `-${tickLabel.endLine} / -${tickLabel.startLine}` }
+								: { gridColumn: `${tickLabel.startLine} / ${tickLabel.endLine}` }
 						"
 					>
 						<MarkdownBlock v-for="elem in tickLabel.label.formatted" :key="elem.id" :elem="elem" />
@@ -120,7 +130,6 @@ const setValue = (value: number) => props.node.setValue(value);
 
 .range-control-container {
 	--track-gap: var(--odk-spacing-xl);
-	--gutter-width: 3rem;
 	--labels-max-width: 50%;
 
 	.range-value {
@@ -173,10 +182,11 @@ const setValue = (value: number) => props.node.setValue(value);
 		}
 	}
 
-	// The rows grow in proportion until every label fits next to its tick.
+	// The columns are the selected value, track, bounds and labels. The rows grow in proportion
+	// until every label fits next to its tick.
 	&.vertical {
 		display: grid;
-		grid-template-columns: calc(var(--gutter-width) - var(--track-gap)) max-content max-content;
+		grid-template-columns: max-content max-content max-content;
 		grid-template-rows: var(--label-tracks);
 		grid-auto-columns: fit-content(var(--labels-max-width));
 		justify-content: center;
@@ -193,6 +203,8 @@ const setValue = (value: number) => props.node.setValue(value);
 			grid-area: 1 / 1 / -1;
 			justify-self: end;
 			align-self: center;
+			min-width: calc(var(--value-length) * 1ch);
+			text-align: end;
 		}
 
 		.range-slider {

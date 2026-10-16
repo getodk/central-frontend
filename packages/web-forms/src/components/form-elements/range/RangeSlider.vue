@@ -127,10 +127,10 @@ const moveBackward = () => moveByStep(-1);
 <style scoped lang="scss">
 .range-slider {
 	--track-size: 5px;
-  --thumb-size: 20px;
+	--thumb-size: 20px;
 	--tick-size: 3px;
 	--tick-offset: calc((var(--track-size) - var(--tick-size)) / 2);
-	--tick-center: calc(var(--tick-size) / -2);
+	--tick-shift: calc(var(--tick-size) / -2);
 	--range-position: calc(var(--range-ratio) * 100%);
 
 	position: relative;
@@ -167,8 +167,8 @@ const moveBackward = () => moveByStep(-1);
 
 		.range-tick {
 			top: var(--tick-offset);
-			left: var(--range-position);
-			margin-left: var(--tick-center);
+			left: var(--tick-position);
+			margin-left: var(--tick-shift);
 		}
 	}
 
@@ -188,9 +188,9 @@ const moveBackward = () => moveByStep(-1);
 		}
 
 		.range-tick {
-			bottom: var(--range-position);
+			bottom: var(--tick-position);
 			left: var(--tick-offset);
-			margin-bottom: var(--tick-center);
+			margin-bottom: var(--tick-shift);
 		}
 	}
 
@@ -220,7 +220,7 @@ const moveBackward = () => moveByStep(-1);
 }
 
 .range-tick {
-	--range-position: calc(var(--tick-ratio) * 100%);
+	--tick-position: calc(var(--tick-ratio) * 100%);
 
 	position: absolute;
 	width: var(--tick-size);
