@@ -38,11 +38,14 @@ const props = defineProps({
     required: true
   },
   extraProperties: Boolean,
-  progress: Number
+  progress: Number,
+  processingProgress: Number
 });
 
 const { t, n } = useI18n();
 const status = computed(() => {
+  if (props.processingProgress != null)
+    return t('status.processing', { percentProcessed: n(props.processingProgress, 'percent') });
   if (props.extraProperties && props.progress == null)
     return t('status.creatingProperties');
   const progress = props.progress ?? 0;
@@ -95,7 +98,7 @@ const status = computed(() => {
       "sending": "Sending file… ({percentUploaded})",
       // This text is shown after a file has been uploaded to the server, but
       // before the server has finished processing it.
-      "processing": "Processing file…"
+      "processing": "Processing file… ({percentProcessed})"
     }
   }
 }
