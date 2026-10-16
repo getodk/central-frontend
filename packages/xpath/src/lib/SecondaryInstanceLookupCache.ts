@@ -79,10 +79,10 @@ const makeReplacements = (expression: string, replacements: ExpressionReplacemen
   let key = getCacheablePrefix(expression, replacements);
   for (const { expr, result, lhs } of replacements) {
     if (lhs) {
-      // replace first occurence
+      // replace first occurrence
       key = key.replace(expr, result);
     } else {
-      // replace last occurence
+      // replace last occurrence
       const index = key.lastIndexOf(expr);
       key = key.slice(0, index) + result + key.slice(index + expr.length);
     }
