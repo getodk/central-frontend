@@ -174,7 +174,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-##### Descriptions and annotations<br/>🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜ 75\%
+##### Descriptions and annotations<br/>🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜ 83\%
 
   </summary>
   <br/>
@@ -183,7 +183,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
 | -------------------------------------------------------------- | :------: |
 | label                                                          |    ✅    |
 | hint                                                           |    ✅    |
-| [guidance hint](https://github.com/getodk/web-forms/issues/53) |          |
+| [guidance hint](https://github.com/getodk/web-forms/issues/53) |    ✅    |
 | form translations                                              |    ✅    |
 | form translations with ref to other<br/>field                  |    ✅    |
 | Markdown                                                       |    ✅    |
