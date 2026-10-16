@@ -1,6 +1,7 @@
 import { Locator, test } from '@playwright/test';
 import { BrowserContext } from 'playwright-core';
 import { FillFormPage } from '../../page-objects/pages/FillFormPage.ts';
+import { stubMapTiles } from '../../map-tiles.ts';
 
 test.describe('All Question Types (Visual)', () => {
   let formPage: FillFormPage;
@@ -19,6 +20,7 @@ test.describe('All Question Types (Visual)', () => {
       geolocation: { latitude: -28.996, longitude: 134.762 }, // South Australia,
       permissions: permissions,
     });
+    await stubMapTiles(context);
     const page = await context.newPage();
 
     formPage = await FillFormPage.loadForm(page, 'all-question-types-v2024091201-3.xml');
@@ -223,7 +225,7 @@ test.describe('All Question Types - Geolocation permission denied', () => {
     context = await browser.newContext({
       permissions: [],
     });
-
+    await stubMapTiles(context);
     const page = await context.newPage();
     formPage = await FillFormPage.loadForm(page, 'all-question-types-v2024091201-3.xml');
     await formPage.waitForNetworkIdle();
