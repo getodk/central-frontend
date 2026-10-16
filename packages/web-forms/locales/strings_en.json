@@ -367,6 +367,10 @@
     "string": "Failed to load image. File: {file}",
     "developer_comment": "Displayed when an image element fires a load error. {file} is the resource URL."
   },
+  "control_hint.details.label": {
+    "string": "More details",
+    "developer_comment": "The label for the button to expand the guidance hint details"
+  },
   "rank_control.open.label": {
     "string": "Rank items",
     "developer_comment": "The label for the button that opens the rank control."

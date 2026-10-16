@@ -7,10 +7,15 @@ import type { TextChunkSource } from '../../client/TextRange.ts';
 import { getTranslationExpression } from '../xpath/semantic-analysis.ts';
 import { DependentExpression } from './abstract/DependentExpression.ts';
 
-export type ChunkType = ResourceType | 'guidance';
+export type ResourceForm = 'guidance';
+
+export const isResourceForm = (string: string): string is ResourceForm => {
+  return 'guidance' === (string as ResourceForm);
+};
 
 interface TextChunkExpressionOptions {
-  readonly type: ChunkType | undefined;
+  readonly type?: ResourceType | undefined;
+  readonly form?: ResourceForm | undefined;
 }
 
 interface OutputElement extends KnownAttributeLocalNamedElement<'output', 'value'> {}
@@ -23,7 +28,8 @@ export class TextChunkExpression<T extends 'nodes' | 'string'> extends Dependent
   readonly source: TextChunkSource;
   // Set for the literal source, blank otherwise
   readonly stringValue: string;
-  readonly type: ChunkType | null;
+  readonly type: ResourceType | null;
+  readonly form: ResourceForm | null;
 
   constructor(
     resultType: T,
@@ -35,31 +41,35 @@ export class TextChunkExpression<T extends 'nodes' | 'string'> extends Dependent
     super(resultType, expression);
 
     this.type = options.type ?? null;
+    this.form = options.form ?? null;
     this.source = source;
     this.stringValue = literalValue;
   }
 
-  static fromLiteral(stringValue: string, type?: ChunkType): TextChunkExpression<'string'> {
-    return new TextChunkExpression('string', 'null', 'literal', stringValue, { type });
+  static fromLiteral(stringValue: string, form?: ResourceForm): TextChunkExpression<'string'> {
+    return new TextChunkExpression('string', 'null', 'literal', stringValue, { form });
   }
 
-  static fromReference(ref: string, type?: ChunkType): TextChunkExpression<'string'> {
-    return new TextChunkExpression('string', ref, 'reference', '', { type });
+  static fromReference(ref: string, form?: ResourceForm): TextChunkExpression<'string'> {
+    return new TextChunkExpression('string', ref, 'reference', '', { form });
   }
 
-  static fromOutput(element: Element, type?: ChunkType): TextChunkExpression<'string'> | null {
+  static fromOutput(element: Element, form?: ResourceForm): TextChunkExpression<'string'> | null {
     if (!isOutputElement(element)) {
       return null;
     }
 
-    return new TextChunkExpression('string', element.getAttribute('value'), 'output', '', { type });
+    return new TextChunkExpression('string', element.getAttribute('value'), 'output', '', { form });
   }
 
   static fromResource(url: JRResourceURLString, type: ResourceType): TextChunkExpression<'string'> {
     return new TextChunkExpression('string', 'null', 'literal', url, { type });
   }
 
-  static fromTranslation(maybeExpression: string, type?: ChunkType): TextChunkExpression<'nodes'> | null {
+  static fromTranslation(
+    maybeExpression: string,
+    type?: ResourceType
+  ): TextChunkExpression<'nodes'> | null {
     const translationExpression = getTranslationExpression(maybeExpression);
     if (translationExpression) {
       return new TextChunkExpression('nodes', translationExpression, 'translation', '', { type });

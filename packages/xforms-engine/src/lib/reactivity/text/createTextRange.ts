@@ -11,7 +11,11 @@ import type { TextRole } from '../../../client/TextRange.ts';
 import type { EvaluationContext } from '../../../instance/internal-api/EvaluationContext.ts';
 import { TextChunk } from '../../../instance/text/TextChunk.ts';
 import { TextRange, type MediaSources } from '../../../instance/text/TextRange.ts';
-import { TextChunkExpression, type ChunkType } from '../../../parse/expression/TextChunkExpression.ts';
+import {
+  isResourceForm,
+  TextChunkExpression,
+  type ResourceForm,
+} from '../../../parse/expression/TextChunkExpression.ts';
 import type { TextRangeDefinition } from '../../../parse/text/abstract/TextRangeDefinition.ts';
 import { evaluateExpression } from '../createComputedExpression.ts';
 
@@ -64,12 +68,15 @@ const generateResourceChunk = (
   return TextChunkExpression.fromResource(url, type);
 };
 
-const generateChunk = (node: Node, type: ChunkType | undefined): TextChunkExpression<'string'> | null => {
+const generateChunk = (
+  node: Node,
+  resourceForm?: ResourceForm
+): TextChunkExpression<'string'> | null => {
   if (isElementNode(node)) {
-    return TextChunkExpression.fromOutput(node, type);
+    return TextChunkExpression.fromOutput(node, resourceForm);
   }
   if (isTextNode(node)) {
-    return TextChunkExpression.fromLiteral(node.data, type);
+    return TextChunkExpression.fromLiteral(node.data, resourceForm);
   }
   return null;
 };
@@ -86,9 +93,10 @@ const generateChunksForTranslation = (
     if (formAttribute && isResourceType(formAttribute)) {
       chunks.push(generateResourceChunk(context, child, formAttribute, errors));
     } else {
-      const type = formAttribute === 'guidance' ? 'guidance' : undefined;
+      const resourceForm =
+        formAttribute && isResourceForm(formAttribute) ? formAttribute : undefined;
       for (const grandchild of child.childNodes) {
-        const chunk = generateChunk(grandchild, type);
+        const chunk = generateChunk(grandchild, resourceForm);
         if (chunk) {
           chunks.push(chunk);
         }
@@ -135,7 +143,7 @@ const createTextChunks = <Role extends TextRole>(
   const errors: Error[] = [];
   const chunkExpressions = getChunkExpressions(context, definition, errors);
   chunkExpressions.forEach((chunkExpression) => {
-    if (chunkExpression.type && chunkExpression.type in ['image', 'audio', 'video']) {
+    if (chunkExpression.type && ['image', 'audio', 'video'].includes(chunkExpression.type)) {
       const url = chunkExpression.stringValue?.trim();
       if (JRResourceURL.isJRResourceReference(url)) {
         mediaSources[chunkExpression.type] = JRResourceURL.from(url);
@@ -151,15 +159,13 @@ const createTextChunks = <Role extends TextRole>(
       chunk = new TextChunk(context, chunkExpression.source, computed);
     }
 
-    if (chunkExpression.type === 'guidance') {
-      console.log('pushing');
-
+    if (chunkExpression.form === 'guidance') {
       guidanceChunks.push(chunk);
     } else {
       chunks.push(chunk);
     }
   });
-  
+
   return { chunks, guidanceChunks, mediaSources, error: errors[0] ?? null };
 };
 
@@ -179,7 +185,6 @@ export const createTextRange = <Role extends TextRole>(
   return context.scope.runTask(() => {
     return createMemo(() => {
       const { chunks, guidanceChunks, mediaSources, error } = createTextChunks(context, definition);
-      console.log({ chunks, guidanceChunks });
       return new TextRange(role, chunks, guidanceChunks, mediaSources, error);
     });
   });
