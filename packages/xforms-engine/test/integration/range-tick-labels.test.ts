@@ -48,16 +48,16 @@ describe('Range tick labels', () => {
     expect(tickLabelsOf(scenario, '/data/score')).toEqual([]);
   });
 
-  it('exposes <item> children in document order', async () => {
+  it('sorts tick labels by value', async () => {
     const scenario = await Scenario.init(
       'Range',
       rangeForm()(range('/data/score', bounds, item(10, 'High'), item(0, 'Low'), item(5, 'Mid')))
     );
 
     expect(tickLabelsOf(scenario, '/data/score')).toEqual([
-      [10, 'High'],
       [0, 'Low'],
       [5, 'Mid'],
+      [10, 'High'],
     ]);
   });
 
@@ -98,8 +98,8 @@ describe('Range tick labels', () => {
     );
 
     expect(tickLabelsOf(scenario, '/data/score')).toEqual([
-      [5, 'Mid'],
       [0, 'Low'],
+      [5, 'Mid'],
     ]);
   });
 

@@ -27,6 +27,7 @@ export interface RangeNodeState<V extends RangeValueType>
    * Labels for the tick marks, per the
    * {@link https://getodk.github.io/xforms-spec/#range-tick-labels | ODK XForms spec}.
    * Unlike {@link BaseNodeState.valueOptions}, these never restrict the {@link value}.
+   * Sorted by value, smallest first.
    */
   get tickLabels(): readonly RangeTickLabel[];
 }

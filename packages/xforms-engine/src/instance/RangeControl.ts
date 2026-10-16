@@ -79,7 +79,9 @@ const createTickLabels = <V extends RangeValueType>(
         }
       });
 
-      return Array.from(labelsByValue.values());
+      return Array.from(labelsByValue.values()).sort(
+        (a: RangeTickLabel, b: RangeTickLabel) => a.value - b.value
+      );
     });
   });
 };
