@@ -85,7 +85,7 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import { computed, inject, nextTick, onBeforeUnmount, reactive, ref, shallowRef, watch } from 'vue';
-import { pick } from 'ramda';
+import { identity, pick } from 'ramda';
 import { useI18n } from 'vue-i18n';
 
 import EntityUploadErrors from './upload/errors.vue';
@@ -206,8 +206,10 @@ const validateHeader = ({ columns, errors: papaErrors }) => {
     }
     errorDetails.duplicateColumns = [...duplicateColumns];
 
-    const hasLabel = columnSet.has('label');
-    errorDetails.missingLabel = !hasLabel;
+    // A label is only required for new entities, not entity updates. If there
+    // is no __id column, that means the CSV is all new entities, not updates,
+    // in which case we expect there to be a label column.
+    errorDetails.missingLabel = !columnSet.has('__id') && !columnSet.has('label');
 
     warningDetails.missingProperties = [];
     const lowercaseProperties = new Map();
@@ -222,7 +224,10 @@ const validateHeader = ({ columns, errors: papaErrors }) => {
     warningDetails.caseMismatch = [];
     warningDetails.extraProperties = [];
     for (const column of columnSet) {
-      if (column === 'label') continue; // eslint-disable-line no-continue
+      // Skip permitted system properties.
+      // eslint-disable-next-line no-continue
+      if (column === '__id' || column === 'label') continue;
+
       if (column.startsWith('__') || column === 'name') {
         warningDetails.systemProperties.push(column);
       } else if (!validatePropertyName(column)) {
@@ -268,19 +273,39 @@ const validateHeader = ({ columns, errors: papaErrors }) => {
 // noPropertyData is used to minimize the JSON sent to Backend: the JSON won't
 // specify a `data` property for an entity without property data.
 const noPropertyData = { toJSON: () => undefined };
-const rowToEntity = (extraProperties) => (values, columns) => {
-  let label;
+const extractUUID = (values, index) => {
+  if (index === -1) return null;
+  const value = values[index];
+  if (/^\s*$/.test(value)) return null;
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value))
+    throw new Error(t('alert.invalidUUID', { value }));
+  return value.toLowerCase();
+};
+const extractLabel = (values, index) => {
+  if (index === -1) return null;
+  const label = values[index];
+  if (/^\s*$/.test(label)) throw new Error(t('alert.blankLabel'));
+  return label;
+};
+const rowToEntity = (uuidIndex, labelIndex, extraProperties) => (values, columns) => {
+  const uuid = extractUUID(values, uuidIndex);
+  const label = extractLabel(values, labelIndex);
+
   const data = dataset.properties.length !== 0 ? Object.create(null) : null;
   let hasProperty = false;
   const extraData = extraProperties.size !== 0 ? Object.create(null) : null;
   let hasExtra = false;
+  // Iterate over property data.
   for (const [i, value] of values.entries()) {
-    if (value === '') continue; // eslint-disable-line no-continue
+    // If it's a new entity (if uuid == null), skip empty property values; leave
+    // them missing. Since it's a CSV, we can't distinguish between an empty
+    // value and a missing one. Sending empty values would increase the size of
+    // the payload. For an entity update, we need to include empty values in
+    // order to overwrite existing values.
+    if (uuid == null && value === '') continue; // eslint-disable-line no-continue
 
     const column = columns[i];
-    if (column === 'label') {
-      label = value;
-    } else if (dataset.propertyMap.has(column)) {
+    if (dataset.propertyMap.has(column)) {
       data[column] = value;
       hasProperty = true;
     } else if (extraProperties.has(column)) {
@@ -289,17 +314,22 @@ const rowToEntity = (extraProperties) => (values, columns) => {
     }
   }
 
-  if (label == null || /^\s+$/.test(label))
-    throw new Error(t('alert.blankLabel'));
-
-  const result = { label, data: hasProperty ? data : noPropertyData };
+  const result = {};
+  if (uuid != null) result.uuid = uuid;
+  if (label != null) result.label = label;
+  result.data = hasProperty ? data : noPropertyData;
   if (hasExtra) result.extra = extraData;
   return result;
 };
 const parseEntities = async (file, headerResults, extraProperties, signal) => {
-  const results = await parseCSV(globalI18n, file, headerResults.columns, {
+  const { columns } = headerResults;
+  const results = await parseCSV(globalI18n, file, columns, {
     delimiter: headerResults.meta.delimiter,
-    transformRow: rowToEntity(new Set(extraProperties ?? [])),
+    transformRow: rowToEntity(
+      columns.indexOf('__id'),
+      columns.indexOf('label'),
+      new Set(extraProperties ?? [])
+    ),
     signal
   });
   if (results.data.length === 0) throw new Error(t('alert.noData'));
@@ -413,19 +443,16 @@ const propertiesToCreate = computed(() => {
   return result != null && result.length !== 0 ? result : null;
 });
 const propertyCreator = usePropertyCreator(request);
-const mergeDataWithExtra = (entity) => {
-  if (entity.extra == null) return entity;
-
-  if (propertiesToCreate.value == null)
-    return { label: entity.label, data: entity.data };
+const _mergeDataWithExtra = (data, extraData) => {
+  if (propertiesToCreate.value == null) return data;
 
   if (propertiesToCreate.value.length === warnings.value.extraProperties.length &&
-    entity.data === noPropertyData)
-    return { label: entity.label, data: entity.extra };
+    data === noPropertyData)
+    return extraData;
 
+  // `merged` combines `data` and `extraData`.
   const merged = Object.create(null);
   let hasExtra = false;
-  const extraData = entity.extra;
   for (const name of propertiesToCreate.value) {
     const value = extraData[name];
     if (value != null) {
@@ -433,13 +460,34 @@ const mergeDataWithExtra = (entity) => {
       hasExtra = true;
     }
   }
-  if (!hasExtra) return { label: entity.label, data: entity.data };
-  if (entity.data !== noPropertyData) Object.assign(merged, entity.data);
-  return { label: entity.label, data: merged };
+  if (!hasExtra) return data;
+  if (data !== noPropertyData) Object.assign(merged, data);
+  return merged;
 };
+const mergeDataWithExtra = (entity) => (entity.extra == null
+  ? entity
+  : {
+    ...pick(['uuid', 'label'], entity),
+    data: _mergeDataWithExtra(entity.data, entity.extra)
+  });
 
 // UPLOAD REQUEST
 const uploadProgress = ref(null);
+// Separates new entities from entity updates before sending the upload request.
+const entitiesByAction = () => {
+  const entities = [];
+  const updates = [];
+  const transform = warnings.value?.extraProperties == null
+    ? identity
+    : mergeDataWithExtra;
+  for (const entity of csvEntities.value)
+    (entity.uuid == null ? entities : updates).push(transform(entity));
+
+  const result = {};
+  if (entities.length !== 0) result.entities = entities;
+  if (updates.length !== 0) result.updates = updates;
+  return result;
+};
 const upload = () => {
   propertyCreator.request(
     apiPaths.datasetProperties(dataset.projectId, dataset.name),
@@ -447,22 +495,21 @@ const upload = () => {
     ['name', 'datasetId']
   )
     .then(() => {
-      const entitiesToSend = warnings.value?.extraProperties == null
-        ? csvEntities.value
-        : csvEntities.value.map(mergeDataWithExtra);
+      const data = {
+        source: pick(['name', 'size'], fileMetadata.value),
+        ...entitiesByAction()
+      };
       uploadProgress.value = 0;
       return request({
         method: 'POST',
         url: apiPaths.entities(dataset.projectId, dataset.name),
-        data: {
-          source: pick(['name', 'size'], fileMetadata.value),
-          entities: entitiesToSend
-        },
+        data,
         onUploadProgress: (event) => { uploadProgress.value = event.progress ?? 0; }
-      }).finally(() => { uploadProgress.value = null; });
-    })
-    .then(() => {
-      emit('success', csvEntities.value.length, propertyCreator.created.size !== 0);
+      })
+        .finally(() => { uploadProgress.value = null; })
+        .then(() => {
+          emit('success', data.entities?.length ?? 0, propertyCreator.created.size !== 0);
+        });
     })
     .catch(noop);
 };
@@ -561,6 +608,7 @@ watch(() => props.state, (state) => {
       "append": "Append Entities"
     },
     "alert": {
+      "invalidUUID": "Invalid UUID “{value}”.",
       "blankLabel": "Missing label.",
       "noData": "Your file does not contain any data."
     }

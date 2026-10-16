@@ -12,12 +12,12 @@ const mountComponent = (options) =>
 describe('EntityUploadWarnings', () => {
   it('shows a warning for system properties', () => {
     const component = mountComponent({
-      props: { systemProperties: ['__id', '__foo'] }
+      props: { systemProperties: ['__version', '__foo'] }
     });
     const warning = component.getComponent(EntityUploadAlert);
     warning.get('p').text().should.startWith('System properties can’t be set');
     const list = component.getComponent(EntityUploadPropertyList);
-    expect(list.props().names).to.eql(['__id', '__foo']);
+    expect(list.props().names).to.eql(['__version', '__foo']);
   });
 
   it('shows a warning for columns that differ from properties on letter case', async () => {
