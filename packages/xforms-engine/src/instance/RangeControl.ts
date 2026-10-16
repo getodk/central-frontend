@@ -5,6 +5,7 @@ import type {
   RangeInputValue,
   RangeNode,
   RangeNodeAppearances,
+  RangeNodeOptions,
   RangeValue,
 } from '../client/RangeNode.ts';
 import type { TextRange } from '../client/TextRange.ts';
@@ -78,7 +79,7 @@ export class RangeControl<V extends RangeValueType = RangeValueType>
   // RangeNode
   readonly nodeType = 'range';
   readonly appearances: RangeNodeAppearances;
-  readonly nodeOptions = null;
+  readonly nodeOptions: RangeNodeOptions;
   readonly currentState: CurrentState<RangeControlStateSpec<V>>;
 
   constructor(
@@ -92,6 +93,7 @@ export class RangeControl<V extends RangeValueType = RangeValueType>
     super(parent, instanceNode, definition, codec);
 
     this.appearances = definition.bodyElement.appearances;
+    this.nodeOptions = definition.bodyElement.options;
     this.attributeState = createAttributeState(this.scope);
 
     const state = createSharedNodeState(

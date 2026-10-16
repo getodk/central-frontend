@@ -20,6 +20,10 @@ export interface RangeNodeState<V extends RangeValueType>
 
 export type RangeNodeAppearances = NodeAppearances<RangeNodeDefinition>;
 
+export interface RangeNodeOptions {
+  readonly tickInterval: number | null;
+}
+
 /**
  * A node corresponding to form field defined as an
  * {@link https://getodk.github.io/xforms-spec/#body-elements | XForms `<range>`}.
@@ -31,7 +35,7 @@ export interface RangeNode<V extends RangeValueType = RangeValueType> extends Ba
   readonly nodeType: 'range';
   readonly valueType: V;
   readonly appearances: RangeNodeAppearances;
-  readonly nodeOptions: null;
+  readonly nodeOptions: RangeNodeOptions;
   readonly definition: RangeNodeDefinition<V>;
   readonly root: RootNode;
   readonly parent: GeneralParentNode;
