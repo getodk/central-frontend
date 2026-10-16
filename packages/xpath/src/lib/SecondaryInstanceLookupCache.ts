@@ -14,7 +14,7 @@ const MAXIMUM_CACHE_SIZE = 100;
 
 const cache = new Map<string, ReadonlySet<XPathNode>>();
 
-const isConstantOrReferencesPrimaryInstance = (expr: ExpressionEvaluator): boolean => {
+const isAbsolute = (expr: ExpressionEvaluator): boolean => {
   if (expr instanceof LocationPathEvaluator && expr.isAbsolute) {
     return true;
   }
@@ -26,15 +26,45 @@ const isConstantOrReferencesPrimaryInstance = (expr: ExpressionEvaluator): boole
       return true;
     }
   }
+  return false;
+};
+
+const isConstant = (expr: ExpressionEvaluator): boolean => {
   const nodeType = expr.syntaxNode?.type;
   if (nodeType === 'number' || nodeType === 'string_literal') {
+    return true;
+  }
+  return false;
+};
+
+const isSomeCacheable = (expr: ExpressionEvaluator): boolean => {
+  if (isConstant(expr)) {
+    return false;
+  }
+  if (isAbsolute(expr)) {
     return true;
   }
   if (expr instanceof FunctionCallExpressionEvaluator) {
     if (expr.argumentExpressions.length === 0) {
       return false;
     }
-    return expr.argumentExpressions.every(isConstantOrReferencesPrimaryInstance);
+    return expr.argumentExpressions.some(isSomeCacheable);
+  }
+  return false;
+};
+
+const isAllCacheable = (expr: ExpressionEvaluator): boolean => {
+  if (isConstant(expr)) {
+    return true;
+  }
+  if (isAbsolute(expr)) {
+    return true;
+  }
+  if (expr instanceof FunctionCallExpressionEvaluator) {
+    if (expr.argumentExpressions.length === 0) {
+      return false;
+    }
+    return expr.argumentExpressions.every(isAllCacheable);
   }
   return false;
 };
@@ -52,8 +82,8 @@ const getIndexKey = (expr: ExpressionEvaluator) => {
   if (!isEqualsExpression(expr)) {
     return;
   }
-  const isLhsKey = isConstantOrReferencesPrimaryInstance(expr.lhs);
-  const isRhsKey = isConstantOrReferencesPrimaryInstance(expr.rhs);
+  const isLhsKey = isAllCacheable(expr.lhs) && !isSomeCacheable(expr.rhs);
+  const isRhsKey = isAllCacheable(expr.rhs) && !isSomeCacheable(expr.lhs);
   if (isLhsKey === isRhsKey) {
     // either neither side is keyable, or both sides are, either way we don't know how to cache it
     return;

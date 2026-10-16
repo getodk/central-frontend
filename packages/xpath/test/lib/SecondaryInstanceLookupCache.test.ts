@@ -166,17 +166,14 @@ describe('Secondary instance lookup cache', () => {
       );
     });
 
-    it('caches predicates with functions on one side and absolute references on the other', () => {
-      const expected = new Set([testDocument.getElementById('7')]);
-      evaluator.evaluateString(
-        '/root/instance[@id="second"]/item[coalesce(@secondarycolor, /root/instance[@id="colors"]/a) = /root/instance[@id="colors"]/b]'
-      );
-      expect(SecondaryInstanceLookupCache.size()).toEqual(1);
-      expect(
-        SecondaryInstanceLookupCache.get(
-          '/root/instance[@id="second"]/item[coalesce(@secondarycolor, /root/instance[@id="colors"]/a) = green]'
-        )
-      ).toEqual(expected);
+    it('does not cache when both sides of the predicate are based on primary data', () => {
+      const query =
+        '/root/instance[@id="second"]/item[coalesce(@secondarycolor, /root/instance[@id="colors"]/a) = /root/instance[@id="colors"]/b]';
+      expect(evaluator.evaluateNodes(query).length).toEqual(1);
+      expect(SecondaryInstanceLookupCache.size()).toEqual(0);
+      testDocument.querySelector('[id="colors"] > a')!.textContent = 'green';
+      expect(evaluator.evaluateNodes(query).length).toEqual(12);
+      expect(SecondaryInstanceLookupCache.size()).toEqual(0);
     });
 
     it('does not reuse the cache item when the query does not match', () => {
