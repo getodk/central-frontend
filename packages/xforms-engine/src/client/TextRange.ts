@@ -118,7 +118,7 @@ export interface TextRange<Role extends TextRole> {
 
   get asString(): string;
   get formatted(): MarkdownNode[];
-  get guidanceHint(): MarkdownNode[];
+  get guidanceHint(): MarkdownNode[] | undefined;
 
   get imageSource(): JRResourceURL | undefined;
   get audioSource(): JRResourceURL | undefined;
