@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { InputNumberInputEvent } from 'primevue/inputnumber';
-import InputNumber from 'primevue/inputnumber';
+import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
+import InputText from 'primevue/inputtext';
 import { type ComponentPublicInstance, computed, nextTick, ref, watch } from 'vue';
 
 interface NumericNodeState {
@@ -28,138 +28,262 @@ interface InputNumericProps {
 	readonly maxCharacters: number;
 }
 
-const props = defineProps<InputNumericProps>();
-const inputRef = ref<ComponentPublicInstance | null>(null);
-const renderKey = ref(1);
-
-interface FractionalDigitOptions {
-	readonly min?: number;
-	readonly max?: number;
-}
-
-let fractionalDigits: FractionalDigitOptions;
-
-/**
- * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inputmode}
- */
 type NumericInputMode = 'decimal' | 'numeric';
 
-let inputmode: NumericInputMode;
+const props = defineProps<InputNumericProps>();
 
-if (props.isDecimal) {
-	fractionalDigits = { min: 0, max: 13 };
-	inputmode = 'decimal';
-} else {
-	fractionalDigits = { min: 0, max: 0 };
-	inputmode = 'numeric';
-}
+const preferredLanguages = [...(navigator.languages || []), navigator.language];
+const renderKey = ref(1);
+const inputRef = ref<ComponentPublicInstance | null>(null);
+const inputmode = computed<NumericInputMode>(() => props.isDecimal ? 'decimal' : 'numeric');
+const formatter = computed(() => new Intl.NumberFormat(preferredLanguages, {
+	maximumFractionDigits: props.isDecimal ? props.maxCharacters - 2 : 0,
+	useGrouping: props.node.appearances['thousands-sep']
+}));
 
-/**
- * Tracks local model state while syncing with the node’s state.
- *
- * - Enforces `min`/`max` constraints if provided.
- * - Rolls back to the previous value if assignment fails.
- * - If the assigned value differs from the effective value (due to clamping or rollback),
- *   triggers a re-render via `renderKey` to update the displayed value.
- */
-const modelValue = computed<number | null>({
-	get: () => props.numericValue,
-	set: (assignedValue) => {
-		const currentValue = props.numericValue;
-		const stringValue = assignedValue != null ? assignedValue.toString() : '';
-		let newValue = stringValue.length <= props.maxCharacters ? assignedValue : currentValue;
+const decimalSeparator = (() => {
+	const parts = new Intl.NumberFormat(preferredLanguages).formatToParts(1.1);
+	return parts.find(part => part.type === 'decimal')?.value ?? ',';
+})();
+const groupSeparator = decimalSeparator === '.' ? ',' : '.';
+const keyFilterPattern = new RegExp(`[\\d\\-\\${decimalSeparator}]`);
 
-		if (newValue != null) {
-			const { min = newValue, max = newValue } = props;
+const standardizeSeparators = (value: string) => {
+	value = value.replaceAll(groupSeparator, '');
+	if (decimalSeparator !== '.') {
+		value = value.replace(decimalSeparator, '.');
+	}
+	if (!props.isDecimal && value.endsWith(decimalSeparator)) {
+		value = value.substring(0, value.length - 1);
+	}
+	return value;
+};
 
-			if (min !== newValue || max !== newValue) {
-				newValue = Math.max(min, Math.min(newValue, max));
-			}
+const validityIsUncertain = (value: string) => {
+	if (value === '-') {
+		return true;
+	}
+	return props.isDecimal && value.indexOf(decimalSeparator) === value.length - 1;
+};
+
+const modelValue = computed<string>({
+	get: () => {
+		const val = props.numericValue;
+		if (val != undefined) {
+			return formatter.value.format(val);
+		}
+		return '';
+	},
+	set: (assignedValue: string) => {
+		if (props.node.currentState.readonly) {
+			return;
+		}
+		assignedValue = assignedValue.trim();
+		if (!assignedValue.length) {
+			props.setNumericValue(null);
+			return;
+		}
+		if (validityIsUncertain(assignedValue)) {
+			// it's too soon to tell if this is a valid number or not
+			return;
+		}
+		const stringValue = standardizeSeparators(assignedValue);
+		if (stringValue.length > props.maxCharacters) {
+			renderKey.value++;
+			return;
 		}
 
-		try {
-			props.setNumericValue(newValue);
-			if (newValue !== assignedValue) {
-				// Re-render if value is clamped
-				renderKey.value++;
-			}
-		} catch {
-			// Re-render to restore previous value if something fails
+		let num = Number(stringValue);
+		if (Number.isNaN(num)) {
+			renderKey.value++;
+			return;
+		}
+
+		if (props.max && num > props.max) {
+			num = props.max;
+		} else if (props.min && num < props.min) {
+			num = props.min;
+		}
+		if (!props.isDecimal) {
+			num = Math.round(num);
+		}
+
+		props.setNumericValue(num);
+		if (!props.isDecimal && formatter.value.format(num) !== assignedValue) {
 			renderKey.value++;
 		}
 	}
 });
 
-// After re-render, refocus input so user can continue typing seamlessly
-watch(renderKey, () => nextTick(() => (inputRef.value?.$el as HTMLElement)?.focus()));
+let timer: ReturnType<typeof setTimeout>;
 
-const onInput = (event: InputNumberInputEvent) => {
-	const { value = null } = event;
-	if (value == null || value === '') {
-		modelValue.value = null;
+const setInteger = (num: number, amount: number) => {
+	const int = num + amount;
+	modelValue.value = int.toString();
+};
+
+const setDecimal = (num: number, amount: number) => {
+	// need to manually increment the decimal to avoid floating point errors
+	const str = num.toString();
+	const parts = str.split('.');
+	const int = Number(parts[0]);
+	if (parts.length === 1) {
+		// no decimal component found
+		setInteger(int, amount);
 		return;
 	}
+	let updated;
+	if (num < 0 && num > -1 && amount === 1) {
+		// the '-' sign has been parsed off, so we've already incremented
+		updated = int;
+	} else if (num > 0 && num < 1 && amount === -1) {
+		// going negative - add the prefix
+		updated = '-' + int.toString();
+	} else {
+		updated = int + amount;
+	}
+	modelValue.value = updated + decimalSeparator + parts[1]!;
+};
 
-	if (typeof value === 'number') {
-		modelValue.value = value;
+const spin = (amount: number) => {
+	if (!inputRef.value?.$el || props.node.currentState.readonly) {
 		return;
+	}
+	const num = props.numericValue ?? 0;
+	if (props.isDecimal) {
+		setDecimal(num, amount);
+	} else {
+		setInteger(num, amount);
+	}
+}
+
+const repeat = (interval: number, amount: number) => {
+	clearTimer();
+	timer = setTimeout(() => {
+		repeat(40, amount);
+	}, interval);
+	spin(amount);
+};
+
+const increment = (event: MouseEvent) => {
+	event.preventDefault();
+	repeat(500, 1);
+};
+
+const decrement = (event: MouseEvent) => {
+	event.preventDefault();
+	repeat(500, -1);
+};
+
+const clearTimer = () => {
+	if (timer) {
+		clearTimeout(timer);
 	}
 };
+
+watch(renderKey, () => nextTick(() => (inputRef.value?.$el as HTMLElement)?.focus()));
 </script>
 
 <template>
-	<InputNumber
-		:key="renderKey"
-		ref="inputRef"
-		v-model="modelValue"
-		:input-id="node.nodeId"
-		:required="node.currentState.required"
-		:disabled="node.currentState.readonly"
-		:show-buttons="true"
-		:min-fraction-digits="fractionalDigits.min"
-		:max-fraction-digits="fractionalDigits.max"
-		:use-grouping="node.appearances['thousands-sep']"
-		:pt="{
-			pcInputText: {
-				root: { inputmode }
-			}
-		}"
-		@input="onInput"
-	/>
+	<span class="number-group">
+		<InputText
+			:id="node.nodeId"
+			:key="renderKey"
+			ref="inputRef"
+			v-model="modelValue"
+			v-keyfilter="keyFilterPattern"
+			:disabled="node.currentState.readonly"
+			:required="node.currentState.required"
+			:pt="{ root: { inputmode } }"
+		/>
+		<span class="button-group">
+			<button
+				aria-hidden="true"
+				class="increment"
+				:disabled="node.currentState.readonly"
+				:tabindex="-1"
+				type="button"
+				@pointerdown="increment"
+				@pointerup="clearTimer"
+				@pointerleave="clearTimer"
+			>
+				<IconSVG
+					name="mdiChevronUp"
+					size="sm"
+					variant="light-muted"
+				/>
+			</button>
+			<button
+				aria-hidden="true"
+				class="decrement"
+				:disabled="node.currentState.readonly"
+				:tabindex="-1"
+				type="button"
+				@pointerdown="decrement"
+				@pointerup="clearTimer"
+				@pointerleave="clearTimer"
+			>
+				<IconSVG
+					name="mdiChevronDown"
+					size="sm"
+					variant="light-muted"
+				/>
+			</button>
+		</span>
+	</span>
 </template>
 
 <style scoped lang="scss">
-// Overrides PrimeVue styles to adhere to Web Forms design.
-
-.p-inputnumber {
+.number-group {
 	position: relative;
-
+	display: inline-flex;
 	:deep(.p-inputtext) {
 		border-radius: var(--odk-radius);
 	}
 }
-
-:deep(.p-inputnumber-button-group) {
+.button-group {
+	display: flex;
+	flex-direction: column;
 	position: absolute;
-	top: 2px;
-	right: 2px;
-	height: calc(100% - 4px);
-}
+	inset-block-start: 1px;
+	inset-inline-end: 1px;
+	height: calc(100% - 2px);
+	z-index: var(--odk-z-index-form-content);
+	top: 1px;
+	right: 1px;
 
-:deep(.p-inputnumber-button-group .p-button) {
-	--numeric-control-color: var(--input-color);
-	--numeric-control-bgcolor: var(--input-bgcolor-default);
+	button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex: 0 0 auto;
+		cursor: pointer;
+		width: 2.5rem;
+		transition: background var(--odk-transition-duration);
+		flex: 1 1 auto;
+		border: 0 none;
+		touch-action: none;
+		padding: 0;
 
-	&,
-	&:hover,
-	&:focus {
-		color: var(--numeric-control-color);
-		background-color: var(--numeric-control-bgcolor);
+		@media (hover: hover) {
+			&:hover {
+				background: var(--odk-muted-background-color);
+			}
+		}
+
+		&:disabled {
+			cursor: auto;
+			&:hover,
+			&:active {
+				background: none;
+			}
+		}
 	}
-
-	&:hover,
-	&:focus {
-		--numeric-control-bgcolor: var(--input-bgcolor-emphasized);
+	.increment {
+		border-start-end-radius: calc(var(--odk-radius) - 1px);
+	}
+	.decrement {
+		border-end-end-radius: calc(var(--odk-radius) - 1px);
 	}
 }
 </style>
