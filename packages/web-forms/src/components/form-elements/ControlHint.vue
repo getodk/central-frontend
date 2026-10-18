@@ -15,7 +15,7 @@ const t: Translate = inject(TRANSLATE)!;
 const props = defineProps<{ question: QuestionNode }>();
 
 const label = computed(() => props.question.currentState.hint?.formatted);
-const guidanceHint = computed(() => props.question.currentState.hint?.guidanceHint);
+const guidanceHint = computed(() => props.question.currentState.hint?.guidance);
 </script>
 
 <template>
@@ -66,6 +66,7 @@ const guidanceHint = computed(() => props.question.currentState.hint?.guidanceHi
 }
 :deep(.p-accordioncontent-content) {
 	padding: 0;
+	color: var(--odk-muted-text-color);
 }
 .chevron-open {
 	display: none;
