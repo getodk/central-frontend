@@ -1,0 +1,502 @@
+import { xml } from '@getodk/common/test-utils/xml.ts';
+import { beforeEach, describe, expect, it } from 'vitest';
+import type { DefaultDOMAdapterNode } from '../../src/adapter/defaults.ts';
+import { DEFAULT_DOM_ADAPTER } from '../../src/adapter/defaults.ts';
+import { Evaluator } from '../../src/evaluator/Evaluator.ts';
+import { SecondaryInstanceLookupCache } from '../../src/lib/SecondaryInstanceLookupCache.ts';
+import { FunctionLibraryCollection } from '../../src/evaluator/functions/FunctionLibraryCollection.ts';
+import { coalesce } from '../../src/functions/xforms/string.ts';
+import { FunctionLibrary } from '../../src/evaluator/functions/FunctionLibrary.ts';
+import { position } from '../../src/functions/xforms/node-set.ts';
+
+describe('Secondary instance lookup cache', () => {
+  beforeEach(() => {
+    SecondaryInstanceLookupCache.clear();
+  });
+
+  describe('generateKey', () => {
+    let testDocument: XMLDocument;
+    let evaluator: Evaluator<DefaultDOMAdapterNode>;
+
+    beforeEach(() => {
+      testDocument = xml`<root>
+        <instance id="primary">
+          <a>3</a>
+          <b>4</b>
+        </instance>
+        <instance id="second">
+          <item id="1">a</item>
+          <item id="2">b</item>
+          <item id="3" color="blue" size="large"></item>
+          <item id="4" color="green" size="small">d</item>
+          <item id="5" color="blue" size="small">e</item>
+          <item id="6" color="green" size="large">f</item>
+          <item id="7" secondarycolor="green">g</item>
+          <item id="8">h</item>
+          <item id="9">i</item>
+          <item id="10">j</item>
+          <item id="11">k</item>
+          <item id="12">l</item>
+        </instance>
+        <instance id="sizes">
+          <a>large</a>
+        </instance>
+        <instance id="colors">
+          <a>blue</a>
+          <b>green</b>
+        </instance>
+        <instance id="refs">
+          <size>large</size>
+          <size_color>blue</size_color>
+        </instance>
+      </root>`;
+      evaluator = new Evaluator({
+        domAdapter: DEFAULT_DOM_ADAPTER,
+        rootNode: testDocument,
+        functions: new FunctionLibraryCollection([
+          new FunctionLibrary('http://www.w3.org/2005/xpath-functions', [coalesce, position]),
+        ]),
+      });
+    });
+
+    it('does not cache for small numbers of nodes', () => {
+      const expected = testDocument.querySelector('a')!;
+      const actual = evaluator.evaluateNode('/root/instance[@id="primary"]/a');
+      expect(actual).toBe(expected);
+      expect(SecondaryInstanceLookupCache.size()).toEqual(0);
+    });
+
+    it('caches node query', () => {
+      const expected = new Set([testDocument.getElementById('3')]);
+      evaluator.evaluateNode(
+        '/root/instance[@id="second"]/item[@id=/root/instance[@id="primary"]/a]'
+      );
+      expect(SecondaryInstanceLookupCache.size()).toEqual(1);
+      expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id=3]')).toEqual(
+        expected
+      );
+    });
+
+    it('handles whitespace in query', () => {
+      const expected = new Set([testDocument.getElementById('3')]);
+      evaluator.evaluateNode(
+        '/root/instance[@id=  "second"]/item[@id=  /root/instance[@id= "primary"  ]/a  ]'
+      );
+
+      expect(SecondaryInstanceLookupCache.size()).toEqual(1);
+      expect(
+        SecondaryInstanceLookupCache.get('/root/instance[@id=  "second"]/item[@id=  3  ]')
+      ).toEqual(expected);
+    });
+
+    it('caches node query for reuse for future queries', () => {
+      const expected = new Set([testDocument.getElementById('3')]);
+      const color = evaluator.evaluateString(
+        '/root/instance[@id="second"]/item[@id=/root/instance[@id="primary"]/a]/@color'
+      );
+      expect(color).toEqual('blue');
+      const size = evaluator.evaluateString(
+        '/root/instance[@id="second"]/item[@id=/root/instance[@id="primary"]/a]/@size'
+      );
+      expect(size).toEqual('large');
+      expect(SecondaryInstanceLookupCache.size()).toEqual(1);
+      expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id=3]')).toEqual(
+        expected
+      );
+    });
+
+    it('caches node query with multiple predicates', () => {
+      const expected = new Set([testDocument.getElementById('3')]);
+      const color = evaluator.evaluateString(
+        '/root/instance[@id="second"]/item[@color=/root/instance[@id="colors"]/a][@size=/root/instance[@id="sizes"]/a]/@color'
+      );
+      expect(color).toEqual('blue');
+      const size = evaluator.evaluateString(
+        '/root/instance[@id="second"]/item[@color=/root/instance[@id="colors"]/a][@size=/root/instance[@id="sizes"]/a]/@size'
+      );
+      expect(size).toEqual('large');
+      expect(SecondaryInstanceLookupCache.size()).toEqual(1);
+      expect(
+        SecondaryInstanceLookupCache.get(
+          '/root/instance[@id="second"]/item[@color=blue][@size=large]'
+        )
+      ).toEqual(expected);
+    });
+
+    it('caches query with multiple predicates where one is the prefix of the other', () => {
+      const expected = new Set([testDocument.getElementById('3')]);
+      const color = evaluator.evaluateString(
+        '/root/instance[@id="second"]/item[@color=/root/instance[@id="refs"]/size_color][@size=/root/instance[@id="refs"]/size]/@color'
+      );
+      expect(color).toEqual('blue');
+      expect(SecondaryInstanceLookupCache.size()).toEqual(1);
+      expect(
+        SecondaryInstanceLookupCache.get(
+          '/root/instance[@id="second"]/item[@color=blue][@size=large]'
+        )
+      ).toEqual(expected);
+    });
+
+    it('does not cache node query with multiple predicates when one is not cacheable', () => {
+      evaluator.evaluateString(
+        '/root/instance[@id="second"]/item[@color=/root/instance[@id="colors"]/a][@size>/root/instance[@id!="sizes"]/a]/@color'
+      );
+      expect(SecondaryInstanceLookupCache.size()).toEqual(0);
+    });
+
+    it('caches functions with zero parameters', () => {
+      const expected = new Set([testDocument.getElementById('3')]);
+      evaluator.evaluateNode(
+        '/root/instance[@id="second"]/item[position() = /root/instance[@id="primary"]/a]'
+      );
+      expect(SecondaryInstanceLookupCache.size()).toEqual(1);
+      expect(
+        SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[position() = 3]')
+      ).toEqual(expected);
+    });
+
+    it('caches predicates with functions on one side and constant values on the other', () => {
+      const expected = new Set([testDocument.getElementById('3')]);
+      evaluator.evaluateNode(
+        '/root/instance[@id="second"]/item[@id=coalesce(/root/instance[@id="primary"]/c, 3)]'
+      );
+      expect(SecondaryInstanceLookupCache.size()).toEqual(1);
+      expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id=3]')).toEqual(
+        expected
+      );
+    });
+
+    it('does not cache when both sides of the predicate are based on primary data', () => {
+      const query =
+        '/root/instance[@id="second"]/item[coalesce(@secondarycolor, /root/instance[@id="colors"]/a) = /root/instance[@id="colors"]/b]';
+      expect(evaluator.evaluateNodes(query).length).toEqual(1);
+      expect(SecondaryInstanceLookupCache.size()).toEqual(0);
+      testDocument.querySelector('[id="colors"] > a')!.textContent = 'green';
+      expect(evaluator.evaluateNodes(query).length).toEqual(12);
+      expect(SecondaryInstanceLookupCache.size()).toEqual(0);
+    });
+
+    it('does not reuse the cache item when the query does not match', () => {
+      const expected3 = new Set([testDocument.getElementById('3')]);
+      const expected4 = new Set([testDocument.getElementById('4')]);
+      const color = evaluator.evaluateString(
+        '/root/instance[@id="second"]/item[@id=/root/instance[@id="primary"]/a]/@color'
+      );
+      expect(color).toEqual('blue');
+      const size = evaluator.evaluateString(
+        '/root/instance[@id="second"]/item[@id=/root/instance[@id="primary"]/b]/@size'
+      );
+      expect(size).toEqual('small');
+      expect(SecondaryInstanceLookupCache.size()).toEqual(2);
+      expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id=3]')).toEqual(
+        expected3
+      );
+      expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id=4]')).toEqual(
+        expected4
+      );
+    });
+
+    it('does not cache relative queries', () => {
+      const expected = testDocument.getElementById('3')!;
+      const actual = evaluator.evaluateNode('../item[@id=/root/instance[@id="primary"]/a]', {
+        contextNode: expected,
+      });
+      expect(SecondaryInstanceLookupCache.size()).toEqual(0);
+      expect(actual).toEqual(expected);
+    });
+
+    it('cache does not grow above 100 entries', () => {
+      for (let i = 1; i < 105; i++) {
+        evaluator.evaluateNode(`/root/instance[@id="second"]/item[@id=${i}]`);
+        const expected = i < 102 ? i : i - 101;
+        expect(SecondaryInstanceLookupCache.size()).toEqual(expected);
+      }
+    });
+  });
+
+  it('does not cache predicates that are nested within other predicates', () => {
+    const testDocument = xml`<root>
+      <instance id="primary">
+        <a>3</a>
+        <b>4</b>
+      </instance>
+      <instance id="second">
+        <item id="1">a</item>
+        <item id="2">b</item>
+        <item id="3">
+          <nested id="4" innerid="4">x</nested>
+          <nested innerid="5">y</nested>
+          <nested innerid="6">z</nested>
+          <nested></nested>
+          <nested></nested>
+          <nested></nested>
+          <nested></nested>
+          <nested></nested>
+          <nested></nested>
+          <nested></nested>
+          <nested></nested>
+          <nested></nested>
+        </item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+      </instance>
+      <instance id="sizes">
+        <a>large</a>
+      </instance>
+      <instance id="colors">
+        <a>blue</a>
+      </instance>
+    </root>`;
+    const evaluator = new Evaluator({
+      domAdapter: DEFAULT_DOM_ADAPTER,
+      rootNode: testDocument,
+    });
+    const expected = new Set([testDocument.getElementById('3')]);
+    evaluator.evaluateNode(
+      '/root/instance[@id="second"]/item[@id=/root/instance[@id="primary"]/a]/nested[@innerid=/root/instance[@id="primary"]/b]'
+    );
+    expect(SecondaryInstanceLookupCache.size()).toEqual(1);
+    expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id=3]')).toEqual(
+      expected
+    );
+    evaluator.evaluateNode(
+      '/root/instance[@id="second"]/item[@id=/root/instance[@id="primary"]/a]/nested[@innerid=/root/instance[@id="primary"]/b]'
+    );
+    expect(SecondaryInstanceLookupCache.size()).toEqual(1);
+    expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id=3]')).toEqual(
+      expected
+    );
+  });
+
+  it('does not cache predicates that are nested within other predicates that cannot be cached', () => {
+    const testDocument = xml`<root>
+      <instance id="primary">
+        <a>3</a>
+        <b>4</b>
+      </instance>
+      <instance id="second">
+        <item id="1">a</item>
+        <item id="2">b</item>
+        <item id="3">
+          <nested id="4" innerid="4">x</nested>
+          <nested innerid="5">y</nested>
+          <nested innerid="6">z</nested>
+          <nested></nested>
+          <nested></nested>
+          <nested></nested>
+          <nested></nested>
+          <nested></nested>
+          <nested></nested>
+          <nested></nested>
+          <nested></nested>
+          <nested></nested>
+        </item>
+        <item id="10"></item>
+        <item id="11"></item>
+        <item id="12"></item>
+        <item id="13"></item>
+        <item id="14"></item>
+        <item id="15"></item>
+        <item id="16"></item>
+        <item id="17"></item>
+        <item id="18"></item>
+        <item id="19"></item>
+      </instance>
+      <instance id="sizes">
+        <a>large</a>
+      </instance>
+      <instance id="colors">
+        <a>blue</a>
+      </instance>
+    </root>`;
+    const evaluator = new Evaluator({
+      domAdapter: DEFAULT_DOM_ADAPTER,
+      rootNode: testDocument,
+    });
+    evaluator.evaluateNode(
+      '/root/instance[@id="second"]/item[@id > 1]/nested[@innerid = /root/instance[@id="primary"]/b]'
+    );
+    expect(SecondaryInstanceLookupCache.size()).toEqual(0);
+  });
+
+  it('does not cache primary instance', () => {
+    const testDocument = xml`<root>
+      <instance>
+        <item id="1">a</item>
+        <item id="2">b</item>
+        <item id="3" color="blue" size="large"></item>
+        <item id="4" color="green" size="small">d</item>
+        <item id="5" color="blue" size="small">e</item>
+        <item id="6" color="green" size="large">f</item>
+        <item id="7">g</item>
+        <item id="8">h</item>
+        <item id="9">i</item>
+        <item id="10">j</item>
+        <item id="11">k</item>
+        <item id="12">l</item>
+      </instance>
+      <instance id="second">
+        <a>3</a>
+      </instance>
+    </root>`;
+    const evaluator = new Evaluator({
+      domAdapter: DEFAULT_DOM_ADAPTER,
+      rootNode: testDocument,
+    });
+    const color = evaluator.evaluateString(
+      '/root/instance[1]/item[@id=/root/instance[@id="second"]/a]/@color'
+    );
+    expect(color).toEqual('blue');
+    expect(SecondaryInstanceLookupCache.size()).toEqual(0);
+  });
+
+  it('does not cache groups named instance', () => {
+    const testDocument = xml`<root>
+      <instance>
+        <instance>
+          <item>red herring</item>
+        </instance>
+        <instance>
+          <item id="1" color="pink">a</item>
+          <item id="2">b</item>
+          <item id="3" color="blue" size="large"></item>
+          <item id="4" color="green" size="small">d</item>
+          <item id="5" color="blue" size="small">e</item>
+          <item id="6" color="green" size="large">f</item>
+          <item id="7">g</item>
+          <item id="8">h</item>
+          <item id="9">i</item>
+          <item id="10">j</item>
+          <item id="11">k</item>
+          <item id="12">l</item>
+        </instance>
+      </instance>
+
+      <instance id="second">
+        <a>1</a>
+      </instance>
+    </root>`;
+    const evaluator = new Evaluator({
+      domAdapter: DEFAULT_DOM_ADAPTER,
+      rootNode: testDocument,
+    });
+    const color = evaluator.evaluateString(
+      '/root/instance[1]/instance[2]/item[@id=/root/instance[1]/instance[2]/item[3]/@id]/@color'
+    );
+    expect(color).toEqual('blue');
+    expect(SecondaryInstanceLookupCache.size()).toEqual(0);
+  });
+
+  it('caches lookups in repeats', () => {
+    const testDocument = xml`<root>
+      <instance id="primary">
+        <entities>
+          <entity>1</entity>
+          <name id="gctx">gareth</name>
+        </entities>
+        <entities>
+          <entity>2</entity>
+          <name id="jctx">jenny</name>
+        </entities>
+      </instance>
+      <instance id="second">
+        <item id="1"><name>gareth</name></item>
+        <item id="2"><name>jenny</name></item>
+        <item id="3"><name>jack</name></item>
+        <item id="4"><name>sally</name></item>
+        <item id="5"><name>jill</name></item>
+        <item id="6"><name>dopey</name></item>
+        <item id="7"><name>skeepy</name></item>
+        <item id="8"><name>grumpy</name></item>
+        <item id="9"><name>doc</name></item>
+        <item id="10"><name>silly</name></item>
+        <item id="11"><name>bouncy</name></item>
+        <item id="12"><name>jouncy</name></item>
+      </instance>
+    </root>`;
+    const evaluator = new Evaluator({
+      domAdapter: DEFAULT_DOM_ADAPTER,
+      rootNode: testDocument,
+    });
+
+    const query = '/root/instance[@id="second"]/item[@id= current( )/../entity ]/name';
+
+    let expected = new Set([testDocument.getElementById('1')]);
+    let context = testDocument.getElementById('gctx')!;
+    let name = evaluator.evaluateString(query, { contextNode: context });
+    expect(name).toEqual('gareth');
+    expect(SecondaryInstanceLookupCache.size()).toEqual(1);
+    expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id= 1 ]')).toEqual(
+      expected
+    );
+
+    expected = new Set([testDocument.getElementById('2')]);
+    context = testDocument.getElementById('jctx')!;
+    name = evaluator.evaluateString(query, { contextNode: context });
+    expect(name).toEqual('jenny');
+    expect(SecondaryInstanceLookupCache.size()).toEqual(2);
+    expect(SecondaryInstanceLookupCache.get('/root/instance[@id="second"]/item[@id= 2 ]')).toEqual(
+      expected
+    );
+  });
+
+  it('does not reuse the cache when a function mixes primary data with item data', () => {
+    const testDocument = xml`<root>
+      <instance id="primary">
+        <choice id="choice"/>
+      </instance>
+      <instance id="second">
+        <item id="apple" fallback="cherry"/>
+        <item id="banana" fallback="banana"/>
+        <item id="cherry"/>
+        <item/><item/><item/><item/><item/><item/><item/>
+      </instance>
+    </root>`;
+    const evaluator = new Evaluator({
+      domAdapter: DEFAULT_DOM_ADAPTER,
+      rootNode: testDocument,
+      functions: new FunctionLibraryCollection([
+        new FunctionLibrary('http://www.w3.org/2005/xpath-functions', [coalesce]),
+      ]),
+    });
+    const query =
+      '/root/instance[@id="second"]/item[@id = coalesce(/root/instance[@id="primary"]/choice, @fallback)]/@id';
+
+    expect(evaluator.evaluateString(query)).toEqual('banana');
+    expect(SecondaryInstanceLookupCache.size()).toEqual(0);
+    testDocument.getElementById('choice')!.textContent = 'cherry';
+    expect(evaluator.evaluateString(query)).toEqual('cherry');
+    expect(SecondaryInstanceLookupCache.size()).toEqual(0);
+  });
+
+  it('does not cache when the key references multiple nodes', () => {
+    const testDocument = xml`<root>
+      <instance id="primary">
+        <visit><clinic>apple</clinic></visit>
+        <visit><clinic id="second-visit">banana</clinic></visit>
+      </instance>
+      <instance id="second">
+        <item id="apple"/><item id="banana"/><item id="cherry"/>
+        <item/><item/><item/><item/><item/><item/><item/>
+      </instance>
+    </root>`;
+    const evaluator = new Evaluator({
+      domAdapter: DEFAULT_DOM_ADAPTER,
+      rootNode: testDocument,
+    });
+    const query =
+      'count(/root/instance[@id="second"]/item[@id = /root/instance[@id="primary"]/visit/clinic])';
+    expect(evaluator.evaluateNumber(query)).toEqual(2);
+    testDocument.getElementById('second-visit')!.textContent = 'apple';
+    expect(evaluator.evaluateNumber(query)).toEqual(1);
+    expect(SecondaryInstanceLookupCache.size()).toEqual(0);
+  });
+});
