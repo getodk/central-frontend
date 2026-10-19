@@ -24,7 +24,7 @@ const guidanceHint = computed(() => props.question.currentState.hint?.guidance);
 			<MarkdownBlock v-for="elem in label" :key="elem.id" :elem="elem" />
 		</div>
 		<div v-if="guidanceHint?.length">
-			<Accordion class="w-full max-w-md">
+			<Accordion>
 				<AccordionPanel value="0">
 					<AccordionHeader :pt="{ root: { tabindex: '-1' } }">
 						<span class="chevron-closed"><IconSVG name="mdiChevronDown" variant="muted" /></span>
