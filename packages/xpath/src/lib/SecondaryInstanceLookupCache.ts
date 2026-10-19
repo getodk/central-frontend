@@ -1,0 +1,179 @@
+import type { XPathNode } from '../adapter/interface/XPathNode';
+import { type LocationPathEvaluation } from '../evaluations/LocationPathEvaluation';
+import { BinaryExpressionEvaluator } from '../evaluator/expression/BinaryExpressionEvaluator';
+import type { ExpressionEvaluator } from '../evaluator/expression/ExpressionEvaluator';
+import { FunctionCallExpressionEvaluator } from '../evaluator/expression/FunctionCallExpressionEvaluator';
+import {
+  LocationPathEvaluator,
+  type LocationPathNode,
+} from '../evaluator/expression/LocationPathEvaluator';
+import type { AnyBinaryExprNode, EqExprNode } from '../static/grammar/SyntaxNode';
+
+const MINIMUM_NODES_WORTH_CACHING = 10;
+const MAXIMUM_CACHE_SIZE = 100;
+
+const cache = new Map<string, ReadonlySet<XPathNode>>();
+
+const isAbsolute = (expr: ExpressionEvaluator): boolean => {
+  if (expr instanceof LocationPathEvaluator && expr.isAbsolute) {
+    return true;
+  }
+  if (expr instanceof LocationPathEvaluator && expr.isFilterExprContext) {
+    const firstStep = expr.syntaxNode.child(0);
+    const functionCall = firstStep?.child(0);
+    const functionName = functionCall?.child(0)?.text;
+    if (functionName === 'current') {
+      return true;
+    }
+  }
+  return false;
+};
+
+const isConstant = (expr: ExpressionEvaluator): boolean => {
+  const nodeType = expr.syntaxNode?.type;
+  if (nodeType === 'number' || nodeType === 'string_literal') {
+    return true;
+  }
+  return false;
+};
+
+const isSomeCacheable = (expr: ExpressionEvaluator): boolean => {
+  if (isConstant(expr)) {
+    return false;
+  }
+  if (isAbsolute(expr)) {
+    return true;
+  }
+  if (expr instanceof FunctionCallExpressionEvaluator) {
+    if (expr.argumentExpressions.length === 0) {
+      return false;
+    }
+    return expr.argumentExpressions.some(isSomeCacheable);
+  }
+  return false;
+};
+
+const isAllCacheable = (expr: ExpressionEvaluator): boolean => {
+  if (isConstant(expr)) {
+    return true;
+  }
+  if (isAbsolute(expr)) {
+    return true;
+  }
+  if (expr instanceof FunctionCallExpressionEvaluator) {
+    if (expr.argumentExpressions.length === 0) {
+      return false;
+    }
+    return expr.argumentExpressions.every(isAllCacheable);
+  }
+  return false;
+};
+
+const isEqualsExpression = (
+  expr: ExpressionEvaluator
+): expr is BinaryExpressionEvaluator<EqExprNode> => {
+  return (
+    expr instanceof BinaryExpressionEvaluator &&
+    (expr as BinaryExpressionEvaluator<AnyBinaryExprNode>).syntaxNode.type === 'eq_expr'
+  );
+};
+
+const getIndexKey = (expr: ExpressionEvaluator) => {
+  if (!isEqualsExpression(expr)) {
+    return;
+  }
+  const isLhsKey = isAllCacheable(expr.lhs) && !isSomeCacheable(expr.rhs);
+  const isRhsKey = isAllCacheable(expr.rhs) && !isSomeCacheable(expr.lhs);
+  if (isLhsKey === isRhsKey) {
+    // either neither side is keyable, or both sides are, either way we don't know how to cache it
+    return;
+  }
+  const indexKey = isLhsKey ? expr.lhs : expr.rhs;
+  return { lhs: isLhsKey, indexKey };
+};
+
+interface ExpressionReplacement {
+  expr: string;
+  result: string;
+  lhs: boolean;
+}
+
+const getCacheablePrefix = (expression: string, replacements: ExpressionReplacement[]) => {
+  const lastExpression = replacements[replacements.length - 1]!.expr;
+  const endOfLastReplacement = expression.lastIndexOf(lastExpression) + lastExpression.length;
+  const endOfPredicate = expression.indexOf(']', endOfLastReplacement) + 1;
+  return expression.substring(0, endOfPredicate);
+};
+
+const makeReplacements = (expression: string, replacements: ExpressionReplacement[]) => {
+  let key = getCacheablePrefix(expression, replacements);
+  for (const { expr, result, lhs } of replacements) {
+    if (lhs) {
+      // replace first occurrence
+      key = key.replace(expr, result);
+    } else {
+      // replace last occurrence
+      const index = key.lastIndexOf(expr);
+      key = key.slice(0, index) + result + key.slice(index + expr.length);
+    }
+  }
+  return key;
+};
+
+export class SecondaryInstanceLookupCache {
+  static generateKey = <T extends XPathNode>(
+    currentContext: LocationPathEvaluation<T>,
+    predicateExpressions: readonly ExpressionEvaluator[],
+    syntaxNode: LocationPathNode
+  ): string | undefined => {
+    if (currentContext.contextSize() < MINIMUM_NODES_WORTH_CACHING) {
+      return;
+    }
+
+    const replacements = [];
+
+    for (const predicateExpression of predicateExpressions) {
+      const key = getIndexKey(predicateExpression);
+      if (!key) {
+        // can't cache when any of the predicates can't be reliably cached
+        return;
+      }
+
+      const evaluation = key.indexKey.evaluate(currentContext);
+      if (evaluation.nodes && evaluation.nodes.size > 1) {
+        // don't cache when referencing more than one node
+        return;
+      }
+
+      const result = evaluation.toString();
+      const expr = key.indexKey.syntaxNode.text;
+      replacements.push({ expr, result, lhs: key.lhs });
+    }
+
+    if (replacements.length === 0) {
+      // no predicates found
+      return;
+    }
+
+    return makeReplacements(syntaxNode.text, replacements);
+  };
+
+  static set<T extends XPathNode>(key: string, filteredNodes: ReadonlySet<T>) {
+    if (cache.size > MAXIMUM_CACHE_SIZE) {
+      cache.clear();
+    }
+    cache.set(key, filteredNodes);
+  }
+
+  static get<T extends XPathNode>(key: string): ReadonlySet<T> | undefined {
+    return cache.get(key) as ReadonlySet<T> | undefined;
+  }
+
+  static size(): number {
+    return cache.size;
+  }
+
+  static clear(): void {
+    cache.clear();
+  }
+}
