@@ -143,7 +143,7 @@ const createTextChunks = <Role extends TextRole>(
   const errors: Error[] = [];
   const chunkExpressions = getChunkExpressions(context, definition, errors);
   chunkExpressions.forEach((chunkExpression) => {
-    if (chunkExpression.type && ['image', 'audio', 'video'].includes(chunkExpression.type)) {
+    if (chunkExpression.type) {
       const url = chunkExpression.stringValue?.trim();
       if (JRResourceURL.isJRResourceReference(url)) {
         mediaSources[chunkExpression.type] = JRResourceURL.from(url);
