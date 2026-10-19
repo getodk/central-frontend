@@ -12,6 +12,8 @@
           <vertical/>
           <no_ticks/>
           <plain/>
+          <horizontal_wrapping/>
+          <vertical_wrapping/>
           <meta>
             <instanceID/>
           </meta>
@@ -21,6 +23,8 @@
       <bind nodeset="/data/vertical" type="int"/>
       <bind nodeset="/data/no_ticks" type="int"/>
       <bind nodeset="/data/plain" type="int"/>
+      <bind nodeset="/data/horizontal_wrapping" type="int"/>
+      <bind nodeset="/data/vertical_wrapping" type="int"/>
       <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid"/>
     </model>
   </h:head>
@@ -80,6 +84,44 @@
     </range>
     <range ref="/data/plain" start="0" end="10" step="1">
       <label>Plain</label>
+    </range>
+    <range ref="/data/horizontal_wrapping" start="0" end="100" step="10">
+      <label>Horizontal wrapping</label>
+      <item>
+        <label>Not at all likely</label>
+        <value>0</value>
+      </item>
+      <item>
+        <label>Slightly likely to recommend</label>
+        <value>20</value>
+      </item>
+      <item>
+        <label>Moderately likely</label>
+        <value>50</value>
+      </item>
+      <item>
+        <label>Extremely likely to recommend to a friend</label>
+        <value>100</value>
+      </item>
+    </range>
+    <range ref="/data/vertical_wrapping" start="-1000000" end="1000000" step="100000" appearance="vertical">
+      <label>Vertical wrapping</label>
+      <item>
+        <label>Much worse than anything you have ever experienced before in your life</label>
+        <value>-1000000</value>
+      </item>
+      <item>
+        <label>Worse than usual</label>
+        <value>-700000</value>
+      </item>
+      <item>
+        <label>About the same as usual</label>
+        <value>0</value>
+      </item>
+      <item>
+        <label>Much better than anything you have ever experienced before in your life</label>
+        <value>1000000</value>
+      </item>
     </range>
   </h:body>
 </h:html>

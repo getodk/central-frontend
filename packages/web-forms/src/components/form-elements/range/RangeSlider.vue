@@ -110,6 +110,7 @@ const moveBackward = () => moveByStep(-1);
 			<span
 				v-for="tick in ticks"
 				:key="tick.distance"
+				:data-value="tick.value"
 				:class="['range-tick', { 'range-tick-on-fill': isTickWithinValueDistance(tick) }]"
 				:style="{ '--tick-ratio': tick.ratio }"
 			/>

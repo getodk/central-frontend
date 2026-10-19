@@ -87,6 +87,12 @@ packages/web-forms/e2e/test-cases/visual/image-labels.test.ts-snapshots/select-o
 packages/web-forms/e2e/test-cases/visual/markdown.test.ts-snapshots/full-page-chromium.png:da29ec696275d85b8cf30866392f80775ea440bfadf2e7e667c0a9549104e36c
 packages/web-forms/e2e/test-cases/visual/markdown.test.ts-snapshots/full-page-firefox.png:ac1a786e86bb9dab7eaa7510593df2511873cd6efefe108c46602d6350dbe749
 packages/web-forms/e2e/test-cases/visual/markdown.test.ts-snapshots/full-page-webkit.png:ce1f4f752d600d5d2ca21e53f3b6edde4abe628dedeef4f5bb4a86a039b3de61
+packages/web-forms/e2e/test-cases/visual/range.test.ts-snapshots/range-horizontal-labels-chromium.png:1739cdb3c2140c5f6a1de9bd0f15f61ffa0889b60543df19dcaa4a822fdcdead
+packages/web-forms/e2e/test-cases/visual/range.test.ts-snapshots/range-horizontal-labels-firefox.png:215c1d29c6b4bdb9cb8bb260202cdf6e3ebc9e480b2cde01b52bbd1b5ee58412
+packages/web-forms/e2e/test-cases/visual/range.test.ts-snapshots/range-horizontal-labels-webkit.png:8352b6c1ba42643d9793349a83a08cfdf5361f611ad0f4c4e0fc2398c909e196
+packages/web-forms/e2e/test-cases/visual/range.test.ts-snapshots/range-vertical-labels-chromium.png:3ecce9280f6526e84df147b1e92108457996ed417812d71315565679a4e68786
+packages/web-forms/e2e/test-cases/visual/range.test.ts-snapshots/range-vertical-labels-firefox.png:b47d027e6f7a2d545d9e99b3fc32ddcac523549dc1039b5aa29760f0a4ac6565
+packages/web-forms/e2e/test-cases/visual/range.test.ts-snapshots/range-vertical-labels-webkit.png:59faee912ac218b3710b17788c725cb0380a0f1db8ba6b91633dcbec804d2cbc
 packages/web-forms/tests/fixtures/attachments/neutral.png:032eb2e5db7b1a750b658fd459c311cbcd6aa5fb8b2aa0233fccd42122f87fb5
 packages/web-forms/tests/fixtures/attachments/sad.png:a7a1723cbc7f95a2166333260525b92d7948e9ef8f1820ba5013933306d856be
 public/android-chrome-192x192.png:63d50e786c5b6090c7b16e5dbcd34828f23a7dab4e58f5c7733ba34e45501197
