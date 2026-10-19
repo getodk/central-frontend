@@ -59,4 +59,25 @@ describe('RangeControl', () => {
 
     expect(component.find('.range-tick-labels').exists()).toBe(false);
   });
+
+  describe('placeholder', () => {
+    const mountPlaceholderQuestion = () => mountQuestion(6);
+
+    it('shows the thumb at the placeholder without saving a value', async () => {
+      const component = await mountPlaceholderQuestion();
+
+      expect(component.find('.range-thumb').exists()).toBe(true);
+      expect(component.find('.range-fill').exists()).toBe(false);
+      expect(component.find('.range-value').text()).toBe('');
+    });
+
+    it('saves the placeholder when the thumb is clicked', async () => {
+      const component = await mountPlaceholderQuestion();
+
+      await component.find('.range-thumb').trigger('click');
+
+      expect(component.find('.range-fill').exists()).toBe(true);
+      expect(component.find('.range-value').text()).toBe('50');
+    });
+  });
 });

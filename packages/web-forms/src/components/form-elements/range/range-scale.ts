@@ -131,6 +131,26 @@ const isValidTickInterval = ({ span, step, tickInterval }: RangeScale) => {
   );
 };
 
+const isValidPlaceholder = (scale: RangeScale, placeholder: number) => {
+  const stepIndex = getNearestStepIndex(scale, placeholder);
+  if (stepIndex < 0 || stepIndex > scale.lastStepIndex) {
+    return false;
+  }
+
+  return getValueAtStepIndex(scale, stepIndex) === placeholder;
+};
+
+export const getRangePlaceholder = (
+  scale: RangeScale,
+  placeholder: number | null
+): number | null => {
+  if (placeholder == null || !isValidRange(scale) || !isValidPlaceholder(scale, placeholder)) {
+    return null;
+  }
+
+  return placeholder;
+};
+
 const getTickGap = (scale: RangeScale) => {
   return isValidTickInterval(scale) ? scale.tickInterval : scale.step;
 };
