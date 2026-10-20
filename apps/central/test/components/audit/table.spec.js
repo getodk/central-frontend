@@ -290,6 +290,7 @@ describe('AuditTable', () => {
     const cases = [
       ['dataset.create', ['Entity List', 'Create']],
       ['dataset.update', ['Entity List', 'Update']],
+      ['entity.bulk.upsert', ['Entity List', 'Bulk Upsert']],
       ['entity.bulk.delete', ['Entity List', 'Bulk Delete']],
       ['entity.bulk.restore', ['Entity List', 'Bulk Restore']],
       ['dataset.delete', ['Entity List', 'Delete']],
