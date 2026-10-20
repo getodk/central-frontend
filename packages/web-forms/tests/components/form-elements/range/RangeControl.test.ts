@@ -67,6 +67,7 @@ describe('RangeControl', () => {
       const component = await mountPlaceholderQuestion();
 
       expect(component.find('.range-thumb').exists()).toBe(true);
+      expect(component.find('.range-thumb').classes()).toContain('range-thumb-placeholder');
       expect(component.find('.range-fill').exists()).toBe(false);
       expect(component.find('.range-value').text()).toBe('');
     });
@@ -76,6 +77,7 @@ describe('RangeControl', () => {
 
       await component.find('.range-thumb').trigger('click');
 
+      expect(component.find('.range-thumb').classes()).not.toContain('range-thumb-placeholder');
       expect(component.find('.range-fill').exists()).toBe(true);
       expect(component.find('.range-value').text()).toBe('50');
     });

@@ -40,4 +40,25 @@ test.describe('Range (Visual)', () => {
       height: 408,
     });
   });
+
+  test('renders the placeholder with no value selected', async () => {
+    await expectScreenshot({
+      page: formPage.page,
+      locator: formPage.range.getRangeContainer('Placeholder'),
+      screenshotName: 'range-placeholder-no-value.png',
+      width: QUESTION_WIDTH,
+      height: 140,
+    });
+  });
+
+  test('renders the fill once a value replaces the placeholder', async () => {
+    await formPage.range.selectValue('Placeholder', 75);
+    await expectScreenshot({
+      page: formPage.page,
+      locator: formPage.range.getRangeContainer('Placeholder'),
+      screenshotName: 'range-placeholder-value-selected.png',
+      width: QUESTION_WIDTH,
+      height: 140,
+    });
+  });
 });

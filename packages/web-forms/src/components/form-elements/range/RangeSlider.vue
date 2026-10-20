@@ -128,7 +128,7 @@ const moveBackward = () => moveByStep(-1);
 		</div>
 		<div
 			v-if="thumbValue != null"
-			class="range-thumb"
+			:class="['range-thumb', { 'range-thumb-placeholder': !hasValue }]"
 			@click.stop="selectPlaceholderValue"
 			@pointerdown="onThumbPointerDown"
 			@pointermove="onThumbPointerMove"
@@ -267,6 +267,17 @@ const moveBackward = () => moveByStep(-1);
 	@media (hover: hover) {
 		&:hover {
 			background-color: var(--odk-primary-hover-background-color);
+		}
+	}
+
+	&.range-thumb-placeholder {
+		border: 2px solid var(--odk-primary-border-color);
+		background-color: var(--odk-base-background-color);
+
+		@media (hover: hover) {
+			&:hover {
+				background-color: var(--odk-primary-lighter-background-color);
+			}
 		}
 	}
 }
