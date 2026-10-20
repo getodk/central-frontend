@@ -46,7 +46,9 @@ const decimalSeparator = (() => {
 	return parts.find(part => part.type === 'decimal')?.value ?? ',';
 })();
 const groupSeparator = decimalSeparator === '.' ? ',' : '.';
-const keyFilterPattern = new RegExp(`[\\d\\-\\,.]`);
+
+const KEY_FILTER_PATTERN = new RegExp(`[\\d\\-\\,.]`);
+const DECIMAL_WITH_TRAILING_ZEROES = decimalSeparator === '.' ? /\.(\d*0+)?$/ : /,(\d*0+)?$/;
 
 const standardizeSeparators = (value: string) => {
 	value = value.replaceAll(groupSeparator, '');
@@ -59,15 +61,11 @@ const standardizeSeparators = (value: string) => {
 	return value;
 };
 
-const validityIsUncertain = (value: string) => {
-	return value === '-' || (props.isDecimal && value.endsWith(decimalSeparator));
-};
-
 const temporaryUserInput = ref<string | null>(null);
 
 const modelValue = computed<string>({
 	get: () => {
-		if (temporaryUserInput.value) {
+		if (temporaryUserInput.value != undefined) {
 			return temporaryUserInput.value;
 		}
 		const val = props.numericValue;
@@ -86,8 +84,11 @@ const modelValue = computed<string>({
 			props.setNumericValue(null);
 			return;
 		}
-		if (validityIsUncertain(assignedValue)) {
-			// it's too soon to tell if this is a valid number or not
+		if (assignedValue.includes(groupSeparator)) {
+			assignedValue = assignedValue.replaceAll(groupSeparator, '');
+		}
+		if (assignedValue === '-') {
+			// user has started typing a negative number - let them continue
 			temporaryUserInput.value = assignedValue;
 			props.setNumericValue(null);
 			return;
@@ -112,6 +113,11 @@ const modelValue = computed<string>({
 		}
 		if (!props.isDecimal) {
 			num = Math.round(num);
+		}
+
+		if (props.isDecimal && DECIMAL_WITH_TRAILING_ZEROES.test(assignedValue)) {
+			// user has started typing a decimal number
+			temporaryUserInput.value = assignedValue;
 		}
 
 		props.setNumericValue(num);
@@ -187,7 +193,7 @@ watch(renderKey, () => nextTick(() => (inputRef.value?.$el as HTMLElement)?.focu
 			:key="renderKey"
 			ref="inputRef"
 			v-model="modelValue"
-			v-keyfilter="keyFilterPattern"
+			v-keyfilter="KEY_FILTER_PATTERN"
 			:disabled="node.currentState.readonly"
 			:required="node.currentState.required"
 			:pt="{ root: { inputmode } }"
