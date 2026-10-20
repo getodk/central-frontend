@@ -46,7 +46,7 @@ const decimalSeparator = (() => {
 	return parts.find(part => part.type === 'decimal')?.value ?? ',';
 })();
 const groupSeparator = decimalSeparator === '.' ? ',' : '.';
-const keyFilterPattern = new RegExp(`[\\d\\-\\${decimalSeparator}]`);
+const keyFilterPattern = new RegExp(`[\\d\\-\\,.]`);
 
 const standardizeSeparators = (value: string) => {
 	value = value.replaceAll(groupSeparator, '');
@@ -60,14 +60,16 @@ const standardizeSeparators = (value: string) => {
 };
 
 const validityIsUncertain = (value: string) => {
-	if (value === '-') {
-		return true;
-	}
-	return props.isDecimal && value.indexOf(decimalSeparator) === value.length - 1;
+	return value === '-' || (props.isDecimal && value.endsWith(decimalSeparator));
 };
+
+const temporaryUserInput = ref<string | null>(null);
 
 const modelValue = computed<string>({
 	get: () => {
+		if (temporaryUserInput.value) {
+			return temporaryUserInput.value;
+		}
 		const val = props.numericValue;
 		if (val != undefined) {
 			return formatter.value.format(val);
@@ -75,6 +77,7 @@ const modelValue = computed<string>({
 		return '';
 	},
 	set: (assignedValue: string) => {
+		temporaryUserInput.value = null;
 		if (props.node.currentState.readonly) {
 			return;
 		}
@@ -85,8 +88,11 @@ const modelValue = computed<string>({
 		}
 		if (validityIsUncertain(assignedValue)) {
 			// it's too soon to tell if this is a valid number or not
+			temporaryUserInput.value = assignedValue;
+			props.setNumericValue(null);
 			return;
 		}
+
 		const stringValue = standardizeSeparators(assignedValue);
 		if (stringValue.length > props.maxCharacters) {
 			renderKey.value++;
@@ -99,9 +105,9 @@ const modelValue = computed<string>({
 			return;
 		}
 
-		if (props.max && num > props.max) {
+		if (props.max != undefined && num > props.max) {
 			num = props.max;
-		} else if (props.min && num < props.min) {
+		} else if (props.min != undefined && num < props.min) {
 			num = props.min;
 		}
 		if (!props.isDecimal) {
@@ -123,26 +129,16 @@ const setInteger = (num: number, amount: number) => {
 };
 
 const setDecimal = (num: number, amount: number) => {
-	// need to manually increment the decimal to avoid floating point errors
-	const str = num.toString();
-	const parts = str.split('.');
-	const int = Number(parts[0]);
+	const parts = num.toString().split('.');
 	if (parts.length === 1) {
 		// no decimal component found
-		setInteger(int, amount);
+		setInteger(Number(parts[0]), amount);
 		return;
 	}
-	let updated;
-	if (num < 0 && num > -1 && amount === 1) {
-		// the '-' sign has been parsed off, so we've already incremented
-		updated = int;
-	} else if (num > 0 && num < 1 && amount === -1) {
-		// going negative - add the prefix
-		updated = '-' + int.toString();
-	} else {
-		updated = int + amount;
-	}
-	modelValue.value = updated + decimalSeparator + parts[1]!;
+	// need to manually increment the decimal to avoid floating point errors
+	const precision = parts[1]!.length;
+	const val = num + amount;
+	modelValue.value = val.toFixed(precision).toString();
 };
 
 const spin = (amount: number) => {
@@ -165,12 +161,12 @@ const repeat = (interval: number, amount: number) => {
 	spin(amount);
 };
 
-const increment = (event: MouseEvent) => {
+const increment = (event: KeyboardEvent | MouseEvent) => {
 	event.preventDefault();
 	repeat(500, 1);
 };
 
-const decrement = (event: MouseEvent) => {
+const decrement = (event: KeyboardEvent | MouseEvent) => {
 	event.preventDefault();
 	repeat(500, -1);
 };
@@ -195,6 +191,10 @@ watch(renderKey, () => nextTick(() => (inputRef.value?.$el as HTMLElement)?.focu
 			:disabled="node.currentState.readonly"
 			:required="node.currentState.required"
 			:pt="{ root: { inputmode } }"
+			@keydown.up="increment"
+			@keydown.down="decrement"
+			@keyup.up="clearTimer"
+			@keyup.down="clearTimer"
 		/>
 		<span class="button-group">
 			<button
@@ -245,8 +245,6 @@ watch(renderKey, () => nextTick(() => (inputRef.value?.$el as HTMLElement)?.focu
 	display: flex;
 	flex-direction: column;
 	position: absolute;
-	inset-block-start: 1px;
-	inset-inline-end: 1px;
 	height: calc(100% - 2px);
 	z-index: var(--odk-z-index-form-content);
 	top: 1px;
@@ -256,7 +254,6 @@ watch(renderKey, () => nextTick(() => (inputRef.value?.$el as HTMLElement)?.focu
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		flex: 0 0 auto;
 		cursor: pointer;
 		width: 2.5rem;
 		transition: background var(--odk-transition-duration);
