@@ -5,10 +5,6 @@ import { computed, inject } from 'vue';
 import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
 import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
-import Accordion from 'primevue/accordion';
-import AccordionPanel from 'primevue/accordionpanel';
-import AccordionHeader from 'primevue/accordionheader';
-import AccordionContent from 'primevue/accordioncontent';
 
 const t: Translate = inject(TRANSLATE)!;
 
@@ -20,25 +16,20 @@ const guidanceHint = computed(() => props.question.currentState.hint?.guidance);
 
 <template>
 	<div v-if="question.currentState.hint" class="hint">
-		<div v-if="question.currentState.hint">
+		<div>
 			<MarkdownBlock v-for="elem in label" :key="elem.id" :elem="elem" />
 		</div>
 		<div v-if="guidanceHint?.length">
-			<Accordion>
-				<AccordionPanel value="0">
-					<AccordionHeader :pt="{ root: { tabindex: '-1' } }">
-						<span class="chevron-closed"><IconSVG name="mdiChevronDown" variant="muted" /></span>
-						<span class="chevron-open"><IconSVG name="mdiChevronUp" variant="muted" /></span>
-						{{ t('control_hint.details.label') }}
-						<template #toggleicon>
-							<span class="hidden" />
-						</template>
-					</AccordionHeader>
-					<AccordionContent>
-						<MarkdownBlock v-for="elem in guidanceHint" :key="elem.id" :elem="elem" />
-					</AccordionContent>
-				</AccordionPanel>
-			</Accordion>
+			<details>
+				<summary tabindex="-1">
+					<span class="chevron-closed"><IconSVG name="mdiChevronDown" variant="muted" /></span>
+					<span class="chevron-open"><IconSVG name="mdiChevronUp" variant="muted" /></span>
+					{{ t('control_hint.details.label') }}
+				</summary>
+				<div>
+					<MarkdownBlock v-for="elem in guidanceHint" :key="elem.id" :elem="elem" />
+				</div>
+			</details>
 		</div>
 	</div>
 </template>
@@ -48,35 +39,34 @@ const guidanceHint = computed(() => props.question.currentState.hint?.guidance);
 	font-size: var(--odk-hint-font-size);
 	font-weight: 300;
 	color: var(--odk-muted-text-color);
-	margin: 4px 0 var(--odk-spacing-m) 0;
+	margin-top: var(--odk-spacing-s);
 	line-height: calc(var(--odk-hint-font-size) * 1.45);
 	word-wrap: break-word;
 	white-space: pre-wrap;
 }
-.p-accordionpanel {
-	margin-top: var(--odk-spacing-s);
-}
-.p-accordionheader {
-	justify-content: left;
-	padding: 0;
-	font-weight: normal;
-}
-.p-accordionpanel {
-	border: 0;
-}
-:deep(.p-accordioncontent-content) {
-	padding: 0;
-	color: var(--odk-muted-text-color);
-}
-.chevron-open {
-	display: none;
-}
-.p-accordionpanel-active {
-	.chevron-open {
-		display: inline;
+details {
+	summary {
+		cursor: pointer;
+		font-weight: bold;
+		&::marker {
+			content: '';
+		}
 	}
-	.chevron-closed {
+	.chevron-open {
 		display: none;
 	}
+
+	.chevron-closed {
+		display: inline;
+	}
+  &[open] {
+    .chevron-open {
+      display: inline;
+    }
+
+    .chevron-closed {
+      display: none;
+    }
+  }
 }
 </style>

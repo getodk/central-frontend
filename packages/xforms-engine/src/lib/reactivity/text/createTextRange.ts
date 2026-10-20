@@ -12,9 +12,9 @@ import type { EvaluationContext } from '../../../instance/internal-api/Evaluatio
 import { TextChunk } from '../../../instance/text/TextChunk.ts';
 import { TextRange, type MediaSources } from '../../../instance/text/TextRange.ts';
 import {
-  isResourceForm,
+  isTextForm,
   TextChunkExpression,
-  type ResourceForm,
+  type TextForm,
 } from '../../../parse/expression/TextChunkExpression.ts';
 import type { TextRangeDefinition } from '../../../parse/text/abstract/TextRangeDefinition.ts';
 import { evaluateExpression } from '../createComputedExpression.ts';
@@ -70,7 +70,7 @@ const generateResourceChunk = (
 
 const generateChunk = (
   node: Node,
-  resourceForm?: ResourceForm
+  resourceForm?: TextForm
 ): TextChunkExpression<'string'> | null => {
   if (isElementNode(node)) {
     return TextChunkExpression.fromOutput(node, resourceForm);
@@ -93,10 +93,9 @@ const generateChunksForTranslation = (
     if (formAttribute && isResourceType(formAttribute)) {
       chunks.push(generateResourceChunk(context, child, formAttribute, errors));
     } else {
-      const resourceForm =
-        formAttribute && isResourceForm(formAttribute) ? formAttribute : undefined;
+      const textForm = formAttribute && isTextForm(formAttribute) ? formAttribute : undefined;
       for (const grandchild of child.childNodes) {
-        const chunk = generateChunk(grandchild, resourceForm);
+        const chunk = generateChunk(grandchild, textForm);
         if (chunk) {
           chunks.push(chunk);
         }
@@ -122,6 +121,18 @@ const getChunkExpressions = <Role extends TextRole>(
   const lang = context.getActiveLanguage();
   const elem = definition.form.model.getItextElement(lang, itextId);
   return elem ? generateChunksForTranslation(context, elem, errors) : [];
+};
+
+const createChunk = (
+  context: EvaluationContext,
+  chunkExpression: TextChunkExpression<'string'>,
+  errors: Error[]
+) => {
+  if (chunkExpression.source === 'literal') {
+    return new TextChunk(context, chunkExpression.source, chunkExpression.stringValue);
+  }
+  const computed = computeChunk(context, chunkExpression, errors);
+  return new TextChunk(context, chunkExpression.source, computed);
 };
 
 /**
@@ -151,14 +162,7 @@ const createTextChunks = <Role extends TextRole>(
       return;
     }
 
-    let chunk;
-    if (chunkExpression.source === 'literal') {
-      chunk = new TextChunk(context, chunkExpression.source, chunkExpression.stringValue);
-    } else {
-      const computed = computeChunk(context, chunkExpression, errors);
-      chunk = new TextChunk(context, chunkExpression.source, computed);
-    }
-
+    const chunk = createChunk(context, chunkExpression, errors);
     if (chunkExpression.form === 'guidance') {
       guidanceChunks.push(chunk);
     } else {

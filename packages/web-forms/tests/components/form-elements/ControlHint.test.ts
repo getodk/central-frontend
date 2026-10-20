@@ -34,16 +34,12 @@ describe('ControlHint', () => {
   });
 
   it('shows guidance accordion', async () => {
-    expect(component.find('.hint button').text()).toEqual('control_hint.details.label');
-    expect(component.find('.hint .p-accordioncontent').attributes('style')).toEqual(
-      'display: none;'
-    );
-    await component.find('.hint button').trigger('click');
-    expect(component.find('.hint .p-accordioncontent').attributes('style')).toEqual('');
-    expect(component.find('.hint .p-accordioncontent').text()).toEqual('For example, Jane');
-    await component.find('.hint button').trigger('click');
-    expect(component.find('.hint .p-accordioncontent').attributes('style')).toEqual(
-      'display: none;'
-    );
+    expect(component.find('.hint summary').text()).toEqual('control_hint.details.label');
+    expect(component.find('.hint details').attributes('open')).toEqual(undefined);
+    await component.find('.hint summary').trigger('click');
+    expect(component.find('.hint details').attributes('open')).toEqual('');
+    expect(component.find('.hint details div').text()).toEqual('For example, Jane');
+    await component.find('.hint summary').trigger('click');
+    expect(component.find('.hint details').attributes('open')).toEqual(undefined);
   });
 });
