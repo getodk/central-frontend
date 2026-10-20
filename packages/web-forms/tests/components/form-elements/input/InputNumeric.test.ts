@@ -128,6 +128,14 @@ describe('InputNumeric', () => {
           expect(question.currentState.value).toBe(expected);
         });
       });
+
+      it('clears the model value when value is invalid', async () => {
+        component = await mountComponent(1);
+        await component.get('input').setValue('0,5');
+        await component.get('input').setValue('0,'); // simulate backspace
+        expect(question.currentState.value).toBe(0);
+        expect(component.get('input').element.value).toBe('0,');
+      });
     });
 
     describe('fullstop separators', () => {
@@ -148,14 +156,14 @@ describe('InputNumeric', () => {
           expect(question.currentState.value).toBe(expected);
         });
       });
-    });
 
-    it('clears the model value when value is invalid', async () => {
-      component = await mountComponent(1);
-      await component.get('input').setValue('0.5');
-      await component.get('input').setValue('0.'); // simulate backspace
-      expect(question.currentState.value).toBe(null);
-      expect(component.get('input').element.value).toBe('0.');
+      it('clears the model value when value is invalid', async () => {
+        component = await mountComponent(1);
+        await component.get('input').setValue('0.5');
+        await component.get('input').setValue('0.'); // simulate backspace
+        expect(question.currentState.value).toBe(0);
+        expect(component.get('input').element.value).toBe('0.');
+      });
     });
 
     it('buttons increment and decrement value', async () => {
