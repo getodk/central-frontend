@@ -132,6 +132,10 @@ const isValidTickInterval = ({ span, step, tickInterval }: RangeScale) => {
 };
 
 const isValidPlaceholder = (scale: RangeScale, placeholder: number) => {
+  if (!isValidRange(scale)) {
+    return false;
+  }
+
   const stepIndex = getNearestStepIndex(scale, placeholder);
   if (stepIndex < 0 || stepIndex > scale.lastStepIndex) {
     return false;
@@ -144,7 +148,7 @@ export const getRangePlaceholder = (
   scale: RangeScale,
   placeholder: number | null
 ): number | null => {
-  if (placeholder == null || !isValidRange(scale) || !isValidPlaceholder(scale, placeholder)) {
+  if (placeholder == null || !isValidPlaceholder(scale, placeholder)) {
     return null;
   }
 
