@@ -150,19 +150,27 @@ describe('InputNumeric', () => {
       });
     });
 
+    it('clears the model value when value is invalid', async () => {
+      component = await mountComponent(1);
+      await component.get('input').setValue('0.5');
+      await component.get('input').setValue('0.'); // simulate backspace
+      expect(question.currentState.value).toBe(null);
+      expect(component.get('input').element.value).toBe('0.');
+    });
+
     it('buttons increment and decrement value', async () => {
       component = await mountComponent(1);
-      await component.get('input').setValue('3.5');
+      await component.get('input').setValue('3.25');
       await increment();
-      expect(question.currentState.value).toBe(4.5);
+      expect(question.currentState.value).toBe(4.25);
       await decrement();
       await decrement();
       await decrement();
       await decrement();
       await decrement();
-      expect(question.currentState.value).toBe(-0.5);
+      expect(question.currentState.value).toBe(-0.75);
       await increment();
-      expect(question.currentState.value).toBe(0.5);
+      expect(question.currentState.value).toBe(0.25);
     });
   });
 });
