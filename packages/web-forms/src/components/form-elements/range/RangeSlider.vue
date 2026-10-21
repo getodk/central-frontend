@@ -20,6 +20,7 @@ const props = defineProps<{
 	readonly ticks: readonly RangeTick[];
 	readonly disabled: boolean;
 	readonly modelValue: number | undefined;
+	readonly placeholder: number | null;
 }>();
 
 const emit = defineEmits<{ 'update:modelValue': [value: number] }>();
@@ -27,7 +28,8 @@ const emit = defineEmits<{ 'update:modelValue': [value: number] }>();
 const trackElement = useTemplateRef<HTMLElement>('track');
 
 const hasValue = computed(() => props.modelValue != null);
-const ratio = computed(() => props.modelValue == null ? TRACK_START : getRangeRatio(props.scale, props.modelValue));
+const thumbValue = computed(() => props.modelValue ?? props.placeholder);
+const ratio = computed(() => thumbValue.value == null ? TRACK_START : getRangeRatio(props.scale, thumbValue.value));
 const valueDistance = computed(() => {
 	return props.modelValue == null ? 0 : getNearestStepDistance(props.scale, props.modelValue);
 });
@@ -53,6 +55,14 @@ const changeValueAtPointer = (event: MouseEvent) => {
 
 	const value = getRangeValueAtRatio(props.scale, pointerRatio);
 	changeValue(value);
+};
+
+const selectPlaceholderValue = () => {
+	if (props.disabled || thumbValue.value == null) {
+		return;
+	}
+
+	changeValue(thumbValue.value);
 };
 
 const onThumbPointerDown = (event: PointerEvent) => {
@@ -81,7 +91,7 @@ const moveByStep = (direction: -1 | 1) => {
 		return;
 	}
 
-	const currentValue = props.modelValue ?? getRangeStart(props.scale);
+	const currentValue = thumbValue.value ?? getRangeStart(props.scale);
 	const nextValue = getRangeValueAfterSteps(props.scale, currentValue, direction);
 	changeValue(nextValue);
 };
@@ -95,7 +105,7 @@ const moveBackward = () => moveByStep(-1);
 	<div
 		:id="id"
 		ref="track"
-		:class="['range-slider', `range-${orientation}`, { 'range-disabled': disabled, 'range-unset': !hasValue }]"
+		:class="['range-slider', `range-${orientation}`, { 'range-disabled': disabled, 'range-no-thumb': thumbValue == null }]"
 		:style="{ '--range-ratio': ratio }"
 		role="slider"
 		:tabindex="disabled ? -1 : 0"
@@ -104,6 +114,7 @@ const moveBackward = () => moveByStep(-1);
 		@keydown.right.prevent="moveForward"
 		@keydown.down.prevent="moveBackward"
 		@keydown.left.prevent="moveBackward"
+		@keydown.enter.prevent="selectPlaceholderValue"
 	>
 		<div v-if="hasValue" class="range-fill" />
 		<div v-if="ticks.length > 0" class="range-ticks">
@@ -116,9 +127,9 @@ const moveBackward = () => moveByStep(-1);
 			/>
 		</div>
 		<div
-			v-if="hasValue"
-			class="range-thumb"
-			@click.stop
+			v-if="thumbValue != null"
+			:class="['range-thumb', { 'range-thumb-placeholder': !hasValue }]"
+			@click.stop="selectPlaceholderValue"
 			@pointerdown="onThumbPointerDown"
 			@pointermove="onThumbPointerMove"
 		/>
@@ -195,7 +206,7 @@ const moveBackward = () => moveByStep(-1);
 		}
 	}
 
-	&.range-unset:focus-visible,
+	&.range-no-thumb:focus-visible,
 	&:focus-visible .range-thumb {
 		outline: 1px solid var(--odk-primary-border-color);
 		outline-offset: 2px;
@@ -256,6 +267,17 @@ const moveBackward = () => moveByStep(-1);
 	@media (hover: hover) {
 		&:hover {
 			background-color: var(--odk-primary-hover-background-color);
+		}
+	}
+
+	&.range-thumb-placeholder {
+		border: 2px solid var(--odk-primary-border-color);
+		background-color: var(--odk-base-background-color);
+
+		@media (hover: hover) {
+			&:hover {
+				background-color: var(--odk-primary-lighter-background-color);
+			}
 		}
 	}
 }
