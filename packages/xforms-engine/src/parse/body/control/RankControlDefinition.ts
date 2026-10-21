@@ -1,9 +1,9 @@
-import { getItemElements, getItemsetElement } from '../../../lib/dom/query.ts';
 import type { XFormDefinition } from '../../XFormDefinition.ts';
 import type { BodyElementParentContext } from '../BodyDefinition.ts';
 import { ControlDefinition } from './ControlDefinition.ts';
-import { ItemsetDefinition } from './ItemsetDefinition.ts';
-import { ItemDefinition } from './ItemDefinition.ts';
+import type { ItemsetDefinition } from './ItemsetDefinition.ts';
+import type { ItemDefinition } from './ItemDefinition.ts';
+import { parseItemCollection } from './parseItemCollection.ts';
 import {
   type UnknownAppearanceDefinition,
   unknownAppearanceParser,
@@ -23,20 +23,10 @@ export class RankControlDefinition extends ControlDefinition<'rank'> {
     super(form, parent, element);
 
     this.appearances = unknownAppearanceParser.parseFrom(element, 'appearance');
-    const itemsetElement = getItemsetElement(element);
-    const itemElements = getItemElements(element);
 
-    if (itemsetElement === null || itemElements === undefined) {
-      this.itemset = null;
-      this.items = itemElements.map((itemElement) => new ItemDefinition(form, this, itemElement));
-    } else {
-      if (itemElements.length > 0) {
-        throw new Error(`<${element.nodeName}> has both <itemset> and <item> children`);
-      }
-
-      this.items = [];
-      this.itemset = new ItemsetDefinition(form, this, itemsetElement);
-    }
+    const { items, itemset } = parseItemCollection(form, this);
+    this.items = items;
+    this.itemset = itemset;
   }
 
   override toJSON() {

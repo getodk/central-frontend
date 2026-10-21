@@ -6,6 +6,9 @@ import type { RangeAppearanceDefinition } from '../appearance/rangeAppearancePar
 import { rangeAppearanceParser } from '../appearance/rangeAppearanceParser.ts';
 import type { BodyElementParentContext } from '../BodyDefinition.ts';
 import { ControlDefinition } from './ControlDefinition.ts';
+import type { ItemDefinition } from './ItemDefinition.ts';
+import type { ItemsetDefinition } from './ItemsetDefinition.ts';
+import { parseItemCollection } from './parseItemCollection.ts';
 
 type NumericString = `${number}`;
 
@@ -27,7 +30,7 @@ type NumericString = `${number}`;
  */
 const NUMERIC_STRING_PATTERN = /^-?\d+(\.\d+)?$/;
 
-const isNumericString = (value: string): value is NumericString => {
+export const isNumericString = (value: string): value is NumericString => {
   return NUMERIC_STRING_PATTERN.test(value);
 };
 
@@ -66,8 +69,7 @@ const parseNumericStringAttributeAbs = (element: Element, localName: string): Nu
   return value;
 };
 
-const parseTickInterval = (element: Element): number | null => {
-  const localName = 'tick-interval';
+const parseNumberAttribute = (element: Element, localName: string): number | null => {
   const value = element.getAttributeNS(ODK_NAMESPACE_URI, localName);
   if (value == null) {
     return null;
@@ -78,7 +80,10 @@ const parseTickInterval = (element: Element): number | null => {
 };
 
 const parseRangeNodeOptions = (element: Element): RangeNodeOptions => {
-  return { tickInterval: parseTickInterval(element) };
+  return {
+    tickInterval: parseNumberAttribute(element, 'tick-interval'),
+    placeholder: parseNumberAttribute(element, 'placeholder'),
+  };
 };
 
 /**
@@ -123,6 +128,8 @@ export class RangeControlDefinition extends ControlDefinition<'range'> {
   readonly appearances: RangeAppearanceDefinition;
   readonly bounds: RangeControlBoundsDefinition;
   readonly options: RangeNodeOptions;
+  readonly items: readonly ItemDefinition[];
+  readonly itemset: ItemsetDefinition | null;
 
   constructor(form: XFormDefinition, parent: BodyElementParentContext, element: Element) {
     super(form, parent, element);
@@ -130,6 +137,10 @@ export class RangeControlDefinition extends ControlDefinition<'range'> {
     this.appearances = rangeAppearanceParser.parseFrom(element, 'appearance');
     this.bounds = RangeControlBoundsDefinition.from(element);
     this.options = parseRangeNodeOptions(element);
+
+    const { items, itemset } = parseItemCollection(form, this);
+    this.items = items;
+    this.itemset = itemset;
   }
 
   override toJSON(): object {

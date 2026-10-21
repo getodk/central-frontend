@@ -1,43 +1,40 @@
 <script setup lang="ts">
+import type {
+	RangeScale,
+	RangeTick,
+} from '@getodk/web-forms/components/form-elements/range/range-scale.ts';
 import {
+	getNearestStepDistance,
 	getRangeRatio,
-	getRangeScale,
-	getRangeTickCount,
-	countTicksCoveredByValue,
+	getRangeStart,
 	getRangeValueAfterSteps,
 	getRangeValueAtRatio,
+	TRACK_START,
 } from '@getodk/web-forms/components/form-elements/range/range-scale.ts';
 import { computed, useTemplateRef } from 'vue';
 
 const props = defineProps<{
 	readonly id: string;
-	readonly start: number;
-	readonly end: number;
-	readonly step: number;
+	readonly scale: RangeScale;
 	readonly orientation: 'horizontal' | 'vertical';
-	readonly ticks: boolean;
-	readonly tickInterval: number | null;
+	readonly ticks: readonly RangeTick[];
 	readonly disabled: boolean;
 	readonly modelValue: number | undefined;
+	readonly placeholder: number | null;
 }>();
 
 const emit = defineEmits<{ 'update:modelValue': [value: number] }>();
 
 const trackElement = useTemplateRef<HTMLElement>('track');
 
-const bounds = computed(() => ({
-	start: props.start,
-	end: props.end,
-	step: props.step,
-	tickInterval: props.tickInterval,
-}));
-const scale = computed(() => getRangeScale(bounds.value));
 const hasValue = computed(() => props.modelValue != null);
-const ratio = computed(() => props.modelValue == null ? 0 : getRangeRatio(bounds.value, props.modelValue));
-const tickCount = computed(() => props.ticks ? getRangeTickCount(scale.value) : 0);
-const filledTickCount = computed(() => {
-	return props.modelValue == null ? 0 : countTicksCoveredByValue(scale.value, props.modelValue);
+const thumbValue = computed(() => props.modelValue ?? props.placeholder);
+const ratio = computed(() => thumbValue.value == null ? TRACK_START : getRangeRatio(props.scale, thumbValue.value));
+const valueDistance = computed(() => {
+	return props.modelValue == null ? 0 : getNearestStepDistance(props.scale, props.modelValue);
 });
+
+const isTickWithinValueDistance = (tick: RangeTick) => hasValue.value && tick.distance <= valueDistance.value;
 
 const changeValue = (value: number) => {
 	if (value !== props.modelValue) {
@@ -56,8 +53,16 @@ const changeValueAtPointer = (event: MouseEvent) => {
 		? (bottom - event.clientY) / height
 		: (event.clientX - left) / width;
 
-	const value = getRangeValueAtRatio(scale.value, pointerRatio);
+	const value = getRangeValueAtRatio(props.scale, pointerRatio);
 	changeValue(value);
+};
+
+const selectPlaceholderValue = () => {
+	if (props.disabled || thumbValue.value == null) {
+		return;
+	}
+
+	changeValue(thumbValue.value);
 };
 
 const onThumbPointerDown = (event: PointerEvent) => {
@@ -86,8 +91,8 @@ const moveByStep = (direction: -1 | 1) => {
 		return;
 	}
 
-	const currentValue = props.modelValue ?? props.start;
-	const nextValue = getRangeValueAfterSteps(scale.value, currentValue, direction);
+	const currentValue = thumbValue.value ?? getRangeStart(props.scale);
+	const nextValue = getRangeValueAfterSteps(props.scale, currentValue, direction);
 	changeValue(nextValue);
 };
 
@@ -100,7 +105,7 @@ const moveBackward = () => moveByStep(-1);
 	<div
 		:id="id"
 		ref="track"
-		:class="['range-slider', `range-${orientation}`, { 'range-disabled': disabled, 'range-unset': !hasValue }]"
+		:class="['range-slider', `range-${orientation}`, { 'range-disabled': disabled, 'range-no-thumb': thumbValue == null }]"
 		:style="{ '--range-ratio': ratio }"
 		role="slider"
 		:tabindex="disabled ? -1 : 0"
@@ -109,19 +114,22 @@ const moveBackward = () => moveByStep(-1);
 		@keydown.right.prevent="moveForward"
 		@keydown.down.prevent="moveBackward"
 		@keydown.left.prevent="moveBackward"
+		@keydown.enter.prevent="selectPlaceholderValue"
 	>
 		<div v-if="hasValue" class="range-fill" />
-		<div v-if="tickCount > 0" class="range-ticks">
+		<div v-if="ticks.length > 0" class="range-ticks">
 			<span
-				v-for="tickIndex in tickCount"
-				:key="tickIndex"
-				:class="['range-tick', { 'range-tick-on-fill': tickIndex <= filledTickCount }]"
+				v-for="tick in ticks"
+				:key="tick.distance"
+				:data-value="tick.value"
+				:class="['range-tick', { 'range-tick-on-fill': isTickWithinValueDistance(tick) }]"
+				:style="{ '--tick-ratio': tick.ratio }"
 			/>
 		</div>
 		<div
-			v-if="hasValue"
-			class="range-thumb"
-			@click.stop
+			v-if="thumbValue != null"
+			:class="['range-thumb', { 'range-thumb-placeholder': !hasValue }]"
+			@click.stop="selectPlaceholderValue"
 			@pointerdown="onThumbPointerDown"
 			@pointermove="onThumbPointerMove"
 		/>
@@ -131,8 +139,10 @@ const moveBackward = () => moveByStep(-1);
 <style scoped lang="scss">
 .range-slider {
 	--track-size: 5px;
-	--tick-size: 3px;
 	--thumb-size: 20px;
+	--tick-size: 3px;
+	--tick-offset: calc((var(--track-size) - var(--tick-size)) / 2);
+	--tick-shift: calc(var(--tick-size) / -2);
 	--range-position: calc(var(--range-ratio) * 100%);
 
 	position: relative;
@@ -166,15 +176,17 @@ const moveBackward = () => moveByStep(-1);
 			left: var(--range-position);
 			transform: translate(-50%, -50%);
 		}
+
+		.range-tick {
+			top: var(--tick-offset);
+			left: var(--tick-position);
+			margin-left: var(--tick-shift);
+		}
 	}
 
 	&.range-vertical {
-		height: 200px;
+		min-height: 200px;
 		width: var(--track-size);
-
-		.range-ticks {
-			flex-direction: column-reverse;
-		}
 
 		.range-fill {
 			width: 100%;
@@ -186,9 +198,15 @@ const moveBackward = () => moveByStep(-1);
 			left: 50%;
 			transform: translate(-50%, 50%);
 		}
+
+		.range-tick {
+			bottom: var(--tick-position);
+			left: var(--tick-offset);
+			margin-bottom: var(--tick-shift);
+		}
 	}
 
-	&.range-unset:focus-visible,
+	&.range-no-thumb:focus-visible,
 	&:focus-visible .range-thumb {
 		outline: 1px solid var(--odk-primary-border-color);
 		outline-offset: 2px;
@@ -211,14 +229,12 @@ const moveBackward = () => moveByStep(-1);
 .range-ticks {
 	position: absolute;
 	inset: 0;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	overflow: hidden;
 }
 
 .range-tick {
-	flex-shrink: 0;
+	--tick-position: calc(var(--tick-ratio) * 100%);
+
+	position: absolute;
 	width: var(--tick-size);
 	height: var(--tick-size);
 	border-radius: 50%;
@@ -251,6 +267,17 @@ const moveBackward = () => moveByStep(-1);
 	@media (hover: hover) {
 		&:hover {
 			background-color: var(--odk-primary-hover-background-color);
+		}
+	}
+
+	&.range-thumb-placeholder {
+		border: 2px solid var(--odk-primary-border-color);
+		background-color: var(--odk-base-background-color);
+
+		@media (hover: hover) {
+			&:hover {
+				background-color: var(--odk-primary-lighter-background-color);
+			}
 		}
 	}
 }
