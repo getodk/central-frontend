@@ -120,7 +120,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-##### Parameters<br/>🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜ 66\%
+##### Parameters<br/>🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜ 73\%
 
   </summary>
   <br/>
@@ -141,7 +141,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
 | [geotrace/shape incremental=true](https://github.com/getodk/web-forms/issues/562)                                                  |          |
 | [geo reference-geometry](https://github.com/getodk/web-forms/issues/924)                                                           |          |
 | [range labels](https://github.com/getodk/web-forms/issues/845)                                                                     |    ✅    |
-| [range placeholder](https://github.com/getodk/web-forms/issues/940)                                                                |          |
+| [range placeholder](https://github.com/getodk/web-forms/issues/940)                                                                |    ✅    |
 
 </details>
 

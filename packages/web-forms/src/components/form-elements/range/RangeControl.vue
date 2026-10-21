@@ -4,6 +4,7 @@ import ControlText from '@getodk/web-forms/components/form-elements/ControlText.
 import RangeSlider from '@getodk/web-forms/components/form-elements/range/RangeSlider.vue';
 import {
 	getDecimalPlaces,
+	getRangePlaceholder,
 	getRangeScale,
 	getRangeTicks,
 	placeLabelsOnTicks,
@@ -32,6 +33,7 @@ const scale = getRangeScale({
 	step,
 	tickInterval: props.node.nodeOptions.tickInterval,
 });
+const placeholder = getRangePlaceholder(scale, props.node.nodeOptions.placeholder);
 
 // Room for the longest value, so the track doesn't move.
 const valueLength =
@@ -90,6 +92,7 @@ const setValue = (value: number) => props.node.setValue(value);
 					:orientation="orientation"
 					:ticks="hasTicks ? ticks : []"
 					:model-value="numberValue"
+					:placeholder="placeholder"
 					@update:model-value="setValue"
 				/>
 

@@ -90,6 +90,12 @@ packages/web-forms/e2e/test-cases/visual/markdown.test.ts-snapshots/full-page-we
 packages/web-forms/e2e/test-cases/visual/range.test.ts-snapshots/range-horizontal-labels-chromium.png:1739cdb3c2140c5f6a1de9bd0f15f61ffa0889b60543df19dcaa4a822fdcdead
 packages/web-forms/e2e/test-cases/visual/range.test.ts-snapshots/range-horizontal-labels-firefox.png:215c1d29c6b4bdb9cb8bb260202cdf6e3ebc9e480b2cde01b52bbd1b5ee58412
 packages/web-forms/e2e/test-cases/visual/range.test.ts-snapshots/range-horizontal-labels-webkit.png:8352b6c1ba42643d9793349a83a08cfdf5361f611ad0f4c4e0fc2398c909e196
+packages/web-forms/e2e/test-cases/visual/range.test.ts-snapshots/range-placeholder-no-value-chromium.png:2fddca8d92f5e7902f7cae8d67770efd30c4e7f250b64d9f3d2738da6dae2566
+packages/web-forms/e2e/test-cases/visual/range.test.ts-snapshots/range-placeholder-no-value-firefox.png:f201b681cf926062194d7692a61290f11f8db6e9250e567b8814cb58eda96075
+packages/web-forms/e2e/test-cases/visual/range.test.ts-snapshots/range-placeholder-no-value-webkit.png:79320083876f63d2e2f540251fd32b192154f5fbf4f0261cace5e8153032b098
+packages/web-forms/e2e/test-cases/visual/range.test.ts-snapshots/range-placeholder-value-selected-chromium.png:7e4b37fbf763322d496ca135cf4d07a99331639e89c73267d2bc6557735fb97a
+packages/web-forms/e2e/test-cases/visual/range.test.ts-snapshots/range-placeholder-value-selected-firefox.png:8882bc56d2a07d64acd9e5f26ba25865607cc840cc1b574035ef8f35516c19a9
+packages/web-forms/e2e/test-cases/visual/range.test.ts-snapshots/range-placeholder-value-selected-webkit.png:caae72496ab1a3f598113e1c4275cc4d0793ad76ff88478d0bfe329ef69a0a55
 packages/web-forms/e2e/test-cases/visual/range.test.ts-snapshots/range-vertical-labels-chromium.png:3ecce9280f6526e84df147b1e92108457996ed417812d71315565679a4e68786
 packages/web-forms/e2e/test-cases/visual/range.test.ts-snapshots/range-vertical-labels-firefox.png:b47d027e6f7a2d545d9e99b3fc32ddcac523549dc1039b5aa29760f0a4ac6565
 packages/web-forms/e2e/test-cases/visual/range.test.ts-snapshots/range-vertical-labels-webkit.png:59faee912ac218b3710b17788c725cb0380a0f1db8ba6b91633dcbec804d2cbc
