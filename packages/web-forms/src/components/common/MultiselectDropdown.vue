@@ -5,6 +5,7 @@ import { computed, inject } from 'vue';
 import MarkdownBlock from './MarkdownBlock.vue';
 import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
 import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
+import { calculateVisibleHeight, DEFAULT_PRIMEVUE_ITEM_HEIGHT } from '@getodk/web-forms/lib/dropdown.ts';
 
 interface MultiselectDropdownProps {
 	readonly question: SelectNode;
@@ -13,8 +14,6 @@ interface MultiselectDropdownProps {
 
 const t: Translate = inject(TRANSLATE)!;
 const props = defineProps<MultiselectDropdownProps>();
-
-const DEFAULT_PRIMEVUE_ITEM_HEIGHT = 38;
 
 defineEmits(['update:modelValue', 'change']);
 
@@ -28,15 +27,6 @@ const options = computed(() => {
 	});
 });
 
-const virtualScrollerOptions = computed(() => {
-	if (props.question.currentState.valueOptions.length > 20) {
-		return { itemSize: DEFAULT_PRIMEVUE_ITEM_HEIGHT };
-	}
-	// remove virtual scroller for small selects so primevue knows
-	// what height to make the list container
-	return undefined;
-});
-
 const selectValues = (values: readonly string[]) => {
 	props.question.selectValues(values);
 };
@@ -45,6 +35,10 @@ let panelClass = 'multi-select-dropdown-panel';
 if (props.question.appearances['no-buttons']) {
 	panelClass += ' no-buttons';
 }
+
+const calculatedScrollHeight = computed(() => {
+	return calculateVisibleHeight(props.question.currentState.valueOptions.length);
+});
 
 const selectedLabels = computed(() => {
 	const state = props.question.currentState;
@@ -74,7 +68,8 @@ const selectedLabels = computed(() => {
 		option-label="search"
 		:panel-class="panelClass"
 		:model-value="question.currentState.value"
-		:virtual-scroller-options="virtualScrollerOptions"
+		:virtual-scroller-options="{ itemSize: DEFAULT_PRIMEVUE_ITEM_HEIGHT }"
+		:scroll-height="calculatedScrollHeight"
 		@update:model-value="selectValues"
 		@change="$emit('change')"
 	>
