@@ -24,9 +24,6 @@ except according to the terms contained in the LICENSE file.
             {{ $n(form.reviewStates[reviewState], 'default') }}
             <span :class="reviewStateIcon(reviewState)"></span>
           </span>
-
-          <!-- <span>{{ $n(form.reviewStates[reviewState], 'default') }}</span>
-          <span :class="reviewStateIcon(reviewState)"></span> -->
         </link-if-can>
       </template>
     </td>
