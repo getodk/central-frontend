@@ -47,11 +47,10 @@ const decimalSeparator = (() => {
 })();
 const groupSeparator = decimalSeparator === '.' ? ',' : '.';
 
-const KEY_FILTER_PATTERN = new RegExp(`[\\d\\-\\,.]`);
+const KEY_FILTER_PATTERN = /[\d\-,.]/;
 const DECIMAL_WITH_TRAILING_ZEROES = decimalSeparator === '.' ? /\.(\d*0+)?$/ : /,(\d*0+)?$/;
 
-const standardizeSeparators = (value: string) => {
-	value = value.replaceAll(groupSeparator, '');
+const standardizeDecimals = (value: string) => {
 	if (decimalSeparator !== '.') {
 		value = value.replace(decimalSeparator, '.');
 	}
@@ -84,9 +83,7 @@ const modelValue = computed<string>({
 			props.setNumericValue(null);
 			return;
 		}
-		if (assignedValue.includes(groupSeparator)) {
-			assignedValue = assignedValue.replaceAll(groupSeparator, '');
-		}
+		assignedValue = assignedValue.replaceAll(groupSeparator, '');
 		if (assignedValue === '-') {
 			// user has started typing a negative number - let them continue
 			temporaryUserInput.value = assignedValue;
@@ -94,7 +91,7 @@ const modelValue = computed<string>({
 			return;
 		}
 
-		const stringValue = standardizeSeparators(assignedValue);
+		const stringValue = standardizeDecimals(assignedValue);
 		if (stringValue.length > props.maxCharacters) {
 			renderKey.value++;
 			return;
@@ -144,7 +141,7 @@ const setDecimal = (num: number, amount: number) => {
 	// need to manually increment the decimal to avoid floating point errors
 	const precision = parts[1]!.length;
 	const val = num + amount;
-	modelValue.value = val.toFixed(precision).toString();
+	modelValue.value = val.toFixed(precision);
 };
 
 const spin = (amount: number) => {
@@ -201,6 +198,7 @@ watch(renderKey, () => nextTick(() => (inputRef.value?.$el as HTMLElement)?.focu
 			@keydown.down="decrement"
 			@keyup.up="clearTimer"
 			@keyup.down="clearTimer"
+			@blur="clearTimer"
 		/>
 		<span class="button-group">
 			<button
