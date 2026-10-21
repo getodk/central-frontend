@@ -62,6 +62,60 @@ const standardizeDecimals = (value: string) => {
 
 const temporaryUserInput = ref<string | null>(null);
 
+const clampToRange = (num: number) => {
+	if (!props.isDecimal) {
+		num = Math.round(num);
+	}
+	if (props.max != undefined && num > props.max) {
+		return props.max;
+	}
+	if (props.min != undefined && num < props.min) {
+		return props.min;
+	}
+	return num;
+};
+
+const resetInput = () => {
+	renderKey.value++;
+};
+
+const isTooLong = (num: string) => {
+	const maxLength = num.startsWith('-') ? props.maxCharacters + 1 : props.maxCharacters;
+	return num.length > maxLength;
+};
+
+const santizeInput = (num: string) => {
+	num = num.trim().replaceAll(groupSeparator, '');
+	if (num === '-') {
+		// user has started typing a negative number - let them continue
+		temporaryUserInput.value = num;
+		return;
+	}
+	return num;
+};
+
+const parseNumber = (input?: string) => {
+	if (!input) {
+		return;
+	}
+	const standardized = standardizeDecimals(input);
+	const num = Number(standardized);
+	if (Number.isNaN(num)) {
+		return;
+	}
+	return clampToRange(num);
+};
+
+watch(() => props.numericValue, (value) => {
+	if (temporaryUserInput.value == null) {
+		return;
+	}
+	const parsed = parseNumber(santizeInput(temporaryUserInput.value));
+	if (parsed != value) {
+		temporaryUserInput.value = null;
+	}
+});
+
 const modelValue = computed<string>({
 	get: () => {
 		if (temporaryUserInput.value != undefined) {
@@ -78,48 +132,29 @@ const modelValue = computed<string>({
 		if (props.node.currentState.readonly) {
 			return;
 		}
-		assignedValue = assignedValue.trim();
-		if (!assignedValue.length) {
+
+		const sanitized = santizeInput(assignedValue);
+		if (!sanitized?.length) {
 			props.setNumericValue(null);
 			return;
 		}
-		assignedValue = assignedValue.replaceAll(groupSeparator, '');
-		if (assignedValue === '-') {
-			// user has started typing a negative number - let them continue
-			temporaryUserInput.value = assignedValue;
-			props.setNumericValue(null);
-			return;
+		if (isTooLong(sanitized)) {
+			return resetInput();
 		}
 
-		const stringValue = standardizeDecimals(assignedValue);
-		if (stringValue.length > props.maxCharacters) {
-			renderKey.value++;
-			return;
+		const num = parseNumber(sanitized);
+		if (num == undefined) {
+			return resetInput();
 		}
 
-		let num = Number(stringValue);
-		if (Number.isNaN(num)) {
-			renderKey.value++;
-			return;
-		}
-
-		if (props.max != undefined && num > props.max) {
-			num = props.max;
-		} else if (props.min != undefined && num < props.min) {
-			num = props.min;
-		}
-		if (!props.isDecimal) {
-			num = Math.round(num);
-		}
-
-		if (props.isDecimal && DECIMAL_WITH_TRAILING_ZEROES.test(assignedValue)) {
+		if (props.isDecimal && DECIMAL_WITH_TRAILING_ZEROES.test(sanitized)) {
 			// user has started typing a decimal number
-			temporaryUserInput.value = assignedValue;
+			temporaryUserInput.value = sanitized;
 		}
 
 		props.setNumericValue(num);
-		if (!props.isDecimal && formatter.value.format(num) !== assignedValue) {
-			renderKey.value++;
+		if (!props.isDecimal && formatter.value.format(num) !== sanitized) {
+			return resetInput();
 		}
 	}
 });
@@ -238,6 +273,7 @@ watch(renderKey, () => nextTick(() => (inputRef.value?.$el as HTMLElement)?.focu
 </template>
 
 <style scoped lang="scss">
+
 .number-group {
 	position: relative;
 	display: inline-flex;
@@ -246,10 +282,12 @@ watch(renderKey, () => nextTick(() => (inputRef.value?.$el as HTMLElement)?.focu
 	}
 }
 .button-group {
+	--input-border-width: 1px;
+
 	display: flex;
 	flex-direction: column;
 	position: absolute;
-	height: calc(100% - 2px);
+	height: calc(100% - (var(--input-border-width) * 2));
 	z-index: var(--odk-z-index-form-content);
 	top: 1px;
 	right: 1px;
@@ -281,10 +319,10 @@ watch(renderKey, () => nextTick(() => (inputRef.value?.$el as HTMLElement)?.focu
 		}
 	}
 	.increment {
-		border-start-end-radius: calc(var(--odk-radius) - 1px);
+		border-start-end-radius: calc(var(--odk-radius) - var(--input-border-width));
 	}
 	.decrement {
-		border-end-end-radius: calc(var(--odk-radius) - 1px);
+		border-end-end-radius: calc(var(--odk-radius) - var(--input-border-width));
 	}
 }
 </style>

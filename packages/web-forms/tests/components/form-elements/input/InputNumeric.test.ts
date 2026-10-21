@@ -81,6 +81,10 @@ describe('InputNumeric', () => {
         { given: '1.59', expected: 2n },
         { given: '1,234', expected: 1234n },
         { given: '1234.', expected: 1234n },
+        { given: '999999999', expected: 999999999n }, // max allowed in collect
+        { given: '1000000000', expected: null },
+        { given: '-999999999', expected: -999999999n }, // min allowed in collect
+        { given: '-1000000000', expected: null },
       ].forEach(({ given, expected }) => {
         it(`${given}`, async () => {
           await component.get('input').setValue(given);
