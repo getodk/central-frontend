@@ -1,9 +1,10 @@
 import type { RuntimeInputValue, RuntimeValue } from '../lib/codecs/getSharedValueCodec.ts';
 import type { RangeNodeDefinition, RangeValueType } from '../parse/model/RangeNodeDefinition.ts';
-import type { BaseControlNodeState } from './BaseNode.ts';
+import type { BaseControlNodeState, BaseNodeState } from './BaseNode.ts';
 import type { BaseValueNode, BaseValueNodeState } from './BaseValueNode.ts';
 import type { NodeAppearances } from './NodeAppearances.ts';
 import type { RootNode } from './RootNode.ts';
+import type { TextRange } from './TextRange.ts';
 import type { GeneralParentNode } from './hierarchy.ts';
 import type { LeafNodeValidationState } from './validation.ts';
 
@@ -13,9 +14,22 @@ export type RangeValue<V extends RangeValueType> = RuntimeValue<V>;
 
 export type RangeInputValue<V extends RangeValueType> = RuntimeInputValue<V>;
 
+export interface RangeTickLabel {
+  get value(): number;
+  get label(): TextRange<'item-label'>;
+}
+
 export interface RangeNodeState<V extends RangeValueType>
   extends BaseValueNodeState<RangeValue<V>>, BaseControlNodeState {
   get valueOptions(): null;
+
+  /**
+   * Labels for the tick marks, per the
+   * {@link https://getodk.github.io/xforms-spec/#range-tick-labels | ODK XForms spec}.
+   * Unlike {@link BaseNodeState.valueOptions}, these never restrict the {@link value}.
+   * Sorted by value, smallest first.
+   */
+  get tickLabels(): readonly RangeTickLabel[];
 }
 
 export type RangeNodeAppearances = NodeAppearances<RangeNodeDefinition>;

@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml"
+        xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms"
+        xmlns:odk="http://www.opendatakit.org/xforms">
+  <h:head>
+    <h:title>Range tick labels</h:title>
+    <model odk:xforms-version="1.0.0">
+      <instance>
+        <data id="range-tick-labels">
+          <items/>
+          <vertical/>
+          <no_ticks/>
+          <plain/>
+          <horizontal_wrapping/>
+          <vertical_wrapping/>
+          <meta>
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <bind nodeset="/data/items" type="int"/>
+      <bind nodeset="/data/vertical" type="int"/>
+      <bind nodeset="/data/no_ticks" type="int"/>
+      <bind nodeset="/data/plain" type="int"/>
+      <bind nodeset="/data/horizontal_wrapping" type="int"/>
+      <bind nodeset="/data/vertical_wrapping" type="int"/>
+      <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid"/>
+    </model>
+  </h:head>
+  <h:body>
+    <range ref="/data/items" start="0" end="10" step="1">
+      <label>Items</label>
+      <item>
+        <label>High</label>
+        <value>10</value>
+      </item>
+      <item>
+        <label>Low</label>
+        <value>0</value>
+      </item>
+      <item>
+        <label>Ignored duplicate</label>
+        <value>0</value>
+      </item>
+      <item>
+        <label>Ignored off step</label>
+        <value>2.5</value>
+      </item>
+      <item>
+        <label>Mid</label>
+        <value>5</value>
+      </item>
+    </range>
+    <range ref="/data/vertical" start="0" end="10" step="1" appearance="vertical">
+      <label>Vertical</label>
+      <item>
+        <label>Bottom</label>
+        <value>0</value>
+      </item>
+      <item>
+        <label>Middle</label>
+        <value>5</value>
+      </item>
+      <item>
+        <label>Top</label>
+        <value>10</value>
+      </item>
+    </range>
+    <range ref="/data/no_ticks" start="0" end="10" step="1" appearance="no-ticks">
+      <label>No ticks</label>
+      <item>
+        <label>Low</label>
+        <value>0</value>
+      </item>
+      <item>
+        <label>Ignored middle</label>
+        <value>5</value>
+      </item>
+      <item>
+        <label>High</label>
+        <value>10</value>
+      </item>
+    </range>
+    <range ref="/data/plain" start="0" end="10" step="1">
+      <label>Plain</label>
+    </range>
+    <range ref="/data/horizontal_wrapping" start="0" end="100" step="10">
+      <label>Horizontal wrapping</label>
+      <item>
+        <label>Not at all likely</label>
+        <value>0</value>
+      </item>
+      <item>
+        <label>Slightly likely to recommend</label>
+        <value>20</value>
+      </item>
+      <item>
+        <label>Moderately likely</label>
+        <value>50</value>
+      </item>
+      <item>
+        <label>Extremely likely to recommend to a friend</label>
+        <value>100</value>
+      </item>
+    </range>
+    <range ref="/data/vertical_wrapping" start="-1000000" end="1000000" step="100000" appearance="vertical">
+      <label>Vertical wrapping</label>
+      <item>
+        <label>Much worse than anything you have ever experienced before in your life</label>
+        <value>-1000000</value>
+      </item>
+      <item>
+        <label>Worse than usual</label>
+        <value>-700000</value>
+      </item>
+      <item>
+        <label>About the same as usual</label>
+        <value>0</value>
+      </item>
+      <item>
+        <label>Much better than anything you have ever experienced before in your life</label>
+        <value>1000000</value>
+      </item>
+    </range>
+  </h:body>
+</h:html>
