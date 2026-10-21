@@ -110,6 +110,11 @@ describe('EntityShow', () => {
       component.should.alert('success');
     });
 
+    it('updates the label', async () => {
+      const component = await submit();
+      component.get('.breadcrumb-item:last-child').text().should.equal('Updated Entity');
+    });
+
     it('updates the entity data', async () => {
       const component = await submit();
       component.get('#entity-data dd').text().should.equal('2');

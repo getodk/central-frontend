@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
   <div v-if="link != null" class="infonav-button">
     <router-link class="btn btn-link" :to="link">
       <slot name="title"></slot>
-      <span v-if="count != null" class="badge">{{ count }}</span>
+      <span v-if="count != null" class="badge">{{ $n(count) }}</span>
     </router-link>
   </div>
   <dropdown v-else class="infonav-button" placement="bottom-start">
@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
       <button type="button" class="btn dropdown-toggle" v-bind="attrs"
         @click="toggle">
           <slot name="title"></slot>
-          <span v-if="count != null" class="badge">{{ count }}</span>
+          <span v-if="count != null" class="badge">{{ $n(count) }}</span>
           <span class="icon-angle-down"></span>
       </button>
     </template>
@@ -43,6 +43,7 @@ defineProps({
   // If a count is provided, a badge will be displayed with the count.
   count: Number
 });
+
 </script>
 
 <style lang="scss">
