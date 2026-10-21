@@ -68,15 +68,12 @@ const generateResourceChunk = (
   return TextChunkExpression.fromResource(url, type);
 };
 
-const generateChunk = (
-  node: Node,
-  resourceForm?: TextForm
-): TextChunkExpression<'string'> | null => {
+const generateChunk = (node: Node, textForm?: TextForm): TextChunkExpression<'string'> | null => {
   if (isElementNode(node)) {
-    return TextChunkExpression.fromOutput(node, resourceForm);
+    return TextChunkExpression.fromOutput(node, textForm);
   }
   if (isTextNode(node)) {
-    return TextChunkExpression.fromLiteral(node.data, resourceForm);
+    return TextChunkExpression.fromLiteral(node.data, textForm);
   }
   return null;
 };
@@ -137,12 +134,12 @@ const createChunk = (
 
 /**
  * Creates a reactive accessor for text chunks and an optional image, audio and video from text source expressions.
- * - Combines chunks from literal and computed sources into a single array.
+ * - Combines chunks from literal and computed sources into a main array and a guidance array.
  * - Captures the first image found with a 'from=<"image"|"audio"|"video">' attribute.
  *
  * @param context The evaluation context for reactive XPath computations.
  * @param definition The definition for the text range which contains chunks to transform
- * @returns An accessor for an object with all chunks and the first image, audio and video (if any).
+ * @returns An accessor for an object with the main chunks, the guidance chunks and the first image, audio and video (if any).
  */
 const createTextChunks = <Role extends TextRole>(
   context: EvaluationContext,
@@ -154,16 +151,16 @@ const createTextChunks = <Role extends TextRole>(
   const errors: Error[] = [];
   const chunkExpressions = getChunkExpressions(context, definition, errors);
   chunkExpressions.forEach((chunkExpression) => {
-    if (chunkExpression.type) {
+    if (chunkExpression.resourceType) {
       const url = chunkExpression.stringValue?.trim();
       if (JRResourceURL.isJRResourceReference(url)) {
-        mediaSources[chunkExpression.type] = JRResourceURL.from(url);
+        mediaSources[chunkExpression.resourceType] = JRResourceURL.from(url);
       }
       return;
     }
 
     const chunk = createChunk(context, chunkExpression, errors);
-    if (chunkExpression.form === 'guidance') {
+    if (chunkExpression.textForm === 'guidance') {
       guidanceChunks.push(chunk);
     } else {
       chunks.push(chunk);

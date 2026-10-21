@@ -47,9 +47,11 @@ const guidanceHint = computed(() => props.question.currentState.hint?.guidance);
 details {
 	summary {
 		cursor: pointer;
-		font-weight: bold;
-		&::marker {
-			content: '';
+		font-weight: normal;
+		list-style: none;
+		&::marker,
+		&::-webkit-details-marker {
+			display: none;
 		}
 	}
 	.chevron-open {
@@ -59,14 +61,14 @@ details {
 	.chevron-closed {
 		display: inline;
 	}
-  &[open] {
-    .chevron-open {
-      display: inline;
-    }
+	&[open] {
+		.chevron-open {
+			display: inline;
+		}
 
-    .chevron-closed {
-      display: none;
-    }
-  }
+		.chevron-closed {
+			display: none;
+		}
+	}
 }
 </style>
