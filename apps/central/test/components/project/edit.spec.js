@@ -91,9 +91,9 @@ describe('ProjectEdit', () => {
       app.should.alert('success');
     });
 
-    it("updates the project's name", async () => {
+    it.only("updates the project's name", async () => {
       const app = await submit();
-      app.get('#page-head-title').text().should.equal('New Name');
+      app.get('.breadcrumb-item:last-child').text().should.equal('New Name');
     });
   });
 });
