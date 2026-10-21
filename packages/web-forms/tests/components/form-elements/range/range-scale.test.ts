@@ -1,5 +1,6 @@
 import {
   getNearestStepDistance,
+  getRangePlaceholder,
   getRangeRatio,
   getRangeScale,
   getRangeTicks,
@@ -118,6 +119,36 @@ describe('Range scale', () => {
       expect(getRangeTicks(emptyScale)).toEqual([]);
       expect(getRangeTicks(oversizedStepScale)).toEqual([]);
       expect(getRangeTicks(unevenScale)).toEqual([]);
+    });
+  });
+
+  describe('getRangePlaceholder', () => {
+    const getPlaceholder = (placeholder: number, otherBounds = bounds) => {
+      const rangeScale = getRangeScale(otherBounds);
+      return getRangePlaceholder(rangeScale, placeholder);
+    };
+
+    it('returns a placeholder on a step between start and end', () => {
+      expect(getPlaceholder(0)).toBe(0);
+      expect(getPlaceholder(4)).toBe(4);
+      expect(getPlaceholder(10)).toBe(10);
+      expect(getPlaceholder(0.3, { start: 0, end: 1, step: 0.1 })).toBe(0.3);
+      expect(getPlaceholder(4, { start: 10, end: 0, step: 2 })).toBe(4);
+    });
+
+    it('ignores a placeholder outside the range', () => {
+      expect(getPlaceholder(-1)).toBe(null);
+      expect(getPlaceholder(11)).toBe(null);
+    });
+
+    it('ignores a placeholder which is not on a step', () => {
+      expect(getPlaceholder(4.5)).toBe(null);
+      expect(getPlaceholder(0.35, { start: 0, end: 1, step: 0.1 })).toBe(null);
+      expect(getPlaceholder(5, { start: 10, end: 0, step: 2 })).toBe(null);
+    });
+
+    it('ignores a placeholder when the range is not valid', () => {
+      expect(getPlaceholder(6, { start: 0, end: 10, step: 3 })).toBe(null);
     });
   });
 

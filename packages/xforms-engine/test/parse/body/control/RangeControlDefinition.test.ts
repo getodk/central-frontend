@@ -46,6 +46,13 @@ describe('RangeControlDefinition', () => {
     );
   };
 
+  const createWithPlaceholder = (placeholder: string) => {
+    return createFromBody(
+      'int',
+      t(`range ref="/root/range" start="0" end="10" step="1" odk:placeholder="${placeholder}"`)
+    );
+  };
+
   describe('bounds', () => {
     describe('int', () => {
       it('parses', () => {
@@ -91,6 +98,20 @@ describe('RangeControlDefinition', () => {
 
     it('fails to parse a tick interval which is not a number', () => {
       expect(() => createWithTickInterval('five')).to.throw();
+    });
+  });
+
+  describe('placeholder', () => {
+    it('is null when the attribute is not defined', () => {
+      expect(create('int', 0, 10, 1).options.placeholder).to.equal(null);
+    });
+
+    it('parses the odk:placeholder attribute', () => {
+      expect(createWithPlaceholder('5').options.placeholder).to.equal(5);
+    });
+
+    it('fails to parse a placeholder which is not a number', () => {
+      expect(() => createWithPlaceholder('five')).to.throw();
     });
   });
 });
