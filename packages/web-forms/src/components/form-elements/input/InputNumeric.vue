@@ -80,8 +80,7 @@ const resetInput = () => {
 };
 
 const isTooLong = (num: string) => {
-	const maxLength = num.startsWith('-') ? props.maxCharacters + 1 : props.maxCharacters;
-	return num.length > maxLength;
+	return num.length > props.maxCharacters;
 };
 
 const santizeInput = (num: string) => {
