@@ -117,7 +117,7 @@
   "Descriptions and annotations": {
     "label": "✅",
     "hint": "✅",
-    "[guidance hint](https://github.com/getodk/web-forms/issues/53)": "",
+    "[guidance hint](https://github.com/getodk/web-forms/issues/53)": "✅",
     "form translations": "✅",
     "form translations with ref to other field": "✅",
     "Markdown": "✅",
