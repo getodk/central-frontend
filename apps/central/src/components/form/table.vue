@@ -67,7 +67,7 @@ export default {
       // non-closed form table.
       // In the case that there are no (non-closed) forms, a loading message
       // or "no forms" message will be shown below the header.
-      return this.formsToShow.length > 0 || !this.showClosed;
+      return this.formsToShow.length > 0;
     },
     formsToShow() {
       if (!this.forms.dataExists)

@@ -38,7 +38,7 @@ except according to the terms contained in the LICENSE file.
         :actor-properties="actorProperties.data"
         :actors="fieldKeys.data"/>
     </div>
-    <table-freeze v-if="dataExists" id="field-key-list-table" :data="filteredFieldKeys" key-prop="id"
+    <table-freeze v-if="dataExists && filteredFieldKeys.length > 0" id="field-key-list-table" :data="filteredFieldKeys" key-prop="id"
       :frozen-only="actorProperties.length === 0" :divider="actorProperties.length > 0">
       <template #head-frozen>
         <th class="col-actions"></th>

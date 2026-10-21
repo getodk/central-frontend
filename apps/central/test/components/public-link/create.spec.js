@@ -225,15 +225,17 @@ describe('PublicLinkCreate', () => {
           app.get('.table-freeze-scrolling th').text().should.equal('region');
         }));
 
-    it('updates the list if only the property request succeeds', () =>
-      create()
+    it('updates the list if only the property request succeeds', () => {
+      testData.extendedPublicLinks.createPast(1);
+      return create()
         .respondWithProblem() // Public link creation
         .afterResponses(async (app) => {
           // The table behind the modal should not change until the modal is
           // hidden.
-          app.find('.table-freeze-scrolling').exists().should.be.false;
+          app.find('.table-freeze-scrolling th').exists().should.be.false;
           await app.get('#public-link-create .btn-link').trigger('click');
           app.get('.table-freeze-scrolling th').text().should.equal('region');
-        }));
+        });
+    });
   });
 });

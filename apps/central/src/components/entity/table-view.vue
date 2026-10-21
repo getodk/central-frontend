@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <entity-table v-show="odataEntities.dataExists" ref="table"
+  <entity-table v-show="odataEntities.dataExists && odataEntities.value.length > 0" ref="table"
     v-model:all-selected="allSelected" class="paginated-table" :properties="dataset.properties"
     :deleted="deleted" :awaiting-deleted-responses="awaitingResponses"
     v-on="reemitters"/>

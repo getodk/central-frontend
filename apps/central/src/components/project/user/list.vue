@@ -48,7 +48,7 @@ are Project Manager, Project Viewer, and Data Collector. -->
       <search-textbox v-model="searchTerm" :label="searchLabel" :disabled="searchDisabled"/>
     </form>
 
-    <table class="table">
+    <table v-show="tableAssignments.dataExists && tableAssignments.length > 0" class="table">
       <thead>
         <tr>
           <th>{{ $t('header.user') }}</th>

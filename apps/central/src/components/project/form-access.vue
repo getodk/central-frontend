@@ -34,11 +34,11 @@ except according to the terms contained in the LICENSE file.
 
     <loading :state="initiallyLoading"/>
     <template v-if="dataExists">
-      <project-form-access-table :changes-by-form="changesByForm"
+      <project-form-access-table v-if="forms.length > 0" :changes-by-form="changesByForm"
         @update:state="updateState"
         @update:field-key-access="updateFieldKeyAccess"
         @show-states="statesModal.show()"/>
-      <p v-if="forms.length === 0" class="empty-table-message">
+      <p v-else class="empty-table-message">
         {{ $t('emptyTable') }}
       </p>
     </template>
