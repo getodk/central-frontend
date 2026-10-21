@@ -1,5 +1,7 @@
-#!/bin/sh
-set -eu
+#!/bin/bash -eu
+set -o pipefail
+shopt -s inherit_errexit || true
+
 cd "$(dirname "$0")/.."
 
 mkdir -p test-results playwright-report
