@@ -199,6 +199,10 @@ export default {
 
   .actions {
     width: 100px;
+
+    .btn {
+      width: 100%;
+    }
   }
 
   .last-submission{
