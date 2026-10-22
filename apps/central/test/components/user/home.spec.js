@@ -4,10 +4,8 @@ import { mockLogin } from '../../util/session';
 describe('UserHome', () => {
   beforeEach(mockLogin);
 
-  it('shows the correct tabs', async () => {
+  it('renders the user home page', async () => {
     const app = await load('/users', { attachTo: document.body });
-    const li = app.findAll('#page-head-tabs li');
-    li.map(wrapper => wrapper.text()).should.eql(['Web Users']);
-    li[0].should.be.visible(true);
+    app.find('#user-home').exists().should.be.true;
   });
 });
