@@ -11,4 +11,4 @@ HOST_UID=$(id -u)
 HOST_GID=$(id -g)
 export PLAYWRIGHT_VERSION HOST_UID HOST_GID
 
-exec docker compose run --build --rm e2e "$@"
+exec docker compose -f e2e/compose.yml run --build --rm e2e "$@"
