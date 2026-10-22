@@ -3,15 +3,35 @@ import {
   SUBMIT_PRESSED,
   IS_FORM_EDIT_MODE,
 } from '@getodk/web-forms/lib/constants/injection-keys.ts';
-import { mount } from '@vue/test-utils';
-import { assert, describe, expect, it } from 'vitest';
+import { mount, VueWrapper } from '@vue/test-utils';
+import { assert, describe, expect, it, beforeEach, afterEach, vi } from 'vitest';
 import { ref, shallowRef } from 'vue';
 import { getReactiveForm, globalMountOptions } from '../../../helpers';
+import type { GeneralChildNode } from '@getodk/xforms-engine';
 
 describe('InputNumeric', () => {
-  const mountComponent = async (questionNumber: number, submitPressed = false) => {
+  let question: GeneralChildNode;
+  let component: VueWrapper;
+
+  const POLISH_NAVIGATOR = {
+    languages: ['pl', 'en'],
+    language: 'en',
+  };
+
+  const ENGLISH_NAVIGATOR = {
+    languages: ['en', 'pl'],
+    language: 'en',
+  };
+
+  const increment = async () => await component.get('.increment').trigger('pointerdown');
+  const decrement = async () => await component.get('.decrement').trigger('pointerdown');
+
+  const mountComponent = async (
+    questionNumber: number,
+    submitPressed = false
+  ): Promise<VueWrapper> => {
     const xform = await getReactiveForm('input-numeric.xml');
-    const question = xform.currentState.children[questionNumber];
+    question = xform.currentState.children[questionNumber]!;
 
     assert(question?.nodeType === 'input');
 
@@ -29,13 +49,164 @@ describe('InputNumeric', () => {
     });
   };
 
-  it('sets the correct inputmode for integers', async () => {
-    const component = await mountComponent(0);
-    expect(component.get('input').attributes().inputmode).toBe('numeric');
+  beforeEach(() => {
+    vi.stubGlobal('navigator', ENGLISH_NAVIGATOR);
   });
 
-  it('sets the correct inputmode for decimals', async () => {
-    const component = await mountComponent(1);
-    expect(component.get('input').attributes().inputmode).toBe('decimal');
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  describe('integer', () => {
+    it('sets the correct inputmode', async () => {
+      component = await mountComponent(0);
+      expect(component.get('input').attributes().inputmode).toBe('numeric');
+    });
+
+    it('handles dots for thousands separators', async () => {
+      vi.stubGlobal('navigator', POLISH_NAVIGATOR);
+      component = await mountComponent(0);
+      await component.get('input').setValue('1.2345');
+      expect(question.currentState.value).toBe(12345n);
+    });
+
+    describe('handles input', () => {
+      beforeEach(async () => {
+        component = await mountComponent(0);
+      });
+
+      [
+        { given: '   1   ', expected: 1n },
+        { given: '    ', expected: null },
+        { given: '1.59', expected: 2n },
+        { given: '1,234', expected: 1234n },
+        { given: '1234.', expected: 1234n },
+        { given: '999999999', expected: 999999999n }, // max allowed in collect
+        { given: '1000000000', expected: null },
+        { given: '-99999999', expected: -99999999n }, // min allowed in collect
+        { given: '-100000000', expected: null },
+      ].forEach(({ given, expected }) => {
+        it(`${given}`, async () => {
+          await component.get('input').setValue(given);
+          expect(question.currentState.value).toBe(expected);
+        });
+      });
+    });
+
+    it('buttons increment and decrement value', async () => {
+      component = await mountComponent(0);
+      await component.get('input').setValue('3');
+      await increment();
+      expect(question.currentState.value).toBe(4n);
+      await decrement();
+      await decrement();
+      await decrement();
+      await decrement();
+      await decrement();
+      expect(question.currentState.value).toBe(-1n);
+    });
+
+    it('cannot increment past max int', async () => {
+      component = await mountComponent(0);
+      await component.get('input').setValue('999999999');
+      await increment();
+      expect(question.currentState.value).toBe(999999999n);
+    });
+  });
+
+  describe('decimal', () => {
+    it('sets the correct inputmode', async () => {
+      component = await mountComponent(1);
+      expect(component.get('input').attributes().inputmode).toBe('decimal');
+    });
+
+    describe('comma separators', () => {
+      beforeEach(async () => {
+        vi.stubGlobal('navigator', POLISH_NAVIGATOR);
+        component = await mountComponent(1);
+      });
+
+      [
+        { given: '56,123', expected: 56.123 },
+        { given: '56.123', expected: 56123 },
+        { given: ',123', expected: 0.123 },
+        { given: '56.123.456', expected: 56123456 },
+        { given: '0,1234567890123456789', expected: null },
+        { given: '1234567890123456789', expected: null },
+      ].forEach(({ given, expected }) => {
+        it(`handles ${given}`, async () => {
+          await component.get('input').setValue(given);
+          expect(question.currentState.value).toBe(expected);
+        });
+      });
+
+      it('clears the model value when value is invalid', async () => {
+        component = await mountComponent(1);
+        await component.get('input').setValue('0,5');
+        await component.get('input').setValue('0,'); // simulate backspace
+        expect(question.currentState.value).toBe(0);
+        expect(component.get('input').element.value).toBe('0,');
+      });
+
+      it('buttons increment and decrement value', async () => {
+        component = await mountComponent(1);
+        await component.get('input').setValue('3,25');
+        expect(question.currentState.value).toBe(3.25);
+        await increment();
+        expect(question.currentState.value).toBe(4.25);
+        await decrement();
+        await decrement();
+        await decrement();
+        await decrement();
+        await decrement();
+        expect(question.currentState.value).toBe(-0.75);
+        await increment();
+        expect(question.currentState.value).toBe(0.25);
+        expect(component.get('input').element.value).toBe('0,25');
+      });
+    });
+
+    describe('fullstop separators', () => {
+      beforeEach(async () => {
+        component = await mountComponent(1);
+      });
+
+      [
+        { given: '56.123', expected: 56.123 },
+        { given: '56,123', expected: 56123 },
+        { given: '.123', expected: 0.123 },
+        { given: '56,123,456', expected: 56123456 },
+        { given: '0.1234567890123456789', expected: null },
+        { given: '1234567890123456789', expected: null },
+      ].forEach(({ given, expected }) => {
+        it(`handles ${given}`, async () => {
+          await component.get('input').setValue(given);
+          expect(question.currentState.value).toBe(expected);
+        });
+      });
+
+      it('clears the model value when value is invalid', async () => {
+        component = await mountComponent(1);
+        await component.get('input').setValue('0.5');
+        await component.get('input').setValue('0.'); // simulate backspace
+        expect(question.currentState.value).toBe(0);
+        expect(component.get('input').element.value).toBe('0.');
+      });
+
+      it('buttons increment and decrement value', async () => {
+        component = await mountComponent(1);
+        await component.get('input').setValue('3.25');
+        await increment();
+        expect(question.currentState.value).toBe(4.25);
+        await decrement();
+        await decrement();
+        await decrement();
+        await decrement();
+        await decrement();
+        expect(question.currentState.value).toBe(-0.75);
+        await increment();
+        expect(question.currentState.value).toBe(0.25);
+      });
+    });
   });
 });
