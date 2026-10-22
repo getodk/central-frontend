@@ -17,7 +17,7 @@ import {
 import type { FormStateSuccessResult } from '@getodk/web-forms/lib/init/form-state.ts';
 import { initializeFormState } from '@getodk/web-forms/lib/init/initialize-form-state.ts';
 import { loadFormState } from '@getodk/web-forms/lib/init/load-form-state';
-import type { EditInstanceOptions, FormOptions } from '@getodk/web-forms/lib/init/load-form-state.ts';
+import type { EditInstanceOptions, FormOptions, RestoreInstanceOptions } from '@getodk/web-forms/lib/init/load-form-state.ts';
 import { useNavigationTarget } from '@getodk/web-forms/lib/useNavigationTarget.ts';
 import type { RevealViolations } from '@getodk/web-forms/lib/useRevealViolations.ts';
 import { updateSubmittedFormState } from '@getodk/web-forms/lib/init/update-submitted-form-state.ts';
@@ -76,6 +76,8 @@ export interface OdkWebFormsProps {
 	 * resources will be resolved and loaded for editing.
 	 */
 	readonly editInstance?: EditInstanceOptions;
+
+	readonly restoreInstance?: RestoreInstanceOptions;
 
 	readonly lastSavedXml?: string;
 }
@@ -268,6 +270,7 @@ const init = async () => {
 	state.value = await loadFormState(props.formXml, {
 		form: formOptions,
 		editInstance: props.editInstance ?? null,
+		restoreInstance: props.restoreInstance ?? null,
 		preloadProperties: props.preloadProperties,
 		instanceDefaults: props.instanceDefaults,
 		deviceID: props.deviceId

@@ -95,12 +95,12 @@ export abstract class BaseInstantiableFormResult<
     };
 
     this.restoreInstance = async (
-      input: RestoreFormInstanceInput,
+      input: EditFormInstanceInput,
       instanceConfig: FormInstanceConfig = {}
     ) => {
       this.assertInstantiable();
 
-      const initialState = await InitialInstanceState.from(instanceOptions.model, input.data);
+      const initialState = await InitialInstanceState.resolve(instanceOptions.model, input);
 
       return new FormInstance(this, {
         mode: 'restore',

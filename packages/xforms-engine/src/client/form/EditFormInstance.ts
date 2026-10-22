@@ -45,7 +45,9 @@ export interface ResolvableFormInstanceInput extends BaseEditFormInstanceInput {
 }
 
 /**
- * @todo This is included as a strawman for discussiong: "should we accept input
+ * TODO resolve this now
+ * 
+ * @todo This is included as a strawman for discussion: "should we accept input
  * to {@link EditFormInstance} in the same shape as input to
  * {@link RestoreFormInstance}?".
  *
