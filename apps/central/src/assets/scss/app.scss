@@ -618,6 +618,7 @@ tr.uncommitted-change { background-color: #ffef67; }
   border-radius: 12px;
   border-collapse: separate;
   border-spacing: 0;
+  overflow: hidden;
 
   > thead {
     background-color: $color-table-heading-background;
