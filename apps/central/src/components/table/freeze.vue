@@ -170,8 +170,6 @@ defineExpose({ getRowPair });
 // should be in a .btn-group.
 .table-freeze-frozen {
   .btn-group {
-    // Setting the background color in case an action is transparent.
-    background-color: $color-page-background;
     left: -2000px;
     // Relative to .table-freeze so that buttons are shown to the right side of the component.
     position: absolute;
