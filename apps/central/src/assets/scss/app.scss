@@ -892,7 +892,6 @@ tr.uncommitted-change { background-color: #ffef67; }
 
   > li {
     margin-bottom: -1px;
-    margin-right: 10px;
 
     > a, &.active > a {
       &, &:hover, &:focus {
@@ -909,6 +908,7 @@ tr.uncommitted-change { background-color: #ffef67; }
     }
 
     > a {
+      margin-right: 0;
       &, &:hover, &:focus {
         background-color: transparent;
       }
