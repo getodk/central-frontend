@@ -164,13 +164,8 @@ export default {
   .table tbody & td { vertical-align: middle; }
 
   td {
-    font-size: 16px;
     padding: 3px 0px 3px 6px;
     color: #333;
-  }
-
-  .name {
-    font-size: 18px;
   }
 
   .duplicate-form-id {

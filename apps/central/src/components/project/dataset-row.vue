@@ -85,7 +85,6 @@ const lastEntityTooltip = computed(() => {
 
 .project-dataset-row {
   td {
-    font-size: 16px;
     padding: 4px 0px 4px 6px;
     color: #333;
 
