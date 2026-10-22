@@ -215,13 +215,16 @@ class. */
 
   &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
     background-color: $color-action-background-disabled;
+    border-color: $color-action-background-disabled;
   }
 
   &:hover, &:focus, &:active:focus {
     background-color: $color-action-background-hover;
+    border-color: $color-action-background-hover;
 
     &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
       background-color: $color-action-background-disabled;
+      border-color: $color-action-background-disabled;
     }
   }
 }
@@ -233,10 +236,13 @@ class. */
 
   &:hover, &:focus, &:active:focus {
     background-color: $color-action-background;
+    border-color: $color-action-background;
+
     color: #fff;
     &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
       background-color: #fff;
       color: $color-action-background;
+      border-color: $color-action-background;
     }
   }
 
