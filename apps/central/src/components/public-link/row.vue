@@ -99,7 +99,6 @@ export default {
 @import '../../assets/scss/variables';
 
 .public-link-row {
-  .table tbody & td { vertical-align: middle; }
 
   .display-name {
     @include text-overflow-ellipsis;
