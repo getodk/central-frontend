@@ -628,7 +628,7 @@ tr.uncommitted-change { background-color: #ffef67; }
     }
 
     > tr > th {
-      border-bottom: $border-bottom-table-heading;
+      border-bottom: none;
       font-size: $font-size-table-heading;
       padding: $padding-table-heading;
       height: 56px;
