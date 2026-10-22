@@ -162,8 +162,7 @@ defineExpose({ getRowPair });
 }
 
 .table-freeze-frozen.divider {
-  box-shadow: 3px 0 0 rgba(0, 0, 0, 0.04);
-  th:last-child { border-right: $border-bottom-table-heading; }
+  th:last-child { border-right: $border-top-table-data;  }
   td:last-child { border-right: $border-top-table-data; }
 }
 
