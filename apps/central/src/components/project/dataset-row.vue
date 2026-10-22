@@ -11,10 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr class="project-dataset-row">
-    <td class="col-icon">
-      <span v-if="showIcon" class="icon-database"></span>
-    </td>
-    <td colspan="2" class="dataset-name">
+    <td class="dataset-name">
       <dataset-link :project-id="project.id" :name="dataset.name"
         v-tooltip.text/>
     </td>
@@ -67,10 +64,6 @@ const props = defineProps({
   project: {
     type: Object,
     required: true
-  },
-  showIcon: {
-    type: Boolean,
-    required: true
   }
 });
 
@@ -101,7 +94,7 @@ const lastEntityTooltip = computed(() => {
     }
   }
 
-  .total-entities {
+  .conflicts-count, .total-entities {
     text-align: right;
     padding-right: 10px;
     width: 80px;

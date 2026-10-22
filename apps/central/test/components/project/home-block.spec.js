@@ -142,7 +142,6 @@ describe('ProjectHomeBlock', () => {
     block.findAllComponents(FormRow).length.should.equal(3);
     block.findAllComponents(DatasetRow).length.should.equal(3);
     block.find('.expand-button').exists().should.be.false;
-    block.find('.margin').exists().should.be.true;
   });
 
   it('shows the correct number of datasets if there are a lot and some should be hidden', () => {
@@ -150,12 +149,11 @@ describe('ProjectHomeBlock', () => {
     testData.extendedDatasets.createPast(4);
     const block = mountComponent();
     block.findAllComponents(DatasetRow).length.should.equal(3);
-    block.find('.project-form-row .expand-button').exists().should.be.false;
-    const expand = block.find('.project-dataset-row .expand-button');
+    block.find('.forms-section .expand-button').exists().should.be.false;
+    const expand = block.find('.datasets-section .expand-button');
     expand.exists().should.be.true;
     expand.text().should.equal('Show 4 total Entity Lists');
     expand.find('.icon-angle-down').exists().should.be.true;
-    block.find('.margin').exists().should.be.false;
   });
 
   it('expands the datasets to show more datasets', async () => {
@@ -163,7 +161,7 @@ describe('ProjectHomeBlock', () => {
     testData.extendedDatasets.createPast(4);
     const block = mountComponent();
     block.findAllComponents(DatasetRow).length.should.equal(3);
-    const expand = block.find('.project-dataset-row .expand-button');
+    const expand = block.find('.datasets-section .expand-button');
     await expand.trigger('click');
     block.findAllComponents(DatasetRow).length.should.equal(4);
     expand.text().should.equal('Show fewer of 4 total Entity Lists');
@@ -190,13 +188,13 @@ describe('ProjectHomeBlock', () => {
     const block = mountComponent();
 
     block.findAllComponents(DatasetRow).length.should.equal(3);
-    const formExpand = block.find('.project-form-row .expand-button');
+    const formExpand = block.find('.forms-section .expand-button');
     formExpand.exists().should.be.true;
     formExpand.text().should.equal('Show 5 total Forms');
     formExpand.find('.icon-angle-down').exists().should.be.true;
 
     block.findAllComponents(FormRow).length.should.equal(3);
-    const dsExpand = block.find('.project-dataset-row .expand-button');
+    const dsExpand = block.find('.datasets-section .expand-button');
     dsExpand.exists().should.be.true;
     dsExpand.text().should.equal('Show 4 total Entity Lists');
     dsExpand.find('.icon-angle-down').exists().should.be.true;
@@ -206,18 +204,18 @@ describe('ProjectHomeBlock', () => {
     testData.extendedProjects.createPast(1);
     testData.extendedDatasets.createPast(6, { conflicts: 2 });
     const block = mountComponent();
-    const expandingRow = block.findAll('.project-dataset-row')[3];
+    const expandContainer = block.find('.datasets-section .expand-button-container');
 
     // there is a caption text 'hidden'
-    expandingRow.find('.conflict-caption').text().should.equal('hidden');
+    expandContainer.find('.conflict-caption').text().should.equal('hidden');
 
     // conflicts are summed up for the hidden rows
-    const hiddenConflictCell = expandingRow.find('.conflicts-count a');
-    hiddenConflictCell.text().should.equal('6 conflicts');
+    const hiddenConflictBtn = expandContainer.find('.conflicts-btn');
+    hiddenConflictBtn.text().should.equal('6 conflicts');
 
     // conflict badge expands the rows
-    await hiddenConflictCell.trigger('click');
-    const expand = expandingRow.find('.expand-button');
+    await hiddenConflictBtn.trigger('click');
+    const expand = expandContainer.find('.expand-button');
     expand.text().should.equal('Show fewer of 6 total Entity Lists');
   });
 
@@ -229,14 +227,14 @@ describe('ProjectHomeBlock', () => {
     testData.extendedDatasets.createPast(1, { conflicts: 5, name: 'Delta', lastEntity: '2023-01-01' });
     testData.extendedDatasets.createPast(1, { conflicts: 3, name: 'Echo', lastEntity: '2023-01-01' });
     const block = mountComponent();
-    const expandingRow = block.findAll('.project-dataset-row')[3];
+    const expandContainer = block.find('.datasets-section .expand-button-container');
 
     // conflicts are summed up for the hidden rows
-    const hiddenConflictCell = expandingRow.find('.conflicts-count a');
-    hiddenConflictCell.text().should.equal('8 conflicts'); // sum of Delta & Echo
+    const hiddenConflictBtn = expandContainer.find('.conflicts-btn');
+    hiddenConflictBtn.text().should.equal('8 conflicts'); // sum of Delta & Echo
 
     await block.setProps({ sortFunc: (a, b) => b.lastEntity.localeCompare(a.lastEntity) });
-    hiddenConflictCell.text().should.equal('5 conflicts'); // sum of Bravo & Charlie
+    hiddenConflictBtn.text().should.equal('5 conflicts'); // sum of Bravo & Charlie
   });
 
   it('shows nothing when there is no conflict', async () => {
@@ -245,9 +243,9 @@ describe('ProjectHomeBlock', () => {
     const block = mountComponent();
     block.findAllComponents(DatasetRow).length.should.equal(3);
 
-    // nothing is show in conflict column when there's no conflict
-    const expandingRow = block.findAll('.project-dataset-row')[3];
-    expandingRow.find('.conflicts-count').exists().should.be.false;
-    expandingRow.find('.conflict-caption').exists().should.be.false;
+    // nothing is shown in conflict area when there's no conflict
+    const expandContainer = block.find('.datasets-section .expand-button-container');
+    expandContainer.find('.conflicts-btn').exists().should.be.false;
+    expandContainer.find('.conflict-caption').exists().should.be.false;
   });
 });
