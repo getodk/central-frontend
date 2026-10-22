@@ -61,7 +61,7 @@ except according to the terms contained in the LICENSE file.
             <span class="icon-clock-o closing-icon"></span>
             <span>{{ $t('formState.closing') }}</span>
           </span>
-          <span class="sr-only">{{ $t('formClosingTip') }}</span>
+          <span class="sr-only">{{ formClosingTip }}</span>
         </template>
         <template v-else-if="form.publishedAt != null">
           <enketo-preview v-if="project.permits('project.update')"
@@ -93,6 +93,7 @@ import LinkIfCan from '../link-if-can.vue';
 import useReviewState from '../../composables/review-state';
 import useRoutes from '../../composables/routes';
 import { formatDateTime } from '../../util/date-time';
+import { joinSentences } from '../../util/i18n';
 import { useRequestData } from '../../request-data';
 
 export default {
@@ -150,6 +151,12 @@ export default {
       if (lastSubmission == null) return header;
       const formatted = formatDateTime(DateTime.fromISO(lastSubmission));
       return `${header}\n${formatted}`;
+    },
+    formClosingTip() {
+      return joinSentences(this.$i18n, [
+        this.$t('formClosingTip[0]'),
+        this.$t('formClosingTip[1]')
+      ]);
     }
   }
 };
@@ -235,7 +242,11 @@ export default {
       // This appears on a button linking to a fillable Form
       "fill": "Fill Form"
     },
-    "formClosingTip": "This Form is Closing and accepting its final Submissions. It is not downloadable but still accepts Submissions."
+    "formClosingTip": [
+      "This Form is Closing.",
+      // @transifexKey component.ProjectFormAccessStates.description.closing
+      "New submissions can’t be started, but submissions already in progress can still be submitted."
+    ]
   }
 }
 </i18n>
