@@ -15,9 +15,9 @@ except according to the terms contained in the LICENSE file.
     <input ref="input" v-model="modelValue" v-bind="$attrs" class="form-control"
       :placeholder="requiredLabel(placeholder, required)" :required="required"
       v-tooltip.aria-describedby="tooltip" :autocomplete="autocomplete">
+    <span class="form-label">{{ requiredLabel(placeholder, required) }}</span>
     <password-strength v-if="autocomplete === 'new-password'"
       :password="modelValue"/>
-    <span class="form-label">{{ requiredLabel(placeholder, required) }}</span>
     <slot name="after"></slot>
   </label>
 </template>
