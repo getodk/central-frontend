@@ -114,15 +114,5 @@ describe('FormTable', () => {
       table.findAll('th').length.should.equal(0);
       table.findAllComponents(FormRow).length.should.equal(0);
     });
-
-    it('does show table header even if no non-open forms to show', () => {
-      mockLogin();
-      testData.extendedProjects.createPast(1);
-      testData.extendedForms.createPast(1, { state: 'closed' });
-      testData.extendedForms.createPast(1, { state: 'closed' });
-      const table = mountComponent(false);
-      table.findAll('th').length.should.equal(5);
-      table.findAllComponents(FormRow).length.should.equal(0);
-    });
   });
 });

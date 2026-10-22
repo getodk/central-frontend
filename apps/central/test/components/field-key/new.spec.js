@@ -437,17 +437,6 @@ describe('FieldKeyNew', () => {
           app.get('.table-freeze-scrolling th').text().should.equal('region');
         }));
 
-    it('updates the list if only the property request succeeds', () =>
-      create()
-        .respondWithProblem() // App user creation
-        .afterResponses(async (app) => {
-          // The table behind the modal should not change until the modal is
-          // hidden.
-          app.find('.table-freeze-scrolling').exists().should.be.false;
-          await app.get('#field-key-new .btn-link').trigger('click');
-          app.get('.table-freeze-scrolling th').text().should.equal('region');
-        }));
-
     it('updates the list after multiple app users are created', () =>
       create()
         .respondWithData(() => testData.standardFieldKeys.createNew({

@@ -26,7 +26,7 @@ const reviewStateTag = new Map()
   .set('approved', 'tag-success')
   .set('edited', 'tag-default')
   .set('rejected', 'tag-danger');
-reviewStateTag.set('received', icons.get(null));
+reviewStateTag.set('received', reviewStateTag.get(null));
 
 export default always({
   reviewStates,

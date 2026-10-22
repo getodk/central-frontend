@@ -91,7 +91,7 @@ describe('ProjectEdit', () => {
       app.should.alert('success');
     });
 
-    it.only("updates the project's name", async () => {
+    it("updates the project's name", async () => {
       const app = await submit();
       app.get('.breadcrumb-item:last-child').text().should.equal('New Name');
     });

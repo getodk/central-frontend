@@ -183,7 +183,7 @@ defineExpose({ getRowPair });
   .actions-trigger-hover .scrolling-hover .btn-group,
   .actions-trigger-focus .btn-group:focus-within {
     left: auto;
-    right: 0px;
+    right: 10px;
   }
 
   .col-actions {

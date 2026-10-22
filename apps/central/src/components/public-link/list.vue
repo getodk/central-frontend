@@ -37,7 +37,7 @@ except according to the terms contained in the LICENSE file.
       </button>
     </page-heading>
 
-    <public-link-table v-if="dataExists" ref="table" :highlighted="highlighted"
+    <public-link-table v-if="dataExists && publicLinks.length > 0" ref="table" :highlighted="highlighted"
       @revoke="revokeModal.show({ publicLink: $event })"
       @edit="editModal.show({ publicLink: $event })"/>
     <loading :state="initiallyLoading"/>

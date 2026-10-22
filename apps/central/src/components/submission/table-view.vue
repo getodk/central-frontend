@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <submission-table v-show="odata.dataExists" ref="table"
+  <submission-table v-show="odata.dataExists && odata.value.length > 0" ref="table"
     :project-id="projectId" :xml-form-id="xmlFormId" :draft="draft" :deleted="deleted"
     :fields="fields" :awaiting-deleted-responses="awaitingResponses"
     class="paginated-table" v-on="reemitters"/>
