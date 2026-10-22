@@ -162,7 +162,8 @@ let timer: ReturnType<typeof setTimeout>;
 
 const setInteger = (num: number, amount: number) => {
 	const int = num + amount;
-	modelValue.value = int.toString();
+	const clamped = clampToRange(int);
+	props.setNumericValue(clamped);
 };
 
 const setDecimal = (num: number, amount: number) => {
@@ -175,7 +176,9 @@ const setDecimal = (num: number, amount: number) => {
 	// need to manually increment the decimal to avoid floating point errors
 	const precision = parts[1]!.length;
 	const val = num + amount;
-	modelValue.value = val.toFixed(precision);
+	const rounded = val.toFixed(precision);
+	const clamped = clampToRange(Number(rounded));
+	props.setNumericValue(clamped);
 };
 
 const spin = (amount: number) => {

@@ -105,6 +105,13 @@ describe('InputNumeric', () => {
       await decrement();
       expect(question.currentState.value).toBe(-1n);
     });
+
+    it('cannot increment past max int', async () => {
+      component = await mountComponent(0);
+      await component.get('input').setValue('999999999');
+      await increment();
+      expect(question.currentState.value).toBe(999999999n);
+    });
   });
 
   describe('decimal', () => {
@@ -140,6 +147,23 @@ describe('InputNumeric', () => {
         expect(question.currentState.value).toBe(0);
         expect(component.get('input').element.value).toBe('0,');
       });
+
+      it('buttons increment and decrement value', async () => {
+        component = await mountComponent(1);
+        await component.get('input').setValue('3,25');
+        expect(question.currentState.value).toBe(3.25);
+        await increment();
+        expect(question.currentState.value).toBe(4.25);
+        await decrement();
+        await decrement();
+        await decrement();
+        await decrement();
+        await decrement();
+        expect(question.currentState.value).toBe(-0.75);
+        await increment();
+        expect(question.currentState.value).toBe(0.25);
+        expect(component.get('input').element.value).toBe('0,25');
+      });
     });
 
     describe('fullstop separators', () => {
@@ -168,21 +192,21 @@ describe('InputNumeric', () => {
         expect(question.currentState.value).toBe(0);
         expect(component.get('input').element.value).toBe('0.');
       });
-    });
 
-    it('buttons increment and decrement value', async () => {
-      component = await mountComponent(1);
-      await component.get('input').setValue('3.25');
-      await increment();
-      expect(question.currentState.value).toBe(4.25);
-      await decrement();
-      await decrement();
-      await decrement();
-      await decrement();
-      await decrement();
-      expect(question.currentState.value).toBe(-0.75);
-      await increment();
-      expect(question.currentState.value).toBe(0.25);
+      it('buttons increment and decrement value', async () => {
+        component = await mountComponent(1);
+        await component.get('input').setValue('3.25');
+        await increment();
+        expect(question.currentState.value).toBe(4.25);
+        await decrement();
+        await decrement();
+        await decrement();
+        await decrement();
+        await decrement();
+        expect(question.currentState.value).toBe(-0.75);
+        await increment();
+        expect(question.currentState.value).toBe(0.25);
+      });
     });
   });
 });
