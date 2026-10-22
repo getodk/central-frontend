@@ -4,6 +4,7 @@ import type {
   RestoredFormInstance,
   RestoreFormInstanceInput,
 } from '../client/form/RestoreFormInstance.ts';
+import type { EditFormInstanceInput } from '../client/index.ts';
 import type { FormResource } from '../instance/resource.ts';
 import { loadForm } from './loadForm.ts';
 
@@ -14,7 +15,7 @@ export interface RestoreInstanceOptions {
 
 export const restoreInstance = async (
   formResource: FormResource,
-  input: RestoreFormInstanceInput,
+  input: EditFormInstanceInput,
   options?: RestoreInstanceOptions
 ): Promise<RestoredFormInstance> => {
   const form = await loadForm(formResource, options?.form);
