@@ -15,41 +15,36 @@ except according to the terms contained in the LICENSE file.
     <thead>
       <tr>
         <th class="col-prop-name">{{ $t('header.name') }}</th>
-        <th class="col-actions"></th>
         <th>{{ $t('header.updatedBy') }}</th>
+        <th class="col-actions"></th>
       </tr>
     </thead>
     <tbody>
       <template v-for="(property) in properties" :key="property.name">
         <tr>
           <!-- we have to show property name even if there is no associated form -->
-          <td :rowspan="property.forms.length || 1" class="col-prop-name">
+          <td class="col-prop-name">
             {{ property.name }}
           </td>
-          <td :rowspan="property.forms.length || 1" class="col-actions">
+          <td class="col-updated-by">
+             <template v-for="(form) in property.forms" :key="form.xmlFormId">
+                <div>
+                  <form-link :form="form"
+                    :to="publishedFormPath(form.projectId, form.xmlFormId)"
+                    v-tooltip.text/>
+                </div>
+              </template>
+            <div v-if="property.forms.length === 0" class="empty-update-form">{{ $t('none') }}</div>
+          </td>
+          <td class="col-actions">
             <button v-if="project.dataExists && project.verbs.has('dataset.update')" type="button"
               class="delete-button btn btn-default" :aria-label="$t('action.delete')"
               v-tooltip.aria-label @click="showDeleteConfirmation(property.name)">
               <span class="icon-trash"></span>
+              {{ $t('action.delete') }}
             </button>
           </td>
-          <td>
-            <form-link v-if="property.forms.length > 0"
-              :form="property.forms[0]"
-              :to="publishedFormPath(property.forms[0].projectId, property.forms[0].xmlFormId)"
-              v-tooltip.text/>
-            <div v-else class="empty-update-form">{{ $t('none') }}</div>
-          </td>
         </tr>
-        <template v-for="(form, index) in property.forms" :key="form.xmlFormId">
-          <tr v-if="index > 0">
-            <td>
-              <form-link :form="form"
-                :to="publishedFormPath(form.projectId, form.xmlFormId)"
-                v-tooltip.text/>
-            </td>
-          </tr>
-        </template>
       </template>
     </tbody>
   </table>
@@ -152,14 +147,6 @@ const deleteProperty = () => {
     td {
       overflow-wrap: break-word;
     }
-
-    > tbody > tr:first-child > td {
-      border-top: none;
-    }
-
-    a {
-      font-size: 16px;
-    }
   }
 
   .empty-update-form {
@@ -171,13 +158,16 @@ const deleteProperty = () => {
     width: 25%;
   }
 
+  .col-updated-by div {
+    margin: 8px 0;
+  }
+
   .col-actions {
     width: 25%;
   }
 
   .delete-button [class^="icon-"] {
     margin-right: 0;
-    color: $color-danger;
   }
 }
 </style>
