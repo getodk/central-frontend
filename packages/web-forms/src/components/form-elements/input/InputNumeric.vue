@@ -83,7 +83,7 @@ const isTooLong = (num: string) => {
 	return num.length > props.maxCharacters;
 };
 
-const santizeInput = (num: string) => {
+const sanitizeInput = (num: string) => {
 	num = num.trim().replaceAll(groupSeparator, '');
 	if (num === '-') {
 		// user has started typing a negative number - let them continue
@@ -109,7 +109,7 @@ watch(() => props.numericValue, (value) => {
 	if (temporaryUserInput.value == null) {
 		return;
 	}
-	const parsed = parseNumber(santizeInput(temporaryUserInput.value));
+	const parsed = parseNumber(sanitizeInput(temporaryUserInput.value));
 	if (parsed != value) {
 		temporaryUserInput.value = null;
 	}
@@ -132,7 +132,7 @@ const modelValue = computed<string>({
 			return;
 		}
 
-		const sanitized = santizeInput(assignedValue);
+		const sanitized = sanitizeInput(assignedValue);
 		if (!sanitized?.length) {
 			props.setNumericValue(null);
 			return;
