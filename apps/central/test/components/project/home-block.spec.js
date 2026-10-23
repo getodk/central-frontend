@@ -206,15 +206,12 @@ describe('ProjectHomeBlock', () => {
     const block = mountComponent();
     const expandContainer = block.find('.datasets-section .expand-button-container');
 
-    // there is a caption text 'hidden'
-    expandContainer.find('.conflict-caption').text().should.equal('hidden');
-
-    // conflicts are summed up for the hidden rows
-    const hiddenConflictBtn = expandContainer.find('.conflicts-btn');
-    hiddenConflictBtn.text().should.equal('6 conflicts');
+    // conflicts are summed up for the hidden rows (3 hidden datasets × 2 conflicts each = 6)
+    const hiddenConflictTag = expandContainer.find('.tag-danger');
+    hiddenConflictTag.text().should.equal('6');
 
     // conflict badge expands the rows
-    await hiddenConflictBtn.trigger('click');
+    await hiddenConflictTag.trigger('click');
     const expand = expandContainer.find('.expand-button');
     expand.text().should.equal('Show fewer of 6 total Entity Lists');
   });
@@ -230,11 +227,11 @@ describe('ProjectHomeBlock', () => {
     const expandContainer = block.find('.datasets-section .expand-button-container');
 
     // conflicts are summed up for the hidden rows
-    const hiddenConflictBtn = expandContainer.find('.conflicts-btn');
-    hiddenConflictBtn.text().should.equal('8 conflicts'); // sum of Delta & Echo
+    const hiddenConflictTag = expandContainer.find('.tag-danger');
+    hiddenConflictTag.text().should.equal('8'); // sum of Delta & Echo
 
     await block.setProps({ sortFunc: (a, b) => b.lastEntity.localeCompare(a.lastEntity) });
-    hiddenConflictBtn.text().should.equal('5 conflicts'); // sum of Bravo & Charlie
+    hiddenConflictTag.text().should.equal('5'); // sum of Bravo & Charlie
   });
 
   it('shows nothing when there is no conflict', async () => {
@@ -245,7 +242,6 @@ describe('ProjectHomeBlock', () => {
 
     // nothing is shown in conflict area when there's no conflict
     const expandContainer = block.find('.datasets-section .expand-button-container');
-    expandContainer.find('.conflicts-btn').exists().should.be.false;
-    expandContainer.find('.conflict-caption').exists().should.be.false;
+    expandContainer.find('.tag-danger').exists().should.be.false;
   });
 });

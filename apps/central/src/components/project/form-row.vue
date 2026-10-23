@@ -181,6 +181,9 @@ export default {
     padding: 4px 0px 4px 6px;
     color: #333;
     a { @include text-link; }
+     &.form-name a {
+      color: $color-action-foreground;
+    }
   }
 
   .duplicate-form-id {

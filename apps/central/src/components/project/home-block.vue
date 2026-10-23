@@ -67,10 +67,10 @@ except according to the terms contained in the LICENSE file.
             </template>
           </a>
           <template v-if="hiddenConflicts > 0">
-            <a href="#" role="button" class="btn btn-danger conflicts-btn" @click.prevent="toggleDatasetExpanded">
-              {{ $tcn('entity.conflictsCount', hiddenConflicts) }}<span class="icon-warning"></span>
+            <a href="#" role="button" @click.prevent="toggleDatasetExpanded">
+              <span class="tag tag-danger">{{ $n(hiddenConflicts) }}<span class="icon-warning"></span>
+              </span>
             </a>
-            <span class="conflict-caption">{{ $t('hidden') }}</span>
           </template>
         </div>
       </div>
@@ -205,10 +205,6 @@ export default {
     td {
       border-top: none;
     }
-
-    .form-name, .dataset-name {
-      color: $color-action-foreground;
-    }
   }
 
   .expand-button-container {
@@ -227,6 +223,9 @@ export default {
     margin-left: 5px;
   }
 
+  .icon-warning {
+    color: #888;
+  }
 
 }
 </style>

@@ -89,6 +89,10 @@ const lastEntityTooltip = computed(() => {
     padding: 4px 0px 4px 6px;
     color: #333;
 
+    &.dataset-name a {
+      color: $color-action-foreground;
+    }
+
     a {
       @include text-link;
     }
