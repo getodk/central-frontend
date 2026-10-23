@@ -53,7 +53,8 @@ jobs:
           mode: restore
 
       - name: 'Run functional e2e tests'
-        run: 'npm run test:e2e:functional:${{ matrix.browser }} -w=packages/web-forms'
+        working-directory: packages/web-forms
+        run: 'npx playwright test --project=functional-${{ matrix.browser }}'
 
       - name: 'Upload Playwright results'
         if: always()
@@ -88,7 +89,8 @@ jobs:
 
       # xvfb-run is used for visual tests to compare snapshots more accurately.
       - name: 'Run visual e2e tests'
-        run: 'xvfb-run --auto-servernum npm run test:e2e:visual:${{ matrix.browser }} -w=packages/web-forms'
+        working-directory: packages/web-forms
+        run: 'xvfb-run --auto-servernum npx playwright test --project=visual-${{ matrix.browser }}'
 
       - name: 'Upload Playwright results'
         if: always()
