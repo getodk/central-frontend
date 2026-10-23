@@ -58,7 +58,7 @@ describe('ProjectArchive', () => {
 
     it("appends (archived) to the project's name", async () => {
       const app = await submit();
-      app.get('#page-head-title').text().should.equal('My Project (archived)');
+      app.get('.breadcrumb-item:last-child').text().should.equal('My Project (archived)');
     });
 
     it('shows a success alert', async () => {

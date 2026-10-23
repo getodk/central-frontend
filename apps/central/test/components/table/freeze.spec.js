@@ -17,6 +17,28 @@ const mountComponent = (options) =>
   }));
 
 describe('TableFreeze', () => {
+  describe('row click', () => {
+    it('emits an action event with the TR target when a frozen row is clicked', async () => {
+      const data = [{ id: 1, name: 'foo' }, { id: 2, name: 'bar' }];
+      const component = mountComponent({ props: { data } });
+      const rows = component.findAll('.table-freeze-frozen tbody tr');
+      await rows[0].trigger('click');
+      const emitted = component.emitted('action');
+      emitted.length.should.equal(1);
+      emitted[0][0].target.tagName.should.eql('TR');
+    });
+
+    it('emits an action event with the TR target when a scrolling row is clicked', async () => {
+      const data = [{ id: 1, name: 'foo' }, { id: 2, name: 'bar' }];
+      const component = mountComponent({ props: { data } });
+      const rows = component.findAll('.table-freeze-scrolling tbody tr');
+      await rows[1].trigger('click');
+      const emitted = component.emitted('action');
+      emitted.length.should.equal(1);
+      emitted[0][0].target.tagName.should.eql('TR');
+    });
+  });
+
   describe('visibility of actions', () => {
     const slots = {
       'head-frozen': '<th>Actions</th>',

@@ -15,17 +15,19 @@ component that each user is assigned only one role and that further, each user
 either is an Administrator or has no role. -->
 <template>
   <div>
-    <div class="heading-with-button">
+    <page-heading :title="$t('resource.webUsers')">
+      <template #help>
+        <i18n-t tag="p" keypath="heading[0]">
+          <template #collect>
+            <doc-link to="collect-intro/">ODK Collect</doc-link>
+          </template>
+        </i18n-t>
+      </template>
       <button id="user-list-new-button" type="button" class="btn btn-primary"
         @click="createModal.show()">
         <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
       </button>
-      <i18n-t tag="p" keypath="heading[0]">
-        <template #collect>
-          <doc-link to="collect-intro/">ODK Collect</doc-link>
-        </template>
-      </i18n-t>
-    </div>
+    </page-heading>
     <table id="user-list-table" class="table">
       <thead>
         <tr>
@@ -58,6 +60,7 @@ either is an Administrator or has no role. -->
 <script>
 import DocLink from '../doc-link.vue';
 import Loading from '../loading.vue';
+import PageHeading from '../page/heading.vue';
 import UserNew from './new.vue';
 import UserResetPassword from './reset-password.vue';
 import UserRetire from './retire.vue';
@@ -71,6 +74,7 @@ export default {
   components: {
     DocLink,
     Loading,
+    PageHeading,
     UserNew,
     UserResetPassword,
     UserRetire,

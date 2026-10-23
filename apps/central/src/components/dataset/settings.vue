@@ -11,6 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="dataset-settings">
+    <page-heading :title="$t('common.tab.settings')"/>
     <div class="row">
       <div class="col-xs-6">
         <div v-if="dataset.dataExists" class="panel panel-simple">
@@ -88,6 +89,7 @@ import { useRouter } from 'vue-router';
 import DatasetOwnerOnly from './owner-only.vue';
 import DatasetPendingSubmissions from './pending-submissions.vue';
 import DatasetDelete from './delete.vue';
+import PageHeading from '../page/heading.vue';
 
 import useRoutes from '../../composables/routes';
 import { apiPaths, isProblem } from '../../util/request';

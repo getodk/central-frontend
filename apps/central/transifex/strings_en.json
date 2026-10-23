@@ -457,6 +457,10 @@
       "string": "Review",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
+    "revoke": {
+      "string": "Revoke",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "save": {
       "string": "Save",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -1760,7 +1764,7 @@
     },
     "ConfigLogin": {
       "title": {
-        "string": "Login page"
+        "string": "Login page customization"
       }
     },
     "ConfigLoginEdit": {
@@ -1863,10 +1867,13 @@
       "purgeDescription": {
         "string": "Entities are deleted after 30 days in the Trash"
       },
+      "deletedTitle": {
+        "string": "{datasetName} (Deleted entities)"
+      },
       "action": {
         "toggleDeletedEntities": {
-          "string": "{count, plural, one {{count} deleted Entity} other {{count} deleted Entities}}",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "string": "Show deleted",
+          "developer_comment": "\"deleted\" refers to deleted Entities"
         }
       },
       "analyzeDisabledDeletedData": {
@@ -2212,11 +2219,11 @@
     "DatasetShow": {
       "infoNav": {
         "connectedForms": {
-          "string": "{count, plural, one {Updated by {count} Form} other {Updated by {count} Forms}}",
+          "string": "{count, plural, one {Updating Form} other {Updating Forms}}",
           "developer_comment": "This dropdown title refers to Entity Lists that are updated by a Form."
         },
         "linkedForms": {
-          "string": "{count, plural, one {Used in {count} Form} other {Used in {count} Forms}}",
+          "string": "{count, plural, one {Referencing Form} other {Referencing Forms}}",
           "developer_comment": "This dropdown title refers to Entity Lists that are linked to a Form."
         }
       }
@@ -2683,12 +2690,6 @@
         "string": "{count, plural, one {{count} Entity in this area} other {{count} Entities in this area}}"
       }
     },
-    "EntityMetadataRow": {
-      "reviewParallelUpdates": {
-        "string": "Review parallel updates",
-        "developer_comment": "This is the text for an action, for example, the text of a button."
-      }
-    },
     "EntityResolve": {
       "title": {
         "string": "Parallel updates to “{label}”",
@@ -2767,10 +2768,6 @@
     },
     "EntityTable": {
       "header": {
-        "updatedAtAndActions": {
-          "string": "Last Updated / Actions",
-          "developer_comment": "This is the text of a column header of a table of Entities. The column shows when each Entity was last updated, as well as actions that can be taken on the Entity."
-        },
         "deletedAt": {
           "string": "Deleted at",
           "developer_comment": "Heading of the column that shows Entity deletion timestamp"
@@ -3109,10 +3106,6 @@
           "string": "Last Used",
           "developer_comment": "This is the text of a table column header."
         },
-        "lastUsedAndActions": {
-          "string": "{lastUsed} / {actions}",
-          "developer_comment": "Header for the table column that shows the last used date and action buttons."
-        },
         "configureClient": {
           "string": "Configure Client",
           "developer_comment": "Header for the table column that shows QR codes to configure data collection clients such as ODK Collect."
@@ -3274,16 +3267,6 @@
       "accessRevoked": {
         "string": "Access revoked",
         "developer_comment": "This text is shown for an App User whose access has been revoked."
-      },
-      "action": {
-        "editAppUser": {
-          "string": "Edit App User",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
-        "revokeAccess": {
-          "string": "Revoke access",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
       }
     },
     "FormAttachmentLinkDataset": {
@@ -3824,7 +3807,7 @@
       },
       "infoNav": {
         "entityLists": {
-          "string": "{count, plural, one {{count} Linked Entity List} other {{count} Linked Entity Lists}}"
+          "string": "{count, plural, one {Linked Entity List} other {Linked Entity Lists}}"
         },
         "updatedDatasets": {
           "string": "Updates",
@@ -3835,7 +3818,7 @@
           "developer_comment": "This text is shown as a header in a dropdown about related entity lists that are used as attachments by this form."
         },
         "appUsers": {
-          "string": "{count, plural, one {{count} App User assigned} other {{count} App Users assigned}}"
+          "string": "{count, plural, one {App User assigned} other {App Users assigned}}"
         }
       },
       "draftNav": {
@@ -3852,18 +3835,14 @@
       }
     },
     "FormList": {
-      "title": {
-        "string": "Forms",
-        "developer_comment": "This is a title shown above a section of the page."
+      "emptyTable": {
+        "string": "There are no Forms to show."
       },
       "action": {
         "create": {
           "string": "New",
           "developer_comment": "This is the text of a button that is used to create a new Form."
         }
-      },
-      "emptyTable": {
-        "string": "There are no Forms to show."
       },
       "alert": {
         "create": {
@@ -4082,20 +4061,24 @@
       }
     },
     "FormSubmissions": {
+      "purgeDescription": {
+        "string": "Submissions and Submission-related data are deleted after 30 days in the Trash"
+      },
+      "deletedTitle": {
+        "string": "{formName} (Deleted submissions)",
+        "developer_comment": "{formName} is the title/xmlFormId of the Form."
+      },
+      "action": {
+        "toggleDeletedSubmissions": {
+          "string": "Show deleted",
+          "developer_comment": "\"deleted\" refers to deleted Submissions"
+        }
+      },
       "analyzeDisabled": {
         "string": "OData access is unavailable due to Form encryption"
       },
       "analyzeDisabledDeletedData": {
         "string": "OData access is unavailable for deleted Submissions"
-      },
-      "purgeDescription": {
-        "string": "Submissions and Submission-related data are deleted after 30 days in the Trash"
-      },
-      "action": {
-        "toggleDeletedSubmissions": {
-          "string": "{count, plural, one {{count} deleted Submission} other {{count} deleted Submissions}}",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
       }
     },
     "FormTable": {
@@ -4397,6 +4380,11 @@
       },
       "dismissTooltip": {
         "string": "Click here to dismiss this warning for 30 days."
+      }
+    },
+    "PageHeading": {
+      "helpButtonLabel": {
+        "string": "Click to view help text"
       }
     },
     "Pagination": {
@@ -5032,16 +5020,6 @@
       }
     },
     "PublicLinkRow": {
-      "action": {
-        "edit": {
-          "string": "Edit Public Access Link",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
-        "revoke": {
-          "string": "Revoke",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
-      },
       "revoked": {
         "string": "Revoked",
         "developer_comment": "This text is shown for a Public Access Link that has been revoked. The text appears on its own and is not part of a longer sentence."
@@ -5594,10 +5572,6 @@
     },
     "SubmissionTable": {
       "header": {
-        "stateAndActions": {
-          "string": "State and actions",
-          "developer_comment": "This is the text of a table column header."
-        },
         "deletedAt": {
           "string": "Deleted at",
           "developer_comment": "Heading of the column that shows Submission deletion timestamp"
@@ -5677,12 +5651,6 @@
         "success": {
           "string": "Success! Your password has been updated."
         }
-      }
-    },
-    "UserHome": {
-      "title": {
-        "string": "User Settings",
-        "developer_comment": "This is shown as the title at the top of the page."
       }
     },
     "UserList": {

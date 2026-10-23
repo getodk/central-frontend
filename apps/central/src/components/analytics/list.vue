@@ -11,15 +11,17 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <div class="page-body-heading">
-      <p>{{ $t('analytics.alwaysImprove') }}</p>
-      <i18n-t tag="p" keypath="analytics.needFeedback.full">
-        <template #your>
-          <span>{{ $t('analytics.needFeedback.your') }}</span>
-        </template>
-      </i18n-t>
-      <p>{{ $t('heading[0]') }}</p>
-    </div>
+    <page-heading :title="$t('systemHome.tab.analytics')">
+      <template #help>
+        <p>{{ $t('analytics.alwaysImprove') }}</p>
+        <i18n-t tag="p" keypath="analytics.needFeedback.full">
+          <template #your>
+            <span>{{ $t('analytics.needFeedback.your') }}</span>
+          </template>
+        </i18n-t>
+        <p>{{ $t('heading[0]') }}</p>
+      </template>
+    </page-heading>
     <loading :state="initiallyLoading"/>
     <template v-if="dataExists">
       <analytics-form @preview="previewModal.show()"/>
@@ -41,6 +43,7 @@ import AnalyticsForm from './form.vue';
 import AnalyticsPreview from './preview.vue';
 import AuditTable from '../audit/table.vue';
 import Loading from '../loading.vue';
+import PageHeading from '../page/heading.vue';
 import PageSection from '../page/section.vue';
 
 import { apiPaths } from '../../util/request';
@@ -54,6 +57,7 @@ export default {
     AnalyticsPreview,
     AuditTable,
     Loading,
+    PageHeading,
     PageSection
   },
   setup() {
