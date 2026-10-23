@@ -215,13 +215,16 @@ class. */
 
   &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
     background-color: $color-action-background-disabled;
+    border-color: $color-action-background-disabled;
   }
 
   &:hover, &:focus, &:active:focus {
     background-color: $color-action-background-hover;
+    border-color: $color-action-background-hover;
 
     &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
       background-color: $color-action-background-disabled;
+      border-color: $color-action-background-disabled;
     }
   }
 }
@@ -233,10 +236,13 @@ class. */
 
   &:hover, &:focus, &:active:focus {
     background-color: $color-action-background;
+    border-color: $color-action-background;
+
     color: #fff;
     &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
       background-color: #fff;
       color: $color-action-background;
+      border-color: $color-action-background;
     }
   }
 
@@ -618,6 +624,7 @@ tr.uncommitted-change { background-color: #ffef67; }
   border-radius: 12px;
   border-collapse: separate;
   border-spacing: 0;
+  overflow: hidden;
 
   > thead {
     background-color: $color-table-heading-background;
@@ -627,7 +634,7 @@ tr.uncommitted-change { background-color: #ffef67; }
     }
 
     > tr > th {
-      border-bottom: $border-bottom-table-heading;
+      border-bottom: none;
       font-size: $font-size-table-heading;
       padding: $padding-table-heading;
       height: 56px;
@@ -891,7 +898,6 @@ tr.uncommitted-change { background-color: #ffef67; }
 
   > li {
     margin-bottom: -1px;
-    margin-right: 10px;
 
     > a, &.active > a {
       &, &:hover, &:focus {
@@ -908,6 +914,7 @@ tr.uncommitted-change { background-color: #ffef67; }
     }
 
     > a {
+      margin-right: 0;
       &, &:hover, &:focus {
         background-color: transparent;
       }

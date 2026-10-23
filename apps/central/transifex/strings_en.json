@@ -5700,12 +5700,6 @@
         }
       }
     },
-    "UserHome": {
-      "title": {
-        "string": "User Settings",
-        "developer_comment": "This is shown as the title at the top of the page."
-      }
-    },
     "UserList": {
       "action": {
         "create": {

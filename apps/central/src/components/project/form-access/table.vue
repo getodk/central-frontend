@@ -88,7 +88,7 @@ export default {
 
   // Space above the tables
   .table-freeze-frozen {
-    margin-top: 70px;
+    margin-top: 50px;
 
     &.no-field-keys {
       margin-top: 0;
@@ -97,13 +97,11 @@ export default {
   .table-freeze-scrolling-container {
     // Using padding rather than margin so that the rotated column header text
     // does not overflow the container, which would cause the text to be hidden.
-    padding-top: 70px;
+    padding-top: 50px;
   }
 
   .table {
-    th {
-      height: 33px;
-    }
+    overflow: visible;
 
     td {
       height: 51px;

@@ -82,12 +82,12 @@ const hideHelp = () => {
   font-size: 18px;
 
   &:hover {
-    color: $color-accent-primary;
+    color: $color-action-foreground;
   }
 
   &:focus {
     outline: none;
-    color: $color-accent-primary;
+    color: $color-action-foreground;
   }
 }
 
