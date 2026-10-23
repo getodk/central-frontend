@@ -2810,6 +2810,9 @@
         }
       },
       "alert": {
+        "invalidUUID": {
+          "string": "Invalid UUID “{value}”."
+        },
         "blankLabel": {
           "string": "Missing label."
         },
@@ -2856,7 +2859,7 @@
       },
       "missingLabel": {
         "title": {
-          "string": "A {label} property is required",
+          "string": "A {label} property is required for new Entities",
           "developer_comment": "{label} will have the text \"label\" and refers to the \"label\" property. The name of the property is not translated."
         },
         "description": {
