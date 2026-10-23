@@ -17,7 +17,7 @@ import {
 import type { FormStateSuccessResult } from '@getodk/web-forms/lib/init/form-state.ts';
 import { initializeFormState } from '@getodk/web-forms/lib/init/initialize-form-state.ts';
 import { loadFormState } from '@getodk/web-forms/lib/init/load-form-state';
-import type { EditInstanceOptions, FormOptions, RestoreInstanceOptions } from '@getodk/web-forms/lib/init/load-form-state.ts';
+import type { AutosaveOptions, EditInstanceOptions, FormOptions, RestoreInstanceOptions } from '@getodk/web-forms/lib/init/load-form-state.ts';
 import { useNavigationTarget } from '@getodk/web-forms/lib/useNavigationTarget.ts';
 import type { RevealViolations } from '@getodk/web-forms/lib/useRevealViolations.ts';
 import { updateSubmittedFormState } from '@getodk/web-forms/lib/init/update-submitted-form-state.ts';
@@ -121,6 +121,7 @@ type OdkWebFormEmits = {
 		submissionPayload: ChunkedInstancePayload,
 		callback: HostSubmissionResultCallback,
 	];
+	updated: [submissionPayload: MonolithicInstancePayload];
 };
 
 /**
@@ -250,6 +251,20 @@ onErrorCaptured(err => {
 	}
 });
 
+const registerAutosaveListener = () => {
+	if (isEmitSubscribed('onUpdated')) {
+		setTimeout(async () => {
+			if (!state.value?.root) {
+				return;
+			}
+			const payload = await state.value.root.prepareInstancePayload({
+				payloadType: 'monolithic',
+			});
+			emit('updated', payload);
+		}, 5000); // TODO needs to be reactive listener
+	};
+};
+
 watch(
 	() => state.value,
 	(newState) => {
@@ -275,6 +290,7 @@ const init = async () => {
 		instanceDefaults: props.instanceDefaults,
 		deviceID: props.deviceId
 	});
+	registerAutosaveListener();
 	emit('loaded');
 };
 

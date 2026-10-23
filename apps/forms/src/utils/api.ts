@@ -7,6 +7,7 @@ export interface Form {
   enketoOnceId?: string;
   draft: boolean;
   webformsEnabled: boolean;
+  autosaveEnabled: boolean;
   once: boolean;
 }
 
@@ -28,6 +29,7 @@ interface BackendFormResponseBody {
   publishedAt: string;
   enketoOnceId: string;
   webformsEnabled: string;
+  autosaveEnabled: string;
 }
 
 interface BackendAttachmentResponseBody {
@@ -109,6 +111,7 @@ const getForm = async (url: string): Promise<Form> => {
     draft: !result.publishedAt,
     enketoOnceId: result.enketoOnceId,
     webformsEnabled: !!result.webformsEnabled,
+    autosaveEnabled: !!result.autosaveEnabled,
     once: false,
   };
 };

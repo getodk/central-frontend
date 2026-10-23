@@ -253,10 +253,17 @@ const editInstanceOptions = computed(() => {
 });
 
 const restoreInstanceOptions = computed(() => {
-  return {
-    resolveInstance: () => '<data id="simple" version="&amp;test"><meta><instanceID></instanceID></meta><first_name>gareth</first_name><city>toronto</city></data>'
-  };
+  if (props.form.autosaveEnabled) {
+    return {
+      resolveInstance: () => '<data id="simple" version="&amp;test"><meta><instanceID></instanceID></meta><first_name>gareth</first_name><city>toronto</city></data>'
+    };
+  }
+  return;
 });
+
+const storeAutosaveUpdate = (instance) => {
+  console.log(instance);
+};
 
 const alreadySubmittedOnce = () => {
   return props.form.once && props.form.enketoOnceId && hasSubmitted(props.form.enketoOnceId);
@@ -294,7 +301,9 @@ onMounted(async () => {
     :last-saved-xml="lastSavedXml"
     @loaded="webFormLoaded"
     @languageSelected="setLocale"
-    @submit="handleSubmit"/>
+    @submit="handleSubmit"
+    v-on="props.form.autosaveEnabled ? { updated: storeAutosaveUpdate } : {}" 
+    />
 
   <Dialog modal :visible="!!visibleModal" :draggable="false" :closable="visibleModal?.hideable" @update:visible="visibleModal = null">
 		<template #header>

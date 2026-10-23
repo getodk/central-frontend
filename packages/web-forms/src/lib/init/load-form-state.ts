@@ -21,10 +21,6 @@ import type {
   InstantiableForm,
 } from './form-state.ts';
 
-import { constants, type InstanceData } from '@getodk/xforms-engine';
-
-const { INSTANCE_FILE_NAME, INSTANCE_FILE_TYPE } = constants;
-
 export interface FormOptions {
   readonly fetchFormAttachment: FetchFormAttachment;
   readonly lastSavedXml?: string;
@@ -47,6 +43,10 @@ export interface RestoreInstanceOptions {
   // TODO expand options
   // readonly attachmentFileNames: readonly string[];
   // readonly resolveAttachment: ResolveInstanceAttachment;
+}
+
+export interface AutosaveOptions {
+	saveInstance: () => {}
 }
 
 /**
@@ -114,6 +114,7 @@ interface LoadFormStateOptions {
   readonly form: FormOptions;
   readonly editInstance?: EditInstanceOptions | null;
   readonly restoreInstance?: RestoreInstanceOptions | null;
+  readonly autosave?: AutosaveOptions;
   readonly deviceID?: string;
   readonly preloadProperties?: PreloadProperties;
   readonly instanceDefaults?: InstanceDefaults;

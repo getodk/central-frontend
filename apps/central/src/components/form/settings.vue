@@ -55,6 +55,10 @@ except according to the terms contained in the LICENSE file.
                     </template>
                   </i18n-t>
                 </label>
+                <label class="autosave">
+                  <input name="autosaveEnabled" type="checkbox" :disabled="!webformsEnabled" v-model="autosaveEnabled"/>
+                  <span>{{ $t('webFormsSetting.autosaveSetting') }}</span>
+                </label>
               </div>
               <div class="radio">
                 <label>
@@ -103,6 +107,7 @@ import PageHeading from '../page/heading.vue';
 
 import useRoutes from '../../composables/routes';
 import { modalData } from '../../util/reactivity';
+import { apiPaths } from '../../util/request';
 import { useRequestData } from '../../request-data';
 
 defineOptions({
@@ -130,6 +135,27 @@ const afterDelete = () => {
 const webformsEnabled = ref(form.webformsEnabled);
 watch(() => form.dataExists, () => {
   webformsEnabled.value = form.webformsEnabled;
+});
+
+const autosaveEnabled = ref(form.autosaveEnabled);
+watch(() => form.dataExists, () => {
+  autosaveEnabled.value = form.autosaveEnabled;
+});
+
+watch(autosaveEnabled, () => {
+  form.request({
+    method: 'PATCH',
+    url: apiPaths.form(form.projectId, form.xmlFormId),
+    data: { autosaveEnabled: autosaveEnabled.value },
+    patch: ({ data }) => {
+      form.updatedAt = data.updatedAt;
+      form.autosaveEnabled = data.autosaveEnabled;
+    }
+  })
+    .then(() => {
+      // TODO toast?
+    })
+    .catch(noop);
 });
 
 const afterSettingChanged = () => {
@@ -188,6 +214,12 @@ const hideAndReset = () => {
         }
       }
     }
+
+    .autosave {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
   }
 }
 </style>
@@ -220,6 +252,7 @@ const hideAndReset = () => {
         "full": "A modern experience that will replace Enketo over time. {preview}.",
         "preview": "See a preview"
       },
+      "autosaveSetting": "Autosave responses if browser closes or refreshes. Sensitive data may be retained in saved responses.",
       // Success message when Enketo is selected as web form technology. {formName} is replaced with the name of the Form
       "enketoSelected": "You’re now using Enketo to fill out, preview and edit your “{formName}” form.",
       // Success message when ODK Web Forms is selected as web form technology. {formName} is replaced with the name of the Form
