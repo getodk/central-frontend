@@ -70,7 +70,7 @@ except according to the terms contained in the LICENSE file.
           {{ $t('offlineUpdate') }}
         </span>
       </template>
-      <template v-else-if="entry.action === 'entity.bulk.create'">
+      <template v-else-if="entry.action === 'entity.bulk.upsert'">
         <span class="icon-cloud-upload"></span>
         <div class="bulk-event">
           <i18n-t keypath="title.entity.create.submission">
@@ -189,7 +189,7 @@ const { entity } = useRequestData();
 // Allow titles that contain more than one string to wrap.
 const wrapTitle = computed(() => {
   const { action } = props.entry;
-  return action === 'submission.create' || action === 'entity.create' || action === 'entity.bulk.create' || action === 'entity.update.version';
+  return action === 'submission.create' || action === 'entity.create' || action === 'entity.bulk.upsert' || action === 'entity.update.version';
 });
 
 // submission.create, entity.update.version

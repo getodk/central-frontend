@@ -166,20 +166,6 @@ export const odkThemePreset = definePreset(Aura, {
         },
       },
     },
-    slider: {
-      colorScheme: {
-        light: {
-          handle: {
-            background: '{primary.500}',
-            hoverBackground: '{primary.300}',
-            content: {
-              background: '{primary.500}',
-              hoverBackground: '{primary.300}',
-            },
-          },
-        },
-      },
-    },
     colorpicker: {
       colorScheme: {
         light: {

@@ -60,7 +60,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-##### Appearances<br/>🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜ 56\%
+##### Appearances<br/>🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜ 58\%
 
   </summary>
   <br/>
@@ -74,7 +74,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
 | thousands-sep                                                   |    ✅    |
 | bearing                                                         |          |
 | [vertical](https://github.com/getodk/web-forms/issues/271)      |          |
-| [no-ticks](https://github.com/getodk/web-forms/issues/271)      |          |
+| [no-ticks](https://github.com/getodk/web-forms/issues/271)      |    ✅    |
 | picker                                                          |          |
 | [rating](https://github.com/getodk/web-forms/issues/711)        |    ✅    |
 | new                                                             |          |
@@ -120,7 +120,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-##### Parameters<br/>🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜ 61\%
+##### Parameters<br/>🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜ 73\%
 
   </summary>
   <br/>
@@ -134,12 +134,14 @@ This section is auto generated. Please update `feature-matrix.json` and then run
 | rows                                                                                                                               |    ✅    |
 | geopoint capture-accuracy,<br/>warning-accuracy, allow-mock-accuracy                                                               |    ✅    |
 | range start, end, step                                                                                                             |    ✅    |
+| range tick_interval                                                                                                                |    ✅    |
 | [image max-pixels](https://github.com/getodk/web-forms/issues/397)                                                                 |    ✅    |
 | audio quality                                                                                                                      |          |
 | Audit: location-priority,<br/>location-min-interval, location-max-age,<br/>track-changes, track-changes-reasons,<br/>identify-user |          |
 | [geotrace/shape incremental=true](https://github.com/getodk/web-forms/issues/562)                                                  |          |
 | [geo reference-geometry](https://github.com/getodk/web-forms/issues/924)                                                           |          |
-| range labels, placeholder                                                                                                          |          |
+| [range labels](https://github.com/getodk/web-forms/issues/845)                                                                     |    ✅    |
+| [range placeholder](https://github.com/getodk/web-forms/issues/940)                                                                |    ✅    |
 
 </details>
 
@@ -173,7 +175,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-##### Descriptions and annotations<br/>🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜ 75\%
+##### Descriptions and annotations<br/>🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜ 83\%
 
   </summary>
   <br/>
@@ -182,7 +184,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
 | -------------------------------------------------------------- | :------: |
 | label                                                          |    ✅    |
 | hint                                                           |    ✅    |
-| [guidance hint](https://github.com/getodk/web-forms/issues/53) |          |
+| [guidance hint](https://github.com/getodk/web-forms/issues/53) |    ✅    |
 | form translations                                              |    ✅    |
 | form translations with ref to other<br/>field                  |    ✅    |
 | Markdown                                                       |    ✅    |

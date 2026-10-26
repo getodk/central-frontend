@@ -14,8 +14,11 @@ import {
   title,
 } from '@getodk/common/test-utils/xform-dsl/index.ts';
 import { describe, expect, it } from 'vitest';
-import { intAnswer } from '../scenario/answer/ExpectedIntAnswer.ts';
 import { Scenario } from '../scenario/jr/Scenario.ts';
+import {
+  ANSWER_CONSTRAINT_VIOLATED,
+  ANSWER_OK,
+} from '../scenario/jr/validation/ValidateOutcome.ts';
 
 // Ported from JavaRosa TriggerableDagTest.java, region Cycles
 describe('Computation cycle detection', () => {
@@ -135,18 +138,6 @@ describe('Computation cycle detection', () => {
     });
   });
 
-  /**
-   * **PORTING NOTES**
-   *
-   * A self-referencing `constraint` is not a cycle: JavaRosa excludes
-   * `constraint` from cycle analysis, and so do we. The passing test checks
-   * that such a form loads.
-   *
-   * The two failing tests exercise constraint *value* behavior. Their
-   * ported assertions contradict each other (after answering 5, the answer
-   * can be neither blank nor 20). They stay marked failing until that
-   * behavior is revisited.
-   */
   describe('self references in `constraint` (exempt from cycle detection)', () => {
     const selfReferencingConstraintForm = buildFormForDagCyclesCheck(
       bind('/data/count').type('int').constraint('. > 10')
@@ -156,21 +147,18 @@ describe('Computation cycle detection', () => {
       await initScenario(selfReferencingConstraintForm);
     });
 
-    it.fails('supports self references in constraints', async () => {
+    it('supports self references in constraints', async () => {
       const scenario = await initScenario(selfReferencingConstraintForm);
-
       scenario.next('/data/count');
-      scenario.answer(5);
 
-      expect(scenario.answerOf('/data/count').getValue()).toBe('');
+      scenario.answer(5);
+      expect(scenario.getValidationOutcome().outcome).toBe(ANSWER_CONSTRAINT_VIOLATED);
 
       scenario.answer(20);
-
-      expect(scenario.answerOf('/data/count')).toEqualAnswer(intAnswer(20));
+      expect(scenario.getValidationOutcome().outcome).toBe(ANSWER_OK);
 
       scenario.answer(5);
-
-      expect(scenario.answerOf('/data/count')).toEqualAnswer(intAnswer(20));
+      expect(scenario.getValidationOutcome().outcome).toBe(ANSWER_CONSTRAINT_VIOLATED);
     });
   });
 

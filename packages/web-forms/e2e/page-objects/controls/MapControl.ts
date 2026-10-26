@@ -1,11 +1,14 @@
 import { expect, Locator, Page } from '@playwright/test';
-import { expectScreenshot } from '../../screenshot.ts';
+import { expectFullScreenScreenshot, expectScreenshot } from '../../screenshot.ts';
+
+const ANIMATION_TIME = 1000; // Map has a default of 1s rendering and animation time
+const GEOLOCATION_DEBOUNCE_TIME = 500;
+const FLY_TO_CURRENT_LOCATION_TIME = GEOLOCATION_DEBOUNCE_TIME + ANIMATION_TIME * 2;
 
 export class MapControl {
   private readonly MAP_COMPONENT_SELECTOR = '.map-block-component';
   private readonly MAP_CONTAINER_SELECTOR = '.map-container';
   private readonly MAP_SELECTOR = '.map-block';
-  private readonly ANIMATION_TIME = 1000; // Map has a default of 1s rendering and animation time
 
   private readonly page: Page;
 
@@ -42,6 +45,7 @@ export class MapControl {
    * @param moveY Pixels. Relative to the map component center.
    */
   async panMap(mapComponent: Locator, moveX: number, moveY: number) {
+    const PAN_RELEASE_DELAY = 150;
     await mapComponent.scrollIntoViewIfNeeded();
     const mapContainer = mapComponent.locator(this.MAP_CONTAINER_SELECTOR);
     const box = await mapContainer.boundingBox();
@@ -55,7 +59,7 @@ export class MapControl {
     await this.page.mouse.move(centerX, centerY);
     await this.page.mouse.down();
     await this.page.mouse.move(centerX + moveX, centerY + moveY, { steps: 40 });
-
+    await this.page.waitForTimeout(PAN_RELEASE_DELAY);
     await this.page.mouse.up();
   }
 
@@ -81,7 +85,7 @@ export class MapControl {
     for (let i = 0; i < times; i++) {
       await button.click();
       // Allows reaching the expected zoom level before zooming again for consistent results.
-      await this.page.waitForTimeout(this.ANIMATION_TIME);
+      await this.page.waitForTimeout(ANIMATION_TIME);
     }
   }
 
@@ -91,7 +95,7 @@ export class MapControl {
     for (let i = 0; i < times; i++) {
       await button.click();
       // Allows reaching the expected zoom level before zooming again for consistent results.
-      await this.page.waitForTimeout(this.ANIMATION_TIME);
+      await this.page.waitForTimeout(ANIMATION_TIME);
     }
   }
 
@@ -105,8 +109,7 @@ export class MapControl {
     const button = mapComponent.locator('button.zoom-current-location');
     await expect(button).toBeVisible();
     await button.click();
-    // Wait for the current location icon to appear on the map.
-    await this.page.waitForTimeout(this.ANIMATION_TIME);
+    await this.page.waitForTimeout(FLY_TO_CURRENT_LOCATION_TIME);
   }
 
   async toggleFullScreen(mapComponent: Locator) {
@@ -122,6 +125,8 @@ export class MapControl {
   async exitFullScreen(mapComponent: Locator) {
     await this.page.keyboard.press('Escape');
     await expect(mapComponent.locator('.map-full-screen')).not.toBeVisible();
+    // Leaving full screen refits the map to its features with an animation.
+    await this.page.waitForTimeout(ANIMATION_TIME);
   }
 
   /**
@@ -163,8 +168,7 @@ export class MapControl {
     const button = mapComponent.locator('.map-overlay').getByText('Get location');
     await expect(button).toBeVisible();
     await button.click();
-    // Wait for the current location icon to appear on the map.
-    await this.page.waitForTimeout(this.ANIMATION_TIME);
+    await this.page.waitForTimeout(FLY_TO_CURRENT_LOCATION_TIME);
   }
 
   async closeProperties(mapComponent: Locator) {
@@ -180,19 +184,41 @@ export class MapControl {
     await expect(error.locator('span')).toHaveText(expectedMessage);
   }
 
-  async expectMapScreenshot(mapComponent: Locator, screenshotName: string, isFullScreen = false) {
+  // The map can stop redrawing on the frame where its last tile arrived, still showing tiles from other zoom
+  // levels. Resizing it by a pixel and back makes it draw a final frame with the tiles it has.
+  private async redrawMap(map: Locator) {
+    await map.evaluate(async (element) => {
+      const waitForNextPaint = () =>
+        new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      element.style.width = 'calc(100% - 1px)';
+      await waitForNextPaint();
+      element.style.width = '';
+      await waitForNextPaint();
+    });
+  }
+
+  private async waitForMapToSettle() {
     // It cannot disable map's JS animations. So setting timeout.
-    await this.page.waitForTimeout(this.ANIMATION_TIME);
-    const width = isFullScreen ? 1280 : 802;
-    const height = isFullScreen ? 720 : 507;
+    await this.page.waitForTimeout(ANIMATION_TIME);
+    await this.page.waitForLoadState('networkidle');
+  }
+
+  async expectMapScreenshot(mapComponent: Locator, screenshotName: string, isFullScreen = false) {
     const map = mapComponent.locator(this.MAP_CONTAINER_SELECTOR);
+    await this.waitForMapToSettle();
+    await this.redrawMap(map);
+
+    if (isFullScreen) {
+      await expectFullScreenScreenshot(this.page, map, screenshotName);
+      return;
+    }
+
     await expectScreenshot({
       page: this.page,
       locator: map,
       screenshotName,
-      width,
-      height,
-      animationTime: this.ANIMATION_TIME,
+      width: 802,
+      height: 507,
     });
   }
 }

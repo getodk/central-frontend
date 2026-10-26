@@ -44,14 +44,14 @@ let fractionalDigits: FractionalDigitOptions;
  */
 type NumericInputMode = 'decimal' | 'numeric';
 
-let inputMode: NumericInputMode;
+let inputmode: NumericInputMode;
 
 if (props.isDecimal) {
 	fractionalDigits = { min: 0, max: 13 };
-	inputMode = 'decimal';
+	inputmode = 'decimal';
 } else {
 	fractionalDigits = { min: 0, max: 0 };
-	inputMode = 'numeric';
+	inputmode = 'numeric';
 }
 
 /**
@@ -120,8 +120,8 @@ const onInput = (event: InputNumberInputEvent) => {
 		:max-fraction-digits="fractionalDigits.max"
 		:use-grouping="node.appearances['thousands-sep']"
 		:pt="{
-			input: {
-				root: { inputMode }
+			pcInputText: {
+				root: { inputmode }
 			}
 		}"
 		@input="onInput"

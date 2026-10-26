@@ -240,12 +240,15 @@ describe('FormRow', () => {
       actions.text().should.be.empty;
     });
 
-    it('shows the correct action (closing note but no link) for a closing form', () => {
+    it('shows the correct action (closing note but no link) for a closing form', async () => {
       mockLogin();
       testData.extendedForms.createPast(1, { state: 'closing' });
-      const actions = mountComponent().get('.actions');
-      actions.get('span').text().should.equal('Closing');
-      actions.find('.closing-icon').exists().should.be.true;
+      const span = mountComponent().get('.actions span');
+      span.text().should.equal('Closing');
+      span.find('.closing-icon').exists().should.be.true;
+      await span.should.have.tooltip(text => {
+        text.should.startWith('This Form is Closing. New submissions can’t be started');
+      });
     });
 
     it('shows the preview button to an administrator', () => {

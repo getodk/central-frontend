@@ -113,7 +113,11 @@ const setDocumentTitle = (formConfig: Form) => {
 const fetchFormConfig = async (): Promise<Form> => {
   if (enketoId.value) {
     try {
-      return await getFormByEnketoId(enketoId.value, st.value);
+      const form = await getFormByEnketoId(enketoId.value, st.value);
+      if (form.state !== 'open') {
+        throw new RequestError('Form not found', 404);
+      }
+      return form;
     } catch(e) {
       if (st.value && e instanceof RequestError && (e.statusCode === 401.2 || e.statusCode === 403.1)) {
         // a public form with an invalid st or revoked enketoId should show as form not found
@@ -182,7 +186,7 @@ const hasAccess = (project: Project, form: Form) => {
     return false;
   }
 
-  if (!permits(project, ['form.read']) && permits(project, ['open_form.read']) && form.state !== 'open') {
+  if (route.name !== 'SubmissionEdit' && route.name !== 'DraftSubmissionNew' && form.state !== 'open') {
     return false;
   }
 

@@ -1,52 +1,74 @@
 <script lang="ts" setup>
+import MarkdownBlock from '@getodk/web-forms/components/common/MarkdownBlock.vue';
+import ControlText from '@getodk/web-forms/components/form-elements/ControlText.vue';
+import RangeSlider from '@getodk/web-forms/components/form-elements/range/RangeSlider.vue';
+import {
+	getDecimalPlaces,
+	getRangePlaceholder,
+	getRangeScale,
+	getRangeTicks,
+	placeLabelsOnTicks,
+	TRACK_END,
+	TRACK_START,
+} from '@getodk/web-forms/components/form-elements/range/range-scale.ts';
 import type { AnyRangeNode } from '@getodk/xforms-engine';
 import Rating from 'primevue/rating';
 import { computed } from 'vue';
-import ControlText from '../ControlText.vue';
-import RangeSlider from './RangeSlider.vue';
 
-interface RangeControlProps {
-	readonly node: AnyRangeNode;
-}
+const DECIMAL_POINT_LENGTH = 1;
 
-const props = defineProps<RangeControlProps>();
-
-defineEmits(['update:modelValue', 'change']);
+const props = defineProps<{ readonly node: AnyRangeNode }>();
 
 const { bounds } = props.node.definition;
 const start = Number(bounds.start);
 const end = Number(bounds.end);
 const step = Number(bounds.step);
+const orientation = props.node.appearances.vertical ? 'vertical' : 'horizontal';
+const isVertical = orientation === 'vertical';
+const hasTicks = !props.node.appearances['no-ticks'];
 
-const numberValue = computed((): number | undefined => {
-	const { value } = props.node.currentState;
+const scale = getRangeScale({
+	start,
+	end,
+	step,
+	tickInterval: props.node.nodeOptions.tickInterval,
+});
+const placeholder = getRangePlaceholder(scale, props.node.nodeOptions.placeholder);
 
-	if (value == null) {
-		// For some reason, PrimeVue is both strict and wrong about what nullish
-		// types it accepts?
-		return;
-	}
+// Room for the longest value, so the track doesn't move.
+const valueLength =
+	Math.max(String(start).length, String(end).length) + getDecimalPlaces(step) + DECIMAL_POINT_LENGTH;
 
-	if (typeof value === 'bigint') {
-		return Number(value);
-	}
-
-	return value;
+const ticks = getRangeTicks(scale);
+const labelLayout = computed(() => {
+	return placeLabelsOnTicks(ticks, props.node.currentState.tickLabels, !hasTicks);
 });
 
-const isUnset = computed(() => numberValue.value == undefined);
+const labelTracks = computed(() => {
+	// Vertical rows go from end (top) to start (bottom), so the tracks are reversed and the template
+	// counts label lines from the bottom with negative line numbers.
+	const tracks = labelLayout.value.trackSizes.map((size) => `minmax(0, ${size}fr)`);
+	if (isVertical) {
+		tracks.reverse();
+	}
+	return tracks.join(' ');
+});
 
-const setValue = (value: number) => {
-	props.node.setValue(value);
-};
+const numberValue = computed(() => {
+	const { value } = props.node.currentState;
+	if (value == null) {
+		return;
+	}
+	return Number(value);
+});
 
-const orientation = props.node.appearances.vertical ? 'vertical' : 'horizontal';
+const setValue = (value: number) => props.node.setValue(value);
 </script>
 
 <template>
 	<ControlText :question="node" />
 
-	<template v-if="props.node.appearances.rating">
+	<template v-if="node.appearances.rating">
 		<Rating
 			:id="node.nodeId"
 			:disabled="node.currentState.readonly"
@@ -57,215 +79,168 @@ const orientation = props.node.appearances.vertical ? 'vertical' : 'horizontal';
 	</template>
 
 	<template v-else>
-		<div :class="['range-control-container', orientation, { 'range-unset': isUnset }]">
+		<div :class="['range-control-container', orientation]" :style="{ '--label-tracks': labelTracks, '--value-length': valueLength }">
 			<div class="range-value">
-				<span v-if="!isUnset">{{ numberValue }}</span>
+				<span v-if="numberValue != null">{{ numberValue }}</span>
 			</div>
-			<RangeSlider
-				:id="node.nodeId"
-				:disabled="node.currentState.readonly"
-				:min="start"
-				:max="end"
-				:step="step"
-				:orientation="orientation"
-				:model-value="numberValue"
-				@update:model-value="setValue"
-			/>
-			<div class="range-bound range-min">
-				{{ start }}
-			</div>
-			<div class="range-bound range-max">
-				{{ end }}
+
+			<div class="range-track-frame">
+				<RangeSlider
+					:id="node.nodeId"
+					:disabled="node.currentState.readonly"
+					:scale="scale"
+					:orientation="orientation"
+					:ticks="hasTicks ? ticks : []"
+					:model-value="numberValue"
+					:placeholder="placeholder"
+					@update:model-value="setValue"
+				/>
+
+				<div class="range-bounds">
+					<div class="range-bound range-min">
+						{{ start }}
+					</div>
+
+					<div class="range-bound range-max">
+						{{ end }}
+					</div>
+				</div>
+
+				<div v-if="labelLayout.labels.length > 0" class="range-tick-labels">
+					<div
+						v-for="tickLabel in labelLayout.labels"
+						:key="tickLabel.ratio"
+						:class="[
+							'range-tick-label',
+							{ 'at-start': tickLabel.ratio === TRACK_START, 'at-end': tickLabel.ratio === TRACK_END },
+						]"
+						:style="
+							isVertical
+								? { gridRow: `-${tickLabel.endLine} / -${tickLabel.startLine}` }
+								: { gridColumn: `${tickLabel.startLine} / ${tickLabel.endLine}` }
+						"
+					>
+						<MarkdownBlock v-for="elem in tickLabel.label.formatted" :key="elem.id" :elem="elem" />
+					</div>
+				</div>
 			</div>
 		</div>
 	</template>
 </template>
 
 <style scoped lang="scss">
-// For now, PrimeVue's `Slider` styles are augmented to resemble current MUI
-// presentation of the same component.
-//
-// There are some functional limitations we'll need to address—either by
-// extending the base component from PrimeVue, or by shopping around for another
-// implementation. Top of mind:
-//
-// - Ticks are not supported. I spent more time than I'd like on this, but it's
-//   non-trivial to integrate with PrimeVue's styling. I backed out due to the
-//   complexity.
-//
-// - Should we flip either of the following in RTL languages?
-//
-//    - Horizontal direction of the control
-//    - Position of labels for vertical appearance
-//
-// It's also worth considering using the native HTML `<input type="range">`.
-// That has built-in support for ticks (via `<datalist>`, see
-// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/range#adding_tick_marks).
-//
-// The example on that page for labeling ticks may also suggest another way to
-// address presentation of the actual value (which would be more mobile-friendly
-// as well).
+@use 'primeflex/core/_variables.scss' as pf;
 
 .range-control-container {
-	--track-size: 0.25rem;
-	--track-value-emphasis: 0.125rem;
-	--thumb-size: 1.25rem;
-	--tick-size: 0.125rem;
-	--gutter-width: 2lh;
-
-	position: relative;
-
-	.range-bound {
-		position: absolute;
-		line-height: 1;
-		font-size: var(--odk-hint-font-size);
-		color: var(--odk-muted-text-color);
-	}
+	--track-gap: var(--odk-spacing-xl);
+	--labels-max-width: 50%;
 
 	.range-value {
 		font-weight: bold;
 	}
 
-	&.horizontal {
-		height: var(--track-size);
-		padding: var(--gutter-width) var(--odk-spacing-m);
-
-		.range-bound {
-			bottom: 0;
-		}
-
-		.range-min {
-			left: 0;
-		}
-
-		.range-max {
-			right: 0;
-		}
-
-		.range-value {
-			text-align: center;
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-		}
+	.range-bound,
+	.range-tick-labels {
+		font-size: var(--odk-hint-font-size);
+		line-height: 1.2;
 	}
 
-	&.vertical {
+	.range-tick-labels {
+		overflow-wrap: anywhere;
+	}
 
-		width: var(--track-size);
-		padding: var(--odk-spacing-m) var(--gutter-width);
-
-		// Vertical appearance is centered. Consistent with
-		// https://docs.getodk.org/form-question-types/#vertical-range-widget
-		margin: 0 auto;
-
-		.range-bound {
-			right: 0;
-			width: 1rem;
-		}
-
-		.range-min {
-			bottom: 0;
-		}
-
-		.range-max {
-			top: 0;
-		}
+	&.horizontal {
+		padding: 0 var(--odk-spacing-m);
 
 		.range-value {
-			display: flex;
-			position: absolute;
-			top: 0;
-			bottom: 0;
-			align-items: center;
-			right: var(--gutter-width);
-			padding-right: var(--odk-spacing-l);
+			min-height: 2lh;
+			text-align: center;
+		}
 
-			span {
-				display: inline-block;
-				width: var(--gutter-width);
-				text-align: right;
+		.range-bounds {
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-end;
+			min-height: 2lh;
+		}
+
+		// Each label wraps within its own columns, so the row is as tall as the tallest label.
+		.range-tick-labels {
+			display: grid;
+			grid-template-columns: var(--label-tracks);
+			margin-top: var(--odk-spacing-s);
+		}
+
+		.range-tick-label {
+			grid-row: 1;
+			text-align: center;
+
+			&.at-start {
+				text-align: start;
+			}
+
+			&.at-end {
+				text-align: end;
 			}
 		}
 	}
-}
 
-// = track (full-width; full-height in vertical orientation)
-.p-slider {
-	background-color: var(--odk-primary-light-background-color);
+	// The columns are the selected value, track, bounds and labels. The rows grow in proportion
+	// until every label fits next to its tick.
+	&.vertical {
+		display: grid;
+		grid-template-columns: max-content max-content max-content;
+		grid-template-rows: var(--label-tracks);
+		grid-auto-columns: fit-content(var(--labels-max-width));
+		justify-content: center;
+		column-gap: var(--track-gap);
+		padding: var(--odk-spacing-m) 0;
 
-	&::before { // Increasing range hit target.
-		content: "";
-		position: absolute;
-		inset: calc(var(--thumb-size) * -1);
-	}
-
-	// = emphasized range between `min` and current value
-	:deep(.p-slider-range) {
-		border-radius: calc((var(--track-size) + var(--track-value-emphasis)) / 2);
-	}
-
-	&.p-slider-horizontal {
-		height: var(--track-size);
-		border-radius: calc(var(--track-size) / 2);
-
-		:deep(.p-slider-range) {
-			top: calc(var(--track-value-emphasis) * -0.5);
-			height: calc(var(--track-size) + var(--track-value-emphasis));
+		.range-track-frame,
+		.range-bounds,
+		.range-tick-labels {
+			display: contents;
 		}
-	}
 
-	&.p-slider-vertical {
-		// No idea what this actually should be! I picked a size that "felt right".
-		//
-		// TODO: if we do want a fixed height, we should account for dynamic
-		// viewport height, form header height, any other constraining factors(?)
-		height: 12rem;
-		width: var(--track-size);
-		border-radius: calc(var(--track-size) / 2);
-
-		:deep(.p-slider-range) {
-			left: calc(var(--track-value-emphasis) * -0.5);
-			width: calc(var(--track-size) + var(--track-value-emphasis));
+		.range-value {
+			grid-area: 1 / 1 / -1;
+			justify-self: end;
+			align-self: center;
+			min-width: calc(var(--value-length) * 1ch);
+			text-align: end;
 		}
-	}
 
-	// ≈ `<input type="range">` "thumb"
-	:deep(.p-slider-handle) {
-		// prettier-ignore
-		--thumb-shadow:
-			0px 3px 1px -2px rgba(0, 0, 0, 0.2),
-			0px 2px 2px 0px rgba(0, 0, 0, 0.14),
-			0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+		.range-slider {
+			grid-area: 1 / 2 / -1;
+		}
 
-		width: var(--thumb-size);
-		height: var(--thumb-size);
-		border-radius: 50%;
-		box-shadow: var(--thumb-shadow);
+		.range-bound {
+			grid-area: 1 / 3 / -1;
+		}
 
-		// No clue why PrimeVue has a default `transform` style to shrink this!
-		transform: none;
+		.range-tick-label {
+			grid-column: 4;
+			align-self: center;
+		}
 
-		z-index: var(--odk-z-index-form-content);
+		// The end numbers and labels are centered on the end ticks, so they reach half a line past the track.
+		.range-max,
+		.range-tick-label.at-end {
+			align-self: start;
+			margin-top: -0.5lh;
+		}
+
+		.range-min,
+		.range-tick-label.at-start {
+			align-self: end;
+			margin-bottom: -0.5lh;
+		}
 	}
 }
 
-// When range is unset, hide handle and fill (PrimeVue draws them at `min`), keep handle focusable.
-.range-unset .p-slider {
-	:deep(.p-slider-range) {
-		display: none;
-	}
-
-	:deep(.p-slider-handle) {
-		opacity: 0;
-		// Hidden handle must not block clicks on the range's line.
-		pointer-events: none;
-	}
-
-	&:focus-within {
-		outline: 1px solid var(--odk-primary-border-color);
-		outline-offset: 2px;
+@media screen and (max-width: #{pf.$sm}) {
+	.range-control-container {
+		--labels-max-width: 100%;
 	}
 }
 

@@ -43,7 +43,7 @@
     "thousands-sep": "✅",
     "bearing": "",
     "[vertical](https://github.com/getodk/web-forms/issues/271)": "",
-    "[no-ticks](https://github.com/getodk/web-forms/issues/271)": "",
+    "[no-ticks](https://github.com/getodk/web-forms/issues/271)": "✅",
     "picker": "",
     "[rating](https://github.com/getodk/web-forms/issues/711)": "✅",
     "new": "",
@@ -91,12 +91,14 @@
     "rows": "✅",
     "geopoint capture-accuracy, warning-accuracy, allow-mock-accuracy": "✅",
     "range start, end, step": "✅",
+    "range tick_interval": "✅",
     "[image max-pixels](https://github.com/getodk/web-forms/issues/397)": "✅",
     "audio quality": "",
     "Audit: location-priority, location-min-interval, location-max-age, track-changes, track-changes-reasons, identify-user": "",
     "[geotrace/shape incremental=true](https://github.com/getodk/web-forms/issues/562)": "",
     "[geo reference-geometry](https://github.com/getodk/web-forms/issues/924)": "",
-    "range labels, placeholder": ""
+    "[range labels](https://github.com/getodk/web-forms/issues/845)": "✅",
+    "[range placeholder](https://github.com/getodk/web-forms/issues/940)": "✅"
   },
   "Form logic": {
     "calculate": "✅",
@@ -115,7 +117,7 @@
   "Descriptions and annotations": {
     "label": "✅",
     "hint": "✅",
-    "[guidance hint](https://github.com/getodk/web-forms/issues/53)": "",
+    "[guidance hint](https://github.com/getodk/web-forms/issues/53)": "✅",
     "form translations": "✅",
     "form translations with ref to other field": "✅",
     "Markdown": "✅",

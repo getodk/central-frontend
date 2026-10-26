@@ -3,7 +3,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { OdkWebForm, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
 import { type MonolithicInstancePayload } from '@getodk/xforms-engine';
-import { queryString, type Form } from '../utils/api';
+import { postPrimaryInstance, uploadAttachment, getFormAttachment, type Form } from '../utils/api';
 import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
 import { Translation } from 'vue-i18n'
@@ -35,11 +35,6 @@ interface SubmissionData {
   attachments: File[];
 }
 
-interface PostPrimaryInstanceParams {
-  st: string | undefined;
-  deviceID?: string | undefined;
-}
-
 let clearForm: Function;
 let submissionData: SubmissionData;
 
@@ -47,14 +42,11 @@ const submissionResult:any = {};
 const inited = ref(false);
 const isEdit = computed(() => props.actionType === 'edit');
 const isPublicLink = computed(() => props.actionType === 'public-link');
-const draftPath = computed(() => props.form.draft ? '/draft' : '');
 const lastSavedXml = ref<string | undefined>();
 
 const deviceID = getDeviceId();
 
 const visibleModal = ref();
-
-const withToken = (url) => `${url}${queryString({ st: props.st })}`;
 
 const getAttachment = (requestUrl: URL) => {
   const fileName = requestUrl.pathname.split('/').pop()!;
@@ -62,50 +54,7 @@ const getAttachment = (requestUrl: URL) => {
   if (!props.form.attachments.some(a => a.name === decoded)) {
     return new Response('Not Found', { status: 404 });
   }
-  const url = withToken(`/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath.value}/attachments/${fileName}`);
-  return fetch(url);
-};
-
-const handleSubmissionRequest = async (request: Promise<Response>) => {
-  try {
-    const response = await request;
-    if (response.status === 413) {
-      // payload too large, response from nginx not central, so do not try to json parse the body
-      return { success: false, data: { code: 413 } };
-    }
-    const data = await response.json();
-    if (response.ok && props.form.once && props.form.enketoOnceId) {
-      setSubmitted(props.form.enketoOnceId);
-    }
-    return { success: response.ok, data };
-  } catch (error) {
-    return { success: false, data: error };
-  }
-};
-
-const postPrimaryInstance = async (file: File) => {
-  let url: string;
-  let method: string;
-  let params: PostPrimaryInstanceParams = {
-    st: props.st ?? undefined
-  }
-  if (isEdit.value) {
-    url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}/submissions/${props.instanceId}`;
-    method = 'PUT';
-  } else {
-    params.deviceID = deviceID;
-    url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath.value}/submissions`;
-    method = 'POST';
-  }
-  url += queryString(params);
-  const headers = {
-    'Content-Type': 'text/xml',
-    'odk-client': `odk-web-forms/${__WEB_FORMS_VERSION__}`,
-    'Accept': 'application/json, text/plain, */*',
-    'X-Requested-With': 'XMLHttpRequest'
-  };
-  const request = fetch(url, { body: file, headers, method });
-  return handleSubmissionRequest(request);
+  return getFormAttachment(props.form, fileName, props.st);
 };
 
 const isProblem = (data: any) => {
@@ -186,19 +135,6 @@ const handleResult = () => {
   }
 };
 
-const uploadAttachment = async (attachment: File, instanceId: string) => {
-  const encodedInstanceId = encodeURIComponent(instanceId);
-  const encodedName = encodeURIComponent(attachment.name);
-  const url = withToken(`/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath.value}/submissions/${encodedInstanceId}/attachments/${encodedName}`);
-  const headers = {
-    'Content-Type': attachment.type,
-    'X-Requested-With': 'XMLHttpRequest'
-  };
-  const request = fetch(url, { body: attachment, headers, method: 'POST' });
-  const result = await handleSubmissionRequest(request);
-  return { name: attachment.name, result };
-};
-
 const submitData = async () => {
   visibleModal.value = { type: 'sendingDataModal', hideable: false };
 
@@ -206,14 +142,28 @@ const submitData = async () => {
   const attachments = submissionData.attachments;
 
   if (!submissionResult.primaryInstanceResult.success) {
-    submissionResult.primaryInstanceResult = await postPrimaryInstance(instanceFile);
+    submissionResult.primaryInstanceResult = await postPrimaryInstance({
+      form: props.form,
+      file: instanceFile,
+      instanceId: props.instanceId ?? null,
+      st: props.st ?? null,
+      deviceID: deviceID ?? null,
+    });
+    if (submissionResult.primaryInstanceResult.success && props.form.once && props.form.enketoOnceId) {
+      setSubmitted(props.form.enketoOnceId);
+    }
   }
 
   if (submissionResult.primaryInstanceResult.success) {
     const instanceId = submissionResult.primaryInstanceResult.data.instanceId;
     const attachmentRequests = attachments
-      .filter(a => !submissionResult.attachmentResult.get(a.name).success)
-      .map(a => uploadAttachment(a, instanceId));
+      .filter(file => !submissionResult.attachmentResult.get(file.name).success)
+      .map(file => uploadAttachment({
+        form: props.form,
+        file,
+        instanceId,
+        st: props.st ?? null,
+      }));
     const attachmentResult = await Promise.all(attachmentRequests);
     attachmentResult.forEach(r => {
       submissionResult.attachmentResult.set(r.name, r.result);

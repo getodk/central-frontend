@@ -282,4 +282,5 @@ export abstract class InstanceNode<
   }
 
   abstract getAttributes(): readonly Attribute[];
+  abstract registerExpressionError(error: Accessor<Error | null>): void;
 }

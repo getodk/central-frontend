@@ -13,6 +13,7 @@ import type { SimpleAtomicState, SimpleAtomicStateSetter } from './types.ts';
 import { ValueNode } from '../../instance/abstract/ValueNode.ts';
 import { Attribute } from '../../instance/Attribute.ts';
 import type { AnyValueNode } from '../../instance/hierarchy.ts';
+import type { EvaluationContext } from '../../instance/internal-api/EvaluationContext.ts';
 import { getInstanceDefaultValue } from '../instance-defaults.ts';
 
 const REPEAT_INDEX_REGEX = /([^[]*)(\[[0-9]+\])/g;
@@ -73,7 +74,7 @@ const createRelevantValueState = (
 };
 
 /**
- * Rejects downstream (client/user) writes while the field is in a `readonly` state.
+ * Ignores downstream (client/user) writes while the field is in a `readonly` state.
  * Engine writes (`calculate` computations, preloads, `setvalue` actions) never pass through this guard.
  */
 const guardDownstreamReadonlyWrites = (
@@ -90,11 +91,23 @@ const guardDownstreamReadonlyWrites = (
 
   const setValue: SimpleAtomicStateSetter<string> = (value) => {
     if (context.isReadonly()) {
-      const reference = untrack(() => context.contextReference());
-
-      throw new Error(`Cannot write to readonly field: ${reference}`);
+      return untrack(() => getValue());
     }
 
+    return baseSetValue(value);
+  };
+
+  return [getValue, setValue];
+};
+
+const clearActionErrorOnClientWrite = (
+  context: ValueContext,
+  baseState: SimpleAtomicState<string>
+): SimpleAtomicState<string> => {
+  const [getValue, baseSetValue] = baseState;
+
+  const setValue: SimpleAtomicStateSetter<string> = (value) => {
+    context.setActionError(null);
     return baseSetValue(value);
   };
 
@@ -148,9 +161,13 @@ const preloadValue = (context: ValueContext, setValue: SimpleAtomicStateSetter<s
 };
 
 const referencesCurrentNode = (context: ValueContext, ref: string): boolean => {
-  const nodes = context.evaluator.evaluateNodes(ref, {
+  const result = context.evaluator.evaluateNodes(ref, {
     contextNode: context.contextNode,
   });
+  if (result.error) {
+    throw result.error;
+  }
+  const nodes = result.value!;
   if (nodes.length > 1) {
     throw new Error(
       'You are trying to target a repeated field. Currently you may only target a field in a specific repeat instance. XPath nodeset has more than one node.'
@@ -196,6 +213,16 @@ const createCalculation = (
   });
 };
 
+const computeActionValue = (
+  target: ValueContext,
+  expression: string,
+  evaluationContext: EvaluationContext
+): string => {
+  const result = untrack(() => target.evaluator.evaluateString(expression, evaluationContext));
+  target.setActionError(result.error);
+  return result.value ?? '';
+};
+
 /**
  * Runs the computation without maintaining a reactive listener, so
  * actions that should run only at a specific time are not triggered
@@ -213,9 +240,7 @@ const createActionCalculation = (
       if (!relevant) {
         return;
       }
-      const calculated = untrack(() => {
-        return context.evaluator.evaluateString(computation.expression, context);
-      });
+      const calculated = computeActionValue(context, computation.expression, context);
       const value = context.decodeInstanceValue(calculated);
       setRelevantValue(value);
     }
@@ -280,9 +305,14 @@ const registerValueChangedActions = (context: ValueContext, getValue: Accessor<s
     const sourceValue = getValue();
     context.valueChangedActions.forEach((action) => {
       const ref = bindRefToRepeatInstance(context, action.ref);
-      const destinationNodes = context.evaluator.evaluateNodes(ref, {
+      const result = context.evaluator.evaluateNodes(ref, {
         contextNode: context.contextNode,
       });
+      if (result.error) {
+        context.setActionError(result.error);
+        return;
+      }
+      const destinationNodes = result.value!;
       if (!destinationNodes.length) {
         return;
       }
@@ -300,12 +330,11 @@ const registerValueChangedActions = (context: ValueContext, getValue: Accessor<s
           if (action.type === 'geopoint') {
             getGeopointValue(context, (point) => destinationNode.setEncodedValue(point, true));
           } else {
-            const value = untrack(() => {
-              return context.evaluator.evaluateString(
-                action.computation.expression,
-                destinationNode
-              );
-            });
+            const value = computeActionValue(
+              destinationNode,
+              action.computation.expression,
+              destinationNode
+            );
             destinationNode.setEncodedValue(value, true);
           }
         }
@@ -316,7 +345,7 @@ const registerValueChangedActions = (context: ValueContext, getValue: Accessor<s
 };
 
 export interface InstanceValueState {
-  // The node's instance value. The setter rejects client writes while readonly.
+  // The node's instance value. The setter ignores client writes while readonly.
   readonly valueState: SimpleAtomicState<string>;
   // Unguarded setter for the same value, used by `xforms-value-changed` actions writing to this node.
   readonly setValueFromAction: SimpleAtomicStateSetter<string>;
@@ -353,7 +382,10 @@ export const createInstanceValueState = (context: ValueContext): InstanceValueSt
     registerSetValueActions(context, setValue);
 
     return {
-      valueState: guardDownstreamReadonlyWrites(context, relevantValueState),
+      valueState: guardDownstreamReadonlyWrites(
+        context,
+        clearActionErrorOnClientWrite(context, relevantValueState)
+      ),
       setValueFromAction: setValue,
     };
   });

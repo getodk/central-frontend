@@ -14,33 +14,12 @@ except according to the terms contained in the LICENSE file.
     @hide="$emit('hide')">
     <template #title>{{ $t('title') }}</template>
     <template #body>
-      <div class="modal-introduction">
-        <p>{{ $t('introduction[0]') }}</p>
-        <i18n-t tag="p" keypath="introduction[1].full">
-          <template #open>
-            <strong>{{ $t('introduction[1].open') }}</strong>
-          </template>
-        </i18n-t>
-        <i18n-t tag="p" keypath="introduction[2].full">
-          <template #closing>
-            <strong>{{ $t('introduction[2].closing') }}</strong>
-          </template>
-          <template #not>
-            <em>{{ $t('introduction[2].not') }}</em>
-          </template>
-        </i18n-t>
-        <i18n-t tag="p" keypath="introduction[3].full">
-          <template #closed>
-            <strong>{{ $t('introduction[3].closed') }}</strong>
-          </template>
-          <template #not1>
-            <em>{{ $t('introduction[3].not1') }}</em>
-          </template>
-          <template #not2>
-            <em>{{ $t('introduction[3].not2') }}</em>
-          </template>
-        </i18n-t>
-      </div>
+      <dl class="dl-horizontal">
+        <template v-for="formState of ['open', 'closing', 'closed']" :key="formState">
+          <dt>{{ $t(`formState.${formState}`) }}</dt>
+          <dd>{{ $t(`description.${formState}`) }}</dd>
+        </template>
+      </dl>
       <div class="modal-actions">
         <button type="button" class="btn btn-primary" @click="$emit('hide')">
           {{ $t('action.ok') }}
@@ -50,27 +29,21 @@ except according to the terms contained in the LICENSE file.
   </modal>
 </template>
 
-<script>
+<script setup>
 import Modal from '../../modal.vue';
 
-export default {
-  name: 'ProjectFormAccessStates',
-  components: { Modal },
-  props: {
-    state: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: ['hide']
-};
+defineOptions({
+  name: 'ProjectFormAccessStates'
+});
+defineProps({
+  state: Boolean
+});
+defineEmits(['hide']);
 </script>
 
 <style lang="scss">
 #project-form-access-states {
-  .modal-introduction p:first-child {
-    margin-bottom: 20px;
-  }
+  dl { margin-bottom: 0; }
 }
 </style>
 
@@ -79,24 +52,11 @@ export default {
   "en": {
     // This is the title at the top of a pop-up.
     "title": "Form States",
-    "introduction": [
-      "Form States control the lifecycle state of each Form. Usually, but not always, a Form will start Open and proceed through Closing to Closed when it is no longer needed.",
-      {
-        "full": "{open} Forms are available to download and will accept new Submissions.",
-        "open": "Open"
-      },
-      {
-        "full": "{closing} Forms will accept new Submissions, but are {not} available to download.",
-        "closing": "Closing",
-        "not": "not"
-      },
-      {
-        "full": "{closed} Forms are {not1} available to download and will {not2} accept new Submissions.",
-        "closed": "Closed",
-        "not1": "not",
-        "not2": "not"
-      }
-    ]
+    "description": {
+      "open": "New submissions can be started and submitted.",
+      "closing": "New submissions can’t be started, but submissions already in progress can still be submitted.",
+      "closed": "New submissions can’t be started, and in-progress submissions can’t be submitted."
+    }
   }
 }
 </i18n>
