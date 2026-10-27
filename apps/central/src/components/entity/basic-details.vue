@@ -75,7 +75,7 @@ const submission = ref(undefined); // submission is contained within source
 watchEffect(() => {
   // if we don't have the audit data yet, or if we have already found the source, return.
   if ((!audits.dataExists || source.value !== undefined)) return;
-  const audit = audits.find(({ action }) => action === 'entity.create' || action === 'entity.bulk.create');
+  const audit = audits.find(({ action }) => action === 'entity.create' || action === 'entity.bulk.upsert');
   // `audit` should always exist in production, but it doesn't always exist in
   // testing.
   if (audit == null) return;

@@ -112,6 +112,7 @@
         "update_property_delete": "Delete Property"
       },
       "entity": {
+        "bulk_upsert": "Import Data",
         "bulk_delete": "Bulk Delete",
         "bulk_restore": "Bulk Restore"
       },
