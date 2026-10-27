@@ -140,7 +140,7 @@ describe('InputNumeric', () => {
         });
       });
 
-      it('clears the model value when value is invalid', async () => {
+      it('keeps the model value while the user is still typing a decimal', async () => {
         component = await mountComponent(1);
         await component.get('input').setValue('0,5');
         await component.get('input').setValue('0,'); // simulate backspace

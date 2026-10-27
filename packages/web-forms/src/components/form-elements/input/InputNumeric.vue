@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
 import InputText from 'primevue/inputtext';
-import { type ComponentPublicInstance, computed, nextTick, ref, watch } from 'vue';
+import { type ComponentPublicInstance, computed, nextTick, onBeforeUnmount, ref, watch } from 'vue';
 
 interface NumericNodeState {
 	get required(): boolean;
@@ -218,6 +218,8 @@ const clearTimer = () => {
 };
 
 watch(renderKey, () => nextTick(() => (inputRef.value?.$el as HTMLElement)?.focus()));
+
+onBeforeUnmount(() => clearTimer());
 </script>
 
 <template>
