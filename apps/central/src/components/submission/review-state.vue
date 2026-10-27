@@ -67,9 +67,9 @@ const htmlClass = computed(() => {
   @mixin review-state-color($color) {
     & [class^="icon-"], &.color-text span:last-child { color: $color; }
   }
-  @include review-state-color(#999);
+  @include review-state-color($color-icon);
   &.hasIssues { @include review-state-color($color-warning); }
-  &.edited { @include review-state-color(#666); }
+  &.edited { @include review-state-color($color-info); }
   &.approved { @include review-state-color($color-success); }
   &.rejected { @include review-state-color($color-danger); }
 

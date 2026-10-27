@@ -177,9 +177,9 @@ export default {
 
   .encrypted {
     margin-left: 9px;
-    color: #333;
-    background-color: #ddd;
-    border: 1px solid #ccc;
+    color: $color-text-secondary;
+    background-color: $color-surface-secondary;
+    border: 1px solid $color-border;
     font-weight: 400;
   }
 
@@ -191,7 +191,7 @@ export default {
       width: 30px;
       padding-top: 16px;
       font-size: 16px;
-      color: #777;
+      color: $color-text-placeholder;
     }
 
     .section-content {
@@ -202,7 +202,7 @@ export default {
   .project-table {
     margin-bottom: 0;
 
-    td {
+    tr:first-child td {
       border-top: none;
     }
   }
@@ -210,7 +210,7 @@ export default {
   .expand-button-container {
     padding: 6px;
     font-size: 14px;
-    color: #888;
+    color: $color-text-muted;
   }
   .expand-button {
     @include text-link;
@@ -224,7 +224,7 @@ export default {
   }
 
   .icon-warning {
-    color: #888;
+    color: $color-text-muted;
   }
 
 }

@@ -121,7 +121,7 @@ export default {
   td {
     font-size: 16px;
     padding: 3px 0px 3px 6px;
-    color: #333;
+    color: $color-text-secondary;
   }
 
   .name {
@@ -151,7 +151,7 @@ export default {
     text-align: right;
     [class*='icon'] {
       margin-left: 5px;
-      color: #888;
+      color: $color-text-muted;
     }
   }
 

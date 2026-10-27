@@ -150,14 +150,14 @@ export default {
 .diff-item {
   &.outer-item {
     padding: 5px;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid $color-border;
 
     &:last-child { border-bottom: 0; }
   }
 
   &.inner-item {
     padding: 0px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid $color-divider;
 
     &:last-child { border-bottom: 0; }
   }
@@ -168,13 +168,13 @@ export default {
 
   .full-path {
     font-size: 11px;
-    color: #333;
+    color: $color-text-secondary;
     letter-spacing: -0.02em;
     margin: 10px 10px -5px 10px;
   }
 
   .field-separator, .field-counter{
-    color: #999;
+    color: $color-icon;
   }
 
   .diff-details {
@@ -195,12 +195,12 @@ export default {
   }
 
   .field-name {
-    color: #000;
+    color: $color-text-primary;
     @include text-overflow-ellipsis;
   }
 
   .old-to-new { margin: 0 10px; }
-  .icon-arrow-circle-right { color: #888; padding: 10px; }
+  .icon-arrow-circle-right { color: $color-text-muted; padding: 10px; }
 
   .data-old { color: $color-danger-dark; }
   .data-new { color: $color-success-dark; }
@@ -221,8 +221,8 @@ export default {
   .added { color: $color-success-dark; }
 
   .data-empty {
-    background-color: #aaa;
-    color: white;
+    background-color: $color-surface-inverse;
+    color: $color-text-inverse;
     padding: 2px 5px 3px;
     border-radius: 2px;
     font-size: 12px;

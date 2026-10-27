@@ -86,7 +86,7 @@ const lastEntityTooltip = computed(() => {
 .project-dataset-row {
   td {
     padding: 4px 0px 4px 6px;
-    color: #333;
+    color: $color-text-secondary;
 
     &.dataset-name a {
       color: $color-action-foreground;
@@ -94,6 +94,7 @@ const lastEntityTooltip = computed(() => {
 
     a {
       @include text-link;
+      display: inline-block;
     }
   }
 
@@ -110,7 +111,7 @@ const lastEntityTooltip = computed(() => {
 
   [class*='icon'] {
     margin-left: 5px;
-    color: #888;
+    color: $color-text-muted;
   }
 }
 </style>

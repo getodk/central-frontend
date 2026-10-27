@@ -64,7 +64,7 @@ defineProps({
     transform: rotate(15deg);
 
     &::after {
-      background-color: #fff;
+      background-color: $color-surface;
       content: '';
       height: 60px;
       left: 15px;

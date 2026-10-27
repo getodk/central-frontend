@@ -20,7 +20,7 @@ html {
 body {
   min-width: 1000px;
   background-color: $color-page-background;
-  box-shadow: 0 #{$box-shadow-offset-y-body} 0 #777 inset;
+  box-shadow: 0 #{$box-shadow-offset-y-body} 0 $gray-600 inset;
   color: $color-text;
   min-height: 100vh;
 
@@ -63,7 +63,7 @@ dl:not(.dl-horizontal) {
   }
 
   dt {
-    color: #666;
+    color: $color-text-secondary;
     font-size: 12px;
     font-weight: normal;
   }
@@ -92,7 +92,7 @@ dl:not(.dl-horizontal) {
   dd { padding-left: $padding-between; }
 }
 
-.dfn { border-bottom: 2px dotted #999; }
+.dfn { border-bottom: 2px dotted $color-border; }
 
 pre {
   background-color: $color-subpanel-background;
@@ -172,13 +172,13 @@ class. */
 }
 
 .navbar-default .navbar-toggle .navbar-icon-bar {
-  background-color: #888;
+  background-color: $gray-400;
 }
 
 .title-icon {
   padding-left: 6px;
   font-size: 24px;
-  color: #666;
+  color: $gray-700;
 }
 
 
@@ -203,44 +203,82 @@ class. */
   position: relative;
 
   &:focus, &:active:focus { outline: none; }
-  &:focus { box-shadow: $btn-focus-box-shadow; }
   &[aria-disabled="true"], &.disabled, fieldset[disabled] & { box-shadow: none; }
 }
 
 .btn-primary {
-  background-color: $color-action-background;
-  border: 1px solid $color-action-background;
+  background-color: $color-primary;
+  border: 1px solid $color-primary;
 
   &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
-    background-color: $color-action-background-disabled;
-    border-color: $color-action-background-disabled;
+    background-color: $color-bg-disabled;
+    border-color: $color-bg-disabled;
+    color: $color-text-disabled;
+  }
+
+  &:hover {
+    background-color: $color-primary-hover;
+    border-color: $color-primary-hover;
+  }
+
+  &:active, &:active:hover {
+    background-color: $color-primary-pressed;
+    border-color: $color-primary-pressed;
+  }
+
+  &:focus {
+    outline: 2px solid $color-focus-ring;
+    outline-offset: 2px;
+  }
+
+  &:active:focus {
+    background-color: $color-primary-pressed;
+    border-color: $color-primary-pressed;
   }
 
   &:hover, &:focus, &:active:focus {
-    background-color: $color-action-background-hover;
-    border-color: $color-action-background-hover;
-
     &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
-      background-color: $color-action-background-disabled;
-      border-color: $color-action-background-disabled;
+      background-color: $color-bg-disabled;
+      border-color: $color-bg-disabled;
     }
   }
 }
 
+.btn-outlined,
 .btn-default {
-  background-color: #fff;
+  background-color: $color-surface;
   color: $color-action-background;
   border: 1px solid $color-action-background;
 
-  &:hover, &:focus, &:active:focus {
-    background-color: $color-action-background;
+  &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
+    border-color: $color-bg-disabled;
+    color: $color-text-disabled;
+  }
+  &:hover, &:hover:focus {
+    background-color: $blue-50;
     border-color: $color-action-background;
+    color: $color-action-background;
+  }
 
-    color: #fff;
+  &:active, &:active:hover, &:active:focus {
+    background-color: $blue-100;
+    border-color: $color-action-background;
+    color: $color-action-background;
+    box-shadow: none;
+  }
+
+  &:focus {
+    background-color: $color-surface;
+    color: $color-action-background;
+    outline: 2px solid $color-focus-ring;
+    outline-offset: 2px;
+  }
+
+  &:hover, &:focus, &:active:focus {
     &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
-      background-color: #fff;
-      color: $color-action-background;
-      border-color: $color-action-background;
+      border-color: $color-bg-disabled;
+      color: $color-text-disabled;
+      background-color: $color-surface;
     }
   }
 
@@ -249,49 +287,85 @@ class. */
 
 .btn-danger {
   background-color: $color-danger;
+  border: 1px solid $color-danger;
 
-  &:hover, &:focus, &:active:focus {
-    background-color: $color-danger-dark;
-
-    &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
-      background-color: $color-danger;
-    }
+  &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
+    background-color: $color-bg-disabled;
+    border-color: $color-bg-disabled;
+    color: $color-text-disabled;
   }
-}
 
-.btn-outlined {
-  background-color: #fff;
-  color: $color-action-background;
-  border: 1px solid $color-action-background;
+  &:hover, &:focus {
+    background-color: $color-danger-hover;
+    border-color: $color-danger-hover;
+  }
+
+  &:active, &:active:hover {
+    background-color: $color-danger-pressed;
+    border-color: $color-danger-pressed;
+  }
+
+  &:focus {
+    outline: 2px solid $color-focus-ring;
+    outline-offset: 2px;
+  }
+
+  &:active:focus {
+    background-color: $color-danger-pressed;
+    border-color: $color-danger-pressed;
+  }
 
   &:hover, &:focus, &:active:focus {
-    color: #fff;
-    background-color: $color-action-background;
-
     &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
-      background-color: #fff;
-      color: $color-action-background;
+      background-color: $color-bg-disabled;
+      border-color: $color-bg-disabled;
+      outline-color: $color-bg-disabled;
     }
   }
 }
 
 .btn-danger-outlined {
-  background-color: #fff;
+  background-color: $color-surface;
   color: $color-danger;
   border: 1px solid $color-danger;
 
-  &:hover, &:focus, &:active:focus {
-    background-color: $color-danger;
-    color: #fff;
+  &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
+    border-color: $color-bg-disabled;
+    color: $color-text-disabled;
+  }
+  &:hover {
+    background-color: $color-danger-hover;
+    border-color: $color-danger-hover;
+    color: $color-surface;
+  }
 
+  &:active, &:active:hover {
+    background-color: $color-danger-pressed;
+    border-color: $color-danger-pressed;
+    color: $color-surface;
+  }
+
+  &:focus {
+    outline: 2px solid $color-focus-ring;
+    outline-offset: 2px;
+  }
+
+  &:active:focus {
+    background-color: $color-danger-pressed;
+    border-color: $color-danger-pressed;
+    color: $color-surface;
+  }
+
+  &:hover, &:focus, &:active:focus {
     &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
-      background-color: #fff;
-      color: $color-danger;
+      border-color: $color-bg-disabled;
+      color: $color-text-disabled;
+      background-color: $color-surface;
     }
   }
 }
 
-a, .btn-link {
+a {
   &:hover, &.disabled, &[aria-disabled="true"], &[aria-disabled="true"]:focus, fieldset[disabled] & {
     text-decoration: none;
   }
@@ -303,16 +377,21 @@ a, .btn-link {
   }
 }
 
-a:not(.btn), .btn-link {
+a:not(.btn) {
   &, &:hover { color: $color-action-foreground; }
 
-  &:focus {
-    background-color: transparentize(#000, 0.94);
-    color: #23527c;
+  &:hover, &:focus:hover {
     text-decoration: underline;
+    outline: none;
   }
 
-  &.disabled, &[aria-disabled="true"], fieldset[disabled] & { color: #888; }
+  &:focus {
+    outline: 2px solid $color-focus-ring;
+    outline-offset: 2px;
+    text-decoration: none;
+  }
+
+  &.disabled, &[aria-disabled="true"], fieldset[disabled] & { color: $color-text-disabled; }
 }
 
 a {
@@ -334,14 +413,32 @@ a {
 
 .btn-link {
   border-radius: 0;
+  background-color: transparent;
 
-  &, &:active, &[aria-disabled="true"], fieldset[disabled] & {
-    background-color: transparent;
+  &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
+    color: $color-text-disabled;
+  }
+
+  &:hover {
+    background-color: $blue-50;
+    text-decoration: none;
+  }
+  &:active {
+    background-color: $blue-100;
+    box-shadow: none;
   }
 
   &:focus {
-    background-clip: content-box;
-    box-shadow: none;
+    outline: 2px solid $color-focus-ring;
+    outline-offset: 2px;
+    text-decoration: none;
+  }
+
+  &:hover, &:focus, &:active:focus {
+    &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
+      color: $color-text-disabled;
+      background-color: transparent;
+    }
   }
 }
 
@@ -411,7 +508,7 @@ input[type="radio"], input[type="checkbox"], input[type="file"] {
 select[multiple] { height: auto; }
 
 .help-block {
-  color: #737373;
+  color: $color-text-secondary;
   margin-bottom: 10px;
   margin-top: 5px;
 }
@@ -567,7 +664,7 @@ select {
   }
 
   .icon-filter {
-    color: #999;
+    color: $gray-400;
     margin-right: $margin-right-icon;
     font-size: 20px;
   }
@@ -607,9 +704,9 @@ select.uncommitted-change,
 // styles on .form-group .form-control.
 .form-control.uncommitted-change,
 .btn.uncommitted-change {
-  &, &:focus { box-shadow: 0 0 0 3px #ffef67; }
+  &, &:focus { box-shadow: 0 0 0 3px $amber-300; }
 }
-tr.uncommitted-change { background-color: #ffef67; }
+tr.uncommitted-change { background-color: $amber-100; }
 
 
 
@@ -618,7 +715,7 @@ tr.uncommitted-change { background-color: #ffef67; }
 
 .table {
   margin-bottom: $margin-bottom-table;
-  border: 1px solid #ddd;
+  border: 1px solid $color-border;
   border-radius: 12px;
   border-collapse: separate;
   border-spacing: 0;
@@ -649,13 +746,8 @@ tr.uncommitted-change { background-color: #ffef67; }
       vertical-align: middle;
     }
 
-    // Zebra striping
-    > tr:nth-child(even) {
-      background-color: $color-even-row;
-    }
-
-    > tr:nth-child(odd) {
-      background-color: $color-odd-row;
+    > tr:hover, >tr:focus-within {
+      background-color: $color-bg;
     }
   }
 
@@ -687,7 +779,7 @@ tr.uncommitted-change { background-color: #ffef67; }
 }
 
 .row-number {
-  color: #999;
+  color: $color-text-muted;
   font-size: 11px;
   padding-top: 11px;
   text-align: right;
@@ -695,7 +787,7 @@ tr.uncommitted-change { background-color: #ffef67; }
 }
 
 .empty-table-message {
-  color: #555;
+  color: $color-text-muted;
   font-size: 15px;
 }
 
@@ -704,7 +796,7 @@ tr.uncommitted-change { background-color: #ffef67; }
 ////////////////////////////////////////////////////////////////////////////////
 // LABELS
 
-.label-default { background-color: #777; }
+.label-default { background-color: $color-surface-secondary; }
 .label-primary { background-color: $color-action-background; }
 .label-warning { background-color: $color-warning; }
 
@@ -718,10 +810,10 @@ tr.uncommitted-change { background-color: #ffef67; }
   padding: 4px 14px;
   border-radius: 9999px;
   font-size: 13px;
-  color: #212529;
+  color: $color-text;
 
   &.tag-default {
-    background-color: #DCDCDC;
+    background-color: $gray-200;
   }
 
   &.tag-warning {
@@ -729,7 +821,7 @@ tr.uncommitted-change { background-color: #ffef67; }
   }
 
   &.tag-success {
-    background-color: #DBFCE0;
+    background-color: $color-success-subtle;
   }
 
   &.tag-info {
@@ -770,7 +862,7 @@ tr.uncommitted-change { background-color: #ffef67; }
 .panel-default {
   .panel-heading {
     background-color: $color-accent-primary;
-    color: #fff;
+    color: $gray-0;
 
     .panel-title {
       font-size: 18px;
@@ -844,22 +936,22 @@ tr.uncommitted-change { background-color: #ffef67; }
   background-color: transparent;
 
   &> .panel-heading {
-    color: white;
+    color: $gray-0;
     background-color: $color-danger;
     border-bottom-color: $color-danger;
 
-    .btn-danger { border: 1px solid #fff; }
+    .btn-danger { border: 1px solid $gray-0; }
   }
 
   &> .panel-body {
-    background-color: #fff;
+    background-color: $gray-0;
     border: 1px solid $color-danger;
     border-top: none;
 
     &> .panel-footer {
       margin: 0 -15px -15px -15px;
-      background-color: #585858;
-      color: white;
+      background-color: $gray-600;
+      color: $gray-0;
     }
   }
 }
@@ -869,7 +961,7 @@ tr.uncommitted-change { background-color: #ffef67; }
   border-radius: 5px;
   margin-bottom: 10px;
   padding: 5px;
-  background-color: #fff;
+  background-color: $gray-0;
   max-width: 77ch;
 
   .panel-heading {
@@ -906,6 +998,10 @@ tr.uncommitted-change { background-color: #ffef67; }
         padding: 7px $hpadding-nav-tab;
       }
 
+      &:hover:focus {
+        text-decoration: none;
+      }
+
       &:focus {
         outline: none;
       }
@@ -940,7 +1036,7 @@ tr.uncommitted-change { background-color: #ffef67; }
 
       > a {
         &, &:hover, &:focus {
-          color: #999;
+          color: $color-text-disabled;
         }
 
         &:hover, &:focus {
@@ -964,7 +1060,7 @@ tr.uncommitted-change { background-color: #ffef67; }
   font-size: 10px;
   top: -2px;
   position: relative;
-  color: white;
+  color: $gray-0;
   padding: 4px 7px;
   margin-left: 2px;
   background: $color-accent-primary;

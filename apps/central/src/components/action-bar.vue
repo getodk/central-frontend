@@ -51,8 +51,8 @@ defineEmits(['hide']);
 
   .action-bar {
     box-shadow: $m3-elevation-light-3;
-    background-color: #333;
-    color: #fff;
+    background-color: $color-surface-inverse;
+    color: $gray-0;
     display: flex;
     align-items: center;
     border-radius: 4px;
@@ -79,7 +79,7 @@ defineEmits(['hide']);
 
     .close {
       opacity: 1;
-      color: #fff;
+      color: $gray-0;
     }
   }
 }

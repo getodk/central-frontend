@@ -172,7 +172,7 @@ export default {
 
   td {
     padding: 3px 0px 3px 6px;
-    color: #333;
+    color: $color-text-secondary;
   }
 
   .duplicate-form-id {
@@ -186,14 +186,14 @@ export default {
     text-align: right;
     width: 100px;
     & [class*='icon'] {
-      color: #888;
+      color: $color-text-muted;
     }
   }
 
   .review-state a {
     border-radius: 9999px;
     margin: -4px;
-    &:hover { background: #fff }
+    &:hover { background: $color-surface; }
   }
 
   .total-submissions a {
@@ -201,7 +201,7 @@ export default {
     border-radius: 9999px;
     padding: 4px 8px;
     margin: -4px;
-    &:hover { background: #e8e8e8 }
+    &:hover { background: $color-surface-secondary; }
   }
 
   .actions {
@@ -218,13 +218,13 @@ export default {
     width: 150px;
     & [class*='icon'] {
       margin-left: 5px;
-      color: #888;
+      color: $color-text-muted;
     }
   }
 
   .closing-icon {
     margin-right: 5px;
-    color: #888;
+    color: $color-text-muted;
   }
 }
 </style>

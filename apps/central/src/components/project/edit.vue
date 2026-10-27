@@ -76,10 +76,11 @@ const submit = () => {
 </script>
 
 <style lang="scss">
+@import '../../assets/scss/variables';
 #project-edit {
   .note {
     float: right;
-    color: #333;
+    color: $color-text-secondary;
     font-size: 11px;
     padding-right: 12px;
     position: relative;

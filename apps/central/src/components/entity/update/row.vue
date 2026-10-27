@@ -84,7 +84,7 @@ defineExpose({ textarea });
   }
 
     .value-changed {
-      box-shadow: 0 0 0 3px #C8E4EE;
+      box-shadow: 0 0 0 3px $blue-50;
     }
 
   .label-cell { @include text-overflow-ellipsis; }

@@ -141,7 +141,7 @@ $popup-width: 300px;
   .dialog-header {
     padding: 15px;
     background-color: $color-action-background;
-    color: #fff;
+    color: $color-text-inverse;
 
     .icon-cloud-upload {
       animation-direction: alternate;
@@ -149,7 +149,7 @@ $popup-width: 300px;
       animation-iteration-count: infinite;
       animation-name: bob;
       animation-timing-function: ease-in-out;
-      color: #fff;
+      color: $color-text-inverse;
       font-size: 90px;
       position: absolute;
       right: 10px;

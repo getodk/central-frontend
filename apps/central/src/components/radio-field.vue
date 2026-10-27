@@ -68,7 +68,7 @@ const disabledMessageId = computed(() =>
   .btn-toggle {
     border-radius: 0 2px 2px 0;
     border: 1px solid $central-grey-2;
-    background: #FFF;
+    background: $color-surface;
     box-shadow: none;
     padding: 10px 30px;
     min-width: 80px;
@@ -80,7 +80,7 @@ const disabledMessageId = computed(() =>
 
     &:hover, &:focus-within {
       background-color: $color-action-overlay;
-      color: #FFF;
+      color: $color-text-inverse;
     }
 
     &.disabled{

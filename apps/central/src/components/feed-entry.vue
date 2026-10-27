@@ -48,12 +48,12 @@ $margin-bottom: 20px;
 }
 
 .feed-entry-heading {
-  background-color: #fff;
+  background-color: $color-surface;
 
   time {
     float: right;
     font-size: 13px;
-    color: #666;
+    color: $color-text-secondary;
     line-height: 25px;
   }
 }

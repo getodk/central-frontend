@@ -89,7 +89,7 @@ $border-height: 3px;
     background-color: $color-accent-primary;
     border: none;
     border-top: $border-height solid $color-accent-secondary;
-    box-shadow: 0 $border-height 0 #dedede;
+    box-shadow: 0 $border-height 0 $color-surface-shadow;
     margin-bottom: $border-height;
     display: flex;
     justify-content: space-between;
@@ -102,11 +102,12 @@ $border-height: 3px;
       line-height: 20px;
       padding: 5px 15px;
 
-      &, &:hover, &:focus { color: #fff; }
+      &, &:hover, &:focus { color: $color-text-inverse; }
 
       &:focus {
         background-color: transparent;
         text-decoration: none;
+        outline: none;
       }
     }
 
@@ -123,18 +124,18 @@ $border-height: 3px;
 
         > li > a {
           padding: 7px 10px;
-          color: #fff;
+          color: $color-text-inverse;
           border-top: transparent solid 3px;
           text-decoration: none;
           transition: 0.25s border-top-color;
 
           &:hover {
-            border-top-color: #ffffffb3;
+            border-top-color: $color-border;
           }
 
           &:focus {
-            border-top-color: #fff;
-            box-shadow: 0 3px 0 transparentize(#000, 0.9);
+            border-top-color: $color-border;
+            box-shadow: 0 3px 0 transparentize($gray-950, 0.9);
             outline: none;
             transition-duration: 0s;
           }
@@ -142,8 +143,8 @@ $border-height: 3px;
       }
 
       li.active a {
-        background-color: #b40066;
-        border-top-color: #fff;
+        background-color: $color-primary-pressed;
+        border-top-color: $gray-0;
       }
     }
 
@@ -156,15 +157,15 @@ $border-height: 3px;
 
 #navbar-analytics-notice {
   @include text-link;
-  background-color: #ffed88;
-  border: 1px solid #e39941;
+  background-color: $amber-100;
+  border: 1px solid $amber-300;
   font-size: 10px;
   margin-right: 30px;
   padding: 1px 3px;
 
   &:hover, &:focus {
-    background-color: #ffdc1c;
-    border-color: #ffed88;
+    background-color: $amber-300;
+    border-color: $amber-100;
   }
 }
 

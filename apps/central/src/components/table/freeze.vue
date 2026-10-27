@@ -17,11 +17,12 @@ except according to the terms contained in the LICENSE file.
           <slot name="head-frozen"></slot>
         </tr>
       </thead>
-      <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
+      <!-- eslint-disable-next-line vuejs-accessibility/mouse-events-have-key-events,vuejs-accessibility/click-events-have-key-events -->
       <tbody v-if="data != null" ref="frozenBody"
         :class="`actions-trigger-${actionsTrigger}`"
-        @mousemove="setActionsTrigger('hover')"
-        @focusin="setActionsTrigger('focus')" @click="rowClick">
+        @mousemove="setActionsTrigger('hover')" @mouseover="toggleHoverClass"
+        @mouseleave="removeHoverClass" @focusin="setActionsTrigger('focus')"
+        @click="rowClick">
         <transition-group name="table-freeze-row">
           <slot v-for="(element, index) in data" :key="element[keyProp]"
             name="data-frozen" :data="element" :index="index">
@@ -52,7 +53,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { ref, shallowRef, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 // We may render many rows, so this component makes use of event delegation and
 // other optimizations.
@@ -89,21 +90,25 @@ const setActionsTrigger = (trigger) => { actionsTrigger.value = trigger; };
 // When hovering over a row of the scrolling table, add a class to the
 // corresponding row of the frozen table. Note that the class may be overwritten
 // if the <tr> element in the data-frozen slot uses v-bind:class.
-const correspondingRow = shallowRef(null);
+const hoverRowIndex = ref(null);
 const frozenBody = ref(null);
+const scrollingBody = ref(null);
 const toggleHoverClass = (event) => {
-  const scrollingRow = event.target.closest('tr');
-  if (correspondingRow.value != null) {
-    if (scrollingRow.rowIndex === correspondingRow.value.rowIndex) return;
-    correspondingRow.value.classList.remove('scrolling-hover');
+  const targetRow = event.target.closest('tr');
+  if (hoverRowIndex.value != null) {
+    if (targetRow.rowIndex - 1 === hoverRowIndex.value) return;
+    frozenBody.value.rows[hoverRowIndex.value].classList.remove('hover');
+    scrollingBody.value.rows[hoverRowIndex.value].classList.remove('hover');
   }
-  correspondingRow.value = frozenBody.value.rows[scrollingRow.rowIndex - 1];
-  correspondingRow.value.classList.add('scrolling-hover');
+  hoverRowIndex.value = targetRow.rowIndex - 1;
+  frozenBody.value.rows[hoverRowIndex.value].classList.add('hover');
+  scrollingBody.value.rows[hoverRowIndex.value].classList.add('hover');
 };
 const removeHoverClass = () => {
-  if (correspondingRow.value != null) {
-    correspondingRow.value.classList.remove('scrolling-hover');
-    correspondingRow.value = null;
+  if (hoverRowIndex.value != null) {
+    frozenBody.value.rows[hoverRowIndex.value].classList.remove('hover');
+    scrollingBody.value.rows[hoverRowIndex.value].classList.remove('hover');
+    hoverRowIndex.value = null;
   }
 };
 /*
@@ -123,8 +128,6 @@ const rowClick = (event) => {
   const target = action ?? row;
   emit('action', { target, data: props.data[index], index });
 };
-
-const scrollingBody = ref(null);
 const getRowPair = (index) =>
   [frozenBody.value.rows[index], scrollingBody.value.rows[index]];
 defineExpose({ getRowPair });
@@ -137,7 +140,7 @@ defineExpose({ getRowPair });
 .table-freeze {
   @include clearfix;
   position: relative;
-  border: 1px solid #ddd;
+  border: 1px solid $color-border;
   border-radius: 12px;
   overflow: hidden;
 
@@ -145,6 +148,10 @@ defineExpose({ getRowPair });
     border: none;
     border-radius: 0;
     margin-bottom: 0;
+
+    tr.hover {
+      background-color: $color-bg;
+    }
   }
 }
 
@@ -177,7 +184,7 @@ defineExpose({ getRowPair });
   }
 
   .actions-trigger-hover tr:hover .btn-group,
-  .actions-trigger-hover .scrolling-hover .btn-group,
+  .actions-trigger-hover .hover .btn-group,
   .actions-trigger-focus .btn-group:focus-within {
     left: auto;
     right: 10px;
@@ -189,4 +196,5 @@ defineExpose({ getRowPair });
     vertical-align: top;
   }
 }
+
 </style>

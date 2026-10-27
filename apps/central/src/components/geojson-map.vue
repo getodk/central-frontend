@@ -731,10 +731,10 @@ defineExpose({
 // based on Web Forms variables
 // (zoom controls styled similarly to those in WF MapBlock.vue)
 $spacing: 10px;
-$background-color: #fff;
+$background-color: $color-surface;
 $radius: 6px;
-$border-color: #cbd5e1;
-$muted-background-color: #F1F5F9;
+$border-color: $color-border;
+$muted-background-color: $color-surface-secondary;
 
 .geojson-map {
   position: relative;
@@ -754,9 +754,9 @@ $muted-background-color: #F1F5F9;
     left: 50%;
     transform: translateX(-50%);
 
-    background-color: #fff;
+    background-color: $color-surface;
     border-radius: 4px;
-    color: #000;
+    color: $color-text-primary;
     font-size: 12px;
     line-height: 16px;
     padding-block: 6px;
@@ -855,7 +855,7 @@ $muted-background-color: #F1F5F9;
     li, a {
       font-size: 10px;
       line-height: 14px;
-      color: #777;
+      color: $color-text-placeholder;
     }
   }
 }

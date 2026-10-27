@@ -83,7 +83,7 @@ const clustersDisabledMessage = computed(() => (props.zoom >= maxZoom.value
 @import '../../assets/scss/mixins';
 
 .geojson-map-dev-tools {
-  background-color: #fff;
+  background-color: $color-surface;
   border-radius: 4px;
 
   padding: 8px;
@@ -96,7 +96,7 @@ const clustersDisabledMessage = computed(() => (props.zoom >= maxZoom.value
   }
 
   a {
-    color: #888;
+    color: $color-text-muted;
 
     span {
       @include text-link;
