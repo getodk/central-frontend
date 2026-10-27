@@ -17,7 +17,7 @@ import {
 import type { FormStateSuccessResult } from '@getodk/web-forms/lib/init/form-state.ts';
 import { initializeFormState } from '@getodk/web-forms/lib/init/initialize-form-state.ts';
 import { loadFormState } from '@getodk/web-forms/lib/init/load-form-state';
-import type { AutosaveOptions, EditInstanceOptions, FormOptions, RestoreInstanceOptions } from '@getodk/web-forms/lib/init/load-form-state.ts';
+import type { EditInstanceOptions, FormOptions, RestoreInstanceOptions } from '@getodk/web-forms/lib/init/load-form-state.ts';
 import { useNavigationTarget } from '@getodk/web-forms/lib/useNavigationTarget.ts';
 import type { RevealViolations } from '@getodk/web-forms/lib/useRevealViolations.ts';
 import { updateSubmittedFormState } from '@getodk/web-forms/lib/init/update-submitted-form-state.ts';
@@ -52,6 +52,7 @@ import {
 } from 'vue';
 import { FormInitializationError } from '@getodk/web-forms/lib/error/FormInitializationError';
 import { FormDesignError } from '@getodk/xpath';
+import type { UpdatePayload } from '../lib/types/UpdatePayload';
 
 const webFormsVersion = __WEB_FORMS_VERSION__;
 type ObjectURL = `blob:${string}`;
@@ -121,7 +122,7 @@ type OdkWebFormEmits = {
 		submissionPayload: ChunkedInstancePayload,
 		callback: HostSubmissionResultCallback,
 	];
-	updated: [submissionPayload: MonolithicInstancePayload];
+	updated: [instance: UpdatePayload];
 };
 
 /**
@@ -232,6 +233,7 @@ provide(IS_FORM_EDIT_MODE, readonly(isFormEditMode));
 const { setLanguage, getLanguage, t } = useLocale(computed(() => state.value.root));
 provide(TRANSLATE, t);
 const { navigateToFirstViolation, navigateToNode } = useNavigationTarget(() => state.value.root);
+const AUTOSAVE_TIMEOUT = 1_000; // in millis
 
 if (isEmitSubscribed('onLanguageSelected')) {
 	watch(
@@ -251,17 +253,39 @@ onErrorCaptured(err => {
 	}
 });
 
+const emitAutosave = async () => {
+	if (!state.value?.root) {
+		return;
+	}
+	// TODO this is doing too much work. think about how to expose just the bits we need
+	const fullPayload = await state.value.root.prepareInstancePayload({
+		payloadType: 'monolithic',
+	});
+
+	const files = fullPayload.data[0].values();
+	const attachments = Array.from(files).slice(1);
+
+
+	// const attachments = attachment ? [attachment] : [];
+	// const attachments = collectInstanceAttachmentFiles(state.value.instance.attachments);
+	const payload = {
+		xml: state.value.root.instanceState.instanceXML,
+		attachments
+	};
+	emit('updated', payload);
+};
+
 const registerAutosaveListener = () => {
-	if (isEmitSubscribed('onUpdated')) {
-		setTimeout(async () => {
-			if (!state.value?.root) {
-				return;
+	if (isEmitSubscribed('onUpdated') && state.value.root) {
+		let timeout: ReturnType<typeof setTimeout> | undefined;
+		watch(state.value.root.instanceState, () => {
+			if (timeout) {
+				clearTimeout(timeout);
 			}
-			const payload = await state.value.root.prepareInstancePayload({
-				payloadType: 'monolithic',
-			});
-			emit('updated', payload);
-		}, 5000); // TODO needs to be reactive listener
+			timeout = setTimeout(() => {
+				void emitAutosave();
+			}, AUTOSAVE_TIMEOUT);
+		});
 	};
 };
 

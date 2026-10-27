@@ -9,7 +9,6 @@ import type {
   PreloadProperties,
   ResolvableFormInstance,
   ResolvableFormInstanceInput,
-  ResolvedFormInstanceInputType,
 } from '@getodk/xforms-engine';
 import { loadForm } from '@getodk/xforms-engine';
 import { FormInitializationError } from '../error/FormInitializationError.ts';
@@ -38,15 +37,9 @@ export interface EditInstanceOptions {
 }
 
 export interface RestoreInstanceOptions {
-  // TODO this interface should have get/set functions
   readonly resolveInstance: ResolvableFormInstance;
-  // TODO expand options
-  // readonly attachmentFileNames: readonly string[];
-  // readonly resolveAttachment: ResolveInstanceAttachment;
-}
-
-export interface AutosaveOptions {
-	saveInstance: () => {}
+  readonly attachmentFileNames: readonly string[];
+  readonly resolveAttachment: ResolveInstanceAttachment;
 }
 
 /**
@@ -82,39 +75,10 @@ const resolvableFormInstanceInput = (options: EditInstanceOptions): ResolvableFo
   };
 };
 
-const resolvableFormInstanceInput2 = (options: RestoreInstanceOptions): ResolvableFormInstanceInput => {
-  const {
-    /**
-     * We can pass this through directly...
-     */
-    resolveInstance,
-
-    /**
-     * ... but we need to take these keys that the host application gave us,
-     * and ask the host application for the values associated with those keys.
-     *
-     * (Per feedback from Central team.)
-     */
-    // attachmentFileNames,
-    // resolveAttachment,
-  } = options;
-
-  return {
-    inputType: 'FORM_INSTANCE_INPUT_RESOLVABLE',
-    resolveInstance,
-    attachments: new Map(
-      // attachmentFileNames.map((fileName) => {
-      //   return [fileName, () => resolveAttachment(fileName)];
-      // })
-    ),
-  };
-};
-
 interface LoadFormStateOptions {
   readonly form: FormOptions;
   readonly editInstance?: EditInstanceOptions | null;
   readonly restoreInstance?: RestoreInstanceOptions | null;
-  readonly autosave?: AutosaveOptions;
   readonly deviceID?: string;
   readonly preloadProperties?: PreloadProperties;
   readonly instanceDefaults?: InstanceDefaults;
@@ -165,22 +129,12 @@ export const loadFormState = async (
 
   if (options.restoreInstance != null) {
     try {
-      console.log(options);
+      // TODO clean this up
       const instanceOptions = resolvableFormInstanceInput({
         resolveInstance: options.restoreInstance.resolveInstance,
-        attachmentFileNames: [],
-        resolveAttachment: (filename: string) => Promise.resolve(new Response())
+        attachmentFileNames: options.restoreInstance.attachmentFileNames,
+        resolveAttachment: options.restoreInstance.resolveAttachment,
       });
-      // const instanceFile = new File([options.restoreInstance.instance], INSTANCE_FILE_NAME, {
-      //   type: INSTANCE_FILE_TYPE,
-      // });
-      // const instanceData = new FormData();
-      // instanceData.set(INSTANCE_FILE_NAME, instanceFile);
-      // const instance2 = {
-      //   inputType: 'FORM_INSTANCE_INPUT_RESOLVED' as ResolvedFormInstanceInputType,
-      //   data: [instanceData as InstanceData] as const,
-      // };
-
       const instance = await form.restoreInstance(instanceOptions, config);
       return success(form, instance);
     } catch (cause) {
@@ -195,5 +149,4 @@ export const loadFormState = async (
   } catch (cause) {
     return failure(FormInitializationError.from(cause));
   }
-
 };

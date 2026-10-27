@@ -30,6 +30,7 @@ const getInstanceID = (root: Root) => {
   return instanceID?.getXPathValue();
 };
 
+// TODO decide whether to expose this
 const collectInstanceAttachmentFiles = (attachments: InstanceAttachmentsState): readonly File[] => {
   const files = Array.from(attachments.entries()).map(([context, attachment]) => {
     if (!context.isAttached() || !context.isRelevant()) {

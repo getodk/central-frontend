@@ -46,7 +46,6 @@ const getWrappedInstanceRootElement = (xml: WrappedInstanceXML): Element => {
   const domParser = new DOMParser();
   const doc = domParser.parseFromString(xml, 'text/xml');
   const { documentElement } = doc;
-  console.log(documentElement);
   const [root] = documentElement.children;
 
   assertSoleChildElement(root);

@@ -62,7 +62,7 @@ except according to the terms contained in the LICENSE file.
                   </i18n-t>
                 </label>
                 <label class="autosave">
-                  <input name="autosaveEnabled" type="checkbox" :disabled="!webformsEnabled" v-model="autosaveEnabled"/>
+                  <input v-model="autosaveEnabled" name="autosaveEnabled" type="checkbox" :disabled="!webformsEnabled">
                   <span>{{ $t('webFormsSetting.autosaveSetting') }}</span>
                 </label>
               </div>
@@ -101,6 +101,7 @@ import useRoutes from '../../composables/routes';
 import { modalData } from '../../util/reactivity';
 import { apiPaths } from '../../util/request';
 import { useRequestData } from '../../request-data';
+import { noop } from '../../util/util';
 
 defineOptions({
   name: 'FormSettings'
