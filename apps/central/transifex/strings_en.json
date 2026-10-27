@@ -4042,6 +4042,9 @@
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {preview} is in the following text:\n\nA modern experience that will replace Enketo over time. {preview}."
           }
         },
+        "autosaveSetting": {
+          "string": "Autosave responses if browser closes or refreshes. Sensitive data may be retained in saved responses."
+        },
         "enketoSelected": {
           "string": "You’re now using Enketo to fill out, preview and edit your “{formName}” form.",
           "developer_comment": "Success message when Enketo is selected as web form technology. {formName} is replaced with the name of the Form"

@@ -3,6 +3,7 @@
   "compilerOptions": {
     "paths": {
       "@getodk/web-forms": ["../../packages/web-forms/src"],
+      "@getodk/web-forms/*": ["../../packages/web-forms/src/*"],
       "@getodk/xforms-engine": ["../../packages/xforms-engine/src"],
       "@getodk/xpath": ["../../packages/xpath/src"],
       "@getodk/xpath/*": ["../../packages/xpath/src/*"]
@@ -34,7 +35,6 @@
     // Type safety (strictness -> 11)
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
-    "exactOptionalPropertyTypes": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
     "noImplicitReturns": true,

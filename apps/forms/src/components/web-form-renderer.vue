@@ -2,6 +2,7 @@
 
 import { computed, onMounted, ref } from 'vue';
 import { OdkWebForm, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
+import type { UpdatePayload } from '@getodk/web-forms/lib/types/UpdatePayload.ts';
 import { type MonolithicInstancePayload } from '@getodk/xforms-engine';
 import { postPrimaryInstance, uploadAttachment, getFormAttachment, type Form } from '../utils/api';
 import Dialog from 'primevue/dialog';
@@ -13,6 +14,7 @@ import { hideSpinner } from '../utils/spinner';
 import { deleteLastSaved, getLastSaved, setLastSaved } from '../utils/last-saved';
 import { hasSubmitted, setSubmitted } from '../utils/once-store';
 import { setLocale } from '../i18n';
+import { getAutosave, setAutosave } from '../utils/autosave';
 
 defineOptions({
   name: 'WebFormRenderer'
@@ -43,6 +45,7 @@ const inited = ref(false);
 const isEdit = computed(() => props.actionType === 'edit');
 const isPublicLink = computed(() => props.actionType === 'public-link');
 const lastSavedXml = ref<string | undefined>();
+const autosavePayload = ref<UpdatePayload | undefined>();
 
 const deviceID = getDeviceId();
 
@@ -245,24 +248,41 @@ const editInstanceOptions = computed(() => {
   if (isEdit.value) {
     return {
       resolveInstance: fetchSubmissionXml,
-      attachmentFileNames: props.submissionAttachments,
+      attachmentFileNames: props.submissionAttachments ?? [],
       resolveAttachment: fetchSubmissionAttachment
     };
   }
-  return null;
+  return undefined;
 });
 
 const restoreInstanceOptions = computed(() => {
-  if (props.form.autosaveEnabled) {
+  if (autosavePayload.value) {
+    const xml = autosavePayload.value.xml;
+    const attachments = autosavePayload.value.attachments;
     return {
-      resolveInstance: () => '<data id="simple" version="&amp;test"><meta><instanceID></instanceID></meta><first_name>gareth</first_name><city>toronto</city></data>'
+      // TODO also need to return attachments
+      resolveInstance: () => xml,
+      attachmentFileNames: attachments.map(file => file.name),
+      resolveAttachment: (fileName: string) => {
+        console.log('resolvng', fileName);
+        const attachment = attachments.find(file => file.name === fileName);
+        if (!attachment) {
+          throw new Error(); // TODO handle
+        }
+        return Promise.resolve(new Response(attachment));
+      }
+
+  //       readonly attachmentFileNames: readonly string[];
+  // readonly resolveAttachment: ResolveInstanceAttachment;
     };
   }
   return;
 });
 
-const storeAutosaveUpdate = (instance) => {
-  console.log(instance);
+const storeAutosaveUpdate = (payload: UpdatePayload) => {
+  // TODO should the api be to provide the form?
+  console.log('instance', payload);
+  setAutosave(props.form.projectId, props.form.xmlFormId, payload);
 };
 
 const alreadySubmittedOnce = () => {
@@ -277,6 +297,9 @@ onMounted(async () => {
   }
   if (!isEdit.value && !props.form.draft) {
     lastSavedXml.value = await getLastSaved(props.form.projectId, props.form.xmlFormId);
+  }
+  if (props.form.autosaveEnabled) {
+    autosavePayload.value = await getAutosave(props.form.projectId, props.form.xmlFormId);
   }
   inited.value = true;
 });
