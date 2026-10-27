@@ -280,6 +280,7 @@ const registerAutosaveListener = () => {
 		let timeout: ReturnType<typeof setTimeout> | undefined;
 		watch(state.value.root.instanceState, () => {
 			if (timeout) {
+				// TODO clear timeout on unmount, and maybe do one last autosave too?
 				clearTimeout(timeout);
 			}
 			timeout = setTimeout(() => {
