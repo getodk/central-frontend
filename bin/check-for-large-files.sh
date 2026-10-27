@@ -4,6 +4,7 @@ shopt -s inherit_errexit || true
 
 git ls-files -z -- . \
     ':!:packages/xforms-engine/test/scenario/fixtures/test-javarosa/resources/whova_form.xml' \
+    ':!:apps/central/src/assets/fonts/material-symbols-outlined.woff2' \
 | xargs -0 ls -l -- \
 | awk '
   BEGIN {

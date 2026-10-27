@@ -37,7 +37,7 @@ except according to the terms contained in the LICENSE file.
         <!-- form.submissions should always exist in production, but it doesn't
         exist in some tests. -->
         <span>{{ $n(form.submissions != null ? form.submissions : 0, 'default') }}</span>
-        <span class="icon-asterisk"></span>
+        <span class="icon-star"></span>
       </span>
     </td>
     <td class="actions">

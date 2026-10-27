@@ -38,9 +38,6 @@ const test = testBase.extend({
           // See: https://github.com/getodk/central/issues/1986
           if(normalisedMsg.match(/"downloadable font: glyf: Glyph bbox was incorrect;.*font-family: "FontAwesome"/)) return;
 
-          // See: https://github.com/getodk/central/issues/1989
-          if(normalisedMsg.match(/"downloadable font: glyf: Glyph bbox was incorrect;.*font-family: "icomoon"/)) return;
-
           // See: https://github.com/enketo/enketo/issues/1540
           if(normalisedMsg.match(/"downloadable font: glyf: Glyph bbox was incorrect;.*font-family: "OpenSans"/)) return;
 

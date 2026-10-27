@@ -79,17 +79,16 @@ export default {
     padding-right: 10%;
   }
   .wrap-circle {
-    width: 22px;
+    width: 26px;
     display: inline-block;
     background: $color-danger;
-    height: 22px;
+    height: 26px;
     border-radius: 15px;
     text-align: center;
     color: white;
-
+    vertical-align: 2px;
     margin-right: 3px;
   }
-  .icon-warning { font-size: 12px; }
   .conflicts a {
     color: $color-danger;
   }

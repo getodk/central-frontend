@@ -83,7 +83,7 @@ describe('ProjectDatasetRow', () => {
   it('shows the correct icon for entity count', async () => {
     testData.extendedDatasets.createPast(1, { name: 'people', entities: 4 });
     const cell = mountComponent().find('.total-entities');
-    cell.find('.icon-asterisk').exists().should.be.true;
+    cell.find('.icon-star').exists().should.be.true;
     await cell.get('span').should.have.tooltip('Total Entities');
   });
 

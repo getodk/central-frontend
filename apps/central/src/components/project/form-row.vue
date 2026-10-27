@@ -72,12 +72,12 @@ except according to the terms contained in the LICENSE file.
           <template v-if="canLinkToSubmissions">
             <router-link :to="submissionsPath.all">
               <span>{{ $n(form.submissions, 'default') }}</span>
-              <span class="icon-asterisk"></span>
+              <span class="icon-star"></span>
             </router-link>
           </template>
           <template v-else>
             <span>{{ $n(form.submissions, 'default') }}</span>
-            <span class="icon-asterisk"></span>
+            <span class="icon-star"></span>
           </template>
         </span>
       </td>
@@ -85,7 +85,7 @@ except according to the terms contained in the LICENSE file.
     <template v-else>
       <td class="not-published" colspan="5">
         <span>{{ $t('formState.unpublished') }}</span>
-        <span class="icon-asterisk"></span>
+        <span class="icon-star"></span>
       </td>
     </template>
   </tr>

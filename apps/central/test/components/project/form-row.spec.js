@@ -171,7 +171,7 @@ describe('ProjectFormRow', () => {
     it('shows the correct icon', async () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 4 });
       const cell = mountComponent().find('.total-submissions');
-      cell.find('.icon-asterisk').exists().should.be.true;
+      cell.find('.icon-star').exists().should.be.true;
       await cell.get('span').should.have.tooltip('Total Submissions');
     });
   });

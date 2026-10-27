@@ -140,8 +140,6 @@ em { @include italic; }
 ////////////////////////////////////////////////////////////////////////////////
 // ICONS
 
-[class^="icon-"] { vertical-align: -1px; }
-
 .btn, a, .label {
   .caret { margin-left: 6px; }
 
@@ -155,8 +153,8 @@ em { @include italic; }
   }
 }
 
-/* Bootstrap has an .icon-bar class that is unrelated to IcoMoon, but our
-IcoMoon styles end up applying to it, because our IcoMoon selectors select on
+/* Bootstrap has an .icon-bar class that is unrelated to Material Symbols, but our
+Material Symbols styles end up applying to it, because our icon selectors select on
 the "icon-" class name prefix. To resolve that, we copy the .icon-bar styles for
 .navbar-icon-bar and use .navbar-icon-bar wherever we would use .icon-bar. This
 should not be an issue for Bootstrap 4, which does not seem to have an .icon-bar

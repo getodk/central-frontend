@@ -1,0 +1,300 @@
+@font-face {
+  font-family: 'Material Symbols Outlined';
+  font-style: normal;
+  src: url('../fonts/material-symbols-outlined.woff2') format('woff2');
+}
+
+[class*="icon-"] {
+  font-family: 'Material Symbols Outlined' !important;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 20px;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  vertical-align: middle;
+}
+/* vite-font-extractor-plugin adds blank space at the top */
+[class*="icon-"]:before {
+  display: inline-block;
+  transform: translateY(-2px);
+}
+
+/* TODO: remove unused icons/classes from here */
+.icon-recycle:before {
+  content: "recycling";
+}
+.icon-filter:before {
+  content: "filter_alt";
+}
+.icon-file-o:before {
+  content: "description";
+}
+.icon-inbox:before {
+  content: "inbox";
+}
+.icon-archive:before {
+  content: "archive";
+}
+.icon-history:before {
+  content: "history";
+}
+.icon-check:before {
+  content: "check";
+}
+.icon-download:before {
+  content: "download";
+}
+.icon-exclamation-triangle:before {
+  content: "warning";
+}
+.icon-warning:before {
+  content: "warning";
+}
+.icon-cloud-upload:before {
+  content: "cloud_upload";
+}
+.icon-mobile:before {
+  content: "mobile";
+}
+.icon-mobile-phone:before {
+  content: "mobile";
+}
+.icon-file-text:before {
+  content: "description";
+}
+.icon-user-circle:before {
+  content: "account_circle";
+}
+.icon-cog:before {
+  content: "settings";
+}
+.icon-gear:before {
+  content: "settings";
+}
+.icon-refresh:before {
+  content: "refresh";
+}
+.icon-qrcode:before {
+  content: "qr_code_scanner";
+}
+.icon-plus-circle:before {
+  content: "add_circle";
+}
+.icon-times-circle:before {
+  content: "cancel";
+}
+.icon-check-circle:before {
+  content: "check_circle";
+}
+.icon-question-circle:before {
+  content: "help";
+}
+.icon-folder-open:before {
+  content: "folder_open";
+}
+.icon-arrow-circle-down:before {
+  content: "arrow_circle_down";
+}
+.icon-angle-right:before {
+  content: "keyboard_arrow_right";
+}
+.icon-plug:before {
+  content: "power";
+}
+.icon-user-circle-o:before {
+  content: "account_circle";
+}
+.icon-close:before {
+  content: "close";
+}
+.icon-remove:before {
+  content: "close";
+}
+.icon-times:before {
+  content: "close";
+}
+.icon-lock:before {
+  content: "lock";
+}
+.icon-circle-o:before {
+  content: "circle";
+}
+.icon-floppy-o:before {
+  content: "save";
+}
+.icon-save:before {
+  content: "save";
+}
+.icon-clock-o:before {
+  content: "schedule";
+}
+.icon-edit:before {
+  content: "edit_square";
+}
+.icon-pencil-square-o:before {
+  content: "edit_square";
+}
+.icon-eye:before {
+  content: "preview";
+}
+.icon-upload:before {
+  content: "upload";
+}
+.icon-exchange:before {
+  content: "sync_alt";
+}
+.icon-trash:before {
+  content: "delete";
+}
+.icon-chevron-down:before {
+  content: "keyboard_arrow_down";
+}
+.icon-angle-down:before {
+  content: "keyboard_arrow_down";
+}
+.icon-code:before {
+  content: "code";
+}
+.icon-bar-chart:before {
+  content: "insert_chart";
+}
+.icon-bar-chart-o:before {
+  content: "insert_chart";
+}
+.icon-pencil:before {
+  content: "edit";
+}
+.icon-chevron-right:before {
+  content: "keyboard_arrow_right";
+}
+.icon-comments:before {
+  content: "forum";
+}
+.icon-dot-circle-o:before {
+  content: "adjust";
+}
+.icon-ban:before {
+  content: "remove_moderator";
+}
+.icon-comment:before {
+  content: "comment";
+}
+.icon-arrow-circle-right:before {
+  content: "arrow_circle_right";
+}
+.icon-question-circle-o:before {
+  content: "help";
+}
+.icon-image:before {
+  content: "image";
+}
+.icon-photo:before {
+  content: "image";
+}
+.icon-picture-o:before {
+  content: "image";
+}
+.icon-copy:before {
+  content: "file_copy";
+}
+.icon-files-o:before {
+  content: "file_copy";
+}
+.icon-asterisk:before {
+  content: "asterisk";
+}
+.icon-tag:before {
+  content: "sell";
+}
+.icon-book:before {
+  content: "menu_book";
+}
+.icon-comments-o:before {
+  content: "forum";
+}
+.icon-angle-up:before {
+  content: "keyboard_arrow_up";
+}
+.icon-database:before {
+  content: "database";
+}
+.icon-magic:before {
+  content: "wand_stars";
+}
+.icon-link:before {
+  content: "link";
+}
+.icon-caret-left:before {
+  content: "arrow_left";
+}
+.icon-caret-down:before {
+  content: "arrow_drop_down";
+}
+.icon-cube:before {
+  content: "deployed_code";
+}
+.icon-file:before {
+  content: "draft";
+}
+.icon-info-circle:before {
+  content: "info";
+}
+.icon-exclamation-circle:before {
+  content: "error";
+}
+.icon-random:before {
+  content: "shuffle";
+}
+.icon-external-link-square:before {
+  content: "open_in_new";
+}
+.icon-angle-double-left:before {
+  content: "keyboard_double_arrow_left";
+}
+.icon-angle-double-right:before {
+  content: "keyboard_double_arrow_right";
+}
+.icon-angle-left:before {
+  content: "keyboard_arrow_left";
+}
+.icon-star:before {
+  content: "star";
+}
+.icon-user:before {
+  content: "person";
+}
+.icon-chain:before {
+  content: "link_2";
+}
+.icon-paperclip:before {
+  content: "attach_file";
+}
+.icon-desktop:before {
+  content: "computer";
+}
+.icon-circle-o {
+  font-feature-settings: 'FILL' 1;
+}
+.icon-circle:before {
+  content: "circle";
+}
+.icon-pencil-square:before {
+  content: "edit_square";
+}
+.icon-file-code-o:before {
+  content: "code_blocks";
+}
+.icon-calendar:before {
+  content: "calendar_month";
+}
+.icon-search:before {
+  content: "search";
+}
+.icon-map-marker:before {
+  content: "location_on";
+}

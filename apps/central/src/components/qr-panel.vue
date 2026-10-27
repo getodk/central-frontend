@@ -57,20 +57,20 @@ defineProps({
   // managed and a legacy QR code would reset the animation.
   .icon-mobile {
     color: $color-action-overlay;
-    font-size: 98px;
+    font-size: 60px;
     position: absolute;
     right: 18px;
-    top: -32px;
+    top: -12px;
     transform: rotate(15deg);
 
     &::after {
       background-color: #fff;
       content: '';
-      height: 65px;
-      left: 5px;
+      height: 60px;
+      left: 15px;
       position: absolute;
-      top: 18px;
-      width: 32px;
+      top: 0px;
+      width: 20px;
       z-index: -1;
     }
   }
