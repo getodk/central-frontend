@@ -1,6 +1,6 @@
 # Runs the Web Forms functional and visual tests in the Playwright image.
-# Use it through the `test:e2e:*` npm scripts, which set the variables read below.
-name: web-forms
+# Use it through the `test:e2e:*` npm scripts, which set the required variables.
+name: web-forms-test-runner
 services:
   e2e:
     build:
