@@ -13,7 +13,7 @@ jobs:
     timeout-minutes: 10
     container:
       # The image version must match the @playwright/test version in the root package-lock.json.
-      image: mcr.microsoft.com/playwright:v1.60.0-noble
+      image: mcr.microsoft.com/playwright:v1.64.0-resolute
       options: --user 1001
 
     steps:
@@ -37,7 +37,7 @@ jobs:
     timeout-minutes: 4
     container:
       # The image version must match the @playwright/test version in the root package-lock.json.
-      image: mcr.microsoft.com/playwright:v1.60.0-noble
+      image: mcr.microsoft.com/playwright:v1.64.0-resolute
       options: --user 1001
 
     strategy:
@@ -71,7 +71,7 @@ jobs:
     timeout-minutes: 6
     container:
       # The image version must match the @playwright/test version in the root package-lock.json.
-      image: mcr.microsoft.com/playwright:v1.60.0-noble
+      image: mcr.microsoft.com/playwright:v1.64.0-resolute
       options: --user 1001
 
     strategy:
