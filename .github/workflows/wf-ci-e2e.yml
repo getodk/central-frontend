@@ -9,7 +9,7 @@ jobs:
   # this image only has gzip and actions/cache treats those as different caches.
   web-forms-e2e-build:
     name: 'Build for e2e'
-    runs-on: 'ubuntu-latest'
+    runs-on: 'ubuntu-24.04'
     timeout-minutes: 10
     container:
       # The image version must match the @playwright/test version in the root package-lock.json.
@@ -33,7 +33,7 @@ jobs:
   web-forms-e2e-functional:
     name: 'Functional e2e'
     needs: web-forms-e2e-build
-    runs-on: 'ubuntu-latest'
+    runs-on: 'ubuntu-24.04'
     timeout-minutes: 4
     container:
       # The image version must match the @playwright/test version in the root package-lock.json.
@@ -68,7 +68,7 @@ jobs:
   web-forms-e2e-visual:
     name: 'Visual e2e'
     needs: web-forms-e2e-build
-    runs-on: 'ubuntu-latest'
+    runs-on: 'ubuntu-24.04'
     timeout-minutes: 6
     container:
       # The image version must match the @playwright/test version in the root package-lock.json.
