@@ -123,7 +123,7 @@ describe('Sentry headers', () => {
     await Promise.all(urlsWithTraceHeaders.map((url) => fetch(url)));
 
     urlsWithTraceHeaders.forEach((url) => {
-      const call = findCall(fetchSpy.mock.calls as FetchCall[], url);
+      const call = findCall(fetchSpy.mock.calls, url);
       expect(call, `expected a fetch call to ${url}`).toBeDefined();
 
       const headers = readSentryHeaders(call!);
@@ -140,7 +140,7 @@ describe('Sentry headers', () => {
     await Promise.all(urlsWithoutTraceHeaders.map((url) => fetch(url)));
 
     urlsWithoutTraceHeaders.forEach((url) => {
-      const call = findCall(fetchSpy.mock.calls as FetchCall[], url);
+      const call = findCall(fetchSpy.mock.calls, url);
       expect(call, `expected a fetch call to ${url}`).toBeDefined();
 
       const headers = readSentryHeaders(call!);
