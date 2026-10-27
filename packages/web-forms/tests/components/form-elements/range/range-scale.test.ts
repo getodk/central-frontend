@@ -6,6 +6,7 @@ import {
   getRangeTicks,
   getRangeValueAfterSteps,
   getRangeValueAtRatio,
+  getRangeValueLength,
   placeLabelsOnTicks,
 } from '@getodk/web-forms/components/form-elements/range/range-scale.ts';
 import type { RangeScale } from '@getodk/web-forms/components/form-elements/range/range-scale.ts';
@@ -249,6 +250,13 @@ describe('Range scale', () => {
     it('does not move past start or end', () => {
       expect(getRangeValueAfterSteps(scale, 0, -1)).toBe(0);
       expect(getRangeValueAfterSteps(scale, 10, 1)).toBe(10);
+    });
+  });
+
+  describe('getRangeValueLength', () => {
+    it('fits the longest bound, the decimals of the step and the decimal point', () => {
+      expect(getRangeValueLength(bounds)).toBe(3);
+      expect(getRangeValueLength({ start: -5, end: 100, step: 0.25 })).toBe(6);
     });
   });
 });
