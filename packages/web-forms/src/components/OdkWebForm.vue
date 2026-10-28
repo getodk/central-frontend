@@ -260,17 +260,25 @@ const emitAutosave = () => {
 	}
 };
 
+let autosaveTimeout: ReturnType<typeof setTimeout> | undefined;
+
 const registerAutosaveListener = () => {
 	if (isEmitSubscribed('onUpdated') && state.value.root) {
-		let timeout: ReturnType<typeof setTimeout> | undefined;
 		watch(state.value.root.instanceState, () => {
-			if (timeout) {
-				// TODO clear timeout on unmount, and maybe do one last autosave too?
-				clearTimeout(timeout);
+			if (autosaveTimeout) {
+				clearTimeout(autosaveTimeout);
 			}
-			timeout = setTimeout(() => emitAutosave(), AUTOSAVE_TIMEOUT);
+			autosaveTimeout = setTimeout(() => emitAutosave(), AUTOSAVE_TIMEOUT);
 		});
 	};
+};
+
+const unmountAutosave = () => {
+	if (autosaveTimeout) {
+		clearTimeout(autosaveTimeout);
+		autosaveTimeout = undefined;
+		emitAutosave();
+	}
 };
 
 watch(
@@ -394,6 +402,7 @@ const showValidationError = computed(() => {
 onUnmounted(() => {
 	mediaCache.forEach((url) => URL.revokeObjectURL(url));
 	mediaCache.clear();
+	unmountAutosave();
 	resetComponentState();
 });
 </script>
