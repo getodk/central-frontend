@@ -1,0 +1,33 @@
+import type { InstanceSnapshot } from '../../../client/serialization/InstancePayload.ts';
+import type { InstanceAttachmentsState } from '../../../instance/attachments/InstanceAttachmentsState.ts';
+import type { ClientReactiveSerializableInstance } from '../../../instance/internal-api/serialization/ClientReactiveSerializableInstance.ts';
+
+// TODO reuse!
+const collectInstanceAttachmentFiles = (attachments: InstanceAttachmentsState): readonly File[] => {
+  const files = Array.from(attachments.entries()).map(([context, attachment]) => {
+    if (!context.isAttached() || !context.isRelevant()) {
+      return null;
+    }
+
+    const state = attachment.getState();
+    if (!state.dirty) {
+      // File not set by client. During editing this means it's unchanged and we don't need to upload it again.
+      return null;
+    }
+
+    return attachment.getValue();
+  });
+
+  return files.filter((file) => file != null);
+};
+
+export const prepareInstanceSnapshot = (
+  instanceRoot: ClientReactiveSerializableInstance
+): InstanceSnapshot => {
+  const xml = instanceRoot.instanceState.instanceXML;
+  const attachments = collectInstanceAttachmentFiles(instanceRoot.attachments);
+  return {
+    xml,
+    attachments
+  };
+};
