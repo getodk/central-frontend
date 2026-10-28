@@ -1,6 +1,7 @@
 import type { RangeTickLabel, TextRange } from '@getodk/xforms-engine';
 
 const MAX_DECIMAL_PLACES = 10;
+const DECIMAL_POINT_LENGTH = 1;
 
 export interface RangeBounds {
   readonly start: number;
@@ -53,9 +54,15 @@ export const TRACK_END = 1;
 // don't fill the grid. Rounding also lets neighbouring labels share a grid line.
 const GRID_UNITS = 1000;
 
-export const getDecimalPlaces = (value: number): number => {
+const getDecimalPlaces = (value: number): number => {
   const places = value.toString().split('.')[1]?.length ?? 0;
   return Math.min(places, MAX_DECIMAL_PLACES);
+};
+
+// Characters needed for the longest value, so the layout doesn't move when the value changes.
+export const getRangeValueLength = (bounds: RangeBounds) => {
+  const boundLength = Math.max(String(bounds.start).length, String(bounds.end).length);
+  return boundLength + getDecimalPlaces(bounds.step) + DECIMAL_POINT_LENGTH;
 };
 
 const toWholeNumber = (value: number, factor: number): number => Math.round(value * factor);

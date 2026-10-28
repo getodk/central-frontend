@@ -60,7 +60,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-##### Appearances<br/>🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜ 58\%
+##### Appearances<br/>🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜ 63\%
 
   </summary>
   <br/>
@@ -73,9 +73,9 @@ This section is auto generated. Please update `feature-matrix.json` and then run
 | ex:                                                             |          |
 | thousands-sep                                                   |    ✅    |
 | bearing                                                         |          |
-| [vertical](https://github.com/getodk/web-forms/issues/271)      |          |
+| [vertical](https://github.com/getodk/web-forms/issues/271)      |    ✅    |
 | [no-ticks](https://github.com/getodk/web-forms/issues/271)      |    ✅    |
-| picker                                                          |          |
+| [picker](https://github.com/getodk/web-forms/issues/712)        |    ✅    |
 | [rating](https://github.com/getodk/web-forms/issues/711)        |    ✅    |
 | new                                                             |          |
 | new-front                                                       |          |
