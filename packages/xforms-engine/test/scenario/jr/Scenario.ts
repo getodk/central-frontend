@@ -1219,9 +1219,15 @@ export class Scenario {
     });
     const instanceData = new FormData();
     instanceData.set(ENGINE_CONSTANTS.INSTANCE_FILE_NAME, instanceFile);
+    const attachments = snapshot.attachments.map((file) => {
+      const formData = new FormData();
+      formData.append(file.name, file);
+      return formData;
+    });
+    const data = [instanceData, ...attachments] as const;
     const payload = {
       inputType: 'FORM_INSTANCE_INPUT_RESOLVED',
-      data: [instanceData],
+      data,
     } as ResolvedFormInstanceInput;
     return this.restoreWebFormsInstanceState(payload);
   }

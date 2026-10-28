@@ -106,6 +106,7 @@ describe('Test api utility', () => {
       state: 'open',
       draft: false,
       webformsEnabled: false,
+      autosaveEnabled: false,
       once: false,
     };
     
