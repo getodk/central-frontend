@@ -260,7 +260,6 @@ const restoreInstanceOptions = computed(() => {
     const xml = autosavePayload.value.xml;
     const attachments = autosavePayload.value.attachments;
     return {
-      // TODO also need to return attachments
       resolveInstance: () => xml,
       attachmentFileNames: attachments.map(file => file.name),
       resolveAttachment: (fileName: string) => {
@@ -270,9 +269,6 @@ const restoreInstanceOptions = computed(() => {
         }
         return Promise.resolve(new Response(attachment));
       }
-
-  //       readonly attachmentFileNames: readonly string[];
-  // readonly resolveAttachment: ResolveInstanceAttachment;
     };
   }
   return;

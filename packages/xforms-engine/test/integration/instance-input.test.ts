@@ -15,7 +15,7 @@ import {
   t,
   title,
 } from '@getodk/common/test-utils/xform-dsl/index.ts';
-import type { InstanceData, InstanceFile, RestoreFormInstanceInput } from '@getodk/xforms-engine';
+import type { InstanceData, InstanceFile, ResolvedFormInstanceInput } from '@getodk/xforms-engine';
 import { constants } from '@getodk/xforms-engine';
 import { afterEach, assert, beforeEach, describe, expect, it } from 'vitest';
 import type { ComparableAnswer } from '../scenario/answer/ComparableAnswer.ts';
@@ -68,7 +68,7 @@ describe.each<InstanceRoundTripCase>([
     expect(instanceFile).toBeInstanceOf(FabricatedInstanceFile);
   };
 
-  const fabricateInstanceInput = (instanceElement: XFormsElement): RestoreFormInstanceInput => {
+  const fabricateInstanceInput = (instanceElement: XFormsElement): ResolvedFormInstanceInput => {
     const instanceFile = new FabricatedInstanceFile(instanceElement);
     const instanceData = new FormData();
 
@@ -77,6 +77,7 @@ describe.each<InstanceRoundTripCase>([
     assertInstanceData(instanceData);
 
     return {
+      inputType: 'FORM_INSTANCE_INPUT_RESOLVED',
       data: [instanceData],
     };
   };
@@ -121,6 +122,7 @@ describe.each<InstanceRoundTripCase>([
     instanceData.set(INSTANCE_FILE_NAME, instanceFile);
 
     const result = await scenario.restoreWebFormsInstanceState({
+      inputType: 'FORM_INSTANCE_INPUT_RESOLVED',
       data: [instanceData as InstanceData],
     });
 

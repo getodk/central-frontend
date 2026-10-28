@@ -11,7 +11,7 @@ import type {
   RepeatRangeControlledNode,
   RepeatRangeNode,
   RepeatRangeUncontrolledNode,
-  RestoreFormInstanceInput,
+  ResolvedFormInstanceInput,
   RootNode,
   SelectNode,
   TextRange,
@@ -1107,7 +1107,7 @@ export class Scenario {
     });
   }
 
-  async restoreWebFormsInstanceState(payload: RestoreFormInstanceInput): Promise<this> {
+  async restoreWebFormsInstanceState(payload: ResolvedFormInstanceInput): Promise<this> {
     const instance = await this.form.restoreInstance(payload, this.config.formOptions);
 
     return this.fork(instance);
@@ -1213,8 +1213,16 @@ export class Scenario {
    *   definition and instance state.
    */
   async proposed_serializeAndRestoreInstanceState(): Promise<this> {
-    const payload = await this.instanceRoot.prepareInstancePayload();
-
+    const snapshot = this.instanceRoot.prepareInstanceSnapshot();
+    const instanceFile = new File([snapshot.xml], ENGINE_CONSTANTS.INSTANCE_FILE_NAME, {
+      type: ENGINE_CONSTANTS.INSTANCE_FILE_TYPE,
+    });
+    const instanceData = new FormData();
+    instanceData.set(ENGINE_CONSTANTS.INSTANCE_FILE_NAME, instanceFile);
+    const payload = {
+      inputType: 'FORM_INSTANCE_INPUT_RESOLVED',
+      data: [instanceData],
+    } as ResolvedFormInstanceInput;
     return this.restoreWebFormsInstanceState(payload);
   }
 

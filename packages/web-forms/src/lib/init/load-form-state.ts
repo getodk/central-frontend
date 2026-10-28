@@ -47,7 +47,9 @@ export interface RestoreInstanceOptions {
  * {@link ResolveFormInstanceResource}, by mapping... a mapping... to a
  * {@link Map}.
  */
-const resolvableFormInstanceInput = (options: EditInstanceOptions): ResolvableFormInstanceInput => {
+const resolvableFormInstanceInput = (
+  options: EditInstanceOptions | RestoreInstanceOptions
+): ResolvableFormInstanceInput => {
   const {
     /**
      * We can pass this through directly...
@@ -129,12 +131,7 @@ export const loadFormState = async (
 
   if (options.restoreInstance != null) {
     try {
-      // TODO clean this up
-      const instanceOptions = resolvableFormInstanceInput({
-        resolveInstance: options.restoreInstance.resolveInstance,
-        attachmentFileNames: options.restoreInstance.attachmentFileNames,
-        resolveAttachment: options.restoreInstance.resolveAttachment,
-      });
+      const instanceOptions = resolvableFormInstanceInput(options.restoreInstance);
       const instance = await form.restoreInstance(instanceOptions, config);
       return success(form, instance);
     } catch (cause) {
