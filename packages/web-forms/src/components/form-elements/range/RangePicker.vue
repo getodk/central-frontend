@@ -165,10 +165,6 @@ onBeforeUnmount(() => stopHold());
 	padding: var(--odk-spacing-s);
 	border-radius: var(--odk-radius);
 	outline: none;
-	// Stops a long press from selecting text or opening the iOS menu.
-	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	user-select: none;
 
 	&:focus-visible {
 		outline: 1px solid var(--odk-primary-border-color);
@@ -188,8 +184,11 @@ onBeforeUnmount(() => stopHold());
 	border-radius: 50%;
 	background: none;
 	cursor: pointer;
-	// Stops a touch hold on the chevron from scrolling the page.
+	// Stops a touch hold on the chevron from scrolling the page, selecting text or opening the iOS menu.
 	touch-action: none;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	user-select: none;
 
 	&:disabled {
 		cursor: default;
@@ -204,9 +203,11 @@ onBeforeUnmount(() => stopHold());
 
 .range-picker-value {
 	font-size: var(--odk-question-font-size);
+	font-weight: bold;
 	text-align: center;
 
 	&.range-picker-empty {
+		font-weight: normal;
 		color: var(--odk-muted-text-color);
 	}
 }
