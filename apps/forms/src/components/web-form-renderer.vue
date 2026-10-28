@@ -13,7 +13,7 @@ import { hideSpinner } from '../utils/spinner';
 import { deleteLastSaved, getLastSaved, setLastSaved } from '../utils/last-saved';
 import { hasSubmitted, setSubmitted } from '../utils/once-store';
 import { setLocale } from '../i18n';
-import { getAutosave, setAutosave } from '../utils/autosave';
+import { clearExpiredAutosave, deleteAutosave, getAutosave, setAutosave } from '../utils/autosave';
 
 defineOptions({
   name: 'WebFormRenderer'
@@ -196,11 +196,11 @@ const updateLastSaved = (hasLastSaved: boolean) => {
     && !props.form.once
   ) {
     if (hasLastSaved) {
-      setLastSaved(props.form.projectId, props.form.xmlFormId, submissionData.instanceFile);
+      setLastSaved(props.form, submissionData.instanceFile);
     } else {
       // clean up any stored data in the case where a previous form version
       // had last-saved data but the current version doesn't
-      deleteLastSaved(props.form.projectId, props.form.xmlFormId);
+      deleteLastSaved(props.form);
     }
   }
 };
@@ -227,7 +227,7 @@ const handleSubmit = async (
   clearForm = clearFormCallback;
 
   await submitData();
-  // TODO clear autosave
+  deleteAutosave(props.form);
   updateLastSaved(hasLastSaved);
 };
 
@@ -256,27 +256,24 @@ const editInstanceOptions = computed(() => {
 });
 
 const restoreInstanceOptions = computed(() => {
-  if (autosavePayload.value) {
-    const xml = autosavePayload.value.xml;
-    const attachments = autosavePayload.value.attachments;
-    return {
-      resolveInstance: () => xml,
-      attachmentFileNames: attachments.map(file => file.name),
-      resolveAttachment: (fileName: string) => {
-        const attachment = attachments.find(file => file.name === fileName);
-        if (!attachment) {
-          throw new Error(); // TODO handle
-        }
-        return Promise.resolve(new Response(attachment));
-      }
-    };
+  if (!autosavePayload.value) {
+    return;
   }
-  return;
+  const xml = autosavePayload.value.xml;
+  const attachments = autosavePayload.value.attachments;
+  return {
+    resolveInstance: () => xml,
+    attachmentFileNames: attachments.map(file => file.name),
+    resolveAttachment: (fileName: string) => {
+      const attachment = attachments.find(file => file.name === fileName);
+      const response = attachment ? new Response(attachment) : new Response('Not Found', { status: 404 });
+      return Promise.resolve(response);
+    }
+  }
 });
 
 const storeAutosaveUpdate = (snapshot: InstanceSnapshot) => {
-  // TODO should the api be to provide the form?
-  setAutosave(props.form.projectId, props.form.xmlFormId, snapshot);
+  setAutosave(props.form, snapshot);
 };
 
 const alreadySubmittedOnce = () => {
@@ -290,11 +287,12 @@ onMounted(async () => {
     return;
   }
   if (!isEdit.value && !props.form.draft) {
-    lastSavedXml.value = await getLastSaved(props.form.projectId, props.form.xmlFormId);
+    lastSavedXml.value = await getLastSaved(props.form);
   }
   if (props.form.autosaveEnabled) {
-    autosavePayload.value = await getAutosave(props.form.projectId, props.form.xmlFormId);
+    autosavePayload.value = await getAutosave(props.form);
   }
+  clearExpiredAutosave();
   inited.value = true;
 });
 </script>
