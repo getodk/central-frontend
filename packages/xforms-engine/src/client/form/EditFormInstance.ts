@@ -49,7 +49,6 @@ export interface ResolvedFormInstanceInput extends BaseFormInstanceInput {
   readonly attachments?: never;
 }
 
-// TODO rename so it can be used for both edit and restore?
 // prettier-ignore
 export type EditFormInstanceInput =
 	| ResolvableFormInstanceInput

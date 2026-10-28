@@ -57,7 +57,7 @@ except according to the terms contained in the LICENSE file.
                 </label>
                 <label class="autosave">
                   <input v-model="autosaveEnabled" name="autosaveEnabled" type="checkbox" :disabled="!webformsEnabled">
-                  <span>{{ $t('webFormsSetting.autosaveSetting') }}</span>
+                  <span>{{ $t('autosaveSetting.description') }}</span>
                 </label>
               </div>
               <div class="radio">
@@ -154,7 +154,10 @@ watch(autosaveEnabled, () => {
     }
   })
     .then(() => {
-      // TODO toast?
+      const message = autosaveEnabled.value
+        ? t('autosaveSetting.enabled', { formName: form.nameOrId })
+        : t('autosaveSetting.disabled', { formName: form.nameOrId });
+      toast.show(message);
     })
     .catch(noop);
 });
@@ -253,11 +256,15 @@ const hideAndReset = () => {
         "full": "A modern experience that will replace Enketo over time. {preview}.",
         "preview": "See a preview"
       },
-      "autosaveSetting": "Autosave responses if browser closes or refreshes. Sensitive data may be retained in saved responses.",
       // Success message when Enketo is selected as web form technology. {formName} is replaced with the name of the Form
       "enketoSelected": "You’re now using Enketo to fill out, preview and edit your “{formName}” form.",
       // Success message when ODK Web Forms is selected as web form technology. {formName} is replaced with the name of the Form
       "owfSelected": "You’re now using ODK Web Forms to fill out, preview and edit your “{formName}” form."
+    },
+    "autosaveSetting": {
+      "description": "Autosave responses if browser closes or refreshes. Sensitive data may be retained in saved responses.",
+      "enabled": "Autosave is now enabled for your “{formName}” form.",
+      "disabled": "Autosave is now disabled for your “{formName}” form.",
     }
   }
 }
