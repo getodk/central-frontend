@@ -20,8 +20,10 @@ except according to the terms contained in the LICENSE file.
       <template v-if="form.publishedAt != null">
         <link-if-can :to="formPath(form.projectId, form.xmlFormId, `submissions?reviewState=${urlFilterEncode.get(reviewState)}`)"
           v-tooltip.no-aria="$t(`reviewState.${reviewState}`)">
-          <span>{{ $n(form.reviewStates[reviewState], 'default') }}</span>
-          <span :class="reviewStateIcon(reviewState)"></span>
+          <span class="tag" :class="reviewStateTag(reviewState)">
+            {{ $n(form.reviewStates[reviewState], 'default') }}
+            <span :class="reviewStateIcon(reviewState)"></span>
+          </span>
         </link-if-can>
       </template>
     </td>
@@ -118,11 +120,11 @@ export default {
   setup() {
     const { project, duplicateFormNames } = useRequestData();
     const { formPath } = useRoutes();
-    const { reviewStateIcon } = useReviewState();
+    const { reviewStateIcon, reviewStateTag } = useReviewState();
     return {
       project, duplicateFormNames,
       formPath,
-      reviewStateIcon
+      reviewStateIcon, reviewStateTag
     };
   },
   computed: {
@@ -169,13 +171,8 @@ export default {
   .table tbody & td { vertical-align: middle; }
 
   td {
-    font-size: 16px;
     padding: 3px 0px 3px 6px;
     color: #333;
-  }
-
-  .name {
-    font-size: 18px;
   }
 
   .duplicate-form-id {
@@ -189,15 +186,12 @@ export default {
     text-align: right;
     width: 100px;
     & [class*='icon'] {
-      margin-left: 5px;
       color: #888;
     }
   }
 
   .review-state a {
-    display: block;
     border-radius: 9999px;
-    padding: 4px 8px;
     margin: -4px;
     &:hover { background: #fff }
   }
@@ -212,6 +206,10 @@ export default {
 
   .actions {
     width: 100px;
+
+    .btn {
+      width: 100%;
+    }
   }
 
   .last-submission{
@@ -227,10 +225,6 @@ export default {
   .closing-icon {
     margin-right: 5px;
     color: #888;
-  }
-
-  td.review-state {
-    background-color: #eee;
   }
 }
 </style>

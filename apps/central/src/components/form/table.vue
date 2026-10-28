@@ -10,22 +10,18 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
+  <div v-if="showClosed && showTable" class="closed-forms-heading">
+    <h5>{{ $t('header.closedForms') }}</h5>
+  </div>
   <table v-if="project.dataExists && showTable" class="table form-table">
     <thead>
-      <template v-if="showClosed">
-        <tr>
-           <th colspan="7">{{ $t('header.closedForms') }}</th>
-        </tr>
-      </template>
-      <template v-else>
-        <tr>
-          <th>{{ $t('header.name') }}</th>
-          <th class="review-state" colspan="3">{{ $t('header.reviewStates') }}</th>
-          <th class="last-submission">{{ $t('header.latest') }}</th>
-          <th class="total-submissions">{{ $t('common.total') }}</th>
-          <th v-if="showActions" class="actions">{{ $t('header.actions') }}</th>
-        </tr>
-      </template>
+      <tr>
+        <th>{{ $t('header.name') }}</th>
+        <th class="review-state" colspan="3">{{ $t('header.reviewStates') }}</th>
+        <th class="last-submission">{{ $t('header.latest') }}</th>
+        <th class="total-submissions">{{ $t('common.total') }}</th>
+        <th v-if="showActions" class="actions">{{ $t('header.actions') }}</th>
+      </tr>
     </thead>
     <tbody v-if="forms.dataExists">
       <form-row v-for="form of formsToShow" :key="form.xmlFormId" :form="form"
@@ -63,11 +59,7 @@ export default {
       return this.project.permits('project.update') || this.project.permits('submission.create');
     },
     showTable() {
-      // Show the table (incluidng header) if there are forms, or if it is the
-      // non-closed form table.
-      // In the case that there are no (non-closed) forms, a loading message
-      // or "no forms" message will be shown below the header.
-      return this.formsToShow.length > 0 || !this.showClosed;
+      return this.formsToShow.length > 0;
     },
     formsToShow() {
       if (!this.forms.dataExists)
@@ -89,13 +81,11 @@ export default {
   .review-state, .last-submission, .total-submissions, .not-published {
     text-align: right;
   }
-
-  th.review-state {
-    background-color: #ccc;
-    box-shadow: inset 0em -2px #aaa;
-  }
 }
 
+.form-table + .closed-forms-heading {
+  margin-top: 20px;
+}
 </style>
 
 <i18n lang="json5">

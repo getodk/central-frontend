@@ -197,7 +197,7 @@ class. */
 
 .btn {
   border: none;
-  border-radius: 2px;
+  border-radius: 6px;
   font-size: $font-size-btn;
   // I think we set this for the Spinner component.
   overflow: hidden;
@@ -211,29 +211,42 @@ class. */
 
 .btn-primary {
   background-color: $color-action-background;
+  border: 1px solid $color-action-background;
 
   &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
     background-color: $color-action-background-disabled;
+    border-color: $color-action-background-disabled;
   }
 
   &:hover, &:focus, &:active:focus {
     background-color: $color-action-background-hover;
+    border-color: $color-action-background-hover;
 
     &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
       background-color: $color-action-background-disabled;
+      border-color: $color-action-background-disabled;
     }
   }
 }
 
 .btn-default {
-  background-color: #ddd;
+  background-color: #fff;
+  color: $color-action-background;
+  border: 1px solid $color-action-background;
 
   &:hover, &:focus, &:active:focus {
-    background-color: #ccc;
-    &[aria-disabled="true"], &.disabled, fieldset[disabled] & { background-color: #ddd; }
+    background-color: $color-action-background;
+    border-color: $color-action-background;
+
+    color: #fff;
+    &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
+      background-color: #fff;
+      color: $color-action-background;
+      border-color: $color-action-background;
+    }
   }
 
-  > [class^="icon-"]:first-child { color: $color-action-background; }
+  > [class^="icon-"]:first-child { color: inherit; }
 }
 
 .btn-danger {
@@ -354,19 +367,9 @@ a {
     }
   }
 
-  > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
-    border-radius: 0;
+  > .btn:not(:first-child) {
+    margin-left: 10px;
   }
-  > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
-    border-bottom-right-radius: 0;
-    border-top-right-radius: 0;
-  }
-  > .btn:last-child:not(:first-child), > .dropdown-toggle:not(:first-child) {
-    border-bottom-left-radius: 0;
-    border-top-left-radius: 0;
-  }
-
-  > .btn-default + .btn-default { border-left: 1px solid #ccc; }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -617,14 +620,25 @@ tr.uncommitted-change { background-color: #ffef67; }
 
 .table {
   margin-bottom: $margin-bottom-table;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
 
   > thead {
     background-color: $color-table-heading-background;
 
+    > tr {
+      background-color: $color-header-row;
+    }
+
     > tr > th {
-      border-bottom: $border-bottom-table-heading;
+      border-bottom: none;
       font-size: $font-size-table-heading;
       padding: $padding-table-heading;
+      height: 56px;
+      vertical-align: middle;
     }
   }
 
@@ -633,6 +647,17 @@ tr.uncommitted-change { background-color: #ffef67; }
       border-top: $border-top-table-data;
       padding: $padding-top-table-data $padding-right-table-data
                $padding-bottom-table-data $padding-left-table-data;
+      height: 56px;
+      vertical-align: middle;
+    }
+
+    // Zebra striping
+    > tr:nth-child(even) {
+      background-color: $color-even-row;
+    }
+
+    > tr:nth-child(odd) {
+      background-color: $color-odd-row;
     }
   }
 
@@ -685,33 +710,38 @@ tr.uncommitted-change { background-color: #ffef67; }
 .label-primary { background-color: $color-action-background; }
 .label-warning { background-color: $color-warning; }
 
-
-
 ////////////////////////////////////////////////////////////////////////////////
-// PAGE STRUCTURE
+// TAGS
 
-/*
-Most pages render a PageHead and a PageBody. The PageBody will often contain one
-or more PageSection components. Some pages use .panel-simple, but this is an
-older pattern: try to use PageSection instead.
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 14px;
+  border-radius: 9999px;
+  font-size: 13px;
+  color: #212529;
 
-The PageBody component may show a heading at the top. Right now we implement
-this using the page-body-heading class, but we may create a component if it
-becomes more complicated.
-*/
-
-// .heading-with-button is deprecated: use .page-body-heading instead.
-.page-body-heading, .heading-with-button {
-  margin-bottom: 25px;
-
-  > .btn {
-    float: right;
-    margin-left: 20px;
+  &.tag-default {
+    background-color: #DCDCDC;
   }
 
-  ul { @include text-list; }
-}
+  &.tag-warning {
+    background-color: #F9E599;
+  }
 
+  &.tag-success {
+    background-color: #DBFCE0;
+  }
+
+  &.tag-info {
+    background-color: #E3EFF3;
+  }
+
+  &.tag-danger {
+    background-color: #F7B3B3;
+  }
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -864,11 +894,10 @@ becomes more complicated.
 // NAVS
 
 .nav-tabs {
-  border-bottom: none;
+  border-bottom: 1px solid $color-input;
 
   > li {
     margin-bottom: -1px;
-    margin-right: 10px;
 
     > a, &.active > a {
       &, &:hover, &:focus {
@@ -876,7 +905,7 @@ becomes more complicated.
         border-bottom: 2px solid transparent;
         border-radius: 0;
         color: $color-text;
-        padding: 7px $hpadding-nav-tab 6px;
+        padding: 7px $hpadding-nav-tab;
       }
 
       &:focus {
@@ -885,6 +914,7 @@ becomes more complicated.
     }
 
     > a {
+      margin-right: 0;
       &, &:hover, &:focus {
         background-color: transparent;
       }
@@ -900,8 +930,8 @@ becomes more complicated.
 
     &.active > a {
       &, &:hover, &:focus {
-        background-color: $color-subpanel-background;
-        border-bottom-color: $color-accent-primary;
+        border-bottom: 2px solid $color-accent-primary;
+        color: $color-accent-primary;
       }
     }
 
@@ -923,7 +953,11 @@ becomes more complicated.
   }
 
   .badge {
-    background-color: $color-accent-primary;
+    margin-left: 2px;
+    background-color: rgba($color-accent-primary, 0.2);
+    color: $color-text;
+    font-size: 14px;
+    font-weight: normal;
     vertical-align: baseline;
   }
 }
@@ -980,3 +1014,4 @@ becomes more complicated.
     margin-left: 10px;
   }
 }
+

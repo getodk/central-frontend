@@ -74,7 +74,7 @@ defineExpose({ textarea });
   $vpadding: 4px;
   .label-cell, .new-value { padding-bottom: $vpadding; }
   .label-cell {
-    padding-left: 0px;
+    padding-left: 15px;
     padding-right: 15px;
     padding-top: #{$vpadding + $padding-top-form-control};
   }

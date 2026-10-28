@@ -12,7 +12,7 @@ import { mount } from '../../util/lifecycle';
 import { setLuxon } from '../../util/date-time';
 import { testRequestData } from '../../util/request-data';
 
-const mountComponent = (showIcon = false) => {
+const mountComponent = () => {
   const projectData = { ...testData.extendedProjects.last() };
   projectData.datasetList = testData.extendedDatasets.sorted();
   const container = createTestContainer({
@@ -21,7 +21,7 @@ const mountComponent = (showIcon = false) => {
   });
   const project = container.requestData.localResources.projects[0];
   return mount(ProjectDatasetRow, {
-    props: { dataset: project.datasetList[0], project, showIcon },
+    props: { dataset: project.datasetList[0], project },
     container
   });
 };
@@ -33,11 +33,6 @@ describe('ProjectDatasetRow', () => {
     testData.extendedDatasets.createPast(1, { name: 'people' });
     const link = mountComponent().find('.dataset-name a');
     link.text().should.equal('people');
-  });
-
-  it('should show dataset icon', () => {
-    testData.extendedDatasets.createPast(1, { name: 'people' });
-    mountComponent(true).find('.col-icon span.icon-database').exists().should.be.true;
   });
 
   it('links to dataset page', () => {
@@ -101,8 +96,7 @@ describe('ProjectDatasetRow', () => {
   it('shows the correct conflict count', () => {
     testData.extendedDatasets.createPast(1, { name: 'people', conflicts: 3 });
     const cell = mountComponent().get('.conflicts-count');
-    cell.text().should.equal('3 conflicts');
-    cell.find('.btn-danger').exists().should.be.true;
+    cell.text().should.equal('3');
 
     const link = cell.getComponent('a');
     link.props().to.should.equal('/projects/1/entity-lists/people/entities?conflict=true');

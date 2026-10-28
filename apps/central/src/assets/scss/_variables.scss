@@ -13,7 +13,7 @@ except according to the terms contained in the LICENSE file.
 // Core
 $color-accent-primary: #bd006b;
 $color-accent-secondary: #8d0050;
-$color-page-background: #f7f7f7;
+$color-page-background: #fff;
 
 // Media query breakpoints - copied from bootstrap
 $screen-xs-min: 480px;
@@ -60,7 +60,7 @@ $color-action-light: #d0e7f1;
 $color-action-overlay: #0096c1;
 $color-input: #555;
 $color-input-inactive: #777;
-$font-size-btn: 12px;
+$font-size-btn: 14px;
 $hpadding-btn: 10px;
 $padding-bottom-btn: 5px;
 $padding-top-btn: 6px;
@@ -84,22 +84,25 @@ $margin-bottom-table: 20px;
 $border-bottom-table-heading: 1px solid #bbb;
 $color-table-heading-background: #ddd;
 $font-size-table-heading: 12px;
-$padding-table-heading: 8px 9px 6px;
+$padding-table-heading: 8px 15px 6px;
 // Data
 $border-top-table-data: 1px solid #ddd;
 $padding-bottom-table-data: 8px;
-$padding-left-table-data: 8px;
-$padding-right-table-data: 8px;
+$padding-left-table-data: 15px;
+$padding-right-table-data: 15px;
 $padding-top-table-data: 8px;
 // Row
 $color-selected-row: #E4EDF1;
+$color-header-row: #FFF;
+$color-odd-row: #F6F6F6;
+$color-even-row: #FCFCFC;
 
 // Panels
 $box-shadow-panel-main: 0 0 24px rgba(0, 0, 0, 0.25), 0 35px 115px rgba(0, 0, 0, 0.28);
 $padding-panel-body: 15px;
 
 // Navs
-$hpadding-nav-tab: 8px;
+$hpadding-nav-tab: 10px;
 
 $color-subpanel-background: #eee;
 $color-subpanel-active: #ddd;

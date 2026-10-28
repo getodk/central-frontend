@@ -11,37 +11,10 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr class="submission-metadata-row">
-    <td class="row-number">{{ $n(rowNumber, 'noGrouping') }}</td>
-    <td v-if="!draft" class="submitter-name">
-      <span v-tooltip.text>{{ submission.__system.submitterName }}</span>
-    </td>
-    <td><date-time :iso="submission.__system.submissionDate"/></td>
-    <td v-if="!draft && !deleted" class="state-and-actions">
-      <div class="col-content">
-        <span class="state">
-          <template v-if="missingAttachment">
-            <span class="icon-circle-o"></span>
-            <span>{{ $t('submission.missingAttachment') }}</span>
-          </template>
-          <submission-review-state v-else
-            :value="submission.__system.reviewState" align/>
-        </span>
-        <span class="edits">
-          <template v-if="submission.__system.edits !== 0">
-            <span class="icon-pencil"></span>
-            <span>{{ $n(submission.__system.edits, 'default') }}</span>
-          </template>
-        </span>
-        <span class="icon-angle-right"></span>
-      </div>
-      <submission-actions :submission="submission"
+    <td class="col-actions">
+      <submission-actions v-if="!draft && !deleted" :submission="submission"
         :awaiting-response="awaitingResponse"/>
-    </td>
-    <td v-if="!draft && deleted" class="state-and-actions">
-      <div class="col-content col-deleted-at">
-        <date-time :iso="submission.__system.deletedAt"/>
-      </div>
-      <div v-if="verbs.has('submission.restore')" class="btn-group">
+      <div v-else-if="deleted && verbs.has('submission.restore')" class="btn-group">
         <button type="button"
           class="restore-button btn btn-default"
           :aria-disabled="awaitingResponse"
@@ -49,6 +22,26 @@ except according to the terms contained in the LICENSE file.
           <span class="icon-recycle"></span><spinner :state="awaitingResponse"/>
         </button>
       </div>
+    </td>
+    <td class="row-number">{{ $n(rowNumber, 'noGrouping') }}</td>
+    <td v-if="!draft" class="submitter-name">
+      <span v-tooltip.text>{{ submission.__system.submitterName }}</span>
+    </td>
+    <td><date-time :iso="submission.__system.submissionDate"/></td>
+    <td v-if="!draft && !deleted">
+      <div class="col-content">
+        <span class="state">
+          <span v-if="missingAttachment" class="tag tag-danger">
+            <span class="icon-circle-o"></span>
+            <span>{{ $t('submission.missingAttachment') }}</span>
+          </span>
+          <submission-review-state v-else
+            :value="submission.__system.reviewState" align/>
+        </span>
+      </div>
+    </td>
+    <td v-if="!draft && deleted">
+      <date-time :iso="submission.__system.deletedAt"/>
     </td>
   </tr>
 </template>
@@ -108,12 +101,6 @@ export default {
     @include text-overflow-ellipsis;
     max-width: 250px;
   }
-
-  .state-and-actions {
-    // Ensure that the column is wide enough that the .btn-group does not wrap.
-    min-width: 205px;
-    &:lang(id) { min-width: 221px; }
-  }
   .col-content {
     align-items: flex-start;
     display: flex;
@@ -122,21 +109,12 @@ export default {
     margin-right: 15px;
 
     .icon-circle-o {
-      color: $color-warning;
       margin-left: 1px;
       margin-right: #{$margin-right-icon + 1px};
     }
 
     .icon-pencil { color: #777; }
   }
-  .edits {
-    color: #777;
-    margin-left: auto;
-    width: 41px;
-
-    .icon-pencil { margin-right: 5px; }
-  }
   .col-deleted-at { color: $color-danger; }
-  // The actions themselves are styled via the icon-btn-group mixin.
 }
 </style>

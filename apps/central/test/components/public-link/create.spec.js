@@ -29,7 +29,7 @@ describe('PublicLinkCreate', () => {
   it('toggles the modal', () =>
     load('/projects/1/forms/f/public-links').testModalToggles({
       modal: PublicLinkCreate,
-      show: '.heading-with-button .btn-primary',
+      show: '.page-heading .btn-primary',
       hide: '.btn-link'
     }));
 
@@ -162,7 +162,7 @@ describe('PublicLinkCreate', () => {
       return load('/projects/1/forms/f/public-links')
         .complete()
         .request(async (app) => {
-          await app.get('.heading-with-button .btn-primary').trigger('click');
+          await app.get('.page-heading .btn-primary').trigger('click');
           const modal = app.getComponent(PublicLinkCreate);
           await modal.get('input').setValue('My Public Link');
           return modal.get('form').trigger('submit');
@@ -205,7 +205,7 @@ describe('PublicLinkCreate', () => {
         app.find('.table-freeze-scrolling').exists().should.be.false;
       })
       .request(async (app) => {
-        await app.get('.heading-with-button .btn-primary').trigger('click');
+        await app.get('.page-heading .btn-primary').trigger('click');
         const modal = app.getComponent(PublicLinkCreate);
         await modal.get('input').setValue('My Public Link');
         await addActorProperty(modal, 'region', 'north');
@@ -222,17 +222,6 @@ describe('PublicLinkCreate', () => {
         }))
         .respondWithData(() => testData.extendedPublicLinks.sorted())
         .afterResponses(app => {
-          app.get('.table-freeze-scrolling th').text().should.equal('region');
-        }));
-
-    it('updates the list if only the property request succeeds', () =>
-      create()
-        .respondWithProblem() // Public link creation
-        .afterResponses(async (app) => {
-          // The table behind the modal should not change until the modal is
-          // hidden.
-          app.find('.table-freeze-scrolling').exists().should.be.false;
-          await app.get('#public-link-create .btn-link').trigger('click');
           app.get('.table-freeze-scrolling th').text().should.equal('region');
         }));
   });

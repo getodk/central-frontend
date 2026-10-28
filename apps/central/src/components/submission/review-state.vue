@@ -37,18 +37,27 @@ const props = defineProps({
   // on each row. In that case, specifying `true` for `align` will align the
   // review state icons with one another. This is needed because different icons
   // have different widths.
-  align: Boolean
+  align: Boolean,
+  // If `true` then review state will be displayed as plain text and icon not as a tag.
+  // It is mutually exclusive with color-text
+  noTag: Boolean
 });
+
+const { reviewStateIcon, reviewStateTag } = useReviewState();
 
 const htmlClass = computed(() => {
   const result = ['submission-review-state'];
-  if (props.value != null) result.push(props.value);
-  if (props.colorText) result.push('color-text');
+  if (!props.noTag) {
+    result.push('tag');
+    result.push(reviewStateTag(props.value));
+  } else {
+    if (props.value != null) result.push(props.value);
+    if (props.colorText) result.push('color-text');
+  }
   if (props.align) result.push('align');
   return result;
 });
 
-const { reviewStateIcon } = useReviewState();
 </script>
 
 <style lang="scss">

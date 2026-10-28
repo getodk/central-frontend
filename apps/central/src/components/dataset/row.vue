@@ -32,7 +32,7 @@ except according to the terms contained in the LICENSE file.
       </span>
     </td>
     <td>
-      <a class="btn btn-primary" :href="href">
+      <a class="btn btn-default" :href="href">
         <span class="icon-download"></span>{{ $t('action.download') }}
       </a>
     </td>
@@ -73,7 +73,6 @@ export default {
 .dataset-row {
   .name {
     @include text-overflow-ellipsis;
-    font-size: 18px;
    }
   .entities {
     text-align: right;
