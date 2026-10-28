@@ -86,6 +86,10 @@ nextTick(() => {
       tr > th {
         border: none;
         padding: 10px 0;
+
+        &:first-child {
+          padding-left: 15px;
+        }
       }
     }
   }

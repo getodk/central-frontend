@@ -11,9 +11,6 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr class="project-form-row">
-    <td class="col-icon">
-      <span v-if="showIcon" class="icon-file"></span>
-    </td>
     <td class="form-name">
       <template v-if="canLinkToDraftStatus">
         <form-link :form="form"/>
@@ -37,13 +34,17 @@ except according to the terms contained in the LICENSE file.
         <span v-tooltip.no-aria="$t(`reviewState.${reviewState}`)">
           <template v-if="canLinkToSubmissions">
             <router-link :to="submissionsPath[reviewState]">
-              <span>{{ $n(form.reviewStates[reviewState], 'default') }}</span>
-              <span :class="reviewStateIcon(reviewState)"></span>
+              <span class="tag" :class="reviewStateTag(reviewState)">
+                {{ $n(form.reviewStates[reviewState], 'default') }}
+                <span :class="reviewStateIcon(reviewState)"></span>
+              </span>
             </router-link>
           </template>
           <template v-else>
-            <span>{{ $n(form.reviewStates[reviewState], 'default') }}</span>
-            <span :class="reviewStateIcon(reviewState)"></span>
+            <span class="tag" :class="reviewStateTag(reviewState)">
+              {{ $n(form.reviewStates[reviewState], 'default') }}
+              <span :class="reviewStateIcon(reviewState)"></span>
+            </span>
           </template>
         </span>
       </td>
@@ -112,24 +113,18 @@ export default {
     project: {
       type: Object,
       required: true
-    },
-    // Whether to show the Form icon or not
-    // We show it only for the first row
-    showIcon: {
-      type: Boolean,
-      required: true
     }
   },
   setup() {
     const { projects } = useRequestData();
     const { duplicateFormNamesPerProject } = projects.toRefs();
     const { formPath, newSubmissionPath } = useRoutes();
-    const { reviewStateIcon } = useReviewState();
+    const { reviewStateIcon, reviewStateTag } = useReviewState();
     return {
       duplicateFormNamesPerProject,
       formPath,
       newSubmissionPath,
-      reviewStateIcon
+      reviewStateIcon, reviewStateTag
     };
   },
   computed: {
@@ -182,10 +177,12 @@ export default {
 
 .project-form-row {
   td {
-    font-size: 16px;
     padding: 4px 0px 4px 6px;
     color: #333;
     a { @include text-link; }
+     &.form-name a {
+      color: $color-action-foreground;
+    }
   }
 
   .duplicate-form-id {

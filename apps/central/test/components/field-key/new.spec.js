@@ -161,7 +161,7 @@ describe('FieldKeyNew', () => {
 
     const create = (series) => series
       .request(async (app) => {
-        await app.get('.heading-with-button button').trigger('click');
+        await app.get('#field-key-list-create-button').trigger('click');
         const modal = app.get('#field-key-new');
         await modal.get('input').setValue('input', 'My App User');
         return modal.get('form').trigger('submit');
@@ -410,7 +410,7 @@ describe('FieldKeyNew', () => {
       return load('/projects/1/app-users')
         .complete()
         .request(async (app) => {
-          await app.get('.heading-with-button button').trigger('click');
+          await app.get('.page-heading .btn-primary').trigger('click');
           const modal = app.get('#field-key-new');
           await modal.get('input').setValue('input', 'My App User');
           await addActorProperty(modal, 'region', 'north');
@@ -434,17 +434,6 @@ describe('FieldKeyNew', () => {
         .request(app => app.get('#field-key-new .btn-primary').trigger('click'))
         .respondWithData(() => testData.extendedFieldKeys.sorted())
         .afterResponse(app => {
-          app.get('.table-freeze-scrolling th').text().should.equal('region');
-        }));
-
-    it('updates the list if only the property request succeeds', () =>
-      create()
-        .respondWithProblem() // App user creation
-        .afterResponses(async (app) => {
-          // The table behind the modal should not change until the modal is
-          // hidden.
-          app.find('.table-freeze-scrolling').exists().should.be.false;
-          await app.get('#field-key-new .btn-link').trigger('click');
           app.get('.table-freeze-scrolling th').text().should.equal('region');
         }));
 

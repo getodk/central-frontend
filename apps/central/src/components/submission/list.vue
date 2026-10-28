@@ -46,18 +46,7 @@ except according to the terms contained in the LICENSE file.
         <radio-field v-if="!draft && fields.dataExists && fields.hasMappable"
           v-model="dataView" :options="viewOptions" :disabled="encrypted || deleted"
           :button-appearance="true" :disabled-message="deleted ? $t('noMapDeleted') : $t('noMapEncryption')"/>
-        <teleport-if-exists v-if="formVersion.dataExists && odata.dataExists"
-          to=".form-submissions-heading-row-right-side">
-          <submission-download-button :form-version="formVersion"
-            :aria-disabled="deleted"
-            :filtered="odataFilter != null && !deleted"
-            v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"
-            @download="showDownloadModal"
-            @download-filtered="showDownloadModal(true)"/>
-        </teleport-if-exists>
       </div>
-
-      <table-refresh-bar :refreshing="refreshing" :odata="odata" @refresh-click="refresh"/>
 
       <p v-show="emptyMessage" class="empty-table-message">
         {{ emptyMessage }}
@@ -67,17 +56,33 @@ except according to the terms contained in the LICENSE file.
         </template>
       </p>
 
-      <submission-table-view v-if="dataView === 'table'" ref="view"
-        :project-id="projectId" :xml-form-id="xmlFormId" :draft="draft" :deleted="deleted"
-        :filter="odataFilter" :fields="selectedFields"
-        :total-count="formVersion.submissions"
-        :awaiting-responses="awaitingResponses"
-        @review="showReview" @delete="showDelete" @restore="showRestore"/>
-      <submission-map-view v-else ref="view"
-        :project-id="projectId" :xml-form-id="xmlFormId"
-        :filter="odataFilter"
-        :awaiting-responses="awaitingResponses"
-        @review="showReview" @delete="showDelete"/>
+      <div class="data-views">
+        <submission-table-view v-if="dataView === 'table'" ref="view"
+          :project-id="projectId" :xml-form-id="xmlFormId" :draft="draft" :deleted="deleted"
+          :filter="odataFilter" :fields="selectedFields"
+          :total-count="formVersion.submissions"
+          :awaiting-responses="awaitingResponses"
+          @review="showReview" @delete="showDelete" @restore="showRestore"/>
+        <submission-map-view v-else ref="view"
+          :project-id="projectId" :xml-form-id="xmlFormId"
+          :filter="odataFilter"
+          :awaiting-responses="awaitingResponses"
+          @review="showReview" @delete="showDelete"/>
+      </div>
+
+      <table-pagination-footer v-show="odata.dataExists" :fixed="!draft">
+        <data-refresh-info :refreshing="refreshing" :odata="odata" @refresh-click="refresh"/>
+        <odata-data-access v-if="!draft" :analyze-disabled="encrypted || deleted"
+          :analyze-disabled-message="analyzeDisabledMessage"
+          @analyze="analyzeModal.show()"/>
+        <submission-download-button v-if="formVersion.dataExists"
+          :form-version="formVersion"
+          :aria-disabled="deleted"
+          :filtered="odataFilter != null && !deleted"
+          v-tooltip.aria-describedby="deleted ? $t('downloadDisabled') : null"
+          @download="showDownloadModal()"
+          @download-filtered="showDownloadModal(true)"/>
+      </table-pagination-footer>
     </div>
 
     <submission-download v-bind="downloadModal" :form-version="formVersion"
@@ -91,16 +96,23 @@ except according to the terms contained in the LICENSE file.
     <submission-restore v-bind="restoreModal" checkbox
       :awaiting-response="restoreModal.state && awaitingResponses.has(restoreModal.submission.__id)"
       @hide="restoreModal.hide()" @restore="requestRestore"/>
+    <odata-analyze v-if="!draft" v-bind="analyzeModal" :odata-url="odataUrl"
+      @hide="analyzeModal.hide()"/>
   </div>
 </template>
 
 <script>
-import { shallowRef, watch } from 'vue';
+import { computed, shallowRef, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import { equals } from 'ramda';
+import DataRefreshInfo from '../data-refresh-info.vue';
 import DocLink from '../doc-link.vue';
 import EnketoFill from '../enketo/fill.vue';
 import Loading from '../loading.vue';
+import OdataAnalyze from '../odata/analyze.vue';
+import OdataDataAccess from '../odata/data-access.vue';
+import TablePaginationFooter from '../table/pagination-footer.vue';
 import RadioField from '../radio-field.vue';
 import SubmissionDelete from './delete.vue';
 import SubmissionDownload from './download.vue';
@@ -111,7 +123,6 @@ import SubmissionMapView from './map-view.vue';
 import SubmissionRestore from './restore.vue';
 import SubmissionTableView from './table-view.vue';
 import SubmissionUpdateReviewState from './update-review-state.vue';
-import TeleportIfExists from '../teleport-if-exists.vue';
 
 import useDataView from '../../composables/data-view';
 import useFields from '../../request-data/fields';
@@ -126,14 +137,16 @@ import { modalData } from '../../util/reactivity';
 import { noop } from '../../util/util';
 import { odataLiteral } from '../../util/odata';
 import { useRequestData } from '../../request-data';
-import TableRefreshBar from '../table-refresh-bar.vue';
 
 export default {
   name: 'SubmissionList',
   components: {
+    DataRefreshInfo,
     DocLink,
     EnketoFill,
     Loading,
+    OdataAnalyze,
+    OdataDataAccess,
     RadioField,
     SubmissionDelete,
     SubmissionDownload,
@@ -144,8 +157,7 @@ export default {
     SubmissionRestore,
     SubmissionTableView,
     SubmissionUpdateReviewState,
-    TableRefreshBar,
-    TeleportIfExists
+    TablePaginationFooter,
   },
   inject: ['alert'],
   props: {
@@ -168,6 +180,11 @@ export default {
       ? resourceView('formDraft', (data) => data.get())
       : form;
     const fields = useFields();
+
+    const { t } = useI18n();
+
+    const analyzeDisabledMessage = computed(() =>
+      (props.deleted ? t('analyzeDisabledDeletedData') : t('analyzeDisabled')));
 
     // Filter query parameters
     const submitterIds = useQueryRef({
@@ -210,7 +227,8 @@ export default {
       form, keys, fields, formVersion, odata, submitters, deletedSubmissionCount,
       submitterIds, submissionDateRange, reviewStates, allReviewStates,
       dataView, viewOptions,
-      request
+      request,
+      analyzeDisabledMessage
     };
   },
   data() {
@@ -223,6 +241,7 @@ export default {
       selectedFields: shallowRef(null),
       refreshing: false,
       // Modals
+      analyzeModal: modalData(),
       downloadModal: modalData(),
       reviewModal: modalData(),
       deleteModal: modalData(),
@@ -285,6 +304,11 @@ export default {
       return this.dataView === 'table'
         ? this.$t('submission.emptyTable')
         : this.emptyMapMessage;
+    },
+    odataUrl() {
+      if (!this.form.dataExists) return '';
+      const path = apiPaths.odataSvc(this.projectId, this.xmlFormId);
+      return `${window.location.origin}${path}`;
     }
   },
   watch: {
@@ -453,6 +477,10 @@ export default {
   // Make sure that there is enough space for the DateRangePicker when it is
   // open.
   &:has(.date-range-picker) { min-height: 375px; }
+
+  .data-views {
+    margin-bottom: 60px;
+  }
 }
 
 #submission-list-actions {
@@ -464,23 +492,6 @@ export default {
   // the download button can wrap above the other actions if the viewport is not
   // wide enough.
   gap: 10px;
-}
-
-// Adjust the spacing between actions on the draft testing page.
-#submission-list-test-in-browser {
-  ~ .form-inline {
-    // It is possible for .form-inline to be :empty, but we still render it so
-    // that the buttons that follow it are shown on the righthand side of the
-    // page.
-    margin-left: auto;
-
-    #submission-field-dropdown {
-      // There are no filters, so no need for margin-left.
-      margin-left: 0;
-    }
-  }
-
-  ~ #submission-download-button { margin-left: 0; }
 }
 
 #submission-list .radio-field { margin-left: auto; }
@@ -508,7 +519,11 @@ export default {
       "emptyTable": "There are no deleted Submissions.",
       "allRestoredOnPage": "All Submissions on the page have been restored."
     },
-    "noMapDeleted": "Map is unavailable for deleted Submissions"
+    "noMapDeleted": "Map is unavailable for deleted Submissions",
+    // @transifexKey component.FormSubmissions.analyzeDisabled
+    "analyzeDisabled": "OData access is unavailable due to Form encryption",
+    // @transifexKey component.FormSubmissions.analyzeDisabledDeletedData
+    "analyzeDisabledDeletedData": "OData access is unavailable for deleted Submissions"
   }
 }
 </i18n>
