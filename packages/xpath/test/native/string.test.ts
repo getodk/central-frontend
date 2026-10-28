@@ -237,7 +237,7 @@ describe('native string functions', () => {
     testContext.assertStringValue("substring-after('aab', 'a')", 'ab');
     testContext.assertStringValue("substring-after('ab', 'b')", '');
     testContext.assertStringValue("substring-after('ab', 'c')", '');
-    testContext.assertStringValue("substring-after('KES-100-DAF2', '-DAF')", '2');
+    testContext.assertStringValue("substring-after('ABC-200-XYZ7', '-XYZ')", '7');
     testContext.assertStringValue("substring-after('abcabc', 'bc')", 'abc');
     testContext.assertStringValue("substring-after('abc', 'abc')", '');
   });
