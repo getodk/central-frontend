@@ -105,6 +105,17 @@ const parseNumber = (input?: string) => {
 	return clampToRange(num);
 };
 
+const constrainCursor = () => {
+	const input = inputRef.value?.$el as HTMLInputElement;
+	if (!input?.selectionStart) {
+		return;
+	}
+	const max = props.maxCharacters;
+	if (input.selectionStart > max) {
+		input.setSelectionRange(max, max);
+	}
+};
+
 watch(() => props.numericValue, (value) => {
 	if (temporaryUserInput.value == null) {
 		return;
@@ -138,7 +149,9 @@ const modelValue = computed<string>({
 			return;
 		}
 		if (isTooLong(sanitized)) {
-			return resetInput();
+			resetInput();
+			void nextTick(() => constrainCursor());
+			return;
 		}
 
 		const num = parseNumber(sanitized);
