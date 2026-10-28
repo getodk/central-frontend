@@ -6,6 +6,8 @@ import Rating from 'primevue/rating';
 const props = defineProps<{ readonly node: AnyRangeNode }>();
 
 const { bounds, numberValue, disabled, setValue } = useRangeNode(props.node);
+// The stars still need a whole number to render
+const starCount = Math.floor(bounds.end);
 </script>
 
 <template>
@@ -13,7 +15,7 @@ const { bounds, numberValue, disabled, setValue } = useRangeNode(props.node);
 		:id="node.nodeId"
 		:disabled="disabled"
 		:model-value="numberValue"
-		:stars="bounds.end"
+		:stars="starCount"
 		@update:model-value="setValue"
 	/>
 </template>
