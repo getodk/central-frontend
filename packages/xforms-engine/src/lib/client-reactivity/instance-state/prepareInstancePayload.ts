@@ -12,10 +12,10 @@ import type { InstancePayloadType } from '../../../client/serialization/Instance
 import type { SubmissionMeta } from '../../../client/submission/SubmissionMeta.ts';
 import type { DescendantNodeViolationReference } from '../../../client/validation.ts';
 import { ErrorProductionDesignPendingError } from '../../../error/ErrorProductionDesignPendingError.ts';
-import type { InstanceAttachmentsState } from '../../../instance/attachments/InstanceAttachmentsState.ts';
 import type { ClientReactiveSerializableInstance } from '../../../instance/internal-api/serialization/ClientReactiveSerializableInstance.ts';
 import type { Root } from '../../../instance/Root.ts';
 import { encryptSubmission } from './quarantine/encryption.ts';
+import { collectInstanceAttachmentFiles } from './prepareAttachmentPayload.ts';
 
 const getAttribute = (root: Root, name: string) => {
   const attribute = root.getAttributes().find((a) => a.definition.qualifiedName.localName === name);
@@ -28,25 +28,6 @@ const getInstanceID = (root: Root) => {
     ?.getChildren()
     .find((c) => c.definition.qualifiedName.localName === 'instanceID');
   return instanceID?.getXPathValue();
-};
-
-// TODO decide whether to expose this
-const collectInstanceAttachmentFiles = (attachments: InstanceAttachmentsState): readonly File[] => {
-  const files = Array.from(attachments.entries()).map(([context, attachment]) => {
-    if (!context.isAttached() || !context.isRelevant()) {
-      return null;
-    }
-
-    const state = attachment.getState();
-    if (!state.dirty) {
-      // File not set by client. During editing this means it's unchanged and we don't need to upload it again.
-      return null;
-    }
-
-    return attachment.getValue();
-  });
-
-  return files.filter((file) => file != null);
 };
 
 export class InstanceFile extends File implements ClientInstanceFile {
