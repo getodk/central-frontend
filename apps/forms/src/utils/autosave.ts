@@ -1,5 +1,5 @@
 import { get, set, del } from 'idb-keyval';
-import type { UpdatePayload } from '@getodk/web-forms/lib/types/UpdatePayload.ts';
+import type { InstanceSnapshot } from '@getodk/xforms-engine';
 
 const EXPIRY_DURATION = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
 
@@ -13,11 +13,11 @@ const getIdbKey = (projectId: number, xmlFormId: string) => {
 
 interface AutosaveValue {
   createdAt: Date;
-  payload: UpdatePayload;
+  snapshot: InstanceSnapshot;
 };
 
 // TODO every page load, delete ALL old autosaves
-export const getAutosave = async (projectId: number, xmlFormId: string): Promise<UpdatePayload | undefined> => {
+export const getAutosave = async (projectId: number, xmlFormId: string): Promise<InstanceSnapshot | undefined> => {
   const key = getIdbKey(projectId, xmlFormId);
   try {
     const result = (await get(key)) as unknown as AutosaveValue;
@@ -28,17 +28,17 @@ export const getAutosave = async (projectId: number, xmlFormId: string): Promise
       await deleteAutosave(projectId, xmlFormId);
       return;
     }
-    return result.payload;
+    return result.snapshot;
   } catch {
     return;
   }
 };
 
-export const setAutosave = async (projectId: number, xmlFormId: string, payload: UpdatePayload): Promise<void> => {
+export const setAutosave = async (projectId: number, xmlFormId: string, snapshot: InstanceSnapshot): Promise<void> => {
   const key = getIdbKey(projectId, xmlFormId);
   const value: AutosaveValue = {
     createdAt: new Date(),
-    payload
+    snapshot
   };
   try {
     await set(key, value);

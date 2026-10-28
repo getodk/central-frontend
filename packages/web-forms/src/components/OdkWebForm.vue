@@ -35,6 +35,7 @@ import type {
 	MonolithicInstancePayload,
 	InstanceDefaults,
 	PreloadProperties,
+	InstanceSnapshot,
 } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
@@ -52,7 +53,6 @@ import {
 } from 'vue';
 import { FormInitializationError } from '@getodk/web-forms/lib/error/FormInitializationError';
 import { FormDesignError } from '@getodk/xpath';
-import type { UpdatePayload } from '../lib/types/UpdatePayload';
 
 const webFormsVersion = __WEB_FORMS_VERSION__;
 type ObjectURL = `blob:${string}`;
@@ -122,7 +122,7 @@ type OdkWebFormEmits = {
 		submissionPayload: ChunkedInstancePayload,
 		callback: HostSubmissionResultCallback,
 	];
-	updated: [instance: UpdatePayload];
+	updated: [instance: InstanceSnapshot];
 };
 
 /**
@@ -254,25 +254,10 @@ onErrorCaptured(err => {
 });
 
 const emitAutosave = async () => {
-	if (!state.value?.root) {
-		return;
+	const snapshot = state.value?.root?.prepareInstanceSnapshot();
+	if (snapshot) {
+		emit('updated', snapshot);
 	}
-	// TODO this is doing too much work. think about how to expose just the bits we need
-	const fullPayload = await state.value.root.prepareInstancePayload({
-		payloadType: 'monolithic',
-	});
-
-	const files = fullPayload.data[0].values();
-	const attachments = Array.from(files).slice(1);
-
-
-	// const attachments = attachment ? [attachment] : [];
-	// const attachments = collectInstanceAttachmentFiles(state.value.instance.attachments);
-	const payload = {
-		xml: state.value.root.instanceState.instanceXML,
-		attachments
-	};
-	emit('updated', payload);
 };
 
 const registerAutosaveListener = () => {

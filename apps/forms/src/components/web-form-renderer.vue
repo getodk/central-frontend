@@ -2,8 +2,7 @@
 
 import { computed, onMounted, ref } from 'vue';
 import { OdkWebForm, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
-import type { UpdatePayload } from '@getodk/web-forms/lib/types/UpdatePayload.ts';
-import { type MonolithicInstancePayload } from '@getodk/xforms-engine';
+import { type InstanceSnapshot, type MonolithicInstancePayload } from '@getodk/xforms-engine';
 import { postPrimaryInstance, uploadAttachment, getFormAttachment, type Form } from '../utils/api';
 import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
@@ -45,7 +44,7 @@ const inited = ref(false);
 const isEdit = computed(() => props.actionType === 'edit');
 const isPublicLink = computed(() => props.actionType === 'public-link');
 const lastSavedXml = ref<string | undefined>();
-const autosavePayload = ref<UpdatePayload | undefined>();
+const autosavePayload = ref<InstanceSnapshot | undefined>();
 
 const deviceID = getDeviceId();
 
@@ -279,9 +278,9 @@ const restoreInstanceOptions = computed(() => {
   return;
 });
 
-const storeAutosaveUpdate = (payload: UpdatePayload) => {
+const storeAutosaveUpdate = (snapshot: InstanceSnapshot) => {
   // TODO should the api be to provide the form?
-  setAutosave(props.form.projectId, props.form.xmlFormId, payload);
+  setAutosave(props.form.projectId, props.form.xmlFormId, snapshot);
 };
 
 const alreadySubmittedOnce = () => {
