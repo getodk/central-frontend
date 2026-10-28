@@ -128,7 +128,7 @@ export type InstancePayload<PayloadType extends InstancePayloadType> = {
 	monolithic: MonolithicInstancePayload;
 }[PayloadType];
 
-export type InstanceSnapshot = {
+export interface InstanceSnapshot {
   xml: string;
   attachments: readonly File[];
-};
+}

@@ -138,15 +138,15 @@ export interface RootNode extends BaseNode {
 
   /**
    * Prepares the current form instance state as an {@link InstanceSnapshot}.
-   * 
+   *
    * This is a lightweight version of {@link prepareInstancePayload} which includes
    * only the xml and attachments without doing any validation or encryption.
-   * 
+   *
    * - A client may inspect the serialized instance state of a form at any time.
    *   Depending on the client and use case, this may be a convenience (e.g. for
    *   developers to inspect that form state at a current point in time); or it
    *   may provide necessary functionality (e.g. for test or tooling clients).
-   * 
+   *
    * - A client may capture _incomplete_ instance state (e.g. for storage in
    *   client-side storage or similar persistance layer), to resume filling the
    *   instance at a later time.

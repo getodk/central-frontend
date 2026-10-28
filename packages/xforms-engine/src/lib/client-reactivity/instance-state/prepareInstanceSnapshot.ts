@@ -28,6 +28,6 @@ export const prepareInstanceSnapshot = (
   const attachments = collectInstanceAttachmentFiles(instanceRoot.attachments);
   return {
     xml,
-    attachments
+    attachments,
   };
 };

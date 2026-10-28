@@ -253,7 +253,7 @@ onErrorCaptured(err => {
 	}
 });
 
-const emitAutosave = async () => {
+const emitAutosave = () => {
 	const snapshot = state.value?.root?.prepareInstanceSnapshot();
 	if (snapshot) {
 		emit('updated', snapshot);
@@ -268,9 +268,7 @@ const registerAutosaveListener = () => {
 				// TODO clear timeout on unmount, and maybe do one last autosave too?
 				clearTimeout(timeout);
 			}
-			timeout = setTimeout(() => {
-				void emitAutosave();
-			}, AUTOSAVE_TIMEOUT);
+			timeout = setTimeout(() => emitAutosave(), AUTOSAVE_TIMEOUT);
 		});
 	};
 };
