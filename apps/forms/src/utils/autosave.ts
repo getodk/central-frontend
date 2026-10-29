@@ -6,8 +6,8 @@ const EXPIRY_DURATION = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
 const KEY_PREFIX = 'autosave-entry';
 const OLDEST_ENTRY_KEY = 'autosave-oldest-entry';
 
-const hasExpired = (date: Date) => {
-  return (Date.now() - date.getTime()) > EXPIRY_DURATION;
+const hasExpired = (date: Date | null) => {
+  return date && (Date.now() - date.getTime()) > EXPIRY_DURATION;
 };
 
 const getIdbKey = (form: Form) => {
@@ -15,8 +15,19 @@ const getIdbKey = (form: Form) => {
 };
 
 interface AutosaveValue {
-  createdOn: Date;
+  createdAt: Date;
   snapshot: InstanceSnapshot;
+};
+
+const isInstanceSnapshot = (value: unknown): value is InstanceSnapshot => {
+  if (value === null || typeof value !== 'object') {
+    return false;
+  }
+  const snapshot = value as Record<string, unknown>;
+  return (
+    'xml' in snapshot && typeof snapshot.xml === 'string' &&
+    'attachments' in snapshot && Array.isArray(snapshot.attachments)
+  );
 };
 
 export const getAutosave = async (form: Form): Promise<InstanceSnapshot | undefined> => {
@@ -26,8 +37,12 @@ export const getAutosave = async (form: Form): Promise<InstanceSnapshot | undefi
     if (!result) {
       return;
     }
-    if (hasExpired(result.createdOn)) {
+    if (hasExpired(result.createdAt)) {
       await deleteAutosave(form);
+      return;
+    }
+    if (!isInstanceSnapshot(result.snapshot)) {
+      // not a valid idb record
       return;
     }
     return result.snapshot;
@@ -39,7 +54,7 @@ export const getAutosave = async (form: Form): Promise<InstanceSnapshot | undefi
 export const setAutosave = async (form: Form, snapshot: InstanceSnapshot): Promise<void> => {
   const key = getIdbKey(form);
   const value: AutosaveValue = {
-    createdOn: new Date(),
+    createdAt: new Date(),
     snapshot
   };
   try {
@@ -69,7 +84,7 @@ const hasExpiredAutosave = async () => {
 
 const isString = (value: unknown): value is string => {
   return typeof value === 'string';
-}
+};
 
 const getAllKeys = async () => {
   try {
@@ -94,10 +109,10 @@ export const clearExpiredAutosave = async () => {
     if (!result) {
       continue;
     }
-    if (hasExpired(result.createdOn)) {
+    if (hasExpired(result.createdAt)) {
       await del(key);
-    } else if (result.createdOn.getTime() < oldest.getTime()) {
-      oldest = result.createdOn;
+    } else if (result.createdAt.getTime() < oldest.getTime()) {
+      oldest = result.createdAt;
     }
   }
   await set(OLDEST_ENTRY_KEY, oldest);
