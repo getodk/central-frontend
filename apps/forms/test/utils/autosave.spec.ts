@@ -58,7 +58,7 @@ describe('autosave util', () => {
       });
       const actual = await getAutosave(form);
       expect(actual).toBeUndefined();
-      expect(idbDelete).toHaveBeenCalledWith('autosave-entry-myproject-myform');
+      expect(idbDelete).toHaveBeenCalledWith('autosave-entry-5-myform');
     });
   });
 
@@ -87,15 +87,15 @@ describe('autosave util', () => {
         .mockResolvedValueOnce({ createdOn: yesterday }) // not expired
         .mockResolvedValue({ createdOn: new Date('2026-09-02') });
       idbKeys.mockResolvedValue([
-        'autosave-entry-myproject-myform1',
-        'autosave-entry-myproject-myform2',
-        'autosave-entry-myproject-myform3'
+        'autosave-entry-5-myform1',
+        'autosave-entry-5-myform2',
+        'autosave-entry-5-myform3'
       ]);
       await clearExpiredAutosave();
       expect(idbKeys).toHaveBeenCalledTimes(1);
       expect(idbDelete).toHaveBeenCalledTimes(2);
-      expect(idbDelete).toHaveBeenNthCalledWith(1, 'autosave-entry-myproject-myform1');
-      expect(idbDelete).toHaveBeenNthCalledWith(2, 'autosave-entry-myproject-myform3');
+      expect(idbDelete).toHaveBeenNthCalledWith(1, 'autosave-entry-5-myform1');
+      expect(idbDelete).toHaveBeenNthCalledWith(2, 'autosave-entry-5-myform3');
       expect(idbSet).toHaveBeenCalledWith('autosave-oldest-entry', yesterday);
     });
   });

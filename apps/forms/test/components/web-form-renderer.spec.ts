@@ -41,7 +41,8 @@ describe('WebFormRenderer', () => {
     state: 'open',
     draft: false,
     webformsEnabled: true,
-    once: false
+    autosaveEnabled: false,
+    once: false,
   };
 
   const mountComponent = async (xform: string, form?: Form, st?: string, actionType='new') => {
