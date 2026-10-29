@@ -39,7 +39,7 @@
     "@changesets/changelog-github": "^0.5.1",
     "@changesets/cli": "^2.29.7",
     "@eslint/js": "^10.0.1",
-    "@playwright/test": "^1.58.2",
+    "@playwright/test": "^1.64.0",
     "@transifex/cli": "^7.1.5",
     "@tsconfig/node20": "^20.1.8",
     "@types/eslint": "^9.6.1",
