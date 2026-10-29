@@ -6,7 +6,7 @@ export const prepareInstanceSnapshot = (
   instanceRoot: ClientReactiveSerializableInstance
 ): InstanceSnapshot => {
   const xml = instanceRoot.instanceState.instanceXML;
-  const attachments = collectInstanceAttachmentFiles(instanceRoot.attachments);
+  const attachments = collectInstanceAttachmentFiles(instanceRoot.attachments, false);
   return {
     xml,
     attachments,
