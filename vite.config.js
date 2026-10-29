@@ -75,6 +75,11 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     vue(),
     devAppRouter(),
+    // Without explicit `targets` fonts, the plugin tries to subset/minimize all local fonts that's
+    // we have add 'Roboto' to the ignore list, which we don't want to subset.
+    // Setting 'Material Symbol Outline' explicitly in the `targets` is not nice because then we
+    // would need to list down all required icons in here in `ligatures` option. 'auto' doesn't work
+    // if `targets` are specified.
     FontExtractor({
       type: 'auto',
       cache: true,

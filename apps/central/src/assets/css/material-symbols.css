@@ -277,9 +277,6 @@
 .icon-desktop:before {
   content: "computer";
 }
-.icon-circle-o {
-  font-feature-settings: 'FILL' 1;
-}
 .icon-circle:before {
   content: "circle";
 }
