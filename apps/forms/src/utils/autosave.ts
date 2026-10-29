@@ -15,7 +15,7 @@ const getIdbKey = (form: Form) => {
 };
 
 interface AutosaveValue {
-  createdAt: Date;
+  createdOn: Date;
   snapshot: InstanceSnapshot;
 };
 
@@ -26,7 +26,7 @@ export const getAutosave = async (form: Form): Promise<InstanceSnapshot | undefi
     if (!result) {
       return;
     }
-    if (hasExpired(result.createdAt)) {
+    if (hasExpired(result.createdOn)) {
       await deleteAutosave(form);
       return;
     }
@@ -39,7 +39,7 @@ export const getAutosave = async (form: Form): Promise<InstanceSnapshot | undefi
 export const setAutosave = async (form: Form, snapshot: InstanceSnapshot): Promise<void> => {
   const key = getIdbKey(form);
   const value: AutosaveValue = {
-    createdAt: new Date(),
+    createdOn: new Date(),
     snapshot
   };
   try {
@@ -67,10 +67,14 @@ const hasExpiredAutosave = async () => {
   }
 };
 
+const isString = (value: unknown): value is string => {
+  return typeof value === 'string';
+}
+
 const getAllKeys = async () => {
   try {
     const idbKeys = await keys();
-    return idbKeys.filter(key => key instanceof String && key.startsWith(KEY_PREFIX));
+    return idbKeys.filter(key => isString(key) && key.startsWith(KEY_PREFIX));
   } catch {
     return [];
   }
@@ -80,21 +84,20 @@ export const clearExpiredAutosave = async () => {
   if (!(await hasExpiredAutosave())) {
     return;
   }
-  const allkeys = await getAllKeys();
-  if (!allkeys.length) {
+  const allKeys = await getAllKeys();
+  if (!allKeys.length) {
     return;
   }
   let oldest = new Date();
-  for (const key of allkeys) {
+  for (const key of allKeys) {
     const result = (await get(key)) as unknown as AutosaveValue;
     if (!result) {
       continue;
     }
-    if (hasExpired(result.createdAt)) {
+    if (hasExpired(result.createdOn)) {
       await del(key);
-    }
-    if (result.createdAt.getTime() < oldest.getTime()) {
-      oldest = result.createdAt;
+    } else if (result.createdOn.getTime() < oldest.getTime()) {
+      oldest = result.createdOn;
     }
   }
   await set(OLDEST_ENTRY_KEY, oldest);
