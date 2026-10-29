@@ -50,7 +50,6 @@ const dataRefreshedAt = computed(() => DateTime.fromJSDate(props.odata.setAt));
   align-items: baseline;
 
   span {
-    font-size: 12px;
     margin-right: 10px;
   }
 }

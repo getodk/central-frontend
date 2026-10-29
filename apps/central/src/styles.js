@@ -12,5 +12,5 @@ except according to the terms contained in the LICENSE file.
 
 // Import global styles.
 import './assets/css/bootstrap.css';
-import './assets/css/icomoon.css';
+import './assets/css/material-symbols.css';
 import './assets/scss/app.scss';

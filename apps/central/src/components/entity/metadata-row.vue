@@ -104,17 +104,16 @@ defineEmits(['selectionChanged']);
     &:empty { width: 75px; }
   }
   .wrap-circle {
-    width: 22px;
+    width: 26px;
     display: inline-block;
     background: $color-danger;
-    height: 22px;
+    height: 26px;
     border-radius: 15px;
     text-align: center;
     color: white;
-
+    margin-top: -2px;
     margin-left: auto;
   }
-  .icon-warning { font-size: 12px; }
   .col-deleted-at { color: $color-danger; }
 }
 </style>

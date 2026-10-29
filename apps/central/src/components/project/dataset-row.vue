@@ -38,7 +38,7 @@ except according to the terms contained in the LICENSE file.
       <span v-tooltip.no-aria="$t('common.totalEntities')">
         <router-link :to="datasetPath(project.id, dataset.name, 'entities')">
           <span>{{ $n(dataset.entities, 'default') }}</span>
-          <span class="icon-asterisk"></span>
+          <span class="icon-star"></span>
         </router-link>
       </span>
     </td>

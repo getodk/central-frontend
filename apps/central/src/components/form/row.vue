@@ -45,14 +45,14 @@ except according to the terms contained in the LICENSE file.
         <link-if-can :to="formPath(form.projectId, form.xmlFormId, 'submissions')"
           v-tooltip.no-aria="$t('common.totalSubmissions')">
           <span>{{ $n(form.submissions, 'default') }}</span>
-          <span class="icon-asterisk"></span>
+          <span class="icon-star"></span>
         </link-if-can>
       </td>
     </template>
     <template v-else>
       <td class="not-published" colspan="2">
         <span>{{ $t('formState.unpublished') }}</span>
-        <span class="icon-asterisk"></span>
+        <span class="icon-star"></span>
       </td>
     </template>
 

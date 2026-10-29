@@ -111,13 +111,13 @@ describe('FormRow', () => {
       row.find('.total-submissions').exists().should.be.false;
       const cell = row.find('.not-published');
       cell.text().should.equal('Not published yet');
-      cell.find('.icon-asterisk').exists().should.be.true;
+      cell.find('.icon-star').exists().should.be.true;
     });
 
     it('shows the correct icon', async () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 4 });
       const cell = mountComponent().find('.total-submissions');
-      cell.find('.icon-asterisk').exists().should.be.true;
+      cell.find('.icon-star').exists().should.be.true;
       await cell.get('a').should.have.tooltip('Total Submissions');
     });
   });

@@ -46,7 +46,7 @@ const { formVersions } = useRequestData();
   table-layout: fixed;
 
   th:nth-child(3) {
-    width: 245px;
+    width: 300px;
   }
 }
 </style>
