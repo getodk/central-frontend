@@ -40,7 +40,7 @@ describe.each<InstanceRoundTripCase>([
         return scenario.editCurrentInstance();
 
       case 'restore':
-        return scenario.proposed_serializeAndRestoreInstanceState();
+        return scenario.serializeAndRestoreInstanceState();
 
       default:
         throw new UnreachableError(initializationMode);

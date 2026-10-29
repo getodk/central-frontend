@@ -396,7 +396,7 @@ describe('Instance edit semantics', () => {
 
       it('does not recompute instanceID on restore', async () => {
         const sourceScenario = await simpleEditScenario(caseOptions);
-        const restored = await sourceScenario.proposed_serializeAndRestoreInstanceState();
+        const restored = await sourceScenario.serializeAndRestoreInstanceState();
 
         expect(restored).not.toHaveEditedPreloadInstanceID({
           sourceScenario,
@@ -407,7 +407,7 @@ describe('Instance edit semantics', () => {
       it('does not populate deprecatedID on restore', async () => {
         const sourceScenario = await simpleEditScenario(caseOptions);
         const sourceInstanceID = getMetaValue(sourceScenario, instanceID);
-        const restored = await sourceScenario.proposed_serializeAndRestoreInstanceState();
+        const restored = await sourceScenario.serializeAndRestoreInstanceState();
         const restoredDeprecatedID = getOptionalMetaValue(restored, deprecatedID);
 
         expect(restoredDeprecatedID).not.toBe(sourceInstanceID);

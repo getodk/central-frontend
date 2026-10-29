@@ -726,7 +726,7 @@ export class Scenario {
    *
    * - form definition (etc)
    * - instance state, equivalent to
-   *   {@link proposed_serializeAndRestoreInstanceState} (and roughly equivalent
+   *   {@link serializeAndRestoreInstanceState} (and roughly equivalent
    *   to {@link serializeAndDeserializeInstance})
    *
    * We have already updated some of ported call sites to this method to reflect
@@ -1147,72 +1147,7 @@ export class Scenario {
     return new JRFormIndex(this.getSelectedPositionalEvent());
   }
 
-  /**
-   * @deprecated
-   *
-   * @see {@link proposed_serializeAndRestoreInstanceState}, which is almost
-   * certainly what you want if you're looking here!
-   *
-   * **PORTING NOTES**
-   *
-   * This method's deprecation is Web Forms-specific! This is **NOT** intended
-   * to suggest deprecation in JavaRosa! It is meant to guide usage toward this
-   * method's
-   * {@link proposed_serializeAndRestoreInstanceState | proposed spiritual successor},
-   * which is conceptually equivalent except for the methods' respective
-   * parameter signatures.
-   *
-   * Below, as quoted from JavaRosa's comment on the same-named method,
-   * describes the reasoning for its {@link form} parameter.
-   *
-   * - - -
-   *
-   * {@link https://github.com/getodk/javarosa/blob/7986abae78dc0dfe8715fa0071cd04ab698db9bb/src/main/java/org/javarosa/test/Scenario.java#L290-L293 | JR}:
-   *
-   * > The fact that we need to pass in the same raw form definition that the
-   * > current scenario is built around suggests that
-   * > XFormParser.loadXmlInstance(FormDef f, Reader xmlReader) should probably
-   * > be public. This is also the method that Collect copies because the
-   * > FormDef may be built from cache meaning there won't be a Reader/Document
-   * > available and because it makes some extra calls for search(). We pass in
-   * > an XFormsElement for now until we decide on an interface that Collect can
-   * > use.
-   *
-   * - - -
-   *
-   * At time of writing, there is only one test calling this method (both as
-   * ported and in JavaRosa!). That call site is currently preserved, at least
-   * pending review of this commentary to confirm we want to swap its usage
-   * locally (a permanent divergence from JavaRosa on that single test).
-   */
-  async serializeAndDeserializeInstance(form: XFormsElement): Promise<this> {
-    expect(
-      form.asXml(),
-      'Attempted to serialize instance with unexpected form XML. Is instance from an unrelated form?'
-    ).toBe(this.config.formElement.asXml());
-
-    return this.proposed_serializeAndRestoreInstanceState();
-  }
-
-  /**
-   * **PORTING NOTES**
-   *
-   * As proposed and implemented here, this method is:
-   *
-   * - Semantically equivalent to the **intent** of
-   *   {@link serializeAndDeserializeInstance}, except that it skips JavaRosa
-   *   inside baseball requiring a "form" parameter. We retain all requisite
-   *   references to perform this operation.
-   *
-   * - _Also expected_ to be called in place of several JavaRosa-ported calls to
-   *   {@link serializeAndDeserializeForm}, where tests clearly _intend to
-   *   express this method's semantics_. These semantics are distinct from the
-   *   **intent** of {@link serializeAndDeserializeForm}: as its name suggests,
-   *   the intent is **NOT** to serialize instance state. That it does probably
-   *   reflects the fact that JavaRosa's `FormDef` implements _both_ form
-   *   definition and instance state.
-   */
-  async proposed_serializeAndRestoreInstanceState(): Promise<this> {
+  async serializeAndRestoreInstanceState(): Promise<this> {
     const snapshot = this.instanceRoot.prepareInstanceSnapshot();
     const instanceFile = new File([snapshot.xml], ENGINE_CONSTANTS.INSTANCE_FILE_NAME, {
       type: ENGINE_CONSTANTS.INSTANCE_FILE_TYPE,
