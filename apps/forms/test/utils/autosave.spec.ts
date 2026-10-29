@@ -41,7 +41,7 @@ describe('autosave util', () => {
         attachments: []
       };
       idbGet.mockResolvedValue({
-        createdOn: new Date(),
+        createdAt: new Date(),
         snapshot: expected
       });
       const actual = await getAutosave(form);
@@ -50,7 +50,7 @@ describe('autosave util', () => {
 
     it('deletes expired autosave', async () => {
       idbGet.mockResolvedValue({
-        createdOn: new Date('2026-09-01'),
+        createdAt: new Date('2026-09-01'),
         snapshot: {
           xml: '<form/>',
           attachments: []
@@ -83,9 +83,9 @@ describe('autosave util', () => {
       yesterday.setDate(yesterday.getDate() - 1);
       idbGet
         .mockResolvedValueOnce(new Date('2026-09-01'))
-        .mockResolvedValueOnce({ createdOn: new Date('2026-09-01') })
-        .mockResolvedValueOnce({ createdOn: yesterday }) // not expired
-        .mockResolvedValue({ createdOn: new Date('2026-09-02') });
+        .mockResolvedValueOnce({ createdAt: new Date('2026-09-01') })
+        .mockResolvedValueOnce({ createdAt: yesterday }) // not expired
+        .mockResolvedValue({ createdAt: new Date('2026-09-02') });
       idbKeys.mockResolvedValue([
         'autosave-entry-5-myform1',
         'autosave-entry-5-myform2',
