@@ -114,8 +114,9 @@ describe('ProjectFormRow', () => {
 
     it('shows blank review state columns when the form is a draft', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
-      const row = mountComponent();
-      row.findAll('.review-state').length.should.equal(0);
+      const columns = mountComponent().findAll('.review-state');
+      columns.length.should.equal(3);
+      columns.map((col) => col.text()).should.eql(['', '', '']);
     });
   });
 
@@ -127,10 +128,10 @@ describe('ProjectFormRow', () => {
       const lastSubmission = '2023-01-01T00:00:00Z';
       testData.extendedForms.createPast(1, { lastSubmission });
       const span = mountComponent().get('.last-submission span');
-      span.text().should.match(/ago$/);
+      span.text().should.equal('2023/01/01 00:00');
       const dateTime = span.getComponent(DateTime);
       dateTime.props().iso.should.equal(lastSubmission);
-      await span.should.have.tooltip('Latest Submission\n2023/01/01 00:00:00');
+      await span.should.have.tooltip('Latest Submission');
       await dateTime.should.not.have.tooltip();
     });
 
@@ -147,9 +148,10 @@ describe('ProjectFormRow', () => {
       await span.should.have.tooltip('Latest Submission');
     });
 
-    it('shows blank last submission column when the form is a draft', () => {
+    it('shows "not published yet" when the form is a draft', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
-      mountComponent().find('.last-submission').exists().should.be.false;
+      const cell = mountComponent().get('.last-submission');
+      cell.text().should.equal('Not published yet');
     });
   });
 
@@ -161,11 +163,10 @@ describe('ProjectFormRow', () => {
       mountComponent().find('.total-submissions').text().should.equal('1,234');
     });
 
-    it('shows "not published yet" when form is a draft', () => {
+    it('shows blank submission count when form is a draft', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
       const row = mountComponent();
-      row.find('.total-submissions').exists().should.be.false;
-      row.find('.not-published').text().should.equal('Not published yet');
+      row.get('.total-submissions').text().should.equal('');
     });
 
     it('shows the correct icon', async () => {

@@ -60,18 +60,16 @@ except according to the terms contained in the LICENSE file.
         <div v-if="showDatasetExpander" class="expand-button-container">
           <a href="#" role="button" class="expand-button" @click.prevent="toggleDatasetExpanded">
             <template v-if="!datasetExpanded">
-              {{ $tcn('showMoreDatasets', numDatasets) }}<span class="icon-angle-down"></span>
+              {{ $tcn('showMoreDatasets', numDatasets) }}
+              <span v-if="hiddenConflicts > 0" class="tag tag-danger">
+                {{ $n(hiddenConflicts) }} <span class="icon-warning"></span>
+              </span>
+              <span class="icon-angle-down"></span>
             </template>
             <template v-else>
               {{ $tcn('showFewerDatasets', numDatasets) }}<span class="icon-angle-up"></span>
             </template>
           </a>
-          <template v-if="hiddenConflicts > 0">
-            <a href="#" role="button" @click.prevent="toggleDatasetExpanded">
-              <span class="tag tag-danger">{{ $n(hiddenConflicts) }}<span class="icon-warning"></span>
-              </span>
-            </a>
-          </template>
         </div>
       </div>
     </div>
@@ -201,6 +199,7 @@ export default {
 
   .project-table {
     margin-bottom: 0;
+    table-layout: fixed;
 
     tr:first-child td {
       border-top: none;

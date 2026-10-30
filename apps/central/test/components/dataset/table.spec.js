@@ -20,7 +20,7 @@ describe('DatasetTable', () => {
     testData.extendedDatasets.createPast(1);
     const table = mountComponent();
     const headers = table.findAll('th').map(th => th.text());
-    headers.should.eql(['List Name', 'Total Entities', 'Latest Entity', 'Status', 'Actions']);
+    headers.should.eql(['List Name', 'Total Entities', 'Latest Entity', 'Status', '']);
     table.findAll('td').length.should.equal(5);
   });
 

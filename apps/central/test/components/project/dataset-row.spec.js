@@ -47,10 +47,10 @@ describe('ProjectDatasetRow', () => {
     const lastEntity = '2023-01-01T00:00:00Z';
     testData.extendedDatasets.createPast(1, { name: 'people', lastEntity });
     const span = mountComponent().get('.last-entity span');
-    span.text().should.match(/ago$/);
+    span.text().should.equal('2023/01/01 00:00');
     const dateTime = span.getComponent(DateTime);
     dateTime.props().iso.should.equal(lastEntity);
-    await span.should.have.tooltip('Latest Entity\n2023/01/01 00:00:00');
+    await span.should.have.tooltip('Latest Entity');
     await dateTime.should.not.have.tooltip();
   });
 

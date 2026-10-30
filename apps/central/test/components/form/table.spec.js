@@ -34,7 +34,7 @@ describe('FormTable', () => {
       const app = await load('/projects/1');
       const table = app.getComponent(FormTable);
       const headers = table.findAll('th').map(th => th.text());
-      headers.should.eql(['Name', 'Review States', 'Latest', 'Total', 'Actions']);
+      headers.should.eql(['Name', 'Review States', 'Latest', 'Total', '']);
       table.findAll('td').length.should.equal(7);
     });
 
@@ -58,7 +58,7 @@ describe('FormTable', () => {
       const app = await load('/projects/1', {}, { deletedForms: false });
       const table = app.getComponent(FormTable);
       const headers = table.findAll('th').map(th => th.text());
-      headers.should.eql(['Name', 'Review States', 'Latest', 'Total', 'Actions']);
+      headers.should.eql(['Name', 'Review States', 'Latest', 'Total', '']);
       const td = table.findAll('td');
       td.length.should.equal(7);
       td[6].classes('actions').should.be.true;

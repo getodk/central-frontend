@@ -15,20 +15,22 @@ except according to the terms contained in the LICENSE file.
       <dataset-link :project-id="project.id" :name="dataset.name"
         v-tooltip.text/>
     </td>
-    <td colspan="2" class="conflicts-count">
+    <td class="conflicts-count">
       <span v-tooltip.no-aria="$t('common.conflicts')">
         <router-link :to="datasetPath(project.id, dataset.name, 'entities?conflict=true')">
-          <span class="tag tag-danger">{{ $n(dataset.conflicts) }}<span class="icon-warning"></span>
+          <span class="tag tag-danger">
+            <span class="icon-warning"></span>
+            {{ $n(dataset.conflicts) }}
           </span>
         </router-link>
       </span>
     </td>
     <td class="last-entity">
-      <span v-tooltip.no-aria="lastEntityTooltip">
+      <span v-tooltip.no-aria="$t('header.lastEntity')">
         <template v-if="dataset.lastEntity != null">
           <router-link :to="datasetPath(project.id, dataset.name, 'entities')">
-            <date-time-component :iso="dataset.lastEntity" relative="past" :tooltip="false"/>
             <span class="icon-clock-o"></span>
+            <date-time-component :iso="dataset.lastEntity" :tooltip="false"/>
           </router-link>
         </template>
         <template v-else>{{ $t('entity.noEntity') }}</template>
@@ -37,8 +39,8 @@ except according to the terms contained in the LICENSE file.
     <td class="total-entities">
       <span v-tooltip.no-aria="$t('common.totalEntities')">
         <router-link :to="datasetPath(project.id, dataset.name, 'entities')">
-          <span>{{ $n(dataset.entities, 'default') }}</span>
           <span class="icon-star"></span>
+          <span>{{ $n(dataset.entities, 'default') }}</span>
         </router-link>
       </span>
     </td>
@@ -46,17 +48,12 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { DateTime } from 'luxon';
-import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
-
 import DatasetLink from '../dataset/link.vue';
 import DateTimeComponent from '../date-time.vue';
 
 import useRoutes from '../../composables/routes';
-import { formatDateTime } from '../../util/date-time';
 
-const props = defineProps({
+defineProps({
   dataset: {
     type: Object,
     required: true
@@ -69,15 +66,6 @@ const props = defineProps({
 
 const { datasetPath } = useRoutes();
 
-const { t } = useI18n();
-
-const lastEntityTooltip = computed(() => {
-  const { lastEntity } = props.dataset;
-  const header = t('header.lastEntity');
-  if (lastEntity == null) return header;
-  const formatted = formatDateTime(DateTime.fromISO(lastEntity));
-  return `${header}\n${formatted}`;
-});
 </script>
 
 <style lang="scss">
@@ -99,13 +87,11 @@ const lastEntityTooltip = computed(() => {
   }
 
   .conflicts-count, .total-entities {
-    text-align: right;
     padding-right: 10px;
-    width: 80px;
+    width: 120px;
   }
 
   .last-entity {
-    text-align: right;
     width: 170px;
   }
 

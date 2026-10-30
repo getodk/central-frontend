@@ -71,10 +71,10 @@ describe('FormRow', () => {
       const lastSubmission = '2023-01-01T00:00:00Z';
       testData.extendedForms.createPast(1, { lastSubmission });
       const span = mountComponent().get('.last-submission span');
-      span.text().should.match(/ago$/);
+      span.text().should.equal('2023/01/01 00:00');
       const dateTime = span.getComponent(DateTime);
       dateTime.props().iso.should.equal(lastSubmission);
-      await span.should.have.tooltip('Latest Submission\n2023/01/01 00:00:00');
+      await span.should.have.tooltip('Latest Submission');
       await dateTime.should.not.have.tooltip();
     });
 
@@ -111,7 +111,6 @@ describe('FormRow', () => {
       row.find('.total-submissions').exists().should.be.false;
       const cell = row.find('.not-published');
       cell.text().should.equal('Not published yet');
-      cell.find('.icon-star').exists().should.be.true;
     });
 
     it('shows the correct icon', async () => {
