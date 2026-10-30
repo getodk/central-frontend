@@ -23,6 +23,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
+// TODO: This component is used only in couple of places, maybe we can remove this and use PageHeading component instead
 defineOptions({
   name: 'PageSection'
 });
@@ -39,13 +40,13 @@ defineProps({
 }
 
 .page-section-heading {
-  font-size: 30px;
+  font-size: 24px;
   margin-bottom: 10px;
   position: relative;
 
   @mixin page-section-heading {
-    color: $color-accent-primary;
-    font-weight: 600;
+    color: $color-text-primary;
+    font-weight: 400;
 
     + .btn { margin-left: 24px; }
     ~ .btn {
@@ -73,7 +74,7 @@ defineProps({
   display: flex;
 
   .page-section-heading {
-    line-height: 1;
+    line-height: 1.5;
     margin-bottom: 0;
     margin-right: 20px;
   }
