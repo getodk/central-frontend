@@ -102,7 +102,10 @@ $border-height: 3px;
       line-height: 20px;
       padding: 5px 15px;
 
-      &, &:hover, &:focus { color: $color-text-inverse; }
+      &, &:hover, &:focus {
+        color: $color-text-inverse;
+        text-decoration: none;
+      }
 
       &:focus {
         background-color: transparent;
