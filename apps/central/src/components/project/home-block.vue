@@ -187,7 +187,7 @@ export default {
 
     .section-icon {
       width: 30px;
-      padding-top: 16px;
+      padding-top: 12px; // dependent upon row height
       font-size: 16px;
       color: $color-text-placeholder;
     }
