@@ -23,7 +23,7 @@ except according to the terms contained in the LICENSE file.
     </td>
     <td class="row-number">{{ $n(rowNumber, 'noGrouping') }}</td>
     <td v-if="!deleted && verbs.has('entity.delete')">
-      <input type="checkbox" :aria-label="$t('action.selectRow')" :checked="entity.__system.selected" @change="$emit('selectionChanged', $event.target.checked)">
+      <input type="checkbox" :aria-label="$t('action.selectRow')" :checked="entity.__system.selected" @click.stop @change="$emit('selectionChanged', $event.target.checked)">
     </td>
     <td class="creator-name">
       <span v-tooltip.text>{{ entity.__system.creatorName }}</span>
