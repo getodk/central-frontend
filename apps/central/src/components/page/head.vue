@@ -57,6 +57,12 @@ defineOptions({
 }
 
 #page-head-tabs {
+  // Allow bottom border to be across the page (go beyond the width of the container-fluid)
+  margin-left: -15px;
+  margin-right: -15px;
+  padding-left: 15px;
+  padding-right: 15px;
+
   > li {
     &:only-child {
       display: none;
