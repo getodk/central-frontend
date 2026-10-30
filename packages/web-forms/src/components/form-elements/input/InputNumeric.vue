@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { InputNumberInputEvent } from 'primevue/inputnumber';
-import InputNumber from 'primevue/inputnumber';
-import { type ComponentPublicInstance, computed, nextTick, ref, watch } from 'vue';
+import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
+import InputText from 'primevue/inputtext';
+import { type ComponentPublicInstance, computed, nextTick, onBeforeUnmount, ref, watch } from 'vue';
 
 interface NumericNodeState {
 	get required(): boolean;
@@ -28,138 +28,321 @@ interface InputNumericProps {
 	readonly maxCharacters: number;
 }
 
-const props = defineProps<InputNumericProps>();
-const inputRef = ref<ComponentPublicInstance | null>(null);
-const renderKey = ref(1);
-
-interface FractionalDigitOptions {
-	readonly min?: number;
-	readonly max?: number;
-}
-
-let fractionalDigits: FractionalDigitOptions;
-
-/**
- * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inputmode}
- */
 type NumericInputMode = 'decimal' | 'numeric';
 
-let inputmode: NumericInputMode;
+const props = defineProps<InputNumericProps>();
 
-if (props.isDecimal) {
-	fractionalDigits = { min: 0, max: 13 };
-	inputmode = 'decimal';
-} else {
-	fractionalDigits = { min: 0, max: 0 };
-	inputmode = 'numeric';
-}
+const preferredLanguages = [...(navigator.languages || []), navigator.language];
+const renderKey = ref(1);
+const inputRef = ref<ComponentPublicInstance | null>(null);
+const inputmode = computed<NumericInputMode>(() => props.isDecimal ? 'decimal' : 'numeric');
+const formatter = computed(() => new Intl.NumberFormat(preferredLanguages, {
+	maximumFractionDigits: props.isDecimal ? props.maxCharacters - 2 : 0,
+	useGrouping: props.node.appearances['thousands-sep']
+}));
 
-/**
- * Tracks local model state while syncing with the node’s state.
- *
- * - Enforces `min`/`max` constraints if provided.
- * - Rolls back to the previous value if assignment fails.
- * - If the assigned value differs from the effective value (due to clamping or rollback),
- *   triggers a re-render via `renderKey` to update the displayed value.
- */
-const modelValue = computed<number | null>({
-	get: () => props.numericValue,
-	set: (assignedValue) => {
-		const currentValue = props.numericValue;
-		const stringValue = assignedValue != null ? assignedValue.toString() : '';
-		let newValue = stringValue.length <= props.maxCharacters ? assignedValue : currentValue;
+const decimalSeparator = (() => {
+	const parts = new Intl.NumberFormat(preferredLanguages).formatToParts(1.1);
+	return parts.find(part => part.type === 'decimal')?.value ?? ',';
+})();
+const groupSeparator = decimalSeparator === '.' ? ',' : '.';
 
-		if (newValue != null) {
-			const { min = newValue, max = newValue } = props;
+const KEY_FILTER_PATTERN = /[\d\-,.]/;
+const DECIMAL_WITH_TRAILING_ZEROES = decimalSeparator === '.' ? /\.(\d*0+)?$/ : /,(\d*0+)?$/;
 
-			if (min !== newValue || max !== newValue) {
-				newValue = Math.max(min, Math.min(newValue, max));
-			}
+const standardizeDecimals = (value: string) => {
+	if (decimalSeparator !== '.') {
+		value = value.replace(decimalSeparator, '.');
+	}
+	if (!props.isDecimal && value.endsWith(decimalSeparator)) {
+		value = value.substring(0, value.length - 1);
+	}
+	return value;
+};
+
+const temporaryUserInput = ref<string | null>(null);
+
+const clampToRange = (num: number) => {
+	if (!props.isDecimal) {
+		num = Math.round(num);
+	}
+	if (props.max != undefined && num > props.max) {
+		return props.max;
+	}
+	if (props.min != undefined && num < props.min) {
+		return props.min;
+	}
+	return num;
+};
+
+const resetInput = () => {
+	renderKey.value++;
+};
+
+const isTooLong = (num: string) => {
+	return num.length > props.maxCharacters;
+};
+
+const sanitizeInput = (num: string) => {
+	num = num.trim().replaceAll(groupSeparator, '');
+	if (num === '-') {
+		// user has started typing a negative number - let them continue
+		temporaryUserInput.value = num;
+		return;
+	}
+	return num;
+};
+
+const parseNumber = (input?: string) => {
+	if (!input) {
+		return;
+	}
+	const standardized = standardizeDecimals(input);
+	const num = Number(standardized);
+	if (Number.isNaN(num)) {
+		return;
+	}
+	return clampToRange(num);
+};
+
+const constrainCursor = () => {
+	setTimeout(() => {
+		const input = inputRef.value?.$el as HTMLInputElement;
+		if (!input?.selectionStart) {
+			return;
+		}
+		const max = props.maxCharacters;
+		if (input.selectionStart > max) {
+			input.focus();
+			input.setSelectionRange(max, max);
+		}
+	}, 0);
+};
+
+watch(() => props.numericValue, (value) => {
+	if (temporaryUserInput.value == null) {
+		return;
+	}
+	const parsed = parseNumber(sanitizeInput(temporaryUserInput.value));
+	if (parsed != value) {
+		temporaryUserInput.value = null;
+	}
+});
+
+const modelValue = computed<string>({
+	get: () => {
+		if (temporaryUserInput.value != undefined) {
+			return temporaryUserInput.value;
+		}
+		const val = props.numericValue;
+		if (val != undefined) {
+			return formatter.value.format(val);
+		}
+		return '';
+	},
+	set: (assignedValue: string) => {
+		temporaryUserInput.value = null;
+		if (props.node.currentState.readonly) {
+			return;
 		}
 
-		try {
-			props.setNumericValue(newValue);
-			if (newValue !== assignedValue) {
-				// Re-render if value is clamped
-				renderKey.value++;
-			}
-		} catch {
-			// Re-render to restore previous value if something fails
-			renderKey.value++;
+		const sanitized = sanitizeInput(assignedValue);
+		if (!sanitized?.length) {
+			props.setNumericValue(null);
+			return;
+		}
+		if (isTooLong(sanitized)) {
+			resetInput();
+			constrainCursor();
+			return;
+		}
+
+		const num = parseNumber(sanitized);
+		if (num == undefined) {
+			return resetInput();
+		}
+
+		if (props.isDecimal && DECIMAL_WITH_TRAILING_ZEROES.test(sanitized)) {
+			// user has started typing a decimal number
+			temporaryUserInput.value = sanitized;
+		}
+
+		props.setNumericValue(num);
+		if (!props.isDecimal && formatter.value.format(num) !== sanitized) {
+			return resetInput();
 		}
 	}
 });
 
-// After re-render, refocus input so user can continue typing seamlessly
-watch(renderKey, () => nextTick(() => (inputRef.value?.$el as HTMLElement)?.focus()));
+let timer: ReturnType<typeof setTimeout>;
 
-const onInput = (event: InputNumberInputEvent) => {
-	const { value = null } = event;
-	if (value == null || value === '') {
-		modelValue.value = null;
+const setInteger = (num: number, amount: number) => {
+	const int = num + amount;
+	const clamped = clampToRange(int);
+	props.setNumericValue(clamped);
+};
+
+const setDecimal = (num: number, amount: number) => {
+	const parts = num.toString().split('.');
+	if (parts.length === 1) {
+		// no decimal component found
+		setInteger(Number(parts[0]), amount);
 		return;
 	}
+	// need to manually increment the decimal to avoid floating point errors
+	const precision = parts[1]!.length;
+	const val = num + amount;
+	const rounded = val.toFixed(precision);
+	const clamped = clampToRange(Number(rounded));
+	props.setNumericValue(clamped);
+};
 
-	if (typeof value === 'number') {
-		modelValue.value = value;
+const spin = (amount: number) => {
+	if (!inputRef.value?.$el || props.node.currentState.readonly) {
 		return;
+	}
+	const num = props.numericValue ?? 0;
+	if (props.isDecimal) {
+		setDecimal(num, amount);
+	} else {
+		setInteger(num, amount);
+	}
+}
+
+const repeat = (interval: number, amount: number) => {
+	clearTimer();
+	timer = setTimeout(() => {
+		repeat(40, amount);
+	}, interval);
+	spin(amount);
+};
+
+const increment = (event: KeyboardEvent | MouseEvent) => {
+	event.preventDefault();
+	repeat(500, 1);
+};
+
+const decrement = (event: KeyboardEvent | MouseEvent) => {
+	event.preventDefault();
+	repeat(500, -1);
+};
+
+const clearTimer = () => {
+	if (timer) {
+		clearTimeout(timer);
 	}
 };
+
+watch(renderKey, () => nextTick(() => (inputRef.value?.$el as HTMLElement)?.focus()));
+
+onBeforeUnmount(() => clearTimer());
 </script>
 
 <template>
-	<InputNumber
-		:key="renderKey"
-		ref="inputRef"
-		v-model="modelValue"
-		:input-id="node.nodeId"
-		:required="node.currentState.required"
-		:disabled="node.currentState.readonly"
-		:show-buttons="true"
-		:min-fraction-digits="fractionalDigits.min"
-		:max-fraction-digits="fractionalDigits.max"
-		:use-grouping="node.appearances['thousands-sep']"
-		:pt="{
-			pcInputText: {
-				root: { inputmode }
-			}
-		}"
-		@input="onInput"
-	/>
+	<span class="number-group">
+		<InputText
+			:id="node.nodeId"
+			:key="renderKey"
+			ref="inputRef"
+			v-model="modelValue"
+			v-keyfilter="KEY_FILTER_PATTERN"
+			:disabled="node.currentState.readonly"
+			:required="node.currentState.required"
+			:pt="{ root: { inputmode } }"
+			@keydown.up="increment"
+			@keydown.down="decrement"
+			@keyup.up="clearTimer"
+			@keyup.down="clearTimer"
+			@blur="clearTimer"
+		/>
+		<span class="button-group">
+			<button
+				aria-hidden="true"
+				class="increment"
+				:disabled="node.currentState.readonly"
+				:tabindex="-1"
+				type="button"
+				@pointerdown="increment"
+				@pointerup="clearTimer"
+				@pointerleave="clearTimer"
+			>
+				<IconSVG
+					name="mdiChevronUp"
+					size="sm"
+					variant="light-muted"
+				/>
+			</button>
+			<button
+				aria-hidden="true"
+				class="decrement"
+				:disabled="node.currentState.readonly"
+				:tabindex="-1"
+				type="button"
+				@pointerdown="decrement"
+				@pointerup="clearTimer"
+				@pointerleave="clearTimer"
+			>
+				<IconSVG
+					name="mdiChevronDown"
+					size="sm"
+					variant="light-muted"
+				/>
+			</button>
+		</span>
+	</span>
 </template>
 
 <style scoped lang="scss">
-// Overrides PrimeVue styles to adhere to Web Forms design.
 
-.p-inputnumber {
+.number-group {
 	position: relative;
-
+	display: inline-flex;
 	:deep(.p-inputtext) {
 		border-radius: var(--odk-radius);
 	}
 }
+.button-group {
+	--input-border-width: 1px;
 
-:deep(.p-inputnumber-button-group) {
+	display: flex;
+	flex-direction: column;
 	position: absolute;
-	top: 2px;
-	right: 2px;
-	height: calc(100% - 4px);
-}
+	height: calc(100% - (var(--input-border-width) * 2));
+	z-index: var(--odk-z-index-form-content);
+	top: 1px;
+	right: 1px;
 
-:deep(.p-inputnumber-button-group .p-button) {
-	--numeric-control-color: var(--input-color);
-	--numeric-control-bgcolor: var(--input-bgcolor-default);
+	button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		width: 2.5rem;
+		transition: background var(--odk-transition-duration);
+		flex: 1 1 auto;
+		border: 0 none;
+		touch-action: none;
+		padding: 0;
 
-	&,
-	&:hover,
-	&:focus {
-		color: var(--numeric-control-color);
-		background-color: var(--numeric-control-bgcolor);
+		@media (hover: hover) {
+			&:hover {
+				background: var(--odk-muted-background-color);
+			}
+		}
+
+		&:disabled {
+			cursor: auto;
+			&:hover,
+			&:active {
+				background: none;
+			}
+		}
 	}
-
-	&:hover,
-	&:focus {
-		--numeric-control-bgcolor: var(--input-bgcolor-emphasized);
+	.increment {
+		border-start-end-radius: calc(var(--odk-radius) - var(--input-border-width));
+	}
+	.decrement {
+		border-end-end-radius: calc(var(--odk-radius) - var(--input-border-width));
 	}
 }
 </style>
