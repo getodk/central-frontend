@@ -33,7 +33,7 @@ except according to the terms contained in the LICENSE file.
       <span v-if="form.publishedAt != null" v-tooltip.no-aria="$t(`reviewState.${reviewState}`)">
         <template v-if="canLinkToSubmissions">
           <router-link :to="submissionsPath[reviewState]">
-            <span class="tag" :class="reviewStateTag(reviewState)">
+            <span class="tag" :class="reviewState === 'hasIssues' && form.reviewStates[reviewState] > 0 ? reviewStateTag(reviewState) : 'tag-info'">
               <span :class="reviewStateIcon(reviewState)"></span>
               {{ $n(form.reviewStates[reviewState], 'default') }}
             </span>

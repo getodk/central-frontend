@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
       <template v-if="form.publishedAt != null">
         <link-if-can :to="formPath(form.projectId, form.xmlFormId, `submissions?reviewState=${urlFilterEncode.get(reviewState)}`)"
           v-tooltip.no-aria="$t(`reviewState.${reviewState}`)">
-          <span class="tag" :class="reviewStateTag(reviewState)">
+          <span class="tag" :class="reviewState === 'hasIssues' && form.reviewStates[reviewState] > 0 ? reviewStateTag(reviewState) : 'tag-info'">
             <span :class="reviewStateIcon(reviewState)"></span>
             {{ $n(form.reviewStates[reviewState], 'default') }}
           </span>

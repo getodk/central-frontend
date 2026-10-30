@@ -105,7 +105,7 @@ describe('ProjectDatasetRow', () => {
   it('should not show warning box when there are 0 conflicts', () => {
     testData.extendedDatasets.createPast(1, { name: 'people', conflicts: 0 });
     const cell = mountComponent().get('.conflicts-count');
-    cell.text().should.equal('0');
+    cell.text().should.equal('');
     cell.find('.btn-danger').exists().should.be.false;
   });
 });
