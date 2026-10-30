@@ -106,14 +106,17 @@ const parseNumber = (input?: string) => {
 };
 
 const constrainCursor = () => {
-	const input = inputRef.value?.$el as HTMLInputElement;
-	if (!input?.selectionStart) {
-		return;
-	}
-	const max = props.maxCharacters;
-	if (input.selectionStart > max) {
-		input.setSelectionRange(max, max);
-	}
+	setTimeout(() => {
+		const input = inputRef.value?.$el as HTMLInputElement;
+		if (!input?.selectionStart) {
+			return;
+		}
+		const max = props.maxCharacters;
+		if (input.selectionStart > max) {
+			input.focus();
+			input.setSelectionRange(max, max);
+		}
+	}, 0);
 };
 
 watch(() => props.numericValue, (value) => {
@@ -150,7 +153,7 @@ const modelValue = computed<string>({
 		}
 		if (isTooLong(sanitized)) {
 			resetInput();
-			void nextTick(() => constrainCursor());
+			constrainCursor();
 			return;
 		}
 
