@@ -20,7 +20,7 @@ except according to the terms contained in the LICENSE file.
         <th class="review-state" colspan="3">{{ $t('header.reviewStates') }}</th>
         <th class="last-submission">{{ $t('header.latest') }}</th>
         <th class="total-submissions">{{ $t('common.total') }}</th>
-        <th v-if="showActions" class="actions">{{ $t('header.actions') }}</th>
+        <th v-if="showActions" class="actions"></th>
       </tr>
     </thead>
     <tbody v-if="forms.dataExists">
@@ -77,9 +77,20 @@ export default {
 <style lang="scss">
 .form-table {
   margin-bottom: 0px;
+  table-layout: fixed;
 
-  .review-state, .last-submission, .total-submissions, .not-published {
-    text-align: right;
+  // if the following widths are changed then form-row.vue should be updated as well
+  .review-state {
+    width: 360px; // 120 * 3col;
+  }
+  .last-submission {
+    width: 170px;
+  }
+  .total-submissions {
+    width: 120px;
+  }
+  .actions {
+    width: 120px;
   }
 }
 

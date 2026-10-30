@@ -21,8 +21,8 @@ except according to the terms contained in the LICENSE file.
         <link-if-can :to="formPath(form.projectId, form.xmlFormId, `submissions?reviewState=${urlFilterEncode.get(reviewState)}`)"
           v-tooltip.no-aria="$t(`reviewState.${reviewState}`)">
           <span class="tag" :class="reviewStateTag(reviewState)">
-            {{ $n(form.reviewStates[reviewState], 'default') }}
             <span :class="reviewStateIcon(reviewState)"></span>
+            {{ $n(form.reviewStates[reviewState], 'default') }}
           </span>
         </link-if-can>
       </template>
@@ -30,12 +30,12 @@ except according to the terms contained in the LICENSE file.
 
     <template v-if="form.publishedAt != null">
       <td class="last-submission">
-        <span v-tooltip.no-aria="lastSubmissionTooltip">
+        <span>
           <template v-if="form.lastSubmission != null">
             <link-if-can :to="formPath(form.projectId, form.xmlFormId, 'submissions')">
-              <date-time :iso="form.lastSubmission" relative="past"
+            <span class="icon-clock-o"></span>
+              <date-time :iso="form.lastSubmission"
                 :tooltip="false"/>
-              <span class="icon-clock-o"></span>
             </link-if-can>
           </template>
           <template v-else>{{ $t('submission.noSubmission') }}</template>
@@ -44,15 +44,14 @@ except according to the terms contained in the LICENSE file.
       <td class="total-submissions">
         <link-if-can :to="formPath(form.projectId, form.xmlFormId, 'submissions')"
           v-tooltip.no-aria="$t('common.totalSubmissions')">
-          <span>{{ $n(form.submissions, 'default') }}</span>
           <span class="icon-star"></span>
+          <span>{{ $n(form.submissions, 'default') }}</span>
         </link-if-can>
       </td>
     </template>
     <template v-else>
       <td class="not-published" colspan="2">
         <span>{{ $t('formState.unpublished') }}</span>
-        <span class="icon-star"></span>
       </td>
     </template>
 
@@ -183,8 +182,6 @@ export default {
 
   .review-state, .total-submissions, .not-published {
     a { @include text-link; }
-    text-align: right;
-    width: 100px;
     & [class*='icon'] {
       color: $color-text-muted;
     }
@@ -205,8 +202,6 @@ export default {
   }
 
   .actions {
-    width: 100px;
-
     .btn {
       width: 100%;
     }
@@ -214,10 +209,8 @@ export default {
 
   .last-submission{
     a { @include text-link; }
-    text-align: right;
     width: 150px;
     & [class*='icon'] {
-      margin-left: 5px;
       color: $color-text-muted;
     }
   }

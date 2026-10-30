@@ -29,77 +29,66 @@ except according to the terms contained in the LICENSE file.
 
       <span v-if="showIdForDuplicateName" class="duplicate-form-id">({{ form.xmlFormId }})</span>
     </td>
-    <template v-if="form.publishedAt != null">
-      <td v-for="reviewState of visibleReviewStates" :key="reviewState" class="review-state">
-        <span v-tooltip.no-aria="$t(`reviewState.${reviewState}`)">
-          <template v-if="canLinkToSubmissions">
-            <router-link :to="submissionsPath[reviewState]">
-              <span class="tag" :class="reviewStateTag(reviewState)">
-                {{ $n(form.reviewStates[reviewState], 'default') }}
-                <span :class="reviewStateIcon(reviewState)"></span>
-              </span>
-            </router-link>
-          </template>
-          <template v-else>
+    <td v-for="reviewState of visibleReviewStates" :key="reviewState" class="review-state">
+      <span v-if="form.publishedAt != null" v-tooltip.no-aria="$t(`reviewState.${reviewState}`)">
+        <template v-if="canLinkToSubmissions">
+          <router-link :to="submissionsPath[reviewState]">
             <span class="tag" :class="reviewStateTag(reviewState)">
-              {{ $n(form.reviewStates[reviewState], 'default') }}
               <span :class="reviewStateIcon(reviewState)"></span>
+              {{ $n(form.reviewStates[reviewState], 'default') }}
             </span>
-          </template>
-        </span>
-      </td>
-      <td class="last-submission">
-        <span v-tooltip.no-aria="lastSubmissionTooltip">
-          <template v-if="form.lastSubmission != null">
-            <template v-if="canLinkToSubmissions">
-              <router-link :to="submissionsPath.all">
-                <date-time :iso="form.lastSubmission" relative="past"
-                  :tooltip="false"/>
-                <span class="icon-clock-o"></span>
-              </router-link>
-            </template>
-            <template v-else>
-              <date-time :iso="form.lastSubmission" relative="past"
-                :tooltip="false"/>
-              <span class="icon-clock-o"></span>
-            </template>
-          </template>
-          <template v-else>{{ $t('submission.noSubmission') }}</template>
-        </span>
-      </td>
-      <td class="total-submissions">
-        <span v-tooltip.no-aria="$t('common.totalSubmissions')">
+          </router-link>
+        </template>
+        <template v-else>
+          <span class="tag" :class="reviewStateTag(reviewState)">
+            <span :class="reviewStateIcon(reviewState)"></span>
+            {{ $n(form.reviewStates[reviewState], 'default') }}
+          </span>
+        </template>
+      </span>
+    </td>
+    <td class="last-submission">
+      <span v-if="form.publishedAt != null" v-tooltip.no-aria="$t('header.lastSubmission')">
+        <template v-if="form.lastSubmission != null">
           <template v-if="canLinkToSubmissions">
             <router-link :to="submissionsPath.all">
-              <span>{{ $n(form.submissions, 'default') }}</span>
-              <span class="icon-star"></span>
+              <span class="icon-clock-o"></span>
+              <date-time :iso="form.lastSubmission"
+                :tooltip="false"/>
             </router-link>
           </template>
           <template v-else>
-            <span>{{ $n(form.submissions, 'default') }}</span>
-            <span class="icon-star"></span>
+            <date-time :iso="form.lastSubmission"
+              :tooltip="false"/>
           </template>
-        </span>
-      </td>
-    </template>
-    <template v-else>
-      <td class="not-published" colspan="5">
-        <span>{{ $t('formState.unpublished') }}</span>
-        <span class="icon-star"></span>
-      </td>
-    </template>
+        </template>
+        <template v-else>{{ $t('submission.noSubmission') }}</template>
+      </span>
+      <span v-else>{{ $t('formState.unpublished') }}</span>
+    </td>
+    <td class="total-submissions">
+      <span v-if="form.publishedAt != null" v-tooltip.no-aria="$t('common.totalSubmissions')">
+        <template v-if="canLinkToSubmissions">
+          <router-link :to="submissionsPath.all">
+            <span class="icon-star"></span>
+            <span>{{ $n(form.submissions, 'default') }}</span>
+          </router-link>
+        </template>
+        <template v-else>
+          <span class="icon-star"></span>
+          <span>{{ $n(form.submissions, 'default') }}</span>
+        </template>
+      </span>
+    </td>
   </tr>
 </template>
 
 <script>
-import { DateTime } from 'luxon';
-
 import DateTimeComponent from '../date-time.vue';
 import FormLink from '../form/link.vue';
 
 import useReviewState from '../../composables/review-state';
 import useRoutes from '../../composables/routes';
-import { formatDateTime } from '../../util/date-time';
 import { useRequestData } from '../../request-data';
 
 export default {
@@ -160,13 +149,6 @@ export default {
         return formNames.has(this.form.nameOrId.toLocaleLowerCase());
       }
       return false;
-    },
-    lastSubmissionTooltip() {
-      const { lastSubmission } = this.form;
-      const header = this.$t('header.lastSubmission');
-      if (lastSubmission == null) return header;
-      const formatted = formatDateTime(DateTime.fromISO(lastSubmission));
-      return `${header}\n${formatted}`;
     }
   }
 };
@@ -194,15 +176,17 @@ export default {
     padding-left: 6px;
   }
 
-  .review-state, .total-submissions, .not-published {
-    text-align: right;
+  .review-state, .total-submissions {
     padding-right: 10px;
-    width: 80px;
+    width: 120px;
   }
 
   .last-submission{
-    text-align: right;
     width: 170px;
+
+    [class*='icon'] {
+      margin-left: 0;
+    }
   }
 
   [class*='icon'] {
