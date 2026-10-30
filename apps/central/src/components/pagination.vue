@@ -165,7 +165,7 @@ const sizeModel = computed({
   }
 
   .form-inline {
-    @include form-control-background;
+    background-color: $color-surface;
     width: 100%;
     align-items: baseline;
     display: flex;

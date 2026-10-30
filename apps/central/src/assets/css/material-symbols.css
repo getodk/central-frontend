@@ -295,3 +295,6 @@
 .icon-map-marker:before {
   content: "location_on";
 }
+.icon-home:before {
+  content: 'home';
+}

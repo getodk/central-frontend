@@ -76,6 +76,7 @@ $tabs-indent: 3px;
 }
 
 .entity-diff-table {
+  border-radius: 0;
   // Align the text of the first column with the text of the first tab.
   $padding-left: $hpadding-feed-entry - $border-width + $tabs-indent;
   col:nth-child(1) {

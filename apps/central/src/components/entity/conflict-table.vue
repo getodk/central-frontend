@@ -285,6 +285,9 @@ defineExpose({ resize });
   .icon-warning { color: $color-danger-dark; }
 }
 
+#entity-conflict-table table {
+  border-radius: 0;
+}
 #entity-conflict-table tbody tr {
   background-color: $background-color-feed-entry;
 }

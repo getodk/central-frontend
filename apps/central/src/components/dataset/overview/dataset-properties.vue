@@ -163,6 +163,7 @@ const deleteProperty = () => {
 
   .col-actions {
     width: 25%;
+    text-align: right;
   }
 
   .delete-button [class^="icon-"] {

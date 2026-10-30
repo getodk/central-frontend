@@ -13,14 +13,13 @@ except according to the terms contained in the LICENSE file.
 @import './mixins';
 
 html {
-  background-color: $color-accent-secondary;
+  background-color: $color-surface;
   min-height: 100%;
 }
 
 body {
   min-width: 1000px;
   background-color: $color-page-background;
-  box-shadow: 0 #{$box-shadow-offset-y-body} 0 $gray-600 inset;
   color: $color-text;
   min-height: 100vh;
 
@@ -580,6 +579,7 @@ $form-group-padding-bottom: 15px;
 input[type="radio"], input[type="checkbox"] {
   margin: 4px 0 0;
   line-height: normal;
+  accent-color: $color-primary;
 
   &[disabled], fieldset[disabled] & { cursor: not-allowed; }
 }
@@ -734,7 +734,7 @@ tr.uncommitted-change { background-color: $amber-100; }
       border-bottom: none;
       font-size: $font-size-table-heading;
       padding: $padding-table-heading;
-      height: 56px;
+      height: 36px;
       vertical-align: middle;
     }
   }
@@ -744,7 +744,7 @@ tr.uncommitted-change { background-color: $amber-100; }
       border-top: $border-top-table-data;
       padding: $padding-top-table-data $padding-right-table-data
                $padding-bottom-table-data $padding-left-table-data;
-      height: 56px;
+      height: 48px;
       vertical-align: middle;
     }
 
@@ -986,10 +986,11 @@ tr.uncommitted-change { background-color: $amber-100; }
 // NAVS
 
 .nav-tabs {
-  border-bottom: 1px solid $color-input;
+  border-bottom: 1px solid $color-border;
 
   > li {
     margin-bottom: -1px;
+    margin-right: 15px;
 
     > a, &.active > a {
       &, &:hover, &:focus {
@@ -998,6 +999,7 @@ tr.uncommitted-change { background-color: $amber-100; }
         border-radius: 0;
         color: $color-text;
         padding: 7px $hpadding-nav-tab;
+        line-height: 1.5;
       }
 
       &:hover:focus {
@@ -1028,6 +1030,7 @@ tr.uncommitted-change { background-color: $amber-100; }
       &, &:hover, &:focus {
         border-bottom: 2px solid $color-accent-primary;
         color: $color-accent-primary;
+        font-weight: bold;
       }
     }
 

@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
         v-tooltip.text/>
     </td>
     <td class="conflicts-count">
-      <span v-tooltip.no-aria="$t('common.conflicts')">
+      <span v-if="dataset.conflicts > 0" v-tooltip.no-aria="$t('common.conflicts')">
         <router-link :to="datasetPath(project.id, dataset.name, 'entities?conflict=true')">
           <span class="tag tag-danger">
             <span class="icon-warning"></span>

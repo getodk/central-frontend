@@ -163,9 +163,10 @@ export default {
   margin-bottom: 15px;
 
   .title {
-    font-size: 24px;
+    font-size: 18px;
     font-weight: bold;
     letter-spacing: -0.02em;
+    margin-top: 20px;
     margin-bottom: 5px;
     background-color: $color-page-background;
     box-shadow: 0 0 20px $color-page-background;
@@ -187,7 +188,7 @@ export default {
 
     .section-icon {
       width: 30px;
-      padding-top: 16px;
+      padding-top: 12px; // dependent upon row height
       font-size: 16px;
       color: $color-text-placeholder;
     }

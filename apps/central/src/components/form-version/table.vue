@@ -44,6 +44,7 @@ const { formVersions } = useRequestData();
 <style lang="scss">
 #form-version-table {
   table-layout: fixed;
+  overflow: visible; // we have dropdown menu which gets clipped without this.
 
   th:nth-child(3) {
     width: 300px;
