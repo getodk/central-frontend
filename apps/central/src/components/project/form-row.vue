@@ -183,6 +183,10 @@ export default {
 
   .last-submission{
     width: 170px;
+
+    [class*='icon'] {
+      margin-left: 0;
+    }
   }
 
   [class*='icon'] {

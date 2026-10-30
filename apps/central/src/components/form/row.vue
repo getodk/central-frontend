@@ -30,7 +30,7 @@ except according to the terms contained in the LICENSE file.
 
     <template v-if="form.publishedAt != null">
       <td class="last-submission">
-        <span v-tooltip.no-aria="$t('header.lastSubmission')">
+        <span>
           <template v-if="form.lastSubmission != null">
             <link-if-can :to="formPath(form.projectId, form.xmlFormId, 'submissions')">
             <span class="icon-clock-o"></span>
@@ -211,7 +211,6 @@ export default {
     a { @include text-link; }
     width: 150px;
     & [class*='icon'] {
-      margin-left: 5px;
       color: $color-text-muted;
     }
   }

@@ -74,8 +74,6 @@ describe('FormRow', () => {
       span.text().should.equal('2023/01/01 00:00');
       const dateTime = span.getComponent(DateTime);
       dateTime.props().iso.should.equal(lastSubmission);
-      await span.should.have.tooltip('Latest Submission');
-      await dateTime.should.not.have.tooltip();
     });
 
     it('shows the correct icon', () => {
@@ -88,7 +86,6 @@ describe('FormRow', () => {
       testData.extendedForms.createPast(1, { submissions: 0 });
       const span = mountComponent().get('.last-submission span');
       span.text().should.equal('(none)');
-      await span.should.have.tooltip('Latest Submission');
     });
 
     it('shows blank last submission column when the form is a draft', () => {
