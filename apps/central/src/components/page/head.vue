@@ -14,7 +14,9 @@ except according to the terms contained in the LICENSE file.
     <div class="col-xs-12">
       <div v-if="$slots.breadcrumbs || $slots.infonav" id="page-head-breadcrumb-row">
         <slot name="breadcrumbs"></slot>
-        <slot name="infonav"></slot>
+        <div class="breadcrumb-row-right-side">
+          <slot name="infonav"></slot>
+        </div>
       </div>
       <div v-if="$slots.title" id="page-head-title" class="h1" v-tooltip.text>
         <slot name="title"></slot>
@@ -47,6 +49,11 @@ defineOptions({
   display: flex;
   align-items: center;
   margin: 20px 0;
+  justify-content: space-between;
+
+  .breadcrumb-row-right-side {
+    display: flex;
+  }
 }
 
 #page-head-tabs {
