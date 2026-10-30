@@ -244,6 +244,7 @@ class. */
   }
 }
 
+// Design system calls this secondary button
 .btn-outlined,
 .btn-default {
   background-color: $color-surface;
@@ -411,6 +412,7 @@ a {
   // and any tooltip are shown.
 }
 
+// Design system calls this tertiary button
 .btn-link {
   border-radius: 0;
   background-color: transparent;

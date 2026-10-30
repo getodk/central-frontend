@@ -127,7 +127,8 @@ $color-info-subtle: $blue-50;
 $color-info-border: $blue-200;
 
 // Above variables comes from ODK Design System (WIP), and will be in the Figma soon.
-// Following are the existing variables that are used in different components.
+// Following are the existing variables that are used in different components and other styling
+// files like `app.scss` and `_mixins.scss`
 // TODO: needs some organization, remove redundant/dead variables, add some description around
 //       the purpose and acceptable usage.
 
@@ -266,5 +267,6 @@ $max-width-page-body: 1280px;
 $box-shadow-popover: 0 5px 10px rgba($gray-950, 0.2);
 
 // Figma Variables
+// TODO: Outdated now, should be updated with the latest elevation definition from the design system
 $m3-elevation-light-3: 0px 4px 8px 3px rgba($gray-950, 0.15), 0px 1px 3px 0px rgba($gray-950, 0.30);
 $central-grey-2: $gray-100;

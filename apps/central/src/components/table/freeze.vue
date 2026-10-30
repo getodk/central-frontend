@@ -87,8 +87,8 @@ events were a challenge. For example, in SubmissionTable:
 const actionsTrigger = ref('hover');
 const setActionsTrigger = (trigger) => { actionsTrigger.value = trigger; };
 
-// When hovering over a row of the scrolling table, add a class to the
-// corresponding row of the frozen table. Note that the class may be overwritten
+// When hovering over a row of the either table, add a class to the
+// row of the corresponding table. Note that the class may be overwritten
 // if the <tr> element in the data-frozen slot uses v-bind:class.
 const hoverRowIndex = ref(null);
 const frozenBody = ref(null);
@@ -183,7 +183,6 @@ defineExpose({ getRowPair });
     margin-top: 12px;
   }
 
-  .actions-trigger-hover tr:hover .btn-group,
   .actions-trigger-hover .hover .btn-group,
   .actions-trigger-focus .btn-group:focus-within {
     left: auto;
