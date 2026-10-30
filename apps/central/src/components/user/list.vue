@@ -163,6 +163,7 @@ export default {
 <style lang="scss">
 #user-list-table {
   table-layout: fixed;
+  overflow: visible; // to avoid dropdown menu clipping.
 
   th.actions { width: 125px; }
 }
