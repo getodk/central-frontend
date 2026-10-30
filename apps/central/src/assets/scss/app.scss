@@ -13,14 +13,13 @@ except according to the terms contained in the LICENSE file.
 @import './mixins';
 
 html {
-  background-color: $color-accent-secondary;
+  background-color: $color-surface;
   min-height: 100%;
 }
 
 body {
   min-width: 1000px;
   background-color: $color-page-background;
-  box-shadow: 0 #{$box-shadow-offset-y-body} 0 $gray-600 inset;
   color: $color-text;
   min-height: 100vh;
 
