@@ -113,7 +113,7 @@ export default {
       margin-right: #{$margin-right-icon + 1px};
     }
 
-    .icon-pencil { color: #777; }
+    .icon-pencil { color: $color-text-placeholder; }
   }
   .col-deleted-at { color: $color-danger; }
 }

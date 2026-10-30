@@ -41,9 +41,12 @@
 }
 
 @mixin text-link {
-  &, &:hover, &:focus {
+  &, &:focus {
     color: inherit;
     text-decoration: none;
+  }
+  &:hover {
+    color: inherit;
   }
 }
 
@@ -72,8 +75,8 @@
 // FORMS
 
 @mixin form-control-background {
-  background-color: #fff;
-  .panel-body &, .modal-body & { background-color: #f7f7f7; }
+  background-color: $color-surface;
+  .panel-body &, .modal-body & { background-color: $color-surface-secondary; }
 }
 
 @mixin filter-control {
@@ -85,12 +88,12 @@
   align-items: center;
   gap: 8px;
   border-radius: 2px;
-  border: 1px solid #EEE;
-  background: #FFF;
+  border: 1px solid $color-border;
+  background: $color-surface;
 
   &.disabled {
     cursor: not-allowed;
-    background: #ddd;
+    background: $color-bg-disabled;
     opacity: 0.65;
 
     .display-value {
@@ -163,6 +166,6 @@
   bottom: 0;
   left: 0;
   z-index: $z-index-modal-backdrop;
-  background-color: #000;
+  background-color: $color-surface-inverse;
   opacity: $opacity;
 }

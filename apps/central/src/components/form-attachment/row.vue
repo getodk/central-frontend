@@ -175,7 +175,7 @@ export default {
   }
 
   .icon-exclamation-triangle {
-    color: #e1bf50;
+    color: $color-warning-text;
     margin-right: $margin-right-icon;
   }
 

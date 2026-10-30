@@ -70,6 +70,8 @@ nextTick(() => {
 </script>
 
 <style lang="scss">
+@import '../../assets/scss/variables';
+
 .actor-properties-upsert {
   .actor-properties-table-scroll {
     // Leave room for modal header, intro, inputs, and actions above/below
@@ -99,7 +101,7 @@ nextTick(() => {
   }
 
   .actor-properties-empty {
-    color: #555;
+    color: $color-text-muted;
     font-style: italic;
     margin: 10px 0;
   }

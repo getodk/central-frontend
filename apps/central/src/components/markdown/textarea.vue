@@ -100,7 +100,7 @@ export default {
   }
 
   textarea {
-    border-bottom-color: #aaa;
+    border-bottom-color: $color-border-input;
     resize: vertical;
   }
 
@@ -114,9 +114,9 @@ export default {
   }
 
   .md-preview-btn {
-    background-color: #bbb;
-    color: #333;
-    &:hover, &:focus, &:active:focus { background-color: #888; }
+    background-color: $color-surface-secondary;
+    color: $color-text-secondary;
+    &:hover, &:focus, &:active:focus { background-color: $color-surface-secondary; }
   }
 
   .markdown-textarea-actions {
@@ -136,12 +136,12 @@ export default {
   }
 
   .external-help-link {
-    color: #888;
+    color: $color-text-muted;
     font-size: 12px;
     text-decoration: underline;
     text-decoration-style: dotted;
     padding: 10px;
-    &:hover, &:focus, &:active:focus { color: #777; }
+    &:hover, &:focus, &:active:focus { color: $color-text-placeholder; }
   }
 }
 </style>

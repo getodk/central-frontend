@@ -178,9 +178,12 @@ export default {
 .project-form-row {
   td {
     padding: 4px 0px 4px 6px;
-    color: #333;
-    a { @include text-link; }
-     &.form-name a {
+    color: $color-text-secondary;
+    a {
+      @include text-link;
+      display: inline-block;
+    }
+    &.form-name a {
       color: $color-action-foreground;
     }
   }
@@ -204,7 +207,7 @@ export default {
 
   [class*='icon'] {
     margin-left: 5px;
-    color: #888;
+    color: $color-text-muted;
   }
 }
 </style>

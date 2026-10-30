@@ -10,10 +10,132 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
 
+// Color Palette
+// =============
+$blue-50: #EEF8FB;
+$blue-100: #D5EEF5;
+$blue-200: #ABDCEA;
+$blue-300: #75C3DA;
+$blue-400: #3AA5C5;
+$blue-500: #1592B6;
+$blue-600: #0A80A3;
+$blue-700: #086C8A;
+$blue-800: #075A73;
+$blue-900: #064A5E;
+$blue-950: #03303D;
+
+$gray-0: #FFFFFF;
+$gray-50: #F7F8F9;
+$gray-100: #EEF0F2;
+$gray-200: #DDE1E5;
+$gray-300: #C3C9CF;
+$gray-400: #8F98A1;
+$gray-500: #6B747D;
+$gray-600: #545C64;
+$gray-700: #40464C;
+$gray-800: #2B3035;
+$gray-900: #1B1F23;
+$gray-950: #0E1114;
+
+$green-50: #EDF7EF;
+$green-100: #D2ECD7;
+$green-300: #8CCB98;
+$green-500: #2E8540;
+$green-600: #257036;
+$green-700: #1D5E2E;
+$green-800: #164A24;
+
+$amber-50: #FFF6E5;
+$amber-100: #FDE7BC;
+$amber-300: #F2BE5C;
+$amber-500: #D98A00;
+$amber-600: #B36B00;
+$amber-700: #8A5100;
+$amber-800: #6B3F00;
+
+$red-50: #FDEEEE;
+$red-100: #F9D3D3;
+$red-300: #EC9A9A;
+$red-500: #D93636;
+$red-600: #C42B2B;
+$red-700: #A11F1F;
+$red-800: #821818;
+
+// Semantic colors
+// Primary color
+$color-primary: $blue-600;
+$color-primary-hover: $blue-700;
+$color-primary-pressed: $blue-800;
+$color-primary-subtle: $blue-50;
+$color-primary-subtle-hover: $blue-100;
+$color-primary-border: $blue-600;
+$color-primary-text: $blue-700;
+$color-on-primary: $gray-0;
+$color-focus-ring: $blue-600;
+
+// Surface
+$color-bg: $gray-50;
+$color-surface: $gray-0;
+$color-surface-raised: $gray-0;
+$color-surface-secondary: $gray-100;
+$color-surface-inverse: $gray-900;
+$color-surface-shadow: $gray-200;
+$color-bg-disabled: $gray-100;
+
+// Border
+$color-border: $gray-200;
+$color-divider: $gray-100;
+$color-border-input: $gray-500;
+$color-border-strong: $gray-700;
+
+// Text
+$color-text-primary: $gray-900;
+$color-text-secondary: $gray-700;
+$color-text-muted: $gray-600;
+$color-text-placeholder: $gray-500;
+$color-text-disabled: $gray-400;
+$color-icon: $gray-600;
+$color-icon-muted: $gray-500;
+$color-text-inverse: $gray-0;
+
+// Success
+$color-success: $green-600;
+$color-success-text: $green-700;
+$color-success-subtle: $green-50;
+$color-success-border: $green-300;
+
+// Warning
+$color-warning: $amber-600;
+$color-warning-hover: $amber-700;
+$color-warning-pressed: $amber-800;
+$color-warning-text: $amber-700;
+$color-warning-subtle: $amber-50;
+$color-warning-border: $amber-300;
+
+// Danger
+$color-danger: $red-600;
+$color-danger-hover: $red-700;
+$color-danger-pressed: $red-800;
+$color-danger-text: $red-700;
+$color-danger-subtle: $red-50;
+$color-danger-border: $red-300;
+
+// Info
+$color-info: $blue-600;
+$color-info-text: $blue-800;
+$color-info-subtle: $blue-50;
+$color-info-border: $blue-200;
+
+// Above variables comes from ODK Design System (WIP), and will be in the Figma soon.
+// Following are the existing variables that are used in different components and other styling
+// files like `app.scss` and `_mixins.scss`
+// TODO: needs some organization, remove redundant/dead variables, add some description around
+//       the purpose and acceptable usage.
+
 // Core
-$color-accent-primary: #bd006b;
-$color-accent-secondary: #8d0050;
-$color-page-background: #fff;
+$color-accent-primary: $blue-600;
+$color-accent-secondary: $blue-700;
+$color-page-background: $color-surface;
 
 // Media query breakpoints - copied from bootstrap
 $screen-xs-min: 480px;
@@ -28,50 +150,50 @@ $z-index-modal: 1050;
 $z-index-modal-backdrop: 1040;
 
 // Text
-$color-text: #333;
+$color-text: $color-text-primary;
 $font-family-monospace: Monaco, Menlo, Consolas, "Courier New", monospace;
-$color-text-secondary: #9499A5;
+$color-text-secondary: $color-text-secondary;
 
 // Icons
 $margin-right-icon: 6px;
 
 // Contextual colors
-$color-success: #08a10b;
-$color-success-light: #ddf1d5;
-$color-success-dark: darken($color-success, 10%);
-$color-info: #31708f;
-$color-info-light: #d9edf7;
-$color-info-dark: darken($color-info, 10%);
-$color-warning: #f29e00;
-$color-warning-light: #F5E9D9;
-$color-warning-dark: #BF6A02;
-$color-danger: #de2a11;
-$color-danger-lighter: #dd5454; // Between $color-danger and $color-danger-light
-$color-danger-light: #ffe6e6;
-$color-danger-dark: darken($color-danger, 10%);
-$color-highlight: #faf1cd;
+$color-success: $color-success;
+$color-success-light: $color-success-subtle;
+$color-success-dark: $color-success-text;
+$color-info: $color-info;
+$color-info-light: $color-info-subtle;
+$color-info-dark: $color-info-text;
+$color-warning: $color-warning;
+$color-warning-light: $color-warning-subtle;
+$color-warning-dark: $color-warning-text;
+$color-danger: $color-danger;
+$color-danger-lighter: $color-danger-hover; // Between $color-danger and $color-danger-light
+$color-danger-light: $color-danger-subtle;
+$color-danger-dark: $color-danger-text;
+$color-highlight: $amber-50; // TODO: confirm it
 
 // Buttons and inputs
-$color-action-foreground: #0c7bd1;
-$color-action-background: #009ecc;
-$color-action-background-hover: #0086ad;
-$color-action-background-disabled: #999;
-$color-action-light: #d0e7f1;
-$color-action-overlay: #0096c1;
-$color-input: #555;
-$color-input-inactive: #777;
+$color-action-foreground: $color-primary; // does it means text?
+$color-action-background: $color-primary;
+$color-action-background-hover: $color-primary-hover;
+$color-action-background-disabled: $color-bg-disabled;
+$color-action-light: $color-primary-subtle;
+$color-action-overlay: $blue-700;
+$color-input: $gray-600;
+$color-input-inactive: $gray-500;
 $font-size-btn: 14px;
 $hpadding-btn: 10px;
 $padding-bottom-btn: 5px;
 $padding-top-btn: 6px;
-$btn-focus-box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.18);
+$btn-focus-box-shadow: 0 0 0 3px rgba($gray-950, 0.18);
 
 // Dropdowns
 $font-size-dropdown-menu: $font-size-btn;
 $min-width-dropdown-menu: 150px;
 
 // <dl>
-$border-bottom-dl: 1px solid #ddd;
+$border-bottom-dl: 1px solid $color-border;
 $padding-block-dl: 10px;
 
 // Forms
@@ -81,33 +203,32 @@ $margin-bottom-form-group: 15px;
 // Tables
 $margin-bottom-table: 20px;
 // Heading
-$border-bottom-table-heading: 1px solid #bbb;
-$color-table-heading-background: #ddd;
+$border-bottom-table-heading: 1px solid $color-border;
+$color-table-heading-background: $color-border;
 $font-size-table-heading: 12px;
 $padding-table-heading: 8px 15px 6px;
 // Data
-$border-top-table-data: 1px solid #ddd;
+$border-top-table-data: 1px solid $color-border;
 $padding-bottom-table-data: 8px;
 $padding-left-table-data: 15px;
 $padding-right-table-data: 15px;
 $padding-top-table-data: 8px;
 // Row
-$color-selected-row: #E4EDF1;
-$color-header-row: #FFF;
-$color-odd-row: #F6F6F6;
-$color-even-row: #FCFCFC;
+$color-selected-row: $gray-50;
+$color-header-row: $color-surface;
 
 // Panels
-$box-shadow-panel-main: 0 0 24px rgba(0, 0, 0, 0.25), 0 35px 115px rgba(0, 0, 0, 0.28);
+$box-shadow-panel-main: 0 0 24px rgba($gray-950, 0.25), 0 35px 115px rgba($gray-950, 0.28);
 $padding-panel-body: 15px;
 
 // Navs
 $hpadding-nav-tab: 10px;
 
-$color-subpanel-background: #eee;
-$color-subpanel-active: #ddd;
-$color-subpanel-border: #e6e6e6;
-$color-subpanel-border-strong: #c3c3c3;
+// TODO: these should go away
+$color-subpanel-background: $gray-100;
+$color-subpanel-active: $gray-200;
+$color-subpanel-border: $color-border;
+$color-subpanel-border-strong: $color-border-strong;
 
 $box-shadow-offset-y-body: -2px;
 
@@ -124,7 +245,7 @@ $padding-bottom-expandable-row: 16px;
 $padding-top-expandable-row: 8px;
 
 // FeedEntry
-$background-color-feed-entry: #f9f9f9;
+$background-color-feed-entry: $gray-50;
 $hpadding-feed-entry: 15px;
 
 // FileDropZone
@@ -143,8 +264,9 @@ $margin-top-page-body: 20px;
 $max-width-page-body: 1280px;
 
 // Popover
-$box-shadow-popover: 0 5px 10px rgba(0, 0, 0, 0.2);
+$box-shadow-popover: 0 5px 10px rgba($gray-950, 0.2);
 
 // Figma Variables
-$m3-elevation-light-3: 0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px 0px rgba(0, 0, 0, 0.30);
-$central-grey-2: #E3E4E4;
+// TODO: Outdated now, should be updated with the latest elevation definition from the design system
+$m3-elevation-light-3: 0px 4px 8px 3px rgba($gray-950, 0.15), 0px 1px 3px 0px rgba($gray-950, 0.30);
+$central-grey-2: $gray-100;

@@ -180,7 +180,7 @@ const sizeModel = computed({
     padding-right: 0;
     vertical-align: baseline;
   }
-  .form-group .form-control { background-color: #fff; }
+  .form-group .form-control { background-color: $color-surface; }
 
   .btn + .form-group {
     margin-left: 18px;

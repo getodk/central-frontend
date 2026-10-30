@@ -230,7 +230,7 @@ export default {
   }
 
   .icon-cloud-upload, .icon-comment, .icon-trash, .icon-recycle, .icon-clock-o {
-    color: #bbb;
+    color: $color-icon;
   }
   .entity-icon { color: $color-action-foreground; }
   .icon-warning { color: $color-danger; }

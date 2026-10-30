@@ -56,8 +56,8 @@ describe('TableFreeze', () => {
       const component = mountComponent({ slots });
       await component.get('.table-freeze-scrolling td').trigger('mouseover');
       const frozenRows = component.findAll('.table-freeze-frozen tbody tr');
-      frozenRows[0].classes('scrolling-hover').should.be.true;
-      frozenRows[1].classes('scrolling-hover').should.be.false;
+      frozenRows[0].classes('hover').should.be.true;
+      frozenRows[1].classes('hover').should.be.false;
     });
 
     it('toggles actions if user hovers over a new scrolling row', async () => {
@@ -66,8 +66,8 @@ describe('TableFreeze', () => {
       await scrollingRows[0].trigger('mouseover');
       await scrollingRows[1].trigger('mouseover');
       const frozenRows = component.findAll('.table-freeze-frozen tbody tr');
-      frozenRows[0].classes('scrolling-hover').should.be.false;
-      frozenRows[1].classes('scrolling-hover').should.be.true;
+      frozenRows[0].classes('hover').should.be.false;
+      frozenRows[1].classes('hover').should.be.true;
     });
 
     it('hides the actions if the cursor leaves the table', async () => {

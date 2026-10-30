@@ -54,7 +54,7 @@ $border-width: 1px;
     border-top-right-radius: 5px;
   }
   &.hard-conflict { border-color: $color-danger; }
-  &.soft-conflict { border-color: $color-warning-dark; }
+  &.soft-conflict { border-color: $color-warning; }
 
   .empty-table-message { margin-left: $hpadding-feed-entry; }
 }

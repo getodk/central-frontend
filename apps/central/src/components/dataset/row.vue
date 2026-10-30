@@ -85,7 +85,7 @@ export default {
     height: 26px;
     border-radius: 15px;
     text-align: center;
-    color: white;
+    color: $color-text-inverse;
     vertical-align: 2px;
     margin-right: 3px;
   }

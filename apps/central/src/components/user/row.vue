@@ -125,6 +125,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../../assets/scss/variables';
+
 #user-list-table td {
   vertical-align: middle;
 
@@ -147,7 +149,7 @@ export default {
   }
 
   .invitation-pending {
-    color: #555555;
+    color: $color-text-muted;
   }
 }
 </style>

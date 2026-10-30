@@ -84,7 +84,7 @@ Notes about the layout:
 
 #account-page-container {
   display: flex;
-  background-color: #fff;
+  background-color: $color-surface;
 }
 
 #account-page-container-left {
@@ -129,7 +129,7 @@ Notes about the layout:
   &:not(:has(img[data-loaded])):not(:has(img[data-error])) {
     // We show a placeholder while the logo is loading so that the page content
     // below it doesn't jump.
-    background-color: color.scale(#f5f9ff, $lightness: -4%);
+    background-color: $gray-50;
     border-radius: 2px;
 
     // Choosing this number based on the assumption that most logos will be at
@@ -192,9 +192,9 @@ Notes about the layout:
   // Using :where() to decrease specificity, so that the default border-color
   // applies when the .form-control is focused.
   :where(&) .form-group .form-control {
-    background-color: #fff;
+    background-color: $color-surface;
     border-width: 1px;
-    border-color: #eee;
+    border-color: $color-divider;
     border-radius: 2px;
 
     &::placeholder { color: $color-input-inactive; }

@@ -149,10 +149,12 @@ defineExpose({ fetchData, cancelFetch, afterDelete });
 </script>
 
 <style lang="scss">
+@import '../../assets/scss/variables';
+
 #map-view {
   position: relative;
 
-  .loading { color: #555; }
+  .loading { color: $color-text-muted; }
   #submission-data-views:has(&) { margin-bottom: 15px; }
 }
 </style>

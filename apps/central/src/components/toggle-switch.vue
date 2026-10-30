@@ -40,7 +40,7 @@ const model = defineModel({ type: Boolean });
     position: relative;
     width: 42px;
     height: 24px;
-    background-color: #d1d5db;
+    background-color: $color-surface-secondary;
     border-radius: 30px;
     transition: background-color 0.2s ease;
   }
@@ -51,7 +51,7 @@ const model = defineModel({ type: Boolean });
     left: 3px;
     width: 18px;
     height: 18px;
-    background-color: #fff;
+    background-color: $color-surface;
     border-radius: 9px;
     transition: transform 0.2s ease;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
@@ -66,7 +66,7 @@ const model = defineModel({ type: Boolean });
   }
 
   &:hover .toggle-track {
-    background-color: #9ca3af;
+    background-color: $color-surface-secondary;
   }
 
   &:hover input:checked + .toggle-track {

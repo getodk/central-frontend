@@ -155,6 +155,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../../assets/scss/variables';
+
 #form-head-draft-tab {
   a {
     align-items: center;
@@ -163,7 +165,7 @@ export default {
   }
 
   .icon-pencil {
-    color: #555;
+    color: $color-text-muted;
     font-size: 16px;
   }
 }

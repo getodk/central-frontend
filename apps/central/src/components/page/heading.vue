@@ -66,7 +66,7 @@ const hideHelp = () => {
 }
 
 .page-heading-title {
-  color: #000;
+  color: $color-text-primary;
   font-size: 24px;
   font-weight: 400;
   margin: 0;

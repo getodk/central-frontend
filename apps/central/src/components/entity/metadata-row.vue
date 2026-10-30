@@ -110,7 +110,7 @@ defineEmits(['selectionChanged']);
     height: 26px;
     border-radius: 15px;
     text-align: center;
-    color: white;
+    color: $color-text-inverse;
     margin-top: -2px;
     margin-left: auto;
   }

@@ -156,11 +156,13 @@ const afterAbandon = () => {
 </script>
 
 <style lang="scss">
+@import '../../assets/scss/variables';
+
 #form-edit {
   padding-inline: 10px;
 }
 
-body:has(#form-edit) { background-color: #fff; }
+body:has(#form-edit) { background-color: $color-surface; }
 </style>
 
 <i18n lang="json5">

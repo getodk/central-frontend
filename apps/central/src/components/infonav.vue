@@ -75,11 +75,11 @@ defineProps({
 
     &.open > .btn {
       background-color: $color-action-background;
-      color: #fff;
+      color: $color-text-inverse;
 
       .badge {
-        background-color: rgba(#fff, 0.3);
-        color: #fff;
+        background-color: rgba($color-surface, 0.3);
+        color: $color-text-inverse;
       }
     }
 
@@ -103,7 +103,7 @@ defineProps({
   }
 
   .badge {
-    background-color: $color-action-light;
+    background-color: $blue-100;
     color: $color-input;
   }
 
