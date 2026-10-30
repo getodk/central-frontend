@@ -58,6 +58,9 @@ following options:
     different message. If the function returns `null` or `undefined`, the
     Problem's message is used.
 
+  - alertOnAbort. Whether to show an alert when the request's Abort Signal is
+    aborted. Defaults to `true`.
+
 request() returns a promise. The promise will be rejected if the request is
 invalid or results in an error response, or if the user navigates away from the
 route that sent the request. Otherwise, the promise should be fulfilled.
@@ -83,6 +86,7 @@ const _request = (container, awaitingResponse) => (config) => {
   const {
     fulfillProblem = undefined,
     problemToAlert = undefined,
+    alertOnAbort = true,
     alert: alertOption = true,
     ...axiosConfig
   } = config;
@@ -103,6 +107,12 @@ const _request = (container, awaitingResponse) => (config) => {
     .catch(error => {
       if (router != null && router.currentRoute.value !== initialRoute)
         throw new Error('route change');
+
+      if (!alertOnAbort && axiosConfig.signal?.aborted) {
+        // eslint-disable-next-line no-param-reassign
+        awaitingResponse.value = false;
+        throw new Error('request was canceled');
+      }
 
       if (fulfillProblem != null && error.response != null &&
         isProblem(error.response.data) && fulfillProblem(error.response.data))

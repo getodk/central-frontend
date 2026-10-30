@@ -433,6 +433,7 @@ describe('EntityUpload', () => {
       .testRequests([{
         method: 'POST',
         url: '/v1/projects/1/datasets/%C3%A1/entities',
+        headers: { Accept: 'text/event-stream' },
         data: {
           source: { name: 'my_data.csv', size: 13 },
           entities: [{ label: 'dogwood' }]
@@ -446,7 +447,6 @@ describe('EntityUpload', () => {
       .afterResponses(selectFile)
       .testStandardButton({
         button: '.modal-actions .btn-primary',
-        disabled: ['.modal-actions .btn-link'],
         modal: true,
         spinner: false
       });
@@ -586,6 +586,7 @@ describe('EntityUpload', () => {
       .testRequests([{
         method: 'POST',
         url: '/v1/projects/1/datasets/trees/entities',
+        headers: { Accept: 'text/event-stream' },
         data: {
           source: { name: 'my_data.csv', size: 22 },
           entities: [{ label: 'dogwood', data: { height: '1' } }]
@@ -615,6 +616,7 @@ describe('EntityUpload', () => {
       .testRequests([{
         method: 'POST',
         url: '/v1/projects/1/datasets/trees/entities',
+        headers: { Accept: 'text/event-stream' },
         data: {
           source: { name: 'my_data.csv', size: 65 },
           entities: [
@@ -650,6 +652,7 @@ describe('EntityUpload', () => {
       .testRequests([{
         method: 'POST',
         url: '/v1/projects/1/datasets/people/entities',
+        headers: { Accept: 'text/event-stream' },
         data: {
           source: { name: 'my_data.csv', size: 91 },
           entities: [
@@ -687,6 +690,7 @@ describe('EntityUpload', () => {
       .testRequests([{
         method: 'POST',
         url: '/v1/projects/1/datasets/trees/entities',
+        headers: { Accept: 'text/event-stream' },
         data: {
           source: { name: 'my_data.csv', size: 65 },
           entities: [
@@ -861,6 +865,7 @@ describe('EntityUpload', () => {
           {
             method: 'POST',
             url: '/v1/projects/1/datasets/trees/entities',
+            headers: { Accept: 'text/event-stream' },
             data: {
               source: { name: 'my_data.csv', size: extraCSV.size },
               entities: [
@@ -894,6 +899,7 @@ describe('EntityUpload', () => {
           {
             method: 'POST',
             url: '/v1/projects/1/datasets/trees/entities',
+            headers: { Accept: 'text/event-stream' },
             data: {
               source: { name: 'my_data.csv', size: extraCSV.size },
               entities: [
@@ -919,6 +925,7 @@ describe('EntityUpload', () => {
         .testRequests([{
           method: 'POST',
           url: '/v1/projects/1/datasets/trees/entities',
+          headers: { Accept: 'text/event-stream' },
           data: {
             source: { name: 'my_data.csv', size: extraCSV.size },
             entities: [
@@ -945,6 +952,7 @@ describe('EntityUpload', () => {
         .testRequests([{
           method: 'POST',
           url: '/v1/projects/1/datasets/trees/entities',
+          headers: { Accept: 'text/event-stream' },
           data: {
             source: { name: 'my_data.csv', size: extraCSV.size },
             entities: [
@@ -1168,6 +1176,7 @@ describe('EntityUpload', () => {
       .testRequests([{
         method: 'POST',
         url: '/v1/projects/1/datasets/trees/entities',
+        headers: { Accept: 'text/event-stream' },
         data: {
           source: { name: 'my_data.csv', size: 38 },
           entities: [{ label: 'dogwood', data: { height: '1' } }]
