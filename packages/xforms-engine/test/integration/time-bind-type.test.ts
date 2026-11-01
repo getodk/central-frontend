@@ -96,20 +96,20 @@ describe('Time bind type', () => {
 
     describe('string', () => {
       it.each([
-        '22:02:02.000+07:00',
-        '22:02:02+07:00',
-        '22:02:02.000-07:00',
-        '22:02:02-07:00',
-        '22:02:02.000Z',
-        '22:02:02Z',
-        '22:02:02.000',
-        '22:02:02',
-        '2026-02-24T22:02:02',
-      ])('sets value with valid time (%s)', (expression) => {
-        scenario.answer('/root/input-time', expression);
+        { given: '22:02:02.000+07:00', expected: '22:02:02' },
+        { given: '22:02:02+07:00', expected: '22:02:02' },
+        { given: '22:02:02.000-07:00', expected: '22:02:02' },
+        { given: '22:02:02-07:00', expected: '22:02:02' },
+        { given: '22:02:02.000Z', expected: '22:02:02' },
+        { given: '22:02:02Z', expected: '22:02:02' },
+        { given: '22:02:02.000', expected: '22:02:02' },
+        { given: '22:02:02', expected: '22:02:02' },
+        { given: '2026-02-24T22:02:02', expected: '22:02:02' },
+        { given: '22', expected: '22:00:00' },
+        { given: '22:02', expected: '22:02:00' },
+      ])('sets value with partial time (%s)', ({ given, expected }) => {
+        scenario.answer('/root/input-time', given);
         const answer = getInputAnswer();
-        const expected = '22:02:02';
-
         expect(answer.value).to.deep.equal(expected);
         expect(answer.stringValue).toEqual(expected);
       });
