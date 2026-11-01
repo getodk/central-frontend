@@ -133,22 +133,18 @@ describe('Time bind type', () => {
     });
 
     describe('date', () => {
-      const toDate = (time: string) => {
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, '0');
-        const day = String(today.getDate()).padStart(2, '0');
-        return new Date(`${year}-${month}-${day}T${time}`);
-      };
+      it.each(['22:02:02.000', '22:02:02'])(
+        'sets value with valid time when given a date (%s)',
+        (expression) => {
+          const given = new Date('2026-10-10T' + expression);
+          scenario.answer('/root/input-time', given);
+          const answer = getInputAnswer();
+          const expected = '22:02:02';
 
-      it.each(['22:02:02.000', '22:02:02'])('sets value with valid time (%s)', (expression) => {
-        scenario.answer('/root/input-time', toDate(expression));
-        const answer = getInputAnswer();
-        const expected = '22:02:02';
-
-        expect(answer.value).to.deep.equal(expected);
-        expect(answer.stringValue).toEqual(expected);
-      });
+          expect(answer.value).to.deep.equal(expected);
+          expect(answer.stringValue).toEqual(expected);
+        }
+      );
     });
   });
 });
