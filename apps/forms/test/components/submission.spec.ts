@@ -227,7 +227,7 @@ describe('Submission', () => {
         })
       vi.stubGlobal('fetch', fetchMock);
       const component = await mountComponent();
-      expect(fetchMock).toHaveBeenCalledTimes(2);
+      expect(fetchMock).toHaveBeenCalledTimes(1);
       const form = component.find('.odk-form');
       expect(form.exists()).to.equal(false);
       const dialog = component.find('.p-dialog');
