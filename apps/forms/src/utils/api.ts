@@ -1,7 +1,3 @@
-export interface Attachment {
-  name: string
-}
-
 export interface Form {
   name: string;
   xmlFormId: string;
