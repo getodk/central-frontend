@@ -125,6 +125,10 @@ export default {
   computed: {
     archivedProjects() {
       if (!this.projects.dataExists) return [];
+      if (!this.projects.filter) {
+        console.error(typeof this.projects);
+        console.error(this.projects);
+      }
       const filteredProjects = this.projects.filter((p) => (p.archived));
       return filteredProjects.sort(this.sortFunction);
     },
