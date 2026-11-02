@@ -17,3 +17,11 @@ export const standardFormSummaryAssignments = dataStore({
     return { actorId, roleId: roleObj.id, xmlFormId };
   }
 });
+
+export const extendedFormSummaryAssignments = dataStore({
+  factory: ({ actor, role, xmlFormId }) => {
+    const roleObj = standardRoles.sorted().find(r => r.system === role);
+    if (roleObj == null) throw new Error('role not found');
+    return { actor: toActor(actor), actorId: actor.id, roleId: roleObj.id, xmlFormId };
+  }
+});
