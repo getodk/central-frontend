@@ -11,13 +11,19 @@ const createFieldKeys = (count) => new Array(count).fill(undefined)
     .createPast(1, { displayName: `App User ${i}` })
     .last());
 
-const mountComponent = (fieldKeys, options) => {
+const mountComponent = ({
+  fieldKeys = [],
+  formSummaryAssignments = [],
+  ...options
+} = {}) => {
   if (testData.extendedDatasets.size === 0)
     testData.extendedDatasets.createPast(1, { accessFilter: { type: 'ownerOnly' } });
   const dataset = testData.extendedDatasets.last();
   return mount(EntityFiltersViewAs, {
     container: {
-      requestData: testRequestData([useProject], { fieldKeys, dataset })
+      requestData: testRequestData([useProject], {
+        fieldKeys, dataset, formSummaryAssignments
+      })
     },
     ...options
   });
@@ -26,20 +32,21 @@ const mountComponent = (fieldKeys, options) => {
 describe('EntityFiltersViewAs', () => {
   it('does not render the select if the dataset has no access filter', () => {
     testData.extendedDatasets.createPast(1, { accessFilter: null });
-    const component = mountComponent(createFieldKeys(1));
+    const component = mountComponent({ fieldKeys: createFieldKeys(1) });
     component.find('select').exists().should.be.false;
   });
 
   it('renders a single-select input for each app user', async () => {
     const fieldKeys = createFieldKeys(2);
-    const component = mountComponent(fieldKeys, { attachTo: document.body });
+    const component = mountComponent({ fieldKeys, attachTo: document.body });
     await component.get('.dropdown-trigger').trigger('click');
     component.findAll('input[type="radio"]').length.should.equal(2);
   });
 
   it('emits an app user ID after selection is applied', async () => {
     const [fieldKey1, fieldKey2] = createFieldKeys(2);
-    const component = mountComponent([fieldKey1, fieldKey2], {
+    const component = mountComponent({
+      fieldKeys: [fieldKey1, fieldKey2],
       props: { modelValue: fieldKey1.id },
       attachTo: document.body
     });
@@ -51,7 +58,8 @@ describe('EntityFiltersViewAs', () => {
 
   it('emits null after Reset to Me is clicked', async () => {
     const [fieldKey] = createFieldKeys(1);
-    const component = mountComponent([fieldKey], {
+    const component = mountComponent({
+      fieldKeys: [fieldKey],
       props: { modelValue: fieldKey.id },
       attachTo: document.body
     });
@@ -63,7 +71,8 @@ describe('EntityFiltersViewAs', () => {
 
   it('does not emit an event when Apply is clicked without a change', async () => {
     const [fieldKey] = createFieldKeys(1);
-    const component = mountComponent([fieldKey], {
+    const component = mountComponent({
+      fieldKeys: [fieldKey],
       props: { modelValue: fieldKey.id },
       attachTo: document.body
     });
@@ -75,7 +84,8 @@ describe('EntityFiltersViewAs', () => {
   describe('display value', () => {
     it('shows the display name of the selected field key', () => {
       const [fieldKey] = createFieldKeys(1);
-      const component = mountComponent([fieldKey], {
+      const component = mountComponent({
+        fieldKeys: [fieldKey],
         props: { modelValue: fieldKey.id }
       });
       component.get('.display-value').text().should.equal(fieldKey.displayName);
@@ -83,7 +93,8 @@ describe('EntityFiltersViewAs', () => {
 
     it('shows default label if modelValue is null', () => {
       const [fieldKey] = createFieldKeys(1);
-      const component = mountComponent([fieldKey], {
+      const component = mountComponent({
+        fieldKeys: [fieldKey],
         props: { modelValue: null }
       });
       component.get('.display-value').text().should.equal('Me');
@@ -91,7 +102,7 @@ describe('EntityFiltersViewAs', () => {
 
     it('shows default label if the id is not in the field keys list', () => {
       const [fieldKey] = createFieldKeys(1);
-      const component = mountComponent([], {
+      const component = mountComponent({
         props: { modelValue: fieldKey.id }
       });
       component.get('.display-value').text().should.equal('Me');
