@@ -139,7 +139,7 @@ em { @include italic; }
 ////////////////////////////////////////////////////////////////////////////////
 // ICONS
 
-.btn, a, .label {
+.btn, a {
   .caret { margin-left: 6px; }
 
   > [class^="icon-"]:first-child {
@@ -792,15 +792,6 @@ tr.uncommitted-change { background-color: $amber-100; }
   color: $color-text-muted;
   font-size: 15px;
 }
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// LABELS
-
-.label-default { background-color: $color-surface-secondary; }
-.label-primary { background-color: $color-action-background; }
-.label-warning { background-color: $color-warning; }
 
 ////////////////////////////////////////////////////////////////////////////////
 // TAGS
