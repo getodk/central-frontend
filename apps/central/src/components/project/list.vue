@@ -126,8 +126,8 @@ export default {
     archivedProjects() {
       if (!this.projects.dataExists) return [];
       if (!this.projects.filter) {
-        console.error(typeof this.projects);
-        console.error(this.projects);
+        console.error(typeof this.projects); // eslint-disable-line no-console
+        console.error(this.projects); // eslint-disable-line no-console
       }
       const filteredProjects = this.projects.filter((p) => (p.archived));
       return filteredProjects.sort(this.sortFunction);
