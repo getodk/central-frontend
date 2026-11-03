@@ -205,7 +205,7 @@ describe.only('UserEditPassword', () => {
       }));
 
   it('should allow user to continue if password breach check returns 500', function() { // eslint-disable-line func-names
-    this.timeout(15_000); // REVIEW some bug in the MockHttp promise resolution chain?
+    this.timeout(15_000); // REVIEW some bug in the MockHttp promise resolution chain?  It seems to take 5 seconds for the status:500 to be returned
     return mockHttp()
       .mount(UserEditPassword, mountOptions())
       .request(submit)
