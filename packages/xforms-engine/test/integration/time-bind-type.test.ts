@@ -105,7 +105,7 @@ describe('Time bind type', () => {
         { given: '22:02:02.000', expected: '22:02:02' },
         { given: '22:02:02', expected: '22:02:02' },
         { given: '22:02:02.987+07:00', expected: '22:02:02' },
-      ])('sets value with partial time (%s)', ({ given, expected }) => {
+      ])('sets value from valid time (%s)', ({ given, expected }) => {
         scenario.answer('/root/input-time', given);
         const answer = getInputAnswer();
         expect(answer.value).to.deep.equal(expected);
