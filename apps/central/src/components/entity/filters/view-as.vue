@@ -62,7 +62,8 @@ const options = computed(() => {
   const publicLinks = publicLinkAssignments.map(({ actor, xmlFormId }) => ({
     value: actor.id,
     text: actor.displayName,
-    group: t('publicLinksForForm', { formName: linkedForms.get(xmlFormId).name })
+    group: t('resource.publicLinks'),
+    subgroup: linkedForms.get(xmlFormId).name
   }));
 
   return [...appUsers, ...publicLinks];
@@ -90,7 +91,6 @@ const placeholder = ({ selectedText }) => selectedText ?? t('noUserSelected');
     "viewAs": "View As",
     // This "All" means all users (app users and public links) shown in this dropdown
     "resetToMe": "Reset to All",
-    "publicLinksForForm": "Public Links: {formName}"
   }
 }
 </i18n>

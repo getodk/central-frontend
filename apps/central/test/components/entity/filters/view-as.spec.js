@@ -146,6 +146,10 @@ describe('EntityFiltersViewAs', () => {
       const component = mountComponent({ formSummaryAssignments });
       await component.get('.dropdown-trigger').trigger('click');
       component.findAll('input[type="radio"]').length.should.equal(4);
+      component.findAll('.option-group').map(heading => heading.text())
+        .should.eql(['Public Links']);
+      component.findAll('.option-subgroup').map(heading => heading.text())
+        .should.eql(['Form 1', 'Form 2']);
     });
 
     it('orders public link groups (forms) according to the order of the linked forms', async () => {
@@ -167,8 +171,11 @@ describe('EntityFiltersViewAs', () => {
       await component.get('.dropdown-trigger').trigger('click');
       component.findAll('.option-group').map(heading => heading.text()).should.eql([
         'App Users',
-        'Public Links: Form 1',
-        'Public Links: Form 2'
+        'Public Links'
+      ]);
+      component.findAll('.option-subgroup').map(heading => heading.text()).should.eql([
+        'Form 1',
+        'Form 2'
       ]);
     });
 
@@ -291,8 +298,13 @@ describe('EntityFiltersViewAs', () => {
       const headings = component.findAll('.option-group').map(heading => heading.text());
       headings.should.eql([
         'App Users',
-        'Public Links: Form 1',
-        'Public Links: Form 2'
+        'Public Links'
+      ]);
+      const subheadings = component.findAll('.option-subgroup')
+        .map(heading => heading.text());
+      subheadings.should.eql([
+        'Form 1',
+        'Form 2'
       ]);
       component.findAll('input[type="radio"]').length.should.equal(6);
       const texts = component.findAll('.single-select-option')
