@@ -119,6 +119,7 @@ describe('Time bind type', () => {
         '22:02:61',
         '22:02',
         '22',
+        '22:02:00+50:00',
         '22:02:00+invalid',
         '22:02:00.Z', // Malformed decimal/Z combination
         'noon',

@@ -1,6 +1,9 @@
 import { Temporal } from 'temporal-polyfill';
 import { type CodecDecoder, type CodecEncoder, ValueCodec } from './ValueCodec.ts';
-import { ISO_TIME_WITH_OPTIONAL_OFFSET_PATTERN } from '@getodk/common/constants/datetime.ts';
+import {
+  ISO_TIME_WITH_OPTIONAL_OFFSET_PATTERN,
+  VALID_OFFSET_VALUE,
+} from '@getodk/common/constants/datetime.ts';
 
 export type TimeRuntimeValue = string | null;
 
@@ -17,14 +20,16 @@ const removeMillis = (value: Temporal.PlainTime) => {
 };
 
 const validateTimeString = (value: string): TimeRuntimeValue => {
-  if (value.endsWith('Z')) {
-    value = value.slice(0, -1);
-  }
   const match = ISO_TIME_WITH_OPTIONAL_OFFSET_PATTERN.exec(value ?? '');
   if (!match?.length) {
     return null;
   }
-  const [, timeOnly = ''] = match;
+
+  const [, timeOnly = '', offset] = match;
+  if (offset && !VALID_OFFSET_VALUE.test(offset)) {
+    return null;
+  }
+
   try {
     // Delegate bounds checking to Temporal
     return removeMillis(Temporal.PlainTime.from(timeOnly));
