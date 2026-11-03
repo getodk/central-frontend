@@ -81,7 +81,7 @@ except according to the terms contained in the LICENSE file.
       <li class="after-list">
         <slot name="after-list" :selected="selected"></slot>
       </li>
-      <li class="action-bar">
+      <li v-if="!single" class="action-bar">
         <button type="button" class="btn btn-primary" :aria-disabled="changes.size === 0" @click="apply()">
           {{ $t('action.apply') }}
         </button>
@@ -195,6 +195,7 @@ id += 1;
 const descriptionId = (i) => `${idPrefix}-description${i}`;
 
 const optionList = ref(null);
+const dropdownEl = ref(null);
 
 
 
@@ -252,14 +253,6 @@ const syncWithModelValue = () => {
   needsSync = false;
 };
 
-const changeCheckbox = ({ target }) => {
-  if (props.single) {
-    // In the case of the single-selection, de-select the one (or zero) previously-selected values before selecting the new one.
-    for (const value of [...selected]) change(value);
-  }
-  change(props.options[target.dataset.index].value);
-};
-
 // emittedValue is used for an optimization, to avoid an unnecessary sync.
 // Unless it is `null`, it holds the last value emitted since props.modelValue
 // was last set. It equals `null` if no value has been emitted since then (or if
@@ -284,6 +277,20 @@ const emitIfChanged = () => {
     emittedValue = [...selected];
     emit('update:modelValue', emittedValue);
   }
+};
+
+const applySingleSelection = () => {
+  emitIfChanged();
+  dropdownEl.value?.hide();
+};
+
+const changeCheckbox = ({ target }) => {
+  if (props.single) {
+    // In the case of the single-selection, de-select the one (or zero) previously-selected values before selecting the new one.
+    for (const value of [...selected]) change(value);
+  }
+  change(props.options[target.dataset.index].value);
+  if (props.single) applySingleSelection();
 };
 
 watch(
@@ -384,8 +391,6 @@ watch(searchValue, (value) => {
 ////////////////////////////////////////////////////////////////////////////////
 // DROPDOWN INTEGRATION
 
-const dropdownEl = ref(null);
-
 const onShow = () => {
   syncWithModelValue();
 };
@@ -422,6 +427,7 @@ const changeAll = (selectAll) => {
     input.checked = selectAll;
     change(props.options[input.dataset.index].value);
   }
+  if (props.single) applySingleSelection();
 };
 
 
