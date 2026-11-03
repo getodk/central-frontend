@@ -56,25 +56,29 @@ describe('DatasetProperties', () => {
     const component = mountComponent();
     const rows = component.findAll('tbody tr');
 
-    rows.length.should.be.eql(5);
+    rows.length.should.be.eql(3);
 
     rows[0].findAll('td')[0].text().should.be.eql('height');
-    rows[0].findAll('td')[2].text().should.be.eql('Tree Registration');
-    rows[0].getComponent(FormLink).props().to.should.be.equal('/projects/1/forms/tree_registration/submissions');
+    const heightFormLinks = rows[0].findAllComponents(FormLink);
+    heightFormLinks.length.should.be.eql(2);
+    heightFormLinks[0].text().should.be.eql('Tree Registration');
+    heightFormLinks[0].props().to.should.be.equal('/projects/1/forms/tree_registration/submissions');
+    heightFormLinks[1].text().should.be.eql('Tree Registration Adv');
+    heightFormLinks[1].props().to.should.be.equal('/projects/1/forms/tree_registration_adv/submissions');
 
-    rows[1].findAll('td')[0].text().should.be.eql('Tree Registration Adv');
-    rows[1].getComponent(FormLink).props().to.should.be.equal('/projects/1/forms/tree_registration_adv/submissions');
+    rows[1].findAll('td')[0].text().should.be.eql('circumference');
+    const circumferenceFormLinks = rows[1].findAllComponents(FormLink);
+    circumferenceFormLinks.length.should.be.eql(1);
+    circumferenceFormLinks[0].text().should.be.eql('Tree Registration Adv');
+    circumferenceFormLinks[0].props().to.should.be.equal('/projects/1/forms/tree_registration_adv/submissions');
 
-    rows[2].findAll('td')[0].text().should.be.eql('circumference');
-    rows[2].findAll('td')[2].text().should.be.eql('Tree Registration Adv');
-    rows[2].getComponent(FormLink).props().to.should.be.equal('/projects/1/forms/tree_registration_adv/submissions');
-
-    rows[3].findAll('td')[0].text().should.be.eql('type');
-    rows[3].findAll('td')[2].text().should.be.eql('Tree Registration');
-    rows[3].getComponent(FormLink).props().to.should.be.equal('/projects/1/forms/tree_registration/submissions');
-
-    rows[4].findAll('td')[0].text().should.be.eql('Tree Registration Adv');
-    rows[4].getComponent(FormLink).props().to.should.be.equal('/projects/1/forms/tree_registration_adv/submissions');
+    rows[2].findAll('td')[0].text().should.be.eql('type');
+    const typeFormLinks = rows[2].findAllComponents(FormLink);
+    typeFormLinks.length.should.be.eql(2);
+    typeFormLinks[0].text().should.be.eql('Tree Registration');
+    typeFormLinks[0].props().to.should.be.equal('/projects/1/forms/tree_registration/submissions');
+    typeFormLinks[1].text().should.be.eql('Tree Registration Adv');
+    typeFormLinks[1].props().to.should.be.equal('/projects/1/forms/tree_registration_adv/submissions');
   });
 
   it('shows the property even if there is no associated form', () => {
@@ -90,7 +94,7 @@ describe('DatasetProperties', () => {
 
     rows.length.should.be.eql(1);
     rows[0].findAll('td')[0].text().should.be.eql('height');
-    rows[0].findAll('td')[2].text().should.be.eql('(None)');
+    rows[0].findAll('td')[1].text().should.be.eql('(None)');
   });
 
   it('shows empty message when there is no properties', () => {

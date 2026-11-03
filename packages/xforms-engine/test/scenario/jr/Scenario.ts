@@ -231,7 +231,7 @@ export class Scenario {
   protected readonly getEventPosition: Accessor<number>;
   private readonly setEventPosition: Setter<number>;
 
-  protected readonly getSelectedPositionalEvent: Accessor<AnyPositionalEvent>;
+  readonly getSelectedPositionalEvent: Accessor<AnyPositionalEvent>;
 
   protected constructor(
     private readonly config: ScenarioConfig,
@@ -1075,8 +1075,8 @@ export class Scenario {
     });
   }
 
-  proposed_getTitle(): string {
-    throw new ImplementationPendingError('form title');
+  getTitle(): string {
+    return this.instanceRoot.definition.bind.form.title;
   }
 
   proposed_serializeInstance(): string {

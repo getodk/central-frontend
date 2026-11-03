@@ -57,24 +57,11 @@ const handleLanguageChange = (event: FormLanguage) => {
 </template>
 
 <style scoped lang="scss">
-.p-menu-item-link,
-.p-menu-item-link:hover {
-	color: var(--odk-text-color);
-}
-
-.p-button.p-button-rounded {
-	&:hover {
-		background: var(--odk-primary-light-background-color);
-		border-color: var(--odk-primary-border-color);
-		outline: none;
-	}
-
-	&:active,
-	&:focus {
-		background: var(--odk-primary-lighter-background-color);
-		border-color: var(--odk-primary-border-color);
-		outline: none;
-	}
+h1 {
+	font-size: var(--odk-title-font-size);
+	font-weight: 500;
+	margin: var(--odk-spacing-m) 0;
+	overflow-wrap: anywhere;
 }
 
 .form-title {
@@ -86,13 +73,6 @@ const handleLanguageChange = (event: FormLanguage) => {
 	:deep(.p-card-body) {
 		padding-left: 3rem;
 		padding-right: 3rem;
-
-		h1 {
-			font-size: var(--odk-title-font-size);
-			font-weight: 500;
-			margin: var(--odk-spacing-m) 0;
-			word-break: break-all;
-		}
 	}
 }
 
@@ -102,10 +82,8 @@ const handleLanguageChange = (event: FormLanguage) => {
 
 	h1 {
 		padding-left: 1.5rem;
-		font-size: var(--odk-title-font-size);
 		font-weight: 400;
 		margin: 16px 0;
-		word-break: break-all;
 	}
 
 	.form-options {

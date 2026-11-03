@@ -68,7 +68,7 @@ const feed = computed(() => {
       const entityVersion = entityVersions[versionIndex];
       versionIndex -= 1;
       groups.push([{ entry: audit, submission, entityVersion }]);
-    } else if (action === 'entity.create' || action === 'entity.bulk.create') {
+    } else if (action === 'entity.create' || action === 'entity.bulk.upsert') {
       const group = [{ entry: audit, entityVersion: entityVersions[0] }];
       const { details } = audit;
       // this will insert a feed entry for the submission approval event

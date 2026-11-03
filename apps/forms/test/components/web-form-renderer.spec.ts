@@ -1,8 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { enableAutoUnmount, mount, VueWrapper } from '@vue/test-utils';
+import { enableAutoUnmount, mount, VueWrapper, flushPromises } from '@vue/test-utils';
 import WebFormRenderer from '../../src/components/web-form-renderer.vue';
-import { flushPromises } from '@vue/test-utils';
 import PrimeVue from 'primevue/config';
 import Location from '../../src/utils/location';
 

@@ -1,5 +1,12 @@
 # @getodk/xpath
 
+## 1.0.3
+
+### Patch Changes
+
+- 12db236: Fixed an inconsistency with Collect. Now calling min() or max() with a set ignores empty values rather than returning NaN.
+- 9202e2e: Fixed a bug where comparing nodes with the same number value in different formats returned no match.
+
 ## 1.0.2
 
 ### Patch Changes

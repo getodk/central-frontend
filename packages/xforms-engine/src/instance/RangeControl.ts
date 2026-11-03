@@ -1,10 +1,13 @@
 import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
+import { createMemo } from 'solid-js';
 import type { PageBoundary } from '../client/identity.ts';
 import type {
   RangeInputValue,
   RangeNode,
   RangeNodeAppearances,
+  RangeNodeOptions,
+  RangeTickLabel,
   RangeValue,
 } from '../client/RangeNode.ts';
 import type { TextRange } from '../client/TextRange.ts';
@@ -12,6 +15,7 @@ import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPat
 import type { StaticLeafElement } from '../integration/xpath/static-dom/StaticElement.ts';
 import { RangeCodec } from '../lib/codecs/RangeCodec.ts';
 import { getSharedValueCodec } from '../lib/codecs/getSharedValueCodec.ts';
+import { createItemCollection } from '../lib/reactivity/createItemCollection.ts';
 import {
   createAttributeState,
   type AttributeState,
@@ -22,6 +26,7 @@ import type { SharedNodeState } from '../lib/reactivity/node-state/createSharedN
 import { createSharedNodeState } from '../lib/reactivity/node-state/createSharedNodeState.ts';
 import { createFieldHint } from '../lib/reactivity/text/createFieldHint.ts';
 import { createNodeLabel } from '../lib/reactivity/text/createNodeLabel.ts';
+import { isNumericString } from '../parse/body/control/RangeControlDefinition.ts';
 import type {
   AnyRangeNodeDefinition,
   RangeNodeDefinition,
@@ -42,8 +47,63 @@ interface RangeControlStateSpec<V extends RangeValueType> extends ValueNodeState
   readonly label: Accessor<TextRange<'label'> | null>;
   readonly hint: Accessor<TextRange<'hint'> | null>;
   readonly valueOptions: null;
+  readonly tickLabels: Accessor<readonly RangeTickLabel[]>;
   readonly pageBoundary: PageBoundary;
 }
+
+/**
+ * Per {@link https://getodk.github.io/xforms-spec/#range-tick-labels | ODK XForms spec},
+ * an item needs a numeric value within the range, and the first item for a value wins.
+ */
+const createTickLabels = <V extends RangeValueType>(
+  control: RangeControl<V>
+): Accessor<readonly RangeTickLabel[]> => {
+  const items = createItemCollection(control);
+  const { start, end } = control.definition.bounds;
+  const min = Math.min(Number(start), Number(end));
+  const max = Math.max(Number(start), Number(end));
+
+  return control.scope.runTask(() => {
+    return createMemo(() => {
+      const labelsByValue = new Map<number, RangeTickLabel>();
+
+      items().forEach(({ value, label }) => {
+        if (!isNumericString(value)) {
+          return;
+        }
+
+        const numericValue = Number(value);
+        const isWithinBounds = numericValue >= min && numericValue <= max;
+        if (isWithinBounds && !labelsByValue.has(numericValue)) {
+          labelsByValue.set(numericValue, { value: numericValue, label });
+        }
+      });
+
+      return Array.from(labelsByValue.values()).sort(
+        (a: RangeTickLabel, b: RangeTickLabel) => a.value - b.value
+      );
+    });
+  });
+};
+
+const getRangeBoundsError = (definition: RangeNodeDefinition): Error | null => {
+  const { appearances, bounds } = definition.bodyElement;
+  const { start, end, step } = bounds;
+  if (appearances.rating) {
+    const isInt = Number.isInteger(Number(end));
+    return isInt ? null : new Error(`Rating "end" must be a whole number, got ${end}.`);
+  }
+
+  const decimalsOf = (value: string) => value.split('.')[1]?.length ?? 0;
+  const factor = 10 ** Math.max(decimalsOf(start), decimalsOf(end), decimalsOf(step));
+  const scaledStep = Math.round(Number(step) * factor);
+  const scaledSpan = Math.round((Number(end) - Number(start)) * factor);
+  if (scaledStep === 0 || scaledSpan % scaledStep !== 0) {
+    return new Error(`Range from ${start} to ${end} cannot be divided into steps of ${step}.`);
+  }
+
+  return null;
+};
 
 export class RangeControl<V extends RangeValueType = RangeValueType>
   extends ValueNode<V, RangeNodeDefinition<V>, RangeValue<V>, RangeInputValue<V>>
@@ -78,7 +138,7 @@ export class RangeControl<V extends RangeValueType = RangeValueType>
   // RangeNode
   readonly nodeType = 'range';
   readonly appearances: RangeNodeAppearances;
-  readonly nodeOptions = null;
+  readonly nodeOptions: RangeNodeOptions;
   readonly currentState: CurrentState<RangeControlStateSpec<V>>;
 
   constructor(
@@ -92,6 +152,13 @@ export class RangeControl<V extends RangeValueType = RangeValueType>
     super(parent, instanceNode, definition, codec);
 
     this.appearances = definition.bodyElement.appearances;
+    this.nodeOptions = definition.bodyElement.options;
+
+    const boundsError = getRangeBoundsError(definition);
+    if (boundsError != null) {
+      this.registerExpressionError(() => boundsError);
+    }
+
     this.attributeState = createAttributeState(this.scope);
 
     const state = createSharedNodeState(
@@ -107,6 +174,7 @@ export class RangeControl<V extends RangeValueType = RangeValueType>
         children: null,
         attributes: this.attributeState.getAttributes,
         valueOptions: null,
+        tickLabels: createTickLabels(this),
         value: this.valueState,
         instanceValue: this.getInstanceValue,
         pageBoundary: this.root.pagination.attachLeaf(this),

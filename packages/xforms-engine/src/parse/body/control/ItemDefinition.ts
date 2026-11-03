@@ -3,8 +3,7 @@ import { getValueElement } from '../../../lib/dom/query.ts';
 import { ItemLabelDefinition } from '../../text/ItemLabelDefinition.ts';
 import type { XFormDefinition } from '../../XFormDefinition.ts';
 import { BodyElementDefinition } from '../BodyElementDefinition.ts';
-import type { AnySelectControlDefinition } from './SelectControlDefinition.ts';
-import { RankControlDefinition } from './RankControlDefinition.ts';
+import type { ItemCollectionControlDefinition } from './parseItemCollection.ts';
 
 export class ItemDefinition extends BodyElementDefinition<'item'> {
   override readonly category = 'support';
@@ -15,7 +14,7 @@ export class ItemDefinition extends BodyElementDefinition<'item'> {
 
   constructor(
     form: XFormDefinition,
-    override readonly parent: AnySelectControlDefinition | RankControlDefinition,
+    override readonly parent: ItemCollectionControlDefinition,
     element: ItemElement
   ) {
     const valueElement = getValueElement(element);

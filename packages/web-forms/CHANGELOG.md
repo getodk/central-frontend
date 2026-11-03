@@ -1,5 +1,16 @@
 # @getodk/web-forms
 
+## 1.1.1
+
+### Patch Changes
+
+- 47af1d1: Added component emit for language selection so app and component can stay in the same language
+- d9464e4: Invalid questions block Next, quick select, and adding repeat instances, showing their errors.
+- 1878f83: Fix page not scrolling to the top when a question is taller than the viewport
+- 8c83cb7: Fixed a bug in styling of select items which have markdown formatting.
+- 7e2d5dc: Fixed a styling bug where fields in groups with validation errors had rounded corners.
+- 93584cb: Range slider now shows an empty state until a value is selected.
+
 ## 1.1.0
 
 ### Minor Changes

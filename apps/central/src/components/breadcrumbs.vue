@@ -11,6 +11,10 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div class="breadcrumbs">
+    <span class="icon-home"></span>
+    <span class="separator">
+      <span class="icon-angle-right"></span>
+    </span>
     <template v-for="(link, index) in links" :key="index">
       <div class="breadcrumb-item" v-tooltip.text>
         <linkable :to="link.path">
@@ -18,7 +22,9 @@ except according to the terms contained in the LICENSE file.
           {{ link.text }}
         </linkable>
       </div>
-      <span v-if="index < links.length - 1" class="separator">/</span>
+      <span v-if="index < links.length - 1" class="separator">
+        <span class="icon-angle-right"></span>
+      </span>
     </template>
   </div>
 </template>
@@ -41,29 +47,36 @@ defineProps({
 @import '../assets/scss/mixins';
 .breadcrumbs {
   display: flex;
-  background-color: $color-subpanel-background;
-  padding-top: 20px;
-  padding-left: 15px;
-  margin-inline: -15px;
+  align-items: center;
 }
 
 .breadcrumb-item {
   @include text-overflow-ellipsis;
-  font-size: 14px;
+  font-size: 16px;
   max-width: 275px;
+  color: $color-input;
 
-  a [class^="icon-"] {
-    margin-left: 0;
-    margin-right: 3px;
+  a {
+    padding: 5px;
+
+    [class^="icon-"] {
+      margin-left: 0;
+      margin-right: 3px;
+    }
   }
 }
 
-.breadcrumb-item a{
-  color: $color-accent-primary;
+.separator {
+  padding: 0px 5px;
+  color: $color-input;
 }
 
-.separator {
-  padding: 0px 10px;
-  color: #bbb;
+.icon-home {
+  font-size: 28px;
+  color: $color-input;
+
+  &::before {
+    transform: translateY(-4px);
+  }
 }
 </style>

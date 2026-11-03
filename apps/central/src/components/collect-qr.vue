@@ -97,12 +97,12 @@ const renderQrCode = () => {
     ctx.stroke();
     ctx.fill();
 
-    // Draw icon
-    ctx.font = `${width * 0.15}px icomoon`;
+    // Draw emoji
+    ctx.font = `${width * 0.15}px "Helvetica Neue", Helvetica, Arial, sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     const icon = '\u{1F4DD}'; // memo emoji
-    ctx.fillText(icon, width * 0.5, width * 0.5, width * 0.2);
+    ctx.fillText(icon, width * 0.5, width * 0.515, width * 0.2);
 
     // Write text at the bottom
     ctx.font = `${textFontSize}px Monaco, Menlo, Consolas, "Courier New", monospace`;

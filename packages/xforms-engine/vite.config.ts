@@ -29,11 +29,34 @@ const BROWSER_ENABLED = BROWSER_NAME != null;
 
 const TEST_ENVIRONMENT = BROWSER_ENABLED ? 'node' : 'jsdom';
 
+const TEST_OPTIONS = (mode: string) => {
+  if (mode === 'test') {
+    return {
+      include: ['test/**/*.test.ts'],
+      exclude: ['test/integration/**/*.test.ts', 'test/performance/**/*.test.ts'],
+    };
+  }
+  if (mode === 'integration') {
+    return {
+      include: ['test/integration/**/*.test.ts'],
+      exclude: [],
+      setupFiles: ['./test/scenario/vitest/setup.ts'],
+    };
+  }
+  if (mode === 'performance') {
+    return {
+      include: ['test/performance/**/*.test.ts'],
+      exclude: [],
+      setupFiles: ['./test/scenario/vitest/setup.ts'],
+    };
+  }
+  return {}; // unknown mode
+};
+
 export default defineConfig(({ mode }) => {
   const { VITE_BUILD_TARGET } = process.env;
   const IS_SOLID_BUILD_TARGET = VITE_BUILD_TARGET === 'solid';
-  const IS_INTEGRATION_TEST = mode === 'integration';
-  const IS_TEST = mode === 'test' || IS_INTEGRATION_TEST;
+  const IS_TEST = mode === 'test' || mode === 'integration' || mode === 'performance';
 
   const entry = './src/index.ts';
   const entryKey = IS_SOLID_BUILD_TARGET ? 'solid' : 'index';
@@ -125,6 +148,7 @@ export default defineConfig(({ mode }) => {
     },
 
     test: {
+      ...TEST_OPTIONS(mode),
       browser: {
         enabled: BROWSER_ENABLED,
         instances: BROWSER_NAME != null ? [{ browser: BROWSER_NAME }] : [],
@@ -135,10 +159,7 @@ export default defineConfig(({ mode }) => {
 
       environment: TEST_ENVIRONMENT,
       globals: false,
-      include: IS_INTEGRATION_TEST ? ['test/integration/**/*.test.ts'] : ['test/**/*.test.ts'],
-      exclude: IS_INTEGRATION_TEST ? [] : ['test/integration/**/*.test.ts'],
       reporters: process.env.GITHUB_ACTIONS ? ['default', 'github-actions'] : 'default',
-      setupFiles: IS_INTEGRATION_TEST ? ['./test/scenario/vitest/setup.ts'] : [],
 
       server: {
         deps: {

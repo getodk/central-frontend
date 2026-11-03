@@ -74,8 +74,8 @@ const label = computed(() => (props.deleted
   }
 
   .icon-download {
-    border-left: 1px dotted #ccc;
-    color: #bbb;
+    border-left: 1px dotted $color-border;
+    color: $color-icon;
     padding-left: 5px;
   }
   &:hover .icon-download { color: $color-action-foreground; }

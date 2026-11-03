@@ -1,5 +1,11 @@
 # @getodk/central-frontend
 
+## 2026.3.1
+
+### Patch Changes
+
+- 7257d25: Style "View As &lt;app user&gt;" dropdown filter on entity list. This is accomplished by modifying the Multiselect component to support single select, while preserving features like searching within options in the dropdown. (getodk/central#2171)
+
 ## 2026.3.0
 
 ### Minor Changes

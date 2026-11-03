@@ -125,8 +125,6 @@ export default {
 }
 
 .project-form-access-row-draft {
-  background-color: rgba(0, 0, 0, 0.0225);
-
   .icon-edit { margin-right: 9px; }
 }
 </style>

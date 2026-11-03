@@ -66,7 +66,7 @@ const score = computed(() => {
   $bar-width: calc(20% - #{math.div(4 * $between-bars, 5)});
   &::before, &::after {
     background-color: transparent;
-    border-color: #fff;
+    border-color: $gray-0;
     border-style: solid;
     border-width: 0 $between-bars 0 $between-bars;
     box-sizing: content-box;

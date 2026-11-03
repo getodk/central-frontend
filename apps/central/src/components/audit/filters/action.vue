@@ -88,6 +88,7 @@ export default {
         this.categoryOption('dataset'),
         this.actionOption('dataset.create'),
         this.actionOption('dataset.update'),
+        this.actionOption('entity.bulk.upsert'),
         this.actionOption('entity.bulk.delete'),
         this.actionOption('entity.bulk.restore'),
         this.actionOption('dataset.delete'),
@@ -139,7 +140,7 @@ export default {
   }
   .icon-angle-down {
     font-size: 16px;
-    color: #555555;
+    color: $color-text-muted;
     font-weight: bold;
     z-index: 1;
     pointer-events: none;

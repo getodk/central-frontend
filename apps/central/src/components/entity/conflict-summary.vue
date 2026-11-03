@@ -120,6 +120,8 @@ const markAsResolved = () => {
 </script>
 
 <style lang="scss" scoped>
+  @import '../../assets/scss/variables';
+
   .panel { margin-bottom: 35px; }
 
   .panel-heading {
@@ -172,7 +174,7 @@ const markAsResolved = () => {
       width: 30px;
       font-size: 20px;
       align-self: center;
-      color: #9F9F9F
+      color: $color-text-placeholder;
     }
 
     p {

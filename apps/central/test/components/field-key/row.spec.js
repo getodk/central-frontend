@@ -123,7 +123,7 @@ describe('FieldKeyRow', () => {
     testData.extendedProjects.createPast(1, { appUsers: 1 });
     testData.extendedFieldKeys.createPast(1, { token: null });
     return load('/projects/1/app-users').then(app => {
-      const text = app.getComponent(FieldKeyRow).findAll('td')[1].text();
+      const text = app.getComponent(FieldKeyRow).findAll('td')[2].text();
       text.should.equal('Access revoked');
     });
   });

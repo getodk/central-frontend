@@ -1,5 +1,12 @@
 # @getodk/xforms-engine
 
+## 1.1.1
+
+### Patch Changes
+
+- d9464e4: Invalid questions block Next, quick select, and adding repeat instances, showing their errors.
+- 0ad53cc: Fix `calculate` and `setvalue` actions being ignored on upload nodes.
+
 ## 1.1.0
 
 ### Minor Changes

@@ -510,11 +510,11 @@ watch(() => props.state, (state) => {
     .panel-heading {
       background-color: $color-action-background;
       border-bottom: none;
-      color: #fff;
+      color: $color-text-inverse;
     }
 
     .panel-body { padding: 0; }
-    thead { background-color: #c5dfe7; }
+    thead { background-color: $color-surface-secondary; }
   }
 
   .pagination { margin-left: $padding-left-table-data; }

@@ -71,11 +71,9 @@ describe('FormRow', () => {
       const lastSubmission = '2023-01-01T00:00:00Z';
       testData.extendedForms.createPast(1, { lastSubmission });
       const span = mountComponent().get('.last-submission span');
-      span.text().should.match(/ago$/);
+      span.text().should.equal('2023/01/01 00:00');
       const dateTime = span.getComponent(DateTime);
       dateTime.props().iso.should.equal(lastSubmission);
-      await span.should.have.tooltip('Latest Submission\n2023/01/01 00:00:00');
-      await dateTime.should.not.have.tooltip();
     });
 
     it('shows the correct icon', () => {
@@ -88,7 +86,6 @@ describe('FormRow', () => {
       testData.extendedForms.createPast(1, { submissions: 0 });
       const span = mountComponent().get('.last-submission span');
       span.text().should.equal('(none)');
-      await span.should.have.tooltip('Latest Submission');
     });
 
     it('shows blank last submission column when the form is a draft', () => {
@@ -111,13 +108,12 @@ describe('FormRow', () => {
       row.find('.total-submissions').exists().should.be.false;
       const cell = row.find('.not-published');
       cell.text().should.equal('Not published yet');
-      cell.find('.icon-asterisk').exists().should.be.true;
     });
 
     it('shows the correct icon', async () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 4 });
       const cell = mountComponent().find('.total-submissions');
-      cell.find('.icon-asterisk').exists().should.be.true;
+      cell.find('.icon-star').exists().should.be.true;
       await cell.get('a').should.have.tooltip('Total Submissions');
     });
   });
@@ -240,12 +236,15 @@ describe('FormRow', () => {
       actions.text().should.be.empty;
     });
 
-    it('shows the correct action (closing note but no link) for a closing form', () => {
+    it('shows the correct action (closing note but no link) for a closing form', async () => {
       mockLogin();
       testData.extendedForms.createPast(1, { state: 'closing' });
-      const actions = mountComponent().get('.actions');
-      actions.get('span').text().should.equal('Closing');
-      actions.find('.closing-icon').exists().should.be.true;
+      const span = mountComponent().get('.actions span');
+      span.text().should.equal('Closing');
+      span.find('.closing-icon').exists().should.be.true;
+      await span.should.have.tooltip(text => {
+        text.should.startWith('This Form is Closing. New submissions can’t be started');
+      });
     });
 
     it('shows the preview button to an administrator', () => {

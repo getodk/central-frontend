@@ -76,7 +76,7 @@ $spinner-width: 3px;
   width: $spinner-size;
 
   &:before {
-    border: $spinner-width solid #666;
+    border: $spinner-width solid $gray-500;
     border-radius: 999px;
     content: '';
     display: block;
@@ -84,7 +84,7 @@ $spinner-width: 3px;
     width: $spinner-size;
 
     .btn-primary &, .btn-danger & {
-      border-color: #fff;
+      border-color: $gray-0;
     }
 
     .btn-primary & {

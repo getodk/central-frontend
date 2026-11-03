@@ -73,10 +73,10 @@ const change = (value) => {
 
 .entity-diff-head {
   .entity-diff.hard-conflict & { background-color: $color-danger; }
-  .entity-diff.soft-conflict & { background-color: $color-warning-dark; }
+  .entity-diff.soft-conflict & { background-color: $color-warning; }
 
   > div {
-    color: #fff;
+    color: $color-text-inverse;
     display: flex;
   }
 
@@ -100,7 +100,7 @@ const change = (value) => {
         border-bottom: none;
         border-top-left-radius: 3px;
         border-top-right-radius: 3px;
-        color: #fff;
+        color: $color-text-inverse;
         padding-bottom: 5px;
         padding-top: 6px;
       }

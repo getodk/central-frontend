@@ -13,14 +13,13 @@ except according to the terms contained in the LICENSE file.
 @import './mixins';
 
 html {
-  background-color: $color-accent-secondary;
+  background-color: $color-surface;
   min-height: 100%;
 }
 
 body {
   min-width: 1000px;
   background-color: $color-page-background;
-  box-shadow: 0 #{$box-shadow-offset-y-body} 0 #777 inset;
   color: $color-text;
   min-height: 100vh;
 
@@ -63,7 +62,7 @@ dl:not(.dl-horizontal) {
   }
 
   dt {
-    color: #666;
+    color: $color-text-secondary;
     font-size: 12px;
     font-weight: normal;
   }
@@ -92,7 +91,7 @@ dl:not(.dl-horizontal) {
   dd { padding-left: $padding-between; }
 }
 
-.dfn { border-bottom: 2px dotted #999; }
+.dfn { border-bottom: 2px dotted $color-border; }
 
 pre {
   background-color: $color-subpanel-background;
@@ -140,8 +139,6 @@ em { @include italic; }
 ////////////////////////////////////////////////////////////////////////////////
 // ICONS
 
-[class^="icon-"] { vertical-align: -1px; }
-
 .btn, a, .label {
   .caret { margin-left: 6px; }
 
@@ -155,8 +152,8 @@ em { @include italic; }
   }
 }
 
-/* Bootstrap has an .icon-bar class that is unrelated to IcoMoon, but our
-IcoMoon styles end up applying to it, because our IcoMoon selectors select on
+/* Bootstrap has an .icon-bar class that is unrelated to Material Symbols, but our
+Material Symbols styles end up applying to it, because our icon selectors select on
 the "icon-" class name prefix. To resolve that, we copy the .icon-bar styles for
 .navbar-icon-bar and use .navbar-icon-bar wherever we would use .icon-bar. This
 should not be an issue for Bootstrap 4, which does not seem to have an .icon-bar
@@ -174,13 +171,13 @@ class. */
 }
 
 .navbar-default .navbar-toggle .navbar-icon-bar {
-  background-color: #888;
+  background-color: $gray-400;
 }
 
 .title-icon {
   padding-left: 6px;
   font-size: 24px;
-  color: #666;
+  color: $gray-700;
 }
 
 
@@ -197,7 +194,7 @@ class. */
 
 .btn {
   border: none;
-  border-radius: 2px;
+  border-radius: 6px;
   font-size: $font-size-btn;
   // I think we set this for the Spinner component.
   overflow: hidden;
@@ -205,82 +202,170 @@ class. */
   position: relative;
 
   &:focus, &:active:focus { outline: none; }
-  &:focus { box-shadow: $btn-focus-box-shadow; }
   &[aria-disabled="true"], &.disabled, fieldset[disabled] & { box-shadow: none; }
 }
 
 .btn-primary {
-  background-color: $color-action-background;
+  background-color: $color-primary;
+  border: 1px solid $color-primary;
 
   &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
-    background-color: $color-action-background-disabled;
+    background-color: $color-bg-disabled;
+    border-color: $color-bg-disabled;
+    color: $color-text-disabled;
+  }
+
+  &:hover {
+    background-color: $color-primary-hover;
+    border-color: $color-primary-hover;
+  }
+
+  &:active, &:active:hover {
+    background-color: $color-primary-pressed;
+    border-color: $color-primary-pressed;
+  }
+
+  &:focus {
+    outline: 2px solid $color-focus-ring;
+    outline-offset: 2px;
+  }
+
+  &:active:focus {
+    background-color: $color-primary-pressed;
+    border-color: $color-primary-pressed;
   }
 
   &:hover, &:focus, &:active:focus {
-    background-color: $color-action-background-hover;
-
     &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
-      background-color: $color-action-background-disabled;
+      background-color: $color-bg-disabled;
+      border-color: $color-bg-disabled;
     }
   }
 }
 
+// Design system calls this secondary button
+.btn-outlined,
 .btn-default {
-  background-color: #ddd;
+  background-color: $color-surface;
+  color: $color-action-background;
+  border: 1px solid $color-action-background;
 
-  &:hover, &:focus, &:active:focus {
-    background-color: #ccc;
-    &[aria-disabled="true"], &.disabled, fieldset[disabled] & { background-color: #ddd; }
+  &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
+    border-color: $color-bg-disabled;
+    color: $color-text-disabled;
+  }
+  &:hover, &:hover:focus {
+    background-color: $blue-50;
+    border-color: $color-action-background;
+    color: $color-action-background;
   }
 
-  > [class^="icon-"]:first-child { color: $color-action-background; }
+  &:active, &:active:hover, &:active:focus {
+    background-color: $blue-100;
+    border-color: $color-action-background;
+    color: $color-action-background;
+    box-shadow: none;
+  }
+
+  &:focus {
+    background-color: $color-surface;
+    color: $color-action-background;
+    outline: 2px solid $color-focus-ring;
+    outline-offset: 2px;
+  }
+
+  &:hover, &:focus, &:active:focus {
+    &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
+      border-color: $color-bg-disabled;
+      color: $color-text-disabled;
+      background-color: $color-surface;
+    }
+  }
+
+  > [class^="icon-"]:first-child { color: inherit; }
 }
 
 .btn-danger {
   background-color: $color-danger;
+  border: 1px solid $color-danger;
 
-  &:hover, &:focus, &:active:focus {
-    background-color: $color-danger-dark;
-
-    &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
-      background-color: $color-danger;
-    }
+  &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
+    background-color: $color-bg-disabled;
+    border-color: $color-bg-disabled;
+    color: $color-text-disabled;
   }
-}
 
-.btn-outlined {
-  background-color: #fff;
-  color: $color-action-background;
-  border: 1px solid $color-action-background;
+  &:hover, &:focus {
+    background-color: $color-danger-hover;
+    border-color: $color-danger-hover;
+  }
+
+  &:active, &:active:hover {
+    background-color: $color-danger-pressed;
+    border-color: $color-danger-pressed;
+  }
+
+  &:focus {
+    outline: 2px solid $color-focus-ring;
+    outline-offset: 2px;
+  }
+
+  &:active:focus {
+    background-color: $color-danger-pressed;
+    border-color: $color-danger-pressed;
+  }
 
   &:hover, &:focus, &:active:focus {
-    color: #fff;
-    background-color: $color-action-background;
-
     &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
-      background-color: #fff;
-      color: $color-action-background;
+      background-color: $color-bg-disabled;
+      border-color: $color-bg-disabled;
+      outline-color: $color-bg-disabled;
     }
   }
 }
 
 .btn-danger-outlined {
-  background-color: #fff;
+  background-color: $color-surface;
   color: $color-danger;
   border: 1px solid $color-danger;
 
-  &:hover, &:focus, &:active:focus {
-    background-color: $color-danger;
-    color: #fff;
+  &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
+    border-color: $color-bg-disabled;
+    color: $color-text-disabled;
+  }
+  &:hover {
+    background-color: $color-danger-hover;
+    border-color: $color-danger-hover;
+    color: $color-surface;
+  }
 
+  &:active, &:active:hover {
+    background-color: $color-danger-pressed;
+    border-color: $color-danger-pressed;
+    color: $color-surface;
+  }
+
+  &:focus {
+    outline: 2px solid $color-focus-ring;
+    outline-offset: 2px;
+  }
+
+  &:active:focus {
+    background-color: $color-danger-pressed;
+    border-color: $color-danger-pressed;
+    color: $color-surface;
+  }
+
+  &:hover, &:focus, &:active:focus {
     &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
-      background-color: #fff;
-      color: $color-danger;
+      border-color: $color-bg-disabled;
+      color: $color-text-disabled;
+      background-color: $color-surface;
     }
   }
 }
 
-a, .btn-link {
+a {
   &:hover, &.disabled, &[aria-disabled="true"], &[aria-disabled="true"]:focus, fieldset[disabled] & {
     text-decoration: none;
   }
@@ -292,16 +377,21 @@ a, .btn-link {
   }
 }
 
-a:not(.btn), .btn-link {
+a:not(.btn) {
   &, &:hover { color: $color-action-foreground; }
 
-  &:focus {
-    background-color: transparentize(#000, 0.94);
-    color: #23527c;
+  &:hover, &:focus:hover {
     text-decoration: underline;
+    outline: none;
   }
 
-  &.disabled, &[aria-disabled="true"], fieldset[disabled] & { color: #888; }
+  &:focus {
+    outline: 2px solid $color-focus-ring;
+    outline-offset: 2px;
+    text-decoration: none;
+  }
+
+  &.disabled, &[aria-disabled="true"], fieldset[disabled] & { color: $color-text-disabled; }
 }
 
 a {
@@ -321,16 +411,35 @@ a {
   // and any tooltip are shown.
 }
 
+// Design system calls this tertiary button
 .btn-link {
   border-radius: 0;
+  background-color: transparent;
 
-  &, &:active, &[aria-disabled="true"], fieldset[disabled] & {
-    background-color: transparent;
+  &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
+    color: $color-text-disabled;
+  }
+
+  &:hover {
+    background-color: $blue-50;
+    text-decoration: none;
+  }
+  &:active {
+    background-color: $blue-100;
+    box-shadow: none;
   }
 
   &:focus {
-    background-clip: content-box;
-    box-shadow: none;
+    outline: 2px solid $color-focus-ring;
+    outline-offset: 2px;
+    text-decoration: none;
+  }
+
+  &:hover, &:focus, &:active:focus {
+    &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
+      color: $color-text-disabled;
+      background-color: transparent;
+    }
   }
 }
 
@@ -354,19 +463,9 @@ a {
     }
   }
 
-  > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
-    border-radius: 0;
+  > .btn:not(:first-child) {
+    margin-left: 10px;
   }
-  > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
-    border-bottom-right-radius: 0;
-    border-top-right-radius: 0;
-  }
-  > .btn:last-child:not(:first-child), > .dropdown-toggle:not(:first-child) {
-    border-bottom-left-radius: 0;
-    border-top-left-radius: 0;
-  }
-
-  > .btn-default + .btn-default { border-left: 1px solid #ccc; }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -410,7 +509,7 @@ input[type="radio"], input[type="checkbox"], input[type="file"] {
 select[multiple] { height: auto; }
 
 .help-block {
-  color: #737373;
+  color: $color-text-secondary;
   margin-bottom: 10px;
   margin-top: 5px;
 }
@@ -480,6 +579,7 @@ $form-group-padding-bottom: 15px;
 input[type="radio"], input[type="checkbox"] {
   margin: 4px 0 0;
   line-height: normal;
+  accent-color: $color-primary;
 
   &[disabled], fieldset[disabled] & { cursor: not-allowed; }
 }
@@ -566,7 +666,7 @@ select {
   }
 
   .icon-filter {
-    color: #999;
+    color: $gray-400;
     margin-right: $margin-right-icon;
     font-size: 20px;
   }
@@ -606,9 +706,9 @@ select.uncommitted-change,
 // styles on .form-group .form-control.
 .form-control.uncommitted-change,
 .btn.uncommitted-change {
-  &, &:focus { box-shadow: 0 0 0 3px #ffef67; }
+  &, &:focus { box-shadow: 0 0 0 3px $amber-300; }
 }
-tr.uncommitted-change { background-color: #ffef67; }
+tr.uncommitted-change { background-color: $amber-100; }
 
 
 
@@ -617,14 +717,25 @@ tr.uncommitted-change { background-color: #ffef67; }
 
 .table {
   margin-bottom: $margin-bottom-table;
+  border: 1px solid $color-border;
+  border-radius: 12px;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
 
   > thead {
     background-color: $color-table-heading-background;
 
+    > tr {
+      background-color: $color-header-row;
+    }
+
     > tr > th {
-      border-bottom: $border-bottom-table-heading;
+      border-bottom: none;
       font-size: $font-size-table-heading;
       padding: $padding-table-heading;
+      height: 36px;
+      vertical-align: middle;
     }
   }
 
@@ -633,6 +744,12 @@ tr.uncommitted-change { background-color: #ffef67; }
       border-top: $border-top-table-data;
       padding: $padding-top-table-data $padding-right-table-data
                $padding-bottom-table-data $padding-left-table-data;
+      height: 48px;
+      vertical-align: middle;
+    }
+
+    > tr:hover, >tr:focus-within {
+      background-color: $color-bg;
     }
   }
 
@@ -664,7 +781,7 @@ tr.uncommitted-change { background-color: #ffef67; }
 }
 
 .row-number {
-  color: #999;
+  color: $color-text-muted;
   font-size: 11px;
   padding-top: 11px;
   text-align: right;
@@ -672,7 +789,7 @@ tr.uncommitted-change { background-color: #ffef67; }
 }
 
 .empty-table-message {
-  color: #555;
+  color: $color-text-muted;
   font-size: 15px;
 }
 
@@ -681,37 +798,42 @@ tr.uncommitted-change { background-color: #ffef67; }
 ////////////////////////////////////////////////////////////////////////////////
 // LABELS
 
-.label-default { background-color: #777; }
+.label-default { background-color: $color-surface-secondary; }
 .label-primary { background-color: $color-action-background; }
 .label-warning { background-color: $color-warning; }
 
-
-
 ////////////////////////////////////////////////////////////////////////////////
-// PAGE STRUCTURE
+// TAGS
 
-/*
-Most pages render a PageHead and a PageBody. The PageBody will often contain one
-or more PageSection components. Some pages use .panel-simple, but this is an
-older pattern: try to use PageSection instead.
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 14px;
+  border-radius: 9999px;
+  font-size: 13px;
+  color: $color-text;
 
-The PageBody component may show a heading at the top. Right now we implement
-this using the page-body-heading class, but we may create a component if it
-becomes more complicated.
-*/
-
-// .heading-with-button is deprecated: use .page-body-heading instead.
-.page-body-heading, .heading-with-button {
-  margin-bottom: 25px;
-
-  > .btn {
-    float: right;
-    margin-left: 20px;
+  &.tag-default {
+    background-color: $gray-200;
   }
 
-  ul { @include text-list; }
-}
+  &.tag-warning {
+    background-color: #F9E599;
+  }
 
+  &.tag-success {
+    background-color: $color-success-subtle;
+  }
+
+  &.tag-info {
+    background-color: #E3EFF3;
+  }
+
+  &.tag-danger {
+    background-color: #F7B3B3;
+  }
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -742,7 +864,7 @@ becomes more complicated.
 .panel-default {
   .panel-heading {
     background-color: $color-accent-primary;
-    color: #fff;
+    color: $gray-0;
 
     .panel-title {
       font-size: 18px;
@@ -816,22 +938,22 @@ becomes more complicated.
   background-color: transparent;
 
   &> .panel-heading {
-    color: white;
+    color: $gray-0;
     background-color: $color-danger;
     border-bottom-color: $color-danger;
 
-    .btn-danger { border: 1px solid #fff; }
+    .btn-danger { border: 1px solid $gray-0; }
   }
 
   &> .panel-body {
-    background-color: #fff;
+    background-color: $gray-0;
     border: 1px solid $color-danger;
     border-top: none;
 
     &> .panel-footer {
       margin: 0 -15px -15px -15px;
-      background-color: #585858;
-      color: white;
+      background-color: $gray-600;
+      color: $gray-0;
     }
   }
 }
@@ -841,7 +963,7 @@ becomes more complicated.
   border-radius: 5px;
   margin-bottom: 10px;
   padding: 5px;
-  background-color: #fff;
+  background-color: $gray-0;
   max-width: 77ch;
 
   .panel-heading {
@@ -864,11 +986,11 @@ becomes more complicated.
 // NAVS
 
 .nav-tabs {
-  border-bottom: none;
+  border-bottom: 1px solid $color-border;
 
   > li {
     margin-bottom: -1px;
-    margin-right: 10px;
+    margin-right: 15px;
 
     > a, &.active > a {
       &, &:hover, &:focus {
@@ -876,7 +998,12 @@ becomes more complicated.
         border-bottom: 2px solid transparent;
         border-radius: 0;
         color: $color-text;
-        padding: 7px $hpadding-nav-tab 6px;
+        padding: 7px $hpadding-nav-tab;
+        line-height: 1.5;
+      }
+
+      &:hover:focus {
+        text-decoration: none;
       }
 
       &:focus {
@@ -885,6 +1012,7 @@ becomes more complicated.
     }
 
     > a {
+      margin-right: 0;
       &, &:hover, &:focus {
         background-color: transparent;
       }
@@ -900,8 +1028,9 @@ becomes more complicated.
 
     &.active > a {
       &, &:hover, &:focus {
-        background-color: $color-subpanel-background;
-        border-bottom-color: $color-accent-primary;
+        border-bottom: 2px solid $color-accent-primary;
+        color: $color-accent-primary;
+        font-weight: bold;
       }
     }
 
@@ -912,7 +1041,7 @@ becomes more complicated.
 
       > a {
         &, &:hover, &:focus {
-          color: #999;
+          color: $color-text-disabled;
         }
 
         &:hover, &:focus {
@@ -923,7 +1052,11 @@ becomes more complicated.
   }
 
   .badge {
-    background-color: $color-accent-primary;
+    margin-left: 2px;
+    background-color: rgba($color-accent-primary, 0.2);
+    color: $color-text;
+    font-size: 14px;
+    font-weight: normal;
     vertical-align: baseline;
   }
 }
@@ -932,7 +1065,7 @@ becomes more complicated.
   font-size: 10px;
   top: -2px;
   position: relative;
-  color: white;
+  color: $gray-0;
   padding: 4px 7px;
   margin-left: 2px;
   background: $color-accent-primary;
@@ -980,3 +1113,4 @@ becomes more complicated.
     margin-left: 10px;
   }
 }
+

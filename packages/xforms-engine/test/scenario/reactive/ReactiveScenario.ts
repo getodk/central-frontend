@@ -1,4 +1,4 @@
-import type { RootNode } from '@getodk/xforms-engine';
+import type { FormInstanceConfig, RootNode } from '@getodk/xforms-engine';
 import type { EffectFunction, Owner } from 'solid-js';
 import { createEffect, createRoot } from 'solid-js';
 import { createMutable } from 'solid-js/store';
@@ -8,8 +8,9 @@ import type { ScenarioConfig } from '../jr/Scenario.ts';
 import { Scenario } from '../jr/Scenario.ts';
 
 export class ReactiveScenario extends Scenario {
-  static override getTestFormOptions(): TestFormOptions {
+  static override getTestFormOptions(overrideOptions?: Partial<TestFormOptions>): TestFormOptions {
     return super.getTestFormOptions({
+      ...overrideOptions,
       stateFactory: createMutable,
     });
   }
@@ -31,6 +32,10 @@ export class ReactiveScenario extends Scenario {
     super({ ...baseConfig, dispose }, form, instanceRoot);
 
     this.testScopedOwner = testScopedOwner;
+  }
+
+  override editCurrentInstance(config?: FormInstanceConfig): Promise<this> {
+    return super.editCurrentInstance({ ...config, stateFactory: createMutable });
   }
 
   createEffect<Next>(fn: EffectFunction<NoInfer<Next> | undefined, Next>): void {

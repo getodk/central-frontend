@@ -235,7 +235,7 @@ export default {
   }
   .icon-angle-down {
     font-size: 16px;
-    color: #555555;
+    color: $color-text-muted;
     font-weight: bold;
     vertical-align: -4px;
   }

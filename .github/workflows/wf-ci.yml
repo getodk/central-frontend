@@ -19,7 +19,7 @@ jobs:
 
   odk-common:
     name: 'common'
-    runs-on: 'ubuntu-latest'
+    runs-on: 'ubuntu-24.04'
 
     strategy:
       fail-fast: false
@@ -54,7 +54,7 @@ jobs:
 
   xforms-engine:
     name: 'xforms-engine'
-    runs-on: 'ubuntu-latest'
+    runs-on: 'ubuntu-24.04'
 
     strategy:
       fail-fast: false
@@ -89,7 +89,7 @@ jobs:
 
   xpath:
     name: 'xpath'
-    runs-on: 'ubuntu-latest'
+    runs-on: 'ubuntu-24.04'
 
     strategy:
       fail-fast: false
@@ -124,7 +124,7 @@ jobs:
 
   web-forms:
     name: 'web-forms'
-    runs-on: 'ubuntu-latest'
+    runs-on: 'ubuntu-24.04'
 
     strategy:
       fail-fast: false

@@ -11,9 +11,21 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr class="field-key-row" :class="{ success: fieldKey.id === highlighted }">
-    <td class="display-name">
-      <span v-tooltip.text>{{ fieldKey.displayName }}</span>
+    <td class="col-actions">
+      <div class="btn-group">
+        <button v-if="fieldKey.token != null && showEdit" type="button"
+          class="edit-button btn btn-default"
+          @click="$emit('edit', fieldKey)">
+          <span class="icon-pencil"></span>{{ $t('action.edit') }}
+        </button>
+        <button v-if="fieldKey.token != null" type="button"
+          class="revoke-button btn btn-default"
+          @click="$emit('revoke', fieldKey)">
+          <span class="icon-ban"></span>{{ $t('action.revoke') }}
+        </button>
+      </div>
     </td>
+    <td class="display-name"><span v-tooltip.text>{{ fieldKey.displayName }}</span></td>
     <td>
       <a v-if="fieldKey.token != null" ref="popoverLink" href="#"
         class="field-key-row-popover-link" role="button"
@@ -28,25 +40,7 @@ except according to the terms contained in the LICENSE file.
     <td class="created-by">
       <span v-tooltip.text>{{ fieldKey.createdBy.displayName }}</span>
     </td>
-    <td class="last-used-and-actions">
-      <div class="col-content">
-        <date-time :iso="fieldKey.lastUsed"/>
-      </div>
-      <div class="btn-group">
-        <button v-if="fieldKey.token != null && showEdit" type="button"
-          class="edit-button btn btn-default"
-          :aria-label="$t('action.editAppUser')" v-tooltip.aria-label
-          @click="$emit('edit', fieldKey)">
-          <span class="icon-pencil"></span>
-        </button>
-        <button v-if="fieldKey.token != null" type="button"
-          class="revoke-button btn btn-default"
-          :aria-label="$t('action.revokeAccess')" v-tooltip.aria-label
-          @click="$emit('revoke', fieldKey)">
-          <span class="icon-ban"></span>
-        </button>
-      </div>
-    </td>
+    <td><date-time :iso="fieldKey.lastUsed"/></td>
   </tr>
 </template>
 
@@ -78,29 +72,11 @@ export default {
 @import '../../assets/scss/variables';
 
 .field-key-row {
-  .table tbody & td { vertical-align: middle; }
-
   .display-name, .created-by {
     @include text-overflow-ellipsis;
     max-width: 250px;
   }
 
-  .last-used-and-actions {
-    padding-top: 4px;
-    padding-bottom: 4px;
-    min-width: 120px;
-  }
-
-  .col-content {
-    display: flex;
-    align-items: flex-start;
-    margin-top: 3px;
-  }
-
-  .btn-group {
-    @include icon-btn-group;
-    .icon-ban { color: $color-danger; }
-  }
 }
 </style>
 
@@ -111,10 +87,6 @@ export default {
     "seeCode": "See code",
     // This text is shown for an App User whose access has been revoked.
     "accessRevoked": "Access revoked",
-    "action": {
-      "editAppUser": "Edit App User",
-      "revokeAccess": "Revoke access"
-    }
   }
 }
 </i18n>

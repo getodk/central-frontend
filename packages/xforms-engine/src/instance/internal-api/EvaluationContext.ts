@@ -84,4 +84,6 @@ export interface EvaluationContext extends TranslationContext {
    *   context (itemsets being a prominent example).
    */
   readonly contextNode: EngineXPathNode;
+
+  registerExpressionError(error: Accessor<Error | null>): void;
 }

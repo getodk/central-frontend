@@ -1,3 +1,5 @@
+import sinon from 'sinon';
+
 import SubmissionDataRow from '../../../src/components/submission/data-row.vue';
 import SubmissionMetadataRow from '../../../src/components/submission/metadata-row.vue';
 import SubmissionTable from '../../../src/components/submission/table.vue';
@@ -52,10 +54,11 @@ describe('SubmissionTable', () => {
       });
       const table = component.get('.table-freeze-frozen');
       headers(table).should.eql([
+        '',
         'Row',
         'Submitted by',
         'Submitted at',
-        'State and actions'
+        'State'
       ]);
     });
 
@@ -66,7 +69,7 @@ describe('SubmissionTable', () => {
         props: { draft: true }
       });
       const table = component.get('.table-freeze-frozen');
-      headers(table).should.eql(['Row', 'Submitted at']);
+      headers(table).should.eql(['', 'Row', 'Submitted at']);
     });
 
     it('renders the correct headers for deleted submissions', () => {
@@ -76,6 +79,7 @@ describe('SubmissionTable', () => {
       });
       const table = component.get('.table-freeze-frozen');
       headers(table).should.eql([
+        '',
         'Row',
         'Submitted by',
         'Submitted at',
@@ -134,5 +138,21 @@ describe('SubmissionTable', () => {
     });
     const rows = component.findAllComponents(SubmissionMetadataRow);
     rows.map(row => row.props().rowNumber).should.eql([10, 9]);
+  });
+
+  describe('row click', () => {
+    it('opens the correct submission when clicking a specific row', async () => {
+      testData.extendedForms.createPast(1, { submissions: 2 });
+      testData.extendedSubmissions.createPast(2);
+      const submissions = testData.extendedSubmissions.sorted();
+      sinon.stub(window, 'open');
+      const component = mountComponent();
+      const rows = component.findAll('.table-freeze-frozen tbody tr');
+      await rows[1].trigger('click');
+      window.open.calledOnce.should.be.true;
+      const [url, target] = window.open.firstCall.args;
+      url.should.equal(`/projects/1/forms/f/submissions/${submissions[1].instanceId}`);
+      target.should.equal('_blank');
+    });
   });
 });

@@ -59,13 +59,15 @@ const message = computed(() => {
 </script>
 
 <style lang="scss">
+@import '../assets/scss/variables';
+
 #odata-loading-message {
   font-size: 12px;
   padding: 20px 0 38px 28px;
 }
 
 #odata-loading-message-text {
-  color: #555;
+  color: $color-text-muted;
   margin-left: 8px;
 }
 </style>

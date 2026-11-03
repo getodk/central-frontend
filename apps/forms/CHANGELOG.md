@@ -1,5 +1,12 @@
 # @getodk/forms
 
+## 2026.3.1
+
+### Patch Changes
+
+- 47af1d1: Added component emit for language selection so app and component can stay in the same language
+- d012ad7: Fixed a bug where the full error details weren't shown when submission failed
+
 ## 2026.3.0
 
 ### Minor Changes

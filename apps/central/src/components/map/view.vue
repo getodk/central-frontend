@@ -101,7 +101,7 @@ const el = useTemplateRef('el');
 const sizeMap = () => {
   const rect = el.value.getBoundingClientRect();
   if (rect.height === 0) return '';
-  const section = el.value.closest('.page-section');
+  const section = el.value.closest('.data-views');
   const { marginBottom } = styleBox(getComputedStyle(section));
   return document.documentElement.clientHeight - rect.top - marginBottom;
 };
@@ -149,10 +149,12 @@ defineExpose({ fetchData, cancelFetch, afterDelete });
 </script>
 
 <style lang="scss">
+@import '../../assets/scss/variables';
+
 #map-view {
   position: relative;
 
-  .loading { color: #555; }
-  .page-section:has(&) { margin-bottom: 15px; }
+  .loading { color: $color-text-muted; }
+  #submission-data-views:has(&) { margin-bottom: 15px; }
 }
 </style>

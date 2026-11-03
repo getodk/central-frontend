@@ -11,10 +11,9 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <breadcrumbs v-if="project.dataExists" :links="breadcrumbLinks"/>
     <page-head v-show="project.dataExists">
-      <template v-if="project.dataExists" #title>
-        {{ project.nameWithArchived }}
+      <template v-if="project.dataExists" #breadcrumbs>
+        <breadcrumbs :links="breadcrumbLinks"/>
       </template>
       <template #description>
         <project-overview-description v-if="project.dataExists"
@@ -117,7 +116,7 @@ export default {
   computed: {
     breadcrumbLinks() {
       return [
-        { text: this.project.dataExists ? this.project.nameWithArchived : this.$t('resource.project'), path: this.projectPath(), icon: 'icon-archive' }
+        { text: this.project.dataExists ? this.project.nameWithArchived : this.$t('resource.project'), path: this.projectPath() }
       ];
     },
     canUpdate() {

@@ -12,19 +12,14 @@ except according to the terms contained in the LICENSE file.
 
 <template>
   <div v-if="dataset.dataExists" id="dataset-overview">
-    <page-section>
-      <template #heading>
-        <span class="dataset-overview-heading"><span class="icon-cog"></span>{{ $t('entityProperties') }}</span>
-        <button v-if="project.dataExists && project.permits('dataset.update')"
-          id="dataset-property-new-button" type="button" class="btn btn-primary"
-          @click="newDatasetPropertyModal.show()">
-          <span class="icon-plus-circle"></span>{{ $t('new') }}
-        </button>
-      </template>
-      <template #body>
-        <dataset-properties/>
-      </template>
-    </page-section>
+    <page-heading :title="$t('entityProperties')">
+      <button v-if="project.dataExists && project.permits('dataset.update')"
+        id="dataset-property-new-button" type="button" class="btn btn-primary"
+        @click="newDatasetPropertyModal.show()">
+        <span class="icon-plus-circle"></span>{{ $t('new') }}
+      </button>
+    </page-heading>
+    <dataset-properties/>
     <dataset-property-new v-bind="newDatasetPropertyModal"
       @hide="newDatasetPropertyModal.hide()"
       @success="afterCreateProperty"/>
@@ -32,9 +27,9 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import PageSection from '../page/section.vue';
 import DatasetPropertyNew from './property/new.vue';
 import DatasetProperties from './overview/dataset-properties.vue';
+import PageHeading from '../page/heading.vue';
 
 import { modalData } from '../../util/reactivity';
 import { useRequestData } from '../../request-data';
@@ -70,21 +65,6 @@ const afterCreateProperty = () => {
 };
 </script>
 
-<style lang="scss">
-@import '../../assets/scss/mixins';
-
-#dataset-overview .page-section-heading {
-  font-size: 24px;
-
-  .dataset-overview-heading {
-    [class^="icon-"] {
-      @include icon-box;
-      font-size: 24px;
-      margin-right: 10px;
-    }
-  }
-}
-</style>
 
 <i18n lang="json5">
 {
