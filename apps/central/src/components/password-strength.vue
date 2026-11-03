@@ -53,7 +53,7 @@ const score = computed(() => {
 }
 
 .inner {
-  background-color: #ddd;
+  background-color: $color-surface-secondary;
   height: 2px;
   position: absolute;
   right: 0;
