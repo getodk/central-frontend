@@ -27,7 +27,7 @@ describe('Time bind type', () => {
           t(
             'root id="time-types"',
             t('relevance-trigger', 'yes'),
-            t('model-only-time', '22:02:55.124'),
+            t('model-only-time', '22:02:55.124-08:00'),
             t('input-time', '14:02:10')
           )
         ),
@@ -58,7 +58,7 @@ describe('Time bind type', () => {
 
     it('has a time populated value', () => {
       const answer = getModelAnswer();
-      expect(answer.value).to.equal('22:02:55.124');
+      expect(answer.value).to.equal('22:02:55');
     });
 
     it('has null as a blank value when not relevant', () => {
@@ -94,42 +94,59 @@ describe('Time bind type', () => {
       expect(answer.stringValue).toBe('');
     });
 
-    it.each([
-      '22:02:00.000+07:00',
-      '22:02:00+07:00',
-      '22:02:00.000-07:00',
-      '22:02:00-07:00',
-      '22:02:00.000Z',
-      '22:02:00Z',
-      '22:02:00.000',
-      '22:02:00',
-    ])('sets value with valid time (%s)', (expression) => {
-      scenario.answer('/root/input-time', expression);
-      const answer = getInputAnswer();
+    describe('string', () => {
+      it.each([
+        { given: '22:02:02.000+07:00', expected: '22:02:02' },
+        { given: '22:02:02+07:00', expected: '22:02:02' },
+        { given: '22:02:02.000-07:00', expected: '22:02:02' },
+        { given: '22:02:02-07:00', expected: '22:02:02' },
+        { given: '22:02:02.000Z', expected: '22:02:02' },
+        { given: '22:02:02Z', expected: '22:02:02' },
+        { given: '22:02:02.000', expected: '22:02:02' },
+        { given: '22:02:02', expected: '22:02:02' },
+        { given: '22:02:02.987+07:00', expected: '22:02:02' },
+      ])('sets value from valid time (%s)', ({ given, expected }) => {
+        scenario.answer('/root/input-time', given);
+        const answer = getInputAnswer();
+        expect(answer.value).to.deep.equal(expected);
+        expect(answer.stringValue).toEqual(expected);
+      });
 
-      expect(answer.value).to.deep.equal(expression);
-      expect(answer.stringValue).toEqual(expression);
+      it.each([
+        '25:02:00',
+        '24:00:00',
+        '22:60:00',
+        '22:02:61',
+        '22:02',
+        '22',
+        '22:02:00+50:00',
+        '22:02:00+invalid',
+        '22:02:00.Z', // Malformed decimal/Z combination
+        'noon',
+        'XX:YY:ZZ',
+        '2026-02-24T22:02:00',
+      ])('has null when incorrect value %s is passed', (expression) => {
+        scenario.answer('/root/input-time', expression);
+        const answer = getInputAnswer();
+
+        expect(answer.value).toBeNull();
+        expect(answer.stringValue).toBe('');
+      });
     });
 
-    it.each([
-      '25:02:00',
-      '24:00:00',
-      '22:60:00',
-      '22:02:61',
-      '22:02',
-      '22',
-      '22:02:00+25:00',
-      '22:02:00+invalid',
-      '22:02:00.Z', // Malformed decimal/Z combination
-      'noon',
-      'XX:YY:ZZ',
-      '2026-02-24T22:02:00',
-    ])('has null when incorrect value %s is passed', (expression) => {
-      scenario.answer('/root/input-time', expression);
-      const answer = getInputAnswer();
+    describe('date', () => {
+      it.each(['22:02:02.000', '22:02:02'])(
+        'sets value with valid time when given a date (%s)',
+        (expression) => {
+          const given = new Date('2026-10-10T' + expression);
+          scenario.answer('/root/input-time', given);
+          const answer = getInputAnswer();
+          const expected = '22:02:02';
 
-      expect(answer.value).toBeNull();
-      expect(answer.stringValue).toBe('');
+          expect(answer.value).to.deep.equal(expected);
+          expect(answer.stringValue).toEqual(expected);
+        }
+      );
     });
   });
 });
