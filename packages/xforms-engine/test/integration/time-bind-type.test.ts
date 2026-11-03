@@ -27,7 +27,7 @@ describe('Time bind type', () => {
           t(
             'root id="time-types"',
             t('relevance-trigger', 'yes'),
-            t('model-only-time', '22:02:55.124'),
+            t('model-only-time', '22:02:55.124-08:00'),
             t('input-time', '14:02:10')
           )
         ),
@@ -58,7 +58,7 @@ describe('Time bind type', () => {
 
     it('has a time populated value', () => {
       const answer = getModelAnswer();
-      expect(answer.value).to.equal('22:02:55.124');
+      expect(answer.value).to.equal('22:02:55');
     });
 
     it('has null as a blank value when not relevant', () => {
@@ -104,9 +104,7 @@ describe('Time bind type', () => {
         { given: '22:02:02Z', expected: '22:02:02' },
         { given: '22:02:02.000', expected: '22:02:02' },
         { given: '22:02:02', expected: '22:02:02' },
-        { given: '2026-02-24T22:02:02', expected: '22:02:02' },
-        { given: '22', expected: '22:00:00' },
-        { given: '22:02', expected: '22:02:00' },
+        { given: '22:02:02.987+07:00', expected: '22:02:02' },
       ])('sets value with partial time (%s)', ({ given, expected }) => {
         scenario.answer('/root/input-time', given);
         const answer = getInputAnswer();
@@ -119,10 +117,13 @@ describe('Time bind type', () => {
         '24:00:00',
         '22:60:00',
         '22:02:61',
+        '22:02',
+        '22',
         '22:02:00+invalid',
         '22:02:00.Z', // Malformed decimal/Z combination
         'noon',
         'XX:YY:ZZ',
+        '2026-02-24T22:02:00',
       ])('has null when incorrect value %s is passed', (expression) => {
         scenario.answer('/root/input-time', expression);
         const answer = getInputAnswer();

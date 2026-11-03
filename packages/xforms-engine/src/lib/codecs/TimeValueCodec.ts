@@ -1,5 +1,6 @@
 import { Temporal } from 'temporal-polyfill';
 import { type CodecDecoder, type CodecEncoder, ValueCodec } from './ValueCodec.ts';
+import { ISO_TIME_WITH_OPTIONAL_OFFSET_PATTERN } from '@getodk/common/constants/datetime.ts';
 
 export type TimeRuntimeValue = string | null;
 
@@ -11,13 +12,22 @@ export type TimeInputValue =
   | string
   | null;
 
+const removeMillis = (value: Temporal.PlainTime) => {
+  return value.toString({ fractionalSecondDigits: 0 });
+};
+
 const validateTimeString = (value: string): TimeRuntimeValue => {
   if (value.endsWith('Z')) {
     value = value.slice(0, -1);
   }
+  const match = ISO_TIME_WITH_OPTIONAL_OFFSET_PATTERN.exec(value ?? '');
+  if (!match?.length) {
+    return null;
+  }
+  const [, timeOnly = ''] = match;
   try {
     // Delegate bounds checking to Temporal
-    return Temporal.PlainTime.from(value).toString();
+    return removeMillis(Temporal.PlainTime.from(timeOnly));
   } catch {
     return null;
   }
@@ -28,12 +38,14 @@ const parseZonedDateTimeToString = (value: Temporal.ZonedDateTime): string => {
     return '';
   }
 
-  return value.toPlainTime().toString({ fractionalSecondDigits: 0 });
+  return removeMillis(value.toPlainTime());
 };
 
 /**
  * Converts a time-like value ({@link TimeInputValue}) to a strict time string.
  * Honors timezones/offsets if present on the input objects.
+ *
+ * Offsets and fractional seconds are dropped. The result is "HH:MM:SS".
  *
  * @param value - The value to convert.
  * @returns A time string or empty string if invalid.
@@ -52,11 +64,11 @@ const toTimeString = (value: TimeInputValue): string => {
     }
 
     if (value instanceof Temporal.PlainTime) {
-      return value.toString();
+      return removeMillis(value);
     }
 
     if (value instanceof Temporal.PlainDateTime) {
-      return value.toPlainTime().toString();
+      return removeMillis(value.toPlainTime());
     }
 
     if (value instanceof Temporal.ZonedDateTime) {
