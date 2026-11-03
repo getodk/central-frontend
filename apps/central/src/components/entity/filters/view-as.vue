@@ -44,7 +44,7 @@ const options = computed(() => {
     return null;
 
   const appUsers = fieldKeys.data.map(({ id, displayName }) =>
-    ({ value: id, text: displayName }));
+    ({ value: id, text: displayName, group: t('appUsers') }));
 
   const formNames = new Map(
     dataset.linkedForms.map(form => [form.xmlFormId, form.name])
@@ -55,7 +55,7 @@ const options = computed(() => {
       publicLinks.push({
         value: actor.id,
         text: actor.displayName,
-        // TODO: add public link info to display, such as form name
+        group: t('publicLinksForForm', { formName: formNames.get(xmlFormId) })
       });
     }
   }
@@ -80,9 +80,12 @@ const placeholder = ({ selectedText }) => selectedText ?? t('noUserSelected');
 <i18n lang="json5">
 {
   "en": {
-    "noUserSelected": "Me",
+    "noUserSelected": "All",
     "viewAs": "View As",
-    "resetToMe": "Reset to Me",
+    "resetToMe": "Reset to All",
+    "search": "Search…",
+    "appUsers": "App users",
+    "publicLinksForForm": "Public links: {formName}"
   }
 }
 </i18n>

@@ -221,6 +221,42 @@ describe('EntityFiltersViewAs', () => {
         .map(({ text }) => text);
       texts.should.eql(['App User 0', 'App User 1', 'Public Link 0', 'Public Link 1']);
     });
+
+    it('shows group headings for app users and public links by form', async () => {
+      testData.extendedDatasets.createPast(1, {
+        accessFilter: { type: 'ownerOnly' },
+        linkedForms: [
+          { xmlFormId: 'f1', name: 'Form 1' },
+          { xmlFormId: 'f2', name: 'Form 2' }
+        ]
+      });
+      const fieldKeys = createFieldKeys(2);
+      createPublicLinkAssignments(2, 'f1');
+      const formSummaryAssignments = createPublicLinkAssignments(2, 'f2');
+      const component = mountComponent({
+        fieldKeys,
+        formSummaryAssignments,
+        attachTo: document.body
+      });
+      await component.get('.dropdown-trigger').trigger('click');
+      const headings = component.findAll('.option-group').map(heading => heading.text());
+      headings.should.eql([
+        'App users',
+        'Public links: Form 1',
+        'Public links: Form 2'
+      ]);
+      component.findAll('input[type="radio"]').length.should.equal(6);
+      const texts = component.findAll('.single-select-option')
+        .map(row => row.text());
+      texts.should.eql([
+        'App User 0',
+        'App User 1',
+        'Public Link 0',
+        'Public Link 1',
+        'Public Link 0',
+        'Public Link 1'
+      ]);
+    });
   });
 
   describe('display value', () => {
@@ -230,7 +266,7 @@ describe('EntityFiltersViewAs', () => {
         fieldKeys: [fieldKey],
         props: { modelValue: null }
       });
-      component.get('.display-value').text().should.equal('Me');
+      component.get('.display-value').text().should.equal('All');
     });
 
     it('shows default label if the actor id is not in the field keys list', () => {
@@ -238,7 +274,7 @@ describe('EntityFiltersViewAs', () => {
       const component = mountComponent({
         props: { modelValue: fieldKey.id }
       });
-      component.get('.display-value').text().should.equal('Me');
+      component.get('.display-value').text().should.equal('All');
     });
 
     it('shows default label if actor id is not in the linked form assignments', () => {
@@ -251,7 +287,7 @@ describe('EntityFiltersViewAs', () => {
         formSummaryAssignments: [assignment],
         props: { modelValue: assignment.actor.id }
       });
-      component.get('.display-value').text().should.equal('Me');
+      component.get('.display-value').text().should.equal('All');
     });
 
     it('shows default label if there are no assignments', () => {
@@ -263,7 +299,7 @@ describe('EntityFiltersViewAs', () => {
       const component = mountComponent({
         props: { modelValue: assignment.actor.id }
       });
-      component.get('.display-value').text().should.equal('Me');
+      component.get('.display-value').text().should.equal('All');
     });
   });
 });

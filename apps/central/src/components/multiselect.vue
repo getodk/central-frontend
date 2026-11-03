@@ -52,19 +52,28 @@ except according to the terms contained in the LICENSE file.
           :class="{ 'shows-all': searchValue === '' }" @change="changeCheckbox">
           <template v-if="options != null">
             <!-- eslint-disable-next-line vue/object-curly-newline -->
-            <li v-for="({ value, key = value, text = value, description }, i) in options"
-              :key="key" :class="{ 'search-match': searchMatches.has(value) }">
-              <div :class="single ? 'single-select-option' : 'checkbox'">
-                <label>
-                  <input :type="single ? 'radio' : 'checkbox'"
-                    :name="single ? `${idPrefix}-single` : null" :class="{ 'sr-only': single }" :data-index="i"
-                    :aria-describedby="description != null ? descriptionId(i) : null">
-                  <span v-if="description == null" v-tooltip.text>{{ text }}</span>
-                  <span v-else v-tooltip.no-aria="description">{{ text }}</span>
-                </label>
-                <p v-if="description != null" :id="descriptionId(i)" class="sr-only">{{ description }}</p>
-              </div>
-            </li>
+            <template v-for="({ value, key = value, text = value, description, group }, i) in options"
+              :key="key">
+              <li v-if="group != null && (i === 0 || options[i - 1].group !== group)"
+                class="option-group" :class="{ 'search-match': groupHasSearchMatch(i) }">
+                <strong tabindex="0" v-tooltip.text>{{ group }}</strong>
+              </li>
+              <li :class="{
+                'search-match': searchMatches.has(value),
+                'grouped-option': group != null,
+              }">
+                <div :class="single ? 'single-select-option' : 'checkbox'">
+                  <label>
+                    <input :type="single ? 'radio' : 'checkbox'"
+                      :name="single ? `${idPrefix}-single` : null" :class="{ 'sr-only': single }" :data-index="i"
+                      :aria-describedby="description != null ? descriptionId(i) : null">
+                    <span v-if="description == null" v-tooltip.text>{{ text }}</span>
+                    <span v-else v-tooltip.no-aria="description">{{ text }}</span>
+                  </label>
+                  <p v-if="description != null" :id="descriptionId(i)" class="sr-only">{{ description }}</p>
+                </div>
+              </li>
+            </template>
           </template>
           <li class="empty-message">{{ emptyMessage }}</li>
         </ul>
@@ -106,6 +115,8 @@ const props = defineProps({
     - text. The text to show for the option. Defaults to the `value` property.
     - description (optional). Additional text to show for the option. This will
       be shown in a tooltip and used as the ARIA description of the checkbox.
+    - group (optional). A heading to show before this option when its group
+      differs from the preceding option's group.
 
   If `options` is `null` (for example, because the options are loading), then
   the dropdown will not be shown.
@@ -340,6 +351,15 @@ watch(searchValue, (value) => {
   }
 });
 
+const groupHasSearchMatch = (index) => {
+  const { group } = props.options[index];
+  for (let i = index; i < props.options.length; i += 1) {
+    if (props.options[i].group !== group) return false;
+    if (searchMatches.has(props.options[i].value)) return true;
+  }
+  return false;
+};
+
 const searchInput = ref(null);
 const clearSearch = () => {
   searchValue.value = '';
@@ -537,9 +557,29 @@ const emptyMessage = computed(() => (searchValue.value === ''
     }
     &.shows-all li, li.search-match { display: list-item; }
 
+    .option-group {
+      background-color: $color-bg;
+      font-weight: bold;
+      line-height: 1.3;
+      padding-bottom: 12px;
+      padding-top: 12px;
+
+      strong {
+        display: block;
+        overflow: hidden;
+        padding-left: $hpadding;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
     .checkbox {
       display: block;
       label { @include text-overflow-ellipsis; }
+    }
+
+    .grouped-option .checkbox {
+      padding-left: $hpadding;
     }
 
     input[type="checkbox"] {
@@ -580,15 +620,24 @@ const emptyMessage = computed(() => (searchValue.value === ''
       }
     }
 
+    .grouped-option .single-select-option label {
+      padding-left: $hpadding * 2;
+    }
+
     li {
       box-sizing: border-box;
       margin-left: -$hpadding;
       margin-right: -$hpadding;
       padding: 0 $hpadding;
 
-      &:not(.empty-message):not(:has(input:checked)):hover {
+      &:not(.empty-message):not(.option-group):not(:has(input:checked)):hover {
         background-color: $color-surface-secondary;
       }
+    }
+
+    li.option-group {
+      padding-bottom: 12px;
+      padding-top: 12px;
     }
 
     li:has(input:checked) {
