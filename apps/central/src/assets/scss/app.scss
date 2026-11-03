@@ -413,7 +413,7 @@ a {
 
 // Design system calls this tertiary button
 .btn-link {
-  border-radius: 0;
+  border-radius: 6px;
   background-color: transparent;
 
   &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
@@ -512,6 +512,10 @@ select[multiple] { height: auto; }
   color: $color-text-secondary;
   margin-bottom: 10px;
   margin-top: 5px;
+}
+
+.help-text{
+  color: $color-text-muted;
 }
 
 $form-group-padding-bottom: 15px;
@@ -819,7 +823,7 @@ tr.uncommitted-change { background-color: $amber-100; }
   }
 
   &.tag-warning {
-    background-color: #F9E599;
+    background-color: $color-warning-subtle;
   }
 
   &.tag-success {
@@ -827,11 +831,11 @@ tr.uncommitted-change { background-color: $amber-100; }
   }
 
   &.tag-info {
-    background-color: #E3EFF3;
+    background-color: $color-info-subtle;
   }
 
   &.tag-danger {
-    background-color: #F7B3B3;
+    background-color: $color-danger-subtle;
   }
 }
 
@@ -894,13 +898,13 @@ tr.uncommitted-change { background-color: $amber-100; }
   box-shadow: none;
 
   .panel-heading {
-    background-color: $color-table-heading-background;
-    border-bottom: $border-bottom-table-heading;
+    background-color: $color-surface;
     padding: $padding-table-heading;
 
     .panel-title {
-      font-size: $font-size-table-heading;
+      font-size: 16px;
       line-height: inherit;
+      font-weight: normal;
     }
   }
 

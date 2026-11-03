@@ -481,7 +481,7 @@
     // This text is shown on its own before details about a warning.
     "warning": "Warning",
     // Standalone text shown as a badge next to a recommendation. Not part of a longer phrase.
-    "recommended": "recommended",
+    "recommended": "Recommended",
     "none": "(none)",
     "search": "Search",
     // @transifexKey component.FormTrashList.title

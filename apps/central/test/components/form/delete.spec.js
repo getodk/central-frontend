@@ -20,7 +20,7 @@ describe('FormDelete', () => {
     return load('/projects/1/forms/f/settings', { root: false })
       .testModalToggles({
         modal: FormDelete,
-        show: '#form-settings .panel-simple-danger .btn-danger',
+        show: '#form-settings .page-heading .btn-danger',
         hide: '.btn-link'
       });
   });
@@ -58,7 +58,7 @@ describe('FormDelete', () => {
       return load('/projects/1/forms/f/settings')
         .complete()
         .request(async (app) => {
-          await app.get('#form-settings .panel-simple-danger .btn-danger').trigger('click');
+          await app.get('#form-settings .page-heading .btn-danger').trigger('click');
           return app.get('#form-delete .btn-danger').trigger('click');
         })
         .respondWithData(() => {
