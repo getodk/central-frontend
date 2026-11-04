@@ -415,6 +415,7 @@ a {
 // Design system calls this tertiary button
 .btn-link {
   border-radius: 6px;
+  border: 1px solid transparent;
   background-color: transparent;
 
   &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
@@ -422,11 +423,12 @@ a {
   }
 
   &:hover {
-    background-color: $blue-50;
     text-decoration: none;
   }
+
   &:active {
     background-color: $blue-100;
+    border-color: $blue-100;
     box-shadow: none;
   }
 
