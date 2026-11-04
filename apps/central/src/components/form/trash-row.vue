@@ -93,7 +93,7 @@ export default {
     },
     showIdForDuplicateName() {
       if (this.duplicateFormNames == null) return false;
-      const name = this.form.nameOrId.toLocaleLowerCase();
+      const name = this.form.nameOrId.toLocaleLowerCase(this.$i18n.locale);
       return this.duplicateFormNames.has(name);
     },
     lastSubmissionTooltip() {

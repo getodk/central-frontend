@@ -562,6 +562,22 @@ describe('ProjectList', () => {
         'C(c_1)'
       ]);
     });
+
+    it('compares names in the selected locale, not the browser default locale', () => {
+      // In Turkish, "I" lowercases to a dotless "ı". Simulate a browser whose
+      // default locale is Turkish while English is selected in Central.
+      const { toLocaleLowerCase } = String.prototype;
+      sinon.replace(String.prototype, 'toLocaleLowerCase', function lower(locale) {
+        return toLocaleLowerCase.call(this, locale ?? 'tr');
+      });
+      createProjects(
+        [{ name: 'Project 1' }],
+        [[{ name: 'Indicators', xmlFormId: 'i_1' }, { name: 'indicators', xmlFormId: 'i_2' }]]
+      );
+      const component = mountComponent();
+      const rows = component.getComponent(ProjectHomeBlock).findAllComponents(FormRow);
+      rows.map((row) => row.find('.duplicate-form-id').exists()).should.eql([true, true]);
+    });
   });
 });
 

@@ -9,10 +9,13 @@ https://www.apache.org/licenses/LICENSE-2.0. No part of ODK Central,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 */
+import { inject } from 'vue';
+
 import { computeIfExists, hasVerbs, transformForm } from './util';
 import { useRequestData } from './index';
 
 export default () => {
+  const { i18n } = inject('container');
   const { createResource } = useRequestData();
   return createResource('projects', (projects) => ({
     /* eslint-disable no-param-reassign */
@@ -34,7 +37,7 @@ export default () => {
         const seenNames = new Set();
         dupeNamesByProject[project.id] = new Set();
         for (const form of project.formList) {
-          const formName = form.nameOrId.toLocaleLowerCase();
+          const formName = form.nameOrId.toLocaleLowerCase(i18n.locale);
           if (seenNames.has(formName)) dupeNamesByProject[project.id].add(formName);
           seenNames.add(formName);
         }
