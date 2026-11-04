@@ -6,8 +6,6 @@ import PrimeVue from 'primevue/config';
 import Location from '../../src/utils/location';
 
 import simpleForm from '../../../central/test/data/xml/simple/form.xml?raw';
-import formWithAttachmentXml from '../../../central/test/data/xml/with-attachment/form.xml?raw';
-import formWithImageAttachmentXml from '../../../central/test/data/xml/image-attachment/form.xml?raw';
 import imageUploaderXml from '../../../central/test/data/xml/image-uploader/form.xml?raw';
 import simpleSubmission from '../../../central/test/data/xml/simple/submission.xml?raw';
 import imageUploaderSubmission from '../../../central/test/data/xml/image-uploader/submission.xml?raw';
@@ -35,7 +33,7 @@ describe('WebFormRenderer', () => {
   });
 
   let deviceId: string;
-  const DEFAULT_FORM = {
+  const DEFAULT_FORM: Form = {
     name: 'simple',
     xmlFormId: 'simple',
     projectId: 1,
@@ -43,8 +41,7 @@ describe('WebFormRenderer', () => {
     state: 'open',
     draft: false,
     webformsEnabled: true,
-    once: false,
-    attachments: []
+    once: false
   };
 
   const mountComponent = async (xform: string, form?: Form, st?: string, actionType='new') => {
@@ -108,51 +105,6 @@ describe('WebFormRenderer', () => {
     const component = await mountComponent(simpleForm);
     const form = component.find('.odk-form');
     expect(form.exists()).to.equal(true);
-  });
-
-  it('should load form attachments', async () => {
-    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
-      ok: true,
-      status: 200,
-      text: () => Promise.resolve('name,label\ntoronto,Toronto'),
-    } as Response);
-    const given = {
-      name: 'simple',
-      xmlFormId: 'simple',
-      projectId: 1,
-      enketoId: '',
-      state: 'open',
-      draft: false,
-      once: false,
-      webformsEnabled: true,
-      attachments: [ { name: 'cities.csv' } ]
-    };
-    const component = await mountComponent(formWithAttachmentXml, given);
-    expect(fetchSpy).toHaveBeenCalledTimes(1);
-    const form = component.find('.odk-form');
-    expect(form.exists()).to.equal(true);
-    expect(form.text()).to.match(/Toronto/);
-    fetchSpy.mockReset();
-  });
-
-  it('should not send request for attachments that are not expected', async () => {
-    const fetchSpy = vi.spyOn(globalThis, 'fetch');
-    const given = {
-      name: 'simple',
-      xmlFormId: 'simple',
-      projectId: 1,
-      enketoId: '',
-      state: 'open',
-      draft: false,
-      once: false,
-      webformsEnabled: true,
-      attachments: [ { name: 'not-right-image.jpg' } ] // attachment name doesn't match
-    };
-    const component = await mountComponent(formWithImageAttachmentXml, given);
-    expect(fetchSpy).toHaveBeenCalledTimes(0);
-    const form = component.find('.odk-form');
-    expect(form.exists()).to.equal(true);
-    fetchSpy.mockReset();
   });
 
   it('should send submission xml request', async () => {
