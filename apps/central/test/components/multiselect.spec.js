@@ -51,6 +51,24 @@ describe('Multiselect', () => {
       .should.eql(['First group', 'Second group']);
   });
 
+  it('shows nested headings when the option subgroup changes', () => {
+    const component = mountComponent({
+      props: {
+        options: [
+          { value: 'crow', group: 'Animals', subgroup: 'Birds' },
+          { value: 'hawk', group: 'Animals', subgroup: 'Birds' },
+          { value: 'fox', group: 'Animals', subgroup: 'Mammals' },
+          { value: 'oak', group: 'Plants', subgroup: 'Trees' }
+        ]
+      }
+    });
+    component.findAll('.option-group').map(heading => heading.text())
+      .should.eql(['Animals', 'Plants']);
+    component.findAll('.option-subgroup').map(heading => heading.text())
+      .should.eql(['Birds', 'Mammals', 'Trees']);
+    component.findAll('.subgrouped-option').length.should.equal(4);
+  });
+
   it('shows each checkbox', async () => {
     const component = mountComponent({
       props: { options: [{ value: 'foo' }, { value: 'bar' }] },
@@ -463,6 +481,30 @@ describe('Multiselect', () => {
       headings[0].should.be.visible(true);
       headings[0].text().should.equal('First group');
       headings[1].should.be.hidden(true);
+    });
+
+    it('shows matching group and subgroup headings', async () => {
+      const component = mountComponent({
+        props: {
+          options: [
+            { value: 1, text: 'Crow', group: 'Animals', subgroup: 'Birds' },
+            { value: 2, text: 'Hawk', group: 'Animals', subgroup: 'Birds' },
+            { value: 3, text: 'Fox', group: 'Animals', subgroup: 'Mammals' },
+            { value: 4, text: 'Oak', group: 'Plants', subgroup: 'Trees' }
+          ],
+          search: 'Search'
+        },
+        attachTo: document.body
+      });
+      await toggle(component);
+      await component.get('.search input').setValue('crow');
+      const groups = component.findAll('.option-group');
+      const subgroups = component.findAll('.option-subgroup');
+      groups[0].should.be.visible(true);
+      groups[1].should.be.hidden(true);
+      subgroups[0].should.be.visible(true);
+      subgroups[1].should.be.hidden(true);
+      subgroups[2].should.be.hidden(true);
     });
 
     it('hides options that do not match', async () => {
