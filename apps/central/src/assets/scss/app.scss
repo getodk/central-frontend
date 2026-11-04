@@ -335,26 +335,26 @@ class. */
     color: $color-text-disabled;
   }
   &:hover {
-    background-color: $color-danger-hover;
-    border-color: $color-danger-hover;
-    color: $color-surface;
+    background-color: $color-danger-subtle;
+    color: $color-danger;
   }
 
   &:active, &:active:hover {
     background-color: $color-danger-pressed;
     border-color: $color-danger-pressed;
-    color: $color-surface;
+    color: $color-text-inverse;
   }
 
   &:focus {
     outline: 2px solid $color-focus-ring;
     outline-offset: 2px;
+    color: $color-danger;
   }
 
   &:active:focus {
     background-color: $color-danger-pressed;
     border-color: $color-danger-pressed;
-    color: $color-surface;
+    color: $color-text-inverse;
   }
 
   &:hover, &:focus, &:active:focus {
