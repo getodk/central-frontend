@@ -311,6 +311,23 @@ describe('Multiselect', () => {
       component.get('.dropdown-trigger').attributes('aria-expanded').should.equal('false');
     });
 
+    it('closes when resetting an empty selection', async () => {
+      const component = mountComponent({
+        props: {
+          options,
+          modelValue: [],
+          single: true,
+          none: 'Reset to Me',
+          placeholder
+        },
+        attachTo: document.body
+      });
+      await toggle(component);
+      await component.get('.change-all.single button').trigger('click');
+      should.not.exist(component.emitted('update:modelValue'));
+      component.get('.dropdown-trigger').attributes('aria-expanded').should.equal('false');
+    });
+
     it('does not show multi-select bulk actions', () => {
       const component = mountComponent({ props: { options, single: true } });
       component.find('.select-all').exists().should.be.false;
