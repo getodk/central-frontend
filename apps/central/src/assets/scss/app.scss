@@ -147,6 +147,7 @@ em { @include italic; }
     // follows it. For a link in particular, the underlining will be off if
     // there is white space.
     margin-right: $margin-right-icon;
+    margin-left: $margin-left-icon;
 
     + .caret { margin-left: 0; }
   }
