@@ -74,7 +74,7 @@ $color-on-primary: $gray-0;
 $color-focus-ring: $blue-600;
 
 // Surface
-$color-bg: $gray-50;
+$color-bg: $gray-50; // need to be renamed, our background is gray-0 i.e. color-surface
 $color-surface: $gray-0;
 $color-surface-raised: $gray-0;
 $color-surface-secondary: $gray-100;

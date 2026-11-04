@@ -76,7 +76,7 @@
 
 @mixin form-control-background {
   background-color: $color-surface;
-  .panel-body &, .modal-body & { background-color: $color-surface-secondary; }
+  .panel-body &, .modal-body & { background-color: $color-bg; }
 }
 
 @mixin filter-control {
