@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
 import * as idbkeyval from 'idb-keyval';
-import { clearExpiredAutosave, getAutosave } from '../../src/utils/autosave';
+import { clearExpiredAutosaves, getAutosave } from '../../src/utils/autosave';
 import type { InstanceSnapshot } from '@getodk/xforms-engine';
 import type { Form } from '../../src/utils/api';
 
@@ -62,10 +62,10 @@ describe('autosave util', () => {
     });
   });
 
-  describe('clearExpiredAutosave', () => {
+  describe('clearExpiredAutosaves', () => {
     it('does nothing if the oldest autosave has not expired', async () => {
       idbGet.mockResolvedValue(new Date());
-      await clearExpiredAutosave();
+      await clearExpiredAutosaves();
       expect(idbKeys).toHaveBeenCalledTimes(0);
       expect(idbDelete).toHaveBeenCalledTimes(0);
     });
@@ -73,7 +73,7 @@ describe('autosave util', () => {
     it('does nothing if no autosaves found', async () => {
       idbGet.mockResolvedValue(new Date('2026-09-01'));
       idbKeys.mockResolvedValue(['something', 'notanautosave']);
-      await clearExpiredAutosave();
+      await clearExpiredAutosaves();
       expect(idbKeys).toHaveBeenCalledTimes(1);
       expect(idbDelete).toHaveBeenCalledTimes(0);
     });
@@ -91,7 +91,7 @@ describe('autosave util', () => {
         'autosave-entry-5-myform2',
         'autosave-entry-5-myform3'
       ]);
-      await clearExpiredAutosave();
+      await clearExpiredAutosaves();
       expect(idbKeys).toHaveBeenCalledTimes(1);
       expect(idbDelete).toHaveBeenCalledTimes(2);
       expect(idbDelete).toHaveBeenNthCalledWith(1, 'autosave-entry-5-myform1');

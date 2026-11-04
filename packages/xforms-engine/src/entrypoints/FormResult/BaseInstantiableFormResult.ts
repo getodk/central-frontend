@@ -9,7 +9,10 @@ import type {
 } from '../../client/form/FormInstanceConfig.ts';
 import type { FormResultStatus } from '../../client/form/LoadFormResult.ts';
 import type { ResetFormInstance } from '../../client/form/ResetFormInstance.ts';
-import type { RestoreFormInstance } from '../../client/form/RestoreFormInstance.ts';
+import type {
+  RestoreFormInstance,
+  RestoreFormInstanceInput,
+} from '../../client/form/RestoreFormInstance.ts';
 import { ErrorProductionDesignPendingError } from '../../error/ErrorProductionDesignPendingError.ts';
 import { InitialInstanceState } from '../../instance/input/InitialInstanceState.ts';
 import type { BasePrimaryInstanceOptions } from '../../instance/PrimaryInstance.ts';
@@ -92,7 +95,7 @@ export abstract class BaseInstantiableFormResult<
     };
 
     this.restoreInstance = async (
-      input: EditFormInstanceInput,
+      input: RestoreFormInstanceInput,
       instanceConfig: FormInstanceConfig = {}
     ) => {
       this.assertInstantiable();
