@@ -16,6 +16,12 @@ const createFieldKeys = (count) => new Array(count).fill(undefined)
     .createPast(1, { displayName: `App User ${i}` })
     .last());
 
+const selectViewAs = (index) => async (component) => {
+  const filter = component.get('#entity-filters-view-as');
+  await filter.get('.dropdown-trigger').trigger('click');
+  return filter.findAll('input[type="radio"]')[index].setValue(true);
+};
+
 describe('EntityFilters', () => {
   beforeEach(mockLogin);
 
@@ -382,7 +388,6 @@ describe('EntityFilters', () => {
         const filter = component.get('#entity-filters-view-as');
         await filter.get('.dropdown-trigger').trigger('click');
         await filter.find('input[type="radio"]').setValue(true);
-        await filter.get('.action-bar button').trigger('click');
       })
       .respondWithData(() => ({
         ...testData.entityOData(1),
@@ -477,7 +482,7 @@ describe('EntityFilters', () => {
           attachTo: document.body
         })
           .complete()
-          .request(changeMultiselect('#entity-filters-view-as', [0]))
+          .request(selectViewAs(0))
           .beforeEachResponse((_, { url }) => {
             const { id } = testData.extendedFieldKeys.last();
             relativeUrl(url).searchParams.get('viewAs').should.equal(String(id));
@@ -489,7 +494,7 @@ describe('EntityFilters', () => {
           attachTo: document.body
         })
           .complete()
-          .request(changeMultiselect('#entity-filters-view-as', [0]))
+          .request(selectViewAs(0))
           .respondWithData(testData.entityOData)
           .afterResponse(app => {
             const { id } = testData.extendedFieldKeys.last();
@@ -506,7 +511,6 @@ describe('EntityFilters', () => {
             const filter = component.get('#entity-filters-view-as');
             await filter.get('.dropdown-trigger').trigger('click');
             await filter.get('.change-all.single button').trigger('click'); // reset to nothing selected
-            await filter.get('.action-bar button').trigger('click');
           })
           .respondWithData(testData.entityOData)
           .afterResponse(app => {
