@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
         <span class="badge">{{ deletedSubmissionCount.value }}</span>
       </toggle-switch>
       <enketo-fill v-if="rendersEnketoFill" :form-version="form">
-        <span class="icon-plus-circle"></span>{{ $t('action.createSubmission') }}
+        <span class="icon-plus"></span>{{ $t('action.createSubmission') }}
       </enketo-fill>
     </page-heading>
     <submission-list v-show="keys.dataExists" ref="submissionList" :project-id="projectId"

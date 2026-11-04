@@ -85,6 +85,9 @@
 .icon-plus-circle:before {
   content: "add_circle";
 }
+.icon-plus:before{
+  content: "add";
+}
 .icon-times-circle:before {
   content: "cancel";
 }
