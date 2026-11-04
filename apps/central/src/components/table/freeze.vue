@@ -141,7 +141,7 @@ defineExpose({ getRowPair });
   @include clearfix;
   position: relative;
   border: 1px solid $color-border;
-  border-radius: 12px;
+  border-radius: 6px;
   overflow: hidden;
 
   .table {
