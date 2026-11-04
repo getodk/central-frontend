@@ -62,7 +62,8 @@ except according to the terms contained in the LICENSE file.
             <template v-if="!datasetExpanded">
               {{ $tcn('showMoreDatasets', numDatasets) }}
               <span v-if="hiddenConflicts > 0" class="tag tag-danger">
-                {{ $n(hiddenConflicts) }} <span class="icon-warning"></span>
+                <span class="icon-warning"></span>
+                {{ $n(hiddenConflicts) }}
               </span>
               <span class="icon-angle-down"></span>
             </template>
