@@ -14,7 +14,7 @@ except according to the terms contained in the LICENSE file.
     <div class="title">
       <router-link :to="projectPath(project.id)">{{ project.name }}</router-link>
       <template v-if="project.keyId">
-        <span class="encrypted badge" aria-hidden="true" v-tooltip.sr-only>
+        <span class="encrypted tag tag-info" aria-hidden="true" v-tooltip.sr-only>
           <span class="icon-lock"></span>
           {{ $t('encrypted') }}
         </span>
@@ -180,6 +180,7 @@ export default {
     background-color: $color-surface-secondary;
     border: 1px solid $color-border;
     font-weight: 400;
+    vertical-align: -3px;
   }
 
   .project-table-section {
