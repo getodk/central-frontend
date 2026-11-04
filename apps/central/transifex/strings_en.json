@@ -1715,6 +1715,14 @@
         "developer_comment": "Text shown when no Audit log date is selected in the filter"
       }
     },
+    "AuditFiltersAction": {
+      "action": {
+        "all": {
+          "string": "All",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      }
+    },
     "AuditList": {
       "heading": {
         "0": {

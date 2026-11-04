@@ -10,27 +10,77 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <label id="audit-filters-action" class="form-group">
-    <span>{{ $t('field.type') }}</span>
-    <div class="display-value" aria-hidden="true">
-      {{ displayValue }}
-    </div>
-    <select class="form-control" :value="modelValue"
-      @change="$emit('update:modelValue', $event.target.value)">
-      <option v-for="option of options" :key="option.value"
-        :class="option.htmlClass" :value="option.value">
-        {{ option.text }}
-      </option>
-    </select>
-    <span class="icon-angle-down"></span>
-  </label>
+  <multiselect id="audit-filters-action" single :model-value="selectValue"
+    :options="options" :label="$t('field.type')" :placeholder="placeholder"
+    :none="categoryMessage('nonverbose')" @update:model-value="update"/>
 </template>
 
 <script>
+import Multiselect from '../../multiselect.vue';
+
 import useAudit from '../../../composables/audit';
+
+const ACTIONS_BY_CATEGORY = {
+  user: [
+    'user.create',
+    'user.update',
+    'user.assignment.create',
+    'user.assignment.delete',
+    'user.session.create',
+    'user.delete'
+  ],
+  project: [
+    'project.create',
+    'project.update',
+    'project.delete',
+    'actor_property.create'
+  ],
+  form: [
+    'form.create',
+    'form.update',
+    'form.update.draft.set',
+    'form.update.publish',
+    'form.update.draft.delete',
+    'form.update.draft.replace',
+    'form.update.draft.update',
+    'form.attachment.update',
+    'form.submission.export',
+    'form.delete',
+    'form.purge',
+    'form.restore'
+  ],
+  field_key: [
+    'field_key.create',
+    'field_key.assignment.create',
+    'field_key.assignment.delete',
+    'field_key.session.end',
+    'field_key.delete',
+    'field_key.property.set'
+  ],
+  public_link: [
+    'public_link.create',
+    'public_link.assignment.create',
+    'public_link.assignment.delete',
+    'public_link.session.end',
+    'public_link.delete',
+    'public_link.property.set'
+  ],
+  dataset: [
+    'dataset.create',
+    'dataset.update',
+    'entity.bulk.upsert',
+    'entity.bulk.delete',
+    'entity.bulk.restore',
+    'dataset.delete',
+    'dataset.update.property.delete'
+  ],
+  config: ['config.set'],
+  upgrade: []
+};
 
 export default {
   name: 'AuditFiltersAction',
+  components: { Multiselect },
   props: {
     modelValue: {
       type: String,
@@ -44,106 +94,46 @@ export default {
   },
   computed: {
     options() {
-      return [
-        this.categoryOption('nonverbose'),
-        this.categoryOption('user'),
-        this.actionOption('user.create'),
-        this.actionOption('user.update'),
-        this.actionOption('user.assignment.create'),
-        this.actionOption('user.assignment.delete'),
-        this.actionOption('user.session.create'),
-        this.actionOption('user.delete'),
-        this.categoryOption('project'),
-        this.actionOption('project.create'),
-        this.actionOption('project.update'),
-        this.actionOption('project.delete'),
-        this.actionOption('actor_property.create'),
-        this.categoryOption('form'),
-        this.actionOption('form.create'),
-        this.actionOption('form.update'),
-        this.actionOption('form.update.draft.set'),
-        this.actionOption('form.update.publish'),
-        this.actionOption('form.update.draft.delete'),
-        this.actionOption('form.update.draft.replace'),
-        this.actionOption('form.update.draft.update'),
-        this.actionOption('form.attachment.update'),
-        this.actionOption('form.submission.export'),
-        this.actionOption('form.delete'),
-        this.actionOption('form.purge'),
-        this.actionOption('form.restore'),
-        this.categoryOption('field_key'),
-        this.actionOption('field_key.create'),
-        this.actionOption('field_key.assignment.create'),
-        this.actionOption('field_key.assignment.delete'),
-        this.actionOption('field_key.session.end'),
-        this.actionOption('field_key.delete'),
-        this.actionOption('field_key.property.set'),
-        this.categoryOption('public_link'),
-        this.actionOption('public_link.create'),
-        this.actionOption('public_link.assignment.create'),
-        this.actionOption('public_link.assignment.delete'),
-        this.actionOption('public_link.session.end'),
-        this.actionOption('public_link.delete'),
-        this.actionOption('public_link.property.set'),
-        this.categoryOption('dataset'),
-        this.actionOption('dataset.create'),
-        this.actionOption('dataset.update'),
-        this.actionOption('entity.bulk.upsert'),
-        this.actionOption('entity.bulk.delete'),
-        this.actionOption('entity.bulk.restore'),
-        this.actionOption('dataset.delete'),
-        this.actionOption('dataset.update.property.delete'),
-        this.categoryOption('config'),
-        this.actionOption('config.set'),
-        this.categoryOption('upgrade')
-      ];
+      const all = this.$t('action.all');
+      const options = [];
+      for (const [category, actions] of Object.entries(ACTIONS_BY_CATEGORY)) {
+        const text = this.categoryMessage(category);
+        options.push({ text: `${all} ${text}`, value: category, group: text });
+        for (const action of actions) {
+          options.push({
+            text: this.actionMessage(action),
+            value: action,
+            group: text
+          });
+        }
+      }
+      return options;
     },
-    displayValue() {
-      return this.categoryMessage(this.modelValue) ? this.categoryMessage(this.modelValue) : this.actionMessage(this.modelValue);
-    }
+    selectValue() {
+      return this.modelValue === 'nonverbose' ? [] : [this.modelValue];
+    },
   },
   methods: {
-    categoryOption(category) {
-      return {
-        text: `» ${this.categoryMessage(category)}`,
-        value: category,
-        htmlClass: 'audit-filters-action-category'
-      };
+    placeholder({ selectedText }) {
+      return selectedText == null
+        ? this.categoryMessage('nonverbose')
+        : selectedText.startsWith(`${this.$t('action.all')} `)
+          ? selectedText.slice(this.$t('action.all').length + 1)
+          : selectedText;
     },
-    actionOption(action) {
-      return {
-        // Adding non-breaking spaces: see #323 on GitHub.
-        text: `\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0${this.actionMessage(action)}`,
-        value: action
-      };
+    update(value) {
+      this.$emit('update:modelValue', value[0] ?? 'nonverbose');
     }
   }
 };
 </script>
 
-<style lang="scss">
-@import '../../../assets/scss/mixins';
-@import '../../../assets/scss/variables';
-
-#audit-filters-action {
-  @include filter-control;
-
-  select {
-    position: absolute;
-    opacity: 0;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    cursor: pointer;
-
-  }
-  .icon-angle-down {
-    font-size: 16px;
-    color: $color-text-muted;
-    font-weight: bold;
-    z-index: 1;
-    pointer-events: none;
+<i18n lang="json5">
+{
+  "en": {
+    "action": {
+      "all": "All"
+    }
   }
 }
-</style>
+</i18n>
