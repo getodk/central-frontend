@@ -17,7 +17,7 @@ export default () => {
   return createResource('projects', (projects) => ({
     /* eslint-disable no-param-reassign */
     transformResponse: ({ data }) => {
-      console.error('transforming project response: ', data);
+      console.error('transforming project response: ', data); // eslint-disable-line no-console
       for (const project of data) {
         for (const form of project.formList)
           transformForm(form);
