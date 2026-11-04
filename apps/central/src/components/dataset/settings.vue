@@ -13,7 +13,8 @@ except according to the terms contained in the LICENSE file.
   <div id="dataset-settings">
     <page-heading :title="$t('common.tab.settings')">
       <button ref="deleteButton" type="button" class="btn btn-danger" @click="handleDeleteButton()">
-        {{ $t('action.delete') }}&hellip;
+        <span class="icon-trash"></span>
+        {{ $t('action.delete') }}
       </button>
       <popover :target="popoverTarget" placement="left" @hide="hidePopover">
         <div class="page-heading-help-content">
