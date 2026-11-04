@@ -190,7 +190,6 @@ export default {
   }
 
   [class*='icon'] {
-    margin-left: 5px;
     color: $color-text-muted;
   }
 }
