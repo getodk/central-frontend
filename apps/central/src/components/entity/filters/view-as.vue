@@ -55,7 +55,8 @@ const options = computed(() => {
       publicLinks.push({
         value: actor.id,
         text: actor.displayName,
-        group: t('publicLinksForForm', { formName: formNames.get(xmlFormId) })
+        group: t('publicLinks'),
+        subgroup: formNames.get(xmlFormId)
       });
     }
   }
@@ -85,7 +86,7 @@ const placeholder = ({ selectedText }) => selectedText ?? t('noUserSelected');
     "resetToMe": "Reset to All",
     "search": "Search…",
     "appUsers": "App users",
-    "publicLinksForForm": "Public links: {formName}"
+    "publicLinks": "Public links"
   }
 }
 </i18n>

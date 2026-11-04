@@ -137,6 +137,10 @@ describe('EntityFiltersViewAs', () => {
       });
       await component.get('.dropdown-trigger').trigger('click');
       component.findAll('input[type="radio"]').length.should.equal(4);
+      component.findAll('.option-group').map(heading => heading.text())
+        .should.eql(['Public links']);
+      component.findAll('.option-subgroup').map(heading => heading.text())
+        .should.eql(['Form 1', 'Form 2']);
     });
 
     it('shows the display name of each public link', async () => {
@@ -254,11 +258,10 @@ describe('EntityFiltersViewAs', () => {
       });
       await component.get('.dropdown-trigger').trigger('click');
       const headings = component.findAll('.option-group').map(heading => heading.text());
-      headings.should.eql([
-        'App users',
-        'Public links: Form 1',
-        'Public links: Form 2'
-      ]);
+      headings.should.eql(['App users', 'Public links']);
+      const subheadings = component.findAll('.option-subgroup')
+        .map(heading => heading.text());
+      subheadings.should.eql(['Form 1', 'Form 2']);
       component.findAll('input[type="radio"]').length.should.equal(6);
       const texts = component.findAll('.single-select-option')
         .map(row => row.text());

@@ -2616,8 +2616,8 @@
       "appUsers": {
         "string": "App users"
       },
-      "publicLinksForForm": {
-        "string": "Public links: {formName}"
+      "publicLinks": {
+        "string": "Public links"
       }
     },
     "EntityList": {
