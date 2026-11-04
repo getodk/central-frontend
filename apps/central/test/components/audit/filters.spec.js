@@ -66,7 +66,7 @@ describe('AuditFilters', () => {
         load('/system/audits')
           .complete()
           .request(app =>
-            app.get('#audit-filters-action select').setValue('user.create'))
+            app.get('#audit-filters-action input[data-index="1"]').setValue())
           .beforeEachResponse((_, { url }) => {
             const action = relativeUrl(url).searchParams.get('action');
             action.should.equal('user.create');
@@ -77,7 +77,7 @@ describe('AuditFilters', () => {
         load('/system/audits')
           .complete()
           .request(app =>
-            app.get('#audit-filters-action select').setValue('user.create'))
+            app.get('#audit-filters-action input[data-index="1"]').setValue())
           .respondWithData(() => testData.extendedAudits.sorted())
           .afterResponse(app => {
             app.vm.$route.query.action.should.equal('user.create');
@@ -86,8 +86,10 @@ describe('AuditFilters', () => {
       it('removes the query parameter if nonverbose is selected', () =>
         load('/system/audits?action=user.create')
           .complete()
-          .request(app =>
-            app.get('#audit-filters-action select').setValue('nonverbose'))
+          .request(async app => {
+            await app.get('#audit-filters-action .dropdown-trigger').trigger('click');
+            await app.get('#audit-filters-action .select-none').trigger('click');
+          })
           .respondWithData(() => testData.extendedAudits.sorted())
           .afterResponse(app => {
             should.not.exist(app.vm.$route.query.action);
