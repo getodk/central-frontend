@@ -52,15 +52,21 @@ except according to the terms contained in the LICENSE file.
           :class="{ 'shows-all': searchValue === '' }" @change="changeCheckbox">
           <template v-if="options != null">
             <!-- eslint-disable-next-line vue/object-curly-newline -->
-            <template v-for="({ value, key = value, text = value, description, group }, i) in options"
+            <template v-for="({ value, key = value, text = value, description, group, subgroup }, i) in options"
               :key="key">
               <li v-if="group != null && (i === 0 || options[i - 1].group !== group)"
                 class="option-group" :class="{ 'search-match': groupHasSearchMatch(i) }">
                 <strong tabindex="0" v-tooltip.text>{{ group }}</strong>
               </li>
+              <li
+                v-if="subgroup != null && (i === 0 || options[i - 1].group !== group || options[i - 1].subgroup !== subgroup)"
+                class="option-subgroup" :class="{ 'search-match': subgroupHasSearchMatch(i) }">
+                <strong tabindex="0" v-tooltip.text>{{ subgroup }}</strong>
+              </li>
               <li :class="{
                 'search-match': searchMatches.has(value),
-                'grouped-option': group != null,
+                'grouped-option': group != null || subgroup != null,
+                'subgrouped-option': subgroup != null,
               }">
                 <div :class="single ? 'single-select-option' : 'checkbox'">
                   <label>
@@ -117,6 +123,8 @@ const props = defineProps({
       be shown in a tooltip and used as the ARIA description of the checkbox.
     - group (optional). A heading to show before this option when its group
       differs from the preceding option's group.
+    - subgroup (optional). A nested heading to show before this option when its
+      subgroup or group differs from the preceding option.
 
   If `options` is `null` (for example, because the options are loading), then
   the dropdown will not be shown.
@@ -367,6 +375,16 @@ const groupHasSearchMatch = (index) => {
   return false;
 };
 
+const subgroupHasSearchMatch = (index) => {
+  const { group, subgroup } = props.options[index];
+  for (let i = index; i < props.options.length; i += 1) {
+    if (props.options[i].group !== group || props.options[i].subgroup !== subgroup)
+      return false;
+    if (searchMatches.has(props.options[i].value)) return true;
+  }
+  return false;
+};
+
 const searchInput = ref(null);
 const clearSearch = () => {
   searchValue.value = '';
@@ -579,6 +597,21 @@ const emptyMessage = computed(() => (searchValue.value === ''
       }
     }
 
+    .option-subgroup {
+      font-weight: bold;
+      line-height: 1.3;
+      padding-bottom: 8px;
+      padding-top: 8px;
+
+      strong {
+        display: block;
+        overflow: hidden;
+        padding-left: $hpadding * 2;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
     .checkbox {
       display: block;
       label { @include text-overflow-ellipsis; }
@@ -586,6 +619,10 @@ const emptyMessage = computed(() => (searchValue.value === ''
 
     .grouped-option .checkbox {
       padding-left: $hpadding;
+    }
+
+    .subgrouped-option .checkbox {
+      padding-left: $hpadding * 2;
     }
 
     input[type="checkbox"] {
@@ -630,13 +667,17 @@ const emptyMessage = computed(() => (searchValue.value === ''
       padding-left: $hpadding * 2;
     }
 
+    .subgrouped-option .single-select-option label {
+      padding-left: $hpadding * 3;
+    }
+
     li {
       box-sizing: border-box;
       margin-left: -$hpadding;
       margin-right: -$hpadding;
       padding: 0 $hpadding;
 
-      &:not(.empty-message):not(.option-group):not(:has(input:checked)):hover {
+      &:not(.empty-message):not(.option-group):not(.option-subgroup):not(:has(input:checked)):hover {
         background-color: $color-surface-secondary;
       }
     }
@@ -644,6 +685,11 @@ const emptyMessage = computed(() => (searchValue.value === ''
     li.option-group {
       padding-bottom: 12px;
       padding-top: 12px;
+    }
+
+    li.option-subgroup {
+      padding-bottom: 8px;
+      padding-top: 8px;
     }
 
     li:has(input:checked) {
