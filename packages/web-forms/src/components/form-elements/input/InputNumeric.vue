@@ -153,7 +153,7 @@ const modelValue = computed<string>({
 		}
 
 		props.setNumericValue(num);
-		if (!props.isDecimal && formatter.value.format(num) !== sanitized) {
+		if (formatter.value.format(num) !== assignedValue) {
 			return resetInput();
 		}
 	}
@@ -218,6 +218,7 @@ const clearTimer = () => {
 	}
 };
 
+// After re-render, refocus input so user can continue typing seamlessly
 watch(renderKey, () => nextTick(() => (inputRef.value?.$el as HTMLElement)?.focus()));
 
 onBeforeUnmount(() => clearTimer());
