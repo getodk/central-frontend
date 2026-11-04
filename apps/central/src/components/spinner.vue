@@ -84,7 +84,7 @@ $spinner-width: 3px;
     width: $spinner-size;
 
     .btn-primary &, .btn-danger & {
-      border-color: $gray-0;
+      border-color: $blue-800;
     }
 
     .btn-primary & {
