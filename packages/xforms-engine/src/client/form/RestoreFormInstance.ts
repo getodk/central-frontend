@@ -2,9 +2,9 @@ import type { ResolvableFormInstanceInput, ResolvedFormInstanceInput } from './E
 import type { FormInstance, FormInstanceRestoreMode } from './FormInstance.ts';
 import type { FormInstanceConfig } from './FormInstanceConfig.ts';
 
-export type RestoredFormInstance = FormInstance<FormInstanceRestoreMode>;
-
 export type RestoreFormInstanceInput = ResolvableFormInstanceInput | ResolvedFormInstanceInput;
+
+export type RestoredFormInstance = FormInstance<FormInstanceRestoreMode>;
 
 export type RestoreFormInstance = (
   input: RestoreFormInstanceInput,

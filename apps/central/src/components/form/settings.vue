@@ -56,7 +56,7 @@ except according to the terms contained in the LICENSE file.
                   </i18n-t>
                 </label>
                 <label class="autosave">
-                  <input v-model="autosaveEnabled" name="autosaveEnabled" type="checkbox" :disabled="!webformsEnabled">
+                  <input v-model="autosaveEnabled" name="autosaveEnabled" type="checkbox" :disabled="!webformsEnabled" @change="setAutosaveEnabled()">
                   <span>{{ $t('autosaveSetting.description') }}</span>
                 </label>
               </div>
@@ -132,18 +132,14 @@ const afterDelete = () => {
     .then(() => { alert.success(message); });
 };
 
-
 const webformsEnabled = ref(form.webformsEnabled);
-watch(() => form.dataExists, () => {
-  webformsEnabled.value = form.webformsEnabled;
-});
-
 const autosaveEnabled = ref(form.autosaveEnabled);
 watch(() => form.dataExists, () => {
+  webformsEnabled.value = form.webformsEnabled;
   autosaveEnabled.value = form.autosaveEnabled;
 });
 
-watch(autosaveEnabled, () => {
+const setAutosaveEnabled = () => {
   form.request({
     method: 'PATCH',
     url: apiPaths.form(form.projectId, form.xmlFormId),
@@ -160,7 +156,7 @@ watch(autosaveEnabled, () => {
       toast.show(message);
     })
     .catch(noop);
-});
+};
 
 const afterSettingChanged = () => {
   const message = webformsEnabled.value

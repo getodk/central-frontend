@@ -13,7 +13,7 @@ import { hideSpinner } from '../utils/spinner';
 import { deleteLastSaved, getLastSaved, setLastSaved } from '../utils/last-saved';
 import { hasSubmitted, setSubmitted } from '../utils/once-store';
 import { setLocale } from '../i18n';
-import { clearExpiredAutosave, deleteAutosave, getAutosave, setAutosave } from '../utils/autosave';
+import { clearExpiredAutosaves, deleteAutosave, getAutosave, setAutosave } from '../utils/autosave';
 
 defineOptions({
   name: 'WebFormRenderer'
@@ -292,7 +292,7 @@ onMounted(async () => {
   if (props.form.autosaveEnabled) {
     autosavePayload.value = await getAutosave(props.form);
   }
-  clearExpiredAutosave();
+  clearExpiredAutosaves();
   inited.value = true;
 });
 </script>

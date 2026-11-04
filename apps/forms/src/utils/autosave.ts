@@ -95,7 +95,7 @@ const getAllKeys = async () => {
   }
 };
 
-export const clearExpiredAutosave = async () => {
+export const clearExpiredAutosaves = async () => {
   if (!(await hasExpiredAutosave())) {
     return;
   }

@@ -395,6 +395,8 @@ The component emits the following events:
 - `submitChunked`: Emitted for chunked submissions when the form is valid
   - Payload: ([submissionPayload: ChunkedInstancePayload, callback: HostSubmissionResultCallback])
   - Note: Requires `submissionMaxSize` prop to be set
+- `updated`: Emitted when the user updates the instance value in any way, designed for features like autosaving form fill progress.
+  - Payload: ([instance: InstanceSnapshot])
 
 ### What if I don't use Vue?
 
