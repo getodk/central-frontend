@@ -731,12 +731,6 @@ tr.uncommitted-change { background-color: $amber-100; }
   overflow: hidden;
 
   > thead {
-    background-color: $color-table-heading-background;
-
-    > tr {
-      background-color: $color-header-row;
-    }
-
     > tr > th {
       border-bottom: none;
       font-size: $font-size-table-heading;
