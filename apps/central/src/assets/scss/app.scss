@@ -1051,7 +1051,7 @@ tr.uncommitted-change { background-color: $amber-100; }
 
   .badge {
     margin-left: 2px;
-    background-color: rgba($color-accent-primary, 0.2);
+    background-color: $color-action-light;
     color: $color-text;
     font-size: 14px;
     font-weight: normal;
