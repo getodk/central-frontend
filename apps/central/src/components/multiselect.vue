@@ -438,7 +438,10 @@ const handleTriggerClick = (toggle) => {
 
 // `true` for select all, `false` for select none.
 const changeAll = (selectAll) => {
-  if (selected.size === (selectAll ? props.options.length : 0)) return;
+  if (selected.size === (selectAll ? props.options.length : 0)) {
+    if (props.single) dropdownEl.value?.hide();
+    return;
+  }
   const selector = [selectAll ? 'input:not(:checked)' : 'input:checked'];
   if (searchValue.value !== '') selector.unshift('.search-match');
   for (const input of optionList.value.querySelectorAll(selector.join(' '))) {
