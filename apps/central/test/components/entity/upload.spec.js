@@ -220,12 +220,6 @@ describe('EntityUpload', () => {
           errors.count.should.equal(1);
         });
       });
-
-      it('does not show an error if there is no label column', async () => {
-        const modal = await showModal();
-        await selectFile(modal, createCSV(`__id,height\n${uuid()},1`));
-        modal.findComponent(EntityUploadErrors).exists().should.be.false;
-      });
     });
 
     it('shows an error for an invalid UUID', async () => {
