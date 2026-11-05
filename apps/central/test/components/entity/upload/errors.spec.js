@@ -29,7 +29,7 @@ describe('EntityUploadErrors', () => {
   // Boolean error props
   [
     ['invalidQuotes', 'A quoted field is invalid in the header row'],
-    ['missingLabel', 'A label property is required'],
+    ['missingLabel', 'A label property is required for new Entities'],
     ['emptyColumn', 'Empty cell in header row']
   ].forEach(([prop, title]) => {
     it(`shows an error if the ${prop} prop is true`, () => {
