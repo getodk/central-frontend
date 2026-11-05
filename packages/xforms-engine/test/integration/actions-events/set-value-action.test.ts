@@ -146,7 +146,7 @@ describe('setvalue action', () => {
         )
       );
 
-      await scenario.proposed_serializeAndRestoreInstanceState();
+      await scenario.serializeAndRestoreInstanceState();
 
       expect(scenario.answerOf('/data/destination').getValue()).toBe('');
 
@@ -1130,7 +1130,7 @@ describe('setvalue action', () => {
       );
 
       expect(scenario.attributeOf('/data/element', 'attr').getValue()).toBe('7');
-      const cached = await scenario.proposed_serializeAndRestoreInstanceState();
+      const cached = await scenario.serializeAndRestoreInstanceState();
       const newInstance = cached.newInstance();
       expect(newInstance.attributeOf('/data/element', 'attr').getValue()).toBe('7');
     });

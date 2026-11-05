@@ -1,11 +1,12 @@
 import { get, set, del } from 'idb-keyval';
+import type { Form } from './api';
 
-const getIdbKey = (projectId: number, xmlFormId: string) => {
-  return `last-saved-${projectId}-${xmlFormId}`;
+const getIdbKey = (form: Form) => {
+  return `last-saved-${form.projectId}-${form.xmlFormId}`;
 };
 
-export const getLastSaved = async (projectId: number, xmlFormId: string): Promise<string | undefined> => {
-  const key = getIdbKey(projectId, xmlFormId);
+export const getLastSaved = async (form: Form): Promise<string | undefined> => {
+  const key = getIdbKey(form);
   try {
     return await get(key);
   } catch {
@@ -13,8 +14,8 @@ export const getLastSaved = async (projectId: number, xmlFormId: string): Promis
   }
 };
 
-export const setLastSaved = async (projectId: number, xmlFormId: string, file: File): Promise<void> => {
-  const key = getIdbKey(projectId, xmlFormId);
+export const setLastSaved = async (form: Form, file: File): Promise<void> => {
+  const key = getIdbKey(form);
   try {
     const xml = await file.text();
     return await set(key, xml);
@@ -23,8 +24,8 @@ export const setLastSaved = async (projectId: number, xmlFormId: string, file: F
   }
 };
 
-export const deleteLastSaved = async (projectId: number, xmlFormId: string): Promise<void> => {
-  const key = getIdbKey(projectId, xmlFormId);
+export const deleteLastSaved = async (form: Form): Promise<void> => {
+  const key = getIdbKey(form);
   try {
     return await del(key);
   } catch {

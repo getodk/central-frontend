@@ -36,12 +36,20 @@ export interface EditInstanceOptions {
   readonly resolveAttachment: ResolveInstanceAttachment;
 }
 
+export interface RestoreInstanceOptions {
+  readonly resolveInstance: ResolvableFormInstance;
+  readonly attachmentFileNames: readonly string[];
+  readonly resolveAttachment: ResolveInstanceAttachment;
+}
+
 /**
  * Converts host app-facing {@link EditInstanceOptions} to engine's
  * {@link ResolveFormInstanceResource}, by mapping... a mapping... to a
  * {@link Map}.
  */
-const resolvableFormInstanceInput = (options: EditInstanceOptions): ResolvableFormInstanceInput => {
+const resolvableFormInstanceInput = (
+  options: EditInstanceOptions | RestoreInstanceOptions
+): ResolvableFormInstanceInput => {
   const {
     /**
      * We can pass this through directly...
@@ -72,6 +80,7 @@ const resolvableFormInstanceInput = (options: EditInstanceOptions): ResolvableFo
 interface LoadFormStateOptions {
   readonly form: FormOptions;
   readonly editInstance?: EditInstanceOptions | null;
+  readonly restoreInstance?: RestoreInstanceOptions | null;
   readonly deviceID?: string;
   readonly preloadProperties?: PreloadProperties;
   readonly instanceDefaults?: InstanceDefaults;
@@ -109,9 +118,10 @@ export const loadFormState = async (
 
   const config = getFormInstanceConfig(options);
 
-  if (options.editInstance == null) {
+  if (options.editInstance != null) {
     try {
-      const instance = form.createInstance(config);
+      const instanceOptions = resolvableFormInstanceInput(options.editInstance);
+      const instance = await form.editInstance(instanceOptions, config);
 
       return success(form, instance);
     } catch (cause) {
@@ -119,9 +129,18 @@ export const loadFormState = async (
     }
   }
 
+  if (options.restoreInstance != null) {
+    try {
+      const instanceOptions = resolvableFormInstanceInput(options.restoreInstance);
+      const instance = await form.restoreInstance(instanceOptions, config);
+      return success(form, instance);
+    } catch (cause) {
+      return failure(FormInitializationError.from(cause));
+    }
+  }
+
   try {
-    const instanceOptions = resolvableFormInstanceInput(options.editInstance);
-    const instance = await form.editInstance(instanceOptions, config);
+    const instance = form.createInstance(config);
 
     return success(form, instance);
   } catch (cause) {

@@ -60,6 +60,10 @@ except according to the terms contained in the LICENSE file.
                     </template>
                   </i18n-t>
                 </label>
+                <label class="autosave">
+                  <input v-model="autosaveEnabled" name="autosaveEnabled" type="checkbox" :disabled="!webformsEnabled" @change="setAutosaveEnabled()">
+                  <span>{{ $t('autosaveSetting.description') }}</span>
+                </label>
               </div>
               <div class="radio">
                 <label>
@@ -93,7 +97,9 @@ import PageHeading from '../page/heading.vue';
 
 import useRoutes from '../../composables/routes';
 import { modalData } from '../../util/reactivity';
+import { apiPaths } from '../../util/request';
 import { useRequestData } from '../../request-data';
+import { noop } from '../../util/util';
 
 defineOptions({
   name: 'FormSettings'
@@ -116,11 +122,31 @@ const afterDelete = () => {
     .then(() => { alert.success(message); });
 };
 
-
 const webformsEnabled = ref(form.webformsEnabled);
+const autosaveEnabled = ref(form.autosaveEnabled);
 watch(() => form.dataExists, () => {
   webformsEnabled.value = form.webformsEnabled;
+  autosaveEnabled.value = form.autosaveEnabled;
 });
+
+const setAutosaveEnabled = () => {
+  form.request({
+    method: 'PATCH',
+    url: apiPaths.form(form.projectId, form.xmlFormId),
+    data: { autosaveEnabled: autosaveEnabled.value },
+    patch: ({ data }) => {
+      form.updatedAt = data.updatedAt;
+      form.autosaveEnabled = data.autosaveEnabled;
+    }
+  })
+    .then(() => {
+      const message = autosaveEnabled.value
+        ? t('autosaveSetting.enabled', { formName: form.nameOrId })
+        : t('autosaveSetting.disabled', { formName: form.nameOrId });
+      toast.show(message);
+    })
+    .catch(noop);
+};
 
 const afterSettingChanged = () => {
   const message = webformsEnabled.value
@@ -177,6 +203,12 @@ const hideAndReset = () => {
         }
       }
     }
+
+    .autosave {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
   }
 }
 </style>
@@ -213,6 +245,11 @@ const hideAndReset = () => {
       "enketoSelected": "You’re now using Enketo to fill out, preview and edit your “{formName}” form.",
       // Success message when ODK Web Forms is selected as web form technology. {formName} is replaced with the name of the Form
       "owfSelected": "You’re now using ODK Web Forms to fill out, preview and edit your “{formName}” form."
+    },
+    "autosaveSetting": {
+      "description": "Autosave responses if browser closes or refreshes. Sensitive data may be retained in saved responses.",
+      "enabled": "Autosave is now enabled for your “{formName}” form.",
+      "disabled": "Autosave is now disabled for your “{formName}” form.",
     }
   }
 }
