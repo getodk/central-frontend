@@ -12,11 +12,16 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div class="radio-field" :class="{ 'btn-appearance': buttonAppearance }"
     v-tooltip.no-aria="disabled ? disabledMessage : null">
-    <label v-for="{ value, text } of options" :key="value" :class="{ disabled, active: model === value, 'btn btn-toggle': buttonAppearance, radio: !buttonAppearance }">
+    <label v-for="{ value, text, icon } of options" :key="value" :class="{ disabled, active: model === value, 'btn btn-toggle': buttonAppearance, radio: !buttonAppearance }">
       <input v-model="model" type="radio" :value="value" :disabled="disabled" autocomplete="off"
-      :aria-describedby="disabledMessageId">
-      <span v-show="buttonAppearance && model === value" class="icon-check"></span>
-      <span>{{ text }}</span>
+      :aria-describedby="disabledMessageId" :name="name">
+      <template v-if="buttonAppearance">
+        <span :class="icon"></span>
+        <span class="sr-only">{{ text }}</span>
+      </template>
+      <template v-else>
+        <span>{{ text }}</span>
+      </template>
     </label>
     <p v-if="disabledMessageId != null" :id="disabledMessageId" class="sr-only">
       {{ disabledMessage }}
@@ -41,7 +46,8 @@ const props = defineProps({
   buttonAppearance: {
     type: Boolean,
     default: false
-  }
+  },
+  name: String
 });
 
 const id = nextId;
@@ -61,17 +67,22 @@ const disabledMessageId = computed(() =>
 }
 
 .radio-field.btn-appearance {
+  border-radius: 6px;
+  border: 1px solid $color-border;
+  padding: 5px;
+
+  &:focus-within {
+    outline: 2px solid $color-focus-ring;
+  }
+
   input[type="radio"] {
     appearance: none;
     opacity: 0;
   }
   .btn-toggle {
-    border-radius: 0 2px 2px 0;
-    border: 1px solid $central-grey-2;
+    border-radius: 6px;
     background: $color-surface;
     box-shadow: none;
-    padding: 10px 30px;
-    min-width: 80px;
     position: relative;
 
     &.active {
@@ -87,10 +98,8 @@ const disabledMessageId = computed(() =>
       opacity: 0.5;
     }
 
-    .icon-check {
-      position: absolute;
-      top: 12px;
-      left: 10px;
+    &:first-child {
+      margin-right: 2px;
     }
   }
 }
