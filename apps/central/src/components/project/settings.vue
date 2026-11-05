@@ -12,8 +12,8 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div id="project-settings">
     <page-heading :title="$t('common.tab.settings')">
-      <button id="project-settings-archive-button" type="button"
-        class="btn btn-danger" :aria-disabled="project.archived" v-tooltip.aria-describedby="project.archived ? $t('dangerZone.archived[0]') : ''" @click="archiveModal.show()">
+      <button v-if="project.dataExists" id="project-settings-archive-button" type="button"
+        class="btn btn-danger" :aria-disabled="project.archived" v-tooltip.aria-describedby="project.archived ? $t('dangerZone.archived[0]') : null" @click="archiveModal.show()">
         {{ $t('dangerZone.action.archive') }}&hellip;
       </button>
     </page-heading>

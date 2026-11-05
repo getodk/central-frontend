@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
       </button>
       <popover :target="popoverTarget" placement="left" @hide="hidePopover">
         <div class="page-heading-help-content">
-          <p v-if="true || dependentFormsCount > 0" class="dependent-forms-help">
+          <p v-if="dependentFormsCount > 0" class="dependent-forms-help">
             <i18n-t tag="span" keypath="dependentForms.description[0]">
               <template #name> {{ dataset.name }}</template>
               <template #formsCount>
