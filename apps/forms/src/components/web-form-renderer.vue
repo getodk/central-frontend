@@ -44,6 +44,7 @@ const inited = ref(false);
 const isEdit = computed(() => props.actionType === 'edit');
 const isPublicLink = computed(() => props.actionType === 'public-link');
 const lastSavedXml = ref<string | undefined>();
+const autosaveEnabled = computed(() => !isEdit.value && !props.form.draft && props.form.autosaveEnabled);
 const autosavePayload = ref<InstanceSnapshot | undefined>();
 
 const deviceID = getDeviceId();
@@ -190,11 +191,7 @@ const webFormLoaded = () => {
 };
 
 const updateLastSaved = (hasLastSaved: boolean) => {
-  if (!isEdit.value
-    && !props.form.draft
-    && submissionResult.primaryInstanceResult.success
-    && !props.form.once
-  ) {
+  if (!isEdit.value && !props.form.draft && !props.form.once) {
     if (hasLastSaved) {
       setLastSaved(props.form, submissionData.instanceFile);
     } else {
@@ -227,8 +224,11 @@ const handleSubmit = async (
   clearForm = clearFormCallback;
 
   await submitData();
-  deleteAutosave(props.form);
-  updateLastSaved(hasLastSaved);
+
+  if (submissionResult.primaryInstanceResult.success) {
+    deleteAutosave(props.form);
+    updateLastSaved(hasLastSaved);
+  }
 };
 
 const fetchSubmissionXml = async () => {
@@ -289,7 +289,7 @@ onMounted(async () => {
   if (!isEdit.value && !props.form.draft) {
     lastSavedXml.value = await getLastSaved(props.form);
   }
-  if (props.form.autosaveEnabled) {
+  if (autosaveEnabled.value) {
     autosavePayload.value = await getAutosave(props.form);
   }
   clearExpiredAutosaves();
@@ -317,7 +317,7 @@ onMounted(async () => {
     @loaded="webFormLoaded"
     @languageSelected="setLocale"
     @submit="handleSubmit"
-    v-on="props.form.autosaveEnabled ? { updated: storeAutosaveUpdate } : {}" 
+    v-on="autosaveEnabled ? { updated: storeAutosaveUpdate } : {}"
     />
 
   <Dialog modal :visible="!!visibleModal" :draggable="false" :closable="visibleModal?.hideable" @update:visible="visibleModal = null">

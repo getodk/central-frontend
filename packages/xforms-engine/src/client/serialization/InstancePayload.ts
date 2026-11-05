@@ -129,6 +129,6 @@ export type InstancePayload<PayloadType extends InstancePayloadType> = {
 }[PayloadType];
 
 export interface InstanceSnapshot {
-  xml: string;
+  readonly xml: string;
   attachments: readonly File[];
 }
