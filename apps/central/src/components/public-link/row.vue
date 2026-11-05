@@ -34,7 +34,16 @@ except according to the terms contained in the LICENSE file.
     <td class="access-link">
       <template v-if="publicLink.token == null">{{ $t('revoked') }}</template>
       <template v-else-if="form.dataExists">
-        <selectable v-if="enketoId != null">{{ url }}</selectable>
+        <template v-if="enketoId != null">
+          <button type="button" class="btn btn-link" @click="copyToClipboard(url)">
+            <span class="icon-content-copy"></span>
+            <span>{{ $t('action.copyLink') }}</span>
+          </button>
+          <a :href="url" target="_blank">
+            <span class="icon-external-link-square"></span>
+            <span>{{ $t('action.openInNewTab') }}</span>
+          </a>
+        </template>
         <template v-else>
           <span class="unavailable" aria-hidden="true" v-tooltip.sr-only>
             <span>{{ $t('unavailable.text') }}</span>
@@ -54,13 +63,13 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import DateTime from '../date-time.vue';
-import Selectable from '../selectable.vue';
 
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'PublicLinkRow',
-  components: { DateTime, Selectable },
+  components: { DateTime },
+  inject: ['toast'],
   props: {
     publicLink: {
       type: Object,
@@ -90,6 +99,12 @@ export default {
       const encodedId = encodeURIComponent(this.enketoId);
       return `${window.location.origin}/f/${encodedId}?st=${this.publicLink.token}`;
     }
+  },
+  methods: {
+    async copyToClipboard(url) {
+      await navigator.clipboard.writeText(url);
+      this.toast.show(this.$t('alert.urlCopied'));
+    }
   }
 };
 </script>
@@ -107,12 +122,25 @@ export default {
 
   .icon-question-circle { margin-left: 5px; }
 
+  .access-link a{
+    margin-left: 15px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
 }
 </style>
 
 <i18n lang="json5">
 {
   "en": {
+    "action": {
+      "copyLink": "Copy link",
+      "openInNewTab": "Open in new tab"
+    },
+    "alert": {
+      "urlCopied": "URL copied."
+    },
     // This text is shown for a Public Access Link that has been revoked. The
     // text appears on its own and is not part of a longer sentence.
     "revoked": "Revoked",

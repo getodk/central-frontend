@@ -306,3 +306,6 @@
 .icon-table:before {
   content: 'table';
 }
+.icon-content-copy:before {
+  content: 'content_copy'
+}
