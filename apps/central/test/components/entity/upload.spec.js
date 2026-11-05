@@ -1215,7 +1215,8 @@ describe('EntityUpload', () => {
     });
     const csv = createCSV([
       ['label', 'height', 'circumference'],
-      ['dogwood', ' ', ' x  y ']
+      ['dogwood', ' ', ' x  y '],
+      ['elm', ' x  y ', ' ']
     ]);
     return showModal()
       .complete()
@@ -1238,7 +1239,8 @@ describe('EntityUpload', () => {
           data: {
             source: getSource(csv),
             entities: [
-              { label: 'dogwood', data: { height: ' ', circumference: ' x  y ' } }
+              { label: 'dogwood', data: { height: ' ', circumference: ' x  y ' } },
+              { label: 'elm', data: { height: ' x  y ', circumference: ' ' } }
             ]
           }
         }
