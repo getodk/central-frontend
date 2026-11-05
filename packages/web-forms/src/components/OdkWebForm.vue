@@ -105,6 +105,7 @@ const hostSubmissionResultCallbackFactory = (
 			lastSavedXml
 		};
 		state.value = updateSubmittedFormState(submissionResult, currentState, options);
+		registerAutosaveListener();
 	};
 
 	return (hostResult) => {
@@ -324,6 +325,8 @@ const handleSubmit = (currentState: FormStateSuccessResult) => {
 	releaseFocus(); // so follow-up dialogs don't restore focus here and scroll back to it
 
 	if (root.validationState.violations.length === 0) {
+		unmountAutosave();
+
 		// eslint-disable-next-line @typescript-eslint/no-floating-promises
 		emitSubmit(currentState);
 		// eslint-disable-next-line @typescript-eslint/no-floating-promises
