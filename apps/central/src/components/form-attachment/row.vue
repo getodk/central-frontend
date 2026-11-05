@@ -27,13 +27,13 @@ except according to the terms contained in the LICENSE file.
             <a :href="href" target="_blank">{{ datasetName }}</a>
           </template>
         </i18n-t>
-        <span v-show="targeted" class="label label-primary">
+        <span v-show="targeted" class="tag tag-info">
           {{ $t('override') }}
         </span>
       </template>
       <template v-else-if="attachment.blobExists">
         <date-time :iso="attachment.updatedAt"/>
-        <span v-show="targeted" class="label label-primary">
+        <span v-show="targeted" class="tag tag-info">
           {{ $t('replace') }}
         </span>
       </template>
@@ -43,7 +43,7 @@ except according to the terms contained in the LICENSE file.
           <span>{{ $t('notUploaded.text') }}</span>
         </span>
         <span class="sr-only">&nbsp;{{ $t('notUploaded.title') }}&nbsp;</span>
-        <span v-show="targeted" class="label label-primary">
+        <span v-show="targeted" class="tag tag-info">
           {{ $t('action.upload') }}
         </span>
       </template>
@@ -170,7 +170,7 @@ export default {
 
   .form-attachment-list-name { @include text-overflow-ellipsis; }
 
-  .label {
+  .tag {
     margin-left: 5px;
   }
 
