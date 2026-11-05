@@ -85,7 +85,7 @@ except according to the terms contained in the LICENSE file.
 
 <script setup>
 import { computed, inject, nextTick, onBeforeUnmount, reactive, ref, shallowRef, watch } from 'vue';
-import { identity, pick } from 'ramda';
+import { pick } from 'ramda';
 import { useI18n } from 'vue-i18n';
 
 import EntityUploadErrors from './upload/errors.vue';
@@ -477,11 +477,8 @@ const uploadProgress = ref(null);
 const entitiesByAction = () => {
   const entities = [];
   const updates = [];
-  const transform = warnings.value?.extraProperties == null
-    ? identity
-    : mergeDataWithExtra;
   for (const entity of csvEntities.value)
-    (entity.uuid == null ? entities : updates).push(transform(entity));
+    (entity.uuid == null ? entities : updates).push(mergeDataWithExtra(entity));
 
   const result = {};
   if (entities.length !== 0) result.entities = entities;
