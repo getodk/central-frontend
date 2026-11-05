@@ -11,7 +11,26 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="dataset-settings">
-    <page-heading :title="$t('common.tab.settings')"/>
+    <page-heading :title="$t('common.tab.settings')">
+      <button ref="deleteButton" type="button" class="btn btn-danger" @click="handleDeleteButton()">
+        {{ $t('action.delete') }}&hellip;
+      </button>
+      <popover :target="popoverTarget" placement="left" @hide="hidePopover">
+        <div class="page-heading-help-content">
+          <p v-if="dependentFormsCount > 0" class="dependent-forms-help">
+            <i18n-t tag="span" keypath="dependentForms.description[0]">
+              <template #name> {{ dataset.name }}</template>
+              <template #formsCount>
+                <strong>{{ $tc('dependentForms.formsCount', dependentFormsCount) }}</strong>
+              </template>
+            </i18n-t>
+            <br>
+            <span>{{ $t('dependentForms.description[1]') }}</span>&nbsp;
+            <a href="https://docs.getodk.org/central-entities/#deleting-entity-lists" target="_blank">{{ $t('dependentForms.description[2]') }}</a>
+          </p>
+        </div>
+      </popover>
+    </page-heading>
     <div class="row">
       <div class="col-xs-6">
         <div v-if="dataset.dataExists" class="panel panel-simple">
@@ -45,32 +64,8 @@ except according to the terms contained in the LICENSE file.
             </form>
           </div>
 
+          <br>
           <dataset-owner-only/>
-        </div>
-      </div>
-      <div class="col-xs-6">
-        <div class="panel panel-simple-danger">
-          <div class="panel-heading">
-            <h1 class="panel-title">{{ $t('common.dangerZone') }}</h1>
-          </div>
-          <div class="panel-body">
-            <p v-if="dependentFormsCount > 0" class="dependent-forms-help">
-              <i18n-t tag="span" keypath="dependentForms.description[0]">
-                <template #name> {{ dataset.name }}</template>
-                <template #formsCount>
-                  <strong>{{ $tc('dependentForms.formsCount', dependentFormsCount) }}</strong>
-                </template>
-              </i18n-t>
-              <br>
-              <span>{{ $t('dependentForms.description[1]') }}</span>&nbsp;
-              <a href="https://docs.getodk.org/central-entities/#deleting-entity-lists" target="_blank">{{ $t('dependentForms.description[2]') }}</a>
-            </p>
-            <p>
-              <button type="button" class="btn btn-danger" :aria-disabled="dependentFormsCount > 0" @click="deleteModal.show()">
-                {{ $t('action.delete') }}&hellip;
-              </button>
-            </p>
-          </div>
         </div>
       </div>
     </div>
@@ -90,6 +85,7 @@ import DatasetOwnerOnly from './owner-only.vue';
 import DatasetPendingSubmissions from './pending-submissions.vue';
 import DatasetDelete from './delete.vue';
 import PageHeading from '../page/heading.vue';
+import popover from '../popover.vue';
 
 import useRoutes from '../../composables/routes';
 import { apiPaths, isProblem } from '../../util/request';
@@ -113,6 +109,10 @@ const approvalRequired = ref(dataset.approvalRequired);
 const pendingSubmissionModal = modalData();
 
 const deleteModal = modalData();
+
+const popoverTarget = ref(null);
+
+const deleteButton = ref(null);
 
 watch(() => dataset.dataExists, () => {
   approvalRequired.value = dataset.approvalRequired;
@@ -169,6 +169,19 @@ const dependentFormsCount = computed(() => {
 
   return publishedForm.size + draftForm.size;
 });
+
+const handleDeleteButton = () => {
+  if (dependentFormsCount.value > 0) {
+    popoverTarget.value = deleteButton.value;
+  } else {
+    deleteModal.show();
+  }
+};
+
+const hidePopover = () => {
+  popoverTarget.value = null;
+};
+
 </script>
 
 <style lang="scss">

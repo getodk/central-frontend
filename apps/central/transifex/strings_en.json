@@ -1057,7 +1057,7 @@
       "developer_comment": "This text is shown on its own before details about a warning."
     },
     "recommended": {
-      "string": "recommended",
+      "string": "Recommended",
       "developer_comment": "Standalone text shown as a badge next to a recommendation. Not part of a longer phrase."
     },
     "none": {
@@ -4763,9 +4763,6 @@
         "archived": {
           "0": {
             "string": "This Project has been archived."
-          },
-          "1": {
-            "string": "In this version of ODK Central, you may not unarchive a Project. However, the ability to unarchive a Project is planned for a future release."
           }
         }
       },

@@ -7,10 +7,11 @@ import { mockLogin } from '../../util/session';
 describe('ProjectArchive', () => {
   beforeEach(mockLogin);
 
-  it('does not render the button for an archived project', async () => {
+  it('disables the button for an archived project', async () => {
     testData.extendedProjects.createPast(1, { archived: true });
     const component = await load('/projects/1/settings', { root: false });
-    component.find('#project-settings-archive-button').exists().should.be.false;
+    const button = component.get('#project-settings-archive-button');
+    button.attributes('aria-disabled').should.equal('true');
   });
 
   it('toggles the modal', () => {
