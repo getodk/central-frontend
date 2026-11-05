@@ -70,9 +70,6 @@ jobs:
 
   e2e-tests:
     name: 'Test apps e2e'
-    needs:
-    - test-central-app
-    - test-forms-app
     timeout-minutes: 20
     runs-on: ubuntu-26.04
     steps:
