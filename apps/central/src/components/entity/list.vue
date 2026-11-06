@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
           :disabled="deleted" :disabled-message="deleted ? $t('filterDisabledMessage') : null" @reset-click="resetFilters"/>
         </form>
         <radio-field v-if="dataset.dataExists && dataset.hasGeometry"
-          v-model="dataView" :options="viewOptions" :disabled="deleted"
+          v-model="dataView" :options="viewOptions" :disabled="deleted" name="viewToggle"
           :disabled-message="$t('mapDisabled')" button-appearance/>
       </div>
 

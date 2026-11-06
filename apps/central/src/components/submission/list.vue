@@ -44,7 +44,7 @@ except according to the terms contained in the LICENSE file.
         </button>
 
         <radio-field v-if="!draft && fields.dataExists && fields.hasMappable"
-          v-model="dataView" :options="viewOptions" :disabled="encrypted || deleted"
+          v-model="dataView" :options="viewOptions" :disabled="encrypted || deleted" name="viewToggle"
           :button-appearance="true" :disabled-message="deleted ? $t('noMapDeleted') : $t('noMapEncryption')"/>
       </div>
 

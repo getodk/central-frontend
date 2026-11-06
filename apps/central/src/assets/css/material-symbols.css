@@ -303,3 +303,6 @@
 .icon-home:before {
   content: 'home';
 }
+.icon-table:before {
+  content: 'table';
+}
