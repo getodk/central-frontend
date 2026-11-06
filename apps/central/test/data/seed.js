@@ -128,5 +128,10 @@ export default () => {
         'open_form.read',
         'submission.create'
       ]
+    })
+    .createPast(1, {
+      name: 'Public Link',
+      system: 'pub-link',
+      verbs: ['open_form.read', 'submission.create']
     });
 };
