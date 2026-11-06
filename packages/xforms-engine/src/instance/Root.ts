@@ -2,7 +2,9 @@ import { XPathNodeKindKey } from '@getodk/xpath';
 import type { Accessor } from 'solid-js';
 import { batch } from 'solid-js';
 import type { ActiveLanguage, FormLanguage, FormLanguages } from '../client/FormLanguage.ts';
+import type { AnyControlNode } from '../client/hierarchy.ts';
 import type { FormNodeID, PageBoundary } from '../client/identity.ts';
+import type { RepeatRangeUncontrolledNode } from '../client/repeat/RepeatRangeUncontrolledNode.ts';
 import type { RootNode } from '../client/RootNode.ts';
 import type { InstancePayload } from '../client/serialization/InstancePayload.ts';
 import type {
@@ -10,7 +12,11 @@ import type {
   InstancePayloadType,
 } from '../client/serialization/InstancePayloadOptions.ts';
 import type { InstanceState } from '../client/serialization/InstanceState.ts';
-import type { AncestorNodeValidationState } from '../client/validation.ts';
+import type {
+  AncestorNodeValidationState,
+  BlockingViolations,
+  DescendantNodeViolationReference,
+} from '../client/validation.ts';
 import type { XFormsXPathElement } from '../integration/xpath/adapter/XFormsXPathNode.ts';
 import { createRootInstanceState } from '../lib/client-reactivity/instance-state/createRootInstanceState.ts';
 import {
@@ -32,10 +38,11 @@ import { createAggregatedViolations } from '../lib/reactivity/validation/createA
 import type { BodyClassList } from '../parse/body/BodyDefinition.ts';
 import type { RootDefinition } from '../parse/model/RootDefinition.ts';
 import { DescendantNode } from './abstract/DescendantNode.ts';
+import { ValueNode } from './abstract/ValueNode.ts';
 import { buildAttributes } from './buildAttributes.ts';
 import { Attribute } from './Attribute.ts';
 import { buildChildren } from './children/buildChildren.ts';
-import type { GeneralChildNode } from './hierarchy.ts';
+import type { AnyControlInstanceNode, GeneralChildNode } from './hierarchy.ts';
 import type { EvaluationContext } from './internal-api/EvaluationContext.ts';
 import type { ClientReactiveSerializableParentNode } from './internal-api/serialization/ClientReactiveSerializableParentNode.ts';
 import type { TranslationContext } from './internal-api/TranslationContext.ts';
@@ -70,6 +77,17 @@ interface RootStateSpec {
   // Navigation
   readonly navigationTarget: Accessor<FormNodeID | null>;
 }
+
+const findViolationControl = (
+  reference: DescendantNodeViolationReference
+): AnyControlInstanceNode | null => {
+  const { node } = reference;
+  const target = node.nodeType === 'attribute' ? node.owner : node;
+  if (target instanceof ValueNode && target.nodeType !== 'model-value') {
+    return target;
+  }
+  return null;
+};
 
 export class Root
   extends DescendantNode<RootDefinition, RootStateSpec, PrimaryInstance, GeneralChildNode>
@@ -196,8 +214,44 @@ export class Root
     return this.pageNavigation.setCurrentPage(page);
   }
 
-  nextPage(): void {
+  isNodeInPage(node: AnyControlNode | RepeatRangeUncontrolledNode): boolean {
+    if (!this.isPaginated) {
+      return true;
+    }
+
+    const currentPage = this.currentState.currentPage;
+    return currentPage != null && node.currentState.pageBoundary === currentPage;
+  }
+
+  nextPage(): BlockingViolations {
+    if (!this.pageNavigation.hasNextPage()) {
+      return [];
+    }
+
+    const violations = this.getBlockingViolations();
+    if (violations.length > 0) {
+      return violations;
+    }
+
     this.pageNavigation.nextPage();
+    return [];
+  }
+
+  private isViolationOnPage(reference: DescendantNodeViolationReference, page: PageBoundary) {
+    const control = findViolationControl(reference);
+    return control != null && this.pagination.getLeafPageId(control.nodeId) === page;
+  }
+
+  // Only violations of controls block, other nodes (groups, model-only values) have no page.
+  getBlockingViolations(): BlockingViolations {
+    const currentPage = this.pageNavigation.currentPage();
+    if (currentPage == null) {
+      return [];
+    }
+
+    return this.validationState.violations.filter((reference) => {
+      return this.isViolationOnPage(reference, currentPage);
+    });
   }
 
   previousPage(): void {
@@ -209,17 +263,19 @@ export class Root
   }
 
   navigateToFirstViolation(): void {
-    const violation = this.validationState.violations?.[0];
-    if (violation == null) {
+    const control = this.validationState.violations
+      .map((reference) => findViolationControl(reference))
+      .find((violationControl) => violationControl != null);
+    if (control == null) {
       return;
     }
 
     batch(() => {
-      const page = this.pagination.getLeafPageId(violation.nodeId);
+      const page = this.pagination.getLeafPageId(control.nodeId);
       if (page != null) {
         this.setCurrentPage(page);
       }
-      this.setNavigationTarget(violation.nodeId);
+      this.setNavigationTarget(control.nodeId);
     });
   }
 

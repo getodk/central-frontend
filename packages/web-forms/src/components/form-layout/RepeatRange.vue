@@ -3,7 +3,7 @@ import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
 import MarkdownBlock from '@getodk/web-forms/components/common/MarkdownBlock.vue';
 import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
 import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
-import { isOnCurrentPage } from '@getodk/web-forms/lib/pagination/pagination.ts';
+import { useRevealViolations } from '@getodk/web-forms/lib/useRevealViolations.ts';
 import type { RepeatRangeNode, RepeatRangeUncontrolledNode } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import { computed, inject } from 'vue';
@@ -13,11 +13,18 @@ const t: Translate = inject(TRANSLATE)!;
 const props = defineProps<{ node: RepeatRangeNode }>();
 const label = computed(() => props.node.currentState.label?.formatted);
 
+const revealViolations = useRevealViolations();
+
 const isAddButtonVisible = (range: RepeatRangeNode): range is RepeatRangeUncontrolledNode => {
 	if (range.nodeType !== 'repeat-range:uncontrolled') {
 		return false;
 	}
-	return isOnCurrentPage(range);
+	return range.root.isNodeInPage(range);
+};
+
+const handleAdd = (range: RepeatRangeUncontrolledNode) => {
+	const violations = range.addInstances();
+	revealViolations(violations);
 };
 </script>
 <template>
@@ -35,7 +42,7 @@ const isAddButtonVisible = (range: RepeatRangeNode): range is RepeatRangeUncontr
 		outlined
 		severity="contrast"
 		class="button-add-instance"
-		@click="node.addInstances()"
+		@click="handleAdd(node)"
 	>
 		<IconSVG name="mdiPlus" />
 		<span>

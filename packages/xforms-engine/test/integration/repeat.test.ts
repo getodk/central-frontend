@@ -1464,6 +1464,57 @@ describe('Tests ported from JavaRosa - repeats', () => {
         });
       });
 
+      describe('adding repeat instance, with inner calculate dependent on outer sum', () => {
+        it('updates inner sum for all instances', async () => {
+          const scenario = await Scenario.init(
+            'Count outside repeat used inside',
+            html(
+              head(
+                title('Count outside repeat used inside'),
+                model(
+                  mainInstance(
+                    t(
+                      'data id="outside-used-inside"',
+                      t('sum'),
+                      t('repeat jr:template=""', t('question', '5'), t('inner-sum'))
+                    )
+                  ),
+                  bind('/data/sum').type('int').calculate('sum(/data/repeat/question)'),
+                  bind('/data/repeat/inner-sum').type('int').calculate('/data/sum')
+                )
+              ),
+
+              body(repeat('/data/repeat', input('/data/repeat/question')))
+            )
+          );
+
+          range(1, 6).forEach((n) => {
+            scenario.next('/data/repeat');
+            scenario.createNewRepeat({
+              assertCurrentReference: '/data/repeat',
+            });
+
+            expect(scenario.answerOf('/data/sum')).toEqualAnswer(intAnswer(n * 5));
+
+            scenario.next('/data/repeat[' + n + ']/question');
+          });
+
+          range(1, 6).forEach((n) => {
+            expect(scenario.answerOf('/data/repeat[' + n + ']/inner-sum')).toEqualAnswer(
+              intAnswer(25)
+            );
+          });
+
+          scenario.removeRepeat('/data/repeat[4]');
+
+          range(1, 5).forEach((n) => {
+            expect(scenario.answerOf('/data/repeat[' + n + ']/inner-sum')).toEqualAnswer(
+              intAnswer(20)
+            );
+          });
+        });
+      });
+
       describe('changing value in repeat, with reference to next instance', () => {
         /**
          * **PORTING NOTES**
@@ -1639,20 +1690,7 @@ describe('Tests ported from JavaRosa - repeats', () => {
 
     describe('//region Repeat misc', () => {
       describe('(issue 135) verify that counts in inner repeats work as expected', () => {
-        /**
-         * **PORTING NOTES**
-         *
-         * - Fails on second `next` call's node-set reference assertion
-         *   (resolving to the outer repeat's "prompt" event, i.e. the repeat
-         *   range itself). This is currently to be expected, as we don't yet
-         *   support `jr:count`.
-         *
-         * @todo The asserted node-set references are best guess (cross
-         * referencing `getPositionalEvents` and `collectFlatNodeList`) in hopes
-         * it will match the intent of the original test once we do support
-         * `jr:count`. We can verify when we work on that feature.
-         */
-        it.fails('[updates the count]', async () => {
+        it('[updates the count]', async () => {
           const scenario = await Scenario.init(
             'Some form',
             html(
@@ -1717,8 +1755,8 @@ describe('Tests ported from JavaRosa - repeats', () => {
           scenario.next('/data/outer[2]/inner[1]');
           scenario.next('/data/outer[2]/inner[1]/some-field');
           scenario.answer('Some field 1-0');
-          scenario.next('/data/outer[2]/inner[1]');
-          scenario.next('/data/outer[2]/inner[1]/some-field');
+          scenario.next('/data/outer[2]/inner[2]');
+          scenario.next('/data/outer[2]/inner[2]/some-field');
           scenario.answer('Some field 1-1');
           scenario.next('END_OF_FORM');
 

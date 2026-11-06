@@ -21,7 +21,10 @@ except according to the terms contained in the LICENSE file.
       @update:model-value="$emit('update:creationDate', $event)"/>
     <entity-filters-conflict :model-value="conflict" :disabled="disabled"
       :disabled-message="disabledMessage" @update:model-value="$emit('update:conflict', $event)"/>
-     <button type="button" class="btn btn-link btn-reset"
+    <entity-filters-view-as :model-value="viewAs"
+      :disabled="disabled" :disabled-message="disabledMessage"
+      @update:model-value="$emit('update:viewAs', $event)"/>
+    <button type="button" class="btn btn-link btn-reset"
       :aria-disabled="disabled" v-tooltip.aria-describedby="disabledMessage"
       @click="$emit('resetClick')">
       {{ $t('action.reset') }}
@@ -32,6 +35,7 @@ except according to the terms contained in the LICENSE file.
 <script setup>
 import EntityFiltersConflict from './filters/conflict.vue';
 import EntityFiltersCreator from './filters/creator.vue';
+import EntityFiltersViewAs from './filters/view-as.vue';
 import DateRangePicker from '../date-range-picker.vue';
 
 defineOptions({
@@ -50,6 +54,10 @@ defineProps({
     type: String,
     required: false
   },
+  viewAs: {
+    type: Number,
+    required: false
+  },
   creatorId: {
     type: Array,
     required: false
@@ -59,7 +67,7 @@ defineProps({
     required: true
   }
 });
-defineEmits(['update:conflict', 'update:creationDate', 'update:creatorId', 'resetClick']);
+defineEmits(['update:conflict', 'update:creationDate', 'update:creatorId', 'update:viewAs', 'resetClick']);
 
 </script>
 

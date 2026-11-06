@@ -1,7 +1,6 @@
 import ActorPropertiesNew from '../../../src/components/actor-properties/new.vue';
 
 import testData from '../../data';
-import { mockHttp } from '../../util/http';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
 import { testRequestData } from '../../util/request-data';
@@ -44,6 +43,15 @@ describe('ActorPropertiesNew', () => {
     component.find('input').should.be.focused();
   });
 
+  it('hides the form and restores the link after a property is added', async () => {
+    const component = mountComponent();
+    await component.find('.add-property-link').trigger('click');
+    await component.find('input').setValue('region');
+    await component.find('form').trigger('submit');
+    component.find('input').exists().should.be.false;
+    component.find('.add-property-link').exists().should.be.true;
+  });
+
   it('hides the form and restores the link on cancel', async () => {
     const component = mountComponent();
     await component.find('.add-property-link').trigger('click');
@@ -52,111 +60,37 @@ describe('ActorPropertiesNew', () => {
     component.find('.add-property-link').exists().should.be.true;
   });
 
-  it('sends the correct POST request', () => mockHttp()
-    .mount(ActorPropertiesNew, mergeMountOptions({}, {
-      container: {
-        requestData: testRequestData(['actorProperties'], {
-          project: testData.extendedProjects.last(),
-          actorProperties: testData.actorProperties.sorted()
-        })
-      }
-    }))
-    .request(async (component) => {
-      await component.find('.add-property-link').trigger('click');
-      await component.get('input').setValue('region');
-      return component.get('form').trigger('submit');
-    })
-    .beforeEachResponse((_, { method, url, data }) => {
-      method.should.equal('POST');
-      url.should.equal('/v1/projects/1/actor-properties');
-      data.should.eql({ name: 'region' });
-    })
-    .respondWithSuccess());
+  describe('validation', () => {
+    beforeEach(() => {
+      testData.actorProperties.createPast(1, { name: 'region' });
+    });
 
-  it('emits success and restores the link after a successful POST', async () => {
-    testData.actorProperties.createPast(1, { name: 'region' });
-    return mockHttp()
-      .mount(ActorPropertiesNew, mergeMountOptions({}, {
-        container: {
-          requestData: testRequestData(['actorProperties'], {
-            project: testData.extendedProjects.last(),
-            actorProperties: testData.actorProperties.sorted()
-          })
-        }
-      }))
-      .request(async (component) => {
-        await component.find('.add-property-link').trigger('click');
-        await component.get('input').setValue('newprop');
-        return component.get('form').trigger('submit');
-      })
-      .respondWithSuccess()
-      .afterResponse((component) => {
-        component.emitted('success').should.have.length(1);
-        component.find('.add-property-link').exists().should.be.true;
-        component.find('input').exists().should.be.false;
+    [
+      ['123'],
+      ['name'],
+      ['displayName'],
+      ['region'],
+      ['REGION']
+    ].forEach(name => {
+      it(`shows an error for a property of '${name}'`, async () => {
+        const component = mountComponent();
+        await component.get('.add-property-link').trigger('click');
+        await component.get('input').setValue(name);
+        component.find('.property-input-error').exists().should.be.true;
       });
+    });
+
+    it('shows an error for two identical new properties', async () => {
+      const component = mountComponent();
+
+      await component.get('.add-property-link').trigger('click');
+      await component.get('input').setValue('prop1');
+      component.find('.property-input-error').exists().should.be.false;
+      await component.get('form').trigger('submit');
+
+      await component.get('.add-property-link').trigger('click');
+      await component.get('input').setValue('prop1');
+      component.find('.property-input-error').exists().should.be.true;
+    });
   });
-
-  it('adds the new property to actorProperties.data after a successful POST', () => mockHttp()
-    .mount(ActorPropertiesNew, mergeMountOptions({}, {
-      container: {
-        requestData: testRequestData(['actorProperties'], {
-          project: testData.extendedProjects.last(),
-          actorProperties: testData.actorProperties.sorted()
-        })
-      }
-    }))
-    .request(async (component) => {
-      await component.find('.add-property-link').trigger('click');
-      await component.get('input').setValue('region');
-      return component.get('form').trigger('submit');
-    })
-    .respondWithSuccess()
-    .afterResponse((component) => {
-      const { actorProperties } = component.vm.$container.requestData.localResources;
-      actorProperties.data.should.deep.include({ name: 'region' });
-    }));
-
-  it('shows an alert on a 409.3 duplicate name conflict', () => mockHttp()
-    .mount(ActorPropertiesNew, mergeMountOptions({}, {
-      container: {
-        requestData: testRequestData(['actorProperties'], {
-          project: testData.extendedProjects.last(),
-          actorProperties: testData.actorProperties.sorted()
-        })
-      }
-    }))
-    .request(async (component) => {
-      await component.find('.add-property-link').trigger('click');
-      await component.get('input').setValue('region');
-      return component.get('form').trigger('submit');
-    })
-    .respondWithProblem({
-      code: 409.3,
-      message: 'Unique constraint violation',
-      details: { fields: ['projectId', 'name'], values: ['1', 'region'] }
-    })
-    .afterResponse((component) => {
-      component.should.alert('danger', /region/);
-    }));
-
-  it('disables the Add and Cancel buttons while the request is in flight', () => mockHttp()
-    .mount(ActorPropertiesNew, mergeMountOptions({}, {
-      container: {
-        requestData: testRequestData(['actorProperties'], {
-          project: testData.extendedProjects.last(),
-          actorProperties: testData.actorProperties.sorted()
-        })
-      }
-    }))
-    .request(async (component) => {
-      await component.find('.add-property-link').trigger('click');
-      await component.get('input').setValue('region');
-      return component.get('form').trigger('submit');
-    })
-    .beforeEachResponse((component) => {
-      component.get('button[type="submit"]').attributes('aria-disabled').should.equal('true');
-      component.get('button[type="button"]').attributes('aria-disabled').should.equal('true');
-    })
-    .respondWithSuccess());
 });

@@ -87,14 +87,14 @@
   <!-- need to test in other places, like validation, select item labels, etc -->
     <group appearance="field-list" ref="/data/group">
       <input ref="/data/group/headings">
-        <label>You _can_ try this with other &lt;span style="color:red;font-family:cursive"&gt;colours&lt;/span&gt;; **most** primary colours should work.</label>
+        <label>You _can_ try this with other &lt;span style="color:red;font-family:Liberation Serif,serif"&gt;colours&lt;/span&gt;; **most** primary colours should work.</label>
       </input>
       <input ref="/data/group/name">
         <label>What's your name?</label>
         <hint>Type **your name** below</hint>
       </input>
       <input ref="/data/group/userentered">
-        <label>*You said:&lt;span style="color:red;font-family:cursive"&gt;<output value="/data/group/name" />&lt;/span&gt;* but should it be markeddown?</label>
+        <label>*You said:&lt;span style="color:red;font-family:Liberation Serif,serif"&gt;<output value="/data/group/name" />&lt;/span&gt;* but should it be markeddown?</label>
       </input>
       <input ref="/data/group/translated">
         <label ref="jr:itext('q1:label')" />
@@ -178,7 +178,7 @@ Phone number: [<output value="/data/group/phone" />](tel:<output value="/data/gr
 
 Escaping: \*hello\*
 
-&lt;span style="color:red;font-family:cursive"&gt;signature&lt;/span&gt;
+&lt;span style="color:red;font-family:Liberation Serif,serif"&gt;signature&lt;/span&gt;
 
 &lt;p style="text-align:center"&gt;
   centered paragraph

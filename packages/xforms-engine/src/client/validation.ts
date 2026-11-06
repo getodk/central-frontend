@@ -1,11 +1,14 @@
+import type { Attribute } from '../instance/Attribute.ts';
 import type { BaseNode, BaseNodeState } from './BaseNode.ts';
+import type { AnyNode } from './hierarchy.ts';
 import type { FormNodeID } from './identity.ts';
 import type { OpaqueReactiveObjectFactory } from './OpaqueReactiveObjectFactory.ts';
-import type { RootNode } from './RootNode.ts';
 import type { TextRange } from './TextRange.ts';
 
 // This interface exists so that extensions can share JSDoc for `valid`.
-interface BaseValidity {
+interface BaseValidity<Condition> {
+  readonly condition: Condition;
+
   /**
    * Specifies the unambiguous validity state for each validity condition of a
    * given node, or for the derived validity of any parent node whose descendants
@@ -25,6 +28,9 @@ interface BaseValidity {
    * - \* = default (expression not defined)
    * - ✅ = `valid: true`
    * - ❌ = `valid: false`
+   *
+   * `error` condition represents an invalid state, for example, if an xpath expression
+   * cannot be parsed.
    */
   readonly valid: boolean;
 }
@@ -34,11 +40,12 @@ interface BaseValidity {
  *
  * @see {@link https://getodk.github.io/xforms-spec/#bind-attributes | `constraint` and `required` bind attributes}
  */
-export type ValidationCondition = 'constraint' | 'required';
+export type ValidationCondition = 'constraint' | 'error' | 'required';
 
 interface ValidationConditionMessageRoles {
   readonly constraint: 'constraintMsg';
   readonly required: 'requiredMsg';
+  readonly error: 'errorMsg';
 }
 
 export type ValidationConditionMessageRole<Condition extends ValidationCondition> =
@@ -49,8 +56,8 @@ export type ValidationConditionMessageRole<Condition extends ValidationCondition
  * or `jr:requiredMsg`. The text may be translated ({@link https://getodk.github.io/xforms-spec/#fn:jr:itext | `jr:itext`})
  * and dynamic (via {@link https://getodk.github.io/xforms-spec/#body-elements | `<output>`}).
  *
- * When absent, {@link ConditionViolation.message} is `null` and clients are expected to provide
- * their own default messaging (e.g. a translated fallback).
+ * When absent, the `message` of {@link ConstraintViolation} or {@link RequiredViolation} is `null`
+ * and clients are expected to provide their own default messaging (e.g. a translated fallback).
  */
 export interface ViolationMessage<Condition extends ValidationCondition> extends TextRange<
   ValidationConditionMessageRole<Condition>
@@ -58,23 +65,33 @@ export interface ViolationMessage<Condition extends ValidationCondition> extends
   get asString(): string;
 }
 
-export interface ConditionSatisfied<Condition extends ValidationCondition> extends BaseValidity {
-  readonly condition: Condition;
+export interface ConditionSatisfied<
+  Condition extends ValidationCondition,
+> extends BaseValidity<Condition> {
   readonly valid: true;
   readonly message: null;
 }
 
-export interface ConditionViolation<Condition extends ValidationCondition> extends BaseValidity {
-  readonly condition: Condition;
+export interface ConstraintViolation extends BaseValidity<'constraint'> {
   readonly valid: false;
-  readonly message: ViolationMessage<Condition> | null;
+  readonly message: ViolationMessage<'constraint'> | null;
+}
+
+export interface RequiredViolation extends BaseValidity<'required'> {
+  readonly valid: false;
+  readonly message: ViolationMessage<'required'> | null;
+}
+
+export interface ErrorViolation extends BaseValidity<'error'> {
+  readonly valid: false;
+  readonly message: string | null;
 }
 
 export type ConditionValidation<Condition extends ValidationCondition> =
-  | ConditionSatisfied<Condition>
-  | ConditionViolation<Condition>;
+  | AnyViolation
+  | ConditionSatisfied<Condition>;
 
-export type AnyViolation = ConditionViolation<ValidationCondition>;
+export type AnyViolation = ConstraintViolation | ErrorViolation | RequiredViolation;
 
 /**
  * Represents the validation state of a leaf (or value) node.
@@ -119,9 +136,6 @@ export interface LeafNodeValidationState {
  * - {@link nodeId} will be a stable reference to a node with the same
  *   {@link BaseNode.nodeId | `nodeId`}.
  *
- * - {@link node} will have reference equality to the same node object, within
- *   the active form instance's {@link RootNode} tree
- *
  * - {@link reference} will be a **current** reference to the same node object's
  *   **computed** {@link BaseNodeState.reference | `currentState.reference`}
  *
@@ -129,18 +143,20 @@ export interface LeafNodeValidationState {
  * {@link OpaqueReactiveObjectFactory}) can safely assume that {@link reference}
  * will be recomputed and updated in tandem with the affected node's own
  * computed `currentState.reference` as well.
- *
- * @todo this type currently exposes multiple ways to reference the affected
- * node. This is intended to maximize flexibility: it's not yet clear how
- * clients will be best served by which reference mechanism. It is expected that
- * each property will be directly computed from the affected node.
  */
 export interface DescendantNodeViolationReference {
   readonly nodeId: FormNodeID;
 
+  get node(): AnyNode | Attribute;
   get reference(): string;
   get violation(): AnyViolation;
 }
+
+/**
+ * Violations on the current page that blocked an action (page turn, repeat add).
+ * Empty when the action went through and always empty on non-paginated forms.
+ */
+export type BlockingViolations = readonly DescendantNodeViolationReference[];
 
 /**
  * Provides access from any ancestor/parent node, to identify any validity
@@ -153,15 +169,7 @@ export interface AncestorNodeValidationState {
   get violations(): readonly DescendantNodeViolationReference[];
 }
 
-/**
- * Convenience interface for nodes that cannot be invalid.
- */
-export interface NullValidationState {
-  get violations(): readonly [];
-}
-
 // prettier-ignore
 export type NodeValidationState =
 	| AncestorNodeValidationState
-	| LeafNodeValidationState
-	| NullValidationState;
+	| LeafNodeValidationState;

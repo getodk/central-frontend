@@ -8,7 +8,7 @@ type NavigationStateKey = keyof Pick<
 
 type NavigationMethodKey = keyof Pick<
   RootNode,
-  'navigateToFirstViolation' | 'nextPage' | 'previousPage' | 'setCurrentPage'
+  'isNodeInPage' | 'navigateToFirstViolation' | 'nextPage' | 'previousPage' | 'setCurrentPage'
 >;
 
 export interface PrimaryInstanceDocumentState extends Omit<

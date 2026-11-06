@@ -19,7 +19,9 @@ describe('Breadcrumbs', () => {
       }
     });
     const breadcrumbs = component.get('.breadcrumbs');
-    breadcrumbs.text().should.equal('Projects/ Forms');
+    breadcrumbs.text().should.equal('Projects Forms');
+    const separators = breadcrumbs.findAll('.separator');
+    separators.length.should.equal(2);
   });
 
   it('renders a link', () => {

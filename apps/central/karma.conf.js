@@ -50,7 +50,6 @@ module.exports = (config) => {
     frameworks: ['webpack', 'mocha', 'source-map-support'],
     files: [
       'test/index.js',
-      { pattern: '../../public/fonts/icomoon.ttf', served: true, included: false },
       { pattern: '../../public/blank.html', served: true, included: false },
       { pattern: 'test/files/*', served: true, included: false },
       { pattern: 'src/assets/images/**', served: true, included: false }
@@ -63,7 +62,7 @@ module.exports = (config) => {
       // Images
       '/v1/config/public/hero-image': '/base/src/assets/images/whats-new/banner@1x.png',
       '/v1/config/public/logo': '/base/src/assets/images/odk-logo.png',
-      '/img/banner@1x.d8793b44.png': '/base/src/assets/images/whats-new/banner@1x.png', // Smaller resolution for circleCI test
+      '/img/banner@1x.d7ed244f.png': '/base/src/assets/images/whats-new/banner@1x.png', // Smaller resolution for circleCI test
       '/img/fullscreen.37a932a6.svg': '/base/src/assets/images/geojson-map/fullscreen.svg'
     },
     preprocessors: {

@@ -5,10 +5,22 @@ export const changeMultiselect = (selector, selectedIndexes) => async (component
   const toggle = multiselect.get('.dropdown-trigger');
   await toggle.trigger('click');
   await multiselect.get('.select-none').trigger('click');
-  const inputs = multiselect.findAll('input[type="checkbox"]');
+  const inputs = multiselect.findAll('input[type="checkbox"],input[type="radio"]');
   for (const i of selectedIndexes)
     await inputs[i].setValue(true);
   return multiselect.find('.action-bar button').trigger('click');
+};
+
+export const addActorProperty = async (component, name, value = '') => {
+  const newProperty = component.get('.actor-properties-new');
+  await newProperty.get('.add-property-link').trigger('click');
+  await newProperty.get('input').setValue(name);
+  await newProperty.get('form').trigger('submit');
+
+  if (value !== '') {
+    const upsert = component.get('.actor-properties-upsert');
+    await upsert.get('.entity-update-row:last-child textarea').setValue(value);
+  }
 };
 
 

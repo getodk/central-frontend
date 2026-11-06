@@ -5,7 +5,6 @@ import type {
   AnyViolation,
   ConditionSatisfied,
   ConditionValidation,
-  ConditionViolation,
   ValidationCondition,
 } from '../../../client/validation.ts';
 import type { ValidationContext } from '../../../instance/internal-api/ValidationContext.ts';
@@ -102,13 +101,10 @@ const createRequiredValidation = (
   });
 };
 
-type OptionalViolation<Condition extends ValidationCondition> =
-  Accessor<ConditionViolation<Condition> | null>;
-
 const createComputedViolation = <Condition extends ValidationCondition>(
   scope: ReactiveScope,
   validateCondition: ComputedConditionValidation<Condition>
-): OptionalViolation<Condition> => {
+): Accessor<AnyViolation | null> => {
   return scope.runTask(() => {
     return createMemo(() => {
       const validation = validateCondition();

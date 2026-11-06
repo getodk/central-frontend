@@ -9,7 +9,7 @@
 
 <script setup>
 import { computed, ref, useId } from 'vue';
-import { computePosition } from '@floating-ui/dom';
+import { computePosition, flip, shift } from '@floating-ui/dom';
 
 import useEventListener from '../composables/event-listener';
 
@@ -54,7 +54,8 @@ const updatePosition = async () => {
   if (triggerEl == null) return;
 
   const { x, y } = await computePosition(triggerEl, menu.value, {
-    placement: props.placement
+    placement: props.placement,
+    middleware: [flip(), shift({ padding: 8 })]
   });
 
   menuStyle.value = {

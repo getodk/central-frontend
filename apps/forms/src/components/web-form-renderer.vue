@@ -3,7 +3,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { OdkWebForm, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
 import { type MonolithicInstancePayload } from '@getodk/xforms-engine';
-import { queryString, type Form } from '../utils/api';
+import { postPrimaryInstance, uploadAttachment, getFormAttachment, type Form } from '../utils/api';
 import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
 import { Translation } from 'vue-i18n'
@@ -11,6 +11,9 @@ import Location from '../utils/location';
 import { getDeviceId } from '../utils/device-id';
 import { hideSpinner } from '../utils/spinner';
 import { deleteLastSaved, getLastSaved, setLastSaved } from '../utils/last-saved';
+import { hasSubmitted, setSubmitted } from '../utils/once-store';
+import { setLocale } from '../i18n';
+
 defineOptions({
   name: 'WebFormRenderer'
 });
@@ -22,7 +25,7 @@ export interface WebFormsRendererProps {
   instanceId?: string | null;
   submissionAttachments?: string[] | null;
   defaultParameters?: Record<string, string>;
-  st?: string | null
+  st?: string | null;
 }
 
 const props = defineProps<WebFormsRendererProps>();
@@ -32,68 +35,25 @@ interface SubmissionData {
   attachments: File[];
 }
 
-interface PostPrimaryInstanceParams {
-  st: string | undefined;
-  deviceID?: string | undefined;
-}
-
-let clearForm:Function;
+let clearForm: Function;
 let submissionData: SubmissionData;
 
 const submissionResult:any = {};
 const inited = ref(false);
 const isEdit = computed(() => props.actionType === 'edit');
 const isPublicLink = computed(() => props.actionType === 'public-link');
-const draftPath = computed(() => props.form.draft ? '/draft' : '');
 const lastSavedXml = ref<string | undefined>();
 
 const deviceID = getDeviceId();
 
 const visibleModal = ref();
 
-const withToken = (url) => `${url}${queryString({ st: props.st })}`;
-
 const getAttachment = (requestUrl: URL) => {
-  const encodedName = encodeURIComponent(requestUrl.pathname.split('/').pop()!);
-  const url = withToken(`/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath.value}/attachments/${encodedName}`);
-  return fetch(url);
+  const fileName = requestUrl.pathname.split('/').pop()!;
+  return getFormAttachment(props.form, fileName, props.st);
 };
 
-const postPrimaryInstance = async (file:File) => {
-  let url: string;
-  let method: string;
-  let params: PostPrimaryInstanceParams = {
-    st: props.st ?? undefined
-  }
-  if (isEdit.value) {
-    url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}/submissions/${props.instanceId}`;
-    method = 'PUT';
-  } else {
-    params.deviceID = deviceID;
-    url = `/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath.value}/submissions`;
-    method = 'POST';
-  }
-  url += queryString(params);
-  const headers = {
-    'Content-Type': 'text/xml',
-    'odk-client': `odk-web-forms/${__WEB_FORMS_VERSION__}`,
-    'Accept': 'application/json, text/plain, */*',
-    'X-Requested-With': 'XMLHttpRequest'
-  };
-  try {
-    const response = await fetch(url, { body: file, headers, method });
-    if (response.ok) {
-      const data = await response.json();
-      return { success: true, data };
-    }
-    const data = await response.json();
-    return { success: false, data: { response: { data } } };
-  } catch (error) {
-    return { success: false, data: error };
-  }
-};
-
-const isProblem = (data:any) => {
+const isProblem = (data: any) => {
   return data != null &&
     typeof data === 'object' &&
     typeof data.code === 'number' &&
@@ -107,9 +67,7 @@ const submissionPath = () => {
 };
 
 const isSessionTimeout = (error) => {
-  return error?.response &&
-    isProblem(error.response.data) &&
-    error.response.data.code === 401.2;
+  return isProblem(error) && error.code === 401.2;
 }
 
 const getErrorMessage = (data) => {
@@ -135,8 +93,8 @@ const handleResult = () => {
   // Success handler
   if (submissionResult.primaryInstanceResult.success && attachmentResultArr.every(r => r.success)) {
 
-    clearForm();
-    
+    clearForm(props.form.once ? {} : { next: POST_SUBMIT__NEW_INSTANCE });
+
     if (isPublicLink.value) {
       visibleModal.value = { type: 'thankYouModal', hideable: false };
     } else if (isEdit.value) {
@@ -173,28 +131,6 @@ const handleResult = () => {
   }
 };
 
-const uploadAttachment = async (attachment: File, instanceId: string) => {
-  const encodedInstanceId = encodeURIComponent(instanceId);
-  const encodedName = encodeURIComponent(attachment.name);
-
-  const url = withToken(`/v1/projects/${props.form.projectId}/forms/${props.form.xmlFormId}${draftPath.value}/submissions/${encodedInstanceId}/attachments/${encodedName}`);
-
-  let result;
-  try {
-    const headers = {
-      'Content-Type': attachment.type,
-      'X-Requested-With': 'XMLHttpRequest'
-    };
-    const response = await fetch(url, { body: attachment, headers, method: 'POST' });
-    const data = await response.json();
-    result = { success: response.ok, data: { response: { data } } };
-  } catch (error) {
-    result = { success: false, data: { response: error } };
-  }
-
-  return { name: attachment.name, result };
-};
-
 const submitData = async () => {
   visibleModal.value = { type: 'sendingDataModal', hideable: false };
 
@@ -202,14 +138,28 @@ const submitData = async () => {
   const attachments = submissionData.attachments;
 
   if (!submissionResult.primaryInstanceResult.success) {
-    submissionResult.primaryInstanceResult = await postPrimaryInstance(instanceFile);
+    submissionResult.primaryInstanceResult = await postPrimaryInstance({
+      form: props.form,
+      file: instanceFile,
+      instanceId: props.instanceId ?? null,
+      st: props.st ?? null,
+      deviceID: deviceID ?? null,
+    });
+    if (submissionResult.primaryInstanceResult.success && props.form.once && props.form.enketoOnceId) {
+      setSubmitted(props.form.enketoOnceId);
+    }
   }
 
   if (submissionResult.primaryInstanceResult.success) {
     const instanceId = submissionResult.primaryInstanceResult.data.instanceId;
     const attachmentRequests = attachments
-      .filter(a => !submissionResult.attachmentResult.get(a.name).success)
-      .map(a => uploadAttachment(a, instanceId));
+      .filter(file => !submissionResult.attachmentResult.get(file.name).success)
+      .map(file => uploadAttachment({
+        form: props.form,
+        file,
+        instanceId,
+        st: props.st ?? null,
+      }));
     const attachmentResult = await Promise.all(attachmentRequests);
     attachmentResult.forEach(r => {
       submissionResult.attachmentResult.set(r.name, r.result);
@@ -218,7 +168,7 @@ const submitData = async () => {
   handleResult();
 };
 
-const initializeSubmissionState = (data:SubmissionData, clearFormCallback:Function) => {
+const initializeSubmissionState = (data: SubmissionData) => {
   submissionData = data;
 
   submissionResult.primaryInstanceResult = {
@@ -231,18 +181,18 @@ const initializeSubmissionState = (data:SubmissionData, clearFormCallback:Functi
       success: false
     });
   });
-
-  clearForm = () => {
-    clearFormCallback({ next: POST_SUBMIT__NEW_INSTANCE });
-  };
 };
 
 const webFormLoaded = () => {
   hideSpinner();
 };
 
-const updateLastSaved = (hasLastSaved) => {
-  if (!isEdit.value && !props.form.draft && submissionResult.primaryInstanceResult.success) {
+const updateLastSaved = (hasLastSaved: boolean) => {
+  if (!isEdit.value
+    && !props.form.draft
+    && submissionResult.primaryInstanceResult.success
+    && !props.form.once
+  ) {
     if (hasLastSaved) {
       setLastSaved(props.form.projectId, props.form.xmlFormId, submissionData.instanceFile);
     } else {
@@ -267,7 +217,13 @@ const handleSubmit = async (
     // hence this branch should never execute.
     return;
   }
-  initializeSubmissionState(data as unknown as SubmissionData, clearFormCallback);
+  if (alreadySubmittedOnce()) {
+    // The user has already submitted a single submission form - should not get here.
+    return;
+  }
+  initializeSubmissionState(data as unknown as SubmissionData);
+  clearForm = clearFormCallback;
+
   await submitData();
   updateLastSaved(hasLastSaved);
 };
@@ -296,11 +252,16 @@ const editInstanceOptions = computed(() => {
   return null;
 });
 
-const closeWindow = () => {
-  window.close();
+const alreadySubmittedOnce = () => {
+  return props.form.once && props.form.enketoOnceId && hasSubmitted(props.form.enketoOnceId);
 };
 
 onMounted(async () => {
+  if (alreadySubmittedOnce()) {
+    visibleModal.value = { type: 'thankYouModal', hideable: false };
+    webFormLoaded(); // hide the spinner
+    return;
+  }
   if (!isEdit.value && !props.form.draft) {
     lastSavedXml.value = await getLastSaved(props.form.projectId, props.form.xmlFormId);
   }
@@ -325,6 +286,7 @@ onMounted(async () => {
     :instance-defaults="defaultParameters"
     :last-saved-xml="lastSavedXml"
     @loaded="webFormLoaded"
+    @languageSelected="setLocale"
     @submit="handleSubmit"/>
 
   <Dialog modal :visible="!!visibleModal" :draggable="false" :closable="visibleModal?.hideable" @update:visible="visibleModal = null">
@@ -357,7 +319,6 @@ onMounted(async () => {
     </template>
     <template #footer>
       <template v-if="visibleModal.type === 'submissionModal'">
-        <Button type="button" @click="closeWindow()" variant="text">{{ $t('action.close') }}</Button>
         <Button type="button" @click="visibleModal = null">{{ $t('submissionModal.action.fillOutAgain') }}</Button>
       </template>
       <!-- Any type of error while sending attachments -->

@@ -106,12 +106,6 @@ export default (container, createResource) => {
       // it here.
       if (!('accessFilter' in data)) Object.assign(data, { accessFilter: null });
 
-      if (data.properties != null) {
-        data.propertyMap = new Map();
-        for (const property of data.properties)
-          data.propertyMap.set(property.name, property);
-      }
-
       return data;
     };
     /* eslint-enable no-param-reassign */
@@ -125,6 +119,10 @@ export default (container, createResource) => {
       replaceData: (data) => {
         Object.assign(dataset.data, transformData(data));
       },
+      propertyMap: computeIfExists(() => dataset.properties.reduce(
+        (map, property) => map.set(property.name, property),
+        new Map()
+      )),
       hasGeometry: computeIfExists(() =>
         dataset.properties.some(({ name }) => name === 'geometry'))
     };

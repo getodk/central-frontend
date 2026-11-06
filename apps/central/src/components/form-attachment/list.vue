@@ -318,10 +318,12 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../../assets/scss/variables';
+
 #form-attachment-list-upload-button {
   margin-right: 5px;
 
-  + span { color: #999; }
+  + span { color: $color-icon; }
 }
 </style>
 
@@ -364,6 +366,9 @@ export default {
     }
   },
   "de": {
+    "action": {
+      "upload": "Dateien auswählen"
+    },
     "problem": {
       "noneUploaded": "{message} Es wurden keine Dateien erfolgreich hochgeladen.",
       "someUploaded": "{message} Nur {uploaded} von {total} Dateien wurde erfolgreich hochgeladen. | {message} Nur {uploaded} von {total} Dateien wurden erfolgreich hochgeladen."
@@ -374,6 +379,9 @@ export default {
     }
   },
   "es": {
+    "action": {
+      "upload": "elegir archivos"
+    },
     "problem": {
       "noneUploaded": "{message} No se cargaron archivos correctamente",
       "someUploaded": "{message} Solo {uploaded} de {total} archivos se cargó correctamente. | {message} Solo {uploaded} de {total} archivos se cargaron correctamente. | {message} Solo {uploaded} de {total} archivos se cargaron correctamente."
@@ -407,6 +415,9 @@ export default {
     }
   },
   "it": {
+    "action": {
+      "upload": "scegli files"
+    },
     "problem": {
       "noneUploaded": "{message} Nessun file è stato caricato correttamente.",
       "someUploaded": "{message} Solamente {uploaded} su {total} files è stato caricato con successo | {message} Solamente {uploaded} su {total} files sono stati caricati con successo | {message} Solamente {uploaded} su {total} files sono stati caricati con successo"

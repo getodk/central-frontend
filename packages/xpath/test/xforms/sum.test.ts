@@ -65,6 +65,20 @@ describe('#sum()', () => {
     testContext.assertNumberValue('sum(/root/item)', 100);
   });
 
+  it('sum of decimals', () => {
+    testContext = createXFormsTestContext(`
+      <root id="root">
+        <item>-10.6</item>
+        <item>11,3</item>
+        <item>99.2</item>
+      </root>`);
+
+    const contextNode = testContext.document.getElementById('root');
+
+    testContext.assertNumberValue('sum(*)', 99.9, { contextNode });
+    testContext.assertNumberValue('sum(/root/item)', 99.9);
+  });
+
   it('sum trims string input', () => {
     testContext = createXFormsTestContext(`
       <root id="root">

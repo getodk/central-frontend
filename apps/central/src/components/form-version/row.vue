@@ -98,7 +98,8 @@ defineEmits(['view-xml']);
 <i18n>
 {
   "de": {
-    "current": "Aktuell veröffentlichte Version"
+    "current": "Aktuell veröffentlichte Version",
+    "notes": "Anmerkungen: {notes}"
   },
   "es": {
     "current": "Versión actualmente publicada"
@@ -108,7 +109,8 @@ defineEmits(['view-xml']);
     "notes": "Notes: {notes}"
   },
   "it": {
-    "current": "Versione corrente pubblicata"
+    "current": "Versione corrente pubblicata",
+    "notes": "Note: {notes}"
   },
   "pt": {
     "current": "Versão publicada atualmente"

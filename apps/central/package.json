@@ -1,6 +1,6 @@
 {
   "name": "@getodk/central-frontend",
-  "version": "2026.2.0",
+  "version": "2026.3.1",
   "private": true,
   "scripts": {
     "eslint": "eslint --max-warnings 0 --cache --ext .js,.vue src/ test/ bin/ *.js",
@@ -10,7 +10,8 @@
     "test": "./test/run.sh",
     "transifex:destructure": "node bin/transifex/destructure.js",
     "transifex:fix": "node bin/transifex/restructure.js > transifex/strings_en.json",
-    "transifex:lint": "./bin/transifex/lint.sh"
+    "transifex:lint": "./bin/transifex/lint.sh",
+    "transifex:pull": "cd ../.. && tx pull -r central.strings -f --mode translator"
   },
   "dependencies": {
     "@floating-ui/dom": "^1.1.0",
@@ -56,6 +57,7 @@
     "sass": "~1",
     "sass-loader": "^13.2.0",
     "sinon": "~9",
-    "util": "^0.12.5"
+    "util": "^0.12.5",
+    "vite-font-extractor-plugin": "^3.1.0"
   }
 }

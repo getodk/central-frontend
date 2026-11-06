@@ -59,7 +59,7 @@ export const mockResponse = {
   // returned, with the object as the response data. (In that case, the response
   // will not have a `config` property.)
   of: (responseOrData) => {
-    if (typeof responseOrData === 'object' &&
+    if (typeof responseOrData === 'object' && responseOrData != null &&
       typeof responseOrData.status === 'number' && responseOrData.data != null)
       return responseOrData;
     return { status: 200, data: responseOrData };

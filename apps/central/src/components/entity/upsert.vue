@@ -1,5 +1,5 @@
 <template>
-  <modal class="entity-upsert" :state="state" :hideable="!awaitingResponse"
+  <modal class="entity-upsert" :state="state" :hideable="!awaitingResponse" :persistent="true"
     size="large" backdrop @shown="afterShown" @hide="$emit('hide')">
     <template #title>{{ create ? $t('titleCreate') : $t('title', currentVersion) }}</template>
     <template #body>

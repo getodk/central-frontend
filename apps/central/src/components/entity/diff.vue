@@ -50,11 +50,16 @@ $border-width: 1px;
   &.hard-conflict, &.soft-conflict {
     border-bottom: $border-width solid transparent;
     border-top: 12px solid transparent;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
+    border-radius: 6px;
+    overflow: hidden;
+
+    // No border rounding for the table because container has it
+    .entity-diff-table {
+      border-radius: 0;
+    }
   }
   &.hard-conflict { border-color: $color-danger; }
-  &.soft-conflict { border-color: $color-warning-dark; }
+  &.soft-conflict { border-color: $color-warning; }
 
   .empty-table-message { margin-left: $hpadding-feed-entry; }
 }
@@ -67,7 +72,6 @@ $tabs-indent: 3px;
 .entity-diff-head {
   $hpadding: $hpadding-feed-entry - $border-width;
   padding-left: $hpadding;
-  padding-right: $hpadding;
 
   // By itself, -$hpadding-nav-tab would align the text of the first tab with
   // the text above it. However, we want it to be a little more indented than
@@ -76,6 +80,7 @@ $tabs-indent: 3px;
 }
 
 .entity-diff-table {
+  border-radius: 6px;
   // Align the text of the first column with the text of the first tab.
   $padding-left: $hpadding-feed-entry - $border-width + $tabs-indent;
   col:nth-child(1) {

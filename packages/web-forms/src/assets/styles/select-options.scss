@@ -16,7 +16,6 @@
   &:has(.p-radiobutton-input:hover),
   &:has(.p-radiobutton-input:focus-visible) {
     outline-color: var(--odk-primary-border-color);
-    background-color: var(--odk-primary-light-background-color);
   }
 
   :deep(.p-radiobutton:not(.p-disabled):has(.p-radiobutton-input:focus-visible)),

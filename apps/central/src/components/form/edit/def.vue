@@ -33,7 +33,7 @@ except according to the terms contained in the LICENSE file.
     </template>
   </form-edit-section>
 
-  <form-version-view-xml v-bind="viewXml" @hide="viewXml.hide()"/>
+  <xml-viewer v-bind="viewXml" :xml="formVersionXml.data" :loading="formVersionXml.awaitingResponse" @hide="viewXml.hide()"/>
 </template>
 
 <script setup>
@@ -54,14 +54,14 @@ defineOptions({
 });
 
 const emits = defineEmits(['afterUpload']);
-const { form, resourceView } = useRequestData();
+const { form, formVersionXml, resourceView } = useRequestData();
 const formDraft = resourceView('formDraft', (data) => data.get());
 
 const changed = computed(() =>
   form.dataExists && form.publishedAt != null && formDraft.hash !== form.hash);
 
-const FormVersionViewXml = defineAsyncComponent(loadAsync('FormVersionViewXml'));
-const viewXml = modalData('FormVersionViewXml');
+const XmlViewer = defineAsyncComponent(loadAsync('XmlViewer'));
+const viewXml = modalData('XmlViewer');
 
 const afterUpload = () => {
   emits('afterUpload');
@@ -90,10 +90,12 @@ const afterUpload = () => {
 <i18n>
 {
   "de": {
+    "title": "Entwurfsversion: {version}",
     "subtitle": "Hochgeladen",
     "changed": "Geändert gegenüber der veröffentlichten Version"
   },
   "es": {
+    "title": "Versión borrador: {version}",
     "subtitle": "Subido",
     "changed": "Cambiado respecto a la versión publicada"
   },
@@ -103,6 +105,7 @@ const afterUpload = () => {
     "changed": "Différente de la version publiée"
   },
   "it": {
+    "title": "Versione bozza:{version}",
     "subtitle": "Caricati",
     "changed": "Modificato rispetto alla versione pubblicata"
   },

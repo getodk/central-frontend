@@ -1,27 +1,23 @@
-import { nextTick } from 'vue';
-
 import EntityUploadAlert from '../../../../src/components/entity/upload/alert.vue';
+import EntityUploadPropertyList from '../../../../src/components/entity/upload/property-list.vue';
 import EntityUploadWarnings from '../../../../src/components/entity/upload/warnings.vue';
 
 import { mergeMountOptions, mount } from '../../../util/lifecycle';
 
 const mountComponent = (options) =>
   mount(EntityUploadWarnings, mergeMountOptions(options, {
-    props: { filename: 'my_data.csv' }
+    props: { filename: 'my_data.csv', count: 1 }
   }));
 
 describe('EntityUploadWarnings', () => {
-  it('shows a warning for system properties', async () => {
+  it('shows a warning for system properties', () => {
     const component = mountComponent({
       props: { systemProperties: ['__id', '__foo'] }
     });
-    // Wait for I18nList to render.
-    await nextTick();
-
-    const p = component.getComponent(EntityUploadAlert).findAll('p');
-    p.length.should.equal(3);
-    p[0].text().should.startWith('System properties can’t be set');
-    p[2].text().should.equal('__id, __foo');
+    const warning = component.getComponent(EntityUploadAlert);
+    warning.get('p').text().should.startWith('System properties can’t be set');
+    const list = component.getComponent(EntityUploadPropertyList);
+    expect(list.props().names).to.eql(['__id', '__foo']);
   });
 
   it('shows a warning for columns that differ from properties on letter case', async () => {
@@ -52,30 +48,46 @@ describe('EntityUploadWarnings', () => {
     await table.get('td').should.have.textTooltip();
   });
 
-  it('shows a warning for columns that are invalid property names', async () => {
+  it('shows a warning for columns that are invalid property names', () => {
     const component = mountComponent({
       props: { invalidProperties: ['First name', 'phone#'] }
     });
-    // Wait for I18nList to render.
-    await nextTick();
-
-    const p = component.getComponent(EntityUploadAlert).findAll('p');
-    p.length.should.equal(3);
-    p[0].text().should.equal('These columns are not valid property names');
-    p[2].text().should.equal('First name, phone#');
+    const warning = component.getComponent(EntityUploadAlert);
+    const title = warning.get('p').text();
+    title.should.startWith('These columns are not valid property names');
+    const list = component.getComponent(EntityUploadPropertyList);
+    expect(list.props().names).to.eql(['First name', 'phone#']);
   });
 
-  it('shows a warning for missing properties', async () => {
+  it('shows a warning for missing properties', () => {
     const component = mountComponent({
       props: { missingProperties: ['foo', 'bar'] }
     });
-    // Wait for I18nList to render.
-    await nextTick();
+    const warning = component.getComponent(EntityUploadAlert);
+    warning.get('p').text().should.equal('Properties not found in file');
+    const list = component.getComponent(EntityUploadPropertyList);
+    expect(list.props().names).to.eql(['foo', 'bar']);
+  });
 
-    const p = component.getComponent(EntityUploadAlert).findAll('p');
-    p.length.should.equal(2);
-    p[0].text().should.startWith('These properties are not included in your file');
-    p[1].text().should.equal('foo, bar');
+  describe('unknown (extra) properties', () => {
+    it('shows a warning', () => {
+      const component = mountComponent({
+        props: { extraProperties: ['foo', 'bar'] }
+      });
+      const p = component.getComponent(EntityUploadAlert).findAll('p');
+      p.length.should.equal(2);
+      p[0].text().should.equal('These columns don’t match existing properties');
+      p[1].text().should.startWith('Select which ones to create');
+    });
+
+    it('shows different text if there is an error', () => {
+      const component = mountComponent({
+        props: { extraProperties: ['foo', 'bar'], hasError: true }
+      });
+      const warning = component.getComponent(EntityUploadAlert);
+      const text = warning.get('p:nth-child(2)').text();
+      text.should.startWith('Once you’ve fixed all errors, you’ll be able to select');
+    });
   });
 
   it('shows a warning for ragged rows', () => {
@@ -98,7 +110,7 @@ describe('EntityUploadWarnings', () => {
 
   it('shows multiple warnings', () => {
     const component = mountComponent({
-      props: { raggedRows: [[1, 2]], largeCell: 3 }
+      props: { count: 2, raggedRows: [[1, 2]], largeCell: 3 }
     });
     const warnings = component.findAllComponents(EntityUploadAlert);
     warnings.length.should.equal(2);
@@ -109,7 +121,7 @@ describe('EntityUploadWarnings', () => {
 
   it('emits a rows event after a row range is clicked', async () => {
     const component = mountComponent({
-      props: { raggedRows: [[1, 2]], largeCell: 3 }
+      props: { count: 2, raggedRows: [[1, 2]], largeCell: 3 }
     });
     const warnings = component.findAllComponents(EntityUploadAlert);
     warnings.length.should.equal(2);

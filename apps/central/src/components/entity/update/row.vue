@@ -74,7 +74,7 @@ defineExpose({ textarea });
   $vpadding: 4px;
   .label-cell, .new-value { padding-bottom: $vpadding; }
   .label-cell {
-    padding-left: 0px;
+    padding-left: 15px;
     padding-right: 15px;
     padding-top: #{$vpadding + $padding-top-form-control};
   }
@@ -84,7 +84,7 @@ defineExpose({ textarea });
   }
 
     .value-changed {
-      box-shadow: 0 0 0 3px #C8E4EE;
+      box-shadow: 0 0 0 3px $blue-50;
     }
 
   .label-cell { @include text-overflow-ellipsis; }

@@ -28,7 +28,12 @@ export default (container, {
   scrollBehavior = createScrollBehavior()
 } = {}) => {
   const routes = createRoutes(container);
-  const router = createRouter({ history, routes, scrollBehavior });
+  const router = createRouter({
+    history,
+    routes,
+    scrollBehavior,
+    sensitive: true
+  });
   const { requestData, toast, redAlert, unsavedChanges, config } = container;
   const { session } = requestData;
 

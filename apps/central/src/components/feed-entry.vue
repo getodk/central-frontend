@@ -39,7 +39,6 @@ defineProps({
 $margin-bottom: 20px;
 .feed-entry {
   @include clearfix;
-  box-shadow: 0 7px 18px rgba(0, 0, 0, 0.05);
   margin-bottom: $margin-bottom;
 }
 
@@ -48,12 +47,12 @@ $margin-bottom: 20px;
 }
 
 .feed-entry-heading {
-  background-color: #fff;
+  background-color: $color-surface;
 
   time {
     float: right;
     font-size: 13px;
-    color: #666;
+    color: $color-text-secondary;
     line-height: 25px;
   }
 }

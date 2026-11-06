@@ -11,6 +11,20 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr :class="htmlClass">
+    <td class="col-actions">
+      <div class="btn-group">
+        <button v-if="publicLink.token != null && showEdit" type="button"
+          class="edit-button btn btn-default"
+          @click="$emit('edit', publicLink)">
+          <span class="icon-pencil"></span>{{ $t('action.edit') }}
+        </button>
+        <button v-if="publicLink.token != null" type="button"
+          class="revoke-button btn btn-default"
+          @click="$emit('revoke', publicLink)">
+          <span class="icon-times-circle"></span>{{ $t('action.revoke') }}
+        </button>
+      </div>
+    </td>
     <td class="display-name">
       <span v-tooltip.text>{{ publicLink.displayName }}</span>
     </td>
@@ -20,7 +34,16 @@ except according to the terms contained in the LICENSE file.
     <td class="access-link">
       <template v-if="publicLink.token == null">{{ $t('revoked') }}</template>
       <template v-else-if="form.dataExists">
-        <selectable v-if="enketoId != null">{{ url }}</selectable>
+        <template v-if="enketoId != null">
+          <button type="button" class="btn btn-link" @click="copyToClipboard(url)">
+            <span class="icon-content-copy"></span>
+            <span>{{ $t('action.copyLink') }}</span>
+          </button>
+          <a :href="url" target="_blank">
+            <span class="icon-external-link-square"></span>
+            <span>{{ $t('action.openInNewTab') }}</span>
+          </a>
+        </template>
         <template v-else>
           <span class="unavailable" aria-hidden="true" v-tooltip.sr-only>
             <span>{{ $t('unavailable.text') }}</span>
@@ -30,23 +53,9 @@ except according to the terms contained in the LICENSE file.
         </template>
       </template>
     </td>
-    <td class="created-at-and-actions">
+    <td class="created-at">
       <div>
         <date-time :iso="publicLink.createdAt"/>
-      </div>
-      <div class="btn-group">
-        <button v-if="publicLink.token != null && showEdit" type="button"
-          class="edit-button btn btn-default"
-          :aria-label="$t('action.edit')" v-tooltip.aria-label
-          @click="$emit('edit', publicLink)">
-          <span class="icon-pencil"></span>
-        </button>
-        <button v-if="publicLink.token != null" type="button"
-          class="revoke-button btn btn-default"
-          :aria-label="$t('action.revoke')" v-tooltip.aria-label
-          @click="$emit('revoke', publicLink)">
-          <span class="icon-times-circle"></span>
-        </button>
       </div>
     </td>
   </tr>
@@ -54,13 +63,13 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import DateTime from '../date-time.vue';
-import Selectable from '../selectable.vue';
 
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'PublicLinkRow',
-  components: { DateTime, Selectable },
+  components: { DateTime },
+  inject: ['toast'],
   props: {
     publicLink: {
       type: Object,
@@ -90,6 +99,12 @@ export default {
       const encodedId = encodeURIComponent(this.enketoId);
       return `${window.location.origin}/f/${encodedId}?st=${this.publicLink.token}`;
     }
+  },
+  methods: {
+    async copyToClipboard(url) {
+      await navigator.clipboard.writeText(url);
+      this.toast.show(this.$t('alert.urlCopied'));
+    }
   }
 };
 </script>
@@ -99,7 +114,6 @@ export default {
 @import '../../assets/scss/variables';
 
 .public-link-row {
-  .table tbody & td { vertical-align: middle; }
 
   .display-name {
     @include text-overflow-ellipsis;
@@ -108,16 +122,12 @@ export default {
 
   .icon-question-circle { margin-left: 5px; }
 
-  .created-at-and-actions {
-    padding-top: 4px;
-    padding-bottom: 4px;
-    min-width: 120px;
+  .access-link a{
+    margin-left: 15px;
+    display: inline-block;
+    vertical-align: middle;
   }
 
-  .btn-group {
-    @include icon-btn-group;
-    .icon-times-circle { color: $color-danger; }
-  }
 }
 </style>
 
@@ -125,8 +135,11 @@ export default {
 {
   "en": {
     "action": {
-      "edit": "Edit Public Access Link",
-      "revoke": "Revoke"
+      "copyLink": "Copy link",
+      "openInNewTab": "Open in new tab"
+    },
+    "alert": {
+      "urlCopied": "URL copied."
     },
     // This text is shown for a Public Access Link that has been revoked. The
     // text appears on its own and is not part of a longer sentence.
@@ -155,6 +168,7 @@ export default {
   },
   "de": {
     "action": {
+      "edit": "Öffentlichen Zugangslink bearbeiten",
       "revoke": "Widerrufen"
     },
     "revoked": "Widerrufen",
@@ -196,6 +210,7 @@ export default {
   },
   "it": {
     "action": {
+      "edit": "Modifica il Link con accesso pubblico",
       "revoke": "Revocare"
     },
     "revoked": "Revocato",

@@ -10,7 +10,7 @@ import Location from '../utils/location';
 import { hideSpinner } from '../utils/spinner';
 
 const getCookieValue = (key, doc) => {
-  const cookie = doc.cookie.split(';')
+  const cookie = doc?.cookie.split(';')
     .map(cookie => cookie.trim())
     .find(cookie => cookie.startsWith(`${key}=`));
   return decodeURIComponent(cookie?.split('=')[1] || '');
@@ -101,7 +101,7 @@ const setEnketoSrc = () => {
 
   // we no longer render Enketo for Edit Submission from central-frontend.
   const enketoId = props.enketoId ?? props.form.enketoId;
-  if (enketoId === props.form.enketoOnceId) {
+  if (props.form.once) {
     lastSubmitted(enketoId)
       .then(result => {
         if (result) {

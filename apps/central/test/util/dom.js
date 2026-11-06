@@ -1,3 +1,24 @@
+// Returns `true` if the element is disabled in the standard way according to
+// the element type. Returns `false` if the element is not disabled, or if it is
+// disabled, but not in the standard way (e.g., via the `disabled` attribute
+// when aria-disabled was expected).
+export const isDisabled = (element) => {
+  const { tagName } = element;
+  if (tagName === 'BUTTON' || tagName === 'TEXTAREA')
+    return element.getAttribute('aria-disabled') === 'true';
+  if (tagName === 'FIELDSET')
+    return element.disabled;
+  if (tagName === 'A')
+    return element.classList.contains('disabled');
+  if (tagName === 'INPUT') {
+    const { type } = element;
+    return type === 'radio' || type === 'checkbox'
+      ? element.disabled
+      : element.getAttribute('aria-disabled') === 'true';
+  }
+  throw new Error(`unexpected ${tagName} element`);
+};
+
 // Returns the text in a Vue Test Utils wrapper, excluding text in elements
 // selected by `selector`.
 export const textWithout = (wrapper, selector) => {

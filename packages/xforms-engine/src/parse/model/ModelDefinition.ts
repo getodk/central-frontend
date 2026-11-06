@@ -12,6 +12,7 @@ import { nodeDefinitionMap } from './nodeDefinitionMap.ts';
 import { RootDefinition } from './RootDefinition.ts';
 import { SubmissionDefinition } from './SubmissionDefinition.ts';
 import { TranslationDefinitionMap } from './TranslationDefinitionMap.ts';
+import { rejectComputationCycles } from './rejectComputationCycles.ts';
 
 type XformsRevalidateListener = () => void;
 
@@ -37,6 +38,7 @@ export class ModelDefinition {
     });
     this.root = new RootDefinition(form, this, submission, form.body.classes);
     this.nodes = nodeDefinitionMap(this.root);
+    rejectComputationCycles(this.binds, this.nodes);
     this.itextTranslations = ItextTranslationsDefinition.from(form.xformDOM);
     this.itextElements = new TranslationDefinitionMap(form.xformDOM.itextTranslationElements);
     this.xformsRevalidateListeners = new Map();

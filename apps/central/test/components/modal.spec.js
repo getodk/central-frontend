@@ -138,6 +138,17 @@ describe('Modal', () => {
     });
   });
 
+  describe('focus', () => {
+    it('focuses the modal after it is shown', async () => {
+      const modal = mountComponent({
+        props: { state: true },
+        attachTo: document.body
+      });
+      await nextTick();
+      document.activeElement.should.equal(modal.get('.modal').element);
+    });
+  });
+
   describe('size prop', () => {
     it("adds the correct class if the prop is 'large'", () => {
       const modal = mountComponent({
@@ -191,6 +202,40 @@ describe('Modal', () => {
           modal.get('.modal').classes('has-scroll').should.be.true;
         });
       });
+    });
+  });
+
+  describe('hiding the modal', () => {
+    it('emits hide on ESC key by default', async () => {
+      const modal = mountComponent();
+      await modal.get('.modal').trigger('keydown.esc');
+      should.exist(modal.emitted().hide);
+    });
+
+    it('emits hide on click outside by default', async () => {
+      const modal = mountComponent();
+      const modalEl = modal.get('.modal');
+      await modalEl.trigger('mousedown');
+      await modalEl.trigger('click');
+      should.exist(modal.emitted().hide);
+    });
+
+    it('does not emit hide on ESC key when persistent is true', async () => {
+      const modal = mountComponent({
+        props: { persistent: true }
+      });
+      await modal.get('.modal').trigger('keydown.esc');
+      should.not.exist(modal.emitted().hide);
+    });
+
+    it('does not emit hide on click outside when persistent is true', async () => {
+      const modal = mountComponent({
+        props: { persistent: true }
+      });
+      const modalEl = modal.get('.modal');
+      await modalEl.trigger('mousedown');
+      await modalEl.trigger('click');
+      should.not.exist(modal.emitted().hide);
     });
   });
 });

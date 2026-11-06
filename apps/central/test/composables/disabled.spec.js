@@ -54,7 +54,7 @@ describe('useDisabled()', () => {
   it('disables an aria-disabled button for a click inside the button', () => {
     const [component, handler] = mountComponent(`<button type="button"
       aria-disabled="true" @click="handler">
-      <span class="icon-plus-circle"></span>
+      <span class="icon-plus"></span>
     </button>`);
     component.get('span').trigger('click');
     event.defaultPrevented.should.be.true;

@@ -9,8 +9,7 @@
   },
   "projectShow": {
     "tab": {
-      "formAccess": "Accès aux formulaires",
-      "customProperties": "Propriétés"
+      "formAccess": "Accès aux formulaires"
     }
   },
   "formHead": {
@@ -147,6 +146,7 @@
     }
   },
   "action": {
+    "add": "Ajouter",
     "cancel": "Annuler",
     "clear": "Effacer",
     "close": "Fermer",
@@ -198,7 +198,7 @@
     "name": "Nom",
     "newPassword": "Nouveau mot de passe",
     "oldPassword": "Ancien mot de passe",
-    "passphrase": "Phrase de passe",
+    "passphrase": "Mot de passe de chiffrement",
     "password": "Mot de passe",
     "passwordConfirm": "Nouveau mot de passe (confirmez)",
     "title": "Titre",

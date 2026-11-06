@@ -127,6 +127,7 @@ watch(
 	() => props.savedFeatureValue,
 	(newValue) => {
 		mapHandler.applySavedFeatureValue(newValue);
+		pointPlaced.value = !!mapHandler.getSavedFeatureValue()?.length;
 	}
 );
 

@@ -106,6 +106,17 @@ test.describe('ODK Web Forms', () => {
     await expect(page.getByRole('heading', { name: 'Successful' })).toBeVisible();
   });
 
+  test('restrict multiple submission for single submission public link', async ({ page }) => {
+    const singleSubPublicLink = await backendClient.createPublicLink(publishedForm.xmlFormId, true);
+    await page.goto(`${appUrl}/-/single/${publishedForm.enketoOnceId}?st=${singleSubPublicLink.token}`);
+    await expect(page.getByRole('heading', { name: publishedForm.name })).toBeVisible();
+    await page.getByLabel('First Name').fill('John Doe');
+    await page.getByRole('button', { name: 'send' }).click();
+    await expect(page.getByRole('heading', { name: 'Thank you' })).toBeVisible();
+    await page.reload();
+    await expect(page.getByRole('heading', { name: 'Thank you' })).toBeVisible();
+  });
+
   test('binds last-saved instance for multiple submissions', async ({ page }) => {
     const form = await backendClient.createForm(FORM_TEMPLATES.lastsaved);
     await login(page);
@@ -167,7 +178,7 @@ test.describe('ODK Web Forms', () => {
 
     await page.getByRole('link', { name: 'log out' }).click();
 
-    await expect(page.getByRole('heading', { name: 'Welcome to ODK Central' })).toBeVisible();
+    await expect(page.getByRole('alert').filter({ hasText: 'you have logged out successfully' })).toBeVisible();
 
     await page2.getByRole('button', { name: 'send' }).click();
 

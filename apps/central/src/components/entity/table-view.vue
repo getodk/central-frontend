@@ -10,8 +10,8 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <entity-table v-show="odataEntities.dataExists" ref="table"
-    v-model:all-selected="allSelected" :properties="dataset.properties"
+  <entity-table v-show="odataEntities.dataExists && odataEntities.value.length > 0" ref="table"
+    v-model:all-selected="allSelected" class="paginated-table" :properties="dataset.properties"
     :deleted="deleted" :awaiting-deleted-responses="awaitingResponses"
     v-on="reemitters"/>
   <odata-loading-message :state="odataEntities.initiallyLoading"
@@ -20,12 +20,14 @@ except according to the terms contained in the LICENSE file.
     :filter="filter != null || !!searchTerm"
     :total-count="dataset.dataExists ? dataset.entities : 0"/>
   <!-- @update:page is emitted on size change as well -->
-  <Pagination v-if="pagination.count > 0"
-    v-model:page="pagination.page" v-model:size="pagination.size"
-    :count="pagination.count" :size-options="pageSizeOptions"
-    :removed="pagination.removed"
-    :spinner="odataEntities.awaitingResponse"
-    @update:page="handlePageChange"/>
+  <teleport-if-exists v-if="pagination.count > 0" to=".pagination-container-left-side">
+    <Pagination
+      v-model:page="pagination.page" v-model:size="pagination.size"
+      :count="pagination.count" :size-options="pageSizeOptions"
+      :removed="pagination.removed"
+      :spinner="odataEntities.awaitingResponse"
+      @update:page="handlePageChange"/>
+  </teleport-if-exists>
 </template>
 
 <script setup>
@@ -34,6 +36,7 @@ import { computed, inject, reactive, useTemplateRef, watch } from 'vue';
 import EntityTable from './table.vue';
 import OdataLoadingMessage from '../odata-loading-message.vue';
 import Pagination from '../pagination.vue';
+import TeleportIfExists from '../teleport-if-exists.vue';
 import usePaginationQueryRef from '../../composables/pagination-query-ref';
 
 import { apiPaths } from '../../util/request';
@@ -47,6 +50,10 @@ const props = defineProps({
   deleted: Boolean,
   filter: String,
   searchTerm: String,
+  viewAs: {
+    type: Number,
+    default: null
+  },
   awaitingResponses: {
     type: Set,
     required: true
@@ -88,7 +95,8 @@ const fetchChunk = (clear, page = 0) => {
         $count: true,
         $filter: props.deleted ? '__system/deletedAt ne null' : props.filter,
         $search,
-        $orderby: '__system/createdAt desc'
+        $orderby: '__system/createdAt desc',
+        viewAs: props.viewAs ?? undefined
       }
     ),
     clear
@@ -115,7 +123,7 @@ const fetchChunk = (clear, page = 0) => {
 
 fetchChunk(true, pagination.page);
 
-watch([() => props.deleted, () => props.filter, () => props.searchTerm], () => {
+watch([() => props.deleted, () => props.filter, () => props.searchTerm, () => props.viewAs], () => {
   fetchChunk(true);
 });
 const handlePageChange = () => {

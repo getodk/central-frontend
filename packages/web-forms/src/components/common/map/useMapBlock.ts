@@ -528,6 +528,16 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
   };
 
   /**
+   * The form value is gone but the map still shows a feature, so remove it.
+   * Does nothing when the map already removed it itself.
+   */
+  const removeStaleSavedFeature = () => {
+    if (mapFeatures?.getSavedFeature()) {
+      discardSavedFeature();
+    }
+  };
+
+  /**
    * Applies a saved feature value to the map.
    * Multi-feature mode: looks it up in the collection.
    * Single-feature mode: applies external updates (defaults, setvalue). Skips when the value matches what's on the map
@@ -542,6 +552,7 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
     }
 
     if (!feature) {
+      removeStaleSavedFeature();
       return;
     }
 

@@ -1,6 +1,7 @@
 import type { UncontrolledRepeatDefinition } from '../../parse/model/RepeatDefinition.ts';
 import type { PageBoundary } from '../identity.ts';
 import type { RootNode } from '../RootNode.ts';
+import type { BlockingViolations } from '../validation.ts';
 import type { BaseRepeatRangeNode, BaseRepeatRangeNodeState } from './BaseRepeatRangeNode.ts';
 
 /**
@@ -24,6 +25,11 @@ export interface RepeatRangeUncontrolledNode extends BaseRepeatRangeNode {
   readonly definition: UncontrolledRepeatDefinition;
   readonly currentState: RepeatRangeUncontrolledState;
 
-  addInstances(afterIndex?: number, count?: number): RootNode;
+  /**
+   * Adds instances and navigates to the first new one, unless {@link BlockingViolations} block
+   * the add. Exception: a repeat inside a field-list never blocks, because adding there keeps
+   * the current page.
+   */
+  addInstances(afterIndex?: number, count?: number): BlockingViolations;
   removeInstances(startIndex: number, count?: number): RootNode;
 }

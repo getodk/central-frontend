@@ -5,6 +5,7 @@ import { computed, inject } from 'vue';
 import MarkdownBlock from './MarkdownBlock.vue';
 import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
 import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
+import { calculateVisibleHeight, DEFAULT_PRIMEVUE_ITEM_HEIGHT } from '@getodk/web-forms/lib/dropdown.ts';
 
 interface SearchableDropdownProps {
 	readonly question: SelectNode;
@@ -14,9 +15,7 @@ interface SearchableDropdownProps {
 const t: Translate = inject(TRANSLATE)!;
 const props = defineProps<SearchableDropdownProps>();
 
-const DEFAULT_PRIMEVUE_ITEM_HEIGHT = 38;
-
-defineEmits(['update:modelValue', 'change']);
+defineEmits(['change']);
 
 const options = computed(() => {
 	return props.question.currentState.valueOptions.map((option) => {
@@ -28,13 +27,8 @@ const options = computed(() => {
 	});
 });
 
-const virtualScrollerOptions = computed(() => {
-	if (props.question.currentState.valueOptions.length > 20) {
-		return { itemSize: DEFAULT_PRIMEVUE_ITEM_HEIGHT };
-	}
-	// remove virtual scroller for small selects so primevue knows
-	// what height to make the list container
-	return undefined;
+const calculatedScrollHeight = computed(() => {
+	return calculateVisibleHeight(props.question.currentState.valueOptions.length);
 });
 
 const selectedLabel = computed(() => {
@@ -45,10 +39,6 @@ const selectedLabel = computed(() => {
 	const option = props.question.getValueOption(value);
 	return option?.label.formatted;
 });
-
-const selectValue = (value: string) => {
-	props.question.selectValue(value);
-};
 </script>
 
 <template>
@@ -63,12 +53,14 @@ const selectValue = (value: string) => {
 		:options="options"
 		option-label="search"
 		option-value="value"
-		:virtual-scroller-options="virtualScrollerOptions"
-		@update:model-value="selectValue"
-		@change="$emit('change')"
+		:virtual-scroller-options="{ itemSize: DEFAULT_PRIMEVUE_ITEM_HEIGHT }"
+		:scroll-height="calculatedScrollHeight"
+		@change="$emit('change', $event.value)"
 	>
 		<template #option="slotProps">
-			<MarkdownBlock v-for="elem in slotProps.option.label" :key="elem.id" :elem="elem" />
+			<span>
+				<MarkdownBlock v-for="elem in slotProps.option.label" :key="elem.id" :elem="elem" />
+			</span>
 		</template>
 		<template #value>
 			<span v-if="!selectedLabel?.length" class="dropdown-placeholder">

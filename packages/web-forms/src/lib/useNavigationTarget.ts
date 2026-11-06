@@ -2,19 +2,39 @@ import type { RootNode } from '@getodk/xforms-engine';
 import { nextTick, watch } from 'vue';
 import { containerId } from '@getodk/web-forms/lib/format/ids.ts';
 
-const findFocusTarget = (
+const isDatepickerInput = (el: HTMLElement | null) => !!el?.matches('.p-datepicker-input');
+const hasErrorHighlight = (el: HTMLElement | null) => el?.closest('.highlight') != null;
+
+const findControl = (
   node: HTMLElement | null,
   container: HTMLElement | null
 ): HTMLElement | null => {
-  const FOCUSABLE =
-    ':is(button, input:not(.p-datepicker-input), textarea, [tabindex]:not([tabindex="-1"])):not(:disabled)';
+  const FOCUSABLE = ':is(button, input, textarea, [tabindex]:not([tabindex="-1"])):not(:disabled)';
   if (node?.matches(FOCUSABLE)) {
     return node;
   }
 
   // Some controls (radios, upload) don't carry the question id on their focusable element, so search for it.
-  const control = (container ?? node)?.querySelector<HTMLElement>(FOCUSABLE);
+  return (container ?? node)?.querySelector<HTMLElement>(FOCUSABLE) ?? null;
+};
+
+// Exported for tests
+export const findFocusTarget = (
+  node: HTMLElement | null,
+  container: HTMLElement | null
+): HTMLElement | null => {
+  const control = findControl(node, container);
+  // Focusing a datepicker opens the calendar; when the question has no validation error, focus the container instead.
+  if (isDatepickerInput(control) && !hasErrorHighlight(control)) {
+    return container;
+  }
   return control ?? container ?? node;
+};
+
+const getScrollPosition = (target: HTMLElement): ScrollLogicalPosition => {
+  const isTallerThanViewport =
+    target.getBoundingClientRect().height > document.documentElement.clientHeight;
+  return isTallerThanViewport ? 'start' : 'nearest';
 };
 
 const navigateTo = (nodeId: string) => {
@@ -26,7 +46,10 @@ const navigateTo = (nodeId: string) => {
   if (!scrollTarget) {
     return;
   }
-  scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  scrollTarget.scrollIntoView({
+    behavior: 'smooth',
+    block: getScrollPosition(scrollTarget),
+  });
 
   const focusTarget = findFocusTarget(node, container);
   // focusVisible is supported in modern Chrome, Firefox and Safari
@@ -34,7 +57,7 @@ const navigateTo = (nodeId: string) => {
   focusTarget?.focus({ preventScroll: true, focusVisible: true });
 };
 
-const navigateToFirstViolation = (root: RootNode | null) => {
+const navigateToFirstViolation = (root?: RootNode | null) => {
   if (!root) {
     return;
   }
@@ -50,18 +73,24 @@ const navigateToFirstViolation = (root: RootNode | null) => {
   });
 };
 
-export const useNavigationTarget = (getRoot: () => RootNode | null) => {
+const navigateToNode = (nodeId?: string | null) => {
+  if (!nodeId) {
+    return;
+  }
+  // Wait for the render cycle to settle
+  // focusing a still mounting question breaks popups like the datepicker.
+  void nextTick(() => navigateTo(nodeId));
+};
+
+export const useNavigationTarget = (getRoot: () => RootNode | null | undefined) => {
   watch(
     () => getRoot()?.currentState.navigationTarget,
-    (nodeId) => {
-      if (nodeId) {
-        navigateTo(nodeId);
-      }
-    },
+    (nodeId) => navigateToNode(nodeId),
     { flush: 'post' }
   );
 
   return {
     navigateToFirstViolation: () => navigateToFirstViolation(getRoot()),
+    navigateToNode: (nodeId?: string | null) => navigateToNode(nodeId),
   };
 };

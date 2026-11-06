@@ -5,6 +5,7 @@ import type { Evaluation } from '../../evaluations/Evaluation.ts';
 import type { FunctionCallNode } from '../../static/grammar/SyntaxNode.ts';
 import type { ExpressionEvaluator } from './ExpressionEvaluator.ts';
 import { createExpression } from './factory.ts';
+import { UnknownFunctionError } from '../../error/UnknownFunctionError.ts';
 
 interface FunctionCallName {
   readonly prefix: string | null;
@@ -58,7 +59,7 @@ export class FunctionCallExpressionEvaluator implements ExpressionEvaluator {
       const { prefix, localName } = name;
       const errorName = prefix == null ? localName : `${prefix}:${localName}`;
 
-      throw new Error(`Function '${errorName}' is not defined.`);
+      throw new UnknownFunctionError(errorName);
     }
 
     return functionImplementation.call(context.currentContext(), argumentExpressions);

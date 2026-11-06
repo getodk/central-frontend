@@ -32,7 +32,7 @@ const mountComponent = (options = undefined) => {
   const entry = testData.extendedAudits.last();
   const { action } = entry;
   const { entityVersions } = container.requestData.localResources;
-  const entityVersion = action === 'entity.create' || action === 'entity.bulk.create'
+  const entityVersion = action === 'entity.create' || action === 'entity.bulk.upsert'
     ? entityVersions[0]
     : (entityVersions.length > 1 ? last(entityVersions) : undefined);
   return mount(EntityFeedEntry, mergeMountOptions(options, {
@@ -248,10 +248,10 @@ describe('EntityFeedEntry', () => {
     });
   });
 
-  describe('entity.bulk.create audit event', () => {
+  describe('entity.bulk.upsert audit event', () => {
     beforeEach(() => {
       testData.extendedAudits.createPast(1, {
-        action: 'entity.bulk.create',
+        action: 'entity.bulk.upsert',
         details: { source: { name: 'my_file.csv' } }
       });
     });

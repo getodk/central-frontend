@@ -105,12 +105,12 @@ const propertiesCount = computed(() => tn(
   }
 
   .properties-count {
-    color: #888;
+    color: $color-text-muted;
     line-height: 28px;
   }
 
   .expandable-row-toggle-button {
-    color: #666;
+    color: $color-text-secondary;
     font-size: 18px;
   }
 

@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="entity-upload-warnings">
-    <p class="entity-upload-section-title">{{ $t('title') }}</p>
+    <p class="entity-upload-section-title">{{ $tcn('title', count) }}</p>
     <p>{{ $t('introduction') }}</p>
 
     <!-- Column header warnings -->
@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
       <template #title>{{ $t('systemProperties') }}</template>
       <template #body>
         <p>{{ $tc('propertiesIgnored', systemProperties.length) }}</p>
-        <p><i18n-list :list="systemProperties"/></p>
+        <entity-upload-property-list :names="systemProperties"/>
       </template>
     </entity-upload-alert>
     <entity-upload-alert v-if="caseMismatch != null"
@@ -53,15 +53,16 @@ except according to the terms contained in the LICENSE file.
       <template #title>{{ $tc('invalidProperties', invalidProperties.length) }}</template>
       <template #body>
         <p>{{ $tc('propertiesIgnored', invalidProperties.length) }}</p>
-        <p><i18n-list :list="invalidProperties"/></p>
+        <entity-upload-property-list :names="invalidProperties"/>
       </template>
     </entity-upload-alert>
     <entity-upload-alert v-if="missingProperties != null" type="warning">
       <template #title>
-        {{ $tc('missingProperties', missingProperties.length) }}
+        {{ $tc('missingProperties.title', missingProperties.length) }}
       </template>
       <template #body>
-        <p><i18n-list :list="missingProperties"/></p>
+        <p>{{ $tc('missingProperties.description', missingProperties.length) }}</p>
+        <entity-upload-property-list :names="missingProperties"/>
       </template>
     </entity-upload-alert>
 
@@ -74,12 +75,45 @@ except according to the terms contained in the LICENSE file.
       :ranges="[[largeCell, largeCell]]" @rows="$emit('rows', $event)">
       <template #title>{{ $t('row.largeCell') }}</template>
     </entity-upload-alert>
+
+    <!-- Extra properties -->
+    <entity-upload-alert v-if="extraProperties != null" type="warning">
+      <template #title>
+        <template v-if="extraProperties.length === 1">
+          {{ $t('extraProperties.title.one') }}
+        </template>
+        <template v-else>
+          {{ $t('extraProperties.title.multiple') }}
+        </template>
+      </template>
+      <template #body>
+        <p>
+          <template v-if="!hasError">
+            <template v-if="extraProperties.length === 1">
+              {{ $t('extraProperties.description.one') }}
+            </template>
+            <template v-else>
+              {{ $t('extraProperties.description.multiple') }}
+            </template>
+          </template>
+          <template v-else>
+            <template v-if="extraProperties.length === 1">
+              {{ $t('extraProperties.error.one') }}
+            </template>
+            <template v-else>
+              {{ $t('extraProperties.error.multiple') }}
+            </template>
+          </template>
+        </p>
+        <slot name="extra-properties"></slot>
+      </template>
+    </entity-upload-alert>
   </div>
 </template>
 
 <script setup>
 import EntityUploadAlert from './alert.vue';
-import I18nList from '../../i18n/list.vue';
+import EntityUploadPropertyList from './property-list.vue';
 import SentenceSeparator from '../../sentence-separator.vue';
 
 defineOptions({
@@ -90,12 +124,19 @@ defineProps({
     type: String,
     required: true
   },
+  // Number of warnings
+  count: {
+    type: Number,
+    required: true
+  },
+  hasError: Boolean,
 
   // Column header warnings
   systemProperties: Array,
   caseMismatch: Array,
   invalidProperties: Array,
   missingProperties: Array,
+  extraProperties: Array,
 
   // Data warnings (below the column header)
   raggedRows: Array,
@@ -106,10 +147,6 @@ defineEmits(['rows']);
 
 <style lang="scss">
 @import '../../../assets/scss/mixins';
-
-#entity-upload-warnings {
-  margin-top: 20px;
-}
 
 #entity-upload-warnings-case-mismatch {
   div:has(> table) {
@@ -134,7 +171,7 @@ defineEmits(['rows']);
     // @transifexKey component.EntityUploadHeaderReview.title
     // This text is shown above a section where the user can review warnings
     // about their data.
-    "title": "Review warnings",
+    "title": "Review {count} warning | Review {count} warnings",
     "introduction": "Some rows contain warnings that may affect upload results.",
 
     // "Properties" refers to Entity properties.
@@ -148,9 +185,28 @@ defineEmits(['rows']);
     },
     // "Property" refers to an Entity property.
     "invalidProperties": "This column is not a valid property name | These columns are not valid property names",
-    // @transifexKey component.EntityUploadHeaderReview.missingProperties
-    // This text is followed by a list of Entity property names.
-    "missingProperties": "This property is not included in your file and will be left empty: | These properties are not included in your file and will be left empty:",
+    "missingProperties": {
+      // "Property" refers to an Entity property.
+      "title": "Property not found in file | Properties not found in file",
+      // "Property" refers to an Entity property.
+      "description": "This property will be left empty. | These properties will be left empty."
+    },
+    "extraProperties": {
+      "title": {
+        "one": "Column doesn’t match existing properties",
+        "multiple": "These columns don’t match existing properties"
+      },
+      "description": {
+        "one": "Select the column to create a new property, otherwise it will be ignored.",
+        // "Ones" refers to "columns".
+        "multiple": "Select which ones to create, otherwise they will be ignored."
+      },
+      "error": {
+        "one": "Once you’ve fixed all errors, you’ll be able to select the column.",
+        // "Ones" refers to "columns".
+        "multiple": "Once you’ve fixed all errors, you’ll be able to select which ones to create."
+      }
+    },
     // "Property" refers to an Entity property.
     "propertiesIgnored": "This property will be ignored. | These properties will be ignored.",
     "columnsIgnored": "This column will be ignored. | These columns will be ignored.",
@@ -180,10 +236,39 @@ defineEmits(['rows']);
     }
   },
   "fr": {
+    "introduction": "Certaines lignes contiennent des avertissements qui pourraient affecter les résultats du chargement.",
+    "systemProperties": "Les propriétés système ne peuvent pas être définies par un import de fichier CSV",
+    "caseMismatch": {
+      "title": "La colonne est similaire à une propriété existante mais ne correspond pas",
+      "description": "Les noms de colonnes sont sensibles à la casse. Vérifiez l'orthographe et les majuscules.",
+      "existingProperty": "Propriété existante"
+    },
+    "invalidProperties": "Cette colonne ne constitue pas un nom de propriété valide | Ces colonnes ne constituent pas des noms de propriété valides | Ces colonnes ne constituent pas des noms de propriété valides",
+    "missingProperties": {
+      "title": "Propriété pas trouvée dans le fichier | Propriétés pas trouvées dans le fichier | Propriétés pas trouvées dans le fichier",
+      "description": "Cette propriété restera vide | Ces propriétés resterons vides | Ces propriétés resterons vides"
+    },
+    "extraProperties": {
+      "title": {
+        "one": "La colonne ne correspond pas aux propriétés existantes",
+        "multiple": "Ces colonnes ne correspondent pas aux propriétés existantes"
+      },
+      "description": {
+        "one": "Choisir la colonne pour créer une nouvelle propriété. Autrement, elle sera ignorée.",
+        "multiple": "Choisir laquelle créer, autrement elle sera ignorée."
+      },
+      "error": {
+        "one": "Une fois que vous aurez corrigé toutes les erreurs, vous pourrez sélectionner la colonne.",
+        "multiple": "Une fois que vous aurez corrigé toutes les erreurs, vous pourrez sélectionner lesquelles créer."
+      }
+    },
+    "propertiesIgnored": "Ces propriétés sera ignorée. | Ces propriétés seront ignorées. | Ces propriétés seront ignorées.",
+    "columnsIgnored": "Cette colonne sera ignorée. | Ces colonnes seront ignorées. | Ces colonnes seront ignorées.",
     "row": {
       "raggedRows": "Dans certaines lignes, il y a eu moins de colonnes détectées que prévu:",
       "largeCell": "Certaines cellules sont anormalement larges, ce qui peut indiquer des difficultés à lire votre fichier:"
-    }
+    },
+    "title": "Vérifiez {count} message d'avertissement | Vérifiez {count} messages d'avertissement | Vérifiez {count} messages d'avertissement"
   },
   "it": {
     "row": {

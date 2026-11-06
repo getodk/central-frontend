@@ -132,6 +132,8 @@ export default {
     }
   },
   "pt": {
+    "title": "Redefinir sua senha",
+    "subtitle": "Digite o seu email para redefinir a sua senha",
     "alert": {
       "success": "Um email foi enviado para {email} com mais instruções."
     }

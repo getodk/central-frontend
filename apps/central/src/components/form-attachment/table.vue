@@ -72,7 +72,7 @@ const dsHashset = computed(() =>
 
   th:first-child { width: 125px; }
   th:nth-child(2) { width: 250px; }
-  th:nth-child(3) { width: 250px; }
+  th:nth-child(3) { width: 300px; }
   th:last-child { width: #{200px + $padding-left-table-data + $padding-right-table-data}; }
 }
 </style>
@@ -102,7 +102,8 @@ const dsHashset = computed(() =>
   },
   "de": {
     "header": {
-      "uploaded": "Hochgeladen"
+      "uploaded": "Hochgeladen",
+      "size": "Grösse"
     }
   },
   "es": {
@@ -112,7 +113,8 @@ const dsHashset = computed(() =>
   },
   "fr": {
     "header": {
-      "uploaded": "Téléversés"
+      "uploaded": "Téléversés",
+      "size": "Taille"
     }
   },
   "id": {
@@ -122,7 +124,8 @@ const dsHashset = computed(() =>
   },
   "it": {
     "header": {
-      "uploaded": "Caricati"
+      "uploaded": "Caricati",
+      "size": "Dimensione"
     }
   },
   "ja": {

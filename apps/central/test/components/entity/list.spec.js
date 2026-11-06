@@ -42,6 +42,7 @@ describe('EntityList', () => {
         }
       },
       { url: '/v1/projects/1/datasets/trees/entities/creators' },
+      { url: '/v1/projects/1/app-users' },
       {
         url: ({ pathname, searchParams }) => {
           // Request to get all the Entities created before now and ( not deleted or deleted after now)
@@ -97,7 +98,7 @@ describe('EntityList', () => {
       return load('/projects/1/entity-lists/trees/entities', { root: false })
         .afterResponses(component => {
           assertRowCount(1)(component);
-          initialTime = component.get('.table-refresh-bar span').text();
+          initialTime = component.get('.data-refresh-info span').text();
         })
         .request(component => {
           clock.tick(1000);
@@ -111,7 +112,7 @@ describe('EntityList', () => {
         .respondWithData(testData.entityDeletedOData)
         .afterResponse(component => {
           assertRowCount(2)(component);
-          const newTime = component.get('.table-refresh-bar span').text();
+          const newTime = component.get('.data-refresh-info span').text();
           newTime.should.not.equal(initialTime);
         });
     });
@@ -263,10 +264,9 @@ describe('EntityList', () => {
 
       it('updates the EntityMetadataRow', async () => {
         const component = await submit();
-        const td = component.get('.entity-metadata-row:nth-child(2) td:last-child');
-        should.exist(td.getComponent(DateTime).props().iso);
-        td.get('.updates').text().should.equal('1');
-        td.get('.update-button').attributes('aria-label').should.equal('Edit (1)');
+        const row = component.get('.entity-metadata-row:nth-child(2)');
+        const lastUpdatedTd = row.get('.last-updated-cell');
+        should.exist(lastUpdatedTd.getComponent(DateTime).props().iso);
       });
     });
   });
@@ -691,7 +691,7 @@ describe('EntityList', () => {
       it('updates the entity count', async () => {
         const component = await restore();
         const text = component.get('.toggle-deleted-entities').text();
-        text.should.equal('0 deleted Entities');
+        text.should.equal('Show deleted 0');
       });
     });
 
@@ -1003,10 +1003,10 @@ describe('EntityList', () => {
       return load('/projects/1/entity-lists/tree/entities', { root: false, container: { router: testRouter() } })
         .complete()
         .request(component =>
-          component.get('.toggle-deleted-entities').trigger('click'))
+          component.get('.toggle-deleted-entities input').setValue(true))
         .respondWithData(testData.entityDeletedOData)
         .afterResponses((component) => {
-          component.find('.toggle-deleted-entities').text().should.equal('1 deleted Entity');
+          component.find('.toggle-deleted-entities').text().should.equal('Show deleted 1');
           component.findAll('.table-freeze-scrolling tbody tr').length.should.be.equal(1);
         })
         .request(component =>
@@ -1016,7 +1016,7 @@ describe('EntityList', () => {
         })
         .respondWithData(testData.entityDeletedOData)
         .afterResponses((component) => {
-          component.find('.toggle-deleted-entities').text().should.equal('2 deleted Entities');
+          component.find('.toggle-deleted-entities').text().should.equal('Show deleted 2');
           component.findAll('.table-freeze-scrolling tbody tr').length.should.be.equal(2);
         });
     });
@@ -1041,6 +1041,24 @@ describe('EntityList', () => {
       const button = app.getComponent('#entity-download-button');
       button.get('.btn-primary').classes().should.include('disabled');
       await button.should.have.tooltip('Download is unavailable for deleted Entities');
+    });
+  });
+
+  describe('"view as" filter', () => {
+    it('shows the filter if the dataset has an access filter', () => {
+      testData.extendedDatasets.createPast(1, {
+        accessFilter: { type: 'ownerOnly' }
+      });
+      return loadEntityList().afterResponses(component => {
+        component.find('#entity-filters-view-as').exists().should.be.true;
+      });
+    });
+
+    it('does not show the filter if the dataset has no access filter', () => {
+      testData.extendedDatasets.createPast(1, { accessFilter: null });
+      return loadEntityList().afterResponses(component => {
+        component.find('#entity-filters-view-as').exists().should.be.false;
+      });
     });
   });
 
@@ -1262,7 +1280,7 @@ describe('EntityList', () => {
         remainingRows.length.should.equal(1);
 
         const deletedEntitiesButton = component.find('.toggle-deleted-entities');
-        deletedEntitiesButton.text().should.equal('2 deleted Entities');
+        deletedEntitiesButton.text().should.equal('Show deleted 2');
       }));
 
     it('shows alert on failure of bulk delete request', () => loadEntityList()

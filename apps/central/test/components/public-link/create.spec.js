@@ -3,6 +3,7 @@ import { nextTick } from 'vue';
 import PublicLinkCreate from '../../../src/components/public-link/create.vue';
 
 import testData from '../../data';
+import { addActorProperty } from '../../util/trigger';
 import { load, mockHttp } from '../../util/http';
 import { mergeMountOptions, mount } from '../../util/lifecycle';
 import { mockLogin } from '../../util/session';
@@ -11,7 +12,11 @@ import { testRequestData } from '../../util/request-data';
 const mountOptions = (options = undefined) => mergeMountOptions(options, {
   props: { state: true },
   container: {
-    requestData: testRequestData(['actorProperties'], { form: testData.extendedForms.last(), actorProperties: testData.actorProperties.sorted() })
+    requestData: testRequestData(['actorProperties'], {
+      project: testData.extendedProjects.last(),
+      form: testData.extendedForms.last(),
+      actorProperties: testData.actorProperties.sorted()
+    })
   }
 });
 
@@ -24,7 +29,7 @@ describe('PublicLinkCreate', () => {
   it('toggles the modal', () =>
     load('/projects/1/forms/f/public-links').testModalToggles({
       modal: PublicLinkCreate,
-      show: '.heading-with-button .btn-primary',
+      show: '.page-heading .btn-primary',
       hide: '.btn-link'
     }));
 
@@ -122,42 +127,33 @@ describe('PublicLinkCreate', () => {
           await modal.get('input').setValue('My Public Link');
           return modal.get('form').trigger('submit');
         },
-        disabled: ['.btn-link'],
+        disabled: ['fieldset', '.btn-link'],
         modal: true
       }));
 
   describe('adding a property inline', () => {
-    it('shows the new property row after adding a property', () => mockHttp()
-      .mount(PublicLinkCreate, mountOptions())
-      .request(async (modal) => {
-        await modal.get('.add-property-link').trigger('click');
-        await modal.get('.actor-properties-new input').setValue('region');
-        return modal.get('.actor-properties-new form').trigger('submit');
-      })
-      .respondWithSuccess()
-      .afterResponse((modal) => {
-        modal.findAll('textarea').length.should.equal(1);
-        modal.get('.entity-update-row label').text().should.include('region');
-      }));
-
-    it('includes a newly added property value in the create request', () => mockHttp()
-      .mount(PublicLinkCreate, mountOptions())
-      .request(async (modal) => {
-        await modal.get('.add-property-link').trigger('click');
-        await modal.get('.actor-properties-new input').setValue('region');
-        return modal.get('.actor-properties-new form').trigger('submit');
-      })
-      .respondWithSuccess()
-      .complete()
-      .request(async (modal) => {
-        await modal.get('input').setValue('My Public Link');
-        await modal.get('textarea').setValue('north');
-        return modal.get('form').trigger('submit');
-      })
-      .beforeEachResponse((_, { data }) => {
-        data.should.eql({ displayName: 'My Public Link', once: false, properties: { region: 'north' } });
-      })
-      .respondWithProblem());
+    it('sends the correct requests', () =>
+      mockHttp()
+        .mount(PublicLinkCreate, mountOptions())
+        .request(async (modal) => {
+          await modal.get('input').setValue('My Public Link');
+          await addActorProperty(modal, 'region', 'north');
+          return modal.get('form').trigger('submit');
+        })
+        .respondWithSuccess()
+        .respondWithProblem()
+        .testRequests([
+          {
+            method: 'POST',
+            url: '/v1/projects/1/actor-properties',
+            data: { name: 'region' }
+          },
+          {
+            method: 'POST',
+            url: '/v1/projects/1/forms/f/public-links',
+            data: { displayName: 'My Public Link', once: false, properties: { region: 'north' } }
+          }
+        ]));
   });
 
   describe('after a successful response', () => {
@@ -166,7 +162,7 @@ describe('PublicLinkCreate', () => {
       return load('/projects/1/forms/f/public-links')
         .complete()
         .request(async (app) => {
-          await app.get('.heading-with-button .btn-primary').trigger('click');
+          await app.get('.page-heading .btn-primary').trigger('click');
           const modal = app.getComponent(PublicLinkCreate);
           await modal.get('input').setValue('My Public Link');
           return modal.get('form').trigger('submit');
@@ -201,5 +197,32 @@ describe('PublicLinkCreate', () => {
       const app = await submit();
       app.get('#page-head-tabs li.active .badge').text().should.equal('2');
     });
+  });
+
+  describe('list of actor properties', () => {
+    const create = () => load('/projects/1/forms/f/public-links')
+      .afterResponses(app => {
+        app.find('.table-freeze-scrolling').exists().should.be.false;
+      })
+      .request(async (app) => {
+        await app.get('.page-heading .btn-primary').trigger('click');
+        const modal = app.getComponent(PublicLinkCreate);
+        await modal.get('input').setValue('My Public Link');
+        await addActorProperty(modal, 'region', 'north');
+        return modal.get('form').trigger('submit');
+      })
+      // Property creation
+      .respondWithSuccess();
+
+    it('updates the list after the public link is created', () =>
+      create()
+        .respondWithData(() => testData.extendedPublicLinks.createNew({
+          displayName: 'My Public Link',
+          properties: { region: 'north' }
+        }))
+        .respondWithData(() => testData.extendedPublicLinks.sorted())
+        .afterResponses(app => {
+          app.get('.table-freeze-scrolling th').text().should.equal('region');
+        }));
   });
 });

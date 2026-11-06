@@ -7,7 +7,7 @@ import Button from 'primevue/button';
 import { inject } from 'vue';
 
 defineProps<{ root: RootNode }>();
-defineEmits<{ submit: [] }>();
+defineEmits<{ submit: []; next: [] }>();
 const t: Translate = inject(TRANSLATE)!;
 </script>
 
@@ -18,7 +18,7 @@ const t: Translate = inject(TRANSLATE)!;
 			class="align-right"
 			outlined
 			severity="contrast"
-			@click="root.nextPage()"
+			@click="$emit('next')"
 		>
 			<span>{{ t('odk_web_forms.next.label') }}</span>
 			<IconSVG name="mdiArrowRight" />

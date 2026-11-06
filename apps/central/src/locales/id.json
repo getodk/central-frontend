@@ -158,7 +158,6 @@
     "name": "Nama",
     "newPassword": "Kata sandi baru",
     "oldPassword": "Kata sandi lama",
-    "passphrase": "Frasa sandi",
     "password": "Kata sandi",
     "passwordConfirm": "Kata sandi baru (konfirmasi)",
     "type": "Tipe"

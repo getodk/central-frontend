@@ -11,38 +11,42 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <div class="heading-with-button">
+    <page-heading :title="$t('resource.appUsers')">
+      <template #help>
+        <i18n-t tag="p" keypath="heading[0].full">
+          <template #collect>
+            <doc-link to="collect-intro/">ODK Collect</doc-link>
+          </template>
+          <template #formAccess>
+            <router-link :to="projectPath('form-access')">{{ $t('heading[0].formAccess') }}</router-link>
+          </template>
+        </i18n-t>
+        <i18n-t tag="p" keypath="heading[1].full">
+          <template #clickHere>
+            <a href="#" @click.prevent="submissionOptions.show()">{{ $t('heading[1].clickHere') }}</a>
+          </template>
+        </i18n-t>
+      </template>
       <button id="field-key-list-create-button" type="button"
         class="btn btn-primary" @click="createModal.show()">
-        <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
+        <span class="icon-plus"></span>{{ $t('action.create') }}&hellip;
       </button>
-      <i18n-t tag="p" keypath="heading[0].full">
-        <template #collect>
-          <doc-link to="collect-intro/">ODK Collect</doc-link>
-        </template>
-        <template #formAccess>
-          <router-link :to="projectPath('form-access')">{{ $t('heading[0].formAccess') }}</router-link>
-        </template>
-      </i18n-t>
-      <i18n-t tag="p" keypath="heading[1].full">
-        <template #clickHere>
-          <a href="#" @click.prevent="submissionOptions.show()">{{ $t('heading[1].clickHere') }}</a>
-        </template>
-      </i18n-t>
-    </div>
+    </page-heading>
+
     <div v-if="dataExists && actorProperties.length > 0" id="field-key-filter-bar">
       <custom-props-filter v-model="filter"
         :actor-properties="actorProperties.data"
         :actors="fieldKeys.data"/>
     </div>
-    <table-freeze v-if="dataExists" id="field-key-list-table" :data="filteredFieldKeys" key-prop="id"
+    <table-freeze v-if="dataExists && filteredFieldKeys.length > 0" id="field-key-list-table" :data="filteredFieldKeys" key-prop="id"
       :frozen-only="actorProperties.length === 0" :divider="actorProperties.length > 0">
       <template #head-frozen>
+        <th class="col-actions"></th>
         <th>{{ $t('header.displayName') }}</th>
         <th>{{ $t('header.configureClient') }}</th>
         <th>{{ $t('header.createdAt') }}</th>
         <th>{{ $t('header.createdBy') }}</th>
-        <th>{{ $t('header.lastUsedAndActions', { lastUsed: $t('header.lastUsed'), actions: $t('header.actions') }) }}</th>
+        <th>{{ $t('header.lastUsed') }}</th>
       </template>
       <template #head-scrolling>
         <th v-for="property of actorProperties" :key="property.name">
@@ -86,6 +90,7 @@ except according to the terms contained in the LICENSE file.
 import Popover from '../popover.vue';
 import DocLink from '../doc-link.vue';
 import Loading from '../loading.vue';
+import PageHeading from '../page/heading.vue';
 import TableFreeze from '../table/freeze.vue';
 import FieldKeyQrPanel from './qr-panel.vue';
 import FieldKeyRow from './row.vue';
@@ -106,6 +111,7 @@ export default {
     Popover,
     DocLink,
     Loading,
+    PageHeading,
     TableFreeze,
     FieldKeyQrPanel,
     FieldKeyRow,
@@ -260,8 +266,6 @@ export default {
     ],
     "header": {
       "lastUsed": "Last Used",
-      // Header for the table column that shows the last used date and action buttons.
-      "lastUsedAndActions": "{lastUsed} / {actions}",
       // Header for the table column that shows QR codes to configure data collection clients such as ODK Collect.
       "configureClient": "Configure Client"
     },
@@ -318,6 +322,7 @@ export default {
     ],
     "header": {
       "lastUsed": "Zuletzt benutzt",
+      "lastUsedAndActions": "{lastUsed}/ {actions}",
       "configureClient": "Client konfigurieren"
     },
     "emptyTable": "Ès gibt noch keine Benutzer der App. Sie müssen zumindest einen erstellen, um Formulare herunterladen zu können und um Daten aus Ihrem Gerät hochzuladen.",
@@ -342,6 +347,7 @@ export default {
     ],
     "header": {
       "lastUsed": "Última utilizada",
+      "lastUsedAndActions": "{lastUsed}/{actions}",
       "configureClient": "Configurar cliente"
     },
     "emptyTable": "Todavía no hay usuarios móviles. Deberá crear algunos para descargar formularios y enviar datos desde su dispositivo.",
@@ -370,6 +376,7 @@ export default {
       "configureClient": "Configurer le client"
     },
     "emptyTable": "Il n'y a pas encore d’utilisateur mobile. Vous devez en créer pour télécharger des formulaires et soumettre des données depuis votre appareil.",
+    "noFilterResults": "Aucun utilisateur mobile correspond au filtre actuel.",
     "alert": {
       "create": "L'utilisateur mobile “{displayName}” a été correctement créé.",
       "edit": "L'utilisateur mobile “{displayName}” a été modifié.",
@@ -415,6 +422,7 @@ export default {
     ],
     "header": {
       "lastUsed": "Utilzzato ultima volta",
+      "lastUsedAndActions": "{lastUsed}/{actions}",
       "configureClient": "Configurare il Client"
     },
     "emptyTable": "Non ci sono ancora utenti dell'app. Dovrai crearne alcuni per scaricare i formulari e inviare i dati dal tuo dispositivo.",

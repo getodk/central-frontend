@@ -28,6 +28,8 @@ import preload from './fixtures/preload.xml?raw';
 import allPossibleNotes from './fixtures/2-all-possible-notes.xml?raw';
 import basicRepeat from './fixtures/01-basic-repeat.xml?raw';
 import markdown from './fixtures/3-notes-with-markdown.xml?raw';
+import inputNumeric from './fixtures/input-numeric.xml?raw';
+import rangeTickLabels from './fixtures/range-tick-labels.xml?raw';
 
 import paginationFlat from './fixtures/pagination-01-flat.xml?raw';
 import paginationFieldlistGroup from './fixtures/pagination-03-fieldlist-group.xml?raw';
@@ -38,6 +40,10 @@ import paginationFieldlistRelevance from './fixtures/pagination-13-fieldlist-rel
 import paginationFieldlistOnRepeat from './fixtures/pagination-14-fieldlist-on-repeat.xml?raw';
 import paginationRepeatFixedCount from './fixtures/pagination-16-repeat-fixed-count.xml?raw';
 import paginationNestedRepeatFieldlist from './fixtures/pagination-17-nested-repeat-fieldlist.xml?raw';
+import paginationQuick from './fixtures/pagination-18-quick.xml?raw';
+import paginationRequired from './fixtures/pagination-19-required.xml?raw';
+import paginationQuickFieldList from './fixtures/pagination-20-quick-fieldlist.xml?raw';
+import paginationRepeatRequired from './fixtures/pagination-21-repeat-required.xml?raw';
 
 import citiesGeoJson from './fixtures/attachments/cities.geojson?url';
 
@@ -81,6 +87,12 @@ const fixtures: Record<string, string> = {
   'pagination-14-fieldlist-on-repeat.xml': paginationFieldlistOnRepeat,
   'pagination-16-repeat-fixed-count.xml': paginationRepeatFixedCount,
   'pagination-17-nested-repeat-fieldlist.xml': paginationNestedRepeatFieldlist,
+  'pagination-18-quick.xml': paginationQuick,
+  'pagination-19-required.xml': paginationRequired,
+  'pagination-20-quick-fieldlist.xml': paginationQuickFieldList,
+  'pagination-21-repeat-required.xml': paginationRepeatRequired,
+  'input-numeric.xml': inputNumeric,
+  'range-tick-labels.xml': rangeTickLabels,
 };
 
 const attachments: Record<string, string> = {

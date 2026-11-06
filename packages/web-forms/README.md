@@ -60,7 +60,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-##### Appearances<br/>🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜ 54\%
+##### Appearances<br/>🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜ 63\%
 
   </summary>
   <br/>
@@ -73,9 +73,9 @@ This section is auto generated. Please update `feature-matrix.json` and then run
 | ex:                                                             |          |
 | thousands-sep                                                   |    ✅    |
 | bearing                                                         |          |
-| [vertical](https://github.com/getodk/web-forms/issues/271)      |          |
-| [no-ticks](https://github.com/getodk/web-forms/issues/271)      |          |
-| picker                                                          |          |
+| [vertical](https://github.com/getodk/web-forms/issues/271)      |    ✅    |
+| [no-ticks](https://github.com/getodk/web-forms/issues/271)      |    ✅    |
+| [picker](https://github.com/getodk/web-forms/issues/712)        |    ✅    |
 | [rating](https://github.com/getodk/web-forms/issues/711)        |    ✅    |
 | new                                                             |          |
 | new-front                                                       |          |
@@ -96,7 +96,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
 | hide-input                                                      |          |
 | minimal                                                         |    ✅    |
 | search / autocomplete                                           |    ✅    |
-| [quick](https://github.com/getodk/web-forms/issues/515)         |          |
+| [quick](https://github.com/getodk/web-forms/issues/515)         |    ✅    |
 | columns-pack                                                    |    ✅    |
 | columns                                                         |    ✅    |
 | columns-n                                                       |    ✅    |
@@ -120,7 +120,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-##### Parameters<br/>🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜ 66\%
+##### Parameters<br/>🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜ 73\%
 
   </summary>
   <br/>
@@ -134,11 +134,14 @@ This section is auto generated. Please update `feature-matrix.json` and then run
 | rows                                                                                                                               |    ✅    |
 | geopoint capture-accuracy,<br/>warning-accuracy, allow-mock-accuracy                                                               |    ✅    |
 | range start, end, step                                                                                                             |    ✅    |
+| range tick_interval                                                                                                                |    ✅    |
 | [image max-pixels](https://github.com/getodk/web-forms/issues/397)                                                                 |    ✅    |
 | audio quality                                                                                                                      |          |
 | Audit: location-priority,<br/>location-min-interval, location-max-age,<br/>track-changes, track-changes-reasons,<br/>identify-user |          |
 | [geotrace/shape incremental=true](https://github.com/getodk/web-forms/issues/562)                                                  |          |
-| range labels, placeholder                                                                                                          |          |
+| [geo reference-geometry](https://github.com/getodk/web-forms/issues/924)                                                           |          |
+| [range labels](https://github.com/getodk/web-forms/issues/845)                                                                     |    ✅    |
+| [range placeholder](https://github.com/getodk/web-forms/issues/940)                                                                |    ✅    |
 
 </details>
 
@@ -172,7 +175,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-##### Descriptions and annotations<br/>🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜ 75\%
+##### Descriptions and annotations<br/>🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜ 83\%
 
   </summary>
   <br/>
@@ -181,7 +184,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
 | -------------------------------------------------------------- | :------: |
 | label                                                          |    ✅    |
 | hint                                                           |    ✅    |
-| [guidance hint](https://github.com/getodk/web-forms/issues/53) |          |
+| [guidance hint](https://github.com/getodk/web-forms/issues/53) |    ✅    |
 | form translations                                              |    ✅    |
 | form translations with ref to other<br/>field                  |    ✅    |
 | Markdown                                                       |    ✅    |
@@ -311,7 +314,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-##### Misc<br/>🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ 33\%
+##### Misc<br/>🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜⬜⬜ 44\%
 
   </summary>
   <br/>
@@ -321,7 +324,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
 | [last saved instance](https://github.com/getodk/web-forms/issues/306)            |    ✅    |
 | [defaults from query parameters](https://github.com/getodk/web-forms/issues/464) |    ✅    |
 | multi-form app-like experience                                                   |          |
-| [prevent multiple submissions](https://github.com/getodk/web-forms/issues/461)   |          |
+| [prevent multiple submissions](https://github.com/getodk/web-forms/issues/461)   |    ✅    |
 | configure end of form experience                                                 |          |
 | save as draft                                                                    |          |
 | offline entities                                                                 |          |
@@ -384,6 +387,8 @@ The `<OdkWebForm>` component accepts the following props:
 
 The component emits the following events:
 
+- `languageSelected`: Emitted when the component changes the language that buttons and messages are displayed in. It is emitted when the form is loaded (defaulting to 'en'), and any time the user selects an option from the language selector.
+  - Payload: ([language: string])
 - `loaded`: Emitted when the form is loaded and displayed to the user
 - `submit`: Emitted when the user presses the "Send" button on a valid form
   - Payload: ([submissionPayload: MonolithicInstancePayload, callback: HostSubmissionResultCallback])

@@ -32,6 +32,7 @@ import type { ClientReactiveSerializableValueNode } from '../internal-api/serial
 import type { ValidationContext } from '../internal-api/ValidationContext.ts';
 import type { DescendantNodeStateSpec } from './DescendantNode.ts';
 import { DescendantNode } from './DescendantNode.ts';
+import { TextRange } from '../text/TextRange.ts';
 
 export type ValueNodeDefinition<V extends ValueType> = LeafNodeDefinition<V>;
 
@@ -92,7 +93,12 @@ export abstract class ValueNode<
     parent: GeneralParentNode,
     override readonly instanceNode: StaticLeafElement | null,
     definition: Definition,
-    codec: ValueCodec<V, RuntimeValue, RuntimeInputValue>
+    codec: ValueCodec<
+      V,
+      RuntimeValue,
+      RuntimeInputValue,
+      ValueNode<V, Definition, RuntimeValue, RuntimeInputValue>
+    >
   ) {
     super(parent, instanceNode, definition);
 
@@ -100,14 +106,9 @@ export abstract class ValueNode<
     this.decodeInstanceValue = codec.decodeInstanceValue;
 
     const { valueState: instanceValueState, setValueFromAction } = createInstanceValueState(this);
-    const [getInstanceValue] = instanceValueState;
+    const [getInstanceValue, setInstanceValue] = instanceValueState;
 
-    const valueState = codec.createRuntimeValueState(instanceValueState);
-    const [, setActionValue] = codec.createRuntimeValueState([
-      getInstanceValue,
-      setValueFromAction,
-    ]);
-
+    const valueState = codec.createRuntimeValueState(instanceValueState, this);
     const [, setValueState] = valueState;
 
     this.getInstanceValue = getInstanceValue;
@@ -120,20 +121,30 @@ export abstract class ValueNode<
     this.instanceState = createValueNodeInstanceState(this);
 
     this.setEncodedValue = (value: string, bypassReadonly = false) => {
-      const decodedValue = codec.decodeValue(value);
+      const instanceValue = this.decodeInstanceValue(value);
       if (bypassReadonly) {
-        setActionValue(decodedValue);
+        setValueFromAction(instanceValue);
         return;
       }
-      setValueState(decodedValue);
+      setInstanceValue(instanceValue);
     };
   }
 
-  // ValidationContext
-  getViolation(): AnyViolation | null {
+  protected override canReportViolation(): boolean {
+    return true;
+  }
+
+  protected override getValidationViolation(): AnyViolation | null {
     return this.validation.engineState.violation;
   }
 
+  override getTextError() {
+    const message = this.validation.engineState.violation?.message;
+    const messageError = message instanceof TextRange ? message.error : null;
+    return super.getTextError() ?? messageError;
+  }
+
+  // ValidationContext
   isBlank(): boolean {
     return this.getInstanceValue() === '';
   }
