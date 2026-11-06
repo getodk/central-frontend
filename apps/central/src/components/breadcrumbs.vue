@@ -11,7 +11,9 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div class="breadcrumbs">
-    <span class="icon-home"></span>
+    <linkable to="/">
+      <span class="icon-home"></span>
+    </linkable>
     <span class="separator">
       <span class="icon-angle-right"></span>
     </span>

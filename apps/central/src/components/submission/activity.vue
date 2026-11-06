@@ -10,43 +10,38 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <page-section id="submission-activity">
-    <template #heading>
-      <span>{{ $t('common.activity') }}</span>
-      <template v-if="project.dataExists && project.permits('submission.update')">
-        <button id="submission-activity-review-button" type="button"
-          class="btn btn-default" @click="$emit('review')">
-          <span class="icon-check"></span>{{ $t('action.review') }}
-        </button>
-        <template v-if="submission.dataExists">
-          <a v-if="submission.__system.status == null"
-            id="submission-activity-edit-button" class="btn btn-default"
-            :href="editPath">
-            <span class="icon-pencil"></span>{{ $t('action.edit') }}
-          </a>
-          <button v-else id="submission-activity-edit-button" type="button"
-            class="btn btn-default" aria-disabled="true"
-            v-tooltip.aria-describedby="$t('submission.editDisabled')">
-            <span class="icon-pencil"></span>{{ $t('action.edit') }}
-          </button>
-        </template>
-        <button v-if="project.dataExists && project.permits('submission.delete')"
-          id="submission-activity-delete-button" type="button" class="btn btn-default"
-          @click="$emit('delete')">
-          <span class="icon-trash"></span>{{ $t('action.delete') }}
+  <page-heading :title="$t('common.activity')">
+    <template v-if="project.dataExists && project.permits('submission.update')">
+      <button id="submission-activity-review-button" type="button"
+        class="btn btn-default" @click="$emit('review')">
+        <span class="icon-check"></span>{{ $t('action.review') }}
+      </button>
+      <template v-if="submission.dataExists">
+        <a v-if="submission.__system.status == null"
+          id="submission-activity-edit-button" class="btn btn-default"
+          :href="editPath">
+          <span class="icon-pencil"></span>{{ $t('action.edit') }}
+        </a>
+        <button v-else id="submission-activity-edit-button" type="button"
+          class="btn btn-default" aria-disabled="true"
+          v-tooltip.aria-describedby="$t('submission.editDisabled')">
+          <span class="icon-pencil"></span>{{ $t('action.edit') }}
         </button>
       </template>
+      <button v-if="project.dataExists && project.permits('submission.delete')"
+        id="submission-activity-delete-button" type="button" class="btn btn-danger-outlined"
+        @click="$emit('delete')">
+        <span class="icon-trash"></span>{{ $t('action.delete') }}
+      </button>
     </template>
-    <template #body>
-      <submission-comment :project-id="projectId" :xml-form-id="xmlFormId"
-        :instance-id="instanceId" :feed="feed" @success="$emit('comment')"/>
-      <loading :state="initiallyLoading"/>
-      <template v-if="feed != null">
-        <submission-feed-entry v-for="(entry, index) in feed" :key="index" :entry="entry"
-          :project-id="projectId" :xml-form-id="xmlFormId" :instance-id="instanceId"/>
-      </template>
-    </template>
-  </page-section>
+  </page-heading>
+  <submission-comment :project-id="projectId" :xml-form-id="xmlFormId"
+    :instance-id="instanceId" :feed="feed" @success="$emit('comment')"/>
+  <loading :state="initiallyLoading"/>
+  <template v-if="feed != null">
+    <submission-feed-entry v-for="(entry, index) in feed" :key="index" :entry="entry"
+      :project-id="projectId" :xml-form-id="xmlFormId" :instance-id="instanceId"/>
+  </template>
 </template>
 
 <script>
@@ -54,7 +49,7 @@ import { DateTime } from 'luxon';
 import { descend } from 'ramda';
 
 import Loading from '../loading.vue';
-import PageSection from '../page/section.vue';
+import PageHeading from '../page/heading.vue';
 import SubmissionComment from './comment.vue';
 import SubmissionFeedEntry from './feed-entry.vue';
 
@@ -63,7 +58,7 @@ import { useRequestData } from '../../request-data';
 
 export default {
   name: 'SubmissionActivity',
-  components: { Loading, PageSection, SubmissionComment, SubmissionFeedEntry },
+  components: { Loading, SubmissionComment, SubmissionFeedEntry, PageHeading },
   props: {
     projectId: {
       type: String,
@@ -119,5 +114,4 @@ export default {
 #submission-activity { margin-bottom: 35px; }
 #submission-activity-review-button { margin-right: 5px; }
 #submission-activity-edit-button { margin-right: 5px; }
-#submission-activity-delete-button .icon-trash { color: $color-danger; }
 </style>

@@ -14,7 +14,8 @@ except according to the terms contained in the LICENSE file.
     <page-heading :title="$t('common.tab.settings')">
       <button type="button" class="btn btn-danger"
         @click="deleteModal.show()">
-        {{ $t('action.delete') }}&hellip;
+        <span class="icon-trash"></span>
+        {{ $t('action.delete') }}
       </button>
     </page-heading>
     <div class="row">

@@ -20,7 +20,7 @@
     </template>
     <a v-else href="#" class="add-property-link"
       @click.prevent="show()">
-      <span class="icon-plus-circle"></span>{{ $t('addProperty') }}
+      <span class="icon-plus"></span>{{ $t('addProperty') }}
     </a>
   </div>
 </template>

@@ -53,6 +53,7 @@ defineProps({
     margin-left: 10px;
     color: $color-text;
 
+    // TODO revisit background colors here
     .btn {
       display: inline-flex;
       align-items: center;

@@ -74,7 +74,7 @@ $color-on-primary: $gray-0;
 $color-focus-ring: $blue-600;
 
 // Surface
-$color-bg: $gray-50;
+$color-bg: $gray-50; // need to be renamed, our background is gray-0 i.e. color-surface
 $color-surface: $gray-0;
 $color-surface-raised: $gray-0;
 $color-surface-secondary: $gray-100;
@@ -156,6 +156,7 @@ $color-text-secondary: $color-text-secondary;
 
 // Icons
 $margin-right-icon: 6px;
+$margin-left-icon: -2px; // to compensate center alignment
 
 // Contextual colors
 $color-success: $color-success;
