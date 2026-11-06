@@ -2602,16 +2602,22 @@
     },
     "EntityFiltersViewAs": {
       "noUserSelected": {
-        "string": "Me"
+        "string": "All"
       },
       "viewAs": {
         "string": "View As"
       },
       "resetToMe": {
-        "string": "Reset to Me"
+        "string": "Reset to All"
       },
       "search": {
         "string": "Search…"
+      },
+      "appUsers": {
+        "string": "App users"
+      },
+      "publicLinksForForm": {
+        "string": "Public links: {formName}"
       }
     },
     "EntityList": {
