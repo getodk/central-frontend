@@ -366,7 +366,7 @@ class. */
   }
 }
 
-a {
+a, .btn-link {
   &:hover, &.disabled, &[aria-disabled="true"], &[aria-disabled="true"]:focus, fieldset[disabled] & {
     text-decoration: none;
   }
@@ -378,7 +378,7 @@ a {
   }
 }
 
-a:not(.btn) {
+a:not(.btn), .btn-link {
   &, &:hover { color: $color-action-foreground; }
 
   &:hover, &:focus:hover {
@@ -386,13 +386,18 @@ a:not(.btn) {
     outline: none;
   }
 
-  &:focus {
-    outline: 2px solid $color-focus-ring;
-    outline-offset: 2px;
-    text-decoration: none;
+  &.disabled, &[aria-disabled="true"], fieldset[disabled] & { color: $color-text-disabled; }
+}
+
+.btn-link {
+  &, &:active, &[aria-disabled="true"], fieldset[disabled] & {
+    background-color: transparent;
   }
 
-  &.disabled, &[aria-disabled="true"], fieldset[disabled] & { color: $color-text-disabled; }
+  &:focus {
+    background-clip: content-box;
+    box-shadow: none;
+  }
 }
 
 a {
@@ -413,7 +418,7 @@ a {
 }
 
 // Design system calls this tertiary button
-.btn-link {
+.btn-tertiary {
   border-radius: 6px;
   border: 1px solid transparent;
   background-color: transparent;

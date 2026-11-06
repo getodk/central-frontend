@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div v-if="link != null" class="infonav-button">
-    <router-link class="btn btn-link" :to="link">
+    <router-link class="btn btn-tertiary" :to="link">
       <slot name="title"></slot>
       <span v-if="count != null" class="badge">{{ $n(count) }}</span>
     </router-link>

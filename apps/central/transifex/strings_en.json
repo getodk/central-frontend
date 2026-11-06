@@ -5021,6 +5021,21 @@
       }
     },
     "PublicLinkRow": {
+      "action": {
+        "copyLink": {
+          "string": "Copy link",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "openInNewTab": {
+          "string": "Open in new tab",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "urlCopied": {
+          "string": "URL copied."
+        }
+      },
       "revoked": {
         "string": "Revoked",
         "developer_comment": "This text is shown for a Public Access Link that has been revoked. The text appears on its own and is not part of a longer sentence."
