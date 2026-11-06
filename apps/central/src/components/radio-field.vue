@@ -12,7 +12,13 @@ except according to the terms contained in the LICENSE file.
 <template>
   <div class="radio-field" :class="{ 'btn-appearance': buttonAppearance }"
     v-tooltip.no-aria="disabled ? disabledMessage : null">
-    <label v-for="{ value, text, icon } of options" :key="value" :class="{ disabled, active: model === value, 'btn btn-toggle': buttonAppearance, radio: !buttonAppearance }">
+    <label v-for="{ value, text, icon } of options" :key="value"
+      v-tooltip.no-aria="buttonAppearance ? text : ''"
+      :class="{ disabled,
+                active: model === value,
+                'btn btn-toggle': buttonAppearance,
+                radio: !buttonAppearance,
+              }">
       <input v-model="model" type="radio" :value="value" :disabled="disabled" autocomplete="off"
       :aria-describedby="disabledMessageId" :name="name">
       <template v-if="buttonAppearance">
