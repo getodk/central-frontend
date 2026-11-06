@@ -76,6 +76,7 @@ const forms = dataStore({
     entityRelated = false,
     publicLinks = 0,
     webformsEnabled = false,
+    autosaveEnabled = true,
 
     ...extraVersionOptions
   }) => {
@@ -90,6 +91,7 @@ const forms = dataStore({
       entityRelated,
       publicLinks,
       webformsEnabled,
+      autosaveEnabled,
       createdAt,
       updatedAt: null,
       // Extended metadata
@@ -208,6 +210,7 @@ const basicFormProps = [
   'createdAt',
   'updatedAt',
   'webformsEnabled',
+  'autosaveEnabled',
   '_fields'
 ];
 // Properties from formVersions above that will be added to all forms and form
