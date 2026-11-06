@@ -1,20 +1,21 @@
 import { definePreset } from '@primeuix/themes';
 import Aura from '@primeuix/themes/aura';
+import { ODK } from './odk-design-system';
 
 export const odkThemePreset = definePreset(Aura, {
   semantic: {
     primary: {
-      50: '#e9f8ff',
-      100: '#c7e6f5',
-      200: '#a5d4eb',
-      300: '#82c3e0',
-      400: '#60b1d6',
-      500: '#3e9fcc',
-      600: '#3488af',
-      700: '#297193',
-      800: '#1f5976',
-      900: '#14425a',
-      950: '#0a2b3d',
+      50: ODK.blue100,
+      100: ODK.blue200,
+      200: ODK.blue300,
+      300: ODK.blue400,
+      400: ODK.blue500,
+      500: ODK.blue600,
+      600: ODK.blue700,
+      700: ODK.blue800,
+      800: ODK.blue900,
+      900: ODK.blue950,
+      950: ODK.blue950,
     },
     colorScheme: {
       light: {
@@ -139,29 +140,6 @@ export const odkThemePreset = definePreset(Aura, {
         light: {
           root: {
             color: '{surface.950}',
-          },
-        },
-      },
-    },
-    button: {
-      colorScheme: {
-        light: {
-          root: {
-            secondary: {
-              color: '{surface.950}',
-              background: '{surface.0}',
-              hoverBackground: '{surface.200}',
-            },
-          },
-          outlined: {
-            contrast: {
-              hoverBackground: '{surface.200}',
-            },
-          },
-          text: {
-            contrast: {
-              hoverBackground: '{surface.200}',
-            },
           },
         },
       },
