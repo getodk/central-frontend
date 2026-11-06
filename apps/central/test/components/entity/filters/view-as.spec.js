@@ -59,7 +59,7 @@ describe('EntityFiltersViewAs', () => {
       component.findAll('input[type="radio"]').length.should.equal(2);
     });
 
-    it('emits an app user ID after selection is applied', async () => {
+    it('emits an app user ID after selection', async () => {
       const [fieldKey1, fieldKey2] = createFieldKeys(2);
       const component = mountComponent({
         fieldKeys: [fieldKey1, fieldKey2],
@@ -68,11 +68,10 @@ describe('EntityFiltersViewAs', () => {
       });
       await component.get('.dropdown-trigger').trigger('click');
       await component.findAll('input[type="radio"]')[1].setValue(true);
-      await component.get('.action-bar button').trigger('click');
       component.emitted('update:modelValue').should.eql([[fieldKey2.id]]);
     });
 
-    it('emits null after Reset to Me is clicked', async () => {
+    it('emits null after Reset to All is clicked', async () => {
       const [fieldKey] = createFieldKeys(1);
       const component = mountComponent({
         fieldKeys: [fieldKey],
@@ -81,11 +80,10 @@ describe('EntityFiltersViewAs', () => {
       });
       await component.get('.dropdown-trigger').trigger('click');
       await component.get('.change-all.single button').trigger('click');
-      await component.get('.action-bar button').trigger('click');
       component.emitted('update:modelValue').should.eql([[null]]);
     });
 
-    it('does not emit an event when Apply is clicked without a change', async () => {
+    it('does not emit an event when the dropdown is closed without a change', async () => {
       const [fieldKey] = createFieldKeys(1);
       const component = mountComponent({
         fieldKeys: [fieldKey],
@@ -93,7 +91,7 @@ describe('EntityFiltersViewAs', () => {
         attachTo: document.body
       });
       await component.get('.dropdown-trigger').trigger('click');
-      await component.get('.action-bar button').trigger('click');
+      await component.get('.dropdown-trigger').trigger('click');
       should.not.exist(component.emitted('update:modelValue'));
     });
 
@@ -187,7 +185,7 @@ describe('EntityFiltersViewAs', () => {
       component.text().should.not.contain('Public Link 1'); // f2 assignment, which is not a linked form
     });
 
-    it('emits a public link ID after selection is applied', async () => {
+    it('emits a public link ID after selection', async () => {
       testData.extendedDatasets.createPast(1, {
         accessFilter: { type: 'ownerOnly' },
         linkedForms: [{ xmlFormId: 'f', name: 'Form F' }]
@@ -199,11 +197,10 @@ describe('EntityFiltersViewAs', () => {
       });
       await component.get('.dropdown-trigger').trigger('click');
       await component.findAll('input[type="radio"]')[0].setValue(true);
-      await component.get('.action-bar button').trigger('click');
       component.emitted('update:modelValue').should.eql([[assignment.actor.id]]);
     });
 
-    it('emits null after Reset to Me is clicked', async () => {
+    it('emits null after Reset to All is clicked', async () => {
       testData.extendedDatasets.createPast(1, {
         accessFilter: { type: 'ownerOnly' },
         linkedForms: [{ xmlFormId: 'f', name: 'Form F' }]
@@ -216,7 +213,6 @@ describe('EntityFiltersViewAs', () => {
       });
       await component.get('.dropdown-trigger').trigger('click');
       await component.get('.change-all.single button').trigger('click');
-      await component.get('.action-bar button').trigger('click');
       component.emitted('update:modelValue').should.eql([[null]]);
     });
   });

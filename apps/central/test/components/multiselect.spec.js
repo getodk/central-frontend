@@ -249,7 +249,7 @@ describe('Multiselect', () => {
       component.get('.display-value').text().should.equal('Bob');
     });
 
-    it('selects one option and emits an array when Apply is clicked', async () => {
+    it('immediately applies a selected option', async () => {
       const component = mountComponent({
         props: { options, modelValue: [0], single: true, placeholder },
         attachTo: document.body
@@ -257,24 +257,12 @@ describe('Multiselect', () => {
       await toggle(component);
       await component.findAll('input[type="radio"]')[1].setValue(true);
       assertChecked(component, [false, true]);
-      await apply(component);
       component.emitted('update:modelValue').should.eql([[[1]]]);
+      component.get('.dropdown-trigger').attributes('aria-expanded').should.equal('false');
+      component.find('.action-bar').exists().should.be.false;
     });
 
-    it('does not emit an event if the original selection is restored', async () => {
-      const component = mountComponent({
-        props: { options, modelValue: [0], single: true, placeholder },
-        attachTo: document.body
-      });
-      await toggle(component);
-      const inputs = component.findAll('input[type="radio"]');
-      await inputs[1].setValue(true);
-      await inputs[0].setValue(true);
-      await apply(component);
-      should.not.exist(component.emitted('update:modelValue'));
-    });
-
-    it('clears the selection when the reset action is clicked', async () => {
+    it('immediately applies the reset action', async () => {
       const component = mountComponent({
         props: {
           options,
@@ -288,8 +276,8 @@ describe('Multiselect', () => {
       await toggle(component);
       await component.get('.change-all.single button').trigger('click');
       assertChecked(component, [false, false]);
-      await apply(component);
       component.emitted('update:modelValue').should.eql([[[]]]);
+      component.get('.dropdown-trigger').attributes('aria-expanded').should.equal('false');
     });
 
     it('does not show multi-select bulk actions', () => {
