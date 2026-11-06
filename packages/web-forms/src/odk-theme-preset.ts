@@ -4,18 +4,17 @@ import Aura from '@primeuix/themes/aura';
 export const odkThemePreset = definePreset(Aura, {
   semantic: {
     primary: {
-      50: '#e9f8ff',
-      100: '#c7e6f5',
-      200: '#a5d4eb',
-      300: '#82c3e0',
-      400: '#60b1d6',
-      500: '#3e9fcc',
-      600: '#3488af',
-      650: '#2e7ba1',
-      700: '#297193',
-      800: '#1f5976',
-      900: '#14425a',
-      950: '#0a2b3d',
+      50: '#eef8fb',
+      100: '#d5eef5',
+      200: '#abdcea',
+      300: '#75c3da',
+      400: '#3aa5c5',
+      500: '#1592b6',
+      600: '#0a80a3',
+      700: '#086c8a',
+      800: '#075a73',
+      900: '#064a5e',
+      950: '#03303d',
     },
     colorScheme: {
       light: {
@@ -149,7 +148,9 @@ export const odkThemePreset = definePreset(Aura, {
         light: {
           root: {
             primary: {
-              background: '{primary.650}',
+              background: '{primary.600}',
+              hoverBackground: '{primary.700}',
+              activeBackground: '{primary.800}',
             },
             secondary: {
               color: '{surface.950}',
@@ -159,11 +160,13 @@ export const odkThemePreset = definePreset(Aura, {
           },
           outlined: {
             contrast: {
+              color: '{surface.700}',
               hoverBackground: '{surface.200}',
             },
           },
           text: {
             contrast: {
+              color: '{surface.700}',
               hoverBackground: '{surface.200}',
             },
           },
