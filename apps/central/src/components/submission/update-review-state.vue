@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
               <label>
                 <input v-model="selectedState" type="radio"
                   :value="reviewState">
-                <submission-review-state :value="reviewState" align/>
+                <submission-review-state :value="reviewState" align no-tag/>
               </label>
             </div>
           </div>

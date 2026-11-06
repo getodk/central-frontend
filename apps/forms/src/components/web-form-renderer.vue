@@ -50,10 +50,6 @@ const visibleModal = ref();
 
 const getAttachment = (requestUrl: URL) => {
   const fileName = requestUrl.pathname.split('/').pop()!;
-  const decoded = decodeURIComponent(fileName);
-  if (!props.form.attachments.some(a => a.name === decoded)) {
-    return new Response('Not Found', { status: 404 });
-  }
   return getFormAttachment(props.form, fileName, props.st);
 };
 

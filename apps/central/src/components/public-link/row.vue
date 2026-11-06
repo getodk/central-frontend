@@ -11,6 +11,20 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <tr :class="htmlClass">
+    <td class="col-actions">
+      <div class="btn-group">
+        <button v-if="publicLink.token != null && showEdit" type="button"
+          class="edit-button btn btn-default"
+          @click="$emit('edit', publicLink)">
+          <span class="icon-pencil"></span>{{ $t('action.edit') }}
+        </button>
+        <button v-if="publicLink.token != null" type="button"
+          class="revoke-button btn btn-default"
+          @click="$emit('revoke', publicLink)">
+          <span class="icon-times-circle"></span>{{ $t('action.revoke') }}
+        </button>
+      </div>
+    </td>
     <td class="display-name">
       <span v-tooltip.text>{{ publicLink.displayName }}</span>
     </td>
@@ -30,23 +44,9 @@ except according to the terms contained in the LICENSE file.
         </template>
       </template>
     </td>
-    <td class="created-at-and-actions">
+    <td class="created-at">
       <div>
         <date-time :iso="publicLink.createdAt"/>
-      </div>
-      <div class="btn-group">
-        <button v-if="publicLink.token != null && showEdit" type="button"
-          class="edit-button btn btn-default"
-          :aria-label="$t('action.edit')" v-tooltip.aria-label
-          @click="$emit('edit', publicLink)">
-          <span class="icon-pencil"></span>
-        </button>
-        <button v-if="publicLink.token != null" type="button"
-          class="revoke-button btn btn-default"
-          :aria-label="$t('action.revoke')" v-tooltip.aria-label
-          @click="$emit('revoke', publicLink)">
-          <span class="icon-times-circle"></span>
-        </button>
       </div>
     </td>
   </tr>
@@ -99,7 +99,6 @@ export default {
 @import '../../assets/scss/variables';
 
 .public-link-row {
-  .table tbody & td { vertical-align: middle; }
 
   .display-name {
     @include text-overflow-ellipsis;
@@ -108,26 +107,12 @@ export default {
 
   .icon-question-circle { margin-left: 5px; }
 
-  .created-at-and-actions {
-    padding-top: 4px;
-    padding-bottom: 4px;
-    min-width: 120px;
-  }
-
-  .btn-group {
-    @include icon-btn-group;
-    .icon-times-circle { color: $color-danger; }
-  }
 }
 </style>
 
 <i18n lang="json5">
 {
   "en": {
-    "action": {
-      "edit": "Edit Public Access Link",
-      "revoke": "Revoke"
-    },
     // This text is shown for a Public Access Link that has been revoked. The
     // text appears on its own and is not part of a longer sentence.
     "revoked": "Revoked",

@@ -17,11 +17,8 @@ import type { Context } from '../context/Context.ts';
 import type { EvaluationContext } from '../context/EvaluationContext.ts';
 import type { Evaluator } from '../evaluator/Evaluator.ts';
 import type { NamespaceResolver } from '../evaluator/NamespaceResolver.ts';
-import type { FilterPathExpressionEvaluator } from '../evaluator/expression/FilterPathExpressionEvaluator.ts';
-import type { LocationPathEvaluator } from '../evaluator/expression/LocationPathEvaluator.ts';
 import type { LocationPathExpressionEvaluator } from '../evaluator/expression/LocationPathExpressionEvaluator.ts';
 import type { FunctionLibraryCollection } from '../evaluator/functions/FunctionLibraryCollection.ts';
-import type { NodeSetFunction } from '../evaluator/functions/NodeSetFunction.ts';
 import type { AnyStep } from '../evaluator/step/Step.ts';
 import type { Evaluation } from './Evaluation.ts';
 import { NodeEvaluation } from './NodeEvaluation.ts';
@@ -448,12 +445,8 @@ const axisEvaluators = {
 interface LocationPathEvaluationOptions {
   readonly contextPosition?: number;
   readonly contextSize?: number;
+  readonly immutable?: boolean;
 }
-
-type ArbitraryNodesTemporaryCallee =
-  | FilterPathExpressionEvaluator
-  | LocationPathEvaluator
-  | NodeSetFunction;
 
 type AssertLocationPathEvaluationInstance = <T extends XPathNode>(
   context: EvaluationContext<T>,
@@ -550,22 +543,14 @@ export class LocationPathEvaluation<T extends XPathNode>
 
   readonly timeZone: Temporal.TimeZoneLike;
 
-  /**
-   * TODO: this is a temporary accommodation for these cases which are presently
-   * not especially well designed:
-   *
-   * - Functions returning node-sets (i.e. {@link NodeSetFunction} instances).
-   *   It may make sense to invert control, invoking them from here?
-   *
-   * - Nodes filtered by predicate in {@link LocationPathExpression}. Such
-   *   filtering almost certainly should be performed here, in {@link step}.
-   */
-  static fromArbitraryNodes<T extends XPathNode>(
+  readonly immutable: boolean;
+
+  static fromNodes<T extends XPathNode>(
     currentContext: LocationPathParentContext<T>,
-    nodes: readonly T[],
-    _temporaryCallee: ArbitraryNodesTemporaryCallee
-  ): LocationPathEvaluation<T> {
-    return new this(currentContext, new Set(nodes));
+    nodes: ReadonlySet<T>,
+    options: LocationPathEvaluationOptions = {}
+  ) {
+    return new this(currentContext, nodes, options);
   }
 
   static fromCurrentContext<T extends XPathNode>(
@@ -616,6 +601,7 @@ export class LocationPathEvaluation<T extends XPathNode>
     });
     this.computedContextSize = options.contextSize ?? contextNodes.size;
     this.initializedContextPosition = options.contextPosition ?? 1;
+    this.immutable = !!options.immutable;
   }
 
   [Symbol.iterator]() {

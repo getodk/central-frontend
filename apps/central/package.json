@@ -57,6 +57,7 @@
     "sass": "~1",
     "sass-loader": "^13.2.0",
     "sinon": "~9",
-    "util": "^0.12.5"
+    "util": "^0.12.5",
+    "vite-font-extractor-plugin": "^3.1.0"
   }
 }

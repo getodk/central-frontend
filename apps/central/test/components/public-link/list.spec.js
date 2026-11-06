@@ -10,12 +10,16 @@ describe('PublicLinkList', () => {
     testData.extendedForms.createPast(1);
   });
 
-  it('toggles the "Submission Options" modal', () =>
-    load('/projects/1/forms/f/public-links').testModalToggles({
-      modal: ProjectSubmissionOptions,
-      show: '.heading-with-button a[href="#"]',
-      hide: '.btn-primary'
-    }));
+  it('toggles the "Submission Options" modal', async () => {
+    const app = await load('/projects/1/forms/f/public-links');
+    const modal = app.getComponent(ProjectSubmissionOptions);
+    // Open the help popover first, then click the link inside
+    await app.get('.page-heading-help').trigger('click');
+    await app.get('.page-heading a[href="#"]').trigger('click');
+    modal.props().state.should.be.true;
+    await modal.get('.btn-primary').trigger('click');
+    modal.props().state.should.be.false;
+  });
 
   it('shows a message if there are no public links', async () => {
     const component = await load('/projects/1/forms/f/public-links');
@@ -74,7 +78,7 @@ describe('PublicLinkList', () => {
           await app.get('.property-select').setValue('region');
           await app.get('.value-select').setValue('North');
           await app.get('.apply-btn').trigger('click');
-          await app.get('.heading-with-button .btn-primary').trigger('click');
+          await app.get('.page-heading .btn-primary').trigger('click');
           await app.get('#public-link-create input').setValue('Link 3');
           return app.get('#public-link-create form').trigger('submit');
         })

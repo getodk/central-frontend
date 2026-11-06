@@ -55,10 +55,12 @@ const create = () => {
 </script>
 
 <style lang="scss">
+@import '../../../assets/scss/variables';
+
 #form-edit-create-draft-button {
   font-size: 14px;
 
-  ~ p { color: #666; }
+  ~ p { color: $color-text-secondary; }
   + p { margin-block: 3px 0; }
 }
 </style>

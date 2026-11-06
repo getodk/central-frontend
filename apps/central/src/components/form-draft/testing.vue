@@ -90,14 +90,14 @@ const hidePopover = () => { popoverData.target = null; };
 
 #form-draft-testing-entities {
   background-color: $color-page-background;
-  color: #666;
+  color: $color-text-secondary;
   column-gap: $margin-right-icon;
   display: flex;
   margin-bottom: 15px;
   padding: 12px;
 
   .icon-info-circle {
-    color: #999;
+    color: $color-icon;
     font-size: 20px;
   }
 }

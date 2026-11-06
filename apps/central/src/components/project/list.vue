@@ -11,37 +11,32 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="project-list">
-    <page-section>
-      <template #heading>
-        <span>{{ $t('resource.projects') }}</span>
-        <button v-if="currentUser.can('project.create')"
-          id="project-list-new-button" type="button" class="btn btn-primary"
-          @click="createModal.show()">
-          <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
-        </button>
-        <project-sort v-model="sortMode"/>
-      </template>
-      <template #body>
-        <div v-if="projects.dataExists">
-          <project-home-block v-for="project of chunkyProjects" :key="project.id"
-            :project="project" :sort-func="sortFunction"
-            :max-forms="maxForms" :max-datasets="maxDatasets"/>
-        </div>
-        <loading :state="projects.initiallyLoading"/>
-        <p v-if="projects.dataExists && activeProjects.length === 0"
-          class="empty-table-message">
-          <template v-if="currentUser.can('project.create')">
-            {{ $t('emptyTable.canCreate') }}<sentence-separator/>
-            <i18n-t keypath="moreInfo.clickHere.full">
-              <template #clickHere>
-                <doc-link to="central-projects/">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
-              </template>
-            </i18n-t>
+    <page-heading :title="$t('resource.projects')">
+      <project-sort v-model="sortMode"/>
+      <button v-if="currentUser.can('project.create')"
+        id="project-list-new-button" type="button" class="btn btn-primary"
+        @click="createModal.show()">
+        <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
+      </button>
+    </page-heading>
+    <div v-if="projects.dataExists">
+      <project-home-block v-for="project of chunkyProjects" :key="project.id"
+        :project="project" :sort-func="sortFunction"
+        :max-forms="maxForms" :max-datasets="maxDatasets"/>
+    </div>
+    <loading :state="projects.initiallyLoading"/>
+    <p v-if="projects.dataExists && activeProjects.length === 0"
+      class="empty-table-message">
+      <template v-if="currentUser.can('project.create')">
+        {{ $t('emptyTable.canCreate') }}<sentence-separator/>
+        <i18n-t keypath="moreInfo.clickHere.full">
+          <template #clickHere>
+            <doc-link to="central-projects/">{{ $t('moreInfo.clickHere.clickHere') }}</doc-link>
           </template>
-          <template v-else>{{ $t('emptyTable.cannotCreate') }}</template>
-        </p>
+        </i18n-t>
       </template>
-    </page-section>
+      <template v-else>{{ $t('emptyTable.cannotCreate') }}</template>
+    </p>
     <page-section v-if="archivedProjects.length > 0">
       <template #heading>
         <span>{{ $t('archived') }}</span>
@@ -68,6 +63,7 @@ import { sum } from 'ramda';
 import DocLink from '../doc-link.vue';
 import Loading from '../loading.vue';
 import PageSection from '../page/section.vue';
+import PageHeading from '../page/heading.vue';
 import ProjectNew from './new.vue';
 import ProjectHomeBlock from './home-block.vue';
 import ProjectSort from './sort.vue';
@@ -86,6 +82,7 @@ export default {
     DocLink,
     Loading,
     PageSection,
+    PageHeading,
     ProjectNew,
     ProjectHomeBlock,
     ProjectSort,

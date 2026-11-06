@@ -23,8 +23,10 @@ defineProps({
 </script>
 
 <style lang="scss">
+@import '../assets/scss/variables';
+
 .loading {
-  color: #999;
+  color: $color-icon;
   margin-bottom: 10px;
   text-align: center;
 }

@@ -1,0 +1,11 @@
+.git
+**/node_modules
+**/dist
+**/test-results
+**/playwright-report
+**/*.eslintcache
+**/*.tsbuildinfo
+**/.DS_Store
+.nginx
+.idea
+.vscode

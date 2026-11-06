@@ -135,13 +135,13 @@ export default {
 
     #form-trash-list-count {
       font-size: 20px;
-      color: #888;
+      color: $color-text-muted;
       padding-left: 4px;
     }
 
     #form-trash-list-note {
       margin-left: auto;
-      color: #888
+      color: $color-text-muted
     }
   }
 

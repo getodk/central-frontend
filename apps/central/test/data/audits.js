@@ -10,7 +10,7 @@ import { toActor } from './actors';
 const actionsWithDefaultActor = new Set([
   'config.set',
   'entity.create',
-  'entity.bulk.create',
+  'entity.bulk.upsert',
   'entity.update.version',
   'entity.update.resolve',
   'submission.create',

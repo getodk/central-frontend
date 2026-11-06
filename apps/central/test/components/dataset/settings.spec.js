@@ -128,7 +128,7 @@ describe('DatasetSettings', () => {
       return load('/projects/1/entity-lists/trees/settings')
         .testModalToggles({
           modal: DatasetDelete,
-          show: '#dataset-settings .panel-simple-danger .btn-danger',
+          show: '#dataset-settings .page-heading .btn-danger',
           hide: '.btn-link'
         });
     });
@@ -140,36 +140,29 @@ describe('DatasetSettings', () => {
           linkedForms: [{ xmlFormId: 'f2', name: 'Form 2' }]
         });
         const component = await load('/projects/1/entity-lists/trees/settings');
+        await component.get('#dataset-settings .page-heading .btn-danger').trigger('click');
         const help = component.get('.dependent-forms-help');
         help.text().should.match(/2 Forms/);
       });
 
-      it('does not show help text if there are no dependent forms', async () => {
+      it('opens modal if there are no dependent forms', async () => {
         testData.extendedDatasets.createPast(1, {
           sourceForms: [],
           linkedForms: []
         });
         const component = await load('/projects/1/entity-lists/trees/settings');
-        component.find('.dependent-forms-help').exists().should.be.false;
+        await component.get('#dataset-settings .page-heading .btn-danger').trigger('click');
+        component.getComponent(DatasetDelete).props().state.should.be.true;
       });
 
-      it('disables delete button if there are dependent forms', async () => {
+      it('shows popover instead of modal if there are dependent forms', async () => {
         testData.extendedDatasets.createPast(1, {
           sourceForms: [{ xmlFormId: 'f1', name: 'Form 1' }]
         });
         const component = await load('/projects/1/entity-lists/trees/settings');
-        const button = component.get('#dataset-settings .panel-simple-danger .btn-danger');
-        button.attributes('aria-disabled').should.equal('true');
-      });
-
-      it('enables delete button if there are no dependent forms', async () => {
-        testData.extendedDatasets.createPast(1, {
-          sourceForms: [],
-          linkedForms: []
-        });
-        const component = await load('/projects/1/entity-lists/trees/settings');
-        const button = component.get('#dataset-settings .panel-simple-danger .btn-danger');
-        button.attributes('aria-disabled').should.equal('false');
+        await component.get('#dataset-settings .page-heading .btn-danger').trigger('click');
+        component.getComponent(DatasetDelete).props().state.should.be.false;
+        component.find('.dependent-forms-help').exists().should.be.true;
       });
     });
   });

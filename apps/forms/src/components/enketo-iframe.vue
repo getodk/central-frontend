@@ -10,7 +10,7 @@ import Location from '../utils/location';
 import { hideSpinner } from '../utils/spinner';
 
 const getCookieValue = (key, doc) => {
-  const cookie = doc.cookie.split(';')
+  const cookie = doc?.cookie.split(';')
     .map(cookie => cookie.trim())
     .find(cookie => cookie.startsWith(`${key}=`));
   return decodeURIComponent(cookie?.split('=')[1] || '');

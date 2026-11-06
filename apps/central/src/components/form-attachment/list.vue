@@ -318,10 +318,12 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../../assets/scss/variables';
+
 #form-attachment-list-upload-button {
   margin-right: 5px;
 
-  + span { color: #999; }
+  + span { color: $color-icon; }
 }
 </style>
 

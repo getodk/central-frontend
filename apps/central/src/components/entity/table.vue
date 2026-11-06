@@ -14,13 +14,14 @@ except according to the terms contained in the LICENSE file.
     :data="odataEntities.value" key-prop="__id"
     :frozen-only="properties == null" divider @action="afterAction">
     <template #head-frozen>
+      <th class="col-actions"></th>
       <th><span class="sr-only">{{ $t('common.rowNumber') }}</span></th>
       <th v-if="!deleted && project.verbs.has('entity.delete')">
         <input type="checkbox" :aria-label="$t('action.selectRow')" :checked="allSelected" @change="changeAllSelection($event.target.checked)">
       </th>
       <th>{{ $t('header.createdBy') }}</th>
       <th>{{ $t('header.createdAt') }}</th>
-      <th v-if="!deleted">{{ $t('header.updatedAtAndActions') }}</th>
+      <th v-if="!deleted">{{ $t('common.lastUpdate') }}</th>
       <th v-else class="col-deleted-at">{{ $t('header.deletedAt') }}</th>
     </template>
     <template #head-scrolling>
@@ -47,12 +48,14 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { inject, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 import EntityDataRow from './data-row.vue';
 import EntityMetadataRow from './metadata-row.vue';
 import TableFreeze from '../table/freeze.vue';
 
+import useRoutes from '../../composables/routes';
 import { markRowsChanged, markRowsDeleted } from '../../util/dom';
 import { useRequestData } from '../../request-data';
 
@@ -78,6 +81,10 @@ const emit = defineEmits(['update', 'resolve', 'delete', 'restore', 'selectionCh
 // created.
 const { project, odataEntities } = useRequestData();
 
+const router = useRouter();
+const { entityPath } = useRoutes();
+const datasetName = inject('datasetName');
+
 const afterAction = ({ target, data }) => {
   const { classList } = target;
   if (classList.contains('delete-button'))
@@ -86,8 +93,12 @@ const afterAction = ({ target, data }) => {
     emit('update', data);
   else if (classList.contains('resolve-button'))
     emit('resolve', data);
-  else if (target.classList.contains('restore-button'))
+  else if (classList.contains('restore-button'))
     emit('restore', data);
+  else if (target.tagName === 'TR') {
+    const path = entityPath(project.id, datasetName, data.__id);
+    window.open(router.resolve(path).href, '_blank', 'noopener');
+  }
 };
 const table = ref(null);
 const findIndex = (uuid) =>
@@ -129,6 +140,10 @@ defineExpose({ afterUpdate, afterDelete });
 #entity-table {
   table:has(tbody:empty) { display: none; }
 
+  tbody tr {
+    cursor: pointer;
+  }
+
   .table-freeze-scrolling {
     th, td {
       @include text-overflow-ellipsis;
@@ -141,7 +156,7 @@ defineExpose({ afterUpdate, afterDelete });
     margin-top: 0;
   }
 
-th.col-deleted-at { color: $color-danger; }
+  th.col-deleted-at { color: $color-danger; }
 }
 </style>
 
@@ -149,10 +164,6 @@ th.col-deleted-at { color: $color-danger; }
 {
   "en": {
     "header": {
-      // This is the text of a column header of a table of Entities. The column
-      // shows when each Entity was last updated, as well as actions that can be
-      // taken on the Entity.
-      "updatedAtAndActions": "Last Updated / Actions",
       // Heading of the column that shows Entity deletion timestamp
       "deletedAt": "Deleted at"
     }

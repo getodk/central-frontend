@@ -11,11 +11,20 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="project-settings">
+    <page-heading :title="$t('common.tab.settings')">
+      <button v-if="project.dataExists" id="project-settings-archive-button" type="button"
+        class="btn btn-danger" :aria-disabled="project.archived" v-tooltip.aria-describedby="project.archived ? $t('dangerZone.archived[0]') : null" @click="archiveModal.show()">
+        {{ $t('dangerZone.action.archive') }}&hellip;
+      </button>
+    </page-heading>
     <div v-if="project.dataExists" class="row">
       <div class="col-xs-8">
         <project-edit/>
       </div>
-      <div class="col-xs-4">
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-xs-8">
         <div class="panel panel-simple">
           <div class="panel-heading">
             <h1 class="panel-title">{{ $t('encryption.title') }}</h1>
@@ -49,25 +58,6 @@ except according to the terms contained in the LICENSE file.
             </template>
           </div>
         </div>
-        <div class="panel panel-simple-danger">
-          <div class="panel-heading">
-            <h1 class="panel-title">{{ $t('common.dangerZone') }}</h1>
-          </div>
-          <div class="panel-body">
-            <template v-if="!project.archived">
-              <p>
-                <button id="project-settings-archive-button" type="button"
-                  class="btn btn-danger" @click="archiveModal.show()">
-                  {{ $t('dangerZone.action.archive') }}&hellip;
-                </button>
-              </p>
-            </template>
-            <template v-else>
-              <p>{{ $t('dangerZone.archived[0]') }}</p>
-              <p>{{ $t('dangerZone.archived[1]') }}</p>
-            </template>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -80,6 +70,7 @@ except according to the terms contained in the LICENSE file.
 
 <script>
 import DocLink from '../doc-link.vue';
+import PageHeading from '../page/heading.vue';
 import ProjectArchive from './archive.vue';
 import ProjectEdit from './edit.vue';
 import ProjectEnableEncryption from './enable-encryption.vue';
@@ -93,6 +84,7 @@ export default {
   name: 'ProjectSettings',
   components: {
     DocLink,
+    PageHeading,
     ProjectArchive,
     ProjectEdit,
     ProjectEnableEncryption,
@@ -156,8 +148,7 @@ export default {
         "archive": "Archive this Project"
       },
       "archived": [
-        "This Project has been archived.",
-        "In this version of ODK Central, you may not unarchive a Project. However, the ability to unarchive a Project is planned for a future release."
+        "This Project has been archived."
       ]
     },
     "alert": {

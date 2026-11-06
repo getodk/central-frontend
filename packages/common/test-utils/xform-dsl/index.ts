@@ -130,16 +130,19 @@ interface RangeAttributes {
   start: number;
   end: number;
   step: number;
+  appearance?: string;
 }
 export const range = (
   ref: string,
   attributes: RangeAttributes,
   ...children: XFormsElement[]
 ): XFormsElement => {
-  return t(
-    `range ref="${ref}" start="${attributes.start}" end="${attributes.end}" step="${attributes.step}"`,
-    ...children
-  );
+  const name = Object.entries({ ref, ...attributes })
+    .filter(([, value]) => value != null)
+    .map(([attributeName, value]) => `${attributeName}="${value}"`)
+    .join(' ');
+
+  return t(`range ${name}`, ...children);
 };
 
 type Select1DynamicParameters =

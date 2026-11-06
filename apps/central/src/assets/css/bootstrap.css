@@ -247,9 +247,6 @@ th {
   .dropup > .btn > .caret {
     border-top-color: #000 !important;
   }
-  .label {
-    border: 1px solid #000;
-  }
   .table {
     border-collapse: collapse !important;
   }
@@ -3035,31 +3032,6 @@ fieldset[disabled] .navbar-default .btn-link:focus {
 }
 .breadcrumb > .active {
   color: #777777;
-}
-.label {
-  display: inline;
-  padding: 0.2em 0.6em 0.3em;
-  font-size: 75%;
-  font-weight: 700;
-  line-height: 1;
-  color: #fff;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: baseline;
-  border-radius: 0.25em;
-}
-a.label:hover,
-a.label:focus {
-  color: #fff;
-  text-decoration: none;
-  cursor: pointer;
-}
-.label:empty {
-  display: none;
-}
-.btn .label {
-  position: relative;
-  top: -1px;
 }
 .badge {
   display: inline-block;

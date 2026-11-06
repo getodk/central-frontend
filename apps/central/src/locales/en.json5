@@ -56,12 +56,6 @@
     // This is a note about a Form that is not yet published.
     "unpublished": "Not published yet"
   },
-  // @transifexKey component.FormOverviewRightNow.stateCaption
-  "formStateDescription": {
-    "open": "This Form is downloadable and is accepting Submissions.",
-    "closing": "This Form is not downloadable but still accepts Submissions.",
-    "closed": "This Form is not downloadable and does not accept Submissions."
-  },
   // This is a possible Review State for a Submission.
   "reviewState": {
     "received": "Received",
@@ -118,6 +112,7 @@
         "update_property_delete": "Delete Property"
       },
       "entity": {
+        "bulk_upsert": "Import Data",
         "bulk_delete": "Bulk Delete",
         "bulk_restore": "Bulk Restore"
       },
@@ -222,8 +217,7 @@
     "refreshPage": "Refresh page",
     "resetPassword": "Reset password",
     "review": "Review",
-    // @transifexKey component.EntityMetadataRow.reviewParallelUpdates
-    "reviewParallelUpdates": "Review parallel updates",
+    "revoke": "Revoke",
     "save": "Save",
     "saveSettings": "Save settings",
     // This text is shown next to a dropdown menu or other way to change the sorting of Projects or Forms
@@ -487,7 +481,7 @@
     // This text is shown on its own before details about a warning.
     "warning": "Warning",
     // Standalone text shown as a badge next to a recommendation. Not part of a longer phrase.
-    "recommended": "recommended",
+    "recommended": "Recommended",
     "none": "(none)",
     "search": "Search",
     // @transifexKey component.FormTrashList.title

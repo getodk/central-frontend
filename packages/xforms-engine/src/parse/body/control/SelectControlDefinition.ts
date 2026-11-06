@@ -1,13 +1,13 @@
 import type { CollectionValues } from '@getodk/common/types/collections/CollectionValues.ts';
 import type { LocalNamedElement } from '@getodk/common/types/dom.ts';
-import { getItemElements, getItemsetElement } from '../../../lib/dom/query.ts';
 import type { XFormDefinition } from '../../XFormDefinition.ts';
 import type { SelectAppearanceDefinition } from '../appearance/selectAppearanceParser.ts';
 import { selectAppearanceParser } from '../appearance/selectAppearanceParser.ts';
 import type { AnyBodyElementDefinition, BodyElementParentContext } from '../BodyDefinition.ts';
 import { ControlDefinition } from './ControlDefinition.ts';
-import { ItemDefinition } from './ItemDefinition.ts';
-import { ItemsetDefinition } from './ItemsetDefinition.ts';
+import type { ItemDefinition } from './ItemDefinition.ts';
+import type { ItemsetDefinition } from './ItemsetDefinition.ts';
+import { parseItemCollection } from './parseItemCollection.ts';
 
 const selectLocalNames = new Set(['select', 'select1'] as const);
 
@@ -49,22 +49,9 @@ export class SelectControlDefinition<Type extends SelectType> extends ControlDef
     this.element = element;
     this.appearances = selectAppearanceParser.parseFrom(element, 'appearance');
 
-    const itemsetElement = getItemsetElement(element);
-    const itemElements = getItemElements(element);
-
-    if (itemsetElement == null) {
-      this.itemset = null;
-      this.items = itemElements.map((itemElement) => {
-        return new ItemDefinition(form, this, itemElement);
-      });
-    } else {
-      if (itemElements.length > 0) {
-        throw new Error(`<${element.nodeName}> has both <itemset> and <item> children`);
-      }
-
-      this.items = [];
-      this.itemset = new ItemsetDefinition(form, this, itemsetElement);
-    }
+    const { items, itemset } = parseItemCollection(form, this);
+    this.items = items;
+    this.itemset = itemset;
   }
 
   override toJSON() {

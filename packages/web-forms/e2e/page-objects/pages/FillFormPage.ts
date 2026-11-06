@@ -4,6 +4,7 @@ import { InputControl } from '../controls/InputControl.js';
 import { MapControl } from '../controls/MapControl.js';
 import { NoteControl } from '../controls/NoteControl.js';
 import { PaginationControl } from '../controls/PaginationControl.js';
+import { RangeControl } from '../controls/RangeControl.js';
 import { RepeatControl } from '../controls/RepeatControl.js';
 import { SelectControl } from '../controls/SelectControl.js';
 import { TextControl } from '../controls/TextControl.js';
@@ -16,6 +17,7 @@ export class FillFormPage {
   public readonly input: InputControl;
   public readonly map: MapControl;
   public readonly pagination: PaginationControl;
+  public readonly range: RangeControl;
   public readonly repeat: RepeatControl;
   public readonly text: TextControl;
   public readonly select: SelectControl;
@@ -36,6 +38,7 @@ export class FillFormPage {
     this.input = new InputControl(page);
     this.map = new MapControl(page);
     this.pagination = new PaginationControl(page);
+    this.range = new RangeControl(page);
     this.repeat = new RepeatControl(page);
     this.text = new TextControl(page);
     this.select = new SelectControl(page);

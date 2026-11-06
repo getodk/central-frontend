@@ -19,7 +19,7 @@ e2e/
     ├── build/        # Contains tests that validate the build process.
     ├── functional/   # Contains tests that validate the core functionality, run in headless mode.
         ├── geopoint.test.ts      # Example of a test file for the geopoint question type.
-    ├── visual/       # Includes tests that perform visual comparisons with headless mode disabled, and they should only execute in the CI.
+    ├── visual/       # Includes tests that perform visual comparisons with headless mode disabled.
 ```
 
 ## Key concepts
@@ -30,24 +30,25 @@ e2e/
 
 ## Getting started
 
-1. **Run tests**
-   Execute all functional E2E tests:
+The tests run in the Playwright image (the same as in CI).
 
-   ```bash
-    npm run test:e2e:functional:all -w=packages/web-forms
-   ```
+Run a suite for one browser (`chromium`, `firefox` or `webkit`), or all functional suites:
 
-   Or run specific tests:
+```bash
+npm run test:e2e:functional:chromium -w=packages/web-forms
+npm run test:e2e:visual:chromium -w=packages/web-forms
+npm run test:e2e:functional:all -w=packages/web-forms
+```
 
-   ```bash
-   npm run test:e2e:functional:<browser, e.g webkit, chromium or firefox> <filepath, e.g. e2e/test-cases/geopoint.test.ts> -w=packages/web-forms
-   ```
+Anything after `--` is passed to `playwright test`:
 
-   Execute visual tests, but note that they are designed to work only in the CI environment. Running them locally may cause issues due to differences in snapshot sizes.
+```bash
+npm run test:e2e:functional:chromium -w=packages/web-forms -- e2e/test-cases/functional/geopoint.test.ts
+npm run test:e2e:visual:webkit -w=packages/web-forms -- -g "renders markdown" --update-snapshots
+npm run test:e2e:functional:chromium -w=packages/web-forms -- --trace on
+```
 
-   ```bash
-    npm run test:e2e:visual:<browser, e.g webkit, chromium or firefox> -w=packages/web-forms
-   ```
+Reports and traces land in `test-results/` and `playwright-report/`; open them with `npx playwright show-report` from `packages/web-forms`. After a Playwright version bump, `docker image prune` removes the old image.
 
 ## Contributing
 

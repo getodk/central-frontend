@@ -454,7 +454,7 @@ const emptyMessage = computed(() => (searchValue.value === ''
 
   .icon-angle-down {
     font-size: 16px;
-    color: #555555;
+    color: $color-text-muted;
     font-weight: bold;
     pointer-events: none;
     z-index: 1;
@@ -482,7 +482,7 @@ const emptyMessage = computed(() => (searchValue.value === ''
     }
 
     .form-control {
-      background-color: #fff;
+      background-color: $color-surface;
       display: block;
       font-size: $font-size-dropdown-menu;
       height: auto;
@@ -520,7 +520,7 @@ const emptyMessage = computed(() => (searchValue.value === ''
   }
 
   .option-list {
-    background-color: #FFF;
+    background-color: $color-surface;
     font-size: 14px;
     list-style: none;
     max-height: 250px;
@@ -587,7 +587,7 @@ const emptyMessage = computed(() => (searchValue.value === ''
       padding: 0 $hpadding;
 
       &:not(.empty-message):not(:has(input:checked)):hover {
-        background-color: #e6e6e6;
+        background-color: $color-surface-secondary;
       }
     }
 

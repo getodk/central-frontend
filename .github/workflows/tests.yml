@@ -12,7 +12,7 @@ jobs:
   check-and-build:
     name: 'Static check and build'
     timeout-minutes: 5
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
     - uses: actions/checkout@v6
     - run: sudo apt-get install shellcheck
@@ -46,7 +46,7 @@ jobs:
     needs:
     - check-and-build
     timeout-minutes: 10
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
     - uses: actions/checkout@v6
     - uses: ./.github/actions/node-cache
@@ -59,7 +59,7 @@ jobs:
     needs:
     - check-and-build
     timeout-minutes: 2
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
     - uses: actions/checkout@v6
     - uses: ./.github/actions/node-cache
@@ -74,7 +74,7 @@ jobs:
     - test-central-app
     - test-forms-app
     timeout-minutes: 20
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
 
     # This one weird trick speeds up every build!

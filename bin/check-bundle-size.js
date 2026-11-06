@@ -55,7 +55,6 @@ function isTooBig({ path, size }) {
   // Special cases:
   const simpleName = basename(path).replace(/(-[\w-]{8})+\./, '.');
   switch (simpleName) {
-    case 'icomoon.svg':    return size >    60_000;
     case 'forms.js':       return size > 1_400_000;
     case 'forms.css':      return size >   500_000;
     case 'web-form.js':    return size >   600_000; // Matches web-form-renderer.js

@@ -105,10 +105,12 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../../assets/scss/variables';
+
 .field-key-qr-panel {
   &.legacy {
-    .panel-heading { background-color: #777; }
-    .icon-mobile { color: #555; }
+    .panel-heading { background-color: $color-surface-secondary; }
+    .icon-mobile { color: $color-text-muted; }
   }
 }
 </style>

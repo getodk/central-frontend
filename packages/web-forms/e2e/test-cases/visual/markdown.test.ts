@@ -1,5 +1,6 @@
-import { expect, test } from '@playwright/test';
+import { test } from '@playwright/test';
 import { FillFormPage } from '../../page-objects/pages/FillFormPage.ts';
+import { expectFullPageScreenshot } from '../../screenshot.ts';
 
 test.describe('Markdown formatting', () => {
   let formPage: FillFormPage;
@@ -24,9 +25,6 @@ test.describe('Markdown formatting', () => {
       'no'
     );
 
-    await expect(page).toHaveScreenshot('full-page.png', {
-      fullPage: true,
-      maxDiffPixelRatio: 0.02,
-    });
+    await expectFullPageScreenshot(page, 'full-page.png');
   });
 });

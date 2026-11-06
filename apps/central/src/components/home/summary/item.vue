@@ -49,7 +49,7 @@ export default {
   padding: 16px;
   background-color: white;
   border-radius: 12px;
-  border: 1px solid #E3E4E4;
+  border: 1px solid $color-border;
   flex: 1 1 0px;
 
   .heading {
