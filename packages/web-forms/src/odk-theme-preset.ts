@@ -1,21 +1,20 @@
 import { definePreset } from '@primeuix/themes';
 import Aura from '@primeuix/themes/aura';
-import { ODK } from './odk-design-system';
 
 export const odkThemePreset = definePreset(Aura, {
   semantic: {
     primary: {
-      50: ODK.blue100,
-      100: ODK.blue200,
-      200: ODK.blue300,
-      300: ODK.blue400,
-      400: ODK.blue500,
-      500: ODK.blue600,
-      600: ODK.blue700,
-      700: ODK.blue800,
-      800: ODK.blue900,
-      900: ODK.blue950,
-      950: ODK.blue950,
+      50: 'var(--odk-blue-100)',
+      100: 'var(--odk-blue-200)',
+      200: 'var(--odk-blue-300)',
+      300: 'var(--odk-blue-400)',
+      400: 'var(--odk-blue-500)',
+      500: 'var(--odk-blue-600)',
+      600: 'var(--odk-blue-700)',
+      700: 'var(--odk-blue-800)',
+      800: 'var(--odk-blue-900)',
+      900: 'var(--odk-blue-950)',
+      950: 'var(--odk-blue-950)',
     },
     colorScheme: {
       light: {

@@ -40,7 +40,7 @@ defineEmits(['update:activeLanguage']);
 	color: var(--odk-text-color);
 
 	&.p-focus {
-		box-shadow: inset 0 0 0 1px var(--p-primary-500);
+		box-shadow: inset 0 0 0 1px var(--odk-primary-text-color);
 	}
 
 	:deep(.p-select-label) {
