@@ -52,9 +52,9 @@ packages/web-forms/e2e/test-cases/visual/all-question-types.test.ts-snapshots/se
 packages/web-forms/e2e/test-cases/visual/all-question-types.test.ts-snapshots/select-map-point-selected-chromium.png:d16943145a98596cae6c5527124853c14de923f4ac05fa46cdf0ab4bbaa4224b
 packages/web-forms/e2e/test-cases/visual/all-question-types.test.ts-snapshots/select-map-point-selected-firefox.png:23a8c0ce510efecc9be525f4040274431370d6d416687bab017c0efdc47bdb52
 packages/web-forms/e2e/test-cases/visual/all-question-types.test.ts-snapshots/select-map-point-selected-webkit.png:c89b1537dbf2704abaedd640a381af6f19a5a83c64df37ce95a967990e779040
-packages/web-forms/e2e/test-cases/visual/all-question-types.test.ts-snapshots/select-map-removed-saved-feature-chromium.png:5c80d179800db83bf98eeeb63f2e6b8d790c598be9d5c326b63a8dc579dcb394
-packages/web-forms/e2e/test-cases/visual/all-question-types.test.ts-snapshots/select-map-removed-saved-feature-firefox.png:52d89b7fd952546ce7a01abd264e2e42aee6c1d60bb82b7985f92887ca7c661a
-packages/web-forms/e2e/test-cases/visual/all-question-types.test.ts-snapshots/select-map-removed-saved-feature-webkit.png:0c338fcf9908c5e4be03f320bac31af3f79d4c8944fe2a8104bc735c544dedb1
+packages/web-forms/e2e/test-cases/visual/all-question-types.test.ts-snapshots/select-map-removed-saved-feature-chromium.png:d16943145a98596cae6c5527124853c14de923f4ac05fa46cdf0ab4bbaa4224b
+packages/web-forms/e2e/test-cases/visual/all-question-types.test.ts-snapshots/select-map-removed-saved-feature-firefox.png:23a8c0ce510efecc9be525f4040274431370d6d416687bab017c0efdc47bdb52
+packages/web-forms/e2e/test-cases/visual/all-question-types.test.ts-snapshots/select-map-removed-saved-feature-webkit.png:c89b1537dbf2704abaedd640a381af6f19a5a83c64df37ce95a967990e779040
 packages/web-forms/e2e/test-cases/visual/all-question-types.test.ts-snapshots/select-map-view-details-chromium.png:7a2ca30d034d1ca74d367f148c3e643e45ca05c5ca28dc07d4fab25dd163f7dc
 packages/web-forms/e2e/test-cases/visual/all-question-types.test.ts-snapshots/select-map-view-details-firefox.png:fe01d496a2f8c365217e7234e8b212d8a0d067ff0c42b947a1396704063a9900
 packages/web-forms/e2e/test-cases/visual/all-question-types.test.ts-snapshots/select-map-view-details-webkit.png:88599a07b68bff4522eff2611d3b8843ae314ae5aa8dc899a2284b51d4918625
