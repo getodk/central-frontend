@@ -33,6 +33,9 @@ test.describe('autosave', () => {
     await page.waitForTimeout(1500); // wait for autosave to execute
 
     await page.reload();
+    await expect(page.getByRole('heading', { name: 'Recover your work?' })).toBeVisible();
+    await page.getByRole('button', { name: 'recover' }).click();
+
     await expect(page.getByRole('heading', { name: simpleForm.name })).toBeVisible();
     expect(await page.getByLabel('First Name').inputValue()).toEqual('autosa');
 

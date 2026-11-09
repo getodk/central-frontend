@@ -14,7 +14,7 @@ const getIdbKey = (form: Form) => {
   return `${KEY_PREFIX}-${form.projectId}-${form.xmlFormId}`;
 };
 
-interface AutosaveValue {
+export interface AutosaveValue {
   createdAt: Date;
   snapshot: InstanceSnapshot;
 };
@@ -30,7 +30,7 @@ const isInstanceSnapshot = (value: unknown): value is InstanceSnapshot => {
   );
 };
 
-export const getAutosave = async (form: Form): Promise<InstanceSnapshot | undefined> => {
+export const getAutosave = async (form: Form): Promise<AutosaveValue | undefined> => {
   const key = getIdbKey(form);
   try {
     const result = (await get(key)) as unknown as AutosaveValue;
@@ -45,7 +45,7 @@ export const getAutosave = async (form: Form): Promise<InstanceSnapshot | undefi
       // not a valid idb record
       return;
     }
-    return result.snapshot;
+    return result;
   } catch {
     return;
   }

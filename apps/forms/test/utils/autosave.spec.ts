@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
 import * as idbkeyval from 'idb-keyval';
-import { clearExpiredAutosaves, getAutosave } from '../../src/utils/autosave';
-import type { InstanceSnapshot } from '@getodk/xforms-engine';
+import { clearExpiredAutosaves, getAutosave, type AutosaveValue } from '../../src/utils/autosave';
 import type { Form } from '../../src/utils/api';
 
 vi.mock('idb-keyval', { spy: true });
@@ -36,14 +35,15 @@ describe('autosave util', () => {
     });
 
     it('returns found autosave', async () => {
-      const expected: InstanceSnapshot = {
-        xml: '<form/>',
-        attachments: []
+      const createdAt = new Date();
+      const expected: AutosaveValue = {
+        createdAt,
+        snapshot: {
+          xml: '<form/>',
+          attachments: []
+        }
       };
-      idbGet.mockResolvedValue({
-        createdAt: new Date(),
-        snapshot: expected
-      });
+      idbGet.mockResolvedValue(expected);
       const actual = await getAutosave(form);
       expect(actual).toEqual(expected);
     });
