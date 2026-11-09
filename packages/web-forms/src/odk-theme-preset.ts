@@ -143,6 +143,29 @@ export const odkThemePreset = definePreset(Aura, {
         },
       },
     },
+    button: {
+      colorScheme: {
+        light: {
+          root: {
+            secondary: {
+              color: '{surface.950}',
+              background: '{surface.0}',
+              hoverBackground: '{surface.200}',
+            },
+          },
+          outlined: {
+            contrast: {
+              hoverBackground: '{surface.200}',
+            },
+          },
+          text: {
+            contrast: {
+              hoverBackground: '{surface.200}',
+            },
+          },
+        },
+      },
+    },
     colorpicker: {
       colorScheme: {
         light: {
