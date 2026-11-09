@@ -137,13 +137,7 @@ test.describe('Enketo', () => {
       });
     });
 
-    const rejectAllRequests = route => {
-      route.fulfill({
-        status: 503,
-        contentType: 'application/json',
-        body: JSON.stringify({ error: 'Offline simulation' })
-      });
-    };
+    const rejectAllRequests = route => { route.abort('failed'); };
 
     const goOffline = async (page) => {
       await page.context().setOffline(true);

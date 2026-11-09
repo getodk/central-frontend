@@ -16,17 +16,14 @@ export default () => {
   const { createResource } = useRequestData();
   return createResource('projects', (projects) => ({
     /* eslint-disable no-param-reassign */
-    transformResponse: (response) => {
-      if (!Array.isArray(response.data)) {
-        console.error('transforming project response: ', response); // eslint-disable-line no-console
-      }
-      for (const project of response.data) {
+    transformResponse: ({ data }) => {
+      for (const project of data) {
         for (const form of project.formList)
           transformForm(form);
         project.verbs = new Set(project.verbs);
         project.permits = hasVerbs;
       }
-      return response.data;
+      return data;
     },
     /* eslint-enable no-param-reassign */
     // Returns an object of Sets containing duplicate project names for use

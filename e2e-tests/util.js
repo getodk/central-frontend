@@ -79,7 +79,7 @@ const test = testBase.extend({
 
       await use();
 
-      expect(
+      await expect(
         fatals,
         `Unexpected fatal error(s) logged: ${fatals.map((logged, idx) => `\n    ${idx}. ${logged}`).join('')}`,
       ).toHaveLength(0);
