@@ -94,7 +94,7 @@ describe('Sentry headers', () => {
           state: 'open',
           draft: false,
           webformsEnabled: true,
-          autosaveEnabled: true,
+          autosaveEnabled: false,
           once: false
         },
         actionType: 'new',
