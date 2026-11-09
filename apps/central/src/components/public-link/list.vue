@@ -33,7 +33,7 @@ except according to the terms contained in the LICENSE file.
         </i18n-t>
       </template>
       <button type="button" class="btn btn-primary" @click="createModal.show()">
-        <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
+        <span class="icon-plus"></span>{{ $t('action.create') }}&hellip;
       </button>
     </page-heading>
 

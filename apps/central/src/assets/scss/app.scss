@@ -139,7 +139,7 @@ em { @include italic; }
 ////////////////////////////////////////////////////////////////////////////////
 // ICONS
 
-.btn, a, .label {
+.btn, a {
   .caret { margin-left: 6px; }
 
   > [class^="icon-"]:first-child {
@@ -147,6 +147,7 @@ em { @include italic; }
     // follows it. For a link in particular, the underlining will be off if
     // there is white space.
     margin-right: $margin-right-icon;
+    margin-left: $margin-left-icon;
 
     + .caret { margin-left: 0; }
   }
@@ -334,26 +335,26 @@ class. */
     color: $color-text-disabled;
   }
   &:hover {
-    background-color: $color-danger-hover;
-    border-color: $color-danger-hover;
-    color: $color-surface;
+    background-color: $color-danger-subtle;
+    color: $color-danger;
   }
 
   &:active, &:active:hover {
     background-color: $color-danger-pressed;
     border-color: $color-danger-pressed;
-    color: $color-surface;
+    color: $color-text-inverse;
   }
 
   &:focus {
     outline: 2px solid $color-focus-ring;
     outline-offset: 2px;
+    color: $color-danger;
   }
 
   &:active:focus {
     background-color: $color-danger-pressed;
     border-color: $color-danger-pressed;
-    color: $color-surface;
+    color: $color-text-inverse;
   }
 
   &:hover, &:focus, &:active:focus {
@@ -365,7 +366,7 @@ class. */
   }
 }
 
-a {
+a, .btn-link {
   &:hover, &.disabled, &[aria-disabled="true"], &[aria-disabled="true"]:focus, fieldset[disabled] & {
     text-decoration: none;
   }
@@ -377,7 +378,7 @@ a {
   }
 }
 
-a:not(.btn) {
+a:not(.btn), .btn-link {
   &, &:hover { color: $color-action-foreground; }
 
   &:hover, &:focus:hover {
@@ -385,13 +386,18 @@ a:not(.btn) {
     outline: none;
   }
 
-  &:focus {
-    outline: 2px solid $color-focus-ring;
-    outline-offset: 2px;
-    text-decoration: none;
+  &.disabled, &[aria-disabled="true"], fieldset[disabled] & { color: $color-text-disabled; }
+}
+
+.btn-link {
+  &, &:active, &[aria-disabled="true"], fieldset[disabled] & {
+    background-color: transparent;
   }
 
-  &.disabled, &[aria-disabled="true"], fieldset[disabled] & { color: $color-text-disabled; }
+  &:focus {
+    background-clip: content-box;
+    box-shadow: none;
+  }
 }
 
 a {
@@ -412,8 +418,9 @@ a {
 }
 
 // Design system calls this tertiary button
-.btn-link {
-  border-radius: 0;
+.btn-tertiary {
+  border-radius: 6px;
+  border: 1px solid transparent;
   background-color: transparent;
 
   &[aria-disabled="true"], &.disabled, fieldset[disabled] & {
@@ -421,11 +428,12 @@ a {
   }
 
   &:hover {
-    background-color: $blue-50;
     text-decoration: none;
   }
+
   &:active {
     background-color: $blue-100;
+    border-color: $blue-100;
     box-shadow: none;
   }
 
@@ -512,6 +520,10 @@ select[multiple] { height: auto; }
   color: $color-text-secondary;
   margin-bottom: 10px;
   margin-top: 5px;
+}
+
+.help-text{
+  color: $color-text-muted;
 }
 
 $form-group-padding-bottom: 15px;
@@ -718,18 +730,12 @@ tr.uncommitted-change { background-color: $amber-100; }
 .table {
   margin-bottom: $margin-bottom-table;
   border: 1px solid $color-border;
-  border-radius: 12px;
+  border-radius: 6px;
   border-collapse: separate;
   border-spacing: 0;
   overflow: hidden;
 
   > thead {
-    background-color: $color-table-heading-background;
-
-    > tr {
-      background-color: $color-header-row;
-    }
-
     > tr > th {
       border-bottom: none;
       font-size: $font-size-table-heading;
@@ -793,15 +799,6 @@ tr.uncommitted-change { background-color: $amber-100; }
   font-size: 15px;
 }
 
-
-
-////////////////////////////////////////////////////////////////////////////////
-// LABELS
-
-.label-default { background-color: $color-surface-secondary; }
-.label-primary { background-color: $color-action-background; }
-.label-warning { background-color: $color-warning; }
-
 ////////////////////////////////////////////////////////////////////////////////
 // TAGS
 
@@ -819,7 +816,7 @@ tr.uncommitted-change { background-color: $amber-100; }
   }
 
   &.tag-warning {
-    background-color: #F9E599;
+    background-color: $color-warning-subtle;
   }
 
   &.tag-success {
@@ -827,11 +824,11 @@ tr.uncommitted-change { background-color: $amber-100; }
   }
 
   &.tag-info {
-    background-color: #E3EFF3;
+    background-color: $color-info-subtle;
   }
 
   &.tag-danger {
-    background-color: #F7B3B3;
+    background-color: $color-danger-subtle;
   }
 }
 
@@ -894,13 +891,13 @@ tr.uncommitted-change { background-color: $amber-100; }
   box-shadow: none;
 
   .panel-heading {
-    background-color: $color-table-heading-background;
-    border-bottom: $border-bottom-table-heading;
+    background-color: $color-surface;
     padding: $padding-table-heading;
 
     .panel-title {
-      font-size: $font-size-table-heading;
+      font-size: 16px;
       line-height: inherit;
+      font-weight: normal;
     }
   }
 
@@ -1053,7 +1050,7 @@ tr.uncommitted-change { background-color: $amber-100; }
 
   .badge {
     margin-left: 2px;
-    background-color: rgba($color-accent-primary, 0.2);
+    background-color: $color-action-light;
     color: $color-text;
     font-size: 14px;
     font-weight: normal;
@@ -1093,7 +1090,7 @@ tr.uncommitted-change { background-color: $amber-100; }
 
 .table-actions-bar {
   background-color: $color-page-background;
-  padding: 10px 0;
+  padding-bottom: 10px;
   font-size: 12px;
 
   .form-inline {

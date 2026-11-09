@@ -93,7 +93,7 @@ const hideHelp = () => {
 
 .page-heading-help-content {
   padding: 12px 16px;
-  max-width: 300px;
+  max-width: 450px;
   line-height: 1.5;
   color: $color-text;
 }

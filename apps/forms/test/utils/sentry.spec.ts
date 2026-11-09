@@ -94,7 +94,7 @@ describe('Sentry headers', () => {
           state: 'open',
           draft: false,
           webformsEnabled: true,
-          attachments: [ { name: 'cities.csv' } ]
+          once: false
         },
         actionType: 'new',
       },

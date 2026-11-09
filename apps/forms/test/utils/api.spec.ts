@@ -106,7 +106,6 @@ describe('Test api utility', () => {
       state: 'open',
       draft: false,
       webformsEnabled: false,
-      attachments: [ { name: 'myfile.png' } ],
       once: false,
     };
     
@@ -125,38 +124,11 @@ describe('Test api utility', () => {
         createdAt: '2018-01-19T23:58:03.395Z',
         updatedAt: '2018-03-21T12:45:02.312Z'
       };
-      const attachments = [
-        {
-          name: 'myfile.png',
-          type: 'image',
-          exists: true,
-          blobExists: true,
-          datasetExists: false,
-          hash: 'd41d8cd98f00b204e9800998ecf8427e',
-          updatedAt: '2018-03-21T12:45:02.312Z'
-        },
-        {
-          name: 'not-uploaded.jpg',
-          type: 'image',
-          exists: false,
-          blobExists: true,
-          datasetExists: false,
-          hash: 'd41d8cd98f00b204e9800998ecf8427e',
-          updatedAt: '2018-03-21T12:45:02.312Z'
-        },
-      ];
-
-      vi.stubGlobal('fetch', vi.fn().mockImplementation((url: string) => {
-        let result: object;
-        if (url.includes('/attachments')) {
-          result = attachments;
-        } else {
-          result = form;
-        }
+      vi.stubGlobal('fetch', vi.fn().mockImplementation(() => {
         return {
           ok: true,
           status: 200,
-          json: () => Promise.resolve(result),
+          json: () => Promise.resolve(form),
         };
       }));
     };
@@ -173,15 +145,13 @@ describe('Test api utility', () => {
           stubFormFetch();
           const actual = await getFormByFormId(5, 'simple', draft, st);
           expect(actual).toEqual(expectedForm);
-          expect(fetch).toHaveBeenCalledTimes(2);
+          expect(fetch).toHaveBeenCalledTimes(1);
 
           const urlStart = `/v1/projects/5/forms/simple`;
           const draftPath = draft ? '/draft' : '';
           const urlEnd = st ? `?st=${st}` : '';
           const formUrl = urlStart + draftPath + urlEnd;
-          const attachmentUrl = urlStart + draftPath + '/attachments' + urlEnd;
           expect(fetch).toHaveBeenCalledWith(formUrl);
-          expect(fetch).toHaveBeenCalledWith(attachmentUrl);
         });
       });
 
@@ -201,7 +171,7 @@ describe('Test api utility', () => {
         stubFormFetch();
         const actual = await getFormByEnketoId('abc');
         expect(actual).toEqual(expectedForm);
-        expect(fetch).toHaveBeenCalledTimes(2);
+        expect(fetch).toHaveBeenCalledTimes(1);
         expect(fetch).toHaveBeenCalledWith('/v1/form-links/abc/form');
       });
 
@@ -209,7 +179,7 @@ describe('Test api utility', () => {
         stubFormFetch();
         const actual = await getFormByEnketoId('abc', 'zyx');
         expect(actual).toEqual(expectedForm);
-        expect(fetch).toHaveBeenCalledTimes(2);
+        expect(fetch).toHaveBeenCalledTimes(1);
         expect(fetch).toHaveBeenCalledWith('/v1/form-links/abc/form?st=zyx');
       });
 
@@ -217,7 +187,7 @@ describe('Test api utility', () => {
         stubFormFetch();
         const actual = await getFormByEnketoId('singlesubmissiononly', 'zyx');
         expect(actual).toEqual({ ...expectedForm, once: true });
-        expect(fetch).toHaveBeenCalledTimes(2);
+        expect(fetch).toHaveBeenCalledTimes(1);
         expect(fetch).toHaveBeenCalledWith('/v1/form-links/singlesubmissiononly/form?st=zyx');
       });
 

@@ -90,7 +90,7 @@ export default {
     width: 120px;
   }
   .actions {
-    width: 120px;
+    width: 150px;
   }
 }
 

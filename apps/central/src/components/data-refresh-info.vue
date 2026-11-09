@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
       {{ $t('dataRefreshTime', { date: formatDate(dataRefreshedAt), time: formatTime(dataRefreshedAt) }) }}
     </span>
     <button id="refresh-button" type="button"
-      class="btn btn-link" :aria-disabled="refreshing"
+      class="btn btn-tertiary" :aria-disabled="refreshing"
       @click="$emit('refreshClick')">
       <span class="icon-refresh"></span>{{ $t('action.refresh') }}
       <spinner :state="refreshing"/>

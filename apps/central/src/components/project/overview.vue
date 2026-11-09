@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
       <router-link v-if="project.dataExists && project.permits('form.create')"
         id="form-list-create-button" :to="projectPath('new-form')"
         class="btn btn-primary">
-        <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
+        <span class="icon-plus"></span>{{ $t('action.create') }}&hellip;
       </router-link>
     </page-heading>
     <form-list :sort-func="sortFunction"/>

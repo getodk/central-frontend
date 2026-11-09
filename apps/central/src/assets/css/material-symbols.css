@@ -85,6 +85,9 @@
 .icon-plus-circle:before {
   content: "add_circle";
 }
+.icon-plus:before{
+  content: "add";
+}
 .icon-times-circle:before {
   content: "cancel";
 }
@@ -132,6 +135,7 @@
 }
 .icon-clock-o:before {
   content: "schedule";
+  transform: translateY(-3px);
 }
 .icon-edit:before {
   content: "edit_square";
@@ -264,6 +268,7 @@
 }
 .icon-star:before {
   content: "star";
+  transform: translateY(-3px);
 }
 .icon-user:before {
   content: "person";
@@ -297,4 +302,10 @@
 }
 .icon-home:before {
   content: 'home';
+}
+.icon-table:before {
+  content: 'table';
+}
+.icon-content-copy:before {
+  content: 'content_copy'
 }
