@@ -12,7 +12,9 @@ jobs:
     runs-on: 'ubuntu-26.04'
     timeout-minutes: 10
     container:
-      # The image version must match the @playwright/test version in the root package-lock.json.
+      # The image version must match
+      # a) the @playwright/test version in the root package-lock.json
+      # b) the codename for the ubuntu version in `runs-on` above
       image: mcr.microsoft.com/playwright:v1.64.0-resolute
       options: --user 1001
 
@@ -36,7 +38,9 @@ jobs:
     runs-on: 'ubuntu-26.04'
     timeout-minutes: 4
     container:
-      # The image version must match the @playwright/test version in the root package-lock.json.
+      # The image version must match
+      # a) the @playwright/test version in the root package-lock.json
+      # b) the codename for the ubuntu version in `runs-on` above
       image: mcr.microsoft.com/playwright:v1.64.0-resolute
       options: --user 1001
 
@@ -71,7 +75,9 @@ jobs:
     runs-on: 'ubuntu-26.04'
     timeout-minutes: 6
     container:
-      # The image version must match the @playwright/test version in the root package-lock.json.
+      # The image version must match
+      # a) the @playwright/test version in the root package-lock.json
+      # b) the codename for the ubuntu version in `runs-on` above
       image: mcr.microsoft.com/playwright:v1.64.0-resolute
       options: --user 1001
 
