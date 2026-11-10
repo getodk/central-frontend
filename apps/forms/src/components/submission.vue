@@ -57,6 +57,7 @@ const formId = computed(() => route.params.xmlFormId ? encodeURIComponent(route.
 const instanceId = computed(() => route.params.instanceId ? encodeURIComponent(route.params.instanceId as string) : null);
 const enketoId = computed(() => route.params.enketoId ? encodeURIComponent(route.params.enketoId as string) : null);
 const st = computed(() => route.query.st ? route.query.st as string : null);
+const modal = computed(() => route.query.modal ? route.query.modal as string : null); // TODO DELETE ME BEFORE MERGING
 const useWebForms = computed(() => route.query.webforms === 'true');
 const offline = computed(() => route.params.offline === 'offline');
 const defaultParameters = computed(() => getDefaultParameters(route.query, props.actionType));
@@ -266,6 +267,7 @@ load();
         :submission-attachments="submissionAttachments"
         :default-parameters="defaultParameters"
         :st="st"
+        :modal="modal"
       />
     </template>
     <template v-else>
