@@ -1,4 +1,5 @@
 import EntityFiltersViewAs from '../../../../src/components/entity/filters/view-as.vue';
+import Multiselect from '../../../../src/components/multiselect.vue';
 
 import useProject from '../../../../src/request-data/project';
 
@@ -114,10 +115,7 @@ describe('EntityFiltersViewAs', () => {
         linkedForms: [{ xmlFormId: 'f', name: 'Form F' }]
       });
       const formSummaryAssignments = createPublicLinkAssignments(2);
-      const component = mountComponent({
-        formSummaryAssignments,
-        attachTo: document.body
-      });
+      const component = mountComponent({ formSummaryAssignments });
       await component.get('.dropdown-trigger').trigger('click');
       component.findAll('input[type="radio"]').length.should.equal(2);
     });
@@ -133,10 +131,7 @@ describe('EntityFiltersViewAs', () => {
       createPublicLinkAssignments(2, 'f1');
       // The helper returns all assignments created so far, including those for f1.
       const formSummaryAssignments = createPublicLinkAssignments(2, 'f2');
-      const component = mountComponent({
-        formSummaryAssignments,
-        attachTo: document.body
-      });
+      const component = mountComponent({ formSummaryAssignments });
       await component.get('.dropdown-trigger').trigger('click');
       component.findAll('input[type="radio"]').length.should.equal(4);
     });
@@ -147,10 +142,7 @@ describe('EntityFiltersViewAs', () => {
         linkedForms: [{ xmlFormId: 'f', name: 'Form F' }]
       });
       const formSummaryAssignments = createPublicLinkAssignments(2);
-      const component = mountComponent({
-        formSummaryAssignments,
-        attachTo: document.body
-      });
+      const component = mountComponent({ formSummaryAssignments });
       await component.get('.dropdown-trigger').trigger('click');
       component.text().should.contain('Public Link 0');
       component.text().should.contain('Public Link 1');
@@ -161,10 +153,7 @@ describe('EntityFiltersViewAs', () => {
         accessFilter: { type: 'ownerOnly' },
         linkedForms: [{ xmlFormId: 'f', name: 'Form F' }]
       });
-      const component = mountComponent({
-        formSummaryAssignments: [],
-        attachTo: document.body
-      });
+      const component = mountComponent({ formSummaryAssignments: [] });
       await component.get('.dropdown-trigger').trigger('click');
       component.findAll('input[type="radio"]').length.should.equal(0);
     });
@@ -177,10 +166,7 @@ describe('EntityFiltersViewAs', () => {
       createPublicLinkAssignments(1, 'f1');
       // The helper returns all assignments created so far, including the one for f1.
       const formSummaryAssignments = createPublicLinkAssignments(1, 'f2');
-      const component = mountComponent({
-        formSummaryAssignments,
-        attachTo: document.body
-      });
+      const component = mountComponent({ formSummaryAssignments });
       await component.get('.dropdown-trigger').trigger('click');
       component.findAll('input[type="radio"]').length.should.equal(1);
       component.text().should.contain('Public Link 0');
@@ -194,8 +180,7 @@ describe('EntityFiltersViewAs', () => {
       });
       const [assignment] = createPublicLinkAssignments(2);
       const component = mountComponent({
-        formSummaryAssignments: [assignment],
-        attachTo: document.body
+        formSummaryAssignments: [assignment]
       });
       await component.get('.dropdown-trigger').trigger('click');
       await component.findAll('input[type="radio"]')[0].setValue(true);
@@ -211,8 +196,7 @@ describe('EntityFiltersViewAs', () => {
       const [assignment] = createPublicLinkAssignments(1);
       const component = mountComponent({
         formSummaryAssignments: [assignment],
-        props: { modelValue: assignment.actor.id },
-        attachTo: document.body
+        props: { modelValue: assignment.actor.id }
       });
       await component.get('.dropdown-trigger').trigger('click');
       await component.get('.change-all.single button').trigger('click');
@@ -222,7 +206,7 @@ describe('EntityFiltersViewAs', () => {
   });
 
   describe('app users and public links', () => {
-    it('renders app users and public links in the same list', async () => {
+    it('includes app users and public links in the options', () => {
       testData.extendedDatasets.createPast(1, {
         accessFilter: { type: 'ownerOnly' },
         linkedForms: [{ xmlFormId: 'f', name: 'Form F' }]
@@ -231,12 +215,10 @@ describe('EntityFiltersViewAs', () => {
       const formSummaryAssignments = createPublicLinkAssignments(2);
       const component = mountComponent({
         fieldKeys,
-        formSummaryAssignments,
-        attachTo: document.body
+        formSummaryAssignments
       });
-      await component.get('.dropdown-trigger').trigger('click');
-      const texts = component.findAll('.single-select-option')
-        .map(row => row.text());
+      const texts = component.getComponent(Multiselect).props().options
+        .map(({ text }) => text);
       texts.should.eql(['App User 0', 'App User 1', 'Public Link 0', 'Public Link 1']);
     });
   });
