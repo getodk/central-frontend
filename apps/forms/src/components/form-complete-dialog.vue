@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, useTemplateRef } from 'vue';
+import { computed, ref, useTemplateRef, watch } from 'vue';
 import { mdiCheckBold, mdiCloseThick } from '@mdi/js';
 
 defineOptions({
@@ -16,7 +16,7 @@ export type ModalType =
   | typeof SUCCESS_TYPES[number];
 
 export interface FormCompleteDialogProps {
-  type: ModalType;
+  type: ModalType | undefined;
 }
 const props = defineProps<FormCompleteDialogProps>();
 
@@ -28,19 +28,23 @@ type FormCompleteDialogEmits = {
 const emit = defineEmits<FormCompleteDialogEmits>();
 const dialog = useTemplateRef('complete-dialog');
 const status = computed(() => {
-  if (LOADING_TYPES.includes(props.type)) {
+  if (props.type && LOADING_TYPES.includes(props.type)) {
     return 'loading';
   }
-  if (ERROR_TYPES.includes(props.type)) {
+  if (props.type && ERROR_TYPES.includes(props.type)) {
     return 'error';
   }
   return 'success';
 });
 
 const statusIcon = ref(status.value === 'error' ? mdiCloseThick : mdiCheckBold);
-  
-onMounted(async () => {
-  dialog.value?.showModal();
+
+watch(() => props.type, (type) => {
+  if (type == undefined) {
+    dialog.value?.close();
+  } else {
+    dialog.value?.showModal();
+  }
 });
 </script>
 
