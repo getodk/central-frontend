@@ -1,7 +1,7 @@
 <template>
   <multiselect v-if="showViewAs" id="entity-filters-view-as" single :model-value="selectValue"
     :options="options" :loading="fieldKeys.initiallyLoading || formSummaryAssignments.initiallyLoading" :label="$t('viewAs')"
-    :placeholder="placeholder" :none="$t('resetToMe')" :search="$t('search')"
+    :placeholder="placeholder" :none="$t('resetToMe')" :search="$t('common.search')"
     :disabled="disabled" :disabled-message="disabledMessage" @update:model-value="update"/>
 </template>
 
@@ -83,7 +83,6 @@ const placeholder = ({ selectedText }) => selectedText ?? t('noUserSelected');
     "noUserSelected": "Me",
     "viewAs": "View As",
     "resetToMe": "Reset to Me",
-    "search": "Search…"
   }
 }
 </i18n>
