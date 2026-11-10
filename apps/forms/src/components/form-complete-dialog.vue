@@ -47,12 +47,14 @@ onMounted(async () => {
 <style scoped>
 dialog {
   width: 80vw;
+  max-width: 600px;
   border: 0;
   border-radius: 6px;
   text-align: center;
   overflow: visible;
   color: #020617;
   outline: none;
+  padding: 4rem 2rem 0;
 
   &::backdrop {
     background: #f1f5f9; /* make a variable */
@@ -62,17 +64,11 @@ dialog {
     white-space: pre-wrap;
     overflow-wrap: break-word;
   }
-
-  h1 {
-    font-size: 2.5rem;
-    margin-top: 4rem;
-  }
-  button {
-    margin: 1rem 0;
+  footer {
+    margin: 2rem 0;
   }
   .status {
     display: block;
-
     box-shadow: 0px 2px 12px 0px #0000001A;
     width: 100px;
     height: 100px;
@@ -140,6 +136,6 @@ dialog {
     </span>
     <h1><slot name="header"></slot></h1>
     <p><slot name="default"></slot></p>
-    <p><slot name="footer"></slot></p>
+    <footer><slot name="footer"></slot></footer>
   </dialog>
 </template>

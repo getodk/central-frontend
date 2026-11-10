@@ -427,13 +427,13 @@ onMounted(async () => {
       },
       "previewModal": {
         "title": "Data is valid",
-        "body": "The data you entered is valid, but it was not submitted because this is a Form preview."
+        "body": "The data you entered is valid, but it was not submitted because this is a form preview."
       },
       "submissionModal": {
-        "title": "Form successfully sent!",
-        "body": "You can fill this Form out again or close if you’re done.",
+        "title": "Submitted",
+        "body": "Thanks for your submission. You can fill this form out again or close if you’re done.",
         "action": {
-          "fillOutAgain": "Fill out again"
+          "fillOutAgain": "Submit another"
         }
       },
       "thankYouModal": {
@@ -441,15 +441,15 @@ onMounted(async () => {
         "body": "You can close this window now."
       },
       "editSubmissionModal": {
-        "title": "Submission successful",
+        "title": "Submitted",
         "body": "You will now be redirected."
       },
       "errorModal": {
         "title": "Submission error",
-        "body": "Your data was not submitted. Error message: {errorMessage} You can close this dialog and try again. If the error keeps happening, please contact the person who asked you to fill this Form or {supportEmail}."
+        "body": "Your data was not submitted. Error message: {errorMessage} You can close this dialog and try again. If the error keeps happening, please contact the person who asked you to fill this form or {supportEmail}."
       },
       "sendingDataModal": {
-        "title": "Sending Submission",
+        "title": "Sending submission",
         "body": "Your data is being submitted. Please don’t close this window until it’s finished."
       },
       "sessionTimeoutModal": {
@@ -461,7 +461,7 @@ onMounted(async () => {
       },
       "retryModal": {
         "title": "Submission error",
-        "body": "Your data was not fully submitted. Please press the “Try again” button to retry. If the error keeps happening, please contact the person who asked you to fill this Form or {supportEmail}."
+        "body": "Your data was not fully submitted. Please press the “Try again” button to retry. If the error keeps happening, please contact the person who asked you to fill this form or {supportEmail}."
       },
       "util": {
         "request": {
