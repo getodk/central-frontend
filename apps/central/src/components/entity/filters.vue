@@ -62,20 +62,12 @@ defineProps({
     type: Array,
     required: false
   },
-  publicLinkActorId: {
-    type: Number,
-    required: false
-  },
-  publicLinkViewAsOptions: {
-    type: Array,
-    required: false
-  },
   creationDate: {
     type: Array,
     required: true
   }
 });
-defineEmits(['update:conflict', 'update:creationDate', 'update:creatorId', 'update:viewAs', 'update:publicLinkActorId', 'resetClick']);
+defineEmits(['update:conflict', 'update:creationDate', 'update:creatorId', 'update:viewAs', 'resetClick']);
 
 </script>
 
