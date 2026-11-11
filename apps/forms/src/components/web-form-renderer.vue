@@ -14,7 +14,7 @@ import { hasSubmitted, setSubmitted } from '../utils/once-store';
 import { setLocale } from '../i18n';
 import { clearExpiredAutosaves, deleteAutosave, getAutosave, setAutosave, type AutosaveValue } from '../utils/autosave';
 import { MAP_PROVIDER } from '../utils/injection-keys';
-import FormCompleteDialog, { type ModalType } from './form-complete-dialog.vue';
+import Dialog, { type Status } from './dialog.vue';
 
 defineOptions({
   name: 'WebFormRenderer'
@@ -61,11 +61,12 @@ const deviceID = getDeviceId();
 const mapProvider = inject(MAP_PROVIDER);
 
 export interface ModalProps {
-  type: ModalType;
+  type: string;
   hideable: boolean;
+  status: Status;
   errorMessage?: string;
 }
-const visibleModal = ref<ModalProps | undefined>(props.modal ? { type: props.modal, errorMessage: 'boom', hideable: false } as ModalProps : undefined);
+const visibleModal = ref<ModalProps | undefined>(props.modal ? { type: props.modal, errorMessage: 'boom', status: 'success', hideable: false } as ModalProps : undefined);
 
 const getAttachment = (requestUrl: URL) => {
   const fileName = requestUrl.pathname.split('/').pop()!;
@@ -115,14 +116,14 @@ const handleResult = () => {
     clearForm(props.form.once ? {} : { next: POST_SUBMIT__NEW_INSTANCE });
 
     if (isPublicLink.value) {
-      visibleModal.value = { type: 'thankYouModal', hideable: false };
+      visibleModal.value = { type: 'thankYouModal', status: 'success', hideable: false };
     } else if (isEdit.value) {
-      visibleModal.value = { type: 'editSubmissionModal', hideable: false };
+      visibleModal.value = { type: 'editSubmissionModal', status: 'success', hideable: false };
       setTimeout(() => {
         Location.assign(submissionPath());
       }, 2000);
     } else {
-      visibleModal.value = { type: 'submissionModal', hideable: false };
+      visibleModal.value = { type: 'submissionModal', status: 'success', hideable: false };
     }
     return;
   }
@@ -131,10 +132,10 @@ const handleResult = () => {
   if (!submissionResult.primaryInstanceResult.success) {
     const error = submissionResult.primaryInstanceResult.data;
     if (isSessionTimeout(error)) {
-      visibleModal.value = { type: 'sessionTimeoutModal', hideable: true };
+      visibleModal.value = { type: 'sessionTimeoutModal', status: 'error', hideable: true };
     } else {
       const errorMessage = getErrorMessage(error);
-      visibleModal.value = { type: 'errorModal', errorMessage, hideable: true };
+      visibleModal.value = { type: 'errorModal', status: 'error', errorMessage, hideable: true };
     }
     return;
   }
@@ -143,15 +144,15 @@ const handleResult = () => {
   if (attachmentResultArr.some(r => !r.success)) {
     const sessionTimeout = attachmentResultArr.some(r => isSessionTimeout(r.data));
     if (sessionTimeout) {
-      visibleModal.value = { type: 'sessionTimeoutModal', hideable: false };
+      visibleModal.value = { type: 'sessionTimeoutModal', status: 'error', hideable: false };
     } else {
-      visibleModal.value = { type: 'retryModal', hideable: false };
+      visibleModal.value = { type: 'retryModal', status: 'error', hideable: false };
     }
   }
 };
 
 const submitData = async () => {
-  visibleModal.value = { type: 'sendingDataModal', hideable: false };
+  visibleModal.value = { type: 'sendingDataModal', status: 'loading', hideable: false };
 
   const instanceFile = submissionData.instanceFile;
   const attachments = submissionData.attachments;
@@ -223,7 +224,7 @@ const handleSubmit = async (
   clearFormCallback: Function
 ) => {
   if (props.actionType === 'preview') {
-    visibleModal.value = { type: 'previewModal', hideable: true };
+    visibleModal.value = { type: 'previewModal', status: 'success', hideable: true };
     return;
   }
   const { data: [data], status, hasLastSaved } = payload;
@@ -326,7 +327,7 @@ const recoverAutosave = () => {
 
 onMounted(async () => {
   if (alreadySubmittedOnce()) {
-    visibleModal.value = { type: 'thankYouModal', hideable: false };
+    visibleModal.value = { type: 'thankYouModal', status: 'success', hideable: false };
     webFormLoaded(); // hide the spinner
     return;
   }
@@ -366,7 +367,7 @@ onMounted(async () => {
     </template>
   </Dialog>
 
-  <FormCompleteDialog :type="visibleModal?.type">
+  <Dialog :status="visibleModal?.status">
     <template #header v-if="visibleModal?.type">
       {{ $t(visibleModal.type + '.title') }}
     </template>
@@ -409,7 +410,7 @@ onMounted(async () => {
         <Button type="button" @click="visibleModal = undefined">{{ $t('action.close') }}</Button>
       </template>
     </template>
-  </FormCompleteDialog>
+  </Dialog>
 </template>
 
 <i18n lang="json5">

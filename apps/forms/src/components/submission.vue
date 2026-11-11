@@ -12,7 +12,7 @@ import {
   queryString,
   RequestError
 } from '../utils/api.ts';
-import Dialog from 'primevue/dialog';
+import Dialog from './dialog.vue';
 import { hideSpinner } from '../utils/spinner.ts';
 import { getDefaultParameters } from '../utils/default-parameters.ts';
 
@@ -241,7 +241,7 @@ load();
 
 <template>
   <template v-if="!loadingState">
-    <Dialog modal v-if="errorCode === 404" :draggable="false" :closable="false" :visible="true">
+    <Dialog v-if="errorCode === 404" :status="'error'">
       <template #header>
         {{ $t('formNotFound.title') }}
       </template>
@@ -249,7 +249,7 @@ load();
         {{ $t('formNotFound.body') }}
       </template>
     </Dialog>
-    <Dialog modal v-else-if="errorCode" :draggable="false" :closable="false" :visible="true">
+    <Dialog v-else-if="errorCode" :status="'error'">
       <template #header>
         {{ $t('errorNotProblem.title') }}
       </template>

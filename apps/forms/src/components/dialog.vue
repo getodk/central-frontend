@@ -1,50 +1,35 @@
 <script setup lang="ts">
-import { computed, ref, useTemplateRef, watch } from 'vue';
+import { onMounted, useTemplateRef, watch } from 'vue';
 import { mdiCheckBold, mdiCloseThick } from '@mdi/js';
 
 defineOptions({
-  name: 'FormCompleteDialog'
+  name: 'Dialog'
 });
 
-const LOADING_TYPES = ['sendingDataModal'];
-const ERROR_TYPES = ['errorModal', 'retryModal', 'sessionTimeoutModal'];
-const SUCCESS_TYPES = ['thankYouModal', 'submissionModal', 'previewModal', 'editSubmissionModal'];
+export type Status = 'loading' | 'error' | 'success';
 
-export type ModalType =
-  | typeof ERROR_TYPES[number]
-  | typeof LOADING_TYPES[number]
-  | typeof SUCCESS_TYPES[number];
-
-export interface FormCompleteDialogProps {
-  type: ModalType | undefined;
+export interface DialogProps {
+  status: Status | undefined;
 }
-const props = defineProps<FormCompleteDialogProps>();
+const props = defineProps<DialogProps>();
 
-type FormCompleteDialogEmits = {
+type DialogEmits = {
 	close: [],
 	retry: []
 };
 
-const emit = defineEmits<FormCompleteDialogEmits>();
+const emit = defineEmits<DialogEmits>();
 const dialog = useTemplateRef('complete-dialog');
-const status = computed(() => {
-  if (props.type && LOADING_TYPES.includes(props.type)) {
-    return 'loading';
-  }
-  if (props.type && ERROR_TYPES.includes(props.type)) {
-    return 'error';
-  }
-  return 'success';
-});
 
-const statusIcon = ref(status.value === 'error' ? mdiCloseThick : mdiCheckBold);
-
-watch(() => props.type, (type) => {
-  if (type == undefined) {
-    dialog.value?.close();
-  } else {
-    dialog.value?.showModal();
-  }
+onMounted(() => {
+  watch(() => props.status, (status) => {
+    if (status == undefined) {
+      // todo check what happens if we close a closed modal
+      dialog.value?.close();
+    } else {
+      dialog.value?.showModal();
+    }
+  }, { immediate: true });
 });
 </script>
 
@@ -133,9 +118,9 @@ dialog {
 <template>
   <dialog ref="complete-dialog">
     <span class="status">
-      <span v-if="status === 'loading'" class="spinner"></span>
-      <svg v-else :class="status === 'error' ? 'error' : 'success'" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path :d="statusIcon" />
+      <span v-if="props.status === 'loading'" class="spinner"></span>
+      <svg v-else :class="props.status === 'error' ? 'error' : 'success'" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path :d="props.status === 'error' ? mdiCloseThick : mdiCheckBold" />
       </svg>
     </span>
     <h1><slot name="header"></slot></h1>
