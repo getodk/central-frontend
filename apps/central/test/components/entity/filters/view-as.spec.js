@@ -169,8 +169,8 @@ describe('EntityFiltersViewAs', () => {
       await component.get('.dropdown-trigger').trigger('click');
       component.findAll('.option-group').map(heading => heading.text()).should.eql([
         'App Users',
-        'Public links: Form A',
-        'Public links: Form Z'
+        'Public Links: Form A',
+        'Public Links: Form Z'
       ]);
     });
 
@@ -280,8 +280,8 @@ describe('EntityFiltersViewAs', () => {
       const headings = component.findAll('.option-group').map(heading => heading.text());
       headings.should.eql([
         'App Users',
-        'Public links: Form 1',
-        'Public links: Form 2'
+        'Public Links: Form 1',
+        'Public Links: Form 2'
       ]);
       component.findAll('input[type="radio"]').length.should.equal(6);
       const texts = component.findAll('.single-select-option')
