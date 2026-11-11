@@ -136,6 +136,44 @@ describe('EntityFiltersViewAs', () => {
       component.findAll('input[type="radio"]').length.should.equal(4);
     });
 
+    it('public links groups (forms) and text (display names) are in alphabetical order', async () => {
+      testData.extendedDatasets.createPast(1, {
+        accessFilter: { type: 'ownerOnly' },
+        linkedForms: [
+          { xmlFormId: 'f1', name: 'Form Z' },
+          { xmlFormId: 'f2', name: 'Form A' }
+        ]
+      });
+      createPublicLinkAssignments(2, 'f1');
+      const assignments = createPublicLinkAssignments(2, 'f2');
+      const formZ = assignments.filter(({ xmlFormId }) => xmlFormId === 'f1');
+      const formA = assignments.filter(({ xmlFormId }) => xmlFormId === 'f2');
+      formZ[0].actor.displayName = 'Z link B';
+      formZ[1].actor.displayName = 'Z link A';
+      formA[0].actor.displayName = 'A link B';
+      formA[1].actor.displayName = 'A link A';
+      const fieldKeys = createFieldKeys(1);
+      const component = mountComponent({
+        fieldKeys,
+        formSummaryAssignments: [formZ[0], formA[0], formZ[1], formA[1]]
+      });
+
+      const { options } = component.getComponent(Multiselect).props();
+      options.map(({ text }) => text).should.eql([
+        'App User 0',
+        'A link A',
+        'A link B',
+        'Z link A',
+        'Z link B'
+      ]);
+      await component.get('.dropdown-trigger').trigger('click');
+      component.findAll('.option-group').map(heading => heading.text()).should.eql([
+        'App Users',
+        'Public links: Form A',
+        'Public links: Form Z'
+      ]);
+    });
+
     it('shows the display name of each public link', async () => {
       testData.extendedDatasets.createPast(1, {
         accessFilter: { type: 'ownerOnly' },
@@ -241,7 +279,7 @@ describe('EntityFiltersViewAs', () => {
       await component.get('.dropdown-trigger').trigger('click');
       const headings = component.findAll('.option-group').map(heading => heading.text());
       headings.should.eql([
-        'App users',
+        'App Users',
         'Public links: Form 1',
         'Public links: Form 2'
       ]);

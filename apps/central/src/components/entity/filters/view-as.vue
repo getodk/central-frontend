@@ -44,7 +44,7 @@ const options = computed(() => {
     return null;
 
   const appUsers = fieldKeys.data.map(({ id, displayName }) =>
-    ({ value: id, text: displayName, group: t('appUsers') }));
+    ({ value: id, text: displayName, group: t('resource.appUsers') }));
 
   const formNames = new Map(
     dataset.linkedForms.map(form => [form.xmlFormId, form.name])
@@ -59,6 +59,8 @@ const options = computed(() => {
       });
     }
   }
+  publicLinks.sort((a, b) => a.group.localeCompare(b.group) ||
+    a.text.localeCompare(b.text));
 
   return [...appUsers, ...publicLinks];
 });
@@ -80,12 +82,12 @@ const placeholder = ({ selectedText }) => selectedText ?? t('noUserSelected');
 <i18n lang="json5">
 {
   "en": {
+    // "All" refers to users (in the form of app users and public links)
     "noUserSelected": "All",
     "viewAs": "View As",
+    // This "All" means all users (app users and public links) shown in this dropdown
     "resetToMe": "Reset to All",
-    "search": "Search…",
-    "appUsers": "App users",
-    "publicLinksForForm": "Public links: {formName}"
+    "publicLinksForForm": "Public Links: {formName}"
   }
 }
 </i18n>
