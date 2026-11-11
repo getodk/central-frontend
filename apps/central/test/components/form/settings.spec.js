@@ -47,7 +47,10 @@ describe('FormSettings', () => {
             method: 'PATCH',
             url: '/v1/projects/1/forms/f',
             data: { autosaveEnabled: true }
-          }]);
+          }])
+          .then(app => {
+            app.should.toast('Autosave is now enabled for your “f” form.');
+          });
       });
     });
   });
@@ -89,7 +92,10 @@ describe('FormSettings', () => {
             method: 'PATCH',
             url: '/v1/projects/1/forms/f',
             data: { webformsEnabled: true }
-          }]);
+          }])
+          .then(app => {
+            app.should.toast('You’re now using ODK Web Forms to fill out, preview and edit your “f” form.');
+          });
       });
 
       it('sends correct PATCH request when selecting enketo enabled', () => {
@@ -109,7 +115,10 @@ describe('FormSettings', () => {
             method: 'PATCH',
             url: '/v1/projects/1/forms/f',
             data: { webformsEnabled: false }
-          }]);
+          }])
+          .then(app => {
+            app.should.toast('You’re now using Enketo to fill out, preview and edit your “f” form.');
+          });
       });
     });
   });

@@ -4060,6 +4060,9 @@
         },
         "disabled": {
           "string": "Autosave is now disabled for your “{formName}” form."
+        },
+        "unselectable": {
+          "string": "Configuring autosave is not possible using Enketo"
         }
       }
     },

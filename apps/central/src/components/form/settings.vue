@@ -60,10 +60,13 @@ except according to the terms contained in the LICENSE file.
                     </template>
                   </i18n-t>
                 </label>
-                <label class="autosave">
-                  <input v-model="autosaveEnabled" name="autosaveEnabled" type="checkbox" :disabled="!webformsEnabled" @change="setAutosaveEnabled()">
-                  <span>{{ $t('autosaveSetting.description') }}</span>
-                </label>
+                <div class="checkbox autosave">
+                  <label v-tooltip.aria-describedby="!webformsEnabled ? $t('autosaveSetting.unselectable') : null">
+                    <input v-model="autosaveEnabled" name="autosaveEnabled" type="checkbox" :disabled="!webformsEnabled || autosaveChangeInProgress" @change="setAutosaveEnabled()">
+                    {{ $t('autosaveSetting.description') }}
+                    <spinner inline :state="autosaveChangeInProgress"/>
+                  </label>
+                </div>
               </div>
               <div class="radio">
                 <label>
@@ -94,6 +97,7 @@ import { useRouter } from 'vue-router';
 import FormDelete from './delete.vue';
 import FormWebFormsSettingsConfirmation from './web-forms-settings-confirmation.vue';
 import PageHeading from '../page/heading.vue';
+import Spinner from '../spinner.vue';
 
 import useRoutes from '../../composables/routes';
 import { modalData } from '../../util/reactivity';
@@ -122,7 +126,7 @@ const afterDelete = () => {
     .then(() => { alert.success(message); });
 };
 
-
+const autosaveChangeInProgress = ref(false);
 const webformsEnabled = ref(form.webformsEnabled);
 const autosaveEnabled = ref(form.autosaveEnabled);
 watch(() => form.dataExists, () => {
@@ -131,6 +135,7 @@ watch(() => form.dataExists, () => {
 });
 
 const setAutosaveEnabled = () => {
+  autosaveChangeInProgress.value = true;
   form.request({
     method: 'PATCH',
     url: apiPaths.form(form.projectId, form.xmlFormId),
@@ -146,7 +151,8 @@ const setAutosaveEnabled = () => {
         : t('autosaveSetting.disabled', { formName: form.nameOrId });
       toast.show(message);
     })
-    .catch(noop);
+    .catch(noop)
+    .then(() => { autosaveChangeInProgress.value = false; });
 };
 
 const afterSettingChanged = () => {
@@ -205,9 +211,7 @@ const hideAndReset = () => {
       }
     }
     .autosave {
-      display: flex;
-      align-items: flex-start;
-      gap: 6px;
+      margin-left: 20px;
     }
   }
 }
@@ -250,6 +254,7 @@ const hideAndReset = () => {
       "description": "Autosave responses if browser closes or refreshes. Sensitive data may be retained in saved responses.",
       "enabled": "Autosave is now enabled for your “{formName}” form.",
       "disabled": "Autosave is now disabled for your “{formName}” form.",
+      "unselectable": "Configuring autosave is not possible using Enketo."
     }
   }
 }
