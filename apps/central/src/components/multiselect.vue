@@ -55,8 +55,8 @@ except according to the terms contained in the LICENSE file.
             <template v-for="({ value, key = value, text = value, description, group }, i) in options"
               :key="key">
               <li v-if="group != null && (i === 0 || options[i - 1].group !== group)"
-                class="option-group" :class="{ 'search-match': groupHasSearchMatch(i) }">
-                <strong tabindex="0" v-tooltip.text>{{ group }}</strong>
+                class="option-group" :class="{ 'search-match': groupHasSearchMatch(i) }"
+                tabindex="0" v-tooltip.text>{{ group }}
               </li>
               <li :class="{
                 'search-match': searchMatches.has(value),
@@ -562,15 +562,9 @@ const emptyMessage = computed(() => (searchValue.value === ''
       font-weight: bold;
       line-height: 1.3;
       padding-bottom: 12px;
+      padding-left: $hpadding * 2;
       padding-top: 12px;
-
-      strong {
-        display: block;
-        overflow: hidden;
-        padding-left: $hpadding;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
+      @include text-overflow-ellipsis;
     }
 
     .checkbox {
@@ -593,6 +587,7 @@ const emptyMessage = computed(() => (searchValue.value === ''
       height: 22px;
       // Give .empty-message a larger max-width to help it not wrap.
       max-width: 375px;
+      padding-left: $hpadding * 2;
       padding-top: 3px;
       // This seems to be needed for .empty-message to use the full max-width
       // available to it.
@@ -637,7 +632,12 @@ const emptyMessage = computed(() => (searchValue.value === ''
 
     li.option-group {
       padding-bottom: 12px;
+      padding-left: $hpadding * 2;
       padding-top: 12px;
+    }
+
+    li.empty-message {
+      padding-left: $hpadding * 2;
     }
 
     li:has(input:checked) {
