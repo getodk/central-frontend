@@ -11,11 +11,11 @@ import { getFlatCoordinates } from '@getodk/web-forms/components/common/map/vert
 import { Map } from 'ol';
 import { getPointResolution } from 'ol/proj';
 
-const HIGHLIGHT_DRAW_COLOR = '#3488AF';
-const DEFAULT_DRAW_LINE_COLOR = '#82C3E0';
+const HIGHLIGHT_DRAW_COLOR = '#0A80A3'; // odk-blue-600
+const DEFAULT_DRAW_LINE_COLOR = '#75C3DA'; // odk-blue-300
 const DEFAULT_VERTEX_FILL_COLOR = '#FFFFFF';
-const DEFAULT_POLYGON_FILL_COLOR = 'rgba(233, 248, 255, 0.8)';
-const DEFAULT_STROKE_COLOR = '#3E9FCC';
+const DEFAULT_POLYGON_FILL_COLOR = 'rgba(213, 238, 245, 0.8)'; // odk-blue-100
+const DEFAULT_STROKE_COLOR = '#3AA5C5'; // odk-blue-400
 const DEFAULT_STROKE_WIDTH = 4;
 const CLEAR_STROKE_COLOR = '#FFFFFF';
 

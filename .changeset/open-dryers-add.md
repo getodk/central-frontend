@@ -2,4 +2,4 @@
 "@getodk/web-forms": patch
 ---
 
-Improve contrast for buttons to improve readability and accessibility
+Update the color palette for improved contrast and accessibility (getodk/web-forms#466)
