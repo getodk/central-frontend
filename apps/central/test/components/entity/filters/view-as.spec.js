@@ -178,7 +178,7 @@ describe('EntityFiltersViewAs', () => {
         accessFilter: { type: 'ownerOnly' },
         linkedForms: [{ xmlFormId: 'f', name: 'Form F' }]
       });
-      const [assignment] = createPublicLinkAssignments(2);
+      const [assignment] = createPublicLinkAssignments(1);
       const component = mountComponent({
         formSummaryAssignments: [assignment]
       });
