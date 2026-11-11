@@ -65,7 +65,7 @@ except according to the terms contained in the LICENSE file.
               </li>
               <li :class="{
                 'search-match': searchMatches.has(value),
-                'grouped-option': group != null || subgroup != null,
+                'grouped-option': group != null,
                 'subgrouped-option': subgroup != null,
               }">
                 <div :class="single ? 'single-select-option' : 'checkbox'">
