@@ -11,13 +11,13 @@ import { getFlatCoordinates } from '@getodk/web-forms/components/common/map/vert
 import { Map } from 'ol';
 import { getPointResolution } from 'ol/proj';
 
-const HIGHLIGHT_DRAW_COLOR = '#0A80A3'; // odk-blue-600
-const DEFAULT_DRAW_LINE_COLOR = '#75C3DA'; // odk-blue-300
-const DEFAULT_VERTEX_FILL_COLOR = '#FFFFFF';
+const HIGHLIGHT_DRAW_COLOR = '#0a80a3'; // odk-blue-600
+const DEFAULT_DRAW_LINE_COLOR = '#75c3da'; // odk-blue-300
+const DEFAULT_VERTEX_FILL_COLOR = '#ffffff';
 const DEFAULT_POLYGON_FILL_COLOR = 'rgba(213, 238, 245, 0.8)'; // odk-blue-100
-const DEFAULT_STROKE_COLOR = '#3AA5C5'; // odk-blue-400
+const DEFAULT_STROKE_COLOR = '#3aa5c5'; // odk-blue-400
 const DEFAULT_STROKE_WIDTH = 4;
-const CLEAR_STROKE_COLOR = '#FFFFFF';
+const CLEAR_STROKE_COLOR = '#ffffff';
 
 const ICON_ANCHOR = {
   'icon-anchor': [0.5, 0.95],
@@ -58,7 +58,7 @@ const SCALE_FEATURE_STYLE = {
   'stroke-width': 6,
 };
 
-const BLUE_GLOW_COLOR = 'rgba(148, 224, 237, 0.7)';
+const BLUE_GLOW_COLOR = 'rgba(171, 220, 234, 0.7)'; // odk-blue-200
 
 const BLUE_GLOW_POINT_STYLE = {
   'circle-radius': 30,
@@ -80,13 +80,13 @@ const GREEN_GLOW_FEATURE_STYLE = {
 };
 
 // Increases the clickable area of the Line feature.
-const LINE_HIT_TOLERANCE_COLOR = 'rgba( 255, 255, 255, 0.1)';
+const LINE_HIT_TOLERANCE_COLOR = 'rgba(255, 255, 255, 0.1)';
 const LINE_HIT_TOLERANCE = {
   'stroke-width': OUTLINE_STROKE_WIDTH,
   'stroke-color': LINE_HIT_TOLERANCE_COLOR,
 };
 
-const LOCATION_POINT_FILL = '#6393F2';
+const LOCATION_POINT_FILL = HIGHLIGHT_DRAW_COLOR;
 const ACCURACY_FILL = 'rgba(99, 147, 242, 0.3)';
 const ACCURACY_STROKE = 'rgba(99, 147, 242, 0.1)';
 
