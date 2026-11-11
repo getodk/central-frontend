@@ -73,7 +73,7 @@ describe('EntityFiltersViewAs', () => {
       component.emitted('update:modelValue').should.eql([[fieldKey2.id]]);
     });
 
-    it('emits null after Reset to Me is clicked', async () => {
+    it('emits null after Reset to All is clicked', async () => {
       const [fieldKey] = createFieldKeys(1);
       const component = mountComponent({
         fieldKeys: [fieldKey],
@@ -226,7 +226,7 @@ describe('EntityFiltersViewAs', () => {
       component.emitted('update:modelValue').should.eql([[assignment.actor.id]]);
     });
 
-    it('emits null after Reset to Me is clicked', async () => {
+    it('emits null after Reset to All is clicked', async () => {
       testData.extendedDatasets.createPast(1, {
         accessFilter: { type: 'ownerOnly' },
         linkedForms: [{ xmlFormId: 'f', name: 'Form F' }]
