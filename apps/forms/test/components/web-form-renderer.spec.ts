@@ -264,8 +264,8 @@ describe('WebFormRenderer', () => {
     const title = document.querySelector('dialog h1')!;
     expect(title.textContent).to.equal('Session expired');
 
-    const button = document.querySelector('.p-dialog .p-dialog-close-button');
-    expect(button).toBeDefined();
+    const button = document.querySelector('dialog button')!;
+    expect(button.textContent).to.equal('Close');
 
     const intro = document.querySelector('dialog p')!;
     expect(intro.textContent).to.equal('Please log in here in a different browser tab and try again.');
@@ -421,8 +421,9 @@ describe('WebFormRenderer', () => {
     const title = document.querySelector('dialog h1')!;
     expect(title.textContent).to.equal('Session expired');
 
-    const button = document.querySelector('.p-dialog .p-dialog-close-button');
-    expect(button).toBeNull();
+    const buttons = document.querySelectorAll('dialog button');
+    expect(buttons.length).to.equal(1);
+    expect(buttons[0]!.textContent).to.equal('Try again');
 
     expect(fetchSpy).toHaveBeenCalledTimes(2);
   });
