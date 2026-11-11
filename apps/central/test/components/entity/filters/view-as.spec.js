@@ -81,22 +81,9 @@ describe('EntityFiltersViewAs', () => {
       });
       await component.get('.dropdown-trigger').trigger('click');
       await component.findAll('input[type="radio"]')[1].setValue(true);
-      await component.get('.action-bar button').trigger('click');
       component.emitted('update:modelValue').should.eql([[fieldKey2.id]]);
     });
 
-    it('emits null after Reset to All is clicked', async () => {
-      const [fieldKey] = createFieldKeys(1);
-      const component = mountComponent({
-        fieldKeys: [fieldKey],
-        props: { modelValue: fieldKey.id },
-        attachTo: document.body
-      });
-      await component.get('.dropdown-trigger').trigger('click');
-      await component.get('.change-all.single button').trigger('click');
-      await component.get('.action-bar button').trigger('click');
-      component.emitted('update:modelValue').should.eql([[null]]);
-    });
 
     it('does not emit an event when Apply is clicked without a change', async () => {
       const [fieldKey] = createFieldKeys(1);
@@ -106,7 +93,6 @@ describe('EntityFiltersViewAs', () => {
         attachTo: document.body
       });
       await component.get('.dropdown-trigger').trigger('click');
-      await component.get('.action-bar button').trigger('click');
       should.not.exist(component.emitted('update:modelValue'));
     });
 
@@ -240,7 +226,6 @@ describe('EntityFiltersViewAs', () => {
       });
       await component.get('.dropdown-trigger').trigger('click');
       await component.findAll('input[type="radio"]')[0].setValue(true);
-      await component.get('.action-bar button').trigger('click');
       component.emitted('update:modelValue').should.eql([[assignment.actor.id]]);
     });
 
@@ -256,7 +241,6 @@ describe('EntityFiltersViewAs', () => {
       });
       await component.get('.dropdown-trigger').trigger('click');
       await component.get('.change-all.single button').trigger('click');
-      await component.get('.action-bar button').trigger('click');
       component.emitted('update:modelValue').should.eql([[null]]);
     });
   });
