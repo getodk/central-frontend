@@ -87,7 +87,7 @@ except according to the terms contained in the LICENSE file.
       <li class="after-list">
         <slot name="after-list" :selected="selected"></slot>
       </li>
-      <li class="action-bar">
+      <li v-if="!single" class="action-bar">
         <button type="button" class="btn btn-primary" :aria-disabled="changes.size === 0" @click="apply()">
           {{ $t('action.apply') }}
         </button>
@@ -203,6 +203,7 @@ id += 1;
 const descriptionId = (i) => `${idPrefix}-description${i}`;
 
 const optionList = ref(null);
+const dropdownEl = ref(null);
 
 
 
@@ -258,14 +259,6 @@ const syncWithModelValue = () => {
     checkboxes[i].checked = selected.has(props.options[i].value);
 
   needsSync = false;
-};
-
-const changeCheckbox = ({ target }) => {
-  if (props.single) {
-    // In the case of the single-selection, de-select the one (or zero) previously-selected values before selecting the new one.
-    for (const value of [...selected]) change(value);
-  }
-  change(props.options[target.dataset.index].value);
 };
 
 // emittedValue is used for an optimization, to avoid an unnecessary sync.
@@ -402,8 +395,6 @@ watch(searchValue, (value) => {
 ////////////////////////////////////////////////////////////////////////////////
 // DROPDOWN INTEGRATION
 
-const dropdownEl = ref(null);
-
 const onShow = () => {
   syncWithModelValue();
 };
@@ -420,6 +411,15 @@ const apply = () => {
   dropdownEl.value?.hide();
 };
 
+const changeCheckbox = ({ target }) => {
+  if (props.single) {
+    // In the case of the single-selection, de-select the one (or zero) previously-selected values before selecting the new one.
+    for (const value of [...selected]) change(value);
+  }
+  change(props.options[target.dataset.index].value);
+  if (props.single) apply();
+};
+
 const handleTriggerClick = (toggle) => {
   if (props.options != null && !props.disabled) {
     toggle();
@@ -433,13 +433,17 @@ const handleTriggerClick = (toggle) => {
 
 // `true` for select all, `false` for select none.
 const changeAll = (selectAll) => {
-  if (selected.size === (selectAll ? props.options.length : 0)) return;
+  if (selected.size === (selectAll ? props.options.length : 0)) {
+    if (props.single) dropdownEl.value?.hide();
+    return;
+  }
   const selector = [selectAll ? 'input:not(:checked)' : 'input:checked'];
   if (searchValue.value !== '') selector.unshift('.search-match');
   for (const input of optionList.value.querySelectorAll(selector.join(' '))) {
     input.checked = selectAll;
     change(props.options[input.dataset.index].value);
   }
+  if (props.single) apply();
 };
 
 

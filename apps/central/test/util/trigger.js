@@ -1,11 +1,22 @@
+import Multiselect from '../../src/components/multiselect.vue';
+
 export const changeMultiselect = (selector, selectedIndexes) => async (component) => {
   if (component.element.getRootNode() !== document)
     throw new Error('component must be attached to the body');
-  const multiselect = component.get(selector);
+  const matchedComponent = component.getComponent(selector);
+  const multiselect = matchedComponent.getComponent(Multiselect);
+  const single = multiselect.props('single');
+  if (single && selectedIndexes.length > 1)
+    throw new Error('single-select accepts at most one selected index');
   const toggle = multiselect.get('.dropdown-trigger');
   await toggle.trigger('click');
+  if (single) {
+    if (selectedIndexes.length === 0)
+      return multiselect.get('.select-none').trigger('click');
+    return multiselect.findAll('input[type="radio"]')[selectedIndexes[0]].setValue(true);
+  }
   await multiselect.get('.select-none').trigger('click');
-  const inputs = multiselect.findAll('input[type="checkbox"],input[type="radio"]');
+  const inputs = multiselect.findAll('input[type="checkbox"]');
   for (const i of selectedIndexes)
     await inputs[i].setValue(true);
   return multiselect.find('.action-bar button').trigger('click');
