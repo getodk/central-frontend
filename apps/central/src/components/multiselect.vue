@@ -57,7 +57,7 @@ except according to the terms contained in the LICENSE file.
               <li v-if="group != null && (i === 0 || options[i - 1].group !== group)"
                 class="option-group" :class="{ 'search-match': groupHasSearchMatch(i) }"
                 tabindex="0" v-tooltip.text>
-{{ group }}
+                {{ group }}
               </li>
               <li :class="{
                 'search-match': searchMatches.has(value),

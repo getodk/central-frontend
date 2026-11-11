@@ -174,6 +174,35 @@ describe('EntityFiltersViewAs', () => {
       ]);
     });
 
+    it('sorts public links according to the current locale', async () => {
+      testData.extendedDatasets.createPast(1, {
+        accessFilter: { type: 'ownerOnly' },
+        linkedForms: [
+          { xmlFormId: 'ch', name: 'Chata' },
+          { xmlFormId: 'h', name: 'Hana' }
+        ]
+      });
+      createPublicLinkAssignments(2, 'ch');
+      const assignments = createPublicLinkAssignments(2, 'h');
+      for (const xmlFormId of ['ch', 'h']) {
+        const links = assignments.filter(assignment =>
+          assignment.xmlFormId === xmlFormId);
+        links[0].actor.displayName = 'Chata';
+        links[1].actor.displayName = 'Hana';
+      }
+      const component = mountComponent({ formSummaryAssignments: assignments });
+      component.vm.$container.i18n.locale = 'cs';
+      await component.vm.$nextTick();
+
+      const { options } = component.getComponent(Multiselect).props();
+      options.map(({ group, text }) => [group, text]).should.eql([
+        ['Public Links: Hana', 'Hana'],
+        ['Public Links: Hana', 'Chata'],
+        ['Public Links: Chata', 'Hana'],
+        ['Public Links: Chata', 'Chata']
+      ]);
+    });
+
     it('shows the display name of each public link', async () => {
       testData.extendedDatasets.createPast(1, {
         accessFilter: { type: 'ownerOnly' },

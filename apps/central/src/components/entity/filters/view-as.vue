@@ -12,7 +12,7 @@ import { useRequestData } from '../../../request-data';
 
 import Multiselect from '../../multiselect.vue';
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 defineOptions({
   name: 'EntityFiltersViewAs'
@@ -59,8 +59,8 @@ const options = computed(() => {
       });
     }
   }
-  publicLinks.sort((a, b) => a.group.localeCompare(b.group) ||
-    a.text.localeCompare(b.text));
+  publicLinks.sort((a, b) => a.group.localeCompare(b.group, locale.value) ||
+    a.text.localeCompare(b.text, locale.value));
 
   return [...appUsers, ...publicLinks];
 });
