@@ -67,6 +67,19 @@ describe('Multiselect', () => {
     component.findAll('.option-subgroup').map(heading => heading.text())
       .should.eql(['Birds', 'Mammals', 'Trees']);
     component.findAll('.subgrouped-option').length.should.equal(4);
+    component.findAll('.option-list > li:not(.empty-message)')
+      .map(item => item.text())
+      .should.eql([
+        'Animals',
+        'Birds',
+        'crow',
+        'hawk',
+        'Mammals',
+        'fox',
+        'Plants',
+        'Trees',
+        'oak'
+      ]);
   });
 
   it('shows each checkbox', async () => {
