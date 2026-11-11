@@ -44,11 +44,16 @@ dialog {
   color: #020617;
   outline: none;
   padding: 4rem 2rem 0;
+  margin-top: 25vh;
+  overflow-wrap: anywhere;
 
   &::backdrop {
     background: #f1f5f9; /* make a variable */
   }
 
+  h1 {
+    font-weight: normal;
+  }
   pre {
     white-space: pre-wrap;
     overflow-wrap: break-word;

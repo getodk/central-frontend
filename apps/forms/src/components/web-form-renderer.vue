@@ -66,7 +66,12 @@ export interface ModalProps {
   status: Status;
   errorMessage?: string;
 }
-const visibleModal = ref<ModalProps | undefined>(props.modal ? { type: props.modal, errorMessage: 'boom', status: 'success', hideable: false } as ModalProps : undefined);
+
+
+const visibleModal = ref<ModalProps | undefined>(props.modal ? { type: props.modal,status: 'loading', hideable: false } as ModalProps : undefined);
+setTimeout(() => {
+visibleModal.value = { type: 'thankYouModal',status: 'success', hideable: false } as ModalProps ;
+}, 2000);
 
 const getAttachment = (requestUrl: URL) => {
   const fileName = requestUrl.pathname.split('/').pop()!;
@@ -390,6 +395,9 @@ onMounted(async () => {
           <a href="/login" target="_blank">{{ $t('sessionTimeoutModal.body.here') }}</a>
         </template>
       </Translation>
+      <span v-else-if="visibleModal.type === 'sendingDataModal'">
+        lkasjdf klasdjfkljas fkljaskldfj askldfj klasdfj klasdjfklsdj fklsjd fklsdj fklsjdfkl jaskldfj lskdfj klsdfj klasdfj klasdj fklasdj fklsjd fklsdj flkasdj fklasjdfkl asjklf jaskldfj askldfj klasdfj klsdfj klsdjf klsdjf klasdjf klsdjf lkasjdf klsjfkljsdklfjsdklfjaskl dfjaklsdfj klasjdf klasdjklasdfj klasdj fklsdj 
+      </span>
       <span v-else>
         {{ $t(visibleModal.type + '.body') }}
       </span>
