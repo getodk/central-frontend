@@ -43,8 +43,11 @@ const submissionResult:any = {};
 const inited = ref(false);
 const isEdit = computed(() => props.actionType === 'edit');
 const isPublicLink = computed(() => props.actionType === 'public-link');
+const isPreview = computed(() => props.actionType === 'preview');
 const lastSavedXml = ref<string | undefined>();
-const autosaveEnabled = computed(() => !isEdit.value && !props.form.draft && props.form.autosaveEnabled);
+const autosaveEnabled = computed(() => {
+  return !isEdit.value && !props.form.draft && !isPreview.value && props.form.autosaveEnabled;
+});
 const autosavePayload = ref<AutosaveValue | undefined>();
 const showAutosaveDialog = ref(false);
 const dateFormatter = new Intl.DateTimeFormat(undefined, {
