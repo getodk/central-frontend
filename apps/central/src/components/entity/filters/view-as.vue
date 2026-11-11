@@ -1,7 +1,7 @@
 <template>
   <multiselect v-if="showViewAs" id="entity-filters-view-as" single :model-value="selectValue"
-    :options="options" :loading="fieldKeys.initiallyLoading" :label="$t('viewAs')"
-    :placeholder="placeholder" :none="$t('resetToMe')" :search="$t('search')"
+    :options="options" :loading="fieldKeys.initiallyLoading || formSummaryAssignments.initiallyLoading" :label="$t('viewAs')"
+    :placeholder="placeholder" :none="$t('resetToMe')" :search="$t('common.search')"
     :disabled="disabled" :disabled-message="disabledMessage" @update:model-value="update"/>
 </template>
 
@@ -31,17 +31,42 @@ const props = defineProps({
     required: false
   }
 });
-const { dataset, fieldKeys } = useRequestData();
+const { dataset, fieldKeys, formSummaryAssignments } = useRequestData();
 
+// Only show viewAs dropdown if dataset has an access filter set
 const showViewAs = computed(() =>
   dataset.dataExists && dataset.accessFilter != null);
 
-const options = computed(() => (fieldKeys.dataExists
-  ? fieldKeys.data.map(({ id, displayName }) => ({ value: id, text: displayName }))
-  : null));
+// Compute list of actor IDs and their display text (app users + public links).
+const options = computed(() => {
+  if (!(fieldKeys.dataExists && dataset.dataExists &&
+    formSummaryAssignments.dataExists))
+    return null;
+
+  const appUsers = fieldKeys.data.map(({ id, displayName }) =>
+    ({ value: id, text: displayName }));
+
+  const formNames = new Map(
+    dataset.linkedForms.map(form => [form.xmlFormId, form.name])
+  );
+  const publicLinks = [];
+  for (const { actor, xmlFormId } of formSummaryAssignments.data) {
+    if (formNames.has(xmlFormId)) {
+      publicLinks.push({
+        value: actor.id,
+        text: actor.displayName,
+        // TODO: add public link info to display, such as form name
+      });
+    }
+  }
+
+  return [...appUsers, ...publicLinks];
+});
+
+// Transform the single selected actor into an array for use by the multi-select dropdown
 const selectValue = computed(() => {
-  if (!fieldKeys.dataExists || props.modelValue == null) return [];
-  return fieldKeys.data.some(fieldKey => fieldKey.id === props.modelValue)
+  if (options.value == null || props.modelValue == null) return [];
+  return options.value.some(({ value }) => value === props.modelValue)
     ? [props.modelValue]
     : [];
 });
@@ -58,7 +83,6 @@ const placeholder = ({ selectedText }) => selectedText ?? t('noUserSelected');
     "noUserSelected": "Me",
     "viewAs": "View As",
     "resetToMe": "Reset to Me",
-    "search": "Search App Users…"
   }
 }
 </i18n>

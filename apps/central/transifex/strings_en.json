@@ -2609,9 +2609,6 @@
       },
       "resetToMe": {
         "string": "Reset to Me"
-      },
-      "search": {
-        "string": "Search App Users…"
       }
     },
     "EntityList": {
