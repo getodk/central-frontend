@@ -287,15 +287,6 @@ const emitIfChanged = () => {
   }
 };
 
-const changeCheckbox = ({ target }) => {
-  if (props.single) {
-    // In the case of the single-selection, de-select the one (or zero) previously-selected values before selecting the new one.
-    for (const value of [...selected]) change(value);
-  }
-  change(props.options[target.dataset.index].value);
-  if (props.single) apply();
-};
-
 watch(
   () => props.modelValue,
   (modelValue) => {
@@ -418,6 +409,15 @@ const apply = () => {
   searchValue.value = '';
   emitIfChanged();
   dropdownEl.value?.hide();
+};
+
+const changeCheckbox = ({ target }) => {
+  if (props.single) {
+    // In the case of the single-selection, de-select the one (or zero) previously-selected values before selecting the new one.
+    for (const value of [...selected]) change(value);
+  }
+  change(props.options[target.dataset.index].value);
+  if (props.single) apply();
 };
 
 const handleTriggerClick = (toggle) => {
