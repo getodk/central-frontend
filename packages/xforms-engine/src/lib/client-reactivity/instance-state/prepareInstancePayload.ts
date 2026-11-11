@@ -52,7 +52,8 @@ const createSubmission = async (
   submissionMeta: SubmissionMeta
 ): Promise<Submission> => {
   const instanceXML = instanceRoot.instanceState.instanceXML;
-  const attachments = collectInstanceAttachmentFiles(instanceRoot.attachments);
+  const dirtyOnly = instanceRoot.root.rootDocument.initializationMode !== 'restore';
+  const attachments = collectInstanceAttachmentFiles(instanceRoot.attachments, dirtyOnly);
   if (submissionMeta.encryptionKey) {
     const root = instanceRoot.root;
     const formId = getAttribute(root, 'id');
