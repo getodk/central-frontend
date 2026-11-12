@@ -218,7 +218,8 @@ const handleSubmit = async (
     return;
   }
   if (alreadySubmittedOnce()) {
-    // The user has already submitted a single submission form - should not get here.
+    // The user submitted since this page loaded; show the same thank-you modal as on mount.
+    visibleModal.value = { type: 'thankYouModal', hideable: false };
     return;
   }
   initializeSubmissionState(data as unknown as SubmissionData);
