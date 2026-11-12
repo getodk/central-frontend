@@ -24,7 +24,6 @@ const dialog = useTemplateRef('complete-dialog');
 onMounted(() => {
   watch(() => props.status, (status) => {
     if (status == undefined) {
-      // todo check what happens if we close a closed modal
       dialog.value?.close();
     } else {
       dialog.value?.showModal();

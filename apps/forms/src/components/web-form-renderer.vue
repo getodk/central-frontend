@@ -28,7 +28,6 @@ export interface WebFormsRendererProps {
   submissionAttachments?: string[] | null;
   defaultParameters?: Record<string, string>;
   st?: string | null;
-  modal?: string | null;
 }
 
 const props = defineProps<WebFormsRendererProps>();
@@ -67,11 +66,7 @@ export interface ModalProps {
   errorMessage?: string;
 }
 
-
-const visibleModal = ref<ModalProps | undefined>(props.modal ? { type: props.modal,status: 'loading', hideable: false } as ModalProps : undefined);
-setTimeout(() => {
-visibleModal.value = { type: 'thankYouModal',status: 'success', hideable: false } as ModalProps ;
-}, 2000);
+const visibleModal = ref<ModalProps | undefined>();
 
 const getAttachment = (requestUrl: URL) => {
   const fileName = requestUrl.pathname.split('/').pop()!;
