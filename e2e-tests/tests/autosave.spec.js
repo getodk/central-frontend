@@ -3,7 +3,7 @@ import BackendClient from '../backend-client';
 import { login, test } from '../util';
 
 const appUrl = process.env.ODK_URL;
-const projectId = process.env.PROJECT_ID_ENCRYPTED;
+const projectId = process.env.PROJECT_ID;
 
 let simpleForm;
 let backendClient;
@@ -24,7 +24,7 @@ test.describe('autosave', () => {
     await login(page);
 
     await page.goto(`${appUrl}/projects/${projectId}/forms/${simpleForm.xmlFormId}/settings`);
-    await expect(page.locator(`.h1:has-text("${simpleForm.name}")`)).toBeVisible();
+    await expect(page.locator('h1:has-text("Settings")')).toBeVisible();
     expect(await page.getByLabel('Autosave responses if browser closes or refreshes. Sensitive data may be retained in saved responses.').isChecked()).toEqual(true);
 
     await page.goto(`${appUrl}/projects/${projectId}/forms/${simpleForm.xmlFormId}/submissions/new`);
