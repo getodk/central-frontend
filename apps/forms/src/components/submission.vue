@@ -234,7 +234,7 @@ load();
 <style lang="scss" scoped>
 .error-code {
   font-size: 14px;
-  color: #64748b;
+  color: var(--odk-neutral);
 }
 </style>
 

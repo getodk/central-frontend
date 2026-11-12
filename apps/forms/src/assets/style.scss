@@ -1,8 +1,16 @@
+:root {
+  --odk-background-color: #f1f5f9;
+  --odk-primary-text-color: #0a80a3;
+  --odk-red-danger: #c42b2b;
+  --odk-neutral: #6b747d;
+}
+
 html {
-  background: #f1f5f9;
+  background: var(--odk-background-color);
   scrollbar-gutter: stable;
 }
 
-.p-dialog {
-  max-width: 800px;
+html,
+dialog {
+  color: #020617;
 }

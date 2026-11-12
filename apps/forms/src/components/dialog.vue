@@ -40,14 +40,13 @@ dialog {
   border-radius: 6px;
   text-align: center;
   overflow: visible;
-  color: #020617;
   outline: none;
   padding: 4rem 2rem 0;
   margin-top: 25vh;
   overflow-wrap: anywhere;
 
   &::backdrop {
-    background: #f1f5f9; /* make a variable */
+    background: var(--odk-background-color);
   }
 
   h1 {
@@ -74,7 +73,7 @@ dialog {
     padding: 20px;
 
     svg {
-      border: 8px solid #0a80a3;
+      border: 8px solid var(--odk-primary-text-color);
       border-radius: 100%;
       padding: 5px;
       width: 100%;
@@ -85,21 +84,21 @@ dialog {
       right: 0;
 
       &.success {
-        border-color: #0a80a3;
-        fill: #0a80a3;
+        border-color: var(--odk-primary-text-color);
+        fill: var(--odk-primary-text-color);
       }
 
       &.error {
-        border-color: #c42b2b;
-        fill: #c42b2b;
+        border-color: var(--odk-red-danger);
+        fill: var(--odk-red-danger);
       }
     }
   }
   .spinner {
     width: 60px;
     height: 60px;
-    border: 8px solid #f1f5f9;
-    border-bottom-color: #0a80a3;
+    border: 8px solid var(--odk-background-color);
+    border-bottom-color: var(--odk-primary-text-color);
     border-radius: 50%;
     display: inline-block;
     box-sizing: border-box;

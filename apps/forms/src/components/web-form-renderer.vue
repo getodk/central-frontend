@@ -390,9 +390,6 @@ onMounted(async () => {
           <a href="/login" target="_blank">{{ $t('sessionTimeoutModal.body.here') }}</a>
         </template>
       </Translation>
-      <span v-else-if="visibleModal.type === 'sendingDataModal'">
-        lkasjdf klasdjfkljas fkljaskldfj askldfj klasdfj klasdjfklsdj fklsjd fklsdj fklsjdfkl jaskldfj lskdfj klsdfj klasdfj klasdj fklasdj fklsjd fklsdj flkasdj fklasjdfkl asjklf jaskldfj askldfj klasdfj klsdfj klsdjf klsdjf klasdjf klsdjf lkasjdf klsjfkljsdklfjsdklfjaskl dfjaklsdfj klasjdf klasdjklasdfj klasdj fklsdj 
-      </span>
       <span v-else>
         {{ $t(visibleModal.type + '.body') }}
       </span>
