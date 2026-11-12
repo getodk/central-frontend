@@ -68,12 +68,12 @@ test.describe('ODK Web Forms Encrypted', () => {
 
     await page.getByLabel('First Name').fill('John Doe');
     await page.getByRole('button', { name: 'send' }).click();
-    await expect(page.getByRole('heading', { name: 'Successful' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Submitted' })).toBeVisible();
 
     await page.getByRole('button', { name: 'fill out again' }).click();
     await page.getByLabel('First Name').fill('Jane Doe');
     await page.getByRole('button', { name: 'send' }).click();
-    await expect(page.getByRole('heading', { name: 'Successful' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Submitted' })).toBeVisible();
 
     // attempt to download the file with no key
     const unencryptedResponse = await backendClient.downloadCsv(simpleForm.xmlFormId);
@@ -105,7 +105,7 @@ test.describe('ODK Web Forms Encrypted', () => {
       buffer: Buffer.from('info about john')
     });
     await page.getByRole('button', { name: 'send' }).click();
-    await expect(page.getByRole('heading', { name: 'Successful' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Submitted' })).toBeVisible();
 
     await page.getByRole('button', { name: 'fill out again' }).click();
     await page.getByLabel('First Name').fill('Jane Doe');
@@ -115,7 +115,7 @@ test.describe('ODK Web Forms Encrypted', () => {
       buffer: Buffer.from('info about jane')
     });
     await page.getByRole('button', { name: 'send' }).click();
-    await expect(page.getByRole('heading', { name: 'Successful' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Submitted' })).toBeVisible();
 
     // attempt to download the file with no key
     const unencryptedResponse = await backendClient.downloadZip(formWithAttachment.xmlFormId);
