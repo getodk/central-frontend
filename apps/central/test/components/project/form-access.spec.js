@@ -18,19 +18,19 @@ const createData = () => {
     // Create an assignment for "App User 2", which will be the first field key
     // shown in the table.
     .createPast(1, {
-      actorId: testData.extendedFieldKeys.get(1).id,
+      actor: testData.extendedFieldKeys.get(1),
       role: 'app-user',
       xmlFormId: 'f'
     })
     .createPast(1, {
-      actorId: testData.extendedFieldKeys.last().id,
+      actor: testData.extendedFieldKeys.last(),
       role: 'app-user',
       xmlFormId: 'f'
     })
     // Frontend should effectively ignore the following two assignments. This
     // assignment has a valid actorId but an invalid xmlFormId.
     .createPast(1, {
-      actorId: testData.extendedFieldKeys.get(1).id,
+      actor: testData.extendedFieldKeys.get(1),
       role: 'app-user',
       xmlFormId: 'does_not_exist'
     })
@@ -224,7 +224,7 @@ describe('ProjectFormAccess', () => {
           testData.standardFormSummaryAssignments.splice(0, 4);
           return testData.standardFormSummaryAssignments
             .createPast(1, {
-              actorId: testData.extendedFieldKeys.first().id,
+              actor: testData.extendedFieldKeys.first(),
               role: 'app-user',
               xmlFormId: 'f'
             })
