@@ -4,17 +4,17 @@ import Aura from '@primeuix/themes/aura';
 export const odkThemePreset = definePreset(Aura, {
   semantic: {
     primary: {
-      50: '#e9f8ff',
-      100: '#c7e6f5',
-      200: '#a5d4eb',
-      300: '#82c3e0',
-      400: '#60b1d6',
-      500: '#3e9fcc',
-      600: '#3488af',
-      700: '#297193',
-      800: '#1f5976',
-      900: '#14425a',
-      950: '#0a2b3d',
+      50: 'var(--odk-blue-100)',
+      100: 'var(--odk-blue-200)',
+      200: 'var(--odk-blue-300)',
+      300: 'var(--odk-blue-400)',
+      400: 'var(--odk-blue-500)',
+      500: 'var(--odk-blue-600)',
+      600: 'var(--odk-blue-700)',
+      700: 'var(--odk-blue-800)',
+      800: 'var(--odk-blue-900)',
+      900: 'var(--odk-blue-950)',
+      950: 'var(--odk-blue-950)',
     },
     colorScheme: {
       light: {
