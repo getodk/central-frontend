@@ -1,0 +1,14 @@
+name: Remove Azure mirrors
+description: Remove azure Ubuntu repo mirrors, as they can be fatally slow
+
+runs:
+  using: 'composite'
+  steps:
+  - name: remove azure ubuntu mirrors
+    run: |
+      sudo sed \
+           -i \
+           -e '/archive.ubuntu.com\/ubuntu\/\tpriority/ s/priority:2/priority:0/' \
+           -e '/azure.archive.ubuntu.com\/ubuntu\/\tpriority/ s/priority:0/priority:1/' \
+           -e '/security.ubuntu.com\/ubuntu\/\tpriority/ s/priority:3/priority:2/' \
+           /etc/apt/apt-mirrors.txt

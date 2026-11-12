@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-26.04
     steps:
     - uses: actions/checkout@v6
+    - uses: ./.github/actions/remove-azure-mirrors
     - run: sudo apt-get install shellcheck
     - run: ./bin/check-scripts.sh
     - run: ./bin/check-for-large-files.sh
@@ -65,6 +66,7 @@ jobs:
     - uses: ./.github/actions/node-cache
       with:
         mode: restore
+    - uses: ./.github/actions/remove-azure-mirrors
     - run: npx playwright install chromium --with-deps
     - run: npm run test -w=@getodk/forms
 
@@ -77,6 +79,7 @@ jobs:
     runs-on: ubuntu-26.04
     steps:
 
+    - uses: ./.github/actions/remove-azure-mirrors
     # This one weird trick speeds up every build!
     # see: https://github.com/getodk/central-backend/pull/1642
     # see: https://github.com/actions/runner/issues/4030
