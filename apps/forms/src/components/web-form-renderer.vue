@@ -219,6 +219,7 @@ const handleSubmit = async (
   }
   if (alreadySubmittedOnce()) {
     // The user has already submitted a single submission form - should not get here.
+    visibleModal.value = { type: 'thankYouModal', hideable: false };
     return;
   }
   initializeSubmissionState(data as unknown as SubmissionData);
