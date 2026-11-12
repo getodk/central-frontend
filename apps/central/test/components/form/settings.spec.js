@@ -2,7 +2,7 @@ import testData from '../../data';
 import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 
-describe.only('FormSettings', () => {
+describe('FormSettings', () => {
   beforeEach(mockLogin);
 
   describe('initial render', () => {
