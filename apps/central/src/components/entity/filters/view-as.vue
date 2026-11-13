@@ -12,7 +12,7 @@ import { useRequestData } from '../../../request-data';
 
 import Multiselect from '../../multiselect.vue';
 
-const { t, locale } = useI18n();
+const { t } = useI18n();
 
 defineOptions({
   name: 'EntityFiltersViewAs'
@@ -46,21 +46,22 @@ const options = computed(() => {
   const appUsers = fieldKeys.data.map(({ id, displayName }) =>
     ({ value: id, text: displayName, group: t('resource.appUsers') }));
 
-  const formNames = new Map(
-    dataset.linkedForms.map(form => [form.xmlFormId, form.name])
+  // Maps each linked form's xmlFormId to its name and its index within
+  // dataset.linkedForms (used below to order public links by linked form).
+  const linkedForms = new Map(
+    dataset.linkedForms.map((form, index) => [form.xmlFormId, { ...form, index }])
   );
-  const publicLinks = [];
-  for (const { actor, xmlFormId } of formSummaryAssignments.data) {
-    if (formNames.has(xmlFormId)) {
-      publicLinks.push({
-        value: actor.id,
-        text: actor.displayName,
-        group: t('publicLinksForForm', { formName: formNames.get(xmlFormId) })
-      });
-    }
-  }
-  publicLinks.sort((a, b) => a.group.localeCompare(b.group, locale.value) ||
-    a.text.localeCompare(b.text, locale.value));
+  const publicLinkAssignments = formSummaryAssignments.data
+    .filter(({ xmlFormId }) => linkedForms.has(xmlFormId));
+  // Sort by the order of the linked forms, then by the public link's created date (newest first)
+  publicLinkAssignments.sort((a, b) =>
+    linkedForms.get(a.xmlFormId).index - linkedForms.get(b.xmlFormId).index ||
+    b.actor.createdAt.localeCompare(a.actor.createdAt));
+  const publicLinks = publicLinkAssignments.map(({ actor, xmlFormId }) => ({
+    value: actor.id,
+    text: actor.displayName,
+    group: t('publicLinksForForm', { formName: linkedForms.get(xmlFormId).name })
+  }));
 
   return [...appUsers, ...publicLinks];
 });

@@ -136,71 +136,43 @@ describe('EntityFiltersViewAs', () => {
       component.findAll('input[type="radio"]').length.should.equal(4);
     });
 
-    it('public links groups (forms) and text (display names) are in alphabetical order', async () => {
+    it('orders public link groups (forms) according to the order of the linked forms', async () => {
       testData.extendedDatasets.createPast(1, {
         accessFilter: { type: 'ownerOnly' },
         linkedForms: [
-          { xmlFormId: 'f1', name: 'Form Z' },
-          { xmlFormId: 'f2', name: 'Form A' }
+          { xmlFormId: 'f1', name: 'Form 1' },
+          { xmlFormId: 'f2', name: 'Form 2' }
         ]
       });
-      createPublicLinkAssignments(2, 'f1');
-      const assignments = createPublicLinkAssignments(2, 'f2');
-      const formZ = assignments.filter(({ xmlFormId }) => xmlFormId === 'f1');
-      const formA = assignments.filter(({ xmlFormId }) => xmlFormId === 'f2');
-      formZ[0].actor.displayName = 'Z link B';
-      formZ[1].actor.displayName = 'Z link A';
-      formA[0].actor.displayName = 'A link B';
-      formA[1].actor.displayName = 'A link A';
+      createPublicLinkAssignments(1, 'f1');
+      const assignments = createPublicLinkAssignments(1, 'f2');
       const fieldKeys = createFieldKeys(1);
       const component = mountComponent({
         fieldKeys,
-        formSummaryAssignments: [formZ[0], formA[0], formZ[1], formA[1]]
+        formSummaryAssignments: assignments,
+        attachTo: document.body
       });
-
-      const { options } = component.getComponent(Multiselect).props();
-      options.map(({ text }) => text).should.eql([
-        'App User 0',
-        'A link A',
-        'A link B',
-        'Z link A',
-        'Z link B'
-      ]);
       await component.get('.dropdown-trigger').trigger('click');
       component.findAll('.option-group').map(heading => heading.text()).should.eql([
         'App Users',
-        'Public Links: Form A',
-        'Public Links: Form Z'
+        'Public Links: Form 1',
+        'Public Links: Form 2'
       ]);
     });
 
-    it('sorts public links according to the current locale', async () => {
+    it('orders public links within a form by their created date', async () => {
       testData.extendedDatasets.createPast(1, {
         accessFilter: { type: 'ownerOnly' },
-        linkedForms: [
-          { xmlFormId: 'ch', name: 'Chata' },
-          { xmlFormId: 'h', name: 'Hana' }
-        ]
+        linkedForms: [{ xmlFormId: 'f', name: 'Form F' }]
       });
-      createPublicLinkAssignments(2, 'ch');
-      const assignments = createPublicLinkAssignments(2, 'h');
-      for (const xmlFormId of ['ch', 'h']) {
-        const links = assignments.filter(assignment =>
-          assignment.xmlFormId === xmlFormId);
-        links[0].actor.displayName = 'Chata';
-        links[1].actor.displayName = 'Hana';
-      }
+      // Public Link 0 is created (earlier createdAt) before Public Link 1.
+      const assignments = createPublicLinkAssignments(2);
+      assignments[0].actor.displayName = 'Public Link 0';
+      assignments[1].actor.displayName = 'Public Link 1';
       const component = mountComponent({ formSummaryAssignments: assignments });
-      component.vm.$container.i18n.locale = 'cs';
-      await component.vm.$nextTick();
 
       const { options } = component.getComponent(Multiselect).props();
-      options.map(({ group, text }) => [group, text]).should.eql([
-        ['Public Links: Hana', 'Hana'],
-        ['Public Links: Hana', 'Chata'],
-        ['Public Links: Chata', 'Hana'],
-        ['Public Links: Chata', 'Chata']
-      ]);
+      options.map(({ text }) => text).should.eql(['Public Link 1', 'Public Link 0']);
     });
 
     it('shows the display name of each public link', async () => {
@@ -286,7 +258,7 @@ describe('EntityFiltersViewAs', () => {
       });
       const texts = component.getComponent(Multiselect).props().options
         .map(({ text }) => text);
-      texts.should.eql(['App User 0', 'App User 1', 'Public Link 0', 'Public Link 1']);
+      texts.should.eql(['App User 0', 'App User 1', 'Public Link 1', 'Public Link 0']);
     });
 
     it('shows group headings for app users and public links by form', async () => {
@@ -318,10 +290,10 @@ describe('EntityFiltersViewAs', () => {
       texts.should.eql([
         'App User 0',
         'App User 1',
-        'Public Link 0',
         'Public Link 1',
         'Public Link 0',
-        'Public Link 1'
+        'Public Link 1',
+        'Public Link 0'
       ]);
     });
   });
