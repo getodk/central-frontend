@@ -47,6 +47,8 @@ jobs:
         run: 'npm run test-node:jsdom -w packages/common'
 
       - if: ${{ matrix.target == 'Web' }}
+        uses: ./.github/actions/remove-azure-mirrors
+      - if: ${{ matrix.target == 'Web' }}
         run: 'npx playwright install ${{ matrix.browser }} --with-deps'
 
       - if: ${{ matrix.target == 'Web' }}
@@ -81,6 +83,8 @@ jobs:
           npm run test-node:jsdom -w=packages/xforms-engine
           npm run integration-test-node:jsdom -w=packages/xforms-engine
 
+      - if: ${{ matrix.target == 'Web' }}
+        uses: ./.github/actions/remove-azure-mirrors
       - if: ${{ matrix.target == 'Web' }}
         run: |
           npx playwright install ${{ matrix.browser }} --with-deps
@@ -117,6 +121,8 @@ jobs:
         run: 'npm run test-node:jsdom -w=packages/xpath'
 
       - if: ${{ matrix.target == 'Web' }}
+        uses: ./.github/actions/remove-azure-mirrors
+      - if: ${{ matrix.target == 'Web' }}
         run: 'npx playwright install ${{ matrix.browser }} --with-deps'
 
       - if: ${{ matrix.target == 'Web' }}
@@ -148,6 +154,8 @@ jobs:
       - if: ${{ matrix.target == 'Node' }}
         run: 'npm run test:types -w=packages/web-forms'
 
+      - if: ${{ matrix.target == 'Web' }}
+        uses: ./.github/actions/remove-azure-mirrors
       - if: ${{ matrix.target == 'Web' }}
         run: 'npx playwright install ${{ matrix.browser }} --with-deps'
 
