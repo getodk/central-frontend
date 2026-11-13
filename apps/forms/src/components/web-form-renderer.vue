@@ -235,7 +235,7 @@ const handleSubmit = async (
   }
   if (alreadySubmittedOnce()) {
     // The user submitted since this page loaded; show the same thank-you modal as on mount.
-    visibleModal.value = { type: 'thankYouModal', hideable: false };
+    visibleModal.value = { type: 'thankYouModal', status: 'success', hideable: false };
     return;
   }
   initializeSubmissionState(data as unknown as SubmissionData);
@@ -404,9 +404,7 @@ onMounted(async () => {
         <Button type="button" @click="submitData()">{{ $t('action.tryAgain') }}</Button>
       </template>
       <!-- Preview modal or any type of error while submitting primary instance -->
-      <template v-else-if="visibleModal.type === 'previewModal'
-        || visibleModal.type === 'errorModal'
-        || visibleModal.type === 'sessionTimeoutModal' && visibleModal.hideable">
+      <template v-else-if="visibleModal.hideable">
         <Button type="button" @click="visibleModal = undefined">{{ $t('action.close') }}</Button>
       </template>
     </template>
