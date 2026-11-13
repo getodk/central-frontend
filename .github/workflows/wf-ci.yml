@@ -47,6 +47,8 @@ jobs:
         run: 'npm run test-node:jsdom -w packages/common'
 
       - if: ${{ matrix.target == 'Web' }}
+        uses: ./.github/actions/remove-azure-mirrors
+      - if: ${{ matrix.target == 'Web' }}
         run: 'npx playwright install ${{ matrix.browser }} --with-deps'
 
       - if: ${{ matrix.target == 'Web' }}
