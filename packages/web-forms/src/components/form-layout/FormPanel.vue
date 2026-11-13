@@ -76,7 +76,7 @@ const menu = ref<InstanceType<typeof Menu> & MenuState>();
 
 h2 {
 	font-size: var(--odk-top-group-font-size);
-	font-weight: 400;
+	font-weight: var(--odk-font-weight-normal);
 	margin: 0;
 	display: flex;
 	align-items: center;
@@ -89,7 +89,7 @@ h2 {
 	border-radius: var(--odk-radius);
 	background-color: var(--odk-muted-background-color);
 	font-size: var(--odk-hint-font-size);
-	font-weight: 400;
+	font-weight: var(--odk-font-weight-normal);
 	text-align: center;
 	height: fit-content;
 }

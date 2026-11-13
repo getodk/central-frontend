@@ -471,7 +471,7 @@ onUnmounted(() => {
 
 .odk-form {
 	font-family: var(--odk-font-family);
-	font-weight: 400;
+	font-weight: var(--odk-font-weight-normal);
 	font-size: var(--odk-base-font-size);
 	background: var(--odk-muted-background-color);
 	color: var(--odk-text-color);
@@ -516,7 +516,7 @@ onUnmounted(() => {
 			:deep(.p-message-text) {
 				display: flex;
 				align-items: center;
-				font-weight: 400;
+				font-weight: var(--odk-font-weight-normal);
 				flex: 1;
 			}
 
@@ -557,7 +557,7 @@ onUnmounted(() => {
 		.anchor {
 			color: var(--odk-text-color);
 			font-size: 18px;
-			font-weight: 300;
+			font-weight: var(--odk-font-weight-light);
 			text-decoration: none;
 
 			span.caption {
@@ -574,7 +574,7 @@ onUnmounted(() => {
 
 		.version {
 			font-size: 14px;
-			font-weight: 300;
+			font-weight: var(--odk-font-weight-light);
 			margin-top: var(--odk-spacing-s);
 		}
 	}

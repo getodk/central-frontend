@@ -103,6 +103,11 @@
 
   /* Critical UI elements (e.g., loading spinners, toast notifications) */
   --odk-z-index-topmost: 1000;
+
+  --odk-font-weight-light: 300;
+  --odk-font-weight-normal: 400;
+  --odk-font-weight-semibold: 500;
+  --odk-font-weight-bold: 600
 }
 
 @mixin toggle-visibility($display: inline-block) {

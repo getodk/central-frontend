@@ -68,7 +68,7 @@ onMounted(() => doLoad());
 
 .async-loader-error-message {
 	font-size: var(--odk-sub-group-font-size);
-	font-weight: 600;
+	font-weight: var(--odk-font-weight-semibold);
 	margin: 0;
 }
 

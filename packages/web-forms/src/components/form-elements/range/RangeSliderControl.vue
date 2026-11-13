@@ -94,7 +94,7 @@ const labelTracks = computed(() => {
 	--labels-max-width: 50%;
 
 	.range-value {
-		font-weight: bold;
+		font-weight: var(--odk-font-weight-semibold);
 	}
 
 	.range-bound,

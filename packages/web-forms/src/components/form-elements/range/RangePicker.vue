@@ -203,11 +203,11 @@ onBeforeUnmount(() => stopHold());
 
 .range-picker-value {
 	font-size: var(--odk-question-font-size);
-	font-weight: bold;
+	font-weight: var(--odk-font-weight-semibold);
 	text-align: center;
 
 	&.range-picker-empty {
-		font-weight: normal;
+		font-weight: var(--odk-font-weight-normal);
 		color: var(--odk-muted-text-color);
 	}
 }
