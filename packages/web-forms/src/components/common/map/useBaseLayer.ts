@@ -53,9 +53,7 @@ export function useBaseLayer(
     return layer;
   };
 
-  mapInstance
-    .getLayers()
-    .insertAt(BASE_LAYER_INDEX, createLayer(activeLayerId.value));
+  mapInstance.getLayers().insertAt(BASE_LAYER_INDEX, createLayer(activeLayerId.value));
 
   const teardown = () => {
     disposeLayerAndSource(getActiveLayer(mapInstance));
