@@ -7,10 +7,12 @@ import testData from '../../../data';
 import { mount } from '../../../util/lifecycle';
 import { testRequestData } from '../../../util/request-data';
 
-const createFieldKeys = (count) => new Array(count).fill(undefined)
-  .map((_, i) => testData.extendedFieldKeys
-    .createPast(1, { displayName: `App User ${i}` })
-    .last());
+const createFieldKeys = (count) => {
+  for (let i = 0; i < count; i += 1) {
+    testData.extendedFieldKeys.createPast(1, { displayName: `App User ${i}` })
+  }
+  return testData.extendedFieldKeys.sorted();
+}
 
 // Creates public links, each with a form assignment, and returns the assignments.
 const createPublicLinkAssignments = (count, xmlFormId = 'f') => {
@@ -58,6 +60,16 @@ describe('EntityFiltersViewAs', () => {
       const component = mountComponent({ fieldKeys, attachTo: document.body });
       await component.get('.dropdown-trigger').trigger('click');
       component.findAll('input[type="radio"]').length.should.equal(2);
+    });
+
+    it('orders app users by created date (newest first)', () => {
+      const fieldKeys = createFieldKeys(3);
+      const component = mountComponent({
+        fieldKeys: [fieldKeys[1], fieldKeys[0], fieldKeys[2]] // pass to component out-of-order
+      });
+      const texts = component.getComponent(Multiselect).props().options
+        .map(({ text }) => text);
+      texts.should.eql(['App User 2', 'App User 1', 'App User 0']);
     });
 
     it('emits an app user ID after selection is applied', async () => {
@@ -258,7 +270,7 @@ describe('EntityFiltersViewAs', () => {
       });
       const texts = component.getComponent(Multiselect).props().options
         .map(({ text }) => text);
-      texts.should.eql(['App User 0', 'App User 1', 'Public Link 1', 'Public Link 0']);
+      texts.should.eql(['App User 1', 'App User 0', 'Public Link 1', 'Public Link 0']);
     });
 
     it('shows group headings for app users and public links by form', async () => {
@@ -288,8 +300,8 @@ describe('EntityFiltersViewAs', () => {
       const texts = component.findAll('.single-select-option')
         .map(row => row.text());
       texts.should.eql([
-        'App User 0',
         'App User 1',
+        'App User 0',
         'Public Link 1',
         'Public Link 0',
         'Public Link 1',

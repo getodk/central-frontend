@@ -43,8 +43,10 @@ const options = computed(() => {
     formSummaryAssignments.dataExists))
     return null;
 
-  const appUsers = fieldKeys.data.map(({ id, displayName }) =>
-    ({ value: id, text: displayName, group: t('resource.appUsers') }));
+  const appUsers = fieldKeys.data.map(({ id, displayName, createdAt }) =>
+    ({ value: id, text: displayName, group: t('resource.appUsers'), createdAt }));
+  // Sort app users by created date (newest first)
+  appUsers.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
 
   // Maps each linked form's xmlFormId to its name and its index within
   // dataset.linkedForms (used below to order public links by linked form).
@@ -56,7 +58,7 @@ const options = computed(() => {
   // Sort by the order of the linked forms, then by the public link's created date (newest first)
   publicLinkAssignments.sort((a, b) =>
     linkedForms.get(a.xmlFormId).index - linkedForms.get(b.xmlFormId).index ||
-    b.actor.createdAt.localeCompare(a.actor.createdAt));
+    Date.parse(b.actor.createdAt) - Date.parse(a.actor.createdAt));
   const publicLinks = publicLinkAssignments.map(({ actor, xmlFormId }) => ({
     value: actor.id,
     text: actor.displayName,
