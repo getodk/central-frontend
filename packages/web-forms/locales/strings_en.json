@@ -160,8 +160,8 @@
     "developer_comment": "Title of the error shown when the Google Maps tile session cannot be created (invalid key, API not enabled, or quota exhausted)."
   },
   "map_block.provider_error.message": {
-    "string": "Google Maps is unavailable. The server's Google Maps key may be invalid or out of quota. Contact the server administrator.",
-    "developer_comment": "Description of the Google Maps error. The key is configured by the server administrator, not the person filling the form."
+    "string": "Google Maps is unavailable. Check your connection. If it persists, contact the server administrator.",
+    "developer_comment": "Description of the Google Maps error, shown when offline or when the server's Google Maps key is invalid or out of quota."
   },
   "map_block.get_location.label": {
     "string": "Get location",

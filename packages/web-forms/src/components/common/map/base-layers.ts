@@ -34,7 +34,7 @@ const failedSessionResponse = () => new Response(null, { status: FAILED_SESSION_
  * OpenLayers only handles a non-ok response. A rejected fetch (offline) would leave the
  * source loading forever, and a response after dispose would schedule a refresh timer.
  */
-export class GuardedGoogleSource extends Google {
+class GuardedGoogleSource extends Google {
   override async fetchSessionToken(url: string, config: RequestInit): Promise<Response> {
     const response = await super.fetchSessionToken(url, config).catch(failedSessionResponse);
     return this.disposed ? failedSessionResponse() : response;

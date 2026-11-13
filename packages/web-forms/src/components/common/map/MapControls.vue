@@ -32,7 +32,6 @@ const MAP_ICONS = {
 	currentLocation: 'mdiCrosshairsGps',
 	undo: 'mdiArrowULeftTop',
 	delete: 'mdiTrashCanOutline',
-	openAdvanced: 'mdiCogOutline',
 	openFullScreen: 'mdiArrowExpand',
 	closeFullScreen: 'mdiArrowCollapse',
 	baseLayers: 'mdiLayersOutline',
