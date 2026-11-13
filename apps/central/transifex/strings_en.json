@@ -3476,6 +3476,22 @@
         }
       }
     },
+    "FormAutosaveSettings": {
+      "autosaveSetting": {
+        "description": {
+          "string": "Autosave responses if browser closes or refreshes. Sensitive data may be retained in saved responses."
+        },
+        "enabled": {
+          "string": "Autosave is now enabled for your “{formName}” form."
+        },
+        "disabled": {
+          "string": "Autosave is now disabled for your “{formName}” form."
+        },
+        "unselectable": {
+          "string": "Configuring autosave is not possible using Enketo."
+        }
+      }
+    },
     "FormDelete": {
       "title": {
         "string": "Delete Form",
