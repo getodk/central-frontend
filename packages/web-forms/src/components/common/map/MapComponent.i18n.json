@@ -108,10 +108,6 @@
     "string": "Delete one vertex or all vertices",
     "developer_comment": "Aria-label for the map control button that deletes the selected vertex or all vertices."
   },
-  "map_controls.open_advanced.description": {
-    "string": "Advanced manual edits",
-    "developer_comment": "Aria-label for the map control button that opens the advanced coordinate editing panel."
-  },
 
   "map_base_layer_picker.open.description": {
     "string": "Change map layer",
@@ -141,10 +137,6 @@
   "map_privacy_dialog.body.text": {
     "string": "This map is provided by Google Maps. To display it, your browser sends your IP address and the map areas you view to Google.",
     "developer_comment": "Body of the privacy dialog shown when Google Maps is the map provider."
-  },
-  "map_privacy_dialog.read_more.text": {
-    "string": "Learn more in the",
-    "developer_comment": "Shown before the 'Google Privacy Policy' link in the map privacy dialog, forming one sentence with it."
   },
   "map_privacy_dialog.privacy_policy.link": {
     "string": "Google Privacy Policy",

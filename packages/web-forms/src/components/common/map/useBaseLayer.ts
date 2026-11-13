@@ -5,9 +5,7 @@ import {
   type MapProvider,
 } from '@getodk/web-forms/components/common/map/base-layers.ts';
 import type { Map as OlMap } from 'ol';
-import type { EventsKey } from 'ol/events';
 import type TileLayer from 'ol/layer/Tile';
-import { unByKey } from 'ol/Observable';
 import type TileSource from 'ol/source/Tile';
 import { shallowRef, type ShallowRef } from 'vue';
 
@@ -25,6 +23,11 @@ const reportSessionError = (source: TileSource, onProviderError: () => void) => 
   }
 };
 
+const getActiveLayer = (mapInstance: OlMap) => {
+  return mapInstance.getLayers().item(BASE_LAYER_INDEX) as TileLayer;
+};
+
+// Disposing the source also removes its listeners.
 const disposeLayerAndSource = (layer: TileLayer) => {
   layer.getSource()?.dispose();
   layer.dispose();
@@ -36,44 +39,37 @@ export function useBaseLayer(
   onProviderError: () => void
 ): UseBaseLayer {
   const activeLayerId = shallowRef<BaseLayerId>(DEFAULT_BASE_LAYER_ID);
-  const layerCache = new Map<BaseLayerId, TileLayer>();
-  const listenerKeys: EventsKey[] = [];
 
   const watchSessionErrors = (layer: TileLayer) => {
     const source = layer.getSource();
     if (provider.kind === 'google' && source) {
-      listenerKeys.push(source.on('change', () => reportSessionError(source, onProviderError)));
+      source.on('change', () => reportSessionError(source, onProviderError));
     }
   };
 
-  const getOrCreateLayer = (layerId: BaseLayerId): TileLayer => {
-    const cachedLayer = layerCache.get(layerId);
-    if (cachedLayer) {
-      return cachedLayer;
-    }
-
+  const createLayer = (layerId: BaseLayerId): TileLayer => {
     const layer = createBaseLayer(layerId, provider);
-    layerCache.set(layerId, layer);
     watchSessionErrors(layer);
     return layer;
   };
 
-  mapInstance.getLayers().insertAt(BASE_LAYER_INDEX, getOrCreateLayer(activeLayerId.value));
+  mapInstance
+    .getLayers()
+    .insertAt(BASE_LAYER_INDEX, createLayer(activeLayerId.value));
 
+  const teardown = () => {
+    disposeLayerAndSource(getActiveLayer(mapInstance));
+  };
+
+  // Recreating a layer is cheap. A hidden layer would keep refreshing its Google session.
   const selectBaseLayer = (layerId: BaseLayerId) => {
     if (layerId === activeLayerId.value) {
       return;
     }
 
-    mapInstance.getLayers().setAt(BASE_LAYER_INDEX, getOrCreateLayer(layerId));
+    teardown();
+    mapInstance.getLayers().setAt(BASE_LAYER_INDEX, createLayer(layerId));
     activeLayerId.value = layerId;
-  };
-
-  const teardown = () => {
-    unByKey(listenerKeys);
-    listenerKeys.length = 0;
-    layerCache.forEach((layer) => disposeLayerAndSource(layer));
-    layerCache.clear();
   };
 
   return {

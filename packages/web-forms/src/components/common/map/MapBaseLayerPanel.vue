@@ -20,12 +20,12 @@ const BASE_LAYER_OPTIONS = [
 </script>
 
 <template>
-	<div class="base-layer-options">
+	<div class="base-layer-options" role="group">
 		<button
 			v-for="option in BASE_LAYER_OPTIONS"
 			:key="option.id"
 			type="button"
-			:aria-checked="option.id === activeLayerId"
+			:aria-pressed="option.id === activeLayerId"
 			class="base-layer-option"
 			:class="{ active: option.id === activeLayerId }"
 			@click="emit('selectBaseLayer', option.id)"
