@@ -43,22 +43,27 @@ const options = computed(() => {
     formSummaryAssignments.dataExists))
     return null;
 
-  const appUsers = fieldKeys.data.map(({ id, displayName }) =>
-    ({ value: id, text: displayName }));
+  const appUsers = fieldKeys.data.map(({ id, displayName, createdAt }) =>
+    ({ value: id, text: displayName, group: t('resource.appUsers'), createdAt }));
+  // Sort app users by created date (newest first)
+  appUsers.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
 
-  const formNames = new Map(
-    dataset.linkedForms.map(form => [form.xmlFormId, form.name])
+  // Maps each linked form's xmlFormId to its name and its index within
+  // dataset.linkedForms (used below to order public links by linked form).
+  const linkedForms = new Map(
+    dataset.linkedForms.map((form, index) => [form.xmlFormId, { ...form, index }])
   );
-  const publicLinks = [];
-  for (const { actor, xmlFormId } of formSummaryAssignments.data) {
-    if (formNames.has(xmlFormId)) {
-      publicLinks.push({
-        value: actor.id,
-        text: actor.displayName,
-        // TODO: add public link info to display, such as form name
-      });
-    }
-  }
+  const publicLinkAssignments = formSummaryAssignments.data
+    .filter(({ xmlFormId }) => linkedForms.has(xmlFormId));
+  // Sort by the order of the linked forms, then by the public link's created date (newest first)
+  publicLinkAssignments.sort((a, b) =>
+    linkedForms.get(a.xmlFormId).index - linkedForms.get(b.xmlFormId).index ||
+    Date.parse(b.actor.createdAt) - Date.parse(a.actor.createdAt));
+  const publicLinks = publicLinkAssignments.map(({ actor, xmlFormId }) => ({
+    value: actor.id,
+    text: actor.displayName,
+    group: t('publicLinksForForm', { formName: linkedForms.get(xmlFormId).name })
+  }));
 
   return [...appUsers, ...publicLinks];
 });
@@ -80,9 +85,12 @@ const placeholder = ({ selectedText }) => selectedText ?? t('noUserSelected');
 <i18n lang="json5">
 {
   "en": {
-    "noUserSelected": "Me",
+    // "All" refers to users (in the form of app users and public links)
+    "noUserSelected": "All",
     "viewAs": "View As",
-    "resetToMe": "Reset to Me",
+    // This "All" means all users (app users and public links) shown in this dropdown
+    "resetToMe": "Reset to All",
+    "publicLinksForForm": "Public Links: {formName}"
   }
 }
 </i18n>

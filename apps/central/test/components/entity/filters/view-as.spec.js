@@ -7,10 +7,12 @@ import testData from '../../../data';
 import { mount } from '../../../util/lifecycle';
 import { testRequestData } from '../../../util/request-data';
 
-const createFieldKeys = (count) => new Array(count).fill(undefined)
-  .map((_, i) => testData.extendedFieldKeys
-    .createPast(1, { displayName: `App User ${i}` })
-    .last());
+const createFieldKeys = (count) => {
+  for (let i = 0; i < count; i += 1) {
+    testData.extendedFieldKeys.createPast(1, { displayName: `App User ${i}` });
+  }
+  return testData.extendedFieldKeys.sorted();
+};
 
 // Creates public links, each with a form assignment, and returns the assignments.
 const createPublicLinkAssignments = (count, xmlFormId = 'f') => {
@@ -60,6 +62,16 @@ describe('EntityFiltersViewAs', () => {
       component.findAll('input[type="radio"]').length.should.equal(2);
     });
 
+    it('orders app users by created date (newest first)', () => {
+      const fieldKeys = createFieldKeys(3);
+      const component = mountComponent({
+        fieldKeys: [fieldKeys[1], fieldKeys[0], fieldKeys[2]] // pass to component out-of-order
+      });
+      const texts = component.getComponent(Multiselect).props().options
+        .map(({ text }) => text);
+      texts.should.eql(['App User 2', 'App User 1', 'App User 0']);
+    });
+
     it('emits an app user ID after selection is applied', async () => {
       const [fieldKey1, fieldKey2] = createFieldKeys(2);
       const component = mountComponent({
@@ -73,7 +85,7 @@ describe('EntityFiltersViewAs', () => {
       component.emitted('update:modelValue').should.eql([[fieldKey2.id]]);
     });
 
-    it('emits null after Reset to Me is clicked', async () => {
+    it('emits null after Reset to All is clicked', async () => {
       const [fieldKey] = createFieldKeys(1);
       const component = mountComponent({
         fieldKeys: [fieldKey],
@@ -136,6 +148,45 @@ describe('EntityFiltersViewAs', () => {
       component.findAll('input[type="radio"]').length.should.equal(4);
     });
 
+    it('orders public link groups (forms) according to the order of the linked forms', async () => {
+      testData.extendedDatasets.createPast(1, {
+        accessFilter: { type: 'ownerOnly' },
+        linkedForms: [
+          { xmlFormId: 'f1', name: 'Form 1' },
+          { xmlFormId: 'f2', name: 'Form 2' }
+        ]
+      });
+      createPublicLinkAssignments(1, 'f1');
+      const assignments = createPublicLinkAssignments(1, 'f2');
+      const fieldKeys = createFieldKeys(1);
+      const component = mountComponent({
+        fieldKeys,
+        formSummaryAssignments: assignments,
+        attachTo: document.body
+      });
+      await component.get('.dropdown-trigger').trigger('click');
+      component.findAll('.option-group').map(heading => heading.text()).should.eql([
+        'App Users',
+        'Public Links: Form 1',
+        'Public Links: Form 2'
+      ]);
+    });
+
+    it('orders public links within a form by their created date', async () => {
+      testData.extendedDatasets.createPast(1, {
+        accessFilter: { type: 'ownerOnly' },
+        linkedForms: [{ xmlFormId: 'f', name: 'Form F' }]
+      });
+      // Public Link 0 is created (earlier createdAt) before Public Link 1.
+      const assignments = createPublicLinkAssignments(2);
+      assignments[0].actor.displayName = 'Public Link 0';
+      assignments[1].actor.displayName = 'Public Link 1';
+      const component = mountComponent({ formSummaryAssignments: assignments });
+
+      const { options } = component.getComponent(Multiselect).props();
+      options.map(({ text }) => text).should.eql(['Public Link 1', 'Public Link 0']);
+    });
+
     it('shows the display name of each public link', async () => {
       testData.extendedDatasets.createPast(1, {
         accessFilter: { type: 'ownerOnly' },
@@ -188,7 +239,7 @@ describe('EntityFiltersViewAs', () => {
       component.emitted('update:modelValue').should.eql([[assignment.actor.id]]);
     });
 
-    it('emits null after Reset to Me is clicked', async () => {
+    it('emits null after Reset to All is clicked', async () => {
       testData.extendedDatasets.createPast(1, {
         accessFilter: { type: 'ownerOnly' },
         linkedForms: [{ xmlFormId: 'f', name: 'Form F' }]
@@ -219,7 +270,43 @@ describe('EntityFiltersViewAs', () => {
       });
       const texts = component.getComponent(Multiselect).props().options
         .map(({ text }) => text);
-      texts.should.eql(['App User 0', 'App User 1', 'Public Link 0', 'Public Link 1']);
+      texts.should.eql(['App User 1', 'App User 0', 'Public Link 1', 'Public Link 0']);
+    });
+
+    it('shows group headings for app users and public links by form', async () => {
+      testData.extendedDatasets.createPast(1, {
+        accessFilter: { type: 'ownerOnly' },
+        linkedForms: [
+          { xmlFormId: 'f1', name: 'Form 1' },
+          { xmlFormId: 'f2', name: 'Form 2' }
+        ]
+      });
+      const fieldKeys = createFieldKeys(2);
+      createPublicLinkAssignments(2, 'f1');
+      const formSummaryAssignments = createPublicLinkAssignments(2, 'f2');
+      const component = mountComponent({
+        fieldKeys,
+        formSummaryAssignments,
+        attachTo: document.body
+      });
+      await component.get('.dropdown-trigger').trigger('click');
+      const headings = component.findAll('.option-group').map(heading => heading.text());
+      headings.should.eql([
+        'App Users',
+        'Public Links: Form 1',
+        'Public Links: Form 2'
+      ]);
+      component.findAll('input[type="radio"]').length.should.equal(6);
+      const texts = component.findAll('.single-select-option')
+        .map(row => row.text());
+      texts.should.eql([
+        'App User 1',
+        'App User 0',
+        'Public Link 1',
+        'Public Link 0',
+        'Public Link 1',
+        'Public Link 0'
+      ]);
     });
   });
 
@@ -230,7 +317,7 @@ describe('EntityFiltersViewAs', () => {
         fieldKeys: [fieldKey],
         props: { modelValue: null }
       });
-      component.get('.display-value').text().should.equal('Me');
+      component.get('.display-value').text().should.equal('All');
     });
 
     it('shows default label if the actor id is not in the field keys list', () => {
@@ -238,7 +325,7 @@ describe('EntityFiltersViewAs', () => {
       const component = mountComponent({
         props: { modelValue: fieldKey.id }
       });
-      component.get('.display-value').text().should.equal('Me');
+      component.get('.display-value').text().should.equal('All');
     });
 
     it('shows default label if actor id is not in the linked form assignments', () => {
@@ -251,7 +338,7 @@ describe('EntityFiltersViewAs', () => {
         formSummaryAssignments: [assignment],
         props: { modelValue: assignment.actor.id }
       });
-      component.get('.display-value').text().should.equal('Me');
+      component.get('.display-value').text().should.equal('All');
     });
 
     it('shows default label if there are no assignments', () => {
@@ -263,7 +350,7 @@ describe('EntityFiltersViewAs', () => {
       const component = mountComponent({
         props: { modelValue: assignment.actor.id }
       });
-      component.get('.display-value').text().should.equal('Me');
+      component.get('.display-value').text().should.equal('All');
     });
   });
 });
