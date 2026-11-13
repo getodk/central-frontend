@@ -9,7 +9,7 @@
   cursor: pointer;
   background: var(--odk-base-background-color);
   overflow: hidden;
-  font-weight: 400;
+  font-weight: var(--odk-font-weight-normal);
 
   &:has(.p-checkbox-input:hover),
   &:has(.p-checkbox-input:focus-visible),

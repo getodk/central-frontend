@@ -231,7 +231,7 @@ watch(pasteValue, (newVal) => {
 		display: block;
 		font-size: var(--odk-hint-font-size);
 		color: var(--odk-muted-text-color);
-		font-weight: 300;
+		font-weight: var(--odk-font-weight-light);
 	}
 
 	#paste-input {

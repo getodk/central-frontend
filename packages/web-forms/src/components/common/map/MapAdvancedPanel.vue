@@ -174,7 +174,7 @@ const updateVertex = () => {
 		padding: var(--odk-spacing-m);
 		background-color: var(--odk-light-background-color);
 		color: var(--odk-text-color);
-		font-weight: normal;
+		font-weight: var(--odk-font-weight-normal);
 		font-size: var(--odk-base-font-size);
 		border-radius: var(--odk-radius) 0 0 var(--odk-radius);
 		border: 1px solid var(--odk-border-color);

@@ -109,7 +109,7 @@ const isGeolocationNode = (
 }
 
 .note-value {
-	font-weight: 300;
+	font-weight: var(--odk-font-weight-light);
 	font-size: var(--odk-answer-font-size);
 }
 </style>
