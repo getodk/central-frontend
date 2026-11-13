@@ -134,9 +134,13 @@ describe('EntityFiltersViewAs', () => {
       const component = mountComponent({ formSummaryAssignments });
       await component.get('.dropdown-trigger').trigger('click');
       component.findAll('input[type="radio"]').length.should.equal(4);
+      component.findAll('.option-group').map(heading => heading.text())
+        .should.eql(['Public Links']);
+      component.findAll('.option-subgroup').map(heading => heading.text())
+        .should.eql(['Form 1', 'Form 2']);
     });
 
-    it('public links groups (forms) and text (display names) are in alphabetical order', async () => {
+    it('public link forms and display names are in alphabetical order', async () => {
       testData.extendedDatasets.createPast(1, {
         accessFilter: { type: 'ownerOnly' },
         linkedForms: [
@@ -169,8 +173,11 @@ describe('EntityFiltersViewAs', () => {
       await component.get('.dropdown-trigger').trigger('click');
       component.findAll('.option-group').map(heading => heading.text()).should.eql([
         'App Users',
-        'Public Links: Form A',
-        'Public Links: Form Z'
+        'Public Links'
+      ]);
+      component.findAll('.option-subgroup').map(heading => heading.text()).should.eql([
+        'Form A',
+        'Form Z'
       ]);
     });
 
@@ -178,29 +185,17 @@ describe('EntityFiltersViewAs', () => {
       testData.extendedDatasets.createPast(1, {
         accessFilter: { type: 'ownerOnly' },
         linkedForms: [
-          { xmlFormId: 'ch', name: 'Chata' },
-          { xmlFormId: 'h', name: 'Hana' }
+          { xmlFormId: 'x', name: 'Form X' },
         ]
       });
-      createPublicLinkAssignments(2, 'ch');
-      const assignments = createPublicLinkAssignments(2, 'h');
-      for (const xmlFormId of ['ch', 'h']) {
-        const links = assignments.filter(assignment =>
-          assignment.xmlFormId === xmlFormId);
-        links[0].actor.displayName = 'Chata';
-        links[1].actor.displayName = 'Hana';
-      }
+      const assignments = createPublicLinkAssignments(2, 'x');
+      assignments[0].actor.displayName = 'Chata';
+      assignments[1].actor.displayName = 'Hana';
       const component = mountComponent({ formSummaryAssignments: assignments });
       component.vm.$container.i18n.locale = 'cs';
       await component.vm.$nextTick();
-
       const { options } = component.getComponent(Multiselect).props();
-      options.map(({ group, text }) => [group, text]).should.eql([
-        ['Public Links: Hana', 'Hana'],
-        ['Public Links: Hana', 'Chata'],
-        ['Public Links: Chata', 'Hana'],
-        ['Public Links: Chata', 'Chata']
-      ]);
+      options.map(({ text }) => text).should.eql(['Hana', 'Chata']);
     });
 
     it('shows the display name of each public link', async () => {
@@ -307,11 +302,10 @@ describe('EntityFiltersViewAs', () => {
       });
       await component.get('.dropdown-trigger').trigger('click');
       const headings = component.findAll('.option-group').map(heading => heading.text());
-      headings.should.eql([
-        'App Users',
-        'Public Links: Form 1',
-        'Public Links: Form 2'
-      ]);
+      headings.should.eql(['App Users', 'Public Links']);
+      const subheadings = component.findAll('.option-subgroup')
+        .map(heading => heading.text());
+      subheadings.should.eql(['Form 1', 'Form 2']);
       component.findAll('input[type="radio"]').length.should.equal(6);
       const texts = component.findAll('.single-select-option')
         .map(row => row.text());

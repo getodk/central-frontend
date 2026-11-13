@@ -55,11 +55,12 @@ const options = computed(() => {
       publicLinks.push({
         value: actor.id,
         text: actor.displayName,
-        group: t('publicLinksForForm', { formName: formNames.get(xmlFormId) })
+        group: t('resource.publicLinks'),
+        subgroup: formNames.get(xmlFormId)
       });
     }
   }
-  publicLinks.sort((a, b) => a.group.localeCompare(b.group, locale.value) ||
+  publicLinks.sort((a, b) => a.group.localeCompare(b.group, locale.value) || a.subgroup.localeCompare(b.subgroup, locale.value) ||
     a.text.localeCompare(b.text, locale.value));
 
   return [...appUsers, ...publicLinks];
@@ -87,7 +88,6 @@ const placeholder = ({ selectedText }) => selectedText ?? t('noUserSelected');
     "viewAs": "View As",
     // This "All" means all users (app users and public links) shown in this dropdown
     "resetToMe": "Reset to All",
-    "publicLinksForForm": "Public Links: {formName}"
   }
 }
 </i18n>

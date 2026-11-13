@@ -336,6 +336,7 @@
     // This refers to the data properties of an Entity or Actor.
     "properties": "Properties",
     "publicLink": "Public Access Link",
+    "publicLinks": "Public Links",
     "user": "User",
     "users": "Users",
     "webUser": "Web User",
