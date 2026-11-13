@@ -50,6 +50,7 @@ import {
 	readonly,
 	ref,
 	watch,
+	type WatchHandle,
 } from 'vue';
 import { FormInitializationError } from '@getodk/web-forms/lib/error/FormInitializationError';
 import { FormDesignError } from '@getodk/xpath';
@@ -262,10 +263,20 @@ const emitAutosave = () => {
 };
 
 let autosaveTimeout: ReturnType<typeof setTimeout> | undefined;
+let autosaveWatchCancel: WatchHandle | undefined;
 
 const registerAutosaveListener = () => {
+	if (autosaveTimeout) {
+		// the form has been reset - do not emit autosaves from the previous form instance
+		clearTimeout(autosaveTimeout);
+		autosaveTimeout = undefined;
+	}
+	if (autosaveWatchCancel) {
+		// cancel any previous watchers before registering the new one
+		autosaveWatchCancel();
+	}
 	if (isEmitSubscribed('onUpdated') && state.value.root) {
-		watch(state.value.root.instanceState, () => {
+		autosaveWatchCancel = watch(state.value.root.instanceState, () => {
 			if (autosaveTimeout) {
 				clearTimeout(autosaveTimeout);
 			}
