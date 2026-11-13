@@ -25,7 +25,7 @@ describe('multiple events', () => {
     // ported from: https://github.com/getodk/javarosa/blob/2dd8e15e9f3110a86f8d7d851efc98627ae5692e/src/test/java/org/javarosa/core/model/actions/MultipleEventsTest.java#L35
     it('sets the value when nested', async () => {
       const scenario = await Scenario.init(multipleEvents);
-      const deserializedScenario = await scenario.proposed_serializeAndRestoreInstanceState();
+      const deserializedScenario = await scenario.serializeAndRestoreInstanceState();
       const newInstance = deserializedScenario.newInstance();
       expect(newInstance.answerOf('/data/nested-first-load').getValue()).toBe('cheese');
     });
@@ -33,7 +33,7 @@ describe('multiple events', () => {
     // ported from: https://github.com/getodk/javarosa/blob/2dd8e15e9f3110a86f8d7d851efc98627ae5692e/src/test/java/org/javarosa/core/model/actions/MultipleEventsTest.java#L44
     it('sets the value when nested in group', async () => {
       const scenario = await Scenario.init(multipleEvents);
-      const deserializedScenario = await scenario.proposed_serializeAndRestoreInstanceState();
+      const deserializedScenario = await scenario.serializeAndRestoreInstanceState();
       const newInstance = deserializedScenario.newInstance();
       expect(newInstance.answerOf('/data/my-group/nested-first-load-in-group').getValue()).toBe(
         'more cheese'
@@ -55,7 +55,7 @@ describe('multiple events', () => {
     // ported from: https://github.com/getodk/javarosa/blob/2dd8e15e9f3110a86f8d7d851efc98627ae5692e/src/test/java/org/javarosa/core/model/actions/MultipleEventsTest.java#L62
     it('sets the value', async () => {
       const scenario = await Scenario.init(multipleEvents);
-      const deserializedScenario = await scenario.proposed_serializeAndRestoreInstanceState();
+      const deserializedScenario = await scenario.serializeAndRestoreInstanceState();
       const newInstance = deserializedScenario.newInstance();
       expect(newInstance.answerOf('/data/my-calculated-value').getValue()).toBe('10');
       newInstance.answer('/data/my-value', '15');

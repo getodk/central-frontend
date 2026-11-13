@@ -57,7 +57,7 @@ describe('instance load events', () => {
 
       expect(scenario.answerOf('/data/q1')).toEqualAnswer(intAnswer(16));
       scenario.answer('/data/q1', 555);
-      const restored = await scenario.proposed_serializeAndRestoreInstanceState();
+      const restored = await scenario.serializeAndRestoreInstanceState();
       expect(restored.answerOf('/data/q1')).toEqualAnswer(intAnswer(16));
     });
 
@@ -141,7 +141,7 @@ describe('instance load events', () => {
 
       expect(scenario.answerOf('/data/q1')).toEqualAnswer(intAnswer(16));
       scenario.answer('/data/q1', 555);
-      const restored = await scenario.proposed_serializeAndRestoreInstanceState();
+      const restored = await scenario.serializeAndRestoreInstanceState();
       expect(restored.answerOf('/data/q1')).toEqualAnswer(intAnswer(555));
     });
 

@@ -33,6 +33,20 @@
         },
         "tryAgain": {
           "string": "Try again"
+        },
+        "recover": {
+          "string": "Recover"
+        },
+        "discard": {
+          "string": "Discard"
+        }
+      },
+      "autosaveModal": {
+        "title": {
+          "string": "Recover your work?"
+        },
+        "body": {
+          "string": "Your form closed unexpectedly on {date} and was saved. Do you want to continue with this form?"
         }
       },
       "previewModal": {

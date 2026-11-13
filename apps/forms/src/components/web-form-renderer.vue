@@ -2,7 +2,7 @@
 
 import { computed, onMounted, ref } from 'vue';
 import { OdkWebForm, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
-import { type MonolithicInstancePayload } from '@getodk/xforms-engine';
+import { type InstanceSnapshot, type MonolithicInstancePayload } from '@getodk/xforms-engine';
 import { postPrimaryInstance, uploadAttachment, getFormAttachment, type Form } from '../utils/api';
 import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
@@ -13,6 +13,7 @@ import { hideSpinner } from '../utils/spinner';
 import { deleteLastSaved, getLastSaved, setLastSaved } from '../utils/last-saved';
 import { hasSubmitted, setSubmitted } from '../utils/once-store';
 import { setLocale } from '../i18n';
+import { clearExpiredAutosaves, deleteAutosave, getAutosave, setAutosave, type AutosaveValue } from '../utils/autosave';
 
 defineOptions({
   name: 'WebFormRenderer'
@@ -42,7 +43,17 @@ const submissionResult:any = {};
 const inited = ref(false);
 const isEdit = computed(() => props.actionType === 'edit');
 const isPublicLink = computed(() => props.actionType === 'public-link');
+const isPreview = computed(() => props.actionType === 'preview');
 const lastSavedXml = ref<string | undefined>();
+const autosaveEnabled = computed(() => {
+  return !isEdit.value && !props.form.draft && !isPreview.value && props.form.autosaveEnabled;
+});
+const autosavePayload = ref<AutosaveValue | undefined>();
+const showAutosaveDialog = ref(false);
+const dateFormatter = new Intl.DateTimeFormat(undefined, {
+  timeStyle: 'short',
+  dateStyle: 'long',
+});
 
 const deviceID = getDeviceId();
 
@@ -188,17 +199,13 @@ const webFormLoaded = () => {
 };
 
 const updateLastSaved = (hasLastSaved: boolean) => {
-  if (!isEdit.value
-    && !props.form.draft
-    && submissionResult.primaryInstanceResult.success
-    && !props.form.once
-  ) {
+  if (!isEdit.value && !props.form.draft && !props.form.once) {
     if (hasLastSaved) {
-      setLastSaved(props.form.projectId, props.form.xmlFormId, submissionData.instanceFile);
+      setLastSaved(props.form, submissionData.instanceFile);
     } else {
       // clean up any stored data in the case where a previous form version
       // had last-saved data but the current version doesn't
-      deleteLastSaved(props.form.projectId, props.form.xmlFormId);
+      deleteLastSaved(props.form);
     }
   }
 };
@@ -226,7 +233,11 @@ const handleSubmit = async (
   clearForm = clearFormCallback;
 
   await submitData();
-  updateLastSaved(hasLastSaved);
+
+  if (submissionResult.primaryInstanceResult.success) {
+    deleteAutosave(props.form);
+    updateLastSaved(hasLastSaved);
+  }
 };
 
 const fetchSubmissionXml = async () => {
@@ -246,15 +257,63 @@ const editInstanceOptions = computed(() => {
   if (isEdit.value) {
     return {
       resolveInstance: fetchSubmissionXml,
-      attachmentFileNames: props.submissionAttachments,
+      attachmentFileNames: props.submissionAttachments ?? [],
       resolveAttachment: fetchSubmissionAttachment
     };
   }
-  return null;
+  return undefined;
 });
+
+const restoreInstanceOptions = computed(() => {
+  if (!autosavePayload.value) {
+    return;
+  }
+  const xml = autosavePayload.value.snapshot.xml;
+  const attachments = autosavePayload.value.snapshot.attachments;
+  return {
+    resolveInstance: () => xml,
+    attachmentFileNames: attachments.map(file => file.name),
+    resolveAttachment: (fileName: string) => {
+      const attachment = attachments.find(file => file.name === fileName);
+      const response = attachment ? new Response(attachment) : new Response('Not Found', { status: 404 });
+      return Promise.resolve(response);
+    }
+  }
+});
+
+const storeAutosaveUpdate = (snapshot: InstanceSnapshot) => {
+  setAutosave(props.form, snapshot);
+};
 
 const alreadySubmittedOnce = () => {
   return props.form.once && props.form.enketoOnceId && hasSubmitted(props.form.enketoOnceId);
+};
+
+const loadLastSaved = async () => {
+  if (!isEdit.value && !props.form.draft) {
+    lastSavedXml.value = await getLastSaved(props.form);
+  }
+};
+
+const loadAutosave = async () => {
+  if (autosaveEnabled.value) {
+    const autosave = await getAutosave(props.form);
+    if (autosave) {
+      autosavePayload.value = autosave;
+      showAutosaveDialog.value = true;
+    }
+  }
+  clearExpiredAutosaves();
+};
+
+const discardAutosave = () => {
+  deleteAutosave(props.form);
+  autosavePayload.value = undefined;
+  showAutosaveDialog.value = false;
+};
+
+const recoverAutosave = () => {
+  showAutosaveDialog.value = false;
 };
 
 onMounted(async () => {
@@ -263,9 +322,8 @@ onMounted(async () => {
     webFormLoaded(); // hide the spinner
     return;
   }
-  if (!isEdit.value && !props.form.draft) {
-    lastSavedXml.value = await getLastSaved(props.form.projectId, props.form.xmlFormId);
-  }
+  await loadLastSaved();
+  await loadAutosave();
   inited.value = true;
 });
 </script>
@@ -279,16 +337,32 @@ onMounted(async () => {
 
 <template>
 
-  <OdkWebForm v-if="inited"
+  <OdkWebForm v-if="!showAutosaveDialog && inited"
     :form-xml="props.xform"
     :edit-instance="editInstanceOptions"
+    :restore-instance="restoreInstanceOptions"
     :fetch-form-attachment="getAttachment"
     :device-id="deviceID"
     :instance-defaults="defaultParameters"
     :last-saved-xml="lastSavedXml"
     @loaded="webFormLoaded"
     @languageSelected="setLocale"
-    @submit="handleSubmit"/>
+    @submit="handleSubmit"
+    v-on="autosaveEnabled ? { updated: storeAutosaveUpdate } : {}"
+    />
+
+  <Dialog modal :visible="showAutosaveDialog" :closable="false" :draggable="false">
+    <template #header>
+      <span role="heading">{{ $t('autosaveModal.title') }}</span>
+    </template>
+    <template #default>
+      {{ $t('autosaveModal.body', { date: dateFormatter.format(autosavePayload?.createdAt) }) }}
+    </template>
+    <template #footer>
+      <Button type="button" variant="link" @click="discardAutosave()">{{ $t('action.discard') }}</Button>
+      <Button type="button" @click="recoverAutosave()">{{ $t('action.recover') }}</Button>
+    </template>
+  </Dialog>
 
   <Dialog modal :visible="!!visibleModal" :draggable="false" :closable="visibleModal?.hideable" @update:visible="visibleModal = null">
 		<template #header>
@@ -343,7 +417,13 @@ onMounted(async () => {
     "en": {
       "action": {
         "close": "Close",
-        "tryAgain": "Try again"
+        "tryAgain": "Try again",
+        "recover": "Recover",
+        "discard": "Discard"
+      },
+      "autosaveModal": {
+        "title": "Recover your work?",
+        "body": "Your form closed unexpectedly on {date} and was saved. Do you want to continue with this form?"
       },
       "previewModal": {
         "title": "Data is valid",

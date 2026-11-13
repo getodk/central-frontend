@@ -127,3 +127,8 @@ export type InstancePayload<PayloadType extends InstancePayloadType> = {
 	chunked: ChunkedInstancePayload;
 	monolithic: MonolithicInstancePayload;
 }[PayloadType];
+
+export interface InstanceSnapshot {
+  readonly xml: string;
+  attachments: readonly File[];
+}

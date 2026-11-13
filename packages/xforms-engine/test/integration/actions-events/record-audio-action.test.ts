@@ -163,7 +163,7 @@ describe('RecordAudioActionTest.java', () => {
       const listener = new CapturingRecordAudioActionListener();
       RecordAudioActions.setRecordAudioListener(listener);
 
-      await scenario.proposed_serializeAndRestoreInstanceState();
+      await scenario.serializeAndRestoreInstanceState();
 
       expect(listener.getAbsoluteTargetRef()).toEqual(getRef('/data/recording'));
       expect(listener.getQuality()).toBe('foo');

@@ -17,7 +17,7 @@ import {
 import type { FormStateSuccessResult } from '@getodk/web-forms/lib/init/form-state.ts';
 import { initializeFormState } from '@getodk/web-forms/lib/init/initialize-form-state.ts';
 import { loadFormState } from '@getodk/web-forms/lib/init/load-form-state';
-import type { EditInstanceOptions, FormOptions } from '@getodk/web-forms/lib/init/load-form-state.ts';
+import type { EditInstanceOptions, FormOptions, RestoreInstanceOptions } from '@getodk/web-forms/lib/init/load-form-state.ts';
 import { useNavigationTarget } from '@getodk/web-forms/lib/useNavigationTarget.ts';
 import type { RevealViolations } from '@getodk/web-forms/lib/useRevealViolations.ts';
 import { updateSubmittedFormState } from '@getodk/web-forms/lib/init/update-submitted-form-state.ts';
@@ -35,6 +35,7 @@ import type {
 	MonolithicInstancePayload,
 	InstanceDefaults,
 	PreloadProperties,
+	InstanceSnapshot,
 } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
@@ -49,6 +50,7 @@ import {
 	readonly,
 	ref,
 	watch,
+	type WatchHandle,
 } from 'vue';
 import { FormInitializationError } from '@getodk/web-forms/lib/error/FormInitializationError';
 import { FormDesignError } from '@getodk/xpath';
@@ -77,6 +79,8 @@ export interface OdkWebFormsProps {
 	 */
 	readonly editInstance?: EditInstanceOptions;
 
+	readonly restoreInstance?: RestoreInstanceOptions;
+
 	readonly lastSavedXml?: string;
 }
 
@@ -102,6 +106,7 @@ const hostSubmissionResultCallbackFactory = (
 			lastSavedXml
 		};
 		state.value = updateSubmittedFormState(submissionResult, currentState, options);
+		registerAutosaveListener();
 	};
 
 	return (hostResult) => {
@@ -119,6 +124,7 @@ type OdkWebFormEmits = {
 		submissionPayload: ChunkedInstancePayload,
 		callback: HostSubmissionResultCallback,
 	];
+	updated: [instance: InstanceSnapshot];
 };
 
 /**
@@ -229,6 +235,7 @@ provide(IS_FORM_EDIT_MODE, readonly(isFormEditMode));
 const { setLanguage, getLanguage, t } = useLocale(computed(() => state.value.root));
 provide(TRANSLATE, t);
 const { navigateToFirstViolation, navigateToNode } = useNavigationTarget(() => state.value.root);
+const AUTOSAVE_TIMEOUT = 1_000; // in millis
 
 if (isEmitSubscribed('onLanguageSelected')) {
 	watch(
@@ -247,6 +254,44 @@ onErrorCaptured(err => {
 		return false;
 	}
 });
+
+const emitAutosave = () => {
+	const snapshot = state.value?.root?.prepareInstanceSnapshot();
+	if (snapshot) {
+		emit('updated', snapshot);
+	}
+};
+
+let autosaveTimeout: ReturnType<typeof setTimeout> | undefined;
+let autosaveWatchCancel: WatchHandle | undefined;
+
+const registerAutosaveListener = () => {
+	if (autosaveTimeout) {
+		// the form has been reset - do not emit autosaves from the previous form instance
+		clearTimeout(autosaveTimeout);
+		autosaveTimeout = undefined;
+	}
+	if (autosaveWatchCancel) {
+		// cancel any previous watchers before registering the new one
+		autosaveWatchCancel();
+	}
+	if (isEmitSubscribed('onUpdated') && state.value.root) {
+		autosaveWatchCancel = watch(state.value.root.instanceState, () => {
+			if (autosaveTimeout) {
+				clearTimeout(autosaveTimeout);
+			}
+			autosaveTimeout = setTimeout(() => emitAutosave(), AUTOSAVE_TIMEOUT);
+		});
+	};
+};
+
+const unmountAutosave = () => {
+	if (autosaveTimeout) {
+		clearTimeout(autosaveTimeout);
+		autosaveTimeout = undefined;
+		emitAutosave();
+	}
+};
 
 watch(
 	() => state.value,
@@ -268,10 +313,12 @@ const init = async () => {
 	state.value = await loadFormState(props.formXml, {
 		form: formOptions,
 		editInstance: props.editInstance ?? null,
+		restoreInstance: props.restoreInstance ?? null,
 		preloadProperties: props.preloadProperties,
 		instanceDefaults: props.instanceDefaults,
 		deviceID: props.deviceId
 	});
+	registerAutosaveListener();
 	emit('loaded');
 };
 
@@ -289,6 +336,8 @@ const handleSubmit = (currentState: FormStateSuccessResult) => {
 	releaseFocus(); // so follow-up dialogs don't restore focus here and scroll back to it
 
 	if (root.validationState.violations.length === 0) {
+		unmountAutosave();
+
 		// eslint-disable-next-line @typescript-eslint/no-floating-promises
 		emitSubmit(currentState);
 		// eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -367,6 +416,7 @@ const showValidationError = computed(() => {
 onUnmounted(() => {
 	mediaCache.forEach((url) => URL.revokeObjectURL(url));
 	mediaCache.clear();
+	unmountAutosave();
 	resetComponentState();
 });
 </script>

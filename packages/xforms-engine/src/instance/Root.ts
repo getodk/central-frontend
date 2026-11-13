@@ -6,7 +6,7 @@ import type { AnyControlNode } from '../client/hierarchy.ts';
 import type { FormNodeID, PageBoundary } from '../client/identity.ts';
 import type { RepeatRangeUncontrolledNode } from '../client/repeat/RepeatRangeUncontrolledNode.ts';
 import type { RootNode } from '../client/RootNode.ts';
-import type { InstancePayload } from '../client/serialization/InstancePayload.ts';
+import type { InstancePayload, InstanceSnapshot } from '../client/serialization/InstancePayload.ts';
 import type {
   InstancePayloadOptions,
   InstancePayloadType,
@@ -302,5 +302,9 @@ export class Root
     options?: InstancePayloadOptions<PayloadType>
   ): Promise<InstancePayload<PayloadType>> {
     return this.rootDocument.prepareInstancePayload(options);
+  }
+
+  prepareInstanceSnapshot(): InstanceSnapshot {
+    return this.rootDocument.prepareInstanceSnapshot();
   }
 }

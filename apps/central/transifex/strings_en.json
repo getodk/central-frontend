@@ -4047,6 +4047,17 @@
           "string": "You’re now using ODK Web Forms to fill out, preview and edit your “{formName}” form.",
           "developer_comment": "Success message when ODK Web Forms is selected as web form technology. {formName} is replaced with the name of the Form"
         }
+      },
+      "autosaveSetting": {
+        "description": {
+          "string": "Autosave responses if browser closes or refreshes. Sensitive data may be retained in saved responses."
+        },
+        "enabled": {
+          "string": "Autosave is now enabled for your “{formName}” form."
+        },
+        "disabled": {
+          "string": "Autosave is now disabled for your “{formName}” form."
+        }
       }
     },
     "FormSort": {

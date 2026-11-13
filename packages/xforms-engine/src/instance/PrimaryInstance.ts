@@ -48,6 +48,7 @@ import type { PrimaryInstanceDocument } from './internal-api/PrimaryInstanceDocu
 import type { ClientReactiveSerializableInstance } from './internal-api/serialization/ClientReactiveSerializableInstance.ts';
 import type { TranslationContext } from './internal-api/TranslationContext.ts';
 import { Root } from './Root.ts';
+import { prepareInstanceSnapshot } from '../lib/client-reactivity/instance-state/prepareInstanceSnapshot.ts';
 
 /**
  * As specified by {@link | XPath 1.0}:
@@ -313,6 +314,10 @@ export class PrimaryInstance<
     });
 
     return Promise.resolve(result);
+  }
+
+  prepareInstanceSnapshot() {
+    return prepareInstanceSnapshot(this);
   }
 
   async getBackgroundGeopoint(): Promise<string> {
