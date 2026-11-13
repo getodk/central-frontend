@@ -2602,13 +2602,18 @@
     },
     "EntityFiltersViewAs": {
       "noUserSelected": {
-        "string": "Me"
+        "string": "All",
+        "developer_comment": "\"All\" refers to users (in the form of app users and public links)"
       },
       "viewAs": {
         "string": "View As"
       },
       "resetToMe": {
-        "string": "Reset to Me"
+        "string": "Reset to All",
+        "developer_comment": "This \"All\" means all users (app users and public links) shown in this dropdown"
+      },
+      "publicLinksForForm": {
+        "string": "Public Links: {formName}"
       }
     },
     "EntityList": {

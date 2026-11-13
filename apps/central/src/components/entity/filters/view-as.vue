@@ -12,7 +12,7 @@ import { useRequestData } from '../../../request-data';
 
 import Multiselect from '../../multiselect.vue';
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 defineOptions({
   name: 'EntityFiltersViewAs'
@@ -44,7 +44,7 @@ const options = computed(() => {
     return null;
 
   const appUsers = fieldKeys.data.map(({ id, displayName }) =>
-    ({ value: id, text: displayName }));
+    ({ value: id, text: displayName, group: t('resource.appUsers') }));
 
   const formNames = new Map(
     dataset.linkedForms.map(form => [form.xmlFormId, form.name])
@@ -55,10 +55,12 @@ const options = computed(() => {
       publicLinks.push({
         value: actor.id,
         text: actor.displayName,
-        // TODO: add public link info to display, such as form name
+        group: t('publicLinksForForm', { formName: formNames.get(xmlFormId) })
       });
     }
   }
+  publicLinks.sort((a, b) => a.group.localeCompare(b.group, locale.value) ||
+    a.text.localeCompare(b.text, locale.value));
 
   return [...appUsers, ...publicLinks];
 });
@@ -80,9 +82,12 @@ const placeholder = ({ selectedText }) => selectedText ?? t('noUserSelected');
 <i18n lang="json5">
 {
   "en": {
-    "noUserSelected": "Me",
+    // "All" refers to users (in the form of app users and public links)
+    "noUserSelected": "All",
     "viewAs": "View As",
-    "resetToMe": "Reset to Me",
+    // This "All" means all users (app users and public links) shown in this dropdown
+    "resetToMe": "Reset to All",
+    "publicLinksForForm": "Public Links: {formName}"
   }
 }
 </i18n>
