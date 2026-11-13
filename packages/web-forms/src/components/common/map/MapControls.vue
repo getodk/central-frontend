@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
-import ActionsInfoDialog, { type ActionInfo } from '@getodk/web-forms/components/common/ActionsInfoDialog.vue';
+import type { BaseLayerId } from '@getodk/web-forms/components/common/map/base-layers.ts';
+import MapBaseLayerPanel from '@getodk/web-forms/components/common/map/MapBaseLayerPanel.vue';
 import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
 import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
-import { computed, inject, ref } from 'vue';
+import { inject, onBeforeUnmount, ref, watch } from 'vue';
 
-const props = defineProps<{
+defineProps<{
 	isFullScreen: boolean;
 	disableFitAllFeatures: boolean;
 	disableUndo: boolean;
 	disableDelete: boolean;
 	showSecondaryControls: boolean;
+	showBaseLayerPicker: boolean;
+	activeBaseLayerId: BaseLayerId;
 }>();
 
 const emit = defineEmits([
@@ -19,6 +22,7 @@ const emit = defineEmits([
 	'watchCurrentLocation',
 	'triggerDelete',
 	'undoLastChange',
+	'selectBaseLayer',
 ]);
 
 const t: Translate = inject(TRANSLATE)!;
@@ -31,29 +35,28 @@ const MAP_ICONS = {
 	openAdvanced: 'mdiCogOutline',
 	openFullScreen: 'mdiArrowExpand',
 	closeFullScreen: 'mdiArrowCollapse',
-	openInfo: 'mdiInformationSlabCircleOutline',
+	baseLayers: 'mdiLayersOutline',
 } as const;
 
-const showActionsInfo = ref(false);
-const processedMapActions = computed((): ActionInfo[] => {
-	const actions: ActionInfo[] = props.isFullScreen
-		? [{ icon: MAP_ICONS.closeFullScreen, description: t('common_actions.close_full_screen.description') }]
-		: [{ icon: MAP_ICONS.openFullScreen, description: t('common_actions.open_full_screen.description') }];
+const baseLayerPicker = ref<HTMLElement>();
+const isBaseLayerPanelOpen = ref(false);
 
-	actions.push(
-		{ icon: MAP_ICONS.zoomFitAll, description: t('map_controls.zoom_fit_all.description') },
-		{ icon: MAP_ICONS.currentLocation, description: t('map_controls.current_location.description') },
-	);
-
-	if (props.showSecondaryControls) {
-		actions.push(
-			{ icon: MAP_ICONS.undo, description: t('common_actions.undo.description') },
-			{ icon: MAP_ICONS.delete, description: t('map_controls.delete.description') },
-			{ icon: MAP_ICONS.openAdvanced, infoClasses: ['mobile-only'], description: t('map_controls.open_advanced.description') },
-		);
+const closeLayerPicker = (event: PointerEvent) => {
+	if (!baseLayerPicker.value?.contains(event.target as Node)) {
+		isBaseLayerPanelOpen.value = false;
 	}
+};
 
-	return actions;
+watch(isBaseLayerPanelOpen, (isOpen) => {
+	if (isOpen) {
+		document.addEventListener('pointerdown', closeLayerPicker);
+		return;
+	}
+	document.removeEventListener('pointerdown', closeLayerPicker);
+});
+
+onBeforeUnmount(() => {
+	document.removeEventListener('pointerdown', closeLayerPicker);
 });
 </script>
 
@@ -83,13 +86,21 @@ const processedMapActions = computed((): ActionInfo[] => {
 			>
 				<IconSVG :name="MAP_ICONS.currentLocation" size="sm" />
 			</button>
-			<button
-				:aria-label="t('common_actions.open_info.description')"
-				class="info-dialog"
-				@click="showActionsInfo = true"
-			>
-				<IconSVG :name="MAP_ICONS.openInfo" />
-			</button>
+			<div v-if="showBaseLayerPicker" ref="baseLayerPicker" class="base-layer-picker">
+				<button
+					:aria-label="t('map_base_layer_picker.open.description')"
+					:aria-expanded="isBaseLayerPanelOpen"
+					@click="isBaseLayerPanelOpen = !isBaseLayerPanelOpen"
+				>
+					<IconSVG :name="MAP_ICONS.baseLayers" />
+				</button>
+				<MapBaseLayerPanel
+					v-if="isBaseLayerPanelOpen"
+					class="base-layer-panel"
+					:active-layer-id="activeBaseLayerId"
+					@select-base-layer="emit('selectBaseLayer', $event)"
+				/>
+			</div>
 		</div>
 
 		<div v-if="showSecondaryControls" class="control-bar-horizontal">
@@ -109,8 +120,6 @@ const processedMapActions = computed((): ActionInfo[] => {
 			</button>
 		</div>
 	</div>
-
-	<ActionsInfoDialog v-model:visible="showActionsInfo" :title="t('common_actions.info_dialog.title')" :actions-info="processedMapActions" />
 </template>
 
 <style scoped lang="scss">
@@ -125,11 +134,23 @@ const processedMapActions = computed((): ActionInfo[] => {
 	.control-bar-vertical {
 		@include pc.panel-control-bar-vertical;
 		top: var(--odk-spacing-m);
+		overflow: visible;
 	}
 
 	.control-bar-horizontal {
 		@include pc.panel-control-bar-horizontal;
 	}
+}
+
+.base-layer-picker {
+	position: relative;
+	display: flex;
+}
+
+.base-layer-panel {
+	position: absolute;
+	top: 0;
+	right: calc(100% + var(--odk-spacing-m));
 }
 
 @media screen and (max-width: #{pf.$sm}) {
@@ -140,7 +161,7 @@ const processedMapActions = computed((): ActionInfo[] => {
 
 	.control-bar:not(.full-screen-active) {
 		.control-bar-horizontal,
-		.control-bar-vertical .info-dialog,
+		.control-bar-vertical .base-layer-picker,
 		.control-bar-vertical .zoom-fit-all,
 		.control-bar-vertical .zoom-current-location {
 			display: none;
@@ -149,7 +170,7 @@ const processedMapActions = computed((): ActionInfo[] => {
 }
 
 @include pc.panel-control-sm {
-	.control-bar-vertical .info-dialog {
+	.control-bar-vertical .base-layer-picker {
 		display: none;
 	}
 }

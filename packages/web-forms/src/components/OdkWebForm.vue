@@ -6,6 +6,7 @@ import FormHeader from '@getodk/web-forms/components/form-layout/FormHeader.vue'
 import QuestionList from '@getodk/web-forms/components/form-layout/QuestionList.vue';
 import { waitAllTasksToFinish } from '@getodk/web-forms/lib/async/event-loop.ts';
 import {
+	CLIENT_OPTIONS,
 	TRANSLATE,
 	FORM_MEDIA_CACHE,
 	FORM_OPTIONS,
@@ -14,6 +15,7 @@ import {
 	SUBMIT_PRESSED,
 	TOUCHED_QUESTIONS,
 } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { ClientOptions } from '@getodk/web-forms/lib/client-options.ts';
 import type { FormStateSuccessResult } from '@getodk/web-forms/lib/init/form-state.ts';
 import { initializeFormState } from '@getodk/web-forms/lib/init/initialize-form-state.ts';
 import { loadFormState } from '@getodk/web-forms/lib/init/load-form-state';
@@ -78,6 +80,8 @@ export interface OdkWebFormsProps {
 	readonly editInstance?: EditInstanceOptions;
 
 	readonly lastSavedXml?: string;
+
+	readonly googleMapsKey?: string;
 }
 
 const props = defineProps<OdkWebFormsProps>();
@@ -214,6 +218,7 @@ const formOptions = readonly<FormOptions>({
 	attachmentMaxSize: props.attachmentMaxSize,
 });
 provide(FORM_OPTIONS, formOptions);
+provide(CLIENT_OPTIONS, readonly<ClientOptions>({ googleMapsKey: props.googleMapsKey }));
 const mediaCache = new Map<JRResourceURLString, ObjectURL>();
 provide(FORM_MEDIA_CACHE, mediaCache);
 

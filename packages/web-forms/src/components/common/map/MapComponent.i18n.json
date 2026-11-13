@@ -20,6 +20,14 @@
     "string": "Grant location permission in the browser settings and make sure location is turned on.",
     "developer_comment": "Description of what the user should do to resolve a geolocation access error in the map."
   },
+  "map_block.provider_error.title": {
+    "string": "Map cannot be loaded",
+    "developer_comment": "Title of the error shown when the Google Maps tile session cannot be created (invalid key, API not enabled, or quota exhausted)."
+  },
+  "map_block.provider_error.message": {
+    "string": "Google Maps is unavailable. The server's Google Maps key may be invalid or out of quota. Contact the server administrator.",
+    "developer_comment": "Description of the Google Maps error. The key is configured by the server administrator, not the person filling the form."
+  },
 
   "map_block.get_location.label": {
     "string": "Get location",
@@ -103,6 +111,44 @@
   "map_controls.open_advanced.description": {
     "string": "Advanced manual edits",
     "developer_comment": "Aria-label for the map control button that opens the advanced coordinate editing panel."
+  },
+
+  "map_base_layer_picker.open.description": {
+    "string": "Change map layer",
+    "developer_comment": "Aria-label for the map control button that opens the list of base map layers (default, satellite, terrain). Shown only when Google Maps is configured."
+  },
+  "map_base_layer_picker.roadmap.label": {
+    "string": "Default",
+    "developer_comment": "Label of the default (road map) layer option in the map layer picker."
+  },
+  "map_base_layer_picker.satellite.label": {
+    "string": "Satellite",
+    "developer_comment": "Label of the satellite imagery layer option (with road labels) in the map layer picker."
+  },
+  "map_base_layer_picker.terrain.label": {
+    "string": "Terrain",
+    "developer_comment": "Label of the terrain layer option in the map layer picker."
+  },
+
+  "map_privacy_dialog.open.description": {
+    "string": "Show map data privacy information",
+    "developer_comment": "Aria-label for the small info button next to the Google Maps logo that opens the privacy dialog."
+  },
+  "map_privacy_dialog.header.title": {
+    "string": "Map data privacy",
+    "developer_comment": "Header of the dialog explaining what data Google receives when the map is displayed."
+  },
+  "map_privacy_dialog.body.text": {
+    "string": "This map is provided by Google Maps. To display it, your browser sends your IP address and the map areas you view to Google.",
+    "developer_comment": "Body of the privacy dialog shown when Google Maps is the map provider."
+  },
+  "map_privacy_dialog.read_more.text": {
+    "string": "Learn more in the",
+    "developer_comment": "Shown before the 'Google Privacy Policy' link in the map privacy dialog, forming one sentence with it."
+  },
+  "map_privacy_dialog.privacy_policy.link": {
+    "string": "Google Privacy Policy",
+    "developer_comment": "Text of the link to Google's privacy policy in the map privacy dialog."
   },
   "map_properties.remove_selection.label": {
     "string": "Remove selection",

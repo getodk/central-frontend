@@ -5,15 +5,18 @@
  * load on demand. Avoids main bundle bloat.
  */
 import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
+import { resolveMapProvider } from '@getodk/web-forms/components/common/map/base-layers.ts';
 import { type Mode, type SingleFeatureType } from '@getodk/web-forms/components/common/map/getModeConfig.ts';
 import MapAdvancedPanel from '@getodk/web-forms/components/common/map/MapAdvancedPanel.vue';
 import MapConfirmDialog from '@getodk/web-forms/components/common/map/MapConfirmDialog.vue';
 import MapControls from '@getodk/web-forms/components/common/map/MapControls.vue';
+import MapPrivacyDialog from '@getodk/web-forms/components/common/map/MapPrivacyDialog.vue';
 import MapProperties from '@getodk/web-forms/components/common/map/MapProperties.vue';
 import MapStatusBar from '@getodk/web-forms/components/common/map/MapStatusBar.vue';
 import MapUpdateCoordsDialog from '@getodk/web-forms/components/common/map/MapUpdateCoordsDialog.vue';
 import { STATES, useMapBlock } from '@getodk/web-forms/components/common/map/useMapBlock.ts';
-import { TRANSLATE, QUESTION_HAS_ERROR } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { ClientOptions } from '@getodk/web-forms/lib/client-options.ts';
+import { CLIENT_OPTIONS, TRANSLATE, QUESTION_HAS_ERROR } from '@getodk/web-forms/lib/constants/injection-keys.ts';
 import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import type { Feature, FeatureCollection } from 'geojson';
 import type { Coordinate } from 'ol/coordinate';
@@ -57,9 +60,12 @@ const showErrorStyle = inject<ComputedRef<boolean>>(
 	computed(() => false)
 );
 const t: Translate = inject(TRANSLATE)!;
+const clientOptions = inject<ClientOptions | undefined>(CLIENT_OPTIONS, undefined);
+const mapProvider = resolveMapProvider(clientOptions);
+const isGoogleProvider = mapProvider.kind === 'google';
 
 const mapHandler = useMapBlock(
-	{ mode: props.mode, singleFeatureType: props.singleFeatureType },
+	{ mode: props.mode, singleFeatureType: props.singleFeatureType, provider: mapProvider },
 	{
 		onFeaturePlacement: () => onFeaturePlacement(),
 		onVertexSelect: (vertex) => (selectedVertex.value = vertex),
@@ -217,7 +223,7 @@ const toggleFullScreen = () => {
 </script>
 
 <template>
-	<div class="map-block-component">
+	<div class="map-block-component" :class="{ 'google-provider': isGoogleProvider }">
 		<div :class="{ 'map-container': true, 'map-full-screen': isFullScreen }">
 			<div ref="mapElement" class="map-block">
 				<div
@@ -246,12 +252,17 @@ const toggleFullScreen = () => {
 					:disable-undo="!mapHandler.canUndoChange()"
 					:disable-delete="!mapHandler.isFeatureSelected()"
 					:show-secondary-controls="showSecondaryControls"
+					:show-base-layer-picker="isGoogleProvider"
+					:active-base-layer-id="mapHandler.getActiveBaseLayerId()"
 					@toggle-full-screen="toggleFullScreen"
 					@fit-all-features="mapHandler.fitToAllFeatures"
 					@watch-current-location="mapHandler.watchCurrentLocation"
 					@trigger-delete="triggerDelete"
 					@undo-last-change="undoLastChange"
+					@select-base-layer="mapHandler.selectBaseLayer"
 				/>
+
+				<MapPrivacyDialog v-if="isGoogleProvider" />
 
 				<Message
 					v-if="instructionMessage"
@@ -476,6 +487,15 @@ const toggleFullScreen = () => {
 		font-size: var(--odk-spacing-m);
 		line-height: 14px;
 		color: var(--odk-muted-text-color);
+	}
+}
+
+.map-block-component.google-provider {
+	--odk-map-privacy-badge-size: 24px;
+
+	:deep(.ol-attribution) {
+		right: var(--odk-map-privacy-badge-size);
+		min-height: var(--odk-map-privacy-badge-size);
 	}
 }
 

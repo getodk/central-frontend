@@ -1,3 +1,8 @@
+import {
+  type BaseLayerId,
+  DEFAULT_BASE_LAYER_ID,
+  type MapProvider,
+} from '@getodk/web-forms/components/common/map/base-layers.ts';
 import { toGeoJsonCoordinateArray } from '@getodk/web-forms/components/common/map/geojson-parsers.ts';
 import {
   getModeConfig,
@@ -26,6 +31,10 @@ import {
   type UseMapFeatures,
 } from '@getodk/web-forms/components/common/map/useMapFeatures.ts';
 import {
+  useBaseLayer,
+  type UseBaseLayer,
+} from '@getodk/web-forms/components/common/map/useBaseLayer.ts';
+import {
   useMapInteractions,
   type UseMapInteractions,
 } from '@getodk/web-forms/components/common/map/useMapInteractions.ts';
@@ -48,16 +57,14 @@ import type { Coordinate } from 'ol/coordinate';
 import Feature from 'ol/Feature';
 import { LineString, Polygon, SimpleGeometry } from 'ol/geom';
 import { defaults as defaultInteractions } from 'ol/interaction';
-import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import WebGLVectorLayer from 'ol/layer/WebGLVector';
 import { fromLonLat, get as getProjection } from 'ol/proj';
-import { OSM } from 'ol/source';
 import VectorSource from 'ol/source/Vector';
 import { shared as iconImageCache } from 'ol/style/IconImageCache';
 import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
 import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
-import { inject, shallowRef, watch } from 'vue';
+import { computed, inject, shallowRef, watch } from 'vue';
 
 export const STATES = {
   LOADING: 'loading',
@@ -70,9 +77,15 @@ const DEFAULT_VIEW_PROJECTION = 'EPSG:3857';
 
 export const ODK_VALUE_PROPERTY = 'odk_value';
 
+interface MapErrorMessage {
+  title: string;
+  message: string;
+}
+
 interface MapBlockConfig {
   mode: Mode;
   singleFeatureType?: SingleFeatureType;
+  provider: MapProvider;
 }
 
 interface MapBlockEvents {
@@ -87,10 +100,20 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
   let mapInteractions: UseMapInteractions | undefined;
   let mapViewControls: UseMapViewControls | undefined;
   let mapFeatures: UseMapFeatures | undefined;
+  let baseLayer: UseBaseLayer | undefined;
 
   const currentMode = getModeConfig(config.mode);
   const currentState = shallowRef<(typeof STATES)[keyof typeof STATES]>(STATES.LOADING);
-  const errorMessage = shallowRef<{ title: string; message: string } | undefined>();
+  const transientError = shallowRef<MapErrorMessage | undefined>();
+  const providerError = shallowRef<MapErrorMessage | undefined>();
+  const errorMessage = computed(() => providerError.value ?? transientError.value);
+
+  const showProviderError = () => {
+    providerError.value = {
+      title: t('map_block.provider_error.title'),
+      message: t('map_block.provider_error.message'),
+    };
+  };
 
   const featuresSource = new VectorSource();
   const singleFeatureLayer = new VectorLayer({
@@ -122,7 +145,7 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 
     if (currentMode.capabilities.canLoadMultiFeatures && !isWebGLAvailable()) {
       currentState.value = STATES.ERROR;
-      errorMessage.value = {
+      transientError.value = {
         title: t('map_block.graphics_error.title'),
         message: t('map_block.graphics_error.message'),
       };
@@ -131,7 +154,7 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 
     mapInstance = new Map({
       target: mapContainer,
-      layers: [new TileLayer({ source: new OSM() })],
+      layers: [],
       view: new View({
         center: DEFAULT_VIEW_CENTER,
         zoom: MIN_ZOOM,
@@ -145,6 +168,7 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
       moveTolerance: 8, // Prevents micro-panning from suppressing click events
     });
 
+    baseLayer = useBaseLayer(mapInstance, config.provider, () => showProviderError());
     mapViewControls = useMapViewControls(mapInstance);
     mapInteractions = useMapInteractions(
       mapInstance,
@@ -444,6 +468,9 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
     mapInteractions?.teardownMap();
     mapInteractions = undefined;
     mapFeatures = undefined;
+    baseLayer?.teardown();
+    baseLayer = undefined;
+    providerError.value = undefined;
 
     iconImageCache.clear();
     if (mapInstance) {
@@ -514,7 +541,7 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
       },
       () => {
         currentState.value = STATES.ERROR;
-        errorMessage.value = {
+        transientError.value = {
           title: t('map_block.location_error.title'),
           message: t('map_block.location_error.message'),
         };
@@ -564,7 +591,7 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
     () => currentState.value,
     (newState) => {
       if (newState !== STATES.ERROR) {
-        errorMessage.value = undefined;
+        transientError.value = undefined;
       }
     }
   );
@@ -581,6 +608,8 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
 
     isMapEmpty: () => featuresSource.isEmpty(),
     fitToAllFeatures: () => mapViewControls?.fitToAllFeatures(featuresSource),
+    getActiveBaseLayerId: () => baseLayer?.activeLayerId.value ?? DEFAULT_BASE_LAYER_ID,
+    selectBaseLayer: (layerId: BaseLayerId) => baseLayer?.selectBaseLayer(layerId),
     watchCurrentLocation,
     stopWatchingCurrentLocation,
     canRemoveCurrentLocation,

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { computed, onMounted, ref } from 'vue';
+import { computed, inject, onMounted, ref } from 'vue';
 import { OdkWebForm, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
 import { type MonolithicInstancePayload } from '@getodk/xforms-engine';
 import { postPrimaryInstance, uploadAttachment, getFormAttachment, type Form } from '../utils/api';
@@ -13,6 +13,7 @@ import { hideSpinner } from '../utils/spinner';
 import { deleteLastSaved, getLastSaved, setLastSaved } from '../utils/last-saved';
 import { hasSubmitted, setSubmitted } from '../utils/once-store';
 import { setLocale } from '../i18n';
+import { GOOGLE_MAPS_KEY } from '../utils/injection-keys';
 
 defineOptions({
   name: 'WebFormRenderer'
@@ -45,6 +46,7 @@ const isPublicLink = computed(() => props.actionType === 'public-link');
 const lastSavedXml = ref<string | undefined>();
 
 const deviceID = getDeviceId();
+const googleMapsKey = inject(GOOGLE_MAPS_KEY);
 
 const visibleModal = ref();
 
@@ -285,6 +287,7 @@ onMounted(async () => {
     :device-id="deviceID"
     :instance-defaults="defaultParameters"
     :last-saved-xml="lastSavedXml"
+    :google-maps-key="googleMapsKey"
     @loaded="webFormLoaded"
     @languageSelected="setLocale"
     @submit="handleSubmit"/>

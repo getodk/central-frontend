@@ -9,11 +9,13 @@ import Forms from './Forms.vue';
 import router from './router';
 import { i18n } from './i18n';
 import initSentry from './utils/sentry';
+import { GOOGLE_MAPS_KEY } from './utils/injection-keys';
 
 import './assets/style.scss';
 
 interface ClientConfig {
   sentryDsn?: string;
+  googleMapsKey?: string;
 }
 
 const fetchClientConfig = async (): Promise<ClientConfig> => {
@@ -31,6 +33,7 @@ const clientConfig = await fetchClientConfig();
 
 const app = createApp(Forms as Component);
 initSentry(app, 'web-forms', clientConfig.sentryDsn);
+app.provide(GOOGLE_MAPS_KEY, clientConfig.googleMapsKey);
 app.use(PrimeVue, { theme: { preset: odkThemePreset, options: { darkModeSelector: false } } });
 app.use(webFormsPlugin);
 app.use(i18n);
