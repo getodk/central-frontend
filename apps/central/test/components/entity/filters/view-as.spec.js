@@ -9,10 +9,10 @@ import { testRequestData } from '../../../util/request-data';
 
 const createFieldKeys = (count) => {
   for (let i = 0; i < count; i += 1) {
-    testData.extendedFieldKeys.createPast(1, { displayName: `App User ${i}` })
+    testData.extendedFieldKeys.createPast(1, { displayName: `App User ${i}` });
   }
   return testData.extendedFieldKeys.sorted();
-}
+};
 
 // Creates public links, each with a form assignment, and returns the assignments.
 const createPublicLinkAssignments = (count, xmlFormId = 'f') => {
