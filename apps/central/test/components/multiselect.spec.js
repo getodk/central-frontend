@@ -37,6 +37,20 @@ describe('Multiselect', () => {
     component.findAll('.checkbox').length.should.equal(2);
   });
 
+  it('shows a heading when the option group changes', () => {
+    const component = mountComponent({
+      props: {
+        options: [
+          { value: 'foo', group: 'First group' },
+          { value: 'bar', group: 'First group' },
+          { value: 'baz', group: 'Second group' }
+        ]
+      }
+    });
+    component.findAll('.option-group').map(heading => heading.text())
+      .should.eql(['First group', 'Second group']);
+  });
+
   it('shows each checkbox', async () => {
     const component = mountComponent({
       props: { options: [{ value: 'foo' }, { value: 'bar' }] },
@@ -266,7 +280,7 @@ describe('Multiselect', () => {
           options,
           modelValue: [0],
           single: true,
-          none: 'Reset to Me',
+          none: 'Reset to All',
           placeholder
         },
         attachTo: document.body
@@ -429,6 +443,26 @@ describe('Multiselect', () => {
       await component.get('.search input').setValue('c');
       const matches = component.findAll('.search-match label');
       matches.map(match => match.text()).should.eql(['Alice']);
+    });
+
+    it('shows a group heading when an option in the group matches', async () => {
+      const component = mountComponent({
+        props: {
+          options: [
+            { value: 1, text: 'Alice', group: 'First group' },
+            { value: 2, text: 'Bob', group: 'First group' },
+            { value: 3, text: 'Carol', group: 'Second group' }
+          ],
+          search: 'Search'
+        },
+        attachTo: document.body
+      });
+      await toggle(component);
+      await component.get('.search input').setValue('ali');
+      const headings = component.findAll('.option-group');
+      headings[0].should.be.visible(true);
+      headings[0].text().should.equal('First group');
+      headings[1].should.be.hidden(true);
     });
 
     it('hides options that do not match', async () => {
