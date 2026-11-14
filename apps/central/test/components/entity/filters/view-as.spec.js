@@ -177,10 +177,8 @@ describe('EntityFiltersViewAs', () => {
         accessFilter: { type: 'ownerOnly' },
         linkedForms: [{ xmlFormId: 'f', name: 'Form F' }]
       });
-      // Public Link 0 is created (earlier createdAt) before Public Link 1.
+      // Public Link 0 is created before Public Link 1
       const assignments = createPublicLinkAssignments(2);
-      assignments[0].actor.displayName = 'Public Link 0';
-      assignments[1].actor.displayName = 'Public Link 1';
       const component = mountComponent({ formSummaryAssignments: assignments });
 
       const { options } = component.getComponent(Multiselect).props();

@@ -624,21 +624,10 @@ const emptyMessage = computed(() => (searchValue.value === ''
       box-sizing: border-box;
       margin-left: -$hpadding;
       margin-right: -$hpadding;
-      padding: 0 $hpadding;
 
       &:not(.empty-message):not(.option-group):not(:has(input:checked)):hover {
         background-color: $color-surface-secondary;
       }
-    }
-
-    li.option-group {
-      padding-bottom: 12px;
-      padding-left: $hpadding * 2;
-      padding-top: 12px;
-    }
-
-    li.empty-message {
-      padding-left: $hpadding * 2;
     }
 
     li:has(input:checked) {
