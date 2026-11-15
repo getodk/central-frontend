@@ -119,7 +119,6 @@ const afterDelete = () => {
     .then(() => { alert.success(message); });
 };
 
-
 const webformsEnabled = ref(form.webformsEnabled);
 watch(() => form.dataExists, () => {
   webformsEnabled.value = form.webformsEnabled;
