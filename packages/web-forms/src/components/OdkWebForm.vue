@@ -256,6 +256,7 @@ onErrorCaptured(err => {
 });
 
 const emitAutosave = () => {
+	autosaveTimeout = undefined;
 	const snapshot = state.value?.root?.prepareInstanceSnapshot();
 	if (snapshot) {
 		emit('updated', snapshot);
@@ -288,7 +289,6 @@ const registerAutosaveListener = () => {
 const unmountAutosave = () => {
 	if (autosaveTimeout) {
 		clearTimeout(autosaveTimeout);
-		autosaveTimeout = undefined;
 		emitAutosave();
 	}
 };
