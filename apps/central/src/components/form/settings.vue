@@ -61,6 +61,7 @@ except according to the terms contained in the LICENSE file.
                     </template>
                   </i18n-t>
                 </label>
+                <AutosaveSettings/>
               </div>
               <div class="radio">
                 <label>
