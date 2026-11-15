@@ -10,7 +10,7 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <modal :state="state" :hideable="!form.awaitingResponse" backdrop
+  <modal id="form-engine-change-confirmation" :state="state" :hideable="!form.awaitingResponse" backdrop
   @hide="$emit('hide')">
     <template v-if="webformsEnabled" #title>ODK Web Forms</template>
     <template v-else #title>Enketo</template>
