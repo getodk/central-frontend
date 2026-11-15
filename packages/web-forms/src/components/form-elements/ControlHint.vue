@@ -37,7 +37,7 @@ const guidanceHint = computed(() => props.question.currentState.hint?.guidance);
 <style scoped lang="scss">
 .hint {
 	font-size: var(--odk-hint-font-size);
-	font-weight: 300;
+	font-weight: var(--odk-font-weight-light);
 	color: var(--odk-muted-text-color);
 	margin-top: var(--odk-spacing-s);
 	line-height: calc(var(--odk-hint-font-size) * 1.45);
@@ -47,7 +47,7 @@ const guidanceHint = computed(() => props.question.currentState.hint?.guidance);
 details {
 	summary {
 		cursor: pointer;
-		font-weight: normal;
+		font-weight: var(--odk-font-weight-normal);
 		list-style: none;
 		&::marker,
 		&::-webkit-details-marker {

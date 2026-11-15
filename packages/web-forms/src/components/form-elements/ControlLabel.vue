@@ -30,7 +30,7 @@ const audio = computed(() => question.currentState.label?.audioSource);
 @use 'primeflex/core/_variables.scss' as pf;
 
 label {
-	font-weight: 400;
+	font-weight: var(--odk-font-weight-semibold);
 	font-size: var(--odk-question-font-size);
 	line-height: 1.5rem;
 	word-wrap: break-word;
