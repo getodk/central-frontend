@@ -592,7 +592,7 @@ describe('SelectChoiceTest.java', () => {
    *   {@link ./serialization.test.ts}).
    *
    * - Note: this test would hypothetically pass with a call to
-   *   {@link Scenario.proposed_serializeAndRestoreInstanceState}, but the test
+   *   {@link Scenario.serializeAndRestoreInstanceState}, but the test
    *   would lose its meaning with that change. It is clearly intended to
    *   exercise **form serde**.
    */
