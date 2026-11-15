@@ -1,7 +1,7 @@
 <template>
-  <div class="checkbox autosave">
+  <div class="checkbox autosave" :class="{ disabled: !checkboxEnabled }">
     <label v-tooltip.aria-describedby="!form.webformsEnabled ? $t('autosaveSetting.unselectable') : null">
-      <input v-model="autosaveEnabled" name="autosaveEnabled" type="checkbox" :disabled="!form.webformsEnabled || awaitingResponse" @change="setAutosaveEnabled()">
+      <input v-model="autosaveEnabled" name="autosaveEnabled" type="checkbox" :disabled="!checkboxEnabled" @change="setAutosaveEnabled()">
       {{ $t('autosaveSetting.description') }}
       <spinner inline :state="awaitingResponse"/>
     </label>
@@ -9,7 +9,7 @@
 </template>
 
 <script setup>
-import { inject, ref, watch } from 'vue';
+import { computed, inject, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import Spinner from '../spinner.vue';
 
@@ -19,7 +19,7 @@ import useRequest from '../../composables/request';
 import { noop } from '../../util/util';
 
 defineOptions({
-  name: 'FormSettings'
+  name: 'FormAutosaveSettings'
 });
 
 const toast = inject('toast');
@@ -32,6 +32,7 @@ const autosaveEnabled = ref(form.autosaveEnabled);
 watch(() => form.dataExists, () => {
   autosaveEnabled.value = form.autosaveEnabled;
 });
+const checkboxEnabled = computed(() => form.webformsEnabled && !awaitingResponse.value);
 
 const setAutosaveEnabled = () => {
   request({
@@ -40,6 +41,7 @@ const setAutosaveEnabled = () => {
     data: { autosaveEnabled: autosaveEnabled.value }
   })
     .then(() => {
+      form.autosaveEnabled = autosaveEnabled.value;
       const message = autosaveEnabled.value
         ? t('autosaveSetting.enabled', { formName: form.nameOrId })
         : t('autosaveSetting.disabled', { formName: form.nameOrId });
