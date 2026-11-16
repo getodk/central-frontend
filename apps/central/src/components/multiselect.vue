@@ -411,15 +411,6 @@ const apply = () => {
   dropdownEl.value?.hide();
 };
 
-const changeCheckbox = ({ target }) => {
-  if (props.single) {
-    // In the case of the single-selection, de-select the one (or zero) previously-selected values before selecting the new one.
-    for (const value of [...selected]) change(value);
-  }
-  change(props.options[target.dataset.index].value);
-  if (props.single) apply();
-};
-
 const handleTriggerClick = (toggle) => {
   if (props.options != null && !props.disabled) {
     toggle();
@@ -431,18 +422,31 @@ const handleTriggerClick = (toggle) => {
 ////////////////////////////////////////////////////////////////////////////////
 // SELECT ALL / NONE
 
+const changeCheckbox = ({ target }) => {
+  if (props.single) {
+    // In the case of the single-selection, de-select the one (or zero) previously-selected values before selecting the new one.
+    for (const value of [...selected]) change(value);
+  }
+  change(props.options[target.dataset.index].value);
+  if (props.single) apply();
+};
+
 // `true` for select all, `false` for select none.
 const changeAll = (selectAll) => {
   if (selected.size === (selectAll ? props.options.length : 0)) {
     if (props.single) dropdownEl.value?.hide();
     return;
   }
+
+  // Only check/uncheck search matches when in multi-select mode
   const selector = [selectAll ? 'input:not(:checked)' : 'input:checked'];
-  if (searchValue.value !== '') selector.unshift('.search-match');
+  if (!props.single && searchValue.value !== '') selector.unshift('.search-match');
+
   for (const input of optionList.value.querySelectorAll(selector.join(' '))) {
     input.checked = selectAll;
     change(props.options[input.dataset.index].value);
   }
+
   if (props.single) apply();
 };
 

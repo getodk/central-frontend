@@ -317,7 +317,7 @@ describe('Multiselect', () => {
           options,
           modelValue: [],
           single: true,
-          none: 'Reset to Me',
+          none: 'Reset to All',
           placeholder
         },
         attachTo: document.body
