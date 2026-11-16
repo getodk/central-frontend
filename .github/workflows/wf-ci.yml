@@ -42,7 +42,6 @@ jobs:
 
       - if: ${{ matrix.target == 'Node' }}
         run: 'npm run test:types -w packages/common'
-
       - if: ${{ matrix.target == 'Node' }}
         run: 'npm run test-node:jsdom -w packages/common'
 
@@ -50,7 +49,6 @@ jobs:
         uses: ./.github/actions/relegate-azure-mirrors
       - if: ${{ matrix.target == 'Web' }}
         run: 'npx playwright install ${{ matrix.browser }} --with-deps'
-
       - if: ${{ matrix.target == 'Web' }}
         run: 'npm run test-browser:${{ matrix.browser }} -w packages/common'
 
@@ -116,7 +114,6 @@ jobs:
 
       - if: ${{ matrix.target == 'Node' }}
         run: 'npm run test:types -w=packages/xpath'
-
       - if: ${{ matrix.target == 'Node' }}
         run: 'npm run test-node:jsdom -w=packages/xpath'
 
@@ -124,7 +121,6 @@ jobs:
         uses: ./.github/actions/relegate-azure-mirrors
       - if: ${{ matrix.target == 'Web' }}
         run: 'npx playwright install ${{ matrix.browser }} --with-deps'
-
       - if: ${{ matrix.target == 'Web' }}
         run: 'npm run test-browser:${{ matrix.browser }} -w=packages/xpath'
 
@@ -158,6 +154,5 @@ jobs:
         uses: ./.github/actions/relegate-azure-mirrors
       - if: ${{ matrix.target == 'Web' }}
         run: 'npx playwright install ${{ matrix.browser }} --with-deps'
-
       - if: ${{ matrix.target == 'Web' }}
         run: 'npm run test-browser:${{ matrix.browser }} -w=packages/web-forms'
