@@ -54,6 +54,7 @@ import type { Feature as GeoJsonFeature, FeatureCollection } from 'geojson';
 import { Map, View } from 'ol';
 import { Attribution, Zoom } from 'ol/control';
 import type { Coordinate } from 'ol/coordinate';
+import type { Extent } from 'ol/extent';
 import Feature from 'ol/Feature';
 import { LineString, Polygon, SimpleGeometry } from 'ol/geom';
 import { defaults as defaultInteractions } from 'ol/interaction';
@@ -610,6 +611,7 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
     fitToAllFeatures: () => mapViewControls?.fitToAllFeatures(featuresSource),
     getActiveBaseLayerId: () => baseLayer?.activeLayerId.value ?? DEFAULT_BASE_LAYER_ID,
     selectBaseLayer: (layerId: BaseLayerId) => baseLayer?.selectBaseLayer(layerId),
+    fitToViewport: (lonLatViewport: Extent) => mapViewControls?.fitToViewport(lonLatViewport),
     watchCurrentLocation,
     stopWatchingCurrentLocation,
     canRemoveCurrentLocation,

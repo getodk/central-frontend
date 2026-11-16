@@ -8,7 +8,7 @@ import { getCenter, isEmpty as isExtendEmpty, type Extent } from 'ol/extent';
 import Feature from 'ol/Feature';
 import { Point } from 'ol/geom';
 import VectorLayer from 'ol/layer/Vector';
-import { fromLonLat, toLonLat } from 'ol/proj';
+import { fromLonLat, toLonLat, transformExtent } from 'ol/proj';
 import type { Size } from 'ol/size';
 import VectorSource from 'ol/source/Vector';
 import { getDistance } from 'ol/sphere';
@@ -34,12 +34,14 @@ export interface UseMapViewControls {
   centerFeatureLocation: (feature: Feature) => void;
   centerFullWorldView: () => void;
   fitToAllFeatures: (featureSource: VectorSource) => void;
+  fitToViewport: (lonLatViewport: Extent) => void;
   getUserCurrentLocation: () => BrowserLocation | undefined;
   stopWatchingCurrentLocation: () => void;
   watchCurrentLocation: (onSuccess: () => void, onError: () => void) => void;
 }
 
 export const COORDINATE_LAYOUT_XYZM = 'XYZM';
+export const DEFAULT_GEOJSON_PROJECTION = 'EPSG:4326';
 export const DEFAULT_VIEW_CENTER = [0, 0];
 export const MIN_ZOOM = 2;
 const MAX_ZOOM = 19;
@@ -75,6 +77,10 @@ export function useMapViewControls(mapInstance: Map): UseMapViewControls {
       return;
     }
 
+    fitToExtent(extent);
+  };
+
+  const fitToExtent = (extent: Extent): void => {
     const view = mapInstance.getView();
     const center = getCenter(extent);
     const distance = evaluateDistance(view, center);
@@ -260,6 +266,11 @@ export function useMapViewControls(mapInstance: Map): UseMapViewControls {
     });
   };
 
+  const fitToViewport = (lonLatViewport: Extent): void => {
+    const projection = mapInstance.getView().getProjection();
+    fitToExtent(transformExtent(lonLatViewport, DEFAULT_GEOJSON_PROJECTION, projection));
+  };
+
   watch(
     () => userCurrentLocation.value,
     (newLocation) => {
@@ -294,6 +305,7 @@ export function useMapViewControls(mapInstance: Map): UseMapViewControls {
     centerFeatureLocation,
     centerFullWorldView: () => transitionToLocation(DEFAULT_VIEW_CENTER, MIN_ZOOM),
     fitToAllFeatures,
+    fitToViewport,
     getUserCurrentLocation: () => userCurrentLocation.value,
     stopWatchingCurrentLocation,
     watchCurrentLocation,

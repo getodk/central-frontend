@@ -255,6 +255,22 @@
     "string": "Terrain",
     "developer_comment": "Label of the terrain layer option in the map layer picker."
   },
+  "map_place_search.input.placeholder": {
+    "string": "Search on map",
+    "developer_comment": "Placeholder and accessible name of the text box at the top of the map where the user types a place or address to move the map there. Shown only when Google Maps is configured."
+  },
+  "map_place_search.results.label": {
+    "string": "Search results",
+    "developer_comment": "Accessible name of the list of matching places shown under the place search box."
+  },
+  "map_place_search.error.message": {
+    "string": "Could not search places. Check your connection. If it persists, contact the server administrator.",
+    "developer_comment": "Shown in the list under the place search box when a place search fails because the device is offline or the server's Google Maps key is invalid or out of quota."
+  },
+  "map_place_search.no_results.text": {
+    "string": "No places found",
+    "developer_comment": "Shown in the list under the place search box when Google returns no match for the typed text."
+  },
   "map_privacy_dialog.open.description": {
     "string": "Show map data privacy information",
     "developer_comment": "Aria-label for the small info button next to the Google Maps logo that opens the privacy dialog."
