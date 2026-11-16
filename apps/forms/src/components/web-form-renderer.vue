@@ -50,7 +50,6 @@ const autosaveEnabled = computed(() => {
   return !isEdit.value && !props.form.draft && !isPreview.value && props.form.autosaveEnabled;
 });
 const autosavePayload = ref<AutosaveValue | undefined>();
-const showAutosaveDialog = ref(false);
 const dateFormatter = new Intl.DateTimeFormat(undefined, {
   timeStyle: 'short',
   dateStyle: 'long',
@@ -309,20 +308,23 @@ const loadAutosave = async () => {
     const autosave = await getAutosave(props.form);
     if (autosave) {
       autosavePayload.value = autosave;
-      showAutosaveDialog.value = true;
+      visibleModal.value = { type: 'autosaveModal', status: 'none', hideable: false };
+      return true;
     }
   }
-  clearExpiredAutosaves();
+  return false;
 };
 
 const discardAutosave = () => {
   deleteAutosave(props.form);
   autosavePayload.value = undefined;
-  showAutosaveDialog.value = false;
+  visibleModal.value = undefined;
+  inited.value = true;
 };
 
 const recoverAutosave = () => {
-  showAutosaveDialog.value = false;
+  visibleModal.value = undefined;
+  inited.value = true;
 };
 
 onMounted(async () => {
@@ -332,14 +334,17 @@ onMounted(async () => {
     return;
   }
   await loadLastSaved();
-  await loadAutosave();
-  inited.value = true;
+  const hasAutosave = await loadAutosave();
+  clearExpiredAutosaves();
+  if (!hasAutosave) {
+    inited.value = true;
+  }
 });
 </script>
 
 <template>
 
-  <OdkWebForm v-if="!showAutosaveDialog && inited"
+  <OdkWebForm v-if="inited"
     :form-xml="props.xform"
     :edit-instance="editInstanceOptions"
     :restore-instance="restoreInstanceOptions"
@@ -353,19 +358,6 @@ onMounted(async () => {
     @submit="handleSubmit"
     v-on="autosaveEnabled ? { updated: storeAutosaveUpdate } : {}"
     />
-
-  <Dialog modal :visible="showAutosaveDialog" :closable="false" :draggable="false">
-    <template #header>
-      <span role="heading">{{ $t('autosaveModal.title') }}</span>
-    </template>
-    <template #default>
-      {{ $t('autosaveModal.body', { date: dateFormatter.format(autosavePayload?.createdAt) }) }}
-    </template>
-    <template #footer>
-      <Button type="button" variant="link" @click="discardAutosave()">{{ $t('action.discard') }}</Button>
-      <Button type="button" @click="recoverAutosave()">{{ $t('action.recover') }}</Button>
-    </template>
-  </Dialog>
 
   <Dialog :status="visibleModal?.status">
     <template #header v-if="visibleModal?.type">
@@ -390,6 +382,9 @@ onMounted(async () => {
           <a href="/login" target="_blank">{{ $t('sessionTimeoutModal.body.here') }}</a>
         </template>
       </Translation>
+      <span v-else-if="visibleModal.type === 'autosaveModal'">
+        {{ $t('autosaveModal.body', { date: dateFormatter.format(autosavePayload?.createdAt) }) }}
+      </span>
       <span v-else>
         {{ $t(visibleModal.type + '.body') }}
       </span>
@@ -402,6 +397,10 @@ onMounted(async () => {
       <template v-else-if="visibleModal.type === 'retryModal'
         || (visibleModal.type === 'sessionTimeoutModal' && !visibleModal.hideable)">
         <Button type="button" @click="submitData()">{{ $t('action.tryAgain') }}</Button>
+      </template>
+      <template v-else-if="visibleModal.type === 'autosaveModal'">
+        <Button type="button" variant="link" @click="discardAutosave()">{{ $t('action.discard') }}</Button>
+        <Button type="button" @click="recoverAutosave()">{{ $t('action.recover') }}</Button>
       </template>
       <!-- Preview modal or any type of error while submitting primary instance -->
       <template v-else-if="visibleModal.hideable">

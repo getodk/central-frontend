@@ -6,7 +6,7 @@ defineOptions({
   name: 'Dialog'
 });
 
-export type Status = 'loading' | 'error' | 'success';
+export type Status = 'loading' | 'error' | 'success' | 'none';
 
 export interface DialogProps {
   status: Status | undefined;
@@ -41,9 +41,13 @@ dialog {
   text-align: center;
   overflow: visible;
   outline: none;
-  padding: 4rem 2rem 0;
+  padding: 2rem;
   margin-top: 25vh;
   overflow-wrap: anywhere;
+
+  &:has(.status) {
+    padding-top: 4rem;
+  }
 
   &::backdrop {
     background: var(--odk-background-color);
@@ -57,7 +61,7 @@ dialog {
     overflow-wrap: break-word;
   }
   footer {
-    margin: 2rem 0;
+    margin-top: 2rem;
   }
   .status {
     display: block;
@@ -120,7 +124,7 @@ dialog {
 
 <template>
   <dialog ref="complete-dialog">
-    <span class="status">
+    <span class="status" v-if="props.status !== 'none'">
       <span v-if="props.status === 'loading'" class="spinner"></span>
       <svg v-else :class="props.status === 'error' ? 'error' : 'success'" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path :d="props.status === 'error' ? mdiCloseThick : mdiCheckBold" />

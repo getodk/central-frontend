@@ -8,6 +8,10 @@
 html {
   background: var(--odk-background-color);
   scrollbar-gutter: stable;
+
+  &:has(dialog[open]:modal) {
+    overflow: hidden;
+  }
 }
 
 html,
