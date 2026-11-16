@@ -32,6 +32,17 @@ const selectPlace = (place: PlaceSearchResult) => {
 	emit('selectPlace', place.lonLatViewport);
 };
 
+const focusNeighbour = (event: KeyboardEvent, step: number) => {
+	const container = event.currentTarget as HTMLElement;
+	const controls = [...container.querySelectorAll<HTMLElement>('input, button')];
+	const current = controls.indexOf(document.activeElement as HTMLElement);
+	controls[current + step]?.focus();
+};
+
+const focusNext = (event: KeyboardEvent) => focusNeighbour(event, 1);
+
+const focusPrevious = (event: KeyboardEvent) => focusNeighbour(event, -1);
+
 const onEscape = (event: KeyboardEvent) => {
 	// Only an open list consumes Escape, so the next Escape still exits map full screen.
 	if (isOpen.value) {
@@ -51,9 +62,15 @@ onBeforeUnmount(() => cancel());
 </script>
 
 <template>
-	<div class="map-place-search" @focusout="onFocusOut">
+	<div
+		class="map-place-search"
+		@focusout="onFocusOut"
+		@keydown.down.prevent.stop="focusNext"
+		@keydown.up.prevent.stop="focusPrevious"
+		@keydown.esc="onEscape"
+	>
 		<div class="search-input">
-			<IconSVG name="mdiMagnify" variant="muted" />
+			<IconSVG name="mdiMagnify" />
 			<input
 				v-model="query"
 				type="text"
@@ -63,28 +80,25 @@ onBeforeUnmount(() => cancel());
 				@input="scheduleSearch"
 				@focus="activate"
 				@keydown.enter.prevent="searchNow"
-				@keydown.esc="onEscape"
 			>
 		</div>
 
-		<ul
-			v-if="isOpen && hasPlaces"
-			class="search-results"
-			:aria-label="t('map_place_search.results.label')"
-		>
-			<li v-for="(place, index) in places" :key="`${place.label}-${index}`">
-				<button type="button" @pointerdown.prevent @click="selectPlace(place)">
-					{{ place.label }}
-				</button>
-			</li>
-		</ul>
+		<div v-if="isOpen" class="search-results">
+			<ul v-if="hasPlaces" :aria-label="t('map_place_search.results.label')">
+				<li v-for="(place, index) in places" :key="`${place.label}-${index}`">
+					<button type="button" class="search-row" @pointerdown.prevent @click="selectPlace(place)">
+						{{ place.label }}
+					</button>
+				</li>
+			</ul>
 
-		<div v-else-if="isOpen && hasError" class="search-results search-message" role="alert">
-			{{ t('map_place_search.error.message') }}
-		</div>
+			<div v-else-if="hasError" class="search-row search-message" role="alert">
+				{{ t('map_place_search.error.message') }}
+			</div>
 
-		<div v-else-if="isOpen" class="search-results search-message" role="status">
-			{{ t('map_place_search.no_results.text') }}
+			<div v-else class="search-row search-message" role="status">
+				{{ t('map_place_search.no_results.text') }}
+			</div>
 		</div>
 	</div>
 </template>
@@ -101,21 +115,21 @@ onBeforeUnmount(() => cancel());
 	max-width: calc(100% - var(--map-control-width) - var(--horizontal-gaps));
 	z-index: var(--odk-z-index-form-content);
 	font-size: var(--odk-base-font-size);
-
-	input,
-	button {
-		border: none;
-		background: none;
-		font: inherit;
-		color: var(--odk-text-color);
-	}
 }
 
 .search-input,
-.search-results {
-	border: 1px solid var(--odk-border-color);
-	border-radius: var(--odk-radius);
-	background: var(--odk-base-background-color);
+.search-results{
+  border: 1px solid var(--odk-border-color);
+  border-radius: var(--odk-radius);
+  background: var(--odk-base-background-color);
+}
+
+.search-input input,
+button.search-row {
+  border: none;
+  background: none;
+  font: inherit;
+  color: var(--odk-text-color);
 }
 
 .search-input {
@@ -127,6 +141,10 @@ onBeforeUnmount(() => cancel());
 
 	&:focus-within {
 		border-color: var(--odk-primary-border-color);
+	}
+
+	&:has(+ .search-results) {
+		border-radius: var(--odk-radius) var(--odk-radius) 0 0;
 	}
 
 	input {
@@ -141,26 +159,38 @@ onBeforeUnmount(() => cancel());
 }
 
 .search-results {
-	margin: var(--odk-spacing-s) 0 0;
 	padding: var(--odk-spacing-s) 0;
-	list-style: none;
+	border-top: none;
+	border-radius: 0 0 var(--odk-radius) var(--odk-radius);
 
-	button {
-		display: block;
-		width: 100%;
-		padding: var(--odk-spacing-s) var(--odk-spacing-m);
-		text-align: left;
-		cursor: pointer;
+	ul {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+}
 
-		&:hover,
-		&:focus-visible {
-			background: var(--odk-primary-lighter-background-color);
-		}
+.search-row {
+	display: block;
+	width: 100%;
+	padding: var(--odk-spacing-s) var(--odk-spacing-m);
+	text-align: left;
+}
+
+button.search-row {
+	cursor: pointer;
+
+	&:hover,
+	&:focus-visible {
+		background: var(--odk-primary-lighter-background-color);
 	}
 
-	&.search-message {
-		padding: var(--odk-spacing-s) var(--odk-spacing-m);
-		color: var(--odk-muted-text-color);
+	&:focus-visible {
+		outline-offset: -1px;
 	}
+}
+
+.search-message {
+	color: var(--odk-muted-text-color);
 }
 </style>
