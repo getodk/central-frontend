@@ -3,6 +3,7 @@
   --odk-primary-text-color: #0a80a3;
   --odk-red-danger: #c42b2b;
   --odk-neutral: #6b747d;
+  --odk-text-color: #020617;
 }
 
 html {
@@ -16,5 +17,5 @@ html {
 
 html,
 dialog {
-  color: #020617;
+  color: var(--odk-text-color);
 }

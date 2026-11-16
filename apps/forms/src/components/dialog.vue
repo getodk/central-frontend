@@ -6,19 +6,13 @@ defineOptions({
   name: 'Dialog'
 });
 
-export type Status = 'loading' | 'error' | 'success' | 'none';
+export type Status = 'error' | 'loading' | 'none' | 'success';
 
 export interface DialogProps {
   status: Status | undefined;
 }
 const props = defineProps<DialogProps>();
 
-type DialogEmits = {
-	close: [],
-	retry: []
-};
-
-const emit = defineEmits<DialogEmits>();
 const dialog = useTemplateRef('complete-dialog');
 
 onMounted(() => {
