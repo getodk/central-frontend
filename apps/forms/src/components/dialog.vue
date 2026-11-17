@@ -26,6 +26,20 @@ onMounted(() => {
 });
 </script>
 
+<template>
+  <dialog ref="complete-dialog">
+    <span class="status" v-if="props.status !== 'none'">
+      <span v-if="props.status === 'loading'" class="spinner"></span>
+      <svg v-else :class="props.status === 'error' ? 'error' : 'success'" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path :d="props.status === 'error' ? mdiCloseThick : mdiCheckBold" />
+      </svg>
+    </span>
+    <h1><slot name="header"></slot></h1>
+    <p><slot name="default"></slot></p>
+    <footer><slot name="footer"></slot></footer>
+  </dialog>
+</template>
+
 <style scoped>
 dialog {
   width: 80vw;
@@ -115,17 +129,3 @@ dialog {
   }
 }
 </style>
-
-<template>
-  <dialog ref="complete-dialog">
-    <span class="status" v-if="props.status !== 'none'">
-      <span v-if="props.status === 'loading'" class="spinner"></span>
-      <svg v-else :class="props.status === 'error' ? 'error' : 'success'" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path :d="props.status === 'error' ? mdiCloseThick : mdiCheckBold" />
-      </svg>
-    </span>
-    <h1><slot name="header"></slot></h1>
-    <p><slot name="default"></slot></p>
-    <footer><slot name="footer"></slot></footer>
-  </dialog>
-</template>
