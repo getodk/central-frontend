@@ -226,6 +226,7 @@ const handleSubmit = async (
 ) => {
   if (props.actionType === 'preview') {
     visibleModal.value = { type: 'preview', status: 'success', hideable: true };
+    clearFormCallback({ next: POST_SUBMIT__NEW_INSTANCE });
     return;
   }
   const { data: [data], status, hasLastSaved } = payload;
@@ -361,7 +362,7 @@ onMounted(async () => {
     v-on="autosaveEnabled ? { updated: storeAutosaveUpdate } : {}"
     />
 
-  <Dialog :status="visibleModal?.status" :hideable="!!visibleModal?.hideable">
+  <Dialog :status="visibleModal?.status" :hideable="!!visibleModal?.hideable" @close="visibleModal = undefined">
     <template #header v-if="visibleModal?.type">
       {{ $t(visibleModal.type + 'Modal.title') }}
     </template>

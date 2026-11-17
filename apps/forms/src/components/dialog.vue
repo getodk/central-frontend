@@ -14,7 +14,21 @@ export interface DialogProps {
 }
 const props = defineProps<DialogProps>();
 
+type DialogEmits = {
+  close: [],
+};
+const emit = defineEmits<DialogEmits>();
+
 const dialog = useTemplateRef('complete-dialog');
+
+const onCancel = (event: Event) => {
+  if (props.hideable) {
+    emit('close');
+  } else {
+    // Safari doesn't have support for `closedby`
+    event.preventDefault();
+  }
+};
 
 onMounted(() => {
   watch(() => props.status, (status) => {
@@ -28,7 +42,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <dialog ref="complete-dialog" :closedby="props.hideable ? 'any' : 'none'">
+  <dialog ref="complete-dialog" :closedby="props.hideable ? 'any' : 'none'" @cancel="onCancel">
     <span class="status" v-if="props.status !== 'none'">
       <span v-if="props.status === 'loading'" class="spinner"></span>
       <svg v-else :class="props.status === 'error' ? 'error' : 'success'" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -60,8 +74,8 @@ dialog {
     flex-direction: column;
   }
 
-  dialog header,
-  dialog footer {
+  header,
+  footer {
     flex-shrink: 0;
   }
 
