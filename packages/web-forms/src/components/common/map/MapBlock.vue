@@ -247,8 +247,9 @@ const toggleFullScreen = () => {
 					</Button>
 				</div>
 
+				<!-- Inline check instead of isGoogleProvider since TypeScript only narrows mapProvider for apiKey this way. -->
 				<MapPlaceSearch
-					v-if="isGoogleProvider && !disabled"
+					v-if="mapProvider.kind === 'google' && !disabled"
 					:api-key="mapProvider.apiKey"
 					@select-place="mapHandler.fitToViewport"
 				/>
