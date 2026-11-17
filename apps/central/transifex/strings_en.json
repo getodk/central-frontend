@@ -1723,7 +1723,7 @@
       "action": {
         "all": {
           "string": "All",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "developer_comment": "This is used to select all the actions in a category in a dropdown"
         }
       }
     },

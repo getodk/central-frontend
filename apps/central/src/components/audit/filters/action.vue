@@ -94,11 +94,10 @@ export default {
   },
   computed: {
     options() {
-      const all = this.$t('action.all');
       const options = [];
       for (const [category, actions] of Object.entries(ACTIONS_BY_CATEGORY)) {
         const text = this.categoryMessage(category);
-        options.push({ text: `${all} ${text}`, value: category, group: text });
+        options.push({ text: this.$t('action.all'), value: category, group: text });
         for (const action of actions) {
           options.push({
             text: this.actionMessage(action),
@@ -114,12 +113,11 @@ export default {
     },
   },
   methods: {
-    placeholder({ selectedText }) {
-      return selectedText == null
-        ? this.categoryMessage('nonverbose')
-        : selectedText.startsWith(`${this.$t('action.all')} `)
-          ? selectedText.slice(this.$t('action.all').length + 1)
-          : selectedText;
+    placeholder() {
+      // If modelValue is category, e.g. 'user' it will use the category message -> "Web User Actions"
+      // Otherwise if it's a specific action like 'user.create' it will use the action message -> "Create"
+      // If nothing is selected, modelValue is 'nonverbose', with the category message "All Actions"
+      return (this.categoryMessage(this.modelValue) || this.actionMessage(this.modelValue));
     },
     update(value) {
       this.$emit('update:modelValue', value[0] ?? 'nonverbose');
@@ -132,6 +130,7 @@ export default {
 {
   "en": {
     "action": {
+      // This is used to select all the actions in a category in a dropdown
       "all": "All"
     }
   }

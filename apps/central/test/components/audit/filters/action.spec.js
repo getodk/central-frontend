@@ -11,7 +11,7 @@ describe('AuditFiltersAction', () => {
   describe('options', () => {
     it('renders a category option correctly', () => {
       const option = mountComponent().get('input[data-index="0"]');
-      option.element.parentElement.textContent.should.equal('All Web User Actions');
+      option.element.parentElement.textContent.should.equal('All');
     });
 
     it('renders an action option correctly', () => {
