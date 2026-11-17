@@ -48,7 +48,7 @@ const BASE_LAYER_OPTIONS = [
 }
 
 .base-layer-option {
-	padding: var(--odk-spacing-s) var(--odk-spacing-m);
+	padding: 8px var(--odk-spacing-m);
 	border: none;
 	border-radius: var(--odk-radius);
 	background: none;
