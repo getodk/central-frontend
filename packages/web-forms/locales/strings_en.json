@@ -257,17 +257,17 @@
   },
   "map_privacy_dialog.open.description": {
     "string": "Show map data privacy information",
-    "developer_comment": "Aria-label for the small info button next to the Google Maps logo that opens the privacy dialog."
+    "developer_comment": "Aria-label for the small info button next to the map attribution that opens the privacy dialog."
   },
   "map_privacy_dialog.header.title": {
     "string": "Map data privacy",
     "developer_comment": "Header of the dialog explaining what data Google receives when the map is displayed."
   },
-  "map_privacy_dialog.body.text": {
+  "map_privacy_dialog.body.message": {
     "string": "This map is provided by Google Maps. To display it, your browser sends your IP address and the map areas you view to Google.",
     "developer_comment": "Body of the privacy dialog shown when Google Maps is the map provider."
   },
-  "map_privacy_dialog.privacy_policy.link": {
+  "map_privacy_dialog.privacy_policy.label": {
     "string": "Google Privacy Policy",
     "developer_comment": "Text of the link to Google's privacy policy in the map privacy dialog."
   },

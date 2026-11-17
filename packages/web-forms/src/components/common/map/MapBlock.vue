@@ -61,7 +61,7 @@ const showErrorStyle = inject<ComputedRef<boolean>>(
 const t: Translate = inject(TRANSLATE)!;
 const clientOptions: ClientOptions = inject(CLIENT_OPTIONS)!;
 const mapProvider = clientOptions.mapProvider;
-const isGoogleProvider = mapProvider.kind === 'google';
+const isGoogleProvider = mapProvider.name === 'google';
 
 const mapHandler = useMapBlock(
 	{ mode: props.mode, singleFeatureType: props.singleFeatureType, provider: mapProvider },

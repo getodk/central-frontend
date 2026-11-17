@@ -6,8 +6,8 @@ import type TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-const OSM_PROVIDER: MapProvider = { kind: 'osm' };
-const GOOGLE_PROVIDER: MapProvider = { kind: 'google', apiKey: 'test-key' };
+const OSM_PROVIDER: MapProvider = { name: 'osm' };
+const GOOGLE_PROVIDER: MapProvider = { name: 'google', apiKey: 'test-key' };
 
 const getBaseLayer = (mapInstance: OlMap) => mapInstance.getLayers().item(0) as TileLayer;
 

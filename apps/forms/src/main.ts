@@ -30,7 +30,7 @@ const fetchClientConfig = async (): Promise<ClientConfig> => {
 };
 
 const resolveMapProvider = (googleMapsKey: string | undefined): MapProvider => {
-  return googleMapsKey ? { kind: 'google', apiKey: googleMapsKey } : DEFAULT_MAP_PROVIDER;
+  return googleMapsKey ? { name: 'google', apiKey: googleMapsKey } : DEFAULT_MAP_PROVIDER;
 };
 
 const clientConfig = await fetchClientConfig();

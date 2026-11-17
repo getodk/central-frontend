@@ -38,7 +38,17 @@ const MAP_ICONS = {
 } as const;
 
 const baseLayerPicker = ref<HTMLElement>();
+const baseLayerPickerButton = ref<HTMLButtonElement>();
 const isBaseLayerPanelOpen = ref(false);
+
+const closeOnEscape = (event: KeyboardEvent) => {
+	// Only an open panel consumes Escape, so the next Escape still exits map fullscreen.
+	if (isBaseLayerPanelOpen.value) {
+		event.stopPropagation();
+		isBaseLayerPanelOpen.value = false;
+		baseLayerPickerButton.value?.focus();
+	}
+};
 
 const closeLayerPicker = (event: PointerEvent) => {
 	if (!baseLayerPicker.value?.contains(event.target as Node)) {
@@ -85,8 +95,14 @@ onBeforeUnmount(() => {
 			>
 				<IconSVG :name="MAP_ICONS.currentLocation" size="sm" />
 			</button>
-			<div v-if="showBaseLayerPicker" ref="baseLayerPicker" class="base-layer-picker">
+			<div
+				v-if="showBaseLayerPicker"
+				ref="baseLayerPicker"
+				class="base-layer-picker"
+				@keydown.esc="closeOnEscape"
+			>
 				<button
+					ref="baseLayerPickerButton"
 					:aria-label="t('map_base_layer_picker.open.description')"
 					:aria-expanded="isBaseLayerPanelOpen"
 					@click="isBaseLayerPanelOpen = !isBaseLayerPanelOpen"

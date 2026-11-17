@@ -19,20 +19,16 @@ const GOOGLE_LAYER_OPTIONS: Record<BaseLayerId, Omit<GoogleSourceOptions, 'key'>
   [BASE_LAYER_IDS.TERRAIN]: { mapType: 'terrain', layerTypes: ['layerRoadmap'] },
 };
 
-const FAILED_SESSION_STATUS = 410;
-
-const failedSessionResponse = () => new Response(null, { status: FAILED_SESSION_STATUS });
-
 /**
  * OpenLayers only handles a non-ok response. A rejected fetch (offline) would leave the
  * source loading forever, and a response after dispose would schedule a refresh timer.
  */
 class GuardedGoogleSource extends Google {
-  override async fetchSessionToken(url: string, config: RequestInit): Promise<Response> {
-    const response = await super
+  override fetchSessionToken(url: string, config: RequestInit): Promise<Response> {
+    return super
       .fetchSessionToken(url, config)
-      .catch(() => failedSessionResponse());
-    return this.disposed ? failedSessionResponse() : response;
+      .then((response) => (this.disposed ? Response.error() : response))
+      .catch(() => Response.error());
   }
 }
 
@@ -44,7 +40,7 @@ const createGoogleLayer = (layerId: BaseLayerId, apiKey: string) => {
 };
 
 export const createBaseLayer = (layerId: BaseLayerId, provider: MapProvider) => {
-  if (provider.kind === 'google') {
+  if (provider.name === 'google') {
     return createGoogleLayer(layerId, provider.apiKey);
   }
 

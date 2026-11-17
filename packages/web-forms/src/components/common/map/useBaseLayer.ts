@@ -42,7 +42,7 @@ export function useBaseLayer(
 
   const watchSessionErrors = (layer: TileLayer) => {
     const source = layer.getSource();
-    if (provider.kind === 'google' && source) {
+    if (provider.name === 'google' && source) {
       source.on('change', () => reportSessionError(source, onProviderError));
     }
   };
