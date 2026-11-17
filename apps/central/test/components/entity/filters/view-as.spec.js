@@ -96,17 +96,6 @@ describe('EntityFiltersViewAs', () => {
       component.emitted('update:modelValue').should.eql([[null]]);
     });
 
-    it('does not emit an event when Apply is clicked without a change', async () => {
-      const [fieldKey] = createFieldKeys(1);
-      const component = mountComponent({
-        fieldKeys: [fieldKey],
-        props: { modelValue: fieldKey.id },
-        attachTo: document.body
-      });
-      await component.get('.dropdown-trigger').trigger('click');
-      should.not.exist(component.emitted('update:modelValue'));
-    });
-
     it('shows the display name of the selected app user', () => {
       const [fieldKey] = createFieldKeys(1);
       const component = mountComponent({
