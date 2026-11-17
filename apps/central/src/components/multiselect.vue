@@ -430,10 +430,10 @@ const handleTriggerClick = (toggle) => {
 // SELECT ALL / NONE
 
 const resetSingle = () => {
-  const checkedInput = optionList.value.querySelector('input:checked');
-  if (checkedInput != null) {
-    checkedInput.checked = false;
-    change(props.options[checkedInput.dataset.index].value);
+  const input = optionList.value.querySelector('input:checked');
+  if (input != null) {
+    input.checked = false;
+    change(props.options[input.dataset.index].value);
   }
 
   apply();
@@ -449,7 +449,6 @@ const changeAll = (selectAll) => {
   if (selected.size === (selectAll ? props.options.length : 0)) return;
   const selector = [selectAll ? 'input:not(:checked)' : 'input:checked'];
   if (searchValue.value !== '') selector.unshift('.search-match');
-
   for (const input of optionList.value.querySelectorAll(selector.join(' '))) {
     input.checked = selectAll;
     change(props.options[input.dataset.index].value);
