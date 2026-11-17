@@ -58,8 +58,10 @@ const dateFormatter = new Intl.DateTimeFormat(undefined, {
 const deviceID = getDeviceId();
 const mapProvider = inject(MAP_PROVIDER);
 
+type ModalType = 'autosave' | 'editSubmission' | 'error' | 'preview' | 'retry' | 'sendingData' | 'sessionTimeout' | 'submission' | 'thankYou';
+
 export interface ModalProps {
-  type: string;
+  type: ModalType;
   hideable: boolean;
   status: Status;
   errorMessage?: string;
@@ -115,14 +117,14 @@ const handleResult = () => {
     clearForm(props.form.once ? {} : { next: POST_SUBMIT__NEW_INSTANCE });
 
     if (isPublicLink.value) {
-      visibleModal.value = { type: 'thankYouModal', status: 'success', hideable: false };
+      visibleModal.value = { type: 'thankYou', status: 'success', hideable: false };
     } else if (isEdit.value) {
-      visibleModal.value = { type: 'editSubmissionModal', status: 'success', hideable: false };
+      visibleModal.value = { type: 'editSubmission', status: 'success', hideable: false };
       setTimeout(() => {
         Location.assign(submissionPath());
       }, 2000);
     } else {
-      visibleModal.value = { type: 'submissionModal', status: 'success', hideable: false };
+      visibleModal.value = { type: 'submission', status: 'success', hideable: false };
     }
     return;
   }
@@ -131,10 +133,10 @@ const handleResult = () => {
   if (!submissionResult.primaryInstanceResult.success) {
     const error = submissionResult.primaryInstanceResult.data;
     if (isSessionTimeout(error)) {
-      visibleModal.value = { type: 'sessionTimeoutModal', status: 'error', hideable: true };
+      visibleModal.value = { type: 'sessionTimeout', status: 'error', hideable: true };
     } else {
       const errorMessage = getErrorMessage(error);
-      visibleModal.value = { type: 'errorModal', status: 'error', errorMessage, hideable: true };
+      visibleModal.value = { type: 'error', status: 'error', errorMessage, hideable: true };
     }
     return;
   }
@@ -143,15 +145,15 @@ const handleResult = () => {
   if (attachmentResultArr.some(r => !r.success)) {
     const sessionTimeout = attachmentResultArr.some(r => isSessionTimeout(r.data));
     if (sessionTimeout) {
-      visibleModal.value = { type: 'sessionTimeoutModal', status: 'error', hideable: false };
+      visibleModal.value = { type: 'sessionTimeout', status: 'error', hideable: false };
     } else {
-      visibleModal.value = { type: 'retryModal', status: 'error', hideable: false };
+      visibleModal.value = { type: 'retry', status: 'error', hideable: false };
     }
   }
 };
 
 const submitData = async () => {
-  visibleModal.value = { type: 'sendingDataModal', status: 'loading', hideable: false };
+  visibleModal.value = { type: 'sendingData', status: 'loading', hideable: false };
 
   const instanceFile = submissionData.instanceFile;
   const attachments = submissionData.attachments;
@@ -223,7 +225,7 @@ const handleSubmit = async (
   clearFormCallback: Function
 ) => {
   if (props.actionType === 'preview') {
-    visibleModal.value = { type: 'previewModal', status: 'success', hideable: true };
+    visibleModal.value = { type: 'preview', status: 'success', hideable: true };
     return;
   }
   const { data: [data], status, hasLastSaved } = payload;
@@ -234,7 +236,7 @@ const handleSubmit = async (
   }
   if (alreadySubmittedOnce()) {
     // The user submitted since this page loaded; show the same thank-you modal as on mount.
-    visibleModal.value = { type: 'thankYouModal', status: 'success', hideable: false };
+    visibleModal.value = { type: 'thankYou', status: 'success', hideable: false };
     return;
   }
   initializeSubmissionState(data as unknown as SubmissionData);
@@ -308,7 +310,7 @@ const loadAutosave = async () => {
     const autosave = await getAutosave(props.form);
     if (autosave) {
       autosavePayload.value = autosave;
-      visibleModal.value = { type: 'autosaveModal', status: 'none', hideable: false };
+      visibleModal.value = { type: 'autosave', status: 'none', hideable: false };
       return true;
     }
   }
@@ -329,7 +331,7 @@ const recoverAutosave = () => {
 
 onMounted(async () => {
   if (alreadySubmittedOnce()) {
-    visibleModal.value = { type: 'thankYouModal', status: 'success', hideable: false };
+    visibleModal.value = { type: 'thankYou', status: 'success', hideable: false };
     webFormLoaded(); // hide the spinner
     return;
   }
@@ -361,10 +363,10 @@ onMounted(async () => {
 
   <Dialog :status="visibleModal?.status" :hideable="!!visibleModal?.hideable">
     <template #header v-if="visibleModal?.type">
-      {{ $t(visibleModal.type + '.title') }}
+      {{ $t(visibleModal.type + 'Modal.title') }}
     </template>
     <template #default v-if="visibleModal?.type">
-      <Translation v-if="visibleModal.type === 'errorModal' && visibleModal.errorMessage" keypath="errorModal.body">
+      <Translation v-if="visibleModal.type === 'error' && visibleModal.errorMessage" keypath="errorModal.body">
         <template #errorMessage>
           <pre>{{ $t(visibleModal.errorMessage) }}</pre>
         </template>
@@ -372,33 +374,33 @@ onMounted(async () => {
           <a href="mailto:support@getodk.org">support@getodk.org</a>
         </template>
       </Translation>
-      <Translation v-else-if="visibleModal.type === 'retryModal'" keypath="retryModal.body">
+      <Translation v-else-if="visibleModal.type === 'retry'" keypath="retryModal.body">
         <template #supportEmail>
           <a href="mailto:support@getodk.org">support@getodk.org</a>
         </template>
       </Translation>
-      <Translation v-else-if="visibleModal.type === 'sessionTimeoutModal'" keypath="sessionTimeoutModal.body.full">
+      <Translation v-else-if="visibleModal.type === 'sessionTimeout'" keypath="sessionTimeoutModal.body.full">
         <template #here>
           <a href="/login" target="_blank">{{ $t('sessionTimeoutModal.body.here') }}</a>
         </template>
       </Translation>
-      <span v-else-if="visibleModal.type === 'autosaveModal'">
+      <span v-else-if="visibleModal.type === 'autosave'">
         {{ $t('autosaveModal.body', { date: dateFormatter.format(autosavePayload?.createdAt) }) }}
       </span>
       <span v-else>
-        {{ $t(visibleModal.type + '.body') }}
+        {{ $t(visibleModal.type + 'Modal.body') }}
       </span>
     </template>
     <template #footer v-if="visibleModal?.type">
-      <template v-if="visibleModal.type === 'submissionModal'">
+      <template v-if="visibleModal.type === 'submission'">
         <Button type="button" @click="visibleModal = undefined">{{ $t('submissionModal.action.fillOutAgain') }}</Button>
       </template>
       <!-- Any type of error while sending attachments -->
-      <template v-else-if="visibleModal.type === 'retryModal'
-        || (visibleModal.type === 'sessionTimeoutModal' && !visibleModal.hideable)">
+      <template v-else-if="visibleModal.type === 'retry'
+        || (visibleModal.type === 'sessionTimeout' && !visibleModal.hideable)">
         <Button type="button" @click="submitData()">{{ $t('action.tryAgain') }}</Button>
       </template>
-      <template v-else-if="visibleModal.type === 'autosaveModal'">
+      <template v-else-if="visibleModal.type === 'autosave'">
         <Button type="button" variant="link" @click="discardAutosave()">{{ $t('action.discard') }}</Button>
         <Button type="button" @click="recoverAutosave()">{{ $t('action.recover') }}</Button>
       </template>

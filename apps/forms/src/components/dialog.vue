@@ -35,8 +35,8 @@ onMounted(() => {
         <path :d="props.status === 'error' ? mdiCloseThick : mdiCheckBold" />
       </svg>
     </span>
-    <h1><slot name="header"></slot></h1>
-    <p><slot name="default"></slot></p>
+    <header><h1><slot name="header"></slot></h1></header>
+    <div class="content"><slot name="default"></slot></div>
     <footer><slot name="footer"></slot></footer>
   </dialog>
 </template>
@@ -45,14 +45,30 @@ onMounted(() => {
 dialog {
   width: 80vw;
   max-width: 600px;
+  margin-top: 25vh;
+  max-height: 75vh;
   border: 0;
   border-radius: 6px;
   text-align: center;
   overflow: visible;
   outline: none;
   padding: 2rem;
-  margin-top: 25vh;
   overflow-wrap: anywhere;
+
+  &[open] {
+    display: flex;
+    flex-direction: column;
+  }
+
+  dialog header,
+  dialog footer {
+    flex-shrink: 0;
+  }
+
+  .content {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
 
   &:has(.status) {
     padding-top: 4rem;
@@ -93,8 +109,6 @@ dialog {
       height: 100%;
       display: block;
       margin: 0 auto;
-      left: 0;
-      right: 0;
 
       &.success {
         border-color: var(--odk-primary-text-color);
