@@ -58,9 +58,17 @@ const BASE_LAYER_OPTIONS = [
 	cursor: pointer;
 
 	&:hover,
-	&:focus-visible,
+	&:focus-visible {
+		background-color: var(--odk-muted-background-color);
+	}
+
 	&.active {
 		background-color: var(--odk-primary-lighter-background-color);
+	}
+
+	&.active:hover,
+	&.active:focus-visible {
+		background-color: var(--odk-primary-light-background-color);
 	}
 }
 </style>

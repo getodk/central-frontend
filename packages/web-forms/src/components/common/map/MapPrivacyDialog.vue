@@ -24,7 +24,7 @@ const isDialogOpen = ref(false);
 
 	<Dialog v-model:visible="isDialogOpen" modal class="map-block-dialog" :draggable="false">
 		<template #header>
-			<strong>{{ t('map_privacy_dialog.header.title') }}</strong>
+			<h3>{{ t('map_privacy_dialog.header.title') }}</h3>
 		</template>
 
 		<template #default>

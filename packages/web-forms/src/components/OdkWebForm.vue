@@ -15,7 +15,11 @@ import {
 	SUBMIT_PRESSED,
 	TOUCHED_QUESTIONS,
 } from '@getodk/web-forms/lib/constants/injection-keys.ts';
-import type { ClientOptions } from '@getodk/web-forms/lib/client-options.ts';
+import {
+	type ClientOptions,
+	DEFAULT_MAP_PROVIDER,
+	type MapProvider,
+} from '@getodk/web-forms/lib/client-options.ts';
 import type { FormStateSuccessResult } from '@getodk/web-forms/lib/init/form-state.ts';
 import { initializeFormState } from '@getodk/web-forms/lib/init/initialize-form-state.ts';
 import { loadFormState } from '@getodk/web-forms/lib/init/load-form-state';
@@ -81,7 +85,10 @@ export interface OdkWebFormsProps {
 
 	readonly lastSavedXml?: string;
 
-	readonly googleMapsKey?: string;
+	/**
+	 * Base map provider for map questions. Defaults to OpenStreetMap.
+	 */
+	readonly mapProvider?: MapProvider;
 }
 
 const props = defineProps<OdkWebFormsProps>();
@@ -218,7 +225,10 @@ const formOptions = readonly<FormOptions>({
 	attachmentMaxSize: props.attachmentMaxSize,
 });
 provide(FORM_OPTIONS, formOptions);
-provide(CLIENT_OPTIONS, readonly<ClientOptions>({ googleMapsKey: props.googleMapsKey }));
+provide(
+	CLIENT_OPTIONS,
+	readonly<ClientOptions>({ mapProvider: props.mapProvider ?? DEFAULT_MAP_PROVIDER })
+);
 const mediaCache = new Map<JRResourceURLString, ObjectURL>();
 provide(FORM_MEDIA_CACHE, mediaCache);
 

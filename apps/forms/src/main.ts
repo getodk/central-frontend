@@ -3,7 +3,7 @@ import { createApp } from 'vue';
 import PrimeVue from 'primevue/config';
 import { odkThemePreset } from '../../../packages/web-forms/src/odk-theme-preset';
 
-import { type MapProvider, webFormsPlugin } from '@getodk/web-forms';
+import { DEFAULT_MAP_PROVIDER, type MapProvider, webFormsPlugin } from '@getodk/web-forms';
 import Forms from './Forms.vue';
 
 import router from './router';
@@ -30,7 +30,7 @@ const fetchClientConfig = async (): Promise<ClientConfig> => {
 };
 
 const resolveMapProvider = (googleMapsKey: string | undefined): MapProvider => {
-  return googleMapsKey ? { kind: 'google', apiKey: googleMapsKey } : { kind: 'osm' };
+  return googleMapsKey ? { kind: 'google', apiKey: googleMapsKey } : DEFAULT_MAP_PROVIDER;
 };
 
 const clientConfig = await fetchClientConfig();

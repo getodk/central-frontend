@@ -5,7 +5,6 @@
  * load on demand. Avoids main bundle bloat.
  */
 import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
-import { resolveMapProvider } from '@getodk/web-forms/components/common/map/base-layers.ts';
 import { type Mode, type SingleFeatureType } from '@getodk/web-forms/components/common/map/getModeConfig.ts';
 import MapAdvancedPanel from '@getodk/web-forms/components/common/map/MapAdvancedPanel.vue';
 import MapConfirmDialog from '@getodk/web-forms/components/common/map/MapConfirmDialog.vue';
@@ -15,7 +14,7 @@ import MapProperties from '@getodk/web-forms/components/common/map/MapProperties
 import MapStatusBar from '@getodk/web-forms/components/common/map/MapStatusBar.vue';
 import MapUpdateCoordsDialog from '@getodk/web-forms/components/common/map/MapUpdateCoordsDialog.vue';
 import { STATES, useMapBlock } from '@getodk/web-forms/components/common/map/useMapBlock.ts';
-import type { ClientOptions } from '@getodk/web-forms/lib/client-options.ts';
+import { type ClientOptions, DEFAULT_MAP_PROVIDER } from '@getodk/web-forms/lib/client-options.ts';
 import { CLIENT_OPTIONS, TRANSLATE, QUESTION_HAS_ERROR } from '@getodk/web-forms/lib/constants/injection-keys.ts';
 import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import type { Feature, FeatureCollection } from 'geojson';
@@ -61,7 +60,7 @@ const showErrorStyle = inject<ComputedRef<boolean>>(
 );
 const t: Translate = inject(TRANSLATE)!;
 const clientOptions = inject<ClientOptions | undefined>(CLIENT_OPTIONS, undefined);
-const mapProvider = resolveMapProvider(clientOptions);
+const mapProvider = clientOptions?.mapProvider ?? DEFAULT_MAP_PROVIDER;
 const isGoogleProvider = mapProvider.kind === 'google';
 
 const mapHandler = useMapBlock(

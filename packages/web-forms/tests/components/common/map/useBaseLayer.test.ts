@@ -1,7 +1,5 @@
-import {
-  BASE_LAYER_IDS,
-  type MapProvider,
-} from '@getodk/web-forms/components/common/map/base-layers.ts';
+import { BASE_LAYER_IDS } from '@getodk/web-forms/components/common/map/base-layers.ts';
+import type { MapProvider } from '@getodk/web-forms/lib/client-options.ts';
 import { useBaseLayer } from '@getodk/web-forms/components/common/map/useBaseLayer.ts';
 import { Map as OlMap } from 'ol';
 import type TileLayer from 'ol/layer/Tile';

@@ -1,8 +1,8 @@
 import {
   type BaseLayerId,
   DEFAULT_BASE_LAYER_ID,
-  type MapProvider,
 } from '@getodk/web-forms/components/common/map/base-layers.ts';
+import type { MapProvider } from '@getodk/web-forms/lib/client-options.ts';
 import { toGeoJsonCoordinateArray } from '@getodk/web-forms/components/common/map/geojson-parsers.ts';
 import {
   getModeConfig,
