@@ -14,7 +14,7 @@ import MapProperties from '@getodk/web-forms/components/common/map/MapProperties
 import MapStatusBar from '@getodk/web-forms/components/common/map/MapStatusBar.vue';
 import MapUpdateCoordsDialog from '@getodk/web-forms/components/common/map/MapUpdateCoordsDialog.vue';
 import { STATES, useMapBlock } from '@getodk/web-forms/components/common/map/useMapBlock.ts';
-import { type ClientOptions, DEFAULT_MAP_PROVIDER } from '@getodk/web-forms/lib/client-options.ts';
+import type { ClientOptions } from '@getodk/web-forms/lib/client-options.ts';
 import { CLIENT_OPTIONS, TRANSLATE, QUESTION_HAS_ERROR } from '@getodk/web-forms/lib/constants/injection-keys.ts';
 import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import type { Feature, FeatureCollection } from 'geojson';
@@ -59,8 +59,8 @@ const showErrorStyle = inject<ComputedRef<boolean>>(
 	computed(() => false)
 );
 const t: Translate = inject(TRANSLATE)!;
-const clientOptions = inject<ClientOptions | undefined>(CLIENT_OPTIONS, undefined);
-const mapProvider = clientOptions?.mapProvider ?? DEFAULT_MAP_PROVIDER;
+const clientOptions: ClientOptions = inject(CLIENT_OPTIONS)!;
+const mapProvider = clientOptions.mapProvider;
 const isGoogleProvider = mapProvider.kind === 'google';
 
 const mapHandler = useMapBlock(

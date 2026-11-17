@@ -28,9 +28,9 @@ const isDialogOpen = ref(false);
 		</template>
 
 		<template #default>
-			<p>{{ t('map_privacy_dialog.body.text') }}</p>
+			<p>{{ t('map_privacy_dialog.body.message') }}</p>
 			<p>
-				<a :href="GOOGLE_PRIVACY_POLICY_URL" target="_blank">{{ t('map_privacy_dialog.privacy_policy.link') }}</a>
+				<a :href="GOOGLE_PRIVACY_POLICY_URL" target="_blank">{{ t('map_privacy_dialog.privacy_policy.label') }}</a>
 			</p>
 		</template>
 	</Dialog>

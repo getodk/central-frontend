@@ -29,7 +29,9 @@ const failedSessionResponse = () => new Response(null, { status: FAILED_SESSION_
  */
 class GuardedGoogleSource extends Google {
   override async fetchSessionToken(url: string, config: RequestInit): Promise<Response> {
-    const response = await super.fetchSessionToken(url, config).catch(failedSessionResponse);
+    const response = await super
+      .fetchSessionToken(url, config)
+      .catch(() => failedSessionResponse());
     return this.disposed ? failedSessionResponse() : response;
   }
 }
