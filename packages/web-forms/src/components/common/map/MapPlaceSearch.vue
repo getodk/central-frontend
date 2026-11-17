@@ -92,7 +92,7 @@ onBeforeUnmount(() => cancel());
 				</li>
 			</ul>
 
-			<div v-else-if="hasError" class="search-row search-message" role="alert">
+			<div v-else-if="hasError" class="search-row search-error" role="alert">
 				{{ t('map_place_search.error.message') }}
 			</div>
 
@@ -192,5 +192,9 @@ button.search-row {
 
 .search-message {
 	color: var(--odk-muted-text-color);
+}
+
+.search-error {
+	color: var(--odk-error-text-color);
 }
 </style>
