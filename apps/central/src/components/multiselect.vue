@@ -430,9 +430,6 @@ const handleTriggerClick = (toggle) => {
 // SELECT ALL / NONE
 
 const resetSingle = () => {
-  // I'm not sure we really need a special check for selected.size === 0.
-  // Could we just always call apply()?
-
   const checkedInput = optionList.value.querySelector('input:checked');
   if (checkedInput != null) {
     checkedInput.checked = false;
