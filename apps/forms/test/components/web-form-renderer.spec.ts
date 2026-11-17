@@ -149,7 +149,7 @@ describe('WebFormRenderer', () => {
     await submit(component);
     expect(fetchSpy).toHaveBeenCalledTimes(1);
     const title = document.querySelector('dialog h1')!;
-    const intro = document.querySelector('dialog p')!;
+    const intro = document.querySelector('dialog .content')!;
     expect(title.textContent).to.equal('Submitted');
     expect(intro.textContent).to.equal('Thanks for your submission. You can fill this form out again or close if you’re done.');
   });
@@ -170,7 +170,7 @@ describe('WebFormRenderer', () => {
     expect(url).to.equal(`/v1/projects/1/forms/simple/submissions?st=sometoken&deviceID=${deviceId}`);
     expect(args.method).to.equal('POST');
     const title = document.querySelector('dialog h1')!;
-    const intro = document.querySelector('dialog p')!;
+    const intro = document.querySelector('dialog .content')!;
     expect(title.textContent).to.equal('Thank you for participating!');
     expect(intro.textContent).to.equal('You can close this window now.');
   });
@@ -185,7 +185,7 @@ describe('WebFormRenderer', () => {
     await submit(component);
     expect(fetchSpy).toHaveBeenCalledTimes(1);
     const title = document.querySelector('dialog h1')!;
-    const intro = document.querySelector('dialog p')!;
+    const intro = document.querySelector('dialog .content')!;
     expect(title.textContent).to.equal('Submitted');
     expect(intro.textContent).to.equal('Thanks for your submission. You can fill this form out again or close if you’re done.');
   });
@@ -203,7 +203,7 @@ describe('WebFormRenderer', () => {
     await submit(component);
     expect(fetchSpy).toHaveBeenCalledTimes(1);
     const title = document.querySelector('dialog h1')!;
-    const intro = document.querySelector('dialog p')!;
+    const intro = document.querySelector('dialog .content')!;
     expect(title.textContent).to.equal('Submitted');
     expect(intro.textContent).to.equal('Thanks for your submission. You can fill this form out again or close if you’re done.');
 
@@ -226,7 +226,7 @@ describe('WebFormRenderer', () => {
     await submit(component);
     expect(fetchSpy).toHaveBeenCalledTimes(1);
     const title = document.querySelector('dialog h1')!;
-    const intro = document.querySelector('dialog p')!;
+    const intro = document.querySelector('dialog .content')!;
     expect(title.textContent).to.equal('Submission error');
     expect(intro.textContent).to.match(/Your data was not submitted.*duplication instance ID/);
   });
@@ -244,7 +244,7 @@ describe('WebFormRenderer', () => {
     await submit(component);
     expect(fetchSpy).toHaveBeenCalledTimes(1);
     const title = document.querySelector('dialog h1')!;
-    const intro = document.querySelector('dialog p')!;
+    const intro = document.querySelector('dialog .content')!;
     expect(title.textContent).to.equal('Submission error');
     expect(intro.textContent).to.match(/Your data was not submitted.*The data that you are trying to upload is too large/);
   });
@@ -267,7 +267,7 @@ describe('WebFormRenderer', () => {
     const button = document.querySelector('dialog button')!;
     expect(button.textContent).to.equal('Close');
 
-    const intro = document.querySelector('dialog p')!;
+    const intro = document.querySelector('dialog .content')!;
     expect(intro.textContent).to.equal('Please log in here in a different browser tab and try again.');
   });
 
@@ -277,7 +277,7 @@ describe('WebFormRenderer', () => {
     await input.setValue('test');
     await submit(component);
     const title = document.querySelector('dialog h1')!;
-    const intro = document.querySelector('dialog p')!;
+    const intro = document.querySelector('dialog .content')!;
     expect(title.textContent).to.equal('Data is valid');
     expect(intro.textContent).to.equal('The data you entered is valid, but it was not submitted because this is a form preview.');
   });
@@ -323,7 +323,7 @@ describe('WebFormRenderer', () => {
     await uploadOnePixelGif(component);
     await submit(component);
     const title = document.querySelector('dialog h1')!;
-    const intro = document.querySelector('dialog p')!;
+    const intro = document.querySelector('dialog .content')!;
     expect(title.textContent).to.equal('Submitted');
     expect(intro.textContent).to.equal('Thanks for your submission. You can fill this form out again or close if you’re done.');
     expect(fetchSpy).toHaveBeenCalledTimes(2);
@@ -343,7 +343,7 @@ describe('WebFormRenderer', () => {
     await uploadOnePixelGif(component);
     await submit(component);
     const title = document.querySelector('dialog h1')!;
-    const intro = document.querySelector('dialog p')!;
+    const intro = document.querySelector('dialog .content')!;
     expect(title.textContent).to.equal('Submission error');
     expect(intro.textContent).to.match(/Your data was not fully submitted.*Please press the “Try again” button to retry/);
     expect(fetchSpy).toHaveBeenCalledTimes(2);
@@ -364,7 +364,7 @@ describe('WebFormRenderer', () => {
     await uploadOnePixelGif(component);
     await submit(component);
     const title = document.querySelector('dialog h1')!;
-    const intro = document.querySelector('dialog p')!;
+    const intro = document.querySelector('dialog .content')!;
     expect(title.textContent).to.equal('Submission error');
     expect(intro.textContent).to.match(/Your data was not fully submitted.*Please press the “Try again” button to retry/);
     expect(fetchSpy).toHaveBeenCalledTimes(2);
