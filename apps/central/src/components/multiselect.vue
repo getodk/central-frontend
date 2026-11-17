@@ -204,8 +204,7 @@ const descriptionId = (i) => `${idPrefix}-description${i}`;
 
 const optionList = ref(null);
 const dropdownEl = ref(null);
-
-
+const searchValue = ref('');
 
 ////////////////////////////////////////////////////////////////////////////////
 // SYNC props.modelValue AND CHECKBOXES
@@ -287,6 +286,21 @@ const emitIfChanged = () => {
   }
 };
 
+const apply = () => {
+  searchValue.value = '';
+  emitIfChanged();
+  dropdownEl.value?.hide();
+};
+
+const changeCheckbox = ({ target }) => {
+  if (props.single) {
+    // In the case of the single-selection, de-select the one (or zero) previously-selected values before selecting the new one.
+    for (const value of [...selected]) change(value);
+  }
+  change(props.options[target.dataset.index].value);
+  if (props.single) apply();
+};
+
 watch(
   () => props.modelValue,
   (modelValue) => {
@@ -331,7 +345,6 @@ if (buildMode === 'development') {
 ////////////////////////////////////////////////////////////////////////////////
 // SEARCH
 
-const searchValue = ref('');
 const searchMatches = shallowReactive(new Set());
 const textToSearch = computed(() => props.options.map(option => {
   const text = option.text != null ? option.text : option.value.toString();
@@ -405,12 +418,6 @@ const onHide = () => {
   changes.clear();
 };
 
-const apply = () => {
-  searchValue.value = '';
-  emitIfChanged();
-  dropdownEl.value?.hide();
-};
-
 const handleTriggerClick = (toggle) => {
   if (props.options != null && !props.disabled) {
     toggle();
@@ -422,32 +429,34 @@ const handleTriggerClick = (toggle) => {
 ////////////////////////////////////////////////////////////////////////////////
 // SELECT ALL / NONE
 
-const changeCheckbox = ({ target }) => {
-  if (props.single) {
-    // In the case of the single-selection, de-select the one (or zero) previously-selected values before selecting the new one.
-    for (const value of [...selected]) change(value);
+const resetSingle = () => {
+  // I'm not sure we really need a special check for selected.size === 0.
+  // Could we just always call apply()?
+
+  const checkedInput = optionList.value.querySelector('input:checked');
+  if (checkedInput != null) {
+    checkedInput.checked = false;
+    change(props.options[checkedInput.dataset.index].value);
   }
-  change(props.options[target.dataset.index].value);
-  if (props.single) apply();
+
+  apply();
 };
 
 // `true` for select all, `false` for select none.
 const changeAll = (selectAll) => {
-  if (selected.size === (selectAll ? props.options.length : 0)) {
-    if (props.single) dropdownEl.value?.hide();
+  if (props.single) {
+    resetSingle();
     return;
   }
 
-  // Only check/uncheck search matches when in multi-select mode
+  if (selected.size === (selectAll ? props.options.length : 0)) return;
   const selector = [selectAll ? 'input:not(:checked)' : 'input:checked'];
-  if (!props.single && searchValue.value !== '') selector.unshift('.search-match');
+  if (searchValue.value !== '') selector.unshift('.search-match');
 
   for (const input of optionList.value.querySelectorAll(selector.join(' '))) {
     input.checked = selectAll;
     change(props.options[input.dataset.index].value);
   }
-
-  if (props.single) apply();
 };
 
 
