@@ -1,5 +1,5 @@
 import MapPlaceSearch from '@getodk/web-forms/components/common/map/MapPlaceSearch.vue';
-import { DOMWrapper, mount } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { globalMountOptions } from '../../../helpers.ts';
 
@@ -37,7 +37,12 @@ describe('MapPlaceSearch', () => {
     return { component, input };
   };
 
-  const focusedPlace = () => new DOMWrapper(document.activeElement);
+  const spyOnFocus = () => vi.spyOn(HTMLElement.prototype, 'focus');
+
+  const focusedTexts = (focusSpy: ReturnType<typeof spyOnFocus>) => {
+    const elements = focusSpy.mock.contexts as HTMLElement[];
+    return elements.map((element) => element.textContent?.trim());
+  };
 
   const listenForDocumentKeydown = () => {
     const onKeydown = vi.fn();
@@ -78,17 +83,16 @@ describe('MapPlaceSearch', () => {
   });
 
   it('arrow keys move focus through the places and do not reach the map', async () => {
-    const { input } = await searchAndOpen(['London, UK', 'London, CA']);
+    const { component, input } = await searchAndOpen(['London, UK', 'London, CA']);
+    const [firstPlace, secondPlace] = component.findAll('button');
 
     const onDocumentKeydown = listenForDocumentKeydown();
-    input.element.focus();
+    const focusSpy = spyOnFocus();
     await input.trigger('keydown.down');
-    expect(focusedPlace().text()).toBe('London, UK');
-    await focusedPlace().trigger('keydown.down');
-    expect(focusedPlace().text()).toBe('London, CA');
-    await focusedPlace().trigger('keydown.up');
-    expect(focusedPlace().text()).toBe('London, UK');
+    await firstPlace!.trigger('keydown.down');
+    await secondPlace!.trigger('keydown.up');
 
+    expect(focusedTexts(focusSpy)).toEqual(['London, UK', 'London, CA', 'London, UK']);
     expect(onDocumentKeydown).not.toHaveBeenCalled();
     document.removeEventListener('keydown', onDocumentKeydown);
   });

@@ -35,7 +35,7 @@ const selectPlace = (place: PlaceSearchResult) => {
 const focusNeighbour = (event: KeyboardEvent, step: number) => {
 	const container = event.currentTarget as HTMLElement;
 	const controls = [...container.querySelectorAll<HTMLElement>('input, button')];
-	const current = controls.indexOf(document.activeElement as HTMLElement);
+	const current = controls.indexOf(event.target as HTMLElement);
 	controls[current + step]?.focus();
 };
 
