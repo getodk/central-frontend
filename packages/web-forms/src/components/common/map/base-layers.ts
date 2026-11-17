@@ -1,4 +1,4 @@
-import type { ClientOptions } from '@getodk/web-forms/lib/client-options.ts';
+import type { MapProvider } from '@getodk/web-forms/lib/client-options.ts';
 import TileLayer from 'ol/layer/Tile';
 import { OSM } from 'ol/source';
 import Google, { type Options as GoogleSourceOptions } from 'ol/source/Google';
@@ -17,13 +17,6 @@ const GOOGLE_LAYER_OPTIONS: Record<BaseLayerId, Omit<GoogleSourceOptions, 'key'>
   [BASE_LAYER_IDS.ROADMAP]: { mapType: 'roadmap' },
   [BASE_LAYER_IDS.SATELLITE]: { mapType: 'satellite', layerTypes: ['layerRoadmap'] },
   [BASE_LAYER_IDS.TERRAIN]: { mapType: 'terrain', layerTypes: ['layerRoadmap'] },
-};
-
-export type MapProvider = { kind: 'google'; apiKey: string } | { kind: 'osm' };
-
-export const resolveMapProvider = (clientOptions: ClientOptions | undefined): MapProvider => {
-  const apiKey = clientOptions?.googleMapsKey;
-  return apiKey ? { kind: 'google', apiKey } : { kind: 'osm' };
 };
 
 const FAILED_SESSION_STATUS = 410;

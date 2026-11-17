@@ -3,13 +3,13 @@ import { createApp } from 'vue';
 import PrimeVue from 'primevue/config';
 import { odkThemePreset } from '../../../packages/web-forms/src/odk-theme-preset';
 
-import { webFormsPlugin } from '@getodk/web-forms';
+import { type MapProvider, webFormsPlugin } from '@getodk/web-forms';
 import Forms from './Forms.vue';
 
 import router from './router';
 import { i18n } from './i18n';
 import initSentry from './utils/sentry';
-import { GOOGLE_MAPS_KEY } from './utils/injection-keys';
+import { MAP_PROVIDER } from './utils/injection-keys';
 
 import './assets/style.scss';
 
@@ -29,11 +29,15 @@ const fetchClientConfig = async (): Promise<ClientConfig> => {
   }
 };
 
+const resolveMapProvider = (googleMapsKey: string | undefined): MapProvider => {
+  return googleMapsKey ? { kind: 'google', apiKey: googleMapsKey } : { kind: 'osm' };
+};
+
 const clientConfig = await fetchClientConfig();
 
 const app = createApp(Forms as Component);
 initSentry(app, 'web-forms', clientConfig.sentryDsn);
-app.provide(GOOGLE_MAPS_KEY, clientConfig.googleMapsKey);
+app.provide(MAP_PROVIDER, resolveMapProvider(clientConfig.googleMapsKey));
 app.use(PrimeVue, { theme: { preset: odkThemePreset, options: { darkModeSelector: false } } });
 app.use(webFormsPlugin);
 app.use(i18n);

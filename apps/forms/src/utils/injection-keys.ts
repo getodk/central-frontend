@@ -1,3 +1,4 @@
+import type { MapProvider } from '@getodk/web-forms';
 import type { InjectionKey } from 'vue';
 
-export const GOOGLE_MAPS_KEY: InjectionKey<string | undefined> = Symbol('googleMapsKey');
+export const MAP_PROVIDER: InjectionKey<MapProvider> = Symbol('mapProvider');

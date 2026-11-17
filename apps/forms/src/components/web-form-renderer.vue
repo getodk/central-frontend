@@ -13,7 +13,7 @@ import { hideSpinner } from '../utils/spinner';
 import { deleteLastSaved, getLastSaved, setLastSaved } from '../utils/last-saved';
 import { hasSubmitted, setSubmitted } from '../utils/once-store';
 import { setLocale } from '../i18n';
-import { GOOGLE_MAPS_KEY } from '../utils/injection-keys';
+import { MAP_PROVIDER } from '../utils/injection-keys';
 
 defineOptions({
   name: 'WebFormRenderer'
@@ -46,7 +46,7 @@ const isPublicLink = computed(() => props.actionType === 'public-link');
 const lastSavedXml = ref<string | undefined>();
 
 const deviceID = getDeviceId();
-const googleMapsKey = inject(GOOGLE_MAPS_KEY);
+const mapProvider = inject(MAP_PROVIDER);
 
 const visibleModal = ref();
 
@@ -287,7 +287,7 @@ onMounted(async () => {
     :device-id="deviceID"
     :instance-defaults="defaultParameters"
     :last-saved-xml="lastSavedXml"
-    :google-maps-key="googleMapsKey"
+    :map-provider="mapProvider"
     @loaded="webFormLoaded"
     @languageSelected="setLocale"
     @submit="handleSubmit"/>
