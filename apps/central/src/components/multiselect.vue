@@ -87,7 +87,7 @@ except according to the terms contained in the LICENSE file.
       <li class="after-list">
         <slot name="after-list" :selected="selected"></slot>
       </li>
-      <li class="action-bar">
+      <li v-if="!single" class="action-bar">
         <button type="button" class="btn btn-primary" :aria-disabled="changes.size === 0" @click="apply()">
           {{ $t('action.apply') }}
         </button>
@@ -203,8 +203,8 @@ id += 1;
 const descriptionId = (i) => `${idPrefix}-description${i}`;
 
 const optionList = ref(null);
-
-
+const dropdownEl = ref(null);
+const searchValue = ref('');
 
 ////////////////////////////////////////////////////////////////////////////////
 // SYNC props.modelValue AND CHECKBOXES
@@ -260,14 +260,6 @@ const syncWithModelValue = () => {
   needsSync = false;
 };
 
-const changeCheckbox = ({ target }) => {
-  if (props.single) {
-    // In the case of the single-selection, de-select the one (or zero) previously-selected values before selecting the new one.
-    for (const value of [...selected]) change(value);
-  }
-  change(props.options[target.dataset.index].value);
-};
-
 // emittedValue is used for an optimization, to avoid an unnecessary sync.
 // Unless it is `null`, it holds the last value emitted since props.modelValue
 // was last set. It equals `null` if no value has been emitted since then (or if
@@ -292,6 +284,21 @@ const emitIfChanged = () => {
     emittedValue = [...selected];
     emit('update:modelValue', emittedValue);
   }
+};
+
+const apply = () => {
+  searchValue.value = '';
+  emitIfChanged();
+  dropdownEl.value?.hide();
+};
+
+const changeCheckbox = ({ target }) => {
+  if (props.single) {
+    // In the case of the single-selection, de-select the one (or zero) previously-selected values before selecting the new one.
+    for (const value of [...selected]) change(value);
+  }
+  change(props.options[target.dataset.index].value);
+  if (props.single) apply();
 };
 
 watch(
@@ -338,7 +345,6 @@ if (buildMode === 'development') {
 ////////////////////////////////////////////////////////////////////////////////
 // SEARCH
 
-const searchValue = ref('');
 const searchMatches = shallowReactive(new Set());
 const textToSearch = computed(() => props.options.map(option => {
   const text = option.text != null ? option.text : option.value.toString();
@@ -402,8 +408,6 @@ watch(searchValue, (value) => {
 ////////////////////////////////////////////////////////////////////////////////
 // DROPDOWN INTEGRATION
 
-const dropdownEl = ref(null);
-
 const onShow = () => {
   syncWithModelValue();
 };
@@ -412,12 +416,6 @@ const onHide = () => {
   searchValue.value = '';
   needsSync = changes.size !== 0;
   changes.clear();
-};
-
-const apply = () => {
-  searchValue.value = '';
-  emitIfChanged();
-  dropdownEl.value?.hide();
 };
 
 const handleTriggerClick = (toggle) => {
@@ -431,8 +429,23 @@ const handleTriggerClick = (toggle) => {
 ////////////////////////////////////////////////////////////////////////////////
 // SELECT ALL / NONE
 
+const resetSingle = () => {
+  const input = optionList.value.querySelector('input:checked');
+  if (input != null) {
+    input.checked = false;
+    change(props.options[input.dataset.index].value);
+  }
+
+  apply();
+};
+
 // `true` for select all, `false` for select none.
 const changeAll = (selectAll) => {
+  if (props.single) {
+    resetSingle();
+    return;
+  }
+
   if (selected.size === (selectAll ? props.options.length : 0)) return;
   const selector = [selectAll ? 'input:not(:checked)' : 'input:checked'];
   if (searchValue.value !== '') selector.unshift('.search-match');

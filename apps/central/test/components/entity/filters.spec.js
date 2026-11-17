@@ -382,7 +382,6 @@ describe('EntityFilters', () => {
         const filter = component.get('#entity-filters-view-as');
         await filter.get('.dropdown-trigger').trigger('click');
         await filter.find('input[type="radio"]').setValue(true);
-        await filter.get('.action-bar button').trigger('click');
       })
       .respondWithData(() => ({
         ...testData.entityOData(1),
@@ -502,12 +501,7 @@ describe('EntityFilters', () => {
           attachTo: document.body
         })
           .complete()
-          .request(async component => {
-            const filter = component.get('#entity-filters-view-as');
-            await filter.get('.dropdown-trigger').trigger('click');
-            await filter.get('.change-all.single button').trigger('click'); // reset to nothing selected
-            await filter.get('.action-bar button').trigger('click');
-          })
+          .request(changeMultiselect('#entity-filters-view-as', []))
           .respondWithData(testData.entityOData)
           .afterResponse(app => {
             should.not.exist(app.vm.$route.query.viewAs);
