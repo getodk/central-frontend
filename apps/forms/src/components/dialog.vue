@@ -10,6 +10,7 @@ export type Status = 'error' | 'loading' | 'none' | 'success';
 
 export interface DialogProps {
   status: Status | undefined;
+  hideable: boolean;
 }
 const props = defineProps<DialogProps>();
 
@@ -27,7 +28,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <dialog ref="complete-dialog">
+  <dialog ref="complete-dialog" :closedby="props.hideable ? 'any' : 'none'">
     <span class="status" v-if="props.status !== 'none'">
       <span v-if="props.status === 'loading'" class="spinner"></span>
       <svg v-else :class="props.status === 'error' ? 'error' : 'success'" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -64,7 +65,7 @@ dialog {
   h1 {
     font-weight: normal;
   }
-  pre {
+  :deep(pre) {
     white-space: pre-wrap;
     overflow-wrap: break-word;
   }

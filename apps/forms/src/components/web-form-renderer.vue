@@ -359,7 +359,7 @@ onMounted(async () => {
     v-on="autosaveEnabled ? { updated: storeAutosaveUpdate } : {}"
     />
 
-  <Dialog :status="visibleModal?.status">
+  <Dialog :status="visibleModal?.status" :hideable="!!visibleModal?.hideable">
     <template #header v-if="visibleModal?.type">
       {{ $t(visibleModal.type + '.title') }}
     </template>

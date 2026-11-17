@@ -240,7 +240,7 @@ load();
 
 <template>
   <template v-if="!loadingState">
-    <Dialog v-if="errorCode === 404" :status="'error'">
+    <Dialog v-if="errorCode === 404" :status="'error'" :hideable="false">
       <template #header>
         {{ $t('formNotFound.title') }}
       </template>
@@ -248,7 +248,7 @@ load();
         {{ $t('formNotFound.body') }}
       </template>
     </Dialog>
-    <Dialog v-else-if="errorCode" :status="'error'">
+    <Dialog v-else-if="errorCode" :status="'error'" :hideable="false">
       <template #header>
         {{ $t('errorNotProblem.title') }}
       </template>
