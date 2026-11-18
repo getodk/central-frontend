@@ -118,6 +118,7 @@ const handleResult = () => {
   if (submissionResult.primaryInstanceResult.success && attachmentResultArr.every(r => r.success)) {
 
     clearForm(props.form.once ? {} : { next: POST_SUBMIT__NEW_INSTANCE });
+    window.removeEventListener('beforeunload', beforeUnload);
 
     if (isPublicLink.value) {
       visibleModal.value = { type: 'thankYou', status: 'success', hideable: false };
@@ -251,7 +252,6 @@ const handleSubmit = async (
   if (submissionResult.primaryInstanceResult.success) {
     deleteAutosave(props.form);
     updateLastSaved(hasLastSaved);
-    window.removeEventListener('beforeunload', beforeUnload);
   }
 };
 
@@ -321,6 +321,7 @@ const loadAutosave = async () => {
       return true;
     }
   }
+  // autosave is not configured so register beforeunload confirm dialog instead
   if (confirmClose.value) {
     window.addEventListener('beforeunload', beforeUnload);
   }
