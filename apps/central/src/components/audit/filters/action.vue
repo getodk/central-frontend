@@ -130,7 +130,7 @@ export default {
 {
   "en": {
     "action": {
-      // This is used to select all the actions in a category in a dropdown
+      // This is shown in a list of actions performed on the server. It refers to all the actions in a certain category.
       "all": "All"
     }
   }
