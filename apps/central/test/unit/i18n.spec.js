@@ -106,7 +106,7 @@ describe('util/i18n', () => {
         const { i18n } = container;
         for (const [count, form] of casesForLocale) {
           it(`uses the correct form for ${count}`, () => {
-            i18n.tc(path, count).should.equal(form);
+            i18n.t(path, count).should.equal(form);
           });
         }
       });
@@ -121,7 +121,7 @@ describe('util/i18n', () => {
     });
     i18n.locale = 'la';
 
-    const i18nProps = { $tc: i18n.tc.bind(i18n), $n: i18n.n.bind(i18n), $tcn };
+    const i18nProps = { $t: i18n.t.bind(i18n), $n: i18n.n.bind(i18n), $tcn };
 
     it('returns the singular', () => {
       i18nProps.$tcn('forms', 1).should.equal('1 Forma');
