@@ -15,11 +15,15 @@ import {
 	SUBMIT_PRESSED,
 	TOUCHED_QUESTIONS,
 } from '@getodk/web-forms/lib/constants/injection-keys.ts';
-import type { ClientOptions } from '@getodk/web-forms/lib/client-options.ts';
+import {
+	type ClientOptions,
+	DEFAULT_MAP_PROVIDER,
+	type MapProvider,
+} from '@getodk/web-forms/lib/client-options.ts';
 import type { FormStateSuccessResult } from '@getodk/web-forms/lib/init/form-state.ts';
 import { initializeFormState } from '@getodk/web-forms/lib/init/initialize-form-state.ts';
 import { loadFormState } from '@getodk/web-forms/lib/init/load-form-state';
-import type { EditInstanceOptions, FormOptions } from '@getodk/web-forms/lib/init/load-form-state.ts';
+import type { EditInstanceOptions, FormOptions, RestoreInstanceOptions } from '@getodk/web-forms/lib/init/load-form-state.ts';
 import { useNavigationTarget } from '@getodk/web-forms/lib/useNavigationTarget.ts';
 import type { RevealViolations } from '@getodk/web-forms/lib/useRevealViolations.ts';
 import { updateSubmittedFormState } from '@getodk/web-forms/lib/init/update-submitted-form-state.ts';
@@ -37,6 +41,7 @@ import type {
 	MonolithicInstancePayload,
 	InstanceDefaults,
 	PreloadProperties,
+	InstanceSnapshot,
 } from '@getodk/xforms-engine';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
@@ -51,6 +56,7 @@ import {
 	readonly,
 	ref,
 	watch,
+	type WatchHandle,
 } from 'vue';
 import { FormInitializationError } from '@getodk/web-forms/lib/error/FormInitializationError';
 import { FormDesignError } from '@getodk/xpath';
@@ -79,9 +85,14 @@ export interface OdkWebFormsProps {
 	 */
 	readonly editInstance?: EditInstanceOptions;
 
+	readonly restoreInstance?: RestoreInstanceOptions;
+
 	readonly lastSavedXml?: string;
 
-	readonly googleMapsKey?: string;
+	/**
+	 * Base map provider for map questions. Defaults to OpenStreetMap.
+	 */
+	readonly mapProvider?: MapProvider;
 }
 
 const props = defineProps<OdkWebFormsProps>();
@@ -106,6 +117,7 @@ const hostSubmissionResultCallbackFactory = (
 			lastSavedXml
 		};
 		state.value = updateSubmittedFormState(submissionResult, currentState, options);
+		registerAutosaveListener();
 	};
 
 	return (hostResult) => {
@@ -123,6 +135,7 @@ type OdkWebFormEmits = {
 		submissionPayload: ChunkedInstancePayload,
 		callback: HostSubmissionResultCallback,
 	];
+	updated: [instance: InstanceSnapshot];
 };
 
 /**
@@ -218,7 +231,10 @@ const formOptions = readonly<FormOptions>({
 	attachmentMaxSize: props.attachmentMaxSize,
 });
 provide(FORM_OPTIONS, formOptions);
-provide(CLIENT_OPTIONS, readonly<ClientOptions>({ googleMapsKey: props.googleMapsKey }));
+provide(
+	CLIENT_OPTIONS,
+	readonly<ClientOptions>({ mapProvider: props.mapProvider ?? DEFAULT_MAP_PROVIDER })
+);
 const mediaCache = new Map<JRResourceURLString, ObjectURL>();
 provide(FORM_MEDIA_CACHE, mediaCache);
 
@@ -234,6 +250,7 @@ provide(IS_FORM_EDIT_MODE, readonly(isFormEditMode));
 const { setLanguage, getLanguage, t } = useLocale(computed(() => state.value.root));
 provide(TRANSLATE, t);
 const { navigateToFirstViolation, navigateToNode } = useNavigationTarget(() => state.value.root);
+const AUTOSAVE_TIMEOUT = 1_000; // in millis
 
 if (isEmitSubscribed('onLanguageSelected')) {
 	watch(
@@ -252,6 +269,44 @@ onErrorCaptured(err => {
 		return false;
 	}
 });
+
+const emitAutosave = () => {
+	autosaveTimeout = undefined;
+	const snapshot = state.value?.root?.prepareInstanceSnapshot();
+	if (snapshot) {
+		emit('updated', snapshot);
+	}
+};
+
+let autosaveTimeout: ReturnType<typeof setTimeout> | undefined;
+let autosaveWatchCancel: WatchHandle | undefined;
+
+const registerAutosaveListener = () => {
+	if (autosaveTimeout) {
+		// the form has been reset - do not emit autosaves from the previous form instance
+		clearTimeout(autosaveTimeout);
+		autosaveTimeout = undefined;
+	}
+	if (autosaveWatchCancel) {
+		// cancel any previous watchers before registering the new one
+		autosaveWatchCancel();
+	}
+	if (isEmitSubscribed('onUpdated') && state.value.root) {
+		autosaveWatchCancel = watch(state.value.root.instanceState, () => {
+			if (autosaveTimeout) {
+				clearTimeout(autosaveTimeout);
+			}
+			autosaveTimeout = setTimeout(() => emitAutosave(), AUTOSAVE_TIMEOUT);
+		});
+	};
+};
+
+const unmountAutosave = () => {
+	if (autosaveTimeout) {
+		clearTimeout(autosaveTimeout);
+		emitAutosave();
+	}
+};
 
 watch(
 	() => state.value,
@@ -273,10 +328,12 @@ const init = async () => {
 	state.value = await loadFormState(props.formXml, {
 		form: formOptions,
 		editInstance: props.editInstance ?? null,
+		restoreInstance: props.restoreInstance ?? null,
 		preloadProperties: props.preloadProperties,
 		instanceDefaults: props.instanceDefaults,
 		deviceID: props.deviceId
 	});
+	registerAutosaveListener();
 	emit('loaded');
 };
 
@@ -294,6 +351,8 @@ const handleSubmit = (currentState: FormStateSuccessResult) => {
 	releaseFocus(); // so follow-up dialogs don't restore focus here and scroll back to it
 
 	if (root.validationState.violations.length === 0) {
+		unmountAutosave();
+
 		// eslint-disable-next-line @typescript-eslint/no-floating-promises
 		emitSubmit(currentState);
 		// eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -372,6 +431,7 @@ const showValidationError = computed(() => {
 onUnmounted(() => {
 	mediaCache.forEach((url) => URL.revokeObjectURL(url));
 	mediaCache.clear();
+	unmountAutosave();
 	resetComponentState();
 });
 </script>
@@ -476,7 +536,7 @@ onUnmounted(() => {
 
 .odk-form {
 	font-family: var(--odk-font-family);
-	font-weight: 400;
+	font-weight: var(--odk-font-weight-normal);
 	font-size: var(--odk-base-font-size);
 	background: var(--odk-muted-background-color);
 	color: var(--odk-text-color);
@@ -521,7 +581,7 @@ onUnmounted(() => {
 			:deep(.p-message-text) {
 				display: flex;
 				align-items: center;
-				font-weight: 400;
+				font-weight: var(--odk-font-weight-normal);
 				flex: 1;
 			}
 
@@ -560,9 +620,9 @@ onUnmounted(() => {
 		background: var(--odk-muted-background-color);
 
 		.anchor {
-			color: var(--odk-muted-text-color);
+			color: var(--odk-text-color);
 			font-size: 18px;
-			font-weight: 400;
+			font-weight: var(--odk-font-weight-light);
 			text-decoration: none;
 
 			span.caption {
@@ -579,8 +639,7 @@ onUnmounted(() => {
 
 		.version {
 			font-size: 14px;
-			font-weight: 300;
-			color: var(--odk-muted-text-color);
+			font-weight: var(--odk-font-weight-light);
 			margin-top: var(--odk-spacing-s);
 		}
 	}

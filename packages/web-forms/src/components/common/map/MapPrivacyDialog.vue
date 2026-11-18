@@ -24,13 +24,13 @@ const isDialogOpen = ref(false);
 
 	<Dialog v-model:visible="isDialogOpen" modal class="map-block-dialog" :draggable="false">
 		<template #header>
-			<strong>{{ t('map_privacy_dialog.header.title') }}</strong>
+			<h3>{{ t('map_privacy_dialog.header.title') }}</h3>
 		</template>
 
 		<template #default>
-			<p>{{ t('map_privacy_dialog.body.text') }}</p>
+			<p>{{ t('map_privacy_dialog.body.message') }}</p>
 			<p>
-				<a :href="GOOGLE_PRIVACY_POLICY_URL" target="_blank">{{ t('map_privacy_dialog.privacy_policy.link') }}</a>
+				<a :href="GOOGLE_PRIVACY_POLICY_URL" target="_blank">{{ t('map_privacy_dialog.privacy_policy.label') }}</a>
 			</p>
 		</template>
 	</Dialog>

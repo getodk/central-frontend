@@ -56,6 +56,11 @@
 
   .p-dialog-header {
     font-size: var(--odk-dialog-title-font-size);
+
+    h3 {
+      margin: 0;
+      font-size: inherit;
+    }
   }
 
   .p-dialog-content *,

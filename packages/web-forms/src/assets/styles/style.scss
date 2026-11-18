@@ -5,6 +5,7 @@
 
 @use 'primeflex/primeflex.scss' as pf;
 @use 'sass:map';
+@use './odk-design-system.scss';
 @forward 'breakpoints';
 
 /**
@@ -24,12 +25,12 @@
   --odk-answer-font-size: #{map.get(pf.$font-size-props, 'text-base')};
   --odk-hint-font-size: #{map.get(pf.$font-size-props, 'text-sm')};
 
-  --odk-primary-text-color: var(--p-primary-500);
-  --odk-primary-background-color: var(--p-primary-500);
-  --odk-primary-hover-background-color: var(--p-primary-300);
-  --odk-primary-light-background-color: var(--p-primary-100);
-  --odk-primary-lighter-background-color: var(--p-primary-50);
-  --odk-primary-border-color: var(--p-primary-500);
+  --odk-primary-text-color: var(--odk-blue-600);
+  --odk-primary-background-color: var(--odk-blue-600);
+  --odk-primary-hover-background-color: var(--odk-blue-700);
+  --odk-primary-light-background-color: var(--odk-blue-200);
+  --odk-primary-lighter-background-color: var(--odk-blue-100);
+  --odk-primary-border-color: var(--odk-blue-600);
 
   --odk-error-text-color: var(--p-red-600);
   --odk-error-background-color: var(--p-red-50);
@@ -69,6 +70,8 @@
   --odk-icon-s: 14px;
   --odk-icon-m: 20px;
 
+  --odk-transition-duration: 0.2s;
+
   /*
 	 * This project uses a centralized z-index layering system to manage the stacking order of UI
 	 * elements, preventing overlap issues and ensuring maintainability.
@@ -100,6 +103,10 @@
 
   /* Critical UI elements (e.g., loading spinners, toast notifications) */
   --odk-z-index-topmost: 1000;
+
+  --odk-font-weight-light: 300;
+  --odk-font-weight-normal: 400;
+  --odk-font-weight-semibold: 500;
 }
 
 @mixin toggle-visibility($display: inline-block) {

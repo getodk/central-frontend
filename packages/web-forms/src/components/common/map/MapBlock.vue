@@ -5,7 +5,6 @@
  * load on demand. Avoids main bundle bloat.
  */
 import IconSVG from '@getodk/web-forms/components/common/IconSVG.vue';
-import { resolveMapProvider } from '@getodk/web-forms/components/common/map/base-layers.ts';
 import { type Mode, type SingleFeatureType } from '@getodk/web-forms/components/common/map/getModeConfig.ts';
 import MapAdvancedPanel from '@getodk/web-forms/components/common/map/MapAdvancedPanel.vue';
 import MapConfirmDialog from '@getodk/web-forms/components/common/map/MapConfirmDialog.vue';
@@ -61,9 +60,9 @@ const showErrorStyle = inject<ComputedRef<boolean>>(
 	computed(() => false)
 );
 const t: Translate = inject(TRANSLATE)!;
-const clientOptions = inject<ClientOptions | undefined>(CLIENT_OPTIONS, undefined);
-const mapProvider = resolveMapProvider(clientOptions);
-const isGoogleProvider = mapProvider.kind === 'google';
+const clientOptions: ClientOptions = inject(CLIENT_OPTIONS)!;
+const mapProvider = clientOptions.mapProvider;
+const isGoogleProvider = mapProvider.name === 'google';
 
 const mapHandler = useMapBlock(
 	{ mode: props.mode, singleFeatureType: props.singleFeatureType, provider: mapProvider },
@@ -249,7 +248,7 @@ const toggleFullScreen = () => {
 
 				<!-- Inline check instead of isGoogleProvider since TypeScript only narrows mapProvider for apiKey this way. -->
 				<MapPlaceSearch
-					v-if="mapProvider.kind === 'google' && !disabled"
+					v-if="mapProvider.name === 'google' && !disabled"
 					:api-key="mapProvider.apiKey"
 					@select-place="mapHandler.fitToViewport"
 				/>

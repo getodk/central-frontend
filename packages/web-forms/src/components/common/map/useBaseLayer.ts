@@ -2,8 +2,8 @@ import {
   type BaseLayerId,
   createBaseLayer,
   DEFAULT_BASE_LAYER_ID,
-  type MapProvider,
 } from '@getodk/web-forms/components/common/map/base-layers.ts';
+import type { MapProvider } from '@getodk/web-forms/lib/client-options.ts';
 import type { Map as OlMap } from 'ol';
 import type TileLayer from 'ol/layer/Tile';
 import type TileSource from 'ol/source/Tile';
@@ -42,7 +42,7 @@ export function useBaseLayer(
 
   const watchSessionErrors = (layer: TileLayer) => {
     const source = layer.getSource();
-    if (provider.kind === 'google' && source) {
+    if (provider.name === 'google' && source) {
       source.on('change', () => reportSessionError(source, onProviderError));
     }
   };

@@ -51,8 +51,8 @@ describe('Map Styles', () => {
       ],
       style: {
         'stroke-width': 4,
-        'stroke-color': '#3E9FCC',
-        'fill-color': 'rgba(233, 248, 255, 0.8)',
+        'stroke-color': '#3aa5c5',
+        'fill-color': 'rgba(213, 238, 245, 0.8)',
       },
     });
 
@@ -65,7 +65,7 @@ describe('Map Styles', () => {
       ],
       style: {
         'stroke-width': 20,
-        'stroke-color': 'rgba( 255, 255, 255, 0.1)',
+        'stroke-color': 'rgba(255, 255, 255, 0.1)',
       },
     });
   });
@@ -87,7 +87,7 @@ describe('Map Styles', () => {
       style: [
         {
           'circle-radius': 30,
-          'circle-fill-color': 'rgba(148, 224, 237, 0.7)',
+          'circle-fill-color': 'rgba(171, 220, 234, 0.7)',
           'circle-displacement': [0, 22],
         },
         {
@@ -119,13 +119,13 @@ describe('Map Styles', () => {
       style: [
         {
           'stroke-width': 20,
-          'stroke-color': 'rgba(148, 224, 237, 0.7)',
+          'stroke-color': 'rgba(171, 220, 234, 0.7)',
           'fill-color': 'transparent',
         },
         {
           'stroke-width': 4,
-          'stroke-color': '#3E9FCC',
-          'fill-color': 'rgba(233, 248, 255, 0.8)',
+          'stroke-color': '#3aa5c5',
+          'fill-color': 'rgba(213, 238, 245, 0.8)',
         },
         {
           'stroke-width': 6,
@@ -185,8 +185,8 @@ describe('Map Styles', () => {
         },
         {
           'stroke-width': 4,
-          'stroke-color': '#3E9FCC',
-          'fill-color': 'rgba(233, 248, 255, 0.8)',
+          'stroke-color': '#3aa5c5',
+          'fill-color': 'rgba(213, 238, 245, 0.8)',
         },
         {
           'stroke-width': 6,
@@ -201,8 +201,8 @@ describe('Map Styles', () => {
     const image = style?.getImage() as CircleStyle;
     expect(image).toBeInstanceOf(CircleStyle);
     expect(image.getRadius()).toBe(4);
-    expect(image.getFill()?.getColor()).toBe('#3488AF');
-    expect(image.getStroke()?.getColor()).toBe('#3488AF');
+    expect(image.getFill()?.getColor()).toBe('#0a80a3');
+    expect(image.getStroke()?.getColor()).toBe('#0a80a3');
     expect(image.getStroke()?.getWidth()).toBe(2);
   });
 
@@ -254,11 +254,11 @@ describe('Map Styles', () => {
       expect(styles.length).toBe(4);
 
       const featureStyle = styles[0]!;
-      expectFeatureDrawStyle(featureStyle, '#82C3E0', 4, 'rgba(233, 248, 255, 0.8)');
+      expectFeatureDrawStyle(featureStyle, '#75c3da', 4, 'rgba(213, 238, 245, 0.8)');
 
       const unselectedStyle = styles[1]!;
       const unselectedImage = unselectedStyle.getImage() as CircleStyle;
-      expectVertexStyle(unselectedImage, '#82C3E0', '#FFFFFF');
+      expectVertexStyle(unselectedImage, '#75c3da', '#ffffff');
       const unselectedGeom = unselectedStyle.getGeometryFunction()(feature) as MultiPoint;
       expect(unselectedGeom).toBeInstanceOf(MultiPoint);
       expect(unselectedGeom.getCoordinates()).toEqual([
@@ -268,7 +268,7 @@ describe('Map Styles', () => {
 
       const lastStyle = styles[2]!;
       const lastImage = lastStyle.getImage() as CircleStyle;
-      expectVertexStyle(lastImage, '#3488AF', '#FFFFFF');
+      expectVertexStyle(lastImage, '#0a80a3', '#ffffff');
       const lastGeom = lastStyle.getGeometryFunction()(feature) as Point;
       expect(lastGeom).toBeInstanceOf(Point);
       expect(lastGeom.getCoordinates()).toEqual([2, 2]);
@@ -285,11 +285,11 @@ describe('Map Styles', () => {
       expect(styles.length).toBe(4);
 
       const featureStyle = styles[0]!;
-      expectFeatureDrawStyle(featureStyle, '#3488AF', 4, 'rgba(233, 248, 255, 0.8)');
+      expectFeatureDrawStyle(featureStyle, '#0a80a3', 4, 'rgba(213, 238, 245, 0.8)');
 
       const unselectedStyle = styles[1]!;
       const unselectedImage = unselectedStyle.getImage() as CircleStyle;
-      expectVertexStyle(unselectedImage, '#3488AF', '#FFFFFF');
+      expectVertexStyle(unselectedImage, '#0a80a3', '#ffffff');
 
       const lastStyle = styles[2]!;
       const lastGeom = lastStyle.getGeometryFunction()(feature) as Point;
@@ -308,11 +308,11 @@ describe('Map Styles', () => {
       expect(styles.length).toBe(4);
 
       const featureStyle = styles[0]!;
-      expectFeatureDrawStyle(featureStyle, '#82C3E0', 4, 'rgba(233, 248, 255, 0.8)');
+      expectFeatureDrawStyle(featureStyle, '#75c3da', 4, 'rgba(213, 238, 245, 0.8)');
 
       const unselectedStyle = styles[1]!;
       const unselectedImage = unselectedStyle.getImage() as CircleStyle;
-      expectVertexStyle(unselectedImage, '#82C3E0', '#FFFFFF');
+      expectVertexStyle(unselectedImage, '#75c3da', '#ffffff');
 
       const lastStyle = styles[2]!;
       const lastGeom = lastStyle.getGeometryFunction()(feature) as Point;
@@ -320,7 +320,7 @@ describe('Map Styles', () => {
 
       const selectedStyle = styles[3]!;
       const selectedImage = selectedStyle.getImage() as CircleStyle;
-      expectVertexStyle(selectedImage, '#FFFFFF', '#3488AF');
+      expectVertexStyle(selectedImage, '#ffffff', '#0a80a3');
       const selectedGeom = selectedStyle.getGeometryFunction()(feature) as Point;
       expect(selectedGeom).toBeInstanceOf(Point);
       expect(selectedGeom.getCoordinates()).toEqual([1, 1]);
@@ -341,7 +341,7 @@ describe('Map Styles', () => {
       expect(styles.length).toBe(4);
 
       const featureStyle = styles[0]!;
-      expectFeatureDrawStyle(featureStyle, '#82C3E0', 4, 'rgba(233, 248, 255, 0.8)');
+      expectFeatureDrawStyle(featureStyle, '#75c3da', 4, 'rgba(213, 238, 245, 0.8)');
 
       const unselectedStyle = styles[1]!;
       const unselectedGeom = unselectedStyle.getGeometryFunction()(feature) as MultiPoint;
