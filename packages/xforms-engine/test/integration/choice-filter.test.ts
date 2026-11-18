@@ -124,7 +124,7 @@ describe('Choice filters', () => {
 
       expect(() => scenario.answer('/data/sel', 'one')).not.toThrow();
 
-      const restored = await scenario.proposed_serializeAndRestoreInstanceState();
+      const restored = await scenario.serializeAndRestoreInstanceState();
 
       expect(typeof restored.answerOf('/data/sel').getValue()).toBe('string');
       expect(() => restored.answer('/data/sel', 'two')).not.toThrow();
@@ -244,7 +244,7 @@ describe('Choice filters', () => {
       scenario.answer('/data/sel', 'one');
       expect(scenario.answerOf('/data/sel').getValue()).toBe('one');
 
-      const restored = await scenario.proposed_serializeAndRestoreInstanceState();
+      const restored = await scenario.serializeAndRestoreInstanceState();
 
       expect(restored.answerOf('/data/flt').getValue()).toBe('one');
       expect(restored.answerOf('/data/sel').getValue()).toBe('one');

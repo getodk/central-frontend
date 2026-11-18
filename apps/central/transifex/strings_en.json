@@ -764,6 +764,10 @@
       "string": "Public Access Link",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
+    "publicLinks": {
+      "string": "Public Links",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
     "user": {
       "string": "User",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
@@ -2602,13 +2606,15 @@
     },
     "EntityFiltersViewAs": {
       "noUserSelected": {
-        "string": "Me"
+        "string": "All",
+        "developer_comment": "\"All\" refers to users (in the form of app users and public links)"
       },
       "viewAs": {
         "string": "View As"
       },
       "resetToMe": {
-        "string": "Reset to Me"
+        "string": "Reset to All",
+        "developer_comment": "This \"All\" means all users (app users and public links) shown in this dropdown"
       }
     },
     "EntityList": {
@@ -3473,6 +3479,22 @@
             "string": "click here to choose",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nIf you would rather select files from a prompt, ensure that their names match the ones in the table and then {clickHere}."
           }
+        }
+      }
+    },
+    "FormAutosaveSettings": {
+      "autosaveSetting": {
+        "description": {
+          "string": "Autosave responses if browser closes or refreshes. Sensitive data may be retained in saved responses."
+        },
+        "enabled": {
+          "string": "Autosave is now enabled for your “{formName}” form."
+        },
+        "disabled": {
+          "string": "Autosave is now disabled for your “{formName}” form."
+        },
+        "unselectable": {
+          "string": "Configuring autosave is not possible using Enketo."
         }
       }
     },

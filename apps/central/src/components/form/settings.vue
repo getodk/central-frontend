@@ -61,6 +61,7 @@ except according to the terms contained in the LICENSE file.
                     </template>
                   </i18n-t>
                 </label>
+                <AutosaveSettings/>
               </div>
               <div class="radio">
                 <label>
@@ -91,6 +92,7 @@ import { useRouter } from 'vue-router';
 import FormDelete from './delete.vue';
 import FormWebFormsSettingsConfirmation from './web-forms-settings-confirmation.vue';
 import PageHeading from '../page/heading.vue';
+import AutosaveSettings from './autosave-settings.vue';
 
 import useRoutes from '../../composables/routes';
 import { modalData } from '../../util/reactivity';
@@ -116,7 +118,6 @@ const afterDelete = () => {
   router.push(projectPath())
     .then(() => { alert.success(message); });
 };
-
 
 const webformsEnabled = ref(form.webformsEnabled);
 watch(() => form.dataExists, () => {
