@@ -192,6 +192,7 @@ export class PrimaryInstance<
     this.model = model;
     this.attachments = new InstanceAttachmentsState(initialState?.attachments, fetchFormAttachment);
     this.instanceNode = activeInstance;
+    console.log({activeInstance});
 
     this.instanceDefaults = instanceDefaults;
     this.geolocationProvider = geolocationProvider;

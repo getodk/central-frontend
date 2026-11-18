@@ -96,11 +96,16 @@ export abstract class BaseInstantiableFormResult<
 
     this.restoreInstance = async (
       input: RestoreFormInstanceInput,
-      instanceConfig: FormInstanceConfig = {}
+      rawInstanceConfig: FormInstanceConfig = {}
     ) => {
       this.assertInstantiable();
 
       const initialState = await InitialInstanceState.resolve(instanceOptions.model, input);
+
+      // TODO combined with edit?
+      // TODO not quite right... it should still work if the autosave is null?
+      // clone the object without the instanceDefaults which are ignored when editing
+      const { instanceDefaults, ...instanceConfig } = rawInstanceConfig;
 
       return new FormInstance(this, {
         mode: 'restore',

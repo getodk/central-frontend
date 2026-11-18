@@ -208,6 +208,7 @@ const createCalculation = (
     if (context.isAttached() && context.isRelevant()) {
       const calculated = calculate();
       const value = context.decodeInstanceValue(calculated);
+      console.log({value});
       setRelevantValue(value);
     }
   });
@@ -366,6 +367,7 @@ export interface InstanceValueState {
 export const createInstanceValueState = (context: ValueContext): InstanceValueState => {
   return context.scope.runTask(() => {
     const initialValue = getInitialValue(context);
+    console.log({initialValue});
     const baseValueState = createSignal(initialValue);
     const relevantValueState = createRelevantValueState(context, baseValueState);
 

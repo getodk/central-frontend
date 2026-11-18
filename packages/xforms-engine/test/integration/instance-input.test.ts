@@ -436,7 +436,7 @@ describe.each<InstanceRoundTripCase>([
      * submitted with this bug!
      *
      * @todo it also seems likely we can address this bug in the broader story
-     * for actions/events. For instnace, we might re-trigger `calculate` for
+     * for actions/events. For instance, we might re-trigger `calculate` for
      * nodes with stale/overwritten values based on some notion of
      * {@link https://www.w3.org/TR/xforms/#evt-revalidate | xforms-revalidate}
      * (which is explicitly linked by the ODK XForms spec, associated with
@@ -477,6 +477,30 @@ describe.each<InstanceRoundTripCase>([
       expect(result.answerOf('/data/a')).toEqualAnswer(intAnswer(2));
       expect(result.answerOf('/data/b')).toEqualAnswer(intAnswer(6));
       expect(result.answerOf('/data/c')).toEqualAnswer(intAnswer(40));
+    });
+
+    it.only('restored values overwrite calculated ones', async () => {
+      scenario = await Scenario.init(
+        'Calculate serde',
+        // prettier-ignore
+        html(
+					head(
+						title('Calculate serde'),
+						model(
+							mainInstance(
+								t('data id="calculate-serde"',
+									t('a'),
+									t('orx:meta',
+										t('orx:instanceID', IGNORED_INSTANCE_ID)))),
+							bind('/data/a').type('int').calculate('4'))),
+					body(
+						input('/data/a', label('a'))))
+      );
+
+      scenario.answer('/data/a', 10);
+      const result = await scenarioFromCurrentInstanceState(scenario);
+
+      expect(result.answerOf('/data/a')).toEqualAnswer(intAnswer(10));
     });
   });
 
