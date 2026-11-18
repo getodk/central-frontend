@@ -5,6 +5,7 @@ import {
 	usePlaceSearch,
 } from '@getodk/web-forms/components/common/map/usePlaceSearch.ts';
 import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import { focusNext, focusPrevious } from '@getodk/web-forms/lib/dropdown.ts';
 import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import type { Extent } from 'ol/extent';
 import { inject, onBeforeUnmount } from 'vue';
@@ -31,17 +32,6 @@ const selectPlace = (place: PlaceSearchResult) => {
 	select(place);
 	emit('selectPlace', place.lonLatViewport);
 };
-
-const focusNeighbour = (event: KeyboardEvent, step: number) => {
-	const container = event.currentTarget as HTMLElement;
-	const controls = [...container.querySelectorAll<HTMLElement>('input, button')];
-	const current = controls.indexOf(event.target as HTMLElement);
-	controls[current + step]?.focus();
-};
-
-const focusNext = (event: KeyboardEvent) => focusNeighbour(event, 1);
-
-const focusPrevious = (event: KeyboardEvent) => focusNeighbour(event, -1);
 
 const onEscape = (event: KeyboardEvent) => {
 	// Only an open list consumes Escape, so the next Escape still exits map full screen.
@@ -84,11 +74,18 @@ onBeforeUnmount(() => cancel());
 		</div>
 
 		<div v-if="isOpen" class="search-results">
-			<ul v-if="hasPlaces" :aria-label="t('map_place_search.results.label')">
-				<li v-for="(place, index) in places" :key="`${place.label}-${index}`">
-					<button type="button" class="search-row" @pointerdown.prevent @click="selectPlace(place)">
-						{{ place.label }}
-					</button>
+			<ul v-if="hasPlaces" role="listbox" :aria-label="t('map_place_search.results.label')">
+				<li
+					v-for="(place, index) in places"
+					:key="`${place.label}-${index}`"
+					role="option"
+					tabindex="0"
+					class="search-row search-option"
+					@pointerdown.prevent
+					@click="selectPlace(place)"
+					@keydown.enter.space.prevent="selectPlace(place)"
+				>
+					{{ place.label }}
 				</li>
 			</ul>
 
@@ -124,8 +121,7 @@ onBeforeUnmount(() => cancel());
   background: var(--odk-base-background-color);
 }
 
-.search-input input,
-button.search-row {
+.search-input input {
   border: none;
   background: none;
   font: inherit;
@@ -177,7 +173,8 @@ button.search-row {
 	text-align: left;
 }
 
-button.search-row {
+.search-option {
+	color: var(--odk-text-color);
 	cursor: pointer;
 
 	&:hover,

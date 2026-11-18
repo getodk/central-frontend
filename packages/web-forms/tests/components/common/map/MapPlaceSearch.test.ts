@@ -84,7 +84,7 @@ describe('MapPlaceSearch', () => {
 
   it('arrow keys move focus through the places and do not reach the map', async () => {
     const { component, input } = await searchAndOpen(['London, UK', 'London, CA']);
-    const [firstPlace, secondPlace] = component.findAll('button');
+    const [firstPlace, secondPlace] = component.findAll('[role="option"]');
 
     const onDocumentKeydown = listenForDocumentKeydown();
     const focusSpy = spyOnFocus();
@@ -100,7 +100,7 @@ describe('MapPlaceSearch', () => {
   it('picking a place fills the input, closes the list and emits its viewport', async () => {
     const { component, input } = await searchAndOpen(['London, UK']);
 
-    await component.get('button').trigger('click');
+    await component.get('[role="option"]').trigger('click');
 
     expect(input.element.value).toBe('London, UK');
     expect(component.text()).not.toContain('London, UK');
