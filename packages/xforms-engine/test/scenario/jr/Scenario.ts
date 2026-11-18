@@ -1107,7 +1107,10 @@ export class Scenario {
     });
   }
 
-  async restoreWebFormsInstanceState(payload: ResolvedFormInstanceInput, config?: FormInstanceConfig): Promise<this> {
+  async restoreWebFormsInstanceState(
+    payload: ResolvedFormInstanceInput,
+    config?: FormInstanceConfig
+  ): Promise<this> {
     const instance = await this.form.restoreInstance(payload, config ?? this.config.formOptions);
 
     return this.fork(instance);
