@@ -4,6 +4,7 @@ import {
 	type BaseLayerId,
 } from '@getodk/web-forms/components/common/map/base-layers.ts';
 import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import { focusNext, focusPrevious } from '@getodk/web-forms/lib/dropdown.ts';
 import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import { inject, onMounted, ref } from 'vue';
 
@@ -14,17 +15,6 @@ const t: Translate = inject(TRANSLATE)!;
 const optionsList = ref<HTMLElement>();
 
 onMounted(() => optionsList.value?.querySelector<HTMLElement>('[aria-selected="true"]')?.focus());
-
-const focusNeighbour = (event: KeyboardEvent, step: number) => {
-	const list = event.currentTarget as HTMLElement;
-	const options = [...list.querySelectorAll<HTMLElement>('li')];
-	const current = options.indexOf(event.target as HTMLElement);
-	options[current + step]?.focus();
-};
-
-const focusNext = (event: KeyboardEvent) => focusNeighbour(event, 1);
-
-const focusPrevious = (event: KeyboardEvent) => focusNeighbour(event, -1);
 
 const BASE_LAYER_OPTIONS = [
 	{ id: BASE_LAYER_IDS.ROADMAP, labelKey: 'map_base_layer_picker.roadmap.label' },
