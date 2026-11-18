@@ -1,5 +1,6 @@
 import { toGeoJsonCoordinateArray } from '@getodk/web-forms/components/common/map/geojson-parsers.ts';
 import { createCurrentLocationStyle } from '@getodk/web-forms/components/common/map/map-styles.ts';
+import type { PlaceSearchResult } from '@getodk/web-forms/components/common/map/usePlaceSearch.ts';
 import type { TimerID } from '@getodk/common/types/timers.ts';
 import { Map, type View } from 'ol';
 import type { Coordinate } from 'ol/coordinate';
@@ -34,7 +35,7 @@ export interface UseMapViewControls {
   centerFeatureLocation: (feature: Feature) => void;
   centerFullWorldView: () => void;
   fitToAllFeatures: (featureSource: VectorSource) => void;
-  fitToViewport: (lonLatViewport: Extent) => void;
+  showPlace: (place: PlaceSearchResult) => void;
   getUserCurrentLocation: () => BrowserLocation | undefined;
   stopWatchingCurrentLocation: () => void;
   watchCurrentLocation: (onSuccess: () => void, onError: () => void) => void;
@@ -45,6 +46,7 @@ export const DEFAULT_GEOJSON_PROJECTION = 'EPSG:4326';
 export const DEFAULT_VIEW_CENTER = [0, 0];
 export const MIN_ZOOM = 2;
 const MAX_ZOOM = 19;
+const PLACE_ZOOM = 17;
 const INTERMEDIATE_ZOOM = 4;
 const LONG_DISTANCE_THRESHOLD_METERS = 50 * 1000;
 const SHORT_DISTANCE_THRESHOLD_METERS = 1000;
@@ -266,9 +268,15 @@ export function useMapViewControls(mapInstance: Map): UseMapViewControls {
     });
   };
 
-  const fitToViewport = (lonLatViewport: Extent): void => {
+  const showPlace = (place: PlaceSearchResult): void => {
+    if (!place.isArea) {
+      const center = fromLonLat(getCenter(place.lonLatViewport));
+      transitionToLocation(center, PLACE_ZOOM);
+      return;
+    }
     const projection = mapInstance.getView().getProjection();
-    fitToExtent(transformExtent(lonLatViewport, DEFAULT_GEOJSON_PROJECTION, projection));
+    const extent = transformExtent(place.lonLatViewport, DEFAULT_GEOJSON_PROJECTION, projection);
+    fitToExtent(extent);
   };
 
   watch(
@@ -305,7 +313,7 @@ export function useMapViewControls(mapInstance: Map): UseMapViewControls {
     centerFeatureLocation,
     centerFullWorldView: () => transitionToLocation(DEFAULT_VIEW_CENTER, MIN_ZOOM),
     fitToAllFeatures,
-    fitToViewport,
+    showPlace,
     getUserCurrentLocation: () => userCurrentLocation.value,
     stopWatchingCurrentLocation,
     watchCurrentLocation,

@@ -4,7 +4,8 @@ import { computed, ref, shallowRef } from 'vue';
 
 const SEARCH_DELAY_MS = 1000;
 const GEOCODING_URL = 'https://geocode.googleapis.com/v4/geocode/address/';
-const GEOCODING_FIELDS = 'results.formattedAddress,results.viewport';
+const GEOCODING_FIELDS = 'results.formattedAddress,results.viewport,results.granularity';
+const AREA_GRANULARITY = 'APPROXIMATE';
 const MIN_QUERY_LENGTH = 3;
 const MAX_PLACE_RESULTS = 4;
 const SEARCH_STATUSES = {
@@ -24,6 +25,7 @@ interface LatLng {
 interface GeocodingResult {
   formattedAddress: string;
   viewport: { low: LatLng; high: LatLng };
+  granularity: string;
 }
 
 interface GeocodingResponse {
@@ -33,6 +35,7 @@ interface GeocodingResponse {
 export interface PlaceSearchResult {
   label: string;
   lonLatViewport: Extent;
+  isArea: boolean;
 }
 
 const buildPlaceSearchUrl = (query: string) => GEOCODING_URL + encodeURIComponent(query);
@@ -43,6 +46,7 @@ const parsePlaceSearchResponse = (body: GeocodingResponse): PlaceSearchResult[] 
     return {
       label: result.formattedAddress,
       lonLatViewport: [low.longitude, low.latitude, high.longitude, high.latitude],
+      isArea: result.granularity === AREA_GRANULARITY,
     };
   });
 };

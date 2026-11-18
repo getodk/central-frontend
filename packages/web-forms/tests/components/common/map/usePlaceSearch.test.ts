@@ -8,6 +8,7 @@ describe('usePlaceSearch', () => {
       low: { latitude: 51.38, longitude: -0.35 },
       high: { latitude: 51.67, longitude: 0.15 },
     },
+    granularity: 'APPROXIMATE',
   });
 
   const okResponse = (labels: string[]) => {
@@ -52,11 +53,11 @@ describe('usePlaceSearch', () => {
     expect(url).toBe('https://geocode.googleapis.com/v4/geocode/address/London%2C%20UK%2FCamden');
     expect(init!.headers).toEqual({
       'X-Goog-Api-Key': 'test key',
-      'X-Goog-FieldMask': 'results.formattedAddress,results.viewport',
+      'X-Goog-FieldMask': 'results.formattedAddress,results.viewport,results.granularity',
     });
   });
 
-  it('opens with each result as a label and a lon/lat viewport', async () => {
+  it('opens with each result as a label, a lon/lat viewport and whether it is an area', async () => {
     vi.spyOn(globalThis, 'fetch').mockResolvedValue(okResponse(['London, UK']));
     const placeSearch = usePlaceSearch('test-key');
 
@@ -64,7 +65,7 @@ describe('usePlaceSearch', () => {
     await waitUntilOpen(placeSearch);
 
     expect(placeSearch.places.value).toEqual([
-      { label: 'London, UK', lonLatViewport: [-0.35, 51.38, 0.15, 51.67] },
+      { label: 'London, UK', lonLatViewport: [-0.35, 51.38, 0.15, 51.67], isArea: true },
     ]);
   });
 

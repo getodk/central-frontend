@@ -7,12 +7,11 @@ import {
 import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
 import { focusNext, focusPrevious } from '@getodk/web-forms/lib/dropdown.ts';
 import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
-import type { Extent } from 'ol/extent';
 import ProgressSpinner from 'primevue/progressspinner';
 import { inject, onBeforeUnmount } from 'vue';
 
 const props = defineProps<{ apiKey: string }>();
-const emit = defineEmits<{ selectPlace: [lonLatViewport: Extent] }>();
+const emit = defineEmits<{ selectPlace: [place: PlaceSearchResult] }>();
 const t: Translate = inject(TRANSLATE)!;
 
 const {
@@ -32,7 +31,7 @@ const {
 
 const selectPlace = (place: PlaceSearchResult) => {
 	select(place);
-	emit('selectPlace', place.lonLatViewport);
+	emit('selectPlace', place);
 };
 
 const onEscape = (event: KeyboardEvent) => {

@@ -250,7 +250,7 @@ const toggleFullScreen = () => {
 				<MapPlaceSearch
 					v-if="mapProvider.name === 'google' && !disabled"
 					:api-key="mapProvider.apiKey"
-					@select-place="mapHandler.fitToViewport"
+					@select-place="mapHandler.showPlace"
 				/>
 
 				<MapControls

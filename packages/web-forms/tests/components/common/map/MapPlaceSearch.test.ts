@@ -11,6 +11,7 @@ describe('MapPlaceSearch', () => {
         low: { latitude: 51.38, longitude: -0.35 },
         high: { latitude: 51.67, longitude: 0.15 },
       },
+      granularity: 'APPROXIMATE',
     }));
     return new Response(JSON.stringify({ results }), { status: 200 });
   };
@@ -107,13 +108,15 @@ describe('MapPlaceSearch', () => {
     expect(component.find('.search-spinner').exists()).toBe(true);
   });
 
-  it('picking a place fills the input, closes the list and emits its viewport', async () => {
+  it('picking a place fills the input, closes the list and emits the place', async () => {
     const { component, input } = await searchAndOpen(['London, UK']);
 
     await component.get('[role="option"]').trigger('click');
 
     expect(input.element.value).toBe('London, UK');
     expect(component.text()).not.toContain('London, UK');
-    expect(component.emitted('selectPlace')).toEqual([[[-0.35, 51.38, 0.15, 51.67]]]);
+    expect(component.emitted('selectPlace')).toEqual([
+      [{ label: 'London, UK', lonLatViewport: [-0.35, 51.38, 0.15, 51.67], isArea: true }],
+    ]);
   });
 });
