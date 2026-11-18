@@ -40,7 +40,7 @@ test.describe('autosave', () => {
     expect(await page.getByLabel('First Name').inputValue()).toEqual('autosa');
 
     await page.getByRole('button', { name: 'send' }).click();
-    await expect(page.getByRole('heading', { name: 'Successful' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Submitted' })).toBeVisible();
 
     await page.reload();
     await expect(page.getByRole('heading', { name: simpleForm.name })).toBeVisible();

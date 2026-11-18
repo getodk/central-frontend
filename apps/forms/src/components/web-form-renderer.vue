@@ -4,7 +4,6 @@ import { computed, inject, onMounted, ref } from 'vue';
 import { OdkWebForm, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
 import { type InstanceSnapshot, type MonolithicInstancePayload } from '@getodk/xforms-engine';
 import { postPrimaryInstance, uploadAttachment, getFormAttachment, type Form } from '../utils/api';
-import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
 import { Translation } from 'vue-i18n'
 import Location from '../utils/location';
@@ -15,6 +14,7 @@ import { hasSubmitted, setSubmitted } from '../utils/once-store';
 import { setLocale } from '../i18n';
 import { clearExpiredAutosaves, deleteAutosave, getAutosave, setAutosave, type AutosaveValue } from '../utils/autosave';
 import { MAP_PROVIDER } from '../utils/injection-keys';
+import Dialog, { type Status } from './dialog.vue';
 
 defineOptions({
   name: 'WebFormRenderer'
@@ -50,7 +50,6 @@ const autosaveEnabled = computed(() => {
   return !isEdit.value && !props.form.draft && !isPreview.value && props.form.autosaveEnabled;
 });
 const autosavePayload = ref<AutosaveValue | undefined>();
-const showAutosaveDialog = ref(false);
 const dateFormatter = new Intl.DateTimeFormat(undefined, {
   timeStyle: 'short',
   dateStyle: 'long',
@@ -59,7 +58,16 @@ const dateFormatter = new Intl.DateTimeFormat(undefined, {
 const deviceID = getDeviceId();
 const mapProvider = inject(MAP_PROVIDER);
 
-const visibleModal = ref();
+type ModalType = 'autosave' | 'editSubmission' | 'error' | 'preview' | 'retry' | 'sendingData' | 'sessionTimeout' | 'submission' | 'thankYou';
+
+export interface ModalProps {
+  type: ModalType;
+  hideable: boolean;
+  status: Status;
+  errorMessage?: string;
+}
+
+const visibleModal = ref<ModalProps | undefined>();
 
 const getAttachment = (requestUrl: URL) => {
   const fileName = requestUrl.pathname.split('/').pop()!;
@@ -109,14 +117,14 @@ const handleResult = () => {
     clearForm(props.form.once ? {} : { next: POST_SUBMIT__NEW_INSTANCE });
 
     if (isPublicLink.value) {
-      visibleModal.value = { type: 'thankYouModal', hideable: false };
+      visibleModal.value = { type: 'thankYou', status: 'success', hideable: false };
     } else if (isEdit.value) {
-      visibleModal.value = { type: 'editSubmissionModal', hideable: false };
+      visibleModal.value = { type: 'editSubmission', status: 'success', hideable: false };
       setTimeout(() => {
         Location.assign(submissionPath());
       }, 2000);
     } else {
-      visibleModal.value = { type: 'submissionModal', hideable: false };
+      visibleModal.value = { type: 'submission', status: 'success', hideable: false };
     }
     return;
   }
@@ -125,10 +133,10 @@ const handleResult = () => {
   if (!submissionResult.primaryInstanceResult.success) {
     const error = submissionResult.primaryInstanceResult.data;
     if (isSessionTimeout(error)) {
-      visibleModal.value = { type: 'sessionTimeoutModal', hideable: true };
+      visibleModal.value = { type: 'sessionTimeout', status: 'error', hideable: true };
     } else {
       const errorMessage = getErrorMessage(error);
-      visibleModal.value = { type: 'errorModal', errorMessage, hideable: true };
+      visibleModal.value = { type: 'error', status: 'error', errorMessage, hideable: true };
     }
     return;
   }
@@ -137,15 +145,15 @@ const handleResult = () => {
   if (attachmentResultArr.some(r => !r.success)) {
     const sessionTimeout = attachmentResultArr.some(r => isSessionTimeout(r.data));
     if (sessionTimeout) {
-      visibleModal.value = { type: 'sessionTimeoutModal', hideable: false };
+      visibleModal.value = { type: 'sessionTimeout', status: 'error', hideable: false };
     } else {
-      visibleModal.value = { type: 'retryModal', hideable: false };
+      visibleModal.value = { type: 'retry', status: 'error', hideable: false };
     }
   }
 };
 
 const submitData = async () => {
-  visibleModal.value = { type: 'sendingDataModal', hideable: false };
+  visibleModal.value = { type: 'sendingData', status: 'loading', hideable: false };
 
   const instanceFile = submissionData.instanceFile;
   const attachments = submissionData.attachments;
@@ -217,7 +225,8 @@ const handleSubmit = async (
   clearFormCallback: Function
 ) => {
   if (props.actionType === 'preview') {
-    visibleModal.value = { type: 'previewModal', hideable: true };
+    visibleModal.value = { type: 'preview', status: 'success', hideable: true };
+    clearFormCallback({ next: POST_SUBMIT__NEW_INSTANCE });
     return;
   }
   const { data: [data], status, hasLastSaved } = payload;
@@ -228,7 +237,7 @@ const handleSubmit = async (
   }
   if (alreadySubmittedOnce()) {
     // The user submitted since this page loaded; show the same thank-you modal as on mount.
-    visibleModal.value = { type: 'thankYouModal', hideable: false };
+    visibleModal.value = { type: 'thankYou', status: 'success', hideable: false };
     return;
   }
   initializeSubmissionState(data as unknown as SubmissionData);
@@ -302,44 +311,43 @@ const loadAutosave = async () => {
     const autosave = await getAutosave(props.form);
     if (autosave) {
       autosavePayload.value = autosave;
-      showAutosaveDialog.value = true;
+      visibleModal.value = { type: 'autosave', status: 'none', hideable: false };
+      return true;
     }
   }
-  clearExpiredAutosaves();
+  return false;
 };
 
 const discardAutosave = () => {
   deleteAutosave(props.form);
   autosavePayload.value = undefined;
-  showAutosaveDialog.value = false;
+  visibleModal.value = undefined;
+  inited.value = true;
 };
 
 const recoverAutosave = () => {
-  showAutosaveDialog.value = false;
+  visibleModal.value = undefined;
+  inited.value = true;
 };
 
 onMounted(async () => {
   if (alreadySubmittedOnce()) {
-    visibleModal.value = { type: 'thankYouModal', hideable: false };
+    visibleModal.value = { type: 'thankYou', status: 'success', hideable: false };
     webFormLoaded(); // hide the spinner
     return;
   }
   await loadLastSaved();
-  await loadAutosave();
-  inited.value = true;
+  const hasAutosave = await loadAutosave();
+  clearExpiredAutosaves();
+  if (!hasAutosave) {
+    inited.value = true;
+  }
 });
 </script>
 
-<style scoped>
-.p-dialog-content pre {
-  white-space: pre-wrap;
-  overflow-wrap: break-word;
-}
-</style>
-
 <template>
 
-  <OdkWebForm v-if="!showAutosaveDialog && inited"
+  <OdkWebForm v-if="inited"
     :form-xml="props.xform"
     :edit-instance="editInstanceOptions"
     :restore-instance="restoreInstanceOptions"
@@ -354,26 +362,12 @@ onMounted(async () => {
     v-on="autosaveEnabled ? { updated: storeAutosaveUpdate } : {}"
     />
 
-  <Dialog modal :visible="showAutosaveDialog" :closable="false" :draggable="false">
-    <template #header>
-      <span role="heading">{{ $t('autosaveModal.title') }}</span>
+  <Dialog :status="visibleModal?.status" :hideable="!!visibleModal?.hideable" @close="visibleModal = undefined">
+    <template #header v-if="visibleModal?.type">
+      {{ $t(visibleModal.type + 'Modal.title') }}
     </template>
-    <template #default>
-      {{ $t('autosaveModal.body', { date: dateFormatter.format(autosavePayload?.createdAt) }) }}
-    </template>
-    <template #footer>
-      <Button type="button" variant="link" @click="discardAutosave()">{{ $t('action.discard') }}</Button>
-      <Button type="button" @click="recoverAutosave()">{{ $t('action.recover') }}</Button>
-    </template>
-  </Dialog>
-
-  <Dialog modal :visible="!!visibleModal" :draggable="false" :closable="visibleModal?.hideable" @update:visible="visibleModal = null">
-		<template #header>
-			<span role="heading">{{ $t(visibleModal.type + '.title') }}</span>
-		</template>
-
-    <template #default>
-      <Translation v-if="visibleModal.type === 'errorModal'" tag="p" keypath="errorModal.body">
+    <template #default v-if="visibleModal?.type">
+      <Translation v-if="visibleModal.type === 'error' && visibleModal.errorMessage" keypath="errorModal.body">
         <template #errorMessage>
           <pre>{{ $t(visibleModal.errorMessage) }}</pre>
         </template>
@@ -381,38 +375,42 @@ onMounted(async () => {
           <a href="mailto:support@getodk.org">support@getodk.org</a>
         </template>
       </Translation>
-      <Translation v-else-if="visibleModal.type === 'retryModal'" tag="p" keypath="retryModal.body">
+      <Translation v-else-if="visibleModal.type === 'retry'" keypath="retryModal.body">
         <template #supportEmail>
           <a href="mailto:support@getodk.org">support@getodk.org</a>
         </template>
       </Translation>
-      <Translation v-else-if="visibleModal.type === 'sessionTimeoutModal'" tag="p" keypath="sessionTimeoutModal.body.full">
+      <Translation v-else-if="visibleModal.type === 'sessionTimeout'" keypath="sessionTimeoutModal.body.full">
         <template #here>
           <a href="/login" target="_blank">{{ $t('sessionTimeoutModal.body.here') }}</a>
         </template>
       </Translation>
+      <span v-else-if="visibleModal.type === 'autosave'">
+        {{ $t('autosaveModal.body', { date: dateFormatter.format(autosavePayload?.createdAt) }) }}
+      </span>
       <span v-else>
-        {{ $t(visibleModal.type + '.body') }}
+        {{ $t(visibleModal.type + 'Modal.body') }}
       </span>
     </template>
-    <template #footer>
-      <template v-if="visibleModal.type === 'submissionModal'">
-        <Button type="button" @click="visibleModal = null">{{ $t('submissionModal.action.fillOutAgain') }}</Button>
+    <template #footer v-if="visibleModal?.type">
+      <template v-if="visibleModal.type === 'submission'">
+        <Button type="button" @click="visibleModal = undefined">{{ $t('submissionModal.action.fillOutAgain') }}</Button>
       </template>
       <!-- Any type of error while sending attachments -->
-      <template v-else-if="visibleModal.type === 'retryModal'
-        || (visibleModal.type === 'sessionTimeoutModal' && !visibleModal.hideable)">
+      <template v-else-if="visibleModal.type === 'retry'
+        || (visibleModal.type === 'sessionTimeout' && !visibleModal.hideable)">
         <Button type="button" @click="submitData()">{{ $t('action.tryAgain') }}</Button>
       </template>
+      <template v-else-if="visibleModal.type === 'autosave'">
+        <Button type="button" variant="link" @click="discardAutosave()">{{ $t('action.discard') }}</Button>
+        <Button type="button" @click="recoverAutosave()">{{ $t('action.recover') }}</Button>
+      </template>
       <!-- Preview modal or any type of error while submitting primary instance -->
-      <template v-else-if="visibleModal.type === 'previewModal'
-        || visibleModal.type === 'errorModal'
-        || visibleModal.type === 'sessionTimeoutModal' && visibleModal.hideable">
-        <Button type="button" @click="visibleModal = null">{{ $t('action.close') }}</Button>
+      <template v-else-if="visibleModal.hideable">
+        <Button type="button" @click="visibleModal = undefined">{{ $t('action.close') }}</Button>
       </template>
     </template>
   </Dialog>
-
 </template>
 
 <i18n lang="json5">
@@ -430,13 +428,13 @@ onMounted(async () => {
       },
       "previewModal": {
         "title": "Data is valid",
-        "body": "The data you entered is valid, but it was not submitted because this is a Form preview."
+        "body": "The data you entered is valid, but it was not submitted because this is a form preview."
       },
       "submissionModal": {
-        "title": "Form successfully sent!",
-        "body": "You can fill this Form out again or close if you’re done.",
+        "title": "Submitted",
+        "body": "Thanks for your submission. You can fill this form out again or close if you’re done.",
         "action": {
-          "fillOutAgain": "Fill out again"
+          "fillOutAgain": "Submit another"
         }
       },
       "thankYouModal": {
@@ -444,15 +442,15 @@ onMounted(async () => {
         "body": "You can close this window now."
       },
       "editSubmissionModal": {
-        "title": "Submission successful",
+        "title": "Submitted",
         "body": "You will now be redirected."
       },
       "errorModal": {
         "title": "Submission error",
-        "body": "Your data was not submitted. Error message: {errorMessage} You can close this dialog and try again. If the error keeps happening, please contact the person who asked you to fill this Form or {supportEmail}."
+        "body": "Your data was not submitted. Error message: {errorMessage} You can close this dialog and try again. If the error keeps happening, please contact the person who asked you to fill this form or {supportEmail}."
       },
       "sendingDataModal": {
-        "title": "Sending Submission",
+        "title": "Sending submission",
         "body": "Your data is being submitted. Please don’t close this window until it’s finished."
       },
       "sessionTimeoutModal": {
@@ -464,7 +462,7 @@ onMounted(async () => {
       },
       "retryModal": {
         "title": "Submission error",
-        "body": "Your data was not fully submitted. Please press the “Try again” button to retry. If the error keeps happening, please contact the person who asked you to fill this Form or {supportEmail}."
+        "body": "Your data was not fully submitted. Please press the “Try again” button to retry. If the error keeps happening, please contact the person who asked you to fill this form or {supportEmail}."
       },
       "util": {
         "request": {

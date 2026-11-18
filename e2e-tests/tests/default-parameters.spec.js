@@ -24,7 +24,7 @@ test.describe('Default Parameters', () => {
     await login(page);
     await page.goto(`${appUrl}/projects/${projectId}/forms/${simpleForm.xmlFormId}/submissions/new?d[/data/first_name]=will i am`);
     await page.getByRole('button', { name: 'send' }).click();
-    await expect(page.getByRole('heading', { name: 'Successful' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Submitted' })).toBeVisible();
     const xml = await backendClient.getLastSubmission(simpleForm.xmlFormId);
     expect(xml).toContain('<first_name>will i am</first_name>');
   });
@@ -33,7 +33,7 @@ test.describe('Default Parameters', () => {
     await login(page);
     await page.goto(`${appUrl}/projects/${projectId}/forms/${simpleForm.xmlFormId}/submissions/new?d[first_name]=mary`);
     await page.getByRole('button', { name: 'send' }).click();
-    await expect(page.getByRole('heading', { name: 'Successful' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Submitted' })).toBeVisible();
     const xml = await backendClient.getLastSubmission(simpleForm.xmlFormId);
     expect(xml).toContain('<first_name>mary</first_name>');
   });
@@ -42,7 +42,7 @@ test.describe('Default Parameters', () => {
     await login(page);
     await page.goto(`${appUrl}/projects/${projectId}/forms/${simpleForm.xmlFormId}/submissions/new?d[first_name]=mary? []=`);
     await page.getByRole('button', { name: 'send' }).click();
-    await expect(page.getByRole('heading', { name: 'Successful' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Submitted' })).toBeVisible();
     const xml = await backendClient.getLastSubmission(simpleForm.xmlFormId);
     expect(xml).toContain('<first_name>mary? []=</first_name>');
   });
