@@ -49,6 +49,9 @@ const lastSavedXml = ref<string | undefined>();
 const autosaveEnabled = computed(() => {
   return !isEdit.value && !props.form.draft && !isPreview.value && props.form.autosaveEnabled;
 });
+const confirmClose = computed(() => {
+  return !isEdit.value && !props.form.draft && !isPreview.value && !props.form.autosaveEnabled;
+});
 const autosavePayload = ref<AutosaveValue | undefined>();
 const dateFormatter = new Intl.DateTimeFormat(undefined, {
   timeStyle: 'short',
@@ -248,6 +251,7 @@ const handleSubmit = async (
   if (submissionResult.primaryInstanceResult.success) {
     deleteAutosave(props.form);
     updateLastSaved(hasLastSaved);
+    window.removeEventListener('beforeunload', beforeUnload);
   }
 };
 
@@ -306,6 +310,8 @@ const loadLastSaved = async () => {
   }
 };
 
+const beforeUnload = (event) => event.preventDefault();
+
 const loadAutosave = async () => {
   if (autosaveEnabled.value) {
     const autosave = await getAutosave(props.form);
@@ -314,6 +320,9 @@ const loadAutosave = async () => {
       visibleModal.value = { type: 'autosave', status: 'none', hideable: false };
       return true;
     }
+  }
+  if (confirmClose.value) {
+    window.addEventListener('beforeunload', beforeUnload);
   }
   return false;
 };
@@ -343,6 +352,11 @@ onMounted(async () => {
     inited.value = true;
   }
 });
+
+const fillOutAgain = () => {
+  visibleModal.value = undefined;
+  window.addEventListener('beforeunload', beforeUnload);
+}
 </script>
 
 <template>
@@ -394,7 +408,7 @@ onMounted(async () => {
     </template>
     <template #footer v-if="visibleModal?.type">
       <template v-if="visibleModal.type === 'submission'">
-        <Button type="button" @click="visibleModal = undefined">{{ $t('submissionModal.action.fillOutAgain') }}</Button>
+        <Button type="button" @click="fillOutAgain()">{{ $t('submissionModal.action.fillOutAgain') }}</Button>
       </template>
       <!-- Any type of error while sending attachments -->
       <template v-else-if="visibleModal.type === 'retry'
