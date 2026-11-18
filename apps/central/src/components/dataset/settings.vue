@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
             <i18n-t tag="span" keypath="dependentForms.description[0]">
               <template #name> {{ dataset.name }}</template>
               <template #formsCount>
-                <strong>{{ $tc('dependentForms.formsCount', dependentFormsCount) }}</strong>
+                <strong>{{ $t('dependentForms.formsCount', dependentFormsCount) }}</strong>
               </template>
             </i18n-t>
             <br>

@@ -27,7 +27,7 @@
     "ramda": "~0.27",
     "vue": "^3.5.44",
     "vue-flatpickr-component": "~9",
-    "vue-i18n": "^10.0.7",
+    "vue-i18n": "^11.4.17",
     "vue-router": "^4.6.3",
     "xml-formatter": "~2"
   },
