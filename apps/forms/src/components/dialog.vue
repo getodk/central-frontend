@@ -51,7 +51,7 @@ onMounted(() => {
     </span>
     <header><h1><slot name="header"></slot></h1></header>
     <div class="content"><slot name="default"></slot></div>
-    <footer><slot name="footer"></slot></footer>
+    <footer v-if="$slots.footer"><slot name="footer"></slot></footer>
   </dialog>
 </template>
 
@@ -82,6 +82,7 @@ dialog {
   .content {
     overflow-y: auto;
     overscroll-behavior: contain;
+    padding-bottom: 2px; /* provide some breathing room before the scrollbar kicks in */
   }
 
   &:has(.status) {
