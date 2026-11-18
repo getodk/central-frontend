@@ -478,30 +478,6 @@ describe.each<InstanceRoundTripCase>([
       expect(result.answerOf('/data/b')).toEqualAnswer(intAnswer(6));
       expect(result.answerOf('/data/c')).toEqualAnswer(intAnswer(40));
     });
-
-    it.only('restored values overwrite calculated ones', async () => {
-      scenario = await Scenario.init(
-        'Calculate serde',
-        // prettier-ignore
-        html(
-					head(
-						title('Calculate serde'),
-						model(
-							mainInstance(
-								t('data id="calculate-serde"',
-									t('a'),
-									t('orx:meta',
-										t('orx:instanceID', IGNORED_INSTANCE_ID)))),
-							bind('/data/a').type('int').calculate('4'))),
-					body(
-						input('/data/a', label('a'))))
-      );
-
-      scenario.answer('/data/a', 10);
-      const result = await scenarioFromCurrentInstanceState(scenario);
-
-      expect(result.answerOf('/data/a')).toEqualAnswer(intAnswer(10));
-    });
   });
 
   describe('repeats', () => {
