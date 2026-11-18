@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { computed, onMounted, ref } from 'vue';
+import { computed, inject, onMounted, ref } from 'vue';
 import { OdkWebForm, POST_SUBMIT__NEW_INSTANCE } from '@getodk/web-forms';
 import { type InstanceSnapshot, type MonolithicInstancePayload } from '@getodk/xforms-engine';
 import { postPrimaryInstance, uploadAttachment, getFormAttachment, type Form } from '../utils/api';
@@ -14,6 +14,7 @@ import { deleteLastSaved, getLastSaved, setLastSaved } from '../utils/last-saved
 import { hasSubmitted, setSubmitted } from '../utils/once-store';
 import { setLocale } from '../i18n';
 import { clearExpiredAutosaves, deleteAutosave, getAutosave, setAutosave, type AutosaveValue } from '../utils/autosave';
+import { MAP_PROVIDER } from '../utils/injection-keys';
 
 defineOptions({
   name: 'WebFormRenderer'
@@ -56,6 +57,7 @@ const dateFormatter = new Intl.DateTimeFormat(undefined, {
 });
 
 const deviceID = getDeviceId();
+const mapProvider = inject(MAP_PROVIDER);
 
 const visibleModal = ref();
 
@@ -345,6 +347,7 @@ onMounted(async () => {
     :device-id="deviceID"
     :instance-defaults="defaultParameters"
     :last-saved-xml="lastSavedXml"
+    :map-provider="mapProvider"
     @loaded="webFormLoaded"
     @languageSelected="setLocale"
     @submit="handleSubmit"

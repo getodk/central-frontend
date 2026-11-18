@@ -6,6 +6,7 @@ import FormHeader from '@getodk/web-forms/components/form-layout/FormHeader.vue'
 import QuestionList from '@getodk/web-forms/components/form-layout/QuestionList.vue';
 import { waitAllTasksToFinish } from '@getodk/web-forms/lib/async/event-loop.ts';
 import {
+	CLIENT_OPTIONS,
 	TRANSLATE,
 	FORM_MEDIA_CACHE,
 	FORM_OPTIONS,
@@ -14,6 +15,11 @@ import {
 	SUBMIT_PRESSED,
 	TOUCHED_QUESTIONS,
 } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import {
+	type ClientOptions,
+	DEFAULT_MAP_PROVIDER,
+	type MapProvider,
+} from '@getodk/web-forms/lib/client-options.ts';
 import type { FormStateSuccessResult } from '@getodk/web-forms/lib/init/form-state.ts';
 import { initializeFormState } from '@getodk/web-forms/lib/init/initialize-form-state.ts';
 import { loadFormState } from '@getodk/web-forms/lib/init/load-form-state';
@@ -82,6 +88,11 @@ export interface OdkWebFormsProps {
 	readonly restoreInstance?: RestoreInstanceOptions;
 
 	readonly lastSavedXml?: string;
+
+	/**
+	 * Base map provider for map questions. Defaults to OpenStreetMap.
+	 */
+	readonly mapProvider?: MapProvider;
 }
 
 const props = defineProps<OdkWebFormsProps>();
@@ -220,6 +231,10 @@ const formOptions = readonly<FormOptions>({
 	attachmentMaxSize: props.attachmentMaxSize,
 });
 provide(FORM_OPTIONS, formOptions);
+provide(
+	CLIENT_OPTIONS,
+	readonly<ClientOptions>({ mapProvider: props.mapProvider ?? DEFAULT_MAP_PROVIDER })
+);
 const mediaCache = new Map<JRResourceURLString, ObjectURL>();
 provide(FORM_MEDIA_CACHE, mediaCache);
 

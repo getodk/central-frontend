@@ -354,6 +354,7 @@ To use this library in a Vue.js application:
     :instance-defaults="instanceDefaults"
     :device-id="abc123"
     :last-saved-xml="lastSavedXml"
+    :map-provider="mapProvider"
     @submit="handleSubmit"
     @submit-chunked="handleChunkedSubmit"
 />
@@ -382,6 +383,7 @@ The `<OdkWebForm>` component accepts the following props:
 - `deviceId` (`string`, optional): If provided is available for binding into the form using preload attributes. Ignored if `preloadProperties.deviceID` is given.
 - `instanceDefaults` (`InstanceDefaults`, optional): Default values to set in the form as a map of xpath reference to string value.
 - `lastSavedXml` (`string`, optional): The XML to parse and bind to the last-saved virtual instance.
+- `mapProvider` (`MapProvider`, optional, defaults to OpenStreetMap): Base map for map questions. Either `{ name: 'osm' }` or `{ name: 'google', apiKey }`; with Google, map questions get a layer picker.
 
 ### Events (`OdkWebFormEmits`)
 
