@@ -6,15 +6,13 @@ import { globalMountOptions } from '../../../helpers.ts';
 describe('MapPlaceSearch', () => {
   const okResponse = (labels: string[]) => {
     const results = labels.map((label) => ({
-      formatted_address: label,
-      geometry: {
-        viewport: {
-          southwest: { lat: 51.38, lng: -0.35 },
-          northeast: { lat: 51.67, lng: 0.15 },
-        },
+      formattedAddress: label,
+      viewport: {
+        low: { latitude: 51.38, longitude: -0.35 },
+        high: { latitude: 51.67, longitude: 0.15 },
       },
     }));
-    return new Response(JSON.stringify({ status: 'OK', results }), { status: 200 });
+    return new Response(JSON.stringify({ results }), { status: 200 });
   };
 
   const mountPlaceSearch = () => {
@@ -95,6 +93,18 @@ describe('MapPlaceSearch', () => {
     expect(focusedTexts(focusSpy)).toEqual(['London, UK', 'London, CA', 'London, UK']);
     expect(onDocumentKeydown).not.toHaveBeenCalled();
     document.removeEventListener('keydown', onDocumentKeydown);
+  });
+
+  it('shows a spinner only while a search is in progress', async () => {
+    vi.spyOn(globalThis, 'fetch').mockImplementation(() => new Promise(() => undefined));
+    const component = mountPlaceSearch();
+    const input = component.find('input');
+    expect(component.find('.search-spinner').exists()).toBe(false);
+
+    await input.setValue('London');
+    await input.trigger('keydown.enter');
+
+    expect(component.find('.search-spinner').exists()).toBe(true);
   });
 
   it('picking a place fills the input, closes the list and emits its viewport', async () => {

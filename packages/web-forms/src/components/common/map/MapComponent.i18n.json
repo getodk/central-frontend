@@ -127,7 +127,7 @@
   },
 
   "map_place_search.input.placeholder": {
-    "string": "Search on map",
+    "string": "Search",
     "developer_comment": "Placeholder and accessible name of the text box at the top of the map where the user types a place or address to move the map there. Shown only when Google Maps is configured."
   },
   "map_place_search.results.label": {

@@ -8,6 +8,7 @@ import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
 import { focusNext, focusPrevious } from '@getodk/web-forms/lib/dropdown.ts';
 import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import type { Extent } from 'ol/extent';
+import ProgressSpinner from 'primevue/progressspinner';
 import { inject, onBeforeUnmount } from 'vue';
 
 const props = defineProps<{ apiKey: string }>();
@@ -18,6 +19,7 @@ const {
 	query,
 	places,
 	isOpen,
+	isSearching,
 	hasPlaces,
 	hasError,
 	activate,
@@ -71,6 +73,7 @@ onBeforeUnmount(() => cancel());
 				@focus="activate"
 				@keydown.enter.prevent="searchNow"
 			>
+			<ProgressSpinner v-if="isSearching" class="search-spinner" stroke-width="5px" />
 		</div>
 
 		<div v-if="isOpen" class="search-results">
@@ -112,20 +115,25 @@ onBeforeUnmount(() => cancel());
 	max-width: calc(100% - var(--map-control-width) - var(--horizontal-gaps));
 	z-index: var(--odk-z-index-form-content);
 	font-size: var(--odk-base-font-size);
+	color: var(--odk-text-color);
 }
 
 .search-input,
-.search-results{
-  border: 1px solid var(--odk-border-color);
-  border-radius: var(--odk-radius);
-  background: var(--odk-base-background-color);
+.search-results {
+	border: 1px solid var(--odk-border-color);
+	border-radius: var(--odk-radius);
+	background: var(--odk-base-background-color);
 }
 
-.search-input input {
-  border: none;
-  background: none;
-  font: inherit;
-  color: var(--odk-text-color);
+.map-place-search:focus-within {
+	.search-input,
+	.search-results {
+		border-color: var(--odk-primary-border-color);
+	}
+
+	.search-input:has(+ .search-results) {
+		border-bottom-color: var(--odk-border-color);
+	}
 }
 
 .search-input {
@@ -135,10 +143,6 @@ onBeforeUnmount(() => cancel());
 	height: var(--map-control-width);
 	padding: 0 var(--odk-spacing-m);
 
-	&:focus-within {
-		border-color: var(--odk-primary-border-color);
-	}
-
 	&:has(+ .search-results) {
 		border-radius: var(--odk-radius) var(--odk-radius) 0 0;
 	}
@@ -146,12 +150,22 @@ onBeforeUnmount(() => cancel());
 	input {
 		flex: 1;
 		min-width: 0;
+		border: none;
+		background: none;
+		font: inherit;
+		color: inherit;
 		outline: none;
 
 		&::placeholder {
 			color: var(--odk-muted-text-color);
 		}
 	}
+}
+
+.search-spinner {
+	flex-shrink: 0;
+	width: var(--odk-icon-m);
+	height: var(--odk-icon-m);
 }
 
 .search-results {
@@ -167,14 +181,10 @@ onBeforeUnmount(() => cancel());
 }
 
 .search-row {
-	display: block;
-	width: 100%;
 	padding: var(--odk-spacing-s) var(--odk-spacing-m);
-	text-align: left;
 }
 
 .search-option {
-	color: var(--odk-text-color);
 	cursor: pointer;
 
 	&:hover,

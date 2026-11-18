@@ -3,8 +3,9 @@ import type { Extent } from 'ol/extent';
 import { computed, ref, shallowRef } from 'vue';
 
 const SEARCH_DELAY_MS = 1000;
-const GEOCODING_URL = 'https://maps.googleapis.com/maps/api/geocode/json';
-const SUCCESS_STATUSES = ['OK', 'ZERO_RESULTS'];
+const GEOCODING_URL = 'https://geocode.googleapis.com/v4/geocode/address/';
+const GEOCODING_FIELDS = 'results.formattedAddress,results.viewport';
+const MIN_QUERY_LENGTH = 3;
 const MAX_PLACE_RESULTS = 4;
 const SEARCH_STATUSES = {
   IDLE: 'idle',
@@ -16,17 +17,16 @@ const SEARCH_STATUSES = {
 type SearchStatus = (typeof SEARCH_STATUSES)[keyof typeof SEARCH_STATUSES];
 
 interface LatLng {
-  lat: number;
-  lng: number;
+  latitude: number;
+  longitude: number;
 }
 
 interface GeocodingResult {
-  formatted_address: string;
-  geometry: { viewport: { northeast: LatLng; southwest: LatLng } };
+  formattedAddress: string;
+  viewport: { low: LatLng; high: LatLng };
 }
 
 interface GeocodingResponse {
-  status: string;
   results?: GeocodingResult[];
 }
 
@@ -35,27 +35,16 @@ export interface PlaceSearchResult {
   lonLatViewport: Extent;
 }
 
-const buildPlaceSearchUrl = (query: string, apiKey: string) => {
-  const url = new URL(GEOCODING_URL);
-  url.searchParams.set('address', query);
-  url.searchParams.set('key', apiKey);
-  return url.toString();
-};
+const buildPlaceSearchUrl = (query: string) => GEOCODING_URL + encodeURIComponent(query);
 
 const parsePlaceSearchResponse = (body: GeocodingResponse): PlaceSearchResult[] => {
-  if (!SUCCESS_STATUSES.includes(body.status)) {
-    throw new Error(`Place search failed with status ${body.status}`);
-  }
-
-  return (body.results ?? [])
-    .slice(0, MAX_PLACE_RESULTS)
-    .map((result: GeocodingResult): PlaceSearchResult => {
-      const { southwest, northeast } = result.geometry.viewport;
-      return {
-        label: result.formatted_address,
-        lonLatViewport: [southwest.lng, southwest.lat, northeast.lng, northeast.lat],
-      };
-    });
+  return (body.results ?? []).slice(0, MAX_PLACE_RESULTS).map((result) => {
+    const { low, high } = result.viewport;
+    return {
+      label: result.formattedAddress,
+      lonLatViewport: [low.longitude, low.latitude, high.longitude, high.latitude],
+    };
+  });
 };
 
 const searchPlaces = async (
@@ -63,8 +52,9 @@ const searchPlaces = async (
   apiKey: string,
   signal: AbortSignal
 ): Promise<PlaceSearchResult[]> => {
-  const url = buildPlaceSearchUrl(query, apiKey);
-  const response = await fetch(url, { signal });
+  const url = buildPlaceSearchUrl(query);
+  const headers = { 'X-Goog-Api-Key': apiKey, 'X-Goog-FieldMask': GEOCODING_FIELDS };
+  const response = await fetch(url, { headers, signal });
   if (!response.ok) {
     throw new Error(`Place search failed with HTTP ${response.status}`);
   }
@@ -75,31 +65,34 @@ const searchPlaces = async (
 export function usePlaceSearch(apiKey: string) {
   const query = ref('');
   const isActive = shallowRef(false);
-  const searchTimer = shallowRef<TimerID | undefined>();
-  const request = shallowRef<AbortController | undefined>();
   const status = shallowRef<SearchStatus>(SEARCH_STATUSES.IDLE);
   const searchedQuery = shallowRef('');
   const places = shallowRef<PlaceSearchResult[]>([]);
+  let searchTimer: TimerID | undefined;
+  let request: AbortController | undefined;
 
   const trimmedQuery = computed(() => query.value.trim());
+  const normalizedQuery = computed(() => trimmedQuery.value.toLowerCase());
   const isSettled = computed(() => {
     return status.value === SEARCH_STATUSES.RESULTS || status.value === SEARCH_STATUSES.ERROR;
   });
   const isOpen = computed(() => {
-    return isActive.value && isSettled.value && searchedQuery.value === trimmedQuery.value;
+    return isActive.value && isSettled.value && searchedQuery.value === normalizedQuery.value;
+  });
+  const isSearching = computed(() => {
+    return isActive.value && status.value === SEARCH_STATUSES.SEARCHING;
   });
   const hasPlaces = computed(() => places.value.length > 0);
   const hasError = computed(() => status.value === SEARCH_STATUSES.ERROR);
-
-  const isAlreadySearched = (text: string) => {
+  const isAlreadySearched = computed(() => {
     const isSearchingOrFound =
       status.value === SEARCH_STATUSES.SEARCHING || status.value === SEARCH_STATUSES.RESULTS;
-    return searchedQuery.value === text && isSearchingOrFound;
-  };
+    return searchedQuery.value === normalizedQuery.value && isSearchingOrFound;
+  });
 
-  const clearSearchTimer = () => clearTimeout(searchTimer.value);
+  const clearSearchTimer = () => clearTimeout(searchTimer);
 
-  const abortRequest = () => request.value?.abort();
+  const abortRequest = () => request?.abort();
 
   const activate = () => {
     isActive.value = true;
@@ -109,20 +102,20 @@ export function usePlaceSearch(apiKey: string) {
     isActive.value = false;
   };
 
-  const search = async (text: string): Promise<void> => {
-    if (isAlreadySearched(text)) {
+  const search = async (): Promise<void> => {
+    if (isAlreadySearched.value) {
       return;
     }
 
     abortRequest();
     const controller = new AbortController();
-    request.value = controller;
-    searchedQuery.value = text;
+    request = controller;
+    searchedQuery.value = normalizedQuery.value;
     places.value = [];
     status.value = SEARCH_STATUSES.SEARCHING;
 
     try {
-      places.value = await searchPlaces(text, apiKey, controller.signal);
+      places.value = await searchPlaces(trimmedQuery.value, apiKey, controller.signal);
       status.value = SEARCH_STATUSES.RESULTS;
     } catch {
       if (!controller.signal.aborted) {
@@ -133,12 +126,12 @@ export function usePlaceSearch(apiKey: string) {
 
   const searchNow = () => {
     clearSearchTimer();
-    if (!trimmedQuery.value) {
+    if (trimmedQuery.value.length < MIN_QUERY_LENGTH) {
       return;
     }
 
     activate();
-    void search(trimmedQuery.value);
+    void search();
   };
 
   const dismiss = () => {
@@ -148,12 +141,12 @@ export function usePlaceSearch(apiKey: string) {
 
   const scheduleSearch = () => {
     dismiss();
-    searchTimer.value = setTimeout(() => searchNow(), SEARCH_DELAY_MS);
+    searchTimer = setTimeout(() => searchNow(), SEARCH_DELAY_MS);
   };
 
   const select = (place: PlaceSearchResult) => {
     query.value = place.label;
-    searchedQuery.value = place.label;
+    searchedQuery.value = normalizedQuery.value;
     deactivate();
   };
 
@@ -166,6 +159,7 @@ export function usePlaceSearch(apiKey: string) {
     query,
     places,
     isOpen,
+    isSearching,
     hasPlaces,
     hasError,
     activate,

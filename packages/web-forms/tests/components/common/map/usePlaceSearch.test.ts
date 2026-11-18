@@ -3,17 +3,15 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 describe('usePlaceSearch', () => {
   const geocodingResult = (label: string) => ({
-    formatted_address: label,
-    geometry: {
-      viewport: {
-        southwest: { lat: 51.38, lng: -0.35 },
-        northeast: { lat: 51.67, lng: 0.15 },
-      },
+    formattedAddress: label,
+    viewport: {
+      low: { latitude: 51.38, longitude: -0.35 },
+      high: { latitude: 51.67, longitude: 0.15 },
     },
   });
 
   const okResponse = (labels: string[]) => {
-    const body = { status: 'OK', results: labels.map((label) => geocodingResult(label)) };
+    const body = labels.length ? { results: labels.map((label) => geocodingResult(label)) } : {};
     return new Response(JSON.stringify(body), { status: 200 });
   };
 
@@ -43,17 +41,19 @@ describe('usePlaceSearch', () => {
     vi.useRealTimers();
   });
 
-  it('sends the trimmed text and the key as URL parameters', async () => {
+  it('sends the trimmed text in the path, and the key and field mask as headers', async () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(okResponse([]));
     const placeSearch = usePlaceSearch('test key');
 
-    searchFor(placeSearch, '  London, UK ');
+    searchFor(placeSearch, '  London, UK/Camden ');
     await waitUntilOpen(placeSearch);
 
-    const url = new URL(fetchSpy.mock.calls[0]![0] as string);
-    expect(url.origin + url.pathname).toBe('https://maps.googleapis.com/maps/api/geocode/json');
-    expect(url.searchParams.get('address')).toBe('London, UK');
-    expect(url.searchParams.get('key')).toBe('test key');
+    const [url, init] = fetchSpy.mock.calls[0]!;
+    expect(url).toBe('https://geocode.googleapis.com/v4/geocode/address/London%2C%20UK%2FCamden');
+    expect(init!.headers).toEqual({
+      'X-Goog-Api-Key': 'test key',
+      'X-Goog-FieldMask': 'results.formattedAddress,results.viewport',
+    });
   });
 
   it('opens with each result as a label and a lon/lat viewport', async () => {
@@ -73,15 +73,14 @@ describe('usePlaceSearch', () => {
     vi.spyOn(globalThis, 'fetch').mockResolvedValue(okResponse(labels));
     const placeSearch = usePlaceSearch('test-key');
 
-    searchFor(placeSearch, 'UK');
+    searchFor(placeSearch, 'England');
     await waitUntilOpen(placeSearch);
 
     expect(labelsOf(placeSearch)).toEqual(labels.slice(0, 4));
   });
 
   it('opens with no places and no error when nothing matched', async () => {
-    const body = JSON.stringify({ status: 'ZERO_RESULTS', results: [] });
-    vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(body, { status: 200 }));
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response('{}', { status: 200 }));
     const placeSearch = usePlaceSearch('test-key');
 
     searchFor(placeSearch, 'Nowhere, UK');
@@ -92,9 +91,9 @@ describe('usePlaceSearch', () => {
   });
 
   it('shows an error when Google rejects or the request fails, and retries the same text', async () => {
-    const denied = JSON.stringify({ status: 'REQUEST_DENIED', results: [] });
+    const denied = JSON.stringify({ error: { code: 400, status: 'INVALID_ARGUMENT' } });
     vi.spyOn(globalThis, 'fetch')
-      .mockResolvedValueOnce(new Response(denied, { status: 200 }))
+      .mockResolvedValueOnce(new Response(denied, { status: 400 }))
       .mockResolvedValueOnce(failedResponse())
       .mockResolvedValueOnce(okResponse(['Oxford, UK']));
     const placeSearch = usePlaceSearch('test-key');
@@ -112,14 +111,31 @@ describe('usePlaceSearch', () => {
     expect(placeSearch.hasError.value).toBe(false);
   });
 
-  it('ignores empty text', () => {
+  it('ignores text shorter than three characters', () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch');
     const placeSearch = usePlaceSearch('test-key');
 
     searchFor(placeSearch, '   ');
+    searchFor(placeSearch, ' ab ');
 
     expect(fetchSpy).not.toHaveBeenCalled();
     expect(placeSearch.isOpen.value).toBe(false);
+  });
+
+  it('is searching only while a request is pending and the search is active', async () => {
+    vi.spyOn(globalThis, 'fetch')
+      .mockImplementationOnce(pendingFetch)
+      .mockResolvedValueOnce(okResponse(['Oxford, UK']));
+    const placeSearch = usePlaceSearch('test-key');
+
+    searchFor(placeSearch, 'Oxford');
+    expect(placeSearch.isSearching.value).toBe(true);
+    placeSearch.dismiss();
+    expect(placeSearch.isSearching.value).toBe(false);
+
+    searchFor(placeSearch, 'Cambridge');
+    await waitUntilOpen(placeSearch);
+    expect(placeSearch.isSearching.value).toBe(false);
   });
 
   it('searches one second after the last keystroke', () => {
@@ -137,8 +153,8 @@ describe('usePlaceSearch', () => {
 
     vi.advanceTimersByTime(1);
     expect(fetchSpy).toHaveBeenCalledOnce();
-    expect(new URL(fetchSpy.mock.calls[0]![0] as string).searchParams.get('address')).toBe(
-      'Oxford'
+    expect(new URL(fetchSpy.mock.calls[0]![0] as string).pathname).toBe(
+      '/v4/geocode/address/Oxford'
     );
   });
 
@@ -156,14 +172,14 @@ describe('usePlaceSearch', () => {
     expect(placeSearch.isOpen.value).toBe(true);
   });
 
-  it('does not request the same text again', async () => {
+  it('does not request the same text again, ignoring case and surrounding spaces', async () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(okResponse(['Oxford, UK']));
     const placeSearch = usePlaceSearch('test-key');
 
     searchFor(placeSearch, 'Oxford');
-    searchFor(placeSearch, 'Oxford');
+    searchFor(placeSearch, 'oxford');
     await waitUntilOpen(placeSearch);
-    searchFor(placeSearch, 'Oxford');
+    searchFor(placeSearch, ' OXFORD ');
 
     expect(fetchSpy).toHaveBeenCalledOnce();
     expect(placeSearch.isOpen.value).toBe(true);
