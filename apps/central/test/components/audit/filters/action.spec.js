@@ -2,6 +2,10 @@ import Multiselect from '../../../../src/components/multiselect.vue';
 import AuditFiltersAction from '../../../../src/components/audit/filters/action.vue';
 
 import { mount } from '../../../util/lifecycle';
+import testData from '../../../data';
+import { load } from '../../../util/http';
+import { changeMultiselect } from '../../../util/trigger';
+import { mockLogin } from '../../../util/session';
 
 const mountComponent = ({ modelValue = 'nonverbose' } = {}) =>
   mount(AuditFiltersAction, {
@@ -78,19 +82,33 @@ describe('AuditFiltersAction', () => {
     multiselect.props().modelValue.should.eql([]);
   });
 
-  it('emits the selected action as the value', async () => {
-    const component = mountComponent();
-    const { options } = component.getComponent(Multiselect).props();
-    const index = options.findIndex(({ value }) => value === 'user');
-    await component.get('.dropdown-trigger').trigger('click');
-    await component.get(`input[data-index="${index}"]`).setValue();
-    component.emitted('update:modelValue').should.eql([['user']]);
-  });
+  describe('after loading the audit page', () => {
+    beforeEach(mockLogin);
 
-  it('emits nonverbose when no value is selected', async () => {
-    const component = mountComponent({ modelValue: 'user' });
-    await component.get('.dropdown-trigger').trigger('click');
-    await component.get('.change-all.single .select-none').trigger('click');
-    component.emitted('update:modelValue').should.eql([['nonverbose']]);
+    it('emits the selected action as the value', () =>
+      load('/system/audits', {
+        attachTo: document.body
+      })
+        .complete()
+        .request(changeMultiselect('#audit-filters-action', [1]))
+        .respondWithData(() => testData.extendedAudits.sorted())
+        .afterResponse(app => {
+          app.getComponent(AuditFiltersAction)
+            .emitted('update:modelValue')
+            .should.eql([['user.create']]);
+        }));
+
+    it('emits nonverbose when no value is selected', () =>
+      load('/system/audits?action=user.create', {
+        attachTo: document.body
+      })
+        .complete()
+        .request(changeMultiselect('#audit-filters-action', []))
+        .respondWithData(() => testData.extendedAudits.sorted())
+        .afterResponse(app => {
+          app.getComponent(AuditFiltersAction)
+            .emitted('update:modelValue')
+            .should.eql([['nonverbose']]);
+        }));
   });
 });
