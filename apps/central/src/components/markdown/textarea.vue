@@ -87,12 +87,8 @@ export default {
 @import '../../assets/scss/mixins';
 
 .markdown-textarea {
-  border: 1px solid transparent;
-  &.active-border {
-    border: 1px solid $color-info;
-  }
 
-  background: darken( $color-subpanel-background, 3% );
+  background: $color-bg;
 
   .form-group {
     margin-bottom: 0;

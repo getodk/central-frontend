@@ -274,7 +274,7 @@ describe('`constraint`', () => {
 
     expect(scenario.getCurrentIndex().isEndOfFormIndex()).toBe(true);
 
-    const restored = await scenario.serializeAndDeserializeInstance(formDef);
+    const restored = await scenario.serializeAndRestoreInstanceState();
 
     restored.next('/data/a');
 

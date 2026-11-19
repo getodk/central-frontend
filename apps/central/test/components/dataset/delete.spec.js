@@ -29,7 +29,7 @@ describe('DatasetDelete', () => {
       return load('/projects/1/entity-lists/trees/settings')
         .complete()
         .request(async (app) => {
-          await app.get('#dataset-settings .panel-simple-danger .btn-danger').trigger('click');
+          await app.get('#dataset-settings .page-heading .btn-danger').trigger('click');
           return app.get('#dataset-delete .btn-danger').trigger('click');
         })
         .respondWithData(() => {

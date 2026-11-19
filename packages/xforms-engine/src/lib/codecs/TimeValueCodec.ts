@@ -1,10 +1,9 @@
+import { Temporal } from 'temporal-polyfill';
+import { type CodecDecoder, type CodecEncoder, ValueCodec } from './ValueCodec.ts';
 import {
-  FRACTIONAL_SECOND_DIGITS,
   ISO_TIME_WITH_OPTIONAL_OFFSET_PATTERN,
   VALID_OFFSET_VALUE,
 } from '@getodk/common/constants/datetime.ts';
-import { Temporal } from 'temporal-polyfill';
-import { type CodecDecoder, type CodecEncoder, ValueCodec } from './ValueCodec.ts';
 
 export type TimeRuntimeValue = string | null;
 
@@ -16,6 +15,10 @@ export type TimeInputValue =
   | string
   | null;
 
+const removeMillis = (value: Temporal.PlainTime) => {
+  return value.toString({ fractionalSecondDigits: 0 });
+};
+
 const validateTimeString = (value: string): TimeRuntimeValue => {
   const match = ISO_TIME_WITH_OPTIONAL_OFFSET_PATTERN.exec(value ?? '');
   if (!match?.length) {
@@ -23,14 +26,16 @@ const validateTimeString = (value: string): TimeRuntimeValue => {
   }
 
   const [, timeOnly = '', offset] = match;
-  try {
-    // Delegate bounds checking to Temporal
-    Temporal.PlainTime.from(timeOnly);
-  } catch {
+  if (offset && !VALID_OFFSET_VALUE.test(offset)) {
     return null;
   }
 
-  return offset && !VALID_OFFSET_VALUE.test(offset) ? null : value;
+  try {
+    // Delegate bounds checking to Temporal
+    return removeMillis(Temporal.PlainTime.from(timeOnly));
+  } catch {
+    return null;
+  }
 };
 
 const parseZonedDateTimeToString = (value: Temporal.ZonedDateTime): string => {
@@ -38,13 +43,14 @@ const parseZonedDateTimeToString = (value: Temporal.ZonedDateTime): string => {
     return '';
   }
 
-  const time = value.toPlainTime().toString({ fractionalSecondDigits: FRACTIONAL_SECOND_DIGITS });
-  return `${time}${value.offset}`;
+  return removeMillis(value.toPlainTime());
 };
 
 /**
  * Converts a time-like value ({@link TimeInputValue}) to a strict time string.
  * Honors timezones/offsets if present on the input objects.
+ *
+ * Offsets and fractional seconds are dropped. The result is "HH:MM:SS".
  *
  * @param value - The value to convert.
  * @returns A time string or empty string if invalid.
@@ -63,17 +69,16 @@ const toTimeString = (value: TimeInputValue): string => {
     }
 
     if (value instanceof Temporal.PlainTime) {
-      return value.toString();
+      return removeMillis(value);
     }
 
     if (value instanceof Temporal.PlainDateTime) {
-      return value.toPlainTime().toString();
+      return removeMillis(value.toPlainTime());
     }
 
     if (value instanceof Temporal.ZonedDateTime) {
       return parseZonedDateTimeToString(value);
     }
-
     return validateTimeString(value) ?? '';
   } catch {
     return '';

@@ -19,7 +19,7 @@ jobs:
 
   odk-common:
     name: 'common'
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'ubuntu-26.04'
 
     strategy:
       fail-fast: false
@@ -42,19 +42,19 @@ jobs:
 
       - if: ${{ matrix.target == 'Node' }}
         run: 'npm run test:types -w packages/common'
-
       - if: ${{ matrix.target == 'Node' }}
         run: 'npm run test-node:jsdom -w packages/common'
 
       - if: ${{ matrix.target == 'Web' }}
+        uses: ./.github/actions/relegate-azure-mirrors
+      - if: ${{ matrix.target == 'Web' }}
         run: 'npx playwright install ${{ matrix.browser }} --with-deps'
-
       - if: ${{ matrix.target == 'Web' }}
         run: 'npm run test-browser:${{ matrix.browser }} -w packages/common'
 
   xforms-engine:
     name: 'xforms-engine'
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'ubuntu-26.04'
 
     strategy:
       fail-fast: false
@@ -82,6 +82,8 @@ jobs:
           npm run integration-test-node:jsdom -w=packages/xforms-engine
 
       - if: ${{ matrix.target == 'Web' }}
+        uses: ./.github/actions/relegate-azure-mirrors
+      - if: ${{ matrix.target == 'Web' }}
         run: |
           npx playwright install ${{ matrix.browser }} --with-deps
           npm run test-browser:${{ matrix.browser }} -w=packages/xforms-engine
@@ -89,7 +91,7 @@ jobs:
 
   xpath:
     name: 'xpath'
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'ubuntu-26.04'
 
     strategy:
       fail-fast: false
@@ -112,19 +114,19 @@ jobs:
 
       - if: ${{ matrix.target == 'Node' }}
         run: 'npm run test:types -w=packages/xpath'
-
       - if: ${{ matrix.target == 'Node' }}
         run: 'npm run test-node:jsdom -w=packages/xpath'
 
       - if: ${{ matrix.target == 'Web' }}
+        uses: ./.github/actions/relegate-azure-mirrors
+      - if: ${{ matrix.target == 'Web' }}
         run: 'npx playwright install ${{ matrix.browser }} --with-deps'
-
       - if: ${{ matrix.target == 'Web' }}
         run: 'npm run test-browser:${{ matrix.browser }} -w=packages/xpath'
 
   web-forms:
     name: 'web-forms'
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'ubuntu-26.04'
 
     strategy:
       fail-fast: false
@@ -149,7 +151,8 @@ jobs:
         run: 'npm run test:types -w=packages/web-forms'
 
       - if: ${{ matrix.target == 'Web' }}
+        uses: ./.github/actions/relegate-azure-mirrors
+      - if: ${{ matrix.target == 'Web' }}
         run: 'npx playwright install ${{ matrix.browser }} --with-deps'
-
       - if: ${{ matrix.target == 'Web' }}
         run: 'npm run test-browser:${{ matrix.browser }} -w=packages/web-forms'

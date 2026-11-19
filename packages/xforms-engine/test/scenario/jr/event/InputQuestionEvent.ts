@@ -4,6 +4,8 @@ import type {
   GeopointInputNode,
   GeopointInputValue,
   IntInputNode,
+  TimeInputNode,
+  TimeInputValue,
 } from '@getodk/xforms-engine';
 import { InputNodeAnswer } from '../../answer/InputNodeAnswer.ts';
 import { UntypedAnswer } from '../../answer/UntypedAnswer.ts';
@@ -58,6 +60,15 @@ export class InputQuestionEvent extends QuestionEvent<'input'> {
     return this.answerDefault(node, answerValue);
   }
 
+  private answerTimeQuestionNode(node: TimeInputNode, answerValue: unknown): ValueNodeAnswer {
+    if (answerValue === null || typeof answerValue === 'object') {
+      node.setValue(answerValue as TimeInputValue);
+      return new InputNodeAnswer(node);
+    }
+
+    return this.answerDefault(node, answerValue);
+  }
+
   answerQuestion(answerValue: unknown): ValueNodeAnswer {
     const { node } = this;
 
@@ -68,6 +79,9 @@ export class InputQuestionEvent extends QuestionEvent<'input'> {
 
       case 'geopoint':
         return this.answerGeopointQuestionNode(node, answerValue);
+
+      case 'time':
+        return this.answerTimeQuestionNode(node, answerValue);
 
       default:
         return this.answerDefault(node, answerValue);

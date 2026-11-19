@@ -59,7 +59,7 @@ const handleLanguageChange = (event: FormLanguage) => {
 <style scoped lang="scss">
 h1 {
 	font-size: var(--odk-title-font-size);
-	font-weight: 500;
+	font-weight: var(--odk-font-weight-semibold);
 	margin: var(--odk-spacing-m) 0;
 	overflow-wrap: anywhere;
 }
@@ -82,7 +82,7 @@ h1 {
 
 	h1 {
 		padding-left: 1.5rem;
-		font-weight: 400;
+		font-weight: var(--odk-font-weight-normal);
 		margin: 16px 0;
 	}
 

@@ -170,11 +170,11 @@ $popup-width: 300px;
       &::after {
         background-color: $color-action-overlay;
         content: '';
-        height: 45px;
-        left: 20px;
+        height: 42px;
+        left: 13px;
         position: absolute;
-        top: 20px;
-        width: 45px;
+        top: 36px;
+        width: 48px;
         z-index: -1;
       }
     }

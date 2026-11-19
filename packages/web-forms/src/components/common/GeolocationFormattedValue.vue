@@ -55,7 +55,7 @@ const locationPoints = computed<GeolocationValue>(() => {
 .geolocation-formatted-value > span {
 	margin-right: var(--odk-spacing-m);
 	font-size: var(--odk-answer-font-size);
-	font-weight: 300;
+	font-weight: var(--odk-font-weight-light);
 }
 
 @media screen and (max-width: #{pf.$sm}) {

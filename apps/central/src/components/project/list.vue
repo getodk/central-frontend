@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
       <button v-if="currentUser.can('project.create')"
         id="project-list-new-button" type="button" class="btn btn-primary"
         @click="createModal.show()">
-        <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
+        <span class="icon-plus"></span>{{ $t('action.create') }}&hellip;
       </button>
     </page-heading>
     <div v-if="projects.dataExists">

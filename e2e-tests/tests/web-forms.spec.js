@@ -95,15 +95,15 @@ test.describe('ODK Web Forms', () => {
 
     await page.getByRole('button', { name: 'send' }).click();
 
-    await expect(page.getByRole('heading', { name: 'Successful' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Submitted' })).toBeVisible();
 
-    await page.getByRole('button', { name: 'fill out again' }).click();
+    await page.getByRole('button', { name: 'Submit another' }).click();
 
     await page.getByLabel('First Name').fill('Jane Doe');
 
     await page.getByRole('button', { name: 'send' }).click();
 
-    await expect(page.getByRole('heading', { name: 'Successful' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Submitted' })).toBeVisible();
   });
 
   test('restrict multiple submission for single submission public link', async ({ page }) => {
@@ -112,9 +112,9 @@ test.describe('ODK Web Forms', () => {
     await expect(page.getByRole('heading', { name: publishedForm.name })).toBeVisible();
     await page.getByLabel('First Name').fill('John Doe');
     await page.getByRole('button', { name: 'send' }).click();
-    await expect(page.getByRole('heading', { name: 'Thank you' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Thank you for participating' })).toBeVisible();
     await page.reload();
-    await expect(page.getByRole('heading', { name: 'Thank you' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Thank you for participating' })).toBeVisible();
   });
 
   test('binds last-saved instance for multiple submissions', async ({ page }) => {
@@ -125,14 +125,14 @@ test.describe('ODK Web Forms', () => {
     await expect(page.getByRole('heading', { name: form.name })).toBeVisible();
     await page.getByLabel('item').fill('first fill');
     await page.getByRole('button', { name: 'send' }).click();
-    await expect(page.getByRole('heading', { name: 'Successful' })).toBeVisible();
-    await page.getByRole('button', { name: 'fill out again' }).click();
+    await expect(page.getByRole('heading', { name: 'Submitted' })).toBeVisible();
+    await page.getByRole('button', { name: 'Submit another' }).click();
 
     await expect(page.getByLabel('previous value')).toHaveValue('first fill');
     await page.getByLabel('item').fill('second fill');
     await page.getByRole('button', { name: 'send' }).click();
-    await expect(page.getByRole('heading', { name: 'Successful' })).toBeVisible();
-    await page.getByRole('button', { name: 'fill out again' }).click();
+    await expect(page.getByRole('heading', { name: 'Submitted' })).toBeVisible();
+    await page.getByRole('button', { name: 'Submit another' }).click();
 
     await expect(page.getByLabel('previous value')).toHaveValue('second fill');
   });
@@ -195,6 +195,6 @@ test.describe('ODK Web Forms', () => {
 
     await page2.getByRole('button', { name: 'send' }).click();
 
-    await expect(page2.getByRole('heading', { name: 'successful' })).toBeVisible();
+    await expect(page2.getByRole('heading', { name: 'Submitted' })).toBeVisible();
   });
 });

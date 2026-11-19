@@ -28,7 +28,7 @@ except according to the terms contained in the LICENSE file.
       <button v-if="project.dataExists && project.permits('entity.create')"
         id="dataset-entities-create-button" type="button"
         class="btn btn-primary" @click="create.show()">
-        <span class="icon-plus-circle"></span>{{ $t('newEntity') }}
+        <span class="icon-plus"></span>{{ $t('newEntity') }}
       </button>
     </page-heading>
     <entity-list v-show="dataset.dataExists" ref="list" :project-id="projectId"

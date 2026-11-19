@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
       <button v-if="project.dataExists && project.permits('dataset.update')"
         id="dataset-property-new-button" type="button" class="btn btn-primary"
         @click="newDatasetPropertyModal.show()">
-        <span class="icon-plus-circle"></span>{{ $t('new') }}
+        <span class="icon-plus"></span>{{ $t('new') }}
       </button>
     </page-heading>
     <dataset-properties/>

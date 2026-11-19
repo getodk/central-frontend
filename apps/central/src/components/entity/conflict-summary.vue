@@ -122,7 +122,11 @@ const markAsResolved = () => {
 <style lang="scss" scoped>
   @import '../../assets/scss/variables';
 
-  .panel { margin-bottom: 35px; }
+  .panel {
+    margin-bottom: 35px;
+    border-radius: 6px;
+    overflow: hidden;
+  }
 
   .panel-heading {
     display: flex;

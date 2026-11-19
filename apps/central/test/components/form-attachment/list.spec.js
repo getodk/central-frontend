@@ -859,7 +859,7 @@ describe('FormAttachmentList', () => {
         await rows[0].trigger('dragenter', {
           dataTransfer: fileDataTransfer(blankFiles(['a']))
         });
-        const labels = rows.map(row => row.get('.label'));
+        const labels = rows.map(row => row.get('.tag'));
         labels[0].should.be.visible();
         labels[0].text().should.equal('Replace');
         labels[1].should.be.hidden();
@@ -874,7 +874,7 @@ describe('FormAttachmentList', () => {
         await rows[0].trigger('dragenter', {
           dataTransfer: fileDataTransfer(blankFiles(['a']))
         });
-        const labels = rows.map(row => row.get('.label'));
+        const labels = rows.map(row => row.get('.tag'));
         labels[0].should.be.visible();
         labels[0].text().should.equal('Override');
         labels[1].should.be.hidden();
@@ -889,7 +889,7 @@ describe('FormAttachmentList', () => {
         await rows[0].trigger('dragenter', {
           dataTransfer: fileDataTransfer(blankFiles(['a']))
         });
-        const labels = rows.map(row => row.get('.label'));
+        const labels = rows.map(row => row.get('.tag'));
         labels[0].should.be.visible();
         labels[0].text().should.equal('Upload');
         labels[1].should.be.hidden();

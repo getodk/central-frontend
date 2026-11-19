@@ -83,12 +83,6 @@ describe('Submission', () => {
             webformsEnabled: true,
           }),
         })
-        // get attachments
-        .mockResolvedValueOnce({
-          ok: true,
-          status: 200,
-          json: () => Promise.resolve([]),
-        })
         // get form xml
         .mockResolvedValueOnce({
           ok: true,
@@ -105,7 +99,7 @@ describe('Submission', () => {
       const component = await mountComponent();
       const form = component.find('.odk-form');
       expect(form.exists()).to.equal(true);
-      expect(fetchMock).toHaveBeenCalledTimes(4);
+      expect(fetchMock).toHaveBeenCalledTimes(3);
     });
 
     it('should show dialog when form request 404s', async () => {
@@ -140,7 +134,7 @@ describe('Submission', () => {
       expect(form.exists()).to.equal(false);
       const dialog = component.find('.p-dialog');
       expect(dialog.exists()).to.equal(true);
-      expect(fetchMock).toHaveBeenCalledTimes(3);
+      expect(fetchMock).toHaveBeenCalledTimes(2);
     });
 
     it('should show dialog when form is closed', async () => {
@@ -151,7 +145,7 @@ describe('Submission', () => {
       expect(form.exists()).to.equal(false);
       const dialog = component.find('.p-dialog');
       expect(dialog.exists()).to.equal(true);
-      expect(fetchMock).toHaveBeenCalledTimes(3);
+      expect(fetchMock).toHaveBeenCalledTimes(2);
     });
 
     it('should show form for draft submissions even when closed', async () => {
@@ -160,7 +154,7 @@ describe('Submission', () => {
       const component = await mountComponent();
       const form = component.find('.odk-form');
       expect(form.exists()).to.equal(true);
-      expect(fetchMock).toHaveBeenCalledTimes(4);
+      expect(fetchMock).toHaveBeenCalledTimes(3);
     });
 
     it('should show form for editing submissions even when closed', async () => {
@@ -169,7 +163,7 @@ describe('Submission', () => {
       const component = await mountComponent();
       const form = component.find('.odk-form');
       expect(form.exists()).to.equal(true);
-      expect(fetchMock).toHaveBeenCalledTimes(4);
+      expect(fetchMock).toHaveBeenCalledTimes(3);
     });
   });
 
@@ -199,12 +193,6 @@ describe('Submission', () => {
             webformsEnabled: true,
           }),
         })
-        // get attachments
-        .mockResolvedValueOnce({
-          ok: true,
-          status: 200,
-          json: () => Promise.resolve([]),
-        })
         // get form xml
         .mockResolvedValueOnce({
           ok: true,
@@ -220,7 +208,7 @@ describe('Submission', () => {
       const component = await mountComponent();
       const form = component.find('.odk-form');
       expect(form.exists()).to.equal(true);
-      expect(fetchMock).toHaveBeenCalledTimes(3);
+      expect(fetchMock).toHaveBeenCalledTimes(2);
     });
 
     it('should show dialog when form request 404s', async () => {
@@ -239,7 +227,7 @@ describe('Submission', () => {
         })
       vi.stubGlobal('fetch', fetchMock);
       const component = await mountComponent();
-      expect(fetchMock).toHaveBeenCalledTimes(2);
+      expect(fetchMock).toHaveBeenCalledTimes(1);
       const form = component.find('.odk-form');
       expect(form.exists()).to.equal(false);
       const dialog = component.find('.p-dialog');
@@ -253,7 +241,7 @@ describe('Submission', () => {
       expect(form.exists()).to.equal(false);
       const dialog = component.find('.p-dialog');
       expect(dialog.exists()).to.equal(true);
-      expect(fetchMock).toHaveBeenCalledTimes(2);
+      expect(fetchMock).toHaveBeenCalledTimes(1);
     });
 
     it('should show dialog when form is closed', async () => {
@@ -263,7 +251,7 @@ describe('Submission', () => {
       expect(form.exists()).to.equal(false);
       const dialog = component.find('.p-dialog');
       expect(dialog.exists()).to.equal(true);
-      expect(fetchMock).toHaveBeenCalledTimes(2);
+      expect(fetchMock).toHaveBeenCalledTimes(1);
     });
   });
 

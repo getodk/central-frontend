@@ -764,6 +764,10 @@
       "string": "Public Access Link",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
+    "publicLinks": {
+      "string": "Public Links",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
     "user": {
       "string": "User",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
@@ -1057,7 +1061,7 @@
       "developer_comment": "This text is shown on its own before details about a warning."
     },
     "recommended": {
-      "string": "recommended",
+      "string": "Recommended",
       "developer_comment": "Standalone text shown as a badge next to a recommendation. Not part of a longer phrase."
     },
     "none": {
@@ -1713,6 +1717,14 @@
       "noLogDateSelected": {
         "string": "(none)",
         "developer_comment": "Text shown when no Audit log date is selected in the filter"
+      }
+    },
+    "AuditFiltersAction": {
+      "action": {
+        "all": {
+          "string": "All",
+          "developer_comment": "This is shown in a list of actions performed on the server. It refers to all the actions in a certain category."
+        }
       }
     },
     "AuditList": {
@@ -2602,16 +2614,15 @@
     },
     "EntityFiltersViewAs": {
       "noUserSelected": {
-        "string": "Me"
+        "string": "All",
+        "developer_comment": "\"All\" refers to users (in the form of app users and public links)"
       },
       "viewAs": {
         "string": "View As"
       },
       "resetToMe": {
-        "string": "Reset to Me"
-      },
-      "search": {
-        "string": "Search App Users…"
+        "string": "Reset to All",
+        "developer_comment": "This \"All\" means all users (app users and public links) shown in this dropdown"
       }
     },
     "EntityList": {
@@ -3476,6 +3487,22 @@
             "string": "click here to choose",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nIf you would rather select files from a prompt, ensure that their names match the ones in the table and then {clickHere}."
           }
+        }
+      }
+    },
+    "FormAutosaveSettings": {
+      "autosaveSetting": {
+        "description": {
+          "string": "Autosave responses if browser closes or refreshes. Sensitive data may be retained in saved responses."
+        },
+        "enabled": {
+          "string": "Autosave is now enabled for your “{formName}” form."
+        },
+        "disabled": {
+          "string": "Autosave is now disabled for your “{formName}” form."
+        },
+        "unselectable": {
+          "string": "Configuring autosave is not possible using Enketo."
         }
       }
     },
@@ -4763,9 +4790,6 @@
         "archived": {
           "0": {
             "string": "This Project has been archived."
-          },
-          "1": {
-            "string": "In this version of ODK Central, you may not unarchive a Project. However, the ability to unarchive a Project is planned for a future release."
           }
         }
       },
@@ -5024,6 +5048,21 @@
       }
     },
     "PublicLinkRow": {
+      "action": {
+        "copyLink": {
+          "string": "Copy link",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        },
+        "openInNewTab": {
+          "string": "Open in new tab",
+          "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "urlCopied": {
+          "string": "URL copied."
+        }
+      },
       "revoked": {
         "string": "Revoked",
         "developer_comment": "This text is shown for a Public Access Link that has been revoked. The text appears on its own and is not part of a longer sentence."

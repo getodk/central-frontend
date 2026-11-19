@@ -176,7 +176,7 @@ watchEffect(() => {
 	.media-error-message {
 		margin: var(--odk-spacing-xl);
 		font-size: var(--odk-hint-font-size);
-		font-weight: 300;
+		font-weight: var(--odk-font-weight-light);
 		word-break: break-word;
 		text-align: center;
 		color: var(--odk-muted-text-color);
