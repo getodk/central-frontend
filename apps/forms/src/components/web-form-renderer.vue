@@ -356,7 +356,9 @@ onMounted(async () => {
 
 const fillOutAgain = () => {
   visibleModal.value = undefined;
-  window.addEventListener('beforeunload', beforeUnload);
+  if (confirmClose.value) {
+    window.addEventListener('beforeunload', beforeUnload);
+  }
 }
 </script>
 
