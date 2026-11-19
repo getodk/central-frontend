@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
     <entity-upload-alert v-if="systemProperties != null" type="warning">
       <template #title>{{ $t('systemProperties') }}</template>
       <template #body>
-        <p>{{ $t('propertiesIgnored', systemProperties.length) }}</p>
+        <p>{{ $tc('propertiesIgnored', systemProperties.length) }}</p>
         <entity-upload-property-list :names="systemProperties"/>
       </template>
     </entity-upload-alert>
@@ -29,7 +29,7 @@ except according to the terms contained in the LICENSE file.
         <p>
           <span>{{ $t('caseMismatch.description') }}</span>
           <sentence-separator/>
-          <span>{{ $t('columnsIgnored', caseMismatch.length) }}</span>
+          <span>{{ $tc('columnsIgnored', caseMismatch.length) }}</span>
         </p>
         <div>
           <table class="table">
@@ -50,18 +50,18 @@ except according to the terms contained in the LICENSE file.
       </template>
     </entity-upload-alert>
     <entity-upload-alert v-if="invalidProperties != null" type="warning">
-      <template #title>{{ $t('invalidProperties', invalidProperties.length) }}</template>
+      <template #title>{{ $tc('invalidProperties', invalidProperties.length) }}</template>
       <template #body>
-        <p>{{ $t('propertiesIgnored', invalidProperties.length) }}</p>
+        <p>{{ $tc('propertiesIgnored', invalidProperties.length) }}</p>
         <entity-upload-property-list :names="invalidProperties"/>
       </template>
     </entity-upload-alert>
     <entity-upload-alert v-if="missingProperties != null" type="warning">
       <template #title>
-        {{ $t('missingProperties.title', missingProperties.length) }}
+        {{ $tc('missingProperties.title', missingProperties.length) }}
       </template>
       <template #body>
-        <p>{{ $t('missingProperties.description', missingProperties.length) }}</p>
+        <p>{{ $tc('missingProperties.description', missingProperties.length) }}</p>
         <entity-upload-property-list :names="missingProperties"/>
       </template>
     </entity-upload-alert>

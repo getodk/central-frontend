@@ -40,7 +40,7 @@ some point. -->
         </template>
         <template v-else-if="shownAfterSelection">
           <p>
-            {{ $t('afterSelection.noneMatched', unmatchedFiles.length) }}
+            {{ $tc('afterSelection.noneMatched', unmatchedFiles.length) }}
           </p>
           <p class="modal-actions">
             <button type="button" class="btn btn-primary"

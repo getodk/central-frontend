@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
         <infonav v-if="project.dataExists && formDatasetDiff.dataExists && publishedAttachments.dataExists
           && uniqueDatasetCount > 0" :count="uniqueDatasetCount">
           <template #title>
-            <span class="icon-magic"></span>{{ $t('infoNav.entityLists', uniqueDatasetCount) }}
+            <span class="icon-magic"></span>{{ $tc('infoNav.entityLists', uniqueDatasetCount) }}
           </template>
           <template #dropdown>
             <li v-if="formDatasetDiff.length > 0">
@@ -38,7 +38,7 @@ except according to the terms contained in the LICENSE file.
           </template>
         </infonav>
         <infonav v-if="project.dataExists && appUserCount.dataExists" :link="projectPath('form-access')" :count="appUserCount.data">
-          <template #title>{{ $t('infoNav.appUsers', appUserCount.data) }}</template>
+          <template #title>{{ $tc('infoNav.appUsers', appUserCount.data) }}</template>
         </infonav>
       </template>
       <template #tabs>

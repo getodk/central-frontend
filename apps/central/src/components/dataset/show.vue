@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
       <template #infonav>
         <infonav v-if="dataset.dataExists && dataset.sourceForms.length > 0" :count="dataset.sourceForms.length">
           <template #title>
-            <span class="icon-magic"></span>{{ $t('infoNav.connectedForms', dataset.sourceForms.length) }}
+            <span class="icon-magic"></span>{{ $tc('infoNav.connectedForms', dataset.sourceForms.length) }}
           </template>
           <template #dropdown>
             <li v-for="form in dataset.sourceForms" :key="form.xmlFormId">
@@ -28,7 +28,7 @@ except according to the terms contained in the LICENSE file.
         </infonav>
         <infonav v-if="dataset.dataExists && dataset.linkedForms.length > 0" :count="dataset.linkedForms.length">
           <template #title>
-            <span class="icon-chain"></span>{{ $t('infoNav.linkedForms', dataset.linkedForms.length) }}
+            <span class="icon-chain"></span>{{ $tc('infoNav.linkedForms', dataset.linkedForms.length) }}
           </template>
           <template #dropdown>
             <li v-for="form in dataset.linkedForms" :key="form.xmlFormId">

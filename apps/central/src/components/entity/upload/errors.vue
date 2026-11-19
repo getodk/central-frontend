@@ -32,7 +32,7 @@
         <p>
           <span>{{ $t('duplicateColumn.description') }}</span>
           <sentence-separator/>
-          <span>{{ $t('duplicateColumn.headersReused', duplicateColumns.length) }}</span>
+          <span>{{ $tc('duplicateColumn.headersReused', duplicateColumns.length) }}</span>
         </p>
         <entity-upload-property-list :names="duplicateColumns"/>
       </template>
