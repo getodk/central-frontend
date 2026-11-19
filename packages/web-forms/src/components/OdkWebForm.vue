@@ -502,7 +502,7 @@ onUnmounted(() => {
 
 			<FormHeader :form="state.root" @change-language="setLanguage" />
 
-			<Card class="questions-card">
+			<Card class="questions-card" role="main">
 				<template #content>
 					<div class="form-questions">
 						<div class="flex flex-column gap-2">
@@ -515,7 +515,7 @@ onUnmounted(() => {
 			<FormFooter :root="state.root" @submit="handleSubmit(state)" @next="handleNext(state)" />
 		</div>
 
-		<div class="powered-by-wrapper">
+		<div class="powered-by-wrapper" role="contentinfo">
 			<a class="anchor" href="https://getodk.org" target="_blank">
 				<span class="caption">Powered by</span>
 				<img class="logo" src="../assets/images/odk-logo.svg" alt="ODK">

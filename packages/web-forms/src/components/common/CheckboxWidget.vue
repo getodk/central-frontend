@@ -35,6 +35,7 @@ const selectValues = (values: readonly string[]) => {
 			:input-id="selectOptionId(question, option)"
 			:name="question.nodeId"
 			:value="option.value"
+			:aria-label="option.label.asString"
 			:disabled="question.currentState.readonly"
 			:model-value="question.currentState.value"
 			@update:model-value="selectValues"

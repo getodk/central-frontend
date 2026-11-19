@@ -7,7 +7,10 @@ import {
 import { useRangeNode } from '@getodk/web-forms/components/form-elements/range/useRangeNode.ts';
 import type { TimerID } from '@getodk/common/types/timers.ts';
 import type { AnyRangeNode } from '@getodk/xforms-engine';
-import { computed, onBeforeUnmount, useTemplateRef } from 'vue';
+import { computed, inject, onBeforeUnmount, useTemplateRef } from 'vue';
+import { labelId } from '@getodk/web-forms/lib/format/ids';
+import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
+import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 
 const HOLD_DELAY = 500;
 const HOLD_INTERVAL = 100;
@@ -22,6 +25,8 @@ interface HoldState {
 }
 
 const props = defineProps<{ readonly node: AnyRangeNode }>();
+
+const t: Translate = inject(TRANSLATE)!;
 
 const { scale, numberValue, disabled, setValue } = useRangeNode(props.node);
 const hold: HoldState = { timerId: null, lastValue: null };
@@ -121,6 +126,8 @@ onBeforeUnmount(() => stopHold());
 		ref="picker"
 		:class="['range-picker', { 'range-disabled': disabled }]"
 		role="spinbutton"
+		:aria-labelledby="labelId(node.nodeId)"
+		:aria-valuenow="numberValue"
 		:tabindex="disabled ? -1 : 0"
 		@keydown.up.prevent="stepUp"
 		@keydown.down.prevent="stepDown"
@@ -128,6 +135,7 @@ onBeforeUnmount(() => stopHold());
 	>
 		<button
 			type="button"
+			:title="t('range_picker.increment.button')"
 			tabindex="-1"
 			class="range-picker-step range-picker-step-up"
 			:disabled="!canStepUp"
@@ -143,6 +151,7 @@ onBeforeUnmount(() => stopHold());
 
 		<button
 			type="button"
+			:title="t('range_picker.decrement.button')"
 			tabindex="-1"
 			class="range-picker-step range-picker-step-down"
 			:disabled="!canStepDown"

@@ -6,6 +6,7 @@ import MarkdownBlock from './MarkdownBlock.vue';
 import { TRANSLATE } from '@getodk/web-forms/lib/constants/injection-keys.ts';
 import type { Translate } from '@getodk/web-forms/lib/locale/useLocale.ts';
 import { calculateVisibleHeight, DEFAULT_PRIMEVUE_ITEM_HEIGHT } from '@getodk/web-forms/lib/dropdown.ts';
+import { labelId } from '@getodk/web-forms/lib/format/ids.ts';
 
 interface SearchableDropdownProps {
 	readonly question: SelectNode;
@@ -55,6 +56,7 @@ const selectedLabel = computed(() => {
 		option-value="value"
 		:virtual-scroller-options="{ itemSize: DEFAULT_PRIMEVUE_ITEM_HEIGHT }"
 		:scroll-height="calculatedScrollHeight"
+		:aria-labelledby="labelId(question.nodeId)"
 		@change="$emit('change', $event.value)"
 	>
 		<template #option="slotProps">

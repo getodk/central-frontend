@@ -1,0 +1,10 @@
+{
+  "range_picker.increment.button": {
+    "string": "Increase by one",
+    "developer_comment": "The title of the button to increment the value."
+  },
+  "range_picker.decrement.button": {
+    "string": "Decrease by one",
+    "developer_comment": "The title of the button to decrement the value."
+  }
+}
