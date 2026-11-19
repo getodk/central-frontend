@@ -204,8 +204,9 @@ describe('UserEditPassword', () => {
         formGroup.find('.collapsible-error').exists().should.be.true;
       }));
 
-  it('should allow user to continue if password breach check returns 500', () =>
-    mockHttp()
+  it('should allow user to continue if password breach check returns 500', function() { // eslint-disable-line func-names
+    this.timeout(15_000); // REVIEW some bug in the MockHttp promise resolution chain?  It seems to take 5 seconds for the status:500 to be returned
+    return mockHttp()
       .mount(UserEditPassword, mountOptions())
       .request(submit)
       .respond(() => ({ status: 500 }))
@@ -217,7 +218,8 @@ describe('UserEditPassword', () => {
           url: '/v1/users/1/password',
           data: { old: 'testPasswordX', new: 'testPasswordY' }
         },
-      ]));
+      ]);
+  });
 
   it('sends the correct request', () =>
     mockHttp()
