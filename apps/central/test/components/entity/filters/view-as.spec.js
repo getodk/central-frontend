@@ -233,7 +233,7 @@ describe('EntityFiltersViewAs', () => {
       });
 
       const validLinkActor = testData.extendedPublicLinks
-        .createPast(1, { displayName: `Valid public link` })
+        .createPast(1, { displayName: 'Valid public link' })
         .last();
       testData.extendedFormSummaryAssignments.createPast(1, {
         actor: validLinkActor,
@@ -243,7 +243,7 @@ describe('EntityFiltersViewAs', () => {
       });
 
       const revokedLinkActor = testData.extendedPublicLinks
-        .createPast(1, { displayName: `Revoked public link` })
+        .createPast(1, { displayName: 'Revoked public link' })
         .last();
       testData.extendedFormSummaryAssignments.createPast(1, {
         actor: revokedLinkActor,
