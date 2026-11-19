@@ -49,6 +49,9 @@ const lastSavedXml = ref<string | undefined>();
 const autosaveEnabled = computed(() => {
   return !isEdit.value && !props.form.draft && !isPreview.value && props.form.autosaveEnabled;
 });
+const confirmClose = computed(() => {
+  return !isEdit.value && !props.form.draft && !isPreview.value && !props.form.autosaveEnabled;
+});
 const autosavePayload = ref<AutosaveValue | undefined>();
 const dateFormatter = new Intl.DateTimeFormat(undefined, {
   timeStyle: 'short',
@@ -115,6 +118,7 @@ const handleResult = () => {
   if (submissionResult.primaryInstanceResult.success && attachmentResultArr.every(r => r.success)) {
 
     clearForm(props.form.once ? {} : { next: POST_SUBMIT__NEW_INSTANCE });
+    window.removeEventListener('beforeunload', beforeUnload);
 
     if (isPublicLink.value) {
       visibleModal.value = { type: 'thankYou', status: 'success', hideable: false };
@@ -306,6 +310,8 @@ const loadLastSaved = async () => {
   }
 };
 
+const beforeUnload = (event) => event.preventDefault();
+
 const loadAutosave = async () => {
   if (autosaveEnabled.value) {
     const autosave = await getAutosave(props.form);
@@ -314,6 +320,10 @@ const loadAutosave = async () => {
       visibleModal.value = { type: 'autosave', status: 'none', hideable: false };
       return true;
     }
+  }
+  // autosave is not configured so register beforeunload confirm dialog instead
+  if (confirmClose.value) {
+    window.addEventListener('beforeunload', beforeUnload);
   }
   return false;
 };
@@ -343,6 +353,13 @@ onMounted(async () => {
     inited.value = true;
   }
 });
+
+const fillOutAgain = () => {
+  visibleModal.value = undefined;
+  if (confirmClose.value) {
+    window.addEventListener('beforeunload', beforeUnload);
+  }
+}
 </script>
 
 <template>
@@ -394,7 +411,7 @@ onMounted(async () => {
     </template>
     <template #footer v-if="visibleModal?.type">
       <template v-if="visibleModal.type === 'submission'">
-        <Button type="button" @click="visibleModal = undefined">{{ $t('submissionModal.action.fillOutAgain') }}</Button>
+        <Button type="button" @click="fillOutAgain()">{{ $t('submissionModal.action.fillOutAgain') }}</Button>
       </template>
       <!-- Any type of error while sending attachments -->
       <template v-else-if="visibleModal.type === 'retry'
