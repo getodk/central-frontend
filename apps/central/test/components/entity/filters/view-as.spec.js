@@ -215,6 +215,40 @@ describe('EntityFiltersViewAs', () => {
       component.text().should.not.contain('Public Link 1'); // f2 assignment, which is not a linked form
     });
 
+    it('skips a revoked public link', async () => {
+      testData.extendedDatasets.createPast(1, {
+        accessFilter: { type: 'ownerOnly' },
+        linkedForms: [{ xmlFormId: 'f1', name: 'Form 1' }]
+      });
+
+      const validLinkActor = testData.extendedPublicLinks
+        .createPast(1, { displayName: `Valid public link` })
+        .last();
+      testData.extendedFormSummaryAssignments.createPast(1, {
+        actor: validLinkActor,
+        role: 'pub-link',
+        xmlFormId: 'f1',
+        tokenActive: true,
+      });
+
+      const revokedLinkActor = testData.extendedPublicLinks
+        .createPast(1, { displayName: `Revoked public link` })
+        .last();
+      testData.extendedFormSummaryAssignments.createPast(1, {
+        actor: revokedLinkActor,
+        role: 'pub-link',
+        xmlFormId: 'f1',
+        tokenActive: false,
+      });
+
+      const formSummaryAssignments = testData.extendedFormSummaryAssignments.sorted();
+      const component = mountComponent({ formSummaryAssignments });
+      await component.get('.dropdown-trigger').trigger('click');
+      component.findAll('input[type="radio"]').length.should.equal(1);
+      component.text().should.contain('Valid public link');
+      component.text().should.not.contain('Revoked public link'); // should not be present
+    });
+
     it('emits a public link ID after selection is applied', async () => {
       testData.extendedDatasets.createPast(1, {
         accessFilter: { type: 'ownerOnly' },

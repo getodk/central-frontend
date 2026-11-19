@@ -13,14 +13,15 @@ export const extendedProjectAssignments = dataStore({
 });
 
 export const extendedFormSummaryAssignments = dataStore({
-  factory: ({ actor, actorId = actor?.id, role, xmlFormId }) => {
+  factory: ({ actor, actorId = actor?.id, role, xmlFormId, tokenActive = true }) => {
     const roleObj = standardRoles.sorted().find(r => r.system === role);
     if (roleObj == null) throw new Error('role not found');
     return {
       ...(actor == null ? {} : { actor: toActor(actor) }),
       actorId,
       roleId: roleObj.id,
-      xmlFormId
+      xmlFormId,
+      tokenActive
     };
   }
 });

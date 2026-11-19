@@ -54,7 +54,8 @@ const options = computed(() => {
     dataset.linkedForms.map((form, index) => [form.xmlFormId, { ...form, index }])
   );
   const publicLinkAssignments = formSummaryAssignments.data
-    .filter(({ xmlFormId }) => linkedForms.has(xmlFormId));
+    .filter(({ xmlFormId }) => linkedForms.has(xmlFormId))
+    .filter(({ tokenActive }) => tokenActive);
   // Sort by the order of the linked forms, then by the public link's created date (newest first)
   publicLinkAssignments.sort((a, b) =>
     linkedForms.get(a.xmlFormId).index - linkedForms.get(b.xmlFormId).index ||
