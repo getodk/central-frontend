@@ -43,8 +43,10 @@ const options = computed(() => {
     formSummaryAssignments.dataExists))
     return null;
 
-  const appUsers = fieldKeys.data.map(({ id, displayName, createdAt }) =>
-    ({ value: id, text: displayName, group: t('resource.appUsers'), createdAt }));
+  const appUsers = fieldKeys.data
+    .filter(({ token }) => token != null)
+    .map(({ id, displayName, createdAt }) =>
+      ({ value: id, text: displayName, group: t('resource.appUsers'), createdAt }))
   // Sort app users by created date (newest first)
   appUsers.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
 

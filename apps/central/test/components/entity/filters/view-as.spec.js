@@ -62,6 +62,17 @@ describe('EntityFiltersViewAs', () => {
       component.findAll('input[type="radio"]').length.should.equal(2);
     });
 
+    it('skips app users that have been revoked', async () => {
+      testData.extendedFieldKeys.createPast(1, { displayName: 'Active app user' });
+      testData.extendedFieldKeys.createPast(1, { displayName: 'Revoked app user', token: null });
+      const fieldKeys = testData.extendedFieldKeys.sorted();
+      const component = mountComponent({ fieldKeys, attachTo: document.body });
+      await component.get('.dropdown-trigger').trigger('click');
+      component.findAll('input[type="radio"]').length.should.equal(1);
+      component.text().should.contain('Active app user');
+      component.text().should.not.contain('Revoked app user'); // should not be present
+    });
+
     it('orders app users by created date (newest first)', () => {
       const fieldKeys = createFieldKeys(3);
       const component = mountComponent({
