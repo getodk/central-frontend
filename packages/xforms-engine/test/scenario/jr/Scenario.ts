@@ -1107,8 +1107,11 @@ export class Scenario {
     });
   }
 
-  async restoreWebFormsInstanceState(payload: ResolvedFormInstanceInput): Promise<this> {
-    const instance = await this.form.restoreInstance(payload, this.config.formOptions);
+  async restoreWebFormsInstanceState(
+    payload: ResolvedFormInstanceInput,
+    config?: FormInstanceConfig
+  ): Promise<this> {
+    const instance = await this.form.restoreInstance(payload, config ?? this.config.formOptions);
 
     return this.fork(instance);
   }
@@ -1147,7 +1150,7 @@ export class Scenario {
     return new JRFormIndex(this.getSelectedPositionalEvent());
   }
 
-  async serializeAndRestoreInstanceState(): Promise<this> {
+  async serializeAndRestoreInstanceState(config?: FormInstanceConfig): Promise<this> {
     const snapshot = this.instanceRoot.prepareInstanceSnapshot();
     const instanceFile = new File([snapshot.xml], ENGINE_CONSTANTS.INSTANCE_FILE_NAME, {
       type: ENGINE_CONSTANTS.INSTANCE_FILE_TYPE,
@@ -1164,7 +1167,7 @@ export class Scenario {
       inputType: 'FORM_INSTANCE_INPUT_RESOLVED',
       data,
     } as ResolvedFormInstanceInput;
-    return this.restoreWebFormsInstanceState(payload);
+    return this.restoreWebFormsInstanceState(payload, config);
   }
 
   /** @see {@link editInstance} */

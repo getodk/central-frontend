@@ -82,9 +82,7 @@ export abstract class BaseInstantiableFormResult<
       this.assertInstantiable();
 
       const initialState = await InitialInstanceState.resolve(instanceOptions.model, input);
-
-      // clone the object without the instanceDefaults which are ignored when editing
-      const { instanceDefaults, ...instanceConfig } = rawInstanceConfig;
+      const instanceConfig = this.removeInstanceDefaults(rawInstanceConfig);
 
       return new FormInstance(this, {
         mode: 'edit',
@@ -96,11 +94,12 @@ export abstract class BaseInstantiableFormResult<
 
     this.restoreInstance = async (
       input: RestoreFormInstanceInput,
-      instanceConfig: FormInstanceConfig = {}
+      rawInstanceConfig: FormInstanceConfig = {}
     ) => {
       this.assertInstantiable();
 
       const initialState = await InitialInstanceState.resolve(instanceOptions.model, input);
+      const instanceConfig = this.removeInstanceDefaults(rawInstanceConfig);
 
       return new FormInstance(this, {
         mode: 'restore',
@@ -123,5 +122,11 @@ export abstract class BaseInstantiableFormResult<
         'Failed to instantiate from result with status: "failure"'
       );
     }
+  }
+
+  // clone the object without the instanceDefaults which are ignored when editing/restoring
+  removeInstanceDefaults(rawInstanceConfig: FormInstanceConfig) {
+    const { instanceDefaults, ...instanceConfig } = rawInstanceConfig;
+    return instanceConfig;
   }
 }
