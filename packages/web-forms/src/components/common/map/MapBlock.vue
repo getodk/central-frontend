@@ -9,6 +9,7 @@ import { type Mode, type SingleFeatureType } from '@getodk/web-forms/components/
 import MapAdvancedPanel from '@getodk/web-forms/components/common/map/MapAdvancedPanel.vue';
 import MapConfirmDialog from '@getodk/web-forms/components/common/map/MapConfirmDialog.vue';
 import MapControls from '@getodk/web-forms/components/common/map/MapControls.vue';
+import MapPlaceSearch from '@getodk/web-forms/components/common/map/MapPlaceSearch.vue';
 import MapPrivacyDialog from '@getodk/web-forms/components/common/map/MapPrivacyDialog.vue';
 import MapProperties from '@getodk/web-forms/components/common/map/MapProperties.vue';
 import MapStatusBar from '@getodk/web-forms/components/common/map/MapStatusBar.vue';
@@ -244,6 +245,13 @@ const toggleFullScreen = () => {
 						<span>{{ t('map_block.get_location.label') }}</span>
 					</Button>
 				</div>
+
+				<!-- Inline check instead of isGoogleProvider since TypeScript only narrows mapProvider for apiKey this way. -->
+				<MapPlaceSearch
+					v-if="mapProvider.name === 'google' && !disabled"
+					:api-key="mapProvider.apiKey"
+					@select-place="mapHandler.showPlace"
+				/>
 
 				<MapControls
 					:is-full-screen="isFullScreen"
@@ -546,6 +554,10 @@ const toggleFullScreen = () => {
 
 	.map-container {
 		:deep(.ol-zoom) {
+			display: none;
+		}
+
+		&:not(.map-full-screen) :deep(.map-place-search) {
 			display: none;
 		}
 

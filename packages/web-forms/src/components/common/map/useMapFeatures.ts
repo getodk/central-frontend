@@ -6,9 +6,10 @@ import {
 import { ODK_VALUE_PROPERTY } from '@getodk/web-forms/components/common/map/useMapBlock.ts';
 import {
   COORDINATE_LAYOUT_XYZM,
+  DEFAULT_GEOJSON_PROJECTION,
   type UseMapViewControls,
 } from '@getodk/web-forms/components/common/map/useMapViewControls.ts';
-import type { FeatureCollection, Feature as GeoJsonFeature } from 'geojson';
+import type { Feature as GeoJsonFeature, FeatureCollection } from 'geojson';
 import { Map } from 'ol';
 import type { Coordinate } from 'ol/coordinate';
 import { intersects } from 'ol/extent';
@@ -42,7 +43,6 @@ export interface UseMapFeatures {
   saveFeature: (feature: Feature | undefined) => void;
 }
 
-const DEFAULT_GEOJSON_PROJECTION = 'EPSG:4326';
 export const FEATURE_ID_PROPERTY = 'odk_feature_id';
 export const SELECTED_VERTEX_INDEX_PROPERTY = 'odk_selected_vertex_index';
 export const SAVED_ID_PROPERTY = 'odk_saved_id';

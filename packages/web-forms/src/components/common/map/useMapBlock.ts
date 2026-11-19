@@ -45,6 +45,7 @@ import {
   useMapViewControls,
   type UseMapViewControls,
 } from '@getodk/web-forms/components/common/map/useMapViewControls.ts';
+import type { PlaceSearchResult } from '@getodk/web-forms/components/common/map/usePlaceSearch.ts';
 import {
   deleteVertexFromFeature,
   getVertexByIndex,
@@ -610,6 +611,7 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
     fitToAllFeatures: () => mapViewControls?.fitToAllFeatures(featuresSource),
     getActiveBaseLayerId: () => baseLayer?.activeLayerId.value ?? DEFAULT_BASE_LAYER_ID,
     selectBaseLayer: (layerId: BaseLayerId) => baseLayer?.selectBaseLayer(layerId),
+    showPlace: (place: PlaceSearchResult) => mapViewControls?.showPlace(place),
     watchCurrentLocation,
     stopWatchingCurrentLocation,
     canRemoveCurrentLocation,
