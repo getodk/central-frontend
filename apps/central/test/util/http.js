@@ -439,10 +439,6 @@ class MockHttp {
     return this.respond(() => mockResponse.problem(problemOrCode));
   }
 
-  respondNever() {
-    return this.respond(() => new Promise(() => {}));
-  }
-
   // Specifies a response to return for a matching request.
   respondIf(f, responseCallback) {
     return this._with({

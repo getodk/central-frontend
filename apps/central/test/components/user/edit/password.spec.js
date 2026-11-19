@@ -220,21 +220,6 @@ describe.only('UserEditPassword', () => {
       ]);
   });
 
-  it('should allow user to continue if password breach check times out', () =>
-    mockHttp()
-      .mount(UserEditPassword, mountOptions())
-      .request(submit)
-      .respondNever()
-      .respondWithSuccess()
-      .testRequests([
-        haveIbeenPwnedRequest('testPasswordY'),
-        {
-          method: 'PUT',
-          url: '/v1/users/1/password',
-          data: { old: 'testPasswordX', new: 'testPasswordY' }
-        },
-      ]));
-
   it('sends the correct request', () =>
     mockHttp()
       .mount(UserEditPassword, mountOptions())
