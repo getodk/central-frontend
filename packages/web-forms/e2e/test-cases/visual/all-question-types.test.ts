@@ -1,7 +1,7 @@
 import { Locator, test } from '@playwright/test';
 import { BrowserContext } from 'playwright-core';
 import { FillFormPage } from '../../page-objects/pages/FillFormPage.ts';
-import { stubMapTiles } from '../../map-tiles.ts';
+import { stubGoogleMaps, stubMapTiles, stubPlaceSearchFailure } from '../../map-tiles.ts';
 
 test.describe('All Question Types (Visual)', () => {
   let formPage: FillFormPage;
@@ -244,5 +244,60 @@ test.describe('All Question Types - Geolocation permission denied', () => {
       'Cannot access location',
       'Grant location permission in the browser settings and make sure location is turned on.'
     );
+  });
+});
+
+test.describe('All Question Types - Map layers and search', () => {
+  let formPage: FillFormPage;
+  let context: BrowserContext;
+  let mapComponent: Locator;
+
+  test.beforeAll(async ({ browser }) => {
+    context = await browser.newContext();
+    await stubGoogleMaps(context);
+    const page = await context.newPage();
+    formPage = await FillFormPage.loadForm(page, 'all-question-types-v2024091201-3.xml', {
+      mapProvider: 'google',
+    });
+    await formPage.waitForNetworkIdle();
+    await formPage.text.expectHint(
+      'select_one type with map appearance. Choices are loaded from a GeoJSON attachment'
+    );
+    mapComponent = formPage.map.getMapComponentLocator('Map');
+  });
+
+  test.afterAll(async () => {
+    await context?.close();
+  });
+
+  test.beforeEach(async () => {
+    await formPage.waitForNetworkIdle();
+    await formPage.map.expectMapVisible(mapComponent);
+    await formPage.map.scrollMapIntoView(mapComponent);
+  });
+
+  test('switches between map layers', async () => {
+    await formPage.map.openBaseLayerPicker(mapComponent);
+    await formPage.map.expectMapScreenshot(mapComponent, 'map-layer-picker.png');
+
+    await formPage.map.selectBaseLayer(mapComponent, 'Satellite');
+    await formPage.map.expectMapScreenshot(mapComponent, 'map-satellite-layer.png');
+
+    await formPage.map.selectBaseLayer(mapComponent, 'Default');
+    await formPage.map.closeBaseLayerPicker(mapComponent);
+  });
+
+  test('searches a place and shows it on the map', async () => {
+    await formPage.map.searchPlace(mapComponent, 'Coober Pedy');
+    await formPage.map.expectMapScreenshot(mapComponent, 'map-search-results.png');
+
+    await formPage.map.selectPlace(mapComponent, 'Coober Pedy SA 5723, Australia');
+    await formPage.map.expectMapScreenshot(mapComponent, 'map-place-shown.png');
+  });
+
+  test('shows an error when the search fails', async () => {
+    await stubPlaceSearchFailure(formPage.page);
+    await formPage.map.searchPlace(mapComponent, 'Coober Pedy Airport');
+    await formPage.map.expectMapScreenshot(mapComponent, 'map-search-error.png');
   });
 });
