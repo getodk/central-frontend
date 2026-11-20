@@ -248,6 +248,9 @@ test.describe('All Question Types - Geolocation permission denied', () => {
 });
 
 test.describe('All Question Types - Map layers and search', () => {
+  // Tests share map state, so a retry reruns them all.
+  test.describe.configure({ mode: 'serial' });
+
   let formPage: FillFormPage;
   let context: BrowserContext;
   let mapComponent: Locator;
