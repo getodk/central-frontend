@@ -63,10 +63,10 @@ describe('InputNumeric', () => {
       expect(component.get('input').attributes().inputmode).toBe('numeric');
     });
 
-    it('handles dots for thousands separators', async () => {
+    it('handles Polish thousands separators', async () => {
       vi.stubGlobal('navigator', POLISH_NAVIGATOR);
       component = await mountComponent(0);
-      await component.get('input').setValue('1.2345');
+      await component.get('input').setValue('1 2345');
       expect(question.currentState.value).toBe(12345n);
     });
 
@@ -128,9 +128,9 @@ describe('InputNumeric', () => {
 
       [
         { given: '56,123', expected: 56.123 },
-        { given: '56.123', expected: 56123 },
+        { given: '56 123', expected: 56123 },
         { given: ',123', expected: 0.123 },
-        { given: '56.123.456', expected: 56123456 },
+        { given: '56 123 456', expected: 56123456 },
         { given: '0,1234567890123456789', expected: null },
         { given: '1234567890123456789', expected: null },
       ].forEach(({ given, expected }) => {

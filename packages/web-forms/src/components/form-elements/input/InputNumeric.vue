@@ -43,11 +43,14 @@ const formatter = computed(() => new Intl.NumberFormat(preferredLanguages, {
 
 const decimalSeparator = (() => {
 	const parts = new Intl.NumberFormat(preferredLanguages).formatToParts(1.1);
-	return parts.find(part => part.type === 'decimal')?.value ?? ',';
+	return parts.find(part => part.type === 'decimal')?.value ?? '.';
 })();
-const groupSeparator = decimalSeparator === '.' ? ',' : '.';
+const groupSeparator = (() => {
+	const parts = new Intl.NumberFormat(preferredLanguages, { useGrouping: true }).formatToParts(1000);
+	return parts.find(part => part.type === 'group')?.value ?? ',';
+})();
 
-const KEY_FILTER_PATTERN = /[\d\-,.]/;
+const KEY_FILTER_PATTERN = /[\d\-,.\s]/;
 const DECIMAL_WITH_TRAILING_ZEROES = decimalSeparator === '.' ? /\.(\d*0+)?$/ : /,(\d*0+)?$/;
 
 const standardizeDecimals = (value: string) => {
@@ -84,7 +87,7 @@ const isTooLong = (num: string) => {
 };
 
 const sanitizeInput = (num: string) => {
-	num = num.trim().replaceAll(groupSeparator, '');
+	num = num.trim().replaceAll(/\s+/g, '').replaceAll(groupSeparator, '');
 	if (num === '-') {
 		// user has started typing a negative number - let them continue
 		temporaryUserInput.value = num;
@@ -141,7 +144,6 @@ const modelValue = computed<string>({
 			props.setNumericValue(props.numericValue);
 			return resetInput();
 		}
-
 		const num = parseNumber(sanitized);
 		if (num == undefined) {
 			return resetInput();
