@@ -82,6 +82,19 @@ describe('useLocale', () => {
       expect(localStorage.getItem(STORAGE_KEY)).toBe('jp');
     });
 
+    it('uses browser language ignoring regional variants when no saved locale and no designer default', async () => {
+      vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['es-PA', 'en']);
+
+      const formRef = makeFormRef([]);
+      const { getLocale } = mountLocale(formRef);
+
+      await vi.waitFor(() => {
+        expect(getLocale().t('odk_web_forms.submit.label')).toBe('Enviar');
+      });
+
+      expect(setLanguage).toHaveBeenCalledTimes(0); // not saved because the user didn't explicitly select it
+    });
+
     it('falls back to first available language when no saved locale, no designer default, and no browser match', () => {
       vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['de']);
 

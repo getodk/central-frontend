@@ -49,12 +49,10 @@ const loadMessages = async (locale: string): Promise<ICUMessage> => {
   if (locale === FALLBACK) {
     return enMessages;
   }
-
   const key = getAvailableTranslationsKey(locale);
   if (!key) {
     return enMessages;
   }
-
   try {
     const raw = await availableTranslations[key]!();
     return { ...enMessages, ...normalizeMessages(raw.default) };
@@ -72,12 +70,10 @@ const findBestLocale = (candidates: string[], isAvailable: (l: string) => boolea
     if (isAvailable(candidate)) {
       return candidate;
     }
-  }
-  // Regional language falls back to base ("en") if no exact match was found.
-  for (const candidate of candidates) {
-    const base = baseLanguage(candidate);
-    if (base !== candidate && isAvailable(base)) {
-      return base;
+    // Regional language falls back to base ("en") if no exact match was found.
+    const regional = baseLanguage(candidate);
+    if (isAvailable(regional)) {
+      return regional;
     }
   }
   return FALLBACK;
