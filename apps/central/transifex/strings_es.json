@@ -3057,12 +3057,6 @@
         }
       }
     },
-    "FeedbackButton": {
-      "feedback": {
-        "string": "Comentario",
-        "developer_comment": "Text for a hovering feedback button shown anchored to right of screen. If your language doesn't have a single word or short phrase for \"feedback\", consider something like \"comments\" or \"reactions\"."
-      }
-    },
     "FieldKeyEdit": {
       "title": {
         "string": "",
