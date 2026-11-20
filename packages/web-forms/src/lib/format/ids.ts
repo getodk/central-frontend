@@ -7,3 +7,7 @@ export const selectOptionId = (node: SelectNode, optionItem: SelectItem): string
 export const containerId = (nodeId: string): string => {
   return `${nodeId}_container`;
 };
+
+export const labelId = (nodeId: string): string => {
+  return `${nodeId}_label`;
+};

@@ -427,6 +427,14 @@
     "string": "Rank items",
     "developer_comment": "The label for the button that opens the rank control."
   },
+  "rank_control.move_up.button": {
+    "string": "Move up",
+    "developer_comment": "The label for the button that moves the current item up in the rank."
+  },
+  "rank_control.move_down.button": {
+    "string": "Move down",
+    "developer_comment": "The label for the button that moves the current item down in the rank."
+  },
   "trigger_control.okay.label": {
     "string": "Okay",
     "developer_comment": "The label for the 'Okay' button."
@@ -482,6 +490,14 @@
   "geopoint_accuracy.unknown.label": {
     "string": "Unknown accuracy",
     "developer_comment": "Label shown when no GPS accuracy value is available yet."
+  },
+  "range_picker.increment.button": {
+    "string": "Increase by one",
+    "developer_comment": "The title of the button to increment the value."
+  },
+  "range_picker.decrement.button": {
+    "string": "Decrease by one",
+    "developer_comment": "The title of the button to decrement the value."
   },
   "upload_image_header.take_picture.label": {
     "string": "Take picture",

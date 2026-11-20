@@ -22,7 +22,7 @@ const handleLanguageChange = (event: FormLanguage) => {
 
 <template>
 	<!-- for desktop -->
-	<div class="hidden lg:inline larger-screens">
+	<div class="hidden lg:inline larger-screens" role="banner">
 		<div class="flex justify-content-end flex-wrap gap-3">
 			<FormLanguageMenu
 				:active-language="form.currentState.activeLanguage"
@@ -40,7 +40,7 @@ const handleLanguageChange = (event: FormLanguage) => {
 	</div>
 
 	<!-- for mobile and tablet -->
-	<div class="flex lg:hidden align-items-start justify-content-between smaller-screens">
+	<div class="flex lg:hidden align-items-start justify-content-between smaller-screens" role="banner">
 		<h1>
 			{{ form.definition.bind.form.title }}
 		</h1>

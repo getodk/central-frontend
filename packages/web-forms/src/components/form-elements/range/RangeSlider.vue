@@ -11,6 +11,7 @@ import {
 	getRangeValueAtRatio,
 	TRACK_START,
 } from '@getodk/web-forms/components/form-elements/range/range-scale.ts';
+import { labelId } from '@getodk/web-forms/lib/format/ids';
 import { computed, useTemplateRef } from 'vue';
 
 const props = defineProps<{
@@ -108,6 +109,8 @@ const moveBackward = () => moveByStep(-1);
 		:class="['range-slider', `range-${orientation}`, { 'range-disabled': disabled, 'range-no-thumb': thumbValue == null }]"
 		:style="{ '--range-ratio': ratio }"
 		role="slider"
+		:aria-labelledby="labelId(id)"
+		:aria-valuenow="props.modelValue"
 		:tabindex="disabled ? -1 : 0"
 		@click="changeValueAtPointer"
 		@keydown.up.prevent="moveForward"
