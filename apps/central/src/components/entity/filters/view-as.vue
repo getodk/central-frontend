@@ -43,8 +43,10 @@ const options = computed(() => {
     formSummaryAssignments.dataExists))
     return null;
 
-  const appUsers = fieldKeys.data.map(({ id, displayName, createdAt }) =>
-    ({ value: id, text: displayName, group: t('resource.appUsers'), createdAt }));
+  const appUsers = fieldKeys.data
+    .filter(({ token }) => token != null)
+    .map(({ id, displayName, createdAt }) =>
+      ({ value: id, text: displayName, group: t('resource.appUsers'), createdAt }));
   // Sort app users by created date (newest first)
   appUsers.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
 
@@ -54,7 +56,8 @@ const options = computed(() => {
     dataset.linkedForms.map((form, index) => [form.xmlFormId, { ...form, index }])
   );
   const publicLinkAssignments = formSummaryAssignments.data
-    .filter(({ xmlFormId }) => linkedForms.has(xmlFormId));
+    .filter(({ xmlFormId }) => linkedForms.has(xmlFormId))
+    .filter(({ tokenActive }) => tokenActive);
   // Sort by the order of the linked forms, then by the public link's created date (newest first)
   publicLinkAssignments.sort((a, b) =>
     linkedForms.get(a.xmlFormId).index - linkedForms.get(b.xmlFormId).index ||
