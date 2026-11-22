@@ -8,9 +8,12 @@ import { flushPromises, mount } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, ref, type Ref } from 'vue';
 import { globalMountOptions } from '../../helpers.ts';
+import { usePrimeVue } from 'primevue/config';
+import type { PrimeVueConfiguration } from '@primevue/core';
 
 describe('useLocale', () => {
   const setLanguage = vi.fn();
+  let primevue: PrimeVueConfiguration;
 
   const makeLanguage = (language: string, localeCode: string, isDefault = false): FormLanguage => ({
     isDefault,
@@ -26,6 +29,7 @@ describe('useLocale', () => {
 
     const TestComponent = defineComponent({
       setup() {
+        primevue = usePrimeVue().config;
         locale = useLocale(formRef);
         return {};
       },
@@ -82,8 +86,8 @@ describe('useLocale', () => {
       expect(localStorage.getItem(STORAGE_KEY)).toBe('jp');
     });
 
-    it('uses browser language ignoring regional variants when no saved locale and no designer default', async () => {
-      vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['es-PA', 'en']);
+    it('uses browser language ignoring regional variants when no saved locale and no form languages', async () => {
+      vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['es-PA']);
 
       const formRef = makeFormRef([]);
       const { getLocale } = mountLocale(formRef);
@@ -92,7 +96,38 @@ describe('useLocale', () => {
         expect(getLocale().t('odk_web_forms.submit.label')).toBe('Enviar');
       });
 
-      expect(setLanguage).toHaveBeenCalledTimes(0); // not saved because the user didn't explicitly select it
+      expect(localStorage.getItem(STORAGE_KEY)).toEqual(null);
+    });
+
+    it('uses browser language ignoring regional variants when no saved locale with form languages', async () => {
+      vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['es-PA']);
+
+      const english = makeLanguage('English', 'en');
+      const spanish = makeLanguage('Spanish', 'es');
+      const formRef = makeFormRef([english, spanish]);
+      const { getLocale } = mountLocale(formRef);
+
+      expect(setLanguage).toHaveBeenCalledTimes(1);
+      expect(setLanguage).toHaveBeenCalledWith(spanish);
+      expect(localStorage.getItem(STORAGE_KEY)).toBe('es');
+      await vi.waitFor(() => {
+        expect(getLocale().t('odk_web_forms.submit.label')).toBe('Enviar');
+      });
+    });
+
+    it('primevue language can be more specific than translation language', async () => {
+      vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['en-xx', 'en-AU', 'en']);
+
+      const formRef = makeFormRef([]);
+      const { getLocale } = mountLocale(formRef);
+
+      await vi.waitFor(() => {
+        expect(getLocale().t('odk_web_forms.submit.label')).toBe('Send');
+      });
+
+      expect(localStorage.getItem(STORAGE_KEY)).toEqual(null);
+
+      expect(primevue.locale?.dateFormat).toEqual('dd/mm/yy'); // en-xx not found,  en-AU wins over en
     });
 
     it('falls back to first available language when no saved locale, no designer default, and no browser match', () => {

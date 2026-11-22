@@ -70,10 +70,11 @@ const findBestLocale = (candidates: string[], isAvailable: (l: string) => boolea
     if (isAvailable(candidate)) {
       return candidate;
     }
-    // Regional language falls back to base ("en") if no exact match was found.
-    const regional = baseLanguage(candidate);
-    if (isAvailable(regional)) {
-      return regional;
+  }
+  for (const candidate of candidates) {
+    const base = baseLanguage(candidate);
+    if (base !== candidate && isAvailable(base)) {
+      return base;
     }
   }
   return FALLBACK;
@@ -111,10 +112,6 @@ const resolveUILocaleCandidates = (formLanguage?: FormLanguage): string[] => {
       sameBaseLocales.push(formLocale);
     }
     return sameBaseLocales;
-  }
-
-  if (!browserLanguages.includes(FALLBACK)) {
-    browserLanguages.push(FALLBACK);
   }
   return browserLanguages;
 };
