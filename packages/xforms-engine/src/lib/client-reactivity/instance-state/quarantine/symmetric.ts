@@ -7,33 +7,12 @@ import { getBlobData } from '@getodk/common/lib/web-compat/blob.ts';
 import * as CryptoJS from 'crypto-js';
 import { ENCRYPTED_SUBMISSION_ATTACHMENT_NAME, ENCRYPTED_SUFFIX } from './encryption';
 import { arrayBufferToWordArray, wordArrayToArrayBuffer } from './wordArrayUtils';
-
-class Seed {
-  private readonly SEED_ARRAY_LENGTH = 16; // guaranteed by the md5 algorithm
-  readonly ivSeedArray;
-  private counter = 0;
-
-  public constructor(
-    readonly instanceId: string,
-    readonly symmetricKey: CryptoJS.lib.WordArray
-  ) {
-    const md = CryptoJS.algo.MD5.create();
-    md.update(instanceId);
-    md.update(symmetricKey);
-    this.ivSeedArray = wordArrayToArrayBuffer(md.finalize());
-  }
-
-  next(): string {
-    ++this.ivSeedArray[this.counter % this.SEED_ARRAY_LENGTH]!;
-    ++this.counter;
-    return String.fromCharCode(...new Uint8Array(this.ivSeedArray));
-  }
-}
+import { IvSeed } from './IvSeed';
 
 const encryptContent = (
   content: CryptoJS.lib.WordArray | string,
   symmetricKey: CryptoJS.lib.WordArray,
-  seed: Seed
+  seed: IvSeed
 ): Uint8Array<ArrayBuffer> => {
   const ivString = seed.next();
   const iv = CryptoJS.enc.Latin1.parse(ivString);
@@ -48,7 +27,7 @@ const encryptContent = (
 const encryptAttachment = async (
   attachment: File,
   symmetricKey: CryptoJS.lib.WordArray,
-  seed: Seed
+  seed: IvSeed
 ): Promise<File> => {
   const content = await getBlobData(attachment);
   const wordArray = arrayBufferToWordArray(new Uint8Array(content));
@@ -65,7 +44,7 @@ export const encryptAttachments = async (
   attachments: readonly File[]
 ): Promise<readonly File[]> => {
   const symmetricKeyWords = arrayBufferToWordArray(symmetricKey);
-  const seed = new Seed(instanceId, symmetricKeyWords);
+  const seed = new IvSeed(instanceId, symmetricKeyWords);
   const encryptedAttachments: File[] = [];
   for (const attachment of attachments) {
     const encrypted = await encryptAttachment(attachment, symmetricKeyWords, seed);
