@@ -49,6 +49,7 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
+import { last } from 'ramda';
 import { nextTick, ref, watch } from 'vue';
 
 import { px } from '../../../util/dom';
@@ -109,16 +110,18 @@ const isHighlighted = (index) => props.highlighted != null &&
   index >= props.highlighted[0] && index <= props.highlighted[1];
 
 const resizeLastColumn = () => {
-  // Undo previous resizing.
-  const th = container.value.querySelector('th:last-child');
-  th.style.width = '';
+  // Undo previous resizing. Note that due to props.extraProperties, the number
+  // of columns is variable: the previous resizing may have modified a <th>
+  // element that is no longer the last column.
+  const ths = container.value.querySelectorAll('th');
+  for (const th of ths) th.style.width = '';
 
   // If the container fits the table without scrolling horizontally, then the
   // columns probably have room to grow. In that case, we allocate the extra
   // width to the last column rather than distributing it evenly among the
   // columns.
   const { clientWidth, scrollWidth } = container.value;
-  if (clientWidth !== 0 && scrollWidth === clientWidth) th.style.width = 'auto';
+  if (clientWidth !== 0 && scrollWidth === clientWidth) last(ths).style.width = 'auto';
 };
 
 const resetScroll = () => { container.value.scroll(0, 0); };
