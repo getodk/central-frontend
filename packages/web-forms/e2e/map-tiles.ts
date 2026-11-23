@@ -62,7 +62,7 @@ const fulfillGoogleTile = (route: Route, url: URL) => {
   return route.fulfill({ body, contentType: 'image/svg+xml' });
 };
 
-const fulfillGoogleData = (route: Route) => {
+const fulfillGoogleSearchResults = (route: Route) => {
   const sessionRequest = route.request().postDataJSON() as { mapType: string } | null;
   const expiry = String(Math.floor(Date.now() / 1000) + 24 * 60 * 60);
   return route.fulfill({
@@ -82,7 +82,7 @@ const fulfillGoogleRequest = (route: Route) => {
   if (url.pathname.startsWith(GOOGLE_TILES_PATH)) {
     return fulfillGoogleTile(route, url);
   }
-  return fulfillGoogleData(route);
+  return fulfillGoogleSearchResults(route);
 };
 
 export const stubGoogleMaps = (context: BrowserContext) => {
