@@ -25,7 +25,6 @@ defineOptions({
 @import '../../assets/scss/variables';
 
 .table-scroll {
-  border-bottom: $border-top-table-data;
   margin-bottom: $margin-bottom-table;
   overflow: hidden auto;
   position: relative;

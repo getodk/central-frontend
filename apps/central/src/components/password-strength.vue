@@ -15,7 +15,9 @@ vue-password-strength-meter 1.7.2, which uses the MIT license.
 https://github.com/apertureless/vue-password-strength-meter -->
 <template>
   <div class="password-strength">
-    <div :data-score="score"></div>
+    <div class="inner">
+      <div :data-score="score"></div>
+    </div>
   </div>
 </template>
 
@@ -46,12 +48,16 @@ const score = computed(() => {
 @import '../assets/scss/mixins';
 
 .password-strength {
-  background-color: #ddd;
-  float: right;
-  height: 2px;
-  margin-bottom: 20px;
-  margin-top: 10px;
   position: relative;
+  height: 2px;
+}
+
+.inner {
+  background-color: $color-surface-secondary;
+  height: 2px;
+  position: absolute;
+  right: 0;
+  top: 10px;
   width: 50%;
 
   // Use the borders of two pseduo-elements to create 4 blank spaces (gaps),
@@ -60,7 +66,7 @@ const score = computed(() => {
   $bar-width: calc(20% - #{math.div(4 * $between-bars, 5)});
   &::before, &::after {
     background-color: transparent;
-    border-color: #fff;
+    border-color: $gray-0;
     border-style: solid;
     border-width: 0 $between-bars 0 $between-bars;
     box-sizing: content-box;

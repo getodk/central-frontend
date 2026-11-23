@@ -12,9 +12,10 @@ jobs:
   check-and-build:
     name: 'Static check and build'
     timeout-minutes: 5
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
     - uses: actions/checkout@v6
+    - uses: ./.github/actions/relegate-azure-mirrors
     - run: sudo apt-get install shellcheck
     - run: ./bin/check-scripts.sh
     - run: ./bin/check-for-large-files.sh
@@ -46,7 +47,7 @@ jobs:
     needs:
     - check-and-build
     timeout-minutes: 10
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
     - uses: actions/checkout@v6
     - uses: ./.github/actions/node-cache
@@ -59,12 +60,13 @@ jobs:
     needs:
     - check-and-build
     timeout-minutes: 2
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
     - uses: actions/checkout@v6
     - uses: ./.github/actions/node-cache
       with:
         mode: restore
+    - uses: ./.github/actions/relegate-azure-mirrors
     - run: npx playwright install chromium --with-deps
     - run: npm run test -w=@getodk/forms
 
@@ -74,7 +76,7 @@ jobs:
     - test-central-app
     - test-forms-app
     timeout-minutes: 20
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
 
     # This one weird trick speeds up every build!
@@ -85,6 +87,7 @@ jobs:
       with:
         path: client
         fetch-depth: 0
+    - uses: ./client/.github/actions/relegate-azure-mirrors
     - name: Clone getodk/central repo
       run: |
         git clone -b next https://github.com/getodk/central.git

@@ -10,14 +10,14 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <table id="dataset-table" class="table">
+  <table v-if="datasets.dataExists && datasets.length > 0" id="dataset-table" class="table">
     <thead>
       <tr>
         <th>{{ $t('header.listName') }}</th>
         <th class="entities">{{ $t('header.entities') }}</th>
         <th>{{ $t('header.lastEntity') }}</th>
         <th>{{ $t('common.status') }}</th>
-        <th>{{ $t('header.actions') }}</th>
+        <th class="actions"></th>
       </tr>
     </thead>
     <tbody v-if="datasets.dataExists">
@@ -48,13 +48,12 @@ const { datasets } = useRequestData();
 #dataset-table {
   table-layout: fixed;
 
-  .entities {
-    text-align: right;
-    padding-right: 10%;
-  }
-
   &+ .empty-table-message {
     margin-bottom: 20px;
+  }
+
+  .actions {
+    text-align: right;
   }
 }
 </style>

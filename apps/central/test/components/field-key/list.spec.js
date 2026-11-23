@@ -7,13 +7,16 @@ import { mockLogin } from '../../util/session';
 describe('FieldKeyList', () => {
   beforeEach(mockLogin);
 
-  it('toggles the "Submission Options" modal', () => {
+  it('toggles the "Submission Options" modal', async () => {
     testData.extendedProjects.createPast(1);
-    return load('/projects/1/app-users').testModalToggles({
-      modal: ProjectSubmissionOptions,
-      show: '.heading-with-button a[href="#"]',
-      hide: '.btn-primary'
-    });
+    const app = await load('/projects/1/app-users');
+    // Open the help popover first, then click the link inside
+    await app.get('.page-heading-help').trigger('click');
+    await app.get('.page-heading a[href="#"]').trigger('click');
+    const modal = app.getComponent(ProjectSubmissionOptions);
+    modal.props().state.should.be.true;
+    await modal.get('.btn-primary').trigger('click');
+    modal.props().state.should.be.false;
   });
 
   it('shows a message if there are no app users', () => {

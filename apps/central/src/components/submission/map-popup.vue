@@ -137,13 +137,21 @@ const handleActions = (event) => {
 @import '../../assets/scss/variables';
 
 #submission-map-popup {
-  @include icon-btn-group;
-
   .submission-review-state {
     position: relative;
     top: -1px;
 
     font-size: 14px;
+
+    &.tag {
+      padding: 4px;
+      margin-right: 10px;
+      vertical-align: -4px;
+
+      [class^="icon-"] {
+        margin-right: 0;
+      }
+    }
   }
 
   dl:first-of-type {

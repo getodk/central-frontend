@@ -284,8 +284,8 @@ export default {
 }
 
 #form-upload-filename {
-  background-color: #eee;
-  border-top: 1px solid #ddd;
+  background-color: $color-surface-secondary;
+  border-top: 1px solid $color-border;
   font-family: $font-family-monospace;
   margin-bottom: -$padding-file-drop-zone;
   margin-top: 10px;

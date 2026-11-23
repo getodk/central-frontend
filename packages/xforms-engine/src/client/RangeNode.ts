@@ -36,6 +36,7 @@ export type RangeNodeAppearances = NodeAppearances<RangeNodeDefinition>;
 
 export interface RangeNodeOptions {
   readonly tickInterval: number | null;
+  readonly placeholder: number | null;
 }
 
 /**

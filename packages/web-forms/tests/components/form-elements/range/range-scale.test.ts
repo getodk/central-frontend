@@ -1,10 +1,12 @@
 import {
   getNearestStepDistance,
+  getRangePlaceholder,
   getRangeRatio,
   getRangeScale,
   getRangeTicks,
   getRangeValueAfterSteps,
   getRangeValueAtRatio,
+  getRangeValueLength,
   placeLabelsOnTicks,
 } from '@getodk/web-forms/components/form-elements/range/range-scale.ts';
 import type { RangeScale } from '@getodk/web-forms/components/form-elements/range/range-scale.ts';
@@ -121,6 +123,36 @@ describe('Range scale', () => {
     });
   });
 
+  describe('getRangePlaceholder', () => {
+    const getPlaceholder = (placeholder: number, otherBounds = bounds) => {
+      const rangeScale = getRangeScale(otherBounds);
+      return getRangePlaceholder(rangeScale, placeholder);
+    };
+
+    it('returns a placeholder on a step between start and end', () => {
+      expect(getPlaceholder(0)).toBe(0);
+      expect(getPlaceholder(4)).toBe(4);
+      expect(getPlaceholder(10)).toBe(10);
+      expect(getPlaceholder(0.3, { start: 0, end: 1, step: 0.1 })).toBe(0.3);
+      expect(getPlaceholder(4, { start: 10, end: 0, step: 2 })).toBe(4);
+    });
+
+    it('ignores a placeholder outside the range', () => {
+      expect(getPlaceholder(-1)).toBe(null);
+      expect(getPlaceholder(11)).toBe(null);
+    });
+
+    it('ignores a placeholder which is not on a step', () => {
+      expect(getPlaceholder(4.5)).toBe(null);
+      expect(getPlaceholder(0.35, { start: 0, end: 1, step: 0.1 })).toBe(null);
+      expect(getPlaceholder(5, { start: 10, end: 0, step: 2 })).toBe(null);
+    });
+
+    it('ignores a placeholder when the range is not valid', () => {
+      expect(getPlaceholder(6, { start: 0, end: 10, step: 3 })).toBe(null);
+    });
+  });
+
   describe('getNearestStepDistance', () => {
     it('measures the nearest step from start in whole numbers', () => {
       expect(getNearestStepDistance(scale, 0)).toBe(0);
@@ -218,6 +250,13 @@ describe('Range scale', () => {
     it('does not move past start or end', () => {
       expect(getRangeValueAfterSteps(scale, 0, -1)).toBe(0);
       expect(getRangeValueAfterSteps(scale, 10, 1)).toBe(10);
+    });
+  });
+
+  describe('getRangeValueLength', () => {
+    it('fits the longest bound, the decimals of the step and the decimal point', () => {
+      expect(getRangeValueLength(bounds)).toBe(3);
+      expect(getRangeValueLength({ start: -5, end: 100, step: 0.25 })).toBe(6);
     });
   });
 });

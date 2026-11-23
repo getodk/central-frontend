@@ -232,7 +232,7 @@ export default {
       }
 
       &.icon-circle-o {
-        color: #999;
+        color: $color-icon;
         top: 1px;
       }
     }

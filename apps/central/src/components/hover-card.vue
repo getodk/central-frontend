@@ -99,7 +99,7 @@ onMounted(resize);
 <style lang="scss">
 @import '../assets/scss/mixins';
 
-$border: 1px solid #fff;
+$border: 1px solid $gray-0;
 $border-radius: 12px;
 
 .popover:has(.hover-card) { border-radius: $border-radius; }
@@ -109,12 +109,12 @@ $border-radius: 12px;
   // Used to align the top of the icon with the top of the text.
   $icon-margin-top: 2px;
 
-  background-color: #666;
+  background-color: $color-surface-inverse;
   border-inline: $border;
   border-top: $border;
   border-top-left-radius: $border-radius;
   border-top-right-radius: $border-radius;
-  color: #fff;
+  color: $color-text-inverse;
   display: flex;
   line-height: 1.2;
   padding: #{$padding-panel-body - $icon-margin-top} $padding-panel-body 13px;
@@ -140,7 +140,7 @@ $border-radius: 12px;
 .hover-card-subtitle { font-size: 12px; }
 
 .hover-card-body {
-  background-color: #fff;
+  background-color: $color-surface;
   border-inline: $border;
 
   dl {
@@ -158,7 +158,7 @@ $border-radius: 12px;
 }
 
 .hover-card-footer {
-  background-color: #ddd;
+  background-color: $color-surface-secondary;
   border-inline: $border;
 
   &:empty { display: none; }

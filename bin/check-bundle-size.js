@@ -55,12 +55,12 @@ function isTooBig({ path, size }) {
   // Special cases:
   const simpleName = basename(path).replace(/(-[\w-]{8})+\./, '.');
   switch (simpleName) {
-    case 'icomoon.svg':    return size >    60_000;
-    case 'forms.js':       return size > 1_400_000;
-    case 'forms.css':      return size >   500_000;
-    case 'web-form.js':    return size >   600_000; // Matches web-form-renderer.js
+    case 'forms.js':       return size > 1_250_000;
+    case 'forms.css':      return size >   450_000;
+    case 'web-form.js':    return size >   700_000; // Matches web-form-renderer.js
     case 'MapBlock.css':   return size >   500_000; // A Web Forms' feature bundle
     case 'WebGLVector.js': return size >   500_000;
+    case 'main.js':        return size >   220_000;
     // This is a performance tracking script from Sentry, shared between apps/central and apps/forms.
     case 'browserTracingIntegration.js': return size > 350_000;
     default: // do nothing

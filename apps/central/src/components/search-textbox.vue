@@ -73,6 +73,7 @@ watch(() => props.modelValue, (value) => {
   .form-control {
     // Add padding so that the .close button does not overlay long input text.
     padding-right: 21px;
+    padding-left: 0px;
     font-size: 12px;
     background: inherit;
     border: none;

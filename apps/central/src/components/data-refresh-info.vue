@@ -11,12 +11,12 @@ except according to the terms contained in the LICENSE file.
 -->
 
 <template>
-  <div class="table-refresh-bar">
+  <div class="data-refresh-info">
     <span v-if="odata.dataExists">
       {{ $t('dataRefreshTime', { date: formatDate(dataRefreshedAt), time: formatTime(dataRefreshedAt) }) }}
     </span>
     <button id="refresh-button" type="button"
-      class="btn btn-link" :aria-disabled="refreshing"
+      class="btn btn-tertiary" :aria-disabled="refreshing"
       @click="$emit('refreshClick')">
       <span class="icon-refresh"></span>{{ $t('action.refresh') }}
       <spinner :state="refreshing"/>
@@ -30,6 +30,10 @@ import { computed } from 'vue';
 import { formatDate, formatTime } from '../util/date-time';
 import Spinner from './spinner.vue';
 
+defineOptions({
+  name: 'DataRefreshInfo'
+});
+
 const props = defineProps({
   odata: Object,
   refreshing: Boolean
@@ -38,24 +42,22 @@ const props = defineProps({
 defineEmits(['refreshClick']);
 
 const dataRefreshedAt = computed(() => DateTime.fromJSDate(props.odata.setAt));
-
 </script>
 
 <style lang="scss">
-.table-refresh-bar {
+.data-refresh-info {
   display: flex;
-  align-items: center;
-  margin-bottom: 10px;
+  align-items: baseline;
 
   span {
-    font-size: 12px;
     margin-right: 10px;
   }
 }
 </style>
 
 <i18n lang="json5">
-  {
+{
+  // @transifexKey component.TableRefreshBar
   "en": {
     // Text shown above the data tables to tell users when data was last fetched / refreshed.
     // {date} is only the date component and {time} is only the time component.

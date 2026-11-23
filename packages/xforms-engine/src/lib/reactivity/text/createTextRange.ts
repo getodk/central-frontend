@@ -11,12 +11,17 @@ import type { TextRole } from '../../../client/TextRange.ts';
 import type { EvaluationContext } from '../../../instance/internal-api/EvaluationContext.ts';
 import { TextChunk } from '../../../instance/text/TextChunk.ts';
 import { TextRange, type MediaSources } from '../../../instance/text/TextRange.ts';
-import { TextChunkExpression } from '../../../parse/expression/TextChunkExpression.ts';
+import {
+  isTextForm,
+  TextChunkExpression,
+  type TextForm,
+} from '../../../parse/expression/TextChunkExpression.ts';
 import type { TextRangeDefinition } from '../../../parse/text/abstract/TextRangeDefinition.ts';
 import { evaluateExpression } from '../createComputedExpression.ts';
 
 interface ChunksAndMedia {
   chunks: readonly TextChunk[];
+  guidanceChunks: readonly TextChunk[];
   mediaSources: MediaSources;
   error: Error | null;
 }
@@ -63,12 +68,12 @@ const generateResourceChunk = (
   return TextChunkExpression.fromResource(url, type);
 };
 
-const generateChunk = (node: Node): TextChunkExpression<'string'> | null => {
+const generateChunk = (node: Node, textForm?: TextForm): TextChunkExpression<'string'> | null => {
   if (isElementNode(node)) {
-    return TextChunkExpression.fromOutput(node);
+    return TextChunkExpression.fromOutput(node, textForm);
   }
   if (isTextNode(node)) {
-    return TextChunkExpression.fromLiteral(node.data);
+    return TextChunkExpression.fromLiteral(node.data, textForm);
   }
   return null;
 };
@@ -80,12 +85,14 @@ const generateChunksForTranslation = (
 ): Array<TextChunkExpression<'string'>> => {
   const chunks = [];
   for (const child of textElement.children) {
-    const formAttribute = child.getAttribute('form') as ResourceType;
-    if (isResourceType(formAttribute)) {
+    const formAttribute = child.getAttribute('form');
+
+    if (formAttribute && isResourceType(formAttribute)) {
       chunks.push(generateResourceChunk(context, child, formAttribute, errors));
     } else {
+      const textForm = formAttribute && isTextForm(formAttribute) ? formAttribute : undefined;
       for (const grandchild of child.childNodes) {
-        const chunk = generateChunk(grandchild);
+        const chunk = generateChunk(grandchild, textForm);
         if (chunk) {
           chunks.push(chunk);
         }
@@ -113,20 +120,33 @@ const getChunkExpressions = <Role extends TextRole>(
   return elem ? generateChunksForTranslation(context, elem, errors) : [];
 };
 
+const createChunk = (
+  context: EvaluationContext,
+  chunkExpression: TextChunkExpression<'string'>,
+  errors: Error[]
+) => {
+  if (chunkExpression.source === 'literal') {
+    return new TextChunk(context, chunkExpression.source, chunkExpression.stringValue);
+  }
+  const computed = computeChunk(context, chunkExpression, errors);
+  return new TextChunk(context, chunkExpression.source, computed);
+};
+
 /**
  * Creates a reactive accessor for text chunks and an optional image, audio and video from text source expressions.
- * - Combines chunks from literal and computed sources into a single array.
+ * - Combines chunks from literal and computed sources into a main array and a guidance array.
  * - Captures the first image found with a 'from=<"image"|"audio"|"video">' attribute.
  *
  * @param context The evaluation context for reactive XPath computations.
  * @param definition The definition for the text range which contains chunks to transform
- * @returns An accessor for an object with all chunks and the first image, audio and video (if any).
+ * @returns An accessor for an object with the main chunks, the guidance chunks and the first image, audio and video (if any).
  */
 const createTextChunks = <Role extends TextRole>(
   context: EvaluationContext,
   definition: TextRangeDefinition<Role>
 ): ChunksAndMedia => {
   const chunks: TextChunk[] = [];
+  const guidanceChunks: TextChunk[] = [];
   const mediaSources: MediaSources = {};
   const errors: Error[] = [];
   const chunkExpressions = getChunkExpressions(context, definition, errors);
@@ -139,15 +159,15 @@ const createTextChunks = <Role extends TextRole>(
       return;
     }
 
-    if (chunkExpression.source === 'literal') {
-      chunks.push(new TextChunk(context, chunkExpression.source, chunkExpression.stringValue));
-      return;
+    const chunk = createChunk(context, chunkExpression, errors);
+    if (chunkExpression.textForm === 'guidance') {
+      guidanceChunks.push(chunk);
+    } else {
+      chunks.push(chunk);
     }
-
-    const computed = computeChunk(context, chunkExpression, errors);
-    chunks.push(new TextChunk(context, chunkExpression.source, computed));
   });
-  return { chunks, mediaSources, error: errors[0] ?? null };
+
+  return { chunks, guidanceChunks, mediaSources, error: errors[0] ?? null };
 };
 
 type ComputedFormTextRange<Role extends TextRole> = Accessor<TextRange<Role>>;
@@ -165,8 +185,8 @@ export const createTextRange = <Role extends TextRole>(
 ): ComputedFormTextRange<Role> => {
   return context.scope.runTask(() => {
     return createMemo(() => {
-      const chunks = createTextChunks(context, definition);
-      return new TextRange(role, chunks.chunks, chunks.mediaSources, chunks.error);
+      const { chunks, guidanceChunks, mediaSources, error } = createTextChunks(context, definition);
+      return new TextRange(role, chunks, guidanceChunks, mediaSources, error);
     });
   });
 };

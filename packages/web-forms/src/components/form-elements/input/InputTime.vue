@@ -26,7 +26,15 @@ const value = computed({
 </script>
 
 <template>
-	<DatePicker v-model="value" time-only :hour-format="hourFormat" :disabled="isDisabled" show-icon icon-display="input">
+	<DatePicker
+		v-model="value"
+		:input-id="question.nodeId"
+		:disabled="isDisabled"
+		time-only
+		:hour-format="hourFormat"
+		show-icon
+		icon-display="input"
+	>
 		<template #inputicon="slotProps">
 			<IconSVG name="mdiClockTimeThreeOutline" variant="light-muted" @click="slotProps.clickCallback" />
 		</template>

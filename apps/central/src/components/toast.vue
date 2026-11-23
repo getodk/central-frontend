@@ -25,8 +25,8 @@ const toast = inject('toast');
 @import '../assets/scss/variables';
 
 .toast {
-  background-color: #333;
-  color: #fff;
+  background-color: $color-surface-inverse;
+  color: $color-text-inverse;
 
   .alert-cta {
     color: $color-action-light;

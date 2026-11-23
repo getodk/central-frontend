@@ -19,7 +19,7 @@ except according to the terms contained in the LICENSE file.
       <span>{{ $n(dataset.entities, 'default') }}</span>
     </td>
     <td>
-      <span> <date-time :iso="dataset.lastEntity"/> </span>
+      <span> <date-time :iso="dataset.lastEntity" :tooltip="false"/> </span>
     </td>
     <td class="conflicts">
       <span v-if="dataset.conflicts > 0">
@@ -31,8 +31,8 @@ except according to the terms contained in the LICENSE file.
         </router-link>
       </span>
     </td>
-    <td>
-      <a class="btn btn-primary" :href="href">
+    <td class="actions">
+      <a class="btn btn-default" :href="href">
         <span class="icon-download"></span>{{ $t('action.download') }}
       </a>
     </td>
@@ -73,24 +73,21 @@ export default {
 .dataset-row {
   .name {
     @include text-overflow-ellipsis;
-    font-size: 18px;
    }
   .entities {
-    text-align: right;
     padding-right: 10%;
   }
   .wrap-circle {
-    width: 22px;
+    width: 26px;
     display: inline-block;
     background: $color-danger;
-    height: 22px;
+    height: 26px;
     border-radius: 15px;
     text-align: center;
-    color: white;
-
+    color: $color-text-inverse;
+    vertical-align: 2px;
     margin-right: 3px;
   }
-  .icon-warning { font-size: 12px; }
   .conflicts a {
     color: $color-danger;
   }

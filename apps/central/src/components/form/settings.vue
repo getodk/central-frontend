@@ -11,6 +11,13 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div v-if="form.dataExists" id="form-settings">
+    <page-heading :title="$t('common.tab.settings')">
+      <button type="button" class="btn btn-danger"
+        @click="deleteModal.show()">
+        <span class="icon-trash"></span>
+        {{ $t('action.delete') }}
+      </button>
+    </page-heading>
     <div class="row">
       <div class="col-xs-6">
         <div class="panel panel-simple">
@@ -18,7 +25,7 @@ except according to the terms contained in the LICENSE file.
             <h1 class="panel-title">{{ $t('state.title') }}</h1>
           </div>
           <div class="panel-body">
-            <i18n-t tag="p" keypath="state.body.full">
+            <i18n-t tag="p" class="help-text" keypath="state.body.full">
               <template #formAccessSettings>
                 <router-link :to="projectPath('form-access')">{{ $t('state.body.formAccessSettings') }}</router-link>
               </template>
@@ -32,7 +39,7 @@ except according to the terms contained in the LICENSE file.
             </h1>
           </div>
           <div class="panel-body">
-            <i18n-t tag="p" keypath="webFormsSetting.description">
+            <i18n-t tag="p" class="help-text" keypath="webFormsSetting.description">
               <template #formName>
                 <strong>{{ form.nameOrId }}</strong>
               </template>
@@ -45,7 +52,7 @@ except according to the terms contained in the LICENSE file.
                   <span class="label-title">
                     ODK Web Forms
                   </span>
-                  <span class="badge recommended">
+                  <span class="tag tag-success recommended">
                     {{ $t('common.recommended') }}
                   </span>
                   <i18n-t tag="p" keypath="webFormsSetting.odkWebFormsDescription.full">
@@ -54,6 +61,7 @@ except according to the terms contained in the LICENSE file.
                     </template>
                   </i18n-t>
                 </label>
+                <AutosaveSettings/>
               </div>
               <div class="radio">
                 <label>
@@ -70,21 +78,6 @@ except according to the terms contained in the LICENSE file.
           </div>
         </div>
       </div>
-      <div class="col-xs-6">
-        <div class="panel panel-simple-danger">
-          <div class="panel-heading">
-            <h1 class="panel-title">{{ $t('common.dangerZone') }}</h1>
-          </div>
-          <div class="panel-body">
-            <p>
-              <button type="button" class="btn btn-danger"
-                @click="deleteModal.show()">
-                {{ $t('action.delete') }}&hellip;
-              </button>
-            </p>
-          </div>
-        </div>
-      </div>
     </div>
     <form-delete v-bind="deleteModal" @hide="deleteModal.hide()"
       @success="afterDelete"/>
@@ -98,6 +91,8 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import FormDelete from './delete.vue';
 import FormWebFormsSettingsConfirmation from './web-forms-settings-confirmation.vue';
+import PageHeading from '../page/heading.vue';
+import AutosaveSettings from './autosave-settings.vue';
 
 import useRoutes from '../../composables/routes';
 import { modalData } from '../../util/reactivity';
@@ -123,7 +118,6 @@ const afterDelete = () => {
   router.push(projectPath())
     .then(() => { alert.success(message); });
 };
-
 
 const webformsEnabled = ref(form.webformsEnabled);
 watch(() => form.dataExists, () => {
@@ -165,7 +159,6 @@ const hideAndReset = () => {
     }
 
     .recommended {
-      text-transform: uppercase;
       background: $color-success-light;
       padding: 5px 10px;
       color: $color-success;

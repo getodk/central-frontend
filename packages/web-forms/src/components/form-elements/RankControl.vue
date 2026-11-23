@@ -158,6 +158,7 @@ const onDragEnd = (oldIndex: number | undefined, newIndex: number | undefined) =
 					<button
 						v-if="values.length > 1"
 						:disabled="disabled || index === 0"
+						:title="t('rank_control.move_up.button')"
 						@click="moveUp(index)"
 						@mousedown="setHighlight(index)"
 					>
@@ -171,6 +172,7 @@ const onDragEnd = (oldIndex: number | undefined, newIndex: number | undefined) =
 					<button
 						v-if="values.length > 1"
 						:disabled="disabled || index === values.length - 1"
+						:title="t('rank_control.move_down.button')"
 						@click="moveDown(index)"
 						@mousedown="setHighlight(index)"
 					>

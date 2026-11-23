@@ -10,28 +10,25 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <page-section id="entity-activity">
-    <template #heading>
-      <span>{{ $t('common.activity') }}</span>
+  <div id="entity-activity">
+    <page-heading :title="$t('common.activity')">
       <button v-if="project.dataExists && project.permits('entity.delete')"
-        id="entity-activity-delete-button" type="button" class="btn btn-default"
+        id="entity-activity-delete-button" type="button" class="btn btn-danger-outlined"
         @click="$emit('delete')">
         <span class="icon-trash"></span>{{ $t('action.delete') }}
       </button>
+    </page-heading>
+    <loading :state="initiallyLoading"/>
+    <template v-if="dataExists">
+      <entity-conflict-summary v-if="entity.conflict != null"
+        @resolve="$emit('resolve')"/>
+      <div v-for="(group, i) of feed" :key="feed.length - i"
+        class="feed-entry-group" v-bind="scrollData(group[0])">
+        <entity-feed-entry v-for="(data, j) of group" :key="j" v-bind="data"
+          @branch-data="$emit('branch-data', $event)"/>
+      </div>
     </template>
-    <template #body>
-      <loading :state="initiallyLoading"/>
-      <template v-if="dataExists">
-        <entity-conflict-summary v-if="entity.conflict != null"
-          @resolve="$emit('resolve')"/>
-        <div v-for="(group, i) of feed" :key="feed.length - i"
-          class="feed-entry-group" v-bind="scrollData(group[0])">
-          <entity-feed-entry v-for="(data, j) of group" :key="j" v-bind="data"
-            @branch-data="$emit('branch-data', $event)"/>
-        </div>
-      </template>
-    </template>
-  </page-section>
+  </div>
 </template>
 
 <script setup>
@@ -41,7 +38,7 @@ import { useRoute } from 'vue-router';
 import EntityConflictSummary from './conflict-summary.vue';
 import EntityFeedEntry from './feed-entry.vue';
 import Loading from '../loading.vue';
-import PageSection from '../page/section.vue';
+import PageHeading from '../page/heading.vue';
 
 import { useRequestData } from '../../request-data';
 import { useScrollBehavior } from '../../scroll-behavior';
@@ -68,7 +65,7 @@ const feed = computed(() => {
       const entityVersion = entityVersions[versionIndex];
       versionIndex -= 1;
       groups.push([{ entry: audit, submission, entityVersion }]);
-    } else if (action === 'entity.create' || action === 'entity.bulk.create') {
+    } else if (action === 'entity.create' || action === 'entity.bulk.upsert') {
       const group = [{ entry: audit, entityVersion: entityVersions[0] }];
       const { details } = audit;
       // this will insert a feed entry for the submission approval event

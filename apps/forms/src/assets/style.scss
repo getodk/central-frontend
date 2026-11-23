@@ -1,8 +1,21 @@
-html {
-  background: #f1f5f9;
-  scrollbar-gutter: stable;
+:root {
+  --odk-background-color: #f1f5f9;
+  --odk-primary-text-color: #0a80a3;
+  --odk-red-danger: #c42b2b;
+  --odk-neutral: #6b747d;
+  --odk-text-color: #020617;
 }
 
-.p-dialog {
-  max-width: 800px;
+html {
+  background: var(--odk-background-color);
+  scrollbar-gutter: stable;
+
+  &:has(dialog[open]:modal) {
+    overflow: hidden;
+  }
+}
+
+html,
+dialog {
+  color: var(--odk-text-color);
 }

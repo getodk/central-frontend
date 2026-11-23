@@ -1,6 +1,7 @@
 import type { RangeTickLabel, TextRange } from '@getodk/xforms-engine';
 
 const MAX_DECIMAL_PLACES = 10;
+const DECIMAL_POINT_LENGTH = 1;
 
 export interface RangeBounds {
   readonly start: number;
@@ -53,9 +54,15 @@ export const TRACK_END = 1;
 // don't fill the grid. Rounding also lets neighbouring labels share a grid line.
 const GRID_UNITS = 1000;
 
-export const getDecimalPlaces = (value: number): number => {
+const getDecimalPlaces = (value: number): number => {
   const places = value.toString().split('.')[1]?.length ?? 0;
   return Math.min(places, MAX_DECIMAL_PLACES);
+};
+
+// Characters needed for the longest value, so the layout doesn't move when the value changes.
+export const getRangeValueLength = (bounds: RangeBounds) => {
+  const boundLength = Math.max(String(bounds.start).length, String(bounds.end).length);
+  return boundLength + getDecimalPlaces(bounds.step) + DECIMAL_POINT_LENGTH;
 };
 
 const toWholeNumber = (value: number, factor: number): number => Math.round(value * factor);
@@ -129,6 +136,30 @@ const isValidTickInterval = ({ span, step, tickInterval }: RangeScale) => {
     tickInterval % step === 0 &&
     span % tickInterval === 0
   );
+};
+
+const isValidPlaceholder = (scale: RangeScale, placeholder: number) => {
+  if (!isValidRange(scale)) {
+    return false;
+  }
+
+  const stepIndex = getNearestStepIndex(scale, placeholder);
+  if (stepIndex < 0 || stepIndex > scale.lastStepIndex) {
+    return false;
+  }
+
+  return getValueAtStepIndex(scale, stepIndex) === placeholder;
+};
+
+export const getRangePlaceholder = (
+  scale: RangeScale,
+  placeholder: number | null
+): number | null => {
+  if (placeholder == null || !isValidPlaceholder(scale, placeholder)) {
+    return null;
+  }
+
+  return placeholder;
 };
 
 const getTickGap = (scale: RangeScale) => {

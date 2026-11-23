@@ -3,7 +3,6 @@ import EntityMetadataRow from '../../../src/components/entity/metadata-row.vue';
 import DateTime from '../../../src/components/date-time.vue';
 
 import testData from '../../data';
-import { load } from '../../util/http';
 import { mockLogin } from '../../util/session';
 import { mockRouter } from '../../util/router';
 import { mount } from '../../util/lifecycle';
@@ -33,8 +32,7 @@ describe('EntityMetadataRow', () => {
   it('shows the row number', () => {
     testData.extendedDatasets.createPast(1);
     testData.extendedEntities.createPast(1);
-    const td = mountComponent({ rowNumber: 1000 }).get('td');
-    td.classes('row-number').should.be.true;
+    const td = mountComponent({ rowNumber: 1000 }).get('.row-number');
     td.text().should.equal('1000');
   });
 
@@ -43,8 +41,7 @@ describe('EntityMetadataRow', () => {
     const creator = testData.extendedUsers.first();
     testData.extendedEntities.createPast(1, { creator }).last();
     const row = mountComponent();
-    const td = row.findAll('td')[2];
-    td.classes('creator-name').should.be.true;
+    const td = row.get('.creator-name');
     td.text().should.equal(creator.displayName);
     await td.get('span').should.have.textTooltip();
   });
@@ -73,18 +70,6 @@ describe('EntityMetadataRow', () => {
     });
   });
 
-  describe('update count', () => {
-    it('shows the count if there has been an update', () => {
-      testData.extendedEntities.createPast(1, { version: 1001 });
-      mountComponent().get('.updates').text().should.equal('1,000');
-    });
-
-    it('does not show the count if there has not been an update', () => {
-      testData.extendedEntities.createPast(1);
-      mountComponent().get('.updates').text().should.equal('');
-    });
-  });
-
   describe('conflict icon', () => {
     it('shows conflict icon if there is a conflict', () => {
       testData.extendedEntities.createPast(1);
@@ -103,7 +88,7 @@ describe('EntityMetadataRow', () => {
       mockLogin();
       testData.extendedEntities.createPast(1);
       testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
-      mountComponent().findAll('.btn').length.should.equal(4);
+      mountComponent().findAll('.btn').length.should.equal(3);
     });
 
     it('renders the correct buttons for a project viewer', () => {
@@ -112,37 +97,22 @@ describe('EntityMetadataRow', () => {
       testData.extendedEntities.createPast(1);
       testData.extendedEntityVersions.createPast(2, { baseVersion: 1 });
       const btn = mountComponent().findAll('.btn');
-      btn.length.should.equal(2);
+      btn.length.should.equal(1);
       btn[0].classes('resolve-button').should.be.true;
-      btn[1].classes('more-button').should.be.true;
     });
   });
 
-  it('renders the edit button correctly', async () => {
+  it('renders the edit button correctly', () => {
     testData.extendedEntities.createPast(1, { version: 1001 });
     const button = mountComponent().get('.update-button');
-    button.attributes('aria-label').should.equal('Edit (1,000)');
-    await button.should.have.tooltip('Edit (1,000)');
-  });
-
-  it('renders the More button correctly', async () => {
-    mockLogin();
-    testData.extendedDatasets.createPast(1, { name: 'á', entities: 1 });
-    testData.extendedEntities.createPast(1, { uuid: 'e' });
-    // Using load() rather than mountComponent() because RouterLinkStub doesn't
-    // use the <router-link> slot.
-    const app = await load('/projects/1/entity-lists/%C3%A1/entities');
-    const btn = app.get('.entity-metadata-row .more-button');
-    btn.element.tagName.should.equal('A');
-    btn.attributes('target').should.equal('_blank');
-    btn.attributes('href').should.equal('/projects/1/entity-lists/%C3%A1/entities/e');
+    button.text().should.equal('Edit');
   });
 
   describe('showing deleted entity', () => {
     it('shows the deleted date', () => {
       testData.extendedDatasets.createPast(1);
       const { deletedAt } = testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() }).last();
-      mountComponent({ deleted: true }).get('.action-cell').getComponent(DateTime).props().iso.should.equal(deletedAt);
+      mountComponent({ deleted: true }).get('.last-updated-cell').getComponent(DateTime).props().iso.should.equal(deletedAt);
     });
 
     it('does not have delete button', () => {
@@ -154,7 +124,7 @@ describe('EntityMetadataRow', () => {
     it('shows restore button', () => {
       testData.extendedDatasets.createPast(1);
       testData.extendedEntities.createPast(1, { deletedAt: new Date().toISOString() }).last();
-      mountComponent({ deleted: true }).find('.restore-button').attributes('aria-label').should.be.equal('Restore');
+      mountComponent({ deleted: true }).find('.restore-button').text().should.equal('Restore');
     });
 
     it('does not show the restore button if user does not have entity restore permission', async () => {

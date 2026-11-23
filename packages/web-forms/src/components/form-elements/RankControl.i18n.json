@@ -2,5 +2,13 @@
   "rank_control.open.label": {
     "string": "Rank items",
     "developer_comment": "The label for the button that opens the rank control."
+  },
+  "rank_control.move_up.button": {
+    "string": "Move up",
+    "developer_comment": "The label for the button that moves the current item up in the rank."
+  },
+  "rank_control.move_down.button": {
+    "string": "Move down",
+    "developer_comment": "The label for the button that moves the current item down in the rank."
   }
 }

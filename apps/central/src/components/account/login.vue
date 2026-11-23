@@ -251,7 +251,7 @@ export default {
   }
 
   span {
-    color: #555;
+    color: $color-text-muted;
     font-family: $font-family-monospace;
     font-size: 12px;
     font-weight: 500;

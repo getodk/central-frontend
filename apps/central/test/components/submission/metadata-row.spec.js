@@ -1,5 +1,3 @@
-import { RouterLinkStub } from '@vue/test-utils';
-
 import DateTime from '../../../src/components/date-time.vue';
 import SubmissionMetadataRow from '../../../src/components/submission/metadata-row.vue';
 import SubmissionUpdateReviewState from '../../../src/components/submission/update-review-state.vue';
@@ -38,8 +36,7 @@ describe('SubmissionMetadataRow', () => {
   it('shows the row number', () => {
     testData.extendedForms.createPast(1, { submissions: 1000 });
     testData.extendedSubmissions.createPast(1);
-    const td = mountComponent({ rowNumber: 1000 }).get('td');
-    td.classes('row-number').should.be.true;
+    const td = mountComponent({ rowNumber: 1000 }).get('.row-number');
     td.text().should.equal('1000');
   });
 
@@ -48,8 +45,7 @@ describe('SubmissionMetadataRow', () => {
       mockLogin({ displayName: 'Alice Allison' });
       testData.extendedSubmissions.createPast(1);
       const row = mountComponent({ draft: false });
-      const td = row.findAll('td')[1];
-      td.classes('submitter-name').should.be.true;
+      const td = row.get('.submitter-name');
       td.text().should.equal('Alice Allison');
       await td.get('span').should.have.textTooltip();
     });
@@ -99,21 +95,9 @@ describe('SubmissionMetadataRow', () => {
     });
   });
 
-  describe('edit count', () => {
-    it('shows the count if there has been an edit', () => {
-      testData.extendedSubmissions.createPast(1, { edits: 1000 });
-      mountComponent().get('.edits').text().should.equal('1,000');
-    });
-
-    it('does not show the count if there has not been an edit', () => {
-      testData.extendedSubmissions.createPast(1, { edits: 0 });
-      mountComponent().get('.edits').text().should.equal('');
-    });
-  });
-
-  it('shows the delete button', async () => {
+  it('shows the delete button', () => {
     testData.extendedSubmissions.createPast(1);
-    mountComponent().find('.delete-button').attributes('aria-label').should.be.equal('Delete');
+    mountComponent().find('.delete-button').text().should.equal('Delete');
   });
 
   it('does not show the delete button if user does not have submission delete permission', async () => {
@@ -198,53 +182,44 @@ describe('SubmissionMetadataRow', () => {
         submissions: 1
       });
       testData.extendedSubmissions.createPast(1, { instanceId: 'c d' });
-      const { href } = mountComponent().findAll('.btn')[2].attributes();
+      const { href } = mountComponent().findAll('.btn')[1].attributes();
       href.should.equal('/v1/projects/1/forms/a%20b/submissions/c%20d/edit');
     });
 
-    it('sets the correct ARIA label', async () => {
+    it('shows the edit text', () => {
       testData.extendedSubmissions.createPast(1, { edits: 1000 });
-      const btn = mountComponent().findAll('.btn')[2];
-      btn.attributes('aria-label').should.equal('Edit (1,000)');
-      await btn.should.have.tooltip('Edit (1,000)');
+      const btn = mountComponent().findAll('.btn')[1];
+      btn.text().should.equal('Edit');
     });
 
     it('disables the button if the submission is encrypted', async () => {
       testData.extendedSubmissions.createPast(1, { status: 'notDecrypted' });
-      const button = mountComponent().findAll('.btn')[2];
+      const button = mountComponent().findAll('.btn')[1];
       button.attributes('aria-disabled').should.equal('true');
       button.should.have.ariaDescription('You cannot edit encrypted Submissions.');
       await button.should.have.tooltip('You cannot edit encrypted Submissions.');
     });
   });
 
-  it('specifies the correct to prop for the More button', () => {
-    testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 1 });
-    testData.extendedSubmissions.createPast(1, { instanceId: 'c d' });
-    const { to } = mountComponent().getComponent(RouterLinkStub).props();
-    to.should.equal('/projects/1/forms/a%20b/submissions/c%20d');
-  });
-
-  it('renders only the More button if user does not have update and delete permission', () => {
+  it('renders no buttons if user does not have update and delete permission', () => {
     mockLogin({ role: 'none' });
     testData.extendedProjects.createPast(1, { forms: 1, role: 'viewer' });
     testData.extendedSubmissions.createPast(1);
     const row = mountComponent({ canUpdate: false });
-    // Selecting this way because RouterLinkStub doesn't use the scoped slot.
-    row.findAll('.btn-group > *').length.should.equal(1);
+    row.findAll('.btn-group > *').length.should.equal(0);
   });
 
-  it('does not render the "State and actions" column for a form draft', () => {
+  it('does not render the "State" column for a form draft', () => {
     testData.extendedForms.createPast(1, { draft: true, submissions: 1 });
     testData.extendedSubmissions.createPast(1);
     const row = mountComponent({ draft: true });
-    row.find('.state-and-actions').exists().should.be.false;
+    row.find('.state').exists().should.be.false;
   });
 
   describe('deleted', () => {
     it('shows the deleted date', () => {
       const { deletedAt } = testData.extendedSubmissions.createPast(1, { deletedAt: new Date().toISOString() }).last();
-      mountComponent({ deleted: true }).get('.state-and-actions').getComponent(DateTime).props().iso.should.equal(deletedAt);
+      mountComponent({ deleted: true }).findAll('td')[4].getComponent(DateTime).props().iso.should.equal(deletedAt);
     });
 
     it('does not have delete button', () => {

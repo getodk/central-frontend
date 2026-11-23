@@ -14,6 +14,9 @@
           <plain/>
           <horizontal_wrapping/>
           <vertical_wrapping/>
+          <placeholder/>
+          <picker/>
+          <picker_reversed/>
           <meta>
             <instanceID/>
           </meta>
@@ -25,6 +28,9 @@
       <bind nodeset="/data/plain" type="int"/>
       <bind nodeset="/data/horizontal_wrapping" type="int"/>
       <bind nodeset="/data/vertical_wrapping" type="int"/>
+      <bind nodeset="/data/placeholder" type="int"/>
+      <bind nodeset="/data/picker" type="int"/>
+      <bind nodeset="/data/picker_reversed" type="int"/>
       <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid"/>
     </model>
   </h:head>
@@ -122,6 +128,15 @@
         <label>Much better than anything you have ever experienced before in your life</label>
         <value>1000000</value>
       </item>
+    </range>
+    <range ref="/data/placeholder" start="0" end="100" step="1" odk:tick-interval="25" odk:placeholder="50">
+      <label>Placeholder</label>
+    </range>
+    <range ref="/data/picker" start="1" end="10" step="1" appearance="picker">
+      <label>Picker</label>
+    </range>
+    <range ref="/data/picker_reversed" start="10" end="0" step="2" appearance="picker">
+      <label>Picker reversed</label>
     </range>
   </h:body>
 </h:html>

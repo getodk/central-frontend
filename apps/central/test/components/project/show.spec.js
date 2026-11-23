@@ -4,8 +4,6 @@ import Loading from '../../../src/components/loading.vue';
 import NotFound from '../../../src/components/not-found.vue';
 import ProjectOverview from '../../../src/components/project/overview.vue';
 
-import { loadLocale } from '../../../src/util/i18n';
-
 import testData from '../../data';
 import { findTab } from '../../util/dom';
 import { load } from '../../util/http';
@@ -113,39 +111,6 @@ describe('ProjectShow', () => {
     links.length.should.equal(1);
     links[0].text.should.equal('My Project');
     links[0].path.should.equal('/projects/1');
-  });
-
-  describe('title', () => {
-    it("shows the project's name", async () => {
-      mockLogin();
-      testData.extendedProjects.createPast(1, { name: 'My Project' });
-      const app = await load('/projects/1');
-      app.get('#page-head-title').text().should.equal('My Project');
-    });
-
-    it("appends (archived) to an archived project's name", async () => {
-      mockLogin();
-      testData.extendedProjects.createPast(1, {
-        name: 'My Project',
-        archived: true
-      });
-      const app = await load('/projects/1');
-      app.get('#page-head-title').text().should.equal('My Project (archived)');
-    });
-
-    it('updates (archived) after a locale change', async () => {
-      mockLogin();
-      testData.extendedProjects.createPast(1, {
-        name: 'My Project',
-        archived: true
-      });
-      const app = await load('/projects/1');
-      const title = app.get('#page-head-title');
-      title.text().should.equal('My Project (archived)');
-      await loadLocale(app.vm.$container, 'es');
-      await app.vm.$nextTick();
-      title.text().should.equal('My Project (archivado)');
-    });
   });
 
   describe('project description', () => {

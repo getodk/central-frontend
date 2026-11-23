@@ -28,6 +28,7 @@ defineProps<RadioButtonProps>();
 			:input-id="selectOptionId(question, option)"
 			:value="option.value"
 			:name="question.nodeId"
+			:aria-label="option.label.asString"
 			:disabled="question.currentState.readonly"
 			:model-value="question.currentState.value[0]"
 			@change="$emit('change', option.value)"

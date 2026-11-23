@@ -1,0 +1,6 @@
+{
+  "control_hint.details.label": {
+    "string": "More details",
+    "developer_comment": "The label for the button to expand the guidance hint details"
+  }
+}

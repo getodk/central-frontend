@@ -6,8 +6,6 @@ import PrimeVue from 'primevue/config';
 import Location from '../../src/utils/location';
 
 import simpleForm from '../../../central/test/data/xml/simple/form.xml?raw';
-import formWithAttachmentXml from '../../../central/test/data/xml/with-attachment/form.xml?raw';
-import formWithImageAttachmentXml from '../../../central/test/data/xml/image-attachment/form.xml?raw';
 import imageUploaderXml from '../../../central/test/data/xml/image-uploader/form.xml?raw';
 import simpleSubmission from '../../../central/test/data/xml/simple/submission.xml?raw';
 import imageUploaderSubmission from '../../../central/test/data/xml/image-uploader/submission.xml?raw';
@@ -35,7 +33,7 @@ describe('WebFormRenderer', () => {
   });
 
   let deviceId: string;
-  const DEFAULT_FORM = {
+  const DEFAULT_FORM: Form = {
     name: 'simple',
     xmlFormId: 'simple',
     projectId: 1,
@@ -43,12 +41,13 @@ describe('WebFormRenderer', () => {
     state: 'open',
     draft: false,
     webformsEnabled: true,
+    autosaveEnabled: false,
     once: false,
-    attachments: []
   };
 
   const mountComponent = async (xform: string, form?: Form, st?: string, actionType='new') => {
     const component = mount(WebFormRenderer, {
+      attachTo: document.body,
       global: {
         plugins: [router, i18n, PrimeVue]
       },
@@ -67,6 +66,7 @@ describe('WebFormRenderer', () => {
 
   const mountComponentForEdit = async (xform: string, instanceId: string, submissionAttachments: string[]) => {
     const component = mount(WebFormRenderer, {
+      attachTo: document.body,
       global: {
         plugins: [router, i18n, PrimeVue]
       },
@@ -85,8 +85,12 @@ describe('WebFormRenderer', () => {
   const submit = async (component: VueWrapper<InstanceType<typeof WebFormRenderer>>) => {
     await component.find('.odk-form .form-footer button').trigger('click');
     await vi.waitFor(() => {
-      const el = document.querySelector('.p-dialog-header');
-      if (!el) throw new Error('Not ready yet');
+      const el = document.querySelector('dialog h1');
+      const title = el?.textContent.trim();
+      if (title?.length) {
+        return;
+      }
+      throw new Error('Not ready yet: ' + title);
     });
   };
 
@@ -108,51 +112,6 @@ describe('WebFormRenderer', () => {
     const component = await mountComponent(simpleForm);
     const form = component.find('.odk-form');
     expect(form.exists()).to.equal(true);
-  });
-
-  it('should load form attachments', async () => {
-    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
-      ok: true,
-      status: 200,
-      text: () => Promise.resolve('name,label\ntoronto,Toronto'),
-    } as Response);
-    const given = {
-      name: 'simple',
-      xmlFormId: 'simple',
-      projectId: 1,
-      enketoId: '',
-      state: 'open',
-      draft: false,
-      once: false,
-      webformsEnabled: true,
-      attachments: [ { name: 'cities.csv' } ]
-    };
-    const component = await mountComponent(formWithAttachmentXml, given);
-    expect(fetchSpy).toHaveBeenCalledTimes(1);
-    const form = component.find('.odk-form');
-    expect(form.exists()).to.equal(true);
-    expect(form.text()).to.match(/Toronto/);
-    fetchSpy.mockReset();
-  });
-
-  it('should not send request for attachments that are not expected', async () => {
-    const fetchSpy = vi.spyOn(globalThis, 'fetch');
-    const given = {
-      name: 'simple',
-      xmlFormId: 'simple',
-      projectId: 1,
-      enketoId: '',
-      state: 'open',
-      draft: false,
-      once: false,
-      webformsEnabled: true,
-      attachments: [ { name: 'not-right-image.jpg' } ] // attachment name doesn't match
-    };
-    const component = await mountComponent(formWithImageAttachmentXml, given);
-    expect(fetchSpy).toHaveBeenCalledTimes(0);
-    const form = component.find('.odk-form');
-    expect(form.exists()).to.equal(true);
-    fetchSpy.mockReset();
   });
 
   it('should send submission xml request', async () => {
@@ -189,10 +148,10 @@ describe('WebFormRenderer', () => {
     const component = await mountComponent(simpleForm);
     await submit(component);
     expect(fetchSpy).toHaveBeenCalledTimes(1);
-    const title = document.querySelector('.p-dialog-header span')!;
-    const intro = document.querySelector('.p-dialog-content span')!;
-    expect(title.textContent).to.equal('Form successfully sent!');
-    expect(intro.textContent).to.equal('You can fill this Form out again or close if you’re done.');
+    const title = document.querySelector('dialog h1')!;
+    const intro = document.querySelector('dialog .content')!;
+    expect(title.textContent).to.equal('Submitted');
+    expect(intro.textContent).to.equal('Thanks for your submission. You can fill this form out again or close if you’re done.');
   });
 
   it('should submit st token with public form submission', async () => {
@@ -210,8 +169,8 @@ describe('WebFormRenderer', () => {
     const args = firstCall[1]!;
     expect(url).to.equal(`/v1/projects/1/forms/simple/submissions?st=sometoken&deviceID=${deviceId}`);
     expect(args.method).to.equal('POST');
-    const title = document.querySelector('.p-dialog-header span')!;
-    const intro = document.querySelector('.p-dialog-content span')!;
+    const title = document.querySelector('dialog h1')!;
+    const intro = document.querySelector('dialog .content')!;
     expect(title.textContent).to.equal('Thank you for participating!');
     expect(intro.textContent).to.equal('You can close this window now.');
   });
@@ -225,10 +184,10 @@ describe('WebFormRenderer', () => {
     const component = await mountComponent(simpleForm);
     await submit(component);
     expect(fetchSpy).toHaveBeenCalledTimes(1);
-    const title = document.querySelector('.p-dialog-header span')!;
-    const intro = document.querySelector('.p-dialog-content span')!;
-    expect(title.textContent).to.equal('Form successfully sent!');
-    expect(intro.textContent).to.equal('You can fill this Form out again or close if you’re done.');
+    const title = document.querySelector('dialog h1')!;
+    const intro = document.querySelector('dialog .content')!;
+    expect(title.textContent).to.equal('Submitted');
+    expect(intro.textContent).to.equal('Thanks for your submission. You can fill this form out again or close if you’re done.');
   });
 
   it('clears the form on Fill out again button', async () => {
@@ -243,12 +202,12 @@ describe('WebFormRenderer', () => {
     expect(component.find('input').element.value).to.equal('test');
     await submit(component);
     expect(fetchSpy).toHaveBeenCalledTimes(1);
-    const title = document.querySelector('.p-dialog-header span')!;
-    const intro = document.querySelector('.p-dialog-content span')!;
-    expect(title.textContent).to.equal('Form successfully sent!');
-    expect(intro.textContent).to.equal('You can fill this Form out again or close if you’re done.');
+    const title = document.querySelector('dialog h1')!;
+    const intro = document.querySelector('dialog .content')!;
+    expect(title.textContent).to.equal('Submitted');
+    expect(intro.textContent).to.equal('Thanks for your submission. You can fill this form out again or close if you’re done.');
 
-    const button = document.querySelector('.p-dialog [type=button]')!;
+    const button = document.querySelector('dialog [type=button]')!;
     (button as HTMLButtonElement).click();
 
     expect(component.find('input').element.value).to.equal('');
@@ -266,9 +225,9 @@ describe('WebFormRenderer', () => {
     expect(component.find('input').element.value).to.equal('test');
     await submit(component);
     expect(fetchSpy).toHaveBeenCalledTimes(1);
-    const title = document.querySelector('.p-dialog-header span')!;
+    const title = document.querySelector('dialog h1')!;
+    const intro = document.querySelector('dialog .content')!;
     expect(title.textContent).to.equal('Submission error');
-    const intro = document.querySelector('.p-dialog-content')!;
     expect(intro.textContent).to.match(/Your data was not submitted.*duplication instance ID/);
   });
 
@@ -284,9 +243,9 @@ describe('WebFormRenderer', () => {
     expect(component.find('input').element.value).to.equal('test');
     await submit(component);
     expect(fetchSpy).toHaveBeenCalledTimes(1);
-    const title = document.querySelector('.p-dialog-header span')!;
+    const title = document.querySelector('dialog h1')!;
+    const intro = document.querySelector('dialog .content')!;
     expect(title.textContent).to.equal('Submission error');
-    const intro = document.querySelector('.p-dialog-content')!;
     expect(intro.textContent).to.match(/Your data was not submitted.*The data that you are trying to upload is too large/);
   });
 
@@ -302,13 +261,13 @@ describe('WebFormRenderer', () => {
     expect(component.find('input').element.value).to.equal('test');
     await submit(component);
     expect(fetchSpy).toHaveBeenCalledTimes(1);
-    const title = document.querySelector('.p-dialog-header span')!;
+    const title = document.querySelector('dialog h1')!;
     expect(title.textContent).to.equal('Session expired');
 
-    const button = document.querySelector('.p-dialog .p-dialog-close-button');
-    expect(button).toBeDefined();
+    const button = document.querySelector('dialog button')!;
+    expect(button.textContent).to.equal('Close');
 
-    const intro = document.querySelector('.p-dialog-content')!;
+    const intro = document.querySelector('dialog .content')!;
     expect(intro.textContent).to.equal('Please log in here in a different browser tab and try again.');
   });
 
@@ -317,10 +276,10 @@ describe('WebFormRenderer', () => {
     const input = component.find('input');
     await input.setValue('test');
     await submit(component);
-    const title = document.querySelector('.p-dialog-header span')!;
+    const title = document.querySelector('dialog h1')!;
+    const intro = document.querySelector('dialog .content')!;
     expect(title.textContent).to.equal('Data is valid');
-    const intro = document.querySelector('.p-dialog-content')!;
-    expect(intro.textContent).to.equal('The data you entered is valid, but it was not submitted because this is a Form preview.');
+    expect(intro.textContent).to.equal('The data you entered is valid, but it was not submitted because this is a form preview.');
   });
 
   it('should show loading modal', async () => {
@@ -338,8 +297,8 @@ describe('WebFormRenderer', () => {
     const input = component.find('input');
     await input.setValue('test');
     await submit(component);
-    const title = document.querySelector('.p-dialog-header span')!.textContent;
-    expect(title).to.equal('Sending Submission');
+    const title = document.querySelector('dialog h1')!;
+    expect(title.textContent).to.equal('Sending submission');
     resolvePromise({
       ok: true,
       status: 200,
@@ -363,10 +322,10 @@ describe('WebFormRenderer', () => {
     const component = await mountComponent(imageUploaderXml);
     await uploadOnePixelGif(component);
     await submit(component);
-    const title = document.querySelector('.p-dialog-header span')!;
-    const intro = document.querySelector('.p-dialog-content span')!;
-    expect(title.textContent).to.equal('Form successfully sent!');
-    expect(intro.textContent).to.equal('You can fill this Form out again or close if you’re done.');
+    const title = document.querySelector('dialog h1')!;
+    const intro = document.querySelector('dialog .content')!;
+    expect(title.textContent).to.equal('Submitted');
+    expect(intro.textContent).to.equal('Thanks for your submission. You can fill this form out again or close if you’re done.');
     expect(fetchSpy).toHaveBeenCalledTimes(2);
   });
 
@@ -383,9 +342,9 @@ describe('WebFormRenderer', () => {
     const component = await mountComponent(imageUploaderXml);
     await uploadOnePixelGif(component);
     await submit(component);
-    const title = document.querySelector('.p-dialog-header span')!;
+    const title = document.querySelector('dialog h1')!;
+    const intro = document.querySelector('dialog .content')!;
     expect(title.textContent).to.equal('Submission error');
-    const intro = document.querySelector('.p-dialog-content p')!;
     expect(intro.textContent).to.match(/Your data was not fully submitted.*Please press the “Try again” button to retry/);
     expect(fetchSpy).toHaveBeenCalledTimes(2);
   });
@@ -404,9 +363,9 @@ describe('WebFormRenderer', () => {
     const component = await mountComponent(imageUploaderXml);
     await uploadOnePixelGif(component);
     await submit(component);
-    const title = document.querySelector('.p-dialog-header span')!;
+    const title = document.querySelector('dialog h1')!;
+    const intro = document.querySelector('dialog .content')!;
     expect(title.textContent).to.equal('Submission error');
-    const intro = document.querySelector('.p-dialog-content p')!;
     expect(intro.textContent).to.match(/Your data was not fully submitted.*Please press the “Try again” button to retry/);
     expect(fetchSpy).toHaveBeenCalledTimes(2);
   });
@@ -431,13 +390,13 @@ describe('WebFormRenderer', () => {
     const component = await mountComponent(imageUploaderXml);
     await uploadOnePixelGif(component);
     await submit(component);
-    let title = document.querySelector('.p-dialog-header span')!;
+    let title = document.querySelector('dialog h1')!;
     expect(title.textContent).to.equal('Submission error');
-    const button = document.querySelector('.p-dialog [type=button]')!;
+    const button = document.querySelector('dialog [type=button]')!;
     (button as HTMLButtonElement).click();
     await vi.waitFor(() => {
-      title = document.querySelector('.p-dialog-header span')!;
-      expect(title.textContent).to.equal('Form successfully sent!');
+      title = document.querySelector('dialog h1')!;
+      expect(title.textContent).to.equal('Submitted');
     });
 
     expect(fetchSpy).toHaveBeenCalledTimes(3);
@@ -459,11 +418,12 @@ describe('WebFormRenderer', () => {
     const component = await mountComponent(imageUploaderXml);
     await uploadOnePixelGif(component);
     await submit(component);
-    const title = document.querySelector('.p-dialog-header span')!;
+    const title = document.querySelector('dialog h1')!;
     expect(title.textContent).to.equal('Session expired');
 
-    const button = document.querySelector('.p-dialog .p-dialog-close-button');
-    expect(button).toBeNull();
+    const buttons = document.querySelectorAll('dialog button');
+    expect(buttons.length).to.equal(1);
+    expect(buttons[0]!.textContent).to.equal('Try again');
 
     expect(fetchSpy).toHaveBeenCalledTimes(2);
   });
@@ -509,8 +469,8 @@ describe('WebFormRenderer', () => {
 
       vi.spyOn(Location, 'assign').mockImplementation(mockAssign);
 
-      const title = document.querySelector('.p-dialog-header span')!;
-      expect(title.textContent).to.equal('Submission successful');
+      const title = document.querySelector('dialog h1')!;
+      expect(title.textContent).to.equal('Submitted');
 
       vi.advanceTimersByTime(2000);
 

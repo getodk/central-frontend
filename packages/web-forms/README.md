@@ -60,7 +60,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-##### Appearances<br/>🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜ 58\%
+##### Appearances<br/>🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜ 63\%
 
   </summary>
   <br/>
@@ -73,9 +73,9 @@ This section is auto generated. Please update `feature-matrix.json` and then run
 | ex:                                                             |          |
 | thousands-sep                                                   |    ✅    |
 | bearing                                                         |          |
-| [vertical](https://github.com/getodk/web-forms/issues/271)      |          |
+| [vertical](https://github.com/getodk/web-forms/issues/271)      |    ✅    |
 | [no-ticks](https://github.com/getodk/web-forms/issues/271)      |    ✅    |
-| picker                                                          |          |
+| [picker](https://github.com/getodk/web-forms/issues/712)        |    ✅    |
 | [rating](https://github.com/getodk/web-forms/issues/711)        |    ✅    |
 | new                                                             |          |
 | new-front                                                       |          |
@@ -120,7 +120,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-##### Parameters<br/>🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜⬜ 66\%
+##### Parameters<br/>🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜ 73\%
 
   </summary>
   <br/>
@@ -141,7 +141,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
 | [geotrace/shape incremental=true](https://github.com/getodk/web-forms/issues/562)                                                  |          |
 | [geo reference-geometry](https://github.com/getodk/web-forms/issues/924)                                                           |          |
 | [range labels](https://github.com/getodk/web-forms/issues/845)                                                                     |    ✅    |
-| [range placeholder](https://github.com/getodk/web-forms/issues/940)                                                                |          |
+| [range placeholder](https://github.com/getodk/web-forms/issues/940)                                                                |    ✅    |
 
 </details>
 
@@ -175,7 +175,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
   <summary>
 
 <!-- prettier-ignore -->
-##### Descriptions and annotations<br/>🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜⬜ 75\%
+##### Descriptions and annotations<br/>🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜ 83\%
 
   </summary>
   <br/>
@@ -184,7 +184,7 @@ This section is auto generated. Please update `feature-matrix.json` and then run
 | -------------------------------------------------------------- | :------: |
 | label                                                          |    ✅    |
 | hint                                                           |    ✅    |
-| [guidance hint](https://github.com/getodk/web-forms/issues/53) |          |
+| [guidance hint](https://github.com/getodk/web-forms/issues/53) |    ✅    |
 | form translations                                              |    ✅    |
 | form translations with ref to other<br/>field                  |    ✅    |
 | Markdown                                                       |    ✅    |
@@ -354,6 +354,7 @@ To use this library in a Vue.js application:
     :instance-defaults="instanceDefaults"
     :device-id="abc123"
     :last-saved-xml="lastSavedXml"
+    :map-provider="mapProvider"
     @submit="handleSubmit"
     @submit-chunked="handleChunkedSubmit"
 />
@@ -382,6 +383,7 @@ The `<OdkWebForm>` component accepts the following props:
 - `deviceId` (`string`, optional): If provided is available for binding into the form using preload attributes. Ignored if `preloadProperties.deviceID` is given.
 - `instanceDefaults` (`InstanceDefaults`, optional): Default values to set in the form as a map of xpath reference to string value.
 - `lastSavedXml` (`string`, optional): The XML to parse and bind to the last-saved virtual instance.
+- `mapProvider` (`MapProvider`, optional, defaults to OpenStreetMap): Base map for map questions. Either `{ name: 'osm' }` or `{ name: 'google', apiKey }`; with Google, map questions get a layer picker.
 
 ### Events (`OdkWebFormEmits`)
 
@@ -395,6 +397,8 @@ The component emits the following events:
 - `submitChunked`: Emitted for chunked submissions when the form is valid
   - Payload: ([submissionPayload: ChunkedInstancePayload, callback: HostSubmissionResultCallback])
   - Note: Requires `submissionMaxSize` prop to be set
+- `updated`: Emitted when the user updates the instance value in any way, designed for features like autosaving form fill progress.
+  - Payload: ([instance: InstanceSnapshot])
 
 ### What if I don't use Vue?
 

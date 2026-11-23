@@ -11,58 +11,36 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div id="form-list">
-    <page-section>
-      <template #heading>
-        <span>{{ $t('title') }}</span>
-        <router-link v-if="project.dataExists && project.permits('form.create')"
-          id="form-list-create-button" :to="projectPath('new-form')"
-          class="btn btn-primary">
-          <span class="icon-plus-circle"></span>{{ $t('action.create') }}&hellip;
-        </router-link>
-        <form-sort v-model="sortMode"/>
-      </template>
-      <template #body>
-        <form-table :sort-func="sortFunction"/>
-        <form-table :sort-func="sortFunction" :show-closed="true"/>
-        <loading :state="forms.initiallyLoading"/>
-        <p v-if="forms.dataExists && forms.length === 0"
-          class="empty-table-message">
-          {{ $t('emptyTable') }}
-        </p>
-      </template>
-    </page-section>
+    <form-table :sort-func="sortFunc"/>
+    <form-table :sort-func="sortFunc" :show-closed="true"/>
+    <loading :state="forms.initiallyLoading"/>
+    <p v-if="forms.dataExists && forms.length === 0"
+      class="empty-table-message">
+      {{ $t('emptyTable') }}
+    </p>
   </div>
 </template>
 
 <script>
 import FormTable from './table.vue';
 import Loading from '../loading.vue';
-import PageSection from '../page/section.vue';
-import FormSort from './sort.vue';
 
-import sortFunctions from '../../util/sort';
-import useRoutes from '../../composables/routes';
 import { useRequestData } from '../../request-data';
 
 export default {
   name: 'FormList',
-  components: { FormTable, FormSort, Loading, PageSection },
+  components: { FormTable, Loading },
+  props: {
+    sortFunc: {
+      type: Function,
+      required: true
+    }
+  },
   setup() {
     // The component does not assume that this data will exist when the
     // component is created.
-    const { project, forms } = useRequestData();
-    const { projectPath } = useRoutes();
-    return { project, forms, projectPath };
-  },
-  data() {
-    return {
-      sortMode: 'alphabetical'
-    };
-  },
-  computed: {
-    sortFunction() {
-      return sortFunctions[this.sortMode];
-    }
+    const { forms } = useRequestData();
+    return { forms };
   }
 };
 </script>
@@ -80,16 +58,7 @@ export default {
 <i18n lang="json5">
 {
   "en": {
-    // This is a title shown above a section of the page.
-    "title": "Forms",
-    "action": {
-      // This is the text of a button that is used to create a new Form.
-      "create": "New"
-    },
-    "emptyTable": "There are no Forms to show.",
-    "alert": {
-      "create": "“{name}” has been created as a Form Draft."
-    }
+    "emptyTable": "There are no Forms to show."
   }
 }
 </i18n>
@@ -98,99 +67,37 @@ export default {
 <i18n>
 {
   "cs": {
-    "title": "Formuláře",
-    "action": {
-      "create": "Nový"
-    },
     "emptyTable": "Nejsou k dispozici žádné formuláře."
   },
   "de": {
-    "title": "Formulare",
-    "action": {
-      "create": "Neu"
-    },
-    "emptyTable": "Keine Formulare zum Anzeigen vorhanden.",
-    "alert": {
-      "create": "\"{name}\" wurde als Formularentwurf erzeugt."
-    }
+    "emptyTable": "Keine Formulare zum Anzeigen vorhanden."
   },
   "es": {
-    "title": "Formularios",
-    "action": {
-      "create": "Nuevo"
-    },
-    "emptyTable": "No hay formularios para mostrar.",
-    "alert": {
-      "create": "\"{name}\" se ha creado como borrador de formulario."
-    }
+    "emptyTable": "No hay formularios para mostrar."
   },
   "fr": {
-    "title": "Formulaires",
-    "action": {
-      "create": "Nouveau"
-    },
-    "emptyTable": "Il n'y a pas de formulaire à montrer.",
-    "alert": {
-      "create": "\"{name}\" a été créé comme ébauche."
-    }
+    "emptyTable": "Il n'y a pas de formulaire à montrer."
   },
   "id": {
-    "title": "Formulir",
-    "action": {
-      "create": "Formulir Baru"
-    },
     "emptyTable": "Tidak ada formulir untuk ditampilkan."
   },
   "it": {
-    "title": "Formulari",
-    "action": {
-      "create": "Nuovo"
-    },
-    "emptyTable": "Non ci sono formulari da mostrare.",
-    "alert": {
-      "create": "“{name}” è stato creato come bozza di formulario."
-    }
+    "emptyTable": "Non ci sono formulari da mostrare."
   },
   "ja": {
-    "title": "フォーム",
-    "action": {
-      "create": "新規作成"
-    },
     "emptyTable": "表示できるフォームはありません。"
   },
   "pt": {
-    "title": "Formulários",
-    "action": {
-      "create": "Novo"
-    },
     "emptyTable": "Não há formulários para exibir."
   },
   "sw": {
-    "title": "Fomu",
-    "action": {
-      "create": "Mpya"
-    },
     "emptyTable": "hakuna Fomu za kuonyesha"
   },
   "zh": {
-    "title": "表单",
-    "action": {
-      "create": "更新"
-    },
-    "emptyTable": "暂无表单可显示。",
-    "alert": {
-      "create": "表单草稿“{name}”已创建。"
-    }
+    "emptyTable": "暂无表单可显示。"
   },
   "zh-Hant": {
-    "title": "表單",
-    "action": {
-      "create": "新增"
-    },
-    "emptyTable": "沒有可顯示的表單。",
-    "alert": {
-      "create": "「{name}」已建立為表單草稿。"
-    }
+    "emptyTable": "沒有可顯示的表單。"
   }
 }
 </i18n>

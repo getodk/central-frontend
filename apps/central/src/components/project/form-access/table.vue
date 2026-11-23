@@ -84,9 +84,11 @@ export default {
 @import '../../../assets/scss/variables';
 
 #project-form-access-table {
+  width: max-content;
+
   // Space above the tables
   .table-freeze-frozen {
-    margin-top: 70px;
+    margin-top: 50px;
 
     &.no-field-keys {
       margin-top: 0;
@@ -95,13 +97,11 @@ export default {
   .table-freeze-scrolling-container {
     // Using padding rather than margin so that the rotated column header text
     // does not overflow the container, which would cause the text to be hidden.
-    padding-top: 70px;
+    padding-top: 50px;
   }
 
   .table {
-    th {
-      height: 33px;
-    }
+    overflow: visible;
 
     td {
       height: 51px;
@@ -155,48 +155,15 @@ export default {
         white-space: nowrap;
       }
 
-      // The background behind the text
-      &::before {
-        bottom: 0;
-        content: '';
-        height: 102px;
-        // This seems to need to be height divided by 2.
-        left: 51px;
-        position: absolute;
-        transform: skewX(-45deg);
-        transform-origin: center left;
-      }
       &, &::before {
         min-width: 42px;
         width: 42px;
-      }
-      &:first-child {
-        &, &::before {
-          background-color: $color-table-heading-background;
-        }
-
-        &::before {
-          border-left: 1px solid #eee;
-        }
-      }
-      &:nth-child(2n + 3)::before {
-        background-color: #eee;
-      }
-      &:last-child::before {
-        display: none;
       }
 
       &:last-child {
         min-width: 102px;
         width: 102px;
       }
-    }
-
-    td:nth-child(2n + 3) {
-      background-color: #eee;
-    }
-    td:last-child {
-      background-color: transparent;
     }
   }
 }

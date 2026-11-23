@@ -86,6 +86,25 @@ const createTickLabels = <V extends RangeValueType>(
   });
 };
 
+const getRangeBoundsError = (definition: RangeNodeDefinition): Error | null => {
+  const { appearances, bounds } = definition.bodyElement;
+  const { start, end, step } = bounds;
+  if (appearances.rating) {
+    const isInt = Number.isInteger(Number(end));
+    return isInt ? null : new Error(`Rating "end" must be a whole number, got ${end}.`);
+  }
+
+  const decimalsOf = (value: string) => value.split('.')[1]?.length ?? 0;
+  const factor = 10 ** Math.max(decimalsOf(start), decimalsOf(end), decimalsOf(step));
+  const scaledStep = Math.round(Number(step) * factor);
+  const scaledSpan = Math.round((Number(end) - Number(start)) * factor);
+  if (scaledStep === 0 || scaledSpan % scaledStep !== 0) {
+    return new Error(`Range from ${start} to ${end} cannot be divided into steps of ${step}.`);
+  }
+
+  return null;
+};
+
 export class RangeControl<V extends RangeValueType = RangeValueType>
   extends ValueNode<V, RangeNodeDefinition<V>, RangeValue<V>, RangeInputValue<V>>
   implements
@@ -134,6 +153,12 @@ export class RangeControl<V extends RangeValueType = RangeValueType>
 
     this.appearances = definition.bodyElement.appearances;
     this.nodeOptions = definition.bodyElement.options;
+
+    const boundsError = getRangeBoundsError(definition);
+    if (boundsError != null) {
+      this.registerExpressionError(() => boundsError);
+    }
+
     this.attributeState = createAttributeState(this.scope);
 
     const state = createSharedNodeState(

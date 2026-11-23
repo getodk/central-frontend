@@ -37,6 +37,51 @@ describe('Multiselect', () => {
     component.findAll('.checkbox').length.should.equal(2);
   });
 
+  it('shows a heading when the option group changes', () => {
+    const component = mountComponent({
+      props: {
+        options: [
+          { value: 'foo', group: 'First group' },
+          { value: 'bar', group: 'First group' },
+          { value: 'baz', group: 'Second group' }
+        ]
+      }
+    });
+    component.findAll('.option-group').map(heading => heading.text())
+      .should.eql(['First group', 'Second group']);
+  });
+
+  it('shows nested headings when the option subgroup changes', () => {
+    const component = mountComponent({
+      props: {
+        options: [
+          { value: 'crow', group: 'Animals', subgroup: 'Birds' },
+          { value: 'hawk', group: 'Animals', subgroup: 'Birds' },
+          { value: 'fox', group: 'Animals', subgroup: 'Mammals' },
+          { value: 'oak', group: 'Plants', subgroup: 'Trees' }
+        ]
+      }
+    });
+    component.findAll('.option-group').map(heading => heading.text())
+      .should.eql(['Animals', 'Plants']);
+    component.findAll('.option-subgroup').map(heading => heading.text())
+      .should.eql(['Birds', 'Mammals', 'Trees']);
+    component.findAll('.subgrouped-option').length.should.equal(4);
+    component.findAll('.option-list > li:not(.empty-message)')
+      .map(item => item.text())
+      .should.eql([
+        'Animals',
+        'Birds',
+        'crow',
+        'hawk',
+        'Mammals',
+        'fox',
+        'Plants',
+        'Trees',
+        'oak'
+      ]);
+  });
+
   it('shows each checkbox', async () => {
     const component = mountComponent({
       props: { options: [{ value: 'foo' }, { value: 'bar' }] },
@@ -235,7 +280,7 @@ describe('Multiselect', () => {
       component.get('.display-value').text().should.equal('Bob');
     });
 
-    it('selects one option and emits an array when Apply is clicked', async () => {
+    it('immediately applies a selected option', async () => {
       const component = mountComponent({
         props: { options, modelValue: [0], single: true, placeholder },
         attachTo: document.body
@@ -243,30 +288,18 @@ describe('Multiselect', () => {
       await toggle(component);
       await component.findAll('input[type="radio"]')[1].setValue(true);
       assertChecked(component, [false, true]);
-      await apply(component);
       component.emitted('update:modelValue').should.eql([[[1]]]);
+      component.get('.dropdown-trigger').attributes('aria-expanded').should.equal('false');
+      component.find('.action-bar').exists().should.be.false;
     });
 
-    it('does not emit an event if the original selection is restored', async () => {
-      const component = mountComponent({
-        props: { options, modelValue: [0], single: true, placeholder },
-        attachTo: document.body
-      });
-      await toggle(component);
-      const inputs = component.findAll('input[type="radio"]');
-      await inputs[1].setValue(true);
-      await inputs[0].setValue(true);
-      await apply(component);
-      should.not.exist(component.emitted('update:modelValue'));
-    });
-
-    it('clears the selection when the reset action is clicked', async () => {
+    it('immediately applies the reset action', async () => {
       const component = mountComponent({
         props: {
           options,
           modelValue: [0],
           single: true,
-          none: 'Reset to Me',
+          none: 'Reset to All',
           placeholder
         },
         attachTo: document.body
@@ -274,8 +307,25 @@ describe('Multiselect', () => {
       await toggle(component);
       await component.get('.change-all.single button').trigger('click');
       assertChecked(component, [false, false]);
-      await apply(component);
       component.emitted('update:modelValue').should.eql([[[]]]);
+      component.get('.dropdown-trigger').attributes('aria-expanded').should.equal('false');
+    });
+
+    it('closes when resetting an empty selection', async () => {
+      const component = mountComponent({
+        props: {
+          options,
+          modelValue: [],
+          single: true,
+          none: 'Reset to All',
+          placeholder
+        },
+        attachTo: document.body
+      });
+      await toggle(component);
+      await component.get('.change-all.single button').trigger('click');
+      should.not.exist(component.emitted('update:modelValue'));
+      component.get('.dropdown-trigger').attributes('aria-expanded').should.equal('false');
     });
 
     it('does not show multi-select bulk actions', () => {
@@ -429,6 +479,50 @@ describe('Multiselect', () => {
       await component.get('.search input').setValue('c');
       const matches = component.findAll('.search-match label');
       matches.map(match => match.text()).should.eql(['Alice']);
+    });
+
+    it('shows a group heading when an option in the group matches', async () => {
+      const component = mountComponent({
+        props: {
+          options: [
+            { value: 1, text: 'Alice', group: 'First group' },
+            { value: 2, text: 'Bob', group: 'First group' },
+            { value: 3, text: 'Carol', group: 'Second group' }
+          ],
+          search: 'Search'
+        },
+        attachTo: document.body
+      });
+      await toggle(component);
+      await component.get('.search input').setValue('ali');
+      const headings = component.findAll('.option-group');
+      headings[0].should.be.visible(true);
+      headings[0].text().should.equal('First group');
+      headings[1].should.be.hidden(true);
+    });
+
+    it('shows matching group and subgroup headings', async () => {
+      const component = mountComponent({
+        props: {
+          options: [
+            { value: 1, text: 'Crow', group: 'Animals', subgroup: 'Birds' },
+            { value: 2, text: 'Hawk', group: 'Animals', subgroup: 'Birds' },
+            { value: 3, text: 'Fox', group: 'Animals', subgroup: 'Mammals' },
+            { value: 4, text: 'Oak', group: 'Plants', subgroup: 'Trees' }
+          ],
+          search: 'Search'
+        },
+        attachTo: document.body
+      });
+      await toggle(component);
+      await component.get('.search input').setValue('crow');
+      const groups = component.findAll('.option-group');
+      const subgroups = component.findAll('.option-subgroup');
+      groups[0].should.be.visible(true);
+      groups[1].should.be.hidden(true);
+      subgroups[0].should.be.visible(true);
+      subgroups[1].should.be.hidden(true);
+      subgroups[2].should.be.hidden(true);
     });
 
     it('hides options that do not match', async () => {

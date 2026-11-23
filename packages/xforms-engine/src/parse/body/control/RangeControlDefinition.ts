@@ -69,8 +69,7 @@ const parseNumericStringAttributeAbs = (element: Element, localName: string): Nu
   return value;
 };
 
-const parseTickInterval = (element: Element): number | null => {
-  const localName = 'tick-interval';
+const parseNumberAttribute = (element: Element, localName: string): number | null => {
   const value = element.getAttributeNS(ODK_NAMESPACE_URI, localName);
   if (value == null) {
     return null;
@@ -81,7 +80,10 @@ const parseTickInterval = (element: Element): number | null => {
 };
 
 const parseRangeNodeOptions = (element: Element): RangeNodeOptions => {
-  return { tickInterval: parseTickInterval(element) };
+  return {
+    tickInterval: parseNumberAttribute(element, 'tick-interval'),
+    placeholder: parseNumberAttribute(element, 'placeholder'),
+  };
 };
 
 /**

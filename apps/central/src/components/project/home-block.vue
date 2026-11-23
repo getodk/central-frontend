@@ -14,18 +14,26 @@ except according to the terms contained in the LICENSE file.
     <div class="title">
       <router-link :to="projectPath(project.id)">{{ project.name }}</router-link>
       <template v-if="project.keyId">
-        <span class="encrypted badge" aria-hidden="true" v-tooltip.sr-only>
+        <span class="encrypted tag tag-info" aria-hidden="true" v-tooltip.sr-only>
           <span class="icon-lock"></span>
           {{ $t('encrypted') }}
         </span>
         <span class="sr-only">{{ $t('encryptionTip') }}</span>
       </template>
     </div>
-    <table v-if="visibleForms.length > 0 || visibleDataset.length > 0" class="project-table table">
-      <project-form-row v-for="(form, index) of visibleForms" :key="form.xmlFormId" :form="form" :project="project" :show-icon="index === 0"/>
-      <tr v-if="showExpander" class="project-form-row transparent-bg">
-        <td class="col-icon"></td>
-        <td colspan="6" class="expand-button-container">
+
+    <!-- Forms Section -->
+    <div v-if="visibleForms.length > 0" class="project-table-section forms-section">
+      <div class="section-icon">
+        <span class="icon-file"></span>
+      </div>
+      <div class="section-content">
+        <table class="project-table table">
+          <tbody>
+            <project-form-row v-for="form of visibleForms" :key="form.xmlFormId" :form="form" :project="project"/>
+          </tbody>
+        </table>
+        <div v-if="showExpander" class="expand-button-container">
           <a href="#" role="button" class="expand-button" @click.prevent="toggleExpanded">
             <template v-if="!formExpanded">
               {{ $tcn('showMore', numForms) }}<span class="icon-angle-down"></span>
@@ -34,37 +42,38 @@ except according to the terms contained in the LICENSE file.
               {{ $tcn('showFewer', numForms) }}<span class="icon-angle-up"></span>
             </template>
           </a>
-        </td>
-      </tr>
+        </div>
+      </div>
+    </div>
 
-      <tr v-if="visibleForms.length > 0 && visibleDataset.length > 0" class="margin">
-        <td class="col-icon"></td>
-      </tr>
-      <project-dataset-row v-for="(dataset, index) of visibleDataset" :key="dataset.name" :dataset="dataset" :project="project" :show-icon="index === 0"/>
-      <tr v-if="showDatasetExpander" class="project-dataset-row transparent-bg">
-        <td class="col-icon"></td>
-        <td colspan="2" class="expand-button-container">
+    <!-- Datasets Section -->
+    <div v-if="visibleDataset.length > 0" class="project-table-section datasets-section">
+      <div class="section-icon">
+        <span class="icon-database"></span>
+      </div>
+      <div class="section-content">
+        <table class="project-table table">
+          <tbody>
+            <project-dataset-row v-for="dataset of visibleDataset" :key="dataset.name" :dataset="dataset" :project="project"/>
+          </tbody>
+        </table>
+        <div v-if="showDatasetExpander" class="expand-button-container">
           <a href="#" role="button" class="expand-button" @click.prevent="toggleDatasetExpanded">
             <template v-if="!datasetExpanded">
-              {{ $tcn('showMoreDatasets', numDatasets) }}<span class="icon-angle-down"></span>
+              {{ $tcn('showMoreDatasets', numDatasets) }}
+              <span v-if="hiddenConflicts > 0" class="tag tag-danger">
+                <span class="icon-warning"></span>
+                {{ $n(hiddenConflicts) }}
+              </span>
+              <span class="icon-angle-down"></span>
             </template>
             <template v-else>
               {{ $tcn('showFewerDatasets', numDatasets) }}<span class="icon-angle-up"></span>
             </template>
           </a>
-        </td>
-        <td v-if="hiddenConflicts > 0" colspan="2" class="conflicts-count">
-          <a href="#" role="button" class="btn btn-danger" @click.prevent="toggleDatasetExpanded">
-            {{ $tcn('entity.conflictsCount', hiddenConflicts) }}<span class="icon-warning"></span>
-          </a>
-        </td>
-        <td v-if="hiddenConflicts > 0" colspan="2" class="conflict-caption">
-          <span>
-            {{ $t('hidden') }}
-          </span>
-        </td>
-      </tr>
-    </table>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -155,9 +164,10 @@ export default {
   margin-bottom: 15px;
 
   .title {
-    font-size: 24px;
+    font-size: 18px;
     font-weight: bold;
     letter-spacing: -0.02em;
+    margin-top: 20px;
     margin-bottom: 5px;
     background-color: $color-page-background;
     box-shadow: 0 0 20px $color-page-background;
@@ -167,23 +177,42 @@ export default {
 
   .encrypted {
     margin-left: 9px;
-    color: #333;
-    background-color: #ddd;
-    border: 1px solid #ccc;
+    color: $color-text-secondary;
+    background-color: $color-surface-secondary;
+    border: 1px solid $color-border;
     font-weight: 400;
+    vertical-align: -3px;
   }
 
-  padding-right: 12px;
+  .project-table-section {
+    display: flex;
+    margin-bottom: 10px;
 
-  table {
-    margin-left: 9px;
-    margin-bottom: 4px;
+    .section-icon {
+      width: 30px;
+      padding-top: 12px; // dependent upon row height
+      font-size: 16px;
+      color: $color-text-placeholder;
+    }
+
+    .section-content {
+      flex: 1;
+    }
+  }
+
+  .project-table {
+    margin-bottom: 0;
+    table-layout: fixed;
+
+    tr:first-child td {
+      border-top: none;
+    }
   }
 
   .expand-button-container {
-    padding-left: 6px;
+    padding: 6px;
     font-size: 14px;
-    color: #888;
+    color: $color-text-muted;
   }
   .expand-button {
     @include text-link;
@@ -196,95 +225,9 @@ export default {
     margin-left: 5px;
   }
 
-  .project-table {
-    .transparent-bg{
-      background: transparent !important;
-    }
-
-    tr:first-child .col-icon {
-      border-top-left-radius: 5px;
-    }
-
-    tr:last-child .col-icon {
-      border-bottom-left-radius: 5px;
-    }
-
-    tr:nth-child(3n + 2 of .project-form-row) {
-      background: #eee;
-    }
-
-    tr:nth-child(3n + 2 of .project-dataset-row) {
-      background: #eee;
-    }
-
-    .col-icon {
-      width: 35px;
-      background: #e3e4e4;
-      border-right-width: 2px;
-      border-right-style: solid;
-      padding: 5px 0px;
-      text-align: center;
-
-      span {
-        margin-left: 0;
-      }
-    }
-
-    .project-form-row .col-icon {
-      border-right-color: #009ccc;
-
-      span {
-        color: #009ccc;
-      }
-    }
-
-    .project-dataset-row {
-      .conflicts-count {
-        text-align: right;
-        padding: 0 $padding-right-table-data;
-
-        [class*='icon'] {
-          margin-right:0;
-        }
-
-        .btn-danger {
-          color: white;
-          margin-right: -5px;
-          font-size: 14px;
-          padding: 2px 7px;
-
-          [class*='icon'] {
-            color: white;
-          }
-        }
-      }
-
-      .col-icon{
-        border-right-color: #b9005c;
-
-        span {
-          color: #b9005c;
-        }
-      }
-
-      .conflict-caption {
-        font-size: 14px;
-        color: #888;
-        padding: 6px 10px;
-      }
-    }
-
-    .margin {
-      height: 5px;
-
-      .col-icon {
-        border-right: none;
-        width: 33px;
-      }
-    }
+  .icon-warning {
+    color: $color-text-muted;
   }
-
-
 
 }
 </style>

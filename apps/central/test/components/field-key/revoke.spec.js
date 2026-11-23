@@ -72,7 +72,7 @@ describe('FieldKeyRevoke', () => {
       rows.length.should.equal(2);
       rows[0].find('.field-key-row-popover-link').exists().should.be.true;
       rows[1].find('.field-key-row-popover-link').exists().should.be.false;
-      rows[1].findAll('td')[1].text().should.equal('Access revoked');
+      rows[1].findAll('td')[2].text().should.equal('Access revoked');
     });
   });
 });

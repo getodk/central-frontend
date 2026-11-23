@@ -231,25 +231,10 @@ Instead of scoped CSS, use `id` and `class` attributes to style components:
 
 #### Icons
 
-We use Font Awesome for our icons, using IcoMoon to select a subset of icons in order to minimize the size. The font files are located in [`/public/fonts/`](/public/fonts/), and the CSS is [`/apps/central/src/assets/css/icomoon.css`](/apps/central/src/assets/css/icomoon.css). Our IcoMoon definition is in the root directory at [`apps/central/icomoon.json`](/apps/central/icomoon.json).
+We use [Material Symbols](https://github.com/google/material-design-icons/tree/master/variablefont) and use vite-font-extractor-plugin
+for subsetting the font.
 
-To update the icons using the [IcoMoon website](https://icomoon.io/app/):
-
-1. Click the "Import Icons" button in IcoMoon. Select [`apps/central/icomoon.json`](/apps/central/icomoon.json). When prompted, load the settings stored in the file.
-2. Scroll down to the "Add Icons From Library" link and add Font Awesome.
-3. Move the imported set above Font Awesome, using the 3-bar icon to the right of the imported set's title. (This should help preserve the icon order and minimize the diff.)
-4. Update the icons by selecting (highlighting) the new icons to add. They don't need to be moved or altered.
-5. Download the new font, then copy the files (`icomoon.css`, `fonts/*`, `icomoon.json`) into their locations in the repository.
-    * You will need to rename the files and update the paths in the CSS (`fonts/icomoon.ttf?...` becomes `/fonts/icomoon.ttf?...` with a beginning slash).
-    * You will need to remove the second class selector in `icomoon.css` line 12 to just read: `[class^="icon-"] {`
-    * You will also need to prettify the JSON file to use two space indentation. You can use https://jsonformatter.org/json-pretty-print and choose 2 Tab Space.
-
-By following the steps above, you should minimize the diff. However, in the JSON file, you may still see changes for properties like `id`, `iconIdx`, `setId`, and `setIdx`. (I think these properties may change for the icons that were previously most recently added.)
-
-Here are a few screenshots of the IcoMoon interface from March 2021:
-
-![Using IcoMoon Interface](img/icomoon-choose-new-icons.png)
-![Choosing Font Awesome Icon Set](img/icomoon-font-awesome.png)
+To use a new icon, just create a new class with `::before` in material-symbols.css and provide the name of the icon in the `content` attribute.
 
 ### Standard Actions
 

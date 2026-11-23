@@ -37,7 +37,7 @@ except according to the terms contained in the LICENSE file.
         <!-- form.submissions should always exist in production, but it doesn't
         exist in some tests. -->
         <span>{{ $n(form.submissions != null ? form.submissions : 0, 'default') }}</span>
-        <span class="icon-asterisk"></span>
+        <span class="icon-star"></span>
       </span>
     </td>
     <td class="actions">
@@ -121,7 +121,7 @@ export default {
   td {
     font-size: 16px;
     padding: 3px 0px 3px 6px;
-    color: #333;
+    color: $color-text-secondary;
   }
 
   .name {
@@ -151,7 +151,7 @@ export default {
     text-align: right;
     [class*='icon'] {
       margin-left: 5px;
-      color: #888;
+      color: $color-text-muted;
     }
   }
 

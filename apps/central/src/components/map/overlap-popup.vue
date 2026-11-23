@@ -115,7 +115,7 @@ const preview = (feature) => {
     > :first-child { @include text-overflow-ellipsis; }
 
     > :last-child {
-      color: #1c1b1f;
+      color: $color-text-secondary;
       flex-shrink: 0;
       font-size: 20px;
       padding-right: 3px;
@@ -125,7 +125,7 @@ const preview = (feature) => {
       background-color: $color-action-background;
       border-radius: 4px;
 
-      &, & > :last-child { color: #fff; }
+      &, & > :last-child { color: $color-text-inverse; }
     }
   }
 

@@ -5,6 +5,7 @@ import MarkdownBlock from '@getodk/web-forms/components/common/MarkdownBlock.vue
 import VideoBlock from '@getodk/web-forms/components/common/media/VideoBlock.vue';
 import type { AnyControlNode as QuestionNode } from '@getodk/xforms-engine';
 import { computed } from 'vue';
+import { labelId } from '@getodk/web-forms/lib/format/ids';
 
 const { question } = defineProps<{ question: QuestionNode }>();
 
@@ -16,7 +17,7 @@ const audio = computed(() => question.currentState.label?.audioSource);
 </script>
 
 <template>
-	<label :for="question.nodeId" :class="{ required: question.currentState.required }">
+	<label :id="labelId(question.nodeId)" :for="question.nodeId" :class="{ required: question.currentState.required }">
 		<MarkdownBlock v-for="elem in text" :key="elem.id" :elem="elem" />
 		<div v-if="image || video || audio" class="media-content">
 			<ImageBlock v-if="image" :resource-url="image" :alt="alt" />
@@ -30,7 +31,7 @@ const audio = computed(() => question.currentState.label?.audioSource);
 @use 'primeflex/core/_variables.scss' as pf;
 
 label {
-	font-weight: 400;
+	font-weight: var(--odk-font-weight-semibold);
 	font-size: var(--odk-question-font-size);
 	line-height: 1.5rem;
 	word-wrap: break-word;
