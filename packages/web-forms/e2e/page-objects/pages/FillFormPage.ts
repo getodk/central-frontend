@@ -11,6 +11,18 @@ import { TextControl } from '../controls/TextControl.js';
 
 const BASE_URL = 'http://localhost:5173';
 
+interface ClientOptions {
+  mapProvider?: 'google';
+}
+
+const buildFormUrl = (formId: string, clientOptions: ClientOptions) => {
+  const url = new URL(`${BASE_URL}/form/${formId}`);
+  if (clientOptions.mapProvider) {
+    url.searchParams.set('mapProvider', clientOptions.mapProvider);
+  }
+  return url.toString();
+};
+
 export class FillFormPage {
   public readonly page: Page;
   public readonly geopoint: GeopointControl;
@@ -23,8 +35,8 @@ export class FillFormPage {
   public readonly select: SelectControl;
   public readonly note: NoteControl;
 
-  static async loadForm(page: Page, formId: string) {
-    await page.goto(`${BASE_URL}/form/${formId}`);
+  static async loadForm(page: Page, formId: string, clientOptions: ClientOptions = {}) {
+    await page.goto(buildFormUrl(formId, clientOptions));
     const formPage = new FillFormPage(page);
     const formWrapper = page.locator('.form-wrapper');
     await expect(formWrapper).toBeVisible();
