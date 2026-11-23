@@ -71,7 +71,7 @@
     "mdast-util-from-markdown": "^2.0.2",
     "mdast-util-newline-to-break": "^2.0.0",
     "papaparse": "^5.5.4",
-    "solid-js": "^1.9.14",
+    "solid-js": "^1.9.18",
     "temporal-polyfill": "^0.3.0"
   },
   "devDependencies": {

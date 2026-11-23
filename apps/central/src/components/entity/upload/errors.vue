@@ -114,7 +114,7 @@ const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
     "missingLabel": {
       // {label} will have the text "label" and refers to the "label" property.
       // The name of the property is not translated.
-      "title": "A {label} property is required",
+      "title": "A {label} property is required for new Entities",
       "description": "The label indicates the name to use for each Entity throughout Central and elsewhere."
     },
     "duplicateColumn": {
