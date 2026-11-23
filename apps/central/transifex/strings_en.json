@@ -241,15 +241,15 @@
       "entity": {
         "bulk_upsert": {
           "string": "Import Data",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         },
         "bulk_delete": {
           "string": "Bulk Delete",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         },
         "bulk_restore": {
           "string": "Bulk Restore",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         }
       },
       "actor_property": {
@@ -411,6 +411,10 @@
     },
     "finish": {
       "string": "Finish",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "import": {
+      "string": "Import",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "logIn": {
@@ -2804,6 +2808,9 @@
       }
     },
     "EntityUpload": {
+      "title": {
+        "string": "Import data from file"
+      },
       "currentEntities": {
         "string": "Your current Entities"
       },
@@ -2813,12 +2820,6 @@
       "table": {
         "file": {
           "string": "Data to import"
-        }
-      },
-      "action": {
-        "append": {
-          "string": "Append Entities",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       },
       "alert": {
@@ -2918,7 +2919,7 @@
         "string": "Upload a .csv file"
       },
       "errors": {
-        "string": "{count, plural, one {{count} error must be fixed before appending Entities} other {{count} errors must be fixed before appending Entities}}"
+        "string": "{count, plural, one {{count} error must be fixed before importing data} other {{count} errors must be fixed before importing data}}"
       },
       "text": {
         "full": {
