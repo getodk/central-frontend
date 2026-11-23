@@ -26,6 +26,13 @@ jobs:
           node-version-file: package.json
           cache: 'npm'
 
+      - name: Set npm version
+        run: |
+          NPM_VERSION=$(node -p "require('./package.json').volta.npm")
+          if [ "$(npm --version)" != "$NPM_VERSION" ]; then
+            npm install -g "npm@$NPM_VERSION"
+          fi
+
       - run: 'npm ci --no-audit'
 
       - uses: ./.github/actions/node-cache
