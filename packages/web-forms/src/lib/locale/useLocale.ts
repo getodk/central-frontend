@@ -65,19 +65,24 @@ const loadMessages = async (locale: string): Promise<ICUMessage> => {
 
 const baseLanguage = (code: string): string => code.split('-')[0] ?? code;
 
-const findBestLocale = (candidates: string[], isAvailable: (l: string) => boolean): string => {
-  for (const candidate of candidates) {
-    if (isAvailable(candidate)) {
-      return candidate;
-    }
-  }
+const findBestBaseLocale = (candidates: string[], isAvailable: (l: string) => boolean): string => {
   for (const candidate of candidates) {
     const base = baseLanguage(candidate);
-    if (base !== candidate && isAvailable(base)) {
+    if (isAvailable(base)) {
       return base;
     }
   }
   return FALLBACK;
+};
+
+const findBestLocale = (candidates: string[], isAvailable: (l: string) => boolean): string => {
+  const bestBase = findBestBaseLocale(candidates, isAvailable);
+  for (const candidate of candidates) {
+    if (candidate.startsWith(bestBase) && isAvailable(candidate)) {
+      return candidate;
+    }
+  }
+  return bestBase;
 };
 
 const findFormLanguage = (languages: FormLanguage[], localeCode: string | null | undefined) => {
