@@ -2811,17 +2811,6 @@
       "title": {
         "string": "Import data from file"
       },
-      "currentEntities": {
-        "string": "Your current Entities"
-      },
-      "newEntities": {
-        "string": "New Entities"
-      },
-      "table": {
-        "file": {
-          "string": "Data to import"
-        }
-      },
       "alert": {
         "invalidUUID": {
           "string": "Invalid UUID “{value}”."
@@ -4314,7 +4303,7 @@
       },
       "preview": {
         "string": "Preview",
-        "developer_comment": "This is text shown as a label above the preview of Markdown formatting (special formatting of user-submitted text)"
+        "developer_comment": "This is text shown as a label above a preview of something."
       }
     },
     "Multiselect": {

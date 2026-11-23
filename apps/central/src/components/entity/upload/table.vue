@@ -133,6 +133,7 @@ defineExpose({ resizeLastColumn, resetScroll });
 @import '../../../assets/scss/mixins';
 
 .entity-upload-table {
+  margin-bottom: 0;
   overflow: auto;
 
   table {

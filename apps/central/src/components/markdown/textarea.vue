@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
       @input="$emit('update:modelValue', $event.target.value)">
     </textarea>
     <div v-if="!emptyValue && previewMode" class="preview-container">
-      <p class="heading">{{ $t('preview') }}</p>
+      <p class="heading">{{ $t('common.preview') }}</p>
       <markdown-view :raw-markdown="modelValue"/>
     </div>
     <div v-show="!emptyValue || showFooter " class="markdown-textarea-actions">
@@ -146,9 +146,7 @@ export default {
 {
   "en": {
     // This is a link to an external website with Markdown style guidelines
-    "markdownSupported": "Markdown supported",
-    // This is text shown as a label above the preview of Markdown formatting (special formatting of user-submitted text)
-    "preview": "Preview"
+    "markdownSupported": "Markdown supported"
   }
 }
 </i18n>

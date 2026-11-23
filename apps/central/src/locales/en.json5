@@ -453,6 +453,9 @@
     // This is shown if a search returned no results.
     "noResults": "No results",
     "noUndo": "This action cannot be undone.",
+    // @transifexKey component.MarkdownTextarea.preview
+    // This is text shown as a label above a preview of something.
+    "preview": "Preview",
     // @transifexKey field.reviewState
     "reviewState": "Review State",
     // This is shown for the row number.
