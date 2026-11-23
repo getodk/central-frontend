@@ -3,6 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": "^24.20.0",
+    "npm": "11"
+  },
+  "volta": {
+    "node": "24.20.0"
+  },
   "scripts": {
     "dev": "      nf start vite,nginx",
     "dev:build": "nf start build,nginx",
@@ -21,9 +28,6 @@
     "transifex:lint": "npm run transifex:lint --workspaces --if-present",
     "transifex:pull": "npm run transifex:pull --workspaces --if-present",
     "version": "changeset version"
-  },
-  "volta": {
-    "node": "24.20.0"
   },
   "packageManager": "npm@11.6.1",
   "workspaces": [
@@ -71,9 +75,5 @@
     "vite": "^7.3.6",
     "vitest": "^4.1.10",
     "vue-tsc": "^3.1.5"
-  },
-  "engines": {
-    "node": "^24.20.0",
-    "npm": "11"
   }
 }
