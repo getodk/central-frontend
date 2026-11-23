@@ -37,7 +37,7 @@ packages/web-forms/e2e/test-cases/visual/all-question-types.test.ts-snapshots/ma
 packages/web-forms/e2e/test-cases/visual/all-question-types.test.ts-snapshots/map-search-error-chromium.png:88bf7b5f452a9a4fc4e86251552bd20e372726a0e38481299c6f90b38801e510
 packages/web-forms/e2e/test-cases/visual/all-question-types.test.ts-snapshots/map-search-error-firefox.png:46563a89a70bebc03fd8e4e95315c1283f6d61cf1065d8be68425c37575cb49e
 packages/web-forms/e2e/test-cases/visual/all-question-types.test.ts-snapshots/map-search-error-webkit.png:e42693325d6f191753236d76769286b7583e112ab6320b3c251a202067916a3a
-packages/web-forms/e2e/test-cases/visual/all-question-types.test.ts-snapshots/map-search-results-chromium.png:02edd1c2f097546531ee2cae3f75fea90764f18f3a7b82d36c993a15db8fb9aa
+packages/web-forms/e2e/test-cases/visual/all-question-types.test.ts-snapshots/map-search-results-chromium.png:5c2befb2de8535357397cf31ca54892cddcf0713996e68606042b34bff3a86b5
 packages/web-forms/e2e/test-cases/visual/all-question-types.test.ts-snapshots/map-search-results-firefox.png:fb117b6a2fe51e37f2c7700da4d228e4f641865e1961eca0474f31d130a371f5
 packages/web-forms/e2e/test-cases/visual/all-question-types.test.ts-snapshots/map-search-results-webkit.png:759e35f72da5492ac68031f2294a4f19d7992f12981c7ae100e7cd643e1c62a6
 packages/web-forms/e2e/test-cases/visual/all-question-types.test.ts-snapshots/placement-map-current-location-chromium.png:40b240fad3fe1903da22452f6c3203ba704ac474aa079ddbc8bae77f028a7b5e
