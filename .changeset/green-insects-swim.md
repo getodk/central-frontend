@@ -7,4 +7,4 @@
 "@getodk/forms": patch
 ---
 
-Upgrade node to 26.13.1, pin npm to 11.20.0
+Upgraded node to 26.13.1, pinned npm to 11.20.0. (getodk/central#2236)
