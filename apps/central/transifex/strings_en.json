@@ -2907,6 +2907,9 @@
       "upload": {
         "string": "Upload a .csv file"
       },
+      "replace": {
+        "string": "Replace data with new file"
+      },
       "errors": {
         "string": "{count, plural, one {{count} error must be fixed before importing data} other {{count} errors must be fixed before importing data}}"
       },
