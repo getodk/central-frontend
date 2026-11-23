@@ -196,13 +196,18 @@ const validateHeader = ({ columns, errors: papaErrors }) => {
 // noPropertyData is used to minimize the JSON sent to Backend: the JSON won't
 // specify a `data` property for an entity without property data.
 const noPropertyData = { toJSON: () => undefined };
-const extractUUID = (values, index) => {
+const extractUUID = (values, index, uuids) => {
   if (index === -1) return null;
   const value = values[index];
   if (/^\s*$/.test(value)) return null;
+
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value))
     throw new Error(t('alert.invalidUUID', { value }));
-  return value.toLowerCase();
+
+  const uuid = value.toLowerCase();
+  if (uuids.has(uuid)) throw new Error(t('alert.duplicateUUID', { uuid }));
+
+  return uuid;
 };
 const extractLabel = (values, index) => {
   if (index === -1) return null;
@@ -210,8 +215,10 @@ const extractLabel = (values, index) => {
   if (/^\s*$/.test(label)) throw new Error(t('alert.blankLabel'));
   return label;
 };
-const rowToEntity = (uuidIndex, labelIndex, extraProperties) => (values, columns) => {
-  const uuid = extractUUID(values, uuidIndex);
+const rowToEntity = (uuidIndex, uuids, labelIndex, extraProperties) => (values, columns) => {
+  const uuid = extractUUID(values, uuidIndex, uuids);
+  if (uuid != null) uuids.add(uuid);
+
   const label = extractLabel(values, labelIndex);
 
   const data = dataset.properties.length !== 0 ? Object.create(null) : null;
@@ -250,6 +257,7 @@ const parseEntities = async (file, headerResults, extraProperties, signal) => {
     delimiter: headerResults.meta.delimiter,
     transformRow: rowToEntity(
       columns.indexOf('__id'),
+      new Set(),
       columns.indexOf('label'),
       new Set(extraProperties ?? [])
     ),
@@ -534,6 +542,7 @@ watch(() => props.state, (state) => {
     "title": "Import data from file",
     "alert": {
       "invalidUUID": "Invalid UUID “{value}”.",
+      "duplicateUUID": "The UUID {uuid} appears more than once in the file. Each update row must have a unique UUID.",
       "blankLabel": "Missing label.",
       "noData": "Your file does not contain any data."
     }

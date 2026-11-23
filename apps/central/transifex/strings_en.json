@@ -2815,6 +2815,9 @@
         "invalidUUID": {
           "string": "Invalid UUID “{value}”."
         },
+        "duplicateUUID": {
+          "string": "The UUID {uuid} appears more than once in the file. Each update row must have a unique UUID."
+        },
         "blankLabel": {
           "string": "Missing label."
         },
