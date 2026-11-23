@@ -14,8 +14,7 @@ const encryptContent = (
   symmetricKey: CryptoJS.lib.WordArray,
   seed: IvSeed
 ): Uint8Array<ArrayBuffer> => {
-  const ivString = seed.next();
-  const iv = CryptoJS.enc.Latin1.parse(ivString);
+  const iv = seed.next();
   const encrypted = CryptoJS.AES.encrypt(content, symmetricKey, {
     iv: iv,
     mode: CryptoJS.mode.CFB,

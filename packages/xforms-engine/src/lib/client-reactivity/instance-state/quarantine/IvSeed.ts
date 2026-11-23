@@ -1,5 +1,5 @@
 import * as CryptoJS from 'crypto-js';
-import { wordArrayToArrayBuffer } from './wordArrayUtils';
+import { arrayBufferToWordArray, wordArrayToArrayBuffer } from './wordArrayUtils';
 
 export class IvSeed {
   private readonly SEED_ARRAY_LENGTH = 16; // guaranteed by the md5 algorithm
@@ -16,9 +16,9 @@ export class IvSeed {
     this.ivSeedArray = wordArrayToArrayBuffer(md.finalize());
   }
 
-  next(): string {
+  next(): CryptoJS.lib.WordArray {
     ++this.ivSeedArray[this.counter % this.SEED_ARRAY_LENGTH]!;
     ++this.counter;
-    return String.fromCharCode(...new Uint8Array(this.ivSeedArray));
+    return arrayBufferToWordArray(this.ivSeedArray);
   }
 }
