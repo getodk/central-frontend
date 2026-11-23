@@ -17,6 +17,8 @@ except according to the terms contained in the LICENSE file.
       <div :class="{ backdrop: uploading }" :inert="uploading">
         <div v-show="csvEntities != null">
           <p class="entity-upload-section-title">{{ $t('common.preview') }}</p>
+          <entity-upload-row-counts v-if="csvEntities != null"
+            :entities="csvEntities"/>
           <div class="entity-upload-table-container">
             <entity-upload-table ref="table" :entities="csvSlice"
               :extra-properties="propertiesToCreate" :row-index="csvRow"
@@ -72,6 +74,7 @@ import EntityUploadErrors from './upload/errors.vue';
 import EntityUploadExtraProperties from './upload/extra-properties.vue';
 import EntityUploadFileSelect from './upload/file-select.vue';
 import EntityUploadPopup from './upload/popup.vue';
+import EntityUploadRowCounts from './upload/row-counts.vue';
 import EntityUploadTable from './upload/table.vue';
 import EntityUploadWarnings from './upload/warnings.vue';
 import Loading from '../loading.vue';
