@@ -17,11 +17,12 @@ except according to the terms contained in the LICENSE file.
         srcset="../assets/images/whats-new/banner@1x.png, ../assets/images/whats-new/banner@2x.png 2x"
         src="../assets/images/whats-new/banner@1x.png">
     </template>
-    <template #title>{{ $t('title') }}</template>
+    <template #title>{{ $t('title') }}<sentence-separator/>🎨</template>
     <template #body>
-      <p class="modal-introduction">
-        {{ $t('body[0]') }}<sentence-separator/><strong>{{ $t('body[1]') }}</strong>
-      </p>
+      <div class="modal-introduction">
+        <p>{{ $t('body[0]') }}</p>
+        <p>{{ $t('body[1]') }}</p>
+      </div>
       <div class="modal-actions">
         <div v-if="!initialOptIn" class="checkbox">
           <label><input v-model="mailingListOptIn" type="checkbox">{{ $t('analytics.mailingListOptIn') }}</label>
@@ -130,10 +131,10 @@ function hideModal() {
   {
     "en": {
       // This is the title at the top of a pop-up.
-      "title": "Easier Entity Uploads 📤",
+      "title": "A refreshed ODK Central",
       "body": [
-        "Bring your Entities into ODK faster with a smoother CSV upload experience. Get clearer errors and warnings, fix issues, and try again, all in one place.",
-        "You can now also create new properties directly from your CSV."
+        "ODK Central has a refreshed look with updated navigation, clearer table styling, and a new accessible primary blue.",
+        "You can also now update multiple Entities at once using CSV bulk updates, preview Entity access as a Public Link, and quickly copy and open Public Link URLs in a new window."
       ]
     }
   }
