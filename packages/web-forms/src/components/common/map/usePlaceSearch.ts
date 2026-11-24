@@ -47,7 +47,7 @@ const buildPlaceSearchUrl = (query: string) => GEOCODING_URL + encodeURIComponen
  * The map doesn't wrap around (wrapping duplicated it), so it can't show a place that crosses
  * the 180° line. We cut the viewport at the line and keep the side where the place is located.
  */
-const toLonLatViewport = (result: GeocodingResult): Extent => {
+const buildLonLatViewport = (result: GeocodingResult): Extent => {
   const { low, high } = result.viewport;
   if (low.longitude <= high.longitude) {
     return [low.longitude, low.latitude, high.longitude, high.latitude];
@@ -61,13 +61,21 @@ const toLonLatViewport = (result: GeocodingResult): Extent => {
 };
 
 const parsePlaceSearchResponse = (body: GeocodingResponse): PlaceSearchResult[] => {
-  return (body.results ?? []).slice(0, MAX_PLACE_RESULTS).map((result) => {
-    return {
-      label: result.formattedAddress,
-      lonLatViewport: toLonLatViewport(result),
-      isArea: result.granularity === AREA_GRANULARITY,
-    };
-  });
+  return (
+    (body.results ?? [])
+      .map((result) => {
+        return {
+          label: result.formattedAddress,
+          lonLatViewport: buildLonLatViewport(result),
+          isArea: result.granularity === AREA_GRANULARITY,
+        };
+      })
+      // Google can name two places the same (a city and its province); keep the first.
+      .filter((place, index, places) => {
+        return places.findIndex((other) => other.label === place.label) === index;
+      })
+      .slice(0, MAX_PLACE_RESULTS)
+  );
 };
 
 const searchPlaces = async (
