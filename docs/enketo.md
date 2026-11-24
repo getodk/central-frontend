@@ -9,7 +9,7 @@ Enketo runs as a Node.js server and caches intermediate representations of forms
 Clone [enketo](https://github.com/enketo/enketo), which is the monorepo containing the `enketo-express` service.
 
 Read the [Development setup and local usage](https://github.com/enketo/enketo?tab=readme-ov-file#development-setup-and-local-usage) section, specifically:
-- Get Node 18 or 20 (should be installed to run ODK Central Frontend and Backend already).
+- Get Node.js version specified in `package.json` (should be installed to run ODK Central Frontend and Backend already).
 - Get Yarn.
 - possibly get Volta.
 * Install and run Redis. Enketo will expect Redis on the default port of `6379`.
