@@ -71,8 +71,8 @@ const afterCreateProperty = () => {
   "en": {
     // This is a title shown above a section of the page.
     "entityProperties" : "Entity Properties",
-    // This is shown on a button for creating new Entity Properties
-    "new": "New",
+    // This is shown on a button for creating a new Entity property.
+    "new": "New property"
   }
 }
 </i18n>

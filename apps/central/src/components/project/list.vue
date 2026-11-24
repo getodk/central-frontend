@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
       <button v-if="currentUser.can('project.create')"
         id="project-list-new-button" type="button" class="btn btn-primary"
         @click="createModal.show()">
-        <span class="icon-plus"></span>{{ $t('action.create') }}&hellip;
+        <span class="icon-plus"></span>{{ $t('action.create') }}
       </button>
     </page-heading>
     <div v-if="projects.dataExists">
@@ -193,7 +193,7 @@ export default {
     "archived": "Archived Projects",
     "action": {
       // This is the text of a button that is used to create a new Project.
-      "create": "New"
+      "create": "New Project"
     },
     "emptyTable": {
       "canCreate": "To get started, create a Project. Projects help you organize your data by grouping related Forms and Users.",

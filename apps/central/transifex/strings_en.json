@@ -1911,8 +1911,8 @@
         }
       },
       "new": {
-        "string": "New",
-        "developer_comment": "This is the text of a button that is used to create a new Entity List. It is shown next to a heading whose text is \"Entity Lists\"."
+        "string": "New Entity List",
+        "developer_comment": "This is the text of a button that is used to create a new Entity List."
       }
     },
     "DatasetNew": {
@@ -1948,8 +1948,8 @@
         "developer_comment": "This is a title shown above a section of the page."
       },
       "new": {
-        "string": "New",
-        "developer_comment": "This is shown on a button for creating new Entity Properties"
+        "string": "New property",
+        "developer_comment": "This is shown on a button for creating a new Entity property."
       }
     },
     "DatasetOverviewDatasetProperties": {
@@ -3890,12 +3890,6 @@
       "emptyTable": {
         "string": "There are no Forms to show."
       },
-      "action": {
-        "create": {
-          "string": "New",
-          "developer_comment": "This is the text of a button that is used to create a new Form."
-        }
-      },
       "alert": {
         "create": {
           "string": "“{name}” has been created as a Form Draft."
@@ -4721,7 +4715,7 @@
       },
       "action": {
         "create": {
-          "string": "New",
+          "string": "New Project",
           "developer_comment": "This is the text of a button that is used to create a new Project."
         }
       },
