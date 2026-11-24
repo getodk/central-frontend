@@ -184,6 +184,20 @@ describe('EntityUpload', () => {
       errors.dataError.should.equal('There is a problem on row 2 of the file: Invalid UUID “foo”.');
       errors.count.should.equal(1);
     });
+
+    it('shows an error for a duplicate UUID', async () => {
+      const id = uuid();
+      const modal = await showModal();
+      await selectFile(modal, createCSV([
+        ['__id', 'label'],
+        [id, 'dogwood'],
+        ['', 'elm'],
+        [id, 'pine']
+      ]));
+      const errors = modal.getComponent(EntityUploadErrors).props();
+      errors.dataError.should.startWith(`There is a problem on row 4 of the file: The UUID ${id} appears more than once`);
+      errors.count.should.equal(1);
+    });
   });
 
   describe('binary file', () => {
