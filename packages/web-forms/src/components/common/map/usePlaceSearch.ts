@@ -61,21 +61,19 @@ const buildLonLatViewport = (result: GeocodingResult): Extent => {
 };
 
 const parsePlaceSearchResponse = (body: GeocodingResponse): PlaceSearchResult[] => {
-  return (
-    (body.results ?? [])
-      .map((result) => {
-        return {
-          label: result.formattedAddress,
-          lonLatViewport: buildLonLatViewport(result),
-          isArea: result.granularity === AREA_GRANULARITY,
-        };
-      })
+  return (body.results ?? [])
+    .map((result) => {
+      return {
+        label: result.formattedAddress,
+        lonLatViewport: buildLonLatViewport(result),
+        isArea: result.granularity === AREA_GRANULARITY,
+      };
+    })
+    .filter((place, index, places) => {
       // Google can name two places the same (a city and its province); keep the first.
-      .filter((place, index, places) => {
-        return places.findIndex((other) => other.label === place.label) === index;
-      })
-      .slice(0, MAX_PLACE_RESULTS)
-  );
+      return places.findIndex((other) => other.label === place.label) === index;
+    })
+    .slice(0, MAX_PLACE_RESULTS);
 };
 
 const searchPlaces = async (

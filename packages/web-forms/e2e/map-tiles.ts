@@ -9,6 +9,7 @@ const GOOGLE_TILES_PATH = '/v1/2dtiles/';
 // Close to the features of the test form, so the map jumps to the place without a long animation.
 const PLACE = {
   formattedAddress: 'Coober Pedy SA 5723, Australia',
+  location: { latitude: -29.01, longitude: 134.75 },
   viewport: {
     low: { latitude: -29.06, longitude: 134.7 },
     high: { latitude: -28.97, longitude: 134.8 },

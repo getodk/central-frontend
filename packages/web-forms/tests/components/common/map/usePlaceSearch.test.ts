@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 describe('usePlaceSearch', () => {
   const geocodingResult = (label: string) => ({
     formattedAddress: label,
+    location: { latitude: 51.51, longitude: -0.13 },
     viewport: {
       low: { latitude: 51.38, longitude: -0.35 },
       high: { latitude: 51.67, longitude: 0.15 },
