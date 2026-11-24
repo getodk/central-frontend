@@ -94,6 +94,11 @@ const handleActions = ({ target, data }) => {
   else if (target.classList.contains('delete-button')) emit('delete', data);
   else if (target.classList.contains('restore-button')) emit('restore', data);
   else if (target.tagName === 'TR') {
+    // allows selecting cell content for copy/paste
+    const selection = window.getSelection();
+    if (selection && selection.toString().length > 0) {
+      return;
+    }
     const path = submissionPath(props.projectId, props.xmlFormId, data.__id);
     window.open(router.resolve(path).href, '_blank', 'noopener');
   }
