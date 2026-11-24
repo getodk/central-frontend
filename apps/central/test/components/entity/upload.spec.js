@@ -1,5 +1,4 @@
 import Papa from 'papaparse';
-import { DateTime } from 'luxon';
 import { T, pick } from 'ramda';
 import { faker } from '@faker-js/faker';
 
@@ -29,16 +28,7 @@ const showModal = () => {
         requestData: { dataset }
       }
     })
-    .request(modal => modal.setProps({ state: true }))
-    .modify(series => (dataset.entities !== 0
-      ? series.respondWithData(() => testData.entityOData(5, 0, true))
-      : series));
-};
-const parseFilterTime = (filter) => {
-  const match = filter.match(/^__system\/createdAt le (.+)/);
-  return match == null
-    ? NaN
-    : DateTime.fromISO(match[1]).toMillis();
+    .afterResponses(modal => modal.setProps({ state: true }));
 };
 const uuid = () => faker.string.uuid();
 const createCSV = (data = 'label\ndogwood') => {
@@ -48,11 +38,6 @@ const createCSV = (data = 'label\ndogwood') => {
 const selectFile = async (modal, file = createCSV()) => {
   await setFiles(modal.get('input[type="file"]'), [file]);
   return waitUntil(() => !modal.vm.parsing);
-};
-const getTables = (modal) => {
-  const tables = modal.findAllComponents(EntityUploadTable);
-  tables.length.should.equal(2);
-  return tables;
 };
 const toggleExtra = (component, name, checked = true) => {
   const input = component.get(`#entity-upload-extra-properties input[value="${name}"]`);
@@ -82,52 +67,6 @@ describe('EntityUpload', () => {
     });
     const button = component.find('#dataset-entities-upload-button');
     button.exists().should.be.false;
-  });
-
-  describe('request for server data', () => {
-    it('sends the correct request', () => {
-      testData.extendedDatasets.createPast(1, { name: 'á', entities: 1 });
-      testData.extendedEntities.createPast(1);
-      return showModal().testRequests([{
-        url: ({ pathname, searchParams: params }) => {
-          pathname.should.equal('/v1/projects/1/datasets/%C3%A1.svc/Entities');
-          const millis = parseFilterTime(params.get('$filter'));
-          (Date.now() - millis).should.be.below(2000);
-          params.get('$top').should.equal('5');
-          params.get('$skip').should.equal('0');
-          params.get('$count').should.equal('true');
-        }
-      }]);
-    });
-
-    it('does not send a request if there are no entities', () => {
-      testData.extendedDatasets.createPast(1);
-      return showModal().testNoRequest();
-    });
-
-    it('sends a new request if the modal is hidden, then shown again', () => {
-      testData.extendedEntities.createPast(1);
-      let firstTime;
-      return showModal()
-        .beforeEachResponse((_, { url }) => {
-          const params = relativeUrl(url).searchParams;
-          firstTime = parseFilterTime(params.get('$filter'));
-        })
-        .complete()
-        .request(async (modal) => {
-          await modal.setProps({ state: false });
-          await modal.setProps({ state: true });
-        })
-        .respondWithData(() => testData.entityOData(5, 0, true))
-        .testRequests([{
-          url: ({ pathname, searchParams: params }) => {
-            pathname.should.equal('/v1/projects/1/datasets/trees.svc/Entities');
-            const millis = parseFilterTime(params.get('$filter'));
-            millis.should.be.above(firstTime);
-            (Date.now() - millis).should.be.below(2000);
-          }
-        }]);
-    });
   });
 
   describe('after a file is selected', () => {
@@ -352,7 +291,7 @@ describe('EntityUpload', () => {
       ]));
       const warnings = modal.getComponent(EntityUploadWarnings);
       warnings.props().raggedRows.should.eql([[9, 11]]);
-      const table = getTables(modal)[1];
+      const table = modal.getComponent(EntityUploadTable);
       table.props().rowIndex.should.equal(0);
       should.not.exist(table.props().highlighted);
       const a = modal.get('.entity-upload-alert a');
@@ -369,16 +308,17 @@ describe('EntityUpload', () => {
       const a = modal.get('.entity-upload-alert a');
       a.text().should.equal('1–2');
       await a.trigger('click');
-      getTables(modal)[1].props().highlighted.should.eql([0, 1]);
+      const table = modal.getComponent(EntityUploadTable);
+      table.props().highlighted.should.eql([0, 1]);
       await selectFile(modal, createCSV(csvString));
-      should.not.exist(getTables(modal)[1].props().highlighted);
+      should.not.exist(table.props().highlighted);
     });
   });
 
   it('renders correctly as the user moves through the flow', async () => {
     testData.extendedDatasets.createPast(1);
     const modal = await showModal();
-    const table = getTables(modal)[1];
+    const table = modal.getComponent(EntityUploadTable);
     const fileSelect = modal.getComponent(EntityUploadFileSelect);
     const getState = () => {
       let tableVisible = true;
@@ -475,7 +415,6 @@ describe('EntityUpload', () => {
   it('sends the correct upload request', () => {
     testData.extendedDatasets.createPast(1, { name: 'á' });
     return showModal()
-      .complete()
       .request(async (modal) => {
         await selectFile(modal);
         return modal.get('.modal-actions .btn-primary').trigger('click');
@@ -623,7 +562,6 @@ describe('EntityUpload', () => {
       properties: [{ name: 'height' }, { name: 'circumference' }]
     });
     return showModal()
-      .complete()
       .request(async (modal) => {
         await selectFile(modal, createCSV('label,height\ndogwood,1'));
 
@@ -649,7 +587,6 @@ describe('EntityUpload', () => {
     // One __id is completely empty, while the other is only whitespace.
     const csv = createCSV('__id,label\n,dogwood\n" ",elm');
     return showModal()
-      .complete()
       .request(async (modal) => {
         await selectFile(modal, csv);
 
@@ -675,7 +612,6 @@ describe('EntityUpload', () => {
       properties: [{ name: 'height' }]
     });
     return showModal()
-      .complete()
       .request(async (modal) => {
         await selectFile(
           modal,
@@ -710,7 +646,6 @@ describe('EntityUpload', () => {
       properties: [{ name: 'height' }]
     });
     return showModal()
-      .complete()
       .request(async (modal) => {
         await selectFile(
           modal,
@@ -744,7 +679,6 @@ describe('EntityUpload', () => {
       properties: [{ name: 'height' }, { name: 'circumference' }, { name: 'species' }]
     });
     return showModal()
-      .complete()
       .request(async (modal) => {
         await selectFile(
           modal,
@@ -812,7 +746,7 @@ describe('EntityUpload', () => {
       const modal = await showModal();
       await selectFile(modal, extraCSV);
 
-      const table = getTables(modal)[1];
+      const table = modal.getComponent(EntityUploadTable);
       should.not.exist(table.props().extraProperties);
 
       const input = modal.get('#entity-upload-extra-properties .checkbox:nth-child(2) input');
@@ -834,7 +768,7 @@ describe('EntityUpload', () => {
         return checked.map(div => div.text());
       };
       const getTableExtra = () =>
-        getTables(modal)[1].props().extraProperties ?? [];
+        modal.getComponent(EntityUploadTable).props().extraProperties ?? [];
 
       await selectFile(modal, extraCSV);
       await toggleExtra(modal, 'circumference');
@@ -909,7 +843,6 @@ describe('EntityUpload', () => {
 
     it('sends all extra properties if all were selected', () =>
       showModal()
-        .complete()
         .request(async (modal) => {
           await selectFile(modal, extraCSV);
           await toggleExtra(modal, 'circumference');
@@ -949,7 +882,6 @@ describe('EntityUpload', () => {
 
     it('does not send all extra properties if only some were selected', () =>
       showModal()
-        .complete()
         .request(async (modal) => {
           await selectFile(modal, extraCSV);
           await toggleExtra(modal, 'circumference');
@@ -982,7 +914,6 @@ describe('EntityUpload', () => {
 
     it('does not send extra properties if none were selected', () =>
       showModal()
-        .complete()
         .request(async (modal) => {
           await selectFile(modal, extraCSV);
           return modal.get('.modal-actions .btn-primary').trigger('click');
@@ -1006,7 +937,6 @@ describe('EntityUpload', () => {
 
     it('does not create properties that were selected, but are not in current CSV', () =>
       showModal()
-        .complete()
         .request(async (modal) => {
           await selectFile(modal, createCSV('label,foo\ndogwood,x'));
           await toggleExtra(modal, 'foo');
@@ -1032,7 +962,6 @@ describe('EntityUpload', () => {
 
     it('shows a popup during the request', () =>
       showModal()
-        .complete()
         .request(async (modal) => {
           await selectFile(modal, extraCSV);
           await toggleExtra(modal, 'circumference');
@@ -1097,12 +1026,6 @@ describe('EntityUpload', () => {
           .respondWithProblem() // Upload
           .afterResponses(app => {
             getCreated(app).should.eql(['circumference']);
-
-            // Even though the entity list has a new property, that shouldn't be
-            // fully reflected in the modal yet. We want the modal to stay as
-            // similar/stable as possible over the course of this error case.
-            const th = getTables(app)[0].findAll('th').map(wrapper => wrapper.text());
-            th.should.eql(['Row', 'label', 'height']);
           })
           // Try to upload again. This time, it should only send the upload
           // request.
@@ -1219,7 +1142,6 @@ describe('EntityUpload', () => {
       ['elm', ' x  y ', ' ']
     ]);
     return showModal()
-      .complete()
       .request(async (modal) => {
         await selectFile(modal, csv);
         await toggleExtra(modal, 'circumference');

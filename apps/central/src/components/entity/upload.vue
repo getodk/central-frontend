@@ -15,37 +15,15 @@ except according to the terms contained in the LICENSE file.
     <template #title>{{ $t('title') }}</template>
     <template #body>
       <div :class="{ backdrop: uploading }" :inert="uploading">
-        <p class="entity-upload-section-title">{{ $t('currentEntities') }}</p>
-        <div class="entity-upload-table-container">
-          <entity-upload-table :ref="setTable(0)"
-            :entities="serverEntities.value" :row-index="serverRow"
-            :page-size="serverPage.size"
-            :awaiting-response="serverEntities.awaitingResponse"/>
-          <loading :state="serverEntities.initiallyLoading"/>
-          <p v-if="serverEntities.dataExists && serverEntities.value.length === 0"
-            class="empty-table-message">
-            {{ $t('noEntities') }}
-          </p>
-          <pagination v-if="serverPage.count !== 0"
-            v-model:page="serverPage.page" v-model:size="serverPage.size"
-            :count="serverPage.count" :size-options="pageSizeOptions"
-            :spinner="serverEntities.awaitingResponse"/>
-        </div>
-
         <div v-show="csvEntities != null">
-          <p class="entity-upload-section-title">{{ $t('newEntities') }}</p>
-          <div class="entity-upload-table-container panel panel-simple">
-            <div class="panel-heading">
-              <h1 class="panel-title">{{ $t('table.file') }}</h1>
-            </div>
-            <div class="panel-body">
-              <entity-upload-table :ref="setTable(1)" :entities="csvSlice"
-                :extra-properties="propertiesToCreate" :row-index="csvRow"
-                :page-size="csvPage.size" :highlighted="warningRows"/>
-              <pagination v-if="csvEntities != null" v-model:page="csvPage.page"
-                v-model:size="csvPage.size" :count="csvEntities.length"
-                :size-options="pageSizeOptions"/>
-            </div>
+          <p class="entity-upload-section-title">{{ $t('common.preview') }}</p>
+          <div class="entity-upload-table-container">
+            <entity-upload-table ref="table" :entities="csvSlice"
+              :extra-properties="propertiesToCreate" :row-index="csvRow"
+              :page-size="csvPage.size" :highlighted="warningRows"/>
+            <pagination v-if="csvEntities != null" v-model:page="csvPage.page"
+              v-model:size="csvPage.size" :count="csvEntities.length"
+              :size-options="pageSizeOptions"/>
           </div>
         </div>
 
@@ -94,7 +72,6 @@ import EntityUploadFileSelect from './upload/file-select.vue';
 import EntityUploadPopup from './upload/popup.vue';
 import EntityUploadTable from './upload/table.vue';
 import EntityUploadWarnings from './upload/warnings.vue';
-import Loading from '../loading.vue';
 import Modal from '../modal.vue';
 import Pagination from '../pagination.vue';
 
@@ -103,7 +80,6 @@ import usePropertyCreator from '../../composables/property-creator';
 import useRequest from '../../composables/request';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { odataEntityToRest } from '../../util/odata';
 import { parseCSV, parseCSVHeader } from '../../util/csv';
 import { useRequestData } from '../../request-data';
 import { validatePropertyName } from '../../util/entity';
@@ -118,69 +94,8 @@ const emit = defineEmits(['hide', 'success']);
 
 const { t } = useI18n();
 const { i18n: globalI18n, redAlert } = inject('container');
-const { dataset, createResource } = useRequestData();
+const { dataset } = useRequestData();
 const { request, awaitingResponse: uploading } = useRequest();
-
-const pageSizeOptions = [5, 10, 20, 50];
-const defaultPageSize = pageSizeOptions[0];
-
-// SERVER DATA
-const serverEntities = createResource('serverEntities', () => ({
-  transformResponse: ({ data }) => ({
-    value: data.value.map(entity =>
-      odataEntityToRest(entity, dataset.properties).currentVersion),
-    count: data['@odata.count']
-  })
-}));
-/* We set serverPage.count after requesting the first page of serverEntities,
-then keep it fixed. That way, the pagination controls won't change while the
-user is navigating the table, even if another user modifies the entity list.
-Newly created entities will be excluded using the $filter OData query parameter.
-However, one downside of this approach is that if entities are deleted, it is
-possible for the table to have blank pages. */
-const serverPage = reactive({ count: 0, page: -1, size: defaultPageSize });
-let odataFilter;
-// serverRow.value holds the 0-indexed row number of the first entity of
-// serverEntities.value. Usually, that will be the same as the first row of the
-// page (i.e., serverPage.page * serverPage.count). However, the two may differ
-// while a request for entities is in progress.
-const serverRow = ref(-1);
-watch(() => props.state, (state) => {
-  if (state) {
-    if (dataset.entities !== 0) {
-      serverPage.page = 0;
-      const now = new Date().toISOString();
-      odataFilter = `__system/createdAt le ${now}`;
-    } else {
-      serverEntities.data = { value: [] };
-    }
-  } else {
-    serverEntities.reset();
-    Object.assign(serverPage, { count: 0, page: -1, size: defaultPageSize });
-    odataFilter = null;
-    serverRow.value = -1;
-  }
-});
-watch([() => serverPage.page, () => serverPage.size], () => {
-  const { count, page, size } = serverPage;
-  if (page === -1) return;
-  const first = count === 0;
-  serverEntities.request({
-    url: apiPaths.odataEntities(dataset.projectId, dataset.name, {
-      $filter: odataFilter,
-      $orderby: '__system/createdAt asc',
-      $top: size,
-      $skip: page * size,
-      $count: first
-    }),
-    clear: false
-  })
-    .then(() => {
-      if (first) serverPage.count = serverEntities.count;
-      serverRow.value = page * size;
-    })
-    .catch(noop);
-});
 
 // Validates the column header of the CSV file, returning any errors or
 // warnings.
@@ -407,6 +322,9 @@ const selectFile = (file) => {
 };
 onBeforeUnmount(() => { abortParse(); });
 
+// PAGINATION
+const pageSizeOptions = [5, 10, 20, 50];
+const defaultPageSize = pageSizeOptions[0];
 const csvPage = reactive({ page: 0, size: defaultPageSize });
 const csvRow = computed(() =>
   (csvEntities.value != null ? csvPage.page * csvPage.size : -1));
@@ -511,14 +429,12 @@ const upload = () => {
     .catch(noop);
 };
 
-// Resize the last column of the tables.
-const tables = [null, null];
-const setTable = (i) => (el) => { tables[i] = el; };
-const resizeLastColumn = () => {
-  for (const table of tables) table.resizeLastColumn();
-};
-watch(() => props.state, (state) => { if (!state) nextTick(resizeLastColumn); });
-const resizeColumnIfShown = () => { if (props.state) resizeLastColumn(); };
+// Resize the last column of the table.
+const table = ref(null);
+watch(() => props.state, (state) => {
+  if (!state) nextTick(() => { table.value.resizeLastColumn(); });
+});
+const resizeColumnIfShown = () => { if (props.state) table.value.resizeLastColumn(); };
 useEventListener(window, 'resize', resizeColumnIfShown);
 
 const actions = ref(null);
@@ -537,7 +453,7 @@ watch(() => props.state, (state) => {
   warnings.value = null;
   selectedProperties.clear();
   propertyCreator.clear();
-  for (const table of tables) table.resetScroll();
+  table.value.resetScroll();
 });
 </script>
 
@@ -550,30 +466,9 @@ watch(() => props.state, (state) => {
     pointer-events: none;
   }
 
-  .panel-simple {
-    .panel-heading {
-      background-color: $color-action-background;
-      border-bottom: none;
-      color: $color-text-inverse;
-    }
-
-    .panel-body { padding: 0; }
-    thead { background-color: $color-surface-secondary; }
-  }
+  .entity-upload-table-container { margin-block: 10px 20px; }
 
   .pagination { margin-left: $padding-left-table-data; }
-
-  .entity-upload-table-container { margin-block: 10px 20px; }
-  // margin-bottom of the tables
-  .entity-upload-table {
-    // The margin before text, either the Loading component or the
-    // .empty-table-message
-    margin-bottom: 10px;
-    // The margin before the Pagination component
-    &:has(tbody) { margin-bottom: 0; }
-    // The margin if there is no text or Pagination
-    &:last-child { margin-bottom: 0; }
-  }
 
   .modal-actions { border-top: 1px solid $central-grey-2; }
 }
@@ -595,13 +490,6 @@ watch(() => props.state, (state) => {
 {
   "en": {
     "title": "Import data from file",
-    "currentEntities": "Your current Entities",
-    "newEntities": "New Entities",
-    "table": {
-      "file": "Data to import"
-    },
-    // @transifexKey component.EntityList.noEntities
-    "noEntities": "There are no Entities to show.",
     "alert": {
       "invalidUUID": "Invalid UUID “{value}”.",
       "blankLabel": "Missing label.",
