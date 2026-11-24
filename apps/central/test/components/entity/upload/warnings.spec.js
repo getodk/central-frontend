@@ -64,7 +64,12 @@ describe('EntityUploadWarnings', () => {
       props: { missingProperties: ['foo', 'bar'] }
     });
     const warning = component.getComponent(EntityUploadAlert);
-    warning.get('p').text().should.equal('Properties not found in file');
+
+    const text = warning.findAll('p').map(p => p.text());
+    text.length.should.equal(2);
+    text[0].should.equal('Properties not found in file');
+    text[1].should.startWith('These properties will be left empty');
+
     const list = component.getComponent(EntityUploadPropertyList);
     expect(list.props().names).to.eql(['foo', 'bar']);
   });

@@ -189,7 +189,7 @@ defineEmits(['rows']);
       // "Property" refers to an Entity property.
       "title": "Property not found in file | Properties not found in file",
       // "Property" refers to an Entity property.
-      "description": "This property will be left empty. | These properties will be left empty."
+      "description": "This property will be left empty for new Entities and unchanged for updated ones. | These properties will be left empty for new Entities and unchanged for updated ones."
     },
     "extraProperties": {
       "title": {
