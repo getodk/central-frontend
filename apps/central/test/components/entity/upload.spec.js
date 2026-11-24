@@ -195,7 +195,7 @@ describe('EntityUpload', () => {
         [id, 'pine']
       ]));
       const errors = modal.getComponent(EntityUploadErrors).props();
-      errors.dataError.should.startWith(`There is a problem on row 4 of the file: The UUID ${id} appears more than once`);
+      errors.dataError.should.startWith(`There is a problem on row 4 of the file: The Entity ID ${id} appears more than once`);
       errors.count.should.equal(1);
     });
   });

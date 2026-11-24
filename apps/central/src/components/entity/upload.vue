@@ -542,7 +542,7 @@ watch(() => props.state, (state) => {
     "title": "Import data from file",
     "alert": {
       "invalidUUID": "Invalid UUID “{value}”.",
-      "duplicateUUID": "The UUID {uuid} appears more than once in the file. Each update row must have a unique UUID.",
+      "duplicateUUID": "The Entity ID {uuid} appears more than once in the file. Each update row must have a unique ID.",
       "blankLabel": "Missing label.",
       "noData": "Your file does not contain any data."
     }
