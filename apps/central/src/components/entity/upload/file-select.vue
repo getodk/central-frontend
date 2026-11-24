@@ -111,7 +111,7 @@ const changeInput = (event) => {
 {
   "en": {
     "upload": "Upload a .csv file",
-    "errors": "{count} error must be fixed before appending Entities | {count} errors must be fixed before appending Entities",
+    "errors": "{count} error must be fixed before importing data | {count} errors must be fixed before importing data",
     "text": {
       "full": "Drag and drop a .csv file here, or {chooseFile}",
       "chooseFile": "choose a file"

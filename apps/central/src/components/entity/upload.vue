@@ -12,7 +12,7 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="entity-upload" :state="state" :hideable="!uploading" :persistent="true" size="full"
     backdrop @hide="hide" @mutate="resizeColumnIfShown">
-    <template #title>{{ $t('action.append') }}</template>
+    <template #title>{{ $t('title') }}</template>
     <template #body>
       <div :class="{ backdrop: uploading }" :inert="uploading">
         <p class="entity-upload-section-title">{{ $t('currentEntities') }}</p>
@@ -76,7 +76,7 @@ except according to the terms contained in the LICENSE file.
         </button>
         <button type="button" class="btn btn-primary"
           :aria-disabled="csvEntities == null || uploading" @click="upload">
-          {{ $t('action.append') }}
+          {{ $t('action.import') }}
         </button>
       </div>
     </template>
@@ -594,6 +594,7 @@ watch(() => props.state, (state) => {
 <i18n lang="json5">
 {
   "en": {
+    "title": "Import data from file",
     "currentEntities": "Your current Entities",
     "newEntities": "New Entities",
     "table": {
@@ -601,9 +602,6 @@ watch(() => props.state, (state) => {
     },
     // @transifexKey component.EntityList.noEntities
     "noEntities": "There are no Entities to show.",
-    "action": {
-      "append": "Append Entities"
-    },
     "alert": {
       "invalidUUID": "Invalid UUID “{value}”.",
       "blankLabel": "Missing label.",
