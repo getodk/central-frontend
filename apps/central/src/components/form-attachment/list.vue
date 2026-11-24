@@ -369,6 +369,7 @@ export default {
     "action": {
       "upload": "Dateien auswählen"
     },
+    "orDrag": "oder ziehen Sie Dateien auf diesen Bereich, um sie hochzuladen",
     "problem": {
       "noneUploaded": "{message} Es wurden keine Dateien erfolgreich hochgeladen.",
       "someUploaded": "{message} Nur {uploaded} von {total} Dateien wurde erfolgreich hochgeladen. | {message} Nur {uploaded} von {total} Dateien wurden erfolgreich hochgeladen."
@@ -416,8 +417,9 @@ export default {
   },
   "it": {
     "action": {
-      "upload": "scegli files"
+      "upload": "scegli i file"
     },
+    "orDrag": "o trascina i file in questa sezione per caricarli",
     "problem": {
       "noneUploaded": "{message} Nessun file è stato caricato correttamente.",
       "someUploaded": "{message} Solamente {uploaded} su {total} files è stato caricato con successo | {message} Solamente {uploaded} su {total} files sono stati caricati con successo | {message} Solamente {uploaded} su {total} files sono stati caricati con successo"
@@ -456,6 +458,10 @@ export default {
     }
   },
   "zh": {
+    "action": {
+      "upload": "选择文件"
+    },
+    "orDrag": "或将文件拖放到此处进行上传",
     "problem": {
       "noneUploaded": "{message}没有文件上传成功。",
       "someUploaded": "{message} 成功上传 {uploaded}/{total} 个文件。"
@@ -466,6 +472,10 @@ export default {
     }
   },
   "zh-Hant": {
+    "action": {
+      "upload": "選擇檔案"
+    },
+    "orDrag": "或將檔案拖曳至此區塊以上傳",
     "problem": {
       "noneUploaded": "{message} 沒有文件上傳成功。",
       "someUploaded": "{message} 僅 {uploaded} 個檔案成功上傳，共 {total} 個檔案。"

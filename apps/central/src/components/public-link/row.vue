@@ -157,9 +157,6 @@ export default {
 <i18n>
 {
   "cs": {
-    "action": {
-      "revoke": "Odebrat"
-    },
     "revoked": "Odebrán",
     "unavailable": {
       "text": "Už není dostupný",
@@ -168,8 +165,11 @@ export default {
   },
   "de": {
     "action": {
-      "edit": "Öffentlichen Zugangslink bearbeiten",
-      "revoke": "Widerrufen"
+      "copyLink": "Link kopieren",
+      "openInNewTab": "In einem neuen Tab öffnen"
+    },
+    "alert": {
+      "urlCopied": "URL kopiert."
     },
     "revoked": "Widerrufen",
     "unavailable": {
@@ -179,7 +179,11 @@ export default {
   },
   "es": {
     "action": {
-      "revoke": "Revocar"
+      "copyLink": "Copiar enlace",
+      "openInNewTab": "Abrir en una pestaña nueva"
+    },
+    "alert": {
+      "urlCopied": "Se ha copiado la URL."
     },
     "revoked": "Revocado",
     "unavailable": {
@@ -189,8 +193,11 @@ export default {
   },
   "fr": {
     "action": {
-      "edit": "Modifier lien d'accès public",
-      "revoke": "Révoquer"
+      "copyLink": "Copier le lien",
+      "openInNewTab": "Nouvel onglet"
+    },
+    "alert": {
+      "urlCopied": "Lien copié"
     },
     "revoked": "Révoqué",
     "unavailable": {
@@ -199,9 +206,6 @@ export default {
     }
   },
   "id": {
-    "action": {
-      "revoke": "Cabut"
-    },
     "revoked": "Dicabut",
     "unavailable": {
       "text": "Belum tersedia",
@@ -210,8 +214,11 @@ export default {
   },
   "it": {
     "action": {
-      "edit": "Modifica il Link con accesso pubblico",
-      "revoke": "Revocare"
+      "copyLink": "Copia il link",
+      "openInNewTab": "Apri in una nuova scheda"
+    },
+    "alert": {
+      "urlCopied": "URL copiato."
     },
     "revoked": "Revocato",
     "unavailable": {
@@ -220,9 +227,6 @@ export default {
     }
   },
   "ja": {
-    "action": {
-      "revoke": "無効化する"
-    },
     "revoked": "無効",
     "unavailable": {
       "text": "まだ利用できません。",
@@ -230,9 +234,6 @@ export default {
     }
   },
   "pt": {
-    "action": {
-      "revoke": "Revogar"
-    },
     "revoked": "Revogado",
     "unavailable": {
       "text": "Não disponível ainda",
@@ -240,9 +241,6 @@ export default {
     }
   },
   "sw": {
-    "action": {
-      "revoke": "Batilisha"
-    },
     "revoked": "Imebatilishwa",
     "unavailable": {
       "text": "Haipatikani bado",
@@ -251,7 +249,11 @@ export default {
   },
   "zh": {
     "action": {
-      "revoke": "撤销"
+      "copyLink": "复制链接",
+      "openInNewTab": "在新标签页中打开"
+    },
+    "alert": {
+      "urlCopied": "链接已复制。"
     },
     "revoked": "已撤销",
     "unavailable": {
@@ -261,7 +263,11 @@ export default {
   },
   "zh-Hant": {
     "action": {
-      "revoke": "撤銷"
+      "copyLink": "複製連結",
+      "openInNewTab": "在新分頁中開啟"
+    },
+    "alert": {
+      "urlCopied": "網址已複製。"
     },
     "revoked": "已撤銷",
     "unavailable": {

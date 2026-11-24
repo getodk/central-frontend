@@ -98,9 +98,11 @@ useEventListener(window, 'resize', rescale);
     "title": "Hakiki"
   },
   "zh": {
+    "introduction": "您的登陆界面如下所示：",
     "title": "预览"
   },
   "zh-Hant": {
+    "introduction": "您的登入頁面現在如下所示：",
     "title": "預覽"
   }
 }

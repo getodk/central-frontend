@@ -155,48 +155,37 @@ export default {
 <i18n>
 {
   "cs": {
-    "markdownSupported": "Markdown podporován",
-    "preview": "Náhled"
+    "markdownSupported": "Markdown podporován"
   },
   "de": {
-    "markdownSupported": "unterstützt durch Markdown",
-    "preview": "Vorschau"
+    "markdownSupported": "unterstützt durch Markdown"
   },
   "es": {
-    "markdownSupported": "soporte Markdown",
-    "preview": "Vista previa"
+    "markdownSupported": "soporte Markdown"
   },
   "fr": {
-    "markdownSupported": "Syntaxe Markdown supportée",
-    "preview": "Aperçu"
+    "markdownSupported": "Syntaxe Markdown supportée"
   },
   "id": {
-    "markdownSupported": "Markdown didukung",
-    "preview": "Pratinjau"
+    "markdownSupported": "Markdown didukung"
   },
   "it": {
-    "markdownSupported": "Markdown supportato",
-    "preview": "Anteprima"
+    "markdownSupported": "Markdown supportato"
   },
   "ja": {
-    "markdownSupported": "マークダウンがサポートされています。",
-    "preview": "プレビュー"
+    "markdownSupported": "マークダウンがサポートされています。"
   },
   "pt": {
-    "markdownSupported": "Formatação em estilo Markdown suportada",
-    "preview": "Visualização"
+    "markdownSupported": "Formatação em estilo Markdown suportada"
   },
   "sw": {
-    "markdownSupported": "Markdown inatumika",
-    "preview": "Hakiki"
+    "markdownSupported": "Markdown inatumika"
   },
   "zh": {
-    "markdownSupported": "支持Markdown语法",
-    "preview": "预览"
+    "markdownSupported": "支持Markdown语法"
   },
   "zh-Hant": {
-    "markdownSupported": "支持 Markdown 語法",
-    "preview": "預覽"
+    "markdownSupported": "支持 Markdown 語法"
   }
 }
 </i18n>

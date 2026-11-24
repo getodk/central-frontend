@@ -44,19 +44,22 @@ serverConfig.request({ url: '/v1/config/public' }).catch(noop);
 <i18n>
 {
   "de": {
-    "title": "Anmeldeseite"
+    "title": "Anpassung der Anmeldeseite"
   },
   "es": {
-    "title": "Página de inicio de sesión"
+    "title": "Personalización de la página de inicio de sesión"
   },
   "fr": {
-    "title": "Page de connexion"
+    "title": "Personnalisation de la page de connexion"
   },
   "it": {
-    "title": "Pagina di Login"
+    "title": "Personalizzazione della pagina di accesso"
   },
   "zh": {
-    "title": "登录页面"
+    "title": "自定义登录界面"
+  },
+  "zh-Hant": {
+    "title": "登入頁面自訂"
   }
 }
 </i18n>

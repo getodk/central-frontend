@@ -354,7 +354,7 @@ const hidePopover = () => {
       "delete": "Elimina l'elenco di entità"
     },
     "alert": {
-      "delete": "La Lista Entità “{name}” è stato eliminato con successo."
+      "delete": "La Lista Entità “{name}” è stata eliminata."
     },
     "dependentForms": {
       "description": [
@@ -410,6 +410,11 @@ const hidePopover = () => {
       "delete": "实体列表“{name}”已成功删除。"
     },
     "dependentForms": {
+      "description": [
+        "实体列表“{name}”已关联到 {formsCount} 个表单。",
+        "在删除它之前，您需要先解除它与相关表单的关联。",
+        "在此了解更多。"
+      ],
       "formsCount": "{count} 个表单"
     }
   },
@@ -424,6 +429,20 @@ const hidePopover = () => {
       "label": "當提交標記為「已核准」時建立實體",
       "description": "在有人查看資料之前，實體資料不會更新。如有必要，可以進行更正。",
       "successMessage": "當提交標記為「已核准」時，將建立實體。"
+    },
+    "action": {
+      "delete": "刪除實體清單"
+    },
+    "alert": {
+      "delete": "實體清單「{name}」已成功刪除。"
+    },
+    "dependentForms": {
+      "description": [
+        "實體清單「{name}」已連結至{formsCount}。",
+        "刪除前，您需要先將其與相關表單取消連結。",
+        "在此了解更多。"
+      ],
+      "formsCount": "{count}個表單"
     }
   }
 }

@@ -705,7 +705,8 @@ export default {
     "actionBar": {
       "message": "{count} Objekt ausgewählt | {count} Objekte ausgewählt"
     },
-    "bulkOpInProgress": "Massenbearbeitung in Bearbeitung"
+    "bulkOpInProgress": "Massenbearbeitung in Bearbeitung",
+    "analyzeDisabledDeletedData": "Der OData-Zugriff ist für gelöschte Objekte nicht verfügbar"
   },
   "es": {
     "noEntities": "No hay Entidades para mostrar.",
@@ -728,7 +729,8 @@ export default {
     "actionBar": {
       "message": "{count} Entidad seleccionada | {count} Entidades seleccionadas | {count} Entidades seleccionadas"
     },
-    "bulkOpInProgress": "Operación masiva en curso"
+    "bulkOpInProgress": "Operación masiva en curso",
+    "analyzeDisabledDeletedData": "El acceso OData no está disponible para Entidades eliminadas"
   },
   "fr": {
     "noEntities": "Pas d'entités à montrer.",
@@ -751,7 +753,8 @@ export default {
     "actionBar": {
       "message": "{count} entité sélectionnée | {count} entités sélectionnées | {count} entités sélectionnées"
     },
-    "bulkOpInProgress": "Opération en masse en progrès"
+    "bulkOpInProgress": "Opération en masse en progrès",
+    "analyzeDisabledDeletedData": "L'accès OData n'est pas disponible pour les entités supprimées"
   },
   "it": {
     "noEntities": "Non ci sono entità da mostrare.",
@@ -774,7 +777,8 @@ export default {
     "actionBar": {
       "message": "{count} Entità selezionata | {count} Entità selezionate | {count} Entità selezionate"
     },
-    "bulkOpInProgress": "Elaborazione di massa in corso"
+    "bulkOpInProgress": "Elaborazione di massa in corso",
+    "analyzeDisabledDeletedData": "L'accesso OData non è disponibile per gli Entità cancellate"
   },
   "pt": {
     "noEntities": "Não há Entidades para mostrar.",
@@ -796,7 +800,8 @@ export default {
     },
     "actionBar": {
       "message": "{count} Entidade selecionada | {count} Entidades selecionadas | {count} Entidades selecionadas"
-    }
+    },
+    "analyzeDisabledDeletedData": "O acesso OData não está disponível para Entidades excluídas"
   },
   "sw": {
     "noEntities": "Hakuna Fomu za kuonyesha.",
@@ -823,7 +828,8 @@ export default {
     "actionBar": {
       "message": "已选择{count}个实体"
     },
-    "bulkOpInProgress": "批量操作执行中"
+    "bulkOpInProgress": "批量操作执行中",
+    "analyzeDisabledDeletedData": "已删除的实体无法使用 OData 访问"
   },
   "zh-Hant": {
     "noEntities": "沒有可顯示的實體。",
@@ -846,7 +852,8 @@ export default {
     "actionBar": {
       "message": "已選取{count}個實體"
     },
-    "bulkOpInProgress": "正在執行大量作業"
+    "bulkOpInProgress": "正在執行大量作業",
+    "analyzeDisabledDeletedData": "已刪除實體的 OData 存取不可用"
   }
 }
 </i18n>

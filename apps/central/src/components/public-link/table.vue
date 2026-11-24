@@ -129,6 +129,7 @@ const filteredPublicLinks = computed(() => {
     }
   },
   "de": {
+    "noFilterResults": "Kein öffentlicher Zugangslink passt zum aktuellen Filter.",
     "header": {
       "once": "Einzelübermittlung",
       "accessLink": "Zugangslink",
@@ -136,6 +137,7 @@ const filteredPublicLinks = computed(() => {
     }
   },
   "es": {
+    "noFilterResults": "No hay enlaces de acceso público que se ajusten al filtro actual.",
     "header": {
       "once": "Envío único",
       "accessLink": "Enlace de acceso",
@@ -157,6 +159,7 @@ const filteredPublicLinks = computed(() => {
     }
   },
   "it": {
+    "noFilterResults": "Nessun link con accesso pubblico corrisponde al filtro attuale.",
     "header": {
       "once": "Invio singolo",
       "accessLink": "Link di accesso",
@@ -182,15 +185,19 @@ const filteredPublicLinks = computed(() => {
     }
   },
   "zh": {
+    "noFilterResults": "没有公开访问链接符合当前的筛选条件。",
     "header": {
       "once": "单次提交",
-      "accessLink": "访问链接"
+      "accessLink": "访问链接",
+      "createdAtAndActions": "{createdAt} / {actions}"
     }
   },
   "zh-Hant": {
+    "noFilterResults": "沒有符合目前篩選條件的公開存取連結。",
     "header": {
       "once": "單次提交",
-      "accessLink": "訪問連結"
+      "accessLink": "訪問連結",
+      "createdAtAndActions": "{createdAt}/{actions}"
     }
   }
 }

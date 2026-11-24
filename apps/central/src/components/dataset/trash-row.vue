@@ -105,6 +105,11 @@ export default {
     "action": {
       "download": "下载数据 (.csv)"
     }
+  },
+  "zh-Hant": {
+    "action": {
+      "download": "下載資料（.csv）"
+    }
   }
 }
 </i18n>

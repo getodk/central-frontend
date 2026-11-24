@@ -205,6 +205,7 @@ export default {
     }
   },
   "zh-Hant": {
+    "title": "設定您的新密碼",
     "action": {
       "set": "設定密碼"
     },

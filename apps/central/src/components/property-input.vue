@@ -118,9 +118,21 @@ defineExpose({
     "placeholder": "Název nové vlastnosti"
   },
   "de": {
+    "invalidName": "Der Name der Eigenschaft ist ungültig",
+    "duplicate": {
+      "title": "Eine Eigenschaft mit diesem Namen gibt es bereits",
+      "description": "Namen von Eigenschaften müssen eindeutig sein, unabhängig von der Groß- und Kleinschreibung."
+    },
+    "tryDifferent": "Versuchen Sie einen anderen Namen.",
     "placeholder": "Neuer Eigenschaftsname"
   },
   "es": {
+    "invalidName": "El nombre de la propiedad no es válido",
+    "duplicate": {
+      "title": "Ya existe una propiedad con este nombre",
+      "description": "Los nombres de las propiedades deben ser únicos, independientemente de si se escriben en mayúsculas o minúsculas."
+    },
+    "tryDifferent": "Prueba con otro nombre.",
     "placeholder": "Nuevo nombre de propiedad"
   },
   "fr": {
@@ -133,6 +145,11 @@ defineExpose({
     "placeholder": "Nom de la nouvelle propriété"
   },
   "it": {
+    "invalidName": "Il nome della proprietà non è valido",
+    "duplicate": {
+      "title": "Esiste già una proprietà con questo nome",
+      "description": "I nomi delle proprietà devono essere univoci, indipendentemente da maiuscole e minuscole."
+    },
     "tryDifferent": "Prova un nome diverso",
     "placeholder": "Nuovo nome della proprietà"
   },
@@ -140,9 +157,21 @@ defineExpose({
     "placeholder": "Nome da nova propriedade"
   },
   "zh": {
+    "invalidName": "属性名称无效",
+    "duplicate": {
+      "title": "已存在同名属性",
+      "description": "属性名称必须唯一，不区分大小写。"
+    },
+    "tryDifferent": "请尝试其他名称。",
     "placeholder": "新属性名称"
   },
   "zh-Hant": {
+    "invalidName": "屬性名稱無效",
+    "duplicate": {
+      "title": "已存在同名的屬性",
+      "description": "屬性名稱必須唯一，不區分大小寫。"
+    },
+    "tryDifferent": "請嘗試其他名稱。",
     "placeholder": "新屬性名稱"
   }
 }

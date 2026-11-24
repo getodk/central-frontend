@@ -65,223 +65,66 @@ defineEmits(['hide']);
 <i18n>
 {
   "cs": {
-    "title": "Stavy formuláře",
-    "introduction": [
-      "Stavy formuláře kontrolují stav životního cyklu každého formuláře. Obvykle, ale ne vždy, bude formulář otevřen a bude pokračovat přes Uzavření až do Uzavřeno, pokud již nebude potřeba.",
-      {
-        "full": "{open} Formuláře jsou k dispozici ke stažení a přijímají nová podání.",
-        "open": "Otevřené"
-      },
-      {
-        "full": "{closing} Formuláře přijímají nová podání, ale {not}jsou k dispozici ke stažení.",
-        "closing": "Uzavřené",
-        "not": "nejsou"
-      },
-      {
-        "full": "{closed} Formuláře {not1}jsou k dispozici ke stažení a {not2}přijímají nová podání.",
-        "closed": "Uzavřené",
-        "not1": "ne",
-        "not2": "ne"
-      }
-    ]
+    "title": "Stavy formuláře"
   },
   "de": {
     "title": "Formular-Status",
-    "introduction": [
-      "Formular-Status steuern den Lebenszyklusstatus eines jeden Formulars. Normalerweise, aber nicht immer, beginnt ein Formular im Status Offen und geht weiter über Schließen nach Geschlossen, wenn es nicht mehr benötigt wird.",
-      {
-        "full": "{open} Formulare sind bereit zum Download und akzeptieren neue Einreichungen.",
-        "open": "Offen"
-      },
-      {
-        "full": "{closing} Formulare akzeptieren neue Einreichungen, aber {not} sind nicht zum Download bereit.",
-        "closing": "Schließen",
-        "not": "nicht"
-      },
-      {
-        "full": "{closed} Formulare können {not1} heruntergeladen werden und akzeptieren {not2} neuen Übermittlungen.",
-        "closed": "Geschlossene",
-        "not1": "nicht",
-        "not2": "nicht"
-      }
-    ]
+    "description": {
+      "open": "Es können neue Übermittlungen begonnen und eingereicht werden.",
+      "closing": "Neue Übermittlungen können nicht gestartet werden, aber bereits laufende Übermittlungen können weiterhin abgeschlossen werden.",
+      "closed": "Es können keine neuen Übermittlungen gestartet und laufende Übermittlungen nicht abgeschlossen werden."
+    }
   },
   "es": {
     "title": "Estado del formulario",
-    "introduction": [
-      "El estado del formulario controla el ciclo de vida de cada formulario. Por lo general, pero en algunas ocasiones no será de este modo, el formulario comenzará abierto y luego procederá a cerrarse cuando ya no sea necesario.",
-      {
-        "full": "{open} Formularios disponibles para descarga y aceptáran nuevos envíos.",
-        "open": "abiertos"
-      },
-      {
-        "full": "{closing} Formularios aceptáran nuevos envíos, pero {not} están disponibles para descarga.",
-        "closing": "cerrando",
-        "not": "no"
-      },
-      {
-        "full": "{closed} Formularios están {not1} disponibles para descarga y {not2} aceptáran nuevos envíos.",
-        "closed": "cerrados",
-        "not1": "no",
-        "not2": "no"
-      }
-    ]
+    "description": {
+      "closing": "No se pueden iniciar nuevas solicitudes, pero las que ya están en trámite aún se pueden presentar.",
+      "closed": "No se pueden iniciar nuevas solicitudes, ni enviar las que están en trámite."
+    }
   },
   "fr": {
     "title": "États des formulaires",
-    "introduction": [
-      "Les États de formulaire contrôlent le cycle de vie de chaque formulaire. Généralement, mais pas toujours, un formulaire démarrera \"Ouvert\", sera utilisé jusqu'à sa \"Fermeture\", et sera \"Fermé\" quand il ne sera plus utile.",
-      {
-        "full": "{open} formulaires sont disponibles pour le téléchargement et prêts à accepter des soumissions.",
-        "open": "Ouvert"
-      },
-      {
-        "full": "{closing} Les formulaires acceptent des soumissions, mais ne sont {not} disponibles au téléchargement.",
-        "closing": "Fermeture",
-        "not": "pas"
-      },
-      {
-        "full": "{closed} Les formulaires ne sont {not1} disponibles au téléchargement et n'acceptent {not2} de nouvelles soumissions.",
-        "closed": "Fermé",
-        "not1": "pas",
-        "not2": "pas"
-      }
-    ]
+    "description": {
+      "open": "De nouvelles soumissions peuvent être commencées et envoyées.",
+      "closing": "Aucune nouvelle soumission ne peut être commencée, mais celles en cours peuvent encore être envoyées.",
+      "closed": "Aucune nouvelle soumission ne peut être commencée, et celles en cours ne peuvent plus être envoyées."
+    }
   },
   "id": {
-    "title": "Status Formulir",
-    "introduction": [
-      "Status Formulir mengontrol keadaan lingkar keaktifan setiap formulir. Biasanya, tidak selalu, sebuah formulir akan dimulai dengan status Terbuka, kemudian Penutupan, hingga Ditutup, ketika sudah tidak diperlukan lagi.",
-      {},
-      {},
-      {}
-    ]
+    "title": "Status Formulir"
   },
   "it": {
     "title": "Stato del Formulario",
-    "introduction": [
-      "Gli stati del formulario controllano lo stato del ciclo di vita di ogni formulario. Di solito, ma non sempre, un formulario inizia nello stato \"aperto\" e procede negli stati da \"in chiusura\" a \"chiuso\" quando non è più necessario.",
-      {
-        "full": "{open} Formulari sono disponibili per il download e accetteranno nuovi Invii.",
-        "open": "Aperto"
-      },
-      {
-        "full": "{closing} Formulari accetteranno nuovi Invii, ma sono {not} disponibili per il download.",
-        "closing": "In fase di chiusura",
-        "not": "non"
-      },
-      {
-        "full": "{closed} Formulari sono {not1} disponibili per il download e {not2} accetteranno nuovi invii.",
-        "closed": "Chiuso",
-        "not1": "non",
-        "not2": "non"
-      }
-    ]
+    "description": {
+      "open": "È possibile avviare e inviare nuove compilazioni.",
+      "closing": "Non è possibile avviare nuove compilazioni, ma quelle già in corso possono ancora essere inviate.",
+      "closed": "Non è possibile avviare nuove compilazioni né inviare quelle in corso."
+    }
   },
   "ja": {
-    "title": "フォームの状態",
-    "introduction": [
-      "フォームの状態では、各フォームのライフサイクルにおける状態を制御します。例外もありますが、通常、フォームは「公開」から始まり、「クロージング状態」を経て、不要になったら「終了」となります。",
-      {
-        "full": "{open}のフォームはダウンロードでき、新規のフォームの提出も受け付けます。",
-        "open": "公開中"
-      },
-      {
-        "full": "{closing}のフォームは新規のフォームの提出を受け付けますが、ダウンロードはでき{not}。",
-        "closing": "クロージング状態",
-        "not": "ません"
-      },
-      {
-        "full": "{closed}したフォームはダウンロードでき{not1}。また新規のフォームの提出も受け付け{not2}。",
-        "closed": "終了",
-        "not1": "ません",
-        "not2": "ません"
-      }
-    ]
+    "title": "フォームの状態"
   },
   "pt": {
-    "title": "Status de formulário",
-    "introduction": [
-      "Os status do formulário controlam o ciclo de vida de cada formulário. Normalmente, mas nem sempre, um formulário começará como Aberto, em seguida Em fechamento, e mudará para Fechado quando não precisar mais ser usado.",
-      {
-        "full": "Formulários com status {open} ficam disponíveis para baixar e aceitarão novas respostas.",
-        "open": "Aberto"
-      },
-      {
-        "full": "Formulários com o status {closing} aceitarão novas respostas, mas {not} estarão disponíveis para baixar.",
-        "closing": "Em fechamento",
-        "not": "não"
-      },
-      {
-        "full": "Formulários com o status {closed} {not1} estão disponíveis para baixar e {not2} aceitam novas respostas.",
-        "closed": "Fechado",
-        "not1": "não",
-        "not2": "não"
-      }
-    ]
+    "title": "Status de formulário"
   },
   "sw": {
-    "title": "Hali ya fomu",
-    "introduction": [
-      "Hali ya Fomu hudhibiti hali ya mzunguko wa maisha ya kila Fomu. Kwa kawaida, lakini si mara zote, Fomu itaanza Fungua na kuendelea na Kufunga hadi Kufungwa wakati haihitajiki tena.",
-      {
-        "full": "{open} Fomu zinapatikana kwa kupakuliwa na zitakubali Mawasilisho mapya.",
-        "open": "Fungua"
-      },
-      {
-        "full": "{closing} Fomu zitakubali Mawasilisho mapya, lakini si {not} kupakuliwa.",
-        "closing": "Kufunga",
-        "not": "sivyo"
-      },
-      {
-        "full": "{closed} Fomu {not1} kupakuliwa na {not2} hazitakubali Mawasilisho mapya",
-        "closed": "Imefungwa",
-        "not1": "Sivyo",
-        "not2": "Sivyo"
-      }
-    ]
+    "title": "Hali ya fomu"
   },
   "zh": {
     "title": "表单状态",
-    "introduction": [
-      "表单状态用于控制每份表单的使用周期。通常情况下，表单会从“开放”状态开始，并在不再需要时依次转为“关闭中”与“已关闭”状态（但存在例外情况）。",
-      {
-        "full": "{open}表单可提供下载，并可接受新的提交",
-        "open": "打开"
-      },
-      {
-        "full": "{closing}表单可接受新的提交，但{not}可下载。",
-        "closing": "正在关闭",
-        "not": "不"
-      },
-      {
-        "full": "{closed}表单{not1}可提供下载，并{not2}接收新的提交。",
-        "closed": "已关闭",
-        "not1": "不",
-        "not2": "不"
-      }
-    ]
+    "description": {
+      "open": "可以开始并发起新的提交。",
+      "closing": "无法发起新的提交，但已在进行中的仍可继续提交。",
+      "closed": "无法发起新的提交，正在进行中的也无法提交。"
+    }
   },
   "zh-Hant": {
     "title": "表單狀態",
-    "introduction": [
-      "表單狀態，可控制每個表單的生命週期狀態。 通常，但不總是，表單會從「公開」（Open）狀態開始，當表單不再需要時，經過「結案中」（Closing）狀態，最後變為「已結案」（Closed）狀態。",
-      {
-        "full": "{open}表格可供下載，並將接受新的提交。",
-        "open": "公開"
-      },
-      {
-        "full": "{closing} 表格將接受新的提交，但{not}可供下載。",
-        "closing": "結案中",
-        "not": "不"
-      },
-      {
-        "full": "{closed}表格{not1}可供下載，並且{not2}接受新的提交。",
-        "closed": "已結案",
-        "not1": "不",
-        "not2": "不"
-      }
-    ]
+    "description": {
+      "open": "可以開始填寫並提交新的提交資料。",
+      "closing": "無法開始填寫新的提交資料，但仍可提交已在填寫中的資料。",
+      "closed": "無法開始填寫新的提交資料，也無法提交填寫中的資料。"
+    }
   }
 }
 </i18n>

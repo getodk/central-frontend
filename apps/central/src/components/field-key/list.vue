@@ -322,12 +322,13 @@ export default {
     ],
     "header": {
       "lastUsed": "Zuletzt benutzt",
-      "lastUsedAndActions": "{lastUsed}/ {actions}",
       "configureClient": "Client konfigurieren"
     },
     "emptyTable": "Ès gibt noch keine Benutzer der App. Sie müssen zumindest einen erstellen, um Formulare herunterladen zu können und um Daten aus Ihrem Gerät hochzuladen.",
+    "noFilterResults": "Kein App-Benutzer passt zum aktuellen Filter.",
     "alert": {
       "create": "Der App-Benutzer \"{displayName}\" ist erstellt worden.",
+      "edit": "Der App-Benutzer „{displayName}“ wurde aktualisiert.",
       "revoke": "Der Zugriff des App-Benutzers {displayName} wurde erfolgreich widerrufen."
     }
   },
@@ -347,7 +348,6 @@ export default {
     ],
     "header": {
       "lastUsed": "Última utilizada",
-      "lastUsedAndActions": "{lastUsed}/{actions}",
       "configureClient": "Configurar cliente"
     },
     "emptyTable": "Todavía no hay usuarios móviles. Deberá crear algunos para descargar formularios y enviar datos desde su dispositivo.",
@@ -372,7 +372,6 @@ export default {
     ],
     "header": {
       "lastUsed": "Dernière utilisation",
-      "lastUsedAndActions": "{lastUsed} / {actions}",
       "configureClient": "Configurer le client"
     },
     "emptyTable": "Il n'y a pas encore d’utilisateur mobile. Vous devez en créer pour télécharger des formulaires et soumettre des données depuis votre appareil.",
@@ -422,12 +421,13 @@ export default {
     ],
     "header": {
       "lastUsed": "Utilzzato ultima volta",
-      "lastUsedAndActions": "{lastUsed}/{actions}",
       "configureClient": "Configurare il Client"
     },
     "emptyTable": "Non ci sono ancora utenti dell'app. Dovrai crearne alcuni per scaricare i formulari e inviare i dati dal tuo dispositivo.",
+    "noFilterResults": "Nessun utente dell'app corrisponde al filtro attuale.",
     "alert": {
       "create": "L'Utente App \"{displayName}\" è stato creato correttamente.",
+      "edit": "Utente dell'app “{displayName}” aggiornato.",
       "revoke": "L'accesso per Utente App {displayName} è stato revocato con successo."
     }
   },
@@ -520,8 +520,10 @@ export default {
       "configureClient": "设置Client"
     },
     "emptyTable": "目前没有App用户。您需要新建表格并从您的设备上传数据。",
+    "noFilterResults": "没有应用用户符合当前筛选条件。",
     "alert": {
       "create": "App用户“{displayName}”已成功建立。",
+      "edit": "应用用户“{displayName}”已成功更新。",
       "revoke": "App用户{displayName}的权限已成功撤销。"
     }
   },
@@ -544,8 +546,10 @@ export default {
       "configureClient": "設定客戶端"
     },
     "emptyTable": "還沒有應用程式用戶。您將需要建立一些表格來下載表格並從您的裝置提交資料。",
+    "noFilterResults": "沒有符合目前篩選條件的應用程式使用者。",
     "alert": {
       "create": "APP使用者「{displayName}」已成功建立。",
+      "edit": "應用程式使用者「{displayName}」已成功更新。",
       "revoke": "App 使用者{displayName}的存取權成功撤銷。"
     }
   }

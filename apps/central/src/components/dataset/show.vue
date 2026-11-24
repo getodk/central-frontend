@@ -168,44 +168,37 @@ export default {
 {
   "de": {
     "infoNav": {
-      "connectedForms": "Update durch {count} Formular | Update durch {count} Formulare",
-      "linkedForms": "Verwendet in {count} Formular | Verwendet in {count} Formulare"
+      "connectedForms": "Formular aktualisieren | Formulare aktualisieren",
+      "linkedForms": "Formular als Referenz | Formulare als Referenz"
     }
   },
   "es": {
     "infoNav": {
-      "connectedForms": "Actualizar por {count} formulario | Actualizar por {count} formularios | Actualizar por {count} formularios",
-      "linkedForms": "Utilizado en {count} formulario | Utilizado en {count} formularios | Utilizado en {count} formularios"
+      "connectedForms": "Actualización del formulario | Actualización de formularios | Actualización de formularios"
     }
   },
   "fr": {
     "infoNav": {
-      "connectedForms": "Mise à jour par {count} Formulaire | Mise à jour par {count} Formulaires | Mise à jour par {count} Formulaire(s)",
-      "linkedForms": "Utilisée dans {count} Formulaire | Utilisée dans {count} Formulaires | Utilisée dans {count} Formulaire(s)"
+      "connectedForms": "Formulaire mis à jour | Formulaires mis à jour | Formulaires mis à jour",
+      "linkedForms": "Formulaire utilisateur | Formulaires utilisateurs | Formulaires utilisateurs"
     }
   },
   "it": {
     "infoNav": {
-      "connectedForms": "Aggiornato da {count} Formulario | Aggiornato da {count} Formulari | Aggiornato da {count} Formulari",
-      "linkedForms": "Usato da {count} Formulario | Usato da {count} Formulari | Usato da {count} Formulari"
-    }
-  },
-  "pt": {
-    "infoNav": {
-      "connectedForms": "Atualizado por {count} Formulário | Atualizado por {count} Formulários | Atualizado por {count} Formulários",
-      "linkedForms": "Utilizado em {count} Formulário | Utilizado em {count} Formulários | Utilizado em {count} Formulários"
+      "connectedForms": "Aggiornamento del formularo | Aggiornamento dei formulari | Aggiornamento dei formulari",
+      "linkedForms": "Formulario referenziato | Formulari referenziati | Formulari referenziati"
     }
   },
   "zh": {
     "infoNav": {
-      "connectedForms": "由{count}个表单更新",
-      "linkedForms": "用于{count}个表单"
+      "connectedForms": "正在更新表单",
+      "linkedForms": "正在引用表单"
     }
   },
   "zh-Hant": {
     "infoNav": {
-      "connectedForms": "由{count}個表格更新",
-      "linkedForms": "用於{count}個表格"
+      "connectedForms": "更新表單",
+      "linkedForms": "引用表單"
     }
   }
 }

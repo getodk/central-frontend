@@ -464,6 +464,9 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "noSelectMultiple": "Dieses Formular enthält keine Mehrfachauswahlfelder.",
     "encryptedForm": "Verschlüsselte Formulare können auf diese Weise nicht verarbeitet werden.",
     "deletedFieldsDisabledForDraft": "Formularentwürfe können auf diese Weise nicht bearbeitet werden.",
+    "introduction": [
+      "Zum Herunterladen dieser Daten wird Ihr Verschlüsselungspasswort benötigt."
+    ],
     "hint": "Hinweis: {hint}",
     "noRepeat": "Diese Form hat keine repeats.",
     "action": {
@@ -491,6 +494,9 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "noSelectMultiple": "Este formulario no tiene ningún campo de selección múltiple.",
     "encryptedForm": "Los formularios cifrados no se pueden procesar de esta manera.",
     "deletedFieldsDisabledForDraft": "Los borradores no se pueden procesar de esta manera.",
+    "introduction": [
+      "Para descargar estos datos, es necesario introducir tu contraseña de cifrado."
+    ],
     "hint": "Pista: {hint}",
     "noRepeat": "Este formulario no tiene campos repetidos.",
     "action": {
@@ -558,6 +564,9 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "noSelectMultiple": "Questo formulario non ha campi a scelta multipla selezionati.",
     "encryptedForm": "I moduli crittografati non possono essere elaborati in questo modo.",
     "deletedFieldsDisabledForDraft": "Le bozze non possono essere elaborate in questo modo.",
+    "introduction": [
+      "Per scaricare questi dati è necessaria la tua password di crittografia."
+    ],
     "hint": "Suggerimento: {hint}",
     "noRepeat": "Questo formulario non ha repeats.",
     "action": {
@@ -659,6 +668,9 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "noSelectMultiple": "此表单不包含多选项",
     "encryptedForm": "加密表单无法通过此方式处理。",
     "deletedFieldsDisabledForDraft": "草稿表单无法通过此方式处理。",
+    "introduction": [
+      "下载此数据需要您的加密密码。"
+    ],
     "hint": "提示：{hint}",
     "noRepeat": "此表格没有重复值",
     "action": {
@@ -686,6 +698,9 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "noSelectMultiple": "此表單沒有任何選擇多個欄位。",
     "encryptedForm": "加密表格不能以這種方式處理。",
     "deletedFieldsDisabledForDraft": "草稿表格不能以這種方式處理。",
+    "introduction": [
+      "需要您的加密密碼才能下載此資料。"
+    ],
     "hint": "提示: {hint}",
     "noRepeat": "此表格沒有重複。",
     "action": {

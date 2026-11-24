@@ -93,11 +93,13 @@ const { form } = useRequestData();
     }
   },
   "zh": {
+    "title": "当前版本：{version}",
     "subtitle": {
       "published": "{dateTime}已发布"
     }
   },
   "zh-Hant": {
+    "title": "目前版本：{version}",
     "subtitle": {
       "published": "{dateTime}已發布"
     }

@@ -109,6 +109,7 @@ const setWebformsEnabled = () => {
 {
   "de": {
     "webformsConfirmation": {
+      "description": "Möchten Sie wirklich von Enketo zu ODK Web Forms wechseln?",
       "useOdkWebForms": "ODK Web-Formulare verwenden"
     },
     "enketoConfirmation": {
@@ -137,10 +138,11 @@ const setWebformsEnabled = () => {
   },
   "it": {
     "webformsConfirmation": {
+      "description": "Vuoi davvero passare da Enketo a ODK Web Forms?",
       "useOdkWebForms": "Utilizza ODK Web Forms"
     },
     "enketoConfirmation": {
-      "description": "Siete sicuri di voler passare da ODK Web Forms a Enketo?",
+      "description": "Vuoi davvero passare da ODK Web Forms a Enketo?",
       "useEnketo": "Usa Enketo"
     }
   },
@@ -155,6 +157,7 @@ const setWebformsEnabled = () => {
   },
   "zh": {
     "webformsConfirmation": {
+      "description": "您确定要从 Enketo 切换到 ODK Web Forms 吗？",
       "useOdkWebForms": "使用 ODK Web Forms"
     },
     "enketoConfirmation": {
@@ -164,6 +167,7 @@ const setWebformsEnabled = () => {
   },
   "zh-Hant": {
     "webformsConfirmation": {
+      "description": "確定要從 Enketo 切換至 ODK 網頁表單嗎？",
       "useOdkWebForms": "使用 ODK Web Forms"
     },
     "enketoConfirmation": {

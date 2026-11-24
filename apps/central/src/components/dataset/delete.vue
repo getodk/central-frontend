@@ -114,7 +114,7 @@ const del = () => {
   "it": {
     "title": "Elimina l'elenco di entità",
     "introduction": [
-      "Sei sicuro di voler eliminare la Lista Entità? “{name}”? Questo è irreversibile."
+      "Sei sicuro di voler eliminare la Lista Entità “{name}”? L'operazione è irreversibile."
     ]
   },
   "pt": {
@@ -124,6 +124,12 @@ const del = () => {
     "title": "删除实体列表",
     "introduction": [
       "您确定要删除实体列表“{name}”吗？此操作无法撤销。"
+    ]
+  },
+  "zh-Hant": {
+    "title": "刪除實體清單",
+    "introduction": [
+      "確定要刪除實體清單「{name}」嗎？此操作無法復原。"
     ]
   }
 }

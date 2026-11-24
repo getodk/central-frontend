@@ -302,6 +302,10 @@ const submit = () => {
     }
   },
   "zh-Hant": {
+    "titleCreate": "建立新實體",
+    "header": {
+      "value": "值"
+    },
     "title": "更新{label}",
     "geometryDisabled": "無法透過地圖更新地理資料。",
     "problem": {

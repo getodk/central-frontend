@@ -290,6 +290,7 @@ const sizeModel = computed({
       "last": "最後一頁"
     },
     "rows": "第 {range} 行，共 {count} 行",
+    "zeroRow": "第 0 列，共 {count} 列",
     "field": {
       "size": "每頁"
     }

@@ -239,13 +239,17 @@
         }
       },
       "entity": {
+        "bulk_upsert": {
+          "string": "",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
+        },
         "bulk_delete": {
           "string": "",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         },
         "bulk_restore": {
           "string": "",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         }
       },
       "actor_property": {
@@ -409,6 +413,10 @@
       "string": "Selesai",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
+    "import": {
+      "string": "",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "logIn": {
       "string": "Masuk",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -455,6 +463,10 @@
     },
     "review": {
       "string": "Tinjau",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "revoke": {
+      "string": "",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "save": {
@@ -754,6 +766,10 @@
     },
     "publicLink": {
       "string": "Tautan Akses Publik",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "publicLinks": {
+      "string": "",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "user": {
@@ -1707,6 +1723,14 @@
         "developer_comment": "Text shown when no Audit log date is selected in the filter"
       }
     },
+    "AuditFiltersAction": {
+      "action": {
+        "all": {
+          "string": "",
+          "developer_comment": "This is shown in a list of actions performed on the server. It refers to all the actions in a certain category."
+        }
+      }
+    },
     "AuditList": {
       "heading": {
         "0": {
@@ -1863,10 +1887,13 @@
       "purgeDescription": {
         "string": ""
       },
+      "deletedTitle": {
+        "string": ""
+      },
       "action": {
         "toggleDeletedEntities": {
-          "string": "{count, plural, other {}}",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "string": "",
+          "developer_comment": "\"deleted\" refers to deleted Entities"
         }
       },
       "analyzeDisabledDeletedData": {
@@ -2591,10 +2618,15 @@
     },
     "EntityFiltersViewAs": {
       "noUserSelected": {
-        "string": ""
+        "string": "",
+        "developer_comment": "\"All\" refers to users (in the form of app users and public links)"
       },
       "viewAs": {
         "string": ""
+      },
+      "resetToMe": {
+        "string": "",
+        "developer_comment": "This \"All\" means all users (app users and public links) shown in this dropdown"
       }
     },
     "EntityList": {
@@ -2677,12 +2709,6 @@
         "string": "{count, plural, other {}}"
       }
     },
-    "EntityMetadataRow": {
-      "reviewParallelUpdates": {
-        "string": "",
-        "developer_comment": "This is the text for an action, for example, the text of a button."
-      }
-    },
     "EntityResolve": {
       "title": {
         "string": "",
@@ -2761,10 +2787,6 @@
     },
     "EntityTable": {
       "header": {
-        "updatedAtAndActions": {
-          "string": "",
-          "developer_comment": "This is the text of a column header of a table of Entities. The column shows when each Entity was last updated, as well as actions that can be taken on the Entity."
-        },
         "deletedAt": {
           "string": "",
           "developer_comment": "Heading of the column that shows Entity deletion timestamp"
@@ -2786,24 +2808,16 @@
       }
     },
     "EntityUpload": {
-      "currentEntities": {
+      "title": {
         "string": ""
-      },
-      "newEntities": {
-        "string": ""
-      },
-      "table": {
-        "file": {
-          "string": ""
-        }
-      },
-      "action": {
-        "append": {
-          "string": "",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
       },
       "alert": {
+        "invalidUUID": {
+          "string": ""
+        },
+        "duplicateUUID": {
+          "string": ""
+        },
         "blankLabel": {
           "string": ""
         },
@@ -2896,6 +2910,9 @@
       "upload": {
         "string": ""
       },
+      "replace": {
+        "string": ""
+      },
       "errors": {
         "string": "{count, plural, other {}}"
       },
@@ -2934,6 +2951,28 @@
         "processing": {
           "string": "",
           "developer_comment": "This text is shown after a file has been uploaded to the server, but before the server has finished processing it."
+        }
+      }
+    },
+    "EntityUploadRowCounts": {
+      "created": {
+        "full": {
+          "string": "{count, plural, other {}}",
+          "developer_comment": "{rows} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} rows"
+        },
+        "rows": {
+          "string": "{count, plural, other {}}",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {rows} is in the following text. (The plural form of the text is shown.)\n\n{rows} will be created."
+        }
+      },
+      "updated": {
+        "full": {
+          "string": "{count, plural, other {}}",
+          "developer_comment": "{rows} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} rows"
+        },
+        "rows": {
+          "string": "{count, plural, other {}}",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {rows} is in the following text. (The plural form of the text is shown.)\n\n{rows} will be updated."
         }
       }
     },
@@ -3097,10 +3136,6 @@
           "string": "Terakhir Digunakan",
           "developer_comment": "This is the text of a table column header."
         },
-        "lastUsedAndActions": {
-          "string": "",
-          "developer_comment": "Header for the table column that shows the last used date and action buttons."
-        },
         "configureClient": {
           "string": "Klien Konfigurasi",
           "developer_comment": "Header for the table column that shows QR codes to configure data collection clients such as ODK Collect."
@@ -3262,16 +3297,6 @@
       "accessRevoked": {
         "string": "Akses dicabut",
         "developer_comment": "This text is shown for an App User whose access has been revoked."
-      },
-      "action": {
-        "editAppUser": {
-          "string": "",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
-        "revokeAccess": {
-          "string": "Cabut akses",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
       }
     },
     "FormAttachmentLinkDataset": {
@@ -3477,6 +3502,22 @@
             "string": "klik di sini untuk memilih",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nIf you would rather select files from a prompt, ensure that their names match the ones in the table and then {clickHere}."
           }
+        }
+      }
+    },
+    "FormAutosaveSettings": {
+      "autosaveSetting": {
+        "description": {
+          "string": ""
+        },
+        "enabled": {
+          "string": ""
+        },
+        "disabled": {
+          "string": ""
+        },
+        "unselectable": {
+          "string": ""
         }
       }
     },
@@ -3840,18 +3881,14 @@
       }
     },
     "FormList": {
-      "title": {
-        "string": "Formulir",
-        "developer_comment": "This is a title shown above a section of the page."
+      "emptyTable": {
+        "string": "Tidak ada formulir untuk ditampilkan."
       },
       "action": {
         "create": {
           "string": "Formulir Baru",
           "developer_comment": "This is the text of a button that is used to create a new Form."
         }
-      },
-      "emptyTable": {
-        "string": "Tidak ada formulir untuk ditampilkan."
       },
       "alert": {
         "create": {
@@ -3966,19 +4003,6 @@
         }
       }
     },
-    "FormOverviewRightNow": {
-      "stateCaption": {
-        "open": {
-          "string": "Formulir ini bisa diunduh dan sedang menerima kiriman data."
-        },
-        "closing": {
-          "string": "Formulir ini tidak bisa diunduh, tetapi masih menerima kiriman data."
-        },
-        "closed": {
-          "string": "Formulir ini tidak bisa diunduh dan tidak menerima kiriman data."
-        }
-      }
-    },
     "FormRestore": {
       "title": {
         "string": "",
@@ -4004,7 +4028,9 @@
         }
       },
       "formClosingTip": {
-        "string": ""
+        "0": {
+          "string": ""
+        }
       }
     },
     "FormSettings": {
@@ -4081,20 +4107,24 @@
       }
     },
     "FormSubmissions": {
+      "purgeDescription": {
+        "string": ""
+      },
+      "deletedTitle": {
+        "string": "",
+        "developer_comment": "{formName} is the title/xmlFormId of the Form."
+      },
+      "action": {
+        "toggleDeletedSubmissions": {
+          "string": "",
+          "developer_comment": "\"deleted\" refers to deleted Submissions"
+        }
+      },
       "analyzeDisabled": {
         "string": ""
       },
       "analyzeDisabledDeletedData": {
         "string": ""
-      },
-      "purgeDescription": {
-        "string": ""
-      },
-      "action": {
-        "toggleDeletedSubmissions": {
-          "string": "{count, plural, other {}}",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
       }
     },
     "FormTable": {
@@ -4295,7 +4325,7 @@
       },
       "preview": {
         "string": "Pratinjau",
-        "developer_comment": "This is text shown as a label above the preview of Markdown formatting (special formatting of user-submitted text)"
+        "developer_comment": "This is text shown as a label above a preview of something."
       }
     },
     "Multiselect": {
@@ -4395,6 +4425,11 @@
         "string": ""
       },
       "dismissTooltip": {
+        "string": ""
+      }
+    },
+    "PageHeading": {
+      "helpButtonLabel": {
         "string": ""
       }
     },
@@ -4620,51 +4655,15 @@
         "string": "Status Formulir",
         "developer_comment": "This is the title at the top of a pop-up."
       },
-      "introduction": {
-        "0": {
-          "string": "Status Formulir mengontrol keadaan lingkar keaktifan setiap formulir. Biasanya, tidak selalu, sebuah formulir akan dimulai dengan status Terbuka, kemudian Penutupan, hingga Ditutup, ketika sudah tidak diperlukan lagi."
+      "description": {
+        "open": {
+          "string": ""
         },
-        "1": {
-          "full": {
-            "string": "",
-            "developer_comment": "{open} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nOpen"
-          },
-          "open": {
-            "string": "Terbuka",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {open} is in the following text:\n\n{open} Forms are available to download and will accept new Submissions."
-          }
+        "closing": {
+          "string": ""
         },
-        "2": {
-          "full": {
-            "string": "",
-            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {closing} has the text: Closing\n- {not} has the text: not"
-          },
-          "closing": {
-            "string": "Penutupan",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {closing} is in the following text:\n\n{closing} Forms will accept new Submissions, but are {not} available to download."
-          },
-          "not": {
-            "string": "tidak",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not} is in the following text:\n\n{closing} Forms will accept new Submissions, but are {not} available to download."
-          }
-        },
-        "3": {
-          "full": {
-            "string": "",
-            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {closed} has the text: Closed\n- {not1} has the text: not\n- {not2} has the text: not"
-          },
-          "closed": {
-            "string": "Ditutup",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {closed} is in the following text:\n\n{closed} Forms are {not1} available to download and will {not2} accept new Submissions."
-          },
-          "not1": {
-            "string": "tidak",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not1} is in the following text:\n\n{closed} Forms are {not1} available to download and will {not2} accept new Submissions."
-          },
-          "not2": {
-            "string": "tidak",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not2} is in the following text:\n\n{closed} Forms are {not1} available to download and will {not2} accept new Submissions."
-          }
+        "closed": {
+          "string": ""
         }
       }
     },
@@ -4806,9 +4805,6 @@
         "archived": {
           "0": {
             "string": "Proyek ini telah diarsipkan."
-          },
-          "1": {
-            "string": "Pada versi ODK Central sekarang, Anda tidak dapat membatalkan pengarsipan sebuah Proyek. Namun, pilihan untuk membantalkan pengarsipan sebuah Proyek telah direncanakan untuk versi mendatang."
           }
         }
       },
@@ -5068,13 +5064,18 @@
     },
     "PublicLinkRow": {
       "action": {
-        "edit": {
+        "copyLink": {
           "string": "",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
-        "revoke": {
-          "string": "Cabut",
+        "openInNewTab": {
+          "string": "",
           "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "urlCopied": {
+          "string": ""
         }
       },
       "revoked": {
@@ -5629,10 +5630,6 @@
     },
     "SubmissionTable": {
       "header": {
-        "stateAndActions": {
-          "string": "Status dan tindakan",
-          "developer_comment": "This is the text of a table column header."
-        },
         "deletedAt": {
           "string": "",
           "developer_comment": "Heading of the column that shows Submission deletion timestamp"
@@ -5706,18 +5703,15 @@
         "string": "Hanya pemilik akun yang bisa mengatur kata sandi."
       },
       "alert": {
+        "includedInBreach": {
+          "string": ""
+        },
         "mismatch": {
           "string": "Harap periksa kesamaan kata sandi baru Anda."
         },
         "success": {
           "string": "Berhasil! Kata sandi telah diperbarui."
         }
-      }
-    },
-    "UserHome": {
-      "title": {
-        "string": "Pengaturan Pengguna",
-        "developer_comment": "This is shown as the title at the top of the page."
       }
     },
     "UserList": {
