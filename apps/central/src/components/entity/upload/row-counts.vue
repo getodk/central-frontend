@@ -15,33 +15,21 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
-
 import SentenceSeparator from '../../sentence-separator.vue';
 
 defineOptions({
   name: 'EntityUploadRowCounts'
 });
-const props = defineProps({
-  entities: {
-    type: Array,
+defineProps({
+  created: {
+    type: Number,
+    required: true
+  },
+  updated: {
+    type: Number,
     required: true
   }
 });
-
-const counts = computed(() => {
-  let created = 0;
-  let updated = 0;
-  for (const entity of props.entities) {
-    if (entity.uuid == null)
-      created += 1;
-    else
-      updated += 1;
-  }
-  return { created, updated };
-});
-const created = computed(() => counts.value?.created);
-const updated = computed(() => counts.value?.updated);
 </script>
 
 <i18n lang="json5">

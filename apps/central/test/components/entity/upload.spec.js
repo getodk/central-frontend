@@ -7,6 +7,7 @@ import EntityUpload from '../../../src/components/entity/upload.vue';
 import EntityUploadErrors from '../../../src/components/entity/upload/errors.vue';
 import EntityUploadExtraProperties from '../../../src/components/entity/upload/extra-properties.vue';
 import EntityUploadFileSelect from '../../../src/components/entity/upload/file-select.vue';
+import EntityUploadRowCounts from '../../../src/components/entity/upload/row-counts.vue';
 import EntityUploadPopup from '../../../src/components/entity/upload/popup.vue';
 import EntityUploadTable from '../../../src/components/entity/upload/table.vue';
 import EntityUploadWarnings from '../../../src/components/entity/upload/warnings.vue';
@@ -270,19 +271,17 @@ describe('EntityUpload', () => {
     });
 
     it('does not show data warnings if there is a data error', async () => {
-      testData.extendedDatasets.createPast(1, {
-        properties: [{ name: 'height' }, { name: 'circumference' }]
-      });
+      testData.extendedDatasets.createPast(1);
       const modal = await showModal();
 
       // First, select a CSV that triggers warnings about both the column header
       // and the data, but does not trigger errors.
-      const warningsCSV = 'label,height\nx\ny,""';
+      const warningsCSV = 'label,circumference\nx\ny,""';
       await selectFile(modal, createCSV(warningsCSV));
       modal.findComponent(EntityUploadErrors).exists().should.be.false;
       const initialWarnings = modal.getComponent(EntityUploadWarnings).props();
       initialWarnings.count.should.equal(2);
-      initialWarnings.missingProperties.should.eql(['circumference']);
+      initialWarnings.extraProperties.should.eql(['circumference']);
       initialWarnings.raggedRows.should.eql([[1, 1]]);
 
       // Next, select a similar CSV that also has an error in the data (a
@@ -297,7 +296,7 @@ describe('EntityUpload', () => {
       // data.
       const warnings = modal.getComponent(EntityUploadWarnings).props();
       warnings.count.should.equal(1);
-      warnings.missingProperties.should.eql(['circumference']);
+      warnings.extraProperties.should.eql(['circumference']);
       should.not.exist(warnings.raggedRows);
     });
 
@@ -402,19 +401,17 @@ describe('EntityUpload', () => {
   });
 
   it('resets errors and warnings after a new file is selected', async () => {
-    testData.extendedDatasets.createPast(1, {
-      properties: [{ name: 'height' }]
-    });
+    testData.extendedDatasets.createPast(1);
     const modal = await showModal();
     const button = modal.get('.modal-actions .btn-primary');
 
-    const problemCSV = createCSV('label,label\ndogwood,dogwood');
+    const problemCSV = createCSV('label,label,height\ndogwood,dogwood,1');
     await selectFile(modal, problemCSV);
     modal.findComponent(EntityUploadErrors).exists().should.be.true;
     modal.findComponent(EntityUploadWarnings).exists().should.be.true;
     button.attributes('aria-disabled').should.equal('true');
 
-    await selectFile(modal, createCSV('label,height\ndogwood,1'));
+    await selectFile(modal, createCSV('label\ndogwood'));
     modal.findComponent(EntityUploadErrors).exists().should.be.false;
     modal.findComponent(EntityUploadWarnings).exists().should.be.false;
     button.attributes('aria-disabled').should.equal('false');
@@ -1527,5 +1524,94 @@ describe('EntityUpload', () => {
           }
         ]);
     });
+
+    it('only shows warning about missing properties if file contains a new entity, not exclusively updates', () => {
+      testData.extendedDatasets.createPast(1, {
+        properties: [{ name: 'height' }]
+      });
+      const id = uuid();
+      // Returns `true` if the modal shows the missingProperties warning and
+      // `false` if not.
+      const hasWarning = (modal) => {
+        const warnings = modal.findComponent(EntityUploadWarnings);
+        if (!warnings.exists()) return false;
+        const { missingProperties } = warnings.props();
+        return missingProperties != null && missingProperties.length === 1 &&
+          missingProperties[0] === 'height';
+      };
+      return showModal()
+        // File that is exclusively new entities
+        .afterResponses(async (modal) => {
+          await selectFile(modal, createCSV([
+            ['__id', 'label'],
+            ['', 'dogwood']
+          ]));
+          hasWarning(modal).should.be.true;
+        })
+        // File that is a mix of new entities and updates
+        .request(async (modal) => {
+          await selectFile(modal, createCSV([
+            ['__id', 'label'],
+            ['', 'dogwood'],
+            [id, 'elm']
+          ]));
+        })
+        .modify(respondWithEntities)
+        .afterResponse(modal => {
+          hasWarning(modal).should.be.true;
+        })
+        // File that is exclusively updates
+        .request(async (modal) => {
+          await selectFile(modal, createCSV([
+            ['__id', 'label'],
+            [id, 'elm']
+          ]));
+        })
+        .modify(respondWithEntities)
+        .afterResponse(modal => {
+          hasWarning(modal).should.be.false;
+        })
+        // File with a header error
+        .afterResponses(async (modal) => {
+          await selectFile(modal, createCSV([
+            ['__id', 'label', 'label', 'circumference'],
+            ['', 'dogwood', 'dogwood', '1']
+          ]));
+          should.exist(modal.getComponent(EntityUploadErrors).props().duplicateColumns);
+          // Some warnings are shown, just not about missingProperties.
+          const warnings = modal.getComponent(EntityUploadWarnings).props();
+          warnings.extraProperties.should.eql(['circumference']);
+          should.not.exist(warnings.missingProperties);
+          warnings.count.should.equal(1);
+        })
+        // File with a data error
+        .afterResponses(async (modal) => {
+          await selectFile(modal, createCSV([
+            ['__id', 'label', 'circumference'],
+            ['', '', '1']
+          ]));
+          should.exist(modal.getComponent(EntityUploadErrors).props().dataError);
+          // Some warnings are shown, just not about missingProperties.
+          const warnings = modal.getComponent(EntityUploadWarnings).props();
+          warnings.extraProperties.should.eql(['circumference']);
+          should.not.exist(warnings.missingProperties);
+        });
+    });
+  });
+
+  it('shows row counts', () => {
+    const csv = createCSV([
+      ['__id', 'label'],
+      ['', 'dogwood'],
+      ['', 'elm'],
+      [uuid(), 'pine']
+    ]);
+    return showModal()
+      .request(modal => selectFile(modal, csv))
+      .modify(respondWithEntities)
+      .afterResponse(modal => {
+        const counts = modal.getComponent(EntityUploadRowCounts).props();
+        counts.should.eql({ created: 2, updated: 1 });
+      });
   });
 });
