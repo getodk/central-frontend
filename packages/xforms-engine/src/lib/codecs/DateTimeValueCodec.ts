@@ -1,4 +1,5 @@
 import {
+  DAY_MILLISECONDS,
   FRACTIONAL_SECOND_DIGITS,
   ISO_DATE_TIME_WITH_OPTIONAL_OFFSET_PATTERN,
   TIMEZONE_OFFSET_PATTERN,
@@ -17,6 +18,15 @@ export type DateTimeInputValue =
   | null;
 
 const validateDateTimeString = (value: string): DateTimeRuntimeValue => {
+  if (value == null || typeof value !== 'string' || value.length === 0) {
+    return null;
+  }
+
+  if (Number.isFinite(Number(value))) {
+    const millis = Math.round(Number(value) * DAY_MILLISECONDS);
+    return formatMillis(millis);
+  }
+
   const match = ISO_DATE_TIME_WITH_OPTIONAL_OFFSET_PATTERN.exec(value);
   if (match == null) {
     return null;
@@ -46,6 +56,13 @@ const formatZonedDateTime = (zdt: Temporal.ZonedDateTime): string => {
   return `${date}T${time}${zdt.offset}`;
 };
 
+const formatMillis = (millis: number): string => {
+  const datetime = Temporal.Instant.fromEpochMilliseconds(millis).toZonedDateTimeISO(
+    Temporal.Now.timeZoneId()
+  );
+  return formatZonedDateTime(datetime);
+};
+
 /**
  * Converts a datetime-like value ({@link DateTimeInputValue}) to a datetime string
  * with timezone offset. Honors timezones/offsets if present on the input objects.
@@ -60,10 +77,7 @@ const toDateTimeString = (value: DateTimeInputValue): string => {
 
   try {
     if (value instanceof Date) {
-      const datetime = Temporal.Instant.fromEpochMilliseconds(value.getTime()).toZonedDateTimeISO(
-        Temporal.Now.timeZoneId()
-      );
-      return formatZonedDateTime(datetime);
+      return formatMillis(value.getTime());
     }
 
     if (value instanceof Temporal.PlainDateTime) {

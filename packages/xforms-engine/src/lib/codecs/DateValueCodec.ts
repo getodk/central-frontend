@@ -1,4 +1,7 @@
-import { ISO_DATE_OR_DATE_TIME_LIKE_PATTERN } from '@getodk/common/constants/datetime.ts';
+import {
+  DAY_MILLISECONDS,
+  ISO_DATE_OR_DATE_TIME_LIKE_PATTERN,
+} from '@getodk/common/constants/datetime.ts';
 import { Temporal } from 'temporal-polyfill';
 import { type CodecDecoder, type CodecEncoder, ValueCodec } from './ValueCodec.ts';
 
@@ -14,18 +17,25 @@ export type DatetimeInputValue =
 
 /**
  * Parses a string in the format 'YYYY-MM-DD', 'YYYY-MM-DDTHH:MM:SS', or an ISO datetime with a timezone offset
- * (e.g. the output of now()) into a Temporal.PlainDate. Only the date portion of the input is used — the time
- * and offset are taken in the browser's local time and ignored.
+ * (e.g. the output of now()), or a number into a Temporal.PlainDate. Only the date portion of the input is used —
+ * the time and offset are taken in the browser's local time and ignored.
  *
  * @param value - The string to parse.
  * @returns A {@link DatetimeRuntimeValue}
  */
 const parseString = (value: string): DatetimeRuntimeValue => {
-  if (
-    value == null ||
-    typeof value !== 'string' ||
-    !ISO_DATE_OR_DATE_TIME_LIKE_PATTERN.test(value)
-  ) {
+  if (value == null || typeof value !== 'string' || value.length === 0) {
+    return null;
+  }
+
+  if (Number.isFinite(Number(value))) {
+    const millis = Math.round(Number(value) * DAY_MILLISECONDS);
+    return Temporal.Instant.fromEpochMilliseconds(millis)
+      .toZonedDateTimeISO(Temporal.Now.timeZoneId())
+      .toPlainDate();
+  }
+
+  if (!ISO_DATE_OR_DATE_TIME_LIKE_PATTERN.test(value)) {
     return null;
   }
 

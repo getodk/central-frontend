@@ -10,12 +10,6 @@ import type {
   SubtractionExprNode,
 } from '../../static/grammar/SyntaxNode.ts';
 import { BinaryExpressionEvaluator } from './BinaryExpressionEvaluator.ts';
-import { DateTimeLikeEvaluation } from '../../evaluations/DateTimeLikeEvaluation.ts';
-import {
-  DAY_MILLISECONDS,
-  ISO_DATE_OR_DATE_TIME_LIKE_PATTERN,
-} from '@getodk/common/constants/datetime.ts';
-import { Temporal } from 'temporal-polyfill';
 import type { ValueEvaluation } from '../../evaluations/ValueEvaluation.ts';
 
 type NumericBinaryExprNode =
@@ -51,15 +45,13 @@ export class NumericBinaryExpressionEvaluator<
   }
 
   evaluate<T extends XPathNode>(context: EvaluationContext<T>): ValueEvaluation<T, 'NUMBER'> {
-    const lhsValue = this.lhs.evaluate(context);
-    const lhsNumberValue = lhsValue.toNumber();
+    const lhsNumberValue = this.lhs.evaluate(context).toNumber();
 
     if (Number.isNaN(lhsNumberValue)) {
       return new NumberEvaluation(context.currentContext(), NaN);
     }
 
-    const rhsValue = this.rhs.evaluate(context);
-    const rhsNumberValue = rhsValue.toNumber();
+    const rhsNumberValue = this.rhs.evaluate(context).toNumber();
 
     if (Number.isNaN(rhsNumberValue)) {
       return new NumberEvaluation(context.currentContext(), NaN);
@@ -92,18 +84,6 @@ export class NumericBinaryExpressionEvaluator<
 
       default:
         throw new UnreachableError(operation);
-    }
-
-    const lhsMatch = ISO_DATE_OR_DATE_TIME_LIKE_PATTERN.exec(lhsValue.toString());
-    const rhsMatch = ISO_DATE_OR_DATE_TIME_LIKE_PATTERN.exec(rhsValue.toString());
-
-    if (lhsMatch != null || rhsMatch != null) {
-      return new DateTimeLikeEvaluation(
-        context.currentContext(),
-        Temporal.Instant.fromEpochMilliseconds(
-          Math.round(numberValue * DAY_MILLISECONDS)
-        ).toZonedDateTimeISO(Temporal.Now.timeZoneId())
-      );
     }
 
     return new NumberEvaluation(context.currentContext(), numberValue);
