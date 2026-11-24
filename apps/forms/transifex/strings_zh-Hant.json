@@ -33,6 +33,20 @@
         },
         "tryAgain": {
           "string": "再試一次"
+        },
+        "recover": {
+          "string": ""
+        },
+        "discard": {
+          "string": ""
+        }
+      },
+      "autosaveModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
         }
       },
       "previewModal": {
@@ -40,19 +54,19 @@
           "string": "資料有效"
         },
         "body": {
-          "string": "您輸入的資料是有效的，但因為這是表單預覽，所以沒有提交。"
+          "string": ""
         }
       },
       "submissionModal": {
         "title": {
-          "string": "表單已成功傳送！"
+          "string": ""
         },
         "body": {
-          "string": "填寫完畢後，您可以再次填寫此表單或關閉。"
+          "string": ""
         },
         "action": {
           "fillOutAgain": {
-            "string": "再次填寫"
+            "string": ""
           }
         }
       },
@@ -66,7 +80,7 @@
       },
       "editSubmissionModal": {
         "title": {
-          "string": "提交成功"
+          "string": ""
         },
         "body": {
           "string": "現在您將會被重定向。"
@@ -77,12 +91,12 @@
           "string": "提交錯誤"
         },
         "body": {
-          "string": "您的資料未提交。錯誤訊息：{errorMessage} 您可以關閉此對話框再試一次。如果錯誤持續發生，請聯絡要求您填寫本表單的人員或{supportEmail}。"
+          "string": ""
         }
       },
       "sendingDataModal": {
         "title": {
-          "string": "發送提交內容"
+          "string": ""
         },
         "body": {
           "string": "正在提交您的資料。在完成之前，請不要關閉此視窗。"
@@ -108,7 +122,7 @@
           "string": "提交錯誤"
         },
         "body": {
-          "string": "您的資料未完全提交。請按「再試一次」按鈕重試。如果錯誤持續發生，請聯絡要求您填寫此表格的人或{supportEmail}。"
+          "string": ""
         }
       },
       "util": {

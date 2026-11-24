@@ -33,6 +33,20 @@
         },
         "tryAgain": {
           "string": "Coba lagi"
+        },
+        "recover": {
+          "string": "Pulihkan"
+        },
+        "discard": {
+          "string": "Buang"
+        }
+      },
+      "autosaveModal": {
+        "title": {
+          "string": "Pulihkan pekerjaan Anda?"
+        },
+        "body": {
+          "string": "Formulir Anda tertutup secara tidak terduga pada {date} dan telah disimpan. Apakah Anda ingin melanjutkan pengisian formulir ini?"
         }
       },
       "previewModal": {
@@ -40,19 +54,19 @@
           "string": "Data valid"
         },
         "body": {
-          "string": "Data yang Anda masukkan valid, tetapi tidak dikirim karena ini adalah pratinjau Formulir."
+          "string": "Data yang Anda masukkan valid, tetapi tidak dikirim karena ini adalah pratinjau formulir."
         }
       },
       "submissionModal": {
         "title": {
-          "string": "Formulir berhasil dikirim!"
+          "string": "Terkirim"
         },
         "body": {
-          "string": "Anda dapat mengisi Formulir ini lagi atau tutup jika sudah selesai."
+          "string": "Terima kasih atas kiriman Anda. Anda dapat mengisi formulir ini lagi atau menutupnya jika sudah selesai."
         },
         "action": {
           "fillOutAgain": {
-            "string": "Isi lagi"
+            "string": "Isi formulir lagi"
           }
         }
       },
@@ -66,7 +80,7 @@
       },
       "editSubmissionModal": {
         "title": {
-          "string": "Pengiriman berhasil"
+          "string": "Terkirim"
         },
         "body": {
           "string": "Anda akan segera dialihkan."
@@ -77,12 +91,12 @@
           "string": "Kesalahan pengiriman"
         },
         "body": {
-          "string": "Data Anda tidak terkirim. Pesan kesalahan: {errorMessage} Anda dapat menutup dialog ini dan mencoba lagi. Jika kesalahan terus terjadi, silakan hubungi orang yang meminta Anda mengisi Formulir ini atau {supportEmail}."
+          "string": "Data Anda gagal dikirim. Pesan kesalahan: {errorMessage} Anda dapat menutup kotak dialog ini dan mencoba lagi. Jika kesalahan terus terjadi, silakan hubungi orang yang meminta Anda mengisi formulir ini atau {supportEmail}."
         }
       },
       "sendingDataModal": {
         "title": {
-          "string": "Sedang mengirim"
+          "string": "Mengirim data"
         },
         "body": {
           "string": "Data Anda sedang dikirim. Mohon jangan menutup jendela ini hingga proses selesai."
@@ -108,7 +122,7 @@
           "string": "Kesalahan pengiriman"
         },
         "body": {
-          "string": "Data Anda tidak sepenuhnya terkirim. Silakan tekan tombol “Coba lagi” untuk mengulang. Jika kesalahan terus terjadi, silakan hubungi orang yang meminta Anda mengisi Formulir ini atau {supportEmail}."
+          "string": "Data Anda belum terkirim sepenuhnya. Silakan tekan tombol “Coba lagi” untuk mengirim ulang. Jika kesalahan terus terjadi, silakan hubungi orang yang meminta Anda mengisi formulir ini atau {supportEmail}."
         }
       },
       "util": {

@@ -19,9 +19,13 @@
     "string": "Lanjut",
     "developer_comment": "Label for the button that moves to the next page in a paginated form."
   },
+  "odk_web_forms.evaluation.error": {
+    "string": "{count, plural, other {Terjadi kesalahan saat mengevaluasi formulir ini. Pesan kesalahan: \"{message}\". Kesalahan terdeteksi pada kolom: {fields}. Silakan hubungi orang yang mengirimkan tautan formulir ini kepada Anda.}}",
+    "developer_comment": "Form error banner message. {message} is the raw error message. {fields} is a string naming the fields affected. {count} is the number of fields reporting the error."
+  },
   "odk_web_forms.validation.error": {
     "string": "{count, plural, other {# pertanyaan dojawab dengan tidak tepat}}",
-    "developer_comment": "Error banner message. {count} is the number of validation violations."
+    "developer_comment": "Validation error banner message. {count} is the number of validation issues."
   },
   "odk_web_forms.validation.view.label": {
     "string": "Lihat",
@@ -151,6 +155,14 @@
     "string": "Berikan izin lokasi di pengaturan browser dan pastikan lokasi diaktifkan.",
     "developer_comment": "Description of what the user should do to resolve a geolocation access error in the map."
   },
+  "map_block.provider_error.title": {
+    "string": "Peta tidak dapat dimuat",
+    "developer_comment": "Title of the error shown when the Google Maps tile session cannot be created (invalid key, API not enabled, or quota exhausted)."
+  },
+  "map_block.provider_error.message": {
+    "string": "Google Maps tidak tersedia. Periksa koneksi Anda. Jika masalah berlanjut, hubungi administrator server.",
+    "developer_comment": "Description of the Google Maps error, shown when offline or when the server's Google Maps key is invalid or out of quota."
+  },
   "map_block.get_location.label": {
     "string": "Dapatkan lokasi",
     "developer_comment": "Label for the button in the map overlay that starts watching the device's GPS location."
@@ -227,9 +239,53 @@
     "string": "Hapus satu titik sudut atau semua titik sudut",
     "developer_comment": "Aria-label for the map control button that deletes the selected vertex or all vertices."
   },
-  "map_controls.open_advanced.description": {
-    "string": "Pengeditan manual lanjutan",
-    "developer_comment": "Aria-label for the map control button that opens the advanced coordinate editing panel."
+  "map_base_layer_picker.open.description": {
+    "string": "Ubah jenis peta",
+    "developer_comment": "Aria-label for the map control button that opens the list of base map layers (default, satellite, terrain). Shown only when Google Maps is configured."
+  },
+  "map_base_layer_picker.roadmap.label": {
+    "string": "Standar",
+    "developer_comment": "Label of the default (road map) layer option in the map layer picker."
+  },
+  "map_base_layer_picker.satellite.label": {
+    "string": "Satelit",
+    "developer_comment": "Label of the satellite imagery layer option (with road labels) in the map layer picker."
+  },
+  "map_base_layer_picker.terrain.label": {
+    "string": "Medan",
+    "developer_comment": "Label of the terrain layer option in the map layer picker."
+  },
+  "map_place_search.input.placeholder": {
+    "string": "Cari",
+    "developer_comment": "Placeholder and accessible name of the text box at the top of the map where the user types a place or address to move the map there. Shown only when Google Maps is configured."
+  },
+  "map_place_search.results.label": {
+    "string": "Hasil pencarian",
+    "developer_comment": "Accessible name of the list of matching places shown under the place search box."
+  },
+  "map_place_search.error.message": {
+    "string": "Tidak dapat mencari tempat. Periksa koneksi Anda. Jika masalah berlanjut, hubungi administrator server.",
+    "developer_comment": "Shown in the list under the place search box when a place search fails because the device is offline or the server's Google Maps key is invalid or out of quota."
+  },
+  "map_place_search.no_results.text": {
+    "string": "Tidak ada tempat yang ditemukan",
+    "developer_comment": "Shown in the list under the place search box when Google returns no match for the typed text."
+  },
+  "map_privacy_dialog.open.description": {
+    "string": "Tampilkan informasi privasi data peta",
+    "developer_comment": "Aria-label for the small info button next to the map attribution that opens the privacy dialog."
+  },
+  "map_privacy_dialog.header.title": {
+    "string": "Privasi data peta",
+    "developer_comment": "Header of the dialog explaining what data Google receives when the map is displayed."
+  },
+  "map_privacy_dialog.body.message": {
+    "string": "Peta ini disediakan oleh Google Maps. Untuk menampilkannya, browser Anda mengirimkan alamat IP Anda dan area peta yang Anda lihat ke Google.",
+    "developer_comment": "Body of the privacy dialog shown when Google Maps is the map provider."
+  },
+  "map_privacy_dialog.privacy_policy.label": {
+    "string": "Kebijakan Privasi Google",
+    "developer_comment": "Text of the link to Google's privacy policy in the map privacy dialog."
   },
   "map_properties.remove_selection.label": {
     "string": "Hapus pilihan",
@@ -363,9 +419,21 @@
     "string": "Kesalahan saat memuat gambar. File: {file}",
     "developer_comment": "Displayed when an image element fires a load error. {file} is the resource URL."
   },
+  "control_hint.details.label": {
+    "string": "Lihat detail",
+    "developer_comment": "The label for the button to expand the guidance hint details"
+  },
   "rank_control.open.label": {
     "string": "Urutkan elemen",
     "developer_comment": "The label for the button that opens the rank control."
+  },
+  "rank_control.move_up.button": {
+    "string": "Naikkan",
+    "developer_comment": "The label for the button that moves the current item up in the rank."
+  },
+  "rank_control.move_down.button": {
+    "string": "Turunkan",
+    "developer_comment": "The label for the button that moves the current item down in the rank."
   },
   "trigger_control.okay.label": {
     "string": "Oke",
@@ -422,6 +490,14 @@
   "geopoint_accuracy.unknown.label": {
     "string": "Akurasi tidak diketahui",
     "developer_comment": "Label shown when no GPS accuracy value is available yet."
+  },
+  "range_picker.increment.button": {
+    "string": "Tambah",
+    "developer_comment": "The title of the button to increase the value."
+  },
+  "range_picker.decrement.button": {
+    "string": "Kurangi",
+    "developer_comment": "The title of the button to decrease the value."
   },
   "upload_image_header.take_picture.label": {
     "string": "Ambil gambar",

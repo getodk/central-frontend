@@ -1,0 +1,578 @@
+{
+  "form_load_failure_dialog.header.title": {
+    "string": "Si è verificato un errore durante il caricamento di questo formulario",
+    "developer_comment": "The title text shown in the header of the dialog."
+  },
+  "form_load_failure_dialog.details.label": {
+    "string": "Dettagli tecnici dell'errore",
+    "developer_comment": "The label for the clickable summary that reveals technical error information."
+  },
+  "odk_web_forms.submit.label": {
+    "string": "Invia",
+    "developer_comment": "Label for the primary form submission button."
+  },
+  "odk_web_forms.back.label": {
+    "string": "Indietro",
+    "developer_comment": "Label for the button that moves to the previous page in a paginated form."
+  },
+  "odk_web_forms.next.label": {
+    "string": "Avanti",
+    "developer_comment": "Label for the button that moves to the next page in a paginated form."
+  },
+  "odk_web_forms.evaluation.error": {
+    "string": "{count, plural, one {} many {} other {}}",
+    "developer_comment": "Form error banner message. {message} is the raw error message. {fields} is a string naming the fields affected. {count} is the number of fields reporting the error."
+  },
+  "odk_web_forms.validation.error": {
+    "string": "{count, plural, one {# domanda con errore} many {# domande con errori} other {# domande con errori}}",
+    "developer_comment": "Validation error banner message. {count} is the number of validation issues."
+  },
+  "odk_web_forms.validation.view.label": {
+    "string": "Visualizza",
+    "developer_comment": "Label for the error banner button that navigates to the first question with a validation error."
+  },
+  "odk_web_forms.geolocation.error": {
+    "string": "Posizione non disponibile. Attiva il GPS e le autorizzazioni del browser, poi riavvia il formulario per riprovare.",
+    "developer_comment": "Error message shown when background geolocation fails."
+  },
+  "odk_web_forms.delete.label": {
+    "string": "Elimina",
+    "developer_comment": "Generic label for a delete action button."
+  },
+  "odk_web_forms.cancel.label": {
+    "string": "Annulla",
+    "developer_comment": "Generic label for a cancel action button."
+  },
+  "odk_web_forms.remove.label": {
+    "string": "Rimuovi",
+    "developer_comment": "Generic label for a remove action button."
+  },
+  "odk_web_forms.save.label": {
+    "string": "Salva",
+    "developer_comment": "Generic label for a save action button."
+  },
+  "common_actions.open_full_screen.description": {
+    "string": "Espandi a schermo intero",
+    "developer_comment": "Aria-label/description for the control button that expands the view to full screen. Shared across the canvas and map components."
+  },
+  "common_actions.close_full_screen.description": {
+    "string": "Esci dallo schermo intero",
+    "developer_comment": "Aria-label/description for the control button that exits full-screen mode. Shared across the canvas and map components."
+  },
+  "common_actions.zoom_in.description": {
+    "string": "Aumenta lo zoom",
+    "developer_comment": "Aria-label/description for the control button that zooms in. Shared across the canvas and map components."
+  },
+  "common_actions.zoom_out.description": {
+    "string": "Riduci lo zoom",
+    "developer_comment": "Aria-label/description for the control button that zooms out. Shared across the canvas and map components."
+  },
+  "common_actions.undo.description": {
+    "string": "Annulla l'ultima azione",
+    "developer_comment": "Aria-label/description for the control button that undoes the last action. Shared across the canvas and map components."
+  },
+  "common_actions.open_info.description": {
+    "string": "Mostra informazioni sulle azioni",
+    "developer_comment": "Aria-label/description for the control button that opens the info dialog listing available actions. Shared across the canvas and map components."
+  },
+  "common_actions.info_dialog.title": {
+    "string": "Come usare questo strumento",
+    "developer_comment": "Title shown in the header of the dialog that explains the available actions. Shared across the canvas and map components."
+  },
+  "geolocation_formatted_value.accuracy.label": {
+    "string": "Precisione: {accuracy} m,",
+    "developer_comment": "Displays the GPS accuracy in metres. {accuracy} is the numeric accuracy value."
+  },
+  "geolocation_formatted_value.latitude.label": {
+    "string": "Latitudine: {latitude},",
+    "developer_comment": "Displays the GPS latitude coordinate. {latitude} is the numeric latitude value."
+  },
+  "geolocation_formatted_value.longitude.label": {
+    "string": "Longitudine: {longitude}.",
+    "developer_comment": "Displays the GPS longitude coordinate. {longitude} is the numeric longitude value."
+  },
+  "searchable_dropdown.select.placeholder": {
+    "string": "Seleziona una risposta",
+    "developer_comment": "Placeholder text shown in a minimal select dropdown when no option has been selected yet."
+  },
+  "validation_message.required.error": {
+    "string": "Questo campo è obbligatorio.",
+    "developer_comment": "Default error shown when a required field has no value and the form designer did not specify a custom message."
+  },
+  "validation_message.constraint.error": {
+    "string": "Questo valore non rispetta il vincolo.",
+    "developer_comment": "Default error shown when a field's value fails a constraint and the form designer did not specify a custom message."
+  },
+  "canvas_async.load_error.message": {
+    "string": "Impossibile caricare l'area di disegno",
+    "developer_comment": "Error message shown when the canvas component fails to load."
+  },
+  "canvas_controls.exit_after_save.description": {
+    "string": "Esci dallo schermo intero, modifiche salvate",
+    "developer_comment": "Explains the canvas control button that exits full-screen mode after autosave has captured the user's drawing."
+  },
+  "canvas_controls.color_picker.description": {
+    "string": "Scegli un colore",
+    "developer_comment": "Explains the canvas control button that opens the color picker."
+  },
+  "canvas_controls.pan.description": {
+    "string": "Attiva o disattiva la modalità spostamento",
+    "developer_comment": "Explains the canvas control button that activates or deactivates pan mode. When active, dragging moves the canvas instead of drawing."
+  },
+  "canvas_controls.clear_all.description": {
+    "string": "Cancella tutti i tratti",
+    "developer_comment": "Explains the canvas control button that removes all drawn strokes."
+  },
+  "canvas_block.loading_image.message": {
+    "string": "Caricamento dell'immagine...",
+    "developer_comment": "Status text shown while the background image is loading in the canvas."
+  },
+  "canvas_block.load_image.error": {
+    "string": "Impossibile caricare l'immagine.",
+    "developer_comment": "Error message shown when the background image fails to load in the canvas."
+  },
+  "canvas_block.draw_instruction.message": {
+    "string": "Inizia a disegnare qui",
+    "developer_comment": "Instruction message shown in draw mode before the user has made any strokes."
+  },
+  "map_async.load_error.message": {
+    "string": "Impossibile caricare la mappa",
+    "developer_comment": "Error message shown when the map component fails to load."
+  },
+  "map_block.graphics_error.title": {
+    "string": "Rilevato un problema grafico",
+    "developer_comment": "Title of the error shown when the browser cannot render the map due to WebGL being unavailable."
+  },
+  "map_block.graphics_error.message": {
+    "string": "Al momento il browser non può visualizzare la mappa. Attiva l'accelerazione grafica nelle impostazioni.",
+    "developer_comment": "Description of the WebGL error, instructing the user to enable hardware acceleration in their browser."
+  },
+  "map_block.location_error.title": {
+    "string": "Impossibile accedere alla posizione",
+    "developer_comment": "Title of the error shown in the map when the browser denies geolocation permission."
+  },
+  "map_block.location_error.message": {
+    "string": "Concedi l'autorizzazione alla posizione nelle impostazioni del browser e assicurati che la localizzazione sia attiva.",
+    "developer_comment": "Description of what the user should do to resolve a geolocation access error in the map."
+  },
+  "map_block.provider_error.title": {
+    "string": "",
+    "developer_comment": "Title of the error shown when the Google Maps tile session cannot be created (invalid key, API not enabled, or quota exhausted)."
+  },
+  "map_block.provider_error.message": {
+    "string": "",
+    "developer_comment": "Description of the Google Maps error, shown when offline or when the server's Google Maps key is invalid or out of quota."
+  },
+  "map_block.get_location.label": {
+    "string": "Rileva posizione",
+    "developer_comment": "Label for the button in the map overlay that starts watching the device's GPS location."
+  },
+  "map_block.drag_vertex_instruction.placed": {
+    "string": "Tieni premuto e trascina per spostare un punto",
+    "developer_comment": "Instruction shown on the map when a point has been placed and the user can drag points and vertices."
+  },
+  "map_block.drag_vertex_instruction.default": {
+    "string": "Tocca per posizionare un punto",
+    "developer_comment": "Instruction shown on the map before a point is placed, when the user can drag points and vertices."
+  },
+  "map_block.drag_instruction.placed": {
+    "string": "Tocca per spostare il punto",
+    "developer_comment": "Instruction shown on the map when a point has been placed and the user can drag the feature."
+  },
+  "map_block.drag_instruction.default": {
+    "string": "Usa il pulsante della posizione per centrare la mappa sulla tua posizione attuale",
+    "developer_comment": "Instruction shown on the map before a point is placed, when the user can drag the feature."
+  },
+  "map_confirm_dialog.delete_shape.header": {
+    "string": "Eliminare l'intera forma?",
+    "developer_comment": "Title of the confirmation dialog shown before deleting a shape."
+  },
+  "map_confirm_dialog.delete_trace.header": {
+    "string": "Eliminare l'intera traccia?",
+    "developer_comment": "Title of the confirmation dialog shown before deleting a trace."
+  },
+  "map_confirm_dialog.delete_shape.body": {
+    "string": "Vuoi davvero eliminare l'intera forma e ricominciare da capo?",
+    "developer_comment": "Body text of the confirmation dialog shown before deleting a shape."
+  },
+  "map_confirm_dialog.delete_trace.body": {
+    "string": "Vuoi davvero eliminare l'intera traccia e ricominciare da capo?",
+    "developer_comment": "Body text of the confirmation dialog shown before deleting a trace."
+  },
+  "map_advanced_panel.longitude.label": {
+    "string": "Longitudine",
+    "developer_comment": "Label for the longitude input field in the advanced panel."
+  },
+  "map_advanced_panel.longitude.error": {
+    "string": "Longitudine non valida",
+    "developer_comment": "Validation error shown when the longitude value entered is out of range."
+  },
+  "map_advanced_panel.latitude.label": {
+    "string": "Latitudine",
+    "developer_comment": "Label for the latitude input field in the advanced panel."
+  },
+  "map_advanced_panel.latitude.error": {
+    "string": "Latitudine non valida",
+    "developer_comment": "Validation error shown when the latitude value entered is out of range."
+  },
+  "map_advanced_panel.altitude.label": {
+    "string": "Altitudine",
+    "developer_comment": "Label for the altitude input field in the advanced panel."
+  },
+  "map_advanced_panel.accuracy.label": {
+    "string": "Precisione",
+    "developer_comment": "Label for the accuracy input field in the advanced panel."
+  },
+  "map_advanced_panel.import_data.label": {
+    "string": "Importa dati per sostituire la posizione",
+    "developer_comment": "Label for the link that opens the import/paste dialog from the advanced panel."
+  },
+  "map_controls.zoom_fit_all.description": {
+    "string": "Mostra tutti gli elementi sulla mappa",
+    "developer_comment": "Aria-label for the map control button that zooms to fit all features in view."
+  },
+  "map_controls.current_location.description": {
+    "string": "Trova la tua posizione",
+    "developer_comment": "Aria-label for the map control button that centers the map on the device's current GPS location."
+  },
+  "map_controls.delete.description": {
+    "string": "Elimina un vertice o tutti i vertici",
+    "developer_comment": "Aria-label for the map control button that deletes the selected vertex or all vertices."
+  },
+  "map_base_layer_picker.open.description": {
+    "string": "",
+    "developer_comment": "Aria-label for the map control button that opens the list of base map layers (default, satellite, terrain). Shown only when Google Maps is configured."
+  },
+  "map_base_layer_picker.roadmap.label": {
+    "string": "",
+    "developer_comment": "Label of the default (road map) layer option in the map layer picker."
+  },
+  "map_base_layer_picker.satellite.label": {
+    "string": "",
+    "developer_comment": "Label of the satellite imagery layer option (with road labels) in the map layer picker."
+  },
+  "map_base_layer_picker.terrain.label": {
+    "string": "",
+    "developer_comment": "Label of the terrain layer option in the map layer picker."
+  },
+  "map_place_search.input.placeholder": {
+    "string": "",
+    "developer_comment": "Placeholder and accessible name of the text box at the top of the map where the user types a place or address to move the map there. Shown only when Google Maps is configured."
+  },
+  "map_place_search.results.label": {
+    "string": "",
+    "developer_comment": "Accessible name of the list of matching places shown under the place search box."
+  },
+  "map_place_search.error.message": {
+    "string": "",
+    "developer_comment": "Shown in the list under the place search box when a place search fails because the device is offline or the server's Google Maps key is invalid or out of quota."
+  },
+  "map_place_search.no_results.text": {
+    "string": "",
+    "developer_comment": "Shown in the list under the place search box when Google returns no match for the typed text."
+  },
+  "map_privacy_dialog.open.description": {
+    "string": "",
+    "developer_comment": "Aria-label for the small info button next to the map attribution that opens the privacy dialog."
+  },
+  "map_privacy_dialog.header.title": {
+    "string": "",
+    "developer_comment": "Header of the dialog explaining what data Google receives when the map is displayed."
+  },
+  "map_privacy_dialog.body.message": {
+    "string": "",
+    "developer_comment": "Body of the privacy dialog shown when Google Maps is the map provider."
+  },
+  "map_privacy_dialog.privacy_policy.label": {
+    "string": "",
+    "developer_comment": "Text of the link to Google's privacy policy in the map privacy dialog."
+  },
+  "map_properties.remove_selection.label": {
+    "string": "Rimuovi selezione",
+    "developer_comment": "Label for the button that removes the currently saved feature selection."
+  },
+  "map_properties.save_selected.label": {
+    "string": "Salva selezione",
+    "developer_comment": "Label for the button that saves the currently selected map feature."
+  },
+  "map_status_bar.no_trace_saved.label": {
+    "string": "Nessuna traccia salvata",
+    "developer_comment": "Status bar message shown when no trace (linestring) has been saved yet."
+  },
+  "map_status_bar.no_shape_saved.label": {
+    "string": "Nessuna forma salvata",
+    "developer_comment": "Status bar message shown when no shape (polygon) has been saved yet."
+  },
+  "map_status_bar.no_point_saved.label": {
+    "string": "Nessun punto salvato",
+    "developer_comment": "Status bar message shown when no point has been saved yet."
+  },
+  "map_status_bar.point_saved.label": {
+    "string": "Punto salvato",
+    "developer_comment": "Status bar message shown when a point has been saved."
+  },
+  "map_status_bar.trace_saved.label": {
+    "string": "Traccia salvata",
+    "developer_comment": "Status bar message shown when a trace (linestring) has been saved."
+  },
+  "map_status_bar.shape_saved.label": {
+    "string": "Forma salvata",
+    "developer_comment": "Status bar message shown when a shape (polygon) has been saved."
+  },
+  "map_status_bar.feature_saved.label": {
+    "string": "Elemento salvato",
+    "developer_comment": "Fallback status bar message shown when a feature of an unrecognised geometry type has been saved."
+  },
+  "map_status_bar.points_saved.label": {
+    "string": "Punti salvati: {count}",
+    "developer_comment": "Status bar message showing how many points have been saved. {count} is the number of saved points."
+  },
+  "map_status_bar.capturing.label": {
+    "string": "Rilevamento della posizione...",
+    "developer_comment": "Status bar message shown while the device is actively capturing a GPS location."
+  },
+  "map_status_bar.remove_point.label": {
+    "string": "Rimuovi punto",
+    "developer_comment": "Full label for the remove button shown on larger screens in the map status bar."
+  },
+  "map_status_bar.view_details.label": {
+    "string": "Visualizza dettagli",
+    "developer_comment": "Label for the button that opens the feature properties panel."
+  },
+  "map_status_bar.advanced.label": {
+    "string": "Avanzate",
+    "developer_comment": "Label for the button that opens the advanced coordinate editing panel."
+  },
+  "map_status_bar.vertex_longitude.label": {
+    "string": "Longitudine: {longitude}",
+    "developer_comment": "Longitude component of the selected vertex info shown in the map status bar. {longitude} is the numeric longitude value."
+  },
+  "map_status_bar.vertex_latitude.label": {
+    "string": "Latitudine: {latitude}",
+    "developer_comment": "Latitude component of the selected vertex info shown in the map status bar. {latitude} is the numeric latitude value."
+  },
+  "map_status_bar.vertex_altitude.label": {
+    "string": "Altitudine: {altitude} m",
+    "developer_comment": "Altitude component of the selected vertex info shown in the map status bar. {altitude} is the numeric altitude value in metres."
+  },
+  "map_status_bar.vertex_accuracy.label": {
+    "string": "Precisione: {accuracy}",
+    "developer_comment": "Accuracy component of the selected vertex info shown in the map status bar. {accuracy} is the pre-formatted accuracy value."
+  },
+  "map_update_coords_dialog.header.title": {
+    "string": "Importa dati per sostituire la posizione",
+    "developer_comment": "Title shown in the header of the dialog for importing coordinates via paste or file upload."
+  },
+  "map_update_coords_dialog.paste_data.label": {
+    "string": "Incolla i dati in formato ODK",
+    "developer_comment": "Label for the paste input field in the import coordinates dialog."
+  },
+  "map_update_coords_dialog.paste_data.hint": {
+    "string": "Inserisci le coordinate nel formato: Lat Long Altitudine Precisione. Separa più punti con un punto e virgola (;).",
+    "developer_comment": "Helper text explaining the expected format for pasted coordinate data."
+  },
+  "map_update_coords_dialog.upload_file.label": {
+    "string": "Carica un file GeoJSON",
+    "developer_comment": "Label for the file upload section in the import coordinates dialog."
+  },
+  "map_update_coords_dialog.upload_file.action": {
+    "string": "Carica file",
+    "developer_comment": "Label for the button that opens the file chooser to upload a GeoJSON file."
+  },
+  "map_update_coords_dialog.file_empty.error": {
+    "string": "Il file è vuoto.",
+    "developer_comment": "Error shown when the uploaded file contains no content."
+  },
+  "map_update_coords_dialog.unsupported_file.error": {
+    "string": "Tipo di file non supportato. Carica un file .geojson.",
+    "developer_comment": "Error shown when the uploaded file is not a supported GeoJSON format."
+  },
+  "map_update_coords_dialog.parse_failed.error": {
+    "string": "Impossibile analizzare il file. Assicurati che sia un GeoJSON valido.",
+    "developer_comment": "Error shown when the uploaded file could not be parsed as valid GeoJSON."
+  },
+  "map_update_coords_dialog.incorrect_geometry.error": {
+    "string": "Tipo di geometria non corretto.",
+    "developer_comment": "Error shown when the imported data contains a geometry type incompatible with the current field."
+  },
+  "media_block.fetch.error": {
+    "string": "Impossibile recuperare il contenuto multimediale. Verifica l'URL e le impostazioni di recupero.",
+    "developer_comment": "Displayed when media (image, audio or video) fetching fails."
+  },
+  "media_block.not_found.error": {
+    "string": "Contenuto multimediale non trovato. File: {file}",
+    "developer_comment": "Displayed when the server returns a 404 or non-200 status."
+  },
+  "media_block.unknown.error": {
+    "string": "Impossibile recuperare il contenuto multimediale. Errore sconosciuto. File: {file}",
+    "developer_comment": "Generic fallback for network failures or unexpected exceptions."
+  },
+  "video_block.load.error": {
+    "string": "Impossibile caricare il video. File: {file}",
+    "developer_comment": "Displayed when a video element fires a load error. {file} is the resource URL."
+  },
+  "audio_block.load.error": {
+    "string": "Impossibile caricare l'audio. File: {file}",
+    "developer_comment": "Displayed when an audio element fires a load error. {file} is the resource URL."
+  },
+  "image_block.load.error": {
+    "string": "Impossibile caricare l'immagine. File: {file}",
+    "developer_comment": "Displayed when an image element fires a load error. {file} is the resource URL."
+  },
+  "control_hint.details.label": {
+    "string": "",
+    "developer_comment": "The label for the button to expand the guidance hint details"
+  },
+  "rank_control.open.label": {
+    "string": "Ordina gli elementi",
+    "developer_comment": "The label for the button that opens the rank control."
+  },
+  "rank_control.move_up.button": {
+    "string": "",
+    "developer_comment": "The label for the button that moves the current item up in the rank."
+  },
+  "rank_control.move_down.button": {
+    "string": "",
+    "developer_comment": "The label for the button that moves the current item down in the rank."
+  },
+  "trigger_control.okay.label": {
+    "string": "OK",
+    "developer_comment": "The label for the 'Okay' button."
+  },
+  "input_geopoint.get_location.label": {
+    "string": "Rileva posizione",
+    "developer_comment": "Label for the button to start capturing the device's current GPS location."
+  },
+  "input_geopoint.try_again.label": {
+    "string": "Riprova",
+    "developer_comment": "Label for the button to retry capturing the GPS location after one has already been saved."
+  },
+  "input_geopoint.location_error.title": {
+    "string": "Impossibile accedere alla posizione",
+    "developer_comment": "Title of the error message shown when the browser cannot access the device's location."
+  },
+  "input_geopoint.location_error.description": {
+    "string": "Concedi l'autorizzazione alla posizione nelle impostazioni del browser e assicurati che la localizzazione sia attiva.",
+    "developer_comment": "Description of what the user should do to resolve a location access error."
+  },
+  "geolocation_dialog.header.title": {
+    "string": "Ricerca della posizione",
+    "developer_comment": "Title shown in the header of the dialog while the device is searching for a GPS fix."
+  },
+  "geolocation_dialog.accuracy_threshold.info": {
+    "string": "La posizione verrà salvata con una precisione di {accuracyThreshold} m",
+    "developer_comment": "Informational message shown while waiting for a GPS fix. {accuracyThreshold} is the accuracy threshold in metres at which the location will be automatically saved."
+  },
+  "geolocation_dialog.elapsed_time.label": {
+    "string": "Tempo impiegato per rilevare la posizione:",
+    "developer_comment": "Label preceding the elapsed time counter shown while waiting for a GPS fix."
+  },
+  "geolocation_dialog.previous_accuracy.info": {
+    "string": "Posizione salvata in precedenza con una precisione di {accuracy} m",
+    "developer_comment": "Shows the accuracy of the previously saved location in metres. {accuracy} is the numeric accuracy value."
+  },
+  "geolocation_dialog.save.label": {
+    "string": "Salva posizione",
+    "developer_comment": "Label for the button to save the currently captured GPS location."
+  },
+  "geopoint_accuracy.good.label": {
+    "string": "Buona precisione",
+    "developer_comment": "Label shown when the GPS accuracy is within the good threshold."
+  },
+  "geopoint_accuracy.acceptable.label": {
+    "string": "Buona precisione",
+    "developer_comment": "Label shown when the GPS accuracy is within the acceptable threshold (between good and unacceptable)."
+  },
+  "geopoint_accuracy.poor.label": {
+    "string": "Scarsa precisione",
+    "developer_comment": "Label shown when the GPS accuracy does not meet the acceptable threshold."
+  },
+  "geopoint_accuracy.unknown.label": {
+    "string": "Precisione sconosciuta",
+    "developer_comment": "Label shown when no GPS accuracy value is available yet."
+  },
+  "range_picker.increment.button": {
+    "string": "",
+    "developer_comment": "The title of the button to increase the value."
+  },
+  "range_picker.decrement.button": {
+    "string": "",
+    "developer_comment": "The title of the button to decrease the value."
+  },
+  "upload_image_header.take_picture.label": {
+    "string": "Scatta foto",
+    "developer_comment": "Label for the button to take a picture using the device's camera."
+  },
+  "upload_image_header.choose_image.label": {
+    "string": "Scegli immagine",
+    "developer_comment": "Label for the button to choose an image from the device's gallery or file system."
+  },
+  "upload_image_header.annotation.label": {
+    "string": "Annota immagine",
+    "developer_comment": "Label for the button to open the canvas in full-screen mode for annotating the image. Only visible on mobile devices."
+  },
+  "upload_image_header.draw.label": {
+    "string": "Disegna",
+    "developer_comment": "Label for the button to open the canvas in full-screen mode for drawing. Only visible on mobile devices."
+  },
+  "upload_image_header.signature.label": {
+    "string": "Acquisisci firma",
+    "developer_comment": "Label for the button to open the canvas in full-screen mode for capturing a signature. Only visible on mobile devices."
+  },
+  "upload_control.choose_file.label": {
+    "string": "Scegli file",
+    "developer_comment": "Label for the button to choose a file from the device. Used in the audio, video, and generic file upload headers."
+  },
+  "upload_control.drag_and_drop.placeholder": {
+    "string": "Trascina qui i file da caricare",
+    "developer_comment": "Placeholder text shown in the upload area when no file has been selected."
+  },
+  "upload_control.no_signature.placeholder": {
+    "string": "Nessuna firma acquisita",
+    "developer_comment": "Placeholder text shown on mobile when no signature has been captured yet."
+  },
+  "upload_control.no_drawing.placeholder": {
+    "string": "Nessun disegno acquisito",
+    "developer_comment": "Placeholder text shown on mobile when no drawing has been captured yet."
+  },
+  "upload_control.file_too_large.error": {
+    "string": "Le dimensioni del file selezionato superano il massimo consentito",
+    "developer_comment": "Error message shown when the selected file exceeds the maximum allowed size."
+  },
+  "upload_control.must_be_image.error": {
+    "string": "Il file selezionato deve essere un'immagine",
+    "developer_comment": "Error message shown when the selected file is not an image."
+  },
+  "upload_control.must_be_video.error": {
+    "string": "Il file selezionato deve essere un video",
+    "developer_comment": "Error message shown when the selected file is not a video."
+  },
+  "upload_control.must_be_audio.error": {
+    "string": "Il file selezionato deve essere un file audio",
+    "developer_comment": "Error message shown when the selected file is not an audio file."
+  },
+  "upload_control.invalid_file_type.error": {
+    "string": "Il file selezionato non corrisponde al tipo previsto",
+    "developer_comment": "Error message shown when the selected file does not match the expected media type."
+  },
+  "upload_delete_dialog.header.title": {
+    "string": "Eliminare il file caricato?",
+    "developer_comment": "Title of the confirmation dialog shown before deleting an uploaded file."
+  },
+  "upload_delete_dialog.body.message": {
+    "string": "Vuoi davvero eliminare questo file?",
+    "developer_comment": "Body text of the confirmation dialog shown before deleting an uploaded file."
+  },
+  "upload_control.downloading.error": {
+    "string": "Errore durante il download del file dal server",
+    "developer_comment": "Error message shown when downloading the attachment from the server failed."
+  },
+  "repeat.add.label": {
+    "string": "Aggiungi",
+    "developer_comment": "Label for the button to add a repeat instance."
+  },
+  "repeat.instance.placeholder": {
+    "string": "Ripetizione",
+    "developer_comment": "Placeholder for the label of a repeat instance."
+  }
+}
