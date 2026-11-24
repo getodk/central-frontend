@@ -171,6 +171,7 @@ const submit = () => {
 
   .entity-upsert-properties-header {
     margin-top: 40px;
+    margin-bottom: 10px;
   }
 
   .entity-upsert-table-scroll {
@@ -188,14 +189,18 @@ const submit = () => {
     background-color: white;
   }
 
-  tbody tr td, thead tr th {
-    padding-left: 0px;
+  .entity-upsert-label-header + table {
+    border: none;
+
+    tr:hover, tr:focus-within {
+      background-color: unset;
+    }
+
+    td {
+      border: none;
+      padding-left: 0px;
+    }
   }
-
-
-.entity-upsert-label-header + table tr td {
-  border: none;
-}
 
   .alert { margin: 15px; }
 }
