@@ -26,6 +26,7 @@ const mountComponent = (options = {}) => {
       .map(entity => pick(['label', 'data'], entity.currentVersion));
   }
   if (props.rowIndex == null) props.rowIndex = props.entities != null ? 0 : -1;
+
   return mount(EntityUploadTable, mergedOptions);
 };
 
@@ -127,8 +128,7 @@ describe('EntityUploadTable', () => {
           oldValue.exists().should.equal(hasOld);
           if (hasOld) {
             oldValue.text().should.equal(serverLabel);
-            if (oldValue.text() !== '')
-              await oldValue.should.have.tooltip(oldValue.text());
+            await oldValue.should.have.tooltip(oldValue.text());
           }
 
           const newValue = td.get('.new-value');

@@ -1344,7 +1344,7 @@ describe('EntityUpload', () => {
     it('accepts uppercase UUIDs', () => {
       testData.extendedDatasets.createPast(1);
       testData.extendedEntities.createPast(1, {
-        uuid: '12345678-1234-4123-8234-123456789ABC'
+        uuid: '12345678-1234-4123-8234-123456789abc'
       });
       const csv = createCSV('__id,label\n12345678-1234-4123-8234-123456789ABC,dogwood');
       return showModal()
