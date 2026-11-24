@@ -1,5 +1,5 @@
 <template>
-  <tr class="entity-upload-row" :class="{ highlight: isHighlighted }">
+  <tr class="entity-upload-row" :class="rowClass">
     <td class="row-number">{{ $n(rowIndex + 1, 'noGrouping') }}</td>
     <td>
       <div :class="{ changed: entity.label != null && entity.label !== oldLabel }">
@@ -62,9 +62,12 @@ const serverEntity = computed(() =>
 const oldLabel = computed(() => serverEntity.value?.label);
 const oldData = (property) => serverEntity.value?.data[property];
 
-const isHighlighted = computed(() => props.highlighted != null &&
-  props.rowIndex >= props.highlighted[0] &&
-  props.rowIndex <= props.highlighted[1]);
+const rowClass = computed(() => ({
+  error: props.entity.uuid != null && serverEntity.value == null,
+  highlight: props.highlighted != null &&
+    props.rowIndex >= props.highlighted[0] &&
+    props.rowIndex <= props.highlighted[1]
+}));
 </script>
 
 <style lang="scss">
@@ -88,5 +91,7 @@ const isHighlighted = computed(() => props.highlighted != null &&
     .old-value { text-decoration: line-through; }
     .new-value { color: $color-success-text; }
   }
+
+  &.error .new-value { color: $color-danger; }
 }
 </style>

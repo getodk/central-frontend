@@ -50,6 +50,14 @@
         <p>{{ dataError }}</p>
       </template>
     </entity-upload-alert>
+    <entity-upload-alert v-if="unknownEntities != null" type="danger"
+      :ranges="[...unknownEntities.values()].toSorted()"
+      @rows="$emit('rows', $event)">
+      <template #title>{{ $t('unknownEntities.title') }}</template>
+      <template #body>
+        <p>{{ $t('unknownEntities.description') }}</p>
+      </template>
+    </entity-upload-alert>
   </div>
 </template>
 
@@ -83,8 +91,10 @@ const props = defineProps({
   emptyColumn: Boolean,
 
   // Error in the data below the column header
-  dataError: String
+  dataError: String,
+  unknownEntities: Map,
 });
+defineEmits(['rows']);
 
 const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
 </script>
@@ -129,7 +139,12 @@ const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
     },
 
     // @transifexKey component.EntityUploadDataError.title
-    "dataError": "Data error"
+    "dataError": "Data error",
+    "unknownEntities": {
+      // This text is followed by a list of one or more rows.
+      "title": "Some rows contain Entity IDs that were not found in the Entity List:",
+      "description": "Please check that these Entities already exist and have not been deleted."
+    }
   }
 }
 </i18n>
