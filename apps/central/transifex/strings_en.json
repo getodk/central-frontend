@@ -3007,7 +3007,7 @@
           "developer_comment": "\"Property\" refers to an Entity property."
         },
         "description": {
-          "string": "{count, plural, one {This property will be left empty.} other {These properties will be left empty.}}",
+          "string": "{count, plural, one {This property will be left empty for new Entities and unchanged for updated ones.} other {These properties will be left empty for new Entities and unchanged for updated ones.}}",
           "developer_comment": "\"Property\" refers to an Entity property."
         }
       },
