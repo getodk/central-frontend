@@ -55,6 +55,29 @@ describe('EntityList', () => {
     ]);
   });
 
+  it('does not request public link and field key data for project viewers (for entity view-as)', () => {
+    testData.reset();
+    mockLogin({ role: 'none' });
+    testData.extendedProjects.createPast(1, { role: 'viewer', datasets: 1 });
+    testData.extendedDatasets.createPast(1, { name: 'trees' });
+    return load('/projects/1/entity-lists/trees/entities', { root: false })
+      .testRequests([
+        {
+          url: ({ pathname, searchParams }) => {
+            pathname.should.equal('/v1/projects/1/datasets/trees.svc/Entities');
+            searchParams.get('$top').should.equal('0');
+          }
+        },
+        { url: '/v1/projects/1/datasets/trees/entities/creators' },
+        {
+          url: ({ pathname, searchParams }) => {
+            pathname.should.equal('/v1/projects/1/datasets/trees.svc/Entities');
+            searchParams.get('$top').should.equal('250');
+          }
+        }
+      ]);
+  });
+
   it('updates dataset.entities using the OData count', () => {
     testData.extendedEntities.createPast(1);
     return load('/projects/1/entity-lists/trees/properties')

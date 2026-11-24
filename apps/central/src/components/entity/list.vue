@@ -155,7 +155,7 @@ export default {
     // The dataset request object is how we get access to the
     // dataset properties for the columns.
     const { dataset, deletedEntityCount, odataEntities, entityCreators } = useRequestData();
-    const { fieldKeys, formSummaryAssignments } = useProject();
+    const { project, fieldKeys, formSummaryAssignments } = useProject();
 
     const { t } = useI18n();
 
@@ -214,7 +214,7 @@ export default {
     const { request } = useRequest();
 
     return {
-      dataset, deletedEntityCount, odataEntities, entityCreators, fieldKeys,
+      dataset, deletedEntityCount, odataEntities, entityCreators, project, fieldKeys,
       formSummaryAssignments,
       searchTerm, creatorIds, creationDateRange, conflict, viewAs,
       dataView, viewOptions,
@@ -342,8 +342,11 @@ export default {
   },
   created() {
     this.fetchCreators();
-    this.fetchFieldKeys();
-    this.fetchPublicLinkAssignments();
+    if (this.project.dataExists &&
+      this.project.permits(['field_key.list', 'assignment.list'])) {
+      this.fetchFieldKeys();
+      this.fetchPublicLinkAssignments();
+    }
   },
   methods: {
     resetFilters() {

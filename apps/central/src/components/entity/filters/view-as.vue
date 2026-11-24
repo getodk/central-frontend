@@ -31,10 +31,12 @@ const props = defineProps({
     required: false
   }
 });
-const { dataset, fieldKeys, formSummaryAssignments } = useRequestData();
+const { project, dataset, fieldKeys, formSummaryAssignments } = useRequestData();
 
-// Only show viewAs dropdown if dataset has an access filter set
+// Only show View As if the dataset has an access filter and the user can load
+// both app users and public link assignments.
 const showViewAs = computed(() =>
+  project.dataExists && project.permits(['field_key.list', 'assignment.list']) &&
   dataset.dataExists && dataset.accessFilter != null);
 
 // Compute list of actor IDs and their display text (app users + public links).

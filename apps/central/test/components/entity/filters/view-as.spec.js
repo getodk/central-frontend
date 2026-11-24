@@ -37,10 +37,11 @@ const mountComponent = ({
   if (testData.extendedDatasets.size === 0)
     testData.extendedDatasets.createPast(1, { accessFilter: { type: 'ownerOnly' } });
   const dataset = testData.extendedDatasets.last();
+  const project = testData.extendedProjects.createPast(1, { role: 'manager' }).last();
   return mount(EntityFiltersViewAs, {
     container: {
       requestData: testRequestData([useProject], {
-        fieldKeys, dataset, formSummaryAssignments
+        project, fieldKeys, dataset, formSummaryAssignments
       })
     },
     ...options
