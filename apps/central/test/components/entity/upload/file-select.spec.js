@@ -23,7 +23,7 @@ describe('EntityUploadFileSelect', () => {
         props: { dataTemplate: false }
       });
       component.findComponent(EntityUploadDataTemplate).exists().should.be.false;
-      component.find('p').exists().should.be.false;
+      component.get('p').text().should.equal('Replace data with new file');
     });
   });
 
