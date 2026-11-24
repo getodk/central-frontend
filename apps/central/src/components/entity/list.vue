@@ -105,7 +105,6 @@ import useDataView from '../../composables/data-view';
 import useQueryRef from '../../composables/query-ref';
 import useDateRangeQueryRef from '../../composables/date-range-query-ref';
 import useRequest from '../../composables/request';
-import useProject from '../../request-data/project';
 import { apiPaths, requestAlertMessage } from '../../util/request';
 import { odataEntityToRest } from '../../util/odata';
 import { joinSentences } from '../../util/i18n';
@@ -155,7 +154,6 @@ export default {
     // The dataset request object is how we get access to the
     // dataset properties for the columns.
     const { dataset, deletedEntityCount, odataEntities, entityCreators } = useRequestData();
-    const { project, fieldKeys, formSummaryAssignments } = useProject();
 
     const { t } = useI18n();
 
@@ -214,8 +212,7 @@ export default {
     const { request } = useRequest();
 
     return {
-      dataset, deletedEntityCount, odataEntities, entityCreators, project, fieldKeys,
-      formSummaryAssignments,
+      dataset, deletedEntityCount, odataEntities, entityCreators,
       searchTerm, creatorIds, creationDateRange, conflict, viewAs,
       dataView, viewOptions,
       request,
@@ -342,11 +339,6 @@ export default {
   },
   created() {
     this.fetchCreators();
-    if (this.project.dataExists &&
-      this.project.permits(['field_key.list', 'assignment.list'])) {
-      this.fetchFieldKeys();
-      this.fetchPublicLinkAssignments();
-    }
   },
   methods: {
     resetFilters() {
@@ -371,17 +363,6 @@ export default {
     fetchCreators() {
       this.entityCreators.request({
         url: apiPaths.entityCreators(this.projectId, this.datasetName)
-      }).catch(noop);
-    },
-    fetchFieldKeys() {
-      this.fieldKeys.request({
-        url: apiPaths.fieldKeys(this.projectId)
-      }).catch(noop);
-    },
-    fetchPublicLinkAssignments() {
-      this.formSummaryAssignments.request({
-        url: apiPaths.formSummaryAssignments(this.projectId, 'pub-link'),
-        extended: true
       }).catch(noop);
     },
     showUpdate(entity) {

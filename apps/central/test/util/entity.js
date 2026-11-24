@@ -32,9 +32,13 @@ export const loadEntityList = (mountOptions = {}) => {
   return mockHttp()
     .mount(EntityList, mergedOptions)
     .respondWithData(() => testData.extendedFieldKeys.sorted().map(testData.toActor)) // response data for entityCreators
-    .respondIf(({ url }) => url === apiPaths.fieldKeys(project.id),
-      () => testData.extendedFieldKeys.sorted())
-    .respondIf(({ url }) => url === apiPaths.formSummaryAssignments(project.id, 'pub-link'),
-      () => [])
+    .respondIf(
+      ({ url }) => url === apiPaths.fieldKeys(project.id),
+      () => testData.extendedFieldKeys.sorted()
+    )
+    .respondIf(
+      ({ url }) => url === apiPaths.formSummaryAssignments(project.id, 'pub-link'),
+      () => []
+    )
     .respondWithData(() => (deleted ? testData.entityDeletedOData() : testData.entityOData()));
 };

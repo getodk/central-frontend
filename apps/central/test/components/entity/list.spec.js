@@ -55,29 +55,6 @@ describe('EntityList', () => {
     ]);
   });
 
-  it('does not request public link and field key data for project viewers (for entity view-as)', () => {
-    testData.reset();
-    mockLogin({ role: 'none' });
-    testData.extendedProjects.createPast(1, { role: 'viewer', datasets: 1 });
-    testData.extendedDatasets.createPast(1, { name: 'trees' });
-    return load('/projects/1/entity-lists/trees/entities', { root: false })
-      .testRequests([
-        {
-          url: ({ pathname, searchParams }) => {
-            pathname.should.equal('/v1/projects/1/datasets/trees.svc/Entities');
-            searchParams.get('$top').should.equal('0');
-          }
-        },
-        { url: '/v1/projects/1/datasets/trees/entities/creators' },
-        {
-          url: ({ pathname, searchParams }) => {
-            pathname.should.equal('/v1/projects/1/datasets/trees.svc/Entities');
-            searchParams.get('$top').should.equal('250');
-          }
-        }
-      ]);
-  });
-
   it('updates dataset.entities using the OData count', () => {
     testData.extendedEntities.createPast(1);
     return load('/projects/1/entity-lists/trees/properties')
@@ -1068,24 +1045,6 @@ describe('EntityList', () => {
     });
   });
 
-  describe('"view as" filter', () => {
-    it('shows the filter if the dataset has an access filter', () => {
-      testData.extendedDatasets.createPast(1, {
-        accessFilter: { type: 'ownerOnly' }
-      });
-      return loadEntityList().afterResponses(component => {
-        component.find('#entity-filters-view-as').exists().should.be.true;
-      });
-    });
-
-    it('does not show the filter if the dataset has no access filter', () => {
-      testData.extendedDatasets.createPast(1, { accessFilter: null });
-      return loadEntityList().afterResponses(component => {
-        component.find('#entity-filters-view-as').exists().should.be.false;
-      });
-    });
-  });
-
   describe('search', () => {
     beforeEach(() => {
       testData.extendedDatasets.createPast(1, { entities: 2 });
@@ -1210,7 +1169,10 @@ describe('EntityList', () => {
       testData.extendedDatasets.createPast(1, { name: 'trees' });
       testData.extendedEntities.createPast(2);
 
-      return load('/projects/1/entity-lists/trees/entities', { root: false })
+      return load('/projects/1/entity-lists/trees/entities', { root: false }, {
+        fieldKeys: false,
+        formSummaryAssignments: false
+      })
         .afterResponses(component => {
           component.find('#entity-table th input[type="checkbox"]').exists().should.be.false;
 

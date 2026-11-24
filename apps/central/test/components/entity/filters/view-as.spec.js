@@ -37,11 +37,10 @@ const mountComponent = ({
   if (testData.extendedDatasets.size === 0)
     testData.extendedDatasets.createPast(1, { accessFilter: { type: 'ownerOnly' } });
   const dataset = testData.extendedDatasets.last();
-  const project = testData.extendedProjects.createPast(1, { role: 'manager' }).last();
   return mount(EntityFiltersViewAs, {
     container: {
       requestData: testRequestData([useProject], {
-        project, fieldKeys, dataset, formSummaryAssignments
+        fieldKeys, dataset, formSummaryAssignments
       })
     },
     ...options
@@ -49,12 +48,6 @@ const mountComponent = ({
 };
 
 describe('EntityFiltersViewAs', () => {
-  it('does not render the select if the dataset has no access filter', () => {
-    testData.extendedDatasets.createPast(1, { accessFilter: null });
-    const component = mountComponent({ fieldKeys: createFieldKeys(1) });
-    component.find('select').exists().should.be.false;
-  });
-
   describe('app users', () => {
     it('renders a single-select input for each app user', async () => {
       const fieldKeys = createFieldKeys(2);

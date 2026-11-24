@@ -416,6 +416,38 @@ describe('EntityFilters', () => {
       testData.extendedFieldKeys.createPast(1);
     });
 
+    it('shows the filter if the dataset has an access filter', () =>
+      load('/projects/1/entity-lists/trees/entities', { root: false })
+        .afterResponses(component => {
+          component.find('#entity-filters-view-as').exists().should.be.true;
+        }));
+
+    it('does not show the filter if the dataset has no access filter', () => {
+      testData.extendedDatasets.last().accessFilter = null;
+      return load('/projects/1/entity-lists/trees/entities', { root: false })
+        .afterResponses(component => {
+          component.find('#entity-filters-view-as').exists().should.be.false;
+        });
+    });
+
+    it('does not request options or show the filter for project viewers', () => {
+      testData.reset();
+      mockLogin({ role: 'none' });
+      testData.extendedProjects.createPast(1, { role: 'viewer', datasets: 1 });
+      testData.extendedDatasets.createPast(1, { accessFilter: { type: 'ownerOnly' } });
+      return load('/projects/1/entity-lists/trees/entities', { root: false }, {
+        fieldKeys: false,
+        formSummaryAssignments: false
+      })
+        .beforeEachResponse((_, { url }) => {
+          relativeUrl(url).pathname.should.not.equal('/v1/projects/1/app-users');
+          relativeUrl(url).pathname.should.not.equal('/v1/projects/1/assignments/forms/pub-link');
+        })
+        .afterResponses(component => {
+          component.find('#entity-filters-view-as').exists().should.be.false;
+        });
+    });
+
     describe('initial request', () => {
       it('does not filter by view-as by default', () =>
         load('/projects/1/entity-lists/trees/entities', { root: false })

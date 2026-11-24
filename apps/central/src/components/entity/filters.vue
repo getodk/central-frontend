@@ -21,7 +21,7 @@ except according to the terms contained in the LICENSE file.
       @update:model-value="$emit('update:creationDate', $event)"/>
     <entity-filters-conflict :model-value="conflict" :disabled="disabled"
       :disabled-message="disabledMessage" @update:model-value="$emit('update:conflict', $event)"/>
-    <entity-filters-view-as :model-value="viewAs"
+    <entity-filters-view-as v-if="showViewAs" :model-value="viewAs"
       :disabled="disabled" :disabled-message="disabledMessage"
       @update:model-value="$emit('update:viewAs', $event)"/>
     <button type="button" class="btn btn-link btn-reset"
@@ -33,10 +33,17 @@ except according to the terms contained in the LICENSE file.
 </template>
 
 <script setup>
+import { computed, inject, watch } from 'vue';
+
 import EntityFiltersConflict from './filters/conflict.vue';
 import EntityFiltersCreator from './filters/creator.vue';
 import EntityFiltersViewAs from './filters/view-as.vue';
 import DateRangePicker from '../date-range-picker.vue';
+
+import useProject from '../../request-data/project';
+import { useRequestData } from '../../request-data';
+import { apiPaths } from '../../util/request';
+import { noop } from '../../util/util';
 
 defineOptions({
   name: 'EntityFilters'
@@ -69,6 +76,24 @@ defineProps({
 });
 defineEmits(['update:conflict', 'update:creationDate', 'update:creatorId', 'update:viewAs', 'resetClick']);
 
+const { project, fieldKeys, formSummaryAssignments } = useProject();
+const { dataset } = useRequestData();
+const projectId = inject('projectId');
+const canViewAs = computed(() =>
+  project.dataExists && project.permits(['field_key.list', 'assignment.list']));
+const showViewAs = computed(() =>
+  canViewAs.value && dataset.dataExists && dataset.accessFilter != null);
+
+watch(() => project.dataExists, (dataExists) => {
+  if (!dataExists || !canViewAs.value) return;
+  fieldKeys.request({
+    url: apiPaths.fieldKeys(projectId)
+  }).catch(noop);
+  formSummaryAssignments.request({
+    url: apiPaths.formSummaryAssignments(projectId, 'pub-link'),
+    extended: true
+  }).catch(noop);
+}, { immediate: true });
 </script>
 
 <style lang="scss">
