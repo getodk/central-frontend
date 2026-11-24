@@ -21,9 +21,11 @@ except according to the terms contained in the LICENSE file.
             <entity-upload-table ref="table" :entities="csvSlice"
               :extra-properties="propertiesToCreate" :row-index="csvRow"
               :page-size="csvPage.size" :highlighted="warningRows"/>
-            <pagination v-if="csvEntities != null" v-model:page="csvPage.page"
+            <loading v-if="csvSlice == null" :state="serverEntities.awaitingResponse"/>
+            <pagination v-else v-model:page="csvPage.page"
               v-model:size="csvPage.size" :count="csvEntities.length"
-              :size-options="pageSizeOptions"/>
+              :size-options="pageSizeOptions"
+              :spinner="serverEntities.awaitingResponse"/>
           </div>
         </div>
 
@@ -72,12 +74,14 @@ import EntityUploadFileSelect from './upload/file-select.vue';
 import EntityUploadPopup from './upload/popup.vue';
 import EntityUploadTable from './upload/table.vue';
 import EntityUploadWarnings from './upload/warnings.vue';
+import Loading from '../loading.vue';
 import Modal from '../modal.vue';
 import Pagination from '../pagination.vue';
 
 import useEventListener from '../../composables/event-listener';
 import usePropertyCreator from '../../composables/property-creator';
 import useRequest from '../../composables/request';
+import useUploadEntities from '../../request-data/upload-entities';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
 import { parseCSV, parseCSVHeader } from '../../util/csv';
@@ -95,6 +99,7 @@ const emit = defineEmits(['hide', 'success']);
 const { t } = useI18n();
 const { i18n: globalI18n, redAlert } = inject('container');
 const { dataset } = useRequestData();
+const serverEntities = useUploadEntities();
 const { request, awaitingResponse: uploading } = useRequest();
 
 // Validates the column header of the CSV file, returning any errors or
@@ -326,13 +331,43 @@ onBeforeUnmount(() => { abortParse(); });
 const pageSizeOptions = [5, 10, 20, 50];
 const defaultPageSize = pageSizeOptions[0];
 const csvPage = reactive({ page: 0, size: defaultPageSize });
-const csvRow = computed(() =>
-  (csvEntities.value != null ? csvPage.page * csvPage.size : -1));
-const csvSlice = computed(() => (csvEntities.value != null
-  ? csvEntities.value.slice(csvRow.value, csvRow.value + csvPage.size)
-  : null));
-watch(csvEntities, (value) => {
-  if (value == null) Object.assign(csvPage, { page: 0, size: defaultPageSize });
+// The subset of csvEntities shown in the table
+const csvSlice = ref(null);
+// The CSV row number of the first entity in csvSlice (0-indexed)
+const csvRow = ref(-1);
+watch([csvEntities, () => csvPage.page, () => csvPage.size], async () => {
+  if (csvEntities.value == null) {
+    serverEntities.reset();
+    Object.assign(csvPage, { page: 0, size: defaultPageSize });
+    csvRow.value = -1;
+    csvSlice.value = null;
+    return;
+  }
+
+  // Wait to set csvRow and csvSlice to these values until the request has
+  // completed.
+  const newRow = csvPage.page * csvPage.size;
+  const newSlice = csvEntities.value.slice(newRow, newRow + csvPage.size);
+
+  const uuids = [];
+  for (const { uuid } of newSlice) {
+    if (uuid != null) uuids.push(uuid);
+  }
+  if (uuids.length === 0) {
+    serverEntities.reset();
+  } else {
+    try {
+      await serverEntities.request({
+        url: apiPaths.odataEntities(dataset.projectId, dataset.name, {
+          $filter: uuids.map(uuid => `__id eq '${uuid}'`).join(' or ')
+        }),
+        clear: false
+      });
+    } catch (error) { return; }
+  }
+
+  csvRow.value = newRow;
+  csvSlice.value = newSlice;
 });
 
 // Rows of a warning that the user has selected to see
@@ -466,7 +501,11 @@ watch(() => props.state, (state) => {
     pointer-events: none;
   }
 
-  .entity-upload-table-container { margin-block: 10px 20px; }
+  .entity-upload-table-container {
+    margin-block: 10px 20px;
+
+    &:has(.loading) .entity-upload-table { margin-bottom: 10px; }
+  }
 
   .pagination { margin-left: $padding-left-table-data; }
 
