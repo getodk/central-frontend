@@ -53,7 +53,8 @@ describe('usePlaceSearch', () => {
     expect(url).toBe('https://geocode.googleapis.com/v4/geocode/address/London%2C%20UK%2FCamden');
     expect(init!.headers).toEqual({
       'X-Goog-Api-Key': 'test key',
-      'X-Goog-FieldMask': 'results.formattedAddress,results.viewport,results.granularity',
+      'X-Goog-FieldMask':
+        'results.formattedAddress,results.location,results.viewport,results.granularity',
     });
   });
 
