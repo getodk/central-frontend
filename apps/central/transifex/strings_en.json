@@ -5834,15 +5834,15 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "Easier Entity Uploads 📤",
+        "string": "A refreshed ODK Central",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
         "0": {
-          "string": "Bring your Entities into ODK faster with a smoother CSV upload experience. Get clearer errors and warnings, fix issues, and try again, all in one place."
+          "string": "ODK Central has a refreshed look with updated navigation, clearer table styling, and a new accessible primary blue."
         },
         "1": {
-          "string": "You can now also create new properties directly from your CSV."
+          "string": "You can also now update multiple Entities at once using CSV bulk updates, preview Entity access as a Public Link, and quickly copy and open Public Link URLs in a new window."
         }
       }
     }
