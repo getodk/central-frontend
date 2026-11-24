@@ -13,6 +13,9 @@ import { assert, beforeEach, describe, expect, it } from 'vitest';
 import { InputNodeAnswer } from '../scenario/answer/InputNodeAnswer.ts';
 import { ModelValueNodeAnswer } from '../scenario/answer/ModelValueNodeAnswer.ts';
 import { AnswerResult, Scenario } from '../scenario/jr/Scenario.ts';
+import { stringAnswer } from '../scenario/answer/ExpectedStringAnswer.ts';
+import { Temporal } from 'temporal-polyfill';
+import { localDateTimeOrDateString } from '@getodk/xpath/lib/datetime/functions.ts';
 
 describe('Datetime bind type', () => {
   const formTitle = 'Datetime bind types';
@@ -132,6 +135,33 @@ describe('Datetime bind type', () => {
 
       expect(answer.value).toBeNull();
       expect(answer.stringValue).toBe('');
+    });
+  });
+
+  describe('date arithmetic', () => {
+    it('can add one to a datetime to get the same time the following day', async () => {
+      const arithmeticScenario = await Scenario.init(
+        'DateTime arithmetic',
+        html(
+          head(
+            title('DateTime arithmetic'),
+            model(
+              mainInstance(t('data id="datetime"', t('date_time'), t('tomorrow'))),
+              bind('/data/date_time').type('dateTime'),
+              bind('/data/tomorrow').type('dateTime').calculate('/data/date_time + 1')
+            )
+          ),
+          body(input('/data/date_time'), input('/data/tomorrow'))
+        )
+      );
+      arithmeticScenario.next('/data/date_time');
+      arithmeticScenario.answer('/data/date_time', '2026-04-22T14:30:00Z');
+      const expected = Temporal.Instant.from('2026-04-23T14:30:00Z').toZonedDateTimeISO(
+        Temporal.Now.timeZoneId()
+      );
+      expect(arithmeticScenario.answerOf('/data/tomorrow')).toEqualAnswer(
+        stringAnswer(localDateTimeOrDateString(expected))
+      );
     });
   });
 
