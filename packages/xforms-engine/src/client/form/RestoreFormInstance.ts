@@ -1,10 +1,8 @@
-import type { InstanceData } from '../serialization/InstanceData.ts';
+import type { ResolvableFormInstanceInput, ResolvedFormInstanceInput } from './EditFormInstance.ts';
 import type { FormInstance, FormInstanceRestoreMode } from './FormInstance.ts';
 import type { FormInstanceConfig } from './FormInstanceConfig.ts';
 
-export interface RestoreFormInstanceInput {
-  readonly data: readonly [InstanceData, ...InstanceData[]];
-}
+export type RestoreFormInstanceInput = ResolvableFormInstanceInput | ResolvedFormInstanceInput;
 
 export type RestoredFormInstance = FormInstance<FormInstanceRestoreMode>;
 

@@ -39,7 +39,7 @@ const rows = computed(() => {
 <template>
 	<template v-if="node.appearances.masked">
 		<Password
-			:id="node.nodeId"
+			:input-id="node.nodeId"
 			:required="node.currentState.required"
 			:disabled="node.currentState.readonly"
 			:model-value="node.currentState.value"

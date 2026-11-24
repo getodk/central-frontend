@@ -96,7 +96,7 @@ describe('Instance output (serialization)', () => {
        * **PORTING NOTES**
        *
        * - Test has been revised to reference
-       *   {@link Scenario.proposed_serializeAndRestoreInstanceState}, as the test
+       *   {@link Scenario.serializeAndRestoreInstanceState}, as the test
        *   does exercise instance state serialization/deserialization.
        *
        * - Test has been revised to remove superfluous XPath position predicates
@@ -120,7 +120,7 @@ describe('Instance output (serialization)', () => {
 
         expect(scenario.answerOf('/data/aggregated')).toEqualAnswer(stringAnswer('a b c'));
 
-        const deserialized = await scenario.proposed_serializeAndRestoreInstanceState();
+        const deserialized = await scenario.serializeAndRestoreInstanceState();
 
         expect(deserialized.answerOf('/data/new-part')).toEqualAnswer(stringAnswer('c'));
         expect(deserialized.answerOf('/data/aggregated')).toEqualAnswer(stringAnswer('a b c'));

@@ -96,9 +96,9 @@ const handleClick = (event, toggle) => {
     color: $color-text;
 
     &:hover {
-      color: #262626;
+      color: $color-text-secondary;
       text-decoration: none;
-      background-color: #f5f5f5;
+      background-color: $color-surface-secondary;
     }
   }
 }

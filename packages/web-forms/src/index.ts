@@ -15,3 +15,4 @@ import './assets/styles/style.scss';
  * package entrypoint!
  */
 export { OdkWebForm, POST_SUBMIT__NEW_INSTANCE, webFormsPlugin };
+export { DEFAULT_MAP_PROVIDER, type MapProvider } from '@getodk/web-forms/lib/client-options.ts';

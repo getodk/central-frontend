@@ -241,15 +241,15 @@
       "entity": {
         "bulk_upsert": {
           "string": "Import Data",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         },
         "bulk_delete": {
           "string": "Bulk Delete",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         },
         "bulk_restore": {
           "string": "Bulk Restore",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         }
       },
       "actor_property": {
@@ -413,6 +413,10 @@
       "string": "Finish",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
+    "import": {
+      "string": "Import",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "logIn": {
       "string": "Log in",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -459,6 +463,10 @@
     },
     "review": {
       "string": "Review",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "revoke": {
+      "string": "Revoke",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "save": {
@@ -760,6 +768,10 @@
       "string": "Public Access Link",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
+    "publicLinks": {
+      "string": "Public Links",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
     "user": {
       "string": "User",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
@@ -1053,7 +1065,7 @@
       "developer_comment": "This text is shown on its own before details about a warning."
     },
     "recommended": {
-      "string": "recommended",
+      "string": "Recommended",
       "developer_comment": "Standalone text shown as a badge next to a recommendation. Not part of a longer phrase."
     },
     "none": {
@@ -1711,6 +1723,14 @@
         "developer_comment": "Text shown when no Audit log date is selected in the filter"
       }
     },
+    "AuditFiltersAction": {
+      "action": {
+        "all": {
+          "string": "All",
+          "developer_comment": "This is shown in a list of actions performed on the server. It refers to all the actions in a certain category."
+        }
+      }
+    },
     "AuditList": {
       "heading": {
         "0": {
@@ -1764,7 +1784,7 @@
     },
     "ConfigLogin": {
       "title": {
-        "string": "Login page"
+        "string": "Login page customization"
       }
     },
     "ConfigLoginEdit": {
@@ -1867,10 +1887,13 @@
       "purgeDescription": {
         "string": "Entities are deleted after 30 days in the Trash"
       },
+      "deletedTitle": {
+        "string": "{datasetName} (Deleted entities)"
+      },
       "action": {
         "toggleDeletedEntities": {
-          "string": "{count, plural, one {{count} deleted Entity} other {{count} deleted Entities}}",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "string": "Show deleted",
+          "developer_comment": "\"deleted\" refers to deleted Entities"
         }
       },
       "analyzeDisabledDeletedData": {
@@ -2216,11 +2239,11 @@
     "DatasetShow": {
       "infoNav": {
         "connectedForms": {
-          "string": "{count, plural, one {Updated by {count} Form} other {Updated by {count} Forms}}",
+          "string": "{count, plural, one {Updating Form} other {Updating Forms}}",
           "developer_comment": "This dropdown title refers to Entity Lists that are updated by a Form."
         },
         "linkedForms": {
-          "string": "{count, plural, one {Used in {count} Form} other {Used in {count} Forms}}",
+          "string": "{count, plural, one {Referencing Form} other {Referencing Forms}}",
           "developer_comment": "This dropdown title refers to Entity Lists that are linked to a Form."
         }
       }
@@ -2595,16 +2618,15 @@
     },
     "EntityFiltersViewAs": {
       "noUserSelected": {
-        "string": "Me"
+        "string": "All",
+        "developer_comment": "\"All\" refers to users (in the form of app users and public links)"
       },
       "viewAs": {
         "string": "View As"
       },
       "resetToMe": {
-        "string": "Reset to Me"
-      },
-      "search": {
-        "string": "Search App Users…"
+        "string": "Reset to All",
+        "developer_comment": "This \"All\" means all users (app users and public links) shown in this dropdown"
       }
     },
     "EntityList": {
@@ -2687,12 +2709,6 @@
         "string": "{count, plural, one {{count} Entity in this area} other {{count} Entities in this area}}"
       }
     },
-    "EntityMetadataRow": {
-      "reviewParallelUpdates": {
-        "string": "Review parallel updates",
-        "developer_comment": "This is the text for an action, for example, the text of a button."
-      }
-    },
     "EntityResolve": {
       "title": {
         "string": "Parallel updates to “{label}”",
@@ -2771,10 +2787,6 @@
     },
     "EntityTable": {
       "header": {
-        "updatedAtAndActions": {
-          "string": "Last Updated / Actions",
-          "developer_comment": "This is the text of a column header of a table of Entities. The column shows when each Entity was last updated, as well as actions that can be taken on the Entity."
-        },
         "deletedAt": {
           "string": "Deleted at",
           "developer_comment": "Heading of the column that shows Entity deletion timestamp"
@@ -2796,24 +2808,16 @@
       }
     },
     "EntityUpload": {
-      "currentEntities": {
-        "string": "Your current Entities"
-      },
-      "newEntities": {
-        "string": "New Entities"
-      },
-      "table": {
-        "file": {
-          "string": "Data to import"
-        }
-      },
-      "action": {
-        "append": {
-          "string": "Append Entities",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
+      "title": {
+        "string": "Import data from file"
       },
       "alert": {
+        "invalidUUID": {
+          "string": "Invalid UUID “{value}”."
+        },
+        "duplicateUUID": {
+          "string": "The Entity ID {uuid} appears more than once in the file. Each update row must have a unique ID."
+        },
         "blankLabel": {
           "string": "Missing label."
         },
@@ -2860,7 +2864,7 @@
       },
       "missingLabel": {
         "title": {
-          "string": "A {label} property is required",
+          "string": "A {label} property is required for new Entities",
           "developer_comment": "{label} will have the text \"label\" and refers to the \"label\" property. The name of the property is not translated."
         },
         "description": {
@@ -2906,8 +2910,11 @@
       "upload": {
         "string": "Upload a .csv file"
       },
+      "replace": {
+        "string": "Replace data with new file"
+      },
       "errors": {
-        "string": "{count, plural, one {{count} error must be fixed before appending Entities} other {{count} errors must be fixed before appending Entities}}"
+        "string": "{count, plural, one {{count} error must be fixed before importing data} other {{count} errors must be fixed before importing data}}"
       },
       "text": {
         "full": {
@@ -2944,6 +2951,28 @@
         "processing": {
           "string": "Processing file…",
           "developer_comment": "This text is shown after a file has been uploaded to the server, but before the server has finished processing it."
+        }
+      }
+    },
+    "EntityUploadRowCounts": {
+      "created": {
+        "full": {
+          "string": "{count, plural, one {{rows} will be created.} other {{rows} will be created.}}",
+          "developer_comment": "{rows} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} rows"
+        },
+        "rows": {
+          "string": "{count, plural, one {{count} row} other {{count} rows}}",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {rows} is in the following text. (The plural form of the text is shown.)\n\n{rows} will be created."
+        }
+      },
+      "updated": {
+        "full": {
+          "string": "{count, plural, one {{rows} will be updated.} other {{rows} will be updated.}}",
+          "developer_comment": "{rows} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} rows"
+        },
+        "rows": {
+          "string": "{count, plural, one {{count} row} other {{count} rows}}",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {rows} is in the following text. (The plural form of the text is shown.)\n\n{rows} will be updated."
         }
       }
     },
@@ -3067,12 +3096,6 @@
         }
       }
     },
-    "FeedbackButton": {
-      "feedback": {
-        "string": "Feedback",
-        "developer_comment": "Text for a hovering feedback button shown anchored to right of screen. If your language doesn't have a single word or short phrase for \"feedback\", consider something like \"comments\" or \"reactions\"."
-      }
-    },
     "FieldKeyEdit": {
       "title": {
         "string": "Edit App User “{displayName}”",
@@ -3112,10 +3135,6 @@
         "lastUsed": {
           "string": "Last Used",
           "developer_comment": "This is the text of a table column header."
-        },
-        "lastUsedAndActions": {
-          "string": "{lastUsed} / {actions}",
-          "developer_comment": "Header for the table column that shows the last used date and action buttons."
         },
         "configureClient": {
           "string": "Configure Client",
@@ -3278,16 +3297,6 @@
       "accessRevoked": {
         "string": "Access revoked",
         "developer_comment": "This text is shown for an App User whose access has been revoked."
-      },
-      "action": {
-        "editAppUser": {
-          "string": "Edit App User",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
-        "revokeAccess": {
-          "string": "Revoke access",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
       }
     },
     "FormAttachmentLinkDataset": {
@@ -3493,6 +3502,22 @@
             "string": "click here to choose",
             "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {clickHere} is in the following text:\n\nIf you would rather select files from a prompt, ensure that their names match the ones in the table and then {clickHere}."
           }
+        }
+      }
+    },
+    "FormAutosaveSettings": {
+      "autosaveSetting": {
+        "description": {
+          "string": "Autosave responses if browser closes or refreshes. Sensitive data may be retained in saved responses."
+        },
+        "enabled": {
+          "string": "Autosave is now enabled for your “{formName}” form."
+        },
+        "disabled": {
+          "string": "Autosave is now disabled for your “{formName}” form."
+        },
+        "unselectable": {
+          "string": "Configuring autosave is not possible using Enketo."
         }
       }
     },
@@ -3828,7 +3853,7 @@
       },
       "infoNav": {
         "entityLists": {
-          "string": "{count, plural, one {{count} Linked Entity List} other {{count} Linked Entity Lists}}"
+          "string": "{count, plural, one {Linked Entity List} other {Linked Entity Lists}}"
         },
         "updatedDatasets": {
           "string": "Updates",
@@ -3839,7 +3864,7 @@
           "developer_comment": "This text is shown as a header in a dropdown about related entity lists that are used as attachments by this form."
         },
         "appUsers": {
-          "string": "{count, plural, one {{count} App User assigned} other {{count} App Users assigned}}"
+          "string": "{count, plural, one {App User assigned} other {App Users assigned}}"
         }
       },
       "draftNav": {
@@ -3856,18 +3881,14 @@
       }
     },
     "FormList": {
-      "title": {
-        "string": "Forms",
-        "developer_comment": "This is a title shown above a section of the page."
+      "emptyTable": {
+        "string": "There are no Forms to show."
       },
       "action": {
         "create": {
           "string": "New",
           "developer_comment": "This is the text of a button that is used to create a new Form."
         }
-      },
-      "emptyTable": {
-        "string": "There are no Forms to show."
       },
       "alert": {
         "create": {
@@ -4086,20 +4107,24 @@
       }
     },
     "FormSubmissions": {
+      "purgeDescription": {
+        "string": "Submissions and Submission-related data are deleted after 30 days in the Trash"
+      },
+      "deletedTitle": {
+        "string": "{formName} (Deleted submissions)",
+        "developer_comment": "{formName} is the title/xmlFormId of the Form."
+      },
+      "action": {
+        "toggleDeletedSubmissions": {
+          "string": "Show deleted",
+          "developer_comment": "\"deleted\" refers to deleted Submissions"
+        }
+      },
       "analyzeDisabled": {
         "string": "OData access is unavailable due to Form encryption"
       },
       "analyzeDisabledDeletedData": {
         "string": "OData access is unavailable for deleted Submissions"
-      },
-      "purgeDescription": {
-        "string": "Submissions and Submission-related data are deleted after 30 days in the Trash"
-      },
-      "action": {
-        "toggleDeletedSubmissions": {
-          "string": "{count, plural, one {{count} deleted Submission} other {{count} deleted Submissions}}",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
       }
     },
     "FormTable": {
@@ -4300,7 +4325,7 @@
       },
       "preview": {
         "string": "Preview",
-        "developer_comment": "This is text shown as a label above the preview of Markdown formatting (special formatting of user-submitted text)"
+        "developer_comment": "This is text shown as a label above a preview of something."
       }
     },
     "Multiselect": {
@@ -4401,6 +4426,11 @@
       },
       "dismissTooltip": {
         "string": "Click here to dismiss this warning for 30 days."
+      }
+    },
+    "PageHeading": {
+      "helpButtonLabel": {
+        "string": "Click to view help text"
       }
     },
     "Pagination": {
@@ -4775,9 +4805,6 @@
         "archived": {
           "0": {
             "string": "This Project has been archived."
-          },
-          "1": {
-            "string": "In this version of ODK Central, you may not unarchive a Project. However, the ability to unarchive a Project is planned for a future release."
           }
         }
       },
@@ -5037,13 +5064,18 @@
     },
     "PublicLinkRow": {
       "action": {
-        "edit": {
-          "string": "Edit Public Access Link",
+        "copyLink": {
+          "string": "Copy link",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
-        "revoke": {
-          "string": "Revoke",
+        "openInNewTab": {
+          "string": "Open in new tab",
           "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "urlCopied": {
+          "string": "URL copied."
         }
       },
       "revoked": {
@@ -5598,10 +5630,6 @@
     },
     "SubmissionTable": {
       "header": {
-        "stateAndActions": {
-          "string": "State and actions",
-          "developer_comment": "This is the text of a table column header."
-        },
         "deletedAt": {
           "string": "Deleted at",
           "developer_comment": "Heading of the column that shows Submission deletion timestamp"
@@ -5675,18 +5703,15 @@
         "string": "Only the owner of the account may directly set their own password."
       },
       "alert": {
+        "includedInBreach": {
+          "string": "This password has previously been included in a breach."
+        },
         "mismatch": {
           "string": "Please check that your new passwords match."
         },
         "success": {
           "string": "Success! Your password has been updated."
         }
-      }
-    },
-    "UserHome": {
-      "title": {
-        "string": "User Settings",
-        "developer_comment": "This is shown as the title at the top of the page."
       }
     },
     "UserList": {

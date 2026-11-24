@@ -78,9 +78,6 @@ const loaders = new Map()
   .set('EntityUpload', loader(() => import(
     '../components/entity/upload.vue'
   )))
-  .set('FeedbackButton', loader(() => import(
-    '../components/feedback-button.vue'
-  )))
   .set('FieldKeyList', loader(() => import(
     '../components/field-key/list.vue'
   )))

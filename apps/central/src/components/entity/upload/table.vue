@@ -28,28 +28,21 @@ except according to the terms contained in the LICENSE file.
       </thead>
       <tbody v-if="entities != null && entities.length !== 0"
         :class="{ 'data-loading': awaitingResponse }">
-        <tr v-for="(entity, entityIndex) in entities" :key="entityIndex"
-          :class="{ highlight: isHighlighted(rowIndex + entityIndex) }">
-          <td class="row-number">
-            {{ $n(rowIndex + entityIndex + 1, 'noGrouping') }}
-          </td>
-          <td><div v-tooltip.text>{{ entity.label }}</div></td>
-          <td v-for="{ name } of dataset.properties" :key="name">
-            <div v-tooltip.text>{{ entity.data[name] }}</div>
-          </td>
-          <template v-if="extraProperties != null">
-            <td v-for="name of extraProperties" :key="name">
-              <div v-tooltip.text>{{ entity.extra?.[name] }}</div>
-            </td>
-          </template>
-        </tr>
+        <entity-upload-row v-for="(entity, entityIndex) in entities"
+          :key="entityIndex" :entity="entity"
+          :row-index="rowIndex + entityIndex"
+          :extra-properties="extraProperties"
+          :highlighted="highlighted"/>
       </tbody>
     </table>
   </div>
 </template>
 
 <script setup>
+import { last } from 'ramda';
 import { nextTick, ref, watch } from 'vue';
+
+import EntityUploadRow from './row.vue';
 
 import { px } from '../../../util/dom';
 import { useRequestData } from '../../../request-data';
@@ -105,20 +98,19 @@ watch(
   }
 );
 
-const isHighlighted = (index) => props.highlighted != null &&
-  index >= props.highlighted[0] && index <= props.highlighted[1];
-
 const resizeLastColumn = () => {
-  // Undo previous resizing.
-  const th = container.value.querySelector('th:last-child');
-  th.style.width = '';
+  // Undo previous resizing. Note that due to props.extraProperties, the number
+  // of columns is variable: the previous resizing may have modified a <th>
+  // element that is no longer the last column.
+  const ths = container.value.querySelectorAll('th');
+  for (const th of ths) th.style.width = '';
 
   // If the container fits the table without scrolling horizontally, then the
   // columns probably have room to grow. In that case, we allocate the extra
   // width to the last column rather than distributing it evenly among the
   // columns.
   const { clientWidth, scrollWidth } = container.value;
-  if (clientWidth !== 0 && scrollWidth === clientWidth) th.style.width = 'auto';
+  if (clientWidth !== 0 && scrollWidth === clientWidth) last(ths).style.width = 'auto';
 };
 
 const resetScroll = () => { container.value.scroll(0, 0); };
@@ -130,6 +122,7 @@ defineExpose({ resizeLastColumn, resetScroll });
 @import '../../../assets/scss/mixins';
 
 .entity-upload-table {
+  margin-bottom: 0;
   overflow: auto;
 
   table {
@@ -137,17 +130,11 @@ defineExpose({ resizeLastColumn, resetScroll });
     table-layout: fixed;
   }
 
-  th, td {
-    div { @include text-overflow-ellipsis; }
-  }
-
   th {
+    @include text-overflow-ellipsis;
     width: 160px;
     // Wide enough to fit a 6-digit number.
     &:first-child { width: 54px; }
   }
-
-  // Provide extra room for the row number in case it is large.
-  td:first-child { padding-left: 0; }
 }
 </style>

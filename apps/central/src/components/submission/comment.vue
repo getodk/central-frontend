@@ -105,7 +105,7 @@ export default {
 
   [role="alert"] {
     background-color: $color-action-foreground;
-    color: #fff;
+    color: $color-text-inverse;
     font-size: 18px;
     padding: 15px;
 

@@ -31,8 +31,8 @@ export default () => {
   });
 
   const options = computed(() => [
-    { value: 'table', text: i18n.t('common.table') },
-    { value: 'map', text: i18n.t('common.map') }
+    { value: 'table', text: i18n.t('common.table'), icon: 'icon-table' },
+    { value: 'map', text: i18n.t('common.map'), icon: 'icon-map-marker' }
   ]);
 
   return { dataView, options };

@@ -1,3 +1,5 @@
+import sinon from 'sinon';
+
 import DateTime from '../../../src/components/date-time.vue';
 import PublicLinkRow from '../../../src/components/public-link/row.vue';
 
@@ -49,7 +51,7 @@ describe('PublicLinkRow', () => {
           once: false,
           token: 'abc'
         });
-        const url = mountComponent().get('.access-link .selectable').text();
+        const url = mountComponent().get('.access-link a').attributes('href');
         url.should.equal('http://localhost:9876/f/xyz?st=abc');
       });
 
@@ -78,7 +80,7 @@ describe('PublicLinkRow', () => {
           once: true,
           token: 'abc'
         });
-        const url = mountComponent().get('.access-link .selectable').text();
+        const url = mountComponent().get('.access-link a').attributes('href');
         url.should.equal('http://localhost:9876/f/zyx?st=abc');
       });
 
@@ -104,6 +106,19 @@ describe('PublicLinkRow', () => {
       });
       testData.extendedPublicLinks.createPast(1, { token: null });
       mountComponent().get('.access-link').text().should.equal('Revoked');
+    });
+
+    it('copies the URL to clipboard when copy link button is clicked', async () => {
+      testData.extendedForms.createPast(1, {
+        enketoId: 'xyz',
+        enketoOnceId: 'zyx'
+      });
+      testData.extendedPublicLinks.createPast(1, { token: 'abc' });
+      const writeText = sinon.stub(navigator.clipboard, 'writeText').resolves();
+      const row = mountComponent();
+      await row.get('.access-link button').trigger('click');
+      writeText.calledOnce.should.be.true;
+      writeText.args[0][0].should.equal('http://localhost:9876/f/xyz?st=abc');
     });
   });
 

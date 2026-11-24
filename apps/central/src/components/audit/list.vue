@@ -11,7 +11,7 @@ except according to the terms contained in the LICENSE file.
 -->
 <template>
   <div>
-    <p class="page-body-heading">{{ $t('heading[0]') }}</p>
+    <page-heading :title="$t('systemHome.tab.audits')" :help-text="$t('heading[0]')"/>
     <div class="table-actions-bar">
       <audit-filters v-model:action="action" v-model:dateRange="dateRange"/>
     </div>
@@ -31,6 +31,7 @@ import { watch } from 'vue';
 import AuditFilters from './filters.vue';
 import AuditTable from './table.vue';
 import Loading from '../loading.vue';
+import PageHeading from '../page/heading.vue';
 
 import useAudit from '../../composables/audit';
 import useQueryRef from '../../composables/query-ref';

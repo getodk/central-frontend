@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
       @input="$emit('update:modelValue', $event.target.value)">
     </textarea>
     <div v-if="!emptyValue && previewMode" class="preview-container">
-      <p class="heading">{{ $t('preview') }}</p>
+      <p class="heading">{{ $t('common.preview') }}</p>
       <markdown-view :raw-markdown="modelValue"/>
     </div>
     <div v-show="!emptyValue || showFooter " class="markdown-textarea-actions">
@@ -87,12 +87,8 @@ export default {
 @import '../../assets/scss/mixins';
 
 .markdown-textarea {
-  border: 1px solid transparent;
-  &.active-border {
-    border: 1px solid $color-info;
-  }
 
-  background: darken( $color-subpanel-background, 3% );
+  background: $color-bg;
 
   .form-group {
     margin-bottom: 0;
@@ -100,7 +96,7 @@ export default {
   }
 
   textarea {
-    border-bottom-color: #aaa;
+    border-bottom-color: $color-border-input;
     resize: vertical;
   }
 
@@ -114,9 +110,9 @@ export default {
   }
 
   .md-preview-btn {
-    background-color: #bbb;
-    color: #333;
-    &:hover, &:focus, &:active:focus { background-color: #888; }
+    background-color: $color-surface-secondary;
+    color: $color-text-secondary;
+    &:hover, &:focus, &:active:focus { background-color: $color-surface-secondary; }
   }
 
   .markdown-textarea-actions {
@@ -136,12 +132,12 @@ export default {
   }
 
   .external-help-link {
-    color: #888;
+    color: $color-text-muted;
     font-size: 12px;
     text-decoration: underline;
     text-decoration-style: dotted;
     padding: 10px;
-    &:hover, &:focus, &:active:focus { color: #777; }
+    &:hover, &:focus, &:active:focus { color: $color-text-placeholder; }
   }
 }
 </style>
@@ -150,9 +146,7 @@ export default {
 {
   "en": {
     // This is a link to an external website with Markdown style guidelines
-    "markdownSupported": "Markdown supported",
-    // This is text shown as a label above the preview of Markdown formatting (special formatting of user-submitted text)
-    "preview": "Preview"
+    "markdownSupported": "Markdown supported"
   }
 }
 </i18n>

@@ -33,6 +33,20 @@
         },
         "tryAgain": {
           "string": "Try again"
+        },
+        "recover": {
+          "string": "Recover"
+        },
+        "discard": {
+          "string": "Discard"
+        }
+      },
+      "autosaveModal": {
+        "title": {
+          "string": "Recover your work?"
+        },
+        "body": {
+          "string": "Your form closed unexpectedly on {date} and was saved. Do you want to continue with this form?"
         }
       },
       "previewModal": {
@@ -40,19 +54,19 @@
           "string": "Data is valid"
         },
         "body": {
-          "string": "The data you entered is valid, but it was not submitted because this is a Form preview."
+          "string": "The data you entered is valid, but it was not submitted because this is a form preview."
         }
       },
       "submissionModal": {
         "title": {
-          "string": "Form successfully sent!"
+          "string": "Submitted"
         },
         "body": {
-          "string": "You can fill this Form out again or close if you’re done."
+          "string": "Thanks for your submission. You can fill this form out again or close if you’re done."
         },
         "action": {
           "fillOutAgain": {
-            "string": "Fill out again"
+            "string": "Submit another"
           }
         }
       },
@@ -66,7 +80,7 @@
       },
       "editSubmissionModal": {
         "title": {
-          "string": "Submission successful"
+          "string": "Submitted"
         },
         "body": {
           "string": "You will now be redirected."
@@ -77,12 +91,12 @@
           "string": "Submission error"
         },
         "body": {
-          "string": "Your data was not submitted. Error message: {errorMessage} You can close this dialog and try again. If the error keeps happening, please contact the person who asked you to fill this Form or {supportEmail}."
+          "string": "Your data was not submitted. Error message: {errorMessage} You can close this dialog and try again. If the error keeps happening, please contact the person who asked you to fill this form or {supportEmail}."
         }
       },
       "sendingDataModal": {
         "title": {
-          "string": "Sending Submission"
+          "string": "Sending submission"
         },
         "body": {
           "string": "Your data is being submitted. Please don’t close this window until it’s finished."
@@ -108,7 +122,7 @@
           "string": "Submission error"
         },
         "body": {
-          "string": "Your data was not fully submitted. Please press the “Try again” button to retry. If the error keeps happening, please contact the person who asked you to fill this Form or {supportEmail}."
+          "string": "Your data was not fully submitted. Please press the “Try again” button to retry. If the error keeps happening, please contact the person who asked you to fill this form or {supportEmail}."
         }
       },
       "util": {

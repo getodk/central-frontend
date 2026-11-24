@@ -66,7 +66,7 @@ const { dataset } = useRequestData();
     &:first-child { padding-left: $padding-panel-body; }
     &:last-child { padding-right: $padding-panel-body; }
 
-    + div { border-left: 1px solid #bbb; }
+    + div { border-left: 1px solid $color-border; }
   }
 }
 </style>

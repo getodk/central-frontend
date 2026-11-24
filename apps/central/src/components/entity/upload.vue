@@ -12,40 +12,22 @@ except according to the terms contained in the LICENSE file.
 <template>
   <modal id="entity-upload" :state="state" :hideable="!uploading" :persistent="true" size="full"
     backdrop @hide="hide" @mutate="resizeColumnIfShown">
-    <template #title>{{ $t('action.append') }}</template>
+    <template #title>{{ $t('title') }}</template>
     <template #body>
       <div :class="{ backdrop: uploading }" :inert="uploading">
-        <p class="entity-upload-section-title">{{ $t('currentEntities') }}</p>
-        <div class="entity-upload-table-container">
-          <entity-upload-table :ref="setTable(0)"
-            :entities="serverEntities.value" :row-index="serverRow"
-            :page-size="serverPage.size"
-            :awaiting-response="serverEntities.awaitingResponse"/>
-          <loading :state="serverEntities.initiallyLoading"/>
-          <p v-if="serverEntities.dataExists && serverEntities.value.length === 0"
-            class="empty-table-message">
-            {{ $t('noEntities') }}
-          </p>
-          <pagination v-if="serverPage.count !== 0"
-            v-model:page="serverPage.page" v-model:size="serverPage.size"
-            :count="serverPage.count" :size-options="pageSizeOptions"
-            :spinner="serverEntities.awaitingResponse"/>
-        </div>
-
         <div v-show="csvEntities != null">
-          <p class="entity-upload-section-title">{{ $t('newEntities') }}</p>
-          <div class="entity-upload-table-container panel panel-simple">
-            <div class="panel-heading">
-              <h1 class="panel-title">{{ $t('table.file') }}</h1>
-            </div>
-            <div class="panel-body">
-              <entity-upload-table :ref="setTable(1)" :entities="csvSlice"
-                :extra-properties="propertiesToCreate" :row-index="csvRow"
-                :page-size="csvPage.size" :highlighted="warningRows"/>
-              <pagination v-if="csvEntities != null" v-model:page="csvPage.page"
-                v-model:size="csvPage.size" :count="csvEntities.length"
-                :size-options="pageSizeOptions"/>
-            </div>
+          <p class="entity-upload-section-title">{{ $t('common.preview') }}</p>
+          <entity-upload-row-counts v-if="csvEntities != null"
+            :entities="csvEntities"/>
+          <div class="entity-upload-table-container">
+            <entity-upload-table ref="table" :entities="csvSlice"
+              :extra-properties="propertiesToCreate" :row-index="csvRow"
+              :page-size="csvPage.size" :highlighted="warningRows"/>
+            <loading v-if="csvSlice == null" :state="serverEntities.awaitingResponse"/>
+            <pagination v-else v-model:page="csvPage.page"
+              v-model:size="csvPage.size" :count="csvEntities.length"
+              :size-options="pageSizeOptions"
+              :spinner="serverEntities.awaitingResponse"/>
           </div>
         </div>
 
@@ -76,7 +58,7 @@ except according to the terms contained in the LICENSE file.
         </button>
         <button type="button" class="btn btn-primary"
           :aria-disabled="csvEntities == null || uploading" @click="upload">
-          {{ $t('action.append') }}
+          {{ $t('action.import') }}
         </button>
       </div>
     </template>
@@ -92,6 +74,7 @@ import EntityUploadErrors from './upload/errors.vue';
 import EntityUploadExtraProperties from './upload/extra-properties.vue';
 import EntityUploadFileSelect from './upload/file-select.vue';
 import EntityUploadPopup from './upload/popup.vue';
+import EntityUploadRowCounts from './upload/row-counts.vue';
 import EntityUploadTable from './upload/table.vue';
 import EntityUploadWarnings from './upload/warnings.vue';
 import Loading from '../loading.vue';
@@ -101,9 +84,9 @@ import Pagination from '../pagination.vue';
 import useEventListener from '../../composables/event-listener';
 import usePropertyCreator from '../../composables/property-creator';
 import useRequest from '../../composables/request';
+import useUploadEntities from '../../request-data/upload-entities';
 import { apiPaths } from '../../util/request';
 import { noop } from '../../util/util';
-import { odataEntityToRest } from '../../util/odata';
 import { parseCSV, parseCSVHeader } from '../../util/csv';
 import { useRequestData } from '../../request-data';
 import { validatePropertyName } from '../../util/entity';
@@ -118,69 +101,9 @@ const emit = defineEmits(['hide', 'success']);
 
 const { t } = useI18n();
 const { i18n: globalI18n, redAlert } = inject('container');
-const { dataset, createResource } = useRequestData();
+const { dataset } = useRequestData();
+const serverEntities = useUploadEntities();
 const { request, awaitingResponse: uploading } = useRequest();
-
-const pageSizeOptions = [5, 10, 20, 50];
-const defaultPageSize = pageSizeOptions[0];
-
-// SERVER DATA
-const serverEntities = createResource('serverEntities', () => ({
-  transformResponse: ({ data }) => ({
-    value: data.value.map(entity =>
-      odataEntityToRest(entity, dataset.properties).currentVersion),
-    count: data['@odata.count']
-  })
-}));
-/* We set serverPage.count after requesting the first page of serverEntities,
-then keep it fixed. That way, the pagination controls won't change while the
-user is navigating the table, even if another user modifies the entity list.
-Newly created entities will be excluded using the $filter OData query parameter.
-However, one downside of this approach is that if entities are deleted, it is
-possible for the table to have blank pages. */
-const serverPage = reactive({ count: 0, page: -1, size: defaultPageSize });
-let odataFilter;
-// serverRow.value holds the 0-indexed row number of the first entity of
-// serverEntities.value. Usually, that will be the same as the first row of the
-// page (i.e., serverPage.page * serverPage.count). However, the two may differ
-// while a request for entities is in progress.
-const serverRow = ref(-1);
-watch(() => props.state, (state) => {
-  if (state) {
-    if (dataset.entities !== 0) {
-      serverPage.page = 0;
-      const now = new Date().toISOString();
-      odataFilter = `__system/createdAt le ${now}`;
-    } else {
-      serverEntities.data = { value: [] };
-    }
-  } else {
-    serverEntities.reset();
-    Object.assign(serverPage, { count: 0, page: -1, size: defaultPageSize });
-    odataFilter = null;
-    serverRow.value = -1;
-  }
-});
-watch([() => serverPage.page, () => serverPage.size], () => {
-  const { count, page, size } = serverPage;
-  if (page === -1) return;
-  const first = count === 0;
-  serverEntities.request({
-    url: apiPaths.odataEntities(dataset.projectId, dataset.name, {
-      $filter: odataFilter,
-      $orderby: '__system/createdAt asc',
-      $top: size,
-      $skip: page * size,
-      $count: first
-    }),
-    clear: false
-  })
-    .then(() => {
-      if (first) serverPage.count = serverEntities.count;
-      serverRow.value = page * size;
-    })
-    .catch(noop);
-});
 
 // Validates the column header of the CSV file, returning any errors or
 // warnings.
@@ -206,8 +129,10 @@ const validateHeader = ({ columns, errors: papaErrors }) => {
     }
     errorDetails.duplicateColumns = [...duplicateColumns];
 
-    const hasLabel = columnSet.has('label');
-    errorDetails.missingLabel = !hasLabel;
+    // A label is only required for new entities, not entity updates. If there
+    // is no __id column, that means the CSV is all new entities, not updates,
+    // in which case we expect there to be a label column.
+    errorDetails.missingLabel = !columnSet.has('__id') && !columnSet.has('label');
 
     warningDetails.missingProperties = [];
     const lowercaseProperties = new Map();
@@ -222,7 +147,10 @@ const validateHeader = ({ columns, errors: papaErrors }) => {
     warningDetails.caseMismatch = [];
     warningDetails.extraProperties = [];
     for (const column of columnSet) {
-      if (column === 'label') continue; // eslint-disable-line no-continue
+      // Skip permitted system properties.
+      // eslint-disable-next-line no-continue
+      if (column === '__id' || column === 'label') continue;
+
       if (column.startsWith('__') || column === 'name') {
         warningDetails.systemProperties.push(column);
       } else if (!validatePropertyName(column)) {
@@ -268,19 +196,46 @@ const validateHeader = ({ columns, errors: papaErrors }) => {
 // noPropertyData is used to minimize the JSON sent to Backend: the JSON won't
 // specify a `data` property for an entity without property data.
 const noPropertyData = { toJSON: () => undefined };
-const rowToEntity = (extraProperties) => (values, columns) => {
-  let label;
+const extractUUID = (values, index, uuids) => {
+  if (index === -1) return null;
+  const value = values[index];
+  if (/^\s*$/.test(value)) return null;
+
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value))
+    throw new Error(t('alert.invalidUUID', { value }));
+
+  const uuid = value.toLowerCase();
+  if (uuids.has(uuid)) throw new Error(t('alert.duplicateUUID', { uuid }));
+
+  return uuid;
+};
+const extractLabel = (values, index) => {
+  if (index === -1) return null;
+  const label = values[index];
+  if (/^\s*$/.test(label)) throw new Error(t('alert.blankLabel'));
+  return label;
+};
+const rowToEntity = (uuidIndex, uuids, labelIndex, extraProperties) => (values, columns) => {
+  const uuid = extractUUID(values, uuidIndex, uuids);
+  if (uuid != null) uuids.add(uuid);
+
+  const label = extractLabel(values, labelIndex);
+
   const data = dataset.properties.length !== 0 ? Object.create(null) : null;
   let hasProperty = false;
   const extraData = extraProperties.size !== 0 ? Object.create(null) : null;
   let hasExtra = false;
+  // Iterate over property data.
   for (const [i, value] of values.entries()) {
-    if (value === '') continue; // eslint-disable-line no-continue
+    // If it's a new entity (if uuid == null), skip empty property values; leave
+    // them missing. Since it's a CSV, we can't distinguish between an empty
+    // value and a missing one. Sending empty values would increase the size of
+    // the payload. For an entity update, we need to include empty values in
+    // order to overwrite existing values.
+    if (uuid == null && value === '') continue; // eslint-disable-line no-continue
 
     const column = columns[i];
-    if (column === 'label') {
-      label = value;
-    } else if (dataset.propertyMap.has(column)) {
+    if (dataset.propertyMap.has(column)) {
       data[column] = value;
       hasProperty = true;
     } else if (extraProperties.has(column)) {
@@ -289,17 +244,23 @@ const rowToEntity = (extraProperties) => (values, columns) => {
     }
   }
 
-  if (label == null || /^\s+$/.test(label))
-    throw new Error(t('alert.blankLabel'));
-
-  const result = { label, data: hasProperty ? data : noPropertyData };
+  const result = {};
+  if (uuid != null) result.uuid = uuid;
+  if (label != null) result.label = label;
+  result.data = hasProperty ? data : noPropertyData;
   if (hasExtra) result.extra = extraData;
   return result;
 };
 const parseEntities = async (file, headerResults, extraProperties, signal) => {
-  const results = await parseCSV(globalI18n, file, headerResults.columns, {
+  const { columns } = headerResults;
+  const results = await parseCSV(globalI18n, file, columns, {
     delimiter: headerResults.meta.delimiter,
-    transformRow: rowToEntity(new Set(extraProperties ?? [])),
+    transformRow: rowToEntity(
+      columns.indexOf('__id'),
+      new Set(),
+      columns.indexOf('label'),
+      new Set(extraProperties ?? [])
+    ),
     signal
   });
   if (results.data.length === 0) throw new Error(t('alert.noData'));
@@ -377,14 +338,47 @@ const selectFile = (file) => {
 };
 onBeforeUnmount(() => { abortParse(); });
 
+// PAGINATION
+const pageSizeOptions = [5, 10, 20, 50];
+const defaultPageSize = pageSizeOptions[0];
 const csvPage = reactive({ page: 0, size: defaultPageSize });
-const csvRow = computed(() =>
-  (csvEntities.value != null ? csvPage.page * csvPage.size : -1));
-const csvSlice = computed(() => (csvEntities.value != null
-  ? csvEntities.value.slice(csvRow.value, csvRow.value + csvPage.size)
-  : null));
-watch(csvEntities, (value) => {
-  if (value == null) Object.assign(csvPage, { page: 0, size: defaultPageSize });
+// The subset of csvEntities shown in the table
+const csvSlice = ref(null);
+// The CSV row number of the first entity in csvSlice (0-indexed)
+const csvRow = ref(-1);
+watch([csvEntities, () => csvPage.page, () => csvPage.size], async () => {
+  if (csvEntities.value == null) {
+    serverEntities.reset();
+    Object.assign(csvPage, { page: 0, size: defaultPageSize });
+    csvRow.value = -1;
+    csvSlice.value = null;
+    return;
+  }
+
+  // Wait to set csvRow and csvSlice to these values until the request has
+  // completed.
+  const newRow = csvPage.page * csvPage.size;
+  const newSlice = csvEntities.value.slice(newRow, newRow + csvPage.size);
+
+  const uuids = [];
+  for (const { uuid } of newSlice) {
+    if (uuid != null) uuids.push(uuid);
+  }
+  if (uuids.length === 0) {
+    serverEntities.reset();
+  } else {
+    try {
+      await serverEntities.request({
+        url: apiPaths.odataEntities(dataset.projectId, dataset.name, {
+          $filter: uuids.map(uuid => `__id eq '${uuid}'`).join(' or ')
+        }),
+        clear: false
+      });
+    } catch (error) { return; }
+  }
+
+  csvRow.value = newRow;
+  csvSlice.value = newSlice;
 });
 
 // Rows of a warning that the user has selected to see
@@ -413,19 +407,16 @@ const propertiesToCreate = computed(() => {
   return result != null && result.length !== 0 ? result : null;
 });
 const propertyCreator = usePropertyCreator(request);
-const mergeDataWithExtra = (entity) => {
-  if (entity.extra == null) return entity;
-
-  if (propertiesToCreate.value == null)
-    return { label: entity.label, data: entity.data };
+const _mergeDataWithExtra = (data, extraData) => {
+  if (propertiesToCreate.value == null) return data;
 
   if (propertiesToCreate.value.length === warnings.value.extraProperties.length &&
-    entity.data === noPropertyData)
-    return { label: entity.label, data: entity.extra };
+    data === noPropertyData)
+    return extraData;
 
+  // `merged` combines `data` and `extraData`.
   const merged = Object.create(null);
   let hasExtra = false;
-  const extraData = entity.extra;
   for (const name of propertiesToCreate.value) {
     const value = extraData[name];
     if (value != null) {
@@ -433,13 +424,31 @@ const mergeDataWithExtra = (entity) => {
       hasExtra = true;
     }
   }
-  if (!hasExtra) return { label: entity.label, data: entity.data };
-  if (entity.data !== noPropertyData) Object.assign(merged, entity.data);
-  return { label: entity.label, data: merged };
+  if (!hasExtra) return data;
+  if (data !== noPropertyData) Object.assign(merged, data);
+  return merged;
 };
+const mergeDataWithExtra = (entity) => (entity.extra == null
+  ? entity
+  : {
+    ...pick(['uuid', 'label'], entity),
+    data: _mergeDataWithExtra(entity.data, entity.extra)
+  });
 
 // UPLOAD REQUEST
 const uploadProgress = ref(null);
+// Separates new entities from entity updates before sending the upload request.
+const entitiesByAction = () => {
+  const entities = [];
+  const updates = [];
+  for (const entity of csvEntities.value)
+    (entity.uuid == null ? entities : updates).push(mergeDataWithExtra(entity));
+
+  const result = {};
+  if (entities.length !== 0) result.entities = entities;
+  if (updates.length !== 0) result.updates = updates;
+  return result;
+};
 const upload = () => {
   propertyCreator.request(
     apiPaths.datasetProperties(dataset.projectId, dataset.name),
@@ -447,34 +456,31 @@ const upload = () => {
     ['name', 'datasetId']
   )
     .then(() => {
-      const entitiesToSend = warnings.value?.extraProperties == null
-        ? csvEntities.value
-        : csvEntities.value.map(mergeDataWithExtra);
+      const data = {
+        source: pick(['name', 'size'], fileMetadata.value),
+        ...entitiesByAction()
+      };
       uploadProgress.value = 0;
       return request({
         method: 'POST',
         url: apiPaths.entities(dataset.projectId, dataset.name),
-        data: {
-          source: pick(['name', 'size'], fileMetadata.value),
-          entities: entitiesToSend
-        },
+        data,
         onUploadProgress: (event) => { uploadProgress.value = event.progress ?? 0; }
-      }).finally(() => { uploadProgress.value = null; });
-    })
-    .then(() => {
-      emit('success', csvEntities.value.length, propertyCreator.created.size !== 0);
+      })
+        .finally(() => { uploadProgress.value = null; })
+        .then(() => {
+          emit('success', data.entities?.length ?? 0, propertyCreator.created.size !== 0);
+        });
     })
     .catch(noop);
 };
 
-// Resize the last column of the tables.
-const tables = [null, null];
-const setTable = (i) => (el) => { tables[i] = el; };
-const resizeLastColumn = () => {
-  for (const table of tables) table.resizeLastColumn();
-};
-watch(() => props.state, (state) => { if (!state) nextTick(resizeLastColumn); });
-const resizeColumnIfShown = () => { if (props.state) resizeLastColumn(); };
+// Resize the last column of the table.
+const table = ref(null);
+watch(() => props.state, (state) => {
+  if (!state) nextTick(() => { table.value.resizeLastColumn(); });
+});
+const resizeColumnIfShown = () => { if (props.state) table.value.resizeLastColumn(); };
 useEventListener(window, 'resize', resizeColumnIfShown);
 
 const actions = ref(null);
@@ -493,7 +499,7 @@ watch(() => props.state, (state) => {
   warnings.value = null;
   selectedProperties.clear();
   propertyCreator.clear();
-  for (const table of tables) table.resetScroll();
+  table.value.resetScroll();
 });
 </script>
 
@@ -506,30 +512,13 @@ watch(() => props.state, (state) => {
     pointer-events: none;
   }
 
-  .panel-simple {
-    .panel-heading {
-      background-color: $color-action-background;
-      border-bottom: none;
-      color: #fff;
-    }
+  .entity-upload-table-container {
+    margin-block: 10px 20px;
 
-    .panel-body { padding: 0; }
-    thead { background-color: #c5dfe7; }
+    &:has(.loading) .entity-upload-table { margin-bottom: 10px; }
   }
 
   .pagination { margin-left: $padding-left-table-data; }
-
-  .entity-upload-table-container { margin-block: 10px 20px; }
-  // margin-bottom of the tables
-  .entity-upload-table {
-    // The margin before text, either the Loading component or the
-    // .empty-table-message
-    margin-bottom: 10px;
-    // The margin before the Pagination component
-    &:has(tbody) { margin-bottom: 0; }
-    // The margin if there is no text or Pagination
-    &:last-child { margin-bottom: 0; }
-  }
 
   .modal-actions { border-top: 1px solid $central-grey-2; }
 }
@@ -550,17 +539,10 @@ watch(() => props.state, (state) => {
 <i18n lang="json5">
 {
   "en": {
-    "currentEntities": "Your current Entities",
-    "newEntities": "New Entities",
-    "table": {
-      "file": "Data to import"
-    },
-    // @transifexKey component.EntityList.noEntities
-    "noEntities": "There are no Entities to show.",
-    "action": {
-      "append": "Append Entities"
-    },
+    "title": "Import data from file",
     "alert": {
+      "invalidUUID": "Invalid UUID “{value}”.",
+      "duplicateUUID": "The Entity ID {uuid} appears more than once in the file. Each update row must have a unique ID.",
       "blankLabel": "Missing label.",
       "noData": "Your file does not contain any data."
     }

@@ -5,6 +5,7 @@ import DateRangePicker from '../../../src/components/date-range-picker.vue';
 
 import testData from '../../data';
 import { load } from '../../util/http';
+import { changeMultiselect } from '../../util/trigger';
 import { mockLogin } from '../../util/session';
 import { relativeUrl } from '../../util/request';
 import { setLuxon } from '../../util/date-time';
@@ -63,10 +64,11 @@ describe('AuditFilters', () => {
 
     describe('after the filter selection is changed', () => {
       it('sends a request', () =>
-        load('/system/audits')
+        load('/system/audits', {
+          attachTo: document.body
+        })
           .complete()
-          .request(app =>
-            app.get('#audit-filters-action select').setValue('user.create'))
+          .request(changeMultiselect('#audit-filters-action', [1]))
           .beforeEachResponse((_, { url }) => {
             const action = relativeUrl(url).searchParams.get('action');
             action.should.equal('user.create');
@@ -74,20 +76,22 @@ describe('AuditFilters', () => {
           .respondWithData(() => testData.extendedAudits.sorted()));
 
       it('updates the query parameter', () =>
-        load('/system/audits')
+        load('/system/audits', {
+          attachTo: document.body
+        })
           .complete()
-          .request(app =>
-            app.get('#audit-filters-action select').setValue('user.create'))
+          .request(changeMultiselect('#audit-filters-action', [1]))
           .respondWithData(() => testData.extendedAudits.sorted())
           .afterResponse(app => {
             app.vm.$route.query.action.should.equal('user.create');
           }));
 
       it('removes the query parameter if nonverbose is selected', () =>
-        load('/system/audits?action=user.create')
+        load('/system/audits?action=user.create', {
+          attachTo: document.body
+        })
           .complete()
-          .request(app =>
-            app.get('#audit-filters-action select').setValue('nonverbose'))
+          .request(changeMultiselect('#audit-filters-action', []))
           .respondWithData(() => testData.extendedAudits.sorted())
           .afterResponse(app => {
             should.not.exist(app.vm.$route.query.action);

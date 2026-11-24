@@ -49,12 +49,10 @@ const loadMessages = async (locale: string): Promise<ICUMessage> => {
   if (locale === FALLBACK) {
     return enMessages;
   }
-
   const key = getAvailableTranslationsKey(locale);
   if (!key) {
     return enMessages;
   }
-
   try {
     const raw = await availableTranslations[key]!();
     return { ...enMessages, ...normalizeMessages(raw.default) };
@@ -67,20 +65,24 @@ const loadMessages = async (locale: string): Promise<ICUMessage> => {
 
 const baseLanguage = (code: string): string => code.split('-')[0] ?? code;
 
-const findBestLocale = (candidates: string[], isAvailable: (l: string) => boolean): string => {
-  for (const candidate of candidates) {
-    if (isAvailable(candidate)) {
-      return candidate;
-    }
-  }
-  // Regional language falls back to base ("en") if no exact match was found.
+const findBestBaseLocale = (candidates: string[], isAvailable: (l: string) => boolean): string => {
   for (const candidate of candidates) {
     const base = baseLanguage(candidate);
-    if (base !== candidate && isAvailable(base)) {
+    if (isAvailable(base)) {
       return base;
     }
   }
   return FALLBACK;
+};
+
+const findBestLocale = (candidates: string[], isAvailable: (l: string) => boolean): string => {
+  const bestBase = findBestBaseLocale(candidates, isAvailable);
+  for (const candidate of candidates) {
+    if (candidate.startsWith(bestBase) && isAvailable(candidate)) {
+      return candidate;
+    }
+  }
+  return bestBase;
 };
 
 const findFormLanguage = (languages: FormLanguage[], localeCode: string | null | undefined) => {
@@ -115,10 +117,6 @@ const resolveUILocaleCandidates = (formLanguage?: FormLanguage): string[] => {
       sameBaseLocales.push(formLocale);
     }
     return sameBaseLocales;
-  }
-
-  if (!browserLanguages.includes(FALLBACK)) {
-    browserLanguages.push(FALLBACK);
   }
   return browserLanguages;
 };

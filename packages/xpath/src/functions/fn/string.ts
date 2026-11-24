@@ -85,7 +85,7 @@ export const substringAfter = new StringFunction(
 
     const needleIndex = haystack.indexOf(needle);
 
-    return needleIndex === -1 ? '' : haystack.slice(needleIndex + 1);
+    return needleIndex === -1 ? '' : haystack.slice(needleIndex + needle.length);
   }
 );
 

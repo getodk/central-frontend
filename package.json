@@ -3,6 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": "26"
+  },
+  "volta": {
+    "node": "26.13.1",
+    "npm": "11.20.0"
+  },
   "scripts": {
     "dev": "      nf start vite,nginx",
     "dev:build": "nf start build,nginx",
@@ -22,9 +29,6 @@
     "transifex:pull": "npm run transifex:pull --workspaces --if-present",
     "version": "changeset version"
   },
-  "volta": {
-    "node": "24.20.0"
-  },
   "packageManager": "npm@11.6.1",
   "workspaces": [
     "apps/*",
@@ -32,14 +36,14 @@
   ],
   "dependencies": {
     "@sentry/vue": "10.55",
-    "vue": "^3.5.39",
+    "vue": "^3.5.44",
     "vue-router": "^4.6.3"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.5.1",
     "@changesets/cli": "^2.29.7",
     "@eslint/js": "^10.0.1",
-    "@playwright/test": "^1.58.2",
+    "@playwright/test": "^1.64.0",
     "@transifex/cli": "^7.1.5",
     "@tsconfig/node20": "^20.1.8",
     "@types/eslint": "^9.6.1",
@@ -71,9 +75,5 @@
     "vite": "^7.3.6",
     "vitest": "^4.1.10",
     "vue-tsc": "^3.1.5"
-  },
-  "engines": {
-    "node": "^24.20.0",
-    "npm": "11"
   }
 }

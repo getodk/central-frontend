@@ -34,7 +34,7 @@ describe('FormTable', () => {
       const app = await load('/projects/1');
       const table = app.getComponent(FormTable);
       const headers = table.findAll('th').map(th => th.text());
-      headers.should.eql(['Name', 'Review States', 'Latest', 'Total', 'Actions']);
+      headers.should.eql(['Name', 'Review States', 'Latest', 'Total', '']);
       table.findAll('td').length.should.equal(7);
     });
 
@@ -58,7 +58,7 @@ describe('FormTable', () => {
       const app = await load('/projects/1', {}, { deletedForms: false });
       const table = app.getComponent(FormTable);
       const headers = table.findAll('th').map(th => th.text());
-      headers.should.eql(['Name', 'Review States', 'Latest', 'Total', 'Actions']);
+      headers.should.eql(['Name', 'Review States', 'Latest', 'Total', '']);
       const td = table.findAll('td');
       td.length.should.equal(7);
       td[6].classes('actions').should.be.true;
@@ -112,16 +112,6 @@ describe('FormTable', () => {
       testData.extendedForms.createPast(1, { state: 'closing' });
       const table = mountComponent(true);
       table.findAll('th').length.should.equal(0);
-      table.findAllComponents(FormRow).length.should.equal(0);
-    });
-
-    it('does show table header even if no non-open forms to show', () => {
-      mockLogin();
-      testData.extendedProjects.createPast(1);
-      testData.extendedForms.createPast(1, { state: 'closed' });
-      testData.extendedForms.createPast(1, { state: 'closed' });
-      const table = mountComponent(false);
-      table.findAll('th').length.should.equal(5);
       table.findAllComponents(FormRow).length.should.equal(0);
     });
   });

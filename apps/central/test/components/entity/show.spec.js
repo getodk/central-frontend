@@ -55,14 +55,6 @@ describe('EntityShow', () => {
     should.not.exist(links[2].path);
   });
 
-  it('shows the entity label', async () => {
-    testData.extendedEntities.createPast(1, { uuid: 'e', label: 'My Entity' });
-    const component = await load('/projects/1/entity-lists/trees/entities/e', {
-      root: false
-    });
-    component.get('#page-head-title').text().should.equal('My Entity');
-  });
-
   describe('after a successful update', () => {
     const submit = () => {
       testData.extendedDatasets.createPast(1, {
@@ -120,7 +112,7 @@ describe('EntityShow', () => {
 
     it('updates the label', async () => {
       const component = await submit();
-      component.get('#page-head-title').text().should.equal('Updated Entity');
+      component.get('.breadcrumb-item:last-child').text().should.equal('Updated Entity');
     });
 
     it('updates the entity data', async () => {

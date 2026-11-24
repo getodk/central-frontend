@@ -14,6 +14,7 @@ describe('ProjectFormAccessStates', () => {
 
   it('toggles the modal', () => {
     testData.extendedProjects.createPast(1);
+    testData.extendedForms.createPast(1);
     return load('/projects/1/form-access').testModalToggles({
       modal: ProjectFormAccessStates,
       show: '#project-form-access-table th .btn-link',

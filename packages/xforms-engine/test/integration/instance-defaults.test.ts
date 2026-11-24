@@ -123,6 +123,20 @@ describe('Sets field values to given defaults', () => {
       expect(edited.answerOf('/root/location')).toEqualAnswer(stringAnswer(''));
     });
 
+    it('ignored instance defaults when restoring', async () => {
+      const scenario = await Scenario.init('Bind defaults', formDefinition);
+      scenario.answer('/root/name', 'original');
+      const instanceDefaults = {
+        '/root/name': 'edited',
+        '/root/age': '85',
+        '/root/location': '38.25146813817506 21.758421137528785 0.0 0.0',
+      };
+      const edited = await scenario.serializeAndRestoreInstanceState({ instanceDefaults });
+      expect(edited.answerOf('/root/name')).toEqualAnswer(stringAnswer('original'));
+      expect(edited.answerOf('/root/age')).toEqualAnswer(stringAnswer(''));
+      expect(edited.answerOf('/root/location')).toEqualAnswer(stringAnswer(''));
+    });
+
     it('instance defaults are restored when resetting', async () => {
       const instanceDefaults = { '/root/name': 'instancedefault' };
       const scenario = await Scenario.init('Bind defaults', formDefinition, { instanceDefaults });

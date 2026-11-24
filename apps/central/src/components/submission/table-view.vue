@@ -10,22 +10,24 @@ including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
 -->
 <template>
-  <submission-table v-show="odata.dataExists" ref="table"
+  <submission-table v-show="odata.dataExists && odata.value.length > 0" ref="table"
     :project-id="projectId" :xml-form-id="xmlFormId" :draft="draft" :deleted="deleted"
     :fields="fields" :awaiting-deleted-responses="awaitingResponses"
-    v-on="reemitters"/>
+    class="paginated-table" v-on="reemitters"/>
   <odata-loading-message :state="odata.initiallyLoading"
     type="submission"
     :top="pagination.size"
     :filter="!!filter"
     :total-count="pagination.page ? 0 : totalCount"/>
   <!-- @update:page is emitted on size change as well -->
-  <Pagination v-if="pagination.count > 0"
-    v-model:page="pagination.page" v-model:size="pagination.size"
-    :count="pagination.count" :size-options="pageSizeOptions"
-    :spinner="odata.awaitingResponse"
-    :removed="pagination.removed"
-    @update:page="handlePageChange"/>
+  <teleport-if-exists v-if="pagination.count > 0" to=".pagination-container-left-side">
+    <Pagination
+      v-model:page="pagination.page" v-model:size="pagination.size"
+      :count="pagination.count" :size-options="pageSizeOptions"
+      :spinner="odata.awaitingResponse"
+      :removed="pagination.removed"
+      @update:page="handlePageChange"/>
+  </teleport-if-exists>
 </template>
 
 <script setup>
@@ -34,6 +36,7 @@ import { computed, reactive, useTemplateRef, watch } from 'vue';
 import OdataLoadingMessage from '../odata-loading-message.vue';
 import Pagination from '../pagination.vue';
 import SubmissionTable from './table.vue';
+import TeleportIfExists from '../teleport-if-exists.vue';
 import usePaginationQueryRef from '../../composables/pagination-query-ref';
 
 import { apiPaths } from '../../util/request';

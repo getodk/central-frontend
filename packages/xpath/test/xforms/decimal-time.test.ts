@@ -12,6 +12,7 @@ describe('decimal-time()', () => {
   [
     { expression: 'decimal-time("06:00:00.000-07:00")', expected: 0.25 },
     { expression: 'decimal-time("06:00:00.000-01:00")', expected: 0.0 },
+    { expression: 'decimal-time("12:00:00")', expected: 0.5 },
     { expression: 'decimal-time("06:00:59.000-07:00")', expected: 0.25068287037037035 },
     { expression: 'decimal-time("23:59:00.000-07:00")', expected: 0.9993055555555556 },
     { expression: 'decimal-time("23:59:00.000-13:00")', expected: 0.24930555555555556 },

@@ -13,9 +13,11 @@ except according to the terms contained in the LICENSE file.
   <file-drop-zone id="entity-upload-file-select" :disabled="disabled"
     @drop="$emit('change', $event.dataTransfer.files[0])">
     <div id="entity-upload-file-select-heading">
-      <p v-if="errors !== 0">{{ $tcn('errors', errors) }}</p>
-      <p v-else-if="dataTemplate">{{ $t('upload') }}</p>
-
+      <p>
+        <template v-if="errors !== 0">{{ $tcn('errors', errors) }}</template>
+        <template v-else-if="dataTemplate">{{ $t('upload') }}</template>
+        <template v-else>{{ $t('replace') }}</template>
+      </p>
       <div>
         <i18n-t keypath="text.full">
           <template #chooseFile>
@@ -111,7 +113,8 @@ const changeInput = (event) => {
 {
   "en": {
     "upload": "Upload a .csv file",
-    "errors": "{count} error must be fixed before appending Entities | {count} errors must be fixed before appending Entities",
+    "replace": "Replace data with new file",
+    "errors": "{count} error must be fixed before importing data | {count} errors must be fixed before importing data",
     "text": {
       "full": "Drag and drop a .csv file here, or {chooseFile}",
       "chooseFile": "choose a file"

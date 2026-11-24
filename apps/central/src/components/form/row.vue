@@ -20,20 +20,22 @@ except according to the terms contained in the LICENSE file.
       <template v-if="form.publishedAt != null">
         <link-if-can :to="formPath(form.projectId, form.xmlFormId, `submissions?reviewState=${urlFilterEncode.get(reviewState)}`)"
           v-tooltip.no-aria="$t(`reviewState.${reviewState}`)">
-          <span>{{ $n(form.reviewStates[reviewState], 'default') }}</span>
-          <span :class="reviewStateIcon(reviewState)"></span>
+          <span class="tag" :class="reviewState === 'hasIssues' && form.reviewStates[reviewState] > 0 ? reviewStateTag(reviewState) : 'tag-info'">
+            <span :class="reviewStateIcon(reviewState)"></span>
+            {{ $n(form.reviewStates[reviewState], 'default') }}
+          </span>
         </link-if-can>
       </template>
     </td>
 
     <template v-if="form.publishedAt != null">
       <td class="last-submission">
-        <span v-tooltip.no-aria="lastSubmissionTooltip">
+        <span>
           <template v-if="form.lastSubmission != null">
             <link-if-can :to="formPath(form.projectId, form.xmlFormId, 'submissions')">
-              <date-time :iso="form.lastSubmission" relative="past"
+            <span class="icon-clock-o"></span>
+              <date-time :iso="form.lastSubmission"
                 :tooltip="false"/>
-              <span class="icon-clock-o"></span>
             </link-if-can>
           </template>
           <template v-else>{{ $t('submission.noSubmission') }}</template>
@@ -42,15 +44,14 @@ except according to the terms contained in the LICENSE file.
       <td class="total-submissions">
         <link-if-can :to="formPath(form.projectId, form.xmlFormId, 'submissions')"
           v-tooltip.no-aria="$t('common.totalSubmissions')">
+          <span class="icon-star"></span>
           <span>{{ $n(form.submissions, 'default') }}</span>
-          <span class="icon-asterisk"></span>
         </link-if-can>
       </td>
     </template>
     <template v-else>
       <td class="not-published" colspan="2">
         <span>{{ $t('formState.unpublished') }}</span>
-        <span class="icon-asterisk"></span>
       </td>
     </template>
 
@@ -118,11 +119,11 @@ export default {
   setup() {
     const { project, duplicateFormNames } = useRequestData();
     const { formPath } = useRoutes();
-    const { reviewStateIcon } = useReviewState();
+    const { reviewStateIcon, reviewStateTag } = useReviewState();
     return {
       project, duplicateFormNames,
       formPath,
-      reviewStateIcon
+      reviewStateIcon, reviewStateTag
     };
   },
   computed: {
@@ -169,13 +170,8 @@ export default {
   .table tbody & td { vertical-align: middle; }
 
   td {
-    font-size: 16px;
     padding: 3px 0px 3px 6px;
-    color: #333;
-  }
-
-  .name {
-    font-size: 18px;
+    color: $color-text-secondary;
   }
 
   .duplicate-form-id {
@@ -186,20 +182,15 @@ export default {
 
   .review-state, .total-submissions, .not-published {
     a { @include text-link; }
-    text-align: right;
-    width: 100px;
     & [class*='icon'] {
-      margin-left: 5px;
-      color: #888;
+      color: $color-text-muted;
     }
   }
 
   .review-state a {
-    display: block;
     border-radius: 9999px;
-    padding: 4px 8px;
     margin: -4px;
-    &:hover { background: #fff }
+    &:hover { background: $color-surface; }
   }
 
   .total-submissions a {
@@ -207,30 +198,26 @@ export default {
     border-radius: 9999px;
     padding: 4px 8px;
     margin: -4px;
-    &:hover { background: #e8e8e8 }
+    &:hover { background: $color-surface-secondary; }
   }
 
   .actions {
-    width: 100px;
+    .btn {
+      width: 100%;
+    }
   }
 
   .last-submission{
     a { @include text-link; }
-    text-align: right;
     width: 150px;
     & [class*='icon'] {
-      margin-left: 5px;
-      color: #888;
+      color: $color-text-muted;
     }
   }
 
   .closing-icon {
     margin-right: 5px;
-    color: #888;
-  }
-
-  td.review-state {
-    background-color: #eee;
+    color: $color-text-muted;
   }
 }
 </style>

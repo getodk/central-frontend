@@ -1,7 +1,7 @@
 <template>
   <multiselect v-if="showViewAs" id="entity-filters-view-as" single :model-value="selectValue"
-    :options="options" :loading="fieldKeys.initiallyLoading" :label="$t('viewAs')"
-    :placeholder="placeholder" :none="$t('resetToMe')" :search="$t('search')"
+    :options="options" :loading="fieldKeys.initiallyLoading || formSummaryAssignments.initiallyLoading" :label="$t('viewAs')"
+    :placeholder="placeholder" :none="$t('resetToMe')" :search="$t('common.search')"
     :disabled="disabled" :disabled-message="disabledMessage" @update:model-value="update"/>
 </template>
 
@@ -31,17 +31,51 @@ const props = defineProps({
     required: false
   }
 });
-const { dataset, fieldKeys } = useRequestData();
+const { dataset, fieldKeys, formSummaryAssignments } = useRequestData();
 
+// Only show viewAs dropdown if dataset has an access filter set
 const showViewAs = computed(() =>
   dataset.dataExists && dataset.accessFilter != null);
 
-const options = computed(() => (fieldKeys.dataExists
-  ? fieldKeys.data.map(({ id, displayName }) => ({ value: id, text: displayName }))
-  : null));
+// Compute list of actor IDs and their display text (app users + public links).
+const options = computed(() => {
+  if (!(fieldKeys.dataExists && dataset.dataExists &&
+    formSummaryAssignments.dataExists))
+    return null;
+
+  const appUsers = fieldKeys.data
+    .filter(({ token }) => token != null)
+    .map(({ id, displayName, createdAt }) =>
+      ({ value: id, text: displayName, group: t('resource.appUsers'), createdAt }));
+  // Sort app users by created date (newest first)
+  appUsers.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
+
+  // Maps each linked form's xmlFormId to its name and its index within
+  // dataset.linkedForms (used below to order public links by linked form).
+  const linkedForms = new Map(
+    dataset.linkedForms.map((form, index) => [form.xmlFormId, { ...form, index }])
+  );
+  const publicLinkAssignments = formSummaryAssignments.data
+    .filter(({ xmlFormId }) => linkedForms.has(xmlFormId))
+    .filter(({ tokenActive }) => tokenActive);
+  // Sort by the order of the linked forms, then by the public link's created date (newest first)
+  publicLinkAssignments.sort((a, b) =>
+    linkedForms.get(a.xmlFormId).index - linkedForms.get(b.xmlFormId).index ||
+    Date.parse(b.actor.createdAt) - Date.parse(a.actor.createdAt));
+  const publicLinks = publicLinkAssignments.map(({ actor, xmlFormId }) => ({
+    value: actor.id,
+    text: actor.displayName,
+    group: t('resource.publicLinks'),
+    subgroup: linkedForms.get(xmlFormId).name
+  }));
+
+  return [...appUsers, ...publicLinks];
+});
+
+// Transform the single selected actor into an array for use by the multi-select dropdown
 const selectValue = computed(() => {
-  if (!fieldKeys.dataExists || props.modelValue == null) return [];
-  return fieldKeys.data.some(fieldKey => fieldKey.id === props.modelValue)
+  if (options.value == null || props.modelValue == null) return [];
+  return options.value.some(({ value }) => value === props.modelValue)
     ? [props.modelValue]
     : [];
 });
@@ -55,10 +89,11 @@ const placeholder = ({ selectedText }) => selectedText ?? t('noUserSelected');
 <i18n lang="json5">
 {
   "en": {
-    "noUserSelected": "Me",
+    // "All" refers to users (in the form of app users and public links)
+    "noUserSelected": "All",
     "viewAs": "View As",
-    "resetToMe": "Reset to Me",
-    "search": "Search App Users…"
+    // This "All" means all users (app users and public links) shown in this dropdown
+    "resetToMe": "Reset to All",
   }
 }
 </i18n>

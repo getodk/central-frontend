@@ -32,5 +32,6 @@ export const loadEntityList = (mountOptions = {}) => {
     .mount(EntityList, mergedOptions)
     .respondWithData(() => testData.extendedFieldKeys.sorted().map(testData.toActor)) // response data for entityCreators
     .respondWithData(() => testData.extendedFieldKeys.sorted()) // response data for app user fieldKeys
+    .respondWithData(() => []) // response data for public link formSummaryAssignments
     .respondWithData(() => (deleted ? testData.entityDeletedOData() : testData.entityOData()));
 };

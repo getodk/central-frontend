@@ -12,7 +12,7 @@ import { mount } from '../../util/lifecycle';
 import { setLuxon } from '../../util/date-time';
 import { testRequestData } from '../../util/request-data';
 
-const mountComponent = (showIcon = false) => {
+const mountComponent = () => {
   const projectData = { ...testData.extendedProjects.last() };
   projectData.formList = testData.extendedForms.sorted();
   const container = createTestContainer({
@@ -21,7 +21,7 @@ const mountComponent = (showIcon = false) => {
   });
   const project = container.requestData.localResources.projects[0];
   return mount(ProjectFormRow, {
-    props: { form: project.formList[0], project, showIcon },
+    props: { form: project.formList[0], project },
     container
   });
 };
@@ -114,8 +114,9 @@ describe('ProjectFormRow', () => {
 
     it('shows blank review state columns when the form is a draft', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
-      const row = mountComponent();
-      row.findAll('.review-state').length.should.equal(0);
+      const columns = mountComponent().findAll('.review-state');
+      columns.length.should.equal(3);
+      columns.map((col) => col.text()).should.eql(['', '', '']);
     });
   });
 
@@ -127,10 +128,10 @@ describe('ProjectFormRow', () => {
       const lastSubmission = '2023-01-01T00:00:00Z';
       testData.extendedForms.createPast(1, { lastSubmission });
       const span = mountComponent().get('.last-submission span');
-      span.text().should.match(/ago$/);
+      span.text().should.equal('2023/01/01 00:00');
       const dateTime = span.getComponent(DateTime);
       dateTime.props().iso.should.equal(lastSubmission);
-      await span.should.have.tooltip('Latest Submission\n2023/01/01 00:00:00');
+      await span.should.have.tooltip('Latest Submission');
       await dateTime.should.not.have.tooltip();
     });
 
@@ -147,9 +148,10 @@ describe('ProjectFormRow', () => {
       await span.should.have.tooltip('Latest Submission');
     });
 
-    it('shows blank last submission column when the form is a draft', () => {
+    it('shows "not published yet" when the form is a draft', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
-      mountComponent().find('.last-submission').exists().should.be.false;
+      const cell = mountComponent().get('.last-submission');
+      cell.text().should.equal('Not published yet');
     });
   });
 
@@ -161,17 +163,16 @@ describe('ProjectFormRow', () => {
       mountComponent().find('.total-submissions').text().should.equal('1,234');
     });
 
-    it('shows "not published yet" when form is a draft', () => {
+    it('shows blank submission count when form is a draft', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', draft: true });
       const row = mountComponent();
-      row.find('.total-submissions').exists().should.be.false;
-      row.find('.not-published').text().should.equal('Not published yet');
+      row.get('.total-submissions').text().should.equal('');
     });
 
     it('shows the correct icon', async () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'a b', submissions: 4 });
       const cell = mountComponent().find('.total-submissions');
-      cell.find('.icon-asterisk').exists().should.be.true;
+      cell.find('.icon-star').exists().should.be.true;
       await cell.get('span').should.have.tooltip('Total Submissions');
     });
   });
@@ -285,20 +286,6 @@ describe('ProjectFormRow', () => {
         nonLink.find('a').exists().should.be.false;
         nonLink.text().should.equal('6');
       });
-    });
-  });
-
-  describe('show icon', () => {
-    beforeEach(mockLogin);
-
-    it('should show form icon', () => {
-      testData.extendedForms.createPast(1, { name: 'My Form', xmlFormId: 'f' });
-      mountComponent(true).find('.col-icon span.icon-file').exists().should.be.true;
-    });
-
-    it('should not show form icon', () => {
-      testData.extendedForms.createPast(1, { name: 'My Form', xmlFormId: 'f' });
-      mountComponent().find('.col-icon span.icon-file').exists().should.be.false;
     });
   });
 });

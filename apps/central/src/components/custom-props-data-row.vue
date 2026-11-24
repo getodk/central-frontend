@@ -23,11 +23,3 @@ defineProps({
   highlighted: Number
 });
 </script>
-
-<style lang="scss">
-.custom-props-data-row {
-  .table tbody & td {
-    height: 37px;
-  }
-}
-</style>

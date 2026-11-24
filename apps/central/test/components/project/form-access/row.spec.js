@@ -49,7 +49,7 @@ describe('ProjectFormAccessRow', () => {
       // Create an assignment for the second field key, which will be the first
       // field key shown in the table.
       testData.standardFormSummaryAssignments.createPast(1, {
-        actorId: testData.extendedFieldKeys.last().id,
+        actor: testData.extendedFieldKeys.last(),
         role: 'app-user',
         xmlFormId: 'f'
       });
@@ -64,7 +64,7 @@ describe('ProjectFormAccessRow', () => {
       testData.extendedForms.createPast(1, { xmlFormId: 'f' });
       testData.extendedFieldKeys.createPast(1, { token: null });
       testData.standardFormSummaryAssignments.createPast(1, {
-        actorId: testData.extendedFieldKeys.last().id,
+        actor: testData.extendedFieldKeys.last(),
         role: 'app-user',
         xmlFormId: 'f'
       });

@@ -165,9 +165,9 @@ const sizeModel = computed({
   }
 
   .form-inline {
-    @include form-control-background;
+    background-color: $color-surface;
     width: 100%;
-    align-items: center;
+    align-items: baseline;
     display: flex;
     border-radius: 5px;
     margin-bottom: 0;
@@ -180,7 +180,7 @@ const sizeModel = computed({
     padding-right: 0;
     vertical-align: baseline;
   }
-  .form-group .form-control { background-color: #fff; }
+  .form-group .form-control { background-color: $color-surface; }
 
   .btn + .form-group {
     margin-left: 18px;
