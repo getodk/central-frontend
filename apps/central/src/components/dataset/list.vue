@@ -99,8 +99,7 @@ const afterCreateDataset = async (dataset) => {
         "Entities are created through form design and can be attached to any Form."
       ],
       // This is the text of a button that is used to create a new Entity List.
-      // It is shown next to a heading whose text is "Entity Lists".
-      "new": "New"
+      "new": "New Entity List"
     }
   }
 </i18n>
