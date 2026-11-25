@@ -16,8 +16,10 @@ except according to the terms contained in the LICENSE file.
     <template #head-frozen>
       <th class="col-actions"></th>
       <th><span class="sr-only">{{ $t('common.rowNumber') }}</span></th>
-      <th v-if="!deleted && project.verbs.has('entity.delete')">
-        <input type="checkbox" :aria-label="$t('action.selectRow')" :checked="allSelected" @change="changeAllSelection($event.target.checked)">
+      <th v-if="!deleted && project.verbs.has('entity.delete')" class="col-select-row">
+        <label :aria-label="$t('action.selectRow')">
+          <input type="checkbox" :checked="allSelected" @change="changeAllSelection($event.target.checked)">
+        </label>
       </th>
       <th>{{ $t('header.createdBy') }}</th>
       <th>{{ $t('header.createdAt') }}</th>
@@ -152,8 +154,26 @@ defineExpose({ afterUpdate, afterDelete });
     }
   }
 
-  input[type="checkbox"] {
-    margin-top: 0;
+  .col-select-row {
+    padding: 0;
+
+    label {
+      padding: 14px 15px;
+      cursor: pointer;
+      margin-bottom: 0;
+
+      input {
+        cursor: pointer;
+      }
+
+      &:hover input {
+        outline-style: auto;
+      }
+    }
+  }
+
+  th.col-select-row label {
+    padding: 7px 15px;
   }
 
   th.col-deleted-at { color: $color-danger; }
