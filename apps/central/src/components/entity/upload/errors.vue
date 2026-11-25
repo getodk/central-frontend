@@ -51,8 +51,7 @@
       </template>
     </entity-upload-alert>
     <entity-upload-alert v-if="unknownEntities != null" type="danger"
-      :ranges="[...unknownEntities.values()].toSorted()"
-      @rows="$emit('rows', $event)">
+      :ranges="unknownRanges" @rows="$emit('rows', $event)">
       <template #title>{{ $t('unknownEntities.title') }}</template>
       <template #body>
         <p>{{ $t('unknownEntities.description') }}</p>
@@ -97,6 +96,9 @@ const props = defineProps({
 defineEmits(['rows']);
 
 const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
+
+const unknownRanges = computed(() => [...props.unknownEntities.values()]
+  .sort(([row1], [row2]) => row1 < row2));
 </script>
 
 <style lang="scss">
