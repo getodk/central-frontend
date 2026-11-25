@@ -200,7 +200,7 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
         },
         "property_set": {
-          "string": "",
+          "string": "Eigenschaft setzen",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action."
         }
       },
@@ -239,18 +239,22 @@
         }
       },
       "entity": {
+        "bulk_upsert": {
+          "string": "Daten importieren",
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
+        },
         "bulk_delete": {
           "string": "Massenlöschung",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         },
         "bulk_restore": {
           "string": "Massenwiederherstellung",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         }
       },
       "actor_property": {
         "create": {
-          "string": "",
+          "string": "Benutzerdefinierte Eigenschaft erstellen",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Actor Property."
         }
       },
@@ -274,7 +278,7 @@
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "update_draft_update": {
-          "string": "",
+          "string": "Entwurfseinstellungen aktualisieren",
           "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on a Form."
         },
         "update_publish": {
@@ -354,7 +358,7 @@
   },
   "action": {
     "add": {
-      "string": "",
+      "string": "Hinzufügen",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "cancel": {
@@ -409,6 +413,10 @@
       "string": "Beenden",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
+    "import": {
+      "string": "",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
     "logIn": {
       "string": "Einloggen",
       "developer_comment": "This is the text for an action, for example, the text of a button."
@@ -455,6 +463,10 @@
     },
     "review": {
       "string": "Überprüfen",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "revoke": {
+      "string": "Widerrufen",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "save": {
@@ -510,7 +522,7 @@
       "developer_comment": "This text is shown on a button that resets the data filters"
     },
     "change": {
-      "string": "",
+      "string": "Ändern",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     }
   },
@@ -544,7 +556,7 @@
       "developer_comment": "This is the text of a form field."
     },
     "passphrase": {
-      "string": "",
+      "string": "Verschlüsselungspasswort",
       "developer_comment": "This is the text of a form field."
     },
     "password": {
@@ -754,6 +766,10 @@
     },
     "publicLink": {
       "string": "Öffentlicher Zugangslink",
+      "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
+    },
+    "publicLinks": {
+      "string": "",
       "developer_comment": "This text appears on its own and is not part of a longer sentence. It may be shown as a title, for example, at the top of the page."
     },
     "user": {
@@ -1049,7 +1065,7 @@
       "developer_comment": "This text is shown on its own before details about a warning."
     },
     "recommended": {
-      "string": "empfohlen",
+      "string": "Empfohlen",
       "developer_comment": "Standalone text shown as a badge next to a recommendation. Not part of a longer phrase."
     },
     "none": {
@@ -1059,11 +1075,11 @@
       "string": "Suchen"
     },
     "useEnketo": {
-      "string": "",
+      "string": "Enketo-Kompatibilitätsmodus",
       "developer_comment": "The word \"Enketo\" should not be translated"
     },
     "updateInProgress": {
-      "string": ""
+      "string": "Aktualisierung läuft"
     }
   },
   "mixin": {
@@ -1231,25 +1247,25 @@
     },
     "ActorPropertiesNew": {
       "addProperty": {
-        "string": ""
+        "string": "Eigenschaft hinzufügen"
       },
       "addPropertyHint": {
-        "string": ""
+        "string": "Geben Sie einen eindeutigen Namen für die Eigenschaft ein"
       }
     },
     "ActorPropertiesUpsert": {
       "description": {
         "full": {
-          "string": "",
+          "string": "Mit Eigenschaften können Sie {assignEntities}, Zugriffe steuern und allen genau die Daten geben, die sie brauchen.",
           "developer_comment": "{assignEntities} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nassign the right Entities"
         },
         "assignEntities": {
-          "string": "",
+          "string": "die richtigen Objekte zuordnen",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {assignEntities} is in the following text:\n\nProperties help {assignEntities}, control access, and connect users to the data they need."
         }
       },
       "noProperties": {
-        "string": ""
+        "string": "Es wurden noch keine Eigenschaften hinzugefügt."
       }
     },
     "AnalyticsForm": {
@@ -1482,10 +1498,10 @@
           "string": "Anzahl der Objektlisten, die nur dem Eigentümer vorbehalten sind"
         },
         "num_custom_user_properties": {
-          "string": ""
+          "string": "Anzahl der Benutzereigenschaften"
         },
         "num_user_property_filtered_datasets": {
-          "string": ""
+          "string": "Anzahl der Objektlisten, die über Benutzereigenschaften eingeschränkt sind"
         },
         "num_properties": {
           "string": "Anzahl der Eigenschaften"
@@ -1511,6 +1527,9 @@
         "num_entity_updates_api": {
           "string": "Anzahl der Objektaktualisierungen über API"
         },
+        "num_entity_updates_bulk": {
+          "string": ""
+        },
         "num_entities_updated": {
           "string": "Anzahl der modifizierten Objekte"
         },
@@ -1521,7 +1540,7 @@
           "string": "Anzahl der Objekte mit Konflikt jetzt als gelöst markiert"
         },
         "num_bulk_create_events": {
-          "string": "Anzahl von Bulk-Uploads"
+          "string": ""
         },
         "biggest_bulk_upload": {
           "string": "Anzahl der Zeilen im grössten Bulk-Upload"
@@ -1607,6 +1626,12 @@
         "num_entity_creates_bulk": {
           "string": "Anzahl der Objekte, die über Massen-Upload erstellt wurden"
         },
+        "num_bulk_update_events": {
+          "string": ""
+        },
+        "num_bulk_create_and_update_events": {
+          "string": ""
+        },
         "max_geo_per_form": {
           "string": "Maximale Anzahl von Übermittlungen mit Geodaten in einem Formular"
         },
@@ -1638,16 +1663,16 @@
           "string": "Anzahl der Fehler durch wiederholte Entitäten"
         },
         "num_wf_submissions": {
-          "string": ""
+          "string": "Anzahl der Übermittlungen mit Web Forms"
         },
         "num_enketo_submissions": {
-          "string": ""
+          "string": "Anzahl der Übermittlungen mit Enketo"
         },
         "num_wf_submission_edits": {
-          "string": ""
+          "string": "Anzahl der Bearbeitungen von Übermittlungen mit Web Forms"
         },
         "num_enketo_submission_edits": {
-          "string": ""
+          "string": "Anzahl der Bearbeitungen von Übermittlungen mit Enketo"
         }
       }
     },
@@ -1707,6 +1732,14 @@
         "developer_comment": "Text shown when no Audit log date is selected in the filter"
       }
     },
+    "AuditFiltersAction": {
+      "action": {
+        "all": {
+          "string": "",
+          "developer_comment": "This is shown in a list of actions performed on the server. It refers to all the actions in a certain category."
+        }
+      }
+    },
     "AuditList": {
       "heading": {
         "0": {
@@ -1760,7 +1793,7 @@
     },
     "ConfigLogin": {
       "title": {
-        "string": "Anmeldeseite"
+        "string": "Anpassung der Anmeldeseite"
       }
     },
     "ConfigLoginEdit": {
@@ -1828,7 +1861,7 @@
     "CustomPropsFilter": {
       "action": {
         "all": {
-          "string": "",
+          "string": "Alle",
           "developer_comment": "This is the text of the button in dropdown menu of an actor (app user or public link) \"Properties\" filter, that allows the user to select all app users with all properties (no filter applied)."
         }
       }
@@ -1863,10 +1896,13 @@
       "purgeDescription": {
         "string": "Objekte werden nach 30 Tagen im Papierkorb gelöscht"
       },
+      "deletedTitle": {
+        "string": "{datasetName} (Gelöschte Entitäten)"
+      },
       "action": {
         "toggleDeletedEntities": {
-          "string": "{count, plural, one {{count} gelöschtes Objekt } other {{count} gelöschte Objekte }}",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "string": "Gelöschte anzeigen",
+          "developer_comment": "\"deleted\" refers to deleted Entities"
         }
       },
       "analyzeDisabledDeletedData": {
@@ -1884,8 +1920,8 @@
         }
       },
       "new": {
-        "string": "Neu",
-        "developer_comment": "This is the text of a button that is used to create a new Entity List. It is shown next to a heading whose text is \"Entity Lists\"."
+        "string": "",
+        "developer_comment": "This is the text of a button that is used to create a new Entity List."
       }
     },
     "DatasetNew": {
@@ -1921,8 +1957,8 @@
         "developer_comment": "This is a title shown above a section of the page."
       },
       "new": {
-        "string": "Neu",
-        "developer_comment": "This is shown on a button for creating new Entity Properties"
+        "string": "",
+        "developer_comment": "This is shown on a button for creating a new Entity property."
       }
     },
     "DatasetOverviewDatasetProperties": {
@@ -1996,7 +2032,7 @@
     "DatasetOwnerOnly": {
       "panel": {
         "title": {
-          "string": "",
+          "string": "Zugriff auf die Objektliste",
           "developer_comment": "This is a title shown above a section of the page."
         }
       },
@@ -2019,40 +2055,40 @@
       },
       "filterByProperty": {
         "label": {
-          "string": ""
+          "string": "Nach Eigenschaft filtern"
         },
         "description": {
-          "string": ""
+          "string": "Legen Sie fest, welche Objekte App-Benutzer und öffentliche Zugangslinks sehen, indem Sie Objekt- und Benutzereigenschaften vergleichen."
         },
         "entityPropertyLabel": {
-          "string": "",
+          "string": "Nur Objekte anzeigen, deren",
           "developer_comment": "This text is shown above the access rule filter dropdown. Translators are free not to translate this literally"
         },
         "entityPropertyPlaceholder": {
-          "string": "",
+          "string": "Objekteigenschaft",
           "developer_comment": "Placeholder text shown on a access rule filter dropdown."
         },
         "userPropertyLabel": {
-          "string": "",
+          "string": "übereinstimmt mit der Eigenschaft des Benutzers",
           "developer_comment": "This text is shown above the access rule filter dropdown. Translators are free not to translate this literally"
         },
         "userPropertyPlaceholder": {
-          "string": "",
+          "string": "Benutzereigenschaft",
           "developer_comment": "Placeholder text shown on a access rule filter dropdown"
         },
         "disabled": {
           "datasetProperties": {
-            "string": ""
+            "string": "Es sind keine Objekteigenschaften definiert."
           },
           "userProperties": {
-            "string": ""
+            "string": "Es sind keine Benutzereigenschaften definiert."
           },
           "both": {
-            "string": ""
+            "string": "Es sind weder Objekt- noch Benutzereigenschaften definiert."
           }
         },
         "currentRule": {
-          "string": "",
+          "string": "Regel: {entityProperty} (Objekteigenschaft) = {userProperty} (Benutzereigenschaft)",
           "developer_comment": "{entityProperty} is the name of an Entity property. {userProperty} is the name of a User property."
         }
       },
@@ -2080,19 +2116,19 @@
           "string": "App-Benutzer und Datensammler haben nun nur noch Zugriff auf die Objekte, die sie selbst erstellen.\n"
         },
         "changeToProperty": {
-          "string": ""
+          "string": "App-Benutzer und öffentliche Zugangslinks haben jetzt nur noch Zugriff auf Objekte, die zur Filterregel passen."
         }
       },
       "accessByFilterRule": {
         "title": {
-          "string": ""
+          "string": "Nach Eigenschaft filtern"
         },
         "introduction": {
-          "string": ""
+          "string": "App-Benutzer und öffentliche Zugangslinks haben nur Zugriff auf Objekte, bei denen die gewählte Eigenschaft mit ihrer Benutzereigenschaft übereinstimmt."
         },
         "action": {
           "save": {
-            "string": "",
+            "string": "Filterregel speichern",
             "developer_comment": "This is the text for an action, for example, the text of a button."
           }
         }
@@ -2212,11 +2248,11 @@
     "DatasetShow": {
       "infoNav": {
         "connectedForms": {
-          "string": "{count, plural, one {Update durch  {count} Formular} other {Update durch {count} Formulare}}",
+          "string": "{count, plural, one {Formular aktualisieren} other {Formulare aktualisieren}}",
           "developer_comment": "This dropdown title refers to Entity Lists that are updated by a Form."
         },
         "linkedForms": {
-          "string": "{count, plural, one {Verwendet in  {count} Formular} other {Verwendet in {count} Formulare}}",
+          "string": "{count, plural, one {Formular als Referenz} other {Formulare als Referenz}}",
           "developer_comment": "This dropdown title refers to Entity Lists that are linked to a Form."
         }
       }
@@ -2591,10 +2627,15 @@
     },
     "EntityFiltersViewAs": {
       "noUserSelected": {
-        "string": ""
+        "string": "",
+        "developer_comment": "\"All\" refers to users (in the form of app users and public links)"
       },
       "viewAs": {
-        "string": ""
+        "string": "Anzeigen als"
+      },
+      "resetToMe": {
+        "string": "",
+        "developer_comment": "This \"All\" means all users (app users and public links) shown in this dropdown"
       }
     },
     "EntityList": {
@@ -2677,12 +2718,6 @@
         "string": "{count, plural, one {{count} Entität in diesem Umkreis} other {{count} Entitäten in diesem Umkreis}}"
       }
     },
-    "EntityMetadataRow": {
-      "reviewParallelUpdates": {
-        "string": "Parallele Updates überprüfen",
-        "developer_comment": "This is the text for an action, for example, the text of a button."
-      }
-    },
     "EntityResolve": {
       "title": {
         "string": "Parallele Update zu \"{label}\"",
@@ -2761,10 +2796,6 @@
     },
     "EntityTable": {
       "header": {
-        "updatedAtAndActions": {
-          "string": "Letzte Aktualisierung / Aktionen",
-          "developer_comment": "This is the text of a column header of a table of Entities. The column shows when each Entity was last updated, as well as actions that can be taken on the Entity."
-        },
         "deletedAt": {
           "string": "Gelöscht am",
           "developer_comment": "Heading of the column that shows Entity deletion timestamp"
@@ -2786,24 +2817,16 @@
       }
     },
     "EntityUpload": {
-      "currentEntities": {
+      "title": {
         "string": ""
-      },
-      "newEntities": {
-        "string": ""
-      },
-      "table": {
-        "file": {
-          "string": "Zu importierende Daten"
-        }
-      },
-      "action": {
-        "append": {
-          "string": "",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
       },
       "alert": {
+        "invalidUUID": {
+          "string": ""
+        },
+        "duplicateUUID": {
+          "string": ""
+        },
         "blankLabel": {
           "string": "Fehlende Etikett."
         },
@@ -2820,32 +2843,32 @@
     "EntityUploadDataTemplate": {
       "text": {
         "full": {
-          "string": "",
+          "string": "Sie brauchen einen Ausgangspunkt? {downloadTemplate}.",
           "developer_comment": "{downloadTemplate} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nDownload a CSV template"
         },
         "downloadTemplate": {
-          "string": "",
+          "string": "CSV-Vorlage herunterladen",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {downloadTemplate} is in the following text:\n\nNeed a starting point? {downloadTemplate}."
         }
       }
     },
     "EntityUploadErrors": {
       "title": {
-        "string": "{count, plural, one {} other {}}",
+        "string": "{count, plural, one {{count} Fehler prüfen} other {{count} Fehler prüfen}}",
         "developer_comment": "This text is shown above a section that lists errors in the user's data."
       },
       "introduction": {
-        "string": ""
+        "string": "Die Fehler müssen behoben sein, bevor Sie Objekte hochladen können."
       },
       "delimiterNotComma": {
-        "string": ""
+        "string": "Diese Fehler können daher kommen, dass das Trennzeichen falsch erkannt wurde. Verwendet wurde {delimiter}."
       },
       "invalidQuotes": {
         "title": {
-          "string": ""
+          "string": "Ein Feld in Anführungszeichen in der Kopfzeile ist ungültig"
         },
         "description": {
-          "string": ""
+          "string": "Prüfen Sie die Kopfzeile Ihrer Datei auf ungewöhnliche Werte."
         }
       },
       "missingLabel": {
@@ -2854,46 +2877,49 @@
           "developer_comment": "{label} will have the text \"label\" and refers to the \"label\" property. The name of the property is not translated."
         },
         "description": {
-          "string": ""
+          "string": "Das Label ist der Name, unter dem jedes Objekt in Central und anderswo angezeigt wird."
         }
       },
       "duplicateColumn": {
         "title": {
-          "string": ""
+          "string": "Doppelte Spaltenüberschriften"
         },
         "description": {
-          "string": ""
+          "string": "Jede Spalte braucht eine eigene Überschrift."
         },
         "headersReused": {
-          "string": "{count, plural, one {} other {}}",
+          "string": "{count, plural, one {Diese Überschrift kommt mehr als einmal vor:} other {Diese Überschriften kommen mehr als einmal vor:}}",
           "developer_comment": "This text is followed by a list of column headers."
         }
       },
       "emptyColumn": {
         "title": {
-          "string": ""
+          "string": "Leere Zelle in der Kopfzeile"
         },
         "description": {
-          "string": ""
+          "string": "Bitte entfernen Sie leere Spalten aus Ihrer Datei."
         }
       }
     },
     "EntityUploadExtraProperties": {
       "action": {
         "selectAll": {
-          "string": "",
+          "string": "Alle auswählen",
           "developer_comment": "This is the text of a button that allows the user to select all the columns of a table."
         }
       },
       "created": {
-        "string": ""
+        "string": "Diese Eigenschaft wurde bei einem früheren Hochladeversuch angelegt."
       },
       "createdAll": {
-        "string": ""
+        "string": "Alle Eigenschaften wurden bei einem früheren Hochladeversuch angelegt."
       }
     },
     "EntityUploadFileSelect": {
       "upload": {
+        "string": "Eine .csv-Datei hochladen"
+      },
+      "replace": {
         "string": ""
       },
       "errors": {
@@ -2901,11 +2927,11 @@
       },
       "text": {
         "full": {
-          "string": "",
+          "string": "Ziehen Sie eine .csv-Datei hierher oder {chooseFile}",
           "developer_comment": "{chooseFile} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nchoose a file"
         },
         "chooseFile": {
-          "string": "",
+          "string": "wählen Sie eine Datei aus",
           "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {chooseFile} is in the following text:\n\nDrag and drop a .csv file here, or {chooseFile}"
         }
       },
@@ -2915,7 +2941,7 @@
     },
     "EntityUploadHeaderReview": {
       "title": {
-        "string": "{count, plural, one {} other {}}",
+        "string": "{count, plural, one {{count} Warnung prüfen} other {{count} Warnungen prüfen}}",
         "developer_comment": "This text is shown above a section where the user can review warnings about their data."
       }
     },
@@ -2925,7 +2951,7 @@
       },
       "status": {
         "creatingProperties": {
-          "string": ""
+          "string": "Neue Eigenschaften werden angelegt…"
         },
         "sending": {
           "string": "Datei senden... ({percentUploaded})",
@@ -2937,34 +2963,56 @@
         }
       }
     },
+    "EntityUploadRowCounts": {
+      "created": {
+        "full": {
+          "string": "{count, plural, one {} other {}}",
+          "developer_comment": "{rows} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} rows"
+        },
+        "rows": {
+          "string": "{count, plural, one {} other {}}",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {rows} is in the following text. (The plural form of the text is shown.)\n\n{rows} will be created."
+        }
+      },
+      "updated": {
+        "full": {
+          "string": "{count, plural, one {} other {}}",
+          "developer_comment": "{rows} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} rows"
+        },
+        "rows": {
+          "string": "{count, plural, one {} other {}}",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {rows} is in the following text. (The plural form of the text is shown.)\n\n{rows} will be updated."
+        }
+      }
+    },
     "EntityUploadWarnings": {
       "introduction": {
-        "string": ""
+        "string": "Einige Zeilen enthalten Warnungen, die das Ergebnis des Hochladens beeinflussen können."
       },
       "systemProperties": {
-        "string": "",
+        "string": "Systemeigenschaften lassen sich nicht per .csv-Datei setzen",
         "developer_comment": "\"Properties\" refers to Entity properties."
       },
       "caseMismatch": {
         "title": {
-          "string": "",
+          "string": "Die Spalte ähnelt einer vorhandenen Eigenschaft, stimmt aber nicht mit ihr überein",
           "developer_comment": "\"Property\" refers to an Entity property."
         },
         "description": {
-          "string": ""
+          "string": "Bei Spaltennamen zählt die Groß- und Kleinschreibung. Prüfen Sie Schreibweise und Großbuchstaben."
         },
         "existingProperty": {
-          "string": "",
+          "string": "Vorhandene Eigenschaft",
           "developer_comment": "\"Property\" refers to an Entity property."
         }
       },
       "invalidProperties": {
-        "string": "{count, plural, one {} other {}}",
+        "string": "{count, plural, one {Diese Spalte ist kein gültiger Eigenschaftsname} other {Diese Spalten sind keine gültigen Eigenschaftsnamen}}",
         "developer_comment": "\"Property\" refers to an Entity property."
       },
       "missingProperties": {
         "title": {
-          "string": "{count, plural, one {} other {}}",
+          "string": "{count, plural, one {Eigenschaft nicht in der Datei gefunden} other {Eigenschaften nicht in der Datei gefunden}}",
           "developer_comment": "\"Property\" refers to an Entity property."
         },
         "description": {
@@ -2975,37 +3023,37 @@
       "extraProperties": {
         "title": {
           "one": {
-            "string": ""
+            "string": "Die Spalte passt zu keiner vorhandenen Eigenschaft"
           },
           "multiple": {
-            "string": ""
+            "string": "Diese Spalten passen zu keiner vorhandenen Eigenschaft"
           }
         },
         "description": {
           "one": {
-            "string": ""
+            "string": "Wählen Sie die Spalte aus, um eine neue Eigenschaft anzulegen, sonst wird sie ignoriert."
           },
           "multiple": {
-            "string": "",
+            "string": "Wählen Sie aus, welche angelegt werden sollen; die übrigen werden ignoriert.",
             "developer_comment": "\"Ones\" refers to \"columns\"."
           }
         },
         "error": {
           "one": {
-            "string": ""
+            "string": "Sobald Sie alle Fehler behoben haben, können Sie die Spalte auswählen."
           },
           "multiple": {
-            "string": "",
+            "string": "Sobald Sie alle Fehler behoben haben, können Sie auswählen, welche angelegt werden sollen.",
             "developer_comment": "\"Ones\" refers to \"columns\"."
           }
         }
       },
       "propertiesIgnored": {
-        "string": "{count, plural, one {} other {}}",
+        "string": "{count, plural, one {Diese Eigenschaft wird ignoriert.} other {Diese Eigenschaften werden ignoriert.}}",
         "developer_comment": "\"Property\" refers to an Entity property."
       },
       "columnsIgnored": {
-        "string": "{count, plural, one {} other {}}"
+        "string": "{count, plural, one {Diese Spalte wird ignoriert.} other {Diese Spalten werden ignoriert.}}"
       },
       "row": {
         "raggedRows": {
@@ -3059,7 +3107,7 @@
     },
     "FieldKeyEdit": {
       "title": {
-        "string": "",
+        "string": "App-Benutzer „{displayName}“ bearbeiten",
         "developer_comment": "This is the title at the top of a pop-up for editing an App User. {displayName} is the the name of the App User"
       }
     },
@@ -3097,10 +3145,6 @@
           "string": "Zuletzt benutzt",
           "developer_comment": "This is the text of a table column header."
         },
-        "lastUsedAndActions": {
-          "string": "{lastUsed}/ {actions}",
-          "developer_comment": "Header for the table column that shows the last used date and action buttons."
-        },
         "configureClient": {
           "string": "Client konfigurieren",
           "developer_comment": "Header for the table column that shows QR codes to configure data collection clients such as ODK Collect."
@@ -3110,14 +3154,14 @@
         "string": "Ès gibt noch keine Benutzer der App. Sie müssen zumindest einen erstellen, um Formulare herunterladen zu können und um Daten aus Ihrem Gerät hochzuladen."
       },
       "noFilterResults": {
-        "string": ""
+        "string": "Kein App-Benutzer passt zum aktuellen Filter."
       },
       "alert": {
         "create": {
           "string": "Der App-Benutzer \"{displayName}\" ist erstellt worden."
         },
         "edit": {
-          "string": ""
+          "string": "Der App-Benutzer „{displayName}“ wurde aktualisiert."
         },
         "revoke": {
           "string": "Der Zugriff des App-Benutzers {displayName} wurde erfolgreich widerrufen.\n"
@@ -3262,16 +3306,6 @@
       "accessRevoked": {
         "string": "Zugriffsberechtigung zurückgezogen",
         "developer_comment": "This text is shown for an App User whose access has been revoked."
-      },
-      "action": {
-        "editAppUser": {
-          "string": "",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        },
-        "revokeAccess": {
-          "string": "Zugriffsberechtigung entziehen",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
       }
     },
     "FormAttachmentLinkDataset": {
@@ -3302,7 +3336,7 @@
         }
       },
       "orDrag": {
-        "string": "",
+        "string": "oder ziehen Sie Dateien auf diesen Bereich, um sie hochzuladen",
         "developer_comment": "This text is shown next to a button with the text \"choose files\"."
       },
       "problem": {
@@ -3480,6 +3514,22 @@
         }
       }
     },
+    "FormAutosaveSettings": {
+      "autosaveSetting": {
+        "description": {
+          "string": ""
+        },
+        "enabled": {
+          "string": ""
+        },
+        "disabled": {
+          "string": ""
+        },
+        "unselectable": {
+          "string": ""
+        }
+      }
+    },
     "FormDelete": {
       "title": {
         "string": "Formulare löschen",
@@ -3583,7 +3633,7 @@
       },
       "placeholder": {
         "note": {
-          "string": ""
+          "string": "Beschreiben Sie diese Version (optional)…"
         }
       }
     },
@@ -3777,11 +3827,11 @@
     },
     "FormEditWebForm": {
       "title": {
-        "string": ""
+        "string": "Neue Standard-Webformulare"
       },
       "description": {
         "full": {
-          "string": "",
+          "string": "Neu angelegte Formulare verwenden für Vorschau, Übermittlungen im Browser und das Bearbeiten von Übermittlungen jetzt standardmäßig ODK Web Forms. Einige fortgeschrittene Formularfunktionen werden eventuell noch nicht vollständig unterstützt, {learnMore}",
           "developer_comment": "{learnMore} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nlearn more"
         },
         "learnMore": {
@@ -3791,7 +3841,7 @@
       },
       "alert": {
         "settingSaved": {
-          "string": ""
+          "string": "Einstellung des Formularentwurfs gespeichert."
         }
       }
     },
@@ -3812,7 +3862,7 @@
       },
       "infoNav": {
         "entityLists": {
-          "string": "{count, plural, one {{count} Verknüpfter Objektliste} other {{count} Verknüpfter Objektlisten}}"
+          "string": "{count, plural, one {Liste der verknüpften Entität} other {Listen verknüpfter Entitäten}}"
         },
         "updatedDatasets": {
           "string": "Aktualisierungen",
@@ -3823,7 +3873,7 @@
           "developer_comment": "This text is shown as a header in a dropdown about related entity lists that are used as attachments by this form."
         },
         "appUsers": {
-          "string": "{count, plural, one {{count} App-Benutzer zugewiesen} other {{count} App-Benutzer zugewiesen}}"
+          "string": "{count, plural, one {Zugewiesene App-Nutzer} other {Zugewiesene App-Nutzer}}"
         }
       },
       "draftNav": {
@@ -3840,16 +3890,6 @@
       }
     },
     "FormList": {
-      "title": {
-        "string": "Formulare",
-        "developer_comment": "This is a title shown above a section of the page."
-      },
-      "action": {
-        "create": {
-          "string": "Neu",
-          "developer_comment": "This is the text of a button that is used to create a new Form."
-        }
-      },
       "emptyTable": {
         "string": "Keine Formulare zum Anzeigen vorhanden."
       },
@@ -3966,19 +4006,6 @@
         }
       }
     },
-    "FormOverviewRightNow": {
-      "stateCaption": {
-        "open": {
-          "string": "Dieses Formular kann heruntergeladen werden und Übermittlungen werden akzeptiert."
-        },
-        "closing": {
-          "string": "Dieses Formular kann nicht heruntergeladen werden, aber Übermittlungen werden noch akzeptiert."
-        },
-        "closed": {
-          "string": "Dieses Formular kann nicht heruntergeladen werden und Übermittlungen werden nicht akzeptiert."
-        }
-      }
-    },
     "FormRestore": {
       "title": {
         "string": "Formular wiederherstellen",
@@ -4004,7 +4031,9 @@
         }
       },
       "formClosingTip": {
-        "string": "Dieses Formular steht auf Schliessen und akzeptiert seine endgültigen Übermittlungen. Es kann nicht heruntergeladen werden, aber Übermittlungen werden noch akzeptiert."
+        "0": {
+          "string": "Dieses Formular wird geschlossen."
+        }
       }
     },
     "FormSettings": {
@@ -4045,12 +4074,12 @@
           "developer_comment": "Description of a section. {formName} is replaced with the name of the Form"
         },
         "enketoDescription": {
-          "string": "",
+          "string": "Wird nicht mehr aktiv weiterentwickelt. Für Spezialfunktionen, die ODK Web Forms noch nicht unterstützt.",
           "developer_comment": "This text is shown under the option of Enketo for Form settings."
         },
         "odkWebFormsDescription": {
           "full": {
-            "string": "",
+            "string": "Eine moderne Oberfläche, die Enketo nach und nach ablöst. {preview}.",
             "developer_comment": "{preview} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nSee a preview"
           },
           "preview": {
@@ -4081,20 +4110,24 @@
       }
     },
     "FormSubmissions": {
+      "purgeDescription": {
+        "string": "Übermittlungen und übermittlungsbezogene Daten werden nach 30 Tagen im Papierkorb gelöscht."
+      },
+      "deletedTitle": {
+        "string": "{formName} (Gelöschte Übermittlungen)",
+        "developer_comment": "{formName} is the title/xmlFormId of the Form."
+      },
+      "action": {
+        "toggleDeletedSubmissions": {
+          "string": "Gelöschte anzeigen",
+          "developer_comment": "\"deleted\" refers to deleted Submissions"
+        }
+      },
       "analyzeDisabled": {
         "string": "OData-Zugriff ist wegen Formularverschlüsselung nicht verfügbar."
       },
       "analyzeDisabledDeletedData": {
         "string": "Der OData-Zugriff ist für gelöschte Übermittlungen nicht verfügbar"
-      },
-      "purgeDescription": {
-        "string": "Übermittlungen und übermittlungsbezogene Daten werden nach 30 Tagen im Papierkorb gelöscht."
-      },
-      "action": {
-        "toggleDeletedSubmissions": {
-          "string": "{count, plural, one {{count} gelöscht Übermittlung} other {{count} gelöschte Übermittlungen}}",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
       }
     },
     "FormTable": {
@@ -4208,7 +4241,7 @@
     "FormWebFormsSettingsConfirmation": {
       "webformsConfirmation": {
         "description": {
-          "string": "",
+          "string": "Möchten Sie wirklich von Enketo zu ODK Web Forms wechseln?",
           "developer_comment": "The words \"ODK Web Forms\" and \"Enketo\" should not be translated"
         },
         "useOdkWebForms": {
@@ -4295,7 +4328,7 @@
       },
       "preview": {
         "string": "Vorschau",
-        "developer_comment": "This is text shown as a label above the preview of Markdown formatting (special formatting of user-submitted text)"
+        "developer_comment": "This is text shown as a label above a preview of something."
       }
     },
     "Multiselect": {
@@ -4396,6 +4429,11 @@
       },
       "dismissTooltip": {
         "string": "Klicken Sie hier, um diese Warnung für 30 Tage aufzuheben."
+      }
+    },
+    "PageHeading": {
+      "helpButtonLabel": {
+        "string": "Klicken Sie hier, um den Hilfetext anzuzeigen"
       }
     },
     "Pagination": {
@@ -4553,11 +4591,11 @@
         "1": {
           "introduction": {
             "0": {
-              "string": ""
+              "string": "Wählen Sie zuerst ein Verschlüsselungspasswort. Der Server speichert dieses Passwort nicht. Nur wer es kennt, kann Ihre Übermittlungen entschlüsseln und lesen."
             },
             "1": {
               "full": {
-                "string": "",
+                "string": "Wenn Sie dieses Verschlüsselungspasswort verlieren, gibt es {no} Möglichkeit, es oder Ihre Daten wiederherzustellen.",
                 "developer_comment": "{no} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nno"
               },
               "no": {
@@ -4575,13 +4613,13 @@
       },
       "field": {
         "hint": {
-          "string": "",
+          "string": "Hinweis zum Verschlüsselungspasswort (optional)",
           "developer_comment": "This is the text of a form field."
         }
       },
       "alert": {
         "passphraseTooShort": {
-          "string": ""
+          "string": "Das Verschlüsselungspasswort muss mindestens 10 Zeichen lang sein."
         }
       }
     },
@@ -4620,51 +4658,15 @@
         "string": "Formular-Status",
         "developer_comment": "This is the title at the top of a pop-up."
       },
-      "introduction": {
-        "0": {
-          "string": "Formular-Status steuern den Lebenszyklusstatus eines jeden Formulars. Normalerweise, aber nicht immer, beginnt ein Formular im Status Offen und geht weiter über Schließen nach Geschlossen, wenn es nicht mehr benötigt wird."
+      "description": {
+        "open": {
+          "string": "Es können neue Übermittlungen begonnen und eingereicht werden."
         },
-        "1": {
-          "full": {
-            "string": "{open} Formulare sind bereit zum Download und akzeptieren neue Einreichungen.",
-            "developer_comment": "{open} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nOpen"
-          },
-          "open": {
-            "string": "Offen",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {open} is in the following text:\n\n{open} Forms are available to download and will accept new Submissions."
-          }
+        "closing": {
+          "string": "Neue Übermittlungen können nicht gestartet werden, aber bereits laufende Übermittlungen können weiterhin abgeschlossen werden."
         },
-        "2": {
-          "full": {
-            "string": "{closing} Formulare akzeptieren neue Einreichungen, aber {not} sind nicht zum Download bereit.",
-            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {closing} has the text: Closing\n- {not} has the text: not"
-          },
-          "closing": {
-            "string": "Schließen",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {closing} is in the following text:\n\n{closing} Forms will accept new Submissions, but are {not} available to download."
-          },
-          "not": {
-            "string": "nicht",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not} is in the following text:\n\n{closing} Forms will accept new Submissions, but are {not} available to download."
-          }
-        },
-        "3": {
-          "full": {
-            "string": "{closed} Formulare können {not1} heruntergeladen werden und akzeptieren {not2} neuen Übermittlungen.",
-            "developer_comment": "The following are separate strings that will be translated below. They will be formatted within ODK Central, for example, they might be bold or a link.\n\n- {closed} has the text: Closed\n- {not1} has the text: not\n- {not2} has the text: not"
-          },
-          "closed": {
-            "string": "Geschlossene",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {closed} is in the following text:\n\n{closed} Forms are {not1} available to download and will {not2} accept new Submissions."
-          },
-          "not1": {
-            "string": "nicht",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not1} is in the following text:\n\n{closed} Forms are {not1} available to download and will {not2} accept new Submissions."
-          },
-          "not2": {
-            "string": "nicht",
-            "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {not2} is in the following text:\n\n{closed} Forms are {not1} available to download and will {not2} accept new Submissions."
-          }
+        "closed": {
+          "string": "Es können keine neuen Übermittlungen gestartet und laufende Übermittlungen nicht abgeschlossen werden."
         }
       }
     },
@@ -4716,7 +4718,7 @@
       },
       "action": {
         "create": {
-          "string": "Neu",
+          "string": "",
           "developer_comment": "This is the text of a button that is used to create a new Project."
         }
       },
@@ -4806,9 +4808,6 @@
         "archived": {
           "0": {
             "string": "Dieses Projekt wurde archiviert."
-          },
-          "1": {
-            "string": "In dieser Version von ODK Central dürfen Sie ein Projekt nicht dearchivieren. Jedoch ist die Funktion zum Dearchivieren eines Projekts für eine zukünftige Version geplant."
           }
         }
       },
@@ -4969,18 +4968,18 @@
     },
     "PropertyInput": {
       "invalidName": {
-        "string": ""
+        "string": "Der Name der Eigenschaft ist ungültig"
       },
       "duplicate": {
         "title": {
-          "string": ""
+          "string": "Eine Eigenschaft mit diesem Namen gibt es bereits"
         },
         "description": {
-          "string": ""
+          "string": "Namen von Eigenschaften müssen eindeutig sein, unabhängig von der Groß- und Kleinschreibung."
         }
       },
       "tryDifferent": {
-        "string": "",
+        "string": "Versuchen Sie einen anderen Namen.",
         "developer_comment": "\"Name\" refers to the name of an Entity property."
       }
     },
@@ -5007,7 +5006,7 @@
     },
     "PublicLinkEdit": {
       "title": {
-        "string": "",
+        "string": "Öffentlichen Zugangslink „{displayName}“ bearbeiten",
         "developer_comment": "This is the title at the top of a pop-up for editing a Public Access Link. {displayName} is the display name of the Public Link"
       }
     },
@@ -5048,7 +5047,7 @@
           "string": "Ihr öffentlicher Zugangslink wurde erfolgreich erstellt und ist jetzt live. Kopieren Sie ihn unten, um ihn zu verteilen."
         },
         "edit": {
-          "string": ""
+          "string": "Der öffentliche Zugangslink „{displayName}“ wurde aktualisiert."
         },
         "revoke": {
           "string": "Der öffentliche Zugangslink \"{displayName}\" wurde erfolgreich widerrufen. Keine weiteren Übermittlungen über diesen Link werden akzeptiert."
@@ -5068,13 +5067,18 @@
     },
     "PublicLinkRow": {
       "action": {
-        "edit": {
-          "string": "Öffentlichen Zugangslink bearbeiten",
+        "copyLink": {
+          "string": "Link kopieren",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         },
-        "revoke": {
-          "string": "Widerrufen",
+        "openInNewTab": {
+          "string": "In einem neuen Tab öffnen",
           "developer_comment": "This is the text for an action, for example, the text of a button."
+        }
+      },
+      "alert": {
+        "urlCopied": {
+          "string": "URL kopiert."
         }
       },
       "revoked": {
@@ -5093,7 +5097,7 @@
     },
     "PublicLinkTable": {
       "noFilterResults": {
-        "string": ""
+        "string": "Kein öffentlicher Zugangslink passt zum aktuellen Filter."
       },
       "header": {
         "once": {
@@ -5240,7 +5244,7 @@
       },
       "introduction": {
         "0": {
-          "string": ""
+          "string": "Zum Herunterladen dieser Daten wird Ihr Verschlüsselungspasswort benötigt."
         }
       },
       "hint": {
@@ -5282,7 +5286,7 @@
     "SubmissionDefDropdown": {
       "action": {
         "downloadXml": {
-          "string": "",
+          "string": "XML herunterladen",
           "developer_comment": "This is the text for an action, for example, the text of a button."
         }
       }
@@ -5438,7 +5442,7 @@
         "developer_comment": "This text is shown next to an Entity when the Entity has been deleted."
       },
       "entityErrorInstructions": {
-        "string": ""
+        "string": "Prüfen Sie die Formulardefinition und die Übermittlung auf Fehler. Bearbeiten Sie die Übermittlung nach der Korrektur und senden Sie sie erneut, um die Verarbeitung zu wiederholen."
       }
     },
     "SubmissionFieldDropdown": {
@@ -5629,10 +5633,6 @@
     },
     "SubmissionTable": {
       "header": {
-        "stateAndActions": {
-          "string": "Status und Aktionen",
-          "developer_comment": "This is the text of a table column header."
-        },
         "deletedAt": {
           "string": "Gelöscht am",
           "developer_comment": "Heading of the column that shows Submission deletion timestamp"
@@ -5706,18 +5706,15 @@
         "string": "Nur der Besitzer des Kontos kann sein eigenes Passwort direkt setzen."
       },
       "alert": {
+        "includedInBreach": {
+          "string": ""
+        },
         "mismatch": {
           "string": "Bitte prüfen Sie, dass ihre neuen Passwörter übereinstimmen."
         },
         "success": {
           "string": "Ihr Passwort wurde erfolgreich aktualisiert."
         }
-      }
-    },
-    "UserHome": {
-      "title": {
-        "string": "Benutzer-Einstellungen",
-        "developer_comment": "This is shown as the title at the top of the page."
       }
     },
     "UserList": {

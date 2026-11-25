@@ -480,7 +480,8 @@ export default {
         "reprocess": "Die vorherige Übermittlung in der Offline-Aktualisierungskette wurde empfangen"
       }
     },
-    "deleted": "(gelöscht)"
+    "deleted": "(gelöscht)",
+    "entityErrorInstructions": "Prüfen Sie die Formulardefinition und die Übermittlung auf Fehler. Bearbeiten Sie die Übermittlung nach der Korrektur und senden Sie sie erneut, um die Verarbeitung zu wiederholen."
   },
   "es": {
     "title": {
@@ -632,7 +633,8 @@ export default {
         "reprocess": "È stato ricevuto l'invio precedente nella catena di aggiornamento offline"
       }
     },
-    "deleted": "(cancellato)"
+    "deleted": "(cancellato)",
+    "entityErrorInstructions": "Verifica che la definizione del formulario e l'invio non contengano problemi. Dopo aver apportato le correzioni, modifica l'invio e invialo di nuovo per ritentare l'elaborazione."
   },
   "ja": {
     "title": {
@@ -774,7 +776,8 @@ export default {
         "reprocess": "离线更新链中的前序提交已接收"
       }
     },
-    "deleted": "（已删除）"
+    "deleted": "（已删除）",
+    "entityErrorInstructions": "检查表单定义和提交内容是否存在问题。修正后，编辑该提交并重新提交以重试。"
   },
   "zh-Hant": {
     "title": {
@@ -814,7 +817,9 @@ export default {
         "force": "已處理來自積壓的提交，而離線更新鏈中沒有先前的提交",
         "reprocess": "前次離線更新鏈提交已收到"
       }
-    }
+    },
+    "deleted": "（已刪除）",
+    "entityErrorInstructions": "請檢查表單定義與提交資料是否有問題。修正後，請編輯提交資料並重新提交，以再次嘗試處理。"
   }
 }
 </i18n>

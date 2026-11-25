@@ -107,6 +107,7 @@ const status = computed(() => {
   "de": {
     "rowCount": "{count} Datenzeile gefunden | {count} Datenzeilen gefunden",
     "status": {
+      "creatingProperties": "Neue Eigenschaften werden angelegt…",
       "sending": "Datei senden... ({percentUploaded})",
       "processing": "Datei verarbeiten..."
     }
@@ -114,6 +115,7 @@ const status = computed(() => {
   "es": {
     "rowCount": "{count} fila de datos encontradas | {count} filas de datos encontradas | {count} filas de datos encontradas",
     "status": {
+      "creatingProperties": "Creando nuevas propiedades…",
       "sending": "Enviando archivo… ({percentUploaded})",
       "processing": "Procesando archivo…"
     }
@@ -129,6 +131,7 @@ const status = computed(() => {
   "it": {
     "rowCount": "{count} riga di dati trovata | {count} righe di dati trovate | {count} righe di dati trovate",
     "status": {
+      "creatingProperties": "Creazione delle nuove proprietà…",
       "sending": "Inviando il file...({percentUploaded})",
       "processing": "Processando il file..."
     }
@@ -143,6 +146,7 @@ const status = computed(() => {
   "zh": {
     "rowCount": "找到{count}行数据",
     "status": {
+      "creatingProperties": "正在创建新属性…",
       "sending": "传送文件...({percentUploaded})",
       "processing": "处理文件..."
     }
@@ -150,6 +154,7 @@ const status = computed(() => {
   "zh-Hant": {
     "rowCount": "找到{count}行資料",
     "status": {
+      "creatingProperties": "正在建立新屬性…",
       "sending": "傳送檔案… ({percentUploaded})",
       "processing": "處理檔案…"
     }

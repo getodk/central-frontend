@@ -224,12 +224,57 @@ defineEmits(['rows']);
 <i18n>
 {
   "de": {
+    "introduction": "Einige Zeilen enthalten Warnungen, die das Ergebnis des Hochladens beeinflussen können.",
+    "systemProperties": "Systemeigenschaften lassen sich nicht per .csv-Datei setzen",
+    "caseMismatch": {
+      "title": "Die Spalte ähnelt einer vorhandenen Eigenschaft, stimmt aber nicht mit ihr überein",
+      "description": "Bei Spaltennamen zählt die Groß- und Kleinschreibung. Prüfen Sie Schreibweise und Großbuchstaben.",
+      "existingProperty": "Vorhandene Eigenschaft"
+    },
+    "invalidProperties": "Diese Spalte ist kein gültiger Eigenschaftsname | Diese Spalten sind keine gültigen Eigenschaftsnamen",
+    "missingProperties": {
+      "title": "Eigenschaft nicht in der Datei gefunden | Eigenschaften nicht in der Datei gefunden"
+    },
+    "extraProperties": {
+      "title": {
+        "one": "Die Spalte passt zu keiner vorhandenen Eigenschaft",
+        "multiple": "Diese Spalten passen zu keiner vorhandenen Eigenschaft"
+      },
+      "description": {
+        "one": "Wählen Sie die Spalte aus, um eine neue Eigenschaft anzulegen, sonst wird sie ignoriert.",
+        "multiple": "Wählen Sie aus, welche angelegt werden sollen; die übrigen werden ignoriert."
+      },
+      "error": {
+        "one": "Sobald Sie alle Fehler behoben haben, können Sie die Spalte auswählen.",
+        "multiple": "Sobald Sie alle Fehler behoben haben, können Sie auswählen, welche angelegt werden sollen."
+      }
+    },
+    "propertiesIgnored": "Diese Eigenschaft wird ignoriert. | Diese Eigenschaften werden ignoriert.",
+    "columnsIgnored": "Diese Spalte wird ignoriert. | Diese Spalten werden ignoriert.",
     "row": {
       "raggedRows": "In einigen Zeilen wurden weniger Spalten als erwartet gefunden:",
       "largeCell": "Einige Zellen sind ungewöhnlich groß, was auf Schwierigkeiten beim Lesen Ihrer Datei hinweisen kann:"
-    }
+    },
+    "title": "{count} Warnung prüfen | {count} Warnungen prüfen"
   },
   "es": {
+    "introduction": "Algunas filas contienen avisos que pueden afectar a los resultados de la carga.",
+    "systemProperties": "Las propiedades del sistema no se pueden configurar mediante la importación de un archivo .csv",
+    "caseMismatch": {
+      "title": "La columna es similar a una propiedad ya existente, pero no coincide con ella",
+      "description": "Los nombres de las columnas distinguen entre mayúsculas y minúsculas. Comprueba la ortografía y el uso de mayúsculas.",
+      "existingProperty": "Propiedad existente"
+    },
+    "invalidProperties": "Esta columna no es un nombre de propiedad válido | Estas columnas no son nombres de propiedades válidos | Estas columnas no son nombres de propiedades válidos",
+    "missingProperties": {
+      "title": "No se ha encontrado la propiedad en el archivo | No se han encontrado propiedades en el archivo | No se han encontrado propiedades en el archivo"
+    },
+    "extraProperties": {
+      "title": {
+        "one": "La columna no coincide con ninguna propiedad existente",
+        "multiple": "Estas columnas no coinciden con las propiedades existentes"
+      }
+    },
     "row": {
       "raggedRows": "Se encontraron menos columnas de las esperadas en algunas filas:",
       "largeCell": "Algunas celdas son anormalmente grandes, lo que puede indicar dificultades para leer su archivo:"
@@ -246,7 +291,7 @@ defineEmits(['rows']);
     "invalidProperties": "Cette colonne ne constitue pas un nom de propriété valide | Ces colonnes ne constituent pas des noms de propriété valides | Ces colonnes ne constituent pas des noms de propriété valides",
     "missingProperties": {
       "title": "Propriété pas trouvée dans le fichier | Propriétés pas trouvées dans le fichier | Propriétés pas trouvées dans le fichier",
-      "description": "Cette propriété restera vide | Ces propriétés resterons vides | Ces propriétés resterons vides"
+      "description": "Cette propriété restera vide pour les nouvelles entités et inchangée pour les entités mises à jour. | Ces propriétés resteront vides pour les nouvelles entités et inchangées pour les entités mises à jour. | Ces propriétés resteront vides pour les nouvelles entités et inchangées pour les entités mises à jour."
     },
     "extraProperties": {
       "title": {
@@ -271,10 +316,38 @@ defineEmits(['rows']);
     "title": "Vérifiez {count} message d'avertissement | Vérifiez {count} messages d'avertissement | Vérifiez {count} messages d'avertissement"
   },
   "it": {
+    "introduction": "Alcune righe contengono avvisi che potrebbero influire sul risultato del caricamento.",
+    "systemProperties": "Le proprietà di sistema non possono essere impostate con il caricamento di un .csv",
+    "caseMismatch": {
+      "title": "La colonna è simile a una proprietà esistente ma non corrisponde",
+      "description": "I nomi delle colonne distinguono tra maiuscole e minuscole. Controlla l'ortografia e le maiuscole.",
+      "existingProperty": "Proprietà esistente"
+    },
+    "invalidProperties": "Questa colonna non è un nome di proprietà valido | Queste colonne non sono nomi di proprietà validi | Queste colonne non sono nomi di proprietà validi",
+    "missingProperties": {
+      "title": "Proprietà non trovata nel file | Proprietà non trovate nel file | Proprietà non trovate nel file"
+    },
+    "extraProperties": {
+      "title": {
+        "one": "La colonna non corrisponde a nessuna proprietà esistente",
+        "multiple": "Queste colonne non corrispondono a nessuna proprietà esistente"
+      },
+      "description": {
+        "one": "Seleziona la colonna per creare una nuova proprietà, altrimenti verrà ignorata.",
+        "multiple": "Seleziona quelle da creare, altrimenti verranno ignorate."
+      },
+      "error": {
+        "one": "Dopo aver corretto tutti gli errori, potrai selezionare la colonna.",
+        "multiple": "Dopo aver corretto tutti gli errori, potrai selezionare quelle da creare."
+      }
+    },
+    "propertiesIgnored": "Questa proprietà verrà ignorata. | Queste proprietà verranno ignorate. | Queste proprietà verranno ignorate.",
+    "columnsIgnored": "Questa colonna verrà ignorata. | Queste colonne verranno ignorate. | Queste colonne verranno ignorate.",
     "row": {
       "raggedRows": "In alcune righe sono state trovate meno colonne del previsto:",
       "largeCell": "Alcune celle sono eccessivamente grandi, il che può indicare difficoltà nella lettura del file:"
-    }
+    },
+    "title": "Controlla {count} avviso | Controlla {count} avvisi | Controlla {count} avvisi"
   },
   "pt": {
     "row": {
@@ -283,16 +356,72 @@ defineEmits(['rows']);
     }
   },
   "zh": {
+    "introduction": "部分行包含可能影响上传结果的警告。",
+    "systemProperties": "系统属性无法通过 .csv 上传设置",
+    "caseMismatch": {
+      "title": "此列与现有属性相似但不匹配",
+      "description": "列名区分大小写。请检查拼写和大小写。",
+      "existingProperty": "现有属性"
+    },
+    "invalidProperties": "这些列不是有效的属性名称",
+    "missingProperties": {
+      "title": "文件中未找到的属性"
+    },
+    "extraProperties": {
+      "title": {
+        "one": "列与现有属性不匹配",
+        "multiple": "这些列与现有属性不匹配"
+      },
+      "description": {
+        "one": "选择该列以创建新属性，否则该列将被忽略。",
+        "multiple": "选择要创建的内容，否则它们将被忽略。"
+      },
+      "error": {
+        "one": "修正所有错误后，您就可以选择该列。",
+        "multiple": "修正所有错误后，您就可以选择要创建哪些内容。"
+      }
+    },
+    "propertiesIgnored": "这些属性将被忽略。",
+    "columnsIgnored": "这些列将被忽略。",
     "row": {
       "raggedRows": "部分行包含的纵列数少于预期：",
       "largeCell": "部分单元格异常过大，这可能会使文件读取失败："
-    }
+    },
+    "title": "查看 {count} 个警告"
   },
   "zh-Hant": {
+    "introduction": "部分資料列含有可能影響上傳結果的警告。",
+    "systemProperties": "無法透過 .csv 上傳設定系統屬性",
+    "caseMismatch": {
+      "title": "此欄與現有屬性相似，但不完全相符",
+      "description": "欄位名稱區分大小寫。請檢查拼字和大小寫。",
+      "existingProperty": "現有屬性"
+    },
+    "invalidProperties": "這些欄位名稱不是有效的屬性名稱",
+    "missingProperties": {
+      "title": "檔案中找不到這些屬性"
+    },
+    "extraProperties": {
+      "title": {
+        "one": "欄位與現有屬性不符",
+        "multiple": "這些欄位與現有屬性不符"
+      },
+      "description": {
+        "one": "選取此欄位以建立新屬性，否則將會略過。",
+        "multiple": "選取要建立的欄位，否則將會略過。"
+      },
+      "error": {
+        "one": "修正所有錯誤後，即可選取此欄位。",
+        "multiple": "修正所有錯誤後，即可選取要建立的欄位。"
+      }
+    },
+    "propertiesIgnored": "這些屬性將會被略過。",
+    "columnsIgnored": "這些欄位將會被略過。",
     "row": {
       "raggedRows": "在某些行中發現的列數少於預期：",
       "largeCell": "有些儲存格異常大，這可能表示讀取檔案有困難："
-    }
+    },
+    "title": "檢查{count}個警告"
   }
 }
 </i18n>

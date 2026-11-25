@@ -279,6 +279,8 @@ export default {
       "num_datasets_deleted": "Anzahl der Löschvorgänge in der Entitätsliste",
       "num_dataset_properties_deleted": "Anzahl der Löschereignisse für Entitätseigenschaften",
       "num_owner_only_datasets_per_project": "Anzahl der Objektlisten, die nur dem Eigentümer vorbehalten sind",
+      "num_custom_user_properties": "Anzahl der Benutzereigenschaften",
+      "num_user_property_filtered_datasets": "Anzahl der Objektlisten, die über Benutzereigenschaften eingeschränkt sind",
       "num_properties": "Anzahl der Eigenschaften",
       "num_creation_forms": "Anzahl der Formulare, die die Objektliste aktualisieren",
       "num_followup_forms": "Anzahl der Formulare, die die Objektliste verwenden",
@@ -290,7 +292,6 @@ export default {
       "num_entities_updated": "Anzahl der modifizierten Objekte",
       "num_entity_conflicts": "Anzahl der Objekte, die jemals einen Konflikt hatten",
       "num_entity_conflicts_resolved": "Anzahl der Objekte mit Konflikt jetzt als gelöst markiert",
-      "num_bulk_create_events": "Anzahl von Bulk-Uploads",
       "biggest_bulk_upload": "Anzahl der Zeilen im grössten Bulk-Upload",
       "sso_enabled": "SSO auf dem Server aktiviert",
       "login_customization_logo_set": "Set mit benutzerdefinierten Logos für die Anmeldeseite",
@@ -328,7 +329,11 @@ export default {
       "num_repeat_entity_update_forms": "Anzahl der Formulare, die Entitäten in Wiederholungen/repeats aktualisieren",
       "num_entity_create_update_forms": "Anzahl der Formulare, die Entitäten sowohl erstellen als auch aktualisieren",
       "num_entities_with_geometry": "Anzahl der Entitäten mit Geometriedaten",
-      "num_multi_entity_errors": "Anzahl der Fehler durch wiederholte Entitäten"
+      "num_multi_entity_errors": "Anzahl der Fehler durch wiederholte Entitäten",
+      "num_wf_submissions": "Anzahl der Übermittlungen mit Web Forms",
+      "num_enketo_submissions": "Anzahl der Übermittlungen mit Enketo",
+      "num_wf_submission_edits": "Anzahl der Bearbeitungen von Übermittlungen mit Web Forms",
+      "num_enketo_submission_edits": "Anzahl der Bearbeitungen von Übermittlungen mit Enketo"
     }
   },
   "es": {
@@ -387,7 +392,6 @@ export default {
       "num_entities_updated": "Número de Entidades modificadas",
       "num_entity_conflicts": "Número de entidades que han tenido conflictos en algún momento",
       "num_entity_conflicts_resolved": "Número de entidades con conflicto ahora marcadas como resueltas",
-      "num_bulk_create_events": "Número de cargas masivas",
       "biggest_bulk_upload": "Número de filas en la mayor carga masiva",
       "sso_enabled": "SSO habilitado en el servidor",
       "login_customization_logo_set": "Conjunto de logotipos personalizados para la página de inicio de sesión",
@@ -485,10 +489,11 @@ export default {
       "num_entity_updates": "Nombre de mises à jour de l'entité",
       "num_entity_updates_sub": "Nombre de mises à jour d'Entités par Soumissions.",
       "num_entity_updates_api": "Nombre de mises à jour d'Entités via l'API",
+      "num_entity_updates_bulk": "Nombre d'entités mises à jour par envoi en masse",
       "num_entities_updated": "Nombre d'Entités modifiées",
       "num_entity_conflicts": "Nombre d'Entités ayant déjà eu un conflit",
       "num_entity_conflicts_resolved": "Nombre d'Entités avec conflit désormais marqué comme résolu",
-      "num_bulk_create_events": "Nombre d'envois en masse",
+      "num_bulk_create_events": "Nombre d'envois en masse (création seulement)",
       "biggest_bulk_upload": "Nombre de lignes du plus gros envoi en masse",
       "sso_enabled": "Authentification unique (SSO) activée",
       "login_customization_logo_set": "Logo personnalisé sur la page de connexion",
@@ -517,6 +522,8 @@ export default {
       "num_entity_creates_sub": "Nombre d'Entités créées par soumissions",
       "num_entity_creates_api": "Nombre d'Entités créées par API",
       "num_entity_creates_bulk": "Nombre d'Entités créées par envoi en masse",
+      "num_bulk_update_events": "Nombre d'envois en masse (mises à jour seulement)",
+      "num_bulk_create_and_update_events": "Nombre d'envois en masse (création et mises à jour)",
       "max_geo_per_form": "Nombre de soumissions maximum ayant des donnés geo dans un formulaire",
       "num_entity_bulk_deletes": "Nombre d'événements de suppression en masse",
       "num_datasets_with_geometry": "Nombre de listes d'entités avec une propriété \"geometry\"",
@@ -599,6 +606,9 @@ export default {
       "description_length": "Lunghezza della descrizione del progetto",
       "num_datasets_deleted": "Numero di eventi di eliminazione dall'elenco delle entità",
       "num_dataset_properties_deleted": "Numero di eventi di eliminazione della proprietà dell'entità",
+      "num_owner_only_datasets_per_project": "Numero di Liste Entità con accesso solo alle proprie entità",
+      "num_custom_user_properties": "Numero di proprietà utente personalizzate",
+      "num_user_property_filtered_datasets": "Numero di Liste Entità filtrate per proprietà utente",
       "num_properties": "Numero di proprietà",
       "num_creation_forms": "Numero di formulari che aggiornano la Lista di Entità",
       "num_followup_forms": "Numero di formulari che usano Lista di Entità",
@@ -610,7 +620,6 @@ export default {
       "num_entities_updated": "Numero di entità modificate",
       "num_entity_conflicts": "Numero di entità mai in conflitto",
       "num_entity_conflicts_resolved": "Numero di entità con conflitto ora contrassegnato come risolto",
-      "num_bulk_create_events": "Numero di caricamenti collettivi",
       "biggest_bulk_upload": "Numero di righe nel caricamento collettivo più grande",
       "sso_enabled": "SSO abilitato sul server",
       "login_customization_logo_set": "Set di loghi personalizzati per la pagina di accesso",
@@ -650,7 +659,9 @@ export default {
       "num_entities_with_geometry": "Numero di entità con proprietà geometrica",
       "num_multi_entity_errors": "Numero di errori da Entità ripetute",
       "num_wf_submissions": "Numero di invii con Web Forms",
-      "num_enketo_submissions": "Numero di invii con Enketo"
+      "num_enketo_submissions": "Numero di invii con Enketo",
+      "num_wf_submission_edits": "Numero di modifiche agli invii con Web Forms",
+      "num_enketo_submission_edits": "Numero di modifiche agli invii con Enketo"
     }
   },
   "ja": {
@@ -740,7 +751,6 @@ export default {
       "num_entities_updated": "Número de Entidades modificadas",
       "num_entity_conflicts": "Número total de Entidades com conflito",
       "num_entity_conflicts_resolved": "Número de Entidades com conflito agora marcados como resolvidos",
-      "num_bulk_create_events": "Número de carregamentos em massa",
       "biggest_bulk_upload": "Número de linhas no maior carregamento em massa",
       "sso_enabled": "SSO habilitado no servidor",
       "num_client_audit_attachments": "Número de Anexos de Auditoria de Cliente",
@@ -872,6 +882,9 @@ export default {
       "description_length": "项目描述长度",
       "num_datasets_deleted": "实体列表删除事件数量",
       "num_dataset_properties_deleted": "实体属性删除事件数量",
+      "num_owner_only_datasets_per_project": "仅限所有者访问的实体列表数量",
+      "num_custom_user_properties": "自定义用户属性的数量",
+      "num_user_property_filtered_datasets": "受用户属性限制的实体列表数量",
       "num_properties": "属性数量",
       "num_creation_forms": "更新实体列表的表单数量",
       "num_followup_forms": "使用实体列表的表单数量",
@@ -883,7 +896,6 @@ export default {
       "num_entities_updated": "改动后的实体数量",
       "num_entity_conflicts": "有过冲突的实体个数",
       "num_entity_conflicts_resolved": "当前标记为已解决冲突的实体个数",
-      "num_bulk_create_events": "批量更新数量",
       "biggest_bulk_upload": "最大批量上传的行数",
       "sso_enabled": "服务器上已启用SSO",
       "login_customization_logo_set": "自定义登录页面标志设置",
@@ -921,7 +933,11 @@ export default {
       "num_repeat_entity_update_forms": "可更新重复实体的表单数量",
       "num_entity_create_update_forms": "创建并更新实体的表单数量",
       "num_entities_with_geometry": "含有地理数据的实体数量",
-      "num_multi_entity_errors": "重复实体的报错数量"
+      "num_multi_entity_errors": "重复实体的报错数量",
+      "num_wf_submissions": "通过网页版表单提交的数量",
+      "num_enketo_submissions": "通过Enketo提交的数量",
+      "num_wf_submission_edits": "通过浏览器对提交进行的编辑次数",
+      "num_enketo_submission_edits": "通过Enketo对提交进行的编辑次数"
     }
   },
   "zh-Hant": {
@@ -964,6 +980,11 @@ export default {
       "num_submissions_from_public_links": "來自公共連結的提交數量",
       "num_submissions_from_web_users": "網路使用者提交的數量",
       "description_length": "專案描述的長度",
+      "num_datasets_deleted": "實體清單刪除事件數",
+      "num_dataset_properties_deleted": "實體屬性刪除事件數",
+      "num_owner_only_datasets_per_project": "限制為僅限擁有者的實體清單數",
+      "num_custom_user_properties": "自訂使用者屬性數",
+      "num_user_property_filtered_datasets": "依使用者屬性限制的實體清單數",
       "num_properties": "特性數量",
       "num_creation_forms": "更新實體列表的表格數量",
       "num_followup_forms": "使用實體清單的表單數量",
@@ -975,9 +996,12 @@ export default {
       "num_entities_updated": "修改實體的數量",
       "num_entity_conflicts": "曾經發生衝突的實體數量",
       "num_entity_conflicts_resolved": "現在標記為已解決的衝突實體數量",
-      "num_bulk_create_events": "批次上傳數量",
       "biggest_bulk_upload": "最大批次上傳行數",
       "sso_enabled": "伺服器上啟用 SSO",
+      "login_customization_logo_set": "已設定自訂登入頁面標誌",
+      "login_customization_hero_image_set": "已設定自訂登入頁面主視覺圖片",
+      "login_customization_title_set": "已設定自訂登入頁面標題",
+      "login_customization_description_set": "已設定自訂登入頁面說明",
       "num_client_audit_attachments": "客戶審核附件數量",
       "num_client_audit_attachments_failures": "客戶審核處理失敗的數量",
       "num_client_audit_rows": "客戶端審核行數",
@@ -1009,7 +1033,11 @@ export default {
       "num_repeat_entity_update_forms": "可更新重複實體的表單數量",
       "num_entity_create_update_forms": "建立並更新實體的表單數量",
       "num_entities_with_geometry": "含有地理資料的實體數量",
-      "num_multi_entity_errors": "重複實體的錯誤次數"
+      "num_multi_entity_errors": "重複實體的錯誤次數",
+      "num_wf_submissions": "透過網頁表單填寫的提交資料數",
+      "num_enketo_submissions": "透過 Enketo 填寫的提交資料數",
+      "num_wf_submission_edits": "透過網頁表單編輯提交資料的次數",
+      "num_enketo_submission_edits": "透過 Enketo 編輯提交資料的次數"
     }
   }
 }

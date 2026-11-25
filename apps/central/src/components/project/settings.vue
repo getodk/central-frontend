@@ -186,8 +186,7 @@ export default {
         "archive": "Archivovat tento projekt"
       },
       "archived": [
-        "Tento projekt byl archivován.",
-        "V této verzi ODK Central nelze archivovat Projekt. Schopnost vyjmout projekt z archivu je však naplánována na budoucí vydání."
+        "Tento projekt byl archivován."
       ]
     }
   },
@@ -215,8 +214,7 @@ export default {
         "archive": "Dieses Projekt archivieren"
       },
       "archived": [
-        "Dieses Projekt wurde archiviert.",
-        "In dieser Version von ODK Central dürfen Sie ein Projekt nicht dearchivieren. Jedoch ist die Funktion zum Dearchivieren eines Projekts für eine zukünftige Version geplant."
+        "Dieses Projekt wurde archiviert."
       ]
     },
     "alert": {
@@ -247,8 +245,7 @@ export default {
         "archive": "Archivar este proyecto"
       },
       "archived": [
-        "Este proyecto ha sido archivado.",
-        "En esta versión de ODK Central, no podrá desarchivar proyectos. No obstante, dicha funcionalidad está planeada para futuros desarrollos."
+        "Este proyecto ha sido archivado."
       ]
     },
     "alert": {
@@ -279,8 +276,7 @@ export default {
         "archive": "Archiver ce projet"
       },
       "archived": [
-        "Le projet a été archivé.",
-        "Dans cette version d'ODK Central, vous ne pouvez pas désarchiver un projet. Cependant, la possibilité de désarchiver un projet est prévue pour une prochaine version."
+        "Le projet a été archivé."
       ]
     },
     "alert": {
@@ -311,8 +307,7 @@ export default {
         "archive": "Arsipkan Proyek ini"
       },
       "archived": [
-        "Proyek ini telah diarsipkan.",
-        "Pada versi ODK Central sekarang, Anda tidak dapat membatalkan pengarsipan sebuah Proyek. Namun, pilihan untuk membantalkan pengarsipan sebuah Proyek telah direncanakan untuk versi mendatang."
+        "Proyek ini telah diarsipkan."
       ]
     }
   },
@@ -340,8 +335,7 @@ export default {
         "archive": "Archivia questo Progetto"
       },
       "archived": [
-        "Il Progetto è stato archiviato",
-        "In questa versione di ODK Central, non puoi annullare l'archiviazione di un progetto. Tuttavia, la possibilità di annullare l'archiviazione di un progetto è prevista per una versione futura."
+        "Il Progetto è stato archiviato"
       ]
     },
     "alert": {
@@ -372,8 +366,7 @@ export default {
         "archive": "このプロジェクトをアーカイブする"
       },
       "archived": [
-        "このプロジェクトはアーカイブされました。",
-        "このバージョンのODK Centralでは、プロジェクトの非アーカイブ化はできません。プロジェクトの非アーカイブ機能は将来的にリリースされる予定です。"
+        "このプロジェクトはアーカイブされました。"
       ]
     }
   },
@@ -401,8 +394,7 @@ export default {
         "archive": "Arquivar esse projeto"
       },
       "archived": [
-        "O projeto foi arquivado.",
-        "Nessa versão do ODK Central você não pode desarquivar um projeto. Entretanto, essa funcionalidade está planejada para uma versão futura."
+        "O projeto foi arquivado."
       ]
     },
     "alert": {
@@ -433,8 +425,7 @@ export default {
         "archive": "Hifadhi Mradi huu kwenye kumbukumbu"
       },
       "archived": [
-        "Mradi huu umewekwa kwenye kumbukumbu.",
-        "Katika toleo hili la ODK Central, unaweza usiondoe Mradi kwenye kumbukumbu. Hata hivyo, uwezo wa kufuta Mradi umepangwa kwa ajili ya kutolewa siku zijazo."
+        "Mradi huu umewekwa kwenye kumbukumbu."
       ]
     }
   },
@@ -462,8 +453,7 @@ export default {
         "archive": "归档此项目"
       },
       "archived": [
-        "此项目已归档。",
-        "此版本ODK Central不支持项目取消归档，该功能计划在后续版本中推出。"
+        "此项目已归档。"
       ]
     },
     "alert": {
@@ -494,8 +484,7 @@ export default {
         "archive": "歸檔該專案"
       },
       "archived": [
-        "該專案已歸檔。",
-        "在此版本的 ODK Central 中，您無法取消專案的歸檔。但是，計劃在未來版本中提供專案取消歸檔的功能。"
+        "該專案已歸檔。"
       ]
     },
     "alert": {

@@ -233,6 +233,7 @@ const onShow = () => {
 {
   "de": {
     "action": {
+      "all": "Alle",
       "apply": "Anwenden"
     }
   },
@@ -261,11 +262,13 @@ const onShow = () => {
   },
   "zh": {
     "action": {
+      "all": "全部",
       "apply": "应用"
     }
   },
   "zh-Hant": {
     "action": {
+      "all": "全部",
       "apply": "應用"
     }
   }

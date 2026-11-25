@@ -227,6 +227,7 @@ export default {
     },
     "cannotChange": "Seul le propriétaire du compte peut directement définir son propre mot de passe.",
     "alert": {
+      "includedInBreach": "Ce mot de passe a déjà été compromis lors d’une fuite de données.",
       "mismatch": "Veuillez vérifier que vos nouveaux mots de passe correspondent.",
       "success": "Succès ! Votre mot de passe a été mis à jour."
     }

@@ -66,7 +66,8 @@
         "create": "创建",
         "update": "更新详情",
         "session_end": "撤销",
-        "delete": "删除"
+        "delete": "删除",
+        "property_set": "设置属性"
       },
       "analytics": "使用报告",
       "blobs": {
@@ -84,19 +85,25 @@
         "delete": "@:audit.action.default.delete"
       },
       "entity": {
+        "bulk_upsert": "导入数据",
         "bulk_delete": "批量删除",
         "bulk_restore": "批量恢复"
+      },
+      "actor_property": {
+        "create": "创建自定义属性"
       },
       "field_key": {
         "assignment_create": "授予权限",
         "assignment_delete": "移除权限",
         "create": "@:audit.action.default.create",
         "session_end": "@:audit.action.default.session_end",
-        "delete": "@:audit.action.default.delete"
+        "delete": "@:audit.action.default.delete",
+        "property_set": "@:audit.action.default.property_set"
       },
       "form": {
         "update_draft_set": "创建或更新草稿",
         "update_draft_replace": "替换草稿",
+        "update_draft_update": "更新草稿设置",
         "update_publish": "发布草稿",
         "update_draft_delete": "放弃草稿",
         "attachment_update": "更新附件",
@@ -112,7 +119,8 @@
         "assignment_delete": "移除权限",
         "create": "@:audit.action.default.create",
         "session_end": "@:audit.action.default.session_end",
-        "delete": "@:audit.action.default.delete"
+        "delete": "@:audit.action.default.delete",
+        "property_set": "@:audit.action.default.property_set"
       },
       "submission": {
         "purge": "清除上传的内容"
@@ -139,6 +147,7 @@
     }
   },
   "action": {
+    "add": "添加",
     "cancel": "取消",
     "clear": "清除",
     "close": "关闭",
@@ -164,9 +173,11 @@
     "refreshPage": "刷新页面",
     "resetPassword": "重置密码",
     "review": "审核",
+    "revoke": "撤销",
     "save": "保存",
     "saveSettings": "保存设置",
     "sort": "排序",
+    "tryAgain": "重试",
     "undo": "撤销",
     "update": "更新",
     "yesProceed": "是的，请继续",
@@ -176,8 +187,8 @@
     "collapse": "收起",
     "selectRow": "选择行",
     "reset": "重设",
+    "change": "更改",
     "upload": "上传",
-    "reviewParallelUpdates": "审核并行更新",
     "restore": "恢复"
   },
   "field": {
@@ -188,6 +199,7 @@
     "name": "名字",
     "newPassword": "新密码",
     "oldPassword": "旧密码",
+    "passphrase": "加密密码",
     "password": "密码",
     "passwordConfirm": "新密码（确认）",
     "title": "标题",
@@ -211,7 +223,8 @@
     "time": "时间",
     "type": "类型",
     "entities": "实体总数",
-    "lastEntity": "最新实体"
+    "lastEntity": "最新实体",
+    "value": "值"
   },
   "plural": {
     "appUser": "APP用户",
@@ -239,6 +252,7 @@
     "entityLists": "实体列表",
     "form": "表单",
     "forms": "表单",
+    "newForm": "新表单",
     "formAttachments": "表单附件",
     "project": "项目",
     "projects": "项目",
@@ -281,6 +295,7 @@
     "odkLogo": "ODK 标志",
     "defaultTitle": "欢迎使用 ODK Central",
     "defaultDescription": "登录您的帐户以开始使用",
+    "heroImage": "登录图片",
     "customLogoAlt": "组织标志"
   },
   "analytics": {
@@ -347,8 +362,12 @@
     "totalEntities": "实体总计",
     "versionShort": "版本{version}",
     "warning": "警告",
+    "recommended": "推荐",
     "none": "（无）",
     "search": "搜索",
+    "useEnketo": "Enketo兼容模式",
+    "updateInProgress": "正在进行更新请求",
+    "preview": "预览",
     "reviewState": "审核状态",
     "status": "状态",
     "version": "版本",
@@ -396,11 +415,6 @@
   },
   "router": {
     "unsavedChanges": "您确定要离开此页面吗？您的更改可能不会被保存。"
-  },
-  "formStateDescription": {
-    "open": "此表单可供下载且正在接收提交。",
-    "closing": "此表单不可下载但仍可接收提交。",
-    "closed": "此表单不可下载且不接收提交。"
   },
   "requestData": {
     "project": {

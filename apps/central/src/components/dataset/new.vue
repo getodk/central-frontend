@@ -246,7 +246,7 @@ const hideOrComplete = () => {
     "encrypted": "Questo progetto è criptato. I formulari e gli invii non saranno in grado di modificare le entità di questo elenco. Le entità devono essere gestite tramite Central o l'API.",
     "entityListName": "Nome Lista Entità",
     "success": [
-      "La Lista Entità \"{name}\" è stato creata.",
+      "La Lista Entità “{name}” è stata creata.",
       "È possibile iniziare ad usarlo aggiungendo le proprietà dei dati direttamente in questa pagina o caricando i formulari che lo utilizzano. In questo caso, le proprietà richiamate dal formulario saranno create automaticamente quando si pubblica il modulo."
     ],
     "problem": {

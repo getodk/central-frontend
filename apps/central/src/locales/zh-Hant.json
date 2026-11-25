@@ -23,6 +23,7 @@
     "title": "系統管理",
     "tab": {
       "audits": "伺服器數據軌跡",
+      "customization": "自訂",
       "analytics": "使用情況報告"
     }
   },
@@ -65,7 +66,8 @@
         "create": "建立",
         "update": "更新細節",
         "session_end": "撤銷",
-        "delete": "刪除"
+        "delete": "刪除",
+        "property_set": "設定屬性"
       },
       "analytics": "報告使用情況",
       "blobs": {
@@ -78,23 +80,30 @@
       "dataset": {
         "update": "更新",
         "update_publish": "發布",
+        "update_property_delete": "刪除屬性",
         "create": "@:audit.action.default.create",
         "delete": "@:audit.action.default.delete"
       },
       "entity": {
+        "bulk_upsert": "匯入資料",
         "bulk_delete": "大量刪除",
         "bulk_restore": "大量還原"
+      },
+      "actor_property": {
+        "create": "建立自訂屬性"
       },
       "field_key": {
         "assignment_create": "授予存取",
         "assignment_delete": "移除存取",
         "create": "@:audit.action.default.create",
         "session_end": "@:audit.action.default.session_end",
-        "delete": "@:audit.action.default.delete"
+        "delete": "@:audit.action.default.delete",
+        "property_set": "@:audit.action.default.property_set"
       },
       "form": {
         "update_draft_set": "建立或更新草稿",
         "update_draft_replace": "替換草稿",
+        "update_draft_update": "更新草稿設定",
         "update_publish": "發布草稿",
         "update_draft_delete": "放棄草稿",
         "attachment_update": "更新附件",
@@ -110,7 +119,8 @@
         "assignment_delete": "移除存取",
         "create": "@:audit.action.default.create",
         "session_end": "@:audit.action.default.session_end",
-        "delete": "@:audit.action.default.delete"
+        "delete": "@:audit.action.default.delete",
+        "property_set": "@:audit.action.default.property_set"
       },
       "submission": {
         "purge": "清除提交內容"
@@ -137,6 +147,7 @@
     }
   },
   "action": {
+    "add": "新增",
     "cancel": "取消",
     "clear": "清除",
     "close": "關閉",
@@ -162,9 +173,11 @@
     "refreshPage": "刷新頁面",
     "resetPassword": "重設密碼",
     "review": "審核",
+    "revoke": "撤銷",
     "save": "儲存",
     "saveSettings": "保存設定",
     "sort": "排序",
+    "tryAgain": "再試一次",
     "undo": "撤銷",
     "update": "更新",
     "yesProceed": "是的，請繼續",
@@ -174,8 +187,8 @@
     "collapse": "閉合",
     "selectRow": "選取列",
     "reset": "重設",
+    "change": "變更",
     "upload": "上傳",
-    "reviewParallelUpdates": "查看並行更新",
     "restore": "還原"
   },
   "field": {
@@ -186,8 +199,10 @@
     "name": "名稱",
     "newPassword": "新密碼",
     "oldPassword": "舊密碼",
+    "passphrase": "加密密碼",
     "password": "密碼",
     "passwordConfirm": "新密碼(確認)",
+    "title": "標題",
     "type": "類型"
   },
   "header": {
@@ -208,7 +223,8 @@
     "time": "時間",
     "type": "類型",
     "entities": "實體總數",
-    "lastEntity": "最新實體"
+    "lastEntity": "最新實體",
+    "value": "值"
   },
   "plural": {
     "appUser": "APP 使用者",
@@ -236,6 +252,7 @@
     "entityLists": "實體清單",
     "form": "表單",
     "forms": "表單",
+    "newForm": "新表單",
     "formAttachments": "表單附件",
     "project": "專案",
     "projects": "專案",
@@ -273,6 +290,13 @@
       "helpArticle": "此說明文件"
     },
     "learnMore": "了解更多。"
+  },
+  "login": {
+    "odkLogo": "ODK 標誌",
+    "defaultTitle": "歡迎使用 ODK Central",
+    "defaultDescription": "登入您的帳號以開始使用",
+    "heroImage": "登入圖片",
+    "customLogoAlt": "組織標誌"
   },
   "analytics": {
     "alwaysImprove": "我們一直努力改進 ODK Central.",
@@ -338,8 +362,12 @@
     "totalEntities": "實體總數",
     "versionShort": "v{version}",
     "warning": "警告",
+    "recommended": "建議",
     "none": "(無)",
     "search": "檢索",
+    "useEnketo": "Enketo 相容模式",
+    "updateInProgress": "更新請求處理中",
+    "preview": "預覽",
     "reviewState": "審核狀態",
     "status": "狀態",
     "version": "版本",
@@ -387,11 +415,6 @@
   },
   "router": {
     "unsavedChanges": "您確定要離開此頁面嗎？您的變更可能不會儲存。"
-  },
-  "formStateDescription": {
-    "open": "該表格可供下載並接受提交。",
-    "closing": "表格不可下載，但仍接受提交。",
-    "closed": "該表格不可下載，也不接受提交。"
   },
   "requestData": {
     "project": {

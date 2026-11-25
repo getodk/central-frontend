@@ -257,6 +257,9 @@ export default {
     },
     "field": {
       "note": "Versionshinweise"
+    },
+    "placeholder": {
+      "note": "Beschreiben Sie diese Version (optional)…"
     }
   },
   "es": {
@@ -338,6 +341,9 @@ export default {
     },
     "field": {
       "note": "Note della versione"
+    },
+    "placeholder": {
+      "note": "Descrivi questa versione (facoltativo)…"
     }
   },
   "ja": {
@@ -417,6 +423,12 @@ export default {
     "newProperties": "发布此草稿将创建 {count} 个属性。",
     "problem": {
       "409_6": "此草稿的版本名称与历史表单版本或已删除表单冲突。请使用下方字段修改为新名称，或上传新的表单定义文件。"
+    },
+    "field": {
+      "note": "版本说明"
+    },
+    "placeholder": {
+      "note": "描述此版本（可选）…"
     }
   },
   "zh-Hant": {
@@ -437,8 +449,15 @@ export default {
       "表單的每個版本，都需要獨一版本名稱。現在，您的草稿表單與先前發布的版本具有相同的版本名稱。您可以透過上傳具有所需名稱的表單定義來設定新的，也可以在下面輸入一個新的版本名稱，伺服器將為您更改它。",
       "您想繼續嗎？"
     ],
+    "newProperties": "發佈此草稿將建立 {count} 個屬性。",
     "problem": {
       "409_6": "此草案的版本名稱與此表單的過去版本或已刪除的表單衝突。請使用下面的欄位將其變更為新內容或上傳新的表單定義。"
+    },
+    "field": {
+      "note": "版本說明"
+    },
+    "placeholder": {
+      "note": "描述此版本（選填）…"
     }
   }
 }

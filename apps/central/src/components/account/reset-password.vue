@@ -151,6 +151,8 @@ export default {
     }
   },
   "zh-Hant": {
+    "title": "重設您的密碼",
+    "subtitle": "輸入您的電子郵件以重設密碼",
     "alert": {
       "success": "一封電子郵件已發送至 {email} 並附有進一步說明。"
     }

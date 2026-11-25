@@ -144,10 +144,10 @@ function hideModal() {
 <i18n>
 {
   "fr": {
-    "title": "Importation d'entités simplifiée 📤",
+    "title": "Une interface rafraîchie pour ODK Central",
     "body": [
-      "Intégrez plus rapidement vos entités dans ODK grâce à un processus de téléchargement CSV plus fluide. Bénéficiez de messages d'erreur et d'avertissements plus clairs, corrigez les problèmes et réessayez, le tout au même endroit.",
-      "Vous pouvez également créer de nouvelles propriétés directement à partir de votre fichier CSV."
+      "L’apparence d’ODK Central a été rafraîchie avec une navigation améliorée, des tableaux plus lisibles et une nouvelle teinte de bleu plus accessible.",
+      "Vous pouvez maintenant aussi mettre à jour plusieurs entités à la fois à l’aide d’un fichier CSV, prévisualiser l’accès aux entités à partir d’un lien public et copier ou ouvrir rapidement les URL des liens publics dans une nouvelle fenêtre."
     ]
   }
 }

@@ -532,7 +532,8 @@ export default {
 <i18n>
 {
   "cs": {
-    "noMatching": "Neexistují žádné odpovídající příspěvky."
+    "noMatching": "Neexistují žádné odpovídající příspěvky.",
+    "analyzeDisabled": "Přístup k OData není dostupný kvůli šifrování formuláře"
   },
   "de": {
     "action": {
@@ -550,7 +551,9 @@ export default {
       "emptyTable": "Es gibt keine gelöschten Übermittlungen.",
       "allRestoredOnPage": "Alle Übermittlungen auf dieser Seite wurden wiederhergestellt."
     },
-    "noMapDeleted": "Karte ist für gelöschte Übermittlungen nicht verfügbar"
+    "noMapDeleted": "Karte ist für gelöschte Übermittlungen nicht verfügbar",
+    "analyzeDisabled": "OData-Zugriff ist wegen Formularverschlüsselung nicht verfügbar.",
+    "analyzeDisabledDeletedData": "Der OData-Zugriff ist für gelöschte Übermittlungen nicht verfügbar"
   },
   "es": {
     "action": {
@@ -568,7 +571,9 @@ export default {
       "emptyTable": "No hay envíos eliminados.",
       "allRestoredOnPage": "Se han restablecido todas las Envíos de la página."
     },
-    "noMapDeleted": "El mapa no está disponible para los envíos eliminados."
+    "noMapDeleted": "El mapa no está disponible para los envíos eliminados.",
+    "analyzeDisabled": "El acceso a OData no está disponible debido al cifrado de Formulario",
+    "analyzeDisabledDeletedData": "El acceso OData no está disponible para los envíos eliminados"
   },
   "fr": {
     "action": {
@@ -586,7 +591,9 @@ export default {
       "emptyTable": "Il n'y a pas de Soumissions supprimées",
       "allRestoredOnPage": "Toutes les Soumissions de la page ont été restaurées."
     },
-    "noMapDeleted": "La carte n'es pas disponible pour les soumissions supprimées."
+    "noMapDeleted": "La carte n'es pas disponible pour les soumissions supprimées.",
+    "analyzeDisabled": "L'accès à OData n'est pas disponible en raison du chiffrement du formulaire",
+    "analyzeDisabledDeletedData": "L'accès OData n'est pas possible pour les soumissions supprimées."
   },
   "id": {
     "noMatching": "Tidak ada Pengiriman yang cocok."
@@ -607,7 +614,9 @@ export default {
       "emptyTable": "Non ci sono invii cancellati.",
       "allRestoredOnPage": "Tutti i contributi presenti nella pagina sono stati ripristinati."
     },
-    "noMapDeleted": "La Mappa non è disponibile per gli invii cancellati"
+    "noMapDeleted": "La Mappa non è disponibile per gli invii cancellati",
+    "analyzeDisabled": "L'accesso OData non è disponibile a causa della crittografia del formulario",
+    "analyzeDisabledDeletedData": "L'accesso OData non è disponibile per gli Invii cancellati"
   },
   "ja": {
     "noMatching": "照合できる提出済フォームはありません。"
@@ -626,10 +635,13 @@ export default {
       "emptyTable": "Não há Respostas excluídas",
       "allRestoredOnPage": "Todas as respostas na página foram recuperadas."
     },
-    "noMapDeleted": "O Mapa está indisponível para Respostas excluídas"
+    "noMapDeleted": "O Mapa está indisponível para Respostas excluídas",
+    "analyzeDisabled": "O acesso ao OData não está disponível devido à encriptação do Formulário",
+    "analyzeDisabledDeletedData": "O acesso ao OData não está disponível devido às Respostas excluídas"
   },
   "sw": {
-    "noMatching": "Hakuna Mawasilisho yanayolingana."
+    "noMatching": "Hakuna Mawasilisho yanayolingana.",
+    "analyzeDisabled": "Ufikiaji wa OData haupatikani kwa sababu ya usimbaji fiche wa Fomu"
   },
   "zh": {
     "action": {
@@ -647,7 +659,9 @@ export default {
       "emptyTable": "没有已删除的提交内容。",
       "allRestoredOnPage": "所有此页面上的提交内容都已还原。"
     },
-    "noMapDeleted": "对于已删除的提交内容，地图功能不可用"
+    "noMapDeleted": "对于已删除的提交内容，地图功能不可用",
+    "analyzeDisabled": "由于表单加密，OData访问不可用",
+    "analyzeDisabledDeletedData": "OData访问对已删除的提交不可用"
   },
   "zh-Hant": {
     "action": {
@@ -665,7 +679,9 @@ export default {
       "emptyTable": "沒有已刪除的提交內容。",
       "allRestoredOnPage": "頁面上的所有提交內容都已還原。"
     },
-    "noMapDeleted": "地圖無法用於已刪除的提交"
+    "noMapDeleted": "地圖無法用於已刪除的提交",
+    "analyzeDisabled": "由於表單加密，OData 存取不可用",
+    "analyzeDisabledDeletedData": "對於已刪除的提交內容，OData 存取不可用"
   }
 }
 </i18n>
