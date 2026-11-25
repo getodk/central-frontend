@@ -1528,7 +1528,7 @@
           "string": "Number of Entity updates via API"
         },
         "num_entity_updates_bulk": {
-          "string": "Number of updates through Bulk Upload"
+          "string": "Number of Entity updates via bulk upload"
         },
         "num_entities_updated": {
           "string": "Number of modified Entities"

@@ -121,7 +121,7 @@ export default {
       "num_entity_updates": "Number of Entity updates",
       "num_entity_updates_sub": "Number of Entity updates via Submissions",
       "num_entity_updates_api": "Number of Entity updates via API",
-      "num_entity_updates_bulk": "Number of updates through Bulk Upload",
+      "num_entity_updates_bulk": "Number of Entity updates via bulk upload",
       "num_entities_updated": "Number of modified Entities",
       "num_entity_conflicts": "Number of Entities ever with conflict",
       "num_entity_conflicts_resolved": "Number of Entities with conflict now marked as resolved",
