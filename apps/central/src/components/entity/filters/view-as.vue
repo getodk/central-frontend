@@ -1,12 +1,12 @@
 <template>
-  <multiselect v-if="showViewAs" id="entity-filters-view-as" single :model-value="selectValue"
+  <multiselect id="entity-filters-view-as" single :model-value="selectValue"
     :options="options" :loading="fieldKeys.initiallyLoading || formSummaryAssignments.initiallyLoading" :label="$t('viewAs')"
     :placeholder="placeholder" :none="$t('resetToMe')" :search="$t('common.search')"
     :disabled="disabled" :disabled-message="disabledMessage" @update:model-value="update"/>
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRequestData } from '../../../request-data';
 
@@ -32,10 +32,6 @@ const props = defineProps({
   }
 });
 const { dataset, fieldKeys, formSummaryAssignments } = useRequestData();
-
-// Only show viewAs dropdown if dataset has an access filter set
-const showViewAs = computed(() =>
-  dataset.dataExists && dataset.accessFilter != null);
 
 // Compute list of actor IDs and their display text (app users + public links).
 const options = computed(() => {
@@ -81,6 +77,12 @@ const selectValue = computed(() => {
 });
 
 const emit = defineEmits(['update:modelValue']);
+// Once the options load, reset any selected actor that is no longer available.
+watch([options, () => props.modelValue], ([currentOptions, modelValue]) => {
+  if (currentOptions != null && modelValue != null &&
+    !currentOptions.some(({ value }) => value === modelValue))
+    emit('update:modelValue', null);
+}, { immediate: true });
 
 const update = (value) => { emit('update:modelValue', value[0] ?? null); };
 const placeholder = ({ selectedText }) => selectedText ?? t('noUserSelected');

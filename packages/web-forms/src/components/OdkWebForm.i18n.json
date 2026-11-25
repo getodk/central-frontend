@@ -12,7 +12,7 @@
     "developer_comment": "Label for the button that moves to the next page in a paginated form."
   },
   "odk_web_forms.evaluation.error": {
-    "string": "Error found while evaluating this form. Error message: \"{message}\". Reported by {count, plural, one {field} other {fields}}: {fields}. Please contact the person who sent you the form link.",
+    "string": "{count, plural, one {Error found while evaluating this form. Error message: \"{message}\". Reported by field: {fields}. Please contact the person who sent you the form link.} other {Error found while evaluating this form. Error message: \"{message}\". Reported by fields: {fields}. Please contact the person who sent you the form link.}}",
     "developer_comment": "Form error banner message. {message} is the raw error message. {fields} is a string naming the fields affected. {count} is the number of fields reporting the error."
   },
   "odk_web_forms.validation.error": {

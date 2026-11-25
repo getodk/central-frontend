@@ -5,6 +5,7 @@ import { mergeMountOptions } from './lifecycle';
 import { mockHttp } from './http';
 import { mockRouter } from './router';
 import { testRequestData } from './request-data';
+import { apiPaths } from '../../src/util/request';
 import useEntities from '../../src/request-data/entities';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -31,7 +32,13 @@ export const loadEntityList = (mountOptions = {}) => {
   return mockHttp()
     .mount(EntityList, mergedOptions)
     .respondWithData(() => testData.extendedFieldKeys.sorted().map(testData.toActor)) // response data for entityCreators
-    .respondWithData(() => testData.extendedFieldKeys.sorted()) // response data for app user fieldKeys
-    .respondWithData(() => []) // response data for public link formSummaryAssignments
+    .respondIf(
+      ({ url }) => url === apiPaths.fieldKeys(project.id),
+      () => testData.extendedFieldKeys.sorted()
+    )
+    .respondIf(
+      ({ url }) => url === apiPaths.formSummaryAssignments(project.id, 'pub-link'),
+      () => []
+    )
     .respondWithData(() => (deleted ? testData.entityDeletedOData() : testData.entityOData()));
 };

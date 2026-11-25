@@ -18,7 +18,7 @@ except according to the terms contained in the LICENSE file.
         <div v-show="csvEntities != null">
           <p class="entity-upload-section-title">{{ $t('common.preview') }}</p>
           <entity-upload-row-counts v-if="csvEntities != null"
-            :entities="csvEntities"/>
+            v-bind="rowCounts"/>
           <div class="entity-upload-table-container">
             <entity-upload-table ref="table" :entities="csvSlice"
               :extra-properties="propertiesToCreate" :row-index="csvRow"
@@ -110,6 +110,10 @@ const { request, awaitingResponse: uploading } = useRequest();
 const validateHeader = ({ columns, errors: papaErrors }) => {
   const errorDetails = {};
   const warningDetails = {};
+  // missingProperties is separated from warningDetails even though it is shown
+  // as a warning, because there are cases where we don't want to surface it at
+  // all.
+  const missingProperties = [];
 
   // If there are errors from Papa Parse, just surface those and don't check for
   // other errors. If there are errors from Papa, then there is something pretty
@@ -134,10 +138,9 @@ const validateHeader = ({ columns, errors: papaErrors }) => {
     // in which case we expect there to be a label column.
     errorDetails.missingLabel = !columnSet.has('__id') && !columnSet.has('label');
 
-    warningDetails.missingProperties = [];
     const lowercaseProperties = new Map();
     for (const { name } of dataset.properties) {
-      if (!columnSet.has(name)) warningDetails.missingProperties.push(name);
+      if (!columnSet.has(name)) missingProperties.push(name);
 
       lowercaseProperties.set(name.toLowerCase(), name);
     }
@@ -189,6 +192,7 @@ const validateHeader = ({ columns, errors: papaErrors }) => {
   const result = {};
   if (errorDetails.count !== 0) result.errors = errorDetails;
   if (warningDetails.count !== 0) result.warnings = warningDetails;
+  if (missingProperties.length !== 0) result.missingProperties = missingProperties;
   return result;
 };
 
@@ -270,6 +274,18 @@ const parseEntities = async (file, headerResults, extraProperties, signal) => {
 // FILE SELECTION
 // Entities from the CSV file
 const csvEntities = shallowRef(null);
+const rowCounts = computed(() => {
+  if (csvEntities.value == null) return null;
+  let created = 0;
+  let updated = 0;
+  for (const entity of csvEntities.value) {
+    if (entity.uuid == null)
+      created += 1;
+    else
+      updated += 1;
+  }
+  return { created, updated };
+});
 // Metadata about the CSV file
 const fileMetadata = shallowRef(null);
 const errors = shallowRef(null);
@@ -313,13 +329,17 @@ const selectFile = (file) => {
         .then(results => {
           csvEntities.value = results.data;
 
-          if (validation.warnings != null || results.warnings.count !== 0) {
-            warnings.value = {
-              ...validation.warnings,
-              ...results.warnings.details,
-              count: (validation.warnings?.count ?? 0) + results.warnings.count
-            };
+          // Assemble warnings.
+          warnings.value = { count: 0, ...validation.warnings };
+          if (validation.missingProperties != null && rowCounts.value.created !== 0) {
+            warnings.value.missingProperties = validation.missingProperties;
+            warnings.value.count += 1;
           }
+          if (results.warnings.count !== 0) {
+            Object.assign(warnings.value, results.warnings.details);
+            warnings.value.count += results.warnings.count;
+          }
+          if (warnings.value.count === 0) warnings.value = null;
         })
         .catch(error => {
           if (!signal.aborted) {

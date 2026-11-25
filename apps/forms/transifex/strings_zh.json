@@ -33,6 +33,20 @@
         },
         "tryAgain": {
           "string": "重试"
+        },
+        "recover": {
+          "string": ""
+        },
+        "discard": {
+          "string": ""
+        }
+      },
+      "autosaveModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
         }
       },
       "previewModal": {
@@ -40,19 +54,19 @@
           "string": "数据有效"
         },
         "body": {
-          "string": "您输入的数据格式正确，但因当前处于表单预览模式，故未执行提交。"
+          "string": ""
         }
       },
       "submissionModal": {
         "title": {
-          "string": "表单提交成功！"
+          "string": ""
         },
         "body": {
-          "string": "您可继续填写此表单，或完成后关闭页面。"
+          "string": ""
         },
         "action": {
           "fillOutAgain": {
-            "string": "再次填写"
+            "string": ""
           }
         }
       },
@@ -66,7 +80,7 @@
       },
       "editSubmissionModal": {
         "title": {
-          "string": "提交成功"
+          "string": ""
         },
         "body": {
           "string": "页面即将跳转"
@@ -77,12 +91,12 @@
           "string": "提交错误"
         },
         "body": {
-          "string": "数据提交失败。错误信息：{errorMessage} 请关闭对话框后重试。若问题持续，请联系表单发放方或{supportEmail}。"
+          "string": ""
         }
       },
       "sendingDataModal": {
         "title": {
-          "string": "正在提交"
+          "string": ""
         },
         "body": {
           "string": "您的数据正在上传。在完成之前，请不要关闭此窗口。"
@@ -108,7 +122,7 @@
           "string": "提交错误"
         },
         "body": {
-          "string": "数据未完全提交。请点击“重试”按钮再次提交。若问题持续，请联系表单发放方或{supportEmail}。"
+          "string": ""
         }
       },
       "util": {
