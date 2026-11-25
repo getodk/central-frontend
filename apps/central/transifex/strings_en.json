@@ -2897,7 +2897,7 @@
           "developer_comment": "This text is followed by a list of one or more rows."
         },
         "description": {
-          "string": "Please check that these Entities already exist and have not been deleted."
+          "string": "These Entities cannot be updated. To proceed, either remove these Entities from the file, or ensure that they exist in the Entity List."
         }
       }
     },

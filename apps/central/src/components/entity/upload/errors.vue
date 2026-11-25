@@ -143,7 +143,7 @@ const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
     "unknownEntities": {
       // This text is followed by a list of one or more rows.
       "title": "Some rows contain Entity IDs that were not found in the Entity List:",
-      "description": "Please check that these Entities already exist and have not been deleted."
+      "description": "These Entities cannot be updated. To proceed, either remove these Entities from the file, or ensure that they exist in the Entity List."
     }
   }
 }
