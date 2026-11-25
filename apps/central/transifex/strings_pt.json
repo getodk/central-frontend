@@ -1527,6 +1527,9 @@
         "num_entity_updates_api": {
           "string": "Número de atualizações de Entidades via API"
         },
+        "num_entity_updates_bulk": {
+          "string": ""
+        },
         "num_entities_updated": {
           "string": "Número de Entidades modificadas"
         },
@@ -1537,7 +1540,7 @@
           "string": "Número de Entidades com conflito agora marcados como resolvidos"
         },
         "num_bulk_create_events": {
-          "string": "Número de carregamentos em massa"
+          "string": ""
         },
         "biggest_bulk_upload": {
           "string": "Número de linhas no maior carregamento em massa"
@@ -1622,6 +1625,12 @@
         },
         "num_entity_creates_bulk": {
           "string": "Número de Entidades criadas por upload em massa"
+        },
+        "num_bulk_update_events": {
+          "string": ""
+        },
+        "num_bulk_create_and_update_events": {
+          "string": ""
         },
         "max_geo_per_form": {
           "string": "Número máximo de Respostas com dados espaciais em um Formulários"
@@ -1911,8 +1920,8 @@
         }
       },
       "new": {
-        "string": "Nova",
-        "developer_comment": "This is the text of a button that is used to create a new Entity List. It is shown next to a heading whose text is \"Entity Lists\"."
+        "string": "",
+        "developer_comment": "This is the text of a button that is used to create a new Entity List."
       }
     },
     "DatasetNew": {
@@ -1948,8 +1957,8 @@
         "developer_comment": "This is a title shown above a section of the page."
       },
       "new": {
-        "string": "Nova",
-        "developer_comment": "This is shown on a button for creating new Entity Properties"
+        "string": "",
+        "developer_comment": "This is shown on a button for creating a new Entity property."
       }
     },
     "DatasetOverviewDatasetProperties": {
@@ -3884,12 +3893,6 @@
       "emptyTable": {
         "string": "Não há formulários para exibir."
       },
-      "action": {
-        "create": {
-          "string": "Novo",
-          "developer_comment": "This is the text of a button that is used to create a new Form."
-        }
-      },
       "alert": {
         "create": {
           "string": ""
@@ -4715,7 +4718,7 @@
       },
       "action": {
         "create": {
-          "string": "Novo",
+          "string": "",
           "developer_comment": "This is the text of a button that is used to create a new Project."
         }
       },

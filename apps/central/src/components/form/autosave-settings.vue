@@ -75,7 +75,10 @@ const setAutosaveEnabled = () => {
 {
   "fr": {
     "autosaveSetting": {
-      "description": "Enregistrer les données automatiquement en cas de fermeture ou d’actualisation du navigateur. Des données sensibles pourraient être conservées dans les réponses enregistrées."
+      "description": "Enregistrer les données automatiquement en cas de fermeture ou d’actualisation du navigateur. Des données sensibles pourraient être conservées dans les réponses enregistrées.",
+      "enabled": "L’enregistrement automatique est maintenant activé pour votre formulaire « {formName} ».",
+      "disabled": "L’enregistrement automatique est maintenant désactivé pour votre formulaire « {formName} ».",
+      "unselectable": "La configuration de l’enregistrement automatique n’est pas possible avec Enketo."
     }
   }
 }

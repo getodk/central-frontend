@@ -1527,6 +1527,9 @@
         "num_entity_updates_api": {
           "string": "Anzahl der Objektaktualisierungen über API"
         },
+        "num_entity_updates_bulk": {
+          "string": ""
+        },
         "num_entities_updated": {
           "string": "Anzahl der modifizierten Objekte"
         },
@@ -1537,7 +1540,7 @@
           "string": "Anzahl der Objekte mit Konflikt jetzt als gelöst markiert"
         },
         "num_bulk_create_events": {
-          "string": "Anzahl von Bulk-Uploads"
+          "string": ""
         },
         "biggest_bulk_upload": {
           "string": "Anzahl der Zeilen im grössten Bulk-Upload"
@@ -1622,6 +1625,12 @@
         },
         "num_entity_creates_bulk": {
           "string": "Anzahl der Objekte, die über Massen-Upload erstellt wurden"
+        },
+        "num_bulk_update_events": {
+          "string": ""
+        },
+        "num_bulk_create_and_update_events": {
+          "string": ""
         },
         "max_geo_per_form": {
           "string": "Maximale Anzahl von Übermittlungen mit Geodaten in einem Formular"
@@ -1911,8 +1920,8 @@
         }
       },
       "new": {
-        "string": "Neu",
-        "developer_comment": "This is the text of a button that is used to create a new Entity List. It is shown next to a heading whose text is \"Entity Lists\"."
+        "string": "",
+        "developer_comment": "This is the text of a button that is used to create a new Entity List."
       }
     },
     "DatasetNew": {
@@ -1948,8 +1957,8 @@
         "developer_comment": "This is a title shown above a section of the page."
       },
       "new": {
-        "string": "Neu",
-        "developer_comment": "This is shown on a button for creating new Entity Properties"
+        "string": "",
+        "developer_comment": "This is shown on a button for creating a new Entity property."
       }
     },
     "DatasetOverviewDatasetProperties": {
@@ -3007,7 +3016,7 @@
           "developer_comment": "\"Property\" refers to an Entity property."
         },
         "description": {
-          "string": "{count, plural, one {Diese Eigenschaft bleibt leer.} other {Diese Eigenschaften bleiben leer.}}",
+          "string": "{count, plural, one {} other {}}",
           "developer_comment": "\"Property\" refers to an Entity property."
         }
       },
@@ -3884,12 +3893,6 @@
       "emptyTable": {
         "string": "Keine Formulare zum Anzeigen vorhanden."
       },
-      "action": {
-        "create": {
-          "string": "Neu",
-          "developer_comment": "This is the text of a button that is used to create a new Form."
-        }
-      },
       "alert": {
         "create": {
           "string": "\"{name}\" wurde als Formularentwurf erzeugt."
@@ -4715,7 +4718,7 @@
       },
       "action": {
         "create": {
-          "string": "Neu",
+          "string": "",
           "developer_comment": "This is the text of a button that is used to create a new Project."
         }
       },
@@ -5840,15 +5843,15 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "Objekte einfacher hochladen 📤",
+        "string": "",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
         "0": {
-          "string": "Bringen Sie Ihre Objekte schneller nach ODK – mit einem übersichtlicheren CSV-Upload. Klarere Fehler und Warnungen, Probleme beheben und erneut versuchen, alles an einem Ort."
+          "string": ""
         },
         "1": {
-          "string": "Sie können jetzt auch neue Eigenschaften direkt aus Ihrer CSV-Datei anlegen."
+          "string": ""
         }
       }
     }

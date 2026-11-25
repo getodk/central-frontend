@@ -1527,6 +1527,9 @@
         "num_entity_updates_api": {
           "string": "Número de actualizaciones de entidades a través de la API"
         },
+        "num_entity_updates_bulk": {
+          "string": ""
+        },
         "num_entities_updated": {
           "string": "Número de Entidades modificadas"
         },
@@ -1537,7 +1540,7 @@
           "string": "Número de entidades con conflicto ahora marcadas como resueltas"
         },
         "num_bulk_create_events": {
-          "string": "Número de cargas masivas"
+          "string": ""
         },
         "biggest_bulk_upload": {
           "string": "Número de filas en la mayor carga masiva"
@@ -1622,6 +1625,12 @@
         },
         "num_entity_creates_bulk": {
           "string": "Número de entidades creadas mediante carga masiva"
+        },
+        "num_bulk_update_events": {
+          "string": ""
+        },
+        "num_bulk_create_and_update_events": {
+          "string": ""
         },
         "max_geo_per_form": {
           "string": "Número máximo de envíos con datos geográficos en un formulario"
@@ -1911,8 +1920,8 @@
         }
       },
       "new": {
-        "string": "Nueva",
-        "developer_comment": "This is the text of a button that is used to create a new Entity List. It is shown next to a heading whose text is \"Entity Lists\"."
+        "string": "",
+        "developer_comment": "This is the text of a button that is used to create a new Entity List."
       }
     },
     "DatasetNew": {
@@ -1948,8 +1957,8 @@
         "developer_comment": "This is a title shown above a section of the page."
       },
       "new": {
-        "string": "Nueva",
-        "developer_comment": "This is shown on a button for creating new Entity Properties"
+        "string": "",
+        "developer_comment": "This is shown on a button for creating a new Entity property."
       }
     },
     "DatasetOverviewDatasetProperties": {
@@ -3884,12 +3893,6 @@
       "emptyTable": {
         "string": "No hay formularios para mostrar."
       },
-      "action": {
-        "create": {
-          "string": "Nuevo",
-          "developer_comment": "This is the text of a button that is used to create a new Form."
-        }
-      },
       "alert": {
         "create": {
           "string": "\"{name}\" se ha creado como borrador de formulario."
@@ -4715,7 +4718,7 @@
       },
       "action": {
         "create": {
-          "string": "Nuevo",
+          "string": "",
           "developer_comment": "This is the text of a button that is used to create a new Project."
         }
       },
@@ -5840,7 +5843,7 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "Subidas de entidades más sencillas 📤",
+        "string": "",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
@@ -5848,7 +5851,7 @@
           "string": ""
         },
         "1": {
-          "string": "Ahora también puedes crear nuevas propiedades directamente desde tu archivo CSV."
+          "string": ""
         }
       }
     }

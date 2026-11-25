@@ -1527,6 +1527,9 @@
         "num_entity_updates_api": {
           "string": "Nombre de mises à jour d'Entités via l'API"
         },
+        "num_entity_updates_bulk": {
+          "string": "Nombre d'entités mises à jour par envoi en masse"
+        },
         "num_entities_updated": {
           "string": "Nombre d'Entités modifiées"
         },
@@ -1537,7 +1540,7 @@
           "string": "Nombre d'Entités avec conflit désormais marqué comme résolu"
         },
         "num_bulk_create_events": {
-          "string": "Nombre d'envois en masse"
+          "string": "Nombre d'envois en masse (création seulement)"
         },
         "biggest_bulk_upload": {
           "string": "Nombre de lignes du plus gros envoi en masse"
@@ -1622,6 +1625,12 @@
         },
         "num_entity_creates_bulk": {
           "string": "Nombre d'Entités créées par envoi en masse"
+        },
+        "num_bulk_update_events": {
+          "string": "Nombre d'envois en masse (mises à jour seulement)"
+        },
+        "num_bulk_create_and_update_events": {
+          "string": "Nombre d'envois en masse (création et mises à jour)"
         },
         "max_geo_per_form": {
           "string": "Nombre de soumissions maximum ayant des donnés geo dans un formulaire"
@@ -1911,8 +1920,8 @@
         }
       },
       "new": {
-        "string": "Nouvelle",
-        "developer_comment": "This is the text of a button that is used to create a new Entity List. It is shown next to a heading whose text is \"Entity Lists\"."
+        "string": "Nouvelle liste d'entités",
+        "developer_comment": "This is the text of a button that is used to create a new Entity List."
       }
     },
     "DatasetNew": {
@@ -1948,8 +1957,8 @@
         "developer_comment": "This is a title shown above a section of the page."
       },
       "new": {
-        "string": "Nouvelle",
-        "developer_comment": "This is shown on a button for creating new Entity Properties"
+        "string": "Nouvelle propriété",
+        "developer_comment": "This is shown on a button for creating a new Entity property."
       }
     },
     "DatasetOverviewDatasetProperties": {
@@ -3007,7 +3016,7 @@
           "developer_comment": "\"Property\" refers to an Entity property."
         },
         "description": {
-          "string": "{count, plural, one {Cette propriété restera vide} many {Ces propriétés resterons vides} other {Ces propriétés resterons vides}}",
+          "string": "{count, plural, one {Cette propriété restera vide pour les nouvelles entités et inchangée pour les entités mises à jour.} many {Ces propriétés resteront vides pour les nouvelles entités et inchangées pour les entités mises à jour.} other {Ces propriétés resteront vides pour les nouvelles entités et inchangées pour les entités mises à jour.}}",
           "developer_comment": "\"Property\" refers to an Entity property."
         }
       },
@@ -3511,13 +3520,13 @@
           "string": "Enregistrer les données automatiquement en cas de fermeture ou d’actualisation du navigateur. Des données sensibles pourraient être conservées dans les réponses enregistrées."
         },
         "enabled": {
-          "string": ""
+          "string": " L’enregistrement automatique est maintenant activé pour votre formulaire « {formName} »."
         },
         "disabled": {
-          "string": ""
+          "string": " L’enregistrement automatique est maintenant désactivé pour votre formulaire « {formName} »."
         },
         "unselectable": {
-          "string": ""
+          "string": "La configuration de l’enregistrement automatique n’est pas possible avec Enketo."
         }
       }
     },
@@ -3883,12 +3892,6 @@
     "FormList": {
       "emptyTable": {
         "string": "Il n'y a pas de formulaire à montrer."
-      },
-      "action": {
-        "create": {
-          "string": "Nouveau",
-          "developer_comment": "This is the text of a button that is used to create a new Form."
-        }
       },
       "alert": {
         "create": {
@@ -4715,7 +4718,7 @@
       },
       "action": {
         "create": {
-          "string": "Nouveau",
+          "string": "Nouveau projet",
           "developer_comment": "This is the text of a button that is used to create a new Project."
         }
       },
@@ -5704,7 +5707,7 @@
       },
       "alert": {
         "includedInBreach": {
-          "string": ""
+          "string": "Ce mot de passe a déjà été compromis lors d’une fuite de données."
         },
         "mismatch": {
           "string": "Veuillez vérifier que vos nouveaux mots de passe correspondent."
@@ -5840,15 +5843,15 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "Importation d'entités simplifiée 📤",
+        "string": "Une interface rafraîchie pour ODK Central",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
         "0": {
-          "string": "Intégrez plus rapidement vos entités dans ODK grâce à un processus de téléchargement CSV plus fluide. Bénéficiez de messages d'erreur et d'avertissements plus clairs, corrigez les problèmes et réessayez, le tout au même endroit."
+          "string": "L’apparence d’ODK Central a été rafraîchie avec une navigation améliorée, des tableaux plus lisibles et une nouvelle teinte de bleu plus accessible."
         },
         "1": {
-          "string": "Vous pouvez également créer de nouvelles propriétés directement à partir de votre fichier CSV."
+          "string": "Vous pouvez maintenant aussi mettre à jour plusieurs entités à la fois à l’aide d’un fichier CSV, prévisualiser l’accès aux entités à partir d’un lien public et copier ou ouvrir rapidement les URL des liens publics dans une nouvelle fenêtre."
         }
       }
     }

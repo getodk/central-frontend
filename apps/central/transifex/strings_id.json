@@ -1527,6 +1527,9 @@
         "num_entity_updates_api": {
           "string": ""
         },
+        "num_entity_updates_bulk": {
+          "string": ""
+        },
         "num_entities_updated": {
           "string": ""
         },
@@ -1621,6 +1624,12 @@
           "string": ""
         },
         "num_entity_creates_bulk": {
+          "string": ""
+        },
+        "num_bulk_update_events": {
+          "string": ""
+        },
+        "num_bulk_create_and_update_events": {
           "string": ""
         },
         "max_geo_per_form": {
@@ -1912,7 +1921,7 @@
       },
       "new": {
         "string": "",
-        "developer_comment": "This is the text of a button that is used to create a new Entity List. It is shown next to a heading whose text is \"Entity Lists\"."
+        "developer_comment": "This is the text of a button that is used to create a new Entity List."
       }
     },
     "DatasetNew": {
@@ -1949,7 +1958,7 @@
       },
       "new": {
         "string": "",
-        "developer_comment": "This is shown on a button for creating new Entity Properties"
+        "developer_comment": "This is shown on a button for creating a new Entity property."
       }
     },
     "DatasetOverviewDatasetProperties": {
@@ -3884,12 +3893,6 @@
       "emptyTable": {
         "string": "Tidak ada formulir untuk ditampilkan."
       },
-      "action": {
-        "create": {
-          "string": "Formulir Baru",
-          "developer_comment": "This is the text of a button that is used to create a new Form."
-        }
-      },
       "alert": {
         "create": {
           "string": ""
@@ -4715,7 +4718,7 @@
       },
       "action": {
         "create": {
-          "string": "Baru",
+          "string": "",
           "developer_comment": "This is the text of a button that is used to create a new Project."
         }
       },

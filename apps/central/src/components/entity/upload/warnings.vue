@@ -233,8 +233,7 @@ defineEmits(['rows']);
     },
     "invalidProperties": "Diese Spalte ist kein gültiger Eigenschaftsname | Diese Spalten sind keine gültigen Eigenschaftsnamen",
     "missingProperties": {
-      "title": "Eigenschaft nicht in der Datei gefunden | Eigenschaften nicht in der Datei gefunden",
-      "description": "Diese Eigenschaft bleibt leer. | Diese Eigenschaften bleiben leer."
+      "title": "Eigenschaft nicht in der Datei gefunden | Eigenschaften nicht in der Datei gefunden"
     },
     "extraProperties": {
       "title": {
@@ -292,7 +291,7 @@ defineEmits(['rows']);
     "invalidProperties": "Cette colonne ne constitue pas un nom de propriété valide | Ces colonnes ne constituent pas des noms de propriété valides | Ces colonnes ne constituent pas des noms de propriété valides",
     "missingProperties": {
       "title": "Propriété pas trouvée dans le fichier | Propriétés pas trouvées dans le fichier | Propriétés pas trouvées dans le fichier",
-      "description": "Cette propriété restera vide | Ces propriétés resterons vides | Ces propriétés resterons vides"
+      "description": "Cette propriété restera vide pour les nouvelles entités et inchangée pour les entités mises à jour. | Ces propriétés resteront vides pour les nouvelles entités et inchangées pour les entités mises à jour. | Ces propriétés resteront vides pour les nouvelles entités et inchangées pour les entités mises à jour."
     },
     "extraProperties": {
       "title": {
@@ -326,8 +325,7 @@ defineEmits(['rows']);
     },
     "invalidProperties": "Questa colonna non è un nome di proprietà valido | Queste colonne non sono nomi di proprietà validi | Queste colonne non sono nomi di proprietà validi",
     "missingProperties": {
-      "title": "Proprietà non trovata nel file | Proprietà non trovate nel file | Proprietà non trovate nel file",
-      "description": "Questa proprietà verrà lasciata vuota. | Queste proprietà verranno lasciate vuote. | Queste proprietà verranno lasciate vuote."
+      "title": "Proprietà non trovata nel file | Proprietà non trovate nel file | Proprietà non trovate nel file"
     },
     "extraProperties": {
       "title": {
@@ -367,8 +365,7 @@ defineEmits(['rows']);
     },
     "invalidProperties": "这些列不是有效的属性名称",
     "missingProperties": {
-      "title": "文件中未找到的属性",
-      "description": "这些属性将空置。"
+      "title": "文件中未找到的属性"
     },
     "extraProperties": {
       "title": {
@@ -402,8 +399,7 @@ defineEmits(['rows']);
     },
     "invalidProperties": "這些欄位名稱不是有效的屬性名稱",
     "missingProperties": {
-      "title": "檔案中找不到這些屬性",
-      "description": "這些屬性將保留空白。"
+      "title": "檔案中找不到這些屬性"
     },
     "extraProperties": {
       "title": {

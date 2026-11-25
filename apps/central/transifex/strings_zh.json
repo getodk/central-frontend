@@ -1527,6 +1527,9 @@
         "num_entity_updates_api": {
           "string": "通过API更新的实体数量"
         },
+        "num_entity_updates_bulk": {
+          "string": ""
+        },
         "num_entities_updated": {
           "string": "改动后的实体数量"
         },
@@ -1537,7 +1540,7 @@
           "string": "当前标记为已解决冲突的实体个数"
         },
         "num_bulk_create_events": {
-          "string": "批量更新数量"
+          "string": ""
         },
         "biggest_bulk_upload": {
           "string": "最大批量上传的行数"
@@ -1622,6 +1625,12 @@
         },
         "num_entity_creates_bulk": {
           "string": "通过批量上传创建的实体个数"
+        },
+        "num_bulk_update_events": {
+          "string": ""
+        },
+        "num_bulk_create_and_update_events": {
+          "string": ""
         },
         "max_geo_per_form": {
           "string": "表单中含有地理数据的最高提交数量"
@@ -1911,8 +1920,8 @@
         }
       },
       "new": {
-        "string": "更新",
-        "developer_comment": "This is the text of a button that is used to create a new Entity List. It is shown next to a heading whose text is \"Entity Lists\"."
+        "string": "",
+        "developer_comment": "This is the text of a button that is used to create a new Entity List."
       }
     },
     "DatasetNew": {
@@ -1948,8 +1957,8 @@
         "developer_comment": "This is a title shown above a section of the page."
       },
       "new": {
-        "string": "更新",
-        "developer_comment": "This is shown on a button for creating new Entity Properties"
+        "string": "",
+        "developer_comment": "This is shown on a button for creating a new Entity property."
       }
     },
     "DatasetOverviewDatasetProperties": {
@@ -3007,7 +3016,7 @@
           "developer_comment": "\"Property\" refers to an Entity property."
         },
         "description": {
-          "string": "{count, plural, other {这些属性将空置。}}",
+          "string": "{count, plural, other {}}",
           "developer_comment": "\"Property\" refers to an Entity property."
         }
       },
@@ -3884,12 +3893,6 @@
       "emptyTable": {
         "string": "暂无表单可显示。"
       },
-      "action": {
-        "create": {
-          "string": "更新",
-          "developer_comment": "This is the text of a button that is used to create a new Form."
-        }
-      },
       "alert": {
         "create": {
           "string": "表单草稿“{name}”已创建。"
@@ -4715,7 +4718,7 @@
       },
       "action": {
         "create": {
-          "string": "更新",
+          "string": "",
           "developer_comment": "This is the text of a button that is used to create a new Project."
         }
       },
@@ -5840,15 +5843,15 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "更轻松的实体上传 📤",
+        "string": "",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
         "0": {
-          "string": "通过更流畅的 CSV 上传流程，更快地将您的实体导入 ODK。在同一个地方即可获得更清晰的错误和警告提示、修复问题并重试。"
+          "string": ""
         },
         "1": {
-          "string": "您现在还可以直接从 CSV 创建新属性。"
+          "string": ""
         }
       }
     }

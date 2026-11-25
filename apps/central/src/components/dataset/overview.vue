@@ -84,35 +84,29 @@ const afterCreateProperty = () => {
     "entityProperties": "Vlastnosti entity"
   },
   "de": {
-    "entityProperties": "Objekteigenschaften",
-    "new": "Neu"
+    "entityProperties": "Objekteigenschaften"
   },
   "es": {
-    "entityProperties": "Propiedades de la entidad",
-    "new": "Nueva"
+    "entityProperties": "Propiedades de la entidad"
   },
   "fr": {
     "entityProperties": "Propriétés",
-    "new": "Nouvelle"
+    "new": "Nouvelle propriété"
   },
   "it": {
-    "entityProperties": "Proprietà della Entità",
-    "new": "Nuova"
+    "entityProperties": "Proprietà della Entità"
   },
   "pt": {
-    "entityProperties": "Propriedades da Entidade",
-    "new": "Nova"
+    "entityProperties": "Propriedades da Entidade"
   },
   "sw": {
     "entityProperties": "Sifa za Mashirika"
   },
   "zh": {
-    "entityProperties": "实体属性",
-    "new": "更新"
+    "entityProperties": "实体属性"
   },
   "zh-Hant": {
-    "entityProperties": "實體屬性",
-    "new": "新增"
+    "entityProperties": "實體屬性"
   }
 }
 </i18n>

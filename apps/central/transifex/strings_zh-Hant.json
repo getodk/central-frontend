@@ -1527,6 +1527,9 @@
         "num_entity_updates_api": {
           "string": "透過 API 更新實體的數量"
         },
+        "num_entity_updates_bulk": {
+          "string": ""
+        },
         "num_entities_updated": {
           "string": "修改實體的數量"
         },
@@ -1537,7 +1540,7 @@
           "string": "現在標記為已解決的衝突實體數量"
         },
         "num_bulk_create_events": {
-          "string": "批次上傳數量"
+          "string": ""
         },
         "biggest_bulk_upload": {
           "string": "最大批次上傳行數"
@@ -1622,6 +1625,12 @@
         },
         "num_entity_creates_bulk": {
           "string": "透過批次上傳建立的實體數量"
+        },
+        "num_bulk_update_events": {
+          "string": ""
+        },
+        "num_bulk_create_and_update_events": {
+          "string": ""
         },
         "max_geo_per_form": {
           "string": "表單中具有地理資料的提交次數上限"
@@ -1911,8 +1920,8 @@
         }
       },
       "new": {
-        "string": "新增",
-        "developer_comment": "This is the text of a button that is used to create a new Entity List. It is shown next to a heading whose text is \"Entity Lists\"."
+        "string": "",
+        "developer_comment": "This is the text of a button that is used to create a new Entity List."
       }
     },
     "DatasetNew": {
@@ -1948,8 +1957,8 @@
         "developer_comment": "This is a title shown above a section of the page."
       },
       "new": {
-        "string": "新增",
-        "developer_comment": "This is shown on a button for creating new Entity Properties"
+        "string": "",
+        "developer_comment": "This is shown on a button for creating a new Entity property."
       }
     },
     "DatasetOverviewDatasetProperties": {
@@ -3007,7 +3016,7 @@
           "developer_comment": "\"Property\" refers to an Entity property."
         },
         "description": {
-          "string": "{count, plural, other {這些屬性將保留空白。}}",
+          "string": "{count, plural, other {}}",
           "developer_comment": "\"Property\" refers to an Entity property."
         }
       },
@@ -3884,12 +3893,6 @@
       "emptyTable": {
         "string": "沒有可顯示的表單。"
       },
-      "action": {
-        "create": {
-          "string": "新增",
-          "developer_comment": "This is the text of a button that is used to create a new Form."
-        }
-      },
       "alert": {
         "create": {
           "string": "「{name}」已建立為表單草稿。"
@@ -4715,7 +4718,7 @@
       },
       "action": {
         "create": {
-          "string": "新訊息",
+          "string": "",
           "developer_comment": "This is the text of a button that is used to create a new Project."
         }
       },
@@ -5840,15 +5843,15 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "更簡便的實體上傳📤",
+        "string": "",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
         "0": {
-          "string": "透過更流暢的 CSV 上傳體驗，更快將實體匯入 ODK。在同一處取得更清楚的錯誤與警告訊息、修正問題並重新嘗試。"
+          "string": ""
         },
         "1": {
-          "string": "您現在也可以直接從 CSV 建立新屬性。"
+          "string": ""
         }
       }
     }
