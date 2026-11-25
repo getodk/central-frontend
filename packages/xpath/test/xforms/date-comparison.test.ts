@@ -9,23 +9,12 @@ describe('date comparison', () => {
     testContext = createXFormsTestContext();
   });
 
-  const relativeDateAsString = (offset: number) => {
-    const d = new Date();
+  // Today's date according to `TEST_NOW`, in the default test time zone.
+  const today = '2026-11-24';
 
-    d.setDate(d.getDate() + offset);
-
-    return (
-      d.getFullYear() +
-      '-' +
-      (d.getMonth() + 1).toString().padStart(2, '0') +
-      '-' +
-      d.getDate().toString().padStart(2, '0')
-    );
-  };
-
-  const yesterdayExpression = JSON.stringify(relativeDateAsString(-1));
-  const todayExpression = JSON.stringify(relativeDateAsString(0));
-  const tomorrowExpression = JSON.stringify(relativeDateAsString(1));
+  const yesterdayExpression = '"2026-11-23"';
+  const todayExpression = `"${today}"`;
+  const tomorrowExpression = '"2026-11-25"';
 
   describe('yesterday', () => {
     it('should be less than today()', () => {
@@ -134,7 +123,7 @@ describe('date comparison', () => {
   describe('comparisons with a field', () => {
     describe('set to today', () => {
       beforeEach(() => {
-        testContext = createXFormsTextContentTestContext(relativeDateAsString(0));
+        testContext = createXFormsTextContentTestContext(today);
       });
 
       it('should be less than tomorrow', () => {

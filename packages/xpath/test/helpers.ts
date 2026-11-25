@@ -11,29 +11,17 @@ type AnyParentNode =
 
 declare global {
   /**
-   * The timezone identifier used for all date and time operations in tests.
-   * This string follows the IANA Time Zone Database format (e.g., 'America/Phoenix').
-   * It determines the offset and DST behavior for `Date` objects and
-   * related functions.
+   * The default time zone for test evaluators, as an IANA time zone name. It
+   * is set in `vite.config.ts`. Native `Date` objects ignore it and use the
+   * machine's time zone.
    *
    * @example 'America/Phoenix' // Fixed UTC-7, no DST
-   * @example 'Europe/London' // UTC+0 (GMT) or UTC+1 (BST) with DST
    */
-  var TZ: string | undefined;
-  /**
-   * The locale string defining the language and regional formatting for tests.
-   * This follows the BCP 47 language tag format (e.g., 'en-US'). It ensures consistent formatting
-   * across tests.
-   *
-   * @example 'en-US' // American English
-   */
-  var LOCALE_ID: string | undefined;
+  var TZ: string;
   var IMPLEMENTATION: string | undefined;
 }
 
 globalThis.IMPLEMENTATION = typeof IMPLEMENTATION === 'string' ? IMPLEMENTATION : undefined;
-globalThis.TZ = typeof TZ === 'string' ? TZ : undefined;
-globalThis.LOCALE_ID = typeof LOCALE_ID === 'string' ? LOCALE_ID : undefined;
 
 const namespaces: Record<string, string> = {
   xhtml: 'http://www.w3.org/1999/xhtml',
@@ -61,6 +49,10 @@ interface EvaluationAssertionOptions {
 interface TestContextOptions<XForms extends boolean = false> {
   readonly getRootNode?: (testDocument: XMLDocument) => AnyParentNode;
   readonly namespaceResolver?: Nullish<XPathNSResolver>;
+  /**
+   * Overrides the default test time zone ({@link TZ}) for this context.
+   */
+  readonly timeZoneId?: string;
   readonly xforms?: XForms;
 }
 
@@ -89,7 +81,7 @@ export class TestContext<XForms extends boolean = false> {
       parseOptions: {
         attemptErrorRecovery: true,
       },
-      timeZoneId: TZ,
+      timeZoneId: options.timeZoneId ?? TZ,
     } as const;
 
     if (options.xforms) {
@@ -355,6 +347,8 @@ export const getNonNamespaceAttributes = (element: Element): readonly Attr[] => 
   return attrs.filter(({ name }) => name !== 'xmlns' && !name.startsWith('xmlns:'));
 };
 
-export const getDefaultDateTimeLocale = (): string => {
-  return new Date().toLocaleString(LOCALE_ID, { timeZone: TZ });
-};
+/**
+ * The instant every test runs at. In the default test time zone this is
+ * 2026-11-24T19:30:00-07:00, a different date than in UTC.
+ */
+export const TEST_NOW = '2026-11-25T02:30:00Z';

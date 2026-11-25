@@ -1,12 +1,8 @@
-import { afterEach, beforeEach } from 'vitest';
-import { vi } from 'vitest';
-import { getDefaultDateTimeLocale } from './helpers.ts';
+import { afterEach, beforeEach, vi } from 'vitest';
+import { TEST_NOW } from './helpers.ts';
 
 beforeEach(() => {
-  const dateOnTimezone = getDefaultDateTimeLocale();
-  vi.useFakeTimers({
-    now: new Date(dateOnTimezone).getTime(),
-  });
+  vi.useFakeTimers({ now: new Date(TEST_NOW) });
 });
 
 afterEach(() => {

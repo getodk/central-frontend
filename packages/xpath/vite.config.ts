@@ -31,39 +31,16 @@ const BROWSER_ENABLED = BROWSER_NAME != null;
 const TEST_ENVIRONMENT = BROWSER_ENABLED ? 'node' : 'jsdom';
 
 /**
- * TODO: Many integration tests concerned with datetimes currently expect a
- * fixed time zone, for hard-coded values. The time zone was also chosen
- * specifically because it does not (er, did not then, nor does presently at
- * time of writing) observe daylight saving time or any other periodic
- * change in its UTC offset.
+ * The default time zone for every test evaluator. Many datetime tests expect
+ * hard-coded values in this zone, so it is pinned here and never read from the
+ * environment: the suite gives the same results on any machine.
  *
- * The hard-coded values make tests difficult to reason about. The lack of
- * testing around DST is a significant gap in test coverage.
+ * The zone does not observe daylight saving time. Tests for other zones
+ * (including DST) pass their own `timeZoneId` to the test context.
  */
 const TEST_TIME_ZONE = 'America/Phoenix';
 
-/**
- * The locale used for formatting dates and times in all test cases.
- * This ensures consistent language and regional settings across tests.
- * Currently set to 'en-US' (American English), which affects date formats
- * (e.g., MM/DD/YYYY) and time separators.
- *
- * @constant
- * @default 'en-US'
- */
-const TEST_LOCALE = 'en-US';
-
-export default defineConfig(({ mode }) => {
-  const isTest = mode === 'test';
-
-  let timeZoneId: string | null = process.env.TZ ?? null;
-  let localeId: string | null = process.env.LOCALE_ID ?? null;
-
-  if (isTest) {
-    timeZoneId = timeZoneId ?? TEST_TIME_ZONE;
-    localeId = localeId ?? TEST_LOCALE;
-  }
-
+export default defineConfig(() => {
   // `expressionParser.ts` is built as a separate entry so it can be consumed
   // directly (once instantiated, with top-level await in its containin module)
   // where the same parser instance is used downstream for static analysis.
@@ -99,8 +76,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     define: {
-      TZ: JSON.stringify(timeZoneId),
-      LOCALE_ID: JSON.stringify(localeId),
+      TZ: JSON.stringify(TEST_TIME_ZONE),
     },
     esbuild: {
       target: 'esnext',
