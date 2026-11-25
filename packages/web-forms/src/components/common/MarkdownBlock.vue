@@ -21,7 +21,7 @@ const { elem } = defineProps<MarkdownProps>();
 	<span v-else-if="elem.role === 'html'" v-html="purify(elem)" />
 
 	<!-- link -->
-	<a v-else-if="elem.role === 'parent' && elem.elementName === 'a'" :href="getUrl(elem)" target="_blank">
+	<a v-else-if="elem.role === 'parent' && elem.elementName === 'a'" :href="getUrl(elem)" target="_blank" rel="noopener noreferrer">
 		<MarkdownBlock v-for="child in elem.children" :key="child.id" :elem="child" />
 	</a>
 
