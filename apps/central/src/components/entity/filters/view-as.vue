@@ -1,5 +1,5 @@
 <template>
-  <multiselect v-if="showViewAs" id="entity-filters-view-as" single :model-value="selectValue"
+  <multiselect id="entity-filters-view-as" single :model-value="selectValue"
     :options="options" :loading="fieldKeys.initiallyLoading || formSummaryAssignments.initiallyLoading" :label="$t('viewAs')"
     :placeholder="placeholder" :none="$t('resetToMe')" :search="$t('common.search')"
     :disabled="disabled" :disabled-message="disabledMessage" @update:model-value="update"/>
@@ -32,10 +32,6 @@ const props = defineProps({
   }
 });
 const { dataset, fieldKeys, formSummaryAssignments } = useRequestData();
-
-// Only show viewAs dropdown if dataset has an access filter set
-const showViewAs = computed(() =>
-  dataset.dataExists && dataset.accessFilter != null);
 
 // Compute list of actor IDs and their display text (app users + public links).
 const options = computed(() => {

@@ -48,12 +48,6 @@ const mountComponent = ({
 };
 
 describe('EntityFiltersViewAs', () => {
-  it('does not render the select if the dataset has no access filter', () => {
-    testData.extendedDatasets.createPast(1, { accessFilter: null });
-    const component = mountComponent({ fieldKeys: createFieldKeys(1) });
-    component.find('select').exists().should.be.false;
-  });
-
   describe('app users', () => {
     it('renders a single-select input for each app user', async () => {
       const fieldKeys = createFieldKeys(2);
