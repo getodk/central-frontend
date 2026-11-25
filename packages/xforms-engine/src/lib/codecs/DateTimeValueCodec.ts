@@ -22,8 +22,9 @@ const validateDateTimeString = (value: string): DateTimeRuntimeValue => {
     return null;
   }
 
-  if (Number.isFinite(Number(value))) {
-    const millis = Math.round(Number(value) * DAY_MILLISECONDS);
+  const num = Number(value);
+  if (Number.isFinite(num)) {
+    const millis = Math.round(num * DAY_MILLISECONDS);
     return formatMillis(millis);
   }
 

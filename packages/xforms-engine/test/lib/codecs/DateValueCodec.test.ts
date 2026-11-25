@@ -42,9 +42,7 @@ describe('DateValueCodec', () => {
       if (expected == null) {
         expect(actual).toBeNull();
       } else {
-        // console.log(actual?.toString());
         expect(actual?.toString()).to.equal(expected.toString());
-        // expect(actual?.equals(expected)).toBeTruthy();
       }
     });
   });

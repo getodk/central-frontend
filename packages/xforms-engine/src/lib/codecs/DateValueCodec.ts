@@ -1,7 +1,4 @@
-import {
-  DAY_MILLISECONDS,
-  ISO_DATE_OR_DATE_TIME_LIKE_PATTERN,
-} from '@getodk/common/constants/datetime.ts';
+import { ISO_DATE_OR_DATE_TIME_LIKE_PATTERN } from '@getodk/common/constants/datetime.ts';
 import { Temporal } from 'temporal-polyfill';
 import { type CodecDecoder, type CodecEncoder, ValueCodec } from './ValueCodec.ts';
 
@@ -28,11 +25,9 @@ const parseString = (value: string): DatetimeRuntimeValue => {
     return null;
   }
 
-  if (Number.isFinite(Number(value))) {
-    const millis = Math.round(Number(value) * DAY_MILLISECONDS);
-    return Temporal.Instant.fromEpochMilliseconds(millis)
-      .toZonedDateTimeISO(Temporal.Now.timeZoneId())
-      .toPlainDate();
+  const num = Number(value);
+  if (Number.isFinite(num)) {
+    return Temporal.PlainDate.from('1970-01-01').add({ days: num });
   }
 
   if (!ISO_DATE_OR_DATE_TIME_LIKE_PATTERN.test(value)) {
