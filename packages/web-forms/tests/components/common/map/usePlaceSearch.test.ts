@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 describe('usePlaceSearch', () => {
   const geocodingResult = (label: string) => ({
     formattedAddress: label,
+    location: { latitude: 51.51, longitude: -0.13 },
     viewport: {
       low: { latitude: 51.38, longitude: -0.35 },
       high: { latitude: 51.67, longitude: 0.15 },
@@ -53,7 +54,8 @@ describe('usePlaceSearch', () => {
     expect(url).toBe('https://geocode.googleapis.com/v4/geocode/address/London%2C%20UK%2FCamden');
     expect(init!.headers).toEqual({
       'X-Goog-Api-Key': 'test key',
-      'X-Goog-FieldMask': 'results.formattedAddress,results.viewport,results.granularity',
+      'X-Goog-FieldMask':
+        'results.formattedAddress,results.location,results.viewport,results.granularity',
     });
   });
 

@@ -8,10 +8,10 @@
     "Submission": {
       "formNotFound": {
         "title": {
-          "string": "Non è stato trovato alcun modulo con questo URL, si prega di ricontrollare."
+          "string": "Impossibile aprire il formulario"
         },
         "body": {
-          "string": ""
+          "string": "Verifica che il link sia corretto. Il formulario potrebbe non essere più disponibile o il tuo accesso potrebbe essere scaduto. Se il problema persiste, contatta la persona che ti ha inviato il link del formulario."
         }
       },
       "errorNotProblem": {
@@ -19,20 +19,34 @@
           "string": "Qualcosa è andato storto"
         },
         "body": {
-          "string": ""
+          "string": "Riprova più tardi. Se il problema persiste, contatta la persona che ti ha inviato il link del formulario."
         },
         "status": {
-          "string": "Codice error {status}"
+          "string": "Codice di errore: {status}"
         }
       }
     },
     "WebFormRenderer": {
       "action": {
         "close": {
-          "string": "Chiudere"
+          "string": "Chiudi"
         },
         "tryAgain": {
-          "string": "Ritenta ancora"
+          "string": "Riprova"
+        },
+        "recover": {
+          "string": ""
+        },
+        "discard": {
+          "string": ""
+        }
+      },
+      "autosaveModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
         }
       },
       "previewModal": {
@@ -40,19 +54,19 @@
           "string": "I dati sono validi"
         },
         "body": {
-          "string": "I dati inseriti sono validi, ma non sono stati inviati perché si tratta di un'anteprima del formulario."
+          "string": ""
         }
       },
       "submissionModal": {
         "title": {
-          "string": "Formulario inviato correttamente!"
+          "string": ""
         },
         "body": {
-          "string": "È possibile compilare nuovamente questo modulo o chiuderlo se si è terminato."
+          "string": ""
         },
         "action": {
           "fillOutAgain": {
-            "string": "Compilare di nuovo"
+            "string": ""
           }
         }
       },
@@ -66,10 +80,10 @@
       },
       "editSubmissionModal": {
         "title": {
-          "string": "Invio riuscito"
+          "string": ""
         },
         "body": {
-          "string": "Ora sarete reindirizzati."
+          "string": "Reindirizzamento in corso."
         }
       },
       "errorModal": {
@@ -77,12 +91,12 @@
           "string": "Errore invio"
         },
         "body": {
-          "string": "I dati non sono stati inviati. Messaggio di errore: {errorMessage} È possibile chiudere questa finestra di dialogo e riprovare. Se l'errore continua a verificarsi, contattate la persona che vi ha chiesto di compilare il formulario oppure {supportEmail}."
+          "string": ""
         }
       },
       "sendingDataModal": {
         "title": {
-          "string": "Mandando invio"
+          "string": ""
         },
         "body": {
           "string": "I dati vengono inviati. Si prega di non chiudere questa finestra fino al termine dell'operazione."
@@ -108,13 +122,13 @@
           "string": "Errore invio"
         },
         "body": {
-          "string": "I dati non sono stati inviati completamente. Premere il pulsante “Riprova” per riprovare. Se l'errore continua a verificarsi, contattate la persona che vi ha chiesto di compilare il formulario oppure {supportEmail}."
+          "string": ""
         }
       },
       "util": {
         "request": {
           "noResponse": {
-            "string": "Qualcosa è andato storto: non c'era nessuna risposta alla tua request."
+            "string": "Qualcosa è andato storto: la richiesta non ha ricevuto risposta."
           },
           "problem": {
             "404_1": {
