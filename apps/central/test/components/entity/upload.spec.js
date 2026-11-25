@@ -75,9 +75,6 @@ describe('EntityUpload', () => {
     testData.extendedDatasets.createPast(1);
     const component = await load('/projects/1/entity-lists/trees/entities', {
       root: false
-    }, {
-      fieldKeys: false,
-      formSummaryAssignments: false
     });
     const button = component.find('#dataset-entities-upload-button');
     button.exists().should.be.false;

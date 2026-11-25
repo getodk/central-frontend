@@ -435,10 +435,7 @@ describe('EntityFilters', () => {
       mockLogin({ role: 'none' });
       testData.extendedProjects.createPast(1, { role: 'viewer', datasets: 1 });
       testData.extendedDatasets.createPast(1, { accessFilter: { type: 'ownerOnly' } });
-      return load('/projects/1/entity-lists/trees/entities', { root: false }, {
-        fieldKeys: false,
-        formSummaryAssignments: false
-      })
+      return load('/projects/1/entity-lists/trees/entities', { root: false })
         .beforeEachResponse((_, { url }) => {
           relativeUrl(url).pathname.should.not.equal('/v1/projects/1/app-users');
           relativeUrl(url).pathname.should.not.equal('/v1/projects/1/assignments/forms/pub-link');

@@ -1169,10 +1169,7 @@ describe('EntityList', () => {
       testData.extendedDatasets.createPast(1, { name: 'trees' });
       testData.extendedEntities.createPast(2);
 
-      return load('/projects/1/entity-lists/trees/entities', { root: false }, {
-        fieldKeys: false,
-        formSummaryAssignments: false
-      })
+      return load('/projects/1/entity-lists/trees/entities', { root: false })
         .afterResponses(component => {
           component.find('#entity-table th input[type="checkbox"]').exists().should.be.false;
 

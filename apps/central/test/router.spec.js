@@ -787,10 +787,7 @@ describe('createCentralRouter()', () => {
         });
 
         it('does not redirect the user from .../entities', async () => {
-          const app = await load('/projects/1/entity-lists/trees/entities', {}, {
-            fieldKeys: false,
-            formSummaryAssignments: false
-          });
+          const app = await load('/projects/1/entity-lists/trees/entities');
           const { path } = app.vm.$route;
           path.should.equal('/projects/1/entity-lists/trees/entities');
         });
