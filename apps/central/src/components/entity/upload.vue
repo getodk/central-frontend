@@ -404,7 +404,7 @@ watch([csvEntities, () => csvPage.page, () => csvPage.size], async () => {
 // UNKNOWN ENTITIES
 const unknownEntities = reactive(new Map());
 watch(csvSlice, (entities) => {
-  if (csvSlice.value == null) {
+  if (entities == null) {
     unknownEntities.clear();
     return;
   }
