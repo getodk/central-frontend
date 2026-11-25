@@ -239,6 +239,7 @@ const evaluateDateTime = <T extends XPathNode>(
 
     default: {
       const stringValue = evaluation.toString();
+      console.log({stringValue});
       return dateTimeFromString(timeZone, stringValue);
     }
   }
@@ -265,6 +266,8 @@ export const date = new FunctionImplementation(
       case 'NODE':
       case 'STRING': {
         const string = results.toString();
+
+        console.log({string});
 
         if (string === '') {
           return new StringEvaluation(context, string);
