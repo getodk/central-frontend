@@ -104,6 +104,18 @@ const hideHelp = () => {
   gap: 10px;
   flex-shrink: 0;
 }
+
+@media (max-width: 768px) {
+  .page-heading {
+    flex-direction: column;
+    width: 768px;
+    align-items: start;
+
+    .page-heading-right {
+      flex-direction: row-reverse;
+    }
+  }
+}
 </style>
 
 <i18n lang="json5">
