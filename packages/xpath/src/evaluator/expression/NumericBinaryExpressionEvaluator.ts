@@ -10,7 +10,6 @@ import type {
   SubtractionExprNode,
 } from '../../static/grammar/SyntaxNode.ts';
 import { BinaryExpressionEvaluator } from './BinaryExpressionEvaluator.ts';
-import type { ValueEvaluation } from '../../evaluations/ValueEvaluation.ts';
 
 type NumericBinaryExprNode =
   | AdditionExprNode
@@ -44,7 +43,7 @@ export class NumericBinaryExpressionEvaluator<
     this.operation = node.type.replace('_expr', '') as NumericOperation<Node>;
   }
 
-  evaluate<T extends XPathNode>(context: EvaluationContext<T>): ValueEvaluation<T, 'NUMBER'> {
+  evaluate<T extends XPathNode>(context: EvaluationContext<T>): NumberEvaluation<T> {
     const lhsNumberValue = this.lhs.evaluate(context).toNumber();
 
     if (Number.isNaN(lhsNumberValue)) {
