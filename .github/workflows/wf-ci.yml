@@ -13,7 +13,6 @@ defaults:
 
 env:
   TZ: 'America/Phoenix'
-  LOCALE_ID: 'en-US'
 
 jobs:
 
