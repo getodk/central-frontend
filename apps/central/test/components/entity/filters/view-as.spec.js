@@ -359,6 +359,13 @@ describe('EntityFiltersViewAs', () => {
       component.get('.display-value').text().should.equal('All');
     });
 
+    it('resets the selection if the actor ID is not in the options', () => {
+      const component = mountComponent({
+        props: { modelValue: 99999 }
+      });
+      component.emitted('update:modelValue').should.eql([[null]]);
+    });
+
     it('shows default label if the actor id is not in the field keys list', () => {
       const [fieldKey] = createFieldKeys(1);
       const component = mountComponent({
