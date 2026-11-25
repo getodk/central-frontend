@@ -2899,6 +2899,15 @@
         "description": {
           "string": "Please remove any empty columns in your file."
         }
+      },
+      "unknownEntities": {
+        "title": {
+          "string": "Some rows contain Entity IDs that were not found in the Entity List:",
+          "developer_comment": "This text is followed by a list of one or more rows."
+        },
+        "description": {
+          "string": "These Entities cannot be updated. To proceed, either remove these Entities from the file, or ensure that they exist in the Entity List."
+        }
       }
     },
     "EntityUploadExtraProperties": {

@@ -50,6 +50,13 @@
         <p>{{ dataError }}</p>
       </template>
     </entity-upload-alert>
+    <entity-upload-alert v-if="unknownEntities != null" type="danger"
+      :ranges="unknownRanges" @rows="$emit('rows', $event)">
+      <template #title>{{ $t('unknownEntities.title') }}</template>
+      <template #body>
+        <p>{{ $t('unknownEntities.description') }}</p>
+      </template>
+    </entity-upload-alert>
   </div>
 </template>
 
@@ -83,10 +90,15 @@ const props = defineProps({
   emptyColumn: Boolean,
 
   // Error in the data below the column header
-  dataError: String
+  dataError: String,
+  unknownEntities: Map,
 });
+defineEmits(['rows']);
 
 const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
+
+const unknownRanges = computed(() => [...props.unknownEntities.values()]
+  .sort(([row1], [row2]) => row1 < row2));
 </script>
 
 <style lang="scss">
@@ -129,7 +141,12 @@ const formattedDelimiter = computed(() => formatCSVDelimiter(props.delimiter));
     },
 
     // @transifexKey component.EntityUploadDataError.title
-    "dataError": "Data error"
+    "dataError": "Data error",
+    "unknownEntities": {
+      // This text is followed by a list of one or more rows.
+      "title": "Some rows contain Entity IDs that were not found in the Entity List:",
+      "description": "These Entities cannot be updated. To proceed, either remove these Entities from the file, or ensure that they exist in the Entity List."
+    }
   }
 }
 </i18n>

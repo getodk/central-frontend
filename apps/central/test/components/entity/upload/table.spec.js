@@ -227,6 +227,19 @@ describe('EntityUploadTable', () => {
         });
       });
     });
+
+    it('renders an unknown entity correctly', () => {
+      testData.extendedDatasets.createPast(1);
+      const component = mountComponent({
+        props: {
+          entities: [{ uuid: 'e', label: 'dogwood', data: {} }]
+        },
+        container: {
+          requestData: { serverEntities: testData.entityOData() }
+        }
+      });
+      component.get('tbody tr').classes('error').should.be.true;
+    });
   });
 
   it('shows extra properties in the CSV data', async () => {

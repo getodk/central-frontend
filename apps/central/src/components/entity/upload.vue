@@ -22,7 +22,7 @@ except according to the terms contained in the LICENSE file.
           <div class="entity-upload-table-container">
             <entity-upload-table ref="table" :entities="csvSlice"
               :extra-properties="propertiesToCreate" :row-index="csvRow"
-              :page-size="csvPage.size" :highlighted="warningRows"/>
+              :page-size="csvPage.size" :highlighted="alertRows"/>
             <loading v-if="csvSlice == null" :state="serverEntities.awaitingResponse"/>
             <pagination v-else v-model:page="csvPage.page"
               v-model:size="csvPage.size" :count="csvEntities.length"
@@ -32,10 +32,10 @@ except according to the terms contained in the LICENSE file.
         </div>
 
         <entity-upload-errors v-if="errors != null" v-bind="errors"
-          :delimiter="fileMetadata.delimiter"/>
+          :delimiter="fileMetadata.delimiter" @rows="showAlertRows"/>
         <entity-upload-warnings v-if="warnings != null" v-bind="warnings"
           :filename="fileMetadata.name" :has-error="errors != null"
-          @rows="showWarningRows">
+          @rows="showAlertRows">
           <template #extra-properties>
             <entity-upload-extra-properties :properties="warnings.extraProperties"
               :selected="selectedProperties" :created="propertyCreator.created"
@@ -401,13 +401,36 @@ watch([csvEntities, () => csvPage.page, () => csvPage.size], async () => {
   csvSlice.value = newSlice;
 });
 
-// Rows of a warning that the user has selected to see
-const warningRows = shallowRef(null);
-const showWarningRows = (range) => {
+// UNKNOWN ENTITIES
+const unknownEntities = reactive(new Map());
+watch(csvSlice, (entities) => {
+  if (entities == null) {
+    unknownEntities.clear();
+    return;
+  }
+
+  if (!serverEntities.dataExists) return;
+
+  for (const [i, { uuid }] of entities.entries()) {
+    if (uuid != null && !serverEntities.has(uuid) && !unknownEntities.has(uuid)) {
+      const row = csvRow.value + i + 1;
+      unknownEntities.set(uuid, [row, row]);
+    }
+  }
+
+  if (unknownEntities.size !== 0 && errors.value?.unknownEntities == null) {
+    errors.value ??= { count: 0 };
+    errors.value = { ...errors.value, unknownEntities, count: errors.value.count + 1 };
+  }
+});
+
+// Rows of an error or warning that the user has selected to see
+const alertRows = shallowRef(null);
+const showAlertRows = (range) => {
   csvPage.page = Math.floor(range[0] / csvPage.size);
-  warningRows.value = range;
+  alertRows.value = range;
 };
-watch(csvEntities, (value) => { if (value == null) warningRows.value = null; });
+watch(csvEntities, (value) => { if (value == null) alertRows.value = null; });
 
 // CREATING NEW PROPERTIES
 const selectedProperties = reactive(new Set());
