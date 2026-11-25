@@ -1527,6 +1527,9 @@
         "num_entity_updates_api": {
           "string": "Number of Entity updates via API"
         },
+        "num_entity_updates_bulk": {
+          "string": "Number of Entity updates via bulk upload"
+        },
         "num_entities_updated": {
           "string": "Number of modified Entities"
         },
@@ -1537,7 +1540,7 @@
           "string": "Number of Entities with conflict now marked as resolved"
         },
         "num_bulk_create_events": {
-          "string": "Number of bulk uploads"
+          "string": "Number of bulk uploads (create only)"
         },
         "biggest_bulk_upload": {
           "string": "Number of rows in biggest bulk upload"
@@ -1622,6 +1625,12 @@
         },
         "num_entity_creates_bulk": {
           "string": "Number of Entities created via bulk upload"
+        },
+        "num_bulk_update_events": {
+          "string": "Number of bulk uploads (update only)"
+        },
+        "num_bulk_create_and_update_events": {
+          "string": "Number of bulk uploads (mixed create and update)"
         },
         "max_geo_per_form": {
           "string": "Maximum number of Submissions with geo data in a Form"
